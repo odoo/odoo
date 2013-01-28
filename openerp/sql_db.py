@@ -74,8 +74,8 @@ import threading
 from inspect import currentframe
 
 import re
-re_from = re.compile('.* from "?([a-zA-Z_0-9]+)"? .*$');
-re_into = re.compile('.* into "?([a-zA-Z_0-9]+)"? .*$');
+re_from = re.compile('.* from "?([a-zA-Z_0-9]+)"? .*$')
+re_into = re.compile('.* into "?([a-zA-Z_0-9]+)"? .*$')
 
 sql_counter = 0
 
@@ -226,11 +226,11 @@ class Cursor(object):
             params = params or None
             res = self._obj.execute(query, params)
         except psycopg2.ProgrammingError, pe:
-            if (self._default_log_exceptions if log_exceptions is None else log_exceptions):
+            if self._default_log_exceptions if log_exceptions is None else log_exceptions:
                 _logger.error("Programming error: %s, in query %s", pe, query)
             raise
         except Exception:
-            if (self._default_log_exceptions if log_exceptions is None else log_exceptions):
+            if self._default_log_exceptions if log_exceptions is None else log_exceptions:
                 _logger.exception("bad query: %s", self._obj.query or query)
             raise
 
@@ -356,11 +356,6 @@ class Cursor(object):
     @check
     def __getattr__(self, name):
         return getattr(self._obj, name)
-
-        """ Set the mode of postgres operations for all cursors
-        """
-        """Obtain the mode of postgres operations for all cursors
-        """
 
 class PsycoConnection(psycopg2.extensions.connection):
     pass
@@ -521,8 +516,8 @@ def db_connect(db_name):
     return Connection(_Pool, db_name)
 
 def close_db(db_name):
-    global _Pool
     """ You might want to call openerp.modules.registry.RegistryManager.delete(db_name) along this function."""
+    global _Pool
     if _Pool:
         _Pool.close_all(dsn(db_name))
     ct = currentThread()

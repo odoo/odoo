@@ -1,6 +1,9 @@
 import unittest2
 from lxml import etree
 
+import openerp
+from openerp.tools.misc import mute_logger
+
 import common
 
 # test group that demo user should not have
@@ -55,6 +58,7 @@ class TestACL(common.TransactionCase):
         self.tech_group.write({'users': [(3, self.demo_uid)]})
         self.res_currency._columns['rate'].groups = False
 
+    @mute_logger('openerp.osv.orm')
     def test_field_crud_restriction(self):
         "Read/Write RPC access to restricted field should be forbidden"
         # Verify the test environment first
@@ -65,12 +69,10 @@ class TestACL(common.TransactionCase):
 
         # Now restrict access to the field and check it's forbidden
         self.res_partner._columns['bank_ids'].groups = GROUP_TECHNICAL_FEATURES
-        # FIXME TODO: enable next tests when access rights checks per field are implemented
-        # from openerp.osv.orm import except_orm
-        # with self.assertRaises(except_orm):
-        #     self.res_partner.read(self.cr, self.demo_uid, [1], ['bank_ids'])
-        # with self.assertRaises(except_orm):
-        #     self.res_partner.write(self.cr, self.demo_uid, [1], {'bank_ids': []})
+        with self.assertRaises(openerp.osv.orm.except_orm):
+            self.res_partner.read(self.cr, self.demo_uid, [1], ['bank_ids'])
+        with self.assertRaises(openerp.osv.orm.except_orm):
+            self.res_partner.write(self.cr, self.demo_uid, [1], {'bank_ids': []})
 
         # Add the restricted group, and check that it works again
         self.tech_group.write({'users': [(4, self.demo_uid)]})

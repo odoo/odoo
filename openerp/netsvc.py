@@ -36,6 +36,11 @@ import time
 import types
 from pprint import pformat
 
+try:
+    import psutil
+except ImportError:
+    psutil = None
+
 # TODO modules that import netsvc only for things from loglevels must be changed to use loglevels.
 from loglevels import *
 import tools
@@ -273,6 +278,9 @@ def dispatch_rpc(service_name, method, params):
         rpc_response_flag = rpc_response.isEnabledFor(logging.DEBUG)
         if rpc_request_flag or rpc_response_flag:
             start_time = time.time()
+            start_rss, start_vms = 0, 0
+            if psutil:
+                start_rss, start_vms = psutil.Process(os.getpid()).get_memory_info()
             if rpc_request and rpc_response_flag:
                 log(rpc_request,logging.DEBUG,'%s.%s'%(service_name,method), replace_request_password(params))
 
@@ -282,10 +290,14 @@ def dispatch_rpc(service_name, method, params):
 
         if rpc_request_flag or rpc_response_flag:
             end_time = time.time()
+            end_rss, end_vms = 0, 0
+            if psutil:
+                end_rss, end_vms = psutil.Process(os.getpid()).get_memory_info()
+            logline = '%s.%s time:%.3fs mem: %sk -> %sk (diff: %sk)' % (service_name, method, end_time - start_time, start_vms / 1024, end_vms / 1024, (end_vms - start_vms)/1024)
             if rpc_response_flag:
-                log(rpc_response,logging.DEBUG,'%s.%s time:%.3fs '%(service_name,method,end_time - start_time), result)
+                log(rpc_response,logging.DEBUG, logline, result)
             else:
-                log(rpc_request,logging.DEBUG,'%s.%s time:%.3fs '%(service_name,method,end_time - start_time), replace_request_password(params), depth=1)
+                log(rpc_request,logging.DEBUG, logline, replace_request_password(params), depth=1)
 
         return result
     except openerp.exceptions.AccessError:

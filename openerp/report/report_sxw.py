@@ -441,7 +441,7 @@ class report_sxw(report_rml, preprocess.report):
             raise NotImplementedError(_('Unknown report type: %s') % report_type)
         fnct_ret = fnct(cr, uid, ids, data, report_xml, context)
         if not fnct_ret:
-            return (False,False)
+            return False, False
         return fnct_ret
 
     def create_source_odt(self, cr, uid, ids, data, report_xml, context=None):
@@ -531,7 +531,7 @@ class report_sxw(report_rml, preprocess.report):
             logo = base64.decodestring(rml_parser.logo)
         create_doc = self.generators[report_xml.report_type]
         pdf = create_doc(etree.tostring(processed_rml),rml_parser.localcontext,logo,title.encode('utf8'))
-        return (pdf, report_xml.report_type)
+        return pdf, report_xml.report_type
 
     def create_single_odt(self, cr, uid, ids, data, report_xml, context=None):
         if not context:
@@ -617,9 +617,7 @@ class report_sxw(report_rml, preprocess.report):
         create_doc = self.generators[mime_type]
         odt = etree.tostring(create_doc(rml_dom, rml_parser.localcontext),
                              encoding='utf-8', xml_declaration=True)
-        sxw_z = zipfile.ZipFile(sxw_io, mode='a')
-        sxw_z.writestr('content.xml', odt)
-        sxw_z.writestr('meta.xml', meta)
+        sxw_contents = {'content.xml':odt, 'meta.xml':meta}
 
         if report_xml.header:
             #Add corporate header/footer
@@ -638,13 +636,26 @@ class report_sxw(report_rml, preprocess.report):
                     rml_parser._add_header(odt)
                 odt = etree.tostring(odt, encoding='utf-8',
                                      xml_declaration=True)
-                sxw_z.writestr('styles.xml', odt)
+                sxw_contents['styles.xml'] = odt
             finally:
                 rml_file.close()
-        sxw_z.close()
-        final_op = sxw_io.getvalue()
+
+        #created empty zip writing sxw contents to avoid duplication
+        sxw_out = StringIO.StringIO()
+        sxw_out_zip = zipfile.ZipFile(sxw_out, mode='w')
+        sxw_template_zip = zipfile.ZipFile (sxw_io, 'r')
+        for item in sxw_template_zip.infolist():
+            if item.filename not in sxw_contents:
+                buffer = sxw_template_zip.read(item.filename)
+                sxw_out_zip.writestr(item.filename, buffer)
+        for item_filename, buffer in sxw_contents.iteritems():
+            sxw_out_zip.writestr(item_filename, buffer)
+        sxw_template_zip.close()
+        sxw_out_zip.close()
+        final_op = sxw_out.getvalue()
         sxw_io.close()
-        return (final_op, mime_type)
+        sxw_out.close()
+        return final_op, mime_type
 
     def create_single_html2html(self, cr, uid, ids, data, report_xml, context=None):
         if not context:
@@ -666,7 +677,7 @@ class report_sxw(report_rml, preprocess.report):
         create_doc = self.generators['html2html']
         html = etree.tostring(create_doc(html_dom, html_parser.localcontext))
 
-        return (html.replace('&amp;','&').replace('&lt;', '<').replace('&gt;', '>').replace('</br>',''), report_type)
+        return html.replace('&amp;','&').replace('&lt;', '<').replace('&gt;', '>').replace('</br>',''), report_type
 
     def create_single_mako2html(self, cr, uid, ids, data, report_xml, context=None):
         mako_html = report_xml.report_rml_content
@@ -675,7 +686,7 @@ class report_sxw(report_rml, preprocess.report):
         html_parser.set_context(objs, data, ids, 'html')
         create_doc = self.generators['makohtml2html']
         html = create_doc(mako_html,html_parser.localcontext)
-        return (html,'html')
+        return html,'html'
 
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

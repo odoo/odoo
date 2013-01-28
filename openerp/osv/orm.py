@@ -454,7 +454,7 @@ class browse_record(object):
                             new_data[field_name] = browse_null()
                     elif field_column._type in ('one2many', 'many2many') and len(result_line[field_name]):
                         new_data[field_name] = self._list_class([browse_record(self._cr, self._uid, id, self._table.pool.get(field_column._obj), self._cache, context=self._context, list_class=self._list_class, fields_process=self._fields_process) for id in result_line[field_name]], self._context)
-                    elif field_column._type in ('reference'):
+                    elif field_column._type == 'reference':
                         if result_line[field_name]:
                             if isinstance(result_line[field_name], browse_record):
                                 new_data[field_name] = result_line[field_name]
@@ -629,7 +629,8 @@ class MetaModel(type):
             self._module = module_name
 
         # Remember which models to instanciate for this module.
-        self.module_to_models.setdefault(self._module, []).append(self)
+        if not self._custom:
+            self.module_to_models.setdefault(self._module, []).append(self)
 
 
 # Definition of log access columns, automatically added to models if
@@ -666,6 +667,7 @@ class BaseModel(object):
     _name = None
     _columns = {}
     _constraints = []
+    _custom = False
     _defaults = {}
     _rec_name = None
     _parent_name = 'parent_id'
@@ -683,9 +685,6 @@ class BaseModel(object):
 
     # Transience
     _transient = False # True in a TransientModel
-    _transient_max_count = None
-    _transient_max_hours = None
-    _transient_check_time = 20
 
     # structure:
     #  { 'parent_model': 'm2o_field', ... }
@@ -865,10 +864,6 @@ class BaseModel(object):
                 parent_names = [parent_names]
             else:
                 name = cls._name
-            # for res.parnter.address compatiblity, should be remove in v7
-            if 'res.partner.address' in parent_names:
-                parent_names.pop(parent_names.index('res.partner.address'))
-                parent_names.append('res.partner')
             if not name:
                 raise TypeError('_name is mandatory in case of multiple inheritance')
 
@@ -949,7 +944,8 @@ class BaseModel(object):
         # managed by the metaclass.
         module_model_list = MetaModel.module_to_models.setdefault(cls._module, [])
         if cls not in module_model_list:
-            module_model_list.append(cls)
+            if not cls._custom:
+                module_model_list.append(cls)
 
         # Since we don't return an instance here, the __init__
         # method won't be called.
@@ -1018,45 +1014,50 @@ class BaseModel(object):
 
         # Load manual fields
 
-        cr.execute("SELECT id FROM ir_model_fields WHERE name=%s AND model=%s", ('state', 'ir.model.fields'))
-        if cr.fetchone():
+        # Check the query is already done for all modules of if we need to
+        # do it ourselves.
+        if self.pool.fields_by_model is not None:
+            manual_fields = self.pool.fields_by_model.get(self._name, [])
+        else:
             cr.execute('SELECT * FROM ir_model_fields WHERE model=%s AND state=%s', (self._name, 'manual'))
-            for field in cr.dictfetchall():
-                if field['name'] in self._columns:
-                    continue
-                attrs = {
-                    'string': field['field_description'],
-                    'required': bool(field['required']),
-                    'readonly': bool(field['readonly']),
-                    'domain': eval(field['domain']) if field['domain'] else None,
-                    'size': field['size'],
-                    'ondelete': field['on_delete'],
-                    'translate': (field['translate']),
-                    'manual': True,
-                    #'select': int(field['select_level'])
-                }
+            manual_fields = cr.dictfetchall()
+        for field in manual_fields:
+            if field['name'] in self._columns:
+                continue
+            attrs = {
+                'string': field['field_description'],
+                'required': bool(field['required']),
+                'readonly': bool(field['readonly']),
+                'domain': eval(field['domain']) if field['domain'] else None,
+                'size': field['size'],
+                'ondelete': field['on_delete'],
+                'translate': (field['translate']),
+                'manual': True,
+                #'select': int(field['select_level'])
+            }
 
-                if field['serialization_field_id']:
-                    cr.execute('SELECT name FROM ir_model_fields WHERE id=%s', (field['serialization_field_id'],))
-                    attrs.update({'serialization_field': cr.fetchone()[0], 'type': field['ttype']})
-                    if field['ttype'] in ['many2one', 'one2many', 'many2many']:
-                        attrs.update({'relation': field['relation']})
-                    self._columns[field['name']] = fields.sparse(**attrs)
-                elif field['ttype'] == 'selection':
-                    self._columns[field['name']] = fields.selection(eval(field['selection']), **attrs)
-                elif field['ttype'] == 'reference':
-                    self._columns[field['name']] = fields.reference(selection=eval(field['selection']), **attrs)
-                elif field['ttype'] == 'many2one':
-                    self._columns[field['name']] = fields.many2one(field['relation'], **attrs)
-                elif field['ttype'] == 'one2many':
-                    self._columns[field['name']] = fields.one2many(field['relation'], field['relation_field'], **attrs)
-                elif field['ttype'] == 'many2many':
-                    _rel1 = field['relation'].replace('.', '_')
-                    _rel2 = field['model'].replace('.', '_')
-                    _rel_name = 'x_%s_%s_%s_rel' % (_rel1, _rel2, field['name'])
-                    self._columns[field['name']] = fields.many2many(field['relation'], _rel_name, 'id1', 'id2', **attrs)
-                else:
-                    self._columns[field['name']] = getattr(fields, field['ttype'])(**attrs)
+            if field['serialization_field_id']:
+                cr.execute('SELECT name FROM ir_model_fields WHERE id=%s', (field['serialization_field_id'],))
+                attrs.update({'serialization_field': cr.fetchone()[0], 'type': field['ttype']})
+                if field['ttype'] in ['many2one', 'one2many', 'many2many']:
+                    attrs.update({'relation': field['relation']})
+                self._columns[field['name']] = fields.sparse(**attrs)
+            elif field['ttype'] == 'selection':
+                self._columns[field['name']] = fields.selection(eval(field['selection']), **attrs)
+            elif field['ttype'] == 'reference':
+                self._columns[field['name']] = fields.reference(selection=eval(field['selection']), **attrs)
+            elif field['ttype'] == 'many2one':
+                self._columns[field['name']] = fields.many2one(field['relation'], **attrs)
+            elif field['ttype'] == 'one2many':
+                self._columns[field['name']] = fields.one2many(field['relation'], field['relation_field'], **attrs)
+            elif field['ttype'] == 'many2many':
+                _rel1 = field['relation'].replace('.', '_')
+                _rel2 = field['model'].replace('.', '_')
+                _rel_name = 'x_%s_%s_%s_rel' % (_rel1, _rel2, field['name'])
+                self._columns[field['name']] = fields.many2many(field['relation'], _rel_name, 'id1', 'id2', **attrs)
+            else:
+                self._columns[field['name']] = getattr(fields, field['ttype'])(**attrs)
+
         self._inherits_check()
         self._inherits_reload()
         if not self._sequence:
@@ -1741,7 +1742,7 @@ class BaseModel(object):
                 views = {}
                 xml = "<form>"
                 for f in node:
-                    if f.tag in ('field'):
+                    if f.tag == 'field':
                         xml += etree.tostring(f, encoding="utf-8")
                 xml += "</form>"
                 new_xml = etree.fromstring(encode(xml))
@@ -2010,7 +2011,7 @@ class BaseModel(object):
         view = etree.Element('calendar', string=self._description)
         etree.SubElement(view, 'field', self._rec_name_fallback(cr, user, context))
 
-        if (self._date_name not in self._columns):
+        if self._date_name not in self._columns:
             date_found = False
             for dt in ['date', 'date_start', 'x_date', 'x_date_start']:
                 if dt in self._columns:
@@ -2031,7 +2032,7 @@ class BaseModel(object):
                                 self._columns, 'date_delay'):
                 raise except_orm(
                     _('Invalid Object Architecture!'),
-                    _("Insufficient fields to generate a Calendar View for %s, missing a date_stop or a date_delay" % (self._name)))
+                    _("Insufficient fields to generate a Calendar View for %s, missing a date_stop or a date_delay" % self._name))
 
         return view
 
@@ -2411,7 +2412,7 @@ class BaseModel(object):
            :rtype: tuple
            :return: the :meth:`~.name_get` pair value for the newly-created record.
         """
-        rec_id = self.create(cr, uid, {self._rec_name: name}, context);
+        rec_id = self.create(cr, uid, {self._rec_name: name}, context)
         return self.name_get(cr, uid, [rec_id], context)[0]
 
     # private implementation of name_search, allows passing a dedicated user for the name_get part to
@@ -2675,7 +2676,7 @@ class BaseModel(object):
         groupby = group_by
         for r in cr.dictfetchall():
             for fld, val in r.items():
-                if val == None: r[fld] = False
+                if val is None: r[fld] = False
             alldata[r['id']] = r
             del r['id']
 
@@ -2889,15 +2890,15 @@ class BaseModel(object):
             # usually because they could block deletion due to the FKs.
             # So unless stated otherwise we default them to ondelete=cascade.
             ondelete = ondelete or 'cascade'
-        self._foreign_keys.append((self._table, source_field, dest_model._table, ondelete or 'set null'))
-        _schema.debug("Table '%s': added foreign key '%s' with definition=REFERENCES \"%s\" ON DELETE %s",
-            self._table, source_field, dest_model._table, ondelete)
+        fk_def = (self._table, source_field, dest_model._table, ondelete or 'set null')
+        self._foreign_keys.add(fk_def)
+        _schema.debug("Table '%s': added foreign key '%s' with definition=REFERENCES \"%s\" ON DELETE %s", *fk_def)
 
     # unchecked version: for custom cases, such as m2m relationships
     def _m2o_add_foreign_key_unchecked(self, source_table, source_field, dest_model, ondelete):
-        self._foreign_keys.append((source_table, source_field, dest_model._table, ondelete or 'set null'))
-        _schema.debug("Table '%s': added foreign key '%s' with definition=REFERENCES \"%s\" ON DELETE %s",
-            source_table, source_field, dest_model._table, ondelete)
+        fk_def = (source_table, source_field, dest_model._table, ondelete or 'set null')
+        self._foreign_keys.add(fk_def)
+        _schema.debug("Table '%s': added foreign key '%s' with definition=REFERENCES \"%s\" ON DELETE %s", *fk_def)
 
     def _drop_constraint(self, cr, source_table, constraint_name):
         cr.execute("ALTER TABLE %s DROP CONSTRAINT %s" % (source_table,constraint_name))
@@ -2928,18 +2929,22 @@ class BaseModel(object):
                 cons, = constraints
                 if cons['ondelete_rule'] != POSTGRES_CONFDELTYPES.get((ondelete or 'set null').upper(), 'a')\
                     or cons['foreign_table'] != dest_model._table:
+                    # Wrong FK: drop it and recreate
                     _schema.debug("Table '%s': dropping obsolete FK constraint: '%s'",
                                   source_table, cons['constraint_name'])
                     self._drop_constraint(cr, source_table, cons['constraint_name'])
-                    self._m2o_add_foreign_key_checked(source_field, dest_model, ondelete)
-                # else it's all good, nothing to do!
+                else:
+                    # it's all good, nothing to do!
+                    return
             else:
                 # Multiple FKs found for the same field, drop them all, and re-create
                 for cons in constraints:
                     _schema.debug("Table '%s': dropping duplicate FK constraints: '%s'",
                                   source_table, cons['constraint_name'])
                     self._drop_constraint(cr, source_table, cons['constraint_name'])
-                self._m2o_add_foreign_key_checked(source_field, dest_model, ondelete)
+
+        # (re-)create the FK
+        self._m2o_add_foreign_key_checked(source_field, dest_model, ondelete)
 
 
 
@@ -2961,7 +2966,7 @@ class BaseModel(object):
           _auto_end).
 
         """
-        self._foreign_keys = []
+        self._foreign_keys = set()
         raise_on_invalid_object_name(self._name)
         if context is None:
             context = {}
@@ -3097,7 +3102,7 @@ class BaseModel(object):
                                     else:
                                         default = self._defaults[k]
 
-                                    if (default is not None):
+                                    if default is not None:
                                         ss = self._columns[k]._symbol_set
                                         query = 'UPDATE "%s" SET "%s"=%s WHERE "%s" is NULL' % (self._table, k, ss[0], k)
                                         cr.execute(query, (ss[1](default),))
@@ -3176,7 +3181,7 @@ class BaseModel(object):
                             # and add constraints if needed
                             if isinstance(f, fields.many2one):
                                 if not self.pool.get(f._obj):
-                                    raise except_orm('Programming Error', ('There is no reference available for %s') % (f._obj,))
+                                    raise except_orm('Programming Error', 'There is no reference available for %s' % (f._obj,))
                                 dest_model = self.pool.get(f._obj)
                                 ref = dest_model._table
                                 # ir_actions is inherited so foreign key doesn't work on it
@@ -3303,7 +3308,7 @@ class BaseModel(object):
             # TODO the condition could use fields_get_keys().
             if f._fields_id not in other._columns.keys():
                 if f._fields_id not in other._inherit_fields.keys():
-                    raise except_orm('Programming Error', ("There is no reference field '%s' found for '%s'") % (f._fields_id, f._obj,))
+                    raise except_orm('Programming Error', "There is no reference field '%s' found for '%s'" % (f._fields_id, f._obj,))
 
     def _m2m_raise_or_create_relation(self, cr, f):
         m2m_tbl, col1, col2 = f._sql_names(self)
@@ -3311,7 +3316,7 @@ class BaseModel(object):
         cr.execute("SELECT relname FROM pg_class WHERE relkind IN ('r','v') AND relname=%s", (m2m_tbl,))
         if not cr.dictfetchall():
             if not self.pool.get(f._obj):
-                raise except_orm('Programming Error', ('Many2Many destination model does not exist: `%s`') % (f._obj,))
+                raise except_orm('Programming Error', 'Many2Many destination model does not exist: `%s`' % (f._obj,))
             dest_model = self.pool.get(f._obj)
             ref = dest_model._table
             cr.execute('CREATE TABLE "%s" ("%s" INTEGER NOT NULL, "%s" INTEGER NOT NULL, UNIQUE("%s","%s"))' % (m2m_tbl, col1, col2, col1, col2))
@@ -3485,7 +3490,7 @@ class BaseModel(object):
 
         :param cr: database cursor
         :param user: current user id
-        :param fields: list of fields
+        :param allfields: list of fields
         :param context: context arguments, like lang, time zone
         :return: dictionary of field dictionaries, each one describing a field of the business object
         :raise AccessError: * if user has no create/write rights on the requested object
@@ -3536,6 +3541,37 @@ class BaseModel(object):
 
         return res
 
+    def check_field_access_rights(self, cr, user, operation, fields, context=None):
+        """
+        Check the user access rights on the given fields. This raises Access
+        Denied if the user does not have the rights. Otherwise it returns the
+        fields (as is if the fields is not falsy, or the readable/writable
+        fields if fields is falsy).
+        """
+        def p(field_name):
+            """Predicate to test if the user has access to the given field name."""
+            # Ignore requested field if it doesn't exist. This is ugly but
+            # it seems to happen at least with 'name_alias' on res.partner.
+            if field_name not in self._all_columns:
+                return True
+            field = self._all_columns[field_name].column
+            if field.groups:
+                return self.user_has_groups(cr, user, groups=field.groups, context=context)
+            else:
+                return True
+        if not fields:
+            fields = filter(p, self._all_columns.keys())
+        else:
+            filtered_fields = filter(lambda a: not p(a), fields)
+            if filtered_fields:
+                _logger.warning('Access Denied by ACLs for operation: %s, uid: %s, model: %s, fields: %s', operation, user, self._name, ', '.join(filtered_fields))
+                raise except_orm(
+                    _('Access Denied'),
+                    _('The requested operation cannot be completed due to security restrictions. '
+                    'Please contact your system administrator.\n\n(Document type: %s, Operation: %s)') % \
+                    (self._description, operation))
+        return fields
+
     def read(self, cr, user, ids, fields=None, context=None, load='_classic_read'):
         """ Read records with given ids with the given fields
 
@@ -3561,8 +3597,7 @@ class BaseModel(object):
         if not context:
             context = {}
         self.check_access_rights(cr, user, 'read')
-        if not fields:
-            fields = list(set(self._columns.keys() + self._inherit_fields.keys()))
+        fields = self.check_field_access_rights(cr, user, 'read', fields)
         if isinstance(ids, (int, long)):
             select = [ids]
         else:
@@ -3584,7 +3619,7 @@ class BaseModel(object):
             context = {}
         if not ids:
             return []
-        if fields_to_read == None:
+        if fields_to_read is None:
             fields_to_read = self._columns.keys()
 
         # Construct a clause for the security rules.
@@ -3628,15 +3663,16 @@ class BaseModel(object):
         else:
             res = map(lambda x: {'id': x}, ids)
 
-        for f in fields_pre:
-            if f == self.CONCURRENCY_CHECK_FIELD:
-                continue
-            if self._columns[f].translate:
-                ids = [x['id'] for x in res]
-                #TODO: optimize out of this loop
-                res_trans = self.pool.get('ir.translation')._get_ids(cr, user, self._name+','+f, 'model', context.get('lang', False) or 'en_US', ids)
-                for r in res:
-                    r[f] = res_trans.get(r['id'], False) or r[f]
+        if context.get('lang'):
+            for f in fields_pre:
+                if f == self.CONCURRENCY_CHECK_FIELD:
+                    continue
+                if self._columns[f].translate:
+                    ids = [x['id'] for x in res]
+                    #TODO: optimize out of this loop
+                    res_trans = self.pool.get('ir.translation')._get_ids(cr, user, self._name+','+f, 'model', context['lang'], ids)
+                    for r in res:
+                        r[f] = res_trans.get(r['id'], False) or r[f]
 
         for table in self._inherits:
             col = self._inherits[table]
@@ -4018,6 +4054,7 @@ class BaseModel(object):
 
         """
         readonly = None
+        self.check_field_access_rights(cr, user, 'write', vals.keys())
         for field in vals.copy():
             fobj = None
             if field in self._columns:
@@ -4672,7 +4709,7 @@ class BaseModel(object):
                     new_tables = []
                     for table in added_tables:
                         # table is just a table name -> switch to the full alias
-                        if table == '"%s"' % (parent_table):
+                        if table == '"%s"' % parent_table:
                             new_tables.append('"%s" as "%s"' % (parent_table, parent_alias))
                         # table is already a full statement -> replace reference to the table to its alias, is correct with the way aliases are generated
                         else:
@@ -4820,7 +4857,15 @@ class BaseModel(object):
             return res[0][0]
         cr.execute('SELECT "%s".id FROM ' % self._table + from_clause + where_str + order_by + limit_str + offset_str, where_clause_params)
         res = cr.fetchall()
-        return [x[0] for x in res]
+
+        # TDE note: with auto_join, we could have several lines about the same result
+        # i.e. a lead with several unread messages; we uniquify the result using
+        # a fast way to do it while preserving order (http://www.peterbe.com/plog/uniqifiers-benchmark)
+        def _uniquify_list(seq):
+            seen = set()
+            return [x for x in seq if x not in seen and not seen.add(x)]
+
+        return _uniquify_list([x[0] for x in res])
 
     # returns the different values ever entered for one field
     # this is used, for example, in the client when the user hits enter on
@@ -4838,7 +4883,7 @@ class BaseModel(object):
         Copy given record's data with all its fields values
 
         :param cr: database cursor
-        :param user: current user id
+        :param uid: current user id
         :param id: id of the record to copy
         :param default: field values to override in the original values of the copied record
         :type default: dictionary
@@ -4997,7 +5042,7 @@ class BaseModel(object):
         """
         if type(ids) in (int, long):
             ids = [ids]
-        query = 'SELECT id FROM "%s"' % (self._table)
+        query = 'SELECT id FROM "%s"' % self._table
         cr.execute(query + "WHERE ID IN %s", (tuple(ids),))
         return [x[0] for x in cr.fetchall()]
 
@@ -5100,20 +5145,22 @@ class BaseModel(object):
 
     def _transient_clean_rows_older_than(self, cr, seconds):
         assert self._transient, "Model %s is not transient, it cannot be vacuumed!" % self._name
-        cr.execute("SELECT id FROM " + self._table + " WHERE"
-            " COALESCE(write_date, create_date, (now() at time zone 'UTC'))::timestamp <"
-            " ((now() at time zone 'UTC') - interval %s)", ("%s seconds" % seconds,))
+        # Never delete rows used in last 5 minutes
+        seconds = max(seconds, 300)
+        query = ("SELECT id FROM " + self._table + " WHERE"
+            " COALESCE(write_date, create_date, (now() at time zone 'UTC'))::timestamp"
+            " < ((now() at time zone 'UTC') - interval %s)")
+        cr.execute(query, ("%s seconds" % seconds,))
         ids = [x[0] for x in cr.fetchall()]
         self.unlink(cr, SUPERUSER_ID, ids)
 
-    def _transient_clean_old_rows(self, cr, count):
-        assert self._transient, "Model %s is not transient, it cannot be vacuumed!" % self._name
-        cr.execute(
-            "SELECT id, COALESCE(write_date, create_date, (now() at time zone 'UTC'))::timestamp"
-            " AS t FROM " + self._table +
-            " ORDER BY t LIMIT %s", (count,))
-        ids = [x[0] for x in cr.fetchall()]
-        self.unlink(cr, SUPERUSER_ID, ids)
+    def _transient_clean_old_rows(self, cr, max_count):
+        # Check how many rows we have in the table
+        cr.execute("SELECT count(*) AS row_count FROM " + self._table)
+        res = cr.fetchall()
+        if res[0][0] <= max_count:
+            return  # max not reached, nothing to do
+        self._transient_clean_rows_older_than(cr, 300)
 
     def _transient_vacuum(self, cr, uid, force=False):
         """Clean the transient records.
@@ -5123,12 +5170,21 @@ class BaseModel(object):
         Actual cleaning will happen only once every "_transient_check_time" calls.
         This means this method can be called frequently called (e.g. whenever
         a new record is created).
+        Example with both max_hours and max_count active:
+        Suppose max_hours = 0.2 (e.g. 12 minutes), max_count = 20, there are 55 rows in the
+        table, 10 created/changed in the last 5 minutes, an additional 12 created/changed between
+        5 and 10 minutes ago, the rest created/changed more then 12 minutes ago.
+        - age based vacuum will leave the 22 rows created/changed in the last 12 minutes
+        - count based vacuum will wipe out another 12 rows. Not just 2, otherwise each addition
+          would immediately cause the maximum to be reached again.
+        - the 10 rows that have been created/changed the last 5 minutes will NOT be deleted
         """
         assert self._transient, "Model %s is not transient, it cannot be vacuumed!" % self._name
+        _transient_check_time = 20          # arbitrary limit on vacuum executions
         self._transient_check_count += 1
-        if (not force) and (self._transient_check_count % self._transient_check_time):
-            self._transient_check_count = 0
-            return True
+        if not force and (self._transient_check_count < _transient_check_time):
+            return True  # no vacuum cleaning this time
+        self._transient_check_count = 0
 
         # Age-based expiration
         if self._transient_max_hours:
@@ -5190,6 +5246,10 @@ class BaseModel(object):
 
     # for backward compatibility
     resolve_o2m_commands_to_record_dicts = resolve_2many_commands
+
+    def _register_hook(self, cr):
+        """ stuff to do right after the registry is built """
+        pass
 
 # keep this import here, at top it will cause dependency cycle errors
 import expression

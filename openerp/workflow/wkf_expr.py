@@ -19,9 +19,6 @@
 #
 ##############################################################################
 
-import sys
-import openerp.netsvc as netsvc
-import openerp.osv as base
 import openerp.pooler as pooler
 from openerp.tools.safe_eval import safe_eval as eval
 

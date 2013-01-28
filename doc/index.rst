@@ -16,7 +16,17 @@ OpenERP Server
    04_security
    05_test_framework
    06_misc
-   09_deployment
+   deployment-gunicorn
+
+OpenERP Command
+'''''''''''''''
+
+.. toctree::
+   :maxdepth: 1
+
+   openerp-command.rst
+   commands.rst
+   adding-command.rst
 
 OpenERP Server API
 ''''''''''''''''''
@@ -24,7 +34,6 @@ OpenERP Server API
 .. toctree::
    :maxdepth: 1
 
-   api_core.rst
    api_models.rst
 
 Concepts

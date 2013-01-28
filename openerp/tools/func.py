@@ -45,7 +45,7 @@ def frame_codeinfo(fframe, back=0):
     
     try:
         if not fframe:
-            return ("<unknown>", '')
+            return "<unknown>", ''
         for i in range(back):
             fframe = fframe.f_back
         try:
@@ -53,8 +53,8 @@ def frame_codeinfo(fframe, back=0):
         except TypeError:
             fname = '<builtin>'
         lineno = fframe.f_lineno or ''
-        return (fname, lineno)
+        return fname, lineno
     except Exception:
-        return ("<unknown>", '')
+        return "<unknown>", ''
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

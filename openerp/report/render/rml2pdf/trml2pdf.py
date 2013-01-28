@@ -96,7 +96,7 @@ class NumberedCanvas(canvas.Canvas):
         key=self._pageCounter
         if not self.pages.get(key,False):
             while not self.pages.get(key,False):
-                key = key + 1
+                key += 1
         self.setFont("Helvetica", 8)
         self.drawRightString((self._pagesize[0]-30), (self._pagesize[1]-40),
             " %(this)i / %(total)i" % {
@@ -123,7 +123,7 @@ class PageCount(platypus.Flowable):
         self.story_count = story_count
 
     def draw(self):
-        self.canv.beginForm("pageCount%d" % (self.story_count))
+        self.canv.beginForm("pageCount%d" % self.story_count)
         self.canv.setFont("Helvetica", utils.unit_get(str(8)))
         self.canv.drawString(0, 0, str(self.canv.getPageNumber()))
         self.canv.endForm()
@@ -268,18 +268,18 @@ class _rml_doc(object):
 
         if fontname not in pdfmetrics._fonts:
             pdfmetrics.registerFont(TTFont(fontname, filename))
-        if (mode == 'all'):
+        if mode == 'all':
             addMapping(face, 0, 0, fontname)    #normal
             addMapping(face, 0, 1, fontname)    #italic
             addMapping(face, 1, 0, fontname)    #bold
             addMapping(face, 1, 1, fontname)    #italic and bold
         elif (mode== 'normal') or (mode == 'regular'):
             addMapping(face, 0, 0, fontname)    #normal
-        elif (mode == 'italic'):
+        elif mode == 'italic':
             addMapping(face, 0, 1, fontname)    #italic
-        elif (mode == 'bold'):
+        elif mode == 'bold':
             addMapping(face, 1, 0, fontname)    #bold
-        elif (mode == 'bolditalic'):
+        elif mode == 'bolditalic':
             addMapping(face, 1, 1, fontname)    #italic and bold
 
     def _textual_image(self, node):
@@ -493,7 +493,7 @@ class _rml_canvas(object):
             img = ImageReader(s)
             (sx,sy) = img.getSize()
             _logger.debug("Image is %dx%d", sx, sy)
-            args = { 'x': 0.0, 'y': 0.0 }
+            args = { 'x': 0.0, 'y': 0.0, 'mask': 'auto'}
             for tag in ('width','height','x','y'):
                 if node.get(tag):
                     args[tag] = utils.unit_get(node.get(tag))
@@ -602,7 +602,7 @@ class _rml_Illustration(platypus.flowables.Flowable):
         self.height = utils.unit_get(node.get('height'))
         self.self2 = self2
     def wrap(self, *args):
-        return (self.width, self.height)
+        return self.width, self.height
     def draw(self):
         drw = _rml_draw(self.localcontext ,self.node,self.styles, images=self.self2.images, path=self.self2.path, title=self.self2.title)
         drw.render(self.canv, None)
@@ -890,7 +890,7 @@ class TinyDocTemplate(platypus.BaseDocTemplate):
         self.canv._storyCount = 0
 
     def ___handle_pageBegin(self):
-        self.page = self.page + 1
+        self.page += 1
         self.pageTemplate.beforeDrawPage(self.canv,self)
         self.pageTemplate.checkPageSize(self.canv,self)
         self.pageTemplate.onPage(self.canv,self)

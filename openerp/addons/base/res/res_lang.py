@@ -20,14 +20,14 @@
 ##############################################################################
 
 import locale
+from locale import localeconv
 import logging
 import re
 
-from osv import fields, osv
-from locale import localeconv
-import tools
-from tools.safe_eval import safe_eval as eval
-from tools.translate import _
+from openerp import tools
+from openerp.osv import fields, osv
+from openerp.tools.safe_eval import safe_eval as eval
+from openerp.tools.translate import _
 
 _logger = logging.getLogger(__name__)
 
@@ -168,7 +168,7 @@ class lang(osv.osv):
         thousands_sep = lang_obj.thousands_sep or conv[monetary and 'mon_thousands_sep' or 'thousands_sep']
         decimal_point = lang_obj.decimal_point
         grouping = lang_obj.grouping
-        return (grouping, thousands_sep, decimal_point)
+        return grouping, thousands_sep, decimal_point
 
     def write(self, cr, uid, ids, vals, context=None):
         for lang_id in ids :
@@ -231,7 +231,7 @@ lang()
 def original_group(s, grouping, thousands_sep=''):
 
     if not grouping:
-        return (s, 0)
+        return s, 0
 
     result = ""
     seps = 0

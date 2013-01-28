@@ -151,7 +151,7 @@ class Query(object):
                 query_from = add_joins_for_table(table_alias, query_from)
             query_from += ','
         query_from = query_from[:-1]  # drop last comma
-        return (query_from, " AND ".join(self.where_clause), self.where_clause_params)
+        return query_from, " AND ".join(self.where_clause), self.where_clause_params
 
     def __str__(self):
         return '<osv.Query: "SELECT ... FROM %s WHERE %s" with params: %r>' % self.get_sql()

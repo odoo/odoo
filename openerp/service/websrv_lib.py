@@ -226,9 +226,9 @@ class HttpOptions:
         
         Sometimes, like in special DAV folders, the OPTIONS may contain
         extra keywords, perhaps also dependant on the request url. 
-        @param the options already. MUST be copied before being altered
-        @return the updated options.
-        
+        :param opts: MUST be copied before being altered
+        :returns: the updated options.
+
         """
         return opts
 

@@ -332,33 +332,31 @@ def generate_table_alias(src_table_alias, joined_tables=[]):
         - src_model='res_users', join_tables=[(res.partner, 'parent_id')]
             alias = ('res_users__parent_id', '"res_partner" as "res_users__parent_id"')
 
-        :param model src_model: model source of the alias
-        :param list join_tables: list of tuples
-            (dst_model, link_field)
+        :param model src_table_alias: model source of the alias
+        :param list joined_tables: list of tuples
+                                   (dst_model, link_field)
 
         :return tuple: (table_alias, alias statement for from clause with quotes added)
     """
     alias = src_table_alias
     if not joined_tables:
-        return ('%s' % alias, '%s' % _quote(alias))
+        return '%s' % alias, '%s' % _quote(alias)
     for link in joined_tables:
         alias += '__' + link[1]
-    assert len(alias) < 64, 'Table alias name %s is longer than the 64 characters size accepted by default in postgresql.' % (alias)
-    return ('%s' % alias, '%s as %s' % (_quote(joined_tables[-1][0]), _quote(alias)))
+    assert len(alias) < 64, 'Table alias name %s is longer than the 64 characters size accepted by default in postgresql.' % alias
+    return '%s' % alias, '%s as %s' % (_quote(joined_tables[-1][0]), _quote(alias))
 
 
 def get_alias_from_query(from_query):
     """ :param string from_query: is something like :
         - '"res_partner"' OR
         - '"res_partner" as "res_users__partner_id"''
-        :param tuple result: (unquoted table name, unquoted alias)
-            i.e. (res_partners, res_partner) OR (res_partner, res_users__partner_id)
     """
     from_splitted = from_query.split(' as ')
     if len(from_splitted) > 1:
-        return (from_splitted[0].replace('"', ''), from_splitted[1].replace('"', ''))
+        return from_splitted[0].replace('"', ''), from_splitted[1].replace('"', '')
     else:
-        return (from_splitted[0].replace('"', ''), from_splitted[0].replace('"', ''))
+        return from_splitted[0].replace('"', ''), from_splitted[0].replace('"', '')
 
 
 def normalize_leaf(element):
@@ -377,7 +375,7 @@ def normalize_leaf(element):
     if isinstance(right, (list, tuple)) and operator in ('=', '!='):
         _logger.warning("The domain term '%s' should use the 'in' or 'not in' operator." % ((left, original, right),))
         operator = 'in' if operator == '=' else 'not in'
-    return (left, operator, right)
+    return left, operator, right
 
 
 def is_operator(element):
@@ -497,11 +495,19 @@ class ExtendedLeaf(object):
                 adding joins
             :attr list join_context: list of join contexts. This is a list of
                 tuples like ``(lhs, table, lhs_col, col, link)``
-                :param obj lhs: source (left hand) model
-                :param obj model: destination (right hand) model
-                :param string lhs_col: source model column for join condition
-                :param string col: destination model column for join condition
-                :param link: link column between source and destination model
+
+                where
+
+                lhs
+                    source (left hand) model
+                model
+                    destination (right hand) model
+                lhs_col
+                    source model column for join condition
+                col
+                    destination model column for join condition
+                link
+                    link column between source and destination model
                     that is not necessarily (but generally) a real column used
                     in the condition (i.e. in many2one); this link is used to
                     compute aliases
@@ -829,7 +835,7 @@ class expression(object):
                     push(create_substitution_leaf(leaf, AND_OPERATOR, relational_model))
 
             elif len(field_path) > 1 and field._auto_join:
-                raise NotImplementedError('_auto_join attribute not supported on many2many field %s' % (left))
+                raise NotImplementedError('_auto_join attribute not supported on many2many field %s' % left)
 
             elif len(field_path) > 1 and field._type == 'many2one':
                 right_ids = relational_model.search(cr, uid, [(field_path[1], operator, right)], context=context)
@@ -989,7 +995,7 @@ class expression(object):
                         res_ids = [x[0] for x in relational_model.name_search(cr, uid, right, [], operator, limit=None, context=c)]
                         if operator in NEGATIVE_TERM_OPERATORS:
                             res_ids.append(False)  # TODO this should not be appended if False was in 'right'
-                        return (left, 'in', res_ids)
+                        return left, 'in', res_ids
                     # resolve string-based m2o criterion into IDs
                     if isinstance(right, basestring) or \
                             right and isinstance(right, (tuple, list)) and all(isinstance(item, basestring) for item in right):
@@ -1098,7 +1104,7 @@ class expression(object):
                 query = '(%s."%s" IS %s)' % (table_alias, left, r)
                 params = []
             elif isinstance(right, (list, tuple)):
-                params = right[:]
+                params = list(right)
                 check_nulls = False
                 for i in range(len(params))[::-1]:
                     if params[i] == False:
@@ -1140,8 +1146,8 @@ class expression(object):
             query = '%s."%s" IS NOT NULL' % (table_alias, left)
             params = []
 
-        elif (operator == '=?'):
-            if (right is False or right is None):
+        elif operator == '=?':
+            if right is False or right is None:
                 # '=?' is a short-circuit that makes the term TRUE if right is None or False
                 query = 'TRUE'
                 params = []
@@ -1187,7 +1193,7 @@ class expression(object):
 
         if isinstance(params, basestring):
             params = [params]
-        return (query, params)
+        return query, params
 
     def to_sql(self):
         stack = []
@@ -1213,6 +1219,6 @@ class expression(object):
         if joins:
             query = '(%s) AND %s' % (joins, query)
 
-        return (query, tools.flatten(params))
+        return query, tools.flatten(params)
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

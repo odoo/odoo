@@ -19,14 +19,14 @@
 #
 ##############################################################################
 
-import os
-import tools
-
-import zipfile
-from StringIO import StringIO
 import base64
-from tools.translate import _
-from osv import osv, fields
+import os
+from StringIO import StringIO
+import zipfile
+
+from openerp import tools
+from openerp.osv import osv, fields
+from openerp.tools.translate import _
 
 ADDONS_PATH = tools.config['addons_path'].split(",")[-1]
 

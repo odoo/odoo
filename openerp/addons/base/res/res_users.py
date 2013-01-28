@@ -19,23 +19,18 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-
-
 from functools import partial
 import logging
 from lxml import etree
 from lxml.builder import E
-import netsvc
-from openerp import SUPERUSER_ID
+
 import openerp
+from openerp import SUPERUSER_ID
+from openerp import pooler, tools
 import openerp.exceptions
-from osv import fields,osv
-from osv.orm import browse_record
-import pooler
-import random
-from service import security
-import tools
-from tools.translate import _
+from openerp.osv import fields,osv
+from openerp.osv.orm import browse_record
+from openerp.tools.translate import _
 
 _logger = logging.getLogger(__name__)
 
@@ -72,6 +67,7 @@ class groups(osv.osv):
         'rule_groups': fields.many2many('ir.rule', 'rule_group_rel',
             'group_id', 'rule_group_id', 'Rules', domain=[('global', '=', False)]),
         'menu_access': fields.many2many('ir.ui.menu', 'ir_ui_menu_group_rel', 'gid', 'menu_id', 'Access Menu'),
+        'view_access': fields.many2many('ir.ui.view', 'ir_ui_view_group_rel', 'group_id', 'view_id', 'Views'),
         'comment' : fields.text('Comment', size=250, translate=True),
         'category_id': fields.many2one('ir.module.category', 'Application', select=True),
         'full_name': fields.function(_get_full_name, type='char', string='Group Name', fnct_search=_search_group),
@@ -142,7 +138,7 @@ class res_users(osv.osv):
         'id': fields.integer('ID'),
         'login_date': fields.date('Latest connection', select=1),
         'partner_id': fields.many2one('res.partner', required=True,
-            string='Related Partner', ondelete='cascade',
+            string='Related Partner', ondelete='restrict',
             help='Partner-related data of the user'),
         'login': fields.char('Login', size=64, required=True,
             help="Used to log into the system"),
@@ -303,7 +299,7 @@ class res_users(osv.osv):
             for id in ids:
                 if id in self._uid_cache[db]:
                     del self._uid_cache[db][id]
-
+        self.context_get.clear_cache(self)
         return res
 
     def unlink(self, cr, uid, ids, context=None):
@@ -337,6 +333,7 @@ class res_users(osv.osv):
             default['login'] = _("%s (copy)") % user2copy['login']
         return super(res_users, self).copy(cr, uid, id, default, context)
 
+    @tools.ormcache(skiparg=2)
     def context_get(self, cr, uid, context=None):
         user = self.browse(cr, SUPERUSER_ID, uid, context)
         result = {}

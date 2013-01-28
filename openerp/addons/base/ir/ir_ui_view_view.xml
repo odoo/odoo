@@ -50,15 +50,11 @@
             <field name="arch" type="xml">
                 <search string="Views">
                     <field name="name" filter_domain="['|', ('name','ilike',self), ('model','ilike',self)]" string="View"/>
-                    <filter icon="terp-stock_zoom"
-                        string="Search"
-                        domain="[('type', '=', 'search')]"/>
-                    <filter icon="gtk-indent"
-                        string="Tree"
-                        domain="[('type', '=', 'tree')]"/>
-                    <filter icon="gtk-new"
-                        string="Form"
-                        domain="[('type', '=','form')]"/>
+                    <filter string="Form" domain="[('type', '=','form')]"/>
+                    <filter string="Tree" domain="[('type', '=', 'tree')]"/>
+                    <filter string="Kanban" domain="[('type', '=', 'kanban')]"/>
+                    <filter string="Search" domain="[('type', '=', 'search')]"/>
+                    <field name="model"/>
                     <field name="inherit_id"/>
                     <field name="type"/>
                     <group expand="0" string="Group By...">

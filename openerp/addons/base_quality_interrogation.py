@@ -20,16 +20,14 @@
 ##############################################################################
 
 import xmlrpclib
-import ConfigParser
 import optparse
 import sys
-import thread
 import threading
 import os
 import time
-import pickle
 import base64
 import socket
+import string
 
 admin_passwd = 'admin'
 waittime = 10
@@ -67,10 +65,10 @@ def execute(connector, method, *args):
     except socket.error,e:
         if e.args[0] == 111:
             if wait_count > wait_limit:
-                print "Server is taking too long to start, it has exceeded the maximum limit of %d seconds."%(wait_limit)
+                print "Server is taking too long to start, it has exceeded the maximum limit of %d seconds." % wait_limit
                 clean()
                 sys.exit(1)
-            print 'Please wait %d sec to start server....'%(waittime)
+            print 'Please wait %d sec to start server....' % waittime
             wait_count += 1
             time.sleep(waittime)
             res = execute(connector, method, *args)
@@ -136,7 +134,7 @@ def check_quality(uri, user, pwd, dbname, modules, quality_logs):
                 detail_html +='''<div id=\"%s\"><h3>%s (Score : %s)</h3><font color=red><h5>%s</h5></font>%s</div>'''%(test.replace(' ', '-'), test, score, msg, detail.get('detail', ''))
                 test_detail[test] = (score,msg,detail.get('detail',''))
             html += "</ul>"
-            html += "%s"%(detail_html)
+            html += "%s"% detail_html
             html += "</div></body></html>"
             if not os.path.isdir(quality_logs):
                 os.mkdir(quality_logs)
@@ -305,13 +303,11 @@ options = {
     'port' : opt.port or 8069,
     'netport':opt.netport or 8070,
     'database': opt.db_name or 'terp',
-    'modules' : opt.modules or [],
+    'modules' : map(string.strip, opt.modules.split(',')) if opt.modules else [],
     'login' : opt.login or 'admin',
     'pwd' : opt.pwd or '',
     'extra-addons':opt.extra_addons or []
 }
-
-options['modules'] = opt.modules and map(lambda m: m.strip(), opt.modules.split(',')) or []
 # Hint:i18n-import=purchase:ar_AR.po+sale:fr_FR.po,nl_BE.po
 if opt.translate_in:
     translate = opt.translate_in

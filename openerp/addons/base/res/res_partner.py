@@ -20,17 +20,16 @@
 ##############################################################################
 
 import datetime
-import math
-import openerp
-from osv import osv, fields
-from openerp import SUPERUSER_ID
-import re
-import tools
-from tools.translate import _
-import logging
-import pooler
-import pytz
 from lxml import etree
+import math
+import pytz
+import re
+
+import openerp
+from openerp import SUPERUSER_ID
+from openerp import pooler, tools
+from openerp.osv import osv, fields
+from openerp.tools.translate import _
 
 class format_address(object):
     def fields_view_get_address(self, cr, uid, arch, context={}):
@@ -188,6 +187,12 @@ class res_partner(osv.osv, format_address):
     def _set_image(self, cr, uid, id, name, value, args, context=None):
         return self.write(cr, uid, [id], {'image': tools.image_resize_image_big(value)}, context=context)
 
+    def _has_image(self, cr, uid, ids, name, args, context=None):
+        result = {}
+        for obj in self.browse(cr, uid, ids, context=context):
+            result[obj.id] = obj.image != False
+        return result
+
     _order = "name"
     _columns = {
         'name': fields.char('Name', size=128, required=True, select=True),
@@ -208,10 +213,6 @@ class res_partner(osv.osv, format_address):
         'bank_ids': fields.one2many('res.partner.bank', 'partner_id', 'Banks'),
         'website': fields.char('Website', size=64, help="Website of Partner or Company"),
         'comment': fields.text('Notes'),
-        'address': fields.one2many('res.partner.address', 'partner_id', 'Addresses',
-                deprecated="The address information is now directly stored on each Partner record. "\
-                           "Multiple contacts with their own address can be added via the child_ids relationship. "\
-                           "This field will be removed as of OpenERP 7.1."),
         'category_id': fields.many2many('res.partner.category', id1='partner_id', id2='category_id', string='Tags'),
         'credit_limit': fields.float(string='Credit Limit'),
         'ean13': fields.char('EAN13', size=13),
@@ -258,6 +259,7 @@ class res_partner(osv.osv, format_address):
             help="Small-sized image of this contact. It is automatically "\
                  "resized as a 64x64px image, with aspect ratio preserved. "\
                  "Use this field anywhere a small image is required."),
+        'has_image': fields.function(_has_image, type="boolean"),
         'company_id': fields.many2one('res.company', 'Company', select=1),
         'color': fields.integer('Color Index'),
         'user_ids': fields.one2many('res.users', 'partner_id', 'Users'),
@@ -302,19 +304,18 @@ class res_partner(osv.osv, format_address):
         'is_company': False,
         'type': 'default',
         'use_parent_address': True,
-        'image': lambda self, cr, uid, ctx: self._get_default_image(cr, uid, ctx.get('default_is_company', False), ctx),
+        'image': False,
     }
 
     def copy(self, cr, uid, id, default=None, context=None):
         if default is None:
             default = {}
         name = self.read(cr, uid, [id], ['name'], context)[0]['name']
-        default.update({'name': _('%s (copy)') % (name)})
+        default.update({'name': _('%s (copy)') % name})
         return super(res_partner, self).copy(cr, uid, id, default, context)
 
     def onchange_type(self, cr, uid, ids, is_company, context=None):
-        # get value as for an onchange on the image
-        value = tools.image_get_resized_images(self._get_default_image(cr, uid, is_company, context), return_big=True, return_medium=False, return_small=False)
+        value = {}
         value['title'] = False
         if is_company:
             value['parent_id'] = False
@@ -407,6 +408,8 @@ class res_partner(osv.osv, format_address):
                 name = name + "\n" + self._display_address(cr, uid, record, without_company=True, context=context)
                 name = name.replace('\n\n','\n')
                 name = name.replace('\n\n','\n')
+            if context.get('show_email') and record.email:
+                name = "%s <%s>" % (name, record.email)
             res.append((record.id, name))
         return res
 
@@ -442,18 +445,23 @@ class res_partner(osv.osv, format_address):
     def name_search(self, cr, uid, name, args=None, operator='ilike', context=None, limit=100):
         if not args:
             args = []
-        if name and operator in ('=', 'ilike', '=ilike', 'like'):
+        if name and operator in ('=', 'ilike', '=ilike', 'like', '=like'):
             # search on the name of the contacts and of its company
-            name2 = operator == '=' and name or '%' + name + '%'
+            search_name = name
+            if operator in ('ilike', 'like'):
+                search_name = '%%%s%%' % name
+            if operator in ('=ilike', '=like'):
+                operator = operator[1:]
+            query_args = {'name': search_name}
             limit_str = ''
-            query_args = [name2]
             if limit:
-                limit_str = ' limit %s'
-                query_args += [limit]
+                limit_str = ' limit %(limit)s'
+                query_args['limit'] = limit
             cr.execute('''SELECT partner.id FROM res_partner partner
                           LEFT JOIN res_partner company ON partner.parent_id = company.id
-                          WHERE partner.name || ' (' || COALESCE(company.name,'') || ')'
-                          ''' + operator + ''' %s ''' + limit_str, query_args)
+                          WHERE partner.email ''' + operator +''' %(name)s
+                             OR partner.name || ' (' || COALESCE(company.name,'') || ')'
+                          ''' + operator + ' %(name)s ' + limit_str, query_args)
             ids = map(lambda x: x[0], cr.fetchall())
             if args:
                 ids = self.search(cr, uid, [('id', 'in', ids)] + args, limit=limit, context=context)
@@ -519,7 +527,7 @@ class res_partner(osv.osv, format_address):
     def view_header_get(self, cr, uid, view_id, view_type, context):
         res = super(res_partner, self).view_header_get(cr, uid, view_id, view_type, context)
         if res: return res
-        if (not context.get('category_id', False)):
+        if not context.get('category_id', False):
             return False
         return _('Partners: ')+self.pool.get('res.partner.category').browse(cr, uid, context['category_id'], context).name
 
@@ -538,7 +546,7 @@ class res_partner(osv.osv, format_address):
         The purpose of this function is to build and return an address formatted accordingly to the
         standards of the country where it belongs.
 
-        :param address: browse record of the res.partner.address to format
+        :param address: browse record of the res.partner to format
         :returns: the address formatted in a display that fit its country habits (or the default ones
             if not country is specified)
         :rtype: string
@@ -563,56 +571,5 @@ class res_partner(osv.osv, format_address):
         elif address.parent_id:
             address_format = '%(company_name)s\n' + address_format
         return address_format % args
-
-# res.partner.address is deprecated; it is still there for backward compability only and will be removed in next version
-class res_partner_address(osv.osv):
-    _table = "res_partner"
-    _name = 'res.partner.address'
-    _order = 'type, name'
-    _columns = {
-        'parent_id': fields.many2one('res.partner', 'Company', ondelete='set null', select=True),
-        'partner_id': fields.related('parent_id', type='many2one', relation='res.partner', string='Partner'),   # for backward compatibility
-        'type': fields.selection( [ ('default','Default'),('invoice','Invoice'), ('delivery','Delivery'), ('contact','Contact'), ('other','Other') ],'Address Type', help="Used to select automatically the right address according to the context in sales and purchases documents."),
-        'function': fields.char('Function', size=128),
-        'title': fields.many2one('res.partner.title','Title'),
-        'name': fields.char('Contact Name', size=64, select=1),
-        'street': fields.char('Street', size=128),
-        'street2': fields.char('Street2', size=128),
-        'zip': fields.char('Zip', change_default=True, size=24),
-        'city': fields.char('City', size=128),
-        'state_id': fields.many2one("res.country.state", 'Fed. State', domain="[('country_id','=',country_id)]"),
-        'country_id': fields.many2one('res.country', 'Country'),
-        'email': fields.char('Email', size=240),
-        'phone': fields.char('Phone', size=64),
-        'fax': fields.char('Fax', size=64),
-        'mobile': fields.char('Mobile', size=64),
-        'birthdate': fields.char('Birthdate', size=64),
-        'is_customer_add': fields.related('partner_id', 'customer', type='boolean', string='Customer'),
-        'is_supplier_add': fields.related('partner_id', 'supplier', type='boolean', string='Supplier'),
-        'active': fields.boolean('Active', help="Uncheck the active field to hide the contact."),
-        'company_id': fields.many2one('res.company', 'Company',select=1),
-        'color': fields.integer('Color Index'),
-    }
-
-    _defaults = {
-        'active': True,
-        'company_id': lambda s,cr,uid,c: s.pool.get('res.company')._company_default_get(cr, uid, 'res.partner', context=c),
-        'color': 0,
-        'type': 'default',
-    }
-
-    def write(self, cr, uid, ids, vals, context=None):
-        logging.getLogger('res.partner').warning("Deprecated use of res.partner.address")
-        if 'partner_id' in vals:
-            vals['parent_id'] = vals.get('partner_id')
-            del(vals['partner_id'])
-        return self.pool.get('res.partner').write(cr, uid, ids, vals, context=context)
-
-    def create(self, cr, uid, vals, context=None):
-        logging.getLogger('res.partner').warning("Deprecated use of res.partner.address")
-        if 'partner_id' in vals:
-            vals['parent_id'] = vals.get('partner_id')
-            del(vals['partner_id'])
-        return self.pool.get('res.partner').create(cr, uid, vals, context=context)
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -52,7 +52,7 @@ def _1000_to_text(chiffre):
     d2 = chiffre/100
     if d2>0 and d:
         return centaine[d2]+' '+d
-    elif d2>1 and not(d):
+    elif d2>1 and not d:
         return centaine[d2]+'s'
     else:
         return centaine[d2] or d

@@ -1,11 +1,8 @@
 #
 # test cases for fields access, etc.
 #
-
-import unittest2
 import common
 
-import openerp
 from openerp.osv import fields
 
 class TestRelatedField(common.TransactionCase):
@@ -53,31 +50,46 @@ class TestRelatedField(common.TransactionCase):
     def test_1_single_related(self):
         """ test a related field with a single indirection like fields.related('foo') """
         # add a related field test_related_company_id on res.partner
+        # and simulate a _inherits_reload() to populate _all_columns.
         old_columns = self.partner._columns
+        old_all_columns = self.partner._all_columns
         self.partner._columns = dict(old_columns)
+        self.partner._all_columns = dict(old_all_columns)
         self.partner._columns.update({
             'single_related_company_id': fields.related('company_id', type='many2one', obj='res.company'),
+        })
+        self.partner._all_columns.update({
+            'single_related_company_id': fields.column_info('single_related_company_id', self.partner._columns['single_related_company_id'], None, None, None)
         })
 
         self.do_test_company_field('single_related_company_id')
 
         # restore res.partner fields
         self.partner._columns = old_columns
+        self.partner._all_columns = old_all_columns
 
     def test_2_related_related(self):
         """ test a related field referring to a related field """
         # add a related field on a related field on res.partner
+        # and simulate a _inherits_reload() to populate _all_columns.
         old_columns = self.partner._columns
+        old_all_columns = self.partner._all_columns
         self.partner._columns = dict(old_columns)
+        self.partner._all_columns = dict(old_all_columns)
         self.partner._columns.update({
             'single_related_company_id': fields.related('company_id', type='many2one', obj='res.company'),
             'related_related_company_id': fields.related('single_related_company_id', type='many2one', obj='res.company'),
+        })
+        self.partner._all_columns.update({
+            'single_related_company_id': fields.column_info('single_related_company_id', self.partner._columns['single_related_company_id'], None, None, None),
+            'related_related_company_id': fields.column_info('related_related_company_id', self.partner._columns['related_related_company_id'], None, None, None)
         })
 
         self.do_test_company_field('related_related_company_id')
 
         # restore res.partner fields
         self.partner._columns = old_columns
+        self.partner._all_columns = old_all_columns
 
     def test_3_read_write(self):
         """ write on a related field """

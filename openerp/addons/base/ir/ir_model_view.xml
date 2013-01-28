@@ -246,8 +246,8 @@
                 <tree string="External Identifiers">
                     <field name="complete_name"/>
                     <field name="display_name"/>
-                    <field name="res_id"/>
                     <field name="model" groups="base.group_no_one"/>
+                    <field name="res_id"/>
                 </tree>
             </field>
         </record>
@@ -255,12 +255,10 @@
             <field name="model">ir.model.data</field>
             <field name="arch" type="xml">
                 <search string="External Identifiers">
-                    <field name="name"
-                        filter_domain="['|', '|', ('name','ilike',self), ('model','ilike',self), ('module','ilike',self)]"
-                        string="External Identifier"/>
-                    <filter icon="terp-camera_test"
-                        string="Updatable"
-                        domain="[('noupdate', '=', False)]"/>
+                    <field name="name" filter_domain="[('name','ilike',self)]" string="External Identifier"/>
+                    <filter string="Updatable" domain="[('noupdate', '=', False)]"/>
+                    <field name="module"/>
+                    <field name="model"/>
                     <field name="res_id"/>
                     <field name="noupdate"/>
                     <group expand="0" string="Group By...">

@@ -18,13 +18,8 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
 #
 ##############################################################################
-
-import wkf_logs
-import workitem
 import instance
-
 import openerp.netsvc as netsvc
-import openerp.pooler as pooler
 
 class workflow_service(netsvc.Service):
     """

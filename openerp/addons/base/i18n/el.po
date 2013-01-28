@@ -5,15 +5,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.0\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2012-12-03 16:01+0000\n"
+"POT-Creation-Date: 2012-12-21 17:04+0000\n"
 "PO-Revision-Date: 2012-08-20 15:34+0000\n"
 "Last-Translator: Dimitris Andavoglou <dimitrisand@gmail.com>\n"
 "Language-Team: nls@hellug.gr <nls@hellug.gr>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-12-04 04:56+0000\n"
-"X-Generator: Launchpad (build 16335)\n"
+"X-Launchpad-Export-Date: 2013-01-19 05:15+0000\n"
+"X-Generator: Launchpad (build 16430)\n"
 "X-Poedit-Country: GREECE\n"
 "X-Poedit-Language: Greek\n"
 "X-Poedit-SourceCharset: utf-8\n"
@@ -43,7 +43,7 @@ msgid "DateTime"
 msgstr "ΗμερομηνίαΏρα"
 
 #. module: base
-#: code:addons/fields.py:637
+#: code:addons/fields.py:643
 #, python-format
 msgid ""
 "The second argument of the many2many field %s must be a SQL table !You used "
@@ -187,41 +187,15 @@ msgid ""
 msgstr ""
 
 #. module: base
-#: model:ir.module.module,description:base.module_crm
-msgid ""
-"\n"
-"The generic OpenERP Customer Relationship Management\n"
-"=====================================================\n"
-"\n"
-"This application enables a group of people to intelligently and efficiently "
-"manage leads, opportunities, meetings and phone calls.\n"
-"\n"
-"It manages key tasks such as communication, identification, prioritization, "
-"assignment, resolution and notification.\n"
-"\n"
-"OpenERP ensures that all cases are successfully tracked by users, customers "
-"and suppliers. It can automatically send reminders, escalate the request, "
-"trigger specific methods and many other actions based on your own enterprise "
-"rules.\n"
-"\n"
-"The greatest thing about this system is that users don't need to do anything "
-"special. The CRM module has an email gateway for the synchronization "
-"interface between mails and OpenERP. That way, users can just send emails to "
-"the request tracker.\n"
-"\n"
-"OpenERP will take care of thanking them for their message, automatically "
-"routing it to the appropriate staff and make sure all future correspondence "
-"gets to the right place.\n"
-"\n"
-"\n"
-"Dashboard for CRM will include:\n"
-"-------------------------------\n"
-"* Planned Revenue by Stage and User (graph)\n"
-"* Opportunities by Stage (graph)\n"
+#: code:addons/base/ir/ir_sequence.py:104
+#: code:addons/base/ir/ir_sequence.py:130
+#: code:addons/base/res/res_users.py:467
+#, python-format
+msgid "Warning!"
 msgstr ""
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:397
+#: code:addons/base/ir/ir_model.py:399
 #, python-format
 msgid ""
 "Properties of base fields cannot be altered in this manner! Please modify "
@@ -229,7 +203,7 @@ msgid ""
 msgstr ""
 
 #. module: base
-#: code:addons/osv.py:130
+#: code:addons/osv.py:132
 #, python-format
 msgid "Constraint Error"
 msgstr ""
@@ -240,7 +214,7 @@ msgid "ir.ui.view.custom"
 msgstr "ir.ui.view.custom"
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:366
+#: code:addons/base/ir/ir_model.py:368
 #, python-format
 msgid "Renaming sparse field \"%s\" is not allowed"
 msgstr ""
@@ -251,7 +225,7 @@ msgid "Swaziland"
 msgstr "Swaziland"
 
 #. module: base
-#: code:addons/orm.py:4453
+#: code:addons/orm.py:4485
 #, python-format
 msgid "created."
 msgstr ""
@@ -331,30 +305,11 @@ msgid "Max. Size"
 msgstr "Μέγιστο Μέγεθος"
 
 #. module: base
-#: model:ir.module.module,description:base.module_sale_order_dates
-msgid ""
-"\n"
-"Add additional date information to the sales order.\n"
-"===================================================\n"
-"\n"
-"You can add the following additional dates to a sale order:\n"
-"-----------------------------------------------------------\n"
-"    * Requested Date\n"
-"    * Commitment Date\n"
-"    * Effective Date\n"
-msgstr ""
-
-#. module: base
 #: help:ir.actions.act_window,res_id:0
 msgid ""
 "Database ID of record to open in form view, when ``view_mode`` is set to "
 "'form' only"
 msgstr ""
-
-#. module: base
-#: field:res.partner.address,name:0
-msgid "Contact Name"
-msgstr "Όνομα Επαφής"
 
 #. module: base
 #: help:ir.values,key2:0
@@ -414,7 +369,7 @@ msgid ""
 msgstr ""
 
 #. module: base
-#: code:addons/base/ir/ir_filters.py:83
+#: code:addons/base/ir/ir_filters.py:80
 #, python-format
 msgid ""
 "There is already a shared filter set as default for %(model)s, delete or "
@@ -451,6 +406,7 @@ msgstr ""
 
 #. module: base
 #: view:ir.attachment:0
+#: field:ir.attachment,create_uid:0
 msgid "Owner"
 msgstr "Ιδιοκτήτης"
 
@@ -489,7 +445,7 @@ msgid ""
 msgstr ""
 
 #. module: base
-#: code:addons/orm.py:4120
+#: code:addons/orm.py:4152
 #, python-format
 msgid ""
 "One of the records you are trying to modify has already been deleted "
@@ -541,7 +497,7 @@ msgid "Netherlands Antilles"
 msgstr "Netherlands Antilles (Ολλανδικές Αντίλλες)"
 
 #. module: base
-#: code:addons/base/res/res_users.py:311
+#: code:addons/base/res/res_users.py:307
 #, python-format
 msgid ""
 "You can not remove the admin user as it is used internally for resources "
@@ -579,9 +535,9 @@ msgid ""
 msgstr ""
 
 #. module: base
-#: field:ir.ui.view.custom,ref_id:0
-msgid "Original View"
-msgstr "Αρχική Προβολή"
+#: model:ir.module.module,shortdesc:base.module_idea
+msgid "Ideas"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_event
@@ -607,26 +563,6 @@ msgid "Bosnian / bosanski jezik"
 msgstr "Bosnian / bosanski jezik"
 
 #. module: base
-#: model:ir.module.module,description:base.module_base_gengo
-msgid ""
-"\n"
-"Automated Translations through Gengo API\n"
-"----------------------------------------\n"
-"\n"
-"This module will install passive scheduler job for automated translations \n"
-"using the Gengo API. To activate it, you must\n"
-"1) Configure your Gengo authentication parameters under `Settings > "
-"Companies > Gengo Parameters`\n"
-"2) Launch the wizard under `Settings > Application Terms > Gengo: Manual "
-"Request of Translation` and follow the wizard.\n"
-"\n"
-"This wizard will activate the CRON job and the Scheduler and will start the "
-"automatic translation via Gengo Services for all the terms where you "
-"requested it.\n"
-"    "
-msgstr ""
-
-#. module: base
 #: help:ir.actions.report.xml,attachment_use:0
 msgid ""
 "If you check this, then the second time the user prints with same attachment "
@@ -636,9 +572,25 @@ msgstr ""
 "συνημμένου, θα εκτυπωθεί η προηγούμενη αναφορά."
 
 #. module: base
-#: model:res.country,name:base.ao
-msgid "Angola"
-msgstr "Angola"
+#: model:ir.module.module,description:base.module_mrp_byproduct
+msgid ""
+"\n"
+"This module allows you to produce several products from one production "
+"order.\n"
+"============================================================================="
+"\n"
+"\n"
+"You can configure by-products in the bill of material.\n"
+"\n"
+"Without this module:\n"
+"--------------------\n"
+"    A + B + C -> D\n"
+"\n"
+"With this module:\n"
+"-----------------\n"
+"    A + B + C -> D + E\n"
+"    "
+msgstr ""
 
 #. module: base
 #: selection:base.language.install,lang:0
@@ -715,14 +667,12 @@ msgstr ""
 "})"
 
 #. module: base
-#: model:ir.actions.act_window,name:base.ir_action_wizard
-#: view:ir.actions.wizard:0
-#: model:ir.ui.menu,name:base.menu_ir_action_wizard
-msgid "Wizards"
-msgstr "Οδηγοί"
+#: field:res.company,logo_web:0
+msgid "Logo Web"
+msgstr ""
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:337
+#: code:addons/base/ir/ir_model.py:339
 #, python-format
 msgid "Custom fields must have a name that starts with 'x_' !"
 msgstr "Τα ειδικά πεδία πρέπει να έχουν όνομα που ξεκινάει από 'x_' !"
@@ -786,16 +736,14 @@ msgid "Model Description"
 msgstr "Περιγραφή Μοντέλου"
 
 #. module: base
-#: model:ir.actions.act_window,help:base.action_partner_customer_form
+#: model:ir.module.module,description:base.module_marketing
 msgid ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"                Click to add a contact in your address book.\n"
-"              </p><p>\n"
-"                OpenERP helps you easily track all activities related to\n"
-"                a customer: discussions, history of business opportunities,\n"
-"                documents, etc.\n"
-"              </p>\n"
-"            "
+"\n"
+"Menu for Marketing.\n"
+"===================\n"
+"\n"
+"Contains the installer for marketing-related modules.\n"
+"    "
 msgstr ""
 
 #. module: base
@@ -827,9 +775,19 @@ msgid "Jordan"
 msgstr "Jordan (Ιορδανία)"
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_hr
+msgid "Croatia - RRIF 2012 COA"
+msgstr ""
+
+#. module: base
 #: help:ir.cron,nextcall:0
 msgid "Next planned execution date for this job."
 msgstr ""
+
+#. module: base
+#: model:ir.model,name:base.model_ir_ui_view
+msgid "ir.ui.view"
+msgstr "ir.ui.view"
 
 #. module: base
 #: model:res.country,name:base.er
@@ -962,13 +920,9 @@ msgid "base.language.export"
 msgstr "base.language.export"
 
 #. module: base
-#: help:ir.actions.server,write_id:0
-msgid ""
-"Provide the field name that the record id refers to for the write operation. "
-"If it is empty it will refer to the active id of the object."
-msgstr ""
-"Provide the field name that the record id refers to for the write operation. "
-"If it is empty it will refer to the active id of the object."
+#: model:res.country,name:base.pg
+msgid "Papua New Guinea"
+msgstr "Papua New Guinea (Παπούα Νέα Γουινέα)"
 
 #. module: base
 #: help:ir.actions.report.xml,report_type:0
@@ -986,7 +940,7 @@ msgid "Email Preferences"
 msgstr ""
 
 #. module: base
-#: code:addons/base/ir/ir_fields.py:196
+#: code:addons/base/ir/ir_fields.py:195
 #, python-format
 msgid "'%s' does not seem to be a valid date for field '%%(field)s'"
 msgstr ""
@@ -1036,16 +990,9 @@ msgid "Spanish (UY) / Español (UY)"
 msgstr "Ισπανικά (UY) / Español (UY)"
 
 #. module: base
-#: model:ir.module.module,description:base.module_l10n_lu
-msgid ""
-"\n"
-"This is the base module to manage the accounting chart for Luxembourg.\n"
-"======================================================================\n"
-"\n"
-"    * the KLUWER Chart of Accounts\n"
-"    * the Tax Code Chart for Luxembourg\n"
-"    * the main taxes used in Luxembourg"
-msgstr ""
+#: field:res.partner,mobile:0
+msgid "Mobile"
+msgstr "Κινητό"
 
 #. module: base
 #: model:res.country,name:base.om
@@ -1142,8 +1089,37 @@ msgid "Mongolia"
 msgstr "Mongolia"
 
 #. module: base
-#: model:ir.model,name:base.model_ir_config_parameter
-msgid "ir.config_parameter"
+#: model:ir.module.module,description:base.module_crm
+msgid ""
+"\n"
+"The generic OpenERP Customer Relationship Management\n"
+"====================================================\n"
+"\n"
+"This application enables a group of people to intelligently and efficiently "
+"manage leads, opportunities, meetings and phone calls.\n"
+"\n"
+"It manages key tasks such as communication, identification, prioritization, "
+"assignment, resolution and notification.\n"
+"\n"
+"OpenERP ensures that all cases are successfully tracked by users, customers "
+"and suppliers. It can automatically send reminders, escalate the request, "
+"trigger specific methods and many other actions based on your own enterprise "
+"rules.\n"
+"\n"
+"The greatest thing about this system is that users don't need to do anything "
+"special. The CRM module has an email gateway for the synchronization "
+"interface between mails and OpenERP. That way, users can just send emails to "
+"the request tracker.\n"
+"\n"
+"OpenERP will take care of thanking them for their message, automatically "
+"routing it to the appropriate staff and make sure all future correspondence "
+"gets to the right place.\n"
+"\n"
+"\n"
+"Dashboard for CRM will include:\n"
+"-------------------------------\n"
+"* Planned Revenue by Stage and User (graph)\n"
+"* Opportunities by Stage (graph)\n"
 msgstr ""
 
 #. module: base
@@ -1158,10 +1134,15 @@ msgid ""
 msgstr ""
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:724
-#: code:addons/base/ir/ir_model.py:727
+#: code:addons/base/ir/ir_model.py:725
+#: code:addons/base/ir/ir_model.py:728
 #, python-format
 msgid "Document model"
+msgstr ""
+
+#. module: base
+#: view:res.users:0
+msgid "Change the user password."
 msgstr ""
 
 #. module: base
@@ -1190,7 +1171,54 @@ msgid "Username"
 msgstr ""
 
 #. module: base
-#: code:addons/orm.py:407
+#: model:ir.module.module,description:base.module_l10n_br
+msgid ""
+"\n"
+"Base module for the Brazilian localization\n"
+"==========================================\n"
+"\n"
+"This module consists in:\n"
+"\n"
+" - Generic Brazilian chart of accounts\n"
+" - Brazilian taxes such as:\n"
+"\n"
+"        - IPI\n"
+"        - ICMS\n"
+"        - PIS\n"
+"        - COFINS\n"
+"        - ISS\n"
+"        - IR\n"
+"        - IRPJ\n"
+"        - CSLL\n"
+"\n"
+"The field tax_discount has also been added in the account.tax.template and \n"
+"account.tax objects to allow the proper computation of some Brazilian VATs \n"
+"such as ICMS. The chart of account creation wizard has been extended to \n"
+"propagate those new data properly.\n"
+"\n"
+"It's important to note however that this module lack many implementations to "
+"\n"
+"use OpenERP properly in Brazil. Those implementations (such as the "
+"electronic \n"
+"fiscal Invoicing which is already operational) are brought by more than 15 \n"
+"additional modules of the Brazilian Launchpad localization project \n"
+"https://launchpad.net/openerp.pt-br-localiz and their dependencies in the \n"
+"extra addons branch. Those modules aim at not breaking with the remarkable \n"
+"OpenERP modularity, this is why they are numerous but small. One of the \n"
+"reasons for maintaining those modules apart is that Brazilian Localization \n"
+"leaders need commit rights agility to complete the localization as companies "
+"\n"
+"fund the remaining legal requirements (such as soon fiscal ledgers, \n"
+"accounting SPED, fiscal SPED and PAF ECF that are still missing as September "
+"\n"
+"2011). Those modules are also strictly licensed under AGPL V3 and today "
+"don't \n"
+"come with any additional paid permission for online use of 'private "
+"modules'.\n"
+msgstr ""
+
+#. module: base
+#: code:addons/orm.py:406
 #, python-format
 msgid ""
 "Language with code \"%s\" is not defined in your system !\n"
@@ -1218,7 +1246,7 @@ msgid "Delete Access Right"
 msgstr ""
 
 #. module: base
-#: code:addons/base/ir/ir_mail_server.py:213
+#: code:addons/base/ir/ir_mail_server.py:212
 #, python-format
 msgid "Connection test failed!"
 msgstr ""
@@ -1250,14 +1278,12 @@ msgid "South Korea"
 msgstr "Νότια Κορέα"
 
 #. module: base
-#: model:ir.actions.act_window,name:base.action_workflow_transition_form
-#: model:ir.ui.menu,name:base.menu_workflow_transition
-#: view:workflow.activity:0
-msgid "Transitions"
-msgstr "Ροές"
+#: model:ir.module.module,description:base.module_l10n_si
+msgid "Kontni načrt za gospodarske družbe"
+msgstr ""
 
 #. module: base
-#: code:addons/orm.py:4859
+#: code:addons/orm.py:4917
 #, python-format
 msgid "Record #%d of %s not found, cannot copy!"
 msgstr ""
@@ -1395,7 +1421,7 @@ msgid "Marshall Islands"
 msgstr "Marshall Islands"
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:421
+#: code:addons/base/ir/ir_model.py:423
 #, python-format
 msgid "Changing the model of a field is forbidden!"
 msgstr ""
@@ -1417,7 +1443,7 @@ msgid "Search"
 msgstr "Αναζήτηση"
 
 #. module: base
-#: code:addons/osv.py:133
+#: code:addons/osv.py:135
 #, python-format
 msgid ""
 "The operation cannot be completed, probably due to the following:\n"
@@ -1432,7 +1458,14 @@ msgid "Parent Application"
 msgstr ""
 
 #. module: base
-#: code:addons/base/res/res_users.py:135
+#: model:ir.actions.act_window,name:base.ir_action_wizard
+#: view:ir.actions.wizard:0
+#: model:ir.ui.menu,name:base.menu_ir_action_wizard
+msgid "Wizards"
+msgstr "Οδηγοί"
+
+#. module: base
+#: code:addons/base/res/res_users.py:131
 #, python-format
 msgid "Operation Canceled"
 msgstr ""
@@ -1558,7 +1591,21 @@ msgid "ir.exports"
 msgstr "ir.exports"
 
 #. module: base
-#: code:addons/base/module/wizard/base_update_translations.py:38
+#: model:ir.module.module,description:base.module_l10n_lu
+msgid ""
+"\n"
+"This is the base module to manage the accounting chart for Luxembourg.\n"
+"======================================================================\n"
+"\n"
+"    * the Luxembourg Official Chart of Accounts (law of June 2009 + 2011 "
+"chart and Taxes),\n"
+"    * the Tax Code Chart for Luxembourg\n"
+"    * the main taxes used in Luxembourg\n"
+"    * default fiscal position for local, intracom, extracom "
+msgstr ""
+
+#. module: base
+#: code:addons/base/module/wizard/base_update_translations.py:39
 #, python-format
 msgid "No language with code \"%s\" exists"
 msgstr "Δεν υπάρχει γλώσσα με κωδικό \"%s\""
@@ -1677,7 +1724,7 @@ msgid "On Create"
 msgstr "Κατά τη Δημιουργία"
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:905
+#: code:addons/base/ir/ir_model.py:906
 #, python-format
 msgid ""
 "'%s' contains too many dots. XML ids should not contain dots ! These are "
@@ -1686,11 +1733,6 @@ msgstr ""
 "'%s' περιέχει πολλές τελείες. Οι XML ταυτότητες (ids) δεν πρέπει να "
 "περιέχουν τελείες! Οι τελείες χρησιμοποιούνται σε αναφορές σε άλλες ενότητες "
 "όπως στο module.reference_id"
-
-#. module: base
-#: model:ir.module.module,summary:base.module_sale
-msgid "Quotations, Sale Orders, Invoicing"
-msgstr ""
 
 #. module: base
 #: field:res.users,login:0
@@ -1774,7 +1816,7 @@ msgid "East Timor"
 msgstr "East Timor"
 
 #. module: base
-#: code:addons/base/module/module.py:388
+#: code:addons/base/module/module.py:415
 #: view:ir.module.module:0
 #, python-format
 msgid "Install"
@@ -1816,11 +1858,6 @@ msgid ""
 msgstr ""
 
 #. module: base
-#: field:ir.attachment,res_id:0
-msgid "Attached ID"
-msgstr "Συνημμένη ID"
-
-#. module: base
 #: view:ir.sequence:0
 msgid "Day: %(day)s"
 msgstr "Ημέρα: %(day)s"
@@ -1834,7 +1871,7 @@ msgid ""
 msgstr ""
 
 #. module: base
-#: code:addons/base/ir/ir_fields.py:165
+#: code:addons/base/ir/ir_fields.py:164
 #, python-format
 msgid "Unknown value '%s' for boolean field '%%(field)s', assuming '%s'"
 msgstr ""
@@ -1874,6 +1911,11 @@ msgstr ""
 #: field:ir.model.access,perm_read:0
 msgid "Read Access"
 msgstr "Πρόσβαση Ανάγνωσης"
+
+#. module: base
+#: help:ir.attachment,res_id:0
+msgid "The record id this is attached to"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_share
@@ -1951,15 +1993,10 @@ msgid "Create Tasks on SO"
 msgstr ""
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:316
+#: code:addons/base/ir/ir_model.py:318
 #, python-format
 msgid "This column contains module data and cannot be removed!"
 msgstr ""
-
-#. module: base
-#: field:ir.attachment,res_model:0
-msgid "Attached Model"
-msgstr "Συνδεδεμένο Μοντέλο"
 
 #. module: base
 #: field:res.partner.bank,footer:0
@@ -2015,7 +2052,7 @@ msgid "Formula"
 msgstr "Τύπος"
 
 #. module: base
-#: code:addons/base/res/res_users.py:311
+#: code:addons/base/res/res_users.py:307
 #, python-format
 msgid "Can not remove root user!"
 msgstr "Can not remove root user!"
@@ -2039,11 +2076,11 @@ msgid ""
 msgstr ""
 
 #. module: base
-#: code:addons/base/ir/ir_filters.py:39
-#: code:addons/base/res/res_partner.py:312
-#: code:addons/base/res/res_users.py:96
-#: code:addons/base/res/res_users.py:335
-#: code:addons/base/res/res_users.py:337
+#: code:addons/base/ir/ir_filters.py:36
+#: code:addons/base/res/res_partner.py:314
+#: code:addons/base/res/res_users.py:92
+#: code:addons/base/res/res_users.py:331
+#: code:addons/base/res/res_users.py:333
 #, python-format
 msgid "%s (copy)"
 msgstr "%s (αντίγραφο)"
@@ -2055,7 +2092,6 @@ msgstr ""
 
 #. module: base
 #: field:res.partner,type:0
-#: field:res.partner.address,type:0
 msgid "Address Type"
 msgstr "Τύπος Διεύθυνσης"
 
@@ -2091,11 +2127,6 @@ msgstr "Πλήρης Διαδρομή"
 #. module: base
 #: view:base.language.export:0
 msgid "The next step depends on the file format:"
-msgstr ""
-
-#. module: base
-#: model:ir.module.module,shortdesc:base.module_idea
-msgid "Ideas"
 msgstr ""
 
 #. module: base
@@ -2234,6 +2265,11 @@ msgid "Method"
 msgstr ""
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_auth_crypt
+msgid "Password Encryption"
+msgstr ""
+
+#. module: base
 #: view:workflow.activity:0
 msgid "Workflow Activity"
 msgstr "Δραστηριότητα Ροής"
@@ -2266,10 +2302,15 @@ msgid ""
 msgstr ""
 
 #. module: base
-#: code:addons/base/ir/ir_fields.py:342
+#: code:addons/base/ir/ir_fields.py:341
 #, python-format
 msgid ""
 "No matching record found for %(field_type)s '%(value)s' in field '%%(field)s'"
+msgstr ""
+
+#. module: base
+#: field:change.password.user,new_passwd:0
+msgid "New Password"
 msgstr ""
 
 #. module: base
@@ -2321,6 +2362,15 @@ msgstr "Belize"
 #: help:ir.actions.report.xml,header:0
 msgid "Add or not the corporate RML header"
 msgstr "Add or not the corporate RML header"
+
+#. module: base
+#: model:ir.module.module,description:base.module_portal_anonymous
+msgid ""
+"\n"
+"Allow anonymous to Access Portal.\n"
+"=================================\n"
+" "
+msgstr ""
 
 #. module: base
 #: model:res.country,name:base.ge
@@ -2375,7 +2425,7 @@ msgstr ""
 "'φόρμα','δέντρο','ημερολόγιο', κ.λπ. (Προεπιλογή: δέντρο, φόρμα)"
 
 #. module: base
-#: code:addons/orm.py:3811
+#: code:addons/orm.py:3842
 #, python-format
 msgid "A document was modified since you last viewed it (%s:%d)"
 msgstr ""
@@ -2456,7 +2506,6 @@ msgstr "Saint Tome (Sao Tome) and Principe"
 
 #. module: base
 #: selection:res.partner,type:0
-#: selection:res.partner.address,type:0
 msgid "Invoice"
 msgstr "Τιμολόγιο"
 
@@ -2501,11 +2550,6 @@ msgid ""
 "    * Company\n"
 "    * Date\n"
 "    "
-msgstr ""
-
-#. module: base
-#: field:res.company,rml_header1:0
-msgid "Company Slogan"
 msgstr ""
 
 #. module: base
@@ -2625,9 +2669,20 @@ msgid "Default limit for the list view"
 msgstr "Προεπιλεγμένο όριο για την προβολή λίστας"
 
 #. module: base
-#: model:res.country,name:base.pg
-msgid "Papua New Guinea"
-msgstr "Papua New Guinea (Παπούα Νέα Γουινέα)"
+#: model:ir.module.module,description:base.module_document
+msgid ""
+"\n"
+"This is a complete document management system.\n"
+"==============================================\n"
+"    * User Authentication\n"
+"    * Document Indexation:- .pptx and .docx files are not supported in "
+"Windows platform.\n"
+"    * Dashboard for Document that includes:\n"
+"        * New Files (list)\n"
+"        * Files by Resource Type (graph)\n"
+"        * Files by Partner (graph)\n"
+"        * Files Size by Month (graph)\n"
+msgstr ""
 
 #. module: base
 #: view:ir.actions.report.xml:0
@@ -2705,7 +2760,7 @@ msgid ""
 msgstr ""
 
 #. module: base
-#: code:addons/base/ir/ir_fields.py:334
+#: code:addons/base/ir/ir_fields.py:333
 #, python-format
 msgid "Found multiple matches for field '%%(field)s' (%d matches)"
 msgstr ""
@@ -2765,6 +2820,19 @@ msgid "Export Translations"
 msgstr "Εξαγωγή Μεταφράσεων"
 
 #. module: base
+#: model:ir.module.module,description:base.module_auth_crypt
+msgid ""
+"\n"
+"Ecrypted passwords\n"
+"==================\n"
+"\n"
+"Interaction with LDAP authentication:\n"
+"-------------------------------------\n"
+"This module is currently not compatible with the ``user_ldap`` module and\n"
+"will disable LDAP authentication completely if installed at the same time.\n"
+msgstr ""
+
+#. module: base
 #: model:res.groups,name:base.group_hr_manager
 #: model:res.groups,name:base.group_sale_manager
 #: model:res.groups,name:base.group_tool_manager
@@ -2772,7 +2840,7 @@ msgid "Manager"
 msgstr ""
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:718
+#: code:addons/base/ir/ir_model.py:719
 #, python-format
 msgid "Sorry, you are not allowed to access this document."
 msgstr ""
@@ -2858,7 +2926,7 @@ msgid "Inherited"
 msgstr ""
 
 #. module: base
-#: code:addons/base/ir/ir_fields.py:147
+#: code:addons/base/ir/ir_fields.py:146
 #, python-format
 msgid "yes"
 msgstr ""
@@ -2888,7 +2956,7 @@ msgid ""
 msgstr ""
 
 #. module: base
-#: code:addons/base/ir/ir_fields.py:175
+#: code:addons/base/ir/ir_fields.py:174
 #, python-format
 msgid "'%s' does not seem to be an integer for field '%%(field)s'"
 msgstr ""
@@ -2953,22 +3021,22 @@ msgid "LinkedIn Integration"
 msgstr ""
 
 #. module: base
-#: code:addons/orm.py:2021
-#: code:addons/orm.py:2032
+#: code:addons/orm.py:2020
+#: code:addons/orm.py:2031
 #, python-format
 msgid "Invalid Object Architecture!"
 msgstr ""
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:364
 #: code:addons/base/ir/ir_model.py:366
-#: code:addons/base/ir/ir_model.py:396
-#: code:addons/base/ir/ir_model.py:410
+#: code:addons/base/ir/ir_model.py:368
+#: code:addons/base/ir/ir_model.py:398
 #: code:addons/base/ir/ir_model.py:412
 #: code:addons/base/ir/ir_model.py:414
-#: code:addons/base/ir/ir_model.py:421
-#: code:addons/base/ir/ir_model.py:424
-#: code:addons/base/module/wizard/base_update_translations.py:38
+#: code:addons/base/ir/ir_model.py:416
+#: code:addons/base/ir/ir_model.py:423
+#: code:addons/base/ir/ir_model.py:426
+#: code:addons/base/module/wizard/base_update_translations.py:39
 #, python-format
 msgid "Error!"
 msgstr "Σφάλμα!"
@@ -3066,12 +3134,12 @@ msgid ""
 msgstr ""
 
 #. module: base
-#: constraint:res.company:0
-msgid "Error! You can not create recursive companies."
-msgstr "Σφάλμα! Υπάρχει εταιρεία με την ίδια περιγραφή"
+#: field:res.company,rml_header1:0
+msgid "Company Tagline"
+msgstr ""
 
 #. module: base
-#: code:addons/base/res/res_users.py:671
+#: code:addons/base/res/res_users.py:668
 #: model:ir.model,name:base.model_ir_module_category
 #: field:ir.module.module,application:0
 #: field:res.groups,category_id:0
@@ -3088,17 +3156,19 @@ msgid ""
 msgstr ""
 
 #. module: base
-#: model:ir.module.module,description:base.module_web_shortcuts
+#: model:ir.module.module,description:base.module_l10n_pl
 msgid ""
 "\n"
-"Enable shortcuts feature in the web client.\n"
-"===========================================\n"
+"This is the module to manage the accounting chart and taxes for Poland in "
+"OpenERP.\n"
+"============================================================================="
+"=====\n"
 "\n"
-"Add a Shortcut icon in the systray in order to access the user's shortcuts "
-"(if any).\n"
-"\n"
-"Add a Shortcut icon besides the views title in order to add/remove a "
-"shortcut.\n"
+"To jest moduł do tworzenia wzorcowego planu kont i podstawowych ustawień do "
+"podatków\n"
+"VAT 0%, 7% i 22%. Moduł ustawia też konta do kupna i sprzedaży towarów "
+"zakładając,\n"
+"że wszystkie towary są w obrocie hurtowym.\n"
 "    "
 msgstr ""
 
@@ -3108,7 +3178,7 @@ msgid "Params storage"
 msgstr ""
 
 #. module: base
-#: code:addons/base/module/module.py:499
+#: code:addons/base/module/module.py:526
 #, python-format
 msgid "Can not upgrade module '%s'. It is not installed."
 msgstr ""
@@ -3162,34 +3232,6 @@ msgid "Invalid arguments"
 msgstr "Μη έγκυρες παράμετροι"
 
 #. module: base
-#: model:ir.module.module,description:base.module_l10n_fr_hr_payroll
-msgid ""
-"\n"
-"French Payroll Rules.\n"
-"=====================\n"
-"\n"
-"    - Configuration of hr_payroll for French localization\n"
-"    - All main contributions rules for French payslip, for 'cadre' and 'non-"
-"cadre'\n"
-"    - New payslip report\n"
-"\n"
-"TODO :\n"
-"------\n"
-"    - Integration with holidays module for deduction and allowance\n"
-"    - Integration with hr_payroll_account for the automatic "
-"account_move_line\n"
-"      creation from the payslip\n"
-"    - Continue to integrate the contribution. Only the main contribution "
-"are\n"
-"      currently implemented\n"
-"    - Remake the report under webkit\n"
-"    - The payslip.line with appears_in_payslip = False should appears in "
-"the\n"
-"      payslip interface, but not in the payslip report\n"
-"    "
-msgstr ""
-
-#. module: base
 #: model:res.country,name:base.se
 msgid "Sweden"
 msgstr "Sweden"
@@ -3227,7 +3269,7 @@ msgid ""
 msgstr ""
 
 #. module: base
-#: code:addons/orm.py:3839
+#: code:addons/orm.py:3870
 #, python-format
 msgid "Missing document(s)"
 msgstr ""
@@ -3238,6 +3280,34 @@ msgstr ""
 #: view:res.partner.bank.type:0
 msgid "Bank Account Type"
 msgstr "Τύπος Τραπεζικού Λογαριασμού"
+
+#. module: base
+#: model:ir.module.module,description:base.module_hr_expense
+msgid ""
+"\n"
+"Manage expenses by Employees\n"
+"============================\n"
+"\n"
+"This application allows you to manage your employees' daily expenses. It "
+"gives you access to your employees’ fee notes and give you the right to "
+"complete and validate or refuse the notes. After validation it creates an "
+"invoice for the employee.\n"
+"Employee can encode their own expenses and the validation flow puts it "
+"automatically in the accounting after validation by managers.\n"
+"\n"
+"\n"
+"The whole flow is implemented as:\n"
+"---------------------------------\n"
+"* Draft expense\n"
+"* Confirmation of the sheet by the employee\n"
+"* Validation by his manager\n"
+"* Validation by the accountant and receipt creation\n"
+"\n"
+"This module also uses analytic accounting and is compatible with the invoice "
+"on timesheet module so that you are able to automatically re-invoice your "
+"customers' expenses if your work by project.\n"
+"    "
+msgstr ""
 
 #. module: base
 #: view:base.language.export:0
@@ -3275,7 +3345,7 @@ msgid "Signal (subflow.*)"
 msgstr "Σινιάλο (υπο-ροή.*)"
 
 #. module: base
-#: code:addons/orm.py:4652
+#: code:addons/orm.py:4684
 #, python-format
 msgid ""
 "Invalid \"order\" specified. A valid \"order\" specification is a comma-"
@@ -3312,7 +3382,7 @@ msgid "Access Controls"
 msgstr "Ρυθμίσεις Πρόσβασης"
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:273
+#: code:addons/base/ir/ir_model.py:275
 #, python-format
 msgid ""
 "The Selection Options expression is not a valid Pythonic expression.Please "
@@ -3341,32 +3411,6 @@ msgid "Web Icon File (hover)"
 msgstr ""
 
 #. module: base
-#: model:ir.module.module,description:base.module_document
-msgid ""
-"\n"
-"This is a complete document management system.\n"
-"==============================================\n"
-"\n"
-"    * User Authentication\n"
-"    * Document Indexation:- .pptx and .docx files are not supported in "
-"Windows platform.\n"
-"    * Dashboard for Document that includes:\n"
-"        * New Files (list)\n"
-"        * Files by Resource Type (graph)\n"
-"        * Files by Partner (graph)\n"
-"        * Files Size by Month (graph)\n"
-"\n"
-"ATTENTION:\n"
-"----------\n"
-"    - When you install this module in a running company that have already "
-"PDF \n"
-"      files stored into the database, you will lose them all.\n"
-"    - After installing this module PDF's are no longer stored into the "
-"database,\n"
-"      but in the servers rootpad like /server/bin/filestore.\n"
-msgstr ""
-
-#. module: base
 #: help:res.currency,name:0
 msgid "Currency Code (ISO 4217)"
 msgstr ""
@@ -3386,8 +3430,12 @@ msgstr ""
 "'object'."
 
 #. module: base
+#: constraint:res.company:0
+msgid "Error! You can not create recursive companies."
+msgstr "Σφάλμα! Υπάρχει εταιρεία με την ίδια περιγραφή"
+
+#. module: base
 #: field:res.partner,birthdate:0
-#: field:res.partner.address,birthdate:0
 msgid "Birthdate"
 msgstr "Ημερ/νία γέννησης"
 
@@ -3403,7 +3451,7 @@ msgid "Products Manufacturers"
 msgstr ""
 
 #. module: base
-#: code:addons/base/ir/ir_mail_server.py:238
+#: code:addons/base/ir/ir_mail_server.py:237
 #, python-format
 msgid "SMTP-over-SSL mode unavailable"
 msgstr ""
@@ -3511,7 +3559,7 @@ msgid "Malta"
 msgstr "Malta"
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:724
+#: code:addons/base/ir/ir_model.py:725
 #, python-format
 msgid ""
 "Only users with the following access level are currently allowed to do that"
@@ -3700,7 +3748,6 @@ msgstr ""
 
 #. module: base
 #: field:res.partner,title:0
-#: field:res.partner.address,title:0
 #: field:res.partner.title,name:0
 msgid "Title"
 msgstr "Τίτλος"
@@ -3711,13 +3758,18 @@ msgid "If not set, acts as a default value for new resources"
 msgstr "Αν δεν έχει ορισθεί, δρα ως η προεπιλεγμένη τιμή για νέους πόρους."
 
 #. module: base
-#: code:addons/orm.py:4213
+#: code:addons/orm.py:4245
 #, python-format
 msgid "Recursivity Detected."
 msgstr ""
 
 #. module: base
-#: code:addons/base/module/module.py:345
+#: model:ir.module.module,shortdesc:base.module_l10n_et
+msgid "Ethiopia - Accounting"
+msgstr ""
+
+#. module: base
+#: code:addons/base/module/module.py:366
 #, python-format
 msgid "Recursion error in modules dependencies !"
 msgstr "Σφάλμα στις εξαρτήσεις Αρθρωμάτων!"
@@ -3777,9 +3829,10 @@ msgid "Urdu / اردو"
 msgstr "Urdu / اردو"
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:731
-#: code:addons/orm.py:3828
-#: code:addons/orm.py:3870
+#: code:addons/base/ir/ir_model.py:732
+#: code:addons/orm.py:3566
+#: code:addons/orm.py:3859
+#: code:addons/orm.py:3901
 #, python-format
 msgid "Access Denied"
 msgstr ""
@@ -3790,7 +3843,7 @@ msgid "Company Name"
 msgstr "Όνομα Εταιρείας"
 
 #. module: base
-#: code:addons/orm.py:2811
+#: code:addons/orm.py:2807
 #, python-format
 msgid ""
 "Invalid value for reference field \"%s.%s\" (last part must be a non-zero "
@@ -3809,14 +3862,37 @@ msgid "RML  (deprecated - use Report)"
 msgstr "RML  (παρωχημένο - χρησιμοποιήστε Αναφορά)"
 
 #. module: base
-#: sql_constraint:ir.translation:0
-msgid "Language code of translation item must be among known languages"
+#: model:ir.module.module,description:base.module_l10n_fr_hr_payroll
+msgid ""
+"\n"
+"French Payroll Rules.\n"
+"=====================\n"
+"\n"
+"    - Configuration of hr_payroll for French localization\n"
+"    - All main contributions rules for French payslip, for 'cadre' and 'non-"
+"cadre'\n"
+"    - New payslip report\n"
+"\n"
+"TODO:\n"
+"-----\n"
+"    - Integration with holidays module for deduction and allowance\n"
+"    - Integration with hr_payroll_account for the automatic "
+"account_move_line\n"
+"      creation from the payslip\n"
+"    - Continue to integrate the contribution. Only the main contribution "
+"are\n"
+"      currently implemented\n"
+"    - Remake the report under webkit\n"
+"    - The payslip.line with appears_in_payslip = False should appears in "
+"the\n"
+"      payslip interface, but not in the payslip report\n"
+"    "
 msgstr ""
 
 #. module: base
-#: view:ir.rule:0
-msgid "Record rules"
-msgstr "Καταχώρηση κανόνων"
+#: model:res.country,name:base.pm
+msgid "Saint Pierre and Miquelon"
+msgstr "Saint Pierre and Miquelon"
 
 #. module: base
 #: view:ir.actions.todo:0
@@ -3845,13 +3921,9 @@ msgid "Jersey"
 msgstr ""
 
 #. module: base
-#: model:ir.module.module,description:base.module_auth_anonymous
-msgid ""
-"\n"
-"Allow anonymous access to OpenERP.\n"
-"==================================\n"
-" "
-msgstr ""
+#: model:ir.model,name:base.model_ir_translation
+msgid "ir.translation"
+msgstr "ir.translation"
 
 #. module: base
 #: view:res.lang:0
@@ -3899,19 +3971,7 @@ msgid "Paper Format"
 msgstr ""
 
 #. module: base
-#: model:ir.module.module,description:base.module_note_pad
-msgid ""
-"\n"
-"This module update memos inside OpenERP for using an external pad\n"
-"===================================================================\n"
-"\n"
-"Use for update your text memo in real time with the following user that you "
-"invite.\n"
-"\n"
-msgstr ""
-
-#. module: base
-#: code:addons/base/module/module.py:609
+#: code:addons/base/module/module.py:645
 #, python-format
 msgid ""
 "Can not create the module file:\n"
@@ -3931,7 +3991,7 @@ msgid "Nauru"
 msgstr "Nauru"
 
 #. module: base
-#: code:addons/base/res/res_company.py:152
+#: code:addons/base/res/res_company.py:166
 #, python-format
 msgid "Reg"
 msgstr ""
@@ -3976,7 +4036,7 @@ msgid "Email Gateway"
 msgstr ""
 
 #. module: base
-#: code:addons/base/ir/ir_mail_server.py:466
+#: code:addons/base/ir/ir_mail_server.py:465
 #, python-format
 msgid ""
 "Mail delivery failed via SMTP server '%s'.\n"
@@ -3995,9 +4055,43 @@ msgid "Technical Data"
 msgstr "Τεχνικά Δεδομένα"
 
 #. module: base
-#: model:ir.model,name:base.model_ir_ui_view
-msgid "ir.ui.view"
-msgstr "ir.ui.view"
+#: model:ir.module.module,description:base.module_l10n_co
+msgid ""
+"\n"
+"Chart of account for Colombia\n"
+"=============================\n"
+"\n"
+"Source of this chart of account is here_.\n"
+"\n"
+"All the documentation available in this website is embeded in this module, "
+"to\n"
+"be sure when you open OpenERP it has all necesary information to manage \n"
+"accounting en Colombia.\n"
+"\n"
+"The law that enable this chart of account as valid for this country is \n"
+"available in this other link_.\n"
+"\n"
+"This module has the intention to put available out of the box the chart of \n"
+"account for Colombia in Openerp.\n"
+"\n"
+"We recommend install the module account_anglo_sxon to be able to have the "
+"cost\n"
+"accounting correctly setted in out invoices.\n"
+"\n"
+"After installing this module, the Configuration wizard for accounting is "
+"launched.\n"
+"    * We have the account templates which can be helpful to generate Charts "
+"of Accounts.\n"
+"    * On that particular wizard, you will be asked to pass the name of the "
+"company,\n"
+"      the chart template to follow, the no. of digits to generate, the code "
+"for your\n"
+"      account and bank account, currency to create journals.\n"
+"\n"
+".. _here: http://puc.com.co/\n"
+".. _link: http://puc.com.co/normatividad/\n"
+"    "
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_bank_statement_extensions
@@ -4054,12 +4148,17 @@ msgid "Ltd"
 msgstr "ΕΠΕ"
 
 #. module: base
+#: model:ir.actions.server,name:base.action_run_ir_action_todo
+msgid "Run Remaining Action Todo"
+msgstr ""
+
+#. module: base
 #: field:res.partner,ean13:0
 msgid "EAN13"
 msgstr "EAN13"
 
 #. module: base
-#: code:addons/orm.py:2247
+#: code:addons/orm.py:2246
 #, python-format
 msgid "Invalid Architecture!"
 msgstr ""
@@ -4075,8 +4174,8 @@ msgid "Share any Document"
 msgstr ""
 
 #. module: base
-#: model:ir.module.module,summary:base.module_crm
-msgid "Leads, Opportunities, Phone Calls"
+#: field:workflow.transition,group_id:0
+msgid "Group Required"
 msgstr ""
 
 #. module: base
@@ -4135,33 +4234,10 @@ msgid "Languages"
 msgstr "Γλώσσες"
 
 #. module: base
-#: model:ir.module.module,description:base.module_point_of_sale
-msgid ""
-"\n"
-"Quick and Easy sale process\n"
-"============================\n"
-"\n"
-"This module allows you to manage your shop sales very easily with a fully "
-"web based touchscreen interface.\n"
-"It is compatible with all PC tablets and the iPad, offering multiple payment "
-"methods. \n"
-"\n"
-"Product selection can be done in several ways: \n"
-"\n"
-"* Using a barcode reader\n"
-"* Browsing through categories of products or via a text search.\n"
-"\n"
-"Main Features\n"
-"-------------\n"
-"* Fast encoding of the sale\n"
-"* Choose one payment method (the quick way) or split the payment between "
-"several payment methods\n"
-"* Computation of the amount of money to return\n"
-"* Create and confirm the picking list automatically\n"
-"* Allows the user to create an invoice automatically\n"
-"* Refund previous sales\n"
-"    "
-msgstr ""
+#: selection:workflow.activity,join_mode:0
+#: selection:workflow.activity,split_mode:0
+msgid "Xor"
+msgstr "Xor"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_localization_account_charts
@@ -4239,7 +4315,6 @@ msgstr "Constraint"
 #. module: base
 #: selection:ir.values,key:0
 #: selection:res.partner,type:0
-#: selection:res.partner.address,type:0
 msgid "Default"
 msgstr "Προεπιλογή"
 
@@ -4312,6 +4387,11 @@ msgid ""
 msgstr ""
 
 #. module: base
+#: model:ir.module.module,summary:base.module_sale
+msgid "Quotations, Sales Orders, Invoicing"
+msgstr ""
+
+#. module: base
 #: field:res.partner,parent_id:0
 msgid "Related Company"
 msgstr ""
@@ -4374,9 +4454,16 @@ msgid "Default value or action reference"
 msgstr ""
 
 #. module: base
-#: model:res.country,name:base.sr
-msgid "Suriname"
-msgstr "Suriname"
+#: model:ir.module.module,description:base.module_note_pad
+msgid ""
+"\n"
+"This module update memos inside OpenERP for using an external pad\n"
+"=================================================================\n"
+"\n"
+"Use for update your text memo in real time with the following user that you "
+"invite.\n"
+"\n"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_sequence
@@ -4457,6 +4544,22 @@ msgid "Installed Version"
 msgstr ""
 
 #. module: base
+#: model:ir.module.module,description:base.module_account_test
+msgid ""
+"\n"
+"Asserts on accounting.\n"
+"======================\n"
+"With this module you can manually check consistencies and inconsistencies of "
+"accounting module from menu Reporting/Accounting/Accounting Tests.\n"
+"\n"
+"You can write a query in order to create Consistency Test and you will get "
+"the result of the test \n"
+"in PDF format which can be accessed by Menu Reporting -> Accounting Tests, "
+"then select the test \n"
+"and print the report from Print button in header area.\n"
+msgstr ""
+
+#. module: base
 #: field:ir.module.module,license:0
 msgid "License"
 msgstr "Άδεια Χρήσης"
@@ -4477,6 +4580,43 @@ msgid ""
 "If you have groups, the visibility of this menu will be based on these "
 "groups. If this field is empty, OpenERP will compute visibility based on the "
 "related object's read access."
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,description:base.module_event_sale
+msgid ""
+"\n"
+"Creating registration with sale orders.\n"
+"=======================================\n"
+"\n"
+"This module allows you to automate and connect your registration creation "
+"with\n"
+"your main sale flow and therefore, to enable the invoicing feature of "
+"registrations.\n"
+"\n"
+"It defines a new kind of service products that offers you the possibility "
+"to\n"
+"choose an event category associated with it. When you encode a sale order "
+"for\n"
+"that product, you will be able to choose an existing event of that category "
+"and\n"
+"when you confirm your sale order it will automatically create a registration "
+"for\n"
+"this event.\n"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,description:base.module_sale_order_dates
+msgid ""
+"\n"
+"Add additional date information to the sales order.\n"
+"===================================================\n"
+"\n"
+"You can add the following additional dates to a sales order:\n"
+"------------------------------------------------------------\n"
+"    * Requested Date\n"
+"    * Commitment Date\n"
+"    * Effective Date\n"
 msgstr ""
 
 #. module: base
@@ -4507,6 +4647,12 @@ msgstr ""
 #: view:ir.ui.view:0
 msgid "View"
 msgstr "Προβολή"
+
+#. module: base
+#: code:addons/base/ir/ir_fields.py:146
+#, python-format
+msgid "no"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_crm_partner_assign
@@ -4586,12 +4732,6 @@ msgid ""
 msgstr ""
 
 #. module: base
-#: model:ir.model,name:base.model_ir_actions_report_xml
-#: selection:ir.ui.menu,action:0
-msgid "ir.actions.report.xml"
-msgstr "ir.actions.report.xml"
-
-#. module: base
 #: model:res.country,name:base.ps
 msgid "Palestinian Territory, Occupied"
 msgstr ""
@@ -4605,7 +4745,6 @@ msgstr ""
 #: field:res.bank,zip:0
 #: field:res.company,zip:0
 #: field:res.partner,zip:0
-#: field:res.partner.address,zip:0
 #: field:res.partner.bank,zip:0
 msgid "Zip"
 msgstr "ΤΚ"
@@ -4617,12 +4756,17 @@ msgid "Author"
 msgstr "Δημιουργός"
 
 #. module: base
+#: view:ir.actions.todo:0
+msgid "Set as Todo"
+msgstr ""
+
+#. module: base
 #: view:res.lang:0
 msgid "%c - Appropriate date and time representation."
 msgstr "%c - Ορθή εμφάνιση ημερ/νίας και ώρας"
 
 #. module: base
-#: code:addons/base/res/res_config.py:388
+#: code:addons/base/res/res_config.py:387
 #, python-format
 msgid ""
 "Your database is now fully configured.\n"
@@ -4668,6 +4812,8 @@ msgstr "Κατεύθυνση"
 #: field:ir.module.module,views_by_module:0
 #: model:ir.ui.menu,name:base.menu_action_ui_view
 #: view:ir.ui.view:0
+#: view:res.groups:0
+#: field:res.groups,view_access:0
 msgid "Views"
 msgstr "Προβολές"
 
@@ -4683,7 +4829,7 @@ msgid "SMTP Server"
 msgstr ""
 
 #. module: base
-#: code:addons/base/module/module.py:299
+#: code:addons/base/module/module.py:320
 #, python-format
 msgid "You try to remove a module that is installed or will be installed"
 msgstr ""
@@ -4778,7 +4924,12 @@ msgid "Google Docs integration"
 msgstr ""
 
 #. module: base
-#: code:addons/base/ir/ir_fields.py:328
+#: help:ir.attachment,res_model:0
+msgid "The database object this attachment will be attached to"
+msgstr ""
+
+#. module: base
+#: code:addons/base/ir/ir_fields.py:327
 #, python-format
 msgid "name"
 msgstr ""
@@ -4866,7 +5017,7 @@ msgid "System Configuration Done"
 msgstr "Διαμόρφωση συστήματος ολοκληρώθηκε"
 
 #. module: base
-#: code:addons/orm.py:1540
+#: code:addons/orm.py:1539
 #, python-format
 msgid "Error occurred while validating the field(s) %s: %s"
 msgstr "Σφάλμα κατά την επικύρωση των πεδίων %s: %s"
@@ -4982,6 +5133,11 @@ msgid "Full Access"
 msgstr "Πλήρης πρόσβαση"
 
 #. module: base
+#: model:ir.module.module,description:base.module_l10n_pt
+msgid "Plano de contas SNC para Portugal"
+msgstr ""
+
+#. module: base
 #: view:ir.actions.act_window:0
 #: view:ir.actions.report.xml:0
 #: model:ir.ui.menu,name:base.menu_security
@@ -4994,7 +5150,7 @@ msgid "Portuguese / Português"
 msgstr ""
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:364
+#: code:addons/base/ir/ir_model.py:366
 #, python-format
 msgid "Changing the storing system for field \"%s\" is not allowed."
 msgstr ""
@@ -5005,7 +5161,7 @@ msgid "Only if this bank account belong to your company"
 msgstr ""
 
 #. module: base
-#: code:addons/base/ir/ir_fields.py:338
+#: code:addons/base/ir/ir_fields.py:337
 #, python-format
 msgid "Unknown sub-field '%s'"
 msgstr ""
@@ -5036,6 +5192,17 @@ msgstr "Senegal"
 #: model:res.country,name:base.hu
 msgid "Hungary"
 msgstr "Hungary"
+
+#. module: base
+#: model:ir.module.module,description:base.module_web_analytics
+msgid ""
+"\n"
+"Google Analytics.\n"
+"=================\n"
+"\n"
+"Collects web application usage with Google Analytics.\n"
+"    "
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_recruitment
@@ -5202,7 +5369,7 @@ msgid "Account Owner Name"
 msgstr ""
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:412
+#: code:addons/base/ir/ir_model.py:414
 #, python-format
 msgid "Cannot rename column to %s, because that column already exists!"
 msgstr ""
@@ -5218,14 +5385,9 @@ msgid "Decimal Separator"
 msgstr "Υποδιαστολή"
 
 #. module: base
-#: code:addons/orm.py:5245
+#: code:addons/orm.py:5318
 #, python-format
 msgid "Missing required value for the field '%s'."
-msgstr ""
-
-#. module: base
-#: model:ir.model,name:base.model_res_partner_address
-msgid "res.partner.address"
 msgstr ""
 
 #. module: base
@@ -5275,9 +5437,10 @@ msgid "Optional model, mostly used for needactions."
 msgstr ""
 
 #. module: base
-#: field:ir.attachment,create_uid:0
-msgid "Creator"
-msgstr "Δημιουργός"
+#: code:addons/base/module/module.py:306
+#, python-format
+msgid "The name of the module must be unique !"
+msgstr "Το όνομα του αρθρώματος πρέπει να είναι μοναδικό !"
 
 #. module: base
 #: model:res.country,name:base.bv
@@ -5341,15 +5504,6 @@ msgid "9.  %j              ==> 340"
 msgstr "9.  %j              ==> 340"
 
 #. module: base
-#: model:ir.module.module,description:base.module_auth_signup
-msgid ""
-"\n"
-"Allow users to sign up.\n"
-"=======================\n"
-"    "
-msgstr ""
-
-#. module: base
 #: model:res.country,name:base.zm
 msgid "Zambia"
 msgstr "Zambia"
@@ -5363,6 +5517,11 @@ msgstr ""
 #: model:ir.module.module,summary:base.module_mrp
 msgid "Manufacturing Orders, Bill of Materials, Routing"
 msgstr ""
+
+#. module: base
+#: field:ir.attachment,name:0
+msgid "Attachment Name"
+msgstr "Όνομα Συνημμένου"
 
 #. module: base
 #: view:ir.module.module:0
@@ -5446,6 +5605,12 @@ msgstr "Kazakhstan"
 #: view:res.lang:0
 msgid "%w - Weekday number [0(Sunday),6]."
 msgstr ""
+
+#. module: base
+#: field:ir.attachment,res_name:0
+#: field:ir.ui.view_sc,resource:0
+msgid "Resource Name"
+msgstr "Περιγραφή Πόρου"
 
 #. module: base
 #: model:ir.ui.menu,name:base.menu_ir_filters
@@ -5699,7 +5864,7 @@ msgid "title"
 msgstr "τίτλος"
 
 #. module: base
-#: code:addons/base/ir/ir_fields.py:147
+#: code:addons/base/ir/ir_fields.py:146
 #, python-format
 msgid "true"
 msgstr ""
@@ -5754,6 +5919,15 @@ msgstr "Προϊόντα"
 #: model:ir.ui.menu,name:base.menu_values_form_defaults
 #: view:ir.values:0
 msgid "User-defined Defaults"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,description:base.module_auth_signup
+msgid ""
+"\n"
+"Allow users to sign up and reset their password\n"
+"===============================================\n"
+"    "
 msgstr ""
 
 #. module: base
@@ -5871,13 +6045,15 @@ msgid "Bank Type"
 msgstr "Τύπος Τράπεζας"
 
 #. module: base
-#: code:addons/base/res/res_users.py:103
+#: code:addons/base/res/res_users.py:99
 #, python-format
 msgid "The name of the group can not start with \"-\""
 msgstr "Το όνομα της ομάδας δεν μπορεί να ξεκινάει με \"-\""
 
 #. module: base
+#: model:ir.actions.client,name:base.modules_act_cl
 #: view:ir.module.module:0
+#: model:ir.ui.menu,name:base.module_mi
 msgid "Apps"
 msgstr ""
 
@@ -5897,7 +6073,7 @@ msgid "Gujarati / ગુજરાતી"
 msgstr "Gujarati / ગુજરાતી"
 
 #. module: base
-#: code:addons/base/module/module.py:340
+#: code:addons/base/module/module.py:361
 #, python-format
 msgid ""
 "Unable to process module \"%s\" because an external dependency is not met: %s"
@@ -5932,10 +6108,9 @@ msgid "Uncategorized"
 msgstr ""
 
 #. module: base
-#: field:ir.attachment,res_name:0
-#: field:ir.ui.view_sc,resource:0
-msgid "Resource Name"
-msgstr "Περιγραφή Πόρου"
+#: view:res.partner:0
+msgid "Phone:"
+msgstr ""
 
 #. module: base
 #: field:res.partner,is_company:0
@@ -5969,6 +6144,11 @@ msgid ""
 msgstr ""
 
 #. module: base
+#: field:ir.ui.view.custom,ref_id:0
+msgid "Original View"
+msgstr "Αρχική Προβολή"
+
+#. module: base
 #: model:ir.module.module,description:base.module_web_kanban
 msgid ""
 "\n"
@@ -5978,7 +6158,7 @@ msgid ""
 msgstr ""
 
 #. module: base
-#: code:addons/base/ir/ir_fields.py:183
+#: code:addons/base/ir/ir_fields.py:182
 #, python-format
 msgid "'%s' does not seem to be a number for field '%%(field)s'"
 msgstr ""
@@ -5992,26 +6172,6 @@ msgstr ""
 #. module: base
 #: view:res.partner.bank:0
 msgid "My Banks"
-msgstr ""
-
-#. module: base
-#: model:ir.module.module,description:base.module_hr_recruitment
-msgid ""
-"\n"
-"Manage job positions and the recruitment process\n"
-"=================================================\n"
-"\n"
-"This application allows you to easily keep track of jobs, vacancies, "
-"applications, interviews...\n"
-"\n"
-"It is integrated with the mail gateway to automatically fetch email sent to "
-"<jobs@yourcompany.com> in the list of applications. It's also integrated "
-"with the document management system to store and search in the CV base and "
-"find the candidate that you are looking for. Similarly, it is integrated "
-"with the survey module to allow you to define interviews for different "
-"jobs.\n"
-"You can define the different phases of interviews and easily rate the "
-"applicant from the kanban view.\n"
 msgstr ""
 
 #. module: base
@@ -6147,11 +6307,6 @@ msgid ""
 msgstr ""
 
 #. module: base
-#: model:ir.module.module,shortdesc:base.module_auth_reset_password
-msgid "Reset Password"
-msgstr ""
-
-#. module: base
 #: view:ir.attachment:0
 msgid "Month"
 msgstr "Μήνας"
@@ -6162,8 +6317,8 @@ msgid "Malaysia"
 msgstr "Malaysia"
 
 #. module: base
-#: code:addons/base/ir/ir_sequence.py:105
-#: code:addons/base/ir/ir_sequence.py:131
+#: code:addons/base/ir/ir_sequence.py:104
+#: code:addons/base/ir/ir_sequence.py:130
 #, python-format
 msgid "Increment number must not be zero."
 msgstr ""
@@ -6270,7 +6425,7 @@ msgid ""
 msgstr ""
 
 #. module: base
-#: code:addons/orm.py:2247
+#: code:addons/orm.py:2246
 #, python-format
 msgid "There is no view of type '%s' defined for the structure!"
 msgstr ""
@@ -6308,7 +6463,7 @@ msgid "Created Menus"
 msgstr "Δημιουργημένα Μενού"
 
 #. module: base
-#: code:addons/base/module/module.py:475
+#: code:addons/base/module/module.py:503
 #: view:ir.module.module:0
 #, python-format
 msgid "Uninstall"
@@ -6335,8 +6490,36 @@ msgid "SSL/TLS"
 msgstr ""
 
 #. module: base
-#: view:ir.actions.todo:0
-msgid "Set as Todo"
+#: model:ir.module.module,description:base.module_l10n_hr
+msgid ""
+"\n"
+"Croatian localisation.\n"
+"======================\n"
+"\n"
+"Author: Goran Kliska, Slobodni programi d.o.o., Zagreb\n"
+"        http://www.slobodni-programi.hr\n"
+"\n"
+"Contributions:\n"
+"  Tomislav Bošnjaković, Storm Computers: tipovi konta\n"
+"  Ivan Vađić, Slobodni programi: tipovi konta\n"
+"\n"
+"Description:\n"
+"\n"
+"Croatian Chart of Accounts (RRIF ver.2012)\n"
+"\n"
+"RRIF-ov računski plan za poduzetnike za 2012.\n"
+"Vrste konta\n"
+"Kontni plan prema RRIF-u, dorađen u smislu kraćenja naziva i dodavanja "
+"analitika\n"
+"Porezne grupe prema poreznoj prijavi\n"
+"Porezi PDV obrasca\n"
+"Ostali porezi \n"
+"Osnovne fiskalne pozicije\n"
+"\n"
+"Izvori podataka:\n"
+" http://www.rrif.hr/dok/preuzimanje/rrif-rp2011.rar\n"
+" http://www.rrif.hr/dok/preuzimanje/rrif-rp2012.rar\n"
+"\n"
 msgstr ""
 
 #. module: base
@@ -6368,6 +6551,13 @@ msgstr ""
 #: view:ir.sequence:0
 msgid "Current Year without Century: %(y)s"
 msgstr "Τρέχον έτος χωρίς τον αιώνα: %(y)s"
+
+#. module: base
+#: model:ir.actions.act_window,name:base.ir_config_list_action
+#: view:ir.config_parameter:0
+#: model:ir.ui.menu,name:base.ir_config_menu
+msgid "System Parameters"
+msgstr ""
 
 #. module: base
 #: help:ir.actions.client,tag:0
@@ -6412,7 +6602,7 @@ msgid "Audit Trail"
 msgstr ""
 
 #. module: base
-#: code:addons/base/ir/ir_fields.py:265
+#: code:addons/base/ir/ir_fields.py:264
 #, python-format
 msgid "Value '%s' not found in selection field '%%(field)s'"
 msgstr ""
@@ -6504,7 +6694,7 @@ msgid "Israel"
 msgstr "Israel"
 
 #. module: base
-#: code:addons/base/res/res_config.py:444
+#: code:addons/base/res/res_config.py:443
 #, python-format
 msgid "Cannot duplicate configuration!"
 msgstr ""
@@ -6522,23 +6712,6 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_in
 msgid "Indian - Accounting"
-msgstr ""
-
-#. module: base
-#: field:res.partner,mobile:0
-#: field:res.partner.address,mobile:0
-msgid "Mobile"
-msgstr "Κινητό"
-
-#. module: base
-#: model:ir.module.module,description:base.module_l10n_mx
-msgid ""
-"\n"
-"This is the module to manage the accounting chart for Mexico in OpenERP.\n"
-"========================================================================\n"
-"\n"
-"Mexican accounting chart and localization.\n"
-"    "
 msgstr ""
 
 #. module: base
@@ -6573,10 +6746,10 @@ msgstr "Αναφορά xml"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_module_open_categ
+#: model:ir.actions.act_window,name:base.open_module_tree
 #: field:ir.module.category,module_ids:0
 #: view:ir.module.module:0
 #: model:ir.ui.menu,name:base.menu_management
-#: model:ir.ui.menu,name:base.menu_module_tree
 msgid "Modules"
 msgstr "Αρθρώματα"
 
@@ -6650,9 +6823,9 @@ msgid "United Kingdom"
 msgstr "United Kingdom"
 
 #. module: base
-#: view:res.config:0
-msgid "res_config_contents"
-msgstr "res_config_contents"
+#: model:ir.module.module,shortdesc:base.module_l10n_pa
+msgid "Panama Localization Chart Account"
+msgstr ""
 
 #. module: base
 #: help:res.partner.category,active:0
@@ -6677,8 +6850,8 @@ msgid "Partner Titles"
 msgstr "Τίτλοι Συνεργάτη"
 
 #. module: base
-#: code:addons/base/ir/ir_fields.py:197
-#: code:addons/base/ir/ir_fields.py:228
+#: code:addons/base/ir/ir_fields.py:196
+#: code:addons/base/ir/ir_fields.py:227
 #, python-format
 msgid "Use the format '%s'"
 msgstr ""
@@ -6726,16 +6899,11 @@ msgid "ir.attachment"
 msgstr "ir.attachment"
 
 #. module: base
-#: code:addons/orm.py:4315
+#: code:addons/orm.py:4347
 #, python-format
 msgid ""
 "You cannot perform this operation. New Record Creation is not allowed for "
 "this object as this object is for reporting purpose."
-msgstr ""
-
-#. module: base
-#: model:ir.module.module,shortdesc:base.module_auth_anonymous
-msgid "Anonymous"
 msgstr ""
 
 #. module: base
@@ -6845,6 +7013,13 @@ msgid "Model Constraints"
 msgstr ""
 
 #. module: base
+#: model:ir.actions.act_window,name:base.action_workflow_transition_form
+#: model:ir.ui.menu,name:base.menu_workflow_transition
+#: view:workflow.activity:0
+msgid "Transitions"
+msgstr "Ροές"
+
+#. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_timesheet
 #: model:ir.module.module,shortdesc:base.module_hr_timesheet_sheet
 msgid "Timesheets"
@@ -6938,7 +7113,6 @@ msgstr ""
 #. module: base
 #: field:res.bank,state:0
 #: field:res.company,state_id:0
-#: field:res.partner.address,state_id:0
 #: field:res.partner.bank,state_id:0
 msgid "Fed. State"
 msgstr "Πολιτεία"
@@ -7040,12 +7214,6 @@ msgid "on"
 msgstr ""
 
 #. module: base
-#: code:addons/base/module/module.py:284
-#, python-format
-msgid "The name of the module must be unique !"
-msgstr "Το όνομα του αρθρώματος πρέπει να είναι μοναδικό !"
-
-#. module: base
 #: view:ir.property:0
 msgid "Parameters that are used by all resources."
 msgstr ""
@@ -7086,6 +7254,7 @@ msgstr "On Multiple Doc."
 #: view:base.module.update:0
 #: view:base.module.upgrade:0
 #: view:base.update.translations:0
+#: view:change.password.wizard:0
 #: view:ir.actions.configuration.wizard:0
 #: view:res.config:0
 #: view:res.config.installer:0
@@ -7143,7 +7312,7 @@ msgid "Connection Security"
 msgstr ""
 
 #. module: base
-#: code:addons/base/ir/ir_actions.py:607
+#: code:addons/base/ir/ir_actions.py:606
 #, python-format
 msgid "Please specify an action to launch !"
 msgstr "Παρακαλώ επιλέξτε ενέργειας προς εκτέλεση!"
@@ -7164,6 +7333,11 @@ msgid "Northern Mariana Islands"
 msgstr "Northern Mariana Islands"
 
 #. module: base
+#: field:change.password.user,user_login:0
+msgid "User Login"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_hn
 msgid "Honduras - Accounting"
 msgstr ""
@@ -7174,11 +7348,16 @@ msgid "Intrastat Reporting"
 msgstr ""
 
 #. module: base
-#: code:addons/base/res/res_users.py:135
+#: code:addons/base/res/res_users.py:131
 #, python-format
 msgid ""
 "Please use the change password wizard (in User Preferences or User menu) to "
 "change your own password."
+msgstr ""
+
+#. module: base
+#: model:ir.model,name:base.model_ir_config_parameter
+msgid "ir.config_parameter"
 msgstr ""
 
 #. module: base
@@ -7211,7 +7390,7 @@ msgid ""
 msgstr ""
 
 #. module: base
-#: code:addons/orm.py:2021
+#: code:addons/orm.py:2020
 #, python-format
 msgid "Insufficient fields for Calendar View!"
 msgstr ""
@@ -7257,7 +7436,6 @@ msgstr "Ροή"
 #: field:res.currency,active:0
 #: field:res.lang,active:0
 #: field:res.partner,active:0
-#: field:res.partner.address,active:0
 #: field:res.partner.category,active:0
 #: field:res.request,active:0
 #: field:res.users,active:0
@@ -7277,30 +7455,30 @@ msgid "Child Categories"
 msgstr "Υποκατηγορίες"
 
 #. module: base
-#: code:addons/base/ir/ir_actions.py:607
+#: code:addons/base/ir/ir_actions.py:606
 #: code:addons/base/ir/ir_actions.py:702
 #: code:addons/base/ir/ir_actions.py:705
-#: code:addons/base/ir/ir_model.py:163
-#: code:addons/base/ir/ir_model.py:272
-#: code:addons/base/ir/ir_model.py:286
-#: code:addons/base/ir/ir_model.py:316
-#: code:addons/base/ir/ir_model.py:332
-#: code:addons/base/ir/ir_model.py:337
-#: code:addons/base/ir/ir_model.py:340
+#: code:addons/base/ir/ir_model.py:164
+#: code:addons/base/ir/ir_model.py:274
+#: code:addons/base/ir/ir_model.py:288
+#: code:addons/base/ir/ir_model.py:318
+#: code:addons/base/ir/ir_model.py:334
+#: code:addons/base/ir/ir_model.py:339
+#: code:addons/base/ir/ir_model.py:342
 #: code:addons/base/ir/ir_translation.py:341
-#: code:addons/base/module/module.py:298
-#: code:addons/base/module/module.py:341
-#: code:addons/base/module/module.py:345
-#: code:addons/base/module/module.py:351
-#: code:addons/base/module/module.py:472
-#: code:addons/base/module/module.py:498
-#: code:addons/base/module/module.py:513
-#: code:addons/base/module/module.py:609
+#: code:addons/base/module/module.py:320
+#: code:addons/base/module/module.py:362
+#: code:addons/base/module/module.py:366
+#: code:addons/base/module/module.py:372
+#: code:addons/base/module/module.py:500
+#: code:addons/base/module/module.py:526
+#: code:addons/base/module/module.py:540
+#: code:addons/base/module/module.py:645
 #: code:addons/base/res/res_currency.py:193
-#: code:addons/base/res/res_users.py:102
-#: code:addons/custom.py:550
-#: code:addons/orm.py:789
-#: code:addons/orm.py:3929
+#: code:addons/base/res/res_users.py:98
+#: code:addons/custom.py:555
+#: code:addons/orm.py:785
+#: code:addons/orm.py:3960
 #, python-format
 msgid "Error"
 msgstr "Σφάλμα"
@@ -7389,6 +7567,11 @@ msgid "This Window"
 msgstr "Αυτό το παράθυρο"
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_portal_anonymous
+msgid "Anonymous portal"
+msgstr ""
+
+#. module: base
 #: field:base.language.export,format:0
 msgid "File Format"
 msgstr "Μορφή Αρχείου"
@@ -7475,6 +7658,21 @@ msgid "Employees"
 msgstr "Υπάλληλοι"
 
 #. module: base
+#: model:ir.module.module,description:base.module_web_shortcuts
+msgid ""
+"\n"
+"Enable shortcuts feature in the web client.\n"
+"===========================================\n"
+"\n"
+"Add a Shortcut icon in the systray in order to access the user's shortcuts "
+"(if any).\n"
+"\n"
+"Add a Shortcut icon besides the views title in order to add/remove a "
+"shortcut.\n"
+"    "
+msgstr ""
+
+#. module: base
 #: field:res.company,rml_header2:0
 msgid "RML Internal Header"
 msgstr "RML Εσωτερική Κεφαλίδα"
@@ -7504,11 +7702,6 @@ msgid "Test Connection"
 msgstr ""
 
 #. module: base
-#: field:res.partner,address:0
-msgid "Addresses"
-msgstr "Διευθύνσεις"
-
-#. module: base
 #: model:res.country,name:base.mm
 msgid "Myanmar"
 msgstr "Myanmar"
@@ -7532,7 +7725,6 @@ msgstr ""
 #: field:res.bank,street:0
 #: field:res.company,street:0
 #: field:res.partner,street:0
-#: field:res.partner.address,street:0
 #: field:res.partner.bank,street:0
 msgid "Street"
 msgstr "Οδός"
@@ -7543,8 +7735,23 @@ msgid "Yugoslavia"
 msgstr "Yugoslavia"
 
 #. module: base
-#: field:res.partner.category,parent_right:0
-msgid "Right parent"
+#: model:ir.module.module,description:base.module_base_gengo
+msgid ""
+"\n"
+"Automated Translations through Gengo API\n"
+"========================================\n"
+"\n"
+"This module will install passive scheduler job for automated translations \n"
+"using the Gengo API. To activate it, you must\n"
+"1) Configure your Gengo authentication parameters under `Settings > "
+"Companies > Gengo Parameters`\n"
+"2) Launch the wizard under `Settings > Application Terms > Gengo: Manual "
+"Request of Translation` and follow the wizard.\n"
+"\n"
+"This wizard will activate the CRON job and the Scheduler and will start the "
+"automatic translation via Gengo Services for all the terms where you "
+"requested it.\n"
+"    "
 msgstr ""
 
 #. module: base
@@ -7623,7 +7830,7 @@ msgid "Change My Preferences"
 msgstr "Αλλαγή Προτιμήσεων"
 
 #. module: base
-#: code:addons/base/ir/ir_actions.py:172
+#: code:addons/base/ir/ir_actions.py:171
 #, python-format
 msgid "Invalid model name in the action definition."
 msgstr "Λανθασμένο όνομα μοντέλου στην δήλωση ενέργειας"
@@ -7710,14 +7917,16 @@ msgid "US Letter"
 msgstr ""
 
 #. module: base
-#: model:ir.module.module,description:base.module_marketing
+#: model:ir.actions.act_window,help:base.action_partner_customer_form
 msgid ""
-"\n"
-"Menu for Marketing.\n"
-"===================\n"
-"\n"
-"Contains the installer for marketing-related modules.\n"
-"    "
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Click to add a contact in your address book.\n"
+"              </p><p>\n"
+"                OpenERP helps you easily track all activities related to\n"
+"                a customer: discussions, history of business opportunities,\n"
+"                documents, etc.\n"
+"              </p>\n"
+"            "
 msgstr ""
 
 #. module: base
@@ -7726,7 +7935,7 @@ msgid "Company Bank Accounts"
 msgstr ""
 
 #. module: base
-#: code:addons/base/res/res_users.py:470
+#: code:addons/base/res/res_users.py:467
 #, python-format
 msgid "Setting empty passwords is not allowed for security reasons!"
 msgstr ""
@@ -7737,13 +7946,13 @@ msgid "Optional password for SMTP authentication"
 msgstr ""
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:719
+#: code:addons/base/ir/ir_model.py:720
 #, python-format
 msgid "Sorry, you are not allowed to modify this document."
 msgstr ""
 
 #. module: base
-#: code:addons/base/res/res_config.py:350
+#: code:addons/base/res/res_config.py:349
 #, python-format
 msgid ""
 "\n"
@@ -7765,12 +7974,13 @@ msgid "Normal Bank Account"
 msgstr ""
 
 #. module: base
+#: field:change.password.user,wizard_id:0
 #: view:ir.actions.wizard:0
 msgid "Wizard"
 msgstr "Αυτόματος Οδηγός"
 
 #. module: base
-#: code:addons/base/ir/ir_fields.py:304
+#: code:addons/base/ir/ir_fields.py:303
 #, python-format
 msgid "database id"
 msgstr ""
@@ -7943,7 +8153,7 @@ msgid "Jobs, Recruitment, Applications, Job Interviews"
 msgstr ""
 
 #. module: base
-#: code:addons/base/module/module.py:513
+#: code:addons/base/module/module.py:540
 #, python-format
 msgid ""
 "You try to upgrade a module that depends on the module: %s.\n"
@@ -7976,14 +8186,6 @@ msgid "base.update.translations"
 msgstr ""
 
 #. module: base
-#: code:addons/base/ir/ir_sequence.py:105
-#: code:addons/base/ir/ir_sequence.py:131
-#: code:addons/base/res/res_users.py:470
-#, python-format
-msgid "Warning!"
-msgstr ""
-
-#. module: base
 #: view:ir.rule:0
 msgid "Full Access Right"
 msgstr ""
@@ -8006,7 +8208,6 @@ msgstr ""
 #. module: base
 #: view:res.partner:0
 #: selection:res.partner,type:0
-#: selection:res.partner.address,type:0
 #: selection:res.partner.title,domain:0
 #: view:res.users:0
 msgid "Contact"
@@ -8124,7 +8325,7 @@ msgid "Nigeria"
 msgstr "Nigeria"
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:332
+#: code:addons/base/ir/ir_model.py:334
 #, python-format
 msgid "For selection fields, the Selection Options must be given!"
 msgstr ""
@@ -8439,7 +8640,7 @@ msgid "Update Modules List"
 msgstr "Ενημέρωση Λίστας Αρθρωμάτων"
 
 #. module: base
-#: code:addons/base/module/module.py:338
+#: code:addons/base/module/module.py:359
 #, python-format
 msgid ""
 "Unable to upgrade module \"%s\" because an external dependency is not met: %s"
@@ -8451,7 +8652,7 @@ msgid "eInvoicing"
 msgstr ""
 
 #. module: base
-#: code:addons/base/res/res_users.py:175
+#: code:addons/base/res/res_users.py:171
 #, python-format
 msgid ""
 "Please keep in mind that documents currently displayed may not be relevant "
@@ -8461,7 +8662,7 @@ msgid ""
 msgstr ""
 
 #. module: base
-#: code:addons/orm.py:2821
+#: code:addons/orm.py:2817
 #, python-format
 msgid "The value \"%s\" for the field \"%s.%s\" is not in the selection"
 msgstr ""
@@ -8475,6 +8676,17 @@ msgstr "Συνέχεια"
 #: selection:base.language.install,lang:0
 msgid "Thai / ภาษาไทย"
 msgstr "Ταϋλανδικά / ภาษาไทย"
+
+#. module: base
+#: model:ir.module.module,description:base.module_l10n_bo
+msgid ""
+"\n"
+"Bolivian accounting chart and tax localization.\n"
+"\n"
+"Plan contable boliviano e impuestos de acuerdo a disposiciones vigentes\n"
+"\n"
+"    "
+msgstr ""
 
 #. module: base
 #: view:res.lang:0
@@ -8515,7 +8727,7 @@ msgid "Mexico"
 msgstr "Mexico"
 
 #. module: base
-#: code:addons/orm.py:3871
+#: code:addons/orm.py:3902
 #, python-format
 msgid ""
 "For this kind of document, you may only access records you created "
@@ -8537,15 +8749,15 @@ msgid ""
 msgstr ""
 
 #. module: base
-#: code:addons/base/ir/ir_mail_server.py:441
+#: code:addons/base/ir/ir_mail_server.py:440
 #, python-format
 msgid "Missing SMTP Server"
 msgstr ""
 
 #. module: base
-#: field:ir.attachment,name:0
-msgid "Attachment Name"
-msgstr "Όνομα Συνημμένου"
+#: sql_constraint:ir.translation:0
+msgid "Language code of translation item must be among known languages"
+msgstr ""
 
 #. module: base
 #: field:base.language.export,data:0
@@ -8569,7 +8781,7 @@ msgid "%b - Abbreviated month name."
 msgstr "%b - Σύντομο όνομα μήνα."
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:721
+#: code:addons/base/ir/ir_model.py:722
 #, python-format
 msgid "Sorry, you are not allowed to delete this document."
 msgstr ""
@@ -8581,7 +8793,6 @@ msgstr ""
 
 #. module: base
 #: field:res.partner,supplier:0
-#: field:res.partner.address,is_supplier_add:0
 #: model:res.partner.category,name:base.res_partner_category_1
 msgid "Supplier"
 msgstr "Προμηθευτής"
@@ -8659,7 +8870,7 @@ msgid "Selectable"
 msgstr "Επιλέξιμο"
 
 #. module: base
-#: code:addons/base/ir/ir_mail_server.py:220
+#: code:addons/base/ir/ir_mail_server.py:219
 #, python-format
 msgid "Everything seems properly set up!"
 msgstr ""
@@ -8687,8 +8898,8 @@ msgid "Iteration"
 msgstr "Επανάληψη"
 
 #. module: base
-#: code:addons/orm.py:4213
-#: code:addons/orm.py:4314
+#: code:addons/orm.py:4245
+#: code:addons/orm.py:4346
 #, python-format
 msgid "UserError"
 msgstr "UserError"
@@ -8712,7 +8923,7 @@ msgid ""
 msgstr ""
 
 #. module: base
-#: code:addons/orm.py:3929
+#: code:addons/orm.py:3960
 #, python-format
 msgid ""
 "Unable to delete this document because it is used as a default property"
@@ -8859,7 +9070,7 @@ msgid "Reunion (French)"
 msgstr "Reunion (French)"
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:414
+#: code:addons/base/ir/ir_model.py:416
 #, python-format
 msgid ""
 "New column name must still start with x_ , because it is a custom field!"
@@ -8898,8 +9109,8 @@ msgid "Solomon Islands"
 msgstr "Solomon Islands"
 
 #. module: base
-#: code:addons/orm.py:4119
-#: code:addons/orm.py:4652
+#: code:addons/orm.py:4151
+#: code:addons/orm.py:4684
 #, python-format
 msgid "AccessError"
 msgstr "AccessError"
@@ -8973,7 +9184,7 @@ msgid "Prof."
 msgstr ""
 
 #. module: base
-#: code:addons/base/ir/ir_mail_server.py:239
+#: code:addons/base/ir/ir_mail_server.py:238
 #, python-format
 msgid ""
 "Your OpenERP Server does not support SMTP-over-SSL. You could use STARTTLS "
@@ -8987,7 +9198,7 @@ msgid "Ukraine"
 msgstr "Ukraine"
 
 #. module: base
-#: code:addons/base/res/res_company.py:150
+#: code:addons/base/res/res_company.py:164
 #: field:ir.module.module,website:0
 #: field:res.company,website:0
 #: field:res.partner,website:0
@@ -9048,6 +9259,11 @@ msgstr ""
 #. module: base
 #: selection:base.language.install,lang:0
 msgid "Flemish (BE) / Vlaams (BE)"
+msgstr ""
+
+#. module: base
+#: selection:base.language.install,lang:0
+msgid "Vietnamese / Tiếng Việt"
 msgstr ""
 
 #. module: base
@@ -9148,8 +9364,8 @@ msgid "Custom Shortcuts"
 msgstr "Προσαρμοσμένες συντομεύσεις"
 
 #. module: base
-#: selection:base.language.install,lang:0
-msgid "Vietnamese / Tiếng Việt"
+#: model:ir.module.module,shortdesc:base.module_l10n_si
+msgid "Slovenian - Accounting"
 msgstr ""
 
 #. module: base
@@ -9178,13 +9394,13 @@ msgid "Models"
 msgstr ""
 
 #. module: base
-#: code:addons/base/module/module.py:472
+#: code:addons/base/module/module.py:500
 #, python-format
 msgid "The `base` module cannot be uninstalled"
 msgstr ""
 
 #. module: base
-#: code:addons/base/ir/ir_cron.py:390
+#: code:addons/base/ir/ir_cron.py:247
 #, python-format
 msgid "Record cannot be modified right now"
 msgstr ""
@@ -9205,7 +9421,7 @@ msgid "osv_memory.autovacuum"
 msgstr ""
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:720
+#: code:addons/base/ir/ir_model.py:721
 #, python-format
 msgid "Sorry, you are not allowed to create this kind of document."
 msgstr ""
@@ -9253,7 +9469,7 @@ msgid "On Delete"
 msgstr ""
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:340
+#: code:addons/base/ir/ir_model.py:342
 #, python-format
 msgid "Model %s does not exist!"
 msgstr ""
@@ -9299,6 +9515,7 @@ msgstr ""
 #: view:base.module.update:0
 #: view:base.module.upgrade:0
 #: view:base.update.translations:0
+#: view:change.password.wizard:0
 #: view:ir.actions.configuration.wizard:0
 #: view:res.config:0
 #: view:res.users:0
@@ -9307,7 +9524,7 @@ msgid "Cancel"
 msgstr "Ακύρωση"
 
 #. module: base
-#: code:addons/orm.py:1509
+#: code:addons/orm.py:1506
 #, python-format
 msgid "Unknown database identifier '%s'"
 msgstr ""
@@ -9324,6 +9541,43 @@ msgid ""
 "Openerp Web Diagram view.\n"
 "=========================\n"
 "\n"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,description:base.module_l10n_ch
+msgid ""
+"\n"
+"Swiss localization :\n"
+"====================\n"
+"**Multilang swiss STERCHI account chart and taxes**\n"
+" **Author:** Camptocamp SA\n"
+"\n"
+" **Donors:** Hasa Sàrl, Open Net Sàrl and Prisme Solutions Informatique SA\n"
+"\n"
+" **Translators:** brain-tec AG, Agile Business Group\n"
+"\n"
+"**This release will introduce major changes to l10n_ch.**\n"
+"\n"
+"Due to important refactoring needs and the Switzerland adoption of new "
+"international payment standard during 2013-2014. We have reorganised the "
+"swiss localization addons this way:\n"
+"\n"
+"- **l10n_ch**: Multilang swiss STERCHI account chart and taxes (official "
+"addon)\n"
+"- **l10n_ch_base_bank**: Technical module that introduces a new and "
+"simplified version of bank type management\n"
+"- **l10n_ch_bank**: List of swiss banks\n"
+"- **l10n_ch_zip**: List of swiss postal zip\n"
+"- **l10n_ch_dta**: Support of dta payment protocol (will be deprecated end "
+"2014)\n"
+"- **l10n_ch_payment_slip**: Support of ESR/BVR payment slip report and "
+"reconciliation. Report refactored with easy element positioning.\n"
+"- **l10n_ch_sepa**: Alpha implementation of PostFinance SEPA/PAIN support "
+"will be completed during 2013/2014\n"
+"\n"
+"The modules will be soon available on OpenERP swiss localization on "
+"launchpad:\n"
+"https://launchpad.net/openerp-swiss-localization\n"
 msgstr ""
 
 #. module: base
@@ -9361,7 +9615,7 @@ msgid ""
 msgstr ""
 
 #. module: base
-#: code:addons/base/ir/ir_fields.py:317
+#: code:addons/base/ir/ir_fields.py:316
 #, python-format
 msgid "external id"
 msgstr ""
@@ -9414,6 +9668,11 @@ msgid "%I - Hour (12-hour clock) [01,12]."
 msgstr ""
 
 #. module: base
+#: view:res.config:0
+msgid "res_config_contents"
+msgstr "res_config_contents"
+
+#. module: base
 #: model:res.country,name:base.de
 msgid "Germany"
 msgstr "Germany"
@@ -9455,21 +9714,9 @@ msgid "The currency code must be unique per company!"
 msgstr ""
 
 #. module: base
-#: code:addons/base/module/wizard/base_export_language.py:38
+#: code:addons/base/module/wizard/base_export_language.py:39
 #, python-format
 msgid "New Language (Empty translation template)"
-msgstr ""
-
-#. module: base
-#: model:ir.module.module,description:base.module_auth_reset_password
-msgid ""
-"\n"
-"Reset Password\n"
-"==============\n"
-"\n"
-"Allow users to reset their password from the login page.\n"
-"Allow administrator to click a button to send a \"Reset Password\" request "
-"to a user.\n"
 msgstr ""
 
 #. module: base
@@ -9505,7 +9752,7 @@ msgid "Products Expiry Date"
 msgstr ""
 
 #. module: base
-#: code:addons/base/res/res_config.py:387
+#: code:addons/base/res/res_config.py:386
 #, python-format
 msgid "Click 'Continue' to configure the next addon..."
 msgstr ""
@@ -9597,6 +9844,11 @@ msgid ""
 "to the hr_expense module.\n"
 "============================================================================="
 "=========================\n"
+msgstr ""
+
+#. module: base
+#: field:ir.attachment,store_fname:0
+msgid "Stored Filename"
 msgstr ""
 
 #. module: base
@@ -9803,7 +10055,7 @@ msgid "Marketing Campaign - Demo"
 msgstr ""
 
 #. module: base
-#: code:addons/base/ir/ir_fields.py:361
+#: code:addons/base/ir/ir_fields.py:360
 #, python-format
 msgid ""
 "Can not create Many-To-One records indirectly, import the field separately"
@@ -9815,12 +10067,17 @@ msgid "Interval Unit"
 msgstr "Μονάδα Διαστήματος"
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_portal_stock
+msgid "Portal Stock"
+msgstr ""
+
+#. module: base
 #: field:workflow.activity,kind:0
 msgid "Kind"
 msgstr "Είδος"
 
 #. module: base
-#: code:addons/orm.py:4614
+#: code:addons/orm.py:4646
 #, python-format
 msgid "This method does not exist anymore"
 msgstr "Αυτή η μέθοδος δε χρησιμοποιείται πια"
@@ -9990,7 +10247,7 @@ msgid "To Translate"
 msgstr ""
 
 #. module: base
-#: code:addons/base/ir/ir_fields.py:295
+#: code:addons/base/ir/ir_fields.py:294
 #, python-format
 msgid "See all possible values"
 msgstr ""
@@ -10024,6 +10281,11 @@ msgid "PostgreSQL constraint or foreign key name."
 msgstr ""
 
 #. module: base
+#: view:res.company:0
+msgid "Click to set your company logo."
+msgstr ""
+
+#. module: base
 #: view:res.lang:0
 msgid "%A - Full weekday name."
 msgstr "%A - Πλήρες όνομα ημέρας εβδομάδας"
@@ -10046,6 +10308,11 @@ msgstr ""
 #. module: base
 #: help:res.company,rml_footer:0
 msgid "Footer text displayed at the bottom of all reports."
+msgstr ""
+
+#. module: base
+#: field:ir.module.module,icon:0
+msgid "Icon URL"
 msgstr ""
 
 #. module: base
@@ -10137,7 +10404,6 @@ msgstr ""
 #: field:res.bank,city:0
 #: field:res.company,city:0
 #: field:res.partner,city:0
-#: field:res.partner.address,city:0
 #: field:res.partner.bank,city:0
 msgid "City"
 msgstr "Πόλη"
@@ -10174,12 +10440,21 @@ msgid "Estonian / Eesti keel"
 msgstr "Estonian / Eesti keel"
 
 #. module: base
+#: help:ir.actions.server,write_id:0
+msgid ""
+"Provide the field name that the record id refers to for the write operation. "
+"If it is empty it will refer to the active id of the object."
+msgstr ""
+"Provide the field name that the record id refers to for the write operation. "
+"If it is empty it will refer to the active id of the object."
+
+#. module: base
 #: selection:ir.module.module,license:0
 msgid "GPL-3 or later version"
 msgstr "GPL-3 ή μεταγενέστερη έκδοση"
 
 #. module: base
-#: code:addons/orm.py:2033
+#: code:addons/orm.py:2032
 #, python-format
 msgid ""
 "Insufficient fields to generate a Calendar View for %s, missing a date_stop "
@@ -10238,19 +10513,44 @@ msgid ""
 msgstr ""
 
 #. module: base
-#: model:ir.model,name:base.model_ir_translation
-msgid "ir.translation"
-msgstr "ir.translation"
+#: model:ir.module.module,description:base.module_account_followup
+msgid ""
+"\n"
+"Module to automate letters for unpaid invoices, with multi-level recalls.\n"
+"=========================================================================\n"
+"\n"
+"You can define your multiple levels of recall through the menu:\n"
+"---------------------------------------------------------------\n"
+"    Configuration / Follow-Up Levels\n"
+"    \n"
+"Once it is defined, you can automatically print recalls every day through "
+"simply clicking on the menu:\n"
+"-----------------------------------------------------------------------------"
+"-------------------------\n"
+"    Payment Follow-Up / Send Email and letters\n"
+"\n"
+"It will generate a PDF / send emails / set manual actions according to the "
+"the different levels \n"
+"of recall defined. You can define different policies for different "
+"companies. \n"
+"\n"
+"Note that if you want to check the follow-up level for a given "
+"partner/account entry, you can do from in the menu:\n"
+"-----------------------------------------------------------------------------"
+"-------------------------------------\n"
+"    Reporting / Accounting / **Follow-ups Analysis\n"
+"\n"
+msgstr ""
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:727
+#: code:addons/base/ir/ir_model.py:728
 #, python-format
 msgid ""
 "Please contact your system administrator if you think this is an error."
 msgstr ""
 
 #. module: base
-#: code:addons/base/module/module.py:519
+#: code:addons/base/module/module.py:546
 #: view:base.module.upgrade:0
 #: model:ir.actions.act_window,name:base.action_view_base_module_upgrade
 #, python-format
@@ -10264,6 +10564,8 @@ msgid "Activity"
 msgstr "Δραστηριότητα"
 
 #. module: base
+#: view:change.password.user:0
+#: field:change.password.wizard,user_ids:0
 #: model:ir.actions.act_window,name:base.action_res_users
 #: field:ir.default,uid:0
 #: model:ir.model,name:base.model_res_users
@@ -10282,7 +10584,12 @@ msgid "Parent Company"
 msgstr "Μητρική Εταιρεία"
 
 #. module: base
-#: code:addons/orm.py:3840
+#: model:ir.module.module,shortdesc:base.module_auth_openid
+msgid "OpenID Authentification"
+msgstr ""
+
+#. module: base
+#: code:addons/orm.py:3871
 #, python-format
 msgid ""
 "One of the documents you are trying to access has been deleted, please try "
@@ -10292,13 +10599,6 @@ msgstr ""
 #. module: base
 #: model:ir.model,name:base.model_ir_mail_server
 msgid "ir.mail_server"
-msgstr ""
-
-#. module: base
-#: help:ir.ui.menu,needaction_counter:0
-msgid ""
-"If the target model uses the need action mechanism, this field gives the "
-"number of actions the current user has to perform."
 msgstr ""
 
 #. module: base
@@ -10383,6 +10683,26 @@ msgid "Sales and Warehouse Management"
 msgstr ""
 
 #. module: base
+#: model:ir.module.module,description:base.module_hr_recruitment
+msgid ""
+"\n"
+"Manage job positions and the recruitment process\n"
+"================================================\n"
+"\n"
+"This application allows you to easily keep track of jobs, vacancies, "
+"applications, interviews...\n"
+"\n"
+"It is integrated with the mail gateway to automatically fetch email sent to "
+"<jobs@yourcompany.com> in the list of applications. It's also integrated "
+"with the document management system to store and search in the CV base and "
+"find the candidate that you are looking for. Similarly, it is integrated "
+"with the survey module to allow you to define interviews for different "
+"jobs.\n"
+"You can define the different phases of interviews and easily rate the "
+"applicant from the kanban view.\n"
+msgstr ""
+
+#. module: base
 #: field:ir.model.fields,model:0
 msgid "Object Name"
 msgstr "Όνομα Αντικειμένου"
@@ -10454,6 +10774,11 @@ msgid "Sequences Type"
 msgstr ""
 
 #. module: base
+#: view:res.partner:0
+msgid "Mobile:"
+msgstr ""
+
+#. module: base
 #: code:addons/base/res/res_bank.py:195
 #, python-format
 msgid "Formating Error"
@@ -10513,9 +10838,9 @@ msgstr ""
 "Παρακαλούμε να απενεργοποιήσετε τη γλώσσα πρώτα."
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:500
-#: code:addons/base/ir/ir_model.py:561
-#: code:addons/base/ir/ir_model.py:1023
+#: code:addons/base/ir/ir_model.py:502
+#: code:addons/base/ir/ir_model.py:563
+#: code:addons/base/ir/ir_model.py:1024
 #, python-format
 msgid "Permission Denied"
 msgstr ""
@@ -10533,8 +10858,8 @@ msgid "Problem in configuration `Record Id` in Server Action!"
 msgstr "Problem in configuration `Record Id` in Server Action!"
 
 #. module: base
-#: code:addons/orm.py:2810
-#: code:addons/orm.py:2820
+#: code:addons/orm.py:2806
+#: code:addons/orm.py:2816
 #, python-format
 msgid "ValidateError"
 msgstr "ValidateError"
@@ -10575,13 +10900,12 @@ msgid "Laos"
 msgstr "Laos"
 
 #. module: base
-#: code:addons/base/res/res_company.py:149
+#: code:addons/base/res/res_company.py:163
 #: selection:ir.actions.server,state:0
 #: model:ir.ui.menu,name:base.menu_email
 #: field:res.bank,email:0
 #: field:res.company,email:0
 #: field:res.partner,email:0
-#: field:res.partner.address,email:0
 #, python-format
 msgid "Email"
 msgstr "Email"
@@ -10592,7 +10916,12 @@ msgid "Office Supplies"
 msgstr ""
 
 #. module: base
-#: code:addons/custom.py:550
+#: field:ir.attachment,res_model:0
+msgid "Resource Model"
+msgstr ""
+
+#. module: base
+#: code:addons/custom.py:555
 #, python-format
 msgid ""
 "The sum of the data (2nd field) is null.\n"
@@ -10624,36 +10953,6 @@ msgid ""
 msgstr ""
 
 #. module: base
-#: model:ir.module.module,description:base.module_account_followup
-msgid ""
-"\n"
-"Module to automate letters for unpaid invoices, with multi-level recalls.\n"
-"==========================================================================\n"
-"\n"
-"You can define your multiple levels of recall through the menu:\n"
-"---------------------------------------------------------------\n"
-"    Configuration / Follow-Up Levels\n"
-"    \n"
-"Once it is defined, you can automatically print recalls every day through "
-"simply clicking on the menu:\n"
-"-----------------------------------------------------------------------------"
-"-------------------------\n"
-"    Payment Follow-Up / Send Email and letters\n"
-"\n"
-"It will generate a PDF / send emails / set manual actions according to the "
-"the different levels \n"
-"of recall defined. You can define different policies for different "
-"companies. \n"
-"\n"
-"Note that if you want to check the follow-up level for a given "
-"partner/account entry, you can do from in the menu:\n"
-"-----------------------------------------------------------------------------"
-"-------------------------------------\n"
-"    Reporting / Accounting / **Follow-ups Analysis\n"
-"\n"
-msgstr ""
-
-#. module: base
 #: view:ir.rule:0
 msgid ""
 "2. Group-specific rules are combined together with a logical OR operator"
@@ -10675,6 +10974,11 @@ msgid "Ecuador"
 msgstr "Ecuador"
 
 #. module: base
+#: model:ir.model,name:base.model_workflow
+msgid "workflow"
+msgstr "ροή εργασίας"
+
+#. module: base
 #: view:ir.rule:0
 msgid "Read Access Right"
 msgstr ""
@@ -10692,16 +10996,6 @@ msgstr ""
 "Δεν μπορείτε να διαγράψετε τη γλώσσα που είναι προτιμώμενη από τον χρήστη!"
 
 #. module: base
-#: model:ir.module.module,description:base.module_l10n_ve
-msgid ""
-"\n"
-"This is the module to manage the accounting chart for Venezuela in OpenERP.\n"
-"===========================================================================\n"
-"\n"
-"Este módulo es para manejar un catálogo de cuentas ejemplo para Venezuela.\n"
-msgstr ""
-
-#. module: base
 #: view:ir.model.data:0
 msgid "Updatable"
 msgstr ""
@@ -10717,8 +11011,8 @@ msgid "Cascade"
 msgstr "Ανάλυση"
 
 #. module: base
-#: field:workflow.transition,group_id:0
-msgid "Group Required"
+#: model:ir.module.module,summary:base.module_crm
+msgid "Leads, Opportunities, Phone Calls"
 msgstr ""
 
 #. module: base
@@ -10742,11 +11036,6 @@ msgstr ""
 #: model:ir.actions.act_window,name:base.action_inventory_form
 #: model:ir.ui.menu,name:base.menu_action_inventory_form
 msgid "Default Company per Object"
-msgstr ""
-
-#. module: base
-#: field:ir.ui.menu,needaction_counter:0
-msgid "Number of actions the user has to perform"
 msgstr ""
 
 #. module: base
@@ -10774,7 +11063,7 @@ msgid "Domain"
 msgstr "Τομέας"
 
 #. module: base
-#: code:addons/base/ir/ir_fields.py:167
+#: code:addons/base/ir/ir_fields.py:166
 #, python-format
 msgid "Use '1' for yes and '0' for no"
 msgstr ""
@@ -10790,12 +11079,12 @@ msgid "State Name"
 msgstr "Όνομα Κατάστασης"
 
 #. module: base
-#: model:ir.module.module,shortdesc:base.module_l10n_be_hr_payroll_account
-msgid "Belgium - Payroll with Accounting"
+#: help:ir.attachment,type:0
+msgid "Binary File or URL"
 msgstr ""
 
 #. module: base
-#: code:addons/base/ir/ir_fields.py:314
+#: code:addons/base/ir/ir_fields.py:313
 #, python-format
 msgid "Invalid database id '%s' for the field '%%(field)s'"
 msgstr ""
@@ -10816,30 +11105,10 @@ msgid "Timezone"
 msgstr "Ζώνη Ώρας"
 
 #. module: base
-#: model:ir.module.module,description:base.module_account_voucher
-msgid ""
-"\n"
-"Invoicing & Payments by Accounting Voucher & Receipts\n"
-"======================================================\n"
-"The specific and easy-to-use Invoicing system in OpenERP allows you to keep "
-"track of your accounting, even when you are not an accountant. It provides "
-"an easy way to follow up on your suppliers and customers. \n"
-"\n"
-"You could use this simplified accounting in case you work with an (external) "
-"account to keep your books, and you still want to keep track of payments. \n"
-"\n"
-"The Invoicing system includes receipts and vouchers (an easy way to keep "
-"track of sales and purchases). It also offers you an easy method of "
-"registering payments, without having to encode complete abstracts of "
-"account.\n"
-"\n"
-"This module manages:\n"
-"\n"
-"* Voucher Entry\n"
-"* Voucher Receipt [Sales & Purchase]\n"
-"* Voucher Payment [Customer & Supplier]\n"
-"    "
-msgstr ""
+#: model:ir.model,name:base.model_ir_actions_report_xml
+#: selection:ir.ui.menu,action:0
+msgid "ir.actions.report.xml"
+msgstr "ir.actions.report.xml"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.ir_sequence_form
@@ -10861,7 +11130,7 @@ msgid "Shared"
 msgstr ""
 
 #. module: base
-#: code:addons/base/module/module.py:336
+#: code:addons/base/module/module.py:357
 #, python-format
 msgid ""
 "Unable to install module \"%s\" because an external dependency is not met: %s"
@@ -10908,7 +11177,6 @@ msgstr ""
 #: field:res.bank,street2:0
 #: field:res.company,street2:0
 #: field:res.partner,street2:0
-#: field:res.partner.address,street2:0
 msgid "Street2"
 msgstr "Οδός 2"
 
@@ -10932,6 +11200,7 @@ msgid ""
 msgstr ""
 
 #. module: base
+#: field:change.password.user,user_id:0
 #: view:ir.cron:0
 #: field:ir.cron,user_id:0
 #: field:ir.filters,user_id:0
@@ -11017,19 +11286,28 @@ msgid "Related Partner"
 msgstr ""
 
 #. module: base
-#: code:addons/osv.py:151
 #: code:addons/osv.py:153
+#: code:addons/osv.py:155
 #, python-format
 msgid "Integrity Error"
 msgstr ""
 
 #. module: base
-#: model:ir.model,name:base.model_workflow
-msgid "workflow"
-msgstr "ροή εργασίας"
+#: model:ir.module.module,description:base.module_l10n_pa
+msgid ""
+"\n"
+"Panamenian accounting chart and tax localization.\n"
+"\n"
+"Plan contable panameño e impuestos de acuerdo a disposiciones vigentes\n"
+"\n"
+"Con la Colaboración de \n"
+"- AHMNET CORP http://www.ahmnet.com\n"
+"\n"
+"    "
+msgstr ""
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:291
+#: code:addons/base/ir/ir_model.py:293
 #, python-format
 msgid "Size of the field can never be less than 1 !"
 msgstr "ο μέγεθος του πεδίου δεν μπορεί ποτέ να είναι μικρότερο του 1!"
@@ -11070,22 +11348,6 @@ msgstr ""
 #: field:ir.cron,args:0
 msgid "Arguments"
 msgstr "Arguments"
-
-#. module: base
-#: model:ir.module.module,description:base.module_crm_claim
-msgid ""
-"\n"
-"\n"
-"Manage Customer Claims.\n"
-"============================================================================="
-"===\n"
-"This application allows you to track your customers/suppliers claims and "
-"grievances.\n"
-"\n"
-"It is fully integrated with the email gateway so that you can create\n"
-"automatically new claims based on incoming emails.\n"
-"    "
-msgstr ""
 
 #. module: base
 #: selection:ir.module.module,license:0
@@ -11219,7 +11481,6 @@ msgstr ""
 
 #. module: base
 #: field:res.partner,customer:0
-#: field:res.partner.address,is_customer_add:0
 msgid "Customer"
 msgstr "Πελάτης"
 
@@ -11309,7 +11570,7 @@ msgid "ir.fields.converter"
 msgstr ""
 
 #. module: base
-#: code:addons/base/res/res_partner.py:436
+#: code:addons/base/res/res_partner.py:439
 #, python-format
 msgid "Couldn't create contact without email address !"
 msgstr ""
@@ -11359,8 +11620,8 @@ msgid ""
 msgstr ""
 
 #. module: base
-#: model:ir.module.module,shortdesc:base.module_auth_openid
-msgid "OpenID Authentification"
+#: model:ir.module.module,shortdesc:base.module_l10n_bo
+msgid "Bolivia Localization Chart Account"
 msgstr ""
 
 #. module: base
@@ -11451,7 +11712,7 @@ msgid ""
 msgstr ""
 
 #. module: base
-#: code:addons/base/ir/ir_mail_server.py:470
+#: code:addons/base/ir/ir_mail_server.py:469
 #, python-format
 msgid "Mail delivery failed"
 msgstr ""
@@ -11478,7 +11739,7 @@ msgid "Object"
 msgstr "Αντικείμενο"
 
 #. module: base
-#: code:addons/osv.py:148
+#: code:addons/osv.py:150
 #, python-format
 msgid ""
 "\n"
@@ -11564,7 +11825,7 @@ msgid "Mrs."
 msgstr ""
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:424
+#: code:addons/base/ir/ir_model.py:426
 #, python-format
 msgid ""
 "Changing the type of a column is not yet supported. Please drop it and "
@@ -11577,7 +11838,7 @@ msgid "User Ref."
 msgstr "User Ref."
 
 #. module: base
-#: code:addons/base/ir/ir_fields.py:227
+#: code:addons/base/ir/ir_fields.py:226
 #, python-format
 msgid "'%s' does not seem to be a valid datetime for field '%%(field)s'"
 msgstr ""
@@ -11622,8 +11883,6 @@ msgstr "Οδηγός Παραπομπών"
 #. module: base
 #: model:ir.model,name:base.model_res_partner
 #: field:res.company,partner_id:0
-#: view:res.partner:0
-#: field:res.partner.address,partner_id:0
 #: model:res.partner.category,name:base.res_partner_category_0
 #: selection:res.partner.title,domain:0
 #: model:res.request.link,name:base.req_link_partner
@@ -11631,7 +11890,7 @@ msgid "Partner"
 msgstr "Συνεργάτης"
 
 #. module: base
-#: code:addons/base/ir/ir_mail_server.py:478
+#: code:addons/base/ir/ir_mail_server.py:477
 #, python-format
 msgid ""
 "Your server does not seem to support SSL, you may want to try STARTTLS "
@@ -11659,12 +11918,6 @@ msgstr "Falkland Islands"
 #: model:res.country,name:base.lb
 msgid "Lebanon"
 msgstr "Lebanon"
-
-#. module: base
-#: selection:workflow.activity,join_mode:0
-#: selection:workflow.activity,split_mode:0
-msgid "Xor"
-msgstr "Xor"
 
 #. module: base
 #: view:ir.actions.report.xml:0
@@ -11772,8 +12025,10 @@ msgid "Selection"
 msgstr "Επιλογή"
 
 #. module: base
-#: field:ir.module.module,icon:0
-msgid "Icon URL"
+#: view:change.password.wizard:0
+#: model:ir.actions.act_window,name:base.change_password_wizard_action
+#: view:res.users:0
+msgid "Change Password"
 msgstr ""
 
 #. module: base
@@ -11810,7 +12065,7 @@ msgid "Action Type"
 msgstr "Τύπος Ενέργειας"
 
 #. module: base
-#: code:addons/base/module/module.py:351
+#: code:addons/base/module/module.py:372
 #, python-format
 msgid ""
 "You try to install module '%s' that depends on module '%s'.\n"
@@ -11947,11 +12202,6 @@ msgid "Hour 00->12: %(h12)s"
 msgstr "Ώρα 00->12: %(h12)s"
 
 #. module: base
-#: help:res.partner.address,active:0
-msgid "Uncheck the active field to hide the contact."
-msgstr "Ξετικάρετε το ενεργό πεδίο για να κρύψετε την επαφή"
-
-#. module: base
 #: model:res.country,name:base.dk
 msgid "Denmark"
 msgstr "Denmark"
@@ -11967,7 +12217,7 @@ msgid "workflow.instance"
 msgstr "workflow.instance"
 
 #. module: base
-#: code:addons/orm.py:480
+#: code:addons/orm.py:479
 #, python-format
 msgid "Unknown attribute %s in %s "
 msgstr ""
@@ -11990,7 +12240,7 @@ msgid ""
 msgstr ""
 
 #. module: base
-#: code:addons/fields.py:126
+#: code:addons/fields.py:130
 #, python-format
 msgid "undefined get method !"
 msgstr "undefined get method !"
@@ -12032,14 +12282,14 @@ msgid "Payroll Accounting"
 msgstr ""
 
 #. module: base
-#: help:ir.attachment,type:0
-msgid "Binary File or external URL"
-msgstr ""
-
-#. module: base
 #: view:res.users:0
 msgid "Change password"
 msgstr ""
+
+#. module: base
+#: model:res.country,name:base.sr
+msgid "Suriname"
+msgstr "Suriname"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_order_dates
@@ -12087,82 +12337,48 @@ msgid "Address Format"
 msgstr ""
 
 #. module: base
-#: help:res.lang,grouping:0
-msgid ""
-"The Separator Format should be like [,n] where 0 < n :starting from Unit "
-"digit.-1 will end the separation. e.g. [3,2,-1] will represent 106500 to be "
-"1,06,500;[1,2,-1] will represent it to be 106,50,0;[3] will represent it as "
-"106,500. Provided ',' as the thousand separator in each case."
+#: model:ir.model,name:base.model_change_password_user
+msgid "Change Password Wizard User"
 msgstr ""
-"The Separator Format should be like [,n] where 0 < n :starting from Unit "
-"digit.-1 will end the separation. e.g. [3,2,-1] will represent 106500 to be "
-"1,06,500;[1,2,-1] will represent it to be 106,50,0;[3] will represent it as "
-"106,500. Provided ',' as the thousand separator in each case."
-
-#. module: base
-#: model:ir.module.module,description:base.module_l10n_br
-msgid ""
-"\n"
-"Base module for the Brazilian localization.\n"
-"===========================================\n"
-"\n"
-"This module consists in:\n"
-"------------------------\n"
-" - Generic Brazilian chart of accounts\n"
-" - Brazilian taxes such as:\n"
-"\n"
-"        - IPI\n"
-"        - ICMS\n"
-"        - PIS\n"
-"        - COFINS\n"
-"        - ISS\n"
-"        - IR\n"
-"        - IRPJ\n"
-"        - CSLL\n"
-"\n"
-" - Tax Situation Code (CST) required for the electronic fiscal invoicing "
-"(NFe)\n"
-"\n"
-"The field tax_discount has also been added in the account.tax.template and "
-"account.tax\n"
-"objects to allow the proper computation of some Brazilian VATs such as ICMS. "
-"The\n"
-"chart of account creation wizard has been extended to propagate those new "
-"data properly.\n"
-"\n"
-"It's important to note however that this module lack many implementations to "
-"use\n"
-"OpenERP properly in Brazil. Those implementations (such as the electronic "
-"fiscal\n"
-"Invoicing which is already operational) are brought by more than 15 "
-"additional\n"
-"modules of the Brazilian Launchpad localization project\n"
-"https://launchpad.net/openerp.pt-br-localiz and their dependencies in the "
-"extra\n"
-"addons branch. Those modules aim at not breaking with the remarkable "
-"OpenERP\n"
-"modularity, this is why they are numerous but small. One of the reasons for\n"
-"maintaining those modules apart is that Brazilian Localization leaders need "
-"commit\n"
-"rights agility to complete the localization as companies fund the remaining "
-"legal\n"
-"requirements (such as soon fiscal ledgers, accounting SPED, fiscal SPED and "
-"PAF\n"
-"ECF that are still missing as September 2011). Those modules are also "
-"strictly\n"
-"licensed under AGPL V3 and today don't come with any additional paid "
-"permission\n"
-"for online use of 'private modules'."
-msgstr ""
-
-#. module: base
-#: model:ir.model,name:base.model_ir_values
-msgid "ir.values"
-msgstr "ir.values"
 
 #. module: base
 #: model:res.groups,name:base.group_no_one
 msgid "Technical Features"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,description:base.module_l10n_ve
+msgid ""
+"\n"
+"Chart of Account for Venezuela.\n"
+"===============================\n"
+"\n"
+"Venezuela doesn't have any chart of account by law, but the default\n"
+"proposed in OpenERP should comply with some Accepted best practices in "
+"Venezuela, \n"
+"this plan comply with this practices.\n"
+"\n"
+"This module has been tested as base for more of 1000 companies, because \n"
+"it is based in a mixtures of most common softwares in the Venezuelan \n"
+"market what will allow for sure to accountants feel them first steps with \n"
+"OpenERP more confortable.\n"
+"\n"
+"This module doesn't pretend be the total localization for Venezuela, \n"
+"but it will help you to start really quickly with OpenERP in this country.\n"
+"\n"
+"This module give you.\n"
+"---------------------\n"
+"\n"
+"- Basic taxes for Venezuela.\n"
+"- Have basic data to run tests with community localization.\n"
+"- Start a company from 0 if your needs are basic from an accounting PoV.\n"
+"\n"
+"We recomend install account_anglo_saxon if you want valued your \n"
+"stocks as Venezuela does with out invoices.\n"
+"\n"
+"If you install this module, and select Custom chart a basic chart will be "
+"proposed, \n"
+"but you will need set manually account defaults for taxes.\n"
 msgstr ""
 
 #. module: base
@@ -12171,7 +12387,7 @@ msgid "Occitan (FR, post 1500) / Occitan"
 msgstr ""
 
 #. module: base
-#: code:addons/base/ir/ir_mail_server.py:213
+#: code:addons/base/ir/ir_mail_server.py:212
 #, python-format
 msgid ""
 "Here is what we got instead:\n"
@@ -12351,6 +12567,11 @@ msgid ""
 msgstr ""
 
 #. module: base
+#: model:ir.model,name:base.model_ir_values
+msgid "ir.values"
+msgstr "ir.values"
+
+#. module: base
 #: model:ir.model,name:base.model_base_module_update
 msgid "Update Module"
 msgstr ""
@@ -12366,7 +12587,7 @@ msgid "Body"
 msgstr "Κυρίως θέμα"
 
 #. module: base
-#: code:addons/base/ir/ir_mail_server.py:220
+#: code:addons/base/ir/ir_mail_server.py:219
 #, python-format
 msgid "Connection test succeeded!"
 msgstr ""
@@ -12414,7 +12635,7 @@ msgid "choose"
 msgstr "επιλέξτε"
 
 #. module: base
-#: code:addons/base/ir/ir_mail_server.py:442
+#: code:addons/base/ir/ir_mail_server.py:441
 #, python-format
 msgid ""
 "Please define at least one SMTP server, or provide the SMTP parameters "
@@ -12590,10 +12811,14 @@ msgid "Components Buyer"
 msgstr ""
 
 #. module: base
-#: view:ir.module.module:0
+#: model:ir.module.module,description:base.module_web_tests_demo
 msgid ""
-"Do you confirm the uninstallation of this module? This will permanently "
-"erase all data currently stored by the module!"
+"\n"
+"OpenERP Web demo of a test suite\n"
+"================================\n"
+"\n"
+"Test suite example, same code as that used in the testing documentation.\n"
+"    "
 msgstr ""
 
 #. module: base
@@ -12625,12 +12850,13 @@ msgstr ""
 
 #. module: base
 #: selection:ir.actions.act_window.view,view_mode:0
+#: view:ir.ui.view:0
 #: selection:ir.ui.view,type:0
 msgid "Kanban"
 msgstr ""
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:287
+#: code:addons/base/ir/ir_model.py:289
 #, python-format
 msgid ""
 "The Selection Options expression is must be in the [('key','Label'), ...] "
@@ -12644,7 +12870,6 @@ msgstr ""
 
 #. module: base
 #: view:ir.actions.report.xml:0
-#: model:ir.ui.menu,name:base.menu_sales_configuration_misc
 #: view:res.currency:0
 msgid "Miscellaneous"
 msgstr "Διάφορα"
@@ -12665,23 +12890,6 @@ msgstr ""
 #: model:res.country,name:base.cn
 msgid "China"
 msgstr "China"
-
-#. module: base
-#: model:ir.module.module,description:base.module_l10n_pl
-msgid ""
-"\n"
-"This is the module to manage the accounting chart and taxes for Poland in "
-"OpenERP.\n"
-"============================================================================="
-"=====\n"
-"\n"
-"To jest moduł do tworzenia wzorcowego planu kont i podstawowych ustawień do "
-"podatków\n"
-"VAT 0%, 7% i 22%. Moduł ustawia też konta do kupna i sprzedaży towarów "
-"zakładając,\n"
-"że wszystkie towary są w obrocie hurtowym.\n"
-"    "
-msgstr ""
 
 #. module: base
 #: help:ir.actions.server,wkf_model_id:0
@@ -12753,25 +12961,9 @@ msgid "Bulgaria"
 msgstr "Bulgaria"
 
 #. module: base
-#: model:ir.module.module,description:base.module_mrp_byproduct
-msgid ""
-"\n"
-"This module allows you to produce several products from one production "
-"order.\n"
-"============================================================================="
-"\n"
-"\n"
-"You can configure by-products in the bill of material.\n"
-"\n"
-"Without this module:\n"
-"--------------------\n"
-"    A + B + C -> D\n"
-"\n"
-"With this module:\n"
-"-----------------\n"
-"    A + B + C -> D + E\n"
-"    "
-msgstr ""
+#: model:res.country,name:base.ao
+msgid "Angola"
+msgstr "Angola"
 
 #. module: base
 #: model:res.country,name:base.tf
@@ -12798,6 +12990,26 @@ msgstr "5.  %y, %Y         ==> 08, 2008"
 #: model:res.partner.title,shortcut:base.res_partner_title_ltd
 msgid "ltd"
 msgstr "Ε.Π.Ε."
+
+#. module: base
+#: model:ir.module.module,description:base.module_crm_claim
+msgid ""
+"\n"
+"\n"
+"Manage Customer Claims.\n"
+"=======================\n"
+"This application allows you to track your customers/suppliers claims and "
+"grievances.\n"
+"\n"
+"It is fully integrated with the email gateway so that you can create\n"
+"automatically new claims based on incoming emails.\n"
+"    "
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_account_test
+msgid "Accounting Consistency Tests"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_purchase_double_validation
@@ -12835,6 +13047,7 @@ msgstr ""
 #. module: base
 #: field:base.language.export,state:0
 #: field:ir.ui.menu,icon_pict:0
+#: field:res.partner,has_image:0
 #: field:res.users,user_email:0
 msgid "unknown"
 msgstr "άγνωστο"
@@ -12901,6 +13114,11 @@ msgstr "Βιβλίο Διευθύνσεων"
 #: model:ir.model,name:base.model_ir_sequence_type
 msgid "ir.sequence.type"
 msgstr "ir.sequence.type"
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_be_hr_payroll_account
+msgid "Belgium - Payroll with Accounting"
+msgstr ""
 
 #. module: base
 #: selection:base.language.export,format:0
@@ -12991,6 +13209,7 @@ msgid "Projects, Tasks"
 msgstr ""
 
 #. module: base
+#: field:ir.attachment,res_id:0
 #: field:workflow.instance,res_id:0
 #: field:workflow.triggers,res_id:0
 msgid "Resource ID"
@@ -13003,7 +13222,7 @@ msgid "Information"
 msgstr "Πληροφορίες"
 
 #. module: base
-#: code:addons/base/ir/ir_fields.py:147
+#: code:addons/base/ir/ir_fields.py:146
 #, python-format
 msgid "false"
 msgstr ""
@@ -13035,15 +13254,19 @@ msgid ""
 msgstr ""
 
 #. module: base
+#: field:res.partner.category,parent_right:0
+msgid "Right parent"
+msgstr ""
+
+#. module: base
 #: view:base.module.update:0
 msgid "Update Module List"
 msgstr ""
 
 #. module: base
-#: code:addons/base/res/res_users.py:682
-#: code:addons/base/res/res_users.py:822
+#: code:addons/base/res/res_users.py:679
+#: code:addons/base/res/res_users.py:819
 #: selection:res.partner,type:0
-#: selection:res.partner.address,type:0
 #: view:res.users:0
 #, python-format
 msgid "Other"
@@ -13106,6 +13329,11 @@ msgstr ""
 #: code:addons/base/ir/ir_model.py:84
 #, python-format
 msgid "The osv_memory field can only be compared with = and != operator."
+msgstr ""
+
+#. module: base
+#: view:res.partner:0
+msgid "Fax:"
 msgstr ""
 
 #. module: base
@@ -13181,29 +13409,6 @@ msgid "External Identifier"
 msgstr ""
 
 #. module: base
-#: model:ir.module.module,description:base.module_event_sale
-msgid ""
-"\n"
-"Creating registration with sale orders.\n"
-"=======================================\n"
-"\n"
-"This module allows you to automatize and connect your registration creation "
-"with\n"
-"your main sale flow and therefore, to enable the invoicing feature of "
-"registrations.\n"
-"\n"
-"It defines a new kind of service products that offers you the possibility "
-"to\n"
-"choose an event category associated with it. When you encode a sale order "
-"for\n"
-"that product, you will be able to choose an existing event of that category "
-"and\n"
-"when you confirm your sale order it will automatically create a registration "
-"for\n"
-"this event.\n"
-msgstr ""
-
-#. module: base
 #: model:ir.module.module,description:base.module_audittrail
 msgid ""
 "\n"
@@ -13250,7 +13455,7 @@ msgid "Delivery Costs"
 msgstr ""
 
 #. module: base
-#: code:addons/base/ir/ir_cron.py:391
+#: code:addons/base/ir/ir_cron.py:248
 #, python-format
 msgid ""
 "This cron task is currently being executed and may not be modified, please "
@@ -13294,9 +13499,9 @@ msgid ""
 msgstr ""
 
 #. module: base
-#: model:ir.module.module,shortdesc:base.module_base_crypt
-msgid "DB Password Encryption"
-msgstr ""
+#: view:ir.rule:0
+msgid "Record rules"
+msgstr "Καταχώρηση κανόνων"
 
 #. module: base
 #: help:workflow.transition,act_to:0
@@ -13540,9 +13745,14 @@ msgid ""
 msgstr ""
 
 #. module: base
-#: code:addons/base/ir/ir_fields.py:147
-#, python-format
-msgid "no"
+#: model:ir.module.module,description:base.module_portal_stock
+msgid ""
+"\n"
+"This module adds access rules to your portal if stock and portal are "
+"installed.\n"
+"============================================================================="
+"=============\n"
+"    "
 msgstr ""
 
 #. module: base
@@ -13569,63 +13779,14 @@ msgid "System Configuration done"
 msgstr ""
 
 #. module: base
-#: model:ir.actions.act_window,name:base.ir_config_list_action
-#: view:ir.config_parameter:0
-#: model:ir.ui.menu,name:base.ir_config_menu
-msgid "System Parameters"
+#: field:ir.attachment,db_datas:0
+msgid "Database Data"
 msgstr ""
 
 #. module: base
-#: model:ir.module.module,description:base.module_l10n_ch
-msgid ""
-"\n"
-"Swiss localization :\n"
-"====================\n"
-"    - DTA generation for a lot of payment types\n"
-"    - BVR management (number generation, report.)\n"
-"    - Import account move from the bank file (like v11)\n"
-"    - Simplify the way you handle the bank statement for reconciliation\n"
-"\n"
-"You can also add ZIP and bank completion with:\n"
-"----------------------------------------------\n"
-"    - l10n_ch_zip\n"
-"    - l10n_ch_bank\n"
-" \n"
-" **Author:** Camptocamp SA\n"
-" \n"
-" **Donors:** Hasa Sàrl, Open Net Sàrl and Prisme Solutions Informatique SA\n"
-"\n"
-"Module incluant la localisation Suisse de OpenERP revu et corrigé par "
-"Camptocamp.\n"
-"Cette nouvelle version comprend la gestion et l'émissionde BVR, le paiement\n"
-"électronique via DTA (pour les banques, le système postal est en "
-"développement)\n"
-"et l'import du relevé de compte depuis la banque de manière automatisée. De "
-"plus,\n"
-"nous avons intégré la définition de toutes les banques Suisses(adresse, "
-"swift et clearing).\n"
-"\n"
-"Par ailleurs, conjointement à ce module, nous proposons la complétion NPA:\n"
-"--------------------------------------------------------------------------\n"
-"Vous pouvez ajouter la completion des banques et des NPA avec with:\n"
-"~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n"
-"    - l10n_ch_zip\n"
-"    - l10n_ch_bank\n"
-" \n"
-" **Auteur:** Camptocamp SA\n"
-" \n"
-" **Donateurs:** Hasa Sàrl, Open Net Sàrl and Prisme Solutions Informatique "
-"SA\n"
-"\n"
-"TODO :\n"
-"------\n"
-"    - Implement bvr import partial reconciliation\n"
-"    - Replace wizard by osv_memory when possible\n"
-"    - Add mising HELP\n"
-"    - Finish code comment\n"
-"    - Improve demo data\n"
-"\n"
-msgstr ""
+#: model:res.country,name:base.tc
+msgid "Turks and Caicos Islands"
+msgstr "Turks and Caicos Islands"
 
 #. module: base
 #: field:workflow.triggers,instance_id:0
@@ -13667,17 +13828,6 @@ msgid ""
 msgstr ""
 
 #. module: base
-#: model:ir.module.module,description:base.module_web_analytics
-msgid ""
-"\n"
-"Google Analytics.\n"
-"==============================\n"
-"\n"
-"Collects web application usage with Google Analytics.\n"
-"    "
-msgstr ""
-
-#. module: base
 #: help:ir.sequence,implementation:0
 msgid ""
 "Two sequence object implementations are offered: Standard and 'No gap'. The "
@@ -13711,7 +13861,7 @@ msgid "Low"
 msgstr "Χαμηλή"
 
 #. module: base
-#: code:addons/base/ir/ir_ui_menu.py:317
+#: code:addons/base/ir/ir_ui_menu.py:354
 #, python-format
 msgid "Error ! You can not create recursive Menu."
 msgstr ""
@@ -13791,11 +13941,10 @@ msgid "El Salvador"
 msgstr "El Salvador"
 
 #. module: base
-#: code:addons/base/res/res_company.py:147
+#: code:addons/base/res/res_company.py:161
 #: field:res.bank,phone:0
 #: field:res.company,phone:0
 #: field:res.partner,phone:0
-#: field:res.partner.address,phone:0
 #, python-format
 msgid "Phone"
 msgstr "Τηλέφωνο"
@@ -13809,6 +13958,11 @@ msgstr "Μενού Πρόσβασης"
 #: model:res.country,name:base.th
 msgid "Thailand"
 msgstr "Thailand"
+
+#. module: base
+#: model:ir.model,name:base.model_change_password_wizard
+msgid "Change Password Wizard"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,summary:base.module_account_voucher
@@ -13828,6 +13982,30 @@ msgstr ""
 #. module: base
 #: selection:base.language.install,lang:0
 msgid "Romanian / română"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,description:base.module_l10n_mx
+msgid ""
+"\n"
+"Minimal accounting configuration for Mexico.\n"
+"============================================\n"
+"\n"
+"This Chart of account is a minimal proposal to be able to use OoB the \n"
+"accounting feature of Openerp.\n"
+"\n"
+"This doesn't pretend be all the localization for MX it is just the minimal \n"
+"data required to start from 0 in mexican localization.\n"
+"\n"
+"This modules and its content is updated frequently by openerp-mexico team.\n"
+"\n"
+"With this module you will have:\n"
+"\n"
+" - Minimal chart of account tested in production eviroments.\n"
+" - Minimal chart of taxes, to comply with SAT_ requirements.\n"
+"\n"
+".. SAT: http://www.sat.gob.mx/\n"
+"    "
 msgstr ""
 
 #. module: base
@@ -13864,41 +14042,6 @@ msgstr "Σχέση Αντικειμένου"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_voucher
 msgid "eInvoicing & Payments"
-msgstr ""
-
-#. module: base
-#: model:ir.module.module,description:base.module_base_crypt
-msgid ""
-"\n"
-"Replaces cleartext passwords in the database with a secure hash.\n"
-"================================================================\n"
-"\n"
-"For your existing user base, the removal of the cleartext passwords occurs \n"
-"immediately when you install base_crypt.\n"
-"\n"
-"All passwords will be replaced by a secure, salted, cryptographic hash, \n"
-"preventing anyone from reading the original password in the database.\n"
-"\n"
-"After installing this module, it won't be possible to recover a forgotten "
-"password \n"
-"for your users, the only solution is for an admin to set a new password.\n"
-"\n"
-"Security Warning:\n"
-"-----------------\n"
-"Installing this module does not mean you can ignore other security "
-"measures,\n"
-"as the password is still transmitted unencrypted on the network, unless you\n"
-"are using a secure protocol such as XML-RPCS or HTTPS.\n"
-"\n"
-"It also does not protect the rest of the content of the database, which may\n"
-"contain critical data. Appropriate security measures need to be implemented\n"
-"by the system administrator in all areas, such as: protection of database\n"
-"backups, system files, remote shell access, physical server access.\n"
-"\n"
-"Interaction with LDAP authentication:\n"
-"-------------------------------------\n"
-"This module is currently not compatible with the ``user_ldap`` module and\n"
-"will disable LDAP authentication completely if installed at the same time.\n"
 msgstr ""
 
 #. module: base
@@ -13961,40 +14104,8 @@ msgid "Apply for Write"
 msgstr ""
 
 #. module: base
-#: model:ir.module.module,description:base.module_stock
-msgid ""
-"\n"
-"Manage multi-warehouses, multi- and structured stock locations\n"
-"==============================================================\n"
-"\n"
-"The warehouse and inventory management is based on a hierarchical location "
-"structure, from warehouses to storage bins. \n"
-"The double entry inventory system allows you to manage customers, suppliers "
-"as well as manufacturing inventories. \n"
-"\n"
-"OpenERP has the capacity to manage lots and serial numbers ensuring "
-"compliance with the traceability requirements imposed by the majority of "
-"industries.\n"
-"\n"
-"Key Features\n"
-"-------------\n"
-"* Moves history and planning,\n"
-"* Stock valuation (standard or average price, ...)\n"
-"* Robustness faced with Inventory differences\n"
-"* Automatic reordering rules\n"
-"* Support for barcodes\n"
-"* Rapid detection of mistakes through double entry system\n"
-"* Traceability (Upstream / Downstream, Serial numbers, ...)\n"
-"\n"
-"Dashboard / Reports for Warehouse Management will include:\n"
-"----------------------------------------------------------\n"
-"* Incoming Products (Graph)\n"
-"* Outgoing Products (Graph)\n"
-"* Procurement in Exception\n"
-"* Inventory Analysis\n"
-"* Last Product Inventories\n"
-"* Moves Analysis\n"
-"    "
+#: field:ir.ui.menu,parent_left:0
+msgid "Parent Left"
 msgstr ""
 
 #. module: base
@@ -14086,6 +14197,21 @@ msgid "View Auto-Load"
 msgstr "Αυτόματη Φόρτωση Προβολής"
 
 #. module: base
+#: model:ir.module.module,description:base.module_l10n_et
+msgid ""
+"\n"
+"Base Module for Ethiopian Localization\n"
+"======================================\n"
+"\n"
+"This is the latest Ethiopian OpenERP localization and consists of:\n"
+"    - Chart of Accounts\n"
+"    - VAT tax structure\n"
+"    - Withholding tax structure\n"
+"    - Regional State listings\n"
+"    "
+msgstr ""
+
+#. module: base
 #: view:res.users:0
 msgid "Allowed Companies"
 msgstr ""
@@ -14128,34 +14254,6 @@ msgid "Persian / فارس"
 msgstr ""
 
 #. module: base
-#: model:ir.module.module,description:base.module_hr_expense
-msgid ""
-"\n"
-"Manage expenses by Employees\n"
-"============================\n"
-"\n"
-"This application allows you to manage your employees' daily expenses. It "
-"gives you access to your employees’ fee notes and give you the right to "
-"complete and validate or refuse the notes. After validation it creates an "
-"invoice for the employee.\n"
-"Employee can encode their own expenses and the validation flow puts it "
-"automatically in the accounting after validation by managers.\n"
-"\n"
-"\n"
-"The whole flow is implemented as:\n"
-"----------------------------------\n"
-"* Draft expense\n"
-"* Confirmation of the sheet by the employee\n"
-"* Validation by his manager\n"
-"* Validation by the accountant and receipt creation\n"
-"\n"
-"This module also uses analytic accounting and is compatible with the invoice "
-"on timesheet module so that you are able to automatically re-invoice your "
-"customers' expenses if your work by project.\n"
-"    "
-msgstr ""
-
-#. module: base
 #: view:base.language.export:0
 msgid "Export Settings"
 msgstr ""
@@ -14177,9 +14275,9 @@ msgid "Unmet dependency !"
 msgstr "Ανεκπλήρωτες εξαρτήσεις!"
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:500
-#: code:addons/base/ir/ir_model.py:561
-#: code:addons/base/ir/ir_model.py:1023
+#: code:addons/base/ir/ir_model.py:502
+#: code:addons/base/ir/ir_model.py:563
+#: code:addons/base/ir/ir_model.py:1024
 #, python-format
 msgid "Administrator access is required to uninstall a module"
 msgstr ""
@@ -14190,7 +14288,37 @@ msgid "base.module.configuration"
 msgstr ""
 
 #. module: base
-#: code:addons/orm.py:3829
+#: model:ir.module.module,description:base.module_point_of_sale
+msgid ""
+"\n"
+"Quick and Easy sale process\n"
+"===========================\n"
+"\n"
+"This module allows you to manage your shop sales very easily with a fully "
+"web based touchscreen interface.\n"
+"It is compatible with all PC tablets and the iPad, offering multiple payment "
+"methods. \n"
+"\n"
+"Product selection can be done in several ways: \n"
+"\n"
+"* Using a barcode reader\n"
+"* Browsing through categories of products or via a text search.\n"
+"\n"
+"Main Features\n"
+"-------------\n"
+"* Fast encoding of the sale\n"
+"* Choose one payment method (the quick way) or split the payment between "
+"several payment methods\n"
+"* Computation of the amount of money to return\n"
+"* Create and confirm the picking list automatically\n"
+"* Allows the user to create an invoice automatically\n"
+"* Refund previous sales\n"
+"    "
+msgstr ""
+
+#. module: base
+#: code:addons/orm.py:3567
+#: code:addons/orm.py:3860
 #, python-format
 msgid ""
 "The requested operation cannot be completed due to security restrictions. "
@@ -14216,7 +14344,7 @@ msgid ""
 msgstr ""
 
 #. module: base
-#: code:addons/orm.py:5248
+#: code:addons/orm.py:5321
 #, python-format
 msgid ""
 "%s This might be '%s' in the current model, or a field of the same name in "
@@ -14261,7 +14389,7 @@ msgid "Access"
 msgstr "Πρόσβαση"
 
 #. module: base
-#: code:addons/base/res/res_company.py:151
+#: code:addons/base/res/res_company.py:165
 #: field:res.partner,vat:0
 #, python-format
 msgid "TIN"
@@ -14294,11 +14422,10 @@ msgid "Bahrain"
 msgstr "Bahrain"
 
 #. module: base
-#: code:addons/base/res/res_company.py:148
+#: code:addons/base/res/res_company.py:162
 #: field:res.bank,fax:0
 #: field:res.company,fax:0
 #: field:res.partner,fax:0
-#: field:res.partner.address,fax:0
 #, python-format
 msgid "Fax"
 msgstr "Fax"
@@ -14314,8 +14441,6 @@ msgstr "Fax"
 #: field:res.currency,company_id:0
 #: view:res.partner:0
 #: field:res.partner,company_id:0
-#: field:res.partner.address,company_id:0
-#: field:res.partner.address,parent_id:0
 #: field:res.partner.bank,company_id:0
 #: view:res.users:0
 #: field:res.users,company_id:0
@@ -14430,7 +14555,7 @@ msgid "Officer"
 msgstr ""
 
 #. module: base
-#: code:addons/orm.py:789
+#: code:addons/orm.py:785
 #, python-format
 msgid "Serialization field `%s` not found for sparse field `%s`!"
 msgstr ""
@@ -14442,7 +14567,6 @@ msgstr "Jamaica"
 
 #. module: base
 #: field:res.partner,color:0
-#: field:res.partner.address,color:0
 msgid "Color Index"
 msgstr ""
 
@@ -14475,7 +14599,7 @@ msgid ""
 msgstr ""
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:163
+#: code:addons/base/ir/ir_model.py:164
 #, python-format
 msgid "Model '%s' contains module data and cannot be removed!"
 msgstr ""
@@ -14486,8 +14610,8 @@ msgid "Azerbaijan"
 msgstr "Azerbaijan"
 
 #. module: base
-#: code:addons/base/ir/ir_mail_server.py:477
-#: code:addons/base/res/res_partner.py:436
+#: code:addons/base/ir/ir_mail_server.py:476
+#: code:addons/base/res/res_partner.py:439
 #, python-format
 msgid "Warning"
 msgstr "Προσοχή"
@@ -14512,11 +14636,6 @@ msgstr "Virgin Islands (British)"
 #: model:ir.ui.menu,name:base.menu_ir_property
 msgid "Parameters"
 msgstr "Παράμετροι"
-
-#. module: base
-#: model:res.country,name:base.pm
-msgid "Saint Pierre and Miquelon"
-msgstr "Saint Pierre and Miquelon"
 
 #. module: base
 #: selection:base.language.install,lang:0
@@ -14607,7 +14726,6 @@ msgstr ""
 #: field:res.country.state,country_id:0
 #: field:res.partner,country:0
 #: field:res.partner,country_id:0
-#: field:res.partner.address,country_id:0
 #: field:res.partner.bank,country_id:0
 msgid "Country"
 msgstr "Χώρα"
@@ -14676,9 +14794,17 @@ msgid "Spanish (SV) / Español (SV)"
 msgstr ""
 
 #. module: base
-#: model:ir.actions.act_window,name:base.open_module_tree
-msgid "Install a Module"
+#: help:res.lang,grouping:0
+msgid ""
+"The Separator Format should be like [,n] where 0 < n :starting from Unit "
+"digit.-1 will end the separation. e.g. [3,2,-1] will represent 106500 to be "
+"1,06,500;[1,2,-1] will represent it to be 106,50,0;[3] will represent it as "
+"106,500. Provided ',' as the thousand separator in each case."
 msgstr ""
+"The Separator Format should be like [,n] where 0 < n :starting from Unit "
+"digit.-1 will end the separation. e.g. [3,2,-1] will represent 106500 to be "
+"1,06,500;[1,2,-1] will represent it to be 106,50,0;[3] will represent it as "
+"106,500. Provided ',' as the thousand separator in each case."
 
 #. module: base
 #: field:ir.module.module,auto_install:0
@@ -14705,7 +14831,7 @@ msgid "Japan"
 msgstr "Japan"
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:410
+#: code:addons/base/ir/ir_model.py:412
 #, python-format
 msgid "Can only rename one column at a time!"
 msgstr ""
@@ -14767,6 +14893,37 @@ msgid "Canada - Accounting"
 msgstr ""
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_co
+msgid "Colombian - Accounting"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,description:base.module_account_voucher
+msgid ""
+"\n"
+"Invoicing & Payments by Accounting Voucher & Receipts\n"
+"=====================================================\n"
+"The specific and easy-to-use Invoicing system in OpenERP allows you to keep "
+"track of your accounting, even when you are not an accountant. It provides "
+"an easy way to follow up on your suppliers and customers. \n"
+"\n"
+"You could use this simplified accounting in case you work with an (external) "
+"account to keep your books, and you still want to keep track of payments. \n"
+"\n"
+"The Invoicing system includes receipts and vouchers (an easy way to keep "
+"track of sales and purchases). It also offers you an easy method of "
+"registering payments, without having to encode complete abstracts of "
+"account.\n"
+"\n"
+"This module manages:\n"
+"\n"
+"* Voucher Entry\n"
+"* Voucher Receipt [Sales & Purchase]\n"
+"* Voucher Payment [Customer & Supplier]\n"
+"    "
+msgstr ""
+
+#. module: base
 #: model:ir.actions.act_window,name:base.act_ir_actions_todo_form
 #: model:ir.model,name:base.model_ir_actions_todo
 #: model:ir.ui.menu,name:base.menu_ir_actions_todo
@@ -14790,7 +14947,7 @@ msgid "Note that this operation might take a few minutes."
 msgstr ""
 
 #. module: base
-#: code:addons/base/ir/ir_fields.py:364
+#: code:addons/base/ir/ir_fields.py:363
 #, python-format
 msgid ""
 "Ambiguous specification for field '%(field)s', only provide one of name, "
@@ -14828,6 +14985,12 @@ msgstr ""
 #: field:workflow.transition,condition:0
 msgid "Condition"
 msgstr "Συνθήκη"
+
+#. module: base
+#: model:ir.actions.client,name:base.modules_updates_act_cl
+#: model:ir.ui.menu,name:base.menu_module_updates
+msgid "Updates"
+msgstr ""
 
 #. module: base
 #: help:res.currency,rate:0
@@ -14882,6 +15045,13 @@ msgid "Croatia"
 msgstr "Croatia"
 
 #. module: base
+#: view:ir.module.module:0
+msgid ""
+"Do you confirm the uninstallation of this module? This will permanently "
+"erase all data currently stored by the module!"
+msgstr ""
+
+#. module: base
 #: field:ir.actions.server,mobile:0
 msgid "Mobile No"
 msgstr "Κινητό"
@@ -14906,6 +15076,11 @@ msgid "SXW Content"
 msgstr ""
 
 #. module: base
+#: field:ir.attachment,file_size:0
+msgid "File Size"
+msgstr ""
+
+#. module: base
 #: help:ir.sequence,prefix:0
 msgid "Prefix value of the record for the sequence"
 msgstr ""
@@ -14921,7 +15096,7 @@ msgid "Gold"
 msgstr ""
 
 #. module: base
-#: code:addons/base/res/res_company.py:159
+#: code:addons/base/res/res_company.py:173
 #: model:ir.actions.act_window,name:base.action_res_partner_bank_account_form
 #: model:ir.model,name:base.model_res_partner_bank
 #: model:ir.ui.menu,name:base.menu_action_res_partner_bank_form
@@ -14943,14 +15118,51 @@ msgid "General Information"
 msgstr "Γενικές Πληροφορίες"
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_pt
+msgid "Portugal - Chart of Accounts"
+msgstr ""
+
+#. module: base
 #: field:ir.model.data,complete_name:0
 msgid "Complete ID"
 msgstr ""
 
 #. module: base
-#: model:res.country,name:base.tc
-msgid "Turks and Caicos Islands"
-msgstr "Turks and Caicos Islands"
+#: model:ir.module.module,description:base.module_stock
+msgid ""
+"\n"
+"Manage multi-warehouses, multi- and structured stock locations\n"
+"==============================================================\n"
+"\n"
+"The warehouse and inventory management is based on a hierarchical location "
+"structure, from warehouses to storage bins. \n"
+"The double entry inventory system allows you to manage customers, suppliers "
+"as well as manufacturing inventories. \n"
+"\n"
+"OpenERP has the capacity to manage lots and serial numbers ensuring "
+"compliance with the traceability requirements imposed by the majority of "
+"industries.\n"
+"\n"
+"Key Features\n"
+"------------\n"
+"* Moves history and planning,\n"
+"* Stock valuation (standard or average price, ...)\n"
+"* Robustness faced with Inventory differences\n"
+"* Automatic reordering rules\n"
+"* Support for barcodes\n"
+"* Rapid detection of mistakes through double entry system\n"
+"* Traceability (Upstream / Downstream, Serial numbers, ...)\n"
+"\n"
+"Dashboard / Reports for Warehouse Management will include:\n"
+"----------------------------------------------------------\n"
+"* Incoming Products (Graph)\n"
+"* Outgoing Products (Graph)\n"
+"* Procurement in Exception\n"
+"* Inventory Analysis\n"
+"* Last Product Inventories\n"
+"* Moves Analysis\n"
+"    "
+msgstr ""
 
 #. module: base
 #: help:res.partner,vat:0
@@ -14986,7 +15198,12 @@ msgid ""
 msgstr ""
 
 #. module: base
-#: code:addons/base/res/res_users.py:174
+#: model:ir.ui.menu,name:base.menu_module_tree
+msgid "Installed Modules"
+msgstr ""
+
+#. module: base
+#: code:addons/base/res/res_users.py:170
 #, python-format
 msgid "Company Switch Warning"
 msgstr "Προειδοποίηση αλλαγής εταιρίας"
@@ -15004,10 +15221,14 @@ msgid "The next number of the sequence will be incremented by this number"
 msgstr ""
 
 #. module: base
-#: field:res.partner.address,function:0
 #: selection:workflow.activity,kind:0
 msgid "Function"
 msgstr "Λειτουργία"
+
+#. module: base
+#: field:ir.ui.menu,parent_right:0
+msgid "Parent Right"
+msgstr ""
 
 #. module: base
 #: model:ir.module.category,description:base.module_category_customer_relationship_management
@@ -15045,11 +15266,6 @@ msgid "Internal Notes"
 msgstr ""
 
 #. module: base
-#: selection:res.partner.address,type:0
-msgid "Delivery"
-msgstr "Παράδοση"
-
-#. module: base
 #: model:res.partner.title,name:base.res_partner_title_pvt_ltd
 #: model:res.partner.title,shortcut:base.res_partner_title_pvt_ltd
 msgid "Corp."
@@ -15076,7 +15292,7 @@ msgid "Workflow Instances"
 msgstr "Workflow Instances"
 
 #. module: base
-#: code:addons/base/res/res_partner.py:524
+#: code:addons/base/res/res_partner.py:532
 #, python-format
 msgid "Partners: "
 msgstr "Συνεργάτες "
@@ -15087,7 +15303,7 @@ msgid "Is a Company?"
 msgstr ""
 
 #. module: base
-#: code:addons/base/res/res_company.py:159
+#: code:addons/base/res/res_company.py:173
 #: field:res.partner.bank,name:0
 #, python-format
 msgid "Bank Account"
@@ -15153,7 +15369,6 @@ msgstr "Όνομα Εξαγωγής"
 
 #. module: base
 #: help:res.partner,type:0
-#: help:res.partner.address,type:0
 msgid ""
 "Used to select automatically the right address according to the context in "
 "sales and purchases documents."
@@ -15216,6 +15431,9 @@ msgstr ""
 
 #~ msgid "On multiple doc."
 #~ msgstr "Σε πολλαπλά έγγραφα."
+
+#~ msgid "Contact Name"
+#~ msgstr "Όνομα Επαφής"
 
 #, python-format
 #~ msgid ""
@@ -15286,6 +15504,9 @@ msgstr ""
 #~ msgid "wizard.ir.model.menu.create.line"
 #~ msgstr "wizard.ir.model.menu.create.line"
 
+#~ msgid "Attached ID"
+#~ msgstr "Συνημμένη ID"
+
 #~ msgid "Keep 0 if the action must appear on all resources."
 #~ msgstr "0 αν η ενέργεια πρέπει να εμφανίζεται σε όλους τους πόρους."
 
@@ -15295,6 +15516,9 @@ msgstr ""
 #~ msgstr ""
 #~ "Συγκεκριμενοποιήστε το μήνυμα. Μπορείτε να χρησιμοποιήσετε τα πεδία του "
 #~ "αντικειμένου, π.χ. 'Αγαπητέ [[ object.partner_id.name ]]'"
+
+#~ msgid "Attached Model"
+#~ msgstr "Συνδεδεμένο Μοντέλο"
 
 #~ msgid "Trigger Name"
 #~ msgstr "Όνομα Εναύσματος"
@@ -15456,6 +15680,9 @@ msgstr ""
 #~ msgid "SXW path"
 #~ msgstr "SXW path"
 
+#~ msgid "Creator"
+#~ msgstr "Δημιουργός"
+
 #~ msgid "res.users"
 #~ msgstr "res.users"
 
@@ -15550,6 +15777,9 @@ msgstr ""
 
 #~ msgid "acc_number"
 #~ msgstr "acc_number"
+
+#~ msgid "Addresses"
+#~ msgstr "Διευθύνσεις"
 
 #~ msgid "XML Identifier"
 #~ msgstr "XML Identifier"
@@ -15679,6 +15909,9 @@ msgstr ""
 #~ msgid "Load an Official Translation"
 #~ msgstr "Φόρτωση Επίσημης Μετάφρασης"
 
+#~ msgid "Delivery"
+#~ msgstr "Παράδοση"
+
 #~ msgid "Open Source Service Company"
 #~ msgstr "Εταιρεία Συντήρησης Ανοικτού Λογισμικού"
 
@@ -15687,6 +15920,9 @@ msgstr ""
 
 #~ msgid "Type fields"
 #~ msgstr "Type fields"
+
+#~ msgid "Uncheck the active field to hide the contact."
+#~ msgstr "Ξετικάρετε το ενεργό πεδίο για να κρύψετε την επαφή"
 
 #~ msgid "Congo, The Democratic Republic of the"
 #~ msgstr "Congo, The Democratic Republic of the"

@@ -96,7 +96,7 @@ class report_custom(report_int):
             else:
                 # Process group_by data first
                 key = []
-                if group_by != None and fields[group_by] != None:
+                if group_by is not None and fields[group_by] is not None:
                     if fields[group_by][0] in levels.keys():
                         key.append(fields[group_by][0])
                     for l in levels.keys():
@@ -144,10 +144,11 @@ class report_custom(report_int):
             parent_field = self.pool.get('ir.model.fields').read(cr, uid, [report['field_parent'][0]], ['model'])
         model_name = self.pool.get('ir.model').read(cr, uid, [report['model_id'][0]], ['model'], context=context)[0]['model']
 
-        fct = {}
-        fct['id'] = lambda x : x
-        fct['gety'] = lambda x: x.split('-')[0]
-        fct['in'] = lambda x: x.split(',')
+        fct = {
+            'id': lambda x: x,
+            'gety': lambda x: x.split('-')[0],
+           'in': lambda x: x.split(',')
+        }
         new_fields = []
         new_cond = []
         for f in fields:
@@ -212,7 +213,7 @@ class report_custom(report_int):
         new_res = []
 
         prev = None
-        if groupby != None:
+        if groupby is not None:
             res_dic = {}
             for line in results:
                 if not line[groupby] and prev in res_dic:
@@ -272,7 +273,7 @@ class report_custom(report_int):
                 res = self._create_bars(cr,uid, ids, report, fields, results2, context)
             elif report['type']=='line':
                 res = self._create_lines(cr,uid, ids, report, fields, results2, context)
-        return (self.obj.get(), 'pdf')
+        return self.obj.get(), 'pdf'
 
     def _create_tree(self, uid, ids, report, fields, level, results, context):
         pageSize=common.pageSize.get(report['print_format'], [210.0,297.0])
@@ -322,7 +323,7 @@ class report_custom(report_int):
                     col.attrib.update(para='yes',
                                       tree='yes',
                                       space=str(3*shift)+'mm')
-                if line[f] != None:
+                if line[f] is not None:
                     col.text = prefix+str(line[f]) or ''
                 else:
                     col.text = '/'
@@ -350,15 +351,17 @@ class report_custom(report_int):
         x_axis = axis.X(label = fields[0]['name'], format="/a-30{}%s"),
         y_axis = axis.Y(label = ', '.join(map(lambda x : x['name'], fields[1:]))))
         
-        process_date = {}
-        process_date['D'] = lambda x : reduce(lambda xx,yy : xx+'-'+yy,x.split('-')[1:3])
-        process_date['M'] = lambda x : x.split('-')[1]
-        process_date['Y'] = lambda x : x.split('-')[0]
+        process_date = {
+            'D': lambda x: reduce(lambda xx, yy: xx + '-' + yy, x.split('-')[1:3]),
+            'M': lambda x: x.split('-')[1],
+            'Y': lambda x: x.split('-')[0]
+        }
 
-        order_date = {}
-        order_date['D'] = lambda x : time.mktime((2005,int(x.split('-')[0]), int(x.split('-')[1]),0,0,0,0,0,0))
-        order_date['M'] = lambda x : x
-        order_date['Y'] = lambda x : x
+        order_date = {
+            'D': lambda x: time.mktime((2005, int(x.split('-')[0]), int(x.split('-')[1]), 0, 0, 0, 0, 0, 0)),
+            'M': lambda x: x,
+            'Y': lambda x: x
+        }
 
         abscissa = []
         
@@ -381,7 +384,7 @@ class report_custom(report_int):
         # plots are usually displayed year by year
         # so we do so if the first field is a date
         data_by_year = {}
-        if date_idx != None:
+        if date_idx is not None:
             for r in results:
                 key = process_date['Y'](r[date_idx])
                 if key not in data_by_year:
@@ -447,15 +450,17 @@ class report_custom(report_int):
         
         can.show(80,380,'/16/H'+report['title'])
         
-        process_date = {}
-        process_date['D'] = lambda x : reduce(lambda xx,yy : xx+'-'+yy,x.split('-')[1:3])
-        process_date['M'] = lambda x : x.split('-')[1]
-        process_date['Y'] = lambda x : x.split('-')[0]
+        process_date = {
+            'D': lambda x: reduce(lambda xx, yy: xx + '-' + yy, x.split('-')[1:3]),
+            'M': lambda x: x.split('-')[1],
+            'Y': lambda x: x.split('-')[0]
+        }
 
-        order_date = {}
-        order_date['D'] = lambda x : time.mktime((2005,int(x.split('-')[0]), int(x.split('-')[1]),0,0,0,0,0,0))
-        order_date['M'] = lambda x : x
-        order_date['Y'] = lambda x : x
+        order_date = {
+            'D': lambda x: time.mktime((2005, int(x.split('-')[0]), int(x.split('-')[1]), 0, 0, 0, 0, 0, 0)),
+            'M': lambda x: x,
+            'Y': lambda x: x
+        }
 
         ar = area.T(size=(350,350),
             x_axis = axis.X(label = fields[0]['name'], format="/a-30{}%s"),
@@ -480,7 +485,7 @@ class report_custom(report_int):
         # plot are usually displayed year by year
         # so we do so if the first field is a date
         data_by_year = {}
-        if date_idx != None:
+        if date_idx is not None:
             for r in results:
                 key = process_date['Y'](r[date_idx])
                 if key not in data_by_year:
@@ -602,7 +607,7 @@ class report_custom(report_int):
             node_line = etree.SubElement(lines, 'row')
             for f in range(len(fields)):
                 col = etree.SubElement(node_line, 'col', tree='no')
-                if line[f] != None:
+                if line[f] is not None:
                     col.text = line[f] or ''
                 else:
                     col.text = '/'

@@ -19,11 +19,11 @@
 #
 ##############################################################################
 
-from osv import osv
+from openerp.osv import osv
 
 
 class ir_needaction_mixin(osv.AbstractModel):
-    '''Mixin class for objects using the need action feature.
+    """Mixin class for objects using the need action feature.
 
     Need action feature can be used by models that have to be able to
     signal that an action is required on a particular record. If in
@@ -37,7 +37,7 @@ class ir_needaction_mixin(osv.AbstractModel):
 
     This class also offers several global services:
     - ``_needaction_count``: returns the number of actions uid has to perform
-    '''
+    """
 
     _name = 'ir.needaction_mixin'
     _needaction = True
@@ -56,7 +56,7 @@ class ir_needaction_mixin(osv.AbstractModel):
     # "Need action" API
     #------------------------------------------------------
 
-    def _needaction_count(self, cr, uid, domain=[], context=None):
+    def _needaction_count(self, cr, uid, domain=None, context=None):
         """ Get the number of actions uid has to perform. """
         dom = self._needaction_domain_get(cr, uid, context=context)
         if not dom:
