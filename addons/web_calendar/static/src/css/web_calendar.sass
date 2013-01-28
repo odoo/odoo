@@ -11,17 +11,8 @@
 
     .oe_calendar
         background-color: white
-        height: 600px
+        min-height: 600px
         border-right: 1px solid #eee
-
-        .oe_calendar_table
-            position: absolute
-            left: 0px
-            right: 0px
-            top: 0px
-            border-top: 3px solid #eee
-            width: 100%
-            overflow: hidden
 
         .oe_calendar_filter
             padding: 0 10px
@@ -36,7 +27,6 @@
             z-index: auto
 
         &.oe_cal_month .dhx_cal_data
-            overflow-y: hidden
 
             table tr td:last-child div.dhx_month_body
                 padding-right: 5px

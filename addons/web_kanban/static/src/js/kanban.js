@@ -43,14 +43,16 @@ instance.web_kanban.KanbanView = instance.web.View.extend({
         this.currently_dragging = {};
         this.limit = options.limit || 40;
         this.add_group_mutex = new $.Mutex();
-        this.on('view_loaded', self, self.load_kanban);
+    },
+    view_loading: function(r) {
+        return this.load_kanban(r);
     },
     start: function() {
         var self = this;
         this._super.apply(this, arguments);
         this.$el.on('click', '.oe_kanban_dummy_cell', function() {
             if (self.$buttons) {
-                self.$buttons.find('.oe_kanban_add_column').effect('bounce', {distance: 18, times: 5}, 150);
+                self.$buttons.find('.oe_kanban_add_column').openerpBounce();
             }
         });
     },
@@ -245,11 +247,15 @@ instance.web_kanban.KanbanView = instance.web.View.extend({
         var self = this;
         this.$el.removeClass('oe_kanban_ungrouped').addClass('oe_kanban_grouped');
         this.add_group_mutex.exec(function() {
+            self.do_clear_groups();
             self.dataset.ids = [];
+            if (!groups.length) {
+                self.no_result();
+                return false;
+            }
             var remaining = groups.length - 1,
                 groups_array = [];
             return $.when.apply(null, _.map(groups, function (group, index) {
-                self.do_clear_groups();
                 var dataset = new instance.web.DataSetSearch(self, self.dataset.model,
                     new instance.web.CompoundContext(self.dataset.get_context(), group.model.context()), group.model.domain());
                 return dataset.read_slice(self.fields_keys.concat(['__last_update']), { 'limit': self.limit })
@@ -269,8 +275,8 @@ instance.web_kanban.KanbanView = instance.web.View.extend({
         this.$el.removeClass('oe_kanban_grouped').addClass('oe_kanban_ungrouped');
         this.add_group_mutex.exec(function() {
             var def = $.Deferred();
+            self.do_clear_groups();
             self.dataset.read_slice(self.fields_keys.concat(['__last_update']), { 'limit': self.limit }).done(function(records) {
-                self.do_clear_groups();
                 var kgroup = new instance.web_kanban.KanbanGroup(self, records, null, self.dataset);
                 self.do_add_groups([kgroup]).done(function() {
                     if (_.isEmpty(records)) {
@@ -317,10 +323,9 @@ instance.web_kanban.KanbanView = instance.web.View.extend({
     },
     on_groups_started: function() {
         var self = this;
-        this.compute_groups_width();
         if (this.group_by) {
             // Kanban cards drag'n'drop
-            var $columns = this.$el.find('.oe_kanban_column');
+            var $columns = this.$el.find('.oe_kanban_column .oe_kanban_column_cards');
             $columns.sortable({
                 handle : '.oe_kanban_draghandle',
                 start: function(event, ui) {
@@ -364,7 +369,7 @@ instance.web_kanban.KanbanView = instance.web.View.extend({
                     scroll: false,
                     start: function(event, ui) {
                         start_index = ui.item.index();
-                        self.$('.oe_kanban_record').css({ visibility: 'hidden' });
+                        self.$('.oe_kanban_record, .oe_kanban_quick_create').css({ visibility: 'hidden' });
                     },
                     stop: function(event, ui) {
                         var stop_index = ui.item.index();
@@ -382,7 +387,7 @@ instance.web_kanban.KanbanView = instance.web.View.extend({
                                 }
                             });
                         }
-                        self.$('.oe_kanban_record').css({ visibility: 'visible' });
+                        self.$('.oe_kanban_record, .oe_kanban_quick_create').css({ visibility: 'visible' });
                     }
                 });
             }
@@ -410,31 +415,10 @@ instance.web_kanban.KanbanView = instance.web.View.extend({
                 new_group.do_save_sequences();
             }).fail(function(error, evt) {
                 evt.preventDefault();
-                alert(_t("An error has occured while moving the record to this group."));
+                alert(_t("An error has occured while moving the record to this group: ") + data.fault_code);
                 self.do_reload(); // TODO: use draggable + sortable in order to cancel the dragging when the rcp fails
             });
         }
-    },
-    compute_groups_width: function() {
-        var unfolded = 0;
-        var self = this;
-        _.each(this.groups, function(group) {
-            unfolded += group.state.folded ? 0 : 1;
-            group.$el.children(':first').css('width', '');
-        });
-        _.each(this.groups, function(group) {
-            if (!group.state.folded) {
-                if (182*unfolded>=self.$el.width()) {
-                    group.$el.children(':first').css('width', "170px");
-                } else if (262*unfolded<self.$el.width()) {
-                    group.$el.children(':first').css('width', "250px");
-                } else {
-		    // -12 because of padding 6 between cards
-		    // -1 because of the border of the latest dummy column
-                    group.$el.children(':first').css('width', Math.floor((self.$el.width()-1)/unfolded)-12 + 'px');
-                }
-            }
-        });
     },
 
     do_show: function() {
@@ -469,7 +453,7 @@ instance.web_kanban.KanbanView = instance.web.View.extend({
         );
         var create_nocontent = this.$buttons;
         this.$el.find('.oe_view_nocontent').click(function() {
-            create_nocontent.effect('bounce', {distance: 18, times: 5}, 150);
+            create_nocontent.openerpBounce();
         });
     },
 
@@ -610,10 +594,10 @@ instance.web_kanban.KanbanGroup = instance.web.Widget.extend({
         this.$has_been_started.resolve();
         var add_btn = this.$el.find('.oe_kanban_add');
         add_btn.tipsy({delayIn: 500, delayOut: 1000});
-        this.$records.click(function (ev) {
+        this.$records.find(".oe_kanban_column_cards").click(function (ev) {
             if (ev.target == ev.currentTarget) {
                 if (!self.state.folded) {
-                    add_btn.effect('bounce', {distance: 18, times: 5}, 150);                    
+                    add_btn.openerpBounce();
                 }
             }
         });
@@ -658,14 +642,15 @@ instance.web_kanban.KanbanGroup = instance.web.Widget.extend({
         var self = this;
         var $list_header = this.$records.find('.oe_kanban_group_list_header');
         var $show_more = this.$records.find('.oe_kanban_show_more');
+        var $cards = this.$records.find('.oe_kanban_column_cards');
 
         _.each(records, function(record) {
             var rec = new instance.web_kanban.KanbanRecord(self, record);
             if (!prepend) {
-                rec.insertBefore($show_more);
+                rec.appendTo($cards);
                 self.records.push(rec);
             } else {
-                rec.insertAfter($list_header);
+                rec.prependTo($cards);
                 self.records.unshift(rec);
             }
         });
@@ -689,7 +674,6 @@ instance.web_kanban.KanbanGroup = instance.web.Widget.extend({
     },
     do_action_toggle_fold: function() {
         this.do_toggle_fold();
-        this.view.compute_groups_width();
     },
     do_action_edit: function() {
         var self = this;
@@ -790,6 +774,7 @@ instance.web_kanban.KanbanRecord = instance.web.Widget.extend({
     },
     renderElement: function() {
         this.qweb_context = {
+            instance: instance,
             record: this.record,
             widget: this,
             read_only_mode: this.view.options.read_only_mode,

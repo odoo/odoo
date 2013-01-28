@@ -103,7 +103,7 @@ class WebRequest(object):
             lang = self.httprequest.cookies.get('lang')
         if lang is None:
             lang = self.httprequest.accept_languages.best
-        if lang is None:
+        if not lang:
             lang = 'en_US'
         # tranform 2 letters lang like 'en' into 5 letters like 'en_US'
         lang = babel.core.LOCALE_ALIASES.get(lang, lang)
@@ -478,10 +478,9 @@ class Root(object):
     """
     def __init__(self):
         self.addons = {}
+        self.statics = {}
 
-        static_dirs = self._load_addons()
-        app = werkzeug.wsgi.SharedDataMiddleware( self.dispatch, static_dirs)
-        self.dispatch = DisableCacheMiddleware(app)
+        self.load_addons()
 
         # Setup http sessions
         path = session_path()
@@ -530,12 +529,10 @@ class Root(object):
 
         return response(environ, start_response)
 
-    def _load_addons(self):
-        """
-        Loads all addons at the specified addons path, returns a mapping of
-        static URLs to the corresponding directories
-        """
-        statics = {}
+    def load_addons(self):
+        """ Load all addons from addons patch containg static files and
+        controllers and configure them.  """
+
         for addons_path in openerp.modules.module.ad_paths:
             for module in sorted(os.listdir(addons_path)):
                 if module not in addons_module:
@@ -551,14 +548,17 @@ class Root(object):
                             m = __import__(module)
                         addons_module[module] = m
                         addons_manifest[module] = manifest
-                        statics['/%s/static' % module] = path_static
+                        self.statics['/%s/static' % module] = path_static
+
         for k, v in controllers_class:
             if k not in controllers_object:
                 o = v()
                 controllers_object[k] = o
                 if hasattr(o, '_cp_path'):
                     controllers_path[o._cp_path] = o
-        return statics
+
+        app = werkzeug.wsgi.SharedDataMiddleware(self.dispatch, self.statics)
+        self.dispatch = DisableCacheMiddleware(app)
 
     def find_handler(self, *l):
         """

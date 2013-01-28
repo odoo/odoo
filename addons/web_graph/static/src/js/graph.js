@@ -42,7 +42,9 @@ instance.web_graph.GraphView = instance.web.View.extend({
         this.group_by = [];
 
         this.graph = null;
-        this.on('view_loaded', self, self.load_graph);
+    },
+    view_loading: function(r) {
+        return this.load_graph(r);
     },
     destroy: function () {
         if (this.graph) {

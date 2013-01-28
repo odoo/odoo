@@ -286,14 +286,15 @@ instance.web.ActionManager = instance.web.Widget.extend({
         var type = action.type.replace(/\./g,'_');
         var popup = action.target === 'new';
         var inline = action.target === 'inline' || action.target === 'inlineview';
-        action.flags = _.extend({
+        action.flags = _.defaults(action.flags || {}, {
             views_switcher : !popup && !inline,
             search_view : !popup && !inline,
             action_buttons : !popup && !inline,
             sidebar : !popup && !inline,
             pager : !popup && !inline,
-            display_title : !popup
-        }, action.flags || {});
+            display_title : !popup,
+            search_disable_custom_filters: action.context && action.context.search_disable_custom_filters
+        });
         action.menu_id = options.action_menu_id;
         if (!(type in this)) {
             console.error("Action manager can't handle action of type " + action.type, action);
@@ -454,11 +455,14 @@ instance.web.ViewManager =  instance.web.Widget.extend({
         this.active_view = null;
         this.views_src = _.map(views, function(x) {
             if (x instanceof Array) {
-                var View = instance.web.views.get_object(x[1], true);
+                var view_type = x[1];
+                var View = instance.web.views.get_object(view_type, true);
+                var view_label = View ? View.prototype.display_name : (void 'nope');
                 return {
                     view_id: x[0],
-                    view_type: x[1],
-                    label: View ? View.prototype.display_name : (void 'nope')
+                    view_type: view_type,
+                    label: view_label,
+                    button_label: View ? _.str.sprintf(_t('%(view_type)s view'), {'view_type': (view_label || view_type)}) : (void 'nope'),
                 };
             } else {
                 return x;
@@ -468,6 +472,7 @@ instance.web.ViewManager =  instance.web.Widget.extend({
         this.flags = flags || {};
         this.registry = instance.web.views;
         this.views_history = [];
+        this.view_completely_inited = $.Deferred();
     },
     /**
      * @returns {jQuery.Deferred} initial view loading promise
@@ -523,7 +528,7 @@ instance.web.ViewManager =  instance.web.Widget.extend({
         }
 
         if (this.searchview) {
-            this.searchview[(view.controller.searchable === false || this.searchview.hidden) ? 'hide' : 'show']();
+            this.searchview[(view.controller.searchable === false || this.searchview.options.hidden) ? 'hide' : 'show']();
         }
 
         this.$el.find('.oe_view_manager_switch a').parent().removeClass('active');
@@ -587,6 +592,8 @@ instance.web.ViewManager =  instance.web.Widget.extend({
                     && self.flags.auto_search
                     && view.controller.searchable !== false) {
                 self.searchview.ready.done(self.searchview.do_search);
+            } else {
+                self.view_completely_inited.resolve();
             }
             self.trigger("controller_inited",view_type,controller);
         });
@@ -679,7 +686,11 @@ instance.web.ViewManager =  instance.web.Widget.extend({
         if (this.searchview) {
             this.searchview.destroy();
         }
-        this.searchview = new instance.web.SearchView(this, this.dataset, view_id, search_defaults, this.flags.search_view === false);
+        var options = {
+            hidden: this.flags.search_view === false,
+            disable_custom_filters: this.flags.search_disable_custom_filters,
+        };
+        this.searchview = new instance.web.SearchView(this, this.dataset, view_id, search_defaults, options);
 
         this.searchview.on('search_data', self, this.do_searchview_search);
         return this.searchview.appendTo(this.$el.find(".oe_view_manager_view_search"));
@@ -701,7 +712,9 @@ instance.web.ViewManager =  instance.web.Widget.extend({
             if (_.isString(groupby)) {
                 groupby = [groupby];
             }
-            controller.do_search(results.domain, results.context, groupby || []);
+            $.when(controller.do_search(results.domain, results.context, groupby || [])).then(function() {
+                self.view_completely_inited.resolve();
+            });
         });
     },
     /**
@@ -783,7 +796,7 @@ instance.web.ViewManagerAction = instance.web.ViewManager.extend({
 
         var main_view_loaded = this._super();
 
-        var manager_ready = $.when(searchview_loaded, main_view_loaded);
+        var manager_ready = $.when(searchview_loaded, main_view_loaded, this.view_completely_inited);
 
         this.$el.find('.oe_debug_view').change(this.on_debug_changed);
         this.$el.addClass("oe_view_manager_" + (this.action.target || 'current'));
@@ -1187,31 +1200,35 @@ instance.web.View = instance.web.Widget.extend({
     },
     load_view: function(context) {
         var self = this;
-        var view_loaded;
+        var view_loaded_def;
         if (this.embedded_view) {
-            view_loaded = $.Deferred();
+            view_loaded_def = $.Deferred();
             $.async_when().done(function() {
-                view_loaded.resolve(self.embedded_view);
+                view_loaded_def.resolve(self.embedded_view);
             });
         } else {
             if (! this.view_type)
                 console.warn("view_type is not defined", this);
-            view_loaded = instance.web.fields_view_get({
+            view_loaded_def = instance.web.fields_view_get({
                 "model": this.dataset._model,
                 "view_id": this.view_id,
                 "view_type": this.view_type,
                 "toolbar": !!this.options.$sidebar,
             });
         }
-        return view_loaded.then(function(r) {
+        return view_loaded_def.then(function(r) {
             self.fields_view = r;
-            self.trigger('view_loaded', r);
             // add css classes that reflect the (absence of) access rights
             self.$el.addClass('oe_view')
                 .toggleClass('oe_cannot_create', !self.is_action_enabled('create'))
                 .toggleClass('oe_cannot_edit', !self.is_action_enabled('edit'))
                 .toggleClass('oe_cannot_delete', !self.is_action_enabled('delete'));
+            return $.when(self.view_loading(r)).then(function() {
+                self.trigger('view_loaded', r);
+            });
         });
+    },
+    view_loading: function(r) {
     },
     set_default_options: function(options) {
         this.options = options || {};
@@ -1254,6 +1271,11 @@ instance.web.View = instance.web.Widget.extend({
                         active_ids: [record_id],
                         active_model: dataset.model
                     });
+                    if (("" + action.context).match(/\bactive_id\b/)) {
+                        // Special case: when the context is evaluted using
+                        // the active_id, we want to disable the custom filters.
+                        ncontext.add({ search_disable_custom_filters: true });
+                    }
                 }
                 ncontext.add(action.context || {});
                 action.context = ncontext;

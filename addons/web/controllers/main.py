@@ -28,6 +28,7 @@ except ImportError:
     xlwt = None
 
 import openerp
+import openerp.modules.registry
 from openerp.tools.translate import _
 
 from .. import http
@@ -169,7 +170,6 @@ def module_installed_bypass_session(dbname):
     loadable = openerpweb.addons_manifest.keys()
     modules = {}
     try:
-        import openerp.modules.registry
         registry = openerp.modules.registry.RegistryManager.get(dbname)
         with registry.cursor() as cr:
             m = registry.get('ir.module.module')
@@ -549,6 +549,11 @@ class Home(openerpweb.Controller):
     def login(self, req, db, login, key):
         return login_and_redirect(req, db, login, key)
 
+    @openerpweb.jsonrequest
+    def jsonrpc(self, req, service, method, args):
+        """ Method used by client APIs to contact OpenERP. """
+        return getattr(req.session.proxy(service), method)(*args)
+
 class WebClient(openerpweb.Controller):
     _cp_path = "/web/webclient"
 
@@ -668,7 +673,7 @@ class WebClient(openerpweb.Controller):
         messages = ir_translation.search_read([('module','in',mods),('lang','=',lang),
                                                ('comments','like','openerp-web'),('value','!=',False),
                                                ('value','!=','')],
-                                              ['module','src','value','lang'], order='module') 
+                                              ['module','src','value','lang'], order='module')
         for mod, msg_group in itertools.groupby(messages, key=operator.itemgetter('module')):
             translations_per_module.setdefault(mod,{'messages':[]})
             translations_per_module[mod]['messages'].extend({'id': m['src'],
@@ -679,9 +684,7 @@ class WebClient(openerpweb.Controller):
 
     @openerpweb.jsonrequest
     def version_info(self, req):
-        return {
-            "version": openerp.release.version
-        }
+        return openerp.service.web_services.RPC_VERSION_1
 
 class Proxy(openerpweb.Controller):
     _cp_path = '/web/proxy'
@@ -799,9 +802,9 @@ class Session(openerpweb.Controller):
         return {
             "session_id": req.session_id,
             "uid": req.session._uid,
-            "context": req.session.get_context() if req.session._uid else {},
+            "user_context": req.session.get_context() if req.session._uid else {},
             "db": req.session._db,
-            "login": req.session._login,
+            "username": req.session._login,
         }
 
     @openerpweb.jsonrequest
@@ -1059,21 +1062,22 @@ class DataSet(openerpweb.Controller):
 
     def _call_kw(self, req, model, method, args, kwargs):
         # Temporary implements future display_name special field for model#read()
-        if method == 'read' and kwargs.get('context') and kwargs['context'].get('future_display_name'):
+        if method == 'read' and kwargs.get('context', {}).get('future_display_name'):
             if 'display_name' in args[1]:
-                names = req.session.model(model).name_get(args[0], **kwargs)
+                names = dict(req.session.model(model).name_get(args[0], **kwargs))
                 args[1].remove('display_name')
-                r = getattr(req.session.model(model), method)(*args, **kwargs)
-                for i in range(len(r)):
-                    r[i]['display_name'] = names[i][1] or "%s#%d" % (model, names[i][0])
-                return r
+                records = req.session.model(model).read(*args, **kwargs)
+                for record in records:
+                    record['display_name'] = \
+                        names.get(record['id']) or "%s#%d" % (model, (record['id']))
+                return records
 
         return getattr(req.session.model(model), method)(*args, **kwargs)
 
     @openerpweb.jsonrequest
     def call(self, req, model, method, args, domain_id=None, context_id=None):
         return self._call_kw(req, model, method, args, {})
-    
+
     @openerpweb.jsonrequest
     def call_kw(self, req, model, method, args, kwargs):
         return self._call_kw(req, model, method, args, kwargs)
@@ -1187,7 +1191,7 @@ class Binary(openerpweb.Controller):
                     if width > 500: width = 500
                     if height > 500: height = 500
                     image_base64 = openerp.tools.image_resize_image(base64_source=image_base64, size=(width, height), encoding='base64', filetype='PNG')
-            
+
             image_data = base64.b64decode(image_base64)
 
         except (TypeError, xmlrpclib.Fault):
@@ -1200,9 +1204,10 @@ class Binary(openerpweb.Controller):
         except:
             pass
         return req.make_response(image_data, headers)
-    def placeholder(self, req):
+
+    def placeholder(self, req, image='placeholder.png'):
         addons_path = openerpweb.addons_manifest['web']['addons_path']
-        return open(os.path.join(addons_path, 'web', 'static', 'src', 'img', 'placeholder.png'), 'rb').read()
+        return open(os.path.join(addons_path, 'web', 'static', 'src', 'img', image), 'rb').read()
 
     @openerpweb.httprequest
     def saveas(self, req, model, field, id=None, filename_field=None, **kw):
@@ -1275,11 +1280,11 @@ class Binary(openerpweb.Controller):
     @openerpweb.httprequest
     def upload(self, req, callback, ufile):
         # TODO: might be useful to have a configuration flag for max-length file uploads
+        out = """<script language="javascript" type="text/javascript">
+                    var win = window.top.window;
+                    win.jQuery(win).trigger(%s, %s);
+                </script>"""
         try:
-            out = """<script language="javascript" type="text/javascript">
-                        var win = window.top.window;
-                        win.jQuery(win).trigger(%s, %s);
-                    </script>"""
             data = ufile.read()
             args = [len(data), ufile.filename,
                     ufile.content_type, base64.b64encode(data)]
@@ -1290,11 +1295,11 @@ class Binary(openerpweb.Controller):
     @openerpweb.httprequest
     def upload_attachment(self, req, callback, model, id, ufile):
         Model = req.session.model('ir.attachment')
+        out = """<script language="javascript" type="text/javascript">
+                    var win = window.top.window;
+                    win.jQuery(win).trigger(%s, %s);
+                </script>"""
         try:
-            out = """<script language="javascript" type="text/javascript">
-                        var win = window.top.window;
-                        win.jQuery(win).trigger(%s, %s);
-                    </script>"""
             attachment_id = Model.create({
                 'name': ufile.filename,
                 'datas': base64.encodestring(ufile.read()),
@@ -1306,9 +1311,38 @@ class Binary(openerpweb.Controller):
                 'filename': ufile.filename,
                 'id':  attachment_id
             }
-        except Exception,e:
+        except xmlrpclib.Fault, e:
             args = {'error':e.faultCode }
         return out % (simplejson.dumps(callback), simplejson.dumps(args))
+
+    @openerpweb.httprequest
+    def company_logo(self, req, dbname=None):
+        # TODO add etag, refactor to use /image code for etag
+        uid = None
+        if req.session._db:
+            dbname = req.session._db
+            uid = req.session._uid
+        elif dbname is None:
+            dbname = db_monodb(req)
+
+        if uid is None:
+            uid = openerp.SUPERUSER_ID
+
+        if not dbname:
+            image_data = self.placeholder(req, 'logo.png')
+        else:
+            registry = openerp.modules.registry.RegistryManager.get(dbname)
+            with registry.cursor() as cr:
+                user = registry.get('res.users').browse(cr, uid, uid)
+                if user.company_id.logo_web:
+                    image_data = user.company_id.logo_web.decode('base64')
+                else:
+                    image_data = self.placeholder(req, 'nologo.png')
+        headers = [
+            ('Content-Type', 'image/png'),
+            ('Content-Length', len(image_data)),
+        ]
+        return req.make_response(image_data, headers)
 
 class Action(openerpweb.Controller):
     _cp_path = "/web/action"
@@ -1439,7 +1473,7 @@ class Export(View):
         fields = self.fields_get(req, model)
         if ".id" in export_fields:
             fields['.id'] = fields.pop('id', {'string': 'ID'})
-            
+
         # To make fields retrieval more efficient, fetch all sub-fields of a
         # given field at the same time. Because the order in the export list is
         # arbitrary, this requires ordering all sub-fields of a given field

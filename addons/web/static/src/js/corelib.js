@@ -1,16 +1,16 @@
 /*
  * Copyright (c) 2012, OpenERP S.A.
  * All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions are met: 
- * 
+ * modification, are permitted provided that the following conditions are met:
+ *
  * 1. Redistributions of source code must retain the above copyright notice, this
- *    list of conditions and the following disclaimer. 
+ *    list of conditions and the following disclaimer.
  * 2. Redistributions in binary form must reproduce the above copyright notice,
  *    this list of conditions and the following disclaimer in the documentation
- *    and/or other materials provided with the distribution. 
- * 
+ *    and/or other materials provided with the distribution.
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
@@ -243,7 +243,7 @@ instance.web.ParentedMixin = {
 
 /**
  * Backbone's events. Do not ever use it directly, use EventDispatcherMixin instead.
- * 
+ *
  * This class just handle the dispatching of events, it is not meant to be extended,
  * nor used directly. All integration with parenting and automatic unregistration of
  * events is done in EventDispatcherMixin.
@@ -303,7 +303,7 @@ var Events = instance.web.Class.extend({
         });
         return lst;
     },
-    
+
     trigger : function(events) {
         var event, node, calls, tail, args, all, rest;
         if (!(calls = this._callbacks))
@@ -1043,7 +1043,7 @@ instance.web.JsonRPC = instance.web.Class.extend(instance.web.PropertiesMixin, {
             id: payload.id,
             sid: this.httpsessionid,
         };
-        
+
         var set_sid = function (response, textStatus, jqXHR) {
             // If response give us the http session id, we store it for next requests...
             if (response.httpsessionid) {
@@ -1054,7 +1054,7 @@ instance.web.JsonRPC = instance.web.Class.extend(instance.web.PropertiesMixin, {
         url.url = this.url(url.url, null);
         var ajax = _.extend({
             type: "GET",
-            dataType: 'jsonp', 
+            dataType: 'jsonp',
             jsonp: 'jsonp',
             cache: false,
             data: data

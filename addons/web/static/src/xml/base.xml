@@ -36,7 +36,7 @@
 <t t-name="CrashManager.warning">
     <table cellspacing="0" cellpadding="0" border="0" class="oe_dialog_warning">
     <tr>
-        <td><img t-att-src='_s + "/web/static/src/img/warning.png"' class="oe_dialog_icon"/></td>
+        <td class="oe_dialog_icon"><img t-att-src='_s + "/web/static/src/img/warning.png"'/></td>
         <td>
             <p>
                 <t t-js="d">
@@ -348,15 +348,13 @@
         <li t-foreach="widget.data.data.children" t-as="menu">
             <t t-call="Menu.link"/>
         </li>
+        <li class="oe_menu_more_container" style="display: none;">
+            <span class="oe_topbar_item oe_menu_more_link oe_dropdown_toggle oe_dropdown_arrow">
+                More
+                <ul class="oe_menu_more oe_dropdown_menu"/>
+            </span>
+        </li>
     </ul>
-</t>
-<t t-name="Menu.more">
-    <li class="oe_menu_more_container">
-        <span class="oe_topbar_item oe_menu_more_link oe_dropdown_toggle oe_dropdown_arrow">
-            More
-            <ul class="oe_menu_more oe_dropdown_menu"/>
-        </span>
-    </li>
 </t>
 <t t-name="Menu.secondary">
     <div t-foreach="widget.data.data.children" t-as="menu" style="display: none" class="oe_secondary_menu" t-att-data-menu-parent="menu.id">
@@ -387,7 +385,9 @@
         t-att-data-menu="menu.id"
         t-att-data-action-model="menu.action ? menu.action.split(',')[0] : ''"
         t-att-data-action-id="menu.action ? menu.action.split(',')[1] : ''">
-        <t t-esc="menu.name"/>
+        <span class="oe_menu_text">
+            <t t-esc="menu.name"/>
+        </span>
     </a>
 </t>
 
@@ -414,7 +414,7 @@
     <div class="oe_about">
       <a class="oe_activate_debug_mode oe_right" href="?debug" style="background-color: white; padding:2px 6px; border-radius: 10px;">Activate the developer mode</a>
       <img class="oe_logo" src="/web/static/src/img/logo2.png"/>
-      <h3>Version <t t-esc="version_info.version"/></h3>
+      <h3>Version <t t-esc="version_info.server_version"/></h3>
 
       <div class="oe_bottom">
         <p>Copyright © 2004-TODAY OpenERP SA. All Rights Reserved.<br />
@@ -439,7 +439,10 @@
         <tr>
             <td class="oe_leftbar" valign="top">
                 <t t-set="debug" t-value="__debug__ ? '&amp;debug' : ''"/>
-                <a class="oe_logo" t-attf-href="/?ts=#{Date.now()}#{debug}"><img t-att-src='_s + "/web/static/src/img/logo.png"'/></a>
+                <a class="oe_logo" t-attf-href="/?ts=#{Date.now()}#{debug}">
+                    <span class="oe_logo_edit">Edit Company data</span>
+                    <img t-att-src='widget.session.url("/web/binary/company_logo")'/>
+                </a>
                 <div class="oe_secondary_menus_container"/>
                 <div class="oe_footer">
                     Powered by <a href="http://www.openerp.com" target="_blank"><span>OpenERP</span></a>
@@ -504,8 +507,10 @@
                 <td>
                     <ul class="oe_view_manager_switch oe_button_group oe_right">
                         <t t-if="widget.views_src.length > 1" t-foreach="widget.views_src" t-as="view">
-                          <li class="oe_e"><a t-attf-class="oe_vm_switch_#{view.view_type}" t-att-data-view-type="view.view_type" t-att-title="_t('Switch to ') + (view.label || view.view_type)">
-                            </a></li>
+                          <li class="oe_e">
+                            <a t-attf-class="oe_vm_switch_#{view.view_type}" t-att-data-view-type="view.view_type"
+                               t-att-title="view.button_label"/>
+                          </li>
                         </t>
                     </ul>
                     <div class="oe_view_manager_pager oe_right"/>
@@ -779,7 +784,7 @@
         t-att-title="widget.string" t-att-disabled="disabled || undefined"
         t-att-class="disabled ? 'oe_list_button_disabled' : undefined"
     ><img t-attf-src="#{prefix}/web/static/src/img/icons/#{widget.icon}.png"
-         t-att-alt="widget.string" /></button>
+         t-att-alt="widget.string"/></button>
 <t t-extend="ListView.row">
     <!-- adds back padding to row being rendered after edition, if necessary
          (if not deletable add back padding), otherwise the row being added is
@@ -1110,7 +1115,7 @@
     </span>
 </t>
 <t t-name="Many2OneButton.cell"
-    ><img t-attf-src="#{_s}/web/static/src/img/icons/gtk-#{widget.has_value ? 'yes' : 'no'}.png" width="16" height="16"/>
+    ><img t-attf-src="#{prefix}/web/static/src/img/icons/#{widget.icon}.png" t-att-alt="widget.string" width="16" height="16"/>
 </t>
 <t t-name="FieldMany2ManyTags">
     <div class="oe_form_field oe_tags" t-att-style="widget.node.attrs.style">
@@ -1368,7 +1373,7 @@
 </t>
 <t t-name="SelectCreatePopup.search.buttons">
     <t t-if="! widget.options.disable_multiple_selection">
-        <button type="button" class="oe_button oe_selectcreatepopup-search-select" disabled="disabled">Select</button>
+        <button type="button" class="oe_button oe_selectcreatepopup-search-select oe_highlight" disabled="disabled">Select</button>
     </t>
     <button type="button" class="oe_button oe_selectcreatepopup-search-create">Create</button>
     or <a class="oe_button oe_selectcreatepopup-search-close oe_bold oe_form_button_cancel" href="javascript:void(0)">Cancel</a>

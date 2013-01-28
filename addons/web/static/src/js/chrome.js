@@ -42,6 +42,16 @@ instance.web.Notification =  instance.web.Widget.extend({
     }
 });
 
+instance.web.action_notify = function(element, action) {
+    element.do_notify(action.params.title, action.params.text, action.params.sticky);
+};
+instance.web.client_actions.add("action_notify", "instance.web.action_notify");
+
+instance.web.action_warn = function(element, action) {
+    element.do_warn(action.params.title, action.params.text, action.params.sticky);
+};
+instance.web.client_actions.add("action_warn", "instance.web.action_warn");
+
 /**
  * The very minimal function everything should call to create a dialog
  * in OpenERP Web Client.
@@ -235,6 +245,11 @@ instance.web.CrashManager = instance.web.Class.extend({
 
     rpc_error: function(error) {
         if (!this.active) {
+            return;
+        }
+        // yes, exception handling is shitty
+        if (error.code === 300 && error.data && error.data.type == "client_exception" && error.data.debug.match("SessionExpiredException")) {
+            this.show_warning({type: "Session Expired", data: { fault_code: "Your OpenERP session expired. Please refresh the current web page." }});
             return;
         }
         if (error.data.fault_code) {
@@ -607,6 +622,9 @@ instance.web.Login =  instance.web.Widget.extend({
         if ($.deparam.querystring().db) {
             self.params.db = $.deparam.querystring().db;
         }
+        if ($.param.fragment().token) {
+            self.params.token = $.param.fragment().token;
+        }
         // used by dbmanager.do_create via internal client action
         if (self.params.db && self.params.login && self.params.password) {
             d = self.do_login(self.params.db, self.params.login, self.params.password);
@@ -690,6 +708,7 @@ instance.web.Login =  instance.web.Widget.extend({
     },
 });
 instance.web.client_actions.add("login", "instance.web.Login");
+
 
 /**
  * Redirect to url by replacing window.location
@@ -804,6 +823,7 @@ instance.web.Menu =  instance.web.Widget.extend({
         this.maximum_visible_links = 'auto'; // # of menu to show. 0 = do not crop, 'auto' = algo
         this.data = {data:{children:[]}};
         this.on("menu_loaded", this, function (menu_data) {
+            self.reflow();
             // launch the fetch of needaction counters, asynchronous
             if (!_.isEmpty(menu_data.all_menu_ids)) {
                 this.rpc("/web/menu/load_needaction", {menu_ids: menu_data.all_menu_ids}).done(function(r) {
@@ -811,7 +831,11 @@ instance.web.Menu =  instance.web.Widget.extend({
                 });
             }
         });
-        
+        var lazyreflow = _.debounce(this.reflow.bind(this), 200);
+        instance.web.bus.on('resize', this, function() {
+            self.$el.height(0);
+            lazyreflow();
+        });
     },
     start: function() {
         this._super.apply(this, arguments);
@@ -829,12 +853,6 @@ instance.web.Menu =  instance.web.Widget.extend({
         var self = this;
         this.data = {data: data};
         this.renderElement();
-        this.limit_entries();
-        // Hide toplevel item if there is only one
-        var $toplevel = this.$("li");
-        if($toplevel.length == 1) {
-            $toplevel.hide();
-        }
         this.$secondary_menus.html(QWeb.render("Menu.secondary", { widget : this }));
         this.$el.on('click', 'a[data-menu]', this.on_menu_click);
         // Hide second level submenus
@@ -856,23 +874,34 @@ instance.web.Menu =  instance.web.Widget.extend({
             }
         });
     },
-    limit_entries: function() {
-        var maximum_visible_links = this.maximum_visible_links;
-        if (maximum_visible_links === 'auto') {
-            maximum_visible_links = this.auto_limit_entries();
+    /**
+     * Reflow the menu items and dock overflowing items into a "More" menu item.
+     * Automatically called when 'menu_loaded' event is triggered and on window resizing.
+     */
+    reflow: function() {
+        var self = this;
+        this.$el.height('auto').show();
+        var $more_container = this.$('.oe_menu_more_container').hide();
+        var $more = this.$('.oe_menu_more');
+        $more.children('li').insertBefore($more_container);
+        var $toplevel_items = this.$el.children('li').not($more_container).hide();
+        $toplevel_items.each(function() {
+            var remaining_space = self.$el.parent().width() - $more_container.outerWidth();
+            self.$el.parent().children(':visible').each(function() {
+                remaining_space -= $(this).outerWidth();
+            });
+            if ($(this).width() > remaining_space) {
+                return false;
+            }
+            $(this).show();
+        });
+        $more.append($toplevel_items.filter(':hidden').show());
+        $more_container.toggle(!!$more.children().length);
+        // Hide toplevel item if there is only one
+        var $toplevel = this.$el.children("li:visible");
+        if ($toplevel.length === 1) {
+            $toplevel.hide();
         }
-        if (maximum_visible_links < this.data.data.children.length) {
-            var $more = $(QWeb.render('Menu.more')),
-                $index = this.$el.find('li').eq(maximum_visible_links - 1);
-            $index.after($more);
-            //$('.oe_topbar').append($more);
-            $more.find('.oe_menu_more').append($index.next().nextAll());
-        }
-    },
-    auto_limit_entries: function() {
-        // TODO: auto detect overflow and bind window on resize
-        var width = $(window).width();
-        return Math.floor(width / 125);
     },
     /**
      * Opens a given menu by id, as if a user had browsed to that menu by hand
@@ -1009,13 +1038,8 @@ instance.web.UserMenu =  instance.web.Widget.extend({
                 if(res.company_id[0] > 1)
                     topbar_name = _.str.sprintf("%s (%s)", topbar_name, res.company_id[1]);
                 self.$el.find('.oe_topbar_name').text(topbar_name);
-                if(!instance.session.debug) {
-                    self.rpc("/web/database/get_list", {}).done( function(result) {
-                       if (result.length > 1) {
-                            topbar_name = _.str.sprintf("%s (%s)", topbar_name, instance.session.db);
-                       }
-                        self.$el.find('.oe_topbar_name').text(topbar_name);
-                    });
+                if (!instance.session.debug) {
+                    topbar_name = _.str.sprintf("%s (%s)", topbar_name, instance.session.db);
                 }
                 var avatar_src = self.session.url('/web/binary/image', {model:'res.users', field: 'image_small', id: self.session.uid});
                 $avatar.attr('src', avatar_src);
@@ -1119,12 +1143,20 @@ instance.web.Client = instance.web.Widget.extend({
 
 instance.web.WebClient = instance.web.Client.extend({
     _template: 'WebClient',
+    events: {
+        'click .oe_logo_edit_admin': 'logo_edit'
+    },
     init: function(parent) {
         this._super(parent);
         this._current_state = null;
+        this.menu_dm = new instance.web.DropMisordered();
+        this.action_mutex = new $.Mutex();
+        this.set('title_part', {"zopenerp": "OpenERP"});
     },
     start: function() {
         var self = this;
+        this.on("change:title_part", this, this._title_changed);
+        this._title_changed();
         return $.when(this._super()).then(function() {
             if (jQuery.param !== undefined && jQuery.deparam(jQuery.param.querystring()).kitten !== undefined) {
                 $("body").addClass("kitten-mode-activated");
@@ -1139,10 +1171,32 @@ instance.web.WebClient = instance.web.Client.extend({
             }
         });
     },
+    /**
+        Sets the first part of the title of the window, dedicated to the current action.
+    */
     set_title: function(title) {
-        title = _.str.clean(title);
-        var sep = _.isEmpty(title) ? '' : ' - ';
-        document.title = title + sep + 'OpenERP';
+        this.set_title_part("action", title);
+    },
+    /**
+        Sets an arbitrary part of the title of the window. Title parts are identified by strings. Each time
+        a title part is changed, all parts are gathered, ordered by alphabetical order and displayed in the
+        title of the window separated by '-'.
+    */
+    set_title_part: function(part, title) {
+        var tmp = _.clone(this.get("title_part"));
+        tmp[part] = title;
+        this.set("title_part", tmp);
+    },
+    _title_changed: function() {
+        var parts = _.sortBy(_.keys(this.get("title_part")), function(x) { return x; });
+        var tmp = "";
+        _.each(parts, function(part) {
+            var str = this.get("title_part")[part];
+            if (str) {
+                tmp = tmp ? tmp + " - " + str : str;
+            }
+        }, this);
+        document.title = tmp;
     },
     show_common: function() {
         var self = this;
@@ -1173,6 +1227,7 @@ instance.web.WebClient = instance.web.Client.extend({
     show_application: function() {
         var self = this;
         self.toggle_bars(true);
+        self.update_logo();
         self.menu = new instance.web.Menu(self);
         self.menu.replace(this.$el.find('.oe_menu_placeholder'));
         self.menu.on('menu_click', this, this.on_menu_action);
@@ -1183,6 +1238,32 @@ instance.web.WebClient = instance.web.Client.extend({
         self.bind_hashchange();
         self.set_title();
         self.check_timezone();
+    },
+    update_logo: function() {
+        var img = this.session.url('/web/binary/company_logo');
+        this.$('.oe_logo img').attr('src', '').attr('src', img);
+        this.$('.oe_logo_edit').toggleClass('oe_logo_edit_admin', this.session.uid === 1);
+    },
+    logo_edit: function(ev) {
+        var self = this;
+        new instance.web.Model("res.users").get_func("read")(this.session.uid, ["company_id"]).then(function(res) {
+            self.rpc("/web/action/load", { action_id: "base.action_res_company_form" }).done(function(result) {
+                result.res_id = res['company_id'][0];
+                result.target = "new";
+                result.views = [[false, 'form']];
+                result.flags = {
+                    action_buttons: true,
+                };
+                self.action_manager.do_action(result);
+                var form = self.action_manager.dialog_widget.views.form.controller;
+                form.on("on_button_cancel", self.action_manager.dialog, self.action_manager.dialog.close);
+                form.on('record_saved', self, function() {
+                    self.action_manager.dialog.close();
+                    self.update_logo();
+                });
+            });
+        });
+        return false;
     },
     check_timezone: function() {
         var self = this;
@@ -1287,18 +1368,29 @@ instance.web.WebClient = instance.web.Client.extend({
     },
     on_menu_action: function(options) {
         var self = this;
-        return this.rpc("/web/action/load", { action_id: options.action_id })
+        return this.menu_dm.add(this.rpc("/web/action/load", { action_id: options.action_id }))
             .then(function (result) {
-                if (options.needaction) {
-                    result.context = new instance.web.CompoundContext(
-                        result.context,
-                        {search_default_message_unread: true});
-                }
-                return $.when(self.action_manager.do_action(result, {
-                    clear_breadcrumbs: true,
-                    action_menu_id: self.menu.current_menu,
-                })).fail(function() {
-                    self.menu.open_menu(options.previous_menu_id);
+                return self.action_mutex.exec(function() {
+                    if (options.needaction) {
+                        result.context = new instance.web.CompoundContext(
+                            result.context,
+                            {search_default_message_unread: true});
+                    }
+                    var completed = $.Deferred();
+                    $.when(self.action_manager.do_action(result, {
+                        clear_breadcrumbs: true,
+                        action_menu_id: self.menu.current_menu,
+                    })).fail(function() {
+                        self.menu.open_menu(options.previous_menu_id);
+                    }).always(function() {
+                        completed.resolve();
+                    });
+                    setTimeout(function() {
+                        completed.resolve();
+                    }, 2000);
+                    // We block the menu when clicking on an element until the action has correctly finished
+                    // loading. If something crash, there is a 2 seconds timeout before it's unblocked.
+                    return completed;
                 });
             });
     },
@@ -1326,17 +1418,17 @@ instance.web.EmbeddedClient = instance.web.Client.extend({
     _template: 'EmbedClient',
     init: function(parent, origin, dbname, login, key, action_id, options) {
         this._super(parent, origin);
-
-        this.dbname = dbname;
-        this.login = login;
-        this.key = key;
+        this.bind_credentials(dbname, login, key);
         this.action_id = action_id;
         this.options = options || {};
     },
     start: function() {
         var self = this;
         return $.when(this._super()).then(function() {
-            return instance.session.session_authenticate(self.dbname, self.login, self.key, true).then(function() {
+            return self.authenticate().then(function() {
+                if (!self.action_id) {
+                    return;
+                }
                 return self.rpc("/web/action/load", { action_id: self.action_id }).done(function(result) {
                     var action = result;
                     action.flags = _.extend({
@@ -1347,11 +1439,30 @@ instance.web.EmbeddedClient = instance.web.Client.extend({
                         //pager : false
                     }, self.options, action.flags || {});
 
-                    self.action_manager.do_action(action);
+                    self.do_action(action);
                 });
             });
         });
     },
+
+    do_action: function(action) {
+        return this.action_manager.do_action(action);
+    },
+
+    authenticate: function() {
+        var s = instance.session;
+        if (s.session_is_valid() && s.db === this.dbname && s.login === this.login) {
+            return $.when();
+        }
+        return instance.session.session_authenticate(this.dbname, this.login, this.key, true);
+    },
+
+    bind_credentials: function(dbname, login, key) {
+        this.dbname = dbname;
+        this.login = login;
+        this.key = key;
+    },
+
 });
 
 instance.web.embed = function (origin, dbname, login, key, action, options) {

@@ -521,7 +521,7 @@ var py = {};
         }
     };
     py.PY_getAttr = function (o, attr_name) {
-        return PY_ensurepy(o.__getattribute__(attr_name));
+        return PY_ensurepy(o.__getattribute__(attr_name),attr_name);
     };
     py.PY_str = function (o) {
         var v = o.__str__();
@@ -998,7 +998,7 @@ var py = {};
             }
             var t = py.PY_call(py.tuple);
             for(var i=0; i<ar.length; ++i) {
-                t._values.push(PY_ensurepy(ar[i]));
+                t._values.push(PY_ensurepy(ar[i],i));
             }
             return t;
         }
@@ -1032,7 +1032,7 @@ var py = {};
                 if (!d.hasOwnProperty(k)) { continue; }
                 instance.__setitem__(
                     py.str.fromJSON(k),
-                    PY_ensurepy(d[k]));
+                    PY_ensurepy(d[k],k));
             }
             return instance;
         },

@@ -46,10 +46,10 @@
                     </div>
                 <div class="oe_fold_column">
                     <div t-attf-class="oe_kanban_group_title #{widget.undefined_title ? 'oe_kanban_group_title_undefined' : ''}">
-                        <span><t t-esc="widget.title"/></span>
-                        <span class="oe_kanban_group_length oe_tag" style="position:relative; top:-2px;">
+                        <div class="oe_kanban_group_length oe_tag">
                             <t t-if="widget.group.get('length') &gt; 99"> 99+ </t><t t-if="widget.group.get('length') &lt;= 99"> <t t-esc="widget.group.get('length')"/> </t>
-                        </span>
+                        </div>
+                        <div class="oe_kanban_group_title_text" t-att-title="widget.title"><t t-esc="widget.title"/></div>
                     </div>
                     <ul class="oe_kanban_aggregates">
                         <li t-foreach="widget.aggregates" t-as="aggregate">
@@ -68,6 +68,7 @@
 <t t-name="KanbanView.group_records_container">
     <td class="oe_kanban_column">
         <div class="oe_kanban_group_list_header"/>
+        <div class="oe_kanban_column_cards"/>
         <div class="oe_kanban_show_more">
             <button class="oe_button">Show more... (<span class="oe_kanban_remaining"></span> remaining)</button>
         </div>

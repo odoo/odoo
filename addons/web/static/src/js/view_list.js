@@ -90,7 +90,9 @@ instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListVi
 
         this.no_leaf = false;
         this.grouped = false;
-        this.on('view_loaded', self, self.load_list);
+    },
+    view_loading: function(r) {
+        return this.load_list(r);
     },
     set_default_options: function (options) {
         this._super(options);
@@ -346,12 +348,27 @@ instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListVi
             this.sidebar.add_toolbar(this.fields_view.toolbar);
             this.sidebar.$el.hide();
         }
+        //Sort
+        if(this.dataset._sort.length){
+            if(this.dataset._sort[0].indexOf('-') == -1){
+                this.$el.find('th[data-id=' + this.dataset._sort[0] + ']').addClass("sortdown");
+            }else {
+                this.$el.find('th[data-id=' + this.dataset._sort[0].split('-')[1] + ']').addClass("sortup");
+            }
+        }
         this.trigger('list_view_loaded', data, this.grouped);
     },
     sort_by_column: function (e) {
         e.stopPropagation();
         var $column = $(e.currentTarget);
-        this.dataset.sort($column.data('id'));
+        var col_name = $column.data('id')
+        var field = this.fields_view.fields[col_name];
+        // test if the field is a function field with store=false, since it's impossible
+        // for the server to sort those fields we desactivate the feature
+        if (field && field.store === false) {
+            return false;
+        }
+        this.dataset.sort(col_name);
         if($column.hasClass("sortdown") || $column.hasClass("sortup"))  {
             $column.toggleClass("sortup sortdown");
         } else {
@@ -831,7 +848,7 @@ instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListVi
         );
         var create_nocontent = this.$buttons;
         this.$el.find('.oe_view_nocontent').click(function() {
-            create_nocontent.effect('bounce', {distance: 18, times: 5}, 150);
+            create_nocontent.openerpBounce();
         });
     }
 });
@@ -2242,7 +2259,12 @@ instance.web.list.Handle = instance.web.list.Column.extend({
 instance.web.list.Many2OneButton = instance.web.list.Column.extend({
     _format: function (row_data, options) {
         this.has_value = !!row_data[this.id].value;
-        return QWeb.render('Many2OneButton.cell', {'widget': this});
+        this.icon = this.has_value ? 'gtk-yes' : 'gtk-no';
+        this.string = this.has_value ? _t('View') : _t('Create');
+        return QWeb.render('Many2OneButton.cell', {
+            'widget': this,
+            'prefix': instance.session.prefix,
+        });
     },
 });
 instance.web.list.Many2Many = instance.web.list.Column.extend({

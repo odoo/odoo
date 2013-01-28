@@ -22,8 +22,11 @@ instance.web.DiagramView = instance.web.View.extend({
         this.domain = this.dataset._domain || [];
         this.context = {};
         this.ids = this.dataset.ids;
-        this.on('view_loaded', self, self.load_diagram);
         this.on('pager_action_executed', self, self.pager_action_trigger);
+    },
+
+    view_loading: function(r) {
+        return this.load_diagram(r);
     },
 
     toTitleCase: function(str) {

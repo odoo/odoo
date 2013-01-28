@@ -253,6 +253,4 @@ todo_include_todos = True
 intersphinx_mapping = {
     'python': ('http://docs.python.org/', None),
     'openerpserver': ('http://doc.openerp.com/trunk/developers/server', None),
-    'openerpdev': ('http://doc.openerp.com/trunk/developers', None),
-    'openerpcommand': ('http://doc.openerp.com/trunk/developers/command', None),
 }
