@@ -19,9 +19,9 @@
 #
 ##############################################################################
 
-import netsvc
-from osv import fields, osv
-from tools.translate import _
+from openerp import netsvc
+from openerp.osv import fields, osv
+from openerp.tools.translate import _
 
 class res_partner_bank(osv.osv):
     """Add fields and behavior for French RIB"""

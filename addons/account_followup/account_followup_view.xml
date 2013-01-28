@@ -123,24 +123,10 @@
               </p>
           </field>
         </record>
-        <record id="action_account_manual_reconcile_receivable" model="ir.actions.act_window">
-            <field name="name">Reconcile Invoices &amp; Payments</field>
-            <field name="search_view_id" ref="view_account_followup_filter"/>
-            <field name="context">{'search_default_unreconciled': 1,'view_mode':True}</field>
-            <field name="domain">[('account_id.type', '=', 'receivable')]</field>
-            <field name="res_model">account.move.line</field>
-            <field name="view_id" ref="account.view_move_line_tree_reconcile"/>
-            <field name="view_mode">tree_account_reconciliation</field>
-            <field name="help" type="html">
-                <p>
-                    No journal items found.
-                </p>
-            </field>
-        </record>
 
         <menuitem
              name="Reconcile Invoices &amp; Payments"
-             action="action_account_manual_reconcile_receivable"
+             action="account.action_account_manual_reconcile"
              parent="menu_finance_followup"
              sequence="0"
              id="menu_manual_reconcile_followup"/>

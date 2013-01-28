@@ -26,7 +26,7 @@ import time
 from datetime import datetime
 from dateutil import relativedelta
 
-from report import report_sxw
+from openerp.report import report_sxw
 
 class contribution_register_report(report_sxw.rml_parse):
     def __init__(self, cr, uid, name, context):

@@ -1,0 +1,1108 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data noupdate="1">
+
+		<!-- account.tax.code.template -->
+		<record id="tax_code_chart_root" model="account.tax.code.template">
+			<field name="name">Códigos de Impostos Brasileiros</field>
+			<field name="sign">1</field>
+			<field name="tax_discount" eval="0" />
+		</record>
+		
+		<record id="tax_code_template_icmsst" model="account.tax.code.template">
+			<field name="code">ICMSST</field>
+			<field name="name">ICMSST</field>
+			<field name="domain">icmsst</field>
+			<field name="sign">1</field>
+			<field name="tax_discount" eval="0" />
+			<field name="parent_id" ref="tax_code_chart_root" />
+		</record>
+		
+		<record id="tax_code_template_irpj" model="account.tax.code.template">
+			<field name="code">IRPJ</field>
+			<field name="name">IRPJ</field>
+			<field name="domain">irpj</field>
+			<field name="sign">1</field>
+			<field name="tax_discount" eval="1" />
+			<field name="parent_id" ref="tax_code_chart_root" />
+		</record>
+		
+		<record id="tax_code_template_ir" model="account.tax.code.template">
+			<field name="code">IR</field>
+			<field name="name">IR</field>
+			<field name="domain">ir</field>
+			<field name="sign">1</field>
+			<field name="tax_discount" eval="1" />
+			<field name="parent_id" ref="tax_code_chart_root" />
+		</record>
+		
+		<record id="tax_code_template_issqn" model="account.tax.code.template">
+			<field name="code">ISSQN</field>
+			<field name="name">ISSQN</field>
+			<field name="domain">issqn</field>
+			<field name="sign">1</field>
+			<field name="tax_discount" eval="1" />
+			<field name="parent_id" ref="tax_code_chart_root" />
+		</record>
+		
+		<record id="tax_code_template_csll" model="account.tax.code.template">
+			<field name="code">CSLL</field>
+			<field name="name">CSLL</field>
+			<field name="domain">csll</field>
+			<field name="sign">1</field>
+			<field name="tax_discount" eval="1" />
+			<field name="parent_id" ref="tax_code_chart_root" />
+		</record>
+		
+		<record id="tax_code_template_cofins" model="account.tax.code.template">
+			<field name="code">COFINS</field>
+			<field name="name">COFINS</field>
+			<field name="domain">cofins</field>
+			<field name="sign">1</field>
+			<field name="tax_discount" eval="1" />
+			<field name="parent_id" ref="tax_code_chart_root" />
+		</record>
+		
+		<record id="tax_code_template_pis" model="account.tax.code.template">
+			<field name="code">PIS</field>
+			<field name="name">PIS</field>
+			<field name="domain">pis</field>
+			<field name="sign">1</field>
+			<field name="tax_discount" eval="1" />
+			<field name="parent_id" ref="tax_code_chart_root" />
+		</record>
+		
+		<record id="tax_code_template_ipi" model="account.tax.code.template">
+			<field name="code">IPI</field>
+			<field name="name">IPI</field>
+			<field name="domain">ipi</field>
+			<field name="sign">1</field>
+			<field name="tax_discount" eval="0" />
+			<field name="parent_id" ref="tax_code_chart_root" />
+		</record>
+		
+		<record id="tax_code_template_icms" model="account.tax.code.template">
+			<field name="code">ICMS</field>
+			<field name="name">ICMS</field>
+			<field name="domain">icms</field>
+			<field name="sign">1</field>
+			<field name="tax_discount" eval="1" />
+			<field name="parent_id" ref="tax_code_chart_root" />
+		</record>
+		
+		<!-- COFINS -->
+		<record id="tax_code_template_cofins_01" model="account.tax.code.template">
+			<field name="code">01</field>
+			<field name="name">Operação Tributável com Alíquota Básica</field>
+			<field name="info">Operação Tributável com Alíquota Básica</field>
+			<field name="domain">cofins</field>
+			<field name="sign">1</field>
+			<field name="tax_discount" eval="1" />
+			<field name="parent_id" ref="tax_code_template_cofins" />
+		</record>
+
+		<record id="tax_code_template_cofins_02" model="account.tax.code.template">
+			<field name="code">02</field>
+			<field name="name">Operação Tributável com Alíquota Diferenciada</field>
+			<field name="info">Operação Tributável com Alíquota Diferenciada</field>
+			<field name="domain">cofins</field>
+			<field name="sign">1</field>
+			<field name="tax_discount" eval="1" />
+			<field name="parent_id" ref="tax_code_template_cofins" />
+		</record>
+
+		<record id="tax_code_template_cofins_03" model="account.tax.code.template">
+			<field name="code">03</field>
+			<field name="name">Operação Tributável com Alíquota por Unidade de Medida de Produto</field>
+			<field name="info">Operação Tributável com Alíquota por Unidade de Medida de Produto</field>
+			<field name="domain">cofins</field>
+			<field name="sign">1</field>
+			<field name="tax_discount" eval="1" />
+			<field name="parent_id" ref="tax_code_template_cofins" />
+		</record>
+
+		<record id="tax_code_template_cofins_04" model="account.tax.code.template">
+			<field name="code">04</field>
+			<field name="name">Operação Tributável Monofásica - Revenda a Alíquota Zero</field>
+			<field name="info">Operação Tributável Monofásica - Revenda a Alíquota Zero</field>
+			<field name="domain">cofins</field>
+			<field name="sign">1</field>
+			<field name="tax_discount" eval="1" />
+			<field name="parent_id" ref="tax_code_template_cofins" />
+		</record>
+
+		<record id="tax_code_template_cofins_05" model="account.tax.code.template">
+			<field name="code">05</field>
+			<field name="name">Operação Tributável por Substituição Tributária</field>
+			<field name="info">Operação Tributável por Substituição Tributária</field>
+			<field name="domain">cofins</field>
+			<field name="sign">1</field>
+			<field name="tax_discount" eval="1" />
+			<field name="parent_id" ref="tax_code_template_cofins" />
+		</record>
+
+		<record id="tax_code_template_cofins_06" model="account.tax.code.template">
+			<field name="code">06</field>
+			<field name="name">Operação Tributável a Alíquota zero</field>
+			<field name="info">Operação Tributável a Alíquota zero</field>
+			<field name="domain">cofins</field>
+			<field name="sign">1</field>
+			<field name="tax_discount" eval="1" />
+			<field name="parent_id" ref="tax_code_template_cofins" />
+		</record>
+
+		<record id="tax_code_template_cofins_07" model="account.tax.code.template">
+			<field name="code">07</field>
+			<field name="name">Operação Isenta da Contribuição</field>
+			<field name="info">Operação Isenta da Contribuição</field>
+			<field name="domain">cofins</field>
+			<field name="sign">1</field>
+			<field name="tax_discount" eval="1" />
+			<field name="parent_id" ref="tax_code_template_cofins" />
+		</record>
+
+		<record id="tax_code_template_cofins_08" model="account.tax.code.template">
+			<field name="code">08</field>
+			<field name="name">Operação sem Incidência da Contribuição</field>
+			<field name="info">Operação sem Incidência da Contribuição</field>
+			<field name="domain">cofins</field>
+			<field name="sign">1</field>
+			<field name="tax_discount" eval="1" />
+			<field name="parent_id" ref="tax_code_template_cofins" />
+		</record>
+
+		<record id="tax_code_template_cofins_09" model="account.tax.code.template">
+			<field name="code">09</field>
+			<field name="name">Operação com Suspensão da Contribuição</field>
+			<field name="info">Operação com Suspensão da Contribuição</field>
+			<field name="domain">cofins</field>
+			<field name="sign">1</field>
+			<field name="tax_discount" eval="1" />
+			<field name="parent_id" ref="tax_code_template_cofins" />
+		</record>
+
+		<record id="tax_code_template_cofins_49" model="account.tax.code.template">
+			<field name="code">49</field>
+			<field name="name">Outras Operações de Saída</field>
+			<field name="info">Outras Operações de Saída</field>
+			<field name="domain">cofins</field>
+			<field name="sign">1</field>
+			<field name="tax_discount" eval="1" />
+			<field name="parent_id" ref="tax_code_template_cofins" />
+		</record>
+
+		<record id="tax_code_template_cofins_50" model="account.tax.code.template">
+			<field name="code">50</field>
+			<field name="name">Operação com Direito a Crédito - Vinculada Exclusivamente a Receita Tributada no Mercado Interno</field>
+			<field name="info">Operação com Direito a Crédito - Vinculada Exclusivamente a Receita Tributada no Mercado Interno</field>
+			<field name="domain">cofins</field>
+			<field name="sign">1</field>
+			<field name="tax_discount" eval="1" />
+			<field name="parent_id" ref="tax_code_template_cofins" />
+		</record>
+
+		<record id="tax_code_template_cofins_51" model="account.tax.code.template">
+			<field name="code">51</field>
+			<field name="name">Operação com Direito a Crédito - Vinculada Exclusivamente a Receita Não-Tributada no Mercado Interno</field>
+			<field name="info">Operação com Direito a Crédito - Vinculada Exclusivamente a Receita Não-Tributada no Mercado Interno</field>
+			<field name="domain">cofins</field>
+			<field name="sign">1</field>
+			<field name="tax_discount" eval="1" />
+			<field name="parent_id" ref="tax_code_template_cofins" />
+		</record>
+
+		<record id="tax_code_template_cofins_52" model="account.tax.code.template">
+			<field name="code">52</field>
+			<field name="name">Operação com Direito a Crédito - Vinculada Exclusivamente a Receita de Exportação</field>
+			<field name="info">Operação com Direito a Crédito - Vinculada Exclusivamente a Receita de Exportação</field>
+			<field name="domain">cofins</field>
+			<field name="sign">1</field>
+			<field name="tax_discount" eval="1" />
+			<field name="parent_id" ref="tax_code_template_cofins" />
+		</record>
+
+		<record id="tax_code_template_cofins_53" model="account.tax.code.template">
+			<field name="code">53</field>
+			<field name="name">Operação com Direito a Crédito - Vinculada a Receitas Tributadas e Não-Tributadas no Mercado Interno</field>
+			<field name="info">Operação com Direito a Crédito - Vinculada a Receitas Tributadas e Não-Tributadas no Mercado Interno</field>
+			<field name="domain">cofins</field>
+			<field name="sign">1</field>
+			<field name="tax_discount" eval="1" />
+			<field name="parent_id" ref="tax_code_template_cofins" />
+		</record>
+
+		<record id="tax_code_template_cofins_54" model="account.tax.code.template">
+			<field name="code">54</field>
+			<field name="name">Operação com Direito a Crédito - Vinculada a Receitas Tributadas no Mercado Interno e de Exportação</field>
+			<field name="info">Operação com Direito a Crédito - Vinculada a Receitas Tributadas no Mercado Interno e de Exportação</field>
+			<field name="domain">cofins</field>
+			<field name="sign">1</field>
+			<field name="tax_discount" eval="1" />
+			<field name="parent_id" ref="tax_code_template_cofins" />
+		</record>
+
+		<record id="tax_code_template_cofins_55" model="account.tax.code.template">
+			<field name="code">55</field>
+			<field name="name">Operação com Direito a Crédito - Vinculada a Receitas Não Tributadas no Mercado Interno e de Exportação</field>
+			<field name="info">Operação com Direito a Crédito - Vinculada a Receitas Não Tributadas no Mercado Interno e de Exportação</field>
+			<field name="domain">cofins</field>
+			<field name="sign">1</field>
+			<field name="tax_discount" eval="1" />
+			<field name="parent_id" ref="tax_code_template_cofins" />
+		</record>
+
+		<record id="tax_code_template_cofins_56" model="account.tax.code.template">
+			<field name="code">56</field>
+			<field name="name">Operação com Direito a Crédito - Vinculada a Receitas Tributadas e Não-Tributadas no Mercado Interno e de Exportação</field>
+			<field name="info">Operação com Direito a Crédito - Vinculada a Receitas Tributadas e Não-Tributadas no Mercado Interno e de Exportação</field>
+			<field name="domain">cofins</field>
+			<field name="sign">1</field>
+			<field name="tax_discount" eval="1" />
+			<field name="parent_id" ref="tax_code_template_cofins" />
+		</record>
+
+		<record id="tax_code_template_cofins_60" model="account.tax.code.template">
+			<field name="code">60</field>
+			<field name="name">Crédito Presumido - Operação de Aquisição Vinculada Exclusivamente a Receita Tributada no Mercado Interno</field>
+			<field name="info">Crédito Presumido - Operação de Aquisição Vinculada Exclusivamente a Receita Tributada no Mercado Interno</field>
+			<field name="domain">cofins</field>
+			<field name="sign">1</field>
+			<field name="tax_discount" eval="1" />
+			<field name="parent_id" ref="tax_code_template_cofins" />
+		</record>
+
+		<record id="tax_code_template_cofins_61" model="account.tax.code.template">
+			<field name="code">61</field>
+			<field name="name">Crédito Presumido - Operação de Aquisição Vinculada Exclusivamente a Receita Não-Tributada no Mercado Interno</field>
+			<field name="info">Crédito Presumido - Operação de Aquisição Vinculada Exclusivamente a Receita Não-Tributada no Mercado Interno</field>
+			<field name="domain">cofins</field>
+			<field name="sign">1</field>
+			<field name="tax_discount" eval="1" />
+			<field name="parent_id" ref="tax_code_template_cofins" />
+		</record>
+
+		<record id="tax_code_template_cofins_62" model="account.tax.code.template">
+			<field name="code">62</field>
+			<field name="name">Crédito Presumido - Operação de Aquisição Vinculada Exclusivamente a Receita de Exportação</field>
+			<field name="info">Crédito Presumido - Operação de Aquisição Vinculada Exclusivamente a Receita de Exportação</field>
+			<field name="domain">cofins</field>
+			<field name="sign">1</field>
+			<field name="tax_discount" eval="1" />
+			<field name="parent_id" ref="tax_code_template_cofins" />
+		</record>
+
+		<record id="tax_code_template_cofins_63" model="account.tax.code.template">
+			<field name="code">63</field>
+			<field name="name">Crédito Presumido - Operação de Aquisição Vinculada a Receitas Tributadas e Não-Tributadas no Mercado Interno</field>
+			<field name="info">Crédito Presumido - Operação de Aquisição Vinculada a Receitas Tributadas e Não-Tributadas no Mercado Interno</field>
+			<field name="domain">cofins</field>
+			<field name="sign">1</field>
+			<field name="tax_discount" eval="1" />
+			<field name="parent_id" ref="tax_code_template_cofins" />
+		</record>
+
+		<record id="tax_code_template_cofins_64" model="account.tax.code.template">
+			<field name="code">64</field>
+			<field name="name">Crédito Presumido - Operação de Aquisição Vinculada a Receitas Tributadas no Mercado Interno e de Exportação</field>
+			<field name="info">Crédito Presumido - Operação de Aquisição Vinculada a Receitas Tributadas no Mercado Interno e de Exportação</field>
+			<field name="domain">cofins</field>
+			<field name="sign">1</field>
+			<field name="tax_discount" eval="1" />
+			<field name="parent_id" ref="tax_code_template_cofins" />
+		</record>
+
+		<record id="tax_code_template_cofins_65" model="account.tax.code.template">
+			<field name="code">65</field>
+			<field name="name">Crédito Presumido - Operação de Aquisição Vinculada a Receitas Não-Tributadas no Mercado Interno e de Exportação</field>
+			<field name="info">Crédito Presumido - Operação de Aquisição Vinculada a Receitas Não-Tributadas no Mercado Interno e de Exportação</field>
+			<field name="domain">cofins</field>
+			<field name="sign">1</field>
+			<field name="tax_discount" eval="1" />
+			<field name="parent_id" ref="tax_code_template_cofins" />
+		</record>
+
+		<record id="tax_code_template_cofins_66" model="account.tax.code.template">
+			<field name="code">66</field>
+			<field name="name">Crédito Presumido - Operação de Aquisição Vinculada a Receitas Tributadas e Não-Tributadas no Mercado Interno e de Exportação</field>
+			<field name="info">Crédito Presumido - Operação de Aquisição Vinculada a Receitas Tributadas e Não-Tributadas no Mercado Interno e de Exportação</field>
+			<field name="domain">cofins</field>
+			<field name="sign">1</field>
+			<field name="tax_discount" eval="1" />
+			<field name="parent_id" ref="tax_code_template_cofins" />
+		</record>
+
+		<record id="tax_code_template_cofins_67" model="account.tax.code.template">
+			<field name="code">67</field>
+			<field name="name">Crédito Presumido - Outras Operações</field>
+			<field name="info">Crédito Presumido - Outras Operações</field>
+			<field name="domain">cofins</field>
+			<field name="sign">1</field>
+			<field name="tax_discount" eval="1" />
+			<field name="parent_id" ref="tax_code_template_cofins" />
+		</record>
+
+		<record id="tax_code_template_cofins_70" model="account.tax.code.template">
+			<field name="code">70</field>
+			<field name="name">Operação de Aquisição sem Direito a Crédito</field>
+			<field name="info">Operação de Aquisição sem Direito a Crédito</field>
+			<field name="domain">cofins</field>
+			<field name="sign">1</field>
+			<field name="tax_discount" eval="1" />
+			<field name="parent_id" ref="tax_code_template_cofins" />
+		</record>
+
+		<record id="tax_code_template_cofins_71" model="account.tax.code.template">
+			<field name="code">71</field>
+			<field name="name">Operação de Aquisição com Isenção</field>
+			<field name="info">Operação de Aquisição com Isenção</field>
+			<field name="domain">cofins</field>
+			<field name="sign">1</field>
+			<field name="tax_discount" eval="1" />
+			<field name="parent_id" ref="tax_code_template_cofins" />
+		</record>
+
+		<record id="tax_code_template_cofins_72" model="account.tax.code.template">
+			<field name="code">72</field>
+			<field name="name">Operação de Aquisição com Suspensão</field>
+			<field name="info">Operação de Aquisição com Suspensão</field>
+			<field name="domain">cofins</field>
+			<field name="sign">1</field>
+			<field name="tax_discount" eval="1" />
+			<field name="parent_id" ref="tax_code_template_cofins" />
+		</record>
+
+		<record id="tax_code_template_cofins_73" model="account.tax.code.template">
+			<field name="code">73</field>
+			<field name="name">Operação de Aquisição a Alíquota Zero</field>
+			<field name="info">Operação de Aquisição a Alíquota Zero</field>
+			<field name="domain">cofins</field>
+			<field name="sign">1</field>
+			<field name="tax_discount" eval="1" />
+			<field name="parent_id" ref="tax_code_template_cofins" />
+		</record>
+
+		<record id="tax_code_template_cofins_74" model="account.tax.code.template">
+			<field name="code">74</field>
+			<field name="name">Operação de Aquisição sem Incidência da Contribuição</field>
+			<field name="info">Operação de Aquisição sem Incidência da Contribuição</field>
+			<field name="domain">cofins</field>
+			<field name="sign">1</field>
+			<field name="tax_discount" eval="1" />
+			<field name="parent_id" ref="tax_code_template_cofins" />
+		</record>
+
+		<record id="tax_code_template_cofins_75" model="account.tax.code.template">
+			<field name="code">75</field>
+			<field name="name">Operação de Aquisição por Substituição Tributária</field>
+			<field name="info">Operação de Aquisição por Substituição Tributária</field>
+			<field name="domain">cofins</field>
+			<field name="sign">1</field>
+			<field name="tax_discount" eval="1" />
+			<field name="parent_id" ref="tax_code_template_cofins" />
+		</record>
+
+		<record id="tax_code_template_cofins_98" model="account.tax.code.template">
+			<field name="code">98</field>
+			<field name="name">Outras Operações de Entrada</field>
+			<field name="info">Outras Operações de Entrada</field>
+			<field name="domain">cofins</field>
+			<field name="sign">1</field>
+			<field name="tax_discount" eval="1" />
+			<field name="parent_id" ref="tax_code_template_cofins" />
+		</record>
+
+		<record id="tax_code_template_cofins_99" model="account.tax.code.template">
+			<field name="code">99</field>
+			<field name="name">Outras Operações</field>
+			<field name="info">Outras Operações</field>
+			<field name="domain">cofins</field>
+			<field name="sign">1</field>
+			<field name="tax_discount" eval="1" />
+			<field name="parent_id" ref="tax_code_template_cofins" />
+		</record>
+
+		<!-- PIS -->
+		<record id="tax_code_template_pis_01" model="account.tax.code.template">
+			<field name="code">01</field>
+			<field name="name">Operação Tributável com Alíquota Básica</field>
+			<field name="info">Operação Tributável com Alíquota Básica</field>
+			<field name="domain">pis</field>
+			<field name="sign">1</field>
+			<field name="tax_discount" eval="1" />
+			<field name="parent_id" ref="tax_code_template_pis" />
+		</record>
+
+		<record id="tax_code_template_pis_02" model="account.tax.code.template">
+			<field name="code">02</field>
+			<field name="name">Operação Tributável com Alíquota Diferenciada</field>
+			<field name="info">Operação Tributável com Alíquota Diferenciada</field>
+			<field name="domain">pis</field>
+			<field name="sign">1</field>
+			<field name="tax_discount" eval="1" />
+			<field name="parent_id" ref="tax_code_template_pis" />
+		</record>
+
+		<record id="tax_code_template_pis_03" model="account.tax.code.template">
+			<field name="code">03</field>
+			<field name="name">Operação Tributável com Alíquota por Unidade de Medida de Produto</field>
+			<field name="info">Operação Tributável com Alíquota por Unidade de Medida de Produto</field>
+			<field name="domain">pis</field>
+			<field name="sign">1</field>
+			<field name="tax_discount" eval="1" />
+			<field name="parent_id" ref="tax_code_template_pis" />
+		</record>
+
+		<record id="tax_code_template_pis_04" model="account.tax.code.template">
+			<field name="code">04</field>
+			<field name="name">Operação Tributável Monofásica - Revenda a Alíquota Zero</field>
+			<field name="info">Operação Tributável Monofásica - Revenda a Alíquota Zero</field>
+			<field name="domain">pis</field>
+			<field name="sign">1</field>
+			<field name="tax_discount" eval="1" />
+			<field name="parent_id" ref="tax_code_template_pis" />
+		</record>
+
+		<record id="tax_code_template_pis_05" model="account.tax.code.template">
+			<field name="code">05</field>
+			<field name="name">Operação Tributável por Substituição Tributária</field>
+			<field name="info">Operação Tributável por Substituição Tributária</field>
+			<field name="domain">pis</field>
+			<field name="sign">1</field>
+			<field name="tax_discount" eval="1" />
+			<field name="parent_id" ref="tax_code_template_pis" />
+		</record>
+
+		<record id="tax_code_template_pis_06" model="account.tax.code.template">
+			<field name="code">06</field>
+			<field name="name">Operação Tributável a Alíquota Zero</field>
+			<field name="info">Operação Tributável a Alíquota Zero</field>
+			<field name="domain">pis</field>
+			<field name="sign">1</field>
+			<field name="tax_discount" eval="1" />
+			<field name="parent_id" ref="tax_code_template_pis" />
+		</record>
+
+		<record id="tax_code_template_pis_07" model="account.tax.code.template">
+			<field name="code">07</field>
+			<field name="name">Operação Isenta da Contribuição</field>
+			<field name="info">Operação Isenta da Contribuição</field>
+			<field name="domain">pis</field>
+			<field name="sign">1</field>
+			<field name="tax_discount" eval="1" />
+			<field name="parent_id" ref="tax_code_template_pis" />
+		</record>
+
+		<record id="tax_code_template_pis_08" model="account.tax.code.template">
+			<field name="code">08</field>
+			<field name="name">Operação sem Incidência da Contribuição</field>
+			<field name="info">Operação sem Incidência da Contribuição</field>
+			<field name="domain">pis</field>
+			<field name="sign">1</field>
+			<field name="tax_discount" eval="1" />
+			<field name="parent_id" ref="tax_code_template_pis" />
+		</record>
+
+		<record id="tax_code_template_pis_09" model="account.tax.code.template">
+			<field name="code">09</field>
+			<field name="name">Operação com Suspensão da Contribuição</field>
+			<field name="info">Operação com Suspensão da Contribuição</field>
+			<field name="domain">pis</field>
+			<field name="sign">1</field>
+			<field name="tax_discount" eval="1" />
+			<field name="parent_id" ref="tax_code_template_pis" />
+		</record>
+
+		<record id="tax_code_template_pis_49" model="account.tax.code.template">
+			<field name="code">49</field>
+			<field name="name">Outras Operações de Saída</field>
+			<field name="info">Outras Operações de Saída</field>
+			<field name="domain">pis</field>
+			<field name="sign">1</field>
+			<field name="tax_discount" eval="1" />
+			<field name="parent_id" ref="tax_code_template_pis" />
+		</record>
+
+		<record id="tax_code_template_pis_50" model="account.tax.code.template">
+			<field name="code">50</field>
+			<field name="name">Operação com Direito a Crédito - Vinculada Exclusivamente a Receita Tributada no Mercado Interno</field>
+			<field name="info">Operação com Direito a Crédito - Vinculada Exclusivamente a Receita Tributada no Mercado Interno</field>
+			<field name="domain">pis</field>
+			<field name="sign">1</field>
+			<field name="tax_discount" eval="1" />
+			<field name="parent_id" ref="tax_code_template_pis" />
+		</record>
+
+		<record id="tax_code_template_pis_51" model="account.tax.code.template">
+			<field name="code">51</field>
+			<field name="name">Operação com Direito a Crédito - Vinculada Exclusivamente a Receita Não Tributada no Mercado Interno</field>
+			<field name="info">Operação com Direito a Crédito - Vinculada Exclusivamente a Receita Não Tributada no Mercado Interno</field>
+			<field name="domain">pis</field>
+			<field name="sign">1</field>
+			<field name="tax_discount" eval="1" />
+			<field name="parent_id" ref="tax_code_template_pis" />
+		</record>
+
+		<record id="tax_code_template_pis_52" model="account.tax.code.template">
+			<field name="code">52</field>
+			<field name="name">Operação com Direito a Crédito - Vinculada Exclusivamente a Receita de Exportação</field>
+			<field name="info">Operação com Direito a Crédito - Vinculada Exclusivamente a Receita de Exportação</field>
+			<field name="domain">pis</field>
+			<field name="sign">1</field>
+			<field name="tax_discount" eval="1" />
+			<field name="parent_id" ref="tax_code_template_pis" />
+		</record>
+
+		<record id="tax_code_template_pis_53" model="account.tax.code.template">
+			<field name="code">53</field>
+			<field name="name">Operação com Direito a Crédito - Vinculada a Receitas Tributadas e Não-Tributadas no Mercado Interno</field>
+			<field name="info">Operação com Direito a Crédito - Vinculada a Receitas Tributadas e Não-Tributadas no Mercado Interno</field>
+			<field name="domain">pis</field>
+			<field name="sign">1</field>
+			<field name="tax_discount" eval="1" />
+			<field name="parent_id" ref="tax_code_template_pis" />
+		</record>
+
+		<record id="tax_code_template_pis_54" model="account.tax.code.template">
+			<field name="code">54</field>
+			<field name="name">Operação com Direito a Crédito - Vinculada a Receitas Tributadas no Mercado Interno e de Exportação</field>
+			<field name="info">Operação com Direito a Crédito - Vinculada a Receitas Tributadas no Mercado Interno e de Exportação</field>
+			<field name="domain">pis</field>
+			<field name="sign">1</field>
+			<field name="tax_discount" eval="1" />
+			<field name="parent_id" ref="tax_code_template_pis" />
+		</record>
+
+		<record id="tax_code_template_pis_55" model="account.tax.code.template">
+			<field name="code">55</field>
+			<field name="name">Operação com Direito a Crédito - Vinculada a Receitas Não-Tributadas no Mercado Interno e de Exportação</field>
+			<field name="info">Operação com Direito a Crédito - Vinculada a Receitas Não-Tributadas no Mercado Interno e de Exportação</field>
+			<field name="domain">pis</field>
+			<field name="sign">1</field>
+			<field name="tax_discount" eval="1" />
+			<field name="parent_id" ref="tax_code_template_pis" />
+		</record>
+
+		<record id="tax_code_template_pis_56" model="account.tax.code.template">
+			<field name="code">56</field>
+			<field name="name">Operação com Direito a Crédito - Vinculada a Receitas Tributadas e Não-Tributadas no Mercado Interno, e de Exportação</field>
+			<field name="info">Operação com Direito a Crédito - Vinculada a Receitas Tributadas e Não-Tributadas no Mercado Interno, e de Exportação</field>
+			<field name="domain">pis</field>
+			<field name="sign">1</field>
+			<field name="tax_discount" eval="1" />
+			<field name="parent_id" ref="tax_code_template_pis" />
+		</record>
+
+		<record id="tax_code_template_pis_60" model="account.tax.code.template">
+			<field name="code">60</field>
+			<field name="name">Crédito Presumido - Operação de Aquisição Vinculada Exclusivamente a Receita Tributada no Mercado Interno</field>
+			<field name="info">Crédito Presumido - Operação de Aquisição Vinculada Exclusivamente a Receita Tributada no Mercado Interno</field>
+			<field name="domain">pis</field>
+			<field name="sign">1</field>
+			<field name="tax_discount" eval="1" />
+			<field name="parent_id" ref="tax_code_template_pis" />
+		</record>
+
+		<record id="tax_code_template_pis_61" model="account.tax.code.template">
+			<field name="code">61</field>
+			<field name="name">Crédito Presumido - Operação de Aquisição Vinculada Exclusivamente a Receita Não-Tributada no Mercado Interno</field>
+			<field name="info">Crédito Presumido - Operação de Aquisição Vinculada Exclusivamente a Receita Não-Tributada no Mercado Interno</field>
+			<field name="domain">pis</field>
+			<field name="sign">1</field>
+			<field name="tax_discount" eval="1" />
+			<field name="parent_id" ref="tax_code_template_pis" />
+		</record>
+
+		<record id="tax_code_template_pis_62" model="account.tax.code.template">
+			<field name="code">62</field>
+			<field name="name">Crédito Presumido - Operação de Aquisição Vinculada Exclusivamente a Receita de Exportação</field>
+			<field name="info">Crédito Presumido - Operação de Aquisição Vinculada Exclusivamente a Receita de Exportação</field>
+			<field name="domain">pis</field>
+			<field name="sign">1</field>
+			<field name="tax_discount" eval="1" />
+			<field name="parent_id" ref="tax_code_template_pis" />
+		</record>
+
+		<record id="tax_code_template_pis_63" model="account.tax.code.template">
+			<field name="code">63</field>
+			<field name="name">Crédito Presumido - Operação de Aquisição Vinculada a Receitas Tributadas e Não-Tributadas no Mercado Interno</field>
+			<field name="info">Crédito Presumido - Operação de Aquisição Vinculada a Receitas Tributadas e Não-Tributadas no Mercado Interno</field>
+			<field name="domain">pis</field>
+			<field name="sign">1</field>
+			<field name="tax_discount" eval="1" />
+			<field name="parent_id" ref="tax_code_template_pis" />
+		</record>
+
+		<record id="tax_code_template_pis_64" model="account.tax.code.template">
+			<field name="code">64</field>
+			<field name="name">Crédito Presumido - Operação de Aquisição Vinculada a Receitas Tributadas no Mercado Interno e de Exportação</field>
+			<field name="info">Crédito Presumido - Operação de Aquisição Vinculada a Receitas Tributadas no Mercado Interno e de Exportação</field>
+			<field name="domain">pis</field>
+			<field name="sign">1</field>
+			<field name="tax_discount" eval="1" />
+			<field name="parent_id" ref="tax_code_template_pis" />
+		</record>
+
+		<record id="tax_code_template_pis_65" model="account.tax.code.template">
+			<field name="code">65</field>
+			<field name="name">Crédito Presumido - Operação de Aquisição Vinculada a Receitas Não-Tributadas no Mercado Interno e de Exportação</field>
+			<field name="info">Crédito Presumido - Operação de Aquisição Vinculada a Receitas Não-Tributadas no Mercado Interno e de Exportação</field>
+			<field name="domain">pis</field>
+			<field name="sign">1</field>
+			<field name="tax_discount" eval="1" />
+			<field name="parent_id" ref="tax_code_template_pis" />
+		</record>
+
+		<record id="tax_code_template_pis_66" model="account.tax.code.template">
+			<field name="code">66</field>
+			<field name="name">Crédito Presumido - Operação de Aquisição Vinculada a Receitas Tributadas e Não-Tributadas no Mercado Interno, e de Exportação</field>
+			<field name="info">Crédito Presumido - Operação de Aquisição Vinculada a Receitas Tributadas e Não-Tributadas no Mercado Interno, e de Exportação</field>
+			<field name="domain">pis</field>
+			<field name="sign">1</field>
+			<field name="tax_discount" eval="1" />
+			<field name="parent_id" ref="tax_code_template_pis" />
+		</record>
+
+		<record id="tax_code_template_pis_67" model="account.tax.code.template">
+			<field name="code">67</field>
+			<field name="name">Crédito Presumido - Outras Operações</field>
+			<field name="info">Crédito Presumido - Outras Operações</field>
+			<field name="domain">pis</field>
+			<field name="sign">1</field>
+			<field name="tax_discount" eval="1" />
+			<field name="parent_id" ref="tax_code_template_pis" />
+		</record>
+
+		<record id="tax_code_template_pis_70" model="account.tax.code.template">
+			<field name="code">70</field>
+			<field name="name">Operação de Aquisição sem Direito a Crédito</field>
+			<field name="info">Operação de Aquisição sem Direito a Crédito</field>
+			<field name="domain">pis</field>
+			<field name="sign">1</field>
+			<field name="tax_discount" eval="1" />
+			<field name="parent_id" ref="tax_code_template_pis" />
+		</record>
+
+		<record id="tax_code_template_pis_71" model="account.tax.code.template">
+			<field name="code">71</field>
+			<field name="name">Operação de Aquisição com Isenção</field>
+			<field name="info">Operação de Aquisição com Isenção</field>
+			<field name="domain">pis</field>
+			<field name="sign">1</field>
+			<field name="tax_discount" eval="1" />
+			<field name="parent_id" ref="tax_code_template_pis" />
+		</record>
+
+		<record id="tax_code_template_pis_72" model="account.tax.code.template">
+			<field name="code">72</field>
+			<field name="name">Operação de Aquisição com Suspensão</field>
+			<field name="info">Operação de Aquisição com Suspensão</field>
+			<field name="domain">pis</field>
+			<field name="sign">1</field>
+			<field name="tax_discount" eval="1" />
+			<field name="parent_id" ref="tax_code_template_pis" />
+		</record>
+
+		<record id="tax_code_template_pis_73" model="account.tax.code.template">
+			<field name="code">73</field>
+			<field name="name">Operação de Aquisição a Alíquota Zero</field>
+			<field name="info">Operação de Aquisição a Alíquota Zero</field>
+			<field name="domain">pis</field>
+			<field name="sign">1</field>
+			<field name="tax_discount" eval="1" />
+			<field name="parent_id" ref="tax_code_template_pis" />
+		</record>
+
+		<record id="tax_code_template_pis_74" model="account.tax.code.template">
+			<field name="code">74</field>
+			<field name="name">Operação de Aquisição sem Incidência da Contribuição</field>
+			<field name="info">Operação de Aquisição sem Incidência da Contribuição</field>
+			<field name="domain">pis</field>
+			<field name="sign">1</field>
+			<field name="tax_discount" eval="1" />
+			<field name="parent_id" ref="tax_code_template_pis" />
+		</record>
+
+		<record id="tax_code_template_pis_75" model="account.tax.code.template">
+			<field name="code">75</field>
+			<field name="name">Operação de Aquisição por Substituição Tributária</field>
+			<field name="info">Operação de Aquisição por Substituição Tributária</field>
+			<field name="domain">pis</field>
+			<field name="sign">1</field>
+			<field name="tax_discount" eval="1" />
+			<field name="parent_id" ref="tax_code_template_pis" />
+		</record>
+
+		<record id="tax_code_template_pis_98" model="account.tax.code.template">
+			<field name="code">98</field>
+			<field name="name">Outras Operações de Entrada</field>
+			<field name="info">Outras Operações de Entrada</field>
+			<field name="domain">pis</field>
+			<field name="sign">1</field>
+			<field name="tax_discount" eval="1" />
+			<field name="parent_id" ref="tax_code_template_pis" />
+		</record>
+
+		<record id="tax_code_template_pis_99" model="account.tax.code.template">
+			<field name="code">99</field>
+			<field name="name">Outras Operações</field>
+			<field name="info">Outras Operações</field>
+			<field name="domain">pis</field>
+			<field name="sign">1</field>
+			<field name="tax_discount" eval="1" />
+			<field name="parent_id" ref="tax_code_template_pis" />
+		</record>
+
+		<!-- IPI -->
+		<record id="tax_code_template_ipi_00" model="account.tax.code.template">
+			<field name="code">00</field>
+			<field name="name">Entrada com recuperação de crédito</field>
+			<field name="info">Entrada com recuperação de crédito</field>
+			<field name="domain">ipi</field>
+			<field name="sign">1</field>
+			<field name="tax_discount" eval="0" />
+			<field name="parent_id" ref="tax_code_template_ipi" />
+		</record>
+
+		<record id="tax_code_template_ipi_01" model="account.tax.code.template">
+			<field name="code">01</field>
+			<field name="name">Entrada tributada com alíquota zero</field>
+			<field name="info">Entrada tributada com alíquota zero</field>
+			<field name="domain">ipi</field>
+			<field name="sign">1</field>
+			<field name="tax_discount" eval="0" />
+			<field name="parent_id" ref="tax_code_template_ipi" />
+		</record>
+
+		<record id="tax_code_template_ipi_02" model="account.tax.code.template">
+			<field name="code">02</field>
+			<field name="name">Entrada isenta</field>
+			<field name="info">Entrada isenta</field>
+			<field name="domain">ipi</field>
+			<field name="sign">1</field>
+			<field name="tax_discount" eval="0" />
+			<field name="parent_id" ref="tax_code_template_ipi" />
+		</record>
+
+		<record id="tax_code_template_ipi_03" model="account.tax.code.template">
+			<field name="code">03</field>
+			<field name="name">Entrada não-tributada</field>
+			<field name="info">Entrada não-tributada</field>
+			<field name="domain">ipi</field>
+			<field name="sign">1</field>
+			<field name="tax_discount" eval="0" />
+			<field name="parent_id" ref="tax_code_template_ipi" />
+		</record>
+
+		<record id="tax_code_template_ipi_04" model="account.tax.code.template">
+			<field name="code">04</field>
+			<field name="name">Entrada imune</field>
+			<field name="info">Entrada imune</field>
+			<field name="domain">ipi</field>
+			<field name="sign">1</field>
+			<field name="tax_discount" eval="0" />
+			<field name="parent_id" ref="tax_code_template_ipi" />
+		</record>
+
+		<record id="tax_code_template_ipi_05" model="account.tax.code.template">
+			<field name="code">05</field>
+			<field name="name">Entrada com suspensão</field>
+			<field name="info">Entrada com suspensão</field>
+			<field name="domain">ipi</field>
+			<field name="sign">1</field>
+			<field name="tax_discount" eval="0" />
+			<field name="parent_id" ref="tax_code_template_ipi" />
+		</record>
+
+		<record id="tax_code_template_ipi_49" model="account.tax.code.template">
+			<field name="code">49</field>
+			<field name="name">Outras entradas</field>
+			<field name="info">Outras entradas</field>
+			<field name="domain">ipi</field>
+			<field name="sign">1</field>
+			<field name="tax_discount" eval="0" />
+			<field name="parent_id" ref="tax_code_template_ipi" />
+		</record>
+
+		<record id="tax_code_template_ipi_50" model="account.tax.code.template">
+			<field name="code">50</field>
+			<field name="name">Saída tributada</field>
+			<field name="info">Saída tributada</field>
+			<field name="domain">ipi</field>
+			<field name="sign">1</field>
+			<field name="tax_discount" eval="0" />
+			<field name="parent_id" ref="tax_code_template_ipi" />
+		</record>
+
+		<record id="tax_code_template_ipi_51" model="account.tax.code.template">
+			<field name="code">51</field>
+			<field name="name">Saída tributada com alíquota zero</field>
+			<field name="info">Saída tributada com alíquota zero</field>
+			<field name="domain">ipi</field>
+			<field name="sign">1</field>
+			<field name="tax_discount" eval="0" />
+			<field name="parent_id" ref="tax_code_template_ipi" />
+		</record>
+
+		<record id="tax_code_template_ipi_52" model="account.tax.code.template">
+			<field name="code">52</field>
+			<field name="name">Saída isenta</field>
+			<field name="info">Saída isenta</field>
+			<field name="domain">ipi</field>
+			<field name="sign">1</field>
+			<field name="tax_discount" eval="0" />
+			<field name="parent_id" ref="tax_code_template_ipi" />
+		</record>
+
+		<record id="tax_code_template_ipi_53" model="account.tax.code.template">
+			<field name="code">53</field>
+			<field name="name">Saída não-tributada</field>
+			<field name="info">Saída não-tributada</field>
+			<field name="domain">ipi</field>
+			<field name="sign">1</field>
+			<field name="tax_discount" eval="0" />
+			<field name="parent_id" ref="tax_code_template_ipi" />
+		</record>
+
+		<record id="tax_code_template_ipi_54" model="account.tax.code.template">
+			<field name="code">54</field>
+			<field name="name">Saída imune</field>
+			<field name="info">Saída imune</field>
+			<field name="domain">ipi</field>
+			<field name="sign">1</field>
+			<field name="tax_discount" eval="0" />
+			<field name="parent_id" ref="tax_code_template_ipi" />
+		</record>
+
+		<record id="tax_code_template_ipi_55" model="account.tax.code.template">
+			<field name="code">55</field>
+			<field name="name">Saída com suspensão</field>
+			<field name="info">Saída com suspensão</field>
+			<field name="domain">ipi</field>
+			<field name="sign">1</field>
+			<field name="tax_discount" eval="0" />
+			<field name="parent_id" ref="tax_code_template_ipi" />
+		</record>
+
+		<record id="tax_code_template_ipi_99" model="account.tax.code.template">
+			<field name="code">99</field>
+			<field name="name">Outras saídas</field>
+			<field name="info">Outras saídas</field>
+			<field name="domain">ipi</field>
+			<field name="sign">1</field>
+			<field name="tax_discount" eval="0" />
+			<field name="parent_id" ref="tax_code_template_ipi" />
+		</record>
+
+		<!-- ICMS -->
+		<record id="tax_code_template_icms_00" model="account.tax.code.template">
+			<field name="code">00</field>
+			<field name="name">Tributada integralmente</field>
+			<field name="info">Tributada integralmente</field>
+			<field name="domain">icms</field>
+			<field name="sign">1</field>
+			<field name="tax_discount" eval="1" />
+			<field name="parent_id" ref="tax_code_template_icms" />
+		</record>
+
+		<record id="tax_code_template_icms_10" model="account.tax.code.template">
+			<field name="code">10</field>
+			<field name="name">Tributada e com cobrança do ICMS por substituição tributária</field>
+			<field name="info">Tributada e com cobrança do ICMS por substituição tributária</field>
+			<field name="domain">icms</field>
+			<field name="sign">1</field>
+			<field name="tax_discount" eval="1" />
+			<field name="parent_id" ref="tax_code_template_icms" />
+		</record>
+
+		<record id="tax_code_template_icms_20" model="account.tax.code.template">
+			<field name="code">20</field>
+			<field name="name">Com redução de base de cálculo</field>
+			<field name="info">Com redução de base de cálculo</field>
+			<field name="domain">icms</field>
+			<field name="sign">1</field>
+			<field name="tax_discount" eval="1" />
+			<field name="parent_id" ref="tax_code_template_icms" />
+		</record>
+
+		<record id="tax_code_template_icms_30" model="account.tax.code.template">
+			<field name="code">30</field>
+			<field name="name">Isenta ou não tributada e com cobrança do ICMS por substituição tributária</field>
+			<field name="info">Isenta ou não tributada e com cobrança do ICMS por substituição tributária</field>
+			<field name="domain">icms</field>
+			<field name="sign">1</field>
+			<field name="tax_discount" eval="1" />
+			<field name="parent_id" ref="tax_code_template_icms" />
+		</record>
+
+		<record id="tax_code_template_icms_40" model="account.tax.code.template">
+			<field name="code">40</field>
+			<field name="name">Isenta</field>
+			<field name="info">Isenta</field>
+			<field name="domain">icms</field>
+			<field name="sign">1</field>
+			<field name="tax_discount" eval="1" />
+			<field name="parent_id" ref="tax_code_template_icms" />
+		</record>
+
+		<record id="tax_code_template_icms_41" model="account.tax.code.template">
+			<field name="code">41</field>
+			<field name="name">Não tributada</field>
+			<field name="info">Não tributada</field>
+			<field name="domain">icms</field>
+			<field name="sign">1</field>
+			<field name="tax_discount" eval="1" />
+			<field name="parent_id" ref="tax_code_template_icms" />
+		</record>
+
+		<record id="tax_code_template_icms_50" model="account.tax.code.template">
+			<field name="code">50</field>
+			<field name="name">Suspensão</field>
+			<field name="info">Suspensão</field>
+			<field name="domain">icms</field>
+			<field name="sign">1</field>
+			<field name="tax_discount" eval="1" />
+			<field name="parent_id" ref="tax_code_template_icms" />
+		</record>
+
+		<record id="tax_code_template_icms_51" model="account.tax.code.template">
+			<field name="code">51</field>
+			<field name="name">Diferimento</field>
+			<field name="info">Diferimento</field>
+			<field name="domain">icms</field>
+			<field name="sign">1</field>
+			<field name="tax_discount" eval="1" />
+			<field name="parent_id" ref="tax_code_template_icms" />
+		</record>
+
+		<record id="tax_code_template_icms_60" model="account.tax.code.template">
+			<field name="code">60</field>
+			<field name="name">ICMS cobrado anteriormente por substituição tributária</field>
+			<field name="info">ICMS cobrado anteriormente por substituição tributária</field>
+			<field name="domain">icms</field>
+			<field name="sign">1</field>
+			<field name="tax_discount" eval="1" />
+			<field name="parent_id" ref="tax_code_template_icms" />
+		</record>
+
+		<record id="tax_code_template_icms_70" model="account.tax.code.template">
+			<field name="code">70</field>
+			<field name="name">Com redução de base de cálculo e cobrança do ICMS por substituição tributária</field>
+			<field name="info">Com redução de base de cálculo e cobrança do ICMS por substituição tributária</field>
+			<field name="domain">icms</field>
+			<field name="sign">1</field>
+			<field name="tax_discount" eval="1" />
+			<field name="parent_id" ref="tax_code_template_icms" />
+		</record>
+
+		<record id="tax_code_template_icms_90" model="account.tax.code.template">
+			<field name="code">90</field>
+			<field name="name">Outras</field>
+			<field name="info">Outras</field>
+			<field name="domain">icms</field>
+			<field name="sign">1</field>
+			<field name="tax_discount" eval="1" />
+			<field name="parent_id" ref="tax_code_template_icms" />
+		</record>
+		
+		<record id="tax_code_template_icms_101" model="account.tax.code.template">
+			<field name="code">101</field>
+			<field name="name">Simples Nacional - Tributada pelo Simples Nacional com permissão de crédito</field>
+			<field name="info">Simples Nacional - Tributada pelo Simples Nacional com permissão de crédito</field>
+			<field name="domain">icms</field>
+			<field name="sign">1</field>
+			<field name="tax_discount" eval="1" />
+			<field name="parent_id" ref="tax_code_template_icms" />
+		</record>
+		
+		<record id="tax_code_template_icms_102" model="account.tax.code.template">
+			<field name="code">102</field>
+			<field name="name">Simples Nacional - Tributada pelo Simples Nacional sem permissão de crédito</field>
+			<field name="info">Simples Nacional - Tributada pelo Simples Nacional sem permissão de crédito</field>
+			<field name="domain">icms</field>
+			<field name="sign">1</field>
+			<field name="tax_discount" eval="1" />
+			<field name="parent_id" ref="tax_code_template_icms" />
+		</record>
+		
+		<record id="tax_code_template_icms_103" model="account.tax.code.template">
+			<field name="code">103</field>
+			<field name="name">Simples Nacional - Isenção do ICMS no Simples Nacional para faixa de receita bruta</field>
+			<field name="info">Simples Nacional - Isenção do ICMS no Simples Nacional para faixa de receita bruta</field>
+			<field name="domain">icms</field>
+			<field name="sign">1</field>
+			<field name="tax_discount" eval="1" />
+			<field name="parent_id" ref="tax_code_template_icms" />
+		</record>
+		
+		<record id="tax_code_template_icms_201" model="account.tax.code.template">
+			<field name="code">201</field>
+			<field name="name">Simples Nacional - Tributada pelo Simples Nacional com permissão de crédito e com cobrança do ICMS por substituição tributária</field>
+			<field name="info">Simples Nacional - Tributada pelo Simples Nacional com permissão de crédito e com cobrança do ICMS por substituição tributária</field>
+			<field name="domain">icms</field>
+			<field name="sign">1</field>
+			<field name="tax_discount" eval="1" />
+			<field name="parent_id" ref="tax_code_template_icms" />
+		</record>
+		
+		<record id="tax_code_template_icms_202" model="account.tax.code.template">
+			<field name="code">202</field>
+			<field name="name">Simples Nacional - Tributada pelo Simples Nacional sem permissão de crédito e com cobrança do ICMS por substituição tributária</field>
+			<field name="info">Simples Nacional - Tributada pelo Simples Nacional sem permissão de crédito e com cobrança do ICMS por substituição tributária</field>
+			<field name="domain">icms</field>
+			<field name="sign">1</field>
+			<field name="tax_discount" eval="1" />
+			<field name="parent_id" ref="tax_code_template_icms" />
+		</record>
+		
+		<record id="tax_code_template_icms_203" model="account.tax.code.template">
+			<field name="code">203</field>
+			<field name="name">Simples Nacional - Isenção do ICMS no Simples Nacional para faixa de receita bruta e com cobrança do ICMS por substituição tributária</field>
+			<field name="info">Simples Nacional - Isenção do ICMS no Simples Nacional para faixa de receita bruta e com cobrança do ICMS por substituição tributária</field>
+			<field name="domain">icms</field>
+			<field name="sign">1</field>
+			<field name="tax_discount" eval="1" />
+			<field name="parent_id" ref="tax_code_template_icms" />
+		</record>
+		
+		<record id="tax_code_template_icms_300" model="account.tax.code.template">
+			<field name="code">300</field>
+			<field name="name">Simples Nacional - Imune</field>
+			<field name="info">Simples Nacional - Imune</field>
+			<field name="domain">icms</field>
+			<field name="sign">1</field>
+			<field name="tax_discount" eval="1" />
+			<field name="parent_id" ref="tax_code_template_icms" />
+		</record>
+		
+		<record id="tax_code_template_icms_400" model="account.tax.code.template">
+			<field name="code">400</field>
+			<field name="name">Simples Nacional - Não tributada pelo Simples Nacional</field>
+			<field name="info">Simples Nacional - Não tributada pelo Simples Nacional</field>
+			<field name="domain">icms</field>
+			<field name="sign">1</field>
+			<field name="tax_discount" eval="1" />
+			<field name="parent_id" ref="tax_code_template_icms" />
+		</record>
+		
+		<record id="tax_code_template_icms_500" model="account.tax.code.template">
+			<field name="code">500</field>
+			<field name="name">Simples Nacional - ICMS cobrado anteriormente por substituição tributária (substituído) ou por antecipação</field>
+			<field name="info">Simples Nacional - ICMS cobrado anteriormente por substituição tributária (substituído) ou por antecipação</field>
+			<field name="domain">icms</field>
+			<field name="sign">1</field>
+			<field name="tax_discount" eval="1" />
+			<field name="parent_id" ref="tax_code_template_icms" />
+		</record>
+		
+		<record id="tax_code_template_icms_900" model="account.tax.code.template">
+			<field name="code">900</field>
+			<field name="name">Simples Nacional - Outros</field>
+			<field name="info">Simples Nacional - Outros</field>
+			<field name="domain">icms</field>
+			<field name="sign">1</field>
+			<field name="tax_discount" eval="1" />
+			<field name="parent_id" ref="tax_code_template_icms" />
+		</record>
+		
+	</data>
+</openerp>

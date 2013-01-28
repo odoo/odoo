@@ -18,20 +18,18 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-import os
-import datetime
-from lxml import etree
-from time import strftime
 
 import base64
-import tools
-import netsvc
-from osv import osv
-from osv import fields
-from tools import to_xml
-from tools.translate import _
-import addons
-from tools.safe_eval import safe_eval
+import datetime
+from lxml import etree
+import os
+from time import strftime
+
+from openerp import addons, netsvc, tools
+from openerp.osv import fields, osv
+from openerp.tools import to_xml
+from openerp.tools.translate import _
+from openerp.tools.safe_eval import safe_eval
 
 class survey_question_wiz(osv.osv_memory):
     _name = 'survey.question.wiz'

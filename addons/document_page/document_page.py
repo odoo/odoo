@@ -19,10 +19,10 @@
 #
 ##############################################################################
 
-from osv import fields, osv
-from tools.translate import _
+from openerp.osv import fields, osv
+from openerp.tools.translate import _
 import difflib
-import tools
+from openerp import tools
 
 class document_page(osv.osv):
     _name = "document.page"

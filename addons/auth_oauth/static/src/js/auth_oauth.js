@@ -28,9 +28,14 @@ openerp.auth_oauth = function(instance) {
         },
         on_oauth_loaded: function(result) {
             this.oauth_providers = result;
-            this.$('.oe_oauth_provider_login_button').remove();
-            var buttons = QWeb.render("auth_oauth.Login.button",{"widget":this});
-            this.$(".oe_login_pane form ul").after(buttons);
+            var params = $.deparam($.param.querystring());
+            if (this.oauth_providers.length === 1 && params.type === 'signup') {
+                this.do_oauth_sign_in(this.oauth_providers[0]);
+            } else {
+                this.$('.oe_oauth_provider_login_button').remove();
+                var buttons = QWeb.render("auth_oauth.Login.button",{"widget":this});
+                this.$(".oe_login_pane form ul").after(buttons);
+            }
         },
         on_oauth_sign_in: function(ev) {
             ev.preventDefault();

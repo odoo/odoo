@@ -62,6 +62,7 @@
             <field name="name">res.partner.followup.form.inherit</field>
             <field name="inherit_id" ref="base.view_partner_form"/>
             <field name="model">res.partner</field>
+            <field name="groups_id" eval="[(4, ref('account.group_account_invoice'))]"/>
             <field name="arch" type="xml" >
                 <page string="Accounting" position="before" version="7.0">
                     <page string="Payment Follow-up" groups="account.group_account_invoice" name="followup_tab">

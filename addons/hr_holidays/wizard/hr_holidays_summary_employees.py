@@ -20,7 +20,7 @@
 ##############################################################################
 import time
 
-from osv import osv, fields
+from openerp.osv import fields, osv
 
 class hr_holidays_summary_employee(osv.osv_memory):
     _name = 'hr.holidays.summary.employee'

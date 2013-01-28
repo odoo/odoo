@@ -29,7 +29,7 @@
 #
 ##############################################################################
 
-import pooler
+from openerp import pooler
 
 class WebKitHelper(object):
     """Set of usefull report helper"""

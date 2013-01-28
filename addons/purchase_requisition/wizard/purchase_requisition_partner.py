@@ -20,9 +20,9 @@
 ##############################################################################
 
 import time
-from osv import fields, osv
-from osv.orm import browse_record, browse_null
-from tools.translate import _
+from openerp.osv import fields, osv
+from openerp.osv.orm import browse_record, browse_null
+from openerp.tools.translate import _
 
 class purchase_requisition_partner(osv.osv_memory):
     _name = "purchase.requisition.partner"

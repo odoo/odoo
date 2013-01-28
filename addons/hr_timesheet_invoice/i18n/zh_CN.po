@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2012-12-03 16:03+0000\n"
+"POT-Creation-Date: 2012-12-21 17:05+0000\n"
 "PO-Revision-Date: 2012-05-10 18:01+0000\n"
 "Last-Translator: 开阖软件     Jeff Wang <jeff@osbzr.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-12-04 05:36+0000\n"
-"X-Generator: Launchpad (build 16335)\n"
+"X-Launchpad-Export-Date: 2012-12-22 05:44+0000\n"
+"X-Generator: Launchpad (build 16378)\n"
 
 #. module: hr_timesheet_invoice
 #: view:report.timesheet.line:0
@@ -96,21 +96,12 @@ msgid "March"
 msgstr "3月"
 
 #. module: hr_timesheet_invoice
-#: help:account.analytic.account,to_invoice:0
-msgid ""
-"You usually invoice 100% of the timesheets. But if you mix fixed price and "
-"timesheet invoicing, you may use another ratio. For instance, if you do a "
-"20% advance invoice (fixed price, based on a sale order), you should invoice "
-"the rest on timesheet with a 80% ratio."
-msgstr ""
-
-#. module: hr_timesheet_invoice
 #: report:account.analytic.profit:0
 msgid "Profit"
 msgstr "利润"
 
 #. module: hr_timesheet_invoice
-#: code:addons/hr_timesheet_invoice/hr_timesheet_invoice.py:165
+#: code:addons/hr_timesheet_invoice/hr_timesheet_invoice.py:144
 #, python-format
 msgid "You cannot modify an invoiced analytic line!"
 msgstr "你不能修改发票的成本行"
@@ -124,11 +115,6 @@ msgstr "开票税率"
 #: help:hr.timesheet.invoice.create.final,time:0
 msgid "Display time in the history of works"
 msgstr "在工作日志显示时间"
-
-#. module: hr_timesheet_invoice
-#: view:hr.timesheet.analytic.profit:0
-msgid "Journals"
-msgstr "账簿"
 
 #. module: hr_timesheet_invoice
 #: view:report.timesheet.line:0
@@ -176,7 +162,7 @@ msgid "Invoiced Amount"
 msgstr "已开票金额"
 
 #. module: hr_timesheet_invoice
-#: code:addons/hr_timesheet_invoice/hr_timesheet_invoice.py:209
+#: code:addons/hr_timesheet_invoice/hr_timesheet_invoice.py:188
 #, python-format
 msgid "Analytic Account incomplete !"
 msgstr ""
@@ -187,10 +173,8 @@ msgid "Project"
 msgstr "项目"
 
 #. module: hr_timesheet_invoice
-#: code:addons/hr_timesheet_invoice/hr_timesheet_invoice.py:164
-#: code:addons/hr_timesheet_invoice/hr_timesheet_invoice.py:254
-#, python-format
-msgid "Error!"
+#: view:account.analytic.account:0
+msgid "Invoice on Timesheets Options"
 msgstr ""
 
 #. module: hr_timesheet_invoice
@@ -202,12 +186,6 @@ msgstr "金额"
 #: help:hr.timesheet.invoice.create,name:0
 msgid "The detail of each work done will be displayed on the invoice"
 msgstr "每个完成的工作将显示在发票上"
-
-#. module: hr_timesheet_invoice
-#: code:addons/hr_timesheet_invoice/hr_timesheet_invoice.py:116
-#, python-format
-msgid "Contract has been set as <b>pending</b>."
-msgstr ""
 
 #. module: hr_timesheet_invoice
 #: field:account.analytic.account,pricelist_id:0
@@ -228,6 +206,15 @@ msgstr "期末日期"
 #: model:ir.model,name:hr_timesheet_invoice.model_report_analytic_account_close
 msgid "Analytic account to close"
 msgstr "关闭辅助核算项"
+
+#. module: hr_timesheet_invoice
+#: help:account.analytic.account,to_invoice:0
+msgid ""
+"You usually invoice 100% of the timesheets. But if you mix fixed price and "
+"timesheet invoicing, you may use another ratio. For instance, if you do a "
+"20% advance invoice (fixed price, based on a sales order), you should "
+"invoice the rest on timesheet with a 80% ratio."
+msgstr ""
 
 #. module: hr_timesheet_invoice
 #: view:hr.timesheet.invoice.create:0
@@ -254,7 +241,7 @@ msgid "Deadline"
 msgstr "截止日期"
 
 #. module: hr_timesheet_invoice
-#: code:addons/hr_timesheet_invoice/hr_timesheet_invoice.py:267
+#: code:addons/hr_timesheet_invoice/hr_timesheet_invoice.py:246
 #, python-format
 msgid "Configuration Error!"
 msgstr ""
@@ -291,7 +278,7 @@ msgid "Costs to invoice"
 msgstr "成本发票"
 
 #. module: hr_timesheet_invoice
-#: code:addons/hr_timesheet_invoice/hr_timesheet_invoice.py:267
+#: code:addons/hr_timesheet_invoice/hr_timesheet_invoice.py:246
 #, python-format
 msgid "Please define income account for product '%s'."
 msgstr ""
@@ -335,12 +322,6 @@ msgstr "用户计工单"
 #: model:ir.actions.act_window,name:hr_timesheet_invoice.act_acc_analytic_acc_2_report_acc_analytic_line_to_invoice
 msgid "To Invoice"
 msgstr "开票"
-
-#. module: hr_timesheet_invoice
-#: code:addons/hr_timesheet_invoice/hr_timesheet_invoice.py:98
-#, python-format
-msgid "Contract has been <b>closed</b>."
-msgstr ""
 
 #. module: hr_timesheet_invoice
 #: view:hr.timesheet.analytic.profit:0
@@ -462,11 +443,6 @@ msgstr "月份"
 #: report:account.analytic.profit:0
 msgid "Currency"
 msgstr "币别"
-
-#. module: hr_timesheet_invoice
-#: view:hr.timesheet.analytic.profit:0
-msgid "Users"
-msgstr "用户"
 
 #. module: hr_timesheet_invoice
 #: view:report.timesheet.line:0
@@ -621,11 +597,6 @@ msgid "Date"
 msgstr "日期"
 
 #. module: hr_timesheet_invoice
-#: model:mail.message.subtype,name:hr_timesheet_invoice.mt_account_closed
-msgid "finished"
-msgstr ""
-
-#. module: hr_timesheet_invoice
 #: field:report.timesheet.line,quantity:0
 #: field:report_timesheet.account,quantity:0
 #: field:report_timesheet.account.date,quantity:0
@@ -656,9 +627,9 @@ msgid "General Account"
 msgstr "辅助核算项"
 
 #. module: hr_timesheet_invoice
-#: view:account.analytic.account:0
-msgid "Invoice on Timesheets Options"
-msgstr ""
+#: model:ir.model,name:hr_timesheet_invoice.model_hr_timesheet_analytic_profit
+msgid "Print Timesheet Profit"
+msgstr "打印计工单收益"
 
 #. module: hr_timesheet_invoice
 #: report:account.analytic.profit:0
@@ -666,9 +637,10 @@ msgid "Totals:"
 msgstr "合计:"
 
 #. module: hr_timesheet_invoice
-#: model:mail.message.subtype,name:hr_timesheet_invoice.mt_account_canceled
-msgid "canceled"
-msgstr ""
+#: model:ir.actions.act_window,name:hr_timesheet_invoice.action_account_analytic_line_to_invoice
+#: view:report.account.analytic.line.to.invoice:0
+msgid "Analytic Lines to Invoice"
+msgstr "辅助核算明细的发票"
 
 #. module: hr_timesheet_invoice
 #: help:account.analytic.line,to_invoice:0
@@ -767,13 +739,7 @@ msgid "Timesheets to invoice"
 msgstr "给计工单开发票"
 
 #. module: hr_timesheet_invoice
-#: code:addons/hr_timesheet_invoice/hr_timesheet_invoice.py:104
-#, python-format
-msgid "Contract has been <b>canceled</b>."
-msgstr ""
-
-#. module: hr_timesheet_invoice
-#: code:addons/hr_timesheet_invoice/hr_timesheet_invoice.py:210
+#: code:addons/hr_timesheet_invoice/hr_timesheet_invoice.py:189
 #, python-format
 msgid ""
 "Contract incomplete. Please fill in the Customer and Pricelist fields."
@@ -820,12 +786,6 @@ msgstr "账簿"
 #: help:hr.timesheet.invoice.create.final,product:0
 msgid "The product that will be used to invoice the remaining amount"
 msgstr "将作为发票的剩余金额"
-
-#. module: hr_timesheet_invoice
-#: code:addons/hr_timesheet_invoice/hr_timesheet_invoice.py:110
-#, python-format
-msgid "Contract has been <b>opened</b>."
-msgstr ""
 
 #. module: hr_timesheet_invoice
 #: field:hr.timesheet.invoice.create.final,time:0
@@ -882,11 +842,6 @@ msgid "Sale price"
 msgstr "售价"
 
 #. module: hr_timesheet_invoice
-#: model:ir.model,name:hr_timesheet_invoice.model_hr_timesheet_analytic_profit
-msgid "Print Timesheet Profit"
-msgstr "打印计工单收益"
-
-#. module: hr_timesheet_invoice
 #: model:ir.actions.act_window,name:hr_timesheet_invoice.act_res_users_2_report_timesheet_user
 msgid "Timesheets per day"
 msgstr "每天计工单"
@@ -901,7 +856,7 @@ msgid "April"
 msgstr "4月"
 
 #. module: hr_timesheet_invoice
-#: code:addons/hr_timesheet_invoice/hr_timesheet_invoice.py:254
+#: code:addons/hr_timesheet_invoice/hr_timesheet_invoice.py:233
 #, python-format
 msgid ""
 "There is no product defined. Please select one or force the product through "
@@ -931,10 +886,11 @@ msgid "Units"
 msgstr "单位"
 
 #. module: hr_timesheet_invoice
-#: model:ir.actions.act_window,name:hr_timesheet_invoice.action_account_analytic_line_to_invoice
-#: view:report.account.analytic.line.to.invoice:0
-msgid "Analytic Lines to Invoice"
-msgstr "辅助核算明细的发票"
+#: code:addons/hr_timesheet_invoice/hr_timesheet_invoice.py:143
+#: code:addons/hr_timesheet_invoice/hr_timesheet_invoice.py:233
+#, python-format
+msgid "Error!"
+msgstr ""
 
 #. module: hr_timesheet_invoice
 #: model:hr_timesheet_invoice.factor,name:hr_timesheet_invoice.timesheet_invoice_factor4
@@ -1151,6 +1107,9 @@ msgstr ""
 #~ msgid "Invoice Balance amount"
 #~ msgstr "发票余额的金额"
 
+#~ msgid "Users"
+#~ msgstr "用户"
+
 #, python-format
 #~ msgid "Error"
 #~ msgstr "错误"
@@ -1214,6 +1173,9 @@ msgstr ""
 
 #~ msgid "This Year"
 #~ msgstr "该年"
+
+#~ msgid "Journals"
+#~ msgstr "账簿"
 
 #~ msgid "Name of entry"
 #~ msgstr "名称"

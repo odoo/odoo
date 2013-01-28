@@ -19,27 +19,30 @@
 #
 ##############################################################################
 
-from datetime import datetime
-from datetime import timedelta
-import re
+from datetime import datetime, timedelta
 import time
+import logging
 
-from osv import fields, osv, orm
-from tools.translate import _
-from tools.safe_eval import safe_eval
-from tools import ustr
-import pooler
-import tools
+from openerp import SUPERUSER_ID
+from openerp.osv import fields, osv
+from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT
 
+_logger = logging.getLogger(__name__)
 
-def get_datetime(date_field):
+DATE_RANGE_FUNCTION = {
+    'minutes': lambda interval: timedelta(minutes=interval),
+    'hour': lambda interval: timedelta(hours=interval),
+    'day': lambda interval: timedelta(days=interval),
+    'month': lambda interval: timedelta(months=interval),
+    False: lambda interval: timedelta(0),
+}
+
+def get_datetime(date_str):
     '''Return a datetime from a date string or a datetime string'''
-    #complete date time if date_field contains only a date
-    date_split = date_field.split(' ')
-    if len(date_split) == 1:
-        date_field = date_split[0] + " 00:00:00"
-
-    return datetime.strptime(date_field[:19], '%Y-%m-%d %H:%M:%S')
+    # complete date time if date_str contains only a date
+    if ' ' not in date_str:
+        date_str = date_str + " 00:00:00"
+    return datetime.strptime(date_str, DEFAULT_SERVER_DATETIME_FORMAT)
 
 
 class base_action_rule(osv.osv):
@@ -48,320 +51,208 @@ class base_action_rule(osv.osv):
     _name = 'base.action.rule'
     _description = 'Action Rules'
 
-    def _state_get(self, cr, uid, context=None):
-        """ Get State """
-        return self.state_get(cr, uid, context=context)
-
-    def state_get(self, cr, uid, context=None):
-        """ Get State """
-        return [('', '')]
-
-    def priority_get(self, cr, uid, context=None):
-        """ Get Priority """
-        return [('', '')]
-
     _columns = {
         'name':  fields.char('Rule Name', size=64, required=True),
-        'model_id': fields.many2one('ir.model', 'Related Document Model', required=True, domain=[('osv_memory','=', False)]),
+        'model_id': fields.many2one('ir.model', 'Related Document Model',
+            required=True, domain=[('osv_memory', '=', False)]),
         'model': fields.related('model_id', 'model', type="char", size=256, string='Model'),
         'create_date': fields.datetime('Create Date', readonly=1),
-        'active': fields.boolean('Active', help="If the active field is set to False,\
- it will allow you to hide the rule without removing it."),
-        'sequence': fields.integer('Sequence', help="Gives the sequence order \
-when displaying a list of rules."),
-        'trg_date_type':  fields.selection([
-            ('none', 'None'),
-            ('create', 'Creation Date'),
-            ('write', 'Last Modified Date'),
-            ('action_last', 'Last Action Date'),
-            ('date', 'Date'),
-            ('deadline', 'Deadline'),
-            ], 'Trigger Date', size=16),
-        'trg_date_range': fields.integer('Delay after trigger date', \
-                                         help="Delay After Trigger Date,\
-specifies you can put a negative number. If you need a delay before the \
-trigger date, like sending a reminder 15 minutes before a meeting."),
-        'trg_date_range_type': fields.selection([('minutes', 'Minutes'), ('hour', 'Hours'), \
+        'active': fields.boolean('Active',
+            help="When unchecked, the rule is hidden and will not be executed."),
+        'sequence': fields.integer('Sequence',
+            help="Gives the sequence order when displaying a list of rules."),
+        'trg_date_id': fields.many2one('ir.model.fields', string='Trigger Date',
+            domain="[('model_id', '=', model_id), ('ttype', 'in', ('date', 'datetime'))]"),
+        'trg_date_range': fields.integer('Delay after trigger date',
+            help="Delay after the trigger date." \
+            "You can put a negative number if you need a delay before the" \
+            "trigger date, like sending a reminder 15 minutes before a meeting."),
+        'trg_date_range_type': fields.selection([('minutes', 'Minutes'), ('hour', 'Hours'),
                                 ('day', 'Days'), ('month', 'Months')], 'Delay type'),
-        'trg_user_id':  fields.many2one('res.users', 'Responsible'),
-        'trg_partner_id': fields.many2one('res.partner', 'Partner'),
-        'trg_partner_categ_id': fields.many2one('res.partner.category', 'Partner Category'),
-        'trg_state_from': fields.selection(_state_get, 'Status', size=16),
-        'trg_state_to': fields.selection(_state_get, 'Button Pressed', size=16),
-
-        'act_user_id': fields.many2one('res.users', 'Set Responsible to'),
-        'act_state': fields.selection(_state_get, 'Set State to', size=16),
-        'act_followers': fields.many2many("res.partner", string="Set Followers"),
-        'regex_name': fields.char('Regex on Resource Name', size=128, help="Regular expression for matching name of the resource\
-\ne.g.: 'urgent.*' will search for records having name starting with the string 'urgent'\
-\nNote: This is case sensitive search."),
-        'server_action_ids': fields.one2many('ir.actions.server', 'action_rule_id', 'Server Action', help="Define Server actions.\neg:Email Reminders, Call Object Service, etc.."), #TODO: set domain [('model_id','=',model_id)]
-        'filter_id':fields.many2one('ir.filters', 'Filter', required=False), #TODO: set domain [('model_id','=',model_id.model)]
+        'act_user_id': fields.many2one('res.users', 'Set Responsible'),
+        'act_followers': fields.many2many("res.partner", string="Add Followers"),
+        'server_action_ids': fields.many2many('ir.actions.server', string='Server Actions',
+            domain="[('model_id', '=', model_id)]",
+            help="Examples: email reminders, call object service, etc."),
+        'filter_pre_id': fields.many2one('ir.filters', string='Before Update Filter',
+            ondelete='restrict',
+            domain="[('model_id', '=', model_id.model)]",
+            help="If present, this condition must be satisfied before the update of the record."),
+        'filter_id': fields.many2one('ir.filters', string='After Update Filter',
+            ondelete='restrict',
+            domain="[('model_id', '=', model_id.model)]",
+            help="If present, this condition must be satisfied after the update of the record."),
         'last_run': fields.datetime('Last Run', readonly=1),
     }
 
     _defaults = {
         'active': True,
-        'trg_date_type': 'none',
         'trg_date_range_type': 'day',
     }
 
     _order = 'sequence'
 
+    def _filter(self, cr, uid, action, action_filter, record_ids, context=None):
+        """ filter the list record_ids that satisfy the action filter """
+        if record_ids and action_filter:
+            assert action.model == action_filter.model_id, "Filter model different from action rule model"
+            model = self.pool.get(action_filter.model_id)
+            domain = [('id', 'in', record_ids)] + eval(action_filter.domain)
+            ctx = dict(context or {})
+            ctx.update(eval(action_filter.context))
+            record_ids = model.search(cr, uid, domain, context=ctx)
+        return record_ids
 
-    def post_action(self, cr, uid, ids, model, context=None):
-        # Searching for action rules
-        cr.execute("SELECT model.model, rule.id  FROM base_action_rule rule \
-                        LEFT JOIN ir_model model on (model.id = rule.model_id) \
-                        WHERE active and model = %s", (model,))
-        res = cr.fetchall()
-        # Check if any rule matching with current object
-        for obj_name, rule_id in res:
-            obj = self.pool.get(obj_name)
-            # If the rule doesn't involve a time condition, run it immediately
-            # Otherwise we let the scheduler run the action
-            if self.browse(cr, uid, rule_id, context=context).trg_date_type == 'none':
-                self._action(cr, uid, [rule_id], obj.browse(cr, uid, ids, context=context), context=context)
+    def _process(self, cr, uid, action, record_ids, context=None):
+        """ process the given action on the records """
+        # execute server actions
+        model = self.pool.get(action.model_id.model)
+        if action.server_action_ids:
+            server_action_ids = map(int, action.server_action_ids)
+            for record in model.browse(cr, uid, record_ids, context):
+                action_server_obj = self.pool.get('ir.actions.server')
+                ctx = dict(context, active_model=model._name, active_ids=[record.id], active_id=record.id)
+                action_server_obj.run(cr, uid, server_action_ids, context=ctx)
+
+        # modify records
+        values = {}
+        if 'date_action_last' in model._all_columns:
+            values['date_action_last'] = time.strftime(DEFAULT_SERVER_DATETIME_FORMAT)
+        if action.act_user_id and 'user_id' in model._all_columns:
+            values['user_id'] = action.act_user_id.id
+        if values:
+            model.write(cr, uid, record_ids, values, context=context)
+
+        if action.act_followers and hasattr(model, 'message_subscribe'):
+            follower_ids = map(int, action.act_followers)
+            model.message_subscribe(cr, uid, record_ids, follower_ids, context=context)
+
         return True
 
-    def _create(self, old_create, model, context=None):
+    def _wrap_create(self, old_create, model):
+        """ Return a wrapper around `old_create` calling both `old_create` and
+            `_process`, in that order.
         """
-        Return a wrapper around `old_create` calling both `old_create` and
-        `post_action`, in that order.
-        """
-        def wrapper(cr, uid, vals, context=context):
-            if context is None:
-                context = {}
+        def wrapper(cr, uid, vals, context=None):
+            # avoid loops or cascading actions
+            if context and context.get('action'):
+                return old_create(cr, uid, vals, context=context)
+
+            context = dict(context or {}, action=True)
             new_id = old_create(cr, uid, vals, context=context)
-            if not context.get('action'):
-                self.post_action(cr, uid, [new_id], model, context=context)
+
+            # as it is a new record, we do not consider the actions that have a prefilter
+            action_dom = [('model', '=', model), ('trg_date_id', '=', False), ('filter_pre_id', '=', False)]
+            action_ids = self.search(cr, uid, action_dom, context=context)
+
+            # check postconditions, and execute actions on the records that satisfy them
+            for action in self.browse(cr, uid, action_ids, context=context):
+                if self._filter(cr, uid, action, action.filter_id, [new_id], context=context):
+                    self._process(cr, uid, action, [new_id], context=context)
             return new_id
+
         return wrapper
 
-    def _write(self, old_write, model, context=None):
+    def _wrap_write(self, old_write, model):
+        """ Return a wrapper around `old_write` calling both `old_write` and
+            `_process`, in that order.
         """
-        Return a wrapper around `old_write` calling both `old_write` and
-        `post_action`, in that order.
-        """
-        def wrapper(cr, uid, ids, vals, context=context):
-            if context is None:
-                context = {}
-            if isinstance(ids, (str, int, long)):
-                ids = [ids]
+        def wrapper(cr, uid, ids, vals, context=None):
+            # avoid loops or cascading actions
+            if context and context.get('action'):
+                return old_write(cr, uid, ids, vals, context=context)
+
+            context = dict(context or {}, action=True)
+            ids = [ids] if isinstance(ids, (int, long, str)) else ids
+
+            # retrieve the action rules to possibly execute
+            action_dom = [('model', '=', model), ('trg_date_id', '=', False)]
+            action_ids = self.search(cr, uid, action_dom, context=context)
+            actions = self.browse(cr, uid, action_ids, context=context)
+
+            # check preconditions
+            pre_ids = {}
+            for action in actions:
+                pre_ids[action] = self._filter(cr, uid, action, action.filter_pre_id, ids, context=context)
+
+            # execute write
             old_write(cr, uid, ids, vals, context=context)
-            if not context.get('action'):
-                self.post_action(cr, uid, ids, model, context=context)
+
+            # check postconditions, and execute actions on the records that satisfy them
+            for action in actions:
+                post_ids = self._filter(cr, uid, action, action.filter_id, pre_ids[action], context=context)
+                if post_ids:
+                    self._process(cr, uid, action, post_ids, context=context)
             return True
+
         return wrapper
 
-    def _register_hook(self, cr, uid, ids, context=None):
+    def _register_hook(self, cr, ids=None):
+        """ Wrap the methods `create` and `write` of the models specified by
+            the rules given by `ids` (or all existing rules if `ids` is `None`.)
         """
-        Wrap every `create` and `write` methods of the models specified by
-        the rules (given by `ids`).
-        """
-        for action_rule in self.browse(cr, uid, ids, context=context):
+        if ids is None:
+            ids = self.search(cr, SUPERUSER_ID, [])
+        for action_rule in self.browse(cr, SUPERUSER_ID, ids):
             model = action_rule.model_id.model
-            obj_pool = self.pool.get(model)
-            if not hasattr(obj_pool, 'base_action_ruled'):
-                obj_pool.create = self._create(obj_pool.create, model, context=context)
-                obj_pool.write = self._write(obj_pool.write, model, context=context)
-                obj_pool.base_action_ruled = True
-
+            model_obj = self.pool.get(model)
+            if not hasattr(model_obj, 'base_action_ruled'):
+                model_obj.create = self._wrap_create(model_obj.create, model)
+                model_obj.write = self._wrap_write(model_obj.write, model)
+                model_obj.base_action_ruled = True
         return True
 
     def create(self, cr, uid, vals, context=None):
         res_id = super(base_action_rule, self).create(cr, uid, vals, context=context)
-        self._register_hook(cr, uid, [res_id], context=context)
+        self._register_hook(cr, [res_id])
         return res_id
 
     def write(self, cr, uid, ids, vals, context=None):
+        if isinstance(ids, (int, long)):
+            ids = [ids]
         super(base_action_rule, self).write(cr, uid, ids, vals, context=context)
-        self._register_hook(cr, uid, ids, context=context)
+        self._register_hook(cr, ids)
         return True
 
-    def _check(self, cr, uid, automatic=False, use_new_cursor=False, \
-                       context=None):
-        """
-        This Function is call by scheduler.
-        """
-        rule_ids = self.search(cr, uid, [], context=context)
-        self._register_hook(cr, uid, rule_ids, context=context)
-        if context is None:
-            context = {}
-        for rule in self.browse(cr, uid, rule_ids, context=context):
-            model = rule.model_id.model
-            model_pool = self.pool.get(model)
-            last_run = False
-            if rule.last_run:
-                last_run = get_datetime(rule.last_run)
+    def _check(self, cr, uid, automatic=False, use_new_cursor=False, context=None):
+        """ This Function is called by scheduler. """
+        context = context or {}
+        # retrieve all the action rules that have a trg_date_id and no precondition
+        action_dom = [('trg_date_id', '!=', False), ('filter_pre_id', '=', False)]
+        action_ids = self.search(cr, uid, action_dom, context=context)
+        for action in self.browse(cr, uid, action_ids, context=context):
             now = datetime.now()
-            ctx = dict(context)            
-            if rule.filter_id and rule.model_id.model == rule.filter_id.model_id:
-                ctx.update(eval(rule.filter_id.context))
-                obj_ids = model_pool.search(cr, uid, eval(rule.filter_id.domain), context=ctx)
-            else:
-                obj_ids = model_pool.search(cr, uid, [], context=ctx)
-            for obj in model_pool.browse(cr, uid, obj_ids, context=ctx):
-                # Calculate when this action should next occur for this object
-                base = False
-                if rule.trg_date_type=='create' and hasattr(obj, 'create_date'):
-                    base = obj.create_date
-                elif rule.trg_date_type=='write' and hasattr(obj, 'write_date'):
-                    base = obj.write_date
-                elif (rule.trg_date_type=='action_last'
-                        and hasattr(obj, 'create_date')):
-                    if hasattr(obj, 'date_action_last') and obj.date_action_last:
-                        base = obj.date_action_last
-                    else:
-                        base = obj.create_date
-                elif (rule.trg_date_type=='deadline'
-                        and hasattr(obj, 'date_deadline')
-                        and obj.date_deadline):
-                    base = obj.date_deadline
-                elif (rule.trg_date_type=='date'
-                        and hasattr(obj, 'date')
-                        and obj.date):
-                    base = obj.date
-                if base:
-                    fnct = {
-                        'minutes': lambda interval: timedelta(minutes=interval),
-                        'day': lambda interval: timedelta(days=interval),
-                        'hour': lambda interval: timedelta(hours=interval),
-                        'month': lambda interval: timedelta(months=interval),
-                    }
-                    base = get_datetime(base)
-                    delay = fnct[rule.trg_date_range_type](rule.trg_date_range)
-                    action_date = base + delay
-                    if (not last_run or (last_run <= action_date < now)):
-                        try:
-                            self._action(cr, uid, [rule.id], obj, context=ctx)
-                            self.write(cr, uid, [rule.id], {'last_run': now}, context=context)
-                        except Exception, e:
-                            import traceback
-                            print traceback.format_exc()
-                        
-                        
+            last_run = get_datetime(action.last_run) if action.last_run else False
 
-    def do_check(self, cr, uid, action, obj, context=None):
-        """ check Action """
-        if context is None:
-            context = {}
-        ok = True
-        if action.filter_id and action.model_id.model == action.filter_id.model_id:
+            # retrieve all the records that satisfy the action's condition
+            model = self.pool.get(action.model_id.model)
+            domain = []
             ctx = dict(context)
-            ctx.update(eval(action.filter_id.context))
-            obj_ids = self.pool.get(action.model_id.model).search(cr, uid, eval(action.filter_id.domain), context=ctx)
-            ok = ok and obj.id in obj_ids
-        if getattr(obj, 'user_id', False):
-            ok = ok and (not action.trg_user_id.id or action.trg_user_id.id==obj.user_id.id)
-        if getattr(obj, 'partner_id', False):
-            ok = ok and (not action.trg_partner_id.id or action.trg_partner_id.id==obj.partner_id.id)
-            ok = ok and (
-                not action.trg_partner_categ_id.id or
-                (
-                    obj.partner_id.id and
-                    (action.trg_partner_categ_id.id in map(lambda x: x.id, obj.partner_id.category_id or []))
-                )
-            )
-        state_to = context.get('state_to', False)
-        state = getattr(obj, 'state', False)
-        if state:
-            ok = ok and (not action.trg_state_from or action.trg_state_from==state)
-        if state_to:
-            ok = ok and (not action.trg_state_to or action.trg_state_to==state_to)
-        elif action.trg_state_to:
-            ok = False
-        reg_name = action.regex_name
-        result_name = True
-        if reg_name:
-            ptrn = re.compile(ustr(reg_name))
-            _result = ptrn.search(ustr(obj.name))
-            if not _result:
-                result_name = False
-        regex_n = not reg_name or result_name
-        ok = ok and regex_n
-        return ok
+            if action.filter_id:
+                domain = eval(action.filter_id.domain)
+                ctx.update(eval(action.filter_id.context))
+            record_ids = model.search(cr, uid, domain, context=ctx)
 
-    def do_action(self, cr, uid, action, obj, context=None):
-        """ Do Action """
-        if context is None:
-            context = {}
-        ctx = dict(context)
-        model_obj = self.pool.get(action.model_id.model)
-        action_server_obj = self.pool.get('ir.actions.server')
-        if action.server_action_ids:
-            ctx.update({'active_model': action.model_id.model, 'active_id':obj.id, 'active_ids':[obj.id]})
-            action_server_obj.run(cr, uid, [x.id for x in action.server_action_ids], context=ctx)
+            # determine when action should occur for the records
+            date_field = action.trg_date_id.name
+            if date_field == 'date_action_last' and 'create_date' in model._all_columns:
+                get_record_dt = lambda record: record[date_field] or record.create_date
+            else:
+                get_record_dt = lambda record: record[date_field]
 
-        write = {}
-        if hasattr(obj, 'user_id') and action.act_user_id:
-            write['user_id'] = action.act_user_id.id
-        if hasattr(obj, 'date_action_last'):
-            write['date_action_last'] = time.strftime('%Y-%m-%d %H:%M:%S')
-        if hasattr(obj, 'state') and action.act_state:
-            write['state'] = action.act_state
+            delay = DATE_RANGE_FUNCTION[action.trg_date_range_type](action.trg_date_range)
 
-        model_obj.write(cr, uid, [obj.id], write, context)
-        if hasattr(obj, 'state') and hasattr(obj, 'message_post') and action.act_state:
-            model_obj.message_post(cr, uid, [obj], _(action.act_state), context=context)
-        
-        if hasattr(obj, 'message_subscribe') and action.act_followers:
-            exits_followers = [x.id for x in obj.message_follower_ids]
-            new_followers = [x.id for x in action.act_followers if x.id not in exits_followers]
-            if new_followers:
-                model_obj.message_subscribe(cr, uid, [obj.id], new_followers, context=context)
-        return True
+            # process action on the records that should be executed
+            for record in model.browse(cr, uid, record_ids, context=context):
+                record_dt = get_record_dt(record)
+                if not record_dt:
+                    continue
+                action_dt = get_datetime(record_dt) + delay
+                if last_run and (last_run <= action_dt < now) or (action_dt < now):
+                    try:
+                        self._process(cr, uid, action, [record.id], context=context)
+                    except Exception:
+                        import traceback
+                        _logger.error(traceback.format_exc())
 
-    def _action(self, cr, uid, ids, objects, scrit=None, context=None):
-        """ Do Action """
-        if context is None:
-            context = {}
-
-        context.update({'action': True})
-        if not scrit:
-            scrit = []
-        if not isinstance(objects, list):
-            objects = [objects]
-        for action in self.browse(cr, uid, ids, context=context):
-            for obj in objects:
-                if self.do_check(cr, uid, action, obj, context=context):
-                    self.do_action(cr, uid, action, obj, context=context)
-
-        context.update({'action': False})
-        return True
-
-base_action_rule()
-
-class actions_server(osv.osv):
-    _inherit = 'ir.actions.server'
-    _columns = {
-        'action_rule_id': fields.many2one("base.action.rule", string="Action Rule")
-    }
-actions_server()
-
-class ir_cron(osv.osv):
-    _inherit = 'ir.cron'
-    _init_done = False
-
-    def _poolJobs(self, db_name, check=False):
-        if not self._init_done:
-            self._init_done = True
-            try:
-                db = pooler.get_db(db_name)
-            except:
-                return False
-            cr = db.cursor()
-            try:
-                next = datetime.now().strftime('%Y-%m-%d %H:00:00')
-                # Putting nextcall always less than current time in order to call it every time
-                cr.execute('UPDATE ir_cron set nextcall = \'%s\' where numbercall<>0 and active and model=\'base.action.rule\' ' % (next))
-            finally:
-                cr.commit()
-                cr.close()
-
-        super(ir_cron, self)._poolJobs(db_name, check=check)
-
-ir_cron()
-
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
+            action.write({'last_run': now.strftime(DEFAULT_SERVER_DATETIME_FORMAT)})

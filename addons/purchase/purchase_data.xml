@@ -48,6 +48,16 @@
             id="purchase_default_set"
             model="ir.values"
             name="set"/>
-        
+
+        <!-- Purchase-related subtypes for messaging / Chatter -->
+        <record id="mt_rfq_confirmed" model="mail.message.subtype">
+            <field name="name">RFQ Confirmed</field>
+            <field name="res_model">purchase.order</field>
+        </record>
+        <record id="mt_rfq_approved" model="mail.message.subtype">
+            <field name="name">RFQ Approved</field>
+            <field name="res_model">purchase.order</field>
+        </record>
+
     </data>
 </openerp>

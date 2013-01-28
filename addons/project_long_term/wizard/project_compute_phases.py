@@ -18,8 +18,8 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-from tools.translate import _
-from osv import fields, osv
+from openerp.tools.translate import _
+from openerp.osv import fields, osv
 
 class project_compute_phases(osv.osv_memory):
     _name = 'project.compute.phases'

@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-03 16:02+0000\n"
+"POT-Creation-Date: 2012-12-21 17:05+0000\n"
 "PO-Revision-Date: 2010-12-29 10:18+0000\n"
 "Last-Translator: Dimitris Andavoglou <dimitrisand@gmail.com>\n"
 "Language-Team: Greek <el@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-12-04 05:46+0000\n"
-"X-Generator: Launchpad (build 16335)\n"
+"X-Launchpad-Export-Date: 2012-12-22 05:56+0000\n"
+"X-Generator: Launchpad (build 16378)\n"
 
 #. module: analytic
 #: field:account.analytic.account,child_ids:0
@@ -28,8 +28,9 @@ msgid "In Progress"
 msgstr ""
 
 #. module: analytic
-#: model:mail.message.subtype,name:analytic.mt_account_status
-msgid "Status Change"
+#: code:addons/analytic/analytic.py:229
+#, python-format
+msgid "Contract: "
 msgstr ""
 
 #. module: analytic
@@ -48,6 +49,24 @@ msgid "Specifies the amount of quantity to count."
 msgstr "Καθορίζει την επιμετρούμενη ποσότητα"
 
 #. module: analytic
+#: field:account.analytic.account,debit:0
+msgid "Debit"
+msgstr "Χρεωστική"
+
+#. module: analytic
+#: help:account.analytic.account,type:0
+msgid ""
+"If you select the View Type, it means you won't allow to create journal "
+"entries using that account.\n"
+"The type 'Analytic account' stands for usual accounts that you only want to "
+"use in accounting.\n"
+"If you select Contract or Project, it offers you the possibility to manage "
+"the validity and the invoicing options for this account.\n"
+"The special type 'Template of Contract' allows you to define a template with "
+"default data that you can reuse easily."
+msgstr ""
+
+#. module: analytic
 #: view:account.analytic.account:0
 msgid ""
 "Once the end date of the contract is\n"
@@ -62,9 +81,13 @@ msgid ""
 msgstr ""
 
 #. module: analytic
-#: code:addons/analytic/analytic.py:222
-#, python-format
-msgid "Contract: "
+#: selection:account.analytic.account,type:0
+msgid "Contract or Project"
+msgstr ""
+
+#. module: analytic
+#: field:account.analytic.account,name:0
+msgid "Account/Contract Name"
 msgstr ""
 
 #. module: analytic
@@ -78,20 +101,14 @@ msgid "Followers"
 msgstr ""
 
 #. module: analytic
-#: code:addons/analytic/analytic.py:319
-#, python-format
-msgid "Contract <b>created</b>."
-msgstr ""
-
-#. module: analytic
 #: selection:account.analytic.account,state:0
 msgid "Closed"
 msgstr "Κλεισμένα"
 
 #. module: analytic
-#: field:account.analytic.account,debit:0
-msgid "Debit"
-msgstr "Χρεωστική"
+#: model:mail.message.subtype,name:analytic.mt_account_pending
+msgid "Contract to Renew"
+msgstr ""
 
 #. module: analytic
 #: selection:account.analytic.account,state:0
@@ -109,7 +126,7 @@ msgid "Status"
 msgstr ""
 
 #. module: analytic
-#: code:addons/analytic/analytic.py:261
+#: code:addons/analytic/analytic.py:268
 #, python-format
 msgid "%s (copy)"
 msgstr ""
@@ -124,11 +141,6 @@ msgstr "Γραμμή Αναλυτικής"
 #: field:account.analytic.line,name:0
 msgid "Description"
 msgstr "Περιγραφή"
-
-#. module: analytic
-#: field:account.analytic.account,name:0
-msgid "Account/Contract Name"
-msgstr ""
 
 #. module: analytic
 #: field:account.analytic.account,message_unread:0
@@ -157,6 +169,11 @@ msgid "Messages and communication history"
 msgstr ""
 
 #. module: analytic
+#: model:mail.message.subtype,description:analytic.mt_account_opened
+msgid "Stage <b>opened</b>"
+msgstr ""
+
+#. module: analytic
 #: help:account.analytic.account,quantity_max:0
 msgid ""
 "Sets the higher limit of time to work on the contract, based on the "
@@ -164,7 +181,7 @@ msgid ""
 msgstr ""
 
 #. module: analytic
-#: code:addons/analytic/analytic.py:153
+#: code:addons/analytic/analytic.py:160
 #, python-format
 msgid ""
 "If you set a company, the currency selected has to be the same as it's "
@@ -186,9 +203,9 @@ msgid "User"
 msgstr "Χρήστης"
 
 #. module: analytic
-#: field:account.analytic.account,parent_id:0
-msgid "Parent Analytic Account"
-msgstr "Γονικός Λογαριασμός Αναλυτικής"
+#: model:mail.message.subtype,description:analytic.mt_account_pending
+msgid "Contract <b>pending</b>"
+msgstr ""
 
 #. module: analytic
 #: field:account.analytic.line,date:0
@@ -196,23 +213,24 @@ msgid "Date"
 msgstr "Ημερομηνία"
 
 #. module: analytic
-#: help:account.analytic.account,type:0
-msgid ""
-"If you select the View Type, it means you won't allow to create journal "
-"entries using that account.\n"
-"The type 'Analytic account' stands for usual accounts that you only want to "
-"use in accounting.\n"
-"If you select Contract or Project, it offers you the possibility to manage "
-"the validity and the invoicing options for this account.\n"
-"The special type 'Template of Contract' allows you to define a template with "
-"default data that you can reuse easily."
+#: model:mail.message.subtype,name:analytic.mt_account_closed
+msgid "Contract Finished"
 msgstr ""
 
 #. module: analytic
-#: field:account.analytic.account,message_comment_ids:0
-#: help:account.analytic.account,message_comment_ids:0
-msgid "Comments and emails"
+#: view:account.analytic.account:0
+msgid "Terms and Conditions"
 msgstr ""
+
+#. module: analytic
+#: help:account.analytic.line,amount:0
+msgid ""
+"Calculated by multiplying the quantity and the price given in the Product's "
+"cost price. Always expressed in the company main currency."
+msgstr ""
+"Υπολογίστηκε πολλαπλασιάζοντας τη νποσότητα επί την τιμή που προκύπτει από "
+"την τιμή κόστους του πίνακα Προϊόντων. Πάντα εκφράζεται στο κύριο νόμισμα "
+"της εταιρείας."
 
 #. module: analytic
 #: field:account.analytic.account,partner_id:0
@@ -230,9 +248,9 @@ msgid "Messages"
 msgstr ""
 
 #. module: analytic
-#: constraint:account.analytic.line:0
-msgid "You cannot create analytic line on view account."
-msgstr ""
+#: field:account.analytic.account,parent_id:0
+msgid "Parent Analytic Account"
+msgstr "Γονικός Λογαριασμός Αναλυτικής"
 
 #. module: analytic
 #: view:account.analytic.account:0
@@ -261,19 +279,13 @@ msgid "Credit"
 msgstr "Πίστωση"
 
 #. module: analytic
-#: field:account.analytic.line,amount:0
-msgid "Amount"
-msgstr "Ποσό"
-
-#. module: analytic
-#: code:addons/analytic/analytic.py:321
-#, python-format
-msgid "Contract for <em>%s</em> has been <b>created</b>."
+#: model:mail.message.subtype,name:analytic.mt_account_opened
+msgid "Contract Opened"
 msgstr ""
 
 #. module: analytic
-#: view:account.analytic.account:0
-msgid "Terms and Conditions"
+#: model:mail.message.subtype,description:analytic.mt_account_closed
+msgid "Contract <b>closed</b>"
 msgstr ""
 
 #. module: analytic
@@ -318,7 +330,7 @@ msgid "Reference"
 msgstr ""
 
 #. module: analytic
-#: code:addons/analytic/analytic.py:153
+#: code:addons/analytic/analytic.py:160
 #, python-format
 msgid "Error!"
 msgstr ""
@@ -329,9 +341,9 @@ msgid "Analytic Accounting"
 msgstr ""
 
 #. module: analytic
-#: selection:account.analytic.account,type:0
-msgid "Contract or Project"
-msgstr ""
+#: field:account.analytic.line,amount:0
+msgid "Amount"
+msgstr "Ποσό"
 
 #. module: analytic
 #: field:account.analytic.account,complete_name:0
@@ -369,14 +381,9 @@ msgid "Start Date"
 msgstr ""
 
 #. module: analytic
-#: help:account.analytic.line,amount:0
-msgid ""
-"Calculated by multiplying the quantity and the price given in the Product's "
-"cost price. Always expressed in the company main currency."
+#: constraint:account.analytic.line:0
+msgid "You cannot create analytic line on view account."
 msgstr ""
-"Υπολογίστηκε πολλαπλασιάζοντας τη νποσότητα επί την τιμή που προκύπτει από "
-"την τιμή κόστους του πίνακα Προϊόντων. Πάντα εκφράζεται στο κύριο νόμισμα "
-"της εταιρείας."
 
 #. module: analytic
 #: field:account.analytic.account,line_ids:0

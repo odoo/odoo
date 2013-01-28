@@ -21,9 +21,9 @@
 
 import time
 
-from osv import fields
-from osv import osv
-from tools.translate import _
+from openerp.osv import fields
+from openerp.osv import osv
+from openerp.tools.translate import _
 
 class hr_employee(osv.osv):
     _name = "hr.employee"
@@ -125,7 +125,7 @@ class hr_analytic_timesheet(osv.osv):
         if emp_id:
             emp = emp_obj.browse(cr, uid, emp_id[0], context=context)
             if bool(emp.product_id):
-                a = emp.product_id.product_tmpl_id.property_account_expense.id
+                a = emp.product_id.property_account_expense.id
                 if not a:
                     a = emp.product_id.categ_id.property_account_expense_categ.id
                 if a:

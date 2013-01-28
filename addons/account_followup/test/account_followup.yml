@@ -3,7 +3,7 @@
 -
   !record {model: account.invoice, id: account.demo_invoice_0}:
     check_total: 14.0
-    date_invoice: 2012-06-2
+    date_invoice: !eval "'%s-06-2' %(datetime.now().year)"
     invoice_line:
       - account_id : account.a_sale
         name: 'Test PC'

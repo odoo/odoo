@@ -19,14 +19,14 @@
 #
 ##############################################################################
 
-from osv import fields, osv
-from tools.translate import _
+from openerp.osv import fields, osv
+from openerp.tools.translate import _
 
 class product(osv.osv):
     _inherit = 'product.product'
     _columns = {
-        'event_ok': fields.boolean('Event Subscription', help='Determine if a product needs to create automatically an event registration at the confirmation of a sale order line.'),
-        'event_type_id': fields.many2one('event.type', 'Type of Event', help='Select event types so when we use this product in Sale order line, it will filter events of this type only.'),
+        'event_ok': fields.boolean('Event Subscription', help='Determine if a product needs to create automatically an event registration at the confirmation of a sales order line.'),
+        'event_type_id': fields.many2one('event.type', 'Type of Event', help='Select event types so when we use this product in sales order lines, it will filter events of this type only.'),
     }
 
     def onchange_event_ok(self, cr, uid, ids, event_ok, context=None):
@@ -69,7 +69,7 @@ class sale_order_line(osv.osv):
 
     def button_confirm(self, cr, uid, ids, context=None):
         '''
-        create registration with sale order
+        create registration with sales order
         '''
         if context is None:
             context = {}

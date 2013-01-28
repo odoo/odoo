@@ -18,9 +18,9 @@
 #
 ##############################################################################
 
-from osv import fields, osv
-from tools.translate import _
-import netsvc
+from openerp.osv import fields, osv
+from openerp.tools.translate import _
+from openerp import netsvc
 
 class sale_make_invoice(osv.osv_memory):
     _name = "sale.make.invoice"
@@ -30,7 +30,8 @@ class sale_make_invoice(osv.osv_memory):
         'invoice_date': fields.date('Invoice Date'),
     }
     _defaults = {
-        'grouped': False
+        'grouped': False,
+        'invoice_date': fields.date.context_today,
     }
 
     def view_init(self, cr, uid, fields_list, context=None):

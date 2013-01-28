@@ -18,9 +18,10 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
+from openerp.osv import osv, fields
+from openerp.addons.edi import EDIMixin
 
-from openerp.osv import osv
-from edi import EDIMixin
+from urllib import urlencode
 
 INVOICE_LINE_EDI_STRUCT = {
     'name': True,
@@ -257,6 +258,28 @@ class account_invoice(osv.osv, EDIMixin):
             # ignore if views are missing
             pass
         return action
+
+    def _edi_paypal_url(self, cr, uid, ids, field, arg, context=None):
+        res = dict.fromkeys(ids, False)
+        for inv in self.browse(cr, uid, ids, context=context):
+            if inv.type == 'out_invoice' and inv.company_id.paypal_account:
+                params = {
+                    "cmd": "_xclick",
+                    "business": inv.company_id.paypal_account,
+                    "item_name": inv.company_id.name + " Invoice " + inv.number,
+                    "invoice": inv.number,
+                    "amount": inv.residual,
+                    "currency_code": inv.currency_id.name,
+                    "button_subtype": "services",
+                    "no_note": "1",
+                    "bn": "OpenERP_Invoice_PayNow_" + inv.currency_id.name,
+                }
+                res[inv.id] = "https://www.paypal.com/cgi-bin/webscr?" + urlencode(params)
+        return res
+
+    _columns = {
+        'paypal_url': fields.function(_edi_paypal_url, type='char', string='Paypal Url'),
+    }
 
 
 class account_invoice_line(osv.osv, EDIMixin):

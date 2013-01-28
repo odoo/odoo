@@ -24,11 +24,11 @@ from datetime import datetime
 from dateutil.relativedelta import relativedelta
 from operator import itemgetter
 
-import netsvc
-import pooler
-from osv import fields, osv
-import decimal_precision as dp
-from tools.translate import _
+from openerp import netsvc
+from openerp import pooler
+from openerp.osv import fields, osv
+import openerp.addons.decimal_precision as dp
+from openerp.tools.translate import _
 
 # ---------------------------------------------------------
 # Account Financial Report

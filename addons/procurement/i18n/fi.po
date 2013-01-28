@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-03 16:03+0000\n"
+"POT-Creation-Date: 2012-12-21 17:06+0000\n"
 "PO-Revision-Date: 2011-06-20 09:20+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Finnish <fi@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-12-04 05:48+0000\n"
-"X-Generator: Launchpad (build 16335)\n"
+"X-Launchpad-Export-Date: 2012-12-22 05:59+0000\n"
+"X-Generator: Launchpad (build 16378)\n"
 
 #. module: procurement
 #: model:ir.ui.menu,name:procurement.menu_stock_sched
@@ -49,12 +49,6 @@ msgid "Draft procurement of the product and location of that orderpoint"
 msgstr "Luonnnos hankinta tuotteelle ja tilauspisteen paikalle"
 
 #. module: procurement
-#: code:addons/procurement/procurement.py:290
-#, python-format
-msgid "No supplier defined for this product !"
-msgstr "Tuotteelle ei ole määritelty toimittajaa!"
-
-#. module: procurement
 #: view:product.product:0
 msgid ""
 "required quantities are always\n"
@@ -82,10 +76,9 @@ msgid "Manufacture"
 msgstr ""
 
 #. module: procurement
-#: code:addons/procurement/procurement.py:307
-#, python-format
-msgid "No address defined for the supplier"
-msgstr "Toimittajan osoitetta ei ole määritetty"
+#: model:process.process,name:procurement.process_process_serviceproductprocess0
+msgid "Service"
+msgstr "Palvelu"
 
 #. module: procurement
 #: model:ir.actions.act_window,name:procurement.action_procurement_compute
@@ -110,7 +103,6 @@ msgstr "Myyntiyksikkö määrä"
 
 #. module: procurement
 #: view:procurement.order:0
-#: field:procurement.order,name:0
 msgid "Reason"
 msgstr "Syy"
 
@@ -138,11 +130,6 @@ msgstr "Ei käytetä laskutoimituksiin - vain tietoja varten."
 #: field:stock.warehouse.orderpoint,procurement_id:0
 msgid "Latest procurement"
 msgstr "Viimeisin hankinta"
-
-#. module: procurement
-#: view:procurement.order:0
-msgid "Notes"
-msgstr "Huomautukset"
 
 #. module: procurement
 #: model:ir.actions.act_window,help:procurement.action_orderpoint_form
@@ -176,6 +163,11 @@ msgid "Cancelled"
 msgstr ""
 
 #. module: procurement
+#: view:procurement.order:0
+msgid "Permanent Procurement Exceptions"
+msgstr "Pysyvät hankinnan poikkeukset"
+
+#. module: procurement
 #: help:procurement.order,message_unread:0
 msgid "If checked new messages require your attention."
 msgstr ""
@@ -191,9 +183,9 @@ msgid "Stock Move"
 msgstr "Varastosiirto"
 
 #. module: procurement
-#: model:ir.model,name:procurement.model_procurement_order_compute_all
-msgid "Compute all schedulers"
-msgstr "Laske kaikki ajastimet"
+#: view:product.product:0
+msgid "Stockable products"
+msgstr ""
 
 #. module: procurement
 #: code:addons/procurement/procurement.py:137
@@ -237,11 +229,6 @@ msgid ""
 msgstr ""
 
 #. module: procurement
-#: view:product.product:0
-msgid "Stockable products"
-msgstr ""
-
-#. module: procurement
 #: selection:procurement.order,state:0
 msgid "Confirmed"
 msgstr "Vahvistettu"
@@ -250,12 +237,6 @@ msgstr "Vahvistettu"
 #: view:procurement.order:0
 msgid "Retry"
 msgstr "Yritä uudelleen"
-
-#. module: procurement
-#: code:addons/procurement/procurement.py:498
-#, python-format
-msgid "Procurement <b>confirmed</b>."
-msgstr ""
 
 #. module: procurement
 #: view:procurement.order.compute:0
@@ -291,7 +272,7 @@ msgid "Minimum Inventory Rule"
 msgstr "Minimivarastosääntö"
 
 #. module: procurement
-#: code:addons/procurement/procurement.py:395
+#: code:addons/procurement/procurement.py:369
 #, python-format
 msgid "Procurement '%s' is in exception: "
 msgstr "Hankinta \"%s\" on poikkeustilassa: "
@@ -307,9 +288,9 @@ msgid "Reordering Rules Search"
 msgstr ""
 
 #. module: procurement
-#: field:procurement.order,message_summary:0
-msgid "Summary"
-msgstr ""
+#: selection:procurement.order,state:0
+msgid "Waiting"
+msgstr "Odotetaan"
 
 #. module: procurement
 #: field:procurement.order,message_follower_ids:0
@@ -378,7 +359,7 @@ msgid "Quantity"
 msgstr "Määrä"
 
 #. module: procurement
-#: code:addons/procurement/procurement.py:390
+#: code:addons/procurement/procurement.py:364
 #, python-format
 msgid "Not enough stock and no minimum orderpoint rule defined."
 msgstr "Ei tarpeeksi varastoa eikä minimitilauspistesääntöä määriteltynä"
@@ -393,12 +374,6 @@ msgstr "Mittayksikkö"
 #: selection:procurement.order,procure_method:0
 #: selection:product.template,procure_method:0
 msgid "Make to Stock"
-msgstr ""
-
-#. module: procurement
-#: code:addons/procurement/procurement.py:501
-#, python-format
-msgid "Procurement <b>cancelled</b>."
 msgstr ""
 
 #. module: procurement
@@ -485,11 +460,6 @@ msgstr "Hankintapyyntö"
 #: view:procurement.orderpoint.compute:0
 msgid "Compute Stock"
 msgstr "Laske varasto"
-
-#. module: procurement
-#: model:process.process,name:procurement.process_process_serviceproductprocess0
-msgid "Service"
-msgstr "Palvelu"
 
 #. module: procurement
 #: field:stock.warehouse.orderpoint,procurement_draft_ids:0
@@ -638,7 +608,7 @@ msgid "Is a Follower"
 msgstr ""
 
 #. module: procurement
-#: code:addons/procurement/procurement.py:392
+#: code:addons/procurement/procurement.py:366
 #, python-format
 msgid "Not enough stock."
 msgstr "Ei tarpeeksi varastoa."
@@ -654,17 +624,11 @@ msgid "Procure Products"
 msgstr "Hanki tuotteita"
 
 #. module: procurement
-#: code:addons/procurement/procurement.py:336
+#: code:addons/procurement/procurement.py:311
 #, python-format
 msgid ""
 "Please check the quantity in procurement order(s) for the product \"%s\", it "
 "should not be 0 or less!"
-msgstr ""
-
-#. module: procurement
-#: field:procurement.order,message_comment_ids:0
-#: help:procurement.order,message_comment_ids:0
-msgid "Comments and emails"
 msgstr ""
 
 #. module: procurement
@@ -716,15 +680,9 @@ msgid "Extra Information"
 msgstr "Lisätiedot"
 
 #. module: procurement
-#: help:procurement.order,name:0
-msgid "Procurement name."
-msgstr "Hankinnan nimi"
-
-#. module: procurement
-#: code:addons/procurement/procurement.py:297
-#, python-format
-msgid "No default supplier defined for this product"
-msgstr "Tuotteelle ei ole määritelty oletustoimittajaa"
+#: field:procurement.order,message_summary:0
+msgid "Summary"
+msgstr ""
 
 #. module: procurement
 #: sql_constraint:stock.warehouse.orderpoint:0
@@ -760,7 +718,7 @@ msgid "Properties composition"
 msgstr "Ominaisuuksien koostumus"
 
 #. module: procurement
-#: code:addons/procurement/procurement.py:335
+#: code:addons/procurement/procurement.py:310
 #, python-format
 msgid "Data Insufficient !"
 msgstr "Riittämätön data!"
@@ -776,12 +734,6 @@ msgstr "Ominaisuusryhmä"
 #: view:stock.warehouse.orderpoint:0
 msgid "Misc"
 msgstr "Sekalaiset"
-
-#. module: procurement
-#: code:addons/procurement/procurement.py:504
-#, python-format
-msgid "Procurement <b>done</b>."
-msgstr ""
 
 #. module: procurement
 #: field:stock.move,procurements:0
@@ -823,13 +775,10 @@ msgid "Not urgent"
 msgstr "Ei kiireellinen"
 
 #. module: procurement
-#: model:ir.actions.act_window,name:procurement.procurement_action5
-#: model:ir.actions.act_window,name:procurement.procurement_action_board
-#: model:ir.actions.act_window,name:procurement.procurement_exceptions
-#: model:ir.ui.menu,name:procurement.menu_stock_procurement_action
-#: view:procurement.order:0
-msgid "Procurement Exceptions"
-msgstr "Hankinnan poikkeamat"
+#: model:ir.actions.act_window,name:procurement.product_open_orderpoint
+#: view:product.product:0
+msgid "Orderpoints"
+msgstr ""
 
 #. module: procurement
 #: help:stock.warehouse.orderpoint,product_max_qty:0
@@ -840,9 +789,9 @@ msgid ""
 msgstr ""
 
 #. module: procurement
-#: view:procurement.order:0
-msgid "Permanent Procurement Exceptions"
-msgstr "Pysyvät hankinnan poikkeukset"
+#: model:ir.model,name:procurement.model_procurement_order_compute_all
+msgid "Compute all schedulers"
+msgstr "Laske kaikki ajastimet"
 
 #. module: procurement
 #: view:procurement.order:0
@@ -855,10 +804,13 @@ msgid "Procurements in Exception"
 msgstr "Poikkeavat hankinnat"
 
 #. module: procurement
-#: model:ir.actions.act_window,name:procurement.product_open_orderpoint
-#: view:product.product:0
-msgid "Orderpoints"
-msgstr ""
+#: model:ir.actions.act_window,name:procurement.procurement_action5
+#: model:ir.actions.act_window,name:procurement.procurement_action_board
+#: model:ir.actions.act_window,name:procurement.procurement_exceptions
+#: model:ir.ui.menu,name:procurement.menu_stock_procurement_action
+#: view:procurement.order:0
+msgid "Procurement Exceptions"
+msgstr "Hankinnan poikkeamat"
 
 #. module: procurement
 #: field:product.product,orderpoint_ids:0
@@ -903,6 +855,7 @@ msgstr "Väliaikainen"
 #. module: procurement
 #: field:mrp.property,description:0
 #: field:mrp.property.group,description:0
+#: field:procurement.order,name:0
 msgid "Description"
 msgstr "Kuvaus"
 
@@ -922,11 +875,6 @@ msgstr "Käynnissä olevat"
 #: selection:product.template,procure_method:0
 msgid "Make to Order"
 msgstr "Valmista tilaukselle"
-
-#. module: procurement
-#: selection:procurement.order,state:0
-msgid "Waiting"
-msgstr "Odotetaan"
 
 #. module: procurement
 #: field:product.template,supply_method:0
@@ -1022,11 +970,6 @@ msgid "Automatic Orderpoint"
 msgstr "Automaattinen tilauspiste"
 
 #. module: procurement
-#: view:procurement.order:0
-msgid "Procurement Details"
-msgstr "Hankinnan yksityiskohdat"
-
-#. module: procurement
 #: help:procurement.order,message_ids:0
 msgid "Messages and communication history"
 msgstr ""
@@ -1035,12 +978,6 @@ msgstr ""
 #: view:procurement.order:0
 msgid "Procurement started late"
 msgstr "Hankinta aloitettu myöhässä"
-
-#. module: procurement
-#: code:addons/procurement/procurement.py:495
-#, python-format
-msgid "Procurement <b>created</b>."
-msgstr ""
 
 #. module: procurement
 #: selection:mrp.property,composition:0
@@ -1073,10 +1010,21 @@ msgid "PROC %d: on order - %3.2f %-5s - %s"
 msgstr ""
 
 #. module: procurement
-#: code:addons/procurement/procurement.py:364
+#: code:addons/procurement/procurement.py:338
 #, python-format
 msgid "Products reserved from stock."
 msgstr ""
+
+#, python-format
+#~ msgid "No supplier defined for this product !"
+#~ msgstr "Tuotteelle ei ole määritelty toimittajaa!"
+
+#, python-format
+#~ msgid "No address defined for the supplier"
+#~ msgstr "Toimittajan osoitetta ei ole määritetty"
+
+#~ msgid "Notes"
+#~ msgstr "Huomautukset"
 
 #~ msgid "on order"
 #~ msgstr "tilauksessa"
@@ -1126,6 +1074,9 @@ msgstr ""
 #~ msgid "No minimum orderpoint rule defined."
 #~ msgstr "Minimitilauspisteen sääntöä ei ole määritelty"
 
+#~ msgid "Procurement name."
+#~ msgstr "Hankinnan nimi"
+
 #~ msgid "Procurement Reason"
 #~ msgstr "Hankinnan syy"
 
@@ -1147,6 +1098,10 @@ msgstr ""
 
 #~ msgid "The procurement quantity will by rounded up to this multiple."
 #~ msgstr "Hankinnan määrä pyöristetään ylös tähän moninkertaan."
+
+#, python-format
+#~ msgid "No default supplier defined for this product"
+#~ msgstr "Tuotteelle ei ole määritelty oletustoimittajaa"
 
 #~ msgid "Current"
 #~ msgstr "Nykyinen"
@@ -1175,6 +1130,9 @@ msgstr ""
 #, python-format
 #~ msgid "from stock: products assigned."
 #~ msgstr "varastosta: tuotteet määrätty."
+
+#~ msgid "Procurement Details"
+#~ msgstr "Hankinnan yksityiskohdat"
 
 #~ msgid "Minimum Stock Rule"
 #~ msgstr "Varaston minimirajasääntö"

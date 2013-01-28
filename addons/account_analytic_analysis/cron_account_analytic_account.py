@@ -1,5 +1,4 @@
 #!/usr/bin/env python
-from osv import osv
 from mako.template import Template
 import time
 try:
@@ -7,7 +6,8 @@ try:
 except ImportError:
     import StringIO
 
-import tools
+from openerp import tools
+from openerp.osv import osv
 
 MAKO_TEMPLATE = u"""Hello ${user.name},
 
@@ -32,7 +32,7 @@ Here is the list of contracts to renew:
       % endif
       - Dates: ${account.date_start} to ${account.date and account.date or '???'}
       - Contacts:
-        ${account.partner_id.name}, ${account.partner_id.phone}, ${account.partner_id.email}
+        ${account.partner_id.name}, ${account.partner_id.phone or ''}, ${account.partner_id.email or ''}
 
   % endfor
 % endfor

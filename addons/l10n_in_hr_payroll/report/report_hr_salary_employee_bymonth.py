@@ -22,7 +22,7 @@
 import datetime
 import time
 
-from report import report_sxw
+from openerp.report import report_sxw
 
 class report_hr_salary_employee_bymonth(report_sxw.rml_parse):
 

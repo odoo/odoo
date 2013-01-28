@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-03 16:03+0000\n"
+"POT-Creation-Date: 2012-12-21 17:05+0000\n"
 "PO-Revision-Date: 2012-05-10 17:23+0000\n"
 "Last-Translator: Rungsan Suyala <rungsan@gmail.com>\n"
 "Language-Team: Thai <th@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-12-04 05:50+0000\n"
-"X-Generator: Launchpad (build 16335)\n"
+"X-Launchpad-Export-Date: 2012-12-22 06:01+0000\n"
+"X-Generator: Launchpad (build 16378)\n"
 
 #. module: base_calendar
 #: selection:calendar.alarm,trigger_related:0
@@ -67,12 +67,6 @@ msgstr "เกิดซ้อนๆกัน"
 #. module: base_calendar
 #: model:crm.meeting.type,name:base_calendar.categ_meet5
 msgid "Feedback Meeting"
-msgstr ""
-
-#. module: base_calendar
-#: code:addons/base_calendar/crm_meeting.py:117
-#, python-format
-msgid "Meeting <b>completed</b>."
 msgstr ""
 
 #. module: base_calendar
@@ -256,7 +250,7 @@ msgid "To"
 msgstr ""
 
 #. module: base_calendar
-#: code:addons/base_calendar/base_calendar.py:1225
+#: code:addons/base_calendar/base_calendar.py:1255
 #, python-format
 msgid "Error!"
 msgstr "ผิดพลาด!"
@@ -275,6 +269,13 @@ msgstr ""
 #: selection:calendar.alarm,action:0
 msgid "Procedure"
 msgstr "กระบวนการ"
+
+#. module: base_calendar
+#: field:calendar.event,recurrent_id:0
+#: field:calendar.todo,recurrent_id:0
+#: field:crm.meeting,recurrent_id:0
+msgid "Recurrent ID"
+msgstr ""
 
 #. module: base_calendar
 #: selection:calendar.event,state:0
@@ -335,14 +336,9 @@ msgid "Meetings"
 msgstr ""
 
 #. module: base_calendar
-#: selection:calendar.attendee,cutype:0
-msgid "Room"
-msgstr "ห้อง"
-
-#. module: base_calendar
-#: field:calendar.event,recurrent_id:0
-#: field:calendar.todo,recurrent_id:0
-#: field:crm.meeting,recurrent_id:0
+#: field:calendar.event,recurrent_id_date:0
+#: field:calendar.todo,recurrent_id_date:0
+#: field:crm.meeting,recurrent_id_date:0
 msgid "Recurrent ID date"
 msgstr ""
 
@@ -365,11 +361,11 @@ msgid ""
 msgstr ""
 
 #. module: base_calendar
-#: code:addons/base_calendar/base_calendar.py:388
-#: code:addons/base_calendar/base_calendar.py:417
-#: code:addons/base_calendar/base_calendar.py:980
-#: code:addons/base_calendar/base_calendar.py:982
-#: code:addons/base_calendar/base_calendar.py:1430
+#: code:addons/base_calendar/base_calendar.py:399
+#: code:addons/base_calendar/base_calendar.py:444
+#: code:addons/base_calendar/base_calendar.py:1008
+#: code:addons/base_calendar/base_calendar.py:1010
+#: code:addons/base_calendar/base_calendar.py:1455
 #, python-format
 msgid "Warning!"
 msgstr "คำเตือน!"
@@ -513,9 +509,9 @@ msgid "Email"
 msgstr "อีเมล์"
 
 #. module: base_calendar
-#: model:ir.actions.server,name:base_calendar.actions_server_crm_meeting_unread
-msgid "CRM Meeting: Mark unread"
-msgstr ""
+#: selection:calendar.attendee,cutype:0
+msgid "Room"
+msgstr "ห้อง"
 
 #. module: base_calendar
 #: selection:calendar.alarm,state:0
@@ -528,7 +524,7 @@ msgid "Event alarm information"
 msgstr ""
 
 #. module: base_calendar
-#: code:addons/base_calendar/base_calendar.py:982
+#: code:addons/base_calendar/base_calendar.py:1010
 #, python-format
 msgid "Count cannot be negative or 0."
 msgstr ""
@@ -539,11 +535,9 @@ msgid "Creation Date"
 msgstr ""
 
 #. module: base_calendar
-#: code:addons/base_calendar/crm_meeting.py:111
 #: view:crm.meeting:0
 #: model:ir.model,name:base_calendar.model_crm_meeting
 #: model:res.request.link,name:base_calendar.request_link_meeting
-#, python-format
 msgid "Meeting"
 msgstr ""
 
@@ -572,10 +566,8 @@ msgid "Caldav URL"
 msgstr ""
 
 #. module: base_calendar
-#: field:calendar.event,recurrent_uid:0
-#: field:calendar.todo,recurrent_uid:0
-#: field:crm.meeting,recurrent_uid:0
-msgid "Recurrent ID"
+#: model:ir.model,name:base_calendar.model_mail_wizard_invite
+msgid "Invite wizard"
 msgstr ""
 
 #. module: base_calendar
@@ -608,7 +600,7 @@ msgid "Delegrated To"
 msgstr ""
 
 #. module: base_calendar
-#: code:addons/base_calendar/crm_meeting.py:94
+#: code:addons/base_calendar/crm_meeting.py:102
 #, python-format
 msgid "The following contacts have no email address :"
 msgstr ""
@@ -717,12 +709,6 @@ msgid "Individual"
 msgstr ""
 
 #. module: base_calendar
-#: code:addons/base_calendar/crm_meeting.py:114
-#, python-format
-msgid "Meeting <b>confirmed</b>."
-msgstr ""
-
-#. module: base_calendar
 #: help:calendar.event,count:0
 #: help:calendar.todo,count:0
 #: help:crm.meeting,count:0
@@ -757,7 +743,7 @@ msgid "Declined"
 msgstr ""
 
 #. module: base_calendar
-#: code:addons/base_calendar/base_calendar.py:1430
+#: code:addons/base_calendar/base_calendar.py:1455
 #, python-format
 msgid "Group by date is not supported, use the calendar view instead."
 msgstr ""
@@ -791,13 +777,6 @@ msgstr ""
 #. module: base_calendar
 #: model:ir.model,name:base_calendar.model_res_alarm
 msgid "Basic Alarm Information"
-msgstr ""
-
-#. module: base_calendar
-#: field:calendar.event,mo:0
-#: field:calendar.todo,mo:0
-#: field:crm.meeting,mo:0
-msgid "Mon"
 msgstr ""
 
 #. module: base_calendar
@@ -999,9 +978,10 @@ msgid "Indicate the groups that the attendee belongs to"
 msgstr ""
 
 #. module: base_calendar
-#: field:crm.meeting,message_comment_ids:0
-#: help:crm.meeting,message_comment_ids:0
-msgid "Comments and emails"
+#: field:calendar.event,mo:0
+#: field:calendar.todo,mo:0
+#: field:crm.meeting,mo:0
+msgid "Mon"
 msgstr ""
 
 #. module: base_calendar
@@ -1053,11 +1033,6 @@ msgid "Interval"
 msgstr ""
 
 #. module: base_calendar
-#: model:ir.actions.server,name:base_calendar.actions_server_crm_meeting_read
-msgid "CRM Meeting: Mark read"
-msgstr ""
-
-#. module: base_calendar
 #: selection:calendar.event,week_list:0
 #: selection:calendar.todo,week_list:0
 #: selection:crm.meeting,week_list:0
@@ -1081,7 +1056,7 @@ msgid "Active"
 msgstr ""
 
 #. module: base_calendar
-#: code:addons/base_calendar/base_calendar.py:388
+#: code:addons/base_calendar/base_calendar.py:399
 #, python-format
 msgid "You cannot duplicate a calendar attendee."
 msgstr ""
@@ -1227,7 +1202,7 @@ msgid "Select Weekdays"
 msgstr ""
 
 #. module: base_calendar
-#: code:addons/base_calendar/base_calendar.py:1489
+#: code:addons/base_calendar/base_calendar.py:1514
 #: selection:calendar.attendee,availability:0
 #: selection:calendar.event,show_as:0
 #: selection:calendar.todo,show_as:0
@@ -1354,6 +1329,11 @@ msgid "Search Meetings"
 msgstr ""
 
 #. module: base_calendar
+#: model:ir.model,name:base_calendar.model_ir_attachment
+msgid "ir.attachment"
+msgstr ""
+
+#. module: base_calendar
 #: model:ir.model,name:base_calendar.model_crm_meeting_type
 msgid "Meeting Type"
 msgstr ""
@@ -1434,6 +1414,11 @@ msgid ""
 msgstr ""
 
 #. module: base_calendar
+#: model:ir.model,name:base_calendar.model_mail_message
+msgid "Message"
+msgstr ""
+
+#. module: base_calendar
 #: field:calendar.event,base_calendar_alarm_id:0
 #: field:calendar.todo,base_calendar_alarm_id:0
 #: field:crm.meeting,base_calendar_alarm_id:0
@@ -1453,7 +1438,7 @@ msgid "April"
 msgstr ""
 
 #. module: base_calendar
-#: code:addons/base_calendar/crm_meeting.py:98
+#: code:addons/base_calendar/crm_meeting.py:106
 #, python-format
 msgid "Email addresses not found"
 msgstr ""
@@ -1471,7 +1456,7 @@ msgid "Weekday"
 msgstr ""
 
 #. module: base_calendar
-#: code:addons/base_calendar/base_calendar.py:980
+#: code:addons/base_calendar/base_calendar.py:1008
 #, python-format
 msgid "Interval cannot be negative."
 msgstr ""
@@ -1484,7 +1469,7 @@ msgid "By day"
 msgstr ""
 
 #. module: base_calendar
-#: code:addons/base_calendar/base_calendar.py:417
+#: code:addons/base_calendar/base_calendar.py:444
 #, python-format
 msgid "First you have to specify the date of the invitation."
 msgstr ""

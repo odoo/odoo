@@ -22,12 +22,12 @@
 from datetime import datetime, timedelta
 from dateutil.relativedelta import relativedelta
 import time
-import pooler
-from osv import fields, osv
-from tools.translate import _
-from tools import DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT, DATETIME_FORMATS_MAP, float_compare
-import decimal_precision as dp
-import netsvc
+from openerp import pooler
+from openerp.osv import fields, osv
+from openerp.tools.translate import _
+from openerp.tools import DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT, DATETIME_FORMATS_MAP, float_compare
+import openerp.addons.decimal_precision as dp
+from openerp import netsvc
 
 class sale_shop(osv.osv):
     _name = "sale.shop"
@@ -49,6 +49,12 @@ class sale_order(osv.osv):
     _name = "sale.order"
     _inherit = ['mail.thread', 'ir.needaction_mixin']
     _description = "Sales Order"
+    _track = {
+        'state': {
+            'sale.mt_order_confirmed': lambda self, cr, uid, obj, ctx=None: obj['state'] in ['manual', 'progress'],
+            'sale.mt_order_sent': lambda self, cr, uid, obj, ctx=None: obj['state'] in ['sent']
+        },
+    }
 
     def onchange_shop_id(self, cr, uid, ids, shop_id, context=None):
         v = {}
@@ -172,6 +178,13 @@ class sale_order(osv.osv):
             result[line.order_id.id] = True
         return result.keys()
 
+    def _get_default_shop(self, cr, uid, context=None):
+        company_id = self.pool.get('res.users').browse(cr, uid, uid, context=context).company_id.id
+        shop_ids = self.pool.get('sale.shop').search(cr, uid, [('company_id','=',company_id)], context=context)
+        if not shop_ids:
+            raise osv.except_osv(_('Error!'), _('There is no default shop for the current user\'s company!'))
+        return shop_ids[0]
+
     _columns = {
         'name': fields.char('Order Reference', size=64, required=True,
             readonly=True, states={'draft': [('readonly', False)], 'sent': [('readonly', False)]}, select=True),
@@ -183,16 +196,17 @@ class sale_order(osv.osv):
             ('sent', 'Quotation Sent'),
             ('cancel', 'Cancelled'),
             ('waiting_date', 'Waiting Schedule'),
-            ('progress', 'Sale Order'),
+            ('progress', 'Sales Order'),
             ('manual', 'Sale to Invoice'),
             ('invoice_except', 'Invoice Exception'),
             ('done', 'Done'),
-            ], 'Status', readonly=True, help="Gives the status of the quotation or sales order. \nThe exception status is automatically set when a cancel operation occurs in the processing of a document linked to the sale order. \nThe 'Waiting Schedule' status is set when the invoice is confirmed but waiting for the scheduler to run on the order date.", select=True),
+            ], 'Status', readonly=True, track_visibility='onchange',
+            help="Gives the status of the quotation or sales order. \nThe exception status is automatically set when a cancel operation occurs in the processing of a document linked to the sales order. \nThe 'Waiting Schedule' status is set when the invoice is confirmed but waiting for the scheduler to run on the order date.", select=True),
         'date_order': fields.date('Date', required=True, readonly=True, select=True, states={'draft': [('readonly', False)], 'sent': [('readonly', False)]}),
         'create_date': fields.datetime('Creation Date', readonly=True, select=True, help="Date on which sales order is created."),
         'date_confirm': fields.date('Confirmation Date', readonly=True, select=True, help="Date on which sales order is confirmed."),
-        'user_id': fields.many2one('res.users', 'Salesperson', states={'draft': [('readonly', False)], 'sent': [('readonly', False)]}, select=True),
-        'partner_id': fields.many2one('res.partner', 'Customer', readonly=True, states={'draft': [('readonly', False)], 'sent': [('readonly', False)]}, required=True, change_default=True, select=True),
+        'user_id': fields.many2one('res.users', 'Salesperson', states={'draft': [('readonly', False)], 'sent': [('readonly', False)]}, select=True, track_visibility='onchange'),
+        'partner_id': fields.many2one('res.partner', 'Customer', readonly=True, states={'draft': [('readonly', False)], 'sent': [('readonly', False)]}, required=True, change_default=True, select=True, track_visibility='always'),
         'partner_invoice_id': fields.many2one('res.partner', 'Invoice Address', readonly=True, required=True, states={'draft': [('readonly', False)], 'sent': [('readonly', False)]}, help="Invoice address for current sales order."),
         'partner_shipping_id': fields.many2one('res.partner', 'Delivery Address', readonly=True, required=True, states={'draft': [('readonly', False)], 'sent': [('readonly', False)]}, help="Delivery address for current sales order."),
         'order_policy': fields.selection([
@@ -210,29 +224,29 @@ class sale_order(osv.osv):
         'invoiced': fields.function(_invoiced, string='Paid',
             fnct_search=_invoiced_search, type='boolean', help="It indicates that an invoice has been paid."),
         'invoice_exists': fields.function(_invoice_exists, string='Invoiced',
-            fnct_search=_invoiced_search, type='boolean', help="It indicates that sale order has at least one invoice."),
+            fnct_search=_invoiced_search, type='boolean', help="It indicates that sales order has at least one invoice."),
         'note': fields.text('Terms and conditions'),
 
-        'amount_untaxed': fields.function(_amount_all, digits_compute= dp.get_precision('Account'), string='Untaxed Amount',
-            store = {
+        'amount_untaxed': fields.function(_amount_all, digits_compute=dp.get_precision('Account'), string='Untaxed Amount',
+            store={
                 'sale.order': (lambda self, cr, uid, ids, c={}: ids, ['order_line'], 10),
                 'sale.order.line': (_get_order, ['price_unit', 'tax_id', 'discount', 'product_uom_qty'], 10),
             },
-            multi='sums', help="The amount without tax."),
-        'amount_tax': fields.function(_amount_all, digits_compute= dp.get_precision('Account'), string='Taxes',
-            store = {
+            multi='sums', help="The amount without tax.", track_visibility='always'),
+        'amount_tax': fields.function(_amount_all, digits_compute=dp.get_precision('Account'), string='Taxes',
+            store={
                 'sale.order': (lambda self, cr, uid, ids, c={}: ids, ['order_line'], 10),
                 'sale.order.line': (_get_order, ['price_unit', 'tax_id', 'discount', 'product_uom_qty'], 10),
             },
             multi='sums', help="The tax amount."),
-        'amount_total': fields.function(_amount_all, digits_compute= dp.get_precision('Account'), string='Total',
-            store = {
+        'amount_total': fields.function(_amount_all, digits_compute=dp.get_precision('Account'), string='Total',
+            store={
                 'sale.order': (lambda self, cr, uid, ids, c={}: ids, ['order_line'], 10),
                 'sale.order.line': (_get_order, ['price_unit', 'tax_id', 'discount', 'product_uom_qty'], 10),
             },
             multi='sums', help="The total amount."),
 
-        'invoice_quantity': fields.selection([('order', 'Ordered Quantities')], 'Invoice on', help="The sale order will automatically create the invoice proposition (draft invoice).", required=True, readonly=True, states={'draft': [('readonly', False)]}),
+        'invoice_quantity': fields.selection([('order', 'Ordered Quantities')], 'Invoice on', help="The sales order will automatically create the invoice proposition (draft invoice).", required=True, readonly=True, states={'draft': [('readonly', False)]}),
         'payment_term': fields.many2one('account.payment.term', 'Payment Term'),
         'fiscal_position': fields.many2one('account.fiscal.position', 'Fiscal Position'),
         'company_id': fields.related('shop_id','company_id',type='many2one',relation='res.company',string='Company',store=True,readonly=True)
@@ -244,6 +258,7 @@ class sale_order(osv.osv):
         'user_id': lambda obj, cr, uid, context: uid,
         'name': lambda obj, cr, uid, context: '/',
         'invoice_quantity': 'order',
+        'shop_id': _get_default_shop,
         'partner_invoice_id': lambda self, cr, uid, context: context.get('partner_id', False) and self.pool.get('res.partner').address_get(cr, uid, [context['partner_id']], ['invoice'])['invoice'],
         'partner_shipping_id': lambda self, cr, uid, context: context.get('partner_id', False) and self.pool.get('res.partner').address_get(cr, uid, [context['partner_id']], ['delivery'])['delivery'],
     }
@@ -260,7 +275,7 @@ class sale_order(osv.osv):
             if s['state'] in ['draft', 'cancel']:
                 unlink_ids.append(s['id'])
             else:
-                raise osv.except_osv(_('Invalid Action!'), _('In order to delete a confirmed sale order, you must cancel it before !'))
+                raise osv.except_osv(_('Invalid Action!'), _('In order to delete a confirmed sales order, you must cancel it before !'))
 
         return osv.osv.unlink(self, cr, uid, unlink_ids, context=context)
 
@@ -323,10 +338,7 @@ class sale_order(osv.osv):
     def create(self, cr, uid, vals, context=None):
         if vals.get('name','/')=='/':
             vals['name'] = self.pool.get('ir.sequence').get(cr, uid, 'sale.order') or '/'
-        order =  super(sale_order, self).create(cr, uid, vals, context=context)
-        if order:
-            self.create_send_note(cr, uid, [order], context=context)
-        return order
+        return super(sale_order, self).create(cr, uid, vals, context=context)
 
     def button_dummy(self, cr, uid, ids, context=None):
         return True
@@ -338,7 +350,7 @@ class sale_order(osv.osv):
 
     def _prepare_invoice(self, cr, uid, order, lines, context=None):
         """Prepare the dict of values to create the new invoice for a
-           sale order. This method may be overridden to implement custom
+           sales order. This method may be overridden to implement custom
            invoice generation (making sure to call super() to establish
            a clean extension chain).
 
@@ -403,7 +415,7 @@ class sale_order(osv.osv):
 
     def print_quotation(self, cr, uid, ids, context=None):
         '''
-        This function prints the sale order and mark it as sent, so that we can see more easily the next step of the workflow
+        This function prints the sales order and mark it as sent, so that we can see more easily the next step of the workflow
         '''
         assert len(ids) == 1, 'This option should only be used for a single id at a time'
         wf_service = netsvc.LocalService("workflow")
@@ -416,13 +428,13 @@ class sale_order(osv.osv):
         return {'type': 'ir.actions.report.xml', 'report_name': 'sale.order', 'datas': datas, 'nodestroy': True}
 
     def manual_invoice(self, cr, uid, ids, context=None):
-        """ create invoices for the given sale orders (ids), and open the form
+        """ create invoices for the given sales orders (ids), and open the form
             view of one of the newly created invoices
         """
         mod_obj = self.pool.get('ir.model.data')
         wf_service = netsvc.LocalService("workflow")
 
-        # create invoices through the sale orders' workflow
+        # create invoices through the sales orders' workflow
         inv_ids0 = set(inv.id for sale in self.browse(cr, uid, ids, context) for inv in sale.invoice_ids)
         for id in ids:
             wf_service.trg_validate(uid, 'sale.order', id, 'manual_invoice', cr)
@@ -448,7 +460,7 @@ class sale_order(osv.osv):
 
     def action_view_invoice(self, cr, uid, ids, context=None):
         '''
-        This function returns an action that display existing invoices of given sale order ids. It can either be a in a list or in a form view, if there is only one invoice to show.
+        This function returns an action that display existing invoices of given sales order ids. It can either be a in a list or in a form view, if there is only one invoice to show.
         '''
         mod_obj = self.pool.get('ir.model.data')
         act_obj = self.pool.get('ir.actions.act_window')
@@ -475,7 +487,7 @@ class sale_order(osv.osv):
                 return False
         return True
 
-    def action_invoice_create(self, cr, uid, ids, grouped=False, states=None, date_inv = False, context=None):
+    def action_invoice_create(self, cr, uid, ids, grouped=False, states=None, date_invoice = False, context=None):
         if states is None:
             states = ['confirmed', 'done', 'exception']
         res = False
@@ -488,8 +500,8 @@ class sale_order(osv.osv):
             context = {}
         # If date was specified, use it as date invoiced, usefull when invoices are generated this month and put the
         # last day of the last month as invoice date
-        if date_inv:
-            context['date_inv'] = date_inv
+        if date_invoice:
+            context['date_invoice'] = date_invoice
         for o in self.browse(cr, uid, ids, context=context):
             currency_id = o.pricelist_id.currency_id.id
             if (o.partner_id.id in partner_currency) and (partner_currency[o.partner_id.id] <> currency_id):
@@ -527,8 +539,6 @@ class sale_order(osv.osv):
                     invoice_ids.append(res)
                     self.write(cr, uid, [order.id], {'state': 'progress'})
                     cr.execute('insert into sale_order_invoice_rel (order_id,invoice_id) values (%s,%s)', (order.id, res))
-        if res:
-            self.invoice_send_note(cr, uid, ids, res, context)
         return res
 
     def action_invoice_cancel(self, cr, uid, ids, context=None):
@@ -542,7 +552,6 @@ class sale_order(osv.osv):
                     line.write({'state': 'confirmed'})
             if this.state == 'invoice_except':
                 this.write({'state': 'progress'})
-            this.invoice_paid_send_note()
         return True
 
     def action_cancel(self, cr, uid, ids, context=None):
@@ -561,7 +570,6 @@ class sale_order(osv.osv):
                     wf_service.trg_validate(uid, 'account.invoice', inv, 'invoice_cancel', cr)
             sale_order_line_obj.write(cr, uid, [l.id for l in  sale.order_line],
                     {'state': 'cancel'})
-            self.cancel_send_note(cr, uid, [sale.id], context=None)
         self.write(cr, uid, ids, {'state': 'cancel'})
         return True
 
@@ -570,7 +578,7 @@ class sale_order(osv.osv):
         wf_service = netsvc.LocalService('workflow')
         wf_service.trg_validate(uid, 'sale.order', ids[0], 'order_confirm', cr)
 
-        # redisplay the record as a sale order
+        # redisplay the record as a sales order
         view_ref = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'sale', 'view_order_form')
         view_id = view_ref and view_ref[1] or False,
         return {
@@ -589,14 +597,13 @@ class sale_order(osv.osv):
         context = context or {}
         for o in self.browse(cr, uid, ids):
             if not o.order_line:
-                raise osv.except_osv(_('Error!'),_('You cannot confirm a sale order which has no line.'))
+                raise osv.except_osv(_('Error!'),_('You cannot confirm a sales order which has no line.'))
             noprod = self.test_no_product(cr, uid, o, context)
             if (o.order_policy == 'manual') or noprod:
                 self.write(cr, uid, [o.id], {'state': 'manual', 'date_confirm': fields.date.context_today(self, cr, uid, context=context)})
             else:
                 self.write(cr, uid, [o.id], {'state': 'progress', 'date_confirm': fields.date.context_today(self, cr, uid, context=context)})
             self.pool.get('sale.order.line').button_confirm(cr, uid, [x.id for x in o.order_line])
-            self.confirm_send_note(cr, uid, ids, context)
         return True
 
     def action_quotation_send(self, cr, uid, ids, context=None):
@@ -634,41 +641,9 @@ class sale_order(osv.osv):
         }
 
     def action_done(self, cr, uid, ids, context=None):
-        self.done_send_note(cr, uid, ids, context=context)
         return self.write(cr, uid, ids, {'state': 'done'}, context=context)
 
-    # ------------------------------------------------
-    # OpenChatter methods and notifications
-    # ------------------------------------------------
 
-    def needaction_domain_get(self, cr, uid, ids, context=None):
-        return [('state', '=', 'draft'), ('user_id','=',uid)]
-
-    def create_send_note(self, cr, uid, ids, context=None):
-        for obj in self.browse(cr, uid, ids, context=context):
-            self.message_post(cr, uid, [obj.id], body=_("Quotation for <em>%s</em> <b>created</b>.") % (obj.partner_id.name), context=context)
-
-    def confirm_send_note(self, cr, uid, ids, context=None):
-        for obj in self.browse(cr, uid, ids, context=context):
-            self.message_post(cr, uid, [obj.id], body=_("Quotation for <em>%s</em> <b>converted</b> to Sale Order of %s %s.") % (obj.partner_id.name, obj.amount_total, obj.pricelist_id.currency_id.symbol), context=context)
-
-    def cancel_send_note(self, cr, uid, ids, context=None):
-        for obj in self.browse(cr, uid, ids, context=context):
-            self.message_post(cr, uid, [obj.id], body=_("Sale Order for <em>%s</em> <b>cancelled</b>.") % (obj.partner_id.name), context=context)
-
-    def done_send_note(self, cr, uid, ids, context=None):
-        for obj in self.browse(cr, uid, ids, context=context):
-            self.message_post(cr, uid, [obj.id], body=_("Sale Order for <em>%s</em> set to <b>Done</b>") % (obj.partner_id.name), context=context)
-
-    def invoice_paid_send_note(self, cr, uid, ids, context=None):
-        self.message_post(cr, uid, ids, body=_("Invoice <b>paid</b>."), context=context)
-
-    def invoice_send_note(self, cr, uid, ids, invoice_id, context=None):
-        for order in self.browse(cr, uid, ids, context=context):
-            for invoice in (inv for inv in order.invoice_ids if inv.id == invoice_id):
-                self.message_post(cr, uid, [order.id], body=_("Draft Invoice of %s %s <b>waiting for validation</b>.") % (invoice.amount_total, invoice.currency_id.symbol), context=context)
-
-sale_order()
 
 # TODO add a field price_unit_uos
 # - update it on change product and unit price
@@ -714,7 +689,7 @@ class sale_order_line(osv.osv):
     _description = 'Sales Order Line'
     _columns = {
         'order_id': fields.many2one('sale.order', 'Order Reference', required=True, ondelete='cascade', select=True, readonly=True, states={'draft':[('readonly',False)]}),
-        'name': fields.text('Description', size=256, required=True, select=True, readonly=True, states={'draft': [('readonly', False)]}),
+        'name': fields.text('Description', required=True, select=True, readonly=True, states={'draft': [('readonly', False)]}),
         'sequence': fields.integer('Sequence', help="Gives the sequence order when displaying a list of sales order lines."),
         'product_id': fields.many2one('product.product', 'Product', domain=[('sale_ok', '=', True)], change_default=True),
         'invoice_lines': fields.many2many('account.invoice.line', 'sale_order_line_invoice_rel', 'order_line_id', 'invoice_id', 'Invoice Lines', readonly=True),
@@ -768,7 +743,7 @@ class sale_order_line(osv.osv):
 
     def _prepare_order_line_invoice_line(self, cr, uid, line, account_id=False, context=None):
         """Prepare the dict of values to create the new invoice line for a
-           sale order line. This method may be overridden to implement custom
+           sales order line. This method may be overridden to implement custom
            invoice generation (making sure to call super() to establish
            a clean extension chain).
 
@@ -781,7 +756,7 @@ class sale_order_line(osv.osv):
         if not line.invoiced:
             if not account_id:
                 if line.product_id:
-                    account_id = line.product_id.product_tmpl_id.property_account_income.id
+                    account_id = line.product_id.property_account_income.id
                     if not account_id:
                         account_id = line.product_id.categ_id.property_account_income_categ.id
                     if not account_id:
@@ -842,7 +817,7 @@ class sale_order_line(osv.osv):
     def button_cancel(self, cr, uid, ids, context=None):
         for line in self.browse(cr, uid, ids, context=context):
             if line.invoiced:
-                raise osv.except_osv(_('Invalid Action!'), _('You cannot cancel a sale order line that has already been invoiced.'))
+                raise osv.except_osv(_('Invalid Action!'), _('You cannot cancel a sales order line that has already been invoiced.'))
         return self.write(cr, uid, ids, {'state': 'cancel'})
 
     def button_confirm(self, cr, uid, ids, context=None):
@@ -1010,11 +985,13 @@ class sale_order_line(osv.osv):
         return super(sale_order_line, self).unlink(cr, uid, ids, context=context)
 
 
-class mail_compose_message(osv.osv):
+class mail_compose_message(osv.Model):
     _inherit = 'mail.compose.message'
+
     def send_mail(self, cr, uid, ids, context=None):
         context = context or {}
         if context.get('default_model') == 'sale.order' and context.get('default_res_id') and context.get('mark_so_as_sent'):
+            context = dict(context, mail_post_autofollow=True)
             wf_service = netsvc.LocalService("workflow")
             wf_service.trg_validate(uid, 'sale.order', context['default_res_id'], 'quotation_sent', cr)
         return super(mail_compose_message, self).send_mail(cr, uid, ids, context=context)

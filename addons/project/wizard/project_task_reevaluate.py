@@ -20,8 +20,8 @@
 ##############################################################################
 
 from lxml import etree
-from osv import fields, osv
-from tools.translate import _
+from openerp.osv import fields, osv
+from openerp.tools.translate import _
 
 class project_task_reevaluate(osv.osv_memory):
     _name = 'project.task.reevaluate'

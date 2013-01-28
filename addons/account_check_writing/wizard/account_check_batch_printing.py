@@ -19,9 +19,9 @@
 #
 ##############################################################################
 
-from tools.translate import _
+from openerp.tools.translate import _
 
-from osv import fields, osv
+from openerp.osv import fields, osv
 
 class account_check_write(osv.osv_memory):
     _name = 'account.check.write'

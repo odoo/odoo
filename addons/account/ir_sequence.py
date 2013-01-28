@@ -19,7 +19,7 @@
 #
 ##############################################################################
 
-from osv import fields, osv
+from openerp.osv import fields, osv
 
 class ir_sequence_fiscalyear(osv.osv):
     _name = 'account.sequence.fiscalyear'

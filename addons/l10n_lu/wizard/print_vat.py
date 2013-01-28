@@ -5,13 +5,13 @@
 #Tranquil IT Systems
 
 from __future__ import with_statement
-from osv import osv, fields
-import pooler
-import tools
-from tools.translate import _
-from report.render import render
-from report.interface import report_int
-import addons
+from openerp.osv import fields, osv
+from openerp import pooler
+from openerp import tools
+from openerp.tools.translate import _
+from openerp.report.render import render
+from openerp.report.interface import report_int
+from openerp import addons
 import tempfile
 import os
 
@@ -73,7 +73,13 @@ class vat_declaration_report(osv.osv_memory):
 
     _columns = {
          'tax_code_id': fields.many2one('account.tax.code', 'Company', readonly=False, required=True, domain=[('parent_id','=',False)]),
-         'period_id' : fields.many2one('account.period', 'Period', required=True)
+         'type': fields.selection([('monthly','Monthly'),('quarterly','Quaterly'),('yearly','Yearly')], 'Type', required=True),
+         'period_id' : fields.many2one('account.period', 'From Period', required=True),
+         'to_period_id': fields.many2one('account.period', 'To Period', required=True),
+    }
+
+    _defaults = {
+        'type': 'monthly',
     }
 
     def print_vat_declaration_report(self, cr, uid, ids, context=None):

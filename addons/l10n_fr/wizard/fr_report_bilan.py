@@ -26,7 +26,7 @@
 #
 ##############################################################################
 
-from osv import osv, fields
+from openerp.osv import fields, osv
 
 class account_bilan_report(osv.osv_memory):
     _name = 'account.bilan.report'

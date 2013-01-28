@@ -6,20 +6,20 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2012-11-24 02:52+0000\n"
-"PO-Revision-Date: 2011-11-07 12:47+0000\n"
+"POT-Creation-Date: 2012-12-21 17:05+0000\n"
+"PO-Revision-Date: 2012-12-14 12:01+0000\n"
 "Last-Translator: Grzegorz Grzelak (OpenGLOBE.pl) <grzegorz@openglobe.pl>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-11-25 05:52+0000\n"
-"X-Generator: Launchpad (build 16293)\n"
+"X-Launchpad-Export-Date: 2012-12-22 05:28+0000\n"
+"X-Generator: Launchpad (build 16378)\n"
 
 #. module: base_setup
 #: view:sale.config.settings:0
 msgid "Emails Integration"
-msgstr ""
+msgstr "Integracja poczty"
 
 #. module: base_setup
 #: selection:base.setup.terminology,partner:0
@@ -29,7 +29,7 @@ msgstr "Gość"
 #. module: base_setup
 #: view:sale.config.settings:0
 msgid "Contacts"
-msgstr ""
+msgstr "Kontakty"
 
 #. module: base_setup
 #: model:ir.model,name:base_setup.model_base_config_settings
@@ -41,6 +41,8 @@ msgstr ""
 msgid ""
 "Use external authentication providers, sign in with google, facebook, ..."
 msgstr ""
+"Stosuje zewnętrzną autentykację, do logowania się kontami google, facebook, "
+"..."
 
 #. module: base_setup
 #: view:sale.config.settings:0
@@ -54,6 +56,19 @@ msgid ""
 "OpenERP using specific\n"
 "                            plugins for your preferred email application."
 msgstr ""
+"OpenERP pozwala automatycznie tworzyć sygnały z wiadomości\n"
+"                            przychodzących. Wiadomości możesz automatycznie "
+"synchronizować\n"
+"                            między OpenERP a kontami POP/IMAP przy "
+"zastosowaniu bezpośrednich\n"
+"                            skryptów pocztowych do serwera email lub ręcznie "
+"możesz przekazywać\n"
+"                            maile z aplikacji do OpenERP przy użyciu wtyczek."
+
+#. module: base_setup
+#: field:sale.config.settings,module_sale:0
+msgid "SALE"
+msgstr ""
 
 #. module: base_setup
 #: selection:base.setup.terminology,partner:0
@@ -63,24 +78,24 @@ msgstr "Członek"
 #. module: base_setup
 #: view:base.config.settings:0
 msgid "Portal access"
-msgstr ""
+msgstr "Dostęp portalowy"
 
 #. module: base_setup
 #: view:base.config.settings:0
 msgid "Authentication"
-msgstr ""
+msgstr "Autentykacja"
 
 #. module: base_setup
 #: view:sale.config.settings:0
 msgid "Quotations and Sales Orders"
-msgstr ""
+msgstr "Oferty i Zamówienia sprzedaży"
 
 #. module: base_setup
 #: view:base.config.settings:0
 #: model:ir.actions.act_window,name:base_setup.action_general_configuration
 #: model:ir.ui.menu,name:base_setup.menu_general_configuration
 msgid "General Settings"
-msgstr ""
+msgstr "Ustawienia ogólne"
 
 #. module: base_setup
 #: selection:base.setup.terminology,partner:0
@@ -105,32 +120,32 @@ msgstr "Pacjent"
 #. module: base_setup
 #: field:base.config.settings,module_base_import:0
 msgid "Allow users to import data from CSV files"
-msgstr ""
+msgstr "Pozwala importować dane z pliku CSV"
 
 #. module: base_setup
 #: field:base.config.settings,module_multi_company:0
 msgid "Manage multiple companies"
-msgstr ""
-
-#. module: base_setup
-#: help:base.config.settings,module_portal:0
-msgid "Give access your customers and suppliers to their documents."
-msgstr ""
+msgstr "Obsługuj kilka firm"
 
 #. module: base_setup
 #: view:sale.config.settings:0
 msgid "On Mail Client"
+msgstr "W aplikacji mailowej"
+
+#. module: base_setup
+#: view:base.config.settings:0
+msgid "--db-filter=YOUR_DATABAE"
 msgstr ""
 
 #. module: base_setup
 #: field:sale.config.settings,module_web_linkedin:0
 msgid "Get contacts automatically from linkedIn"
-msgstr ""
+msgstr "Pobierz kontakty z LinkedIn"
 
 #. module: base_setup
 #: field:sale.config.settings,module_plugin_thunderbird:0
 msgid "Enable Thunderbird plug-in"
-msgstr ""
+msgstr "Włącz wtyczkę Tunderbird"
 
 #. module: base_setup
 #: view:base.setup.terminology:0
@@ -140,29 +155,29 @@ msgstr ""
 #. module: base_setup
 #: view:sale.config.settings:0
 msgid "Customer Features"
-msgstr ""
+msgstr "Własne funkcjonalności"
 
 #. module: base_setup
 #: view:base.config.settings:0
 msgid "Import / Export"
-msgstr ""
+msgstr "Import / Eksport"
 
 #. module: base_setup
 #: view:sale.config.settings:0
 msgid "Sale Features"
-msgstr ""
+msgstr "Funkcjonalność sprzedaży"
 
 #. module: base_setup
 #: field:sale.config.settings,module_plugin_outlook:0
 msgid "Enable Outlook plug-in"
-msgstr ""
+msgstr "Włącz wtyczkę Outlook"
 
 #. module: base_setup
 #: view:base.setup.terminology:0
 msgid ""
 "You can use this wizard to change the terminologies for customers in the "
 "whole application."
-msgstr ""
+msgstr "Ten kreator służy do zmiany terminologii w całej aplikacji."
 
 #. module: base_setup
 #: selection:base.setup.terminology,partner:0
@@ -172,7 +187,7 @@ msgstr ""
 #. module: base_setup
 #: help:base.config.settings,module_share:0
 msgid "Share or embbed any screen of openerp."
-msgstr ""
+msgstr "Współdziel lub zagnieźdź dowolny ekran openerp"
 
 #. module: base_setup
 #: selection:base.setup.terminology,partner:0
@@ -185,6 +200,8 @@ msgid ""
 "When you create a new contact (person or company), you will be able to load "
 "all the data from LinkedIn (photos, address, etc)."
 msgstr ""
+"Kiedy utworzysz nowy kontakt (osobą lub firmę), to będziesz mógł pobrać dane "
+"z LinkedIn (zdjęcia, adresy, etc)."
 
 #. module: base_setup
 #: help:base.config.settings,module_multi_company:0
@@ -192,6 +209,14 @@ msgid ""
 "Work in multi-company environments, with appropriate security access between "
 "companies.\n"
 "                This installs the module multi_company."
+msgstr ""
+
+#. module: base_setup
+#: view:base.config.settings:0
+msgid ""
+"The public portal is accessible only if you are in a single database mode. "
+"You can\n"
+"                                    launch the OpenERP Server with the option"
 msgstr ""
 
 #. module: base_setup
@@ -212,6 +237,19 @@ msgid "How do you call a Customer"
 msgstr "Jak nazywasz klienta"
 
 #. module: base_setup
+#: view:base.config.settings:0
+msgid ""
+"When you send a document to a customer\n"
+"                                    (quotation, invoice), your customer will "
+"be\n"
+"                                    able to signup to get all his "
+"documents,\n"
+"                                    read your company news, check his "
+"projects,\n"
+"                                    etc."
+msgstr ""
+
+#. module: base_setup
 #: model:ir.model,name:base_setup.model_base_setup_terminology
 msgid "base.setup.terminology"
 msgstr ""
@@ -222,9 +260,9 @@ msgid "Client"
 msgstr "Klient"
 
 #. module: base_setup
-#: help:base.config.settings,module_auth_anonymous:0
+#: help:base.config.settings,module_portal_anonymous:0
 msgid "Enable the public part of openerp, openerp becomes a public website."
-msgstr ""
+msgstr "Włącz część publiczną openerp. Openerp stanie się publiczną witryną."
 
 #. module: base_setup
 #: help:sale.config.settings,module_plugin_thunderbird:0
@@ -246,13 +284,13 @@ msgstr ""
 #. module: base_setup
 #: model:ir.actions.act_window,name:base_setup.action_partner_terminology_config_form
 msgid "Use another word to say \"Customer\""
-msgstr ""
+msgstr "Podaj inny termin, który stosuejsz zamiast \"Klient\""
 
 #. module: base_setup
 #: model:ir.actions.act_window,name:base_setup.action_sale_config
 #: view:sale.config.settings:0
 msgid "Configure Sales"
-msgstr ""
+msgstr "Konfiguruj sprzedaż"
 
 #. module: base_setup
 #: help:sale.config.settings,module_plugin_outlook:0
@@ -269,31 +307,49 @@ msgstr ""
 #. module: base_setup
 #: view:base.config.settings:0
 msgid "Options"
-msgstr ""
+msgstr "Opcje"
 
 #. module: base_setup
 #: field:base.config.settings,module_portal:0
-msgid "Activate the customer/supplier portal"
+msgid "Activate the customer portal"
+msgstr ""
+
+#. module: base_setup
+#: view:base.config.settings:0
+msgid ""
+"to do so.\n"
+"                                    Once activated, the login page will be "
+"replaced by the public website."
 msgstr ""
 
 #. module: base_setup
 #: field:base.config.settings,module_share:0
 msgid "Allow documents sharing"
+msgstr "Pozwalaj na współdzielenie dokumentów"
+
+#. module: base_setup
+#: view:base.config.settings:0
+msgid "(company news, jobs, contact form, etc.)"
 msgstr ""
 
 #. module: base_setup
-#: field:base.config.settings,module_auth_anonymous:0
+#: field:base.config.settings,module_portal_anonymous:0
 msgid "Activate the public portal"
-msgstr ""
+msgstr "Aktywuj portal publiczny"
 
 #. module: base_setup
 #: view:base.config.settings:0
 msgid "Configure outgoing email servers"
-msgstr ""
+msgstr "Konfiguruj serwery poczty wychodzącej"
 
 #. module: base_setup
 #: view:sale.config.settings:0
 msgid "Social Network Integration"
+msgstr "Integracja z portalami społecznościowymi"
+
+#. module: base_setup
+#: help:base.config.settings,module_portal:0
+msgid "Give your customers access to their documents."
 msgstr ""
 
 #. module: base_setup
@@ -306,7 +362,7 @@ msgstr "Anuluj"
 #: view:base.config.settings:0
 #: view:sale.config.settings:0
 msgid "Apply"
-msgstr ""
+msgstr "Zastosuj"
 
 #. module: base_setup
 #: view:base.setup.terminology:0
@@ -322,7 +378,7 @@ msgstr ""
 #. module: base_setup
 #: view:base.config.settings:0
 msgid "Configure your company data"
-msgstr ""
+msgstr "Konfiguruj dane swojej firmy"
 
 #~ msgid "City"
 #~ msgstr "Miasto"

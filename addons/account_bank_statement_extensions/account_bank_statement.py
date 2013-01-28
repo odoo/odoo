@@ -21,9 +21,9 @@
 ##############################################################################
 
 import time
-from osv import osv, fields
-import decimal_precision as dp
-from tools.translate import _
+from openerp.osv import fields, osv
+import openerp.addons.decimal_precision as dp
+from openerp.tools.translate import _
 
 class account_bank_statement(osv.osv):
     _inherit = 'account.bank.statement'
@@ -63,7 +63,7 @@ class account_bank_statement_line_global(osv.osv):
     _description = 'Batch Payment Info'
 
     _columns = {
-        'name': fields.char('Communication', size=128, required=True),
+        'name': fields.char('OBI', size=128, required=True, help="Originator to Beneficiary Information"),
         'code': fields.char('Code', size=64, required=True),
         'parent_id': fields.many2one('account.bank.statement.line.global', 'Parent Code', ondelete='cascade'),
         'child_ids': fields.one2many('account.bank.statement.line.global', 'parent_id', 'Child Codes'),

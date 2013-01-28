@@ -19,8 +19,7 @@
 #
 ##############################################################################
 
-from osv import osv
-from osv import fields
+from openerp.osv import fields, osv
 
 class survey_browse_answer(osv.osv_memory):
     _name = 'survey.browse.answer'

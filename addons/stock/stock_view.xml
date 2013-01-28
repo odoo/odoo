@@ -890,37 +890,37 @@
             <field name="model">stock.picking.out</field>
             <field name="inherit_id" ref="view_picking_form"/>
             <field name="arch" type="xml">
-                <data>
-                    <xpath expr="/form/header//button[@name='%(act_stock_return_picking)d']" position="replace">
-                        <button name="%(report_picking_list_out)d" string="Print Delivery Slip" type="action" states="done" class="oe_highlight"/>
-                        <button name="%(act_stock_return_picking)d" string="Return Products" states="done" type="action"/>
-                    </xpath>
-                    <xpath expr="/form/header//button[@name='draft_validate']" position="replace">
-                        <button name="draft_validate" states="draft" string="Confirm &amp; Deliver" type="object" class="oe_highlight"/>
-                        <button name="action_assign" states="confirmed" string="Check Availability" type="object" class="oe_highlight"/>
-                    </xpath>
-                    <xpath expr="/form/header//button[@name='action_process']" position="replace">
-                        <button name="action_process" states="assigned" string="Deliver" type="object" class="oe_highlight"/>
-                    </xpath>
-                    <xpath expr="/form/header//field[@name='state']" position="replace">
-                        <field name="state" nolabel="1" readonly="1" widget="statusbar" statusbar_visible="draft,confirmed,assigned,done" statusbar_colors='{"auto":"blue", "confirmed":"blue"}'/>
-                    </xpath>
-                    <xpath expr="//field[@name='partner_id']" position="replace">
-                        <field name="partner_id" on_change="onchange_partner_in(partner_id)"  string="Customer"/>
-                    </xpath>
-                    <xpath expr="//field[@name='move_lines']" position="replace">
-                        <field name="move_lines" context="{'address_out_id': partner_id, 'picking_type': 'out', 'form_view_ref':'view_move_picking_form', 'tree_view_ref':'view_move_picking_tree'}"/>
-                    </xpath>
-                    <xpath expr="/form/sheet" position="after">
-                        <div class="oe_chatter">
-                            <field name="message_follower_ids" widget="mail_followers"/>
-                            <field name="message_ids" widget="mail_thread"/>
-                        </div>
-                    </xpath>
-                </data>
+                <field name="date_done" position="attributes" version="7.0">
+                    <attribute name="string">Date of Delivery</attribute>
+                </field>
+                <xpath expr="/form/header//button[@name='%(act_stock_return_picking)d']" position="replace">
+                    <button name="%(report_picking_list_out)d" string="Print Delivery Slip" type="action" states="done" class="oe_highlight"/>
+                    <button name="%(act_stock_return_picking)d" string="Return Products" states="done" type="action"/>
+                </xpath>
+                <xpath expr="/form/header//button[@name='draft_validate']" position="replace">
+                    <button name="draft_validate" states="draft" string="Confirm &amp; Deliver" type="object" class="oe_highlight"/>
+                    <button name="action_assign" states="confirmed" string="Check Availability" type="object" class="oe_highlight"/>
+                </xpath>
+                <xpath expr="/form/header//button[@name='action_process']" position="replace">
+                    <button name="action_process" states="assigned" string="Deliver" type="object" class="oe_highlight"/>
+                </xpath>
+                <xpath expr="/form/header//field[@name='state']" position="replace">
+                    <field name="state" nolabel="1" readonly="1" widget="statusbar" statusbar_visible="draft,confirmed,assigned,done" statusbar_colors='{"auto":"blue", "confirmed":"blue"}'/>
+                </xpath>
+                <xpath expr="//field[@name='partner_id']" position="replace">
+                    <field name="partner_id" on_change="onchange_partner_in(partner_id)"  string="Customer"/>
+                </xpath>
+                <xpath expr="//field[@name='move_lines']" position="replace">
+                    <field name="move_lines" context="{'address_out_id': partner_id, 'picking_type': 'out', 'form_view_ref':'view_move_picking_form', 'tree_view_ref':'view_move_picking_tree'}"/>
+                </xpath>
+                <xpath expr="/form/sheet" position="after">
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" widget="mail_followers"/>
+                        <field name="message_ids" widget="mail_thread"/>
+                    </div>
+                </xpath>
             </field>
         </record>
-
         <record id="view_picking_out_search" model="ir.ui.view">
             <field name="name">stock.picking.out.search</field>
             <field name="model">stock.picking</field>
@@ -1021,29 +1021,30 @@
             <field name="model">stock.picking.in</field>
             <field name="inherit_id" ref="view_picking_form"/>
             <field name="arch" type="xml">
-                <data>
-                    <xpath expr="/form/header//button[@name='%(act_stock_return_picking)d']" position="replace">
-                        <button name="%(act_stock_return_picking)d" string="Return Products" states="done" type="action"/>
-                    </xpath>
-                    <xpath expr="//button[@name='draft_validate']" position="replace">
-                        <button name="draft_validate" states="draft" string="Confirm &amp; Receive" type="object" class="oe_highlight"/>
-                    </xpath>
-                    <xpath expr="//button[@name='action_process']" position="replace">
-                        <button name="action_process" states="assigned" string="Receive" type="object" class="oe_highlight"/>
-                    </xpath>
-                    <xpath expr="//field[@name='partner_id']" position="replace">
-                        <field name="partner_id" on_change="onchange_partner_in(partner_id)"  string="Supplier"/>
-                    </xpath>
-                    <xpath expr="//field[@name='move_lines']" position="replace">
-                        <field name="move_lines" context="{'address_in_id': partner_id, 'picking_type': 'in', 'form_view_ref':'view_move_picking_form', 'tree_view_ref':'view_move_picking_tree'}"/>
-                    </xpath>
-                    <xpath expr="/form/sheet" position="after">
-                        <div class="oe_chatter">
-                            <field name="message_follower_ids" widget="mail_followers"/>
-                            <field name="message_ids" widget="mail_thread"/>
-                        </div>
-                    </xpath>
-                </data>
+                <field name="date_done" position="attributes" version="7.0">
+                    <attribute name="string">Date of Reception</attribute>
+                </field>
+                <xpath expr="/form/header//button[@name='%(act_stock_return_picking)d']" position="replace">
+                    <button name="%(act_stock_return_picking)d" string="Return Products" states="done" type="action"/>
+                </xpath>
+                <xpath expr="//button[@name='draft_validate']" position="replace">
+                    <button name="draft_validate" states="draft" string="Confirm &amp; Receive" type="object" class="oe_highlight"/>
+                </xpath>
+                <xpath expr="//button[@name='action_process']" position="replace">
+                    <button name="action_process" states="assigned" string="Receive" type="object" class="oe_highlight"/>
+                </xpath>
+                <xpath expr="//field[@name='partner_id']" position="replace">
+                    <field name="partner_id" on_change="onchange_partner_in(partner_id)"  string="Supplier"/>
+                </xpath>
+                <xpath expr="//field[@name='move_lines']" position="replace">
+                    <field name="move_lines" context="{'address_in_id': partner_id, 'picking_type': 'in', 'form_view_ref':'view_move_picking_form', 'tree_view_ref':'view_move_picking_tree'}"/>
+                </xpath>
+                <xpath expr="/form/sheet" position="after">
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" widget="mail_followers"/>
+                        <field name="message_ids" widget="mail_thread"/>
+                    </div>
+                </xpath>
             </field>
         </record>
         <record id="view_picking_in_search" model="ir.ui.view">

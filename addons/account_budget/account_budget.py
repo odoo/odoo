@@ -21,10 +21,10 @@
 
 import datetime
 
-from osv import osv, fields
-from tools.translate import _
+from openerp.osv import fields, osv
+from openerp.tools.translate import _
 
-import decimal_precision as dp
+import openerp.addons.decimal_precision as dp
 
 def strToDate(dt):
         dt_date=datetime.date(int(dt[0:4]),int(dt[5:7]),int(dt[8:10]))
@@ -190,7 +190,7 @@ class crossovered_budget_lines(osv.osv):
     _description = "Budget Line"
     _columns = {
         'crossovered_budget_id': fields.many2one('crossovered.budget', 'Budget', ondelete='cascade', select=True, required=True),
-        'analytic_account_id': fields.many2one('account.analytic.account', 'Analytic Account',required=True),
+        'analytic_account_id': fields.many2one('account.analytic.account', 'Analytic Account'),
         'general_budget_id': fields.many2one('account.budget.post', 'Budgetary Position',required=True),
         'date_from': fields.date('Start Date', required=True),
         'date_to': fields.date('End Date', required=True),

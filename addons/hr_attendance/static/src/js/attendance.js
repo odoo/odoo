@@ -60,7 +60,7 @@ openerp.hr_attendance = function (instance) {
             return employee.read_slice(['id', 'name', 'state', 'last_sign', 'attendance_access']).then(function (res) {
                 if (_.isEmpty(res) )
                     return;
-                if (res[0].attendance_access == false){
+                if (res[0].attendance_access === false){
                     return;
                 }
                 self.$el.show();
@@ -75,13 +75,21 @@ openerp.hr_attendance = function (instance) {
         do_update: function () {
             this._super();
             var self = this;
-            this.update_promise = this.update_promise.done(function () {
-                if (self.attendanceslider)
+            this.update_promise.done(function () {
+                if (!_.isUndefined(self.attendanceslider)) {
                     return;
-                self.attendanceslider = new instance.hr_attendance.AttendanceSlider(self);
-
-                self.attendanceslider.prependTo(instance.webclient.$('.oe_systray'));
+                }
+                // check current user is an employee
+                var Users = new instance.web.Model('res.users');
+                Users.call('has_group', ['base.group_user']).done(function(is_employee) {
+                    if (is_employee) {
+                        self.attendanceslider = new instance.hr_attendance.AttendanceSlider(self);
+                        self.attendanceslider.prependTo(instance.webclient.$('.oe_systray'));
+                    } else {
+                        self.attendanceslider = null;
+                    }
+                });
             });
         },
     });
-}
+};

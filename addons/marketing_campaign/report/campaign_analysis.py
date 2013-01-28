@@ -18,9 +18,9 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-import tools
-from osv import fields, osv
-from decimal_precision import decimal_precision as dp
+from openerp import tools
+from openerp.osv import fields, osv
+from openerp.addons.decimal_precision import decimal_precision as dp
 
 
 class campaign_analysis(osv.osv):

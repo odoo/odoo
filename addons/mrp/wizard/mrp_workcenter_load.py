@@ -19,7 +19,7 @@
 #
 ##############################################################################
 
-from osv import fields, osv
+from openerp.osv import fields, osv
 
 class mrp_workcenter_load(osv.osv_memory):
     _name = 'mrp.workcenter.load'

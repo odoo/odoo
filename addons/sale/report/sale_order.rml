@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
-<document filename="Sale Order.pdf">
-  <template title="Sale Order" author="OpenERP S.A.(sales@openerp.com)" allowSplitting="20">
+<document filename="Sales Order.pdf">
+  <template title="Sales Order" author="OpenERP S.A.(sales@openerp.com)" allowSplitting="20">
     <pageTemplate id="first">
       <frame id="first" x1="15.0" y1="42.0" width="539" height="758"/>
     </pageTemplate>
@@ -127,6 +127,8 @@
   </stylesheet>
   <story>
   <pto>
+  <para style="terp_default_8">[[repeatIn(objects,'o')]]</para>
+  <para style="terp_default_8">[[ setLang(o.partner_id.lang) ]]</para>
   <pto_header>
     <blockTable colWidths="181.0,70.0,80.0,70.0,50.0,85.0" repeatRows="1" style="Table4">
       <tr>
@@ -151,8 +153,6 @@
       </tr>
     </blockTable>
   </pto_header>
-    <para style="terp_default_8">[[repeatIn(objects,'o')]]</para>
-    <para style="terp_default_8">[[ setLang(o.partner_id.lang) ]]</para>
     <para style="terp_default_8">
       <font color="white"> </font>
     </para>

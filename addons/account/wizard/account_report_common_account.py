@@ -19,7 +19,7 @@
 #
 ##############################################################################
 
-from osv import osv, fields
+from openerp.osv import fields, osv
 
 class account_common_account_report(osv.osv_memory):
     _name = 'account.common.account.report'

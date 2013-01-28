@@ -19,8 +19,8 @@
 #
 ##############################################################################
 
-from osv import fields, osv
-from tools import config
+from openerp.osv import fields, osv
+from openerp.tools import config
 
 class documnet_ftp_setting(osv.osv_memory):
     _name = 'knowledge.config.settings'

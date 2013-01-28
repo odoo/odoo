@@ -44,7 +44,7 @@
         </record>
 
         <record id="action_team" model="ir.actions.act_window">
-            <field name="name">Meet the team</field>
+            <field name="name">Our Team</field>
             <field name="res_model">hr.employee</field>
             <field name="view_id" ref="portal_hr_kanban_view_employees"/>
             <field name="view_mode">kanban</field>
@@ -60,7 +60,7 @@
             <field name="inherit_id" ref="portal_crm.contact_form_view"/>
             <field name="arch" type="xml">
                 <xpath expr="//div[@class='oe_portal_crm_team']" position="inside">
-                    <a href="#action=portal_hr_employees.action_team">Meet the team</a>
+                    <a href="#action=portal_hr_employees.action_team">Our Team</a>
                 </xpath>
             </field>
         </record>

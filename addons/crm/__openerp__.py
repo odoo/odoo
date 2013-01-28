@@ -77,7 +77,6 @@ Dashboard for CRM will include:
 
         'crm_view.xml',
 
-        'crm_action_rule_view.xml',
         'crm_lead_view.xml',
         'crm_lead_menu.xml',
 
@@ -108,7 +107,6 @@ Dashboard for CRM will include:
         'test/process/lead2opportunity_assign_salesmen.yml',
         'test/process/merge_opportunity.yml',
         'test/process/cancel_lead.yml',
-        'test/process/action_rule.yml',
         'test/process/segmentation.yml',
         'test/process/phonecalls.yml',
         'test/ui/crm_demo.yml',
