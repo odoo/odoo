@@ -5,7 +5,6 @@
 -
     !record {model: 'document.directory', id: dir_partner_label}:
         name : "Partner Labels"
-        storage_id : storage_default
         type : ressource
         content_ids:
             - name: "Label"
@@ -18,11 +17,10 @@
         id = self.write(cr, uid, [ref("dir_partner_label")], {'ressource_type_id' : ids[0]}, context)
 -
     In order to check static directory in OpenERP which is the real directory just like system's local folders, 
-    First I create a directory in OpenERP named "Directory 1" with storage as "Default File storage" and type as "Static Directory"
+    First I create a directory in OpenERP named "Directory 1" with type as "Static Directory"
 -
     !record {model: 'document.directory', id: directory_1}:
         name : "Directory 1"
-        storage_id : storage_default
         type : directory
 -
     In order to make a directory hierarchy in OpenERP I will make other static directory "Directory 2" and I put its Parent Item as "Directory 1",
@@ -30,7 +28,6 @@
 -
     !record {model: 'document.directory', id: directory_2}:
         name : "Directory 2"
-        storage_id : storage_default
         type : directory
         parent_id : directory_1
 -

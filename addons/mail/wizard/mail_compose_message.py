@@ -21,12 +21,12 @@
 
 import base64
 import re
-import tools
+from openerp import tools
 
-from osv import osv
-from osv import fields
-from tools.safe_eval import safe_eval as eval
-from tools.translate import _
+from openerp.osv import osv
+from openerp.osv import fields
+from openerp.tools.safe_eval import safe_eval as eval
+from openerp.tools.translate import _
 
 # main mako-like expression pattern
 EXPRESSION_PATTERN = re.compile('(\$\{.+?\})')
@@ -168,6 +168,7 @@ class mail_compose_message(osv.TransientModel):
             reply_subject = "%s %s" % (re_prefix, reply_subject)
         # get partner_ids from original message
         partner_ids = [partner.id for partner in message_data.partner_ids] if message_data.partner_ids else []
+        partner_ids += context.get('default_partner_ids', [])
 
         # update the result
         result = {
@@ -214,6 +215,9 @@ class mail_compose_message(osv.TransientModel):
                     new_attachments = email_dict.pop('attachments', [])
                     post_values['attachments'] += new_attachments
                     post_values.update(email_dict)
+                # automatically subscribe recipients if asked to
+                if context.get('mail_post_autofollow') and wizard.model and post_values.get('partner_ids'):
+                    active_model_pool.message_subscribe(cr, uid, [res_id], [item[1] for item in post_values.get('partner_ids')], context=context)
                 # post the message
                 active_model_pool.message_post(cr, uid, [res_id], type='comment', subtype='mt_comment', context=context, **post_values)
 

@@ -20,7 +20,7 @@
 ##############################################################################
 
 import time
-from report import report_sxw
+from openerp.report import report_sxw
 
 class pos_lines(report_sxw.rml_parse):
 

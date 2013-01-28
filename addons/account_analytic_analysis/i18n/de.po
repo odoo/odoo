@@ -6,16 +6,16 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev_rc3\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2012-12-03 16:02+0000\n"
-"PO-Revision-Date: 2012-12-17 21:42+0000\n"
+"POT-Creation-Date: 2012-12-21 17:04+0000\n"
+"PO-Revision-Date: 2012-12-20 15:02+0000\n"
 "Last-Translator: Thorsten Vocks (OpenBig.org) <thorsten.vocks@big-"
 "consulting.net>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-12-18 05:01+0000\n"
-"X-Generator: Launchpad (build 16372)\n"
+"X-Launchpad-Export-Date: 2012-12-22 05:42+0000\n"
+"X-Generator: Launchpad (build 16378)\n"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
@@ -102,14 +102,23 @@ msgid "Sum of timesheet lines invoiced for this contract."
 msgstr "Summe abgerechneter Arbeitszeiten"
 
 #. module: account_analytic_analysis
+#: code:addons/account_analytic_analysis/account_analytic_analysis.py:462
+#, python-format
+msgid "Sales Order Lines of %s"
+msgstr ""
+
+#. module: account_analytic_analysis
 #: help:account.analytic.account,revenue_per_hour:0
 msgid "Computed using the formula: Invoiced Amount / Total Time"
 msgstr "Berechnungsformel:  Abgerechnete Beträge / Abgerechnete Stunden"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
-msgid "Contracts not assigned"
-msgstr "Nicht unterzeichnete Verträge"
+#: field:account_analytic_analysis.summary.month,account_id:0
+#: field:account_analytic_analysis.summary.user,account_id:0
+#: model:ir.model,name:account_analytic_analysis.model_account_analytic_account
+msgid "Analytic Account"
+msgstr "Kostenstelle"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
@@ -160,13 +169,9 @@ msgid "End Date"
 msgstr "Ende Datum"
 
 #. module: account_analytic_analysis
-#: help:account.analytic.account,hours_qtt_non_invoiced:0
-msgid ""
-"Number of time (hours/days) (from journal of type 'general') that can be "
-"invoiced if you invoice based on analytic account."
+#: view:account.analytic.account:0
+msgid "Account Manager"
 msgstr ""
-"Abrechenbare Zeit (Stunden/Tage) vom Journaltyp 'Sonstige', wenn Abrechnung "
-"über die Kostenstelle erfolgt."
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,remaining_hours_to_invoice:0
@@ -180,11 +185,8 @@ msgstr "Erwartet"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
-#: field:account_analytic_analysis.summary.month,account_id:0
-#: field:account_analytic_analysis.summary.user,account_id:0
-#: model:ir.model,name:account_analytic_analysis.model_account_analytic_account
-msgid "Analytic Account"
-msgstr "Kostenstelle"
+msgid "Contracts not assigned"
+msgstr "Nicht unterzeichnete Verträge"
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,theorical_margin:0
@@ -194,7 +196,7 @@ msgstr "Berechnungsformel: Geplanter Umsatz - Gesamte Kosten"
 #. module: account_analytic_analysis
 #: field:account.analytic.account,hours_qtt_invoiced:0
 msgid "Invoiced Time"
-msgstr "Verrechnete Zeit"
+msgstr "Abgerechnete Zeit"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,fix_price_to_invoice:0
@@ -210,6 +212,8 @@ msgid ""
 "{'required': [('type','=','contract')], 'invisible': [('type','in',['view', "
 "'normal','template'])]}"
 msgstr ""
+"{'required': [('type','=','contract')], 'invisible': [('type','in',['view', "
+"'normal','template'])]}"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,real_margin_rate:0
@@ -227,19 +231,13 @@ msgid ""
 "Number of time you spent on the analytic account (from timesheet). It "
 "computes quantities on all journal of type 'general'."
 msgstr ""
-"Anzahl der Zeiten, die auf dieses Analyse Konto gebucht wurden. Es werden "
-"alle Summen der Journale 'general' gebildet"
+"Arbeitszeiten, die auf diese Kostenstelle gebucht wurden. Es werden nur "
+"Journale vom Typ 'sonstige' zur Berechnung herangezogen."
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
 msgid "Nothing to invoice, create"
-msgstr ""
-
-#. module: account_analytic_analysis
-#: model:ir.actions.act_window,name:account_analytic_analysis.template_of_contract_action
-#: model:ir.ui.menu,name:account_analytic_analysis.menu_template_of_contract_action
-msgid "Template of Contract"
-msgstr "Vertragsvorlage"
+msgstr "Nichts abzurechnen, erstelle"
 
 #. module: account_analytic_analysis
 #: model:res.groups,name:account_analytic_analysis.group_template_required
@@ -273,8 +271,13 @@ msgstr "oder Ansicht"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
+msgid "Customer Contracts"
+msgstr ""
+
+#. module: account_analytic_analysis
+#: view:account.analytic.account:0
 msgid "Parent"
-msgstr "Elternteil"
+msgstr "Hauptprojekt"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,month_ids:0
@@ -324,15 +327,18 @@ msgid "Timesheets"
 msgstr "Stundenzettel"
 
 #. module: account_analytic_analysis
-#: code:addons/account_analytic_analysis/account_analytic_analysis.py:461
-#, python-format
-msgid "Sale Order Lines of %s"
-msgstr "Auftragszeilen von %s"
+#: help:account.analytic.account,hours_qtt_non_invoiced:0
+msgid ""
+"Number of time (hours/days) (from journal of type 'general') that can be "
+"invoiced if you invoice based on analytic account."
+msgstr ""
+"Abrechenbare Zeit (Stunden/Tage) vom Journaltyp 'Sonstige', wenn Abrechnung "
+"über die Kostenstelle erfolgt."
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
 msgid "Pending"
-msgstr "Unerledigt"
+msgstr "Wiedervorlage"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,is_overdue_quantity:0
@@ -358,7 +364,7 @@ msgstr "Zu Erneuern"
 #: view:account.analytic.account:0
 msgid ""
 "A contract in OpenERP is an analytic account having a partner set on it."
-msgstr "Ein Vertrag ist ein Analyse Konto mit Partner"
+msgstr "Ein Vertrag ist ein Kundenprojekt mit Kostenstelle"
 
 #. module: account_analytic_analysis
 #: model:ir.actions.act_window,name:account_analytic_analysis.action_sales_order
@@ -498,14 +504,14 @@ msgstr ""
 "Berechnungsformel: Geplanter Abrechnungsbetrag - Abgerechneter Betrag"
 
 #. module: account_analytic_analysis
-#: view:account.analytic.account:0
-msgid "Responsible"
-msgstr "Projektleiter"
-
-#. module: account_analytic_analysis
 #: field:account.analytic.account,last_invoice_date:0
 msgid "Last Invoice Date"
 msgstr "Letztes Rechnungsdatum"
+
+#. module: account_analytic_analysis
+#: view:account.analytic.account:0
+msgid "Units Remaining"
+msgstr ""
 
 #. module: account_analytic_analysis
 #: model:ir.actions.act_window,help:account_analytic_analysis.action_hr_tree_invoiced_all
@@ -601,7 +607,7 @@ msgstr "Datum der letzten Erfassung auf diesem Konto."
 #. module: account_analytic_analysis
 #: model:ir.model,name:account_analytic_analysis.model_sale_config_settings
 msgid "sale.config.settings"
-msgstr ""
+msgstr "sale.config.settings"
 
 #. module: account_analytic_analysis
 #: field:sale.config.settings,group_template_required:0
@@ -609,9 +615,15 @@ msgid "Mandatory use of templates."
 msgstr "Zwingende Nutzung von Vorlagen"
 
 #. module: account_analytic_analysis
+#: model:ir.actions.act_window,name:account_analytic_analysis.template_of_contract_action
+#: model:ir.ui.menu,name:account_analytic_analysis.menu_template_of_contract_action
+msgid "Contract Template"
+msgstr ""
+
+#. module: account_analytic_analysis
 #: view:account.analytic.account:0
-msgid "Contracts Having a Partner"
-msgstr "Verträge mit Kunden"
+msgid "Units Done"
+msgstr ""
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,total_cost:0
@@ -639,7 +651,7 @@ msgid ""
 "If invoice from analytic account, the remaining amount you can invoice to "
 "the customer based on the total costs."
 msgstr ""
-"Falls eine Rechnung aus einem analytischen Konto generiert wird, basiert der "
+"Falls eine Rechnung über Kostenstellen generiert wird, basiert der "
 "verbleibende Betrag der an den Kunden weiter berechnet werden kann, auf den "
 "gesamten Kosten."
 

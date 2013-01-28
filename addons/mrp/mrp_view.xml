@@ -47,11 +47,11 @@
                 Define specific property groups that can be assigned to your
                 bill of materials and sales orders. Properties allows OpenERP
                 to automatically select the right bill of materials according
-                to properties selected in the sale order by salesperson.
+                to properties selected in the sales order by salesperson.
               </p><p>
                 For instance, in the property group "Warranty", you an have
                 two properties: 1 year warranty, 3 years warranty. Depending
-                on the propoerties selected in the sale order, OpenERP will
+                on the propoerties selected in the sales order, OpenERP will
                 schedule a production using the matching bill of materials.
               </p>
             </field>
@@ -121,7 +121,7 @@
                 materials for manufacturing a product when you have different
                 ways of building the same product.  You can assign several
                 properties to each bill of materials.  When a salesperson
-                creates a sale order, they can relate it to several properties
+                creates a sales order, they can relate it to several properties
                 and OpenERP will automatically select the BoM to use according
                 the needs.
               </p>
@@ -370,7 +370,7 @@
                             <field name="code" string="Reference"/>
                             <field name="type"/>
                             <p colspan="2" class="oe_grey" attrs="{'invisible': [('type','=','normal')]}">
-                                When processing a sale order for this product, the delivery order
+                                When processing a sales order for this product, the delivery order
                                 will contain the raw materials, instead of the finished product.
                             </p>
                             <field name="company_id" groups="base.group_multi_company" widget="selection"/>
@@ -1032,7 +1032,7 @@
         <menuitem id="menu_mrp_planning" name="Planning"
                 parent="base.menu_mrp_root" sequence="2"/>
         <menuitem action="mrp.mrp_production_action_planning"
-                id="menu_mrp_production_order_action" name="Orders Planning"
+                id="menu_mrp_production_order_action" name="Order Planning"
                 parent="menu_mrp_planning" sequence="1"/>
 
 

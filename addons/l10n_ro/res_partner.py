@@ -3,8 +3,7 @@
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution	
-#    Copyright (C) 2009 (<http://www.filsystem.ro>). All Rights Reserved
-#    $Id$
+#    Copyright (C) 2012 (<http://www.erpsystems.ro>). All Rights Reserved
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -21,7 +20,7 @@
 #
 ##############################################################################
 
-from osv import fields, osv
+from openerp.osv import fields, osv
 
 class res_partner(osv.osv):
     _name = "res.partner"
@@ -29,6 +28,10 @@ class res_partner(osv.osv):
     _columns = {
         'nrc' : fields.char('NRC', size=16, help='Registration number at the Registry of Commerce'),
     }
+    _sql_constraints = [
+       ('vat_uniq', 'unique (vat)', 'The vat of the partner must be unique !'),
+       ('nrc_uniq', 'unique (nrc)', 'The code of the partner must be unique !')
+    ]
 res_partner()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

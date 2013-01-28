@@ -21,9 +21,9 @@
 
 from lxml import etree
 
-import tools
-from tools.translate import _
-from osv import fields, osv
+from openerp import tools
+from openerp.tools.translate import _
+from openerp.osv import fields, osv
 
 class project_task_delegate(osv.osv_memory):
     _name = 'project.task.delegate'

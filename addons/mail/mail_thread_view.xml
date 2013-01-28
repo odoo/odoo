@@ -55,7 +55,7 @@
         </record>
 
         <record id="action_mail_star_feeds" model="ir.actions.client">
-            <field name="name">Todo</field>
+            <field name="name">To-do</field>
             <field name="tag">mail.wall</field>
             <field name="res_model">mail.message</field>
             <field name="context">{
@@ -130,7 +130,7 @@
           <field name="parent_id" ref="mail.mail_feeds"/>
         </record>
         <record id="mail_starfeeds" model="ir.ui.menu">
-          <field name="name">Todo</field>
+          <field name="name">To-do</field>
           <field name="sequence" eval="14"/>
           <field name="action" ref="action_mail_star_feeds"/>
           <field name="parent_id" ref="mail.mail_feeds"/>

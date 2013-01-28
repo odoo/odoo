@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2012-11-24 02:52+0000\n"
+"POT-Creation-Date: 2012-12-21 17:05+0000\n"
 "PO-Revision-Date: 2012-05-10 17:36+0000\n"
 "Last-Translator: Fabien (Open ERP) <fp@tinyerp.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-11-25 06:16+0000\n"
-"X-Generator: Launchpad (build 16293)\n"
+"X-Launchpad-Export-Date: 2012-12-22 05:52+0000\n"
+"X-Generator: Launchpad (build 16378)\n"
 
 #. module: document
 #: field:document.directory,parent_id:0
@@ -22,25 +22,10 @@ msgid "Parent Directory"
 msgstr "Directori pare"
 
 #. module: document
-#: code:addons/document/document_directory.py:273
+#: code:addons/document/document.py:336
 #, python-format
 msgid "Directory name contains special characters!"
 msgstr "El nom del directori conté caràcters especials!"
-
-#. module: document
-#: view:board.board:0
-msgid "Document board"
-msgstr "Tauler de documents"
-
-#. module: document
-#: model:ir.model,name:document.model_process_node
-msgid "Process Node"
-msgstr "Node procés"
-
-#. module: document
-#: sql_constraint:document.directory:0
-msgid "Directory must have a parent or a storage."
-msgstr ""
 
 #. module: document
 #: view:document.directory:0
@@ -58,14 +43,13 @@ msgstr ""
 
 #. module: document
 #: view:document.directory:0
-#: view:document.storage:0
 msgid "Group By..."
 msgstr "Agrupa per..."
 
 #. module: document
-#: model:ir.model,name:document.model_document_directory_content_type
-msgid "Directory Content Type"
-msgstr "Tipus de contingut del directori"
+#: view:ir.attachment:0
+msgid "Modification"
+msgstr ""
 
 #. module: document
 #: view:document.directory:0
@@ -105,9 +89,9 @@ msgid "Directory Content"
 msgstr "Contingut directori"
 
 #. module: document
-#: view:document.directory:0
-msgid "Dynamic context"
-msgstr "Context dinàmic"
+#: view:ir.attachment:0
+msgid "My Document(s)"
+msgstr ""
 
 #. module: document
 #: model:ir.ui.menu,name:document.menu_document_management_configuration
@@ -126,13 +110,13 @@ msgstr ""
 "referència al registre actual en directoris dinàmics."
 
 #. module: document
-#: field:document.storage,path:0
-msgid "Path"
-msgstr "Ruta"
+#: help:document.directory.dctx,field:0
+msgid "The name of the field."
+msgstr ""
 
 #. module: document
-#: code:addons/document/document_directory.py:263
-#: code:addons/document/document_directory.py:268
+#: code:addons/document/document.py:326
+#: code:addons/document/document.py:331
 #, python-format
 msgid "Directory name must be unique!"
 msgstr "El nom del directori ha de ser únic!"
@@ -160,7 +144,6 @@ msgstr ""
 
 #. module: document
 #: view:document.directory:0
-#: field:document.storage,dir_ids:0
 #: model:ir.actions.act_window,name:document.action_document_directory_form
 #: model:ir.ui.menu,name:document.menu_document_directories
 msgid "Directories"
@@ -170,13 +153,6 @@ msgstr "Directoris"
 #: model:ir.model,name:document.model_report_document_user
 msgid "Files details by Users"
 msgstr "Fitxers detallats per usuaris"
-
-#. module: document
-#: code:addons/document/document_storage.py:569
-#: code:addons/document/document_storage.py:597
-#, python-format
-msgid "Error!"
-msgstr "Error!"
 
 #. module: document
 #: field:document.directory,resource_find_all:0
@@ -229,14 +205,9 @@ msgid ""
 msgstr ""
 
 #. module: document
-#: field:process.node,directory_id:0
-msgid "Document directory"
-msgstr "Directori document"
-
-#. module: document
-#: code:addons/document/document_directory.py:263
-#: code:addons/document/document_directory.py:268
-#: code:addons/document/document_directory.py:273
+#: code:addons/document/document.py:326
+#: code:addons/document/document.py:331
+#: code:addons/document/document.py:336
 #, python-format
 msgid "ValidateError"
 msgstr "Error de validació"
@@ -254,18 +225,11 @@ msgid "Documents"
 msgstr "Documents"
 
 #. module: document
-#: view:document.directory:0
-#: field:document.directory,storage_id:0
-msgid "Storage"
-msgstr "Emmagatzematge"
-
-#. module: document
 #: field:document.directory,ressource_type_id:0
 msgid "Resource model"
 msgstr "Model de recurs"
 
 #. module: document
-#: field:ir.attachment,file_size:0
 #: field:report.document.file,file_size:0
 #: field:report.document.user,file_size:0
 msgid "File Size"
@@ -278,21 +242,19 @@ msgid "Content Type"
 msgstr "Tipus de contingut"
 
 #. module: document
-#: view:ir.attachment:0
-msgid "Modification"
-msgstr ""
-
-#. module: document
 #: view:document.directory:0
 #: field:document.directory,type:0
-#: view:document.storage:0
-#: field:document.storage,type:0
 msgid "Type"
 msgstr "Tipus"
 
 #. module: document
-#: code:addons/document/document.py:194
-#: code:addons/document/document_directory.py:234
+#: sql_constraint:ir.attachment:0
+msgid "The filename must be unique in a directory !"
+msgstr ""
+
+#. module: document
+#: code:addons/document/document.py:110
+#: code:addons/document/document.py:296
 #, python-format
 msgid "%s (copy)"
 msgstr ""
@@ -330,11 +292,6 @@ msgid "Context fields"
 msgstr "Camps de contexte"
 
 #. module: document
-#: field:ir.attachment,store_fname:0
-msgid "Stored Filename"
-msgstr "Nom del fitxer desat"
-
-#. module: document
 #: view:document.directory:0
 #: field:report.document.user,type:0
 msgid "Directory Type"
@@ -361,7 +318,7 @@ msgid "Virtual Files"
 msgstr "Fitxers virtuals"
 
 #. module: document
-#: code:addons/document/document_storage.py:635
+#: code:addons/document/document.py:562
 #, python-format
 msgid "Error at doc write!"
 msgstr "Error d'escriptura en el document!"
@@ -396,7 +353,6 @@ msgstr "Seguretat"
 
 #. module: document
 #: field:document.directory,write_uid:0
-#: field:document.storage,write_uid:0
 #: field:ir.attachment,write_uid:0
 msgid "Last Modification User"
 msgstr "Usuari última modificació"
@@ -419,7 +375,6 @@ msgstr "Domini"
 
 #. module: document
 #: field:document.directory,write_date:0
-#: field:document.storage,write_date:0
 #: field:ir.attachment,write_date:0
 msgid "Date Modified"
 msgstr "Data de modificació"
@@ -463,12 +418,9 @@ msgstr ""
 "Defineix paraules en el context per a tots els directoris i fitxers fills"
 
 #. module: document
-#: help:document.storage,online:0
-msgid ""
-"If not checked, media is currently offline and its contents not available"
-msgstr ""
-"Si no es marca, el mitjà d'emmagatzematge està actualment fora de línia i el "
-"seu contingut no està disponible."
+#: view:document.directory:0
+msgid "Static"
+msgstr "Estàtic"
 
 #. module: document
 #: field:report.document.user,user:0
@@ -478,7 +430,6 @@ msgstr ""
 #. module: document
 #: view:document.directory:0
 #: field:document.directory,user_id:0
-#: field:document.storage,user_id:0
 #: view:ir.attachment:0
 #: field:ir.attachment,user_id:0
 #: field:report.document.user,user_id:0
@@ -497,15 +448,9 @@ msgstr "Continguts"
 
 #. module: document
 #: field:document.directory,create_date:0
-#: field:document.storage,create_date:0
 #: field:report.document.user,create_date:0
 msgid "Date Created"
 msgstr "Data creació"
-
-#. module: document
-#: field:document.directory,ressource_id:0
-msgid "Resource ID"
-msgstr "ID recurs"
 
 #. module: document
 #: help:document.directory.content,include_name:0
@@ -517,17 +462,6 @@ msgstr ""
 "Marqueu aquest camp si voleu que el nom del fitxer contingui el nom del "
 "registre.\n"
 "Si està marcat, el directori té que ser un recurs."
-
-#. module: document
-#: model:ir.actions.act_window,name:document.open_board_document_manager
-#: model:ir.ui.menu,name:document.menu_reports_document
-msgid "Knowledge"
-msgstr ""
-
-#. module: document
-#: view:document.storage:0
-msgid "Document Storage"
-msgstr ""
 
 #. module: document
 #: view:document.configuration:0
@@ -544,11 +478,6 @@ msgstr "Incloure nom de registre"
 #: field:ir.actions.report.xml,model_id:0
 msgid "Model Id"
 msgstr "ID model"
-
-#. module: document
-#: field:document.storage,online:0
-msgid "Online"
-msgstr "En línia"
 
 #. module: document
 #: help:document.directory,ressource_tree:0
@@ -581,9 +510,9 @@ msgid "August"
 msgstr "Agost"
 
 #. module: document
-#: view:ir.attachment:0
-msgid "My Document(s)"
-msgstr ""
+#: view:document.directory:0
+msgid "Dynamic context"
+msgstr "Context dinàmic"
 
 #. module: document
 #: sql_constraint:document.directory:0
@@ -597,7 +526,6 @@ msgstr "Juny"
 
 #. module: document
 #: field:document.directory,group_ids:0
-#: field:document.storage,group_ids:0
 msgid "Groups"
 msgstr "Grups"
 
@@ -610,11 +538,6 @@ msgstr "Actiu"
 #: selection:report.document.user,month:0
 msgid "November"
 msgstr "Novembre"
-
-#. module: document
-#: field:ir.attachment,db_datas:0
-msgid "Data"
-msgstr "Dades"
 
 #. module: document
 #: help:document.directory,ressource_parent_type_id:0
@@ -645,9 +568,9 @@ msgid "Seq."
 msgstr "Seq."
 
 #. module: document
-#: selection:document.storage,type:0
-msgid "Database"
-msgstr "Base de dades"
+#: model:ir.actions.act_window,name:document.action_view_all_document_tree1
+msgid "All Users files"
+msgstr "Fitxers de tots els usuaris"
 
 #. module: document
 #: selection:report.document.user,month:0
@@ -655,13 +578,7 @@ msgid "January"
 msgstr "Gener"
 
 #. module: document
-#: field:document.storage,readonly:0
-msgid "Read Only"
-msgstr "Només de lectura"
-
-#. module: document
 #: view:document.directory:0
-#: view:process.node:0
 msgid "Document Directory"
 msgstr ""
 
@@ -677,7 +594,6 @@ msgstr ""
 
 #. module: document
 #: field:document.directory,create_uid:0
-#: field:document.storage,create_uid:0
 msgid "Creator"
 msgstr "Autor"
 
@@ -691,7 +607,6 @@ msgid ""
 msgstr ""
 
 #. module: document
-#: view:board.board:0
 #: model:ir.actions.act_window,name:document.action_view_files_by_month_graph
 #: view:report.document.user:0
 msgid "Files by Month"
@@ -713,19 +628,9 @@ msgid "Children"
 msgstr "Fills"
 
 #. module: document
-#: view:board.board:0
-msgid "Files by user"
-msgstr ""
-
-#. module: document
-#: selection:document.storage,type:0
-msgid "External file storage"
-msgstr "Emmagatzematge extern"
-
-#. module: document
-#: help:document.storage,path:0
-msgid "For file storage, the root path of the storage"
-msgstr "Per a l'emmagatzematge de fitxers, la ruta arrel on s'emmagatzemen."
+#: field:document.directory,ressource_id:0
+msgid "Resource ID"
+msgstr "ID recurs"
 
 #. module: document
 #: field:document.directory.dctx,field:0
@@ -743,28 +648,18 @@ msgid "Parent Model"
 msgstr "Model pare"
 
 #. module: document
-#: help:document.directory.dctx,field:0
+#: view:document.directory:0
 msgid ""
-"The name of the field. Note that the prefix \"dctx_\" will be prepended to "
-"what is typed here."
+"These groups, however, do NOT apply to children directories, which must "
+"define their own groups."
 msgstr ""
-"El nom del fitxer. Tingueu en compte que el prefix \"dctx_\" es posarà al "
-"davant del que escriviu aquí."
-
-#. module: document
-#: field:document.directory,ressource_tree:0
-msgid "Tree Structure"
-msgstr "Estructura arbre"
+"Però, aquests grups no s'apliquen als directoris fills, els quals han de "
+"definir el seus propis grups."
 
 #. module: document
 #: selection:report.document.user,month:0
 msgid "May"
 msgstr "Maig"
-
-#. module: document
-#: model:ir.actions.act_window,name:document.action_view_all_document_tree1
-msgid "All Users files"
-msgstr "Fitxers de tots els usuaris"
 
 #. module: document
 #: view:document.directory:0
@@ -781,20 +676,6 @@ msgstr "ir.adjunt"
 #: view:report.document.user:0
 msgid "Users File"
 msgstr ""
-
-#. module: document
-#: view:document.directory:0
-msgid "Static"
-msgstr "Estàtic"
-
-#. module: document
-#: view:document.directory:0
-msgid ""
-"These groups, however, do NOT apply to children directories, which must "
-"define their own groups."
-msgstr ""
-"Però, aquests grups no s'apliquen als directoris fills, els quals han de "
-"definir el seus propis grups."
 
 #. module: document
 #: model:ir.model,name:document.model_document_configuration
@@ -823,24 +704,13 @@ msgstr "Febrer"
 
 #. module: document
 #: field:document.directory,name:0
-#: field:document.storage,name:0
 msgid "Name"
 msgstr "Nom"
-
-#. module: document
-#: sql_constraint:document.storage:0
-msgid "The storage path must be unique!"
-msgstr "La ruta d'emmagatzematge ha de ser única!"
 
 #. module: document
 #: view:document.directory:0
 msgid "Fields"
 msgstr "Camps"
-
-#. module: document
-#: help:document.storage,readonly:0
-msgid "If set, media is for reading only"
-msgstr "Si està marcat, el mitjà d'emmagatzematge només és de lectura."
 
 #. module: document
 #: selection:report.document.user,month:0
@@ -854,9 +724,9 @@ msgid "# of Files"
 msgstr "Núm. de fitxers"
 
 #. module: document
-#: view:document.storage:0
-msgid "Search Document Storage"
-msgstr ""
+#: model:ir.model,name:document.model_document_directory_content_type
+msgid "Directory Content Type"
+msgstr "Tipus de contingut del directori"
 
 #. module: document
 #: view:document.directory:0
@@ -890,9 +760,9 @@ msgid "File Name"
 msgstr "Nom del fitxer"
 
 #. module: document
-#: selection:document.storage,type:0
-msgid "Internal File storage"
-msgstr "Emmagatzematge intern"
+#: field:document.directory,ressource_tree:0
+msgid "Tree Structure"
+msgstr "Estructura arbre"
 
 #. module: document
 #: view:document.configuration:0
@@ -911,10 +781,7 @@ msgid "Year"
 msgstr "Any"
 
 #. module: document
-#: view:document.storage:0
-#: model:ir.actions.act_window,name:document.action_document_storage_form
 #: model:ir.model,name:document.model_document_storage
-#: model:ir.ui.menu,name:document.menu_document_storage_media
 msgid "Storage Media"
 msgstr "Suports d'emmagatzematge"
 
@@ -962,6 +829,9 @@ msgstr "Tipus de document"
 #~ msgid "Browse Files"
 #~ msgstr "Navega pels fitxers"
 
+#~ msgid "Document directory"
+#~ msgstr "Directori document"
+
 #~ msgid "Error! You can not create recursive Directories."
 #~ msgstr "Error! No podeu crear directoris recursius."
 
@@ -973,6 +843,9 @@ msgstr "Tipus de document"
 
 #~ msgid "Server Address"
 #~ msgstr "Adreça del servidor"
+
+#~ msgid "Stored Filename"
+#~ msgstr "Nom del fitxer desat"
 
 #~ msgid "Link"
 #~ msgstr "Enllaç"
@@ -1000,6 +873,12 @@ msgstr "Tipus de document"
 
 #~ msgid "Configure"
 #~ msgstr "Configuració"
+
+#~ msgid "Data"
+#~ msgstr "Dades"
+
+#~ msgid "Database"
+#~ msgstr "Base de dades"
 
 #~ msgid "Others Info"
 #~ msgstr "Altres info."
@@ -1074,6 +953,10 @@ msgstr "Tipus de document"
 #~ msgstr "Fitxers auto-generats"
 
 #, python-format
+#~ msgid "Error!"
+#~ msgstr "Error!"
+
+#, python-format
 #~ msgid "File name must be unique!"
 #~ msgstr "El nom de fitxer ha de ser únic!"
 
@@ -1119,8 +1002,17 @@ msgstr "Tipus de document"
 #~ msgid "Auto Directory Configuration"
 #~ msgstr "Configuració automàtica de directoris"
 
+#~ msgid "Document board"
+#~ msgstr "Tauler de documents"
+
+#~ msgid "Process Node"
+#~ msgstr "Node procés"
+
 #~ msgid "This Year"
 #~ msgstr "Aquest any"
+
+#~ msgid "Path"
+#~ msgstr "Ruta"
 
 #~ msgid "Auto directory configuration for Products."
 #~ msgstr "Configuració automàtica dels directoris per a productes."
@@ -1154,6 +1046,9 @@ msgstr "Tipus de document"
 
 #~ msgid "Files by Partner"
 #~ msgstr "Fitxers per empresa"
+
+#~ msgid "Online"
+#~ msgstr "En línia"
 
 #~ msgid ""
 #~ "This is a complete document management system:\n"
@@ -1190,6 +1085,12 @@ msgstr "Tipus de document"
 #~ "la base de dades,\n"
 #~ "      sinó en el directori arrel del servidor com /server/bin/filestore.\n"
 
+#~ msgid ""
+#~ "If not checked, media is currently offline and its contents not available"
+#~ msgstr ""
+#~ "Si no es marca, el mitjà d'emmagatzematge està actualment fora de línia i el "
+#~ "seu contingut no està disponible."
+
 #~ msgid "Configuration Progress"
 #~ msgstr "Progrés de la configuració"
 
@@ -1206,6 +1107,15 @@ msgstr "Tipus de document"
 #~ msgid "Auto directory configuration for Projects."
 #~ msgstr "Configuració automàtica de directoris per a projectes."
 
+#~ msgid "Read Only"
+#~ msgstr "Només de lectura"
+
+#~ msgid "For file storage, the root path of the storage"
+#~ msgstr "Per a l'emmagatzematge de fitxers, la ruta arrel on s'emmagatzemen."
+
+#~ msgid "External file storage"
+#~ msgstr "Emmagatzematge extern"
+
 #~ msgid ""
 #~ "The Documents repository gives you access to all attachments, such as mails, "
 #~ "project documents, invoices etc."
@@ -1219,6 +1129,9 @@ msgstr "Tipus de document"
 #~ msgid "Product"
 #~ msgstr "Producte"
 
+#~ msgid "If set, media is for reading only"
+#~ msgstr "Si està marcat, el mitjà d'emmagatzematge només és de lectura."
+
 #~ msgid "Statistics by User"
 #~ msgstr "Estadístiques per usuari"
 
@@ -1228,6 +1141,15 @@ msgstr "Tipus de document"
 #~ "Configuració automàtica de directoris per a pressupostos i comandes de venda "
 #~ "amb informes."
 
+#~ msgid "The storage path must be unique!"
+#~ msgstr "La ruta d'emmagatzematge ha de ser única!"
+
+#~ msgid "Storage"
+#~ msgstr "Emmagatzematge"
+
+#~ msgid "Internal File storage"
+#~ msgstr "Emmagatzematge intern"
+
 #~ msgid "Search Document storage"
 #~ msgstr "Cercar emmagatzematge documents"
 
@@ -1236,6 +1158,13 @@ msgstr "Tipus de document"
 
 #~ msgid "Dashboard"
 #~ msgstr "Taulell"
+
+#~ msgid ""
+#~ "The name of the field. Note that the prefix \"dctx_\" will be prepended to "
+#~ "what is typed here."
+#~ msgstr ""
+#~ "El nom del fitxer. Tingueu en compte que el prefix \"dctx_\" es posarà al "
+#~ "davant del que escriviu aquí."
 
 #, python-format
 #~ msgid "(copy)"

@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-03 16:03+0000\n"
+"POT-Creation-Date: 2012-12-21 17:05+0000\n"
 "PO-Revision-Date: 2010-08-14 08:44+0000\n"
 "Last-Translator: ub121 <ubs121@gmail.com>\n"
 "Language-Team: Mongolian <mn@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-12-04 05:14+0000\n"
-"X-Generator: Launchpad (build 16335)\n"
+"X-Launchpad-Export-Date: 2012-12-22 05:21+0000\n"
+"X-Generator: Launchpad (build 16378)\n"
 
 #. module: membership
 #: model:process.transition,name:membership.process_transition_invoicetoassociate0
@@ -96,11 +96,12 @@ msgid "Ending Date Of Membership"
 msgstr "Гишүүнчлэлийн дуусах огноо"
 
 #. module: membership
-#: field:product.product,membership_date_to:0
-msgid "Date to"
-msgstr "Хүртэл огноо"
+#: help:report.membership,date_to:0
+msgid "End membership date"
+msgstr "Гишүүнчлэл дуусах огноо"
 
 #. module: membership
+#: field:product.product,membership_date_to:0
 #: field:res.partner,membership_stop:0
 msgid "Membership End Date"
 msgstr ""
@@ -196,11 +197,6 @@ msgstr "Гишүүдийн Шинжилгээ"
 #: view:res.partner:0
 msgid "End Membership Date"
 msgstr "Гишүүнчлэлийн дуусах огноо"
-
-#. module: membership
-#: field:product.product,membership_date_from:0
-msgid "Date from"
-msgstr "Эхлэх огноо"
 
 #. module: membership
 #: code:addons/membership/membership.py:414
@@ -466,11 +462,6 @@ msgid "Membership Status"
 msgstr ""
 
 #. module: membership
-#: help:report.membership,date_to:0
-msgid "End membership date"
-msgstr "Гишүүнчлэл дуусах огноо"
-
-#. module: membership
 #: view:res.partner:0
 msgid "Customers"
 msgstr "Захиалагчид"
@@ -664,11 +655,6 @@ msgid "All non Members"
 msgstr "Бүх гишүүн бишүүд"
 
 #. module: membership
-#: view:product.product:0
-msgid "Information"
-msgstr "Мэдээлэл"
-
-#. module: membership
 #: field:membership.membership_line,account_invoice_line:0
 msgid "Account Invoice line"
 msgstr "Санхүүгийн Нэхэмжлэлийн Мөр"
@@ -699,6 +685,7 @@ msgid "May"
 msgstr "5-р сар"
 
 #. module: membership
+#: field:product.product,membership_date_from:0
 #: field:res.partner,membership_start:0
 msgid "Membership Start Date"
 msgstr ""
@@ -787,6 +774,11 @@ msgstr "Цуцлагдсан гишүүн"
 #: field:report.membership,year:0
 msgid "Year"
 msgstr "Жил"
+
+#. module: membership
+#: view:product.product:0
+msgid "Accounting"
+msgstr ""
 
 #. module: membership
 #: view:report.membership:0
@@ -885,6 +877,9 @@ msgstr "Орлого хийгдсэн"
 #~ "Объектын нэрний эхлэл x_ байх ёстой бөгөөд бусад тусгай тэмдэгтийг агуулж "
 #~ "болохгүй!"
 
+#~ msgid "Information"
+#~ msgstr "Мэдээлэл"
+
 #~ msgid "Current members"
 #~ msgstr "Одоогийн гишүүд"
 
@@ -897,6 +892,9 @@ msgstr "Орлого хийгдсэн"
 #~ msgid "Error: Invalid ean code"
 #~ msgstr "Алдаа: Буруу зураасан код"
 
+#~ msgid "Date to"
+#~ msgstr "Хүртэл огноо"
+
 #~ msgid "   Month   "
 #~ msgstr "   Сар   "
 
@@ -905,6 +903,9 @@ msgstr "Орлого хийгдсэн"
 
 #~ msgid "Associate member"
 #~ msgstr "Гишүүнийг холбох"
+
+#~ msgid "Date from"
+#~ msgstr "Эхлэх огноо"
 
 #~ msgid "Events created in current month"
 #~ msgstr "Энэ сард үүсгэгдсэн үйл явдал"

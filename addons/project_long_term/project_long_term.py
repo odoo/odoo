@@ -20,8 +20,8 @@
 ##############################################################################
 
 from datetime import datetime
-from tools.translate import _
-from osv import fields, osv
+from openerp.tools.translate import _
+from openerp.osv import fields, osv
 from openerp.addons.resource.faces import task as Task
 
 class project_phase(osv.osv):

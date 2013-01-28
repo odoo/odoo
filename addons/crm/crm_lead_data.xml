@@ -65,6 +65,7 @@
             <field name="name">Lost</field>
             <field eval="1" name="case_default"/>
             <field eval="True" name="fold"/>
+            <field eval="1" name="on_change"/>
             <field name="state">cancel</field>
             <field eval="'0'" name="probability"/>
             <field eval="'17'" name="sequence"/>
@@ -154,20 +155,68 @@
             <field name="object_id" search="[('model','=','crm.lead')]" model="ir.model"/>
         </record>
 
-        <!--  mail subtype -->
-        <record id="mail.mt_crm_won" model="mail.message.subtype">
-            <field name="name">Won</field>
-            <field name="res_model">crm.lead</field>
-        </record>
-        <record id="mail.mt_crm_lost" model="mail.message.subtype">
-            <field name="name">Lost</field>
+        <!-- CRM-related subtypes for messaging / Chatter -->
+        <record id="mt_lead_create" model="mail.message.subtype">
+            <field name="name">Lead Created</field>
             <field name="res_model">crm.lead</field>
             <field name="default" eval="False"/>
+            <field name="description">Opportunity created</field>
         </record>
-        <record id="mail.mt_crm_stage" model="mail.message.subtype">
+        <record id="mt_lead_convert_to_opportunity" model="mail.message.subtype">
+            <field name="name">Lead to Opportunity</field>
+            <field name="res_model">crm.lead</field>
+            <field name="default" eval="False"/>
+            <field name="description">Lead converted into an opportunity</field>
+        </record>
+        <record id="mt_lead_stage" model="mail.message.subtype">
             <field name="name">Stage Changed</field>
             <field name="res_model">crm.lead</field>
+            <field name="description">Stage changed</field>
+        </record>
+        <record id="mt_lead_won" model="mail.message.subtype">
+            <field name="name">Opportunity Won</field>
+            <field name="res_model">crm.lead</field>
+            <field name="description">Opportunity won</field>
+        </record>
+        <record id="mt_lead_lost" model="mail.message.subtype">
+            <field name="name">Opportunity Lost</field>
+            <field name="res_model">crm.lead</field>
             <field name="default" eval="False"/>
+            <field name="description">Opportunity lost</field>
+        </record>
+        <!-- Salesteam-related subtypes for messaging / Chatter -->
+        <record id="mt_salesteam_lead" model="mail.message.subtype">
+            <field name="name">Lead Created</field>
+            <field name="res_model">crm.case.section</field>
+            <field name="default" eval="False"/>
+            <field name="parent_id" eval="ref('mt_lead_create')"/>
+            <field name="relation_field">section_id</field>
+        </record>
+        <record id="mt_salesteam_lead_opportunity" model="mail.message.subtype">
+            <field name="name">Lead to Opportunity</field>
+            <field name="default" eval="False"/>
+            <field name="res_model">crm.case.section</field>
+            <field name="parent_id" eval="ref('mt_lead_convert_to_opportunity')"/>
+            <field name="relation_field">section_id</field>
+        </record>
+        <record id="mt_salesteam_lead_stage" model="mail.message.subtype">
+            <field name="name">Opportunity Stage Changed</field>
+            <field name="res_model">crm.case.section</field>
+            <field name="parent_id" eval="ref('mt_lead_stage')"/>
+            <field name="relation_field">section_id</field>
+        </record>
+        <record id="mt_salesteam_lead_won" model="mail.message.subtype">
+            <field name="name">Opportunity Won</field>
+            <field name="res_model">crm.case.section</field>
+            <field name="parent_id" eval="ref('mt_lead_won')"/>
+            <field name="relation_field">section_id</field>
+        </record>
+        <record id="mt_salesteam_lead_lost" model="mail.message.subtype">
+            <field name="name">Opportunity Lost</field>
+            <field name="res_model">crm.case.section</field>
+            <field name="default" eval="False"/>
+            <field name="parent_id" eval="ref('mt_lead_lost')"/>
+            <field name="relation_field">section_id</field>
         </record>
 
     </data>

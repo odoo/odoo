@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2012-12-03 16:03+0000\n"
-"PO-Revision-Date: 2011-03-31 18:17+0000\n"
+"POT-Creation-Date: 2012-12-21 17:05+0000\n"
+"PO-Revision-Date: 2012-12-28 12:42+0000\n"
 "Last-Translator: Chertykov Denis <chertykov@gmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-12-04 05:11+0000\n"
-"X-Generator: Launchpad (build 16335)\n"
+"X-Launchpad-Export-Date: 2012-12-29 05:01+0000\n"
+"X-Generator: Launchpad (build 16378)\n"
 
 #. module: delivery
 #: report:sale.shipping:0
@@ -48,6 +48,12 @@ msgid "Delivery Grid Line"
 msgstr "Строка сетки доставки"
 
 #. module: delivery
+#: field:stock.move,weight_uom_id:0
+#: field:stock.picking,weight_uom_id:0
+msgid "Unit of Measure"
+msgstr "Единица измерения"
+
+#. module: delivery
 #: view:delivery.carrier:0
 #: view:delivery.grid:0
 msgid "Delivery grids"
@@ -64,7 +70,7 @@ msgstr "Объем"
 #. module: delivery
 #: view:delivery.carrier:0
 msgid "Zip"
-msgstr ""
+msgstr "Индекс"
 
 #. module: delivery
 #: field:delivery.grid,line_ids:0
@@ -80,26 +86,6 @@ msgstr "Партнёр оказывающий услуги доставки."
 #: model:ir.actions.report.xml,name:delivery.report_shipping
 msgid "Delivery order"
 msgstr "Заказ на доставку"
-
-#. module: delivery
-#: model:ir.actions.act_window,help:delivery.action_delivery_carrier_form
-msgid ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"                Click to define a new deliver method. \n"
-"              </p><p>\n"
-"                Each carrier (e.g. UPS) can have several delivery methods "
-"(e.g.\n"
-"                UPS Express, UPS Standard) with a set of pricing rules "
-"attached\n"
-"                to each method.\n"
-"              </p><p>\n"
-"                These methods allows to automaticaly compute the delivery "
-"price\n"
-"                according to your settings; on the sale order (based on the\n"
-"                quotation) or the invoice (based on the delivery orders).\n"
-"              </p>\n"
-"            "
-msgstr ""
 
 #. module: delivery
 #: code:addons/delivery/delivery.py:221
@@ -214,10 +200,10 @@ msgid "Grid definition"
 msgstr "Определение сетки"
 
 #. module: delivery
-#: code:addons/delivery/stock.py:89
+#: code:addons/delivery/stock.py:90
 #, python-format
 msgid "Warning!"
-msgstr ""
+msgstr "Внимание!"
 
 #. module: delivery
 #: field:delivery.grid.line,operator:0
@@ -237,7 +223,7 @@ msgstr "Заказ продаж"
 #. module: delivery
 #: model:ir.model,name:delivery.model_stock_picking_out
 msgid "Delivery Orders"
-msgstr ""
+msgstr "Заказы на доставку"
 
 #. module: delivery
 #: view:sale.order:0
@@ -344,7 +330,9 @@ msgstr "Количество упаковок"
 #: selection:delivery.grid.line,type:0
 #: selection:delivery.grid.line,variable_factor:0
 #: report:sale.shipping:0
+#: view:stock.move:0
 #: field:stock.move,weight:0
+#: view:stock.picking:0
 #: field:stock.picking,weight:0
 #: field:stock.picking.in,weight:0
 #: field:stock.picking.out,weight:0
@@ -369,7 +357,7 @@ msgstr ""
 "назначения"
 
 #. module: delivery
-#: code:addons/delivery/sale.py:55
+#: code:addons/delivery/sale.py:54
 #, python-format
 msgid "No grid available !"
 msgstr "Доступных сеток нет !"
@@ -380,7 +368,7 @@ msgid ">="
 msgstr ">="
 
 #. module: delivery
-#: code:addons/delivery/sale.py:58
+#: code:addons/delivery/sale.py:57
 #, python-format
 msgid "Order not in draft state !"
 msgstr "Заказ не в состоянии \"Черновик\" !"
@@ -430,6 +418,27 @@ msgstr ""
 "комплектованию."
 
 #. module: delivery
+#: model:ir.actions.act_window,help:delivery.action_delivery_carrier_form
+msgid ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Click to define a new deliver method. \n"
+"              </p><p>\n"
+"                Each carrier (e.g. UPS) can have several delivery methods "
+"(e.g.\n"
+"                UPS Express, UPS Standard) with a set of pricing rules "
+"attached\n"
+"                to each method.\n"
+"              </p><p>\n"
+"                These methods allows to automaticaly compute the delivery "
+"price\n"
+"                according to your settings; on the sales order (based on "
+"the\n"
+"                quotation) or the invoice (based on the delivery orders).\n"
+"              </p>\n"
+"            "
+msgstr ""
+
+#. module: delivery
 #: field:delivery.grid.line,max_value:0
 msgid "Maximum Value"
 msgstr "Максимальное значение"
@@ -461,12 +470,17 @@ msgstr "Бесплатно, если больше чем %.2f"
 #. module: delivery
 #: model:ir.model,name:delivery.model_stock_picking_in
 msgid "Incoming Shipments"
-msgstr ""
+msgstr "Входящие поставки"
 
 #. module: delivery
 #: selection:delivery.grid.line,operator:0
 msgid "<="
 msgstr "<="
+
+#. module: delivery
+#: help:stock.picking,weight_uom_id:0
+msgid "Unit of measurement for Weight"
+msgstr "Единица измерения веса"
 
 #. module: delivery
 #: report:sale.shipping:0
@@ -496,7 +510,7 @@ msgid "Price"
 msgstr "Цена"
 
 #. module: delivery
-#: code:addons/delivery/sale.py:55
+#: code:addons/delivery/sale.py:54
 #, python-format
 msgid "No grid matching for this carrier !"
 msgstr "Нет сетки, подходящей для этого перевозчика!"
@@ -513,7 +527,7 @@ msgid "Weight * Volume"
 msgstr "Вес * объем"
 
 #. module: delivery
-#: code:addons/delivery/stock.py:90
+#: code:addons/delivery/stock.py:91
 #, python-format
 msgid "The carrier %s (id: %d) has no delivery grid!"
 msgstr "Перевозчик %s (ID: %d) не имеет доставочной сетки!"
@@ -542,15 +556,10 @@ msgstr "Перевозчик"
 #: model:ir.actions.act_window,name:delivery.action_delivery_carrier_form
 #: model:ir.ui.menu,name:delivery.menu_action_delivery_carrier_form
 msgid "Delivery Methods"
-msgstr ""
+msgstr "Способы доставки"
 
 #. module: delivery
-#: field:sale.order,id:0
-msgid "ID"
-msgstr "Идентификатор"
-
-#. module: delivery
-#: code:addons/delivery/sale.py:58
+#: code:addons/delivery/sale.py:57
 #, python-format
 msgid "The order state have to be draft to add delivery lines."
 msgstr ""
@@ -574,13 +583,19 @@ msgstr "Цена продажи"
 #. module: delivery
 #: view:stock.picking.out:0
 msgid "Print Delivery Order"
-msgstr ""
+msgstr "Печать заказа на доставку"
 
 #. module: delivery
 #: view:delivery.grid:0
 #: field:delivery.grid,state_ids:0
 msgid "States"
 msgstr "Cостояния"
+
+#. module: delivery
+#: help:stock.move,weight_uom_id:0
+msgid ""
+"Unit of Measure (Unit of Measure) is the unit of measurement for Weight"
+msgstr "Единица измерения (единица измерения) это единица измерения веса"
 
 #. module: delivery
 #: field:delivery.grid.line,price_type:0
@@ -644,6 +659,9 @@ msgstr "Тип цены"
 #~ "Error: The default UOM and the purchase UOM must be in the same category."
 #~ msgstr ""
 #~ "Ошибка. ЕИМ по умолчанию и закупочная ЕИМ должны иметь одинаковую категорию."
+
+#~ msgid "ID"
+#~ msgstr "Идентификатор"
 
 #~ msgid "Add Delivery Costs"
 #~ msgstr "Добавить стоимость доставки"

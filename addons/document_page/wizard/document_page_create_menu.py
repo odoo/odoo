@@ -19,7 +19,7 @@
 #
 ##############################################################################
 
-from osv import fields, osv
+from openerp.osv import fields, osv
 
 class document_page_create_menu(osv.osv_memory):
     """ Create Menu """

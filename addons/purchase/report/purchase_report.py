@@ -23,8 +23,8 @@
 # Please note that these reports are not multi-currency !!!
 #
 
-from osv import fields,osv
-import tools
+from openerp.osv import fields,osv
+from openerp import tools
 
 class purchase_report(osv.osv):
     _name = "purchase.report"

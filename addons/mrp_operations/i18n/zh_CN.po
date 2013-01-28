@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2012-12-03 16:03+0000\n"
-"PO-Revision-Date: 2012-11-29 09:53+0000\n"
-"Last-Translator: ccdos <ccdos@163.com>\n"
+"POT-Creation-Date: 2012-12-21 17:05+0000\n"
+"PO-Revision-Date: 2012-12-23 11:24+0000\n"
+"Last-Translator: 盈通 ccdos <ccdos@163.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-12-04 05:40+0000\n"
-"X-Generator: Launchpad (build 16335)\n"
+"X-Launchpad-Export-Date: 2012-12-24 04:40+0000\n"
+"X-Generator: Launchpad (build 16378)\n"
 
 #. module: mrp_operations
 #: model:ir.actions.act_window,name:mrp_operations.mrp_production_wc_action_form
@@ -25,7 +25,7 @@ msgid "Work Orders"
 msgstr "工票"
 
 #. module: mrp_operations
-#: code:addons/mrp_operations/mrp_operations.py:527
+#: code:addons/mrp_operations/mrp_operations.py:484
 #, python-format
 msgid "Operation is already finished!"
 msgstr "工单已完成"
@@ -39,13 +39,6 @@ msgstr "工票作废"
 #: model:ir.model,name:mrp_operations.model_mrp_operations_operation_code
 msgid "mrp_operations.operation.code"
 msgstr "mrp_operations.operation.code"
-
-#. module: mrp_operations
-#: code:addons/mrp_operations/mrp_operations.py:246
-#, python-format
-msgid ""
-"Work order has been <b>cancelled</b> for production order <em>%s</em>."
-msgstr "生产订单 <em>%s</em>的工单被 <b>取消</b>。"
 
 #. module: mrp_operations
 #: view:mrp.production.workcenter.line:0
@@ -96,12 +89,6 @@ msgid "Set to Draft"
 msgstr "设为草稿"
 
 #. module: mrp_operations
-#: code:addons/mrp_operations/mrp_operations.py:238
-#, python-format
-msgid "Work order is <b>pending</b> for production order <em>%s</em>."
-msgstr "生产订单 <em>%s</em>的工单被 <b>挂起</b>。"
-
-#. module: mrp_operations
 #: field:mrp.production,allow_reorder:0
 msgid "Free Serialisation"
 msgstr "自由排序生产"
@@ -148,11 +135,11 @@ msgid "The work orders are created on the basis of the production order."
 msgstr "工票基于生产订单创建"
 
 #. module: mrp_operations
-#: code:addons/mrp_operations/mrp_operations.py:122
-#: code:addons/mrp_operations/mrp_operations.py:508
-#: code:addons/mrp_operations/mrp_operations.py:512
-#: code:addons/mrp_operations/mrp_operations.py:524
-#: code:addons/mrp_operations/mrp_operations.py:527
+#: code:addons/mrp_operations/mrp_operations.py:134
+#: code:addons/mrp_operations/mrp_operations.py:465
+#: code:addons/mrp_operations/mrp_operations.py:469
+#: code:addons/mrp_operations/mrp_operations.py:481
+#: code:addons/mrp_operations/mrp_operations.py:484
 #, python-format
 msgid "Error!"
 msgstr "错误！"
@@ -165,7 +152,7 @@ msgid "Cancelled"
 msgstr "已取消"
 
 #. module: mrp_operations
-#: code:addons/mrp_operations/mrp_operations.py:520
+#: code:addons/mrp_operations/mrp_operations.py:477
 #, python-format
 msgid "Operation is Already Cancelled!"
 msgstr "工单已经取消"
@@ -182,13 +169,13 @@ msgid "Stock Move"
 msgstr "库存调拨"
 
 #. module: mrp_operations
-#: code:addons/mrp_operations/mrp_operations.py:524
+#: code:addons/mrp_operations/mrp_operations.py:481
 #, python-format
 msgid "No operation to cancel."
 msgstr "没有操作被取消"
 
 #. module: mrp_operations
-#: code:addons/mrp_operations/mrp_operations.py:517
+#: code:addons/mrp_operations/mrp_operations.py:474
 #, python-format
 msgid ""
 "In order to Finish the operation, it must be in the Start or Resume state!"
@@ -206,6 +193,11 @@ msgstr "# 明细"
 #: selection:mrp.workorder,state:0
 msgid "Draft"
 msgstr "草稿"
+
+#. module: mrp_operations
+#: view:mrp.production.workcenter.line:0
+msgid "Actual Production Date"
+msgstr "实际生产日期"
 
 #. module: mrp_operations
 #: view:mrp.production.workcenter.line:0
@@ -259,7 +251,7 @@ msgid "Product Qty"
 msgstr "产品数量"
 
 #. module: mrp_operations
-#: code:addons/mrp_operations/mrp_operations.py:122
+#: code:addons/mrp_operations/mrp_operations.py:134
 #, python-format
 msgid "Manufacturing order cannot start in state \"%s\"!"
 msgstr "处于”%s“的工单不能开始。"
@@ -355,12 +347,6 @@ msgid "December"
 msgstr "12月"
 
 #. module: mrp_operations
-#: code:addons/mrp_operations/mrp_operations.py:230
-#, python-format
-msgid "Work order has been <b>done</b> for production order <em>%s</em>."
-msgstr "生产订单 <em>%s</em>的工单被 <b>完成</b>。"
-
-#. module: mrp_operations
 #: view:mrp.workorder:0
 #: field:mrp.workorder,month:0
 msgid "Month"
@@ -411,14 +397,14 @@ msgid "In Progress"
 msgstr "进行中"
 
 #. module: mrp_operations
-#: code:addons/mrp_operations/mrp_operations.py:508
+#: code:addons/mrp_operations/mrp_operations.py:465
 #, python-format
 msgid ""
 "In order to Pause the operation, it must be in the Start or Resume state!"
 msgstr "要暂停工单，必须在开始或重启状态。"
 
 #. module: mrp_operations
-#: code:addons/mrp_operations/mrp_operations.py:512
+#: code:addons/mrp_operations/mrp_operations.py:469
 #, python-format
 msgid "In order to Resume the operation, it must be in the Pause state!"
 msgstr "要重启这个工单，必须在暂停状态。"
@@ -461,7 +447,7 @@ msgid "Production Operation Code"
 msgstr "工单编号"
 
 #. module: mrp_operations
-#: code:addons/mrp_operations/mrp_operations.py:504
+#: code:addons/mrp_operations/mrp_operations.py:461
 #, python-format
 msgid ""
 "Operation has already started! You can either Pause/Finish/Cancel the "
@@ -551,7 +537,7 @@ msgid "Finish the operation."
 msgstr "结束工单"
 
 #. module: mrp_operations
-#: code:addons/mrp_operations/mrp_operations.py:497
+#: code:addons/mrp_operations/mrp_operations.py:454
 #, python-format
 msgid "Operation is not started yet !"
 msgstr "工单还未开始"
@@ -562,10 +548,10 @@ msgid "Information from the production order."
 msgstr "源自生产单的信息"
 
 #. module: mrp_operations
-#: code:addons/mrp_operations/mrp_operations.py:497
-#: code:addons/mrp_operations/mrp_operations.py:504
-#: code:addons/mrp_operations/mrp_operations.py:517
-#: code:addons/mrp_operations/mrp_operations.py:520
+#: code:addons/mrp_operations/mrp_operations.py:454
+#: code:addons/mrp_operations/mrp_operations.py:461
+#: code:addons/mrp_operations/mrp_operations.py:474
+#: code:addons/mrp_operations/mrp_operations.py:477
 #, python-format
 msgid "Sorry!"
 msgstr "抱歉!"
@@ -638,12 +624,6 @@ msgstr ""
 "* 从工单被完成的时候开始，设置为”完成“状态。"
 
 #. module: mrp_operations
-#: code:addons/mrp_operations/mrp_operations.py:214
-#, python-format
-msgid "Work order has been <b>created</b> for production order <em>%s</em>."
-msgstr "生产订单 <em>%s</em>的工单被 <b>创建</b>。"
-
-#. module: mrp_operations
 #: model:process.node,name:mrp_operations.process_node_startoperation0
 msgid "Start Operation"
 msgstr "开始运作"
@@ -714,11 +694,6 @@ msgstr "查询工票："
 #: model:process.node,name:mrp_operations.process_node_workorder0
 msgid "Work Center"
 msgstr "工作中心"
-
-#. module: mrp_operations
-#: view:mrp.production.workcenter.line:0
-msgid "Real"
-msgstr "实际"
 
 #. module: mrp_operations
 #: field:mrp.production.workcenter.line,date_planned:0
@@ -802,12 +777,6 @@ msgstr "工单完成"
 #: view:mrp.workorder:0
 msgid "#Line Orders"
 msgstr "明细"
-
-#. module: mrp_operations
-#: code:addons/mrp_operations/mrp_operations.py:222
-#, python-format
-msgid "Work order has been <b>started</b> for production order <em>%s</em>."
-msgstr "生产订单 <em>%s</em>的工单已经 <b>开始</b>。"
 
 #. module: mrp_operations
 #: view:mrp.production:0
@@ -970,6 +939,9 @@ msgstr "时长"
 
 #~ msgid ")"
 #~ msgstr ")"
+
+#~ msgid "Real"
+#~ msgstr "实际"
 
 #~ msgid "Order quantity cannot be negative or zero !"
 #~ msgstr "订单数量不能为0或者负数!"

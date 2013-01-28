@@ -26,12 +26,16 @@ openerp_mail_followers = function(session, mail) {
             this._super.apply(this, arguments);
             this.image = this.node.attrs.image || 'image_small';
             this.comment = this.node.attrs.help || false;
-            this.displayed_nb = this.node.attrs.displayed_nb || 10;
+            this.displayed_limit = this.node.attrs.displayed_nb || 10;
+            this.displayed_nb = this.displayed_limit;
             this.ds_model = new session.web.DataSetSearch(this, this.view.model);
             this.ds_follow = new session.web.DataSetSearch(this, this.field.relation);
             this.ds_users = new session.web.DataSetSearch(this, 'res.users');
 
             this.value = [];
+            this.followers = [];
+            
+            this.view_is_editable = this.__parentedParent.is_action_enabled('edit');
         },
 
         start: function() {
@@ -69,29 +73,47 @@ openerp_mail_followers = function(session, mail) {
             // event: click on a subtype, that (un)subscribe for this subtype
             this.$el.on('click', '.oe_subtype_list input', self.do_update_subscription);
             // event: click on 'invite' button, that opens the invite wizard
-            this.$('.oe_invite').on('click', function (event) {
-                action = {
-                    type: 'ir.actions.act_window',
-                    res_model: 'mail.wizard.invite',
-                    view_mode: 'form',
-                    view_type: 'form',
-                    views: [[false, 'form']],
-                    target: 'new',
-                    context: {
-                        'default_res_model': self.view.dataset.model,
-                        'default_res_id': self.view.datarecord.id,
-                    },
-                }
-                self.do_action(action, {
-                    on_close: function() {
-                        self.read_value();
-                    },
-                });
+            this.$('.oe_invite').on('click', self.on_invite_follower);
+            this.$el.on('click', '.oe_remove_follower', self.on_remove_follower);
+            this.$el.on('click', '.oe_show_more', self.on_show_more_followers)
+        },
+
+        on_invite_follower: function (event) {
+            var self = this;
+            var action = {
+                type: 'ir.actions.act_window',
+                res_model: 'mail.wizard.invite',
+                view_mode: 'form',
+                view_type: 'form',
+                views: [[false, 'form']],
+                target: 'new',
+                context: {
+                    'default_res_model': this.view.dataset.model,
+                    'default_res_id': this.view.datarecord.id,
+                },
+            }
+            this.do_action(action, {
+                on_close: function() {
+                    self.read_value();
+                },
             });
+        },
+
+        on_show_more_followers: function (event) {
+            this.displayed_nb += this.displayed_limit;
+            this.display_followers(false);
+        },
+
+        on_remove_follower: function (event) {
+            var partner_id = $(event.target).data('id');
+            var context = new session.web.CompoundContext(this.build_context(), {});
+            return this.ds_model.call('message_unsubscribe', [[this.view.datarecord.id], [partner_id], context])
+                .then(this.proxy('read_value'));
         },
 
         read_value: function () {
             var self = this;
+            this.displayed_nb = this.displayed_limit;
             return this.ds_model.read_ids([this.view.datarecord.id], ['message_follower_ids']).then(function (results) {
                 self.value = results[0].message_follower_ids;
                 self.render_value();
@@ -145,20 +167,20 @@ openerp_mail_followers = function(session, mail) {
         /** Display the followers */
         display_followers: function (records) {
             var self = this;
-            records = records || [];
-            this.message_is_follower = this.set_is_follower(records);
+            this.followers = records || this.followers;
+            this.message_is_follower = this.set_is_follower(this.followers);
             // clean and display title
             var node_user_list = this.$('.oe_follower_list').empty();
-            this.$('.oe_follower_title').html(this._format_followers(records.length));
+            this.$('.oe_follower_title').html(this._format_followers(this.followers.length));
             // truncate number of displayed followers
-            truncated = records.splice(0, this.displayed_nb);
+            var truncated = this.followers.slice(0, this.displayed_nb);
             _(truncated).each(function (record) {
                 record.avatar_url = mail.ChatterUtils.get_image(self.session, 'res.partner', 'image_small', record.id);
-                $(session.web.qweb.render('mail.followers.partner', {'record': record})).appendTo(node_user_list);
+                $(session.web.qweb.render('mail.followers.partner', {'record': record, 'widget': self})).appendTo(node_user_list);
             });
             // FVA note: be sure it is correctly translated
-            if (truncated.length < records.length) {
-                $('<div class="oe_partner">And ' + (records.length - truncated.length) + ' more.</div>').appendTo(node_user_list);
+            if (truncated.length < this.followers.length) {
+                $(session.web.qweb.render('mail.followers.show_more', {'number': (this.followers.length - truncated.length)} )).appendTo(node_user_list);
             }
         },
 
@@ -196,18 +218,28 @@ openerp_mail_followers = function(session, mail) {
             var subtype_list_ul = this.$('.oe_subtype_list');
             subtype_list_ul.empty();
             var records = data[this.view.datarecord.id || this.view.dataset.ids[0]].message_subtype_data;
-            _(records).each(function (record, record_name) {
-                record.name = record_name;
-                record.followed = record.followed || undefined;
-                $(session.web.qweb.render('mail.followers.subtype', {'record': record})).appendTo( self.$('.oe_subtype_list') );
-            });
+            var nb_subtype = 0;
+            _(records).each(function (record) {nb_subtype++;});
+            if (nb_subtype > 1) {
+                this.$('hr').show();
+                _(records).each(function (record, record_name) {
+                    record.name = record_name;
+                    record.followed = record.followed || undefined;
+                    $(session.web.qweb.render('mail.followers.subtype', {'record': record})).appendTo( self.$('.oe_subtype_list') );
+                });
+            } else {
+                this.$('hr').hide();
+            }
         },
 
         do_follow: function () {
-            _(this.$('.oe_msg_subtype_check')).each(function (record) {
+            var context = new session.web.CompoundContext(this.build_context(), {});
+            this.ds_model.call('message_subscribe_users', [[this.view.datarecord.id], [this.session.uid], undefined, context])
+                .then(this.proxy('read_value'));
+
+            _.each(this.$('.oe_subtype_list input'), function (record) {
                 $(record).attr('checked', 'checked');
             });
-            this.do_update_subscription();
         },
         
         do_unfollow: function () {
@@ -229,9 +261,13 @@ openerp_mail_followers = function(session, mail) {
                 }
             });
 
-            var context = new session.web.CompoundContext(this.build_context(), {});
-            return this.ds_model.call('message_subscribe_users', [[this.view.datarecord.id], [this.session.uid], this.message_is_follower ? checklist : undefined, context])
-                .then(this.proxy('read_value'));
+            if (!checklist.length) {
+                this.do_unfollow();
+            } else {
+                var context = new session.web.CompoundContext(this.build_context(), {});
+                return this.ds_model.call('message_subscribe_users', [[this.view.datarecord.id], [this.session.uid], checklist, context])
+                    .then(this.proxy('read_value'));
+            }
         },
     });
 };

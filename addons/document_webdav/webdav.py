@@ -29,8 +29,8 @@ from xml.dom.minicompat import StringTypes
 
 import urlparse
 import urllib
-from osv import osv
-from tools.translate import _
+from openerp.osv import osv
+from openerp.tools.translate import _
 
 try:
     from pywebdav.lib import utils
@@ -41,7 +41,7 @@ except ImportError:
     from DAV.propfind import PROPFIND
     from DAV.report import REPORT
 
-import tools
+from openerp import tools
 
 class Text2(xml.dom.minidom.Text):
     def writexml(self, writer, indent="", addindent="", newl=""):

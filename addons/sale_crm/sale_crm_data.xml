@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data noupdate="1">
+
+        <!-- Salesteam-related subtypes for messaging / Chatter -->
+        <record id="mt_salesteam_order_sent" model="mail.message.subtype">
+            <field name="name">Quotation Send</field>
+            <field name="res_model">crm.case.section</field>
+            <field name="parent_id" eval="ref('sale.mt_order_sent')"/>
+            <field name="relation_field">section_id</field>
+        </record>
+        <record id="mt_salesteam_order_confirmed" model="mail.message.subtype">
+            <field name="name">Sales Order Confirmed</field>
+            <field name="res_model">crm.case.section</field>
+            <field name="parent_id" eval="ref('sale.mt_order_confirmed')"/>
+            <field name="relation_field">section_id</field>
+        </record>
+
+    </data>
+</openerp>

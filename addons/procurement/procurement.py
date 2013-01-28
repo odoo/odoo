@@ -19,11 +19,11 @@
 #
 ##############################################################################
 
-from osv import osv, fields
-from tools.translate import _
-import netsvc
+from openerp.osv import fields, osv
+from openerp.tools.translate import _
+from openerp import netsvc
 import time
-import decimal_precision as dp
+import openerp.addons.decimal_precision as dp
 
 # Procurement
 # ------------------------------------------------------------------
@@ -84,7 +84,7 @@ class procurement_order(osv.osv):
     _inherit = ['mail.thread']
     _log_create = False
     _columns = {
-        'name': fields.char('Description', required=True),
+        'name': fields.text('Description', required=True),
         'origin': fields.char('Source Document', size=64,
             help="Reference of the document that created this Procurement.\n"
             "This is automatically completed by OpenERP."),
@@ -112,7 +112,7 @@ class procurement_order(osv.osv):
             ('running','Running'),
             ('ready','Ready'),
             ('done','Done'),
-            ('waiting','Waiting')], 'Status', required=True,
+            ('waiting','Waiting')], 'Status', required=True, track_visibility='onchange',
             help='When a procurement is created the status is set to \'Draft\'.\n If the procurement is confirmed, the status is set to \'Confirmed\'.\
             \nAfter confirming the status is set to \'Running\'.\n If any exception arises in the order then the status is set to \'Exception\'.\n Once the exception is removed the status becomes \'Ready\'.\n It is in \'Waiting\'. status when the procurement is waiting for another one to finish.'),
         'note': fields.text('Note'),
@@ -153,9 +153,9 @@ class procurement_order(osv.osv):
             return {'value': v}
         return {}
 
-    def check_product(self, cr, uid, ids, context=None):
-        """ Checks product type.
-        @return: True or False
+    def is_product(self, cr, uid, ids, context=None):
+        """ Checks product type to decide which transition of the workflow to follow.
+        @return: True if all product ids received in argument are of type 'product' or 'consummable'. False if any is of type 'service'
         """
         return all(proc.product_id.type in ('product', 'consu') for proc in self.browse(cr, uid, ids, context=context))
 
@@ -234,14 +234,16 @@ class procurement_order(osv.osv):
         return False
 
     def check_produce_service(self, cr, uid, procurement, context=None):
+        """ Depicts the capacity of the procurement workflow to deal with production of services.
+            By default, it's False. Overwritten by project_mrp module.
+        """
         return False
 
     def check_produce_product(self, cr, uid, procurement, context=None):
-        """ Finds BoM of a product if not found writes exception message.
-        @param procurement: Current procurement.
-        @return: True or False.
+        """ Depicts the capacity of the procurement workflow to deal with production of products.
+            By default, it's False. Overwritten by mrp module.
         """
-        return True
+        return False
 
     def check_make_to_stock(self, cr, uid, ids, context=None):
         """ Checks product type.
@@ -264,10 +266,6 @@ class procurement_order(osv.osv):
             product = procurement.product_id
             #TOFIX: if product type is 'service' but supply_method is 'buy'.
             if product.supply_method <> 'produce':
-                supplier = product.seller_id
-                if supplier and user.company_id and user.company_id.partner_id:
-                    if supplier.id == user.company_id.partner_id.id:
-                        continue
                 return False
             if product.type=='service':
                 res = self.check_produce_service(cr, uid, procurement, context)
@@ -278,37 +276,14 @@ class procurement_order(osv.osv):
         return True
 
     def check_buy(self, cr, uid, ids):
-        """ Checks product type.
-        @return: True or Product Id.
+        """ Depicts the capacity of the procurement workflow to manage the supply_method == 'buy'.
+            By default, it's False. Overwritten by purchase module.
         """
-        user = self.pool.get('res.users').browse(cr, uid, uid)
-        partner_obj = self.pool.get('res.partner')
-        for procurement in self.browse(cr, uid, ids):
-            if procurement.product_id.product_tmpl_id.supply_method <> 'buy':
-                return False
-            if not procurement.product_id.seller_ids:
-                message = _('No supplier defined for this product !')
-                self.message_post(cr, uid, [procurement.id], body=message)
-                cr.execute('update procurement_order set message=%s where id=%s', (message, procurement.id))
-                return False
-            partner = procurement.product_id.seller_id #Taken Main Supplier of Product of Procurement.
+        return False
 
-            if not partner:
-                message = _('No default supplier defined for this product')
-                self.message_post(cr, uid, [procurement.id], body=message)
-                cr.execute('update procurement_order set message=%s where id=%s', (message, procurement.id))
-                return False
-            if user.company_id and user.company_id.partner_id:
-                if partner.id == user.company_id.partner_id.id:
-                    return False
-
-            address_id = partner_obj.address_get(cr, uid, [partner.id], ['delivery'])['delivery']
-            if not address_id:
-                message = _('No address defined for the supplier')
-                self.message_post(cr, uid, [procurement.id], body=message)
-                cr.execute('update procurement_order set message=%s where id=%s', (message, procurement.id))
-                return False
-        return True
+    def check_conditions_confirm2wait(self, cr, uid, ids):
+        """ condition on the transition to go from 'confirm' activity to 'confirm_wait' activity """
+        return not self.test_cancel(cr, uid, ids)
 
     def test_cancel(self, cr, uid, ids):
         """ Tests whether state of move is cancelled or not.
@@ -338,7 +313,7 @@ class procurement_order(osv.osv):
                 if not procurement.move_id:
                     source = procurement.location_id.id
                     if procurement.procure_method == 'make_to_order':
-                        source = procurement.product_id.product_tmpl_id.property_stock_procurement.id
+                        source = procurement.product_id.property_stock_procurement.id
                     id = move_obj.create(cr, uid, {
                         'name': procurement.name,
                         'location_id': source,
@@ -354,7 +329,6 @@ class procurement_order(osv.osv):
                     move_obj.action_confirm(cr, uid, [id], context=context)
                     self.write(cr, uid, [procurement.id], {'move_id': id, 'close_move': 1})
         self.write(cr, uid, ids, {'state': 'confirmed', 'message': ''})
-        self.confirm_send_note(cr, uid, ids, context)
         return True
 
     def action_move_assigned(self, cr, uid, ids, context=None):
@@ -439,7 +413,6 @@ class procurement_order(osv.osv):
         if len(to_assign):
             move_obj.write(cr, uid, to_assign, {'state': 'assigned'})
         self.write(cr, uid, ids, {'state': 'cancel'})
-        self.cancel_send_note(cr, uid, ids, context=None)
         wf_service = netsvc.LocalService("workflow")
         for id in ids:
             wf_service.trg_trigger(uid, 'procurement.order', id, cr)
@@ -476,38 +449,13 @@ class procurement_order(osv.osv):
                 if procurement.close_move and (procurement.move_id.state <> 'done'):
                     move_obj.action_done(cr, uid, [procurement.move_id.id])
         res = self.write(cr, uid, ids, {'state': 'done', 'date_close': time.strftime('%Y-%m-%d')})
-        self.done_send_note(cr, uid, ids, context=None)
         wf_service = netsvc.LocalService("workflow")
         for id in ids:
             wf_service.trg_trigger(uid, 'procurement.order', id, cr)
         return res
 
-    # ----------------------------------------
-    # OpenChatter methods and notifications
-    # ----------------------------------------
-
-    def create(self, cr, uid, vals, context=None):
-        obj_id = super(procurement_order, self).create(cr, uid, vals, context)
-        self.create_send_note(cr, uid, [obj_id], context=context)
-        return obj_id
-
-    def create_send_note(self, cr, uid, ids, context=None):
-        self.message_post(cr, uid, ids, body=_("Procurement <b>created</b>."), context=context)
-
-    def confirm_send_note(self, cr, uid, ids, context=None):
-        self.message_post(cr, uid, ids, body=_("Procurement <b>confirmed</b>."), context=context)
-
-    def cancel_send_note(self, cr, uid, ids, context=None):
-        self.message_post(cr, uid, ids, body=_("Procurement <b>cancelled</b>."), context=context)
-
-    def done_send_note(self, cr, uid, ids, context=None):
-        self.message_post(cr, uid, ids, body=_("Procurement <b>done</b>."), context=context)
-
-procurement_order()
-
 class StockPicking(osv.osv):
     _inherit = 'stock.picking'
-
     def test_finished(self, cursor, user, ids):
         wf_service = netsvc.LocalService("workflow")
         res = super(StockPicking, self).test_finished(cursor, user, ids)
@@ -518,8 +466,6 @@ class StockPicking(osv.osv):
                         wf_service.trg_validate(user, 'procurement.order',
                             procurement.id, 'button_check', cursor)
         return res
-
-StockPicking()
 
 class stock_warehouse_orderpoint(osv.osv):
     """

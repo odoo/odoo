@@ -11,8 +11,9 @@
                     <group>
                         <field name="res_model" invisible="1"/>
                         <field name="res_id" invisible="1"/>
-                        <field name="partner_ids" widget="many2many_tags"
-                            on_change="onchange_partner_ids(partner_ids)" />
+                        <field name="partner_ids" widget="many2many_tags_email"
+                                placeholder="Add contacts to notify..."
+                                context="{'force_email':True, 'show_email':True}"/>
                         <field name="message"/>
                     </group>
                     <footer>

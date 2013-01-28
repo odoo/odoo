@@ -6,15 +6,16 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2012-12-03 16:04+0000\n"
-"PO-Revision-Date: 2012-07-28 19:09+0000\n"
-"Last-Translator: Luiz Fernando M.França <Unknown>\n"
+"POT-Creation-Date: 2012-12-21 17:06+0000\n"
+"PO-Revision-Date: 2012-12-22 01:38+0000\n"
+"Last-Translator: Fábio Martinelli - http://zupy.com.br "
+"<webmaster@guaru.net>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-12-04 05:42+0000\n"
-"X-Generator: Launchpad (build 16335)\n"
+"X-Launchpad-Export-Date: 2012-12-23 04:41+0000\n"
+"X-Generator: Launchpad (build 16378)\n"
 
 #. module: product_margin
 #: view:product.product:0
@@ -37,6 +38,8 @@ msgstr "A partir de"
 msgid ""
 "Sum of Multiplication of Invoice price and quantity of Supplier Invoices "
 msgstr ""
+"Soma de multiplicação do preço da fatura e quantidade de faturas de "
+"fornecedores "
 
 #. module: product_margin
 #: field:product.margin,to_date:0
@@ -44,19 +47,14 @@ msgid "To"
 msgstr "Até"
 
 #. module: product_margin
-#: field:product.product,date_to:0
-msgid "To Date"
-msgstr "Até a Data"
-
-#. module: product_margin
 #: help:product.product,total_margin:0
 msgid "Turnover - Standard price"
-msgstr ""
+msgstr "Volume de negócios - Preço Padrão"
 
 #. module: product_margin
-#: field:product.product,date_from:0
-msgid "From Date"
-msgstr "Data Inicial"
+#: field:product.product,total_margin_rate:0
+msgid "Total Margin Rate(%)"
+msgstr "Índice total de margem (%)"
 
 #. module: product_margin
 #: selection:product.margin,invoice_state:0
@@ -65,15 +63,24 @@ msgid "Draft, Open and Paid"
 msgstr "Provisório, Aberto e Pago"
 
 #. module: product_margin
+#: code:addons/product_margin/wizard/product_margin.py:73
+#: model:ir.actions.act_window,name:product_margin.product_margin_act_window
+#: model:ir.ui.menu,name:product_margin.menu_action_product_margin
+#: view:product.product:0
+#, python-format
+msgid "Product Margins"
+msgstr "Margens do Produto"
+
+#. module: product_margin
 #: field:product.product,purchase_avg_price:0
 #: field:product.product,sale_avg_price:0
 msgid "Avg. Unit Price"
 msgstr "Preço Unit. Médio"
 
 #. module: product_margin
-#: model:ir.model,name:product_margin.model_product_product
-msgid "Product"
-msgstr "Produto"
+#: field:product.product,sale_num_invoiced:0
+msgid "# Invoiced in Sale"
+msgstr "#Faturado na Venda"
 
 #. module: product_margin
 #: view:product.product:0
@@ -85,6 +92,12 @@ msgstr "Preço de Catálogo"
 #: selection:product.product,invoice_state:0
 msgid "Paid"
 msgstr "Pago"
+
+#. module: product_margin
+#: view:product.product:0
+#: field:product.product,sales_gap:0
+msgid "Sales Gap"
+msgstr "Vendas abertas"
 
 #. module: product_margin
 #: help:product.product,sales_gap:0
@@ -107,15 +120,14 @@ msgid "Sum of Quantity in Supplier Invoices"
 msgstr "Soma da Quantidade nas Faturas de Fornecedor"
 
 #. module: product_margin
-#: help:product.product,expected_margin:0
-msgid "Expected Sale - Normal Cost"
-msgstr "Venda Esperada - Custo Normal"
+#: field:product.product,date_to:0
+msgid "Margin Date To"
+msgstr "Margem Data para"
 
 #. module: product_margin
-#: field:product.product,purchase_num_invoiced:0
-#: field:product.product,sale_num_invoiced:0
-msgid "# Invoiced"
-msgstr "# Faturado"
+#: view:product.product:0
+msgid "Analysis Criteria"
+msgstr "Critérios de Análise"
 
 #. module: product_margin
 #: view:product.product:0
@@ -127,6 +139,8 @@ msgstr "Custo Total"
 #: help:product.product,normal_cost:0
 msgid "Sum of Multiplication of Cost price and quantity of Supplier Invoices"
 msgstr ""
+"Soma de multiplicação do preço de custo e quantidade de faturas de "
+"fornecedores"
 
 #. module: product_margin
 #: field:product.product,expected_margin:0
@@ -146,13 +160,12 @@ msgstr "Magem esperada * 100 / Venda Esperada"
 #. module: product_margin
 #: help:product.product,sale_avg_price:0
 msgid "Avg. Price in Customer Invoices."
-msgstr ""
+msgstr "Preço Médio em faturas de clientes."
 
 #. module: product_margin
-#: help:product.product,sale_expected:0
-msgid ""
-"Sum of Multiplication of Sale Catalog price and quantity of Customer Invoices"
-msgstr ""
+#: help:product.product,purchase_avg_price:0
+msgid "Avg. Price in Supplier Invoices "
+msgstr "Preço Médio nas Faturas de Fornecedor "
 
 #. module: product_margin
 #: field:product.margin,invoice_state:0
@@ -166,21 +179,29 @@ msgid "Normal Cost - Total Cost"
 msgstr "Custo Normal - Custo Total"
 
 #. module: product_margin
+#: help:product.product,sale_expected:0
+msgid ""
+"Sum of Multiplication of Sale Catalog price and quantity of Customer Invoices"
+msgstr ""
+"Soma de multiplicação do preço de venda de catálogo e quantidade de faturas "
+"de clientes"
+
+#. module: product_margin
 #: field:product.product,total_margin:0
 msgid "Total Margin"
 msgstr "Margem total"
 
 #. module: product_margin
-#: view:product.product:0
-#: field:product.product,sales_gap:0
-msgid "Sales Gap"
-msgstr "Vendas abertas"
+#: field:product.product,date_from:0
+msgid "Margin Date From"
+msgstr "Margem Data de"
 
 #. module: product_margin
 #: help:product.product,turnover:0
 msgid ""
 "Sum of Multiplication of Invoice price and quantity of Customer Invoices"
 msgstr ""
+"Soma de multiplicação do preço da fatura e quantidade de faturas de clientes"
 
 #. module: product_margin
 #: field:product.product,normal_cost:0
@@ -193,9 +214,14 @@ msgid "Purchases"
 msgstr "Compras"
 
 #. module: product_margin
-#: help:product.product,purchase_avg_price:0
-msgid "Avg. Price in Supplier Invoices "
-msgstr "Preço Médio nas Faturas de Fornecedor "
+#: field:product.product,purchase_num_invoiced:0
+msgid "# Invoiced in Purchase"
+msgstr "#Faturado na Compra"
+
+#. module: product_margin
+#: help:product.product,expected_margin:0
+msgid "Expected Sale - Normal Cost"
+msgstr "Venda Esperada - Custo Normal"
 
 #. module: product_margin
 #: view:product.margin:0
@@ -208,9 +234,9 @@ msgid "Total margin * 100 / Turnover"
 msgstr "Margem total * 100/retorno"
 
 #. module: product_margin
-#: view:product.product:0
-msgid "Analysis Criteria"
-msgstr "Critérios de Análise"
+#: view:product.margin:0
+msgid "Open Margins"
+msgstr "Margens Abertas"
 
 #. module: product_margin
 #: selection:product.margin,invoice_state:0
@@ -224,13 +250,9 @@ msgid "Sales"
 msgstr "Vendas"
 
 #. module: product_margin
-#: code:addons/product_margin/wizard/product_margin.py:73
-#: model:ir.actions.act_window,name:product_margin.product_margin_act_window
-#: model:ir.ui.menu,name:product_margin.menu_action_product_margin
-#: view:product.product:0
-#, python-format
-msgid "Product Margins"
-msgstr "Margens do Produto"
+#: model:ir.model,name:product_margin.model_product_product
+msgid "Product"
+msgstr "Produto"
 
 #. module: product_margin
 #: view:product.margin:0
@@ -241,16 +263,6 @@ msgstr "Informações Gerais"
 #: field:product.product,purchase_gap:0
 msgid "Purchase Gap"
 msgstr "Abertura de compra"
-
-#. module: product_margin
-#: field:product.product,total_margin_rate:0
-msgid "Total Margin (%)"
-msgstr "Margem Total (%)"
-
-#. module: product_margin
-#: view:product.margin:0
-msgid "Open Margins"
-msgstr "Margens Abertas"
 
 #. module: product_margin
 #: view:product.margin:0
@@ -270,7 +282,7 @@ msgstr "Soma da Quantidade nas Faturas de Clientes"
 #. module: product_margin
 #: view:product.margin:0
 msgid "or"
-msgstr ""
+msgstr "ou"
 
 #. module: product_margin
 #: model:ir.model,name:product_margin.model_product_margin
@@ -282,6 +294,9 @@ msgstr "Margem do Produto"
 #~ msgstr ""
 #~ "Soma da Multiplicação do preço de Catálogo de Venda e quantidade de Faturas "
 #~ "de Cliente"
+
+#~ msgid "# Invoiced"
+#~ msgstr "# Faturado"
 
 #~ msgid "Reporting"
 #~ msgstr "Relatórios"
@@ -306,6 +321,15 @@ msgstr "Margem do Produto"
 #~ "Sum of Multification of Invoice price and quantity of Customer Invoices"
 #~ msgstr ""
 #~ "Soma da Multiplicação do preço faturado e quantidade de faturas do cliente"
+
+#~ msgid "From Date"
+#~ msgstr "Data Inicial"
+
+#~ msgid "To Date"
+#~ msgstr "Até a Data"
+
+#~ msgid "Total Margin (%)"
+#~ msgstr "Margem Total (%)"
 
 #~ msgid "Error: Invalid ean code"
 #~ msgstr "Erro: Código EAN inválido"

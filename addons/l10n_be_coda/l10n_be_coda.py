@@ -19,9 +19,7 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-
-from osv import osv, fields
-
+from openerp.osv import osv, fields
 
 class account_bank_statement(osv.osv):
     _inherit = 'account.bank.statement'
@@ -38,8 +36,8 @@ class account_bank_statement_line(osv.osv):
 
     def create(self, cr, uid, data, context=None):
         """
-            This function creates a Bank Account Number if, for a bank statement line, 
-            the partner_id field and the coda_account_number field are set, 
+            This function creates a Bank Account Number if, for a bank statement line,
+            the partner_id field and the coda_account_number field are set,
             and the account number does not exist in the database
         """
         if 'partner_id' in data and data['partner_id'] and 'coda_account_number' in data and data['coda_account_number']:
@@ -52,8 +50,6 @@ class account_bank_statement_line(osv.osv):
                 except ValueError:
                     pass
         return super(account_bank_statement_line, self).create(cr, uid, data, context=context)
-
-
 
     def write(self, cr, uid, ids, vals, context=None):
         super(account_bank_statement_line, self).write(cr, uid, ids, vals, context)

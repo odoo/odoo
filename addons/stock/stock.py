@@ -26,12 +26,12 @@ import time
 from operator import itemgetter
 from itertools import groupby
 
-from osv import fields, osv
-from tools.translate import _
-import netsvc
-import tools
-from tools import float_compare
-import decimal_precision as dp
+from openerp.osv import fields, osv
+from openerp.tools.translate import _
+from openerp import netsvc
+from openerp import tools
+from openerp.tools import float_compare
+import openerp.addons.decimal_precision as dp
 import logging
 _logger = logging.getLogger(__name__)
 
@@ -621,8 +621,6 @@ class stock_picking(osv.osv):
             seq_obj_name =  self._name
             vals['name'] = self.pool.get('ir.sequence').get(cr, user, seq_obj_name)
         new_id = super(stock_picking, self).create(cr, user, vals, context)
-        if new_id:
-            self.create_send_note(cr, user, [new_id], context=context)
         return new_id
 
     _columns = {
@@ -644,7 +642,7 @@ class stock_picking(osv.osv):
             ('confirmed', 'Waiting Availability'),
             ('assigned', 'Ready to Transfer'),
             ('done', 'Transferred'),
-            ], 'Status', readonly=True, select=True, help="""
+            ], 'Status', readonly=True, select=True, track_visibility='onchange', help="""
             * Draft: not confirmed yet and will not be scheduled until confirmed\n
             * Waiting Another Operation: waiting for another move to proceed before it becomes automatically available (e.g. in Make-To-Order flows)\n
             * Waiting Availability: still waiting for the availability of products\n
@@ -666,7 +664,7 @@ class stock_picking(osv.osv):
             ("invoiced", "Invoiced"),
             ("2binvoiced", "To Be Invoiced"),
             ("none", "Not Applicable")], "Invoice Control",
-            select=True, required=True, readonly=True, states={'draft': [('readonly', False)]}),
+            select=True, required=True, readonly=True, track_visibility='onchange', states={'draft': [('readonly', False)]}),
         'company_id': fields.many2one('res.company', 'Company', required=True, select=True, states={'done':[('readonly', True)], 'cancel':[('readonly',True)]}),
     }
     _defaults = {
@@ -742,9 +740,6 @@ class stock_picking(osv.osv):
         @return: True
         """
         pickings = self.browse(cr, uid, ids, context=context)
-        for picking in pickings:
-            if picking.state <> 'confirmed':
-                self.confirm_send_note(cr, uid, [picking.id], context=context)
         self.write(cr, uid, ids, {'state': 'confirmed'})
         todo = []
         for picking in pickings:
@@ -869,7 +864,6 @@ class stock_picking(osv.osv):
             ids2 = [move.id for move in pick.move_lines]
             self.pool.get('stock.move').action_cancel(cr, uid, ids2, context)
         self.write(cr, uid, ids, {'state': 'cancel', 'invoice_state': 'none'})
-        self.ship_cancel_send_note(cr, uid, ids, context)
         return True
 
     #
@@ -1067,14 +1061,12 @@ class stock_picking(osv.osv):
             origin += ':' + move_line.picking_id.origin
 
         if invoice_vals['type'] in ('out_invoice', 'out_refund'):
-            account_id = move_line.product_id.product_tmpl_id.\
-                    property_account_income.id
+            account_id = move_line.product_id.property_account_income.id
             if not account_id:
                 account_id = move_line.product_id.categ_id.\
                         property_account_income_categ.id
         else:
-            account_id = move_line.product_id.product_tmpl_id.\
-                    property_account_expense.id
+            account_id = move_line.product_id.property_account_expense.id
             if not account_id:
                 account_id = move_line.product_id.categ_id.\
                         property_account_expense_categ.id
@@ -1361,12 +1353,11 @@ class stock_picking(osv.osv):
                 wf_service.trg_write(uid, 'stock.picking', pick.id, cr)
                 delivered_pack_id = new_picking
                 back_order_name = self.browse(cr, uid, delivered_pack_id, context=context).name
-                self.back_order_send_note(cr, uid, ids, back_order_name, context)
+                self.message_post(cr, uid, ids, body=_("Back order <em>%s</em> has been <b>created</b>.") % (back_order_name), context=context)
             else:
                 self.action_move(cr, uid, [pick.id], context=context)
                 wf_service.trg_validate(uid, 'stock.picking', pick.id, 'button_done', cr)
                 delivered_pack_id = pick.id
-                self.ship_done_send_note(cr, uid, ids, context)
 
             delivered_pack = self.browse(cr, uid, delivered_pack_id, context=context)
             res[pick.id] = {'delivered_picking': delivered_pack.id or False}
@@ -1389,88 +1380,6 @@ class stock_picking(osv.osv):
             'stock', self._VIEW_LIST.get(type, 'view_picking_form'))            
         return res and res[1] or False
 
-    def log_picking(self, cr, uid, ids, context=None):
-        """ This function will create log messages for picking.
-        @param cr: the database cursor
-        @param uid: the current user's ID for security checks,
-        @param ids: List of Picking Ids
-        @param context: A standard dictionary for contextual values
-        """
-        if context is None:
-            context = {}
-        lang_obj = self.pool.get('res.lang')
-        user_lang = self.pool.get('res.users').browse(cr, uid, uid, context=context).context_lang
-        lang_ids = lang_obj.search(cr, uid, [('code','like',user_lang)])
-        if lang_ids:
-            date_format = lang_obj.browse(cr, uid, lang_ids[0], context=context).date_format
-        else:
-            date_format = '%m/%d/%Y'
-
-        for pick in self.browse(cr, uid, ids, context=context):
-            msg=''
-            if pick.auto_picking:
-                continue
-            type_list = {
-                'out':_("Delivery Order"),
-                'in':_('Reception'),
-                'internal': _('Internal picking'),
-            }
-            message = type_list.get(pick.type, _('Document')) + " '" + (pick.name or '?') + "' "
-            if pick.min_date:
-                msg= _(' for the ')+ datetime.strptime(pick.min_date, '%Y-%m-%d %H:%M:%S').strftime(date_format)
-            state_list = {
-                'confirmed': _('is scheduled %s.') % msg,
-                'assigned': _('is ready to process.'),
-                'cancel': _('is cancelled.'),
-                'done': _('is done.'),
-                'auto': _('is waiting.'),
-                'draft': _('is in draft state.'),
-            }
-            context['view_id'] = self._get_view_id(cr, uid, pick.type)
-            message += state_list[pick.state]
-        return True
-
-    # -----------------------------------------
-    # OpenChatter methods and notifications
-    # -----------------------------------------
-
-    def _get_document_type(self, cr, uid, obj, context=None):
-        type_dict = {
-                'out': _('Delivery order'),
-                'in': _('Shipment'),
-                'internal': _('Internal picking'),
-        }
-        return type_dict.get(obj.type, _('Picking'))
-
-    def create_send_note(self, cr, uid, ids, context=None):
-        for obj in self.browse(cr, uid, ids, context=context):
-            self.message_post(cr, uid, [obj.id], body=_("%s has been <b>created</b>.") % (self._get_document_type(cr, uid, obj, context=context)), context=context)
-
-    def confirm_send_note(self, cr, uid, ids, context=None):
-        for obj in self.browse(cr, uid, ids, context=context):
-            self.message_post(cr, uid, [obj.id], body=_("%s has been <b>confirmed</b>.") % (self._get_document_type(cr, uid, obj, context=context)), context=context)
-
-    def scrap_send_note(self, cr, uid, ids, quantity, uom, name, context=None):
-        return self.message_post(cr, uid, ids, body= _("%s %s %s has been <b>moved to</b> scrap.") % (quantity, uom, name), context=context)
-
-    def back_order_send_note(self, cr, uid, ids, back_name, context=None):
-        return self.message_post(cr, uid, ids, body=_("Back order <em>%s</em> has been <b>created</b>.") % (back_name), context=context)
-
-    def ship_done_send_note(self, cr, uid, ids, context=None):
-        type_dict = {
-                'out': _("Products have been <b>delivered</b>."),
-                'in': _("Products have been <b>received</b>."),
-                'internal': _("Products have been <b>moved</b>."),
-        }
-        for obj in self.browse(cr, uid, ids, context=context):
-            self.message_post(cr, uid, [obj.id], body=_("Products have been <b>%s</b>.") % (type_dict.get(obj.type, 'move done')), context=context)
-
-    def ship_cancel_send_note(self, cr, uid, ids, context=None):
-        for obj in self.browse(cr, uid, ids, context=context):
-            self.message_post(cr, uid, [obj.id], body=_("%s has been <b>cancelled</b>.") % (self._get_document_type(cr, uid, obj, context=context)), context=context)
-
-
-stock_picking()
 
 class stock_production_lot(osv.osv):
 
@@ -2139,7 +2048,7 @@ class stock_move(osv.osv):
                 # name of new picking according to its type
                 new_pick_name = seq_obj.get(cr, uid, 'stock.picking.' + ptype)
                 pickid = self._create_chained_picking(cr, uid, new_pick_name, picking, ptype, todo, context=context)
-                # Need to check name of old picking because it always considers picking as "OUT" when created from Sale Order
+                # Need to check name of old picking because it always considers picking as "OUT" when created from Sales Order
                 old_ptype = location_obj.picking_type_get(cr, uid, picking.move_lines[0].location_id, picking.move_lines[0].location_dest_id)
                 if old_ptype != picking.type:
                     old_pick_name = seq_obj.get(cr, uid, 'stock.picking.' + old_ptype)
@@ -2584,7 +2493,8 @@ class stock_move(osv.osv):
             for product in product_obj.browse(cr, uid, [move.product_id.id], context=context):
                 if move.picking_id:
                     uom = product.uom_id.name if product.uom_id else ''
-                    move.picking_id.scrap_send_note(quantity, uom, product.name, context=context)
+                    message = _("%s %s %s has been <b>moved to</b> scrap.") % (quantity, uom, product.name)
+                    move.picking_id.message_post(body=message)
 
         self.action_done(cr, uid, res, context=context)
         return res
@@ -2896,7 +2806,7 @@ class stock_inventory(osv.osv):
                 change = line.product_qty - amount
                 lot_id = line.prod_lot_id.id
                 if change:
-                    location_id = line.product_id.product_tmpl_id.property_stock_inventory.id
+                    location_id = line.product_id.property_stock_inventory.id
                     value = {
                         'name': _('INV:') + (line.inventory_id.name or ''),
                         'product_id': line.product_id.id,

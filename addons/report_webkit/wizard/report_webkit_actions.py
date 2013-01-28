@@ -29,9 +29,9 @@
 #
 ##############################################################################
 
-from tools.translate import _
-from osv import fields, osv
-import pooler
+from openerp.tools.translate import _
+from openerp.osv import fields, osv
+from openerp import pooler
 
 class report_webkit_actions(osv.osv_memory):
     _name = "report.webkit.actions"

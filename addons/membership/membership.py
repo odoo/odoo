@@ -21,9 +21,9 @@
 
 import time
 
-from osv import fields, osv
-import decimal_precision as dp
-from tools.translate import _
+from openerp.osv import fields, osv
+import openerp.addons.decimal_precision as dp
+from openerp.tools.translate import _
 
 STATE = [
     ('none', 'Non Member'),

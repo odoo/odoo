@@ -21,10 +21,11 @@
 
 import time
 
-from osv import osv, fields
-from tools.translate import _
 import pos_box_entries
-import netsvc
+
+from openerp import netsvc
+from openerp.osv import osv, fields
+from openerp.tools.translate import _
 
 class account_journal(osv.osv):
     _inherit = 'account.journal'

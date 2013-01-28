@@ -20,7 +20,7 @@
 #
 ##############################################################################
 
-from osv import osv
+from openerp.osv import osv
 
 class cancel_statement_line(osv.osv_memory):
     _name = 'cancel.statement.line'

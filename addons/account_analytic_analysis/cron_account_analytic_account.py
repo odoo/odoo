@@ -1,5 +1,4 @@
 #!/usr/bin/env python
-from osv import osv
 from mako.template import Template
 import time
 try:
@@ -7,7 +6,8 @@ try:
 except ImportError:
     import StringIO
 
-import tools
+from openerp import tools
+from openerp.osv import osv
 
 MAKO_TEMPLATE = u"""Hello ${user.name},
 

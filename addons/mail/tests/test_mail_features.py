@@ -119,18 +119,18 @@ class test_mail(TestMailBase):
         # Previously-created group can be emailed now - it should have an implicit alias group+frogs@...
         frog_group = self.mail_group.browse(cr, uid, frog_groups[0])
         group_messages = frog_group.message_ids
-        self.assertTrue(len(group_messages) == 1, 'New group should only have the original message')
+        self.assertTrue(len(group_messages) == 2, 'New group should only have the original message + creation log')
         mail_frog_news = MAIL_TEMPLATE.format(to='Friendly Frogs <group+frogs@example.com>', subject='news', extra='')
         self.mail_thread.message_process(cr, uid, None, mail_frog_news)
         frog_group.refresh()
-        self.assertTrue(len(frog_group.message_ids) == 2, 'Group should contain 2 messages now')
+        self.assertTrue(len(frog_group.message_ids) == 3, 'Group should contain 3 messages now')
 
         # Even with a wrong destination, a reply should end up in the correct thread
         mail_reply = MAIL_TEMPLATE.format(to='erroneous@example.com>', subject='Re: news',
                                           extra='In-Reply-To: <12321321-openerp-%d-mail.group@example.com>\n' % frog_group.id)
         self.mail_thread.message_process(cr, uid, None, mail_reply)
         frog_group.refresh()
-        self.assertTrue(len(frog_group.message_ids) == 3, 'Group should contain 3 messages now')
+        self.assertTrue(len(frog_group.message_ids) == 4, 'Group should contain 4 messages now')
 
         # No model passed and no matching alias must raise
         mail_spam = MAIL_TEMPLATE.format(to='noone@example.com', subject='spam', extra='')
@@ -143,7 +143,7 @@ class test_mail(TestMailBase):
         mail_text = MAIL_TEMPLATE_PLAINTEXT.format(to='groups@example.com', subject='frogs', extra='', msg_id=test_msg_id)
         self.mail_thread.message_process(cr, uid, None, mail_text)
         new_mail = self.mail_message.browse(cr, uid, self.mail_message.search(cr, uid, [('message_id', '=', test_msg_id)])[0])
-        self.assertEqual(new_mail.body, '\n<pre>\nPlease call me as soon as possible this afternoon!\n\n--\nSylvie\n</pre>\n',
+        self.assertEqual(new_mail.body, '<pre>\nPlease call me as soon as possible this afternoon!\n\n--\nSylvie\n</pre>',
                          'plaintext mail incorrectly parsed')
 
         # Do: post a new message, with a known partner
@@ -204,7 +204,7 @@ class test_mail(TestMailBase):
 
         # Data: create 'disturbing' values in mail.followers: same res_id, other res_model; same res_model, other res_id
         group_dummy_id = self.mail_group.create(cr, uid,
-            {'name': 'Dummy group'})
+            {'name': 'Dummy group'}, {'mail_create_nolog': True})
         self.mail_followers.create(cr, uid,
             {'res_model': 'mail.thread', 'res_id': self.group_pigs_id, 'partner_id': partner_bert_id})
         self.mail_followers.create(cr, uid,
@@ -340,11 +340,11 @@ class test_mail(TestMailBase):
         # Mail data
         _subject = 'Pigs'
         _mail_subject = '%s posted on %s' % (user_raoul.name, group_pigs.name)
-        _body1 = 'Pigs rules'
-        _mail_body1 = 'Pigs rules\n<div><p>Raoul</p></div>\n'
+        _body1 = '<p>Pigs rules</p>'
+        _mail_body1 = '<p>Pigs rules</p>\n<div><p>Raoul</p></div>\n'
         _mail_bodyalt1 = 'Pigs rules\nRaoul\n'
         _body2 = '<html>Pigs rules</html>'
-        _mail_body2 = html_sanitize('<html>Pigs rules\n<div><p>Raoul</p></div>\n</html>')
+        _mail_body2 = '<div><p>Pigs rules</p></div>\n<div><p>Raoul</p></div>'
         _mail_bodyalt2 = 'Pigs rules\nRaoul'
         _attachments = [('First', 'My first attachment'), ('Second', 'My second attachment')]
 
@@ -443,7 +443,7 @@ class test_mail(TestMailBase):
         cr, uid, user_admin, group_pigs = self.cr, self.uid, self.user_admin, self.group_pigs
         mail_compose = self.registry('mail.compose.message')
         self.res_users.write(cr, uid, [uid], {'signature': 'Admin', 'email': 'a@a'})
-        group_bird_id = self.mail_group.create(cr, uid, {'name': 'Bird', 'description': 'Bird resistance'})
+        group_bird_id = self.mail_group.create(cr, uid, {'name': 'Bird', 'description': 'Bird resistance'}, {'mail_create_nolog': True})
         group_bird = self.mail_group.browse(cr, uid, group_bird_id)
 
         # Mail data
@@ -487,7 +487,7 @@ class test_mail(TestMailBase):
         message = group_pigs.message_ids[0]
         # Test: mail.message: subject, body inside pre
         self.assertEqual(message.subject,  _subject, 'mail.message incorrect subject')
-        self.assertEqual(message.body, _body, 'mail.message incorrect body')
+        self.assertEqual(message.body, '<p>%s</p>' % _body, 'mail.message incorrect body')
         # Test: mail.message: notified_partner_ids = entries in mail.notification: group_pigs fans (a, b) + mail.compose.message partner_ids (c, d)
         msg_pids = [partner.id for partner in message.notified_partner_ids]
         test_pids = [p_b_id, p_c_id, p_d_id]
@@ -541,9 +541,9 @@ class test_mail(TestMailBase):
         self.assertIn(message2.id, test_msg_ids, 'Bird did not receive its mass mailing message')
         # Test: mail.message: subject, body
         self.assertEqual(message1.subject, _subject, 'mail.message subject incorrect')
-        self.assertEqual(message1.body, group_pigs.description, 'mail.message body incorrect')
+        self.assertEqual(message1.body, '<p>%s</p>' % group_pigs.description, 'mail.message body incorrect')
         self.assertEqual(message2.subject, _subject, 'mail.message subject incorrect')
-        self.assertEqual(message2.body, group_bird.description, 'mail.message body incorrect')
+        self.assertEqual(message2.body, '<p>%s</p>' % group_bird.description, 'mail.message body incorrect')
 
     def test_30_needaction(self):
         """ Tests for mail.message needaction. """
@@ -586,3 +586,91 @@ class test_mail(TestMailBase):
         na_demo_group = self.mail_message._needaction_count(cr, user_raoul.id, domain=[('model', '=', 'mail.group'), ('res_id', '=', self.group_pigs_id)])
         self.assertEqual(na_demo, na_demo_base + 0, 'Demo should have 0 new needaction')
         self.assertEqual(na_demo_group, 0, 'Demo should have 0 needaction related to Pigs')
+
+    def test_40_track_field(self):
+        """ Testing auto tracking of fields. """
+        def _strip_string_spaces(body):
+            return body.replace(' ', '').replace('\n', '')
+
+        # Data: subscribe Raoul to Pigs, because he will change the public attribute and may loose access to the record
+        cr, uid = self.cr, self.uid
+        self.mail_group.message_subscribe_users(cr, uid, [self.group_pigs_id], [self.user_raoul_id])
+
+        # Data: res.users.group, to test group_public_id automatic logging
+        group_system_ref = self.registry('ir.model.data').get_object_reference(cr, uid, 'base', 'group_system')
+        group_system_id = group_system_ref and group_system_ref[1] or False
+
+        # Data: custom subtypes
+        mt_private_id = self.mail_message_subtype.create(cr, uid, {'name': 'private', 'description': 'Private public'})
+        self.ir_model_data.create(cr, uid, {'name': 'mt_private', 'model': 'mail.message.subtype', 'module': 'mail', 'res_id': mt_private_id})
+        mt_name_supername_id = self.mail_message_subtype.create(cr, uid, {'name': 'name_supername', 'description': 'Supername name'})
+        self.ir_model_data.create(cr, uid, {'name': 'mt_name_supername', 'model': 'mail.message.subtype', 'module': 'mail', 'res_id': mt_name_supername_id})
+        mt_group_public_id = self.mail_message_subtype.create(cr, uid, {'name': 'group_public', 'description': 'Group changed'})
+        self.ir_model_data.create(cr, uid, {'name': 'mt_group_public', 'model': 'mail.message.subtype', 'module': 'mail', 'res_id': mt_group_public_id})
+
+        # Data: alter mail_group model for testing purposes (test on classic, selection and many2one fields)
+        self.mail_group._track = {
+            'public': {
+                'mail.mt_private': lambda self, cr, uid, obj, ctx=None: obj['public'] == 'private',
+            },
+            'name': {
+                'mail.mt_name_supername': lambda self, cr, uid, obj, ctx=None: obj['name'] == 'supername',
+            },
+            'group_public_id': {
+                'mail.mt_group_public': lambda self, cr, uid, obj, ctx=None: True,
+            },
+        }
+        public_col = self.mail_group._columns.get('public')
+        name_col = self.mail_group._columns.get('name')
+        group_public_col = self.mail_group._columns.get('group_public_id')
+        public_col.track_visibility = 'onchange'
+        name_col.track_visibility = 'always'
+        group_public_col.track_visibility = 'onchange'
+
+        # Test: change name -> always tracked, not related to a subtype
+        self.mail_group.write(cr, self.user_raoul_id, [self.group_pigs_id], {'public': 'public'})
+        self.group_pigs.refresh()
+        self.assertEqual(len(self.group_pigs.message_ids), 1, 'tracked: a message should have been produced')
+        # Test: first produced message: no subtype, name change tracked
+        last_msg = self.group_pigs.message_ids[-1]
+        self.assertFalse(last_msg.subtype_id, 'tracked: message should not have been linked to a subtype')
+        self.assertIn(u'SelectedGroupOnly\u2192Public', _strip_string_spaces(last_msg.body), 'tracked: message body incorrect')
+        self.assertIn('Pigs', _strip_string_spaces(last_msg.body), 'tracked: message body does not hold always tracked field')
+
+        # Test: change name as supername, public as private -> 2 subtypes
+        self.mail_group.write(cr, self.user_raoul_id, [self.group_pigs_id], {'name': 'supername', 'public': 'private'})
+        self.group_pigs.refresh()
+        self.assertEqual(len(self.group_pigs.message_ids), 3, 'tracked: two messages should have been produced')
+        # Test: first produced message: mt_name_supername
+        last_msg = self.group_pigs.message_ids[-2]
+        self.assertEqual(last_msg.subtype_id.id, mt_private_id, 'tracked: message should be linked to mt_private subtype')
+        self.assertIn('Private public', last_msg.body, 'tracked: message body does not hold the subtype description')
+        self.assertIn(u'Pigs\u2192supername', _strip_string_spaces(last_msg.body), 'tracked: message body incorrect')
+        # Test: second produced message: mt_name_supername
+        last_msg = self.group_pigs.message_ids[-3]
+        self.assertEqual(last_msg.subtype_id.id, mt_name_supername_id, 'tracked: message should be linked to mt_name_supername subtype')
+        self.assertIn('Supername name', last_msg.body, 'tracked: message body does not hold the subtype description')
+        self.assertIn(u'Public\u2192Private', _strip_string_spaces(last_msg.body), 'tracked: message body incorrect')
+        self.assertIn(u'Pigs\u2192supername', _strip_string_spaces(last_msg.body), 'tracked feature: message body does not hold always tracked field')
+
+        # Test: change public as public, group_public_id -> 1 subtype, name always tracked
+        self.mail_group.write(cr, self.user_raoul_id, [self.group_pigs_id], {'public': 'public', 'group_public_id': group_system_id})
+        self.group_pigs.refresh()
+        self.assertEqual(len(self.group_pigs.message_ids), 4, 'tracked: one message should have been produced')
+        # Test: first produced message: mt_group_public_id, with name always tracked, public tracked on change
+        last_msg = self.group_pigs.message_ids[-4]
+        self.assertEqual(last_msg.subtype_id.id, mt_group_public_id, 'tracked: message should not be linked to any subtype')
+        self.assertIn('Group changed', last_msg.body, 'tracked: message body does not hold the subtype description')
+        self.assertIn(u'Private\u2192Public', _strip_string_spaces(last_msg.body), 'tracked: message body does not hold changed tracked field')
+        self.assertIn(u'HumanResources/Employee\u2192Administration/Settings', _strip_string_spaces(last_msg.body), 'tracked: message body does not hold always tracked field')
+
+        # Test: change not tracked field, no tracking message
+        self.mail_group.write(cr, self.user_raoul_id, [self.group_pigs_id], {'description': 'Dummy'})
+        self.group_pigs.refresh()
+        self.assertEqual(len(self.group_pigs.message_ids), 4, 'tracked: No message should have been produced')
+
+        # Data: removed changes
+        public_col.track_visibility = None
+        name_col.track_visibility = None
+        group_public_col.track_visibility = None
+        self.mail_group._track = {}

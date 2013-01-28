@@ -19,8 +19,8 @@
 #
 ##############################################################################
 
-import netsvc
-from osv import osv, fields
+from openerp import netsvc
+from openerp.osv import fields, osv
 
 class make_invoice(osv.osv_memory):
     _name = 'mrp.repair.make_invoice'

@@ -19,7 +19,7 @@
 #
 ##############################################################################
 
-from osv import osv, fields
+from openerp.osv import fields, osv
 
 class base_config_settings(osv.osv_memory):
     _name = 'base.config.settings'

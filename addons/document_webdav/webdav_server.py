@@ -35,9 +35,9 @@
 
 
 import logging
-import netsvc
+from openerp import netsvc
 from dav_fs import openerp_dav_handler
-from tools.config import config
+from openerp.tools.config import config
 try:
     from pywebdav.lib.WebDAVServer import DAVRequestHandler
     from pywebdav.lib.utils import IfParser, TagList
@@ -48,8 +48,8 @@ except ImportError:
     from DAV.utils import IfParser, TagList
     from DAV.errors import DAV_Error, DAV_Forbidden, DAV_NotFound
     from DAV.propfind import PROPFIND
-from service import http_server
-from service.websrv_lib import FixSendError, HttpOptions
+from openerp.service import http_server
+from openerp.service.websrv_lib import FixSendError, HttpOptions
 from BaseHTTPServer import BaseHTTPRequestHandler
 import urlparse
 import urllib
@@ -57,6 +57,7 @@ import re
 import time
 from string import atoi
 import addons
+import socket
 # from DAV.constants import DAV_VERSION_1, DAV_VERSION_2
 from xml.dom import minidom
 from redirect import RedirectHTTPHandler
@@ -86,6 +87,12 @@ class DAVHandler(DAVRequestHandler, HttpOptions, FixSendError):
                             'PROPFIND', 'PROPPATCH', 'OPTIONS', 'MKCOL',
                             'DELETE', 'TRACE', 'REPORT', ]
                     }
+
+    def __init__(self, request, client_address, server):
+        self.request = request
+        self.client_address = client_address
+        self.server = server
+        self.setup()
 
     def get_userinfo(self, user, pw):
         return False
@@ -118,15 +125,9 @@ class DAVHandler(DAVRequestHandler, HttpOptions, FixSendError):
         return res
 
     def setup(self):
-        DAVRequestHandler.setup(self)
         self.davpath = '/'+config.get_misc('webdav','vdir','webdav')
         addr, port = self.server.server_name, self.server.server_port
         server_proto = getattr(self.server,'proto', 'http').lower()
-        try:
-            if hasattr(self.request, 'getsockname'):
-                addr, port = self.request.getsockname()
-        except Exception, e:
-            self.log_error("Cannot calculate own address: %s" , e)
         # Too early here to use self.headers
         self.baseuri = "%s://%s:%d/"% (server_proto, addr, port)
         self.IFACE_CLASS  = openerp_dav_handler(self, self.verbose)
@@ -433,7 +434,7 @@ class DAVHandler(DAVRequestHandler, HttpOptions, FixSendError):
                 data['lockowner'] = owners
         return data
 
-from service.http_server import reg_http_service,OpenERPAuthProvider
+from openerp.service.http_server import reg_http_service,OpenERPAuthProvider
 
 class DAVAuthProvider(OpenERPAuthProvider):
     def authenticate(self, db, user, passwd, client_address):

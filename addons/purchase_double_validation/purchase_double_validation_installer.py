@@ -19,7 +19,7 @@
 #
 ##############################################################################
 
-from osv import fields, osv
+from openerp.osv import fields, osv
 
 class purchase_config_settings(osv.osv_memory):
     _inherit = 'purchase.config.settings'

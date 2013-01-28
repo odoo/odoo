@@ -19,7 +19,7 @@
 #
 ##############################################################################
 
-from osv import osv, fields
+from openerp.osv import fields, osv
 from lxml import etree
 
 class account_print_journal(osv.osv_memory):
