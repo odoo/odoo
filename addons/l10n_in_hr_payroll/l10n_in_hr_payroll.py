@@ -198,8 +198,9 @@ class hr_payslip_run(osv.osv):
             advice_id = advice_pool.create(cr, uid, advice_data, context=context)
             slip_ids = []
             for slip_id in run.slip_ids:
-                wf_service.trg_validate(uid, 'hr.payslip', slip_id.id, 'hr_verify_sheet', cr)
-                wf_service.trg_validate(uid, 'hr.payslip', slip_id.id, 'process_sheet', cr)
+                # TODO is it necessary to interleave the calls ?
+                payslip_pool.signal_hr_verify_sheet(cr, uid, [slip_id.id])
+                payslip_pool.signal_process_sheet(cr, uid, [slip_id.id])
                 slip_ids.append(slip_id.id)
 
             for slip in payslip_pool.browse(cr, uid, slip_ids, context=context):
