@@ -2386,20 +2386,26 @@ instance.web.DateTimeWidget = instance.web.Widget.extend({
         this._super(parent);
         this.name = parent.name;
     },
-    start: function() {
-        var self = this;
-        this.$input = this.$el.find('input.oe_datepicker_master');
-        this.$input_picker = this.$el.find('input.oe_datepicker_container');
-
-        this.picker({
+    config_plugin: function(){
+        var value = _.indexOf(['select','slider'], this.getParent().options.time) === -1
+                        ? 'select' : this.getParent().options.time;
+        return {
             onClose: this.on_picker_select,
             onSelect: this.on_picker_select,
             changeMonth: true,
             changeYear: true,
             showWeek: true,
             showButtonPanel: true,
-            firstDay: Date.CultureInfo.firstDayOfWeek
-        });
+            firstDay: Date.CultureInfo.firstDayOfWeek,
+            controlType:  value,
+        };
+    },
+    start: function() {
+        var self = this;
+        this.$input = this.$el.find('input.oe_datepicker_master');
+        this.$input_picker = this.$el.find('input.oe_datepicker_container');
+
+        this.picker(this.config_plugin());
         this.$el.find('img.oe_datepicker_trigger').click(function() {
             if (self.get("effective_readonly") || self.picker('widget').is(':visible')) {
                 self.$input.focus();
