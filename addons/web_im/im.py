@@ -41,20 +41,20 @@ if openerp.tools.config.options["gevent"]:
     import gevent.event
     import select
 
-    global Watcher
+    global ImWatcher
 
-    class Watcher:
+    class ImWatcher:
         watchers = {}
 
         @staticmethod
         def get_watcher(db_name):
-            if not Watcher.watchers.get(db_name):
-                Watcher(db_name)
-            return Watcher.watchers[db_name]
+            if not ImWatcher.watchers.get(db_name):
+                ImWatcher(db_name)
+            return ImWatcher.watchers[db_name]
 
         def __init__(self, db_name):
             self.db_name = db_name
-            Watcher.watchers[db_name] = self
+            ImWatcher.watchers[db_name] = self
             self.waiting = 0
             self.wait_id = 0
             self.users = {}
@@ -98,7 +98,7 @@ if openerp.tools.config.options["gevent"]:
                     # if something crash, we wait some time then try again
                     _logger.exception("Exception during instant messaging watcher activity")
                     time.sleep(WATCHER_ERROR_DELAY)
-            del Watcher.watchers[self.db_name]
+            del ImWatcher.watchers[self.db_name]
             _logger.info("End watching for instant messaging events for database " + self.db_name)
 
         def _get_wait_id(self):
@@ -140,7 +140,7 @@ class ImportController(openerp.addons.web.http.Controller):
                 return res
             last = res["last"]
             num += 1
-            Watcher.get_watcher(res["dbname"]).stop(req.session._uid, users_watch or [], POLL_TIMER)
+            ImWatcher.get_watcher(res["dbname"]).stop(req.session._uid, users_watch or [], POLL_TIMER)
 
     @openerp.addons.web.http.jsonrequest
     def activated(self, req):
