@@ -18,15 +18,13 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-
-from osv import fields, osv, expression
 import time
-from operator import itemgetter
-from functools import partial
-import tools
-from tools.safe_eval import safe_eval as eval
-from tools.misc import unquote as unquote
+
 from openerp import SUPERUSER_ID
+from openerp import tools
+from openerp.osv import fields, osv, expression
+from openerp.tools.safe_eval import safe_eval as eval
+from openerp.tools.misc import unquote as unquote
 
 class ir_rule(osv.osv):
     _name = 'ir.rule'
@@ -52,7 +50,7 @@ class ir_rule(osv.osv):
         eval_context = self._eval_context(cr, uid)
         for rule in self.browse(cr, uid, ids, context):
             if rule.domain_force:
-                res[rule.id] = expression.normalize(eval(rule.domain_force, eval_context))
+                res[rule.id] = expression.normalize_domain(eval(rule.domain_force, eval_context))
             else:
                 res[rule.id] = []
         return res
@@ -130,7 +128,7 @@ class ir_rule(osv.osv):
             for rule in self.browse(cr, SUPERUSER_ID, rule_ids):
                 # read 'domain' as UID to have the correct eval context for the rule.
                 rule_domain = self.read(cr, uid, rule.id, ['domain'])['domain']
-                dom = expression.normalize(rule_domain)
+                dom = expression.normalize_domain(rule_domain)
                 for group in rule.groups:
                     if group in user.groups_id:
                         group_domains.setdefault(group, []).append(dom)

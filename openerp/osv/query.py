@@ -21,6 +21,7 @@
 
 #.apidoc title: Query object
 
+
 def _quote(to_quote):
     if '"' not in to_quote:
         return '"%s"' % to_quote
@@ -67,15 +68,35 @@ class Query(object):
         #                                 LEFT JOIN "table_c" ON ("table_a"."table_a_col2" = "table_c"."table_c_col")
         self.joins = joins or {}
 
-    def join(self, connection, outer=False):
-        """Adds the JOIN specified in ``connection``.
+    def _get_table_aliases(self):
+        from openerp.osv.expression import get_alias_from_query
+        return [get_alias_from_query(from_statement)[1] for from_statement in self.tables]
 
-        :param connection: a tuple ``(lhs, table, lhs_col, col)``.
-                           The join corresponds to the SQL equivalent of::
+    def _get_alias_mapping(self):
+        from openerp.osv.expression import get_alias_from_query
+        mapping = {}
+        for table in self.tables:
+            alias, statement = get_alias_from_query(table)
+            mapping[statement] = table
+        return mapping
 
-                               (lhs.lhs_col = table.col)
+    def add_join(self, connection, implicit=True, outer=False):
+        """ Join a destination table to the current table.
 
-        :param outer: True if a LEFT OUTER JOIN should be used, if possible
+            :param implicit: False if the join is an explicit join. This allows
+                to fall back on the previous implementation of ``join`` before
+                OpenERP 7.0. It therefore adds the JOIN specified in ``connection``
+                If True, the join is done implicitely, by adding the table alias
+                in the from clause and the join condition in the where clause
+                of the query. Implicit joins do not handle outer parameter.
+            :param connection: a tuple ``(lhs, table, lhs_col, col, link)``.
+                The join corresponds to the SQL equivalent of::
+
+                (lhs.lhs_col = table.col)
+
+                Note that all connection elements are strings. Please refer to expression.py for more details about joins.
+
+            :param outer: True if a LEFT OUTER JOIN should be used, if possible
                       (no promotion to OUTER JOIN is supported in case the JOIN
                       was already present in the query, as for the moment
                       implicit INNER JOINs are only connected from NON-NULL
@@ -83,39 +104,54 @@ class Query(object):
                       ``_inherits`` or when a domain criterion explicitly
                       adds filtering)
         """
-        (lhs, table, lhs_col, col) = connection
-        lhs = _quote(lhs)
-        table = _quote(table)
-        assert lhs in self.tables, "Left-hand-side table must already be part of the query!"
-        if table in self.tables:
-            # already joined, must ignore (promotion to outer and multiple joins not supported yet)
-            pass
+        from openerp.osv.expression import generate_table_alias
+        (lhs, table, lhs_col, col, link) = connection
+        alias, alias_statement = generate_table_alias(lhs, [(table, link)])
+
+        if implicit:
+            if alias_statement not in self.tables:
+                self.tables.append(alias_statement)
+                condition = '("%s"."%s" = "%s"."%s")' % (lhs, lhs_col, alias, col)
+                self.where_clause.append(condition)
+            else:
+                # already joined
+                pass
+            return alias, alias_statement
         else:
-            # add JOIN
-            self.tables.append(table)
-            self.joins.setdefault(lhs, []).append((table, lhs_col, col, outer and 'LEFT JOIN' or 'JOIN'))
-        return self
+            aliases = self._get_table_aliases()
+            assert lhs in aliases, "Left-hand-side table %s must already be part of the query tables %s!" % (lhs, str(self.tables))
+            if alias_statement in self.tables:
+                # already joined, must ignore (promotion to outer and multiple joins not supported yet)
+                pass
+            else:
+                # add JOIN
+                self.tables.append(alias_statement)
+                self.joins.setdefault(lhs, []).append((alias, lhs_col, col, outer and 'LEFT JOIN' or 'JOIN'))
+            return alias, alias_statement
 
     def get_sql(self):
-        """Returns (query_from, query_where, query_params)"""
+        """ Returns (query_from, query_where, query_params). """
+        from openerp.osv.expression import get_alias_from_query
         query_from = ''
         tables_to_process = list(self.tables)
+        alias_mapping = self._get_alias_mapping()
 
         def add_joins_for_table(table, query_from):
-            for (dest_table, lhs_col, col, join) in self.joins.get(table,[]):
-                tables_to_process.remove(dest_table)
-                query_from += ' %s %s ON (%s."%s" = %s."%s")' % \
-                    (join, dest_table, table, lhs_col, dest_table, col)
+            for (dest_table, lhs_col, col, join) in self.joins.get(table, []):
+                tables_to_process.remove(alias_mapping[dest_table])
+                query_from += ' %s %s ON ("%s"."%s" = "%s"."%s")' % \
+                    (join, alias_mapping[dest_table], table, lhs_col, dest_table, col)
                 query_from = add_joins_for_table(dest_table, query_from)
             return query_from
 
         for table in tables_to_process:
             query_from += table
-            if table in self.joins:
-                query_from = add_joins_for_table(table, query_from)
+            table_alias = get_alias_from_query(table)[1]
+            if table_alias in self.joins:
+                query_from = add_joins_for_table(table_alias, query_from)
             query_from += ','
-        query_from = query_from[:-1] # drop last comma
-        return (query_from, " AND ".join(self.where_clause), self.where_clause_params)
+        query_from = query_from[:-1]  # drop last comma
+        return query_from, " AND ".join(self.where_clause), self.where_clause_params
 
     def __str__(self):
         return '<osv.Query: "SELECT ... FROM %s WHERE %s" with params: %r>' % self.get_sql()

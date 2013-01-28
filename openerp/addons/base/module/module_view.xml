@@ -1,9 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
-
         <!-- Modules Categories -->
-
         <record id="view_module_category_form" model="ir.ui.view">
             <field name="name">ir.module.category.form</field>
             <field name="model">ir.module.category</field>
@@ -32,7 +30,6 @@
         </record>
 
         <!-- Click on a category -->
-
         <record id="view_module_filter" model="ir.ui.view">
             <field name="name">ir.module.module.list.select</field>
             <field name="model">ir.module.module</field>
@@ -43,7 +40,7 @@
                     <filter name="app" icon="terp-check" string="Apps" domain="[('application', '=', 1)]"/>
                     <filter name="extra" icon="terp-check" string="Extra" domain="[('application', '=', 0)]"/>
                     <separator/>
-                    <filter icon="terp-check" string="Installed" domain="[('state', 'in', ['installed', 'to upgrade', 'to remove'])]"/>
+                    <filter name="installed" icon="terp-check" string="Installed" domain="[('state', 'in', ['installed', 'to upgrade', 'to remove'])]"/>
                     <filter icon="terp-dialog-close" string="Not Installed" domain="[('state', 'in', ['uninstalled', 'uninstallable', 'to install'])]"/>
                     <field name="category_id"/>
                     <group expand="0" string="Group By...">
@@ -53,37 +50,6 @@
                </search>
             </field>
         </record>
-
-        <record model="ir.ui.view" id="module_view_kanban">
-            <field name="name">Modules Kanban</field>
-            <field name="model">ir.module.module</field>
-            <field name="arch" type="xml">
-                <kanban create="false">
-                  <field name="icon"/>
-                  <field name="name"/>
-                  <field name="state"/>
-                  <field name="summary"/>
-                  <templates>
-                    <t t-name="kanban-box">
-                      <div class="oe_module_vignette">
-                        <t t-set="installed" t-value="record.state.raw_value == 'installed'"/>
-                        <img t-attf-src="#{record.icon.value}" class="oe_module_icon"/>
-                        <div class="oe_module_desc">
-                          <h4><a type="open"><field name="shortdesc"/></a></h4>
-                          <p class="oe_module_name">
-                             <t t-if="record.summary.raw_value"><field name="summary"/><br/></t>
-                             <i><field name="name" groups="base.group_no_one"/></i>
-                          </p>
-                          <button type="object" name="button_immediate_install" states="uninstalled">Install</button>
-                          <button t-if="installed" disabled="disabled">Installed</button>
-                        </div>
-                      </div>
-                    </t>
-                  </templates>
-                </kanban>
-            </field>
-        </record>
-
         <record id="action_module_open_categ" model="ir.actions.act_window">
             <field name="name">Modules</field>
             <field name="res_model">ir.module.module</field>
@@ -100,7 +66,6 @@
 
 
         <!-- Modules -->
-
         <record id="module_form" model="ir.ui.view">
             <field name="name">ir.module.module.form</field>
             <field name="model">ir.module.module</field>
@@ -176,20 +141,74 @@
                 </tree>
             </field>
         </record>
+        <record model="ir.ui.view" id="module_view_kanban">
+            <field name="name">Modules Kanban</field>
+            <field name="model">ir.module.module</field>
+            <field name="arch" type="xml">
+                <kanban create="false">
+                  <field name="icon"/>
+                  <field name="name"/>
+                  <field name="state"/>
+                  <field name="summary"/>
+                  <templates>
+                    <t t-name="kanban-box">
+                      <div class="oe_module_vignette">
+                        <t t-set="installed" t-value="record.state.raw_value == 'installed'"/>
+                        <img t-attf-src="#{record.icon.value}" class="oe_module_icon"/>
+                        <div class="oe_module_desc">
+                          <h4><a type="open"><field name="shortdesc"/></a></h4>
+                          <p class="oe_module_name">
+                             <t t-if="record.summary.raw_value"><field name="summary"/><br/></t>
+                             <i><field name="name" groups="base.group_no_one"/></i>
+                          </p>
+                          <button type="object" name="button_immediate_install" states="uninstalled">Install</button>
+                          <button t-if="installed" disabled="disabled">Installed</button>
+                        </div>
+                      </div>
+                    </t>
+                  </templates>
+                </kanban>
+            </field>
+        </record>
         <record id="open_module_tree" model="ir.actions.act_window">
-            <field name="name">Install a Module</field>
+            <!-- uncomment on released
+            <field name="name">Installed Modules</field>
+            -->
+            <field name="name">Modules</field>
             <field name="res_model">ir.module.module</field>
             <field name="view_type">form</field>
             <field name="view_mode">kanban,tree,form</field>
-            <field name="context">{'search_default_app':1}</field>
+            <!-- uncomment on released
+            <field name="context">{'search_default_installed':1}</field>
+            -->
             <field name="search_view_id" ref="view_module_filter"/>
             <field name="help" type="html">
               <p><b>No module found!</b></p>
               <p>You should try others search criteria.</p>
             </field>
         </record>
-        <menuitem id="menu_module_tree" parent="base.menu_management" name="Modules"
-            sequence="1" action="open_module_tree"/>
+        <menuitem id="menu_module_tree" parent="menu_management" name="Installed Modules" sequence="10" action="open_module_tree"/>
+
+
+        <!-- Apps modules -->
+        <record model="ir.actions.client" id="modules_act_cl">
+            <field name="name">Apps</field>
+            <field name="tag">apps</field>
+        </record>
+        <!-- uncomment on released
+        <menuitem id="module_mi" parent="base.menu_management" sequence="3" action="modules_act_cl"/>
+        -->
+        <menuitem id="module_mi" parent="base.menu_management" sequence="20" action="modules_act_cl"/>
+
+        <record model="ir.actions.client" id="modules_updates_act_cl">
+            <field name="name">Updates</field>
+            <field name="tag">apps.updates</field>
+            <field name="params">{}</field>
+        </record>
+        <!-- uncomment on released
+        <menuitem id="menu_module_updates" parent="base.menu_management" sequence="7" action="modules_updates_act_cl"/>
+        -->
+        <menuitem id="menu_module_updates" parent="base.menu_management" sequence="30" action="modules_updates_act_cl"/>
 
     </data>
 </openerp>

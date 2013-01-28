@@ -40,7 +40,7 @@
         <record id="ir_cron_view_tree" model="ir.ui.view">
             <field name="model">ir.cron</field>
             <field name="arch" type="xml">
-                <tree string="Scheduled Actions">
+                <tree string="Scheduled Actions" colors="grey:(not active)">
                     <field name="priority" string="Sequence"/>
                     <field name="name"/>
                     <field name="nextcall"/>
@@ -48,6 +48,7 @@
                     <field name="interval_type"/>
                     <field name="numbercall"/>
                     <field name="user_id" invisible="1"/>
+                    <field name="active"/>
                 </tree>
             </field>
         </record>

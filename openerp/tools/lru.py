@@ -77,7 +77,7 @@ class LRU(object):
     @synchronized()
     def __iter__(self):
         cur = self.first
-        while cur != None:
+        while cur is not None:
             cur2 = cur.next
             yield cur.me[1]
             cur = cur2
@@ -89,7 +89,7 @@ class LRU(object):
     @synchronized()
     def iteritems(self):
         cur = self.first
-        while cur != None:
+        while cur is not None:
             cur2 = cur.next
             yield cur.me
             cur = cur2

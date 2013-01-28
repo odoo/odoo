@@ -22,10 +22,9 @@
 import logging
 import time
 
-from osv import osv, fields
-from tools.translate import _
-
 import openerp
+from openerp.osv import osv
+from openerp.tools.translate import _
 
 _logger = logging.getLogger(__name__)
 
@@ -140,7 +139,7 @@ class ir_sequence(openerp.osv.osv.osv):
         values = self._add_missing_default_values(cr, uid, values, context)
         values['id'] = super(ir_sequence, self).create(cr, uid, values, context)
         if values['implementation'] == 'standard':
-            f = self._create_sequence(cr, values['id'], values['number_increment'], values['number_next'])
+            self._create_sequence(cr, values['id'], values['number_increment'], values['number_next'])
         return values['id']
 
     def unlink(self, cr, uid, ids, context=None):

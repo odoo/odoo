@@ -55,13 +55,12 @@ class report_int(netsvc.Service):
     def create(self, cr, uid, ids, datas, context=None):
         return False
 
-"""
-    Class to automatically build a document using the transformation process:
-        XML -> DATAS -> RML -> PDF
-                            -> HTML
-    using a XSL:RML transformation
-"""
 class report_rml(report_int):
+    """
+        Automatically builds a document using the transformation process:
+            XML -> DATAS -> RML -> PDF -> HTML
+        using a XSL:RML transformation
+    """
     def __init__(self, name, table, tmpl, xsl):
         super(report_rml, self).__init__(name)
         self.table = table
@@ -85,7 +84,7 @@ class report_rml(report_int):
         xml = tools.ustr(xml).encode('utf8')
         report_type = datas.get('report_type', 'pdf')
         if report_type == 'raw':
-            return (xml,report_type)
+            return xml, report_type
         rml = self.create_rml(cr, xml, uid, context)
         pool = pooler.get_pool(cr.dbname)
         ir_actions_report_xml_obj = pool.get('ir.actions.report.xml')
@@ -93,7 +92,7 @@ class report_rml(report_int):
         self.title = report_xml_ids and ir_actions_report_xml_obj.browse(cr,uid,report_xml_ids)[0].name or 'OpenERP Report'
         create_doc = self.generators[report_type]
         pdf = create_doc(rml, title=self.title)
-        return (pdf, report_type)
+        return pdf, report_type
 
     def create_xml(self, cr, uid, ids, datas, context=None):
         if not context:
@@ -244,10 +243,10 @@ class report_rml(report_int):
         return obj.get()
 
     def _get_path(self):
-        ret = []
-        ret.append(self.tmpl.replace(os.path.sep, '/').rsplit('/',1)[0]) # Same dir as the report rml
-        ret.append('addons')
-        ret.append(tools.config['root_path'])
-        return ret
+        return [
+            self.tmpl.replace(os.path.sep, '/').rsplit('/', 1)[0],
+            'addons',
+            tools.config['root_path']
+        ]
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

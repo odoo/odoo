@@ -32,6 +32,7 @@
         <record id="main_partner" model="res.partner" context="{'default_is_company': True}">
             <field name="name">Your Company</field>
             <field name="company_id" eval="None"/>
+            <field name="image" eval="False"/>
             <field name="customer" eval="False"/>
             <field name="is_company" eval="True"/>
             <field name="street"></field>
@@ -61,7 +62,7 @@
         <record id="main_company" model="res.company">
             <field name="name">Your Company</field>
             <field name="partner_id" ref="main_partner"/>
-            <field name="rml_header1">Your Company Slogan</field>
+            <field name="rml_header1">Your Company Tagline</field>
             <field name="currency_id" ref="base.EUR"/>
         </record>
 
@@ -88,6 +89,13 @@ Administrator</field>
         <record id="EUR" model="res.currency">
             <field name="company_id" ref="main_company"/>
         </record>
-        
+
+        <record id="ir_mail_server_localhost0" model="ir.mail_server">
+            <field name="name">localhost</field>
+            <field name="smtp_host">localhost</field>
+            <field eval="25" name="smtp_port"/>
+            <field eval="10" name="sequence"/>
+        </record>
+
     </data>
 </openerp>

@@ -29,7 +29,8 @@ import utils
 Font_size= 10.0
 
 def verbose(text):
-    sys.stderr.write(text+"\n");
+    sys.stderr.write(text+"\n")
+
 
 class textbox(object):
     """A box containing plain text.
@@ -107,11 +108,11 @@ class textbox(object):
     def haplines(self,arr,offset,cc= ''):
         """ Horizontaly append lines 
         """
-        while (len(self.lines) < len(arr)):
+        while len(self.lines) < len(arr):
             self.lines.append("")
         
         for i in range(len(self.lines)):
-            while (len(self.lines[i]) < offset):
+            while len(self.lines[i]) < offset:
                 self.lines[i] += " "
         for i in range(len(arr)):
             self.lines[i] += cc +arr[i] 
@@ -220,7 +221,7 @@ class _flowable(object):
     def rec_render(self,node):
         """ Recursive render: fill outarr with text of current node
         """
-        if node.tag != None:
+        if node.tag is not None:
             if node.tag in self._tags:
                 self._tags[node.tag](node)
             else:
@@ -255,12 +256,10 @@ class _rml_tmpl_frame(_rml_tmpl_tag):
         self.posx = posx
     def tag_start(self):
         return "frame start"
-        return '<table border="0" width="%d"><tr><td width="%d">&nbsp;</td><td>' % (self.width+self.posx,self.posx)
     def tag_end(self):
         return True
     def tag_stop(self):
         return "frame stop"
-        return '</td></tr></table><br/>'
     def tag_mergeable(self):
         return False
 
@@ -282,24 +281,7 @@ class _rml_tmpl_draw_string(_rml_tmpl_tag):
 
     def tag_start(self):
         return "draw string \"%s\" @(%d,%d)..\n" %("txt",self.posx,self.posy)
-        self.pos.sort()
-        res = '\\table ...'
-        posx = 0
-        i = 0
-        for (x,y,align,txt, style, fs) in self.pos:
-            if align=="left":
-                pos2 = len(txt)*fs
-                res+='<td width="%d"></td><td style="%s" width="%d">%s</td>' % (x - posx, style, pos2, txt)
-                posx = x+pos2
-            if align=="right":
-                res+='<td width="%d" align="right" style="%s">%s</td>' % (x - posx, style, txt)
-                posx = x
-            if align=="center":
-                res+='<td width="%d" align="center" style="%s">%s</td>' % ((x - posx)*2, style, txt)
-                posx = 2*x-posx
-            i+=1
-        res+='\\table end'
-        return res
+
     def merge(self, ds):
         self.pos+=ds.pos
 
@@ -316,10 +298,6 @@ class _rml_tmpl_draw_lines(_rml_tmpl_tag):
 
     def tag_start(self):
         return "draw lines..\n"
-        if self.ok:
-            return '<table border="0" cellpadding="0" cellspacing="0" width="%d"><tr><td width="%d"></td><td><hr width="100%%" style="margin:0px; %s"></td></tr></table>' % (self.posx+self.width,self.posx,self.style)
-        else:
-            return ''
 
 class _rml_stylesheet(object):
     def __init__(self, stylesheet, doc):
@@ -456,11 +434,6 @@ class _rml_template(object):
     
     def end(self):
         return "template end\n"
-        result = ''
-        while not self.loop:
-            result += self.frame_start()
-            result += self.frame_stop()
-        return result
 
 class _rml_doc(object):
     def __init__(self, node, localcontext=None, images=None, path='.', title=None):

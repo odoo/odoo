@@ -410,22 +410,15 @@ def application(environ, start_response):
 # The WSGI server, started by start_server(), stopped by stop_server().
 httpd = None
 
-def serve():
+def serve(interface, port, threaded):
     """ Serve HTTP requests via werkzeug development server.
-
-    If werkzeug can not be imported, we fall back to wsgiref's simple_server.
 
     Calling this function is blocking, you might want to call it in its own
     thread.
     """
 
     global httpd
-
-    # TODO Change the xmlrpc_* options to http_*
-    interface = config['xmlrpc_interface'] or '0.0.0.0'
-    port = config['xmlrpc_port']
-    httpd = werkzeug.serving.make_server(interface, port, application, threaded=True)
-    _logger.info('HTTP service (werkzeug) running on %s:%s', interface, port)
+    httpd = werkzeug.serving.make_server(interface, port, application, threaded=threaded)
     httpd.serve_forever()
 
 def start_service():
@@ -433,7 +426,11 @@ def start_service():
 
     The WSGI server can be shutdown with stop_server() below.
     """
-    threading.Thread(target=serve).start()
+    # TODO Change the xmlrpc_* options to http_*
+    interface = config['xmlrpc_interface'] or '0.0.0.0'
+    port = config['xmlrpc_port']
+    _logger.info('HTTP service (werkzeug) running on %s:%s', interface, port)
+    threading.Thread(target=serve, args=(interface, port, True)).start()
 
 def stop_service():
     """ Initiate the shutdown of the WSGI server.
@@ -442,5 +439,6 @@ def stop_service():
     """
     if httpd:
         httpd.shutdown()
+        openerp.netsvc.close_socket(httpd.socket)
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

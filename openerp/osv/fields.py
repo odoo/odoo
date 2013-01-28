@@ -27,6 +27,9 @@
     Fields Attributes:
         * _classic_read: is a classic sql fields
         * _type   : field type
+        * _auto_join: for one2many and many2one fields, tells whether select
+            queries will join the relational table instead of replacing the
+            field condition by an equivalent-one based on a search.
         * readonly
         * required
         * size
@@ -67,6 +70,7 @@ class _column(object):
     """
     _classic_read = True
     _classic_write = True
+    _auto_join = False
     _prefetch = True
     _properties = False
     _type = 'unknown'
@@ -285,8 +289,8 @@ class date(_column):
            This method may be passed as value to initialize _defaults.
 
            :param Model model: model (osv) for which the date value is being
-                               computed - technical field, currently ignored,
-                               automatically passed when used in _defaults.
+                               computed - automatically passed when used in
+                                _defaults.
            :param datetime timestamp: optional datetime value to use instead of
                                       the current date and time (must be a
                                       datetime, regular dates can't be converted
@@ -299,9 +303,13 @@ class date(_column):
         today = timestamp or DT.datetime.now()
         context_today = None
         if context and context.get('tz'):
+            tz_name = context['tz']  
+        else:
+            tz_name = model.pool.get('res.users').read(cr, SUPERUSER_ID, uid, ['tz'])['tz']
+        if tz_name:
             try:
                 utc = pytz.timezone('UTC')
-                context_tz = pytz.timezone(context['tz'])
+                context_tz = pytz.timezone(tz_name)
                 utc_today = utc.localize(today, is_dst=False) # UTC = no DST
                 context_today = utc_today.astimezone(context_tz)
             except Exception:
@@ -342,9 +350,14 @@ class datetime(_column):
         """
         assert isinstance(timestamp, DT.datetime), 'Datetime instance expected'
         if context and context.get('tz'):
+            tz_name = context['tz']  
+        else:
+            registry = openerp.modules.registry.RegistryManager.get(cr.dbname)
+            tz_name = registry.get('res.users').read(cr, SUPERUSER_ID, uid, ['tz'])['tz']
+        if tz_name:
             try:
                 utc = pytz.timezone('UTC')
-                context_tz = pytz.timezone(context['tz'])
+                context_tz = pytz.timezone(tz_name)
                 utc_timestamp = utc.localize(timestamp, is_dst=False) # UTC = no DST
                 return utc_timestamp.astimezone(context_tz)
             except Exception:
@@ -427,9 +440,10 @@ class many2one(_column):
     _symbol_f = lambda x: x or None
     _symbol_set = (_symbol_c, _symbol_f)
 
-    def __init__(self, obj, string='unknown', **args):
+    def __init__(self, obj, string='unknown', auto_join=False, **args):
         _column.__init__(self, string=string, **args)
         self._obj = obj
+        self._auto_join = auto_join
 
     def get(self, cr, obj, ids, name, user=None, context=None, values=None):
         if context is None:
@@ -496,11 +510,12 @@ class one2many(_column):
     _prefetch = False
     _type = 'one2many'
 
-    def __init__(self, obj, fields_id, string='unknown', limit=None, **args):
+    def __init__(self, obj, fields_id, string='unknown', limit=None, auto_join=False, **args):
         _column.__init__(self, string=string, **args)
         self._obj = obj
         self._fields_id = fields_id
         self._limit = limit
+        self._auto_join = auto_join
         #one2many can't be used as condition for defaults
         assert(self.change_default != True)
 
@@ -662,7 +677,7 @@ class many2many(_column):
                 col1 = '%s_id' % source_model._table
             if not col2:
                 col2 = '%s_id' % dest_model._table
-        return (tbl, col1, col2)
+        return tbl, col1, col2
 
     def _get_query_and_where_params(self, cr, model, ids, values, where_params):
         """ Extracted from ``get`` to facilitate fine-tuning of the generated
@@ -1298,7 +1313,7 @@ class sparse(function):
 
     def __init__(self, serialization_field, **kwargs):
         self.serialization_field = serialization_field
-        return super(sparse, self).__init__(self._fnct_read, fnct_inv=self._fnct_write, multi='__sparse_multi', **kwargs)
+        super(sparse, self).__init__(self._fnct_read, fnct_inv=self._fnct_write, multi='__sparse_multi', **kwargs)
      
 
 
@@ -1554,7 +1569,7 @@ class column_info(object):
 
     def __str__(self):
         return '%s(%s, %s, %s, %s, %s)' % (
-            self.__name__, self.name, self.column,
+            self.__class__.__name__, self.name, self.column,
             self.parent_model, self.parent_column, self.original_parent)
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

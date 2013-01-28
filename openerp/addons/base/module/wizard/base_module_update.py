@@ -18,7 +18,8 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-from osv import osv, fields
+
+from openerp.osv import osv, fields
 
 class base_module_update(osv.osv_memory):
     """ Update Module """

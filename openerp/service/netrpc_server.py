@@ -22,8 +22,6 @@
 #.apidoc title: NET-RPC Server
 
 """ This file contains instance of the net-rpc server
-
-    
 """
 import logging
 import select
@@ -37,24 +35,6 @@ import openerp.netsvc as netsvc
 import openerp.tools as tools
 
 _logger = logging.getLogger(__name__)
-
-def close_socket(sock):
-    """ Closes a socket instance cleanly
-
-    :param sock: the network socket to close
-    :type sock: socket.socket
-    """
-    try:
-        sock.shutdown(socket.SHUT_RDWR)
-    except socket.error, e:
-        # On OSX, socket shutdowns both sides if any side closes it
-        # causing an error 57 'Socket is not connected' on shutdown
-        # of the other side (or something), see
-        # http://bugs.python.org/issue4397
-        # note: stdlib fixed test, not behavior
-        if e.errno != errno.ENOTCONN or platform.system() not in ['Darwin', 'Windows']:
-            raise
-    sock.close()
 
 class Server:
     """ Generic interface for all servers with an event loop etc.
@@ -133,7 +113,7 @@ class Server:
         return '\n'.join(res)
 
     def _close_socket(self):
-        close_socket(self.socket)
+        netsvc.close_socket(self.socket)
 
 class TinySocketClientThread(threading.Thread):
     def __init__(self, sock, threads):

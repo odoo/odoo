@@ -18,14 +18,14 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
+
 import re
 import time
-import netsvc
-from osv import fields, osv
-import tools
 
-from tools import float_round, float_is_zero, float_compare
-from tools.translate import _
+from openerp import tools
+from openerp.osv import fields, osv
+from openerp.tools import float_round, float_is_zero, float_compare
+from openerp.tools.translate import _
 
 CURRENCY_DISPLAY_PATTERN = re.compile(r'(\w+)\s*(?:\((.*)\))?')
 
@@ -99,7 +99,7 @@ class res_currency(osv.osv):
         res = super(res_currency, self).read(cr, user, ids, fields, context, load)
         currency_rate_obj = self.pool.get('res.currency.rate')
         values = res
-        if not isinstance(values, (list)):
+        if not isinstance(values, list):
             values = [values]
         for r in values:
             if r.__contains__('rate_ids'):
@@ -217,7 +217,7 @@ class res_currency(osv.osv):
             if round:
                 return self.round(cr, uid, to_currency, from_amount * rate)
             else:
-                return (from_amount * rate)
+                return from_amount * rate
 
 res_currency()
 

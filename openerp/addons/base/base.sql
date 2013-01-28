@@ -149,7 +149,6 @@ CREATE TABLE res_users (
     active boolean default True,
     login varchar(64) NOT NULL UNIQUE,
     password varchar(64) default null,
-    lang varchar(64) default '',
     -- No FK references below, will be added later by ORM
     -- (when the destination rows exist)
     company_id int,
@@ -316,11 +315,27 @@ CREATE TABLE ir_module_module_dependency (
     primary key(id)
 );
 
-CREATE TABLE res_company (
+CREATE TABLE res_partner (
     id serial NOT NULL,
-    name character varying(64) not null,
-    parent_id integer references res_company on delete set null,
+    name character varying(128),
+    lang varchar(64),
+    company_id int,
     primary key(id)
+);
+
+
+CREATE TABLE res_currency (
+    id serial PRIMARY KEY,
+    name VARCHAR(32) NOT NULL
+);
+
+CREATE TABLE res_company (
+    id serial PRIMARY KEY,
+    name character varying(128) not null,
+    parent_id integer references res_company on delete set null,
+    partner_id integer not null references res_partner,
+    currency_id integer not null references res_currency
+    
 );
 
 CREATE TABLE res_lang (
@@ -375,16 +390,24 @@ CREATE TABLE ir_model_relation (
     module integer NOT NULL references ir_module_module on delete restrict,
     model integer NOT NULL references ir_model on delete restrict,
     name character varying(128) NOT NULL
-);
+);  
 
 ---------------------------------
 -- Users
 ---------------------------------
+insert into res_users (id,login,password,active,company_id,partner_id) VALUES (1,'admin','admin',true,1,1);
+insert into ir_model_data (name,module,model,noupdate,res_id) VALUES ('user_root','base','res.users',true,1);
 
-insert into res_users (id,login,password,active,company_id,partner_id,lang) values (1,'admin','admin',True,1,1,'en_US');
-insert into ir_model_data (name,module,model,noupdate,res_id) values ('user_root','base','res.users',True,1);
+insert into res_partner (id, name, lang, company_id) VALUES (1, 'Your Company', 'en_US', 1);
+insert into ir_model_data (name,module,model,noupdate,res_id) VALUES ('main_partner','base','res.partner',true,1);
 
--- Compatibility purpose, to remove V6.0
-insert into ir_model_data (name,module,model,noupdate,res_id) values ('user_admin','base','res.users',True,1);
+insert into res_currency (id, name) VALUES (1, 'EUR');
+insert into ir_model_data (name,module,model,noupdate,res_id) VALUES ('EUR','base','res.currency',true,1);
 
+insert into res_company (id, name, partner_id, currency_id) VALUES (1, 'Your Company', 1, 1);
+insert into ir_model_data (name,module,model,noupdate,res_id) VALUES ('main_company','base','res.company',true,1);
+
+select setval('res_company_id_seq', 2);
 select setval('res_users_id_seq', 2);
+select setval('res_partner_id_seq', 2);
+select setval('res_currency_id_seq', 2);

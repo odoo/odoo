@@ -19,8 +19,9 @@
 #
 ##############################################################################
 
-from osv import osv, fields
 import time
+
+from openerp.osv import osv, fields
 
 def _links_get(self, cr, uid, context=None):
     obj = self.pool.get('res.request.link')
@@ -58,7 +59,7 @@ class res_request(osv.osv):
         ids = map(lambda x:x[0], cr.fetchall())
         cr.execute('select id from res_request where act_from=%s and (act_to<>%s) and (trigger_date<=%s or trigger_date is null) and active=True and state != %s', (uid,uid,time.strftime('%Y-%m-%d'), 'closed'))
         ids2 = map(lambda x:x[0], cr.fetchall())
-        return (ids, ids2)
+        return ids, ids2
 
     _columns = {
         'create_date': fields.datetime('Created Date', readonly=True),

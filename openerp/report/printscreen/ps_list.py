@@ -115,7 +115,7 @@ class report_printscreen_list(report_int):
                     rows_new += [elem for elem in rows if elem['id'] == id]
                 rows = rows_new
         res = self._create_table(uid, datas['ids'], result['fields'], fields_order, rows, context, model_desc)
-        return (self.obj.get(), 'pdf')
+        return self.obj.get(), 'pdf'
 
 
     def _create_table(self, uid, ids, fields, fields_order, results, context, title=''):
@@ -147,7 +147,7 @@ class report_printscreen_list(report_int):
         for i in range(0, len(fields_order)):
             temp.append(0)
             tsum.append(0)
-        ince = -1;
+        ince = -1
         for f in fields_order:
             s = 0
             ince += 1
@@ -230,14 +230,14 @@ class report_printscreen_list(report_int):
                     col.text = line[f] = 'Undefined'
                     col.set('tree', 'undefined')
 
-                if line[f] != None:
+                if line[f] is not None:
                     col.text = tools.ustr(line[f] or '')
                     if float_flag:
                         col.set('tree','float')
                     if line.get('__no_leaf') and temp[count] == 1 and f != 'id' and not line['__context']['group_by']:
                         tsum[count] = float(tsum[count]) + float(line[f])
                     if not line.get('__group') and f != 'id' and temp[count] == 1:
-                        tsum[count] = float(tsum[count])  + float(line[f]);
+                        tsum[count] = float(tsum[count])  + float(line[f])
                 else:
                     col.text = '/'
 
@@ -245,7 +245,7 @@ class report_printscreen_list(report_int):
         for f in range(0, len(fields_order)):
             col = etree.SubElement(node_line, 'col', para='group', tree='no')
             col.set('tree', 'float')
-            if tsum[f] != None:
+            if tsum[f] is not None:
                 if tsum[f] != 0.0:
                     digits = fields[fields_order[f]].get('digits', (16, 2))
                     prec = '%%.%sf' % (digits[1], )

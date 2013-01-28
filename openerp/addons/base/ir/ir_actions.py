@@ -22,17 +22,16 @@
 import logging
 import os
 import re
-import time
-import tools
-
-import netsvc
-from osv import fields,osv
-from report.report_sxw import report_sxw, report_rml
-from tools.config import config
-from tools.safe_eval import safe_eval as eval
-from tools.translate import _
 from socket import gethostname
+import time
+
 from openerp import SUPERUSER_ID
+from openerp import netsvc, tools
+from openerp.osv import fields, osv
+from openerp.report.report_sxw import report_sxw, report_rml
+from openerp.tools.config import config
+from openerp.tools.safe_eval import safe_eval as eval
+from openerp.tools.translate import _
 
 _logger = logging.getLogger(__name__)
 
@@ -615,16 +614,6 @@ class actions_server(osv.osv):
 
             if action.state == 'email':
                 email_from = config['email_from']
-                address = str(action.email)
-                try:
-                    address =  eval(str(action.email), cxt)
-                except:
-                    pass
-
-                if not address:
-                    _logger.info('No partner email address specified, not sending any email.')
-                    continue
-
                 if not email_from:
                     _logger.debug('--email-from command line option is not specified, using a fallback value instead.')
                     if user.email:
@@ -632,16 +621,27 @@ class actions_server(osv.osv):
                     else:
                         email_from = "%s@%s" % (user.login, gethostname())
 
+                try:
+                    address = eval(str(action.email), cxt)
+                except Exception:
+                    address = str(action.email)
+
+                if not address:
+                    _logger.info('No partner email address specified, not sending any email.')
+                    continue
+
+                # handle single and multiple recipient addresses
+                addresses = address if isinstance(address, (tuple, list)) else [address]
                 subject = self.merge_message(cr, uid, action.subject, action, context)
                 body = self.merge_message(cr, uid, action.message, action, context)
 
                 ir_mail_server = self.pool.get('ir.mail_server')
-                msg = ir_mail_server.build_email(email_from, [address], subject, body)
+                msg = ir_mail_server.build_email(email_from, addresses, subject, body)
                 res_email = ir_mail_server.send_email(cr, uid, msg)
                 if res_email:
-                    _logger.info('Email successfully sent to: %s', address)
+                    _logger.info('Email successfully sent to: %s', addresses)
                 else:
-                    _logger.warning('Failed to send email to: %s', address)
+                    _logger.warning('Failed to send email to: %s', addresses)
 
             if action.state == 'trigger':
                 wf_service = netsvc.LocalService("workflow")
@@ -671,7 +671,7 @@ class actions_server(osv.osv):
                 context['object'] = obj
                 for i in expr:
                     context['active_id'] = i.id
-                    result = self.run(cr, uid, [action.loop_action.id], context)
+                    self.run(cr, uid, [action.loop_action.id], context)
 
             if action.state == 'object_write':
                 res = {}
@@ -716,8 +716,6 @@ class actions_server(osv.osv):
                         expr = exp.value
                     res[exp.col1.name] = expr
 
-                obj_pool = None
-                res_id = False
                 obj_pool = self.pool.get(action.srcmodel_id.model)
                 res_id = obj_pool.create(cr, uid, res)
                 if action.record_id:
@@ -736,7 +734,7 @@ class actions_server(osv.osv):
                 model = action.copy_object.split(',')[0]
                 cid = action.copy_object.split(',')[1]
                 obj_pool = self.pool.get(model)
-                res_id = obj_pool.copy(cr, uid, int(cid), res)
+                obj_pool.copy(cr, uid, int(cid), res)
 
         return False
 
