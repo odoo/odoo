@@ -7,7 +7,7 @@ define(["nova", "jquery", "underscore", "oeclient", "require"], function(nova, $
     var connection;
 
     livesupport.main = function(server_url, db, login, password) {
-        $.ajax({
+        var templates_def = $.ajax({
             url: require.toUrl("./livesupport_templates.js"),
             jsonp: false,
             jsonpCallback: "oe_livesupport_templates_callback",
@@ -15,7 +15,14 @@ define(["nova", "jquery", "underscore", "oeclient", "require"], function(nova, $
             cache: true,
         }).then(function(content) {
             return templateEngine.loadFileContent(content);
-        }).then(function() {
+        });
+        var css_def = $.Deferred();
+        $('<link rel="stylesheet" href="' + require.toUrl("../css/livesupport.css") + '"></link>')
+                .appendTo($("head")).ready(function() {
+            css_def.resolve();
+        });
+
+        $.when(templates_def, css_def).then(function() {
             console.log("starting client");
             connection = new oeclient.Connection(new oeclient.JsonpRPCConnector(server_url), db, login, password);
             connection.getModel("res.users").search_read([["login", "=", ["demo"]]]).then(function(result) {
@@ -214,7 +221,7 @@ define(["nova", "jquery", "underscore", "oeclient", "require"], function(nova, $
     });
 
     livesupport.Conversation = nova.Widget.$extend({
-        tagClass: "oe_im_chatview",
+        className: "openerp_style oe_im_chatview",
         events: {
             "keydown input": "send_message",
             "click .oe_im_chatview_close": "destroy",
