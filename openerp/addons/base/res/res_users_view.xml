@@ -92,7 +92,7 @@
                 <form string="Users" version="7.0">
                     <field name="id" invisible="1"/>
                     <sheet>
-                        <div class="oe_right oe_button_box">
+                        <div class="oe_right oe_button_box" attrs="{'invisible': [('active', '!=', True), ('state','not in',['active', 'reset'])]}" >
                             <button string="Change Password" type="action" name="%(change_password_wizard_action)d"
                                 help="Change the user password."/>
                         </div>
@@ -102,37 +102,16 @@
                             <h1><field name="name"/></h1>
                             <label for="login" class="oe_edit_only"/>
                             <h2><field name="login"/></h2>
+                            <label for="company_id" class="oe_edit_only" groups="base.group_multi_company"/>
+                            <field name="company_id" context="{'user_preference': 0}" groups="base.group_multi_company"/>
                         </div>
-                        <group>
-                            <group>
-                                <field name="company_id" context="{'user_preference': 0}"/>
-                            </group>
-                            <group>
-                                <field name="active"/>
-                            </group>
-                        </group>
-                        <notebook colspan="4">
+                        <notebook colspan="4" invisible="context.get('simple_mode',False)">
                             <page string="Contact">
-                                <group col="2">
-                                    <group>
-                                        <field name="phone" placeholder="e.g. +32.81.81.37.00"/>
-                                        <field name="mobile"/>
-                                        <field name="fax"/>
-                                        <field name="email" widget="email"/>
-                                    </group>
-                                    <group>
-                                        <label for="street" string="Address"/>
-                                        <div>
-                                            <field name="street" placeholder="Street..."/>
-                                            <field name="street2"/>
-                                            <div class="address_format">
-                                                <field name="city" placeholder="City" style="width: 40%%"/>
-                                                <field name="state_id" class="oe_no_button" placeholder="State" style="width: 37%%" options='{"no_open": True}' on_change="onchange_state(state_id)"/>
-                                                <field name="zip" placeholder="ZIP" style="width: 20%%"/>
-                                            </div>
-                                            <field name="country_id" placeholder="Country" class="oe_no_button" options='{"no_open": True}'/>
-                                        </div>
-                                    </group>
+                                <group>
+                                    <field name="phone" placeholder="e.g. +32.81.81.37.00"/>
+                                    <field name="mobile"/>
+                                    <field name="fax"/>
+                                    <field name="email" widget="email"/>
                                 </group>
                             </page>
                             <page string="Preferences">
@@ -151,6 +130,9 @@
                                 </group>
                             </page>
                             <page string="Access Rights">
+                                <group>
+                                    <field name="active"/>
+                                </group>
                                 <group string="Allowed Companies" groups="base.group_multi_company">
                                     <field name="company_ids" nolabel="1" widget="many2many_tags"/>
                                 </group>
