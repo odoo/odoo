@@ -31,7 +31,7 @@ from openerp.tools.safe_eval import safe_eval as eval
 import re
 from openerp.addons.decimal_precision import decimal_precision as dp
 
-from openerp.osv import fields, osv
+from openerp.osv import fields, osv, api
 from openerp import netsvc
 from openerp.tools.translate import _
 
@@ -334,6 +334,7 @@ class marketing_campaign_segment(osv.osv):
         self.process_segment(cr, uid, ids)
         return True
 
+    @api.cr_uid_ids
     def process_segment(self, cr, uid, segment_ids=None, context=None):
         Workitems = self.pool.get('marketing.campaign.workitem')
         Campaigns = self.pool.get('marketing.campaign')
@@ -660,12 +661,14 @@ class marketing_campaign_workitem(osv.osv):
         'date': False,
     }
 
+    @api.cr_uid_ids
     def button_draft(self, cr, uid, workitem_ids, context=None):
         for wi in self.browse(cr, uid, workitem_ids, context=context):
             if wi.state in ('exception', 'cancelled'):
                 self.write(cr, uid, [wi.id], {'state':'todo'}, context=context)
         return True
 
+    @api.cr_uid_ids
     def button_cancel(self, cr, uid, workitem_ids, context=None):
         for wi in self.browse(cr, uid, workitem_ids, context=context):
             if wi.state in ('todo','exception'):
@@ -694,9 +697,9 @@ class marketing_campaign_workitem(osv.osv):
             if condition:
                 if not eval(condition, eval_context):
                     if activity.keep_if_condition_not_met:
-                        workitem.write({'state': 'cancelled'}, context=context)
+                        workitem.write({'state': 'cancelled'})
                     else:
-                        workitem.unlink(context=context)
+                        workitem.unlink()
                     return
             result = True
             if campaign_mode in ('manual', 'active'):
@@ -707,11 +710,11 @@ class marketing_campaign_workitem(osv.osv):
             values = dict(state='done')
             if not workitem.date:
                 values['date'] = datetime.now().strftime(DT_FMT)
-            workitem.write(values, context=context)
+            workitem.write(values)
 
             if result:
                 # process _chain
-                workitem = workitem.browse(context=context)[0] # reload
+                workitem.refresh()       # reload
                 date = datetime.strptime(workitem.date, DT_FMT)
 
                 for transition in activity.to_ids:
@@ -756,9 +759,9 @@ class marketing_campaign_workitem(osv.osv):
 
         except Exception:
             tb = "".join(format_exception(*exc_info()))
-            workitem.write({'state': 'exception', 'error_msg': tb},
-                     context=context)
+            workitem.write({'state': 'exception', 'error_msg': tb})
 
+    @api.cr_uid_ids
     def process(self, cr, uid, workitem_ids, context=None):
         for wi in self.browse(cr, uid, workitem_ids, context=context):
             self._process_one(cr, uid, wi, context=context)
