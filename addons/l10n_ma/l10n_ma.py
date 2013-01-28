@@ -20,7 +20,7 @@
 #
 ##############################################################################
 
-from osv import fields, osv
+from openerp.osv import fields, osv
 
 class l10n_ma_report(osv.osv):
     _name = 'l10n.ma.report'

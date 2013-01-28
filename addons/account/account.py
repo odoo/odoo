@@ -19,19 +19,19 @@
 #
 ##############################################################################
 
-import time
+import logging
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
 from operator import itemgetter
+import time
 
-import logging
-import pooler
-from osv import fields, osv
-import decimal_precision as dp
-from tools.translate import _
-from tools.float_utils import float_round
 from openerp import SUPERUSER_ID
-import tools
+from openerp import pooler, tools
+from openerp.osv import fields, osv
+from openerp.tools.translate import _
+from openerp.tools.float_utils import float_round
+
+import openerp.addons.decimal_precision as dp
 
 _logger = logging.getLogger(__name__)
 
@@ -705,7 +705,7 @@ class account_journal(osv.osv):
         'with_last_closing_balance' : fields.boolean('Opening With Last Closing Balance'),
         'name': fields.char('Journal Name', size=64, required=True),
         'code': fields.char('Code', size=5, required=True, help="The code will be displayed on reports."),
-        'type': fields.selection([('sale', 'Sale'),('sale_refund','Sale Refund'), ('purchase', 'Purchase'), ('purchase_refund','Purchase Refund'), ('cash', 'Cash'), ('bank', 'Bank and Cheques'), ('general', 'General'), ('situation', 'Opening/Closing Situation')], 'Type', size=32, required=True,
+        'type': fields.selection([('sale', 'Sale'),('sale_refund','Sale Refund'), ('purchase', 'Purchase'), ('purchase_refund','Purchase Refund'), ('cash', 'Cash'), ('bank', 'Bank and Checks'), ('general', 'General'), ('situation', 'Opening/Closing Situation')], 'Type', size=32, required=True,
                                  help="Select 'Sale' for customer invoices journals."\
                                  " Select 'Purchase' for supplier invoices journals."\
                                  " Select 'Cash' or 'Bank' for journals that are used in customer or supplier payments."\
@@ -715,7 +715,7 @@ class account_journal(osv.osv):
         'account_control_ids': fields.many2many('account.account', 'account_account_type_rel', 'journal_id','account_id', 'Account', domain=[('type','<>','view'), ('type', '<>', 'closed')]),
         'default_credit_account_id': fields.many2one('account.account', 'Default Credit Account', domain="[('type','!=','view')]", help="It acts as a default account for credit amount"),
         'default_debit_account_id': fields.many2one('account.account', 'Default Debit Account', domain="[('type','!=','view')]", help="It acts as a default account for debit amount"),
-        'centralisation': fields.boolean('Centralised Counterpart', help="Check this box to determine that each entry of this journal won't create a new counterpart but will share the same counterpart. This is used in fiscal year closing."),
+        'centralisation': fields.boolean('Centralized Counterpart', help="Check this box to determine that each entry of this journal won't create a new counterpart but will share the same counterpart. This is used in fiscal year closing."),
         'update_posted': fields.boolean('Allow Cancelling Entries', help="Check this box if you want to allow the cancellation the entries related to this journal or of the invoice related to this journal"),
         'group_invoice_lines': fields.boolean('Group Invoice Lines', help="If this box is checked, the system will try to group the accounting lines when generating them from invoices."),
         'sequence_id': fields.many2one('ir.sequence', 'Entry Sequence', help="This field contains the information related to the numbering of the journal entries of this journal.", required=True),
@@ -1014,10 +1014,15 @@ class account_period(osv.osv):
         else:
             company_id = self.pool.get('res.users').browse(cr, uid, uid, context=context).company_id.id
             args.append(('company_id', '=', company_id))
-        ids = self.search(cr, uid, args, context=context)
-        if not ids:
-            raise osv.except_osv(_('Error!'), _('There is no period defined for this date: %s.\nPlease create one.')%dt)
-        return ids
+        result = []
+        if context.get('account_period_prefer_normal'):
+            # look for non-special periods first, and fallback to all if no result is found
+            result = self.search(cr, uid, args + [('special', '=', False)], context=context)
+        if not result:
+            result = self.search(cr, uid, args, context=context)
+        if not result:
+            raise osv.except_osv(_('Error !'), _('There is no period defined for this date: %s.\nPlease create one.')%dt)
+        return result
 
     def action_draft(self, cr, uid, ids, *args):
         mode = 'draft'
@@ -1191,10 +1196,9 @@ class account_move(osv.osv):
         return res
 
     def _get_period(self, cr, uid, context=None):
-        periods = self.pool.get('account.period').find(cr, uid)
-        if periods:
-            return periods[0]
-        return False
+        ctx = dict(context or {}, account_period_prefer_normal=True)
+        period_ids = self.pool.get('account.period').find(cr, uid, context=ctx)
+        return period_ids[0]
 
     def _amount_compute(self, cr, uid, ids, name, args, context, where =''):
         if not ids: return {}
@@ -1459,6 +1463,7 @@ class account_move(osv.osv):
             line_id = self.pool.get('account.move.line').create(cr, uid, {
                 'name': _(mode.capitalize()+' Centralisation'),
                 'centralisation': mode,
+                'partner_id': False,
                 'account_id': account_id,
                 'move_id': move.id,
                 'journal_id': move.journal_id.id,
@@ -1497,6 +1502,7 @@ class account_move(osv.osv):
                     line_id = self.pool.get('account.move.line').create(cr, uid, {
                         'name': _('Currency Adjustment'),
                         'centralisation': 'currency',
+                        'partner_id': False,
                         'account_id': account_id,
                         'move_id': move.id,
                         'journal_id': move.journal_id.id,

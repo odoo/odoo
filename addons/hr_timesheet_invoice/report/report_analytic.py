@@ -19,9 +19,9 @@
 #
 ##############################################################################
 
-from osv import fields,osv
-import tools
-from decimal_precision import decimal_precision as dp
+from openerp.osv import fields,osv
+from openerp import tools
+from openerp.addons.decimal_precision import decimal_precision as dp
 
 
 class report_analytic_account_close(osv.osv):

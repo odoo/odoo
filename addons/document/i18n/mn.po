@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0.0-rc1\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2012-11-24 02:52+0000\n"
+"POT-Creation-Date: 2012-12-21 17:05+0000\n"
 "PO-Revision-Date: 2012-05-10 17:39+0000\n"
 "Last-Translator: Raphael Collet (OpenERP) <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-11-25 06:17+0000\n"
-"X-Generator: Launchpad (build 16293)\n"
+"X-Launchpad-Export-Date: 2012-12-22 05:52+0000\n"
+"X-Generator: Launchpad (build 16378)\n"
 
 #. module: document
 #: field:document.directory,parent_id:0
@@ -22,25 +22,10 @@ msgid "Parent Directory"
 msgstr "Эцэг хавтас"
 
 #. module: document
-#: code:addons/document/document_directory.py:273
+#: code:addons/document/document.py:336
 #, python-format
 msgid "Directory name contains special characters!"
 msgstr "Хавтасны нэр онцгой тэмдэгт агуулж болно!"
-
-#. module: document
-#: view:board.board:0
-msgid "Document board"
-msgstr "Баримтын самбар"
-
-#. module: document
-#: model:ir.model,name:document.model_process_node
-msgid "Process Node"
-msgstr "Process Node"
-
-#. module: document
-#: sql_constraint:document.directory:0
-msgid "Directory must have a parent or a storage."
-msgstr ""
 
 #. module: document
 #: view:document.directory:0
@@ -58,14 +43,13 @@ msgstr ""
 
 #. module: document
 #: view:document.directory:0
-#: view:document.storage:0
 msgid "Group By..."
 msgstr "Бүлэглэх..."
 
 #. module: document
-#: model:ir.model,name:document.model_document_directory_content_type
-msgid "Directory Content Type"
-msgstr "Хавтасын агуулгын төрөл"
+#: view:ir.attachment:0
+msgid "Modification"
+msgstr ""
 
 #. module: document
 #: view:document.directory:0
@@ -105,9 +89,9 @@ msgid "Directory Content"
 msgstr "Хавтасын агуулга"
 
 #. module: document
-#: view:document.directory:0
-msgid "Dynamic context"
-msgstr "Динамик утга"
+#: view:ir.attachment:0
+msgid "My Document(s)"
+msgstr ""
 
 #. module: document
 #: model:ir.ui.menu,name:document.menu_document_management_configuration
@@ -126,13 +110,13 @@ msgstr ""
 "to the current record, in dynamic folders"
 
 #. module: document
-#: field:document.storage,path:0
-msgid "Path"
-msgstr "Зам"
+#: help:document.directory.dctx,field:0
+msgid "The name of the field."
+msgstr ""
 
 #. module: document
-#: code:addons/document/document_directory.py:263
-#: code:addons/document/document_directory.py:268
+#: code:addons/document/document.py:326
+#: code:addons/document/document.py:331
 #, python-format
 msgid "Directory name must be unique!"
 msgstr "Хавтасны нэр давхцахгүй!"
@@ -159,7 +143,6 @@ msgstr ""
 
 #. module: document
 #: view:document.directory:0
-#: field:document.storage,dir_ids:0
 #: model:ir.actions.act_window,name:document.action_document_directory_form
 #: model:ir.ui.menu,name:document.menu_document_directories
 msgid "Directories"
@@ -169,13 +152,6 @@ msgstr "Хавтасууд"
 #: model:ir.model,name:document.model_report_document_user
 msgid "Files details by Users"
 msgstr "Файлын дэлгэрэнгүй, хэрэглэгчээр"
-
-#. module: document
-#: code:addons/document/document_storage.py:569
-#: code:addons/document/document_storage.py:597
-#, python-format
-msgid "Error!"
-msgstr "Алдаа!"
 
 #. module: document
 #: field:document.directory,resource_find_all:0
@@ -228,14 +204,9 @@ msgid ""
 msgstr ""
 
 #. module: document
-#: field:process.node,directory_id:0
-msgid "Document directory"
-msgstr "Баримтын хавтас"
-
-#. module: document
-#: code:addons/document/document_directory.py:263
-#: code:addons/document/document_directory.py:268
-#: code:addons/document/document_directory.py:273
+#: code:addons/document/document.py:326
+#: code:addons/document/document.py:331
+#: code:addons/document/document.py:336
 #, python-format
 msgid "ValidateError"
 msgstr "ValidateError"
@@ -253,18 +224,11 @@ msgid "Documents"
 msgstr "Баримт"
 
 #. module: document
-#: view:document.directory:0
-#: field:document.directory,storage_id:0
-msgid "Storage"
-msgstr "Хадгалалт"
-
-#. module: document
 #: field:document.directory,ressource_type_id:0
 msgid "Resource model"
 msgstr "Нөөц модел"
 
 #. module: document
-#: field:ir.attachment,file_size:0
 #: field:report.document.file,file_size:0
 #: field:report.document.user,file_size:0
 msgid "File Size"
@@ -277,21 +241,19 @@ msgid "Content Type"
 msgstr "Агуулгын төрөл"
 
 #. module: document
-#: view:ir.attachment:0
-msgid "Modification"
-msgstr ""
-
-#. module: document
 #: view:document.directory:0
 #: field:document.directory,type:0
-#: view:document.storage:0
-#: field:document.storage,type:0
 msgid "Type"
 msgstr "Төрөл"
 
 #. module: document
-#: code:addons/document/document.py:194
-#: code:addons/document/document_directory.py:234
+#: sql_constraint:ir.attachment:0
+msgid "The filename must be unique in a directory !"
+msgstr ""
+
+#. module: document
+#: code:addons/document/document.py:110
+#: code:addons/document/document.py:296
 #, python-format
 msgid "%s (copy)"
 msgstr ""
@@ -327,11 +289,6 @@ msgid "Context fields"
 msgstr "Агуулга талбар"
 
 #. module: document
-#: field:ir.attachment,store_fname:0
-msgid "Stored Filename"
-msgstr "Нөөцөлсөн файлын нэр"
-
-#. module: document
 #: view:document.directory:0
 #: field:report.document.user,type:0
 msgid "Directory Type"
@@ -358,7 +315,7 @@ msgid "Virtual Files"
 msgstr "Виртуаль файлууд"
 
 #. module: document
-#: code:addons/document/document_storage.py:635
+#: code:addons/document/document.py:562
 #, python-format
 msgid "Error at doc write!"
 msgstr "Бичих алдаа!"
@@ -395,7 +352,6 @@ msgstr "Аюулгүй байдал"
 
 #. module: document
 #: field:document.directory,write_uid:0
-#: field:document.storage,write_uid:0
 #: field:ir.attachment,write_uid:0
 msgid "Last Modification User"
 msgstr "Сүүлд зассан хэрэглэгч"
@@ -418,7 +374,6 @@ msgstr "Домэйн"
 
 #. module: document
 #: field:document.directory,write_date:0
-#: field:document.storage,write_date:0
 #: field:ir.attachment,write_date:0
 msgid "Date Modified"
 msgstr "Зассан огноо"
@@ -461,11 +416,9 @@ msgid "Define words in the context, for all child directories and files"
 msgstr "Define words in the context, for all child directories and files"
 
 #. module: document
-#: help:document.storage,online:0
-msgid ""
-"If not checked, media is currently offline and its contents not available"
-msgstr ""
-"If not checked, media is currently offline and its contents not available"
+#: view:document.directory:0
+msgid "Static"
+msgstr "Статик"
 
 #. module: document
 #: field:report.document.user,user:0
@@ -475,7 +428,6 @@ msgstr ""
 #. module: document
 #: view:document.directory:0
 #: field:document.directory,user_id:0
-#: field:document.storage,user_id:0
 #: view:ir.attachment:0
 #: field:ir.attachment,user_id:0
 #: field:report.document.user,user_id:0
@@ -494,15 +446,9 @@ msgstr "Агуулга"
 
 #. module: document
 #: field:document.directory,create_date:0
-#: field:document.storage,create_date:0
 #: field:report.document.user,create_date:0
 msgid "Date Created"
 msgstr "Үүсгэсэн огноо"
-
-#. module: document
-#: field:document.directory,ressource_id:0
-msgid "Resource ID"
-msgstr "Нөөц ID"
 
 #. module: document
 #: help:document.directory.content,include_name:0
@@ -514,17 +460,6 @@ msgstr ""
 "Check this field if you want that the name of the file to contain the record "
 "name.\n"
 "If set, the directory will have to be a resource one."
-
-#. module: document
-#: model:ir.actions.act_window,name:document.open_board_document_manager
-#: model:ir.ui.menu,name:document.menu_reports_document
-msgid "Knowledge"
-msgstr ""
-
-#. module: document
-#: view:document.storage:0
-msgid "Document Storage"
-msgstr ""
 
 #. module: document
 #: view:document.configuration:0
@@ -541,11 +476,6 @@ msgstr "Бичлэгийн нэрийг багтаах"
 #: field:ir.actions.report.xml,model_id:0
 msgid "Model Id"
 msgstr "Модель Id"
-
-#. module: document
-#: field:document.storage,online:0
-msgid "Online"
-msgstr "Онлайн"
 
 #. module: document
 #: help:document.directory,ressource_tree:0
@@ -578,9 +508,9 @@ msgid "August"
 msgstr "8 сар"
 
 #. module: document
-#: view:ir.attachment:0
-msgid "My Document(s)"
-msgstr ""
+#: view:document.directory:0
+msgid "Dynamic context"
+msgstr "Динамик утга"
 
 #. module: document
 #: sql_constraint:document.directory:0
@@ -594,7 +524,6 @@ msgstr "6 сар"
 
 #. module: document
 #: field:document.directory,group_ids:0
-#: field:document.storage,group_ids:0
 msgid "Groups"
 msgstr "Группүүд"
 
@@ -607,11 +536,6 @@ msgstr "Идэвхтэй"
 #: selection:report.document.user,month:0
 msgid "November"
 msgstr "11 сар"
-
-#. module: document
-#: field:ir.attachment,db_datas:0
-msgid "Data"
-msgstr "Өгөгдөл"
 
 #. module: document
 #: help:document.directory,ressource_parent_type_id:0
@@ -642,9 +566,9 @@ msgid "Seq."
 msgstr "Д/д."
 
 #. module: document
-#: selection:document.storage,type:0
-msgid "Database"
-msgstr "Өгөгдлийн сан"
+#: model:ir.actions.act_window,name:document.action_view_all_document_tree1
+msgid "All Users files"
+msgstr "Бүх хэрэглэгчийн файлууд"
 
 #. module: document
 #: selection:report.document.user,month:0
@@ -652,13 +576,7 @@ msgid "January"
 msgstr "1 сар"
 
 #. module: document
-#: field:document.storage,readonly:0
-msgid "Read Only"
-msgstr "Зөвхөн уншина"
-
-#. module: document
 #: view:document.directory:0
-#: view:process.node:0
 msgid "Document Directory"
 msgstr "Баримтын Директор"
 
@@ -674,7 +592,6 @@ msgstr ""
 
 #. module: document
 #: field:document.directory,create_uid:0
-#: field:document.storage,create_uid:0
 msgid "Creator"
 msgstr "Үүсгэгч"
 
@@ -692,7 +609,6 @@ msgstr ""
 "суулгасан модулиудын дагууд директоруудыг үүсгэнэ."
 
 #. module: document
-#: view:board.board:0
 #: model:ir.actions.act_window,name:document.action_view_files_by_month_graph
 #: view:report.document.user:0
 msgid "Files by Month"
@@ -714,19 +630,9 @@ msgid "Children"
 msgstr "Дэд"
 
 #. module: document
-#: view:board.board:0
-msgid "Files by user"
-msgstr ""
-
-#. module: document
-#: selection:document.storage,type:0
-msgid "External file storage"
-msgstr "Гадна хадгалах файл"
-
-#. module: document
-#: help:document.storage,path:0
-msgid "For file storage, the root path of the storage"
-msgstr "For file storage, the root path of the storage"
+#: field:document.directory,ressource_id:0
+msgid "Resource ID"
+msgstr "Нөөц ID"
 
 #. module: document
 #: field:document.directory.dctx,field:0
@@ -744,28 +650,18 @@ msgid "Parent Model"
 msgstr "Толгой модель"
 
 #. module: document
-#: help:document.directory.dctx,field:0
+#: view:document.directory:0
 msgid ""
-"The name of the field. Note that the prefix \"dctx_\" will be prepended to "
-"what is typed here."
+"These groups, however, do NOT apply to children directories, which must "
+"define their own groups."
 msgstr ""
-"The name of the field. Note that the prefix \"dctx_\" will be prepended to "
-"what is typed here."
-
-#. module: document
-#: field:document.directory,ressource_tree:0
-msgid "Tree Structure"
-msgstr "Мод бүтэц"
+"These groups, however, do NOT apply to children directories, which must "
+"define their own groups."
 
 #. module: document
 #: selection:report.document.user,month:0
 msgid "May"
 msgstr "5 сар"
-
-#. module: document
-#: model:ir.actions.act_window,name:document.action_view_all_document_tree1
-msgid "All Users files"
-msgstr "Бүх хэрэглэгчийн файлууд"
 
 #. module: document
 #: view:document.directory:0
@@ -781,20 +677,6 @@ msgstr "ir.attachment"
 #: view:report.document.user:0
 msgid "Users File"
 msgstr ""
-
-#. module: document
-#: view:document.directory:0
-msgid "Static"
-msgstr "Статик"
-
-#. module: document
-#: view:document.directory:0
-msgid ""
-"These groups, however, do NOT apply to children directories, which must "
-"define their own groups."
-msgstr ""
-"These groups, however, do NOT apply to children directories, which must "
-"define their own groups."
 
 #. module: document
 #: model:ir.model,name:document.model_document_configuration
@@ -823,24 +705,13 @@ msgstr "2 сар"
 
 #. module: document
 #: field:document.directory,name:0
-#: field:document.storage,name:0
 msgid "Name"
 msgstr "Нэр"
-
-#. module: document
-#: sql_constraint:document.storage:0
-msgid "The storage path must be unique!"
-msgstr "Хадгалах зам нь давхцаж болохгүй!"
 
 #. module: document
 #: view:document.directory:0
 msgid "Fields"
 msgstr "Талбар"
-
-#. module: document
-#: help:document.storage,readonly:0
-msgid "If set, media is for reading only"
-msgstr "If set, media is for reading only"
 
 #. module: document
 #: selection:report.document.user,month:0
@@ -854,9 +725,9 @@ msgid "# of Files"
 msgstr "Файлын тоо"
 
 #. module: document
-#: view:document.storage:0
-msgid "Search Document Storage"
-msgstr ""
+#: model:ir.model,name:document.model_document_directory_content_type
+msgid "Directory Content Type"
+msgstr "Хавтасын агуулгын төрөл"
 
 #. module: document
 #: view:document.directory:0
@@ -890,9 +761,9 @@ msgid "File Name"
 msgstr "Файлын нэр"
 
 #. module: document
-#: selection:document.storage,type:0
-msgid "Internal File storage"
-msgstr "Дотор хадгалах файл"
+#: field:document.directory,ressource_tree:0
+msgid "Tree Structure"
+msgstr "Мод бүтэц"
 
 #. module: document
 #: view:document.configuration:0
@@ -911,10 +782,7 @@ msgid "Year"
 msgstr "Жил"
 
 #. module: document
-#: view:document.storage:0
-#: model:ir.actions.act_window,name:document.action_document_storage_form
 #: model:ir.model,name:document.model_document_storage
-#: model:ir.ui.menu,name:document.menu_document_storage_media
 msgid "Storage Media"
 msgstr "Хадгалах ой"
 
@@ -962,8 +830,14 @@ msgstr "Баримтын төрөл"
 #~ msgid "Link"
 #~ msgstr "Холбоос"
 
+#~ msgid "Data"
+#~ msgstr "Өгөгдөл"
+
 #~ msgid "Notes"
 #~ msgstr "Тэмдэглэл"
+
+#~ msgid "Database"
+#~ msgstr "Өгөгдлийн сан"
 
 #~ msgid "Filesystem"
 #~ msgstr "Файлсистем"
@@ -973,6 +847,9 @@ msgstr "Баримтын төрөл"
 
 #~ msgid "Server Address"
 #~ msgstr "Сервер хаяг"
+
+#~ msgid "Document directory"
+#~ msgstr "Баримтын хавтас"
 
 #~ msgid "Search a File"
 #~ msgstr "Файл хайх"
@@ -1064,6 +941,9 @@ msgstr "Баримтын төрөл"
 #~ msgid "Users that did not inserted documents since one month"
 #~ msgstr "Нэг сараас хойш баримт оруулаагүй хэрэглэгчид"
 
+#~ msgid "Stored Filename"
+#~ msgstr "Нөөцөлсөн файлын нэр"
+
 #~ msgid "Attached To"
 #~ msgstr "Хавсаргах"
 
@@ -1073,8 +953,18 @@ msgstr "Баримтын төрөл"
 #~ msgid "Configure"
 #~ msgstr "Тохиргоо"
 
+#~ msgid "Document board"
+#~ msgstr "Баримтын самбар"
+
 #~ msgid "This Year"
 #~ msgstr "Энэ жил"
+
+#~ msgid "Path"
+#~ msgstr "Зам"
+
+#, python-format
+#~ msgid "Error!"
+#~ msgstr "Алдаа!"
 
 #~ msgid "Project"
 #~ msgstr "Төсөл"
@@ -1084,6 +974,9 @@ msgstr "Баримтын төрөл"
 
 #~ msgid "Image"
 #~ msgstr "Зураг"
+
+#~ msgid "Online"
+#~ msgstr "Онлайн"
 
 #~ msgid "Dashboard"
 #~ msgstr "Хянах самбар"
@@ -1115,6 +1008,9 @@ msgstr "Баримтын төрөл"
 #~ msgid "Auto Directory Configuration"
 #~ msgstr "Автомат тохиргооны хавтас"
 
+#~ msgid "Process Node"
+#~ msgstr "Process Node"
+
 #~ msgid "Sale Order"
 #~ msgstr "Борлуулалтын захиалга"
 
@@ -1123,6 +1019,9 @@ msgstr "Баримтын төрөл"
 
 #~ msgid "Files by Users"
 #~ msgstr "Хэрэгдэгчийн файл"
+
+#~ msgid "Storage"
+#~ msgstr "Хадгалалт"
 
 #~ msgid "Files Per Partner"
 #~ msgstr "Харилцагч бүрийн файл"
@@ -1174,6 +1073,12 @@ msgstr "Баримтын төрөл"
 #~ msgid "Auto directory configuration for Projects."
 #~ msgstr "Төслийн автомат тохиргооны хавтас"
 
+#~ msgid "Read Only"
+#~ msgstr "Зөвхөн уншина"
+
+#~ msgid "External file storage"
+#~ msgstr "Гадна хадгалах файл"
+
 #~ msgid "New Files"
 #~ msgstr "Шинэ файл"
 
@@ -1184,15 +1089,29 @@ msgstr "Баримтын төрөл"
 #~ msgid "File name must be unique!"
 #~ msgstr "Файлын нэр давхцахгүй!"
 
+#~ msgid "Internal File storage"
+#~ msgstr "Дотор хадгалах файл"
+
 #~ msgid "Search Document storage"
 #~ msgstr "Хайх"
 
+#~ msgid "The storage path must be unique!"
+#~ msgstr "Хадгалах зам нь давхцаж болохгүй!"
+
+#~ msgid ""
+#~ "If not checked, media is currently offline and its contents not available"
+#~ msgstr ""
+#~ "If not checked, media is currently offline and its contents not available"
+
 #~ msgid ""
 #~ "If you put an object here, this directory template will appear bellow all of "
 #~ "these objects. Don't put a parent directory if you select a parent model."
 #~ msgstr ""
 #~ "If you put an object here, this directory template will appear bellow all of "
 #~ "these objects. Don't put a parent directory if you select a parent model."
+
+#~ msgid "For file storage, the root path of the storage"
+#~ msgstr "For file storage, the root path of the storage"
 
 #~ msgid ""
 #~ "The Documents repository gives you access to all attachments, such as mails, "
@@ -1202,9 +1121,19 @@ msgstr "Баримтын төрөл"
 #~ "project documents, invoices etc."
 
 #~ msgid ""
+#~ "The name of the field. Note that the prefix \"dctx_\" will be prepended to "
+#~ "what is typed here."
+#~ msgstr ""
+#~ "The name of the field. Note that the prefix \"dctx_\" will be prepended to "
+#~ "what is typed here."
+
+#~ msgid ""
 #~ "Auto directory configuration for Sale Orders and Quotation with report."
 #~ msgstr ""
 #~ "Auto directory configuration for Sale Orders and Quotation with report."
+
+#~ msgid "If set, media is for reading only"
+#~ msgstr "If set, media is for reading only"
 
 #~ msgid "Directory must have a parent or a storage"
 #~ msgstr "Directory must have a parent or a storage"

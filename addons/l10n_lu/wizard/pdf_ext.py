@@ -34,7 +34,7 @@ with flatten, everything is turned into text.
 """
 
 import os
-import tools
+from openerp import tools
 
 HEAD="""%FDF-1.2
 %\xE2\xE3\xCF\xD3

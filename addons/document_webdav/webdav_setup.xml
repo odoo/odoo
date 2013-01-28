@@ -14,7 +14,6 @@
                 <field eval="0" name="ressource_tree"/>
                 <field name="user_id" eval="False"/>
                 <field name="company_id" ref="base.main_company"/>
-                <field name="storage_id" ref="document.storage_default"/>
                 <field name="type">directory</field>
                 <field eval="[(6,0,[])]" name="group_ids"/>
                 <field name="name">principals</field>
@@ -27,7 +26,6 @@
             <field name="user_id" eval="False"/>
             <field name="company_id" ref="base.main_company"/>
             <field model="document.directory" name="parent_id" ref="document_directory_principals0"/>
-            <field name="storage_id" ref="document.storage_default"/>
             <field name="type">directory</field>
             <field eval="[(6,0,[])]" name="group_ids"/>
             <field name="name">groups</field>
@@ -39,7 +37,6 @@
             <field eval="0" name="ressource_tree"/>
             <field name="company_id" ref="base.main_company"/>
             <field model="document.directory" name="parent_id" ref="document_directory_principals0"/>
-            <field name="storage_id" ref="document.storage_default"/>
             <field name="type">directory</field>
             <field eval="[(6,0,[])]" name="group_ids"/>
             <field name="name">resources</field>
@@ -52,7 +49,6 @@
             <field name="resource_field" ref="base.field_res_users_login"/>
             <field name="company_id" ref="base.main_company"/>
             <field model="document.directory" name="parent_id" ref="document_directory_principals0"/>
-            <field name="storage_id" ref="document.storage_default"/>
             <field name="type">ressource</field>
             <field name="ressource_type_id" ref="base.model_res_users"/>
             <field eval="[(6,0,[])]" name="group_ids"/>
@@ -66,7 +62,6 @@
             <field name="resource_field" ref="base.field_res_users_login"/>
             <field name="company_id" ref="base.main_company"/>
             <field model="document.directory" name="parent_id" ref="document_directory_principals0"/>
-            <field name="storage_id" ref="document.storage_default"/>
             <field name="type">ressource</field>
             <field name="ressource_type_id" ref="base.model_res_users"/>
             <field eval="[(6,0,[])]" name="group_ids"/>
@@ -78,7 +73,6 @@
             <field eval="0" name="ressource_tree"/>
             <field name="company_id" ref="base.main_company"/>
             <field model="document.directory" name="parent_id" ref="document_directory_principals0"/>
-            <field name="storage_id" ref="document.storage_default"/>
             <field name="type">directory</field>
             <field eval="[(6,0,[])]" name="group_ids"/>
             <field name="name">locations</field>

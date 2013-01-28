@@ -20,9 +20,9 @@
 #
 ##############################################################################
 
-from osv import fields,osv
-import tools
-from crm import crm
+from openerp.osv import fields,osv
+from openerp import tools
+from openerp.addons.crm import crm
 
 AVAILABLE_STATES = [
     ('draft','Draft'),

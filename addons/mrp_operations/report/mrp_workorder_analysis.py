@@ -19,9 +19,9 @@
 #
 ##############################################################################
 
-from osv import fields,osv
-import tools
-import decimal_precision as dp
+from openerp.osv import fields,osv
+from openerp import tools
+import openerp.addons.decimal_precision as dp
 
 class mrp_workorder(osv.osv):
     _name = "mrp.workorder"

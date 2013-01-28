@@ -18,11 +18,10 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
+from openerp.osv import osv, fields
+from openerp.addons.edi import EDIMixin
 
 from urllib import urlencode
-
-from openerp.osv import osv, fields
-from edi import EDIMixin
 
 INVOICE_LINE_EDI_STRUCT = {
     'name': True,

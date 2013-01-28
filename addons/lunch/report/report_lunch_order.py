@@ -19,8 +19,8 @@
 #
 ##############################################################################
 
-import tools
-from osv import fields,osv
+from openerp import tools
+from openerp.osv import fields,osv
 
 class report_lunch_order(osv.osv):
     _name = "report.lunch.order.line"

@@ -104,7 +104,7 @@
                 to each method.
               </p><p>
                 These methods allows to automaticaly compute the delivery price
-                according to your settings; on the sale order (based on the
+                according to your settings; on the sales order (based on the
                 quotation) or the invoice (based on the delivery orders).
               </p>
             </field>
@@ -243,8 +243,12 @@
             <field name="inherit_id" ref="stock.view_picking_form"/>
             <field name="arch" type="xml">
                 <field name="company_id" position="before">
-                    <field name="weight"/>
-                    <field name="weight_net" groups="base.group_no_one"/>
+                    <label for="weight" string="Weight"/>
+                    <div>
+                        <field name="weight" class="oe_inline"/>
+                        <field name="weight_uom_id" nolabel="1" class="oe_inline"/>
+                    </div>
+                     <field name="weight_net"  groups="base.group_no_one" class="oe_inline"/>
                 </field>
             </field>
         </record>
@@ -279,8 +283,12 @@
             <field name="inherit_id" ref="stock.view_move_form"/>
             <field name="arch" type="xml">
                 <xpath expr="//group[@name='main_grp']" position="inside">
-                    <field name="weight"/>
-                    <field name="weight_net" groups="base.group_no_one"/>
+                    <label for="weight" string="Weight"/>
+                    <div>
+                        <field name="weight" class="oe_inline"/>
+                        <field name="weight_uom_id" nolabel="1" class="oe_inline"/>
+                    </div>
+                    <field name="weight_net" groups="base.group_no_one" class="oe_inline"/>
                 </xpath>
             </field>
         </record>

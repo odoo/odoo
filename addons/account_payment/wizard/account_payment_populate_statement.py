@@ -22,7 +22,7 @@
 import time
 from lxml import etree
 
-from osv import osv, fields
+from openerp.osv import fields, osv
 
 class account_payment_populate_statement(osv.osv_memory):
     _name = "account.payment.populate.statement"

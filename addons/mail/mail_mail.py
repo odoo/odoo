@@ -21,11 +21,14 @@
 
 import base64
 import logging
-import tools
+from urllib import urlencode
+from urlparse import urljoin
 
+from openerp import tools
 from openerp import SUPERUSER_ID
-from osv import osv, fields
-from tools.translate import _
+from openerp.osv import fields, osv
+from openerp.osv.orm import except_orm
+from openerp.tools.translate import _
 
 _logger = logging.getLogger(__name__)
 
@@ -158,7 +161,43 @@ class mail_mail(osv.Model):
             :param browse_record mail: mail.mail browse_record
             :param browse_record partner: specific recipient partner
         """
-        return mail.body_html
+        body = mail.body_html
+        # partner is a user, link to a related document (incentive to install portal)
+        if partner and partner.user_ids and mail.model and mail.res_id \
+                and self.check_access_rights(cr, partner.user_ids[0].id, 'read', raise_exception=False):
+            related_user = partner.user_ids[0]
+            try:
+                self.pool.get(mail.model).check_access_rule(cr, related_user.id, [mail.res_id], 'read', context=context)
+                base_url = self.pool.get('ir.config_parameter').get_param(cr, uid, 'web.base.url')
+                # the parameters to encode for the query and fragment part of url
+                query = {'db': cr.dbname}
+                fragment = {
+                    'login': related_user.login,
+                    'model': mail.model,
+                    'id': mail.res_id,
+                }
+                url = urljoin(base_url, "?%s#%s" % (urlencode(query), urlencode(fragment)))
+                text = _("""<p>Access this document <a href="%s">directly in OpenERP</a></p>""") % url
+                body = tools.append_content_to_html(body, ("<div><p>%s</p></div>" % text), plaintext=False)
+            except except_orm, e:
+                pass
+        return body
+
+    def send_get_mail_reply_to(self, cr, uid, mail, partner=None, context=None):
+        """ Return a specific ir_email body. The main purpose of this method
+            is to be inherited by Portal, to add a link for signing in, in
+            each notification email a partner receives.
+
+            :param browse_record mail: mail.mail browse_record
+            :param browse_record partner: specific recipient partner
+        """
+        if mail.reply_to:
+            return mail.reply_to
+        if not mail.model or not mail.res_id:
+            return False
+        if not hasattr(self.pool.get(mail.model), 'message_get_reply_to'):
+            return False
+        return self.pool.get(mail.model).message_get_reply_to(cr, uid, [mail.res_id], context=context)[0]
 
     def send_get_email_dict(self, cr, uid, mail, partner=None, context=None):
         """ Return a dictionary for specific email values, depending on a
@@ -169,6 +208,7 @@ class mail_mail(osv.Model):
         """
         body = self.send_get_mail_body(cr, uid, mail, partner=partner, context=context)
         subject = self.send_get_mail_subject(cr, uid, mail, partner=partner, context=context)
+        reply_to = self.send_get_mail_reply_to(cr, uid, mail, partner=partner, context=context)
         body_alternative = tools.html2plaintext(body)
         email_to = [partner.email] if partner else tools.email_split(mail.email_to)
         return {
@@ -176,6 +216,7 @@ class mail_mail(osv.Model):
             'body_alternative': body_alternative,
             'subject': subject,
             'email_to': email_to,
+            'reply_to': reply_to,
         }
 
     def send(self, cr, uid, ids, auto_commit=False, recipient_ids=None, context=None):
@@ -219,7 +260,7 @@ class mail_mail(osv.Model):
                         body = email.get('body'),
                         body_alternative = email.get('body_alternative'),
                         email_cc = tools.email_split(mail.email_cc),
-                        reply_to = mail.reply_to,
+                        reply_to = email.get('reply_to'),
                         attachments = attachments,
                         message_id = mail.message_id,
                         references = mail.references,
@@ -230,10 +271,14 @@ class mail_mail(osv.Model):
                         mail_server_id=mail.mail_server_id.id, context=context)
                 if res:
                     mail.write({'state': 'sent', 'message_id': res})
+                    mail_sent = True
                 else:
                     mail.write({'state': 'exception'})
-                mail.refresh()
-                if mail.state == 'sent':
+                    mail_sent = False
+
+                # /!\ can't use mail.state here, as mail.refresh() will cause an error
+                # see revid:odo@openerp.com-20120622152536-42b2s28lvdv3odyr in 6.1
+                if mail_sent:
                     self._postprocess_sent_message(cr, uid, mail, context=context)
             except Exception:
                 _logger.exception('failed sending mail.mail %s', mail.id)

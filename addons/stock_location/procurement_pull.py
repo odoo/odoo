@@ -18,9 +18,9 @@
 #
 ##############################################################################
 
-from osv import osv
-import netsvc
-from tools.translate import _
+from openerp.osv import osv
+from openerp import netsvc
+from openerp.tools.translate import _
 
 class procurement_order(osv.osv):
     _inherit = 'procurement.order'

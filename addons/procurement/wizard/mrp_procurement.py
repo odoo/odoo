@@ -20,7 +20,7 @@
 ##############################################################################
 
 import threading
-from osv import osv, fields
+from openerp.osv import fields, osv
 
 class procurement_compute(osv.osv_memory):
     _name = 'procurement.order.compute'

@@ -20,10 +20,9 @@
 #
 ##############################################################################
 
-import pooler
-from report.interface import report_rml
-from tools import to_xml
-import tools
+from openerp import pooler, tools
+from openerp.report.interface import report_rml
+from openerp.tools import to_xml
 
 class survey_form(report_rml):
     def create(self, cr, uid, ids, datas, context):

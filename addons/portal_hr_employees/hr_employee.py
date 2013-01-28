@@ -19,7 +19,7 @@
 #
 ##############################################################################
 
-from osv import osv, fields
+from openerp.osv import fields, osv
 
 class crm_contact_us(osv.TransientModel):
     """ Add employees list to the portal's contact page """

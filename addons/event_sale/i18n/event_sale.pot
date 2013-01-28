@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 7.0alpha\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-12-03 16:03+0000\n"
-"PO-Revision-Date: 2012-12-03 16:03+0000\n"
+"POT-Creation-Date: 2012-12-21 17:05+0000\n"
+"PO-Revision-Date: 2012-12-21 17:05+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -22,17 +22,12 @@ msgstr ""
 
 #. module: event_sale
 #: help:product.product,event_ok:0
-msgid "Determine if a product needs to create automatically an event registration at the confirmation of a sale order line."
+msgid "Determine if a product needs to create automatically an event registration at the confirmation of a sales order line."
 msgstr ""
 
 #. module: event_sale
 #: help:sale.order.line,event_id:0
 msgid "Choose an event and it will automatically create a registration for this event."
-msgstr ""
-
-#. module: event_sale
-#: field:product.product,event_type_id:0
-msgid "Type of Event"
 msgstr ""
 
 #. module: event_sale
@@ -42,18 +37,17 @@ msgstr ""
 
 #. module: event_sale
 #: help:product.product,event_type_id:0
-msgid "Filter the list of event on this category only, in the sale order lines"
+msgid "Select event types so when we use this product in sales order lines, it will filter events of this type only."
+msgstr ""
+
+#. module: event_sale
+#: field:product.product,event_type_id:0
+msgid "Type of Event"
 msgstr ""
 
 #. module: event_sale
 #: field:sale.order.line,event_ok:0
 msgid "event_ok"
-msgstr ""
-
-#. module: event_sale
-#: code:addons/event_sale/event_sale.py:88
-#, python-format
-msgid "The registration %s has been created from the Sale Order %s."
 msgstr ""
 
 #. module: event_sale
@@ -69,6 +63,12 @@ msgstr ""
 #. module: event_sale
 #: model:product.template,name:event_sale.event_product_product_template
 msgid "Technical Training"
+msgstr ""
+
+#. module: event_sale
+#: code:addons/event_sale/event_sale.py:88
+#, python-format
+msgid "The registration %s has been created from the Sales Order %s."
 msgstr ""
 
 #. module: event_sale

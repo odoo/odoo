@@ -19,17 +19,17 @@
 #
 ##############################################################################
 
-import logging
-import time
 import datetime
 from dateutil.relativedelta import relativedelta
+import logging
 from operator import itemgetter
 from os.path import join as opj
+import time
 
-from tools.translate import _
-from osv import fields, osv
-import netsvc
-import tools
+from openerp import netsvc, tools
+from openerp.tools.translate import _
+from openerp.osv import fields, osv
+
 _logger = logging.getLogger(__name__)
 
 class account_installer(osv.osv_memory):

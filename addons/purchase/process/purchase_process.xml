@@ -135,7 +135,7 @@
         <record id="process_condition_conditionorigin" model="process.condition">
             <field name="model_id" ref="purchase.model_purchase_order"/>
             <field name="node_id" ref="process_node_draftpurchaseorder1"/>
-            <field eval="&quot;&quot;&quot;object.origin==''&quot;&quot;&quot;" name="model_states"/>
+            <field eval="&quot;&quot;&quot;not object.origin&quot;&quot;&quot;" name="model_states"/>
             <field eval="&quot;&quot;&quot;condition_origin&quot;&quot;&quot;" name="name"/>
         </record>
 
@@ -219,7 +219,7 @@
         <record id="process_transition_packinginvoice0" model="process.transition">
             <field eval="[(6,0,[])]" name="transition_ids"/>
             <field eval="&quot;&quot;&quot;From a Pick list&quot;&quot;&quot;" name="name"/>
-            <field eval="&quot;&quot;&quot;A Pick list generates an invoice. Depending on the Invoicing control of the sale order, the invoice is based on delivered or on ordered quantities.&quot;&quot;&quot;" name="note"/>
+            <field eval="&quot;&quot;&quot;A Pick list generates an invoice. Depending on the Invoicing control of the sales order, the invoice is based on delivered or on ordered quantities.&quot;&quot;&quot;" name="note"/>
             <field model="process.node" name="target_node_id" ref="account.process_node_draftinvoices0"/>
             <field model="process.node" name="source_node_id" ref="process_node_packinginvoice0"/>
         </record>

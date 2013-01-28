@@ -19,8 +19,8 @@
 #
 ##############################################################################
 
-from osv import fields, osv
-import tools
+from openerp.osv import fields, osv
+from openerp import tools
 
 class account_followup_stat(osv.osv):
     _name = "account_followup.stat"

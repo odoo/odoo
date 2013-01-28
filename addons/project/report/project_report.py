@@ -19,8 +19,8 @@
 #
 ##############################################################################
 
-from osv import fields,osv
-import tools
+from openerp.osv import fields,osv
+from openerp import tools
 
 class report_project_task_user(osv.osv):
     _name = "report.project.task.user"

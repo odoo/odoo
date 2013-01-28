@@ -140,7 +140,7 @@
             <field name="arch" type="xml">
             <xpath expr="//group[@name='active_group']" position="before">
                 <group string="Appraisals">
-                    <field name="evaluation_plan_id" on_change="onchange_evaluation_plan_id(evaluation_plan_id, evaluation_date)"/>
+                    <field name="evaluation_plan_id"/>
                     <field name="evaluation_date"/>
                 </group>
             </xpath>
@@ -379,7 +379,7 @@
             <field name="search_view_id" ref="view_hr_evaluation_interview_search"/>
             <field name="help" type="html">
               <p class="oe_view_nocontent_create">
-                Click to create a new interview request related to a personnal evaluation. 
+                Click to create a new interview request related to a personal evaluation. 
               </p><p>
                 Interview requests are usually generated automatically by
                 OpenERP according to an employee's appraisal plan. Each user

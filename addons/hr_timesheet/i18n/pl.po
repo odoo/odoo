@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev_rc3\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2012-12-03 16:02+0000\n"
-"PO-Revision-Date: 2010-08-02 14:34+0000\n"
-"Last-Translator: Mantavya Gajjar (Open ERP) <Unknown>\n"
+"POT-Creation-Date: 2012-12-21 17:04+0000\n"
+"PO-Revision-Date: 2012-12-17 10:01+0000\n"
+"Last-Translator: Grzegorz Grzelak (OpenGLOBE.pl) <grzegorz@openglobe.pl>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-12-04 05:33+0000\n"
-"X-Generator: Launchpad (build 16335)\n"
+"X-Launchpad-Export-Date: 2012-12-22 05:41+0000\n"
+"X-Generator: Launchpad (build 16378)\n"
 
 #. module: hr_timesheet
 #: model:ir.actions.act_window,help:hr_timesheet.act_analytic_cost_revenue
@@ -74,7 +74,7 @@ msgstr ""
 #. module: hr_timesheet
 #: field:hr.employee,uom_id:0
 msgid "Unit of Measure"
-msgstr ""
+msgstr "Jednostka Miary"
 
 #. module: hr_timesheet
 #: field:hr.employee,journal_id:0
@@ -102,7 +102,7 @@ msgstr "Karta czasu pracy"
 #: code:addons/hr_timesheet/wizard/hr_timesheet_print_employee.py:43
 #, python-format
 msgid "Please define employee for this user!"
-msgstr ""
+msgstr "Zdefiniuj pracownika dla tego użytkownika !"
 
 #. module: hr_timesheet
 #: code:addons/hr_timesheet/report/user_timesheet.py:44
@@ -128,7 +128,7 @@ msgstr "Pią"
 #: model:ir.actions.act_window,name:hr_timesheet.act_hr_timesheet_line_evry1_all_form
 #: model:ir.ui.menu,name:hr_timesheet.menu_hr_working_hours
 msgid "Timesheet Activities"
-msgstr ""
+msgstr "Aktywności karty pracy"
 
 #. module: hr_timesheet
 #: field:hr.sign.out.project,analytic_amount:0
@@ -165,12 +165,12 @@ msgstr "Drukuj karty pracowników"
 #: code:addons/hr_timesheet/wizard/hr_timesheet_sign_in_out.py:132
 #, python-format
 msgid "Please define employee for your user."
-msgstr ""
+msgstr "Zdefiniuj pracownika dla tego użytkownika"
 
 #. module: hr_timesheet
 #: model:ir.actions.act_window,name:hr_timesheet.act_analytic_cost_revenue
 msgid "Costs & Revenues"
-msgstr ""
+msgstr "Koszty i przychody"
 
 #. module: hr_timesheet
 #: code:addons/hr_timesheet/report/user_timesheet.py:44
@@ -187,17 +187,17 @@ msgstr "Konto analityczne"
 #. module: hr_timesheet
 #: view:account.analytic.account:0
 msgid "Costs and Revenues"
-msgstr ""
+msgstr "Koszty i przychody"
 
 #. module: hr_timesheet
-#: code:addons/hr_timesheet/hr_timesheet.py:141
-#: code:addons/hr_timesheet/hr_timesheet.py:146
-#: code:addons/hr_timesheet/hr_timesheet.py:177
-#: code:addons/hr_timesheet/hr_timesheet.py:179
+#: code:addons/hr_timesheet/hr_timesheet.py:144
+#: code:addons/hr_timesheet/hr_timesheet.py:149
+#: code:addons/hr_timesheet/hr_timesheet.py:180
+#: code:addons/hr_timesheet/hr_timesheet.py:182
 #: code:addons/hr_timesheet/wizard/hr_timesheet_print_employee.py:43
 #, python-format
 msgid "Warning!"
-msgstr ""
+msgstr "Ostrzeżenie !"
 
 #. module: hr_timesheet
 #: field:hr.analytic.timesheet,partner_id:0
@@ -287,7 +287,7 @@ msgid "Specifies employee's designation as a product with type 'service'."
 msgstr "Określa powiązanie pracownika z produktem typu 'usługa'."
 
 #. module: hr_timesheet
-#: code:addons/hr_timesheet/hr_timesheet.py:179
+#: code:addons/hr_timesheet/hr_timesheet.py:182
 #, python-format
 msgid ""
 "No analytic account is defined on the project.\n"
@@ -300,7 +300,7 @@ msgid "Total cost"
 msgstr "Suma kasztów"
 
 #. module: hr_timesheet
-#: code:addons/hr_timesheet/hr_timesheet.py:177
+#: code:addons/hr_timesheet/hr_timesheet.py:180
 #, python-format
 msgid ""
 "No 'Analytic Journal' is defined for employee %s \n"
@@ -347,12 +347,12 @@ msgstr "Opis pracy"
 #: view:hr.sign.in.project:0
 #: view:hr.sign.out.project:0
 msgid "or"
-msgstr ""
+msgstr "lub"
 
 #. module: hr_timesheet
 #: xsl:hr.analytical.timesheet:0
 msgid "Timesheet by Employee"
-msgstr ""
+msgstr "karty pracy wg pracowników"
 
 #. module: hr_timesheet
 #: model:ir.actions.report.xml,name:hr_timesheet.report_user_timesheet
@@ -371,7 +371,9 @@ msgid "Define your Analytic Structure"
 msgstr "Zdefiniuj swoją strukturę analityczną"
 
 #. module: hr_timesheet
+#: code:addons/hr_timesheet/wizard/hr_timesheet_sign_in_out.py:146
 #: view:hr.sign.in.project:0
+#, python-format
 msgid "Sign in / Sign out"
 msgstr "Wejście / Wyjście"
 
@@ -411,7 +413,7 @@ msgid "August"
 msgstr "Sierpień"
 
 #. module: hr_timesheet
-#: code:addons/hr_timesheet/hr_timesheet.py:146
+#: code:addons/hr_timesheet/hr_timesheet.py:149
 #, python-format
 msgid ""
 "No analytic journal defined for '%s'.\n"
@@ -431,7 +433,7 @@ msgstr "Czerwiec"
 #: field:hr.sign.in.project,state:0
 #: field:hr.sign.out.project,state:0
 msgid "Current Status"
-msgstr ""
+msgstr "Bieżący stan"
 
 #. module: hr_timesheet
 #: view:hr.analytic.timesheet:0
@@ -481,7 +483,7 @@ msgstr "Czw"
 #: view:hr.sign.in.project:0
 #: view:hr.sign.out.project:0
 msgid "Sign In/Out by Project"
-msgstr ""
+msgstr "Wejścia/Wyjścia wg projektów"
 
 #. module: hr_timesheet
 #: model:ir.model,name:hr_timesheet.model_hr_analytical_timesheet_employee
@@ -497,7 +499,7 @@ msgstr "ID pracownika"
 #. module: hr_timesheet
 #: view:hr.analytical.timesheet.users:0
 msgid "Period"
-msgstr ""
+msgstr "Okres"
 
 #. module: hr_timesheet
 #: view:hr.sign.out.project:0
@@ -604,7 +606,7 @@ msgid "Sign Out By Project"
 msgstr "Wyjście wg projektu"
 
 #. module: hr_timesheet
-#: code:addons/hr_timesheet/hr_timesheet.py:141
+#: code:addons/hr_timesheet/hr_timesheet.py:144
 #, python-format
 msgid ""
 "Please create an employee for this user, using the menu: Human Resources > "
@@ -639,7 +641,7 @@ msgstr "Kwiecień"
 #: code:addons/hr_timesheet/wizard/hr_timesheet_sign_in_out.py:132
 #, python-format
 msgid "User Error!"
-msgstr ""
+msgstr "Błąd użytkownika!"
 
 #. module: hr_timesheet
 #: view:hr.sign.in.project:0
@@ -655,7 +657,7 @@ msgstr "Rok"
 #. module: hr_timesheet
 #: view:hr.analytic.timesheet:0
 msgid "Duration"
-msgstr ""
+msgstr "Czas trwania"
 
 #. module: hr_timesheet
 #: view:hr.analytic.timesheet:0

@@ -19,10 +19,10 @@
 #
 ##############################################################################
 
-from osv import osv, fields
+from openerp.osv import fields, osv
 import time
-import netsvc
-import tools
+from openerp import netsvc
+from openerp import tools
 
 class report_transaction_pos(osv.osv):
     _name = "report.transaction.pos"

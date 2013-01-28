@@ -20,8 +20,8 @@
 ##############################################################################
 
 from openerp import SUPERUSER_ID
-from osv import osv
-from osv import fields
+from openerp.osv import osv
+from openerp.osv import fields
 
 
 class ir_ui_menu(osv.osv):

@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
-from osv import fields, osv
+from openerp.osv import fields, osv
 import random
 import re
 import string
 import urllib2
 import logging
-from tools.translate import _
+from openerp.tools.translate import _
 from openerp.tools import html2plaintext
 from py_etherpad import EtherpadLiteClient
 

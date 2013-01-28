@@ -19,15 +19,15 @@
 #
 ##############################################################################
 
-from osv import fields, osv
-from tools.translate import _
+from openerp.osv import fields, osv
+from openerp.tools.translate import _
 
 class procurement_order(osv.osv):
     _name = "procurement.order"
     _inherit = "procurement.order"
     _columns = {
         'task_id': fields.many2one('project.task', 'Task'),
-        'sale_line_id': fields.many2one('sale.order.line', 'Sale order line')
+        'sale_line_id': fields.many2one('sale.order.line', 'Sales order line')
     }
 
     def action_check_finished(self, cr, uid, ids):
@@ -59,7 +59,7 @@ class procurement_order(osv.osv):
         project_project = self.pool.get('project.project')
         project = procurement.product_id.project_id
         if not project and procurement.sale_line_id:
-            # find the project corresponding to the analytic account of the sale order
+            # find the project corresponding to the analytic account of the sales order
             account = procurement.sale_line_id.order_id.project_id
             project_ids = project_project.search(cr, uid, [('analytic_account_id', '=', account.id)])
             projects = project_project.browse(cr, uid, project_ids, context=context)
@@ -78,9 +78,8 @@ class procurement_order(osv.osv):
                 'remaining_hours': planned_hours,
                 'partner_id': procurement.sale_line_id and procurement.sale_line_id.order_id.partner_id.id or False,
                 'user_id': procurement.product_id.product_manager.id,
-                'notes': procurement.note,
                 'procurement_id': procurement.id,
-                'description': procurement.note,
+                'description': procurement.name + '\n' + (procurement.note or ''),
                 'project_id':  project and project.id or False,
                 'company_id': procurement.company_id.id,
             },context=context)

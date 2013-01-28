@@ -19,7 +19,7 @@
 #
 ##############################################################################
 
-from osv import fields, osv
+from openerp.osv import fields, osv
 
 class l10n_fr_report(osv.osv):
     _name = 'l10n.fr.report'

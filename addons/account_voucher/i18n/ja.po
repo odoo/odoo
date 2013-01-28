@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-03 16:01+0000\n"
+"POT-Creation-Date: 2012-12-21 17:04+0000\n"
 "PO-Revision-Date: 2012-05-16 19:07+0000\n"
 "Last-Translator: Akira Hiyama <Unknown>\n"
 "Language-Team: Japanese <ja@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-12-04 05:41+0000\n"
-"X-Generator: Launchpad (build 16335)\n"
+"X-Launchpad-Export-Date: 2012-12-22 05:50+0000\n"
+"X-Generator: Launchpad (build 16378)\n"
 
 #. module: account_voucher
 #: field:account.bank.statement.line,voucher_id:0
@@ -28,7 +28,7 @@ msgid "account.config.settings"
 msgstr ""
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:348
+#: code:addons/account_voucher/account_voucher.py:357
 #, python-format
 msgid "Write-Off"
 msgstr "償却"
@@ -64,14 +64,6 @@ msgstr "バウチャーで明示された金額とバウチャー行で割り当
 #. module: account_voucher
 #: view:account.voucher:0
 msgid "(Update)"
-msgstr ""
-
-#. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:1093
-#, python-format
-msgid ""
-"You have to delete the bank statement line which the payment was reconciled "
-"to manually. Please check the payment of the partner %s by the amount of %s."
 msgstr ""
 
 #. module: account_voucher
@@ -138,7 +130,7 @@ msgid "Voucher Statistics"
 msgstr "バウチャー統計"
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:1558
+#: code:addons/account_voucher/account_voucher.py:1533
 #, python-format
 msgid ""
 "You can not change the journal as you already reconciled some statement "
@@ -149,6 +141,12 @@ msgstr ""
 #: view:account.voucher:0
 msgid "Validate"
 msgstr "検証"
+
+#. module: account_voucher
+#: model:ir.actions.act_window,name:account_voucher.action_vendor_payment
+#: model:ir.ui.menu,name:account_voucher.menu_action_vendor_payment
+msgid "Supplier Payments"
+msgstr ""
 
 #. module: account_voucher
 #: model:ir.actions.act_window,help:account_voucher.action_purchase_receipt
@@ -213,10 +211,10 @@ msgid "Messages"
 msgstr ""
 
 #. module: account_voucher
-#: selection:account.voucher,type:0
-#: selection:sale.receipt.report,type:0
-msgid "Sale"
-msgstr "販売"
+#: model:ir.actions.act_window,name:account_voucher.action_purchase_receipt
+#: model:ir.ui.menu,name:account_voucher.menu_action_purchase_receipt
+msgid "Purchase Receipts"
+msgstr ""
 
 #. module: account_voucher
 #: field:account.voucher.line,move_line_id:0
@@ -224,8 +222,8 @@ msgid "Journal Item"
 msgstr "仕訳帳項目"
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:492
-#: code:addons/account_voucher/account_voucher.py:964
+#: code:addons/account_voucher/account_voucher.py:496
+#: code:addons/account_voucher/account_voucher.py:967
 #, python-format
 msgid "Error!"
 msgstr ""
@@ -252,7 +250,7 @@ msgid "Cancelled"
 msgstr "キャンセル済"
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:1134
+#: code:addons/account_voucher/account_voucher.py:1139
 #, python-format
 msgid ""
 "You have to configure account base code and account tax code on the '%s' tax!"
@@ -293,7 +291,7 @@ msgid "Tax"
 msgstr "税金"
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:864
+#: code:addons/account_voucher/account_voucher.py:867
 #, python-format
 msgid "Invalid Action!"
 msgstr ""
@@ -314,6 +312,11 @@ msgid ""
 "Holds the Chatter summary (number of messages, ...). This summary is "
 "directly in html format in order to be inserted in kanban views."
 msgstr ""
+
+#. module: account_voucher
+#: view:account.voucher:0
+msgid "Total Allocation"
+msgstr "割り当て合計"
 
 #. module: account_voucher
 #: view:account.voucher:0
@@ -339,6 +342,12 @@ msgid "Import Invoices"
 msgstr "請求書インポート"
 
 #. module: account_voucher
+#: code:addons/account_voucher/account_voucher.py:1098
+#, python-format
+msgid "Wrong voucher line"
+msgstr ""
+
+#. module: account_voucher
 #: selection:account.voucher,pay_now:0
 #: selection:sale.receipt.report,pay_now:0
 msgid "Pay Later or Group Funds"
@@ -352,7 +361,7 @@ msgid "Receipt"
 msgstr "レシート"
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:1001
+#: code:addons/account_voucher/account_voucher.py:1004
 #, python-format
 msgid ""
 "You should configure the 'Gain Exchange Rate Account' in the accounting "
@@ -373,6 +382,8 @@ msgstr "期間"
 
 #. module: account_voucher
 #: view:account.voucher:0
+#: code:addons/account_voucher/account_voucher.py:199
+#, python-format
 msgid "Supplier"
 msgstr "仕入先"
 
@@ -392,7 +403,7 @@ msgid "Debit"
 msgstr "借方"
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:1558
+#: code:addons/account_voucher/account_voucher.py:1533
 #, python-format
 msgid "Unable to change journal !"
 msgstr ""
@@ -421,6 +432,18 @@ msgid "Voucher Entries"
 msgstr "バウチャーエントリー"
 
 #. module: account_voucher
+#: model:ir.actions.act_window,help:account_voucher.action_vendor_payment
+msgid ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Click to create a new supplier payment.\n"
+"              </p><p>\n"
+"                OpenERP helps you easily track payments you make and the "
+"remaining balances you need to pay your suppliers.\n"
+"              </p>\n"
+"            "
+msgstr ""
+
+#. module: account_voucher
 #: view:account.voucher:0
 msgid "Open Supplier Journal Entries"
 msgstr "仕入先仕訳帳エントリーを開く"
@@ -439,13 +462,6 @@ msgstr "メモ"
 #: view:account.voucher:0
 msgid "Are you sure to unreconcile and cancel this record ?"
 msgstr "このレコードを本当に消し込みしキャンセルしますか？"
-
-#. module: account_voucher
-#: view:account.voucher:0
-#: model:ir.actions.act_window,name:account_voucher.action_sale_receipt
-#: model:ir.ui.menu,name:account_voucher.menu_action_sale_receipt
-msgid "Sales Receipt"
-msgstr "領収書"
 
 #. module: account_voucher
 #: field:account.voucher,is_multi_currency:0
@@ -487,13 +503,13 @@ msgid "Avg. Due Delay"
 msgstr "平均遅延"
 
 #. module: account_voucher
-#: code:addons/account_voucher/invoice.py:33
+#: code:addons/account_voucher/invoice.py:34
 #, python-format
 msgid "Pay Invoice"
 msgstr "請求書支払"
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:1134
+#: code:addons/account_voucher/account_voucher.py:1139
 #, python-format
 msgid "No Account Base Code and Account Tax Code!"
 msgstr "アカウント基本コードとアカウント税金コードがありません。"
@@ -547,15 +563,15 @@ msgid "To Review"
 msgstr "レビュー"
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:1008
-#: code:addons/account_voucher/account_voucher.py:1022
-#: code:addons/account_voucher/account_voucher.py:1175
+#: code:addons/account_voucher/account_voucher.py:1011
+#: code:addons/account_voucher/account_voucher.py:1025
+#: code:addons/account_voucher/account_voucher.py:1180
 #, python-format
 msgid "change"
 msgstr "変更"
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:997
+#: code:addons/account_voucher/account_voucher.py:1000
 #, python-format
 msgid ""
 "You should configure the 'Loss Exchange Rate Account' in the accounting "
@@ -652,7 +668,7 @@ msgid "Reconcile Payment Balance"
 msgstr "消し込み支払残高"
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:960
+#: code:addons/account_voucher/account_voucher.py:963
 #, python-format
 msgid "Configuration Error !"
 msgstr ""
@@ -698,6 +714,11 @@ msgid "August"
 msgstr "8月"
 
 #. module: account_voucher
+#: view:account.voucher:0
+msgid "Validate Payment"
+msgstr ""
+
+#. module: account_voucher
 #: help:account.voucher,audit:0
 msgid ""
 "Check this box if you are unsure of that journal entry and if you want to "
@@ -710,7 +731,7 @@ msgid "October"
 msgstr "10月"
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:961
+#: code:addons/account_voucher/account_voucher.py:964
 #, python-format
 msgid "Please activate the sequence of selected journal !"
 msgstr ""
@@ -729,6 +750,13 @@ msgstr "支払の通貨レート"
 #: field:account.voucher,paid:0
 msgid "Paid"
 msgstr "支払済"
+
+#. module: account_voucher
+#: view:account.voucher:0
+#: model:ir.actions.act_window,name:account_voucher.action_sale_receipt
+#: model:ir.ui.menu,name:account_voucher.menu_action_sale_receipt
+msgid "Sales Receipts"
+msgstr ""
 
 #. module: account_voucher
 #: field:account.voucher,message_is_follower:0
@@ -768,24 +796,6 @@ msgid "Amount reconciled"
 msgstr "消し込み済金額"
 
 #. module: account_voucher
-#: field:account.voucher,message_comment_ids:0
-#: help:account.voucher,message_comment_ids:0
-msgid "Comments and emails"
-msgstr ""
-
-#. module: account_voucher
-#: model:ir.actions.act_window,help:account_voucher.action_vendor_payment
-msgid ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"                Click to create a new supplier payment.\n"
-"              </p><p>\n"
-"                OpenERP helps you easily track payments you do and remining\n"
-"                balance to pay to your supplier.\n"
-"              </p>\n"
-"            "
-msgstr ""
-
-#. module: account_voucher
 #: selection:account.voucher,pay_now:0
 #: selection:sale.receipt.report,pay_now:0
 msgid "Pay Directly"
@@ -800,6 +810,12 @@ msgstr "借方 / 貸方"
 #: field:account.voucher,pre_line:0
 msgid "Previous Payments ?"
 msgstr "以前の支払ですか？"
+
+#. module: account_voucher
+#: code:addons/account_voucher/account_voucher.py:1098
+#, python-format
+msgid "The invoice you are willing to pay is not valid anymore."
+msgstr ""
 
 #. module: account_voucher
 #: selection:sale.receipt.report,month:0
@@ -828,26 +844,29 @@ msgid "Active"
 msgstr ""
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:965
+#: code:addons/account_voucher/account_voucher.py:968
 #, python-format
 msgid "Please define a sequence on the journal."
 msgstr ""
 
 #. module: account_voucher
-#: view:account.voucher:0
-msgid "Total Allocation"
-msgstr "割り当て合計"
+#: model:ir.actions.act_window,name:account_voucher.act_pay_voucher
+#: model:ir.actions.act_window,name:account_voucher.action_vendor_receipt
+#: model:ir.ui.menu,name:account_voucher.menu_action_vendor_receipt
+msgid "Customer Payments"
+msgstr ""
+
+#. module: account_voucher
+#: model:ir.actions.act_window,name:account_voucher.action_sale_receipt_report_all
+#: model:ir.ui.menu,name:account_voucher.menu_action_sale_receipt_report_all
+#: view:sale.receipt.report:0
+msgid "Sales Receipts Analysis"
+msgstr ""
 
 #. module: account_voucher
 #: view:sale.receipt.report:0
 msgid "Group by Invoice Date"
 msgstr "請求日でグループ化"
-
-#. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:1093
-#, python-format
-msgid "Wrong bank statement line"
-msgstr ""
 
 #. module: account_voucher
 #: view:account.voucher:0
@@ -912,13 +931,6 @@ msgid "Sales Information"
 msgstr "販売情報"
 
 #. module: account_voucher
-#: model:ir.actions.act_window,name:account_voucher.action_sale_receipt_report_all
-#: model:ir.ui.menu,name:account_voucher.menu_action_sale_receipt_report_all
-#: view:sale.receipt.report:0
-msgid "Sales Receipt Analysis"
-msgstr "領収書分析"
-
-#. module: account_voucher
 #: view:account.voucher:0
 #: field:account.voucher.line,voucher_id:0
 #: model:res.request.link,name:account_voucher.req_link_voucher
@@ -960,17 +972,10 @@ msgid "Journal Items"
 msgstr "仕訳帳項目"
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:492
+#: code:addons/account_voucher/account_voucher.py:496
 #, python-format
 msgid "Please define default credit/debit accounts on the journal \"%s\"."
 msgstr ""
-
-#. module: account_voucher
-#: model:ir.actions.act_window,name:account_voucher.act_pay_voucher
-#: model:ir.actions.act_window,name:account_voucher.action_vendor_receipt
-#: model:ir.ui.menu,name:account_voucher.menu_action_vendor_receipt
-msgid "Customer Payment"
-msgstr "顧客支払"
 
 #. module: account_voucher
 #: selection:account.voucher,type:0
@@ -1052,12 +1057,6 @@ msgid "Journal"
 msgstr "仕訳帳"
 
 #. module: account_voucher
-#: model:ir.actions.act_window,name:account_voucher.action_vendor_payment
-#: model:ir.ui.menu,name:account_voucher.menu_action_vendor_payment
-msgid "Supplier Payment"
-msgstr "仕入先支払"
-
-#. module: account_voucher
 #: view:account.voucher:0
 msgid "Internal Notes"
 msgstr "内部注記"
@@ -1075,8 +1074,6 @@ msgstr "元アカウント"
 
 #. module: account_voucher
 #: view:account.voucher:0
-#: model:ir.actions.act_window,name:account_voucher.action_purchase_receipt
-#: model:ir.ui.menu,name:account_voucher.menu_action_purchase_receipt
 msgid "Purchase Receipt"
 msgstr "領収書"
 
@@ -1137,6 +1134,12 @@ msgid "Gain Exchange Rate Account"
 msgstr ""
 
 #. module: account_voucher
+#: selection:account.voucher,type:0
+#: selection:sale.receipt.report,type:0
+msgid "Sale"
+msgstr "販売"
+
+#. module: account_voucher
 #: selection:sale.receipt.report,month:0
 msgid "April"
 msgstr "4月"
@@ -1180,7 +1183,7 @@ msgid ""
 msgstr ""
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:864
+#: code:addons/account_voucher/account_voucher.py:867
 #, python-format
 msgid "Cannot delete voucher(s) which are already opened or paid."
 msgstr ""
@@ -1191,7 +1194,7 @@ msgid "Effective date for accounting entries"
 msgstr "会計エントリーの有効日"
 
 #. module: account_voucher
-#: model:mail.message.subtype,name:account_voucher.mt_voucher
+#: model:mail.message.subtype,name:account_voucher.mt_voucher_state_change
 msgid "Status Change"
 msgstr ""
 
@@ -1238,8 +1241,13 @@ msgid "Open Balance"
 msgstr "期首残高"
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:997
-#: code:addons/account_voucher/account_voucher.py:1001
+#: model:mail.message.subtype,description:account_voucher.mt_voucher_state_change
+msgid "Status <b>changed</b>"
+msgstr ""
+
+#. module: account_voucher
+#: code:addons/account_voucher/account_voucher.py:1000
+#: code:addons/account_voucher/account_voucher.py:1004
 #, python-format
 msgid "Insufficient Configuration!"
 msgstr ""
@@ -1340,6 +1348,9 @@ msgstr ""
 #~ msgid "Invalid action !"
 #~ msgstr "無効なアクションです。"
 
+#~ msgid "Sales Receipt"
+#~ msgstr "領収書"
+
 #~ msgid ""
 #~ "The amount of the voucher must be the same amount as the one on the "
 #~ "statement line"
@@ -1377,8 +1388,14 @@ msgstr ""
 #~ msgid "Invoice Number must be unique per Company!"
 #~ msgstr "請求書番号は会社ごとに固有である必要があります。"
 
+#~ msgid "Customer Payment"
+#~ msgstr "顧客支払"
+
 #~ msgid "Import Invoices in Statement"
 #~ msgstr "請求書を取引明細書にインポート"
+
+#~ msgid "Sales Receipt Analysis"
+#~ msgstr "領収書分析"
 
 #~ msgid ""
 #~ "From this report, you can have an overview of the amount invoiced to your "
@@ -1409,6 +1426,9 @@ msgstr ""
 #~ "・ 記帳済状態は、ユーザがバウチャーを作成し、バウチャー番号が生成され、そしてアカウントにバウチャーエントリーが作成された状態です。           "
 #~ "            \n"
 #~ "・ キャンセル済状態はユーザがバウチャーをキャンセルした状態です。"
+
+#~ msgid "Supplier Payment"
+#~ msgstr "仕入先支払"
 
 #~ msgid "Expense Currency Rate"
 #~ msgstr "費用の通貨レート"

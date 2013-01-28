@@ -40,3 +40,13 @@ OpenChatter updates the res.users class:
  - it adds a preference about sending emails when receiving a notification
  - make a new user follow itself automatically
  - create a welcome message when creating a new user, to make his arrival in OpenERP more friendly
+
+
+Misc magic context keys
++++++++++++++++++++++++
+
+ - mail_create_nosubscribe: when creating a new record that inherit from mail_thread,
+   do not subscribe the creator to the document followers
+ - mail_create_nolog: do not log creation message
+ - mail_notify_noemail: do not send email notifications; partners to notify are
+   notified, i.e. a mail_notification is created, but no email is actually send

@@ -22,10 +22,10 @@
 import base64
 import time
 from lxml import etree
-from osv import fields
-from osv import osv
-import tools
-from tools.translate import _
+from openerp.osv import fields
+from openerp.osv import osv
+from openerp import tools
+from openerp.tools.translate import _
 
 MAX_LEVEL = 15
 AVAILABLE_STATES = [

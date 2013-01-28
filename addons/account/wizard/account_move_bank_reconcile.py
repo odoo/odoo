@@ -19,8 +19,8 @@
 #
 ##############################################################################
 
-from osv import fields, osv
-from tools.translate import _
+from openerp.osv import fields, osv
+from openerp.tools.translate import _
 
 class account_move_bank_reconcile(osv.osv_memory):
     """

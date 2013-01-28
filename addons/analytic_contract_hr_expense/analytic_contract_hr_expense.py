@@ -18,13 +18,9 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-
-from osv import osv, fields
-from osv.orm import intersect, except_orm
-import tools.sql
-from tools.translate import _
-from decimal_precision import decimal_precision as dp
-
+from openerp.osv import fields, osv
+from openerp.osv.orm import intersect
+from openerp.tools.translate import _
 
 class account_analytic_account(osv.osv):
     _name = "account.analytic.account"
@@ -113,20 +109,19 @@ class account_analytic_account(osv.osv):
         return res
 
     def open_hr_expense(self, cr, uid, ids, context=None):
+        mod_obj = self.pool.get('ir.model.data')
+        act_obj = self.pool.get('ir.actions.act_window')
+
+        dummy, act_window_id = mod_obj.get_object_reference(cr, uid, 'hr_expense', 'expense_all')
+        result = act_obj.read(cr, uid, act_window_id, context=context)
+
         line_ids = self.pool.get('hr.expense.line').search(cr,uid,[('analytic_account', 'in', ids)])
-        domain = [('line_ids', 'in', line_ids)]
-        names = [record.name for record in self.browse(cr, uid, ids, context=context)]
-        name = _('Expenses of %s') % ','.join(names)
-        return {
-            'type': 'ir.actions.act_window',
-            'name': name,
-            'view_type': 'form',
-            'view_mode': 'tree,form',
-            'context':{'analytic_account':ids[0]},
-            'domain' : domain,
-            'res_model': 'hr.expense.expense',
-            'nodestroy': True,
-        }
+        result['domain'] = [('line_ids', 'in', line_ids)]
+        names = [account.name for account in self.browse(cr, uid, ids, context=context)]
+        result['name'] = _('Expenses of %s') % ','.join(names)
+        result['context'] = {'analytic_account': ids[0]}
+        result['view_type'] = 'form'
+        return result
 
     def hr_to_invoice_expense(self, cr, uid, ids, context=None):
         domain = [('invoice_id','=',False),('to_invoice','!=',False), ('journal_id.type', '=', 'purchase'), ('account_id', 'in', ids)]

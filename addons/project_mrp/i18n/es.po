@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2012-12-03 16:04+0000\n"
-"PO-Revision-Date: 2012-12-12 13:07+0000\n"
+"POT-Creation-Date: 2012-12-21 17:06+0000\n"
+"PO-Revision-Date: 2012-12-22 18:22+0000\n"
 "Last-Translator: Pedro Manuel Baeza <pedro.baeza@gmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-12-13 04:44+0000\n"
-"X-Generator: Launchpad (build 16361)\n"
+"X-Launchpad-Export-Date: 2012-12-23 04:41+0000\n"
+"X-Generator: Launchpad (build 16378)\n"
 
 #. module: project_mrp
 #: model:process.node,note:project_mrp.process_node_procuretasktask0
@@ -27,10 +27,15 @@ msgid "Product type is service, then its creates the task."
 msgstr "Tipo de producto es servicio, luego se crea la tarea."
 
 #. module: project_mrp
-#: code:addons/project_mrp/project_procurement.py:93
+#: code:addons/project_mrp/project_procurement.py:92
 #, python-format
 msgid "Task created"
 msgstr "Tarea creada"
+
+#. module: project_mrp
+#: model:process.node,note:project_mrp.process_node_saleordertask0
+msgid "In case you sell services on sales order"
+msgstr "En caso de que vendas servicios en el pedido de venta"
 
 #. module: project_mrp
 #: model:process.node,note:project_mrp.process_node_mrptask0
@@ -38,14 +43,14 @@ msgid "A task is created to provide the service."
 msgstr "Se crea una tarea para proveer el servicio."
 
 #. module: project_mrp
-#: field:project.task,sale_line_id:0
-msgid "Sale Order Line"
-msgstr "Línea de pedido de venta"
-
-#. module: project_mrp
 #: model:ir.model,name:project_mrp.model_product_product
 msgid "Product"
 msgstr "Producto"
+
+#. module: project_mrp
+#: model:process.node,name:project_mrp.process_node_saleordertask0
+msgid "Sales Order Task"
+msgstr "Tareas del pedido de venta"
 
 #. module: project_mrp
 #: model:process.transition,note:project_mrp.process_transition_procuretask0
@@ -63,6 +68,11 @@ msgid "Procurement Task"
 msgstr "Tarea abastecimiento"
 
 #. module: project_mrp
+#: field:procurement.order,sale_line_id:0
+msgid "Sales order line"
+msgstr "Línea del pedido de venta"
+
+#. module: project_mrp
 #: model:ir.model,name:project_mrp.model_project_task
 #: model:process.node,name:project_mrp.process_node_mrptask0
 #: model:process.node,name:project_mrp.process_node_procuretasktask0
@@ -72,8 +82,20 @@ msgstr "Tarea"
 
 #. module: project_mrp
 #: view:product.product:0
+msgid ""
+"will be \n"
+"                        created to follow up the job to do. This task will "
+"appear\n"
+"                        in the project related to the contract of the sales "
+"order."
+msgstr ""
+"será creado para seguir la tarea a realizar. Esta tarea aparecerá en el "
+"proyecto relacionado con el contrato del pedido de venta."
+
+#. module: project_mrp
+#: view:product.product:0
 msgid "When you sell this service to a customer,"
-msgstr "Cuando vende un servicio al cliente,"
+msgstr "Cuando vende este servicio al cliente,"
 
 #. module: project_mrp
 #: field:product.product,project_id:0
@@ -87,29 +109,12 @@ msgid "Procurement"
 msgstr "Abastecimiento"
 
 #. module: project_mrp
-#: field:procurement.order,sale_line_id:0
-msgid "Sale order line"
-msgstr "Línea de pedido de venta"
-
-#. module: project_mrp
 #: view:product.product:0
 msgid "False"
 msgstr "Falso"
 
 #. module: project_mrp
-#: view:product.product:0
-msgid ""
-"will be \n"
-"                        created to follow up the job to do. This task will "
-"appear\n"
-"                        in the project related to the contract of the sale "
-"order."
-msgstr ""
-"será creado para seguir la tarea a realizar. Esta tarea aparecerá en el "
-"proyecto relacionado con el contrato del pedido de venta."
-
-#. module: project_mrp
-#: code:addons/project_mrp/project_procurement.py:87
+#: code:addons/project_mrp/project_procurement.py:86
 #, python-format
 msgid "Task created."
 msgstr "Tarea creada."
@@ -122,9 +127,9 @@ msgstr ""
 "Producir"
 
 #. module: project_mrp
-#: model:process.node,name:project_mrp.process_node_saleordertask0
-msgid "Sale Order Task"
-msgstr "Tarea pedido de venta"
+#: field:project.task,sale_line_id:0
+msgid "Sales Order Line"
+msgstr "Línea del pedido de venta"
 
 #. module: project_mrp
 #: model:process.transition,name:project_mrp.process_transition_createtask0
@@ -142,11 +147,6 @@ msgid "Order Line"
 msgstr "Línea del pedido"
 
 #. module: project_mrp
-#: model:process.node,note:project_mrp.process_node_saleordertask0
-msgid "In case you sell services on sale order"
-msgstr "En caso que venda servicios sobre pedido de venta"
-
-#. module: project_mrp
 #: view:product.product:0
 msgid "a task"
 msgstr "una tarea"
@@ -158,6 +158,12 @@ msgstr "una tarea"
 
 #~ msgid "Procure Task"
 #~ msgstr "Tarea abastecimiento"
+
+#~ msgid "Sale Order Task"
+#~ msgstr "Tarea pedido de venta"
+
+#~ msgid "In case you sell services on sale order"
+#~ msgstr "En caso que venda servicios sobre pedido de venta"
 
 #~ msgid "Project Management - MRP and Sale Integration"
 #~ msgstr "Gestión de proyectos - Integración con MRP y ventas"
@@ -219,6 +225,12 @@ msgstr "una tarea"
 #~ msgid "Error ! Task end-date must be greater then task start-date"
 #~ msgstr ""
 #~ "¡ Error ! La fecha final de la tarea debe ser mayor que la fecha de inicio"
+
+#~ msgid "Sale Order Line"
+#~ msgstr "Línea de pedido de venta"
+
+#~ msgid "Sale order line"
+#~ msgstr "Línea de pedido de venta"
 
 #~ msgid "Order Reference must be unique per Company!"
 #~ msgstr "¡La referencia del pedido debe ser única por compañía!"

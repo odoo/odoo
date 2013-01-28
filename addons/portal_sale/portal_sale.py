@@ -68,6 +68,7 @@ class sale_order(osv.Model):
                 'subject': 'Invitation to follow %s' % document.name_get()[0][1],
                 'body_html': 'You have been invited to follow %s' % document.name_get()[0][1],
                 'auto_delete': True,
+                'type': 'email',
             }
             mail_obj = self.pool.get('mail.mail')
             mail_id = mail_obj.create(cr, uid, mail_values, context=context)
@@ -128,6 +129,7 @@ class account_invoice(osv.Model):
                 'subject': 'Invitation to follow %s' % document.name_get()[0][1],
                 'body_html': 'You have been invited to follow %s' % document.name_get()[0][1],
                 'auto_delete': True,
+                'type': 'email',
             }
             mail_obj = self.pool.get('mail.mail')
             mail_id = mail_obj.create(cr, uid, mail_values, context=context)

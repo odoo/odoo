@@ -19,12 +19,12 @@
 #
 ##############################################################################
 
-from osv import fields
-from osv import osv
-import netsvc
+from openerp.osv import fields
+from openerp.osv import osv
+from openerp import netsvc
 import time
 from datetime import datetime
-from tools.translate import _
+from openerp.tools.translate import _
 
 #----------------------------------------------------------
 # Work Centers
@@ -160,17 +160,14 @@ class mrp_production_workcenter_line(osv.osv):
         """ Sets state to draft.
         @return: True
         """
-        self.write(cr, uid, ids, {'state':'draft'})
-        self.action_draft_send_note(cr, uid, ids, context=context)
-        return True
+        return self.write(cr, uid, ids, {'state': 'draft'}, context=context)
 
     def action_start_working(self, cr, uid, ids, context=None):
         """ Sets state to start working and writes starting date.
         @return: True
         """
         self.modify_production_order_state(cr, uid, ids, 'start')
-        self.write(cr, uid, ids, {'state':'startworking', 'date_start': time.strftime('%Y-%m-%d %H:%M:%S')})
-        self.action_start_send_note(cr, uid, ids, context=context)
+        self.write(cr, uid, ids, {'state':'startworking', 'date_start': time.strftime('%Y-%m-%d %H:%M:%S')}, context=context)
         return True
 
     def action_done(self, cr, uid, ids, context=None):
@@ -186,8 +183,7 @@ class mrp_production_workcenter_line(osv.osv):
         delay += (date_finished-date_start).days * 24
         delay += (date_finished-date_start).seconds / float(60*60)
 
-        self.write(cr, uid, ids, {'state':'done', 'date_finished': date_now,'delay':delay})
-        self.action_done_send_note(cr, uid, ids, context=context)
+        self.write(cr, uid, ids, {'state':'done', 'date_finished': date_now,'delay':delay}, context=context)
         self.modify_production_order_state(cr,uid,ids,'done')
         return True
 
@@ -195,71 +191,20 @@ class mrp_production_workcenter_line(osv.osv):
         """ Sets state to cancel.
         @return: True
         """
-        self.write(cr, uid, ids, {'state':'cancel'})
-        self.action_cancel_send_note(cr, uid, ids, context=context)
-        return True
+        return self.write(cr, uid, ids, {'state':'cancel'}, context=context)
 
     def action_pause(self, cr, uid, ids, context=None):
         """ Sets state to pause.
         @return: True
         """
-        self.write(cr, uid, ids, {'state':'pause'})
-        self.action_pending_send_note(cr, uid, ids, context=context)
-        return True
+        return self.write(cr, uid, ids, {'state':'pause'}, context=context)
 
     def action_resume(self, cr, uid, ids, context=None):
         """ Sets state to startworking.
         @return: True
         """
-        self.write(cr, uid, ids, {'state':'startworking'})
-        self.action_start_send_note(cr, uid, ids, context=context)
-        return True
+        return self.write(cr, uid, ids, {'state':'startworking'}, context=context)
 
-    # -------------------------------------------------------
-    # OpenChatter methods and notifications
-    # -------------------------------------------------------
-    
-    def action_draft_send_note(self, cr, uid, ids, context=None):
-        prod_obj = self.pool.get('mrp.production')
-        for workorder in self.browse(cr, uid, ids):
-            for prod in prod_obj.browse(cr, uid, [workorder.production_id]):
-                message = _("Work order has been <b>created</b> for production order <em>%s</em>.") % (prod.id.name)
-                self.message_post(cr, uid, [workorder.id], body=message, context=context)
-        return True
-
-    def action_start_send_note(self, cr, uid, ids, context=None):
-        prod_obj = self.pool.get('mrp.production')
-        for workorder in self.browse(cr, uid, ids):
-            for prod in prod_obj.browse(cr, uid, [workorder.production_id]):
-                message = _("Work order has been <b>started</b> for production order <em>%s</em>.") % (prod.id.name)
-                self.message_post(cr, uid, [workorder.id], body=message, context=context)
-        return True
-
-    def action_done_send_note(self, cr, uid, ids, context=None):
-        prod_obj = self.pool.get('mrp.production')
-        for workorder in self.browse(cr, uid, ids):
-            for prod in prod_obj.browse(cr, uid, [workorder.production_id]):
-                message = _("Work order has been <b>done</b> for production order <em>%s</em>.") % (prod.id.name)
-                self.message_post(cr, uid, [workorder.id], body=message, context=context)
-        return True
-
-    def action_pending_send_note(self, cr, uid, ids, context=None):
-        prod_obj = self.pool.get('mrp.production')
-        for workorder in self.browse(cr, uid, ids):
-            for prod in prod_obj.browse(cr, uid, [workorder.production_id]):
-                message = _("Work order is <b>pending</b> for production order <em>%s</em>.") % (prod.id.name)
-                self.message_post(cr, uid, [workorder.id], body=message, context=context)
-        return True
-
-    def action_cancel_send_note(self, cr, uid, ids, context=None):
-        prod_obj = self.pool.get('mrp.production')
-        for workorder in self.browse(cr, uid, ids):
-            for prod in prod_obj.browse(cr, uid, [workorder.production_id]):
-                message = _("Work order has been <b>cancelled</b> for production order <em>%s</em>.") % (prod.id.name)
-                self.message_post(cr, uid, [workorder.id], body=message, context=context)
-        return True
-
-mrp_production_workcenter_line()
 
 class mrp_production(osv.osv):
     _inherit = 'mrp.production'

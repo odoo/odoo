@@ -18,12 +18,11 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
+from openerp.osv import osv, fields
+from openerp.addons.edi import EDIMixin
+from openerp.tools.translate import _
 
 from urllib import urlencode
-
-from openerp.osv import osv, fields
-from openerp.tools.translate import _
-from edi import EDIMixin
 
 SALE_ORDER_LINE_EDI_STRUCT = {
     'sequence': True,

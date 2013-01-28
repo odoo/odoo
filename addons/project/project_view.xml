@@ -11,12 +11,56 @@
         <menuitem id="menu_project_management" name="Project" parent="base.menu_main_pm" sequence="1"/>
         <menuitem id="base.menu_definitions" name="Configuration" parent="base.menu_main_pm" sequence="60"/>
 
+        <record id="view_task_search_form" model="ir.ui.view">
+            <field name="name">project.task.search.form</field>
+            <field name="model">project.task</field>
+            <field name="arch" type="xml">
+               <search string="Tasks">
+                    <field name="name" string="Tasks"/>
+                    <field name="categ_ids"/>
+                    <separator/>
+                    <filter icon="terp-mail-message-new" string="Unread Messages" name="message_unread" domain="[('message_unread','=',True)]"/>
+                    <separator/>
+                    <filter name="draft" string="New" domain="[('state','=','draft')]" help="New Tasks" icon="terp-check"/>
+                    <filter name="open" string="In Progress" domain="[('state','=','open')]" help="In Progress Tasks" icon="terp-camera_test"/>
+                    <filter string="Pending" domain="[('state','=','pending')]" context="{'show_delegated':False}" help="Pending Tasks" icon="terp-gtk-media-pause"/>
+                    <separator/>
+                    <filter name="My project" string="Project" domain="[('project_id.user_id','=',uid)]" help="My Projects" icon="terp-check"/>
+                    <separator/>
+                    <filter string="My Tasks" domain="[('user_id','=',uid)]"  help="My Tasks" icon="terp-personal"/>
+                    <filter string="Unassigned Tasks" domain="[('user_id','=',False)]"  help="Unassigned Tasks" icon="terp-personal-"/>
+                    <separator/>
+                    <filter string="Deadlines" context="{'deadline_visible': False}" domain="[('date_deadline','&lt;&gt;',False)]"
+                        help="Show only tasks having a deadline" icon="terp-gnome-cpu-frequency-applet+"/>
+                    <field name="project_id"/>
+                    <field name="user_id"/>
+                    <group expand="0" string="Group By...">
+                        <filter string="Users" name="group_user_id" icon="terp-personal" domain="[]"  context="{'group_by':'user_id'}"/>
+                        <filter string="Project" name="group_project_id" icon="terp-folder-violet" domain="[]" context="{'group_by':'project_id'}"/>
+                        <filter string="Stage" name="group_stage_id" icon="terp-stage" domain="[]" context="{'group_by':'stage_id'}"/>
+                        <filter string="Deadline" icon="terp-gnome-cpu-frequency-applet+" domain="[]" context="{'group_by':'date_deadline'}"/>
+                        <filter string="Start Date" icon="terp-go-month" domain="[]" context="{'group_by':'date_start'}" groups="base.group_no_one"/>
+                        <filter string="End Date" icon="terp-go-month" domain="[]" context="{'group_by':'date_end'}" groups="base.group_no_one"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
         <record id="act_project_project_2_project_task_all" model="ir.actions.act_window">
-            <field name="res_model">project.task</field>
-            <field name="view_type">form</field>
             <field name="name">Tasks</field>
-            <field name="view_mode">kanban,tree,form,calendar,graph</field>
+            <field name="res_model">project.task</field>
+            <field name="view_mode">kanban,tree,form,calendar,gantt,graph</field>
             <field name="context">{'search_default_project_id': [active_id], 'default_project_id': active_id}</field>
+            <field name="search_view_id" ref="view_task_search_form"/>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to create a new task.
+              </p><p>
+                OpenERP's project management allows you to manage the pipeline
+                of tasks in order to get things done efficiently. You can
+                track progress, discuss on tasks, attach documents, etc.
+              </p>
+            </field>
         </record>
 
         <!-- Project -->
@@ -115,7 +159,7 @@
                     </notebook>
                 </sheet>
                 <div class="oe_chatter">
-                    <field name="message_follower_ids" widget="mail_followers" help="Follow this project to automatically follow all related tasks and issues." groups="base.group_user"/>
+                    <field name="message_follower_ids" widget="mail_followers" help="Follow this project to automatically track the events associated to tasks and issues of this project." groups="base.group_user"/>
                     <field name="message_ids" widget="mail_thread"/>
                 </div>
                 </form>
@@ -334,7 +378,6 @@
                         <group>
                             <field name="project_id"  on_change="onchange_project(project_id)" context="{'default_use_tasks':1}"/>
                             <field name="user_id" attrs="{'readonly':[('state','in',['done', 'cancelled'])]}" options='{"no_open": True}'/>
-                            <field name="company_id" groups="base.group_multi_company" widget="selection"/>
                             <field name="planned_hours" widget="float_time"
                                     groups="project.group_time_work_estimation_tasks"
                                     on_change="onchange_planned(planned_hours, effective_hours)"/>
@@ -394,6 +437,15 @@
                                 <field name="sequence"/>
                                 <field name="partner_id"/>
                                 <field name="state" invisible="1"/>
+                                <field name="company_id" groups="base.group_multi_company" widget="selection"/>
+                            </group>
+                            <group>
+                                <group string="Gantt View">
+                                    <field name="date_start"/>
+                                    <field name="date_end"/>
+                                </group>
+                                <group>
+                                </group>
                             </group>
                         </page>
                     </notebook>
@@ -451,7 +503,6 @@
                                 <div><b><field name="name"/></b></div>
                                 <div>
                                     <field name="project_id"/><br/>
-                                    <div class="oe_ellipsis"><t t-raw="record.description.value"/></div>
                                     <t t-if="record.date_deadline.raw_value and record.date_deadline.raw_value lt (new Date())" t-set="red">oe_kanban_text_red</t>
                                     <span t-attf-class="#{red || ''}"><i><field name="date_deadline"/></i></span>
                                 </div>
@@ -502,8 +553,8 @@
                     <field name="date_deadline" invisible="context.get('deadline_visible',True)"/>
                     <field name="stage_id" invisible="context.get('set_visible',False)"/>
                     <field name="state" invisible="1"/>
-                    <field name="date_start" invisible="1" groups="base.group_no_one"/>
-                    <field name="date_end" invisible="1" groups="base.group_no_one"/>
+                    <field name="date_start" groups="base.group_no_one"/>
+                    <field name="date_end" groups="base.group_no_one"/>
                     <field name="progress" widget="progressbar" invisible="context.get('set_visible',False)"/>
                 </tree>
             </field>
@@ -543,41 +594,6 @@
             </field>
         </record>
 
-        <record id="view_task_search_form" model="ir.ui.view">
-            <field name="name">project.task.search.form</field>
-            <field name="model">project.task</field>
-            <field name="arch" type="xml">
-               <search string="Tasks">
-                    <field name="name" string="Tasks"/>
-                    <field name="categ_ids"/>
-                    <separator/>
-                    <filter icon="terp-mail-message-new" string="Unread Messages" name="message_unread" domain="[('message_unread','=',True)]"/>
-                    <separator/>
-                    <filter name="draft" string="New" domain="[('state','=','draft')]" help="New Tasks" icon="terp-check"/>
-                    <filter name="open" string="In Progress" domain="[('state','=','open')]" help="In Progress Tasks" icon="terp-camera_test"/>
-                    <filter string="Pending" domain="[('state','=','pending')]" context="{'show_delegated':False}" help="Pending Tasks" icon="terp-gtk-media-pause"/>
-                    <separator/>
-                    <filter name="My project" string="Project" domain="[('project_id.user_id','=',uid)]" help="My Projects" icon="terp-check"/>
-                    <separator/>
-                    <filter string="My Tasks" domain="[('user_id','=',uid)]"  help="My Tasks" icon="terp-personal"/>
-                    <filter string="Unassigned Tasks" domain="[('user_id','=',False)]"  help="Unassigned Tasks" icon="terp-personal-"/>
-                    <separator/>
-                    <filter string="Deadlines" context="{'deadline_visible': False}" domain="[('date_deadline','&lt;&gt;',False)]"
-                        help="Show only tasks having a deadline" icon="terp-gnome-cpu-frequency-applet+"/>
-                    <field name="project_id"/>
-                    <field name="user_id"/>
-                    <group expand="0" string="Group By...">
-                        <filter string="Users" name="group_user_id" icon="terp-personal" domain="[]"  context="{'group_by':'user_id'}"/>
-                        <filter string="Project" name="group_project_id" icon="terp-folder-violet" domain="[]" context="{'group_by':'project_id'}"/>
-                        <filter string="Stage" name="group_stage_id" icon="terp-stage" domain="[]" context="{'group_by':'stage_id'}"/>
-                        <filter string="Deadline" icon="terp-gnome-cpu-frequency-applet+" domain="[]" context="{'group_by':'date_deadline'}"/>
-                        <filter string="Start Date" icon="terp-go-month" domain="[]" context="{'group_by':'date_start'}" groups="base.group_no_one"/>
-                        <filter string="End Date" icon="terp-go-month" domain="[]" context="{'group_by':'date_end'}" groups="base.group_no_one"/>
-                    </group>
-                </search>
-            </field>
-        </record>
-
         <record id="analytic_account_inherited_form" model="ir.ui.view">
             <field name="name">account.analytic.account.form.inherit</field>
             <field name="model">account.analytic.account</field>
@@ -594,11 +610,7 @@
         <record id="action_view_task" model="ir.actions.act_window">
             <field name="name">Tasks</field>
             <field name="res_model">project.task</field>
-            <field name="view_type">form</field>
             <field name="view_mode">kanban,tree,form,calendar,gantt,graph</field>
-            <field eval="False" name="filter"/>
-            <field name="view_id" eval="False"/>
-            <field name="context">{}</field>
             <field name="search_view_id" ref="view_task_search_form"/>
             <field name="help" type="html">
               <p class="oe_view_nocontent_create">

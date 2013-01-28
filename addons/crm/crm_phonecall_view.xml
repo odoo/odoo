@@ -36,11 +36,13 @@
                 <button string="Meeting"
                     states="open,pending"
                     name="action_make_meeting"
+                    icon="gtk-redo"
                     type="object"/>
                 <button string="Convert to Opportunity"
                     type="object"
                     name="action_button_convert2opportunity"
                     states="open,pending"
+                    icon="gtk-index"
                     attrs="{'invisible':[('opportunity_id','!=',False)]}"/>
                 <field name="partner_phone"/>
                 <field name="user_id"/>

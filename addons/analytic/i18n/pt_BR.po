@@ -7,16 +7,16 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-03 16:02+0000\n"
-"PO-Revision-Date: 2012-12-16 22:53+0000\n"
+"POT-Creation-Date: 2012-12-21 17:05+0000\n"
+"PO-Revision-Date: 2012-12-22 01:02+0000\n"
 "Last-Translator: Fábio Martinelli - http://zupy.com.br "
 "<webmaster@guaru.net>\n"
 "Language-Team: Brazilian Portuguese <pt_BR@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-12-17 04:47+0000\n"
-"X-Generator: Launchpad (build 16372)\n"
+"X-Launchpad-Export-Date: 2012-12-23 04:41+0000\n"
+"X-Generator: Launchpad (build 16378)\n"
 
 #. module: analytic
 #: field:account.analytic.account,child_ids:0
@@ -29,9 +29,10 @@ msgid "In Progress"
 msgstr "Em Andamento"
 
 #. module: analytic
-#: model:mail.message.subtype,name:analytic.mt_account_status
-msgid "Status Change"
-msgstr "Mudança de Situação"
+#: code:addons/analytic/analytic.py:229
+#, python-format
+msgid "Contract: "
+msgstr "Contrato "
 
 #. module: analytic
 #: selection:account.analytic.account,state:0
@@ -47,6 +48,32 @@ msgstr "Data Final"
 #: help:account.analytic.line,unit_amount:0
 msgid "Specifies the amount of quantity to count."
 msgstr "Especifica o total da quantidade para contar."
+
+#. module: analytic
+#: field:account.analytic.account,debit:0
+msgid "Debit"
+msgstr "Débito"
+
+#. module: analytic
+#: help:account.analytic.account,type:0
+msgid ""
+"If you select the View Type, it means you won't allow to create journal "
+"entries using that account.\n"
+"The type 'Analytic account' stands for usual accounts that you only want to "
+"use in accounting.\n"
+"If you select Contract or Project, it offers you the possibility to manage "
+"the validity and the invoicing options for this account.\n"
+"The special type 'Template of Contract' allows you to define a template with "
+"default data that you can reuse easily."
+msgstr ""
+"Se você selecionar o tipo de visão, isso significa que você não vai permitir "
+"a criação de lançamentos de diário usando essa conta.\n"
+"O Tipo 'Conta Analítica' é para contas habituais que você só quer usar em "
+"contabilidade.\n"
+"Se você selecionar Contrato ou Projeto, oferece-lhe a possibilidade de "
+"controlar a validade e as opções de faturamento para esta conta.\n"
+"O tipo especial 'Modelo de Contrato' permite que você defina um modelo com "
+"dados padrão que você pode reutilizar facilmente."
 
 #. module: analytic
 #: view:account.analytic.account:0
@@ -73,10 +100,14 @@ msgstr ""
 "                                         cliente."
 
 #. module: analytic
-#: code:addons/analytic/analytic.py:222
-#, python-format
-msgid "Contract: "
-msgstr "Contrato "
+#: selection:account.analytic.account,type:0
+msgid "Contract or Project"
+msgstr "Contrato ou Projeto"
+
+#. module: analytic
+#: field:account.analytic.account,name:0
+msgid "Account/Contract Name"
+msgstr "Conta/Nome do Contrato"
 
 #. module: analytic
 #: field:account.analytic.account,manager_id:0
@@ -89,20 +120,14 @@ msgid "Followers"
 msgstr "Seguidores"
 
 #. module: analytic
-#: code:addons/analytic/analytic.py:319
-#, python-format
-msgid "Contract <b>created</b>."
-msgstr "Contrato <b>criado</b>."
-
-#. module: analytic
 #: selection:account.analytic.account,state:0
 msgid "Closed"
 msgstr "Fechado"
 
 #. module: analytic
-#: field:account.analytic.account,debit:0
-msgid "Debit"
-msgstr "Débito"
+#: model:mail.message.subtype,name:analytic.mt_account_pending
+msgid "Contract to Renew"
+msgstr "Contrato para Renovar"
 
 #. module: analytic
 #: selection:account.analytic.account,state:0
@@ -120,7 +145,7 @@ msgid "Status"
 msgstr "Situação"
 
 #. module: analytic
-#: code:addons/analytic/analytic.py:261
+#: code:addons/analytic/analytic.py:268
 #, python-format
 msgid "%s (copy)"
 msgstr "%s (cópia)"
@@ -135,11 +160,6 @@ msgstr "Linha Analítica"
 #: field:account.analytic.line,name:0
 msgid "Description"
 msgstr "Descrição"
-
-#. module: analytic
-#: field:account.analytic.account,name:0
-msgid "Account/Contract Name"
-msgstr "Conta/Nome do Contrato"
 
 #. module: analytic
 #: field:account.analytic.account,message_unread:0
@@ -168,6 +188,11 @@ msgid "Messages and communication history"
 msgstr "Histórico de mensagens e comunicação"
 
 #. module: analytic
+#: model:mail.message.subtype,description:analytic.mt_account_opened
+msgid "Stage <b>opened</b>"
+msgstr "Estágio <b>aberto</b>"
+
+#. module: analytic
 #: help:account.analytic.account,quantity_max:0
 msgid ""
 "Sets the higher limit of time to work on the contract, based on the "
@@ -178,7 +203,7 @@ msgstr ""
 "limitado.)"
 
 #. module: analytic
-#: code:addons/analytic/analytic.py:153
+#: code:addons/analytic/analytic.py:160
 #, python-format
 msgid ""
 "If you set a company, the currency selected has to be the same as it's "
@@ -205,9 +230,9 @@ msgid "User"
 msgstr "Usuário"
 
 #. module: analytic
-#: field:account.analytic.account,parent_id:0
-msgid "Parent Analytic Account"
-msgstr "Conta Analítica Pai"
+#: model:mail.message.subtype,description:analytic.mt_account_pending
+msgid "Contract <b>pending</b>"
+msgstr "Contrato <b>pendente</b>"
 
 #. module: analytic
 #: field:account.analytic.line,date:0
@@ -215,31 +240,23 @@ msgid "Date"
 msgstr "Data"
 
 #. module: analytic
-#: help:account.analytic.account,type:0
-msgid ""
-"If you select the View Type, it means you won't allow to create journal "
-"entries using that account.\n"
-"The type 'Analytic account' stands for usual accounts that you only want to "
-"use in accounting.\n"
-"If you select Contract or Project, it offers you the possibility to manage "
-"the validity and the invoicing options for this account.\n"
-"The special type 'Template of Contract' allows you to define a template with "
-"default data that you can reuse easily."
-msgstr ""
-"Se você selecionar o tipo de visão, isso significa que você não vai permitir "
-"a criação de lançamentos de diário usando essa conta.\n"
-"O Tipo 'Conta Analítica' é para contas habituais que você só quer usar em "
-"contabilidade.\n"
-"Se você selecionar Contrato ou Projeto, oferece-lhe a possibilidade de "
-"controlar a validade e as opções de faturamento para esta conta.\n"
-"O tipo especial 'Modelo de Contrato' permite que você defina um modelo com "
-"dados padrão que você pode reutilizar facilmente."
+#: model:mail.message.subtype,name:analytic.mt_account_closed
+msgid "Contract Finished"
+msgstr "Contrato Terminado"
 
 #. module: analytic
-#: field:account.analytic.account,message_comment_ids:0
-#: help:account.analytic.account,message_comment_ids:0
-msgid "Comments and emails"
-msgstr "Comentários e emails"
+#: view:account.analytic.account:0
+msgid "Terms and Conditions"
+msgstr "Termos e Condições"
+
+#. module: analytic
+#: help:account.analytic.line,amount:0
+msgid ""
+"Calculated by multiplying the quantity and the price given in the Product's "
+"cost price. Always expressed in the company main currency."
+msgstr ""
+"Calculado multiplicando a quantidade e o preço dado no preço de custo do "
+"produto. Sempre expressos na moeda principal da empresa."
 
 #. module: analytic
 #: field:account.analytic.account,partner_id:0
@@ -257,10 +274,9 @@ msgid "Messages"
 msgstr "Mensagens"
 
 #. module: analytic
-#: constraint:account.analytic.line:0
-msgid "You cannot create analytic line on view account."
-msgstr ""
-"Você não pode criar uma linha analítica em uma conta de visualização."
+#: field:account.analytic.account,parent_id:0
+msgid "Parent Analytic Account"
+msgstr "Conta Analítica Pai"
 
 #. module: analytic
 #: view:account.analytic.account:0
@@ -289,20 +305,14 @@ msgid "Credit"
 msgstr "Crédito"
 
 #. module: analytic
-#: field:account.analytic.line,amount:0
-msgid "Amount"
-msgstr "Valor"
+#: model:mail.message.subtype,name:analytic.mt_account_opened
+msgid "Contract Opened"
+msgstr "Contrato Iniciado"
 
 #. module: analytic
-#: code:addons/analytic/analytic.py:321
-#, python-format
-msgid "Contract for <em>%s</em> has been <b>created</b>."
-msgstr "Contrato para <em>%s</em> foi <b>criado</b>."
-
-#. module: analytic
-#: view:account.analytic.account:0
-msgid "Terms and Conditions"
-msgstr "Termos e Condições"
+#: model:mail.message.subtype,description:analytic.mt_account_closed
+msgid "Contract <b>closed</b>"
+msgstr "Contrato <b>fechado</b>"
 
 #. module: analytic
 #: selection:account.analytic.account,state:0
@@ -346,7 +356,7 @@ msgid "Reference"
 msgstr "Referência"
 
 #. module: analytic
-#: code:addons/analytic/analytic.py:153
+#: code:addons/analytic/analytic.py:160
 #, python-format
 msgid "Error!"
 msgstr "Erro!"
@@ -357,9 +367,9 @@ msgid "Analytic Accounting"
 msgstr "Contabilidade Analítica"
 
 #. module: analytic
-#: selection:account.analytic.account,type:0
-msgid "Contract or Project"
-msgstr "Contrato ou Projeto"
+#: field:account.analytic.line,amount:0
+msgid "Amount"
+msgstr "Valor"
 
 #. module: analytic
 #: field:account.analytic.account,complete_name:0
@@ -400,13 +410,10 @@ msgid "Start Date"
 msgstr "Data de Início"
 
 #. module: analytic
-#: help:account.analytic.line,amount:0
-msgid ""
-"Calculated by multiplying the quantity and the price given in the Product's "
-"cost price. Always expressed in the company main currency."
+#: constraint:account.analytic.line:0
+msgid "You cannot create analytic line on view account."
 msgstr ""
-"Calculado multiplicando a quantidade e o preço dado no preço de custo do "
-"produto. Sempre expressos na moeda principal da empresa."
+"Você não pode criar uma linha analítica em uma conta de visualização."
 
 #. module: analytic
 #: field:account.analytic.account,line_ids:0

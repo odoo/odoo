@@ -22,8 +22,8 @@
 import time
 from collections import defaultdict
 
-import pooler
-from report import report_sxw
+from openerp import pooler
+from openerp.report import report_sxw
 
 class report_rappel(report_sxw.rml_parse):
     _name = "account_followup.report.rappel"
@@ -79,24 +79,29 @@ class report_rappel(report_sxw.rml_parse):
     def _get_text(self, stat_line, followup_id, context=None):
         if context is None:
             context = {}
+        context.update({'lang': stat_line.partner_id.lang})
         fp_obj = pooler.get_pool(self.cr.dbname).get('account_followup.followup')
-        fp_line = fp_obj.browse(self.cr, self.uid, followup_id).followup_line
+        fp_line = fp_obj.browse(self.cr, self.uid, followup_id, context=context).followup_line
+        if not fp_line:
+            raise osv.except_osv(_('Error!'),_("The followup plan defined for the current company does not have any followup action."))
+        #the default text will be the first fp_line in the sequence with a description.
+        default_text = ''
         li_delay = []
         for line in fp_line:
+            if not default_text and line.description:
+                default_text = line.description
             li_delay.append(line.delay)
         li_delay.sort(reverse=True)
-        text = ""
         a = {}
-        partner_line_ids = pooler.get_pool(self.cr.dbname).get('account.move.line').search(self.cr, self.uid, [('partner_id','=',stat_line.partner_id.id),('reconcile_id','=',False),('company_id','=',stat_line.company_id.id),('blocked','=',False)])
-        partner_delay = []
-        context.update({'lang': stat_line.partner_id.lang})
-        for i in pooler.get_pool(self.cr.dbname).get('account.move.line').browse(self.cr, self.uid, partner_line_ids, context):
-            for delay in li_delay:
-                if  i.followup_line_id and str(i.followup_line_id.delay)==str(delay):
-                    text = i.followup_line_id.description
-                    a[delay] = text
-                    partner_delay.append(delay)
-        text = partner_delay and a[max(partner_delay)] or ''
+        #look into the lines of the partner that already have a followup level, and take the description of the higher level for which it is available
+        partner_line_ids = pooler.get_pool(self.cr.dbname).get('account.move.line').search(self.cr, self.uid, [('partner_id','=',stat_line.partner_id.id),('reconcile_id','=',False),('company_id','=',stat_line.company_id.id),('blocked','=',False),('state','!=','draft'),('debit','!=',False),('account_id.type','=','receivable'),('followup_line_id','!=',False)])
+        partner_max_delay = 0
+        partner_max_text = ''
+        for i in pooler.get_pool(self.cr.dbname).get('account.move.line').browse(self.cr, self.uid, partner_line_ids, context=context):
+            if i.followup_line_id.delay > partner_max_delay and i.followup_line_id.description:
+                partner_max_delay = i.followup_line_id.delay
+                partner_max_text = i.followup_line_id.description
+        text = partner_max_delay and partner_max_text or default_text
         if text:
             text = text % {
                 'partner_name': stat_line.partner_id.name,

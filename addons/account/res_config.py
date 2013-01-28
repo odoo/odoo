@@ -25,9 +25,9 @@ from dateutil.relativedelta import relativedelta
 from operator import itemgetter
 from os.path import join as opj
 
-from tools.translate import _
-from osv import osv, fields
-import tools
+from openerp.tools.translate import _
+from openerp.osv import fields, osv
+from openerp import tools
 
 class account_config_settings(osv.osv_memory):
     _name = 'account.config.settings'
