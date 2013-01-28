@@ -54,7 +54,10 @@ class membership_invoice(osv.osv_memory):
         invoice_list = partner_obj.create_membership_invoice(cr, uid, context.get('active_ids', []), datas=datas, context=context)
         
         res = mod_obj.get_object_reference(cr, uid, 'account', 'view_account_invoice_filter')
-        form_view_id = mod_obj.get_object_reference(cr, uid, 'account', 'invoice_form')
+        try:
+            form_view_id = mod_obj.get_object_reference(cr, uid, 'account', 'invoice_form')[1]
+        except ValueError:
+            form_view_id = False
 
         return  {
             'domain': [('id', 'in', invoice_list)],
@@ -63,7 +66,7 @@ class membership_invoice(osv.osv_memory):
             'view_mode': 'tree,form',
             'res_model': 'account.invoice',
             'type': 'ir.actions.act_window',
-            'views': [(False, 'tree'), (form_view_id and form_view_id[1] or False, 'form')],
+            'views': [(False, 'tree'), (form_view_id, 'form')],
             'search_view_id': res and res[1] or False
         }
 
