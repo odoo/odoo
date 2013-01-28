@@ -72,7 +72,7 @@ class account_analytic_account(osv.osv):
         'amount_invoiced': fields.function(_invoiced_calc, string='Invoiced Amount',
             help="Total invoiced"),
         'to_invoice': fields.many2one('hr_timesheet_invoice.factor', 'Timesheet Invoicing Ratio',
-            help="You usually invoice 100% of the timesheets. But if you mix fixed price and timesheet invoicing, you may use another ratio. For instance, if you do a 20% advance invoice (fixed price, based on a sale order), you should invoice the rest on timesheet with a 80% ratio."),
+            help="You usually invoice 100% of the timesheets. But if you mix fixed price and timesheet invoicing, you may use another ratio. For instance, if you do a 20% advance invoice (fixed price, based on a sales order), you should invoice the rest on timesheet with a 80% ratio."),
     }
     _defaults = {
         'pricelist_id': lambda self, cr, uid, ctx: ctx.get('pricelist_id', False),
@@ -87,30 +87,16 @@ class account_analytic_account(osv.osv):
         return res
 
     def set_close(self, cr, uid, ids, context=None):
-        self.write(cr, uid, ids, {'state': 'close'}, context=context)
-        message = _("Contract has been <b>closed</b>.")
-        self.message_post(cr, uid, ids, body=message, subtype="hr_timesheet_invoice.mt_account_closed", context=context)
-        return True
+        return self.write(cr, uid, ids, {'state': 'close'}, context=context)
 
     def set_cancel(self, cr, uid, ids, context=None):
-        self.write(cr, uid, ids, {'state': 'cancelled'}, context=context)
-        message = _("Contract has been <b>canceled</b>.")
-        self.message_post(cr, uid, ids, body=message, subtype="hr_timesheet_invoice.mt_account_canceled", context=context)
-        return True
+        return self.write(cr, uid, ids, {'state': 'cancelled'}, context=context)
 
     def set_open(self, cr, uid, ids, context=None):
-        self.write(cr, uid, ids, {'state': 'open'}, context=context)
-        message = _("Contract has been <b>opened</b>.")
-        self.message_post(cr, uid, ids, body=message, context=context)
-        return True
+        return self.write(cr, uid, ids, {'state': 'open'}, context=context)
 
     def set_pending(self, cr, uid, ids, context=None):
-        self.write(cr, uid, ids, {'state': 'pending'}, context=context)
-        message = _("Contract has been set as <b>pending</b>.")
-        self.message_post(cr, uid, ids, body=message, context=context)
-        return True
-
-account_analytic_account()
+        return self.write(cr, uid, ids, {'state': 'pending'}, context=context)
 
 
 class account_analytic_line(osv.osv):
@@ -255,7 +241,7 @@ class account_analytic_line(osv.osv):
 
                     price = self._get_invoice_price(cr, uid, account, product_id, user_id, qty, ctx)
 
-                    general_account = product.product_tmpl_id.property_account_income or product.categ_id.property_account_income_categ
+                    general_account = product.property_account_income or product.categ_id.property_account_income_categ
                     if not general_account:
                         raise osv.except_osv(_("Configuration Error!"), _("Please define income account for product '%s'.") % product.name)
                     taxes = product.taxes_id or general_account.tax_ids

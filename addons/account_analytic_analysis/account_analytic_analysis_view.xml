@@ -22,8 +22,8 @@
                     <label for="quantity_max"/>
                     <div>
                         <field name="quantity_max"/>
-                        <div attrs="{'invisible': [('quantity','=',0)]}" class="oe_grey">
-                            <field name="quantity" class="oe_inline"/> Units Done
+                        <div attrs="{'invisible': [('hours_quantity','=',0)]}" class="oe_grey">
+                            <field name="hours_quantity" class="oe_inline"/> Units Consumed
                         </div>
                         <div attrs="{'invisible': [('quantity_max','=',0)]}" class="oe_grey">
                             <field name="remaining_hours" class="oe_inline"/> Units Remaining
@@ -68,11 +68,12 @@
 
                                 <span attrs="{'invisible': ['|',('fix_price_to_invoice','&lt;&gt;',0.0 ),('partner_id','=',False)]}" class="oe_grey">
                                     No order to invoice, create
+                                </span>
                                 <button name="%(action_sales_order)d" string="Sale Orders"
                                     type="action"
                                     class="oe_link"
                                     context="{'default_partner_id': [partner_id], 'search_default_partner_id': [partner_id],'search_default_project_id': [active_id],'default_project_id': [active_id]}"
-                                    /></span>
+                                    />
                             </td>
                         </tr><tr>
                             <td class="oe_timesheet_grey">
@@ -167,7 +168,7 @@
         </record>
 
         <record id="template_of_contract_action" model="ir.actions.act_window">
-            <field name="name">Template of Contract</field>
+            <field name="name">Contract Template</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">account.analytic.account</field>
             <field name="view_type">form</field>

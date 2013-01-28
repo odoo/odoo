@@ -92,7 +92,7 @@ class project_work(osv.osv):
             raise osv.except_osv(_('Bad Configuration !'),
                  _('Please define journal on the related employee.\nFill in the timesheet tab of the employee form.'))
 
-        acc_id = emp.product_id.product_tmpl_id.property_account_expense.id
+        acc_id = emp.product_id.property_account_expense.id
         if not acc_id:
             acc_id = emp.product_id.categ_id.property_account_expense_categ.id
             if not acc_id:

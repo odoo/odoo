@@ -69,5 +69,7 @@
   !python {model: account.bank.statement}: |
     try:
       self.button_cancel(cr, uid, [ref("account_bank_statement_0")])
-    except Exception, e:
-      assert e[0]=='User Error!', 'Another exception has been raised!'
+      assert False, "An exception should have been raised, the journal should not let us cancel moves!" 
+    except Exception:
+      # exception was raised as expected, as the journal does not allow cancelling moves
+      pass

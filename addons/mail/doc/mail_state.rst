@@ -1,7 +1,7 @@
 .. _mail_state:
 
 message_unread
-=============
+==============
 
 ``message_unread`` is a boolean field that states whether the document
 has unread messages. In previous versions, some documents were going
@@ -10,7 +10,7 @@ gateway. Now the state related to messages differs from the state or
 stage of the document itself.
 
 message_unread and need action mechanism
-+++++++++++++++++++++++++++++++++++++++
+++++++++++++++++++++++++++++++++++++++++
 
 The ``mail`` module introduces a default behavior for the need_action
 mechanism [REF].

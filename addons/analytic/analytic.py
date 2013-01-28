@@ -31,6 +31,13 @@ class account_analytic_account(osv.osv):
     _name = 'account.analytic.account'
     _inherit = ['mail.thread']
     _description = 'Analytic Account'
+    _track = {
+        'state': {
+            'analytic.mt_account_pending': lambda self, cr, uid, obj, ctx=None:  obj['state'] == 'pending',
+            'analytic.mt_account_closed': lambda self, cr, uid, obj, ctx=None: obj['state'] == 'close',
+            'analytic.mt_account_opened': lambda self, cr, uid, obj, ctx=None: obj['state'] == 'open',
+        },
+    }
 
     def _compute_level_tree(self, cr, uid, ids, child_ids, res, field_names, context=None):
         currency_obj = self.pool.get('res.currency')
@@ -121,7 +128,7 @@ class account_analytic_account(osv.osv):
         if level<=0:
             return '...'
         if elmt.parent_id and not elmt.type == 'template':
-            parent_path = self._get_one_full_name(elmt.parent_id, level-1) + "/"
+            parent_path = self._get_one_full_name(elmt.parent_id, level-1) + " / "
         else:
             parent_path = ''
         return parent_path + elmt.name
@@ -189,7 +196,7 @@ class account_analytic_account(osv.osv):
         'date_start': fields.date('Start Date'),
         'date': fields.date('Date End', select=True),
         'company_id': fields.many2one('res.company', 'Company', required=False), #not required because we want to allow different companies to use the same chart of account, except for leaf accounts.
-        'state': fields.selection([('template', 'Template'),('draft','New'),('open','In Progress'), ('cancelled', 'Cancelled'),('pending','To Renew'),('close','Closed')], 'Status', required=True,),
+        'state': fields.selection([('template', 'Template'),('draft','New'),('open','In Progress'), ('cancelled', 'Cancelled'),('pending','To Renew'),('close','Closed')], 'Status', required=True, track_visibility='onchange'),
         'currency_id': fields.function(_currency, fnct_inv=_set_company_currency, #the currency_id field is readonly except if it's a view account and if there is no company
             store = {
                 'res.company': (_get_analytic_account, ['currency_id'], 10),
@@ -292,38 +299,15 @@ class account_analytic_account(osv.osv):
         if name:
             account_ids = self.search(cr, uid, [('code', '=', name)] + args, limit=limit, context=context)
             if not account_ids:
-                names=map(lambda i : i.strip(),name.split('/'))
-                for i in range(len(names)):
-                    dom=[('name', operator, names[i])]
-                    if i>0:
-                        dom+=[('id','child_of',account_ids)]
-                    account_ids = self.search(cr, uid, dom, limit=limit, context=context)
-                newacc = account_ids
-                while newacc:
-                    newacc = self.search(cr, uid, [('parent_id', 'in', newacc)], limit=limit, context=context)
-                    account_ids += newacc
-                if args:
-                    account_ids = self.search(cr, uid, [('id', 'in', account_ids)] + args, limit=limit, context=context)
+                dom = []
+                for name2 in name.split('/'):
+                    name = name2.strip()
+                    account_ids = self.search(cr, uid, dom + [('name', 'ilike', name)] + args, limit=limit, context=context)
+                    if not account_ids: break
+                    dom = [('parent_id','in',account_ids)]
         else:
             account_ids = self.search(cr, uid, args, limit=limit, context=context)
         return self.name_get(cr, uid, account_ids, context=context)
-
-    def create(self, cr, uid, vals, context=None):
-        contract =  super(account_analytic_account, self).create(cr, uid, vals, context=context)
-        if contract:
-            self.create_send_note(cr, uid, [contract], context=context)
-        return contract
-
-    def create_send_note(self, cr, uid, ids, context=None):
-        for obj in self.browse(cr, uid, ids, context=context):
-            message = _("Contract <b>created</b>.")
-            if obj.partner_id:
-                message = _("Contract for <em>%s</em> has been <b>created</b>.") % (obj.partner_id.name,)
-            self.message_post(cr, uid, [obj.id], body=message,
-                subtype="analytic.mt_account_status", context=context)
-
-account_analytic_account()
-
 
 class account_analytic_line(osv.osv):
     _name = 'account.analytic.line'

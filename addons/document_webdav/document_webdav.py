@@ -65,8 +65,6 @@ class document_davdir(osv.osv):
         """
         return (nodes.node_database(context=ncontext), uri)
 
-document_davdir()
-
 class dav_dir_property(osv.osv):
     """ Arbitrary WebDAV properties, attached to document.directories.
 
@@ -97,8 +95,6 @@ class dav_dir_property(osv.osv):
         'do_subst': False,
         }
 
-dav_dir_property()
-
 class dav_file_property(osv.osv):
     """ Arbitrary WebDAV properties, attached to ir.attachments.
 
@@ -126,8 +122,6 @@ class dav_file_property(osv.osv):
     _defaults = {
         'do_subst': False,
         }
-
-dav_file_property()
 
 #eof
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

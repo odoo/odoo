@@ -44,7 +44,8 @@ class purchase_requisition(osv.osv):
         'purchase_ids' : fields.one2many('purchase.order','requisition_id','Purchase Orders',states={'done': [('readonly', True)]}),
         'line_ids' : fields.one2many('purchase.requisition.line','requisition_id','Products to Purchase',states={'done': [('readonly', True)]}),
         'warehouse_id': fields.many2one('stock.warehouse', 'Warehouse'),        
-        'state': fields.selection([('draft','New'),('in_progress','Sent to Suppliers'),('cancel','Cancelled'),('done','Purchase Done')], 'Status', required=True)
+        'state': fields.selection([('draft','New'),('in_progress','Sent to Suppliers'),('cancel','Cancelled'),('done','Purchase Done')],
+            'Status', track_visibility='onchange', required=True)
     }
     _defaults = {
         'date_start': lambda *args: time.strftime('%Y-%m-%d %H:%M:%S'),
@@ -71,36 +72,16 @@ class purchase_requisition(osv.osv):
             for purchase_id in purchase.purchase_ids:
                 if str(purchase_id.state) in('draft'):
                     purchase_order_obj.action_cancel(cr,uid,[purchase_id.id])
-        self.write(cr, uid, ids, {'state': 'cancel'})
-        self.cancel_send_note(cr, uid, ids, context=context)
-        return True
+        return self.write(cr, uid, ids, {'state': 'cancel'})
 
     def tender_in_progress(self, cr, uid, ids, context=None):
-        self.write(cr, uid, ids, {'state':'in_progress'} ,context=context)
-        self.in_progress_send_note(cr, uid, ids, context=context)
-        return True
+        return self.write(cr, uid, ids, {'state':'in_progress'} ,context=context)
 
     def tender_reset(self, cr, uid, ids, context=None):
-        self.write(cr, uid, ids, {'state': 'draft'})
-        self.reset_send_note(cr, uid, ids, context=context)
-        return True
+        return self.write(cr, uid, ids, {'state': 'draft'})
 
     def tender_done(self, cr, uid, ids, context=None):
-        self.write(cr, uid, ids, {'state':'done', 'date_end':time.strftime('%Y-%m-%d %H:%M:%S')}, context=context)
-        self.done_to_send_note(cr, uid, ids, context=context)
-        return True
-
-    def in_progress_send_note(self, cr, uid, ids, context=None):
-        self.message_post(cr, uid, ids, body=_("Draft Requisition has been <b>sent to suppliers</b>."), context=context)
-
-    def reset_send_note(self, cr, uid, ids, context=None):
-        self.message_post(cr, uid, ids, body=_("Purchase Requisition has been set to <b>draft</b>."), context=context)
-
-    def done_to_send_note(self, cr, uid, ids, context=None):
-        self.message_post(cr, uid, ids, body=_("Purchase Requisition has been <b>done</b>."), context=context)
-
-    def cancel_send_note(self, cr, uid, ids, context=None):
-        self.message_post(cr, uid, ids, body=_("Purchase Requisition has been <b>cancelled</b>."), context=context)
+        return self.write(cr, uid, ids, {'state':'done', 'date_end':time.strftime('%Y-%m-%d %H:%M:%S')}, context=context)
 
     def _planned_date(self, requisition, delay=0.0):
         company = requisition.company_id
@@ -181,17 +162,7 @@ class purchase_requisition(osv.osv):
                 }, context=context)
                 
         return res
-    
-    def create_send_note(self, cr, uid, ids, context=None):
-        return self.message_post(cr, uid, ids, body=_("Purchase Requisition has been <b>created</b>."), context=context)  
 
-    def create(self, cr, uid, vals, context=None):
-        requisition =  super(purchase_requisition, self).create(cr, uid, vals, context=context)
-        if requisition:
-            self.create_send_note(cr, uid, [requisition], context=context)
-        return requisition
-
-purchase_requisition()
 
 class purchase_requisition_line(osv.osv):
 

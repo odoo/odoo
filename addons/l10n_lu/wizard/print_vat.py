@@ -73,7 +73,13 @@ class vat_declaration_report(osv.osv_memory):
 
     _columns = {
          'tax_code_id': fields.many2one('account.tax.code', 'Company', readonly=False, required=True, domain=[('parent_id','=',False)]),
-         'period_id' : fields.many2one('account.period', 'Period', required=True)
+         'type': fields.selection([('monthly','Monthly'),('quarterly','Quaterly'),('yearly','Yearly')], 'Type', required=True),
+         'period_id' : fields.many2one('account.period', 'From Period', required=True),
+         'to_period_id': fields.many2one('account.period', 'To Period', required=True),
+    }
+
+    _defaults = {
+        'type': 'monthly',
     }
 
     def print_vat_declaration_report(self, cr, uid, ids, context=None):

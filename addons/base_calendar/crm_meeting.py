@@ -19,10 +19,11 @@
 #
 ##############################################################################
 
-from openerp.osv import fields, osv
-from openerp import tools
-from openerp.tools.translate import _
+import time
 
+from openerp.osv import fields, osv
+from openerp.tools import DEFAULT_SERVER_DATE_FORMAT
+from openerp.tools.translate import _
 from base_calendar import get_real_ids, base_calendar_id2real_id
 from openerp.addons.base_status.base_state import base_state
 #
@@ -53,7 +54,7 @@ class crm_meeting(base_state, osv.Model):
             string='Attendees', states={'done': [('readonly', True)]}),
         'state': fields.selection(
                     [('draft', 'Unconfirmed'), ('open', 'Confirmed')],
-                    string='Status', size=16, readonly=True),
+                    string='Status', size=16, readonly=True, track_visibility='onchange'),
         # Meeting fields
         'name': fields.char('Meeting Subject', size=128, required=True, states={'done': [('readonly', True)]}),
         'categ_ids': fields.many2many('crm.meeting.type', 'meeting_category_rel',
@@ -111,21 +112,11 @@ class crm_meeting(base_state, osv.Model):
     # ----------------------------------------
 
     # shows events of the day for this user
-    def needaction_domain_get(self, cr, uid, domain=[], context={}):
-        return [('date','<=',time.strftime('%Y-%M-%D 23:59:59')), ('date_deadline','>=', time.strftime('%Y-%M-%D 00:00:00')), ('user_id','=',uid)]
-
-    def case_get_note_msg_prefix(self, cr, uid, id, context=None):
-        return _('Meeting')
-
-    def case_open_send_note(self, cr, uid, ids, context=None):
-        return self.message_post(cr, uid, ids, body=_("Meeting <b>confirmed</b>."), context=context)
-
-    def case_close_send_note(self, cr, uid, ids, context=None):
-        return self.message_post(cr, uid, ids, body=_("Meeting <b>completed</b>."), context=context)
+    def _needaction_domain_get(self, cr, uid, context=None):
+        return [('date', '<=', time.strftime(DEFAULT_SERVER_DATE_FORMAT + ' 23:59:59')), ('date_deadline', '>=', time.strftime(DEFAULT_SERVER_DATE_FORMAT + ' 23:59:59')), ('user_id', '=', uid)]
 
     def message_post(self, cr, uid, thread_id, body='', subject=None, type='notification',
                         subtype=None, parent_id=False, attachments=None, context=None, **kwargs):
-        cal_event_pool = self.pool.get('calendar.event')
         if isinstance(thread_id, str):
             thread_id = get_real_ids(thread_id)
         return super(crm_meeting, self).message_post(cr, uid, thread_id, body=body, subject=subject, type=type, subtype=subtype, parent_id=parent_id, attachments=attachments, context=context, **kwargs)

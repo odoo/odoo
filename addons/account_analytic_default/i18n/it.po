@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2012-12-03 16:02+0000\n"
-"PO-Revision-Date: 2012-12-15 10:03+0000\n"
-"Last-Translator: Davide Corio - agilebg.com <davide.corio@agilebg.com>\n"
+"POT-Creation-Date: 2012-12-21 17:05+0000\n"
+"PO-Revision-Date: 2013-01-12 08:26+0000\n"
+"Last-Translator: Nicola Riolini - Micronaet <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-12-16 04:48+0000\n"
-"X-Generator: Launchpad (build 16372)\n"
+"X-Launchpad-Export-Date: 2013-01-13 04:38+0000\n"
+"X-Generator: Launchpad (build 16420)\n"
 
 #. module: account_analytic_default
 #: model:ir.actions.act_window,name:account_analytic_default.analytic_rule_action_partner
@@ -34,6 +34,18 @@ msgid "Default end date for this Analytic Account."
 msgstr "Date termine di default per questo conto analitico"
 
 #. module: account_analytic_default
+#: help:account.analytic.default,product_id:0
+msgid ""
+"Select a product which will use analytic account specified in analytic "
+"default (e.g. create new customer invoice or Sales order if we select this "
+"product, it will automatically take this as an analytic account)"
+msgstr ""
+"Seleziona un prodotto che utilizzerà il conto analitico specificato nel "
+"conto analitico default (es.: crea nuova fattura cliente o ordine di "
+"vendita, se viene selezionato questo prodotto, esso prenderà automaticamente "
+"il conto analitico impostato)"
+
+#. module: account_analytic_default
 #: model:ir.model,name:account_analytic_default.model_stock_picking
 msgid "Picking List"
 msgstr "Picking List"
@@ -44,27 +56,22 @@ msgid "Conditions"
 msgstr "Condizioni"
 
 #. module: account_analytic_default
-#: help:account.analytic.default,partner_id:0
-msgid ""
-"Select a partner which will use analytic account specified in analytic "
-"default (e.g. create new customer invoice or Sale order if we select this "
-"partner, it will automatically take this as an analytic account)"
-msgstr ""
-"Seleziona un partner che utilizzerà il conto analitico specificato nelle "
-"impostazioni analitiche predefinite (es. crea una nuova fattura cliente o un "
-"offerta se selezioniamo questo partner, prenderà automaticamente questo come "
-"conto analitico di default)"
-
-#. module: account_analytic_default
 #: view:account.analytic.default:0
 #: field:account.analytic.default,product_id:0
 msgid "Product"
 msgstr "Prodotto"
 
 #. module: account_analytic_default
-#: model:ir.model,name:account_analytic_default.model_account_analytic_default
-msgid "Analytic Distribution"
-msgstr "Distribuzione analitica"
+#: help:account.analytic.default,partner_id:0
+msgid ""
+"Select a partner which will use analytic account specified in analytic "
+"default (e.g. create new customer invoice or Sales order if we select this "
+"partner, it will automatically take this as an analytic account)"
+msgstr ""
+"Seleziona un partner che utilizzerà il conto analitico specificato nel conto "
+"analitico  default (es.: crea nuova fattura cliente o ordine di vendita, se "
+"viene selezionato questo partner, esso prenderà automaticamente il conto "
+"analitico impostato)"
 
 #. module: account_analytic_default
 #: view:account.analytic.default:0
@@ -84,18 +91,6 @@ msgid "Entries"
 msgstr "Registrazioni"
 
 #. module: account_analytic_default
-#: help:account.analytic.default,product_id:0
-msgid ""
-"Select a product which will use analytic account specified in analytic "
-"default (e.g. create new customer invoice or Sale order if we select this "
-"product, it will automatically take this as an analytic account)"
-msgstr ""
-"Seleziona un prodotto che utilizzerà il conto analitico specificato nelle "
-"impostazioni analitiche predefinite (es. crea una nuova fattura cliente o un "
-"offerta se selezioniamo questo prodotto, prenderà automaticamente questo "
-"come conto analitico di default)"
-
-#. module: account_analytic_default
 #: field:account.analytic.default,date_stop:0
 msgid "End Date"
 msgstr "Data finale"
@@ -113,18 +108,6 @@ msgid "Sequence"
 msgstr "Sequenza"
 
 #. module: account_analytic_default
-#: help:account.analytic.default,company_id:0
-msgid ""
-"Select a company which will use analytic account specified in analytic "
-"default (e.g. create new customer invoice or Sale order if we select this "
-"company, it will automatically take this as an analytic account)"
-msgstr ""
-"Seleziona un'azienda che utilizzerà il conto analitico specificato nelle "
-"impostazioni analitiche predefinite (es. crea una nuova fattura cliente o un "
-"offerta se selezioniamo questa azienda, prenderà automaticamente questo come "
-"conto analitico di default)"
-
-#. module: account_analytic_default
 #: help:account.analytic.default,user_id:0
 msgid ""
 "Select a user which will use analytic account specified in analytic default."
@@ -138,10 +121,27 @@ msgid "Invoice Line"
 msgstr "Linea fattura"
 
 #. module: account_analytic_default
+#: help:account.analytic.default,company_id:0
+msgid ""
+"Select a company which will use analytic account specified in analytic "
+"default (e.g. create new customer invoice or Sales order if we select this "
+"company, it will automatically take this as an analytic account)"
+msgstr ""
+"Seleziona una azienda che utilizzerà il conto analitico specificato nel "
+"conto analitico default (es.: crea nuova fattura cliente o ordine di "
+"vendita, se viene selezionata questa azienda, essa prenderà automaticamente "
+"il conto analitico impostato)"
+
+#. module: account_analytic_default
 #: view:account.analytic.default:0
 #: field:account.analytic.default,analytic_id:0
 msgid "Analytic Account"
 msgstr "Conto analitico"
+
+#. module: account_analytic_default
+#: model:ir.model,name:account_analytic_default.model_account_analytic_default
+msgid "Analytic Distribution"
+msgstr "Distribuzione analitica"
 
 #. module: account_analytic_default
 #: help:account.analytic.default,date_start:0

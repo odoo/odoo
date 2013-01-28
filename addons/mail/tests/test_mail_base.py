@@ -25,7 +25,7 @@ from openerp.tests import common
 class TestMailBase(common.TransactionCase):
 
     def _mock_smtp_gateway(self, *args, **kwargs):
-        return True
+        return args[2]['Message-Id']
 
     def _init_mock_build_email(self):
         self._build_email_args_list = []
@@ -51,6 +51,7 @@ class TestMailBase(common.TransactionCase):
 
         # Usefull models
         self.ir_model = self.registry('ir.model')
+        self.ir_model_data = self.registry('ir.model.data')
         self.ir_attachment = self.registry('ir.attachment')
         self.mail_alias = self.registry('mail.alias')
         self.mail_thread = self.registry('mail.thread')
@@ -81,7 +82,8 @@ class TestMailBase(common.TransactionCase):
 
         # Test 'pigs' group to use through the various tests
         self.group_pigs_id = self.mail_group.create(cr, uid,
-            {'name': 'Pigs', 'description': 'Fans of Pigs, unite !'})
+            {'name': 'Pigs', 'description': 'Fans of Pigs, unite !'},
+            {'mail_create_nolog': True})
         self.group_pigs = self.mail_group.browse(cr, uid, self.group_pigs_id)
 
     def tearDown(self):

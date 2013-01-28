@@ -30,7 +30,8 @@ class sale_make_invoice(osv.osv_memory):
         'invoice_date': fields.date('Invoice Date'),
     }
     _defaults = {
-        'grouped': False
+        'grouped': False,
+        'invoice_date': fields.date.context_today,
     }
 
     def view_init(self, cr, uid, fields_list, context=None):

@@ -2,7 +2,7 @@
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2011 OpenERP SA (<http://openerp.com>)
+#    Copyright (C) 2004-2012 OpenERP SA (<http://openerp.com>)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -181,7 +181,7 @@ class res_partner(osv.osv):
             num = filter(lambda s: s.isdigit(), match.group(1))        # get the digits only
             factor = (5,4,3,2,7,6,5,4)
             csum = sum([int(num[i]) * factor[i] for i in range(8)])
-            check = 11 - (csum % 11)
+            check = (11 - (csum % 11)) % 11
             return check == int(num[8])
         return False
 

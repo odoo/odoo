@@ -12,7 +12,8 @@ import fnmatch
 from openerp import pooler, netsvc, sql_db
 from openerp.service import security
 from openerp.osv import osv
-from document.nodes import get_node_context
+
+from document.document import get_node_context
 
 def _get_month_name(month):
     month=int(month)

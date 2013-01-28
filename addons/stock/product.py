@@ -132,7 +132,7 @@ class product_product(osv.osv):
 
                     if diff > 0:
                         if not stock_input_acc:
-                            stock_input_acc = product.product_tmpl_id.\
+                            stock_input_acc = product.\
                                 property_stock_account_input.id
                         if not stock_input_acc:
                             stock_input_acc = product.categ_id.\
@@ -158,7 +158,7 @@ class product_product(osv.osv):
                                     })
                     elif diff < 0:
                         if not stock_output_acc:
-                            stock_output_acc = product.product_tmpl_id.\
+                            stock_output_acc = product.\
                                 property_stock_account_output.id
                         if not stock_output_acc:
                             stock_output_acc = product.categ_id.\
@@ -272,12 +272,16 @@ class product_product(osv.osv):
         elif to_date:
             date_str = "date<=%s"
             date_values = [to_date]
-
-        prodlot_id = context.get('prodlot_id', False)
-
-    # TODO: perhaps merge in one query.
         if date_values:
             where.append(tuple(date_values))
+
+        prodlot_id = context.get('prodlot_id', False)
+        prodlot_clause = ''
+        if prodlot_id:
+            prodlot_clause = ' and prodlot_id = %s '
+            where += [prodlot_id]
+
+        # TODO: perhaps merge in one query.
         if 'in' in what:
             # all moves from a location out of the set to a location in the set
             cr.execute(
@@ -286,8 +290,8 @@ class product_product(osv.osv):
                 'where location_id NOT IN %s '\
                 'and location_dest_id IN %s '\
                 'and product_id IN %s '\
-                '' + (prodlot_id and ('and prodlot_id = ' + str(prodlot_id)) or '') + ' '\
                 'and state IN %s ' + (date_str and 'and '+date_str+' ' or '') +' '\
+                + prodlot_clause + 
                 'group by product_id,product_uom',tuple(where))
             results = cr.fetchall()
         if 'out' in what:
@@ -298,8 +302,8 @@ class product_product(osv.osv):
                 'where location_id IN %s '\
                 'and location_dest_id NOT IN %s '\
                 'and product_id  IN %s '\
-                '' + (prodlot_id and ('and prodlot_id = ' + str(prodlot_id)) or '') + ' '\
                 'and state in %s ' + (date_str and 'and '+date_str+' ' or '') + ' '\
+                + prodlot_clause + 
                 'group by product_id,product_uom',tuple(where))
             results2 = cr.fetchall()
             

@@ -6,15 +6,16 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2012-11-24 02:52+0000\n"
-"PO-Revision-Date: 2012-12-16 12:02+0000\n"
-"Last-Translator: Felix Schubert <Unknown>\n"
+"POT-Creation-Date: 2012-12-21 17:05+0000\n"
+"PO-Revision-Date: 2012-12-19 22:09+0000\n"
+"Last-Translator: Thorsten Vocks (OpenBig.org) <thorsten.vocks@big-"
+"consulting.net>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-12-17 04:45+0000\n"
-"X-Generator: Launchpad (build 16372)\n"
+"X-Launchpad-Export-Date: 2012-12-22 05:28+0000\n"
+"X-Generator: Launchpad (build 16378)\n"
 
 #. module: base_setup
 #: view:sale.config.settings:0
@@ -40,9 +41,7 @@ msgstr "base.config.settings"
 #: field:base.config.settings,module_auth_oauth:0
 msgid ""
 "Use external authentication providers, sign in with google, facebook, ..."
-msgstr ""
-"Benutzen Sie eine externe Authentifizierung, z.B. von Anbietern wie Google, "
-"Facebook, ..."
+msgstr "Externe Benutzer Authentifizierung,  z.B. mit google Konto"
 
 #. module: base_setup
 #: view:sale.config.settings:0
@@ -56,16 +55,21 @@ msgid ""
 "OpenERP using specific\n"
 "                            plugins for your preferred email application."
 msgstr ""
-"OpenERP ermöglicht die automatische Erstellung von Leads (und anderen "
-"Belegen)\n"
-"                                    aus eingehenden E-Mails. Sie können "
-"Ihren E-Mail Posteingang regelmässig synchronisieren, indem\n"
+"OpenERP ermöglicht die automatische Erstellung von Interessenten (und "
+"anderen Belegen)\n"
+"                                    aus eingehenden EMails. Sie können Ihren "
+"EMail Posteingang regelmässig synchronisieren, indem\n"
 "                                    Sie hierzu Ihre POP/IMAP Konten anbinden "
-"und dann ein Script zur E-Mail Integration \n"
-"                                    aktivieren oder indem Sie selektiv mit "
-"Hilfe eines Plugins für Ihre E-Mail Anwendung\n"
-"                                    bestimmte E-Mails nach OpenERP "
-"transferieren."
+"und dann ein Script zur direkten EMail Integration \n"
+"                                    regelmässig anwenden, oder indem Sie "
+"selektiv mit Hilfe eines Plugins für Ihre persönliche Arbeitsplatz \n"
+"                                    Mailanwendung bestimmte EMails nach "
+"OpenERP transferieren."
+
+#. module: base_setup
+#: field:sale.config.settings,module_sale:0
+msgid "SALE"
+msgstr ""
 
 #. module: base_setup
 #: selection:base.setup.terminology,partner:0
@@ -92,7 +96,7 @@ msgstr "Angebote und Aufträge"
 #: model:ir.actions.act_window,name:base_setup.action_general_configuration
 #: model:ir.ui.menu,name:base_setup.menu_general_configuration
 msgid "General Settings"
-msgstr "Grundeinstellungen"
+msgstr "Allgemeine Einstellungen"
 
 #. module: base_setup
 #: selection:base.setup.terminology,partner:0
@@ -102,7 +106,7 @@ msgstr "Spender"
 #. module: base_setup
 #: view:base.config.settings:0
 msgid "Email"
-msgstr "E-Mail:"
+msgstr "E-Mail"
 
 #. module: base_setup
 #: field:sale.config.settings,module_crm:0
@@ -125,19 +129,19 @@ msgid "Manage multiple companies"
 msgstr "Multi-Company Verwaltung"
 
 #. module: base_setup
-#: help:base.config.settings,module_portal:0
-msgid "Give access your customers and suppliers to their documents."
-msgstr "Erlauben Sie Kunden oder Lieferanten Zugriff auf Ihre Belege"
-
-#. module: base_setup
 #: view:sale.config.settings:0
 msgid "On Mail Client"
 msgstr "Anbindung E-Mail Anwendung"
 
 #. module: base_setup
+#: view:base.config.settings:0
+msgid "--db-filter=YOUR_DATABAE"
+msgstr ""
+
+#. module: base_setup
 #: field:sale.config.settings,module_web_linkedin:0
 msgid "Get contacts automatically from linkedIn"
-msgstr "Kontakte von Linkdin importieren"
+msgstr "Kontakte aus linkedin importieren"
 
 #. module: base_setup
 #: field:sale.config.settings,module_plugin_thunderbird:0
@@ -152,7 +156,7 @@ msgstr "res_config_contents"
 #. module: base_setup
 #: view:sale.config.settings:0
 msgid "Customer Features"
-msgstr "Kunden Features"
+msgstr "Kunden Anwendungen"
 
 #. module: base_setup
 #: view:base.config.settings:0
@@ -162,7 +166,7 @@ msgstr "Import / Export"
 #. module: base_setup
 #: view:sale.config.settings:0
 msgid "Sale Features"
-msgstr "Verkauf Features"
+msgstr "Verkauf Anwendungen"
 
 #. module: base_setup
 #: field:sale.config.settings,module_plugin_outlook:0
@@ -175,8 +179,6 @@ msgid ""
 "You can use this wizard to change the terminologies for customers in the "
 "whole application."
 msgstr ""
-"Mit diesem Assistenten können Sie die verwendete Terminologie des gesamten "
-"Systems im Sinne der Kunden verändern."
 
 #. module: base_setup
 #: selection:base.setup.terminology,partner:0
@@ -186,7 +188,7 @@ msgstr "Mieter"
 #. module: base_setup
 #: help:base.config.settings,module_share:0
 msgid "Share or embbed any screen of openerp."
-msgstr "Teilen oder einbetten von OpenERP Ansichten"
+msgstr "Teilen oder einbetten von Bildschirmansichten"
 
 #. module: base_setup
 #: selection:base.setup.terminology,partner:0
@@ -217,6 +219,14 @@ msgstr ""
 #. module: base_setup
 #: view:base.config.settings:0
 msgid ""
+"The public portal is accessible only if you are in a single database mode. "
+"You can\n"
+"                                    launch the OpenERP Server with the option"
+msgstr ""
+
+#. module: base_setup
+#: view:base.config.settings:0
+msgid ""
 "You will find more options in your company details: address for the header "
 "and footer, overdue payments texts, etc."
 msgstr ""
@@ -234,6 +244,19 @@ msgid "How do you call a Customer"
 msgstr "Wie bezeichnen Sie einen Kunden"
 
 #. module: base_setup
+#: view:base.config.settings:0
+msgid ""
+"When you send a document to a customer\n"
+"                                    (quotation, invoice), your customer will "
+"be\n"
+"                                    able to signup to get all his "
+"documents,\n"
+"                                    read your company news, check his "
+"projects,\n"
+"                                    etc."
+msgstr ""
+
+#. module: base_setup
 #: model:ir.model,name:base_setup.model_base_setup_terminology
 msgid "base.setup.terminology"
 msgstr "base.setup.terminology"
@@ -244,7 +267,7 @@ msgid "Client"
 msgstr "Klient"
 
 #. module: base_setup
-#: help:base.config.settings,module_auth_anonymous:0
+#: help:base.config.settings,module_portal_anonymous:0
 msgid "Enable the public part of openerp, openerp becomes a public website."
 msgstr ""
 "Aktivieren Sie den Zugriff auf veröffentliche Bereiche und Dokumente , "
@@ -311,12 +334,20 @@ msgstr ""
 #. module: base_setup
 #: view:base.config.settings:0
 msgid "Options"
-msgstr "Optionen"
+msgstr "Einstellungen"
 
 #. module: base_setup
 #: field:base.config.settings,module_portal:0
-msgid "Activate the customer/supplier portal"
-msgstr "Aktivierung des Kunden / Lieferanten Portals"
+msgid "Activate the customer portal"
+msgstr ""
+
+#. module: base_setup
+#: view:base.config.settings:0
+msgid ""
+"to do so.\n"
+"                                    Once activated, the login page will be "
+"replaced by the public website."
+msgstr ""
 
 #. module: base_setup
 #: field:base.config.settings,module_share:0
@@ -324,7 +355,12 @@ msgid "Allow documents sharing"
 msgstr "Ermögliche Dokumentenfreigabe"
 
 #. module: base_setup
-#: field:base.config.settings,module_auth_anonymous:0
+#: view:base.config.settings:0
+msgid "(company news, jobs, contact form, etc.)"
+msgstr ""
+
+#. module: base_setup
+#: field:base.config.settings,module_portal_anonymous:0
 msgid "Activate the public portal"
 msgstr "Aktivierung des öffentlichen Portals"
 
@@ -337,6 +373,11 @@ msgstr "Konfiguriere die Postausgangsserver"
 #: view:sale.config.settings:0
 msgid "Social Network Integration"
 msgstr "Integration Sozialer Netzwerke"
+
+#. module: base_setup
+#: help:base.config.settings,module_portal:0
+msgid "Give your customers access to their documents."
+msgstr ""
 
 #. module: base_setup
 #: view:base.config.settings:0

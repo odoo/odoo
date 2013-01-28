@@ -543,7 +543,7 @@ class ir_model_fields_anonymize_wizard(osv.osv_memory):
             fixes = group(fixes, ('model_name', 'field_name'))
 
             for line in data:
-                table_name = self.pool.get(line['model_id'])._table
+                table_name = self.pool.get(line['model_id'])._table if self.pool.get(line['model_id']) else None
 
                 # check if custom sql exists:
                 key = (line['model_id'], line['field_id'])
@@ -551,7 +551,7 @@ class ir_model_fields_anonymize_wizard(osv.osv_memory):
                 if custom_updates:
                     custom_updates.sort(itemgetter('sequence'))
                     queries = [(record['query'], record['query_type']) for record in custom_updates if record['query_type']]
-                else:
+                elif table_name:
                     queries = [("update %(table)s set %(field)s = %%(value)s where id = %%(id)s" % {
                         'table': table_name,
                         'field': line['field_id'],

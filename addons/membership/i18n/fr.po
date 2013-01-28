@@ -1,21 +1,21 @@
-# Translation of OpenERP Server.
-# This file contains the translation of the following modules:
-# 	* membership
+# French translation for openobject-addons
+# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
+# This file is distributed under the same license as the openobject-addons package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 6.0dev\n"
-"Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-12-03 16:03+0000\n"
-"PO-Revision-Date: 2012-11-29 15:06+0000\n"
-"Last-Translator: Numérigraphe <Unknown>\n"
-"Language-Team: \n"
+"Project-Id-Version: openobject-addons\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2012-12-21 17:05+0000\n"
+"PO-Revision-Date: 2013-01-09 15:33+0000\n"
+"Last-Translator: Ludovic CHEVALIER <Unknown>\n"
+"Language-Team: French <fr@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-12-04 05:13+0000\n"
-"X-Generator: Launchpad (build 16335)\n"
-"Language: \n"
+"X-Launchpad-Export-Date: 2013-01-10 04:46+0000\n"
+"X-Generator: Launchpad (build 16412)\n"
 
 #. module: membership
 #: model:process.transition,name:membership.process_transition_invoicetoassociate0
@@ -96,21 +96,22 @@ msgid "Ending Date Of Membership"
 msgstr "Date de fin de l'adhésion"
 
 #. module: membership
-#: field:product.product,membership_date_to:0
-msgid "Date to"
-msgstr "Date de fin"
+#: help:report.membership,date_to:0
+msgid "End membership date"
+msgstr "Date de fin de l'adhésion"
 
 #. module: membership
+#: field:product.product,membership_date_to:0
 #: field:res.partner,membership_stop:0
 msgid "Membership End Date"
-msgstr ""
+msgstr "Date de fin d'adhésion"
 
 #. module: membership
 #: view:report.membership:0
 #: field:report.membership,user_id:0
 #: view:res.partner:0
 msgid "Salesperson"
-msgstr ""
+msgstr "Vendeur"
 
 #. module: membership
 #: model:process.transition,name:membership.process_transition_waitingtoinvoice0
@@ -137,7 +138,7 @@ msgstr "Non membre"
 #. module: membership
 #: view:product.product:0
 msgid "Taxes"
-msgstr ""
+msgstr "Taxes"
 
 #. module: membership
 #: view:res.partner:0
@@ -149,7 +150,7 @@ msgstr "Tous les membres"
 #: code:addons/membership/membership.py:413
 #, python-format
 msgid "Error!"
-msgstr ""
+msgstr "Erreur!"
 
 #. module: membership
 #: model:process.transition,name:membership.process_transition_producttomember0
@@ -196,11 +197,6 @@ msgstr "Analyse des membres"
 #: view:res.partner:0
 msgid "End Membership Date"
 msgstr "Date de fin d'adhésion"
-
-#. module: membership
-#: field:product.product,membership_date_from:0
-msgid "Date from"
-msgstr "Date de début"
 
 #. module: membership
 #: code:addons/membership/membership.py:414
@@ -252,7 +248,7 @@ msgstr "Date de début d'adhésion"
 #. module: membership
 #: field:res.partner,membership_cancel:0
 msgid "Cancel Membership Date"
-msgstr ""
+msgstr "Date d'annulation de l'adhésion"
 
 #. module: membership
 #: model:process.node,name:membership.process_node_paidmember0
@@ -332,7 +328,7 @@ msgstr "Articles d'adhésion"
 #. module: membership
 #: field:res.partner,membership_state:0
 msgid "Current Membership Status"
-msgstr ""
+msgstr "État actuel de l'adhésion"
 
 #. module: membership
 #: field:membership.membership_line,date:0
@@ -394,7 +390,7 @@ msgstr "Le partenaire est membre gratuitement."
 #. module: membership
 #: view:res.partner:0
 msgid "Buy Membership"
-msgstr ""
+msgstr "Payer une cotisation"
 
 #. module: membership
 #: field:report.membership,associate_member_id:0
@@ -433,7 +429,7 @@ msgstr "Catégorie"
 #. module: membership
 #: view:res.partner:0
 msgid "Contacts"
-msgstr ""
+msgstr "Contacts"
 
 #. module: membership
 #: view:report.membership:0
@@ -463,12 +459,7 @@ msgstr "Date à laquelle l'adhésion du membre a été effective."
 #. module: membership
 #: field:membership.membership_line,state:0
 msgid "Membership Status"
-msgstr ""
-
-#. module: membership
-#: help:report.membership,date_to:0
-msgid "End membership date"
-msgstr "Date de fin de l'adhésion"
+msgstr "État de l'adhésion"
 
 #. module: membership
 #: view:res.partner:0
@@ -478,7 +469,7 @@ msgstr "Clients"
 #. module: membership
 #: view:membership.invoice:0
 msgid "or"
-msgstr ""
+msgstr "ou"
 
 #. module: membership
 #: selection:report.membership,month:0
@@ -490,12 +481,13 @@ msgstr "Août"
 #: model:ir.ui.menu,name:membership.menu_membership_products
 #: view:product.product:0
 msgid "Membership Products"
-msgstr "Articless d'adhésion"
+msgstr "Articles d'adhésion"
 
 #. module: membership
 #: sql_constraint:product.product:0
 msgid "Error ! Ending Date cannot be set before Beginning Date."
 msgstr ""
+"Erreur ! La Date de Fin ne peut pas être définit avant la Date de Début."
 
 #. module: membership
 #: selection:report.membership,month:0
@@ -505,7 +497,7 @@ msgstr "Juin"
 #. module: membership
 #: help:product.product,membership:0
 msgid "Check if the product is eligible for membership."
-msgstr ""
+msgstr "Cochez si l'article est éligible pour l'adhésion"
 
 #. module: membership
 #: selection:membership.membership_line,state:0
@@ -569,6 +561,15 @@ msgid ""
 "created.\n"
 "                    -Paying member: A member who has paid the membership fee."
 msgstr ""
+"Cela indique l'état de l'adhésion.\n"
+"                    -Non Membre: Un partenaire qui n'a jamais adhéré.\n"
+"                    -Adhésion annulée: Un membre qui a annulé son adhésion.\n"
+"                    -Ancien Membre: Un membre dont la date d'adhésion a "
+"expirée.\n"
+"                    -Membre en attente: Un membre qui a demandé son adhésion "
+"et dont la facture va être créée.\n"
+"                    -Membre facturé: Un membre dont la facture a été créée.\n"
+"                    -Membre payé: Un membre qui a payé son adhésion."
 
 #. module: membership
 #: selection:report.membership,month:0
@@ -636,6 +637,17 @@ msgid ""
 "                        -Paid Member: A member who has paid the membership "
 "amount."
 msgstr ""
+"Cela indique l'état de l'adhésion.\n"
+"                      -Non Membre: Un partenaire qui n'a jamais adhéré.\n"
+"                      -Adhésion annulée: Un membre qui a annulé son "
+"adhésion.\n"
+"                      -Ancien Membre: Un membre dont la date d'adhésion a "
+"expirée.\n"
+"                      -Membre en attente: Un membre qui a demandé son "
+"adhésion et dont la facture va être créée.\n"
+"                      -Membre facturé: Un membre dont la facture a été "
+"créée.\n"
+"                      -Membre payé: Un membre qui a payé son adhésion."
 
 #. module: membership
 #: model:process.transition,note:membership.process_transition_waitingtoinvoice0
@@ -664,11 +676,6 @@ msgid "All non Members"
 msgstr "Tous les non-membres"
 
 #. module: membership
-#: view:product.product:0
-msgid "Information"
-msgstr "Information"
-
-#. module: membership
 #: field:membership.membership_line,account_invoice_line:0
 msgid "Account Invoice line"
 msgstr "Ligne de Facture"
@@ -686,7 +693,7 @@ msgstr "Prix Membre"
 #. module: membership
 #: view:product.product:0
 msgid "Membership Duration"
-msgstr ""
+msgstr "Durée d'Adhésion"
 
 #. module: membership
 #: model:ir.model,name:membership.model_product_product
@@ -699,19 +706,20 @@ msgid "May"
 msgstr "Mai"
 
 #. module: membership
+#: field:product.product,membership_date_from:0
 #: field:res.partner,membership_start:0
 msgid "Membership Start Date"
-msgstr ""
+msgstr "Date de Début d'Adhésion"
 
 #. module: membership
 #: help:res.partner,free_member:0
 msgid "Select if you want to give free membership."
-msgstr ""
+msgstr "Sélectionner si vous voulez donner une adhésion gratuite."
 
 #. module: membership
 #: field:res.partner,membership_amount:0
 msgid "Membership Amount"
-msgstr ""
+msgstr "Montant de l'Adhésion"
 
 #. module: membership
 #: field:report.membership,date_to:0
@@ -790,6 +798,11 @@ msgid "Year"
 msgstr "Année"
 
 #. module: membership
+#: view:product.product:0
+msgid "Accounting"
+msgstr "Compte"
+
+#. module: membership
 #: view:report.membership:0
 msgid "Revenue Done"
 msgstr "Revenu final"
@@ -800,8 +813,14 @@ msgstr "Revenu final"
 #~ msgid "Currency"
 #~ msgstr "Devise"
 
+#~ msgid "Date to"
+#~ msgstr "Date de fin"
+
 #~ msgid "Error ! You can not create recursive accounts."
 #~ msgstr "Erreur ! Vous ne pouvez pas créer d'écritures récursives."
+
+#~ msgid "Date from"
+#~ msgstr "Date de début"
 
 #~ msgid "Free members"
 #~ msgstr "Membres Libres"
@@ -865,6 +884,9 @@ msgstr "Revenu final"
 
 #~ msgid "Paid members"
 #~ msgstr "Membres Cotisants"
+
+#~ msgid "Information"
+#~ msgstr "Information"
 
 #~ msgid ""
 #~ "The Object name must start with x_ and not contain any special character !"

@@ -5,7 +5,7 @@
 
         <!--Email template -->
         <record id="email_template_edi_sale" model="email.template">
-            <field name="name">Sale Order - Send by Email (Portal)</field>
+            <field name="name">Sales Order - Send by Email (Portal)</field>
             <field name="email_from">${object.user_id.email or ''}</field>
             <field name="subject">${object.company_id.name} ${object.state in ('draft', 'sent') and 'Quotation' or 'Order'} (Ref ${object.name or 'n/a' })</field>
             <field name="email_recipients">${object.partner_invoice_id.id}</field>

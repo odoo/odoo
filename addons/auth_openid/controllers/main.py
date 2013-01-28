@@ -46,7 +46,18 @@ oidutil.log = _logger.debug
 
 def get_system_user():
     """Return system user info string, such as USERNAME-EUID"""
-    info = getpass.getuser()
+    try:
+        info = getpass.getuser()
+    except ImportError:
+        if os.name == 'nt':
+            # when there is no 'USERNAME' in environment, getpass.getuser()
+            # fail when trying to import 'pwd' module - which is unix only.
+            # In that case we have to fallback to real win32 API.
+            import win32api
+            info = win32api.GetUserName()
+        else:
+            raise
+
     euid = getattr(os, 'geteuid', None) # Non available on some platforms
     if euid is not None:
         info = '%s-%d' % (info, euid())

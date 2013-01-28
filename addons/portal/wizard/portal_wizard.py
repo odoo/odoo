@@ -212,6 +212,7 @@ class wizard_user(osv.osv_memory):
             'subject': _(WELCOME_EMAIL_SUBJECT) % data,
             'body_html': '<pre>%s</pre>' % (_(WELCOME_EMAIL_BODY) % data),
             'state': 'outgoing',
+            'type': 'email',
         }
         mail_id = mail_mail.create(cr, uid, mail_values, context=this_context)
         return mail_mail.send(cr, uid, [mail_id], context=this_context)

@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2012-12-03 16:04+0000\n"
+"POT-Creation-Date: 2012-12-21 17:06+0000\n"
 "PO-Revision-Date: 2010-11-12 09:10+0000\n"
 "Last-Translator: Dimitris Andavoglou <dimitrisand@gmail.com>\n"
 "Language-Team: nls@hellug.gr <nls@hellug.gr>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-12-04 05:19+0000\n"
-"X-Generator: Launchpad (build 16335)\n"
+"X-Launchpad-Export-Date: 2012-12-22 05:26+0000\n"
+"X-Generator: Launchpad (build 16378)\n"
 "X-Poedit-Country: GREECE\n"
 "X-Poedit-Language: Greek\n"
 "X-Poedit-SourceCharset: utf-8\n"
@@ -59,10 +59,13 @@ msgstr ""
 #. module: sale_crm
 #: help:crm.make.sale,close:0
 msgid ""
-"Check this to close the opportunity after having created the sale order."
+"Check this to close the opportunity after having created the sales order."
 msgstr ""
-"Τσέκαρε αυτό για να κλείσει η ευκαιρία αφού δημιουργήθηκε η παραγγελία "
-"πώλησης."
+
+#. module: sale_crm
+#: model:mail.message.subtype,name:sale_crm.mt_salesteam_order_sent
+msgid "Quotation Send"
+msgstr ""
 
 #. module: sale_crm
 #: field:sale.order,categ_ids:0
@@ -117,6 +120,11 @@ msgstr "Κατάστημα"
 #: code:addons/sale_crm/wizard/crm_make_sale.py:90
 #, python-format
 msgid "No addresse(s) defined for this customer."
+msgstr ""
+
+#. module: sale_crm
+#: model:mail.message.subtype,name:sale_crm.mt_salesteam_order_confirmed
+msgid "Sales Order Confirmed"
 msgstr ""
 
 #. module: sale_crm
@@ -270,6 +278,12 @@ msgstr ""
 #, python-format
 #~ msgid "Data Insufficient!"
 #~ msgstr "Ανεπαρκή Δεδομένα!"
+
+#~ msgid ""
+#~ "Check this to close the opportunity after having created the sale order."
+#~ msgstr ""
+#~ "Τσέκαρε αυτό για να κλείσει η ευκαιρία αφού δημιουργήθηκε η παραγγελία "
+#~ "πώλησης."
 
 #~ msgid "Monthly Turnover"
 #~ msgstr "Μηνιαίος Τζίρος"

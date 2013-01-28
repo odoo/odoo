@@ -36,7 +36,7 @@ class stock_picking(osv.osv):
             for inv in self.pool.get('account.invoice').browse(cr, uid, res.values(), context=context):
                 for ol in inv.invoice_line:
                     if ol.product_id:
-                        oa = ol.product_id.product_tmpl_id.property_stock_account_output and ol.product_id.product_tmpl_id.property_stock_account_output.id
+                        oa = ol.product_id.property_stock_account_output and ol.product_id.property_stock_account_output.id
                         if not oa:
                             oa = ol.product_id.categ_id.property_stock_account_output_categ and ol.product_id.categ_id.property_stock_account_output_categ.id
                         if oa:
@@ -48,7 +48,7 @@ class stock_picking(osv.osv):
             for inv in self.pool.get('account.invoice').browse(cr, uid, res.values(), context=context):
                 for ol in inv.invoice_line:
                     if ol.product_id:
-                        oa = ol.product_id.product_tmpl_id.property_stock_account_input and ol.product_id.product_tmpl_id.property_stock_account_input.id
+                        oa = ol.product_id.property_stock_account_input and ol.product_id.property_stock_account_input.id
                         if not oa:
                             oa = ol.product_id.categ_id.property_stock_account_input_categ and ol.product_id.categ_id.property_stock_account_input_categ.id        
                         if oa:

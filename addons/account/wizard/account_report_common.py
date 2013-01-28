@@ -119,12 +119,16 @@ class account_common_report(osv.osv_memory):
         return accounts and accounts[0] or False
 
     def _get_fiscalyear(self, cr, uid, context=None):
+        if context is None:
+            context = {}
         now = time.strftime('%Y-%m-%d')
         company_id = False
         ids = context.get('active_ids', [])
+        domain = [('date_start', '<', now), ('date_stop', '>', now)]
         if ids and context.get('active_model') == 'account.account':
             company_id = self.pool.get('account.account').browse(cr, uid, ids[0], context=context).company_id.id
-        fiscalyears = self.pool.get('account.fiscalyear').search(cr, uid, [('date_start', '<', now), ('date_stop', '>', now), ('company_id', '=', company_id)], limit=1)
+            domain += [('company_id', '=', company_id)]
+        fiscalyears = self.pool.get('account.fiscalyear').search(cr, uid, domain, limit=1)
         return fiscalyears and fiscalyears[0] or False
 
     def _get_all_journal(self, cr, uid, context=None):

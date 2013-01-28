@@ -19,14 +19,6 @@
 #
 ##############################################################################
 
-import account_wizard
-import invoice
-import company
-import partner
-import company
-import wizard
-import payment
-import report
-import bank
+from . import account_wizard
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

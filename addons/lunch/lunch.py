@@ -33,6 +33,7 @@ class lunch_order(osv.Model):
     """
     _name = 'lunch.order'
     _description = 'Lunch Order'
+    _order = 'date desc'
 
     def _price_get(self, cr, uid, ids, name, arg, context=None):
         """ 
@@ -93,9 +94,8 @@ class lunch_order(osv.Model):
         """
         today = datetime.now().isoweekday()
         assert 1 <= today <= 7, "Should be between 1 and 7"
-        mapping = dict((idx, name) for idx, name in enumerate('monday tuestday wednesday thursday friday saturday sunday'.split()))
-        if today in mapping:
-            return mapping[today]
+        mapping = dict((idx, name) for idx, name in enumerate('days monday tuesday wednesday thursday friday saturday sunday'.split()))
+        return alert[mapping[today]]
 
     def can_display_alert(self, alert):
         """ 
@@ -107,6 +107,7 @@ class lunch_order(osv.Model):
         elif alert.alter_type == 'week':
             #the alert is activated during some days of the week
             return self.check_day(alert)
+        return True # alter_type == 'days' (every day)
 
     def _default_alerts_get(self, cr, uid, context=None):
         """ 

@@ -1,14 +1,4 @@
 -
-    In order to test the document management I make sure the default installation has some storage.
--
-    !assert {model: document.storage, id: storage_default }:
-      - id != False
--
-    I make sure the default installation has some root directory.
--
-    !assert {model: document.directory, id: dir_root}:
-      - storage_id != False
--
     I create a "Testing" folder where all the test data will go.
 -
     !record {model: document.directory, id: dir_tests }:
@@ -42,7 +32,6 @@
     !assert {model: ir.attachment, id: file_test2 }:
         - datas == "YWJjZA==\n"
         - file_size == 4
-        - file_type == 'text/plain'
 -
     I rename the attachment.
 -

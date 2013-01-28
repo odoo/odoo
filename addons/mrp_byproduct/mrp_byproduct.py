@@ -89,7 +89,7 @@ class mrp_production(osv.osv):
         picking_id = super(mrp_production,self).action_confirm(cr, uid, ids)
         product_uom_obj = self.pool.get('product.uom')
         for production in self.browse(cr, uid, ids):
-            source = production.product_id.product_tmpl_id.property_stock_production.id
+            source = production.product_id.property_stock_production.id
             if not production.bom_id:
                 continue
             for sub_product in production.bom_id.sub_products:

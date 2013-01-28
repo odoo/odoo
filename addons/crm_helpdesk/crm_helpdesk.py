@@ -89,11 +89,6 @@ class crm_helpdesk(base_state, base_stage, osv.osv):
         'priority': lambda *a: crm.AVAILABLE_PRIORITIES[2][0],
     }
 
-    def create(self, cr, uid, vals, context=None):
-        obj_id = super(crm_helpdesk, self).create(cr, uid, vals, context)
-        self.create_send_note(cr, uid, [obj_id], context=context)
-        return obj_id
-
     # -------------------------------------------------------
     # Mail gateway
     # -------------------------------------------------------
@@ -105,14 +100,15 @@ class crm_helpdesk(base_state, base_stage, osv.osv):
         """
         if custom_values is None: custom_values = {}
         desc = html2plaintext(msg.get('body')) if msg.get('body') else ''
-        custom_values.update({
+        defaults = {
             'name': msg.get('subject') or _("No Subject"),
             'description': desc,
             'email_from': msg.get('from'),
             'email_cc': msg.get('cc'),
             'user_id': False,
-        })
-        return super(crm_helpdesk,self).message_new(cr, uid, msg, custom_values=custom_values, context=context)
+        }
+        defaults.update(custom_values)
+        return super(crm_helpdesk,self).message_new(cr, uid, msg, custom_values=defaults, context=context)
 
     def message_update(self, cr, uid, ids, msg, update_vals=None, context=None):
         """ Overrides mail_thread message_update that is called by the mailgateway
@@ -139,18 +135,5 @@ class crm_helpdesk(base_state, base_stage, osv.osv):
                 update_vals[key] = res.group(2).lower()
 
         return super(crm_helpdesk,self).message_update(cr, uid, ids, msg, update_vals=update_vals, context=context)
-
-    # ---------------------------------------------------
-    # OpenChatter
-    # ---------------------------------------------------
-
-    def case_get_note_msg_prefix(self, cr, uid, id, context=None):
-        """ override of default base_state method. """
-        return 'Case'
-
-    def create_send_note(self, cr, uid, ids, context=None):
-        msg = _('Case has been <b>created</b>.')
-        self.message_post(cr, uid, ids, body=msg, context=context)
-        return True
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

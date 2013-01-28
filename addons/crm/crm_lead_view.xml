@@ -100,7 +100,7 @@
                             states="cancel"/>
                     <button name="case_cancel" string="Cancel" type="object"
                             states="draft,open,pending"/>
-                    <field name="stage_id" widget="statusbar"
+                    <field name="stage_id" widget="statusbar" clickable="True"
                             on_change="onchange_stage_id(stage_id)"/>
                 </header>
                 <sheet>
@@ -156,7 +156,7 @@
                             <label for="section_id"/>
                             <div>
                                 <field name="section_id"/>
-                                <button name="case_escalate" string="Escalate" type="object" states="draft,open,pending"/>
+                                <button name="case_escalate" string="Escalate" type="object" attrs="{'invisible': ['|', ('section_id','=',False), ('state', 'not in', ['draft','open','pending'])]}"/>
                             </div>
                             <field name="type" invisible="1"/>
                         </group>
@@ -173,17 +173,18 @@
                     </page>
                     <page string="Extra Info">
                         <group>
-                            <group string="Categorization">
+                            <group string="Categorization" groups="base.group_multi_company,base.group_no_one" name="categorization">
                                 <field name="company_id"
                                     groups="base.group_multi_company"
                                     widget="selection" colspan="2"/>
-                                <field name="type_id"/>
-                                <field name="channel_id" widget="selection"/>
-                                <field name="referred"/>
                                 <field name="state" groups="base.group_no_one"/>
                             </group>
                             <group string="Mailings">
                                 <field name="opt_out"/>
+                            </group>
+                            <group string="Misc">
+                                <field name="active"/>
+                                <field name="referred"/>
                             </group>
                         </group>
                     </page>
@@ -370,6 +371,7 @@
                                 states="draft,open,pending" class="oe_highlight"/>
                         <button name="case_mark_lost" string="Mark Lost" type="object"
                                 states="draft,open" class="oe_highlight"/>
+                        <button name="new_mail_send" string="Send Mail" type="object" states="draft,open,pending"/>
                         <field name="stage_id" widget="statusbar" clickable="True"/>
                     </header>
                     <sheet>
@@ -419,8 +421,7 @@
                                 <label for="section_id"/>
                                 <div>
                                     <field name="section_id" widget="selection"/>
-                                    <button name="case_escalate" string="Escalate" type="object" class="oe_link"
-                                        attrs="{'invisible': [('section_id', '=', False)]}"/>
+                                    <button name="case_escalate" string="Escalate" type="object" class="oe_link" attrs="{'invisible': ['|', ('section_id','=',False), ('state', 'not in', ['draft','open','pending'])]}"/>
                                 </div>
                             </group>
                             <group>
@@ -463,12 +464,7 @@
                                     <field name="mobile"/>
                                     <field name="fax"/>
                                 </group>
-
-                                <group string="Categorization">
-                                    <field name="type_id" />
-                                    <field name="channel_id" widget="selection"/>
-                                </group>
-                                <group string="Mailings">
+                                <group string="Mailings" name="mailings">
                                     <field name="opt_out"/>
                                 </group>
                                 <group string="Misc">
@@ -518,7 +514,7 @@
                     <field name="type_id" invisible="1"/>
                     <field name="stage_id"/>
                     <field name="planned_revenue" sum="Expected Revenues"/>
-                    <field name="probability" widget="progressbar" avg="Avg. of Probability"/>
+                    <field name="probability" avg="Avg. of Probability"/>
                     <field name="section_id" invisible="context.get('invisible_section', True)"/>
                     <field name="user_id"/>
                     <field name="priority" invisible="1"/>

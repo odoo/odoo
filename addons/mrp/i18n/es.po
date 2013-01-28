@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2012-12-03 16:02+0000\n"
-"PO-Revision-Date: 2012-12-14 18:23+0000\n"
+"POT-Creation-Date: 2012-12-21 17:04+0000\n"
+"PO-Revision-Date: 2012-12-22 11:22+0000\n"
 "Last-Translator: Pedro Manuel Baeza <pedro.baeza@gmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-12-15 05:04+0000\n"
-"X-Generator: Launchpad (build 16372)\n"
+"X-Launchpad-Export-Date: 2012-12-23 04:40+0000\n"
+"X-Generator: Launchpad (build 16378)\n"
 
 #. module: mrp
 #: help:mrp.config.settings,module_mrp_repair:0
@@ -168,15 +168,6 @@ msgstr ""
 "preferido."
 
 #. module: mrp
-#: help:mrp.config.settings,group_mrp_properties:0
-msgid ""
-"The selection of the right Bill of Material to use will depend on the  "
-"properties specified on the sale order and the Bill of Material."
-msgstr ""
-"La selección de la lista de materiales a usar depende de las propiedades "
-"especificadas en el pedido de venta y en la lista de materiales."
-
-#. module: mrp
 #: view:mrp.production:0
 msgid "Products to Finish"
 msgstr "Productos a terminar"
@@ -216,12 +207,17 @@ msgid "For purchased material"
 msgstr "Para material comprado"
 
 #. module: mrp
+#: model:ir.ui.menu,name:mrp.menu_mrp_production_order_action
+msgid "Order Planning"
+msgstr "Planificación de la orden"
+
+#. module: mrp
 #: field:mrp.config.settings,module_mrp_operations:0
 msgid "Allow detailed planning of work order"
 msgstr "Permitir planificación detallada de la orden de trabajo"
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:648
+#: code:addons/mrp/mrp.py:633
 #, python-format
 msgid "Cannot cancel manufacturing order!"
 msgstr "¡No se puede cancelar la orden de producción!"
@@ -296,6 +292,25 @@ msgstr "Datos principales"
 #: field:mrp.config.settings,module_mrp_byproduct:0
 msgid "Produce several products from one manufacturing order"
 msgstr "Fabricar varios productos de una sola orden de fabricación"
+
+#. module: mrp
+#: help:mrp.config.settings,group_mrp_properties:0
+msgid ""
+"The selection of the right Bill of Material to use will depend on the "
+"properties specified on the sales order and the Bill of Material."
+msgstr ""
+"La selección de la lista de materiales correcta a usar dependerá de las "
+"propiedades especificadas en el pedido de venta y en la lista de materiales."
+
+#. module: mrp
+#: view:mrp.bom:0
+msgid ""
+"When processing a sales order for this product, the delivery order\n"
+"                                will contain the raw materials, instead of "
+"the finished product."
+msgstr ""
+"Cuando se procese un pedido de venta para este producto, la orden de entrega "
+"contendrá las materias primas, en lugar del producto final."
 
 #. module: mrp
 #: report:mrp.production.order:0
@@ -485,6 +500,38 @@ msgid "Weekly Stock Value Variation"
 msgstr "Variación del valor del stock semanal"
 
 #. module: mrp
+#: model:ir.actions.act_window,help:mrp.mrp_property_action
+msgid ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Click to create a new property.\n"
+"              </p><p>\n"
+"                The Properties in OpenERP are used to select the right bill "
+"of\n"
+"                materials for manufacturing a product when you have "
+"different\n"
+"                ways of building the same product.  You can assign several\n"
+"                properties to each bill of materials.  When a salesperson\n"
+"                creates a sales order, they can relate it to several "
+"properties\n"
+"                and OpenERP will automatically select the BoM to use "
+"according\n"
+"                the needs.\n"
+"              </p>\n"
+"            "
+msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"Pulse para crear una nueva propiedad.\n"
+"</p><p>\n"
+"Las propiedades en OpenERP se usan para seleccionar la lista adecuada de "
+"materiales para la fabricación de un producto cuando se tienen diferentes "
+"forma de construir el mismo producto. Puede asignar diferentes propiedades a "
+"cada lista de materiales. Cuando un comercial crea un pedido de venta, puede "
+"relacionarlo con varias  propiedades, y OpenERP seleccionará automáticamente "
+"la LdM a usar de acuerdo a las necesidades.\n"
+"</p>\n"
+"            "
+
+#. module: mrp
 #: view:mrp.production:0
 #: field:mrp.production,date_planned:0
 #: report:mrp.production.order:0
@@ -492,7 +539,7 @@ msgid "Scheduled Date"
 msgstr "Fecha programada"
 
 #. module: mrp
-#: code:addons/mrp/procurement.py:113
+#: code:addons/mrp/procurement.py:124
 #, python-format
 msgid "Manufacturing Order <em>%s</em> created."
 msgstr "La orden de producción <em>%s</em> ha sido creada."
@@ -502,16 +549,6 @@ msgstr "La orden de producción <em>%s</em> ha sido creada."
 #: report:mrp.production.order:0
 msgid "Bill Of Material"
 msgstr "Lista de Material"
-
-#. module: mrp
-#: code:addons/mrp/mrp.py:1068
-#, python-format
-msgid ""
-"Manufacturing order has been <b>confirmed</b> and is <b>scheduled</b> for "
-"the <em>%s</em>."
-msgstr ""
-"La orden de producción ha sido <b>confirmada</b> y está <b>programada</b> "
-"para <em>%s</em>."
 
 #. module: mrp
 #: help:mrp.routing,location_id:0
@@ -534,12 +571,6 @@ msgstr "Variación del valor de stock"
 #: model:ir.actions.act_window,name:mrp.action2
 msgid "Bill of Materials Structure"
 msgstr "Estructura lista de materiales"
-
-#. module: mrp
-#: code:addons/mrp/mrp.py:1043
-#, python-format
-msgid "Manufacturing order has been <b>canceled</b>."
-msgstr "La orden de producción ha sido <b>cancelada</b>."
 
 #. module: mrp
 #: model:process.node,note:mrp.process_node_serviceproduct0
@@ -686,13 +717,6 @@ msgstr ""
 "Si el campo activo se desmarca, permite ocultar la ruta sin eliminarla."
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:386
-#, python-format
-msgid "Bill of Material has been <b>created</b> for <em>%s</em> product."
-msgstr ""
-"La lista de materiales ha sido  <b>creada</b> para el producto <em>%s</em>."
-
-#. module: mrp
 #: model:process.transition,name:mrp.process_transition_billofmaterialrouting0
 msgid "Material Routing"
 msgstr "Ruta del material"
@@ -712,7 +736,7 @@ msgid "Work Center Load"
 msgstr "Carga centro de producción"
 
 #. module: mrp
-#: code:addons/mrp/procurement.py:44
+#: code:addons/mrp/procurement.py:50
 #, python-format
 msgid "No BoM defined for this product !"
 msgstr "¡No se ha definido LdM para este producto!"
@@ -798,12 +822,6 @@ msgid "Master Bill of Materials"
 msgstr "Lista de materiales maestra"
 
 #. module: mrp
-#: view:mrp.production:0
-#: report:mrp.production.order:0
-msgid "Work Orders"
-msgstr "Órdenes de trabajo"
-
-#. module: mrp
 #: help:mrp.config.settings,module_product_manufacturer:0
 msgid ""
 "This allows you to define the following for a product:\n"
@@ -831,44 +849,6 @@ msgstr "Imprimir"
 #: view:mrp.workcenter:0
 msgid "Type"
 msgstr "Tipo"
-
-#. module: mrp
-#: model:ir.actions.act_window,help:mrp.mrp_property_group_action
-msgid ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"                Click to create a group of properties.\n"
-"              </p><p>\n"
-"                Define specific property groups that can be assigned to "
-"your\n"
-"                bill of materials and sales orders. Properties allows "
-"OpenERP\n"
-"                to automatically select the right bill of materials "
-"according\n"
-"                to properties selected in the sale order by salesperson.\n"
-"              </p><p>\n"
-"                For instance, in the property group \"Warranty\", you an "
-"have\n"
-"                two properties: 1 year warranty, 3 years warranty. "
-"Depending\n"
-"                on the propoerties selected in the sale order, OpenERP will\n"
-"                schedule a production using the matching bill of materials.\n"
-"              </p>\n"
-"            "
-msgstr ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"Pulse para crear un grupo de propiedades.\n"
-"</p><p>\n"
-"Define grupos específicos de propiedades que pueden ser asignados a una "
-"lista de materiales y pedidos de venta. Las propiedades permiten a OpenERP "
-"asignar automáticamente la lista de materiales adecuada de acuerdo a las "
-"propiedades seleccionadas en el pedido de venta por parte del comercial.\n"
-"</p><p>\n"
-"Por ejemplo, en el grupo de propiedades \"Garantía\", tiene dos propiedades: "
-"1 año de garantía, 3 años de garantía. Dependiendo de la propiedad "
-"seleccionada en el pedido de venta, OpenERP planificará una fabricación "
-"usando la lista de materiales correspondiente.\n"
-"</p>\n"
-"            "
 
 #. module: mrp
 #: model:ir.actions.act_window,help:mrp.mrp_workcenter_action
@@ -924,8 +904,8 @@ msgstr ""
 "Un factor de 0.9 indica una pérdida del 10% en el proceso de producción."
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:756
-#: code:addons/mrp/mrp.py:784
+#: code:addons/mrp/mrp.py:737
+#: code:addons/mrp/mrp.py:765
 #, python-format
 msgid "Warning!"
 msgstr "¡Advertencia!"
@@ -994,7 +974,7 @@ msgid "Manufacturing Orders which are waiting for raw materials."
 msgstr "Órdenes de fabricación en espera de materias primas"
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:284
+#: code:addons/mrp/mrp.py:285
 #, python-format
 msgid ""
 "The Product Unit of Measure you chose has a different category than in the "
@@ -1007,6 +987,7 @@ msgstr ""
 #: model:ir.model,name:mrp.model_mrp_production
 #: view:mrp.config.settings:0
 #: view:mrp.production:0
+#: field:mrp.production.workcenter.line,production_id:0
 #: field:procurement.order,production_id:0
 msgid "Manufacturing Order"
 msgstr "Órden de producción"
@@ -1086,7 +1067,7 @@ msgid "BoM Type"
 msgstr "Tipo de lista de materiales"
 
 #. module: mrp
-#: code:addons/mrp/procurement.py:46
+#: code:addons/mrp/procurement.py:52
 #, python-format
 msgid ""
 "Procurement '%s' has an exception: 'No BoM defined for this product !'"
@@ -1109,7 +1090,7 @@ msgid "Companies"
 msgstr "Compañías"
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:649
+#: code:addons/mrp/mrp.py:634
 #, python-format
 msgid ""
 "You must first cancel related internal picking attached to this "
@@ -1447,7 +1428,7 @@ msgstr ""
 "automáticamente completada."
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:521
+#: code:addons/mrp/mrp.py:505
 #, python-format
 msgid "Invalid Action!"
 msgstr "¡Acción no válida!"
@@ -1495,7 +1476,7 @@ msgstr ""
 "requeridas para realizar un producto final."
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:374
+#: code:addons/mrp/mrp.py:375
 #, python-format
 msgid "%s (copy)"
 msgstr "%s (copia)"
@@ -1536,38 +1517,6 @@ msgid ""
 msgstr ""
 "En caso de que el método de suministro del producto sea 'Comprar', el "
 "sistema crea un pedido de compra."
-
-#. module: mrp
-#: model:ir.actions.act_window,help:mrp.mrp_property_action
-msgid ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"                Click to create a new property.\n"
-"              </p><p>\n"
-"                The Properties in OpenERP are used to select the right bill "
-"of\n"
-"                materials for manufacturing a product when you have "
-"different\n"
-"                ways of building the same product.  You can assign several\n"
-"                properties to each bill of materials.  When a salesperson\n"
-"                creates a sale order, they can relate it to several "
-"properties\n"
-"                and OpenERP will automatically select the BoM to use "
-"according\n"
-"                the needs.\n"
-"              </p>\n"
-"            "
-msgstr ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"Pulse para crear una nueva propiedad.\n"
-"</p><p>\n"
-"Las propiedades en OpenERP se usan para seleccionar la lista de materiales "
-"adecuada para la fabricación de un producto cuando se tienen diversas formas "
-"de construir el mismo producto. Puede asignar diversas propiedades a cada "
-"lista de materiales. Cuando un comercial crea un pedido de venta, puede "
-"relacionarlo a diversas propiedades, y OpenERP seleccionará automáticamente "
-"la lista de materiales de acuerdo a esas propiedades.\n"
-"</p>\n"
-"            "
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_procurement_order
@@ -1639,12 +1588,6 @@ msgid "Pending"
 msgstr "Pendiente"
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:1053
-#, python-format
-msgid "Manufacturing order is <b>in production</b>."
-msgstr "La orden de fabricación está <b>en producción</b>."
-
-#. module: mrp
 #: field:mrp.bom,active:0
 #: field:mrp.routing,active:0
 msgid "Active"
@@ -1687,12 +1630,6 @@ msgstr ""
 "Referencia al documento que generó esta solicitud de orden de producción."
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:1058
-#, python-format
-msgid "Manufacturing order has been <b>done</b>."
-msgstr "La orden de fabricación se ha <b>realizado</b>."
-
-#. module: mrp
 #: model:process.transition,name:mrp.process_transition_minimumstockprocure0
 msgid "'Minimum stock rule' material"
 msgstr "material 'regla stock mínimo'"
@@ -1713,12 +1650,6 @@ msgid "Drives the procurement orders for raw material."
 msgstr "Guía las órdenes de abastecimiento para materias primas."
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:1048
-#, python-format
-msgid "Manufacturing order is <b>ready to produce</b>."
-msgstr "La orden de fabricación está <b>lista para fabricar</b>."
-
-#. module: mrp
 #: field:mrp.production.product.line,product_uos_qty:0
 msgid "Product UOS Quantity"
 msgstr "Cantidad de producto en UdV"
@@ -1734,7 +1665,7 @@ msgid "SO Number"
 msgstr "Número venta"
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:521
+#: code:addons/mrp/mrp.py:505
 #, python-format
 msgid "Cannot delete a manufacturing order in state '%s'."
 msgstr "No se puede eliminar una orden de fabricación en estado '%s'."
@@ -1780,6 +1711,45 @@ msgstr "Órdenes de producción a iniciar"
 #: field:report.workcenter.load,workcenter_id:0
 msgid "Work Center"
 msgstr "Centro de producción"
+
+#. module: mrp
+#: model:ir.actions.act_window,help:mrp.mrp_property_group_action
+msgid ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Click to create a group of properties.\n"
+"              </p><p>\n"
+"                Define specific property groups that can be assigned to "
+"your\n"
+"                bill of materials and sales orders. Properties allows "
+"OpenERP\n"
+"                to automatically select the right bill of materials "
+"according\n"
+"                to properties selected in the sales order by salesperson.\n"
+"              </p><p>\n"
+"                For instance, in the property group \"Warranty\", you an "
+"have\n"
+"                two properties: 1 year warranty, 3 years warranty. "
+"Depending\n"
+"                on the propoerties selected in the sales order, OpenERP "
+"will\n"
+"                schedule a production using the matching bill of materials.\n"
+"              </p>\n"
+"            "
+msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"Pulse para crear un grupo de propiedades.\n"
+"</p><p>\n"
+"Defina grupos de propiedades específicas  que se pueden asignar las listas "
+"de materiales y a los pedidos de venta. Las propiedades permiten a OpenERP "
+"seleccionar automáticamente la lista de materiales  adecuada de acuerdo a "
+"las propiedades seleccionadas en el pedido de venta por el comercial.\n"
+"</p><p>\n"
+"Por ejemplo, en el grupo de propiedades \"Garantía\", puede tener dos "
+"propiedades: 1 año de garantía y 3 años de garantía. Dependiendo de las "
+"propiedades seleccionadas en el pedido de venta, OpenERP planificará la "
+"fabricación usando la lista de materiales que coincida.\n"
+"</p>\n"
+"            "
 
 #. module: mrp
 #: field:mrp.workcenter,capacity_per_cycle:0
@@ -1927,22 +1897,6 @@ msgid "Manager"
 msgstr "Gerente"
 
 #. module: mrp
-#: view:mrp.bom:0
-msgid ""
-"When processing a sale order for this product, the delivery order\n"
-"                                will contain the raw materials, instead of "
-"the finished product."
-msgstr ""
-"Cuando se procese un pedido de venta para este producto, la orden de entrega "
-"contendrá las materias primas, en lugar del producto final."
-
-#. module: mrp
-#: code:addons/mrp/mrp.py:1039
-#, python-format
-msgid "Manufacturing order has been <b>created</b>."
-msgstr "La orden de fabricación ha sido <b>creada</b>."
-
-#. module: mrp
 #: help:mrp.product.produce,mode:0
 msgid ""
 "'Consume only' mode will only consume the products with the quantity "
@@ -1958,9 +1912,10 @@ msgstr ""
 "cuando el total de las cantidades solicitadas se han producido."
 
 #. module: mrp
-#: model:ir.ui.menu,name:mrp.menu_mrp_production_order_action
-msgid "Orders Planning"
-msgstr "Planificación de órdenes"
+#: view:mrp.production:0
+#: report:mrp.production.order:0
+msgid "Work Orders"
+msgstr "Órdenes de trabajo"
 
 #. module: mrp
 #: field:mrp.workcenter,costs_cycle:0
@@ -1996,7 +1951,7 @@ msgstr ""
 "Esto instalará el módulo 'mrp_operations'."
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:756
+#: code:addons/mrp/mrp.py:737
 #, python-format
 msgid ""
 "You are going to consume total %s quantities of \"%s\".\n"
@@ -2038,7 +1993,6 @@ msgstr "Tiempo para 1 ciclo (horas)"
 #. module: mrp
 #: model:ir.actions.report.xml,name:mrp.report_mrp_production_report
 #: field:mrp.production.product.line,production_id:0
-#: field:mrp.production.workcenter.line,production_id:0
 #: model:process.node,name:mrp.process_node_production0
 #: model:process.node,name:mrp.process_node_productionorder0
 msgid "Production Order"
@@ -2062,7 +2016,7 @@ msgid "Compute Data"
 msgstr "Calcular datos"
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:625
+#: code:addons/mrp/mrp.py:610
 #: code:addons/mrp/wizard/change_production_qty.py:83
 #: code:addons/mrp/wizard/change_production_qty.py:88
 #, python-format
@@ -2108,7 +2062,7 @@ msgid "Manufacturing Lead Time"
 msgstr "Tiempo entrega de fabricación"
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:284
+#: code:addons/mrp/mrp.py:285
 #, python-format
 msgid "Warning"
 msgstr "Advertencia"
@@ -2368,17 +2322,7 @@ msgid "BOM Ref"
 msgstr "Ref LdM"
 
 #. module: mrp
-#: field:mrp.bom,message_comment_ids:0
-#: help:mrp.bom,message_comment_ids:0
-#: field:mrp.production,message_comment_ids:0
-#: help:mrp.production,message_comment_ids:0
-#: field:mrp.production.workcenter.line,message_comment_ids:0
-#: help:mrp.production.workcenter.line,message_comment_ids:0
-msgid "Comments and emails"
-msgstr "Comentarios y correos"
-
-#. module: mrp
-#: code:addons/mrp/mrp.py:784
+#: code:addons/mrp/mrp.py:765
 #, python-format
 msgid ""
 "You are going to produce total %s quantities of \"%s\".\n"
@@ -2418,7 +2362,7 @@ msgid "Bill of Materials"
 msgstr "Lista de materiales (LdM)"
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:625
+#: code:addons/mrp/mrp.py:610
 #, python-format
 msgid "Cannot find a bill of material for this product."
 msgstr "No se ha encontrado ninguna lista de materiales para este producto."
