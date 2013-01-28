@@ -19,15 +19,16 @@
 #
 ##############################################################################
 
-from datetime import datetime
-from osv import osv, fields
-import decimal_precision as dp
-from tools import DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT, DATETIME_FORMATS_MAP
-from tools.translate import _
-import netsvc
 import time
-import tools
+from datetime import datetime
 
+import openerp.addons.decimal_precision as dp
+from openerp.osv import fields, osv
+from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT, DATETIME_FORMATS_MAP
+from openerp.tools import float_compare
+from openerp.tools.translate import _
+from openerp import netsvc
+from openerp import tools
 
 #----------------------------------------------------------
 # Work Centers
@@ -374,19 +375,6 @@ class mrp_bom(osv.osv):
         default.update(name=_("%s (copy)") % (bom_data['name']), bom_id=False)
         return super(mrp_bom, self).copy_data(cr, uid, id, default, context=context)
 
-    def create(self, cr, uid, vals, context=None):
-        obj_id = super(mrp_bom, self).create(cr, uid, vals, context=context)
-        self.create_send_note(cr, uid, [obj_id], context=context)
-        return obj_id
-
-    def create_send_note(self, cr, uid, ids, context=None):
-        prod_obj = self.pool.get('product.product')
-        for obj in self.browse(cr, uid, ids, context=context):
-            for prod in prod_obj.browse(cr, uid, [obj.product_id], context=context):
-                self.message_post(cr, uid, [obj.id], body=_("Bill of Material has been <b>created</b> for <em>%s</em> product.") % (prod.id.name_template), context=context)
-        return True
-
-mrp_bom()
 
 def rounding(f, r):
     import math
@@ -473,6 +461,7 @@ class mrp_production(osv.osv):
             [('draft', 'New'), ('cancel', 'Cancelled'), ('picking_except', 'Picking Exception'), ('confirmed', 'Awaiting Raw Materials'),
                 ('ready', 'Ready to Produce'), ('in_production', 'Production Started'), ('done', 'Done')],
             string='Status', readonly=True,
+            track_visibility='onchange',
             help="When the production order is created the status is set to 'Draft'.\n\
                 If the order is confirmed the status is set to 'Waiting Goods'.\n\
                 If any exceptions are there, the status is set to 'Picking Exception'.\n\
@@ -510,11 +499,6 @@ class mrp_production(osv.osv):
         (_check_qty, 'Order quantity cannot be negative or zero!', ['product_qty']),
     ]
 
-    def create(self, cr, uid, vals, context=None):
-        obj_id = super(mrp_production, self).create(cr, uid, vals, context=context)
-        self.create_send_note(cr, uid, [obj_id], context=context)
-        return obj_id
-
     def unlink(self, cr, uid, ids, context=None):
         for production in self.browse(cr, uid, ids, context=context):
             if production.state not in ('draft', 'cancel'):
@@ -531,7 +515,8 @@ class mrp_production(osv.osv):
             'move_created_ids' : [],
             'move_created_ids2' : [],
             'product_lines' : [],
-            'picking_id': False
+            'move_prod_id' : False,
+            'picking_id' : False
         })
         return super(mrp_production, self).copy(cr, uid, id, default, context)
 
@@ -651,7 +636,6 @@ class mrp_production(osv.osv):
                 move_obj.action_cancel(cr, uid, [x.id for x in production.move_created_ids])
             move_obj.action_cancel(cr, uid, [x.id for x in production.move_lines])
         self.write(cr, uid, ids, {'state': 'cancel'})
-        self.action_cancel_send_note(cr, uid, ids, context)
         return True
 
     def action_ready(self, cr, uid, ids, context=None):
@@ -666,7 +650,6 @@ class mrp_production(osv.osv):
             if production.move_prod_id and production.move_prod_id.location_id.id != production.location_dest_id.id:
                 move_obj.write(cr, uid, [production.move_prod_id.id],
                         {'location_id': production.location_dest_id.id})
-            self.action_ready_send_note(cr, uid, [production_id], context)
         return True
 
     def action_production_end(self, cr, uid, ids, context=None):
@@ -676,7 +659,6 @@ class mrp_production(osv.osv):
         for production in self.browse(cr, uid, ids):
             self._costs_generate(cr, uid, production)
         write_res = self.write(cr, uid, ids, {'state': 'done', 'date_finished': time.strftime('%Y-%m-%d %H:%M:%S')})
-        self.action_done_send_note(cr, uid, ids, context)
         return write_res
 
     def test_production_done(self, cr, uid, ids):
@@ -749,8 +731,7 @@ class mrp_production(osv.osv):
                 if raw_product:
                     # qtys we have to consume
                     qty = total_consume - consumed_data.get(scheduled.product_id.id, 0.0)
-
-                    if qty > qty_avail:
+                    if float_compare(qty, qty_avail, precision_rounding=scheduled.product_id.uom_id.rounding) == 1:
                         # if qtys we have to consume is more than qtys available to consume
                         prod_name = scheduled.product_id.name_get()[0][1]
                         raise osv.except_osv(_('Warning!'), _('You are going to consume total %s quantities of "%s".\nBut you can only consume up to total %s quantities.') % (qty, prod_name, qty_avail))
@@ -808,6 +789,7 @@ class mrp_production(osv.osv):
         for wc_line in production.workcenter_lines:
             wc = wc_line.workcenter_id
             if wc.costs_journal_id and wc.costs_general_account_id:
+                # Cost per hour
                 value = wc_line.hour * wc.costs_hour
                 account = wc.costs_hour_account_id.id
                 if value and account:
@@ -821,10 +803,9 @@ class mrp_production(osv.osv):
                         'ref': wc.code,
                         'product_id': wc.product_id.id,
                         'unit_amount': wc_line.hour,
-                        'product_uom_id': wc.product_id.id and wc.product_id.uom_id.id or False
-
+                        'product_uom_id': wc.product_id and wc.product_id.uom_id.id or False
                     } )
-            if wc.costs_journal_id and wc.costs_general_account_id:
+                # Cost per cycle
                 value = wc_line.cycle * wc.costs_cycle
                 account = wc.costs_cycle_account_id.id
                 if value and account:
@@ -838,8 +819,7 @@ class mrp_production(osv.osv):
                         'ref': wc.code,
                         'product_id': wc.product_id.id,
                         'unit_amount': wc_line.cycle,
-                        'product_uom_id': wc.product_id.id and wc.product_id.uom_id.id or False
-
+                        'product_uom_id': wc.product_id and wc.product_id.uom_id.id or False
                     } )
         return amount
 
@@ -847,9 +827,7 @@ class mrp_production(osv.osv):
         """ Changes state to In Production and writes starting date.
         @return: True
         """
-        self.write(cr, uid, ids, {'state': 'in_production', 'date_start': time.strftime('%Y-%m-%d %H:%M:%S')})
-        self.action_in_production_send_note(cr, uid, ids, context)
-        return True
+        return self.write(cr, uid, ids, {'state': 'in_production', 'date_start': time.strftime('%Y-%m-%d %H:%M:%S')})
 
     def test_if_product(self, cr, uid, ids):
         """
@@ -948,7 +926,7 @@ class mrp_production(osv.osv):
 
     def _make_production_produce_line(self, cr, uid, production, context=None):
         stock_move = self.pool.get('stock.move')
-        source_location_id = production.product_id.product_tmpl_id.property_stock_production.id
+        source_location_id = production.product_id.property_stock_production.id
         destination_location_id = production.location_dest_id.id
         data = {
             'name': production.name,
@@ -974,7 +952,7 @@ class mrp_production(osv.osv):
         # Internal shipment is created for Stockable and Consumer Products
         if production_line.product_id.type not in ('product', 'consu'):
             return False
-        destination_location_id = production.product_id.product_tmpl_id.property_stock_production.id
+        destination_location_id = production.product_id.property_stock_production.id
         if not source_location_id:
             source_location_id = production.location_src_id.id
         move_id = stock_move.create(cr, uid, {
@@ -1019,7 +997,6 @@ class mrp_production(osv.osv):
 
             wf_service.trg_validate(uid, 'stock.picking', shipment_id, 'button_confirm', cr)
             production.write({'state':'confirmed'}, context=context)
-            self.action_confirm_send_note(cr, uid, [production.id], context);
         return shipment_id
 
     def force_production(self, cr, uid, ids, *args):
@@ -1031,46 +1008,6 @@ class mrp_production(osv.osv):
         pick_obj.force_assign(cr, uid, [prod.picking_id.id for prod in self.browse(cr, uid, ids)])
         return True
 
-    # ---------------------------------------------------
-    # OpenChatter methods and notifications
-    # ---------------------------------------------------
-
-    def create_send_note(self, cr, uid, ids, context=None):
-        self.message_post(cr, uid, ids, body=_("Manufacturing order has been <b>created</b>."), context=context)
-        return True
-
-    def action_cancel_send_note(self, cr, uid, ids, context=None):
-        message = _("Manufacturing order has been <b>canceled</b>.")
-        self.message_post(cr, uid, ids, body=message, context=context)
-        return True
-
-    def action_ready_send_note(self, cr, uid, ids, context=None):
-        message = _("Manufacturing order is <b>ready to produce</b>.")
-        self.message_post(cr, uid, ids, body=message, context=context)
-        return True
-
-    def action_in_production_send_note(self, cr, uid, ids, context=None):
-        message = _("Manufacturing order is <b>in production</b>.")
-        self.message_post(cr, uid, ids, body=message, context=context)
-        return True
-
-    def action_done_send_note(self, cr, uid, ids, context=None):
-        message = _("Manufacturing order has been <b>done</b>.")
-        self.message_post(cr, uid, ids, body=message, context=context)
-        return True
-
-    def action_confirm_send_note(self, cr, uid, ids, context=None):
-        for obj in self.browse(cr, uid, ids, context=context):
-            # convert datetime field to a datetime, using server format, then
-            # convert it to the user TZ and re-render it with %Z to add the timezone
-            obj_datetime = fields.DT.datetime.strptime(obj.date_planned, DEFAULT_SERVER_DATETIME_FORMAT)
-            obj_date_str = fields.datetime.context_timestamp(cr, uid, obj_datetime, context=context).strftime(DATETIME_FORMATS_MAP['%+'] + " (%Z)")
-            message = _("Manufacturing order has been <b>confirmed</b> and is <b>scheduled</b> for the <em>%s</em>.") % (obj_date_str)
-            self.message_post(cr, uid, [obj.id], body=message, context=context)
-        return True
-
-
-mrp_production()
 
 class mrp_production_workcenter_line(osv.osv):
     _name = 'mrp.production.workcenter.line'
@@ -1084,14 +1021,14 @@ class mrp_production_workcenter_line(osv.osv):
         'cycle': fields.float('Number of Cycles', digits=(16,2)),
         'hour': fields.float('Number of Hours', digits=(16,2)),
         'sequence': fields.integer('Sequence', required=True, help="Gives the sequence order when displaying a list of work orders."),
-        'production_id': fields.many2one('mrp.production', 'Production Order', select=True, ondelete='cascade', required=True),
+        'production_id': fields.many2one('mrp.production', 'Manufacturing Order',
+            track_visibility='onchange', select=True, ondelete='cascade', required=True),
     }
     _defaults = {
         'sequence': lambda *a: 1,
         'hour': lambda *a: 0,
         'cycle': lambda *a: 0,
     }
-mrp_production_workcenter_line()
 
 class mrp_production_product_line(osv.osv):
     _name = 'mrp.production.product.line'
@@ -1105,7 +1042,6 @@ class mrp_production_product_line(osv.osv):
         'product_uos': fields.many2one('product.uom', 'Product UOS'),
         'production_id': fields.many2one('mrp.production', 'Production Order', select=True),
     }
-mrp_production_product_line()
 
 class product_product(osv.osv):
     _inherit = "product.product"

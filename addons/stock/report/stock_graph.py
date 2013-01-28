@@ -21,8 +21,8 @@
 from pychart import *
 import pychart.legend
 import time
-from report.misc import choice_colors
-import tools
+from openerp.report.misc import choice_colors
+from openerp import tools
 
 #
 # Draw a graph for stocks

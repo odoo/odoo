@@ -6,7 +6,7 @@
             <field name="model">hr.holidays</field>
             <field name="arch" type="xml">
                 <search string="Search Leave">
-                    <field name="date_from"/>
+                    <field name="name"/>
                     <separator/>
                     <filter icon="terp-check" domain="[('state','=','draft')]" string="To Confirm"/>
                     <filter icon="terp-camera_test" domain="[('state','in',('confirm','validate1'))]" string="To Approve" name="approve"/>
@@ -21,6 +21,7 @@
                     <field name="department_id"/>
                     <field name="holiday_status_id"/>
                     <group expand="0" string="Group By...">
+                        <filter name="group_name" string="Description" domain="[]" context="{'group_by':'name'}"/>
                         <filter name="group_date_from" string="Start Date" icon="terp-personal" domain="[]" context="{'group_by':'date_from'}"/>
                         <filter name="group_employee" string="Employee" icon="terp-personal" domain="[]" context="{'group_by':'employee_id'}"/>
                         <filter name="group_category" string="Category" icon="terp-stock_symbol-selection" domain="[]" context="{'group_by':'category_id'}"/>

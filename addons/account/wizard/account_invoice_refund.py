@@ -21,9 +21,9 @@
 
 import time
 
-from osv import fields, osv
-from tools.translate import _
-import netsvc
+from openerp.osv import fields, osv
+from openerp.tools.translate import _
+from openerp import netsvc
 
 class account_invoice_refund(osv.osv_memory):
 
@@ -146,7 +146,7 @@ class account_invoice_refund(osv.osv_memory):
                     raise osv.except_osv(_('Insufficient Data!'), \
                                             _('No period found on the invoice.'))
 
-                refund_id = inv_obj.refund(cr, uid, [inv.id], date, period, description, journal_id)
+                refund_id = inv_obj.refund(cr, uid, [inv.id], date, period, description, journal_id, context=context)
                 refund = inv_obj.browse(cr, uid, refund_id[0], context=context)
                 inv_obj.write(cr, uid, [refund.id], {'date_due': date,
                                                 'check_total': inv.check_total})

@@ -20,8 +20,8 @@
 ##############################################################################
 
 from datetime import datetime
-from tools.translate import _
-from osv import fields, osv
+from openerp.tools.translate import _
+from openerp.osv import fields, osv
 from openerp.addons.resource.faces import task as Task
 
 class project_phase(osv.osv):
@@ -123,7 +123,6 @@ class project_phase(osv.osv):
     _defaults = {
         'state': 'draft',
         'sequence': 10,
-        'product_uom': lambda self,cr,uid,c: self.pool.get('product.uom').search(cr, uid, [('name', '=', _('Day'))], context=c)[0]
     }
     _order = "project_id, date_start, sequence"
     _constraints = [
@@ -169,11 +168,12 @@ class project_phase(osv.osv):
         for phase in phases:
             if phase.state in ('done','cancelled'):
                 continue
+            # FIXME: brittle and not working if context['lang'] != 'en_US'
             duration_uom = {
-                'days': 'd', 'day': 'd', 'd':'d',
-                'months': 'm', 'month':'month', 'm':'m',
-                'weeks': 'w', 'week': 'w', 'w':'w',
-                'hours': 'H', 'hour': 'H', 'h':'H',
+                'day(s)': 'd', 'days': 'd', 'day': 'd', 'd':'d',
+                'month(s)': 'm', 'months': 'm', 'month':'month', 'm':'m',
+                'week(s)': 'w', 'weeks': 'w', 'week': 'w', 'w':'w',
+                'hour(s)': 'H', 'hours': 'H', 'hour': 'H', 'h':'H',
             }.get(phase.product_uom.name.lower(), "H")
             duration = str(phase.duration) + duration_uom
             result += '''

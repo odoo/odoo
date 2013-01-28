@@ -7,26 +7,27 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-03 16:03+0000\n"
+"POT-Creation-Date: 2012-12-21 17:05+0000\n"
 "PO-Revision-Date: 2012-12-01 18:30+0000\n"
 "Last-Translator: gehad shaat <gehad.shaath@gmail.com>\n"
 "Language-Team: Arabic <ar@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-12-04 05:51+0000\n"
-"X-Generator: Launchpad (build 16335)\n"
+"X-Launchpad-Export-Date: 2012-12-22 06:02+0000\n"
+"X-Generator: Launchpad (build 16378)\n"
 
 #. module: base_action_rule
-#: field:base.action.rule,act_followers:0
-msgid "Set Followers"
-msgstr "عين التابعين"
+#: selection:base.action.rule.lead.test,state:0
+msgid "In Progress"
+msgstr ""
 
 #. module: base_action_rule
 #: view:base.action.rule:0
 msgid ""
-"The rule uses the AND operator. The model must match all non-empty fields so "
-"that the rule executes the action  described in the 'Actions' tab."
+"- In this same \"Search\" view, select the menu \"Save Current Filter\", "
+"enter the name (Ex: Create the 01/01/2012) and add the option \"Share with "
+"all users\""
 msgstr ""
 
 #. module: base_action_rule
@@ -35,30 +36,51 @@ msgid "Action Rules"
 msgstr "قواعد الاجراء"
 
 #. module: base_action_rule
-#: field:base.action.rule,trg_user_id:0
+#: view:base.action.rule:0
+msgid "Select a filter or a timer as condition."
+msgstr ""
+
+#. module: base_action_rule
+#: field:base.action.rule.lead.test,user_id:0
 msgid "Responsible"
 msgstr "مسئول"
 
 #. module: base_action_rule
-#: model:ir.model,name:base_action_rule.model_ir_actions_server
-msgid "ir.actions.server"
+#: help:base.action.rule,server_action_ids:0
+msgid "Examples: email reminders, call object service, etc."
 msgstr ""
 
 #. module: base_action_rule
-#: view:base.action.rule:0
-msgid "Note"
-msgstr "ملاحظة"
+#: field:base.action.rule,act_followers:0
+msgid "Add Followers"
+msgstr ""
 
 #. module: base_action_rule
-#: field:base.action.rule,trg_partner_categ_id:0
-msgid "Partner Category"
-msgstr "فئة الشريك"
+#: field:base.action.rule,act_user_id:0
+msgid "Set Responsible"
+msgstr ""
 
 #. module: base_action_rule
-#: view:base.action.rule:0
+#: help:base.action.rule,trg_date_range:0
 msgid ""
-"Server Actions to be Triggered (eg. Email Reminder, Call Object Method, "
-"etc...)"
+"Delay after the trigger date.You can put a negative number if you need a "
+"delay before thetrigger date, like sending a reminder 15 minutes before a "
+"meeting."
+msgstr ""
+
+#. module: base_action_rule
+#: model:ir.model,name:base_action_rule.model_base_action_rule_lead_test
+msgid "base.action.rule.lead.test"
+msgstr ""
+
+#. module: base_action_rule
+#: selection:base.action.rule.lead.test,state:0
+msgid "Closed"
+msgstr ""
+
+#. module: base_action_rule
+#: selection:base.action.rule.lead.test,state:0
+msgid "New"
 msgstr ""
 
 #. module: base_action_rule
@@ -67,27 +89,35 @@ msgid "Delay after trigger date"
 msgstr "تأخير بعد تاريخ تريجر"
 
 #. module: base_action_rule
-#: help:base.action.rule,active:0
-msgid ""
-"If the active field is set to False, it will allow you to hide the rule "
-"without removing it."
-msgstr "اذا عُيين الحقل النشط الى خطأ, سيسمح لك بإخفاء القاعدة بدون ازالتها."
-
-#. module: base_action_rule
 #: view:base.action.rule:0
 msgid "Conditions"
 msgstr "الشروط"
 
 #. module: base_action_rule
-#: field:base.action.rule,trg_state_from:0
+#: selection:base.action.rule.lead.test,state:0
+msgid "Pending"
+msgstr ""
+
+#. module: base_action_rule
+#: field:base.action.rule.lead.test,state:0
 msgid "Status"
 msgstr "الحالة"
 
 #. module: base_action_rule
+#: field:base.action.rule,filter_pre_id:0
+msgid "Before Update Filter"
+msgstr ""
+
+#. module: base_action_rule
 #: view:base.action.rule:0
-#: field:ir.actions.server,action_rule_id:0
 msgid "Action Rule"
 msgstr "قاعدة الاجراء"
+
+#. module: base_action_rule
+#: help:base.action.rule,filter_id:0
+msgid ""
+"If present, this condition must be satisfied after the update of the record."
+msgstr ""
 
 #. module: base_action_rule
 #: view:base.action.rule:0
@@ -95,19 +125,14 @@ msgid "Fields to Change"
 msgstr "حقول للتغيير"
 
 #. module: base_action_rule
-#: field:base.action.rule,trg_state_to:0
-msgid "Button Pressed"
-msgstr "تم الضغط على الزر"
-
-#. module: base_action_rule
 #: view:base.action.rule:0
-msgid "Conditions on Status"
+msgid "The filter must therefore be available in this page."
 msgstr ""
 
 #. module: base_action_rule
-#: selection:base.action.rule,trg_date_type:0
-msgid "Last Action Date"
-msgstr "تاريخ اخر اجراء"
+#: field:base.action.rule,filter_id:0
+msgid "After Update Filter"
+msgstr ""
 
 #. module: base_action_rule
 #: selection:base.action.rule,trg_date_range_type:0
@@ -115,36 +140,15 @@ msgid "Hours"
 msgstr "ساعات"
 
 #. module: base_action_rule
-#: field:base.action.rule,act_state:0
-msgid "Set State to"
-msgstr "ضع حالة لـ"
-
-#. module: base_action_rule
-#: help:base.action.rule,server_action_ids:0
-msgid ""
-"Define Server actions.\n"
-"eg:Email Reminders, Call Object Service, etc.."
+#: view:base.action.rule:0
+msgid "To create a new filter:"
 msgstr ""
 
 #. module: base_action_rule
-#: help:base.action.rule,trg_date_range:0
-msgid ""
-"Delay After Trigger Date,specifies you can put a negative number. If you "
-"need a delay before the trigger date, like sending a reminder 15 minutes "
-"before a meeting."
-msgstr ""
-"يحدد تأخير بعد تاريخ تريجر, يمكنك وضع عدد سلبي. اذا كنت تريد التأخير قبل "
-"تاريخ تريجر, كإرسال تذكير قبل الاجتماع ب15 دقيقة."
-
-#. module: base_action_rule
-#: model:ir.model,name:base_action_rule.model_ir_cron
-msgid "ir.cron"
-msgstr "كرون"
-
-#. module: base_action_rule
-#: selection:base.action.rule,trg_date_type:0
-msgid "Date"
-msgstr "تاريخ"
+#: field:base.action.rule,active:0
+#: field:base.action.rule.lead.test,active:0
+msgid "Active"
+msgstr "نشط"
 
 #. module: base_action_rule
 #: view:base.action.rule:0
@@ -152,19 +156,31 @@ msgid "Delay After Trigger Date"
 msgstr "تأخير بعد تاريخ تريجر"
 
 #. module: base_action_rule
-#: field:base.action.rule,act_user_id:0
-msgid "Set Responsible to"
-msgstr "عيين مؤول عن"
+#: view:base.action.rule:0
+msgid ""
+"An action rule is checked when you create or modify the \"Related Document "
+"Model\". The precondition filter is checked right before the modification "
+"while the postcondition filter is checked after the modification. A "
+"precondition filter will therefore not work during a creation."
+msgstr ""
 
 #. module: base_action_rule
-#: selection:base.action.rule,trg_date_type:0
-msgid "None"
-msgstr "لا شئ"
+#: view:base.action.rule:0
+msgid "Filter Condition"
+msgstr ""
 
 #. module: base_action_rule
-#: selection:base.action.rule,trg_date_range_type:0
-msgid "Months"
-msgstr "شهور"
+#: view:base.action.rule:0
+msgid ""
+"- Go to your \"Related Document Model\" page and set the filter parameters "
+"in the \"Search\" view (Example of filter based on Leads/Opportunities: "
+"Creation Date \"is equal to\" 01/01/2012)"
+msgstr ""
+
+#. module: base_action_rule
+#: field:base.action.rule,name:0
+msgid "Rule Name"
+msgstr "اسم القاعدة"
 
 #. module: base_action_rule
 #: model:ir.actions.act_window,name:base_action_rule.base_action_rule_act
@@ -173,24 +189,14 @@ msgid "Automated Actions"
 msgstr "الإجراءات التلقائية"
 
 #. module: base_action_rule
-#: field:base.action.rule,model_id:0
-msgid "Related Document Model"
-msgstr ""
-
-#. module: base_action_rule
 #: help:base.action.rule,sequence:0
 msgid "Gives the sequence order when displaying a list of rules."
 msgstr "ويعطي امر التسلسل عند عرض قائمة من القواعد."
 
 #. module: base_action_rule
-#: view:base.action.rule:0
-msgid "Conditions on Model Fields"
-msgstr "الشروط على حقول النموذج"
-
-#. module: base_action_rule
-#: field:base.action.rule,server_action_ids:0
-msgid "Server Action"
-msgstr "إجراء الخادم"
+#: selection:base.action.rule,trg_date_range_type:0
+msgid "Months"
+msgstr "شهور"
 
 #. module: base_action_rule
 #: selection:base.action.rule,trg_date_range_type:0
@@ -198,29 +204,29 @@ msgid "Days"
 msgstr "أيام"
 
 #. module: base_action_rule
+#: view:base.action.rule:0
+msgid "Timer"
+msgstr ""
+
+#. module: base_action_rule
 #: field:base.action.rule,trg_date_range_type:0
 msgid "Delay type"
 msgstr "تأخير النوع"
 
 #. module: base_action_rule
-#: field:base.action.rule,filter_id:0
-msgid "Filter"
-msgstr "مُرشِّح"
+#: view:base.action.rule:0
+msgid "Server actions to run"
+msgstr ""
 
 #. module: base_action_rule
-#: field:base.action.rule,active:0
-msgid "Active"
-msgstr "نشط"
+#: help:base.action.rule,active:0
+msgid "When unchecked, the rule is hidden and will not be executed."
+msgstr ""
 
 #. module: base_action_rule
-#: field:base.action.rule,regex_name:0
-msgid "Regex on Resource Name"
-msgstr "رجإكس على اسم المصدر"
-
-#. module: base_action_rule
-#: selection:base.action.rule,trg_date_type:0
-msgid "Last Modified Date"
-msgstr "تاريخ آخر تعديل"
+#: selection:base.action.rule.lead.test,state:0
+msgid "Cancelled"
+msgstr ""
 
 #. module: base_action_rule
 #: field:base.action.rule,model:0
@@ -238,37 +244,20 @@ msgid "Minutes"
 msgstr "دقائق"
 
 #. module: base_action_rule
-#: help:base.action.rule,regex_name:0
-msgid ""
-"Regular expression for matching name of the resource\n"
-"e.g.: 'urgent.*' will search for records having name starting with the "
-"string 'urgent'\n"
-"Note: This is case sensitive search."
+#: field:base.action.rule,model_id:0
+msgid "Related Document Model"
 msgstr ""
-"التعبير العادي لتوفيق الاسم من المصدر\n"
-"مثال: سيبحث ‘طاري.*‘ على التسجيلات شاملة على بداية الاسم مع السللسلة "
-"‘طاريء‘\n"
-"لاحظ: انها تكون بحث مكثف للحالة."
 
 #. module: base_action_rule
-#: view:base.action.rule:0
-msgid "Conditions on Timing"
-msgstr "الشروط على التوقيت"
-
-#. module: base_action_rule
-#: field:base.action.rule,name:0
-msgid "Rule Name"
-msgstr "اسم القاعدة"
+#: help:base.action.rule,filter_pre_id:0
+msgid ""
+"If present, this condition must be satisfied before the update of the record."
+msgstr ""
 
 #. module: base_action_rule
 #: field:base.action.rule,sequence:0
 msgid "Sequence"
 msgstr "مسلسل"
-
-#. module: base_action_rule
-#: view:base.action.rule:0
-msgid "Conditions on Model Partner"
-msgstr "الشروط على الشريك النموذجي"
 
 #. module: base_action_rule
 #: view:base.action.rule:0
@@ -293,37 +282,41 @@ msgid ""
 msgstr ""
 
 #. module: base_action_rule
-#: selection:base.action.rule,trg_date_type:0
-msgid "Creation Date"
-msgstr "تاريخ الإنشاء"
-
-#. module: base_action_rule
 #: field:base.action.rule,create_date:0
 msgid "Create Date"
 msgstr "انشيء سجل"
 
 #. module: base_action_rule
-#: selection:base.action.rule,trg_date_type:0
-msgid "Deadline"
-msgstr "الموعد النهائي"
+#: field:base.action.rule.lead.test,date_action_last:0
+msgid "Last Action"
+msgstr ""
 
 #. module: base_action_rule
-#: field:base.action.rule,trg_partner_id:0
+#: field:base.action.rule.lead.test,partner_id:0
 msgid "Partner"
 msgstr "شريك"
 
 #. module: base_action_rule
-#: field:base.action.rule,trg_date_type:0
+#: field:base.action.rule,trg_date_id:0
 msgid "Trigger Date"
 msgstr "تاريخ تريجر"
 
 #. module: base_action_rule
 #: view:base.action.rule:0
+#: field:base.action.rule,server_action_ids:0
 msgid "Server Actions"
 msgstr "إجراءات الخادم"
 
+#. module: base_action_rule
+#: field:base.action.rule.lead.test,name:0
+msgid "Subject"
+msgstr ""
+
 #~ msgid "Object"
 #~ msgstr "كائن"
+
+#~ msgid "Partner Category"
+#~ msgstr "فئة الشريك"
 
 #, python-format
 #~ msgid "Error!"
@@ -332,11 +325,35 @@ msgstr "إجراءات الخادم"
 #~ msgid "Reply-To"
 #~ msgstr "رد على"
 
+#~ msgid "Deadline"
+#~ msgstr "الموعد النهائي"
+
+#~ msgid "Creation Date"
+#~ msgstr "تاريخ الإنشاء"
+
 #~ msgid "State"
 #~ msgstr "الحالة"
 
+#~ msgid "None"
+#~ msgstr "لا شئ"
+
 #~ msgid "Invalid arguments"
 #~ msgstr "معطيات غير سليمة"
+
+#~ msgid "Note"
+#~ msgstr "ملاحظة"
+
+#~ msgid "Date"
+#~ msgstr "تاريخ"
+
+#~ msgid "Filter"
+#~ msgstr "مُرشِّح"
+
+#~ msgid "Server Action"
+#~ msgstr "إجراء الخادم"
+
+#~ msgid "Button Pressed"
+#~ msgstr "تم الضغط على الزر"
 
 #~ msgid "Mail to Watchers (CC)"
 #~ msgstr "ارسل بريد للمراقبين"
@@ -351,6 +368,9 @@ msgstr "إجراءات الخادم"
 
 #~ msgid "Mail to these Emails"
 #~ msgstr "ارسل بريد الى البريد الالكتروني"
+
+#~ msgid "Set State to"
+#~ msgstr "ضع حالة لـ"
 
 #~ msgid "Remind Partner"
 #~ msgstr "قم بتذكير الشريك"
@@ -367,11 +387,17 @@ msgstr "إجراءات الخادم"
 #~ msgid "Email Reminders"
 #~ msgstr "تذكيرات البريد الالكتروني"
 
+#~ msgid "Conditions on Model Partner"
+#~ msgstr "الشروط على الشريك النموذجي"
+
 #~ msgid ""
 #~ "Check this if you want the rule to send a reminder by email to the partner."
 #~ msgstr ""
 #~ "تحقق من هذا اذا كنت تريد القاعدة لارسال تذكير بواسطة البريد الالكتروني الى "
 #~ "الشريك."
+
+#~ msgid "Last Action Date"
+#~ msgstr "تاريخ اخر اجراء"
 
 #~ msgid ""
 #~ "Use a python expression to specify the right field on which one than we will "
@@ -379,6 +405,9 @@ msgstr "إجراءات الخادم"
 #~ msgstr ""
 #~ "استخدم تعبير بايثون لتحدد الحقل الصحيح من اي واحد منهم  عن ماسيستخدم إلى "
 #~ "الحقل الرأسي"
+
+#~ msgid "Set Responsible to"
+#~ msgstr "عيين مؤول عن"
 
 #~ msgid ""
 #~ "The rule uses the AND operator. The model must match all non-empty fields so "
@@ -428,6 +457,14 @@ msgstr "إجراءات الخادم"
 #~ msgid "Call Object Method"
 #~ msgstr "إستدعاء اسلوب الهدف"
 
+#~ msgid ""
+#~ "Delay After Trigger Date,specifies you can put a negative number. If you "
+#~ "need a delay before the trigger date, like sending a reminder 15 minutes "
+#~ "before a meeting."
+#~ msgstr ""
+#~ "يحدد تأخير بعد تاريخ تريجر, يمكنك وضع عدد سلبي. اذا كنت تريد التأخير قبل "
+#~ "تاريخ تريجر, كإرسال تذكير قبل الاجتماع ب15 دقيقة."
+
 #~ msgid "%(partner_email)s = Partner Email"
 #~ msgstr "%(الشريك_البريد الالكتروني) = البريد الالكتروني للشريك"
 
@@ -450,6 +487,9 @@ msgstr "إجراءات الخادم"
 #~ "توصف اسم الاجراء.\n"
 #~ "مثال: على اي هدف سيأخذ الاجراء على اساس اي شرط"
 
+#~ msgid "ir.cron"
+#~ msgstr "كرون"
+
 #~ msgid "Mail body"
 #~ msgstr "هيئة البريد"
 
@@ -458,6 +498,9 @@ msgstr "إجراءات الخادم"
 
 #~ msgid "%(object_date)s = Creation date"
 #~ msgstr "%(الهدف_التاريخ) = تاريخ الانشاء"
+
+#~ msgid "Regex on Resource Name"
+#~ msgstr "رجإكس على اسم المصدر"
 
 #~ msgid "Server Action to be Triggered"
 #~ msgstr "اجراء الخدمة لتكون تريجرد"
@@ -475,6 +518,9 @@ msgstr "إجراءات الخادم"
 #~ "تحقق من هذا إذا كنت تريد أن ترفق جميع المستندات المرفقة للهدف للبريد "
 #~ "الالكتروني المذكر المرسل."
 
+#~ msgid "Conditions on Model Fields"
+#~ msgstr "الشروط على حقول النموذج"
+
 #~ msgid ""
 #~ "Check this if you want the rule to send a reminder by email to the user."
 #~ msgstr ""
@@ -488,6 +534,14 @@ msgstr "إجراءات الخادم"
 #~ msgstr "%(الهدف_المستخدم) = اسم المسئول"
 
 #~ msgid ""
+#~ "If the active field is set to False, it will allow you to hide the rule "
+#~ "without removing it."
+#~ msgstr "اذا عُيين الحقل النشط الى خطأ, سيسمح لك بإخفاء القاعدة بدون ازالتها."
+
+#~ msgid "Conditions on Timing"
+#~ msgstr "الشروط على التوقيت"
+
+#~ msgid ""
 #~ "These people will receive a copy of the future communication between partner "
 #~ "and users by email"
 #~ msgstr ""
@@ -499,6 +553,17 @@ msgstr "إجراءات الخادم"
 
 #~ msgid "Error: The mail is not well formated"
 #~ msgstr "خطأ: لم يتم إعداد الرسالة جيداً"
+
+#~ msgid ""
+#~ "Regular expression for matching name of the resource\n"
+#~ "e.g.: 'urgent.*' will search for records having name starting with the "
+#~ "string 'urgent'\n"
+#~ "Note: This is case sensitive search."
+#~ msgstr ""
+#~ "التعبير العادي لتوفيق الاسم من المصدر\n"
+#~ "مثال: سيبحث ‘طاري.*‘ على التسجيلات شاملة على بداية الاسم مع السللسلة "
+#~ "‘طاريء‘\n"
+#~ "لاحظ: انها تكون بحث مكثف للحالة."
 
 #~ msgid ""
 #~ "Use automated actions to automatically trigger actions for various screens. "

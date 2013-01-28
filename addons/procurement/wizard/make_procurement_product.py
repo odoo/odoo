@@ -19,9 +19,9 @@
 #
 ##############################################################################
 
-import netsvc
+from openerp import netsvc
 
-from osv import fields, osv
+from openerp.osv import fields, osv
 
 class make_procurement(osv.osv_memory):
     _name = 'make.procurement'

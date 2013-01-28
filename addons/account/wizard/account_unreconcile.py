@@ -19,7 +19,7 @@
 #
 ##############################################################################
 
-from osv import osv
+from openerp.osv import osv
 
 class account_unreconcile(osv.osv_memory):
     _name = "account.unreconcile"

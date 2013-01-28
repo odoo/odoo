@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev_rc3\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2012-12-03 16:02+0000\n"
-"PO-Revision-Date: 2012-12-09 13:20+0000\n"
-"Last-Translator: Davide Corio - agilebg.com <davide.corio@agilebg.com>\n"
+"POT-Creation-Date: 2012-12-21 17:04+0000\n"
+"PO-Revision-Date: 2013-01-12 08:27+0000\n"
+"Last-Translator: Nicola Riolini - Micronaet <Unknown>\n"
 "Language-Team: <>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-12-10 04:38+0000\n"
-"X-Generator: Launchpad (build 16341)\n"
+"X-Launchpad-Export-Date: 2013-01-13 04:38+0000\n"
+"X-Generator: Launchpad (build 16420)\n"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
@@ -69,6 +69,10 @@ msgid ""
 "to\n"
 "                            define the customer invoice price rate."
 msgstr ""
+"Quando si fattura dal timesheet, OpenERP usa il \n"
+"listino del contratto il quale utilizza il prezzo\n"
+"definito nel prodotto relativo ad ogni impiegato per\n"
+"definire il prezzo finale di fatturazione al cliente."
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
@@ -101,14 +105,23 @@ msgid "Sum of timesheet lines invoiced for this contract."
 msgstr "Somma delle linee timesheet fatturate di questo contratto."
 
 #. module: account_analytic_analysis
+#: code:addons/account_analytic_analysis/account_analytic_analysis.py:462
+#, python-format
+msgid "Sales Order Lines of %s"
+msgstr "Linea ordine di vendita di %s"
+
+#. module: account_analytic_analysis
 #: help:account.analytic.account,revenue_per_hour:0
 msgid "Computed using the formula: Invoiced Amount / Total Time"
 msgstr "Calcolato usando la formula: Fatturato / Tempo Totale"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
-msgid "Contracts not assigned"
-msgstr "Contratti non assegnati"
+#: field:account_analytic_analysis.summary.month,account_id:0
+#: field:account_analytic_analysis.summary.user,account_id:0
+#: model:ir.model,name:account_analytic_analysis.model_account_analytic_account
+msgid "Analytic Account"
+msgstr "Contabilità Analitica"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
@@ -138,6 +151,19 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"Cliccare per definire un nuovo contratto.\n"
+"</p><p>\n"
+"Potrete trovare qui i contratti che devono essere rinnovati perchè\n"
+"la data di termine e' passata o l'impegno lavorativo e' maggiore del massimo "
+"autorizzato</p><p>\n"
+"OpenERP automaticamente imposta i contratti che devono essere rinnovati in "
+"uno \n"
+"stato pendente. Dopo la negoziazione, il venditore dovrebbe chiudere o "
+"rinnovare\n"
+"i vari contratti pendenti.\n"
+"</p>\n"
+"            "
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
@@ -145,13 +171,9 @@ msgid "End Date"
 msgstr "Data fine"
 
 #. module: account_analytic_analysis
-#: help:account.analytic.account,hours_qtt_non_invoiced:0
-msgid ""
-"Number of time (hours/days) (from journal of type 'general') that can be "
-"invoiced if you invoice based on analytic account."
-msgstr ""
-"Tempo fatturabile (in ore/giorni, dal giornale di tipo 'generale') se si "
-"fattura tramite conto analitico"
+#: view:account.analytic.account:0
+msgid "Account Manager"
+msgstr "Gestore Contabile"
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,remaining_hours_to_invoice:0
@@ -165,11 +187,8 @@ msgstr "Atteso"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
-#: field:account_analytic_analysis.summary.month,account_id:0
-#: field:account_analytic_analysis.summary.user,account_id:0
-#: model:ir.model,name:account_analytic_analysis.model_account_analytic_account
-msgid "Analytic Account"
-msgstr "Contabilità Analitica"
+msgid "Contracts not assigned"
+msgstr "Contratti non assegnati"
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,theorical_margin:0
@@ -223,12 +242,6 @@ msgid "Nothing to invoice, create"
 msgstr "Niente da fatturare, crealo"
 
 #. module: account_analytic_analysis
-#: model:ir.actions.act_window,name:account_analytic_analysis.template_of_contract_action
-#: model:ir.ui.menu,name:account_analytic_analysis.menu_template_of_contract_action
-msgid "Template of Contract"
-msgstr "Modello Contratto"
-
-#. module: account_analytic_analysis
 #: model:res.groups,name:account_analytic_analysis.group_template_required
 msgid "Mandatory use of templates in contracts"
 msgstr "Utilizzo dei template obbligatorio nei contratti"
@@ -258,6 +271,11 @@ msgstr ""
 #: view:account.analytic.account:0
 msgid "or view"
 msgstr "o vista"
+
+#. module: account_analytic_analysis
+#: view:account.analytic.account:0
+msgid "Customer Contracts"
+msgstr "Contratti clienti"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
@@ -312,10 +330,13 @@ msgid "Timesheets"
 msgstr "Timesheets"
 
 #. module: account_analytic_analysis
-#: code:addons/account_analytic_analysis/account_analytic_analysis.py:461
-#, python-format
-msgid "Sale Order Lines of %s"
-msgstr "Linee Ordine di Vendita di %s"
+#: help:account.analytic.account,hours_qtt_non_invoiced:0
+msgid ""
+"Number of time (hours/days) (from journal of type 'general') that can be "
+"invoiced if you invoice based on analytic account."
+msgstr ""
+"Tempo fatturabile (in ore/giorni, dal giornale di tipo 'generale') se si "
+"fattura tramite conto analitico"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
@@ -389,6 +410,15 @@ msgid ""
 "                </p>\n"
 "            "
 msgstr ""
+"Copy text \t\n"
+"<p class=\"oe_view_nocontent_create\">\n"
+"Cliccare qui per creare un modello del contratto\n"
+"</p><p>\n"
+"I modelli sono utilizzati per creare un contratto / progetto tipo che\n"
+"puo' essere selezionato dal commerciale per configurare velocemente i\n"
+"termini e le condizioni del contratto stesso.\n"
+"</p>\n"
+"            "
 
 #. module: account_analytic_analysis
 #: model:ir.model,name:account_analytic_analysis.model_account_analytic_analysis_summary_user
@@ -436,6 +466,15 @@ msgid ""
 "                </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"Cliccare per creare un nuovo contratto.\n"
+"</p><p>\n"
+"Usare i contratti per sequire le attivita', i problemi, i timesheet o le "
+"fatture basate su\n"
+"lavoro fatto, spese e/o ordini di vendita. OpenERP gestita' automaticamente\n"
+"gli avvisi per i rinnovi dei contratti ai commerciali di riferimento.\n"
+"</p>\n"
+"            "
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,toinvoice_total:0
@@ -450,7 +489,7 @@ msgstr "Ordini di Vendita"
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
 msgid "Open"
-msgstr ""
+msgstr "Apri"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,invoiced_total:0
@@ -464,14 +503,14 @@ msgstr ""
 "Calcolato usando la formula: Prezzo massimo fattura - Importo fattura."
 
 #. module: account_analytic_analysis
-#: view:account.analytic.account:0
-msgid "Responsible"
-msgstr "Responsabile"
-
-#. module: account_analytic_analysis
 #: field:account.analytic.account,last_invoice_date:0
 msgid "Last Invoice Date"
 msgstr "Ultima data di fatturazione"
+
+#. module: account_analytic_analysis
+#: view:account.analytic.account:0
+msgid "Units Remaining"
+msgstr "Unità rimanenti"
 
 #. module: account_analytic_analysis
 #: model:ir.actions.act_window,help:account_analytic_analysis.action_hr_tree_invoiced_all
@@ -486,6 +525,13 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p>\n"
+"Troverete qui timesheet e acquisti fatti per\n"
+"i contratti che possono essere rifatturato al cliente. Se volete\n"
+"registrare le nuove attivita' da fatturare, dovreste usare in alternativa\n"
+"il menu timesheet.\n"
+"</p>\n"
+"            "
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,hours_qtt_non_invoiced:0
@@ -509,6 +555,9 @@ msgid ""
 "remaining subtotals which, in turn, are computed as the maximum between "
 "'(Estimation - Invoiced)' and 'To Invoice' amounts"
 msgstr ""
+"Aspettative di reddito residuo per il presente contratto. Calcolato come la "
+"somma dei totali parziali rimanenti, che, a loro volta, sono calcolati come "
+"il massimo tra '(stima - tatturato)' e importi 'da fatturare'"
 
 #. module: account_analytic_analysis
 #: model:ir.actions.act_window,name:account_analytic_analysis.action_account_analytic_overdue
@@ -563,9 +612,15 @@ msgid "Mandatory use of templates."
 msgstr "Uso dei modelli obbligatorio"
 
 #. module: account_analytic_analysis
+#: model:ir.actions.act_window,name:account_analytic_analysis.template_of_contract_action
+#: model:ir.ui.menu,name:account_analytic_analysis.menu_template_of_contract_action
+msgid "Contract Template"
+msgstr "Modello contratto"
+
+#. module: account_analytic_analysis
 #: view:account.analytic.account:0
-msgid "Contracts Having a Partner"
-msgstr "Contratti con Partner"
+msgid "Units Done"
+msgstr "Unità fatte"
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,total_cost:0

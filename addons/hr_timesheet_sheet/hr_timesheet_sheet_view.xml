@@ -81,6 +81,7 @@
                     <div class="oe_title">
                         <label for="employee_id" class="oe_edit_only"/>
                         <h1><field name="employee_id" on_change="onchange_employee_id(employee_id)" class="oe_inline"/></h1>
+                        <field name="user_id" invisible="1"/>
                     </div>
                     <group>
                         <group>
@@ -94,16 +95,15 @@
                             <field name="total_attendance" widget="float_time"/>
                             <field name="total_timesheet" widget="float_time"/>
                             <field name="total_difference" widget="float_time"/>
-                            <field name="user_id" invisible="1"/>
                         </group>
                     </group>
                     <notebook>
                         <page string="Summary">
-                            <widget type="weekly_timesheet">
+                            <widget type="weekly_timesheet" attrs="{'readonly': [['state', 'not in', ['new', 'draft']]]}">
                             </widget>
                         </page>
                         <page string="Details">
-                            <field context="{'user_id':user_id, 'timesheet_date_from': date_from, 'timesheet_date_to': date_to}" name="timesheet_ids" nolabel="1">
+                            <field context="{'employee_id': employee_id, 'user_id':user_id, 'timesheet_date_from': date_from, 'timesheet_date_to': date_to}" name="timesheet_ids" nolabel="1">
                                 <tree editable="top" string="Timesheet Activities">
                                     <field name="date"/>
                                     <field domain="[('type','in',['normal', 'contract']), ('state', '&lt;&gt;', 'close'),('use_timesheets','=',1)]" name="account_id" on_change="on_change_account_id(account_id, user_id)" context="{'default_use_timesheets': 1}"/>
@@ -134,7 +134,7 @@
                         </page>
                         <page string="Attendances" groups="base.group_hr_attendance">
                             <group>
-                                <field context="{'user_id':user_id}" name="attendances_ids" nolabel="1">
+                                <field context="{'employee_id': employee_id, 'user_id':user_id}" name="attendances_ids" nolabel="1">
                                     <tree string="Attendances" editable="bottom">
                                         <field name="name"/>
                                         <field name="action"/>

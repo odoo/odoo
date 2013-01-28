@@ -18,9 +18,11 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
+from openerp.osv import osv, fields
+from openerp.addons.edi import EDIMixin
+from openerp.tools.translate import _
 
-from openerp.osv import osv
-from edi import EDIMixin
+from urllib import urlencode
 
 SALE_ORDER_LINE_EDI_STRUCT = {
     'sequence': True,
@@ -118,7 +120,6 @@ class sale_order(osv.osv, EDIMixin):
         edi_document.pop('partner_address', None) # ignored, that's supposed to be our own address!
         return partner_id
 
-
     def _edi_get_pricelist(self, cr, uid, partner_id, currency, context=None):
         # TODO: refactor into common place for purchase/sale, e.g. into product module
         partner_model = self.pool.get('res.partner')
@@ -179,6 +180,30 @@ class sale_order(osv.osv, EDIMixin):
             # discard web preview fields, if present
             order_line.pop('price_subtotal', None)
         return super(sale_order,self).edi_import(cr, uid, edi_document, context=context)
+
+    def _edi_paypal_url(self, cr, uid, ids, field, arg, context=None):
+        res = dict.fromkeys(ids, False)
+        for order in self.browse(cr, uid, ids, context=context):
+            if order.order_policy in ('prepaid', 'manual') and \
+                    order.company_id.paypal_account and order.state != 'draft':
+                params = {
+                    "cmd": "_xclick",
+                    "business": order.company_id.paypal_account,
+                    "item_name": order.company_id.name + " Order " + order.name,
+                    "invoice": order.name,
+                    "amount": order.amount_total,
+                    "currency_code": order.pricelist_id.currency_id.name,
+                    "button_subtype": "services",
+                    "no_note": "1",
+                    "bn": "OpenERP_Order_PayNow_" + order.pricelist_id.currency_id.name,
+                }
+                res[order.id] = "https://www.paypal.com/cgi-bin/webscr?" + urlencode(params)
+        return res
+
+    _columns = {
+        'paypal_url': fields.function(_edi_paypal_url, type='char', string='Paypal Url'),
+    }
+
 
 class sale_order_line(osv.osv, EDIMixin):
     _inherit='sale.order.line'

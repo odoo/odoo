@@ -38,7 +38,7 @@ import xml.dom.minidom
 
 import httplib
 
-from tools import config
+from openerp.tools import config
 from xmlrpclib import Transport, ProtocolError
 import StringIO
 import base64

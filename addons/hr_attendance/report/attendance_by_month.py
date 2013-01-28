@@ -19,19 +19,16 @@
 #
 ##############################################################################
 
-import time
 from datetime import datetime, timedelta
 from dateutil.relativedelta import relativedelta
-import netsvc
-import pooler
+import time
 
-from report.interface import report_rml
-from report.interface import toxml
-
-from report import report_sxw
-from tools import ustr
-from tools.translate import _
-from tools import to_xml
+from openerp import netsvc, pooler
+from openerp.report import report_sxw
+from openerp.report.interface import report_rml
+from openerp.report.interface import toxml
+from openerp.tools import to_xml, ustr
+from openerp.tools.translate import _
 
 one_day = relativedelta(days=1)
 month2name = [0, 'January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']

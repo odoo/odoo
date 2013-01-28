@@ -19,8 +19,8 @@
 #
 ##############################################################################
 
-from osv import fields,osv
-from tools.translate import _
+from openerp.osv import fields,osv
+from openerp.tools.translate import _
 try:
     import gdata.contacts.service
     import gdata.contacts.client

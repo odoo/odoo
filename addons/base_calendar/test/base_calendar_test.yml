@@ -26,7 +26,7 @@
 -
     !python {model: calendar.event}: |
      ids = self.search(cr, uid, [('date', '>=', '2011-04-30 16:00:00'), ('date', '<=', '2011-05-31 00:00:00')], context={'virtual_id': True} )
-     assert len(ids) == 9
+     assert len(ids) == 9, 'Wrong number of events found'
 -
   Now I will make All day event and test it
 -

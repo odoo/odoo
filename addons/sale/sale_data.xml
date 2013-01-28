@@ -22,7 +22,7 @@
         <!-- Resource: sale.shop -->
         <record id="sale_shop_1" model="sale.shop">
             <field name="company_id" ref="base.main_company"/>
-            <field name="payment_default_id" ref="account.account_payment_term"/>
+            <field name="payment_default_id" ref="account.account_payment_term_net"/>
             <field name="pricelist_id" ref="product.list0"/>
 
             <!--  Copy the name of any company. Without demo data this will yield
@@ -43,5 +43,18 @@
             <field name="body"><![CDATA[<p>This application lets you create and send quotations and process your sales orders; from delivery to invoicing.</p>
 <p>If you need to manage your sales pipeline (leads, opportunities, phonecalls), the <i>CRM</i> application may be useful. Use the Settings menu to install it.</p>]]></field>
         </record>
+        
+        <!-- Sale-related subtypes for messaging / Chatter -->
+        <record id="mt_order_sent" model="mail.message.subtype">
+            <field name="name">Quotation send</field>
+            <field name="res_model">sale.order</field>
+            <field name="description">Quotation send</field>
+        </record>
+        <record id="mt_order_confirmed" model="mail.message.subtype">
+            <field name="name">Sales Order Confirmed</field>
+            <field name="res_model">sale.order</field>
+            <field name="description">Quotation confirmed</field>
+        </record>
+
     </data>
 </openerp>

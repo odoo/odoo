@@ -28,7 +28,7 @@
 #
 ##############################################################################
 
-from osv import fields,osv
+from openerp.osv import fields,osv
 import pooler
 import netsvc
 import time

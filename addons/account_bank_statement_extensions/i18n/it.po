@@ -7,20 +7,20 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-03 16:02+0000\n"
-"PO-Revision-Date: 2012-03-30 19:02+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2012-12-21 17:05+0000\n"
+"PO-Revision-Date: 2012-12-17 07:42+0000\n"
+"Last-Translator: Nicola Riolini - Micronaet <Unknown>\n"
 "Language-Team: Italian <it@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-12-04 05:54+0000\n"
-"X-Generator: Launchpad (build 16335)\n"
+"X-Launchpad-Export-Date: 2012-12-22 06:06+0000\n"
+"X-Generator: Launchpad (build 16378)\n"
 
 #. module: account_bank_statement_extensions
-#: view:account.bank.statement.line:0
-msgid "Search Bank Transactions"
-msgstr "Cerca transazioni bancarie"
+#: help:account.bank.statement.line.global,name:0
+msgid "Originator to Beneficiary Information"
+msgstr ""
 
 #. module: account_bank_statement_extensions
 #: view:account.bank.statement.line:0
@@ -54,12 +54,12 @@ msgstr "Debito"
 #: model:ir.actions.act_window,name:account_bank_statement_extensions.action_cancel_statement_line
 #: model:ir.model,name:account_bank_statement_extensions.model_cancel_statement_line
 msgid "Cancel selected statement lines"
-msgstr ""
+msgstr "Annulla le registrazioni selezionate"
 
 #. module: account_bank_statement_extensions
 #: field:account.bank.statement.line,val_date:0
 msgid "Value Date"
-msgstr ""
+msgstr "Data Valore"
 
 #. module: account_bank_statement_extensions
 #: view:account.bank.statement.line:0
@@ -82,13 +82,13 @@ msgstr "Dichiarazione"
 #: model:ir.actions.act_window,name:account_bank_statement_extensions.action_confirm_statement_line
 #: model:ir.model,name:account_bank_statement_extensions.model_confirm_statement_line
 msgid "Confirm selected statement lines"
-msgstr ""
+msgstr "Conferma le registrazioni selezionate"
 
 #. module: account_bank_statement_extensions
 #: report:bank.statement.balance.report:0
 #: model:ir.actions.report.xml,name:account_bank_statement_extensions.bank_statement_balance_report
 msgid "Bank Statement Balances Report"
-msgstr ""
+msgstr "Report Bilancio Estratto Conto Bancario"
 
 #. module: account_bank_statement_extensions
 #: view:cancel.statement.line:0
@@ -99,12 +99,12 @@ msgstr "Cancella linee"
 #: view:account.bank.statement.line.global:0
 #: model:ir.model,name:account_bank_statement_extensions.model_account_bank_statement_line_global
 msgid "Batch Payment Info"
-msgstr ""
+msgstr "Informazioni Pagamenti Raggruppati"
 
 #. module: account_bank_statement_extensions
 #: field:account.bank.statement.line,state:0
 msgid "Status"
-msgstr ""
+msgstr "Stato"
 
 #. module: account_bank_statement_extensions
 #: code:addons/account_bank_statement_extensions/account_bank_statement.py:129
@@ -113,11 +113,13 @@ msgid ""
 "Delete operation not allowed.             Please go to the associated bank "
 "statement in order to delete and/or modify bank statement line."
 msgstr ""
+"Eliminazione pagamenti non ammessa. Si prega di cancellare e/o modificare le "
+"registrazioni direttamente dall'estratto conto associato."
 
 #. module: account_bank_statement_extensions
 #: view:confirm.statement.line:0
 msgid "or"
-msgstr ""
+msgstr "o"
 
 #. module: account_bank_statement_extensions
 #: view:confirm.statement.line:0
@@ -132,7 +134,7 @@ msgstr "Transazioni"
 #. module: account_bank_statement_extensions
 #: field:account.bank.statement.line.global,type:0
 msgid "Type"
-msgstr ""
+msgstr "Tipo"
 
 #. module: account_bank_statement_extensions
 #: view:account.bank.statement.line:0
@@ -143,27 +145,27 @@ msgstr "Registro"
 #. module: account_bank_statement_extensions
 #: view:account.bank.statement.line:0
 msgid "Confirmed Statement Lines."
-msgstr ""
+msgstr "Righe Estratto Conto Confermate"
 
 #. module: account_bank_statement_extensions
 #: view:account.bank.statement.line:0
 msgid "Credit Transactions."
-msgstr ""
+msgstr "Movimenti a Credito."
 
 #. module: account_bank_statement_extensions
 #: model:ir.actions.act_window,help:account_bank_statement_extensions.action_cancel_statement_line
 msgid "cancel selected statement lines."
-msgstr ""
+msgstr "Annulla i movimenti selezionati"
 
 #. module: account_bank_statement_extensions
 #: field:account.bank.statement.line,counterparty_number:0
 msgid "Counterparty Number"
-msgstr ""
+msgstr "Numero Controparte"
 
 #. module: account_bank_statement_extensions
 #: report:bank.statement.balance.report:0
 msgid "Closing Balance"
-msgstr ""
+msgstr "Bilancio di chiusura"
 
 #. module: account_bank_statement_extensions
 #: report:bank.statement.balance.report:0
@@ -174,87 +176,101 @@ msgstr "Data"
 #: view:account.bank.statement.line:0
 #: field:account.bank.statement.line,globalisation_amount:0
 msgid "Glob. Amount"
-msgstr ""
+msgstr "Totale Globale"
 
 #. module: account_bank_statement_extensions
 #: view:account.bank.statement.line:0
 msgid "Debit Transactions."
-msgstr ""
+msgstr "Movimenti a Debito."
 
 #. module: account_bank_statement_extensions
 #: view:account.bank.statement.line:0
 msgid "Extended Filters..."
-msgstr ""
+msgstr "Filtri estesi..."
 
 #. module: account_bank_statement_extensions
 #: view:confirm.statement.line:0
 msgid "Confirmed lines cannot be changed anymore."
-msgstr ""
+msgstr "Le righe confermate non possono più essere modificate."
 
 #. module: account_bank_statement_extensions
 #: view:cancel.statement.line:0
 msgid "Are you sure you want to cancel the selected Bank Statement lines ?"
 msgstr ""
+"Si è sicuri di voler annullare le righe dell'estratto conto bancario "
+"selezionate?"
 
 #. module: account_bank_statement_extensions
 #: report:bank.statement.balance.report:0
 msgid "Name"
+msgstr "Nome"
+
+#. module: account_bank_statement_extensions
+#: field:account.bank.statement.line.global,name:0
+msgid "OBI"
 msgstr ""
 
 #. module: account_bank_statement_extensions
 #: selection:account.bank.statement.line.global,type:0
 msgid "ISO 20022"
-msgstr ""
+msgstr "ISO 20022"
 
 #. module: account_bank_statement_extensions
 #: view:account.bank.statement.line:0
 msgid "Notes"
-msgstr ""
+msgstr "Note"
 
 #. module: account_bank_statement_extensions
 #: selection:account.bank.statement.line.global,type:0
 msgid "Manual"
-msgstr ""
+msgstr "Manuale"
 
 #. module: account_bank_statement_extensions
 #: view:account.bank.statement.line:0
 msgid "Bank Transaction"
-msgstr ""
+msgstr "Transazione Bancaria"
 
 #. module: account_bank_statement_extensions
 #: view:account.bank.statement.line:0
 msgid "Credit"
-msgstr ""
+msgstr "Credito"
 
 #. module: account_bank_statement_extensions
 #: field:account.bank.statement.line.global,amount:0
 msgid "Amount"
-msgstr ""
+msgstr "Importo"
 
 #. module: account_bank_statement_extensions
 #: view:account.bank.statement.line:0
 msgid "Fin.Account"
-msgstr ""
+msgstr "Conto Finanziario"
 
 #. module: account_bank_statement_extensions
 #: field:account.bank.statement.line,counterparty_currency:0
 msgid "Counterparty Currency"
-msgstr ""
+msgstr "Valuta Controparte"
 
 #. module: account_bank_statement_extensions
 #: field:account.bank.statement.line,counterparty_bic:0
 msgid "Counterparty BIC"
-msgstr ""
+msgstr "BIC Controparte"
 
 #. module: account_bank_statement_extensions
 #: field:account.bank.statement.line.global,child_ids:0
 msgid "Child Codes"
-msgstr ""
+msgstr "Codici Figli"
+
+#. module: account_bank_statement_extensions
+#: view:account.bank.statement.line:0
+msgid "Search Bank Transactions"
+msgstr "Cerca transazioni bancarie"
 
 #. module: account_bank_statement_extensions
 #: view:confirm.statement.line:0
 msgid "Are you sure you want to confirm the selected Bank Statement lines ?"
 msgstr ""
+"Si è sicuri di voler confermare le righe dell'estratto conto bancario "
+"selezionate?"
 
 #. module: account_bank_statement_extensions
 #: help:account.bank.statement.line,globalisation_id:0
@@ -262,94 +278,91 @@ msgid ""
 "Code to identify transactions belonging to the same globalisation level "
 "within a batch payment"
 msgstr ""
+"Codice che identifica le transazioni appartenenti allo stesso livello di un "
+"pagamento raggruppato"
 
 #. module: account_bank_statement_extensions
 #: view:account.bank.statement.line:0
 msgid "Draft Statement Lines."
-msgstr ""
+msgstr "Righe Estratto Conto Bozza"
 
 #. module: account_bank_statement_extensions
 #: view:account.bank.statement.line:0
 msgid "Glob. Am."
-msgstr ""
+msgstr "Tot. Globale"
 
 #. module: account_bank_statement_extensions
 #: model:ir.model,name:account_bank_statement_extensions.model_account_bank_statement_line
 msgid "Bank Statement Line"
-msgstr ""
+msgstr "Righe Estratto Conto Bancario"
 
 #. module: account_bank_statement_extensions
 #: field:account.bank.statement.line.global,code:0
 msgid "Code"
-msgstr ""
+msgstr "Codice"
 
 #. module: account_bank_statement_extensions
 #: field:account.bank.statement.line,counterparty_name:0
 msgid "Counterparty Name"
-msgstr ""
-
-#. module: account_bank_statement_extensions
-#: field:account.bank.statement.line.global,name:0
-msgid "Communication"
-msgstr ""
+msgstr "Nome Controparte"
 
 #. module: account_bank_statement_extensions
 #: model:ir.model,name:account_bank_statement_extensions.model_res_partner_bank
 msgid "Bank Accounts"
-msgstr ""
+msgstr "Conti Bancari"
 
 #. module: account_bank_statement_extensions
 #: model:ir.model,name:account_bank_statement_extensions.model_account_bank_statement
 msgid "Bank Statement"
-msgstr ""
+msgstr "Estratto Conto Bancario"
 
 #. module: account_bank_statement_extensions
 #: view:account.bank.statement.line:0
 msgid "Statement Line"
-msgstr ""
+msgstr "Riga Estratto Conto"
 
 #. module: account_bank_statement_extensions
 #: sql_constraint:account.bank.statement.line.global:0
 msgid "The code must be unique !"
-msgstr ""
+msgstr "Il codice deve essere unico!"
 
 #. module: account_bank_statement_extensions
 #: field:account.bank.statement.line.global,bank_statement_line_ids:0
 #: model:ir.actions.act_window,name:account_bank_statement_extensions.action_bank_statement_line
 #: model:ir.ui.menu,name:account_bank_statement_extensions.bank_statement_line
 msgid "Bank Statement Lines"
-msgstr ""
+msgstr "Righe Estratto Conto Bancario"
 
 #. module: account_bank_statement_extensions
 #: code:addons/account_bank_statement_extensions/account_bank_statement.py:129
 #, python-format
 msgid "Warning!"
-msgstr ""
+msgstr "Attenzione!"
 
 #. module: account_bank_statement_extensions
 #: view:account.bank.statement.line.global:0
 msgid "Child Batch Payments"
-msgstr ""
+msgstr "Pagamenti batch collegati"
 
 #. module: account_bank_statement_extensions
 #: view:confirm.statement.line:0
 msgid "Cancel"
-msgstr ""
+msgstr "Annulla"
 
 #. module: account_bank_statement_extensions
 #: view:account.bank.statement.line:0
 msgid "Statement Lines"
-msgstr ""
+msgstr "Righe Estratto Conto"
 
 #. module: account_bank_statement_extensions
 #: view:account.bank.statement.line:0
 msgid "Total Amount"
-msgstr ""
+msgstr "Importo Totale"
 
 #. module: account_bank_statement_extensions
 #: field:account.bank.statement.line,globalisation_id:0
 msgid "Globalisation ID"
-msgstr ""
+msgstr "ID Globalizzazione"
 
 #~ msgid "State"
 #~ msgstr "Stato"
@@ -357,3 +370,6 @@ msgstr ""
 #, python-format
 #~ msgid "Warning"
 #~ msgstr "Attenzione"
+
+#~ msgid "Communication"
+#~ msgstr "Comunicazione"

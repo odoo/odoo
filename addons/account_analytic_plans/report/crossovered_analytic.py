@@ -21,7 +21,7 @@
 
 import time
 
-from report import report_sxw
+from openerp.report import report_sxw
 
 class crossovered_analytic(report_sxw.rml_parse):
     def __init__(self, cr, uid, name, context):
@@ -35,6 +35,7 @@ class crossovered_analytic(report_sxw.rml_parse):
         self.base_amount = 0.00
 
     def find_children(self, ref_ids):
+        if not ref_ids: return []
         to_return_ids = []
         final_list = []
         parent_list = []

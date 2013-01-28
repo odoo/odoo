@@ -300,6 +300,7 @@ Andrew</field>
         <record id="crm_case_14" model="crm.lead">
             <field name="type">opportunity</field>
             <field name="name">Interest in your Graphic Design Project</field>
+            <field name="color">7</field>
             <field eval="24000" name="planned_revenue"/>
             <field eval="30.0" name="probability"/>
             <field name="partner_name">Agrolait</field>
@@ -401,9 +402,9 @@ Andrew</field>
             <field name="contact_name">Leland Martinez</field>
             <field name="email_from">info@deltapc.com</field>
             <field name="partner_name">Delta PC</field>
-            <field name="city">Fremont</field>
+            <field name="city">London</field>
             <field name="street">3661 Station Street</field>
-            <field name="country_id" ref="base.us"/>
+            <field name="country_id" ref="base.uk"/>
             <field name="partner_id" ref="base.res_partner_4"/>
             <field name="type_id" ref="type_lead8"/>
             <field name="categ_ids" eval="[(6, 0, [categ_oppor4,categ_oppor6])]"/>
@@ -420,6 +421,7 @@ Andrew</field>
         <record id="crm_case_19" model="crm.lead">
             <field name="type">opportunity</field>
             <field name="name">Interest in your customizable Pcs</field>
+            <field name="color">3</field>
             <field eval="15000" name="planned_revenue"/>
             <field eval="65.0" name="probability"/>
             <field name="contact_name">Robin Smith</field>
@@ -666,7 +668,6 @@ Andrew</field>
             <field name="type">comment</field>
             <field name="subtype_id" ref="mail.mt_comment"/>
             <field name="author_id" ref="base.res_partner_4"/>
-            <field name="favorite_user_ids" eval="[(6, 0, [ref('base.user_root')])]"/>
         </record>
         <record id="msg_case18_2" model="mail.message">
             <field name="model">crm.lead</field>
@@ -676,7 +677,6 @@ Andrew</field>
             <field name="subtype_id" ref="mail.mt_comment"/>
             <field name="parent_id" ref="msg_case18_1"/>
             <field name="author_id" ref="base.partner_demo"/>
-            <field name="favorite_user_ids" eval="[(6, 0, [ref('base.user_root')])]"/>
         </record>
         <record id="msg_case1_1" model="mail.message">
             <field name="subject">Inquiry</field>
@@ -694,6 +694,9 @@ Andrew</field>
             <field name="body">Want to know features and benefits to use the new software.</field>
             <field name="type">comment</field>
         </record>
+        <function model="mail.message" name="set_message_starred"
+            eval="[ ref('msg_case18_1'), ref('msg_case18_2')], True, {}"
+        />
 
     </data>
 </openerp>

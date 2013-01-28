@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<openerp><data>
+<openerp>
+<data noupdate="1">
 
     <record id="analytic_comp_rule" model="ir.rule">
         <field name="name">Analytic multi company rule</field>
@@ -14,9 +15,14 @@
         <field eval="True" name="global"/>
         <field name="domain_force">['|',('company_id','=',False),('company_id','child_of',[user.company_id.id])]</field>
     </record>
-    
+
+</data>
+<data noupdate="0">
+
     <record id="group_analytic_accounting" model="res.groups">
         <field name="name">Analytic Accounting</field>
         <field name="category_id" ref="base.module_category_hidden"/>
     </record>
-</data></openerp>
+
+</data>
+</openerp>

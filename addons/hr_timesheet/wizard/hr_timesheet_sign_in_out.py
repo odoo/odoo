@@ -20,8 +20,8 @@
 ##############################################################################
 import time
 
-from osv import osv, fields
-from tools.translate import _
+from openerp.osv import fields, osv
+from openerp.tools.translate import _
 
 class hr_so_project(osv.osv_memory):
     _name = 'hr.sign.out.project'
@@ -143,7 +143,7 @@ class hr_si_project(osv.osv_memory):
         model_data_ids = obj_model.search(cr,uid,[('model','=','ir.ui.view'),('name','=','view_hr_timesheet_sign_%s' % in_out)], context=context)
         resource_id = obj_model.read(cr, uid, model_data_ids, fields=['res_id'], context=context)[0]['res_id']
         return {
-            'name': 'Sign in / Sign out',
+            'name': _('Sign in / Sign out'),
             'view_type': 'form',
             'view_mode': 'tree,form',
             'res_model': 'hr.sign.%s.project' % in_out,

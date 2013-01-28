@@ -19,7 +19,7 @@
 #
 ##############################################################################
 
-from osv import osv, fields
+from openerp.osv import fields, osv
 
 class hr_applicant_settings(osv.osv_memory):
     _name = 'hr.config.settings'

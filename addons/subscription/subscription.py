@@ -23,8 +23,8 @@
 #   Error treatment: exception, request, ... -> send request to user_id
 
 import time
-from osv import fields,osv
-from tools.translate import _
+from openerp.osv import fields,osv
+from openerp.tools.translate import _
 
 class subscription_document(osv.osv):
     _name = "subscription.document"

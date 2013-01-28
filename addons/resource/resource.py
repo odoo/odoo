@@ -22,8 +22,8 @@
 from datetime import datetime, timedelta
 import math
 from faces import *
-from osv import fields, osv
-from tools.translate import _
+from openerp.osv import fields, osv
+from openerp.tools.translate import _
 
 from itertools import groupby
 from operator import itemgetter
@@ -274,13 +274,10 @@ class resource_calendar_attendance(osv.osv):
     }
 resource_calendar_attendance()
 
-def convert_timeformat(time_string):
-    split_list = str(time_string).split('.')
-    hour_part = split_list[0]
-    mins_part = split_list[1]
-    round_mins = int(round(float(mins_part) * 60,-2))
-    converted_string = hour_part + ':' + str(round_mins)[0:2]
-    return converted_string
+def hours_time_string(hours):
+    """ convert a number of hours (float) into a string with format '%H:%M' """
+    minutes = int(round(hours * 60))
+    return "%02d:%02d" % divmod(minutes, 60)
 
 class resource_resource(osv.osv):
     _name = "resource.resource"
@@ -390,8 +387,8 @@ class resource_resource(osv.osv):
                 wk_days[week['dayofweek']] = week_days[week['dayofweek']]
             else:
                 raise osv.except_osv(_('Configuration Error!'),_('Make sure the Working time has been configured with proper week days!'))
-            hour_from_str = convert_timeformat(week['hour_from'])
-            hour_to_str = convert_timeformat(week['hour_to'])
+            hour_from_str = hours_time_string(week['hour_from'])
+            hour_to_str = hours_time_string(week['hour_to'])
             res_str = hour_from_str + '-' + hour_to_str
             wktime_list.append((day, res_str))
         # Convert into format like [('mon', '8:00-12:00', '13:00-18:00')]

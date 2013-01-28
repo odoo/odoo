@@ -19,7 +19,7 @@
 #
 ##############################################################################
 
-from osv import fields, osv
+from openerp.osv import fields, osv
 
 class account_sequence_installer(osv.osv_memory):
     _name = 'account.sequence.installer'

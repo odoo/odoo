@@ -19,8 +19,8 @@
 #
 ##############################################################################
 
-from osv import fields, osv
-import tools
+from openerp.osv import fields, osv
+from openerp import tools
 
 class hr_department(osv.osv):
     def name_get(self, cr, uid, ids, context=None):

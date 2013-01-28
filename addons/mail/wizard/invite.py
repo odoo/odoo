@@ -19,9 +19,10 @@
 #
 ##############################################################################
 
-from osv import osv
-from osv import fields
-from tools.translate import _
+from openerp import tools
+from openerp.osv import osv
+from openerp.osv import fields
+from openerp.tools.translate import _
 
 
 class invite_wizard(osv.osv_memory):
@@ -49,17 +50,6 @@ class invite_wizard(osv.osv_memory):
         'message': fields.html('Message'),
     }
 
-    def onchange_partner_ids(self, cr, uid, ids, value, context=None):
-        """ onchange_partner_ids (value format: [[6, 0, [3, 4]]]). The
-            basic purpose of this method is to check that destination partners
-            effectively have email addresses. Otherwise a warning is thrown.
-        """
-        res = {'value': {}}
-        if not value or not value[0] or not value[0][0] == 6:
-            return
-        res.update(self.pool.get('mail.message').check_partners_email(cr, uid, value[0][2], context=context))
-        return res
-
     def add_followers(self, cr, uid, ids, context=None):
         for wizard in self.browse(cr, uid, ids, context=context):
             model_obj = self.pool.get(wizard.res_model)
@@ -71,8 +61,15 @@ class invite_wizard(osv.osv_memory):
 
             # send an email
             if wizard.message:
+                # add signature
+                user_id = self.pool.get("res.users").read(cr, uid, [uid], fields=["signature"], context=context)[0]
+                signature = user_id and user_id["signature"] or ''
+                if signature:
+                    wizard.message = tools.append_content_to_html(wizard.message, signature, plaintext=True, container_tag='div')
+                # send mail to new followers
                 for follower_id in new_follower_ids:
                     mail_mail = self.pool.get('mail.mail')
+                    # the invite wizard should create a private message not related to any object -> no model, no res_id
                     mail_id = mail_mail.create(cr, uid, {
                         'model': wizard.res_model,
                         'res_id': wizard.res_id,

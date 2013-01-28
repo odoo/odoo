@@ -21,8 +21,8 @@
 
 import openerp
 import openerp.tools as tools
-from osv import osv
-from osv import fields
+from openerp.osv import osv
+from openerp.osv import fields
 from openerp import SUPERUSER_ID
 
 
@@ -33,7 +33,7 @@ class mail_group(osv.Model):
     _name = 'mail.group'
     _mail_flat_thread = False
     _inherit = ['mail.thread']
-    _inherits = {'mail.alias': 'alias_id', 'ir.ui.menu': 'menu_id'}
+    _inherits = {'mail.alias': 'alias_id'}
 
     def _get_image(self, cr, uid, ids, name, args, context=None):
         result = dict.fromkeys(ids, False)
@@ -45,6 +45,7 @@ class mail_group(osv.Model):
         return self.write(cr, uid, [id], {'image': tools.image_resize_image_big(value)}, context=context)
 
     _columns = {
+        'name': fields.char('Name', size=64, required=True, translate=True),
         'description': fields.text('Description'),
         'menu_id': fields.many2one('ir.ui.menu', string='Related Menu', required=True, ondelete="cascade"),
         'public': fields.selection([('public', 'Public'), ('private', 'Private'), ('groups', 'Selected Group Only')], 'Privacy', required=True,
@@ -88,17 +89,22 @@ class mail_group(osv.Model):
         image_path = openerp.modules.get_module_resource('mail', 'static/src/img', 'groupdefault.png')
         return tools.image_resize_image_big(open(image_path, 'rb').read().encode('base64'))
 
-    def _get_menu_parent(self, cr, uid, context=None):
-        ref = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'mail', 'mail_group_root')
-        return ref and ref[1] or False
-
     _defaults = {
         'public': 'groups',
         'group_public_id': _get_default_employee_group,
         'image': _get_default_image,
-        'parent_id': _get_menu_parent,
-        'alias_domain': False, # always hide alias during creation
+        'alias_domain': False,  # always hide alias during creation
     }
+
+    def _generate_header_description(self, cr, uid, group, context=None):
+        header = ''
+        if group.description:
+            header = '%s' % group.description
+        if group.alias_id and group.alias_id.alias_name and group.alias_id.alias_domain:
+            if header:
+                header = '%s<br/>' % header
+            return '%sGroup email gateway: %s@%s' % (header, group.alias_id.alias_name, group.alias_id.alias_domain)
+        return header
 
     def _subscribe_users(self, cr, uid, ids, context=None):
         for mail_group in self.browse(cr, uid, ids, context=context):
@@ -110,7 +116,7 @@ class mail_group(osv.Model):
     def create(self, cr, uid, vals, context=None):
         mail_alias = self.pool.get('mail.alias')
         if not vals.get('alias_id'):
-            vals.pop('alias_name', None) # prevent errors during copy()
+            vals.pop('alias_name', None)  # prevent errors during copy()
             alias_id = mail_alias.create_unique_alias(cr, uid,
                           # Using '+' allows using subaddressing for those who don't
                           # have a catchall domain setup.
@@ -118,10 +124,19 @@ class mail_group(osv.Model):
                           model_name=self._name, context=context)
             vals['alias_id'] = alias_id
 
-        #check access rights for the current user, then create as SUPERUSER because the object inherits
-        #ir.ui.menu (for which normal users do not have creation rights)
-        self.check_access_rights(cr, uid, 'create')
-        mail_group_id = super(mail_group, self).create(cr, SUPERUSER_ID, vals, context=context)
+        # get parent menu
+        menu_parent = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'mail', 'mail_group_root')
+        menu_parent = menu_parent and menu_parent[1] or False
+
+        # Create menu id
+        mobj = self.pool.get('ir.ui.menu')
+        menu_id = mobj.create(cr, SUPERUSER_ID, {'name': vals['name'], 'parent_id': menu_parent}, context=context)
+        vals['menu_id'] = menu_id
+
+        # Create group and alias
+        mail_group_id = super(mail_group, self).create(cr, uid, vals, context=context)
+        mail_alias.write(cr, uid, [vals['alias_id']], {"alias_force_thread_id": mail_group_id}, context)
+        group = self.browse(cr, uid, mail_group_id, context=context)
 
         # Create client action for this group and link the menu to it
         ref = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'mail', 'action_mail_group_feeds')
@@ -133,13 +148,11 @@ class mail_group(osv.Model):
                 'context': {'default_model': 'mail.group', 'default_res_id': mail_group_id, 'search_default_message_unread': True},
                 'res_model': 'mail.message',
                 'thread_level': 1,
-                'header_description': vals.get('description'),
+                'header_description': self._generate_header_description(cr, uid, group, context=context)
             }
             cobj = self.pool.get('ir.actions.client')
             newref = cobj.copy(cr, SUPERUSER_ID, ref[1], default={'params': str(params), 'name': vals['name']}, context=context)
-            self.write(cr, SUPERUSER_ID, [mail_group_id], {'action': 'ir.actions.client,' + str(newref), 'mail_group_id': mail_group_id}, context=context)
-
-        mail_alias.write(cr, uid, [vals['alias_id']], {"alias_force_thread_id": mail_group_id}, context)
+            mobj.write(cr, SUPERUSER_ID, menu_id, {'action': 'ir.actions.client,' + str(newref), 'mail_group_id': mail_group_id}, context=context)
 
         if vals.get('group_ids'):
             self._subscribe_users(cr, uid, [mail_group_id], context=context)
@@ -150,24 +163,32 @@ class mail_group(osv.Model):
         # Cascade-delete mail aliases as well, as they should not exist without the mail group.
         mail_alias = self.pool.get('mail.alias')
         alias_ids = [group.alias_id.id for group in groups if group.alias_id]
-        # Cascade-delete menu entries as well
-        self.pool.get('ir.ui.menu').unlink(cr, uid, [group.menu_id.id for group in groups if group.menu_id], context=context)
         # Delete mail_group
         res = super(mail_group, self).unlink(cr, uid, ids, context=context)
-        mail_alias.unlink(cr, uid, alias_ids, context=context)
+        # Delete alias
+        mail_alias.unlink(cr, SUPERUSER_ID, alias_ids, context=context)
+        # Cascade-delete menu entries as well
+        self.pool.get('ir.ui.menu').unlink(cr, SUPERUSER_ID, [group.menu_id.id for group in groups if group.menu_id], context=context)
         return res
 
     def write(self, cr, uid, ids, vals, context=None):
         result = super(mail_group, self).write(cr, uid, ids, vals, context=context)
         if vals.get('group_ids'):
             self._subscribe_users(cr, uid, ids, context=context)
-        # if description is changed: update client action
-        if vals.get('description'):
+        # if description, name or alias is changed: update client action
+        if vals.get('description') or vals.get('name') or vals.get('alias_id') or vals.get('alias_name'):
             cobj = self.pool.get('ir.actions.client')
-            for action in [group.action for group in self.browse(cr, SUPERUSER_ID, ids, context=context) if group.action]:
+            for action in [group.menu_id.action for group in self.browse(cr, uid, ids, context=context)]:
                 new_params = action.params
-                new_params['header_description'] = vals.get('description')
+                new_params['header_description'] = self._generate_header_description(cr, uid, group, context=context)
                 cobj.write(cr, SUPERUSER_ID, [action.id], {'params': str(new_params)}, context=context)
+        # if name is changed: update menu
+        if vals.get('name'):
+            mobj = self.pool.get('ir.ui.menu')
+            mobj.write(cr, SUPERUSER_ID,
+                [group.menu_id.id for group in self.browse(cr, uid, ids, context=context)],
+                {'name': vals.get('name')}, context=context)
+
         return result
 
     def action_follow(self, cr, uid, ids, context=None):

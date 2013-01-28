@@ -19,11 +19,12 @@
 #
 ##############################################################################
 
-from osv import osv, fields
-from osv.orm import intersect, except_orm
-import tools.sql
-from tools.translate import _
-from decimal_precision import decimal_precision as dp
+from openerp.osv import osv, fields
+from openerp.osv.orm import intersect, except_orm
+import openerp.tools
+from openerp.tools.translate import _
+
+from openerp.addons.decimal_precision import decimal_precision as dp
 
 
 class account_analytic_account(osv.osv):
@@ -458,7 +459,7 @@ class account_analytic_account(osv.osv):
             context = {}
         sale_ids = self.pool.get('sale.order').search(cr,uid,[('project_id','=',context.get('search_default_project_id',False)),('partner_id','in',context.get('search_default_partner_id',False))])
         names = [record.name for record in self.browse(cr, uid, ids, context=context)]
-        name = _('Sale Order Lines of %s') % ','.join(names)
+        name = _('Sales Order Lines of %s') % ','.join(names)
         return {
             'type': 'ir.actions.act_window',
             'name': name,
@@ -518,7 +519,7 @@ class account_analytic_account_summary_user(osv.osv):
     }
 
     def init(self, cr):
-        tools.sql.drop_view_if_exists(cr, 'account_analytic_analysis_summary_user')
+        openerp.tools.sql.drop_view_if_exists(cr, 'account_analytic_analysis_summary_user')
         cr.execute('''CREATE OR REPLACE VIEW account_analytic_analysis_summary_user AS (
             with mu as
                 (select max(id) as max_user from res_users)
@@ -553,7 +554,7 @@ class account_analytic_account_summary_month(osv.osv):
     }
 
     def init(self, cr):
-        tools.sql.drop_view_if_exists(cr, 'account_analytic_analysis_summary_month')
+        openerp.tools.sql.drop_view_if_exists(cr, 'account_analytic_analysis_summary_month')
         cr.execute('CREATE VIEW account_analytic_analysis_summary_month AS (' \
                 'SELECT ' \
                     '(TO_NUMBER(TO_CHAR(d.month, \'YYYYMM\'), \'999999\') + (d.account_id  * 1000000::bigint))::bigint AS id, ' \

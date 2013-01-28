@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2012-12-03 16:03+0000\n"
-"PO-Revision-Date: 2012-05-10 17:57+0000\n"
-"Last-Translator: Borja López Soilán (NeoPolus) <borjalopezsoilan@gmail.com>\n"
+"POT-Creation-Date: 2012-12-21 17:05+0000\n"
+"PO-Revision-Date: 2012-12-24 10:22+0000\n"
+"Last-Translator: Pedro Manuel Baeza <pedro.baeza@gmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-12-04 05:42+0000\n"
-"X-Generator: Launchpad (build 16335)\n"
+"X-Launchpad-Export-Date: 2012-12-25 04:48+0000\n"
+"X-Generator: Launchpad (build 16378)\n"
 
 #. module: hr_attendance
 #: model:ir.model,name:hr_attendance.model_hr_attendance_month
@@ -29,7 +29,7 @@ msgstr "Buscar presencias RH"
 #. module: hr_attendance
 #: field:hr.employee,last_sign:0
 msgid "Last Sign"
-msgstr ""
+msgstr "Último registro"
 
 #. module: hr_attendance
 #: view:hr.attendance:0
@@ -43,12 +43,12 @@ msgstr "Asistencia"
 #: code:addons/hr_attendance/static/src/js/attendance.js:34
 #, python-format
 msgid "Last sign in: %s,<br />%s.<br />Click to sign out."
-msgstr ""
+msgstr "Última entrada: %s,<br/>%s.<br/>Pulse para registrar salida."
 
 #. module: hr_attendance
 #: constraint:hr.attendance:0
 msgid "Error ! Sign in (resp. Sign out) must follow Sign out (resp. Sign in)"
-msgstr ""
+msgstr "¡Error! Una entrada debe seguir a un registro de salida."
 
 #. module: hr_attendance
 #: help:hr.action.reason,name:0
@@ -69,10 +69,10 @@ msgid "Print Attendance Report Monthly"
 msgstr "Imprimir informe de asistencia mensualmente"
 
 #. module: hr_attendance
-#: code:addons/hr_attendance/report/timesheet.py:122
+#: code:addons/hr_attendance/report/timesheet.py:120
 #, python-format
 msgid "Attendances by Week"
-msgstr ""
+msgstr "Asistencias por semana"
 
 #. module: hr_attendance
 #: selection:hr.action.reason,action_type:0
@@ -95,6 +95,11 @@ msgid "October"
 msgstr "Octubre"
 
 #. module: hr_attendance
+#: field:hr.employee,attendance_access:0
+msgid "Attendance Access"
+msgstr "Acceso a la asistencia"
+
+#. module: hr_attendance
 #: code:addons/hr_attendance/hr_attendance.py:154
 #: selection:hr.attendance,action:0
 #: view:hr.employee:0
@@ -106,7 +111,7 @@ msgstr "Registrar salida"
 #: code:addons/hr_attendance/wizard/hr_attendance_error.py:49
 #, python-format
 msgid "No records are found for your selection!"
-msgstr ""
+msgstr "¡No se han encontrado registros para su selección!"
 
 #. module: hr_attendance
 #: view:hr.attendance.error:0
@@ -172,12 +177,7 @@ msgstr "Aviso"
 #. module: hr_attendance
 #: help:hr.config.settings,group_hr_attendance:0
 msgid "Allocates attendance group to all users."
-msgstr ""
-
-#. module: hr_attendance
-#: field:hr.employee,attendance_access:0
-msgid "unknown"
-msgstr ""
+msgstr "Asigna asistencia en grupo para todos los usuarios"
 
 #. module: hr_attendance
 #: view:hr.attendance:0
@@ -190,10 +190,10 @@ msgid "June"
 msgstr "Junio"
 
 #. module: hr_attendance
-#: code:addons/hr_attendance/report/attendance_by_month.py:193
+#: code:addons/hr_attendance/report/attendance_by_month.py:190
 #, python-format
 msgid "Attendances by Month"
-msgstr ""
+msgstr "Asistencias por mes"
 
 #. module: hr_attendance
 #: model:ir.actions.act_window,name:hr_attendance.action_hr_attendance_week
@@ -251,7 +251,7 @@ msgstr "Fecha"
 #. module: hr_attendance
 #: field:hr.config.settings,group_hr_attendance:0
 msgid "Track attendances for all employees"
-msgstr ""
+msgstr "Rastrear asistencias para todos los empleados"
 
 #. module: hr_attendance
 #: selection:hr.attendance.month,month:0
@@ -335,7 +335,7 @@ msgstr "Enero"
 #: code:addons/hr_attendance/wizard/hr_attendance_error.py:49
 #, python-format
 msgid "No Data Available !"
-msgstr ""
+msgstr "¡No hay datos disponibles!"
 
 #. module: hr_attendance
 #: selection:hr.attendance.month,month:0
@@ -408,14 +408,14 @@ msgstr "Imprimir informe de presencia semanal"
 #. module: hr_attendance
 #: model:ir.model,name:hr_attendance.model_hr_config_settings
 msgid "hr.config.settings"
-msgstr ""
+msgstr "Parámetros de configuración de RRHH"
 
 #. module: hr_attendance
 #. openerp-web
 #: code:addons/hr_attendance/static/src/js/attendance.js:36
 #, python-format
 msgid "Click to Sign In at %s."
-msgstr ""
+msgstr "Pulse para registar la entrada a %s."
 
 #. module: hr_attendance
 #: field:hr.action.reason,action_type:0
@@ -434,6 +434,8 @@ msgid ""
 "You tried to %s with a date anterior to another event !\n"
 "Try to contact the HR Manager to correct attendances."
 msgstr ""
+"¡Ha intentado %s con una fecha anterior a otro evento!\n"
+"Intente contactar con el responsable de RRHH para corregir las asistencias."
 
 #. module: hr_attendance
 #: selection:hr.attendance.month,month:0
@@ -465,7 +467,7 @@ msgstr ""
 #: view:hr.attendance.month:0
 #: view:hr.attendance.week:0
 msgid "or"
-msgstr ""
+msgstr "o"
 
 #. module: hr_attendance
 #: help:hr.attendance,action_desc:0

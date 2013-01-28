@@ -21,10 +21,6 @@
 
 import content_index
 import std_index
-import document_storage
-import document_directory
-import directory_content
-import directory_report
 import document
 import report
 import wizard

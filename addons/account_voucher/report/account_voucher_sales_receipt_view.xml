@@ -6,7 +6,7 @@
         <field name="name">sale.receipt.report.tree</field>
         <field name="model">sale.receipt.report</field>
         <field name="arch" type="xml">
-            <tree colors="blue:state == 'draft';gray:state in ('cancel','paid');black:state in ('proforma','proforma2')" create="false"  string="Sales Receipt Analysis">
+            <tree colors="blue:state == 'draft';gray:state in ('cancel','paid');black:state in ('proforma','proforma2')" create="false"  string="Sales Receipts Analysis">
                 <field name="date" invisible="1"/>
                 <field name="user_id" invisible="1"/>
                 <field name="year" invisible="1"/>
@@ -33,7 +33,7 @@
          <field name="name">sale.receipt.report.graph</field>
          <field name="model">sale.receipt.report</field>
          <field name="arch" type="xml">
-             <graph string="Sales Receipt Analysis" type="bar">
+             <graph string="Sales Receipts Analysis" type="bar">
                  <field name="account_id"/>
                  <field name="price_total"/>
              </graph>
@@ -44,7 +44,7 @@
         <field name="name">sale.receipt.report.search</field>
         <field name="model">sale.receipt.report</field>
         <field name="arch" type="xml">
-            <search string="Sales Receipt Analysis">
+            <search string="Sales Receipts Analysis">
                 <field name="date"/>
                 <field name="date_due"/>
                 <filter string="Draft" icon="terp-document-new" domain="[('state','=','draft')]" help = "Draft Vouchers"/>
@@ -74,7 +74,7 @@
     </record>
 
     <record id="action_sale_receipt_report_all" model="ir.actions.act_window">
-        <field name="name">Sales Receipt Analysis</field>
+        <field name="name">Sales Receipts Analysis</field>
         <field name="res_model">sale.receipt.report</field>
         <field name="view_type">form</field>
         <field name="view_mode">tree,graph</field>

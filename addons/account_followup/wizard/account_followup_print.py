@@ -22,9 +22,9 @@
 import datetime
 import time
 
-import tools
-from osv import fields, osv
-from tools.translate import _
+from openerp import tools
+from openerp.osv import fields, osv
+from openerp.tools.translate import _
 
 class account_followup_stat_by_partner(osv.osv):
     _name = "account_followup.stat.by.partner"

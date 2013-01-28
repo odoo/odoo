@@ -19,9 +19,10 @@
 #
 ##############################################################################
 
-import time
-from report import report_sxw
 import datetime
+import time
+
+from openerp.report import report_sxw
 
 class expense(report_sxw.rml_parse):
 

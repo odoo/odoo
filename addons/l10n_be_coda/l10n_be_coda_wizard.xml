@@ -8,34 +8,15 @@
       <field name="priority">1</field>
       <field name="arch" type="xml">
         <form string="Import CODA File" version="7.0">
-            <header>
+            <group col="2">
+                <field name="coda_data" filename="coda_fname"/>
+                <field name="temporary_account_id" />
+            </group>
+            <footer>
                 <button name="coda_parsing" string="_Import" type="object" class="oe_highlight"/>
                 or
                 <button string="Cancel" class="oe_link" special="cancel"/>
-            </header>
-            <group col="2">
-                <field name="coda_data" filename="coda_fname"/>
-                <field name="coda_fname"/>
-            </group>
-        </form>
-      </field>
-    </record>
-
-    <record id="account_coda_import_result_view" model="ir.ui.view">
-      <field name="name">Import CODA File</field>
-      <field name="model">account.coda.import</field>
-      <field name="priority">2</field>
-      <field name="arch" type="xml">
-        <form string="Import CODA File" version="7.0">
-          <header>
-              <button name="action_open_coda_statements" string="View CODA Bank Statement(s)" type="object" class="oe_highlight"/>
-              <button name="action_open_bank_statements" string="View Bank Statement(s)" type="object" class="oe_highlight"/>
-              or
-              <button string="Cancel" class="oe_link" special="cancel"/>
-          </header>
-          <group string="Results :">
-              <field name="note" nolabel="1" colspan="2"/>
-          </group>
+            </footer>
         </form>
       </field>
     </record>
@@ -49,20 +30,6 @@
       <field name="target">new</field>
       <field name="view_id" ref="account_coda_import_view"/>
     </record>
-
-    <act_window name="Import CODA File"
-      res_model="account.coda.import"
-      src_model="coda.bank.statement"
-      view_type="form" view_mode="form" target="new"
-      key2="client_action_multi" multi="True"
-      id="wizard_account_coda_import_1"/>
-
-    <act_window name="Import CODA File"
-      res_model="account.coda.import"
-      src_model="account.coda"
-      view_type="form" view_mode="form" target="new"
-      key2="client_action_multi" multi="True"
-      id="wizard_account_coda_import_2"/>
     
   </data> 
 </openerp>

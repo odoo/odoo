@@ -173,7 +173,7 @@
                         <group>
                             <group>
                                 <field name="picking_id"/>
-                                <field name="invoice_id"/>
+                                <field name="invoice_id" context="{'form_view_ref': 'account.invoice_form'}"/>
                                 <field name="company_id" groups="base.group_multi_company" widget="selection"/>
                             </group>
                             <group>

@@ -19,7 +19,7 @@
 #
 ##############################################################################
 
-from osv import fields, osv
+from openerp.osv import fields, osv
 
 class invoice_directly(osv.osv_memory):
     _inherit = 'stock.partial.picking'

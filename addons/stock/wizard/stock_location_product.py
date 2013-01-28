@@ -19,8 +19,8 @@
 #
 ##############################################################################
 
-from osv import fields, osv
-from tools.translate import _
+from openerp.osv import fields, osv
+from openerp.tools.translate import _
 
 class stock_location_product(osv.osv_memory):
     _name = "stock.location.product"

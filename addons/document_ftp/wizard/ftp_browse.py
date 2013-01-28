@@ -19,8 +19,8 @@
 #
 ##############################################################################
 
-from osv import osv, fields
-# from tools.translate import _
+from openerp.osv import fields, osv
+# from openerp.tools.translate import _
 from .. import ftpserver
 
 class document_ftp_browse(osv.osv_memory):
