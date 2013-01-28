@@ -149,6 +149,25 @@ define(["underscore", "jquery", "nova"], function(_, $, nova) {
                 ]);
             }, this));
         },
+        search_read: function(domain, fields, offset, limit, order, context) {
+            return this.call("search", [domain || [], offset || 0, limit || false, order || false, context || {}]).then(_.bind(function(record_ids) {
+                if (! record_ids) {
+                    return [];
+                }
+                return this.call("read", [record_ids, fields || [], context || {}]).then(function(records) {
+                    var index = {};
+                    _.each(records, function(r) {
+                        index[r.id] = r;
+                    });
+                    var res = [];
+                    _.each(record_ids, function(id) {
+                        if (index[id])
+                            res.push(index[id]);
+                    });
+                    return res;
+                });
+            }, this));
+        },
     });
 
     return oeclient;

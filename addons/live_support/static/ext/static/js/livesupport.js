@@ -16,8 +16,23 @@ define(["nova", "jquery", "underscore", "oeclient", "require"], function(nova, $
         }).then(function(content) {
             return templateEngine.loadFileContent(content);
         }).then(function() {
+            console.log("starting client");
             connection = new oeclient.Connection(new oeclient.JsonpRPCConnector(server_url), db, login, password);
-            console.log("hello");
+            connection.getModel("res.users").search_read([["login", "in", ["demo", "admin"]]]).then(function(result) {
+                var admin, demo;
+                if (result[0].login === "admin") {
+                    admin = result[0];
+                    demo = result[1];
+                } else {
+                    admin = result[1];
+                    demo = result[0];
+                }
+                admin = new livesupport.ImUser(null, admin);
+                demo = new livesupport.ImUser(null, demo);
+                var manager = new livesupport.ConversationManager(null);
+                manager.set_me(admin);
+                manager.activate_user(demo);
+            });
         });
     };
 
@@ -49,7 +64,7 @@ define(["nova", "jquery", "underscore", "oeclient", "require"], function(nova, $
 
     livesupport.ConversationManager = nova.Class.$extend({
         __include__: [nova.DynamicProperties],
-        init: function(parent) {
+        __init__: function(parent) {
             nova.DynamicProperties.__init__.call(this, parent);
             this.set("right_offset", 0);
             this.conversations = [];
@@ -137,8 +152,8 @@ define(["nova", "jquery", "underscore", "oeclient", "require"], function(nova, $
             "click .oe_im_chatview_close": "destroy",
             "click .oe_im_chatview_header": "show_hide",
         },
-        init: function(parent, user, me) {
-            this._super(parent);
+        __init__: function(parent, user, me) {
+            this.$super(parent);
             this.me = me;
             this.user = user;
             this.user.add_watcher();
@@ -184,7 +199,7 @@ define(["nova", "jquery", "underscore", "oeclient", "require"], function(nova, $
             var mes = this.$("input").val();
             this.$("input").val("");
             var send_it = _.bind(function() {
-                var model = new connection.getModel("im.message");
+                var model = connection.getModel("im.message");
                 return model.call("post", [mes, this.user.get('id')], {context: {}});
             }, this);
             var tries = 0;
