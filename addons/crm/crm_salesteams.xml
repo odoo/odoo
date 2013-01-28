@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+  <data>
+
+        <!-- CRM lead search by Salesteams -->
+
+        <record model="ir.actions.act_window" id="crm_case_form_view_salesteams_lead">
+            <field name="name">Leads</field>
+            <field name="res_model">crm.lead</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">['|', ('type','=','lead'), ('type','=',False)]</field>
+            <field name="context">{
+                'search_default_section_id': [active_id], 
+                'default_section_id': active_id, 
+                'search_default_new': True, 
+                'search_default_open': True
+            }</field>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to create a new lead.
+              </p><p>
+                Use leads if you need a qualification step before creating an
+                opportunity or a customer. It can be a business card you received,
+                a contact form filled in your website, or a file of unqualified
+                prospects you import, etc.
+              </p><p>
+                Once qualified, the lead can be converted into a business
+                opportunity and/or a new customer in your address book.
+              </p>
+            </field>
+        </record>
+
+        <!-- CRM opportunity search by Salesteams -->
+
+        <record model="ir.actions.act_window" id="crm_case_form_view_salesteams_opportunity">
+            <field name="name">Leads</field>
+            <field name="res_model">crm.lead</field>
+            <field name="view_mode">kanban,tree,form</field>
+            <field name="domain">[('type','=','opportunity')]</field>
+            <field name="view_id" ref="crm.crm_case_kanban_view_leads"/>
+            <field name="context">{
+                'search_default_section_id': [active_id],
+                'default_section_id': active_id, 
+                'search_default_new': True, 
+                'search_default_open': True
+            }</field>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to create a new lead.
+              </p><p>
+                Use leads if you need a qualification step before creating an
+                opportunity or a customer. It can be a business card you received,
+                a contact form filled in your website, or a file of unqualified
+                prospects you import, etc.
+              </p><p>
+                Once qualified, the lead can be converted into a business
+                opportunity and/or a new customer in your address book.
+              </p>
+            </field>
+        </record>
+
+        <!-- Case Sections Salesteams kanban view -->
+
+        <record model="ir.ui.view" id="crm_case_section_salesteams_view_kanban">
+            <field name="name">crm.case.section.kanban</field>
+            <field name="model">crm.case.section</field>
+            <field name="arch" type="xml">
+                <kanban version="7.0">
+                    <field name="name"/>
+                    <field name="user_id"/>
+                    <field name="member_ids"/>
+                    <field name="note"/>
+                    <field name="alias_id"/>
+                    <field name="number_lead"/>
+                    <field name="number_opportunity"/>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div t-attf-class="oe_kanban_card oe_kanban_project oe_kanban_global_click oe_kanban_crm_salesteams" style="width:200px;">
+                                <div class="oe_dropdown_toggle oe_dropdown_kanban" groups="base.group_user">
+                                    <span class="oe_e">í</span>
+                                    <ul class="oe_dropdown_menu">
+                                        <t t-if="widget.view.is_action_enabled('edit')"><li><a type="edit">Project Settings</a></li></t>
+                                        <t t-if="widget.view.is_action_enabled('delete')"><li><a type="delete">Delete</a></li></t>
+                                    </ul>
+                                </div>
+                                <div class="oe_kanban_content">
+                                    <h4>
+                                      <field name="name"/>
+                                      <div class="oe_kanban_crm_salesteams_leader">
+                                        <small>
+                                          <t t-if="record.user_id.raw_value">(<field name="user_id"/>)</t>
+                                          <t t-if="!record.user_id.raw_value"><br/></t>
+                                        </small>
+                                      </div>
+                                    </h4>
+                                    <div class="oe_kanban_crm_salesteams_list">
+                                        <a name="%(crm_case_form_view_salesteams_lead)d" type="action"> 
+                                            <field name="number_lead"/>
+                                            <t t-if="record.number_lead.raw_value &gt; 1">Leads</t>
+                                            <t t-if="record.number_lead.raw_value &lt;= 1">Lead</t>
+                                        </a><br/>
+                                        <a name="%(crm_case_form_view_salesteams_opportunity)d" type="action"> 
+                                            <field name="number_opportunity"/>
+                                            <t t-if="record.number_opportunity.raw_value &gt; 1">Opportunities</t>
+                                            <t t-if="record.number_opportunity.raw_value &lt;= 1">Opportunity</t>
+                                        </a>
+                                    </div>
+                                    <div class="oe_kanban_crm_salesteams_avatars">
+                                        <t t-foreach="record.member_ids.raw_value.slice(0,11)" t-as="member">
+                                            <img t-att-src="kanban_image('res.users', 'image_small', member)" t-att-data-member_id="member"/>
+                                        </t>
+                                    </div>
+                                    <br/>
+                                    <small style="position: absolute; bottom: 5px;">
+                                        <field name="alias_id"/>
+                                    </small>
+                                </div>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
+
+        <!-- Case Sections Action -->
+
+        <record id="crm_case_section_salesteams_act" model="ir.actions.act_window">
+            <field name="name">Sales Teams</field>
+            <field name="res_model">crm.case.section</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">kanban,tree,form</field>
+            <field name="view_id" ref="crm_case_section_salesteams_view_kanban"/>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to define a new sales team.
+              </p><p>
+                Use sales team to organize your different salespersons or
+                departments into separate teams. Each team will work in
+                its own list of opportunities.
+              </p>
+            </field>
+        </record>
+
+        <menuitem
+            action="crm_case_section_salesteams_act"
+            id="crm.menu_crm_case_section_act"
+            sequence="1"
+            parent="base.menu_sales"
+            groups="base.group_sale_manager,base.group_sale_salesman"/>
+  </data>
+</openerp>

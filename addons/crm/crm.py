@@ -109,6 +109,20 @@ class crm_case_section(osv.osv):
     def get_full_name(self, cr, uid, ids, field_name, arg, context=None):
         return  dict(self.name_get(cr, uid, ids, context=context))
 
+    def get_number_leads(self, cr, uid, section_ids, field_name, arg, context=None):
+        res = dict.fromkeys(section_ids, 0)
+        lead_obj = self.pool.get('crm.lead')
+        for section_id in section_ids:
+            res[section_id] = lead_obj.search(cr, uid, [("section_id", "=", section_id), '|', '|', ("type", "=", "lead"), ("type", "=", "both"), ("type", "=", False), ('state', 'not in', ['done', 'cancel'])], count=True, context=context)
+        return res
+
+    def get_number_opportunities(self, cr, uid, section_ids, field_name, arg, context=None):
+        res = dict.fromkeys(section_ids, 0)
+        lead_obj = self.pool.get('crm.lead')
+        for section_id in section_ids:
+            res[section_id] = lead_obj.search(cr, uid, [("section_id", "=", section_id), '|', ("type", "=", "opportunity"), ("type", "=", "both"), ('state', 'not in',  ['done', 'cancel'])], context=context, count=True)
+        return res
+
     _columns = {
         'name': fields.char('Sales Team', size=64, required=True, translate=True),
         'complete_name': fields.function(get_full_name, type='char', size=256, readonly=True, store=True),
@@ -128,6 +142,8 @@ class crm_case_section(osv.osv):
         'alias_id': fields.many2one('mail.alias', 'Alias', ondelete="cascade", required=True,
                                     help="The email address associated with this team. New emails received will automatically "
                                          "create new leads assigned to the team."),
+        'number_lead': fields.function(get_number_leads, type='integer', readonly=True),
+        'number_opportunity': fields.function(get_number_opportunities, type='integer',  readonly=True),
     }
 
     def _get_stage_common(self, cr, uid, context):
