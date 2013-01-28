@@ -253,7 +253,14 @@ openerp.mail = function (session) {
             } else {
                 this.avatar = mail.ChatterUtils.get_image(this.session, 'res.users', 'image_small', this.session.uid);
             }
-
+            if (this.author_id) {
+                var email = this.author_id[1].match(/(.*)<(.*@.*)>/);
+                if (!email) {
+                    this.author_id.push(_.str.escapeHTML(this.author_id[1]), '', this.author_id[1]);
+                } else {
+                    this.author_id.push(_.str.escapeHTML(email[0]), _.str.trim(email[1]), email[2]);
+                }
+            }
         },
 
 
@@ -370,6 +377,7 @@ openerp.mail = function (session) {
             this.show_compact_message = false;
             this.show_delete_attachment = true;
             this.emails_from = [];
+            this.partners_from = [];
         },
 
         start: function () {
@@ -471,7 +479,7 @@ openerp.mail = function (session) {
         bind_events: function () {
             var self = this;
 
-            this.$('textarea.oe_compact').on('focus', _.bind( this.on_compose_expandable, this));
+            this.$('.oe_compact').on('click', _.bind( this.on_compose_expandable, this));
 
             // set the function called when attachments are added
             this.$('input.oe_form_binary_file').on('change', _.bind( this.on_attachment_change, this) );
@@ -479,60 +487,58 @@ openerp.mail = function (session) {
             this.$('.oe_cancel').on('click', _.bind( this.on_cancel, this) );
             this.$('.oe_post').on('click', _.bind( this.on_message_post, this) );
             this.$('.oe_full').on('click', _.bind( this.on_compose_fullmail, this, this.id ? 'reply' : 'comment') );
-        
             /* stack for don't close the compose form if the user click on a button */
             this.$('.oe_msg_left, .oe_msg_center').on('mousedown', _.bind( function () { this.stay_open = true; }, this));
             this.$('.oe_msg_left, .oe_msg_content').on('mouseup', _.bind( function () { this.$('textarea').focus(); }, this));
-
             var ev_stay = {};
             ev_stay.mouseup = ev_stay.keydown = ev_stay.focus = function () { self.stay_open = false; };
-            this.$('textarea:not(.oe_compact)').on(ev_stay);
-            this.$('textarea:not(.oe_compact)').autosize();
+            this.$('textarea').on(ev_stay);
+            this.$('textarea').autosize();
 
             // auto close
-            this.$('textarea:not(.oe_compact)').on('blur', _.bind( this.on_compose_expandable, this));
+            this.$('textarea').on('blur', _.bind( this.on_compose_expandable, this));
 
             // event: delete child attachments off the oe_msg_attachment_list box
             this.$(".oe_msg_attachment_list").on('click', '.oe_delete', this.on_attachment_delete);
 
             this.$(".oe_emails_from").on('change', 'input', this.on_checked_email_from);
+            this.$(".oe_partners_from").on('change', 'input', this.on_checked_partner_from);
         },
 
         on_compose_fullmail: function (default_composition_mode) {
-
+            var self = this;
             if(!this.do_check_attachment_upload()) {
                 return false;
             }
 
-            if (default_composition_mode == 'reply') {
+            // create list of new partners
+            this.check_recipient_partners().done(function (partner_ids) {
                 var context = {
                     'default_composition_mode': default_composition_mode,
-                    'default_parent_id': this.id,
-                    'default_body': mail.ChatterUtils.get_text2html(this.$el ? (this.$el.find('textarea:not(.oe_compact)').val() || '') : ''),
-                    'default_attachment_ids': this.attachment_ids,
+                    'default_parent_id': self.id,
+                    'default_body': mail.ChatterUtils.get_text2html(self.$el ? (self.$el.find('textarea:not(.oe_compact)').val() || '') : ''),
+                    'default_attachment_ids': self.attachment_ids,
+                    'default_partner_ids': partner_ids,
                 };
-            } else {
-                var context = {
-                    'default_model': this.context.default_model,
-                    'default_res_id': this.context.default_res_id,
-                    'default_composition_mode': default_composition_mode,
-                    'default_parent_id': this.id,
-                    'default_body': mail.ChatterUtils.get_text2html(this.$el ? (this.$el.find('textarea:not(.oe_compact)').val() || '') : ''),
-                    'default_attachment_ids': this.attachment_ids,
-                };
-            }
-            var action = {
-                type: 'ir.actions.act_window',
-                res_model: 'mail.compose.message',
-                view_mode: 'form',
-                view_type: 'form',
-                views: [[false, 'form']],
-                target: 'new',
-                context: context,
-            };
+                if (default_composition_mode != 'reply' && self.context.default_model && self.context.default_res_id) {
+                    context.default_model = self.context.default_model;
+                    context.default_res_id = self.context.default_res_id;
+                }
 
-            this.do_action(action);
-            this.on_cancel();
+                var action = {
+                    type: 'ir.actions.act_window',
+                    res_model: 'mail.compose.message',
+                    view_mode: 'form',
+                    view_type: 'form',
+                    views: [[false, 'form']],
+                    target: 'new',
+                    context: context,
+                };
+
+                self.do_action(action);
+                self.on_cancel();
+            });
+
         },
 
         reinit: function() {
@@ -564,57 +570,68 @@ openerp.mail = function (session) {
             }
         },
 
-        check_recipient_partners: function (emails) {
+        check_recipient_partners: function () {
             var self = this;
-            var deferreds = [];
-            var ds_partner = new session.web.DataSetSearch(this, 'res.partner');
-            _.each(emails, function (email) {
-                ds_partner.call('search', [[['email', '=', email]]]).then(function (partner_ids) {
-                    if (!partner_ids.length) {
-                        var deferred = $.Deferred();
-                        var pop = new session.web.form.FormOpenPopup(this);
-                        pop.show_element(
-                            'res.partner',
-                            0,
-                            {
-                                'default_email': email,
-                                'force_email': true,
-                                'ref': "compound_context",
-                            },
-                            {
-                                title: _t("Please complete partner's informations"),
-                            }
-                        );
-                        pop.on('write_completed, closed', self, function () {
-                            deferred.resolve();
-                        });
-                        deferreds.push(deferred);
-                    }
+            var partners_from = [];
+            var emails = [];
+            _.each(this.emails_from, function (email_from) {
+                if (email_from[1] && !_.find(emails, function (email) {return email == email_from[0][4];})) {
+                    emails.push(email_from[0][1]);
+                }
+            });
+            var deferred_check = $.Deferred();
+            if (emails.length == 0) {
+                return deferred_check.resolve(partners_from);
+            }
+            self.parent_thread.ds_thread._model.call('message_create_partners_from_emails', [emails]).then(function (partners) {
+                partners_from = _.clone(partners.partner_ids);
+                var deferreds = [];
+                _.each(partners.new_partner_ids, function (id) {
+                    var deferred = $.Deferred()
+                    deferreds.push(deferred);
+                    var pop = new session.web.form.FormOpenPopup(this);
+                    pop.show_element(
+                        'res.partner',
+                        id,
+                        {
+                            'force_email': true,
+                            'ref': "compound_context",
+                        },
+                        {
+                            title: _t("Please complete partner's informations"),
+                        }
+                    );
+                    pop.on('closed', self, function () {
+                        deferred.resolve();
+                    });
+                    partners_from.push(id);
+                });
+                $.when.apply( $, deferreds ).then(function () {
+                    deferred_check.resolve(partners_from);
                 });
             });
-            return $.when.apply( $, deferreds );
+            return deferred_check;
         },
 
         on_message_post: function (event) {
             var self = this;
             if (this.do_check_attachment_upload() && (this.attachment_ids.length || this.$('textarea').val().match(/\S+/))) {
                 // create list of new partners
-                var extra_email = _.map(_.filter(this.emails_from, function (f) {return f[1]}), function (f) {return f[0]});
-                this.check_recipient_partners(extra_email).done(function () {
-                    self.do_send_message_post();
+                this.check_recipient_partners().done(function (partner_ids) {
+                    self.do_send_message_post(partner_ids);
                 });
             }
         },
 
         /*do post a message and fetch the message*/
-        do_send_message_post: function () {
+        do_send_message_post: function (partner_ids) {
             var self = this;
             this.parent_thread.ds_thread._model.call('message_post_user_api', [this.context.default_res_id], {
                 'body': this.$('textarea').val(),
                 'subject': false,
                 'parent_id': this.context.default_parent_id,
                 'attachment_ids': _.map(this.attachment_ids, function (file) {return file.id;}),
-                'extra_emails': _.map(_.filter(this.emails_from, function (f) {return f[1]}), function (f) {return f[0]}),
+                'partner_ids': partner_ids,
                 'context': this.parent_thread.context,
             }).done(function (message_id) {
                 var thread = self.parent_thread;
@@ -674,26 +691,24 @@ openerp.mail = function (session) {
                 _.each(this.options.root_thread.messages, function (msg) {messages.push(msg); messages.concat(msg.get_childs());});
             }
             
-            var emails_from = _.map(_.filter(messages,
-                    function (thread) {return thread.author_id && !thread.author_id[0];}),
-                function (thread) {return thread.author_id[1];});
-
-            return _.each(emails_from, function (email_from) {
-                if (!_.find(self.emails_from, function (from) {return from[0] == email_from;})) {
-                    self.emails_from.push([email_from, true]);
+            _.each(messages, function (thread) {
+                if (thread.author_id && !thread.author_id[0] &&
+                    !_.find(self.emails_from, function (from) {return from[0][4] == thread.author_id[4];})) {
+                    self.emails_from.push([thread.author_id, true]);
                 }
             });
+            return self.emails_from;
         },
 
         on_checked_email_from: function (event) {
             var $input = $(event.target);
             var email = $input.attr("data");
             _.each(this.emails_from, function (email_from) {
-                if (email_from[0] == email) {
+                if (email_from[0][4] == email) {
                     email_from[1] = $input.is(":checked");
                 }
             });
-        }
+        },
     });
 
     /**
@@ -1686,7 +1701,6 @@ openerp.mail = function (session) {
                     this.defaults[key.replace(/^search_default_/, '')] = this.context[key];
                 }
             }
-
             this.action.params = _.extend({
                 'display_indented_thread': 1,
                 'show_reply_button': true,

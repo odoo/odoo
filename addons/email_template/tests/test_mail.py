@@ -45,8 +45,8 @@ class test_message_compose(TestMailBase):
         # Mail data
         _subject1 = 'Pigs'
         _subject2 = 'Bird'
-        _body_html1 = 'Fans of Pigs, unite !\n<p>Admin</p>\n'
-        _body_html2 = 'I am angry !\n<p>Admin</p>\n'
+        _body_html1 = '<div><p>Fans of Pigs, unite !\n</p><p>Admin</p></div>'
+        _body_html2 = '<div><p>I am angry !\n</p><p>Admin</p></div>'
         _attachments = [
             {'name': 'First', 'datas_fname': 'first.txt', 'datas': base64.b64encode('My first attachment')},
             {'name': 'Second', 'datas_fname': 'second.txt', 'datas': base64.b64encode('My second attachment')}
@@ -147,7 +147,7 @@ class test_message_compose(TestMailBase):
         message_pids = [partner.id for partner in compose.partner_ids]
         partner_ids = [p_a_id]
         self.assertEqual(compose.subject, '${object.name}', 'mail.compose.message subject incorrect')
-        self.assertEqual(compose.body, '${object.description}', 'mail.compose.message body incorrect')
+        self.assertEqual(compose.body, '<p>${object.description}</p>', 'mail.compose.message body incorrect')
         self.assertEqual(set(message_pids), set(partner_ids), 'mail.compose.message partner_ids incorrect')
 
         # 2. Post the comment, get created message

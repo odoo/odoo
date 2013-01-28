@@ -20,13 +20,20 @@
 ##############################################################################
 
 import threading
-import ftpserver
+import logging
+
 import authorizer
 import abstracted_fs
-import logging
+import ftpserver
+
+import openerp
 from openerp.tools import config
 _logger = logging.getLogger(__name__)
+
 def start_server():
+    if openerp.multi_process:
+        _logger.info("FTP disabled in multiprocess mode")
+        return
     HOST = config.get('ftp_server_host', '127.0.0.1')
     PORT = int(config.get('ftp_server_port', '8021'))
     PASSIVE_PORTS = None

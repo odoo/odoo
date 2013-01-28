@@ -25,6 +25,7 @@ import dateutil
 import email
 import logging
 import pytz
+import re
 import time
 import xmlrpclib
 from email.message import Message
@@ -39,7 +40,7 @@ _logger = logging.getLogger(__name__)
 
 
 def decode_header(message, header, separator=' '):
-    return separator.join(map(decode, message.get_all(header, [])))
+    return separator.join(map(decode, filter(None, message.get_all(header, []))))
 
 
 class mail_thread(osv.AbstractModel):
@@ -309,13 +310,15 @@ class mail_thread(osv.AbstractModel):
 
     def message_track(self, cr, uid, ids, tracked_fields, initial_values, context=None):
 
-        def convert_for_display(value, field_obj):
+        def convert_for_display(value, col_info):
+            if not value and col_info['type'] == 'boolean':
+                return 'False'
             if not value:
                 return ''
-            if field_obj['type'] == 'many2one':
+            if col_info['type'] == 'many2one':
                 return value[1]
-            if field_obj['type'] == 'selection':
-                return dict(field_obj['selection'])[value]
+            if col_info['type'] == 'selection':
+                return dict(col_info['selection'])[value]
             return value
 
         def format_message(message_description, tracked_values):
@@ -384,6 +387,18 @@ class mail_thread(osv.AbstractModel):
         if self._needaction:
             return [('message_unread', '=', True)]
         return []
+
+    #------------------------------------------------------
+    # Email specific
+    #------------------------------------------------------
+
+    def message_get_reply_to(self, cr, uid, ids, context=None):
+        if not self._inherits.get('mail.alias'):
+            return [False for id in ids]
+        return ["%s@%s" % (record['alias_name'], record['alias_domain'])
+                    if record.get('alias_domain') and record.get('alias_name')
+                    else False
+                    for record in self.read(cr, uid, ids, ['alias_name', 'alias_domain'], context=context)]
 
     #------------------------------------------------------
     # Mail gateway
@@ -489,7 +504,13 @@ class mail_thread(osv.AbstractModel):
                 for alias in mail_alias.browse(cr, uid, alias_ids, context=context):
                     user_id = alias.alias_user_id.id
                     if not user_id:
-                        user_id = self._message_find_user_id(cr, uid, message, context=context)
+                        # TDE note: this could cause crashes, because no clue that the user
+                        # that send the email has the right to create or modify a new document
+                        # Fallback on user_id = uid
+                        # Note: recognized partners will be added as followers anyway
+                        # user_id = self._message_find_user_id(cr, uid, message, context=context)
+                        user_id = uid
+                        _logger.debug('No matching user_id for the alias %s', alias.alias_name)
                     routes.append((alias.alias_model_id.model, alias.alias_force_thread_id, \
                                    eval(alias.alias_defaults), user_id))
                 _logger.debug('Routing mail with Message-Id %s: direct alias match: %r', message_id, routes)
@@ -627,14 +648,14 @@ class mail_thread(osv.AbstractModel):
         """
         if context is None:
             context = {}
+        data = {}
+        if isinstance(custom_values, dict):
+            data = custom_values.copy()
         model = context.get('thread_model') or self._name
         model_pool = self.pool.get(model)
         fields = model_pool.fields_get(cr, uid, context=context)
-        data = model_pool.default_get(cr, uid, fields, context=context)
         if 'name' in fields and not data.get('name'):
             data['name'] = msg_dict.get('subject', '')
-        if custom_values and isinstance(custom_values, dict):
-            data.update(custom_values)
         res_id = model_pool.create(cr, uid, data, context=context)
         return res_id
 
@@ -799,6 +820,42 @@ class mail_thread(osv.AbstractModel):
                         "now deprecated res.log.")
         self.message_post(cr, uid, [id], message, context=context)
 
+    def message_create_partners_from_emails(self, cr, uid, emails, context=None):
+        """ Convert a list of emails into a list partner_ids and a list
+            new_partner_ids. The return value is non conventional because
+            it is meant to be used by the mail widget.
+
+            :return dict: partner_ids and new_partner_ids
+        """
+        partner_obj = self.pool.get('res.partner')
+        mail_message_obj = self.pool.get('mail.message')
+
+        partner_ids = []
+        new_partner_ids = []
+        for email in emails:
+            m = re.search(r"((.+?)\s*<)?([^<>]+@[^<>]+)>?", email, re.IGNORECASE | re.DOTALL)
+            name = m.group(2) or m.group(0)
+            email = m.group(3)
+            ids = partner_obj.search(cr, SUPERUSER_ID, [('email', '=', email)], context=context)
+            if ids:
+                partner_ids.append(ids[0])
+                partner_id = ids[0]
+            else:
+                partner_id = partner_obj.create(cr, uid, {
+                        'name': name or email,
+                        'email': email,
+                    }, context=context)
+                new_partner_ids.append(partner_id)
+
+            # link mail with this from mail to the new partner id
+            message_ids = mail_message_obj.search(cr, SUPERUSER_ID, ['|', ('email_from', '=', email), ('email_from', 'ilike', '<%s>' % email), ('author_id', '=', False)], context=context)
+            if message_ids:
+                mail_message_obj.write(cr, SUPERUSER_ID, message_ids, {'email_from': None, 'author_id': partner_id}, context=context)
+        return {
+            'partner_ids': partner_ids,
+            'new_partner_ids': new_partner_ids,
+        }
+
     def message_post(self, cr, uid, thread_id, body='', subject=None, type='notification',
                         subtype=None, parent_id=False, attachments=None, context=None, **kwargs):
         """ Post a new message in an existing thread, returning the new
@@ -887,7 +944,7 @@ class mail_thread(osv.AbstractModel):
         return mail_message.create(cr, uid, values, context=context)
 
     def message_post_user_api(self, cr, uid, thread_id, body='', parent_id=False,
-                                attachment_ids=None, extra_emails=None, content_subtype='plaintext',
+                                attachment_ids=None, content_subtype='plaintext',
                                 context=None, **kwargs):
         """ Wrapper on message_post, used for user input :
             - mail gateway
@@ -900,26 +957,12 @@ class mail_thread(osv.AbstractModel):
             - type and subtype: comment and mail.mt_comment by default
             - attachment_ids: supposed not attached to any document; attach them
                 to the related document. Should only be set by Chatter.
-            - extra_email: [ 'Fabien <fpi@openerp.com>', 'al@openerp.com' ]
         """
-        partner_obj = self.pool.get('res.partner')
         mail_message_obj = self.pool.get('mail.message')
         ir_attachment = self.pool.get('ir.attachment')
-        extra_emails = extra_emails or []
 
-        # 1.A.1: pre-process partners and incoming extra_emails
+        # 1.A.1: add recipients of parent message
         partner_ids = set([])
-        for email in extra_emails:
-            partner_id = partner_obj.find_or_create(cr, uid, email, context=context)
-            # link mail with this from mail to the new partner id
-            partner_msg_ids = mail_message_obj.search(cr, SUPERUSER_ID, [('email_from', '=', email), ('author_id', '=', False)], context=context)
-            if partner_id and partner_msg_ids:
-                mail_message_obj.write(cr, SUPERUSER_ID, partner_msg_ids, {'email_from': None, 'author_id': partner_id}, context=context)
-            partner_ids.add((4, partner_id))
-        if partner_ids:
-            self.message_subscribe(cr, uid, [thread_id], [item[1] for item in partner_ids], context=context)
-
-        # 1.A.2: add recipients of parent message
         if parent_id:
             parent_message = mail_message_obj.browse(cr, uid, parent_id, context=context)
             partner_ids |= set([(4, partner.id) for partner in parent_message.partner_ids])
@@ -927,8 +970,21 @@ class mail_thread(osv.AbstractModel):
             if self._name == 'mail.thread' and parent_message.author_id.id:
                 partner_ids.add((4, parent_message.author_id.id))
 
-        # 1.A.3: add specified recipients
-        partner_ids |= set(kwargs.pop('partner_ids', []))
+        # 1.A.2: add specified recipients
+        param_partner_ids = set()
+        for item in kwargs.pop('partner_ids', []):
+            if isinstance(item, (list)):
+                param_partner_ids.add((item[0], item[1]))
+            elif isinstance(item, (int, long)):
+                param_partner_ids.add((4, item))
+            else:
+                param_partner_ids.add(item)
+        partner_ids |= param_partner_ids
+
+        # 1.A.3: add parameters recipients as follower
+        # TDE FIXME in 7.1: should check whether this comes from email_list or partner_ids
+        if param_partner_ids and self._name != 'mail.thread':
+            self.message_subscribe(cr, uid, [thread_id], [pid[1] for pid in param_partner_ids], context=context)
 
         # 1.B: handle body, message_type and message_subtype
         if content_subtype == 'plaintext':
@@ -959,7 +1015,7 @@ class mail_thread(osv.AbstractModel):
         # 3. Post message
         return self.message_post(cr, uid, thread_id=thread_id, body=body,
                             type=msg_type, subtype=msg_subtype, parent_id=parent_id,
-                            attachment_ids=attachment_ids, partner_ids=partner_ids, context=context, **kwargs)
+                            attachment_ids=attachment_ids, partner_ids=list(partner_ids), context=context, **kwargs)
 
     #------------------------------------------------------
     # Followers API

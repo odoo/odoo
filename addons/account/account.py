@@ -1463,6 +1463,7 @@ class account_move(osv.osv):
             line_id = self.pool.get('account.move.line').create(cr, uid, {
                 'name': _(mode.capitalize()+' Centralisation'),
                 'centralisation': mode,
+                'partner_id': False,
                 'account_id': account_id,
                 'move_id': move.id,
                 'journal_id': move.journal_id.id,
@@ -1501,6 +1502,7 @@ class account_move(osv.osv):
                     line_id = self.pool.get('account.move.line').create(cr, uid, {
                         'name': _('Currency Adjustment'),
                         'centralisation': 'currency',
+                        'partner_id': False,
                         'account_id': account_id,
                         'move_id': move.id,
                         'journal_id': move.journal_id.id,

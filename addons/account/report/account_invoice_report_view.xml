@@ -28,8 +28,7 @@
                 <field name="nbr" sum="# of Lines"/>
                 <field name="product_qty" sum="Qty"/>
                 <!-- <field name="reconciled"  sum="# Reconciled"/> -->
-                <field name="user_currency_price_total" sum="Total Without Tax"/>
-                <field name="user_currency_residual"  sum="Total Residual" invisible="context.get('residual_invisible',False)"/>
+                <field name="price_total" sum="Total Without Tax"/>
             </tree>
         </field>
     </record>

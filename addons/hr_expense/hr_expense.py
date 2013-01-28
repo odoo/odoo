@@ -212,7 +212,6 @@ class hr_expense_expense(osv.osv):
                 if analytic_journal_ids:
                     account_journal.write(cr, uid, [journal.id], {'analytic_journal_id': analytic_journal_ids[0]}, context=context)
             voucher_id = voucher_obj.create(cr, uid, voucher, context=context)
-            wkf_service.trg_validate(uid, 'account.voucher', voucher_id, 'proforma_voucher', cr)
             self.write(cr, uid, [exp.id], {'voucher_id': voucher_id, 'state': 'done'}, context=context)
         return True
     

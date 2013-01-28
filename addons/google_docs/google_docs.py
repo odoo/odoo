@@ -94,9 +94,9 @@ class google_docs_ir_attachment(osv.osv):
         client = self._auth(cr, uid)
         # fetch and copy the original document
         try:
-            original_resource = client.get_resource_by_id(gdoc_template_id)
+            doc = client.GetDoc(gdoc_template_id)
             #copy the document you choose in the configuration
-            copy_resource = client.copy_resource(original_resource, name_gdocs)
+            copy_resource = client.copy(doc, name_gdocs)
         except:
             raise osv.except_osv(_('Google Docs Error!'), _("Your resource id is not correct. You can find the id in the google docs URL."))
         # create an ir.attachment
