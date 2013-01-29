@@ -52,8 +52,11 @@ class membership_invoice(osv.osv_memory):
                 'amount': data.member_price
             }
         invoice_list = partner_obj.create_membership_invoice(cr, uid, context.get('active_ids', []), datas=datas, context=context)
-        
-        res = mod_obj.get_object_reference(cr, uid, 'account', 'view_account_invoice_filter')
+
+        try:
+            search_view_id = mod_obj.get_object_reference(cr, uid, 'account', 'view_account_invoice_filter')[1]
+        except ValueError:
+            search_view_id = False
         try:
             form_view_id = mod_obj.get_object_reference(cr, uid, 'account', 'invoice_form')[1]
         except ValueError:
@@ -67,7 +70,7 @@ class membership_invoice(osv.osv_memory):
             'res_model': 'account.invoice',
             'type': 'ir.actions.act_window',
             'views': [(False, 'tree'), (form_view_id, 'form')],
-            'search_view_id': res and res[1] or False
+            'search_view_id': search_view_id,
         }
 
 membership_invoice()
