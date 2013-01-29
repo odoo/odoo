@@ -246,7 +246,7 @@ class account_coda_import(osv.osv_memory):
             elif line[0] == '9':
                 statement['balanceMin'] = float(rmspaces(line[22:37])) / 1000
                 statement['balancePlus'] = float(rmspaces(line[37:52])) / 1000
-                if not statement['balance_end_real']:
+                if not statement.get('balance_end_real'):
                     statement['balance_end_real'] = statement['balance_start'] + statement['balancePlus'] - statement['balanceMin']
         for i, statement in enumerate(statements):
             statement['coda_note'] = ''
