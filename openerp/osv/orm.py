@@ -3928,6 +3928,24 @@ class BaseModel(object):
             result[res_id] = wf_service.trg_validate(uid, self._name, res_id, signal, cr)
         return result
 
+    def create_workflow(self, cr, uid, ids):
+        wf_service = netsvc.LocalService("workflow")
+        for res_id in ids:
+            wf_service.trg_create(uid, self._name, res_id, cr)
+        return True
+
+    def delete_workflow(self, cr, uid, ids):
+        wf_service = netsvc.LocalService("workflow")
+        for res_id in ids:
+            wf_service.trg_create(uid, self._name, res_id, cr)
+        return True
+
+    def redirect_workflow(self, cr, uid, old_new_ids):
+        wf_service = netsvc.LocalService("workflow")
+        for old_id, new_id in old_new_ids:
+            wf_service.trg_redirect(uid, self._name, old_id, new_id, cr)
+        return True
+
     def unlink(self, cr, uid, ids, context=None):
         """
         Delete records with given ids
