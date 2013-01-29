@@ -166,9 +166,13 @@ instance.web.format_value = function (value, descriptor, value_if_empty) {
                 value = Math.abs(value);
                 pattern = '-' + pattern;
             }
-            return _.str.sprintf(pattern,
-                    Math.floor(value),
-                    Math.round((value % 1) * 60));
+            var hour = Math.floor(value);
+            var min = Math.round((value % 1) * 60);
+            if (min == 60){
+                min = 0;
+                hour = hour + 1;
+            }
+            return _.str.sprintf(pattern, hour, min);
         case 'many2one':
             // name_get value format
             return value[1] ? value[1].split("\n")[0] : value[1];

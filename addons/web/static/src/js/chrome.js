@@ -481,6 +481,7 @@ instance.web.DatabaseManager = instance.web.Widget.extend({
                         self.do_action("reload");
                     },
                 },
+                _push_me: false,
             };
             self.do_action(client_action);
         });
@@ -868,7 +869,7 @@ instance.web.Menu =  instance.web.Widget.extend({
         this.needaction_data = data;
         _.each(this.needaction_data, function (item, menu_id) {
             var $item = self.$secondary_menus.find('a[data-menu="' + menu_id + '"]');
-            $item.remove('oe_menu_counter');
+            $item.find('.oe_menu_counter').remove();
             if (item.needaction_counter && item.needaction_counter > 0) {
                 $item.append(QWeb.render("Menu.needaction_counter", { widget : item }));
             }
@@ -1395,13 +1396,9 @@ instance.web.WebClient = instance.web.Client.extend({
             });
     },
     set_content_full_screen: function(fullscreen) {
-        if (fullscreen) {
-            $(".oe_webclient", this.$el).addClass("oe_content_full_screen");
-            $("body").css({'overflow-y':'hidden'});
-        } else {
-            $(".oe_webclient", this.$el).removeClass("oe_content_full_screen");
-            $("body").css({'overflow-y':'scroll'});
-        }
+        $(document.body).css('overflow-y', fullscreen ? 'hidden' : 'scroll');
+        this.$('.oe_webclient').toggleClass(
+            'oe_content_full_screen', fullscreen);
     },
     has_uncommitted_changes: function() {
         var $e = $.Event('clear_uncommitted_changes');
