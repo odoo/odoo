@@ -487,8 +487,8 @@ class purchase_order(osv.osv):
         wf_service = netsvc.LocalService("workflow")
         for p_id in ids:
             # Deleting the existing instance of workflow for PO
-            wf_service.trg_delete(uid, 'purchase.order', p_id, cr)
-            wf_service.trg_create(uid, 'purchase.order', p_id, cr)
+            self.delete_workflow(cr, uid, [p_id]) # TODO is it necessary to interleave the calls?
+            self.create_workflow(cr, uid, [p_id])
         return True
 
     def action_invoice_create(self, cr, uid, ids, context=None):
@@ -797,7 +797,7 @@ class purchase_order(osv.osv):
 
             # make triggers pointing to the old orders point to the new order
             for old_id in old_ids:
-                wf_service.trg_redirect(uid, 'purchase.order', old_id, neworder_id, cr)
+                self.redirect_workflow(cr, uid, [(old_id, neworder_id)])
                 self.signal_purchase_cancel(cr, uid, [old_id]) # TODO Is it necessary to interleave the calls?
         return orders_info
 
