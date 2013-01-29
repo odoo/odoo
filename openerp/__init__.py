@@ -37,7 +37,6 @@ import release
 import report
 import service
 import sql_db
-import test
 import tools
 import workflow
 # backward compatilbility
