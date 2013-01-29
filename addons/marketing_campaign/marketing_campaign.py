@@ -47,14 +47,14 @@ DT_FMT = '%Y-%m-%d %H:%M:%S'
 
 def _process_selection(record, fname, column):
     # call fields_get to retrieve the translation of the field's values
-    selection = record._model.fields_get([fname])[fname]['selection']
+    selection = dict(record._model.fields_get([fname])[fname]['selection'])
 
     class processor(object):
         def __init__(self, value):
             self.value = value
 
         def __str__(self, value):
-            return selection[self.value]
+            return selection.get(self.value, '')
 
     return processor
 
