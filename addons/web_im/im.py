@@ -34,8 +34,7 @@ _logger = logging.getLogger(__name__)
 
 def listen_channel(cr, channel_name, handle_message, check_stop=(lambda: False), check_stop_timer=60.):
     """
-        Begin a loop, listening on a PostgreSQL channel. This method does reserver its own cursor, so it should always
-        be called when outside a transaction. This method does never terminate by default, you need to provide a check_stop
+        Begin a loop, listening on a PostgreSQL channel. This method does never terminate by default, you need to provide a check_stop
         callback to do so. This method also assume that all notifications will include a message formated using JSON (see the
         corresponding notify_channel() method).
 
