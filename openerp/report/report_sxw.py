@@ -85,7 +85,7 @@ def _process_int(record, fname, column):
 def _process_float(record, fname, column):
     language = record.session.language
     digits = column.digits[1] if column.digits else 2
-    float_format = "%%.%df" % digit
+    float_format = "%%.%df" % digits
 
     class processor(float):
         def __init__(self, value):
