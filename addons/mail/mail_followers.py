@@ -105,20 +105,26 @@ class mail_notification(osv.Model):
             notify_pids.append(partner.id)
         return notify_pids
 
-    def get_signature_footer(self, cr, uid, user_id, res_model=None, res_id=None, context=None):
+    def get_signature_footer(self, cr, uid, user_id=None, res_model=None, res_id=None, context=None):
         footer = ""
-        user = self.pool.get("res.users").browse(cr, uid, [user_id], context=context)[0]
-        if user and user.signature:
-            signature = plaintext2html(user.signature)
-        else:
-            signature = "--<br>%s" % user.name
-        footer = tools.append_content_to_html(footer, signature, plaintext=False, container_tag='p')
-
         company = None
-        if user.company_id:
-            company = user.company_id.website and "<a style='color:inherit' href='%s'>%s</a>" % (user.company_id.website, user.company_id.name) or user.company_id.name
-        else:
-            company = user.name
+        user = None
+
+        if user_id:
+            users = self.pool.get("res.users").browse(cr, uid, [user_id], context=context)
+            user = users and users[0] or None
+
+        if user:
+            if user.signature:
+                signature = plaintext2html(user.signature)
+            else:
+                signature = "--<br>%s" % user.name
+            footer = tools.append_content_to_html(footer, signature, plaintext=False, container_tag='p')
+
+            if user.company_id:
+                company = user.company_id.website and "<a style='color:inherit' href='%s'>%s</a>" % (user.company_id.website, user.company_id.name) or user.company_id.name
+            else:
+                company = user.name
         
         model_name = None
         record_name = None
@@ -129,27 +135,27 @@ class mail_notification(osv.Model):
             if res_id:
                 record_obj = self.pool.get(res_model)
                 record = record_obj.browse(cr, uid, [res_id], context=context)[0]
-                record_name = record.name
+                record_name = record.name_get() and record.name_get()[0] and record.name_get()[0][1] or record.name
 
         if company:
-            if model_name:
-                if record_name:
-                    signature_company = _("This message is written on the document '<b>%(record_name)s</b>' of '<b>%(model_name)s</b>' from '%(company)s'." % {
-                        'record_name': record_name, 
-                        'model_name': model_name, 
-                        'company': company
-                    })
-                else:
-                    signature_company = _("This message is written on '<b>%(model_name)s</b>' from '%(company)s'." % {
-                        'model_name': model_name, 
-                        'company': company
-                    })
-            else:
-                signature_company = _("This message is written from '%(company)s'." % {
+            if record_name:
+                signature_company = _("This message is written on the document '<b>%(record_name)s</b>' of '<b>%(model_name)s</b>' from %(company)s." % {
+                    'record_name': record_name, 
+                    'model_name': model_name, 
                     'company': company
                 })
-
-        footer = tools.append_content_to_html(footer, "<small>%s</small>" % signature_company, plaintext=False, container_tag='div')
+            else:
+                signature_company = _("This message is written from %(company)s." % {
+                    'company': company
+                })
+            footer = tools.append_content_to_html(footer, "<small>%s</small>" % signature_company, plaintext=False, container_tag='div')
+        else:
+            if record_name:
+                signature_company = _("This message is written on the document '<b>%(record_name)s</b>' of '<b>%(model_name)s</b>'." % {
+                    'record_name': record_name, 
+                    'model_name': model_name
+                })
+                footer = tools.append_content_to_html(footer, "<small>%s</small>" % signature_company, plaintext=False, container_tag='div')
 
         return footer
 
@@ -172,8 +178,8 @@ class mail_notification(osv.Model):
 
         # add signature
         body_html = msg.body
-        user = msg.author_id and msg.author_id.user_ids and msg.author_id.user_ids[0] or None
-        signature_company = self.get_signature_footer(cr, uid, user_id=user.id, res_model=msg.model, res_id=msg.res_id, context=context)
+        user_id = msg.author_id and msg.author_id.user_ids and msg.author_id.user_ids[0] and msg.author_id.user_ids[0].id or None
+        signature_company = self.get_signature_footer(cr, uid, user_id=user_id, res_model=msg.model, res_id=msg.res_id, context=context)
         body_html = tools.append_content_to_html(body_html, signature_company, plaintext=False, container_tag='div')
 
         mail_values = {
