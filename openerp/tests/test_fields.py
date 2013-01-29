@@ -5,6 +5,7 @@ import common
 
 from openerp.osv import fields
 
+
 class TestRelatedField(common.TransactionCase):
 
     def setUp(self):
@@ -12,15 +13,29 @@ class TestRelatedField(common.TransactionCase):
         self.partner = self.registry('res.partner')
         self.company = self.registry('res.company')
 
+        # add related fields in _columns, and update _all_columns accordingly
+        self.partner_columns = self.partner._columns
+        self.partner_all_columns = self.partner._all_columns
+        test_columns = {
+            'related_company_partner_id': fields.related('company_id', 'partner_id', type='many2one', obj='res.partner'),
+            'single_related_company_id': fields.related('company_id', type='many2one', obj='res.company'),
+            'related_related_company_id': fields.related('single_related_company_id', type='many2one', obj='res.company'),
+        }
+
+        self.partner._columns = dict(self.partner_columns)
+        self.partner._all_columns = dict(self.partner_all_columns)
+        for name, field in test_columns.iteritems():
+            self.partner._columns[name] = field
+            self.partner._all_columns[name] = fields.column_info(name, field, None, None, None)
+
+    def tearDown(self):
+        # restore _columns and _all_columns
+        self.partner._columns = self.partner_columns
+        self.partner._all_columns = self.partner_all_columns
+        super(TestRelatedField, self).tearDown()
+
     def test_0_related(self):
         """ test an usual related field """
-        # add a related field test_related_company_id on res.partner
-        old_columns = self.partner._columns
-        self.partner._columns = dict(old_columns)
-        self.partner._columns.update({
-            'related_company_partner_id': fields.related('company_id', 'partner_id', type='many2one', obj='res.partner'),
-        })
-
         # find a company with a non-null partner_id
         ids = self.company.search(self.cr, self.uid, [('partner_id', '!=', False)], limit=1)
         id = ids[0]
@@ -30,9 +45,6 @@ class TestRelatedField(common.TransactionCase):
         partner_ids1 = self.partner.search(self.cr, self.uid, [('company_id', 'in', company_ids)])
         partner_ids2 = self.partner.search(self.cr, self.uid, [('related_company_partner_id', '=', id)])
         self.assertEqual(partner_ids1, partner_ids2)
-
-        # restore res.partner fields
-        self.partner._columns = old_columns
 
     def do_test_company_field(self, field):
         # get a partner with a non-null company_id
@@ -49,57 +61,14 @@ class TestRelatedField(common.TransactionCase):
 
     def test_1_single_related(self):
         """ test a related field with a single indirection like fields.related('foo') """
-        # add a related field test_related_company_id on res.partner
-        # and simulate a _inherits_reload() to populate _all_columns.
-        old_columns = self.partner._columns
-        old_all_columns = self.partner._all_columns
-        self.partner._columns = dict(old_columns)
-        self.partner._all_columns = dict(old_all_columns)
-        self.partner._columns.update({
-            'single_related_company_id': fields.related('company_id', type='many2one', obj='res.company'),
-        })
-        self.partner._all_columns.update({
-            'single_related_company_id': fields.column_info('single_related_company_id', self.partner._columns['single_related_company_id'], None, None, None)
-        })
-
         self.do_test_company_field('single_related_company_id')
-
-        # restore res.partner fields
-        self.partner._columns = old_columns
-        self.partner._all_columns = old_all_columns
 
     def test_2_related_related(self):
         """ test a related field referring to a related field """
-        # add a related field on a related field on res.partner
-        # and simulate a _inherits_reload() to populate _all_columns.
-        old_columns = self.partner._columns
-        old_all_columns = self.partner._all_columns
-        self.partner._columns = dict(old_columns)
-        self.partner._all_columns = dict(old_all_columns)
-        self.partner._columns.update({
-            'single_related_company_id': fields.related('company_id', type='many2one', obj='res.company'),
-            'related_related_company_id': fields.related('single_related_company_id', type='many2one', obj='res.company'),
-        })
-        self.partner._all_columns.update({
-            'single_related_company_id': fields.column_info('single_related_company_id', self.partner._columns['single_related_company_id'], None, None, None),
-            'related_related_company_id': fields.column_info('related_related_company_id', self.partner._columns['related_related_company_id'], None, None, None)
-        })
-
         self.do_test_company_field('related_related_company_id')
-
-        # restore res.partner fields
-        self.partner._columns = old_columns
-        self.partner._all_columns = old_all_columns
 
     def test_3_read_write(self):
         """ write on a related field """
-        # add a related field test_related_company_id on res.partner
-        old_columns = self.partner._columns
-        self.partner._columns = dict(old_columns)
-        self.partner._columns.update({
-            'related_company_partner_id': fields.related('company_id', 'partner_id', type='many2one', obj='res.partner'),
-        })
-
         # find a company with a non-null partner_id
         company_ids = self.company.search(self.cr, self.uid, [('partner_id', '!=', False)], limit=1)
         company = self.company.browse(self.cr, self.uid, company_ids[0])
@@ -117,8 +86,5 @@ class TestRelatedField(common.TransactionCase):
 
         partner = self.partner.browse(self.cr, self.uid, partner_ids[0])
         self.assertEqual(partner.related_company_partner_id.id, new_partner_id)
-
-        # restore res.partner fields
-        self.partner._columns = old_columns
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
