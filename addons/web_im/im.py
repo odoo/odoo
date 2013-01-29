@@ -90,7 +90,7 @@ POLL_TIMER = 30
 DISCONNECTION_TIMER = POLL_TIMER + 5
 WATCHER_ERROR_DELAY = 10
 
-if openerp.tools.config.options["gevent"]:
+if openerp.evented:
     import gevent
     import gevent.event
 
@@ -164,7 +164,7 @@ class ImportController(openerp.addons.web.http.Controller):
 
     @openerp.addons.web.http.jsonrequest
     def poll(self, req, last=None, users_watch=None, db=None, uid=None, password=None):
-        if not openerp.tools.config.options["gevent"]:
+        if not openerp.evented:
             raise Exception("Not usable in a server not running gevent")
         if db is not None:
             req.session._db = db
@@ -182,7 +182,7 @@ class ImportController(openerp.addons.web.http.Controller):
 
     @openerp.addons.web.http.jsonrequest
     def activated(self, req):
-        return not not openerp.tools.config.options["gevent"]
+        return not not openerp.evented
 
 
 class im_message(osv.osv):
