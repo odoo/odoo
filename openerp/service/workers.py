@@ -35,6 +35,7 @@ class Multicorn(object):
     def __init__(self, app):
         # config
         self.address = (config['xmlrpc_interface'] or '0.0.0.0', config['xmlrpc_port'])
+        self.long_polling_address = (config['xmlrpc_interface'] or '0.0.0.0', config['longpolling_port'])
         self.population = config['workers']
         self.timeout = config['limit_time_real']
         self.limit_request = config['limit_request']
@@ -132,7 +133,8 @@ class Multicorn(object):
     def process_timeout(self):
         now = time.time()
         for (pid, worker) in self.workers.items():
-            if now - worker.watchdog_time >= worker.watchdog_timeout:
+            if (worker.watchdog_timeout is not None) and \
+                (now - worker.watchdog_time >= worker.watchdog_timeout):
                 _logger.error("Worker (%s) timeout", pid)
                 self.worker_kill(pid, signal.SIGKILL)
 
@@ -185,7 +187,7 @@ class Multicorn(object):
         self.long_polling_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.long_polling_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
         self.long_polling_socket.setblocking(0)
-        self.long_polling_socket.bind(('0.0.0.0', 8072))
+        self.long_polling_socket.bind(self.long_polling_address)
         self.long_polling_socket.listen(8)
 
     def stop(self, graceful=True):
@@ -230,6 +232,7 @@ class Worker(object):
         self.multi = multi
         self.watchdog_time = time.time()
         self.watchdog_pipe = multi.pipe_new()
+        # Can be set to None if no watchdog is desired.
         self.watchdog_timeout = multi.timeout
         self.ppid = os.getpid()
         self.pid = None
@@ -345,8 +348,13 @@ class WorkerHTTP(Worker):
 
 class WorkerLongPolling(Worker):
     """ Long polling workers """
+    def __init__(self, multi):
+        super(WorkerLongPolling, self).__init__(multi)
+        # Disable the watchdog feature for this kind of worker.
+        self.watchdog_timeout = None
+
     def start(self):
-        config.options["gevent"] = True
+        openerp.evented = True
         _logger.info('Using gevent mode')
         import gevent.monkey
         gevent.monkey.patch_all()

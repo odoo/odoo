@@ -418,7 +418,7 @@ def serve(interface, port, threaded):
     """
 
     global httpd
-    if not openerp.tools.config.options["gevent"]:
+    if not openerp.evented:
         httpd = werkzeug.serving.make_server(interface, port, application, threaded=threaded)
     else:
         from gevent.wsgi import WSGIServer
