@@ -522,7 +522,7 @@ html_template = """<!DOCTYPE html>
     </head>
     <body>
         <!--[if lte IE 8]>
-        <script src="http://ajax.googleapis.com/ajax/libs/chrome-frame/1/CFInstall.min.js"></script>
+        <script src="//ajax.googleapis.com/ajax/libs/chrome-frame/1/CFInstall.min.js"></script>
         <script>CFInstall.check({mode: "overlay"});</script>
         <![endif]-->
     </body>
