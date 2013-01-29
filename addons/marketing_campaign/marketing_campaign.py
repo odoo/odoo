@@ -44,41 +44,23 @@ _intervalTypes = {
 
 DT_FMT = '%Y-%m-%d %H:%M:%S'
 
-def dict_map(f, d):
-    return dict((k, f(v)) for k,v in d.items())
 
-def _find_fieldname(model, field):
-    inherit_columns = dict_map(itemgetter(2), model._inherit_fields)
-    all_columns = dict(inherit_columns, **model._columns)
-    for fn in all_columns:
-        if all_columns[fn] is field:
-            return fn
-    raise ValueError('Field not found: %r' % (field,))
+def _process_selection(record, fname, column):
+    # call fields_get to retrieve the translation of the field's values
+    selection = record._model.fields_get([fname])[fname]['selection']
 
-class selection_converter(object):
-    """Format the selection in the browse record objects"""
-    def __init__(self, value):
-        self._value = value
-        self._str = value
+    class processor(object):
+        def __init__(self, value):
+            self.value = value
 
-    def set_value(self, cr, uid, _self_again, record, field, lang):
-        # this design is terrible
-        # search fieldname from the field
-        fieldname = _find_fieldname(record._table, field)
-        context = dict(lang=lang.code)
-        fg = record._table.fields_get(cr, uid, [fieldname], context=context)
-        selection = dict(fg[fieldname]['selection'])
-        self._str = selection[self.value]
+        def __str__(self, value):
+            return selection[self.value]
 
-    @property
-    def value(self):
-        return self._value
+    return processor
 
-    def __str__(self):
-        return self._str
 
 translate_selections = {
-    'selection': selection_converter,
+    'selection': _process_selection,
 }
 
 
