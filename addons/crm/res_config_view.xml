@@ -23,19 +23,6 @@
                         </div>
                     </group>
 	            </div>
-                <group name="On Mail Client" version="7.0" position="after">
-                    <group>
-                        <label for="id" string="On Mail Server"/>
-                        <div>
-                            <div name="fetchmail_lead">
-                                <field name="fetchmail_lead" class="oe_inline"/>
-                                <label for="fetchmail_lead"/>
-                                <button name="configure_fetchmail_lead" type="object" string="Configure" icon="gtk-go-forward"
-                                attrs="{'invisible': [('fetchmail_lead','=',False)]}" class="oe_link"/>
-                            </div>
-                        </div>
-                    </group>
-                </group>
             </field>
         </record>
 

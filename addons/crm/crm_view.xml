@@ -83,6 +83,12 @@
                                 <field name="name" colspan="2"/>
                                 <field name="parent_id"/>
                                 <field name="code"/>
+                                
+                                <field name="alias_id" invisible="1" required="0"/>
+                                <label for="alias_name" attrs="{'invisible': [('alias_domain', '=', False)]}"/>
+                                <div attrs="{'invisible': [('alias_domain', '=', False)]}">
+                                    <field name="alias_name" class="oe_inline" attrs="{'required': [('alias_id', '!=', False)]}"/>@<field name="alias_domain" class="oe_inline"/>
+                                 </div>
                             </group>
 
                             <group>
@@ -94,11 +100,6 @@
                         <notebook colspan="4">
                             <page string="Sales Team">
                                <group>
-                                    <field name="alias_id" invisible="1" required="0"/>
-                                    <label for="alias_name" attrs="{'invisible': [('alias_domain', '=', False)]}"/>
-                                    <div attrs="{'invisible': [('alias_domain', '=', False)]}">
-                                        <field name="alias_name" class="oe_inline" attrs="{'required': [('alias_id', '!=', False)]}"/>@<field name="alias_domain" class="oe_inline"/>
-                                     </div>
                                     <field name="change_responsible"/>
                                 </group>
                                 <separator string="Team Members"/>

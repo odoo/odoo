@@ -69,39 +69,38 @@
             <field name="arch" type="xml">
                 <form string="Group Form" version="7.0">
                     <sheet class="openerp_mail_group_sheet">
-                        <field name="image" widget='image' class="oe_avatar oe_left" options='{"preview_image": "image_medium"}'/>
+                        <field name="image" widget='image' class="oe_avatar oe_left" options='{"preview_image": "image_small"}'/>
                         <div class="oe_title">
                             <div class="oe_edit_only">
                                 <label for="name" string="Group Name"/>
                             </div>
                             <h1><field name="name" readonly="0"/></h1>
+
                             <div name="alias_box" colspan="4" attrs="{'invisible': [('alias_domain', '=', False)]}">
-                                    <field name="alias_id" invisible="1" required="0"/>
-                                    <label for="alias_name" class="oe_edit_only"/>
-                                    <field name="alias_name" nolabel="1" class="oe_inline" attrs="{'required': [('alias_id', '!=', False)]}"/>@<field name="alias_domain" nolabel="1" class="oe_inline"/>
+                                <field name="alias_id" invisible="1" required="0"/>
+                                <label for="alias_name" class="oe_edit_only"/>
+                                <field name="alias_name" nolabel="1" class="oe_inline" attrs="{'required': [('alias_id', '!=', False)]}"/>@<field name="alias_domain" nolabel="1" class="oe_inline"/>
                             </div>
-                            <field name="description" placeholder="Topics discussed in this group..."/>
                         </div>
+                        <field name="description" placeholder="Topics discussed in this group..."/>
                         <div class="oe_clear"/>
-                        <group>
-                            <group class="oe_edit_only">
-                                <field name="public"/>
-                                <field name="group_public_id"
-                                    attrs="{'invisible': [('public','&lt;&gt;','groups')], 'required': [('public','=','groups')]}"
-                                    />
-                                <field name="group_ids" widget="many2many_tags"/>
-                            </group>
-                            <group>
-                                <div class="oe_grey" attrs="{'invisible': [('public','&lt;&gt;','public')]}">
-                                    This group is visible by everyone,
-                                    including your customers if you installed
-                                    the portal module.
-                                </div>
-                                <div class="oe_grey" attrs="{'invisible': [('public','&lt;&gt;','private')]}">
-                                    Only the invited followers can read the
-                                    discussions on this group.
-                                </div>
-                            </group>
+                        <group class="oe_edit_only">
+                            <field name="public"/>
+                            <field name="group_public_id"
+                                attrs="{'invisible': [('public','&lt;&gt;','groups')], 'required': [('public','=','groups')]}"
+                                />
+                            <field name="group_ids" widget="many2many_tags"/>
+                        </group>
+                        <group attrs="{'invisible': [('public','not in',['public','private'])]}">
+                            <div class="oe_grey" attrs="{'invisible': [('public','&lt;&gt;','public')]}">
+                                This group is visible by everyone,
+                                including your customers if you installed
+                                the portal module.
+                            </div>
+                            <div class="oe_grey" attrs="{'invisible': [('public','&lt;&gt;','private')]}">
+                                Only the invited followers can read the
+                                discussions on this group.
+                            </div>
                         </group>
                     </sheet>
                     <div class="oe_chatter">

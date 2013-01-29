@@ -71,6 +71,7 @@
                     <field name="member_ids"/>
                     <field name="note"/>
                     <field name="alias_id"/>
+                    <field name="alias_domain"/>
                     <field name="number_lead"/>
                     <field name="number_opportunity"/>
                     <templates>
@@ -110,10 +111,12 @@
                                             <img t-att-src="kanban_image('res.users', 'image_small', member)" t-att-data-member_id="member"/>
                                         </t>
                                     </div>
-                                    <br/>
-                                    <small style="position: absolute; bottom: 5px;">
-                                        <field name="alias_id"/>
-                                    </small>
+                                    <t t-if="record.alias_domain.raw_value">
+                                        <br/>
+                                        <small style="position: absolute; bottom: 5px;">
+                                            <field name="alias_id"/>
+                                        </small>
+                                    </t>
                                 </div>
                             </div>
                         </t>

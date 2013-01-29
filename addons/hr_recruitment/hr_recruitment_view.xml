@@ -307,12 +307,12 @@
                         attrs="{'invisible':[('survey_id','=',False)]}"/>
                 </div>
             </field>
-            <xpath expr="//div[@class='oe_title']" version="7.0" position="after">
+            <xpath expr="//group//group" version="7.0" position="inside">
+                <field name="alias_id" invisible="1" required="0"/>
+                <label for="alias_name" attrs="{'invisible': [('alias_domain', '=', False)]}"/>
                 <div attrs="{'invisible': [('alias_domain', '=', False)]}">
-                    <field name="alias_id" invisible="1" required="0"/>
-                    <label for="alias_name" class="oe_edit_only"/>
-                    <field name="alias_name" nolabel="1" class="oe_inline" attrs="{'required': [('alias_id', '!=', False)]}"/>@<field name="alias_domain" nolabel="1" class="oe_inline"/>
-                </div>
+                    <field name="alias_name" class="oe_inline" attrs="{'required': [('alias_id', '!=', False)]}"/>@<field name="alias_domain" class="oe_inline"/>
+                 </div>
             </xpath>
         </field>
     </record>
