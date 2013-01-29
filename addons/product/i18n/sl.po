@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2012-12-21 17:06+0000\n"
-"PO-Revision-Date: 2013-01-14 18:37+0000\n"
+"PO-Revision-Date: 2013-01-28 13:01+0000\n"
 "Last-Translator: Dušan Laznik (Mentis) <laznik@mentis.si>\n"
 "Language-Team: Slovenian <sl@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-01-15 05:32+0000\n"
-"X-Generator: Launchpad (build 16420)\n"
+"X-Launchpad-Export-Date: 2013-01-29 06:18+0000\n"
+"X-Generator: Launchpad (build 16451)\n"
 
 #. module: product
 #: field:product.packaging,rows:0
@@ -90,7 +90,7 @@ msgstr "Ime pravila"
 #: help:product.template,list_price:0
 msgid ""
 "Base price to compute the customer price. Sometimes called the catalog price."
-msgstr ""
+msgstr "Osnovna cena za izračun cene za stranko.(Kataloška cena)"
 
 #. module: product
 #: model:product.template,name:product.product_product_3_product_template
@@ -139,7 +139,7 @@ msgstr "Izrecno pravilo za to linijo cenika."
 #. module: product
 #: field:product.template,uos_coeff:0
 msgid "Unit of Measure -> UOS Coeff"
-msgstr ""
+msgstr "Enota mere -> Prodajna enota mere (Koeficient)"
 
 #. module: product
 #: field:product.price_list,price_list:0
@@ -197,6 +197,8 @@ msgid ""
 "Error! You cannot define the decimal precision of 'Account' as greater than "
 "the rounding factor of the company's main currency"
 msgstr ""
+"Napaka! Število decimalk za 'Account' ne more biti večje od faktorja "
+"zaokroževanja za glavno valuto podjetja."
 
 #. module: product
 #: field:product.category,parent_id:0
@@ -224,6 +226,8 @@ msgid ""
 "Error! You cannot define a rounding factor for the company's main currency "
 "that is smaller than the decimal precision of 'Account'."
 msgstr ""
+"Napaka! Število decimalk za 'Account' ne more biti večje od faktorja "
+"zaokroževanja za glavno valuto podjetja."
 
 #. module: product
 #: help:product.product,outgoing_qty:0
@@ -343,6 +347,10 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Nova vrsta pakiranja.\n"
+"              </p>\n"
+"            "
 
 #. module: product
 #: field:product.template,product_manager:0
@@ -446,6 +454,8 @@ msgid ""
 "Measure for this category:\n"
 "1 * (reference unit) = ratio * (this unit)"
 msgstr ""
+"Koliko večja ali manjša je ta enota glede na referenčno enoto.\n"
+"1 * (referenčna enota) = razmerje * (ta enota)"
 
 #. module: product
 #: model:ir.model,name:product.model_pricelist_partnerinfo
@@ -555,6 +565,8 @@ msgid ""
 "You provided an invalid \"EAN13 Barcode\" reference. You may use the "
 "\"Internal Reference\" field instead."
 msgstr ""
+"Navedli ste napačno referenco \"EAN13\". Uporabiti morate polje interna "
+"referenca."
 
 #. module: product
 #: model:res.groups,name:product.group_purchase_pricelist
@@ -612,7 +624,7 @@ msgstr "Določite maksimalno razliko nad osnovno ceno."
 msgid ""
 "Error! You cannot assign the Main Pricelist as Other Pricelist in PriceList "
 "Item!"
-msgstr ""
+msgstr "Napaka! Ne morete navesti glavni cenik."
 
 #. module: product
 #: view:product.price_list:0
@@ -948,7 +960,7 @@ msgid ""
 "How many times this Unit of Measure is bigger than the reference Unit of "
 "Measure in this category:\n"
 "1 * (this unit) = ratio * (reference unit)"
-msgstr ""
+msgstr "Kolikokrat je ta enota večja od referenčne enote mere."
 
 #. module: product
 #: view:product.template:0
@@ -971,7 +983,7 @@ msgstr "Določite minimalno količino , ki bo sprožila to pravilo."
 #. module: product
 #: help:product.pricelist.version,date_start:0
 msgid "First valid date for the version."
-msgstr ""
+msgstr "Prvi veljavni datum za verzijo."
 
 #. module: product
 #: help:product.supplierinfo,delay:0
@@ -980,6 +992,8 @@ msgid ""
 "reception of the products in your warehouse. Used by the scheduler for "
 "automatic computation of the purchase order planning."
 msgstr ""
+"Predvideni čas med potrditvijo naročila in prihodom izdelkov na vaše "
+"skladišče."
 
 #. module: product
 #: model:product.template,description_sale:product.product_product_3_product_template
@@ -1062,7 +1076,7 @@ msgid ""
 "The minimal quantity to purchase to this supplier, expressed in the supplier "
 "Product Unit of Measure if not empty, in the default unit of measure of the "
 "product otherwise."
-msgstr ""
+msgstr "Minimalna količina nabave za tega dobavitelja."
 
 #. module: product
 #: view:product.product:0
@@ -1177,7 +1191,7 @@ msgstr ""
 #. module: product
 #: model:product.uom,name:product.product_uom_dozen
 msgid "Dozen(s)"
-msgstr ""
+msgstr "Doze"
 
 #. module: product
 #: field:product.uom,factor:0
@@ -1290,7 +1304,7 @@ msgstr "Število slojev na paleti ali  škatlji"
 #. module: product
 #: help:product.pricelist.item,price_min_margin:0
 msgid "Specify the minimum amount of margin over the base price."
-msgstr ""
+msgstr "Minimalna razlika v ceni."
 
 #. module: product
 #: field:product.template,weight_net:0
@@ -1336,7 +1350,7 @@ msgstr "%s (kopija)"
 #. module: product
 #: model:product.template,name:product.product_product_2_product_template
 msgid "On Site Assistance"
-msgstr ""
+msgstr "Pomoč na lokaciji"
 
 #. module: product
 #: model:product.template,name:product.product_product_39_product_template
@@ -1800,7 +1814,7 @@ msgstr ""
 #: code:addons/product/product.py:208
 #, python-format
 msgid "Cannot change the category of existing Unit of Measure '%s'."
-msgstr ""
+msgstr "Ni možno spremeniti skupine za obstoječo enoto mere '%s'."
 
 #. module: product
 #: help:product.packaging,height:0
@@ -1861,7 +1875,7 @@ msgstr "Sporočila"
 #. module: product
 #: model:product.uom,name:product.product_uom_unit
 msgid "Unit(s)"
-msgstr "Enota(e)"
+msgstr "Kos"
 
 #. module: product
 #: code:addons/product/product.py:176
@@ -1961,6 +1975,9 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Nov izdelek <p>\n"
+"            "
 
 #. module: product
 #: model:product.template,description_sale:product.product_product_44_product_template

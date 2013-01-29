@@ -14,8 +14,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-12-22 07:05+0000\n"
-"X-Generator: Launchpad (build 16378)\n"
+"X-Launchpad-Export-Date: 2013-01-18 06:34+0000\n"
+"X-Generator: Launchpad (build 16430)\n"
 
 #. module: account_voucher
 #: field:account.bank.statement.line,voucher_id:0
@@ -147,7 +147,7 @@ msgstr "Zatwierdź"
 #: model:ir.actions.act_window,name:account_voucher.action_vendor_payment
 #: model:ir.ui.menu,name:account_voucher.menu_action_vendor_payment
 msgid "Supplier Payments"
-msgstr ""
+msgstr "Płatności od dostwców"
 
 #. module: account_voucher
 #: model:ir.actions.act_window,help:account_voucher.action_purchase_receipt
@@ -160,6 +160,14 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Kliknij, aby zarejestrować rachunek zakupu. \n"
+"              </p><p>\n"
+"                Kiedy zatwierdzisz rachunek od dostawcy, to\n"
+"                będziesz mógł zarejestrować i skojarzyć płątność\n"
+"                do tego rachunku.\n"
+"              </p>\n"
+"            "
 
 #. module: account_voucher
 #: view:account.voucher:0
@@ -215,7 +223,7 @@ msgstr "Wiadomości"
 #: model:ir.actions.act_window,name:account_voucher.action_purchase_receipt
 #: model:ir.ui.menu,name:account_voucher.menu_action_purchase_receipt
 msgid "Purchase Receipts"
-msgstr ""
+msgstr "Rachunki od dostawców"
 
 #. module: account_voucher
 #: field:account.voucher.line,move_line_id:0
@@ -270,6 +278,13 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Kliknij, aby zarejestrować rachunek sprzedaży.\n"
+"              </p><p>\n"
+"                Kiedy rachunek jest zatwierdzony, to możesz\n"
+"                kojarzyć z nim płatność.\n"
+"              </p>\n"
+"            "
 
 #. module: account_voucher
 #: help:account.voucher,message_unread:0
@@ -314,6 +329,9 @@ msgid ""
 "Holds the Chatter summary (number of messages, ...). This summary is "
 "directly in html format in order to be inserted in kanban views."
 msgstr ""
+"Zawiera podsumowanie wypowiedzi (liczbę wiadomości, ...). To podsumowanie "
+"jest bezpośrednio w formacie html, aby można je było stosować w widokach "
+"kanban."
 
 #. module: account_voucher
 #: view:account.voucher:0
@@ -347,7 +365,7 @@ msgstr "Importuj faktury"
 #: code:addons/account_voucher/account_voucher.py:1098
 #, python-format
 msgid "Wrong voucher line"
-msgstr ""
+msgstr "Błędna pozycja rachunku"
 
 #. module: account_voucher
 #: selection:account.voucher,pay_now:0
@@ -399,7 +417,7 @@ msgstr "Rachunek od dostawcy"
 #. module: account_voucher
 #: field:account.voucher,message_follower_ids:0
 msgid "Followers"
-msgstr ""
+msgstr "Obserwatorzy"
 
 #. module: account_voucher
 #: selection:account.voucher.line,type:0
@@ -446,6 +464,13 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Kliknij, aby utworzyć płatność do dostawcy.\n"
+"              </p><p>\n"
+"                OpenERP pomaga śledzić twoje płatności i wskazywać "
+"płatności, które powinieneś dokonać swoim dostawcom.\n"
+"              </p>\n"
+"            "
 
 #. module: account_voucher
 #: view:account.voucher:0
@@ -495,6 +520,14 @@ msgid ""
 "\n"
 "* The 'Cancelled' status is used when user cancel voucher."
 msgstr ""
+" * Stan 'Projekt' oznacza, że użytkownik jeszcze pracuje nad wprowadzeniem "
+"dokumentu.                         \n"
+"* Stan 'Pro-forma' oznacza, że rachunek został wystawiony bez numeru.        "
+"                 \n"
+"* Stan 'Zaksięgowane' oznacza, że dokument został zatwierdzony, posiada swój "
+"numer i zapisy księgowe.                         \n"
+"* Stan 'Anulowano' oznacza, że użytkownik zrezygnował z wprowadzania tego "
+"dokumentu."
 
 #. module: account_voucher
 #: field:account.voucher,writeoff_amount:0
@@ -544,6 +577,16 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Kliknij, aby zarejestrować nową płatność. \n"
+"              </p><p>\n"
+"                Wprowadź klienta i metodę płatności, a później utwórz "
+"ręcznie\n"
+"                rekord płatności lub OpenERP zaproponuje ci automatyczne\n"
+"                uzgodnienie płatności z otwartą fakturą lub rachunkiem\n"
+"                sprzedaży.\n"
+"              </p>\n"
+"            "
 
 #. module: account_voucher
 #: field:account.config.settings,expense_currency_exchange_account_id:0
@@ -725,7 +768,7 @@ msgstr "Sierpień"
 #. module: account_voucher
 #: view:account.voucher:0
 msgid "Validate Payment"
-msgstr ""
+msgstr "Zatwierdź płatność"
 
 #. module: account_voucher
 #: help:account.voucher,audit:0
@@ -767,12 +810,12 @@ msgstr "Zapłacono"
 #: model:ir.actions.act_window,name:account_voucher.action_sale_receipt
 #: model:ir.ui.menu,name:account_voucher.menu_action_sale_receipt
 msgid "Sales Receipts"
-msgstr ""
+msgstr "Rachunek dla klienta"
 
 #. module: account_voucher
 #: field:account.voucher,message_is_follower:0
 msgid "Is a Follower"
-msgstr ""
+msgstr "Jest obserwatorem"
 
 #. module: account_voucher
 #: field:account.voucher,analytic_id:0
@@ -826,7 +869,7 @@ msgstr "Poprzednia płatność ?"
 #: code:addons/account_voucher/account_voucher.py:1098
 #, python-format
 msgid "The invoice you are willing to pay is not valid anymore."
-msgstr ""
+msgstr "Faktura, którą chcesz zapłacić, nie jest poprawna."
 
 #. module: account_voucher
 #: selection:sale.receipt.report,month:0
@@ -865,14 +908,14 @@ msgstr "Zdefiniuj numerację w dzienniku"
 #: model:ir.actions.act_window,name:account_voucher.action_vendor_receipt
 #: model:ir.ui.menu,name:account_voucher.menu_action_vendor_receipt
 msgid "Customer Payments"
-msgstr ""
+msgstr "Płatności Klientów"
 
 #. module: account_voucher
 #: model:ir.actions.act_window,name:account_voucher.action_sale_receipt_report_all
 #: model:ir.ui.menu,name:account_voucher.menu_action_sale_receipt_report_all
 #: view:sale.receipt.report:0
 msgid "Sales Receipts Analysis"
-msgstr ""
+msgstr "Analiza rachunków dla klientów"
 
 #. module: account_voucher
 #: view:sale.receipt.report:0
@@ -1028,6 +1071,13 @@ msgid ""
 "          </p>\n"
 "        "
 msgstr ""
+"<p>\n"
+"            Z tego raportu możesz dowiedzieć się o kwotach\n"
+"            zafakturowanych klientom, jak również o czasach płatności.\n"
+"            Narzędzie do wyszukiwania może być stosowane do\n"
+"            dostosowania tej analizy do konkretnych twoich potrzeb.\n"
+"          </p>\n"
+"        "
 
 #. module: account_voucher
 #: view:account.voucher:0
@@ -1255,7 +1305,7 @@ msgstr "Stan początkowy"
 #. module: account_voucher
 #: model:mail.message.subtype,description:account_voucher.mt_voucher_state_change
 msgid "Status <b>changed</b>"
-msgstr ""
+msgstr "Stan <b>zmieniono</b>"
 
 #. module: account_voucher
 #: code:addons/account_voucher/account_voucher.py:1000

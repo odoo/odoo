@@ -67,7 +67,7 @@ openerp.web_analytics = function(instance) {
         * This method contains the initialization of all user-related custom variables
         * stored in GA. Also other modules can override it to add new custom variables
         */
-        initialize_custom: function() {
+        initialize_custom: function(url) {
             var self = this;
             return instance.session.rpc("/web/webclient/version_info", {})
                 .done(function(res) {
@@ -79,7 +79,7 @@ openerp.web_analytics = function(instance) {
                     // Track User Type Conversion, Custom Variable 3 in GA with session level scope
                     // Values: 'Visitor', 'Demo', 'Online Trial', 'Online Paying', 'Local User'
                     _gaq.push(['_setCustomVar', 1, 'User Type Conversion', self._get_user_type(), 2]);
-                    _gaq.push(['_trackPageview']);
+                    _gaq.push(['_trackPageview', url]);
                     return;
                 });
         },
@@ -142,6 +142,7 @@ openerp.web_analytics = function(instance) {
                     'action': state.view_type,
                     'label': url,
                 });
+                this._push_pageview(url);
             }
         },
         /*
@@ -157,19 +158,19 @@ openerp.web_analytics = function(instance) {
                     this._super.apply(this, arguments);
                     var self = this;
                     this.on('record_created', self, function(r) {
-                        var url = instance.web_analytics.generateUrl({'model': r.model, 'view_type': 'form'});
+                        var url = instance.web_analytics.generateUrl({'model': self.model, 'view_type': 'form'});
                         t._push_event({
-                            'category': r.model,
-                            'action': 'form',
+                            'category': self.model,
+                            'action': 'create',
                             'label': url,
                             'noninteraction': true,
                         });
                     });
                     this.on('record_saved', self, function(r) {
-                        var url = instance.web_analytics.generateUrl({'model': r.model, 'view_type': 'form'});
+                        var url = instance.web_analytics.generateUrl({'model': self.model, 'view_type': 'form'});
                         t._push_event({
-                            'category': r.model,
-                            'action': 'form',
+                            'category': self.model,
+                            'action': 'save',
                             'label': url,
                             'noninteraction': true,
                         });
@@ -181,12 +182,12 @@ openerp.web_analytics = function(instance) {
             instance.web.ActionManager.include({
                 ir_actions_client: function (action, options) {
                     var url = instance.web_analytics.generateUrl({'action': action.tag});
-                    var category = action.res_model || action.type;
                     t._push_event({
-                        'category': action.res_model || action.type,
-                        'action': action.name || action.tag,
+                        'category': action.type,
+                        'action': action.tag,
                         'label': url,
                     });
+                    t._push_pageview(url);
                     return this._super.apply(this, arguments);
                 },
             });
@@ -224,21 +225,12 @@ openerp.web_analytics = function(instance) {
                         options = {'action': params.action};
                     }
                     var url = instance.web_analytics.generateUrl(options);
-                    if (error.code) {
-                        t._push_event({
-                            'category': error.message,
-                            'action': error.data.fault_code,
-                            'label': url,
-                            'noninteraction': true,
-                        });
-                    } else {
-                        t._push_event({
-                            'category': error.type,
-                            'action': error.data.debug,
-                            'label': url,
-                            'noninteraction': true,
-                        });
-                    }
+                    t._push_event({
+                        'category': options.model || "ir.actions.client",
+                        'action': "error " + (error.code ? error.message + error.data.fault_code : error.type + error.data.debug),
+                        'label': url,
+                        'noninteraction': true,
+                    });
                     this._super.apply(this, arguments);
                 },
             });
@@ -251,17 +243,19 @@ openerp.web_analytics = function(instance) {
 
     instance.web_analytics.generateUrl = function(options) {
         var url = '';
-        _.each(options, function(value, key) {
-            url += '/' + key + '=' + value;
+        var keys = _.keys(options);
+        var keys = _.sortBy(keys, function(i) { return i;});
+        _.each(keys, function(key) {
+            url += '/' + key + '/' + options[key];
         });
         return url;
     };
 
-    instance.web_analytics.setupTracker = function(wc) {
+    instance.web_analytics.setupTracker = function(wc, url) {
         var t = wc.tracker;
         return $.when(t._get_user_access_level()).then(function(r) {
             t.user_access_level = r;
-            t.initialize_custom().then(function() {
+            t.initialize_custom(url).then(function() {
                 wc.on('state_pushed', t, t.on_state_pushed);
                 t.include_tracker();
             });
@@ -276,14 +270,15 @@ openerp.web_analytics = function(instance) {
         // client does not already exists, we are in monodb mode
         instance.web.WebClient.include({
             start: function() {
+                this.subscribe_deferred = $.when();
                 var d = this._super.apply(this, arguments);
                 this.tracker = new instance.web_analytics.Tracker();
                 return d;
             },
             show_application: function() {
                 var self = this;
-                $.when(this.subscribe_deferred).then(function() {
-                    instance.web_analytics.setupTracker(self);
+                $.when(this.subscribe_deferred).then(function(url) {
+                    instance.web_analytics.setupTracker(self, url);
                 });
                 this._super();
             },

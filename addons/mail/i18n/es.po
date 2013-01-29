@@ -14,8 +14,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-12-22 07:21+0000\n"
-"X-Generator: Launchpad (build 16378)\n"
+"X-Launchpad-Export-Date: 2013-01-18 06:52+0000\n"
+"X-Generator: Launchpad (build 16430)\n"
 
 #. module: mail
 #: view:mail.followers:0
@@ -46,7 +46,7 @@ msgstr "Destinatarios del mensaje"
 #. module: mail
 #: help:mail.message.subtype,default:0
 msgid "Activated by default when subscribing."
-msgstr ""
+msgstr "Activado por defecto en la suscripción."
 
 #. module: mail
 #: view:mail.message:0
@@ -85,7 +85,7 @@ msgstr "Componer correo electrónico"
 #: code:addons/mail/static/src/xml/mail.xml:132
 #, python-format
 msgid "Add them into recipients and followers"
-msgstr ""
+msgstr "Añadirlos a los destinatarios y seguidores"
 
 #. module: mail
 #: view:mail.group:0
@@ -127,12 +127,12 @@ msgstr "Asistente de redacción de correo electrónico."
 #: code:addons/mail/static/src/xml/mail_followers.xml:23
 #, python-format
 msgid "Add others"
-msgstr ""
+msgstr "Añadir otros"
 
 #. module: mail
 #: field:mail.message.subtype,parent_id:0
 msgid "Parent"
-msgstr ""
+msgstr "Padre"
 
 #. module: mail
 #: field:mail.group,message_unread:0
@@ -205,7 +205,7 @@ msgstr ""
 #: code:addons/mail/static/src/xml/mail.xml:194
 #, python-format
 msgid "Uploading error"
-msgstr ""
+msgstr "Error de subida"
 
 #. module: mail
 #: model:mail.group,name:mail.group_support
@@ -291,7 +291,7 @@ msgstr "subiendo"
 #: code:addons/mail/static/src/xml/mail_followers.xml:52
 #, python-format
 msgid "more."
-msgstr ""
+msgstr "más."
 
 #. module: mail
 #: help:mail.compose.message,type:0
@@ -310,6 +310,9 @@ msgid ""
 "automatic subscription on a related document. The field is used to compute "
 "getattr(related_document.relation_field)."
 msgstr ""
+"Campo usado para enlazar el modelo relacionado al modelo de subtipo cuando "
+"se utiliza suscripción automática en el documento relacionado. El campo se "
+"usa para calcular getattr(relacionado.campo_relacionado)."
 
 #. module: mail
 #: selection:mail.mail,state:0
@@ -422,7 +425,7 @@ msgstr ""
 #. module: mail
 #: field:mail.message.subtype,relation_field:0
 msgid "Relation field"
-msgstr ""
+msgstr "Campo relación"
 
 #. module: mail
 #: selection:mail.compose.message,type:0
@@ -679,7 +682,7 @@ msgstr "Avanzado"
 #: code:addons/mail/static/src/xml/mail.xml:226
 #, python-format
 msgid "Move to Inbox"
-msgstr ""
+msgstr "Mover a la bandeja de entrada"
 
 #. module: mail
 #: code:addons/mail/wizard/mail_compose_message.py:165
@@ -779,7 +782,7 @@ msgstr ""
 #. module: mail
 #: model:ir.model,name:mail.model_mail_message_subtype
 msgid "Message subtypes"
-msgstr ""
+msgstr "Subtipos de mensaje"
 
 #. module: mail
 #: help:mail.compose.message,notified_partner_ids:0
@@ -943,6 +946,8 @@ msgid ""
 "Description that will be added in the message posted for this subtype. If "
 "void, the name will be added instead."
 msgstr ""
+"Descripción que se añadirá en el mensaje mandado para este subtipo. Si no se "
+"rellena, se pondrá el nombre en su lugar."
 
 #. module: mail
 #: field:mail.compose.message,vote_user_ids:0
@@ -960,6 +965,7 @@ msgstr "Grupo"
 #: help:mail.message,starred:0
 msgid "Current user has a starred notification linked to this message"
 msgstr ""
+"El usuario actual tiene una notificación destacada asociada a este mensaje"
 
 #. module: mail
 #: field:mail.group,public:0
@@ -976,7 +982,7 @@ msgstr "Notificación"
 #: code:addons/mail/static/src/js/mail.js:585
 #, python-format
 msgid "Please complete partner's informations"
-msgstr ""
+msgstr "Complete por favor la información de la empresa"
 
 #. module: mail
 #: view:mail.wizard.invite:0
@@ -986,7 +992,7 @@ msgstr "Añadir seguidores"
 #. module: mail
 #: view:mail.compose.message:0
 msgid "Followers of selected items and"
-msgstr ""
+msgstr "Seguidores de los elementos seleccionados y"
 
 #. module: mail
 #: field:mail.alias,alias_force_thread_id:0
@@ -1182,7 +1188,7 @@ msgstr "Marcar 'Por realizar'"
 #. module: mail
 #: help:mail.message.subtype,parent_id:0
 msgid "Parent subtype, used for automatic subscription."
-msgstr ""
+msgstr "Subtipo del padre, usado para la suscripción automática."
 
 #. module: mail
 #: model:ir.model,name:mail.model_mail_wizard_invite
@@ -1201,6 +1207,8 @@ msgstr "Resumen"
 msgid ""
 "Model the subtype applies to. If False, this subtype applies to all models."
 msgstr ""
+"Modelo al que aplica el subtipo. Si no está establecido, este subtipo aplica "
+"a todos los modelos."
 
 #. module: mail
 #: field:mail.compose.message,subtype_id:0
@@ -1220,7 +1228,7 @@ msgstr "Formulario de grupo"
 #: field:mail.message,starred:0
 #: field:mail.notification,starred:0
 msgid "Starred"
-msgstr ""
+msgstr "Destacado"
 
 #. module: mail
 #. openerp-web
@@ -1268,7 +1276,7 @@ msgstr ""
 #: code:addons/mail/static/src/xml/mail_followers.xml:52
 #, python-format
 msgid "And"
-msgstr ""
+msgstr "Y"
 
 #. module: mail
 #: field:mail.compose.message,message_id:0
@@ -1306,7 +1314,7 @@ msgstr "Cc"
 #. module: mail
 #: help:mail.notification,starred:0
 msgid "Starred message that goes into the todo mailbox"
-msgstr ""
+msgstr "Mensaje destacado que va al buzón 'Por realizar'"
 
 #. module: mail
 #. openerp-web
@@ -1349,7 +1357,7 @@ msgstr "Seguir"
 #. module: mail
 #: field:mail.group,name:0
 msgid "Name"
-msgstr ""
+msgstr "Nombre"
 
 #. module: mail
 #: model:mail.group,name:mail.group_all_employees
@@ -1452,7 +1460,7 @@ msgstr "Seguidores del documento"
 #: code:addons/mail/static/src/xml/mail_followers.xml:35
 #, python-format
 msgid "Remove this follower"
-msgstr ""
+msgstr "Eliminar este seguidor"
 
 #. module: mail
 #: selection:res.partner,notification_email_send:0
@@ -1486,6 +1494,7 @@ msgstr "Contenido con texto enriquecido"
 #: help:mail.message,to_read:0
 msgid "Current user has an unread notification linked to this message"
 msgstr ""
+"El usuario actual tiene una notificación sin leer asociada a este mensaje"
 
 #. module: mail
 #: help:res.partner,notification_email_send:0
@@ -1518,7 +1527,7 @@ msgstr ""
 #: code:addons/mail/static/src/xml/mail.xml:195
 #, python-format
 msgid "Please, wait while the file is uploading."
-msgstr ""
+msgstr "Por favor, espere mientras el archivo sube."
 
 #. module: mail
 #: view:mail.group:0
@@ -1585,7 +1594,7 @@ msgstr "otros..."
 #: model:ir.actions.client,name:mail.action_mail_star_feeds
 #: model:ir.ui.menu,name:mail.mail_starfeeds
 msgid "To-do"
-msgstr ""
+msgstr "Por realizar"
 
 #. module: mail
 #: view:mail.alias:0

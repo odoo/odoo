@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2012-12-21 17:05+0000\n"
-"PO-Revision-Date: 2012-12-25 20:42+0000\n"
+"PO-Revision-Date: 2013-01-25 07:50+0000\n"
 "Last-Translator: Erwin van der Ploeg (Endian Solutions) <Unknown>\n"
 "Language-Team: Dutch <nl@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-12-26 05:18+0000\n"
-"X-Generator: Launchpad (build 16378)\n"
+"X-Launchpad-Export-Date: 2013-01-26 05:37+0000\n"
+"X-Generator: Launchpad (build 16451)\n"
 
 #. module: base_import
 #. openerp-web
@@ -56,6 +56,8 @@ msgid ""
 "How to export/import different tables from an SQL \n"
 "                        application to OpenERP?"
 msgstr ""
+"Hoe exporteer/importeer ik verschillende tabellen van een SQL \n"
+"                        applicatie naar OpenERP?"
 
 #. module: base_import
 #. openerp-web
@@ -72,6 +74,8 @@ msgid ""
 "Country/Database ID: the unique OpenERP ID for a \n"
 "                        record, defined by the ID postgresql column"
 msgstr ""
+"Land/Database ID: de unieke OpenERP ID voor een \n"
+"                        record, gedefinieerd door de postgresql kolom id"
 
 #. module: base_import
 #. openerp-web
@@ -96,6 +100,9 @@ msgid ""
 "For the country \n"
 "                        Belgium, you can use one of these 3 ways to import:"
 msgstr ""
+"Voor het land\n"
+"                        België, kunt u deze drie manieren van importeren "
+"gebruiken:"
 
 #. module: base_import
 #. openerp-web
@@ -121,6 +128,12 @@ msgid ""
 "companies) TO \n"
 "                        '/tmp/company.csv' with CSV HEADER;"
 msgstr ""
+"kopie\n"
+"                        (select 'company_'||id as \"External "
+"ID\",company_name \n"
+"                        as \"Name\",'True' as \"Is a Company\" from "
+"companies) TO \n"
+"                        '/tmp/company.csv' with CSV HEADER;"
 
 #. module: base_import
 #. openerp-web
@@ -139,6 +152,10 @@ msgid ""
 "\n"
 "                        data from a third party application."
 msgstr ""
+"Gebruik\n"
+"                        Land/Externe ID: Gebruik externe ID wanneer u data "
+"importeert\n"
+"                        vanuit een andere applicatie."
 
 #. module: base_import
 #. openerp-web
@@ -224,6 +241,10 @@ msgid ""
 "                        the easiest way when your data come from CSV files \n"
 "                        that have been created manually."
 msgstr ""
+"Gebruik land: Dit is\n"
+"                       de makkelijkste weg wanneer uw gegevens komen vanuit "
+"een CSV bestand \n"
+"                       welke handmatig is aangemaakt."
 
 #. module: base_import
 #. openerp-web
@@ -244,20 +265,24 @@ msgid ""
 "\n"
 "                        you 3 different fields to import:"
 msgstr ""
+"Bijvoorbeeld, om\n"
+"                        te refereren naar het land van een relatie, stelt "
+"OpenERP\n"
+"                        drie verschillende velden voor om te importeren:"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/xml/import.xml:175
 #, python-format
 msgid "What can I do if I have multiple matches for a field?"
-msgstr ""
+msgstr "Wat moet ik doen als ik verschillende matches heb voor een veld?"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/xml/import.xml:302
 #, python-format
 msgid "External ID,Name,Is a Company"
-msgstr ""
+msgstr "Externe ID,Naam,Is een bedrijf"
 
 #. module: base_import
 #: field:base_import.tests.models.preview,somevalue:0
@@ -336,6 +361,8 @@ msgid ""
 "External ID,Name,Is a \n"
 "                        Company,Related Company/External ID"
 msgstr ""
+"Externe ID,Naam,Is een \n"
+"                        bedrijf,Gerelateerd bedrijf/Externe ID"
 
 #. module: base_import
 #. openerp-web
@@ -386,6 +413,12 @@ msgid ""
 "                        (in 'Save As' dialog box > click 'Tools' dropdown \n"
 "                        list > Encoding tab)."
 msgstr ""
+"Microsoft Excel geeft u \n"
+"                        de mogelijkheid alleen de codering te wijzigen bij "
+"het opslaan\n"
+"                         (in 'Opslaan als' dialoogvenster> klik op 'Extra' "
+"dropdown\n"
+"                         lijst> Codering tab)."
 
 #. module: base_import
 #: field:base_import.tests.models.preview,othervalue:0
@@ -420,6 +453,8 @@ msgid ""
 "Country/Database \n"
 "                        ID: 21"
 msgstr ""
+"Land/Database \n"
+"                        ID: 21"
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_tests_models_char
@@ -429,7 +464,7 @@ msgstr "base_import.tests.models.char"
 #. module: base_import
 #: help:base_import.import,file:0
 msgid "File to check and/or import, raw binary (not base64)"
-msgstr ""
+msgstr "Te controleren en/of te importeren bestand, raw binair (niet base64)"
 
 #. module: base_import
 #. openerp-web
@@ -623,6 +658,8 @@ msgid ""
 "The first row of the\n"
 "                file contains the label of the column"
 msgstr ""
+"De eerste regel van het\n"
+"                bestand bevat het label van de kolom"
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_tests_models_char_states
@@ -641,7 +678,7 @@ msgstr "Importeer CSV bestand"
 #: code:addons/base_import/static/src/js/import.js:74
 #, python-format
 msgid "Quoting:"
-msgstr ""
+msgstr "Citeren:"
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_tests_models_m2o_required_related
@@ -691,7 +728,7 @@ msgstr ""
 #: code:addons/base_import/static/src/xml/import.xml:293
 #, python-format
 msgid "dump of such a PostgreSQL database"
-msgstr ""
+msgstr "dump van zo'n PostgreSQL database"
 
 #. module: base_import
 #. openerp-web
@@ -747,7 +784,7 @@ msgstr "person_2,Laurence,False,company_1"
 #: code:addons/base_import/static/src/xml/import.xml:149
 #, python-format
 msgid "Country/External ID: base.be"
-msgstr ""
+msgstr "Land/Externe ID: base.be"
 
 #. module: base_import
 #. openerp-web
@@ -775,7 +812,7 @@ msgstr "(%d meer)"
 #: code:addons/base_import/static/src/xml/import.xml:227
 #, python-format
 msgid "File for some Quotations"
-msgstr ""
+msgstr "Bestand voor enkele offertes"
 
 #. module: base_import
 #. openerp-web
@@ -827,7 +864,7 @@ msgstr ""
 #: code:addons/base_import/static/src/js/import.js:373
 #, python-format
 msgid "Everything seems valid."
-msgstr "Alles lijkt geldig"
+msgstr "Alle velden lijken geldig."
 
 #. module: base_import
 #. openerp-web

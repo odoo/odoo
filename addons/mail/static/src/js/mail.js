@@ -253,7 +253,7 @@ openerp.mail = function (session) {
             } else {
                 this.avatar = mail.ChatterUtils.get_image(this.session, 'res.users', 'image_small', this.session.uid);
             }
-            if (this.author_id) {
+            if (this.author_id && this.author_id[1]) {
                 var email = this.author_id[1].match(/(.*)<(.*@.*)>/);
                 if (!email) {
                     this.author_id.push(_.str.escapeHTML(this.author_id[1]), '', this.author_id[1]);
