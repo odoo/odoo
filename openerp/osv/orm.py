@@ -335,6 +335,24 @@ class Session(object):
             self._user = self.model('res.users').browse(self.uid)
         return self._user
 
+    @property
+    def lang(self):
+        """ return the current language code """
+        if not hasattr(self, '_lang'):
+            self._lang = self.context.get('lang') or 'en_US'
+        return self._lang
+
+    @property
+    def language(self):
+        """ return the current language (as a record) """
+        if not hasattr(self, '_language'):
+            languages = self.model('res.lang').query([('code', '=', self.lang)])
+            languages.force()
+            if not languages:
+                raise Exception(_('Language with code "%s" is not defined in your system !\nDefine it through the Administration menu.') % (self.lang,))
+            self._language = languages[0]
+        return self._language
+
 
 class Record(object):
     """ A record in a model (corresponding to a row in the model's table.)
@@ -427,12 +445,7 @@ class Record(object):
 
             # TODO: improve this, very slow for reports
             if self._fields_process:
-                lang = self._context.get('lang') or 'en_US'
-                languages = self.session.model('res.lang').query([('code', '=', lang)])
-                languages.force()
-                if not languages:
-                    raise Exception(_('Language with code "%s" is not defined in your system !\nDefine it through the Administration menu.') % (lang,))
-                language = languages[0]
+                language = self.session.language
 
                 for field_name, field_column in fields_to_fetch:
                     if field_column._type in self._fields_process:
