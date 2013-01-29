@@ -175,6 +175,7 @@
         <field name="arch" type="xml">
             <search string="Search Jobs">
                 <field name="partner_name" filter_domain="['|','|',('name','ilike',self),('partner_name','ilike',self),('email_from','ilike',self)]" string="Subject / Applicant"/>
+                <field name="categ_ids"/>
                 <filter string="Unread Messages" name="message_unread" domain="[('message_unread','=',True)]"/>
                 <separator/>
                 <filter string="New" domain="[('state','=','draft')]" help="All Initial Jobs"/>
