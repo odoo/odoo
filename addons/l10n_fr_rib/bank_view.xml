@@ -10,6 +10,7 @@
                 <data>
                     <xpath expr="//field[@name='bank_ids']/tree/field[@name='acc_number']" position="after">
                         <field name="rib_acc_number"/>
+                        <field name="state" invisible="1"/>
                     </xpath>
                 </data>
             </field>
@@ -25,7 +26,7 @@
                     <field name="bank_code" />
                     <field name="office" />
                     <newline />
-                    <field name="rib_acc_number" />
+                    <field name="rib_acc_number"/>
                     <field name="key" />
                     <newline />
                 </field>
@@ -40,6 +41,7 @@
             <field name="arch" type="xml">
                 <field name="acc_number" position="after">
                     <field name="rib_acc_number" />
+                    <field name="state" invisible="1"/>
                 </field>
             </field>
         </record>

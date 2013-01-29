@@ -69,6 +69,7 @@ class res_partner_bank(osv.osv):
             value['bank_code'] = bank.rib_code
         return result
 
+
     _columns = {
         'acc_number': fields.char('Account Number', size=64, required=False),
         'rib_acc_number': fields.char('RIB account number', size=11, readonly=True,),
