@@ -28,33 +28,84 @@ from osv import osv, fields
 import time
 import logging
 import json
+import select
 
 _logger = logging.getLogger(__name__)
 
-WATCHER_TIMER = 60
-WATCHER_ERROR_DELAY = 10
+def listen_channel(cr, channel_name, handle_message, check_stop=(lambda: False), check_stop_timer=60.):
+    """
+        Begin a loop, listening on a PostgreSQL channel. This method does never terminate by default, you need to provide a check_stop
+        callback to do so. This method also assume that all notifications will include a message formated using JSON (see the
+        corresponding notify_channel() method).
+
+        :param db_name: database name
+        :param channel_name: the name of the PostgreSQL channel to listen
+        :param handle_message: function that will be called when a message is received. It takes one argument, the message
+            attached to the notification.
+        :type handle_message: function (one argument)
+        :param check_stop: function that will be called periodically (see the check_stop_timer argument). If it returns True
+            this function will stop to watch the channel.
+        :type check_stop: function (no arguments)
+        :param check_stop_timer: The maximum amount of time between calls to check_stop_timer (can be shorter if messages
+            are received).
+    """
+    try:
+        conn = cr._cnx
+        cr.execute("listen " + channel_name + ";")
+        cr.commit();
+        stopping = False
+        while not stopping:
+            if check_stop():
+                stopping = True
+                break
+            if select.select([conn], [], [], check_stop_timer) == ([],[],[]):
+                pass
+            else:
+                conn.poll()
+                while conn.notifies:
+                    message = json.loads(conn.notifies.pop().payload)
+                    handle_message(message)
+    finally:
+        try:
+            cr.execute("unlisten " + channel_name + ";")
+            cr.commit()
+        except:
+            pass # can't do anything if that fails
+
+def notify_channel(cr, channel_name, message):
+    """
+        Send a message through a PostgreSQL channel. The message will be formatted using JSON. This method will
+        commit the given transaction because the notify command in Postgresql seems to work correctly when executed in
+        a separate transaction (despite what is written in the documentation).
+
+        :param cr: The cursor.
+        :param channel_name: The name of the PostgreSQL channel.
+        :param message: The message, must be JSON-compatible data.
+    """
+    cr.commit()
+    cr.execute("notify " + channel_name + ", %s", [json.dumps(message)])
+    cr.commit()
+
 POLL_TIMER = 30
 DISCONNECTION_TIMER = POLL_TIMER + 5
+WATCHER_ERROR_DELAY = 10
 
 if openerp.tools.config.options["gevent"]:
     import gevent
     import gevent.event
-    import select
 
-    global Watcher
-
-    class Watcher:
+    class ImWatcher(object):
         watchers = {}
 
         @staticmethod
         def get_watcher(db_name):
-            if not Watcher.watchers.get(db_name):
-                Watcher(db_name)
-            return Watcher.watchers[db_name]
+            if not ImWatcher.watchers.get(db_name):
+                ImWatcher(db_name)
+            return ImWatcher.watchers[db_name]
 
         def __init__(self, db_name):
             self.db_name = db_name
-            Watcher.watchers[db_name] = self
+            ImWatcher.watchers[db_name] = self
             self.waiting = 0
             self.wait_id = 0
             self.users = {}
@@ -62,44 +113,31 @@ if openerp.tools.config.options["gevent"]:
             gevent.spawn(self.loop)
 
         def loop(self):
-            _logger.info("Begin watching for instant messaging events for database " + self.db_name)
-            stopping = False
-            while not stopping:
+            _logger.info("Begin watching on channel im_channel for database " + self.db_name)
+            stop = False
+            while not stop:
                 try:
                     registry = openerp.modules.registry.RegistryManager.get(self.db_name)
-                    with registry.cursor() as c:
-                        conn = c._cnx
-                        try:
-                            c.execute("listen im_channel;")
-                            c.commit();
-                            while not stopping:
-                                if self.waiting == 0:
-                                    stopping = True
-                                    break
-                                if select.select([conn], [], [], WATCHER_TIMER) == ([],[],[]):
-                                    pass
-                                else:
-                                    conn.poll()
-                                    while conn.notifies:
-                                        message = json.loads(conn.notifies.pop().payload)
-                                        if message["type"] == "message":
-                                            for waiter in self.users.get(message["receiver"], {}).values():
-                                                waiter.set()
-                                        else: #type status
-                                            for waiter in self.users_watch.get(message["user"], {}).values():
-                                                waiter.set()
-                        finally:
-                            try:
-                                c.execute("unlisten im_channel;")
-                                c.commit()
-                            except:
-                                pass # can't do anything if that fails
+                    with registry.cursor() as cr:
+                        listen_channel(cr, "im_channel", self.handle_message, self.check_stop)
+                        stop = True
                 except:
                     # if something crash, we wait some time then try again
-                    _logger.exception("Exception during instant messaging watcher activity")
+                    _logger.exception("Exception during watcher activity")
                     time.sleep(WATCHER_ERROR_DELAY)
-            del Watcher.watchers[self.db_name]
-            _logger.info("End watching for instant messaging events for database " + self.db_name)
+            _logger.info("End watching on channel im_channel for database " + self.db_name)
+            del ImWatcher.watchers[self.db_name]
+
+        def handle_message(self, message):
+            if message["type"] == "message":
+                for waiter in self.users.get(message["receiver"], {}).values():
+                    waiter.set()
+            else: #type status
+                for waiter in self.users_watch.get(message["user"], {}).values():
+                    waiter.set()
+
+        def check_stop(self):
+            return self.waiting == 0
 
         def _get_wait_id(self):
             self.wait_id += 1
@@ -125,9 +163,13 @@ class ImportController(openerp.addons.web.http.Controller):
     _cp_path = '/longpolling/im'
 
     @openerp.addons.web.http.jsonrequest
-    def poll(self, req, last=None, users_watch=None):
+    def poll(self, req, last=None, users_watch=None, db=None, uid=None, password=None):
         if not openerp.tools.config.options["gevent"]:
             raise Exception("Not usable in a server not running gevent")
+        if db is not None:
+            req.session._db = db
+            req.session._uid = uid
+            req.session._password = password
         req.session.model('im.user').im_connect(context=req.context)
         num = 0
         while True:
@@ -136,7 +178,7 @@ class ImportController(openerp.addons.web.http.Controller):
                 return res
             last = res["last"]
             num += 1
-            Watcher.get_watcher(res["dbname"]).stop(req.session._uid, users_watch or [], POLL_TIMER)
+            ImWatcher.get_watcher(res["dbname"]).stop(req.session._uid, users_watch or [], POLL_TIMER)
 
     @openerp.addons.web.http.jsonrequest
     def activated(self, req):
@@ -153,7 +195,7 @@ class im_message(osv.osv):
     }
 
     _defaults = {
-        'date': datetime.datetime.now().strftime(DEFAULT_SERVER_DATETIME_FORMAT),
+        'date': lambda *args: datetime.datetime.now().strftime(DEFAULT_SERVER_DATETIME_FORMAT),
     }
     
     def get_messages(self, cr, uid, last=None, users_watch=None, context=None):
@@ -182,9 +224,7 @@ class im_message(osv.osv):
 
     def post(self, cr, uid, message, to_user_id, context=None):
         self.create(cr, uid, {"message": message, 'from': uid, 'to': to_user_id}, context=context)
-        cr.commit()
-        cr.execute("notify im_channel, %s", [json.dumps({'type': 'message', 'receiver': to_user_id})])
-        cr.commit()
+        notify_channel(cr, "im_channel", {'type': 'message', 'receiver': to_user_id})
         return False
 
 class im_user(osv.osv):
@@ -232,7 +272,7 @@ class im_user(osv.osv):
             "im_last_status_update": datetime.datetime.now().strftime(DEFAULT_SERVER_DATETIME_FORMAT)}, context=context)
         cr.commit()
         if current_status != new_one:
-            cr.execute("notify im_channel, %s", [json.dumps({'type': 'status', 'user': uid})])
+            notify_channel(cr, "im_channel", {'type': 'status', 'user': uid})
             cr.commit()
         return True
 

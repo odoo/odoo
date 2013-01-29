@@ -44,15 +44,12 @@ openerp.web_im = function(instance) {
             this.shown = false;
             this.set("right_offset", 0);
             this.set("current_search", "");
-            this.last = null;
             this.users = [];
-            this.activated = false;
             this.c_manager = new instance.web_im.ConversationManager(this);
             this.on("change:right_offset", this.c_manager, _.bind(function() {
                 this.c_manager.set("right_offset", this.get("right_offset"));
             }, this));
             this.user_search_dm = new instance.web.DropMisordered();
-            this.users_cache = {};
             this.unload_event_handler = _.bind(this.unload, this);
         },
         start: function() {
@@ -68,17 +65,7 @@ openerp.web_im = function(instance) {
 
             $(window).on("unload", this.unload_event_handler);
 
-            return this.ensure_users([instance.session.uid]).then(function() {
-                var me = self.users_cache[instance.session.uid];
-                delete self.users_cache[instance.session.uid];
-                self.c_manager.set_me(me);
-                self.rpc("/longpolling/im/activated", {}).then(function(activated) {
-                    if (activated) {
-                        self.activated = true;
-                        self.poll();
-                    }
-                });
-            });
+            return this.c_manager.start_polling();
         },
         unload: function() {
             return new instance.web.Model("im.user").call("im_disconnect", [], {context: new instance.web.CompoundContext()});
@@ -103,12 +90,12 @@ openerp.web_im = function(instance) {
             return this.user_search_dm.add(users.call("search_users", 
                         [[["name", "ilike", this.get("current_search")], ["id", "<>", instance.session.uid]],
                         ["name"], USERS_LIMIT], {context:new instance.web.CompoundContext()})).then(function(result) {
-                self.add_to_user_cache(result);
+                self.c_manager.add_to_user_cache(result);
                 self.$(".oe_im_input").val("");
                 var old_users = self.users;
                 self.users = [];
                 _.each(result, function(user) {
-                    var widget = new instance.web_im.UserWidget(self, self.get_user(user.id));
+                    var widget = new instance.web_im.UserWidget(self, self.c_manager.get_user(user.id));
                     widget.appendTo(self.$(".oe_im_users"));
                     widget.on("activate_user", self, self.activate_user);
                     self.users.push(widget);
@@ -117,35 +104,6 @@ openerp.web_im = function(instance) {
                     user.destroy();
                 });
             });
-        },
-        ensure_users: function(user_ids) {
-            var no_cache = {};
-            _.each(user_ids, function(el) {
-                if (! this.users_cache[el])
-                    no_cache[el] = el;
-            }, this);
-            var self = this;
-            if (_.size(no_cache) === 0)
-                return $.when();
-            else
-                return new instance.web.Model("im.user").call("read_users", [_.values(no_cache), ["name"]],
-                        {context: new instance.web.CompoundContext()}).then(function(users) {
-                    self.add_to_user_cache(users);
-                });
-        },
-        add_to_user_cache: function(user_recs) {
-            _.each(user_recs, function(user_rec) {
-                if (! this.users_cache[user_rec.id]) {
-                    var user = new instance.web_im.ImUser(this, user_rec);
-                    this.users_cache[user_rec.id] = user;
-                    user.on("destroyed", this, function() {
-                        delete this.users_cache[user_rec.id];
-                    });
-                }
-            }, this);
-        },
-        get_user: function(user_id) {
-            return this.users_cache[user_id];
         },
         switch_display: function() {
             var fct =  _.bind(function(place) {
@@ -159,7 +117,7 @@ openerp.web_im = function(instance) {
                     right: -this.$el.outerWidth(),
                 }, opt);
             } else {
-                if (! this.activated) {
+                if (! this.c_manager.get_activated()) {
                     this.do_warn("Instant Messaging is not activated on this server.", "");
                     return;
                 }
@@ -168,33 +126,6 @@ openerp.web_im = function(instance) {
                 }, opt);
             }
             this.shown = ! this.shown;
-        },
-        poll: function() {
-            var self = this;
-            var user_ids = _.map(this.users_cache, function(el) {
-                return el.get("id");
-            });
-            this.rpc("/longpolling/im/poll", {
-                last: this.last,
-                users_watch: user_ids,
-                context: instance.web.pyeval.eval('context', {}),
-            }, {shadow: true}).then(function(result) {
-                _.each(result.users_status, function(el) {
-                    self.get_user(el.id).set(el);
-                });
-                self.last = result.last;
-                var user_ids = _.pluck(_.pluck(result.res, "from"), 0);
-                self.ensure_users(user_ids).then(function() {
-                    _.each(result.res, function(mes) {
-                        var user = self.get_user(mes.from[0]);
-                        self.c_manager.received_message(mes, user);
-                    });
-                    self.poll();
-                });
-            }, function(unused, e) {
-                e.preventDefault();
-                setTimeout(_.bind(self.poll, self), ERROR_DELAY);
-            });
         },
         activate_user: function(user) {
             this.c_manager.activate_user(user);
@@ -272,6 +203,83 @@ openerp.web_im = function(instance) {
             this.on("change:waiting_messages", this, this.messages_change);
             this.messages_change();
             this.create_ting();
+            this.activated = false;
+            this.users_cache = {};
+            this.last = null;
+        },
+        start_polling: function() {
+            var self = this;
+            return this.ensure_users([instance.session.uid]).then(function() {
+                var me = self.users_cache[instance.session.uid];
+                delete self.users_cache[instance.session.uid];
+                self.me = me;
+                self.rpc("/longpolling/im/activated", {}).then(function(activated) {
+                    if (activated) {
+                        self.activated = true;
+                        self.poll();
+                    }
+                });
+            });
+        },
+        ensure_users: function(user_ids) {
+            var no_cache = {};
+            _.each(user_ids, function(el) {
+                if (! this.users_cache[el])
+                    no_cache[el] = el;
+            }, this);
+            var self = this;
+            if (_.size(no_cache) === 0)
+                return $.when();
+            else
+                return new instance.web.Model("im.user").call("read_users", [_.values(no_cache), ["name"]],
+                        {context: new instance.web.CompoundContext()}).then(function(users) {
+                    self.add_to_user_cache(users);
+                });
+        },
+        add_to_user_cache: function(user_recs) {
+            _.each(user_recs, function(user_rec) {
+                if (! this.users_cache[user_rec.id]) {
+                    var user = new instance.web_im.ImUser(this, user_rec);
+                    this.users_cache[user_rec.id] = user;
+                    user.on("destroyed", this, function() {
+                        delete this.users_cache[user_rec.id];
+                    });
+                }
+            }, this);
+        },
+        get_user: function(user_id) {
+            return this.users_cache[user_id];
+        },
+        poll: function() {
+            var self = this;
+            var user_ids = _.map(this.users_cache, function(el) {
+                return el.get("id");
+            });
+            this.rpc("/longpolling/im/poll", {
+                last: this.last,
+                users_watch: user_ids,
+                context: instance.web.pyeval.eval('context', {}),
+            }, {shadow: true}).then(function(result) {
+                _.each(result.users_status, function(el) {
+                    if (self.get_user(el.id))
+                        self.get_user(el.id).set(el);
+                });
+                self.last = result.last;
+                var user_ids = _.pluck(_.pluck(result.res, "from"), 0);
+                self.ensure_users(user_ids).then(function() {
+                    _.each(result.res, function(mes) {
+                        var user = self.get_user(mes.from[0]);
+                        self.received_message(mes, user);
+                    });
+                    self.poll();
+                });
+            }, function(unused, e) {
+                e.preventDefault();
+                setTimeout(_.bind(self.poll, self), ERROR_DELAY);
+            });
+        },
+        get_activated: function() {
+            return this.activated;
         },
         create_ting: function() {
             var kitten = jQuery.param !== undefined && jQuery.deparam(jQuery.param.querystring()).kitten !== undefined;
@@ -288,9 +296,6 @@ openerp.web_im = function(instance) {
                 return;
             instance.webclient.set_title_part("im_messages", this.get("waiting_messages") === 0 ? undefined :
                 _.str.sprintf(_t("%d Messages"), this.get("waiting_messages")));
-        },
-        set_me: function(me) {
-            this.me = me;
         },
         activate_user: function(user) {
             if (this.users[user.get('id')]) {
