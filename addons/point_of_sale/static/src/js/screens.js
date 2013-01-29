@@ -857,6 +857,7 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
             this.bindPaymentLineEvents();
             this.bind_orderline_events();
             this.paymentlinewidgets = [];
+            this.focusedLine = null;
         },
         show: function(){
             this._super();
@@ -886,6 +887,7 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
                 });
 
             this.updatePaymentSummary();
+            this.line_refocus();
         },
         close: function(){
             this._super();
@@ -923,10 +925,20 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
             this.bind_orderline_events();
             this.renderElement();
         },
+        line_refocus: function(lineWidget){
+            if(lineWidget){
+                if(this.focusedLine !== lineWidget){
+                    this.focusedLine = lineWidget;
+                }
+            }
+            if(this.focusedLine){
+                this.focusedLine.focus();
+            }
+        },
         addPaymentLine: function(newPaymentLine) {
             var self = this;
-            var l = new module.PaymentlineWidget(null, {
-                    payment_line: newPaymentLine
+            var l = new module.PaymentlineWidget(this, {
+                    payment_line: newPaymentLine,
             });
             l.on('delete_payment_line', self, function(r) {
                 self.deleteLine(r);
@@ -936,6 +948,7 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
             if(this.numpadState){
                 this.numpadState.resetValue();
             }
+            this.line_refocus(l);
         },
         renderElement: function() {
             this._super();
@@ -952,6 +965,7 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
         },
         deleteLine: function(lineWidget) {
         	this.currentPaymentLines.remove([lineWidget.payment_line]);
+            lineWidget.destroy();
         },
         updatePaymentSummary: function() {
             var currentOrder = this.pos.get('selectedOrder');

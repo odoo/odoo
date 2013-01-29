@@ -328,10 +328,18 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
             var self = this;
             this.name =   this.payment_line.get_cashregister().get('journal_id')[1];
             this._super();
-            this.$('input').keyup(_.bind(this.changeAmount, this));
+            this.$('input').keyup(function(event){
+                self.changeAmount(event);
+            });
             this.$('.delete-payment-line').click(function() {
                 self.trigger('delete_payment_line', self);
             });
+        },
+        focus: function(){
+            var val = this.$('input')[0].value;
+            this.$('input')[0].focus();
+            this.$('input')[0].value = val;
+            this.$('input')[0].select();
         },
     });
 
