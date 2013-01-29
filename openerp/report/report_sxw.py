@@ -69,66 +69,74 @@ rml2sxw = {
 def get_date_length(date_format=DEFAULT_SERVER_DATE_FORMAT):
     return len((datetime.now()).strftime(date_format))
 
-class _format(object):
-    def set_value(self, cr, uid, name, object, field, lang_obj):
-        self.object = object
-        self._field = field
-        self.name = name
-        self.lang_obj = lang_obj
+def _process_int(record, fname, column):
+    language = record.session.language
 
-class _float_format(float, _format):
-    def __init__(self,value):
-        super(_float_format, self).__init__()
-        self.val = value or 0.0
+    class processor(int):
+        def __init__(self, value):
+            super(processor, self).__init__()
+            self.value = value or 0
 
-    def __str__(self):
-        digits = 2
-        if hasattr(self,'_field') and getattr(self._field, 'digits', None):
-            digits = self._field.digits[1]
-        if hasattr(self, 'lang_obj'):
-            return self.lang_obj.format('%.' + str(digits) + 'f', self.name, True)
-        return str(self.val)
+        def __str__(self):
+            return language.format("%.d", self.value, True)
 
-class _int_format(int, _format):
-    def __init__(self,value):
-        super(_int_format, self).__init__()
-        self.val = value or 0
+    return processor
 
-    def __str__(self):
-        if hasattr(self,'lang_obj'):
-            return self.lang_obj.format('%.d', self.name, True)
-        return str(self.val)
+def _process_float(record, fname, column):
+    language = record.session.language
+    digits = column.digits[1] if column.digits else 2
+    float_format = "%%.%df" % digit
 
-class _date_format(str, _format):
-    def __init__(self,value):
-        super(_date_format, self).__init__()
-        self.val = value and str(value) or ''
+    class processor(float):
+        def __init__(self, value):
+            super(processor, self).__init__()
+            self.value = value or 0.0
 
-    def __str__(self):
-        if self.val:
-            if getattr(self,'name', None):
-                date = datetime.strptime(self.name[:get_date_length()], DEFAULT_SERVER_DATE_FORMAT)
-                return date.strftime(str(self.lang_obj.date_format))
-        return self.val
+        def __str__(self):
+            return language.format(float_format, self.value, True)
 
-class _dttime_format(str, _format):
-    def __init__(self,value):
-        super(_dttime_format, self).__init__()
-        self.val = value and str(value) or ''
+    return processor
 
-    def __str__(self):
-        if self.val and getattr(self,'name', None):
-            return datetime.strptime(self.name, DEFAULT_SERVER_DATETIME_FORMAT)\
-                   .strftime("%s %s"%(str(self.lang_obj.date_format),
-                                      str(self.lang_obj.time_format)))
-        return self.val
+def _process_date(record, fname, column):
+    date_length = get_date_length()
+    date_format = record.session.language.date_format
+
+    class processor(str):
+        def __init__(self, value):
+            super(processor, self).__init__()
+            self.value = value or ''
+
+        def __str__(self):
+            if self.value:
+                date = datetime.strptime(self.value[:date_length], DEFAULT_SERVER_DATE_FORMAT)
+                return date.strftime(date_format)
+            return self.value
+
+    return processor
+
+def _process_datetime(record, fname, column):
+    language = record.session.language
+    datetime_format = "%s %s" % (language.date_format, language.time_format)
+
+    class processor(str):
+        def __init__(self, value):
+            super(processor, self).__init__()
+            self.value = value or ''
+
+        def __str__(self):
+            if self.value:
+                dt = datetime.strptime(self.value, DEFAULT_SERVER_DATETIME_FORMAT)
+                return dt.strftime(datetime_format)
+            return self.value
+
+    return processor
 
 
 _fields_process = {
-    'float': _float_format,
-    'date': _date_format,
-    'integer': _int_format,
-    'datetime' : _dttime_format
+    'integer': _process_int,
+    'float': _process_float,
+    'date': _process_date,
+    'datetime' : _process_datetime,
 }
 
 

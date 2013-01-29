@@ -354,6 +354,72 @@ class Session(object):
         return self._language
 
 
+#
+# Helper functions for browsing record values
+#
+
+def _browse_many2one(record, fname, column):
+    try:
+        model = record.session.model(column._obj)
+        cache = record._cache
+        fields_process = record._fields_process
+
+        def process(value):
+            if isinstance(value, Record):
+                # FIXME: this happen when a _inherits object overwrites a field
+                # of its parent. Need testing to be sure we got the right object
+                # and not the parent one.
+                return value
+            if isinstance(value, (list, tuple)):
+                value = value[0]
+            if value:
+                return model.browse(value, cache=cache, fields_process=fields_process)
+            return browse_null()
+
+        return process
+
+    except Exception:
+        # In some cases the target model is not available yet, so we must ignore it,
+        # which is safe in most cases, this value will just be loaded later when needed.
+        # This situation can be caused by custom fields that connect objects with m2o without
+        # respecting module dependencies, causing relationships to be connected to soon when
+        # the target is not loaded yet.
+        return lambda value: browse_null()
+
+
+def _browse_2many(record, fname, column):
+    model = record.session.model(column._obj)
+    cache = record._cache
+    fields_process = record._fields_process
+    return lambda value: model.browse(value, cache=cache, fields_process=fields_process)
+
+
+def _browse_reference(record, fname, column):
+    cache = record._cache
+    fields_process = record._fields_process
+
+    def process(value):
+        if isinstance(value, Record):
+            return value
+        if value:
+            ref_obj, ref_id = value.split(',')
+            ref_id = long(ref_id)
+            if ref_id:
+                model = record.session.model(ref_obj)
+                return model.browse(ref_id, cache=cache, fields_process=fields_process)
+        return browse_null()
+
+    return process
+
+
+_browse_process = {
+    'many2one': _browse_many2one,
+    'many2many': _browse_2many,
+    'one2many': _browse_2many,
+    'reference': _browse_reference,
+}
+
+
 class Record(object):
     """ A record in a model (corresponding to a row in the model's table.)
         It has attributes after the columns of the corresponding object.
@@ -373,15 +439,19 @@ class Record(object):
             storing record data shared across records, thus reducing the SQL
             read()s.  It can speed up things a lot, but also be disastrous if
             not discarded after write()/unlink() operations.
+
         :param fields_process: optional dictionary indexed by field type, giving
-            processing functions for field values.  Please do not use it.
+            processing functions for field values.  The api is best explained by
+            the value processing::
+
+                # process the value of field with given type, name, and column
+                factory = fields_process[field_type]
+                process = factory(record, field_name, field_column)
+                result = process(value)
         """
         if fields_process is None:
             fields_process = {}
         self.session = model.session
-        self._cr = model.session.cr
-        self._uid = model.session.uid
-        self._context = model.session.context
         self._id = id
         self._model = model
         self._table = model             # deprecated; use _model instead
@@ -399,7 +469,11 @@ class Record(object):
     @property
     def singleton(self):
         """ Return a recordset ``obj`` containing ``self`` only, and such that
-            ``obj.one`` is ``self``.
+            ``obj.one`` is ``self``.  The singleton is used implicitly for
+            accessing model attributes/methods, for instance::
+
+                record._columns         # => record.singleton._columns
+                record.write(values)    # => record.singleton.write(values)
         """
         if not self._singleton:
             self._singleton = self._model._make_recordset([self])
@@ -411,13 +485,9 @@ class Record(object):
             return self._id
 
         if name not in self._data[self._id]:
-            # build the list of fields we will fetch
-
             # fetch the definition of the field which was asked for
-            if name in self._model._columns:
-                col = self._model._columns[name]
-            elif name in self._model._inherit_fields:
-                col = self._model._inherit_fields[name][2]
+            if name in self._model._all_columns:
+                column = self._model._all_columns[name].column
             else:
                 error_msg = "Field '%s' does not exist in record '%s'" % (name, self)
                 self.__logger.warning(error_msg)
@@ -425,98 +495,39 @@ class Record(object):
                     self.__logger.debug(''.join(traceback.format_stack()))
                 raise KeyError(error_msg)
 
-            # if the field is a classic one or a many2one, we'll fetch all classic and many2one fields
-            if col._prefetch:
-                # gen the list of "local" (ie not inherited) fields which are classic or many2one
-                fields_to_fetch = filter(lambda x: x[1]._classic_write, self._model._columns.items())
-                # gen the list of inherited fields
-                inherits = map(lambda x: (x[0], x[1][2]), self._model._inherit_fields.items())
-                # complete the field list with the inherited fields which are classic or many2one
-                fields_to_fetch += filter(lambda x: x[1]._classic_write, inherits)
-            # otherwise we fetch only that field
+            # determine which fields we will fetch
+            if column._prefetch:
+                # the field is a classic one or a many2one, we fetch all classic and many2one fields
+                fields_to_fetch = [(key, cinfo.column)
+                    for key, cinfo in self._model._all_columns.iteritems()
+                    if cinfo.column._classic_write
+                ]
             else:
-                fields_to_fetch = [(name, col)]
+                # otherwise we fetch only that field
+                fields_to_fetch = [(name, column)]
 
             # read the records in the same model that don't have the field yet
-            ids = filter(lambda id: name not in self._data[id], self._data.keys())
-            field_names = map(lambda x: x[0], fields_to_fetch)
-            result = self._model.read(self._cr, self._uid, ids, field_names,
-                                    context=self._context, load="_classic_write")
-
-            # TODO: improve this, very slow for reports
-            if self._fields_process:
-                language = self.session.language
-
-                for field_name, field_column in fields_to_fetch:
-                    if field_column._type in self._fields_process:
-                        for data in result:
-                            data[field_name] = self._fields_process[field_column._type](data[field_name])
-                            if data[field_name]:
-                                data[field_name].set_value(self._cr, self._uid, data[field_name], self, field_column, language)
+            cr, uid, context = self.session.cr, self.session.uid, self.session.context
+            ids = [id for id, values in self._data.iteritems() if name not in values]
+            field_names = [key for key, col in fields_to_fetch]
+            result = self._model.read(cr, uid, ids, field_names, context=context, load="_classic_write")
 
             if not result:
                 # Where did those ids come from? Perhaps old entries in ir_model_data?
                 _logger.warning("No result found for ids %s in %s", ids, self)
                 raise KeyError('Field %s not found in %s' % (name, self))
 
-            # create browse records for 'remote' objects
-            for data in result:
-                # values is a dictionary mapping fields to fetch to their value
-                # to update the cache; we cannot use data itself because it may
-                # contain unexpected fields
-                values = {}
-                for field_name, field_column in fields_to_fetch:
-                    value = data[field_name]
-                    if field_column._type == 'many2one':
-                        if isinstance(value, (list, tuple)):
-                            value = value[0]
-                        if value:
-                            if isinstance(value, Record):
-                                # FIXME: this happen when a _inherits object
-                                # overwrites a field of its parent. Need testing
-                                # to be sure we got the right object and not the
-                                # parent one.
-                                values[field_name] = value
-                            else:
-                                try:
-                                    field_model = self.session.model(field_column._obj)
-                                    values[field_name] = field_model.browse(value,
-                                        cache=self._cache, fields_process=self._fields_process)
-                                except Exception:
-                                    # In some cases the target model is not available yet, so we must ignore it,
-                                    # which is safe in most cases, this value will just be loaded later when needed.
-                                    # This situation can be caused by custom fields that connect objects with m2o without
-                                    # respecting module dependencies, causing relationships to be connected to soon when
-                                    # the target is not loaded yet.
-                                    pass
-                        else:
-                            values[field_name] = browse_null()
-
-                    elif field_column._type in ('one2many', 'many2many'):
-                        field_model = self.session.model(field_column._obj)
-                        values[field_name] = field_model.browse(value,
-                            cache=self._cache, fields_process=self._fields_process)
-
-                    elif field_column._type == 'reference':
-                        if value:
-                            if isinstance(value, Record):
-                                values[field_name] = value
-                            else:
-                                ref_obj, ref_id = value.split(',')
-                                ref_id = long(ref_id)
-                                if ref_id:
-                                    field_model = self.session.model(ref_obj)
-                                    values[field_name] = field_model.browse(ref_id,
-                                        cache=self._cache, fields_process=self._fields_process)
-                                else:
-                                    values[field_name] = browse_null()
-                        else:
-                            values[field_name] = browse_null()
-
-                    else:
-                        values[field_name] = value
-
-                self._data[data['id']].update(values)
+            for fname, column in fields_to_fetch:
+                factory = self._fields_process.get(column._type) or _browse_process.get(column._type)
+                if factory:
+                    # post-process the values, and update the cache
+                    process = factory(self, fname, column)
+                    for data in result:
+                        self._data[data['id']][fname] = process(data[fname])
+                else:
+                    # no processing, simply update the cache
+                    for data in result:
+                        self._data[data['id']][fname] = data[fname]
 
         if not name in self._data[self._id]:
             # How did this happen? Could be a missing model due to custom fields used too soon, see above.
@@ -532,8 +543,7 @@ class Record(object):
         return getattr(self.singleton, name)
 
     def __contains__(self, name):
-        return (name == 'id') or (name in self._model._columns) or \
-                (name in self._model._inherit_fields)
+        return (name == 'id') or (name in self._model._all_columns)
 
     def __iter__(self):
         raise NotImplementedError("Iteration is not allowed on %s" % self)
