@@ -49,7 +49,9 @@
                                     </group>
                                     <group>
                                         <field name="company_id" groups="base.group_multi_company" on_change="onchange_company(company_id)"/>
-                                        <field name="user_id" on_change="onchange_user(user_id)" string="Related User"/>
+                                        <field name="user_id" on_change="onchange_user(user_id)" string="Related User"
+                                            context="{'default_groups_ref': ['base.group_user']}"
+                                            help="Related user name for the resource to manage its access. If you use the quick create, the new user will be added as an employee."/>
                                     </group>
                                 </group>
                                 <field name="notes" placeholder="Other Information ..." colspan="4"/>

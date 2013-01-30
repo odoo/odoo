@@ -19,11 +19,9 @@
                     </header>
                 </xpath>
                 <!-- add Reset Password button -->
-                <xpath expr="//div[@class='oe_right oe_button_box']" position="replace">
-                    <div class="oe_right oe_button_box">
-                        <button string="Reset Password" type="object" name="action_reset_password"
-                            help="Send an email to the user to (re)set their password."/>
-                    </div>
+                <xpath expr="//div[@class='oe_right oe_button_box']//button" position="replace">
+                    <button string="Reset Password" type="object" name="action_reset_password"
+                        help="Send an email to the user to (re)set their password."/>
                 </xpath>
             </field>
         </record>

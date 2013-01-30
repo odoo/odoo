@@ -152,7 +152,9 @@
                             -->
                         </group>
                         <group>
-                            <field name="user_id" context="{'simple_mode': True, 'default_groups_ref': ['base.group_sale_salesman_all_leads', 'base.group_user']}"/>
+                            <field name="user_id"
+                                context="{'default_groups_ref': ['base.group_sale_salesman_all_leads', 'base.group_user']}"
+                                help="If you use the quick create, the new user will have access to 'Sales' for 'All Leads' and will be added as an employee."/>
                             <label for="section_id"/>
                             <div>
                                 <field name="section_id"/>
@@ -417,7 +419,8 @@
                             </group>
 
                             <group>
-                                <field name="user_id" context="{'simple_mode': True, 'default_groups_ref': ['base.group_sale_salesman_all_leads', 'base.group_user']}"/>
+                                <field name="user_id" context="{'default_groups_ref': ['base.group_sale_salesman_all_leads', 'base.group_user']}"
+                                help="If you use the quick create, the new user will have access to 'Sales' for 'All Leads' and will be added as an employee."/>
                                 <label for="section_id"/>
                                 <div>
                                     <field name="section_id" widget="selection"/>
@@ -427,7 +430,7 @@
                             <group>
                                 <field name="categ_ids"
                                     string="Categories" widget="many2many_tags"
-                                    context = "{'object_name': 'crm.lead'}"
+                                    context="{'object_name': 'crm.lead'}"
                                     domain="[('object_id.model', '=', 'crm.lead')]"/>
 
                             </group>
