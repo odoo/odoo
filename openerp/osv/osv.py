@@ -33,7 +33,7 @@ osv_memory = TransientModel
 osv_abstract = AbstractModel # ;-)
 
 # Deprecated, kept for backward compatibility, in particular for audittrail.
-class object_service(object):
+class object_proxy(object):
     def __init__(self):
         import openerp.service.model
         # TODO monkeypatch openerp.service.model to call the new object_service instance methods.
