@@ -590,7 +590,7 @@ class res_config_settings(osv.osv_memory):
             name = act_window.read(cr, uid, action_ids[0], ['name'], context=context)['name']
         return [(record.id, name) for record in self.browse(cr, uid , ids, context=context)]
 
-    def get_option_path(self, cr, uid, menu_xml_id=None, context=None):
+    def get_option_path(self, cr, uid, menu_xml_id, context=None):
         """
         Fetch the path to a specified configuration view.
 
@@ -606,7 +606,7 @@ class res_config_settings(osv.osv_memory):
 
         return ir_ui_menu.complete_name
 
-    def get_option_name(self, cr, uid, full_field_name=None, context=None):
+    def get_option_name(self, cr, uid, full_field_name, context=None):
         """
         Fetch the human readable name of a specified configuration option.
 
@@ -657,7 +657,7 @@ def get_warning_config(cr, msg, context=None):
         elif ref_type == 'field':
             values[item] = res_config_obj.get_option_name(cr, SUPERUSER_ID, ref, context)
 
-    # 4/ substitute and return the result
+    # 3/ substitute and return the result
     return exceptions.Warning(msg % values)
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
