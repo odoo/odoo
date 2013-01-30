@@ -107,7 +107,9 @@
                         <field name="type_id" placeholder="Degree"/>
                     </group>
                     <group>
-                        <field name="user_id"/>
+                        <field name="user_id" 
+                            context="{'default_groups_ref': ['base.group_hr_manager', 'base.group_user']}"
+                            help="If you use the quick create, the new user will have access to 'Human Resources' as a manager and will be added as an employee."/>
                         <label for="title_action"/>
                         <div>
                             <field name="date_action"/>
@@ -337,6 +339,7 @@
         <field name="model">hr.recruitment.stage</field>
         <field name="arch" type="xml">
             <form string="Stage" version="7.0">
+                <sheet>
                 <group string="Stage Definition">
                     <group>
                         <field name="name"/>
@@ -350,6 +353,7 @@
                 </group>
                 <separator string="Requirements"/>
                 <field name="requirements"/>
+                </sheet>
             </form>
         </field>
     </record>
@@ -395,10 +399,12 @@
         <field name="model">hr.recruitment.degree</field>
         <field name="arch" type="xml">
             <form string="Degree" version="7.0">
+                <sheet>
                 <group>
                     <field name="name"/>
                     <field name="sequence" groups="base.group_no_one"/>
                 </group>
+                </sheet>
             </form>
         </field>
     </record>
@@ -432,8 +438,12 @@
         <field name="name">hr.recruitment.source.form</field>
         <field name="model">hr.recruitment.source</field>
         <field name="arch" type="xml">
-            <form string="Sources of Applicants">
-                <field name="name"/>
+            <form string="Sources of Applicants" version="7.0">
+                <sheet>
+                <group>
+                    <field name="name"/>
+                </group>
+                </sheet>
             </form>
         </field>
     </record>
