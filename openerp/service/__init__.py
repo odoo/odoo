@@ -39,8 +39,9 @@ import openerp.osv
 from openerp.release import nt_service_name
 import openerp.tools
 
-import model
+import common
 import db
+import model
 
 #.apidoc title: RPC Services
 
