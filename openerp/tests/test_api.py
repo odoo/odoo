@@ -197,6 +197,7 @@ class TestAPI(common.TransactionCase):
         """ Call session methods. """
         domain = [('name', 'ilike', 'j')]
         partners = self.Partner.query(self.cr, self.uid, domain)
+        partners.force()
         self.assertTrue(partners)
 
         # check content of partners.session
@@ -218,12 +219,12 @@ class TestAPI(common.TransactionCase):
         user2 = [u for u in users if u != partners.session.user][0]
         self.assertNotEqual(user2, partners.session.user)
 
-        # make another query as user
-        session2 = partners.session.copy(user=user2)
-        self.assertNotEqual(session2, partners.session)
-        partners2 = session2.model('res.partner').query(domain)
-        self.assertTrue(partners2.is_recordset())
+        # copy recordset with another user
+        partners2 = partners.with_session(user=user2, lang=user2.lang or 'en_US')
         self.assertEqual(partners2.session.user, user2)
+        self.assertNotEqual(partners2.session, partners.session)
+        self.assertTrue(partners2.is_recordset())
+        self.assertEqual(partners2, partners)
 
     @mute_logger('openerp.osv.orm')
     def test_60_contains(self):

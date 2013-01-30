@@ -144,11 +144,13 @@ def cr_uid(method):
     argnames = method.func_code.co_varnames[:method.func_code.co_argcount]
     if 'context' in argnames:
         def new_api(self, *args, **kwargs):
-            kwargs = dict(kwargs, context=self.session.context)
-            return method(self, self.session.cr, self.session.uid, *args, **kwargs)
+            cr, uid, context = self.session
+            kwargs = dict(kwargs, context=context)
+            return method(self, cr, uid, *args, **kwargs)
     else:
         def new_api(self, *args, **kwargs):
-            return method(self, self.session.cr, self.session.uid, *args, **kwargs)
+            cr, uid, context = self.session
+            return method(self, cr, uid, *args, **kwargs)
 
     return _wrapper(method, method, new_api)
 
@@ -170,14 +172,14 @@ def cr_uid_id(method):
     argnames = method.func_code.co_varnames[:method.func_code.co_argcount]
     if 'context' in argnames:
         def new_api(self, *args, **kwargs):
+            cr, uid, context = self.session
             ids = map(int, self)
-            cr, uid = self.session.cr, self.session.uid
-            kwargs = dict(kwargs, context=self.session.context)
+            kwargs = dict(kwargs, context=context)
             return dict((id, method(self, cr, uid, id, *args, **kwargs)) for id in ids)
     else:
         def new_api(self, *args, **kwargs):
+            cr, uid, context = self.session
             ids = map(int, self)
-            cr, uid = self.session.cr, self.session.uid
             return dict((id, method(self, cr, uid, id, *args, **kwargs)) for id in ids)
 
     return _wrapper(method, method, new_api)
@@ -200,13 +202,15 @@ def cr_uid_ids(method):
     argnames = method.func_code.co_varnames[:method.func_code.co_argcount]
     if 'context' in argnames:
         def new_api(self, *args, **kwargs):
+            cr, uid, context = self.session
             ids = map(int, self)
-            kwargs = dict(kwargs, context=self.session.context)
-            return method(self, self.session.cr, self.session.uid, ids, *args, **kwargs)
+            kwargs = dict(kwargs, context=context)
+            return method(self, cr, uid, ids, *args, **kwargs)
     else:
         def new_api(self, *args, **kwargs):
+            cr, uid, context = self.session
             ids = map(int, self)
-            return method(self, self.session.cr, self.session.uid, ids, *args, **kwargs)
+            return method(self, cr, uid, ids, *args, **kwargs)
 
     return _wrapper(method, method, new_api)
 

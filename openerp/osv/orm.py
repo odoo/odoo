@@ -305,21 +305,22 @@ class Session(object):
         self.uid = uid
         self.context = context
 
+    def __iter__(self):
+        """ Iterating over a session returns self.cr, self.uid, self.context, in
+            that order.  Useful to retrieve data in a destructuring assignment::
+
+                cr, uid, context = session
+        """
+        yield self.cr
+        yield self.uid
+        yield self.context
+
     def __eq__(self, other):
         return isinstance(other, Session) and \
             (self.cr, self.uid, self.context) == (other.cr, other.uid, other.context)
 
     def __ne__(self, other):
         return not self == other
-
-    def copy(self, cr=None, uid=None, user=None, context=None):
-        """ copy the session object, possibly modifying some of its data """
-        cr = cr if cr is not None else self.cr
-        if user is not None:
-            uid = user.id if isinstance(user, Record) else user
-        uid = uid if uid is not None else self.uid
-        context = context if context is not None else self.context
-        return Session(self.registry, cr, uid, context)
 
     def model(self, model_name):
         """ return a given model with session data """
@@ -507,7 +508,7 @@ class Record(object):
                 fields_to_fetch = [(name, column)]
 
             # read the records in the same model that don't have the field yet
-            cr, uid, context = self.session.cr, self.session.uid, self.session.context
+            cr, uid, context = self.session
             ids = [id for id, values in self._data.iteritems() if name not in values]
             field_names = [key for key, col in fields_to_fetch]
             result = self._model.read(cr, uid, ids, field_names, context=context, load="_classic_write")
@@ -1172,6 +1173,28 @@ class BaseModel(object):
         # query() returns recordsets with self._search_args, and self._records
         # when evaluated; browse() returns recordsets with self._records only
         return hasattr(self, '_records') or hasattr(self, '_search_args')
+
+    def with_session(self, user=None, context=None, **kwargs):
+        """ return an instance similar to self (model or recordset, with session
+            data) with modified session data
+            :param user: user (id or record) to use (if not ``None``)
+            :param context: context dictionary to use (if not ``None``)
+            :param kwargs: named arguments to update the context
+        """
+        cr, uid, ctx = self.session
+
+        if user is not None:
+            uid = int(user) if isinstance(user, Record) else user
+        if context is not None:
+            ctx = context
+        if kwargs:
+            ctx.update(kwargs)
+
+        obj = self._make_instance(cr, uid, ctx)
+        for attr in ('_records', '_search_args'):
+            if hasattr(self, attr):
+                setattr(obj, attr, getattr(self, attr))
+        return obj
 
     def __export_row(self, cr, uid, row, fields, context=None):
         if context is None:
