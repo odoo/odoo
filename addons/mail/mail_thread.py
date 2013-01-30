@@ -1069,7 +1069,24 @@ class mail_thread(osv.AbstractModel):
             self.check_access_rights(cr, uid, 'write')
         return self.write(cr, SUPERUSER_ID, ids, {'message_follower_ids': [(3, pid) for pid in partner_ids]}, context=context)
 
-    def message_auto_subscribe(self, cr, uid, ids, updated_fields, auto_follow_fields=['user_id'], context=None):
+    def _message_get_auto_subscribe_fields(self, cr, uid, updated_fields, auto_follow_fields=['user_id'], context=None):
+        """ Returns the list of relational fields linking to res.users that should
+            trigger an auto subscribe. The default list checks for the fields
+            - called 'user_id'
+            - linking to res.users
+            - with track_visibility set
+            In OpenERP V7, this is sufficent for all major addon such as opportunity,
+            project, issue, recruitment, sale.
+            Override this method if a custom behavior is needed about fields
+            that automatically subscribe users.
+        """
+        user_field_lst = []
+        for name, column_info in self._all_columns.items():
+            if name in auto_follow_fields and name in updated_fields and getattr(column_info.column, 'track_visibility', False) and column_info.column._obj == 'res.users':
+                user_field_lst.append(name)
+        return user_field_lst
+
+    def message_auto_subscribe(self, cr, uid, ids, updated_fields, context=None):
         """
             1. fetch project subtype related to task (parent_id.res_model = 'project.task')
             2. for each project subtype: subscribe the follower to the task
@@ -1078,10 +1095,7 @@ class mail_thread(osv.AbstractModel):
         follower_obj = self.pool.get('mail.followers')
 
         # fetch auto_follow_fields
-        user_field_lst = []
-        for name, column_info in self._all_columns.items():
-            if name in auto_follow_fields and name in updated_fields and getattr(column_info.column, 'track_visibility', False):
-                user_field_lst.append(name)
+        user_field_lst = self._message_get_auto_subscribe_fields(cr, uid, updated_fields, context=context)
 
         # fetch related record subtypes
         related_subtype_ids = subtype_obj.search(cr, uid, ['|', ('res_model', '=', False), ('parent_id.res_model', '=', self._name)], context=context)
