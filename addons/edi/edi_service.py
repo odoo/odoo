@@ -21,14 +21,15 @@
 import logging
 
 import openerp
-import openerp.netsvc as netsvc
 
 _logger = logging.getLogger(__name__)
 
-class edi(netsvc.ExportService):
-
-    def __init__(self, name="edi"):
-        netsvc.ExportService.__init__(self, name)
+# TODO this is not needed anymore:
+# - the exposed new service just forward to the model service
+# - the service is called by the web controller, which can
+# now directly call into openerp as the web server is always
+# embedded in openerp.
+class edi():
 
     def _edi_dispatch(self, db_name, method_name, *method_args):
         try:
@@ -61,5 +62,4 @@ class edi(netsvc.ExportService):
         fn = getattr(self, 'exp_'+method)
         return fn(*params)
 
-edi()
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
