@@ -204,7 +204,6 @@ def _set_pg_password_in_environment():
 
 
 def exp_dump(db_name):
-    logger = logging.getLogger('openerp.service.web_services.db.dump')
     with _set_pg_password_in_environment():
         cmd = ['pg_dump', '--format=c', '--no-owner']
         if openerp.tools.config['db_user']:
@@ -221,20 +220,19 @@ def exp_dump(db_name):
         res = stdout.close()
 
         if not data or res:
-            logger.error(
+            _logger.error(
                     'DUMP DB: %s failed! Please verify the configuration of the database password on the server. '
                     'It should be provided as a -w <PASSWD> command-line option, or as `db_password` in the '
                     'server configuration file.\n %s', db_name, data)
             raise Exception, "Couldn't dump database"
-        logger.info('DUMP DB successful: %s', db_name)
+        _logger.info('DUMP DB successful: %s', db_name)
 
         return base64.encodestring(data)
 
 def exp_restore(db_name, data):
-    logger = logging.getLogger('openerp.service.web_services.db.restore')
     with _set_pg_password_in_environment():
         if exp_db_exist(db_name):
-            logger.warning('RESTORE DB: %s already exists', db_name)
+            _logger.warning('RESTORE DB: %s already exists', db_name)
             raise Exception, "Database already exists"
 
         _create_empty_database(db_name)
@@ -263,7 +261,7 @@ def exp_restore(db_name, data):
         res = stdout.close()
         if res:
             raise Exception, "Couldn't restore database"
-        logger.info('RESTORE DB: %s', db_name)
+        _logger.info('RESTORE DB: %s', db_name)
 
         return True
 

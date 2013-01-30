@@ -119,6 +119,8 @@ class ExportService(object):
             return openerp.service.db
         if name == 'common':
             return openerp.service.common
+        if name == 'report':
+            return openerp.service.report
         return cls._services[name]
 
     # Dispatch a RPC call w.r.t. the method name. The dispatching

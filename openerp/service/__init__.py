@@ -29,8 +29,6 @@ import threading
 import time
 
 import cron
-import web_services
-import web_services
 import wsgi_server
 
 import openerp.modules
@@ -42,6 +40,7 @@ import openerp.tools
 import common
 import db
 import model
+import report
 
 #.apidoc title: RPC Services
 
@@ -77,9 +76,6 @@ def start_internal():
         return
     openerp.netsvc.init_logger()
     openerp.modules.loading.open_openerp_namespace()
-
-    # Export (for RPC) services.
-    web_services.start_service()
 
     load_server_wide_modules()
     start_internal_done = True
