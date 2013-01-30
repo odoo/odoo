@@ -39,6 +39,9 @@ import openerp.osv
 from openerp.release import nt_service_name
 import openerp.tools
 
+import model
+import db
+
 #.apidoc title: RPC Services
 
 """ Classes of this module implement the network protocols that the

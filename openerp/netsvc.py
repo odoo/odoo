@@ -91,6 +91,8 @@ def LocalService(name):
     # are updated to directly use openerp.osv.osv.service.
     if name == 'object_proxy':
         return openerp.service.model
+    if name == 'db':
+        return openerp.service.db
 
     return Service._services[name]
 
@@ -111,6 +113,8 @@ class ExportService(object):
 
     @classmethod
     def getService(cls,name):
+        if name == 'db':
+            return openerp.service.db
         return cls._services[name]
 
     # Dispatch a RPC call w.r.t. the method name. The dispatching
