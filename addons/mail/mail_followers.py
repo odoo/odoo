@@ -126,11 +126,20 @@ class mail_notification(osv.Model):
         if signature:
             body_html = tools.append_content_to_html(body_html, signature, plaintext=True, container_tag='div')
 
+        # email_from: partner-user alias or partner email or mail.message email_from
+        if msg.author_id and msg.author_id.user_ids and msg.author_id.user_ids[0].alias_domain and msg.author_id.user_ids[0].alias_name:
+            email_from = '%s <%s@%s>' % (msg.author_id.name, msg.author_id.user_ids[0].alias_name, msg.author_id.user_ids[0].alias_domain)
+        elif msg.author_id:
+            email_from = '%s <%s>' % (msg.author_id.name, msg.author_id.email)
+        else:
+            email_from = msg.email_from
+
         mail_values = {
             'mail_message_id': msg.id,
             'email_to': [],
             'auto_delete': True,
             'body_html': body_html,
+            'email_from': email_from,
             'state': 'outgoing',
         }
         mail_values['email_to'] = ', '.join(mail_values['email_to'])
