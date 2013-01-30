@@ -24,12 +24,13 @@ from dateutil import parser
 from dateutil import rrule
 from dateutil.relativedelta import relativedelta
 from openerp.osv import fields, osv
-from openerp.service import web_services
 from openerp.tools.translate import _
 import pytz
 import re
 import time
+
 from openerp import tools, SUPERUSER_ID
+import openerp.service.report
 
 months = {
     1: "January", 2: "February", 3: "March", 4: "April", \
@@ -1729,27 +1730,25 @@ class ir_model(osv.osv):
 
 ir_model()
 
-class virtual_report_spool(web_services.report_spool):
+original_exp_report = openerp.service.report.exp_report
 
-    def exp_report(self, db, uid, object, ids, data=None, context=None):
-        """
-        Export Report
-        @param self: The object pointer
-        @param db: get the current database,
-        @param uid: the current user's ID for security checks,
-        @param context: A standard dictionary for contextual values
-        """
+def exp_report(db, uid, object, ids, data=None, context=None):
+    """
+    Export Report
+    @param db: get the current database,
+    @param uid: the current user's ID for security checks,
+    @param context: A standard dictionary for contextual values
+    """
 
-        if object == 'printscreen.list':
-            return super(virtual_report_spool, self).exp_report(db, uid, \
-                            object, ids, data, context)
-        new_ids = []
-        for id in ids:
-            new_ids.append(base_calendar_id2real_id(id))
-        if data.get('id', False):
-            data['id'] = base_calendar_id2real_id(data['id'])
-        return super(virtual_report_spool, self).exp_report(db, uid, object, new_ids, data, context)
+    if object == 'printscreen.list':
+        original_exp_report(db, uid, object, ids, data, context)
+    new_ids = []
+    for id in ids:
+        new_ids.append(base_calendar_id2real_id(id))
+    if data.get('id', False):
+        data['id'] = base_calendar_id2real_id(data['id'])
+    return original_exp_report(db, uid, object, new_ids, data, context)
 
-virtual_report_spool()
+openerp.service.report.exp_report = exp_report
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
