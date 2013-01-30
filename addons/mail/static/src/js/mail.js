@@ -218,7 +218,7 @@ openerp.mail = function (session) {
             this.author_id = datasets.author_id || false,
             this.attachment_ids = datasets.attachment_ids ||  [],
             this.partner_ids = datasets.partner_ids || [];
-            this._date = datasets.date;
+            this.date = datasets.date;
 
             this.format_data();
 
@@ -243,8 +243,8 @@ openerp.mail = function (session) {
         /* Convert date, timerelative and avatar in displayable data. */
         format_data: function () {
             //formating and add some fields for render
-            if (this._date) {
-                this.timerelative = $.timeago(this._date+"Z");
+            if (this.date && new Date().getTime()-Date.parse(this.date).getTime() < 7*24*60*60*1000) {
+                this.timerelative = $.timeago(this.date+"Z");
             } 
             if (this.type == 'email' && (!this.author_id || !this.author_id[0])) {
                 this.avatar = ('/mail/static/src/img/email_icon.png');
