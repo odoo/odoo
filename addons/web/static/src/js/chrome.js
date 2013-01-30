@@ -247,6 +247,11 @@ instance.web.CrashManager = instance.web.Class.extend({
         if (!this.active) {
             return;
         }
+        var handler = instance.web.crash_manager_registry.get_object(error.data.name, true);
+        if (handler) {
+            new (handler)(this, error).display();
+            return;
+        };
         if (error.data.name === "openerp.addons.web.session SessionExpiredException") {
             this.show_warning({type: "Session Expired", data: { message: "Your OpenERP session expired. Please refresh the current web page." }});
             return;
@@ -298,6 +303,29 @@ instance.web.CrashManager = instance.web.Class.extend({
         });
     },
 });
+
+/**
+    An interface to implement to handle exceptions. Register implementation in instance.web.crash_manager_registry.
+*/
+instance.web.ExceptionHandler = {
+    /**
+        @param parent The parent.
+        @param error The error object as returned by the JSON-RPC implementation.
+    */
+    init: function(parent, error) {},
+    /**
+        Called to inform to display the widget, if necessary. A typical way would be to implement
+        this interface in a class extending instance.web.Dialog and simply display the dialog in this
+        method.
+    */
+    display: function() {},
+};
+
+/**
+    The registry to handle exceptions. It associate a fully qualified python exception name with a class implementing
+    instance.web.ExceptionHandler.
+*/
+instance.web.crash_manager_registry = new instance.web.Registry();
 
 instance.web.Loading = instance.web.Widget.extend({
     template: _t("Loading"),
