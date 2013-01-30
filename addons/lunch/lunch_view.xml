@@ -321,7 +321,9 @@
                     <sheet>
                         <group>
                             <group>
-                                <field name='user_id'/>
+                                <field name='user_id'
+                                context="{'default_groups_ref': ['base.group_user']}"
+                                help="If you use the quick create, the new user will be added as an employee."/>
                             </group>
                             <group> 
                                 <field name='date'/>
@@ -406,7 +408,9 @@
                 <form string="cashmove form" version="7.0">
                     <sheet>
                         <group>
-                            <field name="user_id"/>
+                            <field name="user_id"
+                                context="{'default_groups_ref': ['base.group_user']}"
+                                help="If you use the quick create, the new user will be added as an employee."/>
                             <field name="date"/>
                             <field name="amount"/>
                         </group>
