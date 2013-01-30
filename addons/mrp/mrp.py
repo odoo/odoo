@@ -416,6 +416,23 @@ class mrp_production(osv.osv):
         dest_location_id = self.pool.get('ir.model.data').get_object(cr, uid, 'stock', 'stock_location_stock', context=context)
         return dest_location_id.id
 
+    def _product_progress(self, cr, uid, ids, prop, unknow_none, context=None):
+        """ To obtain product quantity
+        @return: Dictionary of values.
+        """
+        result = {}
+        for prod in self.browse(cr, uid, ids, context=context):
+            done = 0.0
+            if prod.product_qty:
+                for move in prod.move_created_ids2:
+                    if move.product_id == prod.product_id:
+                        if not move.scrapped:
+                            done += move.product_qty
+                result[prod.id] = done / prod.product_qty * 100
+            else:
+                result[prod.id] = 100
+        return result
+
     _columns = {
         'name': fields.char('Reference', size=64, required=True, readonly=True, states={'draft': [('readonly', False)]}),
         'origin': fields.char('Source Document', size=64, readonly=True, states={'draft': [('readonly', False)]},
@@ -428,6 +445,8 @@ class mrp_production(osv.osv):
         'product_uom': fields.many2one('product.uom', 'Product Unit of Measure', required=True, readonly=True, states={'draft': [('readonly', False)]}),
         'product_uos_qty': fields.float('Product UoS Quantity', readonly=True, states={'draft': [('readonly', False)]}),
         'product_uos': fields.many2one('product.uom', 'Product UoS', readonly=True, states={'draft': [('readonly', False)]}),
+
+        'product_progress': fields.function(_product_progress, type='float', string='Progress of the production'),
 
         'location_src_id': fields.many2one('stock.location', 'Raw Materials Location', required=True,
             readonly=True, states={'draft':[('readonly',False)]},
