@@ -31,11 +31,31 @@ openerp.web_linkedin = function(instance) {
                 tag.type = 'text/javascript';
                 tag.src = "http://platform.linkedin.com/in.js";
                 tag.innerHTML = 'api_key : ' + self.api_key + '\nauthorize : true\nscope: r_network r_basicprofile'; // r_contactinfo r_fullprofile r_emailaddress';
+                
+                // error catcher for library exception
+                var crashmanager = false;
+                var $head = $("head:first");
+                var DOMNodeInserted = function (event) {
+                    if(event.srcElement.previousSibling == tag) {
+                        console.debug("LinkedIn JavaScript userspace inserted.");
+                        crashmanager = window.onerror;
+                        window.onerror = function() {
+                            crashmanager("You have a Linkedin error integration.\nPlease check your API Domain and your API Key's configuration", "", "");
+                            window.onerror = crashmanager;
+                        };
+                        $head.off("DOMNodeInserted", DOMNodeInserted);
+                    }
+                };
+                $head.on("DOMNodeInserted", DOMNodeInserted);
+                window.setTimeout(function () {$head.off("DOMNodeInserted", DOMNodeInserted);}, 60000);
+                // end
+
                 document.getElementsByTagName('head')[0].appendChild(tag);
                 self.linkedin_added = true;
-                $(tag).load(function() {
+                $(tag).load(function(event) {
                     console.debug("LinkedIn JavaScript inserted.");
                     IN.Event.on(IN, "frameworkLoaded", function() {
+                        if(crashmanager) window.onerror = crashmanager;
                         console.debug("LinkedIn DOM node inserted and frameworkLoaded.");
                     });
                     IN.Event.on(IN, "systemReady", function() {
