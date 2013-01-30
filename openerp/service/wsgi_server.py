@@ -90,7 +90,7 @@ def xmlrpc_return(start_response, service, method, params, legacy_exceptions=Fal
     return [response]
 
 def xmlrpc_handle_exception(e):
-    if isinstance(e, openerp.osv.osv.except_osv): # legacy
+    if isinstance(e, openerp.osv.orm.except_orm): # legacy
         fault = xmlrpclib.Fault(RPC_FAULT_CODE_WARNING, openerp.tools.ustr(e.value))
         response = xmlrpclib.dumps(fault, allow_none=False, encoding=None)
     elif isinstance(e, openerp.exceptions.Warning):
@@ -123,7 +123,7 @@ def xmlrpc_handle_exception(e):
     return response
 
 def xmlrpc_handle_exception_legacy(e):
-    if isinstance(e, openerp.osv.osv.except_osv):
+    if isinstance(e, openerp.osv.orm.except_orm):
         fault = xmlrpclib.Fault('warning -- ' + e.name + '\n\n' + e.value, '')
         response = xmlrpclib.dumps(fault, allow_none=False, encoding=None)
     elif isinstance(e, openerp.exceptions.Warning):

@@ -42,6 +42,7 @@ import openerp.sql_db as sql_db
 import openerp.tools as tools
 import openerp.modules
 import openerp.exceptions
+import openerp.osv.orm # TODO use openerp.exceptions
 from openerp.service import http_server
 from openerp import SUPERUSER_ID
 
@@ -388,22 +389,10 @@ class db(netsvc.ExportService):
         return release.version
 
     def exp_migrate_databases(self,databases):
-
-        from openerp.osv.orm import except_orm
-        from openerp.osv.osv import except_osv
-
         for db in databases:
-            try:
-                _logger.info('migrate database %s', db)
-                tools.config['update']['base'] = True
-                pooler.restart_pool(db, force_demo=False, update_module=True)
-            except except_orm, inst:
-                netsvc.abort_response(1, inst.name, 'warning', inst.value)
-            except except_osv, inst:
-                netsvc.abort_response(1, inst.name, 'warning', inst.value)
-            except Exception:
-                _logger.exception('Exception in migrate_databases:')
-                raise
+            _logger.info('migrate database %s', db)
+            tools.config['update']['base'] = True
+            pooler.restart_pool(db, force_demo=False, update_module=True)
         return True
 
 class common(netsvc.ExportService):
@@ -474,7 +463,7 @@ GNU Public Licence.
             return rc.get_available_updates(rc.id, openerp.modules.get_modules_with_version())
 
         except tm.RemoteContractException, e:
-            netsvc.abort_response(1, 'Migration Error', 'warning', str(e))
+            raise openerp.osv.orm.except_orm('Migration Error', str(e))
 
 
     def exp_get_migration_scripts(self, contract_id, contract_password):
@@ -540,7 +529,7 @@ GNU Public Licence.
 
             return True
         except tm.RemoteContractException, e:
-            netsvc.abort_response(1, 'Migration Error', 'warning', str(e))
+            raise openerp.osv.orm.except_orm('Migration Error', str(e))
         except Exception, e:
             _logger.exception('Exception in get_migration_script:')
             raise
@@ -724,7 +713,7 @@ class report_spool(netsvc.ExportService):
         result = self._reports[report_id]
         exc = result['exception']
         if exc:
-            netsvc.abort_response(exc, exc.message, 'warning', exc.traceback)
+            raise openerp.osv.orm.except_orm(exc.message, exc.traceback)
         res = {'state': result['state']}
         if res['state']:
             if tools.config['reportgz']:

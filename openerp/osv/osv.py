@@ -21,18 +21,21 @@
 
 #.apidoc title: Objects Services (OSV)
 
-from openerp.osv.orm import Model, TransientModel, AbstractModel
+from openerp.osv.orm import except_orm, Model, TransientModel, AbstractModel
 
-# Deprecated.
-class except_osv(Exception):
-    def __init__(self, name, value):
-        self.name = name
-        self.value = value
-        self.args = (name, value)
+# Deprecated, kept for backward compatibility.
+# openerp.exceptions.Warning should be used instead.
+except_osv = except_orm
 
-# deprecated - for backward compatibility.
+# Deprecated, kept for backward compatibility.
 osv = Model
 osv_memory = TransientModel
 osv_abstract = AbstractModel # ;-)
+
+# Deprecated, kept for backward compatibility, in particular for audittrail.
+class object_service(object):
+    def __init__(self):
+        import openerp.service.model
+        # TODO monkeypatch openerp.service.model to call the new object_service instance methods.
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

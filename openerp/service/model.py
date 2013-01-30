@@ -8,7 +8,6 @@ import threading
 import openerp
 from openerp.tools.translate import translate
 from openerp.osv.orm import except_orm
-from openerp.osv.osv import except_osv
 
 _logger = logging.getLogger(__name__)
 
@@ -80,18 +79,15 @@ def check(f):
 
         try:
             if openerp.pooler.get_pool(dbname)._init:
-                raise except_osv('Database not ready', 'Currently, this database is not fully loaded and can not be used.')
+                raise openerp.exceptions.Warning('Currently, this database is not fully loaded and can not be used.')
             return f(dbname, *args, **kwargs)
-        except except_orm, inst:
-            raise except_osv(inst.name, inst.value)
-        except except_osv:
+        except except_orm:
             raise
         except IntegrityError, inst:
             osv_pool = openerp.pooler.get_pool(dbname)
             for key in osv_pool._sql_error.keys():
                 if key in inst[0]:
-                    openerp.netsvc.abort_response(1, _('Constraint Error'), 'warning',
-                                    tr(osv_pool._sql_error[key], 'sql_constraint') or inst[0])
+                    raise openerp.osv.orm.except_orm(_('Constraint Error'), tr(osv_pool._sql_error[key], 'sql_constraint') or inst[0])
             if inst.pgcode in (errorcodes.NOT_NULL_VIOLATION, errorcodes.FOREIGN_KEY_VIOLATION, errorcodes.RESTRICT_VIOLATION):
                 msg = _('The operation cannot be completed, probably due to the following:\n- deletion: you may be trying to delete a record while other records still reference it\n- creation/update: a mandatory field is not correctly set')
                 _logger.debug("IntegrityError", exc_info=True)
@@ -111,9 +107,9 @@ def check(f):
                     msg += _('\n\n[object with reference: %s - %s]') % (model_name, model)
                 except Exception:
                     pass
-                openerp.netsvc.abort_response(1, _('Integrity Error'), 'warning', msg)
+                raise openerp.osv.orm.except_orm(_('Integrity Error'), msg)
             else:
-                openerp.netsvc.abort_response(1, _('Integrity Error'), 'warning', inst[0])
+                raise openerp.osv.orm.except_orm(_('Integrity Error'), inst[0])
         except Exception:
             _logger.exception("Uncaught exception")
             raise
@@ -123,7 +119,7 @@ def check(f):
 def execute_cr(cr, uid, obj, method, *args, **kw):
     object = openerp.pooler.get_pool(cr.dbname).get(obj)
     if not object:
-        raise except_osv('Object Error', 'Object %s doesn\'t exist' % str(obj))
+        raise except_orm('Object Error', 'Object %s doesn\'t exist' % str(obj))
     return getattr(object, method)(cr, uid, *args, **kw)
 
 def execute_kw(db, uid, obj, method, args, kw=None):
@@ -136,7 +132,7 @@ def execute(db, uid, obj, method, *args, **kw):
     try:
         try:
             if method.startswith('_'):
-                raise except_osv('Access Denied', 'Private methods (such as %s) cannot be called remotely.' % (method,))
+                raise except_orm('Access Denied', 'Private methods (such as %s) cannot be called remotely.' % (method,))
             res = execute_cr(cr, uid, obj, method, *args, **kw)
             if res is None:
                 _logger.warning('The method %s of the object %s can not return `None` !', method, obj)
@@ -151,7 +147,7 @@ def execute(db, uid, obj, method, *args, **kw):
 def exec_workflow_cr(cr, uid, obj, signal, *args):
     object = openerp.pooler.get_pool(cr.dbname).get(obj)
     if not object:
-        raise except_osv('Object Error', 'Object %s doesn\'t exist' % str(obj))
+        raise except_orm('Object Error', 'Object %s doesn\'t exist' % str(obj))
     res_id = args[0]
     return object._workflow_signal(cr, uid, [res_id], signal)[res_id]
 
