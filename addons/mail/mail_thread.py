@@ -243,7 +243,7 @@ class mail_thread(osv.AbstractModel):
         # subscribe uid unless asked not to
         if not context.get('mail_create_nosubscribe'):
             self.message_subscribe_users(cr, uid, [thread_id], [uid], context=context)
-            self.message_subscribe_from_parent(cr, uid, [thread_id], values.keys(), context=context)
+            self.message_auto_subscribe(cr, uid, [thread_id], values.keys(), context=context)
 
         # automatic logging unless asked not to (mainly for various testing purpose)
         if not context.get('mail_create_nolog'):
@@ -261,7 +261,7 @@ class mail_thread(osv.AbstractModel):
 
         # Perform write, update followers
         result = super(mail_thread, self).write(cr, uid, ids, values, context=context)
-        self.message_subscribe_from_parent(cr, uid, ids, values.keys(), context=context)
+        self.message_auto_subscribe(cr, uid, ids, values.keys(), context=context)
 
         # Perform the tracking
         if tracked_fields:
@@ -1069,7 +1069,24 @@ class mail_thread(osv.AbstractModel):
             self.check_access_rights(cr, uid, 'write')
         return self.write(cr, SUPERUSER_ID, ids, {'message_follower_ids': [(3, pid) for pid in partner_ids]}, context=context)
 
-    def message_subscribe_from_parent(self, cr, uid, ids, updated_fields, context=None):
+    def _message_get_auto_subscribe_fields(self, cr, uid, updated_fields, auto_follow_fields=['user_id'], context=None):
+        """ Returns the list of relational fields linking to res.users that should
+            trigger an auto subscribe. The default list checks for the fields
+            - called 'user_id'
+            - linking to res.users
+            - with track_visibility set
+            In OpenERP V7, this is sufficent for all major addon such as opportunity,
+            project, issue, recruitment, sale.
+            Override this method if a custom behavior is needed about fields
+            that automatically subscribe users.
+        """
+        user_field_lst = []
+        for name, column_info in self._all_columns.items():
+            if name in auto_follow_fields and name in updated_fields and getattr(column_info.column, 'track_visibility', False) and column_info.column._obj == 'res.users':
+                user_field_lst.append(name)
+        return user_field_lst
+
+    def message_auto_subscribe(self, cr, uid, ids, updated_fields, context=None):
         """
             1. fetch project subtype related to task (parent_id.res_model = 'project.task')
             2. for each project subtype: subscribe the follower to the task
@@ -1077,13 +1094,16 @@ class mail_thread(osv.AbstractModel):
         subtype_obj = self.pool.get('mail.message.subtype')
         follower_obj = self.pool.get('mail.followers')
 
+        # fetch auto_follow_fields
+        user_field_lst = self._message_get_auto_subscribe_fields(cr, uid, updated_fields, context=context)
+
         # fetch related record subtypes
         related_subtype_ids = subtype_obj.search(cr, uid, ['|', ('res_model', '=', False), ('parent_id.res_model', '=', self._name)], context=context)
         subtypes = subtype_obj.browse(cr, uid, related_subtype_ids, context=context)
         default_subtypes = [subtype for subtype in subtypes if subtype.res_model == False]
         related_subtypes = [subtype for subtype in subtypes if subtype.res_model != False]
         relation_fields = set([subtype.relation_field for subtype in subtypes if subtype.relation_field != False])
-        if not related_subtypes or not any(relation in updated_fields for relation in relation_fields):
+        if (not related_subtypes or not any(relation in updated_fields for relation in relation_fields)) and not user_field_lst:
             return True
 
         for record in self.browse(cr, uid, ids, context=context):
@@ -1105,20 +1125,24 @@ class mail_thread(osv.AbstractModel):
                 for follower in follower_obj.browse(cr, SUPERUSER_ID, follower_ids, context=context):
                     new_followers.setdefault(follower.partner_id.id, set()).add(subtype.parent_id.id)
 
-            if not parent_res_id or not parent_model:
-                continue
+            if parent_res_id and parent_model:
+                for subtype in default_subtypes:
+                    follower_ids = follower_obj.search(cr, SUPERUSER_ID, [
+                        ('res_model', '=', parent_model),
+                        ('res_id', '=', parent_res_id),
+                        ('subtype_ids', 'in', [subtype.id])
+                        ], context=context)
+                    for follower in follower_obj.browse(cr, SUPERUSER_ID, follower_ids, context=context):
+                        new_followers.setdefault(follower.partner_id.id, set()).add(subtype.id)
 
-            for subtype in default_subtypes:
-                follower_ids = follower_obj.search(cr, SUPERUSER_ID, [
-                    ('res_model', '=', parent_model),
-                    ('res_id', '=', parent_res_id),
-                    ('subtype_ids', 'in', [subtype.id])
-                    ], context=context)
-                for follower in follower_obj.browse(cr, SUPERUSER_ID, follower_ids, context=context):
-                    new_followers.setdefault(follower.partner_id.id, set()).add(subtype.id)
+            # add followers coming from res.users relational fields that are tracked
+            user_ids = [getattr(record, name).id for name in user_field_lst if getattr(record, name)]
+            for partner_id in [user.partner_id.id for user in self.pool.get('res.users').browse(cr, SUPERUSER_ID, user_ids, context=context)]:
+                new_followers.setdefault(partner_id, None)
 
             for pid, subtypes in new_followers.items():
-                self.message_subscribe(cr, uid, [record.id], [pid], list(subtypes), context=context)
+                subtypes = list(subtypes) if subtypes is not None else None
+                self.message_subscribe(cr, uid, [record.id], [pid], subtypes, context=context)
         return True
 
     #------------------------------------------------------
