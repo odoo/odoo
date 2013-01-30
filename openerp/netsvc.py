@@ -96,38 +96,6 @@ def LocalService(name):
 
     return Service._services[name]
 
-class ExportService(object):
-    """ Proxy for exported services.
-
-    Note that this class has no direct proxy, capable of calling
-    eservice.method(). Rather, the proxy should call
-    dispatch(method, params)
-    """
-
-    _services = {}
-    
-    def __init__(self, name):
-        ExportService._services[name] = self
-        self.__name = name
-        _logger.debug("Registered an exported service: %s" % name)
-
-    @classmethod
-    def getService(cls,name):
-        if name == 'object':
-            return openerp.service.model
-        if name == 'db':
-            return openerp.service.db
-        if name == 'common':
-            return openerp.service.common
-        if name == 'report':
-            return openerp.service.report
-        return cls._services[name]
-
-    # Dispatch a RPC call w.r.t. the method name. The dispatching
-    # w.r.t. the service (this class) is done by OpenERPDispatcher.
-    def dispatch(self, method, params):
-        raise Exception("stub dispatch at %s" % self.__name)
-
 BLACK, RED, GREEN, YELLOW, BLUE, MAGENTA, CYAN, WHITE, _NOTHING, DEFAULT = range(10)
 #The background is set with 40 plus the number of the color, and the foreground with 30
 #These are the sequences need to get colored ouput
@@ -292,7 +260,16 @@ def dispatch_rpc(service_name, method, params):
 
         threading.current_thread().uid = None
         threading.current_thread().dbname = None
-        result = ExportService.getService(service_name).dispatch(method, params)
+        service = None
+        if service_name == 'object':
+            service = openerp.service.model
+        if service_name == 'db':
+            service = openerp.service.db
+        if service_name == 'common':
+            service = openerp.service.common
+        if service_name == 'report':
+            service = openerp.service.report
+        result = service.dispatch(method, params)
 
         if rpc_request_flag or rpc_response_flag:
             end_time = time.time()
