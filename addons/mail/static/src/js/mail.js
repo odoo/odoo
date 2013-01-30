@@ -232,9 +232,9 @@ openerp.mail = function (session) {
                 else {
                     this.options.show_read = this.to_read;
                     this.options.show_unread = !this.to_read;
-                    this.options.rerender = true;
-                    this.options.toggle_read = true;
                 }
+                this.options.rerender = true;
+                this.options.toggle_read = true;
             }
             this.parent_thread = parent.messages != undefined ? parent : this.options.root_thread;
             this.thread = false;
@@ -1605,7 +1605,8 @@ openerp.mail = function (session) {
             this.node.params = _.extend({
                 'display_indented_thread': -1,
                 'show_reply_button': false,
-                'show_read_unread_button': false,
+                'show_read_unread_button': true,
+                'read_action': 'unread',
                 'show_record_name': false,
                 'show_compact_message': 1,
             }, this.node.params);
