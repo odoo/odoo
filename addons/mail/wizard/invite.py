@@ -76,8 +76,6 @@ class invite_wizard(osv.osv_memory):
                         'subject': 'Invitation to follow %s' % document.name_get()[0][1],
                         'body_html': '%s' % wizard.message,
                         'auto_delete': True,
-                        'res_id': False,
-                        'model': False,
                         }, context=context)
                     mail_mail.send(cr, uid, [mail_id], recipient_ids=[follower_id], context=context)
         return {'type': 'ir.actions.act_window_close'}

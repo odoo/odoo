@@ -75,13 +75,6 @@ class mail_notification(osv.Model):
         if not cr.fetchone():
             cr.execute('CREATE INDEX mail_notification_partner_id_read_starred_message_id ON mail_notification (partner_id, read, starred, message_id)')
 
-    def create(self, cr, uid, vals, context=None):
-        """ Override of create to check that we can not create a notification
-            for a message the user can not read. """
-        if self.pool.get('mail.message').check_access_rights(cr, uid, 'read'):
-            return super(mail_notification, self).create(cr, uid, vals, context=context)
-        return False
-
     def get_partners_to_notify(self, cr, uid, message, context=None):
         """ Return the list of partners to notify, based on their preferences.
 

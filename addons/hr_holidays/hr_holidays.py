@@ -283,7 +283,14 @@ class hr_holidays(osv.osv):
             result['value']['number_of_days_temp'] = 0
 
         return result
-    
+
+    def create(self, cr, uid, values, context=None):
+        """ Override to avoid automatic logging of creation """
+        if context is None:
+            context = {}
+        context = dict(context, mail_create_nolog=True)
+        return super(hr_holidays, self).create(cr, uid, values, context=context)
+
     def write(self, cr, uid, ids, vals, context=None):
         check_fnct = self.pool.get('hr.holidays.status').check_access_rights
         for  holiday in self.browse(cr, uid, ids, context=context):
@@ -430,7 +437,7 @@ class hr_holidays(osv.osv):
     def holidays_first_validate_notificate(self, cr, uid, ids, context=None):
         for obj in self.browse(cr, uid, ids, context=context):
             self.message_post(cr, uid, [obj.id],
-                _("Request <b>approved</b>, waiting second validation."), context=context)
+                _("Request approved, waiting second validation."), context=context)
 
 class resource_calendar_leaves(osv.osv):
     _inherit = "resource.calendar.leaves"

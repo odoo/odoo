@@ -52,7 +52,7 @@ class res_partner(osv.Model):
                                 (not partner.signup_expiration or dt <= partner.signup_expiration)
         return res
 
-    def _get_signup_url_for_action(self, cr, uid, ids, action='login', view_type=None, menu_id=None, res_id=None, context=None):
+    def _get_signup_url_for_action(self, cr, uid, ids, action='login', view_type=None, menu_id=None, res_id=None, model=None, context=None):
         """ generate a signup url for the given partner ids and action, possibly overriding
             the url state components (menu_id, id, view_type) """
         res = dict.fromkeys(ids, False)
@@ -61,6 +61,7 @@ class res_partner(osv.Model):
             # when required, make sure the partner has a valid signup token
             if context and context.get('signup_valid') and not partner.user_ids:
                 self.signup_prepare(cr, uid, [partner.id], context=context)
+                partner.refresh()
 
             # the parameters to encode for the query and fragment part of url
             query = {'db': cr.dbname}
@@ -78,6 +79,8 @@ class res_partner(osv.Model):
                 fragment['view_type'] = view_type
             if menu_id:
                 fragment['menu_id'] = menu_id
+            if model:
+                fragment['model'] = model
             if res_id:
                 fragment['id'] = res_id
 

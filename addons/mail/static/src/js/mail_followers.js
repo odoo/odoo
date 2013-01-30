@@ -221,11 +221,14 @@ openerp_mail_followers = function(session, mail) {
             var nb_subtype = 0;
             _(records).each(function (record) {nb_subtype++;});
             if (nb_subtype > 1) {
+                this.$('hr').show();
                 _(records).each(function (record, record_name) {
                     record.name = record_name;
                     record.followed = record.followed || undefined;
                     $(session.web.qweb.render('mail.followers.subtype', {'record': record})).appendTo( self.$('.oe_subtype_list') );
                 });
+            } else {
+                this.$('hr').hide();
             }
         },
 
