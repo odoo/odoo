@@ -280,7 +280,7 @@ openerp.web_analytics = function(instance) {
                 // the call to bind_events() may have been delayed in some embed
                 // cases, and when that happens we can skip the push, as the
                 // proper one will be done when bind_event is eventually called.
-                if (instance.client.tracker) {
+                if (instance.client && instance.client.tracker) {
                     instance.client.tracker._push_customvars();
                 }
             });
