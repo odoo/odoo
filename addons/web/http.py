@@ -232,12 +232,21 @@ class JsonRequest(WebRequest):
         return r
 
 def serialize_exception(e):
-    return {
+    tmp = {
         "name": type(e).__module__ + "." + type(e).__name__ if type(e).__module__ else type(e).__name__,
         "debug": traceback.format_exc(),
         "message": u"%s" % e,
         "arguments": to_jsonable(e.args),
     }
+    if isinstance(e, openerp.osv.osv.except_osv):
+        tmp["exception_type"] = "except_osv"
+    elif isinstance(e, openerp.exceptions.Warning):
+        tmp["exception_type"] = "warning"
+    elif isinstance(e, openerp.exceptions.AccessError):
+        tmp["exception_type"] = "access_error"
+    elif isinstance(e, openerp.exceptions.AccessDenied):
+        tmp["exception_type"] = "access_denied"
+    return tmp
 
 def to_jsonable(o):
     if isinstance(o, str) or isinstance(o,unicode) or isinstance(o, int) or isinstance(o, long) \
