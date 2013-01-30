@@ -93,9 +93,9 @@ class stock_invoice_onshipping(osv.osv_memory):
             if pick.invoice_state != '2binvoiced':
                 count += 1
         if len(active_ids) == 1 and count:
-            raise osv.except_osv(_('Warning!'), _('This picking list does not require invoicing.'))
+            raise osv.except_osv(_('Warning!'), _('This picking does not require invoicing.'))
         if len(active_ids) == count:
-            raise osv.except_osv(_('Warning!'), _('None of these picking lists require invoicing.'))
+            raise osv.except_osv(_('Warning!'), _('None of these pickings require invoicing.'))
         return res
 
     def open_invoice(self, cr, uid, ids, context=None):
