@@ -85,14 +85,48 @@
         <menuitem action="action_res_groups" id="menu_action_res_groups" parent="base.menu_users" groups="base.group_no_one"/>
 
         <!-- res.users -->
+        <record id="view_users_simple_form" model="ir.ui.view">
+            <field name="name">res.users.simplified.form</field>
+            <field name="model">res.users</field>
+            <field name="priority">1</field>
+            <field name="arch" type="xml">
+                <form string="Users" version="7.0">
+                    <sheet>
+                        <field name="image" widget='image' class="oe_avatar oe_left" options='{"preview_image": "image_medium"}'/>
+                        <div class="oe_title">
+                            <label for="name" class="oe_edit_only"/>
+                            <h1><field name="name"/></h1>
+                            <label for="login" class="oe_edit_only"/>
+                            <h2><field name="login"/></h2>
+                            <label for="company_id" class="oe_edit_only" groups="base.group_multi_company"/>
+                            <field name="company_id" context="{'user_preference': 0}" groups="base.group_multi_company"/>
+                        </div>
+                        <separator/>
+                        <div>
+                            You are creating a new user.
+                            <span invisible="not context.get('default_groups_ref',False)">
+                                This user will have the access rights to be able to do the task assigned to it. You can see this list of groups of access rights on the field of the form view.
+                            </span>
+                            You should use the "Settings > Users" menu to change his access rights and other settings.
+                        </div>
+                        <group>
+                            <field name="phone" placeholder="e.g. +32.81.81.37.00"/>
+                            <field name="mobile"/>
+                            <field name="fax"/>
+                            <field name="email" widget="email"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
         <record id="view_users_form" model="ir.ui.view">
             <field name="name">res.users.form</field>
             <field name="model">res.users</field>
             <field name="arch" type="xml">
                 <form string="Users" version="7.0">
-                    <field name="id" invisible="1"/>
                     <sheet>
-                        <div class="oe_right oe_button_box" attrs="{'invisible': [('active', '!=', True), ('state','not in',['active', 'reset'])]}" >
+                        <field name="id" invisible="1"/>
+                        <div attrs="{'invisible': ['|', ('active', '!=', True), ('state','not in',['active', 'reset'])]}" class="oe_right oe_button_box">
                             <button string="Change Password" type="action" name="%(change_password_wizard_action)d"
                                 help="Change the user password."/>
                         </div>
@@ -105,7 +139,7 @@
                             <label for="company_id" class="oe_edit_only" groups="base.group_multi_company"/>
                             <field name="company_id" context="{'user_preference': 0}" groups="base.group_multi_company"/>
                         </div>
-                        <notebook colspan="4" invisible="context.get('simple_mode',False)">
+                        <notebook colspan="4">
                             <page string="Contact">
                                 <group>
                                     <field name="phone" placeholder="e.g. +32.81.81.37.00"/>
@@ -145,6 +179,7 @@
                 </form>
             </field>
         </record>
+
         <record id="view_users_tree" model="ir.ui.view">
             <field name="name">res.users.tree</field>
             <field name="model">res.users</field>
