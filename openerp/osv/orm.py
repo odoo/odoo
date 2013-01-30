@@ -477,8 +477,7 @@ class Record(object):
                 record.write(values)    # => record.singleton.write(values)
         """
         if not self._singleton:
-            self._singleton = self._model._make_recordset([self])
-            self._singleton.one = self
+            self._singleton = self._model._make_singleton(self)
         return self._singleton
 
     def __getitem__(self, name):
@@ -1173,6 +1172,19 @@ class BaseModel(object):
         # query() returns recordsets with self._search_args, and self._records
         # when evaluated; browse() returns recordsets with self._records only
         return hasattr(self, '_records') or hasattr(self, '_search_args')
+
+    def _make_singleton(self, cr, uid, record, context=None):
+        """ make a recordset ``y`` for a single record ``record``; the record
+            is accessible as ``y.record``
+        """
+        obj = self._make_instance(cr, uid, context)
+        obj._records = [record]
+        obj.record = record
+        return obj
+
+    def is_singleton(self):
+        """ test whether self is a singleton """
+        return hasattr(self, 'record')
 
     def with_session(self, user=None, context=None, **kwargs):
         """ return an instance similar to self (model or recordset, with session
