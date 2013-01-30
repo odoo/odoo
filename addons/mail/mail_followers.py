@@ -85,9 +85,6 @@ class mail_notification(osv.Model):
             if notification.read:
                 continue
             partner = notification.partner_id
-            # Do not send an email to the writer
-            if partner.user_ids and partner.user_ids[0].id == uid:
-                continue
             # Do not send to partners without email address defined
             if not partner.email:
                 continue

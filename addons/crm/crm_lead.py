@@ -983,6 +983,8 @@ class crm_lead(base_stage, format_address, osv.osv):
             'partner_id': msg.get('author_id', False),
             'user_id': False,
         }
+        if msg.get('author_id'):
+            defaults.update(self.on_change_partner(cr, uid, None, msg.get('author_id'), context=context)['value'])
         if msg.get('priority') in dict(crm.AVAILABLE_PRIORITIES):
             defaults['priority'] = msg.get('priority')
         defaults.update(custom_values)
