@@ -130,7 +130,7 @@ def start_services_workers():
 def _reexec():
     """reexecute openerp-server process with (nearly) the same arguments"""
     if openerp.tools.osutil.is_running_as_nt_service():
-        subprocess.call('sc stop {0} && sc start {0}'.format(nt_service_name), shell=True)
+        subprocess.call('net stop {0} && net start {0}'.format(nt_service_name), shell=True)
     exe = os.path.basename(sys.executable)
     strip_args = ['-d', '-u']
     a = sys.argv[:]

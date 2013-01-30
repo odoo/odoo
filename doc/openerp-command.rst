@@ -1,21 +1,22 @@
 .. _openerp-command:
 
-OpenERP Command
-===============
+The ``oe`` script
+=================
 
 The ``oe`` script provides a set of command-line tools around the OpenERP
-framework.
+framework. It is meant to replace the older ``openerp-server`` script (which
+is still available).
 
-Using OpenERP Command
----------------------
+Using ``oe``
+------------
 
 In contrast to the previous ``openerp-server`` script, ``oe`` defines a few
-sub-commands, each with its own set of flags and options. You can get some
+commands, each with its own set of flags and options. You can get some
 information for any of them with
 
 ::
 
-  > oe <sub-command> --help
+  > oe <command> --help
 
 For instance::
 
@@ -43,6 +44,11 @@ for instance here is a, say, ``test-trunk-view-validation.sh`` file::
   # itself does not need it.
   oe run-tests -d ignored -m openerp.test_view_validation
 
+Available commands
+-------------------
+
+See the :doc:`commands` page.
+
 Adding new commands
 -------------------
 
@@ -57,4 +63,4 @@ A preliminary ``oe-bash-completion`` file is provided. After sourcing it,
 
   > . oe-bash-completion
 
-completion (using the TAB character) in Bash should be working.
+completion (using the TAB character) in Bash should work.
