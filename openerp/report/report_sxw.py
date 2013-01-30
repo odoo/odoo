@@ -225,8 +225,9 @@ class rml_parse(object):
     def setLang(self, lang):
         self.localcontext['lang'] = lang
         self.lang_dict_called = False
+        # UGLY: change the context directly in the records' context dictionary
         for obj in self.objects:
-            obj._context['lang'] = lang
+            obj.session.context['lang'] = lang
 
     def _get_lang_dict(self):
         pool_lang = self.pool.get('res.lang')
