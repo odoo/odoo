@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2012-12-21 17:04+0000\n"
-"PO-Revision-Date: 2013-01-27 11:07+0000\n"
+"PO-Revision-Date: 2013-01-29 12:47+0000\n"
 "Last-Translator: Erwin van der Ploeg (Endian Solutions) <Unknown>\n"
 "Language-Team: Dutch <nl@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-01-28 05:57+0000\n"
-"X-Generator: Launchpad (build 16451)\n"
+"X-Launchpad-Export-Date: 2013-01-30 05:19+0000\n"
+"X-Generator: Launchpad (build 16455)\n"
 
 #. module: account
 #: model:process.transition,name:account.process_transition_supplierreconcilepaid0
@@ -6375,8 +6375,8 @@ msgid ""
 "This payment term will be used instead of the default one for purchase "
 "orders and supplier invoices"
 msgstr ""
-"Dit betaaltermijn wordt gebruikt in plaats van het standaard betaaltermijn "
-"voor inkooporders en inkoopfacturen."
+"Deze betalingsconditie wordt gebruikt in plaats van het standaard "
+"betalingsconditie voor inkooporders en inkoopfacturen."
 
 #. module: account
 #: help:account.automatic.reconcile,power:0
@@ -7222,13 +7222,13 @@ msgid ""
 "due date, make sure that the payment term is not set on the invoice. If you "
 "keep the payment term and the due date empty, it means direct payment."
 msgstr ""
-"Bij het gebruik van betalingstermijnen zal de vervaldatum automatisch "
-"berekend worden bij het genereren van de posten. De betalingstermijn kan "
+"Bij het gebruik van betalingscondities zal de vervaldatum automatisch "
+"berekend worden bij het genereren van de posten. De betalingsconditie kan "
 "meerdere vervaldata berekenen, bijvoorbeeld 50% nu en 50% over een maand, "
 "maar u kunt ook een vervaldatum forceren. Zorg er dan voor dat er geen "
-"betaaltermijn is ingesteld op de factuur.  Als u noch een betalingstermijn "
-"noch een vervaldatum gebruikt, dan veronderstelt het systeem een "
-"onmiddellijke betaling."
+"betalingsconditie is ingesteld op de factuur.  Als u noch een "
+"betalingsconditie noch een vervaldatum gebruikt, dan veronderstelt het "
+"systeem een onmiddellijke betaling."
 
 #. module: account
 #: code:addons/account/account.py:414
@@ -7440,7 +7440,7 @@ msgid ""
 "Percentages for Payment Term Line must be between 0 and 1, Example: 0.02 for "
 "2%."
 msgstr ""
-"Het percentage voor de betaaltermijn regel moet liggen tussen 0 en 1, "
+"Het percentage voor de betalingsconditie regel moet liggen tussen 0 en 1, "
 "bijvoorbeeld 0,002 voor 2%."
 
 #. module: account
@@ -11645,7 +11645,8 @@ msgstr "Handmatige Factuur Belasting"
 #: code:addons/account/account_invoice.py:554
 #, python-format
 msgid "The payment term of supplier does not have a payment term line."
-msgstr "Het betaaltermijn van de leverancier heeft geen betaaltermijnregels."
+msgstr ""
+"De betalingsconditie van de leverancier heeft geen betalingsconditie regels."
 
 #. module: account
 #: field:account.account,parent_right:0
@@ -11784,7 +11785,7 @@ msgstr "Kostenrekening op product sjabloon"
 #. module: account
 #: field:res.partner,property_payment_term:0
 msgid "Customer Payment Term"
-msgstr "Betaaltermijn klant"
+msgstr "Betalingsconditie klant"
 
 #. module: account
 #: help:accounting.report,label_filter:0
