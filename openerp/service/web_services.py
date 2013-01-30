@@ -255,26 +255,6 @@ GNU Public Licence.
         return sql_db.sql_counter
 
 
-class objects_proxy(netsvc.ExportService):
-    def __init__(self, name="object"):
-        netsvc.ExportService.__init__(self,name)
-
-    def dispatch(self, method, params):
-        (db, uid, passwd ) = params[0:3]
-        threading.current_thread().uid = uid
-        params = params[3:]
-        if method == 'obj_list':
-            raise NameError("obj_list has been discontinued via RPC as of 6.0, please query ir.model directly!")
-        if method not in ['execute', 'execute_kw', 'exec_workflow']:
-            raise NameError("Method not available %s" % method)
-        security.check(db,uid,passwd)
-        openerp.modules.registry.RegistryManager.check_registry_signaling(db)
-        fn = getattr(openerp.service.model, method)
-        res = fn(db, uid, *params)
-        openerp.modules.registry.RegistryManager.signal_caches_change(db)
-        return res
-
-
 #
 # TODO: set a maximum report number per user to avoid DOS attacks
 #
@@ -413,7 +393,6 @@ class report_spool(netsvc.ExportService):
 
 def start_service():
     common()
-    objects_proxy()
     report_spool()
 
 

@@ -113,6 +113,8 @@ class ExportService(object):
 
     @classmethod
     def getService(cls,name):
+        if name == 'object':
+            return openerp.service.model
         if name == 'db':
             return openerp.service.db
         return cls._services[name]

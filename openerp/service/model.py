@@ -9,7 +9,24 @@ import openerp
 from openerp.tools.translate import translate
 from openerp.osv.orm import except_orm
 
+import security
+
 _logger = logging.getLogger(__name__)
+
+def dispatch(method, params):
+    (db, uid, passwd ) = params[0:3]
+    threading.current_thread().uid = uid
+    params = params[3:]
+    if method == 'obj_list':
+        raise NameError("obj_list has been discontinued via RPC as of 6.0, please query ir.model directly!")
+    if method not in ['execute', 'execute_kw', 'exec_workflow']:
+        raise NameError("Method not available %s" % method)
+    security.check(db,uid,passwd)
+    openerp.modules.registry.RegistryManager.check_registry_signaling(db)
+    fn = globals()[method]
+    res = fn(db, uid, *params)
+    openerp.modules.registry.RegistryManager.signal_caches_change(db)
+    return res
 
 def check(f):
     @wraps(f)
