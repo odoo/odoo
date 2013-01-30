@@ -247,19 +247,12 @@ instance.web.CrashManager = instance.web.Class.extend({
         if (!this.active) {
             return;
         }
-        // yes, exception handling is shitty
-        if (error.code === 300 && error.data && error.data.type == "client_exception" && error.data.debug.match("SessionExpiredException")) {
-            this.show_warning({type: "Session Expired", data: { fault_code: "Your OpenERP session expired. Please refresh the current web page." }});
+        if (error.data.name === "openerp.addons.web.session SessionExpiredException") {
+            this.show_warning({type: "Session Expired", data: { message: "Your OpenERP session expired. Please refresh the current web page." }});
             return;
         }
-        if (error.data.fault_code) {
-            var split = ("" + error.data.fault_code).split('\n')[0].split(' -- ');
-            if (split.length > 1) {
-                error.type = split.shift();
-                error.data.fault_code = error.data.fault_code.substr(error.type.length + 4);
-            }
-        }
-        if (error.code === 200 && error.type) {
+        if (error.data.exception_type === "except_osv" || error.data.exception_type === "warning"
+                || error.data.exception_type === "access_error") {
             this.show_warning(error);
         } else {
             this.show_error(error);
@@ -269,8 +262,11 @@ instance.web.CrashManager = instance.web.Class.extend({
         if (!this.active) {
             return;
         }
+        if (error.data.exception_type === "except_osv") {
+            error = _.extend({}, error, {data: _.extend({}, error.data, {message: error.data.arguments[0] + "\n\n" + error.data.arguments[1]})});
+        }
         instance.web.dialog($('<div>' + QWeb.render('CrashManager.warning', {error: error}) + '</div>'), {
-            title: "OpenERP " + _.str.capitalize(error.type),
+            title: "OpenERP " + (_.str.capitalize(error.type) || "Warning"),
             buttons: [
                 {text: _t("Ok"), click: function() { $(this).dialog("close"); }}
             ]
@@ -650,7 +646,7 @@ instance.web.Login =  instance.web.Widget.extend({
         }
     },
     on_db_failed: function (error, event) {
-        if (error.data.fault_code === 'AccessDenied') {
+        if (error.data.name === 'openerp.exceptions.AccessDenied') {
             event.preventDefault();
         }
     },
