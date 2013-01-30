@@ -991,7 +991,7 @@ instance.web.JsonRPC = instance.web.Class.extend(instance.web.PropertiesMixin, {
                     self.trigger('response', response);
                 if (!response.error) {
                     deferred.resolve(response["result"], textStatus, jqXHR);
-                } else if (response.error.data.type === "session_invalid") {
+                } else if (response.error.code === 100) {
                     self.uid = false;
                 } else {
                     deferred.reject(response.error, $.Event());

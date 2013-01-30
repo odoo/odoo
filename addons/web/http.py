@@ -197,19 +197,14 @@ class JsonRequest(WebRequest):
             error = {
                 'code': 100,
                 'message': "OpenERP Session Invalid",
-                'data': dict(se, **{
-                    'type': 'session_invalid',
-                })
+                'data': se
             }
         except Exception, e:
             se = serialize_exception(e)
             error = {
                 'code': 200,
                 'message': "OpenERP Server Error",
-                'data': dict(se, **{
-                    'type': 'server_exception',
-                    'fault_code': se["message"],
-                })
+                'data': se
             }
         if error:
             response["error"] = error
@@ -296,10 +291,7 @@ class HttpRequest(WebRequest):
             error = {
                 'code': 200,
                 'message': "OpenERP Server Error",
-                'data': dict(se, **{
-                    'type': 'server_exception',
-                    'fault_code': se["message"],
-                })
+                'data': se
             }
             r = werkzeug.exceptions.InternalServerError(cgi.escape(simplejson.dumps(error)))
         if self.debug or 1:
