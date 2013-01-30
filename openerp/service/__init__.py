@@ -75,8 +75,6 @@ def start_internal():
     openerp.netsvc.init_logger()
     openerp.modules.loading.open_openerp_namespace()
 
-    # Instantiate local services (this is a legacy design).
-    openerp.osv.osv.start_object_proxy()
     # Export (for RPC) services.
     web_services.start_service()
 

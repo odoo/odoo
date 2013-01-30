@@ -32,10 +32,12 @@ import threading
 import time
 import traceback
 from cStringIO import StringIO
+
 from openerp.tools.translate import _
 import openerp.netsvc as netsvc
 import openerp.pooler as pooler
 import openerp.release as release
+import openerp.service.model
 import openerp.sql_db as sql_db
 import openerp.tools as tools
 import openerp.modules
@@ -608,9 +610,8 @@ class objects_proxy(netsvc.ExportService):
         if method not in ['execute', 'execute_kw', 'exec_workflow']:
             raise NameError("Method not available %s" % method)
         security.check(db,uid,passwd)
-        assert openerp.osv.osv.service, "The object_proxy class must be started with start_object_proxy."
         openerp.modules.registry.RegistryManager.check_registry_signaling(db)
-        fn = getattr(openerp.osv.osv.service, method)
+        fn = getattr(openerp.service.model, method)
         res = fn(db, uid, *params)
         openerp.modules.registry.RegistryManager.signal_caches_change(db)
         return res

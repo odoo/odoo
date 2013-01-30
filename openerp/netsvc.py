@@ -94,7 +94,7 @@ def LocalService(name):
     # Special case for addons support, will be removed in a few days when addons
     # are updated to directly use openerp.osv.osv.service.
     if name == 'object_proxy':
-        return openerp.osv.osv.service
+        return openerp.service.model
 
     return Service._services[name]
 
