@@ -515,7 +515,7 @@ class module(osv.osv):
 
     def button_upgrade(self, cr, uid, ids, context=None):
         depobj = self.pool.get('ir.module.module.dependency')
-        todo = self.browse(cr, uid, ids, context=context)
+        todo = list(self.browse(cr, uid, ids, context=context))
         self.update_list(cr, uid)
 
         i = 0
