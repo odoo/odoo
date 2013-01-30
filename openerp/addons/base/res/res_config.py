@@ -620,44 +620,44 @@ class res_config_settings(osv.osv_memory):
 
         return self.pool.get(model_name).fields_get(cr, uid, allfields=[field_name], context=context)[field_name]['string']
 
-def get_warning_config(cr, msg, context=None):
-    """
-    Helper: return a Warning exception with the given message where the
-    %(field:)s and/or %(menu:)s are replaced by the human readable field's name
-    and/or menuitem's full path.
+    def get_config_warning(self, cr, msg, context=None):
+        """
+        Helper: return a Warning exception with the given message where the
+        %(field:)s and/or %(menu:)s are replaced by the human readable field's name
+        and/or menuitem's full path.
 
-    Usage:
-    ------
-    Just include in your error message %(field:model_name.field_name)s to
-    obtain the human readable field's name, and/or
-    %(menu:module_name.menuitem_xml_id)s to obtain the menuitem's full path.
+        Usage:
+        ------
+        Just include in your error message %(field:model_name.field_name)s to
+        obtain the human readable field's name, and/or
+        %(menu:module_name.menuitem_xml_id)s to obtain the menuitem's full path.
 
-    Example of use:
-    ---------------
-    from openerp.addons.base.res.res_config import get_warning_config
-    raise get_warning_config(cr, _("Error: this action is prohibited. You should check the field %(field:sale.config.settings.fetchmail_lead)s in %(menu:base.menu_sale_config)s."), context=context)
-    will return an exception containing the following message:
-    Error: this action is prohibited. You should check the field Create leads from incoming mails in Settings/Configuration/Sales.
-    """
+        Example of use:
+        ---------------
+        from openerp.addons.base.res.res_config import get_warning_config
+        raise get_warning_config(cr, _("Error: this action is prohibited. You should check the field %(field:sale.config.settings.fetchmail_lead)s in %(menu:base.menu_sale_config)s."), context=context)
+        will return an exception containing the following message:
+        Error: this action is prohibited. You should check the field Create leads from incoming mails in Settings/Configuration/Sales.
+        """
 
-    res_config_obj = pooler.get_pool(cr.dbname).get('res.config.settings')
-    regex_path = r'%\(((?:menu|field):[a-z_\.]*)\)s'
+        res_config_obj = pooler.get_pool(cr.dbname).get('res.config.settings')
+        regex_path = r'%\(((?:menu|field):[a-z_\.]*)\)s'
 
-    # Process the message
-    # 1/ find the path and/or field references, put them in a list
-    references = re.findall(regex_path, msg, flags=re.I)
+        # Process the message
+        # 1/ find the path and/or field references, put them in a list
+        references = re.findall(regex_path, msg, flags=re.I)
 
-    # 2/ fetch the path and/or field replacement values
-    #    (full path and human readable field's name)
-    values = {}
-    for item in references:
-        ref_type, ref = item.split(':')
-        if ref_type == 'menu':
-            values[item] = res_config_obj.get_option_path(cr, SUPERUSER_ID, ref, context)
-        elif ref_type == 'field':
-            values[item] = res_config_obj.get_option_name(cr, SUPERUSER_ID, ref, context)
+        # 2/ fetch the path and/or field replacement values
+        #    (full path and human readable field's name)
+        values = {}
+        for item in references:
+            ref_type, ref = item.split(':')
+            if ref_type == 'menu':
+                values[item] = res_config_obj.get_option_path(cr, SUPERUSER_ID, ref, context)
+            elif ref_type == 'field':
+                values[item] = res_config_obj.get_option_name(cr, SUPERUSER_ID, ref, context)
 
-    # 3/ substitute and return the result
-    return exceptions.Warning(msg % values)
+        # 3/ substitute and return the result
+        return exceptions.Warning(msg % values)
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
