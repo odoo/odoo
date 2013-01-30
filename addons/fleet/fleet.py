@@ -556,6 +556,7 @@ class fleet_vehicle_log_fuel(osv.Model):
         'inv_ref': fields.char('Invoice Reference', size=64),
         'vendor_id': fields.many2one('res.partner', 'Supplier', domain="[('supplier','=',True)]"),
         'notes': fields.text('Notes'),
+        'cost_id': fields.many2one('fleet.vehicle.cost', 'Cost'),
         'cost_amount': fields.related('cost_id', 'amount', string='Amount', type='float', store=True), #we need to keep this field as a related with store=True because the graph view doesn't support (1) to address fields from inherited table and (2) fields that aren't stored in database
     }
     _defaults = {
@@ -596,6 +597,7 @@ class fleet_vehicle_log_services(osv.Model):
         'vendor_id': fields.many2one('res.partner', 'Supplier', domain="[('supplier','=',True)]"),
         'cost_amount': fields.related('cost_id', 'amount', string='Amount', type='float', store=True), #we need to keep this field as a related with store=True because the graph view doesn't support (1) to address fields from inherited table and (2) fields that aren't stored in database
         'notes': fields.text('Notes'),
+        'cost_id': fields.many2one('fleet.vehicle.cost', 'Cost'),
     }
     _defaults = {
         'date': fields.date.context_today,
@@ -794,6 +796,7 @@ class fleet_vehicle_log_contract(osv.Model):
         'cost_frequency': fields.selection([('no','No'), ('daily', 'Daily'), ('weekly','Weekly'), ('monthly','Monthly'), ('yearly','Yearly')], 'Recurring Cost Frequency', help='Frequency of the recuring cost', required=True),
         'generated_cost_ids': fields.one2many('fleet.vehicle.cost', 'contract_id', 'Generated Costs', ondelete='cascade'),
         'sum_cost': fields.function(_get_sum_cost, type='float', string='Indicative Costs Total'),
+        'cost_id': fields.many2one('fleet.vehicle.cost', 'Cost'),
         'cost_amount': fields.related('cost_id', 'amount', string='Amount', type='float', store=True), #we need to keep this field as a related with store=True because the graph view doesn't support (1) to address fields from inherited table and (2) fields that aren't stored in database
     }
     _defaults = {
