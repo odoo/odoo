@@ -91,8 +91,8 @@ def LocalService(name):
     # are updated to directly use openerp.osv.osv.service.
     if name == 'object_proxy':
         return openerp.service.model
-    if name == 'db':
-        return openerp.service.db
+    if name == 'workflow':
+        return openerp.workflow
 
     return Service._services[name]
 
