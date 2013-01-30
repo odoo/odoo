@@ -247,19 +247,17 @@ instance.web.CrashManager = instance.web.Class.extend({
         if (!this.active) {
             return;
         }
-        // yes, exception handling is shitty
-        if (error.code === 300 && error.data && error.data.type == "client_exception" && error.data.debug.match("SessionExpiredException")) {
-            this.show_warning({type: "Session Expired", data: { fault_code: "Your OpenERP session expired. Please refresh the current web page." }});
+        var handler = instance.web.crash_manager_registry.get_object(error.data.name, true);
+        if (handler) {
+            new (handler)(this, error).display();
+            return;
+        };
+        if (error.data.name === "openerp.addons.web.session SessionExpiredException") {
+            this.show_warning({type: "Session Expired", data: { message: "Your OpenERP session expired. Please refresh the current web page." }});
             return;
         }
-        if (error.data.fault_code) {
-            var split = ("" + error.data.fault_code).split('\n')[0].split(' -- ');
-            if (split.length > 1) {
-                error.type = split.shift();
-                error.data.fault_code = error.data.fault_code.substr(error.type.length + 4);
-            }
-        }
-        if (error.code === 200 && error.type) {
+        if (error.data.exception_type === "except_osv" || error.data.exception_type === "warning"
+                || error.data.exception_type === "access_error") {
             this.show_warning(error);
         } else {
             this.show_error(error);
@@ -269,8 +267,11 @@ instance.web.CrashManager = instance.web.Class.extend({
         if (!this.active) {
             return;
         }
+        if (error.data.exception_type === "except_osv") {
+            error = _.extend({}, error, {data: _.extend({}, error.data, {message: error.data.arguments[0] + "\n\n" + error.data.arguments[1]})});
+        }
         instance.web.dialog($('<div>' + QWeb.render('CrashManager.warning', {error: error}) + '</div>'), {
-            title: "OpenERP " + _.str.capitalize(error.type),
+            title: "OpenERP " + (_.str.capitalize(error.type) || "Warning"),
             buttons: [
                 {text: _t("Ok"), click: function() { $(this).dialog("close"); }}
             ]
@@ -302,6 +303,29 @@ instance.web.CrashManager = instance.web.Class.extend({
         });
     },
 });
+
+/**
+    An interface to implement to handle exceptions. Register implementation in instance.web.crash_manager_registry.
+*/
+instance.web.ExceptionHandler = {
+    /**
+        @param parent The parent.
+        @param error The error object as returned by the JSON-RPC implementation.
+    */
+    init: function(parent, error) {},
+    /**
+        Called to inform to display the widget, if necessary. A typical way would be to implement
+        this interface in a class extending instance.web.Dialog and simply display the dialog in this
+        method.
+    */
+    display: function() {},
+};
+
+/**
+    The registry to handle exceptions. It associate a fully qualified python exception name with a class implementing
+    instance.web.ExceptionHandler.
+*/
+instance.web.crash_manager_registry = new instance.web.Registry();
 
 instance.web.Loading = instance.web.Widget.extend({
     template: _t("Loading"),
@@ -481,6 +505,7 @@ instance.web.DatabaseManager = instance.web.Widget.extend({
                         self.do_action("reload");
                     },
                 },
+                _push_me: false,
             };
             self.do_action(client_action);
         });
@@ -649,7 +674,7 @@ instance.web.Login =  instance.web.Widget.extend({
         }
     },
     on_db_failed: function (error, event) {
-        if (error.data.fault_code === 'AccessDenied') {
+        if (error.data.name === 'openerp.exceptions.AccessDenied') {
             event.preventDefault();
         }
     },
@@ -868,7 +893,7 @@ instance.web.Menu =  instance.web.Widget.extend({
         this.needaction_data = data;
         _.each(this.needaction_data, function (item, menu_id) {
             var $item = self.$secondary_menus.find('a[data-menu="' + menu_id + '"]');
-            $item.remove('oe_menu_counter');
+            $item.find('.oe_menu_counter').remove();
             if (item.needaction_counter && item.needaction_counter > 0) {
                 $item.append(QWeb.render("Menu.needaction_counter", { widget : item }));
             }
@@ -1395,13 +1420,9 @@ instance.web.WebClient = instance.web.Client.extend({
             });
     },
     set_content_full_screen: function(fullscreen) {
-        if (fullscreen) {
-            $(".oe_webclient", this.$el).addClass("oe_content_full_screen");
-            $("body").css({'overflow-y':'hidden'});
-        } else {
-            $(".oe_webclient", this.$el).removeClass("oe_content_full_screen");
-            $("body").css({'overflow-y':'scroll'});
-        }
+        $(document.body).css('overflow-y', fullscreen ? 'hidden' : 'scroll');
+        this.$('.oe_webclient').toggleClass(
+            'oe_content_full_screen', fullscreen);
     },
     has_uncommitted_changes: function() {
         var $e = $.Event('clear_uncommitted_changes');
