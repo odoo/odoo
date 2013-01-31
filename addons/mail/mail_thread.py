@@ -243,7 +243,7 @@ class mail_thread(osv.AbstractModel):
         # subscribe uid unless asked not to
         if not context.get('mail_create_nosubscribe'):
             self.message_subscribe_users(cr, uid, [thread_id], [uid], context=context)
-            self.message_auto_subscribe(cr, uid, [thread_id], values.keys(), context=context)
+        self.message_auto_subscribe(cr, uid, [thread_id], values.keys(), context=context)
 
         # automatic logging unless asked not to (mainly for various testing purpose)
         if not context.get('mail_create_nolog'):
