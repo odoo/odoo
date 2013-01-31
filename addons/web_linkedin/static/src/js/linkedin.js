@@ -19,47 +19,73 @@ openerp.web_linkedin = function(instance) {
             this.linkedin_def = $.Deferred();
             this.auth_def = $.Deferred();
         },
+        error_catcher: function (callback) {
+            var self = this;
+            if (!this.realError) {
+                this.realError = Error;
+                this.window_onerror = window.onerror;
+            }
+            if (!callback) {
+                window.onerror = self.window_onerror;
+                Error = self.realError;
+            }
+            this.callback = callback;
+            Error = function (message, fileName, lineNumber) {
+                this.name = message;
+                this.message = message;
+                this.fileName = fileName;
+                this.lineNumber = lineNumber;
+                if (Error.caller.toString().match(/API Key is invalid/)) {
+                    self.callback.apply(self, [this]);
+                    Error.prototype.catched = true;
+                }
+            };
+            Error.prototype.toString = function () {return this.name;};
+            Error.prototype.catched = false;
+            window.onerror = function(message, fileName, lineNumber) {
+                if (!Error.prototype.catched) {
+                    self.window_onerror(message, fileName, lineNumber);
+                }
+                Error.prototype.catched = false;
+            };
+        },
+        linkedin_disabled: function(error) {
+            instance.web.dialog($(QWeb.render("LinkedIn.DisabledWarning", {'error': error})), {
+                title: _t("LinkedIn is not enabled"),
+                buttons: [
+                    {text: _t("Ok"), click: function() { $(this).dialog("close"); }}
+                ]
+            });
+        },
         test_linkedin: function() {
             var self = this;
             return this.test_api_key().then(function() {
                 if (self.linkedin_added) {
                     return self.linkedin_def;
                 }
-                $("body").append('<div class="oe_linkedin_login_hidden" style="display:none;"><script type="in/Login"></script></div>');
 
+                self.error_catcher(function (error) {
+                    self.linkedin_disabled(error);
+                    self.auth_def.reject();
+                    self.linkedin_def.reject();
+                    self.$linkedin.remove();
+                    IN = false;
+                    self.linkedin_added = false;
+                    self.error_catcher(false);
+                });
+
+                self.$linkedin = $('<div class="oe_linkedin_login_hidden" style="display:none;"><script type="in/Login"></script></div>');
+                $("body").append(self.$linkedin);
                 var tag = document.createElement('script');
                 tag.type = 'text/javascript';
                 tag.src = "http://platform.linkedin.com/in.js";
                 tag.innerHTML = 'api_key : ' + self.api_key + '\nauthorize : true\nscope: r_network r_basicprofile'; // r_contactinfo r_fullprofile r_emailaddress';
                 
-                // error catcher for library exception
-                var crashmanager = false;
-                var $head = $("head:first");
-                var DOMNodeInserted = function (event) {
-                    if(event.srcElement.previousSibling == tag) {
-                        console.debug("LinkedIn JavaScript userspace inserted.");
-                        crashmanager = window.onerror;
-                        window.onerror = function(e,a,l) {
-                            if (!a.length && !l) {
-                                crashmanager("You have a Linkedin error integration.\nPlease check your API Domain and your API Key's configuration", "", "");
-                            } else {
-                                crashmanager(e,a,l);
-                            }
-                            window.onerror = crashmanager;
-                        };
-                        $head.off("DOMNodeInserted", DOMNodeInserted);
-                    }
-                };
-                $head.on("DOMNodeInserted", DOMNodeInserted);
-                window.setTimeout(function () {$head.off("DOMNodeInserted", DOMNodeInserted);}, 60000);
-                // end
-
                 document.getElementsByTagName('head')[0].appendChild(tag);
                 self.linkedin_added = true;
                 $(tag).load(function(event) {
                     console.debug("LinkedIn JavaScript inserted.");
                     IN.Event.on(IN, "frameworkLoaded", function() {
-                        if(crashmanager) window.onerror = crashmanager;
                         console.debug("LinkedIn DOM node inserted and frameworkLoaded.");
                     });
                     IN.Event.on(IN, "systemReady", function() {
@@ -130,14 +156,6 @@ openerp.web_linkedin = function(instance) {
                         self.selected_entity(entity);
                     });
                 });
-            }).fail(_.bind(this.linkedin_disabled, this));
-        },
-        linkedin_disabled: function() {
-            instance.web.dialog($(QWeb.render("LinkedIn.DisabledWarning")), {
-                title: _t("LinkedIn is not enabled"),
-                buttons: [
-                    {text: _t("Ok"), click: function() { $(this).dialog("close"); }}
-                ]
             });
         },
         selected_entity: function(entity) {
