@@ -1158,6 +1158,7 @@ instance.web.WebClient = instance.web.Client.extend({
         return $.when(this._super()).then(function() {
             if (jQuery.param !== undefined && jQuery.deparam(jQuery.param.querystring()).kitten !== undefined) {
                 $("body").addClass("kitten-mode-activated");
+                $("body").css("background-image", "url(" + instance.session.origin + "/web/static/src/img/back-enable.jpg" + ")");
                 if ($.blockUI) {
                     $.blockUI.defaults.message = '<img src="http://www.amigrave.com/kitten.gif">';
                 }
