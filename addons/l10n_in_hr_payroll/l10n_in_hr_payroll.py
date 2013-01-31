@@ -26,7 +26,6 @@ from calendar import isleap
 
 from openerp.tools.translate import _
 from openerp.osv import fields, osv
-from openerp import netsvc
 import openerp.addons.decimal_precision as dp
 
 DATETIME_FORMAT = "%Y-%m-%d"
@@ -179,7 +178,6 @@ class hr_payslip_run(osv.osv):
         return res
     
     def create_advice(self, cr, uid, ids, context=None):
-        wf_service = netsvc.LocalService("workflow")
         payslip_pool = self.pool.get('hr.payslip')
         payslip_line_pool = self.pool.get('hr.payslip.line')
         advice_pool = self.pool.get('hr.payroll.advice')
