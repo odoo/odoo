@@ -27,7 +27,6 @@ from openerp.osv import fields, osv
 from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT, DATETIME_FORMATS_MAP
 from openerp.tools import float_compare
 from openerp.tools.translate import _
-from openerp import netsvc
 from openerp import tools
 
 #----------------------------------------------------------
@@ -775,8 +774,7 @@ class mrp_production(osv.osv):
             for new_parent_id in new_parent_ids:
                 stock_mov_obj.write(cr, uid, [raw_product.id], {'move_history_ids': [(4,new_parent_id)]})
 
-        wf_service = netsvc.LocalService("workflow")
-        wf_service.trg_validate(uid, 'mrp.production', production_id, 'button_produce_done', cr)
+        self.signal_button_produce_done(cr, uid, [production_id])
         return True
 
     def _costs_generate(self, cr, uid, production):
@@ -844,7 +842,6 @@ class mrp_production(osv.osv):
         return True
 
     def _make_production_line_procurement(self, cr, uid, production_line, shipment_move_id, context=None):
-        wf_service = netsvc.LocalService("workflow")
         procurement_order = self.pool.get('procurement.order')
         production = production_line.production_id
         location_id = production.location_src_id.id
@@ -864,7 +861,7 @@ class mrp_production(osv.osv):
                     'move_id': shipment_move_id,
                     'company_id': production.company_id.id,
                 })
-        wf_service.trg_validate(uid, procurement_order._name, procurement_id, 'button_confirm', cr)
+        self.signal_button_confirm(cr, uid, [procurement_id])
         return procurement_id
 
     def _make_production_internal_shipment_line(self, cr, uid, production_line, shipment_id, parent_move_id, destination_location_id=False, context=None):
@@ -977,7 +974,6 @@ class mrp_production(osv.osv):
         @return: Newly generated Shipment Id.
         """
         shipment_id = False
-        wf_service = netsvc.LocalService("workflow")
         uncompute_ids = filter(lambda x:x, [not x.product_lines and x.id or False for x in self.browse(cr, uid, ids, context=context)])
         self.action_compute(cr, uid, uncompute_ids, context=context)
         for production in self.browse(cr, uid, ids, context=context):
@@ -995,7 +991,7 @@ class mrp_production(osv.osv):
                                  destination_location_id=source_location_id, context=context)
                 self._make_production_line_procurement(cr, uid, line, shipment_move_id, context=context)
 
-            wf_service.trg_validate(uid, 'stock.picking', shipment_id, 'button_confirm', cr)
+            self.registry('stock.picking').signal_button_confirm(cr, uid, [shipment_id])
             production.write({'state':'confirmed'}, context=context)
         return shipment_id
 
