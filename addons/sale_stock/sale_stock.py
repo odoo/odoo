@@ -23,7 +23,6 @@ from datetime import datetime, timedelta
 from openerp.tools import DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT, DATETIME_FORMATS_MAP, float_compare
 from dateutil.relativedelta import relativedelta
 from openerp.osv import fields, osv
-from openerp import netsvc
 from openerp.tools.translate import _
 
 class sale_shop(osv.osv):
