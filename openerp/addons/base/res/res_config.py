@@ -597,14 +597,16 @@ class res_config_settings(osv.osv_memory):
         :param string menu_xml_id: the xml id of the menuitem where the view
         is located, structured as follows: module_name.menuitem_xml_id
         (e.g.: "base.menu_sale_config")
-        :return string: full path to the menuitem
-        (e.g.: "Settings/Configuration/Sales")
+        :return tuple:
+        - t[0]: string: full path to the menuitem
+          (e.g.: "Settings/Configuration/Sales")
+        - t[1]: int: id of the menuitem's action
         """
         module_name, menu_xml_id = menu_xml_id.split('.')
         dummy, menu_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, module_name, menu_xml_id)
         ir_ui_menu = self.pool.get('ir.ui.menu').browse(cr, uid, menu_id, context=context)
 
-        return ir_ui_menu.complete_name
+        return (ir_ui_menu.complete_name, ir_ui_menu.action.id)
 
     def get_option_name(self, cr, uid, full_field_name, context=None):
         """
@@ -644,20 +646,25 @@ class res_config_settings(osv.osv_memory):
         regex_path = r'%\(((?:menu|field):[a-z_\.]*)\)s'
 
         # Process the message
-        # 1/ find the path and/or field references, put them in a list
+        # 1/ find the menu and/or field references, put them in a list
         references = re.findall(regex_path, msg, flags=re.I)
 
-        # 2/ fetch the path and/or field replacement values
-        #    (full path and human readable field's name)
+        # 2/ fetch the menu and/or field replacement values (full path and
+        #    human readable field's name) and the action_id if any
         values = {}
+        action_id = None
+        buttontext = None
         for item in references:
             ref_type, ref = item.split(':')
             if ref_type == 'menu':
-                values[item] = res_config_obj.get_option_path(cr, SUPERUSER_ID, ref, context)
+                values[item], action_id = res_config_obj.get_option_path(cr, SUPERUSER_ID, ref, context)
+                buttontext = _('Go to the configuration panel')
             elif ref_type == 'field':
                 values[item] = res_config_obj.get_option_name(cr, SUPERUSER_ID, ref, context)
 
         # 3/ substitute and return the result
-        return exceptions.Warning(msg % values)
-
+        if (action_id):
+            return exceptions.RedirectWarning(msg % values, action_id, _('Go to the configuration panel'))
+        else:
+            return exceptions.Warning(msg % values)
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
