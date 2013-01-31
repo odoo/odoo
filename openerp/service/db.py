@@ -140,6 +140,10 @@ def exp_get_progress(id):
         clean = self_actions[id]['clean']
         if clean:
             users = self_actions[id]['users']
+            for user in users:
+                # Remove the None passwords as they can't be marshalled by XML-RPC.
+                if user['password'] is None:
+                    user['password'] = ''
             self_actions.pop(id)
             return 1.0, users
         else:
