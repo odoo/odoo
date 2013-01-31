@@ -1365,6 +1365,12 @@ class account_invoice_line(osv.osv):
             a = res.product_tmpl_id.property_account_expense.id
             if not a:
                 a = res.categ_id.property_account_expense_categ.id
+
+        if context.get('account_id',False):
+            # this is set by onchange_account_id() to force the account choosen by the
+            # user - to get defaults taxes when product have no tax defined.
+            a = context['account_id']
+
         a = fpos_obj.map_account(cr, uid, fpos, a)
         if a:
             result['account_id'] = a
@@ -1500,8 +1506,11 @@ class account_invoice_line(osv.osv):
             taxes = account.tax_ids
             unique_tax_ids = self.pool.get('account.fiscal.position').map_tax(cr, uid, fpos, taxes)
         else:
+            # force user choosen account in context to allow product_id_change()
+            # to fallback to the this accounts in case product has no taxes defined.
+            context = {'account_id': account_id}
             product_change_result = self.product_id_change(cr, uid, ids, product_id, False, type=inv_type,
-                partner_id=partner_id, fposition_id=fposition_id,
+                partner_id=partner_id, fposition_id=fposition_id, context=context,
                 company_id=account.company_id.id)
             if product_change_result and 'value' in product_change_result and 'invoice_line_tax_id' in product_change_result['value']:
                 unique_tax_ids = product_change_result['value']['invoice_line_tax_id']
