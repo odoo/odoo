@@ -212,10 +212,9 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
             }
         });
         //bounce effect on red button when click on statusbar.
-        self.$el.find(".oe_highlight").wrap('<div class="oe_bounce_highlight_btn"></div>');
         this.$el.on('click', '.oe_form_field_status:not(.oe_form_status_clickable)', function (e) {
             if((self.get("actual_mode") == "view")) {
-                var $button = self.$el.find(".oe_highlight:not(.oe_form_invisible)");
+                var $button = self.$el.find(".oe_highlight:not(.oe_form_invisible)").css({'float':'left','margin-left':'0px','white-space':'nowrap'});
                 $button.openerpBounce();
                 e.stopPropagation();
             }
