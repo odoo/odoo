@@ -456,7 +456,6 @@ class procurement_order(osv.osv):
 class StockPicking(osv.osv):
     _inherit = 'stock.picking'
     def test_finished(self, cr, uid, ids):
-        wf_service = netsvc.LocalService("workflow")
         res = super(StockPicking, self).test_finished(cr, uid, ids)
         for picking in self.browse(cr, uid, ids):
             for move in picking.move_lines:

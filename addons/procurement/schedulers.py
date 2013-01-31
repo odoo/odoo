@@ -57,7 +57,6 @@ class procurement_order(osv.osv):
         try:
             if use_new_cursor:
                 cr = pooler.get_db(use_new_cursor).cursor()
-            wf_service = netsvc.LocalService("workflow")
 
             procurement_obj = self.pool.get('procurement.order')
             if not ids:
@@ -154,7 +153,6 @@ class procurement_order(osv.osv):
         product_obj = self.pool.get('product.product')
         proc_obj = self.pool.get('procurement.order')
         warehouse_obj = self.pool.get('stock.warehouse')
-        wf_service = netsvc.LocalService("workflow")
 
         warehouse_ids = warehouse_obj.search(cr, uid, [], context=context)
         products_ids = product_obj.search(cr, uid, [('purchase_ok', '=', True)], order='id', context=context)
@@ -224,7 +222,6 @@ class procurement_order(osv.osv):
         orderpoint_obj = self.pool.get('stock.warehouse.orderpoint')
         
         procurement_obj = self.pool.get('procurement.order')
-        wf_service = netsvc.LocalService("workflow")
         offset = 0
         ids = [1]
         if automatic:
