@@ -273,6 +273,36 @@ the button displayed in the UI. Then comes some actual logic:
 Starting and stopping the watch now works, and correctly tracks time
 since having started the watch, neatly formatted.
 
+Burning through the skies
+-------------------------
+
+All work so far has been "local" outside of the original impetus
+provided by the client action: the widget is self-contained and, once
+started, does not communicate with anything outside itself. Not only
+that, but it has no persistence: if the user leaves the stopwatch
+screen (to go and see his inbox, or do some well-deserved accounting,
+for instance) whatever was being timed will be lost.
+
+To prevent this irremediable loss, we can use OpenERP's support for
+storing data as a model, allowing so that we don't lose our data and
+can later retrieve, query and manipulate it. First let's create a
+basic OpenERP model in which our data will be stored:
+
+.. literalinclude:: module/__init__.py.1.diff
+    :language: diff
+
+then let's add saving times to the database every time the stopwatch
+is stopped, using :js:class:`the "high-level" Model API
+<openerp.web.Model.call>`:
+
+.. literalinclude:: module/static/src/js/first_module.js.7.diff
+    :language: diff
+
+A look at the "Network" tab of your preferred browser's developer
+tools while playing with the stopwatch will show that the save
+(creation) request is indeed sent (and replied to, even though we're
+ignoring the response at this point).
+
 .. [#DOM-building] they are not alternative solutions: they work very
                    well together. Templates are used to build "just
                    DOM", sub-widgets are used to build DOM subsections
