@@ -573,19 +573,14 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
                 ]
             });
         }
-        if (result.domain) {
-            function edit_domain(node) {
-                if (typeof node !== "object") {
-                    return;
-                }
-                var new_domain = result.domain[node.attrs.name];
-                if (new_domain) {
-                    node.attrs.domain = new_domain;
-                }
-                _(node.children).each(edit_domain);
-            }
-            edit_domain(this.fields_view.arch);
-        }
+
+        var fields = this.fields;
+        _(result.domain).each(function (domain, fieldname) {
+            var field = fields[fieldname];
+            if (!field) { return; }
+            field.node.attrs.domain = domain;
+        });
+
         return $.Deferred().resolve();
         } catch(e) {
             console.error(e);

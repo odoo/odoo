@@ -72,7 +72,7 @@ openerp.test_support = {
                 }
                 return;
             }
-            fn(e.data.fault_code);
+            fn(e.data.name);
         })
     }
 };

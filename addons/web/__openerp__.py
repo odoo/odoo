@@ -87,5 +87,4 @@ This module provides the core of the OpenERP Web Client.
         "static/test/mutex.js"
     ],
     'bootstrap': True,
-    'twitter': False,
 }

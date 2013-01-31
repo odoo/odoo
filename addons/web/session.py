@@ -6,7 +6,6 @@ import logging
 import time
 import traceback
 import sys
-import xmlrpclib
 
 import openerp
 
@@ -85,23 +84,7 @@ class OpenERPSession(object):
         self.jsonp_requests = {}     # FIXME use a LRU
 
     def send(self, service_name, method, *args):
-        code_string = "warning -- %s\n\n%s"
-        try:
-            return openerp.netsvc.dispatch_rpc(service_name, method, args)
-        except openerp.osv.osv.except_osv, e:
-            raise xmlrpclib.Fault(code_string % (e.name, e.value), '')
-        except openerp.exceptions.Warning, e:
-            raise xmlrpclib.Fault(code_string % ("Warning", e), '')
-        except openerp.exceptions.AccessError, e:
-            raise xmlrpclib.Fault(code_string % ("AccessError", e), '')
-        except openerp.exceptions.AccessDenied, e:
-            raise xmlrpclib.Fault('AccessDenied', str(e))
-        except openerp.exceptions.DeferredException, e:
-            formatted_info = "".join(traceback.format_exception(*e.traceback))
-            raise xmlrpclib.Fault(openerp.tools.ustr(e.message), formatted_info)
-        except Exception, e:
-            formatted_info = "".join(traceback.format_exception(*(sys.exc_info())))
-            raise xmlrpclib.Fault(openerp.tools.exception_to_unicode(e), formatted_info)
+        return openerp.netsvc.dispatch_rpc(service_name, method, args)
 
     def proxy(self, service):
         return Service(self, service)
