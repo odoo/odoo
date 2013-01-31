@@ -6,16 +6,16 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2012-11-24 02:52+0000\n"
-"PO-Revision-Date: 2012-12-16 23:13+0000\n"
+"POT-Creation-Date: 2012-12-21 17:05+0000\n"
+"PO-Revision-Date: 2012-12-22 01:12+0000\n"
 "Last-Translator: Fábio Martinelli - http://zupy.com.br "
 "<webmaster@guaru.net>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-12-18 05:00+0000\n"
-"X-Generator: Launchpad (build 16372)\n"
+"X-Launchpad-Export-Date: 2012-12-23 04:40+0000\n"
+"X-Generator: Launchpad (build 16378)\n"
 
 #. module: base_setup
 #: view:sale.config.settings:0
@@ -64,6 +64,11 @@ msgstr ""
 "emails para o OpenERP usando plugins\n"
 "                             específicos para o seu aplicativo de e-mail "
 "preferido."
+
+#. module: base_setup
+#: field:sale.config.settings,module_sale:0
+msgid "SALE"
+msgstr "VENDA"
 
 #. module: base_setup
 #: selection:base.setup.terminology,partner:0
@@ -123,15 +128,14 @@ msgid "Manage multiple companies"
 msgstr "Gerenciar múltiplas Empresas"
 
 #. module: base_setup
-#: help:base.config.settings,module_portal:0
-msgid "Give access your customers and suppliers to their documents."
-msgstr ""
-"Dá acesso a seus clientes e fornecedores aos seus respectivos documentos."
-
-#. module: base_setup
 #: view:sale.config.settings:0
 msgid "On Mail Client"
 msgstr "No Cliente de Email"
+
+#. module: base_setup
+#: view:base.config.settings:0
+msgid "--db-filter=YOUR_DATABAE"
+msgstr "--db-filter=SUA_DATABASE"
 
 #. module: base_setup
 #: field:sale.config.settings,module_web_linkedin:0
@@ -215,6 +219,18 @@ msgstr ""
 #. module: base_setup
 #: view:base.config.settings:0
 msgid ""
+"The public portal is accessible only if you are in a single database mode. "
+"You can\n"
+"                                    launch the OpenERP Server with the option"
+msgstr ""
+"O portal público é acessível apenas se você estiver em um modo único banco "
+"de dados. você pode\n"
+"                                     iniciar o servidor OpenERP com esta "
+"opção"
+
+#. module: base_setup
+#: view:base.config.settings:0
+msgid ""
 "You will find more options in your company details: address for the header "
 "and footer, overdue payments texts, etc."
 msgstr ""
@@ -232,6 +248,26 @@ msgid "How do you call a Customer"
 msgstr "Como você chama um Cliente"
 
 #. module: base_setup
+#: view:base.config.settings:0
+msgid ""
+"When you send a document to a customer\n"
+"                                    (quotation, invoice), your customer will "
+"be\n"
+"                                    able to signup to get all his "
+"documents,\n"
+"                                    read your company news, check his "
+"projects,\n"
+"                                    etc."
+msgstr ""
+"Quando você enviar um documento para um cliente\n"
+"                                     (fatura, cotação), seu cliente será\n"
+"                                     capaz de se inscrever para obter todos "
+"os seus documentos,\n"
+"                                     ler as notícias da empresa, verificar "
+"seus projetos,\n"
+"                                     etc"
+
+#. module: base_setup
 #: model:ir.model,name:base_setup.model_base_setup_terminology
 msgid "base.setup.terminology"
 msgstr "base.setup.terminology"
@@ -242,7 +278,7 @@ msgid "Client"
 msgstr "Cliente"
 
 #. module: base_setup
-#: help:base.config.settings,module_auth_anonymous:0
+#: help:base.config.settings,module_portal_anonymous:0
 msgid "Enable the public part of openerp, openerp becomes a public website."
 msgstr ""
 "Habilita a parte pública do OpenERP, OpenERP torna-se um site público."
@@ -308,8 +344,19 @@ msgstr "Opções"
 
 #. module: base_setup
 #: field:base.config.settings,module_portal:0
-msgid "Activate the customer/supplier portal"
-msgstr "Ativar o portal do cliente / fornecedor"
+msgid "Activate the customer portal"
+msgstr "Ativar o Portal de Cliente"
+
+#. module: base_setup
+#: view:base.config.settings:0
+msgid ""
+"to do so.\n"
+"                                    Once activated, the login page will be "
+"replaced by the public website."
+msgstr ""
+"ao fazê-lo.\n"
+"                                     Uma vez ativada, a página de login será "
+"substituído pelo site público."
 
 #. module: base_setup
 #: field:base.config.settings,module_share:0
@@ -317,7 +364,12 @@ msgid "Allow documents sharing"
 msgstr "Permite compartilhar documentos"
 
 #. module: base_setup
-#: field:base.config.settings,module_auth_anonymous:0
+#: view:base.config.settings:0
+msgid "(company news, jobs, contact form, etc.)"
+msgstr "(notícias da empresa, trabalhos, formulário de contato, etc)"
+
+#. module: base_setup
+#: field:base.config.settings,module_portal_anonymous:0
 msgid "Activate the public portal"
 msgstr "Ativar o portal público"
 
@@ -330,6 +382,11 @@ msgstr "Configurar servidor de email para saida"
 #: view:sale.config.settings:0
 msgid "Social Network Integration"
 msgstr "Integração com redes sociais"
+
+#. module: base_setup
+#: help:base.config.settings,module_portal:0
+msgid "Give your customers access to their documents."
+msgstr "Dê a seus clientes o acesso a seus documentos."
 
 #. module: base_setup
 #: view:base.config.settings:0

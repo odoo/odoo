@@ -7,20 +7,20 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-03 16:02+0000\n"
-"PO-Revision-Date: 2012-02-21 13:52+0000\n"
-"Last-Translator: t.o <Unknown>\n"
+"POT-Creation-Date: 2012-12-21 17:05+0000\n"
+"PO-Revision-Date: 2012-12-21 13:46+0000\n"
+"Last-Translator: Nicolas JEUDY <njeudy@tuxservices.com>\n"
 "Language-Team: French <fr@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-12-04 05:54+0000\n"
-"X-Generator: Launchpad (build 16335)\n"
+"X-Launchpad-Export-Date: 2012-12-22 06:06+0000\n"
+"X-Generator: Launchpad (build 16378)\n"
 
 #. module: account_bank_statement_extensions
-#: view:account.bank.statement.line:0
-msgid "Search Bank Transactions"
-msgstr "Chercher parmi les transactions bancaires"
+#: help:account.bank.statement.line.global,name:0
+msgid "Originator to Beneficiary Information"
+msgstr ""
 
 #. module: account_bank_statement_extensions
 #: view:account.bank.statement.line:0
@@ -59,7 +59,7 @@ msgstr "Annuler les lignes de relevé sélectionnées"
 #. module: account_bank_statement_extensions
 #: field:account.bank.statement.line,val_date:0
 msgid "Value Date"
-msgstr ""
+msgstr "Date de valeur"
 
 #. module: account_bank_statement_extensions
 #: view:account.bank.statement.line:0
@@ -104,7 +104,7 @@ msgstr "Information sur les paiements en lot"
 #. module: account_bank_statement_extensions
 #: field:account.bank.statement.line,state:0
 msgid "Status"
-msgstr ""
+msgstr "Statut"
 
 #. module: account_bank_statement_extensions
 #: code:addons/account_bank_statement_extensions/account_bank_statement.py:129
@@ -113,11 +113,14 @@ msgid ""
 "Delete operation not allowed.             Please go to the associated bank "
 "statement in order to delete and/or modify bank statement line."
 msgstr ""
+"La suppression d'opération n'est pas autorisée. Merci de vous rendre sur le "
+"formulaire de l'état bancaire pour supprimer et/ou modifier la ligne "
+"correspondante."
 
 #. module: account_bank_statement_extensions
 #: view:confirm.statement.line:0
 msgid "or"
-msgstr ""
+msgstr "ou"
 
 #. module: account_bank_statement_extensions
 #: view:confirm.statement.line:0
@@ -203,6 +206,11 @@ msgid "Name"
 msgstr "Nom / Libellé"
 
 #. module: account_bank_statement_extensions
+#: field:account.bank.statement.line.global,name:0
+msgid "OBI"
+msgstr ""
+
+#. module: account_bank_statement_extensions
 #: selection:account.bank.statement.line.global,type:0
 msgid "ISO 20022"
 msgstr "Copy text \t ISO 20022"
@@ -220,7 +228,7 @@ msgstr "Manuel"
 #. module: account_bank_statement_extensions
 #: view:account.bank.statement.line:0
 msgid "Bank Transaction"
-msgstr ""
+msgstr "Transaction bancaire"
 
 #. module: account_bank_statement_extensions
 #: view:account.bank.statement.line:0
@@ -251,6 +259,11 @@ msgstr "BIC contrepartie"
 #: field:account.bank.statement.line.global,child_ids:0
 msgid "Child Codes"
 msgstr "Codes fils"
+
+#. module: account_bank_statement_extensions
+#: view:account.bank.statement.line:0
+msgid "Search Bank Transactions"
+msgstr "Chercher parmi les transactions bancaires"
 
 #. module: account_bank_statement_extensions
 #: view:confirm.statement.line:0
@@ -292,11 +305,6 @@ msgid "Counterparty Name"
 msgstr "Nom de la contrepartie"
 
 #. module: account_bank_statement_extensions
-#: field:account.bank.statement.line.global,name:0
-msgid "Communication"
-msgstr "Communication"
-
-#. module: account_bank_statement_extensions
 #: model:ir.model,name:account_bank_statement_extensions.model_res_partner_bank
 msgid "Bank Accounts"
 msgstr "Comptes bancaires"
@@ -327,7 +335,7 @@ msgstr "Lignes de relevé bancaire"
 #: code:addons/account_bank_statement_extensions/account_bank_statement.py:129
 #, python-format
 msgid "Warning!"
-msgstr ""
+msgstr "Avertissement!"
 
 #. module: account_bank_statement_extensions
 #: view:account.bank.statement.line.global:0
@@ -396,3 +404,6 @@ msgstr "N° du lot"
 #~ msgstr ""
 #~ "Suppression interdite ! Pour supprimer et / ou modifier cette ligne de  "
 #~ "relevé vous devez vous rendre sur le relevé bancaire correspondant."
+
+#~ msgid "Communication"
+#~ msgstr "Communication"

@@ -49,7 +49,7 @@ This installs the module product_expiry."""),
         'group_uom': fields.boolean("Manage different units of measure for products",
             implied_group='product.group_uom',
             help="""Allows you to select and maintain different units of measure for products."""),
-        'group_uos': fields.boolean("Invoice products in a different unit of measure than the sale order",
+        'group_uos': fields.boolean("Invoice products in a different unit of measure than the sales order",
             implied_group='product.group_uos',
             help="""Allows you to sell units of a product, but invoice based on a different unit of measure.
                 For instance, you can sell pieces of meat that you invoice based on their weight."""),

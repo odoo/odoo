@@ -156,7 +156,7 @@
                             <label for="section_id"/>
                             <div>
                                 <field name="section_id"/>
-                                <button name="case_escalate" string="Escalate" type="object" states="draft,open,pending"/>
+                                <button name="case_escalate" string="Escalate" type="object" attrs="{'invisible': ['|', ('section_id','=',False), ('state', 'not in', ['draft','open','pending'])]}"/>
                             </div>
                             <field name="type" invisible="1"/>
                         </group>
@@ -421,8 +421,7 @@
                                 <label for="section_id"/>
                                 <div>
                                     <field name="section_id" widget="selection"/>
-                                    <button name="case_escalate" string="Escalate" type="object" class="oe_link"
-                                        attrs="{'invisible': [('section_id', '=', False)]}"/>
+                                    <button name="case_escalate" string="Escalate" type="object" class="oe_link" attrs="{'invisible': ['|', ('section_id','=',False), ('state', 'not in', ['draft','open','pending'])]}"/>
                                 </div>
                             </group>
                             <group>
@@ -515,7 +514,7 @@
                     <field name="type_id" invisible="1"/>
                     <field name="stage_id"/>
                     <field name="planned_revenue" sum="Expected Revenues"/>
-                    <field name="probability" widget="progressbar" avg="Avg. of Probability"/>
+                    <field name="probability" avg="Avg. of Probability"/>
                     <field name="section_id" invisible="context.get('invisible_section', True)"/>
                     <field name="user_id"/>
                     <field name="priority" invisible="1"/>

@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2012-12-03 16:01+0000\n"
+"POT-Creation-Date: 2012-12-21 17:04+0000\n"
 "PO-Revision-Date: 2012-12-19 19:13+0000\n"
 "Last-Translator: Thorsten Vocks (OpenBig.org) <thorsten.vocks@big-"
 "consulting.net>\n"
@@ -14,7 +14,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-12-20 04:44+0000\n"
+"X-Launchpad-Export-Date: 2012-12-22 05:24+0000\n"
 "X-Generator: Launchpad (build 16378)\n"
 
 #. module: crm
@@ -32,11 +32,13 @@ msgstr ""
 "eingehenden E-Mails neue Interessenten erzeugen."
 
 #. module: crm
+#: code:addons/crm/crm_lead.py:880
 #: selection:crm.case.stage,type:0
 #: view:crm.lead:0
 #: selection:crm.lead,type:0
 #: view:crm.lead.report:0
 #: selection:crm.lead.report,type:0
+#, python-format
 msgid "Lead"
 msgstr "Interessent"
 
@@ -46,22 +48,30 @@ msgid "Title"
 msgstr "Anrede"
 
 #. module: crm
-#: field:crm.lead2partner,action:0
+#: model:ir.actions.server,message:crm.action_email_reminder_lead
+msgid ""
+"Warning unprocessed incoming lead is more than 5 day old.\n"
+"Name: [[object.name ]]\n"
+"ID: [[object.id ]]\n"
+"Description: [[object.description]]\n"
+"            "
+msgstr ""
+
+#. module: crm
 #: field:crm.opportunity2phonecall,action:0
-#: field:crm.phonecall2partner,action:0
 #: field:crm.phonecall2phonecall,action:0
 msgid "Action"
 msgstr "Aktion"
 
 #. module: crm
-#: code:addons/crm/crm_phonecall.py:282
-#, python-format
-msgid ""
-"Phonecall linked to the opportunity <em>%s</em> has been <b>created</b> and "
-"<b>scheduled</b> on <em>%s</em>."
+#: model:ir.actions.server,name:crm.action_set_team_sales_department
+msgid "Set team to Sales Department"
 msgstr ""
-"Ein Telefonanruf für die Chance <em>%s</em> wurde <b> erstellt</b> und "
-"<b>terminiert</b> für den<em>%s</em>."
+
+#. module: crm
+#: view:crm.lead2opportunity.partner.mass:0
+msgid "Select Opportunities"
+msgstr "Wähle Chancen"
 
 #. module: crm
 #: model:res.groups,name:crm.group_fund_raising
@@ -70,21 +80,16 @@ msgid "Manage Fund Raising"
 msgstr "Fund Raising Management"
 
 #. module: crm
-#: view:crm.lead2opportunity.partner.mass:0
-msgid "Convert to Opportunities"
-msgstr "Umwandeln in Chance"
-
-#. module: crm
 #: view:crm.lead.report:0
 #: field:crm.phonecall.report,delay_close:0
 msgid "Delay to close"
 msgstr "Dauer für Beendigung"
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:888
-#, python-format
-msgid "Lead has been <b>converted to an opportunity</b>."
-msgstr "Interessent wurde <b>ungewandelt in Chance</b>."
+#: view:crm.case.stage:0
+#: field:crm.case.stage,name:0
+msgid "Stage Name"
+msgstr "Bezeichnung Stufe"
 
 #. module: crm
 #: view:crm.lead:0
@@ -98,11 +103,6 @@ msgstr "Verkäufer"
 #: model:ir.model,name:crm.model_crm_lead_report
 msgid "CRM Lead Analysis"
 msgstr "CRM Interessenten Statistik"
-
-#. module: crm
-#: model:ir.actions.server,subject:crm.action_email_reminder_customer_lead
-msgid "Reminder on Lead: [[object.id ]]"
-msgstr "Erinnerung an Interessent: [[object.id ]]"
 
 #. module: crm
 #: view:crm.lead.report:0
@@ -150,6 +150,12 @@ msgid "Rule Name"
 msgstr "Regel Bezeichnung"
 
 #. module: crm
+#: code:addons/crm/crm_phonecall.py:280
+#, python-format
+msgid "It's only possible to convert one phonecall at a time."
+msgstr ""
+
+#. module: crm
 #: view:crm.case.resource.type:0
 #: view:crm.lead:0
 #: field:crm.lead,type_id:0
@@ -181,8 +187,8 @@ msgstr ""
 "html Format, um Sie später in einer Kanban Ansicht einfügen zu können."
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:552
-#: code:addons/crm/wizard/crm_lead_to_partner.py:47
+#: code:addons/crm/crm_lead.py:632
+#: code:addons/crm/crm_phonecall.py:280
 #, python-format
 msgid "Warning!"
 msgstr "Warnung !"
@@ -209,7 +215,7 @@ msgid "Schedule Other Call"
 msgstr "Terminiere weiteren Anruf"
 
 #. module: crm
-#: code:addons/crm/crm_phonecall.py:199
+#: code:addons/crm/crm_phonecall.py:209
 #: view:crm.phonecall:0
 #, python-format
 msgid "Phone Call"
@@ -221,9 +227,14 @@ msgid "Opt-Out"
 msgstr "Opt-Out"
 
 #. module: crm
-#: field:crm.case.stage,fold:0
-msgid "Hide in Views when Empty"
-msgstr "Ohne Eintrag in Ansichten verbergen"
+#: field:crm.lead,state_id:0
+msgid "State"
+msgstr "Status"
+
+#. module: crm
+#: field:res.partner,meeting_count:0
+msgid "# Meetings"
+msgstr ""
 
 #. module: crm
 #: model:ir.actions.server,name:crm.action_email_reminder_lead
@@ -241,9 +252,9 @@ msgid "Excluded Answers :"
 msgstr "Ausgeschlossene Antworten:"
 
 #. module: crm
-#: field:crm.case.stage,section_ids:0
-msgid "Sections"
-msgstr "Sektionen"
+#: model:ir.model,name:crm.model_crm_merge_opportunity
+msgid "Merge opportunities"
+msgstr ""
 
 #. module: crm
 #: view:crm.lead.report:0
@@ -253,7 +264,7 @@ msgid "Leads Analysis"
 msgstr "Statistik Interessenten"
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:878
+#: code:addons/crm/crm_lead.py:1010
 #, python-format
 msgid "<b>%s a call</b> for the <em>%s</em>."
 msgstr "<b>%s Anruf</b> für den <em>%s</em>."
@@ -263,16 +274,6 @@ msgstr "<b>%s Anruf</b> für den <em>%s</em>."
 #: model:ir.ui.menu,name:crm.menu_crm_case_resource_type_act
 msgid "Campaigns"
 msgstr "Kampagnen"
-
-#. module: crm
-#: view:crm.lead2opportunity.partner.mass:0
-msgid "Select Opportunities"
-msgstr "Wähle Chancen"
-
-#. module: crm
-#: field:crm.lead,state_id:0
-msgid "State"
-msgstr "Status"
 
 #. module: crm
 #: view:crm.lead:0
@@ -296,7 +297,7 @@ msgid "Prospect Partner"
 msgstr "Interessent"
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:811
+#: code:addons/crm/crm_lead.py:967
 #, python-format
 msgid "No Subject"
 msgstr "Kein Betreff"
@@ -424,10 +425,16 @@ msgid "Unread Messages"
 msgstr "Ungelesene Nachrichten"
 
 #. module: crm
+#: view:crm.segmentation:0
+#: field:crm.segmentation.line,segmentation_id:0
+#: model:ir.actions.act_window,name:crm.crm_segmentation-act
+msgid "Segmentation"
+msgstr "Segmentierung"
+
+#. module: crm
 #: selection:crm.lead2opportunity.partner,action:0
 #: selection:crm.lead2opportunity.partner.mass,action:0
-#: selection:crm.lead2partner,action:0
-#: selection:crm.phonecall2partner,action:0
+#: selection:crm.partner.binding,action:0
 msgid "Link to an existing customer"
 msgstr "Verbinde zu Kunde"
 
@@ -451,7 +458,6 @@ msgstr ""
 "Wahrscheinlichkeit für einen erfolgreichen Verkaufsabschluss."
 
 #. module: crm
-#: field:base.action.rule,trg_categ_id:0
 #: view:crm.lead:0
 #: field:crm.opportunity2phonecall,categ_id:0
 #: field:crm.phonecall,categ_id:0
@@ -467,15 +473,21 @@ msgid "#Opportunities"
 msgstr "Anzahl Chancen"
 
 #. module: crm
+#: code:addons/crm/crm_lead.py:632
+#, python-format
+msgid ""
+"Please select more than one element (lead or opportunity) from the list view."
+msgstr ""
+
+#. module: crm
 #: view:crm.lead:0
 msgid "Leads that are assigned to one of the sale teams I manage, or to me"
 msgstr "Interessenten des Teams, bei denen ich Leiter bin und meine eigenen."
 
 #. module: crm
-#: field:crm.lead2opportunity.partner,name:0
-#: field:crm.lead2opportunity.partner.mass,name:0
-msgid "Conversion Action"
-msgstr "Umwandlung"
+#: field:crm.lead,partner_address_email:0
+msgid "Partner Contact Email"
+msgstr "Partner Kontakt E-Mail"
 
 #. module: crm
 #: model:ir.actions.act_window,help:crm.crm_case_section_act
@@ -517,22 +529,13 @@ msgstr "Status"
 
 #. module: crm
 #: view:crm.lead2opportunity.partner:0
-#: view:crm.partner2opportunity:0
 msgid "Create Opportunity"
 msgstr "Erstelle Chance"
 
 #. module: crm
-#: selection:crm.lead.report,creation_month:0
-#: selection:crm.lead.report,deadline_month:0
-#: selection:crm.phonecall.report,month:0
-msgid "August"
-msgstr "August"
-
-#. module: crm
-#: view:crm.case.stage:0
-#: field:crm.case.stage,name:0
-msgid "Stage Name"
-msgstr "Bezeichnung Stufe"
+#: view:sale.config.settings:0
+msgid "Configure"
+msgstr "Konfigurieren"
 
 #. module: crm
 #: view:crm.lead:0
@@ -545,9 +548,9 @@ msgid "Mailings"
 msgstr "Zustimmung E-Mailversand"
 
 #. module: crm
-#: view:crm.phonecall:0
-msgid "To Do"
-msgstr "To Do"
+#: model:mail.message.subtype,description:crm.mt_lead_stage
+msgid "Stage changed"
+msgstr ""
 
 #. module: crm
 #: selection:crm.lead.report,creation_month:0
@@ -567,9 +570,9 @@ msgid "Planned Revenue"
 msgstr "Geplanter Umsatz"
 
 #. module: crm
-#: model:ir.actions.server,name:crm.actions_server_crm_phonecall_read
-msgid "CRM Phonecall: Mark read"
-msgstr "Telefonanruf: Als gelesen markieren"
+#: field:crm.lead,planned_revenue:0
+msgid "Expected Revenue"
+msgstr "Erwarteter Umsatz"
 
 #. module: crm
 #: selection:crm.lead.report,creation_month:0
@@ -611,6 +614,11 @@ msgid "Merge"
 msgstr "Zusammenfassen"
 
 #. module: crm
+#: model:email.template,subject:crm.email_template_opportunity_mail
+msgid "Opportunity ${object.name | h})"
+msgstr ""
+
+#. module: crm
 #: view:crm.case.categ:0
 msgid "Case Category"
 msgstr "Vorgangshistorie"
@@ -619,11 +627,6 @@ msgstr "Vorgangshistorie"
 #: field:crm.lead,partner_address_name:0
 msgid "Partner Contact Name"
 msgstr "Partner Kontakt Name"
-
-#. module: crm
-#: model:ir.actions.server,name:crm.actions_server_crm_phonecall_unread
-msgid "CRM Phonecall: Mark unread"
-msgstr "CRM Anruf: Als ungelesen markieren"
 
 #. module: crm
 #: model:ir.actions.server,subject:crm.action_email_reminder_lead
@@ -648,6 +651,11 @@ msgstr "Anzahl Anrufe"
 #: sql_constraint:crm.case.section:0
 msgid "The code of the sales team must be unique !"
 msgstr "Das Kürzel für das Vertriebsteam muss eindeutig sein!"
+
+#. module: crm
+#: help:crm.lead,email_from:0
+msgid "Email address of the contact"
+msgstr "E-Mail Adresse des Kontakts"
 
 #. module: crm
 #: selection:crm.case.stage,state:0
@@ -720,9 +728,9 @@ msgid "Partner Segmentation"
 msgstr "Partner Segmentierung"
 
 #. module: crm
-#: help:crm.phonecall,duration:0
-msgid "Duration in Minutes"
-msgstr "Dauer in Minuten"
+#: field:crm.lead,company_currency:0
+msgid "Currency"
+msgstr "Währung"
 
 #. module: crm
 #: field:crm.lead.report,probable_revenue:0
@@ -740,9 +748,9 @@ msgid "The name of the segmentation."
 msgstr "Bezeichnung des Kundensegments"
 
 #. module: crm
-#: model:ir.filters,name:crm.filter_usa_lead
-msgid "Leads from USA"
-msgstr "Interessenten aus der USA"
+#: field:crm.case.stage,probability:0
+msgid "Probability (%)"
+msgstr "Wahrscheinl. (%)"
 
 #. module: crm
 #: sql_constraint:crm.lead:0
@@ -762,13 +770,7 @@ msgid "Statistics Dashboard"
 msgstr "Statistik Anzeigetafel"
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:853
-#, python-format
-msgid "Stage changed to <b>%s</b>."
-msgstr "Stufe wurde geändert auf <b>%s</b>."
-
-#. module: crm
-#: code:addons/crm/crm_lead.py:755
+#: code:addons/crm/crm_lead.py:860
 #: model:crm.case.stage,name:crm.stage_lead2
 #: selection:crm.case.stage,type:0
 #: view:crm.lead:0
@@ -780,12 +782,6 @@ msgstr "Stufe wurde geändert auf <b>%s</b>."
 #, python-format
 msgid "Opportunity"
 msgstr "Chance"
-
-#. module: crm
-#: code:addons/crm/crm_meeting.py:62
-#, python-format
-msgid "A meeting has been <b>scheduled</b> on <em>%s</em>."
-msgstr "Ein Meeting wurde <b>terminiert</b> für den <em>%s</em>."
 
 #. module: crm
 #: model:crm.case.resource.type,name:crm.type_lead7
@@ -824,17 +820,6 @@ msgid ""
 msgstr "Interessenten / Chancen, die mir oder meinem Team zugewiesen wurden."
 
 #. module: crm
-#: field:crm.partner2opportunity,name:0
-#: field:crm.phonecall2opportunity,name:0
-msgid "Opportunity Name"
-msgstr "Chance Bezeichnung"
-
-#. module: crm
-#: field:base.action.rule,act_section_id:0
-msgid "Set Team to"
-msgstr "Setze Team auf"
-
-#. module: crm
 #: field:calendar.attendee,categ_id:0
 msgid "Event Type"
 msgstr "Terminart"
@@ -845,25 +830,21 @@ msgid "Exclusive"
 msgstr "Exklusiv"
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:512
+#: code:addons/crm/crm_lead.py:591
 #, python-format
 msgid "From %s : %s"
 msgstr "Von %s : %s"
 
 #. module: crm
-#: field:crm.lead.report,creation_year:0
-msgid "Creation Year"
-msgstr "Jahr der Erzeugung"
+#: view:crm.lead2opportunity.partner.mass:0
+msgid "Convert to Opportunities"
+msgstr "Umwandeln in Chance"
 
 #. module: crm
 #: view:crm.lead2opportunity.partner:0
 #: view:crm.lead2opportunity.partner.mass:0
-#: view:crm.lead2partner:0
 #: view:crm.merge.opportunity:0
 #: view:crm.opportunity2phonecall:0
-#: view:crm.partner2opportunity:0
-#: view:crm.phonecall2opportunity:0
-#: view:crm.phonecall2partner:0
 #: view:crm.phonecall2phonecall:0
 msgid "or"
 msgstr "oder"
@@ -889,41 +870,15 @@ msgstr ""
 "Auswahlmöglichkeiten für Stufen in Abhängigkeit vom Team einschränken."
 
 #. module: crm
-#: model:ir.actions.server,message:crm.action_email_reminder_lead
-msgid ""
-"Hello [[object.user_id.name]], \n"
-"can you check following lead, it's not open since 5 days ?\n"
-"\n"
-"Lead: [[object.id ]]\n"
-"Description:\n"
-"\n"
-"    [[object.description]]\n"
-"\n"
-"Thanks,\n"
-"            "
-msgstr ""
-"Hallo [[object.user_id.name]], \n"
-"könntest Du bitte diesen Interessenten prüfen, der Fall wurde schon seit 5 "
-"Tagen noch nicht bearbeitet ?\n"
-"\n"
-"Interessent: [[object.id ]]\n"
-"Beschreibung:\n"
-"\n"
-"    [[object.description]]\n"
-"\n"
-"Vielen Dank\n"
-"            "
-
-#. module: crm
 #: view:crm.case.stage:0
 #: field:crm.case.stage,requirements:0
 msgid "Requirements"
 msgstr "Anforderungen"
 
 #. module: crm
-#: view:crm.phonecall2opportunity:0
-msgid "Convert To Opportunity "
-msgstr "Umwandel zu Chance "
+#: field:crm.lead,zip:0
+msgid "Zip"
+msgstr "Plz"
 
 #. module: crm
 #: view:crm.phonecall:0
@@ -968,9 +923,9 @@ msgid "Mark Won"
 msgstr "Markiere als erfolgreich angeschlossen"
 
 #. module: crm
-#: field:crm.case.stage,probability:0
-msgid "Probability (%)"
-msgstr "Wahrscheinl. (%)"
+#: model:ir.filters,name:crm.filter_usa_lead
+msgid "Leads from USA"
+msgstr "Interessenten aus der USA"
 
 #. module: crm
 #: view:crm.lead:0
@@ -995,7 +950,7 @@ msgid "Send Email"
 msgstr "E-Mail senden"
 
 #. module: crm
-#: code:addons/crm/wizard/crm_lead_to_opportunity.py:100
+#: code:addons/crm/wizard/crm_lead_to_opportunity.py:97
 #, python-format
 msgid "Warning !"
 msgstr "Warnung !"
@@ -1006,21 +961,10 @@ msgid "Days to Open"
 msgstr "Tage bis Eröffnung"
 
 #. module: crm
-#: view:crm.phonecall2partner:0
-msgid "Create Partner"
-msgstr "Erzeuge Partner"
-
-#. module: crm
 #: field:crm.lead,mobile:0
 #: field:crm.phonecall,partner_mobile:0
 msgid "Mobile"
 msgstr "Mobil"
-
-#. module: crm
-#: code:addons/crm/crm_phonecall.py:270
-#, python-format
-msgid "Phonecall has been <b>reset and set as open</b>."
-msgstr "Anruf wurde <b>zurück gesetzt und wieder eröffnet</b>."
 
 #. module: crm
 #: field:crm.lead,ref:0
@@ -1048,16 +992,24 @@ msgid "Meetings"
 msgstr "Meetings"
 
 #. module: crm
-#: view:base.action.rule:0
-msgid "Conditions on Case Fields"
-msgstr "Filterkriterien"
-
-#. module: crm
 #: field:crm.lead,date_action_next:0
 #: field:crm.lead,title_action:0
 #: field:crm.phonecall,date_action_next:0
 msgid "Next Action"
 msgstr "Nächster Schritt"
+
+#. module: crm
+#: code:addons/crm/crm_lead.py:762
+#, python-format
+msgid "<b>Partner</b> set to <em>%s</em>."
+msgstr ""
+
+#. module: crm
+#: selection:crm.lead.report,state:0
+#: selection:crm.phonecall,state:0
+#: selection:crm.phonecall.report,state:0
+msgid "Draft"
+msgstr "Entwurf"
 
 #. module: crm
 #: view:crm.segmentation:0
@@ -1131,16 +1083,6 @@ msgid "Lowest"
 msgstr "Sehr gering"
 
 #. module: crm
-#: code:addons/crm/crm_meeting.py:59
-#, python-format
-msgid ""
-"Meeting linked to the phonecall <em>%s</em> has been <b>created</b> and "
-"<b>scheduled</b> on <em>%s</em>."
-msgstr ""
-"Verknüpftes Meeting zum Anruf  <em>%s</em> wurde <b>erstellt</b> und "
-"<b>terminiert</b> zum <em>%s</em>."
-
-#. module: crm
 #: field:crm.lead,create_date:0
 #: view:crm.phonecall:0
 #: field:crm.phonecall,create_date:0
@@ -1149,10 +1091,10 @@ msgid "Creation Date"
 msgstr "Erzeugt am"
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:862
+#: code:addons/crm/crm_lead.py:703
 #, python-format
-msgid "%s has been <b>created</b>."
-msgstr "%s wurde <b>erstellt</b>."
+msgid "Lead <b>converted into an Opportunity</b>"
+msgstr ""
 
 #. module: crm
 #: selection:crm.segmentation.line,expr_name:0
@@ -1214,22 +1156,14 @@ msgid "Delete"
 msgstr "Löschen"
 
 #. module: crm
-#: field:crm.lead,planned_revenue:0
-#: field:crm.partner2opportunity,planned_revenue:0
-#: field:crm.phonecall2opportunity,planned_revenue:0
-msgid "Expected Revenue"
-msgstr "Erwarteter Umsatz"
+#: model:mail.message.subtype,description:crm.mt_lead_create
+msgid "Opportunity created"
+msgstr ""
 
 #. module: crm
 #: view:crm.lead:0
 msgid "í"
 msgstr ""
-
-#. module: crm
-#: code:addons/crm/crm_lead.py:867
-#, python-format
-msgid "Opportunity has been <b>lost</b>."
-msgstr "Chance wurde <b>kein erfolgreicher Abschluss</b>."
 
 #. module: crm
 #: selection:crm.lead.report,creation_month:0
@@ -1239,9 +1173,20 @@ msgid "September"
 msgstr "September"
 
 #. module: crm
-#: help:crm.lead,email_from:0
-msgid "Email address of the contact"
-msgstr "E-Mail Adresse des Kontakts"
+#: model:ir.actions.act_window,help:crm.crm_case_category_act_oppor11
+msgid ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"          Click to create a new opportunity.\n"
+"          </p><p>\n"
+"          OpenERP helps you keep track of your sales pipeline to follow\n"
+"          up potential sales and better forecast your future revenues.\n"
+"          </p><p>\n"
+"          You will be able to plan meetings and phone calls from\n"
+"          opportunities, convert them into quotations, attach related\n"
+"          documents, track all discussions, and much more.\n"
+"          </p>\n"
+"        "
+msgstr ""
 
 #. module: crm
 #: field:crm.segmentation,partner_id:0
@@ -1272,20 +1217,14 @@ msgid "Opening Date"
 msgstr "Datum Eröffnung"
 
 #. module: crm
-#: field:crm.lead,company_currency:0
-msgid "Currency"
-msgstr "Währung"
+#: help:crm.phonecall,duration:0
+msgid "Duration in Minutes"
+msgstr "Dauer in Minuten"
 
 #. module: crm
 #: field:crm.case.channel,name:0
 msgid "Channel Name"
 msgstr "Verkaufskanal"
-
-#. module: crm
-#: view:crm.lead2partner:0
-#: view:crm.phonecall2partner:0
-msgid "Continue"
-msgstr "Fortsetzen"
 
 #. module: crm
 #: help:crm.lead.report,deadline_day:0
@@ -1321,6 +1260,12 @@ msgstr ""
 "Typen zugleich existieren."
 
 #. module: crm
+#: model:mail.message.subtype,name:crm.mt_lead_create
+#: model:mail.message.subtype,name:crm.mt_salesteam_lead
+msgid "Lead Created"
+msgstr ""
+
+#. module: crm
 #: help:crm.segmentation,sales_purchase_active:0
 msgid ""
 "Check if you want to use this tab as part of the segmentation rule. If not "
@@ -1329,14 +1274,6 @@ msgstr ""
 "Aktivieren Sie diese, falls dieser Tabulator als Bestandteil der "
 "Segmentierung genutzt werden soll. Falls der Haken nicht gesetzt wird, "
 "werden die Kriterien dieser Seite ignoriert."
-
-#. module: crm
-#: view:crm.lead2partner:0
-#: view:crm.phonecall2partner:0
-#: model:ir.actions.act_window,name:crm.action_crm_lead2partner
-#: model:ir.actions.act_window,name:crm.action_crm_phonecall2partner
-msgid "Create a Partner"
-msgstr "Erzeuge Partner"
 
 #. module: crm
 #: field:crm.segmentation,state:0
@@ -1359,18 +1296,11 @@ msgid "unknown"
 msgstr "unbekannt"
 
 #. module: crm
-#: view:crm.case.section:0
-msgid ""
-"Followers of this salesteam follow automatically all opportunities related "
-"to this salesteam."
-msgstr ""
-"Follower eines Vertriebsteams folgen automatisch auch allen Interessenten "
-"und Chancen Ihres Teams."
-
-#. module: crm
-#: model:ir.model,name:crm.model_crm_partner2opportunity
-msgid "Partner To Opportunity"
-msgstr "Partner zu Chance"
+#: field:crm.case.section,message_is_follower:0
+#: field:crm.lead,message_is_follower:0
+#: field:crm.phonecall,message_is_follower:0
+msgid "Is a Follower"
+msgstr "Ist bereits Follower"
 
 #. module: crm
 #: field:crm.opportunity2phonecall,date:0
@@ -1379,13 +1309,6 @@ msgstr "Partner zu Chance"
 #: field:crm.phonecall2phonecall,date:0
 msgid "Date"
 msgstr "Datum"
-
-#. module: crm
-#: field:crm.case.section,message_is_follower:0
-#: field:crm.lead,message_is_follower:0
-#: field:crm.phonecall,message_is_follower:0
-msgid "Is a Follower"
-msgstr "Ist bereits Follower"
 
 #. module: crm
 #: model:crm.case.section,name:crm.crm_case_section_4
@@ -1439,6 +1362,13 @@ msgstr ""
 "Für den Mailversand wird die Standardadresse des  Verkaufsteams verwendet"
 
 #. module: crm
+#: view:crm.phonecall:0
+msgid ""
+"Phone Calls Assigned to the current user or with a team having the current "
+"user as team leader"
+msgstr ""
+
+#. module: crm
 #: view:crm.segmentation:0
 msgid "Segmentation Description"
 msgstr "Beschreibung der Segmente"
@@ -1449,7 +1379,7 @@ msgid "Lead Description"
 msgstr "Interessent Beschreibung"
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:491
+#: code:addons/crm/crm_lead.py:573
 #, python-format
 msgid "Merged opportunities"
 msgstr "Zusammengefasste Chancen"
@@ -1493,13 +1423,9 @@ msgstr "Referenzen"
 #: view:crm.lead:0
 #: view:crm.lead2opportunity.partner:0
 #: view:crm.lead2opportunity.partner.mass:0
-#: view:crm.lead2partner:0
 #: view:crm.merge.opportunity:0
 #: view:crm.opportunity2phonecall:0
-#: view:crm.partner2opportunity:0
 #: view:crm.phonecall:0
-#: view:crm.phonecall2opportunity:0
-#: view:crm.phonecall2partner:0
 #: view:crm.phonecall2phonecall:0
 msgid "Cancel"
 msgstr "Abbrechen"
@@ -1520,14 +1446,21 @@ msgid "Leads/Opportunities which are in pending state"
 msgstr "Interessenten / Chancen zur Wiedervorlage"
 
 #. module: crm
-#: model:ir.model,name:crm.model_crm_merge_opportunity
-msgid "Merge two Opportunities"
-msgstr "Fasse zwei Chancen zusammen"
+#: view:crm.phonecall:0
+msgid "To Do"
+msgstr "To Do"
 
 #. module: crm
-#: model:ir.model,name:crm.model_crm_phonecall2partner
-msgid "Phonecall to Partner"
-msgstr "Telefonanruf zu Partner"
+#: model:mail.message.subtype,description:crm.mt_lead_lost
+msgid "Opportunity lost"
+msgstr ""
+
+#. module: crm
+#: field:crm.lead2opportunity.partner,action:0
+#: field:crm.lead2opportunity.partner.mass,action:0
+#: field:crm.partner.binding,action:0
+msgid "Related Customer"
+msgstr "Verknüpfter Kunde"
 
 #. module: crm
 #: model:crm.case.categ,name:crm.categ_oppor8
@@ -1565,6 +1498,16 @@ msgstr "Offene Chancen / Interessenten"
 #: model:ir.model,name:crm.model_res_users
 msgid "Users"
 msgstr "Benutzer"
+
+#. module: crm
+#: model:mail.message.subtype,name:crm.mt_lead_stage
+msgid "Stage Changed"
+msgstr ""
+
+#. module: crm
+#: field:crm.case.stage,section_ids:0
+msgid "Sections"
+msgstr "Sektionen"
 
 #. module: crm
 #: constraint:crm.case.section:0
@@ -1618,6 +1561,12 @@ msgid "Leads/Opportunities that are assigned to me"
 msgstr "Mir zugewiesene Interessenten / Chancen"
 
 #. module: crm
+#: field:crm.lead.report,date_closed:0
+#: field:crm.phonecall.report,date_closed:0
+msgid "Close Date"
+msgstr "Abschluss Datum"
+
+#. module: crm
 #: view:crm.lead.report:0
 msgid "My Case(s)"
 msgstr "Meine Fälle"
@@ -1652,17 +1601,6 @@ msgstr "Hoch"
 #: model:process.node,note:crm.process_node_partner0
 msgid "Convert to prospect to business partner"
 msgstr "Konvertiere zu Kaufinteressent oder Partner"
-
-#. module: crm
-#: code:addons/crm/crm_lead.py:871
-#, python-format
-msgid "Opportunity has been <b>won</b>."
-msgstr "Chance wurde <b>erfolgreich abgeschlossen</b>."
-
-#. module: crm
-#: view:crm.phonecall:0
-msgid "Phone Calls that are assigned to me or to my team(s)"
-msgstr "Anrufe, die mir oder meinem Team zugewiesen wurden"
 
 #. module: crm
 #: model:ir.model,name:crm.model_crm_payment_mode
@@ -1700,6 +1638,7 @@ msgstr "Hauptteam"
 #. module: crm
 #: selection:crm.lead2opportunity.partner,action:0
 #: selection:crm.lead2opportunity.partner.mass,action:0
+#: selection:crm.partner.binding,action:0
 msgid "Do not link to a customer"
 msgstr "Nicht mit Kunden verbinden"
 
@@ -1707,11 +1646,6 @@ msgstr "Nicht mit Kunden verbinden"
 #: field:crm.lead,date_action:0
 msgid "Next Action Date"
 msgstr "Datum nächste Aktion"
-
-#. module: crm
-#: selection:crm.segmentation,state:0
-msgid "Running"
-msgstr "In laufender Bearbeitung"
 
 #. module: crm
 #: help:crm.case.stage,state:0
@@ -1731,11 +1665,6 @@ msgid "Assign opportunities to"
 msgstr "Chance zuweisen an"
 
 #. module: crm
-#: field:crm.lead,zip:0
-msgid "Zip"
-msgstr "Plz"
-
-#. module: crm
 #: model:crm.case.categ,name:crm.categ_phone1
 msgid "Inbound"
 msgstr "Eingehende Anrufe"
@@ -1746,7 +1675,7 @@ msgid "Month of call"
 msgstr "Monat des Anrufs"
 
 #. module: crm
-#: code:addons/crm/crm_phonecall.py:289
+#: code:addons/crm/crm_phonecall.py:290
 #, python-format
 msgid "Partner has been <b>created</b>."
 msgstr "Partner wurde <b>erstellt</b>."
@@ -1805,11 +1734,6 @@ msgid "Customer Name"
 msgstr "Kundenname"
 
 #. module: crm
-#: model:ir.model,name:crm.model_crm_phonecall2opportunity
-msgid "Phonecall To Opportunity"
-msgstr "Anruf bei Chance"
-
-#. module: crm
 #: field:crm.case.section,reply_to:0
 msgid "Reply-To"
 msgstr "Antwort an"
@@ -1828,11 +1752,6 @@ msgstr "Chancen nach Stufen"
 #: model:process.transition,note:crm.process_transition_leadpartner0
 msgid "Prospect is converting to business partner"
 msgstr "Interessent wird zu Partner konvertiert"
-
-#. module: crm
-#: model:ir.actions.server,name:crm.actions_server_crm_lead_unread
-msgid "CRM Lead: Mark unread"
-msgstr "CRM Interessent: Markiere als ungelesen"
 
 #. module: crm
 #: view:crm.case.channel:0
@@ -1970,13 +1889,6 @@ msgid "Type is used to separate Leads and Opportunities"
 msgstr "Typ wird zur Unterscheidung von Interessent und Chance verwendet."
 
 #. module: crm
-#: view:crm.phonecall2partner:0
-msgid "Are you sure you want to create a partner based on this Phonecall ?"
-msgstr ""
-"Sind Sie sicher, dass Sie einen neuen Partner auf der Grundlage dieses "
-"Anrufs anlegen möchten?"
-
-#. module: crm
 #: selection:crm.lead.report,creation_month:0
 #: selection:crm.lead.report,deadline_month:0
 #: selection:crm.phonecall.report,month:0
@@ -2006,16 +1918,9 @@ msgid "Sales Teams"
 msgstr "Vertriebsteams"
 
 #. module: crm
-#: model:ir.model,name:crm.model_crm_lead2partner
-msgid "Lead to Partner"
-msgstr "Konvertiere zu Partner"
-
-#. module: crm
-#: view:crm.segmentation:0
-#: field:crm.segmentation.line,segmentation_id:0
-#: model:ir.actions.act_window,name:crm.crm_segmentation-act
-msgid "Segmentation"
-msgstr "Segmentierung"
+#: field:crm.case.stage,case_default:0
+msgid "Default to New Sales Team"
+msgstr ""
 
 #. module: crm
 #: view:crm.lead:0
@@ -2028,12 +1933,6 @@ msgid "Leads/Opportunities which are in New state"
 msgstr "Neuer Interessent / Chance"
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:883
-#, python-format
-msgid "%s <b>partner</b> is now set to <em>%s</em>."
-msgstr "%s <b>Kunde</b>wurde geändert zu<em>%s</em>."
-
-#. module: crm
 #: selection:crm.phonecall,state:0
 #: view:crm.phonecall.report:0
 msgid "Not Held"
@@ -2043,12 +1942,6 @@ msgstr "Nicht Telefoniert"
 #: field:crm.lead.report,probability:0
 msgid "Probability"
 msgstr "Wahrscheinl."
-
-#. module: crm
-#: code:addons/crm/crm_lead.py:552
-#, python-format
-msgid "Please select more than one opportunity from the list view."
-msgstr "Bitte wählen Sie mehr als eine Chance aus"
 
 #. module: crm
 #: view:crm.lead.report:0
@@ -2066,6 +1959,12 @@ msgid "Leads"
 msgstr "Interessenten"
 
 #. module: crm
+#: code:addons/crm/crm_lead.py:571
+#, python-format
+msgid "Merged leads"
+msgstr ""
+
+#. module: crm
 #: model:crm.case.categ,name:crm.categ_oppor5
 msgid "Design"
 msgstr "Layout und Design"
@@ -2077,40 +1976,16 @@ msgid "Merge with existing opportunities"
 msgstr "Zusammenfassen mit existierenden Chancen"
 
 #. module: crm
-#: model:ir.actions.act_window,help:crm.crm_case_category_act_oppor11
-msgid ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"              Click to create a new opportunity.\n"
-"            </p><p>\n"
-"              OpenERP helps you keep track of your sales pipeline to follow\n"
-"              up potential sales and better forecast your future revenues.\n"
-"            </p><p>\n"
-"              You will be able to plan meetings and phone calls from\n"
-"              opportunities, convert them into quotations, attach related\n"
-"              documents, track all discussions, and much more.\n"
-"            </p>\n"
-"          "
-msgstr ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"              Klicken Sie zur Erstellung einer neuen Chance.\n"
-"            </p><p>\n"
-"              OpenERP hilft Ihnen dabei, Ihre Vertriebs-Pipeline zu "
-"verfolgen\n"
-"               und die Prognose zukünftiger Umsätze zu optimieren.\n"
-"            </p><p>\n"
-"              Sie können Ihre Meetings und Telefonanrufe bei Chancen "
-"einplanen,\n"
-"              Angebote ableiten, Dateianhänge und Dokumente hochladen, "
-"Kommentare\n"
-"              und Diskussionen verfolgen , und vieles mehr.   \n"
-"            </p>\n"
-"          "
-
-#. module: crm
 #: view:crm.phonecall.report:0
 #: selection:crm.phonecall.report,state:0
 msgid "Todo"
 msgstr "Zu erledigen"
+
+#. module: crm
+#: model:mail.message.subtype,name:crm.mt_lead_convert_to_opportunity
+#: model:mail.message.subtype,name:crm.mt_salesteam_lead_opportunity
+msgid "Lead to Opportunity"
+msgstr ""
 
 #. module: crm
 #: field:crm.lead,user_email:0
@@ -2175,41 +2050,6 @@ msgid "Prospect Opportunity"
 msgstr "Aussichtsreiche Chance"
 
 #. module: crm
-#: model:ir.actions.act_window,help:crm.crm_case_category_act_leads_all
-msgid ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"            Click to create an unqualified lead. \n"
-"          </p><p>\n"
-"            Use leads if you need a qualification step before creating an\n"
-"            opportunity or a customer. It can be a business card you "
-"received,\n"
-"            a contact form filled in your website, or a file of unqualified\n"
-"            prospects you import, etc.\n"
-"          </p><p>\n"
-"            Once qualified, the lead can be converted into a business\n"
-"            opportunity and/or a new customer in your address book.\n"
-"          </p>\n"
-"        "
-msgstr ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"            Klicken Sie zur Erstellung eines Interessenten. \n"
-"          </p><p>\n"
-"             Erfassen Sie zuerst Interessenten, wenn Sie vor der "
-"Qualifikation und Umwandlung zur Chance\n"
-"             einen vorgeschalteten Schritt für sinnvoll erachten. Dieses "
-"kann eine Visitenkarte\n"
-"             sein oder auch andere unqualifizierte Adressdaten, die Sie z.B. "
-"über das Kontaktformular Ihrer \n"
-"             Homepage oder aus einem Adressverzeichnis importieren.\n"
-"          </p><p>\n"
-"            Nach einer Qualifizierung können Sie den Interessenten in eine "
-"Verkaufschance umwandeln,\n"
-"            oder bereits direkt einen neuen Kunden mit Kontaktdaten "
-"anlegen.\n"
-"          </p>\n"
-"        "
-
-#. module: crm
 #: field:crm.lead,email_cc:0
 msgid "Global CC"
 msgstr "Generelle E-Mail Kopie (CC)"
@@ -2257,18 +2097,16 @@ msgid "Mandatory Expression"
 msgstr "Verbindlich"
 
 #. module: crm
-#: selection:crm.lead2opportunity.partner,action:0
-#: selection:crm.lead2opportunity.partner.mass,action:0
-#: selection:crm.lead2partner,action:0
-#: selection:crm.phonecall2partner,action:0
-msgid "Create a new customer"
-msgstr "Erstellen Sie einen neuen Kunden"
+#: view:crm.lead:0
+msgid "Send Mail"
+msgstr "Sende EMail"
 
 #. module: crm
-#: field:crm.lead2opportunity.partner,action:0
-#: field:crm.lead2opportunity.partner.mass,action:0
-msgid "Related Customer"
-msgstr "Verknüpfter Kunde"
+#: selection:crm.lead2opportunity.partner,action:0
+#: selection:crm.lead2opportunity.partner.mass,action:0
+#: selection:crm.partner.binding,action:0
+msgid "Create a new customer"
+msgstr "Erstellen Sie einen neuen Kunden"
 
 #. module: crm
 #: field:crm.lead.report,deadline_day:0
@@ -2298,11 +2136,6 @@ msgid "Misc"
 msgstr "Sonstiges"
 
 #. module: crm
-#: field:base.action.rule,regex_history:0
-msgid "Regular Expression on Case History"
-msgstr "Suchausdruck in Fallhistorie"
-
-#. module: crm
 #: view:crm.lead.report:0
 #: selection:crm.lead.report,state:0
 msgid "Open"
@@ -2330,11 +2163,6 @@ msgid "Responsible"
 msgstr "Verantwortlich"
 
 #. module: crm
-#: model:ir.actions.server,name:crm.action_email_reminder_customer_lead
-msgid "Reminder to Customer"
-msgstr "Erinnerung an Kunde"
-
-#. module: crm
 #: model:crm.case.section,name:crm.crm_case_section_3
 msgid "Direct Marketing"
 msgstr "Direkt Marketing"
@@ -2345,20 +2173,21 @@ msgid "Product"
 msgstr "Produkt"
 
 #. module: crm
-#: code:addons/crm/crm_phonecall.py:284
-#, python-format
-msgid "Phonecall has been <b>created and opened</b>."
-msgstr "Anruf wurde <b>erstellt und eröffnet</b>."
-
-#. module: crm
-#: field:base.action.rule,trg_max_history:0
-msgid "Maximum Communication History"
-msgstr "Maximum Kommunikation Historie"
+#: field:crm.lead.report,creation_year:0
+msgid "Creation Year"
+msgstr "Jahr der Erzeugung"
 
 #. module: crm
 #: view:crm.lead2opportunity.partner.mass:0
 msgid "Conversion Options"
 msgstr "Optionen zur Umwandlung"
+
+#. module: crm
+#: view:crm.case.section:0
+msgid ""
+"Follow this salesteam to automatically track the events associated to users "
+"of this team."
+msgstr ""
 
 #. module: crm
 #: view:crm.lead:0
@@ -2430,7 +2259,6 @@ msgstr "Prozess fortsetzen"
 #: selection:crm.lead2opportunity.partner,name:0
 #: selection:crm.lead2opportunity.partner.mass,name:0
 #: model:ir.actions.act_window,name:crm.action_crm_lead2opportunity_partner
-#: model:ir.actions.act_window,name:crm.phonecall2opportunity_act
 msgid "Convert to opportunity"
 msgstr "Unwandeln zu Chance"
 
@@ -2528,14 +2356,24 @@ msgid "Company"
 msgstr "Unternehmen"
 
 #. module: crm
-#: view:base.action.rule:0
-msgid "Conditions on Communication History"
-msgstr "Bedingungen der Kommunikation"
+#: selection:crm.segmentation,state:0
+msgid "Running"
+msgstr "In laufender Bearbeitung"
+
+#. module: crm
+#: model:mail.message.subtype,description:crm.mt_lead_convert_to_opportunity
+msgid "Lead converted into an opportunity"
+msgstr ""
 
 #. module: crm
 #: view:crm.lead:0
 msgid "Unassigned Leads"
 msgstr "nicht zugewiesene Interessenten"
+
+#. module: crm
+#: model:mail.message.subtype,description:crm.mt_lead_won
+msgid "Opportunity won"
+msgstr ""
 
 #. module: crm
 #: field:crm.case.categ,object_id:0
@@ -2556,36 +2394,6 @@ msgstr "Zurücksetzen"
 #: view:sale.config.settings:0
 msgid "After-Sale Services"
 msgstr "After-Sale Dienstleistung"
-
-#. module: crm
-#: model:ir.actions.server,message:crm.action_email_reminder_customer_lead
-msgid ""
-"Hello [[object.partner_id and object.partner_id.name or '']], \n"
-"your following lead is not open since 5 days.\n"
-"\n"
-"Lead: [[object.id ]]\n"
-"Description:\n"
-"\n"
-"    [[object.description]]\n"
-"\n"
-"Thanks,\n"
-"            "
-msgstr ""
-"Hallo [[object.partner_id and object.partner_id.name or '']], \n"
-"der folgende Interessent wurde nach 5 Tage immer noch nicht eröffnet.\n"
-"\n"
-"Interessent: [[object.id ]]\n"
-"Beschreibung: \n"
-"\n"
-"    [[object.description]]\n"
-"\n"
-"Vielen Dank\n"
-"            "
-
-#. module: crm
-#: view:crm.phonecall2opportunity:0
-msgid "_Convert"
-msgstr "_Umwandeln"
 
 #. module: crm
 #: field:crm.case.section,message_ids:0
@@ -2632,6 +2440,11 @@ msgstr ""
 "verschiedener Kriterien filtern und gründlich untersuchen."
 
 #. module: crm
+#: field:crm.case.stage,fold:0
+msgid "Fold by Default"
+msgstr ""
+
+#. module: crm
 #: field:crm.case.stage,state:0
 msgid "Related Status"
 msgstr "Verbundener Status"
@@ -2661,6 +2474,11 @@ msgstr "Auswahl Interessenten / Chancen"
 #: selection:crm.phonecall,state:0
 msgid "Confirmed"
 msgstr "Bestätigt"
+
+#. module: crm
+#: model:ir.model,name:crm.model_crm_partner_binding
+msgid "Handle partner binding or generation in CRM wizards."
+msgstr ""
 
 #. module: crm
 #: model:ir.actions.act_window,name:crm.act_oppor_stage_user
@@ -2693,6 +2511,24 @@ msgstr "Optional"
 #: field:crm.phonecall,message_follower_ids:0
 msgid "Followers"
 msgstr "Followers"
+
+#. module: crm
+#: model:ir.actions.act_window,help:crm.crm_case_category_act_leads_all
+msgid ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"            Click to create an unqualified lead.\n"
+"          </p><p>\n"
+"            Use leads if you need a qualification step before creating an\n"
+"            opportunity or a customer. It can be a business card you "
+"received,\n"
+"            a contact form filled in your website, or a file of unqualified\n"
+"            prospects you import, etc.\n"
+"          </p><p>\n"
+"            Once qualified, the lead can be converted into a business\n"
+"            opportunity and/or a new customer in your address book.\n"
+"          </p>\n"
+"        "
+msgstr ""
 
 #. module: crm
 #: field:sale.config.settings,fetchmail_lead:0
@@ -2748,11 +2584,6 @@ msgstr "Erzeuge Chance aus Interessent"
 #: model:crm.case.resource.type,name:crm.type_lead3
 msgid "Email Campaign - Products"
 msgstr "E-Mail Kampagne - Produkte"
-
-#. module: crm
-#: field:base.action.rule,act_categ_id:0
-msgid "Set Category to"
-msgstr "Setze Kategorie auf"
 
 #. module: crm
 #: model:ir.actions.act_window,help:crm.crm_case_categ_phone_incoming0
@@ -2812,9 +2643,10 @@ msgid "Qualification"
 msgstr "Qualifikation"
 
 #. module: crm
-#: field:crm.lead,partner_address_email:0
-msgid "Partner Contact Email"
-msgstr "Partner Kontakt E-Mail"
+#: field:crm.lead2opportunity.partner,name:0
+#: field:crm.lead2opportunity.partner.mass,name:0
+msgid "Conversion Action"
+msgstr "Umwandlung"
 
 #. module: crm
 #: model:ir.actions.act_window,help:crm.crm_lead_categ_action
@@ -2845,15 +2677,17 @@ msgstr ""
 "            "
 
 #. module: crm
-#: code:addons/crm/wizard/crm_lead_to_partner.py:48
-#, python-format
-msgid "A partner is already defined."
-msgstr "Ein Partner wird nach-wie vor"
+#: selection:crm.lead.report,creation_month:0
+#: selection:crm.lead.report,deadline_month:0
+#: selection:crm.phonecall.report,month:0
+msgid "August"
+msgstr "August"
 
 #. module: crm
-#: view:sale.config.settings:0
-msgid "Configure"
-msgstr "Konfigurieren"
+#: model:mail.message.subtype,name:crm.mt_lead_lost
+#: model:mail.message.subtype,name:crm.mt_salesteam_lead_lost
+msgid "Opportunity Lost"
+msgstr ""
 
 #. module: crm
 #: field:crm.lead.report,deadline_month:0
@@ -2949,17 +2783,10 @@ msgid "Logged Calls"
 msgstr "Aufgezeichete Anrufe"
 
 #. module: crm
-#: field:crm.partner2opportunity,probability:0
-#: field:crm.phonecall2opportunity,probability:0
-msgid "Success Probability"
-msgstr "Erfolgswahrscheinlichkeit"
-
-#. module: crm
-#: selection:crm.lead.report,state:0
-#: selection:crm.phonecall,state:0
-#: selection:crm.phonecall.report,state:0
-msgid "Draft"
-msgstr "Entwurf"
+#: model:mail.message.subtype,name:crm.mt_lead_won
+#: model:mail.message.subtype,name:crm.mt_salesteam_lead_won
+msgid "Opportunity Won"
+msgstr ""
 
 #. module: crm
 #: model:ir.actions.act_window,name:crm.crm_case_section_act_tree
@@ -2971,7 +2798,6 @@ msgstr "Vorgänge der Teams"
 #: view:crm.phonecall:0
 #: model:ir.model,name:crm.model_crm_meeting
 #: model:process.node,name:crm.process_node_meeting0
-#: field:res.partner,meeting_count:0
 msgid "Meeting"
 msgstr "Meeting"
 
@@ -2979,11 +2805,6 @@ msgstr "Meeting"
 #: model:ir.model,name:crm.model_crm_case_categ
 msgid "Category of Case"
 msgstr "Vorgang Kategorie"
-
-#. module: crm
-#: view:crm.lead:0
-msgid "Opportunity / Customer"
-msgstr "Chance / Kunde"
 
 #. module: crm
 #: view:board.board:0
@@ -3009,11 +2830,6 @@ msgid "Manage Helpdesk and Support"
 msgstr "Kundenservice und Support Management"
 
 #. module: crm
-#: view:crm.phonecall2partner:0
-msgid "You may have to verify that this partner does not exist already."
-msgstr "Sie sollten prüfen ob Partner bereits existiert."
-
-#. module: crm
 #: field:crm.lead.report,delay_open:0
 msgid "Delay to Open"
 msgstr "Dauer bis Eröffnung"
@@ -3030,21 +2846,6 @@ msgstr "Benutzer"
 #: selection:crm.phonecall.report,month:0
 msgid "November"
 msgstr "November"
-
-#. module: crm
-#: field:crm.case.section,message_comment_ids:0
-#: help:crm.case.section,message_comment_ids:0
-#: field:crm.lead,message_comment_ids:0
-#: help:crm.lead,message_comment_ids:0
-#: field:crm.phonecall,message_comment_ids:0
-#: help:crm.phonecall,message_comment_ids:0
-msgid "Comments and emails"
-msgstr "Kommentare und E-Mails"
-
-#. module: crm
-#: model:crm.case.stage,name:crm.stage_lead5
-msgid "Negotiation"
-msgstr "Verhandlung"
 
 #. module: crm
 #: view:crm.lead.report:0
@@ -3070,11 +2871,6 @@ msgid "Twitter Ads"
 msgstr "Twitter Werbung"
 
 #. module: crm
-#: field:crm.case.stage,case_default:0
-msgid "Common to All Teams"
-msgstr "Gemeinsam für alle Teams"
-
-#. module: crm
 #: field:crm.lead.report,creation_day:0
 msgid "Creation Day"
 msgstr "Datum Erstellung"
@@ -3085,14 +2881,9 @@ msgid "Planned Revenues"
 msgstr "Geplanter Umsatz"
 
 #. module: crm
-#: model:ir.actions.server,name:crm.actions_server_crm_lead_read
-msgid "CRM Lead: Mark read"
-msgstr "CRM Interessent: Markiere als gelesen"
-
-#. module: crm
-#: model:ir.model,name:crm.model_crm_phonecall2phonecall
-msgid "Phonecall To Phonecall"
-msgstr "Folgeanruf zu Anruf"
+#: view:crm.lead:0
+msgid "Exp.Closing"
+msgstr "Geplanter Abschluss"
 
 #. module: crm
 #: help:crm.lead.report,deadline_year:0
@@ -3116,15 +2907,9 @@ msgid "Categorization"
 msgstr "Kategorisierung"
 
 #. module: crm
-#: view:crm.lead:0
 #: view:crm.phonecall2phonecall:0
 msgid "Log Call"
 msgstr "Anrufprotokoll"
-
-#. module: crm
-#: model:ir.model,name:crm.model_base_action_rule
-msgid "Action Rules"
-msgstr "Regeln zur Auslösung v. Aktionen"
 
 #. module: crm
 #: help:sale.config.settings,group_fund_raising:0
@@ -3150,7 +2935,6 @@ msgstr "Datum Erstellung"
 
 #. module: crm
 #: view:crm.lead:0
-#: view:crm.phonecall2opportunity:0
 msgid "at"
 msgstr "am"
 
@@ -3176,7 +2960,6 @@ msgid "Description"
 msgstr "Beschreibung"
 
 #. module: crm
-#: field:base.action.rule,trg_section_id:0
 #: field:crm.case.categ,section_id:0
 #: field:crm.case.resource.type,section_id:0
 #: view:crm.case.section:0
@@ -3269,19 +3052,10 @@ msgid "Working Hours"
 msgstr "Arbeitsstunden"
 
 #. module: crm
-#: view:crm.phonecall:0
-#: field:res.partner,phonecall_ids:0
-msgid "Phonecalls"
-msgstr "Telefonanrufe"
-
-#. module: crm
 #: view:crm.lead:0
 #: field:crm.lead2opportunity.partner,partner_id:0
 #: field:crm.lead2opportunity.partner.mass,partner_id:0
-#: field:crm.lead2partner,partner_id:0
-#: field:crm.partner2opportunity,partner_id:0
-#: field:crm.phonecall2opportunity,partner_id:0
-#: field:crm.phonecall2partner,partner_id:0
+#: field:crm.partner.binding,partner_id:0
 msgid "Customer"
 msgstr "Kunde"
 
@@ -3303,7 +3077,7 @@ msgid "Lost"
 msgstr "Verloren"
 
 #. module: crm
-#: code:addons/crm/wizard/crm_lead_to_opportunity.py:100
+#: code:addons/crm/wizard/crm_lead_to_opportunity.py:97
 #, python-format
 msgid "Closed/Cancelled leads cannot be converted into opportunities."
 msgstr ""
@@ -3353,19 +3127,14 @@ msgid "Phone calls by user and section"
 msgstr "Anrufe nach Benutzer und Sektion"
 
 #. module: crm
-#: code:addons/crm/crm_meeting.py:55
-#, python-format
-msgid ""
-"Meeting linked to the opportunity <em>%s</em> has been <b>created</b> and "
-"<b>scheduled</b> on <em>%s</em>."
-msgstr ""
-"Ein Meeting für diese Chance <em>%s</em> wurde <b>erstellt</b> und "
-"<b>terminiert</b> am <em>%s</em>."
+#: model:crm.case.stage,name:crm.stage_lead5
+msgid "Negotiation"
+msgstr "Verhandlung"
 
 #. module: crm
-#: view:crm.lead:0
-msgid "Exp.Closing"
-msgstr "Geplanter Abschluss"
+#: model:ir.model,name:crm.model_crm_phonecall2phonecall
+msgid "Phonecall To Phonecall"
+msgstr "Folgeanruf zu Anruf"
 
 #. module: crm
 #: field:crm.case.stage,sequence:0
@@ -3383,10 +3152,10 @@ msgid "Proposition"
 msgstr "Umsatzprognose"
 
 #. module: crm
-#: field:crm.lead.report,date_closed:0
-#: field:crm.phonecall.report,date_closed:0
-msgid "Close Date"
-msgstr "Abschluss Datum"
+#: view:crm.phonecall:0
+#: field:res.partner,phonecall_ids:0
+msgid "Phonecalls"
+msgstr "Telefonanrufe"
 
 #. module: crm
 #: view:crm.lead.report:0
@@ -3399,6 +3168,11 @@ msgstr "Jahr"
 #: model:crm.case.resource.type,name:crm.type_lead8
 msgid "Newsletter"
 msgstr "Newsletter"
+
+#. module: crm
+#: model:mail.message.subtype,name:crm.mt_salesteam_lead_stage
+msgid "Opportunity Stage Changed"
+msgstr ""
 
 #. module: crm
 #: model:ir.actions.act_window,help:crm.crm_lead_stage_act
@@ -3923,6 +3697,9 @@ msgstr ""
 #~ msgid "Link to an existing partner"
 #~ msgstr "Link zu vorhandenem Partner"
 
+#~ msgid "Regular Expression on Case History"
+#~ msgstr "Suchausdruck in Fallhistorie"
+
 #~ msgid ""
 #~ "The rule use a AND operator. The case must match all non empty fields so "
 #~ "that the rule execute the action described in the 'Actions' tab."
@@ -3966,6 +3743,9 @@ msgstr ""
 #~ "EMail Adresse, die als \"Antworten an\" Adresse in alle Emails eingetragen "
 #~ "wird, die zu allen Vorgängen dieser Sektion versendet werden."
 
+#~ msgid "Continue"
+#~ msgstr "Fortsetzen"
+
 #~ msgid ""
 #~ "Check if the category is limited to partners that match the segmentation "
 #~ "criterions. If checked, remove the category from partners that doesn't match "
@@ -3996,6 +3776,9 @@ msgstr ""
 #~ msgstr ""
 #~ "Aktiviere Feld, wenn diese Regel eine EMail Erinnerung an Kunden / "
 #~ "Lieferanten senden soll."
+
+#~ msgid "Conditions on Case Fields"
+#~ msgstr "Filterkriterien"
 
 #~ msgid "_Cancel"
 #~ msgstr "Abbrechen"
@@ -4066,9 +3849,6 @@ msgstr ""
 #~ msgstr ""
 #~ "Aktiviere diese Option, falls alle Dokumente die zum Fall gehören auch an "
 #~ "eine  Erinnerungsmail  angehängt werden sollen."
-
-#~ msgid "Send Mail"
-#~ msgstr "Sende EMail"
 
 #~ msgid "Claims"
 #~ msgstr "Reklamationen"
@@ -4187,6 +3967,9 @@ msgstr ""
 #~ "Sie müssen eine E-Mail Adresse für den Partner haben, um diese Aktion zu "
 #~ "nutzen!"
 
+#~ msgid "You may have to verify that this partner does not exist already."
+#~ msgstr "Sie sollten prüfen ob Partner bereits existiert."
+
 #, python-format
 #~ msgid ""
 #~ "Can not send mail with empty body,you should have description in the body"
@@ -4272,6 +4055,9 @@ msgstr ""
 #~ msgid "crm.installer"
 #~ msgstr "crm.installer"
 
+#~ msgid "Set Team to"
+#~ msgstr "Setze Team auf"
+
 #~ msgid "Supplier"
 #~ msgstr "Lieferant"
 
@@ -4355,6 +4141,9 @@ msgstr ""
 
 #~ msgid "Reply To"
 #~ msgstr "Antwort an"
+
+#~ msgid "Phonecall to Partner"
+#~ msgstr "Telefonanruf zu Partner"
 
 #~ msgid "Sunday"
 #~ msgstr "Sonntag"
@@ -4680,6 +4469,9 @@ msgstr ""
 #~ msgid "Create"
 #~ msgstr "Erstelle"
 
+#~ msgid "Lead to Partner"
+#~ msgstr "Konvertiere zu Partner"
+
 #~ msgid "MS-Outlook"
 #~ msgstr "MS Outlook"
 
@@ -4841,6 +4633,9 @@ msgstr ""
 
 #~ msgid "CRM Application Configuration"
 #~ msgstr "Konfiguration CRM & SRM Anwendungen"
+
+#~ msgid "Set Category to"
+#~ msgstr "Setze Kategorie auf"
 
 #~ msgid "    Month-1    "
 #~ msgstr "    Monat-1    "
@@ -5327,6 +5122,9 @@ msgstr ""
 #~ "Urlauben und Opportunitäten.\n"
 #~ "        "
 
+#~ msgid "Success Probability"
+#~ msgstr "Erfolgswahrscheinlichkeit"
+
 #~ msgid "Recurrence termination"
 #~ msgstr "Ende der Wiederholungen"
 
@@ -5497,6 +5295,9 @@ msgstr ""
 #~ "Abgeschlossene/ stornierte Kontakte, die nicht in Verkaufschance umgewandelt "
 #~ "wurden"
 
+#~ msgid "Common to All Teams"
+#~ msgstr "Gemeinsam für alle Teams"
+
 #, python-format
 #~ msgid "The opportunity '%s' has been been won."
 #~ msgstr "Die Chance '%s' wurde gewonnen"
@@ -5584,3 +5385,49 @@ msgstr ""
 #~ msgstr ""
 #~ "Keine weitere Eskalation möglich, da Sie bereits die obersten Ebene erreicht "
 #~ "haben."
+
+#~ msgid "Partner To Opportunity"
+#~ msgstr "Partner zu Chance"
+
+#~ msgid "Phonecall To Opportunity"
+#~ msgstr "Anruf bei Chance"
+
+#~ msgid "Convert To Opportunity "
+#~ msgstr "Umwandel zu Chance "
+
+#~ msgid "Merge two Opportunities"
+#~ msgstr "Fasse zwei Chancen zusammen"
+
+#~ msgid "Opportunity Name"
+#~ msgstr "Chance Bezeichnung"
+
+#~ msgid "Opportunity / Customer"
+#~ msgstr "Chance / Kunde"
+
+#~ msgid "Create Partner"
+#~ msgstr "Erzeuge Partner"
+
+#~ msgid "Create a Partner"
+#~ msgstr "Erzeuge Partner"
+
+#~ msgid "Are you sure you want to create a partner based on this Phonecall ?"
+#~ msgstr ""
+#~ "Sind Sie sicher, dass Sie einen neuen Partner auf der Grundlage dieses "
+#~ "Anrufs anlegen möchten?"
+
+#, python-format
+#~ msgid "Please select more than one opportunity from the list view."
+#~ msgstr "Bitte wählen Sie mehr als eine Chance aus"
+
+#~ msgid "Maximum Communication History"
+#~ msgstr "Maximum Kommunikation Historie"
+
+#~ msgid "_Convert"
+#~ msgstr "_Umwandeln"
+
+#, python-format
+#~ msgid "A partner is already defined."
+#~ msgstr "Ein Partner wird nach-wie vor"
+
+#~ msgid "Action Rules"
+#~ msgstr "Regeln zur Auslösung v. Aktionen"

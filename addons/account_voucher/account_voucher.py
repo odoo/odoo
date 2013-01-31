@@ -26,6 +26,7 @@ from openerp import netsvc
 from openerp.osv import fields, osv
 import openerp.addons.decimal_precision as dp
 from openerp.tools.translate import _
+from openerp.tools import float_compare
 
 class res_company(osv.osv):
     _inherit = "res.company"
@@ -193,7 +194,9 @@ class account_voucher(osv.osv):
         if context.get('type', 'sale') in ('purchase', 'payment'):
             nodes = doc.xpath("//field[@name='partner_id']")
             for node in nodes:
-                node.set('domain', "[('supplier', '=', True)]")
+                node.set('context', "{'search_default_supplier': 1}")
+                if context.get('invoice_type','') in ('in_invoice', 'in_refund'):
+                    node.set('string', _("Supplier"))
         res['arch'] = etree.tostring(doc)
         return res
 
@@ -266,6 +269,12 @@ class account_voucher(osv.osv):
     _inherit = ['mail.thread']
     _order = "date desc, id desc"
 #    _rec_name = 'number'
+    _track = {
+        'state': {
+            'account_voucher.mt_voucher_state_change': lambda self, cr, uid, obj, ctx=None: True,
+        },
+    }
+
     _columns = {
         'active': fields.boolean('Active', help="By default, reconciliation vouchers made on draft bank statements are set as inactive, which allow to hide the customer/supplier payment while the bank statement isn't confirmed."),
         'type':fields.selection([
@@ -293,7 +302,7 @@ class account_voucher(osv.osv):
              ('cancel','Cancelled'),
              ('proforma','Pro-forma'),
              ('posted','Posted')
-            ], 'Status', readonly=True, size=32,
+            ], 'Status', readonly=True, size=32, track_visibility='onchange',
             help=' * The \'Draft\' status is used when a user is encoding a new and unconfirmed Voucher. \
                         \n* The \'Pro-forma\' when voucher is in Pro-forma status,voucher does not have an voucher number. \
                         \n* The \'Posted\' status is used when user create voucher,a voucher number is generated and voucher entries are created in account \
@@ -349,11 +358,6 @@ class account_voucher(osv.osv):
         'payment_rate': 1.0,
         'payment_rate_currency_id': _get_payment_rate_currency,
     }
-
-    def create(self, cr, uid, vals, context=None):
-        voucher =  super(account_voucher, self).create(cr, uid, vals, context=context)
-        self.create_send_note(cr, uid, [voucher], context=context)
-        return voucher
 
     def compute_tax(self, cr, uid, ids, context=None):
         tax_pool = self.pool.get('account.tax')
@@ -596,12 +600,11 @@ class account_voucher(osv.osv):
                 This function returns True if the line is considered as noise and should not be displayed
             """
             if line.reconcile_partial_id:
-                sign = 1 if ttype == 'receipt' else -1
                 if currency_id == line.currency_id.id:
-                    if line.amount_residual_currency * sign <= 0:
+                    if line.amount_residual_currency <= 0:
                         return True
                 else:
-                    if line.amount_residual * sign <= 0:
+                    if line.amount_residual <= 0:
                         return True
             return False
 
@@ -1080,17 +1083,19 @@ class account_voucher(osv.osv):
         voucher_brw = self.pool.get('account.voucher').browse(cr, uid, voucher_id, context)
         ctx = context.copy()
         ctx.update({'date': voucher_brw.date})
+        prec = self.pool.get('decimal.precision').precision_get(cr, uid, 'Account')
         for line in voucher_brw.line_ids:
             #create one move line per voucher line where amount is not 0.0
-            if not line.amount:
+            # AND (second part of the clause) only if the original move line was not having debit = credit = 0 (which is a legal value)
+            if not line.amount and not (line.move_line_id and not float_compare(line.move_line_id.debit, line.move_line_id.credit, precision_rounding=prec) and not float_compare(line.move_line_id.debit, 0.0, precision_rounding=prec)):
                 continue
             # convert the amount set on the voucher line into the currency of the voucher's company
             amount = self._convert_amount(cr, uid, line.untax_amount or line.amount, voucher_brw.id, context=ctx)
             # if the amount encoded in voucher is equal to the amount unreconciled, we need to compute the
             # currency rate difference
             if line.amount == line.amount_unreconciled:
-                if not line.move_line_id.amount_residual:
-                    raise osv.except_osv(_('Wrong bank statement line'),_("You have to delete the bank statement line which the payment was reconciled to manually. Please check the payment of the partner %s by the amount of %s.")%(line.voucher_id.partner_id.name, line.voucher_id.amount))
+                if not line.move_line_id:
+                    raise osv.except_osv(_('Wrong voucher line'),_("The invoice you are willing to pay is not valid anymore."))
                 sign = voucher_brw.type in ('payment', 'purchase') and -1 or 1
                 currency_rate_difference = sign * (line.move_line_id.amount_residual - amount)
             else:
@@ -1302,7 +1307,6 @@ class account_voucher(osv.osv):
                 'state': 'posted',
                 'number': name,
             })
-            self.post_send_note(cr, uid, [voucher.id], context=context)
             if voucher.journal_id.entry_posted:
                 move_pool.post(cr, uid, [move_id], context={})
             # We automatically reconcile the account move lines.
@@ -1310,8 +1314,6 @@ class account_voucher(osv.osv):
             for rec_ids in rec_list_ids:
                 if len(rec_ids) >= 2:
                     reconcile = move_line_pool.reconcile_partial(cr, uid, rec_ids, writeoff_acc_id=voucher.writeoff_acc_id.id, writeoff_period_id=voucher.period_id.id, writeoff_journal_id=voucher.journal_id.id)
-            if reconcile:
-                self.reconcile_send_note(cr, uid, [voucher.id], context=context)
         return True
 
     def copy(self, cr, uid, id, default=None, context=None):
@@ -1329,33 +1331,6 @@ class account_voucher(osv.osv):
             default['date'] = time.strftime('%Y-%m-%d')
         return super(account_voucher, self).copy(cr, uid, id, default, context)
 
-    # -----------------------------------------
-    # OpenChatter notifications and need_action
-    # -----------------------------------------
-    _document_type = {
-        'sale': 'Sales Receipt',
-        'purchase': 'Purchase Receipt',
-        'payment': 'Supplier Payment',
-        'receipt': 'Customer Payment',
-        False: 'Payment',
-    }
-
-    def create_send_note(self, cr, uid, ids, context=None):
-        for obj in self.browse(cr, uid, ids, context=context):
-            message = "%s <b>created</b>." % self._document_type[obj.type or False]
-            self.message_post(cr, uid, [obj.id], body=message, subtype="account_voucher.mt_voucher", context=context)
-
-    def post_send_note(self, cr, uid, ids, context=None):
-        for obj in self.browse(cr, uid, ids, context=context):
-            message = "%s '%s' is <b>posted</b>." % (self._document_type[obj.type or False], obj.move_id.name)
-            self.message_post(cr, uid, [obj.id], body=message, subtype="account_voucher.mt_voucher", context=context)
-
-    def reconcile_send_note(self, cr, uid, ids, context=None):
-        for obj in self.browse(cr, uid, ids, context=context):
-            message = "%s <b>reconciled</b>." % self._document_type[obj.type or False]
-            self.message_post(cr, uid, [obj.id], body=message, subtype="account_voucher.mt_voucher", context=context)
-
-account_voucher()
 
 class account_voucher_line(osv.osv):
     _name = 'account.voucher.line'

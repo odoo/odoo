@@ -864,6 +864,7 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
             this.pos.bind('change:selectedOrder', this.change_selected_order, this);
             this.bindPaymentLineEvents();
             this.bind_orderline_events();
+            this.paymentlinewidgets = [];
         },
         show: function(){
             this._super();
@@ -932,18 +933,24 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
         },
         addPaymentLine: function(newPaymentLine) {
             var self = this;
-            var x = new module.PaymentlineWidget(null, {
+            var l = new module.PaymentlineWidget(null, {
                     payment_line: newPaymentLine
             });
-            x.on('delete_payment_line', self, function(r) {
+            l.on('delete_payment_line', self, function(r) {
                 self.deleteLine(r);
             });
-            x.appendTo(this.$('#paymentlines'));
+            l.appendTo(this.$('#paymentlines'));
+            this.paymentlinewidgets.push(l);
             this.$('.paymentline-amount input:last').focus();
         },
         renderElement: function() {
             this._super();
             this.$('#paymentlines').empty();
+            for(var i = 0, len = this.paymentlinewidgets.length; i < len; i++){
+                this.paymentlinewidgets[i].destroy();
+            }
+            this.paymentlinewidgets = [];
+            
             this.currentPaymentLines.each(_.bind( function(paymentLine) {
                 this.addPaymentLine(paymentLine);
             }, this));

@@ -97,7 +97,7 @@
                 <form string="Account Period" version="7.0">
                     <header>
                         <button string="Close Period" name="%(account.action_account_period_close)d" type="action" class="oe_highlight" states="draft"/>
-                        <button name="action_draft" states="done" string="Set to Draft" type="object" groups="account.group_account_manager"/>
+                        <button name="action_draft" states="done" string="Re-Open Period" type="object" groups="account.group_account_manager"/>
                         <field name="state" widget="statusbar" nolabel="1"/>
                     </header>
                     <sheet>
@@ -537,6 +537,7 @@
         <record id="view_bank_statement_form" model="ir.ui.view">
             <field name="name">account.bank.statement.form</field>
             <field name="model">account.bank.statement</field>
+            <field name="priority">1</field>
             <field name="arch" type="xml">
                 <form string="Bank Statement" version="7.0">
                 <header>
@@ -549,10 +550,8 @@
                     <div class="oe_right oe_button_box" name="import_buttons">
                        <!-- Put here related buttons -->
                     </div>
-                    <label for="name" class="oe_edit_only" attrs="{'invisible':[('name','=','/')]}"/>
-                    <h1>
-                        <field name="name" attrs="{'invisible':[('name','=','/')]}"/>
-                    </h1>
+                    <label for="name" class="oe_edit_only"/>
+                    <h1><field name="name"/></h1>
                     <group>
                         <group>
                             <field name="journal_id" domain="[('type', '=', 'bank')]" on_change="onchange_journal_id(journal_id)" widget="selection"/>
@@ -1155,7 +1154,7 @@
             <field name="name">Journal Items</field>
             <field name="res_model">account.move.line</field>
             <field name="view_id" ref="view_move_line_tree"/>
-            <field name="view_mode">tree_account_move_line_quickadd</field>
+            <field name="view_mode">tree_account_move_line_quickadd,form</field>
             <field name="help" type="html">
               <p class="oe_view_nocontent_create">
                 Select the period and the journal you want to fill.
@@ -2234,6 +2233,7 @@
         <record id="view_bank_statement_form2" model="ir.ui.view">
             <field name="name">account.bank.statement.form</field>
             <field name="model">account.bank.statement</field>
+            <field name="priority">2</field>
             <field name="arch" type="xml">
                 <form string="Statement" version="7.0">
                 <header>
@@ -2243,8 +2243,8 @@
                     <field name="state" widget="statusbar" nolabel="1" statusbar_visible="draft,confirm"/>
                 </header>
                 <sheet string="Statement">
-                    <label for="name" class="oe_edit_only"/>
-                    <h1><field name="name" class="oe_inline"/></h1>
+                    <label for="name" class="oe_edit_only" attrs="{'invisible':[('name','=','/')]}"/>
+                    <h1><field name="name" class="oe_inline" attrs="{'invisible':[('name','=','/')]}"/></h1>
                     <group>
                         <group>
                             <field name="journal_id" on_change="onchange_journal_id(journal_id)" widget="selection" domain="[('type', '=', 'cash')]" />

@@ -24,7 +24,7 @@
     'version': '1.0',
     'category': 'Sales Management',
     'sequence': 14,
-    'summary': 'Quotations, Sale Orders, Invoicing',
+    'summary': 'Quotations, Sales Orders, Invoicing',
     'description': """
 Manage sales quotations and orders
 ==================================

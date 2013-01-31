@@ -59,6 +59,10 @@
     left:0; top: 0; bottom: 0; width: 40px;
     overflow: hidden;
 }
+.openerp .oe_mail .oe_msg .oe_msg_left a,
+.openerp .oe_mail .oe_msg .oe_msg_left img{
+    border: 0;
+}
 .openerp .oe_mail .oe_msg .oe_msg_icon{
     width: 32px;
     margin: 4px;
@@ -184,7 +188,7 @@
             transition: all 0.1s linear;
 }
 .openerp .oe_mail .oe_msg .oe_msg_icons .oe_star:hover a{
-    color: #FFF6C0;
+    color: #FFF670;
     text-shadow: 0px 1px #FFA162,0px -1px #FFA162, -1px 0px #FFA162, 1px 0px #FFA162, 0px 3px 3px rgba(0,0,0,0.1);
 }
 .openerp .oe_mail .oe_msg .oe_msg_icons .oe_star.oe_starred a{
@@ -220,6 +224,21 @@
     height: 24px;
     width: 100%;
 }
+.openerp .oe_mail .oe_msg.oe_msg_composer_compact .oe_compact{
+    height: 24px;
+    width: 100%;
+    padding: 2px 4px;
+    border: 1px solid #CCC;
+    -moz-border-radius: 3px;
+    -webkit-border-radius: 3px;
+    border-radius: 3px;
+    background: white;
+    font-size: 14px;
+    color: #AAA;
+    font-style: italic;
+    word-spacing: 3px;
+    cursor: text;
+}
 
 /* d) I.E. tweaks for Message action icons */
 
@@ -252,6 +271,19 @@
 }
 .openerp .oe_mail .oe_msg_composer .oe_msg_attachment_list{
     display: block;
+}
+.openerp .oe_mail .oe_msg_composer .oe_emails_from{
+    font-size: 12px;
+    margin-left: 20px;
+    margin-bottom: 2px;
+}
+.openerp .oe_mail .oe_msg_composer .oe_emails_from label{
+    vertical-align: middle;
+    display: block;
+    line-height: 14px;
+}
+.openerp .oe_mail .oe_msg_composer .oe_emails_from input{
+    vertical-align: middle;
 }
 .openerp .oe_mail .oe_attachment{
     display: inline-block;
@@ -465,8 +497,8 @@
 }
 .openerp .oe_mail .oe_msg_content .oe_mail_list_recipients{
     font-size: 12px;
-    margin-top: 4px;
-    margin-bottom: 4px;
+    margin: 4px 0 4px 20px;
+    text-indent: -20px;
 }
 
 /* ---------------- HIDDEN MESSAGES ------------------ */
@@ -572,11 +604,22 @@
 .openerp .oe_followers .oe_partner {
     height: 32px;
     overflow: hidden;
+    white-space: nowrap;
 }
 .openerp .oe_followers .oe_partner img{
     width: 32px;
     margin-right:4px;
     border-radius: 2px;
+}
+.openerp .oe_followers .oe_remove_follower{
+    cursor: pointer;
+    position: absolute;
+    right: 0px;
+    line-height: 20px;
+}
+
+.openerp .oe_followers .oe_show_more{
+    cursor: pointer;
 }
 
 /* ---------------- MESSAGES BODY ------------------ */

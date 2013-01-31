@@ -60,7 +60,7 @@
             <field name="name">project.user.allocation.search</field>
             <field name="model">project.user.allocation</field>
             <field name="arch" type="xml">
-                <search string="Planning of Users">
+                <search string="Team Planning">
                     <field name="user_id"/>
                     <field name="phase_id"/>
                     <field name="project_id"/>
@@ -73,7 +73,7 @@
             </field>
         </record>
         <record id="act_resouce_allocation" model="ir.actions.act_window">
-            <field name="name">Planning of Users</field>
+            <field name="name">Team Planning</field>
             <field name="res_model">project.user.allocation</field>
             <field name="view_type">form</field>
             <field name="view_mode">gantt,tree,form,calendar</field>
@@ -171,7 +171,7 @@
                         </group>
                     </group>
                     <notebook>
-                        <page string="Planning of Users">
+                        <page string="Team Planning">
                             <field name="user_ids">
                                  <tree editable="bottom" string="Project Users">
                                       <field name="user_id"/>

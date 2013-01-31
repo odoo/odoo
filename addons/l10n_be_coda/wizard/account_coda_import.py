@@ -37,9 +37,20 @@ class account_coda_import(osv.osv_memory):
         'coda_data': fields.binary('CODA File', required=True),
         'coda_fname': fields.char('CODA Filename', size=128, required=True),
         'note': fields.text('Log'),
+        'temporary_account_id': fields.many2one('account.account', 'Temporary Account', domain="[('type','!=','view')]", help="It acts as a temporary account for general amount", required=True),
     }
+
+    def _get_default_tmp_account(self, cr, uid, context):
+        tmp_accounts = self.pool.get('account.account').search(cr, uid, [('code', '=', '490000')])
+        if tmp_accounts and len(tmp_accounts) > 0:
+            tmp_account_id = tmp_accounts[0]
+        else:
+            tmp_account_id = False
+        return tmp_account_id
+
     _defaults = {
         'coda_fname': lambda *a: '',
+        'temporary_account_id': _get_default_tmp_account,
     }
 
     def coda_parsing(self, cr, uid, ids, context=None, batch=False, codafile=None, codafilename=None):
@@ -53,6 +64,7 @@ class account_coda_import(osv.osv_memory):
             try:
                 codafile = data.coda_data
                 codafilename = data.coda_fname
+                temporaryaccount = data.temporary_account_id.id
             except:
                 raise osv.except_osv(_('Error'), _('Wizard in incorrect state. Please hit the Cancel button'))
                 return {}
@@ -108,11 +120,11 @@ class account_coda_import(osv.osv_memory):
                 if bank_ids and len(bank_ids) > 0:
                     bank_accs = self.pool.get('res.partner.bank').browse(cr, uid, bank_ids)
                     for bank_acc in bank_accs:
-                        if not (bank_acc.journal_id and (bank_acc.journal_id.currency and bank_acc.journal_id.currency.name != statement['currency']) and (not bank_acc.journal_id.currency and bank_acc.journal_id.company_id.currency_id.name != statement['currency'])):
+                        if bank_acc.journal_id.id and ((bank_acc.journal_id.currency.id and bank_acc.journal_id.currency.name == statement['currency']) or (not bank_acc.journal_id.currency.id and bank_acc.journal_id.company_id.currency_id.name == statement['currency'])):
                             statement['journal_id'] = bank_acc.journal_id
                             statement['bank_account'] = bank_acc
                             break
-                if statement['bank_account'] == False:
+                if not statement['bank_account']:
                     raise osv.except_osv(_('Error') + ' R1004', _("No matching Bank Account (with Account Journal) found.\n\nPlease set-up a Bank Account with as Account Number '%s' and as Currency '%s' and an Account Journal.") % (statement['acc_number'], statement['currency']))
                 statement['description'] = rmspaces(line[90:125])
                 statement['balance_start'] = float(rmspaces(line[43:58])) / 1000
@@ -253,7 +265,7 @@ class account_coda_import(osv.osv_memory):
             if balance_start_check != statement['balance_start']:
                 statement['coda_note'] = _("The CODA Statement %s Starting Balance (%.2f) does not correspond with the previous Closing Balance (%.2f) in journal %s!") % (statement['description'] + ' #' + statement['paperSeqNumber'], statement['balance_start'], balance_start_check, statement['journal_id'].name)
             data = {
-                'name': '[' + statement['date'] + ']' + statement['description'],
+                'name': statement['paperSeqNumber'],
                 'date': statement['date'],
                 'journal_id': statement['journal_id'].id,
                 'period_id': statement['period_id'],
@@ -354,10 +366,7 @@ class account_coda_import(osv.osv_memory):
                                     if partner.supplier:
                                         line['transaction_type'] = 'supplier'
                     if not partner and not invoice:
-                        if line['debit'] == '1':
-                            line['account'] = statement['journal_id'].default_debit_account_id.id
-                        else:
-                            line['account'] = statement['journal_id'].default_credit_account_id.id
+                        line['account'] = temporaryaccount
                     if 'communication' in line and line['communication'] != '':
                         note.append(_('Communication') + ': ' + line['communication'])
                     if 'voucher_id' not in line:
@@ -379,13 +388,18 @@ class account_coda_import(osv.osv_memory):
                     self.pool.get('account.bank.statement.line').create(cr, uid, data, context=context)
             if statement['coda_note'] != '':
                 self.pool.get('account.bank.statement').write(cr, uid, [statement['id']], {'coda_note': statement['coda_note']}, context=context)
+        model, action_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'account', 'action_bank_statement_tree')
+        action = self.pool.get(model).browse(cr, uid, action_id, context=context)
         return {
-            'view_type': 'form',
-            'view_mode': 'tree,form',
-            'res_model': 'account.bank.statement',
-            'view_id': False,
-            'context': context,
+            'name': action.name,
+            'view_type': action.view_type,
+            'view_mode': action.view_mode,
+            'res_model': action.res_model,
+            'domain': action.domain,
+            'context': action.context,
             'type': 'ir.actions.act_window',
+            'search_view_id': action.search_view_id.id,
+            'views': [(v.view_id.id, v.view_mode) for v in action.view_ids]
         }
 
 

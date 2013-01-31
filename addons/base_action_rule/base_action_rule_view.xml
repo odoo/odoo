@@ -4,57 +4,55 @@
         <menuitem id="base.menu_base_action_rule_admin" name="Automated Actions"
             parent="base.menu_custom" />
 
-        <!--
-            Action Rule Form View
-        -->
-           <record id="view_base_action_rule_form" model="ir.ui.view">
-               <field name="name">base.action.rule.form</field>
+        <!-- Action Rule Form View -->
+        <record id="view_base_action_rule_form" model="ir.ui.view">
+            <field name="name">base.action.rule.form</field>
             <field name="model">base.action.rule</field>
             <field name="arch" type="xml">
                 <form string="Action Rule" version="7.0">
                     <sheet>
-                        <group col="4">
-                            <field name="name"/>
-                            <field name="model_id"/>
-                            <field name="filter_id" domain="[('model_id','=',model), ('user_id', '=', False)]" context="{'default_model_id': model}"/>
-                            <field name="sequence"/>
-                            <field name="active"/>
-                            <field name="model" invisible="1"/>
+                        <label for="name" class="oe_edit_only"/>
+                        <h1><field name="name"/></h1>
+                        <group>
+                            <group>
+                                <field name="model_id"/>
+                                <field name="model" invisible="1"/>
+                            </group>
+                            <group>
+                                <field name="active"/>
+                                <field name="sequence"/>
+                            </group>
                         </group>
                         <notebook>
                             <page string="Conditions">
                                 <group>
-                                    <group name="model" string="Conditions on Model Fields">
-                                        <field name="regex_name"/>
-                                        <field name="trg_user_id"/>
+                                    <group name="filter" string="Filter Condition">
+                                        <field name="filter_pre_id" domain="[('model_id','=',model), ('user_id', '=', False)]" context="{'default_model_id': model}"/>
+                                        <field name="filter_id" domain="[('model_id','=',model), ('user_id', '=', False)]" context="{'default_model_id': model}"/>
                                     </group>
-                                    <group name="partner" string="Conditions on Model Partner">
-                                        <field name="trg_partner_id"/>
-                                        <field name="trg_partner_categ_id"/>
-                                    </group>
-                                    <group name="state" string="Conditions on Status">
-                                        <field name="trg_state_from"/>
-                                        <field name="trg_state_to"/>
-                                    </group>
-                                    <group name="timing" string="Conditions on Timing">
-                                        <field name="trg_date_type"/>
-                                        <field name="trg_date_range" string="Delay After Trigger Date" attrs="{'invisible': [('trg_date_type', '=', 'none')]}"/>
-                                        <field name="trg_date_range_type" attrs="{'invisible': [('trg_date_type', '=', 'none')]}"/>
+                                    <group name="timing" string="Timer">
+                                        <field name="trg_date_id"/>
+                                        <label for="trg_date_range" string="Delay After Trigger Date" attrs="{'invisible': [('trg_date_id','=',False)]}"/>
+                                        <div attrs="{'invisible': [('trg_date_id','=',False)]}">
+                                            <field name="trg_date_range" class="oe_inline"/>
+                                            <field name="trg_date_range_type" class="oe_inline" attrs="{'required': [('trg_date_id','!=',False)]}"/>
+                                        </div>
                                     </group>
                                 </group>
-                                <group string="Note">
-                                    <label string="The rule uses the AND operator. The model must match all non-empty fields so that the rule executes the action  described in the 'Actions' tab." />
-                                </group>
+                                <p class="oe_grey">
+                                    <b>Select a filter or a timer as condition.</b><br/> An action rule is checked when you create or modify the "Related Document Model". The precondition filter is checked right before the modification while the postcondition filter is checked after the modification. A precondition filter will therefore not work during a creation.<br/>
+                                    <b>To create a new filter:</b><br/>
+                                    - Go to your "Related Document Model" page and set the filter parameters in the "Search" view (Example of filter based on Leads/Opportunities: Creation Date "is equal to" 01/01/2012)<br/>
+                                    - In this same "Search" view, select the menu "Save Current Filter", enter the name (Ex: Create the 01/01/2012) and add the option "Share with all users"<br/>
+                                    The filter must therefore be available in this page.
+                                </p>
                             </page>
                             <page string="Actions">
-                                <group name="action_followers">
-                                    <field name="act_followers" widget="many2many_tags"/>
-                                </group>
                                 <group name="action_field" col="4" string="Fields to Change">
                                     <field name="act_user_id"/>
-                                    <field name="act_state"/>
+                                    <field name="act_followers" widget="many2many_tags"/>
                                 </group>
-                                <group name="action_server" string="Server Actions to be Triggered (eg. Email Reminder, Call Object Method, etc...)" >
+                                <group name="action_server" string="Server actions to run">
                                     <field name="server_action_ids" domain="[('model_id','=', model_id)]" nolabel="1" context="{'default_model_id': model_id}">
                                         <tree string="Server Actions">
                                             <field name="sequence"/>
@@ -63,30 +61,27 @@
                                         </tree>
                                     </field>
                                 </group>
-                                
                            </page>
                        </notebook>
                     </sheet>
                 </form>
             </field>
-           </record>
+        </record>
 
-<!-- Action Rule Tree View -->
-
-           <record id="view_base_action_rule_tree" model="ir.ui.view">
-               <field name="name">base.action.rule.tree</field>
+        <!-- Action Rule Tree View -->
+        <record id="view_base_action_rule_tree" model="ir.ui.view">
+            <field name="name">base.action.rule.tree</field>
             <field name="model">base.action.rule</field>
             <field name="arch" type="xml">
                 <tree string="Action Rule">
                     <field name="sequence"/>
-                    <field name="name" colspan="4"/>
+                    <field name="name"/>
                     <field name="filter_id"/>
                 </tree>
             </field>
-           </record>
+        </record>
 
-<!-- Action Rule Action -->
-
+        <!-- Action Rule Action -->
         <record id="base_action_rule_act" model="ir.actions.act_window">
             <field name="name">Automated Actions</field>
             <field name="res_model">base.action.rule</field>
@@ -108,7 +103,6 @@
 
         <menuitem id="menu_base_action_rule_form"
             parent="base.menu_base_action_rule_admin" action="base_action_rule_act" sequence="1"/>
-
 
     </data>
 </openerp>

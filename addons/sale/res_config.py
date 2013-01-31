@@ -27,9 +27,9 @@ class sale_configuration(osv.osv_memory):
     _inherit = 'sale.config.settings'
 
     _columns = {
-        'group_invoice_so_lines': fields.boolean('Generate invoices based on the sale order lines',
+        'group_invoice_so_lines': fields.boolean('Generate invoices based on the sales order lines',
             implied_group='sale.group_invoice_so_lines',
-            help="To allow your salesman to make invoices for sale order lines using the menu 'Lines to Invoice'."),
+            help="To allow your salesman to make invoices for sales order lines using the menu 'Lines to Invoice'."),
         'timesheet': fields.boolean('Prepare invoices based on timesheets',
             help = """For modifying account analytic view to show important data to project manager of services companies.
                 You can also view the report of account analytic summary user-wise as well as month wise.
@@ -48,9 +48,9 @@ Example: 10% for retailers, promotion of 5 EUR on this product, etc."""),
         'group_uom':fields.boolean("Allow using different units of measures",
             implied_group='product.group_uom',
             help="""Allows you to select and maintain different units of measure for products."""),
-        'group_discount_per_so_line': fields.boolean("Allow setting a discount on the sale order lines",
+        'group_discount_per_so_line': fields.boolean("Allow setting a discount on the sales order lines",
             implied_group='sale.group_discount_per_so_line',
-            help="Allows you to apply some discount per sale order line."),
+            help="Allows you to apply some discount per sales order line."),
         'module_warning': fields.boolean("Allow configuring alerts by customer or products",
             help="""Allow to configure notification on products and trigger them when a user wants to sale a given product or a given customer.
 Example: Product: this product is deprecated, do not purchase more than 5.
@@ -69,7 +69,7 @@ Example: Product: this product is deprecated, do not purchase more than 5.
                 But the possibility to change these values is still available.
                 This installs the module analytic_user_function."""),
         'module_project': fields.boolean("Project"),
-        'module_sale_stock': fields.boolean("Trigger delivery orders automatically from sale orders",
+        'module_sale_stock': fields.boolean("Trigger delivery orders automatically from sales orders",
             help="""Allows you to Make Quotation, Sale Order using different Order policy and Manage Related Stock.
                     This installs the module sale_stock."""),
     }
@@ -98,13 +98,20 @@ Example: Product: this product is deprecated, do not purchase more than 5.
         wizard = self.browse(cr, uid, ids)[0]
 
         if wizard.time_unit:
-            product = ir_model_data.get_object(cr, uid, 'product', 'product_product_consultant')
-            product.write({'uom_id': wizard.time_unit.id, 'uom_po_id': wizard.time_unit.id})
+            product = False
+            try:
+                product = ir_model_data.get_object(cr, uid, 'product', 'product_product_consultant')
+            except:
+                #product with xml_id product_product_consultant has not been found. Don't do anything except logging the exception
+                import logging
+                _logger = logging.getLogger(__name__)
+                _logger.warning("Warning, product with xml_id 'product_product_consultant' hasn't been found")
+            if product:
+                product.write({'uom_id': wizard.time_unit.id, 'uom_po_id': wizard.time_unit.id})
 
         if wizard.module_project and wizard.time_unit:
             user = self.pool.get('res.users').browse(cr, uid, uid, context)
             user.company_id.write({'project_time_mode_id': wizard.time_unit.id})
-         
         return {}
 
     def onchange_task_work(self, cr, uid, ids, task_work, context=None):
@@ -126,7 +133,7 @@ class account_config_settings(osv.osv_memory):
             help="""This allows install module sale_analytic_plans."""),
         'group_analytic_account_for_sales': fields.boolean('Analytic accounting for sales',
             implied_group='sale.group_analytic_accounting',
-            help="Allows you to specify an analytic account on sale orders."),
+            help="Allows you to specify an analytic account on sales orders."),
     }
 
     def onchange_sale_analytic_plans(self, cr, uid, ids, module_sale_analytic_plans, context=None):

@@ -580,15 +580,6 @@ class product_product(osv.osv):
         'seller_qty': fields.function(_calc_seller, type='float', string='Supplier Quantity', multi="seller_info", help="This is minimum quantity to purchase from Main Supplier."),
         'seller_id': fields.function(_calc_seller, type='many2one', relation="res.partner", string='Main Supplier', help="Main Supplier who has highest priority in Supplier List.", multi="seller_info"),
     }
-
-    def create(self, cr, uid, vals, context=None):
-        obj_id = super(product_product, self).create(cr, uid, vals, context=context)
-        self.create_send_note(cr, uid, [obj_id], context=context)
-        return obj_id
-
-    def create_send_note(self, cr, uid, ids, context=None):
-        return self.message_post(cr, uid, ids, body=_("Product has been <b>created</b>."), context=context)
-
     def unlink(self, cr, uid, ids, context=None):
         unlink_ids = []
         unlink_product_tmpl_ids = []

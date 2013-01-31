@@ -46,7 +46,7 @@
         </record>
 
         <record id="act_pay_voucher" model="ir.actions.act_window">
-            <field name="name">Customer Payment</field>
+            <field name="name">Customer Payments</field>
             <field name="res_model">account.voucher</field>
             <field name="view_type">form</field>
             <field name="domain">[('journal_id.type', 'in', ['bank', 'cash']), ('type','=','receipt'), ('partner_id','=',partner_id)]</field>
@@ -68,7 +68,7 @@
                     <button name="action_cancel_draft" type="object" states="cancel" string="Set to Draft"/>
                     <field name="state" widget="statusbar" statusbar_visible="draft,posted" statusbar_colors='{"proforma":"blue"}'/>
                 </header>
-                <sheet string="Sales Receipt" >
+                <sheet string="Sales Receipts" >
                     <h1><label for="number" string="Sale Receipt"/> <field name="number" class="oe_inline" readonly="1"/></h1>
                     <group>
                         <group>
@@ -156,7 +156,7 @@
 
         <!-- Sales Voucher -->
         <record id="action_sale_receipt" model="ir.actions.act_window">
-            <field name="name">Sales Receipt</field>
+            <field name="name">Sales Receipts</field>
             <field name="res_model">account.voucher</field>
             <field name="view_type">form</field>
             <field name="domain">[('journal_id.type','in',['sale','sale_refund']), ('type','=','sale')]</field>
@@ -310,7 +310,7 @@
             </field>
         </record>
         <record id="action_purchase_receipt" model="ir.actions.act_window">
-            <field name="name">Purchase Receipt</field>
+            <field name="name">Purchase Receipts</field>
             <field name="res_model">account.voucher</field>
             <field name="view_type">form</field>
             <field name="domain">[('journal_id.type','in',['purchase','purchase_refund']), ('type','=','purchase')]</field>

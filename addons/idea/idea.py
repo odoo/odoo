@@ -36,11 +36,10 @@ class idea_category(osv.osv):
         'name': fields.char('Category Name', size=64, required=True),
     }
     _sql_constraints = [
-        ('name', 'unique(name)', 'The name of the category must be unique' )
+        ('name', 'unique(name)', 'The name of the category must be unique')
     ]
     _order = 'name asc'
 
-idea_category()
 
 class idea_idea(osv.osv):
     """ Idea """
@@ -48,18 +47,18 @@ class idea_idea(osv.osv):
     _inherit = ['mail.thread']
     _columns = {
         'create_uid': fields.many2one('res.users', 'Creator', required=True, readonly=True),
-        'name': fields.char('Idea Summary', size=64, required=True, readonly=True, oldname='title', states={'draft':[('readonly',False)]}),
-        'description': fields.text('Description', help='Content of the idea', readonly=True, states={'draft':[('readonly',False)]}),
-        'category_ids': fields.many2many('idea.category', string='Tags', readonly=True, states={'draft':[('readonly',False)]}),
+        'name': fields.char('Idea Summary', size=64, required=True, readonly=True, oldname='title', states={'draft': [('readonly', False)]}),
+        'description': fields.text('Description', help='Content of the idea', readonly=True, states={'draft': [('readonly', False)]}),
+        'category_ids': fields.many2many('idea.category', string='Tags', readonly=True, states={'draft': [('readonly', False)]}),
         'state': fields.selection([('draft', 'New'),
             ('open', 'Accepted'),
             ('cancel', 'Refused'),
             ('close', 'Done')],
-            'Status', readonly=True
+            'Status', readonly=True, track_visibility='onchange',
         )
     }
     _sql_constraints = [
-        ('name', 'unique(name)', 'The name of the idea must be unique' )
+        ('name', 'unique(name)', 'The name of the idea must be unique')
     ]
     _defaults = {
         'state': lambda *a: 'draft',
@@ -67,21 +66,13 @@ class idea_idea(osv.osv):
     _order = 'name asc'
 
     def idea_cancel(self, cr, uid, ids, context=None):
-        self.write(cr, uid, ids, { 'state': 'cancel' })
-        self.message_post(cr, uid, ids, body=_('Idea has been refused.'), context=context)
-        return True
+        return self.write(cr, uid, ids, {'state': 'cancel'}, context=context)
 
     def idea_open(self, cr, uid, ids, context={}):
-        self.write(cr, uid, ids, {'state': 'open'}, context=context)
-        self.message_post(cr, uid, ids, body=_('Idea has been opened.'), context=context)
-        return True
+        return self.write(cr, uid, ids, {'state': 'open'}, context=context)
 
     def idea_close(self, cr, uid, ids, context={}):
-        self.write(cr, uid, ids, {'state': 'close'}, context=context)
-        self.message_post(cr, uid, ids, body=_('Idea has been accepted.'), context=context)
-        return True
+        return self.write(cr, uid, ids, {'state': 'close'}, context=context)
 
     def idea_draft(self, cr, uid, ids, context={}):
-        self.write(cr, uid, ids, {'state': 'draft'}, context=context)
-        self.message_post(cr, uid, ids, body=_('Idea has been created.'), context=context)
-        return True
+        return self.write(cr, uid, ids, {'state': 'draft'}, context=context)

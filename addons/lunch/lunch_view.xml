@@ -64,6 +64,7 @@
             <field name='model'>lunch.order</field>
             <field name='arch' type='xml'>
                 <search string="lunch orders">
+                    <field name="user_id"/>
                     <field name="date"/>
                     <field name="order_line_ids"/>
                     <filter name='is_mine' string="My Orders" domain="[('user_id','=',uid)]"/>
@@ -202,7 +203,7 @@
               </p>
             </field>
         </record>
-        <menuitem name="Employee's Payment" parent="menu_lunch_cash" id="menu_lunch_cashmove" action="action_lunch_cashmove" />
+        <menuitem name="Employee Payments" parent="menu_lunch_cash" id="menu_lunch_cashmove" action="action_lunch_cashmove" />
 
         <!--Action for Products-->
         <record model="ir.actions.act_window" id="action_lunch_products">
@@ -334,7 +335,7 @@
                             <tree string='List' editable='bottom'>
                                 <field name='product_id' on_change='onchange_price(product_id)'/>
                                 <field name='note' />
-                                <field name='price' />
+                                <field name='price' on_change='onchange_price(product_id)'/>
                                 <field name='supplier' invisible="1"/>
                                 <field name="state" invisible="1"/>
                             </tree>

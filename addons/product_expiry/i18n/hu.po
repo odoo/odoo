@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2012-12-03 16:04+0000\n"
-"PO-Revision-Date: 2011-01-31 17:24+0000\n"
-"Last-Translator: Krisztian Eyssen <krisz@eyssen.hu>\n"
+"POT-Creation-Date: 2012-12-21 17:06+0000\n"
+"PO-Revision-Date: 2013-01-28 00:43+0000\n"
+"Last-Translator: krnkris <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-12-04 05:45+0000\n"
-"X-Generator: Launchpad (build 16335)\n"
+"X-Launchpad-Export-Date: 2013-01-29 05:20+0000\n"
+"X-Generator: Launchpad (build 16451)\n"
 
 #. module: product_expiry
 #: model:product.template,name:product_expiry.product_product_from_product_template
@@ -37,6 +37,8 @@ msgid ""
 "This is the date on which the goods with this Serial Number should be "
 "removed from the stock."
 msgstr ""
+"Ez annak a dátuma, amikor az ezzel a szériaszámmal rendelkező terméket ki "
+"kell vonni a raktárból."
 
 #. module: product_expiry
 #: help:product.product,removal_time:0
@@ -44,6 +46,8 @@ msgid ""
 "When a new a Serial Number is issued, this is the number of days before the "
 "goods should be removed from the stock."
 msgstr ""
+"Ha egy új széria számot bocsát ki, akkor ez a napok számát jelzi, amielőtt a "
+"terméket ki kell vonni a raktárból."
 
 #. module: product_expiry
 #: field:product.product,use_time:0
@@ -61,6 +65,8 @@ msgid ""
 "When a new a Serial Number is issued, this is the number of days before the "
 "goods starts deteriorating, without being dangerous yet."
 msgstr ""
+"Ha egy új széria számot bocsát ki, akkor ez a napok számát jelzi, amielőtt a "
+"termék romlásnak indulna, de még nem veszélyes."
 
 #. module: product_expiry
 #: field:product.product,removal_time:0
@@ -73,11 +79,13 @@ msgid ""
 "This is the date on which an alert should be notified about the goods with "
 "this Serial Number."
 msgstr ""
+"Ez a nap amelyen vészjelzést kell kiadni az ezekkel a a szériaszámokkal "
+"rendelkező árukról."
 
 #. module: product_expiry
 #: model:ir.model,name:product_expiry.model_stock_production_lot
 msgid "Serial Number"
-msgstr ""
+msgstr "Szériaszám"
 
 #. module: product_expiry
 #: help:product.product,alert_time:0
@@ -85,6 +93,8 @@ msgid ""
 "When a new a Serial Number is issued, this is the number of days before an "
 "alert should be notified."
 msgstr ""
+"Ha egy új széria számot bocsát ki, akkor ez a napok számát jelzi, amielőtt "
+"egy vészjelzést ki kell adni."
 
 #. module: product_expiry
 #: field:stock.production.lot,removal_date:0
@@ -104,7 +114,7 @@ msgstr "Dátumok"
 #. module: product_expiry
 #: field:stock.production.lot,life_date:0
 msgid "End of Life Date"
-msgstr ""
+msgstr "Határidő lejárati vég dátum"
 
 #. module: product_expiry
 #: field:stock.production.lot,use_date:0
@@ -126,7 +136,7 @@ msgstr ""
 #. module: product_expiry
 #: field:stock.production.lot,alert_date:0
 msgid "Alert Date"
-msgstr ""
+msgstr "Figyelmeztetés dátuma"
 
 #. module: product_expiry
 #: help:stock.production.lot,use_date:0

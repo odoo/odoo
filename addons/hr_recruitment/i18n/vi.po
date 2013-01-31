@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-03 16:02+0000\n"
+"POT-Creation-Date: 2012-12-21 17:04+0000\n"
 "PO-Revision-Date: 2011-07-09 09:19+0000\n"
 "Last-Translator: OpenBMS JSC <Unknown>\n"
 "Language-Team: Vietnamese <vi@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-12-04 05:48+0000\n"
-"X-Generator: Launchpad (build 16335)\n"
+"X-Launchpad-Export-Date: 2012-12-22 05:58+0000\n"
+"X-Generator: Launchpad (build 16378)\n"
 
 #. module: hr_recruitment
 #: help:hr.applicant,active:0
@@ -116,7 +116,7 @@ msgid "Sources of Applicants"
 msgstr ""
 
 #. module: hr_recruitment
-#: code:addons/hr_recruitment/hr_recruitment.py:424
+#: code:addons/hr_recruitment/hr_recruitment.py:435
 #, python-format
 msgid "You must define Applied Job for this applicant."
 msgstr ""
@@ -287,7 +287,7 @@ msgid ""
 msgstr ""
 
 #. module: hr_recruitment
-#: code:addons/hr_recruitment/hr_recruitment.py:424
+#: code:addons/hr_recruitment/hr_recruitment.py:435
 #, python-format
 msgid "Warning!"
 msgstr ""
@@ -298,9 +298,10 @@ msgid "Salary Proposed"
 msgstr "Mức lương Đề nghị"
 
 #. module: hr_recruitment
-#: view:hr.applicant:0
-msgid "Edit..."
-msgstr ""
+#: view:hr.recruitment.report:0
+#: field:hr.recruitment.report,partner_id:0
+msgid "Partner"
+msgstr "Đối tác"
 
 #. module: hr_recruitment
 #: view:hr.recruitment.report:0
@@ -321,9 +322,8 @@ msgid "Proposed Salary"
 msgstr "Mức lương đề nghị"
 
 #. module: hr_recruitment
-#: code:addons/hr_recruitment/hr_recruitment.py:482
-#, python-format
-msgid "Applicant has been set <b>in progress</b>."
+#: model:ir.model,name:hr_recruitment.model_hr_recruitment_source
+msgid "Source of Applicants"
 msgstr ""
 
 #. module: hr_recruitment
@@ -352,24 +352,25 @@ msgid "Job Description"
 msgstr "Mô tả công việc"
 
 #. module: hr_recruitment
-#: model:ir.actions.server,name:hr_recruitment.actions_server_applicant_read
-msgid "HR Applicant: Mark read"
-msgstr ""
-
-#. module: hr_recruitment
-#: code:addons/hr_recruitment/hr_recruitment.py:504
-#, python-format
-msgid "Applicant has been set as <b>new</b>."
-msgstr ""
-
-#. module: hr_recruitment
 #: view:hr.applicant:0
-#: selection:hr.applicant,state:0
-#: view:hr.recruitment.report:0
-#: selection:hr.recruitment.report,state:0
-#: selection:hr.recruitment.stage,state:0
-msgid "New"
-msgstr "Mới"
+#: field:hr.applicant,source_id:0
+msgid "Source"
+msgstr ""
+
+#. module: hr_recruitment
+#: field:hr.applicant,message_follower_ids:0
+msgid "Followers"
+msgstr ""
+
+#. module: hr_recruitment
+#: model:hr.recruitment.source,name:hr_recruitment.source_monster
+msgid "Monster"
+msgstr ""
+
+#. module: hr_recruitment
+#: model:mail.message.subtype,name:hr_recruitment.mt_applicant_hired
+msgid "Applicant Hired"
+msgstr ""
 
 #. module: hr_recruitment
 #: field:hr.applicant,email_from:0
@@ -414,6 +415,11 @@ msgid "Good"
 msgstr "Tốt"
 
 #. module: hr_recruitment
+#: selection:hr.recruitment.report,month:0
+msgid "August"
+msgstr "Tháng Tám"
+
+#. module: hr_recruitment
 #: view:hr.applicant:0
 #: field:hr.applicant,create_date:0
 #: view:hr.recruitment.report:0
@@ -425,11 +431,6 @@ msgstr "Ngày tạo"
 #: model:ir.model,name:hr_recruitment.model_hired_employee
 msgid "Create Employee"
 msgstr ""
-
-#. module: hr_recruitment
-#: field:hr.applicant,partner_phone:0
-msgid "Phone"
-msgstr "Điện thoại"
 
 #. module: hr_recruitment
 #: view:hr.applicant:0
@@ -489,7 +490,7 @@ msgid "Applicants"
 msgstr "Các ứng viên"
 
 #. module: hr_recruitment
-#: code:addons/hr_recruitment/hr_recruitment.py:342
+#: code:addons/hr_recruitment/hr_recruitment.py:351
 #, python-format
 msgid "No Subject"
 msgstr ""
@@ -520,10 +521,14 @@ msgid "Salary Expected by Applicant, extra advantages"
 msgstr ""
 
 #. module: hr_recruitment
-#: view:hr.recruitment.report:0
-#: field:hr.recruitment.report,partner_id:0
-msgid "Partner"
-msgstr "Đối tác"
+#: help:hr.applicant,state:0
+msgid ""
+"The status is set to 'Draft', when a case is created.                      "
+"If the case is in progress the status is set to 'Open'.                      "
+"When the case is over, the status is set to 'Done'.                      If "
+"the case needs to be reviewed then the status is                       set "
+"to 'Pending'."
+msgstr ""
 
 #. module: hr_recruitment
 #: selection:hr.recruitment.report,month:0
@@ -558,6 +563,11 @@ msgid "Hire & Create Employee"
 msgstr ""
 
 #. module: hr_recruitment
+#: model:mail.message.subtype,description:hr_recruitment.mt_applicant_hired
+msgid "Applicant hired"
+msgstr ""
+
+#. module: hr_recruitment
 #: view:hr.applicant:0
 msgid "Jobs - Recruitment Form"
 msgstr ""
@@ -568,9 +578,9 @@ msgid "Probability"
 msgstr "Xác suất"
 
 #. module: hr_recruitment
-#: field:hr.job,alias_id:0
-msgid "Alias"
-msgstr ""
+#: selection:hr.recruitment.report,month:0
+msgid "April"
+msgstr "Tháng Tư"
 
 #. module: hr_recruitment
 #: selection:hr.recruitment.report,month:0
@@ -610,9 +620,9 @@ msgid "Answer related job question"
 msgstr ""
 
 #. module: hr_recruitment
-#: model:ir.model,name:hr_recruitment.model_hr_recruitment_degree
-msgid "Degree of Recruitment"
-msgstr ""
+#: model:hr.recruitment.stage,name:hr_recruitment.stage_job2
+msgid "First Interview"
+msgstr "Phỏng vấn lần một"
 
 #. module: hr_recruitment
 #: field:hr.applicant,write_date:0
@@ -637,9 +647,9 @@ msgid "or"
 msgstr ""
 
 #. module: hr_recruitment
-#: view:hr.applicant:0
-msgid "Search Jobs"
-msgstr "Tìm kiếm Các công việc"
+#: model:mail.message.subtype,name:hr_recruitment.mt_applicant_refused
+msgid "Applicant Refused"
+msgstr ""
 
 #. module: hr_recruitment
 #: view:hr.applicant:0
@@ -743,9 +753,10 @@ msgid "Schedule interview with this applicant"
 msgstr ""
 
 #. module: hr_recruitment
-#: selection:hr.recruitment.report,month:0
-msgid "August"
-msgstr "Tháng Tám"
+#: code:addons/hr_recruitment/hr_recruitment.py:397
+#, python-format
+msgid "Applicant <b>created</b>"
+msgstr ""
 
 #. module: hr_recruitment
 #: view:hr.applicant:0
@@ -758,24 +769,14 @@ msgid "Degree"
 msgstr "Bằng Cấp"
 
 #. module: hr_recruitment
-#: model:ir.actions.server,name:hr_recruitment.actions_server_applicant_unread
-msgid "HR Applicant: Mark unread"
-msgstr ""
+#: field:hr.applicant,partner_phone:0
+msgid "Phone"
+msgstr "Điện thoại"
 
 #. module: hr_recruitment
 #: selection:hr.recruitment.report,month:0
 msgid "June"
 msgstr "Tháng Sáu"
-
-#. module: hr_recruitment
-#: help:hr.applicant,state:0
-msgid ""
-"The status is set to 'Draft', when a case is created.                      "
-"If the case is in progress the status is set to 'Open'.                      "
-"When the case is over, the status is set to 'Done'.                      If "
-"the case needs to be reviewed then the status is                       set "
-"to 'Pending'."
-msgstr ""
 
 #. module: hr_recruitment
 #: field:hr.applicant,day_close:0
@@ -828,12 +829,6 @@ msgid "Response"
 msgstr "Hồi đáp"
 
 #. module: hr_recruitment
-#: field:hr.applicant,message_comment_ids:0
-#: help:hr.applicant,message_comment_ids:0
-msgid "Comments and emails"
-msgstr ""
-
-#. module: hr_recruitment
 #: selection:hr.recruitment.report,month:0
 msgid "October"
 msgstr "Tháng Mười"
@@ -849,11 +844,6 @@ msgid "Proposed Salary Extra"
 msgstr ""
 
 #. module: hr_recruitment
-#: model:mail.message.subtype,name:hr_recruitment.mt_hired
-msgid "Employee Hired"
-msgstr ""
-
-#. module: hr_recruitment
 #: selection:hr.recruitment.report,month:0
 msgid "January"
 msgstr "Tháng Giêng"
@@ -865,9 +855,8 @@ msgid "A contact is already existing with the same name."
 msgstr ""
 
 #. module: hr_recruitment
-#: code:addons/hr_recruitment/hr_recruitment.py:495
-#, python-format
-msgid "Applicant has been <b>hired</b>."
+#: model:ir.actions.act_window,name:hr_recruitment.hr_recruitment_stage_form_installer
+msgid "Review Recruitment Stages"
 msgstr ""
 
 #. module: hr_recruitment
@@ -876,9 +865,9 @@ msgid "Contact:"
 msgstr ""
 
 #. module: hr_recruitment
-#: field:hr.applicant,message_summary:0
-msgid "Summary"
-msgstr ""
+#: view:hr.applicant:0
+msgid "Search Jobs"
+msgstr "Tìm kiếm Các công việc"
 
 #. module: hr_recruitment
 #: field:hr.applicant,date:0
@@ -920,18 +909,6 @@ msgid "Configure"
 msgstr ""
 
 #. module: hr_recruitment
-#: code:addons/hr_recruitment/hr_recruitment.py:492
-#, python-format
-msgid "Applicant has been <b>hired</b> and created as an employee."
-msgstr ""
-
-#. module: hr_recruitment
-#: view:hr.applicant:0
-#: field:hr.applicant,source_id:0
-msgid "Source"
-msgstr ""
-
-#. module: hr_recruitment
 #: model:hr.recruitment.stage,name:hr_recruitment.stage_job4
 msgid "Contract Proposed"
 msgstr ""
@@ -957,11 +934,6 @@ msgstr ""
 #: view:hr.recruitment.partner.create:0
 msgid "Cancel"
 msgstr "Hủy bỏ"
-
-#. module: hr_recruitment
-#: field:hr.applicant,message_follower_ids:0
-msgid "Followers"
-msgstr ""
 
 #. module: hr_recruitment
 #: view:hr.recruitment.partner.create:0
@@ -994,6 +966,11 @@ msgid "Gives the sequence order when displaying a list of degrees."
 msgstr ""
 
 #. module: hr_recruitment
+#: model:mail.message.subtype,description:hr_recruitment.mt_stage_changed
+msgid "Stage changed"
+msgstr ""
+
+#. module: hr_recruitment
 #: view:hr.applicant:0
 #: field:hr.applicant,user_id:0
 #: view:hr.recruitment.report:0
@@ -1018,7 +995,7 @@ msgid "LinkedIn"
 msgstr ""
 
 #. module: hr_recruitment
-#: model:mail.message.subtype,name:hr_recruitment.mt_applicant_new
+#: model:mail.message.subtype,name:hr_recruitment.mt_job_new_applicant
 msgid "New Applicant"
 msgstr ""
 
@@ -1033,9 +1010,13 @@ msgid "Cases By Stage and Estimates"
 msgstr ""
 
 #. module: hr_recruitment
-#: model:ir.model,name:hr_recruitment.model_hr_recruitment_source
-msgid "Source of Applicants"
-msgstr ""
+#: view:hr.applicant:0
+#: selection:hr.applicant,state:0
+#: view:hr.recruitment.report:0
+#: selection:hr.recruitment.report,state:0
+#: selection:hr.recruitment.stage,state:0
+msgid "New"
+msgstr "Mới"
 
 #. module: hr_recruitment
 #: model:crm.meeting.type,name:hr_recruitment.categ_meet_interview
@@ -1044,19 +1025,8 @@ msgid "Interview"
 msgstr "Phỏng vấn"
 
 #. module: hr_recruitment
-#: model:ir.actions.act_window,name:hr_recruitment.hr_recruitment_stage_form_installer
-msgid "Review Recruitment Stages"
-msgstr ""
-
-#. module: hr_recruitment
 #: field:hr.recruitment.source,name:0
 msgid "Source Name"
-msgstr ""
-
-#. module: hr_recruitment
-#: code:addons/hr_recruitment/hr_recruitment.py:476
-#, python-format
-msgid "Stage changed to <b>%s</b>."
 msgstr ""
 
 #. module: hr_recruitment
@@ -1070,8 +1040,8 @@ msgid "Description"
 msgstr "Mô tả"
 
 #. module: hr_recruitment
-#: view:hr.applicant:0
-msgid "Unassigned Recruitments"
+#: model:mail.message.subtype,name:hr_recruitment.mt_stage_changed
+msgid "Stage Changed"
 msgstr ""
 
 #. module: hr_recruitment
@@ -1136,9 +1106,9 @@ msgid "On Average"
 msgstr ""
 
 #. module: hr_recruitment
-#: model:hr.recruitment.stage,name:hr_recruitment.stage_job2
-msgid "First Interview"
-msgstr "Phỏng vấn lần một"
+#: model:ir.model,name:hr_recruitment.model_hr_recruitment_degree
+msgid "Degree of Recruitment"
+msgstr ""
 
 #. module: hr_recruitment
 #: field:hr.recruitment.report,salary_prop_avg:0
@@ -1194,9 +1164,9 @@ msgid "These people will receive email."
 msgstr ""
 
 #. module: hr_recruitment
-#: selection:hr.recruitment.report,month:0
-msgid "April"
-msgstr "Tháng Tư"
+#: field:hr.job,alias_id:0
+msgid "Alias"
+msgstr ""
 
 #. module: hr_recruitment
 #: view:hr.recruitment.report:0
@@ -1209,13 +1179,18 @@ msgid "Contract"
 msgstr ""
 
 #. module: hr_recruitment
+#: field:hr.applicant,message_summary:0
+msgid "Summary"
+msgstr ""
+
+#. module: hr_recruitment
 #: help:hr.applicant,message_ids:0
 msgid "Messages and communication history"
 msgstr ""
 
 #. module: hr_recruitment
-#: model:hr.recruitment.source,name:hr_recruitment.source_monster
-msgid "Monster"
+#: model:mail.message.subtype,description:hr_recruitment.mt_applicant_refused
+msgid "Applicant refused"
 msgstr ""
 
 #. module: hr_recruitment
@@ -1235,25 +1210,18 @@ msgid "Sequence"
 msgstr ""
 
 #. module: hr_recruitment
-#: code:addons/hr_recruitment/hr_recruitment.py:490
-#, python-format
-msgid "New employee joined the company %s."
-msgstr ""
-
-#. module: hr_recruitment
 #: model:hr.recruitment.degree,name:hr_recruitment.degree_bachelor
 msgid "Bachelor Degree"
 msgstr ""
 
 #. module: hr_recruitment
-#: model:ir.model,name:hr_recruitment.model_hr_config_settings
-msgid "hr.config.settings"
+#: view:hr.applicant:0
+msgid "Unassigned Recruitments"
 msgstr ""
 
 #. module: hr_recruitment
-#: code:addons/hr_recruitment/hr_recruitment.py:508
-#, python-format
-msgid "Applicant has been <b>created</b>."
+#: model:ir.model,name:hr_recruitment.model_hr_config_settings
+msgid "hr.config.settings"
 msgstr ""
 
 #. module: hr_recruitment

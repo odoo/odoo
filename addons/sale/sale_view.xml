@@ -58,7 +58,7 @@
               <p class="oe_view_nocontent_create">
                 Click to define a new sale shop.
               </p><p>
-                Each quotation or sale order must be linked to a shop. The
+                Each quotation or sales order must be linked to a shop. The
                 shop also defines the warehouse from which the products will be
                 delivered for each particular sales.
               </p>
@@ -148,7 +148,7 @@
                 <sheet>
                     <h1>
                         <label string="Quotation " attrs="{'invisible': [('state','not in',('draft','sent'))]}"/>
-                        <label string="Sale Order " attrs="{'invisible': [('state','in',('draft','sent'))]}"/>
+                        <label string="Sales Order " attrs="{'invisible': [('state','in',('draft','sent'))]}"/>
                         <field name="name" class="oe_inline" readonly="1"/>
                     </h1>
                     <group>
@@ -156,7 +156,7 @@
                             <field name="partner_id" on_change="onchange_partner_id(partner_id, context)" domain="[('customer','=',True)]" context="{'search_default_customer':1, 'show_address': 1}" options='{"always_reload": True}'/>
                             <field name="partner_invoice_id" groups="sale.group_delivery_invoice_address" context="{'default_type':'invoice'}"/>
                             <field name="partner_shipping_id" groups="sale.group_delivery_invoice_address" context="{'default_type':'delivery'}"/>
-                            <field name="project_id" context="{'partner_id':partner_id, 'pricelist_id':pricelist_id, 'default_name':name}" groups="sale.group_analytic_accounting" domain="[('type','in',['view','normal','contract'])]"/>
+                            <field name="project_id" context="{'partner_id':partner_id, 'pricelist_id':pricelist_id, 'default_name':name, 'default_type': 'contract'}" groups="sale.group_analytic_accounting" domain="[('type','in',['view','normal','contract'])]"/>
                         </group>
                         <group>
                             <field name="date_order"/>
@@ -246,7 +246,7 @@
                                 <div class="oe_subtotal_footer_separator oe_inline">
                                     <label for="amount_total" />
                                     <button name="button_dummy"
-                                        states="draft" string="(update)" type="object" class="oe_edit_only oe_link"/>
+                                        states="draft,sent" string="(update)" type="object" class="oe_edit_only oe_link"/>
                                 </div>
                                 <field name="amount_total" nolabel="1" class="oe_subtotal_footer_separator" widget='monetary' options="{'currency_field': 'currency_id'}"/>
                             </group>
@@ -307,7 +307,7 @@
                     <filter icon="terp-dolar_ok!" string="To Invoice" domain="[('state','=','manual')]" help="Sales Order ready to be invoiced"/>
                     <filter icon="terp-dolar_ok!" string="Done" domain="[('state','=','done')]" help="Sales Order done"/>
                     <separator/>
-                    <filter string="My Sale Orders" domain="[('user_id','=',uid)]" help="My Sale Orders" icon="terp-personal" name="my_sale_orders_filter"/>
+                    <filter string="My Sales Orders" domain="[('user_id','=',uid)]" help="My Sales Orders" icon="terp-personal" name="my_sale_orders_filter"/>
                     <field name="partner_id"/>
                     <field name="user_id"/>
                     <field name="project_id"/>
@@ -322,7 +322,7 @@
         </record>
 
         <record id="action_orders" model="ir.actions.act_window">
-            <field name="name">Sale Orders</field>
+            <field name="name">Sales Orders</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">sale.order</field>
             <field name="view_type">form</field>
@@ -332,11 +332,11 @@
             <field name="domain">[('state','not in',('draft','sent','cancel'))]</field>
             <field name="help" type="html">
               <p class="oe_view_nocontent_create">
-                Click to create a quotation that can be converted into a sale
+                Click to create a quotation that can be converted into a sales
                 order.
               </p><p>
                 OpenERP will help you efficiently handle the complete sales flow:
-                quotation, sale order, delivery, invoicing and payment.
+                quotation, sales order, delivery, invoicing and payment.
               </p>
             </field>
         </record>
@@ -379,12 +379,12 @@
                 Click to create a quotation, the first step of a new sale.
               </p><p>
                 OpenERP will help you handle efficiently the complete sale flow:
-                from the quotation to the sale order, the
+                from the quotation to the sales order, the
                 delivery, the invoicing and the payment collection.
               </p><p>
-                The social feature helps you organize discussions on each sale
+                The social feature helps you organize discussions on each sales
                 order, and allow your customers to keep track of the evolution
-                of the sale order.
+                of the sales order.
               </p>
             </field>
         </record>
@@ -468,7 +468,7 @@
             <field name="model">sale.order.line</field>
             <field name="arch" type="xml">
                 <search string="Search Sales Order">
-                    <filter icon="terp-dolar_ok!" string="To Invoice" domain="[('invoiced','&lt;&gt;', 1),('state','=','done')]"  help="Sale Order Lines ready to be invoiced"/>
+                    <filter icon="terp-dolar_ok!" string="To Invoice" domain="[('invoiced','&lt;&gt;', 1),('state','=','done')]"  help="Sales Order Lines ready to be invoiced"/>
                     <separator/>
                     <filter string="My Sales Order Lines" icon="terp-personnal" domain="[('salesman_id','=',uid)]" help="Sales Order Lines related to a Sales Order of mine"/>
                     <field name="order_id"/>
@@ -490,11 +490,11 @@
             <field name="model">sale.order.line</field>
             <field name="arch" type="xml">
                 <search string="Search Uninvoiced Lines">
-                    <filter icon="terp-gtk-go-back-rtl" string="To Do" domain="[('state','=','confirmed')]" name="sale order" help="Confirmed sale order lines, not yet delivered"/>
-                    <filter icon="terp-dialog-close" string="Done" domain="[('state','=','done')]" name="sale_order_done" help="Sale order lines done"/>
-                    <filter icon="terp-accessories-archiver" string="Shipped" domain="[('state','=','done')]" name="unshipped" help="Sale Order Lines that are in 'done' state"/>
+                    <filter icon="terp-gtk-go-back-rtl" string="To Do" domain="[('state','=','confirmed')]" name="sale order" help="Confirmed sales order lines, not yet delivered"/>
+                    <filter icon="terp-dialog-close" string="Done" domain="[('state','=','done')]" name="sale_order_done" help="Sales order lines done"/>
+                    <filter icon="terp-accessories-archiver" string="Shipped" domain="[('state','=','done')]" name="unshipped" help="Sales Order Lines that are in 'done' state"/>
                     <separator/>
-                    <filter icon="terp-dolar_ok!" string="Uninvoiced" name="uninvoiced" domain="[('invoiced','&lt;&gt;', 1),('state','&lt;&gt;','draft'),('state','&lt;&gt;','cancel')]" help="Sale Order Lines that are confirmed, done or in exception state and haven't yet been invoiced"/>
+                    <filter icon="terp-dolar_ok!" string="Uninvoiced" name="uninvoiced" domain="[('invoiced','&lt;&gt;', 1),('state','&lt;&gt;','draft'),('state','&lt;&gt;','cancel')]" help="Sales Order Lines that are confirmed, done or in exception state and haven't yet been invoiced"/>
                     <separator/>
                     <filter string="My Sales Order Lines" icon="terp-personal" domain="[('salesman_id','=',uid)]" help="My Sales Order Lines"/>
                     <field name="order_id"/>

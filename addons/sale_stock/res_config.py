@@ -29,7 +29,7 @@ class sale_configuration(osv.osv_memory):
     _columns = {
         'group_sale_delivery_address': fields.boolean("Allow a different address for delivery and invoicing ",
             implied_group='sale.group_delivery_invoice_address',
-            help="Allows you to specify different delivery and invoice addresses on a sale order."),
+            help="Allows you to specify different delivery and invoice addresses on a sales order."),
         'group_invoice_deli_orders': fields.boolean('Generate invoices after and based on delivery orders',
             implied_group='sale_stock.group_invoice_deli_orders',
             help="To allow your salesman to make invoices for Delivery Orders using the menu 'Deliveries to Invoice'."),
@@ -43,14 +43,14 @@ class sale_configuration(osv.osv_memory):
             'The default invoicing method is', default_model='sale.order',
             help="You can generate invoices based on sales orders or based on shippings."),
         'module_delivery': fields.boolean('Allow adding shipping costs',
-            help ="""Allows you to add delivery methods in sale orders and delivery orders.
+            help ="""Allows you to add delivery methods in sales orders and delivery orders.
                 You can define your own carrier and delivery grids for prices.
                 This installs the module delivery."""),
         'default_picking_policy' : fields.boolean("Deliver all at once when all products are available.",
             help = "Sales order by default will be configured to deliver all products at once instead of delivering each product when it is available. This may have an impact on the shipping price."),
         'group_mrp_properties': fields.boolean('Product properties on order lines',
             implied_group='sale.group_mrp_properties',
-            help="Allows you to tag sale order lines with properties."),
+            help="Allows you to tag sales order lines with properties."),
         'group_multiple_shops': fields.boolean("Manage multiple shops",
             implied_group='stock.group_locations',
             help="This allows to configure and use multiple shops."),

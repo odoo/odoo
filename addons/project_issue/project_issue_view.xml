@@ -200,6 +200,7 @@
                     <field name="user_email"/>
                     <field name="user_id"/>
                     <field name="date_deadline"/>
+                    <field name="kanban_state"/>
                     <templates>
                         <t t-name="kanban-tooltip">
                            <ul class="oe_kanban_tooltip">
@@ -227,6 +228,9 @@
                                         <field name="categ_ids"/>
                                         <div class="oe_right">
                                             <span class="oe_kanban_highlight" groups="base.group_user">
+                                                <a t-if="record.kanban_state.raw_value === 'normal'" type="object" string="In Progress" name="set_kanban_state_done" class="oe_kanban_status"> </a>
+                                                <a t-if="record.kanban_state.raw_value === 'done'" type="object" string="Ready for next stage" name="set_kanban_state_blocked" class="oe_kanban_status oe_kanban_status_green"> </a>
+                                                <a t-if="record.kanban_state.raw_value === 'blocked'" type="object" string="Blocked" name="set_kanban_state_normal" class="oe_kanban_status oe_kanban_status_red"> </a>
                                                 <t t-set="priority" t-value="record.priority.raw_value || 5"/>
                                                 <a type="object" name="set_priority" args="['3']" t-if="priority gt 3" title="Normal Priority">
                                                    <img src="/web/static/src/img/icons/star-off.png" width="16" height="16"/>
