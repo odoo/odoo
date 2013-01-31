@@ -41,7 +41,7 @@ class mail_mail(osv.Model):
         if partner:
             contex_signup = dict(context or {}, signup_valid=True)
             partner = partner_obj.browse(cr, SUPERUSER_ID, partner.id, context=contex_signup)
-            text = _("""<small>Access your messages and personal documents through <a href="%s">our Customer Portal</a></small>""") % partner.signup_url
+            text = _("""<small>Access your messages and documents through <a href="%s">our Customer Portal</a></small>""") % partner.signup_url
             # partner is an user: add a link to the document if read access
             if partner.user_ids and mail.model and mail.res_id \
                     and self.check_access_rights(cr, partner.user_ids[0].id, 'read', raise_exception=False):

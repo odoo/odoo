@@ -126,37 +126,13 @@ class mail_notification(osv.Model):
             else:
                 company = user.name
         
-        model_name = None
-        record_name = None
-        if res_model:
-            res_model_obj = self.pool.get('ir.model')
-            res_model_ids = res_model_obj.search(cr, uid, [('model', '=', res_model)], context=context)
-            model_name = res_model_obj.browse(cr, uid, res_model_ids, context=context)[0].name
-            if res_id:
-                record_obj = self.pool.get(res_model)
-                record = record_obj.browse(cr, uid, [res_id], context=context)[0]
-                record_name = record.name_get() and record.name_get()[0] and record.name_get()[0][1] or record.name
-
         if company:
-            if record_name:
-                signature_company = _("This message is written on the document '<b>%(record_name)s</b>' of '<b>%(model_name)s</b>' from %(company)s." % {
-                    'record_name': record_name, 
-                    'model_name': model_name, 
-                    'company': company
-                })
-            else:
-                signature_company = _("This message is written from %(company)s." % {
-                    'company': company
-                })
+            signature_company = _('Send by %(company)s using %(openerp)s.' % {
+                'company': company,
+                'openerp': "<a style='color:inherit' href='https://www.openerp.com/'>OpenERP</a>"
+            })
             footer = tools.append_content_to_html(footer, "<small>%s</small>" % signature_company, plaintext=False, container_tag='div')
-        else:
-            if record_name:
-                signature_company = _("This message is written on the document '<b>%(record_name)s</b>' of '<b>%(model_name)s</b>'." % {
-                    'record_name': record_name, 
-                    'model_name': model_name
-                })
-                footer = tools.append_content_to_html(footer, "<small>%s</small>" % signature_company, plaintext=False, container_tag='div')
-
+        
         return footer
 
     def _notify(self, cr, uid, msg_id, context=None):

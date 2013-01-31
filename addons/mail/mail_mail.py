@@ -150,7 +150,7 @@ class mail_mail(osv.Model):
             :param browse_record partner: specific recipient partner
         """
         if force or (not mail.subject and mail.model and mail.res_id):
-            return '%s posted on %s' % (mail.author_id.name, mail.record_name)
+            return 'Re: %s' % (mail.record_name)
         return mail.subject
 
     def send_get_mail_body(self, cr, uid, mail, partner=None, context=None):
@@ -178,7 +178,7 @@ class mail_mail(osv.Model):
                 }
                 url = urljoin(base_url, "?%s#%s" % (urlencode(query), urlencode(fragment)))
                 text = _("""<small>Access this document <a href="%s">directly in OpenERP</a></small>""") % url
-                body = tools.append_content_to_html(body, ("<div><p>%s</p></div>" % text), plaintext=False)
+                body = tools.append_content_to_html(body, ("<div><p>%s</p></div>" % text), plaintext=False, container_tag='div')
             except except_orm, e:
                 pass
         return body
