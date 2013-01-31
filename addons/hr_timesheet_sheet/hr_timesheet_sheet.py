@@ -93,8 +93,7 @@ class hr_timesheet_sheet(osv.osv):
             self.check_employee_attendance_state(cr, uid, sheet.id, context=context)
             di = sheet.user_id.company_id.timesheet_max_difference
             if (abs(sheet.total_difference) < di) or not di:
-                wf_service = netsvc.LocalService("workflow")
-                wf_service.trg_validate(uid, 'hr_timesheet_sheet.sheet', sheet.id, 'confirm', cr)
+                self.signal_confirm(cr, uid, [sheet.id])
             else:
                 raise osv.except_osv(_('Warning!'), _('Please verify that the total difference of the sheet is lower than %.2f.') %(di,))
         return True
@@ -192,9 +191,8 @@ class hr_timesheet_sheet(osv.osv):
 
     def action_set_to_draft(self, cr, uid, ids, *args):
         self.write(cr, uid, ids, {'state': 'draft'})
-        wf_service = netsvc.LocalService('workflow')
         for id in ids:
-            wf_service.trg_create(uid, self._name, id, cr)
+            self.create_workflow(cr, uid, [id])
         return True
 
     def name_get(self, cr, uid, ids, context=None):
