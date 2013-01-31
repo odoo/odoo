@@ -20,7 +20,6 @@
 ##############################################################################
 
 from openerp.osv import fields,osv
-from openerp import netsvc
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
 from openerp.tools.translate import _
@@ -314,9 +313,7 @@ class mrp_repair(osv.osv):
         for repair in self.browse(cr, uid, ids):
             mrp_line_obj.write(cr, uid, [l.id for l in repair.operations], {'state': 'draft'})
         self.write(cr, uid, ids, {'state':'draft'})
-        wf_service = netsvc.LocalService("workflow")
-        for id in ids:
-            wf_service.trg_create(uid, 'mrp.repair', id, cr)
+        self.create_workflow(cr, uid, ids)        
         return True
 
     def action_confirm(self, cr, uid, ids, *args):
@@ -505,7 +502,6 @@ class mrp_repair(osv.osv):
         """
         res = {}
         move_obj = self.pool.get('stock.move')
-        wf_service = netsvc.LocalService("workflow")
         repair_line_obj = self.pool.get('mrp.repair.line')
         seq_obj = self.pool.get('ir.sequence')
         pick_obj = self.pool.get('stock.picking')
@@ -548,7 +544,7 @@ class mrp_repair(osv.osv):
                     'tracking_id': False,
                     'state': 'assigned',
                 })
-                wf_service.trg_validate(uid, 'stock.picking', picking, 'button_confirm', cr)
+                self.registry.signal_button_confirm(cr, uid, [picking])
                 self.write(cr, uid, [repair.id], {'state': 'done', 'picking_id': picking})
                 res[repair.id] = picking
             else:
