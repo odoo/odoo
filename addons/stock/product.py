@@ -235,10 +235,10 @@ class product_product(osv.osv):
         else:
             location_ids = []
             wids = warehouse_obj.search(cr, uid, [], context=context)
-            if not wids:
-                return res
             for w in warehouse_obj.browse(cr, uid, wids, context=context):
                 location_ids.append(w.lot_stock_id.id)
+            else:
+                return res
 
         # build the list of ids of children of the location given by id
         if context.get('compute_child',True):
