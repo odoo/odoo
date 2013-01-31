@@ -7,14 +7,14 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2012-10-23 11:49+0000\n"
-"PO-Revision-Date: 2012-05-25 17:54+0000\n"
+"PO-Revision-Date: 2013-01-04 07:13+0000\n"
 "Last-Translator: Fekete Mihai <mihai@erpsystems.ro>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-10-24 05:51+0000\n"
-"X-Generator: Launchpad (build 16179)\n"
+"X-Launchpad-Export-Date: 2013-01-05 05:20+0000\n"
+"X-Generator: Launchpad (build 16393)\n"
 
 #. module: hr_holidays
 #: selection:hr.holidays.status,color_name:0
@@ -28,7 +28,6 @@ msgstr "Tipul alocarii"
 
 #. module: hr_holidays
 #: selection:hr.employee,current_leave_state:0
-#: selection:hr.holidays,state:0
 msgid "Waiting Second Approval"
 msgstr "Se asteapta a doua aprobare"
 
@@ -48,7 +47,7 @@ msgid "Group By..."
 msgstr "Grupati dupa..."
 
 #. module: hr_holidays
-#: view:hr.holidays:0
+#: field:hr.holidays,holiday_type:0
 msgid "Allocation Mode"
 msgstr "Mod Alocare"
 
@@ -66,6 +65,7 @@ msgstr "Aprobare cereri"
 #. module: hr_holidays
 #: selection:hr.employee,current_leave_state:0
 #: selection:hr.holidays,state:0
+#: model:mail.message.subtype,name:hr_holidays.mt_holidays_refused
 msgid "Refused"
 msgstr "Respins"
 
@@ -92,7 +92,7 @@ msgstr "Zile ramase"
 #. module: hr_holidays
 #: xsl:holidays.summary:0
 msgid "of the"
-msgstr ""
+msgstr "ale"
 
 #. module: hr_holidays
 #: xsl:holidays.summary:0
@@ -121,7 +121,7 @@ msgstr "Setati ca ciorna"
 #. module: hr_holidays
 #: xsl:holidays.summary:0
 msgid "to"
-msgstr ""
+msgstr "la"
 
 #. module: hr_holidays
 #: selection:hr.holidays.status,color_name:0
@@ -159,8 +159,10 @@ msgstr "Rezumat Concedii"
 
 #. module: hr_holidays
 #: selection:hr.employee,current_leave_state:0
-#: view:hr.holidays:0
 #: selection:hr.holidays,state:0
+#: selection:hr.holidays.summary.dept,holiday_type:0
+#: selection:hr.holidays.summary.employee,holiday_type:0
+#: model:mail.message.subtype,name:hr_holidays.mt_holidays_approved
 msgid "Approved"
 msgstr "Aprobat(e)"
 
@@ -191,12 +193,11 @@ msgstr ""
 #: code:addons/hr_holidays/report/holidays_summary_report.py:120
 #, python-format
 msgid "Confirmed and Validated"
-msgstr ""
+msgstr "Confirmata si validata"
 
 #. module: hr_holidays
-#: view:board.board:0
+#: view:hr.employee:0
 #: model:ir.actions.act_window,name:hr_holidays.act_hr_employee_holiday_request
-#: model:ir.ui.menu,name:hr_holidays.menu_hr_reporting_holidays
 #: model:ir.ui.menu,name:hr_holidays.menu_open_ask_holidays
 msgid "Leaves"
 msgstr "Concedii"
@@ -204,7 +205,7 @@ msgstr "Concedii"
 #. module: hr_holidays
 #: xsl:holidays.summary:0
 msgid "Analyze from"
-msgstr ""
+msgstr "Analiza de la"
 
 #. module: hr_holidays
 #: model:ir.ui.menu,name:hr_holidays.menu_request_approve_holidays
@@ -212,6 +213,8 @@ msgid "Leave Requests to Approve"
 msgstr "Cerere de concediu pentru Aprobare"
 
 #. module: hr_holidays
+#: view:hr.holidays.summary.dept:0
+#: model:ir.actions.act_window,name:hr_holidays.action_hr_holidays_summary_dept
 #: model:ir.ui.menu,name:hr_holidays.menu_account_central_journal
 msgid "Leaves by Department"
 msgstr "Concedii dupa Departament"
@@ -271,20 +274,23 @@ msgstr ""
 "concediul"
 
 #. module: hr_holidays
+#: xsl:holidays.summary:0
 #: field:hr.holidays,holiday_status_id:0
 #: field:hr.holidays.remaining.leaves.user,leave_type:0
 #: view:hr.holidays.status:0
 #: field:hr.holidays.status,name:0
 #: field:hr.holidays.summary.dept,holiday_type:0
-#: model:ir.actions.act_window,name:hr_holidays.open_view_holiday_status
 #: model:ir.model,name:hr_holidays.model_hr_holidays_status
-#: model:ir.ui.menu,name:hr_holidays.menu_open_view_holiday_status
 msgid "Leave Type"
 msgstr "Tipul concediului"
 
 #. module: hr_holidays
-#: code:addons/hr_holidays/hr_holidays.py:199
-#: code:addons/hr_holidays/hr_holidays.py:344
+#: code:addons/hr_holidays/hr_holidays.py:238
+#: code:addons/hr_holidays/hr_holidays.py:249
+#: code:addons/hr_holidays/hr_holidays.py:274
+#: code:addons/hr_holidays/hr_holidays.py:291
+#: code:addons/hr_holidays/hr_holidays.py:414
+#: code:addons/hr_holidays/hr_holidays.py:464
 #, python-format
 msgid "Warning!"
 msgstr "Avertizare!"
@@ -302,10 +308,8 @@ msgstr ""
 "Trebuie sa selectati cel putin un departament.Apoi incercati din nou."
 
 #. module: hr_holidays
-#: code:addons/hr_holidays/report/holidays_summary_report.py:114
 #: selection:hr.holidays.summary.dept,holiday_type:0
 #: selection:hr.holidays.summary.employee,holiday_type:0
-#, python-format
 msgid "Confirmed"
 msgstr "Confirmat(a)"
 
@@ -321,7 +325,7 @@ msgid "Confirm"
 msgstr "Confirmati"
 
 #. module: hr_holidays
-#: code:addons/hr_holidays/hr_holidays.py:384
+#: code:addons/hr_holidays/hr_holidays.py:471
 #, python-format
 msgid "Leave Request for %s"
 msgstr "Cerere de concediu pentru %s"
@@ -329,7 +333,7 @@ msgstr "Cerere de concediu pentru %s"
 #. module: hr_holidays
 #: xsl:holidays.summary:0
 msgid "Sum"
-msgstr ""
+msgstr "Sumă"
 
 #. module: hr_holidays
 #: field:hr.holidays.status,remaining_leaves:0
@@ -358,7 +362,6 @@ msgstr "Angajat"
 
 #. module: hr_holidays
 #: selection:hr.employee,current_leave_state:0
-#: selection:hr.holidays,state:0
 msgid "New"
 msgstr "Nou(a)"
 
@@ -395,7 +398,7 @@ msgstr ""
 "sfarsit a concediului."
 
 #. module: hr_holidays
-#: code:addons/hr_holidays/hr_holidays.py:382
+#: code:addons/hr_holidays/hr_holidays.py:469
 #, python-format
 msgid "Allocation for %s"
 msgstr "Alocare pentru %s"
@@ -403,12 +406,11 @@ msgstr "Alocare pentru %s"
 #. module: hr_holidays
 #: view:hr.holidays:0
 #: field:hr.holidays,number_of_days:0
-#: field:hr.holidays,number_of_days_temp:0
 msgid "Number of Days"
 msgstr "Numar de zile"
 
 #. module: hr_holidays
-#: code:addons/hr_holidays/hr_holidays.py:377
+#: code:addons/hr_holidays/hr_holidays.py:464
 #, python-format
 msgid ""
 "The feature behind the field 'Remaining Legal Leaves' can only be used when "
@@ -469,7 +471,6 @@ msgstr ""
 
 #. module: hr_holidays
 #: selection:hr.employee,current_leave_state:0
-#: selection:hr.holidays,state:0
 msgid "Waiting Approval"
 msgstr "Asteapta aprobare"
 
@@ -504,7 +505,6 @@ msgstr "Lavanda"
 
 #. module: hr_holidays
 #: xsl:holidays.summary:0
-#: view:hr.holidays:0
 msgid "Month"
 msgstr "Luna"
 
@@ -528,7 +528,6 @@ msgstr "Concediile Angajatului"
 
 #. module: hr_holidays
 #: view:hr.holidays:0
-#: field:hr.holidays,category_id:0
 msgid "Category"
 msgstr "Categorie"
 
@@ -573,8 +572,7 @@ msgid "Holiday"
 msgstr "Concediu"
 
 #. module: hr_holidays
-#: field:hr.holidays,case_id:0
-#: field:hr.holidays.status,categ_id:0
+#: field:hr.holidays,meeting_id:0
 msgid "Meeting"
 msgstr "Intalnire"
 
@@ -597,7 +595,7 @@ msgstr "Concedii luate deja"
 #. module: hr_holidays
 #: xsl:holidays.summary:0
 msgid "holidays."
-msgstr ""
+msgstr "concedii."
 
 #. module: hr_holidays
 #: field:hr.holidays,user_id:0
@@ -642,8 +640,12 @@ msgid "Unpaid"
 msgstr "Neplatit"
 
 #. module: hr_holidays
+#: xsl:holidays.summary:0
 #: view:hr.holidays:0
+#: view:hr.holidays.summary.employee:0
+#: model:ir.actions.act_window,name:hr_holidays.action_hr_holidays_summary_employee
 #: model:ir.actions.act_window,name:hr_holidays.open_company_allocation
+#: model:ir.actions.report.xml,name:hr_holidays.report_holidays_summary
 #: model:ir.ui.menu,name:hr_holidays.menu_open_company_allocation
 msgid "Leaves Summary"
 msgstr "Rezumat concedii"
@@ -735,11 +737,7 @@ msgstr ""
 "Rapoarte\\Concedii dupa Departament"
 
 #. module: hr_holidays
-#: code:addons/hr_holidays/report/holidays_summary_report.py:117
 #: view:hr.holidays:0
-#: selection:hr.holidays.summary.dept,holiday_type:0
-#: selection:hr.holidays.summary.employee,holiday_type:0
-#, python-format
 msgid "Validated"
 msgstr "Validat(a)"
 
@@ -763,7 +761,7 @@ msgstr "Aplicati Validarea Dubla"
 #. module: hr_holidays
 #: xsl:holidays.summary:0
 msgid "Holiday Type"
-msgstr ""
+msgstr "Tip concediu"
 
 #. module: hr_holidays
 #: view:hr.holidays.summary.dept:0
@@ -777,6 +775,7 @@ msgid "Details"
 msgstr "Detalii"
 
 #. module: hr_holidays
+#: view:board.board:0
 #: view:hr.holidays:0
 #: model:ir.actions.act_window,name:hr_holidays.action_hr_holidays_leaves_by_month
 msgid "My Leaves"
@@ -788,12 +787,16 @@ msgid "By Employee Category"
 msgstr "Dupa Categoria Angajatului"
 
 #. module: hr_holidays
+#: code:addons/hr_holidays/hr_holidays.py:336
 #: view:hr.holidays:0
 #: selection:hr.holidays,type:0
+#: field:resource.calendar.leaves,holiday_id:0
+#, python-format
 msgid "Leave Request"
 msgstr "Cerere de concediu"
 
 #. module: hr_holidays
+#: view:hr.holidays:0
 #: field:hr.holidays,name:0
 msgid "Description"
 msgstr "Descriere"
@@ -824,7 +827,6 @@ msgid "You cannot delete a leave which is not in draft state !"
 msgstr "Nu puteti sterge un concediu care nu se afla in starea ciorna !"
 
 #. module: hr_holidays
-#: view:hr.holidays:0
 #: field:hr.holidays,notes:0
 msgid "Reasons"
 msgstr "Motive"
@@ -846,6 +848,7 @@ msgstr "Departament(e)"
 
 #. module: hr_holidays
 #: field:hr.holidays,manager_id2:0
+#: selection:hr.holidays,state:0
 msgid "Second Approval"
 msgstr "A doua aprobare"
 
@@ -942,7 +945,7 @@ msgstr "Cereri de alocare"
 #. module: hr_holidays
 #: xsl:holidays.summary:0
 msgid "Color"
-msgstr ""
+msgstr "Culoare"
 
 #. module: hr_holidays
 #: selection:hr.holidays.status,color_name:0
@@ -966,5 +969,7 @@ msgstr "An"
 
 #. module: hr_holidays
 #: view:hr.holidays:0
+#: selection:hr.holidays,state:0
+#: model:mail.message.subtype,name:hr_holidays.mt_holidays_confirmed
 msgid "To Approve"
 msgstr "De aprobat"
