@@ -71,9 +71,12 @@ Main Features
     'installable': True,
     'application': True,
     'images': [
-        'images/customer_history.jpeg',
+        'images/inbox.jpeg',
         'images/messages_form.jpeg',
         'images/messages_list.jpeg',
+        'images/email.jpeg',
+        'images/join_a_group.jpeg',
+        'images/share_a_message.jpeg',
         'static/src/img/email_icong.png',
         'static/src/img/_al.png',
         'static/src/img/_pincky.png',
