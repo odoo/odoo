@@ -20,7 +20,6 @@
 ##############################################################################
 
 from openerp.osv import fields, osv
-from openerp.osv.osv import object_proxy
 import openerp.service.model
 from openerp.tools.translate import _
 from openerp import pooler
