@@ -750,6 +750,8 @@ class crm_lead(base_stage, format_address, osv.osv):
             partner_id = self._lead_create_contact(cr, uid, lead, lead.contact_name, False, context=context)
         elif lead.email_from:
             contact_name, contact_email = self.pool.get('res.partner')._parse_partner_name(lead.email_from, context=context)
+            if not contact_name and contact_email:
+                contact_name = contact_email
             partner_id = self._lead_create_contact(cr, uid, lead, contact_name, False, context=context)
         else:
             partner_id = self._lead_create_contact(cr, uid, lead, lead.name, False, context=context)
