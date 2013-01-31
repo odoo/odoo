@@ -246,6 +246,9 @@ class res_users(osv.Model):
         partner_ids = [user.partner_id.id for user in self.browse(cr, uid, ids, context)]
         res_partner.signup_prepare(cr, uid, partner_ids, signup_type="reset", expiration=now(days=+1), context=context)
 
+        if not context:
+            context = {}
+
         # send email to users with their signup url
         template = False
         if context.get('create_user'):
