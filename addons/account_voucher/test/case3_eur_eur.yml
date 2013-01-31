@@ -141,10 +141,8 @@
   I confirm the voucher
 -
   !python {model: account.voucher}: |
-    import netsvc
     voucher = self.search(cr, uid, [('name', '=', 'First payment: Case 3'),('partner_id', '=', ref('base.res_partner_19'))])
-    wf_service = netsvc.LocalService("workflow")
-    wf_service.trg_validate(uid, 'account.voucher', voucher[0], 'proforma_voucher', cr)
+    self.signal_proforma_voucher(cr, uid, voucher)
 -
   I check that the move of my first voucher is valid
 -
@@ -231,10 +229,8 @@
   I confirm the voucher
 -
   !python {model: account.voucher}: |
-    import netsvc
     voucher = self.search(cr, uid, [('name', '=', 'Second payment: Case 3'), ('partner_id', '=', ref('base.res_partner_19'))])
-    wf_service = netsvc.LocalService("workflow")
-    wf_service.trg_validate(uid, 'account.voucher', voucher[0], 'proforma_voucher', cr)
+    self.signal_proforma_voucher(cr, uid, voucher)
 -
   I check that the move of my second voucher is valid
 -

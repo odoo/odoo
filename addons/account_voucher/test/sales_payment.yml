@@ -61,8 +61,7 @@
     id = self.create(cr, uid, vals)
     voucher_id = self.browse(cr, uid, id)
     assert (voucher_id.state=='draft'), "Voucher is not in draft state"
-    wf_service = netsvc.LocalService("workflow")
-    wf_service.trg_validate(uid, 'account.voucher', voucher_id.id, 'proforma_voucher', cr)
+    self.signal_proforma_voucher(cr, uid, [voucher_id.id])
 
 -
   Finally i will Confirm the state of the invoice is paid

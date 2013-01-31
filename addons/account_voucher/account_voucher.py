@@ -820,10 +820,7 @@ class account_voucher(osv.osv):
         return vals
 
     def button_proforma_voucher(self, cr, uid, ids, context=None):
-        context = context or {}
-        wf_service = netsvc.LocalService("workflow")
-        for vid in ids:
-            wf_service.trg_validate(uid, 'account.voucher', vid, 'proforma_voucher', cr)
+        self.signal_proforma_voucher(cr, uid, ids)
         return {'type': 'ir.actions.act_window_close'}
 
     def proforma_voucher(self, cr, uid, ids, context=None):
@@ -1506,7 +1503,6 @@ class account_bank_statement(osv.osv):
 
     def create_move_from_st_line(self, cr, uid, st_line_id, company_currency_id, next_number, context=None):
         voucher_obj = self.pool.get('account.voucher')
-        wf_service = netsvc.LocalService("workflow")
         move_line_obj = self.pool.get('account.move.line')
         bank_st_line_obj = self.pool.get('account.bank.statement.line')
         st_line = bank_st_line_obj.browse(cr, uid, st_line_id, context=context)
@@ -1514,7 +1510,7 @@ class account_bank_statement(osv.osv):
             voucher_obj.write(cr, uid, [st_line.voucher_id.id], {'number': next_number}, context=context)
             if st_line.voucher_id.state == 'cancel':
                 voucher_obj.action_cancel_draft(cr, uid, [st_line.voucher_id.id], context=context)
-            wf_service.trg_validate(uid, 'account.voucher', st_line.voucher_id.id, 'proforma_voucher', cr)
+            voucher_obj.signal_proforma_voucher(cr, uid, [st_line.voucher_id.id])
 
             v = voucher_obj.browse(cr, uid, st_line.voucher_id.id, context=context)
             bank_st_line_obj.write(cr, uid, [st_line_id], {

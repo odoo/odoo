@@ -135,9 +135,8 @@ class payment_order(osv.osv):
         return True
 
     def set_done(self, cr, uid, ids, *args):
-        wf_service = netsvc.LocalService("workflow")
         self.write(cr, uid, ids, {'date_done': time.strftime('%Y-%m-%d')})
-        wf_service.trg_validate(uid, 'payment.order', ids[0], 'done', cr)
+        self.signal_done(cr, uid, [ids[0]])
         return True
 
     def copy(self, cr, uid, id, default=None, context=None):
