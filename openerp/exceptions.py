@@ -30,6 +30,19 @@ treated as a 'Server error'.
 class Warning(Exception):
     pass
 
+class RedirectWarning(Exception):
+    """ Warning with a possibility to redirect the user instead of simply
+    discarding the warning message.
+    """
+    def __init__(self, msg, action_id, button_text):
+        """
+        :param int action_id: id of the action required to perform the
+        redirection
+        :param string button_text: text to put on the button which will trigger
+        the redirection
+        """
+        super(RedirectWarning, self).__init__(msg, action_id, button_text)
+
 class AccessDenied(Exception):
     """ Login/password error. No message, no traceback. """
     def __init__(self):
