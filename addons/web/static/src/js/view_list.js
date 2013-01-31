@@ -587,8 +587,10 @@ instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListVi
      * @param {Array} ids the ids of the records to delete
      */
     do_delete: function (ids) {
-        if (!(ids.length && confirm(_t("Do you really want to remove these records?")))) {
-            return;
+        if (!this.m2m_field){
+            if (!(ids.length && confirm(_t("Are you sure?"))) && (this.m2m_field)) {
+                return;
+            }
         }
         var self = this;
         return $.when(this.dataset.unlink(ids)).done(function () {
