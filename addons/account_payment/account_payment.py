@@ -23,7 +23,6 @@ import logging
 import time
 
 from openerp.osv import fields, osv
-from openerp import netsvc
 
 _logger = logging.getLogger(__name__)
 
@@ -120,9 +119,7 @@ class payment_order(osv.osv):
 
     def set_to_draft(self, cr, uid, ids, *args):
         self.write(cr, uid, ids, {'state': 'draft'})
-        wf_service = netsvc.LocalService("workflow")
-        for id in ids:
-            wf_service.trg_create(uid, 'payment.order', id, cr)
+        self.create_workflow(cr, uid, ids)
         return True
 
     def action_open(self, cr, uid, ids, *args):
