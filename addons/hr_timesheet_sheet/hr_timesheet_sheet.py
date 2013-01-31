@@ -25,7 +25,6 @@ from dateutil.relativedelta import relativedelta
 
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
-from openerp import netsvc
 
 class hr_timesheet_sheet(osv.osv):
     _name = "hr_timesheet_sheet.sheet"
