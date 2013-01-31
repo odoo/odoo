@@ -104,10 +104,8 @@
   I want to check cancel button. So I first cancel the sheet then make it set to draft.
 -
   !python {model: hr.payslip}: |
-    import netsvc
-    wf_service = netsvc.LocalService("workflow")
     self.cancel_sheet(cr, uid, [ref("hr_payslip_0")], None)
-    wf_service.trg_validate(uid, 'hr.payslip', ref("hr_payslip_0"), 'draft', cr)
+    self.signal_draft(cr, uid, [ref("hr_payslip_0")])
 -
   Then I click on the "Confirm" button.
 -
