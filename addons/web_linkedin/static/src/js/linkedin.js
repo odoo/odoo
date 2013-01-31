@@ -174,9 +174,7 @@ openerp.web_linkedin = function(instance) {
                 var values = self.view.get_fields_values();
                 _.each(to_change, function (value, key) {
                     if (!/linkedin/.test(key) && !!values[key]) {
-                        if(_.isArray(values[key])) {
-
-                        } else {
+                        if(!_.isArray(values[key])) {
                             delete to_change[key];
                         }
                     }
