@@ -105,7 +105,7 @@ openerp.mail = function (session) {
         // As it only looks at the extension it is quite approximative. 
         filetype: function(url){
             url = url.filename || url;
-            var tokens = url.split('.');
+            var tokens = (url+'').split('.');
             if(tokens.length <= 1){
                 return 'unknown';
             }
@@ -271,7 +271,7 @@ openerp.mail = function (session) {
                 var attach = this.attachment_ids[l];
                 if (!attach.formating) {
                     attach.url = mail.ChatterUtils.get_attachment_url(this.session, this.id, attach.id);
-                    attach.filetype = mail.ChatterUtils.filetype(attach.filename);
+                    attach.filetype = mail.ChatterUtils.filetype(attach.filename || attach.name);
                     attach.name = mail.ChatterUtils.breakword(attach.name || attach.filename);
                     attach.formating = true;
                 }
