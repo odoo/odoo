@@ -63,8 +63,8 @@ instance.edi.EdiImport = instance.web.Widget.extend({
     on_imported_error: function(response){
         var self = this;
         var msg = _t("Sorry, the document could not be imported.");
-        if (response.data.fault_code) {
-            msg += "\n " + _t("Reason:") + response.data.fault_code;
+        if (response.data.message) {
+            msg += "\n " + _t("Reason:") + response.data.message;
         }
         var params = {error: response, message: msg};
         $(instance.web.qweb.render("CrashManager.warning", params)).dialog({
