@@ -34,6 +34,7 @@ import errno
 import logging
 import os
 import signal
+import socket
 import sys
 import threading
 import traceback
@@ -373,6 +374,8 @@ def parse_http_response(s):
 
 # WSGI handlers registered through the register_wsgi_handler() function below.
 module_handlers = []
+# RPC endpoints registered through the register_rpc_endpoint() function below.
+rpc_handlers = {}
 
 def register_wsgi_handler(handler):
     """ Register a WSGI handler.
@@ -381,6 +384,11 @@ def register_wsgi_handler(handler):
     register a handler for specific routes later.
     """
     module_handlers.append(handler)
+
+def register_rpc_endpoint(endpoint, handler):
+    """ Register a handler for a given RPC enpoint.
+    """
+    rpc_handlers[endpoint] = handler
 
 def application_unproxied(environ, start_response):
     """ WSGI entry point."""

@@ -133,6 +133,7 @@ class RpcCase(unittest2.TestCase):
         self.proxy.common_60 = xmlrpclib.ServerProxy(url_60 + 'common')
         self.proxy.db_60 = xmlrpclib.ServerProxy(url_60 + 'db')
         self.proxy.object_60 = xmlrpclib.ServerProxy(url_60 + 'object')
+        #self.proxy.edi_60 = xmlrpclib.ServerProxy(url_60 + 'edi')
 
         # Use the new (6.1) API.
         self.proxy.url_61 = url_61 = 'http://%s:%d/openerp/xmlrpc/1/' % (HOST, PORT)

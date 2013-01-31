@@ -150,4 +150,22 @@ def restart_server():
             openerp.phoenix = True
             os.kill(os.getpid(), signal.SIGINT)
 
+def handler():
+    """TODO"""
+    def decorator(f):
+        wsgi_server.register_wsgi_handler(f)
+    return decorator
+
+def route(url):
+    """TODO"""
+    def decorator(f):
+        pass # TODO Same as handler() but register the handler under a specific url.
+    return decorator
+
+def rpc(endpoint):
+    """TODO"""
+    def decorator(f):
+        wsgi_server.register_rpc_endpoint(endpoint, f)
+    return decorator
+
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

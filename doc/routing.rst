@@ -1,0 +1,18 @@
+.. _routing:
+
+Routing
+=======
+
+The OpenERP framework, as an HTTP server, serves a few hard-coded URLs
+(``models``, ``db``, ...) to expose RPC endpoints. When running the web addons
+(which is almost always the case), it also serves URLs without them being RPC
+endpoints.
+
+In older version of OpenERP, adding RPC endpoints was done by subclassing the
+``openerp.netsvc.ExportService`` class. Adding WSGI handlers was done by
+registering them with the ``openerp.wsgi.register_wsgi_handler()`` function.
+
+Starting with OpenERP 7.1, exposing a new arbitrary WSGI handler is done with
+the ``openerp.service.handler`` decorator while adding an RPC endpoint is done
+with the ``openerp.service.rpc`` decorator.
+

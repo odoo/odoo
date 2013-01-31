@@ -35,6 +35,7 @@ OpenERP Server API
    :maxdepth: 1
 
    api_models.rst
+   routing.rst
 
 Concepts
 ''''''''

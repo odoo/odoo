@@ -29,7 +29,6 @@ import logging.handlers
 import os
 import platform
 import release
-import socket
 import sys
 import threading
 import time
@@ -242,16 +241,17 @@ def dispatch_rpc(service_name, method, params):
 
         threading.current_thread().uid = None
         threading.current_thread().dbname = None
-        service = None
-        if service_name == 'object':
-            service = openerp.service.model
-        if service_name == 'db':
-            service = openerp.service.db
         if service_name == 'common':
-            service = openerp.service.common
-        if service_name == 'report':
-            service = openerp.service.report
-        result = service.dispatch(method, params)
+            dispatch = openerp.service.common.dispatch
+        elif service_name == 'db':
+            dispatch = openerp.service.db.dispatch
+        elif service_name == 'object':
+            dispatch = openerp.service.model.dispatch
+        elif service_name == 'report':
+            dispatch = openerp.service.report.dispatch
+        else:
+            dispatch = openerp.service.wsgi_server.rpc_handlers.get(service_name)
+        result = dispatch(method, params)
 
         if rpc_request_flag or rpc_response_flag:
             end_time = time.time()
