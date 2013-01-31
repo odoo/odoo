@@ -40,7 +40,7 @@
         <td>
             <p>
                 <t t-js="d">
-                    var message = d.message ? d.message : d.error.data.fault_code;
+                    var message = d.message ? d.message : d.error.data.message;
                     d.html_error = context.engine.tools.html_escape(message)
                         .replace(/\n/g, '<br/>');
                 </t>
@@ -1413,8 +1413,6 @@
     <t t-jquery="thead.ui-widget-header > tr:first">
         this.removeAttr('t-if');
     </t>
-
-    <t t-jquery="tfoot &gt; tr:last-child" t-operation="replace"/>
 
     <t t-jquery="td.oe-actions">
         this.removeAttr('t-if');

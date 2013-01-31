@@ -689,15 +689,14 @@ openerp.web.pyeval = function (instance) {
     };
 
     instance.web.pyeval.context = function () {
-        return {
-            uid: py.float.fromJSON(instance.session.uid),
+        return _.extend({
             datetime: datetime,
             context_today: context_today,
             time: time,
             relativedelta: relativedelta,
             current_date: py.PY_call(
                 time.strftime, [py.str.fromJSON('%Y-%m-%d')]),
-        };
+        }, instance.session.user_context);
     };
 
     /**
