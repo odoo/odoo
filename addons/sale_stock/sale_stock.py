@@ -194,7 +194,6 @@ class sale_order(osv.osv):
         return res
 
     def action_cancel(self, cr, uid, ids, context=None):
-        wf_service = netsvc.LocalService("workflow")
         if context is None:
             context = {}
         sale_order_line_obj = self.pool.get('sale.order.line')
@@ -209,11 +208,9 @@ class sale_order(osv.osv):
                     for mov in pick.move_lines:
                         proc_ids = proc_obj.search(cr, uid, [('move_id', '=', mov.id)])
                         if proc_ids:
-                            for proc in proc_ids:
-                                wf_service.trg_validate(uid, 'procurement.order', proc, 'button_check', cr)
+                            self.pool.get('procurement.order').signal_button_check(cr, uid, proc_ids)
             for r in self.read(cr, uid, ids, ['picking_ids']):
-                for pick in r['picking_ids']:
-                    wf_service.trg_validate(uid, 'stock.picking', pick, 'button_cancel', cr)
+                self.pool.get('stock.picking').signal_button_cancel(cr, uid, r['picking_ids'])
         return super(sale_order, self).action_cancel(cr, uid, ids, context=context)
 
     def action_wait(self, cr, uid, ids, context=None):
@@ -396,11 +393,9 @@ class sale_order(osv.osv):
                 line.write({'procurement_id': proc_id})
                 self.ship_recreate(cr, uid, order, line, move_id, proc_id)
 
-        wf_service = netsvc.LocalService("workflow")
         if picking_id:
-            wf_service.trg_validate(uid, 'stock.picking', picking_id, 'button_confirm', cr)
-        for proc_id in proc_ids:
-            wf_service.trg_validate(uid, 'procurement.order', proc_id, 'button_confirm', cr)
+            self.pool.get('stock.picking').signal_button_confirm(cr, uid, [picking_id])
+        self.pool.get('procurement.order').signal_button_confirm(cr, uid, proc_ids)
 
         val = {}
         if order.state == 'shipping_except':
