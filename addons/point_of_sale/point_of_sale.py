@@ -51,7 +51,7 @@ class pos_config(osv.osv):
         'journal_ids' : fields.many2many('account.journal', 'pos_config_journal_rel', 
              'pos_config_id', 'journal_id', 'Available Payment Methods',
              domain="[('journal_user', '=', True )]",),
-        'warehouse_id' : fields.many2one('stock.warehouse', 'Location',
+        'warehouse_id' : fields.many2one('stock.warehouse', 'Warehouse',
              required=True),
         'journal_id' : fields.many2one('account.journal', 'Sale Journal',
              domain=[('type', '=', 'sale')],
@@ -575,7 +575,7 @@ class pos_order(osv.osv):
     _columns = {
         'name': fields.char('Order Ref', size=64, required=True, readonly=True),
         'company_id':fields.many2one('res.company', 'Company', required=True, readonly=True),
-        'warehouse_id': fields.related('session_id', 'config_id', 'warehouse_id', relation='stock.warehouse', type='many2one', string='Location', store=True, readonly=True),
+        'warehouse_id': fields.related('session_id', 'config_id', 'warehouse_id', relation='stock.warehouse', type='many2one', string='Warehouse', store=True, readonly=True),
         'date_order': fields.datetime('Order Date', readonly=True, select=True),
         'user_id': fields.many2one('res.users', 'Salesman', help="Person who uses the the cash register. It can be a reliever, a student or an interim employee."),
         'amount_tax': fields.function(_amount_all, string='Taxes', digits_compute=dp.get_precision('Point Of Sale'), multi='all'),

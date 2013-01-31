@@ -139,7 +139,7 @@ class sale_order(osv.osv):
         'picking_ids': fields.one2many('stock.picking.out', 'sale_id', 'Related Picking', readonly=True, help="This is a list of delivery orders that has been generated for this sales order."),
         'shipped': fields.boolean('Delivered', readonly=True, help="It indicates that the sales order has been delivered. This field is updated only after the scheduler(s) have been launched."),
         'picked_rate': fields.function(_picked_rate, string='Picked', type='float'),
-        'warehouse_id': fields.many2one('stock.warehouse', 'Location'),
+        'warehouse_id': fields.many2one('stock.warehouse', 'Warehouse'),
         'invoice_quantity': fields.selection([('order', 'Ordered Quantities'), ('procurement', 'Shipped Quantities')], 'Invoice on', 
                                              help="The sales order will automatically create the invoice proposition (draft invoice).\
                                               You have to choose  if you want your invoice based on ordered ", required=True, readonly=True, states={'draft': [('readonly', False)]}),
@@ -162,6 +162,14 @@ class sale_order(osv.osv):
                 raise osv.except_osv(_('Invalid Action!'), _('In order to delete a confirmed sales order, you must cancel it.\nTo do so, you must first cancel related picking for delivery orders.'))
 
         return osv.osv.unlink(self, cr, uid, unlink_ids, context=context)
+    
+    def onchange_warehouse_id(self, cr, uid, ids, warehouse_id, context=None):
+        val = {}
+        if warehouse_id:
+            warehouse = self.pool.get('stock.warehouse').browse(cr, uid, warehouse_id, context=context)
+            if warehouse.company_id.id:
+                val['company_id'] = warehouse.company_id.id
+        return {'value': val}
 
     def action_view_delivery(self, cr, uid, ids, context=None):
         '''

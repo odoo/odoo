@@ -41,7 +41,7 @@ class pos_order_report(osv.osv):
         'price_total':fields.float('Total Price', readonly=True),
         'total_discount':fields.float('Total Discount', readonly=True),
         'average_price': fields.float('Average Price', readonly=True,group_operator="avg"),
-        'warehouse_id':fields.many2one('stock.warehouse', 'Location', readonly=True),
+        'warehouse_id':fields.many2one('stock.warehouse', 'Warehouse', readonly=True),
         'company_id':fields.many2one('res.company', 'Company', readonly=True),
         'nbr':fields.integer('# of Lines', readonly=True),
         'product_qty':fields.integer('# of Qty', readonly=True),
