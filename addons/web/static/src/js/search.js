@@ -1598,7 +1598,7 @@ instance.web.search.CustomFilters = instance.web.search.Input.extend({
                 get_groupby: function () { return [filter.context]; },
                 get_domain: function () { return filter.domain; }
             },
-            id: filter['id'],
+            _id: filter['id'],
             is_custom_filter: true,
             values: [{label: filter.name, value: null}]
         };
@@ -1645,7 +1645,7 @@ instance.web.search.CustomFilters = instance.web.search.Input.extend({
     },
     toggle_filter: function (filter, preventSearch) {
         var current = this.view.query.find(function (facet) {
-            return facet.get('id') === filter.id;
+            return facet.get('_id') === filter.id;
         });
         if (current) {
             this.view.query.remove(current);
