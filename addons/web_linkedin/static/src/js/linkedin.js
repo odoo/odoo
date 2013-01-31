@@ -26,30 +26,36 @@ openerp.web_linkedin = function(instance) {
                 this.window_onerror = window.onerror;
             }
             if (!callback) {
-                window.onerror = self.window_onerror;
                 Error = self.realError;
+                return false;
             }
             this.callback = callback;
+            window.onerror = function(message, fileName, lineNumber) {
+                if (!window.onerror.prototype.catched) {
+                    self.window_onerror(message, fileName, lineNumber);
+                }
+                if (self.realError != Error) {
+                    window.onerror.prototype.catched = false;
+                } else {
+                    window.onerror = self.window_onerror;
+                }
+            };
+            window.onerror.prototype.catched = false;
             Error = function (message, fileName, lineNumber) {
                 this.name = message;
                 this.message = message;
                 this.fileName = fileName;
                 this.lineNumber = lineNumber;
-                if (Error.caller.toString().match(/API Key is invalid/)) {
-                    self.callback.apply(self, [this]);
-                    Error.prototype.catched = true;
-                }
+                this.caller = Error.caller.toString();
+                window.onerror.prototype.catched = self.callback.apply(self, [this]);
+                return this;
             };
             Error.prototype.toString = function () {return this.name;};
-            Error.prototype.catched = false;
-            window.onerror = function(message, fileName, lineNumber) {
-                if (!Error.prototype.catched) {
-                    self.window_onerror(message, fileName, lineNumber);
-                }
-                Error.prototype.catched = false;
-            };
         },
         linkedin_disabled: function(error) {
+            this.linkedin_def.reject();
+            this.auth_def.reject();
+            IN = false;
             instance.web.dialog($(QWeb.render("LinkedIn.DisabledWarning", {'error': error})), {
                 title: _t("LinkedIn is not enabled"),
                 buttons: [
@@ -65,13 +71,16 @@ openerp.web_linkedin = function(instance) {
                 }
 
                 self.error_catcher(function (error) {
-                    self.linkedin_disabled(error);
-                    self.auth_def.reject();
-                    self.linkedin_def.reject();
-                    self.$linkedin.remove();
-                    IN = false;
-                    self.linkedin_added = false;
-                    self.error_catcher(false);
+                    if (!!error.caller.match(/API Key is invalid/)) {
+                        self.linkedin_disabled(error);
+                        self.$linkedin.remove();
+                        console.debug("LinkedIn JavaScript removed.");
+                        self.linkedin_added = false;
+                        self.error_catcher(false);
+                        return true;
+                    } else {
+                        return false;
+                    }
                 });
 
                 self.$linkedin = $('<div class="oe_linkedin_login_hidden" style="display:none;"><script type="in/Login"></script></div>');
@@ -86,6 +95,7 @@ openerp.web_linkedin = function(instance) {
                 $(tag).load(function(event) {
                     console.debug("LinkedIn JavaScript inserted.");
                     IN.Event.on(IN, "frameworkLoaded", function() {
+                        self.error_catcher(false);
                         console.debug("LinkedIn DOM node inserted and frameworkLoaded.");
                     });
                     IN.Event.on(IN, "systemReady", function() {
