@@ -22,7 +22,6 @@
 import time
 from lxml import etree
 
-from openerp import netsvc
 from openerp.osv import fields, osv
 import openerp.addons.decimal_precision as dp
 from openerp.tools.translate import _
@@ -828,9 +827,7 @@ class account_voucher(osv.osv):
         return True
 
     def action_cancel_draft(self, cr, uid, ids, context=None):
-        wf_service = netsvc.LocalService("workflow")
-        for voucher_id in ids:
-            wf_service.trg_create(uid, 'account.voucher', voucher_id, cr)
+        self.create_workflow(cr, uid, ids)
         self.write(cr, uid, ids, {'state':'draft'})
         return True
 
