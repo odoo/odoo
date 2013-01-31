@@ -39,8 +39,12 @@ openerp.web_linkedin = function(instance) {
                     if(event.srcElement.previousSibling == tag) {
                         console.debug("LinkedIn JavaScript userspace inserted.");
                         crashmanager = window.onerror;
-                        window.onerror = function() {
-                            crashmanager("You have a Linkedin error integration.\nPlease check your API Domain and your API Key's configuration", "", "");
+                        window.onerror = function(e,a,l) {
+                            if (!a.length && !l) {
+                                crashmanager("You have a Linkedin error integration.\nPlease check your API Domain and your API Key's configuration", "", "");
+                            } else {
+                                crashmanager(e,a,l);
+                            }
                             window.onerror = crashmanager;
                         };
                         $head.off("DOMNodeInserted", DOMNodeInserted);
