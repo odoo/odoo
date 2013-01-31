@@ -500,7 +500,6 @@ class mrp_operations_operation(osv.osv):
 
     def create(self, cr, uid, vals, context=None):
         workcenter_pool = self.pool.get('mrp.production.workcenter.line')
-        wf_service = netsvc.LocalService('workflow')
         code_ids=self.pool.get('mrp_operations.operation.code').search(cr,uid,[('id','=',vals['code_id'])])
         code=self.pool.get('mrp_operations.operation.code').browse(cr, uid, code_ids, context=context)[0]
         wc_op_id=workcenter_pool.search(cr,uid,[('workcenter_id','=',vals['workcenter_id']),('production_id','=',vals['production_id'])])
@@ -545,10 +544,9 @@ class mrp_operations_operation(osv.osv):
         return super(mrp_operations_operation, self).create(cr, uid, vals, context=context)
 
     def initialize_workflow_instance(self, cr, uid, context=None):
-        wf_service = netsvc.LocalService("workflow")
-        line_ids = self.pool.get('mrp.production.workcenter.line').search(cr, uid, [], context=context)
-        for line_id in line_ids:
-            wf_service.trg_create(uid, 'mrp.production.workcenter.line', line_id, cr)
+        mrp_production_workcenter_line = self.pool.get('mrp.production.workcenter.line')
+        line_ids = mrp_production_workcenter_line.search(cr, uid, [], context=context)
+        mrp_production_workcenter_line.create_workflow(cr, uid, line_ids)
         return True
 
     _columns={
