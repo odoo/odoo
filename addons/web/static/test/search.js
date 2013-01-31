@@ -1038,6 +1038,44 @@ openerp.testing.section('saved_filters', {
                     "should not be checked anymore");
             });
     });
+    test('toggling', {asserts: 2}, function (instance, $fix, mock) {
+        var view = makeSearchView(instance);
+        mock('ir.filters:get_filters', function () {
+            return [{name: 'filter name', user_id: 42, id: 1}];
+        });
+
+        return view.appendTo($fix)
+            .done(function () {
+                var $row = $fix.find('.oe_searchview_custom li:first').click();
+                equal(view.query.length, 1, "should have one facet");
+                $row.click();
+                equal(view.query.length, 0, "should have removed facet");
+            });
+    });
+    test('replacement', {asserts: 4}, function (instance, $fix, mock) {
+        var view = makeSearchView(instance);
+        mock('ir.filters:get_filters', function () {
+            return [
+                {name: 'f', user_id: 42, id: 1, context: {'private': 1}},
+                {name: 'f', user_id: false, id: 2, context: {'private': 0}}
+            ];
+        });
+        return view.appendTo($fix)
+            .done(function () {
+                $fix.find('.oe_searchview_custom li:eq(0)').click();
+                equal(view.query.length, 1, "should have one facet");
+                deepEqual(
+                    view.query.at(0).get('field').get_context(),
+                    {'private': 1},
+                    "should have selected first filter");
+                $fix.find('.oe_searchview_custom li:eq(1)').click();
+                equal(view.query.length, 1, "should have one facet");
+                deepEqual(
+                    view.query.at(0).get('field').get_context(),
+                    {'private': 0},
+                    "should have selected second filter");
+            });
+    });
 });
 openerp.testing.section('advanced', {
     dependencies: ['web.search'],

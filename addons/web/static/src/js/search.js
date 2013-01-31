@@ -697,7 +697,7 @@ instance.web.SearchView = instance.web.Widget.extend(/** @lends instance.web.Sea
                 return filter.user_id && filter.is_default;
             });
             if (personal_filter) {
-                this.custom_filters.enable_filter(personal_filter, true);
+                this.custom_filters.toggle_filter(personal_filter, true);
                 return;
             }
 
@@ -705,7 +705,7 @@ instance.web.SearchView = instance.web.Widget.extend(/** @lends instance.web.Sea
                 return !filter.user_id && filter.is_default;
             });
             if (global_filter) {
-                this.custom_filters.enable_filter(global_filter, true);
+                this.custom_filters.toggle_filter(global_filter, true);
                 return;
             }
         }
@@ -1598,6 +1598,7 @@ instance.web.search.CustomFilters = instance.web.search.Input.extend({
                 get_groupby: function () { return [filter.context]; },
                 get_domain: function () { return filter.domain; }
             },
+            id: filter['id'],
             is_custom_filter: true,
             values: [{label: filter.name, value: null}]
         };
@@ -1639,10 +1640,18 @@ instance.web.search.CustomFilters = instance.web.search.Input.extend({
         }
 
         $filter.unbind('click').click(function () {
-            self.enable_filter(filter);
+            self.toggle_filter(filter);
         });
     },
-    enable_filter: function (filter, preventSearch) {
+    toggle_filter: function (filter, preventSearch) {
+        var current = this.view.query.find(function (facet) {
+            return facet.get('id') === filter.id;
+        });
+        if (current) {
+            this.view.query.remove(current);
+            this.$filters[this.key_for(filter)].removeClass('oe_selected');
+            return;
+        }
         this.view.query.reset([this.facet_for(filter)], {
             preventSearch: preventSearch || false});
         this.$filters[this.key_for(filter)].addClass('oe_selected');
