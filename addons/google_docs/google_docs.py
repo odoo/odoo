@@ -29,12 +29,39 @@ _logger = logging.getLogger(__name__)
 try:
     import gdata.docs.data
     import gdata.docs.client
-    from gdata.client import RequestError
-    from gdata.docs.service import DOCUMENT_LABEL
-    import gdata.auth
-    from gdata.docs.data import Resource
+
+    # API breakage madness in the gdata API - those guys are insane. 
+    try:
+        # gdata 2.0.15+
+        gdata.docs.client.DocsClient.copy_resource
+    except AttributeError:
+        # gdata 2.0.14- : copy_resource() was copy()
+        gdata.docs.client.DocsClient.copy_resource = gdata.docs.client.DocsClient.copy
+
+    try:
+        # gdata 2.0.16+
+        gdata.docs.client.DocsClient.get_resource_by_id
+    except AttributeError:
+        try:
+            # gdata 2.0.15+
+            gdata.docs.client.DocsClient.get_resource_by_self_link
+            def get_resource_by_id_2_0_16(self, resource_id, **kwargs):
+                return self.GetResourceBySelfLink(
+                    gdata.docs.client.RESOURCE_FEED_URI + ('/%s' % resource_id), **kwargs)
+            gdata.docs.client.DocsClient.get_resource_by_id = get_resource_by_id_2_0_16
+        except AttributeError:
+            # gdata 2.0.14- : alias get_resource_by_id()
+            gdata.docs.client.DocsClient.get_resource_by_id = gdata.docs.client.DocsClient.get_doc
+
+    try:
+        import atom.http_interface
+        _logger.info('GData lib version `%s` detected' % atom.http_interface.USER_AGENT)
+    except (ImportError, AttributeError):
+        _logger.debug('GData lib version could not be detected', exc_info=True)
+
 except ImportError:
     _logger.warning("Please install latest gdata-python-client from http://code.google.com/p/gdata-python-client/downloads/list")
+
 
 class google_docs_ir_attachment(osv.osv):
     _inherit = 'ir.attachment'
@@ -49,11 +76,12 @@ class google_docs_ir_attachment(osv.osv):
         #get gmail password and login. We use default_get() instead of a create() followed by a read() on the 
         # google.login object, because it is easier. The keys 'user' and 'password' ahve to be passed in the dict
         # but the values will be replaced by the user gmail password and login.
-        user_config = google_pool.default_get( cr, uid, {'user' : '' , 'password' : ''}, context=context)
+        user_config = google_pool.default_get(cr, uid, {'user' : '' , 'password' : ''}, context=context)
         #login gmail account
-        client = google_pool.google_login( user_config['user'], user_config['password'], type='docs_client', context=context)
+        client = google_pool.google_login(user_config['user'], user_config['password'], type='docs_client', context=context)
         if not client:
-            raise osv.except_osv( _('Google Docs Error!'), _("Check your google configuration in Users/Users/Synchronization tab."))
+            raise osv.except_osv(_('Google Docs Error!'), _("Check your google configuration in Users/Users/Synchronization tab."))
+        _logger.info('Logged into google docs as %s', user_config['user'])
         return client
 
     def create_empty_google_doc(self, cr, uid, res_model, res_id, context=None):
@@ -94,9 +122,9 @@ class google_docs_ir_attachment(osv.osv):
         client = self._auth(cr, uid)
         # fetch and copy the original document
         try:
-            doc = client.GetDoc(gdoc_template_id)
+            doc = client.get_resource_by_id(gdoc_template_id)
             #copy the document you choose in the configuration
-            copy_resource = client.copy(doc, name_gdocs)
+            copy_resource = client.copy_resource(doc, name_gdocs)
         except:
             raise osv.except_osv(_('Google Docs Error!'), _("Your resource id is not correct. You can find the id in the google docs URL."))
         # create an ir.attachment
