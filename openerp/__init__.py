@@ -28,6 +28,7 @@ SUPERUSER_ID = 1
 import addons
 import cli
 import conf
+import http
 import loglevels
 import modules
 import netsvc
