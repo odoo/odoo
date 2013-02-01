@@ -42,8 +42,8 @@
         membership_lines = membership_line_pool.browse(cr, uid, membership_line_ids)
         assert membership_lines, _('Membership is not registrated.')
         membership_line = membership_lines[0]
-        wf_service = netsvc.LocalService("workflow")
-        wf_service.trg_validate(uid, 'account.invoice', membership_line.account_invoice_id.id, 'invoice_open', cr)
+        invoice_pool.signal_invoice_open(cr, uid, [membership_line.account_invoice_id.id])
+
 - |
   I'm checking "Current membership state" of "Seagate". It is an "Invoiced Member" or not.
 -
