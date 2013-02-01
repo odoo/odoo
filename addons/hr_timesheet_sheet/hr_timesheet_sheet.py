@@ -190,8 +190,7 @@ class hr_timesheet_sheet(osv.osv):
 
     def action_set_to_draft(self, cr, uid, ids, *args):
         self.write(cr, uid, ids, {'state': 'draft'})
-        for id in ids:
-            self.create_workflow(cr, uid, [id])
+        self.create_workflow(cr, uid, ids)
         return True
 
     def name_get(self, cr, uid, ids, context=None):
