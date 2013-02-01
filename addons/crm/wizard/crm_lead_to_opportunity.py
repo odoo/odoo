@@ -62,15 +62,11 @@ class crm_lead2opportunity_partner(osv.osv_memory):
         ids = []
         if partner_id:
             # Search for opportunities that have the same partner and that arent done or cancelled
-            ids = lead_obj.search(cr, uid, [('partner_id', '=', partner_id), ('type', '=', 'opportunity'), '!', ('state', 'in', ['done', 'cancel'])])
+            ids = lead_obj.search(cr, uid, [('partner_id', '=', partner_id), ('type', '=', 'opportunity')])
             if ids:
                 opportunities.append(ids[0])
-        if not partner_id:
-            if email:
-                # Find email of existing opportunity matching the email_from of the lead
-                cr.execute("""select id from crm_lead where type='opportunity' and
-                                substring(email_from from '([^ ,<@]+@[^> ,]+)') in (%s)""" % (','.join(email)))
-                ids = map(lambda x:x[0], cr.fetchall())
+        if email:
+            ids = lead_obj.search(cr, uid, [('email', 'ilike', email), ('type', '=', 'opportunity')])
             if ids:
                 opportunities.append(ids[0])
 
