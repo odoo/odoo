@@ -9,12 +9,20 @@
                 <form string="Convert to Opportunity" version="7.0">
                     <group name="name">
                         <field name="name" class="oe_inline"/>
-                        <field name="opportunity_ids" attrs="{'invisible': [('name', '!=', 'merge')]}">
+                    </group>
+                    <group string="Opportunities">
+                        <field name="opportunity_ids" attrs="{'invisible': [('name', '!=', 'merge')]}" nolabel="1">
                             <tree>
-                                <field name="name"/>
-                                <field name="partner_id"/>
-                                <field name="user_id"/>
-                                <field name="section_id"/>
+                                <field name="create_date" groups="base.group_no_one"/>
+                                 <field name="name"/>
+                                <field name="type"/>
+                                <field name="contact_name"/>
+                                <field name="country_id" invisible="context.get('invisible_country', True)"/>
+                                <field name="email_from"/>
+                                <field name="phone"/>
+                                <field name="stage_id"/>
+                                <field name="user_id" invisible="1"/>
+                                <field name="section_id" invisible="context.get('invisible_section', True)"/>
                             </tree>
                         </field>
                     </group>

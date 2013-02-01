@@ -46,38 +46,35 @@ class crm_lead2opportunity_partner(osv.osv_memory):
         lead_obj = self.pool.get('crm.lead')
 
         res = super(crm_lead2opportunity_partner, self).default_get(cr, uid, fields, context=context)
-        opportunities = res.get('opportunity_ids') or []
-        partner_id = False
-        email = False
-        for lead in lead_obj.browse(cr, uid, opportunities, context=context):
-            partner_id = lead.partner_id and lead.partner_id.id or False
+        if context.get('active_id'):
+            tomerge = set([int(context['active_id'])])
+
+            email = False
+            partner_id = res.get('partner_id')
+            lead = lead_obj.browse(cr, uid, int(context['active_id']), context=context)
 
             #TOFIX: use mail.mail_message.to_mail
             email = re.findall(r'([^ ,<@]+@[^> ,]+)', lead.email_from or '')
-            email = map(lambda x: "'" + x + "'", email)
+            email = email[0]
 
-        if not partner_id and res.get('partner_id'):
-            partner_id = res.get('partner_id')
+            if partner_id:
+                # Search for opportunities that have the same partner and that arent done or cancelled
+                ids = lead_obj.search(cr, uid, [('partner_id', '=', partner_id), ('type', '=', 'opportunity')])
+                for id in ids:
+                    tomerge.add(id)
+            if email:
+                ids = lead_obj.search(cr, uid, [('email_from', 'ilike', email), ('type', '=', 'opportunity')])
+                for id in ids:
+                    tomerge.add(id)
 
-        ids = []
-        if partner_id:
-            # Search for opportunities that have the same partner and that arent done or cancelled
-            ids = lead_obj.search(cr, uid, [('partner_id', '=', partner_id), ('type', '=', 'opportunity')])
-            if ids:
-                opportunities.append(ids[0])
-        if email:
-            ids = lead_obj.search(cr, uid, [('email', 'ilike', email), ('type', '=', 'opportunity')])
-            if ids:
-                opportunities.append(ids[0])
-
-        if 'action' in fields:
-            res.update({'action' : partner_id and 'exist' or 'create'})
-        if 'partner_id' in fields:
-            res.update({'partner_id' : partner_id})
-        if 'name' in fields:
-            res.update({'name' : ids and 'merge' or 'convert'})
-        if 'opportunity_ids' in fields:
-            res.update({'opportunity_ids': opportunities})
+            if 'action' in fields:
+                res.update({'action' : partner_id and 'exist' or 'create'})
+            if 'partner_id' in fields:
+                res.update({'partner_id' : partner_id})
+            if 'name' in fields:
+                res.update({'name' : ids and 'merge' or 'convert'})
+            if 'opportunity_ids' in fields and len(tomerge) >= 2:
+                res.update({'opportunity_ids': list(tomerge)})
 
         return res
 
