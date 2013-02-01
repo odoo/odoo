@@ -42,7 +42,9 @@
 -
   !python {model: sale.order}: |
     so = self.browse(cr, uid, ref("sale_order_2"))
-    self.pool.get('account.invoice').signal_invoice_open(cr, uid, so.invoice_ids)
+    account_invoice_obj = self.pool.get('account.invoice')
+    for invoice in so.invoice_ids:
+      account_invoice_obj.signal_invoice_open(cr, uid, [invoice.id])
 -
   I pay the invoice.
 -
