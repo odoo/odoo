@@ -210,7 +210,7 @@ openerp.web_im = function(instance) {
         },
         start_polling: function() {
             var self = this;
-            new instance.web.Model("im.user").call("get_by_user_id", [instance.session.uid]).then(function(my_id) {
+            return new instance.web.Model("im.user").call("get_by_user_id", [instance.session.uid]).then(function(my_id) {
                 self.my_id = my_id["id"];
                 return self.ensure_users([self.my_id]).then(function() {
                     var me = self.users_cache[self.my_id];

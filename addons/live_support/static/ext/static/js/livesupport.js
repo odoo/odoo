@@ -25,7 +25,7 @@ define(["nova", "jquery", "underscore", "oeclient", "require"], function(nova, $
         $.when(templates_def, css_def).then(function() {
             console.log("starting client");
             connection = new oeclient.Connection(new oeclient.JsonpRPCConnector(server_url), db, login, password);
-            connection.getModel("res.users").search_read([["login", "=", ["demo"]]]).then(function(result) {
+            connection.getModel("im.user").search_read([["name", "=", ["Demo User"]]]).then(function(result) {
                 demo_id = result[0].id;
                 var manager = new livesupport.ConversationManager(null);
                 manager.start_polling().then(function() {
@@ -43,7 +43,8 @@ define(["nova", "jquery", "underscore", "oeclient", "require"], function(nova, $
         __include__: [nova.DynamicProperties],
         __init__: function(parent, user_rec) {
             nova.DynamicProperties.__init__.call(this, parent);
-            //user_rec.image_url = instance.session.url('/web/binary/image', {model:'res.users', field: 'image_small', id: user_rec.id});
+            //if (user_rec.user)
+            //    user_rec.image_url = instance.session.url('/web/binary/image', {model:'res.users', field: 'image_small', id: user_rec.user[0]});
             this.set(user_rec);
             this.set("watcher_count", 0);
             this.on("change:watcher_count", this, function() {
@@ -92,15 +93,22 @@ define(["nova", "jquery", "underscore", "oeclient", "require"], function(nova, $
         },
         start_polling: function() {
             var self = this;
-            return this.ensure_users([connection.userId]).then(function() {
-                var me = self.users_cache[connection.userId];
-                delete self.users_cache[connection.userId];
-                self.me = me;
-                connection.connector.call("/longpolling/im/activated", {}).then(function(activated) {
-                    if (activated) {
-                        self.activated = true;
-                        self.poll();
-                    }
+
+            return connection.connector.call("/longpolling/im/gen_uuid", {}).then(function(uuid) {
+                self.my_uuid = uuid;
+                return connection.getModel("im.user").call("get_by_user_id", [uuid]).then(function(my_id) {
+                    self.my_id = my_id;
+                    return self.ensure_users([self.my_id]).then(function() {
+                        var me = self.users_cache[self.my_id];
+                        delete self.users_cache[self.my_id];
+                        self.me = me;
+                        connection.connector.call("/longpolling/im/activated", {}).then(function(activated) {
+                            if (activated) {
+                                self.activated = true;
+                                self.poll();
+                            }
+                        });
+                    });
                 });
             });
         },
@@ -114,7 +122,7 @@ define(["nova", "jquery", "underscore", "oeclient", "require"], function(nova, $
             if (_.size(no_cache) === 0)
                 return $.when();
             else
-                return connection.getModel("im.user").call("read_users", [_.values(no_cache), ["name"]]).then(function(users) {
+                return connection.getModel("im.user").call("read", [_.values(no_cache), []]).then(function(users) {
                     self.add_to_user_cache(users);
                 });
         },
