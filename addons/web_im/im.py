@@ -303,5 +303,5 @@ class im_user(osv.osv):
     _defaults = {
         'im_last_received': -1,
         'im_last_status': False,
-        'im_last_status_update': datetime.datetime.now().strftime(DEFAULT_SERVER_DATETIME_FORMAT),
+        'im_last_status_update': lambda *args: datetime.datetime.now().strftime(DEFAULT_SERVER_DATETIME_FORMAT),
     }
