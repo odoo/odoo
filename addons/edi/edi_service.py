@@ -53,7 +53,7 @@ def exp_import_edi_document(db_name, uid, passwd, edi_document, context=None):
 def exp_import_edi_url(db_name, uid, passwd, edi_url, context=None):
     return _edi_dispatch(db_name, 'import_edi', uid, None, edi_url)
 
-@openerp.service.rpc('edi')
+@openerp.http.rpc('edi')
 def dispatch(method, params):
     if method in ['import_edi_document',  'import_edi_url']:
         (db, uid, passwd) = params[0:3]
