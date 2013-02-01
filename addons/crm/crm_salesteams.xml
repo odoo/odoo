@@ -59,7 +59,7 @@
             <field name="name">crm.case.section.kanban</field>
             <field name="model">crm.case.section</field>
             <field name="arch" type="xml">
-                <kanban version="7.0">
+                <kanban version="7.0" class="oe_background_grey">
                     <field name="name"/>
                     <field name="user_id"/>
                     <field name="member_ids"/>
@@ -70,29 +70,24 @@
                     <field name="number_opportunity"/>
                     <templates>
                         <t t-name="kanban-box">
-                            <div t-attf-class="oe_kanban_card oe_kanban_project oe_kanban_global_click oe_kanban_crm_salesteams" style="width:200px;">
+                            <div t-attf-class="oe_kanban_card oe_kanban_crm_salesteams oe_kanban_global_click oe_kanban_crm_salesteams" style="width:220px;">
                                 <div class="oe_dropdown_toggle oe_dropdown_kanban" groups="base.group_user">
                                     <span class="oe_e">í</span>
                                     <ul class="oe_dropdown_menu">
-                                        <t t-if="widget.view.is_action_enabled('edit')"><li><a type="edit">Project Settings</a></li></t>
+                                        <t t-if="widget.view.is_action_enabled('edit')"><li><a type="edit">Sales Teams Settings</a></li></t>
                                         <t t-if="widget.view.is_action_enabled('delete')"><li><a type="delete">Delete</a></li></t>
                                     </ul>
                                 </div>
                                 <div class="oe_kanban_content">
-                                    <h4>
-                                      <field name="name"/>
-                                      <div class="oe_kanban_crm_salesteams_leader">
-                                        <small>
-                                          <t t-if="record.user_id.raw_value">(<field name="user_id"/>)</t>
-                                          <t t-if="!record.user_id.raw_value"><br/></t>
-                                        </small>
-                                      </div>
-                                    </h4>
+                                    <h4><field name="name"/></h4>
+                                    <div class="oe_kanban_crm_salesteams_alias" t-if="record.alias_id.raw_value and record.alias_id.value.match(/@.+/)">
+                                        <span class="oe_e">%%</span><small><field name="alias_id"/></small>
+                                    </div>
                                     <div class="oe_kanban_crm_salesteams_list">
-                                        <a name="%(crm_case_form_view_salesteams_opportunity)d" type="action">
+                                        <a name="%(crm_case_form_view_salesteams_opportunity)d" type="action" style="margin-right: 10px">
                                             <field name="number_opportunity"/>
-                                            <t t-if="record.number_opportunity.raw_value &gt; 1">Opportunities</t><t t-if="record.number_opportunity.raw_value &lt;= 1">Opportunity</t></a>,
-                                        <a name="%(crm_case_form_view_salesteams_lead)d" type="action">
+                                            <t t-if="record.number_opportunity.raw_value &gt; 1">Opportunities</t><t t-if="record.number_opportunity.raw_value &lt;= 1">Opportunity</t></a>
+                                        <a name="%(crm_case_form_view_salesteams_lead)d" type="action" style="margin-right: 10px">
                                             <field name="number_lead"/>
                                             <t t-if="record.number_lead.raw_value &gt; 1">Leads</t><t t-if="record.number_lead.raw_value &lt;= 1">Lead</t></a>
                                     </div>
@@ -101,12 +96,6 @@
                                             <img t-att-src="kanban_image('res.users', 'image_small', member)" t-att-data-member_id="member"/>
                                         </t>
                                     </div>
-                                    <t t-if="record.alias_domain.raw_value">
-                                        <br/>
-                                        <small style="position: absolute; bottom: 5px;">
-                                            <field name="alias_id"/>
-                                        </small>
-                                    </t>
                                 </div>
                             </div>
                         </t>

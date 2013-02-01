@@ -246,8 +246,10 @@
                                     </ul>
                                 </div>
                                 <div class="oe_kanban_content">
-
                                     <h4><field name="name"/></h4>
+                                    <div class="oe_kanban_project_alias" t-if="record.alias_id.raw_value and record.alias_id.value.match(/@.+/)">
+                                        <span class="oe_e">%%</span><small><field name="alias_id"/></small>
+                                    </div>
                                     <div class="oe_kanban_project_list">
                                         <a t-if="record.use_tasks.raw_value" name="%(act_project_project_2_project_task_all)d" type="action" style="margin-right: 10px"> 
                                             <span t-if="record.task_count.raw_value gt 1"><field name="task_count"/> Tasks</span>
@@ -272,12 +274,6 @@
                                             <img t-att-src="kanban_image('res.users', 'image_small', member)" t-att-data-member_id="member"/>
                                         </t>
                                     </div>
-                                    <t t-if="record.alias_domain.raw_value">
-                                        <br/>
-                                        <small style="position: absolute; bottom: 5px;">
-                                            <field name="alias_id"/>
-                                        </small>
-                                    </t>
                                 </div>
                             </div>
                         </t>

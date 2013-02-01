@@ -116,6 +116,7 @@ Dashboard for CRM will include:
         'test/ui/delete_lead.yml',
     ],
     'css': ['static/src/css/crm.css'],
+    'js': ['static/src/js/crm.js'],
     'installable': True,
     'application': True,
     'auto_install': False,
