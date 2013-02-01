@@ -102,7 +102,7 @@ class sale_order_line_make_invoice(osv.osv_memory):
                     flag = False
                     break
             if flag:
-                sales_order_obj.signal_manual_invoice(cr, uid, line.order_id.id)
+                sales_order_obj.signal_manual_invoice(cr, uid, [line.order_id.id])
                 sales_order_obj.write(cr, uid, [line.order_id.id], {'state': 'progress'})
 
         if not invoices:
