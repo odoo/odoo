@@ -1406,23 +1406,11 @@ instance.web.View = instance.web.Widget.extend({
                     'model': this.options.action.res_model, 
                     'alias_defaults': context.help_alias
                     }).then(function (alias_ids) {
-                if (alias_ids.length) {
+                if (alias_ids.length && alias_ids[0].email.match(/@.+/)) {
+                    // alias_ids[0].global
                     var $alias = $(QWeb.render('View.nocontent_alias'));
-                    var global = false;
-                    var inc = 0;
-                    _.each(alias_ids, function (alias_id) {
-                        if (alias_id.email.match(/@.+/)) {
-                            if (inc && global != alias_id.global) {
-                                $alias.append('<br/>' + _t("or"));
-                                global = alias_id.global;
-                            }
-                            $alias.append('<br/><a href="mailto:' + alias_id.email + '">' + alias_id.email + '</a>');
-                            inc++;
-                        }
-                    })
-                    if(inc) {
-                        $dom.append($alias);
-                    }
+                    $alias.append('<a href="mailto:' + alias_ids[0].email + '">' + alias_ids[0].email + '</a>');
+                    $dom.append($alias);
                 }
             });
         }
