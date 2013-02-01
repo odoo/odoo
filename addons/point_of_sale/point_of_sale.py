@@ -27,7 +27,7 @@ import pdb
 import time
 
 import openerp
-from openerp import netsvc, tools
+from openerp import tools
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
 
@@ -442,8 +442,7 @@ class pos_session(osv.osv):
         }
 
     def _confirm_orders(self, cr, uid, ids, context=None):
-        wf_service = netsvc.LocalService("workflow")
-
+        
         for session in self.browse(cr, uid, ids, context=context):
             order_ids = [order.id for order in session.order_ids if order.state == 'paid']
 
@@ -457,7 +456,7 @@ class pos_session(osv.osv):
                         _('Error!'),
                         _("You cannot confirm all orders of this session, because they have not the 'paid' status"))
                 else:
-                    wf_service.trg_validate(uid, 'pos.order', order.id, 'done', cr)
+                    self.pool.get('pos.order').signal_done(cr, uid, [order.id])
 
         return True
 
@@ -519,8 +518,7 @@ class pos_order(osv.osv):
                     'journal': cash_journal.id,
                 }, context=context)
             order_ids.append(order_id)
-            wf_service = netsvc.LocalService("workflow")
-            wf_service.trg_validate(uid, 'pos.order', order_id, 'paid', cr)
+            self.signal_paid(cr, uid, [order_id])
         return order_ids
 
     def unlink(self, cr, uid, ids, context=None):
@@ -695,9 +693,8 @@ class pos_order(osv.osv):
                 }, context=context)
                 if line.qty < 0:
                     location_id, output_id = output_id, location_id
-
-            wf_service = netsvc.LocalService("workflow")
-            wf_service.trg_validate(uid, 'stock.picking', picking_id, 'button_confirm', cr)
+            
+            self.pool.get('stock.picking').signal_button_confirm(cr, uid, [picking_id])
             picking_obj.force_assign(cr, uid, [picking_id], context)
         return True
 
@@ -707,7 +704,7 @@ class pos_order(osv.osv):
         """
         stock_picking_obj = self.pool.get('stock.picking')
         for order in self.browse(cr, uid, ids, context=context):
-            wf_service.trg_validate(uid, 'stock.picking', order.picking_id.id, 'button_cancel', cr)
+            self.pool.get('stock.picking').signal_button_cancel(cr, uid, [order.picking_id.id])
             if stock_picking_obj.browse(cr, uid, order.picking_id.id, context=context).state <> 'cancel':
                 raise osv.except_osv(_('Error!'), _('Unable to cancel the picking.'))
         self.write(cr, uid, ids, {'state': 'cancel'}, context=context)
@@ -803,7 +800,6 @@ class pos_order(osv.osv):
         return self.write(cr, uid, ids, {'state':'invoiced'}, context=context)
 
     def action_invoice(self, cr, uid, ids, context=None):
-        wf_service = netsvc.LocalService("workflow")
         inv_ref = self.pool.get('account.invoice')
         inv_line_ref = self.pool.get('account.invoice.line')
         product_obj = self.pool.get('product.product')
@@ -857,7 +853,7 @@ class pos_order(osv.osv):
                     and [(6, 0, inv_line['invoice_line_tax_id'])] or []
                 inv_line_ref.create(cr, uid, inv_line, context=context)
             inv_ref.button_reset_taxes(cr, uid, [inv_id], context=context)
-            wf_service.trg_validate(uid, 'pos.order', order.id, 'invoice', cr)
+            self.signal_invoice(cr, uid, [order.id])
 
         if not inv_ids: return {}
 
