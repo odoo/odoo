@@ -748,13 +748,14 @@ class crm_lead(base_stage, format_address, osv.osv):
             partner_id = self._lead_create_contact(cr, uid, lead, lead.partner_name, True, context=context)
         elif not lead.partner_name and lead.contact_name:
             partner_id = self._lead_create_contact(cr, uid, lead, lead.contact_name, False, context=context)
-        elif lead.email_from:
-            contact_name, contact_email = self.pool.get('res.partner')._parse_partner_name(lead.email_from, context=context)
-            if not contact_name and contact_email:
-                contact_name = contact_email
+        elif lead.email_from and self.pool.get('res.partner')._parse_partner_name(lead.email_from, context=context)[0]:
+            contact_name = self.pool.get('res.partner')._parse_partner_name(lead.email_from, context=context)[0]
             partner_id = self._lead_create_contact(cr, uid, lead, contact_name, False, context=context)
         else:
-            partner_id = self._lead_create_contact(cr, uid, lead, lead.name, False, context=context)
+            raise osv.except_osv(
+                _('Warning!'),
+                _('No customer name defined. Please fill one of the following fields: Company Name, Contact Name or Email ("Name <email@address>")')
+            )
         return partner_id
 
     def _lead_set_partner(self, cr, uid, lead, partner_id, context=None):
