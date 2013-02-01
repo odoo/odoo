@@ -161,7 +161,8 @@ openerp.web_im = function(instance) {
     instance.web_im.ImUser = instance.web.Class.extend(instance.web.PropertiesMixin, {
         init: function(parent, user_rec) {
             instance.web.PropertiesMixin.init.call(this, parent);
-            user_rec.image_url = instance.session.url('/web/binary/image', {model:'res.users', field: 'image_small', id: user_rec.id});
+            if (user_rec.user)
+                user_rec.image_url = instance.session.url('/web/binary/image', {model:'res.users', field: 'image_small', id: user_rec.user[0]});
             this.set(user_rec);
             this.set("watcher_count", 0);
             this.on("change:watcher_count", this, function() {
@@ -209,15 +210,18 @@ openerp.web_im = function(instance) {
         },
         start_polling: function() {
             var self = this;
-            return this.ensure_users([instance.session.uid]).then(function() {
-                var me = self.users_cache[instance.session.uid];
-                delete self.users_cache[instance.session.uid];
-                self.me = me;
-                self.rpc("/longpolling/im/activated", {}).then(function(activated) {
-                    if (activated) {
-                        self.activated = true;
-                        self.poll();
-                    }
+            new instance.web.Model("im.user").call("get_by_user_id", [instance.session.uid]).then(function(my_id) {
+                self.my_id = my_id["id"];
+                return self.ensure_users([self.my_id]).then(function() {
+                    var me = self.users_cache[self.my_id];
+                    delete self.users_cache[self.my_id];
+                    self.me = me;
+                    self.rpc("/longpolling/im/activated", {}).then(function(activated) {
+                        if (activated) {
+                            self.activated = true;
+                            self.poll();
+                        }
+                    });
                 });
             });
         },
