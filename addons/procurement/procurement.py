@@ -103,7 +103,7 @@ class procurement_order(osv.osv):
             readonly=True, required=True, help="If you encode manually a Procurement, you probably want to use" \
             " a make to order method."),
         'note': fields.text('Note'),
-        'message': fields.char('Latest error', size=124, help="Exception occurred while computing procurement orders."),
+        'message': fields.char('Latest error', help="Exception occurred while computing procurement orders."),
         'state': fields.selection([
             ('draft','Draft'),
             ('cancel','Cancelled'),
@@ -367,7 +367,7 @@ class procurement_order(osv.osv):
 
                 if message:
                     message = _("Procurement '%s' is in exception: ") % (procurement.name) + message
-                    cr.execute('update procurement_order set message=%s where id=%s', (message, procurement.id))
+                    procurement.write({'message': message})
                     self.message_post(cr, uid, [procurement.id], body=message, context=context)
         return ok
 
