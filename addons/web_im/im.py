@@ -174,7 +174,7 @@ class ImportController(openerp.addons.web.http.Controller):
             req.session._db = db
             req.session._uid = uid
             req.session._password = password
-        req.session.model('im.user').im_connect(context=req.context)
+        req.session.model('im.user').im_connect(uuid=uuid, context=req.context)
         my_id = req.session.model('im.user').get_by_user_id(uuid or req.session._uid, req.context)["id"]
         num = 0
         while True:

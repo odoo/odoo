@@ -95,9 +95,8 @@ define(["nova", "jquery", "underscore", "oeclient", "require"], function(nova, $
             var self = this;
 
             return connection.connector.call("/longpolling/im/gen_uuid", {}).then(function(uuid) {
-                self.my_uuid = uuid;
                 return connection.getModel("im.user").call("get_by_user_id", [uuid]).then(function(my_id) {
-                    self.my_id = my_id;
+                    self.my_id = my_id["id"];
                     return self.ensure_users([self.my_id]).then(function() {
                         var me = self.users_cache[self.my_id];
                         delete self.users_cache[self.my_id];
@@ -151,6 +150,7 @@ define(["nova", "jquery", "underscore", "oeclient", "require"], function(nova, $
                 db: connection.database,
                 uid: connection.userId,
                 password: connection.password,
+                uuid: self.me.get("uuid"),
             }).then(function(result) {
                 _.each(result.users_status, function(el) {
                     if (self.get_user(el.id))
@@ -283,7 +283,7 @@ define(["nova", "jquery", "underscore", "oeclient", "require"], function(nova, $
             this.$("input").val("");
             var send_it = _.bind(function() {
                 var model = connection.getModel("im.message");
-                return model.call("post", [mes, this.user.get('id')], {context: {}});
+                return model.call("post", [mes, this.user.get('id')], {uuid: this.me.get("uuid"), context: {}});
             }, this);
             var tries = 0;
             send_it().then(_.bind(function() {
