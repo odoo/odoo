@@ -227,7 +227,7 @@ openerp.web_analytics = function(instance) {
                     if (error.code) {
                         t._push_event({
                             'category': error.message,
-                            'action': error.data.fault_code,
+                            'action': error.data.message,
                             'label': url,
                             'noninteraction': true,
                         });
