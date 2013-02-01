@@ -253,22 +253,7 @@ class im_user(osv.osv):
     def search_users(self, cr, uid, domain, fields, limit, context=None):
         found = self.pool.get('res.users').search(cr, uid, domain, limit=limit, context=context)
         found = self.get_by_user_ids(cr, uid, found, context=context)
-        return self.read_users(cr, uid, found, fields, context)
-
-    def read_users(self, cr, uid, ids, fields, context=None):
-        statuses = self.read(cr, uid, ids, context = context)
-        by_id = {}
-        for x in statuses:
-            by_id[x["user"][0]] = x
-
-        res_users_ids = [x["user"][0] for x in statuses if x["user"]]
-        users = self.pool.get('res.users').read(cr, uid, res_users_ids, fields, context=context)
-        res = []
-        for x in users:
-            s = by_id[x["id"]]
-            x.update(s)
-            res.append(x)
-        return res
+        return self.read(cr, uid, found, fields, context=context)
 
     def im_connect(self, cr, uid, context=None):
         return self._im_change_status(cr, uid, True, context)
@@ -307,6 +292,7 @@ class im_user(osv.osv):
 
 
     _columns = {
+        'name': fields.related('user', 'name', type='char', size=200, string="Name", store=True, readonly=True),
         'user': fields.many2one("res.users", string="User", select=True, ondelete='cascade'),
         'im_last_received': fields.integer(string="Instant Messaging Last Received Message"),
         'im_last_status': fields.boolean(strint="Instant Messaging Last Status"),

@@ -89,7 +89,7 @@ openerp.web_im = function(instance) {
             var self = this;
             return this.user_search_dm.add(users.call("search_users", 
                         [[["name", "ilike", this.get("current_search")], ["id", "<>", instance.session.uid]],
-                        ["name"], USERS_LIMIT], {context:new instance.web.CompoundContext()})).then(function(result) {
+                        [], USERS_LIMIT], {context:new instance.web.CompoundContext()})).then(function(result) {
                 self.c_manager.add_to_user_cache(result);
                 self.$(".oe_im_input").val("");
                 var old_users = self.users;
@@ -235,7 +235,7 @@ openerp.web_im = function(instance) {
             if (_.size(no_cache) === 0)
                 return $.when();
             else
-                return new instance.web.Model("im.user").call("read_users", [_.values(no_cache), ["name"]],
+                return new instance.web.Model("im.user").call("read", [_.values(no_cache), []],
                         {context: new instance.web.CompoundContext()}).then(function(users) {
                     self.add_to_user_cache(users);
                 });
