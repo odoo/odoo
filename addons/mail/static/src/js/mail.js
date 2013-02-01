@@ -243,7 +243,7 @@ openerp.mail = function (session) {
         /* Convert date, timerelative and avatar in displayable data. */
         format_data: function () {
             //formating and add some fields for render
-            if (this.date && new Date().getTime()-Date.parse(this.date).getTime() < 7*24*60*60*1000) {
+            if (this.date && new Date().getTime()-Date.parse((this.date+'').split('.')[0]).getTime() < 7*24*60*60*1000) {
                 this.timerelative = $.timeago(this.date+"Z");
             } 
             if (this.type == 'email' && (!this.author_id || !this.author_id[0])) {
