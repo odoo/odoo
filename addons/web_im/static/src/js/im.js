@@ -161,6 +161,7 @@ openerp.web_im = function(instance) {
     instance.web_im.ImUser = instance.web.Class.extend(instance.web.PropertiesMixin, {
         init: function(parent, user_rec) {
             instance.web.PropertiesMixin.init.call(this, parent);
+            user_rec.image_url = instance.session.url("/web_im/static/src/img/avatar/avatar.jpeg");
             if (user_rec.user)
                 user_rec.image_url = instance.session.url('/web/binary/image', {model:'res.users', field: 'image_small', id: user_rec.user[0]});
             this.set(user_rec);

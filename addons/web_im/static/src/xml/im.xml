@@ -31,7 +31,7 @@
         <div class="oe_im_chatview">
             <div class="oe_im_chatview_header">
                 <img t-att-src="_s +'/web_im/static/src/img/green.png'" class="oe_im_chatview_online"/>
-                <t t-esc="widget.user.get('name')"/>
+                <t t-esc="widget.user.get('name') || 'Anonymous'"/>
                 <button class="oe_im_chatview_close">×</button>
             </div>
             <div class="oe_im_chatview_disconnected">
@@ -50,7 +50,7 @@
             <div class="oe_im_chatview_clip">
                 <img class="oe_im_chatview_avatar" t-att-src='user.get("image_url")'/>
             </div>
-            <div class="oe_im_chatview_from"><t t-esc="user.get('name')"/></div>
+            <div class="oe_im_chatview_from"><t t-esc="user.get('name') || 'Anonymous'"/></div>
             <div class="oe_im_chatview_bubble_list">
                 <t t-foreach="items" t-as="item">
                     <div class="oe_im_chatview_bubble_item"><t t-esc="item"/></div>

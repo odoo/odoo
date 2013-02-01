@@ -2,7 +2,7 @@
 <%def name="conversation">
     <div class="oe_im_chatview_header">
         <img src="${toUrl('../img/green.png')}" class="oe_im_chatview_online"/>
-        ${widget.user.get('name')}
+        ${widget.user.get('name') || 'You'}
         <button class="oe_im_chatview_close">×</button>
     </div>
     <div class="oe_im_chatview_disconnected">
@@ -21,7 +21,7 @@
         <div class="oe_im_chatview_clip">
             <img class="oe_im_chatview_avatar" src="${user.get('image_url')}"/>
         </div>
-        <div class="oe_im_chatview_from">${user.get('name')}</div>
+        <div class="oe_im_chatview_from">${user.get('name') || 'You'}</div>
         <div class="oe_im_chatview_bubble_list">
             % _.each(items, function(item) {
                 <div class="oe_im_chatview_bubble_item">${item}</div>
