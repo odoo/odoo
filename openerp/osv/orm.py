@@ -5318,11 +5318,9 @@ def convert_pgerror_23502(model, fields, info, e):
     field_name = m.group('field')
     if not m or field_name not in fields:
         return {'message': unicode(e)}
-    message = _(u"Missing required value for the field '%s'.") % field_name
     field = fields.get(field_name)
     if field:
-        message = _(u"%s This might be '%s' in the current model, or a field "
-                    u"of the same name in an o2m.") % (message, field['string'])
+        message = _(u"Missing required value for the field '%s'") % (field['string'])
     return {
         'message': message,
         'field': field_name,
