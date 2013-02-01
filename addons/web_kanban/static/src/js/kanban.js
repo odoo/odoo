@@ -325,19 +325,30 @@ instance.web_kanban.KanbanView = instance.web.View.extend({
         var self = this;
         if (this.group_by) {
             // Kanban cards drag'n'drop
-            var $columns = this.$el.find('.oe_kanban_column .oe_kanban_column_cards');
+            var prev_widet;
+            var $columns = this.$el.find('.oe_kanban_column .oe_kanban_column_cards, .oe_kanban_column .oe_kanban_on_fold_cards');
             $columns.sortable({
                 handle : '.oe_kanban_draghandle',
                 start: function(event, ui) {
                     self.currently_dragging.index = ui.item.parent().children('.oe_kanban_record').index(ui.item);
-                    self.currently_dragging.group = ui.item.parents('.oe_kanban_column:first').data('widget');
+                    self.currently_dragging.group = prev_widet = ui.item.parents('.oe_kanban_column:first').data('widget');
                     ui.item.find('*').on('click.prevent', function(ev) {
                         return false;
                     });
                     ui.placeholder.height(ui.item.height());
                 },
+                over: function(event, ui) {
+                    var parent = $(event.target).parent();
+                    prev_widet.highlight(false);
+                    if(parent.hasClass('oe_kanban_group_folded')){
+                        var widget = parent.data('widget');
+                        widget.highlight(true);
+                        prev_widet = widget;
+                    }
+                 },
                 revert: 150,
                 stop: function(event, ui) {
+                    prev_widet.highlight(false);
                     var record = ui.item.data('widget');
                     var old_index = self.currently_dragging.index;
                     var new_index = ui.item.parent().children('.oe_kanban_record').index(ui.item);
@@ -413,6 +424,10 @@ instance.web_kanban.KanbanView = instance.web.View.extend({
             this.dataset.write(record.id, data, {}).done(function() {
                 record.do_reload();
                 new_group.do_save_sequences();
+                if(new_group.state.folded){
+                    new_group.do_action_toggle_fold();
+                    record.prependTo(new_group.$records.find('.oe_kanban_column_cards'));
+                }
             }).fail(function(error, evt) {
                 evt.preventDefault();
                 alert(_t("An error has occured while moving the record to this group: ") + data.message);
@@ -723,6 +738,15 @@ instance.web_kanban.KanbanGroup = instance.web.Widget.extend({
                 self.view.dataset.ids.push(id);
                 self.do_add_records(records, true);
             });
+    },
+    highlight: function(show){
+        if(show){
+            this.$el.addClass('oe_kanban_column_higlight');
+            this.$records.addClass('oe_kanban_column_higlight');
+        }else{
+            this.$el.removeClass('oe_kanban_column_higlight');
+            this.$records.removeClass('oe_kanban_column_higlight');
+        }
     }
 });
 
