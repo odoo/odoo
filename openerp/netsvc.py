@@ -47,35 +47,13 @@ import openerp
 
 _logger = logging.getLogger(__name__)
 
-
-class Service(object):
-    """ Base class for Local services
-    Functionality here is trusted, no authentication.
-    Workflow engine and reports subclass this.
-    """
-    _services = {}
-    def __init__(self, name):
-        Service._services[name] = self
-        self.__name = name
-
-    @classmethod
-    def exists(cls, name):
-        return name in cls._services
-
-    @classmethod
-    def remove(cls, name):
-        if cls.exists(name):
-            cls._services.pop(name)
-
 def LocalService(name):
     # Special case for addons support, will be removed in a few days when addons
     # are updated to directly use openerp.osv.osv.service.
-    if name == 'object_proxy':
-        return openerp.service.model
     if name == 'workflow':
         return openerp.workflow
 
-    return Service._services[name]
+    return openerp.report.interface.report_int._reports[name]
 
 BLACK, RED, GREEN, YELLOW, BLUE, MAGENTA, CYAN, WHITE, _NOTHING, DEFAULT = range(10)
 #The background is set with 40 plus the number of the color, and the foreground with 30
