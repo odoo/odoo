@@ -208,8 +208,9 @@ class sale_order(osv.osv):
                         proc_ids = proc_obj.search(cr, uid, [('move_id', '=', mov.id)])
                         if proc_ids:
                             self.pool.get('procurement.order').signal_button_check(cr, uid, proc_ids)
+            stock_obj = self.pool.get('stock.picking')
             for r in self.read(cr, uid, ids, ['picking_ids']):
-                self.pool.get('stock.picking').signal_button_cancel(cr, uid, r['picking_ids'])
+                stock_obj.signal_button_cancel(cr, uid, r['picking_ids'])
         return super(sale_order, self).action_cancel(cr, uid, ids, context=context)
 
     def action_wait(self, cr, uid, ids, context=None):
