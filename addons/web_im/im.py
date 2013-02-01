@@ -167,7 +167,7 @@ class ImportController(openerp.addons.web.http.Controller):
     _cp_path = '/longpolling/im'
 
     @openerp.addons.web.http.jsonrequest
-    def poll(self, req, last=None, users_watch=None, db=None, uid=None, password=None):
+    def poll(self, req, last=None, users_watch=None, db=None, uid=None, password=None, uuid=None):
         if not openerp.evented:
             raise Exception("Not usable in a server not running gevent")
         if db is not None:
@@ -175,10 +175,10 @@ class ImportController(openerp.addons.web.http.Controller):
             req.session._uid = uid
             req.session._password = password
         req.session.model('im.user').im_connect(context=req.context)
-        my_id = req.session.model('im.user').get_by_user_id(req.session._uid, req.context)["id"]
+        my_id = req.session.model('im.user').get_by_user_id(uuid or req.session._uid, req.context)["id"]
         num = 0
         while True:
-            res = req.session.model('im.message').get_messages(last, users_watch, req.context)
+            res = req.session.model('im.message').get_messages(last, users_watch, uuid=uuid, context=req.context)
             if num >= 1 or len(res["res"]) > 0:
                 return res
             last = res["last"]
@@ -188,6 +188,11 @@ class ImportController(openerp.addons.web.http.Controller):
     @openerp.addons.web.http.jsonrequest
     def activated(self, req):
         return not not openerp.evented
+
+    @openerp.addons.web.http.jsonrequest
+    def gen_uuid(self, req):
+        import uuid
+        return "%s" % uuid.uuid1()
 
 
 class im_message(osv.osv):
@@ -203,12 +208,12 @@ class im_message(osv.osv):
         'date': lambda *args: datetime.datetime.now().strftime(DEFAULT_SERVER_DATETIME_FORMAT),
     }
     
-    def get_messages(self, cr, uid, last=None, users_watch=None, context=None):
+    def get_messages(self, cr, uid, last=None, users_watch=None, uuid=None, context=None):
         users_watch = users_watch or []
 
         # complex stuff to determine the last message to show
         users = self.pool.get("im.user")
-        my_id = users.get_by_user_id(cr, uid, uid, context=context)["id"]
+        my_id = users.get_by_user_id(cr, uid, uuid or uid, context=context)["id"]
         c_user = users.browse(cr, uid, my_id, context=context)
         if last:
             if c_user.im_last_received < last:
@@ -231,8 +236,8 @@ class im_message(osv.osv):
         users_status = users.read(cr, uid, users_watch, ["im_status"], context=context)
         return {"res": mess, "last": last, "dbname": cr.dbname, "users_status": users_status}
 
-    def post(self, cr, uid, message, to_user_id, context=None):
-        my_id = self.pool.get('im.user').get_by_user_id(cr, uid, uid)["id"]
+    def post(self, cr, uid, message, to_user_id, uuid=None, context=None):
+        my_id = self.pool.get('im.user').get_by_user_id(cr, uid, uuid or uid)["id"]
         self.create(cr, uid, {"message": message, 'from': my_id, 'to': to_user_id}, context=context)
         notify_channel(cr, "im_channel", {'type': 'message', 'receiver': to_user_id})
         return False
@@ -255,15 +260,14 @@ class im_user(osv.osv):
         found = self.get_by_user_ids(cr, uid, found, context=context)
         return self.read(cr, uid, found, fields, context=context)
 
-    def im_connect(self, cr, uid, context=None):
-        return self._im_change_status(cr, uid, True, context)
+    def im_connect(self, cr, uid, uuid=None, context=None):
+        return self._im_change_status(cr, uid, True, uuid or uid, context)
 
-    def im_disconnect(self, cr, uid, context=None):
-        return self._im_change_status(cr, uid, False, context)
+    def im_disconnect(self, cr, uid, uuid=None, context=None):
+        return self._im_change_status(cr, uid, False, uuid or uid, context)
 
-    def _im_change_status(self, cr, uid, new_one, context=None):
-        ids = self.get_by_user_ids(cr, uid, [uid], context=context)
-        id = ids[0]["id"]
+    def _im_change_status(self, cr, uid, new_one, uuid=None, context=None):
+        id = self.get_by_user_id(cr, uid, uuid or uid, context=context)["id"]
         current_status = self.read(cr, uid, id, ["im_status"], context=None)["im_status"]
         self.write(cr, uid, id, {"im_last_status": new_one, 
             "im_last_status_update": datetime.datetime.now().strftime(DEFAULT_SERVER_DATETIME_FORMAT)}, context=context)
@@ -276,24 +280,34 @@ class im_user(osv.osv):
         return ids[0]
 
     def get_by_user_ids(self, cr, uid, ids, context=None):
-        users = self.search(cr, uid, [["user", "in", ids]], context=None)
-        records = self.read(cr, uid, users, ["user"], context=None)
+        user_ids = [x for x in ids if isinstance(x, int)]
+        uuids = [x for x in ids if isinstance(x, (str, unicode))]
+        users = self.search(cr, uid, ["|", ["user", "in", user_ids], ["uuid", "in", uuids]], context=None)
+        records = self.read(cr, uid, users, ["user", "uuid"], context=None)
         inside = {}
         for i in records:
-            inside[i["user"][0]] = True
+            if i["user"]:
+                inside[i["user"][0]] = True
+            elif ["uuid"]:
+                inside[i["uuid"]] = True
         not_inside = {}
         for i in ids:
             if not (i in inside):
                 not_inside[i] = True
         for to_create in not_inside.keys():
-            created = self.create(cr, uid, {"user": to_create}, context=context)
-            records.append({"id": created, "user": [to_create, ""]})
+            if isinstance(to_create, int):
+                created = self.create(cr, uid, {"user": to_create}, context=context)
+                records.append({"id": created, "user": [to_create, ""]})
+            else:
+                created = self.create(cr, uid, {"uuid": to_create}, context=context)
+                records.append({"id": created, "uuid": to_create})
         return records
 
 
     _columns = {
         'name': fields.related('user', 'name', type='char', size=200, string="Name", store=True, readonly=True),
         'user': fields.many2one("res.users", string="User", select=True, ondelete='cascade'),
+        'uuid': fields.char(string="UUID", size=50, select=True),
         'im_last_received': fields.integer(string="Instant Messaging Last Received Message"),
         'im_last_status': fields.boolean(strint="Instant Messaging Last Status"),
         'im_last_status_update': fields.datetime(string="Instant Messaging Last Status Update"),
