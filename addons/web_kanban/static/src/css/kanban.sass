@@ -51,6 +51,8 @@
     //background: url(data:image/pngbase64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAAECAYAAACp8Z5+AAAAKElEQVQIHWP8DwTv379nAAFBQUEGhnfv3oHEwADEZgJLIRGMIClkLQCr3x2Htp/lLwAAAABJRU5ErkJggg==)
     background: white
     height: inherit
+    .oe_kanban_column_higlight
+        background: #eeddf6 !important
     &.oe_kanban_grouped .oe_kanban_dummy_cell
         background: url(/web/static/src/img/form_sheetbg.png)
         width: 100%
@@ -158,6 +160,9 @@
     .oe_kanban_aggregates
         padding: 0
         margin: 0px
+    .oe_kanban_column
+        .oe_kanban_folded_column_cards
+            visibility: hidden
     .oe_kanban_group_folded
         .oe_kanban_group_title, &.oe_kanban_column *, .oe_kanban_aggregates, .oe_kanban_add
             display: none
@@ -165,6 +170,10 @@
             display: block
         .oe_dropdown_kanban
             left: -5px
+        .oe_kanban_folded_column_cards
+            visibility: visible
+            display: block !important
+            height: 100%
     .oe_kanban_group_title_undefined
         color: #666666
     .oe_kanban_group_title_vertical
