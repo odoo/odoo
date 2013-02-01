@@ -22,7 +22,8 @@ import test_osv
 import test_translate
 import test_uninstall
 import test_view_validation
-import test_xmlrpc # TODO Remove this before merge, or change oe run-tests to only run fast_suite + checks by default.
+# This need a change in `oe run-tests` to only run fast_suite + checks by default.
+# import test_xmlrpc
 
 fast_suite = [
     test_ir_sequence,
