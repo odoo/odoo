@@ -12,9 +12,16 @@ endpoints.
 
 In older version of OpenERP, adding RPC endpoints was done by subclassing the
 ``openerp.netsvc.ExportService`` class. Adding WSGI handlers was done by
-registering them with the ``openerp.wsgi.register_wsgi_handler()`` function.
+registering them with the :py:func:`openerp.wsgi.register_wsgi_handler`
+function.
 
 Starting with OpenERP 7.1, exposing a new arbitrary WSGI handler is done with
-the ``openerp.http.handler`` decorator while adding an RPC endpoint is done
-with the ``openerp.http.rpc`` decorator.
+the :py:func:`openerp.http.handler` decorator while adding an RPC endpoint is
+done with the :py:func:`openerp.http.rpc` decorator.
 
+Routing decorators
+------------------
+
+.. automodule:: openerp.http
+   :members:
+   :undoc-members:

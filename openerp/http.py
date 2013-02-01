@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 
 """
-Decorators to register WSGI and RPC endpoints handlers. See doc/routing.rst.
-# TODO use sphinx ref to doc/routing.rst.
+``openerp.http`` offers decorators to register WSGI and RPC endpoints handlers.
+See :ref:`routing`.
 """
 
 from . import service
