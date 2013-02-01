@@ -105,7 +105,7 @@ openerp.mail = function (session) {
         // As it only looks at the extension it is quite approximative. 
         filetype: function(url){
             url = url.filename || url;
-            var tokens = url.split('.');
+            var tokens = (url+'').split('.');
             if(tokens.length <= 1){
                 return 'unknown';
             }
@@ -236,15 +236,16 @@ openerp.mail = function (session) {
                 this.options.rerender = true;
                 this.options.toggle_read = true;
             }
-            this.parent_thread = parent.messages != undefined ? parent : this.options.root_thread;
+            this.parent_thread = typeof parent.on_message_detroy == 'function' ? parent : this.options.root_thread;
             this.thread = false;
         },
 
         /* Convert date, timerelative and avatar in displayable data. */
         format_data: function () {
             //formating and add some fields for render
-            if (this.date && new Date().getTime()-Date.parse(this.date).getTime() < 7*24*60*60*1000) {
-                this.timerelative = $.timeago(this.date+"Z");
+            this.date = this.date ? session.web.str_to_datetime(this.date) : false;
+            if (this.date && new Date().getTime()-this.date.getTime() < 7*24*60*60*1000) {
+                this.timerelative = $.timeago(this.date);
             } 
             if (this.type == 'email' && (!this.author_id || !this.author_id[0])) {
                 this.avatar = ('/mail/static/src/img/email_icon.png');
@@ -271,7 +272,7 @@ openerp.mail = function (session) {
                 var attach = this.attachment_ids[l];
                 if (!attach.formating) {
                     attach.url = mail.ChatterUtils.get_attachment_url(this.session, this.id, attach.id);
-                    attach.filetype = mail.ChatterUtils.filetype(attach.filename);
+                    attach.filetype = mail.ChatterUtils.filetype(attach.filename || attach.name);
                     attach.name = mail.ChatterUtils.breakword(attach.name || attach.filename);
                     attach.formating = true;
                 }

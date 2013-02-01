@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2012-12-21 17:04+0000\n"
-"PO-Revision-Date: 2013-01-13 19:39+0000\n"
+"PO-Revision-Date: 2013-01-31 16:10+0000\n"
 "Last-Translator: Erwin van der Ploeg (Endian Solutions) <Unknown>\n"
 "Language-Team: Dutch <nl@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-01-18 07:07+0000\n"
-"X-Generator: Launchpad (build 16430)\n"
+"X-Launchpad-Export-Date: 2013-02-01 05:49+0000\n"
+"X-Generator: Launchpad (build 16455)\n"
 
 #. module: stock
 #: field:stock.inventory.line.split,line_exist_ids:0
@@ -237,7 +237,7 @@ msgstr "Optioneel adres waar de goederen moeten worden afgeleverd"
 #. module: stock
 #: model:ir.actions.server,name:stock.action_partial_move_server
 msgid "Deliver/Receive Products"
-msgstr "Geleverde/ontvangen producten"
+msgstr "Ontvang/lever per product"
 
 #. module: stock
 #: code:addons/stock/report/report_stock.py:78
@@ -428,7 +428,7 @@ msgstr "Bestaand partijnummer"
 #. module: stock
 #: model:res.groups,name:stock.group_inventory_valuation
 msgid "Manage Inventory valuation"
-msgstr "Beheers voorraadwaarde"
+msgstr "Beheer voorraadwaarde"
 
 #. module: stock
 #: model:stock.location,name:stock.stock_location_suppliers
@@ -659,7 +659,7 @@ msgstr ""
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_stock_products_moves
 msgid "Receive/Deliver Products"
-msgstr "Ontvangen / Leveren producten"
+msgstr "Ontvang/lever per product"
 
 #. module: stock
 #: field:stock.move,move_history_ids:0
@@ -1151,7 +1151,7 @@ msgstr "Voorraad per locatie"
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_stock_warehouse_mgmt
 msgid "Receive/Deliver By Orders"
-msgstr "Ontvang/lever op basis van orders"
+msgstr "Ontvang/lever per order"
 
 #. module: stock
 #: view:stock.production.lot:0
@@ -2146,6 +2146,22 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Klik hier voor het registeren van een inkomende levering. \n"
+"              </p><p>\n"
+"                Hier kunt u individuele producten ontvangen, onafhankelijk "
+"van welke\n"
+"                inkooporder of verzamelopdracht ze vandaan komen. U vindt "
+"in\n"
+"                de lijst alle producten die u verwacht. Zodra u een "
+"inkooporder ontvangt,\n"
+"                kunt u filteren op basis van de naam van de leverancier of\n"
+"                de orderreferentie. Dan kunt u alle producten bevestigen "
+"voor\n"
+"                ontvangst met behulp van de knoppen aan de rechterkant van "
+"elke regel.\n"
+"              </ p>\n"
+"            "
 
 #. module: stock
 #: view:stock.change.product.qty:0
@@ -2519,7 +2535,7 @@ msgstr "Beheer meerdere locaties en magazijnen"
 #. module: stock
 #: field:stock.config.settings,group_stock_production_lot:0
 msgid "Track serial number on products"
-msgstr "Traceer partijnummers van porducten"
+msgstr "Traceer partijnummers van producten"
 
 #. module: stock
 #: field:stock.picking,message_unread:0
@@ -2752,7 +2768,7 @@ msgid ""
 "levels. Sort and group by selection criteria in order to better analyse and "
 "manage your company  activities."
 msgstr ""
-"Met de voorraadanalyse kunt u eenvoudig de bedrijfsvoorraden controleren en "
+"Met de voorraad analyse kunt u eenvoudig de bedrijfsvoorraden controleren en "
 "analyseren. Sorteer en groepeer per selectiecriteria om zo betere analyses "
 "te maken en de bedrijfsactiviteiten te beheren."
 
@@ -3408,7 +3424,7 @@ msgstr ""
 #: model:ir.ui.menu,name:stock.menu_action_stock_inventory_report
 #: view:report.stock.inventory:0
 msgid "Inventory Analysis"
-msgstr "Voorraadanalyse"
+msgstr "Voorraad analyse"
 
 #. module: stock
 #: field:stock.invoice.onshipping,journal_id:0
@@ -4835,17 +4851,16 @@ msgstr ""
 "<p class=\"oe_view_nocontent_create\">\n"
 "                Klik om een partijnummer toe te voegen.\n"
 "              </p><p>\n"
-"                 Dit is de lijst van alle partijen die u heeft "
-"geregistreerd. Wanneer\n"
-"                 u een partij selecteert kunt u het product terug en vooruit "
+"                Dit is de lijst van alle partijen die u heeft geregistreerd. "
+"Wanneer\n"
+"                u een partij selecteert kunt u het product terug en vooruit "
 "traceren.\n"
-"                Standaard is de lijst gefiltert op producten die beschikbaar "
+"                Standaard is de lijst gefilterd op producten die beschikbaar "
 "zijn in\n"
-"                 uw magazijn, maar u kunt met de knop 'Beschikbaar' alle "
+"                uw magazijn, maar u kunt met de knop 'Beschikbaar' alle "
 "partijen\n"
-"                 bekijken welke zijn geproduceerd, ontvangen of geleverd "
-"aan\n"
-"                 klanten.\n"
+"                bekijken welke zijn geproduceerd, ontvangen of geleverd aan\n"
+"                klanten.\n"
 "              </p>\n"
 "            "
 

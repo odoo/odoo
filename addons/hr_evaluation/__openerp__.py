@@ -27,7 +27,7 @@
     'sequence': 31,
     'website': 'http://www.openerp.com',
     'summary': 'Periodical Evaluations, Appraisals, Surveys',
-    'images': ['images/hr_evaluation_analysis.jpeg','images/hr_evaluation.jpeg'],
+    'images': ['images/hr_evaluation_analysis.jpeg','images/hr_evaluation.jpeg','images/hr_interview_requests.jpeg'],
     'depends': ['hr','base_calendar','survey'],
     'description': """
 Periodical Employees evaluation and appraisals
