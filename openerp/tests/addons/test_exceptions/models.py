@@ -29,5 +29,5 @@ class m(openerp.osv.osv.Model):
         raise Exception('AccessDenied')
 
     def generate_undefined(self, cr, uid, ids, context=None):
-        self.surely_undefined_sumbol
+        self.surely_undefined_symbol
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
