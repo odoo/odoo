@@ -25,6 +25,8 @@ This module defines a few exception types. Those types are understood by the
 RPC layer. Any other exception type bubbling until the RPC layer will be
 treated as a 'Server error'.
 
+If you consider introducing new exceptions, check out the test_exceptions
+addon.
 """
 
 class Warning(Exception):
