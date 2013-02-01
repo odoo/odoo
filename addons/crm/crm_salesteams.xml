@@ -10,10 +10,7 @@
             <field name="view_mode">tree,form</field>
             <field name="domain">['|', ('type','=','lead'), ('type','=',False)]</field>
             <field name="context">{
-                'search_default_section_id': [active_id], 
-                'default_section_id': active_id, 
-                'search_default_new': True, 
-                'search_default_open': True
+                'search_default_section_id': [active_id], 'default_section_id': active_id, 'search_default_new': True, 'search_default_open': True, 'help_alias': {'type': "lead", 'section_id': active_id}
             }</field>
             <field name="help" type="html">
               <p class="oe_view_nocontent_create">
@@ -39,10 +36,7 @@
             <field name="domain">[('type','=','opportunity')]</field>
             <field name="view_id" ref="crm.crm_case_kanban_view_leads"/>
             <field name="context">{
-                'search_default_section_id': [active_id],
-                'default_section_id': active_id, 
-                'search_default_new': True, 
-                'search_default_open': True
+                'search_default_section_id': [active_id], 'default_section_id': active_id, 'search_default_new': True, 'search_default_open': True, 'help_alias': {'type': "lead", 'section_id': active_id}
             }</field>
             <field name="help" type="html">
               <p class="oe_view_nocontent_create">
@@ -95,16 +89,12 @@
                                       </div>
                                     </h4>
                                     <div class="oe_kanban_crm_salesteams_list">
-                                        <a name="%(crm_case_form_view_salesteams_lead)d" type="action"> 
-                                            <field name="number_lead"/>
-                                            <t t-if="record.number_lead.raw_value &gt; 1">Leads</t>
-                                            <t t-if="record.number_lead.raw_value &lt;= 1">Lead</t>
-                                        </a><br/>
-                                        <a name="%(crm_case_form_view_salesteams_opportunity)d" type="action"> 
+                                        <a name="%(crm_case_form_view_salesteams_opportunity)d" type="action">
                                             <field name="number_opportunity"/>
-                                            <t t-if="record.number_opportunity.raw_value &gt; 1">Opportunities</t>
-                                            <t t-if="record.number_opportunity.raw_value &lt;= 1">Opportunity</t>
-                                        </a>
+                                            <t t-if="record.number_opportunity.raw_value &gt; 1">Opportunities</t><t t-if="record.number_opportunity.raw_value &lt;= 1">Opportunity</t></a>,
+                                        <a name="%(crm_case_form_view_salesteams_lead)d" type="action">
+                                            <field name="number_lead"/>
+                                            <t t-if="record.number_lead.raw_value &gt; 1">Leads</t><t t-if="record.number_lead.raw_value &lt;= 1">Lead</t></a>
                                     </div>
                                     <div class="oe_kanban_crm_salesteams_avatars">
                                         <t t-foreach="record.member_ids.raw_value.slice(0,11)" t-as="member">
