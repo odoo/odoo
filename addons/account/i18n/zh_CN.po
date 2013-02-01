@@ -7,14 +7,14 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2012-12-21 17:04+0000\n"
-"PO-Revision-Date: 2012-12-19 06:55+0000\n"
+"PO-Revision-Date: 2013-01-30 03:58+0000\n"
 "Last-Translator: Wei \"oldrev\" Li <oldrev@gmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-12-22 05:37+0000\n"
-"X-Generator: Launchpad (build 16378)\n"
+"X-Launchpad-Export-Date: 2013-01-31 04:38+0000\n"
+"X-Generator: Launchpad (build 16455)\n"
 
 #. module: account
 #: model:process.transition,name:account.process_transition_supplierreconcilepaid0
@@ -243,7 +243,7 @@ msgstr "比利时报表"
 #. module: account
 #: model:mail.message.subtype,name:account.mt_invoice_validated
 msgid "Validated"
-msgstr ""
+msgstr "已审核"
 
 #. module: account
 #: model:account.account.type,name:account.account_type_income_view1
@@ -759,7 +759,7 @@ msgstr "配置你公司银行账户"
 #. module: account
 #: view:account.invoice.refund:0
 msgid "Create Refund"
-msgstr ""
+msgstr "创建退款"
 
 #. module: account
 #: constraint:account.move.line:0
@@ -1000,7 +1000,7 @@ msgstr "采购分类账"
 #. module: account
 #: model:mail.message.subtype,description:account.mt_invoice_paid
 msgid "Invoice paid"
-msgstr ""
+msgstr "发票已付清"
 
 #. module: account
 #: view:validate.account.move:0
@@ -1188,7 +1188,7 @@ msgstr "退款 "
 #: code:addons/account/account_analytic_line.py:90
 #, python-format
 msgid "There is no expense account defined for this product: \"%s\" (id:%d)."
-msgstr ""
+msgstr "产品: \"%s\" (id:%d)  没有定义 成本科目"
 
 #. module: account
 #: view:account.tax:0
@@ -1707,7 +1707,7 @@ msgstr "搜索银行对账单"
 #. module: account
 #: view:account.move.line:0
 msgid "Unposted Journal Items"
-msgstr "未登帐凭证项"
+msgstr "未记账凭证"
 
 #. module: account
 #: view:account.chart.template:0
@@ -1826,7 +1826,7 @@ msgstr "销售科目类型"
 #: model:account.payment.term,name:account.account_payment_term_15days
 #: model:account.payment.term,note:account.account_payment_term_15days
 msgid "15 Days"
-msgstr ""
+msgstr "15 天"
 
 #. module: account
 #: model:ir.ui.menu,name:account.periodical_processing_invoicing
@@ -1964,7 +1964,7 @@ msgstr "银行单据草稿"
 #. module: account
 #: model:mail.message.subtype,description:account.mt_invoice_validated
 msgid "Invoice validated"
-msgstr ""
+msgstr "发票已核准"
 
 #. module: account
 #: field:account.config.settings,module_account_check_writing:0
@@ -2200,7 +2200,7 @@ msgstr "产品类别"
 msgid ""
 "You cannot change the type of account to '%s' type as it contains journal "
 "items!"
-msgstr ""
+msgstr "不能改变科目类型为'%s' ，因为他已经有了一个分类账"
 
 #. module: account
 #: model:ir.model,name:account.model_account_aged_trial_balance
@@ -2646,7 +2646,7 @@ msgstr "科目属性"
 #. module: account
 #: selection:account.invoice.refund,filter_refund:0
 msgid "Create a draft refund"
-msgstr ""
+msgstr "创建一个退款单草稿"
 
 #. module: account
 #: view:account.partner.reconcile.process:0
@@ -2774,7 +2774,7 @@ msgstr ""
 #. module: account
 #: field:account.config.settings,purchase_sequence_next:0
 msgid "Next supplier invoice number"
-msgstr ""
+msgstr "下个供应商发票编号"
 
 #. module: account
 #: view:account.analytic.cost.ledger.journal.report:0
@@ -2856,7 +2856,7 @@ msgstr "设置错误!"
 #: code:addons/account/account_bank_statement.py:433
 #, python-format
 msgid "Statement %s confirmed, journal items were created."
-msgstr ""
+msgstr "对账单 %s 确认，分类账目 被创建."
 
 #. module: account
 #: field:account.invoice.report,price_average:0
@@ -2968,6 +2968,12 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"点击建立新的财年.\n"
+"              </p><p>\n"
+"                "
+"根据需要定义公司的会计年度。会计年度通常是公司的账户最后结转的期间，通常是12个月。会计年度通常和结束日期有关。例如，假如一个公司的会计年度结束在2011"
+"年11月30日，那么在2010年12月1日至2011年11月30日的每一个交易会被记录到2011会计年度。              </p>\n"
+"            "
 
 #. module: account
 #: view:account.common.report:0
@@ -3153,7 +3159,7 @@ msgstr "行显示的非强制性数量，如：已销售产品。这数量不是
 #: view:account.unreconcile:0
 #: view:account.unreconcile.reconcile:0
 msgid "Unreconcile Transactions"
-msgstr ""
+msgstr "未核销交易"
 
 #. module: account
 #: field:wizard.multi.charts.accounts,only_one_chart_template:0
@@ -3342,7 +3348,7 @@ msgstr "科目代码使用数字"
 #. module: account
 #: field:res.partner,property_supplier_payment_term:0
 msgid "Supplier Payment Term"
-msgstr ""
+msgstr "供应商付款条款"
 
 #. module: account
 #: view:account.fiscalyear:0
@@ -3415,7 +3421,7 @@ msgstr "电子文件"
 #. module: account
 #: field:account.move.line,reconcile:0
 msgid "Reconcile Ref"
-msgstr ""
+msgstr "核销编号"
 
 #. module: account
 #: field:account.config.settings,has_chart_of_accounts:0
@@ -3813,7 +3819,7 @@ msgstr "科目一览表"
 #: view:cash.box.out:0
 #: model:ir.actions.act_window,name:account.action_cash_box_out
 msgid "Take Money Out"
-msgstr ""
+msgstr "取钱"
 
 #. module: account
 #: report:account.vat.declaration:0
@@ -3873,7 +3879,7 @@ msgstr "期间（天数）"
 msgid ""
 "You cannot modify a posted entry of this journal.\n"
 "First you should set the journal to allow cancelling entries."
-msgstr ""
+msgstr "不能修改已经记账的凭证项，首先设置分类账允许取消"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_print_sale_purchase_journal
@@ -4442,7 +4448,7 @@ msgstr "如果活动字段设置为False，您将可以隐藏它而不在科目�
 #. module: account
 #: view:account.move.line:0
 msgid "Posted Journal Items"
-msgstr "已登帐凭证"
+msgstr "已记账凭证"
 
 #. module: account
 #: field:account.move.line,blocked:0
@@ -5782,7 +5788,7 @@ msgstr "产品数量"
 #: selection:account.move,state:0
 #: view:account.move.line:0
 msgid "Unposted"
-msgstr "未登账"
+msgstr "未记账"
 
 #. module: account
 #: view:account.change.currency:0
@@ -7458,7 +7464,7 @@ msgstr "它将作为一个默认的借方科目"
 #. module: account
 #: view:account.entries.report:0
 msgid "Posted entries"
-msgstr "已复核的会计凭证呢个"
+msgstr "已记账的会计凭证"
 
 #. module: account
 #: help:account.payment.term.line,value_amount:0
@@ -7809,7 +7815,7 @@ msgstr ""
 #. module: account
 #: view:account.move:0
 msgid "Unposted Journal Entries"
-msgstr "未审核的会计凭证"
+msgstr "未记账的会计凭证"
 
 #. module: account
 #: help:account.invoice.refund,date:0
@@ -10108,7 +10114,7 @@ msgstr "选择会计期间"
 #: selection:account.move,state:0
 #: view:account.move.line:0
 msgid "Posted"
-msgstr "已登账"
+msgstr "已记账"
 
 #. module: account
 #: report:account.account.balance:0
