@@ -236,7 +236,7 @@ openerp.mail = function (session) {
                 this.options.rerender = true;
                 this.options.toggle_read = true;
             }
-            this.parent_thread = parent.messages != undefined ? parent : this.options.root_thread;
+            this.parent_thread = typeof parent.on_message_detroy == 'function' ? parent : this.options.root_thread;
             this.thread = false;
         },
 
