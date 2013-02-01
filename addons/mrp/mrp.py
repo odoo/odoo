@@ -991,7 +991,7 @@ class mrp_production(osv.osv):
                                  destination_location_id=source_location_id, context=context)
                 self._make_production_line_procurement(cr, uid, line, shipment_move_id, context=context)
 
-            self.registry('stock.picking').signal_button_confirm(cr, uid, [shipment_id])
+            self.pool.get('stock.picking').signal_button_confirm(cr, uid, [shipment_id])
             production.write({'state':'confirmed'}, context=context)
         return shipment_id
 
