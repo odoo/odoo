@@ -108,7 +108,7 @@ class crm_lead2opportunity_partner(osv.osv_memory):
             lead.allocate_salesman(cr, uid, lead_ids, user_ids, team_id=team_id, context=context)
         return res
 
-    def _merge_opportunity(self, cr, uid, ids, opportunity_ids, action='merge', context=None):
+    def _merge_opportunity(self, cr, uid, ids, opportunity_ids, context=None):
         if context is None:
             context = {}
         res = False
@@ -117,7 +117,7 @@ class crm_lead2opportunity_partner(osv.osv_memory):
         # merged into the first opportunity (and the rest deleted)
         opportunity_ids = [o.id for o in opportunity_ids]
         lead_ids = context.get('active_ids', [])
-        if action == 'merge' and lead_ids and opportunity_ids:
+        if lead_ids and opportunity_ids:
             # Add the leads in the to-merge list, next to other opps
             # (the fact that they're passed in context['lead_ids'] means that
             # they cannot be selected to contain the result of the merge.
@@ -137,7 +137,8 @@ class crm_lead2opportunity_partner(osv.osv_memory):
         lead_ids = context.get('active_ids', [])
         data = self.browse(cr, uid, ids, context=context)[0]
         self._convert_opportunity(cr, uid, ids, {'lead_ids': lead_ids}, context=context)
-        self._merge_opportunity(cr, uid, ids, data.opportunity_ids, data.name, context=context)
+        if data.name == 'merge':
+            self._merge_opportunity(cr, uid, ids, data.opportunity_ids, context=context)
         return lead.redirect_opportunity_view(cr, uid, lead_ids[0], context=context)
 
 
