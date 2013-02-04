@@ -1306,7 +1306,7 @@ instance.web.View = instance.web.Widget.extend({
         } else if (action_data.type=="action") {
             return this.rpc('/web/action/load', {
                 action_id: action_data.name,
-                context: instance.web.pyeval.eval('context', context),
+                context: _.extend({'active_model': dataset.model, 'active_ids': dataset.ids, 'active_id': record_id}, instance.web.pyeval.eval('context', context)),
                 do_not_eval: true
             }).then(handler);
         } else  {
@@ -1394,26 +1394,6 @@ instance.web.View = instance.web.Widget.extend({
     is_action_enabled: function(action) {
         var attrs = this.fields_view.arch.attrs;
         return (action in attrs) ? JSON.parse(attrs[action]) : true;
-    },
-    /**
-     * insert alias into the dom
-     */
-    insert_alias: function ($dom) {
-        var self = this;
-        var context = this.options.action.context || {};
-        if (context && context.help_alias) {
-            new instance.web.Model('mail.alias').call("get_alias", [], {
-                    'model': this.options.action.res_model, 
-                    'alias_defaults': context.help_alias
-                    }).then(function (alias_ids) {
-                if (alias_ids.length && alias_ids[0].email.match(/@.+/)) {
-                    // alias_ids[0].global
-                    var $alias = $(QWeb.render('View.nocontent_alias'));
-                    $alias.append('<a href="mailto:' + alias_ids[0].email + '">' + alias_ids[0].email + '</a>');
-                    $dom.append($alias);
-                }
-            });
-        }
     },
 });
 
