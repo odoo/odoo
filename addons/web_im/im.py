@@ -214,16 +214,16 @@ class im_message(osv.osv):
         # complex stuff to determine the last message to show
         users = self.pool.get("im.user")
         my_id = users.get_by_user_id(cr, uid, uuid or uid, context=context)["id"]
-        c_user = users.browse(cr, uid, my_id, context=context)
+        c_user = users.browse(cr, openerp.SUPERUSER_ID, my_id, context=context)
         if last:
             if c_user.im_last_received < last:
-                users.write(cr, uid, my_id, {'im_last_received': last}, context=context)
+                users.write(cr, openerp.SUPERUSER_ID, my_id, {'im_last_received': last}, context=context)
         else:
             last = c_user.im_last_received or -1
 
         # how fun it is to always need to reorder results from read
-        mess_ids = self.search(cr, uid, [['id', '>', last], ['to', '=', my_id]], order="id", context=context)
-        mess = self.read(cr, uid, mess_ids, ["id", "message", "from", "date"], context=context)
+        mess_ids = self.search(cr, openerp.SUPERUSER_ID, [['id', '>', last], ['to', '=', my_id]], order="id", context=context)
+        mess = self.read(cr, openerp.SUPERUSER_ID, mess_ids, ["id", "message", "from", "date"], context=context)
         index = {}
         for i in xrange(len(mess)):
             index[mess[i]["id"]] = mess[i]
@@ -233,12 +233,12 @@ class im_message(osv.osv):
 
         if len(mess) > 0:
             last = mess[-1]["id"]
-        users_status = users.read(cr, uid, users_watch, ["im_status"], context=context)
+        users_status = users.read(cr, openerp.SUPERUSER_ID, users_watch, ["im_status"], context=context)
         return {"res": mess, "last": last, "dbname": cr.dbname, "users_status": users_status}
 
     def post(self, cr, uid, message, to_user_id, uuid=None, context=None):
         my_id = self.pool.get('im.user').get_by_user_id(cr, uid, uuid or uid)["id"]
-        self.create(cr, uid, {"message": message, 'from': my_id, 'to': to_user_id}, context=context)
+        self.create(cr, openerp.SUPERUSER_ID, {"message": message, 'from': my_id, 'to': to_user_id}, context=context)
         notify_channel(cr, "im_channel", {'type': 'message', 'receiver': to_user_id})
         return False
 
@@ -249,13 +249,14 @@ class im_user(osv.osv):
         res = {}
         current = datetime.datetime.now()
         delta = datetime.timedelta(0, DISCONNECTION_TIMER)
-        data = self.read(cr, uid, ids, ["im_last_status_update", "im_last_status"], context=context)
+        data = self.read(cr, openerp.SUPERUSER_ID, ids, ["im_last_status_update", "im_last_status"], context=context)
         for obj in data:
             last_update = datetime.datetime.strptime(obj["im_last_status_update"], DEFAULT_SERVER_DATETIME_FORMAT)
             res[obj["id"]] = obj["im_last_status"] and (last_update + delta) > current
         return res
 
     def search_users(self, cr, uid, domain, fields, limit, context=None):
+        # do not user openerp.SUPERUSER_ID, reserved to normal users
         found = self.pool.get('res.users').search(cr, uid, domain, limit=limit, context=context)
         found = self.get_by_user_ids(cr, uid, found, context=context)
         return self.read(cr, uid, found, fields, context=context)
@@ -264,14 +265,12 @@ class im_user(osv.osv):
         return self._im_change_status(cr, uid, True, uuid or uid, context)
 
     def im_disconnect(self, cr, uid, uuid=None, context=None):
-        import pudb
-        pudb.set_trace()
         return self._im_change_status(cr, uid, False, uuid or uid, context)
 
     def _im_change_status(self, cr, uid, new_one, uuid=None, context=None):
         id = self.get_by_user_id(cr, uid, uuid or uid, context=context)["id"]
-        current_status = self.read(cr, uid, id, ["im_status"], context=None)["im_status"]
-        self.write(cr, uid, id, {"im_last_status": new_one, 
+        current_status = self.read(cr, openerp.SUPERUSER_ID, id, ["im_status"], context=None)["im_status"]
+        self.write(cr, openerp.SUPERUSER_ID, id, {"im_last_status": new_one, 
             "im_last_status_update": datetime.datetime.now().strftime(DEFAULT_SERVER_DATETIME_FORMAT)}, context=context)
         if current_status != new_one:
             notify_channel(cr, "im_channel", {'type': 'status', 'user': id})
@@ -284,8 +283,8 @@ class im_user(osv.osv):
     def get_by_user_ids(self, cr, uid, ids, context=None):
         user_ids = [x for x in ids if isinstance(x, int)]
         uuids = [x for x in ids if isinstance(x, (str, unicode))]
-        users = self.search(cr, uid, ["|", ["user", "in", user_ids], ["uuid", "in", uuids]], context=None)
-        records = self.read(cr, uid, users, ["user", "uuid"], context=None)
+        users = self.search(cr, openerp.SUPERUSER_ID, ["|", ["user", "in", user_ids], ["uuid", "in", uuids]], context=None)
+        records = self.read(cr, openerp.SUPERUSER_ID, users, ["user", "uuid"], context=None)
         inside = {}
         for i in records:
             if i["user"]:
@@ -298,10 +297,10 @@ class im_user(osv.osv):
                 not_inside[i] = True
         for to_create in not_inside.keys():
             if isinstance(to_create, int):
-                created = self.create(cr, uid, {"user": to_create}, context=context)
+                created = self.create(cr, openerp.SUPERUSER_ID, {"user": to_create}, context=context)
                 records.append({"id": created, "user": [to_create, ""]})
             else:
-                created = self.create(cr, uid, {"uuid": to_create}, context=context)
+                created = self.create(cr, openerp.SUPERUSER_ID, {"uuid": to_create}, context=context)
                 records.append({"id": created, "uuid": to_create})
         return records
 
