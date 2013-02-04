@@ -141,7 +141,8 @@ class Multicorn(object):
     def process_spawn(self):
         while len(self.workers_http) < self.population:
             self.worker_spawn(WorkerHTTP, self.workers_http)
-        while len(self.workers_cron) < config['max_cron_threads']:
+        while len(self.workers_cron) < config['max_cron_threads'] \
+            and config['db_name']:
             self.worker_spawn(WorkerCron, self.workers_cron)
         while len(self.workers_longpolling) < 1:
             self.worker_spawn(WorkerLongPolling, self.workers_longpolling)
@@ -393,7 +394,7 @@ class WorkerCron(Worker):
         if config['db_name']:
             db_names = config['db_name'].split(',')
         else:
-            db_names = openerp.netsvc.ExportService._services['db'].exp_list(True)
+            db_names = []
         for db_name in db_names:
             if rpc_request_flag:
                 start_time = time.time()
