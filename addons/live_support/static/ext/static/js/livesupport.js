@@ -48,16 +48,35 @@ define(["nova", "jquery", "underscore", "oeclient", "require"], function(nova, $
             this.$().append(templateEngine.chatButton({widget: this}));
         },
         click: function() {
-            connection.getModel("live_support.channel").call("get_available_user", [1]).then(function(result) {
-                if (! result) {
-                    console.log("no available user");
+            if (! this.manager) {
+                this.manager = new livesupport.ConversationManager(null);
+                this.activated_def = this.manager.start_polling();
+            }
+            var def = $.Deferred();
+            $.when(this.activated_def).then(function() {
+                def.resolve();
+            }, function() {
+                def.reject();
+            });
+            setTimeout(function() {
+                def.reject();
+            }, 5000);
+            def.then(_.bind(this.chat, this), function() {
+                window.alert("It seems the connection to the server is encountering problems, please try again later.");
+            });
+        },
+        chat: function() {
+            var self = this;
+            if (this.manager.conversations.length > 0)
+                return;
+            connection.getModel("live_support.channel").call("get_available_user", [1]).then(function(user_id) {
+                if (! user_id) {
+                    window.alert("None of our collaborators seems to be available, please try again later.");
                     return;
                 }
-                demo_id = result;
-                var manager = new livesupport.ConversationManager(null);
-                manager.start_polling().then(function() {
-                    manager.ensure_users([demo_id]).then(function() {
-                        manager.activate_user(manager.get_user(demo_id));
+                self.manager.start_polling().then(function() {
+                    self.manager.ensure_users([user_id]).then(function() {
+                        self.manager.activate_user(self.manager.get_user(user_id));
                     });
                 });
             });
@@ -350,7 +369,7 @@ define(["nova", "jquery", "underscore", "oeclient", "require"], function(nova, $
         destroy: function() {
             this.user.remove_watcher();
             this.trigger("destroyed");
-            return this._super();
+            return this.$super();
         },
     });
 
