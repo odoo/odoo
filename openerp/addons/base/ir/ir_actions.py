@@ -216,9 +216,9 @@ class act_window(osv.osv):
         'name': fields.char('Action Name', size=64, translate=True),
         'type': fields.char('Action Type', size=32, required=True),
         'view_id': fields.many2one('ir.ui.view', 'View Ref.', ondelete='cascade'),
-        'domain': fields.char('Domain Value', size=250,
+        'domain': fields.char('Domain Value',
             help="Optional domain filtering of the destination data, as a Python expression"),
-        'context': fields.char('Context Value', size=250, required=True,
+        'context': fields.char('Context Value', required=True,
             help="Context dictionary as Python expression, empty by default (Default: {})"),
         'res_id': fields.integer('Record ID', help="Database ID of record to open in form view, when ``view_mode`` is set to 'form' only"),
         'res_model': fields.char('Destination Model', size=64, required=True,
@@ -260,6 +260,22 @@ class act_window(osv.osv):
         'auto_search':True,
         'multi': False,
     }
+
+    def read(self, cr, uid, ids, fields=None, context=None, load='_classic_read'):
+        results = super(act_window, self).read(cr, uid, ids, fields=fields, context=context, load=load)
+
+        if not fields or 'help' in fields:
+            context = dict(context)
+            dic = {
+                'active_model' : context.get('active_model', None),
+                'active_id' : context.get('active_id', None),
+                'active_ids' : context.get('active_ids', None)
+            }
+            for res in results:
+                if res.get('res_model', False):
+                    res['help'] = self.pool.get(res.get('res_model')).dynamic_help(cr, uid, res.get('help', ""), context=dict(context, **eval(res['context'], dic)))
+        
+        return results
 
     def for_xml_id(self, cr, uid, module, xml_id, context=None):
         """ Returns the act_window object created for the provided xml_id
