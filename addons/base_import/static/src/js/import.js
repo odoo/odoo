@@ -134,6 +134,7 @@ openerp.base_import = function (instance) {
         start: function () {
             var self = this;
             this.setup_encoding_picker();
+            this.setup_separator_picker();
 
             return $.when(
                 this._super(),
@@ -163,6 +164,26 @@ openerp.base_import = function (instance) {
                     return c({id: 'utf-8', text: 'utf-8'});
                 }
             }).select2('val', 'utf-8');
+        },
+        setup_separator_picker: function () {
+            this.$('input.oe_import_separator').select2({
+                width: '160px',
+                query: function (q) {
+                    var suggestions = [
+                        {id: ',', text: _t("Comma")},
+                        {id: ';', text: _t("Semicolon")},
+                        {id: '\t', text: _t("Tab")},
+                        {id: ' ', text: _t("Space")}
+                    ];
+                    if (q.term) {
+                        suggestions.unshift({id: q.term, text: q.term});
+                    }
+                    q.callback({results: suggestions});
+                },
+                initSelection: function (e, c) {
+                    return c({id: ',', text: _t("Comma")});
+                },
+            });
         },
 
         import_options: function () {
