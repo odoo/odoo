@@ -8,8 +8,25 @@
             <field name="res_model">live_support.channel</field>
             <field name="view_mode">tree,form</field>
         </record>
-        <menuitem name="Support Channels" parent="live_support" id="support_channels" action="action_support_channels"/>
+        <menuitem name="Support Channels" parent="live_support" id="support_channels" action="action_support_channels" groups="group_live_support"/>
 
-        
+
+        <record id="view_order_form" model="ir.ui.view">
+            <field name="name">support_channel.form</field>
+            <field name="model">live_support.channel</field>
+            <field name="arch" type="xml">
+                <form string="Support Channels" version="7.0">
+                <sheet>
+                    <h1>
+                        <field name="name"/>
+                    </h1>
+                    <label string="Users" colspan="2"/>
+                    <field name="user_ids" nolabel="1" colspan="2"/>
+                </sheet>
+                </form>
+            </field>
+        </record>
+
+
     </data>
 </openerp>

@@ -27,4 +27,11 @@ class live_support_channel(osv.osv):
     _name = 'live_support.channel'
     _columns = {
         'name': fields.char(string="Name", size=200, required=True),
+        'user_ids': fields.many2many('im.user', 'live_support_channel_im_user', 'channel_id', 'user_id', string="Users"),
+    }
+
+class im_user(osv.osv):
+    _inherit = 'im.user'
+    _columns = {
+        'support_channel_ids': fields.many2many('live_support.channel', 'live_support_channel_im_user', 'user_id', 'channel_id', string="Support Channels"),
     }
