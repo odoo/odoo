@@ -345,3 +345,54 @@
           'product_uom': move.product_uom.id,
       }
    self.do_partial(cr, uid, [ref('stock_picking_0')],partial_datas)
+-
+  Now I will do some test on HP Pavilion Desktop PCs to check the qty with and without Production Lot.
+-
+  !python {model: stock.change.standard.price}: |
+    context.update({'active_model':'product.product', 'active_id': ref('product_product_hppaviliondesktoppcs0')})
+-
+  I am creating production lot '00001' for 'HP Pavilion Desktop PCs'
+-
+  !record {model: stock.production.lot, id: lot_hp_pc_1}:
+    name: 00001
+    product_id: product_product_hppaviliondesktoppcs0
+-
+  I update stock of 'HP Pavilion Desktop PCs' with 10 PCE in Stock with Production Lot.
+-
+  !record {model: stock.change.product.qty, id: update_qty_with_lot}:
+    location_id: stock_location_stock
+    new_quantity: 10
+    product_id: product_product_hppaviliondesktoppcs0
+    prodlot_id: lot_hp_pc_1
+-
+  Now I run the update wizard and update stock.
+-
+  !python {model: stock.change.product.qty}: |
+    self.change_product_qty(cr, uid, [ref('update_qty_with_lot')], context=context)
+-
+  I check real stock of 'HP Pavilion Desktop PCs'.
+-
+  !python {model: product.product}: |
+    product = self.browse(cr, uid, ref('product_product_hppaviliondesktoppcs0'), context=context)
+    assert product.qty_available == 20, "Real stock is not 20 PCE."
+-
+  The current stock of the 'HP Pavilion Desktop PCs' is 20 PCE.
+-
+  !record {model: stock.change.product.qty, id: update_qty_nolot}:
+    location_id: stock_location_stock
+    new_quantity: 10
+    product_id: product_product_hppaviliondesktoppcs0
+-
+  I try to update more 10 PCE in Stock without Production Lot.
+-
+  !python {model: stock.change.product.qty}: |
+    self.change_product_qty(cr, uid, [ref('update_qty_nolot')], context=context)
+-
+  I again check real stock of 'HP Pavilion Desktop PCs'.
+-
+  !python {model: product.product}: |
+    product = self.browse(cr, uid, ref('product_product_hppaviliondesktoppcs0'), context=context)
+    assert product.qty_available == 20, "Real stock is updated with 10 more PCE."
+-
+  I confirm available stock of 'HP Pavilion Desktop PCs' is still 20 PCE.
+
