@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<openerp>
+    <data>
+        <menuitem id="live_support" name="Live Support" parent="mail.mail_feeds_main" groups="group_live_support"/>
+
+        <record model="ir.actions.act_window" id="action_support_channels">
+            <field name="name">Support Channels</field>
+            <field name="res_model">live_support.channel</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+        <menuitem name="Support Channels" parent="live_support" id="support_channels" action="action_support_channels"/>
+
+        
+    </data>
+</openerp>
