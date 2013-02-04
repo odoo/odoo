@@ -66,7 +66,7 @@ class pos_make_payment(osv.osv_memory):
             order_obj.add_payment(cr, uid, active_id, data, context=context)
 
         if order_obj.test_paid(cr, uid, [active_id]):
-            self.pool.get('pos.order').signal_paid(cr, uid, [active_id])
+            order_obj.signal_paid(cr, uid, [active_id])
             return {'type' : 'ir.actions.act_window_close' }
          ##self.print_report(cr, uid, ids, context=context)
 

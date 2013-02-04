@@ -694,7 +694,7 @@ class pos_order(osv.osv):
                 if line.qty < 0:
                     location_id, output_id = output_id, location_id
             
-            self.pool.get('stock.picking').signal_button_confirm(cr, uid, [picking_id])
+            picking_obj.signal_button_confirm(cr, uid, [picking_id])
             picking_obj.force_assign(cr, uid, [picking_id], context)
         return True
 
@@ -704,7 +704,7 @@ class pos_order(osv.osv):
         """
         stock_picking_obj = self.pool.get('stock.picking')
         for order in self.browse(cr, uid, ids, context=context):
-            self.pool.get('stock.picking').signal_button_cancel(cr, uid, [order.picking_id.id])
+            stock_picking_obj.signal_button_cancel(cr, uid, [order.picking_id.id])
             if stock_picking_obj.browse(cr, uid, order.picking_id.id, context=context).state <> 'cancel':
                 raise osv.except_osv(_('Error!'), _('Unable to cancel the picking.'))
         self.write(cr, uid, ids, {'state': 'cancel'}, context=context)

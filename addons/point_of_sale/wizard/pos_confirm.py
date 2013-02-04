@@ -36,7 +36,7 @@ class pos_confirm(osv.osv_memory):
                     todo = False
                     break
             if todo:
-                self.pool.get('pos.order').signal_done(cr, uid, [order.id])
+                order_obj.signal_done(cr, uid, [order.id])
 
         # Check if there is orders to reconcile their invoices
         ids = order_obj.search(cr, uid, [('state','=','invoiced'),('invoice_id.state','=','open')], context=context)
