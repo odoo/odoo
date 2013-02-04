@@ -597,6 +597,12 @@ instance.web.ViewManager =  instance.web.Widget.extend({
             self.trigger("controller_inited",view_type,controller);
         });
     },
+    /**
+     * @returns {Number|Boolean} the view id of the given type, false if not found
+     */
+    get_view_id: function(view_type) {
+        return this.views[view_type] && this.views[view_type].view_id || false;
+    },
     set_title: function(title) {
         this.$el.find('.oe_view_title_text:first').text(title);
     },

@@ -416,6 +416,15 @@ instance.web_calendar.CalendarView = instance.web.View.extend({
     },
     slow_create: function(event_id, event_obj) {
         var self = this;
+        var view_id = false;
+        var title = this.name;
+        var parent = this.getParent();
+        if (parent instanceof instance.web.ViewManager) {
+            view_id = parent.get_view_id('form');
+            if (parent instanceof instance.web.ViewManagerAction) {
+                title = parent.get_action_manager().get_title();
+            }
+        }
         if (this.current_mode() === 'month') {
             event_obj['start_date'].addHours(8);
             if (event_obj._length === 1) {
@@ -432,8 +441,9 @@ instance.web_calendar.CalendarView = instance.web.View.extend({
         var something_saved = false;
         var pop = new instance.web.form.FormOpenPopup(this);
         pop.show_element(this.dataset.model, null, this.dataset.get_context(defaults), {
-            title: _t("Create: ") + ' ' + this.name,
+            title: _t("Create: ") + ' ' + title,
             disable_multiple_selection: true,
+            view_id: view_id,
         });
         pop.on('closed', self, function() {
             if (!something_saved) {
@@ -450,6 +460,15 @@ instance.web_calendar.CalendarView = instance.web.View.extend({
     open_event: function(event_id) {
         var self = this;
         var index = this.dataset.get_id_index(event_id);
+        var view_id = false;
+        var title = this.name;
+        var parent = this.getParent();
+        if (parent instanceof instance.web.ViewManager) {
+            view_id = parent.get_view_id('form');
+            if (parent instanceof instance.web.ViewManagerAction) {
+                title = parent.get_action_manager().get_title();
+            }
+        }
         if (index === null) {
             // Some weird behaviour in dhtmlx scheduler could lead to this case
             // eg: making multiple days event in week view, dhtmlx doesn't trigger eventAdded !!??
@@ -467,7 +486,8 @@ instance.web_calendar.CalendarView = instance.web.View.extend({
             var pop = new instance.web.form.FormOpenPopup(this);
             var id_from_dataset = this.dataset.ids[index]; // dhtmlx scheduler loses id's type
             pop.show_element(this.dataset.model, id_from_dataset, this.dataset.get_context(), {
-                title: _t("Edit: ") + this.name
+                title: _t("Edit: ") + title,
+                view_id: view_id,
             });
             pop.on('write_completed', self, function(){
                 self.reload_event(id_from_dataset);
