@@ -2393,7 +2393,6 @@ instance.web.DateTimeWidget = instance.web.Widget.extend({
             showButtonPanel: true,
             firstDay: Date.CultureInfo.firstDayOfWeek,
             controlType:  value,
-            timeFormat: 'hh:mm tt'
         };
     },
     start: function() {
