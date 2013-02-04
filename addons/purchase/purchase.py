@@ -25,7 +25,6 @@ from dateutil.relativedelta import relativedelta
 from operator import attrgetter
 
 from openerp.osv import fields, osv
-from openerp import netsvc
 from openerp import pooler
 from openerp.tools.translate import _
 import openerp.addons.decimal_precision as dp
@@ -484,7 +483,6 @@ class purchase_order(osv.osv):
         if not len(ids):
             return False
         self.write(cr, uid, ids, {'state':'draft','shipped':0})
-        wf_service = netsvc.LocalService("workflow")
         for p_id in ids:
             # Deleting the existing instance of workflow for PO
             self.delete_workflow(cr, uid, [p_id]) # TODO is it necessary to interleave the calls?
@@ -777,7 +775,6 @@ class purchase_order(osv.osv):
 
         allorders = []
         orders_info = {}
-        wf_service = netsvc.LocalService("workflow")
         for order_key, (order_data, old_ids) in new_orders.iteritems():
             # skip merges with only one order
             if len(old_ids) < 2:

@@ -59,9 +59,7 @@
   I Validate Invoice of Purchase Order.
 -
   !python {model: purchase.order}: |
-    import netsvc
     invoice_ids = [x.id for x in self.browse(cr, uid, ref("purchase_order_1")).invoice_ids]
-    wf_service = netsvc.LocalService("workflow")
     self.pool.get('account.invoice').signal_invoice_open(cr, uid, invoice_ids)
 -
   I check that purchase order is invoiced.

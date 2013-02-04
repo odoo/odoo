@@ -69,10 +69,8 @@
   I confirmed RFQ which has best price.
 -
   !python {model: purchase.order}: |
-    import netsvc
-    wf_service = netsvc.LocalService("workflow")
     purchase = self.browse(cr, uid, ref('rfq2'), context=context)
-    wf_service.trg_validate(uid, 'purchase.order', purchase.id, 'purchase_confirm', cr)
+    self.signal_purchase_confirm(cr, uid, [purchase.id])
 
 -
   I check status of requisition after confirmed best RFQ.

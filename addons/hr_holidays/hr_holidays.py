@@ -27,7 +27,6 @@ from itertools import groupby
 from operator import attrgetter, itemgetter
 
 import math
-from openerp import netsvc
 from openerp import tools
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
@@ -304,10 +303,8 @@ class hr_holidays(osv.osv):
             'manager_id': False,
             'manager_id2': False,
         })
-        wf_service = netsvc.LocalService("workflow")
-        for id in ids:
-            wf_service.trg_delete(uid, 'hr.holidays', id, cr)
-            wf_service.trg_create(uid, 'hr.holidays', id, cr)
+        self.delete_workflow(cr, uid, ids)
+        self.create_workflow(cr, uid, ids)
         to_unlink = []
         for record in self.browse(cr, uid, ids, context=context):
             for record2 in record.linked_request_ids:

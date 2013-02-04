@@ -26,7 +26,6 @@ from datetime import datetime
 from datetime import timedelta
 from dateutil import relativedelta
 
-from openerp import netsvc
 from openerp.osv import fields, osv
 from openerp import tools
 from openerp.tools.translate import _
@@ -331,13 +330,12 @@ class hr_payslip(osv.osv):
 
     def refund_sheet(self, cr, uid, ids, context=None):
         mod_obj = self.pool.get('ir.model.data')
-        wf_service = netsvc.LocalService("workflow")
         for payslip in self.browse(cr, uid, ids, context=context):
             id_copy = self.copy(cr, uid, payslip.id, {'credit_note': True, 'name': _('Refund: ')+payslip.name}, context=context)
             self.compute_sheet(cr, uid, [id_copy], context=context)
-            wf_service.trg_validate(uid, 'hr.payslip', id_copy, 'hr_verify_sheet', cr)
-            wf_service.trg_validate(uid, 'hr.payslip', id_copy, 'process_sheet', cr)
-
+            self.signal_hr_verify_sheet(cr, uid, [id_copy])
+            self.signal_process_sheet(cr, uid, [id_copy])
+            
         form_id = mod_obj.get_object_reference(cr, uid, 'hr_payroll', 'view_hr_payslip_form')
         form_res = form_id and form_id[1] or False
         tree_id = mod_obj.get_object_reference(cr, uid, 'hr_payroll', 'view_hr_payslip_tree')
