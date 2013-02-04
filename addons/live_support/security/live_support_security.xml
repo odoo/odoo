@@ -17,7 +17,7 @@
             <field name="name">Can only read support users</field>
             <field name="model_id" ref="model_im_user"/>
             <field name="groups" eval="[(6,0,[ref('portal.group_anonymous')])]"/>
-            <field name="domain_force">[('support_channel_ids', '&lt;&gt;', False)]</field>
+            <field name="domain_force">[('support_channel_ids', '!=', False)]</field>
             <field name="perm_unlink" eval="0"/>
             <field name="perm_write" eval="0"/>
             <field name="perm_read" eval="1"/>

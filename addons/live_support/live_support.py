@@ -21,6 +21,7 @@
 
 import openerp.addons.web_im.im as im
 import json
+import random
 from osv import osv, fields
 
 class live_support_channel(osv.osv):
@@ -29,6 +30,16 @@ class live_support_channel(osv.osv):
         'name': fields.char(string="Name", size=200, required=True),
         'user_ids': fields.many2many('im.user', 'live_support_channel_im_user', 'channel_id', 'user_id', string="Users"),
     }
+
+    def get_available_user(self, cr, uid, channel_id, context=None):
+        channel = self.browse(cr, uid, channel_id, context=context)
+        users = []
+        for user in channel.user_ids:
+            if user.im_status:
+                users.append(user)
+        if len(users) == 0:
+            return False
+        return random.choice(users).id
 
 class im_user(osv.osv):
     _inherit = 'im.user'

@@ -25,8 +25,12 @@ define(["nova", "jquery", "underscore", "oeclient", "require"], function(nova, $
         $.when(templates_def, css_def).then(function() {
             console.log("starting client");
             connection = new oeclient.Connection(new oeclient.JsonpRPCConnector(server_url), db, login, password);
-            connection.getModel("im.user").search_read([["name", "=", ["Demo User"]]]).then(function(result) {
-                demo_id = result[0].id;
+            connection.getModel("live_support.channel").call("get_available_user", [1]).then(function(result) {
+                if (! result) {
+                    console.log("no available user");
+                    return;
+                }
+                demo_id = result;
                 var manager = new livesupport.ConversationManager(null);
                 manager.start_polling().then(function() {
                     manager.ensure_users([demo_id]).then(function() {
