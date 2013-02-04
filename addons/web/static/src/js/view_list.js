@@ -588,7 +588,7 @@ instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListVi
      */
     do_delete: function (ids) {
         if (!this.m2m_field){
-            if (!(ids.length && confirm(_t("Are you sure?"))) && (this.m2m_field)) {
+            if (!(ids.length && confirm(_t("Are you sure?")))) {
                 return;
             }
         }
