@@ -207,7 +207,7 @@ class sale_order(osv.osv):
                     for mov in pick.move_lines:
                         proc_ids = proc_obj.search(cr, uid, [('move_id', '=', mov.id)])
                         if proc_ids:
-                            self.pool.get('procurement.order').signal_button_check(cr, uid, proc_ids)
+                            proc_obj.signal_button_check(cr, uid, proc_ids)
             stock_obj = self.pool.get('stock.picking')
             for r in self.read(cr, uid, ids, ['picking_ids']):
                 stock_obj.signal_button_cancel(cr, uid, r['picking_ids'])
@@ -394,8 +394,8 @@ class sale_order(osv.osv):
                 self.ship_recreate(cr, uid, order, line, move_id, proc_id)
 
         if picking_id:
-            self.pool.get('stock.picking').signal_button_confirm(cr, uid, [picking_id])
-        self.pool.get('procurement.order').signal_button_confirm(cr, uid, proc_ids)
+            picking_obj.signal_button_confirm(cr, uid, [picking_id])
+        procurement_obj.signal_button_confirm(cr, uid, proc_ids)
 
         val = {}
         if order.state == 'shipping_except':
