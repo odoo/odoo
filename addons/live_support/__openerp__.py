@@ -12,10 +12,7 @@ server.
         """,
     'data': [
     ],
-    'depends' : [],
-    'js': ['static/src/js/*.js'],
-    'css': ['static/src/css/*.css'],
-    'qweb': ['static/src/xml/*.xml'],
+    'depends' : ["web_im", "mail", "portal_anonymous"],
     'installable': True,
     'auto_install': False,
 }

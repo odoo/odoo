@@ -11,6 +11,7 @@ Allows users to chat with each other.
         """,
     'data': [
         'security/ir.model.access.csv',
+        'security/web_im_security.xml',
     ],
     'depends' : [],
     'js': ['static/src/js/*.js'],
