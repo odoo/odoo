@@ -32,6 +32,13 @@ class Record(YamlTag):
     def __str__(self):
         return '!record {model: %s, id: %s}:' % (str(self.model,), str(self.id,))
 
+class Session(YamlTag):
+    def __init__(self, uid, **kwargs):
+        self.uid = uid
+        super(Session, self).__init__(**kwargs)
+    def __str__(self):
+        return '!session {uid: %s}:' % (str(self.uid,))
+
 class Python(YamlTag):
     def __init__(self, model, severity=logging.ERROR, name="", **kwargs):
         self.model= model
@@ -113,6 +120,11 @@ def record_constructor(loader, node):
     assert "id" in kwargs, "'id' argument is required for !record"
     return Record(**kwargs)
 
+def session_constructor(loader, node):
+    kwargs = loader.construct_mapping(node)
+    assert "uid" in kwargs, "'uid' argument is required for !session"
+    return Session(**kwargs)
+
 def python_constructor(loader, node):
     kwargs = loader.construct_mapping(node)
     return Python(**kwargs)
@@ -182,6 +194,7 @@ def add_constructors():
     yaml.add_constructor(u"!eval", eval_constructor)
     yaml.add_multi_constructor(u"!ref", ref_constructor)
     yaml.add_constructor(u"!ir_set", ir_set_constructor)
+    yaml.add_constructor(u"!session", session_constructor)
 add_constructors()
 
 
