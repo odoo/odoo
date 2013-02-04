@@ -118,8 +118,13 @@ class mail_alias(osv.Model):
            mail catchall domain from config.
            e.g. `jobs@openerp.my.openerp.com` or `sales@openerp.my.openerp.com`
         """
-        return [(record['id'], "%s@%s" % (record['alias_name'], record['alias_domain']))
-                    for record in self.read(cr, uid, ids, ['alias_name', 'alias_domain'], context=context)]
+        res = []
+        for record in self.browse(cr, uid, ids, context=context):
+            if record.alias_name and record.alias_domain:
+                res.append((record['id'], "%s@%s" % (record.alias_name, record.alias_domain)))
+            else:
+                res.append((record['id'], False))
+        return res
 
     def _find_unique(self, cr, uid, name, context=None):
         """Find a unique alias name similar to ``name``. If ``name`` is
@@ -197,51 +202,3 @@ class mail_alias(osv.Model):
             model_id = self.pool.get('ir.model').search(cr, uid, [('model', '=', model_name)], context=context)[0]
             vals['alias_model_id'] = model_id
         return self.create(cr, uid, vals, context=context)
-
-    def get_alias(self, cr, uid, model, alias_defaults={}, context=None):
-        """Return the mail alias for a document (or the default mail alias of the model)
-        This method is used by the web client (method web.view.insert_alias)
-        Arguments:
-            model (model OpenERP)
-            alias_defaults (A Python dictionary to provide default values when creating new records for this alias.)
-        """
-        model_id = self.pool.get('ir.model').search(cr, uid, [('model', '=', model)], context=context)[0]
-
-        result = []
-        # get the value with required attribute
-        domain = [('alias_model_id', '=', model_id)]
-        if alias_defaults:
-            for item in alias_defaults.items():
-                domain += ['|', '|', '|',
-                    ('alias_defaults', 'like', ("%%'%s': %s%%" % (item[0], item[1]))), 
-                    ('alias_defaults', 'like', ("%%'%s':%s%%" % (item[0], item[1]))), 
-                    ('alias_defaults', 'like', ("%%'%s': '%s'%%" % (item[0], item[1]))), 
-                    ('alias_defaults', 'like', ("%%'%s':'%s'%%" % (item[0], item[1])))]
-        else:
-            domain += [('alias_defaults', 'like', "{}")]
-
-        ids = self.search(cr, uid, domain, context=context)
-        if ids:
-            for record in self.browse(cr, uid, ids, context=context):
-                test = True
-                if alias_defaults:
-                    for item in ast.literal_eval(record.alias_defaults).items():
-                        if alias_defaults.get(item[0]) == None or alias_defaults.get(item[0]) != item[1]:
-                            test = False
-                            continue
-                if test:
-                    result.append( {'id': record.id, 'email': "%s@%s" % (record.alias_name, record.alias_domain), 'global': False})
-
-        # get the default value
-        if alias_defaults:
-            domain = [('alias_model_id', '=', model_id)]
-            for item in alias_defaults.items():
-                domain += [
-                    ('alias_defaults', 'not like', ("%%'%s'%%" % (item[0])))]
-
-            ids = self.search(cr, uid, domain, context=context)
-            if ids:
-                for record in self.browse(cr, uid, ids, context=context):
-                    result.append( {'id': record.id, 'email': "%s@%s" % (record.alias_name, record.alias_domain), 'global': True})
-        
-        return result        

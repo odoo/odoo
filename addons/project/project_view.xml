@@ -53,7 +53,6 @@
             <field name="context">{
                 'search_default_project_id': [active_id], 
                 'default_project_id': active_id, 
-                'help_alias': {'project_id': active_id}
             }</field>
             <field name="search_view_id" ref="view_task_search_form"/>
             <field name="help" type="html">
@@ -232,7 +231,6 @@
                     <field name="color"/>
                     <field name="task_count"/>
                     <field name="alias_id"/>
-                    <field name="alias_domain"/>
                     <field name="doc_count"/>
                     <templates>
                         <t t-name="kanban-box">
@@ -247,7 +245,7 @@
                                 </div>
                                 <div class="oe_kanban_content">
                                     <h4><field name="name"/></h4>
-                                    <div class="oe_kanban_project_alias" t-if="record.alias_id.raw_value and record.alias_id.value.match(/@.+/)">
+                                    <div class="oe_kanban_project_alias" t-if="record.alias_id.value">
                                         <span class="oe_e">%%</span><small><field name="alias_id"/></small>
                                     </div>
                                     <div class="oe_kanban_project_list">
@@ -617,7 +615,6 @@
             <field name="res_model">project.task</field>
             <field name="view_mode">kanban,tree,form,calendar,gantt,graph</field>
             <field name="search_view_id" ref="view_task_search_form"/>
-            <field name="context">{'help_alias': {}}</field>
             <field name="help" type="html">
               <p class="oe_view_nocontent_create">
                 Click to create a new task.

@@ -887,8 +887,18 @@ class task(base_stage, osv.osv):
         for f in res['fields']:
             if 'Hours' in res['fields'][f]['string']:
                 res['fields'][f]['string'] = res['fields'][f]['string'].replace('Hours',tm)
+
         return res
 
+
+    def dynamic_help(self, cr, uid, help, context=None):
+        if context.get('default_project_id'):
+            project_id = self.pool.get('project.project').browse(cr, uid, context.get('default_project_id'), context=context)
+            alias = project_id.alias_id and project_id.alias_id.name_get() or False
+            if alias and alias[0] and alias[0][1]:
+                help = "%s%s" % (help, _("<div>You can also create documents by sending an email to: %s</div>" % alias[0][1]))
+        return help
+       
     # ----------------------------------------
     # Case management
     # ----------------------------------------

@@ -9,8 +9,10 @@
             <field name="res_model">crm.lead</field>
             <field name="view_mode">tree,form</field>
             <field name="domain">['|', ('type','=','lead'), ('type','=',False)]</field>
+            <field name="view_id" ref="crm_case_tree_view_leads"/>
+            <field name="search_view_id" ref="crm.view_crm_case_leads_filter"/>
             <field name="context">{
-                'search_default_section_id': [active_id], 'default_section_id': active_id, 'search_default_new': True, 'search_default_open': True, 'help_alias': {'type': "lead", 'section_id': active_id}
+                'search_default_section_id': [active_id], 'default_section_id': active_id, 'default_type':'lead', 'stage_type':'lead'
             }</field>
             <field name="help" type="html">
               <p class="oe_view_nocontent_create">
@@ -27,30 +29,65 @@
             </field>
         </record>
 
+        <record model="ir.actions.act_window.view" id="action_crm_tag_tree_view_leads_salesteams_all">
+            <field name="sequence" eval="1"/>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="crm_case_tree_view_leads"/>
+            <field name="act_window_id" ref="crm_case_form_view_salesteams_lead"/>
+        </record>
+
+        <record model="ir.actions.act_window.view" id="action_crm_tag_form_view_leads_salesteams_all">
+            <field name="sequence" eval="3"/>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="crm_case_form_view_leads"/>
+            <field name="act_window_id" ref="crm_case_form_view_salesteams_lead"/>
+        </record>
+
         <!-- CRM opportunity search by Salesteams -->
 
         <record model="ir.actions.act_window" id="crm_case_form_view_salesteams_opportunity">
-            <field name="name">Leads</field>
+            <field name="name">Opportunities</field>
             <field name="res_model">crm.lead</field>
-            <field name="view_mode">kanban,tree,form</field>
+            <field name="view_mode">kanban,tree,graph,form,calendar</field>
             <field name="domain">[('type','=','opportunity')]</field>
             <field name="view_id" ref="crm.crm_case_kanban_view_leads"/>
+        <field name="search_view_id" ref="crm.view_crm_case_opportunities_filter"/>
             <field name="context">{
-                'search_default_section_id': [active_id], 'default_section_id': active_id, 'search_default_new': True, 'search_default_open': True, 'help_alias': {'type': "lead", 'section_id': active_id}
+                'search_default_section_id': [active_id], 'default_section_id': active_id, 'stage_type': 'opportunity', 'default_type': 'opportunity', 'default_user_id': uid
             }</field>
             <field name="help" type="html">
               <p class="oe_view_nocontent_create">
-                Click to create a new lead.
+              Click to create a new opportunity.
               </p><p>
-                Use leads if you need a qualification step before creating an
-                opportunity or a customer. It can be a business card you received,
-                a contact form filled in your website, or a file of unqualified
-                prospects you import, etc.
+              OpenERP helps you keep track of your sales pipeline to follow
+              up potential sales and better forecast your future revenues.
               </p><p>
-                Once qualified, the lead can be converted into a business
-                opportunity and/or a new customer in your address book.
+              You will be able to plan meetings and phone calls from
+              opportunities, convert them into quotations, attach related
+              documents, track all discussions, and much more.
               </p>
             </field>
+        </record>
+
+        <record model="ir.actions.act_window.view" id="action_crm_tag_kanban_view_salesteams_oppor11">
+            <field name="sequence" eval="0"/>
+            <field name="view_mode">kanban</field>
+            <field name="view_id" ref="crm_case_kanban_view_leads"/>
+            <field name="act_window_id" ref="crm_case_form_view_salesteams_opportunity"/>
+        </record>
+
+        <record model="ir.actions.act_window.view" id="action_crm_tag_tree_view_salesteams_oppor11">
+            <field name="sequence" eval="1"/>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="crm_case_tree_view_oppor"/>
+            <field name="act_window_id" ref="crm_case_form_view_salesteams_opportunity"/>
+        </record>
+
+        <record model="ir.actions.act_window.view" id="action_crm_tag_form_view_salesteams_oppor11">
+            <field name="sequence" eval="2"/>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="crm_case_form_view_oppor"/>
+            <field name="act_window_id" ref="crm_case_form_view_salesteams_opportunity"/>
         </record>
 
         <!-- Case Sections Salesteams kanban view -->
@@ -65,7 +102,6 @@
                     <field name="member_ids"/>
                     <field name="note"/>
                     <field name="alias_id"/>
-                    <field name="alias_domain"/>
                     <field name="number_lead"/>
                     <field name="number_opportunity"/>
                     <templates>
@@ -80,7 +116,7 @@
                                 </div>
                                 <div class="oe_kanban_content">
                                     <h4><field name="name"/></h4>
-                                    <div class="oe_kanban_crm_salesteams_alias" t-if="record.alias_id.raw_value and record.alias_id.value.match(/@.+/)">
+                                    <div class="oe_kanban_crm_salesteams_alias" t-if="record.alias_id.value">
                                         <span class="oe_e">%%</span><small><field name="alias_id"/></small>
                                     </div>
                                     <div class="oe_kanban_crm_salesteams_list">
