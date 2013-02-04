@@ -11,6 +11,9 @@ Allow to drop instant messaging widgets on any web page that will communicate wi
 server.
         """,
     'data': [
+        "security/ir.model.access.csv",
+        "security/live_support_security.xml",
+        "live_support_view.xml",
     ],
     'depends' : ["web_im", "mail", "portal_anonymous"],
     'installable': True,

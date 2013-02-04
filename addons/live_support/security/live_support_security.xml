@@ -1,6 +1,16 @@
 <?xml version="1.0"?>
 <openerp>
     <data>
-        
+
+        <record id="module_category_live_support" model="ir.module.category">
+            <field name="name">Live Support</field>
+            <field name="sequence" eval="20" />
+        </record>
+
+        <record id="group_live_support" model="res.groups">
+            <field name="name">User</field>
+            <field name="category_id" ref="module_category_live_support"/>
+            <field name="comment">The user will be able to join support channels.</field>
+        </record>
     </data>
 </openerp>
