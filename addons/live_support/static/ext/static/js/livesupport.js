@@ -6,7 +6,11 @@ define(["nova", "jquery", "underscore", "oeclient", "require"], function(nova, $
     templateEngine.extendEnvironment({"toUrl": _.bind(require.toUrl, require)});
     var connection;
 
-    livesupport.main = function(server_url, db, login, password) {
+    livesupport.main = function(server_url, db, login, password, options) {
+        options = options || {};
+        _.defaults(options, {
+            buttonText: "Chat with one of our collaborators",
+        });
         var templates_def = $.ajax({
             url: require.toUrl("./livesupport_templates.js"),
             jsonp: false,
@@ -25,6 +29,25 @@ define(["nova", "jquery", "underscore", "oeclient", "require"], function(nova, $
         $.when(templates_def, css_def).then(function() {
             console.log("starting client");
             connection = new oeclient.Connection(new oeclient.JsonpRPCConnector(server_url), db, login, password);
+            new livesupport.ChatButton(null, options.buttonText).appendTo($("body"));
+        });
+    };
+
+    var ERROR_DELAY = 5000;
+
+    livesupport.ChatButton = nova.Widget.$extend({
+        className: "openerp_style oe_chat_button",
+        events: {
+            "click": "click",
+        },
+        __init__: function(parent, text) {
+            this.$super(parent);
+            this.text = text;
+        },
+        render: function() {
+            this.$().append(templateEngine.chatButton({widget: this}));
+        },
+        click: function() {
             connection.getModel("live_support.channel").call("get_available_user", [1]).then(function(result) {
                 if (! result) {
                     console.log("no available user");
@@ -38,10 +61,8 @@ define(["nova", "jquery", "underscore", "oeclient", "require"], function(nova, $
                     });
                 });
             });
-        });
-    };
-
-    var ERROR_DELAY = 5000;
+        },
+    });
 
     livesupport.ImUser = nova.Class.$extend({
         __include__: [nova.DynamicProperties],
