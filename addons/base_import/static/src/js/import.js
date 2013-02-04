@@ -336,8 +336,18 @@ openerp.base_import = function (instance) {
             var fields = this.$('.oe_import_fields input.oe_import_match_field').map(function (index, el) {
                 return $(el).select2('val') || false;
             }).get();
-            return this.Import.call(
-                'do', [this.id, fields, this.import_options()], options);
+            return this.Import.call('do', [this.id, fields, this.import_options()], options)
+                .then(undefined, function (error, event) {
+                    // In case of unexpected exception, convert
+                    // "JSON-RPC error" to an import failure, and
+                    // prevent default handling (warning dialog)
+                    if (event) { event.preventDefault(); }
+                    return $.when([{
+                        type: 'error',
+                        record: false,
+                        message: error.data.fault_code,
+                    }]);
+                }) ;
         },
         onvalidate: function () {
             return this.call_import({ dryrun: true })
