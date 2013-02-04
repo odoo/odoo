@@ -367,9 +367,18 @@ class procurement_order(osv.osv):
 
                 if message:
                     message = _("Procurement '%s' is in exception: ") % (procurement.name) + message
-                    procurement.write({'message': message})
+                    ctx_wkf = dict(context or {})
+                    ctx_wkf['workflow.trg_write.%s' % self._name] = False
+                    self.write(cr, uid, [procurement.id], {'message': message},context=ctx_wkf)
                     self.message_post(cr, uid, [procurement.id], body=message, context=context)
         return ok
+
+    def _workflow_trigger(self, cr, uid, ids, trigger, context=None):
+        wkf_op_key = 'workflow.%s.%s' % (trigger, self._name)
+        if context and not context.get(wkf_op_key, True):
+            # make sure we don't have a trigger loop while processing triggers
+            return 
+        return super(procurement_order,self)._workflow_trigger(cr, uid, ids, trigger, context=context)
 
     def action_produce_assign_service(self, cr, uid, ids, context=None):
         """ Changes procurement state to Running.
