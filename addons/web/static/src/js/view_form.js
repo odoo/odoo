@@ -4450,6 +4450,7 @@ instance.web.form.AbstractFormPopup = instance.web.Widget.extend({
      *  options:
      *  -readonly: only applicable when not in creation mode, default to false
      * - alternative_form_view
+     * - view_id
      * - write_function
      * - read_function
      * - create_function
@@ -4516,7 +4517,7 @@ instance.web.form.AbstractFormPopup = instance.web.Widget.extend({
         _.extend(options, {
             $buttons: this.$buttonpane,
         });
-        this.view_form = new instance.web.FormView(this, this.dataset, false, options);
+        this.view_form = new instance.web.FormView(this, this.dataset, this.options.view_id || false, options);
         if (this.options.alternative_form_view) {
             this.view_form.set_embedded_view(this.options.alternative_form_view);
         }
