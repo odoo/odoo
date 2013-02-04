@@ -325,31 +325,36 @@ instance.web_kanban.KanbanView = instance.web.View.extend({
         var self = this;
         if (this.group_by) {
             // Kanban cards drag'n'drop
-            var prev_widet;
+            var prev_widget,is_folded,record;
             var $columns = this.$el.find('.oe_kanban_column .oe_kanban_column_cards, .oe_kanban_column .oe_kanban_folded_column_cards');
             $columns.sortable({
                 handle : '.oe_kanban_draghandle',
                 start: function(event, ui) {
                     self.currently_dragging.index = ui.item.parent().children('.oe_kanban_record').index(ui.item);
-                    self.currently_dragging.group = prev_widet = ui.item.parents('.oe_kanban_column:first').data('widget');
+                    self.currently_dragging.group = prev_widget = ui.item.parents('.oe_kanban_column:first').data('widget');
                     ui.item.find('*').on('click.prevent', function(ev) {
                         return false;
                     });
+                    record = ui.item.data('widget');
+                    record.$el.bind('mouseup',function(ev,ui){
+                        if(is_folded)record.$el.hide();
+                        record.$el.unbind('mouseup');
+                    })
                     ui.placeholder.height(ui.item.height());
                 },
                 over: function(event, ui) {
                     var parent = $(event.target).parent();
-                    prev_widet.highlight(false);
-                    if(parent.hasClass('oe_kanban_group_folded')){
+                    prev_widget.highlight(false);
+                    is_folded = parent.hasClass('oe_kanban_group_folded'); 
+                    if(is_folded){
                         var widget = parent.data('widget');
                         widget.highlight(true);
-                        prev_widet = widget;
+                        prev_widget = widget;
                     }
                  },
                 revert: 150,
                 stop: function(event, ui) {
-                    prev_widet.highlight(false);
-                    var record = ui.item.data('widget');
+                    prev_widget.highlight(false);
                     var old_index = self.currently_dragging.index;
                     var new_index = ui.item.parent().children('.oe_kanban_record').index(ui.item);
                     var old_group = self.currently_dragging.group;
