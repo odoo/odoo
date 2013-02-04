@@ -80,7 +80,8 @@ The Dashboard for the Sales Manager will include
     ],
     'demo': ['sale_demo.xml'],
     'test': [
-        'test/sale_order_demo.yml',
+        'test/sale_order_salesmanager_demo.yml',
+        'test/sale_order_salesman_demo.yml',
         'test/manual_order_policy.yml',
         'test/cancel_order.yml',
         'test/delete_order.yml',
