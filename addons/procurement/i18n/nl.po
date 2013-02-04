@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2012-12-21 17:06+0000\n"
-"PO-Revision-Date: 2013-01-31 15:36+0000\n"
+"PO-Revision-Date: 2013-02-03 13:10+0000\n"
 "Last-Translator: Erwin van der Ploeg (Endian Solutions) <Unknown>\n"
 "Language-Team: Dutch <nl@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-02-01 05:49+0000\n"
-"X-Generator: Launchpad (build 16455)\n"
+"X-Launchpad-Export-Date: 2013-02-04 05:42+0000\n"
+"X-Generator: Launchpad (build 16462)\n"
 
 #. module: procurement
 #: model:ir.ui.menu,name:procurement.menu_stock_sched
@@ -54,6 +54,8 @@ msgid ""
 "required quantities are always\n"
 "                           available"
 msgstr ""
+"benodigde hoeveelheden zijn altijd\n"
+"                          beschikbaar"
 
 #. module: procurement
 #: view:product.product:0
@@ -63,6 +65,10 @@ msgid ""
 "inventory, you should\n"
 "                           create others rules like orderpoints."
 msgstr ""
+"als er geen voldoende voorraad beschikbaar is, zal de uitgaande levering\n"
+"                           wachten voor nieuwe producten. Om de voorraad aan "
+"te vullen, dient u\n"
+"                           regels aan te maken voor minimale voorraad."
 
 #. module: procurement
 #: field:procurement.order,procure_method:0
@@ -236,6 +242,20 @@ msgid ""
 "                </p>\n"
 "            "
 msgstr ""
+"<p>\n"
+"                Verwervingsopdrachten geven de behoefte weer van een "
+"bepaalde hoeveelheid producten op een gegeven moment in een bepaalde "
+"locatie. Verkooporders zijn een typische bron van verwervingsopdrachten "
+"(maar dat zijn afzonderlijke documenten). Afhankelijk van de verwerving "
+"parameters en de product configuratie, probeert het verwervingsprogramma de "
+"aan behoefte te voldoen door producten te reserveren op voorraad, producten "
+"te bestellen bij een leverancier of een productieorder uit te geven, etc. "
+"Een verwervingsfout treedt op als het systeem geen manier kan vinden om de "
+"verwerving te vervullen. Sommige fouten lossen zichzelf automatisch op , "
+"maar anderen vereisen handmatig ingrijpen (die zijn van een specifieke "
+"foutmelding voorzien).\n"
+"                </p>\n"
+"            "
 
 #. module: procurement
 #: selection:procurement.order,state:0
@@ -407,6 +427,24 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Klik voor het aanmaken van een verwervingsopdracht. \n"
+"              </p><p>\n"
+"                Een verwervingsopdracht wordt gebruikt om een behoefte vast\n"
+"                te leggen voor een specifiek product op een specifieke "
+"locatie.\n"
+"                Een verwervingsopdracht wordt gewoonlijk automatisch "
+"gemaakt\n"
+"               vanuit de verkooporders, een logistieke pull regel of "
+"minimale voorraadregels. \n"
+"              </p><p>\n"
+"                Als de verwervingsopdracht is bevestigd maakt het "
+"automatisch de\n"
+"                noodzakelijke bewerkingen om de behoefte te vervullen: "
+"inkoopvoorstel, \n"
+"                productieorder, etc.\n"
+"              </p>\n"
+"            "
 
 #. module: procurement
 #: help:procurement.order,procure_method:0
@@ -428,6 +466,8 @@ msgid ""
 "use the available\n"
 "                           inventory"
 msgstr ""
+"gebruik de beschikbare\n"
+"                           voorraad"
 
 #. module: procurement
 #: model:ir.model,name:procurement.model_procurement_order
@@ -500,6 +540,14 @@ msgid ""
 " It is in 'Waiting'. status when the procurement is waiting for another one "
 "to finish."
 msgstr ""
+"Nadat een verwerving is gemaakt is de status ingesteld op 'Concept'.\n"
+" Als de verwerving is bevestigd, gaat de status naar 'Bevestigd'.            "
+"\n"
+"Na bevestiging gaat de status naar 'In behandeling'.\n"
+" Als er een fout optreedt in de order gaat de status naar 'Fout'.\n"
+" Als de uitzondering is verwijderd gaat de status naar 'Gereed'.\n"
+" De status is 'Wachtend' als de verwerving wacht op het afronden van een "
+"andere."
 
 #. module: procurement
 #: help:stock.warehouse.orderpoint,active:0
@@ -518,6 +566,10 @@ msgid ""
 "procurement method as\n"
 "                           'Make to Stock'."
 msgstr ""
+"Wanneer u deze dienst verkoopt, zal niets speciaals worden gestart\n"
+"                           om de klant te leveren, dit omdat u de "
+"verwervingsmethode heeft ingesteld op\n"
+"                           'Maak op voorraad'."
 
 #. module: procurement
 #: help:procurement.orderpoint.compute,automatic:0
@@ -538,6 +590,8 @@ msgid ""
 "You have to select a product unit of measure in the same category than the "
 "default unit of measure of the product"
 msgstr ""
+"U dient een product maateenheid in dezelfde categorie als de standaard "
+"maateenheid."
 
 #. module: procurement
 #: view:procurement.order:0
@@ -550,6 +604,9 @@ msgid ""
 "as it's a consumable (as a result of this, the quantity\n"
 "                           on hand may become negative)."
 msgstr ""
+"omdat het een verbruiksartikel is (als resultaat hiervan, zal kan de "
+"voorraad\n"
+"                           negatief worden)."
 
 #. module: procurement
 #: field:procurement.order,note:0
@@ -563,6 +620,8 @@ msgid ""
 "OpenERP generates a procurement to bring the forecasted quantity to the Max "
 "Quantity."
 msgstr ""
+"Wanneer de virtuele voorraad onder de gespecificeerde minimale voorraad "
+"komt, zal OpenERP verwervingen genereren om de voorraad aan te vullen."
 
 #. module: procurement
 #: selection:procurement.order,state:0
@@ -609,6 +668,9 @@ msgid ""
 "will be generated, depending on the product type. \n"
 "Buy: When procuring the product, a purchase order will be generated."
 msgstr ""
+"Produceren: Wanneer u een product produceert, wordt een productieorder of "
+"een projecttaak gegenereerd. Dit is afhankelijk van het soort product. \n"
+"Kopen: Bij een verwerving wordt een inkooporder gegenereerd,"
 
 #. module: procurement
 #: field:stock.warehouse.orderpoint,product_max_qty:0
@@ -643,6 +705,8 @@ msgid ""
 "Please check the quantity in procurement order(s) for the product \"%s\", it "
 "should not be 0 or less!"
 msgstr ""
+"Controleer de hoeveelheid in de verwerving order(s) voor het product \"%s\". "
+"Deze zou niet 0 of lager moeten zijn!"
 
 #. module: procurement
 #: field:procurement.order,date_planned:0
@@ -660,6 +724,8 @@ msgid ""
 "When you sell this product, a delivery order will be created.\n"
 "                           OpenERP will consider that the"
 msgstr ""
+"Wanneer u dit product verkoopt, wordt een uitgaande levering gemaakt.\n"
+"                           OpenERP beschouwd dat de"
 
 #. module: procurement
 #: code:addons/procurement/schedulers.py:133
@@ -726,6 +792,10 @@ msgid ""
 "for replenishment. \n"
 "Make to Order: When needed, the product is purchased or produced."
 msgstr ""
+"Maak op voorraad: Wanneer benodigd wordt het product van voorraad gehaald of "
+"er wordt gewacht op een aanvulling. \n"
+"Maak op bestelling: Wanneeer benodigd wordt het product beteld of "
+"geproduceerd."
 
 #. module: procurement
 #: field:mrp.property,composition:0
@@ -802,6 +872,9 @@ msgid ""
 "procurement to bring the forecasted quantity to the Quantity specified as "
 "Max Quantity."
 msgstr ""
+"Wannneer de voorraad onder de Minimale voorraad gaat, zal OpenERP "
+"verwervingen genereren om de virtuele voorraad aan te vullen titaan de "
+"maximale voorraad."
 
 #. module: procurement
 #: model:ir.model,name:procurement.model_procurement_order_compute_all
@@ -909,7 +982,7 @@ msgstr "De manier van verwerving hangt af van het product type."
 #. module: procurement
 #: view:product.product:0
 msgid "When you sell this product, OpenERP will"
-msgstr ""
+msgstr "Wanneer u dit product verkoopt zal OpenERP"
 
 #. module: procurement
 #: view:procurement.order:0
@@ -941,6 +1014,8 @@ msgstr "Aanvulopdracht regels"
 #, python-format
 msgid "Cannot delete Procurement Order(s) which are in %s state."
 msgstr ""
+"Het is niet mogelijk om verwerving order(s) te verwijderen welke zich in de "
+"%s status bevindend"
 
 #. module: procurement
 #: field:procurement.order,product_uos:0
@@ -1030,4 +1105,4 @@ msgstr "VERW %d: van order - %3.2f %-5s - %s"
 #: code:addons/procurement/procurement.py:338
 #, python-format
 msgid "Products reserved from stock."
-msgstr ""
+msgstr "Producten gereserveerd van voorraad."
