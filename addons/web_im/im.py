@@ -264,6 +264,8 @@ class im_user(osv.osv):
         return self._im_change_status(cr, uid, True, uuid or uid, context)
 
     def im_disconnect(self, cr, uid, uuid=None, context=None):
+        import pudb
+        pudb.set_trace()
         return self._im_change_status(cr, uid, False, uuid or uid, context)
 
     def _im_change_status(self, cr, uid, new_one, uuid=None, context=None):

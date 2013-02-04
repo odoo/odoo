@@ -50,7 +50,6 @@ openerp.web_im = function(instance) {
                 this.c_manager.set("right_offset", this.get("right_offset"));
             }, this));
             this.user_search_dm = new instance.web.DropMisordered();
-            this.unload_event_handler = _.bind(this.unload, this);
         },
         start: function() {
             this.$el.css("right", -this.$el.outerWidth());
@@ -63,16 +62,7 @@ openerp.web_im = function(instance) {
 
             var self = this;
 
-            $(window).on("unload", this.unload_event_handler);
-
             return this.c_manager.start_polling();
-        },
-        unload: function() {
-            return new instance.web.Model("im.user").call("im_disconnect", [], {context: new instance.web.CompoundContext()});
-        },
-        destroy: function() {
-            $(window).off("unload", this.unload_event_handler);
-            this._super();
         },
         calc_box: function() {
             var $topbar = instance.client.$(".oe_topbar");
@@ -208,6 +198,7 @@ openerp.web_im = function(instance) {
             this.activated = false;
             this.users_cache = {};
             this.last = null;
+            this.unload_event_handler = _.bind(this.unload, this);
         },
         start_polling: function() {
             var self = this;
@@ -220,11 +211,15 @@ openerp.web_im = function(instance) {
                     self.rpc("/longpolling/im/activated", {}).then(function(activated) {
                         if (activated) {
                             self.activated = true;
+                            $(window).on("unload", self.unload_event_handler);
                             self.poll();
                         }
                     });
                 });
             });
+        },
+        unload: function() {
+            return new instance.web.Model("im.user").call("im_disconnect", [], {context: new instance.web.CompoundContext()});
         },
         ensure_users: function(user_ids) {
             var no_cache = {};
@@ -335,6 +330,7 @@ openerp.web_im = function(instance) {
             }, this);
         },
         destroy: function() {
+            $(window).off("unload", this.unload_event_handler);
             $(window).unbind("blur", this.blur_hdl);
             $(window).unbind("focus", this.focus_hdl);
             this._super();

@@ -91,6 +91,7 @@ define(["nova", "jquery", "underscore", "oeclient", "require"], function(nova, $
             this.activated = false;
             this.users_cache = {};
             this.last = null;
+            this.unload_event_handler = _.bind(this.unload, this);
         },
         start_polling: function() {
             var self = this;
@@ -105,12 +106,16 @@ define(["nova", "jquery", "underscore", "oeclient", "require"], function(nova, $
                         connection.connector.call("/longpolling/im/activated", {}).then(function(activated) {
                             if (activated) {
                                 self.activated = true;
+                                $(window).on("unload", self.unload_event_handler);
                                 self.poll();
                             }
                         });
                     });
                 });
             });
+        },
+        unload: function() {
+            connection.getModel("im.user").call("im_disconnect", [], {uuid: this.me.get("uuid"), context: {}});
         },
         ensure_users: function(user_ids) {
             var no_cache = {};
@@ -223,6 +228,7 @@ define(["nova", "jquery", "underscore", "oeclient", "require"], function(nova, $
             }, this);
         },
         destroy: function() {
+            $(window).off("unload", this.unload_event_handler);
             $(window).unbind("blur", this.blur_hdl);
             $(window).unbind("focus", this.focus_hdl);
             nova.DynamicProperties.destroy.call(this);
