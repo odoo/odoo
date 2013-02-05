@@ -265,7 +265,7 @@ class act_window(osv.osv):
         results = super(act_window, self).read(cr, uid, ids, fields=fields, context=context, load=load)
 
         if not fields or 'help' in fields:
-            context = dict(context)
+            context = dict(context or {})
             dic = {
                 'active_model' : context.get('active_model', None),
                 'active_id' : context.get('active_id', None),
@@ -273,7 +273,8 @@ class act_window(osv.osv):
             }
             for res in results:
                 if res.get('res_model', False):
-                    res['help'] = self.pool.get(res.get('res_model')).dynamic_help(cr, uid, res.get('help', ""), context=dict(context, **eval(res['context'], dic)))
+                    custom_context = dict(context.items() + (eval(res['context'] or "{}", dic) or {}).items())
+                    res['help'] = self.pool.get(res.get('res_model')).dynamic_help(cr, uid, res.get('help', ""), context=custom_context)
         
         return results
 
