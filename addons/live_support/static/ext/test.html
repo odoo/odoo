@@ -1,23 +1,8 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <script src="http://localhost:8069/live_support/static/ext/static/js/require.js"></script>
-    <script>
-        require.config({
-            context: "oelivesupport",
-            baseUrl: "http://localhost:8069/live_support/static/ext/static/js",
-            shim: {
-                underscore: {
-                    init: function() {
-                        return _.noConflict();
-                    },
-                },
-            },
-        })(["livesupport", "jquery"], function(livesupport, jQuery) {
-            jQuery.noConflict();
-            livesupport.main("http://localhost", "test", "anonymous", "anonymous");
-        });
-    </script>
+    <script type="text/javascript" src="http://localhost/live_support/static/ext/static/js/require.js"></script>
+    <script type="text/javascript" src="http://localhost/live_support/loader?db=test&channel=1"></script>
 </head>
 <body style="height:100%; margin:0; padding:0;">
     <iframe src="http://openerp.com" height="100%" width=100%"></iframe>

@@ -19,10 +19,34 @@
 #
 ##############################################################################
 
+import openerp
 import openerp.addons.web_im.im as im
 import json
 import random
+import jinja2
 from osv import osv, fields
+
+env = jinja2.Environment(
+    loader=jinja2.PackageLoader('openerp.addons.live_support', "."),
+    autoescape=False
+)
+env.filters["json"] = json.dumps
+
+class ImportController(openerp.addons.web.http.Controller):
+    _cp_path = '/live_support'
+
+    @openerp.addons.web.http.httprequest
+    def loader(self, req, **kwargs):
+        db = kwargs["db"]
+        channel = int(kwargs["channel"])
+        req.session._db = db
+        req.session._uid = None
+        req.session._login = "anonymous"
+        req.session._password = "anonymous"
+        info = req.session.model('live_support.channel').get_info_for_chat_src()
+        info["db"] = db
+        info["channel"] = channel
+        return env.get_template("loader.js").render(info)
 
 class live_support_channel(osv.osv):
     _name = 'live_support.channel'
@@ -40,6 +64,11 @@ class live_support_channel(osv.osv):
         if len(users) == 0:
             return False
         return random.choice(users).id
+
+    def get_info_for_chat_src(self, cr, uid, context=None):
+        url = self.pool.get('ir.config_parameter').get_param(cr, openerp.SUPERUSER_ID, 'web.base.url')
+        return {"url": url}
+
 
 class im_user(osv.osv):
     _inherit = 'im.user'

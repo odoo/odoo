@@ -6,7 +6,7 @@ define(["nova", "jquery", "underscore", "oeclient", "require"], function(nova, $
     templateEngine.extendEnvironment({"toUrl": _.bind(require.toUrl, require)});
     var connection;
 
-    livesupport.main = function(server_url, db, login, password, options) {
+    livesupport.main = function(server_url, db, login, password, channel, options) {
         options = options || {};
         _.defaults(options, {
             buttonText: "Chat with one of our collaborators",
@@ -29,7 +29,7 @@ define(["nova", "jquery", "underscore", "oeclient", "require"], function(nova, $
         $.when(templates_def, css_def).then(function() {
             console.log("starting client");
             connection = new oeclient.Connection(new oeclient.JsonpRPCConnector(server_url), db, login, password);
-            new livesupport.ChatButton(null, options.buttonText).appendTo($("body"));
+            new livesupport.ChatButton(null, channel, options.buttonText).appendTo($("body"));
         });
     };
 
@@ -40,8 +40,9 @@ define(["nova", "jquery", "underscore", "oeclient", "require"], function(nova, $
         events: {
             "click": "click",
         },
-        __init__: function(parent, text) {
+        __init__: function(parent, channel, text) {
             this.$super(parent);
+            this.channel = channel;
             this.text = text;
         },
         render: function() {
@@ -69,7 +70,7 @@ define(["nova", "jquery", "underscore", "oeclient", "require"], function(nova, $
             var self = this;
             if (this.manager.conversations.length > 0)
                 return;
-            connection.getModel("live_support.channel").call("get_available_user", [1]).then(function(user_id) {
+            connection.getModel("live_support.channel").call("get_available_user", [this.channel]).then(function(user_id) {
                 if (! user_id) {
                     window.alert("None of our collaborators seems to be available, please try again later.");
                     return;
