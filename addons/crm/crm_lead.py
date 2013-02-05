@@ -861,10 +861,14 @@ class crm_lead(base_stage, format_address, osv.osv):
         return {
             'name': _('Opportunity'),
             'view_type': 'form',
-            'view_mode': 'form',
+            'view_mode': 'tree, form',
             'res_model': 'crm.lead',
             'domain': [('type', '=', 'opportunity')],
             'res_id': int(opportunity_id),
+            'view_id': False,
+            'views': [(form_view or False, 'form'),
+                    (tree_view or False, 'tree'),
+                    (False, 'calendar'), (False, 'graph')],
             'type': 'ir.actions.act_window',
         }
 
