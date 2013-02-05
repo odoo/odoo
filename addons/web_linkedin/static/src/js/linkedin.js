@@ -226,6 +226,7 @@ openerp.web_linkedin = function(instance) {
                     var defs = [];
                     _.each(result, function (el) {
                         el.__type = "people";
+                        el.__company = entity.universalName;
                         el.parent_id = self.field_manager.datarecord.id || false;
                         defs.push(self.create_or_modify_partner(el, true).then(function (data) {
                             // [0,0,data] if it's a new partner
@@ -263,17 +264,23 @@ openerp.web_linkedin = function(instance) {
                 }
             });
             var positions = (entity.positions || {}).values || [];
-            if (positions.length && positions[0].isCurrent) {
-                to_change.function = positions[0].title;
-                if (!entity.parent_id) {
-                    var company_name = positions[0].company ? positions[0].company.name : false;
-                    if (company_name) {
+            for (key in positions) {
+                var position = positions[key];
+                if (position.isCurrent) {
+                    var company_name = position.company ? position.company.name : false;
+                    if (!entity.parent_id && company_name) {
                         defs.push(new instance.web.DataSetSearch(this, 'res.partner').call("search", [[["name", "=", company_name]]]).then(function (data) {
                             if(data[0]) to_change.parent_id = data[0];
+                            else position.title = position.title + ' (' + company_name + ') ';
+                            to_change.function = position.title;
                         }));
+                    } else if (!entity.__company || !company_name || company_name == entity.__company) {
+                        to_change.function = position.title + (company_name ? ' (' + company_name + ') ':'');
                     }
+                    break;
                 }
-            }
+            };
+
             if (entity.parent_id) {
                 to_change.parent_id = entity.parent_id;
             }
@@ -304,7 +311,7 @@ openerp.web_linkedin = function(instance) {
                             } else {
                                 _.each(partners[0], function (val, key) {
                                     if (val) {
-                                        to_change[key] = val;
+                                        to_change[key] = typeof val == "object" && key.match(/_id$/) ? val[0] : val;
                                     }
                                 });
                             }
