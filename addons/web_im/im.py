@@ -307,6 +307,7 @@ class im_user(osv.osv):
 
     _columns = {
         'name': fields.related('user', 'name', type='char', size=200, string="Name", store=True, readonly=True),
+        'image': fields.related('user', 'image_small', type='binary', string="Image", readonly=True),
         'user': fields.many2one("res.users", string="User", select=True, ondelete='cascade'),
         'uuid': fields.char(string="UUID", size=50, select=True),
         'im_last_received': fields.integer(string="Instant Messaging Last Received Message"),

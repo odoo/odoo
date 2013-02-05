@@ -91,8 +91,8 @@ define(["nova", "jquery", "underscore", "oeclient", "require"], function(nova, $
         __init__: function(parent, user_rec) {
             nova.DynamicProperties.__init__.call(this, parent);
             user_rec.image_url = require.toUrl("../img/avatar/avatar.jpeg");
-            //if (user_rec.user)
-            //    user_rec.image_url = instance.session.url('/web/binary/image', {model:'res.users', field: 'image_small', id: user_rec.user[0]});
+            if (user_rec.image)
+                user_rec.image_url = "data:image/png;base64," + user_rec.image;
             this.set(user_rec);
             this.set("watcher_count", 0);
             this.on("change:watcher_count", this, function() {
