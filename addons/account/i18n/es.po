@@ -14,8 +14,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-12-22 06:59+0000\n"
-"X-Generator: Launchpad (build 16378)\n"
+"X-Launchpad-Export-Date: 2013-01-18 06:28+0000\n"
+"X-Generator: Launchpad (build 16430)\n"
 
 #. module: account
 #: model:process.transition,name:account.process_transition_supplierreconcilepaid0
@@ -260,7 +260,7 @@ msgstr "Informes Belgas"
 #. module: account
 #: model:mail.message.subtype,name:account.mt_invoice_validated
 msgid "Validated"
-msgstr ""
+msgstr "Validado"
 
 #. module: account
 #: model:account.account.type,name:account.account_type_income_view1
@@ -429,7 +429,7 @@ msgstr "Fecha creación"
 #. module: account
 #: selection:account.journal,type:0
 msgid "Purchase Refund"
-msgstr "Abono de compra"
+msgstr "Factura rectificativa de proveedor"
 
 #. module: account
 #: selection:account.journal,type:0
@@ -472,7 +472,7 @@ msgstr ""
 #. module: account
 #: help:account.bank.statement.line,name:0
 msgid "Originator to Beneficiary Information"
-msgstr ""
+msgstr "Información del emisor al beneficiario"
 
 #. module: account
 #. openerp-web
@@ -493,6 +493,7 @@ msgstr "Plantilla plan contable"
 #: selection:account.invoice.refund,filter_refund:0
 msgid "Modify: create refund, reconcile and create a new draft invoice"
 msgstr ""
+"Modificar: crea el reembolso, concilia y crea una nueva factura borrador"
 
 #. module: account
 #: help:account.config.settings,tax_calculation_rounding_method:0
@@ -755,7 +756,7 @@ msgstr "Cerrar período"
 #. module: account
 #: model:ir.model,name:account.model_account_common_partner_report
 msgid "Account Common Partner Report"
-msgstr "Rapport du compte commun partenaire"
+msgstr "Informe de la cuenta común de empresa"
 
 #. module: account
 #: field:account.fiscalyear.close,period_id:0
@@ -804,7 +805,7 @@ msgstr "Configure los números de cuenta bancaria de su compañía"
 #. module: account
 #: view:account.invoice.refund:0
 msgid "Create Refund"
-msgstr ""
+msgstr "Crear factura rectificativa"
 
 #. module: account
 #: constraint:account.move.line:0
@@ -834,7 +835,7 @@ msgstr "¿Está seguro que desea crear los asientos?"
 #: code:addons/account/account_invoice.py:1329
 #, python-format
 msgid "Invoice partially paid: %s%s of %s%s (%s%s remaining)."
-msgstr ""
+msgstr "Factura parcialmente pagada: %s %s de %s %s (%s %s restante)."
 
 #. module: account
 #: view:account.invoice:0
@@ -906,7 +907,9 @@ msgstr "Tipo"
 msgid ""
 "Taxes are missing!\n"
 "Click on compute button."
-msgstr "¡Faltan impuestos!"
+msgstr ""
+"¡Faltan los impuestos!\n"
+"Pulse en el botón \"Calcular\"."
 
 #. module: account
 #: model:ir.model,name:account.model_account_subscription_line
@@ -996,7 +999,7 @@ msgid ""
 "            "
 msgstr ""
 "<p>\n"
-"No se han encontrado elementos de diario.\n"
+"No se han encontrado asientos en el diario.\n"
 "</p>\n"
 "            "
 
@@ -1052,7 +1055,7 @@ msgstr "Diario de compra"
 #. module: account
 #: model:mail.message.subtype,description:account.mt_invoice_paid
 msgid "Invoice paid"
-msgstr ""
+msgstr "Factura pagada"
 
 #. module: account
 #: view:validate.account.move:0
@@ -1932,7 +1935,7 @@ msgstr "Ventas por tipo de cuenta"
 #: model:account.payment.term,name:account.account_payment_term_15days
 #: model:account.payment.term,note:account.account_payment_term_15days
 msgid "15 Days"
-msgstr ""
+msgstr "15 días"
 
 #. module: account
 #: model:ir.ui.menu,name:account.periodical_processing_invoicing
@@ -2076,7 +2079,7 @@ msgstr "Extracto borrador"
 #. module: account
 #: model:mail.message.subtype,description:account.mt_invoice_validated
 msgid "Invoice validated"
-msgstr ""
+msgstr "Factura validada"
 
 #. module: account
 #: field:account.config.settings,module_account_check_writing:0
@@ -2802,7 +2805,7 @@ msgstr "Propiedades de la cuenta"
 #. module: account
 #: selection:account.invoice.refund,filter_refund:0
 msgid "Create a draft refund"
-msgstr ""
+msgstr "Crear una factura rectificativa borrador"
 
 #. module: account
 #: view:account.partner.reconcile.process:0
@@ -3351,7 +3354,7 @@ msgstr ""
 #: view:account.unreconcile:0
 #: view:account.unreconcile.reconcile:0
 msgid "Unreconcile Transactions"
-msgstr ""
+msgstr "Transacciones sin conciliar"
 
 #. module: account
 #: field:wizard.multi.charts.accounts,only_one_chart_template:0
@@ -3549,7 +3552,7 @@ msgstr "Núm. de dígitos a usar para código de cuenta."
 #. module: account
 #: field:res.partner,property_supplier_payment_term:0
 msgid "Supplier Payment Term"
-msgstr ""
+msgstr "Plazo de pago del proveedor"
 
 #. module: account
 #: view:account.fiscalyear:0
@@ -3624,7 +3627,7 @@ msgstr "Archivo electrónico"
 #. module: account
 #: field:account.move.line,reconcile:0
 msgid "Reconcile Ref"
-msgstr ""
+msgstr "Referencia de conciliación"
 
 #. module: account
 #: field:account.config.settings,has_chart_of_accounts:0
@@ -3725,6 +3728,86 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
+"\n"
+"<div style=\"font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-"
+"serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; \">\n"
+"\n"
+"<p>Hola ${object.partner_id.name},</p>\n"
+"\n"
+"<p>Hay una nueva factura disponible: </p>\n"
+"    \n"
+"<p style=\"border-left: 1px solid #8e0000; margin-left: 30px;\">\n"
+"       &nbsp;&nbsp;<strong>REFERENCIAS</strong><br />\n"
+"       &nbsp;&nbsp;Nº de factura: <strong>${object.number}</strong><br />\n"
+"       &nbsp;&nbsp;Total de la factura: <strong>${object.amount_total} "
+"${object.currency_id.name}</strong><br />\n"
+"       &nbsp;&nbsp;Fecha de factura: ${object.date_invoice}<br />\n"
+"       % if object.origin:\n"
+"       &nbsp;&nbsp;Referencia del pedido: ${object.origin}<br />\n"
+"       % endif\n"
+"       % if object.user_id:\n"
+"       &nbsp;&nbsp;Su contacto: <a href=\"mailto:${object.user_id.email or "
+"''}?subject=Factura%20${object.number}\">${object.user_id.name}</a>\n"
+"       % endif\n"
+"    </p>  \n"
+"    \n"
+"    % if object.paypal_url:\n"
+"    <br/>\n"
+"    <p>Es posible pagarla directamente con Paypal:</p>\n"
+"        <a style=\"margin-left: 120px;\" href=\"${object.paypal_url}\">\n"
+"            <img class=\"oe_edi_paypal_button\" "
+"src=\"https://www.paypal.com/en_US/i/btn/btn_paynowCC_LG.gif\"/>\n"
+"        </a>\n"
+"    % endif\n"
+"    \n"
+"    <br/>\n"
+"    <p>Si tiene cualquier pregunta, no dude en contactarnos.</p>\n"
+"    <p>Gracias por elegir ${object.company_id.name or 'us'}!</p>\n"
+"    <br/>\n"
+"    <br/>\n"
+"    <div style=\"width: 375px; margin: 0px; padding: 0px; background-color: "
+"#8E0000; border-top-left-radius: 5px 5px; border-top-right-radius: 5px 5px; "
+"background-repeat: repeat no-repeat;\">\n"
+"        <h3 style=\"margin: 0px; padding: 2px 14px; font-size: 12px; color: "
+"#DDD;\">\n"
+"            <strong style=\"text-"
+"transform:uppercase;\">${object.company_id.name}</strong></h3>\n"
+"    </div>\n"
+"    <div style=\"width: 347px; margin: 0px; padding: 5px 14px; line-height: "
+"16px; background-color: #F2F2F2;\">\n"
+"        <span style=\"color: #222; margin-bottom: 5px; display: block; \">\n"
+"        % if object.company_id.street:\n"
+"            ${object.company_id.street}<br/>\n"
+"        % endif\n"
+"        % if object.company_id.street2:\n"
+"            ${object.company_id.street2}<br/>\n"
+"        % endif\n"
+"        % if object.company_id.city or object.company_id.zip:\n"
+"            ${object.company_id.zip} ${object.company_id.city}<br/>\n"
+"        % endif\n"
+"        % if object.company_id.country_id:\n"
+"            ${object.company_id.state_id and ('%s, ' % "
+"object.company_id.state_id.name) or ''} ${object.company_id.country_id.name "
+"or ''}<br/>\n"
+"        % endif\n"
+"        </span>\n"
+"        % if object.company_id.phone:\n"
+"            <div style=\"margin-top: 0px; margin-right: 0px; margin-bottom: "
+"0px; margin-left: 0px; padding-top: 0px; padding-right: 0px; padding-bottom: "
+"0px; padding-left: 0px; \">\n"
+"                Teléfono:&nbsp; ${object.company_id.phone}\n"
+"            </div>\n"
+"        % endif\n"
+"        % if object.company_id.website:\n"
+"            <div>\n"
+"                Web :&nbsp;<a "
+"href=\"${object.company_id.website}\">${object.company_id.website}</a>\n"
+"            </div>\n"
+"        %endif\n"
+"        <p></p>\n"
+"    </div>\n"
+"</div>\n"
+"            "
 
 #. module: account
 #: view:account.period:0
@@ -4702,6 +4785,8 @@ msgid ""
 "This payment term will be used instead of the default one for sale orders "
 "and customer invoices"
 msgstr ""
+"Se usará este plazo de pago en lugar del predeterminado para los pedidos de "
+"venta y las facturas de cliente"
 
 #. module: account
 #: view:account.config.settings:0
@@ -4727,7 +4812,7 @@ msgstr "Asientos validados/asentados"
 #. module: account
 #: field:account.move.line,blocked:0
 msgid "No Follow-up"
-msgstr ""
+msgstr "Sin seguimiento"
 
 #. module: account
 #: view:account.tax.template:0
@@ -4894,7 +4979,7 @@ msgstr "Tipo cuenta"
 #. module: account
 #: selection:account.journal,type:0
 msgid "Bank and Checks"
-msgstr ""
+msgstr "Banco y cheques"
 
 #. module: account
 #: field:account.account.template,note:0
@@ -5018,7 +5103,7 @@ msgstr "Plan contable"
 #. module: account
 #: field:account.invoice,reference_type:0
 msgid "Payment Reference"
-msgstr ""
+msgstr "Referencia del pago"
 
 #. module: account
 #: selection:account.financial.report,style_overwrite:0
@@ -5092,7 +5177,7 @@ msgstr "Apuntes a conciliar"
 #. module: account
 #: model:ir.model,name:account.model_account_tax_template
 msgid "Templates for Taxes"
-msgstr ""
+msgstr "Plantilla para los impuestos"
 
 #. module: account
 #: sql_constraint:account.period:0
@@ -6232,6 +6317,8 @@ msgid ""
 "This payment term will be used instead of the default one for purchase "
 "orders and supplier invoices"
 msgstr ""
+"Se usará este plazo de pago en lugar del predeterminado para los pedidos de "
+"compra y las facturas de proveedor"
 
 #. module: account
 #: help:account.automatic.reconcile,power:0
@@ -7065,6 +7152,12 @@ msgid ""
 "due date, make sure that the payment term is not set on the invoice. If you "
 "keep the payment term and the due date empty, it means direct payment."
 msgstr ""
+"Si usa plazos de pago, la fecha de vencimiento se calculará automáticamente "
+"con la generación de los asientos contables. El plazo de pago puede calcular "
+"varias fechas de vencimiento, por ejemplo 50% ahora y 50% en un mes, pero si "
+"quiere forzar una fecha de vencimiento, asegúrese que el plazo de pago no se "
+"establece en la factura. Si deja vacío el plazo de pago y la fecha de "
+"vencimiento, significa pago directo."
 
 #. module: account
 #: code:addons/account/account.py:414
@@ -7312,6 +7405,8 @@ msgid ""
 "If you unreconcile transactions, you must also verify all the actions that "
 "are linked to those transactions because they will not be disabled"
 msgstr ""
+"Si concilia transacciones, debe verificar también todas la acciones que "
+"están enlazadas con ellas porque no se deshabilitarán"
 
 #. module: account
 #: view:account.account.template:0
@@ -7484,7 +7579,7 @@ msgstr "Manual"
 #. module: account
 #: selection:account.invoice.refund,filter_refund:0
 msgid "Cancel: create refund and reconcile"
-msgstr ""
+msgstr "Cancelar: crea la factura rectificativa y concilia"
 
 #. module: account
 #: code:addons/account/wizard/account_report_aged_partner_balance.py:58
@@ -7702,7 +7797,7 @@ msgstr ""
 #. module: account
 #: field:account.invoice,paypal_url:0
 msgid "Paypal Url"
-msgstr ""
+msgstr "URL de Paypal"
 
 #. module: account
 #: field:account.config.settings,module_account_voucher:0
@@ -8407,7 +8502,7 @@ msgstr ""
 #. module: account
 #: field:account.move.line,amount_residual_currency:0
 msgid "Residual Amount in Currency"
-msgstr ""
+msgstr "Importe residual en la moneda"
 
 #. module: account
 #: field:account.config.settings,sale_refund_sequence_prefix:0
@@ -8461,6 +8556,8 @@ msgid ""
 "Refund base on this type. You can not Modify and Cancel if the invoice is "
 "already reconciled"
 msgstr ""
+"Factura rectificativa basada en este tipo. No puede modificar o cancelar si "
+"la factura ya está conciliada"
 
 #. module: account
 #: field:account.bank.statement.line,sequence:0
@@ -9033,7 +9130,7 @@ msgstr "Saldo final"
 #. module: account
 #: field:account.journal,centralisation:0
 msgid "Centralized Counterpart"
-msgstr ""
+msgstr "Contrapartida centralizada"
 
 #. module: account
 #: help:account.move.line,blocked:0
@@ -9105,7 +9202,7 @@ msgstr "Tipos de cuentas"
 #. module: account
 #: model:email.template,subject:account.email_template_edi_invoice
 msgid "${object.company_id.name} Invoice (Ref ${object.number or 'n/a'})"
-msgstr ""
+msgstr "${object.company_id.name} Factura (Ref. ${object.number or 'n/a'})"
 
 #. module: account
 #: code:addons/account/account_move_line.py:1211
@@ -10199,7 +10296,7 @@ msgstr "No se pueden crear apuntes de compañías diferentes."
 #. module: account
 #: model:ir.ui.menu,name:account.menu_finance_periodical_processing
 msgid "Periodic Processing"
-msgstr ""
+msgstr "Procesamiento periódico"
 
 #. module: account
 #: view:account.invoice.report:0
@@ -10279,7 +10376,7 @@ msgstr "Fecha vencimiento"
 #: model:account.payment.term,name:account.account_payment_term_immediate
 #: model:account.payment.term,note:account.account_payment_term_immediate
 msgid "Immediate Payment"
-msgstr ""
+msgstr "Pago inmediato"
 
 #. module: account
 #: code:addons/account/account.py:1464
@@ -10501,7 +10598,7 @@ msgstr ""
 #. module: account
 #: field:account.bank.statement.line,name:0
 msgid "OBI"
-msgstr ""
+msgstr "OBI"
 
 #. module: account
 #: help:res.partner,property_account_payable:0
@@ -10990,6 +11087,8 @@ msgid ""
 "If you unreconcile transactions, you must also verify all the actions that "
 "are linked to those transactions because they will not be disable"
 msgstr ""
+"Si rompe la conciliación de las transacciones, debe verificar también todas "
+"las acciones enlazadas, ya que no serán deshabilitadas"
 
 #. module: account
 #: code:addons/account/account_move_line.py:1059
@@ -11578,7 +11677,7 @@ msgstr "Cuenta de gastos en plantilla producto"
 #. module: account
 #: field:res.partner,property_payment_term:0
 msgid "Customer Payment Term"
-msgstr ""
+msgstr "Plazo de pago de cliente"
 
 #. module: account
 #: help:accounting.report,label_filter:0

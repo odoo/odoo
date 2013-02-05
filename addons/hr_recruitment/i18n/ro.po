@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2012-12-21 17:04+0000\n"
-"PO-Revision-Date: 2012-12-21 23:00+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"PO-Revision-Date: 2013-01-28 17:31+0000\n"
+"Last-Translator: Fekete Mihai <mihai@erpsystems.ro>\n"
 "Language-Team: Romanian <ro@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-12-22 07:16+0000\n"
-"X-Generator: Launchpad (build 16378)\n"
+"X-Launchpad-Export-Date: 2013-01-29 06:18+0000\n"
+"X-Generator: Launchpad (build 16451)\n"
 
 #. module: hr_recruitment
 #: help:hr.applicant,active:0
@@ -35,17 +35,17 @@ msgstr "Cerinte"
 #. module: hr_recruitment
 #: view:hr.applicant:0
 msgid "Application Summary"
-msgstr ""
+msgstr "Continut Aplicatie"
 
 #. module: hr_recruitment
 #: view:hr.applicant:0
 msgid "Start Interview"
-msgstr ""
+msgstr "Incepe Interviul"
 
 #. module: hr_recruitment
 #: view:hr.applicant:0
 msgid "Mobile:"
-msgstr ""
+msgstr "Mobil:"
 
 #. module: hr_recruitment
 #: help:hr.recruitment.stage,fold:0
@@ -53,6 +53,8 @@ msgid ""
 "This stage is not visible, for example in status bar or kanban view, when "
 "there are no records in that stage to display."
 msgstr ""
+"Aceasta etapa nu este vizibila, de exemplu in bara status sau in "
+"vizualizarea kanban, atunci cand nu exista inregistrari de afisat."
 
 #. module: hr_recruitment
 #: model:hr.recruitment.degree,name:hr_recruitment.degree_graduate
@@ -101,7 +103,7 @@ msgstr "Locuri de munca in asteptare"
 #: view:hr.applicant:0
 #: field:hr.applicant,message_unread:0
 msgid "Unread Messages"
-msgstr ""
+msgstr "Mesaje Necitite"
 
 #. module: hr_recruitment
 #: field:hr.applicant,company_id:0
@@ -154,12 +156,30 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<clasa p=\"oe_vizualizare_niciuncontinut_creeaza\">\n"
+"                Dati click pentru a adauga un nou candidat pentru locul de "
+"munca.\n"
+"              </p><p>\n"
+"                OpenERP va ajuta sa tineti evidenta candidatilor in procesul "
+"de\n"
+"                recrutare si sa urmariti toate operatiunile: intalniri, "
+"interviuri, etc.\n"
+"              </p><p>\n"
+"                Daca configurati email gateway, candidatii si CV-ul lor\n"
+"                atasat sunt creati automat atunci cand un email este trimis\n"
+"                la jobs@yourcompany.com. Daca instalati modulele de "
+"management\n"
+"                al documentelor, toate CV-urile sunt indexate automat, "
+"astfel ca puteti\n"
+"                cauta cu usurinta prin continutul lor.\n"
+"              </p>\n"
+"            "
 
 #. module: hr_recruitment
 #: model:ir.actions.act_window,name:hr_recruitment.crm_case_categ0_act_job
 #: model:ir.ui.menu,name:hr_recruitment.menu_crm_case_categ0_act_job
 msgid "Applications"
-msgstr ""
+msgstr "Cereri"
 
 #. module: hr_recruitment
 #: field:hr.applicant,day_open:0
@@ -169,12 +189,12 @@ msgstr "Zile pana la deschidere"
 #. module: hr_recruitment
 #: field:hr.applicant,emp_id:0
 msgid "employee"
-msgstr ""
+msgstr "angajat"
 
 #. module: hr_recruitment
 #: field:hr.config.settings,fetchmail_applicants:0
 msgid "Create applicants from an incoming email account"
-msgstr ""
+msgstr "Creeaza candidati dintr-un cont de email-uri primite"
 
 #. module: hr_recruitment
 #: view:hr.recruitment.report:0
@@ -186,7 +206,7 @@ msgstr "Zi"
 #: view:hr.recruitment.partner.create:0
 #: model:ir.actions.act_window,name:hr_recruitment.action_hr_recruitment_partner_create
 msgid "Create Contact"
-msgstr ""
+msgstr "Creeaza Contact"
 
 #. module: hr_recruitment
 #: view:hr.applicant:0
@@ -218,7 +238,7 @@ msgstr "Actiunile urmatoare"
 #: code:addons/hr_recruitment/wizard/hr_recruitment_create_partner_job.py:56
 #, python-format
 msgid "Error!"
-msgstr ""
+msgstr "Eroare!"
 
 #. module: hr_recruitment
 #: model:hr.recruitment.degree,name:hr_recruitment.degree_bac5
@@ -237,11 +257,14 @@ msgid ""
 "Stages of the recruitment process may be different per department. If this "
 "stage is common to all departments, keep this field empty."
 msgstr ""
+"Etapele din procesul de recrutare pot fi diferite pentru fiecare "
+"departament. Daca aceasta etapa este comuna tuturor departamentelor, lasati "
+"acest camp necompletat."
 
 #. module: hr_recruitment
 #: help:hr.applicant,message_unread:0
 msgid "If checked new messages require your attention."
-msgstr ""
+msgstr "Daca este selectat, mesajele noi necesita atentia dumneavoastra."
 
 #. module: hr_recruitment
 #: field:hr.applicant,color:0
@@ -251,7 +274,7 @@ msgstr "Index culori"
 #. module: hr_recruitment
 #: model:ir.actions.act_window,name:hr_recruitment.act_hr_applicant_to_meeting
 msgid "Meetings"
-msgstr ""
+msgstr "Intalniri"
 
 #. module: hr_recruitment
 #: view:hr.applicant:0
@@ -290,6 +313,8 @@ msgid ""
 "Holds the Chatter summary (number of messages, ...). This summary is "
 "directly in html format in order to be inserted in kanban views."
 msgstr ""
+"Contine rezumatul Chatter (numar de mesaje, ...). Acest rezumat este direct "
+"in format HTML, cu scopul de a se introduce in vizualizari kanban."
 
 #. module: hr_recruitment
 #: code:addons/hr_recruitment/hr_recruitment.py:435
@@ -344,7 +369,7 @@ msgstr "Statistica Recrutari"
 #. module: hr_recruitment
 #: view:hr.applicant:0
 msgid "Print interview report"
-msgstr ""
+msgstr "Tipareste raportul interviului"
 
 #. module: hr_recruitment
 #: view:hr.recruitment.report:0
@@ -365,7 +390,7 @@ msgstr "Sursa"
 #. module: hr_recruitment
 #: field:hr.applicant,message_follower_ids:0
 msgid "Followers"
-msgstr ""
+msgstr "Persoane interesate"
 
 #. module: hr_recruitment
 #: model:hr.recruitment.source,name:hr_recruitment.source_monster
@@ -375,7 +400,7 @@ msgstr "Monstru"
 #. module: hr_recruitment
 #: model:mail.message.subtype,name:hr_recruitment.mt_applicant_hired
 msgid "Applicant Hired"
-msgstr ""
+msgstr "Candidat Angajat"
 
 #. module: hr_recruitment
 #: field:hr.applicant,email_from:0
@@ -395,6 +420,16 @@ msgid ""
 "          </p>\n"
 "        "
 msgstr ""
+"<clasa p=\"oe_vizualizare_niciuncontinut_creeaza\">\n"
+"            Dati click pentru a adauga o etapa noua in procesul de "
+"recrutare.\n"
+"          </p><p>\n"
+"            Definiti aici etapele din procesul de recrutare, de exemplu:\n"
+"            apel de calificare, primul interviu, al doilea interviu, "
+"respins,\n"
+"            angajat.\n"
+"          </p>\n"
+"        "
 
 #. module: hr_recruitment
 #: view:hr.recruitment.report:0
@@ -412,6 +447,8 @@ msgid ""
 "Email alias for this job position. New emails will automatically create new "
 "applicants for this job position."
 msgstr ""
+"Email alias pentru acest post. Email-urile noi vor crea automat candidati "
+"noi pentru acest post."
 
 #. module: hr_recruitment
 #: selection:hr.applicant,priority:0
@@ -534,6 +571,10 @@ msgid ""
 "the case needs to be reviewed then the status is                       set "
 "to 'Pending'."
 msgstr ""
+"Starea este setata pe 'Ciorna', atunci cand este creat un caz. Atunci cand "
+"cazul este in desfasurare, starea este setata pe 'Deschis'. Cand cazul este "
+"finalizat, starea este setata pe 'Efectuat'. Atunci cand cazul trebuie "
+"verificat, starea este setata pe 'In asteptare'."
 
 #. module: hr_recruitment
 #: selection:hr.recruitment.report,month:0
@@ -565,12 +606,12 @@ msgstr "In desfasurare"
 #. module: hr_recruitment
 #: view:hr.applicant:0
 msgid "Hire & Create Employee"
-msgstr ""
+msgstr "Angajeaza & Creeaza Angajat"
 
 #. module: hr_recruitment
 #: model:mail.message.subtype,description:hr_recruitment.mt_applicant_hired
 msgid "Applicant hired"
-msgstr ""
+msgstr "Candidat angajat"
 
 #. module: hr_recruitment
 #: view:hr.applicant:0
@@ -601,17 +642,17 @@ msgstr "Decembrie"
 #: code:addons/hr_recruitment/wizard/hr_recruitment_create_partner_job.py:39
 #, python-format
 msgid "A contact is already defined on this job request."
-msgstr ""
+msgstr "Un contact este deja definit pentru aceasta cerere de loc de munca."
 
 #. module: hr_recruitment
 #: field:hr.applicant,categ_ids:0
 msgid "Tags"
-msgstr ""
+msgstr "Etichete"
 
 #. module: hr_recruitment
 #: model:ir.model,name:hr_recruitment.model_hr_applicant_category
 msgid "Category of applicant"
-msgstr ""
+msgstr "Categoria aplicantului"
 
 #. module: hr_recruitment
 #: view:hr.recruitment.report:0
@@ -622,7 +663,7 @@ msgstr "Luna"
 #. module: hr_recruitment
 #: view:hr.applicant:0
 msgid "Answer related job question"
-msgstr ""
+msgstr "Raspunde la intrebarea referitoare la locul de munca"
 
 #. module: hr_recruitment
 #: model:hr.recruitment.stage,name:hr_recruitment.stage_job2
@@ -649,12 +690,12 @@ msgstr "Subiect"
 #: view:hired.employee:0
 #: view:hr.recruitment.partner.create:0
 msgid "or"
-msgstr ""
+msgstr "sau"
 
 #. module: hr_recruitment
 #: model:mail.message.subtype,name:hr_recruitment.mt_applicant_refused
 msgid "Applicant Refused"
-msgstr ""
+msgstr "Candidat Respins"
 
 #. module: hr_recruitment
 #: view:hr.applicant:0
@@ -758,13 +799,13 @@ msgstr "Status"
 #. module: hr_recruitment
 #: view:hr.applicant:0
 msgid "Schedule interview with this applicant"
-msgstr ""
+msgstr "Programeaza un interviu cu acest angajat"
 
 #. module: hr_recruitment
 #: code:addons/hr_recruitment/hr_recruitment.py:397
 #, python-format
 msgid "Applicant <b>created</b>"
-msgstr ""
+msgstr "Candidat <b>creat</b>"
 
 #. module: hr_recruitment
 #: view:hr.applicant:0
@@ -794,7 +835,7 @@ msgstr "Zile pana la inchidere"
 #. module: hr_recruitment
 #: field:hr.applicant,message_is_follower:0
 msgid "Is a Follower"
-msgstr ""
+msgstr "Este o persoana interesata"
 
 #. module: hr_recruitment
 #: field:hr.recruitment.report,user_id:0
@@ -816,7 +857,7 @@ msgstr "Activ(a)"
 #: view:hr.recruitment.report:0
 #: field:hr.recruitment.report,nbr:0
 msgid "# of Applications"
-msgstr ""
+msgstr "# de Cereri"
 
 #. module: hr_recruitment
 #: model:ir.actions.act_window,help:hr_recruitment.hr_recruitment_stage_act
@@ -830,6 +871,15 @@ msgid ""
 "          </p>\n"
 "        "
 msgstr ""
+"<clasa p=\"oe_vizualizare_niciuncontinut_creeaza\">\n"
+"            Dati click pentru a adauga o etapa noua in procesul de "
+"recrutare.\n"
+"          </p><p>\n"
+"            Nu uitati sa specificati departmentul daca procesul "
+"dumneavoastra\n"
+"            este diferit in functie de post.\n"
+"          </p>\n"
+"        "
 
 #. module: hr_recruitment
 #: field:hr.applicant,response:0
@@ -844,7 +894,7 @@ msgstr "Octombrie"
 #. module: hr_recruitment
 #: field:hr.config.settings,module_document_ftp:0
 msgid "Allow the automatic indexation of resumes"
-msgstr ""
+msgstr "Permite indexarea automata a CV-urilor"
 
 #. module: hr_recruitment
 #: field:hr.applicant,salary_proposed_extra:0
@@ -860,7 +910,7 @@ msgstr "Ianuarie"
 #: code:addons/hr_recruitment/wizard/hr_recruitment_create_partner_job.py:56
 #, python-format
 msgid "A contact is already existing with the same name."
-msgstr ""
+msgstr "Exista deja un contact cu acelasi nume."
 
 #. module: hr_recruitment
 #: model:ir.actions.act_window,name:hr_recruitment.hr_recruitment_stage_form_installer
@@ -870,7 +920,7 @@ msgstr "Verificati Etapele de Recrutare"
 #. module: hr_recruitment
 #: view:hr.applicant:0
 msgid "Contact:"
-msgstr ""
+msgstr "Contact:"
 
 #. module: hr_recruitment
 #: view:hr.applicant:0
@@ -896,7 +946,7 @@ msgstr "Doriti sa creati un angajat ?"
 #. module: hr_recruitment
 #: view:hr.applicant:0
 msgid "Degree:"
-msgstr ""
+msgstr "Grad:"
 
 #. module: hr_recruitment
 #: view:hr.recruitment.report:0
@@ -917,7 +967,7 @@ msgstr ""
 #. module: hr_recruitment
 #: view:hr.config.settings:0
 msgid "Configure"
-msgstr ""
+msgstr "Configureaza"
 
 #. module: hr_recruitment
 #: model:hr.recruitment.stage,name:hr_recruitment.stage_job4
@@ -950,6 +1000,8 @@ msgstr "Anulati"
 #: view:hr.recruitment.partner.create:0
 msgid "Are you sure you want to create a contact based on this job request ?"
 msgstr ""
+"Sunteti sigur ca doriti sa creati un contact pe baza acestei cereri de loc "
+"de munca?"
 
 #. module: hr_recruitment
 #: help:hr.config.settings,fetchmail_applicants:0
@@ -958,6 +1010,9 @@ msgid ""
 "(jobs@mycompany.com),\n"
 "                and create automatically application documents in the system."
 msgstr ""
+"Le permite candidatilor sa isi trimita cererea de angajare la o adresa de "
+"email (jobs@mycompany.com),\n"
+"                si creeaza automat documente cerere in sistem."
 
 #. module: hr_recruitment
 #: view:hr.applicant:0
@@ -979,7 +1034,7 @@ msgstr "Da ordinea secventei atunci cand afisează o lista de diplome."
 #. module: hr_recruitment
 #: model:mail.message.subtype,description:hr_recruitment.mt_stage_changed
 msgid "Stage changed"
-msgstr ""
+msgstr "Etapa schimbata"
 
 #. module: hr_recruitment
 #: view:hr.applicant:0
@@ -1008,7 +1063,7 @@ msgstr "LinkedIn"
 #. module: hr_recruitment
 #: model:mail.message.subtype,name:hr_recruitment.mt_job_new_applicant
 msgid "New Applicant"
-msgstr ""
+msgstr "Candidat Nou"
 
 #. module: hr_recruitment
 #: model:ir.model,name:hr_recruitment.model_hr_recruitment_stage
@@ -1043,7 +1098,7 @@ msgstr "Nume sursa"
 #. module: hr_recruitment
 #: view:hr.applicant:0
 msgid "Day(s)"
-msgstr ""
+msgstr "Zi(le)"
 
 #. module: hr_recruitment
 #: field:hr.applicant,description:0
@@ -1053,7 +1108,7 @@ msgstr "Descriere"
 #. module: hr_recruitment
 #: model:mail.message.subtype,name:hr_recruitment.mt_stage_changed
 msgid "Stage Changed"
-msgstr ""
+msgstr "Etapa Schimbata"
 
 #. module: hr_recruitment
 #: selection:hr.recruitment.report,month:0
@@ -1073,7 +1128,7 @@ msgstr "Oral"
 #. module: hr_recruitment
 #: field:hr.recruitment.stage,fold:0
 msgid "Hide in views if empty"
-msgstr ""
+msgstr "Ascunde in vizualizari daca este necompletat"
 
 #. module: hr_recruitment
 #: help:hr.config.settings,module_document_ftp:0
@@ -1083,6 +1138,12 @@ msgid ""
 "knowledge management  module in order to allow you to search using specific "
 "keywords through  the content of all documents (PDF, .DOCx...)"
 msgstr ""
+"Gestionati-va CV-urile si scrisorile de intentie asociate tuturor "
+"candidatilor.\n"
+"                Acesta instaleaza modulul document_ftp. Acesta va instala "
+"modulul managementul cunostintelor pentru a va permite cautarea prin "
+"continutul tuturor documentelor folosind anumite cuvinte cheie (PDF, "
+".DOCx...)"
 
 #. module: hr_recruitment
 #: selection:hr.applicant,state:0
@@ -1103,12 +1164,12 @@ msgstr "Angajat"
 #. module: hr_recruitment
 #: field:hr.applicant,reference:0
 msgid "Referred By"
-msgstr ""
+msgstr "Recomandat de"
 
 #. module: hr_recruitment
 #: view:hr.applicant:0
 msgid "Departement:"
-msgstr ""
+msgstr "Departament:"
 
 #. module: hr_recruitment
 #: selection:hr.applicant,priority:0
@@ -1124,7 +1185,7 @@ msgstr "Gradul de recrutare"
 #. module: hr_recruitment
 #: field:hr.recruitment.report,salary_prop_avg:0
 msgid "Avg. Proposed Salary"
-msgstr ""
+msgstr "Salariul Mediu Propus"
 
 #. module: hr_recruitment
 #: view:hr.applicant:0
@@ -1157,12 +1218,12 @@ msgstr "Noiembrie"
 #. module: hr_recruitment
 #: field:hr.recruitment.report,salary_exp_avg:0
 msgid "Avg. Expected Salary"
-msgstr ""
+msgstr "Salariul Mediu Estimat"
 
 #. module: hr_recruitment
 #: view:hr.recruitment.report:0
 msgid "Avg Expected Salary"
-msgstr ""
+msgstr "Salariul Mediu Estimat"
 
 #. module: hr_recruitment
 #: model:ir.model,name:hr_recruitment.model_hr_recruitment_partner_create
@@ -1177,7 +1238,7 @@ msgstr "Aceste persoane vor primi e-mail."
 #. module: hr_recruitment
 #: field:hr.job,alias_id:0
 msgid "Alias"
-msgstr ""
+msgstr "Alias"
 
 #. module: hr_recruitment
 #: view:hr.recruitment.report:0
@@ -1187,22 +1248,22 @@ msgstr "Recrutare in asteptare"
 #. module: hr_recruitment
 #: view:hr.applicant:0
 msgid "Contract"
-msgstr ""
+msgstr "Contract"
 
 #. module: hr_recruitment
 #: field:hr.applicant,message_summary:0
 msgid "Summary"
-msgstr ""
+msgstr "Continut"
 
 #. module: hr_recruitment
 #: help:hr.applicant,message_ids:0
 msgid "Messages and communication history"
-msgstr ""
+msgstr "Istoric mesaje si conversatii"
 
 #. module: hr_recruitment
 #: model:mail.message.subtype,description:hr_recruitment.mt_applicant_refused
 msgid "Applicant refused"
-msgstr ""
+msgstr "Candidat respins"
 
 #. module: hr_recruitment
 #: field:hr.recruitment.stage,department_id:0
@@ -1233,7 +1294,7 @@ msgstr "Recrutari nealocate"
 #. module: hr_recruitment
 #: model:ir.model,name:hr_recruitment.model_hr_config_settings
 msgid "hr.config.settings"
-msgstr ""
+msgstr "hr.config.setari"
 
 #. module: hr_recruitment
 #: help:hr.recruitment.stage,state:0
@@ -1243,6 +1304,10 @@ msgid ""
 "related to the status 'Close', when your document reach this stage, it will "
 "be automatically closed."
 msgstr ""
+"Starea asociata etapei. Starea documentului dumneavoastra se va modifica "
+"automat in functie de etapa selectata. De exemplu, o etapa este asociata "
+"starii 'Inchisa', iar atunci cand documentul dumneavoastra ajunge in aceasta "
+"etapa, el va fi inchis automat."
 
 #. module: hr_recruitment
 #: help:hr.applicant,salary_proposed_extra:0
@@ -1262,9 +1327,9 @@ msgstr "Deschideti"
 #. module: hr_recruitment
 #: view:board.board:0
 msgid "Applications to be Processed"
-msgstr ""
+msgstr "Cereri care vor fi Procesate"
 
 #. module: hr_recruitment
 #: view:hr.applicant:0
 msgid "Schedule Interview"
-msgstr ""
+msgstr "Programeaza un Interviu"

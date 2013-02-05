@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2012-12-21 17:04+0000\n"
-"PO-Revision-Date: 2013-01-09 13:00+0000\n"
+"PO-Revision-Date: 2013-02-03 13:59+0000\n"
 "Last-Translator: Fekete Mihai <mihai@erpsystems.ro>\n"
 "Language-Team: Romanian <ro@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-01-10 05:35+0000\n"
-"X-Generator: Launchpad (build 16412)\n"
+"X-Launchpad-Export-Date: 2013-02-04 05:42+0000\n"
+"X-Generator: Launchpad (build 16462)\n"
 
 #. module: account
 #: model:process.transition,name:account.process_transition_supplierreconcilepaid0
@@ -3511,7 +3511,7 @@ msgstr "Balanta de verificare"
 #: code:addons/account/account.py:431
 #, python-format
 msgid "Unable to adapt the initial balance (negative value)."
-msgstr ""
+msgstr "Nu s-a putut adapta soldul initial (valoare negativa)."
 
 #. module: account
 #: selection:account.invoice,type:0
@@ -3530,7 +3530,7 @@ msgstr "Alegeti Anul Fiscal"
 #: view:account.config.settings:0
 #: view:account.installer:0
 msgid "Date Range"
-msgstr ""
+msgstr "Interval"
 
 #. module: account
 #: view:account.period:0
@@ -3583,7 +3583,7 @@ msgstr ""
 #: code:addons/account/account.py:2630
 #, python-format
 msgid "There is no parent code for the template account."
-msgstr ""
+msgstr "Nu exista nici un cod principal pentru contul sablon."
 
 #. module: account
 #: help:account.chart.template,code_digits:0
@@ -3594,7 +3594,7 @@ msgstr "Nr. de Cifre care va fi folosit pentru codul contului"
 #. module: account
 #: field:res.partner,property_supplier_payment_term:0
 msgid "Supplier Payment Term"
-msgstr ""
+msgstr "Termenul de Plata al Furnizorului"
 
 #. module: account
 #: view:account.fiscalyear:0
@@ -3611,6 +3611,8 @@ msgstr "Intotdeauna"
 msgid ""
 "Full accounting features: journals, legal statements, chart of accounts, etc."
 msgstr ""
+"Caracteristici contabile complete: registre, declaratii legale, plan de "
+"conturi, etc."
 
 #. module: account
 #: view:account.analytic.line:0
@@ -3667,12 +3669,12 @@ msgstr "Fisier electronic"
 #. module: account
 #: field:account.move.line,reconcile:0
 msgid "Reconcile Ref"
-msgstr ""
+msgstr "Reconciliaza Ref"
 
 #. module: account
 #: field:account.config.settings,has_chart_of_accounts:0
 msgid "Company has a chart of accounts"
-msgstr ""
+msgstr "Compania are un plan de conturi"
 
 #. module: account
 #: model:ir.model,name:account.model_account_tax_code_template
@@ -3768,11 +3770,97 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
+"\n"
+"<stil div=\"font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-"
+"serif; dimensiune font: 12px; culoare: rgb(34, 34, 34); culoare fundal: "
+"#FFF; \">\n"
+"\n"
+"    <p>Buna ziua ${obiect.partener_id.nume},</p>\n"
+"\n"
+"    <p>O noua factura este disponibila pentru dumneavoastra: </p>\n"
+"    \n"
+"    <stil p=\"marginea-stanga: 1px solid #8e0000; marginea-stanga: 30px;\">\n"
+"       &nbsp;&nbsp;<strong>REFERINTE</strong><br />\n"
+"       &nbsp;&nbsp;Numarul facturii: <strong>${obiect.numar}</strong><br />\n"
+"       &nbsp;&nbsp;Total factura: <strong>${obiect.suma_totala} "
+"${obiect.valuta_id.nume}</strong><br />\n"
+"       &nbsp;&nbsp;Data facturii: ${obiect.data_facturii}<br />\n"
+"       % if obiect.origine:\n"
+"       &nbsp;&nbsp;Referinta comenzii: ${obiect.origine}<br />\n"
+"       % endif\n"
+"       % if obiect.id_utilizator:\n"
+"       &nbsp;&nbsp;Contactul dumneavoastra: <a href=\"destinatar "
+"email:${obiect.id-utilizator.email sau "
+"''}?subiect=Factura%20${obiect.numar}\">${obiect.id_utilizator.nume}</a>\n"
+"       % endif\n"
+"    </p>  \n"
+"    \n"
+"    % if obiect.url_paypal:\n"
+"    <br/>\n"
+"    <p>De asemenea, puteti sa platiti direct cu Paypal:</p>\n"
+"        <stil a=\"marginea-stanga: 120px;\" href=\"${obiect.url_paypal}\">\n"
+"            <clasa img=\"oe_edi_paypal_buton\" "
+"src=\"https://www.paypal.com/en_US/i/btn/btn_paynowCC_LG.gif\"/>\n"
+"        </a>\n"
+"    % endif\n"
+"    \n"
+"    <br/>\n"
+"    <p>Daca aveti intrebari, nu ezitati sa ne contactati.</p>\n"
+"    <p>Va multumim pentru ca ati ales ${obiect.companie_id.nume sau "
+"'noi'}!</p>\n"
+"    <br/>\n"
+"    <br/>\n"
+"    <stil div=\"latime: 375px; margine: 0px; umplutura: 0px; culoare fundal: "
+"#8E0000; raza-marginii-de-sus-stanga: 5px 5px; raza-marginii-de-sus-dreapta: "
+"5px 5px; repeta-fundal: repeta fara-repetare;\">\n"
+"        <stil h3=\"margine: 0px; umplutura: 2px 14px; dimensiune-font: 12px; "
+"culoare: #DDD;\">\n"
+"            <stil stong=\"transforma-"
+"textul:majuscule;\">${obiect.id_companie.nume}</strong></h3>\n"
+"    </div>\n"
+"    <stil div=\"latime: 347px; margine: 0px; umplutura: 5px 14px; inaltime-"
+"linie: 16px; culoare-fundal: #F2F2F2;\">\n"
+"        <stil span=\"culoare: #222; marginea-de-jos: 5px; afisare: block; "
+"\">\n"
+"        % if obiect.id_companie.strada:\n"
+"            ${obiect.id_companie.strada}<br/>\n"
+"        % endif\n"
+"        % if obiect.id_companie.strada2:\n"
+"            ${obiect.id_companie.strada2}<br/>\n"
+"        % endif\n"
+"        % if obiect.id_companie.oras sau obiect.id_companie.cod postal:\n"
+"            ${obiect.id_companie.cod postal} "
+"${obiect.id_companie.oras}<br/>\n"
+"        % endif\n"
+"        % if obiect.id_companie.id_tara:\n"
+"            ${obiect.id_companie.id-stat si ('%s, ' % "
+"obiect.id_companie.id_stat.nume) sau ''} ${obiect.id_companie.id_tara.nume "
+"sau ''}<br/>\n"
+"        % endif\n"
+"        </span>\n"
+"        % if obiect.id_companie.telefon:\n"
+"            <stil div=\"marginea-de-sus: 0px; marginea-dreapta: 0px; "
+"marginea-de-jos; 0px; marginea-stanga: 0px; umplutura-sus: 0px; umplutura-"
+"drepata: 0px; umplutura-jos: 0px; umplutura-stanga: 0px; \">\n"
+"                Telefon:&nbsp; ${obiect.id_companie.telefon}\n"
+"            </div>\n"
+"        % endif\n"
+"        % if obiect.id_companie.pagina_de_internet:\n"
+"            <div>\n"
+"                Web :&nbsp;<a "
+"href=\"${obiect.id_companie.pagina_de_internet}\">${obiect.id_companie.pagina"
+"_de-internet}</a>\n"
+"            </div>\n"
+"        %endif\n"
+"        <p></p>\n"
+"    </div>\n"
+"</div>\n"
+"            "
 
 #. module: account
 #: view:account.period:0
 msgid "Account Period"
-msgstr ""
+msgstr "Perioada Cont"
 
 #. module: account
 #: help:account.account,currency_id:0
@@ -3800,7 +3888,7 @@ msgstr "Sabloane Planuri de conturi"
 #. module: account
 #: view:account.bank.statement:0
 msgid "Transactions"
-msgstr ""
+msgstr "Tranzactii"
 
 #. module: account
 #: model:ir.model,name:account.model_account_unreconcile_reconcile
@@ -3900,7 +3988,7 @@ msgstr "Configurarea Aplicatiei de Contabilitate"
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_vat_declaration
 msgid "Account Tax Declaration"
-msgstr ""
+msgstr "Cont Declaratie Fiscala"
 
 #. module: account
 #: help:account.bank.statement,name:0
@@ -3921,6 +4009,8 @@ msgid ""
 "centralized counterpart box in the related journal from the configuration "
 "menu."
 msgstr ""
+"Nu puteti crea o factura intr-un registru centralizat. Debifati casuta "
+"omologului centralizat din registrul asociat din meniul de configurare."
 
 #. module: account
 #: field:account.bank.statement,balance_start:0
@@ -3945,7 +4035,7 @@ msgstr "Inchideti o Perioada"
 #: view:account.bank.statement:0
 #: field:account.cashbox.line,subtotal_opening:0
 msgid "Opening Subtotal"
-msgstr ""
+msgstr "Deschidere Subtotal"
 
 #. module: account
 #: constraint:account.move.line:0
@@ -3953,6 +4043,8 @@ msgid ""
 "You cannot create journal items with a secondary currency without recording "
 "both 'currency' and 'amount currency' field."
 msgstr ""
+"Nu puteti crea elemente ale registrului cu o valuta secundara fara a "
+"inregistra atat campul 'valuta' si 'valoare valuta'."
 
 #. module: account
 #: field:account.financial.report,display_detail:0
@@ -3981,6 +4073,10 @@ msgid ""
 "quotations with a button \"Pay with  Paypal\" in automated emails or through "
 "the OpenERP portal."
 msgstr ""
+"Contul Paypal (email) pentru a primi plati online (card de credit, etc.) "
+"Daca configurati un cont paypal, clientul va putea sa plateasca facturile "
+"sau cotatiile cu un buton \"Plateste cu Paypal\" in email-uri automate sau "
+"prin portalul OpenERP."
 
 #. module: account
 #: code:addons/account/account_move_line.py:535
@@ -3991,6 +4087,11 @@ msgid ""
 "You can create one in the menu: \n"
 "Configuration/Journals/Journals."
 msgstr ""
+"Nu poate fi gasit nici un cont de registru de tip %s pentru aceasta "
+"companie.\n"
+"\n"
+"Puteti crea unul in meniul: \n"
+"Configurare/Registre/Registre."
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_unreconcile
@@ -4041,6 +4142,12 @@ msgid ""
 "by\n"
 "                                    your supplier/customer."
 msgstr ""
+"Veti putea sa editati si sa validati aceasta\n"
+"                                    nota de credit direct sau sa o lasati in "
+"starea de ciorna,\n"
+"                                    asteptand ca documentul sa fie emis de "
+"catre\n"
+"                                    furnzorul/clientul dumneaovastra."
 
 #. module: account
 #: view:validate.account.move.lines:0
@@ -4058,6 +4165,8 @@ msgid ""
 "You have not supplied enough arguments to compute the initial balance, "
 "please select a period and a journal in the context."
 msgstr ""
+"Nu ati adus suficiente argumente pentru calcularea soldului initial, va "
+"rugam sa selectati o perioada si un registru in context."
 
 #. module: account
 #: model:ir.actions.report.xml,name:account.account_transfers
@@ -4067,7 +4176,7 @@ msgstr "Transferuri"
 #. module: account
 #: field:account.config.settings,expects_chart_of_accounts:0
 msgid "This company has its own chart of accounts"
-msgstr ""
+msgstr "Aceasta companie are propriul plan de conturi"
 
 #. module: account
 #: view:account.chart:0
@@ -4078,7 +4187,7 @@ msgstr "Planuri de conturi"
 #: view:cash.box.out:0
 #: model:ir.actions.act_window,name:account.action_cash_box_out
 msgid "Take Money Out"
-msgstr ""
+msgstr "Scoateti bani"
 
 #. module: account
 #: report:account.vat.declaration:0
@@ -4108,6 +4217,22 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<clasa p=\"oe_vizualizare_niciuncontinut_creeaza\">\n"
+"                Faceti click pentru a crea o factura a clientului.\n"
+"              </p><p>\n"
+"                Facturarea electronica a lui OpenERP permite usurarea si "
+"fixarea\n"
+"                colectarii platilor clientilor. Clientul dumneavoastra "
+"primeste\n"
+"                factura prin email si poate sa o plateasca online si/sau sa "
+"o importe\n"
+"                in propriul sistem.\n"
+"              </p><p>\n"
+"                Discutiile cu clientul dumneavoastra sunt afisate automat "
+"in\n"
+"                partea de jos a fiecarei facturi.\n"
+"              </p>\n"
+"            "
 
 #. module: account
 #: field:account.tax.code,name:0
@@ -4139,6 +4264,9 @@ msgid ""
 "You cannot modify a posted entry of this journal.\n"
 "First you should set the journal to allow cancelling entries."
 msgstr ""
+"Nu puteti modifica o inregistrare postata a acestui registru.\n"
+"Mai intai ar trebui sa configurati registrul pentru a permite anularea "
+"inregistrarilor."
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_print_sale_purchase_journal
@@ -4163,6 +4291,8 @@ msgid ""
 "There is no fiscal year defined for this date.\n"
 "Please create one from the configuration of the accounting menu."
 msgstr ""
+"Nu exista nici un an fiscal definit pentru aceasta data.\n"
+"Va rugam sa creati unul din configurarea meniului contabilitate."
 
 #. module: account
 #: view:account.addtmpl.wizard:0
@@ -4175,6 +4305,7 @@ msgstr "Creati Contul"
 #, python-format
 msgid "The entries to reconcile should belong to the same company."
 msgstr ""
+"Inregistrarile de reconciliat ar trebui sa apartina aceleiasi companii."
 
 #. module: account
 #: field:account.invoice.tax,tax_amount:0
@@ -4194,7 +4325,7 @@ msgstr "Detalii"
 #. module: account
 #: help:account.config.settings,default_purchase_tax:0
 msgid "This purchase tax will be assigned by default on new products."
-msgstr ""
+msgstr "Aceasta taxa de cumparare va fi atribuita implicit noilor produse."
 
 #. module: account
 #: report:account.invoice:0
@@ -4224,7 +4355,7 @@ msgstr ""
 #. module: account
 #: model:ir.model,name:account.model_account_journal_cashbox_line
 msgid "account.journal.cashbox.line"
-msgstr ""
+msgstr "account.journal.cashbox.line (cont.registru.caseta_de_numerar_linie)"
 
 #. module: account
 #: model:ir.model,name:account.model_account_partner_reconcile_process
@@ -4365,7 +4496,7 @@ msgstr ""
 #. module: account
 #: field:account.config.settings,group_check_supplier_invoice_total:0
 msgid "Check the total of supplier invoices"
-msgstr ""
+msgstr "Verifica totalul facturilor furnizorilor"
 
 #. module: account
 #: view:account.tax:0
@@ -4379,6 +4510,8 @@ msgid ""
 "When monthly periods are created. The status is 'Draft'. At the end of "
 "monthly period it is in 'Done' status."
 msgstr ""
+"Atunci cand sunt create perioadele lunare. Starea este 'Ciorna'. La "
+"sfarsitul perioadei lunare, starea este 'Efectuata'."
 
 #. module: account
 #: view:account.invoice.report:0
@@ -4412,6 +4545,7 @@ msgstr "Cont Plati"
 #, python-format
 msgid "The periods to generate opening entries cannot be found."
 msgstr ""
+"Nu pot fi gasite perioadele pentru generarea inregistrarilor de deschidere."
 
 #. module: account
 #: model:process.node,name:account.process_node_supplierpaymentorder0
@@ -4455,7 +4589,7 @@ msgstr "Factor de multiplicare Cod fiscal"
 #. module: account
 #: field:account.config.settings,complete_tax_set:0
 msgid "Complete set of taxes"
-msgstr ""
+msgstr "Set complet de taxe"
 
 #. module: account
 #: field:account.account,name:0
@@ -4473,12 +4607,12 @@ msgstr "Nume"
 #: code:addons/account/installer.py:94
 #, python-format
 msgid "No unconfigured company !"
-msgstr ""
+msgstr "Nici o companie neconfigurata !"
 
 #. module: account
 #: field:res.company,expects_chart_of_accounts:0
 msgid "Expects a Chart of Accounts"
-msgstr ""
+msgstr "Asteapta un Plan de Conturi"
 
 #. module: account
 #: field:account.move.line,date:0
@@ -4489,7 +4623,7 @@ msgstr "Data efectiva"
 #: code:addons/account/wizard/account_fiscalyear_close.py:100
 #, python-format
 msgid "The journal must have default credit and debit account."
-msgstr ""
+msgstr "Registrul trebuie sa aiba un cont de credit si de debit implicit."
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_bank_tree
@@ -4500,13 +4634,13 @@ msgstr "Configurati-va Conturile Bancare"
 #. module: account
 #: xsl:account.transfer:0
 msgid "Partner ID"
-msgstr ""
+msgstr "ID Partener"
 
 #. module: account
 #: help:account.bank.statement,message_ids:0
 #: help:account.invoice,message_ids:0
 msgid "Messages and communication history"
-msgstr ""
+msgstr "Istoric mesaje si conversatii"
 
 #. module: account
 #: help:account.journal,analytic_journal_id:0
@@ -4541,13 +4675,15 @@ msgid ""
 "Check this box if you don't want any tax related to this tax Code to appear "
 "on invoices."
 msgstr ""
+"Selectati aceasta casuta daca nu doriti ca pe facturi sa apara vreo taxa "
+"asociata acestui Cod fiscal."
 
 #. module: account
 #: code:addons/account/account_move_line.py:1061
 #: code:addons/account/account_move_line.py:1144
 #, python-format
 msgid "You cannot use an inactive account."
-msgstr ""
+msgstr "Nu puteti folosi un cont inactiv."
 
 #. module: account
 #: model:ir.actions.act_window,name:account.open_board_account
@@ -4578,7 +4714,7 @@ msgstr "Subordonati reuniti"
 #: code:addons/account/wizard/account_invoice_refund.py:146
 #, python-format
 msgid "Insufficient Data!"
-msgstr ""
+msgstr "Date Insuficiente!"
 
 #. module: account
 #: help:account.account,unrealized_gain_loss:0
@@ -4642,7 +4778,7 @@ msgstr "Active"
 #. module: account
 #: view:account.config.settings:0
 msgid "Accounting & Finance"
-msgstr ""
+msgstr "Contabilitate si Finante"
 
 #. module: account
 #: view:account.invoice.confirm:0
@@ -4669,7 +4805,7 @@ msgstr "(Factura trebuie sa fie nereconciliata daca doriti sa o deschideti)"
 #. module: account
 #: field:account.tax,account_analytic_collected_id:0
 msgid "Invoice Tax Analytic Account"
-msgstr ""
+msgstr "Cont Analitic Factura Fiscala"
 
 #. module: account
 #: field:account.chart,period_from:0
@@ -4707,13 +4843,15 @@ msgid ""
 "This payment term will be used instead of the default one for sale orders "
 "and customer invoices"
 msgstr ""
+"Acest termen de plata va fi folosit in loc de cel implicit pentru comenzile "
+"de vanzare si facturile clientilor"
 
 #. module: account
 #: view:account.config.settings:0
 msgid ""
 "If you put \"%(year)s\" in the prefix, it will be replaced by the current "
 "year."
-msgstr ""
+msgstr "Daca introduceti \"%(an)s\" in pefix, va fi inlocuit cu anul curent."
 
 #. module: account
 #: help:account.account,active:0
@@ -4732,7 +4870,7 @@ msgstr "Elemente Afisate ale Jurnalului"
 #. module: account
 #: field:account.move.line,blocked:0
 msgid "No Follow-up"
-msgstr ""
+msgstr "Fara Urmare"
 
 #. module: account
 #: view:account.tax.template:0
@@ -4751,6 +4889,9 @@ msgid ""
 "9.99 EUR, whereas a decimal precision of 4 will allow journal  entries like: "
 "0.0231 EUR."
 msgstr ""
+"Drept exemplu, o precizie zecimala de 2 va permite inregistrari in registru "
+"precum: 9.99 EUR, in timp ce o precizie zecimala de 4 va permite "
+"inregistrari in registru precum: 0.0231 EUR."
 
 #. module: account
 #: field:account.account,shortcut:0
@@ -4814,6 +4955,17 @@ msgid ""
 "          </p>\n"
 "        "
 msgstr ""
+"<clasa p=\"oe_vizualizare_niciuncontinut_creeaza\">\n"
+"            Dati click pentru a seta un nou cont bancar. \n"
+"          </p><p>\n"
+"            Configurati contul bancar al companiei dumneavoastra si "
+"selectati-le pe cele care trebuie\n"
+"            sa apara in subsolul raportului.\n"
+"          </p><p>\n"
+"            Daca folositi aplicatia contabila din OpenERP, registrele si\n"
+"            conturile vor fi create automat pe baza acestor date.\n"
+"          </p>\n"
+"        "
 
 #. module: account
 #: constraint:account.tax.code.template:0
@@ -4821,6 +4973,8 @@ msgid ""
 "Error!\n"
 "You cannot create recursive Tax Codes."
 msgstr ""
+"Eroare!\n"
+"Nu puteti crea Coduri Fiscale recursive."
 
 #. module: account
 #: constraint:account.period:0
@@ -4828,6 +4982,8 @@ msgid ""
 "Error!\n"
 "The duration of the Period(s) is/are invalid."
 msgstr ""
+"Eroare!\n"
+"Durata Perioadei(lor) nu este valida."
 
 #. module: account
 #: field:account.entries.report,month:0
@@ -4845,11 +5001,12 @@ msgstr "Luna"
 #, python-format
 msgid "You cannot change the code of account which contains journal items!"
 msgstr ""
+"Nu puteti schimba codul contului care contine elemente ale registrului!"
 
 #. module: account
 #: field:account.config.settings,purchase_sequence_prefix:0
 msgid "Supplier invoice sequence"
-msgstr ""
+msgstr "Ordinea facturilor furnizorului"
 
 #. module: account
 #: code:addons/account/account_invoice.py:587
@@ -4859,13 +5016,15 @@ msgid ""
 "Cannot find a chart of account, you should create one from Settings\\"
 "Configuration\\Accounting menu."
 msgstr ""
+"Imposibil de gasit un plan de conturi, ar trebui sa creati unul in meniul "
+"Setari\\Configurare\\Contabilitate."
 
 #. module: account
 #: field:account.entries.report,product_uom_id:0
 #: view:analytic.entries.report:0
 #: field:analytic.entries.report,product_uom_id:0
 msgid "Product Unit of Measure"
-msgstr ""
+msgstr "Unitatea de masura a produsului"
 
 #. module: account
 #: field:res.company,paypal_account:0
@@ -4880,7 +5039,7 @@ msgstr "Tipul de cont"
 #. module: account
 #: selection:account.journal,type:0
 msgid "Bank and Checks"
-msgstr ""
+msgstr "Banca si Cecuri"
 
 #. module: account
 #: field:account.account.template,note:0
@@ -4908,7 +5067,7 @@ msgstr "Lasati necompletat pentru a folosi data actuala"
 #: view:account.bank.statement:0
 #: field:account.cashbox.line,subtotal_closing:0
 msgid "Closing Subtotal"
-msgstr ""
+msgstr "Subtotal la inchidere"
 
 #. module: account
 #: field:account.tax,base_code_id:0
@@ -4921,6 +5080,8 @@ msgstr "Cod de baza cont"
 msgid ""
 "You have to provide an account for the write off/exchange difference entry."
 msgstr ""
+"Trebuie sa furnizati un cont pentru inregistrarea diferentei "
+"pierderii/schimbului valutar."
 
 #. module: account
 #: help:res.company,paypal_account:0
@@ -4963,19 +5124,19 @@ msgstr "Bifati daca doriti sa afisati si Conturi cu soldul 0."
 #. module: account
 #: field:account.move.reconcile,opening_reconciliation:0
 msgid "Opening Entries Reconciliation"
-msgstr ""
+msgstr "Reconcilierea Inregistrarilor de Deschidere"
 
 #. module: account
 #. openerp-web
 #: code:addons/account/static/src/xml/account_move_reconciliation.xml:24
 #, python-format
 msgid "Last Reconciliation:"
-msgstr ""
+msgstr "Ultima Reconciliere:"
 
 #. module: account
 #: selection:account.move.line,state:0
 msgid "Balanced"
-msgstr ""
+msgstr "Echilibrat"
 
 #. module: account
 #: model:process.node,note:account.process_node_importinvoice0
@@ -4989,6 +5150,8 @@ msgid ""
 "There is currently no company without chart of account. The wizard will "
 "therefore not be executed."
 msgstr ""
+"Momentan nu exista nici o companie fara un plan de conturi. Prin urmare, "
+"wizardul nu va fi lansat."
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_wizard_multi_chart
@@ -5003,7 +5166,7 @@ msgstr "Plan de conturi"
 #. module: account
 #: field:account.invoice,reference_type:0
 msgid "Payment Reference"
-msgstr ""
+msgstr "Referinta Plata"
 
 #. module: account
 #: selection:account.financial.report,style_overwrite:0
@@ -5072,12 +5235,12 @@ msgstr "Note de credit"
 #: view:account.move.line:0
 #: model:ir.actions.act_window,name:account.action_account_manual_reconcile
 msgid "Journal Items to Reconcile"
-msgstr ""
+msgstr "Elemente ale Registrului de Reconciliat"
 
 #. module: account
 #: model:ir.model,name:account.model_account_tax_template
 msgid "Templates for Taxes"
-msgstr ""
+msgstr "Sabloane pentru Taxe"
 
 #. module: account
 #: sql_constraint:account.period:0
@@ -5087,12 +5250,12 @@ msgstr "Numele perioadei trebuie sa fie unic pe companie!"
 #. module: account
 #: help:wizard.multi.charts.accounts,currency_id:0
 msgid "Currency as per company's country."
-msgstr ""
+msgstr "Valuta conform tarii companiei."
 
 #. module: account
 #: view:account.tax:0
 msgid "Tax Computation"
-msgstr ""
+msgstr "Calculul Impozitului"
 
 #. module: account
 #: view:wizard.multi.charts.accounts:0
@@ -5129,6 +5292,8 @@ msgid ""
 "Error!\n"
 "You cannot create an account which has parent account of different company."
 msgstr ""
+"Eroare!\n"
+"Nu puteti crea un cont care are contul principal al unei companii diferite."
 
 #. module: account
 #: code:addons/account/account_invoice.py:631
@@ -5139,6 +5304,11 @@ msgid ""
 "You can create one in the menu: \n"
 "Configuration\\Journals\\Journals."
 msgstr ""
+"Nu poate fi gasit nici un cont registru de tipul %s pentru aceasta "
+"companie.\n"
+"\n"
+"Puteti crea unul in meniul: \n"
+"Configurare\\Registre\\Registre."
 
 #. module: account
 #: report:account.vat.declaration:0
@@ -5164,7 +5334,7 @@ msgstr "Modele Recurente"
 #. module: account
 #: view:account.tax:0
 msgid "Children/Sub Taxes"
-msgstr ""
+msgstr "Taxe Secundare/Sub"
 
 #. module: account
 #: xsl:account.transfer:0
@@ -5184,7 +5354,7 @@ msgstr "Actioneaza ca si cont predefinit pentru suma creditului"
 #. module: account
 #: view:cash.box.out:0
 msgid "Describe why you take money from the cash register:"
-msgstr ""
+msgstr "Descrieti de ce luati bani din casa de marcat:"
 
 #. module: account
 #: selection:account.invoice,state:0
@@ -5196,12 +5366,12 @@ msgstr "Anulat(a)"
 #. module: account
 #: help:account.config.settings,group_proforma_invoices:0
 msgid "Allows you to put invoices in pro-forma state."
-msgstr ""
+msgstr "Va permite sa puneti facturile in starea pro-forma."
 
 #. module: account
 #: view:account.journal:0
 msgid "Unit Of Currency Definition"
-msgstr ""
+msgstr "Definirea Unitatii de valuta"
 
 #. module: account
 #: help:account.partner.ledger,amount_currency:0
@@ -5210,6 +5380,7 @@ msgid ""
 "It adds the currency column on report if the currency differs from the "
 "company currency."
 msgstr ""
+"Adauga coloana valutei in raport daca valuta difera de cea a companiei."
 
 #. module: account
 #: code:addons/account/account.py:3346
@@ -5249,7 +5420,7 @@ msgstr "Factura anulata"
 #. module: account
 #: view:account.invoice:0
 msgid "My Invoices"
-msgstr ""
+msgstr "Facturile mele"
 
 #. module: account
 #: selection:account.bank.statement,state:0
@@ -5259,7 +5430,7 @@ msgstr "Nou(a)"
 #. module: account
 #: view:wizard.multi.charts.accounts:0
 msgid "Sale Tax"
-msgstr ""
+msgstr "Taxa pe vanzare"
 
 #. module: account
 #: field:account.tax,ref_tax_code_id:0
@@ -5284,6 +5455,9 @@ msgid ""
 "printed it comes to 'Printed' status. When all transactions are done, it "
 "comes in 'Done' status."
 msgstr ""
+"Cand este creata perioada in registru. Starea este 'Ciorna'. Daca un raport "
+"este tiparit, starea este 'Tiparit'. Cand toate tranzactiile sunt efectuate, "
+"starea este 'Efectuat'."
 
 #. module: account
 #: code:addons/account/account.py:3157
@@ -5313,6 +5487,7 @@ msgstr "Facturi"
 #: help:account.config.settings,expects_chart_of_accounts:0
 msgid "Check this box if this company is a legal entity."
 msgstr ""
+"Selectati aceasta casuta daca aceasta companie este entitate juridica."
 
 #. module: account
 #: model:account.account.type,name:account.conf_account_type_chk
@@ -5358,7 +5533,7 @@ msgstr "Verificati"
 #: view:validate.account.move:0
 #: view:validate.account.move.lines:0
 msgid "or"
-msgstr ""
+msgstr "sau"
 
 #. module: account
 #: view:account.invoice.report:0
@@ -5429,6 +5604,9 @@ msgid ""
 "Set the account that will be set by default on invoice tax lines for "
 "invoices. Leave empty to use the expense account."
 msgstr ""
+"Configureaza contul care va fi setat in mod implicit in liniile facturii "
+"fiscale pentru facturi. Lasati necompletat pentru a folosi contul de "
+"cheltuieli."
 
 #. module: account
 #: code:addons/account/account.py:890
@@ -5444,7 +5622,7 @@ msgstr "Inregistrari in Jurnal de Revizuit"
 #. module: account
 #: selection:res.company,tax_calculation_rounding_method:0
 msgid "Round Globally"
-msgstr ""
+msgstr "Rotunjire Globala"
 
 #. module: account
 #: view:account.bank.statement:0
@@ -5464,6 +5642,8 @@ msgid ""
 "Please verify the price of the invoice !\n"
 "The encoded total does not match the computed total."
 msgstr ""
+"Va rugam sa verificati pretul de pe factura !\n"
+"Totalul inregistrat nu se potriveste cu totalul calculat."
 
 #. module: account
 #: field:account.account,active:0
@@ -5479,7 +5659,7 @@ msgstr "Activ(a)"
 #: view:account.bank.statement:0
 #: field:account.journal,cash_control:0
 msgid "Cash Control"
-msgstr ""
+msgstr "Controlul Numerarului"
 
 #. module: account
 #: field:account.analytic.balance,date2:0
@@ -5509,7 +5689,7 @@ msgstr "Sold dupa Tipul de cont"
 #: code:addons/account/account_cash_statement.py:301
 #, python-format
 msgid "There is no %s Account on the journal %s."
-msgstr ""
+msgstr "Nu exista nici un Cont %s in registrul %s."
 
 #. module: account
 #: model:res.groups,name:account.group_account_user
@@ -5529,7 +5709,7 @@ msgstr ""
 #. module: account
 #: model:res.groups,name:account.group_account_manager
 msgid "Financial Manager"
-msgstr ""
+msgstr "Manager Financiar"
 
 #. module: account
 #: field:account.journal,group_invoice_lines:0
@@ -5550,7 +5730,7 @@ msgstr "Miscari"
 #: field:account.bank.statement,details_ids:0
 #: view:account.journal:0
 msgid "CashBox Lines"
-msgstr ""
+msgstr "Liniile Casei de bani"
 
 #. module: account
 #: model:ir.model,name:account.model_account_vat_declaration
@@ -5563,6 +5743,8 @@ msgid ""
 "If you do not check this box, you will be able to do invoicing & payments, "
 "but not accounting (Journal Items, Chart of  Accounts, ...)"
 msgstr ""
+"Daca nu selectati aceasta casuta, veti putea sa faceti facturare & plati, "
+"dar nu si contabilitate (Elemente ale Registrului, Plan de Conturi, ...)"
 
 #. module: account
 #: view:account.period:0
@@ -5640,12 +5822,14 @@ msgstr "Miscari tinta"
 msgid ""
 "Move cannot be deleted if linked to an invoice. (Invoice: %s - Move ID:%s)"
 msgstr ""
+"Mutarea nu poate fi stearsa daca este asociata unei facturi. (Factura: %s - "
+"ID Mutare:%s)"
 
 #. module: account
 #: view:account.bank.statement:0
 #: help:account.cashbox.line,number_opening:0
 msgid "Opening Unit Numbers"
-msgstr ""
+msgstr "Numere Unitare de Deschidere"
 
 #. module: account
 #: field:account.subscription,period_type:0
@@ -5712,7 +5896,7 @@ msgstr "Anul"
 #. module: account
 #: help:account.invoice,sent:0
 msgid "It indicates that the invoice has been sent."
-msgstr ""
+msgstr "Indica faptul ca factura a fost trimisa."
 
 #. module: account
 #: field:account.tax.template,description:0
@@ -5727,11 +5911,14 @@ msgid ""
 "Put a sequence in the journal definition for automatic numbering or create a "
 "sequence manually for this piece."
 msgstr ""
+"Nu se poate crea o secventa automata pentru aceasta piesa.\n"
+"Introduceti o secventa in definirea registrului pentru numerotare automata "
+"sau creati manual o secventa pentru aceasta piesa."
 
 #. module: account
 #: view:account.invoice:0
 msgid "Pro Forma Invoice "
-msgstr ""
+msgstr "Factura Pro Forma "
 
 #. module: account
 #: selection:account.subscription,period_type:0
@@ -5797,6 +5984,8 @@ msgstr "Cod Calcul (daca tip=cod)"
 msgid ""
 "Cannot find a chart of accounts for this company, you should create one."
 msgstr ""
+"Nu poate fi gasit un plan de conturi pentru aceasta companie, ar trebui sa "
+"creati unul."
 
 #. module: account
 #: selection:account.analytic.journal,type:0
@@ -5857,6 +6046,8 @@ msgid ""
 "Holds the Chatter summary (number of messages, ...). This summary is "
 "directly in html format in order to be inserted in kanban views."
 msgstr ""
+"Contine rezumatul Chatter (numar de mesaje, ...). Acest rezumat este direct "
+"in format HTML, cu scopul de a se introduce in vizualizari kanban."
 
 #. module: account
 #: field:account.tax,child_depend:0
@@ -5874,6 +6065,13 @@ msgid ""
 "entry was reconciled, either the user pressed the button \"Fully "
 "Reconciled\" in the manual reconciliation process"
 msgstr ""
+"Data la care inregistrarile contabile ale partenerului au fost reconciliate "
+"complet. Difera de data ultimei reconcilieri efectuate pentru acest "
+"partener, deoarece aici observam faptul ca nimic altceva nu a fost "
+"reconciliat la aceasta data. Aceasta poate fi efectuata in 2 moduri: fie "
+"ultima inregistrare a debitului/creditului a fost reconciliata, fie "
+"utilizatorul a apasat pe butonul 'Reconciliat Complet' in procesul de "
+"reconciliere manuala"
 
 #. module: account
 #: field:account.journal,update_posted:0
@@ -5920,13 +6118,15 @@ msgstr "cont.program de instalare"
 #. module: account
 #: view:account.invoice:0
 msgid "Recompute taxes and total"
-msgstr ""
+msgstr "Recalculeaza taxele si totalul"
 
 #. module: account
 #: code:addons/account/account.py:1103
 #, python-format
 msgid "You cannot modify/delete a journal with entries for this period."
 msgstr ""
+"Nu puteti modifica/sterge un registru cu inregistrari pentru aceasta "
+"perioada."
 
 #. module: account
 #: field:account.tax.template,include_base_amount:0
@@ -5936,7 +6136,7 @@ msgstr "Se include in suma de baza"
 #. module: account
 #: field:account.invoice,supplier_invoice_number:0
 msgid "Supplier Invoice Number"
-msgstr ""
+msgstr "Numarul Facturii Furnizorului"
 
 #. module: account
 #: help:account.payment.term.line,days:0
@@ -5958,6 +6158,8 @@ msgstr "Calcul Suma"
 #, python-format
 msgid "You can not add/modify entries in a closed period %s of journal %s."
 msgstr ""
+"Nu puteti adauga/sterge inregistrari intr-o perioada inchisa %s din "
+"registrul %s."
 
 #. module: account
 #: view:account.journal:0
@@ -5982,7 +6184,7 @@ msgstr "Inceputul perioadei"
 #. module: account
 #: model:account.account.type,name:account.account_type_asset_view1
 msgid "Asset View"
-msgstr ""
+msgstr "Vizualizare Active"
 
 #. module: account
 #: model:ir.model,name:account.model_account_common_account_report
@@ -6014,6 +6216,9 @@ msgid ""
 "that you should have your last line with the type 'Balance' to ensure that "
 "the whole amount will be treated."
 msgstr ""
+"Selectati aici tipul de evaluare asociat acestei linii a termenului de "
+"plata. Observati ca ar trebui sa aveti ultima linie de tipul 'Sold' pentru a "
+"va asigura ca intreaga suma va fi luata in considerare."
 
 #. module: account
 #: field:account.partner.ledger,initial_balance:0
@@ -6054,12 +6259,12 @@ msgstr "Jurnal Inregistrari Sfarsit de an"
 #. module: account
 #: view:account.invoice:0
 msgid "Draft Refund "
-msgstr ""
+msgstr "Rambursare Ciorna "
 
 #. module: account
 #: view:cash.box.in:0
 msgid "Fill in this form if you put money in the cash register:"
-msgstr ""
+msgstr "Completati acest formular daca introduceti bani in casa de marcat:"
 
 #. module: account
 #: view:account.payment.term.line:0
@@ -6119,7 +6324,7 @@ msgstr "Data platii"
 #: view:account.bank.statement:0
 #: field:account.bank.statement,opening_details_ids:0
 msgid "Opening Cashbox Lines"
-msgstr ""
+msgstr "Linii Caseta de Numerar de Deschidere"
 
 #. module: account
 #: view:account.analytic.account:0
@@ -6144,7 +6349,7 @@ msgstr "Moneda sumei"
 #. module: account
 #: selection:res.company,tax_calculation_rounding_method:0
 msgid "Round per Line"
-msgstr ""
+msgstr "Rotunjire per Linie"
 
 #. module: account
 #: report:account.analytic.account.balance:0
@@ -6182,6 +6387,8 @@ msgid ""
 "This payment term will be used instead of the default one for purchase "
 "orders and supplier invoices"
 msgstr ""
+"Acest termen de plata va fi folosit in locul celui implicit pentru comenzile "
+"de achizitie si facturile furnizorilor"
 
 #. module: account
 #: help:account.automatic.reconcile,power:0
@@ -6196,7 +6403,7 @@ msgstr ""
 #: code:addons/account/wizard/account_report_aged_partner_balance.py:56
 #, python-format
 msgid "You must set a period length greater than 0."
-msgstr ""
+msgstr "Trebuie sa configurati o perioada mai mare de 0."
 
 #. module: account
 #: view:account.fiscal.position.template:0
@@ -6207,7 +6414,7 @@ msgstr "Sablon Pozitie Fiscala"
 #. module: account
 #: view:account.invoice:0
 msgid "Draft Refund"
-msgstr ""
+msgstr "Rambursare Ciorna"
 
 #. module: account
 #: view:account.analytic.chart:0
@@ -6245,6 +6452,7 @@ msgstr "Reconciliere cu Pierderea"
 #: constraint:account.move.line:0
 msgid "You cannot create journal items on an account of type view."
 msgstr ""
+"Nu puteti crea elemente ale registrului intr-un cont de tip vizualizare."
 
 #. module: account
 #: selection:account.payment.term.line,value:0
@@ -6257,6 +6465,7 @@ msgstr "Suma fixa"
 #, python-format
 msgid "You cannot change the tax, you should remove and recreate lines."
 msgstr ""
+"Nu puteti modifica impozitul, ar trebui sa stergeti si sa recreati liniile."
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_automatic_reconcile
@@ -6380,7 +6589,7 @@ msgstr "Reprezentare fiscala"
 #. module: account
 #: view:account.config.settings:0
 msgid "Select Company"
-msgstr ""
+msgstr "Selecteaza Compania"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_state_open
@@ -6446,6 +6655,21 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<clasa p=\"oe_vizualizare_niciuncontinut_creeaza\">\n"
+"                Dati click pentru a adauga un cont.\n"
+"              </p><p>\n"
+"                Un cont este o parte a unui registru de contabilitate care "
+"permite companiei dumneavoastra\n"
+"                sa inregistreze toate tipurile de tranzactii de debit si de "
+"credit.\n"
+"                Companiile isi prezinta conturile anuale in doua parti "
+"principale:\n"
+"                bilantul si declaratia de venituri (contul de profit si\n"
+"                de pierderi). Conturile anuale ale unei companii sunt "
+"obligate prin lege\n"
+"                sa dezvaluie o anumita cantitate de informatii.\n"
+"              </p>\n"
+"            "
 
 #. module: account
 #: view:account.invoice.report:0
@@ -6456,7 +6680,7 @@ msgstr "# de Linii"
 #. module: account
 #: view:account.invoice:0
 msgid "(update)"
-msgstr ""
+msgstr "(actualizare)"
 
 #. module: account
 #: field:account.aged.trial.balance,filter:0
@@ -6496,7 +6720,7 @@ msgstr "Soldul calculat pe baza Soldului Initial si liniile tranzactiei"
 #. module: account
 #: field:account.journal,loss_account_id:0
 msgid "Loss Account"
-msgstr ""
+msgstr "Cont Pierderi"
 
 #. module: account
 #: field:account.tax,account_collected_id:0
@@ -6519,6 +6743,11 @@ msgid ""
 "created by the system on document validation (invoices, bank statements...) "
 "and will be created in 'Posted' status."
 msgstr ""
+"Toate inregistrarile noi din registru create manual se afla de obicei in "
+"starea 'Neafisate', dar puteti seta optiunea de a sari peste acea stare in "
+"registrul respectiv. In acest caz, ele se vor comporta ca niste inregistrari "
+"in registru create automat de sistem la validarea documentelor (facturi, "
+"extrase de cont...) si vor fi create in starea 'Afisate'."
 
 #. module: account
 #: field:account.payment.term.line,days:0
@@ -6532,6 +6761,8 @@ msgid ""
 "You cannot validate this journal entry because account \"%s\" does not "
 "belong to chart of accounts \"%s\"."
 msgstr ""
+"Nu puteti valida aceasta inregistrare in registru deoarece contul \"%s\" nu "
+"apartine planului de conturi \"%s\"."
 
 #. module: account
 #: view:account.financial.report:0
@@ -6590,7 +6821,7 @@ msgstr "Compania asociata acestui jurnal"
 #. module: account
 #: help:account.config.settings,group_multi_currency:0
 msgid "Allows you multi currency environment"
-msgstr ""
+msgstr "Va permite un mediu cu mai multe valute"
 
 #. module: account
 #: view:account.subscription:0
@@ -6673,7 +6904,7 @@ msgstr "Linie Analitica"
 #. module: account
 #: model:ir.ui.menu,name:account.menu_action_model_form
 msgid "Models"
-msgstr ""
+msgstr "Modele"
 
 #. module: account
 #: code:addons/account/account_invoice.py:1095
@@ -6682,6 +6913,8 @@ msgid ""
 "You cannot cancel an invoice which is partially paid. You need to "
 "unreconcile related payment entries first."
 msgstr ""
+"Nu puteti anula o factura care este platita partial. Mai intai trebui sa "
+"nereconciliati inregistrarile platii."
 
 #. module: account
 #: field:product.template,taxes_id:0
@@ -6716,6 +6949,16 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<clasa p=\"oe_vizualizare_niciuncontinut_creeaza\">\n"
+"                Faceti click pentru a inregistra o rambursare primita de la "
+"un furnizor.\n"
+"              </p><p>\n"
+"                In loc sa creati manual rambursarea de la furnizor, puteti "
+"genera\n"
+"                rambursari si sa le reconciliati direct din factura "
+"furnizorului.\n"
+"              </p>\n"
+"            "
 
 #. module: account
 #: field:account.tax,type:0
@@ -6766,7 +7009,7 @@ msgstr "Afisati subordordonatele fixe"
 #. module: account
 #: view:account.config.settings:0
 msgid "Bank & Cash"
-msgstr ""
+msgstr "Banca & Numerar"
 
 #. module: account
 #: help:account.fiscalyear.close.state,fy_id:0
@@ -6852,13 +7095,14 @@ msgstr "Incasari"
 #. module: account
 #: constraint:account.move.line:0
 msgid "You cannot create journal items on closed account."
-msgstr ""
+msgstr "Nu puteti crea elemente ale registrului intr-un cont inchis."
 
 #. module: account
 #: code:addons/account/account_invoice.py:610
 #, python-format
 msgid "Invoice line account's company and invoice's compnay does not match."
 msgstr ""
+"Linia facturii din contul firmei si factura pe firma nu se potrivesc."
 
 #. module: account
 #: view:account.invoice:0
@@ -6879,7 +7123,7 @@ msgstr "Valuta asociata contului daca nu este aceeasi ca si cea a companiei."
 #: code:addons/account/installer.py:48
 #, python-format
 msgid "Custom"
-msgstr ""
+msgstr "Personalizat"
 
 #. module: account
 #: view:account.analytic.account:0
@@ -6900,13 +7144,15 @@ msgstr "Capital"
 #. module: account
 #: field:account.journal,internal_account_id:0
 msgid "Internal Transfers Account"
-msgstr ""
+msgstr "Cont de Transferuri Interne"
 
 #. module: account
 #: code:addons/account/wizard/pos_box.py:33
 #, python-format
 msgid "Please check that the field 'Journal' is set on the Bank Statement"
 msgstr ""
+"Va rugam sa verificati daca campul 'Registru' este configurat in Extrasul "
+"bancar"
 
 #. module: account
 #: selection:account.tax,type:0
@@ -6916,7 +7162,7 @@ msgstr "Procentaj"
 #. module: account
 #: selection:account.config.settings,tax_calculation_rounding_method:0
 msgid "Round globally"
-msgstr ""
+msgstr "Rotunjire globala"
 
 #. module: account
 #: selection:account.report.general.ledger,sortby:0
@@ -6948,7 +7194,7 @@ msgstr "Numarul facturii"
 #. module: account
 #: field:account.bank.statement,difference:0
 msgid "Difference"
-msgstr ""
+msgstr "Diferenta"
 
 #. module: account
 #: help:account.tax,include_base_amount:0
@@ -6984,6 +7230,12 @@ msgid ""
 "due date, make sure that the payment term is not set on the invoice. If you "
 "keep the payment term and the due date empty, it means direct payment."
 msgstr ""
+"Daca folositi termeni de plata, data scadenta va fi calculata automat la "
+"generarea de onregistrari contabile. Termenul de plata poate calcula mai "
+"multe date scadente, de exemplu 50% acum si 50% peste o luna, dar daca "
+"doriti sa impuneti o data scadenta, atunci asigurati-va ca termenul de plata "
+"nu este setat pe factura. Daca nu completati termenul de plata si data "
+"scadenta, aceasta inseamna o plata directa."
 
 #. module: account
 #: code:addons/account/account.py:414
@@ -6992,6 +7244,8 @@ msgid ""
 "There is no opening/closing period defined, please create one to set the "
 "initial balance."
 msgstr ""
+"Nu exista nici o perioada de deschidere/inchidere definita, va rugam sa "
+"creati una pentru a configura soldul initial."
 
 #. module: account
 #: help:account.tax.template,sequence:0
@@ -7019,12 +7273,12 @@ msgstr ""
 #: code:addons/account/wizard/account_report_aged_partner_balance.py:58
 #, python-format
 msgid "User Error!"
-msgstr ""
+msgstr "Eroare utilizator!"
 
 #. module: account
 #: view:account.open.closed.fiscalyear:0
 msgid "Discard"
-msgstr ""
+msgstr "Elimina"
 
 #. module: account
 #: selection:account.account,type:0
@@ -7042,7 +7296,7 @@ msgstr "Elementele Jurnalului Analitic"
 #. module: account
 #: field:account.config.settings,has_default_company:0
 msgid "Has default company"
-msgstr ""
+msgstr "Are o companie implicita"
 
 #. module: account
 #: view:account.fiscalyear.close:0
@@ -7142,6 +7396,8 @@ msgid ""
 "There is no period defined for this date: %s.\n"
 "Please create one."
 msgstr ""
+"Nu exista nici o perioada definita pentru aceasta data: %s.\n"
+"Va rugam sa creati una."
 
 #. module: account
 #: field:account.analytic.line,product_uom_id:0
@@ -7192,6 +7448,8 @@ msgid ""
 "Percentages for Payment Term Line must be between 0 and 1, Example: 0.02 for "
 "2%."
 msgstr ""
+"Procentele pentru Linia Termenului de Plata trebuie sa fie intre 0 si 1, De "
+"exemplu: 0,02 pentru 2%."
 
 #. module: account
 #: report:account.invoice:0
@@ -7212,7 +7470,7 @@ msgstr "Categorie Cont de cheltuieli"
 #. module: account
 #: sql_constraint:account.tax:0
 msgid "Tax Name must be unique per company!"
-msgstr ""
+msgstr "Numele Taxei trebuie sa fie unic pe companie!"
 
 #. module: account
 #: view:account.bank.statement:0
@@ -7225,6 +7483,9 @@ msgid ""
 "If you unreconcile transactions, you must also verify all the actions that "
 "are linked to those transactions because they will not be disabled"
 msgstr ""
+"Daca desreconciliati tranzactiile, trebuie de asemenea sa verificati toate "
+"actiunile care sunt legate de acele tranzactii pentru ca ele nu vor fi "
+"dezactivate"
 
 #. module: account
 #: view:account.account.template:0
@@ -7259,6 +7520,7 @@ msgid ""
 "You cannot provide a secondary currency if it is the same than the company "
 "one."
 msgstr ""
+"Nu puteti furniza o valuta secundara daca este aceeasi ca si cea a companiei."
 
 #. module: account
 #: selection:account.tax.template,applicable_type:0
@@ -7346,13 +7608,13 @@ msgstr "Profit & Pierdere (Contul de cheltuieli)"
 #. module: account
 #: field:account.bank.statement,total_entry_encoding:0
 msgid "Total Transactions"
-msgstr ""
+msgstr "Total Tranzactii"
 
 #. module: account
 #: code:addons/account/account.py:636
 #, python-format
 msgid "You cannot remove an account that contains journal items."
-msgstr ""
+msgstr "Nu puteti sterge un cont care contine elemente ale registrului."
 
 #. module: account
 #: code:addons/account/account.py:1024
@@ -7396,13 +7658,13 @@ msgstr "Manual"
 #. module: account
 #: selection:account.invoice.refund,filter_refund:0
 msgid "Cancel: create refund and reconcile"
-msgstr ""
+msgstr "Anuleaza: creeaza rambursare si reconciliaza"
 
 #. module: account
 #: code:addons/account/wizard/account_report_aged_partner_balance.py:58
 #, python-format
 msgid "You must set a start date."
-msgstr ""
+msgstr "Trebuie sa setati o data de inceput."
 
 #. module: account
 #: view:account.automatic.reconcile:0
@@ -7450,7 +7712,7 @@ msgstr "Inregistrari in Jurnal"
 #: code:addons/account/wizard/account_invoice_refund.py:147
 #, python-format
 msgid "No period found on the invoice."
-msgstr ""
+msgstr "Nu a fost gasita nici o perioada pe factura."
 
 #. module: account
 #: help:account.partner.ledger,page_split:0
@@ -7495,7 +7757,7 @@ msgstr "Toate Inregistrarile"
 #. module: account
 #: constraint:account.move.reconcile:0
 msgid "You can only reconcile journal items with the same partner."
-msgstr ""
+msgstr "Puteti reconcilia numai elementele registrului cu acelasi partener."
 
 #. module: account
 #: view:account.journal.select:0
@@ -7557,6 +7819,8 @@ msgstr "Completati Setul de Taxe"
 msgid ""
 "Selected Entry Lines does not have any account move enties in draft state."
 msgstr ""
+"Liniile Inregistrarii selectate nu au nici o inregistrare a miscarilor in "
+"cont in starea ciorna."
 
 #. module: account
 #: view:account.chart.template:0
@@ -7586,6 +7850,8 @@ msgid ""
 "Configuration error!\n"
 "The currency chosen should be shared by the default accounts too."
 msgstr ""
+"Eroare de configurare!\n"
+"Valuta aleasa ar trebui sa fie comuna si conturilor implicite."
 
 #. module: account
 #: code:addons/account/account.py:2256
@@ -7612,12 +7878,12 @@ msgstr ""
 #. module: account
 #: field:account.invoice,paypal_url:0
 msgid "Paypal Url"
-msgstr ""
+msgstr "Url Paypal"
 
 #. module: account
 #: field:account.config.settings,module_account_voucher:0
 msgid "Manage customer payments"
-msgstr ""
+msgstr "Gestioneaza platile clientilor"
 
 #. module: account
 #: help:report.invoice.created,origin:0
@@ -7636,6 +7902,8 @@ msgid ""
 "Error!\n"
 "The start date of a fiscal year must precede its end date."
 msgstr ""
+"Eroare!\n"
+"Data de inceput a anului fiscal trebuie sa preceada data de sfarsit."
 
 #. module: account
 #: view:account.tax.template:0
@@ -7651,7 +7919,7 @@ msgstr "Facturi client"
 #. module: account
 #: view:account.tax:0
 msgid "Misc"
-msgstr ""
+msgstr "Diverse"
 
 #. module: account
 #: view:account.analytic.line:0
@@ -7674,6 +7942,9 @@ msgid ""
 "Make sure you have configured payment terms properly.\n"
 "The latest payment term line should be of the \"Balance\" type."
 msgstr ""
+"Nu puteti valida o inregistrare neechilibrata.\n"
+"Asigurati-va ca ati configurat termenii de plata in mod corespunzator.\n"
+"Linia celui mai recent termen de plata ar trebui sa fie de tip \"Sold\"."
 
 #. module: account
 #: model:process.transition,note:account.process_transition_invoicemanually0
@@ -7709,6 +7980,7 @@ msgstr "Document sursa"
 #: help:account.config.settings,company_footer:0
 msgid "Bank accounts as printed in the footer of each printed document"
 msgstr ""
+"Conturi bancare asa cum sunt imprimate la subsolui fiecarui document imprimat"
 
 #. module: account
 #: constraint:account.account:0
@@ -7717,6 +7989,9 @@ msgid ""
 "You cannot define children to an account with internal type different of "
 "\"View\"."
 msgstr ""
+"Eroare de configurare!\n"
+"Nu puteti defini subordonati unui cont cu tipul intern diferit de "
+"\"Vizualizare\"."
 
 #. module: account
 #: model:ir.model,name:account.model_accounting_report
@@ -7726,7 +8001,7 @@ msgstr "Raport Contabil"
 #. module: account
 #: field:account.analytic.line,currency_id:0
 msgid "Account Currency"
-msgstr ""
+msgstr "Valuta Contului"
 
 #. module: account
 #: report:account.invoice:0
@@ -7740,6 +8015,8 @@ msgid ""
 "You can not delete an invoice which is not cancelled. You should refund it "
 "instead."
 msgstr ""
+"Nu puteti sterge o factura care nu este anulata. In schimb, ar trebui sa o "
+"rambursati."
 
 #. module: account
 #: help:account.tax,amount:0
@@ -7791,7 +8068,7 @@ msgstr "Inregistrari Deschise Cont de Cheltuieli"
 #. module: account
 #: view:account.invoice:0
 msgid "Customer Reference"
-msgstr ""
+msgstr "Referinta Client"
 
 #. module: account
 #: field:account.account.template,parent_id:0
@@ -7807,7 +8084,7 @@ msgstr "Pret"
 #: view:account.bank.statement:0
 #: field:account.bank.statement,closing_details_ids:0
 msgid "Closing Cashbox Lines"
-msgstr ""
+msgstr "Linii de inchidere ale Casei de bani"
 
 #. module: account
 #: view:account.bank.statement:0
@@ -7848,7 +8125,7 @@ msgstr "Grupati dupa anul Datei Facturii"
 #. module: account
 #: field:account.config.settings,purchase_tax_rate:0
 msgid "Purchase tax (%)"
-msgstr ""
+msgstr "Taxa la cumparare (%)"
 
 #. module: account
 #: help:res.partner,credit:0
@@ -7863,7 +8140,7 @@ msgstr "Elemente Neechilibrate Jurnal"
 #. module: account
 #: model:ir.actions.act_window,name:account.open_account_charts_modules
 msgid "Chart Templates"
-msgstr ""
+msgstr "Sabloane Plan"
 
 #. module: account
 #: field:account.journal.period,icon:0
@@ -7914,7 +8191,7 @@ msgstr "Inregistrari Deschise Cont Venituri"
 #. module: account
 #: field:account.config.settings,group_proforma_invoices:0
 msgid "Allow pro-forma invoices"
-msgstr ""
+msgstr "Permite facturi pro-forma"
 
 #. module: account
 #: view:account.bank.statement:0
@@ -7950,12 +8227,12 @@ msgstr "Creati Inregistrari"
 #. module: account
 #: model:ir.model,name:account.model_cash_box_out
 msgid "cash.box.out"
-msgstr ""
+msgstr "cash.box.out"
 
 #. module: account
 #: help:account.config.settings,currency_id:0
 msgid "Main currency of the company."
-msgstr ""
+msgstr "Valuta principala a companiei."
 
 #. module: account
 #: model:ir.ui.menu,name:account.menu_finance_reports
@@ -7983,7 +8260,7 @@ msgstr "Jurnal Contabil"
 #. module: account
 #: field:account.config.settings,tax_calculation_rounding_method:0
 msgid "Tax calculation rounding method"
-msgstr ""
+msgstr "Metoda de rotunjire la calcularea impozitului"
 
 #. module: account
 #: model:process.node,name:account.process_node_paidinvoice0
@@ -8000,6 +8277,12 @@ msgid ""
 "                                    with the invoice. You will not be able "
 "to modify the credit note."
 msgstr ""
+"Folositi aceasta optiune daca doriti sa anulati o factura pe care nu ar fi "
+"trebuit\n"
+"                                    sa o emiteti. Nota de credit va fi "
+"creata, validata si reconciliata\n"
+"                                    cu factura. Nu veti putea modifica nota "
+"de credit."
 
 #. module: account
 #: help:account.partner.reconcile.process,next_partner_id:0
@@ -8035,6 +8318,8 @@ msgid ""
 "There is no default credit account defined \n"
 "on journal \"%s\"."
 msgstr ""
+"Nu exista nici un cont de credit definit \n"
+"in registrul \"%s\"."
 
 #. module: account
 #: view:account.invoice.line:0
@@ -8073,6 +8358,22 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p>\n"
+"                Faceti click pentru a adauga un nou cont analitic.\n"
+"              </p><p>\n"
+"                Planul de conturi obisnuit are o structura definita \n"
+"                de cerintele legale ale tarii. Structura planului de\n"
+"                conturi analitic ar trebui sa reflecte nevoile proprii de "
+"afaceri in\n"
+"                termeni de raportare costuri/venituri.\n"
+"              </p><p>\n"
+"                De obicei sunt structurate dupa contracte, proiecte sau\n"
+"                departamente. Majoritatea operatiunilor OpenERP (facturi,\n"
+"                fise de pontaj, cheltuieli, etc) genereaza inregistrari "
+"analitice in\n"
+"                contul asociat.\n"
+"              </p>\n"
+"            "
 
 #. module: account
 #: model:account.account.type,name:account.data_account_type_view
@@ -8197,6 +8498,8 @@ msgid ""
 "This date will be used as the invoice date for credit note and period will "
 "be chosen accordingly!"
 msgstr ""
+"Aceasta data va fi folosita drept data facturii pentru nota de credit, iar "
+"perioada va fi aleasa ca atare!"
 
 #. module: account
 #: view:product.template:0
@@ -8210,6 +8513,8 @@ msgid ""
 "You have to set a code for the bank account defined on the selected chart of "
 "accounts."
 msgstr ""
+"Trebuie sa setati un cod pentru codul bancar definit in planul de conturi "
+"selectat."
 
 #. module: account
 #: model:ir.ui.menu,name:account.menu_manual_reconcile
@@ -8285,12 +8590,12 @@ msgstr "Campul secventa este utilizat pentru a ordona resursele ascendent."
 #. module: account
 #: field:account.move.line,amount_residual_currency:0
 msgid "Residual Amount in Currency"
-msgstr ""
+msgstr "Suma Reziduala in Valuta"
 
 #. module: account
 #: field:account.config.settings,sale_refund_sequence_prefix:0
 msgid "Credit note sequence"
-msgstr ""
+msgstr "Ordinea notelor de credit"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_validate_account_move
@@ -8339,6 +8644,8 @@ msgid ""
 "Refund base on this type. You can not Modify and Cancel if the invoice is "
 "already reconciled"
 msgstr ""
+"Restituirea bazata pe acest tip. Nu puteti Modifica si Anula daca factura "
+"este deja reconciliata"
 
 #. module: account
 #: field:account.bank.statement.line,sequence:0
@@ -8356,7 +8663,7 @@ msgstr "Secventa"
 #. module: account
 #: field:account.config.settings,paypal_account:0
 msgid "Paypal account"
-msgstr ""
+msgstr "Cont Paypal"
 
 #. module: account
 #: selection:account.print.journal,sort_selection:0
@@ -8375,11 +8682,13 @@ msgid ""
 "Error!\n"
 "You cannot create recursive accounts."
 msgstr ""
+"Eroare!\n"
+"Nu puteti crea conturi recursive."
 
 #. module: account
 #: model:ir.model,name:account.model_cash_box_in
 msgid "cash.box.in"
-msgstr ""
+msgstr "cash.box.in"
 
 #. module: account
 #: help:account.invoice,move_id:0
@@ -8389,7 +8698,7 @@ msgstr "Link catre Elementele Jurnalului generate automat."
 #. module: account
 #: model:ir.model,name:account.model_account_config_settings
 msgid "account.config.settings"
-msgstr ""
+msgstr "setari.config.cont"
 
 #. module: account
 #: selection:account.config.settings,period:0
@@ -8412,7 +8721,7 @@ msgstr "Soldul calculat"
 #: code:addons/account/static/src/js/account_move_reconciliation.js:89
 #, python-format
 msgid "You must choose at least one record."
-msgstr ""
+msgstr "Trebuie sa selectati cel putin o inregistrare."
 
 #. module: account
 #: field:account.account,parent_id:0
@@ -8424,7 +8733,7 @@ msgstr "Parinte"
 #: code:addons/account/account_cash_statement.py:292
 #, python-format
 msgid "Profit"
-msgstr ""
+msgstr "Profit"
 
 #. module: account
 #: help:account.payment.term.line,days2:0
@@ -8471,7 +8780,7 @@ msgstr "Linie Casa de bani"
 #. module: account
 #: field:account.installer,charts:0
 msgid "Accounting Package"
-msgstr ""
+msgstr "Pachet Contabilitate"
 
 #. module: account
 #: report:account.third_party_ledger:0
@@ -8499,12 +8808,12 @@ msgstr "Avertizare !"
 #: help:account.bank.statement,message_unread:0
 #: help:account.invoice,message_unread:0
 msgid "If checked new messages require your attention."
-msgstr ""
+msgstr "Daca este selectat, mesajele noi necesita atentia dumneavoastra."
 
 #. module: account
 #: field:res.company,tax_calculation_rounding_method:0
 msgid "Tax Calculation Rounding Method"
-msgstr ""
+msgstr "Metoda de Rotunjire in Calculul Impozitului"
 
 #. module: account
 #: field:account.entries.report,move_line_state:0
@@ -8626,6 +8935,7 @@ msgstr "Sold Analitic Inversat -"
 msgid ""
 "Is this reconciliation produced by the opening of a new fiscal year ?."
 msgstr ""
+"Este aceasta reconciliere produsa de deschiderea unui nou an fiscal ?."
 
 #. module: account
 #: view:account.analytic.line:0
@@ -8659,7 +8969,7 @@ msgstr "Valoarea Reziduala Totala"
 #. module: account
 #: view:account.bank.statement:0
 msgid "Opening Cash Control"
-msgstr ""
+msgstr "Controlul Numerarului la deschidere"
 
 #. module: account
 #: model:process.node,note:account.process_node_invoiceinvoice0
@@ -8699,7 +9009,7 @@ msgstr "Registru Costuri"
 #. module: account
 #: view:account.config.settings:0
 msgid "No Fiscal Year Defined for This Company"
-msgstr ""
+msgstr "Nu exista un An Fiscal Definit pentru Aceasta Companie"
 
 #. module: account
 #: view:account.invoice:0
@@ -8730,7 +9040,7 @@ msgstr "Jurnal Rambursare Achizitii"
 #: code:addons/account/account.py:1297
 #, python-format
 msgid "Please define a sequence on the journal."
-msgstr ""
+msgstr "Va rugam sa definiti o secventa in registru."
 
 #. module: account
 #: help:account.tax.template,amount:0
@@ -8759,6 +9069,9 @@ msgid ""
 "recalls.\n"
 "                This installs the module account_followup."
 msgstr ""
+"Acesta permite sa automatizati scrisori pentru facturile neplatite, cu "
+"memento-uri pe niveluri multiple.\n"
+"                Acesta instaleaza modulul account_followup."
 
 #. module: account
 #: field:account.automatic.reconcile,period_id:0
@@ -8803,12 +9116,12 @@ msgstr "Net Total:"
 #: code:addons/account/wizard/account_report_common.py:158
 #, python-format
 msgid "Select a starting and an ending period."
-msgstr ""
+msgstr "Selectati o perioada de inceput si una de sfarsit."
 
 #. module: account
 #: field:account.config.settings,sale_sequence_next:0
 msgid "Next invoice number"
-msgstr ""
+msgstr "Numarul facturii urmatoare"
 
 #. module: account
 #: model:ir.ui.menu,name:account.menu_finance_generic_reporting
@@ -8852,6 +9165,9 @@ msgid ""
 "This wizard will remove the end of year journal entries of selected fiscal "
 "year. Note that you can run this wizard many times for the same fiscal year."
 msgstr ""
+"Acest wizard va sterge inregistrarile de sfarsit de an din registru ale "
+"anului fiscal selectat. Observati ca puteti sa executati acest wizard de mai "
+"multe ori pentru acelasi an fiscal."
 
 #. module: account
 #: report:account.invoice:0
@@ -8902,7 +9218,7 @@ msgstr "Sold final"
 #. module: account
 #: field:account.journal,centralisation:0
 msgid "Centralized Counterpart"
-msgstr ""
+msgstr "Omolog Centralizat"
 
 #. module: account
 #: help:account.move.line,blocked:0
@@ -8939,6 +9255,12 @@ msgid ""
 "invoice will be created \n"
 "                                    so that you can edit it."
 msgstr ""
+"Folositi aceasta optiune daca doriti sa anulati o factura si sa creati\n"
+"                                    una noua. Nota de credit va fi creata, "
+"validata si reconciliata\n"
+"                                    cu factura curenta. O noua factura "
+"ciorna va fi creata \n"
+"                                    astfel ca dumneavoastra o puteti edita."
 
 #. module: account
 #: model:process.transition,name:account.process_transition_filestatement0
@@ -8949,7 +9271,7 @@ msgstr "Import automat al extrasului de cont"
 #: code:addons/account/account_invoice.py:389
 #, python-format
 msgid "Unknown Error!"
-msgstr ""
+msgstr "Eroare Necunoscuta!"
 
 #. module: account
 #: model:ir.model,name:account.model_account_move_bank_reconcile
@@ -8959,7 +9281,7 @@ msgstr "Reconciliere miscare bancara"
 #. module: account
 #: view:account.config.settings:0
 msgid "Apply"
-msgstr ""
+msgstr "Aplica"
 
 #. module: account
 #: field:account.financial.report,account_type_ids:0
@@ -8971,7 +9293,7 @@ msgstr "Tipuri de Conturi"
 #. module: account
 #: model:email.template,subject:account.email_template_edi_invoice
 msgid "${object.company_id.name} Invoice (Ref ${object.number or 'n/a'})"
-msgstr ""
+msgstr "${obiect.companie_id.nume} Factura (Ref ${obiect.numar sau 'n/a'})"
 
 #. module: account
 #: code:addons/account/account_move_line.py:1211
@@ -8980,6 +9302,8 @@ msgid ""
 "You cannot use this general account in this journal, check the tab 'Entry "
 "Controls' on the related journal."
 msgstr ""
+"Nu puteti folosi acest cont general in acest registru, selectati tabul "
+"'Controale Inregistrari' din registrul respectiv."
 
 #. module: account
 #: field:account.account.type,report_type:0
@@ -9041,6 +9365,20 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<clasa p=\"oe_vizualizare_niciuncontinut_creeaza\">\n"
+"                Dati click pentru a adauga un registru.\n"
+"              </p><p>\n"
+"                Un registru este utilizat pentru a inregistra tranzactii cu "
+"toate datele contabile\n"
+"                legate de afacerile cotidiene.\n"
+"              </p><p>\n"
+"                O companie tipica poate folosi un registru pentru fiecare "
+"metoda de plata (numerar,\n"
+"                conturi bancare, cecuri), un registru de achizitii, un "
+"registru de vanzari\n"
+"                si unul pentru informatii diverse.\n"
+"              </p>\n"
+"            "
 
 #. module: account
 #: model:ir.model,name:account.model_account_fiscalyear_close_state
@@ -9169,6 +9507,9 @@ msgid ""
 "computed. Because it is space consuming, we do not allow to use it while "
 "doing a comparison."
 msgstr ""
+"Aceasta optiune va permite sa obtineti mai multe detalii referitoare la "
+"modalitatea de calcul a soldurilor dumneavoastra. Deoarece consuma spatiu, "
+"nu permitem utilizarea ei in timpul efectuarii unei comparatii."
 
 #. module: account
 #: model:ir.model,name:account.model_account_fiscalyear_close
@@ -9185,6 +9526,8 @@ msgstr "Codul contului trebuie sa fie unic per companie !"
 #: help:product.template,property_account_expense:0
 msgid "This account will be used to value outgoing stock using cost price."
 msgstr ""
+"Acest cont va fi folosit pentru a evalua stocul de iesire folosind pretul de "
+"cost."
 
 #. module: account
 #: view:account.invoice:0
@@ -9222,7 +9565,7 @@ msgstr "Conturi admise (lasati necompletat pentru niciun control)"
 #. module: account
 #: field:account.config.settings,sale_tax_rate:0
 msgid "Sales tax (%)"
-msgstr ""
+msgstr "Taxa de vanzare (%)"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_analytic_account_tree2
@@ -9247,6 +9590,17 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<clasa p=\"oe_vizualizare_niciuncontinut_creeaza\">\n"
+"                Dati click pentru a defini o noua inregistrare recurenta.\n"
+"              </p><p>\n"
+"                O inregistrare recurenta are loc pe o baza recurenta dintr-o "
+"anumita\n"
+"                data, adica corespunzatoare semnarii unui contract sau a "
+"unui\n"
+"                acord cu un client sau cu un furnizor. Puteti crea asemenea\n"
+"                inregistrari pentru a automatiza postarile in sistem.\n"
+"              </p>\n"
+"            "
 
 #. module: account
 #: view:account.journal:0
@@ -9289,6 +9643,8 @@ msgid ""
 "This allows you to check writing and printing.\n"
 "                This installs the module account_check_writing."
 msgstr ""
+"Acesta va permite sa verificati scrierea si imprimarea.\n"
+"                Acesta instaleaza modulul account_check_writing."
 
 #. module: account
 #: model:res.groups,name:account.group_account_invoice
@@ -9327,7 +9683,7 @@ msgstr ""
 #: code:addons/account/account_move_line.py:1009
 #, python-format
 msgid "The account move (%s) for centralisation has been confirmed."
-msgstr ""
+msgstr "A fost confirmata miscarea contului (%s) pentru centralizare."
 
 #. module: account
 #: report:account.analytic.account.journal:0
@@ -9366,6 +9722,9 @@ msgid ""
 "created. If you leave that field empty, it will use the same journal as the "
 "current invoice."
 msgstr ""
+"Aici puteti selecta registrul pe care il veti folosi pentru nota de credit "
+"care va fi creata. Daca lasati campul necompletat, va folosi acelasi "
+"registru ca si factura curenta."
 
 #. module: account
 #: help:account.bank.statement.line,sequence:0
@@ -9396,7 +9755,7 @@ msgstr "Model gresit !"
 #: view:account.tax.code.template:0
 #: view:account.tax.template:0
 msgid "Tax Template"
-msgstr ""
+msgstr "Sablon Fiscal"
 
 #. module: account
 #: field:account.invoice.refund,period:0
@@ -9416,6 +9775,10 @@ msgid ""
 "some non legal fields or you must unreconcile first.\n"
 "%s."
 msgstr ""
+"Nu puteti face aceasta modificare intr-o inregistrare reconciliata. Puteti "
+"doar sa schimbati unele campuri non-juridice sau trebuie sa le "
+"dezreconciliati mai intai.\n"
+"%s."
 
 #. module: account
 #: help:account.financial.report,sign:0
@@ -9463,7 +9826,7 @@ msgstr "Facturile ciorna sunt verificate, validate si tiparite."
 #: field:account.bank.statement,message_is_follower:0
 #: field:account.invoice,message_is_follower:0
 msgid "Is a Follower"
-msgstr ""
+msgstr "Este o persoana interesata"
 
 #. module: account
 #: view:account.move:0
@@ -9479,11 +9842,14 @@ msgid ""
 "You cannot select an account type with a deferral method different of "
 "\"Unreconciled\" for accounts with internal type \"Payable/Receivable\"."
 msgstr ""
+"Eroare de Configurare!\n"
+"Nu puteti selecta un tip de cont cu o metoda de amanare diferita de "
+"\"Nereconciliat\" pentru conturile cu tipul intern \"Plati/Incasari\"."
 
 #. module: account
 #: field:account.config.settings,has_fiscal_year:0
 msgid "Company has a fiscal year"
-msgstr ""
+msgstr "Compania are un an fiscal"
 
 #. module: account
 #: help:account.tax,child_depend:0
@@ -9499,7 +9865,7 @@ msgstr ""
 #: code:addons/account/account.py:634
 #, python-format
 msgid "You cannot deactivate an account that contains journal items."
-msgstr ""
+msgstr "Nu puteti dezactiva un cont care contine elemente ale registrului."
 
 #. module: account
 #: selection:account.tax,applicable_type:0
@@ -9543,7 +9909,7 @@ msgstr "Perioada de la"
 #. module: account
 #: field:account.cashbox.line,pieces:0
 msgid "Unit of Currency"
-msgstr ""
+msgstr "Unitatea Valutei"
 
 #. module: account
 #: code:addons/account/account.py:3147
@@ -9566,6 +9932,11 @@ msgid ""
 "chart\n"
 "                        of accounts."
 msgstr ""
+"Odata ce facturile ciorna sunt confirmate, nu veti mai putea sa\n"
+"                        le modificati. Facturile vor primi un numar\n"
+"                        unic, iar elementele registrului vor fi create in "
+"planul dumneavoastra\n"
+"                        de conturi."
 
 #. module: account
 #: model:process.node,note:account.process_node_bankstatement0
@@ -9580,7 +9951,7 @@ msgstr "Inchideti starile Anului fiscal si ale perioadelor"
 #. module: account
 #: field:account.config.settings,purchase_refund_journal_id:0
 msgid "Purchase refund journal"
-msgstr ""
+msgstr "Registru de rambursare a achizitiilor"
 
 #. module: account
 #: view:account.analytic.line:0
@@ -9604,7 +9975,7 @@ msgstr "Creati Factura"
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_configuration_installer
 msgid "Configure Accounting Data"
-msgstr ""
+msgstr "Configureaza Datele Contabile"
 
 #. module: account
 #: field:wizard.multi.charts.accounts,purchase_tax_rate:0
@@ -9624,6 +9995,8 @@ msgid ""
 "Please check that the field 'Internal Transfers Account' is set on the "
 "payment method '%s'."
 msgstr ""
+"Va rugam sa verificati campul \"Cont de Transferuri Interne\" sa fie setat "
+"pe metoda de plata '%s'."
 
 #. module: account
 #: field:account.vat.declaration,display_detail:0
@@ -9664,6 +10037,17 @@ msgid ""
 "related journal entries may or may not be reconciled.             \n"
 "* The 'Cancelled' status is used when user cancel invoice."
 msgstr ""
+" * Starea 'Ciorna' este utilizata atunci cand un utilizator inregistreaza o "
+"Factura noua si neconfirmata.             \n"
+"* Starea 'Pro-forma' este atunci cand factura este in starea Pro-"
+"forma,factura nu are un numar.             \n"
+"* Starea 'Deschisa' este utilizata atunci cand utilizatorul creeaza "
+"factura,un numar de factura este generat.Este in starea deschisa atata timp "
+"cat utilizatorul nu achita factura.             \n"
+"* Starea 'Achitata' este setata automat atunci cand factura este achitata. "
+"Inregistrarile asociate din registru pot sau nu pot sa fie reconciliate.     "
+"        \n"
+"* Starea 'Anulata' este utilizata atunci cand utilizatorul anuleaza factura."
 
 #. module: account
 #: field:account.period,date_stop:0
@@ -9683,7 +10067,7 @@ msgstr "Rapoarte Financiare"
 #. module: account
 #: model:account.account.type,name:account.account_type_liability_view1
 msgid "Liability View"
-msgstr ""
+msgstr "Vizualizare Raspundere"
 
 #. module: account
 #: report:account.account.balance:0
@@ -9731,7 +10115,7 @@ msgstr "Companii care se raporteaza la partener"
 #. module: account
 #: view:account.invoice:0
 msgid "Ask Refund"
-msgstr ""
+msgstr "Cere Rambursare"
 
 #. module: account
 #: view:account.move.line:0
@@ -9762,13 +10146,13 @@ msgstr "Conturi Incasari"
 #. module: account
 #: field:account.config.settings,purchase_refund_sequence_prefix:0
 msgid "Supplier credit note sequence"
-msgstr ""
+msgstr "Ordinea norelor de credit ale furnizorului"
 
 #. module: account
 #: code:addons/account/wizard/account_state_open.py:37
 #, python-format
 msgid "Invoice is already reconciled."
-msgstr ""
+msgstr "Factura este deja reconciliata."
 
 #. module: account
 #: help:account.config.settings,module_account_payment:0
@@ -9780,6 +10164,13 @@ msgid ""
 "payments.\n"
 "                This installs the module account_payment."
 msgstr ""
+"Acesta va permite sa creati  si sa va gestionati ordinele de platal, cu "
+"scopul de a\n"
+"                    * servi ca baza pentru extensia usoara a diverse "
+"mecanisme automate de plata, si\n"
+"                    * oferi un mod mai eficient de gestionare a platilor "
+"facturilor.\n"
+"                Acesta instaleaza modulul account_payment."
 
 #. module: account
 #: xsl:account.transfer:0
@@ -9798,6 +10189,8 @@ msgstr "Cont Incasari"
 #, python-format
 msgid "To reconcile the entries company should be the same for all entries."
 msgstr ""
+"Pentru a reconcilia inregistrarile, compania ar trebui sa fie aceeasi pentru "
+"toate inregistrarile."
 
 #. module: account
 #: field:account.account,balance:0
@@ -9875,7 +10268,7 @@ msgstr "Filtre dupa"
 #: field:account.cashbox.line,number_closing:0
 #: field:account.cashbox.line,number_opening:0
 msgid "Number of Units"
-msgstr ""
+msgstr "Numarul de Unitati"
 
 #. module: account
 #: model:process.node,note:account.process_node_manually0
@@ -9900,12 +10293,12 @@ msgstr "Miscare"
 #: code:addons/account/wizard/account_period_close.py:51
 #, python-format
 msgid "Invalid Action!"
-msgstr ""
+msgstr "Actiune Nevalida!"
 
 #. module: account
 #: view:account.bank.statement:0
 msgid "Date / Period"
-msgstr ""
+msgstr "Data / Perioada"
 
 #. module: account
 #: report:account.central.journal:0
@@ -9924,11 +10317,14 @@ msgid ""
 "The period is invalid. Either some periods are overlapping or the period's "
 "dates are not matching the scope of the fiscal year."
 msgstr ""
+"Eroare!\n"
+"Perioada nu este valida. Fie unele perioade se suprapun, fie datele "
+"perioadei nu se potrivesc cu durata anului fiscal."
 
 #. module: account
 #: report:account.overdue:0
 msgid "There is nothing due with this customer."
-msgstr ""
+msgstr "Acest client nu datoreaza nimic."
 
 #. module: account
 #: help:account.tax,account_paid_id:0
@@ -9936,6 +10332,8 @@ msgid ""
 "Set the account that will be set by default on invoice tax lines for "
 "refunds. Leave empty to use the expense account."
 msgstr ""
+"Configureaza contul care va fi setat implicit in liniile facturii fiscale "
+"pentru restituiri. Lasati necompletat pentru a folosi contul de cheltuieli."
 
 #. module: account
 #: help:account.addtmpl.wizard,cparent_id:0
@@ -9947,7 +10345,7 @@ msgstr ""
 #. module: account
 #: report:account.invoice:0
 msgid "Source"
-msgstr ""
+msgstr "Sursa"
 
 #. module: account
 #: selection:account.model.line,date_maturity:0
@@ -9970,11 +10368,13 @@ msgid ""
 "This field contains the information related to the numbering of the journal "
 "entries of this journal."
 msgstr ""
+"Acest camp contine informatii referitoare la numerotarea inregistrarilor din "
+"acest registru."
 
 #. module: account
 #: field:account.invoice,sent:0
 msgid "Sent"
-msgstr ""
+msgstr "Trimis"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_common_menu
@@ -9985,7 +10385,7 @@ msgstr "Raport Obisnuit"
 #: field:account.config.settings,default_sale_tax:0
 #: field:account.config.settings,sale_tax:0
 msgid "Default sale tax"
-msgstr ""
+msgstr "Taxa de vanzare implicita"
 
 #. module: account
 #: report:account.overdue:0
@@ -9996,12 +10396,12 @@ msgstr "Sold :"
 #: code:addons/account/account.py:1547
 #, python-format
 msgid "Cannot create moves for different companies."
-msgstr ""
+msgstr "Nu pot fi create miscari pentru companii diferite."
 
 #. module: account
 #: model:ir.ui.menu,name:account.menu_finance_periodical_processing
 msgid "Periodic Processing"
-msgstr ""
+msgstr "Procesare Periodica"
 
 #. module: account
 #: view:account.invoice.report:0
@@ -10070,7 +10470,7 @@ msgstr "Sfarsitul perioadei"
 #. module: account
 #: model:account.account.type,name:account.account_type_expense_view1
 msgid "Expense View"
-msgstr ""
+msgstr "Vizualizare Cheltuieli"
 
 #. module: account
 #: field:account.move.line,date_maturity:0
@@ -10081,13 +10481,13 @@ msgstr "Data scadenta"
 #: model:account.payment.term,name:account.account_payment_term_immediate
 #: model:account.payment.term,note:account.account_payment_term_immediate
 msgid "Immediate Payment"
-msgstr ""
+msgstr "Plata Imediata"
 
 #. module: account
 #: code:addons/account/account.py:1464
 #, python-format
 msgid " Centralisation"
-msgstr ""
+msgstr " Centralizare"
 
 #. module: account
 #: help:account.journal,type:0
@@ -10172,7 +10572,7 @@ msgstr "Facturi ciorna"
 #: view:cash.box.in:0
 #: model:ir.actions.act_window,name:account.action_cash_box_in
 msgid "Put Money In"
-msgstr ""
+msgstr "Introduceti bani in"
 
 #. module: account
 #: selection:account.account.type,close_method:0
@@ -10233,7 +10633,7 @@ msgstr "Din conturile analitice"
 #. module: account
 #: view:account.installer:0
 msgid "Configure your Fiscal Year"
-msgstr ""
+msgstr "Configurati-va Anul Fiscal"
 
 #. module: account
 #: field:account.period,name:0
@@ -10247,6 +10647,8 @@ msgid ""
 "Selected invoice(s) cannot be cancelled as they are already in 'Cancelled' "
 "or 'Done' state."
 msgstr ""
+"Facturile selectate nu pot fi anulate pentru ca se afla deja in starea "
+"'Anulata' sau 'Efectuata'."
 
 #. module: account
 #: report:account.analytic.account.quantity_cost_ledger:0
@@ -10281,6 +10683,10 @@ msgid ""
 "some non legal fields or you must unconfirm the journal entry first.\n"
 "%s."
 msgstr ""
+"Nu puteti efectua aceasta modificare intr-o inregistrare confirmata. Puteti "
+"doar sa modificati unele campuri non-juridice sau trebuie sa nu confirmati "
+"inregistrarea in registru mai intai.\n"
+"%s."
 
 #. module: account
 #: help:account.config.settings,module_account_budget:0
@@ -10291,11 +10697,16 @@ msgid ""
 "analytic account.\n"
 "                This installs the module account_budget."
 msgstr ""
+"Acesta le permite contabililor sa gestioneze bugete analitice si mixte.\n"
+"                Odata ce bugetul principal si bugetele sunt definite,\n"
+"                managerii de proiecte pot seta suma planificata in fiecare "
+"cont analitic.\n"
+"                Acesta instaleaza modulul account_budget."
 
 #. module: account
 #: field:account.bank.statement.line,name:0
 msgid "OBI"
-msgstr ""
+msgstr "OBI"
 
 #. module: account
 #: help:res.partner,property_account_payable:0
@@ -10350,7 +10761,7 @@ msgstr "Credit"
 #. module: account
 #: view:account.invoice:0
 msgid "Draft Invoice "
-msgstr ""
+msgstr "Factura Ciorna "
 
 #. module: account
 #: model:ir.ui.menu,name:account.menu_account_general_journal
@@ -10366,7 +10777,7 @@ msgstr "Model Inregistrare in Jurnal"
 #: code:addons/account/account.py:1064
 #, python-format
 msgid "Start period should precede then end period."
-msgstr ""
+msgstr "Perioada de inceput ar trebui sa o preceada pe cea de sfarsit."
 
 #. module: account
 #: field:account.invoice,number:0
@@ -10451,7 +10862,7 @@ msgstr "Profit (Pierdere) de raportat"
 #: code:addons/account/account_invoice.py:387
 #, python-format
 msgid "There is no Sale/Purchase Journal(s) defined."
-msgstr ""
+msgstr "Nu este definit niciun Registru de Vanzare/Cumparare."
 
 #. module: account
 #: view:account.move.line.reconcile.select:0
@@ -10530,7 +10941,7 @@ msgstr "Tip intern"
 #. module: account
 #: field:account.subscription.generate,date:0
 msgid "Generate Entries Before"
-msgstr ""
+msgstr "Generati Inregistrari inainte de"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_subscription_form_running
@@ -10630,6 +11041,8 @@ msgstr "Stari"
 #: help:product.template,property_account_income:0
 msgid "This account will be used to value outgoing stock using sale price."
 msgstr ""
+"Acest cont va fi folosit pentru a evalua stocul de iesire folosind pretul de "
+"vanzare."
 
 #. module: account
 #: field:account.invoice,check_total:0
@@ -10652,12 +11065,12 @@ msgstr "Total"
 #: code:addons/account/wizard/account_invoice_refund.py:109
 #, python-format
 msgid "Cannot %s draft/proforma/cancel invoice."
-msgstr ""
+msgstr "Nu se poate %s factura ciorna/proforma/anula."
 
 #. module: account
 #: field:account.tax,account_analytic_paid_id:0
 msgid "Refund Tax Analytic Account"
-msgstr ""
+msgstr "Cont Analitic Restituire Taxe"
 
 #. module: account
 #: view:account.move.bank.reconcile:0
@@ -10724,7 +11137,7 @@ msgstr "Data Scadentei"
 #: field:cash.box.in,name:0
 #: field:cash.box.out,name:0
 msgid "Reason"
-msgstr ""
+msgstr "Motiv"
 
 #. module: account
 #: selection:account.partner.ledger,filter:0
@@ -10783,12 +11196,15 @@ msgid ""
 "If you unreconcile transactions, you must also verify all the actions that "
 "are linked to those transactions because they will not be disable"
 msgstr ""
+"Daca dezreconciliati tranzactiile, trebuie de asemenea sa verificati toate "
+"actiunile care sunt legate de acele tranzactii pentru ca nu vor fi "
+"dezactivate"
 
 #. module: account
 #: code:addons/account/account_move_line.py:1059
 #, python-format
 msgid "Unable to change tax!"
-msgstr ""
+msgstr "Imposibil de modificat taxa!"
 
 #. module: account
 #: constraint:account.bank.statement:0
@@ -10817,6 +11233,10 @@ msgid ""
 "customer. The tool search can also be used to personalise your Invoices "
 "reports and so, match this analysis to your needs."
 msgstr ""
+"Din acest raport, puteti avea o privire generala a sumei facturate "
+"clientului dumneavoastra. Unealta de cautare poate fi de asemenea folosita "
+"pentru a personaliza Rapoartele facturilor si, astfel, sa ajustati aceasta "
+"analiza nevoilor dumneavoastra."
 
 #. module: account
 #: view:account.partner.reconcile.process:0
@@ -10837,7 +11257,7 @@ msgstr "Starea facturii este Efectuata"
 #. module: account
 #: field:account.config.settings,module_account_followup:0
 msgid "Manage customer payment follow-ups"
-msgstr ""
+msgstr "Gestionati urmarile platilor clientilor"
 
 #. module: account
 #: model:ir.model,name:account.model_report_account_sales
@@ -10913,7 +11333,7 @@ msgstr "Conturi de Incasari"
 #: code:addons/account/account_move_line.py:783
 #, python-format
 msgid "Already reconciled."
-msgstr ""
+msgstr "Deja reconciliat."
 
 #. module: account
 #: selection:account.model.line,date_maturity:0
@@ -10968,6 +11388,7 @@ msgstr "Manual"
 msgid ""
 "This is a field only used for internal purpose and shouldn't be displayed"
 msgstr ""
+"Acesta este un camp folosit doar in scopuri interne si nu ar trbeui afisat"
 
 #. module: account
 #: selection:account.entries.report,month:0
@@ -10988,6 +11409,8 @@ msgstr "Grupati dupa luna Datei facturii"
 #, python-format
 msgid "There is no income account defined for this product: \"%s\" (id:%d)."
 msgstr ""
+"Nu exista niciun cont de venituri definit pentru acest produs: \"%s\" "
+"(id:%d)."
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_aged_receivable_graph
@@ -11050,6 +11473,8 @@ msgid ""
 "The selected unit of measure is not compatible with the unit of measure of "
 "the product."
 msgstr ""
+"Unitatea de masura selectata nu este compatibila cu unitatea de masura a "
+"produsului."
 
 #. module: account
 #: view:account.fiscal.position:0
@@ -11073,6 +11498,18 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<clasa p=\"oe_vizualizare_niciuncontinut_creeaza\">\n"
+"                Dati click pentru a defini un nou cod fiscal.\n"
+"              </p><p>\n"
+"                In functie de tara, un cod fiscal este de obicei o celula "
+"pentru\n"
+"                completarea declaratiei dumneavoastra fiscale. OpenERP va "
+"permite sa definiti\n"
+"                structura impozitului si fiecare calcul de impozitare va fi "
+"inregistrat intr-unul\n"
+"                sau mai multe coduri fiscale.\n"
+"              </p>\n"
+"            "
 
 #. module: account
 #: selection:account.entries.report,month:0
@@ -11099,6 +11536,20 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<clasa p=\"oe_vizualizare_niciuncontinut_creeaza\">\n"
+"                Selectati perioada si registrul pe care doriti sa il "
+"completati.\n"
+"              </p><p>\n"
+"                Aceasta vizualizare poate fi folosita de contabili pentru a "
+"inregistra repede\n"
+"                inregistrari in OpenERP. Daca doriti sa inregistrati o "
+"factura a unui furnizor,\n"
+"                incepeti prin a inregistra linia contului de cheltuilei. "
+"OpenERP\n"
+"                va va propune automat Taxa asociata acestui\n"
+"                cont si \"Contul de Plati\" echivalent.\n"
+"              </p>\n"
+"            "
 
 #. module: account
 #: help:account.invoice.line,account_id:0
@@ -11108,7 +11559,7 @@ msgstr "Contul de venituri sau de cheltuieli asociat produsului selectat."
 #. module: account
 #: view:account.config.settings:0
 msgid "Install more chart templates"
-msgstr ""
+msgstr "Instaleaza mai multe sabloane de planuri"
 
 #. module: account
 #: report:account.general.journal:0
@@ -11156,6 +11607,8 @@ msgid ""
 "You cannot remove/deactivate an account which is set on a customer or "
 "supplier."
 msgstr ""
+"Nu puteti sterge/dezactiva un cont care este setat pe un client sau un "
+"furnizor."
 
 #. module: account
 #: model:ir.model,name:account.model_validate_account_move_lines
@@ -11167,6 +11620,7 @@ msgstr "Validati Liniile Miscarii Contului"
 msgid ""
 "The fiscal position will determine taxes and accounts used for the partner."
 msgstr ""
+"Poziita fiscala va determina taxele si conturile folosite pentru partener."
 
 #. module: account
 #: model:process.node,note:account.process_node_supplierpaidinvoice0
@@ -11182,7 +11636,7 @@ msgstr "De indata ce reconcilierea este efectuata, factura poate fi platita."
 #: code:addons/account/wizard/account_change_currency.py:59
 #, python-format
 msgid "New currency is not configured properly."
-msgstr ""
+msgstr "Noua valuta nu este configurata in mod corespunzator."
 
 #. module: account
 #: view:account.account.template:0
@@ -11199,6 +11653,7 @@ msgstr "Taxe factura manuala"
 #, python-format
 msgid "The payment term of supplier does not have a payment term line."
 msgstr ""
+"Termenul de plata al furnizorului nu are o linie a termenului de plata."
 
 #. module: account
 #: field:account.account,parent_right:0
@@ -11211,7 +11666,7 @@ msgstr "Parinte Drept"
 #: code:addons/account/static/src/js/account_move_reconciliation.js:80
 #, python-format
 msgid "Never"
-msgstr ""
+msgstr "Niciodata"
 
 #. module: account
 #: model:ir.model,name:account.model_account_addtmpl_wizard
@@ -11232,7 +11687,7 @@ msgstr "A(l) partenerului"
 #. module: account
 #: field:account.account,note:0
 msgid "Internal Notes"
-msgstr ""
+msgstr "Note Interne"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_fiscalyear
@@ -11265,7 +11720,7 @@ msgstr "Model Cont"
 #: code:addons/account/account_cash_statement.py:292
 #, python-format
 msgid "Loss"
-msgstr ""
+msgstr "Pierdere"
 
 #. module: account
 #: selection:account.entries.report,month:0
@@ -11280,7 +11735,7 @@ msgstr "Februarie"
 #: view:account.bank.statement:0
 #: help:account.cashbox.line,number_closing:0
 msgid "Closing Unit Numbers"
-msgstr ""
+msgstr "Numere unitare de inchidere"
 
 #. module: account
 #: field:account.bank.accounts.wizard,bank_account_id:0
@@ -11337,7 +11792,7 @@ msgstr "Cont de cheltuieli definit in Sablonul Produsului"
 #. module: account
 #: field:res.partner,property_payment_term:0
 msgid "Customer Payment Term"
-msgstr ""
+msgstr "Termenul de Plata al Clientului"
 
 #. module: account
 #: help:accounting.report,label_filter:0
@@ -11351,7 +11806,7 @@ msgstr ""
 #. module: account
 #: selection:account.config.settings,tax_calculation_rounding_method:0
 msgid "Round per line"
-msgstr ""
+msgstr "Rotunjire per linie"
 
 #. module: account
 #: help:account.move.line,amount_residual_currency:0

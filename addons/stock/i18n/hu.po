@@ -8,14 +8,30 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2012-12-21 17:04+0000\n"
-"PO-Revision-Date: 2013-01-07 00:29+0000\n"
+"PO-Revision-Date: 2013-01-27 23:59+0000\n"
 "Last-Translator: krnkris <Unknown>\n"
 "Language-Team: Hungarian <hu@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-01-08 06:06+0000\n"
-"X-Generator: Launchpad (build 16402)\n"
+"X-Launchpad-Export-Date: 2013-01-29 06:18+0000\n"
+"X-Generator: Launchpad (build 16451)\n"
+
+#. module: stock
+#: view:stock.inventory:0
+msgid "Set to Draft"
+msgstr "Beállítás tervezetnek"
+
+#. module: stock
+#: selection:report.stock.inventory,state:0
+#: selection:report.stock.move,state:0
+#: selection:stock.inventory,state:0
+#: selection:stock.move,state:0
+#: selection:stock.picking,state:0
+#: selection:stock.picking.in,state:0
+#: selection:stock.picking.out,state:0
+msgid "Cancelled"
+msgstr "Visszavont"
 
 #. module: stock
 #: field:stock.inventory.line.split,line_exist_ids:0
@@ -1025,8 +1041,8 @@ msgid ""
 "You cannot cancel the picking as some moves have been done. You should "
 "cancel the picking lines."
 msgstr ""
-"Nem tudja a kiválogatást érvényteleníteni, mivel egyes mozgások már "
-"megtörténtek. A kiválogatás sorait érvénytelenítheti."
+"Nem tudja a kiválogatást megszakítani, mivel egyes mozgások már "
+"megtörténtek. A kiválogatás sorait kell megszakítani."
 
 #. module: stock
 #: field:stock.config.settings,decimal_precision:0
@@ -1153,7 +1169,7 @@ msgstr "Készen áll a befogadásra"
 #: view:stock.move:0
 #: view:stock.picking:0
 msgid "_Cancel"
-msgstr "_Mégsem"
+msgstr "Megszakítás"
 
 #. module: stock
 #: field:report.stock.move,day_diff:0
@@ -1377,8 +1393,8 @@ msgid ""
 "In order to cancel this inventory, you must first unpost related journal "
 "entries."
 msgstr ""
-"Ahhoz, hogy visszavonja ezt a készletet, először az idevonatkozó napló "
-"belyegyzéseket kell kiiktatnia."
+"Ahhoz, hogy megszakítsa ezt a készletet, először az idevonatkozó napló "
+"bejegyzéseket kell megszakítania."
 
 #. module: stock
 #: code:addons/stock/product.py:113
@@ -1891,7 +1907,7 @@ msgstr "Kérem határozzon meg pozitív számot a hulladékra"
 #. module: stock
 #: model:stock.location,name:stock.stock_location_shop1
 msgid "Your Company, Birmingham shop"
-msgstr ""
+msgstr "Vállakozása, Birmingham eladótér"
 
 #. module: stock
 #: view:product.product:0
@@ -1998,7 +2014,7 @@ msgstr "Termék kategóriák"
 #. module: stock
 #: view:stock.move:0
 msgid "Cancel Availability"
-msgstr "Hozzáférés törlése"
+msgstr "Hozzáférés megszakítása"
 
 #. module: stock
 #: code:addons/stock/wizard/stock_location_product.py:49
@@ -2284,7 +2300,7 @@ msgstr ""
 #: view:stock.return.picking:0
 #: view:stock.split.into:0
 msgid "Cancel"
-msgstr "Mégsem"
+msgstr "Megszakítás"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_return_picking
@@ -2608,6 +2624,14 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Kattintson készlet mozgatáshoz.\n"
+"              </p><p>\n"
+"                Ez a menü konkrét termékre vonatkozó készlet műveletekre\n"
+"                teljes nyomon követhetőséget biztosít. Szűrést végezhet \n"
+"                a termékre a termelést megelőző vagy jövőbeni mozgásra.\n"
+"              </p>\n"
+"            "
 
 #. module: stock
 #: view:stock.location:0
@@ -2639,7 +2663,7 @@ msgstr "Több termékhely és raktérépület kezelés"
 #. module: stock
 #: field:stock.config.settings,group_stock_production_lot:0
 msgid "Track serial number on products"
-msgstr ""
+msgstr "A termékek szériaszám nyomonkövetése"
 
 #. module: stock
 #: field:stock.picking,message_unread:0
@@ -2656,11 +2680,6 @@ msgid ""
 msgstr ""
 "Jelenleg termék mennyiség ezzel a széria számmal elérhető a vállalat "
 "raktárépületeiben"
-
-#. module: stock
-#: view:stock.inventory:0
-msgid "Set to Draft"
-msgstr "Beállítás sablonként"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_stock_journal_form
@@ -2943,12 +2962,12 @@ msgstr "Kiszedési lista"
 #. module: stock
 #: view:stock.inventory:0
 msgid "Cancel Inventory"
-msgstr "Leltár törlése"
+msgstr "Készlet megszakítása"
 
 #. module: stock
 #: field:stock.config.settings,group_product_variant:0
 msgid "Support multiple variants per products  "
-msgstr ""
+msgstr "Egy terméken több variáció támogatása  "
 
 #. module: stock
 #: code:addons/stock/stock.py:2246
@@ -3776,7 +3795,7 @@ msgstr "Termékek telephely szerint"
 #. module: stock
 #: view:stock.config.settings:0
 msgid "Logistic"
-msgstr ""
+msgstr "Logisztika"
 
 #. module: stock
 #: model:ir.actions.act_window,help:stock.action_location_form
@@ -4162,17 +4181,6 @@ msgstr ""
 "                Kattintson új Raktárépület meghatározásához.\n"
 "              </p>\n"
 "            "
-
-#. module: stock
-#: selection:report.stock.inventory,state:0
-#: selection:report.stock.move,state:0
-#: selection:stock.inventory,state:0
-#: selection:stock.move,state:0
-#: selection:stock.picking,state:0
-#: selection:stock.picking.in,state:0
-#: selection:stock.picking.out,state:0
-msgid "Cancelled"
-msgstr "Törölt"
 
 #. module: stock
 #: view:stock.picking:0
@@ -4886,6 +4894,8 @@ msgid ""
 "If this shipment was split, then this field links to the shipment which "
 "contains the already processed part."
 msgstr ""
+"Ha ez a szállítmány részekre bontott, akkor ez a mező átvisz a már elvégzett "
+"szállítási műveletek részleteihez."
 
 #. module: stock
 #: view:stock.inventory:0
@@ -5180,6 +5190,14 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Kattintson kiszállítási kiszolgáltatási jegy készítéséhez. \n"
+"              </p><p>\n"
+"                Ez az összes a különböző vevői megrendelések és logisztikai\n"
+"                szabályok szerint elkészített kiszállítási kiszolgáltatási "
+"jegyek listája.\n"
+"              </p>\n"
+"            "
 
 #. module: stock
 #: help:stock.tracking,name:0
@@ -5187,6 +5205,8 @@ msgid ""
 "By default, the pack reference is generated following the sscc standard. "
 "(Serial number + 1 check digit)"
 msgstr ""
+"Alapértelmezésben, a csomag referencia az SSCC szabványt követve lesz "
+"létrehozva. (széria szám + 1 ellenörző szám)"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_inventory
@@ -5204,6 +5224,9 @@ msgid ""
 "empty to automatically detect the type based on the source and destination "
 "locations)."
 msgstr ""
+"A kiválogatási listán a szállítás típusa tartalmazni fogja a láncolt mozgást "
+"(hagyja üresen a típus automatikus érzékelését a forrás és a végcél "
+"termékhelyei alapján)."
 
 #. module: stock
 #: code:addons/stock/wizard/stock_partial_picking.py:192
@@ -5213,16 +5236,19 @@ msgid ""
 "would let a quantity of \"%s %s\" to ship and only roundings of \"%s %s\" is "
 "accepted by the uom."
 msgstr ""
+"A kezdeti mértékegység kerekítése nem teszi lehetővé a \"%s %s\" szállítást, "
+"mivel ezzel lehetővé tenné a \"%s %s\" mennyiség szállítását de a \"%s %s\" "
+"kerekítését engedélyezi a mértékegység."
 
 #. module: stock
 #: help:stock.move,move_dest_id:0
 msgid "Optional: next stock move when chaining them"
-msgstr ""
+msgstr "Lehetőség: következő raktár művelet ha láncolva lesznek"
 
 #. module: stock
 #: view:stock.picking.out:0
 msgid "Print Delivery Slip"
-msgstr ""
+msgstr "Szállító levél nyomtatása"
 
 #. module: stock
 #: view:report.stock.inventory:0
@@ -5240,9 +5266,9 @@ msgstr "Fizikai helyek"
 #. module: stock
 #: view:stock.picking.in:0
 msgid "Ready to Process"
-msgstr ""
+msgstr "Feldolgozásra kész"
 
 #. module: stock
 #: report:stock.picking.list:0
 msgid "Warehouse Address :"
-msgstr ""
+msgstr "Rektárépület címe:"

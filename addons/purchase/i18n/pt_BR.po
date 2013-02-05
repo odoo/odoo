@@ -14,8 +14,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-12-22 07:31+0000\n"
-"X-Generator: Launchpad (build 16378)\n"
+"X-Launchpad-Export-Date: 2013-01-18 07:04+0000\n"
+"X-Generator: Launchpad (build 16430)\n"
 
 #. module: purchase
 #: model:res.groups,name:purchase.group_analytic_accounting
@@ -112,7 +112,7 @@ msgstr ""
 #: code:addons/purchase/purchase.py:1024
 #, python-format
 msgid "Configuration Error!"
-msgstr ""
+msgstr "Erro de Configuração!"
 
 #. module: purchase
 #: code:addons/purchase/purchase.py:587
@@ -137,7 +137,7 @@ msgstr "Preço Padrão de Compra"
 #: code:addons/purchase/purchase.py:1011
 #, python-format
 msgid "No supplier defined for this product !"
-msgstr ""
+msgstr "Nenhum fornecedor definido para este produto!"
 
 #. module: purchase
 #: model:ir.actions.act_window,help:purchase.action_picking_tree4_picking_to_invoice
@@ -361,6 +361,8 @@ msgid ""
 "The product \"%s\" has been defined with your company as reseller which "
 "seems to be a configuration error!"
 msgstr ""
+"O produto \"%s\" foi definido em sua empresa como um revendedor o que parece "
+"ser um erro de configuração!"
 
 #. module: purchase
 #: view:product.product:0
@@ -493,7 +495,7 @@ msgstr "Data Programada"
 #. module: purchase
 #: field:purchase.order,currency_id:0
 msgid "Currency"
-msgstr ""
+msgstr "Moeda"
 
 #. module: purchase
 #: field:purchase.order,journal_id:0
@@ -530,7 +532,7 @@ msgstr "Recebimentos de Produtos"
 #. module: purchase
 #: view:purchase.order:0
 msgid "Request for Quotation "
-msgstr ""
+msgstr "Solicitar Cotação "
 
 #. module: purchase
 #: help:purchase.order,partner_ref:0
@@ -539,6 +541,10 @@ msgid ""
 "used to do the matching when you receive the products as this reference is "
 "usually written on the delivery order sent by your supplier."
 msgstr ""
+"Referência do pedido de venda ou cotação enviada pelo seu fornecedor. É "
+"usado principalmente para fazer a correspondência quando você recebe os "
+"produtos já que essa referência é geralmente escrita na nota de entrega "
+"enviada pelo seu fornecedor."
 
 #. module: purchase
 #: view:purchase.config.settings:0
@@ -566,7 +572,7 @@ msgstr ""
 #. module: purchase
 #: model:mail.message.subtype,name:purchase.mt_rfq_approved
 msgid "RFQ Approved"
-msgstr ""
+msgstr "RFQ Aprovada"
 
 #. module: purchase
 #: view:purchase.config.settings:0
@@ -590,7 +596,7 @@ msgstr ""
 #. module: purchase
 #: model:mail.message.subtype,name:purchase.mt_rfq_confirmed
 msgid "RFQ Confirmed"
-msgstr ""
+msgstr "RFQ Confirmada"
 
 #. module: purchase
 #: view:purchase.order:0
@@ -698,6 +704,9 @@ msgid ""
 "A Pick list generates an invoice. Depending on the Invoicing control of the "
 "sales order, the invoice is based on delivered or on ordered quantities."
 msgstr ""
+"Uma lista de separação gera uma fatura. Dependendo do controle de "
+"faturamento no pedido de venda, a fatura é gerada com base em entregas ou em "
+"quantidades encomendadas."
 
 #. module: purchase
 #: view:purchase.report:0
@@ -838,7 +847,7 @@ msgstr "O valor do Imposto"
 #. module: purchase
 #: field:purchase.order,shipped_rate:0
 msgid "Received Ratio"
-msgstr ""
+msgstr "Proporção Recebida"
 
 #. module: purchase
 #: selection:purchase.report,month:0
@@ -1103,6 +1112,83 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
+"\n"
+"<div style=\"font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-"
+"serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; \">\n"
+"\n"
+"    <p>Olá ${object.partner_id.name},</p>\n"
+"    \n"
+"    <p>Aqui está o ${object.state in ('draft', 'sent') and 'request for "
+"quotation' or 'purchase order confirmation'} from ${object.company_id.name}: "
+"</p>\n"
+"    \n"
+"    <p style=\"border-left: 1px solid #8e0000; margin-left: 30px;\">\n"
+"       &nbsp;&nbsp;<strong>REFERENCIA</strong><br />\n"
+"       &nbsp;&nbsp;Número do pedido: <strong>${object.name}</strong><br />\n"
+"       &nbsp;&nbsp;Total do pedido: <strong>${object.amount_total} "
+"${object.pricelist_id.currency_id.name}</strong><br />\n"
+"       &nbsp;&nbsp;Data do pedido: ${object.date_order}<br />\n"
+"       % if object.origin:\n"
+"       &nbsp;&nbsp;Referência do pedido: ${object.origin}<br />\n"
+"       % endif\n"
+"       % if object.partner_ref:\n"
+"       &nbsp;&nbsp;Sua referência: ${object.partner_ref}<br />\n"
+"       % endif\n"
+"       % if object.validator:\n"
+"       &nbsp;&nbsp;Seu contato: <a href=\"mailto:${object.validator.email or "
+"''}?subject=Order%20${object.name}\">${object.validator.name}</a>\n"
+"       % endif\n"
+"    </p>\n"
+"\n"
+"    <br/>\n"
+"    <p>Se você tiver alguma dúvida, não deixe de entrar em contato "
+"conosco.</p>\n"
+"    <p>Obrigado!</p>\n"
+"    <br/>\n"
+"    <br/>\n"
+"    <div style=\"width: 375px; margin: 0px; padding: 0px; background-color: "
+"#8E0000; border-top-left-radius: 5px 5px; border-top-right-radius: 5px 5px; "
+"background-repeat: repeat no-repeat;\">\n"
+"        <h3 style=\"margin: 0px; padding: 2px 14px; font-size: 12px; color: "
+"#DDD;\">\n"
+"            <strong style=\"text-"
+"transform:uppercase;\">${object.company_id.name}</strong></h3>\n"
+"    </div>\n"
+"    <div style=\"width: 347px; margin: 0px; padding: 5px 14px; line-height: "
+"16px; background-color: #F2F2F2;\">\n"
+"        <span style=\"color: #222; margin-bottom: 5px; display: block; \">\n"
+"        % if object.company_id.street:\n"
+"            ${object.company_id.street}<br/>\n"
+"        % endif\n"
+"        % if object.company_id.street2:\n"
+"            ${object.company_id.street2}<br/>\n"
+"        % endif\n"
+"        % if object.company_id.city or object.company_id.zip:\n"
+"            ${object.company_id.zip} ${object.company_id.city}<br/>\n"
+"        % endif\n"
+"        % if object.company_id.country_id:\n"
+"            ${object.company_id.state_id and ('%s, ' % "
+"object.company_id.state_id.name) or ''} ${object.company_id.country_id.name "
+"or ''}<br/>\n"
+"        % endif\n"
+"        </span>\n"
+"        % if object.company_id.phone:\n"
+"            <div style=\"margin-top: 0px; margin-right: 0px; margin-bottom: "
+"0px; margin-left: 0px; padding-top: 0px; padding-right: 0px; padding-bottom: "
+"0px; padding-left: 0px; \">\n"
+"                Fone:&nbsp; ${object.company_id.phone}\n"
+"            </div>\n"
+"        % endif\n"
+"        % if object.company_id.website:\n"
+"            <div>\n"
+"                Site :&nbsp;<a "
+"href=\"${object.company_id.website}\">${object.company_id.website}</a>\n"
+"            </div>\n"
+"        %endif\n"
+"        <p></p>\n"
+"    </div>\n"
+"</div>\n"
+"            "
 
 #. module: purchase
 #: view:purchase.report:0
@@ -1178,7 +1264,7 @@ msgstr ""
 #. module: purchase
 #: view:purchase.order.line_invoice:0
 msgid "Select an Open Sales Order"
-msgstr ""
+msgstr "Escolha um Pedido de Vendas Aberto"
 
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_purchase_unit_measure_purchase
@@ -1252,6 +1338,8 @@ msgid ""
 "Reference of the document that generated this purchase order request; a "
 "sales order or an internal procurement request."
 msgstr ""
+"Referência do documento que gerou essa solicitação de pedido de compra; um "
+"pedido de venda ou uma solicitação de aquisição interna."
 
 #. module: purchase
 #: view:purchase.order.line:0
@@ -1810,7 +1898,7 @@ msgstr "Abrir Menu de Compras"
 #: code:addons/purchase/purchase.py:1028
 #, python-format
 msgid "No address defined for the supplier"
-msgstr ""
+msgstr "Nenhum endereço definido para o fornecedor"
 
 #. module: purchase
 #: field:purchase.order,company_id:0
@@ -2233,7 +2321,7 @@ msgstr "Baseado em recebimentos"
 #: code:addons/purchase/purchase.py:1018
 #, python-format
 msgid "No default supplier defined for this product"
-msgstr ""
+msgstr "Nenhum fornecedor padrão definido para este produto"
 
 #. module: purchase
 #: view:purchase.report:0
@@ -2341,7 +2429,7 @@ msgstr "Versões da lista"
 #. module: purchase
 #: field:purchase.order,payment_term_id:0
 msgid "Payment Term"
-msgstr ""
+msgstr "Condições de Pagamento"
 
 #. module: purchase
 #: view:purchase.order:0
