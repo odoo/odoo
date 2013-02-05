@@ -262,6 +262,9 @@ class act_window(osv.osv):
     }
 
     def read(self, cr, uid, ids, fields=None, context=None, load='_classic_read'):
+        u = isinstance(ids, (int, long))
+        if u:
+            ids = [ids]
         results = super(act_window, self).read(cr, uid, ids, fields=fields, context=context, load=load)
 
         if not fields or 'help' in fields:
@@ -276,6 +279,8 @@ class act_window(osv.osv):
                     custom_context = dict(context.items() + (eval(res['context'] or "{}", dic) or {}).items())
                     res['help'] = self.pool.get(res.get('res_model')).dynamic_help(cr, uid, res.get('help', ""), context=custom_context)
         
+        if u:
+            return results[0]
         return results
 
     def for_xml_id(self, cr, uid, module, xml_id, context=None):
