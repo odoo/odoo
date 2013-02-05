@@ -896,7 +896,7 @@ class task(base_stage, osv.osv):
             project_id = self.pool.get('project.project').browse(cr, uid, context.get('default_project_id'), context=context)
             alias = project_id.alias_id and project_id.alias_id.name_get() or False
             if alias and alias[0] and alias[0][1]:
-                help = "%s%s" % (help, _("<div>You can also create documents by sending an email to: %s</div>" % alias[0][1]))
+                help = "%s%s" % (help, _("<div>You can also create documents by sending an email to: <b>%s</b></div>" % alias[0][1]))
         return help
        
     # ----------------------------------------
