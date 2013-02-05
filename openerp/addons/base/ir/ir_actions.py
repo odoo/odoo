@@ -272,7 +272,8 @@ class act_window(osv.osv):
             dic = {
                 'active_model' : context.get('active_model', None),
                 'active_id' : context.get('active_id', None),
-                'active_ids' : context.get('active_ids', None)
+                'active_ids' : context.get('active_ids', None),
+                'uid' : uid,
             }
             for res in results:
                 if res.get('res_model', False):
