@@ -583,19 +583,26 @@ instance.web_kanban.KanbanGroup = instance.web.Widget.extend({
         });
 
         this.$el.find('.oe_kanban_add').click(function () {
-            if (self.quick) {
-                return self.quick.trigger('close');
+            if (self.view.quick) {
+                self.view.quick.trigger('close');
             }
+            if (self.quick) {
+                return false;
+            }
+            self.view.$el.find('.oe_view_nocontent').hide();
             var ctx = {};
             ctx['default_' + self.view.group_by] = self.value;
             self.quick = new (get_class(self.view.quick_create_class))(this, self.dataset, ctx, true)
                 .on('added', self, self.proxy('quick_created'))
                 .on('close', self, function() {
+                    self.view.$el.find('.oe_view_nocontent').show();
                     this.quick.destroy();
+                    delete self.view.quick;
                     delete this.quick;
                 });
             self.quick.appendTo($(".oe_kanban_group_list_header", self.$records));
             self.quick.focus();
+            self.view.quick = self.quick;
         });
         // Add bounce effect on image '+' of kanban header when click on empty space of kanban grouped column.
         this.$records.on('click', '.oe_kanban_show_more', this.do_show_more);
@@ -731,6 +738,7 @@ instance.web_kanban.KanbanGroup = instance.web.Widget.extend({
      */
     quick_created: function (record) {
         var id = record, self = this;
+        self.view.remove_no_result();
         self.trigger("add_record");
         this.dataset.read_ids([id], this.view.fields_keys)
             .done(function (records) {
