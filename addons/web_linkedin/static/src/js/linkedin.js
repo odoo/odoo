@@ -148,23 +148,12 @@ openerp.web_linkedin = function(instance) {
             this.display_dm = new instance.web.DropMisordered(true);
         },
         initialize_content: function() {
-            var $ht = $(QWeb.render("FieldChar.linkedin.form"));
+            var $ht = $(QWeb.render("FieldChar.linkedin"));
             var $in = this.$("input");
             $in.replaceWith($ht);
             this.$(".oe_linkedin_input").append($in);
             this.$(".oe_linkedin_form_img").click(_.bind(this.search_linkedin, this));
-
-            var $ht = $(QWeb.render("FieldChar.linkedin"));
-            var $span = this.$("span");
-            $span.replaceWith($ht);
-            this.$(".oe_linkedin_span").replaceWith($span);
-
             this._super();
-        },
-        render_value: function() {
-            var result = this._super();
-            this.$(".oe_linkedin_url").attr("href", this.field_manager.datarecord.linkedin_url || "#").toggle(!!this.field_manager.datarecord.linkedin_url);
-            return result;
         },
         search_linkedin: function() {
             var self = this;
@@ -342,9 +331,21 @@ openerp.web_linkedin = function(instance) {
             });
         },
     });
-    
     instance.web.form.widgets.add('linkedin', 'instance.web_linkedin.Linkedin');
     
+    instance.web_linkedin.Linkedin_url = instance.web.form.FieldChar.extend({
+        initialize_content: function() {
+            this.$("input,span").replaceWith($(QWeb.render("FieldChar.linkedin_url")));
+            this._super();
+        },
+        render_value: function() {
+            this._super();
+            this.$(".oe_linkedin_url").attr("href", this.field_manager.datarecord.linkedin_url || "#").toggle(!!this.field_manager.datarecord.linkedin_url);
+        },
+    });
+    instance.web.form.widgets.add('linkedin_url', 'instance.web_linkedin.Linkedin_url');
+    
+
     var commonPeopleFields = ["id", "picture-url", "public-profile-url", "first-name", "last-name",
                             "formatted-name", "location", "phone-numbers", "im-accounts",
                             "main-address", "headline", "positions", "summary", "specialties"];

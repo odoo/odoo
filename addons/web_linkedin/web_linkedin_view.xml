@@ -11,6 +11,10 @@
                     <field name="linkedin_url" invisible="1"/>
                     <field name="name" default_focus="1" nolabel="1" widget="linkedin" />
                 </field>
+                <field name="website" position="after">
+                    <field name="linkedin_id" invisible="1"/>
+                    <field name="linkedin_url" nolabel="1" widget="linkedin_url"/>
+                </field>
             </field>
        </record>
         
