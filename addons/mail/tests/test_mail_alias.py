@@ -51,9 +51,3 @@ class test_mail_alias(common.TransactionCase):
             {'alias_model_id': partner_model_id, 'alias_name': alias_name_1, 'alias_defaults': alias_defaults_1})
         alias_id_2 = self.mail_alias.create(cr, uid,
             {'alias_model_id': partner_model_id, 'alias_name': alias_name_2, 'alias_defaults': alias_defaults_2})
-
-        # alias of the model and alias for a docmuent
-        alias = self.mail_alias.get_alias(cr, uid, 'mail.alias', {'field_pigs': 11})
-        self.assertEqual(len(alias), 2, "get_alias don't return the alias of the document and the default alias of the model")
-        self.assertEqual(alias[0].get('id'), alias_id_1, "get_alias don't return the alias of the document")
-        self.assertEqual(alias[1].get('id'), alias_id_0, "get_alias don't return the default alias of the model")
