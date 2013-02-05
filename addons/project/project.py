@@ -908,7 +908,7 @@ class task(base_stage, osv.osv):
                     alias_txt = "%s%s%s" % (alias_txt, (alias_nb and ", " or " "), email)
                     alias_nb += 1
         if alias_txt:
-            help = "%s %s" % (help, _("<div class='oe_view_nocontent_create_alias'>You can also create documents by sending an email to: <b>%s</b></div>" % alias_txt))
+            help = "%s %s" % (help, _("<div class='oe_view_nocontent_create_alias'>You can also create tasks by sending an email to: <b>%s</b></div>" % alias_txt))
         return help
        
     # ----------------------------------------
