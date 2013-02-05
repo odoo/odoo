@@ -272,10 +272,10 @@ instance.web.ActionManager = instance.web.Widget.extend({
         if (action.context) {
             action.context = instance.web.pyeval.eval(
                 'context', action.context);
-            if (action.context.active_id) {
-                // Here we assume that when an `active_id` is used in the context,
-                // we are in a `related` action, so we disable the searchview's
-                // default custom filters.
+            if (action.context.active_id || action.context.active_ids) {
+                // Here we assume that when an `active_id` or `active_ids` is used
+                // in the context, we are in a `related` action, so we disable the
+                // searchview's default custom filters.
                 action.context.search_disable_custom_filters = true;
             }
         }
