@@ -140,7 +140,14 @@ define(["nova", "jquery", "underscore", "oeclient", "require"], function(nova, $
         start_polling: function() {
             var self = this;
 
-            return connection.connector.call("/longpolling/im/gen_uuid", {}).then(function(uuid) {
+            var uuid = localStorage["oe_livesupport_uuid"];
+            var def = $.when(uuid);
+
+            if (! uuid) {
+                def = connection.connector.call("/longpolling/im/gen_uuid", {});
+            }
+            return def.then(function(uuid) {
+                localStorage["oe_livesupport_uuid"] = uuid;
                 return connection.getModel("im.user").call("get_by_user_id", [uuid]).then(function(my_id) {
                     self.my_id = my_id["id"];
                     return self.ensure_users([self.my_id]).then(function() {
