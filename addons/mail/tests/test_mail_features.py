@@ -397,11 +397,11 @@ class test_mail(TestMailBase):
             self.assertEqual(sent_email['subject'], _mail_subject, 'sent_email subject incorrect')
             self.assertIn(_mail_body2, sent_email['body'], 'sent_email body incorrect')
             self.assertIn(_mail_signature2, sent_email['body'], 'sent_email body incorrect (no signature)')
-            self.assertIn("This message is written on the document", sent_email['body'], 'sent_email body incorrect (no document signature)')
+            self.assertIn("OpenERP", sent_email['body'], 'sent_email body incorrect (no OpenERP company)')
             # body_alternative
             self.assertIn(_mail_bodyalt2, sent_email['body_alternative'], 'sent_email body_alternative is incorrect')
             self.assertIn(_mail_signaturealt2, sent_email['body_alternative'], 'sent_email body_alternative is incorrect (no signature)')
-            self.assertIn("This message is written on the document", sent_email['body'], 'sent_email body incorrect (no document signature)')
+            self.assertIn("OpenERP", sent_email['body'], 'sent_email body incorrect (no OpenERP company)')
         # Test: mail_message: notified_partner_ids = group followers
         message_pids = set([partner.id for partner in message2.notified_partner_ids])
         test_pids = set([self.partner_admin_id, p_b_id, p_c_id, p_d_id])
