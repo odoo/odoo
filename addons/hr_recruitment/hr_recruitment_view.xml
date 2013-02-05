@@ -235,6 +235,7 @@
                 <field name="title_action"/>
                 <field name="department_id"/>
                 <field name="categ_ids"/>
+                <field name="message_summary"/>
                 <templates>
                     <t t-name="kanban-tooltip">
                         <ul class="oe_kanban_tooltip">
@@ -280,6 +281,7 @@
 
                                 </div>
                                 <div class="oe_kanban_footer_left" style="margin-top:5px;">
+                                    <t t-raw="record.message_summary.raw_value"/>
                                     <field name="categ_ids"/>
                                 </div>
                             </div>
