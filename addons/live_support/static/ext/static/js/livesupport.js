@@ -79,10 +79,8 @@ define(["nova", "jquery", "underscore", "oeclient", "require"], function(nova, $
                     window.alert("None of our collaborators seems to be available, please try again later.");
                     return;
                 }
-                self.manager.start_polling().then(function() {
-                    self.manager.ensure_users([user_id]).then(function() {
-                        self.manager.activate_user(self.manager.get_user(user_id));
-                    });
+                self.manager.ensure_users([user_id]).then(function() {
+                    self.manager.activate_user(self.manager.get_user(user_id));
                 });
             });
         },
