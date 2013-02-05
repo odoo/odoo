@@ -272,6 +272,12 @@ instance.web.ActionManager = instance.web.Widget.extend({
         if (action.context) {
             action.context = instance.web.pyeval.eval(
                 'context', action.context);
+            if (action.context.active_id || action.context.active_ids) {
+                // Here we assume that when an `active_id` or `active_ids` is used
+                // in the context, we are in a `related` action, so we disable the
+                // searchview's default custom filters.
+                action.context.search_disable_custom_filters = true;
+            }
         }
         if (action.domain) {
             action.domain = instance.web.pyeval.eval(
@@ -1276,11 +1282,6 @@ instance.web.View = instance.web.Widget.extend({
                         active_ids: [record_id],
                         active_model: dataset.model
                     });
-                    if (("" + action.context).match(/\bactive_id\b/)) {
-                        // Special case: when the context is evaluted using
-                        // the active_id, we want to disable the custom filters.
-                        ncontext.add({ search_disable_custom_filters: true });
-                    }
                 }
                 ncontext.add(action.context || {});
                 action.context = ncontext;
