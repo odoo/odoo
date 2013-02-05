@@ -149,11 +149,11 @@ class stock_invoice_onshipping(osv.osv_memory):
     def fields_view_get(self, cr, uid, view_id=None, view_type="form", context=None, toolbar=False, submenu=False):
         if context is None:
             context = {}
-        ids_length = False
+        group_field_visible = False
         if context.get('active_ids'):
             if len(context.get('active_ids')) == 1:
-                ids_length = True
-        context.update({'ids_length' : ids_length})
+                group_field_visible = True
+        context.update({'group_field_visible' : group_field_visible})
         return super(stock_invoice_onshipping, self).fields_view_get(cr, uid, view_id=view_id, view_type=view_type, context=context, toolbar=toolbar, submenu=submenu)
 
 stock_invoice_onshipping()
