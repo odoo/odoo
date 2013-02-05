@@ -358,12 +358,12 @@ class test_mail(TestMailBase):
             self.assertEqual(sent_email['subject'], _subject, 'sent_email subject incorrect')
             self.assertIn(_mail_body1, sent_email['body'], 'sent_email body incorrect')
             self.assertIn(_mail_signature1, sent_email['body'], 'sent_email body incorrect (no signature)')
-            self.assertIn("This message is written on the document", sent_email['body'], 'sent_email body incorrect (no document signature)')
+            self.assertIn("OpenERP", sent_email['body'], 'sent_email body incorrect (no OpenERP company)')
             # the html2plaintext uses etree or beautiful soup, so the result may be slighly different
             # depending if you have installed beautiful soup.
             self.assertIn(_mail_bodyalt1, sent_email['body_alternative'], 'sent_email body_alternative is incorrect')
             self.assertIn(_mail_signaturealt1, sent_email['body_alternative'], 'sent_email body_alternative is incorrect (no signature)')
-            self.assertIn("This message is written on the document", sent_email['body'], 'sent_email body incorrect (no document signature)')
+            self.assertIn("OpenERP", sent_email['body_alternative'], 'sent_email body incorrect (no OpenERP company)')
         # Test: mail_message: notified_partner_ids = group followers
         message_pids = set([partner.id for partner in message1.notified_partner_ids])
         test_pids = set([self.partner_admin_id, p_b_id, p_c_id])
