@@ -208,12 +208,14 @@ openerp.web_im = function(instance) {
                     var me = self.users_cache[self.my_id];
                     delete self.users_cache[self.my_id];
                     self.me = me;
-                    self.rpc("/longpolling/im/activated", {}).then(function(activated) {
+                    self.rpc("/longpolling/im/activated", {}, {shadow: true}).then(function(activated) {
                         if (activated) {
                             self.activated = true;
                             $(window).on("unload", self.unload_event_handler);
                             self.poll();
                         }
+                    }, function(a, e) {
+                        e.preventDefault();
                     });
                 });
             });
