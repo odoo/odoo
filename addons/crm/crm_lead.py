@@ -496,10 +496,8 @@ class crm_lead(base_stage, format_address, osv.osv):
         opportunities = self.browse(cr, uid, ids, context=context)
 
         def _get_first_not_null(attr):
-            if hasattr(oldest, attr):
-                return getattr(oldest, attr)
             for opp in opportunities:
-                if hasattr(opp, attr):
+                if hasattr(opp, attr) and bool(getattr(opp, attr)):
                     return getattr(opp, attr)
             return False
 
@@ -661,7 +659,9 @@ class crm_lead(base_stage, format_address, osv.osv):
         self._merge_opportunity_attachments(cr, uid, first_opportunity.id, tail_opportunities, context=context)
 
         # Merge notifications about loss of information
-        self._merge_notify(cr, uid, first_opportunity, tail_opportunities, context=context)
+        opportunities = [oldest]
+        opportunities.extend(opportunities_rest)
+        self._merge_notify(cr, uid, first_opportunity, opportunities, context=context)
         # Write merged data into first opportunity
         self.write(cr, uid, [first_opportunity.id], merged_data, context=context)
         # Delete tail opportunities
