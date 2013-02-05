@@ -37,8 +37,9 @@ class ImportController(openerp.addons.web.http.Controller):
 
     @openerp.addons.web.http.httprequest
     def loader(self, req, **kwargs):
-        db = kwargs["db"]
-        channel = int(kwargs["channel"])
+        p = json.loads(kwargs["p"])
+        db = p["db"]
+        channel = p["channel"]
         req.session._db = db
         req.session._uid = None
         req.session._login = "anonymous"
@@ -46,7 +47,8 @@ class ImportController(openerp.addons.web.http.Controller):
         info = req.session.model('live_support.channel').get_info_for_chat_src()
         info["db"] = db
         info["channel"] = channel
-        return env.get_template("loader.js").render(info)
+        return req.make_response(env.get_template("loader.js").render(info),
+             headers=[('Content-Type', "text/javascript")])
 
 class live_support_channel(osv.osv):
     _name = 'live_support.channel'
