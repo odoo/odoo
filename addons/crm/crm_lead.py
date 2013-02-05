@@ -711,7 +711,7 @@ class crm_lead(base_stage, format_address, osv.osv):
 
     def _lead_create_contact(self, cr, uid, lead, name, is_company, parent_id=False, context=None):
         partner = self.pool.get('res.partner')
-        vals = { 'name': name,
+        vals = {'name': name,
             'user_id': lead.user_id.id,
             'comment': lead.description,
             'section_id': lead.section_id.id or False,
@@ -731,11 +731,11 @@ class crm_lead(base_stage, format_address, osv.osv):
             'is_company': is_company,
             'type': 'contact'
         }
-        partner = partner.create(cr, uid,vals, context)
+        partner = partner.create(cr, uid, vals, context=context)
         return partner
 
     def _create_lead_partner(self, cr, uid, lead, context=None):
-        partner_id =  False
+        partner_id = False
         if lead.partner_name and lead.contact_name:
             partner_id = self._lead_create_contact(cr, uid, lead, lead.partner_name, True, context=context)
             partner_id = self._lead_create_contact(cr, uid, lead, lead.contact_name, False, partner_id, context=context)
@@ -743,8 +743,14 @@ class crm_lead(base_stage, format_address, osv.osv):
             partner_id = self._lead_create_contact(cr, uid, lead, lead.partner_name, True, context=context)
         elif not lead.partner_name and lead.contact_name:
             partner_id = self._lead_create_contact(cr, uid, lead, lead.contact_name, False, context=context)
+        elif lead.email_from and self.pool.get('res.partner')._parse_partner_name(lead.email_from, context=context)[0]:
+            contact_name = self.pool.get('res.partner')._parse_partner_name(lead.email_from, context=context)[0]
+            partner_id = self._lead_create_contact(cr, uid, lead, contact_name, False, context=context)
         else:
-            partner_id = self._lead_create_contact(cr, uid, lead, lead.name, False, context=context)
+            raise osv.except_osv(
+                _('Warning!'),
+                _('No customer name defined. Please fill one of the following fields: Company Name, Contact Name or Email ("Name <email@address>")')
+            )
         return partner_id
 
     def _lead_set_partner(self, cr, uid, lead, partner_id, context=None):
