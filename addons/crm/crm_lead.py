@@ -474,9 +474,14 @@ class crm_lead(base_stage, format_address, osv.osv):
     def _merge_get_result_stage(self, cr, uid, opps, context=None):
         stage = None
         for opp in opps:
+            print opp.stage_id.id
+            print opp.stage_id.name
             if not stage:
                 stage = opp.stage_id.id
             if opp.type == 'opportunity':
+                print 'Opp found, return:'
+                print opp.stage_id.id
+                print opp.stage_id.name
                 return opp.stage_id.id
         return stage
 
@@ -529,6 +534,7 @@ class crm_lead(base_stage, format_address, osv.osv):
         # Define the resulting type ('lead' or 'opportunity')
         data['type'] = self._merge_get_result_type(cr, uid, opportunities, context)
         data['stage_id'] = self._merge_get_result_stage(cr, uid, opportunities, context)
+        print data['stage_id']
         return data
 
     def _merge_find_oldest(self, cr, uid, ids, context=None):
@@ -667,8 +673,6 @@ class crm_lead(base_stage, format_address, osv.osv):
         # Delete tail opportunities
         self.unlink(cr, uid, [x.id for x in tail_opportunities], context=context)
 
-        # Open first opportunity
-        self.case_open(cr, uid, [first_opportunity.id])
         return first_opportunity.id
 
     def _convert_opportunity_data(self, cr, uid, lead, customer, section_id=False, context=None):
@@ -865,7 +869,7 @@ class crm_lead(base_stage, format_address, osv.osv):
         return {
             'name': _('Opportunity'),
             'view_type': 'form',
-            'view_mode': 'tree, form',
+            'view_mode': 'form',
             'res_model': 'crm.lead',
             'domain': [('type', '=', 'opportunity')],
             'res_id': int(opportunity_id),

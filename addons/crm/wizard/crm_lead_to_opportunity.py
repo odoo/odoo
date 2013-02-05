@@ -123,6 +123,7 @@ class crm_lead2opportunity_partner(osv.osv_memory):
             lead_ids = [lead_id]
             lead = self.pool.get('crm.lead').read(cr, uid, lead_id, ['type'], context=context)
             if lead['type'] == "lead":
+                context.update({'active_ids': lead_ids})
                 self._convert_opportunity(cr, uid, ids, {'lead_ids': lead_ids}, context=context)
         else:
             lead_ids = context.get('active_ids', [])
