@@ -7,12 +7,9 @@
             <field name="inherit_id" ref="base.view_partner_form"/>
             <field name="arch" type="xml">
                 <field name="name" position="replace">
-                    <field name="name" default_focus="1" nolabel="1" widget="linkedin" />
-                </field>
-                <field name="website" position="after">
                     <field name="linkedin_id" invisible="1"/>
                     <field name="linkedin_url" invisible="1"/>
-                    <field name="linkedin_public_url" widget="url" placeholder="LinkedIn url automatically set..."/>
+                    <field name="name" default_focus="1" nolabel="1" widget="linkedin" />
                 </field>
             </field>
        </record>
