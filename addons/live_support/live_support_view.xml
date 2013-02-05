@@ -20,8 +20,13 @@
                     <h1>
                         <field name="name"/>
                     </h1>
-                    <label string="Users" colspan="2"/>
-                    <field name="user_ids" nolabel="1" colspan="2"/>
+                    <div style="margin-bottom: 12px">
+                        <button type="object" name="join" string="Join" attrs='{"invisible": [["are_you_inside", "=", True]]}'/>
+                        <button type="object" name="quit" string="Quit" attrs='{"invisible": [["are_you_inside", "=", False]]}'/>
+                    </div>
+                    <field name="are_you_inside" invisible="1"/>
+                    <label for="user_ids" colspan="2"/>
+                    <field name="user_ids" readonly="1" nolabel="1" colspan="2"/>
                 </sheet>
                 </form>
             </field>

@@ -60,9 +60,21 @@ class ImportController(openerp.addons.web.http.Controller):
 
 class live_support_channel(osv.osv):
     _name = 'live_support.channel'
+
+    def _are_you_inside(self, cr, uid, ids, name, arg, context=None):
+        res = {}
+        for record in self.browse(cr, uid, ids, context=context):
+            res[record.id] = False
+            for user in record.user_ids:
+                if user.user.id == uid:
+                    res[record.id] = True
+                    break
+        return res
+
     _columns = {
         'name': fields.char(string="Name", size=200, required=True),
         'user_ids': fields.many2many('im.user', 'live_support_channel_im_user', 'channel_id', 'user_id', string="Users"),
+        'are_you_inside': fields.function(_are_you_inside, type='boolean', string='Are you inside the matrix?', store=False),
     }
 
     def get_available_user(self, cr, uid, channel_id, context=None):
@@ -78,6 +90,16 @@ class live_support_channel(osv.osv):
     def get_info_for_chat_src(self, cr, uid, context=None):
         url = self.pool.get('ir.config_parameter').get_param(cr, openerp.SUPERUSER_ID, 'web.base.url')
         return {"url": url}
+
+    def join(self, cr, uid, ids, context=None):
+        my_id = self.pool.get("im.user").get_by_user_id(cr, uid, uid, context)["id"]
+        self.write(cr, uid, ids, {'user_ids': [(4, my_id)]})
+        return True
+
+    def quit(self, cr, uid, ids, context=None):
+        my_id = self.pool.get("im.user").get_by_user_id(cr, uid, uid, context)["id"]
+        self.write(cr, uid, ids, {'user_ids': [(3, my_id)]})
+        return True
 
 
 class im_user(osv.osv):
