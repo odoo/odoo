@@ -474,9 +474,9 @@ class crm_lead(base_stage, format_address, osv.osv):
     def _merge_get_result_stage(self, cr, uid, opps, context=None):
         stage = None
         for opp in opps:
-            if not stage:
+            if not stage and opp.stage_id.state != 'cancel':
                 stage = opp.stage_id.id
-            if opp.type == 'opportunity':
+            if opp.type == 'opportunity' and opp.stage_id.state != 'cancel':
                 return opp.stage_id.id
         return stage
 
