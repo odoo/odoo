@@ -35,7 +35,6 @@ class crm_lead2opportunity_partner(osv.osv_memory):
                 ('merge', 'Merge with existing opportunities')
             ], 'Conversion Action', required=True),
         'opportunity_ids': fields.many2many('crm.lead', string='Opportunities'),
-        'partner_id': fields.many2one('res.partner', 'Customer'),
     }
 
     def default_get(self, cr, uid, fields, context=None):
@@ -144,7 +143,6 @@ class crm_lead2opportunity_partner(osv.osv_memory):
         lead = self.pool.get('crm.lead')
         lead_ids = context.get('active_ids', [])
         data = self.browse(cr, uid, ids, context=context)[0]
-        print repr(data._table._columns)
         partner_id = data.partner_id and data.partner_id.id or False
         return lead.handle_partner_assignation(cr, uid, lead_ids, data.action, partner_id, context=context)
 

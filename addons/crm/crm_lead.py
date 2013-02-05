@@ -474,14 +474,9 @@ class crm_lead(base_stage, format_address, osv.osv):
     def _merge_get_result_stage(self, cr, uid, opps, context=None):
         stage = None
         for opp in opps:
-            print opp.stage_id.id
-            print opp.stage_id.name
             if not stage:
                 stage = opp.stage_id.id
             if opp.type == 'opportunity':
-                print 'Opp found, return:'
-                print opp.stage_id.id
-                print opp.stage_id.name
                 return opp.stage_id.id
         return stage
 
@@ -534,7 +529,6 @@ class crm_lead(base_stage, format_address, osv.osv):
         # Define the resulting type ('lead' or 'opportunity')
         data['type'] = self._merge_get_result_type(cr, uid, opportunities, context)
         data['stage_id'] = self._merge_get_result_stage(cr, uid, opportunities, context)
-        print data['stage_id']
         return data
 
     def _merge_find_oldest(self, cr, uid, ids, context=None):
@@ -764,8 +758,6 @@ class crm_lead(base_stage, format_address, osv.osv):
         res = False
         res_partner = self.pool.get('res.partner')
         if partner_id:
-            if lead.section_id:
-                print '---TESTTRUE---'
             res_partner.write(cr, uid, partner_id, {'section_id': lead.section_id and lead.section_id.id or False})
             contact_id = res_partner.address_get(cr, uid, [partner_id])['default']
             res = lead.write({'partner_id': partner_id}, context=context)
