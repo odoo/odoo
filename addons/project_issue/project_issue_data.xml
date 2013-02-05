@@ -59,16 +59,19 @@ Access all issues from the top Project menu, and access the issues of a specific
         <record id="mt_issue_blocked" model="mail.message.subtype">
             <field name="name">Issue Blocked</field>
             <field name="res_model">project.issue</field>
+            <field name="default" eval="False"/>
             <field name="description">Issue blocked</field>
         </record>
         <record id="mt_issue_closed" model="mail.message.subtype">
             <field name="name">Issue Closed</field>
             <field name="res_model">project.issue</field>
+            <field name="default" eval="False"/>
             <field name="description">Issue closed</field>
         </record>
         <record id="mt_issue_stage" model="mail.message.subtype">
             <field name="name">Stage Changed</field>
             <field name="res_model">project.issue</field>
+            <field name="default" eval="False"/>
             <field name="description">Stage changed</field>
         </record>
         <!-- Project-related subtypes for messaging / Chatter -->
