@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2012-12-21 17:04+0000\n"
-"PO-Revision-Date: 2013-01-20 12:39+0000\n"
-"Last-Translator: Erwin van der Ploeg (Endian Solutions) <Unknown>\n"
+"PO-Revision-Date: 2013-02-02 11:07+0000\n"
+"Last-Translator: Arno Peters <Unknown>\n"
 "Language-Team: Dutch <nl@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-01-21 05:27+0000\n"
-"X-Generator: Launchpad (build 16430)\n"
+"X-Launchpad-Export-Date: 2013-02-03 05:29+0000\n"
+"X-Generator: Launchpad (build 16462)\n"
 
 #. module: mail
 #: view:mail.followers:0
@@ -71,6 +71,8 @@ msgid ""
 "The name of the email alias, e.g. 'jobs' if you want to catch emails for "
 "<jobs@example.my.openerp.com>"
 msgstr ""
+"De naam van de e-mail alias, bijvoorbeeld 'vacature' als u alle e-mails wilt "
+"opvangen voor <vacature@uwbedrijf.com>"
 
 #. module: mail
 #: model:ir.actions.act_window,name:mail.action_email_compose_message_wizard
@@ -152,6 +154,8 @@ msgid ""
 "Members of those groups will automatically added as followers. Note that "
 "they will be able to manage their subscription manually if necessary."
 msgstr ""
+"Leden van die groepen worden automatisch toegevoegd als volger. Zij kunnen "
+"zelfstandig hun lidmaatschap beheren als dat nodig is."
 
 #. module: mail
 #. openerp-web
@@ -191,6 +195,9 @@ msgid ""
 "image, with aspect ratio preserved. Use this field in form views or some "
 "kanban views."
 msgstr ""
+"Middelgrote foto van de groep. Deze wordt automatisch aangepast naar een "
+"128x128px afbeelding, met behoud van verhouding. Gebruik dit veld in "
+"formulier- of in sommige kanban weergaves."
 
 #. module: mail
 #. openerp-web
@@ -213,6 +220,10 @@ msgid ""
 "\n"
 "(Document type: %s, Operation: %s)"
 msgstr ""
+"De gevraagde bewerking kan niet worden voltooid vanwege "
+"beveiligingsbeperkingen. Neem contact op met uw systeembeheerder.\n"
+"\n"
+"(Document type: %s, Bewerking: %s)"
 
 #. module: mail
 #: view:mail.mail:0
@@ -561,6 +572,9 @@ msgid ""
 "image, with aspect ratio preserved. Use this field anywhere a small image is "
 "required."
 msgstr ""
+"Kleine foto van de groep. Deze wordt automatisch aangepast naar een 65x64px "
+"afbeelding, met behoud van verhouding. Gebruik dit veld overal waar een "
+"kleine foto benodigd is."
 
 #. module: mail
 #: view:mail.compose.message:0
@@ -683,6 +697,8 @@ msgid ""
 "You may not create a user. To create new users, you should use the "
 "\"Settings > Users\" menu."
 msgstr ""
+"Het is niet toegestaan een gebruiker aan te maken. Om een nieuwe gebruiker "
+"aan te maken, dient u gebruik te maken van het menu: Instellingen\\Gebrukers."
 
 #. module: mail
 #: help:mail.followers,res_model:0
@@ -722,6 +738,8 @@ msgid ""
 "Only the invited followers can read the\n"
 "                                    discussions on this group."
 msgstr ""
+"Alleen de uitgenodigde volgers kunnen de discussies\n"
+"                                     van deze groep lezen."
 
 #. module: mail
 #: model:ir.model,name:mail.model_ir_ui_menu
@@ -745,6 +763,8 @@ msgid ""
 "The following partners chosen as recipients for the email have no email "
 "address linked :"
 msgstr ""
+"De volgende partners gekozen als ontvangers voor de e-mail hebben geen "
+"gekoppelde e-mail adres:"
 
 #. module: mail
 #: help:mail.alias,alias_defaults:0
@@ -830,6 +850,8 @@ msgid ""
 "Email address internally associated with this user. Incoming emails will "
 "appear in the user's notifications."
 msgstr ""
+"E-mail adressen welke intern zijn gekoppeld aan deze gebruiker. Inkomende e-"
+"mails worden weergegeven in de gebruikers notificaties."
 
 #. module: mail
 #: field:mail.group,image:0
@@ -857,6 +879,8 @@ msgid ""
 "The email address associated with this group. New emails received will "
 "automatically create new topics."
 msgstr ""
+"Het e-mail adres gekoppeld aan deze groep. Nieuw ontvangen e-mails zullen "
+"automatisch nieuwe onderwerpen aanmaken."
 
 #. module: mail
 #: view:mail.mail:0
@@ -897,7 +921,7 @@ msgstr "Bericht"
 #: help:mail.followers,res_id:0
 #: help:mail.wizard.invite,res_id:0
 msgid "Id of the followed resource"
-msgstr ""
+msgstr "Id van de gevolgde resource"
 
 #. module: mail
 #: field:mail.compose.message,body:0
@@ -917,6 +941,8 @@ msgid ""
 "Description that will be added in the message posted for this subtype. If "
 "void, the name will be added instead."
 msgstr ""
+"Omschrijving welke wordt toegevoegd aan het bericht voor dit subtype. Indien "
+"leeg, zal de naam worden toegevoegd."
 
 #. module: mail
 #: field:mail.compose.message,vote_user_ids:0
@@ -966,7 +992,7 @@ msgstr "Volgers van de geselecteerde items en"
 #. module: mail
 #: field:mail.alias,alias_force_thread_id:0
 msgid "Record Thread ID"
-msgstr ""
+msgstr "Record Thread ID"
 
 #. module: mail
 #: model:ir.ui.menu,name:mail.mail_group_root
@@ -1168,6 +1194,8 @@ msgstr "Samenvatting"
 msgid ""
 "Model the subtype applies to. If False, this subtype applies to all models."
 msgstr ""
+"Model waar het subtype van toepassing is. Indien 'False', is dit subtype van "
+"toepassing op alle modellen."
 
 #. module: mail
 #: field:mail.compose.message,subtype_id:0
@@ -1213,7 +1241,7 @@ msgstr "Volgend"
 #: sql_constraint:mail.alias:0
 msgid ""
 "Unfortunately this email alias is already used, please choose a unique one"
-msgstr ""
+msgstr "Helaas is deze e-mail alias al in gebruik. Kies een unieke alias."
 
 #. module: mail
 #: help:mail.alias,alias_user_id:0
@@ -1243,6 +1271,8 @@ msgid ""
 "This field holds the image used as photo for the group, limited to "
 "1024x1024px."
 msgstr ""
+"Dit veld bevat de afbeelding welke  wordt gebruikt als foto voor de groep, "
+"beperkt tot 1024x1024px."
 
 #. module: mail
 #: field:mail.compose.message,attachment_ids:0
@@ -1367,6 +1397,8 @@ msgid ""
 "This group is visible by non members.             Invisible groups can add "
 "members through the invite button."
 msgstr ""
+"Deze groep is zichtbaar voor niet leden. Onzichtbare groepen kunnen leden "
+"toevoegen door gebruik te maken van de 'Uitnodigen' knop."
 
 #. module: mail
 #: model:mail.group,name:mail.group_board
@@ -1379,6 +1411,8 @@ msgid ""
 "Invalid expression, it must be a literal python dictionary definition e.g. "
 "\"{'field': 'value'}\""
 msgstr ""
+"Ongeldige expressie, het moet een letterlijke python dictionary definition "
+"zijn, bijvoorbeeld:  \"{'field': 'value'}\""
 
 #. module: mail
 #: field:mail.alias,alias_model_id:0
@@ -1449,6 +1483,8 @@ msgstr ""
 msgid ""
 "Choose in which case you want to receive an email when you receive new feeds."
 msgstr ""
+"Maak een keuze voor in welke situatie u een e-mail wilt ontvangen over "
+"nieuwe berichten."
 
 #. module: mail
 #: model:ir.actions.act_window,name:mail.action_view_groups
@@ -1519,6 +1555,8 @@ msgid ""
 "If you have setup a catch-all email domain redirected to the OpenERP server, "
 "enter the domain name here."
 msgstr ""
+"Als u hebt ingesteld om alle e-mail af te vangen van een domein naar de "
+"OpenERP server, voer dan hier de domeinnaam in."
 
 #. module: mail
 #: model:ir.actions.act_window,name:mail.action_view_mail_message
@@ -1690,7 +1728,7 @@ msgstr "Extra contactpersonen"
 #: help:mail.compose.message,parent_id:0
 #: help:mail.message,parent_id:0
 msgid "Initial thread message."
-msgstr ""
+msgstr "Initiële bericht thread"
 
 #. module: mail
 #: model:mail.group,name:mail.group_hr_policies
@@ -1720,7 +1758,7 @@ msgstr "Bestand"
 #: code:addons/mail/static/src/js/many2many_tags_email.js:63
 #, python-format
 msgid "Please complete partner's informations and Email"
-msgstr ""
+msgstr "Vul de relatie informatie en e-mail volledig in."
 
 #. module: mail
 #: model:ir.actions.act_window,name:mail.action_view_message_subtype
@@ -1736,7 +1774,7 @@ msgstr "E-mail Aliases"
 #. module: mail
 #: field:mail.group,image_small:0
 msgid "Small-sized photo"
-msgstr ""
+msgstr "Kleine foto"
 
 #. module: mail
 #: help:mail.mail,reply_to:0

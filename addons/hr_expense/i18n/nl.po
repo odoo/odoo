@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2012-12-21 17:04+0000\n"
-"PO-Revision-Date: 2012-12-25 20:53+0000\n"
+"PO-Revision-Date: 2013-01-31 18:21+0000\n"
 "Last-Translator: Erwin van der Ploeg (Endian Solutions) <Unknown>\n"
 "Language-Team: Dutch <nl@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-01-18 06:44+0000\n"
-"X-Generator: Launchpad (build 16430)\n"
+"X-Launchpad-Export-Date: 2013-02-01 05:49+0000\n"
+"X-Generator: Launchpad (build 16455)\n"
 
 #. module: hr_expense
 #: view:hr.expense.expense:0
@@ -113,6 +113,8 @@ msgid ""
 "No expense journal found. Please make sure you have a journal with type "
 "'purchase' configured."
 msgstr ""
+"Geen kosten dagboek gevonden. Zorg ervoor dat er een dagboek is aangemaakt "
+"van het type \"Inkoop\"."
 
 #. module: hr_expense
 #: model:ir.model,name:hr_expense.model_hr_expense_report
@@ -217,6 +219,12 @@ msgid ""
 "If the admin accepts it, the status is 'Accepted'.\n"
 " If a receipt is made for the expense request, the status is 'Done'."
 msgstr ""
+"Nadat de declaratie is gemaakt staat de status op 'Concept'.\n"
+" Als het is bevestigd door de gebruiker en gestuurd naar de beheerder, gaat "
+"de status naar 'Wacht of bevestiging'.            \n"
+"Als de beheerder de declaratie accepteert, gaat de status naar "
+"'Geaccepteerd'.\n"
+" Als een factuur is gemaakt voor de declaratie, gaat de status naar 'Gereed'."
 
 #. module: hr_expense
 #: help:hr.expense.expense,date_confirm:0
@@ -507,7 +515,7 @@ msgstr ""
 #. module: hr_expense
 #: help:hr.expense.expense,journal_id:0
 msgid "The journal used when the expense is done."
-msgstr ""
+msgstr "Het gebruikte dagboek als de declaratie wordt doorberekend."
 
 #. module: hr_expense
 #: field:hr.expense.expense,note:0
@@ -531,6 +539,8 @@ msgid ""
 "Please configure Default Expense account for Product purchase: "
 "`property_account_expense_categ`."
 msgstr ""
+"Configureer de standaard kostenrekening voor inkoopproduct: "
+"`property_account_expense_categ`"
 
 #. module: hr_expense
 #: model:process.transition,note:hr_expense.process_transition_approveexpense0
@@ -597,7 +607,7 @@ msgstr "Gebruiker"
 #. module: hr_expense
 #: model:ir.ui.menu,name:hr_expense.menu_hr_product
 msgid "Expense Categories"
-msgstr "Declaratie categorieën"
+msgstr "Declaratie producten"
 
 #. module: hr_expense
 #: selection:hr.expense.report,month:0
@@ -619,6 +629,16 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Klik voor het registreren van declaraties\n"
+"              </p><p>\n"
+"                OpenERP zal ervoor zorgen het hele proces wordt gevolgd, de "
+"declaratie\n"
+"                wordt gevalideerd door de manager(s), en wordt aan de "
+"werknemer vergoed.\n"
+"                Sommige kosten worden doorberekend aan de klanten.\n"
+"              </p>\n"
+"            "
 
 #. module: hr_expense
 #: view:hr.expense.expense:0
@@ -825,12 +845,12 @@ msgstr "Geweigerd"
 #. module: hr_expense
 #: field:product.product,hr_expense_ok:0
 msgid "Can be Expensed"
-msgstr "Kan gedeclareerd worden"
+msgstr "Declaratie product"
 
 #. module: hr_expense
 #: model:mail.message.subtype,description:hr_expense.mt_expense_confirmed
 msgid "Expense confirmed, waiting confirmation"
-msgstr ""
+msgstr "Declaratie bevestigd, wachten op bevestiging"
 
 #. module: hr_expense
 #: report:hr.expense:0
@@ -926,7 +946,7 @@ msgstr "Declaraties"
 #. module: hr_expense
 #: help:product.product,hr_expense_ok:0
 msgid "Specify if the product can be selected in an HR expense line."
-msgstr ""
+msgstr "Specificeer of het product kan worden gebruikt als declaratie."
 
 #. module: hr_expense
 #: view:hr.expense.expense:0

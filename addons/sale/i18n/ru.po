@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2012-12-21 17:04+0000\n"
-"PO-Revision-Date: 2013-01-15 09:52+0000\n"
+"PO-Revision-Date: 2013-02-04 13:50+0000\n"
 "Last-Translator: Denis Karataev <dskarataev@gmail.com>\n"
 "Language-Team: Russian <ru@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-01-18 07:06+0000\n"
-"X-Generator: Launchpad (build 16430)\n"
+"X-Launchpad-Export-Date: 2013-02-05 05:23+0000\n"
+"X-Generator: Launchpad (build 16468)\n"
 
 #. module: sale
 #: model:res.groups,name:sale.group_analytic_accounting
@@ -584,7 +584,7 @@ msgstr "Разрешить использование различных еди�
 #. module: sale
 #: model:mail.message.subtype,name:sale.mt_order_confirmed
 msgid "Sales Order Confirmed"
-msgstr ""
+msgstr "Заказ продаж подтвержден"
 
 #. module: sale
 #: view:sale.order:0
@@ -633,7 +633,7 @@ msgstr "Итоговая цена"
 #. module: sale
 #: help:account.config.settings,group_analytic_account_for_sales:0
 msgid "Allows you to specify an analytic account on sales orders."
-msgstr ""
+msgstr "Позволяет вам указывать аналитический счет в заказах продаж."
 
 #. module: sale
 #: help:sale.config.settings,module_sale_journal:0
@@ -709,7 +709,7 @@ msgstr "Год заказа в заказе продаж"
 #. module: sale
 #: model:res.groups,name:sale.group_delivery_invoice_address
 msgid "Addresses in Sales Orders"
-msgstr ""
+msgstr "Адреса в заказах продаж"
 
 #. module: sale
 #: field:sale.advance.payment.inv,qtty:0
@@ -726,7 +726,7 @@ msgstr "Всего :"
 #. module: sale
 #: view:sale.order.line:0
 msgid "Sales Order Lines ready to be invoiced"
-msgstr ""
+msgstr "Строки заказа продаж готовы к выставлению в счет"
 
 #. module: sale
 #: view:sale.report:0
@@ -949,7 +949,7 @@ msgstr "Месяц"
 #. module: sale
 #: field:sale.order,currency_id:0
 msgid "Currency"
-msgstr ""
+msgstr "Валюта"
 
 #. module: sale
 #: view:sale.order.line:0
@@ -986,7 +986,7 @@ msgstr "Название магазина"
 #. module: sale
 #: view:sale.order:0
 msgid "My Sales Orders"
-msgstr ""
+msgstr "Мои заказы продаж"
 
 #. module: sale
 #: report:sale.order:0
@@ -1022,6 +1022,7 @@ msgstr "Открыть меню продаж"
 #, python-format
 msgid "You cannot confirm a sales order which has no line."
 msgstr ""
+"Вы не можете подтвердить заказ продаж, который не имеет ни одной строки."
 
 #. module: sale
 #: selection:sale.report,state:0
@@ -1037,7 +1038,7 @@ msgstr "Заказчик не определен !"
 #. module: sale
 #: field:sale.config.settings,module_sale_stock:0
 msgid "Trigger delivery orders automatically from sales orders"
-msgstr ""
+msgstr "Автоматически создавать заказы на доставку из заказов продаж"
 
 #. module: sale
 #: view:sale.make.invoice:0
@@ -1171,6 +1172,8 @@ msgid ""
 "Sales Order Lines that are confirmed, done or in exception state and haven't "
 "yet been invoiced"
 msgstr ""
+"Строки заказов продаж, которые подтверждены, выполнены или в состоянии "
+"исключительной ситуации и не были выставлены в счет"
 
 #. module: sale
 #: model:ir.model,name:sale.model_sale_report
@@ -1266,7 +1269,7 @@ msgstr "Январь"
 #. module: sale
 #: field:sale.config.settings,group_discount_per_so_line:0
 msgid "Allow setting a discount on the sales order lines"
-msgstr ""
+msgstr "Позволяет устанавливать скидку на строки заказа продаж"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_orders_in_progress
@@ -1332,8 +1335,8 @@ msgid ""
 "You have to select a pricelist or a customer in the sales form !\n"
 "Please set one before choosing a product."
 msgstr ""
-"Перед выбором ТМЦ, \n"
-"вы должны выбрать прайс-лист или заказчика в форме ввода продаж !"
+"Вы должны выбрать прайс-лист или клиента в форме ввода продаж!\n"
+"Пожалуйста сделайте это перед выбором продукта."
 
 #. module: sale
 #: help:sale.order,origin:0
@@ -1532,13 +1535,13 @@ msgstr "Нет прайс-листа ! : "
 #. module: sale
 #: view:sale.order:0
 msgid "Sales Order "
-msgstr ""
+msgstr "Заказ продаж "
 
 #. module: sale
 #: model:mail.message.subtype,description:sale.mt_order_sent
 #: model:mail.message.subtype,name:sale.mt_order_sent
 msgid "Quotation send"
-msgstr ""
+msgstr "Заявка отправлена"
 
 #. module: sale
 #: view:sale.order.line:0
@@ -1759,7 +1762,7 @@ msgstr ""
 #: view:sale.report:0
 #: field:sale.report,product_id:0
 msgid "Product"
-msgstr "ТМЦ"
+msgstr "Продукт"
 
 #. module: sale
 #: help:sale.order,amount_total:0
@@ -1814,9 +1817,9 @@ msgid ""
 "having invoiced yet. If you want to analyse your turnover, you should use "
 "the Invoice Analysis report in the Accounting application."
 msgstr ""
-"Этот отчет проводит анализ предложений цен  и заказов продаж. Анализ "
+"Этот отчет проводит анализ предложений цен и заказов продаж. Анализ "
 "учитывает доходы от продаж и сортирует их по различным группам критериев "
-"(ответственный, контрагент, ТМЦ и т.д.). Используйте этот отчет для "
+"(ответственный, партнер, продукт  и т.д.). Используйте этот отчет для "
 "проведения анализа по продажам без выставления счетов. Если вы хотите "
 "анализировать оборот, вы должны использовать отчет \"Анализ счетов\" в "
 "приложении \"Бухгалтерия\"."
@@ -2093,7 +2096,7 @@ msgstr "Из заказа продаж"
 #. module: sale
 #: view:sale.order.line:0
 msgid "Confirmed sales order lines, not yet delivered"
-msgstr ""
+msgstr "Подтвержденные строки заказа продаж, еще не доставленные"
 
 #. module: sale
 #: model:process.transition,note:sale.process_transition_saleinvoice0
@@ -2138,7 +2141,7 @@ msgstr "Заказ продаж готов к выставлению счета"
 #. module: sale
 #: field:sale.config.settings,group_invoice_so_lines:0
 msgid "Generate invoices based on the sales order lines"
-msgstr ""
+msgstr "Сгенерировать счета на основе строк заказа продаж"
 
 #. module: sale
 #: view:sale.advance.payment.inv:0
