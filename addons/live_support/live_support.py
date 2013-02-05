@@ -50,6 +50,14 @@ class ImportController(openerp.addons.web.http.Controller):
         return req.make_response(env.get_template("loader.js").render(info),
              headers=[('Content-Type', "text/javascript")])
 
+    @openerp.addons.web.http.jsonrequest
+    def available(self, req, db, channel):
+        req.session._db = db
+        req.session._uid = None
+        req.session._login = "anonymous"
+        req.session._password = "anonymous"
+        return req.session.model('live_support.channel').get_available_user(channel) > 0
+
 class live_support_channel(osv.osv):
     _name = 'live_support.channel'
     _columns = {

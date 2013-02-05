@@ -27,9 +27,13 @@ define(["nova", "jquery", "underscore", "oeclient", "require"], function(nova, $
         });
 
         $.when(templates_def, css_def).then(function() {
-            console.log("starting client");
+            console.log("starting live support customer app");
             connection = new oeclient.Connection(new oeclient.JsonpRPCConnector(server_url), db, login, password);
-            new livesupport.ChatButton(null, channel, options.buttonText).appendTo($("body"));
+            connection.connector.call("/live_support/available", {db: db, channel: channel}).then(function(activated) {
+                if (! activated)
+                    return;
+                new livesupport.ChatButton(null, channel, options.buttonText).appendTo($("body"));
+            });
         });
     };
 
