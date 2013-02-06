@@ -277,7 +277,12 @@ class act_window(osv.osv):
             }
             for res in results:
                 if res.get('res_model', False):
-                    custom_context = dict(context.items() + (eval(res['context'] or "{}", dic) or {}).items())
+                    try:
+                        with tools.mute_logger("openerp.tools.safe_eval"):
+                            eval_context = eval(res['context'] or "{}", dic) or {}
+                    except Exception:
+                        continue
+                    custom_context = dict(context, **eval_context)
                     res['help'] = self.pool.get(res.get('res_model')).dynamic_help(cr, uid, res.get('help', ""), context=custom_context)
         
         if u:
