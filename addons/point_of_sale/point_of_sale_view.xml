@@ -84,7 +84,7 @@
                         <page string="Extra Info">
                             <group string="General Information">
                                 <field name="company_id" groups="base.group_multi_company"/>
-                                <field name="warehouse_id" widget="selection"/>
+                                <field name="warehouse_id" widget="selection" groups="stock.group_locations"/>
                                 <field name="user_id"/>
                                 <field name="pricelist_id" groups="product.group_sale_pricelist" domain="[('type','=','sale')]"/>
                                 <field name="picking_id" readonly="1"/>
@@ -773,6 +773,7 @@
                         <field name="name"/>
                         <field name="warehouse_id" widget="selection" groups="stock.group_locations" />
                         <field name="journal_id" widget="selection" />
+                        <field name="pricelist_id" groups="product.group_sale_pricelist"/>
                         <field name="sequence_id" readonly="1" groups="base.group_no_one" />
                         <field name="group_by" groups="account.group_account_user"  />
                         </group>

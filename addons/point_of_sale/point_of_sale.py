@@ -70,6 +70,7 @@ class pos_config(osv.osv):
                 "to customize the reference numbers of your orders."),
         'session_ids': fields.one2many('pos.session', 'config_id', 'Sessions'),
         'group_by' : fields.boolean('Group Journal Items', help="Check this if you want to group the Journal Items by Product while closing a Session"),
+        'pricelist_id': fields.many2one('product.pricelist','Pricelist', required=True)
     }
 
     def _check_cash_control(self, cr, uid, ids, context=None):
@@ -115,12 +116,17 @@ class pos_config(osv.osv):
     def _default_warehouse(self, cr, uid, context=None):
         res = self.pool.get('stock.warehouse').search(cr, uid, [])
         return res and res[0] or False
+    
+    def _default_pricelist(self, cr, uid, context=None):
+        res = self.pool.get('product.pricelist').search(cr, uid, [('type', '=', 'sale')])
+        return res and res[0] or False
 
     _defaults = {
         'state' : POS_CONFIG_STATE[0][0],
         'warehouse_id': _default_warehouse,
         'journal_id': _default_sale_journal,
         'group_by' : True,
+        'pricelist_id': _default_pricelist
     }
 
     def set_active(self, cr, uid, ids, context=None):
@@ -619,7 +625,7 @@ class pos_order(osv.osv):
         session_ids = self._default_session(cr, uid, context) 
         if session_ids:
             session_record = self.pool.get('pos.session').browse(cr, uid, session_ids, context=context)
-            return session_record.user_id.partner_id.property_product_pricelist and session_record.user_id.partner_id.property_product_pricelist.id or False
+            return session_record.config_id.pricelist_id and session_record.config_id.pricelist_id.id or False
         return False
 
     _defaults = {
