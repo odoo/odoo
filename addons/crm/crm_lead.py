@@ -498,7 +498,7 @@ class crm_lead(base_stage, format_address, osv.osv):
             return res and res.id or False
 
         def _concat_all(attr):
-            return ','.join(filter(lambda x: x, [getattr(opp, attr) or '' for opp in opportunities if hasattr(opp, attr)]))
+            return '\n\n'.join(filter(lambda x: x, [getattr(opp, attr) or '' for opp in opportunities if hasattr(opp, attr)]))
 
         # Process the fields' values
         data = {}
