@@ -1202,11 +1202,9 @@ class account_invoice(osv.Model):
     _inherit = 'account.invoice'
     
     def invoice_validate(self, cr, uid, ids, context=None):
-        for record in self.browse(cr, uid, ids, context):
-            print '\n\nrecord', record.invoice_ids
-            for purchase in self.pool.get('purchase.order').browse(cr, uid, ids, context):
-                print '\n\npurchase', purchase
-        self.message_post(cr, uid, ids, body=_("Invoice <b>Received...</b>"), context=context)
-        return super(account_invoice, self).invoice_validate(cr, uid, ids, context=None)
+        po_ids = self.pool.get('purchase.order').search(cr,uid,[('invoice_ids','in',ids)],context)
+        res = super(account_invoice, self).invoice_validate(cr, uid, ids, context=None)
+        self.pool.get('purchase.order').message_post(cr, uid, po_ids, body=_("Invoice <b>Received.</b>"), context=context)
+        return res 
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
