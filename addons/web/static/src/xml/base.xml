@@ -40,7 +40,7 @@
         <td>
             <p>
                 <t t-js="d">
-                    var message = d.message ? d.message : d.error.data.fault_code;
+                    var message = d.message ? d.message : d.error.data.message;
                     d.html_error = context.engine.tools.html_escape(message)
                         .replace(/\n/g, '<br/>');
                 </t>
@@ -403,8 +403,9 @@
         <img class="oe_topbar_avatar" t-att-data-default-src="_s + '/web/static/src/img/user_menu_avatar.png'"/>
         <span class="oe_topbar_name"/>
         <ul class="oe_dropdown_menu">
-            <li><a href="#" data-menu="about">About OpenERP</a></li>
             <li><a href="#" data-menu="settings">Preferences</a></li>
+            <li><a href="#" data-menu="about">About OpenERP</a></li>
+            <li><a href="#" data-menu="help">Help</a></li>
             <li><a href="#" data-menu="logout">Log out</a></li>
         </ul>
     </span>
