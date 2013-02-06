@@ -41,7 +41,7 @@ class bank(osv.osv):
 
     def _prepare_name(self, bank):
         "Return the name to use when creating a bank journal"
-        return (bank.bank_name or '') + ' ' + bank.acc_number
+        return (bank.bank_name or '') + ' ' + (bank.acc_number or '')
 
     def _prepare_name_get(self, cr, uid, bank_dicts, context=None):
         """Add ability to have %(currency_name)s in the format_layout of res.partner.bank.type"""
