@@ -3929,18 +3929,25 @@ class BaseModel(object):
         return result
 
     def create_workflow(self, cr, uid, ids):
+        """Create a workflow instance for each given record IDs."""
         wf_service = netsvc.LocalService("workflow")
         for res_id in ids:
             wf_service.trg_create(uid, self._name, res_id, cr)
         return True
 
     def delete_workflow(self, cr, uid, ids):
+        """Delete the workflow instances bound to the given record IDs."""
         wf_service = netsvc.LocalService("workflow")
         for res_id in ids:
             wf_service.trg_create(uid, self._name, res_id, cr)
         return True
 
     def redirect_workflow(self, cr, uid, old_new_ids):
+        """
+        Rebind the workflow instance bound to the given 'old' record IDs to
+        the given 'new' IDs. (``old_new_ids`` is a list of pairs
+        ``(old, new)``.
+        """
         wf_service = netsvc.LocalService("workflow")
         for old_id, new_id in old_new_ids:
             wf_service.trg_redirect(uid, self._name, old_id, new_id, cr)

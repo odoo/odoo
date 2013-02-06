@@ -34,6 +34,7 @@ OpenERP Server API
 .. toctree::
    :maxdepth: 1
 
+   orm-methods.rst
    api_models.rst
 
 Concepts
