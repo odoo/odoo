@@ -561,6 +561,7 @@ class purchase_order(osv.osv):
 
     def invoice_done(self, cr, uid, ids, context=None):
         self.write(cr, uid, ids, {'state':'approved'}, context=context)
+        self.message_post(cr, uid, ids, body=_("Invoice <b>Paid.</b>"), context=context)
         return True
 
     def has_stockable_product(self, cr, uid, ids, *args):
@@ -679,6 +680,7 @@ class purchase_order(osv.osv):
 
     def picking_done(self, cr, uid, ids, context=None):
         self.write(cr, uid, ids, {'shipped':1,'state':'approved'}, context=context)
+        self.message_post(cr, uid, ids, body=_("Product <b>Received.</b>"), context=context)
         return True
 
     def copy(self, cr, uid, id, default=None, context=None):
@@ -1195,5 +1197,14 @@ class mail_compose_message(osv.Model):
             wf_service = netsvc.LocalService("workflow")
             wf_service.trg_validate(uid, 'purchase.order', context['default_res_id'], 'send_rfq', cr)
         return super(mail_compose_message, self).send_mail(cr, uid, ids, context=context)
+
+class account_invoice(osv.Model):
+    _inherit = 'account.invoice'
+    
+    def invoice_validate(self, cr, uid, ids, context=None):
+        po_ids = self.pool.get('purchase.order').search(cr,uid,[('invoice_ids','in',ids)],context)
+        res = super(account_invoice, self).invoice_validate(cr, uid, ids, context=None)
+        self.pool.get('purchase.order').message_post(cr, uid, po_ids, body=_("Invoice <b>Received.</b>"), context=context)
+        return res 
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
