@@ -566,7 +566,7 @@ class crm_lead(base_stage, format_address, osv.osv):
         subject = [merge_message]
         for opportunity in opportunities:
             subject.append(opportunity.name)
-            title = "%s : %s" % (merge_message, opportunity.name)
+            title = "%s : %s" % (opportunity.type == 'opportunity' and _('Merged opportunity') or _('Merged lead'), opportunity.name)
             details.append(self._mail_body(cr, uid, opportunity, CRM_LEAD_FIELDS_TO_MERGE, title=title, context=context))
 
         # Chatter message's subject
