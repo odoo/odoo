@@ -14,3 +14,23 @@
   !assert {model: sale.order, id: sale.sale_order_test1, string: The onchange function of product was not correctly triggered}:
     - order_line[0].name == u'[LCD17] 17\u201d LCD Monitor'
     - order_line[0].price_unit == 1350.0
+    - order_line[0].product_uom_qty == 8
+    - order_line[0].product_uom.id == ref('product.product_uom_unit')
+
+-
+  I create another sale order
+-
+  !record {model: sale.order, id: sale_order_test2}:
+    partner_id: base.res_partner_2
+    order_line: 
+      - product_id: product.product_product_7
+        product_uom_qty: 16
+        product_uom: product.product_uom_dozen
+-
+  I verify that the onchange was correctly triggered
+-
+  !assert {model: sale.order, id: sale.sale_order_test2, string: The onchange function of product was not correctly triggered}:
+    - order_line[0].name == u'[LCD17] 17\u201d LCD Monitor'
+    - order_line[0].price_unit == 1350.0 * 12
+    - order_line[0].product_uom.id == ref('product.product_uom_dozen')
+    - order_line[0].product_uom_qty == 16
