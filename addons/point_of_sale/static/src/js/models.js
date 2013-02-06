@@ -158,7 +158,7 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
 
                     return self.fetch(
                         'pos.config',
-                        ['name','journal_ids','warehouse_id','journal_id',
+                        ['name','journal_ids','warehouse_id','journal_id','pricelist_id',
                          'iface_self_checkout', 'iface_led', 'iface_cashdrawer',
                          'iface_payment_terminal', 'iface_electronic_scale', 'iface_barscan', 'iface_vkeyboard',
                          'iface_print_via_proxy','iface_cashdrawer','state','sequence_id','session_ids'],
@@ -184,14 +184,13 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
                     return self.fetch('pos.category', ['id','name','parent_id','child_id','image'])
                 }).then(function(categories){
                     self.db.add_categories(categories);
-                    return new instance.web.Model("ir.model.data").call("get_object_reference", ["product", "list0"])
-                }).then(function(pricelist){
+
                     return self.fetch(
                         'product.product', 
                         ['name', 'list_price','price','pos_categ_id', 'taxes_id', 'ean13', 
-                         'to_weight', 'uom_id', 'uos_id', 'uos_coeff', 'mes_type', 'description_sale', 'description','pricelist_id'],
+                         'to_weight', 'uom_id', 'uos_id', 'uos_coeff', 'mes_type', 'description_sale', 'description'],
                         [['sale_ok','=',true],['available_in_pos','=',true]],
-                        {pricelist: pricelist[1]} // context for price
+                        {pricelist: self.get('pos_config').pricelist_id[0]} // context for price
                     );
                 }).then(function(products){
                     self.db.add_products(products);
