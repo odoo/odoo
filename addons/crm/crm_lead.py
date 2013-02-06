@@ -37,6 +37,7 @@ CRM_LEAD_FIELDS_TO_MERGE = ['name',
     'country_id',
     'section_id',
     'state_id',
+    'stage_id',
     'type_id',
     'user_id',
     'title',
@@ -497,7 +498,7 @@ class crm_lead(base_stage, format_address, osv.osv):
             return res and res.id or False
 
         def _concat_all(attr):
-            return ', '.join(filter(lambda x: x, [getattr(opp, attr) or '' for opp in opportunities if hasattr(opp, attr)]))
+            return '\n\n'.join(filter(lambda x: x, [getattr(opp, attr) or '' for opp in opportunities if hasattr(opp, attr)]))
 
         # Process the fields' values
         data = {}
@@ -645,6 +646,12 @@ class crm_lead(base_stage, format_address, osv.osv):
         opportunities = [highest]
         opportunities.extend(opportunities_rest)
         self._merge_notify(cr, uid, highest, opportunities, context=context)
+        # Check if the stage is in the stages of the sales team. If not, assign the stage with the lowest sequence
+        if merged_data.get('type') == 'opportunity' and merged_data.get('section_id'):
+            section_stages = self.pool.get('crm.case.section').read(cr, uid, merged_data['section_id'], ['stage_ids'], context=context)
+            if merged_data.get('stage_id') not in section_stages['stage_ids']:
+                stages_sequences = self.pool.get('crm.case.stage').search(cr, uid, [('id','in',section_stages['stage_ids'])], order='sequence', limit=1, context=context)
+                merged_data['stage_id'] = stages_sequences[0]
         # Write merged data into first opportunity
         self.write(cr, uid, [highest.id], merged_data, context=context)
         # Delete tail opportunities
