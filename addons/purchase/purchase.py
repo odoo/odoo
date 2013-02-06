@@ -30,6 +30,7 @@ from openerp.tools.translate import _
 import openerp.addons.decimal_precision as dp
 from openerp.osv.orm import browse_record, browse_null
 from openerp.tools import DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT, DATETIME_FORMATS_MAP
+from apt.package import Record
 
 class purchase_order(osv.osv):
 
@@ -561,6 +562,7 @@ class purchase_order(osv.osv):
 
     def invoice_done(self, cr, uid, ids, context=None):
         self.write(cr, uid, ids, {'state':'approved'}, context=context)
+        self.message_post(cr, uid, ids, body=_("Invoice <b>Paid.</b>"), context=context)
         return True
 
     def has_stockable_product(self, cr, uid, ids, *args):
@@ -679,6 +681,7 @@ class purchase_order(osv.osv):
 
     def picking_done(self, cr, uid, ids, context=None):
         self.write(cr, uid, ids, {'shipped':1,'state':'approved'}, context=context)
+        self.message_post(cr, uid, ids, body=_("Product <b>Received.</b>"), context=context)
         return True
 
     def copy(self, cr, uid, id, default=None, context=None):
@@ -1195,5 +1198,16 @@ class mail_compose_message(osv.Model):
             wf_service = netsvc.LocalService("workflow")
             wf_service.trg_validate(uid, 'purchase.order', context['default_res_id'], 'send_rfq', cr)
         return super(mail_compose_message, self).send_mail(cr, uid, ids, context=context)
+
+class account_invoice(osv.Model):
+    _inherit = 'account.invoice'
+    
+    def invoice_validate(self, cr, uid, ids, context=None):
+        for record in self.browse(cr, uid, ids, context):
+            print '\n\nrecord', record.invoice_ids
+            for purchase in self.pool.get('purchase.order').browse(cr, uid, ids, context):
+                print '\n\npurchase', purchase
+        self.message_post(cr, uid, ids, body=_("Invoice <b>Received...</b>"), context=context)
+        return super(account_invoice, self).invoice_validate(cr, uid, ids, context=None)
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
