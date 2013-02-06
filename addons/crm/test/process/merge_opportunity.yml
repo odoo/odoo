@@ -41,7 +41,7 @@
     assert merge_id, 'Fail to create merge opportunity wizard'
     merge_result = self.browse(cr, uid, merge_id)[0]
     assert merge_result.partner_id.id == ref("base.res_partner_1"), 'Partner mismatch: when merging leads/opps with different m2o values, the first not null value prevails (the other are dropped)'
-    assert merge_result.description == 'This is the description of the test lead 1., This is the description of the test lead 2., This is the description of the test opp 1.', 'Description mismatch: when merging leads/opps with different text values, these values should get concatenated and separeted with ", "'
+    assert merge_result.description == 'This is the description of the test lead 1.\n\n This is the description of the test lead 2.\n\n This is the description of the test opp 1.', 'Description mismatch: when merging leads/opps with different text values, these values should get concatenated and separeted with ", "'
     assert merge_result.type == 'opportunity', 'Type mismatch: when at least one opp in involved in the merge, the result should be a new opp (instead of %s)' % merge_result.type
 -
   The other (tailing) leads/opps shouldn't exist anymore.
