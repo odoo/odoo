@@ -164,6 +164,17 @@
             </field>
         </record>
 
+        <record id="action_invoice_salesteams" model="ir.actions.act_window">
+            <field name="name">Invoices</field>
+            <field name="res_model">account.invoice</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form,calendar,graph</field>
+            <field name="view_id" ref="account.invoice_tree"/>
+            <field name="domain">[('state','not in',['draft','cancel'])]</field>
+            <field name="context">{'search_default_section_id': [active_id], 'default_section_id': active_id}</field>
+            <field name="search_view_id" ref="account.view_account_invoice_filter"/>
+        </record>
+
         <record id="crm_case_section_salesteams_view_kanban" model="ir.ui.view">
             <field name="name">crm.case.section.kanban</field>
             <field name="model">crm.case.section</field>
@@ -173,6 +184,7 @@
                 <xpath expr="//field[@name='number_opportunity']" position="after">
                     <field name="number_quotation"/>
                     <field name="number_saleorder"/>
+                    <field name="number_invoice"/>
                 </xpath>
                 <xpath expr="//div[@class='oe_kanban_crm_salesteams_list']" position="inside">
                     <a name="%(action_quotations_salesteams)d" type="action" style="margin-right: 10px">
@@ -181,6 +193,9 @@
                     <a name="%(action_orders_salesteams)d" type="action" style="margin-right: 10px">
                         <t t-raw="record.number_saleorder.raw_value"/>
                         <t t-if="record.number_saleorder.raw_value &gt;= 1">Sales Order</t><t t-if="record.number_saleorder.raw_value &lt; 1">Sales Orders</t></a>
+                    <a name="%(action_invoice_salesteams)d" type="action" style="margin-right: 10px">
+                        <t t-raw="record.number_invoice.raw_value"/>
+                        <t t-if="record.number_invoice.raw_value &gt;= 1">Invoice</t><t t-if="record.number_invoice.raw_value &lt; 1">Invoices</t></a>
                 </xpath>
             </data>
             </field>

@@ -102,16 +102,18 @@
                     <field name="member_ids"/>
                     <field name="note"/>
                     <field name="alias_id"/>
+                    <field name="color"/>
                     <field name="number_lead"/>
                     <field name="number_opportunity"/>
                     <templates>
                         <t t-name="kanban-box">
-                            <div t-attf-class="oe_kanban_card oe_kanban_crm_salesteams oe_kanban_global_click oe_kanban_crm_salesteams" style="width:220px;">
+                            <div t-attf-class="oe_kanban_color_#{kanban_getcolor(record.color.raw_value)} oe_kanban_card oe_kanban_project oe_kanban_global_click oe_kanban_crm_salesteams" style="width:220px;">
                                 <div class="oe_dropdown_toggle oe_dropdown_kanban" groups="base.group_user">
                                     <span class="oe_e">í</span>
                                     <ul class="oe_dropdown_menu">
-                                        <t t-if="widget.view.is_action_enabled('edit')"><li><a type="edit">Sales Teams Settings</a></li></t>
-                                        <t t-if="widget.view.is_action_enabled('delete')"><li><a type="delete">Delete</a></li></t>
+                                        <li t-if="widget.view.is_action_enabled('edit')"><a type="edit">Sales Teams Settings</a></li>
+                                        <li t-if="widget.view.is_action_enabled('delete')"><a type="delete">Delete</a></li>
+                                        <li t-if="widget.view.is_action_enabled('edit')"><ul class="oe_kanban_colorpicker" data-field="color"/></li>
                                     </ul>
                                 </div>
                                 <div class="oe_kanban_content">

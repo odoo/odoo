@@ -32,23 +32,19 @@ class sale_order(osv.osv):
 class crm_case_section(osv.osv):
     _inherit = 'crm.case.section'
 
-    def get_number_saleorder(self, cr, uid, ids, field_name, arg, context=None):
-        res = dict.fromkeys(ids, 0)
-        obj = self.pool.get('sale.order')
-        for section_id in ids:
-            res[section_id] = obj.search(cr, uid, [("section_id", "=", section_id), ('state','not in',('draft','sent','cancel'))], context=context, count=True)
-        return res
+    def _get_number_saleorder(self, cr, uid, ids, field_name, arg, context=None):
+        return self.get_number_items(cr, uid, ids, 'sale.order', [('state','not in',('draft','sent','cancel'))], context=context)
 
-    def get_number_quotation(self, cr, uid, ids, field_name, arg, context=None):
-        res = dict.fromkeys(ids, 0)
-        obj = self.pool.get('sale.order')
-        for section_id in ids:
-            res[section_id] = obj.search(cr, uid, [("section_id", "=", section_id), ('state','in',('draft','sent','cancel'))], context=context, count=True)
-        return res
+    def _get_number_quotation(self, cr, uid, ids, field_name, arg, context=None):
+        return self.get_number_items(cr, uid, ids, 'sale.order', [('state','in',('draft','sent','cancel'))], context=context)
+
+    def _get_number_invoice(self, cr, uid, ids, field_name, arg, context=None):
+        return self.get_number_items(cr, uid, ids, 'account.invoice', [('state','not in',('draft','cancel'))], context=context)
 
     _columns = {
-        'number_saleorder': fields.function(get_number_saleorder, type='integer',  readonly=True),
-        'number_quotation': fields.function(get_number_quotation, type='integer',  readonly=True),
+        'number_saleorder': fields.function(_get_number_saleorder, type='integer',  readonly=True),
+        'number_quotation': fields.function(_get_number_quotation, type='integer',  readonly=True),
+        'number_invoice': fields.function(_get_number_invoice, type='integer',  readonly=True),
     }
 
 class res_users(osv.Model):

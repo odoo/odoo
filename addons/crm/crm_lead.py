@@ -90,6 +90,13 @@ class crm_lead(base_stage, format_address, osv.osv):
             context['dynamic_help_documents'] = _("leads")
         return super(crm_lead, self).dynamic_help(cr, uid, help, context=context)
 
+    def onchange_user_id(self, cr, uid, ids, section_id, user_id, context=None):
+        if user_id:
+            section_ids = self.pool.get('crm.case.section').search(cr, uid, ['|', ('user_id', '=', user_id), ('member_ids', '=', user_id)], context=context)
+            if section_ids and (not section_id or section_id not in section_ids):
+                section_id = section_ids[0]
+        return {'value': {'section_id': section_id}}
+
     def create(self, cr, uid, vals, context=None):
         if context is None:
             context = {}
