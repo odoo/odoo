@@ -109,17 +109,17 @@ class crm_case_section(osv.osv):
     def get_full_name(self, cr, uid, ids, field_name, arg, context=None):
         return  dict(self.name_get(cr, uid, ids, context=context))
 
-    def get_number_leads(self, cr, uid, section_ids, field_name, arg, context=None):
-        res = dict.fromkeys(section_ids, 0)
+    def get_number_leads(self, cr, uid, ids, field_name, arg, context=None):
+        res = dict.fromkeys(ids, 0)
         lead_obj = self.pool.get('crm.lead')
-        for section_id in section_ids:
+        for section_id in ids:
             res[section_id] = lead_obj.search(cr, uid, [("section_id", "=", section_id), '|', '|', ("type", "=", "lead"), ("type", "=", "both"), ("type", "=", False), ('state', 'not in', ['done', 'cancel'])], count=True, context=context)
         return res
 
-    def get_number_opportunities(self, cr, uid, section_ids, field_name, arg, context=None):
-        res = dict.fromkeys(section_ids, 0)
+    def get_number_opportunities(self, cr, uid, ids, field_name, arg, context=None):
+        res = dict.fromkeys(ids, 0)
         lead_obj = self.pool.get('crm.lead')
-        for section_id in section_ids:
+        for section_id in ids:
             res[section_id] = lead_obj.search(cr, uid, [("section_id", "=", section_id), '|', ("type", "=", "opportunity"), ("type", "=", "both"), ('state', 'not in',  ['done', 'cancel'])], context=context, count=True)
         return res
 

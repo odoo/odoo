@@ -35,6 +35,7 @@ from openerp import SUPERUSER_ID
 from openerp.addons.mail.mail_message import decode
 from openerp.osv import fields, osv
 from openerp.tools.safe_eval import safe_eval as eval
+from openerp.tools.translate import _
 
 _logger = logging.getLogger(__name__)
 
@@ -87,6 +88,31 @@ class mail_thread(osv.AbstractModel):
     #   :param obj: is a browse_record
     #   :param function lambda: returns whether the tracking should record using this subtype
     _track = {}
+
+    def dynamic_help(self, cr, uid, help, context=None):
+        if not context.get('dynamic_help_model', None):
+            return help
+
+        alias_txt = ""
+        if context.get('dynamic_help_id', None):
+            object_id = self.pool.get(context.get('dynamic_help_model')).browse(cr, uid, context.get('dynamic_help_id'), context=context)
+            alias = object_id.alias_id and object_id.alias_id.name_get() or False
+            if alias and alias[0] and alias[0][1]:
+                alias_txt =  alias[0][1]
+        else:
+            model_id = self.pool.get('ir.model').search(cr, uid, [("model", "=", self._name)], context=context)[0]
+            alias_obj = self.pool.get('mail.alias')
+            alias_nb = 0
+            alias_ids = alias_obj.search(cr, uid, [("alias_model_id", "=", model_id)], context=context, limit=5)
+            if alias_ids:
+                for alias in alias_obj.browse(cr, uid, alias_ids, context=context):
+                    email = "%s@%s" % (alias.alias_name, alias.alias_domain)
+                    alias_txt = "%s%s%s" % (alias_txt, (alias_nb and ", " or " "), email)
+                    alias_nb += 1
+        if alias_txt:
+            help = "%s %s" % (help, _("<div class='oe_view_nocontent_create_alias'>You can also create %s by sending an email to: <b>%s</b></div>" % (context.get('dynamic_help_documents', _("documents")), alias_txt)))
+        
+        return help
 
     def _get_message_data(self, cr, uid, ids, name, args, context=None):
         """ Computes:

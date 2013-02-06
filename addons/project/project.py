@@ -891,26 +891,12 @@ class task(base_stage, osv.osv):
 
 
     def dynamic_help(self, cr, uid, help, context=None):
-        alias_txt = ""
-        if context.get('default_project_id'):
-            project_id = self.pool.get('project.project').browse(cr, uid, context.get('default_project_id'), context=context)
-            alias = project_id.alias_id and project_id.alias_id.name_get() or False
-            if alias and alias[0] and alias[0][1]:
-                alias_txt =  alias[0][1]
-        else:
-            model_id = self.pool.get('ir.model').search(cr, uid, [("model", "=", self._name)], context=context)[0]
-            alias_obj = self.pool.get('mail.alias')
-            alias_nb = 0
-            alias_ids = alias_obj.search(cr, uid, [("alias_model_id", "=", model_id)], context=context, limit=5)
-            if alias_ids:
-                for alias in alias_obj.browse(cr, uid, alias_ids, context=context):
-                    email = "%s@%s" % (alias.alias_name, alias.alias_domain)
-                    alias_txt = "%s%s%s" % (alias_txt, (alias_nb and ", " or " "), email)
-                    alias_nb += 1
-        if alias_txt:
-            help = "%s %s" % (help, _("<div class='oe_view_nocontent_create_alias'>You can also create tasks by sending an email to: <b>%s</b></div>" % alias_txt))
-        return help
-       
+        context['dynamic_help_model'] = 'project.project'
+        context['dynamic_help_id'] = context.get('default_project_id', None)
+        context['dynamic_help_documents'] = _("tasks")
+        print context
+        return super(task, self).dynamic_help(cr, uid, help, context=context)
+
     # ----------------------------------------
     # Case management
     # ----------------------------------------

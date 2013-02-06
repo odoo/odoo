@@ -29,6 +29,27 @@ class sale_order(osv.osv):
             domain="['|',('section_id','=',section_id),('section_id','=',False), ('object_id.model', '=', 'crm.lead')]")
     }
 
+class crm_case_section(osv.osv):
+    _inherit = 'crm.case.section'
+
+    def get_number_saleorder(self, cr, uid, ids, field_name, arg, context=None):
+        res = dict.fromkeys(ids, 0)
+        obj = self.pool.get('sale.order')
+        for section_id in ids:
+            res[section_id] = obj.search(cr, uid, [("section_id", "=", section_id), ('state','not in',('draft','sent','cancel'))], context=context, count=True)
+        return res
+
+    def get_number_quotation(self, cr, uid, ids, field_name, arg, context=None):
+        res = dict.fromkeys(ids, 0)
+        obj = self.pool.get('sale.order')
+        for section_id in ids:
+            res[section_id] = obj.search(cr, uid, [("section_id", "=", section_id), ('state','in',('draft','sent','cancel'))], context=context, count=True)
+        return res
+
+    _columns = {
+        'number_saleorder': fields.function(get_number_saleorder, type='integer',  readonly=True),
+        'number_quotation': fields.function(get_number_quotation, type='integer',  readonly=True),
+    }
 
 class res_users(osv.Model):
     _inherit = 'res.users'

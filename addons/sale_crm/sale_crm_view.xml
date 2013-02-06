@@ -113,5 +113,78 @@
             </field>
         </record>
 
+        <!-- search by Salesteams -->
+
+        <record id="action_orders_salesteams" model="ir.actions.act_window">
+            <field name="name">Sales Orders</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">sale.order</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form,calendar,graph</field>
+            <field name="search_view_id" ref="sale.view_sales_order_filter"/>
+            <field name="domain">[('state','not in',('draft','sent','cancel'))]</field>
+            <field name="context">{
+                'search_default_section_id': [active_id], 'default_section_id': active_id
+            }</field>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to create a quotation that can be converted into a sales
+                order.
+              </p><p>
+                OpenERP will help you efficiently handle the complete sales flow:
+                quotation, sales order, delivery, invoicing and payment.
+              </p>
+            </field>
+        </record>
+
+        <record id="action_quotations_salesteams" model="ir.actions.act_window">
+            <field name="name">Quotations</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">sale.order</field>
+            <field name="view_type">form</field>
+            <field name="view_id" ref="sale.view_quotation_tree"/>
+            <field name="view_mode">tree,form,calendar,graph</field>
+            <field name="context">{
+                'search_default_section_id': [active_id], 'default_section_id': active_id, 'show_address': 1
+            }</field>
+            <field name="domain">[('state','in',('draft','sent','cancel'))]</field>
+            <field name="search_view_id" ref="sale.view_sales_order_filter"/>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to create a quotation, the first step of a new sale.
+              </p><p>
+                OpenERP will help you handle efficiently the complete sale flow:
+                from the quotation to the sales order, the
+                delivery, the invoicing and the payment collection.
+              </p><p>
+                The social feature helps you organize discussions on each sales
+                order, and allow your customers to keep track of the evolution
+                of the sales order.
+              </p>
+            </field>
+        </record>
+
+        <record id="crm_case_section_salesteams_view_kanban" model="ir.ui.view">
+            <field name="name">crm.case.section.kanban</field>
+            <field name="model">crm.case.section</field>
+            <field name="inherit_id" ref="crm.crm_case_section_salesteams_view_kanban"/>
+            <field name="arch" type="xml">
+            <data>
+                <xpath expr="//field[@name='number_opportunity']" position="after">
+                    <field name="number_quotation"/>
+                    <field name="number_saleorder"/>
+                </xpath>
+                <xpath expr="//div[@class='oe_kanban_crm_salesteams_list']" position="inside">
+                    <a name="%(action_quotations_salesteams)d" type="action" style="margin-right: 10px">
+                        <t t-raw="record.number_quotation.raw_value"/>
+                        <t t-if="record.number_quotation.raw_value &gt;= 1">Quotation</t><t t-if="record.number_quotation.raw_value &lt; 1">Quotations</t></a>
+                    <a name="%(action_orders_salesteams)d" type="action" style="margin-right: 10px">
+                        <t t-raw="record.number_saleorder.raw_value"/>
+                        <t t-if="record.number_saleorder.raw_value &gt;= 1">Sales Order</t><t t-if="record.number_saleorder.raw_value &lt; 1">Sales Orders</t></a>
+                </xpath>
+            </data>
+            </field>
+        </record>
+
     </data>
 </openerp>
