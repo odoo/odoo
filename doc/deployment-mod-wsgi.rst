@@ -13,23 +13,32 @@ Summary
 -------
 
 Similarly to :doc:`deployment-gunicorn`, running OpenERP behind Apache with
-``mod_wsgi`` requires to modify the sample ``openerp-wsgi.py`` script.
-For instance, make sure to correctly set the ``addons_path`` configuration
-(using absolute paths). Then that Python script can be set in the Apache
-configuration.
+``mod_wsgi`` requires to modify the sample ``openerp-wsgi.py`` script. Then
+that Python script can be set in the Apache configuration.
 
-Configuration
--------------
+Python (WSGI) application
+-------------------------
 
-In Apache's configuration, add the line
+Apache needs a Python script providing the WSGI application. By default the
+symbol looked up by Apache is ``application`` but it can be overidden with the
+``WSGICallableObject`` directive if necessary. A sample script
+``openerp-wsgi.py`` is provided with OpenERP and you can adapt it to your
+needs. For instance, make sure to correctly set the ``addons_path``
+configuration (using absolute paths).
 
-::
+.. note ::
+  The script provided to Apache has often the extension ``.wsgi`` but the
+  ``openerp-wsgi.py`` script will do just as fine.
+
+Apache Configuration
+--------------------
+
+In Apache's configuration, add the following line to activate ``mod_wsgi``::
 
   LoadModule wsgi_module modules/mod_wsgi.so
 
-to activate ``mod_wsgi``.
-
-Then a possible configuration is as follow::
+Then a possible (straightforward, with e.g. no virtual server) configuration is
+as follow::
 
   WSGIScriptAlias / /home/thu/repos/server/trunk/openerp-wsgi.py
   WSGIDaemonProcess oe user=thu group=users processes=2 python-path=/home/thu/repos/server/trunk/ display-name=apache-openerp
@@ -45,10 +54,16 @@ run the application defined in the ``openerp-wsgi.py`` script.
 
 The ``WSGIDaemonProcess`` and ``WSGIProcessGroup`` directives create a process
 configuration. The configuration makes it possible for isntance to specify
-which user runs the OpenERP process.
+which user runs the OpenERP process. The ``display-name`` option will make the
+processes appear as ``apache-openerp`` in ``ps`` (instead of the normal
+``httpd``).
 
 Finally, it is necessary to make sure the source directory where the script can
 be found is allowed by Apache with the ``Directory`` block.
+
+``mod_wsgi`` supports a lot of directives, please see this ``mod_wsgi`` wiki
+page for more details:
+http://code.google.com/p/modwsgi/wiki/ConfigurationDirectives.
 
 Running
 -------
