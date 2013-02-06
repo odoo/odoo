@@ -37,6 +37,7 @@ CRM_LEAD_FIELDS_TO_MERGE = ['name',
     'country_id',
     'section_id',
     'state_id',
+    'stage_id',
     'type_id',
     'user_id',
     'title',
@@ -471,15 +472,6 @@ class crm_lead(base_stage, format_address, osv.osv):
 
         return 'lead'
 
-    def _merge_get_result_stage(self, cr, uid, opps, context=None):
-        stage = None
-        for opp in opps:
-            if not stage:
-                stage = opp.stage_id.id
-            if opp.type == 'opportunity':
-                return opp.stage_id.id
-        return stage
-
     def _merge_data(self, cr, uid, ids, oldest, fields, context=None):
         """
         Prepare lead/opp data into a dictionary for merging.  Different types
@@ -506,7 +498,7 @@ class crm_lead(base_stage, format_address, osv.osv):
             return res and res.id or False
 
         def _concat_all(attr):
-            return ', '.join(filter(lambda x: x, [getattr(opp, attr) or '' for opp in opportunities if hasattr(opp, attr)]))
+            return '\n\n'.join(filter(lambda x: x, [getattr(opp, attr) or '' for opp in opportunities if hasattr(opp, attr)]))
 
         # Process the fields' values
         data = {}
@@ -526,23 +518,7 @@ class crm_lead(base_stage, format_address, osv.osv):
 
         # Define the resulting type ('lead' or 'opportunity')
         data['type'] = self._merge_get_result_type(cr, uid, opportunities, context)
-        data['stage_id'] = self._merge_get_result_stage(cr, uid, opportunities, context)
         return data
-
-    def _merge_find_oldest(self, cr, uid, ids, context=None):
-        """
-        Return the oldest lead found among ids.
-
-        :param list ids: list of ids of the leads to inspect
-        :return object: browse record of the oldest of the leads
-        """
-        if context is None:
-            context = {}
-
-        # Search opportunities order by create date
-        opportunity_ids = self.search(cr, uid, [('id', 'in', ids)], order='create_date', context=context)
-        oldest_opp_id = opportunity_ids[0]
-        return self.browse(cr, uid, oldest_opp_id, context=context)
 
     def _mail_body(self, cr, uid, lead, fields, title=False, context=None):
         body = []
@@ -590,7 +566,7 @@ class crm_lead(base_stage, format_address, osv.osv):
         subject = [merge_message]
         for opportunity in opportunities:
             subject.append(opportunity.name)
-            title = "%s : %s" % (merge_message, opportunity.name)
+            title = "%s : %s" % (opportunity.type == 'opportunity' and _('Merged opportunity') or _('Merged lead'), opportunity.name)
             details.append(self._mail_body(cr, uid, opportunity, CRM_LEAD_FIELDS_TO_MERGE, title=title, context=context))
 
         # Chatter message's subject
@@ -642,32 +618,46 @@ class crm_lead(base_stage, format_address, osv.osv):
         :param list ids: leads/opportunities ids to merge
         :return int id: id of the resulting lead/opp
         """
-        if context is None: context = {}
+        if context is None:
+            context = {}
 
         if len(ids) <= 1:
-            raise osv.except_osv(_('Warning!'),_('Please select more than one element (lead or opportunity) from the list view.'))
-        ids.sort()
-        oldest = self._merge_find_oldest(cr, uid, ids, context=context)
-        opportunities_rest = self.browse(cr, uid, list(set(ids) - set([oldest.id])), context=context)
-        first_opportunity = oldest
+            raise osv.except_osv(_('Warning!'), _('Please select more than one element (lead or opportunity) from the list view.'))
+
+        opportunities = self.browse(cr, uid, ids, context=context)
+        sequenced_opps = []
+        for opportunity in opportunities:
+            sequenced_opps.append((opportunity.stage_id and opportunity.stage_id.state != 'cancel' and opportunity.stage_id.sequence or 0, opportunity))
+        sequenced_opps.sort(key=lambda tup: tup[0], reverse=True)
+        opportunities = [opportunity for sequence, opportunity in sequenced_opps]
+        ids = [opportunity.id for opportunity in opportunities]
+        highest = opportunities[0]
+        opportunities_rest = opportunities[1:]
+
         tail_opportunities = opportunities_rest
 
-        merged_data = self._merge_data(cr, uid, ids, oldest, CRM_LEAD_FIELDS_TO_MERGE, context=context)
+        merged_data = self._merge_data(cr, uid, ids, highest, CRM_LEAD_FIELDS_TO_MERGE, context=context)
 
         # Merge messages and attachements into the first opportunity
-        self._merge_opportunity_history(cr, uid, first_opportunity.id, tail_opportunities, context=context)
-        self._merge_opportunity_attachments(cr, uid, first_opportunity.id, tail_opportunities, context=context)
+        self._merge_opportunity_history(cr, uid, highest.id, tail_opportunities, context=context)
+        self._merge_opportunity_attachments(cr, uid, highest.id, tail_opportunities, context=context)
 
         # Merge notifications about loss of information
-        opportunities = [oldest]
+        opportunities = [highest]
         opportunities.extend(opportunities_rest)
-        self._merge_notify(cr, uid, first_opportunity, opportunities, context=context)
+        self._merge_notify(cr, uid, highest, opportunities, context=context)
+        # Check if the stage is in the stages of the sales team. If not, assign the stage with the lowest sequence
+        if merged_data.get('type') == 'opportunity' and merged_data.get('section_id'):
+            section_stages = self.pool.get('crm.case.section').read(cr, uid, merged_data['section_id'], ['stage_ids'], context=context)
+            if merged_data.get('stage_id') not in section_stages['stage_ids']:
+                stages_sequences = self.pool.get('crm.case.stage').search(cr, uid, [('id','in',section_stages['stage_ids'])], order='sequence', limit=1, context=context)
+                merged_data['stage_id'] = stages_sequences[0]
         # Write merged data into first opportunity
-        self.write(cr, uid, [first_opportunity.id], merged_data, context=context)
+        self.write(cr, uid, [highest.id], merged_data, context=context)
         # Delete tail opportunities
         self.unlink(cr, uid, [x.id for x in tail_opportunities], context=context)
 
-        return first_opportunity.id
+        return highest.id
 
     def _convert_opportunity_data(self, cr, uid, lead, customer, section_id=False, context=None):
         crm_stage = self.pool.get('crm.case.stage')
