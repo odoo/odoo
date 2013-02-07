@@ -25,8 +25,8 @@ class validate_account_move(osv.osv_memory):
     _name = "validate.account.move"
     _description = "Validate Account Move"
     _columns = {
-        'journal_id': fields.many2many('account.journal', 'wizard_validate_account_move_journal', 'wizard_id', 'journal_id', 'Journal', required=True),
-        'period_id': fields.many2many('account.period', 'wizard_validate_account_move_period', 'wizard_id', 'period_id', 'Period', required=True, domain=[('state','<>','done')]),
+        'journal_ids': fields.many2many('account.journal', 'wizard_validate_account_move_journal', 'wizard_id', 'journal_id', 'Journal', required=True),
+        'period_ids': fields.many2many('account.period', 'wizard_validate_account_move_period', 'wizard_id', 'period_id', 'Period', required=True, domain=[('state','<>','done')]),
     }
 
     def validate_move(self, cr, uid, ids, context=None):
@@ -34,7 +34,7 @@ class validate_account_move(osv.osv_memory):
         if context is None:
             context = {}
         data = self.read(cr, uid, ids[0], context=context)
-        ids_move = obj_move.search(cr, uid, [('state','=','draft'),('journal_id','in',tuple(data['journal_id'])),('period_id','in',tuple(data['period_id']))])
+        ids_move = obj_move.search(cr, uid, [('state','=','draft'),('journal_ids','in',tuple(data['journal_ids'])),('period_ids','in',tuple(data['period_ids']))])
         if not ids_move:
             raise osv.except_osv(_('Warning!'), _('Specified journals do not have any account move entries in draft state for the specified periods.'))
         obj_move.button_validate(cr, uid, ids_move, context=context)
