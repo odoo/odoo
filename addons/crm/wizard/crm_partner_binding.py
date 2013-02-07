@@ -96,20 +96,4 @@ class crm_partner_binding(osv.osv_memory):
 
         return res
 
-    def _create_partner(self, cr, uid, ids, context=None):
-        """
-        Create partner based on action.
-        :return dict: dictionary organized as followed: {lead_id: partner_assigned_id}
-        """
-        #TODO this method in only called by crm_lead2opportunity_partner
-        #wizard and would probably diserve to be refactored or at least
-        #moved to a better place
-        if context is None:
-            context = {}
-        lead = self.pool.get('crm.lead')
-        lead_ids = context.get('active_ids', [])
-        data = self.browse(cr, uid, ids, context=context)[0]
-        partner_id = data.partner_id and data.partner_id.id or False
-        return lead.handle_partner_assignation(cr, uid, lead_ids, data.action, partner_id, context=context)
-
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
