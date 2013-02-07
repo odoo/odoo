@@ -1010,7 +1010,7 @@ class stock_picking(osv.Model):
     def action_done(self, cr, uid, ids, context=None):        
         res = super(stock_picking, self).action_done(cr, uid, ids, context=None)
         for stockpicking in self.browse(cr, uid, ids, context):
-            if stockpicking.sale_id.id:
+            if stockpicking.sale_id:
                 for sale in self.pool.get('sale.order').browse(cr, uid, [stockpicking.sale_id.id], context):
                     sale.message_post(body=_("%s <b>Delivered</b>") % (sale._description))
         return True
