@@ -995,4 +995,12 @@ class mail_compose_message(osv.Model):
             wf_service.trg_validate(uid, 'sale.order', context['default_res_id'], 'quotation_sent', cr)
         return super(mail_compose_message, self).send_mail(cr, uid, ids, context=context)
 
+class account_invoice(osv.Model):
+    _inherit = 'account.invoice'
+    
+    def confirm_paid(self, cr, uid, ids, context=None):
+        so_ids = self.pool.get('sale.order').search(cr,uid,[('invoice_ids','in',ids)],context)
+        res = super(account_invoice, self).confirm_paid(cr, uid, ids, context=None)
+        self.pool.get('sale.order').message_post(cr, uid, so_ids, body=_("Invoice <b>Paid</b>"), context=context)
+        return res
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
