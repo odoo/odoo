@@ -91,6 +91,11 @@ class procurement_order(osv.osv):
         for procurement in self.browse(cr, uid, ids, context=context):
             body = _("Task created")
             self.message_post(cr, uid, [procurement.id], body=body, context=context)
+            if procurement.sale_line_id:
+                sale_order_line = self.pool.get('sale.order.line')
+                for saleorder_line in sale_order_line.browse(cr, uid, [procurement.sale_line_id.id], context=context):
+                    sale_order_obj = self.pool.get('sale.order')
+                    sale_order_obj.message_post(cr, uid, [saleorder_line.order_id], body=body, context=context)
 
 procurement_order()
 
