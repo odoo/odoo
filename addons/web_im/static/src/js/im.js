@@ -118,7 +118,7 @@ openerp.web_im = function(instance) {
             this.shown = ! this.shown;
         },
         activate_user: function(user) {
-            this.c_manager.activate_user(user);
+            this.c_manager.activate_user(user, true);
         },
     });
 
@@ -299,20 +299,22 @@ openerp.web_im = function(instance) {
             instance.webclient.set_title_part("im_messages", this.get("waiting_messages") === 0 ? undefined :
                 _.str.sprintf(_t("%d Messages"), this.get("waiting_messages")));
         },
-        activate_user: function(user) {
-            if (this.users[user.get('id')]) {
-                return this.users[user.get('id')];
-            }
-            var conv = new instance.web_im.Conversation(this, user, this.me);
-            conv.appendTo(instance.client.$el);
-            conv.on("destroyed", this, function() {
-                this.conversations = _.without(this.conversations, conv);
-                delete this.users[conv.user.get('id')];
+        activate_user: function(user, focus) {
+            var conv = this.users[user.get('id')];
+            if (! conv) {
+                conv = new instance.web_im.Conversation(this, user, this.me);
+                conv.appendTo(instance.client.$el);
+                conv.on("destroyed", this, function() {
+                    this.conversations = _.without(this.conversations, conv);
+                    delete this.users[conv.user.get('id')];
+                    this.calc_positions();
+                });
+                this.conversations.push(conv);
+                this.users[user.get('id')] = conv;
                 this.calc_positions();
-            });
-            this.conversations.push(conv);
-            this.users[user.get('id')] = conv;
-            this.calc_positions();
+            }
+            if (focus)
+                conv.focus();
             return conv;
         },
         received_message: function(message, user) {
@@ -445,6 +447,9 @@ openerp.web_im = function(instance) {
         },
         _go_bottom: function() {
             this.$(".oe_im_chatview_content").scrollTop($(this.$(".oe_im_chatview_content").children()[0]).height());
+        },
+        focus: function() {
+            this.$(".oe_im_chatview_input").focus();
         },
         destroy: function() {
             this.user.remove_watcher();
