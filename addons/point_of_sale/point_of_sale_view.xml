@@ -769,13 +769,20 @@
                     </header>
 
                     <sheet>
+                        <label for="name" class="oe_edit_only"/>
+                        <h1>
+                            <field name="name"/>
+                        </h1>
                         <group>
-                        <field name="name"/>
-                        <field name="warehouse_id" widget="selection" groups="stock.group_locations" />
-                        <field name="journal_id" widget="selection" />
-                        <field name="pricelist_id" groups="product.group_sale_pricelist"/>
-                        <field name="sequence_id" readonly="1" groups="base.group_no_one" />
-                        <field name="group_by" groups="account.group_account_user"  />
+                            <group>
+                                <field name="warehouse_id" widget="selection" groups="stock.group_locations" />
+                                <field name="pricelist_id" groups="product.group_sale_pricelist"/>
+                                <field name="sequence_id" readonly="1" groups="base.group_no_one" />
+                            </group>
+                            <group>
+                                 <field name="journal_id" widget="selection" />
+                                 <field name="group_by" groups="account.group_account_user"  />
+                            </group>
                         </group>
                         <separator string="Available Payment Methods" colspan="4"/>
                         <field name="journal_ids" colspan="4" nolabel="1">
@@ -810,7 +817,7 @@
             <field name="arch" type="xml">
                 <tree string="Point of Sale Configuration" colors="grey:state == 'inactive'">
                     <field name="name" />
-                    <field name="warehouse_id" />
+                    <field name="warehouse_id" groups="stock.group_locations"/>
                     <field name="state" />
                 </tree>
             </field>
@@ -824,7 +831,7 @@
                     <field name="name" />
                     <filter string="Active" domain="[('state', '=', 'active')]" />
                     <filter string="Inactive" domain="[('state', '=', 'inactive')]" />
-                    <field name="warehouse_id" />
+                    <field name="warehouse_id" groups="stock.group_locations" />
                 </search>
             </field>
         </record>
