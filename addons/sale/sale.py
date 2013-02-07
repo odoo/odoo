@@ -1013,5 +1013,5 @@ class stock_picking(osv.Model):
             if stockpicking.sale_id.id:
                 for sale in self.pool.get('sale.order').browse(cr, uid, [stockpicking.sale_id.id], context):
                     sale.message_post(body=_("%s <b>Delivered</b>") % (sale._description))
-        return res
+        return True
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
