@@ -152,21 +152,25 @@ openerp.web_linkedin = function(instance) {
             var $in = this.$("input");
             $in.replaceWith($ht);
             this.$(".oe_linkedin_input").append($in);
-            this.$(".oe_linkedin_form_img").click(_.bind(this.search_linkedin, this));
+            this.$(".oe_linkedin_img").click(_.bind(this.search_linkedin, this));
             this._super();
         },
         search_linkedin: function() {
             var self = this;
-            this.display_dm.add(instance.web_linkedin.tester.test_linkedin()).done(function() {
-                var text = (self.get("value") || "").replace(/^\s+|\s+$/g, "").replace(/\s+/g, " ");
-                instance.web_linkedin.tester.test_authentication().done(function() {
-                    var pop = new instance.web_linkedin.LinkedinSearchPopup(self, text);
-                    pop.open();
-                    pop.on("selected", this, function(entity) {
-                        self.selected_entity(entity);
+            if (!this.open_in_process) {
+                this.open_in_process = true;
+                this.display_dm.add(instance.web_linkedin.tester.test_linkedin()).done(function() {
+                    self.open_in_process = false;
+                    var text = (self.get("value") || "").replace(/^\s+|\s+$/g, "").replace(/\s+/g, " ");
+                    instance.web_linkedin.tester.test_authentication().done(function() {
+                        var pop = new instance.web_linkedin.LinkedinSearchPopup(self, text);
+                        pop.open();
+                        pop.on("selected", this, function(entity) {
+                            self.selected_entity(entity);
+                        });
                     });
                 });
-            });
+            }
         },
         selected_entity: function(entity) {
             var self = this;
