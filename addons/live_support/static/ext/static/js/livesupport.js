@@ -80,7 +80,7 @@ define(["nova", "jquery", "underscore", "oeclient", "require"], function(nova, $
                     return;
                 }
                 self.manager.ensure_users([user_id]).then(function() {
-                    self.manager.activate_user(self.manager.get_user(user_id));
+                    self.manager.activate_user(self.manager.get_user(user_id), true);
                 });
             });
         },
@@ -249,20 +249,22 @@ define(["nova", "jquery", "underscore", "oeclient", "require"], function(nova, $
             instance.webclient.set_title_part("im_messages", this.get("waiting_messages") === 0 ? undefined :
                 _.str.sprintf(_t("%d Messages"), this.get("waiting_messages")));*/
         },
-        activate_user: function(user) {
-            if (this.users[user.get('id')]) {
-                return this.users[user.get('id')];
-            }
-            var conv = new livesupport.Conversation(this, user, this.me);
-            conv.appendTo($("body"));
-            conv.on("destroyed", this, function() {
-                this.conversations = _.without(this.conversations, conv);
-                delete this.users[conv.user.get('id')];
+        activate_user: function(user, focus) {
+            var conv = this.users[user.get('id')];
+            if (! conv) {
+                conv = new livesupport.Conversation(this, user, this.me);
+                conv.appendTo($("body"));
+                conv.on("destroyed", this, function() {
+                    this.conversations = _.without(this.conversations, conv);
+                    delete this.users[conv.user.get('id')];
+                    this.calc_positions();
+                });
+                this.conversations.push(conv);
+                this.users[user.get('id')] = conv;
                 this.calc_positions();
-            });
-            this.conversations.push(conv);
-            this.users[user.get('id')] = conv;
-            this.calc_positions();
+            }
+            if (focus)
+                conv.focus();
             return conv;
         },
         received_message: function(message, user) {
@@ -391,6 +393,9 @@ define(["nova", "jquery", "underscore", "oeclient", "require"], function(nova, $
         },
         _go_bottom: function() {
             this.$(".oe_im_chatview_content").scrollTop($(this.$(".oe_im_chatview_content").children()[0]).height());
+        },
+        focus: function() {
+            this.$(".oe_im_chatview_input").focus();
         },
         destroy: function() {
             this.user.remove_watcher();
