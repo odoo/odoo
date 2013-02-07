@@ -1751,6 +1751,9 @@ class mail_compose_message(osv.Model):
         if context.get('default_model') == 'account.invoice' and context.get('default_res_id') and context.get('mark_invoice_as_sent'):
             context = dict(context, mail_post_autofollow=True)
             self.pool.get('account.invoice').write(cr, uid, [context['default_res_id']], {'sent': True}, context=context)
+            if context.get('active_model') == "sale.order":
+                for sale in self.pool.get(context.get('active_model')).browse(cr, uid, [context.get('active_id')], context):
+                    sale.message_post(body=_("Invoice <b>Sent</b>"))
         return super(mail_compose_message, self).send_mail(cr, uid, ids, context=context)
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
