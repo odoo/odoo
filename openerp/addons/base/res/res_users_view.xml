@@ -92,6 +92,10 @@
             <field name="arch" type="xml">
                 <form string="Users" version="7.0">
                     <sheet>
+                        <div class="oe_right oe_button_box">
+                            <button string="Change Password" type="action" name="%(change_password_wizard_action)d"
+                                help="Change the user password."/>
+                        </div>
                         <field name="image" widget='image' class="oe_avatar oe_left" options='{"preview_image": "image_medium"}'/>
                         <div class="oe_title">
                             <label for="name" class="oe_edit_only"/>
