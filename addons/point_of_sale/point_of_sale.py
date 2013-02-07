@@ -115,7 +115,7 @@ class pos_config(osv.osv):
 
     def _default_warehouse(self, cr, uid, context=None):
         user = self.pool.get('res.users').browse(cr, uid, uid, context)
-        res = self.pool.get('stock.warehouse').search(cr, uid, [('company_id','=',user.company_id.id)], context)
+        res = self.pool.get('stock.warehouse').search(cr, uid, [('company_id','=',user.company_id.id)], context=context)
         return res and res[0] or False
     
     def _default_pricelist(self, cr, uid, context=None):
