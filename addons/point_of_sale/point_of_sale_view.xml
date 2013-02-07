@@ -773,16 +773,12 @@
                         <h1>
                             <field name="name"/>
                         </h1>
-                        <group>
-                            <group>
-                                <field name="warehouse_id" widget="selection" groups="stock.group_locations" />
-                                <field name="pricelist_id" groups="product.group_sale_pricelist"/>
-                                <field name="sequence_id" readonly="1" groups="base.group_no_one" />
-                            </group>
-                            <group>
-                                 <field name="journal_id" widget="selection" />
-                                 <field name="group_by" groups="account.group_account_user"  />
-                            </group>
+                        <group col="4">
+                            <field name="warehouse_id" widget="selection" groups="stock.group_locations" />
+                            <field name="pricelist_id" groups="product.group_sale_pricelist"/>
+                            <field name="journal_id" widget="selection"/>
+                            <field name="group_by" groups="account.group_account_user"/>
+                            <field name="sequence_id" readonly="1" groups="base.group_no_one"/>
                         </group>
                         <separator string="Available Payment Methods" colspan="4"/>
                         <field name="journal_ids" colspan="4" nolabel="1">
