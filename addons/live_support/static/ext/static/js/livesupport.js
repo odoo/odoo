@@ -6,11 +6,16 @@ define(["nova", "jquery", "underscore", "oeclient", "require"], function(nova, $
     templateEngine.extendEnvironment({"toUrl": _.bind(require.toUrl, require)});
     var connection;
 
+    var defaultInputPlaceholder;
+
     livesupport.main = function(server_url, db, login, password, channel, options) {
         options = options || {};
         _.defaults(options, {
             buttonText: "Chat with one of our collaborators",
+            inputPlaceholder: "How may I help you?",
+            defaultMessage: null,
         });
+        defaultInputPlaceholder = options.inputPlaceholder;
         var templates_def = $.ajax({
             url: require.toUrl("./livesupport_templates.js"),
             jsonp: false,
@@ -32,7 +37,7 @@ define(["nova", "jquery", "underscore", "oeclient", "require"], function(nova, $
             connection.connector.call("/live_support/available", {db: db, channel: channel}).then(function(activated) {
                 if (! activated)
                     return;
-                new livesupport.ChatButton(null, channel, options.buttonText).appendTo($("body"));
+                new livesupport.ChatButton(null, channel, options).appendTo($("body"));
             });
         });
     };
@@ -44,10 +49,11 @@ define(["nova", "jquery", "underscore", "oeclient", "require"], function(nova, $
         events: {
             "click": "click",
         },
-        __init__: function(parent, channel, text) {
+        __init__: function(parent, channel, options) {
             this.$super(parent);
             this.channel = channel;
-            this.text = text;
+            this.options = options;
+            this.text = options.buttonText;
         },
         render: function() {
             this.$().append(templateEngine.chatButton({widget: this}));
@@ -80,7 +86,11 @@ define(["nova", "jquery", "underscore", "oeclient", "require"], function(nova, $
                     return;
                 }
                 self.manager.ensure_users([user_id]).then(function() {
-                    self.manager.activate_user(self.manager.get_user(user_id), true);
+                    var conv = self.manager.activate_user(self.manager.get_user(user_id), true);
+                    if (self.options.defaultMessage) {
+                        conv.received_message({message: self.options.defaultMessage, 
+                            date: oeclient.datetime_to_str(new Date())});
+                    }
                 });
             });
         },
@@ -306,6 +316,7 @@ define(["nova", "jquery", "underscore", "oeclient", "require"], function(nova, $
             this.set("right_position", 0);
             this.shown = true;
             this.set("pending", 0);
+            this.inputPlaceholder = defaultInputPlaceholder;
         },
         render: function() {
             this.$().append(templateEngine.conversation({widget: this}));
