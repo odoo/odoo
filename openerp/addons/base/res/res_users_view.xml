@@ -126,7 +126,7 @@
                 <form string="Users" version="7.0">
                     <sheet>
                         <field name="id" invisible="1"/>
-                        <div attrs="{'invisible': ['|', ('active', '!=', True), ('state','not in',['active', 'reset'])]}" class="oe_right oe_button_box">
+                        <div class="oe_right oe_button_box">
                             <button string="Change Password" type="action" name="%(change_password_wizard_action)d"
                                 help="Change the user password."/>
                         </div>
