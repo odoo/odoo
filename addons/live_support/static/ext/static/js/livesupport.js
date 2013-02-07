@@ -303,6 +303,7 @@ define(["nova", "jquery", "underscore", "oeclient", "require"], function(nova, $
             this.user.add_watcher();
             this.set("right_position", 0);
             this.shown = true;
+            this.set("pending", 0);
         },
         render: function() {
             this.$().append(templateEngine.conversation({widget: this}));
@@ -317,6 +318,13 @@ define(["nova", "jquery", "underscore", "oeclient", "require"], function(nova, $
             this.on("change:right_position", this, this.calc_pos);
             this.full_height = this.$().height();
             this.calc_pos();
+            this.on("change:pending", this, _.bind(function() {
+                if (this.get("pending") === 0) {
+                    this.$(".oe_im_chatview_nbr_messages").text("");
+                } else {
+                    this.$(".oe_im_chatview_nbr_messages").text("(" + this.get("pending") + ")");
+                }
+            }, this));
         },
         show_hide: function() {
             if (this.shown) {
@@ -329,11 +337,19 @@ define(["nova", "jquery", "underscore", "oeclient", "require"], function(nova, $
                 });
             }
             this.shown = ! this.shown;
+            if (this.shown) {
+                this.set("pending", 0);
+            }
         },
         calc_pos: function() {
             this.$().css("right", this.get("right_position"));
         },
         received_message: function(message) {
+            if (this.shown) {
+                this.set("pending", 0);
+            } else {
+                this.set("pending", this.get("pending") + 1);
+            }
             this._add_bubble(this.user, message.message, oeclient.str_to_datetime(message.date));
         },
         send_message: function(e) {
