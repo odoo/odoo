@@ -35,10 +35,8 @@ import osv
 import pooler
 import release
 import report
-import run_tests
 import service
 import sql_db
-import test
 import tools
 import workflow
 # backward compatilbility

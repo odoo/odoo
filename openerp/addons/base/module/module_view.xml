@@ -171,23 +171,18 @@
             </field>
         </record>
         <record id="open_module_tree" model="ir.actions.act_window">
-            <!-- uncomment on released
             <field name="name">Installed Modules</field>
-            -->
-            <field name="name">Modules</field>
             <field name="res_model">ir.module.module</field>
             <field name="view_type">form</field>
             <field name="view_mode">kanban,tree,form</field>
-            <!-- uncomment on released
             <field name="context">{'search_default_installed':1}</field>
-            -->
             <field name="search_view_id" ref="view_module_filter"/>
             <field name="help" type="html">
               <p><b>No module found!</b></p>
               <p>You should try others search criteria.</p>
             </field>
         </record>
-        <menuitem id="menu_module_tree" parent="menu_management" name="Installed Modules" sequence="10" action="open_module_tree"/>
+        <menuitem id="menu_module_tree" parent="menu_management" name="Installed Modules" sequence="30" action="open_module_tree" />
 
 
         <!-- Apps modules -->
@@ -195,20 +190,14 @@
             <field name="name">Apps</field>
             <field name="tag">apps</field>
         </record>
-        <!-- uncomment on released
-        <menuitem id="module_mi" parent="base.menu_management" sequence="3" action="modules_act_cl"/>
-        -->
-        <menuitem id="module_mi" parent="base.menu_management" sequence="20" action="modules_act_cl"/>
+        <menuitem id="module_mi" parent="base.menu_management" sequence="10" action="modules_act_cl"/>
 
         <record model="ir.actions.client" id="modules_updates_act_cl">
             <field name="name">Updates</field>
             <field name="tag">apps.updates</field>
             <field name="params">{}</field>
         </record>
-        <!-- uncomment on released
-        <menuitem id="menu_module_updates" parent="base.menu_management" sequence="7" action="modules_updates_act_cl"/>
-        -->
-        <menuitem id="menu_module_updates" parent="base.menu_management" sequence="30" action="modules_updates_act_cl"/>
+        <menuitem id="menu_module_updates" parent="base.menu_management" sequence="20" action="modules_updates_act_cl"/>
 
     </data>
 </openerp>
