@@ -777,6 +777,7 @@ class mrp_production(osv.osv):
 
         wf_service = netsvc.LocalService("workflow")
         wf_service.trg_validate(uid, 'mrp.production', production_id, 'button_produce_done', cr)
+        self.message_post(cr, uid, production_id, body=_("%s <b>Produced</b>") % self._description, context=context)
         return True
 
     def _costs_generate(self, cr, uid, production):
