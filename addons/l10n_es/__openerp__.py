@@ -23,7 +23,7 @@
 
 {
     "name" : "Spanish Charts of Accounts (PGCE 2008)",
-    "version" : "3.0",
+    "version" : "3.1",
     "author" : "Spanish Localization Team",
     'website' : 'https://launchpad.net/openerp-spain',
     "category" : "Localization/Account Charts",
