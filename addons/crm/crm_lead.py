@@ -567,7 +567,8 @@ class crm_lead(base_stage, format_address, osv.osv):
         for opportunity in opportunities:
             subject.append(opportunity.name)
             title = "%s : %s" % (opportunity.type == 'opportunity' and _('Merged opportunity') or _('Merged lead'), opportunity.name)
-            details.append(self._mail_body(cr, uid, opportunity, CRM_LEAD_FIELDS_TO_MERGE, title=title, context=context))
+            fields = list(CRM_LEAD_FIELDS_TO_MERGE)
+            details.append(self._mail_body(cr, uid, opportunity, fields, title=title, context=context))
 
         # Chatter message's subject
         subject = subject[0] + ": " + ", ".join(subject[1:])
@@ -636,7 +637,8 @@ class crm_lead(base_stage, format_address, osv.osv):
 
         tail_opportunities = opportunities_rest
 
-        merged_data = self._merge_data(cr, uid, ids, highest, CRM_LEAD_FIELDS_TO_MERGE, context=context)
+        fields = list(CRM_LEAD_FIELDS_TO_MERGE)
+        merged_data = self._merge_data(cr, uid, ids, highest, fields, context=context)
 
         # Merge messages and attachements into the first opportunity
         self._merge_opportunity_history(cr, uid, highest.id, tail_opportunities, context=context)
