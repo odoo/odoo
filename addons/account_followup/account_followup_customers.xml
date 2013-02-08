@@ -23,6 +23,17 @@
             </field>
         </record>
 
+        <record id="view_partner_inherit_customer_followup_tree" model="ir.ui.view">
+            <field name="name">res.partner.followup.inherit.tree</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="base.view_partner_tree"/>
+            <field name="arch" type="xml">
+                 <field name="name" position="after">
+                     <field name="payment_responsible_id" invisible="1"/>
+                 </field>
+             </field>
+         </record>
+
         <record id="customer_followup_search_view" model="ir.ui.view">
             <field name="name">Search</field>
             <field name="model">res.partner</field>
