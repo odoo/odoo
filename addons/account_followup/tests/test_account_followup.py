@@ -65,22 +65,21 @@ class TestAccountFollowup(TransactionCase):
         
     def run_wizard_three_times(self):
         cr, uid = self.cr, self.uid
-        current_date = datetime.datetime.now()
+        current_date = datetime.datetime.utcnow()
         delta = datetime.timedelta(days=40)
         result = current_date + delta
         self.wizard_id = self.wizard.create(cr, uid, {'date':result.strftime("%Y-%m-%d"), 
                                                       'followup_id': self.followup_id
                                                       }, context={"followup_id": self.followup_id})
-        self.wizard.do_process(cr, uid, [self.wizard_id], context={"followup_id": self.followup_id})
+        self.wizard.do_process(cr, uid, [self.wizard_id], context={"followup_id": self.followup_id, 'tz':'UTC'})
         self.wizard_id = self.wizard.create(cr, uid, {'date':result.strftime("%Y-%m-%d"), 
                                                       'followup_id': self.followup_id
                                                       }, context={"followup_id": self.followup_id})
-        self.wizard.do_process(cr, uid, [self.wizard_id], context={"followup_id": self.followup_id})
+        self.wizard.do_process(cr, uid, [self.wizard_id], context={"followup_id": self.followup_id, 'tz':'UTC'})
         self.wizard_id = self.wizard.create(cr, uid, {'date':result.strftime("%Y-%m-%d"), 
-                                                      'followup_id': self.followup_id
+                                                      'followup_id': self.followup_id, 
                                                       }, context={"followup_id": self.followup_id})
-        self.wizard.do_process(cr, uid, [self.wizard_id], context={"followup_id": self.followup_id})
-        
+        self.wizard.do_process(cr, uid, [self.wizard_id], context={"followup_id": self.followup_id, 'tz':'UTC'})
         
     def test_01_send_followup_later_for_upgrade(self):
         """ Send one follow-up after 15 days to check it upgrades to level 1"""
@@ -103,8 +102,8 @@ class TestAccountFollowup(TransactionCase):
         self.assertEqual(self.partner.browse(cr, uid, self.partner_id).payment_next_action, 
                          "Call the customer on the phone! ", "Manual action not set")
         self.assertEqual(self.partner.browse(cr, uid, self.partner_id).payment_next_action_date, 
-                         datetime.datetime.now().strftime("%Y-%m-%d"))
-        
+                         datetime.datetime.utcnow().strftime("%Y-%m-%d"))
+
     def test_03_filter_on_credit(self):
         """ Check the partners can be filtered on having credits """
         cr, uid = self.cr, self.uid
