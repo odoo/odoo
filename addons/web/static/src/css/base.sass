@@ -2435,8 +2435,11 @@ $sheet-padding: 16px
         color: #333
     // }}}
 @-moz-document url-prefix()
-    .openerp .oe_view_manager .oe_view_manager_switch li
-        line-height: 21px
+    .openerp
+        .oe_view_manager .oe_view_manager_switch li
+            line-height: 21px
+        .oe_searchview .oe_searchview_search
+            top: 0px
 
 // Kitten Mode {{{
 .kitten-mode-activated
@@ -2623,7 +2626,7 @@ div.ui-widget-overlay
         .openerp div.oe_mail_wall
             overflow: hidden !important
 // }}}
-+@media
+@media
     .openerp .oe_form .oe_form_field
         display: -moz-stack
 
