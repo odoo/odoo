@@ -29,7 +29,12 @@ class Binary(openerp.addons.web.http.Controller):
     _cp_path = "/web_linkedin/binary"
 
     @openerp.addons.web.http.jsonrequest
-    def url2binary(self, req,url):
+    def url2binary(self, req, url):
+        if not url.startswith("http"):
+            raise Exception("Not allowed to load a file using this protocol")
+        if url.count("?") > 0 or url.count("&") > 0 or url.count("=") > 0:
+            raise Exception("Not allowed to use GET parameters")
+        req.session.assert_valid(force=True)
         bfile = urllib2.urlopen(url)
         return base64.b64encode(bfile.read())
     
