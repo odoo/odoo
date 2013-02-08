@@ -257,21 +257,6 @@ class survey_question_wiz(osv.osv_memory):
                                     etree.SubElement(xml_group, 'field', {'readonly' :str(readonly), 'name': tools.ustr(que.id) + "_" + tools.ustr(row.id) + "_" + tools.ustr(col.id), 'nolabel':"1"})
                                     fields[tools.ustr(que.id) + "_" + tools.ustr(row.id)  + "_" + tools.ustr(col.id)] = {'type':'boolean', 'string': col.title}
 
-                        elif que_rec.type == 'matrix_of_drop_down_menus':
-                            xml_group = etree.SubElement(xml_group, 'group', {'col': str(len(que_rec.column_heading_ids) + 1), 'colspan': '4'})
-                            etree.SubElement(xml_group, 'separator', {'string': '.','colspan': '1'})
-                            for col in que_rec.column_heading_ids:
-                                etree.SubElement(xml_group, 'separator', {'string': tools.ustr(col.title),'colspan': '1'})
-                            for row in ans_ids:
-                                etree.SubElement(xml_group, 'label', {'string': to_xml(tools.ustr(row.answer))+' :-', 'align': '0.0'})
-                                for col in que_rec.column_heading_ids:
-                                    selection = []
-                                    if col.menu_choice:
-                                        for item in col.menu_choice.split('\n'):
-                                            if item and not item.strip() == '': selection.append((item ,item))
-                                    etree.SubElement(xml_group, 'field', {'readonly' :str(readonly), 'name': tools.ustr(que.id) + "_" + tools.ustr(row.id) + "_" + tools.ustr(col.id),'nolabel':'1'})
-                                    fields[tools.ustr(que.id) + "_" + tools.ustr(row.id)  + "_" + tools.ustr(col.id)] = {'type':'selection', 'string': col.title, 'selection':selection}
-
                         elif que_rec.type == 'multiple_textboxes':
                             xml_group = etree.SubElement(xml_group, 'group', {'col': '4', 'colspan': '4'})
                             type = "char"
@@ -348,7 +333,7 @@ class survey_question_wiz(osv.osv_memory):
                                                 if item and not item.strip() == '': selection.append((item ,item))
                                         fields[tools.ustr(que.id) + "_" + tools.ustr(ans.id) + "_multi"] = {'type':'selection', 'selection' : selection, 'string':ans.answer}
 
-                        if que_rec.type in ['multiple_choice_only_one_ans', 'multiple_choice_multiple_ans', 'matrix_of_choices_only_one_ans', 'matrix_of_choices_only_multi_ans', 'matrix_of_drop_down_menus', 'rating_scale'] and que_rec.is_comment_require:
+                        if que_rec.type in ['multiple_choice_only_one_ans', 'multiple_choice_multiple_ans', 'matrix_of_choices_only_one_ans', 'matrix_of_choices_only_multi_ans', 'rating_scale'] and que_rec.is_comment_require:
                             if que_rec.type in ['multiple_choice_only_one_ans', 'multiple_choice_multiple_ans'] and que_rec.comment_field_type in ['char','text'] and que_rec.make_comment_field:
                                 etree.SubElement(xml_group, 'field', {'readonly' :str(readonly), 'name': tools.ustr(que.id) + "_otherfield", 'colspan':"4"})
                                 fields[tools.ustr(que.id) + "_otherfield"] = {'type':'boolean', 'string':que_rec.comment_label, 'views':{}}
@@ -807,7 +792,7 @@ class survey_question_wiz(osv.osv_memory):
                             sur_name_read['store_ans'].pop(res)
                         raise osv.except_osv(_('Warning!'), "'" + que_rec['question'] + "' " + tools.ustr(que_rec['numeric_required_sum_err_msg']))
 
-                    if que_rec['type'] in ['multiple_textboxes_diff_type', 'multiple_choice_multiple_ans','matrix_of_choices_only_one_ans','matrix_of_choices_only_multi_ans','matrix_of_drop_down_menus','rating_scale','multiple_textboxes','numerical_textboxes','date','date_and_time'] and que_rec['is_require_answer']:
+                    if que_rec['type'] in ['multiple_textboxes_diff_type', 'multiple_choice_multiple_ans','matrix_of_choices_only_one_ans','matrix_of_choices_only_multi_ans','rating_scale','multiple_textboxes','numerical_textboxes','date','date_and_time'] and que_rec['is_require_answer']:
                         if matrix_list:
                             if (que_rec['required_type'] == 'all' and len(list(set(matrix_list))) < len(que_rec['answer_choice_ids'])) or \
                             (que_rec['required_type'] == 'at least' and len(list(set(matrix_list))) < que_rec['req_ans']) or \
@@ -997,7 +982,7 @@ class survey_question_wiz(osv.osv_memory):
                 if not select_count:
                     resp_obj.write(cr, uid, update, {'state': 'skip'})
 
-                if que_rec['type'] in ['multiple_textboxes_diff_type','multiple_choice_multiple_ans','matrix_of_choices_only_one_ans','matrix_of_choices_only_multi_ans','matrix_of_drop_down_menus','rating_scale','multiple_textboxes','numerical_textboxes','date','date_and_time'] and que_rec['is_require_answer']:
+                if que_rec['type'] in ['multiple_textboxes_diff_type','multiple_choice_multiple_ans','matrix_of_choices_only_one_ans','matrix_of_choices_only_multi_ans','rating_scale','multiple_textboxes','numerical_textboxes','date','date_and_time'] and que_rec['is_require_answer']:
                     if matrix_list:
                         if (que_rec['required_type'] == 'all' and len(list(set(matrix_list))) < len(que_rec['answer_choice_ids'])) or \
                         (que_rec['required_type'] == 'at least' and len(list(set(matrix_list))) < que_rec['req_ans']) or \

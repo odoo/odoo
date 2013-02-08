@@ -330,54 +330,6 @@ class survey_analysis(report_rml):
                                 <td><para style="answer_right">""" + tools.ustr(res_count) + """</para></td></tr>"""
                         rml += """</blockTable>"""
 
-                    elif que.type in['matrix_of_drop_down_menus']:
-                        for column in que.column_heading_ids:
-                            rml += """<blockTable colWidths="500" style="Table1"><tr>
-                                <td><para style="answer">""" + to_xml(tools.ustr(column.title)) + """</para></td></tr></blockTable>"""
-                            menu_choices = column.menu_choice.split('\n')
-                            cols_widhts = []
-                            cols_widhts.append(200)
-                            for col in range(0, len(menu_choices) + 1):
-                                cols_widhts.append(float(300 / (len(menu_choices) + 1)))
-                            colWidths = ",".join(map(tools.ustr, cols_widhts))
-                            rml += """<blockTable colWidths=" """ + colWidths + """ " style="Table1"><tr>
-                                <td><para style="response"></para></td>"""
-
-                            for menu in menu_choices:
-                                rml += """<td><para style="response">""" + to_xml(tools.ustr(menu)) + """</para></td>"""
-                            rml += """<td><para style="response-bold">Answer Count</para></td></tr>"""
-                            cr.execute("select count(id), sra.answer_id from survey_response_answer sra \
-                                     where sra.column_id='%s' group by sra.answer_id ", (column.id,))
-                            res_count = cr.dictfetchall()
-                            cr.execute("select count(sra.id),sra.value_choice, sra.answer_id, sra.column_id from survey_response_answer sra \
-                                 where sra.column_id='%s' group by sra.value_choice ,sra.answer_id, sra.column_id", (column.id,))
-                            calc_percantage = cr.dictfetchall()
-
-                            for ans in que.answer_choice_ids:
-                                rml += """<tr><td><para style="answer_right">""" + to_xml(tools.ustr(ans.answer)) + """</para></td>"""
-                                for mat_col in range(0, len(menu_choices)):
-                                    calc = 0
-                                    response = 0
-                                    for res in res_count:
-                                        if res['answer_id'] == ans.id: response = res['count']
-                                    for per in calc_percantage:
-                                        if ans.id == per['answer_id'] and menu_choices[mat_col] == per['value_choice']:
-                                            calc = per['count']
-                                    percantage = 0.00
-
-                                    if calc and response:
-                                        percantage = round((float(calc)* 100) / response,2)
-                                    if calc:
-                                        rml += """<td><para style="answer_bold">""" +tools.ustr(percantage)+"% (" +  tools.ustr(calc) + """)</para></td>"""
-                                    else:
-                                        rml += """<td><para style="answer">""" +tools.ustr(percantage)+"% (" +  tools.ustr(calc) + """)</para></td>"""
-
-                                response = 0
-                                for res in res_count:
-                                    if res['answer_id'] == ans.id: response = res['count']
-                                rml += """<td><para style="answer_right">""" + tools.ustr(response) + """</para></td></tr>"""
-                            rml += """</blockTable>"""
-
                     elif que.type in['numerical_textboxes']:
                         rml += """<blockTable colWidths="240.0,20,100.0,70,70.0" style="Table1">
                              <tr>

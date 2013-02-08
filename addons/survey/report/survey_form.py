@@ -244,7 +244,7 @@ class survey_form(report_rml):
                             rml += """
                             </tr></blockTable>"""
 
-                    elif que.type in ['matrix_of_choices_only_one_ans','rating_scale','matrix_of_choices_only_multi_ans','matrix_of_drop_down_menus']:
+                    elif que.type in ['matrix_of_choices_only_one_ans','rating_scale','matrix_of_choices_only_multi_ans']:
                         if len(que.column_heading_ids):
                             cols_widhts.append(float(_tbl_widths.replace('cm',''))/float(2.0))
                             for col in que.column_heading_ids:
@@ -290,10 +290,7 @@ class survey_form(report_rml):
                             rec_width = float((sum-tmp)*10+100)
                             value = ""
 
-                            if que.type in ['matrix_of_drop_down_menus']:
-                                value = """ <fill color="white"/>
-                                    <rect x="-0.1cm" y="-0.45cm" width='""" + tools.ustr(cols_widhts[-1] - 0.5) +"cm" + """' height="0.5cm" fill="yes" stroke="yes" round="0.1cm"/>"""
-                            elif que.type in ['matrix_of_choices_only_one_ans','rating_scale']:
+                            if que.type in ['matrix_of_choices_only_one_ans','rating_scale']:
                                 value = """ <fill color="white"/>
                                     <circle x="0.35cm" y="-0.18cm" radius="0.25 cm" fill="yes" stroke="yes"/>"""
                             else:

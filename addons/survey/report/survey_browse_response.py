@@ -423,7 +423,7 @@ class survey_browse_response(report_rml):
                                          <tr>  <td> <para style="response">No Answer</para></td> </tr>
                                         </blockTable>"""
 
-                        elif que.type in ['matrix_of_choices_only_one_ans','matrix_of_choices_only_multi_ans', 'rating_scale', 'matrix_of_drop_down_menus']:
+                        elif que.type in ['matrix_of_choices_only_one_ans','matrix_of_choices_only_multi_ans', 'rating_scale']:
                             if len(answer) and answer[0].state == "done":
                                 if que.type  in ['matrix_of_choices_only_one_ans', 'rating_scale'] and que.comment_column:
                                     pass
@@ -478,9 +478,7 @@ class survey_browse_response(report_rml):
                                         for res_ans in answer[0].response_answer_ids:
                                             if res_ans.answer_id.id == ans.id and res_ans.column_id.id == matrix_ans[mat_col][0]:
                                                 comment_value = to_xml(tools.ustr(res_ans.comment_field))
-                                                if que.type in ['matrix_of_drop_down_menus']:
-                                                    value = """<para style="response">""" + to_xml(tools.ustr(res_ans.value_choice)) + """</para>"""
-                                                elif que.type in ['matrix_of_choices_only_one_ans', 'rating_scale']:
+                                                if que.type in ['matrix_of_choices_only_one_ans', 'rating_scale']:
                                                     value = """<illustration><fill color="white"/>
                                                                 <circle x="0.3cm" y="-0.18cm" radius="0.22 cm" fill="yes" stroke="yes"/>
                                                                 <fill color="gray"/>
@@ -495,9 +493,7 @@ class survey_browse_response(report_rml):
                                                                 </illustration>"""
                                                 break
                                             else:
-                                                if que.type in ['matrix_of_drop_down_menus']:
-                                                    value = """"""
-                                                elif que.type in ['matrix_of_choices_only_one_ans','rating_scale']:
+                                                if que.type in ['matrix_of_choices_only_one_ans','rating_scale']:
                                                     value = """<illustration><fill color="white"/>
                                                                     <circle x="0.3cm" y="-0.18cm" radius="0.22 cm" fill="yes" stroke="yes"  round="0.1cm"/>
                                                                 </illustration>"""

@@ -82,11 +82,11 @@
                                                 <field name="in_visible_answer_type" invisible="1"/>
                                                 <notebook colspan="4">
                                                     <page string="Options">
-                                                        <group attrs="{'invisible':[('type','!=','multiple_textboxes_diff_type'),('type','!=','multiple_choice_only_one_ans'), ('type','!=','multiple_choice_multiple_ans'),('type','!=','matrix_of_choices_only_one_ans'),('type','!=','matrix_of_choices_only_multi_ans'),('type','!=','matrix_of_drop_down_menus'),('type','!=','rating_scale'),('type','!=','multiple_textboxes'),('type','!=','numerical_textboxes'),('type','!=','date'),('type','!=','date_and_time'),('type','!=','table')]}" string="Answer">
+                                                        <group attrs="{'invisible':[('type','!=','multiple_textboxes_diff_type'),('type','!=','multiple_choice_only_one_ans'), ('type','!=','multiple_choice_multiple_ans'),('type','!=','matrix_of_choices_only_one_ans'),('type','!=','matrix_of_choices_only_multi_ans'),('type','!=','rating_scale'),('type','!=','multiple_textboxes'),('type','!=','numerical_textboxes'),('type','!=','date'),('type','!=','date_and_time'),('type','!=','table')]}" string="Answer">
                                                            <group colspan="4" attrs="{'invisible':[('type','=','table')]}">
                                                                <field name="answer_choice_ids" nolabel="1" colspan="4" context="{'in_visible_answer_type': in_visible_answer_type}"/>
                                                            </group>
-                                                           <group colspan="4" attrs="{'invisible':[('type','!=','matrix_of_choices_only_multi_ans'),('type','!=','matrix_of_choices_only_one_ans'),('type','!=','matrix_of_drop_down_menus'),('type','!=','rating_scale'),('type','!=','table')]}">
+                                                           <group colspan="4" attrs="{'invisible':[('type','!=','matrix_of_choices_only_multi_ans'),('type','!=','matrix_of_choices_only_one_ans'),('type','!=','rating_scale'),('type','!=','table')]}">
                                                                <field name="column_heading_ids" colspan="4" nolabel="1" context="{'in_visible_rating_weight':in_visible_rating_weight,'in_visible_menu_choice':in_visible_menu_choice}"/>
                                                                 <group colspan="4" attrs="{'invisible':[('type','!=','table')]}">
                                                                    <field name="no_of_rows"/>
@@ -94,7 +94,7 @@
                                                            </group>
                                                         </group>
                                                         <newline/>
-                                                        <group  attrs="{'invisible':[('type','!=','multiple_choice_only_one_ans'), ('type','!=','multiple_choice_multiple_ans'), ('type','!=','matrix_of_choices_only_multi_ans'),('type','!=','matrix_of_choices_only_one_ans'),('type','!=','matrix_of_drop_down_menus'),('type','!=','rating_scale')]}">
+                                                        <group  attrs="{'invisible':[('type','!=','multiple_choice_only_one_ans'), ('type','!=','multiple_choice_multiple_ans'), ('type','!=','matrix_of_choices_only_multi_ans'),('type','!=','matrix_of_choices_only_one_ans'),('type','!=','rating_scale')]}">
                                                             <separator string="Comment Field" colspan="4"/>
                                                             <group colspan="4">
                                                                 <field name="is_comment_require"/>
@@ -161,12 +161,12 @@
                                                             </group>
                                                         </group>
                                                         <newline/>
-                                                        <group attrs="{'invisible':[('type','!=','multiple_choice_only_one_ans'), ('type','!=','multiple_choice_multiple_ans'),('type','!=','matrix_of_choices_only_one_ans'),('type','!=','matrix_of_choices_only_multi_ans'),('type','!=','matrix_of_drop_down_menus'),('type','!=','rating_scale'),('type','!=','multiple_textboxes'),('type','!=','numerical_textboxes'),('type','!=','date'),('type','!=','date_and_time'),('type','!=','single_textbox'),('type','!=','comment'),('type','!=','multiple_textboxes_diff_type')]}">
+                                                        <group attrs="{'invisible':[('type','!=','multiple_choice_only_one_ans'), ('type','!=','multiple_choice_multiple_ans'),('type','!=','matrix_of_choices_only_one_ans'),('type','!=','matrix_of_choices_only_multi_ans'),('type','!=','rating_scale'),('type','!=','multiple_textboxes'),('type','!=','numerical_textboxes'),('type','!=','date'),('type','!=','date_and_time'),('type','!=','single_textbox'),('type','!=','comment'),('type','!=','multiple_textboxes_diff_type')]}">
                                                             <separator string="Required Answer" colspan="4"/>
                                                             <newline/>
                                                             <field name="is_require_answer"/>
                                                             <group col="6" colspan="4" attrs="{'invisible':[('is_require_answer','=',False)]}">
-                                                                <group colspan="4" attrs="{'invisible':[('type','!=','multiple_choice_multiple_ans'),('type','!=','matrix_of_choices_only_one_ans'),('type','!=','matrix_of_choices_only_multi_ans'),('type','!=','matrix_of_drop_down_menus'),('type','!=','rating_scale'),('type','!=','multiple_textboxes'),('type','!=','numerical_textboxes'),('type','!=','date'),('type','!=','date_and_time'),('type','!=','multiple_textboxes_diff_type')]}">
+                                                                <group colspan="4" attrs="{'invisible':[('type','!=','multiple_choice_multiple_ans'),('type','!=','matrix_of_choices_only_one_ans'),('type','!=','matrix_of_choices_only_multi_ans'),('type','!=','rating_scale'),('type','!=','multiple_textboxes'),('type','!=','numerical_textboxes'),('type','!=','date'),('type','!=','date_and_time'),('type','!=','multiple_textboxes_diff_type')]}">
                                                                     <field name="required_type"/>
                                                                     <group colspan="2" attrs="{'invisible':[('required_type','!=','at least'),('required_type','!=','at most'),('required_type','!=','exactly')]}">
                                                                         <field name="req_ans" />
@@ -318,7 +318,12 @@
                                         <t t-if="record.max_response_limit.raw_value > 0"> / <field name="max_response_limit"/></t>
                                     </div>
                                     <br/>
-                                    <a name="fill_survey" type="object">Answer Survey</a>
+                                    <ul>
+                                        <li t-if="widget.view.is_action_enabled('edit')"><a type="edit">Edit Survey</a></li>
+                                        <li t-if="widget.view.is_action_enabled('edit')"><a name="%(action_view_survey_send_invitation)d" type="action">Collect informations</a></li>
+                                        <li><a name="fill_survey" type="object">Answer Survey</a></li>
+                                        <li t-if="widget.view.is_action_enabled('edit')"><a>Analysis</a></li>
+                                    </ul>
                                     <img t-att-src="kanban_image('res.users', 'image_small', record.responsible_id.raw_value)" t-att-title="record.responsible_id.value" width="24" height="24" class="oe_kanban_avatar oe_right"/>
                                 </div>
                             </div>
@@ -395,11 +400,11 @@
                                     <newline/>
                                     <notebook colspan="4">
                                         <page string="Options">
-                                            <group attrs="{'invisible':[('type','!=','multiple_textboxes_diff_type'),('type','!=','multiple_choice_only_one_ans'), ('type','!=','multiple_choice_multiple_ans'),('type','!=','matrix_of_choices_only_one_ans'),('type','!=','matrix_of_choices_only_multi_ans'),('type','!=','matrix_of_drop_down_menus'),('type','!=','rating_scale'),('type','!=','multiple_textboxes'),('type','!=','numerical_textboxes'),('type','!=','date'),('type','!=','date_and_time'),('type','!=','table')]}" string="Answer" col="4">
+                                            <group attrs="{'invisible':[('type','!=','multiple_textboxes_diff_type'),('type','!=','multiple_choice_only_one_ans'), ('type','!=','multiple_choice_multiple_ans'),('type','!=','matrix_of_choices_only_one_ans'),('type','!=','matrix_of_choices_only_multi_ans'),('type','!=','rating_scale'),('type','!=','multiple_textboxes'),('type','!=','numerical_textboxes'),('type','!=','date'),('type','!=','date_and_time'),('type','!=','table')]}" string="Answer" col="4">
                                                <group attrs="{'invisible':[('type','=','table')]}">
                                                    <field name="answer_choice_ids" nolabel="1" context="{'in_visible_answer_type': in_visible_answer_type}"/>
                                                </group>
-                                               <group attrs="{'invisible':[('type','!=','matrix_of_choices_only_multi_ans'),('type','!=','matrix_of_choices_only_one_ans'),('type','!=','matrix_of_drop_down_menus'),('type','!=','rating_scale'),('type','!=','table')]}">
+                                               <group attrs="{'invisible':[('type','!=','matrix_of_choices_only_multi_ans'),('type','!=','matrix_of_choices_only_one_ans'),('type','!=','rating_scale'),('type','!=','table')]}">
                                                    <field name="column_heading_ids" nolabel="1" context="{'in_visible_rating_weight':in_visible_rating_weight,'in_visible_menu_choice':in_visible_menu_choice}"/>
                                                     <group attrs="{'invisible':[('type','!=','table')]}">
                                                        <field name="no_of_rows"/>
@@ -407,7 +412,7 @@
                                                </group>
                                             </group>
                                             <newline/>
-                                            <group  attrs="{'invisible':[('type','!=','multiple_choice_only_one_ans'), ('type','!=','multiple_choice_multiple_ans'), ('type','!=','matrix_of_choices_only_multi_ans'),('type','!=','matrix_of_choices_only_one_ans'),('type','!=','matrix_of_drop_down_menus'),('type','!=','rating_scale')]}" string="Comment Field" col="4">
+                                            <group  attrs="{'invisible':[('type','!=','multiple_choice_only_one_ans'), ('type','!=','multiple_choice_multiple_ans'), ('type','!=','matrix_of_choices_only_multi_ans'),('type','!=','matrix_of_choices_only_one_ans'),('type','!=','rating_scale')]}" string="Comment Field" col="4">
                                                 <group>
                                                     <field name="is_comment_require"/>
                                                 </group>
@@ -473,12 +478,12 @@
                                                 </group>
                                             </group>
                                             <newline/>
-                                            <group attrs="{'invisible':[('type','!=','multiple_choice_only_one_ans'), ('type','!=','multiple_choice_multiple_ans'),('type','!=','matrix_of_choices_only_one_ans'),('type','!=','matrix_of_choices_only_multi_ans'),('type','!=','matrix_of_drop_down_menus'),('type','!=','rating_scale'),('type','!=','multiple_textboxes'),('type','!=','numerical_textboxes'),('type','!=','date'),('type','!=','date_and_time'),('type','!=','single_textbox'),('type','!=','comment'),('type','!=','multiple_textboxes_diff_type')]}">
+                                            <group attrs="{'invisible':[('type','!=','multiple_choice_only_one_ans'), ('type','!=','multiple_choice_multiple_ans'),('type','!=','matrix_of_choices_only_one_ans'),('type','!=','matrix_of_choices_only_multi_ans'),('type','!=','rating_scale'),('type','!=','multiple_textboxes'),('type','!=','numerical_textboxes'),('type','!=','date'),('type','!=','date_and_time'),('type','!=','single_textbox'),('type','!=','comment'),('type','!=','multiple_textboxes_diff_type')]}">
                                                 <separator string="Required Answer" colspan="4"/>
                                                 <newline/>
                                                 <field name="is_require_answer"/>
                                                 <group col="6" colspan="4" attrs="{'invisible':[('is_require_answer','=',False)]}">
-                                                    <group colspan="4" attrs="{'invisible':[('type','!=','multiple_choice_multiple_ans'),('type','!=','matrix_of_choices_only_one_ans'),('type','!=','matrix_of_choices_only_multi_ans'),('type','!=','matrix_of_drop_down_menus'),('type','!=','rating_scale'),('type','!=','multiple_textboxes'),('type','!=','numerical_textboxes'),('type','!=','date'),('type','!=','date_and_time'),('type','!=','multiple_textboxes_diff_type')]}">
+                                                    <group colspan="4" attrs="{'invisible':[('type','!=','multiple_choice_multiple_ans'),('type','!=','matrix_of_choices_only_one_ans'),('type','!=','matrix_of_choices_only_multi_ans'),('type','!=','rating_scale'),('type','!=','multiple_textboxes'),('type','!=','numerical_textboxes'),('type','!=','date'),('type','!=','date_and_time'),('type','!=','multiple_textboxes_diff_type')]}">
                                                         <field name="required_type"/>
                                                         <group colspan="2" attrs="{'invisible':[('required_type','!=','at least'),('required_type','!=','at most'),('required_type','!=','exactly')]}">
                                                             <field name="req_ans" />
@@ -603,12 +608,12 @@
                     <field name="in_visible_answer_type" invisible="1"/>
                     <notebook colspan="4">
                         <page string="Options">
-                            <group attrs="{'invisible':[('type','!=','multiple_textboxes_diff_type'),('type','!=','multiple_choice_only_one_ans'), ('type','!=','multiple_choice_multiple_ans'),('type','!=','matrix_of_choices_only_one_ans'),('type','!=','matrix_of_choices_only_multi_ans'),('type','!=','matrix_of_drop_down_menus'),('type','!=','rating_scale'),('type','!=','multiple_textboxes'),('type','!=','numerical_textboxes'),('type','!=','date'),('type','!=','date_and_time'),('type','!=','table')]}">
+                            <group attrs="{'invisible':[('type','!=','multiple_textboxes_diff_type'),('type','!=','multiple_choice_only_one_ans'), ('type','!=','multiple_choice_multiple_ans'),('type','!=','matrix_of_choices_only_one_ans'),('type','!=','matrix_of_choices_only_multi_ans'),('type','!=','rating_scale'),('type','!=','multiple_textboxes'),('type','!=','numerical_textboxes'),('type','!=','date'),('type','!=','date_and_time'),('type','!=','table')]}">
                               <separator string="Answer" colspan="4"/>
                                <group colspan="4" attrs="{'invisible':[('type','=','table')]}">
                                    <field name="answer_choice_ids" nolabel="1" colspan="4" context="{'in_visible_answer_type': in_visible_answer_type}"/>
                                </group>
-                               <group colspan="4" attrs="{'invisible':[('type','!=','matrix_of_choices_only_multi_ans'),('type','!=','matrix_of_choices_only_one_ans'),('type','!=','matrix_of_drop_down_menus'),('type','!=','rating_scale'),('type','!=','table')]}">
+                               <group colspan="4" attrs="{'invisible':[('type','!=','matrix_of_choices_only_multi_ans'),('type','!=','matrix_of_choices_only_one_ans'),('type','!=','rating_scale'),('type','!=','table')]}">
                                    <field name="column_heading_ids" colspan="4" nolabel="1" context="{'in_visible_rating_weight':in_visible_rating_weight,'in_visible_menu_choice':in_visible_menu_choice}"/>
                                     <group colspan="4" attrs="{'invisible':[('type','!=','table')]}">
                                        <field name="no_of_rows"/>
@@ -616,7 +621,7 @@
                                </group>
                             </group>
                             <newline/>
-                            <group  attrs="{'invisible':[('type','!=','multiple_choice_only_one_ans'), ('type','!=','multiple_choice_multiple_ans'), ('type','!=','matrix_of_choices_only_multi_ans'),('type','!=','matrix_of_choices_only_one_ans'),('type','!=','matrix_of_drop_down_menus'),('type','!=','rating_scale')]}">
+                            <group  attrs="{'invisible':[('type','!=','multiple_choice_only_one_ans'), ('type','!=','multiple_choice_multiple_ans'), ('type','!=','matrix_of_choices_only_multi_ans'),('type','!=','matrix_of_choices_only_one_ans'),('type','!=','rating_scale')]}">
                                 <separator string="Comment Field" colspan="4"/>
                                 <group colspan="4">
                                     <field name="is_comment_require"/>
@@ -683,12 +688,12 @@
                                 </group>
                             </group>
                             <newline/>
-                            <group attrs="{'invisible':[('type','!=','multiple_choice_only_one_ans'), ('type','!=','multiple_choice_multiple_ans'),('type','!=','matrix_of_choices_only_one_ans'),('type','!=','matrix_of_choices_only_multi_ans'),('type','!=','matrix_of_drop_down_menus'),('type','!=','rating_scale'),('type','!=','multiple_textboxes'),('type','!=','numerical_textboxes'),('type','!=','date'),('type','!=','date_and_time'),('type','!=','single_textbox'),('type','!=','comment'),('type','!=','multiple_textboxes_diff_type')]}">
+                            <group attrs="{'invisible':[('type','!=','multiple_choice_only_one_ans'), ('type','!=','multiple_choice_multiple_ans'),('type','!=','matrix_of_choices_only_one_ans'),('type','!=','matrix_of_choices_only_multi_ans'),('type','!=','rating_scale'),('type','!=','multiple_textboxes'),('type','!=','numerical_textboxes'),('type','!=','date'),('type','!=','date_and_time'),('type','!=','single_textbox'),('type','!=','comment'),('type','!=','multiple_textboxes_diff_type')]}">
                                 <separator string="Required Answer" colspan="4"/>
                                 <newline/>
                                 <field name="is_require_answer"/>
                                 <group col="6" colspan="4" attrs="{'invisible':[('is_require_answer','=',False)]}">
-                                    <group colspan="4" attrs="{'invisible':[('type','!=','multiple_choice_multiple_ans'),('type','!=','matrix_of_choices_only_one_ans'),('type','!=','matrix_of_choices_only_multi_ans'),('type','!=','matrix_of_drop_down_menus'),('type','!=','rating_scale'),('type','!=','multiple_textboxes'),('type','!=','numerical_textboxes'),('type','!=','date'),('type','!=','date_and_time'),('type','!=','multiple_textboxes_diff_type')]}">
+                                    <group colspan="4" attrs="{'invisible':[('type','!=','multiple_choice_multiple_ans'),('type','!=','matrix_of_choices_only_one_ans'),('type','!=','matrix_of_choices_only_multi_ans'),('type','!=','rating_scale'),('type','!=','multiple_textboxes'),('type','!=','numerical_textboxes'),('type','!=','date'),('type','!=','date_and_time'),('type','!=','multiple_textboxes_diff_type')]}">
                                         <field name="required_type"/>
                                         <group colspan="2" attrs="{'invisible':[('required_type','!=','at least'),('required_type','!=','at most'),('required_type','!=','exactly')]}">
                                             <field name="req_ans" />
@@ -780,12 +785,12 @@
                     <field name="in_visible_answer_type" invisible="1"/>
                     <notebook colspan="4">
                         <page string="Options">
-                            <group attrs="{'invisible':[('type','!=','multiple_textboxes_diff_type'),('type','!=','multiple_choice_only_one_ans'), ('type','!=','multiple_choice_multiple_ans'),('type','!=','matrix_of_choices_only_one_ans'),('type','!=','matrix_of_choices_only_multi_ans'),('type','!=','matrix_of_drop_down_menus'),('type','!=','rating_scale'),('type','!=','multiple_textboxes'),('type','!=','numerical_textboxes'),('type','!=','date'),('type','!=','date_and_time'),('type','!=','table')]}">
+                            <group attrs="{'invisible':[('type','!=','multiple_textboxes_diff_type'),('type','!=','multiple_choice_only_one_ans'), ('type','!=','multiple_choice_multiple_ans'),('type','!=','matrix_of_choices_only_one_ans'),('type','!=','matrix_of_choices_only_multi_ans'),('type','!=','rating_scale'),('type','!=','multiple_textboxes'),('type','!=','numerical_textboxes'),('type','!=','date'),('type','!=','date_and_time'),('type','!=','table')]}">
                               <separator string="Answer" colspan="4"/>
                                <group colspan="4" attrs="{'invisible':[('type','=','table')]}">
                                    <field name="answer_choice_ids" nolabel="1" colspan="4" context="{'in_visible_answer_type': in_visible_answer_type}"/>
                                </group>
-                               <group colspan="4" attrs="{'invisible':[('type','!=','matrix_of_choices_only_multi_ans'),('type','!=','matrix_of_choices_only_one_ans'),('type','!=','matrix_of_drop_down_menus'),('type','!=','rating_scale'),('type','!=','table')]}">
+                               <group colspan="4" attrs="{'invisible':[('type','!=','matrix_of_choices_only_multi_ans'),('type','!=','matrix_of_choices_only_one_ans'),('type','!=','rating_scale'),('type','!=','table')]}">
                                    <field name="column_heading_ids" colspan="4" nolabel="1" context="{'in_visible_rating_weight':in_visible_rating_weight,'in_visible_menu_choice':in_visible_menu_choice}"/>
                                     <group colspan="4" attrs="{'invisible':[('type','!=','table')]}">
                                        <field name="no_of_rows"/>
@@ -793,7 +798,7 @@
                                </group>
                             </group>
                             <newline/>
-                            <group  attrs="{'invisible':[('type','!=','multiple_choice_only_one_ans'), ('type','!=','multiple_choice_multiple_ans'), ('type','!=','matrix_of_choices_only_multi_ans'),('type','!=','matrix_of_choices_only_one_ans'),('type','!=','matrix_of_drop_down_menus'),('type','!=','rating_scale')]}">
+                            <group  attrs="{'invisible':[('type','!=','multiple_choice_only_one_ans'), ('type','!=','multiple_choice_multiple_ans'), ('type','!=','matrix_of_choices_only_multi_ans'),('type','!=','matrix_of_choices_only_one_ans'),('type','!=','rating_scale')]}">
                                 <separator string="Comment Field" colspan="4"/>
                                 <group colspan="4">
                                     <field name="is_comment_require"/>
@@ -860,12 +865,12 @@
                                 </group>
                             </group>
                             <newline/>
-                            <group attrs="{'invisible':[('type','!=','multiple_choice_only_one_ans'), ('type','!=','multiple_choice_multiple_ans'),('type','!=','matrix_of_choices_only_one_ans'),('type','!=','matrix_of_choices_only_multi_ans'),('type','!=','matrix_of_drop_down_menus'),('type','!=','rating_scale'),('type','!=','multiple_textboxes'),('type','!=','numerical_textboxes'),('type','!=','date'),('type','!=','date_and_time'),('type','!=','single_textbox'),('type','!=','comment'),('type','!=','multiple_textboxes_diff_type')]}">
+                            <group attrs="{'invisible':[('type','!=','multiple_choice_only_one_ans'), ('type','!=','multiple_choice_multiple_ans'),('type','!=','matrix_of_choices_only_one_ans'),('type','!=','matrix_of_choices_only_multi_ans'),('type','!=','rating_scale'),('type','!=','multiple_textboxes'),('type','!=','numerical_textboxes'),('type','!=','date'),('type','!=','date_and_time'),('type','!=','single_textbox'),('type','!=','comment'),('type','!=','multiple_textboxes_diff_type')]}">
                                 <separator string="Required Answer" colspan="4"/>
                                 <newline/>
                                 <field name="is_require_answer"/>
                                 <group col="6" colspan="4" attrs="{'invisible':[('is_require_answer','=',False)]}">
-                                    <group colspan="4" attrs="{'invisible':[('type','!=','multiple_choice_multiple_ans'),('type','!=','matrix_of_choices_only_one_ans'),('type','!=','matrix_of_choices_only_multi_ans'),('type','!=','matrix_of_drop_down_menus'),('type','!=','rating_scale'),('type','!=','multiple_textboxes'),('type','!=','numerical_textboxes'),('type','!=','date'),('type','!=','date_and_time'),('type','!=','multiple_textboxes_diff_type')]}">
+                                    <group colspan="4" attrs="{'invisible':[('type','!=','multiple_choice_multiple_ans'),('type','!=','matrix_of_choices_only_one_ans'),('type','!=','matrix_of_choices_only_multi_ans'),('type','!=','rating_scale'),('type','!=','multiple_textboxes'),('type','!=','numerical_textboxes'),('type','!=','date'),('type','!=','date_and_time'),('type','!=','multiple_textboxes_diff_type')]}">
                                         <field name="required_type"/>
                                         <group colspan="2" attrs="{'invisible':[('required_type','!=','at least'),('required_type','!=','at most'),('required_type','!=','exactly')]}">
                                             <field name="req_ans" />
@@ -1036,25 +1041,6 @@
         <!--
             Survey Response Answer
         -->
-
-        <record model="ir.ui.view" id="survey_response_answer_form">
-            <field name="name">survey_response_answer_form</field>
-            <field name="model">survey.response.answer</field>
-            <field name="arch" type="xml">
-                <form string="Survey Answer">
-                    <group colspan="4">
-                        <field name="answer_id"/>
-                        <field name="answer" />
-                    </group>
-                    <field name="value_choice"/>
-                    <label string="(Use Only Question Type is matrix_of_drop_down_menus)" align="0.0"/>
-                    <group colspan="4" col="4">
-                        <field name="comment_field"/>
-                        <field name="column_id"/>
-                    </group>
-                </form>
-            </field>
-        </record>
 
         <record model="ir.ui.view" id="survey_response_answer_tree">
             <field name="name">survey_response_answer_tree</field>

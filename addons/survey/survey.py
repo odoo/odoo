@@ -303,7 +303,6 @@ class survey_question(osv.osv):
              ('multiple_choice_multiple_ans','Multiple Choice (Multiple Answer)'),
              ('matrix_of_choices_only_one_ans','Matrix of Choices (Only One Answers Per Row)'),
              ('matrix_of_choices_only_multi_ans','Matrix of Choices (Multiple Answers Per Row)'),
-             ('matrix_of_drop_down_menus','Matrix of Drop-down Menus'),
              ('rating_scale','Rating Scale'),('single_textbox','Single Textbox'),
              ('multiple_textboxes','Multiple Textboxes'),
              ('multiple_textboxes_diff_type','Multiple Textboxes With Different Type'),
@@ -388,10 +387,6 @@ class survey_question(osv.osv):
             val.update({'in_visible_rating_weight':False, 'in_visible_menu_choice':True})
             return {'value': val}
 
-        elif type in ['matrix_of_drop_down_menus']:
-            val.update({'in_visible_rating_weight':True, 'in_visible_menu_choice':False})
-            return {'value': val}
-
         elif type in ['single_textbox']:
             val.update({'in_visible_rating_weight':True, 'in_visible_menu_choice':True})
             return {'value': val}
@@ -418,8 +413,7 @@ class survey_question(osv.osv):
             else:
                 que_type = question['type']
 
-            if que_type in ['matrix_of_choices_only_one_ans', 'matrix_of_choices_only_multi_ans',\
-                             'matrix_of_drop_down_menus', 'rating_scale']:
+            if que_type in ['matrix_of_choices_only_one_ans', 'matrix_of_choices_only_multi_ans', 'rating_scale']:
                 if not col_len:
                     raise osv.except_osv(_('Warning!'),_('You must enter one or more column headings for question "%s" of page %s.') % (question['question'], question['page_id'][1]))
             ans_len = len(question['answer_choice_ids'])
@@ -442,8 +436,8 @@ class survey_question(osv.osv):
                 req_type = question['required_type']
 
             if que_type in ['multiple_choice_multiple_ans','matrix_of_choices_only_one_ans', \
-                        'matrix_of_choices_only_multi_ans', 'matrix_of_drop_down_menus',\
-                         'rating_scale','multiple_textboxes','numerical_textboxes','date','date_and_time']:
+                        'matrix_of_choices_only_multi_ans', 'rating_scale','multiple_textboxes', \
+                        'numerical_textboxes','date','date_and_time']:
                 if req_type in ['at least', 'at most', 'exactly']:
                     if vals.has_key('req_ans'):
                         if not vals['req_ans'] or  vals['req_ans'] > ans_len:
@@ -487,16 +481,6 @@ class survey_question(osv.osv):
                         raise osv.except_osv(_('Warning!'),_("Maximum Required Answer is greater \
                                     than Minimum Required Answer"))
 
-            if question['type'] ==  'matrix_of_drop_down_menus' and vals.has_key('column_heading_ids'):
-                for col in vals['column_heading_ids']:
-                    if not col[2] or not col[2].has_key('menu_choice') or not col[2]['menu_choice']:
-                        raise osv.except_osv(_('Warning!'),_("You must enter one or more menu choices\
-                                 in column heading."))
-                    elif not col[2] or not col[2].has_key('menu_choice') or\
-                             col[2]['menu_choice'].strip() == '':
-                        raise osv.except_osv(_('Warning!'),_("You must enter one or more menu \
-                                choices in column heading (white spaces not allowed)."))
-
         return super(survey_question, self).write(cr, uid, ids, vals, context=context)
 
     def create(self, cr, uid, vals, context=None):
@@ -508,10 +492,10 @@ class survey_question(osv.osv):
                 raise osv.except_osv(_('Warning!'),_('You must enter one or more answers for question "%s" of page %s .') % (vals['question'], page))
 
         if vals.has_key('column_heading_ids') and  not len(vals['column_heading_ids']):
-            if vals.has_key('type') and vals['type'] in ['matrix_of_choices_only_one_ans', 'matrix_of_choices_only_multi_ans', 'matrix_of_drop_down_menus', 'rating_scale']:
+            if vals.has_key('type') and vals['type'] in ['matrix_of_choices_only_one_ans', 'matrix_of_choices_only_multi_ans', 'rating_scale']:
                 raise osv.except_osv(_('Warning!'),_('You must enter one or more column headings for question "%s" of page %s.')% (vals['question'], page))
 
-        if vals['type'] in ['multiple_choice_multiple_ans','matrix_of_choices_only_one_ans', 'matrix_of_choices_only_multi_ans', 'matrix_of_drop_down_menus', 'rating_scale','multiple_textboxes','numerical_textboxes','date','date_and_time']:
+        if vals['type'] in ['multiple_choice_multiple_ans','matrix_of_choices_only_one_ans', 'matrix_of_choices_only_multi_ans', 'rating_scale','multiple_textboxes','numerical_textboxes','date','date_and_time']:
             if vals.has_key('is_require_answer') and vals.has_key('required_type') and vals['required_type'] in ['at least', 'at most', 'exactly']:
                 if vals.has_key('answer_choice_ids') and vals['req_ans'] > len(vals['answer_choice_ids']) or not vals['req_ans']:
                     raise osv.except_osv(_('Warning!'),_("#Required Answer you entered is greater than the number of answer. Please use a number that is smaller than %d.") % (len(vals['answer_choice_ids'])+1))
@@ -525,13 +509,6 @@ class survey_question(osv.osv):
                     raise osv.except_osv(_('Warning!'),_("Maximum Required Answer you entered for your maximum is greater than the number of answer. Please use a number that is smaller than %d.") % (len(vals['answer_choice_ids'])+1))
                 if maximum_ans <= minimum_ans:
                     raise osv.except_osv(_('Warning!'),_("Maximum Required Answer is greater than Minimum Required Answer."))
-
-        if vals['type'] ==  'matrix_of_drop_down_menus':
-            for col in vals['column_heading_ids']:
-                if not col[2] or not col[2].has_key('menu_choice') or not col[2]['menu_choice']:
-                    raise osv.except_osv(_('Warning!'),_("You must enter one or more menu choices in column heading."))
-                elif not col[2] or not col[2].has_key('menu_choice') or col[2]['menu_choice'].strip() == '':
-                    raise osv.except_osv(_('Warning!'),_("You must enter one or more menu choices in column heading (white spaces not allowed)."))
 
         res = super(survey_question, self).create(cr, uid, vals, context)
         return res
