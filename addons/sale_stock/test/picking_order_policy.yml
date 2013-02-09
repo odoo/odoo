@@ -22,7 +22,7 @@
   !python {model: sale.order}: |
     from datetime import datetime, timedelta
     from dateutil.relativedelta import relativedelta
-    from tools import DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT
+    from openerp.tools import DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT
     order = self.browse(cr, uid, ref("sale.sale_order_6"))
     for order_line in order.order_line:
         procurement = order_line.procurement_id
@@ -44,7 +44,7 @@
   !python {model: sale.order}: |
     from datetime import datetime, timedelta
     from dateutil.relativedelta import relativedelta
-    from tools import DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT
+    from openerp.tools import DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT
     sale_order = self.browse(cr, uid, ref("sale.sale_order_6"))
     assert sale_order.picking_ids, "Delivery order is not created."
     for picking in sale_order.picking_ids:

@@ -32,7 +32,7 @@
 -
   !python {model: res.partner}: |
         import netsvc
-        from tools.translate import _
+        from openerp.tools.translate import _
         invoice_pool = self.pool.get('account.invoice')
         partner_pool = self.pool.get('res.partner')
         membership_line_pool = self.pool.get('membership.membership_line')
@@ -106,7 +106,7 @@
   I'm doing to make credit note of invoice which is paid by "Seagate" to cancel membership.
 -
   !python {model: account.invoice}: |
-        from tools.translate import _
+        from openerp.tools.translate import _
         invoice_pool = self.pool.get('account.invoice')
         partner_pool = self.pool.get('res.partner')
         membership_line_pool = self.pool.get('membership.membership_line')

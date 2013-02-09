@@ -14,7 +14,7 @@
   Now I check workcenter lines.
 -
   !python {model: mrp.production}: |
-    from tools import float_compare
+    from openerp.tools import float_compare
     def assert_equals(value1, value2, msg, float_compare=float_compare):
         assert float_compare(value1, value2, precision_digits=2) == 0, msg
     order = self.browse(cr, uid, ref("mrp_production_test1"), context=context)
@@ -234,6 +234,6 @@
     ctx = context.copy()
     ctx.update({'model': 'mrp.workcenter','active_ids': [ref('mrp_workcenter_0'),ref('mrp_workcenter_1')]})
     data_dict = {'time_unit': 'day', 'measure_unit': 'hours'}
-    from tools import test_reports
+    from openerp.tools import test_reports
     test_reports.try_report_action(cr, uid, 'action_mrp_workcenter_load_wizard',wiz_data=data_dict, context=ctx, our_module='mrp')
     

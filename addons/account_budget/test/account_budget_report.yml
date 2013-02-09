@@ -6,7 +6,7 @@
     ctx={}
     ctx.update({'model': 'account.analytic.account','active_ids': [ref('account.analytic_root')]})
     data_dict = {}
-    from tools import test_reports
+    from openerp.tools import test_reports
     test_reports.try_report_action(cr, uid, 'action_account_budget_analytic',wiz_data=data_dict, context=ctx, our_module='account_budget')
 
 -
@@ -17,7 +17,7 @@
     ctx={}
     ctx.update({'model': 'account.budget.post','active_ids': [ref('account_budget.account_budget_post_sales0')]})
     data_dict = {}
-    from tools import test_reports
+    from openerp.tools import test_reports
     test_reports.try_report_action(cr, uid, 'action_account_budget_report',wiz_data=data_dict, context=ctx, our_module='account_budget')
 
 -
@@ -28,6 +28,6 @@
     ctx={}
     ctx.update({'model': 'account.budget.post','active_ids': [ref('account_budget.crossovered_budget_budgetoptimistic0')]})
     data_dict = {}
-    from tools import test_reports
+    from openerp.tools import test_reports
     test_reports.try_report_action(cr, uid, 'action_account_budget_crossvered_report',wiz_data=data_dict, context=ctx, our_module='account_budget')
 
