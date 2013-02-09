@@ -39,7 +39,7 @@
   Production start on first work center, so I start work operation on first work center.
 -
   !python {model: mrp.production}: |
-    import netsvc
+    from openerp import netsvc
     order = self.browse(cr, uid, ref("mrp.mrp_production_1"), context=context)
     wf_service = netsvc.LocalService("workflow")
     wf_service.trg_validate(uid, 'mrp.production.workcenter.line', order.workcenter_lines[0].id, 'button_start_working', cr)
@@ -47,7 +47,7 @@
   Now I pause first work operation due to technical fault of work center.
 -
   !python {model: mrp.production}: |
-    import netsvc
+    from openerp import netsvc
     order = self.browse(cr, uid, ref("mrp.mrp_production_1"), context=context)
     wf_service = netsvc.LocalService("workflow")
     wf_service.trg_validate(uid, 'mrp.production.workcenter.line', order.workcenter_lines[0].id, 'button_pause', cr)
@@ -55,7 +55,7 @@
   I resume first work operation.
 -
   !python {model: mrp.production}: |
-    import netsvc
+    from openerp import netsvc
     order = self.browse(cr, uid, ref("mrp.mrp_production_1"), context=context)
     wf_service = netsvc.LocalService("workflow")
     wf_service.trg_validate(uid, 'mrp.production.workcenter.line', order.workcenter_lines[0].id, 'button_resume', cr)
@@ -64,7 +64,7 @@
   I cancel first work operation.
 -
   !python {model: mrp.production}: |
-    import netsvc
+    from openerp import netsvc
     order = self.browse(cr, uid, ref("mrp.mrp_production_1"), context=context)
     wf_service = netsvc.LocalService("workflow")
     wf_service.trg_validate(uid, 'mrp.production.workcenter.line', order.workcenter_lines[0].id, 'button_cancel', cr)
@@ -72,7 +72,7 @@
   I reset first work operation and start after resolving techninal fault of work center.
 -
   !python {model: mrp.production}: |
-    import netsvc
+    from openerp import netsvc
     order = self.browse(cr, uid, ref("mrp.mrp_production_1"), context=context)
     wf_service = netsvc.LocalService("workflow")
     wf_service.trg_validate(uid, 'mrp.production.workcenter.line', order.workcenter_lines[0].id, 'button_draft', cr)
@@ -81,7 +81,7 @@
   I close first work operation as this work center completed its process.
 -
   !python {model: mrp.production}: |
-    import netsvc
+    from openerp import netsvc
     order = self.browse(cr, uid, ref("mrp.mrp_production_1"), context=context)
     wf_service = netsvc.LocalService("workflow")
     wf_service.trg_validate(uid, 'mrp.production.workcenter.line', order.workcenter_lines[0].id, 'button_done', cr)
@@ -89,7 +89,7 @@
   Now I close other operations one by one which are in start state.
 -
   !python {model: mrp.production}: |
-    import netsvc
+    from openerp import netsvc
     order = self.browse(cr, uid, ref("mrp.mrp_production_1"), context=context)
     wf_service = netsvc.LocalService("workflow")
     for work_line in order.workcenter_lines[1:]:

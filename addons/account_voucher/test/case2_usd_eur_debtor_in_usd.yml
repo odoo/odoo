@@ -180,7 +180,7 @@
   I confirm the voucher
 -
   !python {model: account.voucher}: |
-    import netsvc
+    from openerp import netsvc
     voucher = self.search(cr, uid, [('name', '=', 'First payment: Case 2 USD/EUR DR USD'), ('partner_id', '=', ref('base.res_partner_19'))])
     wf_service = netsvc.LocalService("workflow")
     wf_service.trg_validate(uid, 'account.voucher', voucher[0], 'proforma_voucher', cr)
@@ -271,7 +271,7 @@
   I confirm the voucher
 -
   !python {model: account.voucher}: |
-    import netsvc
+    from openerp import netsvc
     voucher = self.search(cr, uid, [('name', '=', 'Second payment: Case 2 SUPPL USD/EUR DR USD'), ('partner_id', '=', ref('base.res_partner_19'))])
     wf_service = netsvc.LocalService("workflow")
     wf_service.trg_validate(uid, 'account.voucher', voucher[0], 'proforma_voucher', cr)
