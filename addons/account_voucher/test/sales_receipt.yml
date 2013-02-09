@@ -45,7 +45,7 @@
   I create and post a voucher payment of amount 30000.0 for the partner Seagate
 -
   !python {model: account.voucher}: |
-    import netsvc
+    from openerp import netsvc
     vals = {}
     journal_id = self.default_get(cr, uid, ['journal_id']).get('journal_id',None)
     res = self.onchange_partner_id(cr, uid, [], ref("base.res_partner_19"), journal_id, 0.0, 1, ttype='receipt', date=False)
