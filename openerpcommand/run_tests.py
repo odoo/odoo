@@ -120,7 +120,6 @@ def run(args):
 
     # Install the import hook, to import openerp.addons.<module>.
     openerp.modules.module.initialize_sys_path()
-    openerp.modules.loading.open_openerp_namespace()
 
     # Extract module, submodule from the command-line args.
     if args.module is None:
