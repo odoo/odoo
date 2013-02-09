@@ -49,7 +49,8 @@
   In order to test the PDF reports defined on a Point of Sale, we will print a POS Sales User Report
 -
   !python {model: pos.order}: |
-    import netsvc, tools, os, time
+    import os, time
+    from openerp import netsvc, tools
     data_dict = {'model':'ir.ui.menu', 'form':{'date_start': time.strftime('%Y-%m-%d'), 'date_end': time.strftime('%Y-%m-%d'),'user_id':[ref('base.user_root')] }}
     (data, format) = netsvc.LocalService('report.pos.sales.user').create(cr, uid, [ref('point_of_sale.pos_order_pos1')], data_dict, {})
     if tools.config['test_report_directory']:
@@ -58,7 +59,8 @@
   In order to test the PDF reports defined on a Point of Sale, we will print a POS Payment Report
 -
   !python {model: pos.order}: |
-    import netsvc, tools, os, time
+    import os, time
+    from openerp import netsvc, tools
     (data, format) = netsvc.LocalService('report.pos.payment.report').create(cr, uid, [ref('point_of_sale.pos_order_pos0')], {}, {})
     if tools.config['test_report_directory']:
         file(os.path.join(tools.config['test_report_directory'], 'point_of_sale-payment_report'+format), 'wb+').write(data)
@@ -66,7 +68,8 @@
   In order to test the PDF reports defined on a Point of Sale, we will print a POS Payment User Report
 -
   !python {model: pos.order}: |
-    import netsvc, tools, os, time
+    import os, time
+    from openerp import netsvc, tools
     data_dict = {'model':'ir.ui.menu', 'form':{'user_id':[ref('base.user_root'),ref('base.user_demo')] }}
     (data, format) = netsvc.LocalService('report.pos.payment.report.user').create(cr, uid, [ref('point_of_sale.pos_order_pos1')], data_dict, {})
     if tools.config['test_report_directory']:

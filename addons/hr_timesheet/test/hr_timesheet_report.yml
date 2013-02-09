@@ -2,7 +2,8 @@
  Print the HR Timesheet By Employee report through the wizard
 -
   !python {model: hr.employee}: |
-    import netsvc, tools, os, time
+    import os, time
+    from openerp import netsvc, tools
     ctx={}
     ctx.update({'model': 'hr.employee','active_ids': []})
     data_dict = {'month': time.gmtime()[1], 'year': time.gmtime()[0], 'employee_id' : ref('hr.employee_fp')}
@@ -13,7 +14,8 @@
  Print the HR Timesheet By Employee report through the wizard
 -
   !python {model: hr.employee}: |
-    import netsvc, tools, os, time
+    import os, time
+    from openerp import netsvc, tools
     ctx={}
     ctx.update({'model': 'hr.employee','active_ids': []})
     data_dict = {'month': time.gmtime()[1], 'year': time.gmtime()[0], 'employee_ids' : [(6,0,[ref('hr.employee_fp'),ref('hr.employee_qdp'),ref('hr.employee_al')])]}

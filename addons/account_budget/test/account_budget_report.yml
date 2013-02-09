@@ -2,7 +2,8 @@
   Print the Analytic Budget Report through wizard
 -
   !python {model: account.analytic.account}: |
-    import netsvc, tools, os, time
+    import os, time
+    from openerp import netsvc, tools
     ctx={}
     ctx.update({'model': 'account.analytic.account','active_ids': [ref('account.analytic_root')]})
     data_dict = {}
@@ -13,7 +14,8 @@
   Print the Budget Report through wizard
 -
   !python {model: account.budget.post}: |
-    import netsvc, tools, os, time
+    import os, time
+    from openerp import netsvc, tools
     ctx={}
     ctx.update({'model': 'account.budget.post','active_ids': [ref('account_budget.account_budget_post_sales0')]})
     data_dict = {}
@@ -24,7 +26,8 @@
   Print the CrossOvered Budget Report mode through wizard
 -
   !python {model: crossovered.budget}: |
-    import netsvc, tools, os, time
+    import os, time
+    from openerp import netsvc, tools
     ctx={}
     ctx.update({'model': 'account.budget.post','active_ids': [ref('account_budget.crossovered_budget_budgetoptimistic0')]})
     data_dict = {}
