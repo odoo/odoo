@@ -487,7 +487,6 @@ class configmanager(object):
             openerp.conf.server_wide_modules = ['web','web_kanban']
         if complete:
             openerp.modules.module.initialize_sys_path()
-            openerp.modules.loading.open_openerp_namespace()
 
     def _generate_pgpassfile(self):
         """

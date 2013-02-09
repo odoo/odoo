@@ -45,13 +45,6 @@ from openerp.modules.module import initialize_sys_path, \
 
 _logger = logging.getLogger(__name__)
 
-def open_openerp_namespace():
-    # See comment for open_openerp_namespace.
-    if openerp.conf.deprecation.open_openerp_namespace:
-        for k, v in list(sys.modules.items()):
-            if k.startswith('openerp.') and sys.modules.get(k[8:]) is None:
-                sys.modules[k[8:]] = v
-
 
 def load_module_graph(cr, graph, status=None, perform_checks=True, skip_modules=None, report=None):
     """Migrates+Updates or Installs all module nodes from ``graph``
@@ -267,8 +260,6 @@ def load_modules(db, force_demo=False, status=None, update_module=False):
     # time to zero) in load_module_graph, not fine-grained enough.
     # It should be a method exposed by the pool.
     initialize_sys_path()
-
-    open_openerp_namespace()
 
     force = []
     if force_demo:
