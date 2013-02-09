@@ -13,7 +13,8 @@
   In order to test the PDF reports defined on an invoice, we will print an Invoice Report
 -
   !python {model: account.invoice}: |
-    import netsvc, tools, os
+    import os
+    from openerp import netsvc, tools
     (data, format) = netsvc.LocalService('report.account.invoice').create(cr, uid, [ref('account.account_invoice_customer0')], {}, {})
     if tools.config['test_report_directory']:
         file(os.path.join(tools.config['test_report_directory'], 'account-invoice.'+format), 'wb+').write(data)
@@ -22,7 +23,8 @@
   In order to test the PDF reports defined on a partner, we will print the Overdue Report
 -
   !python {model: res.partner}: |
-    import netsvc, tools, os
+    import os
+    from openerp import netsvc, tools
     (data, format) = netsvc.LocalService('report.account.overdue').create(cr, uid, [ref('base.res_partner_1'),ref('base.res_partner_2'),ref('base.res_partner_12')], {}, {})
     if tools.config['test_report_directory']:
         file(os.path.join(tools.config['test_report_directory'], 'account-report_overdue.'+format), 'wb+').write(data)

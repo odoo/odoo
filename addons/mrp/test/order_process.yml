@@ -214,7 +214,8 @@
   I print a "BOM Structure".
 -
   !python {model: mrp.production}: |
-    import netsvc, tools, os
+    import os
+    from openerp import netsvc, tools
     order = self.browse(cr, uid, ref("mrp_production_test1"))
     (data, format) = netsvc.LocalService('report.bom.structure').create(cr, uid, [order.bom_id.id], {}, {})
     if tools.config['test_report_directory']:
@@ -223,7 +224,8 @@
   I print "Production Order".
 -
   !python {model: mrp.production}: |
-    import netsvc, tools, os
+    import os
+    from openerp import netsvc, tools
     (data, format) = netsvc.LocalService('report.mrp.production.order').create(cr, uid, [ref("mrp_production_test1")], {}, {})
     if tools.config['test_report_directory']:
         file(os.path.join(tools.config['test_report_directory'], 'mrp-production_order_report.'+format), 'wb+').write(data)

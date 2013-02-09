@@ -2,7 +2,8 @@
   In order to test the PDF reports defined on a Point Of Sale,we will print a POS Detail Summary Report
 -
   !python {model: pos.order}: |
-    import netsvc, tools, os
+    import os
+    from openerp import netsvc, tools
     (data, format) = netsvc.LocalService('report.pos.details_summary').create(cr, uid, [ref('point_of_sale.pos_order_pos1')], {}, {})
     if tools.config['test_report_directory']:
         file(os.path.join(tools.config['test_report_directory'], 'point_of_sale-details_summary report'+format), 'wb+').write(data)
@@ -11,7 +12,8 @@
   In order to test the PDF reports defined on a Point Of Sale, we will print a POS Invoice Report
 -
   !python {model: pos.order}: |
-    import netsvc, tools, os
+    import os
+    from openerp import netsvc, tools
     (data, format) = netsvc.LocalService('report.pos.invoice').create(cr, uid, [ref('point_of_sale.pos_order_pos1')], {}, {})
     if tools.config['test_report_directory']:
         file(os.path.join(tools.config['test_report_directory'], 'point_of_sale-invoice report'+format), 'wb+').write(data)
@@ -20,7 +22,8 @@
   In order to test the PDF reports defined on a Point Of Sale, we will print a POS Lines Report
 -
   !python {model: pos.order}: |
-    import netsvc, tools, os
+    import os
+    from openerp import netsvc, tools
     (data, format) = netsvc.LocalService('report.pos.lines').create(cr, uid, [ref('point_of_sale.pos_order_pos1')], {}, {})
     if tools.config['test_report_directory']:
         file(os.path.join(tools.config['test_report_directory'], 'point_of_sale-lines report'+format), 'wb+').write(data)
@@ -29,7 +32,8 @@
   In order to test the PDF reports defined on a Point of Sale, we will print a POS Receipt Report
 -
   !python {model: pos.order}: |
-    import netsvc, tools, os
+    import os
+    from openerp import netsvc, tools
     (data, format) = netsvc.LocalService('report.pos.receipt').create(cr, uid, [ref('point_of_sale.pos_order_pos1')], {}, {})
     if tools.config['test_report_directory']:
         file(os.path.join(tools.config['test_report_directory'], 'point_of_sale-receipt report'+format), 'wb+').write(data)
