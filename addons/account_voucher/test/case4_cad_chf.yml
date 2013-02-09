@@ -118,7 +118,8 @@
   I completly pay the invoice of 200 CAD
 -
   !python {model: account.voucher}: |
-    import netsvc, time
+    import time
+    from openerp import netsvc
     vals = {}
     voucher_id = self.browse(cr, uid, ref('account_voucher_1_case4'))
     data = []

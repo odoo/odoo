@@ -159,7 +159,8 @@
   I fill amounts 180 for the invoice of 200$ and 70 for the invoice of 100$>
 -
   !python {model: account.voucher}: |
-    import netsvc, time
+    import time
+    from openerp import netsvc
     vals = {}
     voucher_id = self.browse(cr, uid, ref('account_voucher_1_case1'))
     data = []
@@ -256,7 +257,8 @@
   I fill amounts 20 for the invoice of 200$ and 30 for the invoice of 100$
 -
   !python {model: account.voucher}: |
-    import netsvc, time
+    import time
+    from openerp import netsvc
     vals = {}
     voucher_id = self.browse(cr, uid, ref('account_voucher_2_case1'))
     data = []

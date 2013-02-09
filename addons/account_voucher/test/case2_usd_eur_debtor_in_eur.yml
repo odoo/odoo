@@ -163,7 +163,8 @@
   I fill amounts 130 for the invoice of 200$ and 70 for the invoice of 100$
 -
   !python {model: account.voucher}: |
-    import netsvc, time
+    import time
+    from openerp import netsvc
     vals = {}
     voucher_id = self.browse(cr, uid, ref('account_voucher_1_case2a'))
     data = []
@@ -231,7 +232,8 @@
   and I fully reconcile the 2 previous invoices
 -
   !python {model: account.voucher}: |
-    import netsvc, time
+    import time
+    from openerp import netsvc
     vals = {}
     voucher_id = self.browse(cr, uid, ref('account_voucher_2_case2a'))
     data = []
