@@ -1,0 +1,11 @@
+# HG changeset patch
+# Parent c8ae7646cce3f271698c844eb2d67f9a8719650d
+diff --git a/static/src/js/first_module.js b/static/src/js/first_module.js
+--- a/static/src/js/first_module.js
++++ b/static/src/js/first_module.js
+@@ -1,2 +1,4 @@
+ // static/src/js/first_module.js
+-console.log("Debug statement: file loaded");
++openerp.web_example = function (instance) {
++    console.log("Module loaded");
++};

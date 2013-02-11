@@ -1,12 +1,9 @@
---- web_example/static/src/js/first_module.js
-+++ web_example/static/src/js/first_module.js
-@@ -1,19 +1,52 @@
- // static/src/js/first_module.js
- openerp.web_example = function (instance) {
-     instance.web.client_actions.add('example.action', 'instance.web_example.Action');
-     instance.web_example.Action = instance.web.Widget.extend({
-         template: 'web_example.action',
-         events: {
+# HG changeset patch
+# Parent 2921a545adc3406d3139be7951f3225e94493466
+diff --git a/static/src/js/first_module.js b/static/src/js/first_module.js
+--- a/static/src/js/first_module.js
++++ b/static/src/js/first_module.js
+@@ -7,13 +7,46 @@ openerp.web_example = function (instance
              'click .oe_web_example_start button': 'watch_start',
              'click .oe_web_example_stop button': 'watch_stop'
          },

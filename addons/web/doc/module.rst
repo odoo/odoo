@@ -1,5 +1,7 @@
 .. _module:
 
+.. queue:: module/series
+
 Building an OpenERP Web module
 ==============================
 
@@ -19,8 +21,7 @@ A very basic OpenERP module structure will be our starting point:
     ├── __init__.py
     └── __openerp__.py
 
-.. literalinclude:: module/__openerp__.py
-    :language: python
+.. patch::
 
 This is a sufficient minimal declaration of a valid OpenERP module.
 
@@ -41,8 +42,7 @@ module is automatically recognized as "web-enabled" if it contains a
 is the extent of it. You should also change the dependency to list
 ``web``:
 
-.. literalinclude:: module/__openerp__.py.1.diff
-    :language: diff
+.. patch::
 
 .. note::
 
@@ -67,15 +67,13 @@ The first one is to add javascript code. It's customary to put it in
 ``static/src/js``, to have room for e.g. other file types, or
 third-party libraries.
 
-.. literalinclude:: module/static/src/js/first_module.js
-    :language: javascript
+.. patch::
 
 The client won't load any file unless specified, thus the new file
 should be listed in the module's manifest file, under a new key ``js``
 (a list of file names, or glob patterns):
 
-.. literalinclude:: module/__openerp__.py.2.diff
-    :language: diff
+.. patch::
 
 At this point, if the module is installed and the client reloaded the
 message should appear in your browser's development console.
@@ -100,8 +98,7 @@ initialized, and it can't get access to the various APIs of the web
 client (such as making RPC requests to the server). This is done by
 providing a `javascript module`_:
 
-.. literalinclude:: module/static/src/js/first_module.js.1.diff
-    :language: diff
+.. patch::
 
 If you reload the client, you'll see a message in the console exactly
 as previously. The differences, though invisible at this point, are:
@@ -122,17 +119,12 @@ To demonstrate, let's build a simple :doc:`client action
 
 First, the action declaration:
 
-.. literalinclude:: module/__openerp__.py.3.diff
-    :language: diff
-
-.. literalinclude:: module/web_example.xml
-    :language: xml
+.. patch::
 
 then set up the :doc:`client action hook <client_action>` to register
 a function (for now):
 
-.. literalinclude:: module/static/src/js/first_module.js.2.diff
-    :language: diff
+.. patch::
 
 Updating the module (in order to load the XML description) and
 re-starting the server should display a new menu *Example Client
@@ -148,8 +140,7 @@ client action function by a :doc:`widget`. Our widget will simply use
 its :js:func:`~openerp.web.Widget.start` to add some content to its
 DOM:
 
-.. literalinclude:: module/static/src/js/first_module.js.3.diff
-    :language: diff
+.. patch::
 
 after reloading the client (to update the javascript file), instead of
 printing to the console the menu item clears the whole screen and
@@ -159,15 +150,13 @@ Since we've added a class on the widget's :ref:`DOM root
 <widget-dom_root>` we can now see how to add a stylesheet to a module:
 first create the stylesheet file:
 
-.. literalinclude:: module/static/src/css/web_example.css
-    :language: css
+.. patch::
 
 then add a reference to the stylesheet in the module's manifest (which
 will require restarting the OpenERP Server to see the changes, as
 usual):
 
-.. literalinclude:: module/__openerp__.py.4.diff
-    :language: diff
+.. patch::
 
 the text displayed by the menu item should now be huge, and
 white-on-black (instead of small and black-on-white). From there on,
@@ -204,22 +193,16 @@ integration to OpenERP Web widgets.
 
 Adding a template file is similar to adding a style sheet:
 
-.. literalinclude:: module/static/src/xml/web_example.xml
-    :language: xml
-
-.. literalinclude:: module/__openerp__.py.5.diff
-    :language: diff
+.. patch::
 
 The template can then easily be hooked in the widget:
 
-.. literalinclude:: module/static/src/js/first_module.js.4.diff
-    :language: diff
+.. patch::
 
 And finally the CSS can be altered to style the new (and more complex)
 template-generated DOM, rather than the code-generated one:
 
-.. literalinclude:: module/static/src/css/web_example.css.1.diff
-    :language: diff
+.. patch::
 
 .. note::
 
@@ -238,15 +221,13 @@ The last step (until the next one) is to add some behavior and make
 our stopwatch watch. First hook some events on the buttons to toggle
 the widget's state:
 
-.. literalinclude:: module/static/src/js/first_module.js.5.diff
-    :language: diff
+.. patch::
 
 This demonstrates the use of the "events hash" and event delegation to
 declaratively handle events on the widget's DOM. And already changes
 the button displayed in the UI. Then comes some actual logic:
 
-.. literalinclude:: module/static/src/js/first_module.js.6.diff
-    :language: diff
+.. patch::
 
 * An initializer (the ``init`` method) is introduced to set-up a few
   internal variables: ``_start`` will hold the start of the timer (as
@@ -288,15 +269,13 @@ storing data as a model, allowing so that we don't lose our data and
 can later retrieve, query and manipulate it. First let's create a
 basic OpenERP model in which our data will be stored:
 
-.. literalinclude:: module/__init__.py.1.diff
-    :language: diff
+.. patch::
 
 then let's add saving times to the database every time the stopwatch
 is stopped, using :js:class:`the "high-level" Model API
 <openerp.web.Model.call>`:
 
-.. literalinclude:: module/static/src/js/first_module.js.7.diff
-    :language: diff
+.. patch::
 
 A look at the "Network" tab of your preferred browser's developer
 tools while playing with the stopwatch will show that the save
