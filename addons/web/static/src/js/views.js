@@ -225,7 +225,9 @@ instance.web.ActionManager = instance.web.Widget.extend({
                         add_context.active_id = state.active_id;
                     }
                     if (state.active_ids) {
-                        add_context.active_ids = state.active_ids.toString().split(',');
+                        add_context.active_ids = state.active_ids.toString().split(',').map(function(id) {
+                            return parseInt(id, 10);
+                        });
                     }
                     this.null_action();
                     action_loaded = this.do_action(state.action, { additional_context: add_context });
