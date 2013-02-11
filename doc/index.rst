@@ -17,6 +17,7 @@ OpenERP Server
    05_test_framework
    06_misc
    deployment-gunicorn
+   deployment-mod-wsgi
 
 OpenERP Command
 '''''''''''''''

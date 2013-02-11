@@ -1062,9 +1062,13 @@ class ir_model_data(osv.osv):
                     continue
                 _logger.info('Deleting %s@%s', res_id, model)
                 try:
+                    cr.execute('SAVEPOINT record_unlink_save')
                     self.pool.get(model).unlink(cr, uid, [res_id], context=context)
                 except Exception:
                     _logger.info('Unable to delete %s@%s', res_id, model, exc_info=True)
+                    cr.execute('ROLLBACK TO SAVEPOINT record_unlink_save')
+                else:
+                    cr.execute('RELEASE SAVEPOINT record_unlink_save')
 
         # Remove non-model records first, then model fields, and finish with models
         unlink_if_refcount((model, res_id) for model, res_id in to_unlink
