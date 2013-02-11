@@ -3556,7 +3556,7 @@ class BaseModel(object):
             if field_name not in self._all_columns:
                 return True
             field = self._all_columns[field_name].column
-            if field.groups:
+            if user != SUPERUSER_ID and field.groups:
                 return self.user_has_groups(cr, user, groups=field.groups, context=context)
             else:
                 return True

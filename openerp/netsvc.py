@@ -186,7 +186,13 @@ def init_logger():
         # Normal Handler on standard output
         handler = logging.StreamHandler(sys.stdout)
 
-    if isinstance(handler, logging.StreamHandler) and os.isatty(handler.stream.fileno()):
+    # Check that handler.stream has a fileno() method: when running OpenERP
+    # behind Apache with mod_wsgi, handler.stream will have type mod_wsgi.Log,
+    # which has no fileno() method. (mod_wsgi.Log is what is being bound to
+    # sys.stderr when the logging.StreamHandler is being constructed above.)
+    if isinstance(handler, logging.StreamHandler) \
+        and hasattr(handler.stream, 'fileno') \
+        and os.isatty(handler.stream.fileno()):
         formatter = ColoredFormatter(format)
     else:
         formatter = DBFormatter(format)
