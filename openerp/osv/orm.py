@@ -1077,7 +1077,7 @@ class BaseModel(object):
 
         # Validate rec_name
         if self._rec_name is not None:
-            assert self._rec_name in self._columns.keys() + ['id'], "Invalid rec_name %s for model %s" % (self._rec_name, self._name)
+            assert self._rec_name in self._all_columns.keys() + ['id'], "Invalid rec_name %s for model %s" % (self._rec_name, self._name)
         else:
             self._rec_name = 'name'
 
