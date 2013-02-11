@@ -20,10 +20,8 @@
                     <h1>
                         <field name="name"/>
                     </h1>
-                    <!--
                     <label for="web_page" colspan="2"/>
                     <field name="web_page" readonly="1" nolabel="1" colspan="2"/>
-                    -->
                     <div style="margin-bottom: 12px">
                         <button type="object" name="join" string="Join" attrs='{"invisible": [["are_you_inside", "=", True]]}'/>
                         <button type="object" name="quit" string="Quit" attrs='{"invisible": [["are_you_inside", "=", False]]}'/>
@@ -33,6 +31,12 @@
                     <field name="user_ids" readonly="1" nolabel="1" colspan="2"/>
                     <label for="script" colspan="2"/>
                     <field name="script" readonly="1" nolabel="1" colspan="2"/>
+                    <label for="button_text" colspan="2"/>
+                    <field name="button_text" nolabel="1" colspan="2"/>
+                    <label for="input_placeholder" colspan="2"/>
+                    <field name="input_placeholder" nolabel="1" colspan="2"/>
+                    <label for="default_message" colspan="2"/>
+                    <field name="default_message" nolabel="1" colspan="2"/>
                 </sheet>
                 </form>
             </field>

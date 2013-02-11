@@ -44,7 +44,7 @@ class ImportController(openerp.addons.web.http.Controller):
         req.session._uid = None
         req.session._login = "anonymous"
         req.session._password = "anonymous"
-        info = req.session.model('live_support.channel').get_info_for_chat_src()
+        info = req.session.model('live_support.channel').get_info_for_chat_src(channel)
         info["db"] = db
         info["channel"] = channel
         return req.make_response(env.get_template("loader.js").render(info),
@@ -106,6 +106,15 @@ class live_support_channel(osv.osv):
         'are_you_inside': fields.function(_are_you_inside, type='boolean', string='Are you inside the matrix?', store=False),
         'script': fields.function(_script, type='text', string='Script', store=False),
         'web_page': fields.function(_web_page, type='url', string='Web Page', store=False, size="200"),
+        'button_text': fields.char(string="Button Text", size=200),
+        'input_placeholder': fields.char(string="Input Placeholder", size=200),
+        'default_message': fields.char(string="Default Message", size=200),
+    }
+
+    _defaults = {
+        'button_text': "Chat with one of our collaborators",
+        'input_placeholder': "How may I help you?",
+        'default_message': '',
     }
 
     def get_available_user(self, cr, uid, channel_id, context=None):
@@ -118,9 +127,15 @@ class live_support_channel(osv.osv):
             return False
         return random.choice(users).id
 
-    def get_info_for_chat_src(self, cr, uid, context=None):
+    def get_info_for_chat_src(self, cr, uid, channel, context=None):
         url = self.pool.get('ir.config_parameter').get_param(cr, openerp.SUPERUSER_ID, 'web.base.url')
-        return {"url": url}
+        chan = self.browse(cr, uid, channel, context=context)
+        return {
+            "url": url,
+            'buttonText': chan.button_text,
+            'inputPlaceholder': chan.input_placeholder,
+            'defaultMessage': chan.default_message,
+        }
 
     def join(self, cr, uid, ids, context=None):
         my_id = self.pool.get("im.user").get_by_user_id(cr, uid, uid, context)["id"]
