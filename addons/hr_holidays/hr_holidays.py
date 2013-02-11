@@ -117,7 +117,10 @@ class hr_holidays(osv.osv):
         },
     }
 
-    def _employee_get(self, cr, uid, context=None):
+    def _employee_get(self, cr, uid, context=None):        
+        emp_id = context.get('default_employee_id', False)
+        if emp_id:
+            return emp_id
         ids = self.pool.get('hr.employee').search(cr, uid, [('user_id', '=', uid)], context=context)
         if ids:
             return ids[0]
@@ -204,9 +207,9 @@ class hr_holidays(osv.osv):
         leave_ids = obj_res_leave.search(cr, uid, [('holiday_id', 'in', ids)], context=context)
         return obj_res_leave.unlink(cr, uid, leave_ids, context=context)
 
-    def onchange_type(self, cr, uid, ids, holiday_type):
-        result = {'value': {'employee_id': False}}
-        if holiday_type == 'employee':
+    def onchange_type(self, cr, uid, ids, holiday_type, employee_id):
+        result = {}
+        if holiday_type == 'employee' and not employee_id:
             ids_employee = self.pool.get('hr.employee').search(cr, uid, [('user_id','=', uid)])
             if ids_employee:
                 result['value'] = {
