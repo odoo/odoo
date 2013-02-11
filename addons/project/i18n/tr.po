@@ -8,13 +8,13 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2012-12-21 17:04+0000\n"
-"PO-Revision-Date: 2013-02-07 14:00+0000\n"
-"Last-Translator: Ayhan KIZILTAN <Unknown>\n"
+"PO-Revision-Date: 2013-02-10 21:24+0000\n"
+"Last-Translator: Ediz Duman <neps1192@gmail.com>\n"
 "Language-Team: Turkish <tr@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-02-08 05:24+0000\n"
+"X-Launchpad-Export-Date: 2013-02-11 05:35+0000\n"
 "X-Generator: Launchpad (build 16482)\n"
 
 #. module: project
@@ -28,6 +28,8 @@ msgid ""
 "If checked, this contract will be available in the project menu and you will "
 "be able to manage tasks or track issues"
 msgstr ""
+"Eğer işaretli ise, bu sözleşme proje menüsünde mevcut olacak ve sizden "
+"görevleri veya takip sorunları yönetmek mümkün"
 
 #. module: project
 #: field:project.project,progress_rate:0
@@ -39,7 +41,7 @@ msgstr "İlerleme"
 #. module: project
 #: model:process.node,name:project.process_node_taskbydelegate0
 msgid "Task by delegate"
-msgstr "Aktarılmaya Göre Görevler"
+msgstr "Yetkilendirilmiş  Görevler"
 
 #. module: project
 #: view:project.project:0
@@ -169,7 +171,7 @@ msgstr "İlerlemedeki görevler"
 #. module: project
 #: help:project.project,progress_rate:0
 msgid "Percent of tasks closed according to the total of tasks todo."
-msgstr ""
+msgstr "Görevleri Yüzde kaçı kapatıldı. Yapılacak toplam görevlerin."
 
 #. module: project
 #: model:ir.actions.client,name:project.action_client_project_menu
@@ -294,6 +296,7 @@ msgid ""
 "Project's members are users who can have an access to the tasks related to "
 "this project."
 msgstr ""
+"Projenin üyeleri ile ilgili görevlere erişebilir kullanıcıları bu proje."
 
 #. module: project
 #: view:project.project:0
@@ -337,6 +340,8 @@ msgid ""
 "Sum of total hours of all tasks related to this project and its child "
 "projects."
 msgstr ""
+"Bu proje ile ilgili tüm görevlerin toplam saatleri toplamı ve onun alt "
+"projlers."
 
 #. module: project
 #: help:project.project,active:0
@@ -344,6 +349,8 @@ msgid ""
 "If the active field is set to False, it will allow you to hide the project "
 "without removing it."
 msgstr ""
+"Etkin alanını yanlış olarak ayarlıysa, bu projeyi gizleme için izin verir "
+"onu çıkarmadan."
 
 #. module: project
 #: model:process.transition,note:project.process_transition_opendonetask0
@@ -360,12 +367,13 @@ msgstr "Özet"
 #: view:project.project:0
 msgid "Append this project to another one using analytic accounts hierarchy"
 msgstr ""
+"Analitik hesapların hiyerarşi kullanarak başka birine bu proje ekleme"
 
 #. module: project
 #: view:project.task:0
 #: view:project.task.history.cumulative:0
 msgid "In Progress Tasks"
-msgstr "İlerlemedeki Görevler"
+msgstr "DevamEden Görevler"
 
 #. module: project
 #: help:res.company,project_time_mode_id:0
@@ -374,6 +382,10 @@ msgid ""
 "If you use the timesheet linked to projects (project_timesheet module), "
 "don't forget to setup the right unit of measure in your employees."
 msgstr ""
+"Bu projeler ve görevler kullanılan ölçü birimini ayarlar.\n"
+"Eğer projelerde (project_timesheet modülü) ile bağlantılı zaman çizelgesi "
+"kullanıyorsanız,unutmayın Çalışanlarınızın ölçü birim doğru olarak "
+"ayarlamayı."
 
 #. module: project
 #: field:project.task,user_id:0
@@ -385,7 +397,7 @@ msgstr "Atanan"
 #: code:addons/project/project.py:1021
 #, python-format
 msgid "Delegated User should be specified"
-msgstr ""
+msgstr "Yetkili Kullanıcı belirtilmelidir"
 
 #. module: project
 #: view:project.project:0
@@ -416,7 +428,7 @@ msgstr "Çalışılan Zaman"
 #. module: project
 #: model:ir.actions.act_window,name:project.action_project_task_reevaluate
 msgid "Re-evaluate Task"
-msgstr ""
+msgstr "Yeniden değerlendirme Görev"
 
 #. module: project
 #: view:project.task:0
@@ -426,7 +438,7 @@ msgstr "Planlanan zamanı doğrula"
 #. module: project
 #: field:project.config.settings,module_pad:0
 msgid "Use integrated collaborative note pads on task"
-msgstr ""
+msgstr "Görevde entegre çalışma için Not Kartları kullanın"
 
 #. module: project
 #: model:mail.message.subtype,name:project.mt_project_task_blocked
@@ -467,7 +479,7 @@ msgstr "Oluşturma Tarihi"
 #. module: project
 #: view:res.partner:0
 msgid "For changing to open state"
-msgstr ""
+msgstr "Değişim için durumu açın"
 
 #. module: project
 #: view:project.config.settings:0
@@ -482,7 +494,7 @@ msgstr "Görev Yetkileri"
 #. module: project
 #: help:project.task.delegate,new_task_description:0
 msgid "Reinclude the description of the task in the task of the user"
-msgstr ""
+msgstr "Kullanıcı görevi de görev tanımı yeniden eklesin"
 
 #. module: project
 #: view:project.project:0
@@ -604,7 +616,7 @@ msgstr "Görev Özeti"
 #. module: project
 #: field:project.task,active:0
 msgid "Not a Template Task"
-msgstr ""
+msgstr "Şablon Görev Değil"
 
 #. module: project
 #: field:project.task,planned_hours:0
@@ -637,6 +649,20 @@ msgid ""
 "                </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                  Yeni bir proje başlatmak için tıklayın.\n"
+"                </p><p>\n"
+"                  Projeler etkinliklerinizi düzenlemek için kullanılır; "
+"planı \n"
+"                  görevleri, sorunları izleme, fatura çizelgeleri. Sen "
+"tanımlayabilirsiniz\n"
+"                  dahili projeler (R&amp;D, Satış Sürecini geliştirin),\n"
+"                  özel projeler (My Todos)veya bir  müşteri ile.\n"
+"                </p><p>\n"
+"                  dahili kullanıcıların ile işbirliği mümkün olacak\n"
+"                  müşterilerini proje veya faaliyetleri paylaşmaya davetet.\n"
+"                </p>\n"
+"            "
 
 #. module: project
 #: view:project.config.settings:0
@@ -663,7 +689,7 @@ msgstr "Yeni Görevler"
 #. module: project
 #: field:project.config.settings,module_project_issue_sheet:0
 msgid "Invoice working time on issues"
-msgstr ""
+msgstr "Sorularda çalışma zamanı Faturalama"
 
 #. module: project
 #: view:project.project:0
@@ -746,7 +772,7 @@ msgstr ""
 #. module: project
 #: help:report.project.task.user,closing_days:0
 msgid "Number of Days to close the task"
-msgstr ""
+msgstr "Görevi kapatma için gün sayısı"
 
 #. module: project
 #: view:board.board:0
@@ -767,7 +793,7 @@ msgstr "Sil"
 #. module: project
 #: view:report.project.task.user:0
 msgid "In progress"
-msgstr "İlerlemeler"
+msgstr "DevamEden"
 
 #. module: project
 #: selection:report.project.task.user,month:0
@@ -881,6 +907,8 @@ msgid ""
 "Provides management of issues/bugs in projects.\n"
 "                This installs the module project_issue."
 msgstr ""
+"Sorunlar/projelerde hataların yönetimi sağlar.\n"
+"                Bu modül project_issue yükler."
 
 #. module: project
 #: help:project.task,kanban_state:0
@@ -944,6 +972,8 @@ msgid ""
 "Follow this project to automatically track the events associated to tasks "
 "and issues of this project."
 msgstr ""
+"Otomatik görevler ile ilişkili etkinlikler izlemek için bu projeyi takip "
+"etBu projenin ve sorunları."
 
 #. module: project
 #: view:project.task:0
@@ -953,7 +983,7 @@ msgstr "Kullanıcılar"
 #. module: project
 #: model:mail.message.subtype,name:project.mt_task_stage
 msgid "Stage Changed"
-msgstr "Aşama İptalEdildi"
+msgstr "Aşama Değişti"
 
 #. module: project
 #: view:project.project:0
@@ -1004,6 +1034,7 @@ msgid ""
 "To invoice or setup invoicing and renewal options, go to the related "
 "contract:"
 msgstr ""
+"Faturlama veya fatura ayarları ve yenileme seçeneklerine gitsözleşme:"
 
 #. module: project
 #: field:project.task.delegate,state:0
@@ -1036,7 +1067,7 @@ msgstr "Projeyi Yeniden aç"
 #. module: project
 #: help:project.project,priority:0
 msgid "Gives the sequence order when displaying the list of projects"
-msgstr ""
+msgstr "Projelerin listesi görüntülenirken sırasını verir"
 
 #. module: project
 #: constraint:project.project:0
@@ -1051,7 +1082,7 @@ msgstr "Proje Üyeleri"
 #. module: project
 #: field:project.task,child_ids:0
 msgid "Delegated Tasks"
-msgstr "Aktarılmış Görevler"
+msgstr "Yekilendirilmiş Görevler"
 
 #. module: project
 #: view:project.project:0
@@ -1186,7 +1217,7 @@ msgstr ""
 #. module: project
 #: help:project.task,total_hours:0
 msgid "Computed as: Time Spent + Remaining Time."
-msgstr "Hesaplanır: Geçirilen Zaman + Kalan Zaman."
+msgstr "Hesapla: Geçirilen Zaman + Kalan Zaman."
 
 #. module: project
 #: code:addons/project/project.py:356
@@ -1236,7 +1267,7 @@ msgstr "Takım"
 #. module: project
 #: help:project.config.settings,time_unit:0
 msgid "This will set the unit of measure used in projects and tasks."
-msgstr ""
+msgstr "Projeler ve görevlerde kullanılan ölçü birimini ayarlar."
 
 #. module: project
 #: selection:project.task,priority:0
@@ -1368,12 +1399,12 @@ msgstr ""
 #. module: project
 #: view:project.config.settings:0
 msgid "Helpdesk & Support"
-msgstr "Yardım Masası ve Destek"
+msgstr "Yardım/Destek Masası"
 
 #. module: project
 #: help:report.project.task.user,opening_days:0
 msgid "Number of Days to Open the task"
-msgstr ""
+msgstr "Görevi açılış Gün sayısı"
 
 #. module: project
 #: field:project.task,delegated_user_id:0
@@ -1531,7 +1562,7 @@ msgstr "Atanan"
 #. module: project
 #: model:res.groups,name:project.group_time_work_estimation_tasks
 msgid "Time Estimation on Tasks"
-msgstr ""
+msgstr "Görev Zaman Tahmini"
 
 #. module: project
 #: field:project.task,total_hours:0
@@ -1551,7 +1582,7 @@ msgstr "Görev başladı"
 #. module: project
 #: help:project.task.reevaluate,remaining_hours:0
 msgid "Put here the remaining hours required to close the task."
-msgstr ""
+msgstr "Buraya görev kapatmak için gerekli olan geriye kalan saat koyun."
 
 #. module: project
 #: help:project.task.type,fold:0
@@ -1578,7 +1609,7 @@ msgstr "KOTROL: "
 #: code:addons/project/project.py:432
 #, python-format
 msgid "You must assign members on the project '%s' !"
-msgstr ""
+msgstr "Proje üyeleri atamalısınız '%s' !"
 
 #. module: project
 #: view:project.project:0
@@ -1617,12 +1648,12 @@ msgstr ""
 #. module: project
 #: field:project.config.settings,module_project_issue:0
 msgid "Track issues and bugs"
-msgstr ""
+msgstr "İzleme sorunlar ve hatalar"
 
 #. module: project
 #: field:project.config.settings,module_project_mrp:0
 msgid "Generate tasks from sale orders"
-msgstr ""
+msgstr "Satış siparişlerinden görevler oluşturun"
 
 #. module: project
 #: model:ir.ui.menu,name:project.menu_task_types_view
@@ -1686,6 +1717,15 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Yeni bir görev oluşturmak için tıklayın.\n"
+"              </p><p>\n"
+"                OpenERP proje yönetimi, yönetmenize olanak sağlar pipeline\n"
+"                şeyler verimli yapmak için görevler için. yapabilirsiniz\n"
+"                ilerlemeyi izlemek, görevler üzerinde tartışmak, belgeleri "
+"ekleyiniz, vb. \n"
+"              </p>\n"
+"            "
 
 #. module: project
 #: field:project.task,date_end:0
@@ -1770,6 +1810,8 @@ msgid ""
 "Sum of planned hours of all tasks related to this project and its child "
 "projects."
 msgstr ""
+"Bu proje ile ilgili tüm görevlerin planlanan saat toplamı ve onun "
+"altprojeleri."
 
 #. module: project
 #: view:res.partner:0
@@ -1791,13 +1833,13 @@ msgstr "Projelerim"
 #. module: project
 #: help:project.task,sequence:0
 msgid "Gives the sequence order when displaying a list of tasks."
-msgstr ""
+msgstr "Görevlerin bir listesini görüntülerken sırasını verir."
 
 #. module: project
 #: field:project.task,date_start:0
 #: field:report.project.task.user,date_start:0
 msgid "Starting Date"
-msgstr "Başlangıç Tarihi"
+msgstr "Başlama Tarihi"
 
 #. module: project
 #: code:addons/project/project.py:398
@@ -1818,7 +1860,7 @@ msgstr ""
 #. module: project
 #: help:project.task.delegate,name:0
 msgid "New title of the task delegated to the user"
-msgstr ""
+msgstr "Görev Yeni başlık kullanıcıyı yekilenedirme için"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.action_project_task_user_tree
@@ -1958,13 +2000,13 @@ msgstr "Görev Başlığınız"
 #. module: project
 #: view:project.task.reevaluate:0
 msgid "Reevaluation Task"
-msgstr ""
+msgstr "Yeniden Değerleme Görev"
 
 #. module: project
 #: code:addons/project/project.py:1305
 #, python-format
 msgid "Please delete the project linked with this account first."
-msgstr ""
+msgstr "Önce bu hesap ile bağlantılı projeyi silin."
 
 #. module: project
 #: model:mail.message.subtype,name:project.mt_project_task_new
@@ -1975,7 +2017,7 @@ msgstr "Görev Oluşturuldu"
 #. module: project
 #: view:report.project.task.user:0
 msgid "Non Assigned Tasks to users"
-msgstr ""
+msgstr "Kullanıcılara Görev Atanmamış"
 
 #. module: project
 #: view:project.project:0
@@ -1993,7 +2035,7 @@ msgstr "Sonraki aşaması için hazır"
 #. module: project
 #: field:project.task.type,case_default:0
 msgid "Default for New Projects"
-msgstr "Yeni Projeler için varsayılan"
+msgstr "Yeni Projeler için Varsayılan"
 
 #. module: project
 #: view:project.task:0
@@ -2050,7 +2092,7 @@ msgstr "Harcanan Saatleri"
 #. module: project
 #: help:project.project,sequence:0
 msgid "Gives the sequence order when displaying a list of Projects."
-msgstr ""
+msgstr "Projelerin listesi görüntülenirken sırasını verir."
 
 #. module: project
 #: model:ir.actions.act_window,name:project.act_res_users_2_project_task_opened
@@ -2063,6 +2105,8 @@ msgid ""
 "Provides timesheet support for the issues/bugs management in project.\n"
 "                This installs the module project_issue_sheet."
 msgstr ""
+"Projede sorunlar/hatalar yönetimi zaman çizelgesi desteği sağlar. \n"
+"                Bu modül project_issue_sheet yükler."
 
 #. module: project
 #: selection:project.project,privacy_visibility:0
