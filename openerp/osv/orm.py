@@ -303,7 +303,7 @@ class Session(object):
         self.registry = registry
         self.cr = cr
         self.uid = uid
-        self.context = context
+        self.context = context if context is not None else {}
 
     def __iter__(self):
         """ Iterating over a session returns self.cr, self.uid, self.context, in
@@ -327,7 +327,7 @@ class Session(object):
         model = self.registry.get(model_name)
         if model is None:
             raise Exception(_("Invalid access to model '%s'") % model_name)
-        return model._make_instance(self.cr, self.uid, self.context)
+        return model._make_instance(session=self)
 
     @property
     def user(self):
@@ -1148,24 +1148,31 @@ class BaseModel(object):
         'pool',
     ]
 
-    def _make_instance(self, cr, uid, context=None):
-        """ create an instance of this model with session data """
+    # other specific attributes used by model instances
+    INSTANCE_ATTRIBUTES = [
+        '_records',
+        '_search_args',
+    ]
+
+    def _make_instance(self, **kwargs):
+        """ create an instance of this model
+            :params kwargs: attributes to set on the new instance
+        """
         # copy the fields determined by create_instance() and __init__()
         obj = object.__new__(self.__class__)
         for name in self.INIT_MODEL_ATTRIBUTES:
             if hasattr(self, name):
                 setattr(obj, name, getattr(self, name))
 
-        # add session data
-        context = context if context is not None else {}
-        obj.session = Session(obj.pool, cr, uid, context)
+        # add attributes
+        for key, val in kwargs.iteritems():
+            setattr(obj, key, val)
         return obj
 
-    def _make_recordset(self, cr, uid, records, context=None):
+    @api.model
+    def _make_recordset(self, records):
         """ make a recordset from an explicit list of records """
-        obj = self._make_instance(cr, uid, context)
-        obj._records = records
-        return obj
+        return self._make_instance(session=self.session, _records=records)
 
     def is_recordset(self):
         """ test whether self is a recordset """
@@ -1173,14 +1180,12 @@ class BaseModel(object):
         # when evaluated; browse() returns recordsets with self._records only
         return hasattr(self, '_records') or hasattr(self, '_search_args')
 
-    def _make_singleton(self, cr, uid, record, context=None):
+    @api.model
+    def _make_singleton(self, record):
         """ make a recordset ``y`` for a single record ``record``; the record
             is accessible as ``y.record``
         """
-        obj = self._make_instance(cr, uid, context)
-        obj._records = [record]
-        obj.record = record
-        return obj
+        return self._make_instance(session=self.session, _records=[record], record=record)
 
     def is_singleton(self):
         """ test whether self is a singleton """
@@ -1202,11 +1207,11 @@ class BaseModel(object):
         if kwargs:
             ctx.update(kwargs)
 
-        obj = self._make_instance(cr, uid, ctx)
-        for attr in ('_records', '_search_args'):
-            if hasattr(self, attr):
-                setattr(obj, attr, getattr(self, attr))
-        return obj
+        session = Session(self.pool, cr, uid, ctx)
+        kwargs = dict((attr, getattr(self, attr))
+                    for attr in self.INSTANCE_ATTRIBUTES
+                    if hasattr(self, attr))
+        return self._make_instance(session=session, **kwargs)
 
     def __export_row(self, cr, uid, row, fields, context=None):
         if context is None:
@@ -4629,12 +4634,17 @@ class BaseModel(object):
             cache = {}
         # need to accepts ints and longs because ids coming from a method
         # launched by button in the interface have a type long...
-        model = self._make_instance(cr, uid, context)
+        if hasattr(self, 'session') and tuple(self.session) == (cr, uid, context):
+            model = self
+        else:
+            session = Session(self.pool, cr, uid, context)
+            model = self._make_instance(session=session)
+
         if isinstance(select, (int, long)):
             return Record(model, select, cache, fields_process=fields_process)
         elif isinstance(select, list):
             records = [Record(model, id, cache, fields_process=fields_process) for id in select]
-            return self._make_recordset(cr, uid, records, context)
+            return model._make_recordset(records)
         else:
             return browse_null()
 
@@ -5422,9 +5432,7 @@ class BaseModel(object):
             records is required.  Once evaluated, it keeps its list of records,
             and will never be evaluated again.
         """
-        obj = self._make_instance()
-        obj._search_args = (domain, offset, limit, order)
-        return obj
+        return self._make_instance(session=self.session, _search_args=(domain, offset, limit, order))
 
     def force(self):
         """ Force the evaluation of a recordset.

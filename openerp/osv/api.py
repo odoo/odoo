@@ -78,7 +78,7 @@ def model(method):
 
     def old_api(self, cr, uid, *args, **kwargs):
         context, args, kwargs = _split_context_args(nargs, args, kwargs)
-        m = self._make_instance(cr, uid, context)
+        m = self.browse(cr, uid, [], context)
         return method(m, *args, **kwargs)
 
     return _wrapper(method, old_api, method)
