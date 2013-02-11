@@ -319,12 +319,12 @@
                                     </div>
                                     <br/>
                                     <ul>
-                                        <li t-if="widget.view.is_action_enabled('edit')"><a type="edit">Edit Survey</a></li>
+                                        <li t-if="widget.view.is_action_enabled('edit')"><a type="edit">Configuration</a></li>
+                                        <li t-if="widget.view.is_action_enabled('edit')"><a name="edit_survey" string="Edit Survey" type="object" context="{'active':True,'edit' : True}">Edit Survey</a></li>
                                         <li t-if="widget.view.is_action_enabled('edit')"><a name="%(action_view_survey_send_invitation)d" type="action">Collect informations</a></li>
                                         <li><a name="fill_survey" type="object">Answer Survey</a></li>
                                         <li t-if="widget.view.is_action_enabled('edit')"><a>Analysis</a></li>
                                     </ul>
-                                    <img t-att-src="kanban_image('res.users', 'image_small', record.responsible_id.raw_value)" t-att-title="record.responsible_id.value" width="24" height="24" class="oe_kanban_avatar oe_right"/>
                                 </div>
                             </div>
                         </t>
