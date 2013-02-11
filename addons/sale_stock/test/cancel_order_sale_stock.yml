@@ -17,7 +17,7 @@
   Now I cancel latest shipment.
 -
   !python {model: stock.picking}: |
-    import netsvc
+    from openerp import netsvc
     delivery_orders = self.search(cr, uid, [('sale_id','=',ref("sale.sale_order_8"))])
     last_delivery_order_id = delivery_orders[0]
     wf_service = netsvc.LocalService("workflow")
@@ -50,7 +50,7 @@
   To cancel the sale order from Invoice Exception, I have to cancel the invoice of sale order.
 -
   !python {model: sale.order}: |
-    import netsvc
+    from openerp import netsvc
     invoice_ids = self.browse(cr, uid, ref("sale.sale_order_8")).invoice_ids
     wf_service = netsvc.LocalService("workflow")
     first_invoice_id = invoice_ids[0]

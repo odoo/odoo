@@ -41,7 +41,7 @@
   I open the Invoice.
 -
   !python {model: sale.order}: |
-    import netsvc
+    from openerp import netsvc
     wf_service = netsvc.LocalService("workflow")
     so = self.browse(cr, uid, ref("sale_order_2"))
     for invoice in so.invoice_ids:

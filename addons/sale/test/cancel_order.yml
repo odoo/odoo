@@ -51,7 +51,7 @@
   I cancel all the invoices.
 -
   !python {model: sale.order}: |
-    import netsvc
+    from openerp import netsvc
     invoice_ids = self.browse(cr, uid, ref("sale_order_8")).invoice_ids
     wf_service = netsvc.LocalService("workflow")
     for invoice in invoice_ids:
