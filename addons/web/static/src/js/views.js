@@ -190,6 +190,14 @@ instance.web.ActionManager = instance.web.Widget.extend({
                     });
                     state = _.extend(params || {}, state);
                 }
+                if (this.inner_action.context) {
+                    if (this.inner_action.context.active_id) {
+                        state["active_id"] = this.inner_action.context.active_id;
+                    }
+                    if (this.inner_action.context.active_ids) {
+                        state["active_ids"] = this.inner_action.context.active_ids.toString();
+                    }
+                }
             }
             if(!this.dialog) {
                 this.getParent().do_push_state(state);
@@ -212,8 +220,15 @@ instance.web.ActionManager = instance.web.Widget.extend({
             } else {
                 var run_action = (!this.inner_widget || !this.inner_widget.action) || this.inner_widget.action.id !== state.action;
                 if (run_action) {
+                    var add_context = {};
+                    if (state.active_id) {
+                        add_context.active_id = state.active_id;
+                    }
+                    if (state.active_ids) {
+                        add_context.active_ids = state.active_ids.toString().split(',');
+                    }
                     this.null_action();
-                    action_loaded = this.do_action(state.action);
+                    action_loaded = this.do_action(state.action, { additional_context: add_context });
                     $.when(action_loaded || null).done(function() {
                         instance.webclient.menu.has_been_loaded.done(function() {
                             if (self.inner_action && self.inner_action.id) {
@@ -249,12 +264,25 @@ instance.web.ActionManager = instance.web.Widget.extend({
             }
         });
     },
+    /**
+     * Execute an OpenERP action
+     *
+     * @param {Number|String|Object} Can be either an action id, a client action or an action descriptor.
+     * @param {Object} [options]
+     * @param {Boolean} [options.clear_breadcrumbs=false] Clear the breadcrumbs history list
+     * @param {Function} [options.on_reverse_breadcrumb] Callback to be executed whenever an anterior breadcrumb item is clicked on.
+     * @param {Function} [options.on_close] Callback to be executed when the dialog is closed (only relevant for target=new actions)
+     * @param {Function} [options.action_menu_id] Manually set the menu id on the fly.
+     * @param {Object} [options.additional_context] Additional context to be merged with the action's context.
+     * @return {jQuery.Deferred} Action loaded
+     */
     do_action: function(action, options) {
         options = _.defaults(options || {}, {
             clear_breadcrumbs: false,
             on_reverse_breadcrumb: function() {},
             on_close: function() {},
             action_menu_id: null,
+            additional_context: {},
         });
         if (action === false) {
             action = { type: 'ir.actions.act_window_close' };
@@ -269,15 +297,13 @@ instance.web.ActionManager = instance.web.Widget.extend({
         }
 
         // Ensure context & domain are evaluated and can be manipulated/used
-        if (action.context) {
-            action.context = instance.web.pyeval.eval(
-                'context', action.context);
-            if (action.context.active_id || action.context.active_ids) {
-                // Here we assume that when an `active_id` or `active_ids` is used
-                // in the context, we are in a `related` action, so we disable the
-                // searchview's default custom filters.
-                action.context.search_disable_custom_filters = true;
-            }
+        var ncontext = new instance.web.CompoundContext(options.additional_context, action.context || {});
+        action.context = instance.web.pyeval.eval('context', ncontext);
+        if (action.context.active_id || action.context.active_ids) {
+            // Here we assume that when an `active_id` or `active_ids` is used
+            // in the context, we are in a `related` action, so we disable the
+            // searchview's default custom filters.
+            action.context.search_disable_custom_filters = true;
         }
         if (action.domain) {
             action.domain = instance.web.pyeval.eval(
