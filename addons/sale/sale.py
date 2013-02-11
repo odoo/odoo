@@ -261,6 +261,7 @@ class sale_order(osv.osv):
         'shop_id': _get_default_shop,
         'partner_invoice_id': lambda self, cr, uid, context: context.get('partner_id', False) and self.pool.get('res.partner').address_get(cr, uid, [context['partner_id']], ['invoice'])['invoice'],
         'partner_shipping_id': lambda self, cr, uid, context: context.get('partner_id', False) and self.pool.get('res.partner').address_get(cr, uid, [context['partner_id']], ['delivery'])['delivery'],
+        'note': lambda self, cr, uid, context: self.pool.get('res.company').browse(cr, uid, uid, context=context).sale_note
     }
     _sql_constraints = [
         ('name_uniq', 'unique(name, company_id)', 'Order Reference must be unique per Company!'),
@@ -324,12 +325,16 @@ class sale_order(osv.osv):
         payment_term = part.property_payment_term and part.property_payment_term.id or False
         fiscal_position = part.property_account_position and part.property_account_position.id or False
         dedicated_salesman = part.user_id and part.user_id.id or uid
+        context_lang = context.copy()
+        context_lang.update({'lang': part.lang})
+        company = self.pool.get('res.company').browse(cr, uid, uid, context=context_lang)
         val = {
             'partner_invoice_id': addr['invoice'],
             'partner_shipping_id': addr['delivery'],
             'payment_term': payment_term,
             'fiscal_position': fiscal_position,
             'user_id': dedicated_salesman,
+            'note': company.sale_note
         }
         if pricelist:
             val['pricelist_id'] = pricelist
@@ -983,7 +988,12 @@ class sale_order_line(osv.osv):
                 raise osv.except_osv(_('Invalid Action!'), _('Cannot delete a sales order line which is in state \'%s\'.') %(rec.state,))
         return super(sale_order_line, self).unlink(cr, uid, ids, context=context)
 
-
+class res_company(osv.Model):
+    _inherit = "res.company"
+    _columns = {
+        'sale_note': fields.text('sales_note', translate=True, placeholder="Terms & Conditions"),
+        }
+    
 class mail_compose_message(osv.Model):
     _inherit = 'mail.compose.message'
 

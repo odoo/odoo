@@ -76,14 +76,25 @@ Example: Product: this product is deprecated, do not purchase more than 5.
         'module_sale_stock': fields.boolean("Trigger delivery orders automatically from sales orders",
             help="""Allows you to Make Quotation, Sale Order using different Order policy and Manage Related Stock.
                     This installs the module sale_stock."""),
+        'sale_note': fields.text('Terms & Conditions', translate=True),
+        'company_id': fields.many2one('res.company', 'Company', required=True),
     }
 
+    def onchange_company_id(self, cr, uid, ids, company_id):
+        res = {'value':{}}
+        if company_id:
+            company = self.pool.get('res.company').browse(cr, uid, company_id)
+            res['value'].update({'sale_note': company.sale_note})
+        return res
+    
     def default_get(self, cr, uid, fields, context=None):
         ir_model_data = self.pool.get('ir.model.data')
         res = super(sale_configuration, self).default_get(cr, uid, fields, context)
         if res.get('module_project'):
             user = self.pool.get('res.users').browse(cr, uid, uid, context)
             res['time_unit'] = user.company_id.project_time_mode_id.id
+            res['sale_note'] = user.company_id.sale_note
+            res['company_id'] = user.company_id.id
         else:
             try:
                 product = ir_model_data.get_object(cr, uid, 'product', 'product_product_consultant')
@@ -104,7 +115,7 @@ Example: Product: this product is deprecated, do not purchase more than 5.
     def set_sale_defaults(self, cr, uid, ids, context=None):
         ir_model_data = self.pool.get('ir.model.data')
         wizard = self.browse(cr, uid, ids)[0]
-
+        
         if wizard.time_unit:
             try:
                 product = ir_model_data.get_object(cr, uid, 'product', 'product_product_consultant')
@@ -115,6 +126,10 @@ Example: Product: this product is deprecated, do not purchase more than 5.
         if wizard.module_project and wizard.time_unit:
             user = self.pool.get('res.users').browse(cr, uid, uid, context)
             user.company_id.write({'project_time_mode_id': wizard.time_unit.id})
+            
+        if wizard.company_id:
+            self.pool.get('res.company').write(cr, uid, wizard.company_id.id, {'sale_note': wizard.sale_note}, context=context)
+            
         return {}
 
     def onchange_task_work(self, cr, uid, ids, task_work, context=None):
