@@ -14,6 +14,7 @@ define(["nova", "jquery", "underscore", "oeclient", "require"], function(nova, $
             buttonText: "Chat with one of our collaborators",
             inputPlaceholder: "How may I help you?",
             defaultMessage: null,
+            auto: false,
         });
         defaultInputPlaceholder = options.inputPlaceholder;
         var templates_def = $.ajax({
@@ -37,7 +38,10 @@ define(["nova", "jquery", "underscore", "oeclient", "require"], function(nova, $
             connection.connector.call("/live_support/available", {db: db, channel: channel}).then(function(activated) {
                 if (! activated)
                     return;
-                new livesupport.ChatButton(null, channel, options).appendTo($("body"));
+                var button = new livesupport.ChatButton(null, channel, options);
+                button.appendTo($("body"));
+                if (options.auto)
+                    button.click();
             });
         });
     };

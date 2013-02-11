@@ -60,7 +60,9 @@ class ImportController(openerp.addons.web.http.Controller):
         req.session._login = "anonymous"
         req.session._password = "anonymous"
         script = req.session.model('live_support.channel').read(channel, ["script"])["script"]
-        return req.make_response(env.get_template("web_page.html").render({"script": script}),
+        info = req.session.model('live_support.channel').get_info_for_chat_src(channel)
+        info["script"] = script
+        return req.make_response(env.get_template("web_page.html").render(info),
              headers=[('Content-Type', "text/html")])
 
     @openerp.addons.web.http.jsonrequest
@@ -135,6 +137,7 @@ class live_support_channel(osv.osv):
             'buttonText': chan.button_text,
             'inputPlaceholder': chan.input_placeholder,
             'defaultMessage': chan.default_message,
+            "channelName": chan.name,
         }
 
     def join(self, cr, uid, ids, context=None):

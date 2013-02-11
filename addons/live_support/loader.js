@@ -15,5 +15,6 @@ require.config({
         buttonText: {{buttonText | json}},
         inputPlaceholder: {{inputPlaceholder | json}},
         defaultMessage: {{(defaultMessage or None) | json}},
+        auto: window.oe_live_support_auto || false,
     });
 });
