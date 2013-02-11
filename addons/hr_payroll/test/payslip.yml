@@ -68,7 +68,7 @@
   I verify that the payslip is in done state
 -
   !python {model: hr.payslip}: |
-    from tools.translate import _
+    from openerp.tools.translate import _
     payslip_brw=self.browse(cr, uid, ref("hr_payslip_0"))
     assert(payslip_brw.state == 'done'), _('State not changed!')
 -

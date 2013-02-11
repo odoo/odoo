@@ -105,7 +105,7 @@ openerp.mail = function (session) {
         // As it only looks at the extension it is quite approximative. 
         filetype: function(url){
             url = url.filename || url;
-            var tokens = url.split('.');
+            var tokens = (url+'').split('.');
             if(tokens.length <= 1){
                 return 'unknown';
             }
@@ -218,7 +218,7 @@ openerp.mail = function (session) {
             this.author_id = datasets.author_id || false,
             this.attachment_ids = datasets.attachment_ids ||  [],
             this.partner_ids = datasets.partner_ids || [];
-            this._date = datasets.date;
+            this.date = datasets.date;
 
             this.format_data();
 
@@ -232,19 +232,20 @@ openerp.mail = function (session) {
                 else {
                     this.options.show_read = this.to_read;
                     this.options.show_unread = !this.to_read;
-                    this.options.rerender = true;
-                    this.options.toggle_read = true;
                 }
+                this.options.rerender = true;
+                this.options.toggle_read = true;
             }
-            this.parent_thread = parent.messages != undefined ? parent : this.options.root_thread;
+            this.parent_thread = typeof parent.on_message_detroy == 'function' ? parent : this.options.root_thread;
             this.thread = false;
         },
 
         /* Convert date, timerelative and avatar in displayable data. */
         format_data: function () {
             //formating and add some fields for render
-            if (this._date) {
-                this.timerelative = $.timeago(this._date+"Z");
+            this.date = this.date ? session.web.str_to_datetime(this.date) : false;
+            if (this.date && new Date().getTime()-this.date.getTime() < 7*24*60*60*1000) {
+                this.timerelative = $.timeago(this.date);
             } 
             if (this.type == 'email' && (!this.author_id || !this.author_id[0])) {
                 this.avatar = ('/mail/static/src/img/email_icon.png');
@@ -253,7 +254,7 @@ openerp.mail = function (session) {
             } else {
                 this.avatar = mail.ChatterUtils.get_image(this.session, 'res.users', 'image_small', this.session.uid);
             }
-            if (this.author_id) {
+            if (this.author_id && this.author_id[1]) {
                 var email = this.author_id[1].match(/(.*)<(.*@.*)>/);
                 if (!email) {
                     this.author_id.push(_.str.escapeHTML(this.author_id[1]), '', this.author_id[1]);
@@ -271,7 +272,7 @@ openerp.mail = function (session) {
                 var attach = this.attachment_ids[l];
                 if (!attach.formating) {
                     attach.url = mail.ChatterUtils.get_attachment_url(this.session, this.id, attach.id);
-                    attach.filetype = mail.ChatterUtils.filetype(attach.filename);
+                    attach.filetype = mail.ChatterUtils.filetype(attach.filename || attach.name);
                     attach.name = mail.ChatterUtils.breakword(attach.name || attach.filename);
                     attach.formating = true;
                 }
@@ -1605,7 +1606,8 @@ openerp.mail = function (session) {
             this.node.params = _.extend({
                 'display_indented_thread': -1,
                 'show_reply_button': false,
-                'show_read_unread_button': false,
+                'show_read_unread_button': true,
+                'read_action': 'unread',
                 'show_record_name': false,
                 'show_compact_message': 1,
             }, this.node.params);
