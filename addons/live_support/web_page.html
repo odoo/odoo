@@ -2,8 +2,53 @@
 <html>
 <head>
     {{script}}
+    <style type="text/css">
+        body {
+            height: 100%;
+            font-size: 16px;
+            font-weight: 400;
+            font-family: "Lato", "Lucida Grande", "Helvetica neue", "Helvetica", "Verdana", "Arial", sans-serif;
+            overflow: hidden;
+            overflow-y: auto;
+            display: block;
+            margin: 0;
+            padding: 0;
+            border: none;
+            width: 100%;
+            height: 100%;
+            background: #C9C8E0;
+            background-image: -webkit-linear-gradient(top, #7c7bad, #ddddee);
+            background-image: -moz-linear-gradient(top, #7c7bad, #ddddee);
+            background-image: -ms-linear-gradient(top, #7c7bad, #ddddee);
+            background-image: -o-linear-gradient(top, #7c7bad, #ddddee);
+            background-image: linear-gradient(to bottom, #7c7bad, #ddddee);
+            filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#7c7bad', endColorstr='#ddddee',GradientType=0 );
+            -webkit-background-size: cover;
+            -moz-background-size: cover;
+            -o-background-size: cover;
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+        }
+        .main {
+            position: absolute;
+            opacity: 0;
+            top: 50%;
+            left: 50%;
+            margin: -70px 0 0 -330px;
+            color: white;
+            text-shadow: 0 1px 0 rgba(34, 52, 72, 0.2);
+            z-index: 10;
+
+            font-size: 64px;
+            font-style: italic;
+            font-weight: bold;
+        }
+    </style>
 </head>
 <body>
-
+    <div class="main" style="opacity: 1;">
+        OpenERP Live Support
+    </div>
 </body>
 </html>
