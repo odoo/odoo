@@ -107,6 +107,35 @@ def recordset(method):
     return _wrapper(method, old_api, method)
 
 
+def record(method):
+    """ Decorate a record singleton method with the new-style API.  Such a method::
+
+            @api.record
+            def method(self, args):
+                ... self.record ...
+
+        may be called in both new and old styles, like::
+
+            obj.method(args)            # new style, obj must be a recordset
+            obj.method(cr, uid, id, args, context=context)      # old style
+            obj.method(cr, uid, ids, args, context=context)     # old style
+    """
+    nargs = method.func_code.co_argcount - 1
+
+    def old_api(self, cr, uid, ids, *args, **kwargs):
+        context, args, kwargs = _split_context_args(nargs, args, kwargs)
+        y = self.browse(cr, uid, ids, context)
+        return new_api(y, *args, **kwargs)
+
+    def new_api(self, *args, **kwargs):
+        if self.is_singleton():
+            return method(self, *args, **kwargs)
+        else:
+            return dict((x.id, method(x.singleton, *args, **kwargs)) for x in self)
+
+    return _wrapper(method, old_api, new_api)
+
+
 def cr(method):
     """ Decorate a method with the old-style API.  Such a method::
 
@@ -173,14 +202,18 @@ def cr_uid_id(method):
     if 'context' in argnames:
         def new_api(self, *args, **kwargs):
             cr, uid, context = self.session
-            ids = map(int, self)
             kwargs = dict(kwargs, context=context)
-            return dict((id, method(self, cr, uid, id, *args, **kwargs)) for id in ids)
+            if self.is_singleton():
+                return method(self, cr, uid, self.record.id, *args, **kwargs)
+            else:
+                return dict((x.id, method(self, cr, uid, x.id, *args, **kwargs)) for x in self)
     else:
         def new_api(self, *args, **kwargs):
             cr, uid, context = self.session
-            ids = map(int, self)
-            return dict((id, method(self, cr, uid, id, *args, **kwargs)) for id in ids)
+            if self.is_singleton():
+                return method(self, cr, uid, self.record.id, *args, **kwargs)
+            else:
+                return dict((x.id, method(self, cr, uid, x.id, *args, **kwargs)) for x in self)
 
     return _wrapper(method, method, new_api)
 
@@ -203,14 +236,12 @@ def cr_uid_ids(method):
     if 'context' in argnames:
         def new_api(self, *args, **kwargs):
             cr, uid, context = self.session
-            ids = map(int, self)
             kwargs = dict(kwargs, context=context)
-            return method(self, cr, uid, ids, *args, **kwargs)
+            return method(self, cr, uid, map(int, self), *args, **kwargs)
     else:
         def new_api(self, *args, **kwargs):
             cr, uid, context = self.session
-            ids = map(int, self)
-            return method(self, cr, uid, ids, *args, **kwargs)
+            return method(self, cr, uid, map(int, self), *args, **kwargs)
 
     return _wrapper(method, method, new_api)
 
