@@ -36,7 +36,7 @@
                 <button class="oe_im_chatview_close">×</button>
             </div>
             <div class="oe_im_chatview_disconnected">
-                <t t-esc='_.str.sprintf(_t("%s is offline. He/She will receive your messages on his/her next connection."), widget.user.get("name"))'/>
+                <t t-esc='_.str.sprintf(_t("%s is offline. He/She will receive your messages on his/her next connection."), widget.user.get("name") || "Anonymous")'/>
             </div>
             <div class="oe_im_chatview_content">
                 <div></div>
