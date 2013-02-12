@@ -8,13 +8,13 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2012-12-21 17:05+0000\n"
-"PO-Revision-Date: 2013-02-07 18:12+0000\n"
+"PO-Revision-Date: 2013-02-10 13:21+0000\n"
 "Last-Translator: Erwin van der Ploeg (Endian Solutions) <Unknown>\n"
 "Language-Team: Dutch <nl@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-02-08 05:23+0000\n"
+"X-Launchpad-Export-Date: 2013-02-11 05:34+0000\n"
 "X-Generator: Launchpad (build 16482)\n"
 
 #. module: base_import
@@ -216,6 +216,11 @@ msgid ""
 "\n"
 "                        See the following question."
 msgstr ""
+"Merk op dat indien uw CSV bestand \n"
+"                        een tab heeft als scheidingsteken, OpenERP de\n"
+"                        scheidingsteken niet kan waarnemen. U dient het \n"
+"                        bestandsformaat aan te passen in uw spreadsheet. \n"
+"                        programma. Zie ook de volgende vraag."
 
 #. module: base_import
 #. openerp-web
@@ -351,6 +356,21 @@ msgid ""
 "orignial \n"
 "                        database)."
 msgstr ""
+"Zoals u in dit bestand kunt zien, werken Fabien en Laurence\n"
+"                        voor grote bedrijven (company_1) en Eric werkt\n"
+"                        voor het nedrijf Organi. De relatie tussen de "
+"personen \n"
+"                        en de bedrijven wordt egmaakt door gebruik te maken "
+"van de \n"
+"                        External ID van de bedrijven. We hebben een prefix "
+"gemaakt voor de \n"
+"                        \"External ID\" met de naam van de tabel om een "
+"conflict te voorkomen \n"
+"                        tussen de ID van de personen en de bedrijven "
+"(person_1 \n"
+"                        en company_1 welke dezelfde ID delen in de originele "
+" \n"
+"                        database)."
 
 #. module: base_import
 #. openerp-web
@@ -423,6 +443,20 @@ msgid ""
 "category \n"
 "                        hierarchy."
 msgstr ""
+"Als u bijvoorbeeld twee productcategorieën heeft\n"
+"                         met het onderliggende categorie met de naam "
+"\"Verkoopbaar\" (bijv. \"Div.\n"
+"                         Producten / Verkoopbaar\" & \"Overige producten / "
+"Verkoopbaar\"),\n"
+"                         zal de import validate stoppen, maar u kunt nog "
+"steeds uw data importeren.\n"
+"                         Toch raden wij u niet aan de data te importeren "
+"omdat deze allemaal worden\n"
+"                         gekoppeld aan de eerste categorie \"Verkoopbaar\" "
+"in de product categorie lijst\n"
+"                         (\"Div. Producten / Verkoopbaar\"). Wij raden u aan "
+"om een van de dubbele waarden\n"
+"                         van uw productcategorie hiërarchie aan te passen."
 
 #. module: base_import
 #. openerp-web
@@ -913,6 +947,8 @@ msgid ""
 "How can I import a one2many relationship (e.g. several \n"
 "                        Order Lines of a Sales Order)?"
 msgstr ""
+"Hoe kan ik een one2many relatie veld importeren (bijv. verschillende\n"
+"                        orderregels van een verkooporder)?"
 
 #. module: base_import
 #. openerp-web
@@ -932,6 +968,11 @@ msgid ""
 "                        use make use of the external ID for this field \n"
 "                        'Category'."
 msgstr ""
+"Maar als u de configuratie van de\n"
+"                         productcategorieën niet wiltr wijzigen, raden wij u "
+"aan\n"
+"                         gebruik maken van de externe ID voor dit veld\n"
+"                         'Categorie'."
 
 #. module: base_import
 #. openerp-web
@@ -948,6 +989,8 @@ msgid ""
 "How can I import a many2many relationship field \n"
 "                        (e.g. a customer that has multiple tags)?"
 msgstr ""
+"Hoe kan ik een many2many relatieveld importeren \n"
+"                        (bijv. een klant met meerdere labels)?"
 
 #. module: base_import
 #. openerp-web
@@ -1004,6 +1047,14 @@ msgid ""
 "                        will set the EMPTY value in the field, instead of \n"
 "                        assigning the default value."
 msgstr ""
+"Als u niet al uw velden instelt van uw CSV bestand, \n"
+"                        dat zal OpenERP standaard waarden toekennen aan "
+"iedere \n"
+"                        niet gedefinieerd veld. Indien u velden een lege "
+"waarde\n"
+"                        geeft, zal OpenERP deze lege waarden instellen in "
+"plaats \n"
+"                        van het toewijzen van standaard waarden."
 
 #. module: base_import
 #. openerp-web
@@ -1049,6 +1100,12 @@ msgid ""
 "spreadsheet \n"
 "                        application."
 msgstr ""
+"Deze optie\n"
+"                        geeft u de mogelijkheid om de importeer en exporteer "
+"functie \n"
+"                        van OpenERP te gebruiken voor het bewerken van een "
+"hele reeks\n"
+"                        records in uw favoriete spreadsheet."
 
 #. module: base_import
 #. openerp-web
@@ -1059,6 +1116,10 @@ msgid ""
 "                        import an other record that links to the first\n"
 "                        one, use"
 msgstr ""
+"kolom in OpenERP. Waneer u\n"
+"                        een ander record importeerd, welke verwijst naar de "
+"eerste\n"
+"                        gebruik,"
 
 #. module: base_import
 #. openerp-web
@@ -1255,4 +1316,4 @@ msgstr ""
 #. module: base_import
 #: field:base_import.import,file:0
 msgid "File"
-msgstr ""
+msgstr "Bestand"

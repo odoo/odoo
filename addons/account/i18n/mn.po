@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2012-12-21 17:04+0000\n"
-"PO-Revision-Date: 2013-02-07 10:30+0000\n"
-"Last-Translator: Altangerel <worstnaemeva@gmail.com>\n"
+"PO-Revision-Date: 2013-02-12 05:15+0000\n"
+"Last-Translator: gobi <Unknown>\n"
 "Language-Team: Mongolian <mn@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-02-08 05:23+0000\n"
-"X-Generator: Launchpad (build 16482)\n"
+"X-Launchpad-Export-Date: 2013-02-12 05:29+0000\n"
+"X-Generator: Launchpad (build 16491)\n"
 
 #. module: account
 #: model:process.transition,name:account.process_transition_supplierreconcilepaid0
@@ -463,11 +463,21 @@ msgid ""
 "this box, you will be able to do invoicing & payments,\n"
 "                but not accounting (Journal Items, Chart of Accounts, ...)"
 msgstr ""
+"Компани болон хүмүүсийн эзэмшиж байгаа хөрөнгийг менежмент хийх боломжийг "
+"энэ нь олгоно.\n"
+"                Энэ нь хөрөнгүүд дээр явагдсан элэгдлийг хөтлөж харгалзах "
+"санхүүгийн бичилтийг элэгдлийн мөр \n"
+"                бүрээр хийдэг.\n"
+"                Энэ нь account_asset модулийг суулгадаг. Хэрэв энэ талбарыг "
+"тэмдэглээгүй бол нэхэмжлэх болон \n"
+"                төлбөрийг хийх боломжтой байна. гэхдээ санхүү бүртгэл "
+"хийгдэхгүй (Журналын бичилт, Дансны \n"
+"                төлөвлөгөө, ...)"
 
 #. module: account
 #: help:account.bank.statement.line,name:0
 msgid "Originator to Beneficiary Information"
-msgstr ""
+msgstr "Үүсгэгчээс Ашиг хүртэгчийн Мэдээлэл рүү"
 
 #. module: account
 #. openerp-web
@@ -501,6 +511,15 @@ msgid ""
 "should choose 'Round per line' because you certainly want the sum of your "
 "tax-included line subtotals to be equal to the total amount with taxes."
 msgstr ""
+"Хэрэв \"Мөрөөр тоймлох\"-г сонгосон бол: татвар тутамд татварын дүн нь "
+"БЗ/ХАЗ/Нэмэжлэлийн мөр бүр дээр эхэлж бодогдоод тоймлогдоно. Дараа нь эдгээр "
+"тоймлогдсон дүнгүүд нэмэгдэж нийлбэрийг бодож нийт татварыг гаргана.\r\n"
+"Хэрэв \"Глобаль тоймлох\"-г сонгосон бол: татвар тутамд татварын дүн нь "
+"БЗ/ХАЗ/Нэмэжлэлийн мөр бүр дээр эхэлж бодогдоно. Дараа нь эдгээр дүнгүүд "
+"нэмэгдэж нийлбэрийг бодож нийт татварыг гаргаад дараа нь тоймлоно. Хэрэв "
+"татвар орсон борлуулалт хийж байгаа бол \"Мөрөөр тоймлох\"-г сонгох нь "
+"зүйтэй. Учир нь мөр бүрийн татварын дэд дүн нь нийт дүнтэйгээ тэнцүү байх нь "
+"зохимжтой."
 
 #. module: account
 #: model:ir.model,name:account.model_wizard_multi_charts_accounts
@@ -768,6 +787,9 @@ msgid ""
 "lines for refunds. Leave empty if you don't want to use an analytic account "
 "on the invoice tax lines by default."
 msgstr ""
+"Мөнгөний буцаалтын нэхэмжлэлийн татварын мөрүүдэд анхны утгаар хэрэглэгдэх "
+"шинжилгээний дансыг тохируулна. Хэрэв хоосон үлдээвэл нэхэмжлэлийн татварын "
+"мөрүүдэд шинжилгээний дансыг хэрэглэхгүй."
 
 #. module: account
 #: view:account.account:0
@@ -832,6 +854,8 @@ msgid ""
 "Cannot %s invoice which is already reconciled, invoice should be "
 "unreconciled first. You can only refund this invoice."
 msgstr ""
+"%s нь хэдийнээ тулгагдсан тул нэхэмжлэх боломжгүй. Нэхэмжлэлийн тулгалтыг "
+"эхлээд арилгах хэрэгтэй. Энэ нэхэмжлэлийг зөвхөн буцаах л боломжтой."
 
 #. module: account
 #: selection:account.financial.report,display_detail:0
@@ -939,6 +963,7 @@ msgid ""
 "Print Report with the currency column if the currency differs from the "
 "company currency."
 msgstr ""
+"Валют нь компаний валютаас ялгаатай бол валют баганатайгаар тайланг хэвлэнэ."
 
 #. module: account
 #: report:account.analytic.account.quantity_cost_ledger:0
@@ -992,6 +1017,8 @@ msgid ""
 "                                                  opening/closing fiscal "
 "year process."
 msgstr ""
+"Хэрэв журналын бичилт нь санхүүгийн жилийн нээлт/хаалт хийх процессоор "
+"үүсгэгдсэн байвал тулгалтыг арилгах боломжгүй."
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_subscription_form_new
@@ -1176,6 +1203,19 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Данс нэмэхээр бол дарна уу.\n"
+"              </p><p>\n"
+"                Хэрэв олон валюттай гүйлгээ хийж байгаа бол ханшийн "
+"зөрүүнээс\n"
+"                хамаарч олз, гарз явагдаж болно. Энэ меню нь эдгээр гүйлгээ "
+"хэрэв \n"
+"                өнөөдөр дуусах тохиолдолд олз эсвэл гарзыг урьдчилан "
+"таамаглах боломжийг \n"
+"                олгоно. Зөвхөн хоёрдогч валюттай дансууд дээр энэ нь "
+"яригдана.\n"
+"              </p>\n"
+"            "
 
 #. module: account
 #: field:account.bank.accounts.wizard,acc_name:0
@@ -1193,6 +1233,8 @@ msgid ""
 "Check this box if you don't want any tax related to this tax code to appear "
 "on invoices"
 msgstr ""
+"Хэрэв энэ кодтой холбогдсон татвар нь нэхэмжлэл дээр харуулахгүй байхыг "
+"хүсвэл энэ талбарыг сонгоно."
 
 #. module: account
 #: field:report.account.receivable,name:0
@@ -1857,6 +1899,15 @@ msgid ""
 "should choose 'Round per line' because you certainly want the sum of your "
 "tax-included line subtotals to be equal to the total amount with taxes."
 msgstr ""
+"Хэрэв \"Мөрөөр тоймлох\"-г сонгосон бол: татвар тутамд татварын дүн нь "
+"БЗ/ХАЗ/Нэмэжлэлийн мөр бүр дээр эхэлж бодогдоод тоймлогдоно. Дараа нь эдгээр "
+"тоймлогдсон дүнгүүд нэмэгдэж нийлбэрийг бодож нийт татварыг гаргана.\r\n"
+"Хэрэв \"Глобаль тоймлох\"-г сонгосон бол: татвар тутамд татварын дүн нь "
+"БЗ/ХАЗ/Нэмэжлэлийн мөр бүр дээр эхэлж бодогдоно. Дараа нь эдгээр дүнгүүд "
+"нэмэгдэж нийлбэрийг бодож нийт татварыг гаргаад дараа нь тоймлоно. Хэрэв "
+"татвар орсон борлуулалт хийж байгаа бол \"Мөрөөр тоймлох\"-г сонгох нь "
+"зүйтэй. Учир нь мөр бүрийн татварын дэд дүн нь нийт дүнтэйгээ тэнцүү байх нь "
+"зохимжтой."
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_report_account_type_sales_tree_all
@@ -5271,7 +5322,7 @@ msgstr "Үзлэг хийх шаардлагатай журналын бичил
 #. module: account
 #: selection:res.company,tax_calculation_rounding_method:0
 msgid "Round Globally"
-msgstr ""
+msgstr "Глобаль тоймлох"
 
 #. module: account
 #: view:account.bank.statement:0
@@ -5973,7 +6024,7 @@ msgstr "Валютаарх дүн"
 #. module: account
 #: selection:res.company,tax_calculation_rounding_method:0
 msgid "Round per Line"
-msgstr ""
+msgstr "Мөрөөр тоймлох"
 
 #. module: account
 #: report:account.analytic.account.balance:0
@@ -6742,7 +6793,7 @@ msgstr "Хувь"
 #. module: account
 #: selection:account.config.settings,tax_calculation_rounding_method:0
 msgid "Round globally"
-msgstr ""
+msgstr "Глобаль тоймлох"
 
 #. module: account
 #: selection:account.report.general.ledger,sortby:0
@@ -10463,7 +10514,7 @@ msgstr "Нийт"
 #: code:addons/account/wizard/account_invoice_refund.py:109
 #, python-format
 msgid "Cannot %s draft/proforma/cancel invoice."
-msgstr ""
+msgstr "%s ноорог/урьдчилсан/цуцласан нэхэмжлэлийг чадахгүй"
 
 #. module: account
 #: field:account.tax,account_analytic_paid_id:0
@@ -11161,7 +11212,7 @@ msgstr ""
 #. module: account
 #: selection:account.config.settings,tax_calculation_rounding_method:0
 msgid "Round per line"
-msgstr ""
+msgstr "Мөрөөр тоймлох"
 
 #. module: account
 #: help:account.move.line,amount_residual_currency:0

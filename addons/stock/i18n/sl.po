@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2012-12-21 17:04+0000\n"
-"PO-Revision-Date: 2013-02-07 01:34+0000\n"
+"PO-Revision-Date: 2013-02-11 01:43+0000\n"
 "Last-Translator: Dušan Laznik (Mentis) <laznik@mentis.si>\n"
 "Language-Team: Slovenian <sl@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-02-08 05:24+0000\n"
-"X-Generator: Launchpad (build 16482)\n"
+"X-Launchpad-Export-Date: 2013-02-12 05:30+0000\n"
+"X-Generator: Launchpad (build 16491)\n"
 
 #. module: stock
 #: field:stock.inventory.line.split,line_exist_ids:0
@@ -1018,7 +1018,7 @@ msgstr "Spremeni količino"
 #: code:addons/stock/product.py:463
 #, python-format
 msgid "Future P&L"
-msgstr ""
+msgstr "Bodoči P&I"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_picking_tree4
@@ -1125,7 +1125,7 @@ msgstr "_Prekliči"
 #. module: stock
 #: field:report.stock.move,day_diff:0
 msgid "Execution Lead Time (Days)"
-msgstr ""
+msgstr "Čas dobave (dni)"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_partial_move
@@ -1168,7 +1168,7 @@ msgstr "Tu lahko skrijete lokacijo , ne da bi jo izbrisali."
 #, python-format
 msgid ""
 "Please select multiple physical inventories to merge in the list view."
-msgstr ""
+msgstr "Izbrati morate več inventur za združevanje v ta seznam."
 
 #. module: stock
 #: code:addons/stock/wizard/stock_return_picking.py:106
@@ -1260,12 +1260,28 @@ msgid ""
 "location consumes the raw material and produces finished products\n"
 "                      "
 msgstr ""
+"*Dobaviteljeva lokacija: Virtualna lokacija za blago , ki prihaja od "
+"dobaviteljev\n"
+"                       \n"
+"* Pogled: Virtualna lokacija ki združuje več drugih lokacij. Ne more "
+"vsebovati izdelkov.\n"
+"                       \n"
+"* Interna lokacija: Fizična lokacija znotraj vašega skladišča,\n"
+"                       \n"
+"* Kupčeva lokacija: Virtualna lokacija za blago , ki ga pošiljate kupcem.\n"
+"                       \n"
+"* Inventura: Virtualna lokacija za popravke zalog z inventuro.\n"
+"                       \n"
+"* Oskrba: Virtualna začasna lokacija  za oskrbo.\n"
+"                       \n"
+"* Proizvodnja: Virtualna  lokacija proizvodnje.\n"
+"                      "
 
 #. module: stock
 #: field:stock.partial.move.line,update_cost:0
 #: field:stock.partial.picking.line,update_cost:0
 msgid "Need cost update"
-msgstr ""
+msgstr "Potrebna je osvežitev stroškovne cene"
 
 #. module: stock
 #: field:stock.production.lot.revision,author_id:0
@@ -1278,6 +1294,7 @@ msgstr "Avtor"
 msgid ""
 "You are moving %.2f %s but only %.2f %s available for this serial number."
 msgstr ""
+"Premikate  %.2f %s , na razpolago pa je samo %.2f %s za to serijsko številko."
 
 #. module: stock
 #: report:stock.picking.list:0
@@ -1314,24 +1331,25 @@ msgid ""
 "In order to cancel this inventory, you must first unpost related journal "
 "entries."
 msgstr ""
+"Za preklic te inventure , morati najprej preklicati povezane vknjižbe."
 
 #. module: stock
 #: code:addons/stock/product.py:113
 #, python-format
 msgid "Please specify company in Location."
-msgstr ""
+msgstr "Določite podjetje za to lokacijo"
 
 #. module: stock
 #: view:stock.move:0
 msgid "Stock moves that are Available (Ready to process)"
-msgstr ""
+msgstr "Premiki razpoložljivi za procesiranje"
 
 #. module: stock
 #: help:stock.config.settings,group_stock_packaging:0
 msgid ""
 "Allows you to create and manage your packaging dimensions and types you want "
 "to be maintained in your system."
-msgstr ""
+msgstr "Omogoča urejanje vrst in dimenzij pakiranja"
 
 #. module: stock
 #: selection:report.stock.inventory,month:0
@@ -1377,6 +1395,11 @@ msgid ""
 "* Available: When products are reserved, it is set to 'Available'.\n"
 "* Done: When the shipment is processed, the state is 'Done'."
 msgstr ""
+"* Novo:Še ne potrjen premik.\n"
+"* Čaka na drugi premik: Pri verižnem toku.\n"
+"* Čaka na razpoložljivost: Čaka nabavo,izdelavo..\n"
+"* Razpoložljivo: Izdelki so rezervirani.\n"
+"* Končano: Premik kočan."
 
 #. module: stock
 #: model:stock.location,name:stock.stock_location_locations_partner
@@ -1405,7 +1428,7 @@ msgstr "Načrtovan čas"
 #: model:ir.actions.act_window,name:stock.move_consume
 #: view:stock.move.consume:0
 msgid "Consume Move"
-msgstr ""
+msgstr "Potrošnja"
 
 #. module: stock
 #: report:stock.picking.list:0
@@ -1415,7 +1438,7 @@ msgstr "Dobavnica:"
 #. module: stock
 #: help:stock.location,chained_delay:0
 msgid "Delay between original move and chained move in days"
-msgstr ""
+msgstr "Zamik med osnovnim in povezanim premikom (dnevi)"
 
 #. module: stock
 #: model:ir.actions.act_window,help:stock.action_stock_journal_form
@@ -1433,6 +1456,13 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Nov dnevnik.\n"
+"              </p><p>\n"
+"                npr. Kontrola kvalitete,Prevzemi,Pakiranje ...\n"
+"               \n"
+"              </p>\n"
+"            "
 
 #. module: stock
 #: help:stock.location,chained_auto_packing:0
@@ -1447,7 +1477,7 @@ msgstr ""
 #. module: stock
 #: view:stock.split.into:0
 msgid "Quantity to Leave in the Current Pack"
-msgstr ""
+msgstr "Količina v paketu"
 
 #. module: stock
 #: view:stock.tracking:0
@@ -1492,7 +1522,7 @@ msgstr "Premik zaloge"
 #. module: stock
 #: view:stock.inventory.merge:0
 msgid "Merge Inventories"
-msgstr ""
+msgstr "Združevanje inventur"
 
 #. module: stock
 #: selection:stock.return.picking,invoice_state:0
@@ -1509,12 +1539,12 @@ msgstr "Lahko brišete samo osnutke premikov."
 #: code:addons/stock/stock.py:1665
 #, python-format
 msgid "You cannot move product %s to a location of type view %s."
-msgstr ""
+msgstr "Ni možno premakniti izdelka %s na lokacijo vrste pogled %s."
 
 #. module: stock
 #: view:stock.inventory:0
 msgid "Split in serial numbers"
-msgstr ""
+msgstr "Delitev v serijske številke"
 
 #. module: stock
 #: view:stock.move:0
@@ -1546,7 +1576,7 @@ msgstr "Dodatne informacije"
 #: code:addons/stock/stock.py:2648
 #, python-format
 msgid "Missing partial picking data for move #%s."
-msgstr ""
+msgstr "Manjka datum delnega prevzema za #%s."
 
 #. module: stock
 #: field:stock.location.product,from_date:0
@@ -1556,7 +1586,7 @@ msgstr "Od"
 #. module: stock
 #: view:stock.picking.in:0
 msgid "Incoming Shipments already processed"
-msgstr ""
+msgstr "Že procesirane prihajajoče pošiljke."
 
 #. module: stock
 #: code:addons/stock/wizard/stock_return_picking.py:99
@@ -1587,7 +1617,7 @@ msgstr "Interna prevzemnica"
 #: selection:report.stock.move,state:0
 #: view:stock.picking:0
 msgid "Waiting"
-msgstr "Čakanje"
+msgstr "V čakanju"
 
 #. module: stock
 #: view:stock.move:0
@@ -1666,7 +1696,7 @@ msgstr ""
 #: model:ir.actions.report.xml,name:stock.report_location_overview
 #: report:lot.stock.overview:0
 msgid "Location Inventory Overview"
-msgstr ""
+msgstr "Inventura lokacije - pregled"
 
 #. module: stock
 #: view:report.stock.inventory:0
@@ -1676,7 +1706,7 @@ msgstr ""
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action3
 msgid "Downstream traceability"
-msgstr ""
+msgstr "Sledljivost"
 
 #. module: stock
 #: view:stock.picking.in:0
@@ -1706,7 +1736,7 @@ msgstr ""
 #: help:stock.incoterms,active:0
 msgid ""
 "By unchecking the active field, you may hide an INCOTERM without deleting it."
-msgstr ""
+msgstr "Tu lahko skrijete ta objekt , ne da bi ga izbrisali."
 
 #. module: stock
 #: view:stock.picking:0
@@ -1718,7 +1748,7 @@ msgstr "Datum Naročila"
 #: code:addons/stock/wizard/stock_change_product_qty.py:92
 #, python-format
 msgid "INV: %s"
-msgstr ""
+msgstr "INV: %s"
 
 #. module: stock
 #: view:stock.location:0
@@ -1735,7 +1765,7 @@ msgstr ""
 #. module: stock
 #: help:stock.location,company_id:0
 msgid "Let this field empty if this location is shared between all companies"
-msgstr ""
+msgstr "Pustite to polje prazno , če je to skupna lokacija za vsa podjetja."
 
 #. module: stock
 #: field:stock.location,chained_delay:0
@@ -1761,13 +1791,13 @@ msgstr "Vnesite pozitivno količino."
 #. module: stock
 #: model:stock.location,name:stock.stock_location_shop1
 msgid "Your Company, Birmingham shop"
-msgstr ""
+msgstr "Your Company, Birmingham shop"
 
 #. module: stock
 #: view:product.product:0
 #: view:product.template:0
 msgid "Storage Location"
-msgstr ""
+msgstr "Lokacija skladišča"
 
 #. module: stock
 #: help:stock.partial.move.line,currency:0
@@ -1808,7 +1838,7 @@ msgstr "Mesečni plan"
 #: help:stock.picking.in,origin:0
 #: help:stock.picking.out,origin:0
 msgid "Reference of the document"
-msgstr ""
+msgstr "Referenca"
 
 #. module: stock
 #: view:stock.picking:0
@@ -1824,7 +1854,7 @@ msgstr "Prihajajoče pošiljke:"
 #. module: stock
 #: field:stock.location,valuation_out_account_id:0
 msgid "Stock Valuation Account (Outgoing)"
-msgstr ""
+msgstr "Konto vrednotenja zalog (Izhodni)"
 
 #. module: stock
 #: view:stock.return.picking.memory:0
@@ -1884,7 +1914,7 @@ msgstr ""
 #. module: stock
 #: help:stock.move,date_expected:0
 msgid "Scheduled date for the processing of this move"
-msgstr ""
+msgstr "Planirani datum tega premika"
 
 #. module: stock
 #: field:stock.inventory,move_ids:0
@@ -1894,18 +1924,18 @@ msgstr "Narejene knjižbe"
 #. module: stock
 #: field:stock.location,valuation_in_account_id:0
 msgid "Stock Valuation Account (Incoming)"
-msgstr ""
+msgstr "Konto vrednotenja zalog (Vhodni)"
 
 #. module: stock
 #: model:stock.location,name:stock.stock_location_14
 msgid "Shelf 2"
-msgstr ""
+msgstr "Regal 2"
 
 #. module: stock
 #: code:addons/stock/stock.py:529
 #, python-format
 msgid "You cannot remove a lot line."
-msgstr ""
+msgstr "Ni možno odstraniti vrstico sklopa"
 
 #. module: stock
 #: help:stock.location,posx:0
@@ -1942,6 +1972,7 @@ msgid ""
 "This stock location will be used, instead of the default one, as the source "
 "location for stock moves generated when you do an inventory."
 msgstr ""
+"Ta lokacija bo uporabljena namesto privzete , kot izvorna lokacija inventure."
 
 #. module: stock
 #: help:product.template,property_stock_account_output:0
@@ -2014,7 +2045,7 @@ msgstr "Lokacija zaloge"
 #: code:addons/stock/wizard/stock_partial_picking.py:97
 #, python-format
 msgid "_Deliver"
-msgstr ""
+msgstr "_Dostava"
 
 #. module: stock
 #: code:addons/stock/wizard/stock_inventory_merge.py:64
@@ -2108,7 +2139,7 @@ msgstr "Vračila"
 #: model:ir.actions.act_window,name:stock.act_stock_return_picking_in
 #: model:ir.actions.act_window,name:stock.act_stock_return_picking_out
 msgid "Return Shipment"
-msgstr ""
+msgstr "Vrnitev pošiljke"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_inventory_merge
@@ -2125,7 +2156,7 @@ msgstr "Izpolni inventuro"
 #. module: stock
 #: view:stock.return.picking:0
 msgid "Provide the quantities of the returned products."
-msgstr ""
+msgstr "Določite količine vrnjenih izdelkov."
 
 #. module: stock
 #: view:product.product:0
@@ -2193,7 +2224,7 @@ msgstr "Cena"
 #. module: stock
 #: field:stock.config.settings,module_stock_invoice_directly:0
 msgid "Create and open the invoice when the user finish a delivery order"
-msgstr ""
+msgstr "Ustvari in odpri račun , ko uporabnik zaključi dostavni nalog."
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_return_picking_memory
@@ -2266,7 +2297,7 @@ msgstr "V realnem času (samodejno)"
 #. module: stock
 #: help:stock.move,tracking_id:0
 msgid "Logistical shipping unit: pallet, box, pack ..."
-msgstr ""
+msgstr "Logistične enote (palete,zaboji,paketi...)"
 
 #. module: stock
 #: view:stock.location:0
@@ -2325,7 +2356,7 @@ msgstr ""
 #. module: stock
 #: view:stock.move:0
 msgid "Creation"
-msgstr ""
+msgstr "Izdelava"
 
 #. module: stock
 #: code:addons/stock/stock.py:1776
@@ -2350,7 +2381,7 @@ msgstr "Stroški"
 #: field:product.template,property_stock_account_input:0
 #: field:stock.change.standard.price,stock_account_input:0
 msgid "Stock Input Account"
-msgstr ""
+msgstr "Konto prejema"
 
 #. module: stock
 #: view:report.stock.move:0
@@ -2507,7 +2538,7 @@ msgstr "Predvideno"
 #. module: stock
 #: model:res.groups,name:stock.group_production_lot
 msgid "Manage Serial Numbers"
-msgstr ""
+msgstr "Serijske številke"
 
 #. module: stock
 #: field:stock.move,note:0
@@ -2546,7 +2577,7 @@ msgstr "Delno procesiranje"
 #. module: stock
 #: view:stock.move:0
 msgid "Stock moves that are Confirmed, Available or Waiting"
-msgstr ""
+msgstr "Premiki , ki so potrjeni , razpoložljivi ali na čakanju"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.act_product_location_open
@@ -2598,7 +2629,7 @@ msgstr "Lokacija gotovih izdelkov"
 #: view:board.board:0
 #: model:ir.actions.act_window,name:stock.action_stock_outgoing_product_delay
 msgid "Outgoing Products"
-msgstr ""
+msgstr "Izdelki v izdaji"
 
 #. module: stock
 #: code:addons/stock/stock.py:2249
@@ -2624,7 +2655,7 @@ msgstr "Premik"
 #: code:addons/stock/product.py:465
 #, python-format
 msgid "P&L Qty"
-msgstr ""
+msgstr "P&L kol."
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_config_settings
@@ -2716,7 +2747,7 @@ msgstr "Lokacija"
 #: model:ir.model,name:stock.model_stock_picking
 #: view:stock.picking:0
 msgid "Picking List"
-msgstr "Prevzemnica"
+msgstr "Dobavnica"
 
 #. module: stock
 #: view:stock.inventory:0
@@ -2773,7 +2804,7 @@ msgstr "Na zalogi:"
 #. module: stock
 #: model:ir.model,name:stock.model_stock_report_prodlots
 msgid "Stock report by serial number"
-msgstr ""
+msgstr "Zaloge po serijskih številkah"
 
 #. module: stock
 #: selection:report.stock.inventory,month:0
@@ -2799,7 +2830,7 @@ msgstr ""
 #: code:addons/stock/wizard/stock_invoice_onshipping.py:112
 #, python-format
 msgid "Please create Invoices."
-msgstr ""
+msgstr "Kreirajte  račune"
 
 #. module: stock
 #: help:stock.config.settings,module_product_expiry:0
@@ -2840,7 +2871,7 @@ msgstr "Dnevnik zaloge"
 #: code:addons/stock/wizard/stock_return_picking.py:171
 #, python-format
 msgid "%s-%s-return"
-msgstr ""
+msgstr "%s-%s-vračilo"
 
 #. module: stock
 #: code:addons/stock/wizard/stock_change_product_qty.py:82
@@ -2967,6 +2998,10 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Nova lokacija.\n"
+"              </p>\n"
+"            "
 
 #. module: stock
 #: field:stock.location,stock_real:0
@@ -2976,7 +3011,7 @@ msgstr "Dejanska zaloga"
 #. module: stock
 #: field:stock.report.tracklots,tracking_id:0
 msgid "Logistic Serial Number"
-msgstr ""
+msgstr "Serijske številke"
 
 #. module: stock
 #: field:stock.production.lot.revision,date:0
@@ -3029,7 +3064,7 @@ msgstr ""
 #: code:addons/stock/wizard/stock_partial_picking.py:95
 #, python-format
 msgid "_Receive"
-msgstr ""
+msgstr "_prejem"
 
 #. module: stock
 #: field:stock.incoterms,active:0
@@ -3112,7 +3147,7 @@ msgstr ""
 #: help:stock.config.settings,group_stock_inventory_valuation:0
 msgid ""
 "Allows to configure inventory valuations on products and product categories."
-msgstr ""
+msgstr "Nastavitve vrednotenja zalog na izdelkih in skupinah izdelkov"
 
 #. module: stock
 #: help:stock.config.settings,module_stock_location:0
@@ -3164,7 +3199,7 @@ msgstr ""
 #. module: stock
 #: model:res.groups,name:stock.group_tracking_lot
 msgid "Manage Logistic Serial Numbers"
-msgstr ""
+msgstr "Upravljanje logističnih serijskih številk"
 
 #. module: stock
 #: view:stock.inventory:0
@@ -3226,7 +3261,7 @@ msgstr "Virtualne lokacije"
 #: selection:stock.picking.in,invoice_state:0
 #: selection:stock.picking.out,invoice_state:0
 msgid "To Be Invoiced"
-msgstr ""
+msgstr "Za fakturiranje"
 
 #. module: stock
 #: field:stock.inventory,date_done:0
@@ -3238,12 +3273,12 @@ msgstr "Datum zaključka"
 #, python-format
 msgid ""
 "Please put a partner on the picking list if you want to generate invoice."
-msgstr ""
+msgstr "Določite partnerja na dobavnici , če želite ustvariti račun"
 
 #. module: stock
 #: view:stock.picking.in:0
 msgid "Confirm & Receive"
-msgstr ""
+msgstr "Potrditev&Prejem"
 
 #. module: stock
 #: field:stock.picking,origin:0
@@ -3438,12 +3473,12 @@ msgstr "Izdelki po kategorijah"
 #: selection:stock.picking.in,state:0
 #: selection:stock.picking.out,state:0
 msgid "Waiting Another Operation"
-msgstr ""
+msgstr "Čaka drugo operacijo"
 
 #. module: stock
 #: view:stock.location:0
 msgid "Supplier Locations"
-msgstr ""
+msgstr "Dobaviteljeve lokacije"
 
 #. module: stock
 #: field:stock.partial.move.line,wizard_id:0
@@ -3461,7 +3496,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:stock.action_view_stock_location_product
 #: model:ir.model,name:stock.model_stock_location_product
 msgid "Products by Location"
-msgstr ""
+msgstr "Izdelki po lokaciji"
 
 #. module: stock
 #: view:stock.config.settings:0
@@ -3505,7 +3540,7 @@ msgstr ""
 #. module: stock
 #: model:stock.location,name:stock.stock_location_components
 msgid "Shelf 1"
-msgstr ""
+msgstr "Regal 1"
 
 #. module: stock
 #: help:stock.picking,date:0
@@ -3541,7 +3576,7 @@ msgstr "Vodja"
 #. module: stock
 #: model:stock.location,name:stock.stock_location_intermediatelocation0
 msgid "Internal Shippings"
-msgstr ""
+msgstr "Interni premiki"
 
 #. module: stock
 #: field:stock.change.standard.price,enable_stock_in_out_acc:0
@@ -3583,13 +3618,13 @@ msgstr "Vse naenkrat"
 #. module: stock
 #: model:ir.actions.act_window,name:stock.act_product_stock_move_open
 msgid "Inventory Move"
-msgstr ""
+msgstr "Premik zaloge"
 
 #. module: stock
 #: code:addons/stock/product.py:475
 #, python-format
 msgid "Future Productions"
-msgstr ""
+msgstr "Bodoča proizvodnja"
 
 #. module: stock
 #: help:stock.picking.in,state:0
@@ -3827,7 +3862,7 @@ msgstr "Prevzem"
 #: code:addons/stock/wizard/stock_invoice_onshipping.py:96
 #, python-format
 msgid "This picking list does not require invoicing."
-msgstr ""
+msgstr "Ta dobavnica ne zahteva računa"
 
 #. module: stock
 #: code:addons/stock/wizard/stock_partial_picking.py:181
@@ -3840,7 +3875,7 @@ msgstr ""
 #. module: stock
 #: model:stock.location,name:stock.stock_location_shop0
 msgid "Your Company, Chicago shop"
-msgstr ""
+msgstr "Your Company, Chicago shop"
 
 #. module: stock
 #: selection:report.stock.move,type:0
@@ -4334,7 +4369,7 @@ msgstr ""
 #: code:addons/stock/wizard/stock_invoice_onshipping.py:98
 #, python-format
 msgid "None of these picking lists require invoicing."
-msgstr ""
+msgstr "Nobena dobavnica ne zahteva fakturiranja"
 
 #. module: stock
 #: selection:report.stock.inventory,month:0
