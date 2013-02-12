@@ -8,6 +8,7 @@ class test_res_config(common.TransactionCase):
         super(test_res_config, self).setUp()
         self.res_config = self.registry('res.config.settings')
         self.menu_xml_id = 'base.menu_action_res_users'
+        self.full_field_name = 'res.partner.lang'
 
     def test_00_get_option_path(self):
         """ The get_option_path() should return a tuple containing a string and an integer """
@@ -26,3 +27,16 @@ class test_res_config(common.TransactionCase):
 
         self.assertTrue(res[0] == ir_ui_menu.complete_name), "Result mismatch: expected %s, got %s" % (ir_ui_menu.complete_name, res[0])
         self.assertTrue(res[1] == ir_ui_menu.action.id), "Result mismatch: expected %s, got %s" % (ir_ui_menu.action.id, res[1])
+
+    def test_10_get_option_name(self):
+        """ The get_option_name() should return a string """
+        res = self.res_config.get_option_name(self.cr, self.uid, self.full_field_name, context=None)
+
+        # Check type
+        self.assertTrue(isinstance(res, basestring)), "The result of get_option_name() should be a basestring (got %s)" % type(res)
+
+        # Check returned value
+        model_name, field_name = self.full_field_name.rsplit('.', 1)
+        expected_value = self.registry(model_name).fields_get(self.cr, self.uid, allfields=[field_name], context=None)[field_name]['string']
+
+        self.assertTrue(res == expected_value), "Result mismatch: expected %s, got %s" % (res, expected_value)
