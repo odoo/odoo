@@ -233,7 +233,8 @@ instance.web_kanban.KanbanView = instance.web.View.extend({
             self.grouped_by_m2o = (self.group_by_field.type === 'many2one');
             self.$buttons.find('.oe_alternative').toggle(self.grouped_by_m2o);
             self.$el.toggleClass('oe_kanban_grouped_by_m2o', self.grouped_by_m2o);
-            var grouping = new instance.web.Model(self.dataset.model, context, domain).query().group_by(self.group_by);
+            var grouping_fields = self.group_by ? [self.group_by].concat(_.keys(self.aggregates)) : undefined;
+            var grouping = new instance.web.Model(self.dataset.model, context, domain).query().group_by(grouping_fields);
             return $.when(grouping).done(function(groups) {
                 if (groups) {
                     self.do_process_groups(groups);
