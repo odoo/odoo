@@ -1,5 +1,6 @@
 
-define(["nova", "jquery", "underscore", "oeclient", "require"], function(nova, $, _, oeclient, require) {
+define(["nova", "underscore", "oeclient", "require", "jquery",
+        "jquery.achtung"], function(nova, _, oeclient, require, $) {
     var livesupport = {};
 
     var templateEngine = new nova.TemplateEngine();
@@ -9,6 +10,7 @@ define(["nova", "jquery", "underscore", "oeclient", "require"], function(nova, $
     var defaultInputPlaceholder;
 
     livesupport.main = function(server_url, db, login, password, channel, options) {
+        var defs = [];
         options = options || {};
         _.defaults(options, {
             buttonText: "Chat with one of our collaborators",
@@ -17,7 +19,7 @@ define(["nova", "jquery", "underscore", "oeclient", "require"], function(nova, $
             auto: false,
         });
         defaultInputPlaceholder = options.inputPlaceholder;
-        var templates_def = $.ajax({
+        defs.push($.ajax({
             url: require.toUrl("./livesupport_templates.js"),
             jsonp: false,
             jsonpCallback: "oe_livesupport_templates_callback",
@@ -25,18 +27,15 @@ define(["nova", "jquery", "underscore", "oeclient", "require"], function(nova, $
             cache: true,
         }).then(function(content) {
             return templateEngine.loadFileContent(content);
-        });
-        var css_def = $.Deferred();
-        $('<link rel="stylesheet" href="' + require.toUrl("../css/livesupport.css") + '"></link>')
-                .appendTo($("head")).ready(function() {
-            css_def.resolve();
-        });
+        }));
+        defs.push(add_css("../css/livesupport.css"));
+        defs.push(add_css("./jquery.achtung.css"));
 
-        $.when(templates_def, css_def).then(function() {
+        $.when.apply($, defs).then(function() {
             console.log("starting live support customer app");
             connection = new oeclient.Connection(new oeclient.JsonpRPCConnector(server_url), db, login, password);
             connection.connector.call("/live_support/available", {db: db, channel: channel}).then(function(activated) {
-                if (! activated)
+                if (! activated & ! options.auto)
                     return;
                 var button = new livesupport.ChatButton(null, channel, options);
                 button.appendTo($("body"));
@@ -44,6 +43,19 @@ define(["nova", "jquery", "underscore", "oeclient", "require"], function(nova, $
                     button.click();
             });
         });
+    };
+
+    var add_css = function(relative_file_name) {
+        var css_def = $.Deferred();
+        $('<link rel="stylesheet" href="' + require.toUrl(relative_file_name) + '"></link>')
+                .appendTo($("head")).ready(function() {
+            css_def.resolve();
+        });
+        return css_def.promise();
+    };
+
+    var notification = function(message) {
+        $.achtung({message: message, timeout: 0, showEffects: false, hideEffects: false});
     };
 
     var ERROR_DELAY = 5000;
@@ -77,7 +89,7 @@ define(["nova", "jquery", "underscore", "oeclient", "require"], function(nova, $
                 def.reject();
             }, 5000);
             def.then(_.bind(this.chat, this), function() {
-                window.alert("It seems the connection to the server is encountering problems, please try again later.");
+                notification("It seems the connection to the server is encountering problems, please try again later.");
             });
         },
         chat: function() {
@@ -86,7 +98,7 @@ define(["nova", "jquery", "underscore", "oeclient", "require"], function(nova, $
                 return;
             connection.getModel("live_support.channel").call("get_available_user", [this.channel]).then(function(user_id) {
                 if (! user_id) {
-                    window.alert("None of our collaborators seems to be available, please try again later.");
+                    notification("None of our collaborators seems to be available, please try again later.");
                     return;
                 }
                 self.manager.ensure_users([user_id]).then(function() {

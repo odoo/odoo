@@ -168,6 +168,7 @@ class ImportController(openerp.addons.web.http.Controller):
 
     @openerp.addons.web.http.jsonrequest
     def poll(self, req, last=None, users_watch=None, db=None, uid=None, password=None, uuid=None):
+        assert_uuid(uuid)
         if not openerp.evented:
             raise Exception("Not usable in a server not running gevent")
         if db is not None:
@@ -194,6 +195,10 @@ class ImportController(openerp.addons.web.http.Controller):
         import uuid
         return "%s" % uuid.uuid1()
 
+def assert_uuid(uuid):
+    if not isinstance(uuid, (str, unicode, type(None))):
+        raise Exception("%s is not a uuid" % uuid)
+
 
 class im_message(osv.osv):
     _name = 'im.message'
@@ -209,6 +214,7 @@ class im_message(osv.osv):
     }
     
     def get_messages(self, cr, uid, last=None, users_watch=None, uuid=None, context=None):
+        assert_uuid(uuid)
         users_watch = users_watch or []
 
         # complex stuff to determine the last message to show
@@ -237,6 +243,7 @@ class im_message(osv.osv):
         return {"res": mess, "last": last, "dbname": cr.dbname, "users_status": users_status}
 
     def post(self, cr, uid, message, to_user_id, uuid=None, context=None):
+        assert_uuid(uuid)
         my_id = self.pool.get('im.user').get_by_user_id(cr, uid, uuid or uid)["id"]
         self.create(cr, openerp.SUPERUSER_ID, {"message": message, 'from': my_id, 'to': to_user_id}, context=context)
         notify_channel(cr, "im_channel", {'type': 'message', 'receiver': to_user_id})
@@ -262,12 +269,15 @@ class im_user(osv.osv):
         return self.read(cr, uid, found, fields, context=context)
 
     def im_connect(self, cr, uid, uuid=None, context=None):
-        return self._im_change_status(cr, uid, True, uuid or uid, context)
+        assert_uuid(uuid)
+        return self._im_change_status(cr, uid, True, uuid, context)
 
     def im_disconnect(self, cr, uid, uuid=None, context=None):
-        return self._im_change_status(cr, uid, False, uuid or uid, context)
+        assert_uuid(uuid)
+        return self._im_change_status(cr, uid, False, uuid, context)
 
     def _im_change_status(self, cr, uid, new_one, uuid=None, context=None):
+        assert_uuid(uuid)
         id = self.get_by_user_id(cr, uid, uuid or uid, context=context)["id"]
         current_status = self.read(cr, openerp.SUPERUSER_ID, id, ["im_status"], context=None)["im_status"]
         self.write(cr, openerp.SUPERUSER_ID, id, {"im_last_status": new_one, 
@@ -304,9 +314,24 @@ class im_user(osv.osv):
                 records.append({"id": created, "uuid": to_create})
         return records
 
+    def assign_name(self, cr, uid, uuid, name, context=None):
+        assert_uuid(uuid)
+        id = self.get_by_user_id(cr, uid, uuid or uid, context=context)["id"]
+        self.write(cr, openerp.SUPERUSER_ID, id, {"assigned_name": name}, context=context)
+        return True
+
+    def _get_name(self, cr, uid, ids, name, arg, context=None):
+        res = {}
+        for record in self.browse(cr, uid, ids, context=context):
+            res[record.id] = record.assigned_name
+            if record.user:
+                res[record.id] = record.user.name
+                continue
+        return res
 
     _columns = {
-        'name': fields.related('user', 'name', type='char', size=200, string="Name", store=True, readonly=True),
+        'name': fields.function(_get_name, type='char', size=200, string="Name", store=True, readonly=True),
+        'assigned_name': fields.char(string="Assigned Name", size=200, required=False),
         'image': fields.related('user', 'image_small', type='binary', string="Image", readonly=True),
         'user': fields.many2one("res.users", string="User", select=True, ondelete='cascade'),
         'uuid': fields.char(string="UUID", size=50, select=True),
