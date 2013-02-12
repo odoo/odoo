@@ -628,7 +628,10 @@ class crm_lead(base_stage, format_address, osv.osv):
         opportunities = self.browse(cr, uid, ids, context=context)
         sequenced_opps = []
         for opportunity in opportunities:
-            sequenced_opps.append((opportunity.stage_id and opportunity.stage_id.state != 'cancel' and opportunity.stage_id.sequence or 0, opportunity))
+            if opportunity.stage_id and opportunity.stage_id.state != 'cancel':
+                sequenced_opps.append((opportunity.stage_id.sequence, opportunity))
+            else:
+                sequenced_opps.append((-1, opportunity))
         sequenced_opps.sort(key=lambda tup: tup[0], reverse=True)
         opportunities = [opportunity for sequence, opportunity in sequenced_opps]
         ids = [opportunity.id for opportunity in opportunities]
@@ -653,7 +656,7 @@ class crm_lead(base_stage, format_address, osv.osv):
             section_stages = self.pool.get('crm.case.section').read(cr, uid, merged_data['section_id'], ['stage_ids'], context=context)
             if merged_data.get('stage_id') not in section_stages['stage_ids']:
                 stages_sequences = self.pool.get('crm.case.stage').search(cr, uid, [('id','in',section_stages['stage_ids'])], order='sequence', limit=1, context=context)
-                merged_data['stage_id'] = stages_sequences[0]
+                merged_data['stage_id'] = stages_sequences and stages_sequences[0] or False
         # Write merged data into first opportunity
         self.write(cr, uid, [highest.id], merged_data, context=context)
         # Delete tail opportunities
