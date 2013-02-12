@@ -36,6 +36,8 @@ class res_users(osv.Model):
             login = super(res_users, self)._auth_oauth_signin(cr, uid, provider, validation, params, context=context)
 
         except openerp.exceptions.AccessDenied:
+            if context and context.get('no_user_creation'):
+                return None
             state = simplejson.loads(params['state'])
             token = state.get('t')
             oauth_uid = validation['user_id']
