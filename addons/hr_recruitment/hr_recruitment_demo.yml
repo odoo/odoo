@@ -9,6 +9,7 @@
     stage_id: stage_job1
     name: 'Salesperson'
     partner_phone: '1236547890'
+    categ_ids: [hr_recruitment.tag_applicant_sales]
     date_action: !eval time.strftime('%Y-%m-15 18:15:00')
     title_action: 'Send mail regarding our interviwes'
 
@@ -24,6 +25,7 @@
     stage_id: stage_job4
     name: 'Trainee - MCA'
     partner_phone: '6633225'
+    categ_ids: [hr_recruitment.tag_applicant_manager]
     date_action: !eval time.strftime('%Y-%m-10 18:15:00')
     title_action: 'Call to define real needs about training<'
 -
@@ -37,6 +39,7 @@
     stage_id: stage_job3
     name: 'Fresher'
     partner_phone: '999666735'
+     categ_ids: [hr_recruitment.tag_applicant_it]
     date_action: !eval time.strftime('%Y-%m-5 18:15:00')
     title_action: 'Send mail regarding our interviwes'
 -
@@ -60,6 +63,7 @@
     color: 5
     stage_id: stage_job5
     name: 'Marketing Job'
+    categ_ids: [hr_recruitment.tag_applicant_sales]
     date_action: !eval time.strftime('%Y-%m-20 18:15:00')
     title_action: 'Send mail regarding our interviwes'
 -
@@ -73,6 +77,7 @@
     stage_id: stage_job2
     name: 'Finance Job'
     partner_phone: '33968745'
+    categ_ids: [hr_recruitment.tag_applicant_reserve]
     date_action: !eval time.strftime('%Y-%m-18 18:15:00')
     title_action: 'Send mail regarding our interviews'
 -
@@ -113,6 +118,7 @@
     color: 4
     name: 'Advertisement'
     salary_expected: 11000.0
+    categ_ids: [hr_recruitment.tag_applicant_reserve]
     date_action: !eval time.strftime('%Y-%m-15 18:15:00')
     title_action: 'Send mail regarding our interviwes'
 -
