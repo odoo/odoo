@@ -162,7 +162,7 @@ class object_proxy(object):
     def execute_cr(self, cr, uid, obj, method, *args, **kw):
         object = pooler.get_pool(cr.dbname).get(obj)
         if not object:
-            raise except_osv('Object Error', 'Object %s doesn\'t exist' % str(obj))
+            raise except_osv('Object Error', "Object %s doesn't exist" % obj)
         return getattr(object, method)(cr, uid, *args, **kw)
 
     def execute_kw(self, db, uid, obj, method, args, kw=None):
