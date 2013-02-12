@@ -43,8 +43,6 @@ import openerp.exceptions
 from openerp.service import http_server
 from openerp import SUPERUSER_ID
 
-#.apidoc title: Exported Service methods
-#.apidoc module-mods: member-order: bysource
 
 """ This python module defines the RPC methods available to remote clients.
 

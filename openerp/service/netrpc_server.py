@@ -19,7 +19,6 @@
 #
 ##############################################################################
 
-#.apidoc title: NET-RPC Server
 
 """ This file contains instance of the net-rpc server
 """

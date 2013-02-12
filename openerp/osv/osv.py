@@ -19,7 +19,6 @@
 #
 ##############################################################################
 
-#.apidoc title: Objects Services (OSV)
 
 from functools import wraps
 import logging

@@ -19,8 +19,6 @@
 #
 ##############################################################################
 
-#.apidoc title: Object Relational Mapping
-#.apidoc module-mods: member-order: bysource
 
 """
   Object relational mapping to database (postgresql) module

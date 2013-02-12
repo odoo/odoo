@@ -20,8 +20,6 @@
 #
 ##############################################################################
 
-#.apidoc title: Common Services: netsvc
-#.apidoc module-mods: member-order: bysource
 
 import errno
 import logging

@@ -22,7 +22,6 @@
 import ps_list
 import ps_form
 
-#.apidoc title: Printscreen Support
 
 """ A special report, that is automatically formatted to look like the
     screen contents of Form/List Views.
