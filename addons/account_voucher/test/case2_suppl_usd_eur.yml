@@ -131,7 +131,8 @@
   I fill amounts 180 for the invoice of 200$ and 70 for the invoice of 100$
 -
   !python {model: account.voucher}: |
-    import netsvc, time
+    import time
+    from openerp import netsvc
     vals = {}
     voucher_id = self.browse(cr, uid, ref('account_voucher_1_case2_suppl'))
     data = []
@@ -161,7 +162,7 @@
   I confirm the voucher
 -
   !python {model: account.voucher}: |
-    import netsvc
+    from openerp import netsvc
     voucher = self.search(cr, uid, [('name', '=', 'First payment: Case 2 SUPPL USD/EUR'), ('partner_id', '=', ref('base.res_partner_19'))])
     wf_service = netsvc.LocalService("workflow")
     wf_service.trg_validate(uid, 'account.voucher', voucher[0], 'proforma_voucher', cr)
@@ -236,7 +237,8 @@
   I fill amounts 20 for the invoice of 200$ and 30 for the invoice of 100$>
 -
   !python {model: account.voucher}: |
-    import netsvc, time
+    import time
+    from openerp import netsvc
     vals = {}
     voucher_id = self.browse(cr, uid, ref('account_voucher_2_case2_suppl'))
     data = []
@@ -266,7 +268,7 @@
   I confirm the voucher
 -
   !python {model: account.voucher}: |
-    import netsvc
+    from openerp import netsvc
     voucher = self.search(cr, uid, [('name', '=', 'Second payment: Case 2 SUPPL USD/EUR'), ('partner_id', '=', ref('base.res_partner_19'))])
     wf_service = netsvc.LocalService("workflow")
     wf_service.trg_validate(uid, 'account.voucher', voucher[0], 'proforma_voucher', cr)

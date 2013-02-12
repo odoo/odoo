@@ -94,7 +94,7 @@
   I check the move is in waiting state.
 -
   !python {model: stock.picking }: |
-   from tools.translate import _
+   from openerp.tools.translate import _
    picking_id = self.search(cr, uid, [('origin','=','Pushed Flow Test'),('type','=','out')])
    if picking_id:
       pick=self.browse(cr,uid,picking_id[0])
@@ -123,7 +123,7 @@
   I check the Outgoing Orders is automatically  done.
 -
   !python {model: stock.picking }: |
-   from tools.translate import _
+   from openerp.tools.translate import _
    picking_id = self.search(cr, uid, [('origin','=','Pushed Flow Test'),('type','=','out')])
    if picking_id:
       pick=self.browse(cr,uid,picking_id[0])
