@@ -59,7 +59,22 @@
                     </div>
                     <field name="are_you_inside" invisible="1"/>
                     <label for="user_ids" colspan="2"/>
-                    <field name="user_ids" readonly="1" nolabel="1" colspan="2"/>
+                    <field name="user_ids" readonly="1" nolabel="1" colspan="2" widget="many2many_kanban">
+                        <kanban>
+                            <field name="name"/>
+                            <templates>
+                                <t t-name="kanban-box">
+                                    <div>
+                                        <div class="oe_group_details" style="min-height: 40px">
+                                            <img t-att-src="kanban_image('im.user', 'image', record.id.value)"
+                                                class="oe_avatar oe_kanban_avatar_smallbox" style="float:left; margin-right: 10px;"/>
+                                            <h4><field name="name"/></h4>
+                                        </div>
+                                    </div>
+                                </t>
+                            </templates>
+                        </kanban>
+                    </field>
                     <label for="script" colspan="2"/>
                     <field name="script" readonly="1" nolabel="1" colspan="2"/>
                     <label for="button_text" colspan="2"/>
