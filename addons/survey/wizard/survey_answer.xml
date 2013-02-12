@@ -38,8 +38,8 @@
             <field name="res_model">survey.question.wiz</field>
             <field name="view_type">form</field>
             <field name="view_mode">form</field>
-            <field name="target">new</field>
-            <field name="context">{'survey_id': survey_id, 'survey_token': survey_token}</field>
+            <field name="target">inline</field>
+            <field name="context">{'survey_id': active_id, 'survey_token': params, 'ir_actions_act_window_target': 'inline'}</field>
         </record>
 
     </data>

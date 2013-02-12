@@ -14,7 +14,7 @@
     <p>Hello,</p>
     <p>
         Would you please spent some of your time to fill-in our survey: 
-        <a href="#action=survey.action_answer_survey&survey_id=${object.id}&survey_token=__TOKEN__">${object.title}</a>
+        <a href="#action=survey.action_answer_survey&active_id=${object.id}&token=__TOKEN__">${object.title}</a>
     </p>
     % if object.responsible_id:
     <p>Thank you for choosing ${object.responsible_id.company_id.name or 'us'}!</p>
