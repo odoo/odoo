@@ -1077,7 +1077,7 @@ class BaseModel(object):
 
         # Validate rec_name
         if self._rec_name is not None:
-            assert self._rec_name in self._columns.keys() + ['id'], "Invalid rec_name %s for model %s" % (self._rec_name, self._name)
+            assert self._rec_name in self._all_columns.keys() + ['id'], "Invalid rec_name %s for model %s" % (self._rec_name, self._name)
         else:
             self._rec_name = 'name'
 
@@ -1362,11 +1362,9 @@ class BaseModel(object):
                      noupdate=noupdate, res_id=id, context=context))
                 cr.execute('RELEASE SAVEPOINT model_load_save')
             except psycopg2.Warning, e:
-                _logger.exception('Failed to import record %s', record)
                 messages.append(dict(info, type='warning', message=str(e)))
                 cr.execute('ROLLBACK TO SAVEPOINT model_load_save')
             except psycopg2.Error, e:
-                _logger.exception('Failed to import record %s', record)
                 messages.append(dict(
                     info, type='error',
                     **PGERROR_TO_OE[e.pgcode](self, fg, info, e)))
@@ -5328,11 +5326,28 @@ def convert_pgerror_23502(model, fields, info, e):
         'message': message,
         'field': field_name,
     }
+def convert_pgerror_23505(model, fields, info, e):
+    m = re.match(r'^duplicate key (?P<field>\w+) violates unique constraint',
+                 str(e))
+    field_name = m.group('field')
+    if not m or field_name not in fields:
+        return {'message': unicode(e)}
+    message = _(u"The value for the field '%s' already exists.") % field_name
+    field = fields.get(field_name)
+    if field:
+        message = _(u"%s This might be '%s' in the current model, or a field "
+                    u"of the same name in an o2m.") % (message, field['string'])
+    return {
+        'message': message,
+        'field': field_name,
+    }
 
 PGERROR_TO_OE = collections.defaultdict(
     # shape of mapped converters
     lambda: (lambda model, fvg, info, pgerror: {'message': unicode(pgerror)}), {
     # not_null_violation
     '23502': convert_pgerror_23502,
+    # unique constraint error
+    '23505': convert_pgerror_23505,
 })
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -319,7 +319,13 @@ class WorkerHTTP(Worker):
         fcntl.fcntl(client, fcntl.F_SETFD, flags)
         # do request using WorkerBaseWSGIServer monkey patched with socket
         self.server.socket = client
-        self.server.process_request(client,addr)
+        # tolerate broken pipe when the http client closes the socket before
+        # receiving the full reply
+        try:
+            self.server.process_request(client,addr)
+        except IOError, e:
+            if e.errno != errno.EPIPE:
+                raise
         self.request_count += 1
 
     def process_work(self):
