@@ -296,7 +296,7 @@ openerp.web_im = function(instance) {
         messages_change: function() {
             if (! instance.webclient.set_title_part)
                 return;
-            instance.webclient.set_title_part("im_messages", this.get("waiting_messages") === 0 ? undefined :
+            instance.webclient.set_title_part("aa_im_messages", this.get("waiting_messages") === 0 ? undefined :
                 _.str.sprintf(_t("%d Messages"), this.get("waiting_messages")));
         },
         activate_user: function(user, focus) {
