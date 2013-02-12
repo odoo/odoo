@@ -8,6 +8,9 @@ require.config({
                 return _.noConflict();
             },
         },
+        "jquery.achtung": {
+            deps: ['jquery'],
+        },
     },
 })(["livesupport", "jquery"], function(livesupport, jQuery) {
     jQuery.noConflict();
