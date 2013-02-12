@@ -1,14 +1,23 @@
 <?xml version="1.0"?>
 <openerp>
     <data>
-        <menuitem id="live_support" name="Live Support" parent="mail.mail_feeds_main" groups="group_live_support"/>
+        <menuitem id="live_support" name="Live Chat" parent="mail.mail_feeds_main" groups="group_live_support"/>
 
         <record model="ir.actions.act_window" id="action_support_channels">
-            <field name="name">Support Channels</field>
+            <field name="name">Live Chat Channels</field>
             <field name="res_model">live_support.channel</field>
             <field name="view_mode">kanban,form</field>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to define a new live chat channel.
+              </p><p>
+                You can create channels for each website on which you want
+                to integrate the live chat widget, allowing you website
+                visitors to talk in real time with your operators.
+              </p>
+            </field>
         </record>
-        <menuitem name="Support Channels" parent="live_support" id="support_channels" action="action_support_channels" groups="group_live_support"/>
+        <menuitem name="Channels" parent="live_support" id="support_channels" action="action_support_channels" groups="group_live_support"/>
 
 
         <record model="ir.ui.view" id="support_channel_kanban">
