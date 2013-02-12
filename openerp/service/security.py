@@ -28,7 +28,7 @@ import openerp.tools as tools
 def login(db, login, password):
     pool = pooler.get_pool(db)
     user_obj = pool.get('res.users')
-    return user_obj.login(db, login, password)
+    return user_obj._login(db, login, password)
 
 def check_super(passwd):
     if passwd == tools.config['admin_passwd']:

@@ -368,7 +368,7 @@ class res_users(osv.osv):
         if not res:
             raise openerp.exceptions.AccessDenied()
 
-    def login(self, db, login, password):
+    def _login(self, db, login, password):
         if not password:
             return False
         user_id = False
@@ -418,7 +418,7 @@ class res_users(osv.osv):
            :param dict user_agent_env: environment dictionary describing any
                relevant environment attributes
         """
-        uid = self.login(db, login, password)
+        uid = self._login(db, login, password)
         if uid == openerp.SUPERUSER_ID:
             # Successfully logged in as admin!
             # Attempt to guess the web base url...
