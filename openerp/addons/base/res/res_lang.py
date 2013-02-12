@@ -228,45 +228,6 @@ class lang(osv.osv):
 
 lang()
 
-def original_group(s, grouping, thousands_sep=''):
-
-    if not grouping:
-        return s, 0
-
-    result = ""
-    seps = 0
-    spaces = ""
-
-    if s[-1] == ' ':
-        sp = s.find(' ')
-        spaces = s[sp:]
-        s = s[:sp]
-
-    while s and grouping:
-        # if grouping is -1, we are done
-        if grouping[0] == -1:
-            break
-        # 0: re-use last group ad infinitum
-        elif grouping[0] != 0:
-            #process last group
-            group = grouping[0]
-            grouping = grouping[1:]
-        if result:
-            result = s[-group:] + thousands_sep + result
-            seps += 1
-        else:
-            result = s[-group:]
-        s = s[:-group]
-        if s and s[-1] not in "0123456789":
-            # the leading string is only spaces and signs
-            return s + result + spaces, seps
-    if not result:
-        return s + spaces, seps
-    if s:
-        result = s + thousands_sep + result
-        seps += 1
-    return result + spaces, seps
-
 def split(l, counts):
     """
 
