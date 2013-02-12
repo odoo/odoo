@@ -62,6 +62,15 @@ def _split_context_args(nargs, args, kwargs):
         return None, args, kwargs
 
 
+def _record_get(id, value):
+    """ if ``value`` is a dictionary mapping record ids to values, retrieve the
+        value corresponding to id
+    """
+    if isinstance(value, dict) and value.keys() == [id]:
+        return value[id]
+    return value
+
+
 def model(method):
     """ Decorate a model method with the new-style API.  Such a method::
 
@@ -71,8 +80,8 @@ def model(method):
 
         may be called in both new and old styles, like::
 
-            obj.method(args)            # new style, obj must have session data
-            obj.method(cr, uid, args, context=context)          # old style
+            model.method(args)                  # model must have session data
+            model.method(cr, uid, args, context=context)
     """
     nargs = method.func_code.co_argcount - 1
 
@@ -84,6 +93,42 @@ def model(method):
     return _wrapper(method, old_api, method)
 
 
+def record(method):
+    """ Decorate a record method with the new-style API.  Such a method::
+
+            @api.record
+            def method(self, args):
+                return self.name
+
+        may be called in both new and old styles, like::
+
+            y = model.browse([id, ...])         # y is a recordset
+            x = y[0]                            # x is a record
+
+            # call on record => x.name
+            x.method(args)
+            model.method(cr, uid, id, args, context=context)
+
+            # call on recordset => {id: ..., ...}
+            y.method(args)
+            model.method(cr, uid, [id, ...], args, context=context)
+    """
+    nargs = method.func_code.co_argcount - 1
+
+    def old_api(self, cr, uid, ids, *args, **kwargs):
+        context, args, kwargs = _split_context_args(nargs, args, kwargs)
+        obj = self.browse(cr, uid, ids, context)
+        return new_api(obj, *args, **kwargs)
+
+    def new_api(self, *args, **kwargs):
+        if self.is_record():
+            return method(self, *args, **kwargs)
+        else:
+            return dict((x.id, method(x, *args, **kwargs)) for x in self)
+
+    return _wrapper(method, old_api, new_api)
+
+
 def recordset(method):
     """ Decorate a recordset method with the new-style API.  Such a method::
 
@@ -93,45 +138,30 @@ def recordset(method):
 
         may be called in both new and old styles, like::
 
-            obj.method(args)            # new style, obj must be a recordset
-            obj.method(cr, uid, ids, args, context=context)     # old style
-    """
-    nargs = method.func_code.co_argcount - 1
+            y = model.browse(ids)               # y is a recordset
 
-    def old_api(self, cr, uid, ids, *args, **kwargs):
-        ids = ids if isinstance(ids, list) else [ids]
-        context, args, kwargs = _split_context_args(nargs, args, kwargs)
-        y = self.browse(cr, uid, ids, context)
-        return method(y, *args, **kwargs)
+            y.method(args)
+            model.method(cr, uid, ids, args, context=context)
 
-    return _wrapper(method, old_api, method)
+        If the method is record-compatible, i.e., it returns a dictionary
+        indexed by record ids, then calling the method with a record
+        automatically "unwraps" the result::
 
-
-def record(method):
-    """ Decorate a record singleton method with the new-style API.  Such a method::
-
-            @api.record
-            def method(self, args):
-                ... self.record ...
-
-        may be called in both new and old styles, like::
-
-            obj.method(args)            # new style, obj must be a recordset
-            obj.method(cr, uid, id, args, context=context)      # old style
-            obj.method(cr, uid, ids, args, context=context)     # old style
+            y.method(args)          # => {id: value, ...}
+            y[0].method(args)       # => value
     """
     nargs = method.func_code.co_argcount - 1
 
     def old_api(self, cr, uid, ids, *args, **kwargs):
         context, args, kwargs = _split_context_args(nargs, args, kwargs)
-        y = self.browse(cr, uid, ids, context)
-        return new_api(y, *args, **kwargs)
+        obj = self.browse(cr, uid, ids, context)
+        return new_api(obj, *args, **kwargs)
 
     def new_api(self, *args, **kwargs):
-        if self.is_singleton():
-            return method(self, *args, **kwargs)
+        if self.is_record():
+            return _record_get(self.id, method(self.recordset, *args, **kwargs))
         else:
-            return dict((x.id, method(x.singleton, *args, **kwargs)) for x in self)
+            return method(self, *args, **kwargs)
 
     return _wrapper(method, old_api, new_api)
 
@@ -193,8 +223,15 @@ def cr_uid_id(method):
 
         may be called in both new and old styles, like::
 
-            obj.method(args)            # new style, obj must be a recordset
-            obj.method(cr, uid, id, args, context=context)      # old style
+            y = model.browse([id])              # y is a recordset
+            x = y[0]                            # x is a record
+
+            # call on record => value
+            x.method(args)
+            model.method(cr, uid, id, args, context=context)
+
+            # call on recordset => {id: value}
+            y.method(args)
 
         This decorator is not necessary, see decorator ``versatile``.
     """
@@ -203,15 +240,15 @@ def cr_uid_id(method):
         def new_api(self, *args, **kwargs):
             cr, uid, context = self.session
             kwargs = dict(kwargs, context=context)
-            if self.is_singleton():
-                return method(self, cr, uid, self.record.id, *args, **kwargs)
+            if self.is_record():
+                return method(self, cr, uid, self.id, *args, **kwargs)
             else:
                 return dict((x.id, method(self, cr, uid, x.id, *args, **kwargs)) for x in self)
     else:
         def new_api(self, *args, **kwargs):
             cr, uid, context = self.session
-            if self.is_singleton():
-                return method(self, cr, uid, self.record.id, *args, **kwargs)
+            if self.is_record():
+                return method(self, cr, uid, self.id, *args, **kwargs)
             else:
                 return dict((x.id, method(self, cr, uid, x.id, *args, **kwargs)) for x in self)
 
@@ -227,8 +264,18 @@ def cr_uid_ids(method):
 
         may be called in both new and old styles, like::
 
-            obj.method(args)            # new style, obj must be a recordset
-            obj.method(cr, uid, ids, args, context=context)     # old style
+            y = model.browse(ids)               # y is a recordset
+
+            # call on recordset
+            y.method(args)
+            model.method(cr, uid, ids, args, context=context)
+
+        If the method is record-compatible, i.e., it returns a dictionary
+        indexed by record ids, then calling the method with a record
+        automatically "unwraps" the result::
+
+            y.method(args)          # => {id: value, ...}
+            y[0].method(args)       # => value
 
         This decorator is not necessary, see decorator ``versatile``.
     """
@@ -237,11 +284,17 @@ def cr_uid_ids(method):
         def new_api(self, *args, **kwargs):
             cr, uid, context = self.session
             kwargs = dict(kwargs, context=context)
-            return method(self, cr, uid, map(int, self), *args, **kwargs)
+            if self.is_record():
+                return _record_get(self.id, method(self, cr, uid, [self.id], *args, **kwargs))
+            else:
+                return method(self, cr, uid, map(int, self), *args, **kwargs)
     else:
         def new_api(self, *args, **kwargs):
             cr, uid, context = self.session
-            return method(self, cr, uid, map(int, self), *args, **kwargs)
+            if self.is_record():
+                return _record_get(self.id, method(self, cr, uid, [self.id], *args, **kwargs))
+            else:
+                return method(self, cr, uid, map(int, self), *args, **kwargs)
 
     return _wrapper(method, method, new_api)
 

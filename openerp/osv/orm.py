@@ -316,8 +316,7 @@ class Session(object):
         yield self.context
 
     def __eq__(self, other):
-        return isinstance(other, Session) and \
-            (self.cr, self.uid, self.context) == (other.cr, other.uid, other.context)
+        return isinstance(other, (Session, tuple)) and tuple(self) == tuple(other)
 
     def __ne__(self, other):
         return not self == other
@@ -420,170 +419,6 @@ _browse_process = {
     'reference': _browse_reference,
 }
 
-
-class Record(object):
-    """ A record in a model (corresponding to a row in the model's table.)
-        It has attributes after the columns of the corresponding object.
-
-        Examples::
-
-            res_users = pool.get('res.users')
-            user = res_users.browse(cr, uid, 104)
-            name = user.name
-    """
-
-    def __init__(self, model, id, cache, fields_process=None):
-        """
-        :param model: the record's model, with session data
-        :param id: the record's database id
-        :param cache: a dictionary used as ``cache[model_name][id][field_name]``,
-            storing record data shared across records, thus reducing the SQL
-            read()s.  It can speed up things a lot, but also be disastrous if
-            not discarded after write()/unlink() operations.
-
-        :param fields_process: optional dictionary indexed by field type, giving
-            processing functions for field values.  The api is best explained by
-            the value processing::
-
-                # process the value of field with given type, name, and column
-                factory = fields_process[field_type]
-                process = factory(record, field_name, field_column)
-                result = process(value)
-        """
-        if fields_process is None:
-            fields_process = {}
-        self.session = model.session
-        self._id = id
-        self._model = model
-        self._table = model             # deprecated; use _model instead
-        self._table_name = self._model._name
-        self.__logger = logging.getLogger('openerp.osv.orm.Record.' + self._table_name)
-        self._fields_process = fields_process
-        self._singleton = None
-
-        cache.setdefault(model._name, {})
-        self._cache = cache
-        self._data = cache[model._name]
-        if id not in self._data:
-            self._data[id] = {'id': id}
-
-    @property
-    def singleton(self):
-        """ Return a recordset ``obj`` containing ``self`` only, and such that
-            ``obj.one`` is ``self``.  The singleton is used implicitly for
-            accessing model attributes/methods, for instance::
-
-                record._columns         # => record.singleton._columns
-                record.write(values)    # => record.singleton.write(values)
-        """
-        if not self._singleton:
-            self._singleton = self._model._make_singleton(self)
-        return self._singleton
-
-    def __getitem__(self, name):
-        if name == 'id':
-            return self._id
-
-        if name not in self._data[self._id]:
-            # fetch the definition of the field which was asked for
-            if name in self._model._all_columns:
-                column = self._model._all_columns[name].column
-            else:
-                error_msg = "Field '%s' does not exist in record '%s'" % (name, self)
-                self.__logger.warning(error_msg)
-                if self.__logger.isEnabledFor(logging.DEBUG):
-                    self.__logger.debug(''.join(traceback.format_stack()))
-                raise KeyError(error_msg)
-
-            # determine which fields we will fetch
-            if column._prefetch:
-                # the field is a classic one or a many2one, we fetch all classic and many2one fields
-                fields_to_fetch = [(key, cinfo.column)
-                    for key, cinfo in self._model._all_columns.iteritems()
-                    if cinfo.column._classic_write
-                ]
-            else:
-                # otherwise we fetch only that field
-                fields_to_fetch = [(name, column)]
-
-            # read the records in the same model that don't have the field yet
-            cr, uid, context = self.session
-            ids = [id for id, values in self._data.iteritems() if name not in values]
-            field_names = [key for key, col in fields_to_fetch]
-            result = self._model.read(cr, uid, ids, field_names, context=context, load="_classic_write")
-
-            if not result:
-                # Where did those ids come from? Perhaps old entries in ir_model_data?
-                _logger.warning("No result found for ids %s in %s", ids, self)
-                raise KeyError('Field %s not found in %s' % (name, self))
-
-            for fname, column in fields_to_fetch:
-                factory = self._fields_process.get(column._type) or _browse_process.get(column._type)
-                if factory:
-                    # post-process the values, and update the cache
-                    process = factory(self, fname, column)
-                    for data in result:
-                        self._data[data['id']][fname] = process(data[fname])
-                else:
-                    # no processing, simply update the cache
-                    for data in result:
-                        self._data[data['id']][fname] = data[fname]
-
-        if not name in self._data[self._id]:
-            # How did this happen? Could be a missing model due to custom fields used too soon, see above.
-            self.__logger.error("Fields to fetch: %s, Field values: %s", field_names, result)
-            self.__logger.error("Cached: %s, Table: %s", self._data[self._id], self._model)
-            raise KeyError(_('Unknown attribute %s in %s ') % (name, self))
-
-        return self._data[self._id][name]
-
-    def __getattr__(self, name):
-        if name in self:
-            return self[name]
-        return getattr(self.singleton, name)
-
-    def __contains__(self, name):
-        return (name == 'id') or (name in self._model._all_columns)
-
-    def __iter__(self):
-        raise NotImplementedError("Iteration is not allowed on %s" % self)
-
-    def __hasattr__(self, name):
-        return (name in self) or hasattr(self._model, name)
-
-    def __int__(self):
-        return self._id
-
-    def __str__(self):
-        return "Record(%s, %d)" % (self._table_name, self._id)
-
-    def __eq__(self, other):
-        return isinstance(other, Record) and \
-            (self._table_name, self._id) == (other._table_name, other._id)
-
-    def __ne__(self, other):
-        return not self == other
-
-    # we need to define __unicode__ even though we've already defined __str__
-    # because we have overridden __getattr__
-    def __unicode__(self):
-        return unicode(str(self))
-
-    def __hash__(self):
-        return hash((self._table_name, self._id))
-
-    __repr__ = __str__
-
-    def refresh(self):
-        """Force refreshing this Record's data and all the data of the
-           records that belong to the same cache, by emptying the cache completely,
-           preserving only the record identifiers (for prefetching optimizations).
-        """
-        for model, model_cache in self._cache.iteritems():
-            # only preserve the ids of the records that were in the cache
-            cached_ids = dict([(i, {'id': i}) for i in model_cache.keys()])
-            self._cache[model].clear()
-            self._cache[model].update(cached_ids)
 
 def pg_varchar(size=0):
     """ Returns the VARCHAR declaration for the provided size:
@@ -693,6 +528,10 @@ class MetaModel(type):
             self.module_to_models.setdefault(self._module, []).append(self)
 
 
+def _RecordCache():
+    return collections.defaultdict(dict)
+
+
 # Definition of log access columns, automatically added to models if
 # self._log_access is True
 LOG_ACCESS_COLUMNS = {
@@ -702,7 +541,8 @@ LOG_ACCESS_COLUMNS = {
     'write_date': 'TIMESTAMP'
 }
 # special columns automatically created by the ORM
-MAGIC_COLUMNS =  ['id'] + LOG_ACCESS_COLUMNS.keys()
+MAGIC_COLUMNS = ['id'] + LOG_ACCESS_COLUMNS.keys()
+
 
 class BaseModel(object):
     """ Base class for OpenERP models.
@@ -742,6 +582,9 @@ class BaseModel(object):
     _sequence = None
     _description = None
     _needaction = False
+
+    # session data, for records and recordsets
+    session = None
 
     # dict of {field:method}, with method returning the (name_get of records, {id: fold})
     # to include in the _read_group, if grouped on this field
@@ -983,9 +826,11 @@ class BaseModel(object):
         else:
             # introduce a extra class inheritance to enable monkey-patching with
             # _patch_method() on all instances of the model in this pool only
-            nattr = {'_register': False}
-            nattr['_local_constraints'] = cls.__dict__.get('_constraints', [])
-            nattr['_local_sql_constraints'] = cls.__dict__.get('_sql_constraints', [])
+            nattr = {
+                '_register': False,
+                '_local_constraints': cls.__dict__.get('_constraints', []),
+                '_local_sql_constraints': cls.__dict__.get('_sql_constraints', []),
+            }
             cls = type(cls._name, (cls,), nattr)
 
         if not getattr(cls, '_original_module', None):
@@ -1150,6 +995,9 @@ class BaseModel(object):
 
     # other specific attributes used by model instances
     INSTANCE_ATTRIBUTES = [
+        '_id',
+        '_cache',
+        '_fields_process',
         '_records',
         '_search_args',
     ]
@@ -1170,29 +1018,71 @@ class BaseModel(object):
         return obj
 
     @api.model
+    def _make_record(self, id, cache, fields_process=None):
+        """ make a record instance
+            :param id: the record's id
+            :param cache: a dictionary used as ``cache[model_name][id][field_name]``,
+                storing record data shared across records, thus reducing the SQL
+                read()s.  It can speed up things a lot, but also be disastrous if
+                not discarded after write()/unlink() operations.
+
+            :param fields_process: optional dictionary indexed by field type, giving
+                processing functions for field values.  The api is best explained by
+                the value processing::
+
+                    # process the value of field with given type, name, and column
+                    factory = fields_process[field_type]
+                    process = factory(model, field_name, field_column)
+                    result = process(value)
+        """
+        # insert an entry in the cache if necessary
+        model_cache = cache[self._name]
+        if id not in model_cache:
+            model_cache[id] = {'id': id}
+
+        if fields_process is None:
+            fields_process = {}
+        return self._make_instance(session=self.session,
+                        _id=id, _cache=cache, _fields_process=fields_process)
+
+    def is_record(self):
+        """ test whether self is a record instance """
+        return hasattr(self, '_id')
+
+    @api.model
     def _make_recordset(self, records):
-        """ make a recordset from an explicit list of records """
+        """ make a recordset instance from a list of records """
         return self._make_instance(session=self.session, _records=records)
 
     def is_recordset(self):
-        """ test whether self is a recordset """
+        """ test whether self is a recordset instance """
         # query() returns recordsets with self._search_args, and self._records
         # when evaluated; browse() returns recordsets with self._records only
         return hasattr(self, '_records') or hasattr(self, '_search_args')
 
-    @api.model
-    def _make_singleton(self, record):
-        """ make a recordset ``y`` for a single record ``record``; the record
-            is accessible as ``y.record``
+    @property
+    def record(self):
+        """ return the record instance corresponding to ``self``.
+            If ``self`` is a recordset, check that it contains only one record.
         """
-        return self._make_instance(session=self.session, _records=[record], record=record)
+        if self.is_record():
+            return self
+        assert len(self) == 1
+        return self[0]
 
-    def is_singleton(self):
-        """ test whether self is a singleton """
-        return hasattr(self, 'record')
+    @property
+    def recordset(self):
+        """ return the recordset instance corresponding to ``self``.
+            Force the evaluation of ``self`` if it is a recordset.
+        """
+        if self.is_record():
+            return self._make_recordset([self])
+        assert self.is_recordset(), "Expected recordset: %s" % self
+        self.force()
+        return self
 
     def with_session(self, user=None, context=None, **kwargs):
-        """ return an instance similar to self (model or recordset, with session
+        """ return an instance similar to self (record or recordset, with session
             data) with modified session data
             :param user: user (id or record) to use (if not ``None``)
             :param context: context dictionary to use (if not ``None``)
@@ -3586,32 +3476,6 @@ class BaseModel(object):
                 self._columns[field_name].required = True
                 self._columns[field_name].ondelete = "cascade"
 
-    #def __getattr__(self, name):
-    #    """
-    #    Proxies attribute accesses to the `inherits` parent so we can call methods defined on the inherited parent
-    #    (though inherits doesn't use Python inheritance).
-    #    Handles translating between local ids and remote ids.
-    #    Known issue: doesn't work correctly when using python's own super(), don't involve inherit-based inheritance
-    #                 when you have inherits.
-    #    """
-    #    for model, field in self._inherits.iteritems():
-    #        proxy = self.pool.get(model)
-    #        if hasattr(proxy, name):
-    #            attribute = getattr(proxy, name)
-    #            if not hasattr(attribute, '__call__'):
-    #                return attribute
-    #            break
-    #    else:
-    #        return super(orm, self).__getattr__(name)
-
-    #    def _proxy(cr, uid, ids, *args, **kwargs):
-    #        objects = self.browse(cr, uid, ids, kwargs.get('context', None))
-    #        lst = [obj[field].id for obj in objects if obj[field]]
-    #        return getattr(proxy, name)(cr, uid, lst, *args, **kwargs)
-
-    #    return _proxy
-
-
     def fields_get(self, cr, user, allfields=None, context=None, write_access=True):
         """ Return the definition of each field.
 
@@ -4631,19 +4495,19 @@ class BaseModel(object):
             :rtype: record or recordset requested
         """
         if cache is None:
-            cache = {}
+            cache = _RecordCache()
         # need to accepts ints and longs because ids coming from a method
         # launched by button in the interface have a type long...
-        if hasattr(self, 'session') and tuple(self.session) == (cr, uid, context):
+        if self.session == (cr, uid, context):
             model = self
         else:
             session = Session(self.pool, cr, uid, context)
             model = self._make_instance(session=session)
 
         if isinstance(select, (int, long)):
-            return Record(model, select, cache, fields_process=fields_process)
+            return model._make_record(select, cache, fields_process=fields_process)
         elif isinstance(select, list):
-            records = [Record(model, id, cache, fields_process=fields_process) for id in select]
+            records = [model._make_record(id, cache, fields_process=fields_process) for id in select]
             return model._make_recordset(records)
         else:
             return browse_null()
@@ -5465,6 +5329,7 @@ class BaseModel(object):
         """ Return an iterator over ``self`` (must be a recordset).
             It forces the evaluation of ``self``.
         """
+        assert self.is_recordset()
         self.force()
         return iter(self._records)
 
@@ -5474,14 +5339,16 @@ class BaseModel(object):
             return self.search(*self._search_args, count=True)
         return len(self._records)
 
-    def __contains__(self, record):
-        """ Test whether ``record`` belongs to ``self``.
-            It does not force evaluation of ``self``.
+    def __contains__(self, item):
+        """ If ``self`` is a record, test whether ``item`` is a field name.
+            If ``self`` is a recordset, test whether ``item`` is a record in ``self``.
         """
-        if hasattr(self, '_records'):
-            return record in self._records
+        if self.is_record():
+            return item == 'id' or item in self._all_columns
+        elif hasattr(self, '_records'):
+            return item in self._records
         else:
-            dom = [('id', '=', record.id)] + self.get_domain()
+            dom = [('id', '=', item.id)] + self.get_domain()
             return bool(self.search(dom, count=True))
 
     def __add__(self, other):
@@ -5555,14 +5422,19 @@ class BaseModel(object):
         return other < self
 
     def __eq__(self, other):
-        assert isinstance(other, BaseModel), "Cannot compare model instance with %s" % (other,)
-        if self.is_recordset():
+        if not isinstance(other, BaseModel):
+            _logger.warning("Comparison of %s and %s" % (self, other))
+            return False
+        if self.is_record():
+            # compare two records
+            assert other.is_record(), "Comparing record to non-record: %s, %s" % (self, other)
+            return (self._name, self._id) == (other._name, other._id)
+        elif self.is_recordset():
             # compare two recordsets
-            assert other.is_recordset(), "Mixing recordset and model: %s, %s" % (self, other)
+            assert other.is_recordset(), "Comparing recordset to non-recordset: %s, %s" % (self, other)
             return self <= other and other <= self
         else:
             # compare two models
-            assert not other.is_recordset(), "Mixing model and recordset: %s, %s" % (self, other)
             return self._name == other._name
 
     def __ne__(self, other):
@@ -5573,6 +5445,68 @@ class BaseModel(object):
             It does not force evaluation of recordsets.
         """
         return not bool(self & other)
+
+    def _get_record_field(self, name):
+        """ read the field ``name`` on a record instance """
+        assert self.is_record(), "Expected record instance: %s" % self
+
+        if name == 'id':
+            return self._id
+
+        model_cache = self._cache[self._name]
+
+        if name not in model_cache[self._id]:
+            # fetch the definition of the field which was asked for
+            if name in self._all_columns:
+                column = self._all_columns[name].column
+            else:
+                error_msg = "Field '%s' does not exist in record '%s'" % (name, self)
+                _logger.warning(error_msg)
+                if _logger.isEnabledFor(logging.DEBUG):
+                    _logger.debug(''.join(traceback.format_stack()))
+                raise KeyError(error_msg)
+
+            # determine which fields we will fetch
+            if column._prefetch:
+                # the field is a classic one or a many2one, we fetch all classic and many2one fields
+                fields_to_fetch = [(key, cinfo.column)
+                    for key, cinfo in self._all_columns.iteritems()
+                    if cinfo.column._classic_write
+                ]
+            else:
+                # otherwise we fetch only that field
+                fields_to_fetch = [(name, column)]
+
+            # read the records in the same model that don't have the field yet
+            cr, uid, context = self.session
+            ids = [id for id, values in model_cache.iteritems() if name not in values]
+            field_names = [key for key, col in fields_to_fetch]
+            result = self.read(cr, uid, ids, field_names, context=context, load="_classic_write")
+
+            if not result:
+                # Where did those ids come from? Perhaps old entries in ir_model_data?
+                _logger.warning("No result found for ids %s in %s", ids, self)
+                raise KeyError('Field %s not found in %s' % (name, self))
+
+            for fname, column in fields_to_fetch:
+                factory = self._fields_process.get(column._type) or _browse_process.get(column._type)
+                if factory:
+                    # post-process the values, and update the cache
+                    process = factory(self, fname, column)
+                    for data in result:
+                        model_cache[data['id']][fname] = process(data[fname])
+                else:
+                    # no processing, simply update the cache
+                    for data in result:
+                        model_cache[data['id']][fname] = data[fname]
+
+        if not name in model_cache[self._id]:
+            # How did this happen? Could be a missing model due to custom fields used too soon, see above.
+            _logger.error("Fields to fetch: %s, Field values: %s", field_names, result)
+            _logger.error("Cached: %s, Table: %s", model_cache[self._id], self._model)
+            raise KeyError(_('Unknown attribute %s in %s ') % (name, self))
+
+        return model_cache[self._id][name]
 
     def __getitem__(self, key):
         """ Return a record or a recordset from ``self``, depending on whether
@@ -5611,9 +5545,66 @@ class BaseModel(object):
 
                 return self.query(domain, offset, limit, order)
 
-        # select a single record in the list
-        self.force()
-        return self._records[key]
+        elif isinstance(key, (int, long)):
+            # select a single record in the list
+            self.force()
+            return self._records[key]
+
+        else:
+            return self._get_record_field(key)
+
+    def __getattr__(self, name):
+        # field names do not start with '_'
+        if name.startswith('_'):
+            raise AttributeError(name)
+        return self._get_record_field(name)
+
+    def __int__(self):
+        assert self.is_record(), "Expected record instance: %s" % self
+        return self._id
+
+    def __str__(self):
+        if self.is_record():
+            return "Record(%s, %d)" % (self._name, self._id)
+        elif self.is_recordset():
+            if hasattr(self, '_records'):
+                return "Recordset(%s, %s)" % (self._name, map(int, self))
+            else:
+                return "Query(%s, %d)" % (self._name, self._search_args[0])
+        return "Model(%s)" % self._name
+
+    def __unicode__(self):
+        return unicode(str(self))
+
+    __repr__ = __str__
+
+    def __hash__(self):
+        return hash((self._name, self._id))
+
+    def refresh(self):
+        """ Clear the records cache used by ``self`` by emptying the cache completely,
+            preserving only the record identifiers (for prefetching optimizations).
+        """
+        for model_cache in self._cache.itervalues():
+            for id in model_cache.keys():
+                model_cache[id] = {'id': id}
+
+
+# for instance checking
+class Record(object):
+    class __metaclass__(type):
+        def __instancecheck__(self, inst):
+            return isinstance(inst, BaseModel) and inst.is_record()
+
+class Recordset(object):
+    class __metaclass__(type):
+        def __instancecheck__(self, inst):
+            return isinstance(inst, BaseModel) and inst.is_recordset()
+
+# extra definitions for backward compatibility
+browse_record = Record
+browse_record_list = Recordset
+
 
 # keep this import here, at top it will cause dependency cycle errors
 import expression
@@ -5698,10 +5689,5 @@ PGERROR_TO_OE = collections.defaultdict(
     # not_null_violation
     '23502': convert_pgerror_23502,
 })
-
-
-# extra definitions for backward compatibility
-browse_record = Record
-browse_record_list = BaseModel
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -1180,8 +1180,7 @@ class related(function):
                 record = record[field] or False
                 if not record:
                     break
-                elif isinstance(record, openerp.osv.orm.BaseModel):
-                    # record is a recordset (result of a one2many or many2many field)
+                elif record.is_recordset():     # one2many or many2many field
                     record = record[0]
             if record:
                 # write on the last field
@@ -1192,7 +1191,7 @@ class related(function):
         for record in obj.browse(cr, SUPERUSER_ID, ids, context=context):
             value = record
             for field in self.arg:
-                if isinstance(value, openerp.osv.orm.BaseModel):
+                if value.is_recordset():
                     value = value[0]
                 value = value[field] or False
                 if not value:

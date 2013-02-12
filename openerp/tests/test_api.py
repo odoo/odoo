@@ -1,6 +1,6 @@
 
 from openerp.tools import mute_logger
-from openerp.osv.orm import Record, BaseModel
+from openerp.osv.orm import Record, Recordset
 import common
 
 
@@ -102,7 +102,7 @@ class TestAPI(common.TransactionCase):
         # many2many fields may be anyway read, and put in the cache as a list of
         # ids instead of a recordset.
         self.assertIsInstance(user.partner_id, Record)
-        self.assertIsInstance(user.groups_id, BaseModel)
+        self.assertIsInstance(user.groups_id, Recordset)
 
         partners = self.Partner.query(self.cr, self.uid, [])
         for name, cinfo in partners._all_columns.iteritems():
@@ -112,7 +112,7 @@ class TestAPI(common.TransactionCase):
                         self.assertIsInstance(p[name], Record)
             elif cinfo.column._type in ('one2many', 'many2many'):
                 for p in partners:
-                    self.assertIsInstance(p[name], BaseModel)
+                    self.assertIsInstance(p[name], Recordset)
 
     @mute_logger('openerp.osv.orm')
     def test_10_old_old(self):
