@@ -195,7 +195,7 @@ instance.web.ActionManager = instance.web.Widget.extend({
                         state["active_id"] = this.inner_action.context.active_id;
                     }
                     if (this.inner_action.context.active_ids) {
-                        state["active_ids"] = this.inner_action.context.active_ids.toString();
+                        state["active_ids"] = this.inner_action.context.active_ids.join(',');
                     }
                 }
             }
@@ -225,6 +225,9 @@ instance.web.ActionManager = instance.web.Widget.extend({
                         add_context.active_id = state.active_id;
                     }
                     if (state.active_ids) {
+                        // The jQuery BBQ plugin does some parsing on values that are valid integers.
+                        // It means that if there's only one item, it will do parseInt() on it,
+                        // otherwise it will keep the comma seperated list as string.
                         add_context.active_ids = state.active_ids.toString().split(',').map(function(id) {
                             return parseInt(id, 10);
                         });
