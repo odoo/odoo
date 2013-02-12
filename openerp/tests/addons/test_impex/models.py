@@ -144,3 +144,13 @@ class RecO2M(orm.Model):
         'value': fields.integer(),
         'child': fields.one2many('export.one2many.multiple', 'parent_id')
     }
+
+class OnlyOne(orm.Model):
+    _name = 'export.unique'
+
+    _columns = {
+        'value': fields.integer(),
+    }
+    _sql_constraints = [
+        ('value_unique', 'unique (value)', "The value must be unique"),
+    ]
