@@ -34,12 +34,12 @@ def get_sys_logs(self, cr, uid):
     limit_date = limit_date - datetime.timedelta(15)
     limit_date_str = limit_date.strftime(misc.DEFAULT_SERVER_DATETIME_FORMAT)
     nbr_users = pool.get("res.users").search(cr, uid, [], count=True)
-    nbr_active_users = pool.get("res.users").search(cr, uid, [("date", ">=", limit_date_str)], count=True)
+    nbr_active_users = pool.get("res.users").search(cr, uid, [("login_date", ">=", limit_date_str)], count=True)
     nbr_share_users = False
     nbr_active_share_users = False
     if "share" in pool.get("res.users")._all_columns:
         nbr_share_users = pool.get("res.users").search(cr, uid, [("share", "=", True)], count=True)
-        nbr_active_share_users = pool.get("res.users").search(cr, uid, [("share", "=", True), ("date", ">=", limit_date_str)], count=True)
+        nbr_active_share_users = pool.get("res.users").search(cr, uid, [("share", "=", True), ("login_date", ">=", limit_date_str)], count=True)
     user = pool.get("res.users").browse(cr, uid, uid)
 
     web_base_url = self.pool.get('ir.config_parameter').get_param(cr, uid, 'web.base.url', 'False')

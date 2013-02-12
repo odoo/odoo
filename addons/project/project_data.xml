@@ -94,16 +94,19 @@
         <record id="mt_task_blocked" model="mail.message.subtype">
             <field name="name">Task Blocked</field>
             <field name="res_model">project.task</field>
+            <field name="default" eval="False"/>
             <field name="description">Task blocked</field>
         </record>
         <record id="mt_task_closed" model="mail.message.subtype">
             <field name="name">Task Done</field>
             <field name="res_model">project.task</field>
+            <field name="default" eval="False"/>
             <field name="description">Task closed</field>
         </record>
         <record id="mt_task_stage" model="mail.message.subtype">
             <field name="name">Stage Changed</field>
             <field name="res_model">project.task</field>
+            <field name="default" eval="False"/>
             <field name="description">Stage changed</field>
         </record>
         <!-- Project-related subtypes for messaging / Chatter -->

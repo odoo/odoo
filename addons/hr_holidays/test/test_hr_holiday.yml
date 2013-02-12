@@ -18,10 +18,10 @@
   I again set to draft and then confirm.
 -
   !python {model: hr.holidays}: |
-     import netsvc
-     wf_service = netsvc.LocalService("workflow")
-     self.set_to_draft(cr, uid, [ref('hr_holidays_employee1_cl')])
-     wf_service.trg_validate(uid, 'hr.holidays', ref('hr_holidays_employee1_cl'), 'confirm', cr)
+    from openerp import netsvc
+    wf_service = netsvc.LocalService("workflow")
+    self.set_to_draft(cr, uid, [ref('hr_holidays_employee1_cl')])
+    wf_service.trg_validate(uid, 'hr.holidays', ref('hr_holidays_employee1_cl'), 'confirm', cr)
 -
   I validate the holiday request by clicking on "To Approve" button.
 -
