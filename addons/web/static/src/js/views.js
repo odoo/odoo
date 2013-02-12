@@ -229,8 +229,7 @@ instance.web.ActionManager = instance.web.Widget.extend({
                         // It means that if there's only one item, it will do parseInt() on it,
                         // otherwise it will keep the comma seperated list as string.
                         add_context.active_ids = state.active_ids.toString().split(',').map(function(id) {
-                            var rid = parseInt(id, 10);
-                            return rid || id;
+                            return parseInt(id, 10) || id;
                         });
                     }
                     this.null_action();
