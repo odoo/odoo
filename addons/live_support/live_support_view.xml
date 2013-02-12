@@ -6,12 +6,48 @@
         <record model="ir.actions.act_window" id="action_support_channels">
             <field name="name">Support Channels</field>
             <field name="res_model">live_support.channel</field>
-            <field name="view_mode">tree,form</field>
+            <field name="view_mode">kanban,form</field>
         </record>
         <menuitem name="Support Channels" parent="live_support" id="support_channels" action="action_support_channels" groups="group_live_support"/>
 
 
-        <record id="view_order_form" model="ir.ui.view">
+        <record model="ir.ui.view" id="support_channel_kanban">
+            <field name="name">support_channel.kanban</field>
+            <field name="model">live_support.channel</field>
+            <field name="arch" type="xml">
+                <kanban>
+                    <field name="name"/>
+                    <field name="web_page"/>
+                    <field name="are_you_inside"/>
+                    <field name="user_ids"/>
+                    <templates>
+                        <!--<t t-name="kanban-description">
+                            <div class="oe_group_description" t-if="record.description.raw_value">
+                                <field name="description"/>
+                            </div>
+                        </t>-->
+                        <t t-name="kanban-box">
+                            <div class="oe_group_details">
+                                <h4><a type="open"><field name="name"/></a></h4>
+                                <a t-att-href="record.web_page">Test it</a>
+                                <div class="oe_kanban_footer_left">
+                                    <span>
+                                        <span class="oe_e">+</span> <t t-esc="(record.user_ids.raw_value || []).length"/>
+                                    </span>
+                                </div>
+                                <div class="oe_group_button">
+                                    <button t-if="record.are_you_inside.raw_value" name="quit" type="object" class="oe_group_join">Quit</button>
+                                    <button t-if="! record.are_you_inside.raw_value" name="join" type="object">Join</button>
+                                </div>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
+
+
+        <record id="support_channel_form" model="ir.ui.view">
             <field name="name">support_channel.form</field>
             <field name="model">live_support.channel</field>
             <field name="arch" type="xml">
