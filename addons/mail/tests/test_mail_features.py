@@ -296,7 +296,7 @@ class test_mail(TestMailBase):
         # CASE2: test mail_thread fields
         # ----------------------------------------
 
-        subtype_data = group_pigs._get_subscription_data(None, None)[group_pigs.id]['message_subtype_data']
+        subtype_data = group_pigs._get_subscription_data(None, None)['message_subtype_data']
         self.assertEqual(set(subtype_data.keys()), set(['Discussions', 'mt_mg_def', 'mt_all_def', 'mt_mg_nodef', 'mt_all_nodef']), 'mail.group available subtypes incorrect')
         self.assertFalse(subtype_data['Discussions']['followed'], 'Admin should not follow Discussions in pigs')
         self.assertTrue(subtype_data['mt_mg_nodef']['followed'], 'Admin should follow mt_mg_nodef in pigs')
