@@ -60,8 +60,8 @@ class res_users(osv.osv):
         defaults['openid_key'] = False
         return super(res_users, self).copy(cr, uid, rid, defaults, context)
 
-    def login(self, db, login, password):
-        result = super(res_users, self).login(db, login, password)
+    def _login(self, db, login, password):
+        result = super(res_users, self)._login(db, login, password)
         if result:
             return result
         else:
