@@ -33,5 +33,14 @@
             <field name="target">new</field>
         </record>
 
+        <record id="action_answer_survey" model="ir.actions.act_window">
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">survey.question.wiz</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+            <field name="context">{'survey_id': survey_id, 'survey_token': survey_token}</field>
+        </record>
+
     </data>
 </openerp>

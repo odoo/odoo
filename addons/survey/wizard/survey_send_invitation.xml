@@ -1,74 +1,28 @@
 <?xml version="1.0" ?>
 <openerp>
     <data>
-    
-        <!-- Survey send invitation Form View -->
-
-        <record id="view_survey_send_invitation" model="ir.ui.view">
-            <field name="name">Send Invitation</field>
-            <field name="model">survey.send.invitation</field>
-            <field name="arch" type="xml">
-                <form string="Send Invitation" version="7.0">
-                    <header>
-                        <button name="action_send" string="_Send" type="object" class="oe_highlight"/>
-                        or
-                        <button string="Cancel" class="oe_link" special="cancel" />
-                    </header>
-                    <group col="4">
-                        <separator string="Select Partner" colspan="4"/>
-                        <field name="partner_ids" nolabel="1" colspan="4" widget="many2many_tags"/>
-                        <separator colspan="4" string="Send Mail for New User"/>
-                        <field name="send_mail" nolabel="1"/>
-                        <field name="mail_subject" colspan="3"/>
-                        <separator colspan="4" string="Send Reminder for Existing User"/>
-                        <field name="send_mail_existing" nolabel="1"/>
-                        <field name="mail_subject_existing" colspan="3"/>
-                        <separator colspan="4"/>
-                        <field name="mail_from" colspan="4"/>
-                        <separator string="Message" colspan="4"/>
-                        <field name="mail" nolabel="1" colspan="4"/>
-                    </group>
-                </form>
-            </field>
+        <!--Survey send invitation Email template -->
+        <record id="email_template_survey" model="email.template">
+            <field name="name">Survey - Send by Email</field>
+            <field name="email_from">${object.responsible_id and object.responsible_id.company_id and object.responsible_id.company_id.email or object.responsible_id.email or ''}</field>
+            <field name="subject">${object.title}</field>
+            <field name="lang">${object.lang}</field>
+            <field name="model_id" ref="model_survey"/>
+            <field name="auto_delete" eval="True"/>
+            <field name="body_html"><![CDATA[
+<div style="font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; ">
+    <p>Hello,</p>
+    <p>
+        Would you please spent some of your time to fill-in our survey: 
+        <a href="#action=survey.action_answer_survey&survey_id=${object.id}&survey_token=__TOKEN__">${object.title}</a>
+    </p>
+    % if object.responsible_id:
+    <p>Thank you for choosing ${object.responsible_id.company_id.name or 'us'}!</p>
+    % endif
+    <br/>
+</div>
+            ]]></field>
         </record>
 
-        <!-- Survey send invitation action -->
-
-        <record id="action_view_survey_send_invitation" model="ir.actions.act_window">
-            <field name="name">Send Invitation</field>
-            <field name="res_model">survey.send.invitation</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">form</field>
-            <field name="target">new</field>
-        </record>
-
-        <act_window id="action_act_view_survey_send_invitation"
-            key2="client_action_multi" name="Send Invitations"
-            res_model="survey.send.invitation" src_model="survey"
-            view_mode="form" target="new" view_type="form" />
-
-        <!-- Survey send invitation Display Log Form View -->
-
-        <record id="view_survey_send_invitation_log" model="ir.ui.view">
-            <field name="name">survey send invitation log</field>
-            <field name="model">survey.send.invitation.log</field>
-            <field name="arch" type="xml">
-                <form string="User creation" version="7.0">
-                    <group string="Results :">
-                        <field name="note"/>
-                    </group>
-                </form>
-            </field>
-        </record>
-
-        <!-- Survey send invitation action -->
-
-        <record id="action_view_survey_send_invitation_log" model="ir.actions.act_window">
-            <field name="name">survey.send.invitation.log</field>
-            <field name="res_model">survey.send.invitation.log</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">form</field>
-            <field name="target">new</field>
-        </record>
     </data>
 </openerp>

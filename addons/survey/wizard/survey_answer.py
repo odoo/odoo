@@ -41,10 +41,20 @@ class survey_question_wiz(osv.osv_memory):
         """
         Fields View Get method :- generate the new view and display the survey pages of selected survey.
         """
+
+        print ""
+        print ""
+        print view_id, view_type, context, toolbar, submenu
+        print ""
+        print ""
+
+        if not view_id and not context.get('survey_id', None) and context.get('default_survey_id', None):
+            context['survey_id'] = context['active_id'] = context.get('default_survey_id')
+
+
         if context is None:
             context = {}
-        result = super(survey_question_wiz, self).fields_view_get(cr, uid, view_id, \
-                                        view_type, context, toolbar,submenu)
+        result = super(survey_question_wiz, self).fields_view_get(cr, uid, view_id, view_type, context, toolbar,submenu)
 
         surv_name_wiz = self.pool.get('survey.name.wiz')
         survey_obj = self.pool.get('survey')
@@ -213,6 +223,7 @@ class survey_question_wiz(osv.osv_memory):
                         ans_ids = que_rec.answer_choice_ids
                         xml_group = etree.SubElement(xml_form, 'group', {'col': '1', 'colspan': '4'})
 
+                        # TODO convert selection field into radio input
                         if que_rec.type == 'multiple_choice_only_one_ans':
                             selection = []
                             for ans in ans_ids:
@@ -373,8 +384,9 @@ class survey_question_wiz(osv.osv_memory):
                     else:
                         etree.SubElement(xml_footer, 'label', {'string': ""})
                         etree.SubElement(xml_footer, 'button', {'name':"action_next",'string': tools.ustr(but_string) ,'type':"object",'context' : tools.ustr(context), 'class':"oe_highlight"})
-                    etree.SubElement(xml_footer, 'label', {'string': "or"})
-                    etree.SubElement(xml_footer, 'button', {'special': "cancel",'string':"Exit",'class':"oe_link"})
+                    if context.get('ir_actions_act_window_target', None):
+                        etree.SubElement(xml_footer, 'label', {'string': "or"})
+                        etree.SubElement(xml_footer, 'button', {'special': "cancel",'string':"Exit",'class':"oe_link"})
                     etree.SubElement(xml_footer, 'label', {'string': tools.ustr(page_number+ 1) + "/" + tools.ustr(total_pages), 'class':"oe_survey_title_page oe_right"})
 
                     root = xml_form.getroottree()
@@ -1211,7 +1223,7 @@ class survey_question_wiz(osv.osv_memory):
             "view_mode": 'form',
             'res_model': 'survey.question.wiz',
             'type': 'ir.actions.act_window',
-            'target': 'new',
+            'target': context.get('ir_actions_act_window_target', None),
             'search_view_id': search_id[0],
             'context': context
         }
@@ -1232,7 +1244,7 @@ class survey_question_wiz(osv.osv_memory):
             "view_mode": 'form',
             'res_model': 'survey.question.wiz',
             'type': 'ir.actions.act_window',
-            'target': 'new',
+            'target': context.get('ir_actions_act_window_target', None),
             'search_view_id': search_id[0],
             'context': context
         }

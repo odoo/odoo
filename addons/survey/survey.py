@@ -28,6 +28,7 @@ import os
 from openerp import netsvc, tools
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
+import uuid # token = uuid.uuid4()
 
 class survey_type(osv.osv):
     _name = 'survey.type'
@@ -151,12 +152,12 @@ class survey(osv.osv):
             if not pages:
                 raise osv.except_osv(_('Warning!'), _('This survey has no question defined. Please define the questions and answers first.'))
             context.update({'active':False,'survey_id': ids[0]})
+
         return {
             'view_type': 'form',
             'view_mode': 'form',
             'res_model': 'survey.question.wiz',
             'type': 'ir.actions.act_window',
-            'target': 'new',
             'name': name,
             'context': context
         }
@@ -168,6 +169,8 @@ class survey(osv.osv):
             if not pages:
                 raise osv.except_osv(_('Warning!'), _('This survey has no pages defined. Please define pages first.'))
             context.update({'active':False,'survey_id': ids[0]})
+
+        context.update({'ir_actions_act_window_target': 'new'})
         return {
             'view_type': 'form',
             'view_mode': 'form',
@@ -186,6 +189,8 @@ class survey(osv.osv):
             if not pages:
                 raise osv.except_osv(_('Warning!'), _('This survey has no question defined. Please define the questions and answers first.'))
             context.update({'survey_id': ids[0]})
+
+        context.update({'ir_actions_act_window_target': 'new'})
         return {
             'view_type': 'form',
             'view_mode': 'form',
@@ -194,6 +199,41 @@ class survey(osv.osv):
             'target': 'new',
             'name': name,
             'context': context
+        }
+
+    def action_survey_sent(self, cr, uid, ids, context=None):
+        '''
+        This function opens a window to compose an email, with the survey template message loaded by default
+        '''
+        assert len(ids) == 1, 'This option should only be used for a single id at a time.'
+        ir_model_data = self.pool.get('ir.model.data')
+        try:
+            template_id = ir_model_data.get_object_reference(cr, uid, 'survey', 'email_template_survey')[1]
+        except ValueError:
+            template_id = False
+        try:
+            compose_form_id = ir_model_data.get_object_reference(cr, uid, 'mail', 'email_compose_message_wizard_form')[1]
+        except ValueError:
+            compose_form_id = False 
+        ctx = dict(context)
+
+        ctx.update({
+            'default_model': 'survey',
+            'default_res_id': ids[0],
+            'default_use_template': bool(template_id),
+            'default_template_id': template_id,
+            'default_composition_mode': 'comment',
+            'mark_invoice_as_sent': True,
+            })
+        return {
+            'type': 'ir.actions.act_window',
+            'view_type': 'form',
+            'view_mode': 'form',
+            'res_model': 'mail.compose.message',
+            'views': [(compose_form_id, 'form')],
+            'view_id': compose_form_id,
+            'target': 'new',
+            'context': ctx,
         }
 
 survey()
@@ -249,7 +289,7 @@ class survey_page(osv.osv):
             'res_model': 'survey.question.wiz',
             'type': 'ir.actions.act_window',
             'target': 'new',
-            'search_view_id': search_id[0],
+            #'search_view_id': search_id[0],
             'context': context
         }
 
@@ -526,7 +566,7 @@ class survey_question(osv.osv):
             'res_model': 'survey.question.wiz',
             'type': 'ir.actions.act_window',
             'target': 'new',
-            'search_view_id': search_id[0],
+            #'search_view_id': search_id[0],
             'context': context
         }
 

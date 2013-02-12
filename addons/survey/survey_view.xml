@@ -321,7 +321,7 @@
                                     <ul>
                                         <li t-if="widget.view.is_action_enabled('edit')"><a type="edit">Configuration</a></li>
                                         <li t-if="widget.view.is_action_enabled('edit')"><a name="edit_survey" string="Edit Survey" type="object" context="{'active':True,'edit' : True}">Edit Survey</a></li>
-                                        <li t-if="widget.view.is_action_enabled('edit')"><a name="%(action_view_survey_send_invitation)d" type="action">Collect informations</a></li>
+                                        <li t-if="widget.view.is_action_enabled('edit')"><a name="action_survey_sent" type="object">Collect informations</a></li>
                                         <li><a name="fill_survey" type="object">Answer Survey</a></li>
                                         <li t-if="widget.view.is_action_enabled('edit')"><a>Analysis</a></li>
                                     </ul>
