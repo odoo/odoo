@@ -144,7 +144,7 @@ class res_partner(osv.osv):
         vat_no = "'CC##' (CC=Country Code, ##=VAT Number)"
         if default_vat_check(vat_country, vat_number):
             vat_no = _ref_vat[vat_country] if vat_country in _ref_vat else vat_no
-        return '\n' + _('This VAT number does not seem to be valid.\nNote: the expected format is %s') % vat_no
+        return '\n' + _('The VAT number %s%s does not seem to be valid.\nNote: the expected format is %s') % (vat_country,vat_number,vat_no)
 
     _constraints = [(check_vat, _construct_constraint_msg, ["vat"])]
 
