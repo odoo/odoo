@@ -28,6 +28,7 @@ import time
 from openerp import SUPERUSER_ID
 from openerp import netsvc, tools
 from openerp.osv import fields, osv
+import openerp.report.interface
 from openerp.report.report_sxw import report_sxw, report_rml
 from openerp.tools.config import config
 from openerp.tools.safe_eval import safe_eval as eval
@@ -93,9 +94,9 @@ class report_xml(osv.osv):
         opj = os.path.join
         cr.execute("SELECT * FROM ir_act_report_xml WHERE auto=%s ORDER BY id", (True,))
         result = cr.dictfetchall()
-        svcs = netsvc.Service._services
+        reports = openerp.report.interface.report_int._reports
         for r in result:
-            if svcs.has_key('report.'+r['report_name']):
+            if reports.has_key('report.'+r['report_name']):
                 continue
             if r['report_rml'] or r['report_rml_content_data']:
                 report_sxw('report.'+r['report_name'], r['model'],

@@ -367,7 +367,7 @@ class WorkerCron(Worker):
         if config['db_name']:
             db_names = config['db_name'].split(',')
         else:
-            db_names = openerp.netsvc.ExportService._services['db'].exp_list(True)
+            db_names = openerp.service.db.exp_list(True)
         for db_name in db_names:
             if rpc_request_flag:
                 start_time = time.time()
