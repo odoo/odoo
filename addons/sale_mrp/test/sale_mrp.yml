@@ -92,7 +92,7 @@
   I verify that a procurement has been generated for sale order
 -
   !python {model: procurement.order}: |
-    from tools.translate import _
+    from openerp.tools.translate import _
     sale_order_obj = self.pool.get('sale.order')
     so = sale_order_obj.browse(cr, uid, ref("sale_order_so0"))
     proc_ids = self.search(cr, uid, [('origin','=',so.name)])
@@ -103,7 +103,7 @@
   !python {model: procurement.order}: |
     sale_order_obj = self.pool.get('sale.order')
     so = sale_order_obj.browse(cr, uid, ref("sale_order_so0"))
-    import netsvc
+    from openerp import netsvc
     wf_service = netsvc.LocalService("workflow")
     proc_ids = self.search(cr, uid, [('origin','=',so.name)])
     for proc in proc_ids:
