@@ -8,6 +8,7 @@ define(["nova", "underscore", "oeclient", "require", "jquery",
     var connection;
 
     var defaultInputPlaceholder;
+    var userName;
 
     livesupport.main = function(server_url, db, login, password, channel, options) {
         var defs = [];
@@ -17,8 +18,10 @@ define(["nova", "underscore", "oeclient", "require", "jquery",
             inputPlaceholder: "How may I help you?",
             defaultMessage: null,
             auto: false,
+            userName: "Anonymous",
         });
         defaultInputPlaceholder = options.inputPlaceholder;
+        userName = options.userName;
         defs.push($.ajax({
             url: require.toUrl("./livesupport_templates.js"),
             jsonp: false,
@@ -177,21 +180,24 @@ define(["nova", "underscore", "oeclient", "require", "jquery",
             }
             return def.then(function(uuid) {
                 localStorage["oe_livesupport_uuid"] = uuid;
-                return connection.getModel("im.user").call("get_by_user_id", [uuid]).then(function(my_id) {
-                    self.my_id = my_id["id"];
-                    return self.ensure_users([self.my_id]).then(function() {
-                        var me = self.users_cache[self.my_id];
-                        delete self.users_cache[self.my_id];
-                        self.me = me;
-                        connection.connector.call("/longpolling/im/activated", {}).then(function(activated) {
-                            if (activated) {
-                                self.activated = true;
-                                $(window).on("unload", self.unload_event_handler);
-                                self.poll();
-                            }
-                        });
-                    });
-                });
+                return connection.getModel("im.user").call("get_by_user_id", [uuid]);
+            }).then(function(my_id) {
+                self.my_id = my_id["id"];
+                return connection.getModel("im.user").call("assign_name", [uuid, userName]);
+            }).then(function() {
+                return self.ensure_users([self.my_id])
+            }).then(function() {
+                var me = self.users_cache[self.my_id];
+                delete self.users_cache[self.my_id];
+                self.me = me;
+                me.set("name", "You");
+                connection.connector.call("/longpolling/im/activated", {});
+            }).then(function(activated) {
+                if (activated) {
+                    self.activated = true;
+                    $(window).on("unload", self.unload_event_handler);
+                    self.poll();
+                }
             });
         },
         unload: function() {

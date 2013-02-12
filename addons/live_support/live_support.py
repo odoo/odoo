@@ -40,6 +40,7 @@ class ImportController(openerp.addons.web.http.Controller):
         p = json.loads(kwargs["p"])
         db = p["db"]
         channel = p["channel"]
+        user_name = p.get("user_name", None)
         req.session._db = db
         req.session._uid = None
         req.session._login = "anonymous"
@@ -47,6 +48,7 @@ class ImportController(openerp.addons.web.http.Controller):
         info = req.session.model('live_support.channel').get_info_for_chat_src(channel)
         info["db"] = db
         info["channel"] = channel
+        info["userName"] = user_name
         return req.make_response(env.get_template("loader.js").render(info),
              headers=[('Content-Type', "text/javascript")])
 
