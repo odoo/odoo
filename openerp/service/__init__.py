@@ -75,7 +75,6 @@ def start_internal():
     if start_internal_done:
         return
     openerp.netsvc.init_logger()
-    openerp.modules.loading.open_openerp_namespace()
 
     load_server_wide_modules()
     start_internal_done = True
