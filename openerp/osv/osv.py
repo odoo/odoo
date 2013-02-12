@@ -188,11 +188,9 @@ class object_proxy(object):
         return res
 
     def exec_workflow_cr(self, cr, uid, obj, signal, *args):
-        object = pooler.get_pool(cr.dbname).get(obj)
-        if not object:
-            raise except_osv('Object Error', 'Object %s doesn\'t exist' % str(obj))
         res_id = args[0]
-        return object._workflow_signal(cr, uid, [res_id], signal)[res_id]
+        return self.execute_cr(
+            cr, uid, obj, '_workflow_signal', [res_id], signal)[res_id]
 
     @check
     def exec_workflow(self, db, uid, obj, signal, *args):
