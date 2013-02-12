@@ -38,6 +38,7 @@ except ImportError:
 
 import openerp
 from openerp import pooler, sql_db, netsvc
+import openerp.service
 from openerp.tools import misc
 
 from cache import memoize
@@ -372,7 +373,7 @@ class openerp_dav_handler(dav_interface):
     @memoize(4)
     def _all_db_list(self):
         """return all databases who have module document_webdav installed"""
-        s = netsvc.ExportService.getService('db')
+        s = openerp.service.db
         result = s.exp_list()
         self.db_name_list=[]
         for db_name in result:
