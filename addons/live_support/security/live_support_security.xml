@@ -11,18 +11,16 @@
             <field name="name">User</field>
             <field name="category_id" ref="module_category_live_support"/>
             <field name="comment">The user will be able to join support channels.</field>
+            <field name="users" eval="[(4, ref('base.user_demo'))]"/>
         </record>
-<!--
-        <record id="users_rule_1" model="ir.rule">
-            <field name="name">Can only read support users</field>
-            <field name="model_id" ref="model_im_user"/>
-            <field name="groups" eval="[(6,0,[ref('portal.group_anonymous')])]"/>
-            <field name="domain_force">[('support_channel_ids', '!=', False)]</field>
-            <field name="perm_unlink" eval="0"/>
-            <field name="perm_write" eval="0"/>
-            <field name="perm_read" eval="1"/>
-            <field name="perm_create" eval="0"/>
-        </record>-->
+
+        <record id="group_live_support_manager" model="res.groups">
+            <field name="name">Manager</field>
+            <field name="comment">The user will be able to delete support channels.</field>
+            <field name="category_id" ref="module_category_live_support"/>
+            <field name="implied_ids" eval="[(4, ref('live_support.group_live_support'))]"/>
+            <field name="users" eval="[(4, ref('base.user_root'))]"/>
+        </record>
 
     </data>
 </openerp>
