@@ -594,7 +594,8 @@ class res_config_settings(osv.osv_memory):
 
     def get_option_path(self, cr, uid, menu_xml_id, context=None):
         """
-        Fetch the path to a specified configuration view.
+        Fetch the path to a specified configuration view and the action id
+        to access it.
 
         :param string menu_xml_id: the xml id of the menuitem where the view
         is located, structured as follows: module_name.menuitem_xml_id
@@ -602,7 +603,7 @@ class res_config_settings(osv.osv_memory):
         :return tuple:
         - t[0]: string: full path to the menuitem
           (e.g.: "Settings/Configuration/Sales")
-        - t[1]: int: id of the menuitem's action
+        - t[1]: long: id of the menuitem's action
         """
         module_name, menu_xml_id = menu_xml_id.split('.')
         dummy, menu_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, module_name, menu_xml_id)
