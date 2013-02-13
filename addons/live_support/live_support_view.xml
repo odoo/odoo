@@ -14,6 +14,9 @@
                 You can create channels for each website on which you want
                 to integrate the live chat widget, allowing you website
                 visitors to talk in real time with your operators.
+              </p><p>
+                Each channel has it's own URL that you can send by email to
+                your customers in order to start chatting with you.
               </p>
             </field>
         </record>
@@ -31,9 +34,11 @@
                     <field name="user_ids"/>
                     <templates>
                         <t t-name="kanban-box">
+                            <div class="oe_group_image">
+                                <a type="open"><img t-att-src="kanban_image('live_support.channel', 'image_medium', record.id.value)" class="oe_group_photo"/></a>
+                            </div>
                             <div class="oe_group_details">
                                 <h4><a type="open"><field name="name"/></a></h4>
-                                <a t-att-href="record.web_page.raw_value">Test it</a>
                                 <div class="oe_kanban_footer_left">
                                     <span>
                                         <span class="oe_e">+</span> <t t-esc="(record.user_ids.raw_value || []).length"/>
