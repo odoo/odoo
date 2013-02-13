@@ -147,12 +147,15 @@ class live_support_channel(osv.osv):
                  "Use this field anywhere a small image is required."),
     }
 
+    def _default_user_ids(self, cr, uid, context=None):
+        my_id = self.pool.get("im.user").get_by_user_id(cr, uid, uid, context)["id"]
+        return [(6, 0, [my_id])]
+
     _defaults = {
         'button_text': "Have a Question? Chat with us.",
         'input_placeholder': "How may I help you?",
         'default_message': '',
-        'user_ids': lambda self,cr, uid, ctx={}: [(6,0,[uid])],
-        'are_you_inside': lambda self,cr, uid, ctx={}: True,
+        'user_ids': _default_user_ids,
         'image': _get_default_image,
     }
 
