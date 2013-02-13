@@ -134,7 +134,9 @@ instance.web_kanban.KanbanView = instance.web.View.extend({
         switch (node.tag) {
             case 'field':
                 if (this.fields_view.fields[node.attrs.name].type === 'many2many') {
-                    this.many2manys.push(node.attrs.name);
+                    if (_.indexOf(this.many2manys, node.attrs.name) < 0) {
+                        this.many2manys.push(node.attrs.name);
+                    }
                     node.tag = 'div';
                     node.attrs['class'] = (node.attrs['class'] || '') + ' oe_form_field oe_tags';
                 } else {
