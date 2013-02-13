@@ -203,7 +203,7 @@ def assert_uuid(uuid):
 class im_message(osv.osv):
     _name = 'im.message'
 
-    _order = "date"
+    _order = "date desc"
 
     _columns = {
         'message': fields.char(string="Message", size=200, required=True),
