@@ -21,12 +21,63 @@
 
 from functools import wraps
 
+#.apidoc title: API Method Decorators
+
+""" These method decorators aim at managing two different API styles, namely the
+    "traditional" and "record" styles.
+
+    In the "traditional" style, parameters like the database cursor, user id,
+    context dictionary and record ids (usually denoted as ``cr``, ``uid``,
+    ``context``, ``ids``) are passed explicitly to all methods. In the "record"
+    style, those parameters are encapsulated in the model instance, which gives
+    it a more object-oriented feel.
+
+    For instance, the statements::
+
+        model = self.pool.get(MODEL)
+        ids = model.search(cr, uid, DOMAIN, context=context)
+        model.write(cr, uid, ids, VALUES, context=context)
+
+    may be written as::
+
+        # model and records both carry the (cr, uid, context) attached to self
+        model = self.session.model(MODEL)
+        records = model.query(DOMAIN)
+        records.write(VALUES)
+
+    Methods written in the "traditional" style are automatically decorated,
+    following some heuristics based on parameter names.
+
+
+    Record-Map Methods
+    ------------------
+
+    The decorators also provides support for "record-map" methods, i.e., methods
+    with a specific calling convention: when called on a recordset, they return
+    a dictionary that associates record ids to values. Function fields use that
+    convention, for instance.
+
+    When a method is called on a single record, the actual method is called with
+    a recordset made from that record. The result is then inspected to see
+    whether it is a record-map. If that is the case, the value is extracted from
+    the dictionary.
+
+    The following example illustrates the case::
+
+        y = model.browse([42, 43])              # y is a recordset
+        y.method(args)                          # => {42: 'foo', 43: 'bar'}
+
+        x = model.browse(42)                    # x is a single record
+        x.method(args)                          # => 'foo'
+
+"""
+
 
 def _wrapper(method, old_api, new_api):
     """ return a wrapper for a method that combines both api styles
         :param method: the original method
-        :param old_api: the function that implements the old-style api
-        :param new_api: the function that implements the new-style api
+        :param old_api: the function that implements the traditional-style api
+        :param new_api: the function that implements the record-style api
     """
     from openerp.sql_db import Cursor
 
@@ -62,9 +113,9 @@ def _split_context_args(nargs, args, kwargs):
         return None, args, kwargs
 
 
-def _record_get(id, value):
-    """ if ``value`` is a dictionary mapping record ids to values, retrieve the
-        value corresponding to id
+def _map_record(id, value):
+    """ if ``value`` is a record map for the given record id, return the
+        corresponding value; otherwise return ``value``
     """
     if isinstance(value, dict) and value.keys() == [id]:
         return value[id]
@@ -72,15 +123,16 @@ def _record_get(id, value):
 
 
 def model(method):
-    """ Decorate a model method with the new-style API.  Such a method::
+    """ Decorate a record-style method where ``self`` is any instance with
+        session data (model, record or recordset). Such a method::
 
             @api.model
             def method(self, args):
                 ...
 
-        may be called in both new and old styles, like::
+        may be called in both record and traditional styles, like::
 
-            model.method(args)                  # model must have session data
+            model.method(args)
             model.method(cr, uid, args, context=context)
     """
     nargs = method.func_code.co_argcount - 1
@@ -94,13 +146,14 @@ def model(method):
 
 
 def record(method):
-    """ Decorate a record method with the new-style API.  Such a method::
+    """ Decorate a record-style method where ``self`` is a single record. The
+        resulting method follows the record-map convention. Such a method::
 
             @api.record
             def method(self, args):
                 return self.name
 
-        may be called in both new and old styles, like::
+        may be called in both record and traditional styles, like::
 
             y = model.browse([id, ...])         # y is a recordset
             x = y[0]                            # x is a record
@@ -130,25 +183,21 @@ def record(method):
 
 
 def recordset(method):
-    """ Decorate a recordset method with the new-style API.  Such a method::
+    """ Decorate a record-style method where ``self`` is a recordset. Such a
+        method::
 
             @api.recordset
             def method(self, args):
                 ...
 
-        may be called in both new and old styles, like::
+        may be called in both record and traditional styles, like::
 
             y = model.browse(ids)               # y is a recordset
 
             y.method(args)
             model.method(cr, uid, ids, args, context=context)
 
-        If the method is record-compatible, i.e., it returns a dictionary
-        indexed by record ids, then calling the method with a record
-        automatically "unwraps" the result::
-
-            y.method(args)          # => {id: value, ...}
-            y[0].method(args)       # => value
+        This decorator supports record-map methods.
     """
     nargs = method.func_code.co_argcount - 1
 
@@ -159,7 +208,7 @@ def recordset(method):
 
     def new_api(self, *args, **kwargs):
         if self.is_record():
-            return _record_get(self.id, method(self.recordset, *args, **kwargs))
+            return _map_record(self.id, method(self.recordset, *args, **kwargs))
         else:
             return method(self, *args, **kwargs)
 
@@ -167,18 +216,19 @@ def recordset(method):
 
 
 def cr(method):
-    """ Decorate a method with the old-style API.  Such a method::
+    """ Decorate a traditional-style method that takes ``cr`` as a parameter.
+        Such a method::
 
             @api.cr
             def method(self, cr, args):
                 ...
 
-        may be called in both new and old styles, like::
+        may be called in both record and traditional styles, like::
 
-            obj.method(args)            # new style, obj must have session data
-            obj.method(cr, args)        # old style
+            obj.method(args)            # record style
+            obj.method(cr, args)        # traditional style
 
-        This decorator is not necessary, see decorator ``versatile``.
+        This decorator is generally not necessary, see `versatile`.
     """
     def new_api(self, *args, **kwargs):
         return method(self, self.session.cr, *args, **kwargs)
@@ -187,18 +237,19 @@ def cr(method):
 
 
 def cr_uid(method):
-    """ Decorate a method with the old-style API.  Such a method::
+    """ Decorate a traditional-style method that takes ``cr``, ``uid`` as
+        parameters. Such a method::
 
             @api.cr_uid
             def method(self, cr, uid, args, context=None):
                 ...
 
-        may be called in both new and old styles, like::
+        may be called in both record and traditional styles, like::
 
-            obj.method(args)            # new style, obj must have session data
-            obj.method(cr, uid, args, context=context)          # old style
+            obj.method(args)
+            obj.method(cr, uid, args, context=context)
 
-        This decorator is not necessary, see decorator ``versatile``.
+        This decorator is generally not necessary, see `versatile`.
     """
     argnames = method.func_code.co_varnames[:method.func_code.co_argcount]
     if 'context' in argnames:
@@ -215,13 +266,15 @@ def cr_uid(method):
 
 
 def cr_uid_id(method):
-    """ Decorate a method with the old-style API.  Such a method::
+    """ Decorate a traditional-style method that takes ``cr``, ``uid``, ``id``,
+        and possibly ``context`` as parameters. The resulting method follows the
+        record-map convention. Such a method::
 
             @api.cr_uid_id
             def method(self, cr, uid, id, args, context=None):
                 ...
 
-        may be called in both new and old styles, like::
+        may be called in both record and traditional styles, like::
 
             y = model.browse([id])              # y is a recordset
             x = y[0]                            # x is a record
@@ -233,7 +286,7 @@ def cr_uid_id(method):
             # call on recordset => {id: value}
             y.method(args)
 
-        This decorator is not necessary, see decorator ``versatile``.
+        This decorator is generally not necessary, see `versatile`.
     """
     argnames = method.func_code.co_varnames[:method.func_code.co_argcount]
     if 'context' in argnames:
@@ -256,13 +309,14 @@ def cr_uid_id(method):
 
 
 def cr_uid_ids(method):
-    """ Decorate a method with the old-style API.  Such a method::
+    """ Decorate a traditional-style method that takes ``cr``, ``uid``, ``ids``,
+        and possibly ``context`` as parameters. Such a method::
 
             @api.cr_uid_ids
             def method(self, cr, uid, ids, args, context=None):
                 ...
 
-        may be called in both new and old styles, like::
+        may be called in both record and traditional styles, like::
 
             y = model.browse(ids)               # y is a recordset
 
@@ -270,14 +324,8 @@ def cr_uid_ids(method):
             y.method(args)
             model.method(cr, uid, ids, args, context=context)
 
-        If the method is record-compatible, i.e., it returns a dictionary
-        indexed by record ids, then calling the method with a record
-        automatically "unwraps" the result::
-
-            y.method(args)          # => {id: value, ...}
-            y[0].method(args)       # => value
-
-        This decorator is not necessary, see decorator ``versatile``.
+        This decorator supports record-map methods.
+        It is generally not necessary, see `versatile`.
     """
     argnames = method.func_code.co_varnames[:method.func_code.co_argcount]
     if 'context' in argnames:
@@ -285,14 +333,14 @@ def cr_uid_ids(method):
             cr, uid, context = self.session
             kwargs = dict(kwargs, context=context)
             if self.is_record():
-                return _record_get(self.id, method(self, cr, uid, [self.id], *args, **kwargs))
+                return _map_record(self.id, method(self, cr, uid, [self.id], *args, **kwargs))
             else:
                 return method(self, cr, uid, map(int, self), *args, **kwargs)
     else:
         def new_api(self, *args, **kwargs):
             cr, uid, context = self.session
             if self.is_record():
-                return _record_get(self.id, method(self, cr, uid, [self.id], *args, **kwargs))
+                return _map_record(self.id, method(self, cr, uid, [self.id], *args, **kwargs))
             else:
                 return method(self, cr, uid, map(int, self), *args, **kwargs)
 
@@ -300,15 +348,18 @@ def cr_uid_ids(method):
 
 
 def versatile(method):
-    """ Decorate a method to make it callable in both old and new styles.
-        This decorator is applied automatically by the model's metaclass.
+    """ Decorate a method to make it callable in both traditional and record
+        styles. This decorator is applied automatically by the model's
+        metaclass, and has no effect on already-decorated methods.
 
-        The API style is determined by heuristics on the parameter names ('cr'
+        The API style is determined by heuristics on the parameter names: 'cr'
         or 'cursor' for the cursor, 'uid' or 'user' for the user id, 'id' or
-        'ids' for a list of record ids, and 'context' for the context dictionary.)
+        'ids' for a list of record ids, and 'context' for the context
+        dictionary. If a traditional API is recognized, one of the decorators
+        `cr`, `cr_uid`, `cr_uid_id`, `cr_uid_ids` is applied on the method.
 
-        Method calls are considered old style when their first parameter is
-        an instance of Cursor.
+        Method calls are considered traditional style when their first parameter
+        is an instance of Cursor.
     """
     if hasattr(method, 'versatile'):
         return method
@@ -336,6 +387,6 @@ def versatile(method):
 
 
 def notversatile(method):
-    """ Decorate a method to disable any 'versatile' wrapping. """
+    """ Decorate a method to disable any effect from `versatile`. """
     method.versatile = False
     return method
