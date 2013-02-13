@@ -235,6 +235,7 @@
                 <field name="title_action"/>
                 <field name="department_id"/>
                 <field name="categ_ids"/>
+                <field name="message_summary"/>
                 <templates>
                     <t t-name="kanban-tooltip">
                         <ul class="oe_kanban_tooltip">
@@ -259,8 +260,12 @@
                                     <i><field name="name"/></i><br/>
                                     <field name="job_id"/><br/>
                                     <t t-if="record.partner_mobile.raw_value">Mobile: <field name="partner_mobile"/><br/></t>
-                                    <t t-if="record.title_action.raw_value"><field name="title_action"/><br/></t>
-                                    <field name="date_action"/>
+                                </div>
+                                <div style="padding-left: 0.5em">
+                                    <t t-if="record.date_action.raw_value and record.date_action.raw_value lt (new Date())" t-set="red">oe_kanban_text_red</t>
+                                    <span t-attf-class="#{red || ''}"><field name="date_action"/></span>
+                                        <t t-if="record.date_action.raw_value"> : </t>
+                                        <field name="title_action"/>
                                 </div>
                                 <div class="oe_kanban_right">
                                     <t t-set="priority" t-value="record.priority.raw_value || 5"/>
@@ -280,6 +285,7 @@
 
                                 </div>
                                 <div class="oe_kanban_footer_left" style="margin-top:5px;">
+                                    <t t-raw="record.message_summary.raw_value"/>
                                     <field name="categ_ids"/>
                                 </div>
                             </div>

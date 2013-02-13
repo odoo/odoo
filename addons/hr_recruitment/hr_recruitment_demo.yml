@@ -10,6 +10,8 @@
     name: 'Salesperson'
     partner_phone: '1236547890'
     categ_ids: [hr_recruitment.tag_applicant_sales]
+    date_action: !eval time.strftime('%Y-%m-15 18:15:00')
+    title_action: 'Send mail regarding our interviwes'
 
 -
   !record {model: hr.applicant, id: hr_case_traineemca0}:
@@ -24,6 +26,8 @@
     name: 'Trainee - MCA'
     partner_phone: '6633225'
     categ_ids: [hr_recruitment.tag_applicant_manager]
+    date_action: !eval time.strftime('%Y-%m-10 18:15:00')
+    title_action: 'Call to define real needs about training<'
 -
   !record {model: hr.applicant, id: hr_case_fresher0}:
     date: !eval time.strftime('%Y-%m-15 16:10:00')
@@ -36,6 +40,8 @@
     name: 'Fresher'
     partner_phone: '999666735'
     categ_ids: [hr_recruitment.tag_applicant_it]
+    date_action: !eval time.strftime('%Y-%m-5 18:15:00')
+    title_action: 'Send mail regarding our interviwes'
 -
   !record {model: hr.applicant, id: hr_case_yrsexperienceinphp0}:
     date: !eval time.strftime('%Y-%m-25 16:25:52')
@@ -45,6 +51,8 @@
     partner_name: 'Sandra Elvis'
     stage_id: stage_job6
     name: 'More than 5 yrs Experience in PHP'
+    date_action: !eval time.strftime('%Y-%m-24 18:15:00')
+    title_action: 'Send mail regarding our interviwes'
 -
   !record {model: hr.applicant, id: hr_case_marketingjob0}:
     date: !eval time.strftime('%Y-%m-26 17:15:32')
@@ -56,6 +64,8 @@
     stage_id: stage_job5
     name: 'Marketing Job'
     categ_ids: [hr_recruitment.tag_applicant_sales]
+    date_action: !eval time.strftime('%Y-%m-20 18:15:00')
+    title_action: 'Send mail regarding our interviwes'
 -
   !record {model: hr.applicant, id: hr_case_financejob0}:
     date: !eval time.strftime('%Y-%m-26 17:39:42')
@@ -68,6 +78,8 @@
     name: 'Finance Job'
     partner_phone: '33968745'
     categ_ids: [hr_recruitment.tag_applicant_reserve]
+    date_action: !eval time.strftime('%Y-%m-18 18:15:00')
+    title_action: 'Send mail regarding our interviews'
 -
   !record {model: hr.applicant, id: hr_case_traineemca1}:
     date: !eval time.strftime('%Y-%m-12 17:49:19')
@@ -78,6 +90,8 @@
     stage_id: stage_job4
     name: 'Trainee - MCA'
     partner_phone: '6630125'
+    date_action: !eval time.strftime('%Y-%m-15 18:15:00')
+    title_action: 'Call to define real needs about training'
 
 -
   !record {model: hr.applicant, id: hr_case_programmer}:
@@ -91,6 +105,8 @@
     job_id: hr.job_developer
     department_id: hr.dep_rd
     salary_expected: 11000.0
+    date_action: !eval time.strftime('%Y-%m-24 18:15:00')
+    title_action: 'Call to define real needs about training'
 
 -
   !record {model: hr.applicant, id: hr_case_advertisement}:
@@ -103,6 +119,8 @@
     name: 'Advertisement'
     salary_expected: 11000.0
     categ_ids: [hr_recruitment.tag_applicant_reserve]
+    date_action: !eval time.strftime('%Y-%m-15 18:15:00')
+    title_action: 'Send mail regarding our interviwes'
 -
   !record {model: hr.job, id: hr.job_developer}:
     survey_id: hr_recruitment.survey_job_0
