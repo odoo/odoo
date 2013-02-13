@@ -32,12 +32,12 @@ NOMODULE_TEMPLATE = Template(u"""<!DOCTYPE html>
         </form>
     </body>
 </html>
-""")
+""", default_filters=['h'])
 NOTFOUND = Template(u"""
 <p>Unable to find the module [${module}], please check that the module
    name is correct and the module is on OpenERP's path.</p>
 <a href="/web/tests">&lt;&lt; Back to tests</a>
-""")
+""", default_filters=['h'])
 TESTING = Template(u"""<!DOCTYPE html>
 <html style="height: 100%">
 <%def name="to_path(module, p)">/${module}/${p}</%def>
@@ -51,9 +51,9 @@ TESTING = Template(u"""<!DOCTYPE html>
     <script src="/web/static/lib/qunit/qunit.js"></script>
 
     <script type="text/javascript">
-        var oe_db_info = ${db_info};
+        var oe_db_info = ${db_info | n};
         // List of modules, each module is preceded by its dependencies
-        var oe_all_dependencies = ${dependencies};
+        var oe_all_dependencies = ${dependencies | n};
         QUnit.config.testTimeout = 5 * 60 * 1000;
     </script>
 </head>
@@ -83,7 +83,7 @@ TESTING = Template(u"""<!DOCTYPE html>
     % endif
 % endfor
 </html>
-""")
+""", default_filters=['h'])
 
 class TestRunnerController(http.Controller):
     _cp_path = '/web/tests'
