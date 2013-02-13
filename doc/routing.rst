@@ -19,6 +19,8 @@ Starting with OpenERP 7.1, exposing a new arbitrary WSGI handler is done with
 the :py:func:`openerp.http.handler` decorator while adding an RPC endpoint is
 done with the :py:func:`openerp.http.rpc` decorator.
 
+.. _routing-decorators:
+
 Routing decorators
 ------------------
 
