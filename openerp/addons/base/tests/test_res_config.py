@@ -13,6 +13,7 @@ class test_res_config(common.TransactionCase):
         self.menu_xml_id = 'base.menu_action_res_users'
         self.full_field_name = 'res.partner.lang'
         self.error_msg = "WarningRedirect test string: %(field:res.partner.lang)s - %(menu:base.menu_action_res_users)s."
+        self.error_msg_wo_menu = "WarningRedirect test string: %(field:res.partner.lang)s."
         # Note: see the get_config_warning() doc for a better example
 
         # Fetch the expected values
@@ -28,6 +29,9 @@ class test_res_config(common.TransactionCase):
         self.expected_final_error_msg = self.error_msg % {
             'field:res.partner.lang': self.expected_name,
             'menu:base.menu_action_res_users': self.expected_path
+        }
+        self.expected_final_error_msg_wo_menu = self.error_msg_wo_menu % {
+            'field:res.partner.lang': self.expected_name,
         }
 
     def test_00_get_option_path(self):
@@ -55,12 +59,22 @@ class test_res_config(common.TransactionCase):
         self.assertTrue(res == self.expected_name), "Result mismatch: expected %s, got %s" % (self.expected_name, res)
 
     def test_20_get_config_warning(self):
-        """ The get_config_warning() method should return a RedirectWarning exception """
+        """ The get_config_warning() method should return a RedirectWarning """
         res = self.res_config.get_config_warning(self.cr, self.error_msg, context=None)
 
         # Check type
-        self.assertTrue(isinstance(res, openerp.exceptions.RedirectWarning)), "Result type mismatch: expected RedirectWarning, got %s" % type(res)
+        self.assertTrue(isinstance(res, openerp.exceptions.RedirectWarning)), "Result type mismatch: expected openerp.exceptions.RedirectWarning, got %s" % type(res)
 
         # Check returned value
         self.assertTrue(res.args[0], self.expected_final_error_msg), "Result mismatch: expected %s, got %s" % (self.expected_final_error_msg, res.args[0])
         self.assertTrue(res.args[1], self.expected_action_id), "Result mismatch: expected %s, got %s" % (self.expected_action_id, res.args[1])
+
+    def test_30_get_config_warning_wo_menu(self):
+        """ The get_config_warning() method should return a Warning exception """
+        res = self.res_config.get_config_warning(self.cr, self.error_msg_wo_menu, context=None)
+
+        # Check type
+        self.assertTrue(isinstance(res, openerp.exceptions.Warning)), "Result type mismatch: expected openerp.exceptions.Warning, got %s" % type(res)
+
+        # Check returned value
+        self.assertTrue(res.args[0], self.expected_final_error_msg), "Result mismatch: expected %s, got %s" % (self.expected_final_error_msg_wo_menu, res.args[0])
