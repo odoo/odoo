@@ -673,6 +673,7 @@ class purchase_order(osv.osv):
 
     def picking_done(self, cr, uid, ids, context=None):
         self.write(cr, uid, ids, {'shipped':1,'state':'approved'}, context=context)
+        self.message_post(cr, uid, ids, body=_("Products <b>Received.</b>"), context=context)
         return True
 
     def copy(self, cr, uid, id, default=None, context=None):
