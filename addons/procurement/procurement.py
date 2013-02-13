@@ -373,13 +373,13 @@ class procurement_order(osv.osv):
                     self.message_post(cr, uid, [procurement.id], body=message, context=context)
         return ok
 
-    def trigger_workflow(self, cr, uid, ids, context=None):
+    def step_workflow(self, cr, uid, ids, context=None):
         """ Don't trigger workflow for the element specified in trigger """
         wkf_op_key = 'workflow.trg_write.%s' % self._name
         if context and not context.get(wkf_op_key, True):
             # make sure we don't have a trigger loop while processing triggers
             return 
-        return super(procurement_order, self).trigger_workflow(cr, uid, ids, context=context)
+        return super(procurement_order, self).step_workflow(cr, uid, ids, context=context)
 
     def action_produce_assign_service(self, cr, uid, ids, context=None):
         """ Changes procurement state to Running.

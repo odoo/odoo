@@ -2957,10 +2957,10 @@ class stock_picking_in(osv.osv):
         # write and unlink operation instead of its own workflow (which is not existing)
         return self.pool.get('stock.picking').delete_workflow(cr, uid, ids, context=context)
 
-    def trigger_workflow(self, cr, uid, ids, context=None):
+    def step_workflow(self, cr, uid, ids, context=None):
         # overridden in order to trigger the workflow of stock.picking at the end of create,
         # write and unlink operation instead of its own workflow (which is not existing)
-        return self.pool.get('stock.picking').trigger_workflow(cr, uid, ids, context=context)
+        return self.pool.get('stock.picking').step_workflow(cr, uid, ids, context=context)
 
     def signal_workflow(self, cr, uid, ids, signal, context=None):
         # overridden in order to fire the workflow signal on given stock.picking workflow instance
@@ -3012,10 +3012,10 @@ class stock_picking_out(osv.osv):
         # write and unlink operation instead of its own workflow (which is not existing)
         return self.pool.get('stock.picking').delete_workflow(cr, uid, ids, context=context)
 
-    def trigger_workflow(self, cr, uid, ids, context=None):
+    def step_workflow(self, cr, uid, ids, context=None):
         # overridden in order to trigger the workflow of stock.picking at the end of create,
         # write and unlink operation instead of its own workflow (which is not existing)
-        return self.pool.get('stock.picking').trigger_workflow(cr, uid, ids, context=context)
+        return self.pool.get('stock.picking').step_workflow(cr, uid, ids, context=context)
 
     def signal_workflow(self, cr, uid, ids, signal, context=None):
         # overridden in order to fire the workflow signal on given stock.picking workflow instance
