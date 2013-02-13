@@ -27,8 +27,18 @@ way.)
 
   This is used instead of ``LocalService('workflow').trg_delete()``.
 
+.. automethod:: BaseModel.step_workflow
+  :noindex:
+
+  This is used instead of ``LocalService('workflow').trg_write()``.
+
 .. automethod:: BaseModel.redirect_workflow
   :noindex:
+
+.. automethod:: BaseModel.signal_workflow
+  :noindex:
+
+  This is used instead of ``LocalService('workflow').trg_validate()``.
 
 .. method:: BaseModel.signal_xxx(cr, uid, ids)
   :noindex:
