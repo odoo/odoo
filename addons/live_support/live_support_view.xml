@@ -64,39 +64,51 @@
                             <field name="name" placeholder="e.g. YourWebsite.com"/>
                         </h1>
                         <div>
-                            <button type="object" name="join" class="oe_group_join" string="Join" attrs='{"invisible": [["are_you_inside", "=", True]]}'/>
-                            <button type="object" name="quit" string="Quit" attrs='{"invisible": [["are_you_inside", "=", False]]}'/>
+                            <button type="object" name="join" class="oe_highlight" string="Join Channel" attrs='{"invisible": [["are_you_inside", "=", True]]}'/>
+                            <button type="object" name="quit" string="Leave Channel" attrs='{"invisible": [["are_you_inside", "=", False]]}'/>
+                            <button type="object" name="test_channel" string="Test" attrs='{"invisible": [["web_page", "=", False]]}'/>
                             <field name="are_you_inside" invisible="1"/>
                         </div>
                     </div>
 
-                    <field name="user_ids" readonly="1" nolabel="1" colspan="2" widget="many2many_kanban">
-                        <kanban>
-                            <field name="name"/>
-                            <templates>
-                                <t t-name="kanban-box">
-                                    <div>
-                                        <div class="oe_group_details" style="min-height: 40px">
-                                            <img t-att-src="kanban_image('im.user', 'image', record.id.value)"
-                                                class="oe_avatar oe_kanban_avatar_smallbox" style="float:left; margin-right: 10px;"/>
-                                            <h4><field name="name"/></h4>
-                                        </div>
-                                    </div>
-                                </t>
-                            </templates>
-                        </kanban>
-                    </field>
-
-                    <label for="web_page" colspan="2"/>
-                    <field name="web_page" readonly="1" nolabel="1" colspan="2"/>
-                    <label for="script" colspan="2"/>
-                    <field name="script" readonly="1" nolabel="1" colspan="2"/>
-
-                    <group col="4">
-                        <field name="button_text"/>
-                        <field name="input_placeholder"/>
-                        <field name="default_message"/>
+                    <group>
+                        <group string="Operators">
+                            <field name="user_ids" widget="many2many_kanban" nolabel="1" colspan="2">
+                                <kanban>
+                                    <field name="name"/>
+                                    <templates>
+                                        <t t-name="kanban-box">
+                                            <div>
+                                                <div class="oe_group_details" style="min-height: 40px">
+                                                    <img t-att-src="kanban_image('im.user', 'image', record.id.value)"
+                                                        class="oe_avatar oe_kanban_avatar_smallbox" style="float:left; margin-right: 10px;"/>
+                                                    <h4><field name="name"/></h4>
+                                                </div>
+                                            </div>
+                                        </t>
+                                    </templates>
+                                </kanban>
+                            </field>
+                        </group>
+                        <group string="Options">
+                            <field name="button_text"/>
+                            <field name="input_placeholder"/>
+                            <field name="default_message"/>
+                        </group>
                     </group>
+
+                    <div attrs='{"invisible": [["web_page", "=", False]]}'>
+                        <separator string="How to use the Live Chat widget?"/>
+                        <p>
+                            Copy and paste this code into your website, within the &amp;lt;head&amp;gt; tag:
+                        </p>
+                        <field name="script" readonly="1" class="oe_tag"/>
+                        <p>
+                            or copy this url and send it by email to your customers or suppliers:
+                        </p>
+                        <field name="web_page" readonly="1" class="oe_tag"/>
+                    </div>
+
                 </sheet>
                 </form>
             </field>

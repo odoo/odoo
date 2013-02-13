@@ -118,7 +118,7 @@ class live_support_channel(osv.osv):
         return res
 
     _columns = {
-        'name': fields.char(string="Name", size=200, required=True),
+        'name': fields.char(string="Channel Name", size=200, required=True),
         'user_ids': fields.many2many('im.user', 'live_support_channel_im_user', 'channel_id', 'user_id', string="Users"),
         'are_you_inside': fields.function(_are_you_inside, type='boolean', string='Are you inside the matrix?', store=False),
         'script': fields.function(_script, type='text', string='Script', store=False),
@@ -151,6 +151,8 @@ class live_support_channel(osv.osv):
         'button_text': "Chat with one of our collaborators",
         'input_placeholder': "How may I help you?",
         'default_message': '',
+        'user_ids': lambda self,cr, uid, ctx={}: [uid],
+        'are_you_inside': lambda self,cr, uid, ctx={}: True,
         'image': _get_default_image,
     }
 
@@ -163,6 +165,14 @@ class live_support_channel(osv.osv):
         if len(users) == 0:
             return False
         return random.choice(users).id
+
+    def test_channel(self, cr, uid, channel, context=None):
+        if not channel:
+            return {}
+        return {
+            'url': self.browse(cr, uid, channel[0], context=context or {}).web_page,
+            'type': 'ir.actions.act_url'
+        }
 
     def get_info_for_chat_src(self, cr, uid, channel, context=None):
         url = self.pool.get('ir.config_parameter').get_param(cr, openerp.SUPERUSER_ID, 'web.base.url')
