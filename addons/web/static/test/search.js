@@ -1,4 +1,4 @@
-openerp.testing.section('query', {
+openerp.testing.section('search.query', {
     dependencies: ['web.search']
 }, function (test) {
     test('Adding a facet to the query creates a facet and a value', function (instance) {
@@ -180,7 +180,7 @@ var makeSearchView = function (instance, dummy_widget_attributes, defaults) {
     });
     return view;
 };
-openerp.testing.section('defaults', {
+openerp.testing.section('search.defaults', {
     dependencies: ['web.search'],
     rpc: 'mock',
     templates: true,
@@ -331,7 +331,7 @@ openerp.testing.section('defaults', {
             });
     });
 });
-openerp.testing.section('completions', {
+openerp.testing.section('search.completions', {
     dependencies: ['web.search'],
     rpc: 'mock',
     templates: true
@@ -564,7 +564,7 @@ openerp.testing.section('completions', {
             });
     });
 });
-openerp.testing.section('search-serialization', {
+openerp.testing.section('search.serialization', {
     dependencies: ['web.search'],
     rpc: 'mock',
     templates: true
@@ -871,7 +871,7 @@ openerp.testing.section('search-serialization', {
         return $.when(t1, t2);
     });
 });
-openerp.testing.section('removal', {
+openerp.testing.section('search.removal', {
     dependencies: ['web.search'],
     rpc: 'mock',
     templates: true
@@ -894,7 +894,7 @@ openerp.testing.section('removal', {
             });
     });
 });
-openerp.testing.section('drawer', {
+openerp.testing.section('search.drawer', {
     dependencies: ['web.search'],
     rpc: 'mock',
     templates: true
@@ -910,7 +910,7 @@ openerp.testing.section('drawer', {
             });
     });
 });
-openerp.testing.section('filters', {
+openerp.testing.section('search.filters', {
     dependencies: ['web.search'],
     rpc: 'mock',
     templates: true,
@@ -995,7 +995,7 @@ openerp.testing.section('filters', {
             });
     });
 });
-openerp.testing.section('saved_filters', {
+openerp.testing.section('search.filters.saved', {
     dependencies: ['web.search'],
     rpc: 'mock',
     templates: true
@@ -1077,7 +1077,7 @@ openerp.testing.section('saved_filters', {
             });
     });
 });
-openerp.testing.section('advanced', {
+openerp.testing.section('search.advanced', {
     dependencies: ['web.search'],
     rpc: 'mock',
     templates: true
