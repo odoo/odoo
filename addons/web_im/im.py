@@ -202,11 +202,14 @@ def assert_uuid(uuid):
 
 class im_message(osv.osv):
     _name = 'im.message'
+
+    _order = "date"
+
     _columns = {
         'message': fields.char(string="Message", size=200, required=True),
-        'from': fields.many2one("im.user", "From", required= True, ondelete='cascade'),
-        'to': fields.many2one("im.user", "To", required=True, select=True, ondelete='cascade'),
-        'date': fields.datetime("Date", required=True),
+        'from_id': fields.many2one("im.user", "From", required= True, ondelete='cascade'),
+        'to_id': fields.many2one("im.user", "To", required=True, select=True, ondelete='cascade'),
+        'date': fields.datetime("Date", required=True, select=True),
     }
 
     _defaults = {
@@ -228,8 +231,8 @@ class im_message(osv.osv):
             last = c_user.im_last_received or -1
 
         # how fun it is to always need to reorder results from read
-        mess_ids = self.search(cr, openerp.SUPERUSER_ID, [['id', '>', last], ['to', '=', my_id]], order="id", context=context)
-        mess = self.read(cr, openerp.SUPERUSER_ID, mess_ids, ["id", "message", "from", "date"], context=context)
+        mess_ids = self.search(cr, openerp.SUPERUSER_ID, [['id', '>', last], ['to_id', '=', my_id]], order="id", context=context)
+        mess = self.read(cr, openerp.SUPERUSER_ID, mess_ids, ["id", "message", "from_id", "date"], context=context)
         index = {}
         for i in xrange(len(mess)):
             index[mess[i]["id"]] = mess[i]
@@ -245,7 +248,7 @@ class im_message(osv.osv):
     def post(self, cr, uid, message, to_user_id, uuid=None, context=None):
         assert_uuid(uuid)
         my_id = self.pool.get('im.user').get_by_user_id(cr, uid, uuid or uid)["id"]
-        self.create(cr, openerp.SUPERUSER_ID, {"message": message, 'from': my_id, 'to': to_user_id}, context=context)
+        self.create(cr, openerp.SUPERUSER_ID, {"message": message, 'from_id': my_id, 'to_id': to_user_id}, context=context)
         notify_channel(cr, "im_channel", {'type': 'message', 'receiver': to_user_id})
         return False
 

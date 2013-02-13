@@ -267,10 +267,10 @@ openerp.web_im = function(instance) {
                         self.get_user(el.id).set(el);
                 });
                 self.last = result.last;
-                var user_ids = _.pluck(_.pluck(result.res, "from"), 0);
+                var user_ids = _.pluck(_.pluck(result.res, "from_id"), 0);
                 self.ensure_users(user_ids).then(function() {
                     _.each(result.res, function(mes) {
-                        var user = self.get_user(mes.from[0]);
+                        var user = self.get_user(mes.from_id[0]);
                         self.received_message(mes, user);
                     });
                     self.poll();

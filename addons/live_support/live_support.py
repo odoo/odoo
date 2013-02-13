@@ -201,3 +201,50 @@ class im_user(osv.osv):
     _columns = {
         'support_channel_ids': fields.many2many('live_support.channel', 'live_support_channel_im_user', 'user_id', 'channel_id', string="Support Channels"),
     }
+
+
+class im_message(osv.osv):
+    _inherit = 'im.message'
+
+    def _support_member(self, cr, uid, ids, name, arg, context=None):
+        res = {}
+        for record in self.browse(cr, uid, ids, context=context):
+            res[record.id] = False
+            if record.to_id.user and record.from_id.user:
+                continue
+            elif record.to_id.user:
+                res[record.id] = record.to_id.user.id
+            elif record.from_id.user:
+                res[record.id] = record.from_id.user.id
+        return res
+
+    def _customer(self, cr, uid, ids, name, arg, context=None):
+        res = {}
+        for record in self.browse(cr, uid, ids, context=context):
+            res[record.id] = False
+            if record.to_id.uuid and record.from_id.uuid:
+                continue
+            elif record.to_id.uuid:
+                res[record.id] = record.to_id.id
+            elif record.from_id.uuid:
+                res[record.id] = record.from_id.id
+        return res
+
+    def _direction(self, cr, uid, ids, name, arg, context=None):
+        res = {}
+        for record in self.browse(cr, uid, ids, context=context):
+            res[record.id] = False
+            if not not record.to_id.user and not not record.from_id.user:
+                continue
+            elif not not record.to_id.user:
+                res[record.id] = "c2s"
+            elif not not record.from_id.user:
+                res[record.id] = "s2c"
+        return res
+
+    _columns = {
+        'support_member_id': fields.function(_support_member, type='many2one', relation='res.users', string='Support Member', store=True, select=True),
+        'customer_id': fields.function(_customer, type='many2one', relation='im.user', string='Customer', store=True, select=True),
+        'direction': fields.function(_direction, type="selection", selection=[("s2c", "Support Member to Customer"), ("c2s", "Customer to Support Member")],
+            string='Direction', store=False),
+    }
