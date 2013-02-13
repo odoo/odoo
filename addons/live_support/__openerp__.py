@@ -20,7 +20,7 @@ chat operators.
         "live_support_view.xml",
     ],
     'demo': [
-        "security/live_support_security_demo.xml",
+        "live_support_demo.xml",
     ],
     'depends' : ["web_im", "mail", "portal_anonymous"],
     'installable': True,

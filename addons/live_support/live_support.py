@@ -151,7 +151,7 @@ class live_support_channel(osv.osv):
         'button_text': "Have a Question? Chat with us.",
         'input_placeholder': "How may I help you?",
         'default_message': '',
-        'user_ids': lambda self,cr, uid, ctx={}: [uid],
+        'user_ids': lambda self,cr, uid, ctx={}: [(6,0,[uid])],
         'are_you_inside': lambda self,cr, uid, ctx={}: True,
         'image': _get_default_image,
     }

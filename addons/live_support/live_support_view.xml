@@ -98,7 +98,7 @@
                         <group string="Options">
                             <field name="button_text"/>
                             <field name="input_placeholder"/>
-                            <field name="default_message"/>
+                            <field name="default_message" placeholder="e.g. Hello, how may I help you?"/>
                         </group>
                     </group>
 
@@ -119,26 +119,6 @@
             </field>
         </record>
 
-        <record model="ir.actions.act_window" id="action_history">
-            <field name="name">History</field>
-            <field name="res_model">im.message</field>
-            <field name="view_mode">list</field>
-        </record>
-        <menuitem name="History" parent="live_support" id="history" action="action_history" groups="group_live_support_manager"/>
-
-        <record id="im_message_form" model="ir.ui.view">
-            <field name="name">im.message.tree</field>
-            <field name="model">im.message</field>
-            <field name="arch" type="xml">
-                <tree string="History">
-                    <field name="date"/>
-                    <field name="support_member_id"/>
-                    <field name="customer_id"/>
-                    <field name="direction"/>
-                    <field name="message"/>
-                </tree>
-            </field>
-        </record>
 
     </data>
 </openerp>
