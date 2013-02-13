@@ -19,6 +19,9 @@ chat operators.
         "security/ir.model.access.csv",
         "live_support_view.xml",
     ],
+    'demo': [
+        "security/live_support_security_demo.xml",
+    ],
     'depends' : ["web_im", "mail", "portal_anonymous"],
     'installable': True,
     'auto_install': False,
