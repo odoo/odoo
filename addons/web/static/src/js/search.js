@@ -1715,15 +1715,22 @@ instance.web.search.Filters = instance.web.search.Input.extend({
             .sum()
             .value();
 
-        var col1 = [], col2 = _(this.view.controls).map(function (inputs, group) {
-            var filters = _(inputs).filter(is_group);
-            return {
-                name: group === 'null' ? "<span class='oe_i'>q</span> " + _t("Filters") : "<span class='oe_i'>w</span> " + group,
-                filters: filters,
-                length: _(filters).chain().map(function (i) {
-                    return i.filters.length; }).sum().value()
-            };
-        });
+        var col1 = [], col2 = _(this.view.controls).chain()
+            .map(function (inputs, group) {
+                return {group: group, inputs: inputs};
+            }).reject(function (item) {
+                return _(item.inputs).isEmpty();
+            }).map(function (item) {
+                var filters = _(item.inputs).filter(is_group);
+                return {
+                    name: item.group === 'null'
+                        ? "<span class='oe_i'>q</span> " + _t("Filters")
+                        : "<span class='oe_i'>w</span> " + item.group,
+                    filters: filters,
+                    length: _(filters).chain().map(function (i) {
+                        return i.filters.length; }).sum().value()
+                };
+            }).value();
 
         while (col2.length) {
             // col1 + group should be smaller than col2 + group
