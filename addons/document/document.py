@@ -31,11 +31,11 @@ from StringIO import StringIO
 import psycopg2
 
 import openerp
-from openerp import netsvc
 from openerp import pooler
 from openerp import tools
 from openerp.osv import fields, osv
 from openerp.osv.orm import except_orm
+import openerp.report.interface
 from openerp.tools.misc import ustr
 from openerp.tools.translate import _
 from openerp.tools.safe_eval import safe_eval
@@ -456,7 +456,7 @@ class document_directory_content(osv.osv):
         if node.extension != '.pdf':
             raise Exception("Invalid content: %s" % node.extension)
         report = self.pool.get('ir.actions.report.xml').browse(cr, uid, node.report_id, context=context)
-        srv = netsvc.Service._services['report.'+report.report_name]
+        srv = openerp.report.interface.report_int._reports['report.'+report.report_name]
         ctx = node.context.context.copy()
         ctx.update(node.dctx)
         pdf,pdftype = srv.create(cr, uid, [node.act_id,], {}, context=ctx)
