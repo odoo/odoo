@@ -25,6 +25,7 @@ import json
 import random
 import jinja2
 from osv import osv, fields
+import tools
 
 env = jinja2.Environment(
     loader=jinja2.PackageLoader('openerp.addons.live_support', "."),
@@ -78,6 +79,18 @@ class ImportController(openerp.addons.web.http.Controller):
 class live_support_channel(osv.osv):
     _name = 'live_support.channel'
 
+    def _get_default_image(self, cr, uid, context=None):
+        image_path = openerp.modules.get_module_resource('live_support', 'static/src/img', 'default.png')
+        return tools.image_resize_image_big(open(image_path, 'rb').read().encode('base64'))
+    def _get_image(self, cr, uid, ids, name, args, context=None):
+        result = dict.fromkeys(ids, False)
+        for obj in self.browse(cr, uid, ids, context=context):
+            result[obj.id] = tools.image_get_resized_images(obj.image)
+        return result
+    def _set_image(self, cr, uid, id, name, value, args, context=None):
+        return self.write(cr, uid, [id], {'image': tools.image_resize_image_big(value)}, context=context)
+
+
     def _are_you_inside(self, cr, uid, ids, name, arg, context=None):
         res = {}
         for record in self.browse(cr, uid, ids, context=context):
@@ -113,12 +126,32 @@ class live_support_channel(osv.osv):
         'button_text': fields.char(string="Button Text", size=200),
         'input_placeholder': fields.char(string="Input Placeholder", size=200),
         'default_message': fields.char(string="Default Message", size=200),
+        # image: all image fields are base64 encoded and PIL-supported
+        'image': fields.binary("Photo",
+            help="This field holds the image used as photo for the group, limited to 1024x1024px."),
+        'image_medium': fields.function(_get_image, fnct_inv=_set_image,
+            string="Medium-sized photo", type="binary", multi="_get_image",
+            store={
+                'live_support.channel': (lambda self, cr, uid, ids, c={}: ids, ['image'], 10),
+            },
+            help="Medium-sized photo of the group. It is automatically "\
+                 "resized as a 128x128px image, with aspect ratio preserved. "\
+                 "Use this field in form views or some kanban views."),
+        'image_small': fields.function(_get_image, fnct_inv=_set_image,
+            string="Small-sized photo", type="binary", multi="_get_image",
+            store={
+                'live_support.channel': (lambda self, cr, uid, ids, c={}: ids, ['image'], 10),
+            },
+            help="Small-sized photo of the group. It is automatically "\
+                 "resized as a 64x64px image, with aspect ratio preserved. "\
+                 "Use this field anywhere a small image is required."),
     }
 
     _defaults = {
         'button_text': "Chat with one of our collaborators",
         'input_placeholder': "How may I help you?",
         'default_message': '',
+        'image': _get_default_image,
     }
 
     def get_available_user(self, cr, uid, channel_id, context=None):
