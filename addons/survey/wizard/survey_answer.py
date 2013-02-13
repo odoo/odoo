@@ -28,6 +28,7 @@ from time import strftime
 from openerp import addons, netsvc, tools
 from openerp.osv import fields, osv
 from openerp.tools import to_xml
+from datetime import datetime
 from openerp.tools.translate import _
 from openerp.tools.safe_eval import safe_eval
 
@@ -44,18 +45,6 @@ class survey_question_wiz(osv.osv_memory):
         if context is None:
             context = {}
 
-        print ""
-        print ""
-        print view_id
-        print view_type
-        print context.get("survey_id", None)
-        print context.get("survey_token", None)
-        print ""
-        print ""
-
-        if not view_id and not context.get('survey_id', None) and context.get('default_survey_id', None):
-            context['survey_id'] = context['active_id'] = context.get('default_survey_id')
-
         result = super(survey_question_wiz, self).fields_view_get(cr, uid, view_id, view_type, context, toolbar,submenu)
 
         surv_name_wiz = self.pool.get('survey.name.wiz')
@@ -66,6 +55,7 @@ class survey_question_wiz(osv.osv_memory):
         sur_response_obj = self.pool.get('survey.response')
         que_col_head = self.pool.get('survey.question.column.heading')
         user_obj = self.pool.get('res.users')
+        user_browse = user_obj.browse(cr, uid, uid, context=context)
         partner_obj = self.pool.get('res.partner')
         mail_message = self.pool.get('mail.message')
         
@@ -122,337 +112,358 @@ class survey_question_wiz(osv.osv_memory):
                 surv_name_wiz.write(cr, uid, [context['sur_name_id']], {'transfer':False})
                 flag = False
                 fields = {}
-                if sur_name_read.page == "next" or sur_name_rec.page_no == -1:
-                    if total_pages > sur_name_rec.page_no + 1:
-                        if ((context.has_key('active') and not context.get('active', False)) \
-                                    or not context.has_key('active')) and not sur_name_rec.page_no + 1:
-                            if sur_rec.state != "open" :
-                                raise osv.except_osv(_('Warning!'),_("You cannot answer because the survey is not open."))
-                            cr.execute('select count(id) from survey_history where partner_id=%s\
-                                                    and survey_id=%s', (uid,survey_id))
-                            res = cr.fetchone()[0]
-                            partner_limit = survey_obj.browse(cr, uid, survey_id)
-                            partner_limit = partner_limit.response_partner
-                            if partner_limit and res >= partner_limit:
-                                raise osv.except_osv(_('Warning!'),_("You cannot answer this survey more than %s times.") % (partner_limit))
 
-                        if sur_rec.max_response_limit and sur_rec.max_response_limit <= sur_rec.tot_start_survey and not sur_name_rec.page_no + 1:
-                            survey_obj.write(cr, uid, survey_id, {'state':'close', 'date_close':strftime("%Y-%m-%d %H:%M:%S")})
+                # get if the token of the partner or anonymous user is valid
+                validate_response = sur_rec.responsible_id.id == uid or sur_response_obj.search(cr, uid, [('survey_id','=',survey_id), ('state','=','new'), 
+                    '|', ('partner_id','=',user_browse.partner_id.id), ("token","=", context.get("survey_token", None)),
+                    '|', ('date_deadline','=',None), ('date_deadline','<',datetime.now())], context=context, limit=1)
+                #validate_response = None
+                
+                # have acces to this survey
+                if validate_response:
+                    if sur_name_read.page == "next" or sur_name_rec.page_no == -1:
+                        if total_pages > sur_name_rec.page_no + 1:
+                            if ((context.has_key('active') and not context.get('active', False)) \
+                                        or not context.has_key('active')) and not sur_name_rec.page_no + 1:
+                                if sur_rec.state != "open" :
+                                    raise osv.except_osv(_('Warning!'),_("You cannot answer because the survey is not open."))
+                                cr.execute('select count(id) from survey_history where partner_id=%s\
+                                                        and survey_id=%s', (uid,survey_id))
+                                res = cr.fetchone()[0]
+                                partner_limit = survey_obj.browse(cr, uid, survey_id)
+                                partner_limit = partner_limit.response_partner
+                                if partner_limit and res >= partner_limit:
+                                    raise osv.except_osv(_('Warning!'),_("You cannot answer this survey more than %s times.") % (partner_limit))
 
-                        p_id = p_id[sur_name_rec.page_no + 1]
-                        surv_name_wiz.write(cr, uid, [context['sur_name_id'],], {'page_no' : sur_name_rec.page_no + 1})
-                        flag = True
-                        page_number += 1
-                    if sur_name_rec.page_no > - 1:
-                        pre_button = True
-                    else:
-                        flag = True
-                else:
-                    if sur_name_rec.page_no != 0:
-                        p_id = p_id[sur_name_rec.page_no - 1]
-                        surv_name_wiz.write(cr, uid, [context['sur_name_id'],],\
-                                             {'page_no' : sur_name_rec.page_no - 1})
-                        flag = True
-                        page_number -= 1
+                            if sur_rec.max_response_limit and sur_rec.max_response_limit <= sur_rec.tot_start_survey and not sur_name_rec.page_no + 1:
+                                survey_obj.write(cr, uid, survey_id, {'state':'close', 'date_close':strftime("%Y-%m-%d %H:%M:%S")})
 
-                    if sur_name_rec.page_no > 1:
-                        pre_button = True
-                if flag:
-                    pag_rec = page_obj.browse(cr, uid, p_id, context=context)
-                    note = False
-                    question_ids = []
-                    if pag_rec:
-                        title = pag_rec.title
-                        note = pag_rec.note
-                        question_ids = pag_rec.question_ids
-                    else:
-                        title = sur_rec.title
-                    xml_form = etree.Element('form', {'string': tools.ustr(title)})
-                    if context.has_key('active') and context.get('active',False) and context.has_key('edit'):
-                        context.update({'page_id' : tools.ustr(p_id),'page_number' : sur_name_rec.page_no , 'transfer' : sur_name_read.transfer})
-                        xml_group3 = etree.SubElement(xml_form, 'group', {'col': '4', 'colspan': '4'})
-                        etree.SubElement(xml_group3, 'button', {'string' :'Add Page','icon': "gtk-new", 'type' :'object','name':"action_new_page", 'context' : tools.ustr(context)})
-                        etree.SubElement(xml_group3, 'button', {'string' :'Edit Page','icon': "gtk-edit", 'type' :'object','name':"action_edit_page", 'context' : tools.ustr(context)})
-                        etree.SubElement(xml_group3, 'button', {'string' :'Delete Page','icon': "gtk-delete", 'type' :'object','name':"action_delete_page", 'context' : tools.ustr(context)})
-                        etree.SubElement(xml_group3, 'button', {'string' :'Add Question','icon': "gtk-new", 'type' :'object','name':"action_new_question", 'context' : tools.ustr(context)})
-
-                    # FP Note
-                    xml_group = xml_form
-
-                    if context.has_key('response_id') and context.get('response_id', False) \
-                         and int(context.get('response_id',0)[0]) > 0:
-                        # TODO: l10n, cleanup this code to make it readable. Or template?
-                        xml_group = etree.SubElement(xml_form, 'group', {'col': '40', 'colspan': '4'})
-                        record = sur_response_obj.browse(cr, uid, context['response_id'][context['response_no']])
-                        etree.SubElement(xml_group, 'label', {'string': to_xml(tools.ustr('Answer Of :- ' + record.partner_id.name + ',  Date :- ' + record.date_create.split('.')[0]  )), 'align':"0.0"})
-                        etree.SubElement(xml_group, 'label', {'string': to_xml(tools.ustr(" Answer :- " + str(context.get('response_no',0) + 1) +"/" + str(len(context.get('response_id',0))) )), 'align':"0.0"})
-                        if context.get('response_no',0) > 0:
-                            etree.SubElement(xml_group, 'button', {'colspan':"1",'icon':"gtk-go-back",'name':"action_forward_previous",'string': tools.ustr("Previous Answer"),'type':"object"})
-                        if context.get('response_no',0) + 1 < len(context.get('response_id',0)):
-                            etree.SubElement(xml_group, 'button', {'colspan':"1",'icon': "gtk-go-forward", 'name':"action_forward_next",'string': tools.ustr("Next Answer") ,'type':"object",'context' : tools.ustr(context)})
-
-                    if wiz_id:
-                        fields["wizardid_" + str(wiz_id)] = {'type':'char', 'size' : 255, 'string':"", 'views':{}}
-                        etree.SubElement(xml_form, 'field', {'invisible':'1','name': "wizardid_" + str(wiz_id),'default':str(lambda *a: 0),'modifiers':'{"invisible":true}'})
-
-                    if note:
-                        xml_group_note = etree.SubElement(xml_form, 'group', {'col': '1','colspan': '4'})
-                        for que_test in note.split('\n'):
-                            etree.SubElement(xml_group_note, 'label', {'string': to_xml(tools.ustr(que_test)), 'align':"0.0"})
-                    que_ids = question_ids
-                    qu_no = 0
-
-                    for que in que_ids:
-                        qu_no += 1
-                        que_rec = que_obj.browse(cr, uid, que.id, context=context)
-                        descriptive_text = ""
-                        separator_string = tools.ustr(qu_no) + "." + tools.ustr(que_rec.question)
-                        if ((context.has_key('active') and not context.get('active',False)) or not context.has_key('active')) and que_rec.is_require_answer:
-                            star = '*'
+                            p_id = p_id[sur_name_rec.page_no + 1]
+                            surv_name_wiz.write(cr, uid, [context['sur_name_id'],], {'page_no' : sur_name_rec.page_no + 1})
+                            flag = True
+                            page_number += 1
+                        if sur_name_rec.page_no > - 1:
+                            pre_button = True
                         else:
-                            star = ''
-                        if context.has_key('active') and context.get('active',False) and \
-                                    context.has_key('edit'):
-                            etree.SubElement(xml_form, 'separator', {'string': star+to_xml(separator_string)})
+                            flag = True
+                    else:
+                        if sur_name_rec.page_no != 0:
+                            p_id = p_id[sur_name_rec.page_no - 1]
+                            surv_name_wiz.write(cr, uid, [context['sur_name_id'],],\
+                                                 {'page_no' : sur_name_rec.page_no - 1})
+                            flag = True
+                            page_number -= 1
 
-                            xml_group1 = etree.SubElement(xml_form, 'group', {'col': '2', 'colspan': '2'})
-                            context.update({'question_id' : tools.ustr(que.id),'page_number': sur_name_rec.page_no , 'transfer' : sur_name_read.transfer, 'page_id' : p_id})
-                            etree.SubElement(xml_group1, 'button', {'string':'','icon': "gtk-edit", 'type' :'object', 'name':"action_edit_question", 'context' : tools.ustr(context)})
-                            etree.SubElement(xml_group1, 'button', {'string':'','icon': "gtk-delete", 'type' :'object','name':"action_delete_question", 'context' : tools.ustr(context)})
+                        if sur_name_rec.page_no > 1:
+                            pre_button = True
+
+                    # survey in progress
+                    if flag:
+                        pag_rec = page_obj.browse(cr, uid, p_id, context=context)
+                        note = False
+                        question_ids = []
+                        if pag_rec:
+                            title = pag_rec.title
+                            note = pag_rec.note
+                            question_ids = pag_rec.question_ids
                         else:
-                            etree.SubElement(xml_form, 'newline')
-                            etree.SubElement(xml_form, 'separator', {'string': star+to_xml(separator_string)})
+                            title = sur_rec.title
+                        xml_form = etree.Element('form', {'string': tools.ustr(title)})
+                        if context.has_key('active') and context.get('active',False) and context.has_key('edit'):
+                            context.update({'page_id' : tools.ustr(p_id),'page_number' : sur_name_rec.page_no , 'transfer' : sur_name_read.transfer})
+                            xml_group3 = etree.SubElement(xml_form, 'group', {'col': '4', 'colspan': '4'})
+                            etree.SubElement(xml_group3, 'button', {'string' :'Add Page','icon': "gtk-new", 'type' :'object','name':"action_new_page", 'context' : tools.ustr(context)})
+                            etree.SubElement(xml_group3, 'button', {'string' :'Edit Page','icon': "gtk-edit", 'type' :'object','name':"action_edit_page", 'context' : tools.ustr(context)})
+                            etree.SubElement(xml_group3, 'button', {'string' :'Delete Page','icon': "gtk-delete", 'type' :'object','name':"action_delete_page", 'context' : tools.ustr(context)})
+                            etree.SubElement(xml_group3, 'button', {'string' :'Add Question','icon': "gtk-new", 'type' :'object','name':"action_new_question", 'context' : tools.ustr(context)})
 
-                        ans_ids = que_rec.answer_choice_ids
-                        xml_group = etree.SubElement(xml_form, 'group', {'col': '1', 'colspan': '4'})
+                        # FP Note
+                        xml_group = xml_form
 
-                        # TODO convert selection field into radio input
-                        if que_rec.type == 'multiple_choice_only_one_ans':
-                            selection = []
-                            for ans in ans_ids:
-                                selection.append((tools.ustr(ans.id), ans.answer))
-                            xml_group = etree.SubElement(xml_group, 'group', {'col': '2', 'colspan': '2'})
-                            etree.SubElement(xml_group, 'field', {'readonly':str(readonly), 'name': tools.ustr(que.id) + "_selection"})
-                            fields[tools.ustr(que.id) + "_selection"] = {'type':'selection', 'selection' :selection, 'string':"Answer"}
+                        if context.has_key('response_id') and context.get('response_id', False) \
+                             and int(context.get('response_id',0)[0]) > 0:
+                            # TODO: l10n, cleanup this code to make it readable. Or template?
+                            xml_group = etree.SubElement(xml_form, 'group', {'col': '40', 'colspan': '4'})
+                            record = sur_response_obj.browse(cr, uid, context['response_id'][context['response_no']])
+                            etree.SubElement(xml_group, 'label', {'string': to_xml(tools.ustr('Answer Of :- ' + record.partner_id.name + ',  Date :- ' + record.date_create.split('.')[0]  )), 'align':"0.0"})
+                            etree.SubElement(xml_group, 'label', {'string': to_xml(tools.ustr(" Answer :- " + str(context.get('response_no',0) + 1) +"/" + str(len(context.get('response_id',0))) )), 'align':"0.0"})
+                            if context.get('response_no',0) > 0:
+                                etree.SubElement(xml_group, 'button', {'colspan':"1",'icon':"gtk-go-back",'name':"action_forward_previous",'string': tools.ustr("Previous Answer"),'type':"object"})
+                            if context.get('response_no',0) + 1 < len(context.get('response_id',0)):
+                                etree.SubElement(xml_group, 'button', {'colspan':"1",'icon': "gtk-go-forward", 'name':"action_forward_next",'string': tools.ustr("Next Answer") ,'type':"object",'context' : tools.ustr(context)})
 
-                        elif que_rec.type == 'multiple_choice_multiple_ans':
-                            xml_group = etree.SubElement(xml_group, 'group', {'col': '4', 'colspan': '4'})
-                            for ans in ans_ids:
-                                etree.SubElement(xml_group, 'field', {'readonly':str(readonly), 'name': tools.ustr(que.id) + "_" + tools.ustr(ans.id)})
-                                fields[tools.ustr(que.id) + "_" + tools.ustr(ans.id)] = {'type':'boolean', 'string':ans.answer}
+                        if wiz_id:
+                            fields["wizardid_" + str(wiz_id)] = {'type':'char', 'size' : 255, 'string':"", 'views':{}}
+                            etree.SubElement(xml_form, 'field', {'invisible':'1','name': "wizardid_" + str(wiz_id),'default':str(lambda *a: 0),'modifiers':'{"invisible":true}'})
 
-                        elif que_rec.type in ['matrix_of_choices_only_one_ans', 'rating_scale']:
-                            if que_rec.comment_column:
-                                col = "4"
-                                colspan = "4"
+                        if note:
+                            xml_group_note = etree.SubElement(xml_form, 'group', {'col': '1','colspan': '4'})
+                            for que_test in note.split('\n'):
+                                etree.SubElement(xml_group_note, 'label', {'string': to_xml(tools.ustr(que_test)), 'align':"0.0"})
+                        que_ids = question_ids
+                        qu_no = 0
+
+                        for que in que_ids:
+                            qu_no += 1
+                            que_rec = que_obj.browse(cr, uid, que.id, context=context)
+                            descriptive_text = ""
+                            separator_string = tools.ustr(qu_no) + "." + tools.ustr(que_rec.question)
+                            if ((context.has_key('active') and not context.get('active',False)) or not context.has_key('active')) and que_rec.is_require_answer:
+                                star = '*'
                             else:
-                               col = "2"
-                               colspan = "2"
-                            xml_group = etree.SubElement(xml_group, 'group', {'col': tools.ustr(col), 'colspan': tools.ustr(colspan)})
-                            for row in ans_ids:
-                                etree.SubElement(xml_group, 'newline')
-                                etree.SubElement(xml_group, 'field', {'readonly': str(readonly), 'name': tools.ustr(que.id) + "_selection_" + tools.ustr(row.id),'string':to_xml(tools.ustr(row.answer))})
-                                selection = [('','')]
-                                for col in que_rec.column_heading_ids:
-                                    selection.append((str(col.id), col.title))
-                                fields[tools.ustr(que.id) + "_selection_" + tools.ustr(row.id)] = {'type':'selection', 'selection' : selection, 'string': "Answer"}
+                                star = ''
+                            if context.has_key('active') and context.get('active',False) and \
+                                        context.has_key('edit'):
+                                etree.SubElement(xml_form, 'separator', {'string': star+to_xml(separator_string)})
+
+                                xml_group1 = etree.SubElement(xml_form, 'group', {'col': '2', 'colspan': '2'})
+                                context.update({'question_id' : tools.ustr(que.id),'page_number': sur_name_rec.page_no , 'transfer' : sur_name_read.transfer, 'page_id' : p_id})
+                                etree.SubElement(xml_group1, 'button', {'string':'','icon': "gtk-edit", 'type' :'object', 'name':"action_edit_question", 'context' : tools.ustr(context)})
+                                etree.SubElement(xml_group1, 'button', {'string':'','icon': "gtk-delete", 'type' :'object','name':"action_delete_question", 'context' : tools.ustr(context)})
+                            else:
+                                etree.SubElement(xml_form, 'newline')
+                                etree.SubElement(xml_form, 'separator', {'string': star+to_xml(separator_string)})
+
+                            ans_ids = que_rec.answer_choice_ids
+                            xml_group = etree.SubElement(xml_form, 'group', {'col': '1', 'colspan': '4'})
+
+                            # TODO convert selection field into radio input
+                            if que_rec.type == 'multiple_choice_only_one_ans':
+                                selection = []
+                                for ans in ans_ids:
+                                    selection.append((tools.ustr(ans.id), ans.answer))
+                                xml_group = etree.SubElement(xml_group, 'group', {'col': '2', 'colspan': '2'})
+                                etree.SubElement(xml_group, 'field', {'readonly':str(readonly), 'name': tools.ustr(que.id) + "_selection"})
+                                fields[tools.ustr(que.id) + "_selection"] = {'type':'selection', 'selection' :selection, 'string':"Answer"}
+
+                            elif que_rec.type == 'multiple_choice_multiple_ans':
+                                xml_group = etree.SubElement(xml_group, 'group', {'col': '4', 'colspan': '4'})
+                                for ans in ans_ids:
+                                    etree.SubElement(xml_group, 'field', {'readonly':str(readonly), 'name': tools.ustr(que.id) + "_" + tools.ustr(ans.id)})
+                                    fields[tools.ustr(que.id) + "_" + tools.ustr(ans.id)] = {'type':'boolean', 'string':ans.answer}
+
+                            elif que_rec.type in ['matrix_of_choices_only_one_ans', 'rating_scale']:
                                 if que_rec.comment_column:
-                                   fields[tools.ustr(que.id) + "_commentcolumn_"+tools.ustr(row.id) + "_field"] = {'type':'char', 'size' : 255, 'string':tools.ustr(que_rec.column_name), 'views':{}}
-                                   etree.SubElement(xml_group, 'field', {'readonly' :str(readonly), 'name': tools.ustr(que.id) + "_commentcolumn_"+tools.ustr(row.id)+ "_field"})
-
-                        elif que_rec.type == 'matrix_of_choices_only_multi_ans':
-                            xml_group = etree.SubElement(xml_group, 'group', {'col': str(len(que_rec.column_heading_ids) + 1), 'colspan': '4'})
-                            etree.SubElement(xml_group, 'separator', {'string': '.','colspan': '1'})
-                            for col in que_rec.column_heading_ids:
-                                etree.SubElement(xml_group, 'separator', {'string': tools.ustr(col.title),'colspan': '1'})
-                            for row in ans_ids:
-                                etree.SubElement(xml_group, 'label', {'string': to_xml(tools.ustr(row.answer)) +' :-', 'align': '0.0'})
-                                for col in que_col_head.browse(cr, uid, [head.id for head in  que_rec.column_heading_ids]):
-                                    etree.SubElement(xml_group, 'field', {'readonly' :str(readonly), 'name': tools.ustr(que.id) + "_" + tools.ustr(row.id) + "_" + tools.ustr(col.id), 'nolabel':"1"})
-                                    fields[tools.ustr(que.id) + "_" + tools.ustr(row.id)  + "_" + tools.ustr(col.id)] = {'type':'boolean', 'string': col.title}
-
-                        elif que_rec.type == 'multiple_textboxes':
-                            xml_group = etree.SubElement(xml_group, 'group', {'col': '4', 'colspan': '4'})
-                            type = "char"
-                            if que_rec.is_validation_require:
-                                if que_rec.validation_type in ['must_be_whole_number']:
-                                    type = "integer"
-                                elif que_rec.validation_type in ['must_be_decimal_number']:
-                                    type = "float"
-                                elif que_rec.validation_type in ['must_be_date']:
-                                    type = "date"
-                            for ans in ans_ids:
-                                etree.SubElement(xml_group, 'field', {'readonly': str(readonly), 'width':"300",'colspan': '1','name': tools.ustr(que.id) + "_" + tools.ustr(ans.id) + "_multi"})
-                                if type == "char" :
-                                    fields[tools.ustr(que.id) + "_" + tools.ustr(ans.id) + "_multi"] = {'type':'char', 'size':255, 'string':ans.answer}
+                                    col = "4"
+                                    colspan = "4"
                                 else:
-                                    fields[tools.ustr(que.id) + "_" + tools.ustr(ans.id) + "_multi"] = {'type': str(type), 'string':ans.answer}
+                                   col = "2"
+                                   colspan = "2"
+                                xml_group = etree.SubElement(xml_group, 'group', {'col': tools.ustr(col), 'colspan': tools.ustr(colspan)})
+                                for row in ans_ids:
+                                    etree.SubElement(xml_group, 'newline')
+                                    etree.SubElement(xml_group, 'field', {'readonly': str(readonly), 'name': tools.ustr(que.id) + "_selection_" + tools.ustr(row.id),'string':to_xml(tools.ustr(row.answer))})
+                                    selection = [('','')]
+                                    for col in que_rec.column_heading_ids:
+                                        selection.append((str(col.id), col.title))
+                                    fields[tools.ustr(que.id) + "_selection_" + tools.ustr(row.id)] = {'type':'selection', 'selection' : selection, 'string': "Answer"}
+                                    if que_rec.comment_column:
+                                       fields[tools.ustr(que.id) + "_commentcolumn_"+tools.ustr(row.id) + "_field"] = {'type':'char', 'size' : 255, 'string':tools.ustr(que_rec.column_name), 'views':{}}
+                                       etree.SubElement(xml_group, 'field', {'readonly' :str(readonly), 'name': tools.ustr(que.id) + "_commentcolumn_"+tools.ustr(row.id)+ "_field"})
 
-                        elif que_rec.type == 'numerical_textboxes':
-                            xml_group = etree.SubElement(xml_group, 'group', {'col': '4', 'colspan': '4'})
-                            for ans in ans_ids:
-                                etree.SubElement(xml_group, 'field', {'readonly': str(readonly), 'width':"300",'colspan': '1','name': tools.ustr(que.id) + "_" + tools.ustr(ans.id) + "_numeric"})
-                                fields[tools.ustr(que.id) + "_" + tools.ustr(ans.id) + "_numeric"] = {'type':'integer', 'string':ans.answer}
-
-                        elif que_rec.type == 'date':
-                            xml_group = etree.SubElement(xml_group, 'group', {'col': '4', 'colspan': '4'})
-                            for ans in ans_ids:
-                                etree.SubElement(xml_group, 'field', {'readonly': str(readonly), 'width':"300",'colspan': '1','name': tools.ustr(que.id) + "_" + tools.ustr(ans.id)})
-                                fields[tools.ustr(que.id) + "_" + tools.ustr(ans.id)] = {'type':'date', 'string':ans.answer}
-
-                        elif que_rec.type == 'date_and_time':
-                            xml_group = etree.SubElement(xml_group, 'group', {'col': '4', 'colspan': '4'})
-                            for ans in ans_ids:
-                                etree.SubElement(xml_group, 'field', {'readonly': str(readonly), 'width':"300",'colspan': '1','name': tools.ustr(que.id) + "_" + tools.ustr(ans.id)})
-                                fields[tools.ustr(que.id) + "_" + tools.ustr(ans.id)] = {'type':'datetime', 'string':ans.answer}
-
-                        elif que_rec.type == 'descriptive_text':
-                            if que_rec.descriptive_text:
-                                for que_test in que_rec.descriptive_text.split('\n'):
-                                    etree.SubElement(xml_group, 'label', {'string': to_xml(tools.ustr(que_test)), 'align':"0.0"})
-
-                        elif que_rec.type == 'single_textbox':
-                            etree.SubElement(xml_group, 'field', {'readonly' :str(readonly), 'name': tools.ustr(que.id) + "_single", 'nolabel':"1" ,'colspan':"4"})
-                            fields[tools.ustr(que.id) + "_single"] = {'type':'char', 'size': 255, 'string':"single_textbox", 'views':{}}
-
-                        elif que_rec.type == 'comment':
-                            etree.SubElement(xml_group, 'field', {'readonly' :str(readonly), 'name': tools.ustr(que.id) + "_comment", 'nolabel':"1" ,'colspan':"4"})
-                            fields[tools.ustr(que.id) + "_comment"] = {'type':'text', 'string':"Comment/Eassy Box", 'views':{}}
-
-                        elif que_rec.type == 'table':
-                            xml_group = etree.SubElement(xml_group, 'group', {'col': str(len(que_rec.column_heading_ids)), 'colspan': '4'})
-                            for col in que_rec.column_heading_ids:
-                                etree.SubElement(xml_group, 'separator', {'string': tools.ustr(col.title),'colspan': '1'})
-                            for row in range(0,que_rec.no_of_rows):
+                            elif que_rec.type == 'matrix_of_choices_only_multi_ans':
+                                xml_group = etree.SubElement(xml_group, 'group', {'col': str(len(que_rec.column_heading_ids) + 1), 'colspan': '4'})
+                                etree.SubElement(xml_group, 'separator', {'string': '.','colspan': '1'})
                                 for col in que_rec.column_heading_ids:
-                                    etree.SubElement(xml_group, 'field', {'readonly' :str(readonly), 'name': tools.ustr(que.id) + "_table_" + tools.ustr(col.id) +"_"+ tools.ustr(row), 'nolabel':"1"})
-                                    fields[tools.ustr(que.id) + "_table_" + tools.ustr(col.id) +"_"+ tools.ustr(row)] = {'type':'char','size':255,'views':{}}
+                                    etree.SubElement(xml_group, 'separator', {'string': tools.ustr(col.title),'colspan': '1'})
+                                for row in ans_ids:
+                                    etree.SubElement(xml_group, 'label', {'string': to_xml(tools.ustr(row.answer)) +' :-', 'align': '0.0'})
+                                    for col in que_col_head.browse(cr, uid, [head.id for head in  que_rec.column_heading_ids]):
+                                        etree.SubElement(xml_group, 'field', {'readonly' :str(readonly), 'name': tools.ustr(que.id) + "_" + tools.ustr(row.id) + "_" + tools.ustr(col.id), 'nolabel':"1"})
+                                        fields[tools.ustr(que.id) + "_" + tools.ustr(row.id)  + "_" + tools.ustr(col.id)] = {'type':'boolean', 'string': col.title}
 
-                        elif que_rec.type == 'multiple_textboxes_diff_type':
-                            xml_group = etree.SubElement(xml_group, 'group', {'col': '4', 'colspan': '4'})
-                            for ans in ans_ids:
-                                if ans.type == "email" :
-                                    fields[tools.ustr(que.id) + "_" + tools.ustr(ans.id) + "_multi"] = {'type':'char', 'size':255, 'string':ans.answer}
-                                    etree.SubElement(xml_group, 'field', {'readonly': str(readonly), 'widget':'email','width':"300",'colspan': '1','name': tools.ustr(que.id) + "_" + tools.ustr(ans.id) + "_multi"})
-                                else:
+                            elif que_rec.type == 'multiple_textboxes':
+                                xml_group = etree.SubElement(xml_group, 'group', {'col': '4', 'colspan': '4'})
+                                type = "char"
+                                if que_rec.is_validation_require:
+                                    if que_rec.validation_type in ['must_be_whole_number']:
+                                        type = "integer"
+                                    elif que_rec.validation_type in ['must_be_decimal_number']:
+                                        type = "float"
+                                    elif que_rec.validation_type in ['must_be_date']:
+                                        type = "date"
+                                for ans in ans_ids:
                                     etree.SubElement(xml_group, 'field', {'readonly': str(readonly), 'width':"300",'colspan': '1','name': tools.ustr(que.id) + "_" + tools.ustr(ans.id) + "_multi"})
-                                    if ans.type == "char" :
+                                    if type == "char" :
                                         fields[tools.ustr(que.id) + "_" + tools.ustr(ans.id) + "_multi"] = {'type':'char', 'size':255, 'string':ans.answer}
-                                    elif ans.type in ['integer','float','date','datetime']:
-                                        fields[tools.ustr(que.id) + "_" + tools.ustr(ans.id) + "_multi"] = {'type': str(ans.type), 'string':ans.answer}
                                     else:
-                                        selection = []
-                                        if ans.menu_choice:
-                                            for item in ans.menu_choice.split('\n'):
-                                                if item and not item.strip() == '': selection.append((item ,item))
-                                        fields[tools.ustr(que.id) + "_" + tools.ustr(ans.id) + "_multi"] = {'type':'selection', 'selection' : selection, 'string':ans.answer}
+                                        fields[tools.ustr(que.id) + "_" + tools.ustr(ans.id) + "_multi"] = {'type': str(type), 'string':ans.answer}
 
-                        if que_rec.type in ['multiple_choice_only_one_ans', 'multiple_choice_multiple_ans', 'matrix_of_choices_only_one_ans', 'matrix_of_choices_only_multi_ans', 'rating_scale'] and que_rec.is_comment_require:
-                            if que_rec.type in ['multiple_choice_only_one_ans', 'multiple_choice_multiple_ans'] and que_rec.comment_field_type in ['char','text'] and que_rec.make_comment_field:
-                                etree.SubElement(xml_group, 'field', {'readonly' :str(readonly), 'name': tools.ustr(que.id) + "_otherfield", 'colspan':"4"})
-                                fields[tools.ustr(que.id) + "_otherfield"] = {'type':'boolean', 'string':que_rec.comment_label, 'views':{}}
-                                if que_rec.comment_field_type == 'char':
-                                    etree.SubElement(xml_group, 'field', {'readonly' :str(readonly), 'name': tools.ustr(que.id) + "_other", 'nolabel':"1" ,'colspan':"4"})
-                                    fields[tools.ustr(que.id) + "_other"] = {'type': 'char', 'string': '', 'size':255, 'views':{}}
-                                elif que_rec.comment_field_type == 'text':
-                                    etree.SubElement(xml_group, 'field', {'readonly' :str(readonly), 'name': tools.ustr(que.id) + "_other", 'nolabel':"1" ,'colspan':"4"})
-                                    fields[tools.ustr(que.id) + "_other"] = {'type': 'text', 'string': '', 'views':{}}
-                            else:
-                                if que_rec.comment_field_type == 'char':
-                                    etree.SubElement(xml_group, 'label', {'string': to_xml(tools.ustr(que_rec.comment_label)),'colspan':"4"})
-                                    etree.SubElement(xml_group, 'field', {'readonly' :str(readonly), 'name': tools.ustr(que.id) + "_other", 'nolabel':"1" ,'colspan':"4"})
-                                    fields[tools.ustr(que.id) + "_other"] = {'type': 'char', 'string': '', 'size':255, 'views':{}}
-                                elif que_rec.comment_field_type == 'text':
-                                    etree.SubElement(xml_group, 'label', {'string': to_xml(tools.ustr(que_rec.comment_label)),'colspan':"4"})
-                                    etree.SubElement(xml_group, 'field', {'readonly' :str(readonly), 'name': tools.ustr(que.id) + "_other", 'nolabel':"1" ,'colspan':"4"})
-                                    fields[tools.ustr(que.id) + "_other"] = {'type': 'text', 'string': '', 'views':{}}
+                            elif que_rec.type == 'numerical_textboxes':
+                                xml_group = etree.SubElement(xml_group, 'group', {'col': '4', 'colspan': '4'})
+                                for ans in ans_ids:
+                                    etree.SubElement(xml_group, 'field', {'readonly': str(readonly), 'width':"300",'colspan': '1','name': tools.ustr(que.id) + "_" + tools.ustr(ans.id) + "_numeric"})
+                                    fields[tools.ustr(que.id) + "_" + tools.ustr(ans.id) + "_numeric"] = {'type':'integer', 'string':ans.answer}
 
-                    xml_footer = etree.SubElement(xml_form, 'footer', {'col': '8', 'colspan': '1', 'width':"100%"})
+                            elif que_rec.type == 'date':
+                                xml_group = etree.SubElement(xml_group, 'group', {'col': '4', 'colspan': '4'})
+                                for ans in ans_ids:
+                                    etree.SubElement(xml_group, 'field', {'readonly': str(readonly), 'width':"300",'colspan': '1','name': tools.ustr(que.id) + "_" + tools.ustr(ans.id)})
+                                    fields[tools.ustr(que.id) + "_" + tools.ustr(ans.id)] = {'type':'date', 'string':ans.answer}
 
-                    if pre_button:
-                        etree.SubElement(xml_footer, 'label', {'string': ""})
-                        etree.SubElement(xml_footer, 'button', {'name':"action_previous",'string':"Previous",'type':"object"})
-                    but_string = "Next"
-                    if int(page_number) + 1 == total_pages:
-                        but_string = "Done"
-                    if context.has_key('active') and context.get('active',False) and int(page_number) + 1 == total_pages and context.has_key('response_id') and context.has_key('response_no') and  context.get('response_no',0) + 1 == len(context.get('response_id',0)):
-                        etree.SubElement(xml_footer, 'label', {'string': ""})
-                        etree.SubElement(xml_footer, 'button', {'special' : 'cancel','string': tools.ustr("Done") ,'context' : tools.ustr(context), 'class':"oe_highlight"})
-                    elif context.has_key('active') and context.get('active', False) and int(page_number) + 1 == total_pages and context.has_key('response_id'):
-                        etree.SubElement(xml_footer, 'label', {'string': ""})
-                        etree.SubElement(xml_footer, 'button', {'name':"action_forward_next",'string': tools.ustr("Next Answer") ,'type':"object",'context' : tools.ustr(context), 'class':"oe_highlight"})
-                    elif context.has_key('active') and context.get('active',False) and int(page_number) + 1 == total_pages:
-                        etree.SubElement(xml_footer, 'label', {'string': ""})
-                        etree.SubElement(xml_footer, 'button', {'special': "cancel", 'string' : 'Done', 'context' : tools.ustr(context), 'class':"oe_highlight"})
+                            elif que_rec.type == 'date_and_time':
+                                xml_group = etree.SubElement(xml_group, 'group', {'col': '4', 'colspan': '4'})
+                                for ans in ans_ids:
+                                    etree.SubElement(xml_group, 'field', {'readonly': str(readonly), 'width':"300",'colspan': '1','name': tools.ustr(que.id) + "_" + tools.ustr(ans.id)})
+                                    fields[tools.ustr(que.id) + "_" + tools.ustr(ans.id)] = {'type':'datetime', 'string':ans.answer}
+
+                            elif que_rec.type == 'descriptive_text':
+                                if que_rec.descriptive_text:
+                                    for que_test in que_rec.descriptive_text.split('\n'):
+                                        etree.SubElement(xml_group, 'label', {'string': to_xml(tools.ustr(que_test)), 'align':"0.0"})
+
+                            elif que_rec.type == 'single_textbox':
+                                etree.SubElement(xml_group, 'field', {'readonly' :str(readonly), 'name': tools.ustr(que.id) + "_single", 'nolabel':"1" ,'colspan':"4"})
+                                fields[tools.ustr(que.id) + "_single"] = {'type':'char', 'size': 255, 'string':"single_textbox", 'views':{}}
+
+                            elif que_rec.type == 'comment':
+                                etree.SubElement(xml_group, 'field', {'readonly' :str(readonly), 'name': tools.ustr(que.id) + "_comment", 'nolabel':"1" ,'colspan':"4"})
+                                fields[tools.ustr(que.id) + "_comment"] = {'type':'text', 'string':"Comment/Eassy Box", 'views':{}}
+
+                            elif que_rec.type == 'table':
+                                xml_group = etree.SubElement(xml_group, 'group', {'col': str(len(que_rec.column_heading_ids)), 'colspan': '4'})
+                                for col in que_rec.column_heading_ids:
+                                    etree.SubElement(xml_group, 'separator', {'string': tools.ustr(col.title),'colspan': '1'})
+                                for row in range(0,que_rec.no_of_rows):
+                                    for col in que_rec.column_heading_ids:
+                                        etree.SubElement(xml_group, 'field', {'readonly' :str(readonly), 'name': tools.ustr(que.id) + "_table_" + tools.ustr(col.id) +"_"+ tools.ustr(row), 'nolabel':"1"})
+                                        fields[tools.ustr(que.id) + "_table_" + tools.ustr(col.id) +"_"+ tools.ustr(row)] = {'type':'char','size':255,'views':{}}
+
+                            elif que_rec.type == 'multiple_textboxes_diff_type':
+                                xml_group = etree.SubElement(xml_group, 'group', {'col': '4', 'colspan': '4'})
+                                for ans in ans_ids:
+                                    if ans.type == "email" :
+                                        fields[tools.ustr(que.id) + "_" + tools.ustr(ans.id) + "_multi"] = {'type':'char', 'size':255, 'string':ans.answer}
+                                        etree.SubElement(xml_group, 'field', {'readonly': str(readonly), 'widget':'email','width':"300",'colspan': '1','name': tools.ustr(que.id) + "_" + tools.ustr(ans.id) + "_multi"})
+                                    else:
+                                        etree.SubElement(xml_group, 'field', {'readonly': str(readonly), 'width':"300",'colspan': '1','name': tools.ustr(que.id) + "_" + tools.ustr(ans.id) + "_multi"})
+                                        if ans.type == "char" :
+                                            fields[tools.ustr(que.id) + "_" + tools.ustr(ans.id) + "_multi"] = {'type':'char', 'size':255, 'string':ans.answer}
+                                        elif ans.type in ['integer','float','date','datetime']:
+                                            fields[tools.ustr(que.id) + "_" + tools.ustr(ans.id) + "_multi"] = {'type': str(ans.type), 'string':ans.answer}
+                                        else:
+                                            selection = []
+                                            if ans.menu_choice:
+                                                for item in ans.menu_choice.split('\n'):
+                                                    if item and not item.strip() == '': selection.append((item ,item))
+                                            fields[tools.ustr(que.id) + "_" + tools.ustr(ans.id) + "_multi"] = {'type':'selection', 'selection' : selection, 'string':ans.answer}
+
+                            if que_rec.type in ['multiple_choice_only_one_ans', 'multiple_choice_multiple_ans', 'matrix_of_choices_only_one_ans', 'matrix_of_choices_only_multi_ans', 'rating_scale'] and que_rec.is_comment_require:
+                                if que_rec.type in ['multiple_choice_only_one_ans', 'multiple_choice_multiple_ans'] and que_rec.comment_field_type in ['char','text'] and que_rec.make_comment_field:
+                                    etree.SubElement(xml_group, 'field', {'readonly' :str(readonly), 'name': tools.ustr(que.id) + "_otherfield", 'colspan':"4"})
+                                    fields[tools.ustr(que.id) + "_otherfield"] = {'type':'boolean', 'string':que_rec.comment_label, 'views':{}}
+                                    if que_rec.comment_field_type == 'char':
+                                        etree.SubElement(xml_group, 'field', {'readonly' :str(readonly), 'name': tools.ustr(que.id) + "_other", 'nolabel':"1" ,'colspan':"4"})
+                                        fields[tools.ustr(que.id) + "_other"] = {'type': 'char', 'string': '', 'size':255, 'views':{}}
+                                    elif que_rec.comment_field_type == 'text':
+                                        etree.SubElement(xml_group, 'field', {'readonly' :str(readonly), 'name': tools.ustr(que.id) + "_other", 'nolabel':"1" ,'colspan':"4"})
+                                        fields[tools.ustr(que.id) + "_other"] = {'type': 'text', 'string': '', 'views':{}}
+                                else:
+                                    if que_rec.comment_field_type == 'char':
+                                        etree.SubElement(xml_group, 'label', {'string': to_xml(tools.ustr(que_rec.comment_label)),'colspan':"4"})
+                                        etree.SubElement(xml_group, 'field', {'readonly' :str(readonly), 'name': tools.ustr(que.id) + "_other", 'nolabel':"1" ,'colspan':"4"})
+                                        fields[tools.ustr(que.id) + "_other"] = {'type': 'char', 'string': '', 'size':255, 'views':{}}
+                                    elif que_rec.comment_field_type == 'text':
+                                        etree.SubElement(xml_group, 'label', {'string': to_xml(tools.ustr(que_rec.comment_label)),'colspan':"4"})
+                                        etree.SubElement(xml_group, 'field', {'readonly' :str(readonly), 'name': tools.ustr(que.id) + "_other", 'nolabel':"1" ,'colspan':"4"})
+                                        fields[tools.ustr(que.id) + "_other"] = {'type': 'text', 'string': '', 'views':{}}
+
+                        xml_footer = etree.SubElement(xml_form, 'footer', {'col': '8', 'colspan': '1', 'width':"100%"})
+
+                        if pre_button:
+                            etree.SubElement(xml_footer, 'label', {'string': ""})
+                            etree.SubElement(xml_footer, 'button', {'name':"action_previous",'string':"Previous",'type':"object"})
+                        but_string = "Next"
+                        if int(page_number) + 1 == total_pages:
+                            but_string = "Done"
+                        if context.has_key('active') and context.get('active',False) and int(page_number) + 1 == total_pages and context.has_key('response_id') and context.has_key('response_no') and  context.get('response_no',0) + 1 == len(context.get('response_id',0)):
+                            etree.SubElement(xml_footer, 'label', {'string': ""})
+                            etree.SubElement(xml_footer, 'button', {'special' : 'cancel','string': tools.ustr("Done") ,'context' : tools.ustr(context), 'class':"oe_highlight"})
+                        elif context.has_key('active') and context.get('active', False) and int(page_number) + 1 == total_pages and context.has_key('response_id'):
+                            etree.SubElement(xml_footer, 'label', {'string': ""})
+                            etree.SubElement(xml_footer, 'button', {'name':"action_forward_next",'string': tools.ustr("Next Answer") ,'type':"object",'context' : tools.ustr(context), 'class':"oe_highlight"})
+                        elif context.has_key('active') and context.get('active',False) and int(page_number) + 1 == total_pages:
+                            etree.SubElement(xml_footer, 'label', {'string': ""})
+                            etree.SubElement(xml_footer, 'button', {'special': "cancel", 'string' : 'Done', 'context' : tools.ustr(context), 'class':"oe_highlight"})
+                        else:
+                            etree.SubElement(xml_footer, 'label', {'string': ""})
+                            etree.SubElement(xml_footer, 'button', {'name':"action_next",'string': tools.ustr(but_string) ,'type':"object",'context' : tools.ustr(context), 'class':"oe_highlight"})
+                        if context.get('ir_actions_act_window_target', None):
+                            etree.SubElement(xml_footer, 'label', {'string': "or"})
+                            etree.SubElement(xml_footer, 'button', {'special': "cancel",'string':"Exit",'class':"oe_link"})
+                        etree.SubElement(xml_footer, 'label', {'string': tools.ustr(page_number+ 1) + "/" + tools.ustr(total_pages), 'class':"oe_survey_title_page oe_right"})
+
+                        root = xml_form.getroottree()
+                        result['arch'] = etree.tostring(root)
+                        result['fields'] = fields
+                        result['context'] = context
+
+                    # survey complete
                     else:
-                        etree.SubElement(xml_footer, 'label', {'string': ""})
-                        etree.SubElement(xml_footer, 'button', {'name':"action_next",'string': tools.ustr(but_string) ,'type':"object",'context' : tools.ustr(context), 'class':"oe_highlight"})
-                    if context.get('ir_actions_act_window_target', None):
-                        etree.SubElement(xml_footer, 'label', {'string': "or"})
-                        etree.SubElement(xml_footer, 'button', {'special': "cancel",'string':"Exit",'class':"oe_link"})
-                    etree.SubElement(xml_footer, 'label', {'string': tools.ustr(page_number+ 1) + "/" + tools.ustr(total_pages), 'class':"oe_survey_title_page oe_right"})
+                        survey_obj.write(cr, uid, survey_id, {'tot_comp_survey' : sur_rec.tot_comp_survey + 1})
+                        sur_response_obj.write(cr, uid, [sur_name_read.response], {'state' : 'done'})
 
-                    root = xml_form.getroottree()
-                    result['arch'] = etree.tostring(root)
-                    result['fields'] = fields
-                    result['context'] = context
+                        if sur_rec.send_response:
+                            survey_data = survey_obj.browse(cr, uid, survey_id)
+                            response_id = surv_name_wiz.read(cr, uid, context.get('sur_name_id',False))['response']
+                            report = self.create_report(cr, uid, [survey_id], 'report.survey.browse.response', survey_data.title,context)
+                            attachments = {}
+                            pdf_filename = addons.get_module_resource('survey', 'report') + survey_data.title + ".pdf"
+                            if os.path.exists(pdf_filename):
+                                file = open(pdf_filename)
+                                file_data = ""
+                                while 1:
+                                    line = file.readline()
+                                    file_data += line
+                                    if not line:
+                                        break
+
+                                attachments[survey_data.title + ".pdf"] = file_data
+                                file.close()
+                                os.remove(addons.get_module_resource('survey', 'report') + survey_data.title + ".pdf")
+                            context.update({'response_id':response_id})
+                            partner_email = user_browse.email
+                            resp_email = survey_data.responsible_id and survey_data.responsible_id.email or False
+
+                            if partner_email and resp_email:
+                                partner_name = partner_obj.browse(cr, uid, uid, context=context).name
+                                mail = "Hello " + survey_data.responsible_id.name + ",\n\n " + str(partner_name) + " has given the Response Of " + survey_data.title + " Survey.\nThe Response has been attached herewith.\n\n Thanks."
+                                vals = {'state': 'outgoing',
+                                        'subject': "Survey Answer Of " + partner_name,
+                                        'body_html': '<pre>%s</pre>' % mail,
+                                        'email_to': [resp_email],
+                                        'email_from': partner_email}
+                                if attachments:
+                                    vals['attachment_ids'] = [(0,0,{'name': a_name,
+                                                                    'datas_fname': a_name,
+                                                                    'datas': str(a_content).encode('base64')})
+                                                                    for a_name, a_content in attachments.items()]
+                                self.pool.get('mail.mail').create(cr, uid, vals, context=context)
+
+                        xml_form = etree.Element('form', {'string': _('Complete Survey Answer')})
+                        xml_footer = etree.SubElement(xml_form, 'footer', {'col': '6', 'colspan': '4' ,'class': 'oe_survey_title_height'})
+
+                        etree.SubElement(xml_form, 'separator', {'string': 'Survey Completed', 'colspan': "4"})
+                        etree.SubElement(xml_form, 'label', {'string': 'Thanks for your Answer'})
+                        etree.SubElement(xml_form, 'newline')
+                        # etree.SubElement(xml_footer, 'button', {'special':"cancel",'string':"OK",'colspan':"2",'class':'oe_highlight'})
+                        root = xml_form.getroottree()
+                        result['arch'] = etree.tostring(root)
+                        result['fields'] = {}
+                        result['context'] = context
+                
+                # don't have acces to this survey
                 else:
-                    survey_obj.write(cr, uid, survey_id, {'tot_comp_survey' : sur_rec.tot_comp_survey + 1})
-                    sur_response_obj.write(cr, uid, [sur_name_read.response], {'state' : 'done'})
-
-                    # mark the survey request as done; call 'survey_req_done' on its actual model
-                    survey_req_obj = self.pool.get(context.get('active_model'))
-                    if survey_req_obj and hasattr(survey_req_obj, 'survey_req_done'): 
-                        survey_req_obj.survey_req_done(cr, uid, context.get('active_ids', []), context=context)
-
-                    if sur_rec.send_response:
-                        survey_data = survey_obj.browse(cr, uid, survey_id)
-                        response_id = surv_name_wiz.read(cr, uid, context.get('sur_name_id',False))['response']
-                        report = self.create_report(cr, uid, [survey_id], 'report.survey.browse.response', survey_data.title,context)
-                        attachments = {}
-                        pdf_filename = addons.get_module_resource('survey', 'report') + survey_data.title + ".pdf"
-                        if os.path.exists(pdf_filename):
-                            file = open(pdf_filename)
-                            file_data = ""
-                            while 1:
-                                line = file.readline()
-                                file_data += line
-                                if not line:
-                                    break
-
-                            attachments[survey_data.title + ".pdf"] = file_data
-                            file.close()
-                            os.remove(addons.get_module_resource('survey', 'report') + survey_data.title + ".pdf")
-                        context.update({'response_id':response_id})
-                        partner_email = user_obj.browse(cr, uid, uid, context).email
-                        resp_email = survey_data.responsible_id and survey_data.responsible_id.email or False
-
-                        if partner_email and resp_email:
-                            partner_name = partner_obj.browse(cr, uid, uid, context=context).name
-                            mail = "Hello " + survey_data.responsible_id.name + ",\n\n " + str(partner_name) + " has given the Response Of " + survey_data.title + " Survey.\nThe Response has been attached herewith.\n\n Thanks."
-                            vals = {'state': 'outgoing',
-                                    'subject': "Survey Answer Of " + partner_name,
-                                    'body_html': '<pre>%s</pre>' % mail,
-                                    'email_to': [resp_email],
-                                    'email_from': partner_email}
-                            if attachments:
-                                vals['attachment_ids'] = [(0,0,{'name': a_name,
-                                                                'datas_fname': a_name,
-                                                                'datas': str(a_content).encode('base64')})
-                                                                for a_name, a_content in attachments.items()]
-                            self.pool.get('mail.mail').create(cr, uid, vals, context=context)
-
-                    xml_form = etree.Element('form', {'string': _('Complete Survey Answer')})
-                    xml_footer = etree.SubElement(xml_form, 'footer', {'col': '6', 'colspan': '4' ,'class': 'oe_survey_title_height'})
-
-                    etree.SubElement(xml_form, 'separator', {'string': 'Survey Completed', 'colspan': "4"})
-                    etree.SubElement(xml_form, 'label', {'string': 'Thanks for your Answer'})
+                    xml_form = etree.Element('form', {'string': _('No access to this survey')})
+                    etree.SubElement(xml_form, 'separator', {'string': sur_rec.title, 'colspan': "4"})
+                    etree.SubElement(xml_form, 'label', {'string': "You don't have access to this survey."})
                     etree.SubElement(xml_form, 'newline')
-                    etree.SubElement(xml_footer, 'button', {'special':"cancel",'string':"OK",'colspan':"2",'class':'oe_highlight'})
+                    etree.SubElement(xml_form, 'label', {'string': "The access you have not been given or the deadline has passed."})
                     root = xml_form.getroottree()
                     result['arch'] = etree.tostring(root)
                     result['fields'] = {}
                     result['context'] = context
+
         return result
 
     def create_report(self, cr, uid, res_ids, report_name=False, file_name=False, context=None):

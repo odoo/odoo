@@ -668,17 +668,18 @@ class survey_response(osv.osv):
     _name = "survey.response"
     _rec_name = 'date_create'
     _columns = {
+        'date_deadline': fields.date("Deadline date", help="Date by which the person can respond to the survey"),
         'survey_id' : fields.many2one('survey', 'Survey', required=1, ondelete='cascade'),
         'date_create' : fields.datetime('Create Date', required=1),
-        'partner_id' : fields.many2one('res.partner', 'Partner'),
-        'response_type' : fields.selection([('manually', 'Manually'), ('link', 'Link')], \
-                                    'Answer Type', required=1, readonly=1),
+        'response_type' : fields.selection([('manually', 'Manually'), ('link', 'Link')], 'Answer Type', required=1, readonly=1),
         'question_ids' : fields.one2many('survey.response.line', 'response_id', 'Answer'),
-        'state' : fields.selection([('done', 'Finished '),('skip', 'Not Finished')], \
-                            'Status', readonly=True),
+        'state' : fields.selection([('new', 'Not Started'),('done', 'Finished'),('skip', 'Not Finished')], 'Status', readonly=True),
+        'token': fields.char("Indentification token"),
+        'partner_id' : fields.many2one('res.partner', 'Partner'),
+        'email': fields.char("Email", size=64),
     }
     _defaults = {
-        'state' : lambda * a: "skip",
+        'state' : lambda * a: "new",
         'response_type' : lambda * a: "manually",
     }
 
