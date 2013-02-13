@@ -118,7 +118,8 @@
   I completly pay the invoice of 200 CAD
 -
   !python {model: account.voucher}: |
-    import netsvc, time
+    import time
+    from openerp import netsvc
     vals = {}
     voucher_id = self.browse(cr, uid, ref('account_voucher_1_case4'))
     data = []
@@ -141,7 +142,7 @@
   I confirm the voucher
 -
   !python {model: account.voucher}: |
-    import netsvc
+    from openerp import netsvc
     voucher = self.search(cr, uid, [('name', '=', 'First payment: Case 4'), ('partner_id', '=', ref('base.res_partner_19'))])
     self.signal_proforma_voucher(cr, uid, voucher)
 -

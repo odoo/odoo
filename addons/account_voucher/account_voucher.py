@@ -956,7 +956,9 @@ class account_voucher(osv.osv):
             if not voucher_brw.journal_id.sequence_id.active:
                 raise osv.except_osv(_('Configuration Error !'),
                     _('Please activate the sequence of selected journal !'))
-            name = seq_obj.next_by_id(cr, uid, voucher_brw.journal_id.sequence_id.id, context=context)
+            c = dict(context)
+            c.update({'fiscalyear_id': voucher_brw.period_id.fiscalyear_id.id})
+            name = seq_obj.next_by_id(cr, uid, voucher_brw.journal_id.sequence_id.id, context=c)
         else:
             raise osv.except_osv(_('Error!'),
                         _('Please define a sequence on the journal.'))
@@ -971,7 +973,7 @@ class account_voucher(osv.osv):
             'narration': voucher_brw.narration,
             'date': voucher_brw.date,
             'ref': ref,
-            'period_id': voucher_brw.period_id and voucher_brw.period_id.id or False
+            'period_id': voucher_brw.period_id.id,
         }
         return move
 

@@ -106,6 +106,7 @@ class crm_helpdesk(base_state, base_stage, osv.osv):
             'email_from': msg.get('from'),
             'email_cc': msg.get('cc'),
             'user_id': False,
+            'partner_id': msg.get('author_id', False),
         }
         defaults.update(custom_values)
         return super(crm_helpdesk,self).message_new(cr, uid, msg, custom_values=defaults, context=context)

@@ -102,7 +102,7 @@ class procurement_order(osv.osv):
             readonly=True, required=True, help="If you encode manually a Procurement, you probably want to use" \
             " a make to order method."),
         'note': fields.text('Note'),
-        'message': fields.char('Latest error', size=124, help="Exception occurred while computing procurement orders."),
+        'message': fields.char('Latest error', help="Exception occurred while computing procurement orders."),
         'state': fields.selection([
             ('draft','Draft'),
             ('cancel','Cancelled'),
@@ -366,9 +366,21 @@ class procurement_order(osv.osv):
 
                 if message:
                     message = _("Procurement '%s' is in exception: ") % (procurement.name) + message
-                    cr.execute('update procurement_order set message=%s where id=%s', (message, procurement.id))
+                    #temporary context passed in write to prevent an infinite loop
+                    ctx_wkf = dict(context or {})
+                    ctx_wkf['workflow.trg_write.%s' % self._name] = False
+                    self.write(cr, uid, [procurement.id], {'message': message},context=ctx_wkf)
                     self.message_post(cr, uid, [procurement.id], body=message, context=context)
         return ok
+
+    def _workflow_trigger(self, cr, uid, ids, trigger, context=None):
+        """ Don't trigger workflow for the element specified in trigger
+        """
+        wkf_op_key = 'workflow.%s.%s' % (trigger, self._name)
+        if context and not context.get(wkf_op_key, True):
+            # make sure we don't have a trigger loop while processing triggers
+            return 
+        return super(procurement_order,self)._workflow_trigger(cr, uid, ids, trigger, context=context)
 
     def action_produce_assign_service(self, cr, uid, ids, context=None):
         """ Changes procurement state to Running.
