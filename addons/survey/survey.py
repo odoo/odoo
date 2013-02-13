@@ -157,6 +157,7 @@ class survey(osv.osv):
             'view_mode': 'form',
             'res_model': 'survey.question.wiz',
             'type': 'ir.actions.act_window',
+            'target': 'inline',
             'name': name,
             'context': context
         }
@@ -175,7 +176,7 @@ class survey(osv.osv):
             'view_mode': 'form',
             'res_model': 'survey.question.wiz',
             'type': 'ir.actions.act_window',
-            'target': 'new',
+            'target': 'inline',
             'name': name,
             'context': context
         }
@@ -210,10 +211,6 @@ class survey(osv.osv):
             template_id = ir_model_data.get_object_reference(cr, uid, 'survey', 'email_template_survey')[1]
         except ValueError:
             template_id = False
-        try:
-            compose_form_id = ir_model_data.get_object_reference(cr, uid, 'mail', 'email_compose_message_wizard_form')[1]
-        except ValueError:
-            compose_form_id = False 
         ctx = dict(context)
 
         ctx.update({
@@ -228,9 +225,7 @@ class survey(osv.osv):
             'type': 'ir.actions.act_window',
             'view_type': 'form',
             'view_mode': 'form',
-            'res_model': 'mail.compose.message',
-            'views': [(compose_form_id, 'form')],
-            'view_id': compose_form_id,
+            'res_model': 'survey.mail.compose.message',
             'target': 'new',
             'context': ctx,
         }
@@ -766,12 +761,14 @@ class survey_request(osv.osv):
     _name = "survey.request"
     _order = 'date_deadline'
     _rec_name = 'date_deadline'
+
     _columns = {
         'date_deadline': fields.date("Deadline date"),
+        'token': fields.char("Indentification token"),
         'partner_id': fields.many2one("res.partner", "Partner"),
         'email': fields.char("Email", size=64),
         'survey_id': fields.many2one("survey", "Survey", required=1, ondelete='cascade'),
-        'response': fields.many2one('survey.response', 'Answer'),
+        'response_id': fields.many2one('survey.response', 'Answer'),
         'state': fields.selection([('draft','Draft'),('cancel', 'Cancelled'),('waiting_answer', 'Waiting Answer'),('done', 'Done')], 'Status', readonly=1)
     }
     _defaults = {

@@ -424,7 +424,7 @@ class survey_question_wiz(osv.osv_memory):
                             file.close()
                             os.remove(addons.get_module_resource('survey', 'report') + survey_data.title + ".pdf")
                         context.update({'response_id':response_id})
-                        partner_email = user_obj.browse(cr, uid, uid, context).partner_email.email
+                        partner_email = user_obj.browse(cr, uid, uid, context).email
                         resp_email = survey_data.responsible_id and survey_data.responsible_id.email or False
 
                         if partner_email and resp_email:
@@ -588,7 +588,7 @@ class survey_question_wiz(osv.osv_memory):
         res_ans_obj = self.pool.get('survey.response.answer')
         que_obj = self.pool.get('survey.question')
         sur_name_read = surv_name_wiz.read(cr, uid, context.get('sur_name_id',False), [])
-        partner_id = self.pool.get('res.users').browse(cr, uid, uid, context).partner_email.id
+        partner_id = self.pool.get('res.users').browse(cr, uid, uid, context).partner_id.id
         response_id =  0
 
         if not sur_name_read['response']:
@@ -1227,7 +1227,7 @@ class survey_question_wiz(osv.osv_memory):
             "view_mode": 'form',
             'res_model': 'survey.question.wiz',
             'type': 'ir.actions.act_window',
-            'target': context.get('ir_actions_act_window_target', None),
+            'target': 'inline',
             'search_view_id': search_id[0],
             'context': context
         }
@@ -1248,7 +1248,7 @@ class survey_question_wiz(osv.osv_memory):
             "view_mode": 'form',
             'res_model': 'survey.question.wiz',
             'type': 'ir.actions.act_window',
-            'target': context.get('ir_actions_act_window_target', None),
+            'target': 'inline',
             'search_view_id': search_id[0],
             'context': context
         }
