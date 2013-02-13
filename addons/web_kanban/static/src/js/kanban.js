@@ -41,7 +41,7 @@ instance.web_kanban.KanbanView = instance.web.View.extend({
         this.has_been_loaded = $.Deferred();
         this.search_domain = this.search_context = this.search_group_by = null;
         this.currently_dragging = {};
-        this.limit = options.limit || 40;
+        this.limit = options.limit || 3;
         this.add_group_mutex = new $.Mutex();
     },
     view_loading: function(r) {
@@ -636,6 +636,7 @@ instance.web_kanban.KanbanGroup = instance.web.Widget.extend({
             self.view.dataset.ids = ids.concat(self.dataset.ids);
             self.do_add_records(records);
             self.compute_cards_auto_height();
+            self.view.postprocess_m2m_tags();
             return records;
         });
     },
