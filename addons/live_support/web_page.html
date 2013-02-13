@@ -37,45 +37,25 @@
             position: absolute;
             opacity: 0;
             top: 50%;
-            left: 50%;
-            margin: -150px 0 0 -210px;
+            width: 100%;
+            margin-top: -150px;
             color: white;
             text-shadow: 0 1px 0 rgba(34, 52, 72, 0.2);
             z-index: 10;
-
-            font-size: 32px;
-            font-weight: bold;
+            text-align: center;
         }
         .main h1 {
-            position: relative;
-            left: -4px;
-            padding-bottom: 5px;
-            font-size: 64px;
-            font-weight: 700;
-            font-style: italic;
+            font-size: 54px;
         }
-        .main h1 .strong {
-            position: absolute;
-            bottom: 39px;
-            height: 21px;
-            line-height: 22px;
-            margin: -2px 0 0 10px;
-            background: white;
-            color: #aeb0cf;
-            font-size: 18px;
-            padding: 2px 6px 2px 5px;
-            -moz-box-shadow: 0 0 1px rgba(34, 52, 72, 0.2), 0 1px 0 rgba(34, 52, 72, 0.1);
-            -webkit-box-shadow: 0 0 1px rgba(34, 52, 72, 0.2), 0 1px 0 rgba(34, 52, 72, 0.1);
-            border-radius: 4px;
-            box-shadow: 0 0 1px rgba(34, 52, 72, 0.2), 0 1px 0 rgba(34, 52, 72, 0.1);
-            text-shadow: none;
+        .main div {
+            font-style: italic;
         }
     </style>
 </head>
 <body>
     <div class="main" style="opacity: 1;">
-        <h1>OpenERP<span class="strong">7.0</span></h1>
-        <div class="channel_name">{{channelName | escape}}</div>
+        <h1 class="channel_name">{{channelName | escape}}</h1>
+        <div>Live Chat Powered by <strong>OpenERP</strong>.</div>
     </div>
 </body>
 </html>

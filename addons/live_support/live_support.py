@@ -123,9 +123,9 @@ class live_support_channel(osv.osv):
         'are_you_inside': fields.function(_are_you_inside, type='boolean', string='Are you inside the matrix?', store=False),
         'script': fields.function(_script, type='text', string='Script', store=False),
         'web_page': fields.function(_web_page, type='url', string='Web Page', store=False, size="200"),
-        'button_text': fields.char(string="Button Text", size=200),
-        'input_placeholder': fields.char(string="Input Placeholder", size=200),
-        'default_message': fields.char(string="Default Message", size=200),
+        'button_text': fields.char(string="Text of the Button", size=200),
+        'input_placeholder': fields.char(string="Chat Input Placeholder", size=200),
+        'default_message': fields.char(string="Welcome Message", size=200, help="This is an automated 'welcome' message that your visitor will see when they initiate a new chat session."),
         # image: all image fields are base64 encoded and PIL-supported
         'image': fields.binary("Photo",
             help="This field holds the image used as photo for the group, limited to 1024x1024px."),
@@ -148,7 +148,7 @@ class live_support_channel(osv.osv):
     }
 
     _defaults = {
-        'button_text': "Chat with one of our collaborators",
+        'button_text': "Have a Question? Chat with us.",
         'input_placeholder': "How may I help you?",
         'default_message': '',
         'user_ids': lambda self,cr, uid, ctx={}: [uid],
