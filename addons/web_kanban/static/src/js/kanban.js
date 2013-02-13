@@ -41,7 +41,7 @@ instance.web_kanban.KanbanView = instance.web.View.extend({
         this.has_been_loaded = $.Deferred();
         this.search_domain = this.search_context = this.search_group_by = null;
         this.currently_dragging = {};
-        this.limit = options.limit || 3;
+        this.limit = options.limit || 40;
         this.add_group_mutex = new $.Mutex();
     },
     view_loading: function(r) {
