@@ -3924,7 +3924,7 @@ class BaseModel(object):
             workflow.trg_delete(uid, self._name, res_id, cr)
         return True
 
-    def trigger_workflow(self, cr, uid, ids, context=None):
+    def step_workflow(self, cr, uid, ids, context=None):
         """Reevaluate the workflow instances of the given record IDs."""
         from openerp import workflow
         for res_id in ids:
@@ -4291,7 +4291,7 @@ class BaseModel(object):
                     todo.append(id)
             self.pool.get(object)._store_set_values(cr, user, todo, fields_to_recompute, context)
 
-        self.trigger_workflow(cr, user, ids, context=context)
+        self.step_workflow(cr, user, ids, context=context)
         return True
 
     #
