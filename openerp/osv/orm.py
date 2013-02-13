@@ -5276,7 +5276,7 @@ class BaseModel(object):
         if name.startswith('signal_'):
             signal_name = name[len('signal_'):]
             assert signal_name
-            def handle_workflow_signal(cr, uid, ids):
+            def handle_workflow_signal(cr, uid, ids, context=None):
                 workflow_service = netsvc.LocalService("workflow")
                 res = {}
                 for id in ids:
