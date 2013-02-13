@@ -25,7 +25,7 @@ from functools import wraps
 import logging
 import threading
 
-from psycopg2 import IntegrityError, errorcodes
+from psycopg2 import IntegrityError, OperationalError, errorcodes
 
 import orm
 import openerp
@@ -36,7 +36,13 @@ from openerp.tools.translate import translate
 from openerp.osv.orm import MetaModel, Model, TransientModel, AbstractModel
 import openerp.exceptions
 
+import time
+import random
+
 _logger = logging.getLogger(__name__)
+
+PG_CONCURRENCY_ERRORS_TO_RETRY = (errorcodes.LOCK_NOT_AVAILABLE, errorcodes.SERIALIZATION_FAILURE, errorcodes.DEADLOCK_DETECTED)
+MAX_TRIES_ON_CONCURRENCY_FAILURE = 5
 
 # Deprecated.
 class except_osv(Exception):
@@ -117,45 +123,56 @@ class object_proxy(object):
             def _(src):
                 return tr(src, 'code')
 
-            try:
-                if pooler.get_pool(dbname)._init:
-                    raise except_osv('Database not ready', 'Currently, this database is not fully loaded and can not be used.')
-                return f(self, dbname, *args, **kwargs)
-            except orm.except_orm, inst:
-                raise except_osv(inst.name, inst.value)
-            except except_osv:
-                raise
-            except IntegrityError, inst:
-                osv_pool = pooler.get_pool(dbname)
-                for key in osv_pool._sql_error.keys():
-                    if key in inst[0]:
-                        netsvc.abort_response(1, _('Constraint Error'), 'warning',
-                                        tr(osv_pool._sql_error[key], 'sql_constraint') or inst[0])
-                if inst.pgcode in (errorcodes.NOT_NULL_VIOLATION, errorcodes.FOREIGN_KEY_VIOLATION, errorcodes.RESTRICT_VIOLATION):
-                    msg = _('The operation cannot be completed, probably due to the following:\n- deletion: you may be trying to delete a record while other records still reference it\n- creation/update: a mandatory field is not correctly set')
-                    _logger.debug("IntegrityError", exc_info=True)
-                    try:
-                        errortxt = inst.pgerror.replace('«','"').replace('»','"')
-                        if '"public".' in errortxt:
-                            context = errortxt.split('"public".')[1]
-                            model_name = table = context.split('"')[1]
-                        else:
-                            last_quote_end = errortxt.rfind('"')
-                            last_quote_begin = errortxt.rfind('"', 0, last_quote_end)
-                            model_name = table = errortxt[last_quote_begin+1:last_quote_end].strip()
-                        model = table.replace("_",".")
-                        model_obj = osv_pool.get(model)
-                        if model_obj:
-                            model_name = model_obj._description or model_obj._name
-                        msg += _('\n\n[object with reference: %s - %s]') % (model_name, model)
-                    except Exception:
-                        pass
-                    netsvc.abort_response(1, _('Integrity Error'), 'warning', msg)
-                else:
-                    netsvc.abort_response(1, _('Integrity Error'), 'warning', inst[0])
-            except Exception:
-                _logger.exception("Uncaught exception")
-                raise
+            tries = 0
+            while True:
+                try:
+                    if pooler.get_pool(dbname)._init:
+                        raise except_osv('Database not ready', 'Currently, this database is not fully loaded and can not be used.')
+                    return f(self, dbname, *args, **kwargs)
+                except OperationalError, e:
+                    # Automatically retry the typical transaction serialization errors
+                    if not e.pgcode in PG_CONCURRENCY_ERRORS_TO_RETRY or tries >= MAX_TRIES_ON_CONCURRENCY_FAILURE:
+                        self.logger.warning("%s, maximum number of tries reached" % errorcodes.lookup(e.pgcode))
+                        raise
+                    wait_time = random.uniform(0.0, 2 ** tries)
+                    tries += 1
+                    self.logger.info("%s, retrying %d/%d in %.04f sec..." % (errorcodes.lookup(e.pgcode), tries, MAX_TRIES_ON_CONCURRENCY_FAILURE, wait_time))
+                    time.sleep(wait_time)
+                except orm.except_orm, inst:
+                    raise except_osv(inst.name, inst.value)
+                except except_osv:
+                    raise
+                except IntegrityError, inst:
+                    osv_pool = pooler.get_pool(dbname)
+                    for key in osv_pool._sql_error.keys():
+                        if key in inst[0]:
+                            netsvc.abort_response(1, _('Constraint Error'), 'warning',
+                                            tr(osv_pool._sql_error[key], 'sql_constraint') or inst[0])
+                    if inst.pgcode in (errorcodes.NOT_NULL_VIOLATION, errorcodes.FOREIGN_KEY_VIOLATION, errorcodes.RESTRICT_VIOLATION):
+                        msg = _('The operation cannot be completed, probably due to the following:\n- deletion: you may be trying to delete a record while other records still reference it\n- creation/update: a mandatory field is not correctly set')
+                        _logger.debug("IntegrityError", exc_info=True)
+                        try:
+                            errortxt = inst.pgerror.replace('«','"').replace('»','"')
+                            if '"public".' in errortxt:
+                                context = errortxt.split('"public".')[1]
+                                model_name = table = context.split('"')[1]
+                            else:
+                                last_quote_end = errortxt.rfind('"')
+                                last_quote_begin = errortxt.rfind('"', 0, last_quote_end)
+                                model_name = table = errortxt[last_quote_begin+1:last_quote_end].strip()
+                            model = table.replace("_",".")
+                            model_obj = osv_pool.get(model)
+                            if model_obj:
+                                model_name = model_obj._description or model_obj._name
+                            msg += _('\n\n[object with reference: %s - %s]') % (model_name, model)
+                        except Exception:
+                            pass
+                        netsvc.abort_response(1, _('Integrity Error'), 'warning', msg)
+                    else:
+                        netsvc.abort_response(1, _('Integrity Error'), 'warning', inst[0])
+                except Exception:
+                    _logger.exception("Uncaught exception")
+                    raise
 
         return wrapper
 
