@@ -166,7 +166,7 @@ def exec_workflow_cr(cr, uid, obj, signal, *args):
     if not object:
         raise except_orm('Object Error', 'Object %s doesn\'t exist' % str(obj))
     res_id = args[0]
-    return object._workflow_signal(cr, uid, [res_id], signal)[res_id]
+    return object.signal_workflow(cr, uid, [res_id], signal)[res_id]
 
 @check
 def exec_workflow(db, uid, obj, signal, *args):
