@@ -18,7 +18,6 @@
   I again set to draft and then confirm.
 -
   !python {model: hr.holidays}: |
-     import netsvc
      self.set_to_draft(cr, uid, [ref('hr_holidays_employee1_cl')])
      self.signal_confirm(cr, uid, [ref('hr_holidays_employee1_cl')])
 -
