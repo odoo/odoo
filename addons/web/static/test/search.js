@@ -1158,3 +1158,52 @@ openerp.testing.section('search.advanced', {
     });
     // TODO: UI tests?
 });
+openerp.testing.section('search.invisible', {
+    dependencies: ['web.search'],
+    rpc: 'mock',
+    templates: true,
+}, function (test) {
+    // Invisible fields should not auto-complete
+    test('invisible-no-autocomplete', {asserts: 1}, function (instance, $fix, mock) {
+        instance.web.search.fields.add('test', 'instance.test.TestWidget');
+        instance.test = {
+            TestWidget: instance.web.search.Field.extend({
+                complete: function () {
+                    return $.when([{label: this.attrs.string}]);
+                },
+            }),
+        };
+        var fields = {
+            field0: {type: 'test', string: 'Field 0'},
+            field1: {type: 'test', string: 'Field 1'},
+        };
+        mock('ir.filters:get_filters', function () { return []; });
+        mock('test.model:fields_get', function () { return fields; });
+        mock('test.model:fields_view_get', function () {
+            return {
+                type: 'search',
+                fields: fields,
+                arch: '<search>' +
+                    '<field name="field0"/>' +
+                    '<field name="field1" modifiers="{&quot;invisible&quot;: true}"/>' +
+                '</search>'
+            };
+        });
+        var ds = new instance.web.DataSet(null, 'test.model');
+        var view = new instance.web.SearchView(null, ds, false);
+        return view.appendTo($fix)
+        .then(function () {
+            var done = $.Deferred();
+            view.complete_global_search({term: 'test'}, function (comps) {
+                done.resolve(comps);
+            });
+            return done;
+        }).then(function (completions) {
+            deepEqual(completions, [{label: 'Field 0'}],
+                      "should only complete the visible field");
+        });
+    });
+    // Invisible filters should not appear in the drawer
+    // Invisible filter groups should not appear in the drawer
+    // Group invisibility should be inherited by children
+});

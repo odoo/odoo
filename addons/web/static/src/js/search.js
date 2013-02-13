@@ -499,6 +499,7 @@ instance.web.SearchView = instance.web.Widget.extend(/** @lends instance.web.Sea
      */
     complete_global_search:  function (req, resp) {
         $.when.apply(null, _(this.inputs).chain()
+            .filter(function (input) { return input.visible(); })
             .invoke('complete', req.term)
             .value()).then(function () {
                 resp(_(_(arguments).compact()).flatten(true));
@@ -903,8 +904,8 @@ instance.web.search.Input = instance.web.search.Widget.extend( /** @lends instan
      */
     init: function (view) {
         this._super(view);
+        this.load_attrs({});
         this.view.inputs.push(this);
-        this.style = undefined;
     },
     /**
      * Fetch auto-completion values for the widget.
@@ -952,15 +953,19 @@ instance.web.search.Input = instance.web.search.Widget.extend( /** @lends instan
             "get_domain not implemented for widget " + this.attrs.type);
     },
     load_attrs: function (attrs) {
-        if (attrs.modifiers) {
-            attrs.modifiers = JSON.parse(attrs.modifiers);
-            attrs.invisible = attrs.modifiers.invisible || false;
-            if (attrs.invisible) {
-                this.style = 'display: none;'
-            }
-        }
+        attrs.modifiers = attrs.modifiers ? JSON.parse(attrs.modifiers) : {};
         this.attrs = attrs;
-    }
+    },
+    /**
+     * Returns whether the input is "visible". The default behavior is to
+     * query the ``modifiers.invisible`` flag on the input's description or
+     * view node.
+     *
+     * @returns {Boolean}
+     */
+    visible: function () {
+        return !this.attrs.modifiers.invisible;
+    },
 });
 instance.web.search.FilterGroup = instance.web.search.Input.extend(/** @lends instance.web.search.FilterGroup# */{
     template: 'SearchView.filters',
