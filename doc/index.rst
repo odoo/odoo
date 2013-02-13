@@ -17,6 +17,7 @@ OpenERP Server
    05_test_framework
    06_misc
    deployment-gunicorn
+   deployment-mod-wsgi
 
 OpenERP Command
 '''''''''''''''
@@ -36,6 +37,15 @@ OpenERP Server API
 
    orm-methods.rst
    api_models.rst
+   routing.rst
+
+Changelog
+'''''''''
+
+.. toctree::
+   :maxdepth: 1
+
+   changelog.rst
 
 Concepts
 ''''''''

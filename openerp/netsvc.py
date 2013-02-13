@@ -20,8 +20,6 @@
 #
 ##############################################################################
 
-#.apidoc title: Common Services: netsvc
-#.apidoc module-mods: member-order: bysource
 
 import errno
 import logging
@@ -29,7 +27,6 @@ import logging.handlers
 import os
 import platform
 import release
-import socket
 import sys
 import threading
 import time
@@ -48,79 +45,13 @@ import openerp
 
 _logger = logging.getLogger(__name__)
 
-
-def close_socket(sock):
-    """ Closes a socket instance cleanly
-
-    :param sock: the network socket to close
-    :type sock: socket.socket
-    """
-    try:
-        sock.shutdown(socket.SHUT_RDWR)
-    except socket.error, e:
-        # On OSX, socket shutdowns both sides if any side closes it
-        # causing an error 57 'Socket is not connected' on shutdown
-        # of the other side (or something), see
-        # http://bugs.python.org/issue4397
-        # note: stdlib fixed test, not behavior
-        if e.errno != errno.ENOTCONN or platform.system() not in ['Darwin', 'Windows']:
-            raise
-    sock.close()
-
-def abort_response(dummy_1, description, dummy_2, details):
-    # TODO Replace except_{osv,orm} with these directly.
-    raise openerp.osv.osv.except_osv(description, details)
-
-class Service(object):
-    """ Base class for Local services
-    Functionality here is trusted, no authentication.
-    Workflow engine and reports subclass this.
-    """
-    _services = {}
-    def __init__(self, name):
-        Service._services[name] = self
-        self.__name = name
-
-    @classmethod
-    def exists(cls, name):
-        return name in cls._services
-
-    @classmethod
-    def remove(cls, name):
-        if cls.exists(name):
-            cls._services.pop(name)
-
 def LocalService(name):
     # Special case for addons support, will be removed in a few days when addons
     # are updated to directly use openerp.osv.osv.service.
-    if name == 'object_proxy':
-        return openerp.osv.osv.service
+    if name == 'workflow':
+        return openerp.workflow
 
-    return Service._services[name]
-
-class ExportService(object):
-    """ Proxy for exported services.
-
-    Note that this class has no direct proxy, capable of calling
-    eservice.method(). Rather, the proxy should call
-    dispatch(method, params)
-    """
-
-    _services = {}
-    
-    def __init__(self, name):
-        ExportService._services[name] = self
-        self.__name = name
-        _logger.debug("Registered an exported service: %s" % name)
-
-    @classmethod
-    def getService(cls,name):
-        return cls._services[name]
-
-    # Dispatch a RPC call w.r.t. the method name. The dispatching
-    # w.r.t. the service (this class) is done by OpenERPDispatcher.
-    def dispatch(self, method, params):
-        raise Exception("stub dispatch at %s" % self.__name)
+    return openerp.report.interface.report_int._reports[name]
 
 BLACK, RED, GREEN, YELLOW, BLUE, MAGENTA, CYAN, WHITE, _NOTHING, DEFAULT = range(10)
 #The background is set with 40 plus the number of the color, and the foreground with 30
@@ -186,7 +117,13 @@ def init_logger():
         # Normal Handler on standard output
         handler = logging.StreamHandler(sys.stdout)
 
-    if isinstance(handler, logging.StreamHandler) and os.isatty(handler.stream.fileno()):
+    # Check that handler.stream has a fileno() method: when running OpenERP
+    # behind Apache with mod_wsgi, handler.stream will have type mod_wsgi.Log,
+    # which has no fileno() method. (mod_wsgi.Log is what is being bound to
+    # sys.stderr when the logging.StreamHandler is being constructed above.)
+    if isinstance(handler, logging.StreamHandler) \
+        and hasattr(handler.stream, 'fileno') \
+        and os.isatty(handler.stream.fileno()):
         formatter = ColoredFormatter(format)
     else:
         formatter = DBFormatter(format)
@@ -286,7 +223,17 @@ def dispatch_rpc(service_name, method, params):
 
         threading.current_thread().uid = None
         threading.current_thread().dbname = None
-        result = ExportService.getService(service_name).dispatch(method, params)
+        if service_name == 'common':
+            dispatch = openerp.service.common.dispatch
+        elif service_name == 'db':
+            dispatch = openerp.service.db.dispatch
+        elif service_name == 'object':
+            dispatch = openerp.service.model.dispatch
+        elif service_name == 'report':
+            dispatch = openerp.service.report.dispatch
+        else:
+            dispatch = openerp.service.wsgi_server.rpc_handlers.get(service_name)
+        result = dispatch(method, params)
 
         if rpc_request_flag or rpc_response_flag:
             end_time = time.time()

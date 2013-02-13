@@ -28,6 +28,7 @@ SUPERUSER_ID = 1
 import addons
 import cli
 import conf
+import http
 import loglevels
 import modules
 import netsvc
@@ -35,10 +36,8 @@ import osv
 import pooler
 import release
 import report
-import run_tests
 import service
 import sql_db
-import test
 import tools
 import workflow
 # backward compatilbility
