@@ -216,6 +216,11 @@ class RegistryManager(object):
                 del cls.registries[db_name]
                 raise
 
+            # load_modules() above can replace the registry by calling
+            # indirectly new() again (when modules have to be uninstalled).
+            # Yeah, crazy.
+            registry = cls.registries[db_name]
+
             cr = registry.db.cursor()
             try:
                 Registry.setup_multi_process_signaling(cr)

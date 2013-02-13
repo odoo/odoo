@@ -19,10 +19,6 @@
 #
 ##############################################################################
 
-from functools import wraps
-
-#.apidoc title: API Method Decorators
-
 """ These method decorators aim at managing two different API styles, namely the
     "traditional" and "record" styles.
 
@@ -71,6 +67,8 @@ from functools import wraps
         x.method(args)                          # => 'foo'
 
 """
+
+from functools import wraps
 
 
 def _wrapper(method, old_api, new_api):

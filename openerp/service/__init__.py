@@ -29,9 +29,6 @@ import threading
 import time
 
 import cron
-import netrpc_server
-import web_services
-import web_services
 import wsgi_server
 
 import openerp.modules
@@ -39,6 +36,11 @@ import openerp.netsvc
 import openerp.osv
 from openerp.release import nt_service_name
 import openerp.tools
+
+import common
+import db
+import model
+import report
 
 #.apidoc title: RPC Services
 
@@ -74,19 +76,12 @@ def start_internal():
         return
     openerp.netsvc.init_logger()
 
-    # Instantiate local services (this is a legacy design).
-    openerp.osv.osv.start_object_proxy()
-    # Export (for RPC) services.
-    web_services.start_service()
-
     load_server_wide_modules()
     start_internal_done = True
 
 def start_services():
-    """ Start all services including http, netrpc and cron """
+    """ Start all services including http, and cron """
     start_internal()
-    # Initialize the NETRPC server.
-    netrpc_server.start_service()
     # Start the WSGI server.
     wsgi_server.start_service()
     # Start the main cron thread.
@@ -96,7 +91,6 @@ def stop_services():
     """ Stop all services. """
     # stop services
     cron.stop_service()
-    netrpc_server.stop_service()
     wsgi_server.stop_service()
 
     _logger.info("Initiating shutdown")

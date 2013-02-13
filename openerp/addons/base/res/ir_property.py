@@ -21,7 +21,7 @@
 
 import time
 
-from openerp.osv import osv,fields
+from openerp.osv import osv, fields
 from openerp.tools.misc import attrgetter
 
 # -------------------------------------------------------------------------
