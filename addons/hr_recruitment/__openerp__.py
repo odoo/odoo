@@ -46,6 +46,7 @@ You can define the different phases of interviews and easily rate the applicant 
         'base_calendar',
         'fetchmail',
     ],
+    'demo': ['hr_recruitment_demo.yml'],
     'data': [
         'wizard/hr_recruitment_employee_hired.xml',
         'wizard/hr_recruitment_create_partner_job_view.xml',
@@ -57,9 +58,10 @@ You can define the different phases of interviews and easily rate the applicant 
         'board_hr_recruitment_statistical_view.xml',
         'hr_recruitment_installer_view.xml',
         'res_config_view.xml',
-        'hr_recruitment_data.xml'
+        'hr_recruitment_data.xml',
+        'hr_recruitment_demo.yml'
     ],
-    'demo': ['hr_recruitment_demo.yml'],
+    'demo': [],
     'test': ['test/recruitment_process.yml'],
     'installable': True,
     'auto_install': False,
