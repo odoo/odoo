@@ -24,7 +24,6 @@ from dateutil.relativedelta import relativedelta
 from openerp.osv import fields
 from openerp.osv import osv
 from openerp.tools.translate import _
-from openerp import netsvc
 
 class procurement_order(osv.osv):
     _inherit = 'procurement.order'
@@ -87,7 +86,6 @@ class procurement_order(osv.osv):
         company = self.pool.get('res.users').browse(cr, uid, uid, context).company_id
         production_obj = self.pool.get('mrp.production')
         move_obj = self.pool.get('stock.move')
-        wf_service = netsvc.LocalService("workflow")
         procurement_obj = self.pool.get('procurement.order')
         for procurement in procurement_obj.browse(cr, uid, ids, context=context):
             res_id = procurement.move_id.id
@@ -112,7 +110,7 @@ class procurement_order(osv.osv):
             self.write(cr, uid, [procurement.id], {'state': 'running', 'production_id': produce_id})   
             bom_result = production_obj.action_compute(cr, uid,
                     [produce_id], properties=[x.id for x in procurement.property_ids])
-            wf_service.trg_validate(uid, 'mrp.production', produce_id, 'button_confirm', cr)
+            production_obj.signal_button_confirm(cr, uid, [produce_id])
             if res_id:
                 move_obj.write(cr, uid, [res_id],
                         {'location_id': procurement.location_id.id})
