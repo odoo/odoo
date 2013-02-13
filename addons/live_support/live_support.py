@@ -119,7 +119,7 @@ class live_support_channel(osv.osv):
 
     _columns = {
         'name': fields.char(string="Channel Name", size=200, required=True),
-        'user_ids': fields.many2many('im.user', 'live_support_channel_im_user', 'channel_id', 'user_id', string="Users"),
+        'user_ids': fields.many2many('im.user', 'live_support_channel_im_user', 'channel_id', 'user_id', domain=[["user", "!=", False]], string="Users"),
         'are_you_inside': fields.function(_are_you_inside, type='boolean', string='Are you inside the matrix?', store=False),
         'script': fields.function(_script, type='text', string='Script', store=False),
         'web_page': fields.function(_web_page, type='url', string='Web Page', store=False, size="200"),
