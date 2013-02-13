@@ -364,7 +364,7 @@ class pos_session(osv.osv):
             ids = [ids]
 
         this_record = self.browse(cr, uid, ids[0], context=context)
-        this_record._workflow_signal('open')
+        this_record.signal_workflow('open')
 
         context.update(active_id=this_record.id)
 
