@@ -191,7 +191,7 @@ define(["nova", "underscore", "oeclient", "require", "jquery",
                 delete self.users_cache[self.my_id];
                 self.me = me;
                 me.set("name", "You");
-                connection.connector.call("/longpolling/im/activated", {});
+                return connection.connector.call("/longpolling/im/activated", {});
             }).then(function(activated) {
                 if (activated) {
                     self.activated = true;
@@ -232,6 +232,7 @@ define(["nova", "underscore", "oeclient", "require", "jquery",
             return this.users_cache[user_id];
         },
         poll: function() {
+            console.debug("live support beggin polling");
             var self = this;
             var user_ids = _.map(this.users_cache, function(el) {
                 return el.get("id");
