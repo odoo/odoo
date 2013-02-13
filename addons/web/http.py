@@ -286,7 +286,8 @@ class HttpRequest(WebRequest):
         _logger.debug("%s --> %s.%s %r", self.httprequest.method, method.im_class.__name__, method.__name__, akw)
         try:
             r = method(self, **self.params)
-        except Exception:
+        except Exception, e:
+            _logger.exception("An exception occured during an http request")
             se = serialize_exception(e)
             error = {
                 'code': 200,
