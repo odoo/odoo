@@ -1004,14 +1004,4 @@ class account_invoice(osv.Model):
         self.pool.get('sale.order').message_post(cr, uid, so_ids, body=_("Invoice <b>Paid</b>"), context=context)
         return res
     
-class stock_picking(osv.Model):
-    _inherit = 'stock.picking'
-    
-    def action_done(self, cr, uid, ids, context=None):        
-        res = super(stock_picking, self).action_done(cr, uid, ids, context=None)
-        for stockpicking in self.browse(cr, uid, ids, context):
-            if stockpicking.type == "out":
-                for sale in self.pool.get('sale.order').browse(cr, uid, [stockpicking.sale_id.id], context):
-                    sale.message_post(body=_("%s <b>Delivered</b>") % (sale._description))
-        return True
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
