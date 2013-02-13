@@ -226,7 +226,7 @@ def zip_directory(directory, b64enc=True, src=True):
         base = os.path.basename(path)
         for f in osutil.listdir(path, True):
             bf = os.path.basename(f)
-            if not RE_exclude.search(bf) and (src or bf in ('__openerp__.py', '__terp__.py') or not bf.endswith('.py')):
+            if not RE_exclude.search(bf) and (src or bf == '__openerp__.py' or not bf.endswith('.py')):
                 archive.write(os.path.join(path, f), os.path.join(base, f))
 
     archname = StringIO()
@@ -310,8 +310,6 @@ def load_information_from_description_file(module):
     """
 
     terp_file = get_module_resource(module, '__openerp__.py')
-    if not terp_file:
-        terp_file = get_module_resource(module, '__terp__.py')
     mod_path = get_module_path(module)
     if terp_file:
         info = {}
@@ -354,8 +352,7 @@ def load_information_from_description_file(module):
 
     #TODO: refactor the logger in this file to follow the logging guidelines
     #      for 6.0
-    _logger.debug('module %s: no descriptor file'
-        ' found: __openerp__.py or __terp__.py (deprecated)', module)
+    _logger.debug('module %s: no __openerp__.py file found.', module)
     return {}
 
 

@@ -34,6 +34,7 @@ import errno
 import logging
 import os
 import signal
+import socket
 import sys
 import threading
 import traceback
@@ -90,7 +91,7 @@ def xmlrpc_return(start_response, service, method, params, legacy_exceptions=Fal
     return [response]
 
 def xmlrpc_handle_exception(e):
-    if isinstance(e, openerp.osv.osv.except_osv): # legacy
+    if isinstance(e, openerp.osv.orm.except_orm): # legacy
         fault = xmlrpclib.Fault(RPC_FAULT_CODE_WARNING, openerp.tools.ustr(e.value))
         response = xmlrpclib.dumps(fault, allow_none=False, encoding=None)
     elif isinstance(e, openerp.exceptions.Warning):
@@ -122,7 +123,7 @@ def xmlrpc_handle_exception(e):
     return response
 
 def xmlrpc_handle_exception_legacy(e):
-    if isinstance(e, openerp.osv.osv.except_osv):
+    if isinstance(e, openerp.osv.orm.except_orm):
         fault = xmlrpclib.Fault('warning -- ' + e.name + '\n\n' + e.value, '')
         response = xmlrpclib.dumps(fault, allow_none=False, encoding=None)
     elif isinstance(e, openerp.exceptions.Warning):
@@ -372,6 +373,8 @@ def parse_http_response(s):
 
 # WSGI handlers registered through the register_wsgi_handler() function below.
 module_handlers = []
+# RPC endpoints registered through the register_rpc_endpoint() function below.
+rpc_handlers = {}
 
 def register_wsgi_handler(handler):
     """ Register a WSGI handler.
@@ -380,6 +383,11 @@ def register_wsgi_handler(handler):
     register a handler for specific routes later.
     """
     module_handlers.append(handler)
+
+def register_rpc_endpoint(endpoint, handler):
+    """ Register a handler for a given RPC enpoint.
+    """
+    rpc_handlers[endpoint] = handler
 
 def application_unproxied(environ, start_response):
     """ WSGI entry point."""
@@ -438,6 +446,25 @@ def stop_service():
     """
     if httpd:
         httpd.shutdown()
-        openerp.netsvc.close_socket(httpd.socket)
+        close_socket(httpd.socket)
+
+def close_socket(sock):
+    """ Closes a socket instance cleanly
+
+    :param sock: the network socket to close
+    :type sock: socket.socket
+    """
+    try:
+        sock.shutdown(socket.SHUT_RDWR)
+    except socket.error, e:
+        # On OSX, socket shutdowns both sides if any side closes it
+        # causing an error 57 'Socket is not connected' on shutdown
+        # of the other side (or something), see
+        # http://bugs.python.org/issue4397
+        # note: stdlib fixed test, not behavior
+        if e.errno != errno.ENOTCONN or platform.system() not in ['Darwin', 'Windows']:
+            raise
+    sock.close()
+
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

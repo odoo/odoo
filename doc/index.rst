@@ -36,6 +36,15 @@ OpenERP Server API
    :maxdepth: 1
 
    api_models.rst
+   routing.rst
+
+Changelog
+'''''''''
+
+.. toctree::
+   :maxdepth: 1
+
+   changelog.rst
 
 Concepts
 ''''''''

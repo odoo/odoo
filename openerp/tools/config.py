@@ -47,7 +47,6 @@ class MyOption (optparse.Option, object):
         self.my_default = attrs.pop('my_default', None)
         super(MyOption, self).__init__(*opts, **attrs)
 
-#.apidoc title: Server Configuration Loader
 
 def check_ssl():
     try:
