@@ -41,19 +41,21 @@ class survey_question_wiz(osv.osv_memory):
         """
         Fields View Get method :- generate the new view and display the survey pages of selected survey.
         """
+        if context is None:
+            context = {}
 
         print ""
         print ""
-        print view_id, view_type, context, toolbar, submenu
+        print view_id
+        print view_type
+        print context.get("survey_id", None)
+        print context.get("survey_token", None)
         print ""
         print ""
 
         if not view_id and not context.get('survey_id', None) and context.get('default_survey_id', None):
             context['survey_id'] = context['active_id'] = context.get('default_survey_id')
 
-
-        if context is None:
-            context = {}
         result = super(survey_question_wiz, self).fields_view_get(cr, uid, view_id, view_type, context, toolbar,submenu)
 
         surv_name_wiz = self.pool.get('survey.name.wiz')
@@ -64,6 +66,7 @@ class survey_question_wiz(osv.osv_memory):
         sur_response_obj = self.pool.get('survey.response')
         que_col_head = self.pool.get('survey.question.column.heading')
         user_obj = self.pool.get('res.users')
+        partner_obj = self.pool.get('res.partner')
         mail_message = self.pool.get('mail.message')
         
         if view_type in ['form']:
@@ -125,13 +128,13 @@ class survey_question_wiz(osv.osv_memory):
                                     or not context.has_key('active')) and not sur_name_rec.page_no + 1:
                             if sur_rec.state != "open" :
                                 raise osv.except_osv(_('Warning!'),_("You cannot answer because the survey is not open."))
-                            cr.execute('select count(id) from survey_history where user_id=%s\
+                            cr.execute('select count(id) from survey_history where partner_id=%s\
                                                     and survey_id=%s', (uid,survey_id))
                             res = cr.fetchone()[0]
-                            user_limit = survey_obj.browse(cr, uid, survey_id)
-                            user_limit = user_limit.response_user
-                            if user_limit and res >= user_limit:
-                                raise osv.except_osv(_('Warning!'),_("You cannot answer this survey more than %s times.") % (user_limit))
+                            partner_limit = survey_obj.browse(cr, uid, survey_id)
+                            partner_limit = partner_limit.response_partner
+                            if partner_limit and res >= partner_limit:
+                                raise osv.except_osv(_('Warning!'),_("You cannot answer this survey more than %s times.") % (partner_limit))
 
                         if sur_rec.max_response_limit and sur_rec.max_response_limit <= sur_rec.tot_start_survey and not sur_name_rec.page_no + 1:
                             survey_obj.write(cr, uid, survey_id, {'state':'close', 'date_close':strftime("%Y-%m-%d %H:%M:%S")})
@@ -181,7 +184,7 @@ class survey_question_wiz(osv.osv_memory):
                         # TODO: l10n, cleanup this code to make it readable. Or template?
                         xml_group = etree.SubElement(xml_form, 'group', {'col': '40', 'colspan': '4'})
                         record = sur_response_obj.browse(cr, uid, context['response_id'][context['response_no']])
-                        etree.SubElement(xml_group, 'label', {'string': to_xml(tools.ustr('Answer Of :- ' + record.user_id.name + ',  Date :- ' + record.date_create.split('.')[0]  )), 'align':"0.0"})
+                        etree.SubElement(xml_group, 'label', {'string': to_xml(tools.ustr('Answer Of :- ' + record.partner_id.name + ',  Date :- ' + record.date_create.split('.')[0]  )), 'align':"0.0"})
                         etree.SubElement(xml_group, 'label', {'string': to_xml(tools.ustr(" Answer :- " + str(context.get('response_no',0) + 1) +"/" + str(len(context.get('response_id',0))) )), 'align':"0.0"})
                         if context.get('response_no',0) > 0:
                             etree.SubElement(xml_group, 'button', {'colspan':"1",'icon':"gtk-go-back",'name':"action_forward_previous",'string': tools.ustr("Previous Answer"),'type':"object"})
@@ -421,17 +424,17 @@ class survey_question_wiz(osv.osv_memory):
                             file.close()
                             os.remove(addons.get_module_resource('survey', 'report') + survey_data.title + ".pdf")
                         context.update({'response_id':response_id})
-                        user_email = user_obj.browse(cr, uid, uid, context).email
+                        partner_email = user_obj.browse(cr, uid, uid, context).partner_email.email
                         resp_email = survey_data.responsible_id and survey_data.responsible_id.email or False
 
-                        if user_email and resp_email:
-                            user_name = user_obj.browse(cr, uid, uid, context=context).name
-                            mail = "Hello " + survey_data.responsible_id.name + ",\n\n " + str(user_name) + " has given the Response Of " + survey_data.title + " Survey.\nThe Response has been attached herewith.\n\n Thanks."
+                        if partner_email and resp_email:
+                            partner_name = partner_obj.browse(cr, uid, uid, context=context).name
+                            mail = "Hello " + survey_data.responsible_id.name + ",\n\n " + str(partner_name) + " has given the Response Of " + survey_data.title + " Survey.\nThe Response has been attached herewith.\n\n Thanks."
                             vals = {'state': 'outgoing',
-                                    'subject': "Survey Answer Of " + user_name,
+                                    'subject': "Survey Answer Of " + partner_name,
                                     'body_html': '<pre>%s</pre>' % mail,
                                     'email_to': [resp_email],
-                                    'email_from': user_email}
+                                    'email_from': partner_email}
                             if attachments:
                                 vals['attachment_ids'] = [(0,0,{'name': a_name,
                                                                 'datas_fname': a_name,
@@ -585,21 +588,22 @@ class survey_question_wiz(osv.osv_memory):
         res_ans_obj = self.pool.get('survey.response.answer')
         que_obj = self.pool.get('survey.question')
         sur_name_read = surv_name_wiz.read(cr, uid, context.get('sur_name_id',False), [])
+        partner_id = self.pool.get('res.users').browse(cr, uid, uid, context).partner_email.id
         response_id =  0
 
         if not sur_name_read['response']:
-            response_id = surv_all_resp_obj.create(cr, uid, {'response_type':'link', 'user_id':uid, 'date_create':datetime.datetime.now(), 'survey_id' : context['survey_id']})
+            response_id = surv_all_resp_obj.create(cr, uid, {'response_type':'link', 'partner_id':partner_id, 'date_create':datetime.datetime.now(), 'survey_id' : context['survey_id']})
             surv_name_wiz.write(cr, uid, [context.get('sur_name_id', False)], {'response' : tools.ustr(response_id)})
         else:
             response_id = int(sur_name_read['response'])
 
         if response_id not in surv_all_resp_obj.search(cr, uid, []):
-            response_id = surv_all_resp_obj.create(cr, uid, {'response_type':'link', 'user_id':uid, 'date_create':datetime.datetime.now(), 'survey_id' : context.get('survey_id',False)})
+            response_id = surv_all_resp_obj.create(cr, uid, {'response_type':'link', 'partner_id':partner_id, 'date_create':datetime.datetime.now(), 'survey_id' : context.get('survey_id',False)})
             surv_name_wiz.write(cr, uid, [context.get('sur_name_id',False)], {'response' : tools.ustr(response_id)})
 
         #click first time on next button then increemnet on total start suvey
         if not safe_eval(sur_name_read['store_ans']):
-            his_id = self.pool.get('survey.history').create(cr, uid, {'user_id': uid, \
+            his_id = self.pool.get('survey.history').create(cr, uid, {'partner_id': partner_id, \
                                               'date': strftime('%Y-%m-%d %H:%M:%S'), 'survey_id': sur_name_read['survey_id'][0]})
             survey_id = sur_name_read['survey_id'][0]
             sur_rec = survey_obj.read(cr, uid, survey_id)

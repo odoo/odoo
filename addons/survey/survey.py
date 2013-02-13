@@ -28,7 +28,6 @@ import os
 from openerp import netsvc, tools
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
-import uuid # token = uuid.uuid4()
 
 class survey_type(osv.osv):
     _name = 'survey.type'
@@ -56,26 +55,26 @@ class survey(osv.osv):
         'date_close': fields.datetime('Survey Close Date', readonly=1),
         'max_response_limit': fields.integer('Maximum Answer Limit',
                      help="Set to one if survey is answerable only once"),
-        'response_user': fields.integer('Maximum Answer per User',
-                     help="Set to one if  you require only one Answer per user"),
+        'response_partner': fields.integer('Maximum Answer per partner',
+                     help="Set to one if  you require only one Answer per partner"),
         'state': fields.selection([('open', 'Open'), ('cancel', 'Cancelled'),('close', 'Closed') ], 'Status', readonly=True),
         'responsible_id': fields.many2one('res.users', 'Responsible', help="User responsible for survey"),
         'tot_start_survey': fields.integer("Total Started Survey", readonly=1),
         'tot_comp_survey': fields.integer("Total Completed Survey", readonly=1),
         'note': fields.text('Description', size=128),
         'history': fields.one2many('survey.history', 'survey_id', 'History Lines', readonly=True),
-        'users': fields.many2many('res.users', 'survey_users_rel', 'sid', 'uid', 'Users'),
+        'partner_id': fields.many2many('res.partner', 'survey_partner_rel', 'sid', 'uid', 'Partners'),
         'send_response': fields.boolean('Email Notification on Answer'),
         'type': fields.many2one('survey.type', 'Type'),
         'color': fields.integer('Color Index'),
-        'invited_user_ids': fields.many2many('res.users', 'survey_invited_user_rel', 'sid', 'uid', 'Invited User'),
+        'invited_partner_ids': fields.many2many('res.partner', 'survey_invited_partner_rel', 'sid', 'uid', 'Invited User'),
     }
     _defaults = {
         'state': lambda * a: "open",
         'tot_start_survey': lambda * a: 0,
         'tot_comp_survey': lambda * a: 0,
         'send_response': lambda * a: 1,
-        'response_user': lambda * a:1,
+        'response_partner': lambda * a:1,
         'date_open': fields.datetime.now,
     }
 
@@ -244,7 +243,7 @@ class survey_history(osv.osv):
     _rec_name = 'date'
     _columns = {
         'survey_id': fields.many2one('survey', 'Survey'),
-        'user_id': fields.many2one('res.users', 'User', readonly=True),
+        'partner_id': fields.many2one('res.partner', 'Partner', readonly=True),
         'date': fields.datetime('Date started', readonly=1),
     }
     _defaults = {
@@ -657,9 +656,9 @@ class survey_answer(osv.osv):
         'in_visible_answer_type': fields.boolean('Is Answer Type Invisible??')
     }
     _defaults = {
-#         'sequence' : lambda * a: 1,
-         'type' : lambda * a: 'char',
-         'in_visible_answer_type':_get_in_visible_answer_type,
+        # 'sequence' : lambda * a: 1,
+        'type' : lambda * a: 'char',
+        'in_visible_answer_type':_get_in_visible_answer_type,
     }
 
     def default_get(self, cr, uid, fields, context=None):
@@ -676,7 +675,7 @@ class survey_response(osv.osv):
     _columns = {
         'survey_id' : fields.many2one('survey', 'Survey', required=1, ondelete='cascade'),
         'date_create' : fields.datetime('Create Date', required=1),
-        'user_id' : fields.many2one('res.users', 'User'),
+        'partner_id' : fields.many2one('res.partner', 'Partner'),
         'response_type' : fields.selection([('manually', 'Manually'), ('link', 'Link')], \
                                     'Answer Type', required=1, readonly=1),
         'question_ids' : fields.one2many('survey.response.line', 'response_id', 'Answer'),
@@ -691,10 +690,10 @@ class survey_response(osv.osv):
     def name_get(self, cr, uid, ids, context=None):
         if not len(ids):
             return []
-        reads = self.read(cr, uid, ids, ['user_id','date_create'], context=context)
+        reads = self.read(cr, uid, ids, ['partner_id','date_create'], context=context)
         res = []
         for record in reads:
-            name = (record['user_id'] and record['user_id'][1] or '' )+ ' (' + record['date_create'].split('.')[0] + ')'
+            name = (record['partner_id'] and record['partner_id'][1] or '' )+ ' (' + record['date_create'].split('.')[0] + ')'
             res.append((record['id'], name))
         return res
 
@@ -755,14 +754,13 @@ class survey_response_answer(osv.osv):
 
 survey_response_answer()
 
-class res_users(osv.osv):
-    _inherit = "res.users"
-    _name = "res.users"
+class res_partner(osv.osv):
+    _inherit = "res.partner"
+    _name = "res.partner"
     _columns = {
-        'survey_id': fields.many2many('survey', 'survey_users_rel', 'uid', 'sid', 'Groups'),
+        'survey_id': fields.many2many('survey', 'survey_partner_rel', 'uid', 'sid', 'Groups'),
     }
-
-res_users()
+res_partner()
 
 class survey_request(osv.osv):
     _name = "survey.request"
@@ -770,7 +768,7 @@ class survey_request(osv.osv):
     _rec_name = 'date_deadline'
     _columns = {
         'date_deadline': fields.date("Deadline date"),
-        'user_id': fields.many2one("res.users", "User"),
+        'partner_id': fields.many2one("res.partner", "Partner"),
         'email': fields.char("Email", size=64),
         'survey_id': fields.many2one("survey", "Survey", required=1, ondelete='cascade'),
         'response': fields.many2one('survey.response', 'Answer'),
@@ -796,11 +794,11 @@ class survey_request(osv.osv):
         self.write(cr, uid, ids, { 'state' : 'cancel'})
         return True
 
-    def on_change_user(self, cr, uid, ids, user_id, context=None):
-        if user_id:
-            user_obj = self.pool.get('res.users')
-            user = user_obj.browse(cr, uid, user_id, context=context)
-            return {'value': {'email': user.email}}
+    def on_change_partner(self, cr, uid, ids, partner_id, context=None):
+        if partner_id:
+            partner_obj = self.pool.get('res.partner')
+            partner = partner_obj.browse(cr, uid, partner_id, context=context)
+            return {'value': {'email': partner.email}}
         return {}
 
 survey_request()

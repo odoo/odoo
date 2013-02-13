@@ -49,7 +49,7 @@ class survey_name_wiz(osv.osv_memory):
         res = super(survey_name_wiz, self).fields_view_get(cr, uid, view_id=view_id, view_type=view_type, context=context, toolbar=toolbar, submenu=False)
         if uid != 1:
             survey_obj = self.pool.get('survey')
-            line_ids = survey_obj.search(cr, uid, [('invited_user_ids','in',uid)], context=context)
+            line_ids = survey_obj.search(cr, uid, [('invited_partner_ids','in',uid)], context=context)
             domain = str([('id', 'in', line_ids)])
             doc = etree.XML(res['arch'])
             nodes = doc.xpath("//field[@name='survey_id']")

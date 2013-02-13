@@ -19,6 +19,7 @@
 #
 ##############################################################################
 
+import survey_email_compose_message
 import survey_print_statistics
 import survey_print_answer
 import survey_browse_answer
