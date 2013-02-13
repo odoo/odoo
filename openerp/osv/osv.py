@@ -131,7 +131,9 @@ class object_proxy(object):
                     return f(self, dbname, *args, **kwargs)
                 except OperationalError, e:
                     # Automatically retry the typical transaction serialization errors
-                    if not e.pgcode in PG_CONCURRENCY_ERRORS_TO_RETRY or tries >= MAX_TRIES_ON_CONCURRENCY_FAILURE:
+                    if e.pgcode not in PG_CONCURRENCY_ERRORS_TO_RETRY:
+                        raise
+                    if tries >= MAX_TRIES_ON_CONCURRENCY_FAILURE:
                         self.logger.warning("%s, maximum number of tries reached" % errorcodes.lookup(e.pgcode))
                         raise
                     wait_time = random.uniform(0.0, 2 ** tries)
