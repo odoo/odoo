@@ -32,23 +32,6 @@
                         </div>
                     </group>
                 </div>              
-                <group name="Sale" position="before">
-                    <group>
-                        <label for="sale_note"/>
-                        <div>
-                            <div>
-                                <label for="company_id" string="Select Company"/>
-                                <field name="company_id"
-                                    widget="selection"
-                                    on_change="onchange_company_id(company_id)"
-                                    class="oe_inline"/>
-                            </div>
-                            <div>
-                                <field name="sale_note" nolabel="1" class="oe_inline" placeholder="Terms &amp; Conditions"/>
-                            </div>
-                        </div>
-                    </group>
-                </group>
                 <div name="Customer Features" position="inside">
                     <div>
                         <field name="group_sale_pricelist" class="oe_inline"/>
