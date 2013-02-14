@@ -260,11 +260,13 @@ class res_users(osv.Model):
             template = self.pool.get('ir.model.data').get_object(cr, uid, 'auth_signup', 'reset_password_email')
         mail_obj = self.pool.get('mail.mail')
         assert template._name == 'email.template'
+
         for user in self.browse(cr, uid, ids, context):
             if not user.email:
                 raise osv.except_osv(_("Cannot send email: user has no email address."), user.name)
             mail_id = self.pool.get('email.template').send_mail(cr, uid, template.id, user.id, True, context=context)
             mail_state = mail_obj.read(cr, uid, mail_id, ['state'], context=context)
+
             if mail_state and mail_state['state'] == 'exception':
                 raise osv.except_osv(_("Cannot send email: no outgoing email server configured.\nYou can configure it under Settings/General Settings."), user.name)
             else:
