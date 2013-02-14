@@ -66,7 +66,7 @@ def last_update_for(record):
     """Returns the last update timestamp for the given record,
        if available, otherwise False
     """
-    if record._model._log_access:
+    if record._log_access:
         record_log = record.perm_read()[0]
         return record_log.get('write_date') or record_log.get('create_date') or False
     return False
@@ -310,8 +310,7 @@ class EDIMixin(object):
             ['unique_external_id', 'Document Name']
         """
         edi_ext_id = self._edi_external_id(cr, uid, record, context=context)
-        relation_model = record._model
-        name = relation_model.name_get(cr, uid, [record.id], context=context)
+        name = record.name_get(cr, uid, [record.id], context=context)
         name = name and name[0][1] or False
         return [edi_ext_id, name]
 
@@ -335,7 +334,7 @@ class EDIMixin(object):
         """
         result = []
         for record in records:
-            result += record._model.edi_export(cr, uid, [record], edi_struct=edi_struct, context=context)
+            result += record.edi_export(cr, uid, [record], edi_struct=edi_struct, context=context)
         return result
 
     def edi_m2m(self, cr, uid, records, context=None):

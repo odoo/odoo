@@ -1118,7 +1118,7 @@ class node_dir(node_database):
         if not self.check_perms('u'):
             raise IOError(errno.EPERM,"Permission denied.")
 
-        if directory._table_name=='document.directory':
+        if directory._name == 'document.directory':
             if self.children(cr):
                 raise OSError(39, 'Directory not empty.')
             res = self.context._dirobj.unlink(cr, uid, [directory.id])
@@ -1698,7 +1698,7 @@ class node_file(node_class):
             return False
         document = document_obj.browse(cr, uid, self.file_id, context=self.context.context)
         res = False
-        if document and document._table_name == 'ir.attachment':
+        if document and document._name == 'ir.attachment':
             res = document_obj.unlink(cr, uid, [document.id])
         return res
 

@@ -47,7 +47,7 @@ DT_FMT = '%Y-%m-%d %H:%M:%S'
 
 def _process_selection(record, fname, column):
     # call fields_get to retrieve the translation of the field's values
-    selection = dict(record._model.fields_get([fname])[fname]['selection'])
+    selection = dict(record.fields_get([fname])[fname]['selection'])
 
     class processor(object):
         def __init__(self, value):
@@ -157,7 +157,7 @@ Normal - the campaign runs normally and automatically sends all emails and repor
             raise ValueError('Signal cannot be False.')
 
         Workitems = self.pool.get('marketing.campaign.workitem')
-        domain = [('object_id.model', '=', record._table._name),
+        domain = [('object_id.model', '=', record._name),
                   ('state', '=', 'running')]
         campaign_ids = self.search(cr, uid, domain, context=context)
         for campaign in self.browse(cr, uid, campaign_ids, context=context):

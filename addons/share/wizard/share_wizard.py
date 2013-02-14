@@ -104,9 +104,7 @@ class share_wizard(osv.TransientModel):
         return result
 
     def _generate_embedded_code(self, wizard, options=None):
-        cr = wizard._cr
-        uid = wizard._uid
-        context = wizard._context
+        cr, uid, context = wizard.session
         if options is None:
             options = {}
 
