@@ -961,13 +961,12 @@ class mail_thread(osv.AbstractModel):
         mail_message_obj = self.pool.get('mail.message')
         ir_attachment = self.pool.get('ir.attachment')
 
-        # 1.A.1: add recipients of parent message
+        # 1.A.1: add recipients of parent message (# TDE FIXME HACK: mail.thread -> private message)
         partner_ids = set([])
-        if parent_id:
+        if parent_id and self._name == 'mail.thread':
             parent_message = mail_message_obj.browse(cr, uid, parent_id, context=context)
             partner_ids |= set([(4, partner.id) for partner in parent_message.partner_ids])
-            # TDE FIXME HACK: mail.thread -> private message
-            if self._name == 'mail.thread' and parent_message.author_id.id:
+            if parent_message.author_id.id:
                 partner_ids.add((4, parent_message.author_id.id))
 
         # 1.A.2: add specified recipients
