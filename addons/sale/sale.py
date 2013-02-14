@@ -56,7 +56,7 @@ class sale_order(osv.osv):
         },
     }
 
-    def onchange_shop_id(self, cr, uid, ids, shop_id, context=None):
+    def onchange_shop_id(self, cr, uid, ids, shop_id, partner_id, context=None):
         v = {}
         if shop_id:
             shop = self.pool.get('sale.shop').browse(cr, uid, shop_id, context=context)
@@ -64,6 +64,9 @@ class sale_order(osv.osv):
                 v['project_id'] = shop.project_id.id
             if shop.pricelist_id.id:
                 v['pricelist_id'] = shop.pricelist_id.id
+            partner = self.pool.get('res.partner').browse(cr, uid, partner_id, context=context)
+            sale_note = self.get_sale_note(cr, uid, ids, partner, shop_id, context=context)
+            v.update({'note': sale_note})
         return {'value': v}
 
     def copy(self, cr, uid, id, default=None, context=None):
@@ -311,7 +314,13 @@ class sale_order(osv.osv):
         }
         return {'warning': warning, 'value': value}
 
-    def onchange_partner_id(self, cr, uid, ids, part, context=None):
+    def get_sale_note(self, cr, uid, ids, part, shop_id, context=None):
+        context_lang = context.copy()
+        context_lang.update({'lang': part.lang})
+        sale_note =  self.pool.get('sale.shop').browse(cr, uid, shop_id, context=context_lang).company_id.sale_note
+        return sale_note
+        
+    def onchange_partner_id(self, cr, uid, ids, part, shop_id, context=None):
         if not part:
             return {'value': {'partner_invoice_id': False, 'partner_shipping_id': False,  'payment_term': False, 'fiscal_position': False}}
 
@@ -325,19 +334,17 @@ class sale_order(osv.osv):
         payment_term = part.property_payment_term and part.property_payment_term.id or False
         fiscal_position = part.property_account_position and part.property_account_position.id or False
         dedicated_salesman = part.user_id and part.user_id.id or uid
-        context_lang = context.copy()
-        context_lang.update({'lang': part.lang})
-        company = self.pool.get('res.company').browse(cr, uid, uid, context=context_lang)
         val = {
             'partner_invoice_id': addr['invoice'],
             'partner_shipping_id': addr['delivery'],
             'payment_term': payment_term,
             'fiscal_position': fiscal_position,
             'user_id': dedicated_salesman,
-            'note': company.sale_note
         }
         if pricelist:
             val['pricelist_id'] = pricelist
+        sale_note = self.get_sale_note(cr, uid, ids, part, shop_id, context=context)
+        val.update({'note': sale_note})  
         return {'value': val}
 
     def create(self, cr, uid, vals, context=None):
@@ -986,7 +993,7 @@ class sale_order_line(osv.osv):
 class res_company(osv.Model):
     _inherit = "res.company"
     _columns = {
-        'sale_note': fields.text('sales_note', translate=True, placeholder="Terms & Conditions"),
+        'sale_note': fields.text('sales_note', translate=True),
         }
     
 class mail_compose_message(osv.Model):
