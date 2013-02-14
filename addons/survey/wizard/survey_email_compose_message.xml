@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <!--Survey send invitation Email template -->
+        <record id="email_template_survey" model="email.template">
+            <field name="name">Survey - Send by Email</field>
+            <field name="email_from">${object.responsible_id and object.responsible_id.company_id and object.responsible_id.company_id.email or object.responsible_id.email or ''}</field>
+            <field name="subject">${object.title}</field>
+            <field name="lang">${object.lang}</field>
+            <field name="model_id" ref="model_survey"/>
+            <field name="auto_delete" eval="True"/>
+            <field name="body_html"><![CDATA[
+<div style="font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; ">
+    <p>Hello,</p>
+    <p>
+        Would you please spent some of your time to fill-in our survey: 
+        <a href="__URL__">${object.title}</a>
+    </p>
+    % if object.responsible_id:
+    <p>Thank you for choosing ${object.responsible_id.company_id.name or 'us'}!</p>
+    % endif
+    <br/>
+</div>
+            ]]></field>
+        </record>
+
+        <record model="ir.ui.view" id="survey_email_compose_message">
+            <field name="name">survey.mail.compose.message.form</field>
+            <field name="model">survey.mail.compose.message</field>
+            <field name="arch" type="xml">
+                <form string="Compose Email" version="7.0">
+                    <group>
+                        <field name="composition_mode" invisible="1"/>
+                        <field name="model" invisible="1"/>
+                        <field name="res_id" invisible="1"/>
+                        <field name="parent_id" invisible="1"/>
+                        <field name="date_deadline"/>
+                        <field string="List of partners" name="partner_ids" widget="many2many_tags_email" placeholder="Add contacts to notify..." context="{'force_email':True, 'show_email':True}"/>
+                        <field name="multi_email"/>
+                        <field name="subject" placeholder="Subject..."/>
+                    </group>
+                    <field name="body"/>
+                    <field name="attachment_ids" widget="many2many_binary"/>
+                    <footer>
+                        <button string="Send" name="send_mail" type="object" class="oe_highlight"/>
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel" />
+                        <group class="oe_right" col="1">
+                            <div>Use template
+                                <field name="template_id" nolabel="1"
+                                    on_change="onchange_template_id(template_id, composition_mode, model, res_id, context)"/>
+                            </div>
+                            <button icon="/email_template/static/src/img/email_template_save.png"
+                                type="object" name="save_as_template" string="Save as new template" class="oe_link"
+                                help="Save as a new template"/>
+                        </group>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+    </data>
+</openerp>
