@@ -268,7 +268,7 @@ class res_users(osv.Model):
             mail_state = mail_obj.read(cr, uid, mail_id, ['state'], context=context)
 
             if mail_state and mail_state['state'] == 'exception':
-                raise osv.except_osv(_("Cannot send email: no outgoing email server configured.\nYou can configure it under Settings/General Settings."), user.name)
+                raise self.pool.get('res.config.settings').get_config_warning(cr, _("Cannot send email: no outgoing email server configured.\nYou can configure it under %(menu:base_setup.menu_general_configuration)s."), context)
             else:
                 return {
                     'type': 'ir.actions.client',

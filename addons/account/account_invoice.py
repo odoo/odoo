@@ -586,8 +586,8 @@ class account_invoice(osv.osv):
                     pay_res_id = pay_line_data and pay_line_data[0].get('value_reference',False) and int(pay_line_data[0]['value_reference'].split(',')[1]) or False
 
                     if not rec_res_id and not pay_res_id:
-                        raise osv.except_osv(_('Configuration Error!'),
-                            _('Cannot find a chart of account, you should create one from Settings\Configuration\Accounting menu.'))
+                        raise self.pool.get('res.config.settings').get_config_warning(cr, _('Cannot find any chart of account: you can create a new one from %(menu:account.menu_account_config)s.'), context)
+
                     if type in ('out_invoice', 'out_refund'):
                         acc_id = rec_res_id
                     else:
