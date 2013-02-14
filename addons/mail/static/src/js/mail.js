@@ -262,6 +262,14 @@ openerp.mail = function (session) {
                     this.author_id.push(_.str.escapeHTML(email[0]), _.str.trim(email[1]), email[2]);
                 }
             }
+            if (this.partner_ids && this.partner_ids.length > 3) {
+                this.extra_partners_nbr = this.partner_ids.length - 3;
+                this.extra_partners_str = ''
+                var extra_partners = this.partner_ids.slice(3);
+                for (var key in extra_partners) {
+                    this.extra_partners_str += extra_partners[key][1];
+                }
+            }
         },
 
 

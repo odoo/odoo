@@ -301,8 +301,8 @@ class mail_message(osv.Model):
         for key, message in message_tree.iteritems():
             if message.author_id:
                 partner_ids |= set([message.author_id.id])
-            if message.partner_ids:
-                partner_ids |= set([partner.id for partner in message.partner_ids])
+            if message.notified_partner_ids:
+                partner_ids |= set([partner.id for partner in message.notified_partner_ids])
             if message.attachment_ids:
                 attachment_ids |= set([attachment.id for attachment in message.attachment_ids])
         # Read partners as SUPERUSER -> display the names like classic m2o even if no access
@@ -322,7 +322,7 @@ class mail_message(osv.Model):
             else:
                 author = (0, message.email_from)
             partner_ids = []
-            for partner in message.partner_ids:
+            for partner in message.notified_partner_ids:
                 if partner.id in partner_tree:
                     partner_ids.append(partner_tree[partner.id])
             attachment_ids = []
