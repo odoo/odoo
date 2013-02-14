@@ -3,7 +3,7 @@
 #
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
-#    Copyright (C) 2010-2011 OpenERP s.a. (<http://openerp.com>).
+#    Copyright (C) 2010-2013 OpenERP s.a. (<http://openerp.com>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -398,8 +398,14 @@ class ConnectionPool(object):
     def borrow(self, dsn):
         self._debug('Borrow connection to %r', dsn)
 
-        # free leaked connections
+        # free dead and leaked connections
         for i, (cnx, _) in tools.reverse_enumerate(self._connections):
+            try:
+                cnx.reset()
+            except psycopg2.OperationalError:
+                self._debug('Cannot reset connection at index %d: %r', i, cnx.dsn)
+                cnx.close()
+
             if cnx.closed:
                 self._connections.pop(i)
                 self._debug('Removing closed connection at index %d: %r', i, cnx.dsn)
