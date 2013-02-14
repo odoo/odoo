@@ -1390,7 +1390,12 @@ class account_invoice_line(osv.osv):
         # XXX this gets the default account for the user's company,
         # it should get the default account for the invoice's company
         # however, the invoice's company does not reach this point
-        prop = self.pool.get('ir.property').get(cr, uid, 'property_account_income_categ', 'product.category', context=context)
+        if context is None:
+            context = {}
+        if context.get('type') in ('out_invoice','out_refund'):
+            prop = self.pool.get('ir.property').get(cr, uid, 'property_account_income_categ', 'product.category', context=context)
+        else:
+            prop = self.pool.get('ir.property').get(cr, uid, 'property_account_expense_categ', 'product.category', context=context)
         return prop and prop.id or False
 
     _defaults = {

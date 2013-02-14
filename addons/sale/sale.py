@@ -887,7 +887,7 @@ class sale_order_line(osv.osv):
             date_order = time.strftime(DEFAULT_SERVER_DATE_FORMAT)
 
         result = {}
-        warning_msgs = {}
+        warning_msgs = ''
         product_obj = product_obj.browse(cr, uid, product, context=context_partner)
 
         uom2 = False
