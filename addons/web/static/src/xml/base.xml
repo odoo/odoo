@@ -1496,7 +1496,7 @@
     <t t-esc="attrs.string"/>
 </button>
 <ul t-name="SearchView.filters">
-    <li t-foreach="widget.filters" t-as="filter"
+    <li t-foreach="widget.filters" t-as="filter" t-if="filter.visible()"
             t-att-title="filter.attrs.string ? filter.attrs.help : undefined">
         <t t-esc="filter.attrs.string or filter.attrs.help or filter.attrs.name or 'Ω'"/>
     </li>
@@ -1583,15 +1583,6 @@
             <t t-raw="content"/>
         </div>
     </div>
-</t>
-<t t-name="SearchView.group">
-    <t t-call="SearchView.util.expand">
-        <t t-set="expand" t-value="attrs.expand"/>
-        <t t-set="label" t-value="attrs.string"/>
-        <t t-set="content">
-            <t t-call="SearchView.render_lines"/>
-        </t>
-    </t>
 </t>
 <div t-name="SearchView.Filters" class="oe_searchview_filters oe_searchview_section">
 

@@ -359,7 +359,7 @@ instance.web.SearchView = instance.web.Widget.extend(/** @lends instance.web.Sea
         this.has_defaults = !_.isEmpty(this.defaults);
 
         this.inputs = [];
-        this.controls = {};
+        this.controls = [];
 
         this.headless = this.options.hidden && !this.has_defaults;
 
@@ -588,18 +588,18 @@ instance.web.SearchView = instance.web.Widget.extend(/** @lends instance.web.Sea
      *
      * @param {Array} items a list of nodes to convert to widgets
      * @param {Object} fields a mapping of field names to (ORM) field attributes
-     * @param {String} [group_name] name of the group to put the new controls in
+     * @param {Object} [group] group to put the new controls in
      */
-    make_widgets: function (items, fields, group_name) {
-        group_name = group_name || null;
-        if (!(group_name in this.controls)) {
-            this.controls[group_name] = [];
+    make_widgets: function (items, fields, group) {
+        if (!group) {
+            group = new instance.web.search.Group(
+                this, 'q', {attrs: {string: _t("Filters")}});
         }
-        var self = this, group = this.controls[group_name];
+        var self = this;
         var filters = [];
         _.each(items, function (item) {
             if (filters.length && item.tag !== 'filter') {
-                group.push(new instance.web.search.FilterGroup(filters, this));
+                group.push(new instance.web.search.FilterGroup(filters, group));
                 filters = [];
             }
 
@@ -607,15 +607,18 @@ instance.web.SearchView = instance.web.Widget.extend(/** @lends instance.web.Sea
             case 'separator': case 'newline':
                 break;
             case 'filter':
-                filters.push(new instance.web.search.Filter(item, this));
+                filters.push(new instance.web.search.Filter(item, group));
                 break;
             case 'group':
-                self.make_widgets(item.children, fields, item.attrs.string);
+                self.make_widgets(item.children, fields,
+                    new instance.web.search.Group(group, 'w', item));
                 break;
             case 'field':
-                group.push(this.make_field(item, fields[item['attrs'].name]));
+                var field = this.make_field(
+                    item, fields[item['attrs'].name], group);
+                group.push(field);
                 // filters
-                self.make_widgets(item.children, fields, group_name);
+                self.make_widgets(item.children, fields, group);
                 break;
             }
         }, this);
@@ -630,12 +633,13 @@ instance.web.SearchView = instance.web.Widget.extend(/** @lends instance.web.Sea
      *
      * @param {Object} item fields_view_get node for the field
      * @param {Object} field fields_get result for the field
+     * @param {Object} [parent]
      * @returns instance.web.search.Field
      */
-    make_field: function (item, field) {
+    make_field: function (item, field, parent) {
         var obj = instance.web.search.fields.get_any( [item.attrs.widget, field.type]);
         if(obj) {
-            return new (obj) (item, field, this);
+            return new (obj) (item, field, parent || this);
         } else {
             console.group('Unknown field type ' + field.type);
             console.error('View node', item);
@@ -870,13 +874,18 @@ instance.web.search.Widget = instance.web.Widget.extend( /** @lends instance.web
      * @constructs instance.web.search.Widget
      * @extends instance.web.Widget
      *
-     * @param view the ancestor view of this widget
+     * @param parent parent of this widget
      */
-    init: function (view) {
-        this._super(view);
-        this.view = view;
+    init: function (parent) {
+        this._super(parent);
+        var ancestor = parent;
+        do {
+            this.view = ancestor;
+        } while (!(ancestor instanceof instance.web.SearchView)
+               && (ancestor = (ancestor.getParent && ancestor.getParent())));
     }
 });
+
 instance.web.search.add_expand_listener = function($root) {
     $root.find('a.searchview_group_string').click(function (e) {
         $root.toggleClass('folded expanded');
@@ -885,13 +894,24 @@ instance.web.search.add_expand_listener = function($root) {
     });
 };
 instance.web.search.Group = instance.web.search.Widget.extend({
-    template: 'SearchView.group',
-    init: function (view_section, view, fields) {
-        this._super(view);
-        this.attrs = view_section.attrs;
-        this.lines = view.make_widgets(
-            view_section.children, fields);
-    }
+    init: function (parent, icon, node) {
+        this._super(parent);
+        var attrs = node.attrs;
+        this.modifiers = attrs.modifiers =
+            attrs.modifiers ? JSON.parse(attrs.modifiers) : {};
+        this.attrs = attrs;
+        this.icon = icon;
+        this.name = attrs.string;
+        this.children = [];
+
+        this.view.controls.push(this);
+    },
+    push: function (input) {
+        this.children.push(input);
+    },
+    visible: function () {
+        return !this.modifiers.invisible;
+    },
 });
 
 instance.web.search.Input = instance.web.search.Widget.extend( /** @lends instance.web.search.Input# */{
@@ -900,10 +920,10 @@ instance.web.search.Input = instance.web.search.Widget.extend( /** @lends instan
      * @constructs instance.web.search.Input
      * @extends instance.web.search.Widget
      *
-     * @param view
+     * @param parent
      */
-    init: function (view) {
-        this._super(view);
+    init: function (parent) {
+        this._super(parent);
         this.load_attrs({});
         this.view.inputs.push(this);
     },
@@ -964,7 +984,18 @@ instance.web.search.Input = instance.web.search.Widget.extend( /** @lends instan
      * @returns {Boolean}
      */
     visible: function () {
-        return !this.attrs.modifiers.invisible;
+        if (this.attrs.modifiers.invisible) {
+            return false;
+        }
+        var parent = this;
+        while ((parent = parent.getParent()) &&
+               (   (parent instanceof instance.web.search.Group)
+                || (parent instanceof instance.web.search.Input))) {
+            if (!parent.visible()) {
+                return false;
+            }
+        }
+        return true;
     },
 });
 instance.web.search.FilterGroup = instance.web.search.Input.extend(/** @lends instance.web.search.FilterGroup# */{
@@ -979,17 +1010,17 @@ instance.web.search.FilterGroup = instance.web.search.Input.extend(/** @lends in
      * @extends instance.web.search.Input
      *
      * @param {Array<instance.web.search.Filter>} filters elements of the group
-     * @param {instance.web.SearchView} view view in which the filters are contained
+     * @param {instance.web.SearchView} parent parent in which the filters are contained
      */
-    init: function (filters, view) {
+    init: function (filters, parent) {
         // If all filters are group_by and we're not initializing a GroupbyGroup,
         // create a GroupbyGroup instead of the current FilterGroup
         if (!(this instanceof instance.web.search.GroupbyGroup) &&
               _(filters).all(function (f) {
                   return f.attrs.context && f.attrs.context.group_by; })) {
-            return new instance.web.search.GroupbyGroup(filters, view);
+            return new instance.web.search.GroupbyGroup(filters, parent);
         }
-        this._super(view);
+        this._super(parent);
         this.filters = filters;
         this.view.query.on('add remove change reset', this.proxy('search_change'));
     },
@@ -1108,6 +1139,7 @@ instance.web.search.FilterGroup = instance.web.search.Input.extend(/** @lends in
         var self = this;
         item = item.toLowerCase();
         var facet_values = _(this.filters).chain()
+            .filter(function (filter) { return filter.visible(); })
             .filter(function (filter) {
                 var at = {
                     string: filter.attrs.string || '',
@@ -1134,8 +1166,8 @@ instance.web.search.FilterGroup = instance.web.search.Input.extend(/** @lends in
 instance.web.search.GroupbyGroup = instance.web.search.FilterGroup.extend({
     icon: 'w',
     completion_label: _lt("Group by: %s"),
-    init: function (filters, view) {
-        this._super(filters, view);
+    init: function (filters, parent) {
+        this._super(filters, parent);
         // Not flanders: facet unicity is handled through the
         // (category, field) pair of facet attributes. This is all well and
         // good for regular filter groups where a group matches a facet, but for
@@ -1143,8 +1175,8 @@ instance.web.search.GroupbyGroup = instance.web.search.FilterGroup.extend({
         // view which proxies to the first GroupbyGroup, so it can be used
         // for every GroupbyGroup and still provides the various methods needed
         // by the search view. Use weirdo name to avoid risks of conflicts
-        if (!this.getParent()._s_groupby) {
-            this.getParent()._s_groupby = {
+        if (!this.view._s_groupby) {
+            this.view._s_groupby = {
                 help: "See GroupbyGroup#init",
                 get_context: this.proxy('get_context'),
                 get_domain: this.proxy('get_domain'),
@@ -1153,7 +1185,7 @@ instance.web.search.GroupbyGroup = instance.web.search.FilterGroup.extend({
         }
     },
     match_facet: function (facet) {
-        return facet.get('field') === this.getParent()._s_groupby;
+        return facet.get('field') === this.view._s_groupby;
     },
     make_facet: function (values) {
         return {
@@ -1178,10 +1210,10 @@ instance.web.search.Filter = instance.web.search.Input.extend(/** @lends instanc
      * @extends instance.web.search.Input
      *
      * @param node
-     * @param view
+     * @param parent
      */
-    init: function (node, view) {
-        this._super(view);
+    init: function (node, parent) {
+        this._super(parent);
         this.load_attrs(node.attrs);
     },
     facet_for: function () { return $.when(null); },
@@ -1197,10 +1229,10 @@ instance.web.search.Field = instance.web.search.Input.extend( /** @lends instanc
      *
      * @param view_section
      * @param field
-     * @param view
+     * @param parent
      */
-    init: function (view_section, field, view) {
-        this._super(view);
+    init: function (view_section, field, parent) {
+        this._super(parent);
         this.load_attrs(_.extend({}, field, view_section.attrs));
     },
     facet_for: function (value) {
@@ -1240,7 +1272,7 @@ instance.web.search.Field = instance.web.search.Input.extend( /** @lends instanc
      *
      * @param {String} name the field's name
      * @param {String} operator the field's operator (either attribute-specified or default operator for the field
-     * @param {Number|String} value parsed value for the field
+     * @param {Number|String} facet parsed value for the field
      * @returns {Array<Array>} domain to include in the resulting search
      */
     make_domain: function (name, operator, facet) {
@@ -1472,8 +1504,8 @@ instance.web.search.DateTimeField = instance.web.search.DateField.extend(/** @le
 });
 instance.web.search.ManyToOneField = instance.web.search.CharField.extend({
     default_operator: {},
-    init: function (view_section, field, view) {
-        this._super(view_section, field, view);
+    init: function (view_section, field, parent) {
+        this._super(view_section, field, parent);
         this.model = new instance.web.Model(this.attrs.relation);
     },
     complete: function (needle) {
@@ -1716,16 +1748,13 @@ instance.web.search.Filters = instance.web.search.Input.extend({
             .value();
 
         var col1 = [], col2 = _(this.view.controls).chain()
-            .map(function (inputs, group) {
-                return {group: group, inputs: inputs};
-            }).reject(function (item) {
-                return _(item.inputs).isEmpty();
-            }).map(function (item) {
-                var filters = _(item.inputs).filter(is_group);
+            .reject(function (group) {
+                return _(group.children).isEmpty() || group.modifiers.invisible;
+            }).map(function (group) {
+                var filters = _(group.children).filter(is_group);
                 return {
-                    name: item.group === 'null'
-                        ? "<span class='oe_i'>q</span> " + _t("Filters")
-                        : "<span class='oe_i'>w</span> " + item.group,
+                    name: _.str.sprintf("<span class='oe_i'>%s</span> %s",
+                            group.icon, group.name),
                     filters: filters,
                     length: _(filters).chain().map(function (i) {
                         return i.filters.length; }).sum().value()
