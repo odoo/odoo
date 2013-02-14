@@ -45,8 +45,8 @@ class test_message_compose(TestMailBase):
         # Mail data
         _subject1 = 'Pigs'
         _subject2 = 'Bird'
-        _body_html1 = '<div><p>Fans of Pigs, unite !\n</p><p>Admin</p></div>'
-        _body_html2 = '<div><p>I am angry !\n</p><p>Admin</p></div>'
+        _body_html1 = '<p>Fans of Pigs, unite !\n</p>'
+        _body_html2 = '<p>I am angry !\n</p>'
         _attachments = [
             {'name': 'First', 'datas_fname': 'first.txt', 'datas': base64.b64encode('My first attachment')},
             {'name': 'Second', 'datas_fname': 'second.txt', 'datas': base64.b64encode('My second attachment')}
@@ -113,7 +113,7 @@ class test_message_compose(TestMailBase):
         partner_ids = self.res_partner.search(cr, uid, [('email', 'in', ['b@b.b', 'c@c.c', 'd@d.d'])])
         # Test: mail.compose.message: subject, body, partner_ids
         self.assertEqual(compose.subject, _subject1, 'mail.compose.message subject incorrect')
-        self.assertEqual(compose.body, _body_html1, 'mail.compose.message body incorrect')
+        self.assertIn(_body_html1, compose.body, 'mail.compose.message body incorrect')
         self.assertEqual(set(message_pids), set(partner_ids), 'mail.compose.message partner_ids incorrect')
         # Test: mail.compose.message: attachments
         # Test: mail.message: attachments
@@ -159,8 +159,8 @@ class test_message_compose(TestMailBase):
         # Test: subject, body
         self.assertEqual(message_pigs.subject, _subject1, 'mail.message subject on Pigs incorrect')
         self.assertEqual(message_bird.subject, _subject2, 'mail.message subject on Bird incorrect')
-        # self.assertEqual(message_pigs.body, _body_html1, 'mail.message body on Pigs incorrect')
-        # self.assertEqual(message_bird.body, _body_html2, 'mail.message body on Bird incorrect')
+        self.assertIn(_body_html1, message_pigs.body, 'mail.message body on Pigs incorrect')
+        self.assertIn(_body_html2, message_bird.body, 'mail.message body on Bird incorrect')
         # Test: partner_ids: p_a_id (default) + 3 newly created partners
         message_pigs_pids = [partner.id for partner in message_pigs.notified_partner_ids]
         message_bird_pids = [partner.id for partner in message_bird.notified_partner_ids]
