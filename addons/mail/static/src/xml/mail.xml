@@ -26,6 +26,7 @@
             </div>
             <div class="oe_msg_center">
                 <div class="oe_msg_content">
+                    <button class="oe_full" title="Open the full mail composer"><span class='oe_e'>&amp;ograve</span></button>
                     <t t-call="mail.thread.list_recipients"/>
                     <textarea class="field_text"></textarea>
                 </div>
@@ -34,7 +35,6 @@
                     <button class="oe_post">Post</button>
                     <t t-call="mail.compose_message.add_attachment"/>
                     <!--<a class="oe_cancel oe_e">X</a>-->
-                    <button class="oe_full" title="Open the full mail composer"><span class='oe_e'>&amp;ograve</span></button>
                 </div>
             </div>
         </div>
