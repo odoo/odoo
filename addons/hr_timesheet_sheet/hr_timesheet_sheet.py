@@ -253,7 +253,7 @@ class account_analytic_line(osv.osv):
 class hr_timesheet_line(osv.osv):
     _inherit = "hr.analytic.timesheet"
 
-    def create(self, cr, uid, vals, *args, **argv):
+    def create_timesheet(self, cr, uid, vals,context=None):
         sheet_obj = self.pool.get('hr_timesheet_sheet.sheet')
         print"this >>>>>>>>>>>>>>>>>>>>>>>>",vals,sheet_obj.search(cr, uid,[('date_to', '>=', vals['date']), ('date_from', '<=', vals['date'])])
         idss = sheet_obj.search(cr, uid,[('date_to', '>=', vals['date']), ('date_from', '<=', vals['date'])])
@@ -272,9 +272,10 @@ class hr_timesheet_line(osv.osv):
                 [('date_to', '>=', ts_line.date), ('date_from', '<=', ts_line.date),
                  ('employee_id.user_id', '=', ts_line.user_id.id)],
                 context=context)
-            if sheet_ids:
+            if not sheet_ids:
+                sheet_ids = self.create_timesheet(cursor,user,ts_line,context=context)
             # [0] because only one sheet possible for an employee between 2 dates
-                res[ts_line.id] = sheet_obj.name_get(cursor, user, sheet_ids, context=context)[0]
+            res[ts_line.id] = sheet_obj.name_get(cursor, user, sheet_ids, context=context)[0]
         return res
 
     def _get_hr_timesheet_sheet(self, cr, uid, ids, context=None):
