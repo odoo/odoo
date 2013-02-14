@@ -6,6 +6,8 @@ import threading
 import openerp.netsvc
 import openerp.pooler
 
+import security
+
 _logger = logging.getLogger(__name__)
 
 # TODO: set a maximum report number per user to avoid DOS attacks
