@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data>
+        <record id="criteria_list_action" model="ir.actions.act_window">
+            <field name="name">Criterias</field>
+            <field name="res_model">hr.goal.criteria</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <menuitem id="root_menu" name="Goals"/>
+
+        <menuitem id="goal_menu" name="Goals" parent="root_menu"/>
+
+        <menuitem id="criterias_menu" parent="goal_menu"
+            action="criteria_list_action"/>
+    </data>
+</openerp>

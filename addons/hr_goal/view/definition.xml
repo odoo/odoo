@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data>
+        <record id="definition_list_action" model="ir.actions.act_window">
+            <field name="name">Goal definitions</field>
+            <field name="res_model">hr.goal.definition</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <menuitem id="predifined_menu" name="Predifined" parent="root_menu"/>
+
+        <menuitem id="definitions_menu" parent="predifined_menu"
+            action="definition_list_action"/>
+    </data>
+</openerp>
