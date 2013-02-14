@@ -196,7 +196,7 @@ class account_analytic_account(osv.osv):
         'date_start': fields.date('Start Date'),
         'date': fields.date('Date End', select=True),
         'company_id': fields.many2one('res.company', 'Company', required=False), #not required because we want to allow different companies to use the same chart of account, except for leaf accounts.
-        'state': fields.selection([('template', 'Template'),('draft','New'),('open','In Progress'), ('cancelled', 'Cancelled'),('pending','To Renew'),('close','Closed')], 'Status', required=True, track_visibility='onchange'),
+        'state': fields.selection([('template', 'Template'),('draft','New'),('open','In Progress'),('pending','To Renew'),('close','Closed'),('cancelled', 'Cancelled')], 'Status', required=True, track_visibility='onchange'),
         'currency_id': fields.function(_currency, fnct_inv=_set_company_currency, #the currency_id field is readonly except if it's a view account and if there is no company
             store = {
                 'res.company': (_get_analytic_account, ['currency_id'], 10),
@@ -348,7 +348,5 @@ class account_analytic_line(osv.osv):
     _constraints = [
         (_check_no_view, 'You cannot create analytic line on view account.', ['account_id']),
     ]
-
-account_analytic_line()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
