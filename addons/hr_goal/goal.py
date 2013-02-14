@@ -33,11 +33,6 @@ class hr_goal_criteria(osv.Model):
 	_name = 'hr.goal.criteria'
 	_description = 'Goal criteria'
 
-	def get_evaluated_field_value(self, cr, user, ids, vals, context=None):
-		"""Return the type of the 'evaluated_field' field"""
-		for item in self.browse(cr, user, ids, context=context):
-			return item.evaluated_field.ttype
-
 	_columns = {
         'name': fields.char('Name'),
         'description': fields.char('Description'),
@@ -59,8 +54,8 @@ class hr_goal(osv.Model):
 		'user_id' : fields.many2one('res.users', string='User'),
 		'start_date' : fields.date('Start date'),
 		'end_date' : fields.date('End date'),
-		'to_reach' : fields.char('To reach'),
-		'current' : fields.char('Current'),
+		'to_reach' : fields.float('To reach'),
+		'current' : fields.float('Current'),
 	}
 
 	def _compute_default_end_date(self, cr, uid, ids, field_name, arg, 
@@ -91,7 +86,7 @@ class hr_goal_definition(osv.Model):
 	_columns = {
 		'criteria_id' : fields.many2one('hr.goal.criteria',
 			string='Criteria'),
-		'default_to_reach' : fields.char('Default value to reach'),
+		'default_to_reach' : fields.float('Default value to reach'),
 	}
 
 
