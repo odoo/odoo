@@ -1188,4 +1188,13 @@ class mail_compose_message(osv.Model):
             self.pool.get('purchase.order').signal_send_rfq(cr, uid, [context['default_res_id']])
         return super(mail_compose_message, self).send_mail(cr, uid, ids, context=context)
 
+class account_invoice(osv.Model):
+    _inherit = 'account.invoice'
+    
+    def invoice_validate(self, cr, uid, ids, context=None):
+        po_ids = self.pool.get('purchase.order').search(cr,uid,[('invoice_ids','in',ids)],context)
+        res = super(account_invoice, self).invoice_validate(cr, uid, ids, context=None)
+        self.pool.get('purchase.order').message_post(cr, uid, po_ids, body=_("Invoice <b>Received.</b>"), context=context)
+        return res 
+
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
