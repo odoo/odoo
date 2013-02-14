@@ -245,6 +245,7 @@
                         <div class="oe_msg_attachment_list"></div>
                     </t>
                     From: <a t-if="widget.author_id and widget.options.show_link and widget.author_id[0]" t-attf-href="#model=res.partner&amp;id=#{widget.author_id[0]}"><t t-raw="widget.author_id[2]"/></a>
+                    <span t-if="widget.author_id and (!widget.options.show_link or !widget.author_id[0])"><t t-raw="widget.author_id[2]"/></span>
                     <span class='oe_subtle'>•</span>
                     To: 
                     <t t-if="widget.partner_ids.length == 0">
@@ -260,7 +261,6 @@
                     <t t-if="widget.partner_ids.length > 3">
                         <span t-att-title="widget.extra_partners_str">and <t t-raw="widget.extra_partners_nbr"/> more</span>
                     </t>
-                    <span t-if="widget.author_id and (!widget.options.show_link or !widget.author_id[0])"><t t-raw="widget.author_id[2]"/></span>
                     <span class='oe_subtle'>•</span>
                     <span t-att-title="widget.date"><t t-if="widget.timerelative" t-raw="widget.timerelative"/><t t-if="!widget.timerelative" t-raw="widget.date"/></span>
                     <span t-if="!widget.options.readonly" class='oe_subtle'>•</span>
