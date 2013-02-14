@@ -28,7 +28,7 @@ from openerp.osv import fields, osv
 from openerp import pooler
 from openerp.tools.translate import _
 import openerp.addons.decimal_precision as dp
-from openerp.osv.orm import browse_record, browse_null
+from openerp.osv.orm import Record, Recordset, browse_null
 from openerp.tools import DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT, DATETIME_FORMATS_MAP
 
 class purchase_order(osv.osv):
@@ -715,11 +715,11 @@ class purchase_order(osv.osv):
                 if field in ('product_id', 'move_dest_id', 'account_analytic_id'):
                     if not field_val:
                         field_val = False
-                if isinstance(field_val, browse_record):
+                if isinstance(field_val, Record):
                     field_val = field_val.id
                 elif isinstance(field_val, browse_null):
                     field_val = False
-                elif isinstance(field_val, list):
+                elif isinstance(field_val, Recordset):
                     field_val = ((6, 0, tuple([v.id for v in field_val])),)
                 list_key.append((field, field_val))
             list_key.sort()
@@ -766,7 +766,7 @@ class purchase_order(osv.osv):
                     # append a new "standalone" line
                     for field in ('product_qty', 'product_uom'):
                         field_val = getattr(order_line, field)
-                        if isinstance(field_val, browse_record):
+                        if isinstance(field_val, Record):
                             field_val = field_val.id
                         o_line[field] = field_val
                     o_line['uom_factor'] = order_line.product_uom and order_line.product_uom.factor or 1.0
