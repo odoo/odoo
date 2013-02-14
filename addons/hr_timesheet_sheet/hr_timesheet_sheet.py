@@ -177,6 +177,11 @@ class hr_timesheet_sheet(osv.osv):
         r = user.company_id and user.company_id.timesheet_range or 'month'
         if r=='month':
             return time.strftime('%Y-%m-01')
+        elif r=='semimonth':
+            if datetime.today().day <= 15:
+                return time.strftime('%Y-%m-01')
+            else:
+                return time.strftime('%Y-%m-16')
         elif r=='week':
             return (datetime.today() + relativedelta(weekday=0, days=-6)).strftime('%Y-%m-%d')
         elif r=='year':
@@ -188,6 +193,11 @@ class hr_timesheet_sheet(osv.osv):
         r = user.company_id and user.company_id.timesheet_range or 'month'
         if r=='month':
             return (datetime.today() + relativedelta(months=+1,day=1,days=-1)).strftime('%Y-%m-%d')
+        elif r=='semimonth':
+            if datetime.today().day <= 15:
+                return time.strftime('%Y-%m-15')
+            else:
+                return (datetime.today() + relativedelta(months=+1,day=1,days=-1)).strftime('%Y-%m-%d')
         elif r=='week':
             return (datetime.today() + relativedelta(weekday=6)).strftime('%Y-%m-%d')
         elif r=='year':
@@ -629,7 +639,7 @@ class res_company(osv.osv):
     _inherit = 'res.company'
     _columns = {
         'timesheet_range': fields.selection(
-            [('day','Day'),('week','Week'),('month','Month')], 'Timesheet range',
+            [('day','Day'),('week','Week'),('semimonth','Semi-Month'),('month','Month')], 'Timesheet range',
             help="Periodicity on which you validate your timesheets."),
         'timesheet_max_difference': fields.float('Timesheet allowed difference(Hours)',
             help="Allowed difference in hours between the sign in/out and the timesheet " \
