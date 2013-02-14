@@ -592,7 +592,7 @@ class mail_thread(osv.AbstractModel):
 
         thread_id = False
         for model, thread_id, custom_values, user_id in routes:
-            if self._name != model:
+            if self._name == 'mail.thread':
                 context.update({'thread_model': model})
             if model:
                 model_pool = self.pool.get(model)
@@ -883,7 +883,12 @@ class mail_thread(osv.AbstractModel):
         if isinstance(thread_id, (list, tuple)):
             thread_id = thread_id and thread_id[0]
         mail_message = self.pool.get('mail.message')
-        model = context.get('thread_model', self._name) if thread_id else False
+
+        # if we're processing a message directly coming from the gateway, the destination model was
+        # set in the context. 
+        model = False
+        if thread_id:
+            model = context.get('thread_model', self._name) if self._name == 'mail.thread' else self._name
 
         attachment_ids = kwargs.pop('attachment_ids', [])
         for name, content in attachments:
