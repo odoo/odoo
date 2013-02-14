@@ -874,14 +874,10 @@ class stock_picking(osv.osv):
         
         This method is called at the end of the workflow by the activity "done".
         @return: True
-        """        
+        """                
         self.write(cr, uid, ids, {'state': 'done', 'date_done': time.strftime('%Y-%m-%d %H:%M:%S')})
-        for record in self.browse(cr, uid, ids, context):
-            if record.type == "out":
-                for sale in self.pool.get('sale.order').browse(cr, uid, [record.sale_id.id], context):
-                    sale.message_post(body=_("Products <b>Delivered</b>"))
         return True
-
+    
     def action_move(self, cr, uid, ids, context=None):
         """Process the Stock Moves of the Picking
         
