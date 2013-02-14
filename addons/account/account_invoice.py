@@ -23,7 +23,6 @@ import time
 from lxml import etree
 import openerp.addons.decimal_precision as dp
 
-from openerp import netsvc
 from openerp import pooler
 from openerp.osv import fields, osv, orm
 from openerp.tools.translate import _
@@ -80,11 +79,10 @@ class account_invoice(osv.osv):
 
     def _reconciled(self, cr, uid, ids, name, args, context=None):
         res = {}
-        wf_service = netsvc.LocalService("workflow")
         for inv in self.browse(cr, uid, ids, context=context):
             res[inv.id] = self.test_paid(cr, uid, [inv.id])
             if not res[inv.id] and inv.state == 'paid':
-                wf_service.trg_validate(uid, 'account.invoice', inv.id, 'open_test', cr)
+                self.signal_open_test(cr, uid, [inv.id])
         return res
 
     def _get_reference_type(self, cr, uid, context=None):
@@ -638,10 +636,8 @@ class account_invoice(osv.osv):
     # go from canceled state to draft state
     def action_cancel_draft(self, cr, uid, ids, *args):
         self.write(cr, uid, ids, {'state':'draft'})
-        wf_service = netsvc.LocalService("workflow")
-        for inv_id in ids:
-            wf_service.trg_delete(uid, 'account.invoice', inv_id, cr)
-            wf_service.trg_create(uid, 'account.invoice', inv_id, cr)
+        self.delete_workflow(cr, uid, ids)
+        self.create_workflow(cr, uid, ids)
         return True
 
     # Workflow stuff

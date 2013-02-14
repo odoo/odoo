@@ -19,7 +19,6 @@
 #
 ##############################################################################
 
-from openerp import netsvc
 from openerp.osv import osv
 
 
@@ -28,7 +27,6 @@ class pos_confirm(osv.osv_memory):
     _description = 'Post POS Journal Entries'
 
     def action_confirm(self, cr, uid, ids, context=None):
-        wf_service = netsvc.LocalService("workflow")
         order_obj = self.pool.get('pos.order')
         ids = order_obj.search(cr, uid, [('state','=','paid')], context=context)
         for order in order_obj.browse(cr, uid, ids, context=context):
@@ -38,7 +36,7 @@ class pos_confirm(osv.osv_memory):
                     todo = False
                     break
             if todo:
-                wf_service.trg_validate(uid, 'pos.order', order.id, 'done', cr)
+                order_obj.signal_done(cr, uid, [order.id])
 
         # Check if there is orders to reconcile their invoices
         ids = order_obj.search(cr, uid, [('state','=','invoiced'),('invoice_id.state','=','open')], context=context)

@@ -21,7 +21,6 @@
 
 from openerp.osv import fields
 from openerp.osv import osv
-from openerp import netsvc
 
 
 class StockMove(osv.osv):
@@ -45,7 +44,6 @@ class StockMove(osv.osv):
         move_obj = self.pool.get('stock.move')
         procurement_obj = self.pool.get('procurement.order')
         product_obj = self.pool.get('product.product')
-        wf_service = netsvc.LocalService("workflow")
         processed_ids = [move.id]
         if move.product_id.supply_method == 'produce' and move.product_id.procure_method == 'make_to_order':
             bis = bom_obj.search(cr, uid, [
@@ -90,16 +88,17 @@ class StockMove(osv.osv):
                         'procure_method': prodobj.procure_method,
                         'move_id': mid,
                     })
-                    wf_service.trg_validate(uid, 'procurement.order', proc_id, 'button_confirm', cr)
+                    procurement_obj.signal_button_confirm(cr, uid, [proc_id])
+                    
                 move_obj.write(cr, uid, [move.id], {
                     'location_dest_id': move.location_id.id, # dummy move for the kit
                     'auto_validate': True,
                     'picking_id': False,
                     'state': 'confirmed'
                 })
-                for m in procurement_obj.search(cr, uid, [('move_id','=',move.id)], context):
-                    wf_service.trg_validate(uid, 'procurement.order', m, 'button_confirm', cr)
-                    wf_service.trg_validate(uid, 'procurement.order', m, 'button_wait_done', cr)
+                procurement_ids = procurement_obj.search(cr, uid, [('move_id','=',move.id)], context)
+                procurement_obj.signal_button_confirm(cr, uid, procurement_ids)
+                procurement_obj.signal_button_wait_done(cr, uid, procurement_ids)
         return processed_ids
     
     def action_consume(self, cr, uid, ids, product_qty, location_id=False, context=None):
@@ -110,7 +109,6 @@ class StockMove(osv.osv):
         """       
         res = []
         production_obj = self.pool.get('mrp.production')
-        wf_service = netsvc.LocalService("workflow")
         for move in self.browse(cr, uid, ids):
             move.action_confirm(context)
             new_moves = super(StockMove, self).action_consume(cr, uid, [move.id], product_qty, location_id, context=context)
@@ -118,7 +116,7 @@ class StockMove(osv.osv):
             for prod in production_obj.browse(cr, uid, production_ids, context=context):
                 if prod.state == 'confirmed':
                     production_obj.force_production(cr, uid, [prod.id])
-                wf_service.trg_validate(uid, 'mrp.production', prod.id, 'button_produce', cr)
+            production_obj.signal_button_produce(cr, uid, production_ids)                
             for new_move in new_moves:
                 if new_move == move.id:
                     #This move is already there in move lines of production order
@@ -135,14 +133,13 @@ class StockMove(osv.osv):
         """  
         res = []
         production_obj = self.pool.get('mrp.production')
-        wf_service = netsvc.LocalService("workflow")
         for move in self.browse(cr, uid, ids, context=context):
             new_moves = super(StockMove, self).action_scrap(cr, uid, [move.id], product_qty, location_id, context=context)
             #If we are not scrapping our whole move, tracking and lot references must not be removed
             #self.write(cr, uid, [move.id], {'prodlot_id': False, 'tracking_id': False})
             production_ids = production_obj.search(cr, uid, [('move_lines', 'in', [move.id])])
             for prod_id in production_ids:
-                wf_service.trg_validate(uid, 'mrp.production', prod_id, 'button_produce', cr)
+                production_obj.signal_button_produce(cr, uid, [prod_id])
             for new_move in new_moves:
                 production_obj.write(cr, uid, production_ids, {'move_lines': [(4, new_move)]})
                 res.append(new_move)

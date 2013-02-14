@@ -10,6 +10,7 @@ import glob
 import fnmatch
 
 from openerp import pooler, netsvc, sql_db
+import openerp.service
 from openerp.service import security
 from openerp.osv import osv
 
@@ -60,7 +61,7 @@ class abstracted_fs(object):
     def db_list(self):
         """Get the list of available databases, with FTPd support
         """
-        s = netsvc.ExportService.getService('db')
+        s = openerp.service.db
         result = s.exp_list(document=True)
         self.db_name_list = []
         for db_name in result:

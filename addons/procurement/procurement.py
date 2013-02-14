@@ -19,10 +19,12 @@
 #
 ##############################################################################
 
+from operator import attrgetter
+import time
+
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
 from openerp import netsvc
-import time
 import openerp.addons.decimal_precision as dp
 
 # Procurement
@@ -42,7 +44,6 @@ class mrp_property_group(osv.osv):
         'name': fields.char('Property Group', size=64, required=True),
         'description': fields.text('Description'),
     }
-mrp_property_group()
 
 class mrp_property(osv.osv):
     """
@@ -59,7 +60,6 @@ class mrp_property(osv.osv):
     _defaults = {
         'composition': lambda *a: 'min',
     }
-mrp_property()
 
 class StockMove(osv.osv):
     _inherit = 'stock.move'
@@ -72,7 +72,6 @@ class StockMove(osv.osv):
         default['procurements'] = []
         return super(StockMove, self).copy(cr, uid, id, default, context=context)
 
-StockMove()
 
 class procurement_order(osv.osv):
     """
@@ -374,14 +373,13 @@ class procurement_order(osv.osv):
                     self.message_post(cr, uid, [procurement.id], body=message, context=context)
         return ok
 
-    def _workflow_trigger(self, cr, uid, ids, trigger, context=None):
-        """ Don't trigger workflow for the element specified in trigger
-        """
-        wkf_op_key = 'workflow.%s.%s' % (trigger, self._name)
+    def step_workflow(self, cr, uid, ids, context=None):
+        """ Don't trigger workflow for the element specified in trigger """
+        wkf_op_key = 'workflow.trg_write.%s' % self._name
         if context and not context.get(wkf_op_key, True):
             # make sure we don't have a trigger loop while processing triggers
             return 
-        return super(procurement_order,self)._workflow_trigger(cr, uid, ids, trigger, context=context)
+        return super(procurement_order, self).step_workflow(cr, uid, ids, context=context)
 
     def action_produce_assign_service(self, cr, uid, ids, context=None):
         """ Changes procurement state to Running.
@@ -468,15 +466,12 @@ class procurement_order(osv.osv):
 
 class StockPicking(osv.osv):
     _inherit = 'stock.picking'
-    def test_finished(self, cursor, user, ids):
-        wf_service = netsvc.LocalService("workflow")
-        res = super(StockPicking, self).test_finished(cursor, user, ids)
-        for picking in self.browse(cursor, user, ids):
+    def test_finished(self, cr, uid, ids):
+        res = super(StockPicking, self).test_finished(cr, uid, ids)
+        for picking in self.browse(cr, uid, ids):
             for move in picking.move_lines:
                 if move.state == 'done' and move.procurements:
-                    for procurement in move.procurements:
-                        wf_service.trg_validate(user, 'procurement.order',
-                            procurement.id, 'button_check', cursor)
+                    self.pool.get('procurement.order').signal_button_check(cr, uid, map(attrgetter('id'), move.procurements))
         return res
 
 class stock_warehouse_orderpoint(osv.osv):

@@ -30,21 +30,22 @@
 ##############################################################################
 
 from openerp.osv import fields, osv
-from openerp import netsvc
-from webkit_report import WebKitParser
+import openerp.report.interface
 from openerp.report.report_sxw import rml_parse
+
+from webkit_report import WebKitParser
 
 def register_report(name, model, tmpl_path, parser=rml_parse):
     """Register the report into the services"""
     name = 'report.%s' % name
-    if netsvc.Service._services.get(name, False):
-        service = netsvc.Service._services[name]
+    if name in openerp.report.interface.report_int._reports:
+        service = openerp.report.interface.report_int[name]
         if isinstance(service, WebKitParser):
             #already instantiated properly, skip it
             return
         if hasattr(service, 'parser'):
             parser = service.parser
-        del netsvc.Service._services[name]
+        del openerp.report.interface.report_int[name]
     WebKitParser(name, model, tmpl_path, parser=parser)
 
 
