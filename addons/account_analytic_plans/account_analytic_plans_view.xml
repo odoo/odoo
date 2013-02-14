@@ -272,7 +272,7 @@
             <field name="model">account.analytic.default</field>
             <field name="inherit_id" ref="account_analytic_default.view_account_analytic_default_tree"/>
             <field name="arch" type="xml">
-                <field name="analytic_id" required="1" position="replace">
+                <field name="analytic_id" required="1" position="after">
                     <field name="analytics_id" required="1"/>
                 </field>
             </field>
