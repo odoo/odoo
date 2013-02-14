@@ -5582,10 +5582,10 @@ class BaseModel(object):
                     self.signal_workflow(*args, signal=signal_name, **kwargs))
 
         if not name.startswith('_'):
-            # if self is a record, get the field with the given field name
+            # get the value of the field with the given name
             return self._get_record_field(name)
 
-        return super(BaseModel, self).__getattr__(name)
+        raise AttributeError(name)
 
     def __int__(self):
         assert self.is_record(), "Expected record instance: %s" % self
