@@ -234,11 +234,12 @@
         <field name="arch" type="xml">
             <search string="Search Meetings">
                 <field name="name" string="Meeting" filter_domain="[('name','ilike',self)]"/>
-                <filter string="Unread Messages" name="message_unread" domain="[('message_unread','=',True)]"/>
+                <field name="partner_ids"/>
+                <field name="categ_ids"/>
+                <field name="user_id"/>
                 <separator/>
                 <filter string="My Meetings" help="My Meetings" domain="[('user_id','=',uid)]"/>
-                <field name="user_id"/>
-                <field name="partner_ids"/>
+                <filter string="Unread Messages" name="message_unread" domain="[('message_unread','=',True)]"/>
             </search>
         </field>
     </record>
