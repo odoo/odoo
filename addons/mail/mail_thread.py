@@ -35,6 +35,7 @@ from openerp import SUPERUSER_ID
 from openerp.addons.mail.mail_message import decode
 from openerp.osv import fields, osv
 from openerp.tools.safe_eval import safe_eval as eval
+from openerp.tools.translate import _
 
 _logger = logging.getLogger(__name__)
 
@@ -92,23 +93,21 @@ class mail_thread(osv.AbstractModel):
         """ Computes:
             - message_unread: has uid unread message for the document
             - message_summary: html snippet summarizing the Chatter for kanban views """
-        res = dict((id, dict(message_unread=False, message_summary='')) for id in ids)
+        res = dict((id, dict(message_unread=False, message_summary=' ')) for id in ids)
         user_pid = self.pool.get('res.users').read(cr, uid, uid, ['partner_id'], context=context)['partner_id'][0]
 
         # search for unread messages, directly in SQL to improve performances
-        cr.execute("""  SELECT m.res_id FROM mail_message m
+        cr.execute("""  SELECT m.res_id, COUNT(n.message_id) as nb FROM mail_message m
                         RIGHT JOIN mail_notification n
                         ON (n.message_id = m.id AND n.partner_id = %s AND (n.read = False or n.read IS NULL))
-                        WHERE m.model = %s AND m.res_id in %s""",
+                        WHERE m.model = %s AND m.res_id in %s
+                        GROUP BY m.res_id""",
                     (user_pid, self._name, tuple(ids),))
-        msg_ids = [result[0] for result in cr.fetchall()]
-        for msg_id in msg_ids:
-            res[msg_id]['message_unread'] = True
-
-        for thread in self.browse(cr, uid, ids, context=context):
-            cls = res[thread.id]['message_unread'] and ' class="oe_kanban_mail_new"' or ''
-            res[thread.id]['message_summary'] = "<span%s><span class='oe_e'>9</span> %d</span> <span><span class='oe_e'>+</span> %d</span>" % (cls, len(thread.message_ids), len(thread.message_follower_ids))
-
+        for result in cr.fetchall():
+            res[result[0]]['message_unread'] = True
+            if result[1]:
+                title = result[1] > 1 and _("There are %d messages unread") % result[1] or _("There is 1 message unread")
+                res[result[0]]['message_summary'] = "<span class='oe_kanban_mail_new' title='%s'><span class='oe_e'>9</span> %d %s</span>" % (title, result[1], _("New"))
         return res
 
     def _get_subscription_data(self, cr, uid, ids, name, args, context=None):
