@@ -2947,15 +2947,25 @@ class stock_picking_in(osv.osv):
         #override in order to redirect the check of acces rules on the stock.picking object
         return self.pool.get('stock.picking').check_access_rule(cr, uid, ids, operation, context=context)
 
-    def _workflow_trigger(self, cr, uid, ids, trigger, context=None):
-        #override in order to trigger the workflow of stock.picking at the end of create, write and unlink operation
-        #instead of it's own workflow (which is not existing)
-        return self.pool.get('stock.picking')._workflow_trigger(cr, uid, ids, trigger, context=context)
+    def create_workflow(self, cr, uid, ids, context=None):
+        # overridden in order to trigger the workflow of stock.picking at the end of create,
+        # write and unlink operation instead of its own workflow (which is not existing)
+        return self.pool.get('stock.picking').create_workflow(cr, uid, ids, context=context)
 
-    def _workflow_signal(self, cr, uid, ids, signal, context=None):
-        #override in order to fire the workflow signal on given stock.picking workflow instance
-        #instead of it's own workflow (which is not existing)
-        return self.pool.get('stock.picking')._workflow_signal(cr, uid, ids, signal, context=context)
+    def delete_workflow(self, cr, uid, ids, context=None):
+        # overridden in order to trigger the workflow of stock.picking at the end of create,
+        # write and unlink operation instead of its own workflow (which is not existing)
+        return self.pool.get('stock.picking').delete_workflow(cr, uid, ids, context=context)
+
+    def step_workflow(self, cr, uid, ids, context=None):
+        # overridden in order to trigger the workflow of stock.picking at the end of create,
+        # write and unlink operation instead of its own workflow (which is not existing)
+        return self.pool.get('stock.picking').step_workflow(cr, uid, ids, context=context)
+
+    def signal_workflow(self, cr, uid, ids, signal, context=None):
+        # overridden in order to fire the workflow signal on given stock.picking workflow instance
+        # instead of its own workflow (which is not existing)
+        return self.pool.get('stock.picking').signal_workflow(cr, uid, ids, signal, context=context)
 
     _columns = {
         'backorder_id': fields.many2one('stock.picking.in', 'Back Order of', states={'done':[('readonly', True)], 'cancel':[('readonly',True)]}, help="If this shipment was split, then this field links to the shipment which contains the already processed part.", select=True),
@@ -2992,15 +3002,25 @@ class stock_picking_out(osv.osv):
         #override in order to redirect the check of acces rules on the stock.picking object
         return self.pool.get('stock.picking').check_access_rule(cr, uid, ids, operation, context=context)
 
-    def _workflow_trigger(self, cr, uid, ids, trigger, context=None):
-        #override in order to trigger the workflow of stock.picking at the end of create, write and unlink operation
-        #instead of it's own workflow (which is not existing)
-        return self.pool.get('stock.picking')._workflow_trigger(cr, uid, ids, trigger, context=context)
+    def create_workflow(self, cr, uid, ids, context=None):
+        # overridden in order to trigger the workflow of stock.picking at the end of create,
+        # write and unlink operation instead of its own workflow (which is not existing)
+        return self.pool.get('stock.picking').create_workflow(cr, uid, ids, context=context)
 
-    def _workflow_signal(self, cr, uid, ids, signal, context=None):
-        #override in order to fire the workflow signal on given stock.picking workflow instance
-        #instead of it's own workflow (which is not existing)
-        return self.pool.get('stock.picking')._workflow_signal(cr, uid, ids, signal, context=context)
+    def delete_workflow(self, cr, uid, ids, context=None):
+        # overridden in order to trigger the workflow of stock.picking at the end of create,
+        # write and unlink operation instead of its own workflow (which is not existing)
+        return self.pool.get('stock.picking').delete_workflow(cr, uid, ids, context=context)
+
+    def step_workflow(self, cr, uid, ids, context=None):
+        # overridden in order to trigger the workflow of stock.picking at the end of create,
+        # write and unlink operation instead of its own workflow (which is not existing)
+        return self.pool.get('stock.picking').step_workflow(cr, uid, ids, context=context)
+
+    def signal_workflow(self, cr, uid, ids, signal, context=None):
+        # overridden in order to fire the workflow signal on given stock.picking workflow instance
+        # instead of its own workflow (which is not existing)
+        return self.pool.get('stock.picking').signal_workflow(cr, uid, ids, signal, context=context)
 
     _columns = {
         'backorder_id': fields.many2one('stock.picking.out', 'Back Order of', states={'done':[('readonly', True)], 'cancel':[('readonly',True)]}, help="If this shipment was split, then this field links to the shipment which contains the already processed part.", select=True),
