@@ -3911,19 +3911,43 @@ class BaseModel(object):
                     returned_ids = [x['id'] for x in cr.dictfetchall()]
                     self._check_record_rules_result_count(cr, uid, sub_ids, returned_ids, operation, context=context)
 
-    def _workflow_trigger(self, cr, uid, ids, trigger, context=None):
-        """Call given workflow trigger as a result of a CRUD operation"""
-        wf_service = netsvc.LocalService("workflow")
+    def create_workflow(self, cr, uid, ids, context=None):
+        """Create a workflow instance for each given record IDs."""
+        from openerp import workflow
         for res_id in ids:
-            getattr(wf_service, trigger)(uid, self._name, res_id, cr)
+            workflow.trg_create(uid, self._name, res_id, cr)
+        return True
 
-    def _workflow_signal(self, cr, uid, ids, signal, context=None):
+    def delete_workflow(self, cr, uid, ids, context=None):
+        """Delete the workflow instances bound to the given record IDs."""
+        from openerp import workflow
+        for res_id in ids:
+            workflow.trg_delete(uid, self._name, res_id, cr)
+        return True
+
+    def step_workflow(self, cr, uid, ids, context=None):
+        """Reevaluate the workflow instances of the given record IDs."""
+        from openerp import workflow
+        for res_id in ids:
+            workflow.trg_write(uid, self._name, res_id, cr)
+        return True
+
+    def signal_workflow(self, cr, uid, ids, signal, context=None):
         """Send given workflow signal and return a dict mapping ids to workflow results"""
-        wf_service = netsvc.LocalService("workflow")
+        from openerp import workflow
         result = {}
         for res_id in ids:
-            result[res_id] = wf_service.trg_validate(uid, self._name, res_id, signal, cr)
+            result[res_id] = workflow.trg_validate(uid, self._name, res_id, signal, cr)
         return result
+
+    def redirect_workflow(self, cr, uid, old_new_ids, context=None):
+        """ Rebind the workflow instance bound to the given 'old' record IDs to
+            the given 'new' IDs. (``old_new_ids`` is a list of pairs ``(old, new)``.
+        """
+        from openerp import workflow
+        for old_id, new_id in old_new_ids:
+            workflow.trg_redirect(uid, self._name, old_id, new_id, cr)
+        return True
 
     def unlink(self, cr, uid, ids, context=None):
         """
@@ -3963,7 +3987,7 @@ class BaseModel(object):
         property_ids = ir_property.search(cr, uid, [('res_id', 'in', ['%s,%s' % (self._name, i) for i in ids])], context=context)
         ir_property.unlink(cr, uid, property_ids, context=context)
 
-        self._workflow_trigger(cr, uid, ids, 'trg_delete', context=context)
+        self.delete_workflow(cr, uid, ids, context=context)
 
         self.check_access_rule(cr, uid, ids, 'unlink', context=context)
         pool_model_data = self.pool.get('ir.model.data')
@@ -4268,7 +4292,7 @@ class BaseModel(object):
                     todo.append(id)
             self.pool.get(object)._store_set_values(cr, user, todo, fields_to_recompute, context)
 
-        self._workflow_trigger(cr, user, ids, 'trg_write', context=context)
+        self.step_workflow(cr, user, ids, context=context)
         return True
 
     #
@@ -4484,7 +4508,7 @@ class BaseModel(object):
                 self.name_get(cr, user, [id_new], context=context)[0][1] + \
                 "' " + _("created.")
             self.log(cr, user, id_new, message, True, context=context)
-        self._workflow_trigger(cr, user, [id_new], 'trg_create', context=context)
+        self.create_workflow(cr, user, [id_new], context=context)
         return id_new
 
     def browse(self, cr, uid, select, context=None, list_class=None, fields_process=None):
@@ -5247,6 +5271,14 @@ class BaseModel(object):
     def _register_hook(self, cr):
         """ stuff to do right after the registry is built """
         pass
+
+    def __getattr__(self, name):
+        if name.startswith('signal_'):
+            signal_name = name[len('signal_'):]
+            assert signal_name
+            return (lambda *args, **kwargs:
+                    self.signal_workflow(*args, signal=signal_name, **kwargs))
+        return super(BaseModel, self).__getattr__(name)
 
 # keep this import here, at top it will cause dependency cycle errors
 import expression
