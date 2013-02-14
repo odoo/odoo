@@ -51,7 +51,7 @@ class sale_order(osv.osv):
     _description = "Sales Order"
     _track = {
         'state': {
-            'sale.mt_order_confirmed': lambda self, cr, uid, obj, ctx=None: obj['state'] in ['manual', 'progress'],
+            'sale.mt_order_confirmed': lambda self, cr, uid, obj, ctx=None: obj['state'] in ['manual'],
             'sale.mt_order_sent': lambda self, cr, uid, obj, ctx=None: obj['state'] in ['sent']
         },
     }
