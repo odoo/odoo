@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data>
+
+        <record id="goal_list_action" model="ir.actions.act_window">
+            <field name="name">Gamification</field>
+            <field name="res_model">gamification.goal.type</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <!-- <menuitem id="root_menu" name="Gamification"/> -->
+        <menuitem id="gamification_menu" name="Gamification Tools" parent="base.menu_administration"/>
+        <menuitem id="courses_menu" parent="gamification_menu" action="goal_list_action"/>
+
+    </data>
+</openerp>

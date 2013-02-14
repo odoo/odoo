@@ -23,102 +23,164 @@ from openerp.osv import fields, osv
 
 from datetime import date
 
-class hr_goal_criteria(osv.Model):
-	"""Goal criteria definition
+GAMIFICATION_GOAL_STATUS = [
+    ('inprogress','In progress'),
+    ('reached','Reached'),
+    ('failed','Failed'),
+]
 
-	A criteria defining a way to set an objective and evaluate it
-	Each module wanting to be able to set goals to the users needs to create
-	a new goal_criteria
-	"""
-	_name = 'hr.goal.criteria'
-	_description = 'Goal criteria'
+# I don't see why it would be different but just in case...
+GAMIFICATION_PLAN_STATUS = GAMIFICATION_GOAL_STATUS
 
-	_columns = {
-        'name': fields.char('Name'),
+GAMIFICATION_PERIOD_STATUS = [
+    ('once','No automatic assigment'),
+    ('daily','Daily'),
+    ('weekly','Weekly'),
+    ('monthly','Monthly'),
+    ('yearly', 'Yearly')
+]
+
+class gamification_goal_type(osv.Model):
+    """Goal type definition
+
+    A goal type defining a way to set an objective and evaluate it
+    Each module wanting to be able to set goals to the users needs to create
+    a new gamification_goal_type
+    """
+    _name = 'gamification.goal.type'
+    _description = 'Gamification goal type'
+
+    _columns = {
+        'name': fields.char('Name', required=True),
         'description': fields.char('Description'),
-    	'evaluated_field': fields.many2one('ir.model.fields', 
-    		string='Evaluated field'),
+        'computation_mode': fields.selection(
+            (
+                ('s','Sum'),
+                ('c','Count'),
+                ('m','Manually'),
+            ),
+            string="Mode of computation",
+            description="""How is computed the goal value :
+- 'Sum' for the total of the values if the 'Evaluated field'
+- 'Count' for the number of entries
+- 'Manually' for user defined values""",
+            required=True),
+        'object': fields.many2one('ir.model',
+            string='Object',
+            description='The object type for the field to evaluate' ),
+        'field': fields.many2one('ir.model.fields',
+            string='Evaluated field',
+            description='The field containing the value to evaluate' ),
+        'field_date': fields.many2one('ir.model.fields',
+            string='Evaluated date field',
+            description='The date to use for the time period evaluated'),
+        'domain': fields.char("Domain"), # how to apply it ?
+        'condition' : fields.selection(
+            (
+                ('minus','<='),
+                ('plus','>=')
+            ),
+            string='Validation condition',
+            description='A goal is considered as completed when the current value is compared to the value to reach'),
+        'sequence' : fields.integer('Sequence',
+            description='Sequence number for ordering',
+            required=True),
+    }
+    
+    _defaults = {
+        'sequence': 0,
+        'condition': 'plus',
     }
 
-class hr_goal(osv.Model):
-	"""Goal instance for a user
 
-	An individual goal for a user on a specified time period
-	"""
+class gamification_goal(osv.Model):
+    """Goal instance for a user
 
-	_name = 'hr.goal.instance'
-	_description = 'Goal instance'
+    An individual goal for a user on a specified time period
+    """
 
-	_columns = {
-		'criteria_id' : fields.many2one('hr.goal.criteria', string='Criteria'),
-		'user_id' : fields.many2one('res.users', string='User'),
-		'start_date' : fields.date('Start date'),
-		'end_date' : fields.date('End date'),
-		'to_reach' : fields.float('To reach'),
-		'current' : fields.float('Current'),
-	}
+    _name = 'gamification.goal'
+    _description = 'Gamification goal instance'
+    _inherit = 'mail.thread'
 
-	def _compute_default_end_date(self, cr, uid, ids, field_name, arg, 
-		context=None):
-		hr_goal = self.browse(cr, uid, ids, context)
-		if hr_goal.start_date:
-			return hr_goal.start_date + datetime.timedelta(days=1)
-		else:
-			return fields.date.today() + datetime.timedelta(days=1)
+    _columns = {
+        'type_id' : fields.many2one('gamification.goal.type', 
+            string='Goal type',
+            required=True),
+        'user_id' : fields.many2one('res.users', string='User', required=True),
+        'plan_id' : fields.many2one('gamification.goal.plan',
+            string='Goal plan'),
+        'start_date' : fields.date('Start date'),
+        'end_date' : fields.date('End date'), # no start and end = always active
+        'target_goal' : fields.float('To reach',
+            required=True,
+            track_visibility = 'always'), # no goal = global index
+        'current' : fields.float('Current',
+            required=True,
+            track_visibility = 'always'),
+        'status': fields.selection(GAMIFICATION_GOAL_STATUS,
+            string='Status',
+            required=True,
+            track_visibility = 'always'),
+    }
 
-	_defaults = {
+    _defaults = {
         'start_date': fields.date.today,
-        'end_date': _compute_default_end_date,
-        'current': "",
+        'current': 0,
+        'status': 'inprogress',
     }
 
 
+class gamification_goal_plan(osv.Model):
+    """Ga;ification goal plan
 
-class hr_goal_definition(osv.Model):
-	"""Goal definition
+    Set of predifined goals to be able to automate goal settings or
+    quickly apply several goals manually to a group of users
 
-	Predifined goal for 'hr_goal_preset'
-	"""
+    If 'user_ids' is defined and 'period' is different than 'one', the set will
+    be assigned to the users for each period (eg: every 1st of each month if 
+        'monthly' is selected)
+    """
 
-	_name = 'hr.goal.definition'
-	_description = 'Goal definition'
+    _name = 'gamification.goal.plan'
+    _description = 'Gamification goal plan'
 
-	_columns = {
-		'criteria_id' : fields.many2one('hr.goal.criteria',
-			string='Criteria'),
-		'default_to_reach' : fields.float('Default value to reach'),
-	}
+    _columns = {
+        'name' : fields.char('Plan name', required=True),
+        'user_ids' : fields.many2many('res.users',
+            string='Definition',
+            description="list of users to which the goal will be set"),
+        'group_id' : fields.many2one('res.groups', string='Group'),
+        'period' : fields.selection(GAMIFICATION_PERIOD_STATUS,
+            string='Period',
+            description='Period of automatic goal assigment, will be done manually if none is selected',
+            required=True),
+        'status': fields.selection(GAMIFICATION_PLAN_STATUS,
+            string='Status',
+            required=True),
+        }
+
+    _defaults = {
+        'period': 'once',
+        'status': 'inprogress',
+    }
 
 
-class hr_goal_preset(osv.Model):
-	"""Goal preset
+class gamification_goal_planline(osv.Model):
+    """Gamification goal planline
 
-	Set of predifined goals to be able to automate goal settings or
-	quickly apply several goals manually
+    Predifined goal for 'gamification_goal_plan'
+    These are generic list of goals with only the target goal defined
+    Should only be created for the gamification_goal_plan object
+    """
 
-	If both 'group_id' and 'period' are defined, the set will be assigned to the
-	group for each period (eg: every 1st of each month if 'monthly' is selected)
-	"""
+    _name = 'gamification.goal.planline'
+    _description = 'Gamification generic goal for plan'
 
-	_name = 'hr.goal.preset'
-	_description = 'Goal preset'
-
-	_columns = {
-		'name' : fields.char('Set name'),
-		'definition_id' : fields.many2many('hr.goal.definition',
-			string='Definition'),
-		'group_id' : fields.many2one('res.groups', string='Group'),
-		'period' : fields.selection(
-			(
-				('n','No automatic assigment'),
-				('d','Daily'),
-				('m','Monthly'),
-				('y', 'Yearly')
-			),
-                   string='Period',
-                   description='Period of automatic goal assigment, ignored if no group is selected'),
-		}
-
-	_defaults = {
-        'period': 'n',
+    _columns = {
+        'plan_id' : fields.many2one('gamification.goal.plan',
+            string='Plan'),
+        'type_id' : fields.many2one('gamification.goal.type',
+            string='Goal type'),
+        'target_goal' : fields.float('Target value to reach'),
     }

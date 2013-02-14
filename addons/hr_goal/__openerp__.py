@@ -19,20 +19,18 @@
 #
 ##############################################################################
 {
-    'name': 'Goal',
+    'name': 'Gamification',
     'version': '1.0',
     'author': 'OpenERP SA',
     'category': 'Human Resources',
-    'depends': ['base', 'hr'],
-    'description': """HR Goal definition
-
-Defined goals to users""",
+    'depends': ['mail'],
+    'description': """Gamification of goals""",
 
     'data': [
-        'view/criteria.xml',
-        'view/definition.xml',
-        'view/instance.xml',
-        'view/preset.xml',
+        'view/type.xml',
+        # 'view/definition.xml',
+        # 'view/instance.xml',
+        # 'view/preset.xml',
     ],
     'installable': True,
     'application': True,
