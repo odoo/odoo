@@ -23,7 +23,7 @@ from lxml import etree
 import openerp.tools as tools
 from openerp.tools.safe_eval import safe_eval
 import print_fnc
-from openerp.osv.orm import browse_null, Record
+from openerp.osv.orm import browse_null, Record, Recordset
 import openerp.pooler as pooler
 
 class InheritDict(dict):
@@ -74,8 +74,8 @@ class document(object):
         value = browser
 
         for f in fields:
-            if isinstance(value, list):
-                if len(value)==0:
+            if isinstance(value, (Recordset, list)):
+                if len(value) == 0:
                     return ''
                 value = value[0]
             if isinstance(value, browse_null):
@@ -83,7 +83,7 @@ class document(object):
             else:
                 value = value[f]
 
-        if isinstance(value, browse_null) or (type(value)==bool and not value):
+        if isinstance(value, browse_null) or (value is False):
             return ''
         else:
             return value
@@ -127,11 +127,7 @@ class document(object):
                             el.set(key, value)
 
                 elif attrs['type']=='attachment':
-                    if isinstance(browser, list):
-                        model = browser[0]._table_name
-                    else:
-                        model = browser._table_name
-
+                    model = browser._name
                     value = self.get_value(browser, attrs['name'])
 
                     ids = self.pool.get('ir.attachment').search(self.cr, self.uid, [('res_model','=',model),('res_id','=',int(value))])
@@ -203,19 +199,13 @@ class document(object):
                     if 'model' in attrs:
                         obj = self.pool.get(attrs['model'])
                     else:
-                        if isinstance(browser, list):
-                            obj = browser[0]._table
-                        else:
-                            obj = browser._table
+                        obj = browser       # the record(set) is an instance of the model
 
                     # get the ids
                     if 'ids' in attrs:
                         ids = self.eval(browser, attrs['ids'])
                     else:
-                        if isinstance(browser, list):
-                            ids = [b.id for b in browser]
-                        else:
-                            ids = [browser.id]
+                        ids = map(int, browser.recordset)
 
                     # call the method itself
                     newdatas = getattr(obj, attrs['name'])(self.cr, self.uid, ids, *args)
@@ -233,7 +223,7 @@ class document(object):
                             else:
                                 for el_cld in node:
                                     parse_result_tree(el_cld, el, datas)
-                    if not isinstance(newdatas, list):
+                    if not isinstance(newdatas, (Recordset, list)):
                         newdatas = [newdatas]
                     for newdata in newdatas:
                         parse_result_tree(node, parent, newdata)
@@ -241,7 +231,7 @@ class document(object):
                 elif attrs['type']=='zoom':
                     value = self.get_value(browser, attrs['name'])
                     if value:
-                        if not isinstance(value, list):
+                        if not isinstance(value, (Recordset, list)):
                             v_list = [value]
                         else:
                             v_list = value

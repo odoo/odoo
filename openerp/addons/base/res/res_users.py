@@ -691,7 +691,7 @@ class groups_view(osv.osv):
     def get_user_groups_view(self, cr, uid, context=None):
         try:
             view = self.pool.get('ir.model.data').get_object(cr, SUPERUSER_ID, 'base', 'user_groups_view', context)
-            assert view and view._table_name == 'ir.ui.view'
+            assert view and view._name == 'ir.ui.view'
         except Exception:
             view = False
         return view

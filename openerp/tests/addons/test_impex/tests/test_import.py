@@ -57,7 +57,7 @@ class ImporterCase(common.TransactionCase):
 
         ids = ModelData.search(
             self.cr, openerp.SUPERUSER_ID,
-            [('model', '=', record._table_name), ('res_id', '=', record.id)])
+            [('model', '=', record._name), ('res_id', '=', record.id)])
         if ids:
             d = ModelData.read(
                 self.cr, openerp.SUPERUSER_ID, ids, ['name', 'module'])[0]
@@ -70,7 +70,7 @@ class ImporterCase(common.TransactionCase):
         name = name.replace('.', '-')
         ModelData.create(self.cr, openerp.SUPERUSER_ID, {
             'name': name,
-            'model': record._table_name,
+            'model': record._name,
             'res_id': record.id,
             'module': '__test__'
         })

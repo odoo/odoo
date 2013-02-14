@@ -618,7 +618,7 @@ class ir_model_access(osv.osv):
         assert mode in ['read','write','create','unlink'], 'Invalid access mode'
 
         if isinstance(model, Record):
-            assert model._table_name == 'ir.model', 'Invalid model object'
+            assert model._name == 'ir.model', 'Invalid model object'
             model_name = model.name
         else:
             model_name = model
@@ -677,7 +677,7 @@ class ir_model_access(osv.osv):
         assert mode in ['read','write','create','unlink'], 'Invalid access mode'
 
         if isinstance(model, Record):
-            assert model._table_name == 'ir.model', 'Invalid model object'
+            assert model._name == 'ir.model', 'Invalid model object'
             model_name = model.model
         else:
             model_name = model

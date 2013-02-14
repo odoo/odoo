@@ -1125,7 +1125,7 @@ class BaseModel(object):
 
         def _get_xml_id(self, cr, uid, r):
             model_data = self.pool.get('ir.model.data')
-            data_ids = model_data.search(cr, uid, [('model', '=', r._table_name), ('res_id', '=', r['id'])])
+            data_ids = model_data.search(cr, uid, [('model', '=', r._name), ('res_id', '=', r['id'])])
             if len(data_ids):
                 d = model_data.read(cr, uid, data_ids, ['name', 'module'])[0]
                 if d['module']:
@@ -1181,7 +1181,7 @@ class BaseModel(object):
                             r = check_type(self._inherit_fields[f[i]][2]._type)
                         data[fpos] = r or False
                         break
-                    if isinstance(r, (BaseModel, list)):
+                    if isinstance(r, Recordset):
                         first = True
                         fields2 = map(lambda x: (x[:i+1]==f[:i+1] and x[i+1:]) \
                                 or [], fields)
@@ -1194,8 +1194,7 @@ class BaseModel(object):
                             break
 
                         for row2 in r:
-                            lines2 = row2._model.__export_row(cr, uid, row2, fields2,
-                                    context)
+                            lines2 = row2.__export_row(cr, uid, row2, fields2, context)
                             if first:
                                 for fpos2 in range(len(fields)):
                                     if lines2 and lines2[0][fpos2]:
@@ -1203,10 +1202,10 @@ class BaseModel(object):
                                 if not data[fpos]:
                                     dt = ''
                                     for rr in r:
-                                        name_relation = self.pool.get(rr._table_name)._rec_name
+                                        name_relation = rr._rec_name
                                         if isinstance(rr[name_relation], Record):
                                             rr = rr[name_relation]
-                                        rr_name = self.pool.get(rr._table_name).name_get(cr, uid, [rr.id], context=context)
+                                        rr_name = rr.name_get(cr, uid, [rr.id], context=context)
                                         rr_name = rr_name and rr_name[0] and rr_name[0][1] or ''
                                         dt += tools.ustr(rr_name or '') + ','
                                     data[fpos] = dt[:-1]
@@ -1219,7 +1218,7 @@ class BaseModel(object):
                     i += 1
                 if i == len(f):
                     if isinstance(r, Record):
-                        r = self.pool.get(r._table_name).name_get(cr, uid, [r.id], context=context)
+                        r = r.name_get(cr, uid, [r.id], context=context)
                         r = r and r[0] and r[0][1] or ''
                     data[fpos] = tools.ustr(r or '')
         return [data] + lines
@@ -5523,7 +5522,7 @@ class BaseModel(object):
         if not name in model_cache[self._id]:
             # How did this happen? Could be a missing model due to custom fields used too soon, see above.
             _logger.error("Fields to fetch: %s, Field values: %s", field_names, result)
-            _logger.error("Cached: %s, Table: %s", model_cache[self._id], self._model)
+            _logger.error("Cached: %s, Table: %s", model_cache[self._id], self._name)
             raise KeyError(_('Unknown attribute %s in %s ') % (name, self))
 
         return model_cache[self._id][name]
