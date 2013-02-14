@@ -104,6 +104,7 @@ class test_mail(TestMailBase):
     def test_00_message_process(self):
         """ Testing incoming emails processing. """
         cr, uid, user_raoul = self.cr, self.uid, self.user_raoul
+        extra_partner_id = self.res_partner.create(cr, uid, {'name': 'Raoul Extra', 'email': 'raoul@raoul.fr'})
 
         # groups@.. will cause the creation of new mail groups
         self.mail_group_model_id = self.ir_model.search(cr, uid, [('model', '=', 'mail.group')])[0]
@@ -146,15 +147,15 @@ class test_mail(TestMailBase):
         self.assertEqual(new_mail.body, '<pre>\nPlease call me as soon as possible this afternoon!\n\n--\nSylvie\n</pre>',
                          'plaintext mail incorrectly parsed')
 
-        # Do: post a new message, with a known partner
+        # Do: post a new message, with a known partner -> duplicate emails -> should take the user-one
         test_msg_id = '<deadcafe.1337-2@smtp.agrolait.com>'
         TEMPLATE_MOD = MAIL_TEMPLATE_PLAINTEXT.replace('Sylvie Lelitre <sylvie.lelitre@agrolait.com>', user_raoul.email)
         mail_new = TEMPLATE_MOD.format(to='Friendly Frogs <group+frogs@example.com>', subject='extra news', extra='', msg_id=test_msg_id)
         self.mail_thread.message_process(cr, uid, None, mail_new)
         new_mail = self.mail_message.browse(cr, uid, self.mail_message.search(cr, uid, [('message_id', '=', test_msg_id)])[0])
         # Test: author_id set, not email_from
-        self.assertEqual(new_mail.author_id, user_raoul.partner_id, 'message process wrong author found')
-        self.assertFalse(new_mail.email_from, 'message process should not set the email_from when an author is found')
+        self.assertEqual(new_mail.author_id.id, user_raoul.partner_id.id, 'message process wrong author found')
+        self.assertEqual(new_mail.email_from, user_raoul.email, 'message process should set the email_from of incoming emails')
 
         # Do: post a new message, with a unknown partner
         test_msg_id = '<deadcafe.1337-3@smtp.agrolait.com>'
@@ -165,6 +166,17 @@ class test_mail(TestMailBase):
         # Test: author_id set, not email_from
         self.assertFalse(new_mail.author_id, 'message process shnould not have found a partner for _abcd_ email address')
         self.assertIn('_abcd_', new_mail.email_from, 'message process should set en email_from when not finding a partner_id')
+
+        # Do: post a new message, with a known partner -> duplicate emails -> should take the follower-one
+        test_msg_id = '<deadcafe.1337-2@smtp.agrolait.com>'
+        frog_group.message_subscribe([extra_partner_id])
+        TEMPLATE_MOD = MAIL_TEMPLATE_PLAINTEXT.replace('Sylvie Lelitre <sylvie.lelitre@agrolait.com>', user_raoul.email)
+        mail_new = TEMPLATE_MOD.format(to='Friendly Frogs <group+frogs@example.com>', subject='extra news', extra='', msg_id=test_msg_id)
+        self.mail_thread.message_process(cr, uid, None, mail_new)
+        new_mail = self.mail_message.browse(cr, uid, self.mail_message.search(cr, uid, [('message_id', '=', test_msg_id)])[0])
+        # Test: author_id set, not email_from
+        self.assertEqual(new_mail.author_id.id, extra_partner_id, 'message process wrong author found')
+        self.assertEqual(new_mail.email_from, user_raoul.email, 'message process should set the email_from of incoming emails')
 
     def test_05_thread_parent_resolution(self):
         """Verify parent/child relationships are correctly established when processing incoming mails"""

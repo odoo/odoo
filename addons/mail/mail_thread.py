@@ -415,9 +415,15 @@ class mail_thread(osv.AbstractModel):
 
     def _message_find_partners(self, cr, uid, message, header_fields=['From'], context=None):
         """ Find partners related to some header fields of the message. """
+        partner_obj = self.pool.get('res.partner')
+        partner_ids = []
         s = ', '.join([decode(message.get(h)) for h in header_fields if message.get(h)])
-        return [partner_id for email in tools.email_split(s)
-                for partner_id in self.pool.get('res.partner').search(cr, uid, [('email', 'ilike', email)], limit=1, context=context)]
+        for email_address in tools.email_split(s):
+            related_partners = partner_obj.search(cr, uid, [('email', 'ilike', email_address), ('user_ids', '!=', False)], limit=1, context=context)
+            if not related_partners:
+                related_partners = partner_obj.search(cr, uid, [('email', 'ilike', email_address)], limit=1, context=context)
+            partner_ids += related_partners
+        return partner_ids
 
     def _message_find_user_id(self, cr, uid, message, context=None):
         from_local_part = tools.email_split(decode(message.get('From')))[0]
@@ -611,10 +617,11 @@ class mail_thread(osv.AbstractModel):
                 assert thread_id == 0, "Posting a message without model should be with a null res_id, to create a private message."
                 model_pool = self.pool.get('mail.thread')
             new_msg_id = model_pool.message_post_user_api(cr, uid, [thread_id], context=context, content_subtype='html', **msg)
+            new_msg = self.pool.get('mail.message').browse(cr, uid, new_msg_id, context=context)
 
             # when posting an incoming email to a document: subscribe the author, if a partner, as follower
-            if model and thread_id and msg.get('author_id'):
-                model_pool.message_subscribe(cr, uid, [thread_id], [msg.get('author_id')], context=context)
+            if model and thread_id and new_msg.author_id:
+                model_pool.message_subscribe(cr, uid, [thread_id], [new_msg.author_id.id], context=context)
 
             if partner_ids:
                 # postponed after message_post, because this is an external message and we don't want to create
@@ -771,8 +778,7 @@ class mail_thread(osv.AbstractModel):
             author_ids = self._message_find_partners(cr, uid, message, ['From'], context=context)
             if author_ids:
                 msg_dict['author_id'] = author_ids[0]
-            else:
-                msg_dict['email_from'] = message.get('from')
+            msg_dict['email_from'] = message.get('from')
         partner_ids = self._message_find_partners(cr, uid, message, ['To', 'Cc'], context=context)
         msg_dict['partner_ids'] = [(4, partner_id) for partner_id in partner_ids]
 
@@ -883,7 +889,20 @@ class mail_thread(osv.AbstractModel):
         if isinstance(thread_id, (list, tuple)):
             thread_id = thread_id and thread_id[0]
         mail_message = self.pool.get('mail.message')
+        partner_obj = self.pool.get('res.partner')
         model = context.get('thread_model', self._name) if thread_id else False
+
+        # 0: parse email-from, try to find a better author_id based on document's followers
+        email_from = kwargs.get('email_from')
+        author_ids = None
+        if email_from and thread_id:
+            email_list = tools.email_split(email_from)
+            if email_list:
+                doc = self.browse(cr, uid, thread_id, context=context)
+                doc_fol_ids = [follower.id for follower in doc.message_follower_ids]
+                author_ids = partner_obj.search(cr, uid, [('email', 'ilike', email_list[0]), ('id', 'in', doc_fol_ids)], limit=1, context=context)
+                if author_ids:
+                    kwargs['author_id'] = author_ids[0]
 
         attachment_ids = kwargs.pop('attachment_ids', [])
         for name, content in attachments:
