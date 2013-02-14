@@ -605,6 +605,7 @@ class mail_thread(osv.AbstractModel):
                 if thread_id and hasattr(model_pool, 'message_update'):
                     model_pool.message_update(cr, user_id, [thread_id], msg, context=nosub_ctx)
                 else:
+                    nosub_ctx = dict(nosub_ctx, mail_create_nolog=True)
                     thread_id = model_pool.message_new(cr, user_id, msg, custom_values, context=nosub_ctx)
             else:
                 assert thread_id == 0, "Posting a message without model should be with a null res_id, to create a private message."
