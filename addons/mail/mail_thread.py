@@ -106,7 +106,7 @@ class mail_thread(osv.AbstractModel):
         for result in cr.fetchall():
             res[result[0]]['message_unread'] = True
             if result[1]:
-                title = result[1] > 1 and _("There are %d messages unread") % result[1] or _("There is 1 message unread")
+                title = result[1] > 1 and _("You have %d unread messages") % result[1] or _("You have one unread message")
                 res[result[0]]['message_summary'] = "<span class='oe_kanban_mail_new' title='%s'><span class='oe_e'>9</span> %d %s</span>" % (title, result[1], _("New"))
         return res
 
