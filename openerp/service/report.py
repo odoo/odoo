@@ -1,10 +1,13 @@
 # -*- coding: utf-8 -*-
 
+import base64
 import logging
+import sys
 import threading
 
 import openerp.netsvc
 import openerp.pooler
+from openerp import tools
 
 import security
 
@@ -107,7 +110,7 @@ def exp_report(db, uid, object, ids, datas=None, context=None):
         cr.close()
         return True
 
-    thread.start_new_thread(go, (id, uid, ids, datas, context))
+    threading.Thread(target=go, args=(id, uid, ids, datas, context)).start()
     return id
 
 def _check_report(report_id):
