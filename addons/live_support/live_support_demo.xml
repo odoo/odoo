@@ -7,10 +7,6 @@
             <field name="default_message">Hello, how may I help you?</field>
         </record>
 
-        <record id="channel_website" model="live_support.channel">
-            <field name="user_ids" eval="[(4, ref('base.user_demo'))]"/>
-        </record>
-
         <record id="group_live_support" model="res.groups">
             <field name="users" eval="[(4, ref('base.user_demo'))]"/>
         </record>
