@@ -495,6 +495,7 @@ openerp.mail = function (session) {
 
             this.$('.oe_cancel').on('click', _.bind( this.on_cancel, this) );
             this.$('.oe_post').on('click', _.bind( this.on_message_post, this) );
+            this.$('.oe_log').on('click', _.bind( this.on_message_log, this) );
             this.$('.oe_full').on('click', _.bind( this.on_compose_fullmail, this, this.id ? 'reply' : 'comment') );
             /* stack for don't close the compose form if the user click on a button */
             this.$('.oe_msg_left, .oe_msg_center').on('mousedown', _.bind( function () { this.stay_open = true; }, this));
@@ -632,17 +633,27 @@ openerp.mail = function (session) {
             }
         },
 
+        on_message_log: function (event) {
+            if (this.do_check_attachment_upload() && (this.attachment_ids.length || this.$('textarea').val().match(/\S+/))) {
+                this.do_send_message_post([], true);
+            }
+        },
+
         /*do post a message and fetch the message*/
-        do_send_message_post: function (partner_ids) {
+        do_send_message_post: function (partner_ids, log) {
             var self = this;
-            this.parent_thread.ds_thread._model.call('message_post_user_api', [this.context.default_res_id], {
+            var values = {
                 'body': this.$('textarea').val(),
                 'subject': false,
                 'parent_id': this.context.default_parent_id,
                 'attachment_ids': _.map(this.attachment_ids, function (file) {return file.id;}),
                 'partner_ids': partner_ids,
                 'context': this.parent_thread.context,
-            }).done(function (message_id) {
+            };
+            if (log) {
+                values['subtype'] = false;
+            }
+            this.parent_thread.ds_thread._model.call('message_post_user_api', [this.context.default_res_id], values).done(function (message_id) {
                 var thread = self.parent_thread;
                 var root = thread == self.options.root_thread;
                 if (self.options.display_indented_thread < self.thread_level && thread.parent_message) {
