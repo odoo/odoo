@@ -1740,17 +1740,19 @@ instance.web.search.Filters = instance.web.search.Input.extend({
         var running_count = 0;
         // get total filters count
         var is_group = function (i) { return i instanceof instance.web.search.FilterGroup; };
-        var filters_count = _(this.view.controls).chain()
+        var visible_filters = _(this.view.controls).chain().reject(function (group) {
+            return _(_(group.children).filter(is_group)).isEmpty()
+                || group.modifiers.invisible;
+        });
+        var filters_count = visible_filters
+            .pluck('children')
             .flatten()
             .filter(is_group)
             .map(function (i) { return i.filters.length; })
             .sum()
             .value();
 
-        var col1 = [], col2 = _(this.view.controls).chain()
-            .reject(function (group) {
-                return _(group.children).isEmpty() || group.modifiers.invisible;
-            }).map(function (group) {
+        var col1 = [], col2 = visible_filters.map(function (group) {
                 var filters = _(group.children).filter(is_group);
                 return {
                     name: _.str.sprintf("<span class='oe_i'>%s</span> %s",
