@@ -1849,7 +1849,7 @@ instance.web.search.ExtendedSearchProposition = instance.web.Widget.extend(/** @
         }
     },
     operator_changed: function (e) {
-        var $value = self.$('.searchview_extended_prop_value');
+        var $value = this.$('.searchview_extended_prop_value');
         switch ($(e.target).val()) {
         case '∃':
         case '∄':
