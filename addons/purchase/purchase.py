@@ -163,6 +163,7 @@ class purchase_order(osv.osv):
         'state': {
             'purchase.mt_rfq_confirmed': lambda self, cr, uid, obj, ctx=None: obj['state'] == 'confirmed',
             'purchase.mt_rfq_approved': lambda self, cr, uid, obj, ctx=None: obj['state'] == 'approved',
+            'purchase.mt_rfq_invoice_paid': lambda self, cr, uid, obj, ctx=None: obj['state'] == 'done',
         },
     }
     _columns = {
@@ -557,7 +558,7 @@ class purchase_order(osv.osv):
 
     def invoice_done(self, cr, uid, ids, context=None):
         self.write(cr, uid, ids, {'state':'approved'}, context=context)
-        self.message_post(cr, uid, ids, body=_("Invoice <b>Paid.</b>"), context=context)
+     #   self.message_post(cr, uid, ids, body=_("Invoice <b>Paid.</b>"), context=context)
         return True
 
     def has_stockable_product(self, cr, uid, ids, *args):
