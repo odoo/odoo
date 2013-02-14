@@ -253,6 +253,17 @@ class account_analytic_line(osv.osv):
 class hr_timesheet_line(osv.osv):
     _inherit = "hr.analytic.timesheet"
 
+    def create(self, cr, uid, vals, *args, **argv):
+        sheet_obj = self.pool.get('hr_timesheet_sheet.sheet')
+        print"this >>>>>>>>>>>>>>>>>>>>>>>>",vals,sheet_obj.search(cr, uid,[('date_to', '>=', vals['date']), ('date_from', '<=', vals['date'])])
+        idss = sheet_obj.search(cr, uid,[('date_to', '>=', vals['date']), ('date_from', '<=', vals['date'])])
+        print"this 123 >>>>>>>>>>>>>>>>>>>>>>>>",idss
+        if not idss or len(idss) < 1 :
+            res = sheet_obj.default_get(cr, uid, ['date_from','date_to','employee_id','company_id','state'], context=None)
+            ids = sheet_obj.create(cr, uid, res, context=None)
+            print"this >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>...343424",ids,res
+        return super(hr_timesheet_line, self).create(cr, uid, vals, *args, **argv)
+
     def _sheet(self, cursor, user, ids, name, args, context=None):
         sheet_obj = self.pool.get('hr_timesheet_sheet.sheet')
         res = {}.fromkeys(ids, False)
