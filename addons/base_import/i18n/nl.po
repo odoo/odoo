@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2012-12-21 17:05+0000\n"
-"PO-Revision-Date: 2013-02-10 13:21+0000\n"
+"PO-Revision-Date: 2013-02-14 16:15+0000\n"
 "Last-Translator: Erwin van der Ploeg (Endian Solutions) <Unknown>\n"
 "Language-Team: Dutch <nl@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-02-11 05:34+0000\n"
-"X-Generator: Launchpad (build 16482)\n"
+"X-Launchpad-Export-Date: 2013-02-15 05:23+0000\n"
+"X-Generator: Launchpad (build 16491)\n"
 
 #. module: base_import
 #. openerp-web
@@ -561,6 +561,10 @@ msgid ""
 "                field corresponding to the column. This makes imports\n"
 "                simpler especially when the file has many columns."
 msgstr ""
+"als het bestand de kolom\n"
+"                namen bevat, kan OpenERP proberen de bijbehorende velden\n"
+"                te detecteren voor de kolommen. Dit maakt het importeren\n"
+"                eenvoudiger, vooral wanneer het bestand veel kolommen heeft."
 
 #. module: base_import
 #. openerp-web
@@ -605,6 +609,16 @@ msgid ""
 "filter \n"
 "                        settings' > Save)."
 msgstr ""
+"Als u een CSV bestand bewerkt en opslaat in een spreadsheet \n"
+"                        worden uw regionale instellingen van uw computer\n"
+"                        gebruikt voor het scheidingsteken. U kunt het beste\n"
+"                        OpenOffice of Libreoffice calc gebruiken, omdat "
+"deze\n"
+"                        programma's u de mogelijkheid geven om deze "
+"instellingen\n"
+"                        aan te passen (in 'Opslaan als' scherm > Aanvinken "
+"'Filter instellingen\n"
+"                        bewerken > Opslaan'."
 
 #. module: base_import
 #. openerp-web
@@ -675,6 +689,10 @@ msgid ""
 "\n"
 "                        that imported it)"
 msgstr ""
+"Land/Externe ID: De ID van dit record\n"
+"                        waaraan gerefereerd wordt in de andere applicatie "
+"(of het .XML bestand\n"
+"                        dat het heeft geïmporteerd)"
 
 #. module: base_import
 #. openerp-web
@@ -703,6 +721,17 @@ msgid ""
 "\n"
 "                        per field you want to import."
 msgstr ""
+"Sommige velden geven een relatie met een ander\n"
+"                        object aan. Bijvoorbeeld, het land van een contact "
+"is een koppeling \n"
+"                        naar een record van het 'Land' object. Wanneer u\n"
+"                        zo'n veld wilt importeren, zal OpenERP de koppeling "
+"tussen deze\n"
+"                        velden moeten maken. Om u te helpen zulke velden te "
+"importeren, \n"
+"                        geeft OpenERP u drie mechanismen. U dient een "
+"mechanisme te kiezen\n"
+"                        en alleen dit mechanisme per veld gebruiken."
 
 #. module: base_import
 #. openerp-web
@@ -716,6 +745,14 @@ msgid ""
 "                        then you will encode it as follow \"Manufacturer,\n"
 "                        Retailer\" in the same column of your CSV file."
 msgstr ""
+"De labels moeten worden gescheiden door een komma, zonder spaties \n"
+"                        Bijvoorbeeld, indien u, uw klant wilt koppelen aan "
+"de labels\n"
+"                        \"Producent\" en \"Retailer\" dan dient u dit als "
+"volgt\n"
+"                        te coderen. \"Producent,Retailer\" in dezelfde kolom "
+"van\n"
+"                        uw CSV bestand."
 
 #. module: base_import
 #: code:addons/base_import/models.py:264
@@ -1165,6 +1202,11 @@ msgid ""
 "                        identifier from the original application and\n"
 "                        map it to the"
 msgstr ""
+"Om het mogelijk te maken om relaties, tussen verschillende records,\n"
+"                        opnieuw aan te maken, dient u unieke identifiers, "
+"van de\n"
+"                        originele applicatie te gebruiken en deze koppelen "
+"aan de"
 
 #. module: base_import
 #. openerp-web
@@ -1191,6 +1233,18 @@ msgid ""
 "\n"
 "                        the fields relative to the order."
 msgstr ""
+"Indien u verkooporders wilt importeren met verschillende \n"
+"                        orderregels, dien u voor iedere orderregel in het\n"
+"                        CSV bestande een specifieke regel te reserveren.\n"
+"                        De eerste orderregel wordt geïmporteerd op de "
+"eerste\n"
+"                        regel welke ook de kop informatie van de order "
+"bevat.\n"
+"                        Iedere volgende regel hebben een eigen regel welke "
+"niet\n"
+"                        meer de kopgegevens van de order bevatten, maar "
+"alleen de\n"
+"                        regelinformatie."
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_tests_models_m2o_related
@@ -1312,6 +1366,11 @@ msgid ""
 "demo \n"
 "                        data."
 msgstr ""
+"Als een voorbeeld vind u hier het bestand:\n"
+"                        purchase.order_functional_error_line_cant_adpat.CSV\n"
+"                        Het bestand bevat enkele offertes, welke u kunt "
+"importeren.\n"
+"                        Het bestand is gebaseerd op de demo data."
 
 #. module: base_import
 #: field:base_import.import,file:0

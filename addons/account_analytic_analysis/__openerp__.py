@@ -38,7 +38,6 @@ Adds menu to show relevant information to each manager.You can also view the rep
         'security/ir.model.access.csv',
         'security/account_analytic_analysis_security.xml',
         'account_analytic_analysis_view.xml',
-        'account_analytic_analysis_menu.xml',
         'account_analytic_analysis_cron.xml',
         'res_config_view.xml',
     ],
