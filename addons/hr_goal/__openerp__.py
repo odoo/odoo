@@ -27,6 +27,7 @@
     'description': """Gamification of goals""",
 
     'data': [
+        'view/menu.xml',
         'view/type.xml',
         # 'view/definition.xml',
         # 'view/instance.xml',

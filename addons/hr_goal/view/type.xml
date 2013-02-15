@@ -3,14 +3,52 @@
     <data>
 
         <record id="goal_list_action" model="ir.actions.act_window">
-            <field name="name">Gamification</field>
+            <field name="name">Goal types</field>
             <field name="res_model">gamification.goal.type</field>
             <field name="view_mode">tree,form</field>
         </record>
 
-        <!-- <menuitem id="root_menu" name="Gamification"/> -->
-        <menuitem id="gamification_menu" name="Gamification Tools" parent="base.menu_administration"/>
-        <menuitem id="courses_menu" parent="gamification_menu" action="goal_list_action"/>
+        <record id="goal_type_list_view" model="ir.ui.view">
+            <field name="name">Goal types list</field>
+            <field name="model">gamification.goal.type</field>
+            <field name="arch" type="xml">
+                <tree string="Goal types">
+                    <field name="name"/>
+                    <field name="computation_mode"/>
+                    <field name="field"/>
+                    <field name="domain"/>
+                </tree>
+            </field>
+        </record>
+
+
+        <record id="goal_type_form_view" model="ir.ui.view">
+            <field name="name">Goal types form</field>
+            <field name="model">gamification.goal.type</field>
+            <field name="arch" type="xml">
+                <form string="Goal types" version="7.0">
+                    <sheet>
+                        <h1>
+                            <field name="name" placeholder="Goal type name"/>
+                        </h1>
+                        <group>
+                            <group string="General">
+                                <field name="description"/>
+                                <field name="sequence"/>
+                                <field name="condition"/>
+                            </group>
+                            <group string="Computation">
+                                <field name="computation_mode"/>
+                                <field name="object"/>
+                                <field name="field"/>
+                                <field name="field_date"/>
+                                <field name="domain"/>
+                            </group>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
 
     </data>
 </openerp>
