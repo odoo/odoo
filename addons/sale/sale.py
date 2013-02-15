@@ -338,7 +338,10 @@ class sale_order(osv.osv):
     def create(self, cr, uid, vals, context=None):
         if vals.get('name','/')=='/':
             vals['name'] = self.pool.get('ir.sequence').get(cr, uid, 'sale.order') or '/'
-        return super(sale_order, self).create(cr, uid, vals, context=context)
+        context = dict(context, mail_create_nolog=True)        
+        res = super(sale_order, self).create(cr, uid, vals, context=context)
+        self.message_post(cr, uid, [res], body=_("Quotation <b>Created</b>"), context=context)
+        return res
 
     def button_dummy(self, cr, uid, ids, context=None):
         return True
