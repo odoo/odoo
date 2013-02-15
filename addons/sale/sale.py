@@ -64,9 +64,9 @@ class sale_order(osv.osv):
                 v['project_id'] = shop.project_id.id
             if shop.pricelist_id.id:
                 v['pricelist_id'] = shop.pricelist_id.id
-            if context['partner_id']:
-                partner = self.pool.get('res.partner').browse(cr, uid, context['partner_id'], context=context)
-                sale_note = self.get_sale_note(cr, uid, ids, partner, shop_id, context=context)
+            partner_id = context.get('partner_id',False)
+            if partner_id:
+                sale_note = self.get_salenote(cr, uid, ids, partner_id, shop_id, context=context)
                 v.update({'note': sale_note})
         return {'value': v}
 
@@ -315,12 +315,15 @@ class sale_order(osv.osv):
         }
         return {'warning': warning, 'value': value}
 
-    def get_sale_note(self, cr, uid, ids, part, shop_id, context=None):
-        context_lang = context.copy()
-        context_lang.update({'lang': part.lang})
-        sale_note =  self.pool.get('sale.shop').browse(cr, uid, shop_id, context=context_lang).company_id.sale_note
-        return sale_note
-        
+    def get_salenote(self, cr, uid, ids, partner_id, shop_id, context=None):
+        context_lang = context.copy() 
+        if partner_id:
+            partner_lang = self.pool.get('res.partner').browse(cr, uid, partner_id, context=context).lang
+            context_lang.update({'lang': partner_lang})
+        if shop_id:
+            return self.pool.get('sale.shop').browse(cr, uid, shop_id, context=context_lang).company_id.sale_note
+        return self.pool.get('res.users').browse(cr, uid, uid, context=context).company_id.sale_note
+            
     def onchange_partner_id(self, cr, uid, ids, part, context=None):
         if not part:
             return {'value': {'partner_invoice_id': False, 'partner_shipping_id': False,  'payment_term': False, 'fiscal_position': False}}
@@ -344,7 +347,8 @@ class sale_order(osv.osv):
         }
         if pricelist:
             val['pricelist_id'] = pricelist
-        sale_note = self.get_sale_note(cr, uid, ids, part, context['shop_id'], context=context)
+        shop_id = context.get('shop_id',False)
+        sale_note = self.get_salenote(cr, uid, ids, part.id, shop_id, context=context)
         val.update({'note': sale_note})  
         return {'value': val}
 
