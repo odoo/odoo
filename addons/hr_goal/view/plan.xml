@@ -25,6 +25,12 @@
             <field name="model">gamification.goal.plan</field>
             <field name="arch" type="xml">
                 <form string="Goal types" version="7.0">
+                    <header>
+                        <button string="Start plan" type="workflow" name="signal_start" states="draft"/>
+                        <button string="Close plan" type="workflow" name="signal_close" states="inprogress"/>
+                        <button string="Cancel plan" type="workflow" name="signal_cancel" states="inprogress"/>
+                        <field name="state" widget="statusbar"/>
+                    </header>
                     <sheet>
                         <h1>
                             <field name="name" placeholder="Goal plan name"/>
