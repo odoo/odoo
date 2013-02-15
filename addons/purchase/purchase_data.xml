@@ -60,6 +60,11 @@
             <field name="default" eval="False"/>
             <field name="res_model">purchase.order</field>
         </record>
+        <record id="mt_rfq_done" model="mail.message.subtype">
+            <field name="name">Purchase Order Done</field>
+            <field name="default" eval="False"/>
+            <field name="res_model">purchase.order</field>
+        </record>
 
     </data>
 </openerp>
