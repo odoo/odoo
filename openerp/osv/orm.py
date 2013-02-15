@@ -2283,7 +2283,7 @@ class BaseModel(object):
                          if view_type == 'tree' or not action[2].get('multi')]
             resprint = [clean(print_) for print_ in resprint
                         if view_type == 'tree' or not print_[2].get('multi')]
-            #When multi="True" set it will display only in More of the list view 
+            #When multi="True" set it will display only in More of the list view
             resrelate = [clean(action) for action in resrelate
                          if (action[2].get('multi') and view_type == 'tree') or (not action[2].get('multi') and view_type == 'form')]
 
@@ -2678,17 +2678,17 @@ class BaseModel(object):
 
         order = orderby or groupby
         data_ids = self.search(cr, uid, [('id', 'in', alldata.keys())], order=order, context=context)
-        
+
         # the IDs of records that have groupby field value = False or '' should be included too
         data_ids += set(alldata.keys()).difference(data_ids)
-        
-        if groupby:   
+
+        if groupby:
             data = self.read(cr, uid, data_ids, [groupby], context=context)
             # restore order of the search as read() uses the default _order (this is only for groups, so the footprint of data should be small):
             data_dict = dict((d['id'], d[groupby] ) for d in data)
             result = [{'id': i, groupby: data_dict[i]} for i in data_ids]
         else:
-            result = [{'id': i} for i in data_ids] 
+            result = [{'id': i} for i in data_ids]
 
         for d in result:
             if groupby:
@@ -2752,7 +2752,7 @@ class BaseModel(object):
             return
         _logger.info('Computing parent left and right for table %s...', self._table)
         def browse_rec(root, pos=0):
-# TODO: set order
+            # TODO: set order
             where = self._parent_name+'='+str(root)
             if not root:
                 where = self._parent_name+' IS NULL'
@@ -3863,7 +3863,7 @@ class BaseModel(object):
                 if operation in ('read','unlink'):
                     # No need to warn about deleting an already deleted record.
                     # And no error when reading a record that was deleted, to prevent spurious
-                    # errors for non-transactional search/read sequences coming from clients 
+                    # errors for non-transactional search/read sequences coming from clients
                     return
                 _logger.warning('Failed operation on deleted record(s): %s, uid: %s, model: %s', operation, uid, self._name)
                 raise except_orm(_('Missing document(s)'),
@@ -4375,12 +4375,12 @@ class BaseModel(object):
                 del vals[self._inherits[table]]
 
             record_id = tocreate[table].pop('id', None)
-            
+
             # When linking/creating parent records, force context without 'no_store_function' key that
-            # defers stored functions computing, as these won't be computed in batch at the end of create(). 
+            # defers stored functions computing, as these won't be computed in batch at the end of create().
             parent_context = dict(context)
             parent_context.pop('no_store_function', None)
-            
+
             if record_id is None or not record_id:
                 record_id = self.pool.get(table).create(cr, user, tocreate[table], context=parent_context)
             else:
@@ -4429,7 +4429,7 @@ class BaseModel(object):
                 upd0 = upd0 + ',"' + field + '"'
                 upd1 = upd1 + ',' + self._columns[field]._symbol_set[0]
                 upd2.append(self._columns[field]._symbol_set[1](vals[field]))
-                #for the function fields that receive a value, we set them directly in the database 
+                #for the function fields that receive a value, we set them directly in the database
                 #(they may be required), but we also need to trigger the _fct_inv()
                 if (hasattr(self._columns[field], '_fnct_inv')) and not isinstance(self._columns[field], fields.related):
                     #TODO: this way to special case the related fields is really creepy but it shouldn't be changed at

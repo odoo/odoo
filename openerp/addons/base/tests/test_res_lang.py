@@ -7,20 +7,20 @@ class test_res_lang(common.TransactionCase):
     def test_00_intersperse(self):
         from openerp.addons.base.res.res_lang import intersperse
 
-        assert intersperse("", []) == ("", 0), "Assert passed"
-        assert intersperse("0", []) == ("0", 0), "Assert passed"
-        assert intersperse("012", []) == ("012", 0), "Assert passed"
-        assert intersperse("1", []) == ("1", 0), "Assert passed"
-        assert intersperse("12", []) == ("12", 0), "Assert passed"
-        assert intersperse("123", []) == ("123", 0), "Assert passed"
-        assert intersperse("1234", []) == ("1234", 0), "Assert passed"
-        assert intersperse("123456789", []) == ("123456789", 0), "Assert passed"
-        assert intersperse("&ab%#@1", []) == ("&ab%#@1", 0), "Assert passed"
+        assert intersperse("", []) == ("", 0)
+        assert intersperse("0", []) == ("0", 0)
+        assert intersperse("012", []) == ("012", 0)
+        assert intersperse("1", []) == ("1", 0)
+        assert intersperse("12", []) == ("12", 0)
+        assert intersperse("123", []) == ("123", 0)
+        assert intersperse("1234", []) == ("1234", 0)
+        assert intersperse("123456789", []) == ("123456789", 0)
+        assert intersperse("&ab%#@1", []) == ("&ab%#@1", 0)
 
-        assert intersperse("0", []) == ("0", 0), "Assert passed"
-        assert intersperse("0", [1]) == ("0", 0), "Assert passed"
-        assert intersperse("0", [2]) == ("0", 0), "Assert passed"
-        assert intersperse("0", [200]) == ("0", 0), "Assert passed"
+        assert intersperse("0", []) == ("0", 0)
+        assert intersperse("0", [1]) == ("0", 0)
+        assert intersperse("0", [2]) == ("0", 0)
+        assert intersperse("0", [200]) == ("0", 0)
 
         assert intersperse("12345678", [1], '.') == ('1234567.8', 1)
         assert intersperse("12345678", [1], '.') == ('1234567.8', 1)
