@@ -1,6 +1,5 @@
 #!/usr/bin/env python
 
-from openerp import netsvc
 from openerp.osv import osv, fields
 from openerp.tools.translate import _
 
@@ -37,9 +36,8 @@ class pos_session_opening(osv.osv_memory):
         }
 
     def open_existing_session_cb_close(self, cr, uid, ids, context=None):
-        wf_service = netsvc.LocalService("workflow")
         wizard = self.browse(cr, uid, ids[0], context=context)
-        wf_service.trg_validate(uid, 'pos.session', wizard.pos_session_id.id, 'cashbox_control', cr)
+        self.pool.get('pos.session').signal_cashbox_control(cr, uid, [wizard.pos_session_id.id])
         return self.open_session_cb(cr, uid, ids, context)
 
     def open_session_cb(self, cr, uid, ids, context=None):

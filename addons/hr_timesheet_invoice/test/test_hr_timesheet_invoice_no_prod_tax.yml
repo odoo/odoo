@@ -114,6 +114,4 @@
   I click on "Create Invoice" button to create Invoice and validate the invoice.
 -
   !python {model: hr.timesheet.invoice.create.final}: |
-    from openerp import netsvc
-    wkf_service = netsvc.LocalService("workflow")
     res = self.do_create(cr, uid, [ref("hr_timesheet_invoice_create_final_0")], {"active_ids": [ref("account.analytic_agrolait")]})

@@ -151,7 +151,6 @@ class stock_return_picking(osv.osv_memory):
         data_obj = self.pool.get('stock.return.picking.memory')
         act_obj = self.pool.get('ir.actions.act_window')
         model_obj = self.pool.get('ir.model.data')
-        wf_service = netsvc.LocalService("workflow")
         pick = pick_obj.browse(cr, uid, record_id, context=context)
         data = self.read(cr, uid, ids[0], context=context)
         date_cur = time.strftime('%Y-%m-%d %H:%M:%S')
@@ -206,7 +205,7 @@ class stock_return_picking(osv.osv_memory):
 
         if set_invoice_state_to_none:
             pick_obj.write(cr, uid, [pick.id], {'invoice_state':'none'}, context=context)
-        wf_service.trg_validate(uid, 'stock.picking', new_picking, 'button_confirm', cr)
+        pick_obj.signal_button_confirm(cr, uid, [new_picking])
         pick_obj.force_assign(cr, uid, [new_picking], context)
         # Update view id in context, lp:702939
         model_list = {
