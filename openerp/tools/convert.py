@@ -833,12 +833,8 @@ form: module.record_id""" % (xml_id,)
         return model_data_obj.get_object_reference(cr, self.uid, mod, id_str)
 
     def parse(self, de):
-        if not de.tag in ['terp', 'openerp']:
-            _logger.error("Mismatch xml format")
-            raise Exception( "Mismatch xml format: only terp or openerp as root tag" )
-
-        if de.tag == 'terp':
-            _logger.warning("The tag <terp/> is deprecated, use <openerp/>")
+        if de.tag != 'openerp':
+            raise Exception("Mismatch xml format: root tag must be `openerp`.")
 
         for n in de.findall('./data'):
             for rec in n:

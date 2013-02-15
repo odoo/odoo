@@ -12,7 +12,7 @@
   I will prepare the context
 -
   !python {model: res.users }: |
-    from tools import config
+    from openerp.tools import config
     host = config.get_misc('httpd', 'interface')
     port = config.get_misc('httpd', 'port', 8069)
     if not host:

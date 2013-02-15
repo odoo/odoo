@@ -22,6 +22,8 @@ import test_osv
 import test_translate
 import test_uninstall
 import test_view_validation
+# This need a change in `oe run-tests` to only run fast_suite + checks by default.
+# import test_xmlrpc
 
 fast_suite = [
     test_ir_sequence,

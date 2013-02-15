@@ -23,7 +23,6 @@ import os
 import re
 
 from lxml import etree
-import openerp.netsvc as netsvc
 import openerp.pooler as pooler
 
 import openerp.tools as tools
@@ -40,12 +39,17 @@ def toxml(value):
     unicode_value = tools.ustr(value)
     return unicode_value.replace('&', '&amp;').replace('<','&lt;').replace('>','&gt;')
 
-class report_int(netsvc.Service):
+class report_int(object):
+
+    _reports = {}
+    
     def __init__(self, name):
-        assert not self.exists(name), 'The report "%s" already exists!' % name
-        super(report_int, self).__init__(name)
         if not name.startswith('report.'):
             raise Exception('ConceptionError, bad report name, should start with "report."')
+        assert name not in self._reports, 'The report "%s" already exists!' % name
+        self._reports[name] = self
+        self.__name = name
+
         self.name = name
         self.id = 0
         self.name2 = '.'.join(name.split('.')[1:])

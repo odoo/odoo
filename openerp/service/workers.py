@@ -319,7 +319,13 @@ class WorkerHTTP(Worker):
         fcntl.fcntl(client, fcntl.F_SETFD, flags)
         # do request using WorkerBaseWSGIServer monkey patched with socket
         self.server.socket = client
-        self.server.process_request(client,addr)
+        # tolerate broken pipe when the http client closes the socket before
+        # receiving the full reply
+        try:
+            self.server.process_request(client,addr)
+        except IOError, e:
+            if e.errno != errno.EPIPE:
+                raise
         self.request_count += 1
 
     def process_work(self):
@@ -361,7 +367,7 @@ class WorkerCron(Worker):
         if config['db_name']:
             db_names = config['db_name'].split(',')
         else:
-            db_names = openerp.netsvc.ExportService._services['db'].exp_list(True)
+            db_names = openerp.service.db.exp_list(True)
         for db_name in db_names:
             if rpc_request_flag:
                 start_time = time.time()

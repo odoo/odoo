@@ -674,49 +674,7 @@ def trans_generate(lang, modules, cr):
             for t in trans_parse_view(d):
                 push_translation(module, 'view', encode(obj.model), 0, t)
         elif model=='ir.actions.wizard':
-            service_name = 'wizard.'+encode(obj.wiz_name)
-            import openerp.netsvc as netsvc
-            if netsvc.Service._services.get(service_name):
-                obj2 = netsvc.Service._services[service_name]
-                for state_name, state_def in obj2.states.iteritems():
-                    if 'result' in state_def:
-                        result = state_def['result']
-                        if result['type'] != 'form':
-                            continue
-                        name = "%s,%s" % (encode(obj.wiz_name), state_name)
-
-                        def_params = {
-                            'string': ('wizard_field', lambda s: [encode(s)]),
-                            'selection': ('selection', lambda s: [encode(e[1]) for e in ((not callable(s)) and s or [])]),
-                            'help': ('help', lambda s: [encode(s)]),
-                        }
-
-                        # export fields
-                        if not result.has_key('fields'):
-                            _logger.warning("res has no fields: %r", result)
-                            continue
-                        for field_name, field_def in result['fields'].iteritems():
-                            res_name = name + ',' + field_name
-
-                            for fn in def_params:
-                                if fn in field_def:
-                                    transtype, modifier = def_params[fn]
-                                    for val in modifier(field_def[fn]):
-                                        push_translation(module, transtype, res_name, 0, val)
-
-                        # export arch
-                        arch = result['arch']
-                        if arch and not isinstance(arch, UpdateableStr):
-                            d = etree.XML(arch)
-                            for t in trans_parse_view(d):
-                                push_translation(module, 'wizard_view', name, 0, t)
-
-                        # export button labels
-                        for but_args in result['state']:
-                            button_name = but_args[0]
-                            button_label = but_args[1]
-                            res_name = name + ',' + button_name
-                            push_translation(module, 'wizard_button', res_name, 0, button_label)
+            pass # TODO Can model really be 'ir.actions.wizard' ?
 
         elif model=='ir.model.fields':
             try:
