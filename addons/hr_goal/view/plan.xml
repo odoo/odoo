@@ -43,7 +43,12 @@
                         </group>
                         <notebook>
                             <page string="Goals">
-                                <field name="planline_ids"/>
+                                <field name="planline_ids">
+                                    <tree string="planline list" version="7.0" editable="top" >
+                                        <field name="type_id"/>
+                                        <field name="target_goal"/>
+                                    </tree>
+                                </field>
                             </page>
                             <page string="Subscription">
                                 <group>
@@ -72,6 +77,19 @@
                         </notebook>
                     </sheet>
                 </form>
+            </field>
+        </record>
+
+
+        <!-- Planline -->
+        <record id="goal_planline_list_view" model="ir.ui.view">
+            <field name="name">Goal planline list</field>
+            <field name="model">gamification.goal.planline</field>
+            <field name="arch" type="xml">
+                <tree string="planline list" >
+                    <field name="type_id"/>
+                    <field name="target_goal"/>
+                </tree>
             </field>
         </record>
 
