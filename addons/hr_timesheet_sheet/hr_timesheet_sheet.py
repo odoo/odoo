@@ -262,7 +262,8 @@ class hr_timesheet_line(osv.osv):
             res = sheet_obj.default_get(cr, uid, ['date_from','date_to','employee_id','company_id','state'], context=None)
             ids = sheet_obj.create(cr, uid, res, context=None)
             print"this >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>...343424",ids,res
-        return [ids]
+            return ids
+        return idss
 
     def _sheet(self, cursor, user, ids, name, args, context=None):
         sheet_obj = self.pool.get('hr_timesheet_sheet.sheet')
