@@ -559,7 +559,6 @@ class purchase_order(osv.osv):
 
     def invoice_done(self, cr, uid, ids, context=None):
         self.write(cr, uid, ids, {'state':'approved'}, context=context)
-        self.message_post(cr, uid, ids, body=_("Invoice <b>Paid.</b>"), context=context)
         return True
 
     def has_stockable_product(self, cr, uid, ids, *args):
@@ -1199,5 +1198,11 @@ class account_invoice(osv.Model):
         res = super(account_invoice, self).invoice_validate(cr, uid, ids, context=None)
         self.pool.get('purchase.order').message_post(cr, uid, po_ids, body=_("Invoice <b>Received.</b>"), context=context)
         return res 
+    
+    def confirm_paid(self, cr, uid, ids, context=None):
+        po_ids = self.pool.get('purchase.order').search(cr,uid,[('invoice_ids','in',ids)],context)
+        res = super(account_invoice, self).confirm_paid(cr, uid, ids, context=None)
+        self.pool.get('purchase.order').message_post(cr, uid, po_ids, body=_("Invoice <b>Paid</b>"), context=context)
+        return res
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
