@@ -38,7 +38,6 @@ def run(args):
 
     # Install the import hook, to import openerp.addons.<module>.
     openerp.modules.module.initialize_sys_path()
-    openerp.modules.loading.open_openerp_namespace()
 
     registry = openerp.modules.registry.RegistryManager.get(
         args.database, update_module=False)

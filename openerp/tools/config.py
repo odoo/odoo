@@ -47,7 +47,6 @@ class MyOption (optparse.Option, object):
         self.my_default = attrs.pop('my_default', None)
         super(MyOption, self).__init__(*opts, **attrs)
 
-#.apidoc title: Server Configuration Loader
 
 def check_ssl():
     try:
@@ -491,7 +490,6 @@ class configmanager(object):
             openerp.conf.server_wide_modules = ['web','web_kanban']
         if complete:
             openerp.modules.module.initialize_sys_path()
-            openerp.modules.loading.open_openerp_namespace()
 
     def _generate_pgpassfile(self):
         """
