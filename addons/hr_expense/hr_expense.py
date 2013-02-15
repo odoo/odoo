@@ -284,7 +284,7 @@ class hr_expense_line(osv.osv):
         if product_id:
             product = self.pool.get('product.product').browse(cr, uid, product_id, context=context)
             res['name'] = product.name
-            amount_unit = product.price_get('standard_price')[product.id]
+            amount_unit = product.price_get('standard_price')
             res['unit_amount'] = amount_unit
             res['uom_id'] = product.uom_id.id
         return {'value': res}

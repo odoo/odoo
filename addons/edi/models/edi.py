@@ -214,7 +214,7 @@ class EDIMixin(object):
         """
         ir_model_data = self.pool.get('ir.model.data')
         db_uuid = self.pool.get('ir.config_parameter').get_param(cr, uid, 'database.uuid')
-        ext_id = record.get_external_id()[record.id]
+        ext_id = record.get_external_id()
         if not ext_id:
             ext_id = existing_id or safe_unique_id(db_uuid, record._name, record.id)
             # ID is unique cross-db thanks to db_uuid (already included in existing_module)

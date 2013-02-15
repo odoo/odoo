@@ -118,7 +118,7 @@ class account_analytic_line(osv.osv):
             # price_get() will respect a 'uom' in its context, in order
             # to return a default price for those units
             ctx['uom'] = unit
-        amount_unit = prod.price_get(pricetype.field, context=ctx)[prod.id]
+        amount_unit = prod.price_get(pricetype.field, context=ctx)
         prec = self.pool.get('decimal.precision').precision_get(cr, uid, 'Account')
         amount = amount_unit * quantity or 0.0
         result = round(amount, prec)

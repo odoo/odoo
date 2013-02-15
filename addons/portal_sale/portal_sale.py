@@ -81,7 +81,7 @@ class sale_order(osv.Model):
         partner = document.partner_id
         action = 'portal_sale.action_quotations_portal' if document.state in ('draft', 'sent') else 'portal_sale.action_orders_portal'
         partner.signup_prepare()
-        return partner._get_signup_url_for_action(action=action, view_type='form', res_id=document.id)[partner.id]
+        return partner._get_signup_url_for_action(action=action, view_type='form', res_id=document.id)
 
 
 class account_invoice(osv.Model):
@@ -142,7 +142,7 @@ class account_invoice(osv.Model):
         partner = document.partner_id
         action = 'portal_sale.portal_action_invoices'
         partner.signup_prepare()
-        return partner._get_signup_url_for_action(action=action, view_type='form', res_id=document.id)[partner.id]
+        return partner._get_signup_url_for_action(action=action, view_type='form', res_id=document.id)
 
 
 class mail_mail(osv.osv):
