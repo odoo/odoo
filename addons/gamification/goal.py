@@ -164,6 +164,16 @@ class gamification_goal(osv.Model):
         'state': 'inprogress',
     }
 
+    def action_reach(self, cr, uid, ids, context=None):
+        return self.write(cr, uid, ids, {'state': 'reached'}, context=context)
+
+    def action_fail(self, cr, uid, ids, context=None):
+        return self.write(cr, uid, ids, {'state': 'failed'}, context=context)
+
+    def action_cancel(self, cr, uid, ids, context=None):
+        return self.write(cr, uid, ids, {'state': 'inprogress'}, context=context)
+
+
 
 class gamification_goal_plan(osv.Model):
     """Ga;ification goal plan
@@ -206,17 +216,27 @@ class gamification_goal_plan(osv.Model):
             string="Frequency",
             required=True),
         'report_message_group_id' : fields.many2one('mail.group',
-            string='Group',
+            string='Report to',
             help='Group that will receive the report in addition to the user'),
         'report_header' : fields.text('Report header'),
         }
 
     _defaults = {
         'period': 'once',
-        'state': 'inprogress',
+        'state': 'draft',
         'report_mode' : 'progressbar',
         'report_message_frequency' : 'onchange',
     }
+
+    def action_start(self, cr, uid, ids, context=None):
+        return self.write(cr, uid, ids, {'state': 'inprogress'}, context=context)
+
+    def action_close(self, cr, uid, ids, context=None):
+        return self.write(cr, uid, ids, {'state': 'done'}, context=context)
+
+    def action_cancel(self, cr, uid, ids, context=None):
+        return self.write(cr, uid, ids, {'state': 'draft'}, context=context)
+
 
 
 class gamification_goal_planline(osv.Model):
