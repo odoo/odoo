@@ -420,12 +420,13 @@ class hr_applicant(base_stage, osv.Model):
         act_window = self.pool.get('ir.actions.act_window')
         emp_id = False
         for applicant in self.browse(cr, uid, ids, context=context):
-            address_id = False
+            address_id = contact_name = False
             if applicant.partner_id:
                 address_id = self.pool.get('res.partner').address_get(cr,uid,[applicant.partner_id.id],['contact'])['contact']
+                contact_name = self.pool.get('res.partner').name_get(cr,uid,[applicant.partner_id.id])[0][1]
             if applicant.job_id:
                 applicant.job_id.write({'no_of_recruitment': applicant.job_id.no_of_recruitment - 1})
-                emp_id = hr_employee.create(cr,uid,{'name': applicant.partner_name or applicant.name,
+                emp_id = hr_employee.create(cr,uid,{'name': applicant.partner_name or contact_name or applicant.name,
                                                      'job_id': applicant.job_id.id,
                                                      'address_home_id': address_id,
                                                      'department_id': applicant.department_id.id

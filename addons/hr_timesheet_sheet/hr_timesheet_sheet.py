@@ -255,15 +255,12 @@ class hr_timesheet_line(osv.osv):
 
     def create_timesheet(self, cr, uid, vals,context=None):
         sheet_obj = self.pool.get('hr_timesheet_sheet.sheet')
-        print"this >>>>>>>>>>>>>>>>>>>>>>>>",vals,sheet_obj.search(cr, uid,[('date_to', '>=', vals['date']), ('date_from', '<=', vals['date'])])
-        idss = sheet_obj.search(cr, uid,[('date_to', '>=', vals['date']), ('date_from', '<=', vals['date'])])
-        print"this 123 >>>>>>>>>>>>>>>>>>>>>>>>",idss
-        if not idss or len(idss) < 1 :
+        sheet_ids = sheet_obj.search(cr, uid,[('date_to', '>=', vals['date']), ('date_from', '<=', vals['date'])])
+        if not sheet_ids or len(sheet_ids) < 1 :
             res = sheet_obj.default_get(cr, uid, ['date_from','date_to','employee_id','company_id','state'], context=None)
-            ids = sheet_obj.create(cr, uid, res, context=None)
-            print"this >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>...343424",ids,res
-            return ids
-        return idss
+            id = sheet_obj.create(cr, uid, res, context=None)
+            return id
+        return sheet_ids
 
     def _sheet(self, cursor, user, ids, name, args, context=None):
         sheet_obj = self.pool.get('hr_timesheet_sheet.sheet')
