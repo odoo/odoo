@@ -163,6 +163,7 @@ class purchase_order(osv.osv):
         'state': {
             'purchase.mt_rfq_confirmed': lambda self, cr, uid, obj, ctx=None: obj['state'] == 'confirmed',
             'purchase.mt_rfq_approved': lambda self, cr, uid, obj, ctx=None: obj['state'] == 'approved',
+            'purchase.mt_rfq_done': lambda self, cr, uid, obj, ctx=None: obj['state'] == 'done',
         },
     }
     _columns = {
@@ -675,7 +676,7 @@ class purchase_order(osv.osv):
 
     def picking_done(self, cr, uid, ids, context=None):
         self.write(cr, uid, ids, {'shipped':1,'state':'approved'}, context=context)
-        self.message_post(cr, uid, ids, body=_("Product <b>Received.</b>"), context=context)
+        self.message_post(cr, uid, ids, body=_("Products <b>Received.</b>"), context=context)
         return True
 
     def copy(self, cr, uid, id, default=None, context=None):
@@ -1192,7 +1193,7 @@ class mail_compose_message(osv.Model):
 
 class account_invoice(osv.Model):
     _inherit = 'account.invoice'
-    
+
     def invoice_validate(self, cr, uid, ids, context=None):
         po_ids = self.pool.get('purchase.order').search(cr,uid,[('invoice_ids','in',ids)],context)
         res = super(account_invoice, self).invoice_validate(cr, uid, ids, context=None)
@@ -1204,5 +1205,6 @@ class account_invoice(osv.Model):
         res = super(account_invoice, self).confirm_paid(cr, uid, ids, context=None)
         self.pool.get('purchase.order').message_post(cr, uid, po_ids, body=_("Invoice <b>Paid</b>"), context=context)
         return res
+
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
