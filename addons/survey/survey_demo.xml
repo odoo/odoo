@@ -2915,20 +2915,6 @@
     <!--  Survey Response -->
 
     <data noupdate="1">
-        <record id="survey_history_0" model="survey.history">
-            <field name="date" eval="time.strftime('%Y-%m-%d %H:%M:%S')"/>
-            <field name="survey_id" ref="survey.survey_partner_feedback"/>
-            <field name="user_id" ref="base.user_root"/>
-        </record>
-    </data>
-    <data noupdate="1">
-        <record id="survey_history_1" model="survey.history">
-            <field name="date" eval="time.strftime('%Y-%m-%d %H:%M:%S')"/>
-            <field name="survey_id" ref="survey.survey_odoo_feedback"/>
-            <field name="user_id" ref="base.user_root"/>
-        </record>
-    </data>
-    <data noupdate="1">
         <record id="survey_response_0" model="survey.response">
             <field name="date_create" eval="time.strftime('%Y-%m-%d %H:%M:%S')+'.603599'"/>
             <field name="state">done</field>

@@ -62,7 +62,6 @@ class survey(osv.osv):
         'tot_start_survey': fields.integer("Total Started Survey", readonly=1),
         'tot_comp_survey': fields.integer("Total Completed Survey", readonly=1),
         'note': fields.text('Description', size=128),
-        'history': fields.one2many('survey.history', 'survey_id', 'History Lines', readonly=True),
         'partner_id': fields.many2many('res.partner', 'survey_partner_rel', 'sid', 'partner_id', 'Partners'),
         'send_response': fields.boolean('Email Notification on Answer'),
         'type': fields.many2one('survey.type', 'Type'),
@@ -95,7 +94,7 @@ class survey(osv.osv):
         current_rec = self.read(cr, uid, ids, context=context)
         title = _("%s (copy)") % (current_rec.get('title'))
         vals.update({'title':title})
-        vals.update({'history':[],'tot_start_survey':0,'tot_comp_survey':0})
+        vals.update({'tot_start_survey':0,'tot_comp_survey':0})
         return super(survey, self).copy(cr, uid, ids, vals, context=context)
 
     def action_print_survey(self, cr, uid, ids, context=None):
@@ -231,20 +230,6 @@ class survey(osv.osv):
         }
 
 survey()
-
-class survey_history(osv.osv):
-    _name = 'survey.history'
-    _description = 'Survey History'
-    _rec_name = 'date'
-    _columns = {
-        'survey_id': fields.many2one('survey', 'Survey'),
-        'partner_id': fields.many2one('res.partner', 'Partner', readonly=True),
-        'date': fields.datetime('Date started', readonly=1),
-    }
-    _defaults = {
-         'date': lambda * a: datetime.datetime.now()
-    }
-survey_history()
 
 class survey_page(osv.osv):
     _name = 'survey.page'

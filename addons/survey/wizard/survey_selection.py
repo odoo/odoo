@@ -66,23 +66,17 @@ class survey_name_wiz(osv.osv_memory):
         """
         survey_obj = self.pool.get('survey')
         search_obj = self.pool.get('ir.ui.view')
-        if context is None: context = {}
+        context = context or {}
 
         this = self.browse(cr, uid, ids, context=context)[0]
         survey_id = this.survey_id.id
         context.update({'survey_id': survey_id, 'sur_name_id': this.id})
-        cr.execute('select count(id) from survey_history where user_id=%s\
-                    and survey_id=%s' % (uid,survey_id))
-
-        res = cr.fetchone()[0]
-        sur_rec = survey_obj.browse(cr,uid,survey_id,context=context)
-        if sur_rec.response_user and res >= sur_rec.response_user:
-            raise osv.except_osv(_('Warning!'),_("You cannot give response for this survey more than %s times.") % (sur_rec.response_user))
+        sur_rec = survey_obj.browse(cr, uid, survey_id, context=context)
 
         if sur_rec.max_response_limit and sur_rec.max_response_limit <= sur_rec.tot_start_survey:
-            raise osv.except_osv(_('Warning!'),_("You cannot give more responses. Please contact the author of this survey for further assistance."))
+            raise osv.except_osv(_('Warning!'), _("You cannot give more responses. Please contact the author of this survey for further assistance."))
 
-        search_id = search_obj.search(cr,uid,[('model','=','survey.question.wiz'),('name','=','Survey Search')])
+        search_id = search_obj.search(cr, uid, [('model', '=', 'survey.question.wiz'), ('name', '=', 'Survey Search')])
         return {
             'view_type': 'form',
             "view_mode": 'form',
