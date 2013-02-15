@@ -54,6 +54,19 @@ GAMIFICATION_VALIDATION_CONDITION = [
     ('plus','>=')
 ]
 
+GAMIFICATION_REPORT_MODE = [
+    ('board','Leader board'),
+    ('progressbar','Personal progressbar')
+]
+
+GAMIFICATION_REPORT_FREQ = [
+    ('onchange','On change'),
+    ('daily','Daily'),
+    ('weekly','Weekly'),
+    ('monthly','Monthly'),
+    ('yearly', 'Yearly')
+]
+
 
 class gamification_goal_type(osv.Model):
     """Goal type definition
@@ -161,7 +174,9 @@ class gamification_goal_plan(osv.Model):
             'plan_id',
             string='Planline',
             help="list of goals that will be set"),
-        'group_id' : fields.many2one('res.groups', string='Group'),
+        'autojoin_group_id' : fields.many2one('res.groups',
+            string='Group',
+            help='Group of users whose members will automatically be added to the users'),
         'period' : fields.selection(GAMIFICATION_PERIOD_STATUS,
             string='Period',
             help='Period of automatic goal assigment, will be done manually if none is selected',
@@ -169,11 +184,24 @@ class gamification_goal_plan(osv.Model):
         'status': fields.selection(GAMIFICATION_PLAN_STATUS,
             string='Status',
             required=True),
+        'report_mode':fields.selection(GAMIFICATION_REPORT_MODE,
+            string="Mode",
+            help='How is displayed the results, shared or in a signle progressbar',
+            required=True),
+        'report_message_frequency':fields.selection(GAMIFICATION_REPORT_FREQ,
+            string="Frequency",
+            required=True),
+        'report_message_group_id' : fields.many2one('mail.group',
+            string='Group',
+            help='Group that will receive the report in addition to the user'),
+        'report_header' : fields.text('Report header'),
         }
 
     _defaults = {
         'period': 'once',
         'status': 'inprogress',
+        'report_mode' : 'progressbar',
+        'report_message_frequency' : 'onchange',
     }
 
 
