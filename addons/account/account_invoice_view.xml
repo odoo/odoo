@@ -186,7 +186,7 @@
                                 on_change="onchange_journal_id(journal_id, context)" widget="selection"/>
                             <label for="currency_id" groups="base.group_multi_currency"/>
                             <div groups="base.group_multi_currency">
-                                <field name="currency_id" class="oe_inline" readonly="1"/>
+                                <field name="currency_id" class="oe_inline"/>
                                 <button name="223" type="action" class="oe_inline oe_link oe_edit_only" 
                                     string="(change)" 
                                     attrs="{'invisible':[('state','!=','draft')]}" 
@@ -340,7 +340,7 @@
 
                             <label for="currency_id" groups="base.group_multi_currency"/>
                             <div groups="base.group_multi_currency">
-                                <field name="currency_id" class="oe_inline" readonly="1"/>
+                                <field name="currency_id" class="oe_inline"/>
                                 <button name="%(action_account_change_currency)d" type="action" 
                                   class="oe_inline oe_link oe_edit_only"
                                   string="(change)"
