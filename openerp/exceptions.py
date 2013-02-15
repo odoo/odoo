@@ -25,8 +25,7 @@ This module defines a few exception types. Those types are understood by the
 RPC layer. Any other exception type bubbling until the RPC layer will be
 treated as a 'Server error'.
 
-If you consider introducing new exceptions, check out the test_exceptions
-addon.
+If you consider introducing new exceptions, check out the test_exceptions addon.
 """
 
 class Warning(Exception):
@@ -34,16 +33,13 @@ class Warning(Exception):
 
 class RedirectWarning(Exception):
     """ Warning with a possibility to redirect the user instead of simply
-    discarding the warning message.
+    diplaying the warning message.
+
+    Should receive as parameters:
+      :param int action_id: id of the action where to perform the redirection
+      :param string button_text: text to put on the button that will trigger
+          the redirection.
     """
-    def __init__(self, msg, action_id, button_text):
-        """
-        :param int action_id: id of the action required to perform the
-        redirection
-        :param string button_text: text to put on the button which will trigger
-        the redirection
-        """
-        super(RedirectWarning, self).__init__(msg, action_id, button_text)
 
 class AccessDenied(Exception):
     """ Login/password error. No message, no traceback. """

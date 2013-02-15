@@ -594,16 +594,13 @@ class res_config_settings(osv.osv_memory):
 
     def get_option_path(self, cr, uid, menu_xml_id, context=None):
         """
-        Fetch the path to a specified configuration view and the action id
-        to access it.
+        Fetch the path to a specified configuration view and the action id to access it.
 
-        :param string menu_xml_id: the xml id of the menuitem where the view
-        is located, structured as follows: module_name.menuitem_xml_id
-        (e.g.: "base.menu_sale_config")
+        :param string menu_xml_id: the xml id of the menuitem where the view is located,
+            structured as follows: module_name.menuitem_xml_id (e.g.: "base.menu_sale_config")
         :return tuple:
-        - t[0]: string: full path to the menuitem
-          (e.g.: "Settings/Configuration/Sales")
-        - t[1]: long: id of the menuitem's action
+            - t[0]: string: full path to the menuitem (e.g.: "Settings/Configuration/Sales")
+            - t[1]: long: id of the menuitem's action
         """
         module_name, menu_xml_id = menu_xml_id.split('.')
         dummy, menu_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, module_name, menu_xml_id)
@@ -615,11 +612,9 @@ class res_config_settings(osv.osv_memory):
         """
         Fetch the human readable name of a specified configuration option.
 
-        :param string full_field_name: the full name of the field, structured
-        as follows: model_name.field_name
-        (e.g.: "sale.config.settings.fetchmail_lead")
-        :return string: human readable name of the field
-        (e.g.: "Create leads from incoming mails")
+        :param string full_field_name: the full name of the field, structured as follows: 
+            model_name.field_name (e.g.: "sale.config.settings.fetchmail_lead")
+        :return string: human readable name of the field (e.g.: "Create leads from incoming mails")
         """
         model_name, field_name = full_field_name.rsplit('.', 1)
 
@@ -627,22 +622,23 @@ class res_config_settings(osv.osv_memory):
 
     def get_config_warning(self, cr, msg, context=None):
         """
-        Helper: return a Warning exception with the given message where the
-        %(field:)s and/or %(menu:)s are replaced by the human readable field's name
-        and/or menuitem's full path.
+        Helper: return a Warning exception with the given message where the %(field:xxx)s 
+        and/or %(menu:yyy)s are replaced by the human readable field's name and/or menuitem's
+        full path.
 
         Usage:
         ------
-        Just include in your error message %(field:model_name.field_name)s to
-        obtain the human readable field's name, and/or
-        %(menu:module_name.menuitem_xml_id)s to obtain the menuitem's full path.
+        Just include in your error message %(field:model_name.field_name)s to obtain the human
+        readable field's name, and/or %(menu:module_name.menuitem_xml_id)s to obtain the menuitem's
+        full path.
 
         Example of use:
         ---------------
         from openerp.addons.base.res.res_config import get_warning_config
         raise get_warning_config(cr, _("Error: this action is prohibited. You should check the field %(field:sale.config.settings.fetchmail_lead)s in %(menu:base.menu_sale_config)s."), context=context)
-        will return an exception containing the following message:
-        Error: this action is prohibited. You should check the field Create leads from incoming mails in Settings/Configuration/Sales.
+
+        This will return an exception containing the following message:
+            Error: this action is prohibited. You should check the field Create leads from incoming mails in Settings/Configuration/Sales.
         """
 
         res_config_obj = pooler.get_pool(cr.dbname).get('res.config.settings')
@@ -656,18 +652,15 @@ class res_config_settings(osv.osv_memory):
         #    human readable field's name) and the action_id if any
         values = {}
         action_id = None
-        buttontext = None
         for item in references:
             ref_type, ref = item.split(':')
             if ref_type == 'menu':
-                values[item], action_id = res_config_obj.get_option_path(cr, SUPERUSER_ID, ref, context)
-                buttontext = _('Go to the configuration panel')
+                values[item], action_id = res_config_obj.get_option_path(cr, SUPERUSER_ID, ref, context=context)
             elif ref_type == 'field':
-                values[item] = res_config_obj.get_option_name(cr, SUPERUSER_ID, ref, context)
+                values[item] = res_config_obj.get_option_name(cr, SUPERUSER_ID, ref, context=context)
 
         # 3/ substitute and return the result
         if (action_id):
             return exceptions.RedirectWarning(msg % values, action_id, _('Go to the configuration panel'))
-        else:
-            return exceptions.Warning(msg % values)
+        return exceptions.Warning(msg % values)
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

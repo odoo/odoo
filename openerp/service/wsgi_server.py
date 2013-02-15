@@ -94,8 +94,9 @@ def xmlrpc_handle_exception(e):
     if isinstance(e, openerp.osv.orm.except_orm): # legacy
         fault = xmlrpclib.Fault(RPC_FAULT_CODE_WARNING, openerp.tools.ustr(e.value))
         response = xmlrpclib.dumps(fault, allow_none=False, encoding=None)
-    elif isinstance(e, openerp.exceptions.Warning):
+    elif isinstance(e, openerp.exceptions.Warning) or isinstance(e, openerp.exceptions.RedirectWarning):
         fault = xmlrpclib.Fault(RPC_FAULT_CODE_WARNING, str(e))
+        response = xmlrpclib.dumps(fault, allow_none=False, encoding=None)
     elif isinstance (e, openerp.exceptions.AccessError):
         fault = xmlrpclib.Fault(RPC_FAULT_CODE_ACCESS_ERROR, str(e))
         response = xmlrpclib.dumps(fault, allow_none=False, encoding=None)
