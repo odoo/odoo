@@ -63,11 +63,11 @@ class survey(osv.osv):
         'tot_comp_survey': fields.integer("Total Completed Survey", readonly=1),
         'note': fields.text('Description', size=128),
         'history': fields.one2many('survey.history', 'survey_id', 'History Lines', readonly=True),
-        'partner_id': fields.many2many('res.partner', 'survey_partner_rel', 'sid', 'uid', 'Partners'),
+        'partner_id': fields.many2many('res.partner', 'survey_partner_rel', 'sid', 'partner_id', 'Partners'),
         'send_response': fields.boolean('Email Notification on Answer'),
         'type': fields.many2one('survey.type', 'Type'),
         'color': fields.integer('Color Index'),
-        'invited_partner_ids': fields.many2many('res.partner', 'survey_invited_partner_rel', 'sid', 'uid', 'Invited User'),
+        'invited_partner_ids': fields.many2many('res.partner', 'survey_invited_partner_rel', 'sid', 'partner_id', 'Invited User'),
     }
     _defaults = {
         'state': lambda * a: "open",
@@ -754,7 +754,7 @@ class res_partner(osv.osv):
     _inherit = "res.partner"
     _name = "res.partner"
     _columns = {
-        'survey_id': fields.many2many('survey', 'survey_partner_rel', 'uid', 'sid', 'Groups'),
+        'survey_id': fields.many2many('survey', 'survey_partner_rel', 'partner_id', 'sid', 'Groups'),
     }
 res_partner()
 

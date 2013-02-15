@@ -47,15 +47,15 @@ class survey_name_wiz(osv.osv_memory):
 
     def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
         res = super(survey_name_wiz, self).fields_view_get(cr, uid, view_id=view_id, view_type=view_type, context=context, toolbar=toolbar, submenu=False)
-        if uid != 1:
-            survey_obj = self.pool.get('survey')
-            line_ids = survey_obj.search(cr, uid, [('invited_partner_ids.user_id','in',uid)], context=context)
-            domain = str([('id', 'in', line_ids)])
-            doc = etree.XML(res['arch'])
-            nodes = doc.xpath("//field[@name='survey_id']")
-            for node in nodes:
-                node.set('domain', domain)
-            res['arch'] = etree.tostring(doc)
+        partner_id = self.pool.get('res.partner').search(cr, uid, [("user_id","=",uid)], context=context)[0]
+        survey_obj = self.pool.get('survey')
+        line_ids = survey_obj.search(cr, uid, [('invited_partner_ids.partner_id','in',partner_id)], context=context)
+        domain = str([('id', 'in', line_ids)])
+        doc = etree.XML(res['arch'])
+        nodes = doc.xpath("//field[@name='survey_id']")
+        for node in nodes:
+            node.set('domain', domain)
+        res['arch'] = etree.tostring(doc)
         return res
 
     def action_next(self, cr, uid, ids, context=None):

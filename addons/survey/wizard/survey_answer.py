@@ -161,17 +161,42 @@ class survey_question_wiz(osv.osv_memory):
     def _view_field_rating_scale(self, xml_group, fields, readonly, que, que_rec):
         self._view_field_matrix_of_choices_only_one_ans(xml_group, fields, readonly, que, que_rec)
 
-    def _view_field_after_matrix_of_choices(self, xml_group, fields, readonly, que, que_rec):
-        if que_rec.type in ['multiple_choice_only_one_ans', 'multiple_choice_multiple_ans'] and que_rec.comment_field_type in ['char','text'] and que_rec.make_comment_field:
-            etree.SubElement(xml_group, 'field', {'readonly' :str(readonly), 'name': tools.ustr(que.id) + "_otherfield", 'colspan':"4"})
-            fields[tools.ustr(que.id) + "_otherfield"] = {'type':'boolean', 'string':que_rec.comment_label, 'views':{}}
-            etree.SubElement(xml_group, 'field', {'readonly' :str(readonly), 'name': tools.ustr(que.id) + "_other", 'nolabel':"1" ,'colspan':"4"})
-            fields[tools.ustr(que.id) + "_other"] = {'type': que_rec.comment_field_type, 'string': '', 'views':{}}
-        else:
-            etree.SubElement(xml_group, 'label', {'string': to_xml(tools.ustr(que_rec.comment_label)),'colspan':"4"})
-            etree.SubElement(xml_group, 'field', {'readonly' :str(readonly), 'name': tools.ustr(que.id) + "_other", 'nolabel':"1" ,'colspan':"4"})
-            fields[tools.ustr(que.id) + "_other"] = {'type': que_rec.comment_field_type, 'string': '', 'views':{}}
+    def _view_survey_complete(self, result):
+        xml_form = etree.Element('form', {'string': _('Complete Survey Answer')})
+        #xml_footer = etree.SubElement(xml_form, 'footer', {'col': '6', 'colspan': '4' ,'class': 'oe_survey_title_height'})
+        etree.SubElement(xml_form, 'separator', {'string': 'Survey Completed', 'colspan': "4"})
+        etree.SubElement(xml_form, 'label', {'string': 'Thanks for your Answer'})
+        etree.SubElement(xml_form, 'newline')
+        root = xml_form.getroottree()
+        result['arch'] = etree.tostring(root)
+        result['fields'] = {}
+        result['context'] = context
+    
+    def _survey_complete(self, survey_id, partner_id, sur_rec):
+        survey_obj = self.pool.get('survey')
+        sur_response_obj = self.pool.get('survey.response')
 
+        # record complete
+        survey_obj.write(cr, uid, survey_id, {'tot_comp_survey' : sur_rec.tot_comp_survey + 1})
+        sur_response_obj.write(cr, uid, [sur_name_read.response], {'state' : 'done'})
+
+        # send mail to the responsible
+        survey_data = survey_obj.browse(cr, uid, survey_id, context.context)
+        responsible_id = survey_data.responsible_id and survey_data.responsible_id.email or False
+        if sur_rec.send_response and responsible_id:
+            val = {
+                'type': 'notification',
+                'author_id': partner_id or None,
+                'partner_ids': [responsible_id],
+                'notified_partner_ids': [responsible_id],
+                'model': 'survey',
+                'res_id': survey_id,
+                'record_name': _("Survey N° %s") % survey_id,
+                'subject': survey_data.title,
+                'body': _("A survey answer is completed."),
+            }
+            self.pool.get('mail.thread').create(cr, uid, val, context=context)
+        
     def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
         """
         Fields View Get method :- generate the new view and display the survey pages of selected survey.
@@ -190,6 +215,9 @@ class survey_question_wiz(osv.osv_memory):
         que_col_head = self.pool.get('survey.question.column.heading')
         user_obj = self.pool.get('res.users')
         user_browse = user_obj.browse(cr, uid, uid, context=context)
+        #todo
+        partner_id = 0
+        partner_email = 'fqsdf@fdqsf'
         partner_obj = self.pool.get('res.partner')
         mail_message = self.pool.get('mail.message')
         
@@ -249,7 +277,7 @@ class survey_question_wiz(osv.osv_memory):
 
                 # get if the token of the partner or anonymous user is valid
                 validate_response = sur_rec.responsible_id.id == uid or sur_response_obj.search(cr, uid, [('survey_id','=',survey_id), ('state','=','new'), 
-                    '|', ('partner_id','=',user_browse.partner_id.id), ("token","=", context.get("survey_token", None)),
+                    '|', ('partner_id','=',partner_id), ("token","=", context.get("survey_token", None)),
                     '|', ('date_deadline','=',None), ('date_deadline','<',datetime.now())], context=context, limit=1)
                 active = context.get('active', False)
 
@@ -383,57 +411,9 @@ class survey_question_wiz(osv.osv_memory):
 
                     # survey complete
                     else:
-                        survey_obj.write(cr, uid, survey_id, {'tot_comp_survey' : sur_rec.tot_comp_survey + 1})
-                        sur_response_obj.write(cr, uid, [sur_name_read.response], {'state' : 'done'})
+                        self._survey_complete(survey_id, partner_id, sur_rec)
+                        self._view_survey_complete(result):
 
-                        if sur_rec.send_response:
-                            survey_data = survey_obj.browse(cr, uid, survey_id)
-                            response_id = surv_name_wiz.read(cr, uid, context.get('sur_name_id',False))['response']
-                            report = self.create_report(cr, uid, [survey_id], 'report.survey.browse.response', survey_data.title,context)
-                            attachments = {}
-                            pdf_filename = addons.get_module_resource('survey', 'report') + survey_data.title + ".pdf"
-                            if os.path.exists(pdf_filename):
-                                file = open(pdf_filename)
-                                file_data = ""
-                                while 1:
-                                    line = file.readline()
-                                    file_data += line
-                                    if not line:
-                                        break
-
-                                attachments[survey_data.title + ".pdf"] = file_data
-                                file.close()
-                                os.remove(addons.get_module_resource('survey', 'report') + survey_data.title + ".pdf")
-                            context.update({'response_id':response_id})
-                            partner_email = user_browse.email
-                            resp_email = survey_data.responsible_id and survey_data.responsible_id.email or False
-
-                            if partner_email and resp_email:
-                                partner_name = partner_obj.browse(cr, uid, uid, context=context).name
-                                mail = "Hello " + survey_data.responsible_id.name + ",\n\n " + str(partner_name) + " has given the Response Of " + survey_data.title + " Survey.\nThe Response has been attached herewith.\n\n Thanks."
-                                vals = {'state': 'outgoing',
-                                        'subject': "Survey Answer Of " + partner_name,
-                                        'body_html': '<pre>%s</pre>' % mail,
-                                        'email_to': [resp_email],
-                                        'email_from': partner_email}
-                                if attachments:
-                                    vals['attachment_ids'] = [(0,0,{'name': a_name,
-                                                                    'datas_fname': a_name,
-                                                                    'datas': str(a_content).encode('base64')})
-                                                                    for a_name, a_content in attachments.items()]
-                                self.pool.get('mail.mail').create(cr, uid, vals, context=context)
-
-                        xml_form = etree.Element('form', {'string': _('Complete Survey Answer')})
-                        xml_footer = etree.SubElement(xml_form, 'footer', {'col': '6', 'colspan': '4' ,'class': 'oe_survey_title_height'})
-
-                        etree.SubElement(xml_form, 'separator', {'string': 'Survey Completed', 'colspan': "4"})
-                        etree.SubElement(xml_form, 'label', {'string': 'Thanks for your Answer'})
-                        etree.SubElement(xml_form, 'newline')
-                        # etree.SubElement(xml_footer, 'button', {'special':"cancel",'string':"OK",'colspan':"2",'class':'oe_highlight'})
-                        root = xml_form.getroottree()
-                        result['arch'] = etree.tostring(root)
-                        result['fields'] = {}
-                        result['context'] = context
                 
                 # don't have acces to this survey
                 else:
@@ -460,9 +440,8 @@ class survey_question_wiz(osv.osv_memory):
             service = netsvc.LocalService(report_name);
             (result, format) = service.create(cr, uid, res_ids, {}, context)
             ret_file_name = addons.get_module_resource('survey', 'report') + file_name + '.pdf'
-            fp = open(ret_file_name, 'wb+');
-            fp.write(result);
-            fp.close();
+            with open(ret_file_name, 'wb+') as fp:
+                fp.write(result)
             
             # hr.applicant: if survey answered directly in system: attach report to applicant
             if context.get('active_model') == 'hr.applicant':
