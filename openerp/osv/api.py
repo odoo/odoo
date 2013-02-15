@@ -253,7 +253,8 @@ def cr_uid(method):
     if 'context' in argnames:
         def new_api(self, *args, **kwargs):
             cr, uid, context = self.session
-            kwargs = dict(kwargs, context=context)
+            if 'context' not in kwargs:
+                kwargs = dict(kwargs, context=context)
             return method(self, cr, uid, *args, **kwargs)
     else:
         def new_api(self, *args, **kwargs):
@@ -290,7 +291,8 @@ def cr_uid_id(method):
     if 'context' in argnames:
         def new_api(self, *args, **kwargs):
             cr, uid, context = self.session
-            kwargs = dict(kwargs, context=context)
+            if 'context' not in kwargs:
+                kwargs = dict(kwargs, context=context)
             if self.is_record():
                 return method(self, cr, uid, self.id, *args, **kwargs)
             else:
@@ -329,7 +331,8 @@ def cr_uid_ids(method):
     if 'context' in argnames:
         def new_api(self, *args, **kwargs):
             cr, uid, context = self.session
-            kwargs = dict(kwargs, context=context)
+            if 'context' not in kwargs:
+                kwargs = dict(kwargs, context=context)
             if self.is_record():
                 return _map_record(self.id, method(self, cr, uid, [self.id], *args, **kwargs))
             else:
