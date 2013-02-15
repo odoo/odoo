@@ -835,6 +835,12 @@ class BaseModel(object):
             cls._original_module = cls._module
         obj = object.__new__(cls)
         obj.__init__(pool, cr)
+
+        # check for name clashes between method and field names
+        for attr in set(dir(obj)) & set(obj._all_columns):
+            if callable(getattr(cls, attr, None)):
+                _logger.warning("Model %r has both a field and a method named %r" % (obj._name, attr))
+
         return obj
 
     def __new__(cls):
