@@ -12,10 +12,10 @@
             <field name="name">Goal plans list</field>
             <field name="model">gamification.goal.plan</field>
             <field name="arch" type="xml">
-                <tree string="Goal types" colors="blue:status == 'inprogress';grey:status == 'done'">
+                <tree string="Goal types" colors="blue:state == 'inprogress';grey:state == 'done'">
                     <field name="name"/>
                     <field name="period"/>
-                    <field name="status" invisible="1"/>
+                    <field name="state" invisible="1"/>
                 </tree>
             </field>
         </record>
@@ -32,7 +32,7 @@
                         <group>
                             <group colspan="4">
                                 <field name="period"/>
-                                <field name="status"/>
+                                <field name="state"/>
                             </group>
                             <group string="Report">
                                 <field name="report_mode"/>

@@ -23,19 +23,19 @@ from openerp.osv import fields, osv
 
 from datetime import date
 
-GAMIFICATION_GOAL_STATUS = [
+GAMIFICATION_GOAL_STATE = [
     ('inprogress','In progress'),
     ('reached','Reached'),
     ('failed','Failed'),
 ]
 
-GAMIFICATION_PLAN_STATUS = [
+GAMIFICATION_PLAN_STATE = [
     ('draft','Draft'),
     ('inprogress','In progress'),
     ('done','Done'),
 ]
 
-GAMIFICATION_PERIOD_STATUS = [
+GAMIFICATION_PERIOD_STATE = [
     ('once','No automatic assigment'),
     ('daily','Daily'),
     ('weekly','Weekly'),
@@ -139,15 +139,15 @@ class gamification_goal(osv.Model):
         'current' : fields.float('Current',
             required=True,
             track_visibility = 'always'),
-        'status': fields.selection(GAMIFICATION_GOAL_STATUS,
-            string='Status',
+        'state': fields.selection(GAMIFICATION_GOAL_STATE,
+            string='State',
             required=True,
             track_visibility = 'always'),
     }
 
     _defaults = {
         'current': 0,
-        'status': 'inprogress',
+        'state': 'inprogress',
     }
 
 
@@ -177,12 +177,12 @@ class gamification_goal_plan(osv.Model):
         'autojoin_group_id' : fields.many2one('res.groups',
             string='Group',
             help='Group of users whose members will automatically be added to the users'),
-        'period' : fields.selection(GAMIFICATION_PERIOD_STATUS,
+        'period' : fields.selection(GAMIFICATION_PERIOD_STATE,
             string='Period',
             help='Period of automatic goal assigment, will be done manually if none is selected',
             required=True),
-        'status': fields.selection(GAMIFICATION_PLAN_STATUS,
-            string='Status',
+        'state': fields.selection(GAMIFICATION_PLAN_STATE,
+            string='State',
             required=True),
         'report_mode':fields.selection(GAMIFICATION_REPORT_MODE,
             string="Mode",
@@ -199,7 +199,7 @@ class gamification_goal_plan(osv.Model):
 
     _defaults = {
         'period': 'once',
-        'status': 'inprogress',
+        'state': 'inprogress',
         'report_mode' : 'progressbar',
         'report_message_frequency' : 'onchange',
     }

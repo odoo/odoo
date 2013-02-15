@@ -11,14 +11,14 @@
             <field name="name">Goal list</field>
             <field name="model">gamification.goal</field>
             <field name="arch" type="xml">
-                <tree string="Goal list" colors="red:status == 'failed';green:status == 'reached'"> 
+                <tree string="Goal list" colors="red:state == 'failed';green:state == 'reached'"> 
                     <field name="type_id"/>
                     <field name="user_id"/>
                     <field name="current"/>
                     <field name="target_goal"/>
                     <field name="start_date"/>
                     <field name="end_date"/>
-                    <field name="status" invisible="1"/>
+                    <field name="state" invisible="1"/>
                 </tree>
             </field>
         </record>
@@ -28,6 +28,12 @@
             <field name="model">gamification.goal</field>
             <field name="arch" type="xml">
                 <form string="Goal" version="7.0">
+                    <header>
+                        <button string="Mark as reached" type="workflow" name="signal_reached" states="inprogress"/>
+                        <button string="Mark as failed" type="workflow" name="signal_failed" states="inprogress"/>
+                        <!-- <button string="Cancel completion" type="workflow" name="signal_cancel" states="failed,reached"/> -->
+                        <field name="state" widget="statusbar"/>
+                    </header>
                     <sheet>
                         <group>
                             <group string="Reference">
@@ -42,7 +48,7 @@
                             <group string="Data">
                                 <field name="target_goal"/>
                                 <field name="current"/>
-                                <field name="status"/>
+                                <field name="state"/>
                             </group>
                         </group>
                     </sheet>
