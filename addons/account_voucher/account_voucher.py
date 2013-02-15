@@ -49,13 +49,25 @@ class account_config_settings(osv.osv_memory):
             'company_id', 'income_currency_exchange_account_id',
             type='many2one',
             relation='account.account',
-            string="Gain Exchange Rate Account"),
+            string="Gain Exchange Rate Account", 
+            domain="[('type', '=', 'other')]"),
         'expense_currency_exchange_account_id': fields.related(
             'company_id', 'expense_currency_exchange_account_id',
             type="many2one",
             relation='account.account',
-            string="Loss Exchange Rate Account"),
+            string="Loss Exchange Rate Account",
+            domain="[('type', '=', 'other')]"),
     }
+    def onchange_company_id(self, cr, uid, ids, company_id, context=None):
+        res = super(account_config_settings, self).onchange_company_id(cr, uid, ids, company_id, context=context)
+        if company_id:
+            company = self.pool.get('res.company').browse(cr, uid, company_id, context=context)
+            res['value'].update({'income_currency_exchange_account_id': company.income_currency_exchange_account_id and company.income_currency_exchange_account_id.id or False, 
+                                 'expense_currency_exchange_account_id': company.expense_currency_exchange_account_id and company.expense_currency_exchange_account_id.id or False})
+        else: 
+            res['value'].update({'income_currency_exchange_account_id': False, 
+                                 'expense_currency_exchange_account_id': False})
+        return res
 
 class account_voucher(osv.osv):
     def _check_paid(self, cr, uid, ids, name, args, context=None):
