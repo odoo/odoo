@@ -33,7 +33,7 @@
                         <button string="Mark as reached" type="object" name="action_reach" states="inprogress"/>
                         <button string="Mark as failed" type="object" name="action_fail" states="inprogress"/>
                         <button string="Cancel completion" type="object" name="action_cancel" states="failed,reached"/>
-                        <field name="state" widget="statusbar"/>
+                        <field name="state" widget="statusbar" statusbar_visible="inprogress" />
                     </header>
                     <sheet>
                         <group>
