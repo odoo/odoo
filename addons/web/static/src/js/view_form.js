@@ -3047,9 +3047,9 @@ instance.web.form.FieldMany2One = instance.web.form.AbstractField.extend(instanc
         this.$input.keydown(input_changed);
         this.$input.change(input_changed);
         this.$drop_down.click(function() {
+        	self.$input.focus();
             if (self.$input.autocomplete("widget").is(":visible")) {
-                self.$input.autocomplete("close");
-                self.$input.focus();
+                self.$input.autocomplete("close");                
             } else {
                 if (self.get("value") && ! self.floating) {
                     self.$input.autocomplete("search", "");
