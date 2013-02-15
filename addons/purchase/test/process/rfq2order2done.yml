@@ -59,11 +59,8 @@
   I Validate Invoice of Purchase Order.
 -
   !python {model: purchase.order}: |
-    from openerp import netsvc
     invoice_ids = [x.id for x in self.browse(cr, uid, ref("purchase_order_1")).invoice_ids]
-    wf_service = netsvc.LocalService("workflow")
-    for invoice in invoice_ids:
-      wf_service.trg_validate(uid, 'account.invoice', invoice, 'invoice_open', cr)
+    self.pool.get('account.invoice').signal_invoice_open(cr, uid, invoice_ids)
 -
   I check that purchase order is invoiced.
 -

@@ -44,8 +44,7 @@ class TestAccountFollowup(TransactionCase):
                                                                             'quantity': 5, 
                                                                             'price_unit':200
                                                                                  })]})
-        wf_service = netsvc.LocalService("workflow")
-        wf_service.trg_validate(uid, 'account.invoice', self.invoice_id, 'invoice_open', cr)
+        self.registry('account.invoice').signal_invoice_open(cr, uid, [self.invoice_id])
         
         self.voucher = self.registry("account.voucher")
         

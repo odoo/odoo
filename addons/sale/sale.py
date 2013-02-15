@@ -418,8 +418,7 @@ class sale_order(osv.osv):
         This function prints the sales order and mark it as sent, so that we can see more easily the next step of the workflow
         '''
         assert len(ids) == 1, 'This option should only be used for a single id at a time'
-        wf_service = netsvc.LocalService("workflow")
-        wf_service.trg_validate(uid, 'sale.order', ids[0], 'quotation_sent', cr)
+        self.signal_quotation_sent(cr, uid, ids)
         datas = {
                  'model': 'sale.order',
                  'ids': ids,
@@ -432,12 +431,10 @@ class sale_order(osv.osv):
             view of one of the newly created invoices
         """
         mod_obj = self.pool.get('ir.model.data')
-        wf_service = netsvc.LocalService("workflow")
-
+        
         # create invoices through the sales orders' workflow
         inv_ids0 = set(inv.id for sale in self.browse(cr, uid, ids, context) for inv in sale.invoice_ids)
-        for id in ids:
-            wf_service.trg_validate(uid, 'sale.order', id, 'manual_invoice', cr)
+        self.signal_manual_invoice(cr, uid, ids)
         inv_ids1 = set(inv.id for sale in self.browse(cr, uid, ids, context) for inv in sale.invoice_ids)
         # determine newly created invoices
         new_inv_ids = list(inv_ids1 - inv_ids0)
@@ -555,10 +552,10 @@ class sale_order(osv.osv):
         return True
 
     def action_cancel(self, cr, uid, ids, context=None):
-        wf_service = netsvc.LocalService("workflow")
         if context is None:
             context = {}
         sale_order_line_obj = self.pool.get('sale.order.line')
+        account_invoice_obj = self.pool.get('account.invoice')
         for sale in self.browse(cr, uid, ids, context=context):
             for inv in sale.invoice_ids:
                 if inv.state not in ('draft', 'cancel'):
@@ -566,8 +563,7 @@ class sale_order(osv.osv):
                         _('Cannot cancel this sales order!'),
                         _('First cancel all invoices attached to this sales order.'))
             for r in self.read(cr, uid, ids, ['invoice_ids']):
-                for inv in r['invoice_ids']:
-                    wf_service.trg_validate(uid, 'account.invoice', inv, 'invoice_cancel', cr)
+                account_invoice_obj.signal_invoice_cancel(cr, uid, r['invoice_ids'])
             sale_order_line_obj.write(cr, uid, [l.id for l in  sale.order_line],
                     {'state': 'cancel'})
         self.write(cr, uid, ids, {'state': 'cancel'})
@@ -575,8 +571,7 @@ class sale_order(osv.osv):
 
     def action_button_confirm(self, cr, uid, ids, context=None):
         assert len(ids) == 1, 'This option should only be used for a single id at a time.'
-        wf_service = netsvc.LocalService('workflow')
-        wf_service.trg_validate(uid, 'sale.order', ids[0], 'order_confirm', cr)
+        self.signal_order_confirm(cr, uid, ids)
 
         # redisplay the record as a sales order
         view_ref = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'sale', 'view_order_form')
@@ -880,7 +875,7 @@ class sale_order_line(osv.osv):
             date_order = time.strftime(DEFAULT_SERVER_DATE_FORMAT)
 
         result = {}
-        warning_msgs = {}
+        warning_msgs = ''
         product_obj = product_obj.browse(cr, uid, product, context=context_partner)
 
         uom2 = False
@@ -991,8 +986,7 @@ class mail_compose_message(osv.Model):
         context = context or {}
         if context.get('default_model') == 'sale.order' and context.get('default_res_id') and context.get('mark_so_as_sent'):
             context = dict(context, mail_post_autofollow=True)
-            wf_service = netsvc.LocalService("workflow")
-            wf_service.trg_validate(uid, 'sale.order', context['default_res_id'], 'quotation_sent', cr)
+            self.pool.get('sale.order').signal_quotation_sent(cr, uid, [context['default_res_id']])
         return super(mail_compose_message, self).send_mail(cr, uid, ids, context=context)
 
 class account_invoice(osv.Model):
