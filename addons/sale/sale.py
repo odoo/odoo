@@ -56,7 +56,7 @@ class sale_order(osv.osv):
         },
     }
 
-    def onchange_shop_id(self, cr, uid, ids, shop_id, partner_id, context=None):
+    def onchange_shop_id(self, cr, uid, ids, shop_id, context=None):
         v = {}
         if shop_id:
             shop = self.pool.get('sale.shop').browse(cr, uid, shop_id, context=context)
@@ -64,9 +64,10 @@ class sale_order(osv.osv):
                 v['project_id'] = shop.project_id.id
             if shop.pricelist_id.id:
                 v['pricelist_id'] = shop.pricelist_id.id
-            partner = self.pool.get('res.partner').browse(cr, uid, partner_id, context=context)
-            sale_note = self.get_sale_note(cr, uid, ids, partner, shop_id, context=context)
-            v.update({'note': sale_note})
+            if context['partner_id']:
+                partner = self.pool.get('res.partner').browse(cr, uid, context['partner_id'], context=context)
+                sale_note = self.get_sale_note(cr, uid, ids, partner, shop_id, context=context)
+                v.update({'note': sale_note})
         return {'value': v}
 
     def copy(self, cr, uid, id, default=None, context=None):
@@ -320,7 +321,7 @@ class sale_order(osv.osv):
         sale_note =  self.pool.get('sale.shop').browse(cr, uid, shop_id, context=context_lang).company_id.sale_note
         return sale_note
         
-    def onchange_partner_id(self, cr, uid, ids, part, shop_id, context=None):
+    def onchange_partner_id(self, cr, uid, ids, part, context=None):
         if not part:
             return {'value': {'partner_invoice_id': False, 'partner_shipping_id': False,  'payment_term': False, 'fiscal_position': False}}
 
@@ -343,7 +344,7 @@ class sale_order(osv.osv):
         }
         if pricelist:
             val['pricelist_id'] = pricelist
-        sale_note = self.get_sale_note(cr, uid, ids, part, shop_id, context=context)
+        sale_note = self.get_sale_note(cr, uid, ids, part, context['shop_id'], context=context)
         val.update({'note': sale_note})  
         return {'value': val}
 
