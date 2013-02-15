@@ -4,7 +4,7 @@
   Mail script will fetch his request from mail server. Then I process that mail after read EML file.
 -
   !python {model: mail.thread}: |
-    import addons
+    from openerp import addons
     request_file = open(addons.get_module_resource('crm','test', 'customer_request.eml'),'rb')
     request_message = request_file.read()
     self.message_process(cr, uid, 'crm.lead', request_message)
