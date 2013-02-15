@@ -107,6 +107,7 @@ class gamification_goal_type(osv.Model):
             required=True),
     }
     
+    _order = 'sequence'
     _defaults = {
         'sequence': 0,
         'condition': 'plus',
@@ -124,6 +125,16 @@ class gamification_goal(osv.Model):
     _description = 'Gamification goal instance'
     _inherit = 'mail.thread'
 
+    def _get_completeness(self, cr, uid, ids, field_name, arg, context=None):
+        res = {}
+        for goal in self.browse(cr, uid, ids, context):
+            # more 100% ?
+            if goal.target_goal > 0:
+                res[goal.id] = 100.0 * goal.current / goal.target_goal
+            else:
+                res[goal.id] = 0.0
+        return res
+
     _columns = {
         'type_id' : fields.many2one('gamification.goal.type', 
             string='Goal type',
@@ -139,6 +150,9 @@ class gamification_goal(osv.Model):
         'current' : fields.float('Current',
             required=True,
             track_visibility = 'always'),
+        'completeness': fields.function(_get_completeness,
+            type='float',
+            string='Occupation'),
         'state': fields.selection(GAMIFICATION_GOAL_STATE,
             string='State',
             required=True,
