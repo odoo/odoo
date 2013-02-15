@@ -683,7 +683,7 @@ class WebClient(openerpweb.Controller):
 
     @openerpweb.jsonrequest
     def version_info(self, req):
-        return openerp.service.web_services.RPC_VERSION_1
+        return openerp.service.common.exp_version()
 
 class Proxy(openerpweb.Controller):
     _cp_path = '/web/proxy'
