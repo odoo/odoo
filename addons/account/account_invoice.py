@@ -308,7 +308,7 @@ class account_invoice(osv.osv):
         '''
         Find the partner for which the accounting entries will be created
         '''
-        #if the chosen partner is not a company and has a parent company, use the parent for the journal entries 
+        #if the chosen partner is not a company and has a parent company, use the parent for the journal entries
         #because you want to invoice 'Agrolait, accounting department' but the journal items are for 'Agrolait'
         part = inv.partner_id
         if part.parent_id and not part.is_company:
@@ -419,7 +419,7 @@ class account_invoice(osv.osv):
         try:
             compose_form_id = ir_model_data.get_object_reference(cr, uid, 'mail', 'email_compose_message_wizard_form')[1]
         except ValueError:
-            compose_form_id = False 
+            compose_form_id = False
         ctx = dict(context)
         ctx.update({
             'default_model': 'account.invoice',
@@ -540,11 +540,11 @@ class account_invoice(osv.osv):
         return result
 
     def onchange_payment_term_date_invoice(self, cr, uid, ids, payment_term_id, date_invoice):
-        res = {}        
+        res = {}
         if not date_invoice:
             date_invoice = time.strftime('%Y-%m-%d')
         if not payment_term_id:
-            return {'value':{'date_due': date_invoice}} #To make sure the invoice has a due date when no payment term 
+            return {'value':{'date_due': date_invoice}} #To make sure the invoice has a due date when no payment term
         pterm_list = self.pool.get('account.payment.term').compute(cr, uid, payment_term_id, value=1, date_ref=date_invoice)
         if pterm_list:
             pterm_list = [line[0] for line in pterm_list]
