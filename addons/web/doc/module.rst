@@ -282,6 +282,27 @@ tools while playing with the stopwatch will show that the save
 (creation) request is indeed sent (and replied to, even though we're
 ignoring the response at this point).
 
+These saved data should now be loaded and displayed when first opening
+the action, so the user can see his previously recorded times. This is
+done by overloading the model's ``start`` method: the purpose of
+:js:func:`~openerp.base.Widget.start()` is to perform *asynchronous*
+initialization steps, so the rest of the web client knows to "wait"
+and gets a readiness signal. In this case, it will fetch the data
+recorded previously using the :js:class:`~openerp.web.Query` interface
+and add this data to an ordered list added to the widget's template:
+
+.. patch::
+
+And for consistency's sake (so that the display a user leaves is
+pretty much the same as the one he comes back to), newly created
+records should also automatically be added to the list:
+
+.. patch::
+
+Note that we're only displaying the record once we know it's been
+saved from the database (the ``create`` call has returned without
+error).
+
 .. [#DOM-building] they are not alternative solutions: they work very
                    well together. Templates are used to build "just
                    DOM", sub-widgets are used to build DOM subsections
