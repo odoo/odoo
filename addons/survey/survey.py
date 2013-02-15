@@ -64,7 +64,6 @@ class survey(osv.osv):
         'send_response': fields.boolean('Email Notification on Answer'),
         'type': fields.many2one('survey.type', 'Type'),
         'color': fields.integer('Color Index'),
-        'invited_partner_ids': fields.many2many('res.partner', 'survey_invited_partner_rel', 'sid', 'partner_id', 'Invited User'),
     }
     _defaults = {
         'state': lambda * a: "open",
@@ -660,7 +659,7 @@ class survey_response(osv.osv):
         'date_create' : fields.datetime('Create Date', required=1),
         'response_type' : fields.selection([('manually', 'Manually'), ('link', 'Link')], 'Answer Type', required=1),
         'question_ids' : fields.one2many('survey.response.line', 'response_id', 'Answer'),
-        'state' : fields.selection([('new', 'Wait answer'), ('done', 'Finished'), ('skip', 'Not Finished')], 'Status', readonly=True),
+        'state' : fields.selection([('new', 'Not Started'), ('skip', 'Not Finished'), ('done', 'Finished')], 'Status', readonly=True),
         'token': fields.char("Indentification token", readonly=1),
         'partner_id' : fields.many2one('res.partner', 'Partner', readonly=1),
         'email': fields.char("Email", size=64, readonly=1),

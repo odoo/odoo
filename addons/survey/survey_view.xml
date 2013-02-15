@@ -214,9 +214,6 @@
                                 </field>
                             <field name="note" placeholder="Survey description..." attrs="{'readonly':[('state','=','close')]}"/>
                         </page>
-                        <page string="Invited User">
-                            <field name="invited_partner_ids" readonly="1"/>
-                        </page>
                         <page string="History">
                             <group>
                                 <group>
@@ -1007,17 +1004,20 @@
                     <field name="survey_id"/>
                     <field name="email"/>
                     <field name="partner_id"/>
+                    <filter string="Finished" domain="[('state','=', 'done')]"/>
+                    <filter string="Not Finished" domain="[('state','=', 'skip')]"/>
+                    <filter string="Not Started" domain="[('state','=', 'new')]"/>
                     <group expand="0" string="Group By...">
                        <filter string="Survey" domain="[]" context="{'group_by':'survey_id'}"/>
                        <filter string="Email" domain="[]" context="{'group_by':'email'}"/>
-                       <filter string="Partner" domain="[]" context="{'group_by':'partner_id'}"/>
+                       <filter string="Partner" domain="[]" context="{'group_by':['partner_id']}"/>
                     </group>
                </search>
             </field>
         </record>
 
-        <record model="ir.ui.view" id="survey_response_tree">
-            <field name="name">survey_response_tree</field>
+        <record model="ir.ui.view" id="survey_response_form">
+            <field name="name">survey_response_form</field>
             <field name="model">survey.response</field>
             <field name="arch" type="xml">
                 <form string="Survey Response" version="7.0">

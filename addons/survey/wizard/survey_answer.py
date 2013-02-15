@@ -204,7 +204,6 @@ class survey_question_wiz(osv.osv_memory):
                 'subject': survey_browse.title or None,
                 'body': _("A survey answer is completed."),
             }
-            print val
             self.pool.get('mail.message').create(cr, uid, val, context=context)
 
     def _check_token(self, cr, uid, survey_id, context):
@@ -341,7 +340,9 @@ class survey_question_wiz(osv.osv_memory):
                     # survey in progress
                     if flag:
                         pag_rec = page_obj.browse(cr, uid, p_id, context=context)
-                        xml_form = etree.Element('form', {'string': tools.ustr(pag_rec and pag_rec.title or survey_browse.title)})
+                        xml_form = etree.Element('form', {'version': "7.0", 'string': tools.ustr(pag_rec and pag_rec.title or survey_browse.title)})
+                        xml_form = etree.SubElement(xml_form, 'sheet')
+
                         if active and context.get('edit'):
                             context.update({'page_id': tools.ustr(p_id), 'page_number': sur_name_rec.page_no, 'transfer': sur_name_read.transfer})
                             xml_group3 = etree.SubElement(xml_form, 'group', {'col': '4', 'colspan': '4'})
@@ -352,17 +353,6 @@ class survey_question_wiz(osv.osv_memory):
 
                         # FP Note
                         xml_group = xml_form
-
-                        if context.get('response_id') and int(context.get('response_id', 0)[0]) > 0:
-                            # TODO: l10n, cleanup this code to make it readable. Or template?
-                            xml_group = etree.SubElement(xml_form, 'group', {'col': '40', 'colspan': '4'})
-                            record = sur_response_obj.browse(cr, uid, context['response_id'][context['response_no']])
-                            etree.SubElement(xml_group, 'label', {'string': to_xml(tools.ustr('Answer Of: - ' + record.partner_id.name + ',  Date: - ' + record.date_create.split('.')[0])), 'align': "0.0"})
-                            etree.SubElement(xml_group, 'label', {'string': to_xml(tools.ustr(" Answer: - " + str(context.get('response_no', 0) + 1) + "/" + str(len(context.get('response_id', 0))))), 'align': "0.0"})
-                            if context.get('response_no', 0) > 0:
-                                etree.SubElement(xml_group, 'button', {'colspan': "1", 'icon': "gtk-go-back", 'name': "action_forward_previous", 'string': tools.ustr("Previous Answer"), 'type': "object"})
-                            if context.get('response_no', 0) + 1 < len(context.get('response_id', 0)):
-                                etree.SubElement(xml_group, 'button', {'colspan': "1", 'icon': "gtk-go-forward", 'name': "action_forward_next", 'string': tools.ustr("Next Answer"), 'type': "object", 'context': tools.ustr(context)})
 
                         if wiz_id:
                             fields["wizardid_" + str(wiz_id)] = {'type': 'char', 'size': 255, 'string': "", 'views': {}}
@@ -405,13 +395,7 @@ class survey_question_wiz(osv.osv_memory):
                         but_string = "Next"
                         if int(page_number) + 1 == total_pages:
                             but_string = "Done"
-                        if active and int(page_number) + 1 == total_pages and context.get('response_id') and context.get('response_no', 0) + 1 == len(context.get('response_id', 0)):
-                            etree.SubElement(xml_footer, 'label', {'string': ""})
-                            etree.SubElement(xml_footer, 'button', {'special': 'cancel', 'string': tools.ustr("Done"), 'context': tools.ustr(context), 'class': "oe_highlight"})
-                        elif active and int(page_number) + 1 == total_pages and context.get('response_id'):
-                            etree.SubElement(xml_footer, 'label', {'string': ""})
-                            etree.SubElement(xml_footer, 'button', {'name': "action_forward_next", 'string': tools.ustr("Next Answer"), 'type': "object", 'context': tools.ustr(context), 'class': "oe_highlight"})
-                        elif active and int(page_number) + 1 == total_pages:
+                        if active and int(page_number) + 1 == total_pages:
                             etree.SubElement(xml_footer, 'label', {'string': ""})
                             etree.SubElement(xml_footer, 'button', {'special': "cancel", 'string': 'Done', 'context': tools.ustr(context), 'class': "oe_highlight"})
                         else:
@@ -1134,56 +1118,6 @@ class survey_question_wiz(osv.osv_memory):
                 'context': context
                 }
 
-    def action_forward_previous(self, cr, uid, ids, context=None):
-        """
-        Goes to previous Survey Answer.
-        """
-        if context is None:
-            context = {}
-        search_obj = self.pool.get('ir.ui.view')
-        surv_name_wiz = self.pool.get('survey.name.wiz')
-        search_id = search_obj.search(cr, uid, [('model', '=', 'survey.question.wiz'), \
-                                              ('name', '=', 'Survey Search')])
-        wiz_id = surv_name_wiz.create(cr, uid, {'survey_id': context.get('survey_id', False), 'page_no': -1, 'page': 'next', 'transfer': 1, 'response': 0})
-        context.update({'sur_name_id': wiz_id, 'response_no': context.get('response_no', 0) - 1})
-
-        if context.get('response_no', 0) + 1 > len(context.get('response_id', 0)):
-            return {}
-        return {
-            'view_type': 'form',
-            "view_mode": 'form',
-            'res_model': 'survey.question.wiz',
-            'type': 'ir.actions.act_window',
-            'target': 'new',
-            'search_view_id': search_id[0],
-            'context': context
-        }
-
-    def action_forward_next(self, cr, uid, ids, context=None):
-        """
-        Goes to Next Survey Answer.
-        """
-        if context is None:
-            context = {}
-        search_obj = self.pool.get('ir.ui.view')
-        surv_name_wiz = self.pool.get('survey.name.wiz')
-        search_id = search_obj.search(cr, uid, [('model', '=', 'survey.question.wiz'), \
-                                    ('name', '=', 'Survey Search')])
-        wiz_id = surv_name_wiz.create(cr, uid, {'survey_id': context.get('survey_id', False), 'page_no': -1, 'page': 'next', 'transfer': 1, 'response': 0})
-        context.update({'sur_name_id': wiz_id, 'response_no': context.get('response_no', 0) + 1})
-
-        if context.get('response_no', 0) + 1 > len(context.get('response_id', 0)):
-            return {}
-        return {
-            'view_type': 'form',
-            "view_mode": 'form',
-            'res_model': 'survey.question.wiz',
-            'type': 'ir.actions.act_window',
-            'target': 'new',
-            'search_view_id': search_id[0],
-            'context': context
-        }
-
     def action_next(self, cr, uid, ids, context=None):
         """
         Goes to Next page.
@@ -1199,7 +1133,7 @@ class survey_question_wiz(osv.osv_memory):
             "view_mode": 'form',
             'res_model': 'survey.question.wiz',
             'type': 'ir.actions.act_window',
-            'target': 'inline',
+            'target': context.get('ir_actions_act_window_target', 'inline'),
             'search_view_id': search_id[0],
             'context': context
         }
@@ -1220,7 +1154,7 @@ class survey_question_wiz(osv.osv_memory):
             "view_mode": 'form',
             'res_model': 'survey.question.wiz',
             'type': 'ir.actions.act_window',
-            'target': 'inline',
+            'target': context.get('ir_actions_act_window_target', 'inline'),
             'search_view_id': search_id[0],
             'context': context
         }
