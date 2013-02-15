@@ -58,7 +58,7 @@
             <field name="arch" type="xml">
                 <form string="Issue" version="7.0">
                 <header>
-                    <button name="case_close" string="Done" type="object" 
+                    <button name="case_close" string="Done" type="object"
                             states="open" groups="base.group_user"/>
                     <button name="case_close" string="Done" type="object"
                             states="draft,pending" groups="base.group_user"/>
@@ -157,7 +157,7 @@
                     <filter string="New" icon="terp-document-new" domain="[('state','=','draft')]" help="New Issues"/>
                     <filter string="To Do" domain="[('state','=','open')]" help="To Do Issues" icon="terp-check"/>
                     <separator/>
-                    <filter string="Unassigned Issues" domain="[('user_id','=',False)]"  help="Unassigned Issues" icon="terp-personal-" />
+                    <filter string="Unassigned Issues" domain="[('user_id','=',False)]"  help="Unassigned Issues" icon="terp-personal-"/>
                     <field name="user_id"/>
                     <field name="project_id"/>
                     <field name="categ_ids"/>
