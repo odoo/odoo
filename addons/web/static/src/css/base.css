@@ -1,4 +1,4 @@
-@charset "UTF-8";
+@charset "utf-8";
 @font-face {
   font-family: "mnmliconsRegular";
   src: url("/web/static/src/font/mnmliconsv21-webfont.eot") format("eot");
@@ -2233,6 +2233,7 @@
   line-height: 18px;
   display: block;
   min-width: 140px;
+  float: right;
 }
 .openerp .oe_form td.oe_form_group_cell + .oe_form_group_cell {
   padding: 2px 0 2px 8px;
@@ -2323,6 +2324,7 @@
   width: 100%;
   display: inline-block;
   padding: 2px 2px 2px 0px;
+  vertical-align: top;
 }
 .openerp .oe_form .oe_form_field input {
   margin: 0px;
@@ -2366,7 +2368,6 @@
   white-space: nowrap;
 }
 .openerp .oe_form .oe_form_field_boolean {
-  padding-top: 4px;
   width: auto;
 }
 .openerp .oe_form .oe_datepicker_container {
@@ -3086,6 +3087,24 @@
   width: 49%;
   float: right;
   color: #333333;
+}
+
+@-moz-document url-prefix() {
+  .openerp .oe_view_manager .oe_view_manager_switch li {
+    line-height: 21px;
+  }
+  .openerp .oe_searchview .oe_searchview_search {
+    top: -1px;
+  }
+  .openerp .oe_form_field_many2one .oe_m2o_cm_button {
+    line-height: 18px;
+  }
+  .openerp .oe_secondary_submenu {
+    line-height: 14px;
+  }
+  .openerp .oe_webclient .oe_star_on, .openerp .oe_webclient .oe_star_off {
+    top: 0px;
+  }
 }
 
 .kitten-mode-activated {
