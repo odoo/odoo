@@ -40,6 +40,18 @@ GAMIFICATION_PERIOD_STATUS = [
     ('yearly', 'Yearly')
 ]
 
+GAMIFICATION_COMPUTATION_MODE = [
+    ('sum','Sum'),
+    ('count','Count'),
+    ('manually','Manually')
+]
+
+GAMIFICATION_VALIDATION_CONDITION = [
+    ('minus','<='),
+    ('plus','>=')
+]
+
+
 class gamification_goal_type(osv.Model):
     """Goal type definition
 
@@ -52,44 +64,37 @@ class gamification_goal_type(osv.Model):
 
     _columns = {
         'name': fields.char('Name', required=True),
-        'description': fields.char('Description'),
-        'computation_mode': fields.selection(
-            (
-                ('s','Sum'),
-                ('c','Count'),
-                ('m','Manually'),
-            ),
+        'description': fields.text('Description'),
+        'computation_mode': fields.selection(GAMIFICATION_COMPUTATION_MODE,
             string="Mode of computation",
-            description="""How is computed the goal value :
-- 'Sum' for the total of the values if the 'Evaluated field'
-- 'Count' for the number of entries
+            help="""How is computed the goal value :\n
+- 'Sum' for the total of the values if the 'Evaluated field'\n
+- 'Count' for the number of entries\n
 - 'Manually' for user defined values""",
             required=True),
         'object': fields.many2one('ir.model',
             string='Object',
-            description='The object type for the field to evaluate' ),
+            help='The object type for the field to evaluate' ),
         'field': fields.many2one('ir.model.fields',
             string='Evaluated field',
-            description='The field containing the value to evaluate' ),
+            help='The field containing the value to evaluate' ),
         'field_date': fields.many2one('ir.model.fields',
             string='Evaluated date field',
-            description='The date to use for the time period evaluated'),
+            help='The date to use for the time period evaluated'),
         'domain': fields.char("Domain"), # how to apply it ?
-        'condition' : fields.selection(
-            (
-                ('minus','<='),
-                ('plus','>=')
-            ),
+        'condition' : fields.selection(GAMIFICATION_VALIDATION_CONDITION,
             string='Validation condition',
-            description='A goal is considered as completed when the current value is compared to the value to reach'),
+            help='A goal is considered as completed when the current value is compared to the value to reach',
+            required=True),
         'sequence' : fields.integer('Sequence',
-            description='Sequence number for ordering',
+            help='Sequence number for ordering',
             required=True),
     }
     
     _defaults = {
         'sequence': 0,
         'condition': 'plus',
+        'computation_mode':'manually',
     }
 
 
@@ -149,11 +154,11 @@ class gamification_goal_plan(osv.Model):
         'name' : fields.char('Plan name', required=True),
         'user_ids' : fields.many2many('res.users',
             string='Definition',
-            description="list of users to which the goal will be set"),
+            help="list of users to which the goal will be set"),
         'group_id' : fields.many2one('res.groups', string='Group'),
         'period' : fields.selection(GAMIFICATION_PERIOD_STATUS,
             string='Period',
-            description='Period of automatic goal assigment, will be done manually if none is selected',
+            help='Period of automatic goal assigment, will be done manually if none is selected',
             required=True),
         'status': fields.selection(GAMIFICATION_PLAN_STATUS,
             string='Status',
