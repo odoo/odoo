@@ -405,7 +405,7 @@ class ConnectionPool(object):
             except psycopg2.OperationalError:
                 self._debug('Cannot reset connection at index %d: %r', i, cnx.dsn)
                 # psycopg2 2.4.4 and earlier do not allow closing a closed connection
-                if cnx.closed:
+                if not cnx.closed:
                     cnx.close()
 
             if cnx.closed:
