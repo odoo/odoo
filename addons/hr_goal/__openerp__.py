@@ -29,6 +29,7 @@
     'data': [
         'view/type.xml',
         'view/goal.xml',
+        'view/plan.xml',
         'view/menu.xml',
         ],
     'installable': True,

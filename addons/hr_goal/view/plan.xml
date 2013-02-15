@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data>
+
+        <record id="goal_plan_list_action" model="ir.actions.act_window">
+            <field name="name">Goal plans</field>
+            <field name="res_model">gamification.goal.plan</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <record id="goal_plan_list_view" model="ir.ui.view">
+            <field name="name">Goal plans list</field>
+            <field name="model">gamification.goal.plan</field>
+            <field name="arch" type="xml">
+                <tree string="Goal types" colors="blue:status == 'inprogress';grey:status == 'done'">
+                    <field name="name"/>
+                    <field name="period"/>
+                    <field name="status" invisible="1"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="goal_type_form_view" model="ir.ui.view">
+            <field name="name">Goal plan form</field>
+            <field name="model">gamification.goal.plan</field>
+            <field name="arch" type="xml">
+                <form string="Goal types" version="7.0">
+                    <sheet>
+                        <h1>
+                            <field name="name" placeholder="Goal plan name"/>
+                        </h1>
+                        <group>
+                            <group string="General">
+                                <field name="period"/>
+                                <field name="status"/>
+                            </group>
+                        </group>
+                        <notebook>
+                            <page string="Goals">
+                                <field name="planline_ids"/>
+                            </page>
+                            <page string="Subscription">
+                                <group>
+                                    <field name="group_id" string="Group" />
+                                </group>
+                                <group>
+                                <field colspan="4" name="user_ids" widget="many2many_kanban">
+                                    <kanban quick_create="false" create="true">
+                                        <field name="name"/>
+                                        <templates>
+                                            <t t-name="kanban-box">
+                                                <div style="position: relative">
+                                                    <a t-if="! read_only_mode" type="delete" style="position: absolute; right: 0; padding: 4px; diplay: inline-block">X</a>
+                                                    <div class="oe_module_vignette">
+                                                        <div class="oe_module_desc">
+                                                            <field name="name"/>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </t>
+                                        </templates>
+                                    </kanban>
+                                </field>
+                                </group>
+                            </page>
+                        </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+    </data>
+</openerp>

@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <openerp>
     <data>
-
         <!-- <menuitem id="root_menu" name="Gamification"/> -->
         <menuitem id="gamification_menu" name="Gamification Tools" parent="base.menu_administration"/>
-        <!-- Goal types -->
-        <menuitem id="gamification_type_menu" parent="gamification_menu" action="goal_type_list_action"/>
-        <!-- Goals -->
-        <menuitem id="gamification_goal_menu" parent="gamification_menu" action="goal_list_action"/>
-
+        	<!-- Goals -->
+        	<menuitem id="gamification_goal_menu" parent="gamification_menu" action="goal_list_action" sequence="0"/>
+			<!-- Goal plans -->
+        	<menuitem id="gamification_plan_menu" parent="gamification_menu" action="goal_plan_list_action" sequence="10"/>
+        	<!-- Goal types -->
+        	<menuitem id="gamification_type_menu" parent="gamification_menu" action="goal_type_list_action" sequence="20"/>
     </data>
 </openerp>

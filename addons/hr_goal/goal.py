@@ -155,8 +155,12 @@ class gamification_goal_plan(osv.Model):
     _columns = {
         'name' : fields.char('Plan name', required=True),
         'user_ids' : fields.many2many('res.users',
-            string='Definition',
+            string='Users',
             help="list of users to which the goal will be set"),
+        'planline_ids' : fields.one2many('gamification.goal.planline',
+            'plan_id',
+            string='Planline',
+            help="list of goals that will be set"),
         'group_id' : fields.many2one('res.groups', string='Group'),
         'period' : fields.selection(GAMIFICATION_PERIOD_STATUS,
             string='Period',
