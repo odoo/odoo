@@ -4094,6 +4094,13 @@ instance.web.form.FieldMany2ManyTags = instance.web.form.AbstractField.extend(in
     focus: function () {
         this.$text[0].focus();
     },
+    set_dimensions: function (height, width) {
+        this._super(height, width);        
+        this.$("textarea").css({
+            width: width,
+            minHeight: height
+        });
+    },
 });
 
 /**
