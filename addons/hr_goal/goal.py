@@ -29,8 +29,11 @@ GAMIFICATION_GOAL_STATUS = [
     ('failed','Failed'),
 ]
 
-# I don't see why it would be different but just in case...
-GAMIFICATION_PLAN_STATUS = GAMIFICATION_GOAL_STATUS
+GAMIFICATION_PLAN_STATUS = [
+    ('draft','Draft'),
+    ('inprogress','In progress'),
+    ('done','Done'),
+]
 
 GAMIFICATION_PERIOD_STATUS = [
     ('once','No automatic assigment'),
