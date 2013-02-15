@@ -558,7 +558,7 @@ class account_invoice(osv.osv):
     def onchange_partner_bank(self, cursor, user, ids, partner_bank_id=False):
         return {'value': {}}
 
-    def onchange_company_id(self, cr, uid, ids, company_id, part_id, type, invoice_line, currency_id):
+    def onchange_company_id(self, cr, uid, ids, company_id, part_id, type, invoice_line, currency_id, context=None):
         val = {}
         dom = {}
         obj_journal = self.pool.get('account.journal')
@@ -567,7 +567,7 @@ class account_invoice(osv.osv):
 
         if company_id and part_id and type:
             acc_id = False
-            partner_obj = self.pool.get('res.partner').browse(cr,uid,part_id)
+            partner_obj = self.pool.get('res.partner').browse(cr, uid, part_id, context=context)
 
             if partner_obj.property_account_payable and partner_obj.property_account_receivable:
                 if partner_obj.property_account_payable.company_id.id != company_id and partner_obj.property_account_receivable.company_id.id != company_id:
@@ -586,7 +586,7 @@ class account_invoice(osv.osv):
                     pay_res_id = pay_line_data and pay_line_data[0].get('value_reference',False) and int(pay_line_data[0]['value_reference'].split(',')[1]) or False
 
                     if not rec_res_id and not pay_res_id:
-                        raise self.pool.get('res.config.settings').get_config_warning(cr, _('Cannot find any chart of account: you can create a new one from %(menu:account.menu_account_config)s.'), context)
+                        raise self.pool.get('res.config.settings').get_config_warning(cr, _('Cannot find any chart of account: you can create a new one from %(menu:account.menu_account_config)s.'), context=context)
 
                     if type in ('out_invoice', 'out_refund'):
                         acc_id = rec_res_id
