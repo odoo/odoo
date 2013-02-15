@@ -8,13 +8,13 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2012-12-21 17:04+0000\n"
-"PO-Revision-Date: 2013-02-11 01:27+0000\n"
+"PO-Revision-Date: 2013-02-14 14:33+0000\n"
 "Last-Translator: Dušan Laznik (Mentis) <laznik@mentis.si>\n"
 "Language-Team: Slovenian <sl@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-02-12 05:29+0000\n"
+"X-Launchpad-Export-Date: 2013-02-15 05:24+0000\n"
 "X-Generator: Launchpad (build 16491)\n"
 
 #. module: purchase
@@ -627,6 +627,10 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Novo povpraševanje (Nalog za nabavo)\n"
+"              </p>\n"
+"            "
 
 #. module: purchase
 #: view:purchase.order.line:0
@@ -778,7 +782,7 @@ msgstr "Znesek davka"
 #. module: purchase
 #: field:purchase.order,shipped_rate:0
 msgid "Received Ratio"
-msgstr ""
+msgstr "Razmerje prejema"
 
 #. module: purchase
 #: selection:purchase.report,month:0
@@ -857,7 +861,7 @@ msgstr "Razširjeni filtri..."
 #: code:addons/purchase/wizard/purchase_order_group.py:48
 #, python-format
 msgid "Please select multiple order to merge in the list view."
-msgstr ""
+msgstr "Izbrati morate več naročil."
 
 #. module: purchase
 #: view:purchase.order:0
@@ -887,7 +891,7 @@ msgstr "Vač analitičnih kontov na naročilih"
 #. module: purchase
 #: view:product.product:0
 msgid "will be created in order to subcontract the job"
-msgstr ""
+msgstr "bo ustvarjen za podizvajalca"
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.action_purchase_line_product_tree
@@ -1110,7 +1114,7 @@ msgstr "Izbrana enota mere ne pripada isti skupini kot enota mere produkta."
 #. module: purchase
 #: view:purchase.order.line_invoice:0
 msgid "Select an Open Sales Order"
-msgstr ""
+msgstr "Izberite odprt nalog za prodajo"
 
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_purchase_unit_measure_purchase
@@ -1182,7 +1186,7 @@ msgstr "Preklopi v pripravo"
 msgid ""
 "Reference of the document that generated this purchase order request; a "
 "sales order or an internal procurement request."
-msgstr ""
+msgstr "Dokument , ki je kreiral ta nalog za nabavo."
 
 #. module: purchase
 #: view:purchase.order.line:0
@@ -1192,7 +1196,7 @@ msgstr "Opombe"
 #. module: purchase
 #: field:purchase.config.settings,module_purchase_requisition:0
 msgid "Manage purchase requisitions"
-msgstr ""
+msgstr "Upravljanje nabave"
 
 #. module: purchase
 #: report:purchase.order:0
@@ -1688,6 +1692,7 @@ msgid ""
 "lines on a purchase order between several accounts and analytic plans.\n"
 "                This installs the module purchase_analytic_plans."
 msgstr ""
+"Omogoča delitev postavk nabavnega naloga na več analitičnih planov in kontov."
 
 #. module: purchase
 #: field:purchase.order,location_id:0
@@ -1869,6 +1874,8 @@ msgid ""
 "of the purchase order, the invoice is based on received or on ordered "
 "quantities."
 msgstr ""
+"Prevzemnica generira dobaviteljev račun. Odvisno od nastavitev , lahko račun "
+"izhaja iz naročenih ali prevzetih količin."
 
 #. module: purchase
 #: field:purchase.order,message_follower_ids:0
@@ -1934,7 +1941,7 @@ msgid ""
 "Provide a double validation mechanism for purchases exceeding minimum "
 "amount.\n"
 "                This installs the module purchase_double_validation."
-msgstr ""
+msgstr "Omogoča dvojno potrjevanje dobav , ki presegajo določeno vrednost."
 
 #. module: purchase
 #: code:addons/purchase/edi/purchase_order.py:132
@@ -2245,6 +2252,10 @@ msgid ""
 "                </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                    Ta dobavitelj nima nabavnih nalogov.\n"
+"                </p>\n"
+"            "
 
 #. module: purchase
 #: view:purchase.report:0
