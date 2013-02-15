@@ -118,7 +118,7 @@ setuptools.setup(
           'mock',
           'PIL', # windows binary http://www.lfd.uci.edu/~gohlke/pythonlibs/
           'psutil', # windows binary code.google.com/p/psutil/downloads/list
-          'psycopg2',
+          'psycopg2 >= 2.2',
           'pydot',
           'python-dateutil < 2',
           'python-ldap', # optional
