@@ -20,14 +20,11 @@
 ##############################################################################
 
 import copy
-from datetime import datetime
-from dateutil.relativedelta import relativedelta
 from time import strftime
-import os
 
-from openerp import netsvc, tools
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
+
 
 class survey_type(osv.osv):
     _name = 'survey.type'
@@ -37,6 +34,7 @@ class survey_type(osv.osv):
         'code': fields.char("Code", size=64),
     }
 survey_type()
+
 
 class survey(osv.osv):
     _name = 'survey'
@@ -231,6 +229,7 @@ class survey(osv.osv):
 
 survey()
 
+
 class survey_page(osv.osv):
     _name = 'survey.page'
     _description = 'Survey Pages'
@@ -280,6 +279,7 @@ class survey_page(osv.osv):
         return super(survey_page, self).copy(cr, uid, ids, vals, context=context)
 
 survey_page()
+
 
 class survey_question(osv.osv):
     _name = 'survey.question'
@@ -592,6 +592,7 @@ class survey_question_column_heading(osv.osv):
     }
 survey_question_column_heading()
 
+
 class survey_answer(osv.osv):
     _name = 'survey.answer'
     _description = 'Survey Answer'
@@ -649,19 +650,20 @@ class survey_answer(osv.osv):
 
 survey_answer()
 
+
 class survey_response(osv.osv):
     _name = "survey.response"
     _rec_name = 'date_create'
     _columns = {
         'date_deadline': fields.date("Deadline date", help="Date by which the person can respond to the survey"),
-        'survey_id' : fields.many2one('survey', 'Survey', required=1, ondelete='cascade'),
+        'survey_id' : fields.many2one('survey', 'Survey', required=1, readonly=1, ondelete='cascade'),
         'date_create' : fields.datetime('Create Date', required=1),
-        'response_type' : fields.selection([('manually', 'Manually'), ('link', 'Link')], 'Answer Type', required=1, readonly=1),
+        'response_type' : fields.selection([('manually', 'Manually'), ('link', 'Link')], 'Answer Type', required=1),
         'question_ids' : fields.one2many('survey.response.line', 'response_id', 'Answer'),
-        'state' : fields.selection([('new', 'Not Started'),('done', 'Finished'),('skip', 'Not Finished')], 'Status', readonly=True),
-        'token': fields.char("Indentification token"),
-        'partner_id' : fields.many2one('res.partner', 'Partner'),
-        'email': fields.char("Email", size=64),
+        'state' : fields.selection([('new', 'Wait answer'), ('done', 'Finished'), ('skip', 'Not Finished')], 'Status', readonly=True),
+        'token': fields.char("Indentification token", readonly=1),
+        'partner_id' : fields.many2one('res.partner', 'Partner', readonly=1),
+        'email': fields.char("Email", size=64, readonly=1),
     }
     _defaults = {
         'state' : lambda * a: "new",
@@ -682,6 +684,7 @@ class survey_response(osv.osv):
         raise osv.except_osv(_('Warning!'),_('You cannot duplicate the resource!'))
 
 survey_response()
+
 
 class survey_response_line(osv.osv):
     _name = 'survey.response.line'
@@ -707,6 +710,7 @@ class survey_response_line(osv.osv):
 
 survey_response_line()
 
+
 class survey_tbl_column_heading(osv.osv):
     _name = 'survey.tbl.column.heading'
     _order = 'name'
@@ -718,6 +722,7 @@ class survey_tbl_column_heading(osv.osv):
     }
 
 survey_tbl_column_heading()
+
 
 class survey_response_answer(osv.osv):
     _name = 'survey.response.answer'
@@ -735,6 +740,7 @@ class survey_response_answer(osv.osv):
 
 survey_response_answer()
 
+
 class res_partner(osv.osv):
     _inherit = "res.partner"
     _name = "res.partner"
@@ -742,48 +748,5 @@ class res_partner(osv.osv):
         'survey_id': fields.many2many('survey', 'survey_partner_rel', 'partner_id', 'sid', 'Groups'),
     }
 res_partner()
-
-class survey_request(osv.osv):
-    _name = "survey.request"
-    _order = 'date_deadline'
-    _rec_name = 'date_deadline'
-
-    _columns = {
-        'date_deadline': fields.date("Deadline date"),
-        'token': fields.char("Indentification token"),
-        'partner_id': fields.many2one("res.partner", "Partner"),
-        'email': fields.char("Email", size=64),
-        'survey_id': fields.many2one("survey", "Survey", required=1, ondelete='cascade'),
-        'response_id': fields.many2one('survey.response', 'Answer'),
-        'state': fields.selection([('draft','Draft'),('cancel', 'Cancelled'),('waiting_answer', 'Waiting Answer'),('done', 'Done')], 'Status', readonly=1)
-    }
-    _defaults = {
-        'state': lambda * a: 'draft',
-#        'date_deadline': lambda * a :  (datetime.now() + relativedelta(months=+1)).strftime("%Y-%m-%d %H:%M:%S")
-    }
-    def survey_req_waiting_answer(self, cr, uid, ids, arg):
-        self.write(cr, uid, ids, { 'state' : 'waiting_answer'})
-        return True
-
-    def survey_req_draft(self, cr, uid, ids, arg):
-        self.write(cr, uid, ids, { 'state' : 'draft'})
-        return True
-
-    def survey_req_done(self, cr, uid, ids, arg):
-        self.write(cr, uid, ids, { 'state' : 'done'})
-        return True
-
-    def survey_req_cancel(self, cr, uid, ids, arg):
-        self.write(cr, uid, ids, { 'state' : 'cancel'})
-        return True
-
-    def on_change_partner(self, cr, uid, ids, partner_id, context=None):
-        if partner_id:
-            partner_obj = self.pool.get('res.partner')
-            partner = partner_obj.browse(cr, uid, partner_id, context=context)
-            return {'value': {'email': partner.email}}
-        return {}
-
-survey_request()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
