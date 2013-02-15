@@ -43,14 +43,14 @@ class test_mail_access_rights(TestMailBase):
         # Do: Bert reads Jobs -> ok, public
         self.mail_group.read(cr, user_bert_id, [self.group_jobs_id])
         # Do: Bert read Pigs -> ko, restricted to employees
-        self.assertRaises(except_orm, self.mail_group.read,
-            cr, user_bert_id, [self.group_pigs_id])
+        with self.assertRaises(except_orm):
+            self.mail_group.read(cr, user_bert_id, [self.group_pigs_id])
         # Do: Raoul read Pigs -> ok, belong to employees
         self.mail_group.read(cr, user_raoul_id, [self.group_pigs_id])
 
         # Do: Bert creates a group -> ko, no access rights
-        self.assertRaises(except_orm, self.mail_group.create,
-            cr, user_bert_id, {'name': 'Test'})
+        with self.assertRaises(except_orm):
+            self.mail_group.create(cr, user_bert_id, {'name': 'Test'})
         # Do: Raoul creates a restricted group -> ok
         new_group_id = self.mail_group.create(cr, user_raoul_id, {'name': 'Test'})
         # Do: Bert added in followers, read -> ok, in followers
@@ -58,8 +58,8 @@ class test_mail_access_rights(TestMailBase):
         self.mail_group.read(cr, user_bert_id, [new_group_id])
 
         # Do: Raoul reads Priv -> ko, private
-        self.assertRaises(except_orm, self.mail_group.read,
-            cr, user_raoul_id, [self.group_priv_id])
+        with self.assertRaises(except_orm):
+            self.mail_group.read(cr, user_raoul_id, [self.group_priv_id])
         # Do: Raoul added in follower, read -> ok, in followers
         self.mail_group.message_subscribe_users(cr, uid, [self.group_priv_id], [user_raoul_id])
         self.mail_group.read(cr, user_raoul_id, [self.group_priv_id])
@@ -67,12 +67,11 @@ class test_mail_access_rights(TestMailBase):
         # Do: Raoul write on Jobs -> ok
         self.mail_group.write(cr, user_raoul_id, [self.group_priv_id], {'name': 'modified'})
         # Do: Bert cannot write on Private -> ko (read but no write)
-        self.assertRaises(except_orm, self.mail_group.write,
-            cr, user_bert_id, [self.group_priv_id], {'name': 're-modified'})
+        with self.assertRaises(except_orm):
+            self.mail_group.write(cr, user_bert_id, [self.group_priv_id], {'name': 're-modified'})
         # Test: Bert cannot unlink the group
-        self.assertRaises(except_orm,
-            self.mail_group.unlink,
-            cr, user_bert_id, [self.group_priv_id])
+        with self.assertRaises(except_orm):
+            self.mail_group.unlink(cr, user_bert_id, [self.group_priv_id])
         # Do: Raoul unlinks the group, there are no followers and messages left
         self.mail_group.unlink(cr, user_raoul_id, [self.group_priv_id])
         fol_ids = self.mail_followers.search(cr, uid, [('res_model', '=', 'mail.group'), ('res_id', '=', self.group_priv_id)])
@@ -137,8 +136,8 @@ class test_mail_access_rights(TestMailBase):
         message_id = self.mail_message.create(cr, uid, {'body': 'My Body', 'attachment_ids': [(4, attachment_id)]})
 
         # Test: Bert reads the message, crash because not notification/not in doc followers/not read on doc
-        self.assertRaises(except_orm, self.mail_message.read,
-            cr, user_bert_id, message_id)
+        with self.assertRaises(except_orm):
+            self.mail_message.read(cr, user_bert_id, message_id)
         # Do: message is pushed to Bert
         notif_id = self.mail_notification.create(cr, uid, {'message_id': message_id, 'partner_id': partner_bert_id})
         # Test: Bert reads the message, ok because notification pushed
@@ -148,11 +147,11 @@ class test_mail_access_rights(TestMailBase):
         # Do: remove notification
         self.mail_notification.unlink(cr, uid, notif_id)
         # Test: Bert reads the message, crash because not notification/not in doc followers/not read on doc
-        self.assertRaises(except_orm, self.mail_message.read,
-            cr, self.user_bert_id, message_id)
+        with self.assertRaises(except_orm):
+            self.mail_message.read(cr, self.user_bert_id, message_id)
         # Test: Bert downloads attachment, crash because he can't read message
-        self.assertRaises(except_orm, self.mail_message.download_attachment,
-            cr, user_bert_id, message_id, attachment_id)
+        with self.assertRaises(except_orm):
+            self.mail_message.download_attachment(cr, user_bert_id, message_id, attachment_id)
         # Do: Bert is now the author
         self.mail_message.write(cr, uid, [message_id], {'author_id': partner_bert_id})
         # Test: Bert reads the message, ok because Bert is the author
@@ -160,8 +159,8 @@ class test_mail_access_rights(TestMailBase):
         # Do: Bert is not the author anymore
         self.mail_message.write(cr, uid, [message_id], {'author_id': partner_raoul_id})
         # Test: Bert reads the message, crash because not notification/not in doc followers/not read on doc
-        self.assertRaises(except_orm, self.mail_message.read,
-            cr, user_bert_id, message_id)
+        with self.assertRaises(except_orm):
+            self.mail_message.read(cr, user_bert_id, message_id)
         # Do: message is attached to a document Bert can read, Jobs
         self.mail_message.write(cr, uid, [message_id], {'model': 'mail.group', 'res_id': self.group_jobs_id})
         # Test: Bert reads the message, ok because linked to a doc he is allowed to read
@@ -169,33 +168,33 @@ class test_mail_access_rights(TestMailBase):
         # Do: message is attached to a document Bert cannot read, Pigs
         self.mail_message.write(cr, uid, [message_id], {'model': 'mail.group', 'res_id': self.group_pigs_id})
         # Test: Bert reads the message, crash because not notification/not in doc followers/not read on doc
-        self.assertRaises(except_orm, self.mail_message.read,
-            cr, user_bert_id, message_id)
+        with self.assertRaises(except_orm):
+            self.mail_message.read(cr, user_bert_id, message_id)
 
         # ----------------------------------------
         # CASE2: create
         # ----------------------------------------
 
         # Do: Bert creates a message on Pigs -> ko, no creation rights
-        self.assertRaises(except_orm, self.mail_message.create,
-            cr, user_bert_id, {'model': 'mail.group', 'res_id': self.group_pigs_id, 'body': 'Test'})
+        with self.assertRaises(except_orm):
+            self.mail_message.create(cr, user_bert_id, {'model': 'mail.group', 'res_id': self.group_pigs_id, 'body': 'Test'})
         # Do: Bert create a message on Jobs -> ko, no creation rights
-        self.assertRaises(except_orm, self.mail_message.create,
-            cr, user_bert_id, {'model': 'mail.group', 'res_id': self.group_jobs_id, 'body': 'Test'})
+        with self.assertRaises(except_orm):
+            self.mail_message.create(cr, user_bert_id, {'model': 'mail.group', 'res_id': self.group_jobs_id, 'body': 'Test'})
         # Do: Bert create a private message -> ko, no creation rights
-        self.assertRaises(except_orm, self.mail_message.create,
-            cr, user_bert_id, {'body': 'Test'})
+        with self.assertRaises(except_orm):
+            self.mail_message.create(cr, user_bert_id, {'body': 'Test'})
 
         # Do: Raoul creates a message on Jobs -> ok, write access to the related document
         self.mail_message.create(cr, user_raoul_id, {'model': 'mail.group', 'res_id': self.group_jobs_id, 'body': 'Test'})
         # Do: Raoul creates a message on Priv -> ko, no write access to the related document
-        self.assertRaises(except_orm, self.mail_message.create,
-            cr, user_raoul_id, {'model': 'mail.group', 'res_id': self.group_priv_id, 'body': 'Test'})
+        with self.assertRaises(except_orm):
+            self.mail_message.create(cr, user_raoul_id, {'model': 'mail.group', 'res_id': self.group_priv_id, 'body': 'Test'})
         # Do: Raoul creates a private message -> ok
         self.mail_message.create(cr, user_raoul_id, {'body': 'Test'})
         # Do: Raoul creates a reply to a message on Priv -> ko
-        self.assertRaises(except_orm, self.mail_message.create,
-            cr, user_raoul_id, {'model': 'mail.group', 'res_id': self.group_priv_id, 'body': 'Test', 'parent_id': priv_msg_id})
+        with self.assertRaises(except_orm):
+            self.mail_message.create(cr, user_raoul_id, {'model': 'mail.group', 'res_id': self.group_priv_id, 'body': 'Test', 'parent_id': priv_msg_id})
         # Do: Raoul creates a reply to a message on Priv-> ok if has received parent
         self.mail_notification.create(cr, uid, {'message_id': priv_msg_id, 'partner_id': self.partner_raoul_id})
         self.mail_message.create(cr, user_raoul_id, {'model': 'mail.group', 'res_id': self.group_priv_id, 'body': 'Test', 'parent_id': priv_msg_id})
@@ -254,7 +253,7 @@ class test_mail_access_rights(TestMailBase):
         self.assertEqual(len(notif_ids), 1, 'mail_message set_message_read: more than one notification created')
         # Test: notification read
         notif = self.mail_notification.browse(cr, uid, notif_ids[0])
-        self.assertTrue(notif.read, 'mail_notification read failed')
+        self.assertTrue(notif['read'], 'mail_notification read failed')
         self.assertFalse(msg.to_read, 'mail_message read failed')
 
         # Do: Raoul reads msg
@@ -265,7 +264,7 @@ class test_mail_access_rights(TestMailBase):
         self.assertEqual(len(notif_ids), 1, 'mail_message set_message_read: more than one notification created')
         # Test: notification read
         notif = self.mail_notification.browse(cr, uid, notif_ids[0])
-        self.assertTrue(notif.read, 'mail_notification starred failed')
+        self.assertTrue(notif['read'], 'mail_notification starred failed')
         self.assertFalse(msg_raoul.to_read, 'mail_message starred failed')
 
         # Do: Admin unreads msg
@@ -332,9 +331,8 @@ class test_mail_access_rights(TestMailBase):
             with self.assertRaises(except_orm):
                 trigger_read = partner.name
         # Do: Bert comments Jobs, ko because no creation right
-        self.assertRaises(except_orm,
-                          self.mail_group.message_post,
-                          cr, user_bert_id, self.group_jobs_id, body='I love Pigs')
+        with self.assertRaises(except_orm):
+            self.mail_group.message_post(cr, user_bert_id, self.group_jobs_id, body='I love Pigs')
 
         # Do: Bert writes on its own profile, ko because no message create access
         with self.assertRaises(except_orm):

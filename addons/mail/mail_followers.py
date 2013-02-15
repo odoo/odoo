@@ -82,7 +82,7 @@ class mail_notification(osv.Model):
         """
         notify_pids = []
         for notification in message.notification_ids:
-            if notification.read:
+            if notification['read']:
                 continue
             partner = notification.partner_id
             # Do not send to partners without email address defined
