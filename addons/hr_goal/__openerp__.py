@@ -27,12 +27,10 @@
     'description': """Gamification of goals""",
 
     'data': [
-        'view/menu.xml',
         'view/type.xml',
-        # 'view/definition.xml',
-        # 'view/instance.xml',
-        # 'view/preset.xml',
-    ],
+        'view/goal.xml',
+        'view/menu.xml',
+        ],
     'installable': True,
     'application': True,
 }

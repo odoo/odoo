@@ -130,7 +130,6 @@ class gamification_goal(osv.Model):
     }
 
     _defaults = {
-        'start_date': fields.date.today,
         'current': 0,
         'status': 'inprogress',
     }

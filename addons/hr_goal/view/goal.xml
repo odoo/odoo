@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data>
+        <record id="goal_list_action" model="ir.actions.act_window">
+            <field name="name">Goals</field>
+            <field name="res_model">gamification.goal</field>
+            <field name="view_mode">tree,form,calendar</field>
+        </record>
+
+        <record id="goal_list_view" model="ir.ui.view">
+            <field name="name">Goal list</field>
+            <field name="model">gamification.goal</field>
+            <field name="arch" type="xml">
+                <tree string="Goal list" colors="red:status == 'failed';green:status == 'reached'"> 
+                    <field name="type_id"/>
+                    <field name="user_id"/>
+                    <field name="current"/>
+                    <field name="target_goal"/>
+                    <field name="start_date"/>
+                    <field name="end_date"/>
+                    <field name="status" invisible="1"/>
+                </tree>
+            </field>
+        </record>
+		
+		<record id="goal_form_view" model="ir.ui.view">
+            <field name="name">Goal form</field>
+            <field name="model">gamification.goal</field>
+            <field name="arch" type="xml">
+                <form string="Goal" version="7.0">
+                    <sheet>
+                        <group>
+                            <group string="Reference">
+                                <field name="type_id"/>
+                                <field name="user_id"/>
+                                <field name="plan_id"/>
+                            </group>
+                            <group string="Schedule">
+                                <field name="start_date"/>
+                                <field name="end_date"/>
+                            </group>
+                            <group string="Data">
+                                <field name="target_goal"/>
+                                <field name="current"/>
+                                <field name="status"/>
+                            </group>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="goal_calendar_view" model="ir.ui.view">
+            <field name="name">Goal calendar</field>
+            <field name="model">gamification.goal</field>
+            <field name="arch" type="xml">
+                <calendar string="Goal"
+                        date_start="start_date"
+                        date_stop="end_date"
+                        color="type_id">
+                    <field name="type_id"/>
+                </calendar>
+            </field>
+        </record>
+
+    </data>
+</openerp>
