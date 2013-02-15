@@ -21,6 +21,7 @@
 
 import base64
 import urllib2
+from urlparse import urlparse, urlunparse
 
 import openerp
 from openerp.osv import fields, osv
@@ -30,11 +31,12 @@ class Binary(openerp.addons.web.http.Controller):
 
     @openerp.addons.web.http.jsonrequest
     def url2binary(self, req, url):
-        if not url.startswith("http"):
-            raise Exception("Not allowed to load a file using this protocol")
-        if url.count("?") > 0 or url.count("&") > 0 or url.count("=") > 0:
-            raise Exception("Not allowed to use GET parameters")
+        """Used exclusively to load images from LinkedIn profiles, must not be used for anything else."""
         req.session.assert_valid(force=True)
+        _scheme, _netloc, path, params, query, fragment = urlparse(url)
+        # media.linkedin.com is the master domain for LinkedIn media (replicated to CDNs),
+        # so forcing it should always work and prevents abusing this method to load arbitrary URLs
+        url = urlunparse(('http', 'media.linkedin.com', path, params, query, fragment))
         bfile = urllib2.urlopen(url)
         return base64.b64encode(bfile.read())
     

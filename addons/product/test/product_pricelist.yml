@@ -71,5 +71,5 @@
         'qty5': 30,
         'price_list':ref('customer_pricelist'),
     }
-    from tools import test_reports
+    from openerp.tools import test_reports
     test_reports.try_report_action(cr, uid, 'action_product_price_list',wiz_data=data_dict, context=ctx, our_module='product')

@@ -187,6 +187,8 @@
                     domain="[('date_action','&lt;&gt;',False)]" help="Filter and view on next actions and date"/>
                 <field name="job_id"/>
                 <field name="user_id"/>
+                <separator/>
+                <field name="categ_ids"/>
                 <group expand="0" string="Group By...">
                     <filter string="Responsible" domain="[]"  context="{'group_by':'user_id'}"/>
                     <filter string="Department" domain="[]" context="{'group_by':'department_id'}"/>
