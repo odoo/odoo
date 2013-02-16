@@ -412,15 +412,15 @@ class ConnectionPool(object):
 
         for i, (cnx, used) in enumerate(self._connections):
             if not used and dsn_are_equals(cnx.dsn, dsn):
+                self._connections.pop(i)
                 try:
                     cnx.reset()
                 except psycopg2.OperationalError:
-                    self._debug('Cannot reset connection at index %d: %r', i, cnx.dsn)
+                    self._debug('Cannot reset connection at index %d: %r, removing it', i, cnx.dsn)
                     # psycopg2 2.4.4 and earlier do not allow closing a closed connection
                     if not cnx.closed:
                         cnx.close()
                     continue
-                self._connections.pop(i)
                 self._connections.append((cnx, True))
                 self._debug('Existing connection found at index %d', i)
 
