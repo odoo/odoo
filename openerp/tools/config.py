@@ -107,6 +107,7 @@ class configmanager(object):
                          help="specify additional addons paths (separated by commas).",
                          action="callback", callback=self._check_addons_path, nargs=1, type="string")
         group.add_option("--load", dest="server_wide_modules", help="Comma-separated list of server-wide modules default=web")
+        group.add_option("--gevent", dest="gevent", action="store_true", my_default=False, help="Activate the GEvent mode, this also desactivate the cron.")
         parser.add_option_group(group)
 
         # XML-RPC / HTTP
@@ -119,6 +120,8 @@ class configmanager(object):
                          help="disable the XML-RPC protocol")
         group.add_option("--proxy-mode", dest="proxy_mode", action="store_true", my_default=False,
                          help="Enable correct behavior when behind a reverse proxy")
+        group.add_option("--longpolling-port", dest="longpolling_port", my_default=8072,
+                         help="specify the TCP port for longpolling requests", type="int")
         parser.add_option_group(group)
 
         # XML-RPC / HTTPS
@@ -376,7 +379,8 @@ class configmanager(object):
             self.options['pidfile'] = False
 
         # if defined dont take the configfile value even if the defined value is None
-        keys = ['xmlrpc_interface', 'xmlrpc_port', 'db_name', 'db_user', 'db_password', 'db_host',
+        keys = ['xmlrpc_interface', 'xmlrpc_port', 'longpolling_port',
+                'db_name', 'db_user', 'db_password', 'db_host',
                 'db_port', 'db_template', 'logfile', 'pidfile', 'smtp_port',
                 'email_from', 'smtp_server', 'smtp_user', 'smtp_password',
                 'netrpc_interface', 'netrpc_port', 'db_maxconn', 'import_partial', 'addons_path',
@@ -407,7 +411,7 @@ class configmanager(object):
             'list_db', 'xmlrpcs', 'proxy_mode',
             'test_file', 'test_enable', 'test_commit', 'test_report_directory',
             'osv_memory_count_limit', 'osv_memory_age_limit', 'max_cron_threads', 'unaccent',
-            'workers', 'limit_memory_hard', 'limit_memory_soft', 'limit_time_cpu', 'limit_time_real', 'limit_request'
+            'workers', 'limit_memory_hard', 'limit_memory_soft', 'limit_time_cpu', 'limit_time_real', 'limit_request', 'gevent'
         ]
 
         for arg in keys:

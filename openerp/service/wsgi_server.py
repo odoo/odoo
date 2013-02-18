@@ -426,7 +426,11 @@ def serve(interface, port, threaded):
     """
 
     global httpd
-    httpd = werkzeug.serving.make_server(interface, port, application, threaded=threaded)
+    if not openerp.evented:
+        httpd = werkzeug.serving.make_server(interface, port, application, threaded=threaded)
+    else:
+        from gevent.wsgi import WSGIServer
+        httpd = WSGIServer((interface, port), application)
     httpd.serve_forever()
 
 def start_service():
@@ -446,8 +450,13 @@ def stop_service():
     The server is supposed to have been started by start_server() above.
     """
     if httpd:
-        httpd.shutdown()
-        close_socket(httpd.socket)
+        if not openerp.evented:
+            httpd.shutdown()
+            close_socket(httpd.socket)
+        else:
+            import gevent
+            httpd.stop()
+            gevent.shutdown()
 
 def close_socket(sock):
     """ Closes a socket instance cleanly
