@@ -373,24 +373,11 @@ class lunch_order_line(osv.Model):
             cashmove_ref.unlink(cr, uid, cash_ids, context=context)
         return self._update_order_lines(cr, uid, ids, context=context)
 
-    def _get_line_order_ids(self, cr, uid, ids, context=None):
-        """
-        return the list of lunch.order.lines ids to which belong the  lunch.order 'ids'
-        """
-        result = set()
-        for lunch_order in self.browse(cr, uid, ids, context=context):
-            for lines in lunch_order.order_line_ids:
-                result.add(lines.id)
-        return list(result)
-
-
     _columns = {
         'name': fields.related('product_id', 'name', readonly=True),
         'order_id': fields.many2one('lunch.order', 'Order', ondelete='cascade'),
         'product_id': fields.many2one('lunch.product', 'Product', required=True),
-        'date': fields.related('order_id', 'date', type='date', string="Date", readonly=True, store={
-            'lunch.order': (_get_line_order_ids, ['date'], 10),
-            }),
+        'date': fields.related('order_id', 'date', type='date', string="Date", readonly=True, store=True),
         'supplier': fields.related('product_id', 'supplier', type='many2one', relation='res.partner', string="Supplier", readonly=True, store=True),
         'user_id': fields.related('order_id', 'user_id', type='many2one', relation='res.users', string='User', readonly=True, store=True),
         'note': fields.text('Note'),
