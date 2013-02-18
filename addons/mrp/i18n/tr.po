@@ -8,13 +8,13 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2012-12-21 17:04+0000\n"
-"PO-Revision-Date: 2013-02-12 21:50+0000\n"
-"Last-Translator: Ediz Duman <neps1192@gmail.com>\n"
+"PO-Revision-Date: 2013-02-16 19:33+0000\n"
+"Last-Translator: Ayhan KIZILTAN <Unknown>\n"
 "Language-Team: Turkish <tr@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-02-13 05:21+0000\n"
+"X-Launchpad-Export-Date: 2013-02-17 05:23+0000\n"
 "X-Generator: Launchpad (build 16491)\n"
 
 #. module: mrp
@@ -80,7 +80,7 @@ msgstr "Hurda Ürünler"
 #. module: mrp
 #: view:mrp.workcenter:0
 msgid "Mrp Workcenter"
-msgstr ""
+msgstr "Ürt İşmerkezi"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.mrp_routing_action
@@ -144,6 +144,8 @@ msgid ""
 "Holds the Chatter summary (number of messages, ...). This summary is "
 "directly in html format in order to be inserted in kanban views."
 msgstr ""
+"Sohbetçi özetini tutar (mesajların sayısı, ...). Bu özet kanban ekranlarına "
+"eklenebilmesi için html biçimindedir."
 
 #. module: mrp
 #: model:process.transition,name:mrp.process_transition_servicerfq0
@@ -204,7 +206,7 @@ msgstr "Sipariş Planlama"
 #. module: mrp
 #: field:mrp.config.settings,module_mrp_operations:0
 msgid "Allow detailed planning of work order"
-msgstr ""
+msgstr "Ayrıntılı iş emri planınına izin verir"
 
 #. module: mrp
 #: code:addons/mrp/mrp.py:633
@@ -280,6 +282,8 @@ msgid ""
 "The selection of the right Bill of Material to use will depend on the "
 "properties specified on the sales order and the Bill of Material."
 msgstr ""
+"Kullanılacak doğru Ürün Ağacının seçimi satış siparişinde ve Ürün Ağacında "
+"belirtilen özelliklere bağlı olacaktır."
 
 #. module: mrp
 #: view:mrp.bom:0
@@ -385,6 +389,8 @@ msgid ""
 "Fill this product to easily track your production costs in the analytic "
 "accounting."
 msgstr ""
+"Analiz muhasebesinde üretim maliyetlerinizi kolayca izlemek için bu ürünü "
+"doldurun."
 
 #. module: mrp
 #: field:mrp.workcenter,product_id:0
@@ -795,6 +801,7 @@ msgid ""
 "Unit of Measure (Unit of Measure) is the unit of measurement for the "
 "inventory control"
 msgstr ""
+"Ölçü Birimi (Ölçü Birimi) stok kontrolünde kullanılacak ölçü birimidir"
 
 #. module: mrp
 #: report:bom.structure:0
@@ -837,11 +844,13 @@ msgid ""
 "Fill this only if you want automatic analytic accounting entries on "
 "production orders."
 msgstr ""
+"Bunu yalnızca üretim emirlerinde otomatik analiz girişleri isterseniz "
+"doldurun."
 
 #. module: mrp
 #: view:mrp.production:0
 msgid "Mark as Started"
-msgstr ""
+msgstr "Başlatıldı olarak İşaretle"
 
 #. module: mrp
 #: view:mrp.production:0
@@ -881,6 +890,8 @@ msgid ""
 "The Product Unit of Measure you chose has a different category than in the "
 "product form."
 msgstr ""
+"Seçtiğiniz Ürün Ölçü Birimi, ürün formundakinden farklı bir kategoriye "
+"sahiptir."
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_production
@@ -903,6 +914,9 @@ msgid ""
 "You should install the mrp_byproduct module if you want to manage extra "
 "products on BoMs !"
 msgstr ""
+"Bütün ürün miktarları 0 dan büyük olmalıdır.\n"
+"ÜA larında ek ürünleri yönetmek isterseniz mrp_byproduct modülünü "
+"kurmalısınız !"
 
 #. module: mrp
 #: view:mrp.production:0
@@ -1163,7 +1177,7 @@ msgstr "DevamEden Üretim Emirleri"
 #. module: mrp
 #: model:ir.actions.client,name:mrp.action_client_mrp_menu
 msgid "Open MRP Menu"
-msgstr ""
+msgstr "ÜRT Menüsünü Aç"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.mrp_production_action4
@@ -1347,6 +1361,8 @@ msgid ""
 "Bill of Materials allow you to define the list of required raw materials to "
 "make a finished product."
 msgstr ""
+"Ürün Ağaçları, bitmiş bir ürün yapmak için gerekli ham maddeleri "
+"tanımlamanızı sağlar."
 
 #. module: mrp
 #: code:addons/mrp/mrp.py:375
@@ -2201,11 +2217,13 @@ msgid ""
 "                        The delivery order will be ready once the production "
 "is done."
 msgstr ""
+"Bu ürüne atanmış ürün ağacını kullanıyor.\n"
+"                        Üretim tamamlandığında teslimat emri hazır olacaktır."
 
 #. module: mrp
 #: field:mrp.config.settings,module_stock_no_autopicking:0
 msgid "Manage manual picking to fulfill manufacturing orders "
-msgstr ""
+msgstr "Üretim emirlerini tamamlamak için ell toplama işlemi yapın "
 
 #. module: mrp
 #: view:mrp.routing.workcenter:0
@@ -2222,7 +2240,7 @@ msgstr "Üretimler"
 #: model:ir.model,name:mrp.model_stock_move_split
 #: view:mrp.production:0
 msgid "Split in Serial Numbers"
-msgstr ""
+msgstr "Seri Numaralarına Göre ayır"
 
 #. module: mrp
 #: help:mrp.bom,product_uos:0
@@ -2280,7 +2298,7 @@ msgstr "Üretim panosu"
 #: code:addons/mrp/wizard/change_production_qty.py:68
 #, python-format
 msgid "Active Id not found"
-msgstr ""
+msgstr "Etkin Id bulunamadı"
 
 #. module: mrp
 #: model:process.node,note:mrp.process_node_procureproducts0
@@ -2423,7 +2441,7 @@ msgstr "Bir ürün ağacı listesi görüntülenirken sıralamayı verir."
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_config_settings
 msgid "mrp.config.settings"
-msgstr ""
+msgstr "mrp.config.settings"
 
 #. module: mrp
 #: view:mrp.production:0

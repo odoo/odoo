@@ -8,24 +8,24 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2012-12-21 17:04+0000\n"
-"PO-Revision-Date: 2013-02-14 19:15+0000\n"
+"PO-Revision-Date: 2013-02-17 17:59+0000\n"
 "Last-Translator: Fekete Mihai <mihai@erpsystems.ro>\n"
 "Language-Team: Romanian <ro@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-02-15 05:24+0000\n"
+"X-Launchpad-Export-Date: 2013-02-18 05:26+0000\n"
 "X-Generator: Launchpad (build 16491)\n"
 
 #. module: purchase
 #: model:res.groups,name:purchase.group_analytic_accounting
 msgid "Analytic Accounting for Purchases"
-msgstr ""
+msgstr "Contabilitate Analitica pentru Achizitii"
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_account_config_settings
 msgid "account.config.settings"
-msgstr ""
+msgstr "setari.config.cont"
 
 #. module: purchase
 #: view:board.board:0
@@ -40,6 +40,12 @@ msgid ""
 "Example: Product: this product is deprecated, do not purchase more than 5.\n"
 "                Supplier: don't forget to ask for an express delivery."
 msgstr ""
+"Permite sa configurati notificari pe produse si sa le declansati atunci cand "
+"un utilizator doreste sa cumpere un anumit produs sau de la un anumit "
+"furnizor.\n"
+"De exemplu: Produs: acest produs este depreciat, nu cumparati mai mult de "
+"5.\n"
+"                Furnizor: nu uitati sa cereti o livrare expres."
 
 #. module: purchase
 #: model:product.pricelist,name:purchase.list0
@@ -49,7 +55,7 @@ msgstr "Lista de preturi implicita de achizitii"
 #. module: purchase
 #: report:purchase.order:0
 msgid "Tel :"
-msgstr ""
+msgstr "Tel :"
 
 #. module: purchase
 #: help:purchase.order,pricelist_id:0
@@ -75,7 +81,7 @@ msgstr "Ordinea de zi"
 #. module: purchase
 #: help:purchase.order,message_unread:0
 msgid "If checked new messages require your attention."
-msgstr ""
+msgstr "Daca este selectat, mesajele noi necesita atentia dumneavoastra."
 
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_procurement_management_inventory
@@ -100,12 +106,14 @@ msgid ""
 "Holds the Chatter summary (number of messages, ...). This summary is "
 "directly in html format in order to be inserted in kanban views."
 msgstr ""
+"Contine rezumatul Chatter (numar de mesaje, ...). Acest rezumat este direct "
+"in format HTML, cu scopul de a se introduce in vizualizari kanban."
 
 #. module: purchase
 #: code:addons/purchase/purchase.py:1024
 #, python-format
 msgid "Configuration Error!"
-msgstr ""
+msgstr "Eroare de configurare!"
 
 #. module: purchase
 #: code:addons/purchase/purchase.py:587
@@ -130,7 +138,7 @@ msgstr "Pretul Standard de achizitie"
 #: code:addons/purchase/purchase.py:1011
 #, python-format
 msgid "No supplier defined for this product !"
-msgstr ""
+msgstr "Nu exista nici un furnizor definit pentru acest produs !"
 
 #. module: purchase
 #: model:ir.actions.act_window,help:purchase.action_picking_tree4_picking_to_invoice
@@ -145,6 +153,16 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p>\n"
+"                Aici puteti sa urmariti toate receptiile produselor din "
+"comenzile\n"
+"                de cumparare unde facturarea este \"Bazata pe Expedierea "
+"Primita\",\n"
+"                si pentru care nu ati primit inca o factura a furnizorului.\n"
+"                Puteti genera o factura a furnizorului pe baza acelor "
+"receptii.\n"
+"              </p>\n"
+"            "
 
 #. module: purchase
 #: view:purchase.report:0
@@ -184,12 +202,12 @@ msgstr "Adresa de expediere:"
 #. module: purchase
 #: view:purchase.order:0
 msgid "Confirm Order"
-msgstr ""
+msgstr "Confirma Comanda"
 
 #. module: purchase
 #: field:purchase.config.settings,module_warning:0
 msgid "Alerts by products or supplier"
-msgstr ""
+msgstr "Alerte dupa produse sau furnizor"
 
 #. module: purchase
 #: field:purchase.order,name:0
@@ -201,7 +219,7 @@ msgstr "Referinta comanda"
 #. module: purchase
 #: view:purchase.config.settings:0
 msgid "Invoicing Process"
-msgstr ""
+msgstr "Procesul de Facturare"
 
 #. module: purchase
 #: model:process.transition,name:purchase.process_transition_approvingpurchaseorder0
@@ -213,6 +231,8 @@ msgstr "Aprobare"
 msgid ""
 "Allows you to select and maintain different units of measure for products."
 msgstr ""
+"Va permite sa selectati si sa mentineti diferite unitati de masura pentru "
+"produse."
 
 #. module: purchase
 #: help:purchase.order,minimum_planned_date:0
@@ -228,11 +248,12 @@ msgstr ""
 #, python-format
 msgid "In order to delete a purchase order, you must cancel it first."
 msgstr ""
+"Pentru a sterge o comanda de achizitie, mai intai trebuie sa o anulati."
 
 #. module: purchase
 #: view:product.product:0
 msgid "When you sell this product, OpenERP will trigger"
-msgstr ""
+msgstr "Cand vindeti acest produs, OpenERP va declansa"
 
 #. module: purchase
 #: view:purchase.order:0
@@ -274,7 +295,7 @@ msgstr ""
 #: field:purchase.order.line,state:0
 #: view:purchase.report:0
 msgid "Status"
-msgstr ""
+msgstr "Status"
 
 #. module: purchase
 #: selection:purchase.report,month:0
@@ -284,7 +305,7 @@ msgstr "August"
 #. module: purchase
 #: view:product.product:0
 msgid "to"
-msgstr ""
+msgstr "catre"
 
 #. module: purchase
 #: selection:purchase.report,month:0
@@ -301,6 +322,7 @@ msgstr "Comenzi de aprovizionare"
 #: help:purchase.config.settings,group_analytic_account_for_purchases:0
 msgid "Allows you to specify an analytic account on purchase orders."
 msgstr ""
+"Va permite sa specificati un cont analitic pentru comenzile de achizitie."
 
 #. module: purchase
 #: model:ir.actions.act_window,help:purchase.action_invoice_pending
@@ -317,6 +339,20 @@ msgid ""
 "          </p>\n"
 "        "
 msgstr ""
+"<clasa p=\"oe_vizualizare_niciuncontinut_creeaza\">\n"
+"            Clic pentru a crea o factura ciorna.\n"
+"          </p><p>\n"
+"            Utilizati acest meniu pentru a controla facturile care vor fi "
+"primite de la furnizorul\n"
+"            dumneavoastra. OpenERP genereaza facturi ciorna din comenzile "
+"dumneavoastra de\n"
+"            achizitie sau din receptii, in functie de setarile "
+"dumneavoastra.\n"
+"          </p><p>\n"
+"            Odata ce primiti o factura a furnizorului, o puteti potrivi cu\n"
+"            factura ciorna si sa o validati.\n"
+"          </p>\n"
+"        "
 
 #. module: purchase
 #: selection:purchase.report,month:0
@@ -330,11 +366,13 @@ msgid ""
 "The product \"%s\" has been defined with your company as reseller which "
 "seems to be a configuration error!"
 msgstr ""
+"Produsul \"%s\" a fost definit in compania dumneavoastra ca revanzator ceea "
+"ce pare a fi o eroare de configurare!"
 
 #. module: purchase
 #: view:product.product:0
 msgid "When you sell this service to a customer,"
-msgstr ""
+msgstr "Atunci cand vindeti acest serviciu unui client,"
 
 #. module: purchase
 #: model:process.transition,note:purchase.process_transition_createpackinglist0
@@ -352,7 +390,7 @@ msgstr "Cotatii (oferte)"
 #. module: purchase
 #: view:purchase.order.line_invoice:0
 msgid "Do you want to generate the supplier invoices?"
-msgstr ""
+msgstr "Doriti sa generati facturile furnizorului?"
 
 #. module: purchase
 #: field:purchase.order.line,product_qty:0
@@ -369,7 +407,7 @@ msgstr "Pozitie fiscala"
 #. module: purchase
 #: field:purchase.config.settings,default_invoice_method:0
 msgid "Default invoicing control method"
-msgstr ""
+msgstr "Metoda de control a facturarii implicite"
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_stock_picking_in
@@ -393,6 +431,18 @@ msgid ""
 "                </p>\n"
 "            "
 msgstr ""
+"<clasa p=\"oe_vizualizare_niciuncontinut_creeaza\">\n"
+"                    Clic aici pentru a inregistra o factura a furnizorului.\n"
+"                </p><p>\n"
+"                    Facturile furnizorului pot fi pre-generate pe baza "
+"comenzilor de\n"
+"                    achizitie sau a receptiilor. Acest lucru  va permite sa "
+"controlati facturile\n"
+"                    pe care le primiti de la furnizorul dumneavoastra, in "
+"functie de documentul\n"
+"                    ciorna in OpenERP.\n"
+"                </p>\n"
+"            "
 
 #. module: purchase
 #: view:purchase.order:0
@@ -417,6 +467,9 @@ msgid ""
 "Put an address if you want to deliver directly from the supplier to the "
 "customer. Otherwise, keep empty to deliver to your own company."
 msgstr ""
+"Introduceti o adresa daca doriti sa faceti livrarea direct de la furnizor "
+"catre client. In caz contrar, lasati necompletat pentru a face livrarea "
+"catre compania dumneavoastra."
 
 #. module: purchase
 #: model:ir.actions.act_window,help:purchase.purchase_line_form_action2
@@ -432,6 +485,17 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p>\n"
+"                Aici puteti urmari toate liniile comenzilor de achizitie "
+"unde\n"
+"                facturarea este \"Pe Baza Liniilor Comenzii de Achizitie\", "
+"si pentru care\n"
+"                nu ati primit inca o factura a furnizorului. Puteti genera "
+"o\n"
+"                factura ciorna a furnizorului pe baza liniilor din aceasta "
+"lista.\n"
+"              </p>\n"
+"            "
 
 #. module: purchase
 #: field:purchase.order.line,date_planned:0
@@ -441,7 +505,7 @@ msgstr "Data programata"
 #. module: purchase
 #: field:purchase.order,currency_id:0
 msgid "Currency"
-msgstr ""
+msgstr "Moneda"
 
 #. module: purchase
 #: field:purchase.order,journal_id:0
@@ -468,17 +532,17 @@ msgstr "Comenzi de achizitie care includ linii nefacturate."
 #: view:product.product:0
 #: field:product.template,purchase_ok:0
 msgid "Can be Purchased"
-msgstr ""
+msgstr "Poate fi achizitionat"
 
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_action_picking_tree_in_move
 msgid "Incoming  Products"
-msgstr ""
+msgstr "Produse Primite"
 
 #. module: purchase
 #: view:purchase.order:0
 msgid "Request for Quotation "
-msgstr ""
+msgstr "Cerere pentru Cotatie "
 
 #. module: purchase
 #: help:purchase.order,partner_ref:0
