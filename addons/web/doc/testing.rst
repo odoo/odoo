@@ -327,6 +327,8 @@ a test case (or its containing test suite) through
 :js:attr:`~TestOptions.rpc`, and can be one of two modes: ``mock`` or
 ``rpc``.
 
+.. _testing-rpc-mock:
+
 Mock RPC
 ++++++++
 

@@ -385,9 +385,50 @@ which for us means going to query the user's times.
 
 We don't have any records to get in our test, and we don't want to
 test the initialization yet! So let's cheat a bit: we can manually
-:js:func:`set a widget's DOM <openerp.web.Widget.setElement`, let's
+:js:func:`set a widget's DOM <openerp.web.Widget.setElement>`, let's
 create a basic DOM matching what each method expects then call the
 method:
+
+.. patch::
+
+The next group of patches (in terms of setup/complexity) is RPC tests:
+testing components/methods which perform network calls (RPC
+requests). In our module, ``start`` and ``watch_stop`` are in that
+case: ``start`` fetches the user's recorded times and ``watch_stop``
+creates a new record with the current watch.
+
+By default, tests don't allow RPC requests and will generate an error
+when trying to perform one:
+
+.. image:: module/testing_1.png
+    :align: center
+
+To allow them, the test case (or the test suite) has to explicitly opt
+into :js:attr:`rpc support <TestOptions.rpc>` by adding the ``rpc:
+'mock'`` option to the test case, and providing its own "rpc
+responses":
+
+.. patch::
+
+.. note::
+
+    By defaut, tests cases don't load templates either. We had not
+    needed to perform any template rendering before here, so we must
+    now enable templates loading via :js:attr:`the corresponding
+    option <TestOptions.templates>`.
+
+Our final test requires altering the module's code: asynchronous tests
+use :doc:`deferred </async>` to know when a test ends and the other
+one can start (otherwise test content will execute non-linearly and
+the assertions of a test will be executed during the next test or
+worse), but although ``watch_stop`` performs an asynchronous
+``create`` operation it doesn't return a deferred we can synchronize
+on. We simply need to return its result:
+
+.. patch::
+
+This makes no difference to the original code, but allows us to write
+our test:
 
 .. patch::
 
