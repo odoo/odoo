@@ -996,10 +996,11 @@ instance.web.ViewManagerAction = instance.web.ViewManager.extend({
         });
     },
     do_create_view: function(view_type) {
-        var r = this._super.apply(this, arguments);
-        var view = this.views[view_type].controller;
-        view.set({ 'title': this.action.name });
-        return r;
+        var self = this;
+        return this._super.apply(this, arguments).then(function() {
+            var view = self.views[view_type].controller;
+            view.set({ 'title': self.action.name });
+        });
     },
     get_action_manager: function() {
         var cur = this;
