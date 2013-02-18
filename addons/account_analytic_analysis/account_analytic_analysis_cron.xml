@@ -4,14 +4,14 @@
 
         <record id="account_analytic_cron_email_template" model="email.template">
             <field name="name">Contract expiration reminder</field>
-            <field name="email_from">${user.email or ''}</field>
+            <field name="email_from">${object.email or ''}</field>
             <field name="subject">Contract expiration reminder ${user.company_id.name}</field>
             <field name="email_to">${object.email}</field>
             <field name="lang">${object.lang}</field>
             <field name="model_id" ref="base.model_res_users"/>
             <field name="auto_delete" eval="True"/>
             <field name="body_html"><![CDATA[
-Hello ${user.name},
+Hello ${object.name},
 
 % macro account_table(values):
 <table cellspacing="1" border="1" cellpadding="4">
@@ -26,7 +26,7 @@ Hello ${user.name},
         % for account in accounts:
         <tr>
             <td>${partner.name}</td>
-            <td>${account.name}</td>
+            <td><a href="${ctx["base_url"]}/#action=${ctx["action_id"]}&id=${account.id}&view_type=form">${account.name}</a></td>
             <td>${account.date_start} to ${account.date and account.date or '???'}</td>
             <td>
             % if account.quantity_max != 0.0:
