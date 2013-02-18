@@ -359,8 +359,8 @@ class Session(object):
 def _browse_many2one(record, fname, column):
     try:
         model = record.session.model(column._obj)
-        cache = record._cache
-        fields_process = record._fields_process
+        cache = record._record_cache
+        fields_process = record._record_process
 
         def process(value):
             if isinstance(value, Record):
@@ -387,14 +387,14 @@ def _browse_many2one(record, fname, column):
 
 def _browse_2many(record, fname, column):
     model = record.session.model(column._obj)
-    cache = record._cache
-    fields_process = record._fields_process
+    cache = record._record_cache
+    fields_process = record._record_process
     return lambda value: model.browse(value, cache=cache, fields_process=fields_process)
 
 
 def _browse_reference(record, fname, column):
-    cache = record._cache
-    fields_process = record._fields_process
+    cache = record._record_cache
+    fields_process = record._record_process
 
     def process(value):
         if isinstance(value, Record):
@@ -999,11 +999,11 @@ class BaseModel(object):
 
     # other specific attributes used by model instances
     INSTANCE_ATTRIBUTES = [
-        '_id',
-        '_cache',
-        '_fields_process',
+        '_record_id',
+        '_record_cache',
+        '_record_process',
         '_records',
-        '_search_args',
+        '_records_search',
     ]
 
     def _make_instance(self, **kwargs):
@@ -1046,12 +1046,12 @@ class BaseModel(object):
 
         if fields_process is None:
             fields_process = {}
-        return self._make_instance(session=self.session,
-                        _id=id, _cache=cache, _fields_process=fields_process)
+        return self._make_instance(session=self.session, _record_id=id,
+                            _record_cache=cache, _record_process=fields_process)
 
     def is_record(self):
         """ test whether self is a record instance """
-        return hasattr(self, '_id')
+        return hasattr(self, '_record_id')
 
     @api.model
     def _make_recordset(self, records):
@@ -1060,9 +1060,9 @@ class BaseModel(object):
 
     def is_recordset(self):
         """ test whether self is a recordset instance """
-        # query() returns recordsets with self._search_args, and self._records
+        # query() returns recordsets with self._records_search, and self._records
         # when evaluated; browse() returns recordsets with self._records only
-        return hasattr(self, '_records') or hasattr(self, '_search_args')
+        return hasattr(self, '_records') or hasattr(self, '_records_search')
 
     @property
     def record(self):
@@ -5321,7 +5321,7 @@ class BaseModel(object):
             records is required.  Once evaluated, it keeps its list of records,
             and will never be evaluated again.
         """
-        return self._make_instance(session=self.session, _search_args=(domain, offset, limit, order))
+        return self._make_instance(session=self.session, _records_search=(domain, offset, limit, order))
 
     def force(self):
         """ Force the evaluation of a recordset.
@@ -5329,7 +5329,7 @@ class BaseModel(object):
             been evaluated.
         """
         if not hasattr(self, '_records'):
-            ids = self.search(*self._search_args)
+            ids = self.search(*self._records_search)
             self._records = self.browse(ids)._records
 
     def is_forced(self):
@@ -5340,7 +5340,7 @@ class BaseModel(object):
         """ Return a domain that describes exactly ``self``. """
         if hasattr(self, '_records'):
             return [('id', 'in', map(int, self))]
-        return expression.normalize_domain(self._search_args[0])
+        return expression.normalize_domain(self._records_search[0])
 
     def __nonzero__(self):
         """ If ``self`` is a recordset, test whether it is nonempty.
@@ -5361,7 +5361,7 @@ class BaseModel(object):
     def __len__(self):
         """ Return the size of ``self`` (must be a recordset). """
         if not hasattr(self, '_records'):
-            return self.search(*self._search_args, count=True)
+            return self.search(*self._records_search, count=True)
         return len(self._records)
 
     def __contains__(self, item):
@@ -5399,7 +5399,7 @@ class BaseModel(object):
             return self._make_recordset(list(set(self) & set(other)))
         dom = expression.AND([self.get_domain(), other.get_domain()])
         uneval = self if not hasattr(self, '_records') else other
-        return self.query(dom, *uneval._search_args[1:])
+        return self.query(dom, *uneval._records_search[1:])
 
     def __or__(self, other):
         """ Return the union of two recordsets.
@@ -5410,7 +5410,7 @@ class BaseModel(object):
             return self._make_recordset(list(set(self) | set(other)))
         dom = expression.OR([self.get_domain(), other.get_domain()])
         uneval = self if not hasattr(self, '_records') else other
-        return self.query(dom, *uneval._search_args[1:])
+        return self.query(dom, *uneval._records_search[1:])
 
     def __xor__(self, other):
         """ Return the disjoint union of two recordsets.
@@ -5453,7 +5453,7 @@ class BaseModel(object):
         if self.is_record():
             # compare two records
             assert other.is_record(), "Comparing record to non-record: %s, %s" % (self, other)
-            return (self._name, self._id) == (other._name, other._id)
+            return (self._name, self._record_id) == (other._name, other._record_id)
         elif self.is_recordset():
             # compare two recordsets
             assert other.is_recordset(), "Comparing recordset to non-recordset: %s, %s" % (self, other)
@@ -5476,11 +5476,11 @@ class BaseModel(object):
         assert self.is_record(), "Expected record instance: %s" % self
 
         if name == 'id':
-            return self._id
+            return self._record_id
 
-        model_cache = self._cache[self._name]
+        model_cache = self._record_cache[self._name]
 
-        if name not in model_cache[self._id]:
+        if name not in model_cache[self._record_id]:
             # fetch the definition of the field which was asked for
             if name in self._all_columns:
                 column = self._all_columns[name].column
@@ -5514,7 +5514,7 @@ class BaseModel(object):
                 raise KeyError('Field %s not found in %s' % (name, self))
 
             for fname, column in fields_to_fetch:
-                factory = self._fields_process.get(column._type) or _browse_process.get(column._type)
+                factory = self._record_process.get(column._type) or _browse_process.get(column._type)
                 if factory:
                     # post-process the values, and update the cache
                     process = factory(self, fname, column)
@@ -5525,13 +5525,13 @@ class BaseModel(object):
                     for data in result:
                         model_cache[data['id']][fname] = data[fname]
 
-        if not name in model_cache[self._id]:
+        if not name in model_cache[self._record_id]:
             # How did this happen? Could be a missing model due to custom fields used too soon, see above.
             _logger.error("Fields to fetch: %s, Field values: %s", field_names, result)
-            _logger.error("Cached: %s, Table: %s", model_cache[self._id], self._name)
+            _logger.error("Cached: %s, Table: %s", model_cache[self._record_id], self._name)
             raise KeyError(_('Unknown attribute %s in %s ') % (name, self))
 
-        return model_cache[self._id][name]
+        return model_cache[self._record_id][name]
 
     def __getitem__(self, key):
         """ Return a record or a recordset from ``self``, depending on whether
@@ -5556,7 +5556,7 @@ class BaseModel(object):
                 # do not evaluate self; make a recordset with new offset and limit
                 assert key.start is None or key.start >= 0, "Recordset slice cannot start with %s" % key.start
                 assert key.stop is None or key.stop >= 0, "Recordset slice cannot stop with %s" % key.stop
-                domain, offset, limit, order = self._search_args
+                domain, offset, limit, order = self._records_search
 
                 key_offset = key.start or 0
                 offset += key_offset
@@ -5594,16 +5594,16 @@ class BaseModel(object):
 
     def __int__(self):
         assert self.is_record(), "Expected record instance: %s" % self
-        return self._id
+        return self._record_id
 
     def __str__(self):
         if self.is_record():
-            return "Record(%s, %d)" % (self._name, self._id)
+            return "Record(%s, %d)" % (self._name, self._record_id)
         elif self.is_recordset():
             if hasattr(self, '_records'):
                 return "Recordset(%s, %s)" % (self._name, map(int, self))
             else:
-                return "Query(%s, %d)" % (self._name, self._search_args[0])
+                return "Query(%s, %d)" % (self._name, self._records_search[0])
         return "Model(%s)" % self._name
 
     def __unicode__(self):
@@ -5612,13 +5612,13 @@ class BaseModel(object):
     __repr__ = __str__
 
     def __hash__(self):
-        return hash((self._name, self._id))
+        return hash((self._name, self._record_id))
 
     def refresh(self):
         """ Clear the records cache used by ``self`` by emptying the cache completely,
             preserving only the record identifiers (for prefetching optimizations).
         """
-        for model_cache in self._cache.itervalues():
+        for model_cache in self._record_cache.itervalues():
             for id in model_cache.keys():
                 model_cache[id] = {'id': id}
 
