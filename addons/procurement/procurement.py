@@ -102,7 +102,7 @@ class procurement_order(osv.osv):
             readonly=True, required=True, help="If you encode manually a Procurement, you probably want to use" \
             " a make to order method."),
         'note': fields.text('Note'),
-        'message': fields.char('Latest error', help="Exception occurred while computing procurement orders."),
+        'message': fields.text('Latest error', help="Exception occurred while computing procurement orders."),
         'state': fields.selection([
             ('draft','Draft'),
             ('cancel','Cancelled'),
