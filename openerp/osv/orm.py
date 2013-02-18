@@ -4436,7 +4436,7 @@ class BaseModel(object):
         if isinstance(select, (int, long)):
             return model._make_record(select, cache, fields_process=fields_process)
         elif isinstance(select, list):
-            records = [model._make_record(id, cache, fields_process=fields_process) for id in select]
+            records = (model._make_record(id, cache, fields_process=fields_process) for id in select)
             return model._make_recordset(records)
         else:
             return browse_null()
@@ -5310,7 +5310,8 @@ class BaseModel(object):
         """ check that ``self`` is a recordset that contains exactly one record,
             and return that record
         """
-        assert len(self) == 1, "Expected singleton recordset: %s" % self
+        assert self.is_recordset(), "Expected recordset: %s" % self
+        assert len(self.recordset) == 1, "Expected singleton: %s" % self
         return self[0]
 
     @property
@@ -5341,14 +5342,14 @@ class BaseModel(object):
         return True
 
     def __iter__(self):
-        """ Return an iterator over ``self`` (must be a recordset).
-            It forces the evaluation of ``self``.
-        """
-        assert self.is_recordset()
+        """ Return an iterator over ``self`` (must be a recordset). """
+        assert self.is_recordset(), "Expected recordset: %s" % self
         return iter(self.recordset._records)
 
     def __len__(self):
-        """ Return the size of ``self`` (must be a recordset). """
+        """ Return the size of ``self`` (must be a recordset).
+            Does not force evaluation if ``self`` is a queryset.
+        """
         if not hasattr(self, '_records'):
             return self.search(*self._records_search, count=True)
         return len(self._records)
@@ -5359,83 +5360,33 @@ class BaseModel(object):
         """
         if self.is_record():
             return item == 'id' or item in self._all_columns
-        elif hasattr(self, '_records'):
-            return item in self._records
-        else:
-            dom = [('id', '=', item.id)] + self.get_domain()
-            return bool(self.search(dom, count=True))
+        assert self.is_recordset(), "Expected record or recordset: %s" % self
+        if not isinstance(item, Record):
+            _logger.warning("Unexpected: %s in %s" % (item, self))
+        return item in self.recordset._records
 
     def __add__(self, other):
-        """ Return the concatenation of two recordsets as a recordset.
-            It forces the evaluation of both recordsets.
-        """
+        """ Return the concatenation of two recordsets as a recordset. """
         assert self._name == other._name, "Mixing apples and oranges: %s, %s" % (self, other)
         return self._make_recordset(list(self) + list(other))
 
     def __sub__(self, other):
-        """ Return a recordset made of the records in ``self`` but not in ``other``.
-            It does not force evaluation of recordsets.
-        """
+        """ Return a recordset made of the records in ``self`` but not in ``other``. """
         assert self._name == other._name, "Mixing apples and oranges: %s, %s" % (self, other)
-        return self & (~other)
+        return self._make_recordset(set(self) - set(other))
 
     def __and__(self, other):
-        """ Return the conjunction of two recordsets.
-            It does not force evaluation of recordsets.
-        """
+        """ Return the intersection of two recordsets. """
         assert self._name == other._name, "Mixing apples and oranges: %s, %s" % (self, other)
-        if hasattr(self, '_records') and hasattr(other, '_records'):
-            return self._make_recordset(list(set(self) & set(other)))
-        dom = expression.AND([self.get_domain(), other.get_domain()])
-        uneval = self if not hasattr(self, '_records') else other
-        return self.query(dom, *uneval._records_search[1:])
+        return self._make_recordset(set(self) & set(other))
 
     def __or__(self, other):
-        """ Return the union of two recordsets.
-            It does not force evaluation of recordsets.
-        """
+        """ Return the union of two recordsets. """
         assert self._name == other._name, "Mixing apples and oranges: %s, %s" % (self, other)
-        if hasattr(self, '_records') and hasattr(other, '_records'):
-            return self._make_recordset(list(set(self) | set(other)))
-        dom = expression.OR([self.get_domain(), other.get_domain()])
-        uneval = self if not hasattr(self, '_records') else other
-        return self.query(dom, *uneval._records_search[1:])
-
-    def __xor__(self, other):
-        """ Return the disjoint union of two recordsets.
-            It does not force evaluation of recordsets.
-        """
-        return (self & ~other) | (~self & other)
-
-    def __neg__(self):
-        """ Same as ``~self``. """
-        return ~self
-
-    def __invert__(self):
-        """ Return the complement of ``self``.
-            It does not force evaluation of ``self``.
-        """
-        assert self.is_recordset(), "Expected recordset: %s" % self
-        return self.query(['!'] + self.get_domain())
-
-    def __le__(self, other):
-        """ Test whether ``self`` is included into ``other`` (set inclusion).
-            It does not force evaluation of recordsets.
-        """
-        # Beware: do not change this expression!
-        # It tests the non-existence of a record in self and not in other.
-        return not bool(self & ~other)
-
-    def __lt__(self, other):
-        return self <= other and bool(~self & other)
-
-    def __ge__(self, other):
-        return other <= self
-
-    def __gt__(self, other):
-        return other < self
+        return self._make_recordset(set(self) | set(other))
 
     def __eq__(self, other):
+        """ Test equality between two records, two recordsets or two models. """
         if not isinstance(other, BaseModel):
             _logger.warning("Comparison of %s and %s" % (self, other))
             return False
@@ -5446,19 +5397,13 @@ class BaseModel(object):
         elif self.is_recordset():
             # compare two recordsets
             assert other.is_recordset(), "Comparing recordset to non-recordset: %s, %s" % (self, other)
-            return self <= other and other <= self
+            return set(self) == set(other)
         else:
             # compare two models
             return self._name == other._name
 
     def __ne__(self, other):
         return not self == other
-
-    def isdisjoint(self, other):
-        """ Test whether ``self`` and ``other`` are disjoint.
-            It does not force evaluation of recordsets.
-        """
-        return not bool(self & other)
 
     def _get_record_field(self, name):
         """ read the field ``name`` on a record instance """
@@ -5523,20 +5468,27 @@ class BaseModel(object):
         return model_cache[self._record_id][name]
 
     def __getitem__(self, key):
-        """ Return a record or a recordset from ``self``, depending on whether
-            ``key`` is an integer or a slice.  When ``key`` is a slice, if the
-            recordset is not evaluated, return another recordset with updated
-            offset and limit.
+        """ If ``self`` is a record, return the value of the field named ``key``.
+            If ``self`` is a recordset, return a record or a recordset from
+            ``self``, depending on whether ``key`` is an integer or a slice.
+            If ``key`` is a slice and ``self`` is a queryset, return a queryset
+            with new offset and limit.
 
             Examples::
 
                 r = records[3]              # fourth record in records
+                print r['name']             # print field 'name' of record
 
-                rs = model.query(dom)       # rs is a recordset
+                rs = model.query(dom)       # rs is a queryset
                 rs1 = rs[10:]               # same as rs with offset 10
                 rs2 = rs1[:10]              # same as rs with offset 10 and limit 10
                 assert list(rs2) == list(rs[10:20])
         """
+        if self.is_record():
+            return self._get_record_field(key)
+
+        assert self.is_recordset(), "Expected record or recordset: %s" % self
+
         if isinstance(key, slice):
             if hasattr(self, '_records'):
                 # make a recordset with the sublist of records
@@ -5558,13 +5510,9 @@ class BaseModel(object):
                     limit = max(0, limit - key_offset)
 
                 return self.query(domain, offset, limit, order)
-
-        elif isinstance(key, (int, long)):
+        else:
             # select a single record in the list
             return self.recordset._records[key]
-
-        else:
-            return self._get_record_field(key)
 
     def __getattr__(self, name):
         if name.startswith('signal_'):
@@ -5591,7 +5539,7 @@ class BaseModel(object):
             if hasattr(self, '_records'):
                 return "Recordset(%s, %s)" % (self._name, map(int, self))
             else:
-                return "Query(%s, %d)" % (self._name, self._records_search[0])
+                return "Query(%s, %s)" % (self._name, self._records_search[0])
         return "Model(%s)" % self._name
 
     def __unicode__(self):
@@ -5600,15 +5548,21 @@ class BaseModel(object):
     __repr__ = __str__
 
     def __hash__(self):
+        assert self.is_record(), "Expected record instance: %s" % self
         return hash((self._name, self._record_id))
 
     def refresh(self):
         """ Clear the records cache used by ``self`` by emptying the cache completely,
             preserving only the record identifiers (for prefetching optimizations).
         """
-        for model_cache in self._record_cache.itervalues():
-            for id in model_cache.keys():
-                model_cache[id] = {'id': id}
+        assert self.is_record() or self.is_recordset(), "Expected record or recordset: %s" % self
+
+        # querysets and empty recordsets have no cache
+        if not self.is_queryset() and self:
+            record = self if self.is_record() else self[0]
+            for model_cache in record._record_cache.itervalues():
+                for id in model_cache.keys():
+                    model_cache[id] = {'id': id}
 
 
 # for instance checking

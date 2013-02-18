@@ -226,14 +226,21 @@ class TestAPI(common.TransactionCase):
         self.assertEqual(partners2, partners)
 
     @mute_logger('openerp.osv.orm')
+    def test_50_record_recordset(self):
+        """ Check properties record and recordset. """
+        ps = self.Partner.query(self.cr, self.uid, [('name', 'ilike', 'a')], limit=1)
+        self.assertEqual(ps.recordset, ps)
+        p = ps.record
+        self.assertEqual(p, ps[0])
+        self.assertEqual(p.recordset, ps)
+
+    @mute_logger('openerp.osv.orm')
     def test_60_contains(self):
         """ Test membership on recordset. """
-        pa = self.Partner.query(self.cr, self.uid, [('name', 'ilike', 'a')], limit=1)
-        p = pa[0]
-        pa = self.Partner.query(self.cr, self.uid, [('name', 'ilike', 'a')])
-        self.assertTrue(pa.is_queryset())
-        self.assertTrue(p in pa)
-        self.assertTrue(pa.is_queryset())
+        ps = self.Partner.query(self.cr, self.uid, [('name', 'ilike', 'a')], limit=1)
+        p = ps.record
+        ps = self.Partner.query(self.cr, self.uid, [('name', 'ilike', 'a')])
+        self.assertTrue(p in ps)
 
     @mute_logger('openerp.osv.orm')
     def test_60_and(self):
@@ -241,9 +248,6 @@ class TestAPI(common.TransactionCase):
         pa = self.Partner.query(self.cr, self.uid, [('name', 'ilike', 'a')])
         pb = self.Partner.query(self.cr, self.uid, [('name', 'ilike', 'b')])
         pab = pa & pb
-        self.assertTrue(pa.is_queryset())
-        self.assertTrue(pb.is_queryset())
-        self.assertEqual(pab.get_domain(), ['&', ('name', 'ilike', 'a'), ('name', 'ilike', 'b')])
         self.assertEqual(set(pab), set(pa) & set(pb))
 
     @mute_logger('openerp.osv.orm')
@@ -252,37 +256,12 @@ class TestAPI(common.TransactionCase):
         pa = self.Partner.query(self.cr, self.uid, [('name', 'ilike', 'a')])
         pb = self.Partner.query(self.cr, self.uid, [('name', 'ilike', 'b')])
         pab = pa | pb
-        self.assertTrue(pa.is_queryset())
-        self.assertTrue(pb.is_queryset())
-        self.assertEqual(pab.get_domain(), ['|', ('name', 'ilike', 'a'), ('name', 'ilike', 'b')])
         self.assertEqual(set(pab), set(pa) | set(pb))
 
     @mute_logger('openerp.osv.orm')
-    def test_60_xor(self):
-        """ Check disjoint union of recordsets. """
+    def test_60_sub(self):
+        """ Check difference of recordsets. """
         pa = self.Partner.query(self.cr, self.uid, [('name', 'ilike', 'a')])
-        pb = self.Partner.query(self.cr, self.uid, [('name', 'ilike', 'b')])
-        pab = pa ^ pb
-        self.assertTrue(pa.is_queryset())
-        self.assertTrue(pb.is_queryset())
-        self.assertEqual(set(pab), set(pa) ^ set(pb))
-
-    @mute_logger('openerp.osv.orm')
-    def test_60_neg(self):
-        """ Check complement of recordsets. """
-        ps = self.Partner.query(self.cr, self.uid, [])
-        pa = self.Partner.query(self.cr, self.uid, [('name', 'ilike', 'a')])
-        pb = ~pa
-        self.assertTrue(pa.is_queryset())
-        self.assertEqual(pb.get_domain(), ['!', ('name', 'ilike', 'a')])
-        self.assertEqual(set(ps), set(pa) | set(pb))
-        self.assertTrue(set(pa).isdisjoint(set(pb)))
-
-    @mute_logger('openerp.osv.orm')
-    def test_60_included(self):
-        """ Test comparison of recordsets. """
-        pa = self.Partner.query(self.cr, self.uid, [('name', 'ilike', 'a')])
-        pag = self.Partner.query(self.cr, self.uid, [('name', 'ilike', 'ag')])
-        self.assertTrue(pag <= pa)
-        self.assertTrue(pa.is_queryset())
-        self.assertTrue(pag.is_queryset())
+        pb = self.Partner.query(self.cr, self.uid, [('name', 'ilike', 'ag')])
+        pab = pa - pb
+        self.assertEqual(set(pab), set(pa) - set(pb))
