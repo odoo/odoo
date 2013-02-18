@@ -88,9 +88,6 @@ def is_ir_set(node):
 def is_string(node):
     return isinstance(node, basestring)
 
-def is_session(node):
-    return _is_yaml_mapping(node, yaml_tag.Session)
-
 class RecordDictWrapper(dict):
     """
     Used to pass a record as locals in eval:
@@ -763,7 +760,7 @@ class YamlInterpreter(object):
             keyword = 'client_action_relate'
             value = 'ir.actions.act_window,%s' % id
             replace = node.replace or True
-            self.pool.get('ir.model.data').ir_set(self.cr, self.uid, 'action', keyword, \
+            self.pool.get('ir.model.data').ir_set(self.cr, SUPERUSER_ID, 'action', keyword, \
                     node.id, [node.src_model], value, replace=replace, noupdate=self.isnoupdate(node), isobject=True, xml_id=node.id)
         # TODO add remove ir.model.data
 
@@ -779,12 +776,6 @@ class YamlInterpreter(object):
         else:
             self._log("Record not deleted.")
             
-    def process_session(self, node):
-        record, fields = node.items()[0]
-        uid = self.get_id(record.uid)
-        self.uid = uid
-        _logger.debug("RECORD_DICT %s" % uid)
-
     def process_url(self, node):
         self.validate_xml_id(node.id)
         
@@ -898,8 +889,6 @@ class YamlInterpreter(object):
             self.process_act_window(node)
         elif is_report(node):
             self.process_report(node)
-        elif is_session(node):
-            self.process_session(node)
         elif is_workflow(node):
             if isinstance(node, types.DictionaryType):
                 self.process_workflow(node)
