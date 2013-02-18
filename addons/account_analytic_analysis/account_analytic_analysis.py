@@ -492,6 +492,7 @@ class account_analytic_account(osv.osv):
 
         def fill_remind(key, domain, write_pending=False):
             base_domain = [
+                ('type', '=', 'contract'),
                 ('partner_id', '!=', False),
                 ('manager_id', '!=', False),
                 ('manager_id.email', '!=', False),
