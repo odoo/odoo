@@ -1,6 +1,8 @@
 -
   In order to test process of the Sale Order, I create sale order
 -
+    Create a user as 'Salesmanager'
+-
   !record {model: res.users, id: res_users_salesmanager}:
     company_id: base.main_company
     name: Sales manager
@@ -12,7 +14,7 @@
   Now, check the data with sales Manager
 -
   !context
-    'uid': 'res_users_salesmanager'
+    uid: 'res_users_salesmanager'
 -
   !record {model: sale.order, id: sale_order_test1}:
     partner_id: base.res_partner_2
