@@ -5327,12 +5327,6 @@ class BaseModel(object):
             self._records = self.browse(ids)._records
         return self
 
-    def get_domain(self):
-        """ Return a domain that describes exactly ``self``. """
-        if hasattr(self, '_records'):
-            return [('id', 'in', map(int, self))]
-        return expression.normalize_domain(self._records_search[0])
-
     def __nonzero__(self):
         """ If ``self`` is a recordset, test whether it is nonempty.
             Otherwise return True.
