@@ -8,10 +8,10 @@
         </record>
 
         <record id="goal_list_view" model="ir.ui.view">
-            <field name="name">Goal list</field>
+            <field name="name">Goal List</field>
             <field name="model">gamification.goal</field>
             <field name="arch" type="xml">
-                <tree string="Goal list" colors="red:state == 'failed';green:state == 'reached'"> 
+                <tree string="Goal List" colors="red:state == 'failed';green:state == 'reached'"> 
                     <field name="type_id"/>
                     <field name="user_id"/>
                     <field name="current"/>
@@ -25,14 +25,14 @@
         </record>
 		
 		<record id="goal_form_view" model="ir.ui.view">
-            <field name="name">Goal form</field>
+            <field name="name">Goal Form</field>
             <field name="model">gamification.goal</field>
             <field name="arch" type="xml">
                 <form string="Goal" version="7.0">
                     <header>
-                        <button string="Mark as reached" type="object" name="action_reach" states="inprogress"/>
-                        <button string="Mark as failed" type="object" name="action_fail" states="inprogress"/>
-                        <button string="Cancel completion" type="object" name="action_cancel" states="failed,reached"/>
+                        <button string="Mark as Reached" type="object" name="action_reach" states="inprogress"/>
+                        <button string="Mark as Failed" type="object" name="action_fail" states="inprogress"/>
+                        <button string="Cancel Completion" type="object" name="action_cancel" states="failed,reached"/>
                         <field name="state" widget="statusbar" statusbar_visible="inprogress" />
                     </header>
                     <sheet>
@@ -57,7 +57,7 @@
         </record>
 
         <record id="goal_calendar_view" model="ir.ui.view">
-            <field name="name">Goal calendar</field>
+            <field name="name">Goal Calendar</field>
             <field name="model">gamification.goal</field>
             <field name="arch" type="xml">
                 <calendar string="Goal"

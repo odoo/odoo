@@ -80,10 +80,10 @@ class gamification_goal_type(osv.Model):
     _order = "sequence"
 
     _columns = {
-        'name': fields.char('Name', required=True),
+        'name': fields.char('Type Name', required=True),
         'description': fields.text('Description'),
         'computation_mode': fields.selection(GAMIFICATION_COMPUTATION_MODE,
-            string="Mode of computation",
+            string="Mode of Computation",
             help="""How is computed the goal value :\n
 - 'Sum' for the total of the values if the 'Evaluated field'\n
 - 'Count' for the number of entries\n
@@ -93,16 +93,16 @@ class gamification_goal_type(osv.Model):
             string='Object',
             help='The object type for the field to evaluate' ),
         'field': fields.many2one('ir.model.fields',
-            string='Evaluated field',
+            string='Evaluated Field',
             help='The field containing the value to evaluate' ),
         'field_date': fields.many2one('ir.model.fields',
-            string='Evaluated date field',
+            string='Evaluated Date Field',
             help='The date to use for the time period evaluated'),
         'domain': fields.char("Domain",
             help="Technical filters rules to apply",
             required=True), # how to apply it ?
         'condition' : fields.selection(GAMIFICATION_VALIDATION_CONDITION,
-            string='Validation condition',
+            string='Validation Condition',
             help='A goal is considered as completed when the current value is compared to the value to reach',
             required=True),
         'sequence' : fields.integer('Sequence',
@@ -140,14 +140,14 @@ class gamification_goal(osv.Model):
 
     _columns = {
         'type_id' : fields.many2one('gamification.goal.type', 
-            string='Goal type',
+            string='Goal Type',
             required=True),
         'user_id' : fields.many2one('res.users', string='User', required=True),
         'plan_id' : fields.many2one('gamification.goal.plan',
-            string='Goal plan'),
-        'start_date' : fields.date('Start date'),
-        'end_date' : fields.date('End date'), # no start and end = always active
-        'target_goal' : fields.float('To reach',
+            string='Goal Plan'),
+        'start_date' : fields.date('Start Date'),
+        'end_date' : fields.date('End Date'), # no start and end = always active
+        'target_goal' : fields.float('To Reach',
             required=True,
             track_visibility = 'always'), # no goal = global index
         'current' : fields.float('Current',
@@ -193,7 +193,7 @@ class gamification_goal_plan(osv.Model):
     _description = 'Gamification goal plan'
 
     _columns = {
-        'name' : fields.char('Plan name', required=True),
+        'name' : fields.char('Plan Name', required=True),
         'user_ids' : fields.many2many('res.users',
             string='Users',
             help="list of users to which the goal will be set"),
@@ -221,7 +221,7 @@ class gamification_goal_plan(osv.Model):
         'report_message_group_id' : fields.many2one('mail.group',
             string='Report to',
             help='Group that will receive the report in addition to the user'),
-        'report_header' : fields.text('Report header'),
+        'report_header' : fields.text('Report Header'),
         }
 
     _defaults = {
@@ -271,8 +271,10 @@ class gamification_goal_planline(osv.Model):
         'plan_id' : fields.many2one('gamification.goal.plan',
             string='Plan'),
         'type_id' : fields.many2one('gamification.goal.type',
-            string='Goal type'),
-        'target_goal' : fields.float('Target value to reach'),
+            string='Goal Type',
+            required=True),
+        'target_goal' : fields.float('Target Value to Reach',
+            required=True),
         'sequence_type' : fields.related('type_id','sequence',
             type='integer',
             string='Sequence',

@@ -3,13 +3,13 @@
     <data>
 
         <record id="goal_plan_list_action" model="ir.actions.act_window">
-            <field name="name">Goal plans</field>
+            <field name="name">Goal Plans</field>
             <field name="res_model">gamification.goal.plan</field>
             <field name="view_mode">tree,form</field>
         </record>
 
         <record id="goal_plan_list_view" model="ir.ui.view">
-            <field name="name">Goal plans list</field>
+            <field name="name">Goal Plans List</field>
             <field name="model">gamification.goal.plan</field>
             <field name="arch" type="xml">
                 <tree string="Goal types" colors="blue:state == 'inprogress';grey:state == 'done'">
@@ -21,19 +21,22 @@
         </record>
 
         <record id="goal_plan_form_view" model="ir.ui.view">
-            <field name="name">Goal plan form</field>
+            <field name="name">Goal Plan Form</field>
             <field name="model">gamification.goal.plan</field>
             <field name="arch" type="xml">
                 <form string="Goal types" version="7.0">
                     <header>
-                        <button string="Start plan" type="object" name="action_start" states="draft"/>
-                        <button string="Close plan" type="object" name="action_close" states="inprogress"/>
-                        <button string="Cancel plan" type="object" name="action_cancel" states="inprogress"/>
+                        <button string="Start Plan" type="object" name="action_start" states="draft"/>
+                        <button string="Close Plan" type="object" name="action_close" states="inprogress"/>
+                        <button string="Cancel Plan" type="object" name="action_cancel" states="inprogress"/>
                         <field name="state" widget="statusbar"/>
                     </header>
                     <sheet>
                         <h1>
-                            <field name="name" placeholder="Goal plan name"/>
+                            <div class="oe_edit_only">
+                                <label for="name"/>
+                            </div>
+                            <field name="name"/>
                         </h1>
                         <group>
                             <group colspan="4">
@@ -49,7 +52,7 @@
                         <notebook>
                             <page string="Goals">
                                 <field name="planline_ids">
-                                    <tree string="planline list" version="7.0" editable="top" >
+                                    <tree string="Planline List" version="7.0" editable="bottom" >
                                         <field name="type_id"/>
                                         <field name="target_goal"/>
                                     </tree>
