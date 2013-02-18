@@ -11,19 +11,19 @@
 #
 #    This program is distributed in the hope that it will be useful,
 #    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS F OR A PARTICULAR PURPOSE.  See the
-#    GNU Affero General Public License f or m or e details.
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http: //www.gnu. or g/licenses/>.
+#    along with this program.  If not, see <http: //www.gnu.org/licenses/>.
 #
 ##############################################################################
 
-imp or t copy
-from time imp or t strftime
+import copy
+from time import strftime
 
-from openerp.osv imp or t fields, osv
-from openerp.tools.translate imp or t _
+from openerp.osv import fields, osv
+from openerp.tools.translate import _
 
 
 class survey_type(osv.osv):
@@ -56,14 +56,14 @@ class survey(osv.osv):
         'response_partner': fields.integer('Maximum Answer per partner',
                      help="Set to one if  you require only one Answer per partner"),
         'state': fields.selection([('open', 'Open'), ('cancel', 'Cancelled'), ('close', 'Closed')], 'Status', readonly=True),
-        'responsible_id': fields.many2one('res.users', 'Responsible', help="User responsible f or survey"),
+        'responsible_id': fields.many2one('res.users', 'Responsible', help="User responsible forsurvey"),
         'tot_start_survey': fields.integer("Total Started Survey", readonly=1),
         'tot_comp_survey': fields.integer("Total Completed Survey", readonly=1),
         'note': fields.text('Description', size=128),
         'partner_id': fields.many2many('res.partner', 'survey_partner_rel', 'sid', 'partner_id', 'Partners'),
         'send_response': fields.boolean('Email Notification on Answer'),
         'type': fields.many2one('survey.type', 'Type'),
-        'col or ': fields.integer('Col or Index'),
+        'color': fields.integer('Color Index'),
     }
     _defaults = {
         'state': lambda * a: "open",
@@ -96,13 +96,13 @@ class survey(osv.osv):
 
     def action_print_survey(self, cr, uid, ids, context=None):
         """
-        If response is available then print this response otherwise print survey f or m(print template of the survey).
+        If response is available then print this response otherwise print survey form(print template of the survey).
         @param self: The object pointer
-        @param cr: the current row, from the database curs or ,
-        @param uid: the current user’s ID f or security checks,
+        @param cr: the current row, from the database cursor,
+        @param uid: the current user’s ID forsecurity checks,
         @param ids: List of Survey IDs
-        @param context: A st and ard dictionary f or contextual values
-        @return: Dictionary value f or print survey f or m.
+        @param context: A standard dictionary forcontextual values
+        @return: Dictionary value forprint survey form.
         """
         if context is None:
             context = {}
@@ -113,35 +113,35 @@ class survey(osv.osv):
         else:
             response_id = self.pool.get('survey.response').search(cr, uid, [('survey_id', '=', ids)], context=context)
             datas['ids'] = ids
-        page_setting = {' or ientation': 'vertical', 'without_pagebreak': 0, 'paper_size': 'letter', 'page_number': 1, 'survey_title': 1}
-        rep or t = {}
+        page_setting = {'orientation': 'vertical', 'without_pagebreak': 0, 'paper_size': 'letter', 'page_number': 1, 'survey_title': 1}
+        report = {}
         if response_id and response_id[0]:
             context.update({'survey_id': datas['ids']})
-            datas['f or m'] = page_setting
+            datas['form'] = page_setting
             datas['model'] = 'survey.print.answer'
-            rep or t = {
-                'type': 'ir.actions.rep or t.xml',
-                'rep or t_name': 'survey.browse.response',
+            report = {
+                'type': 'ir.actions.report.xml',
+                'report_name': 'survey.browse.response',
                 'datas': datas,
                 'context': context,
                 'nodestroy': True,
             }
         else:
 
-            datas['f or m'] = page_setting
+            datas['form'] = page_setting
             datas['model'] = 'survey.print'
-            rep or t = {
-                'type': 'ir.actions.rep or t.xml',
-                'rep or t_name': 'survey.f or m',
+            report = {
+                'type': 'ir.actions.report.xml',
+                'report_name': 'survey.form',
                 'datas': datas,
                 'context': context,
                 'nodestroy': True,
             }
-        return rep or t
+        return report
 
     def fill_survey(self, cr, uid, ids, context=None):
         sur_obj = self.read(cr, uid, ids, ['title', 'page_ids'], context=context)
-        f or sur in sur_obj:
+        for sur in sur_obj:
             name = sur['title']
             pages = sur['page_ids']
             if not pages:
@@ -149,8 +149,8 @@ class survey(osv.osv):
             context.update({'active': False, 'survey_id': ids[0]})
 
         return {
-            'view_type': 'f or m',
-            'view_mode': 'f or m',
+            'view_type': 'form',
+            'view_mode': 'form',
             'res_model': 'survey.question.wiz',
             'type': 'ir.actions.act_window',
             'target': 'inline',
@@ -160,7 +160,7 @@ class survey(osv.osv):
 
     def test_survey(self, cr, uid, ids, context=None):
         sur_obj = self.read(cr, uid, ids, ['title', 'page_ids'], context=context)
-        f or sur in sur_obj:
+        for sur in sur_obj:
             name = sur['title']
             pages = sur['page_ids']
             if not pages:
@@ -169,8 +169,8 @@ class survey(osv.osv):
 
         context.update({'ir_actions_act_window_target': 'new'})
         return {
-            'view_type': 'f or m',
-            'view_mode': 'f or m',
+            'view_type': 'form',
+            'view_mode': 'form',
             'res_model': 'survey.question.wiz',
             'type': 'ir.actions.act_window',
             'target': 'inline',
@@ -180,7 +180,7 @@ class survey(osv.osv):
 
     def edit_survey(self, cr, uid, ids, context=None):
         sur_obj = self.read(cr, uid, ids, ['title', 'page_ids'], context=context)
-        f or sur in sur_obj:
+        for sur in sur_obj:
             name = sur['title']
             pages = sur['page_ids']
             if not pages:
@@ -189,8 +189,8 @@ class survey(osv.osv):
 
         context.update({'ir_actions_act_window_target': 'new'})
         return {
-            'view_type': 'f or m',
-            'view_mode': 'f or m',
+            'view_type': 'form',
+            'view_mode': 'form',
             'res_model': 'survey.question.wiz',
             'type': 'ir.actions.act_window',
             'target': 'new',
@@ -202,11 +202,11 @@ class survey(osv.osv):
         '''
         This function opens a window to compose an email, with the survey template message loaded by default
         '''
-        assert len(ids) == 1, 'This option should only be used f or a single id at a time.'
+        assert len(ids) == 1, 'This option should only be used for a single id at a time.'
         ir_model_data = self.pool.get('ir.model.data')
         try:
             template_id = ir_model_data.get_object_reference(cr, uid, 'survey', 'email_template_survey')[1]
-        except ValueErr or :
+        except ValueError:
             template_id = False
         ctx = dict(context)
 
@@ -220,8 +220,8 @@ class survey(osv.osv):
             })
         return {
             'type': 'ir.actions.act_window',
-            'view_type': 'f or m',
-            'view_mode': 'f or m',
+            'view_type': 'form',
+            'view_mode': 'form',
             'res_model': 'survey.mail.compose.message',
             'target': 'new',
             'context': ctx,
@@ -234,7 +234,7 @@ class survey_page(osv.osv):
     _name = 'survey.page'
     _description = 'Survey Pages'
     _rec_name = 'title'
-    _ or der = 'sequence'
+    _order = 'sequence'
     _columns = {
         'title': fields.char('Page Title', size=128, required=1),
         'survey_id': fields.many2one('survey', 'Survey', ondelete='cascade'),
@@ -260,8 +260,8 @@ class survey_page(osv.osv):
         surv_name_wiz = self.pool.get('survey.name.wiz')
         surv_name_wiz.write(cr, uid, [context.get('sur_name_id', False)], {'transfer': True, 'page_no': context.get('page_number', 0)})
         return {
-            'view_type': 'f or m',
-            'view_mode': 'f or m',
+            'view_type': 'form',
+            'view_mode': 'form',
             'res_model': 'survey.question.wiz',
             'type': 'ir.actions.act_window',
             'target': 'new',
@@ -282,7 +282,7 @@ class survey_question(osv.osv):
     _name = 'survey.question'
     _description = 'Survey Question'
     _rec_name = 'question'
-    _ or der = 'sequence'
+    _order = 'sequence'
 
     def _calc_response(self, cr, uid, ids, field_name, arg, context=None):
         if len(ids) == 0:
@@ -292,10 +292,10 @@ class survey_question(osv.osv):
                 survey_response_line where state='done' and question_id IN %s\
                  group by question_id", (tuple(ids), ))
         ids1 = copy.deepcopy(ids)
-        f or rec in cr.fetchall():
+        for rec in cr.fetchall():
             ids1.remove(rec[0])
             val[rec[0]] = int(rec[1])
-        f or id in ids1:
+        for id in ids1:
             val[id] = 0
         return val
 
@@ -308,7 +308,7 @@ class survey_question(osv.osv):
         'req_ans': fields.integer('#Required Answer'),
         'maximum_req_ans': fields.integer('Maximum Required Answer'),
         'minimum_req_ans': fields.integer('Minimum Required Answer'),
-        'req_err or _msg': fields.text('Err or Message'),
+        'req_error_msg': fields.text('Error Message'),
         'allow_comment': fields.boolean('Allow Comment Field'),
         'sequence': fields.integer('Sequence'),
         'tot_resp': fields.function(_calc_response, string="Total Answer"),
@@ -324,7 +324,7 @@ class survey_question(osv.osv):
              ('multiple_textboxes_diff_type', 'Multiple Textboxes With Different Type'),
              ('comment', 'Comment/Essay Box'),
              ('numerical_textboxes', 'Numerical Textboxes'), ('date', 'Date'),
-             ('date_ and _time', 'Date and Time'), ('descriptive_text', 'Descriptive Text'),
+             ('date_and_time', 'Date and Time'), ('descriptive_text', 'Descriptive Text'),
              ('table', 'Table'),
             ], 'Question Type', required=1, ),
         'is_comment_require': fields.boolean('Add Comment Field'),
@@ -343,9 +343,9 @@ class survey_question(osv.osv):
         'comment_maximum_float': fields.float('Maximum decimal number'),
         'comment_minimum_date': fields.date('Minimum date'),
         'comment_maximum_date': fields.date('Maximum date'),
-        'comment_valid_err_msg': fields.text('Err or message'),
+        'comment_valid_err_msg': fields.text('Error message'),
         'make_comment_field': fields.boolean('Make Comment Field an Answer Choice'),
-        'make_comment_field_err_msg': fields.text('Err or message'),
+        'make_comment_field_err_msg': fields.text('Error message'),
         'is_validation_require': fields.boolean('Validate Text'),
         'validation_type': fields.selection([('do_not_validate', '''Don't Validate Comment Text.'''), \
              ('must_be_specific_length', 'Must Be Specific Length'), \
@@ -360,10 +360,10 @@ class survey_question(osv.osv):
         'validation_maximum_float': fields.float('Maximum decimal number'),
         'validation_minimum_date': fields.date('Minimum date'),
         'validation_maximum_date': fields.date('Maximum date'),
-        'validation_valid_err_msg': fields.text('Err or message'),
+        'validation_valid_err_msg': fields.text('Error message'),
         'numeric_required_sum': fields.integer('Sum of all choices'),
-        'numeric_required_sum_err_msg': fields.text('Err or message'),
-        'rating_allow_one_column_require': fields.boolean('Allow Only One Answer per Column (F or ced Ranking)'),
+        'numeric_required_sum_err_msg': fields.text('Error message'),
+        'rating_allow_one_column_require': fields.boolean('Allow Only One Answer per Column (Forced Ranking)'),
         'in_visible_rating_weight': fields.boolean('Is Rating Scale Invisible?'),
         'in_visible_menu_choice': fields.boolean('Is Menu Choice Invisible?'),
         'in_visible_answer_type': fields.boolean('Is Answer Type Invisible?'),
@@ -374,15 +374,15 @@ class survey_question(osv.osv):
     _defaults = {
          'sequence': lambda * a: 1,
          'type': lambda * a: 'multiple_choice_multiple_ans',
-         'req_err or _msg': lambda * a: 'This question requires an answer.',
+         'req_error_msg': lambda * a: 'This question requires an answer.',
          'required_type': lambda * a: 'at least',
          'req_ans': lambda * a: 1,
          'comment_field_type': lambda * a: 'char',
          'comment_label': lambda * a: 'Other (please specify)',
          'comment_valid_type': lambda * a: 'do_not_validate',
-         'comment_valid_err_msg': lambda * a: 'The comment you entered is in an invalid f or mat.',
+         'comment_valid_err_msg': lambda * a: 'The comment you entered is in an invalid format.',
          'validation_type': lambda * a: 'do_not_validate',
-         'validation_valid_err_msg': lambda * a: 'The comment you entered is in an invalid f or mat.',
+         'validation_valid_err_msg': lambda * a: 'The comment you entered is in an invalid format.',
          'numeric_required_sum_err_msg': lambda * a: 'The choices need to add up to [enter sum here].',
          'make_comment_field_err_msg': lambda * a: 'Please enter a comment.',
          'in_visible_answer_type': lambda * a: 1
@@ -415,9 +415,9 @@ class survey_question(osv.osv):
     def write(self, cr, uid, ids, vals, context=None):
         questions = self.read(cr, uid, ids, ['answer_choice_ids', 'type', 'required_type', \
                         'req_ans', 'minimum_req_ans', 'maximum_req_ans', 'column_heading_ids', 'page_id', 'question'])
-        f or question in questions:
+        for question in questions:
             col_len = len(question['column_heading_ids'])
-            f or col in vals.get('column_heading_ids', []):
+            for col in vals.get('column_heading_ids', []):
                 if type(col[2]) == type({}):
                     col_len += 1
                 else:
@@ -427,10 +427,10 @@ class survey_question(osv.osv):
 
             if que_type in ['matrix_of_choices_only_one_ans', 'matrix_of_choices_only_multi_ans', 'rating_scale']:
                 if not col_len:
-                    raise osv.except_osv(_('Warning!'), _('You must enter one or m or e column headings f or question "%s" of page %s.') % (question['question'], question['page_id'][1]))
+                    raise osv.except_osv(_('Warning!'), _('You must enter one or more column headings for question "%s" of page %s.') % (question['question'], question['page_id'][1]))
             ans_len = len(question['answer_choice_ids'])
 
-            f or ans in vals.get('answer_choice_ids', []):
+            for ans in vals.get('answer_choice_ids', []):
                 if type(ans[2]) == type({}):
                     ans_len += 1
                 else:
@@ -438,13 +438,13 @@ class survey_question(osv.osv):
 
             if que_type not in ['descriptive_text', 'single_textbox', 'comment', 'table']:
                 if not ans_len:
-                    raise osv.except_osv(_('Warning!'), _('You must enter one or m or e Answers f or question "%s" of page %s.') % (question['question'], question['page_id'][1]))
+                    raise osv.except_osv(_('Warning!'), _('You must enter one or more Answers for question "%s" of page %s.') % (question['question'], question['page_id'][1]))
 
             req_type = vals.get('required_type', question['required_type'])
 
             if que_type in ['multiple_choice_multiple_ans', 'matrix_of_choices_only_one_ans', \
                         'matrix_of_choices_only_multi_ans', 'rating_scale', 'multiple_textboxes', \
-                        'numerical_textboxes', 'date', 'date_ and _time']:
+                        'numerical_textboxes', 'date', 'date_and_time']:
                 if req_type in ['at least', 'at most', 'exactly']:
                     if 'req_ans' in vals:
                         if not vals['req_ans'] or vals['req_ans'] > ans_len:
@@ -460,7 +460,6 @@ class survey_question(osv.osv):
                 if req_type == 'a range':
                     minimum_ans = 0
                     maximum_ans = 0
-                    error = False
                     minimum_ans = 'minimum_req_ans' in vals and vals['minimum_req_ans'] or question['minimum_req_ans']
                     maximum_ans = 'maximum_req_ans' in vals and vals['maximum_req_ans'] or question['maximum_req_ans']
 
@@ -475,49 +474,43 @@ class survey_question(osv.osv):
         return super(survey_question, self).write(cr, uid, ids, vals, context=context)
 
     def create(self, cr, uid, vals, context=None):
-        minimum_ans = 0
-        maximum_ans = 0
         page = self.pool.get('survey.page').browse(cr, uid, vals['page_id'], context=context).title
-        if vals.has_key('answer_choice_ids') and not len(vals['answer_choice_ids']):
-            if vals.has_key('type') and vals['type'] not in ['descriptive_text', 'single_textbox', 'comment', 'table']:
-                raise osv.except_osv(_('Warning!'), _('You must enter one or m or e answers f or question "%s" of page %s .') % (vals['question'], page))
+        if 'answer_choice_ids' in vals and not len(vals.get('answer_choice_ids', [])) and \
+            vals.get('type') not in ['descriptive_text', 'single_textbox', 'comment', 'table']:
+            raise osv.except_osv(_('Warning!'), _('You must enter one or more answers for question "%s" of page %s .') % (vals['question'], page))
 
-        if vals.has_key('column_heading_ids') and not len(vals['column_heading_ids']):
-            if vals.has_key('type') and vals['type'] in ['matrix_of_choices_only_one_ans', 'matrix_of_choices_only_multi_ans', 'rating_scale']:
-                raise osv.except_osv(_('Warning!'), _('You must enter one or m or e column headings f or question "%s" of page %s.')% (vals['question'], page))
+        if 'column_heading_ids' in vals and not len(vals.get('column_heading_ids', [])) and \
+            vals.get('type') in ['matrix_of_choices_only_one_ans', 'matrix_of_choices_only_multi_ans', 'rating_scale']:
+            raise osv.except_osv(_('Warning!'), _('You must enter one or more column headings for question "%s" of page %s.') % (vals['question'], page))
 
-        if vals['type'] in ['multiple_choice_multiple_ans', 'matrix_of_choices_only_one_ans', 'matrix_of_choices_only_multi_ans', 'rating_scale', 'multiple_textboxes', 'numerical_textboxes', 'date', 'date_ and _time']:
-            if vals.has_key('is_require_answer') and vals.has_key('required_type') and vals['required_type'] in ['at least', 'at most', 'exactly']:
-                if vals.has_key('answer_choice_ids') and vals['req_ans'] > len(vals['answer_choice_ids']) or not vals['req_ans']:
-                    raise osv.except_osv(_('Warning!'), _("#Required Answer you entered is greater than the number of answer. Please use a number that is smaller than %d.") % (len(vals['answer_choice_ids'])+1))
-
-            if vals.has_key('is_require_answer') and vals.has_key('required_type') and vals['required_type'] == 'a range':
-                minimum_ans = vals['minimum_req_ans']
-                maximum_ans = vals['maximum_req_ans']
-                if vals.has_key('answer_choice_ids') or vals['minimum_req_ans'] > len(vals['answer_choice_ids']) or not vals['minimum_req_ans']:
-                    raise osv.except_osv(_('Warning!'), _("Minimum Required Answer you entered is greater than the number of answer. Please use a number that is smaller than %d.") % (len(vals['answer_choice_ids'])+1))
-                if vals.has_key('answer_choice_ids') or vals['maximum_req_ans'] > len(vals['answer_choice_ids']) or not vals['maximum_req_ans']:
-                    raise osv.except_osv(_('Warning!'), _("Maximum Required Answer you entered f or your maximum is greater than the number of answer. Please use a number that is smaller than %d.") % (len(vals['answer_choice_ids'])+1))
-                if maximum_ans <= minimum_ans:
+        if 'is_require_answer' in vals and vals.get('type') in ['multiple_choice_multiple_ans', 'matrix_of_choices_only_one_ans', \
+            'matrix_of_choices_only_multi_ans', 'rating_scale', 'multiple_textboxes', 'numerical_textboxes', 'date', 'date_and_time']:
+            if vals.get('required_type') in ['at least', 'at most', 'exactly']:
+                if 'answer_choice_ids' in vals and not vals.get('req_ans') or vals.get('req_ans') > len(vals['answer_choice_ids']):
+                    raise osv.except_osv(_('Warning!'), _("#Required Answer you entered is greater than the number of answer. Please use a number that is smaller than %d.") % (len(vals['answer_choice_ids']) + 1))
+            if vals.get('required_type') == 'a range':
+                if 'answer_choice_ids' in vals:
+                    if not vals.get('minimum_req_ans') or vals['minimum_req_ans'] > len(vals['answer_choice_ids']):
+                        raise osv.except_osv(_('Warning!'), _("Minimum Required Answer you entered is greater than the number of answer. Please use a number that is smaller than %d.") % (len(vals['answer_choice_ids']) + 1))
+                    if not vals.get('maximum_req_ans') or vals['maximum_req_ans'] > len(vals['answer_choice_ids']):
+                        raise osv.except_osv(_('Warning!'), _("Maximum Required Answer you entered for your maximum is greater than the number of answer. Please use a number that is smaller than %d.") % (len(vals['answer_choice_ids']) + 1))
+                if vals.get('maximum_req_ans', 0) <= vals.get('minimum_req_ans', 0):
                     raise osv.except_osv(_('Warning!'), _("Maximum Required Answer is greater than Minimum Required Answer."))
 
-        res = super(survey_question, self).create(cr, uid, vals, context)
-        return res
+        return super(survey_question, self).create(cr, uid, vals, context)
 
     def survey_save(self, cr, uid, ids, context=None):
         if context is None:
             context = {}
-        search_obj = self.pool.get('ir.ui.view')
-        search_id = search_obj.search(cr, uid, [('model', '=', 'survey.question.wiz'), ('name', '=', 'Survey Search')])
         surv_name_wiz = self.pool.get('survey.name.wiz')
         surv_name_wiz.write(cr, uid, [context.get('sur_name_id', False)], {'transfer': True, 'page_no': context.get('page_number', False)})
         return {
-            'view_type': 'f or m',
-            'view_mode': 'f or m',
+            'view_type': 'form',
+            'view_mode': 'form',
             'res_model': 'survey.question.wiz',
             'type': 'ir.actions.act_window',
             'target': 'new',
-            #'search_view_id': search_id[0],
+            #'search_view_id': self.pool.get('ir.ui.view').search(cr, uid, [('model', '=', 'survey.question.wiz'), ('name', '=', 'Survey Search')])[0],
             'context': context
         }
 
@@ -525,8 +518,8 @@ class survey_question(osv.osv):
         if context is None:
             context = {}
         data = super(survey_question, self).default_get(cr, uid, fields, context)
-        if context.has_key('page_id'):
-            data['page_id']= context.get('page_id', False)
+        if context.get('page_id'):
+            data['page_id'] = context.get('page_id', False)
         return data
 
 survey_question()
@@ -543,6 +536,7 @@ class survey_question_column_heading(osv.osv):
         if context.get('in_visible_rating_weight', False):
             return context['in_visible_rating_weight']
         return False
+
     def _get_in_visible_menu_choice(self, cr, uid, context=None):
         if context is None:
             context = {}
@@ -558,7 +552,7 @@ class survey_question_column_heading(osv.osv):
         'in_visible_rating_weight': fields.boolean('Is Rating Scale Invisible ??'),
         'in_visible_menu_choice': fields.boolean('Is Menu Choice Invisible??')
     }
-    _defaults={
+    _defaults = {
        'in_visible_rating_weight': _get_in_visible_rating_weight,
        'in_visible_menu_choice': _get_in_visible_menu_choice,
     }
@@ -569,11 +563,11 @@ class survey_answer(osv.osv):
     _name = 'survey.answer'
     _description = 'Survey Answer'
     _rec_name = 'answer'
-    _ or der = 'sequence'
+    _order = 'sequence'
 
     def _calc_response_avg(self, cr, uid, ids, field_name, arg, context=None):
         val = {}
-        f or rec in self.browse(cr, uid, ids, context=context):
+        for rec in self.browse(cr, uid, ids, context=context):
             cr.execute("select count(question_id), (select count(answer_id) \
                 from survey_response_answer sra, survey_response_line sa \
                 where sra.response_id = sa.id and sra.answer_id = %d \
@@ -647,9 +641,9 @@ class survey_response(osv.osv):
             return []
         reads = self.read(cr, uid, ids, ['partner_id', 'date_create'], context=context)
         res = []
-        f or rec or d in reads:
-            name = (rec or d['partner_id'] and rec or d['partner_id'][1] or '') + ' (' + rec or d['date_create'].split('.')[0] + ')'
-            res.append((rec or d['id'], name))
+        for record in reads:
+            name = (record['partner_id'] and record['partner_id'][1] or '') + ' (' + record['date_create'].split('.')[0] + ')'
+            res.append((record['id'], name))
         return res
 
     def copy(self, cr, uid, id, default=None, context=None):
@@ -685,11 +679,11 @@ survey_response_line()
 
 class survey_tbl_column_heading(osv.osv):
     _name = 'survey.tbl.column.heading'
-    _ or der = 'name'
+    _order = 'name'
     _columns = {
         'name': fields.integer('Row Number'),
         'column_id': fields.many2one('survey.question.column.heading', 'Column'),
-        'value': fields.char('Value', size = 255),
+        'value': fields.char('Value', size=255),
         'response_table_id': fields.many2one('survey.response.line', 'Answer', ondelete='cascade'),
     }
 
@@ -704,10 +698,10 @@ class survey_response_answer(osv.osv):
         'response_id': fields.many2one('survey.response.line', 'Answer', ondelete='cascade'),
         'answer_id': fields.many2one('survey.answer', 'Answer', required=1, ondelete='cascade'),
         'column_id': fields.many2one('survey.question.column.heading', 'Column'),
-        'answer': fields.char('Value', size =255),
-        'value_choice': fields.char('Value Choice', size =255),
+        'answer': fields.char('Value', size=255),
+        'value_choice': fields.char('Value Choice', size=255),
         'comment': fields.text('Notes'),
-        'comment_field': fields.char('Comment', size = 255)
+        'comment_field': fields.char('Comment', size=255)
     }
 
 survey_response_answer()
