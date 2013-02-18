@@ -13,7 +13,7 @@
             <field name="name">Goal Plans List</field>
             <field name="model">gamification.goal.plan</field>
             <field name="arch" type="xml">
-                <tree string="Goal types" colors="blue:state == 'inprogress';grey:state == 'done'">
+                <tree string="Goal types" colors="blue:state == 'draft';grey:state == 'done'">
                     <field name="name"/>
                     <field name="period"/>
                     <field name="state" invisible="1"/>
