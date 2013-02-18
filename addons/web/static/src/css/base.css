@@ -1,4 +1,4 @@
-@charset "UTF-8";
+@charset "utf-8";
 @font-face {
   font-family: "mnmliconsRegular";
   src: url("/web/static/src/font/mnmliconsv21-webfont.eot") format("eot");
@@ -1415,7 +1415,13 @@
   display: inline-block;
   overflow: hidden;
 }
+.openerp .oe_view_manager {
+  display: table;
+  height: inherit;
+  width: 100%;
+}
 .openerp .oe_view_manager .oe_view_manager_body {
+  display: table-row;
   height: inherit;
 }
 .openerp .oe_view_manager .oe_view_manager_view_kanban {
