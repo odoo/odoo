@@ -165,6 +165,7 @@ class gamification_goal(osv.Model):
     _defaults = {
         'current': 0,
         'state': 'inprogress',
+        'start_date': fields.date.today,
     }
 
     def action_reach(self, cr, uid, ids, context=None):

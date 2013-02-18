@@ -5,6 +5,7 @@
             <field name="name">Goals</field>
             <field name="res_model">gamification.goal</field>
             <field name="view_mode">tree,form,calendar</field>
+            <field name="context">{'search_default_my_in_progress': 1}</field>
         </record>
 
         <record id="goal_list_view" model="ir.ui.view">
@@ -66,6 +67,23 @@
                         color="type_id">
                     <field name="type_id"/>
                 </calendar>
+            </field>
+        </record>
+
+        <record id="goal_search_view" model="ir.ui.view">
+            <field name="name">Goal Search</field>
+            <field name="model">gamification.goal</field>
+            <field name="arch" type="xml">
+                <search string="Search Goals">
+                    <filter name="my_in_progress" string="My Goals in Progress"
+                        domain="[('user_id', '=', uid),('state', '=', 'inprogress')]"/>
+                    <group expand="0" string="Group By...">
+                        <filter string="User" domain="[]" context="{'group_by':'user_id'}"/>
+                        <filter string="Goal Type" domain="[]" context="{'group_by':'type_id'}"/>
+                        <filter string="State" domain="[]" context="{'group_by':'state'}"/>
+                        <filter string="End Date" domain="[]" context="{'group_by':'end_date'}"/>
+                    </group>
+                </search>
             </field>
         </record>
 
