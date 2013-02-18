@@ -5,6 +5,7 @@
         <field name="name">Salesperson</field>
         <field name="job_id" ref="hr.job_developer"/>
         <field name="type_id" ref="degree_graduate"/>
+        <field name="categ_ids" eval="[(6,0,[ref('tag_applicant_sales')])]"/>
         <field eval= "time.strftime('%Y-%m-01 10:35:50')" name="date"/>
         <field name="priority">2</field>
         <field name="partner_name">Enrique Jones</field>
@@ -17,6 +18,7 @@
         <field name="name">Trainee - MCA</field>
         <field name="job_id" ref="hr.job_developer"/>
         <field name="type_id" ref="degree_bac5"/>
+        <field name="categ_ids" eval="[(6,0,[ref('tag_applicant_manager')])]"/>
         <field eval="time.strftime('%Y-%m-10 18:15:00')" name="date"/>
         <field name="user_id" ref="base.user_demo"/>
         <field name="priority">3</field>
@@ -31,6 +33,7 @@
         <field name="name">Fresher</field>
         <field name="job_id" ref="hr.job_developer"/>
         <field name="type_id" ref="degree_licenced"/>
+        <field name="categ_ids" eval="[(6,0,[ref('tag_applicant_it')])]"/>
         <field eval="time.strftime('%Y-%m-10 18:15:00')" name="date"/>
         <field name="user_id" ref="base.user_root"/>
         <field name="priority">1</field>
@@ -44,6 +47,7 @@
         <field name="name">Marketing Job</field>
         <field name="job_id" ref="hr.job_developer"/>
         <field name="type_id" ref="degree_bac5"/>
+        <field name="categ_ids" eval="[(6,0,[ref('tag_applicant_manager')])]"/>
         <field eval="time.strftime('%Y-%m-25 16:25:52')" name="date"/>
         <field name="user_id" ref="base.user_root"/>
         <field name="partner_name">John Bruno</field>
@@ -55,6 +59,7 @@
         <field name="name">More than 5 yrs Experience in PHP</field>
         <field name="job_id" ref="hr.job_developer"/>
         <field name="type_id" ref="degree_licenced"/>
+        <field name="categ_ids" eval="[(6,0,[ref('tag_applicant_reserve')])]"/>
         <field eval="time.strftime('%Y-%m-26 17:15:32')" name="date"/>
         <field name="user_id" ref="base.user_demo"/>
         <field name="partner_name">Sandra Elvis</field>
@@ -66,6 +71,7 @@
         <field name="name">Finance Job</field>
         <field name="job_id" ref="hr.job_developer"/>
         <field name="type_id" ref="degree_licenced"/>
+        <field name="categ_ids" eval="[(6,0,[ref('tag_applicant_reserve')])]"/>
         <field eval="time.strftime('%Y-%m-26 17:39:42')" name="date"/>
         <field name="user_id" ref="base.user_root"/>
         <field name="priority">4</field>
@@ -79,6 +85,7 @@
         <field name="name">Trainee - MCA</field>
         <field name="job_id" ref="hr.job_developer"/>
         <field name="type_id" ref="degree_bac5"/>
+        <field name="categ_ids" eval="[(6,0,[ref('tag_applicant_sales')])]"/>
         <field eval="time.strftime('%Y-%m-12 17:49:19')" name="date"/>
         <field name="partner_name">Tina Augustie</field>
         <field name="partner_mobile">9898745745</field>
@@ -91,6 +98,7 @@
         <field name="name">Programmer</field>
         <field name="job_id" ref="hr.job_developer"/>
         <field name="type_id" ref="degree_bac5"/>
+        <field name="categ_ids" eval="[(6,0,[ref('tag_applicant_it')])]"/>
         <field eval="time.strftime('%Y-%m-12 17:49:19')" name="date"/>
         <field name="partner_name">Shane Williams</field>
         <field name="partner_mobile">9812398524</field>
@@ -104,6 +112,7 @@
         <field name="name">Advertisement</field>
         <field name="job_id" ref="hr.job_developer"/>
         <field name="type_id" ref="degree_licenced"/>
+        <field name="categ_ids" eval="[(6,0,[ref('tag_applicant_it')])]"/>
         <field eval="time.strftime('%Y-%m-26 17:39:42')" name="date"/>
         <field name="partner_name">David Armstrong</field>
         <field name="partner_mobile">9988774455</field>
