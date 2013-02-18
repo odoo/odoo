@@ -248,7 +248,7 @@ class purchase_order(osv.osv):
     def create(self, cr, uid, vals, context=None):
         if vals.get('name','/')=='/':
             vals['name'] = self.pool.get('ir.sequence').get(cr, uid, 'purchase.order') or '/'
-        context = dict(context, mail_create_nolog=True)
+        context.update({ 'mail_create_nolog' : True })
         order =  super(purchase_order, self).create(cr, uid, vals, context=context)
         self.message_post(cr, uid, [order], body=_("RFQ <b>Created</b>"), context=context)
         return order
@@ -792,7 +792,7 @@ class purchase_order(osv.osv):
             order_data['order_line'] = [(0, 0, value) for value in order_data['order_line'].itervalues()]
 
             # create the new order            
-            context = dict(context, mail_create_nolog=True)
+            context.update({ 'mail_create_nolog' : True })
             neworder_id = self.create(cr, uid, order_data)
             self.message_post(cr, uid, [neworder_id], body=_("RFQ <b>Created</b>"), context=context)
             orders_info.update({neworder_id: old_ids})
