@@ -97,7 +97,9 @@ class gamification_goal_type(osv.Model):
         'field_date': fields.many2one('ir.model.fields',
             string='Evaluated date field',
             help='The date to use for the time period evaluated'),
-        'domain': fields.char("Domain"), # how to apply it ?
+        'domain': fields.char("Domain",
+            help="Technical filters rules to apply",
+            required=True), # how to apply it ?
         'condition' : fields.selection(GAMIFICATION_VALIDATION_CONDITION,
             string='Validation condition',
             help='A goal is considered as completed when the current value is compared to the value to reach',
@@ -112,6 +114,7 @@ class gamification_goal_type(osv.Model):
         'sequence': 0,
         'condition': 'plus',
         'computation_mode':'manually',
+        'domain':"[]",
     }
 
 
