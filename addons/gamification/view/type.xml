@@ -13,6 +13,7 @@
             <field name="model">gamification.goal.type</field>
             <field name="arch" type="xml">
                 <tree string="Goal types">
+                    <field name="sequence" widget="handle"/>
                     <field name="name"/>
                     <field name="computation_mode"/>
                     <field name="field"/>
@@ -34,7 +35,6 @@
                         <group>
                             <group string="General">
                                 <field name="description"/>
-                                <field name="sequence"/>
                                 <field name="condition"/>
                             </group>
                             <group string="Computation">

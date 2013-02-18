@@ -77,6 +77,7 @@ class gamification_goal_type(osv.Model):
     """
     _name = 'gamification.goal.type'
     _description = 'Gamification goal type'
+    _order = "sequence"
 
     _columns = {
         'name': fields.char('Name', required=True),
@@ -111,12 +112,11 @@ class gamification_goal_type(osv.Model):
     
     _order = 'sequence'
     _defaults = {
-        'sequence': 0,
+        'sequence': 1,
         'condition': 'plus',
         'computation_mode':'manually',
         'domain':"[]",
     }
-
 
 class gamification_goal(osv.Model):
     """Goal instance for a user
@@ -252,6 +252,20 @@ class gamification_goal_planline(osv.Model):
 
     _name = 'gamification.goal.planline'
     _description = 'Gamification generic goal for plan'
+    _order = "sequence_type"
+
+
+    def _get_planline_types(self, cr, uid, ids, context=None):
+        """Return the ids of planline items related to the gamification.goal.type
+        objects in 'ids (used to update the value of 'sequence_type')'"""
+
+        result = {}
+        for goal_type in self.pool.get('gamification.goal.type').browse(cr, uid, ids, context=context):
+            domain = [('type_id', '=', goal_type.id)]
+            planline_ids = self.pool.get('gamification.goal.planline').search(cr, uid, domain, context=context)
+            for p_id in planline_ids:
+                result[p_id] = True
+        return result.keys()
 
     _columns = {
         'plan_id' : fields.many2one('gamification.goal.plan',
@@ -259,4 +273,11 @@ class gamification_goal_planline(osv.Model):
         'type_id' : fields.many2one('gamification.goal.type',
             string='Goal type'),
         'target_goal' : fields.float('Target value to reach'),
+        'sequence_type' : fields.related('type_id','sequence',
+            type='integer',
+            string='Sequence',
+            readonly=True,
+            store={
+                'gamification.goal.type': (_get_planline_types, ['sequence'], 10),
+                }),
     }
