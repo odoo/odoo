@@ -775,10 +775,9 @@ class YamlInterpreter(object):
                 self.pool.get(node.model).unlink(self.cr, self.uid, ids)
         else:
             self._log("Record not deleted.")
-            
+
     def process_url(self, node):
         self.validate_xml_id(node.id)
-        
         res = {'name': node.name, 'url': node.url, 'target': node.target}
 
         id = self.pool.get('ir.model.data')._update(self.cr, SUPERUSER_ID, \
