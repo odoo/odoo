@@ -2,7 +2,7 @@
   In order to merge RFQ, I merge two RFQ which has same supplier and check new merged order.
 -
   !python {model: purchase.order}: |  	
-    context = dict(context, mail_create_nolog=True)
+    context = {"mail_create_nolog" : True }
     new_id = self.do_merge(cr, uid, [ref('purchase_order_4'), ref('purchase_order_7')], context=context)
     order3 = self.browse(cr, uid, ref('purchase_order_4'))
     order7 = self.browse(cr, uid, ref('purchase_order_7'))
