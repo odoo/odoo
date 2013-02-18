@@ -62,8 +62,8 @@ openerp.base = function(instance) {
             if (instance.base.apps_client) {
                 return check_client_available(instance.base.apps_client);
             } else {
-                var ICP = new instance.web.Model('ir.config_parameter');
-                return ICP.call('get_param', ['apps.server', 'https://apps.openerp.com/apps']).then(function(u) {
+                var Mod = new instance.web.Model('ir.module.module');
+                return Mod.call('get_apps_server').then(function(u) {
                     var link = $(_.str.sprintf('<a href="%s"></a>', u))[0];
                     var host = _.str.sprintf('%s//%s', link.protocol, link.host);
                     var dbname = link.pathname;
