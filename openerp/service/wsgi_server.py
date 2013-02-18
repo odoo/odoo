@@ -94,7 +94,7 @@ def xmlrpc_handle_exception(e):
     if isinstance(e, openerp.osv.orm.except_orm): # legacy
         fault = xmlrpclib.Fault(RPC_FAULT_CODE_WARNING, openerp.tools.ustr(e.value))
         response = xmlrpclib.dumps(fault, allow_none=False, encoding=None)
-    elif isinstance(e, openerp.exceptions.Warning):
+    elif isinstance(e, openerp.exceptions.Warning) or isinstance(e, openerp.exceptions.RedirectWarning):
         fault = xmlrpclib.Fault(RPC_FAULT_CODE_WARNING, str(e))
         response = xmlrpclib.dumps(fault, allow_none=False, encoding=None)
     elif isinstance (e, openerp.exceptions.AccessError):
@@ -312,7 +312,7 @@ def http_to_wsgi(http_dir):
                 handler.auth_provider.checkRequest(handler, path)
             except websrv_lib.AuthRequiredExc, ae:
                 # Darwin 9.x.x webdav clients will report "HTTP/1.0" to us, while they support (and need) the
-                # authorisation features of HTTP/1.1 
+                # authorisation features of HTTP/1.1
                 if request_version != 'HTTP/1.1' and ('Darwin/9.' not in handler.headers.get('User-Agent', '')):
                     start_response("403 Forbidden", [])
                     return []

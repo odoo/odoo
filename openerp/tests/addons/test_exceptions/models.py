@@ -19,6 +19,9 @@ class m(openerp.osv.osv.Model):
     def generate_warning(self, cr, uid, ids, context=None):
         raise openerp.exceptions.Warning('description')
 
+    def generate_redirect_warning(self, cr, uid, ids, context=None):
+        raise openerp.exceptions.RedirectWarning('description', self.pool.get('ir.model.data').get_object_reference(cr, uid, 'base', 'menu_action_res_users'), 'go to the redirection')
+
     def generate_access_denied(self, cr, uid, ids, context=None):
         raise openerp.exceptions.AccessDenied()
 
@@ -29,5 +32,6 @@ class m(openerp.osv.osv.Model):
         raise Exception('AccessDenied')
 
     def generate_undefined(self, cr, uid, ids, context=None):
-        self.surely_undefined_sumbol
+        self.surely_undefined_symbol
+
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
