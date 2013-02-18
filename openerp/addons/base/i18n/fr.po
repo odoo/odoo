@@ -13,8 +13,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-02-07 04:45+0000\n"
-"X-Generator: Launchpad (build 16477)\n"
+"X-Launchpad-Export-Date: 2013-02-17 04:39+0000\n"
+"X-Generator: Launchpad (build 16491)\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_check_writing
@@ -42,7 +42,7 @@ msgstr "Autre configuration"
 #. module: base
 #: selection:ir.property,type:0
 msgid "DateTime"
-msgstr "Horodatage"
+msgstr "Date/Heure"
 
 #. module: base
 #: code:addons/fields.py:643
@@ -698,6 +698,22 @@ msgid ""
 "    A + B + C -> D + E\n"
 "    "
 msgstr ""
+"\n"
+"Ce module vous permet de produire plusieurs produits à partir d'un ordre de "
+"production.\n"
+"======================================================================\n"
+"\n"
+"Vous pouvez configurer des sous-produits dans la nomenclature des "
+"matériaux.\n"
+"\n"
+"Sans ce module :\n"
+"----------------------\n"
+"    A + B + C -> D\n"
+"\n"
+"Avec ce module : \n"
+"-----------------------\n"
+"    A + B + C -> D + E\n"
+"    "
 
 #. module: base
 #: selection:base.language.install,lang:0
@@ -2217,7 +2233,7 @@ msgstr "Accès en lecture"
 #. module: base
 #: help:ir.attachment,res_id:0
 msgid "The record id this is attached to"
-msgstr ""
+msgstr "L'ID de l'enregistrement est attaché à"
 
 #. module: base
 #: model:ir.module.module,description:base.module_share
@@ -3594,7 +3610,7 @@ msgstr ""
 #. module: base
 #: field:res.company,rml_header1:0
 msgid "Company Tagline"
-msgstr ""
+msgstr "Slogan de la société"
 
 #. module: base
 #: code:addons/base/res/res_users.py:668
@@ -3612,6 +3628,8 @@ msgid ""
 "the user will have an access to the human resources configuration as well as "
 "statistic reports."
 msgstr ""
+"l'utilisateur aura un accès à la configuration des ressources humaines comme "
+"aux rapports statistiques."
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_pl
@@ -4409,6 +4427,18 @@ msgid ""
 "If you need to manage your meetings, you should install the CRM module.\n"
 "    "
 msgstr ""
+"\n"
+"Ceci est un système complet d'agenda.\n"
+"===============================\n"
+"\n"
+"Il supporte :\n"
+"---------------\n"
+"    - L'agenda des événements,\n"
+"    - Les événements récurrents.\n"
+"\n"
+"Si vous souhaitez gérer vos rendez-vous, vous devriez installer le module "
+"CRM.\n"
+"    "
 
 #. module: base
 #: model:res.country,name:base.je
@@ -4438,7 +4468,7 @@ msgstr "%x - Représentation de date appropriée"
 #. module: base
 #: view:res.partner:0
 msgid "Tag"
-msgstr ""
+msgstr "Étiquette"
 
 #. module: base
 #: view:res.lang:0
@@ -4478,7 +4508,7 @@ msgstr ""
 #. module: base
 #: model:res.country,name:base.sk
 msgid "Slovakia"
-msgstr ""
+msgstr "Slovaquie"
 
 #. module: base
 #: model:res.country,name:base.nr
@@ -4719,6 +4749,18 @@ msgid ""
 "comptable\n"
 "Seddik au cours du troisième trimestre 2010."
 msgstr ""
+"\n"
+"Ce module de base permet de gérer le plan comptable pour le Maroc.\n"
+"=================================================================\n"
+"\n"
+"Ce Module charge le modèle du plan de comptes standard Marocain et permet "
+"de\n"
+"générer les états comptables aux normes marocaines (Bilan, CPC (comptes de\n"
+"produits et charges), balance générale à 6 colonnes, Grand livre "
+"cumulatif...).\n"
+"L'intégration comptable a été validé avec l'aide du Cabinet d'expertise "
+"comptable\n"
+"Seddik au cours du troisième trimestre 2010."
 
 #. module: base
 #: help:ir.module.module,auto_install:0
@@ -4753,7 +4795,7 @@ msgstr "Plans comtables"
 #. module: base
 #: model:ir.ui.menu,name:base.menu_event_main
 msgid "Events Organization"
-msgstr ""
+msgstr "Organisation d'évènements"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_partner_customer_form
@@ -4781,7 +4823,7 @@ msgstr "Champ de base"
 #. module: base
 #: model:ir.module.category,name:base.module_category_managing_vehicles_and_contracts
 msgid "Managing vehicles and contracts"
-msgstr ""
+msgstr "Gestion de véhicules et de contrats"
 
 #. module: base
 #: model:ir.module.module,description:base.module_base_setup
@@ -4908,12 +4950,12 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,summary:base.module_sale
 msgid "Quotations, Sales Orders, Invoicing"
-msgstr ""
+msgstr "Devis, commandes, facturation"
 
 #. module: base
 #: field:res.partner,parent_id:0
 msgid "Related Company"
-msgstr ""
+msgstr "Société parente"
 
 #. module: base
 #: help:ir.actions.act_url,help:0
@@ -4959,7 +5001,7 @@ msgstr "`code` doit être unique."
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_knowledge
 msgid "Knowledge Management System"
-msgstr ""
+msgstr "Base de connaissances"
 
 #. module: base
 #: view:workflow.activity:0
@@ -4983,6 +5025,14 @@ msgid ""
 "invite.\n"
 "\n"
 msgstr ""
+"\n"
+"Ce module met à jour les notes  dans OpenERP, en utilisant un éditeur "
+"externe\n"
+"===============================================================\n"
+"\n"
+"Utilisez le pour mettre à jour vos notes en temps réel, avec les "
+"utilisateurs invités.\n"
+"\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_sequence
@@ -5002,6 +5052,23 @@ msgid ""
 "    * Number Padding\n"
 "    "
 msgstr ""
+"\n"
+"Ce module permet de paramétrer les séquences de numérotation interne des "
+"écritures comptables.\n"
+"============================================================================="
+"=\n"
+"\n"
+"Il permet de configurer les séquences comptables\n"
+"\n"
+"Vous pouvez personnaliser les attributs suivants de la séquence : \n"
+"-----------------------------------------------------------------------------"
+"-----------\n"
+"    * Préfixe\n"
+"    * Suffixe\n"
+"    * Nombre suivant\n"
+"    * Incrément\n"
+"    * Espacement.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_project_timesheet
@@ -13513,7 +13580,7 @@ msgstr "Chypre"
 #. module: base
 #: field:res.users,new_password:0
 msgid "Set Password"
-msgstr ""
+msgstr "Définir le mot de passe"
 
 #. module: base
 #: field:ir.actions.server,subject:0
@@ -14748,7 +14815,7 @@ msgstr "Thaïlande"
 #. module: base
 #: model:ir.model,name:base.model_change_password_wizard
 msgid "Change Password Wizard"
-msgstr ""
+msgstr "Assistant de changement de mot de passe"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_account_voucher
@@ -14867,7 +14934,7 @@ msgstr "Taux de la devise"
 #: view:base.module.upgrade:0
 #: field:base.module.upgrade,module_info:0
 msgid "Modules to Update"
-msgstr ""
+msgstr "Modules à mettre à jour"
 
 #. module: base
 #: model:ir.ui.menu,name:base.menu_custom_multicompany
@@ -14956,7 +15023,7 @@ msgstr "Utilisation de l'action"
 #. module: base
 #: field:ir.module.module,name:0
 msgid "Technical Name"
-msgstr ""
+msgstr "Nom technique"
 
 #. module: base
 #: model:ir.model,name:base.model_workflow_workitem
@@ -15020,7 +15087,7 @@ msgstr "Allemagne - Comptabilité"
 #. module: base
 #: view:ir.sequence:0
 msgid "Day of the Year: %(doy)s"
-msgstr ""
+msgstr "Jour de l'année: %(doy)s"
 
 #. module: base
 #: field:ir.ui.menu,web_icon:0
@@ -15043,6 +15110,8 @@ msgid ""
 "If this field is empty, the view applies to all users. Otherwise, the view "
 "applies to the users of those groups only."
 msgstr ""
+"Si ce champ est vide, la vue s'applique à tous les utilisateurs. Sinon, la "
+"vue s'applique aux utilisateurs de ces groupes uniquement."
 
 #. module: base
 #: selection:base.language.install,lang:0
@@ -15057,12 +15126,12 @@ msgstr ""
 #. module: base
 #: field:ir.actions.act_window,src_model:0
 msgid "Source Model"
-msgstr ""
+msgstr "Classe source"
 
 #. module: base
 #: view:ir.sequence:0
 msgid "Day of the Week (0:Monday): %(weekday)s"
-msgstr ""
+msgstr "Jour de la semaine (0: lundi): %(weekday)s"
 
 #. module: base
 #: code:addons/base/module/wizard/base_module_upgrade.py:84
@@ -15076,7 +15145,7 @@ msgstr "Dépendance non trouvé !"
 #: code:addons/base/ir/ir_model.py:1024
 #, python-format
 msgid "Administrator access is required to uninstall a module"
-msgstr ""
+msgstr "L'accès administrateur est nécessaire pour désinstaller un module"
 
 #. module: base
 #: model:ir.model,name:base.model_base_module_configuration
@@ -15780,7 +15849,7 @@ msgstr "Chili"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_web_view_editor
 msgid "View Editor"
-msgstr ""
+msgstr "Editeur de vue"
 
 #. module: base
 #: view:ir.cron:0
@@ -15860,6 +15929,8 @@ msgid ""
 "Do you confirm the uninstallation of this module? This will permanently "
 "erase all data currently stored by the module!"
 msgstr ""
+"Confirmez-vous la désinstallation de ce module ? Cela efface définitivement "
+"toutes les données actuellement stockées par le module !"
 
 #. module: base
 #: field:ir.actions.server,mobile:0
@@ -16077,7 +16148,7 @@ msgstr ""
 #. module: base
 #: view:res.partner:0
 msgid "Internal Notes"
-msgstr ""
+msgstr "Notes internes"
 
 #. module: base
 #: model:res.partner.title,name:base.res_partner_title_pvt_ltd

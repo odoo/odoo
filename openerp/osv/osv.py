@@ -19,7 +19,6 @@
 #
 ##############################################################################
 
-
 from openerp.osv.orm import except_orm, Model, TransientModel, AbstractModel
 
 # Deprecated, kept for backward compatibility.
