@@ -16,8 +16,6 @@
                     <field name="sequence" widget="handle"/>
                     <field name="name"/>
                     <field name="computation_mode"/>
-                    <field name="field"/>
-                    <field name="domain"/>
                 </tree>
             </field>
         </record>
@@ -42,10 +40,12 @@
                             </group>
                             <group string="Computation">
                                 <field name="computation_mode"/>
-                                <field name="object"/>
-                                <field name="field"/>
-                                <field name="field_date"/>
-                                <field name="domain"/>
+
+                                <!-- Hide the fields beloz if manually -->
+                                <field name="model_id" attrs="{'invisible':[('computation_mode','=','manually')], 'required':[('computation_mode','!=','manually')]}"/>
+                                <field name="field_id" attrs="{'invisible':[('computation_mode','=','manually')], 'required':[('computation_mode','!=','manually')]}" domain="[('model_id','=',model_id)]" />
+                                <field name="field_date_id" attrs="{'invisible':[('computation_mode','=','manually')], 'required':[('computation_mode','!=','manually')]}" domain="[('ttype', 'in', ('date', 'datetime')), ('model_id','=',model_id)]"/>
+                                <field name="domain" attrs="{'invisible':[('computation_mode','=','manually')], 'required':[('computation_mode','!=','manually')]}"/>
                             </group>
                         </group>
                     </sheet>
@@ -59,7 +59,7 @@
             <field name="arch" type="xml">
                 <search string="Search Goal Types">
                      <group expand="0" string="Group By...">
-                        <filter string="Object" domain="[]" context="{'group_by':'object'}"/>
+                        <filter string="Model" domain="[]" context="{'group_by':'model_id'}"/>
                         <filter string="Computation Mode" domain="[]" context="{'group_by':'computation_mode'}"/>
                     </group>
                 </search>
