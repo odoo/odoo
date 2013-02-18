@@ -11,7 +11,8 @@
 -
   Now, check the data with sales Manager
 -
-  !session {uid: res_users_salesmanager}:
+  !context
+    'uid': 'res_users_salesmanager'
 -
   !record {model: sale.order, id: sale_order_test1}:
     partner_id: base.res_partner_2
