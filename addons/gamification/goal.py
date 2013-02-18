@@ -36,7 +36,7 @@ GAMIFICATION_PLAN_STATE = [
 ]
 
 GAMIFICATION_PERIOD_STATE = [
-    ('once','No automatic assigment'),
+    ('once','Manual'),
     ('daily','Daily'),
     ('weekly','Weekly'),
     ('monthly','Monthly'),
@@ -60,6 +60,7 @@ GAMIFICATION_REPORT_MODE = [
 ]
 
 GAMIFICATION_REPORT_FREQ = [
+    ('never','Never'),
     ('onchange','On change'),
     ('daily','Daily'),
     ('weekly','Weekly'),
@@ -131,7 +132,7 @@ class gamification_goal(osv.Model):
     def _get_completeness(self, cr, uid, ids, field_name, arg, context=None):
         res = {}
         for goal in self.browse(cr, uid, ids, context):
-            # more 100% ?
+            # more than 100% case is handled by the widget
             if goal.target_goal > 0:
                 res[goal.id] = 100.0 * goal.current / goal.target_goal
             else:
@@ -201,7 +202,8 @@ class gamification_goal_plan(osv.Model):
         'planline_ids' : fields.one2many('gamification.goal.planline',
             'plan_id',
             string='Planline',
-            help="list of goals that will be set"),
+            help="list of goals that will be set",
+            required=True),
         'autojoin_group_id' : fields.many2one('res.groups',
             string='Group',
             help='Group of users whose members will automatically be added to the users'),
