@@ -45,7 +45,7 @@
     partner_id: base.res_partner_12
 - 
   !python {model: purchase.requisition.partner}: |  	
-    context = {"mail_create_nolog" : True }
+    context.update({"mail_create_nolog" : True })
     self.create_order(cr, uid, [ref("requisition_partner_0")], context=context)
 -
   I check that the RFQ details which created for supplier.
