@@ -20,6 +20,7 @@
 ##############################################################################
 
 from openerp import tools
+import time
 from openerp.tests import common
 
 class Test_Lunch(common.TransactionCase):
@@ -43,12 +44,14 @@ class Test_Lunch(common.TransactionCase):
         self.new_id_order = self.lunch_order.create(cr,uid,{
             'user_id': self.demo_id[0],
             'order_line_ids':'[]',
+            'date': time.strftime(tools.DEFAULT_SERVER_DATE_FORMAT),
             },context=None)
         self.new_id_order_line = self.lunch_order_line.create(cr,uid,{
             'order_id':self.new_id_order,
             'product_id':self.product_Bolognese_id,
             'note': '+Emmental',
             'cashmove': [],
+            'date': time.strftime(tools.DEFAULT_SERVER_DATE_FORMAT),
             'price': self.lunch_product.browse(cr,uid,self.product_Bolognese_id,context=None).price,
             })
 
