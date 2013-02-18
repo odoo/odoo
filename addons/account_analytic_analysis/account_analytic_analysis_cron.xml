@@ -11,5 +11,18 @@
             <field eval="'cron_account_analytic_account'" name="function"/>
             <field eval="'()'" name="args"/>
         </record>
+
+        <record model="ir.cron" id="account_analytic_cron_for_invoice">
+            <field name="name">Recurrent Report for Invoice</field>
+            <field eval="True" name="active" />
+           <field name="user_id" ref="base.user_root" />
+           <field name="interval_number">1</field>
+           <field name="interval_type">minutes</field>
+           <field name="numbercall">-1</field>
+           <field eval="'account.analytic.account'" name="model" />
+           <field eval="'cron_create_invoice'" name="function" />
+           <field eval="'(False,)'" name="args" />
+        </record>
+
     </data>
 </openerp>

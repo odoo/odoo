@@ -43,7 +43,7 @@ class final_invoice_create(osv.osv_memory):
     }
 
     def do_create(self, cr, uid, ids, context=None):
-        data = self.read(cr, uid, ids, [], context=context)[0]
+        data = self.read(cr, uid, ids, [], context=context) or None
         # hack for fixing small issue (context should not propagate implicitly between actions)
         if 'default_type' in context:
             del context['default_type']
