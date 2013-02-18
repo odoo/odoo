@@ -303,6 +303,94 @@ Note that we're only displaying the record once we know it's been
 saved from the database (the ``create`` call has returned without
 error).
 
+Mic check, is this working?
+---------------------------
+
+So far, features have been implemented, code has been worked and
+tentatively tried. However, there is no guarantee they will *keep
+working* as new changes are performed, new features added, …
+
+The original author (you, dear reader) could keep a notebook with a
+list of workflows to check, to ensure everything keeps working. And
+follow the notebook day after day, every time something is changed in
+the module.
+
+That gets repetitive after a while. And computers are good at doing
+repetitive stuff, as long as you tell them how to do it.
+
+So let's add test to the module, so that in the future the computer
+can take care of ensuring what works today keeps working tomorrow.
+
+.. note::
+
+    Here we're writing tests after having implemented the widget. This
+    may or may not work, we may need to alter bits and pieces of code
+    to get them in a testable state. An other testing methodology is
+    :abbr:`TDD (Test-Driven Development)` where the tests are written
+    first, and the code necessary to make these tests pass is written
+    afterwards.
+
+    Both methods have their opponents and detractors, advantages and
+    inconvenients. Pick the one you prefer.
+
+The first step of :doc:`testing` is to set up the basic testing
+structure:
+
+1. Creating a javascript file
+
+   .. patch::
+
+2. Containing a test section (and a few tests to make sure the tests
+   are correctly run)
+
+   .. patch::
+
+3. Then declaring the test file in the module's manifest
+
+   .. patch::
+
+4. And finally — after restarting OpenERP — navigating to the test
+   runner at ``/web/tests`` and selecting your soon-to-be-tested
+   module:
+
+   .. image:: module/testing_0.png
+       :align: center
+
+   the testing result do indeed match the test.
+
+The simplest tests to write are for synchronous pure
+functions. Synchronous means no RPC call or any other such thing
+(e.g. ``setTimeout``), only direct data processing, and pure means no
+side-effect: the function takes some input, manipulates it and yields
+an output.
+
+In our widget, only ``format_time`` fits the bill: it takes a duration
+(in milliseconds) and returns an ``hours:minutes:second`` formatting
+of it. Let's test it:
+
+.. patch::
+
+This series of simple tests passes with no issue. The next easy-ish
+test type is to test basic DOM alterations from provided input, such
+as (for our widget) updating the counter or displaying a record to the
+records list: while it's not pure (it alters the DOM "in-place") it
+has well-delimited side-effects and these side-effects come solely
+from the provided input.
+
+Because these methods alter the widget's DOM, the widget needs a
+DOM. Looking up :doc:`a widget's lifecycle <widget>`, the widget
+really only gets its DOM when adding it to the document. However a
+side-effect of this is to :js:func:`~openerp.web.Widget.start` it,
+which for us means going to query the user's times.
+
+We don't have any records to get in our test, and we don't want to
+test the initialization yet! So let's cheat a bit: we can manually
+:js:func:`set a widget's DOM <openerp.web.Widget.setElement`, let's
+create a basic DOM matching what each method expects then call the
+method:
+
+.. patch::
+
 .. [#DOM-building] they are not alternative solutions: they work very
                    well together. Templates are used to build "just
                    DOM", sub-widgets are used to build DOM subsections
