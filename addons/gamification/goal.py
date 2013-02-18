@@ -234,6 +234,25 @@ class gamification_goal_plan(osv.Model):
         'report_message_frequency' : 'onchange',
     }
 
+    def _check_nonzero_planline(self, cr, uid, ids, context=None):
+        "checks that there is at least one planline set"
+        for plan in self.browse(cr, uid, ids, context):
+            if len(plan.planline_ids) < 1:
+                return False
+        return True
+
+    def _check_nonzero_users(self, cr, uid, ids, context=None):
+        "checks that there is at least one user set"
+        for plan in self.browse(cr, uid, ids, context):
+            if len(plan.user_ids) < 1:
+                return False
+        return True
+
+    _constraints = [
+        (_check_nonzero_planline, "At least one planline is required to create a goal plan", ['planline_ids']),
+        (_check_nonzero_users, "At least one user is required to create a goal plan", ['user_ids']),
+    ]
+
     def action_start(self, cr, uid, ids, context=None):
         return self.write(cr, uid, ids, {'state': 'inprogress'}, context=context)
 
