@@ -24,8 +24,8 @@ import openerp.addons.web_im.im as im
 import json
 import random
 import jinja2
-from osv import osv, fields
-import tools
+from openerp.osv import osv, fields
+from openerp import tools
 
 env = jinja2.Environment(
     loader=jinja2.PackageLoader('openerp.addons.live_support', "."),

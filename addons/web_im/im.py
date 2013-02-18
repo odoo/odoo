@@ -24,7 +24,7 @@ import openerp.tools.config
 import openerp.modules.registry
 from openerp.tools.misc import DEFAULT_SERVER_DATETIME_FORMAT
 import datetime
-from osv import osv, fields
+from openerp.osv import osv, fields
 import time
 import logging
 import json
