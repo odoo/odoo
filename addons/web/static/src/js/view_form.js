@@ -509,9 +509,13 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
             var on_change = widget.node.attrs.on_change;
             if (on_change) {
                 var change_spec = self.parse_on_change(on_change, widget);
-                var id = [self.datarecord.id == null ? [] : [self.datarecord.id]];
+                var ids = [];
+                if (self.datarecord.id && !instance.web.BufferedDataSet.virtual_id_regex.test(self.datarecord.id)) {
+                    // In case of a o2m virtual id, we should pass an empty ids list
+                    ids.push(self.datarecord.id);
+                }
                 def = new instance.web.Model(self.dataset.model).call(
-                    change_spec.method, id.concat(change_spec.args));
+                    change_spec.method, [ids].concat(change_spec.args));
             } else {
                 def = $.when({});
             }
