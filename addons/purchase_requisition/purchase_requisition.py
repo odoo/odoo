@@ -132,6 +132,7 @@ class purchase_requisition(osv.osv):
             if supplier.id in filter(lambda x: x, [rfq.state <> 'cancel' and rfq.partner_id.id or None for rfq in requisition.purchase_ids]):
                  raise osv.except_osv(_('Warning!'), _('You have already one %s purchase order for this partner, you must cancel this purchase order to create a new quotation.') % rfq.state)
             location_id = requisition.warehouse_id.lot_input_id.id
+            context = dict(context, mail_create_nolog=True)
             purchase_id = purchase_order.create(cr, uid, {
                         'origin': requisition.name,
                         'partner_id': supplier.id,
@@ -143,6 +144,7 @@ class purchase_requisition(osv.osv):
                         'notes':requisition.description,
                         'warehouse_id':requisition.warehouse_id.id ,
             })
+            purchase_order.message_post(cr, uid, [purchase_id], body=_("RFQ <b>Created</b>"), context=context)
             res[requisition.id] = purchase_id
             for line in requisition.line_ids:
                 product = line.product_id
