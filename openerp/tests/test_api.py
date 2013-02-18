@@ -196,8 +196,7 @@ class TestAPI(common.TransactionCase):
     def test_50_session(self):
         """ Call session methods. """
         domain = [('name', 'ilike', 'j')]
-        partners = self.Partner.query(self.cr, self.uid, domain)
-        partners.force()
+        partners = self.Partner.query(self.cr, self.uid, domain).recordset
         self.assertTrue(partners)
 
         # check content of partners.session
@@ -232,9 +231,9 @@ class TestAPI(common.TransactionCase):
         pa = self.Partner.query(self.cr, self.uid, [('name', 'ilike', 'a')], limit=1)
         p = pa[0]
         pa = self.Partner.query(self.cr, self.uid, [('name', 'ilike', 'a')])
-        self.assertFalse(pa.is_forced())
+        self.assertTrue(pa.is_queryset())
         self.assertTrue(p in pa)
-        self.assertFalse(pa.is_forced())
+        self.assertTrue(pa.is_queryset())
 
     @mute_logger('openerp.osv.orm')
     def test_60_and(self):
@@ -242,8 +241,8 @@ class TestAPI(common.TransactionCase):
         pa = self.Partner.query(self.cr, self.uid, [('name', 'ilike', 'a')])
         pb = self.Partner.query(self.cr, self.uid, [('name', 'ilike', 'b')])
         pab = pa & pb
-        self.assertFalse(pa.is_forced())
-        self.assertFalse(pb.is_forced())
+        self.assertTrue(pa.is_queryset())
+        self.assertTrue(pb.is_queryset())
         self.assertEqual(pab.get_domain(), ['&', ('name', 'ilike', 'a'), ('name', 'ilike', 'b')])
         self.assertEqual(set(pab), set(pa) & set(pb))
 
@@ -253,8 +252,8 @@ class TestAPI(common.TransactionCase):
         pa = self.Partner.query(self.cr, self.uid, [('name', 'ilike', 'a')])
         pb = self.Partner.query(self.cr, self.uid, [('name', 'ilike', 'b')])
         pab = pa | pb
-        self.assertFalse(pa.is_forced())
-        self.assertFalse(pb.is_forced())
+        self.assertTrue(pa.is_queryset())
+        self.assertTrue(pb.is_queryset())
         self.assertEqual(pab.get_domain(), ['|', ('name', 'ilike', 'a'), ('name', 'ilike', 'b')])
         self.assertEqual(set(pab), set(pa) | set(pb))
 
@@ -264,8 +263,8 @@ class TestAPI(common.TransactionCase):
         pa = self.Partner.query(self.cr, self.uid, [('name', 'ilike', 'a')])
         pb = self.Partner.query(self.cr, self.uid, [('name', 'ilike', 'b')])
         pab = pa ^ pb
-        self.assertFalse(pa.is_forced())
-        self.assertFalse(pb.is_forced())
+        self.assertTrue(pa.is_queryset())
+        self.assertTrue(pb.is_queryset())
         self.assertEqual(set(pab), set(pa) ^ set(pb))
 
     @mute_logger('openerp.osv.orm')
@@ -274,7 +273,7 @@ class TestAPI(common.TransactionCase):
         ps = self.Partner.query(self.cr, self.uid, [])
         pa = self.Partner.query(self.cr, self.uid, [('name', 'ilike', 'a')])
         pb = ~pa
-        self.assertFalse(pa.is_forced())
+        self.assertTrue(pa.is_queryset())
         self.assertEqual(pb.get_domain(), ['!', ('name', 'ilike', 'a')])
         self.assertEqual(set(ps), set(pa) | set(pb))
         self.assertTrue(set(pa).isdisjoint(set(pb)))
@@ -285,5 +284,5 @@ class TestAPI(common.TransactionCase):
         pa = self.Partner.query(self.cr, self.uid, [('name', 'ilike', 'a')])
         pag = self.Partner.query(self.cr, self.uid, [('name', 'ilike', 'ag')])
         self.assertTrue(pag <= pa)
-        self.assertFalse(pa.is_forced())
-        self.assertFalse(pag.is_forced())
+        self.assertTrue(pa.is_queryset())
+        self.assertTrue(pag.is_queryset())

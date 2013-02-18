@@ -344,8 +344,7 @@ class Session(object):
     def language(self):
         """ return the current language (as a record) """
         if not hasattr(self, '_language'):
-            languages = self.model('res.lang').query([('code', '=', self.lang)])
-            languages.force()
+            languages = self.model('res.lang').query([('code', '=', self.lang)]).recordset
             if not languages:
                 raise Exception(_('Language with code "%s" is not defined in your system !\nDefine it through the Administration menu.') % (self.lang,))
             self._language = languages[0]
@@ -997,15 +996,6 @@ class BaseModel(object):
         'pool',
     ]
 
-    # other specific attributes used by model instances
-    INSTANCE_ATTRIBUTES = [
-        '_record_id',
-        '_record_cache',
-        '_record_process',
-        '_records',
-        '_records_search',
-    ]
-
     def _make_instance(self, **kwargs):
         """ create an instance of this model
             :params kwargs: attributes to set on the new instance
@@ -1020,92 +1010,6 @@ class BaseModel(object):
         for key, val in kwargs.iteritems():
             setattr(obj, key, val)
         return obj
-
-    @api.model
-    def _make_record(self, id, cache, fields_process=None):
-        """ make a record instance
-            :param id: the record's id
-            :param cache: a dictionary used as ``cache[model_name][id][field_name]``,
-                storing record data shared across records, thus reducing the SQL
-                read()s.  It can speed up things a lot, but also be disastrous if
-                not discarded after write()/unlink() operations.
-
-            :param fields_process: optional dictionary indexed by field type, giving
-                processing functions for field values.  The api is best explained by
-                the value processing::
-
-                    # process the value of field with given type, name, and column
-                    factory = fields_process[field_type]
-                    process = factory(model, field_name, field_column)
-                    result = process(value)
-        """
-        # insert an entry in the cache if necessary
-        model_cache = cache[self._name]
-        if id not in model_cache:
-            model_cache[id] = {'id': id}
-
-        if fields_process is None:
-            fields_process = {}
-        return self._make_instance(session=self.session, _record_id=id,
-                            _record_cache=cache, _record_process=fields_process)
-
-    def is_record(self):
-        """ test whether self is a record instance """
-        return hasattr(self, '_record_id')
-
-    @api.model
-    def _make_recordset(self, records):
-        """ make a recordset instance from a list of records """
-        return self._make_instance(session=self.session, _records=records)
-
-    def is_recordset(self):
-        """ test whether self is a recordset instance """
-        # query() returns recordsets with self._records_search, and self._records
-        # when evaluated; browse() returns recordsets with self._records only
-        return hasattr(self, '_records') or hasattr(self, '_records_search')
-
-    @property
-    def record(self):
-        """ return the record instance corresponding to ``self``.
-            If ``self`` is a recordset, check that it contains only one record.
-        """
-        if self.is_record():
-            return self
-        assert len(self) == 1
-        return self[0]
-
-    @property
-    def recordset(self):
-        """ return the recordset instance corresponding to ``self``.
-            Force the evaluation of ``self`` if it is a recordset.
-        """
-        if self.is_record():
-            return self._make_recordset([self])
-        assert self.is_recordset(), "Expected recordset: %s" % self
-        self.force()
-        return self
-
-    def with_session(self, user=None, context=None, **kwargs):
-        """ return an instance similar to self (record or recordset, with session
-            data) with modified session data
-            :param user: user (id or record) to use (if not ``None``)
-            :param context: context dictionary to use (if not ``None``)
-            :param kwargs: named arguments to update the context
-        """
-        cr, uid, ctx = self.session
-
-        if user is not None:
-            uid = int(user) if isinstance(user, Record) else user
-        if context is not None:
-            ctx = context
-        if kwargs:
-            ctx.update(kwargs)
-
-        session = Session(self.pool, cr, uid, ctx)
-        kwargs = dict((attr, getattr(self, attr))
-                    for attr in self.INSTANCE_ATTRIBUTES
-                    if hasattr(self, attr))
-        return self._make_instance(session=session, **kwargs)
 
     def __export_row(self, cr, uid, row, fields, context=None):
         if context is None:
@@ -5313,28 +5217,114 @@ class BaseModel(object):
         method = getattr(self.__class__, name)
         setattr(self.__class__, name, method.origin)
 
+    # specific attributes used by record and recordset instances
+    INSTANCE_ATTRIBUTES = [
+        '_record_id',
+        '_record_cache',
+        '_record_process',
+        '_records',
+        '_records_search',
+    ]
+
+    def with_session(self, user=None, context=None, **kwargs):
+        """ return an instance similar to self (record or recordset, with session
+            data) with modified session data
+            :param user: user (id or record) to use (if not ``None``)
+            :param context: context dictionary to use (if not ``None``)
+            :param kwargs: named arguments to update the context
+        """
+        cr, uid, ctx = self.session
+
+        if user is not None:
+            uid = int(user) if isinstance(user, Record) else user
+        if context is not None:
+            ctx = context
+        if kwargs:
+            ctx.update(kwargs)
+
+        session = Session(self.pool, cr, uid, ctx)
+        kwargs = dict((attr, getattr(self, attr))
+                    for attr in self.INSTANCE_ATTRIBUTES
+                    if hasattr(self, attr))
+        return self._make_instance(session=session, **kwargs)
+
+    @api.model
+    def _make_record(self, id, cache, fields_process=None):
+        """ make a record instance
+            :param id: the record's id
+            :param cache: a dictionary used as ``cache[model_name][id][field_name]``,
+                storing record data shared across records, thus reducing the SQL
+                read()s.  It can speed up things a lot, but also be disastrous if
+                not discarded after write()/unlink() operations.
+
+            :param fields_process: optional dictionary indexed by field type, giving
+                processing functions for field values.  The api is best explained by
+                the value processing::
+
+                    # process the value of field with given type, name, and column
+                    factory = fields_process[field_type]
+                    process = factory(model, field_name, field_column)
+                    result = process(value)
+        """
+        # insert an entry in the cache if necessary
+        model_cache = cache[self._name]
+        if id not in model_cache:
+            model_cache[id] = {'id': id}
+
+        if fields_process is None:
+            fields_process = {}
+        return self._make_instance(session=self.session, _record_id=id,
+                            _record_cache=cache, _record_process=fields_process)
+
+    def is_record(self):
+        """ test whether self is a record instance """
+        return hasattr(self, '_record_id')
+
+    @api.model
+    def _make_recordset(self, records):
+        """ make a recordset instance from a collection of records """
+        return self._make_instance(session=self.session, _records=list(records))
+
+    def is_recordset(self):
+        """ test whether self is a recordset instance (regular or queryset) """
+        return hasattr(self, '_records') or hasattr(self, '_records_search')
+
     @api.model
     def query(self, domain, offset=0, limit=None, order=None):
-        """ Return the recordset satisfying the given domain.
+        """ make a recordset instance from a domain and optional offset/limit.
+            That kind of recordset is called a "queryset".
 
-            The recordset is evaluated on demand, i.e., when iterating over its
-            records is required.  Once evaluated, it keeps its list of records,
-            and will never be evaluated again.
+            The queryset is evaluated on demand, i.e., when iterating over its
+            records is required. Once evaluated, it becomes a regular recordset
+            with the result as its list of records.
         """
-        return self._make_instance(session=self.session, _records_search=(domain, offset, limit, order))
+        return self._make_instance(session=self.session,
+                                _records_search=(domain, offset, limit, order))
 
-    def force(self):
-        """ Force the evaluation of a recordset.
-            Does nothing if ``self`` is not defined by a query or has already
-            been evaluated.
+    def is_queryset(self):
+        """ test whether self is a queryset instance (not evaluated yet) """
+        return hasattr(self, '_records_search') and not hasattr(self, '_records')
+
+    @property
+    def record(self):
+        """ check that ``self`` is a recordset that contains exactly one record,
+            and return that record
         """
+        assert len(self) == 1, "Expected singleton recordset: %s" % self
+        return self[0]
+
+    @property
+    def recordset(self):
+        """ If ``self`` is a record, return a recordset containing ``self`` only.
+            If ``self`` is a recordset, force its evaluation, and return it.
+        """
+        if self.is_record():
+            return self._make_recordset([self])
+
         if not hasattr(self, '_records'):
             ids = self.search(*self._records_search)
             self._records = self.browse(ids)._records
-
-    def is_forced(self):
-        """ Test whether a recordset has been evaluated. """
-        return hasattr(self, '_records')
+        return self
 
     def get_domain(self):
         """ Return a domain that describes exactly ``self``. """
@@ -5355,8 +5345,7 @@ class BaseModel(object):
             It forces the evaluation of ``self``.
         """
         assert self.is_recordset()
-        self.force()
-        return iter(self._records)
+        return iter(self.recordset._records)
 
     def __len__(self):
         """ Return the size of ``self`` (must be a recordset). """
@@ -5572,8 +5561,7 @@ class BaseModel(object):
 
         elif isinstance(key, (int, long)):
             # select a single record in the list
-            self.force()
-            return self._records[key]
+            return self.recordset._records[key]
 
         else:
             return self._get_record_field(key)
