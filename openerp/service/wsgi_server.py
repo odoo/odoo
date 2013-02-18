@@ -450,8 +450,13 @@ def stop_service():
     The server is supposed to have been started by start_server() above.
     """
     if httpd:
-        httpd.shutdown()
-        close_socket(httpd.socket)
+        if not openerp.evented:
+            httpd.shutdown()
+            close_socket(httpd.socket)
+        else:
+            import gevent
+            httpd.stop()
+            gevent.shutdown()
 
 def close_socket(sock):
     """ Closes a socket instance cleanly
