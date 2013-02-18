@@ -327,6 +327,34 @@ instance.web.ExceptionHandler = {
 */
 instance.web.crash_manager_registry = new instance.web.Registry();
 
+/**
+ * Handle redirection warnings, which behave more or less like a regular
+ * warning, with an additional redirection button.
+ */
+instance.web.RedirectWarningHandler = instance.web.Dialog.extend(instance.web.ExceptionHandler, {
+    init: function(parent, error) {
+        this._super(parent);
+        this.error = error;
+    },
+    display: function() {
+        error = this.error;
+        error.data.message = error.data.arguments[0];
+
+        instance.web.dialog($('<div>' + QWeb.render('CrashManager.warning', {error: error}) + '</div>'), {
+            title: "OpenERP " + (_.str.capitalize(error.type) || "Warning"),
+            buttons: [
+                {text: _t("Ok"), click: function() { $(this).dialog("close"); }},
+                {text: error.data.arguments[2], click: function() {
+                    window.location.href='#action='+error.data.arguments[1];
+                    $(this).dialog("close");
+                }}
+            ]
+        });
+        this.destroy();
+    }
+});
+instance.web.crash_manager_registry.add('openerp.exceptions.RedirectWarning', 'instance.web.RedirectWarningHandler');
+
 instance.web.Loading = instance.web.Widget.extend({
     template: _t("Loading"),
     init: function(parent) {
