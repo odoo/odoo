@@ -772,7 +772,7 @@ class mail_thread(osv.AbstractModel):
             if author_ids:
                 msg_dict['author_id'] = author_ids[0]
             else:
-                msg_dict['email_from'] = message.get('from')
+                msg_dict['email_from'] = decode(message.get('from'))
         partner_ids = self._message_find_partners(cr, uid, message, ['To', 'Cc'], context=context)
         msg_dict['partner_ids'] = [(4, partner_id) for partner_id in partner_ids]
 
