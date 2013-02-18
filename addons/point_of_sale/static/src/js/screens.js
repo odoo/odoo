@@ -16,7 +16,8 @@
 // hide()s
 
 function openerp_pos_screens(instance, module){ //module is instance.point_of_sale
-    var QWeb = instance.web.qweb;
+    var QWeb = instance.web.qweb,
+    _t = instance.web._t;
 
     module.ScreenSelector = instance.web.Class.extend({
         init: function(options){
@@ -808,13 +809,13 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
             var self = this;
 
             this.add_action_button({
-                    label: 'Print',
+                    label: _t('Print'),
                     icon: '/point_of_sale/static/src/img/icons/png48/printer.png',
                     click: function(){ self.print(); },
                 });
 
             this.add_action_button({
-                    label: 'Next Order',
+                    label: _t('Next Order'),
                     icon: '/point_of_sale/static/src/img/icons/png48/go-next.png',
                     click: function() { self.finishOrder(); },
                 });
@@ -870,7 +871,7 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
             this.set_numpad_state(this.pos_widget.numpad.state);
             
             this.back_button = this.add_action_button({
-                    label: 'Back',
+                    label: _t('Back'),
                     icon: '/point_of_sale/static/src/img/icons/png48/go-previous.png',
                     click: function(){  
                         self.pos_widget.screen_selector.set_current_screen(self.back_screen);
@@ -878,7 +879,7 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
                 });
             
             this.validate_button = this.add_action_button({
-                    label: 'Validate',
+                    label: _t('Validate'),
                     name: 'validation',
                     icon: '/point_of_sale/static/src/img/icons/png48/validate.png',
                     click: function(){
