@@ -860,9 +860,8 @@ instance.web.BufferedDataSet = instance.web.DataSetStatic.extend({
         }
         return completion.promise();
     },
-    call_button: function (method, args) {
-        var id = args[0][0], index;
-        for(var i=0, len=this.cache.length; i<len; ++i) {
+    evict_record: function(id) {
+        for (var i = 0, len = this.cache.length; i < len; ++i) {
             var record = this.cache[i];
             // if record we call the button upon is in the cache
             if (record.id === id) {
@@ -871,7 +870,15 @@ instance.web.BufferedDataSet = instance.web.DataSetStatic.extend({
                 break;
             }
         }
+    },
+    call_button: function (method, args) {
+        var id = args[0][0], index;
+        this.evict_record(id);
         return this._super(method, args);
+    },
+    exec_workflow: function (id, signal) {
+        this.evict_record(id);
+        return this._model.exec_workflow(id, signal);
     },
     alter_ids: function(n_ids) {
         this._super(n_ids);
