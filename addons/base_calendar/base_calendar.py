@@ -1510,7 +1510,7 @@ rule or repeating pattern of time to exclude from the recurring rule."),
                     continue
             if r['class']=='private':
                 for f in r.keys():
-                    if f not in ('id','date','date_deadline','duration','user_id','state'):
+                    if f not in ('id','date','date_deadline','duration','user_id','state','interval','count'):
                         if isinstance(r[f], list):
                             r[f] = []
                         else:
