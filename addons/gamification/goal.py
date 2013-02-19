@@ -142,10 +142,12 @@ class gamification_goal(osv.Model):
     _columns = {
         'type_id' : fields.many2one('gamification.goal.type', 
             string='Goal Type',
-            required=True),
+            required=True,
+            ondelete="cascade"),
         'user_id' : fields.many2one('res.users', string='User', required=True),
         'plan_id' : fields.many2one('gamification.goal.plan',
-            string='Goal Plan'),
+            string='Goal Plan',
+            ondelete="cascade"),
         'start_date' : fields.date('Start Date'),
         'end_date' : fields.date('End Date'), # no start and end = always active
         'target_goal' : fields.float('To Reach',
@@ -244,13 +246,13 @@ class gamification_goal_plan(osv.Model):
     def _check_nonzero_users(self, cr, uid, ids, context=None):
         "checks that there is at least one user set"
         for plan in self.browse(cr, uid, ids, context):
-            if len(plan.user_ids) < 1:
+            if len(plan.user_ids) < 1 and plan.state != 'draft':
                 return False
         return True
 
     _constraints = [
         (_check_nonzero_planline, "At least one planline is required to create a goal plan", ['planline_ids']),
-        (_check_nonzero_users, "At least one user is required to create a goal plan", ['user_ids']),
+        (_check_nonzero_users, "At least one user is required to create a non-draft goal plan", ['user_ids']),
     ]
 
     def action_start(self, cr, uid, ids, context=None):
@@ -309,10 +311,12 @@ class gamification_goal_planline(osv.Model):
 
     _columns = {
         'plan_id' : fields.many2one('gamification.goal.plan',
-            string='Plan'),
+            string='Plan',
+            ondelete="cascade"),
         'type_id' : fields.many2one('gamification.goal.type',
             string='Goal Type',
-            required=True),
+            required=True,
+            ondelete="cascade"),
         'target_goal' : fields.float('Target Value to Reach',
             required=True),
         'sequence_type' : fields.related('type_id','sequence',
