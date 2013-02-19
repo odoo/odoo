@@ -244,7 +244,7 @@ class survey_question_wiz(osv.osv_memory):
             res['response_id'] = response_id
             res['state'] = 'new'
 
-        else:
+        elif not context.get('edit'):
             response_ids = sur_response_obj.search(cr, uid, [('survey_id', '=', survey_id), '|', ("token", "=", context.get("survey_token", None)), ('partner_id', '=', pid)], context=context, limit=1, order="date_deadline DESC")
             if not response_ids:
                 res['error_message'] = _("You do not have access to this survey.")
@@ -257,7 +257,7 @@ class survey_question_wiz(osv.osv_memory):
                 else:
                     res['error_message'] = _("You do not have access to this survey.")
 
-        if survey_browse.state not in ["open", "restricted"]:
+        if not context.get('edit') and survey_browse.state not in ["open", "restricted"]:
             res['error_message'] = _("You cannot answer because the survey is not open.")
 
         return res
@@ -339,9 +339,6 @@ class survey_question_wiz(osv.osv_memory):
 
                     if sur_name_read.page == "next" or sur_name_rec.page_no == -1:
                         if total_pages > sur_name_rec.page_no + 1:
-                            if not active and not sur_name_rec.page_no + 1 and survey_browse.state not in ["open", "restricted"]:
-                                raise osv.except_osv(_('Warning!'), _("You cannot answer because the survey is not open."))
-
                             if survey_browse.max_response_limit and survey_browse.max_response_limit <= survey_browse.tot_start_survey and not sur_name_rec.page_no + 1:
                                 survey_obj.write(cr, uid, survey_id, {'state': 'close', 'date_close': datetime.now()})
 

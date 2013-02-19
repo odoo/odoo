@@ -138,62 +138,41 @@ class survey(osv.osv):
             }
         return report
 
+    def _check_valid(self, cr, uid, ids, context=None):
+        sur_browse = self.browse(cr, uid, ids[0], context=context)
+        if not sur_browse.page_ids:
+            raise osv.except_osv(_('Warning!'), _('This survey has no question defined or has no pages defined. Please define the questions and answers first.'))
+
     def fill_survey(self, cr, uid, ids, context=None):
-        sur_obj = self.read(cr, uid, ids, ['title', 'page_ids'], context=context)
-        for sur in sur_obj:
-            name = sur['title']
-            pages = sur['page_ids']
-            if not pages:
-                raise osv.except_osv(_('Warning!'), _('This survey has no question defined. Please define the questions and answers first.'))
-            context.update({'active': False, 'survey_id': ids[0]})
+        self._check_valid(cr, uid, ids, context=context)
 
-        return {
-            'view_type': 'form',
-            'view_mode': 'form',
-            'res_model': 'survey.question.wiz',
-            'type': 'ir.actions.act_window',
-            'target': 'inline',
-            'name': name,
-            'context': context
-        }
-
-    def test_survey(self, cr, uid, ids, context=None):
-        sur_obj = self.read(cr, uid, ids, ['title', 'page_ids'], context=context)
-        for sur in sur_obj:
-            name = sur['title']
-            pages = sur['page_ids']
-            if not pages:
-                raise osv.except_osv(_('Warning!'), _('This survey has no pages defined. Please define pages first.'))
-            context.update({'active': False, 'survey_id': ids[0]})
-
-        context.update({'ir_actions_act_window_target': 'new'})
-        return {
-            'view_type': 'form',
-            'view_mode': 'form',
-            'res_model': 'survey.question.wiz',
-            'type': 'ir.actions.act_window',
-            'target': 'inline',
-            'name': name,
-            'context': context
-        }
-
-    def edit_survey(self, cr, uid, ids, context=None):
-        sur_obj = self.read(cr, uid, ids, ['title', 'page_ids'], context=context)
-        for sur in sur_obj:
-            name = sur['title']
-            pages = sur['page_ids']
-            if not pages:
-                raise osv.except_osv(_('Warning!'), _('This survey has no question defined. Please define the questions and answers first.'))
-            context.update({'survey_id': ids[0]})
-
-        context.update({'ir_actions_act_window_target': 'new'})
+        id = ids[0]
+        context.update({'active': False, 'survey_id': id})
         return {
             'view_type': 'form',
             'view_mode': 'form',
             'res_model': 'survey.question.wiz',
             'type': 'ir.actions.act_window',
             'target': 'new',
-            'name': name,
+            'name': self.browse(cr, uid, id, context=context).title,
+            'context': context
+        }
+
+    def edit_survey(self, cr, uid, ids, context=None):
+        id = ids[0]
+        context.update({
+            'active': False,
+            'survey_id': id,
+            'edit': True,
+            'ir_actions_act_window_target': 'new'
+        })
+        return {
+            'view_type': 'form',
+            'view_mode': 'form',
+            'res_model': 'survey.question.wiz',
+            'type': 'ir.actions.act_window',
+            'target': 'new',
+            'name': self.browse(cr, uid, id, context=context).title,
             'context': context
         }
 
@@ -201,6 +180,12 @@ class survey(osv.osv):
         '''
         This function opens a window to compose an email, with the survey template message loaded by default
         '''
+        self._check_valid(cr, uid, ids, context=context)
+
+        survey_browse = self.pool.get('survey').browse(cr, uid, ids, context=context)[0]
+        if survey_browse.state not in ["open", "restricted"]:
+            raise osv.except_osv(_('Warning!'), _("You cannot send invitations because the survey is not open."))
+
         assert len(ids) == 1, 'This option should only be used for a single id at a time.'
         ir_model_data = self.pool.get('ir.model.data')
         try:

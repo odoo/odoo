@@ -32,7 +32,6 @@
                 </header>
                 <sheet>
                     <div class="oe_button_box oe_right">
-                        <button name="test_survey" states="draft,open,restricted,close,cancel" string="Test Survey" type="object" icon="gtk-new" context="{'survey_id': active_id}" attrs="{'invisible':[('id','=',0)]}"/>
                         <button name="action_print_survey" states="draft,open,restricted,close,cancel" string="Print Answer" type="object"/>
                         <button name="edit_survey" states="draft,open,restricted,close,cancel"
                             string="Edit Survey" type="object" context="{'active':True,'edit' : True,'survey_id': active_id}"/>
@@ -245,9 +244,6 @@
                     <field name="tot_start_survey" string="Started"/>
                     <field name="tot_comp_survey" string="Completed"/>
                     <field name="state"/>
-                    <button name="test_survey" states="open,draft,close,cancel"
-                        string="Test Survey" type="object" icon="gtk-new"
-                        context="{'survey_id': active_id}"/>
                     <button name="fill_survey" states="open"
                         string="Answer Survey" type="object" icon="gtk-execute" context="{'survey_id': active_id}" attrs="{'invisible':[('state','!=','open')]}"/>                   
                     <button name="action_print_survey" states="open,draft,close,cancel"
@@ -306,25 +302,23 @@
                                 <div class="oe_kanban_content">
                                     <h3 class="oe_kanban_ellipsis"><t t-esc="record.title.raw_value.toString()"></t></h3>
                                     <div>
+                                        <span class="oe_kanban_right">
+                                            <a t-if="record.state.raw_value === 'draft'" title="Draft" class="oe_kanban_status"> </a>
+                                            <a t-if="record.state.raw_value === 'open'" title="Open freely" class="oe_kanban_status_green"> </a>
+                                            <a t-if="record.state.raw_value === 'restricted'" title="Restricted invitation" class="oe_kanban_status_darkgreen"> </a>
+                                            <a t-if="record.state.raw_value === 'close'" title="Close" class="oe_kanban_status_red"> </a>
+                                            <a t-if="record.state.raw_value === 'cancel'" title="Cancelled" class="oe_kanban_status_red"> </a>
+                                        </span>
                                         Answers: <field name="tot_comp_survey"/>
                                         <t t-if="record.max_response_limit.raw_value > 0"> / <field name="max_response_limit"/></t>
                                     </div>
                                     <br/>
                                     <ul>
+                                        <t t-set="open" t-value="record.state.raw_value === 'open' or record.state.raw_value === 'restricted'"/>
                                         <li t-if="widget.view.is_action_enabled('edit')"><a type="edit">Configuration</a></li>
                                         <li t-if="widget.view.is_action_enabled('edit')"><a name="edit_survey" string="Edit Survey" type="object" context="{'active':True,'edit' : True}">Edit Survey</a></li>
-                                        <li t-if="widget.view.is_action_enabled('edit')"><a name="test_survey" type="object">Test Survey</a></li>
-                                        <li t-if="widget.view.is_action_enabled('edit')"><a name="action_survey_sent" type="object">Send invite by email</a></li>
-                                        <li>
-                                            <span class="oe_kanban_right">
-                                                <a t-if="record.state.raw_value === 'draft'" title="Draft" class="oe_kanban_status"> </a>
-                                                <a t-if="record.state.raw_value === 'open'" title="Open freely" class="oe_kanban_status_green"> </a>
-                                                <a t-if="record.state.raw_value === 'restricted'" title="Restricted invitation" class="oe_kanban_status_darkgreen"> </a>
-                                                <a t-if="record.state.raw_value === 'close'" title="Close" class="oe_kanban_status_red"> </a>
-                                                <a t-if="record.state.raw_value === 'cancel'" title="Cancelled" class="oe_kanban_status_red"> </a>
-                                            </span>
-                                            <a name="fill_survey" type="object">Answer Survey</a>
-                                        </li>
+                                        <li t-if="widget.view.is_action_enabled('edit')"><a t-att-style="!open?'color:#aaaaaa;':''" name="action_survey_sent" type="object">Send invite by email</a></li>
+                                        <li><a t-att-style="!open?'color:#aaaaaa;':''" name="fill_survey" type="object">Answer Survey</a></li>
                                         <li t-if="widget.view.is_action_enabled('edit')"><a>Analysis</a></li>
                                     </ul>
                                 </div>
