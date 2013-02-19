@@ -98,7 +98,7 @@ setuptools.setup(
           'gdata',
           'lxml',
           'mako',
-          'psycopg2',
+          'psycopg2 >= 2.0.14',
           'pydot',
           'python-dateutil < 2',
           'python-ldap',
