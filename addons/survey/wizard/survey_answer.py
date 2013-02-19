@@ -20,7 +20,6 @@
 ##############################################################################
 
 from lxml import etree
-from time import strftime
 
 from openerp import addons, netsvc, tools
 from openerp.osv import fields, osv
@@ -218,12 +217,10 @@ class survey_question_wiz(osv.osv_memory):
         res = {'partner_id': False, 'response_id': False, 'state': None, 'error_message': None}
 
         if not survey_id:
-            return res
+            raise osv.except_osv(_('Warning!'), _("You do not have access to this survey."))
 
+        pid = self.pool.get('res.users').browse(cr, uid, uid, context=context).partner_id.id
         survey_browse = self.pool.get('survey').browse(cr, uid, survey_id, context=context)
-        if False and survey_browse.responsible_id.id == uid:
-            res['partner_id'] = survey_browse.responsible_id.partner_id.id or False
-            return res
 
         sur_response_obj = self.pool.get('survey.response')
         dom = [('survey_id', '=', survey_id), ('state', 'in', ['new', 'skip']), "|", ('date_deadline', '=', None), ('date_deadline', '>', datetime.now())]
@@ -231,14 +228,22 @@ class survey_question_wiz(osv.osv_memory):
         if context.get("survey_token"):
             response_ids = sur_response_obj.search(cr, uid, dom + [("token", "=", context.get("survey_token", None))], context=context, limit=1, order="id DESC")
         else:
-            pid = self.pool.get('res.users').browse(cr, uid, uid, context=context).partner_id.id
             response_ids = sur_response_obj.search(cr, uid, dom + [('partner_id', '=', pid)], context=context, limit=1, order="date_deadline DESC")
 
+        # user have a specific token or a specific partner access (for state open or restricted)
         if response_ids:
             sur_response_browse = sur_response_obj.browse(cr, uid, response_ids[0], context=context)
             res['response_id'] = response_ids[0]
             res['partner_id'] = sur_response_browse.partner_id.id or False
             res['state'] = sur_response_browse.state
+
+        # state open for all user
+        elif survey_browse.state == 'open':
+            response_id = sur_response_obj.create(cr, uid, {'state': 'new', 'response_type': 'manually', 'partner_id': pid, 'date_create': datetime.now(), 'survey_id': survey_id})
+            res['partner_id'] = pid
+            res['response_id'] = response_id
+            res['state'] = 'new'
+
         else:
             response_ids = sur_response_obj.search(cr, uid, [('survey_id', '=', survey_id), '|', ("token", "=", context.get("survey_token", None)), ('partner_id', '=', pid)], context=context, limit=1, order="date_deadline DESC")
             if not response_ids:
@@ -246,11 +251,14 @@ class survey_question_wiz(osv.osv_memory):
             else:
                 response = sur_response_obj.browse(cr, uid, response_ids[0], context=context)
                 if response.state == 'done':
-                    res['error_message'] = _("Thank you, you have already answered this survey.")
+                    res['error_message'] = _("You have already answered this survey, Thank you.")
                 elif response.date_deadline and response.date_deadline < datetime.now():
                     res['error_message'] = _("The deadline for responding to this survey is exceeded since %s") % datetime.strptime(response.date_deadline, DATETIME_FORMAT)
                 else:
                     res['error_message'] = _("You do not have access to this survey.")
+
+        if survey_browse.state not in ["open", "restricted"]:
+            res['error_message'] = _("You cannot answer because the survey is not open.")
 
         return res
 
@@ -328,11 +336,10 @@ class survey_question_wiz(osv.osv_memory):
                 # have acces to this survey
                 if not check_token['error_message']:
                     active = context.get('active', False)
-                    print "access"
 
                     if sur_name_read.page == "next" or sur_name_rec.page_no == -1:
                         if total_pages > sur_name_rec.page_no + 1:
-                            if not active and not sur_name_rec.page_no + 1 and survey_browse.state != "open":
+                            if not active and not sur_name_rec.page_no + 1 and survey_browse.state not in ["open", "restricted"]:
                                 raise osv.except_osv(_('Warning!'), _("You cannot answer because the survey is not open."))
 
                             if survey_browse.max_response_limit and survey_browse.max_response_limit <= survey_browse.tot_start_survey and not sur_name_rec.page_no + 1:

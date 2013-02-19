@@ -20,8 +20,7 @@
 ##############################################################################
 
 import copy
-from time import strftime
-
+from datetime import datetime
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
 
@@ -46,16 +45,13 @@ class survey(osv.osv):
         return data
 
     _columns = {
-        'id': fields.integer('ID'),
         'title': fields.char('Survey Title', size=128, required=1),
         'page_ids': fields.one2many('survey.page', 'survey_id', 'Page'),
         'date_open': fields.datetime('Survey Open Date', readonly=1),
         'date_close': fields.datetime('Survey Close Date', readonly=1),
         'max_response_limit': fields.integer('Maximum Answer Limit',
                      help="Set to one if survey is answerable only once"),
-        'response_partner': fields.integer('Maximum Answer per partner',
-                     help="Set to one if  you require only one Answer per partner"),
-        'state': fields.selection([('open', 'Open'), ('cancel', 'Cancelled'), ('close', 'Closed')], 'Status', readonly=True),
+        'state': fields.selection([('draft', 'Draft'), ('open', 'Open freely'), ('restricted', 'Restricted invitation'), ('close', 'Close'), ('cancel', 'Cancelled')], 'Status'),
         'responsible_id': fields.many2one('res.users', 'Responsible', help="User responsible forsurvey"),
         'tot_start_survey': fields.integer("Total Started Survey", readonly=1),
         'tot_comp_survey': fields.integer("Total Completed Survey", readonly=1),
@@ -64,27 +60,30 @@ class survey(osv.osv):
         'send_response': fields.boolean('Email Notification on Answer'),
         'type': fields.many2one('survey.type', 'Type'),
         'color': fields.integer('Color Index'),
+        'response_ids': fields.one2many('survey.response', 'survey_id', 'Responses', readonly=1),
     }
     _defaults = {
-        'state': lambda * a: "open",
-        'tot_start_survey': lambda * a: 0,
-        'tot_comp_survey': lambda * a: 0,
-        'send_response': lambda * a: 1,
-        'response_partner': lambda * a: 1,
+        'state': "draft",
+        'tot_start_survey': 0,
+        'tot_comp_survey': 0,
+        'send_response': 1,
         'date_open': fields.datetime.now,
     }
 
+    def survey_draft(self, cr, uid, ids, arg):
+        return self.write(cr, uid, ids, {'state': 'draft', 'date_open': None})
+
     def survey_open(self, cr, uid, ids, arg):
-        self.write(cr, uid, ids, {'state': 'open', 'date_open': strftime("%Y-%m-%d %H: %M: %S")})
-        return True
+        return self.write(cr, uid, ids, {'state': 'open', 'date_open': datetime.now()})
 
     def survey_close(self, cr, uid, ids, arg):
-        self.write(cr, uid, ids, {'state': 'close', 'date_close': strftime("%Y-%m-%d %H: %M: %S")})
-        return True
+        return self.write(cr, uid, ids, {'state': 'close', 'date_close': datetime.now()})
+
+    def survey_restricted(self, cr, uid, ids, arg):
+        return self.write(cr, uid, ids, {'state': 'restricted', 'date_close': datetime.now()})
 
     def survey_cancel(self, cr, uid, ids, arg):
-        self.write(cr, uid, ids, {'state': 'cancel'})
-        return True
+        return self.write(cr, uid, ids, {'state': 'cancel', 'date_close': datetime.now()})
 
     def copy(self, cr, uid, ids, default=None, context=None):
         vals = {}
@@ -243,7 +242,7 @@ class survey_page(osv.osv):
         'note': fields.text('Description'),
     }
     _defaults = {
-        'sequence': lambda * a: 1
+        'sequence': 1
     }
 
     def default_get(self, cr, uid, fields, context=None):
@@ -372,20 +371,20 @@ class survey_question(osv.osv):
         'no_of_rows': fields.integer('No of Rows'),
     }
     _defaults = {
-         'sequence': lambda * a: 1,
-         'type': lambda * a: 'multiple_choice_multiple_ans',
-         'req_error_msg': lambda * a: 'This question requires an answer.',
-         'required_type': lambda * a: 'at least',
-         'req_ans': lambda * a: 1,
-         'comment_field_type': lambda * a: 'char',
-         'comment_label': lambda * a: 'Other (please specify)',
-         'comment_valid_type': lambda * a: 'do_not_validate',
-         'comment_valid_err_msg': lambda * a: 'The comment you entered is in an invalid format.',
-         'validation_type': lambda * a: 'do_not_validate',
-         'validation_valid_err_msg': lambda * a: 'The comment you entered is in an invalid format.',
-         'numeric_required_sum_err_msg': lambda * a: 'The choices need to add up to [enter sum here].',
-         'make_comment_field_err_msg': lambda * a: 'Please enter a comment.',
-         'in_visible_answer_type': lambda * a: 1
+         'sequence': 1,
+         'type': 'multiple_choice_multiple_ans',
+         'req_error_msg': 'This question requires an answer.',
+         'required_type': 'at least',
+         'req_ans': 1,
+         'comment_field_type': 'char',
+         'comment_label': 'Other (please specify)',
+         'comment_valid_type': 'do_not_validate',
+         'comment_valid_err_msg': 'The comment you entered is in an invalid format.',
+         'validation_type': 'do_not_validate',
+         'validation_valid_err_msg': 'The comment you entered is in an invalid format.',
+         'numeric_required_sum_err_msg': 'The choices need to add up to [enter sum here].',
+         'make_comment_field_err_msg': 'Please enter a comment.',
+         'in_visible_answer_type': 1
     }
 
     def on_change_type(self, cr, uid, ids, type, context=None):
@@ -486,7 +485,7 @@ class survey_question(osv.osv):
         if 'is_require_answer' in vals and vals.get('type') in ['multiple_choice_multiple_ans', 'matrix_of_choices_only_one_ans', \
             'matrix_of_choices_only_multi_ans', 'rating_scale', 'multiple_textboxes', 'numerical_textboxes', 'date', 'date_and_time']:
             if vals.get('required_type') in ['at least', 'at most', 'exactly']:
-                if 'answer_choice_ids' in vals and not vals.get('req_ans') or vals.get('req_ans') > len(vals['answer_choice_ids']):
+                if 'answer_choice_ids' in vals and 'answer_choice_ids' in vals and vals.get('req_ans') > len(vals.get('answer_choice_ids', [])):
                     raise osv.except_osv(_('Warning!'), _("#Required Answer you entered is greater than the number of answer. Please use a number that is smaller than %d.") % (len(vals['answer_choice_ids']) + 1))
             if vals.get('required_type') == 'a range':
                 if 'answer_choice_ids' in vals:
@@ -571,7 +570,7 @@ class survey_answer(osv.osv):
             cr.execute("select count(question_id), (select count(answer_id) \
                 from survey_response_answer sra, survey_response_line sa \
                 where sra.response_id = sa.id and sra.answer_id = %d \
- and sa.state='done') as tot_ans from survey_response_line \
+                and sa.state='done') as tot_ans from survey_response_line \
                 where question_id = %d and state = 'done'"\
                      % (rec.id, rec.question_id.id))
             res = cr.fetchone()
@@ -603,8 +602,8 @@ class survey_answer(osv.osv):
         'in_visible_answer_type': fields.boolean('Is Answer Type Invisible??')
     }
     _defaults = {
-        # 'sequence': lambda * a: 1,
-        'type': lambda * a: 'char',
+        # 'sequence': 1,
+        'type': 'char',
         'in_visible_answer_type': _get_in_visible_answer_type,
     }
 
@@ -632,8 +631,8 @@ class survey_response(osv.osv):
         'email': fields.char("Email", size=64, readonly=1),
     }
     _defaults = {
-        'state': lambda * a: "new",
-        'response_type': lambda * a: "manually",
+        'state': "new",
+        'response_type': "manually",
     }
 
     def name_get(self, cr, uid, ids, context=None):
@@ -671,7 +670,7 @@ class survey_response_line(osv.osv):
         'single_text': fields.char('Text', size=255),
     }
     _defaults = {
-        'state': lambda * a: "draft",
+        'state': "draft",
     }
 
 survey_response_line()

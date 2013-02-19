@@ -21,19 +21,21 @@
             <field name="arch" type="xml">
                 <form string="Survey" version="7.0">
                 <header>
-                    <button name="survey_open" string="Open" states="cancel,close" type="object"/>
-                    <button name="survey_close" string="Close" states="open" type="object" class="oe_highlight"/>
-                    <button name="survey_cancel" string="Cancel" states="open" type="object"/>
-                    <field name="state" widget="statusbar" statusbar_visible="open,close"/>
+                    <button name="survey_draft" string="Draft" states="cancel" type="object"/>
+                    <button name="survey_open" class="oe_highlight" string="Open freely" states="draft,close" type="object"/>
+                    <button name="survey_open" string="Open freely" states="restricted" type="object"/>
+                    <button name="survey_restricted" class="oe_highlight" string="Restricted invitation" states="draft,close" type="object"/>
+                    <button name="survey_restricted" string="Restricted invitation" states="open" type="object"/>
+                    <button name="survey_close" string="Close" states="open,restricted" type="object" class="oe_highlight"/>
+                    <button name="survey_cancel" string="Cancel" states="draft" type="object"/>
+                    <field name="state" widget="statusbar" nolabel="1" attrs="{'invisible':[('state','=','cancel')]}" statusbar_visible="draft,open,restricted,close"/>
                 </header>
                 <sheet>
                     <div class="oe_button_box oe_right">
-                        <button name="test_survey" states="open,draft,close,cancel" string="Test Survey" type="object" icon="gtk-new" context="{'survey_id': active_id}" attrs="{'invisible':[('id','=',0)]}"/>
-                        <button name="fill_survey" states="open" string="Answer Survey" type="object" icon="gtk-execute" context="{'survey_id': active_id}" attrs="{'invisible':[('state','!=','open')]}"/>
-                        <button name="action_print_survey" states="open,draft,close,cancel" string="Print Answer" type="object"/>
-                        <button name="edit_survey" states="open,draft,close,cancel"
+                        <button name="test_survey" states="draft,open,restricted,close,cancel" string="Test Survey" type="object" icon="gtk-new" context="{'survey_id': active_id}" attrs="{'invisible':[('id','=',0)]}"/>
+                        <button name="action_print_survey" states="draft,open,restricted,close,cancel" string="Print Answer" type="object"/>
+                        <button name="edit_survey" states="draft,open,restricted,close,cancel"
                             string="Edit Survey" type="object" context="{'active':True,'edit' : True,'survey_id': active_id}"/>
-
                     </div>
                     <div class="oe_title">
                         <label for="title" class="oe_edit_only"/>
@@ -44,16 +46,15 @@
                     <group>
                         <group>
                             <field name="id" invisible="1"/>
-                            <field name="responsible_id" class="oe_inline" attrs="{'readonly':[('state','=','close')]}"/>
-                            <field name="type" attrs="{'readonly':[('state','=','close')]}" class="oe_inline"/>
-                            <field name="send_response" attrs="{'readonly':[('state','=','close')]}"/>
+                            <field name="responsible_id" class="oe_inline" attrs="{'readonly':[('state','=',['close','cancel'])]}"/>
+                            <field name="type" attrs="{'readonly':[('state','in',['close','cancel'])]}" class="oe_inline"/>
                         </group>
                         <group>
                             <field name="max_response_limit" attrs="{'readonly':[('state','=','close')]}"/>
-                            <field name="response_partner" attrs="{'readonly':[('state','=','close')]}"/>
+                            <field name="send_response" attrs="{'readonly':[('state','=',['close','cancel'])]}"/>
                         </group>
-                     </group>
-                     <notebook>
+                    </group>
+                    <notebook>
                         <page string="Survey Details">
                             <field name="page_ids" colspan="4" mode="tree" attrs="{'readonly':[('state','=','close')]}">
                                 <form string="Survey Page" version="7.0">
@@ -262,8 +263,11 @@
                 <search string="Search Survey">
                     <field name="title" string="Survey"/>
                     <field name="type"/>
-                    <filter icon="terp-document-new" string="New" domain="[('state','=', 'draft')]" help="All New Survey"/>
-                    <filter icon="terp-camera_test" string="Open" domain="[('state','=','open')]" help="All Open Survey"/>
+                    <filter string="New / Draft" domain="[('state','=', 'draft')]"/>
+                    <filter string="Open freely" domain="[('state','=','open')]"/>
+                    <filter string="Restricted" domain="[('state','=','restricted')]"/>
+                    <filter string="Closed" domain="[('state','=','close')]"/>
+                    <filter string="Canceled" domain="[('state','=','cancel')]"/>
                     <separator/>
                     <filter string="My Survey(s)" icon="terp-personal" domain="[('responsible_id','=',uid)]" help="My Survey(s)"/>
                     <field name="responsible_id"/>
@@ -287,6 +291,7 @@
                     <field name="max_response_limit"/>
                     <field name="responsible_id"/>
                     <field name="color"/>
+                    <field name="state"/>
                     <templates>
                         <t t-name="kanban-box">
                             <div t-attf-class="oe_kanban_color_#{kanban_getcolor(record.color.raw_value)} oe_kanban_card oe_kanban_survey">
@@ -308,8 +313,18 @@
                                     <ul>
                                         <li t-if="widget.view.is_action_enabled('edit')"><a type="edit">Configuration</a></li>
                                         <li t-if="widget.view.is_action_enabled('edit')"><a name="edit_survey" string="Edit Survey" type="object" context="{'active':True,'edit' : True}">Edit Survey</a></li>
-                                        <li t-if="widget.view.is_action_enabled('edit')"><a name="action_survey_sent" type="object">Collect informations</a></li>
-                                        <li><a name="fill_survey" type="object">Answer Survey</a></li>
+                                        <li t-if="widget.view.is_action_enabled('edit')"><a name="test_survey" type="object">Test Survey</a></li>
+                                        <li t-if="widget.view.is_action_enabled('edit')"><a name="action_survey_sent" type="object">Send invite by email</a></li>
+                                        <li>
+                                            <span class="oe_kanban_right">
+                                                <a t-if="record.state.raw_value === 'draft'" title="Draft" class="oe_kanban_status"> </a>
+                                                <a t-if="record.state.raw_value === 'open'" title="Open freely" class="oe_kanban_status_green"> </a>
+                                                <a t-if="record.state.raw_value === 'restricted'" title="Restricted invitation" class="oe_kanban_status_darkgreen"> </a>
+                                                <a t-if="record.state.raw_value === 'close'" title="Close" class="oe_kanban_status_red"> </a>
+                                                <a t-if="record.state.raw_value === 'cancel'" title="Cancelled" class="oe_kanban_status_red"> </a>
+                                            </span>
+                                            <a name="fill_survey" type="object">Answer Survey</a>
+                                        </li>
                                         <li t-if="widget.view.is_action_enabled('edit')"><a>Analysis</a></li>
                                     </ul>
                                 </div>
