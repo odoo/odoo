@@ -29,6 +29,8 @@ from datetime import datetime
 from openerp.tools.translate import _
 from openerp.tools.safe_eval import safe_eval
 
+DATETIME_FORMAT = "%Y-%m-%d"
+
 
 class survey_question_wiz(osv.osv_memory):
     _name = 'survey.question.wiz'
@@ -160,7 +162,8 @@ class survey_question_wiz(osv.osv_memory):
     def _view_field_rating_scale(self, cr, uid, xml_group, fields, readonly, que, que_rec):
         self._view_field_matrix_of_choices_only_one_ans(xml_group, fields, readonly, que, que_rec)
 
-    def _view_field_after_matrix_of_choices(self, cr, uid, xml_group, fields, readonly, que, que_rec):
+    def _view_field_postprocessing(self, cr, uid, xml_group, fields, readonly, que, que_rec):
+        # after matrix of choices
         if que_rec.type in ['multiple_choice_only_one_ans', 'multiple_choice_multiple_ans'] and que_rec.comment_field_type in ['char', 'text'] and que_rec.make_comment_field:
             etree.SubElement(xml_group, 'field', {'readonly': str(readonly), 'name': tools.ustr(que.id) + "_otherfield", 'colspan': "4"})
             fields[tools.ustr(que.id) + "_otherfield"] = {'type': 'boolean', 'string': que_rec.comment_label, 'views': {}}
@@ -172,6 +175,8 @@ class survey_question_wiz(osv.osv_memory):
             fields[tools.ustr(que.id) + "_other"] = {'type': que_rec.comment_field_type, 'string': '', 'views': {}}
 
     def _view_survey_complete(self, result, context):
+        """ rendering of the message displayed when the survey is completed
+        """
         xml_form = etree.Element('form', {'string': _('Complete Survey Answer')})
         #xml_footer = etree.SubElement(xml_form, 'footer', {'col': '6', 'colspan': '4', 'class': 'oe_survey_title_height'})
         etree.SubElement(xml_form, 'separator', {'string': 'Survey Completed', 'colspan': "4"})
@@ -183,6 +188,8 @@ class survey_question_wiz(osv.osv_memory):
         result['context'] = context
 
     def _survey_complete(self, cr, uid, survey_id, partner_id, sur_name_read, survey_browse, context):
+        """ list of action to do when the survey is completed
+        """
         survey_obj = self.pool.get('survey')
         sur_response_obj = self.pool.get('survey.response')
 
@@ -206,9 +213,9 @@ class survey_question_wiz(osv.osv_memory):
             }
             self.pool.get('mail.message').create(cr, uid, val, context=context)
 
-    def _check_token(self, cr, uid, survey_id, context):
+    def _check_access(self, cr, uid, survey_id, context):
         # get if the token of the partner or anonymous user is valid
-        res = {'partner_id': False, 'response_id': False, 'state': None}
+        res = {'partner_id': False, 'response_id': False, 'state': None, 'error_message': None}
 
         if not survey_id:
             return res
@@ -219,18 +226,31 @@ class survey_question_wiz(osv.osv_memory):
             return res
 
         sur_response_obj = self.pool.get('survey.response')
-        dom = [('survey_id', '=', survey_id), ('state', 'in', ['new', 'skip']), "|", ('date_deadline', '=', None), ('date_deadline', '<', datetime.now())]
+        dom = [('survey_id', '=', survey_id), ('state', 'in', ['new', 'skip']), "|", ('date_deadline', '=', None), ('date_deadline', '>', datetime.now())]
 
-        if context.get("survey_token", None):
-            response_id = sur_response_obj.search(cr, uid, dom + [("token", "=", context.get("survey_token", None))], context=context, limit=1, order="date_deadline DESC")
+        if context.get("survey_token"):
+            response_ids = sur_response_obj.search(cr, uid, dom + [("token", "=", context.get("survey_token", None))], context=context, limit=1, order="id DESC")
         else:
             pid = self.pool.get('res.users').browse(cr, uid, uid, context=context).partner_id.id
-            response_id = sur_response_obj.search(cr, uid, dom + [('partner_id', '=', pid)], context=context, limit=1, order="date_deadline DESC")
+            response_ids = sur_response_obj.search(cr, uid, dom + [('partner_id', '=', pid)], context=context, limit=1, order="date_deadline DESC")
 
-        if response_id:
-            sur_response_browse = sur_response_obj.browse(cr, uid, response_id[0], context=context)
+        if response_ids:
+            sur_response_browse = sur_response_obj.browse(cr, uid, response_ids[0], context=context)
+            res['response_id'] = response_ids[0]
             res['partner_id'] = sur_response_browse.partner_id.id or False
             res['state'] = sur_response_browse.state
+        else:
+            response_ids = sur_response_obj.search(cr, uid, [('survey_id', '=', survey_id), '|', ("token", "=", context.get("survey_token", None)), ('partner_id', '=', pid)], context=context, limit=1, order="date_deadline DESC")
+            if not response_ids:
+                res['error_message'] = _("You do not have access to this survey.")
+            else:
+                response = sur_response_obj.browse(cr, uid, response_ids[0], context=context)
+                if response.state == 'done':
+                    res['error_message'] = _("Thank you, you have already answered this survey.")
+                elif response.date_deadline and response.date_deadline < datetime.now():
+                    res['error_message'] = _("The deadline for responding to this survey is exceeded since %s") % datetime.strptime(response.date_deadline, DATETIME_FORMAT)
+                else:
+                    res['error_message'] = _("You do not have access to this survey.")
 
         return res
 
@@ -241,15 +261,19 @@ class survey_question_wiz(osv.osv_memory):
         if context is None:
             context = {}
 
+        print "fields_view_get", context
+
         result = super(survey_question_wiz, self).fields_view_get(cr, uid, view_id, view_type, context, toolbar, submenu)
 
         surv_name_wiz = self.pool.get('survey.name.wiz')
         survey_obj = self.pool.get('survey')
         page_obj = self.pool.get('survey.page')
         que_obj = self.pool.get('survey.question')
-        sur_response_obj = self.pool.get('survey.response')
 
         if view_type in ['form']:
+
+            print view_type
+
             wiz_id = 0
             sur_name_rec = None
             if 'sur_name_id' in context:
@@ -289,8 +313,7 @@ class survey_question_wiz(osv.osv_memory):
             pre_button = False
             readonly = 0
 
-            if context.get('response_id', False) \
-                           and int(context['response_id'][0]) > 0:
+            if context.get('response_id', False) and int(context['response_id'][0]) > 0:
                 readonly = 1
 
             if not sur_name_rec.page_no + 1:
@@ -298,17 +321,23 @@ class survey_question_wiz(osv.osv_memory):
 
             sur_name_read = surv_name_wiz.browse(cr, uid, context['sur_name_id'], context=context)
             page_number = int(sur_name_rec.page_no)
+
+            print sur_name_read
+
             if sur_name_read.transfer or not sur_name_rec.page_no + 1:
                 surv_name_wiz.write(cr, uid, [context['sur_name_id']], {'transfer': False})
                 flag = False
                 fields = {}
 
                 # get if the token of the partner or anonymous user is valid
-                check_token = self._check_token(cr, uid, survey_id, context)
+                check_token = self._check_access(cr, uid, survey_id, context)
+                
+                print "check_token", check_token
 
                 # have acces to this survey
-                if check_token['partner_id'] or check_token['response_id']:
+                if not check_token['error_message']:
                     active = context.get('active', False)
+                    print "access"
 
                     if sur_name_read.page == "next" or sur_name_rec.page_no == -1:
                         if total_pages > sur_name_rec.page_no + 1:
@@ -316,7 +345,7 @@ class survey_question_wiz(osv.osv_memory):
                                 raise osv.except_osv(_('Warning!'), _("You cannot answer because the survey is not open."))
 
                             if survey_browse.max_response_limit and survey_browse.max_response_limit <= survey_browse.tot_start_survey and not sur_name_rec.page_no + 1:
-                                survey_obj.write(cr, uid, survey_id, {'state': 'close', 'date_close': strftime("%Y-%m-%d %H: %M: %S")})
+                                survey_obj.write(cr, uid, survey_id, {'state': 'close', 'date_close': datetime.now()})
 
                             p_id = p_id[sur_name_rec.page_no + 1]
                             surv_name_wiz.write(cr, uid, [context['sur_name_id'], ], {'page_no': sur_name_rec.page_no + 1})
@@ -385,7 +414,7 @@ class survey_question_wiz(osv.osv_memory):
                             # rendering different views
                             getattr(self, "_view_field_%s" % que_rec.type)(cr, uid, xml_group, fields, readonly, que, que_rec)
                             if que_rec.type in ['multiple_choice_only_one_ans', 'multiple_choice_multiple_ans', 'matrix_of_choices_only_one_ans', 'matrix_of_choices_only_multi_ans', 'rating_scale'] and que_rec.is_comment_require:
-                                self._view_field_after_matrix_of_choices(cr, uid, xml_group, fields, readonly, que, que_rec)
+                                self._view_field_postprocessing(cr, uid, xml_group, fields, readonly, que, que_rec)
 
                         xml_footer = etree.SubElement(xml_form, 'footer', {'col': '8', 'colspan': '1', 'width': "100%"})
 
@@ -420,9 +449,7 @@ class survey_question_wiz(osv.osv_memory):
                 else:
                     xml_form = etree.Element('form', {'string': _('No access to this survey')})
                     etree.SubElement(xml_form, 'separator', {'string': survey_browse.title, 'colspan': "4"})
-                    etree.SubElement(xml_form, 'label', {'string': "You don't have access to this survey."})
-                    etree.SubElement(xml_form, 'newline')
-                    etree.SubElement(xml_form, 'label', {'string': "The access you have not been given or the deadline has passed."})
+                    etree.SubElement(xml_form, 'label', {'string': check_token['error_message']})
                     root = xml_form.getroottree()
                     result['arch'] = etree.tostring(root)
                     result['fields'] = {}
@@ -455,17 +482,24 @@ class survey_question_wiz(osv.osv_memory):
         value = {}
         if context is None:
             context = {}
+
         for field in fields_list:
             if field.split('_')[0] == 'progress':
                 tot_page_id = self.pool.get('survey').browse(cr, uid, context.get('survey_id', False))
                 tot_per = (float(100) * (int(field.split('_')[2]) + 1) / len(tot_page_id.page_ids))
                 value[field] = tot_per
+
+        check_token = self._check_access(cr, uid, context.get('survey_id'), context)
+
+        response_ans = False
         sur_response_obj = self.pool.get('survey.response')
-        surv_name_wiz = self.pool.get('survey.name.wiz')
+        if check_token.get('response_id'):
+            response_ans = sur_response_obj.browse(cr, uid, check_token['response_id'])
         if context.get('response_id') and int(context['response_id'][0]) > 0:
             response_ans = sur_response_obj.browse(cr, uid, context['response_id'][context['response_no']])
-            fields_list.sort()
 
+        if response_ans:
+            fields_list.sort()
             for que in response_ans.question_ids:
                 for field in fields_list:
                     if field.split('_')[0] != "progress" and field.split('_')[0] == str(que.question_id.id):
@@ -511,6 +545,8 @@ class survey_question_wiz(osv.osv_memory):
                 return value
             if context.get('active', False):
                 return value
+
+            surv_name_wiz = self.pool.get('survey.name.wiz')
             sur_name_read = surv_name_wiz.read(cr, uid, context.get('sur_name_id', False))
 
             for key, val in safe_eval(sur_name_read.get('store_ans', "{}")).items():
@@ -525,8 +561,8 @@ class survey_question_wiz(osv.osv_memory):
         """
         context = context or {}
 
-        check_token = self._check_token(cr, uid, context['survey_id'], context)
-        if not check_token['partner_id'] and not check_token['response_id']:
+        check_token = self._check_access(cr, uid, context['survey_id'], context)
+        if check_token['error_message']:
             return False
 
         survey_question_wiz_id = super(survey_question_wiz, self).create(cr, uid, {'name': vals.get('name')}, context=context)
@@ -551,10 +587,10 @@ class survey_question_wiz(osv.osv_memory):
         que_obj = self.pool.get('survey.question')
         sur_name_read = surv_name_wiz.read(cr, uid, context.get('sur_name_id', False), context=context)
 
-        if not sur_name_read['response']:
-            response_id = int(sur_name_read['response'])
-        elif check_token['response_id']:
+        if check_token['response_id']:
             response_id = check_token['response_id']
+        elif not sur_name_read['response']:
+            response_id = int(sur_name_read['response'])
         else:
             response_id = sur_response_obj.create(cr, uid, {'response_type': 'link', 'partner_id': check_token['partner_id'], 'date_create': datetime.now(), 'survey_id': context.get('survey_id')})
 
@@ -1118,16 +1154,15 @@ class survey_question_wiz(osv.osv_memory):
                 'context': context
                 }
 
-    def action_next(self, cr, uid, ids, context=None):
-        """
-        Goes to Next page.
+    def _action_next_previous(self, cr, uid, ids, next, context=None):
+        """ Goes to nex page or previous page.
         """
         if context is None:
             context = {}
-        surv_name_wiz = self.pool.get('survey.name.wiz')
         search_obj = self.pool.get('ir.ui.view')
         search_id = search_obj.search(cr, uid, [('model', '=', 'survey.question.wiz'), ('name', '=', 'Survey Search')])
-        surv_name_wiz.write(cr, uid, [context.get('sur_name_id', False)], {'transfer': True, 'page': 'next'})
+        surv_name_wiz = self.pool.get('survey.name.wiz')
+        surv_name_wiz.write(cr, uid, [context.get('sur_name_id', False)], {'transfer': True, 'page': next and 'next' or 'previous'})
         return {
             'view_type': 'form',
             "view_mode": 'form',
@@ -1138,26 +1173,15 @@ class survey_question_wiz(osv.osv_memory):
             'context': context
         }
 
+    def action_next(self, cr, uid, ids, context=None):
+        """ Goes to Next page.
+        """
+        return self._action_next_previous(cr, uid, ids, True, context=context)
+
     def action_previous(self, cr, uid, ids, context=None):
+        """ Goes to previous page.
         """
-        Goes to previous page.
-        """
-        if context is None:
-            context = {}
-        surv_name_wiz = self.pool.get('survey.name.wiz')
-        search_obj = self.pool.get('ir.ui.view')
-        search_id = search_obj.search(cr, uid, [('model', '=', 'survey.question.wiz'), \
-                                    ('name', '=', 'Survey Search')])
-        surv_name_wiz.write(cr, uid, [context.get('sur_name_id', False)], {'transfer': True, 'page': 'previous'})
-        return {
-            'view_type': 'form',
-            "view_mode": 'form',
-            'res_model': 'survey.question.wiz',
-            'type': 'ir.actions.act_window',
-            'target': context.get('ir_actions_act_window_target', 'inline'),
-            'search_view_id': search_id[0],
-            'context': context
-        }
+        return self._action_next_previous(cr, uid, ids, False, context=context)
 
 survey_question_wiz()
 
