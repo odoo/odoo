@@ -21,25 +21,23 @@
 
 from openerp.osv import fields, osv
 
-from datetime import date
-
 GAMIFICATION_GOAL_STATE = [
-    ('inprogress','In progress'),
-    ('reached','Reached'),
-    ('failed','Failed'),
+    ('inprogress', 'In progress'),
+    ('reached', 'Reached'),
+    ('failed', 'Failed'),
 ]
 
 GAMIFICATION_PLAN_STATE = [
-    ('draft','Draft'),
-    ('inprogress','In progress'),
-    ('done','Done'),
+    ('draft', 'Draft'),
+    ('inprogress', 'In progress'),
+    ('done', 'Done'),
 ]
 
 GAMIFICATION_PERIOD_STATE = [
-    ('once','Manual'),
-    ('daily','Daily'),
-    ('weekly','Weekly'),
-    ('monthly','Monthly'),
+    ('once', 'Manual'),
+    ('daily', 'Daily'),
+    ('weekly', 'Weekly'),
+    ('monthly', 'Monthly'),
     ('yearly', 'Yearly')
 ]
 

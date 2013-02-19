@@ -6,6 +6,15 @@
             <field name="name">Goal Types</field>
             <field name="res_model">gamification.goal.type</field>
             <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    Click to create a goal type. 
+                </p>
+                <p>
+                    A goal type is a technical model of goal defining a condition to reach.
+                    The dates, values to reach or users are defined in goal instance.
+                </p>
+            </field>
         </record>
 
         <record id="goal_type_list_view" model="ir.ui.view">

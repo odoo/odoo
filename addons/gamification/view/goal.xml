@@ -6,6 +6,15 @@
             <field name="res_model">gamification.goal</field>
             <field name="view_mode">tree,form,calendar</field>
             <field name="context">{'search_default_my_in_progress': 1}</field>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    Click to create a goal. 
+                </p>
+                <p>
+                    A goal is defined by a user and a goal type.
+                    Goals can be created automatically by using goal plans.
+                </p>
+            </field>
         </record>
 
         <record id="goal_list_view" model="ir.ui.view">
