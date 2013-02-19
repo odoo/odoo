@@ -226,7 +226,7 @@ def cr(method):
             obj.method(args)            # record style
             obj.method(cr, args)        # traditional style
 
-        This decorator is generally not necessary, see `versatile`.
+        This decorator is generally not necessary, see :func:`versatile`.
     """
     def new_api(self, *args, **kwargs):
         return method(self, self.session.cr, *args, **kwargs)
@@ -247,7 +247,7 @@ def cr_uid(method):
             obj.method(args)
             obj.method(cr, uid, args, context=context)
 
-        This decorator is generally not necessary, see `versatile`.
+        This decorator is generally not necessary, see :func:`versatile`.
     """
     argnames = method.func_code.co_varnames[:method.func_code.co_argcount]
     if 'context' in argnames:
@@ -285,7 +285,7 @@ def cr_uid_id(method):
             # call on recordset => {id: value}
             y.method(args)
 
-        This decorator is generally not necessary, see `versatile`.
+        This decorator is generally not necessary, see :func:`versatile`.
     """
     argnames = method.func_code.co_varnames[:method.func_code.co_argcount]
     if 'context' in argnames:
@@ -325,7 +325,7 @@ def cr_uid_ids(method):
             model.method(cr, uid, ids, args, context=context)
 
         This decorator supports record-map methods.
-        It is generally not necessary, see `versatile`.
+        It is generally not necessary, see :func:`versatile`.
     """
     argnames = method.func_code.co_varnames[:method.func_code.co_argcount]
     if 'context' in argnames:
@@ -353,14 +353,15 @@ def versatile(method):
         styles. This decorator is applied automatically by the model's
         metaclass, and has no effect on already-decorated methods.
 
-        The API style is determined by heuristics on the parameter names: 'cr'
-        or 'cursor' for the cursor, 'uid' or 'user' for the user id, 'id' or
-        'ids' for a list of record ids, and 'context' for the context
-        dictionary. If a traditional API is recognized, one of the decorators
-        `cr`, `cr_uid`, `cr_uid_id`, `cr_uid_ids` is applied on the method.
+        The API style is determined by heuristics on the parameter names: ``cr``
+        or ``cursor`` for the cursor, ``uid`` or ``user`` for the user id,
+        ``id`` or ``ids`` for a list of record ids, and ``context`` for the
+        context dictionary. If a traditional API is recognized, one of the
+        decorators :func:`cr`, :func:`cr_uid`, :func:`cr_uid_id`,
+        :func:`cr_uid_ids` is applied on the method.
 
         Method calls are considered traditional style when their first parameter
-        is an instance of Cursor.
+        is a database cursor.
     """
     if hasattr(method, 'versatile'):
         return method
@@ -388,6 +389,6 @@ def versatile(method):
 
 
 def notversatile(method):
-    """ Decorate a method to disable any effect from `versatile`. """
+    """ Decorate a method to disable any effect from :func:`versatile`. """
     method.versatile = False
     return method

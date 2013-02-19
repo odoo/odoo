@@ -21,21 +21,21 @@
 
 
 """
-  Object relational mapping to database (postgresql) module
+    Object Relational Mapping module:
      * Hierarchical structure
-     * Constraints consistency, validations
-     * Object meta Data depends on its status
+     * Constraints consistency and validation
+     * Object metadata depends on its status
      * Optimised processing by complex query (multiple actions at once)
-     * Default fields value
+     * Default field values
      * Permissions optimisation
      * Persistant object: DB postgresql
-     * Datas conversions
+     * Data conversion
      * Multi-level caching system
-     * 2 different inheritancies
-     * Fields:
-          - classicals (varchar, integer, boolean, ...)
-          - relations (one2many, many2one, many2many)
-          - functions
+     * Two different inheritance mechanisms
+     * Rich set of field types:
+          - classical (varchar, integer, boolean, ...)
+          - relational (one2many, many2one, many2many)
+          - functional
 
 """
 
@@ -484,12 +484,12 @@ def get_pg_type(f, type_override=None):
 
 
 class MetaModel(type):
-    """ Metaclass for the Model.
+    """ Metaclass for the models.
 
-    This class is used as the metaclass for the Model class to discover
-    the models defined in a module (i.e. without instanciating them).
-    If the automatic discovery is not needed, it is possible to set the
-    model's _register attribute to False.
+    This class is used as the metaclass for the class :class:`BaseModel` to
+    discover the models defined in a module (without instanciating them).
+    If the automatic discovery is not needed, it is possible to set the model's
+    ``_register`` attribute to False.
 
     """
 
@@ -546,21 +546,39 @@ class BaseModel(object):
 
     OpenERP models are created by inheriting from this class' subclasses:
 
-        * Model: for regular database-persisted models
-        * TransientModel: for temporary data, stored in the database but automatically
-                          vaccuumed every so often
-        * AbstractModel: for abstract super classes meant to be shared by multiple
-                        _inheriting classes (usually Models or TransientModels)
+        * :class:`Model` for regular database-persisted models
 
-    The system will later instantiate the class once per database (on
-    which the class' module is installed).
+        * :class:`TransientModel` for temporary data, stored in the database but
+          automatically vaccuumed every so often
 
-    An instance of this class is either a model, or a *recordset*, i.e., a
-    collection of records in the given model.  A recordset encapsulates transaction
-    data (cursor, user id, context) together with record data (typically record ids).
+        * :class:`AbstractModel` for abstract super classes meant to be shared
+          by multiple inheriting model
 
-    To create a class that should not be instantiated, the _register class attribute
-    may be set to False.
+    The system automatically instantiates every model once per database. Those
+    instances represent the available models on each database, and depend on
+    which modules are installed on that database. The actual class of each
+    instance is built from the Python classes that create and inherit from the
+    corresponding model.
+
+    Other instances encapsulate session data (cursor, user id, context) together
+    with model functionalities. There are three kinds of them:
+
+        * model: represents a model, usually given by :meth:`Session.model`;
+
+        * record: represents a record of the given model, typically returned by
+          :meth:`~.browse` or another record/recordset. One can read the fields
+          of a record as its attributes.
+
+        * recordset: represents a collection of records in the given model,
+          typically returned by :meth:`~.browse`, :meth:`~.query`, or another
+          record/recordset. One can iterate over it.
+
+    All those kinds can use model methods to perform some action related to the
+    model or some of its records. Of course, methods applying on specific
+    records or recordsets can only be invoked by these kinds of instances.
+
+    To create a class that should not be instantiated, the _register class
+    attribute may be set to False.
     """
     __metaclass__ = MetaModel
     _auto = True # create database backend
@@ -4415,7 +4433,8 @@ class BaseModel(object):
         return id_new
 
     def browse(self, cr, uid, select, context=None, cache=None, fields_process=None):
-        """ Fetch records as objects allowing to use dot notation to browse fields and relations
+        """ return a record or recordset corresponding to the value of parameter
+            `select` (id or list of ids).
 
             :param cr: database cursor
             :param uid: current user id
@@ -5229,6 +5248,7 @@ class BaseModel(object):
     def with_session(self, user=None, context=None, **kwargs):
         """ return an instance similar to self (record or recordset, with session
             data) with modified session data
+
             :param user: user (id or record) to use (if not ``None``)
             :param context: context dictionary to use (if not ``None``)
             :param kwargs: named arguments to update the context
@@ -5561,11 +5581,17 @@ class BaseModel(object):
 
 # for instance checking
 class Record(object):
+    """ Pseudo-class for record instances:
+        ``isinstance(x, Record)`` returns ``True`` if ``x`` is a record.
+    """
     class __metaclass__(type):
         def __instancecheck__(self, inst):
             return isinstance(inst, BaseModel) and inst.is_record()
 
 class Recordset(object):
+    """ Pseudo-class for recordset instances:
+        ``isinstance(x, Recordset)`` returns ``True`` if ``x`` is a recordset.
+    """
     class __metaclass__(type):
         def __instancecheck__(self, inst):
             return isinstance(inst, BaseModel) and inst.is_recordset()
