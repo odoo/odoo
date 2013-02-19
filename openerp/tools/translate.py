@@ -551,7 +551,7 @@ def trans_parse_view(de):
     if de.get("confirm"):
         res.append(de.get('confirm').encode("utf8"))
     if de.get("placeholder"):
-        res.append(de.get('confirm').encode("utf8"))
+        res.append(de.get('placeholder').encode("utf8"))
     for n in de:
         res.extend(trans_parse_view(n))
     return res
