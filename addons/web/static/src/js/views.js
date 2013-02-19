@@ -195,7 +195,7 @@ instance.web.ActionManager = instance.web.Widget.extend({
                         state["active_id"] = this.inner_action.context.active_id;
                     }
                     if (this.inner_action.context.active_ids) {
-                        state["active_ids"] = this.inner_action.context.active_ids.join(',');
+                        //state["active_ids"] = this.inner_action.context.active_ids.join(',');
                     }
                 }
             }
