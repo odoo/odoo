@@ -257,7 +257,7 @@
                                 <group>
                                     <field name="move_id" groups="account.group_account_user"/>
                                     <field name="period_id" domain="[('state', '=', 'draft'), ('company_id', '=', company_id)]" groups="account.group_account_user"/>
-                                    <field name="company_id" on_change="onchange_company_id(company_id,partner_id,type,invoice_line,currency_id)" widget="selection" groups="base.group_multi_company"/>
+                                    <field name="company_id" on_change="onchange_company_id(company_id,partner_id,type,invoice_line,currency_id,context)" widget="selection" groups="base.group_multi_company"/>
                                 </group>
                             </group>
                         </page>
@@ -390,7 +390,7 @@
                         <page string="Other Info">
                             <group col="4">
                                 <group>
-                                    <field name="company_id" on_change="onchange_company_id(company_id,partner_id,type,invoice_line,currency_id)" widget="selection" groups="base.group_multi_company"/>
+                                    <field name="company_id" on_change="onchange_company_id(company_id,partner_id,type,invoice_line,currency_id,context)" widget="selection" groups="base.group_multi_company"/>
                                     <field name="user_id" groups="base.group_user"/>
                                     <field domain="[('partner_id.ref_companies', 'in', [company_id])]" name="partner_bank_id"/>
                                     <field name="period_id" domain="[('state', '=', 'draft'), ('company_id', '=', company_id)]"
