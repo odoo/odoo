@@ -20,12 +20,14 @@
 ##############################################################################
 
 
-from document import document as nodes
-from openerp.tools.safe_eval import safe_eval as eval
 import time
 import urllib
 import uuid
+
 from openerp import SUPERUSER_ID
+from openerp.tools.safe_eval import safe_eval as eval
+
+from openerp.addons.document import document as nodes
 
 def dict_filter(srcdic, keys, res=None):
     ''' Return a copy of srcdic that has only keys set.
