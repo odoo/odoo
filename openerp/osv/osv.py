@@ -132,11 +132,11 @@ class object_proxy(object):
                     if e.pgcode not in PG_CONCURRENCY_ERRORS_TO_RETRY:
                         raise
                     if tries >= MAX_TRIES_ON_CONCURRENCY_FAILURE:
-                        self.logger.warning("%s, maximum number of tries reached" % errorcodes.lookup(e.pgcode))
+                        _logger.warning("%s, maximum number of tries reached" % errorcodes.lookup(e.pgcode))
                         raise
                     wait_time = random.uniform(0.0, 2 ** tries)
                     tries += 1
-                    self.logger.info("%s, retrying %d/%d in %.04f sec..." % (errorcodes.lookup(e.pgcode), tries, MAX_TRIES_ON_CONCURRENCY_FAILURE, wait_time))
+                    _logger.info("%s, retrying %d/%d in %.04f sec..." % (errorcodes.lookup(e.pgcode), tries, MAX_TRIES_ON_CONCURRENCY_FAILURE, wait_time))
                     time.sleep(wait_time)
                 except orm.except_orm, inst:
                     raise except_osv(inst.name, inst.value)
