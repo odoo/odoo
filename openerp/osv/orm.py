@@ -52,7 +52,6 @@ import re
 import simplejson
 import time
 import traceback
-import types
 
 import psycopg2
 from lxml import etree
@@ -60,12 +59,12 @@ from lxml import etree
 import api
 import fields
 import openerp
-import openerp.netsvc as netsvc
 import openerp.tools as tools
 from openerp.tools.config import config
 from openerp.tools.misc import CountingStream
 from openerp.tools.safe_eval import safe_eval as eval
 from openerp.tools.translate import _
+from openerp.modules.registry import RegistryManager
 from openerp import SUPERUSER_ID
 from query import Query
 
@@ -286,29 +285,24 @@ class browse_null(object):
 
 
 class Session(object):
-    """ An object that stores session data (db cursor, current user, context)
-        and provides convenient accessors:
+    """ An object that stores primary session data in its attributes:
 
-         - ``session.cr`` is the current database cursor;
-         - ``session.uid`` is the current user id;
-         - ``session.user`` is the current user record;
-         - ``session.context`` is the current context dictionary;
-         - ``session.registry`` is the model registry (or pool);
-         - ``session.model(name)`` returns the given model with session data.
+         - :attr:`cr`, the current database cursor;
+         - :attr:`uid`, the current user id;
+         - :attr:`context`, the current context dictionary.
+
+        Iterating over a session returns the three attributes above, in that
+        order. Useful to retrieve data in a destructuring assignment::
+
+            cr, uid, context = session
     """
-    def __init__(self, registry, cr, uid, context):
-        assert cr.dbname == registry.db_name
-        self.registry = registry
+    def __init__(self, cr, uid, context):
         self.cr = cr
         self.uid = uid
         self.context = context if context is not None else {}
+        self.registry = RegistryManager.get(cr.dbname)
 
     def __iter__(self):
-        """ Iterating over a session returns self.cr, self.uid, self.context, in
-            that order.  Useful to retrieve data in a destructuring assignment::
-
-                cr, uid, context = session
-        """
         yield self.cr
         yield self.uid
         yield self.context
@@ -344,10 +338,12 @@ class Session(object):
     def language(self):
         """ return the current language (as a record) """
         if not hasattr(self, '_language'):
-            languages = self.model('res.lang').query([('code', '=', self.lang)]).recordset
-            if not languages:
+            try:
+                languages = self.model('res.lang').query([('code', '=', self.lang)])
+                self._language = languages.record
+            except Exception:
+                context = self.context      # for translating the message below
                 raise Exception(_('Language with code "%s" is not defined in your system !\nDefine it through the Administration menu.') % (self.lang,))
-            self._language = languages[0]
         return self._language
 
 
@@ -4449,7 +4445,7 @@ class BaseModel(object):
         if self.session == (cr, uid, context):
             model = self
         else:
-            session = Session(self.pool, cr, uid, context)
+            session = Session(cr, uid, context)
             model = self._make_instance(session=session)
 
         if isinstance(select, (int, long)):
@@ -5262,7 +5258,7 @@ class BaseModel(object):
         if kwargs:
             ctx.update(kwargs)
 
-        session = Session(self.pool, cr, uid, ctx)
+        session = Session(cr, uid, ctx)
         kwargs = dict((attr, getattr(self, attr))
                     for attr in self.INSTANCE_ATTRIBUTES
                     if hasattr(self, attr))
