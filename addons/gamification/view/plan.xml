@@ -27,9 +27,10 @@
             <field name="arch" type="xml">
                 <form string="Goal types" version="7.0">
                     <header>
-                        <button string="Start Plan" type="object" name="action_start" states="draft"/>
-                        <button string="Close Plan" type="object" name="action_close" states="inprogress"/>
+                        <button string="Start Plan" type="object" name="action_start" states="draft" class="oe_highlight"/>
+                        <button string="Close Plan" type="object" name="action_close" states="inprogress" class="oe_highlight"/>
                         <button string="Cancel Plan" type="object" name="action_cancel" states="inprogress"/>
+                        <button string="Reset Plan" type="object" name="action_reset" states="done"/>
                         <field name="state" widget="statusbar"/>
                     </header>
                     <sheet>

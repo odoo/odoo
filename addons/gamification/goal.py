@@ -262,6 +262,8 @@ class gamification_goal_plan(osv.Model):
     def action_cancel(self, cr, uid, ids, context=None):
         return self.write(cr, uid, ids, {'state': 'draft'}, context=context)
 
+    def action_reset(self, cr, uid, ids, context=None):
+        return self.write(cr, uid, ids, {'state': 'inprogress'}, context=context)
 
 
 class gamification_goal_planline(osv.Model):
