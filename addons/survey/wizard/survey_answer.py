@@ -261,8 +261,6 @@ class survey_question_wiz(osv.osv_memory):
         if context is None:
             context = {}
 
-        print "fields_view_get", context
-
         result = super(survey_question_wiz, self).fields_view_get(cr, uid, view_id, view_type, context, toolbar, submenu)
 
         surv_name_wiz = self.pool.get('survey.name.wiz')
@@ -271,9 +269,6 @@ class survey_question_wiz(osv.osv_memory):
         que_obj = self.pool.get('survey.question')
 
         if view_type in ['form']:
-
-            print view_type
-
             wiz_id = 0
             sur_name_rec = None
             if 'sur_name_id' in context:
@@ -322,8 +317,6 @@ class survey_question_wiz(osv.osv_memory):
             sur_name_read = surv_name_wiz.browse(cr, uid, context['sur_name_id'], context=context)
             page_number = int(sur_name_rec.page_no)
 
-            print sur_name_read
-
             if sur_name_read.transfer or not sur_name_rec.page_no + 1:
                 surv_name_wiz.write(cr, uid, [context['sur_name_id']], {'transfer': False})
                 flag = False
@@ -331,8 +324,6 @@ class survey_question_wiz(osv.osv_memory):
 
                 # get if the token of the partner or anonymous user is valid
                 check_token = self._check_access(cr, uid, survey_id, context)
-                
-                print "check_token", check_token
 
                 # have acces to this survey
                 if not check_token['error_message']:
@@ -489,13 +480,14 @@ class survey_question_wiz(osv.osv_memory):
                 tot_per = (float(100) * (int(field.split('_')[2]) + 1) / len(tot_page_id.page_ids))
                 value[field] = tot_per
 
-        check_token = self._check_access(cr, uid, context.get('survey_id'), context)
+        if not context.get('edit'):
+            check_token = self._check_access(cr, uid, context.get('survey_id'), context)
 
         response_ans = False
         sur_response_obj = self.pool.get('survey.response')
-        if check_token.get('response_id'):
+        if not context.get('edit') and check_token.get('response_id'):
             response_ans = sur_response_obj.browse(cr, uid, check_token['response_id'])
-        if context.get('response_id') and int(context['response_id'][0]) > 0:
+        elif context.get('response_id') and int(context['response_id'][0]) > 0:
             response_ans = sur_response_obj.browse(cr, uid, context['response_id'][context['response_no']])
 
         if response_ans:
