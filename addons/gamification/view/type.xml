@@ -58,7 +58,10 @@
             <field name="model">gamification.goal.type</field>
             <field name="arch" type="xml">
                 <search string="Search Goal Types">
-                     <group expand="0" string="Group By...">
+                    <field name="name"/>
+                    <field name="model_id"/>
+                    <field name="field_id"/>
+                    <group expand="0" string="Group By...">
                         <filter string="Model" domain="[]" context="{'group_by':'model_id'}"/>
                         <filter string="Computation Mode" domain="[]" context="{'group_by':'computation_mode'}"/>
                     </group>

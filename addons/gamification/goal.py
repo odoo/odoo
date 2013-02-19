@@ -91,7 +91,7 @@ class gamification_goal_type(osv.Model):
 - 'Manually' for user defined values""",
             required=True),
         'model_id': fields.many2one('ir.model',
-            string='Modeel',
+            string='Model',
             help='The model object for the field to evaluate' ),
         'field_id': fields.many2one('ir.model.fields',
             string='Evaluated Field',
@@ -254,15 +254,31 @@ class gamification_goal_plan(osv.Model):
     ]
 
     def action_start(self, cr, uid, ids, context=None):
+        """Start a draft goal plan
+
+        Change the state of the plan to in progress
+        TODO: generate related goals"""
         return self.write(cr, uid, ids, {'state': 'inprogress'}, context=context)
 
     def action_close(self, cr, uid, ids, context=None):
+        """Close a plan in progress
+
+        Change the state of the plan to in done
+        TODO: close the related goals"""
         return self.write(cr, uid, ids, {'state': 'done'}, context=context)
 
     def action_cancel(self, cr, uid, ids, context=None):
+        """Cancel a plan in progress
+
+        Change the state of the plan to draft
+        TODO: close the related goals ?"""
         return self.write(cr, uid, ids, {'state': 'draft'}, context=context)
 
     def action_reset(self, cr, uid, ids, context=None):
+        """Reset a closed goal plan
+
+        Change the state of the plan to in progress
+        TODO: reopen unfinished goals ?"""
         return self.write(cr, uid, ids, {'state': 'inprogress'}, context=context)
 
 

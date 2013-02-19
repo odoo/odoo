@@ -21,6 +21,7 @@
                     <field name="end_date"/>
                     <field name="completeness" widget="progressbar"/>
                     <field name="state" invisible="1"/>
+                    <field name="plan_id" invisible="1"/>
                 </tree>
             </field>
         </record>
@@ -81,11 +82,15 @@
                 <search string="Search Goals">
                     <filter name="my_in_progress" string="My Goals in Progress"
                         domain="[('user_id', '=', uid),('state', '=', 'inprogress')]"/>
+                    <field name="plan_id"/>
+                    <field name="user_id"/>
+                    <field name="type_id"/>
                     <group expand="0" string="Group By...">
                         <filter string="User" domain="[]" context="{'group_by':'user_id'}"/>
                         <filter string="Goal Type" domain="[]" context="{'group_by':'type_id'}"/>
                         <filter string="State" domain="[]" context="{'group_by':'state'}"/>
                         <filter string="End Date" domain="[]" context="{'group_by':'end_date'}"/>
+                        <filter string="Plan" domain="[]" context="{'group_by':'plan_id'}"/>
                     </group>
                 </search>
             </field>
