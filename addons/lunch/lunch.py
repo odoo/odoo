@@ -383,19 +383,13 @@ class lunch_order_line(osv.Model):
                 result.add(lines.id)
         return list(result)
 
-    def _get_create_line_ids(self, cr, uid, ids, context=None):
-        """
-        return list of lunch_order_line ids
-        """
-        return ids
-
     _columns = {
         'name': fields.related('product_id', 'name', readonly=True),
         'order_id': fields.many2one('lunch.order', 'Order', ondelete='cascade'),
         'product_id': fields.many2one('lunch.product', 'Product', required=True),
         'date': fields.related('order_id', 'date', type='date', string="Date", readonly=True, store={
             'lunch.order': (_get_line_order_ids, ['date'], 10), 
-            'lunch.order.line': (_get_create_line_ids, [], 10),
+            'lunch.order.line': (lambda self, cr, uid, ids, ctx: ids, [], 10),
             }),
         'supplier': fields.related('product_id', 'supplier', type='many2one', relation='res.partner', string="Supplier", readonly=True, store=True),
         'user_id': fields.related('order_id', 'user_id', type='many2one', relation='res.users', string='User', readonly=True, store=True),
