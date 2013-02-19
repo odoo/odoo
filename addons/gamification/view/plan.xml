@@ -50,21 +50,22 @@
                                 <field name="report_header"/>
                             </group>
                         </group>
-                        <notebook>
-                            <page string="Goals">
-                                <field name="planline_ids">
+                        
+                        <group string="Planlines">
+                                <field name="planline_ids" nolabel="1">
                                     <tree string="Planline List" version="7.0" editable="bottom" >
                                         <field name="type_id"/>
                                         <field name="target_goal"/>
                                     </tree>
                                 </field>
-                            </page>
-                            <page string="Subscription">
-                                <group>
-                                    <field name="autojoin_group_id" string="Group" />
-                                </group>
-                                <group>
-                                <field colspan="4" name="user_ids" widget="many2many_kanban">
+                        </group>
+                        
+                        <group string="Subscription">
+                            <group colspan="4">
+                                <field name="autojoin_group_id" string="Group" />
+                            </group>
+                            <group colspan="4">
+                                <field name="user_ids" widget="many2many_kanban">
                                     <kanban quick_create="false" create="true">
                                         <field name="name"/>
                                         <templates>
@@ -81,9 +82,8 @@
                                         </templates>
                                     </kanban>
                                 </field>
-                                </group>
-                            </page>
-                        </notebook>
+                            </group>
+                        </group>
                     </sheet>
                 </form>
             </field>
