@@ -4551,6 +4551,7 @@ instance.web.form.AbstractFormPopup = instance.web.Widget.extend({
             });
             var $cbutton = self.$buttonpane.find(".oe_abstractformpopup-form-close");
             $cbutton.click(function() {
+                self.view_form.trigger('on_button_cancel');
                 self.check_exit();
             });
             self.view_form.do_show();
