@@ -5222,6 +5222,8 @@ instance.web.form.FieldStatus = instance.web.form.AbstractField.extend({
         this.options.clickable = this.options.clickable || (this.node.attrs || {}).clickable || false;
         this.options.visible = this.options.visible || (this.node.attrs || {}).statusbar_visible || false;
         this.set({value: false});
+        this.field_manager.on("view_content_has_changed", this, this.render_value);
+        this.selection_mutex = new $.Mutex();
     },
     start: function() {
         if (this.options.clickable) {
@@ -5240,14 +5242,16 @@ instance.web.form.FieldStatus = instance.web.form.AbstractField.extend({
     },
     render_value: function() {
         var self = this;
-        self.get_selection().done(function() {
-            var content = QWeb.render("FieldStatus.content", {widget: self});
-            self.$el.html(content);
-            var colors = JSON.parse((self.node.attrs || {}).statusbar_colors || "{}");
-            var color = colors[self.get('value')];
-            if (color) {
-                self.$("oe_active").css("color", color);
-            }
+        self.selection_mutex.exec(function() {
+            return self.get_selection().done(function() {
+                var content = QWeb.render("FieldStatus.content", {widget: self});
+                self.$el.html(content);
+                var colors = JSON.parse((self.node.attrs || {}).statusbar_colors || "{}");
+                var color = colors[self.get('value')];
+                if (color) {
+                    self.$("oe_active").css("color", color);
+                }
+            });
         });
     },
     /** Get the selection and render it
