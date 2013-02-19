@@ -23,6 +23,7 @@ from openerp.osv import fields, osv
 
 GAMIFICATION_GOAL_STATE = [
     ('inprogress', 'In progress'),
+    ('inprogress_update', 'In progress (to update)'),
     ('reached', 'Reached'),
     ('failed', 'Failed'),
 ]

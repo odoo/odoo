@@ -41,10 +41,10 @@
             <field name="arch" type="xml">
                 <form string="Goal" version="7.0">
                     <header>
-                        <button string="Goal Reached" type="object" name="action_reach" states="inprogress" class="oe_highlight"/>
-                        <button string="Goal Failed" type="object" name="action_fail" states="inprogress"/>
+                        <button string="Goal Reached" type="object" name="action_reach" states="inprogress,inprogress_update" class="oe_highlight"/>
+                        <button string="Goal Failed" type="object" name="action_fail" states="inprogress,inprogress_update"/>
                         <button string="Reset Completion" type="object" name="action_cancel" states="failed,reached"/>
-                        <field name="state" widget="statusbar" statusbar_visible="inprogress" />
+                        <field name="state" widget="statusbar" statusbar_visible="inprogress,inprogress_update" />
                     </header>
                     <sheet>
                         <group>
@@ -90,7 +90,7 @@
             <field name="arch" type="xml">
                 <search string="Search Goals">
                     <filter name="my_in_progress" string="My Goals in Progress"
-                        domain="[('user_id', '=', uid),('state', '=', 'inprogress')]"/>
+                        domain="[('user_id', '=', uid),('state', 'in', ('inprogress', 'inprogress_update'))]"/>
                     <field name="plan_id"/>
                     <field name="user_id"/>
                     <field name="type_id"/>
