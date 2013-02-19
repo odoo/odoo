@@ -25,6 +25,7 @@ import logging
 import os.path
 import pickle
 import re
+import sys
 
 # for eval context:
 import time
@@ -61,13 +62,16 @@ from misc import unquote
 unsafe_eval = eval
 from safe_eval import safe_eval as eval
 
-class ConvertError(Exception):
-    def __init__(self, doc, orig_excpt):
-        self.d = doc
-        self.orig = orig_excpt
+class ParseError(Exception):
+    def __init__(self, msg, text, filename, lineno):
+        self.msg = msg
+        self.text = text
+        self.filename = filename
+        self.lineno = lineno
 
     def __str__(self):
-        return 'Exception:\n\t%s\nUsing file:\n%s' % (self.orig, self.d)
+        return '"%s" while parsing %s:%s, near\n%s' \
+            % (self.msg, self.filename, self.lineno, self.text)
 
 def _ref(self, cr):
     return lambda x: self.id_get(cr, x)
@@ -841,13 +845,10 @@ form: module.record_id""" % (xml_id,)
                 if rec.tag in self._tags:
                     try:
                         self._tags[rec.tag](self.cr, rec, n)
-                    except:
-                        _logger.error('Parse error in %s:%d: \n%s',
-                                      rec.getroottree().docinfo.URL,
-                                      rec.sourceline,
-                                      etree.tostring(rec).strip(), exc_info=True)
+                    except Exception, e:
                         self.cr.rollback()
-                        raise
+                        exc_info = sys.exc_info()
+                        raise ParseError, (str(e), etree.tostring(rec).rstrip(), rec.getroottree().docinfo.URL, rec.sourceline), exc_info[2]
         return True
 
     def __init__(self, cr, module, idref, mode, report=None, noupdate=False):
