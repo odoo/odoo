@@ -46,7 +46,6 @@
     ctx = context.copy()
     ctx.update({"active_model": 'sale.order', "active_ids": [ref("sale_order_8")], "active_id":ref("sale_order_8")})
     pay_id = self.create(cr, uid, {'advance_payment_method': 'fixed', 'amount': 5})
-    print ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>.",uid
     self.create_invoices(cr, uid, [pay_id], context=ctx)
     invoice_ids = self.pool.get('sale.order').browse(cr, uid, ref("sale_order_8")).invoice_ids
 
