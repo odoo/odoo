@@ -118,16 +118,15 @@ class mrp_production_workcenter_line(osv.osv):
         @param action: Action to perform.
         @return: Nothing
         """
-        wf_service = netsvc.LocalService("workflow")
         prod_obj_pool = self.pool.get('mrp.production')
         oper_obj = self.browse(cr, uid, ids)[0]
         prod_obj = oper_obj.production_id
         if action == 'start':
                if prod_obj.state =='confirmed':
                    prod_obj_pool.force_production(cr, uid, [prod_obj.id])
-                   wf_service.trg_validate(uid, 'mrp.production', prod_obj.id, 'button_produce', cr)
+                   prod_obj_pool.signal_button_produce(cr, uid, [prod_obj.id])
                elif prod_obj.state =='ready':
-                   wf_service.trg_validate(uid, 'mrp.production', prod_obj.id, 'button_produce', cr)
+                   prod_obj_pool.signal_button_produce(cr, uid, [prod_obj.id])
                elif prod_obj.state =='in_production':
                    return
                else:
@@ -143,7 +142,7 @@ class mrp_production_workcenter_line(osv.osv):
                 for production in prod_obj_pool.browse(cr, uid, [prod_obj.id], context= None):
                     if production.move_lines or production.move_created_ids:
                         prod_obj_pool.action_produce(cr,uid, production.id, production.product_qty, 'consume_produce', context = None)
-                wf_service.trg_validate(uid, 'mrp.production', oper_obj.production_id.id, 'button_produce_done', cr)
+                prod_obj_pool.signal_button_produce_done(cr, uid, [oper_obj.production_id.id])
         return
 
     def write(self, cr, uid, ids, vals, context=None, update=True):
@@ -228,23 +227,21 @@ class mrp_production(osv.osv):
         @return: Super method
         """
         obj = self.browse(cr, uid, ids)[0]
-        wf_service = netsvc.LocalService("workflow")
+        workcenter_pool = self.pool.get('mrp.production.workcenter.line')
         for workcenter_line in obj.workcenter_lines:
             if workcenter_line.state == 'draft':
-                wf_service.trg_validate(uid, 'mrp.production.workcenter.line', workcenter_line.id, 'button_start_working', cr)
-            wf_service.trg_validate(uid, 'mrp.production.workcenter.line', workcenter_line.id, 'button_done', cr)
+                workcenter_pool.signal_button_start_working(cr, uid, [workcenter_line.id])
+            workcenter_pool.signal_button_done(cr, uid, [workcenter_line.id])
         return super(mrp_production,self).action_production_end(cr, uid, ids)
 
     def action_in_production(self, cr, uid, ids):
         """ Changes state to In Production and writes starting date.
         @return: True
         """
-        obj = self.browse(cr, uid, ids)[0]
         workcenter_pool = self.pool.get('mrp.production.workcenter.line')
-        wf_service = netsvc.LocalService("workflow")
         for prod in self.browse(cr, uid, ids):
             if prod.workcenter_lines:
-                wf_service.trg_validate(uid, 'mrp.production.workcenter.line', prod.workcenter_lines[0].id, 'button_start_working', cr)
+                workcenter_pool.signal_button_start_working(cr, uid, [prod.workcenter_lines[0].id])
         return super(mrp_production,self).action_in_production(cr, uid, ids)
     
     def action_cancel(self, cr, uid, ids, context=None):
@@ -252,9 +249,8 @@ class mrp_production(osv.osv):
         @return: Super method
         """
         obj = self.browse(cr, uid, ids,context=context)[0]
-        wf_service = netsvc.LocalService("workflow")
         for workcenter_line in obj.workcenter_lines:
-            wf_service.trg_validate(uid, 'mrp.production.workcenter.line', workcenter_line.id, 'button_cancel', cr)
+            workcenter_pool.signal_button_cancel(cr, uid, [workcenter_line.id])
         return super(mrp_production,self).action_cancel(cr,uid,ids,context=context)
 
     def _compute_planned_workcenter(self, cr, uid, ids, context=None, mini=False):
@@ -503,35 +499,34 @@ class mrp_operations_operation(osv.osv):
         return super(mrp_operations_operation, self).write(cr, uid, ids, vals, context=context)
 
     def create(self, cr, uid, vals, context=None):
-        wf_service = netsvc.LocalService('workflow')
+        workcenter_pool = self.pool.get('mrp.production.workcenter.line')
         code_ids=self.pool.get('mrp_operations.operation.code').search(cr,uid,[('id','=',vals['code_id'])])
         code=self.pool.get('mrp_operations.operation.code').browse(cr, uid, code_ids, context=context)[0]
-        wc_op_id=self.pool.get('mrp.production.workcenter.line').search(cr,uid,[('workcenter_id','=',vals['workcenter_id']),('production_id','=',vals['production_id'])])
+        wc_op_id=workcenter_pool.search(cr,uid,[('workcenter_id','=',vals['workcenter_id']),('production_id','=',vals['production_id'])])
         if code.start_stop in ('start','done','pause','cancel','resume'):
             if not wc_op_id:
                 production_obj=self.pool.get('mrp.production').browse(cr, uid, vals['production_id'], context=context)
-                wc_op_id.append(self.pool.get('mrp.production.workcenter.line').create(cr,uid,{'production_id':vals['production_id'],'name':production_obj.product_id.name,'workcenter_id':vals['workcenter_id']}))
+                wc_op_id.append(workcenter_pool.create(cr,uid,{'production_id':vals['production_id'],'name':production_obj.product_id.name,'workcenter_id':vals['workcenter_id']}))
             if code.start_stop=='start':
-                self.pool.get('mrp.production.workcenter.line').action_start_working(cr,uid,wc_op_id)
-                wf_service.trg_validate(uid, 'mrp.production.workcenter.line', wc_op_id[0], 'button_start_working', cr)
-
+                workcenter_pool.action_start_working(cr,uid,wc_op_id)
+                workcenter_pool.signal_button_start_working(cr, uid, [wc_op_id[0]])
 
             if code.start_stop=='done':
-                self.pool.get('mrp.production.workcenter.line').action_done(cr,uid,wc_op_id)
-                wf_service.trg_validate(uid, 'mrp.production.workcenter.line', wc_op_id[0], 'button_done', cr)
+                workcenter_pool.action_done(cr,uid,wc_op_id)
+                workcenter_pool.signal_button_done(cr, uid, [wc_op_id[0]])
                 self.pool.get('mrp.production').write(cr,uid,vals['production_id'],{'date_finished':datetime.now().strftime('%Y-%m-%d %H:%M:%S')})
 
             if code.start_stop=='pause':
-                self.pool.get('mrp.production.workcenter.line').action_pause(cr,uid,wc_op_id)
-                wf_service.trg_validate(uid, 'mrp.production.workcenter.line', wc_op_id[0], 'button_pause', cr)
+                workcenter_pool.action_pause(cr,uid,wc_op_id)
+                workcenter_pool.signal_button_pause(cr, uid, [wc_op_id[0]])
 
             if code.start_stop=='resume':
-                self.pool.get('mrp.production.workcenter.line').action_resume(cr,uid,wc_op_id)
-                wf_service.trg_validate(uid, 'mrp.production.workcenter.line', wc_op_id[0], 'button_resume', cr)
+                workcenter_pool.action_resume(cr,uid,wc_op_id)
+                workcenter_pool.signal_button_resume(cr, uid, [wc_op_id[0]])
 
             if code.start_stop=='cancel':
-                self.pool.get('mrp.production.workcenter.line').action_cancel(cr,uid,wc_op_id)
-                wf_service.trg_validate(uid, 'mrp.production.workcenter.line', wc_op_id[0], 'button_cancel', cr)
+                workcenter_pool.action_cancel(cr,uid,wc_op_id)
+                workcenter_pool.signal_button_cancel(cr, uid, [wc_op_id[0]])
 
         if not self.check_operation(cr, uid, vals):
             return
@@ -549,10 +544,9 @@ class mrp_operations_operation(osv.osv):
         return super(mrp_operations_operation, self).create(cr, uid, vals, context=context)
 
     def initialize_workflow_instance(self, cr, uid, context=None):
-        wf_service = netsvc.LocalService("workflow")
-        line_ids = self.pool.get('mrp.production.workcenter.line').search(cr, uid, [], context=context)
-        for line_id in line_ids:
-            wf_service.trg_create(uid, 'mrp.production.workcenter.line', line_id, cr)
+        mrp_production_workcenter_line = self.pool.get('mrp.production.workcenter.line')
+        line_ids = mrp_production_workcenter_line.search(cr, uid, [], context=context)
+        mrp_production_workcenter_line.create_workflow(cr, uid, line_ids)
         return True
 
     _columns={

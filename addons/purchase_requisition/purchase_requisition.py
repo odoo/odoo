@@ -22,7 +22,6 @@
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
 import time
-from openerp import netsvc
 
 from openerp.osv import fields,osv
 from openerp.tools.translate import _
@@ -211,8 +210,7 @@ class purchase_order(osv.osv):
                         proc_ids = proc_obj.search(cr, uid, [('purchase_id', '=', order.id)])
                         if proc_ids and po.state=='confirmed':
                             proc_obj.write(cr, uid, proc_ids, {'purchase_id': po.id})
-                        wf_service = netsvc.LocalService("workflow")
-                        wf_service.trg_validate(uid, 'purchase.order', order.id, 'purchase_cancel', cr)
+                        self.signal_purchase_cancel(cr, uid, [order.id])
                     po.requisition_id.tender_done(context=context)
         return res
 

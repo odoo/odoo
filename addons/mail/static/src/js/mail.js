@@ -104,8 +104,8 @@ openerp.mail = function (session) {
         // returns the file type of a file based on its extension 
         // As it only looks at the extension it is quite approximative. 
         filetype: function(url){
-            url = url.filename || url;
-            var tokens = (url+'').split('.');
+            var url = url && url.filename || url;
+            var tokens = typeof url == 'string' ? url.split('.') : [];
             if(tokens.length <= 1){
                 return 'unknown';
             }

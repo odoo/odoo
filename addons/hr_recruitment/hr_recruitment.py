@@ -373,7 +373,6 @@ class hr_applicant(base_stage, osv.Model):
             update_vals = {}
 
         update_vals.update({
-            'description': msg.get('body'),
             'email_from': msg.get('from'),
             'email_cc': msg.get('cc'),
         })
