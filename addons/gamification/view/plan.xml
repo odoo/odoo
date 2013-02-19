@@ -52,7 +52,7 @@
                         </group>
                         
                         <group string="Planlines">
-                                <field name="planline_ids" nolabel="1">
+                                <field name="planline_ids" nolabel="1" attrs="{'readonly':[('state','!=','draft')]}">
                                     <tree string="Planline List" version="7.0" editable="bottom" >
                                         <field name="type_id"/>
                                         <field name="target_goal"/>
