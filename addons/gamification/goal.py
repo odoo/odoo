@@ -161,6 +161,8 @@ class gamification_goal(osv.Model):
             string='State',
             required=True,
             track_visibility = 'always'),
+        'last_update' : fields.date('Last Update',
+            help="In case of manual goal, reminders are sent if the goal as not been updated for a while (defined in goal plan). Ignored in case of non-manual goal or goal not linked to a plan."), #
     }
 
     _defaults = {
@@ -225,6 +227,8 @@ class gamification_goal_plan(osv.Model):
             string='Report to',
             help='Group that will receive the report in addition to the user'),
         'report_header' : fields.text('Report Header'),
+        'remind_update_delays' : fields.integer('Remind delays',
+            help="The number of days after which the user assigned to a manual goal will be reminded. Never reminded if no value is specified.")
         }
 
     _defaults = {
