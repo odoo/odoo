@@ -3,7 +3,21 @@
   I confirm order (with at least 2 lines)
 -
   !workflow {model: sale.order, action: order_confirm, ref: sale_order_8}
-
+-
+    Create a user as 'Salesmanager for cancel order'
+-
+  !record {model: res.users, id: res_users_can_so}:
+    company_id: base.main_company
+    name: Sales manager for cancel
+    login: smc
+    password: smc
+    groups_id:
+      - base.group_sale_manager
+-
+  Now, check the data with sales Manager for cancel order.
+-
+  !context
+    uid: 'res_users_can_so'
 -
   I check state of order in 'Sale Order'.
 -
@@ -32,6 +46,7 @@
     ctx = context.copy()
     ctx.update({"active_model": 'sale.order', "active_ids": [ref("sale_order_8")], "active_id":ref("sale_order_8")})
     pay_id = self.create(cr, uid, {'advance_payment_method': 'fixed', 'amount': 5})
+    print ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>.",uid
     self.create_invoices(cr, uid, [pay_id], context=ctx)
     invoice_ids = self.pool.get('sale.order').browse(cr, uid, ref("sale_order_8")).invoice_ids
 
