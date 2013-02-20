@@ -106,11 +106,11 @@ def test_expr(expr, allowed_codes, mode="eval"):
             expr = expr.strip()
         code_obj = compile(expr, "", mode)
     except (SyntaxError, TypeError):
-        _logger.debug('Invalid eval expression', exc_info=True)
         raise
-    except Exception:
-        _logger.debug('Disallowed or invalid eval expression', exc_info=True)
-        raise ValueError("%s is not a valid expression" % expr)
+    except Exception, e:
+        import sys
+        exc_info = sys.exc_info()
+        raise ValueError, '"%s" while compiling\n%s' % (str(e), expr), exc_info[2]
     for code in _get_opcodes(code_obj):
         if code not in allowed_codes:
             raise ValueError("opcode %s not allowed (%r)" % (opname[code], expr))
@@ -237,10 +237,7 @@ def safe_eval(expr, globals_dict=None, locals_dict=None, mode="eval", nocopy=Fal
                 'set' : set
             }
     )
-    try:
-        return eval(test_expr(expr, _SAFE_OPCODES, mode=mode), globals_dict, locals_dict)
-    except Exception:
-        _logger.exception('Cannot eval %r', expr)
-        raise
+    c = test_expr(expr, _SAFE_OPCODES, mode=mode)
+    return eval(c, globals_dict, locals_dict)
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
