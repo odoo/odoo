@@ -4870,12 +4870,16 @@ class BaseModel(object):
         limit_str = limit and ' limit %d' % limit or ''
         offset_str = offset and ' offset %d' % offset or ''
         where_str = where_clause and (" WHERE %s" % where_clause) or ''
+        query_str = 'SELECT "%s".id FROM ' % self._table + from_clause + where_str + order_by + limit_str + offset_str
 
         if count:
-            cr.execute('SELECT count("%s".id) FROM ' % self._table + from_clause + where_str + limit_str + offset_str, where_clause_params)
-            res = cr.fetchall()
-            return res[0][0]
-        cr.execute('SELECT "%s".id FROM ' % self._table + from_clause + where_str + order_by + limit_str + offset_str, where_clause_params)
+            # /!\ the main query must be executed as a subquery, otherwise
+            # offset and limit apply to the result of count()!
+            cr.execute('SELECT count(*) FROM (%s) AS count' % query_str, where_clause_params)
+            res = cr.fetchone()
+            return res[0]
+
+        cr.execute(query_str, where_clause_params)
         res = cr.fetchall()
 
         # TDE note: with auto_join, we could have several lines about the same result
