@@ -1323,8 +1323,9 @@ instance.web.WebClient = instance.web.Client.extend({
     },
     on_hashchange: function(event) {
         var self = this;
-        var state = event.getState(true);
-        if (!_.isEqual(this._current_state, state)) {
+        var stringstate = event.getState(false);
+        if (!_.isEqual(this._current_state, stringstate)) {
+            var state = event.getState(true);
             if(!state.action && state.menu_id) {
                 self.menu.has_been_loaded.done(function() {
                     self.menu.do_reload().done(function() {
@@ -1336,13 +1337,13 @@ instance.web.WebClient = instance.web.Client.extend({
                 this.action_manager.do_load_state(state, !!this._current_state);
             }
         }
-        this._current_state = state;
+        this._current_state = stringstate;
     },
     do_push_state: function(state) {
         this.set_title(state.title);
         delete state.title;
         var url = '#' + $.param(state);
-        this._current_state = _.clone(state);
+        this._current_state = $.deparam($.param(state), false);     // stringify all values
         $.bbq.pushState(url);
         this.trigger('state_pushed', state);
     },
