@@ -56,7 +56,6 @@ class survey(osv.osv):
         'tot_start_survey': fields.integer("Total Started Survey", readonly=1),
         'tot_comp_survey': fields.integer("Total Completed Survey", readonly=1),
         'note': fields.text('Description', size=128),
-        'partner_id': fields.many2many('res.partner', 'survey_partner_rel', 'sid', 'partner_id', 'Partners'),
         'send_response': fields.boolean('Email Notification on Answer'),
         'type': fields.many2one('survey.type', 'Type'),
         'color': fields.integer('Color Index'),
@@ -616,6 +615,7 @@ class survey_response(osv.osv):
         'email': fields.char("Email", size=64, readonly=1),
     }
     _defaults = {
+        'date_create': datetime.now(),
         'state': "new",
         'response_type': "manually",
     }
@@ -690,13 +690,5 @@ class survey_response_answer(osv.osv):
 
 survey_response_answer()
 
-
-class res_partner(osv.osv):
-    _inherit = "res.partner"
-    _name = "res.partner"
-    _columns = {
-        'survey_id': fields.many2many('survey', 'survey_partner_rel', 'partner_id', 'sid', 'Groups'),
-    }
-res_partner()
 
 # vim: exp and tab: smartindent: tabstop=4: softtabstop=4: shiftwidth=4:

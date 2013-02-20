@@ -37,10 +37,10 @@ class survey_print_answer(osv.osv_memory):
     }
 
     _defaults = {
-        'orientation': lambda *a:'vertical',
-        'paper_size': lambda *a:'letter',
-        'page_number': lambda *a: 0,
-        'without_pagebreak': lambda *a: 0
+        'orientation': 'vertical',
+        'paper_size': 'letter',
+        'page_number': 0,
+        'without_pagebreak': 0
     }
 
     def action_next(self, cr, uid, ids, context=None):

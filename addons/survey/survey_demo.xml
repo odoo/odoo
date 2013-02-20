@@ -16,7 +16,6 @@
             <field name="color">5</field>
             <field name="tot_comp_survey">1</field>
             <field name="tot_start_survey">1</field>
-            <field name="response_user">5</field>
             <field name="date_open" eval="time.strftime('%Y-%m-%d %H:%M:%S')"/>
            </record>
 
@@ -165,7 +164,6 @@
             <field name="state">open</field>
             <field name="tot_comp_survey">1</field>
             <field name="tot_start_survey">1</field>
-            <field name="response_user">5</field>
             <field name="date_open" eval="time.strftime('%Y-%m-%d %H:%M:%S')"/>
            </record>
 
@@ -632,7 +630,6 @@
             <field name="state">open</field>
             <field name="tot_comp_survey">1</field>
             <field name="tot_start_survey">1</field>
-            <field name="response_user">5</field>
             <field name="date_open" eval="time.strftime('%Y-%m-%d %H:%M:%S')"/>
            </record>
 
@@ -1407,7 +1404,6 @@
             <field name="max_response_limit">20</field>
             <field name="type" ref="survey_type2"/>
             <field name="state">open</field>
-            <field name="response_user">5</field>
         </record>
     </data>
     <data>
@@ -2251,13 +2247,10 @@
         <record id="survey_0_Community" model="survey">
             <field name="title">Community Survey</field>
             <field name="note">Please take a few minutes to complete this survey on the quality of service we provide. We welcome your feedback and appreciate your honesty. With your help, we hope to strengthen the bond between our clients.</field>
-            <field eval="6" name="response_user"/>
             <field name="state">open</field>
             <field name="responsible_id" ref="base.user_root"/>
             <field eval="1" name="send_response"/>
-            <field eval="[(6,0,[])]" name="users"/>
             <field name="type" ref="survey_type3"/>
-            <field name="response_user">5</field>
             <field name="max_response_limit">20</field>
         </record>
     </data>
@@ -2919,7 +2912,7 @@
             <field name="date_create" eval="time.strftime('%Y-%m-%d %H:%M:%S')+'.603599'"/>
             <field name="state">done</field>
             <field name="survey_id" ref="survey.survey_partner_feedback"/>
-            <field name="user_id" ref="base.user_root"/>
+            <field name="partner_id" ref="base.res_partner_1"/>
             <field name="response_type">link</field>
         </record>
     </data>
@@ -2928,7 +2921,7 @@
             <field name="date_create" eval="time.strftime('%Y-%m-%d %H:%M:%S')+'.247905'"/>
             <field name="state">done</field>
             <field name="survey_id" ref="survey.survey_odoo_feedback"/>
-            <field name="user_id" ref="base.user_root"/>
+            <field name="partner_id" ref="base.res_partner_1"/>
             <field name="response_type">link</field>
         </record>
     </data>

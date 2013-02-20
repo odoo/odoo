@@ -198,7 +198,7 @@ class survey_browse_response(report_rml):
 
         surv_resp_line_obj = pooler.get_pool(cr.dbname).get('survey.response.line')
         surv_obj = pooler.get_pool(cr.dbname).get('survey')
-
+        
         for response in surv_resp_obj.browse(cr, uid, response_id):
             for survey in surv_obj.browse(cr, uid, [response.survey_id.id]):
                 tbl_width = float(_tbl_widths.replace('cm', ''))
@@ -210,7 +210,7 @@ class survey_browse_response(report_rml):
                             <td><para style="terp_default_9">""" + to_xml(rml_obj.formatLang(time.strftime("%Y-%m-%d %H:%M:%S"),date_time=True)) + """</para></td>
                             <td><para style="terp_default_9"></para></td>
                             <td><para style="terp_default_9_Bold">Answered by : </para></td>
-                            <td><para style="terp_default_9">""" + to_xml(response.user_id.login or '') + """</para></td>
+                            <td><para style="terp_default_9">""" + to_xml(response.partner_id.name or '') + """</para></td>
                           </tr>
                           <tr>
                             <td><para style="terp_default_9"></para></td>

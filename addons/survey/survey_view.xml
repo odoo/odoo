@@ -315,7 +315,6 @@
                                     <br/>
                                     <ul>
                                         <t t-set="open" t-value="record.state.raw_value === 'open' or record.state.raw_value === 'restricted'"/>
-                                        <li t-if="widget.view.is_action_enabled('edit')"><a type="edit">Configuration</a></li>
                                         <li t-if="widget.view.is_action_enabled('edit')"><a name="edit_survey" string="Edit Survey" type="object" context="{'active':True,'edit' : True}">Edit Survey</a></li>
                                         <li t-if="widget.view.is_action_enabled('edit')"><a t-att-style="!open?'color:#aaaaaa;':''" name="action_survey_sent" type="object">Send invite by email</a></li>
                                         <li><a t-att-style="!open?'color:#aaaaaa;':''" name="fill_survey" type="object">Answer Survey</a></li>

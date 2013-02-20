@@ -175,27 +175,26 @@
                         </group>
                     </group>
                     <group string="Appraisal Forms" attrs="{'invisible':[('state','=','draft')]}">
-                        <field nolabel="1" name="survey_request_ids">
+                        <field nolabel="1" name="survey_response_ids">
                             <form string="Interview Appraisal" version="7.0">
                                 <div class="oe_right oe_button_box">
-                                    <button name="%(survey.action_view_survey_question_message)d" string="Answer Survey" type="action" states="waiting_answer" icon="gtk-execute" context="{'survey_id': survey_id, 'response_id': [response], 'response_no':0, 'active' : response,'request' : True, 'object' : 'hr.evaluation.interview', 'cur_id' : active_id}" attrs="{'readonly':[('survey_id','=',False)]}"/>
-                                    <button name="%(survey.survey_browse_response)d" string="Print Interview" type="action" states="done" icon="gtk-print" context="{'survey_id': survey_id, 'response_id' : [response], 'response_no':0,}" attrs="{'readonly':[('response','=',False)]}" />
+                                    <button name="%(survey.action_view_survey_question_message)d" string="Answer Survey" type="action" states="waiting_answer" icon="gtk-execute" context="{'survey_id': survey_id, 'response_id': [id], 'response_no':0, 'active' : response,'request' : True, 'object' : 'hr.evaluation.interview', 'cur_id' : active_id}" attrs="{'readonly':[('survey_id','=',False)]}"/>
+                                    <button name="%(survey.survey_browse_response)d" string="Print Interview" type="action" states="done" icon="gtk-print" context="{'survey_id': survey_id, 'response_id' : [id], 'response_no':0,}"/>
                                 </div>
                                 <group>
                                     <group>
                                         <field name="survey_id"/>
                                         <field name="user_to_review_id"/>
-                                        <field name="user_id" string="Interviewer"/>
+                                        <field name="user_id"/>
                                     </group>
                                     <group>              
                                         <field name="date_deadline"/>
-                                        <field name="response" readonly="1"/>
                                     </group>
                                 </group>
                                 <group col="4" string="Status" invisible="1">
                                      <field name="state"/>
                                      <div>
-                                         <button string="Done" name="survey_req_done" states="waiting_answer" type="object" icon="gtk-jump-to" />
+                                         <button string="Done" name="survey_req_done" states="new,skip" type="object" icon="gtk-jump-to" />
                                      </div>
                                 </group>
                             </form>
@@ -285,13 +284,13 @@
                         <button string="Cancel" name="survey_req_cancel" type="object"
                             states="draft,waiting_answer" class="oe_left"/>
                         <button string="Print Survey" name="action_print_survey"  type="object"
-                            states="draft" context="{'survey_id': survey_id, 'response_id': [response], 'response_no':0}"
+                            states="draft" context="{'survey_id': survey_id, 'response_id': [id], 'response_no':0}"
                             attrs="{'readonly':[('survey_id','=',False)]}" class="oe_highlight"/>
                         <button string="Send Request" name="survey_req_waiting_answer" type="object"
                             states="draft" class="oe_highlight"/>
                         <button string="Answer Survey" name="%(survey.action_view_survey_question_message)d" type="action"
                             states="waiting_answer" class="oe_highlight"
-                            context="{'survey_id': survey_id, 'response_id': [response], 'response_no':0, 'active' : response,'request' : True, 'object' : 'hr.evaluation.interview', 'cur_id' : active_id}"
+                            context="{'survey_id': survey_id, 'response_id': [id], 'response_no':0, 'active' : response,'request' : True, 'object' : 'hr.evaluation.interview', 'cur_id' : active_id}"
                             attrs="{'readonly':[('survey_id','=',False)]}"/>
                         <button string="Done" name="survey_req_done" type="object"
                             states="waiting_answer"/>
@@ -308,11 +307,11 @@
                             <group>
                                 <field name="survey_id"/>
                                 <field name="user_to_review_id"/>
-                                <field name="user_id" string="Interviewer"/>
+                                <field name="user_id"/>
                             </group>
                             <group>
                                 <field name="date_deadline"/>
-                                <field name="response" readonly="1"/>
+                                <field name="state"/>
                                 <field name="evaluation_id" string="Appraisal Plan"/>
                             </group>
                         </group>
@@ -328,15 +327,14 @@
                 <tree string="Interview Appraisal">
                     <field name="date_deadline" string="Deadline Date"/>
                     <field name="survey_id"/>
-                    <field name="user_id" string="Interviewer"/>
+                    <field name="user_id"/>
                     <field name="user_to_review_id"/>
-                    <field name="response" readonly="1" invisible="True"/>
-                    <button name="%(survey.action_view_survey_question_message)d" string="Answer Survey" type="action" states="waiting_answer" icon="gtk-execute" context="{'survey_id': survey_id, 'response_id': [response], 'response_no':0, 'active' : response, 'request' : True, 'object' : 'hr.evaluation.interview', 'cur_id' : active_id}" attrs="{'readonly':[('survey_id','=',False)]}"/>
-                    <button name="action_print_survey" string="Print Survey" type="object" icon="gtk-print" context="{'survey_id': survey_id, 'response_id': [response], 'response_no':0}" attrs="{'readonly':[('survey_id','=',False)]}"/>
+                    <field name="response_id" readonly="1" invisible="True"/>
+                    <button name="%(survey.action_view_survey_question_message)d" string="Answer Survey" type="action" states="waiting_answer" icon="gtk-execute" context="{'survey_id': survey_id, 'response_id': [id], 'response_no':0, 'active' : response, 'request' : True, 'object' : 'hr.evaluation.interview', 'cur_id' : active_id}" attrs="{'readonly':[('survey_id','=',False)]}"/>
+                    <button name="action_print_survey" string="Print Survey" type="object" icon="gtk-print" context="{'survey_id': survey_id, 'response_id': [id], 'response_no':0}" attrs="{'readonly':[('survey_id','=',False)]}"/>
                     <button name="%(mail.action_email_compose_message_wizard)d" string="Send Reminder Email" icon="terp-mail-message-new" type="action" states="waiting_answer"/>
                     <field name="state"/>
-                    <button string="Send Request" name="survey_req_waiting_answer" states="draft" type="object" icon="gtk-yes" />
-                    <button string="Done" name="survey_req_done" states="waiting_answer" type="object" icon="gtk-jump-to" />
+                    <button string="Done" name="survey_req_done" states="new,skip" type="object" icon="gtk-jump-to" />
                 </tree>
             </field>
         </record>
@@ -347,13 +345,15 @@
             <field name="arch" type="xml">
                 <search string="Search Appraisal">
                     <field name="date_deadline"/>
-                    <filter icon="terp-gtk-go-back-rtl" string="To Do" name="todo" domain="[('state','=','waiting_answer')]"/>
                     <field name="user_to_review_id"/>
-                    <field name="user_id" string="Interviewer"/>
+                    <field name="user_id"/>
+                    <filter string="Interviews to do" name="todo_interviewer" domain="['&amp;', ('state','=','done'), ('user_id','=',uid)]"/>
+                    <filter string="Responses to do" name="todo_employee" domain="['&amp;', ('state','in',['new','skip']), ('user_to_review_id.user_id','=',uid)]"/>
                     <group expand="0" string="Group By...">
-                        <filter string="Interviewer" icon="terp-personal" domain="[]" context="{'group_by':'user_id'}"/>
-                        <filter string="Survey" icon="terp-stock_align_left_24" domain="[]" context="{'group_by':'survey_id'}"/>
-                        <filter string="Status" name="group_state" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'state'}"/>
+                        <filter string="Interviewer" context="{'group_by':'user_id'}"/>
+                        <filter string="Epmloyee" context="{'group_by':'partner_id'}"/>
+                        <filter string="Survey" context="{'group_by':'survey_id'}"/>
+                        <filter string="Status" context="{'group_by':'state'}"/>
                     </group>
                </search>
             </field>
@@ -364,7 +364,7 @@
             <field name="model">hr.evaluation.interview</field>
             <field name="arch" type="xml">
                 <calendar string="Interview Request" color="user_to_review_id" date_start="date_deadline">
-                    <field name="request_id"/>
+                    <field name="response_id"/>
                 </calendar>
             </field>
         </record>
@@ -375,7 +375,7 @@
             <field name="view_type">form</field>
             <field name="view_id" eval="False"/>
             <field name="domain">[('is_evaluation' ,'=', True)]</field>
-            <field name="context">{'default_is_evaluation': True, "search_default_todo":1,"search_default_user_id":uid}</field>
+            <field name="context">{"search_default_todo_employee":1, "search_default_todo_interviewer":1}</field>
             <field name="search_view_id" ref="view_hr_evaluation_interview_search"/>
             <field name="help" type="html">
               <p class="oe_view_nocontent_create">
