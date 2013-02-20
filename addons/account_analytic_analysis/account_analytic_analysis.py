@@ -22,12 +22,75 @@
 from openerp.osv import osv, fields
 from openerp.osv.orm import intersect, except_orm
 import openerp.tools
+from openerp import tools
 from openerp.tools.translate import _
 
 from openerp.addons.decimal_precision import decimal_precision as dp
-import time
-import datetime
-from dateutil.relativedelta import relativedelta
+
+class account_virtual_invoice(osv.osv):
+    _name = "account.virtual.invoice"
+    _auto = False
+    _columns = {
+        'product_id': fields.many2one('product.product','Product(s)'),
+        'analytic_account_id': fields.many2one('account.analytic.account', 'Analytic Account'),
+        'user_id': fields.many2one('res.users', 'User',readonly=True),
+        'name': fields.char('Description', size=64, readonly=True),
+        'qty': fields.float('Quantity', readonly=True),
+        'total_qty': fields.float('Total Quantity', readonly=True),
+        'uom': fields.many2one('product.uom', 'Product Unit of Measure', required=True),
+        'unit_price': fields.float('Unit Price', readonly=True),
+        'sub_total': fields.float('Sub Total', readonly=True),
+        'product_qty':fields.float('Qty', readonly=True),
+        'total': fields.float('Total', readonly=True),
+    }
+
+    _order = 'name desc'
+
+    def init(self, cr):
+        tools.drop_view_if_exists(cr, 'account_virtual_invoice')
+        cr.execute("""
+        create or replace view account_virtual_invoice as (
+        
+        SELECT
+        l.id as id,
+        account.id as analytic_account_id,
+        l.product_id as product_id,
+        l.name as name,
+        l.unit_amount as qty,
+        l.product_uom_id as uom,
+        t.list_price as unit_price,
+        l.unit_amount*t.list_price as sub_total,
+        l.unit_amount*t.list_price as total,
+        l.unit_amount as total_qty
+        
+        FROM
+        account_analytic_line as l 
+        LEFT JOIN account_analytic_account account ON (l.account_id = account.id)
+        LEFT JOIN account_analytic_journal journal ON (l.journal_id = journal.id)
+        left join product_product p on (l.product_id=p.id)
+        left join product_template t on (p.product_tmpl_id=t.id)
+        WHERE (l.to_invoice IS NOT NULL) and (l.invoice_id IS NULL)
+UNION 
+    SELECT
+        sol.id as id,
+        account.id as analytic_account_id,
+        sol.product_id as product_id,
+        sol.name as name,
+        sol.product_uom_qty as qty,
+        sol.product_uom as uom,
+        sol.price_unit as unit_price,
+        sol.price_unit*sol.product_uom_qty as sub_total,
+        sol.price_unit*sol.product_uom_qty as total,
+        sol.product_uom_qty as total_qty
+        FROM
+        sale_order as so 
+        LEFT JOIN account_analytic_account account ON (so.project_id = account.id)
+    LEFT JOIN sale_order_line sol on (so.id = sol.order_id)
+        WHERE so.partner_id = account.partner_id
+       
+        )
+         """)
+account_virtual_invoice()
 
 class account_analytic_account(osv.osv):
     _name = "account.analytic.account"
@@ -393,44 +456,6 @@ class account_analytic_account(osv.osv):
             res[account.id]['toinvoice_total'] =  self._get_total_toinvoice(account)
          return res
 
-    def _calc_virtual_invoice(self, cr, uid, ids, name, arg, context=None):
-        res = {}
-        analytic_line_obj = self.pool.get('account.analytic.line')
-        product_obj = self.pool.get('product.product')
-        if ids:
-            journal_types = {}
-            timesheets1 = []
-            for account in self.browse(cr, uid, ids, context=context):
-                timesheets1 = analytic_line_obj.search(cr, uid,[('account_id','=', account.id),('invoice_id','=', None)])
-                res[account.id]= {'product_id': 0, 'user_id': 0, 'qty': 0.0 , 'uom': 0, 'description':'', 'unit_price': 0.0, 'sub_total':0.0}
-            for line in analytic_line_obj.browse(cr, uid, timesheets1, context=context):
-                if line.journal_id.type not in journal_types:
-                    journal_types[line.journal_id.type] = set()
-                for journal_type in journal_types:
-                    cr.execute("""SELECT product_id, user_id, to_invoice, unit_amount, product_uom_id, date
-                                    FROM account_analytic_line as line LEFT JOIN account_analytic_journal journal ON (line.journal_id = journal.id)
-                                    WHERE account_id = %s
-                                       AND invoice_id IS NULL AND journal.type = %s AND to_invoice IS NOT NULL
-                                    GROUP BY product_id, user_id, to_invoice, unit_amount, product_uom_id, date""", (account.id, journal_type))
-                    
-                    for product_id, user_id, to_invoice, unit_amount, product_uom_id, date in cr.fetchall():
-                        product = product_obj.browse(cr, uid, product_id)
-                        description = product.description
-                        unit_price = product.list_price
-                        sub_total = product.list_price * unit_amount
-                        print"--------------------------------->",description, unit_price, sub_total
-                        res[account.id]['product_id']= product_id,
-                        res[account.id]['user_id'] = user_id,
-                        res[account.id]['qty'] = unit_amount,
-                        res[account.id]['uom'] = product_uom_id,
-                        res[account.id]['date'] = date,
-                        res[account.id]['descriptions'] = description,
-                        res[account.id]['unit_price'] = unit_price,
-                        res[account.id]['sub_total'] = sub_total,
-
-        print"\n\n**********************************>",res
-        return res
-
     _columns = {
         'is_overdue_quantity' : fields.function(_is_overdue_quantity, method=True, type='boolean', string='Overdue Quantity',
                                                 store={
@@ -492,16 +517,7 @@ class account_analytic_account(osv.osv):
         'invoiced_total' : fields.function(_sum_of_fields, type="float",multi="sum_of_all", string="Total Invoiced"),
         'remaining_total' : fields.function(_sum_of_fields, type="float",multi="sum_of_all", string="Total Remaining", help="Expectation of remaining income for this contract. Computed as the sum of remaining subtotals which, in turn, are computed as the maximum between '(Estimation - Invoiced)' and 'To Invoice' amounts"),
         'toinvoice_total' : fields.function(_sum_of_fields, type="float",multi="sum_of_all", string="Total to Invoice", help=" Sum of everything that could be invoiced for this contract."),
-        # New Fields added
-        'recurring_invoices' : fields.boolean('Recurring Invoices'),
-        'product_id': fields.function(_calc_virtual_invoice, type='many2one',relation="product.product",string='Product(s)', multi="vinvline"),
-        'user_id': fields.function(_calc_virtual_invoice, type='many2one', relation="res.users",string='User(s)', multi="vinvline"),
-        'descriptions': fields.function(_calc_virtual_invoice, type='char', string='Description', multi="vinvline"),
-        'qty': fields.function(_calc_virtual_invoice, type='char', string='Quantity', multi="vinvline"),
-        'uom': fields.function(_calc_virtual_invoice, type='many2one', string='Unit of Measure', relation="product.uom",multi="vinvline"),
-        'date': fields.function(_calc_virtual_invoice, type='date', string='Date', multi="vinvline"),
-        'unit_price':fields.function(_calc_virtual_invoice, type='char', string='Unit Price', multi="vinvline"),
-        'sub_total':fields.function(_calc_virtual_invoice, type='char', string='Sub Total', multi="vinvline"),
+        'virtual_invoice_line': fields.one2many('account.virtual.invoice', 'analytic_account_id'),
         'rrule_type': fields.selection([
             ('daily', 'Day(s)'),
             ('weekly', 'Week(s)'),
@@ -509,9 +525,6 @@ class account_analytic_account(osv.osv):
             ], 'Recurrency', help="Let the event automatically repeat at that interval"),
         'interval': fields.integer('Repeat Every', help="Repeat every (Days/Week/Month/Year)"),
         'next_date': fields.date('Next Date'),
-        'amount_tax': fields.float('Tax'),
-        'amount_total': fields.float('Total'),
-        
     }
 
     def open_sale_order_lines(self,cr,uid,ids,context=None):
@@ -544,40 +557,6 @@ class account_analytic_account(osv.osv):
             res['value']['to_invoice'] = template.to_invoice.id
             res['value']['pricelist_id'] = template.pricelist_id.id
         return res
-
-    def onchange_recurring_invoices(self, cr, uid, ids, date_start=False, parent_id=False, context=None):
-        result = {}
-        if date_start:
-            result = {'value': {
-                    'next_date': date_start,
-                    'rrule_type':'monthly'
-                    }
-                }
-        return result
-
-
-    def cron_create_invoice1(self, cr, uid, ids, context=None):
-        res = {}
-        inv_obj = self.pool.get('account.invoice')
-        journal_obj = self.pool.get('account.journal')
-        inv_lines = []
-        
-        contract_ids = self.search(cr, uid, [('next_date','<=',time.strftime("%Y-%m-%d")), ('state','=', 'open'), ('recurring_invoices','=', True)], context=context, order='name asc')
-        context.update({'active_ids':ids})
-        contracts = self.browse(cr, uid, contract_ids, context=context)
-        for contract in contracts:
-            next_date = datetime.datetime.strptime(contract.next_date, "%Y-%m-%d")
-            interval = contract.interval
-            if contract.rrule_type == 'monthly':
-                new_date = next_date+relativedelta(months=+interval)
-            if contract.rrule_type == 'daily':
-                new_date = next_date+relativedelta(days=+interval)
-            if contract.rrule_type == 'weekly':
-                new_date = next_date+relativedelta(weeks=+interval)
-            # Need to Link this new invoice to related contract
-            contract.write({'next_date':new_date}, context=context)
-        return self.pool.get('hr.timesheet.invoice.create.final').do_create(cr, uid, contract_ids, context=context)
-
 account_analytic_account()
 
 class account_analytic_account_summary_user(osv.osv):
