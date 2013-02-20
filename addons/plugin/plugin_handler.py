@@ -95,14 +95,13 @@ class plugin_handler(osv.osv_memory):
         msg = self.pool.get('mail.thread').message_parse(cr, uid, email)
         message_id = msg.get('message-id')
         mail_ids = mail_message.search(cr, uid, [('message_id','=',message_id),('res_id','=',res_id),('model','=',model)])
-
         if message_id and mail_ids :
             mail_record = mail_message.browse(cr, uid, mail_ids)[0]
             res_id = mail_record.res_id
             notify = "Email already pushed"
         elif res_id == 0:
             if model == 'res.partner':
-                notify = 'User the Partner button to create a new partner'
+                notify = 'Use the Partner button to create a new partner'
             else:
                 res_id = model_obj.message_process(cr, uid, model, email)
                 notify = "Mail successfully pushed, a new %s has been created " % model
@@ -155,6 +154,7 @@ class plugin_handler(osv.osv_memory):
         push_mail = self.push_message(cr, uid, model, headers, res_id)
         res_id = push_mail[1]
         model =  push_mail[0]
+        notify = push_mail[3]
         for name in attachments.keys():
             attachment_ids = ir_attachment_obj.search(cr, uid, [('res_model', '=', model), ('res_id', '=', res_id), ('datas_fname', '=', name)])
             if attachment_ids:
@@ -166,4 +166,4 @@ class plugin_handler(osv.osv_memory):
         if mail_ids:
             ids =  mail_message.write(cr, uid, mail_ids[0], { 'attachment_ids': [(6, 0, attach_ids)],'body':body,'body_html':body_html})
         url = self._make_url(cr, uid, res_id, model)
-        return (model, res_id, url)
+        return (model, res_id, url,notify)
