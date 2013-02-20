@@ -1,4 +1,9 @@
 -
+  Give access rights of Purchase user to create purchase order
+-
+  !context
+    uid: 'res_users_purchase_user'
+-
   !record {model: purchase.order, id: purchase_order_1}:
     partner_id: base.res_partner_1
     invoice_method: order
