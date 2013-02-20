@@ -128,7 +128,6 @@ def check(f):
             else:
                 raise openerp.osv.orm.except_orm(_('Integrity Error'), inst[0])
         except Exception:
-            _logger.exception("Uncaught exception")
             raise
 
     return wrapper

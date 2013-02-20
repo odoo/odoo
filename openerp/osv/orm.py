@@ -59,7 +59,6 @@ from lxml import etree
 
 import fields
 import openerp
-import openerp.netsvc as netsvc
 import openerp.tools as tools
 from openerp.tools.config import config
 from openerp.tools.misc import CountingStream
