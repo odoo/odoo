@@ -33,9 +33,8 @@
                 <div class="oe_msg_footer">
                     <div class="oe_msg_attachment_list"></div>
                     <button class="oe_post">Send to followers</button>
-                    or <button class="oe_log">Log a note</button>
+                    or <button class="oe_log" data-is_log="true">Log a note</button>
                     <t t-call="mail.compose_message.add_attachment"/>
-                    <!--<a class="oe_cancel oe_e">X</a>-->
                 </div>
             </div>
         </div>
@@ -130,11 +129,11 @@
                 <a class="oe_more_hidden">&lt;&lt;&lt;</a>
             </t>
         </div>
-        <div class="oe_emails_from">
-            <t t-foreach='widget.emails_from' t-as='email_from'>
-                <label title="Add them into recipients and followers">
-                    <input type="checkbox" t-att-checked="email_from[1] ? 'checked' : undefind" t-att-data="email_from[0][4]"/>
-                    <t t-raw="email_from[0][2]"/>
+        <div class="oe_recipients">
+            <t t-foreach='widget.recipients' t-as='recipient'>
+                <label title="Add as recipient and follower">
+                    <input type="checkbox" t-att-checked="recipient.checked ? 'checked' : undefined" t-att-data="recipient.email_address"/>
+                    <t t-raw="recipient.name"/> (<t t-raw="recipient.email_address"/>)
                 </label>
             </t>
         </div>

@@ -820,41 +820,42 @@ class mail_thread(osv.AbstractModel):
                         "now deprecated res.log.")
         self.message_post(cr, uid, [id], message, context=context)
 
-    def message_create_partners_from_emails(self, cr, uid, emails, context=None):
+    def message_get_suggested_recipients(self, cr, uid, ids, context=None):
+        return dict.fromkeys(ids, list())
+
+    def message_get_partner_info_from_emails(self, cr, uid, emails, link_mail=False, context=None):
         """ Convert a list of emails into a list partner_ids and a list
             new_partner_ids. The return value is non conventional because
             it is meant to be used by the mail widget.
 
             :return dict: partner_ids and new_partner_ids
         """
-        partner_obj = self.pool.get('res.partner')
         mail_message_obj = self.pool.get('mail.message')
-
-        partner_ids = []
-        new_partner_ids = []
+        partner_obj = self.pool.get('res.partner')
+        partner_info = dict()
         for email in emails:
             m = re.search(r"((.+?)\s*<)?([^<>]+@[^<>]+)>?", email, re.IGNORECASE | re.DOTALL)
-            name = m.group(2) or m.group(0)
-            email = m.group(3)
-            ids = partner_obj.search(cr, SUPERUSER_ID, [('email', '=', email)], context=context)
+            email_address = m.group(3)
+            partner_info.setdefault(email_address, dict()).setdefault('full_name', email)
+            ids = partner_obj.search(cr, SUPERUSER_ID, [('email', '=', email_address)], context=context)
             if ids:
-                partner_ids.append(ids[0])
-                partner_id = ids[0]
+                partner_info[email_address]['partner_id'] = ids[0]
             else:
-                partner_id = partner_obj.create(cr, uid, {
-                        'name': name or email,
-                        'email': email,
-                    }, context=context)
-                new_partner_ids.append(partner_id)
+                partner_info[email_address]['partner_id'] = False
 
             # link mail with this from mail to the new partner id
-            message_ids = mail_message_obj.search(cr, SUPERUSER_ID, ['|', ('email_from', '=', email), ('email_from', 'ilike', '<%s>' % email), ('author_id', '=', False)], context=context)
-            if message_ids:
-                mail_message_obj.write(cr, SUPERUSER_ID, message_ids, {'email_from': None, 'author_id': partner_id}, context=context)
-        return {
-            'partner_ids': partner_ids,
-            'new_partner_ids': new_partner_ids,
-        }
+            if link_mail and ids:
+                print email, ids
+                message_ids = mail_message_obj.search(cr, SUPERUSER_ID, [
+                                    '|',
+                                    ('email_from', '=', email),
+                                    ('email_from', 'ilike', '<%s>' % email),
+                                    ('author_id', '=', False)
+                                ], context=context)
+                if message_ids:
+                    # mail_message_obj.write(cr, SUPERUSER_ID, message_ids, {'author_id': ids[0]}, context=context)
+                    print 'found', message_ids
+        return partner_info
 
     def message_post(self, cr, uid, thread_id, body='', subject=None, type='notification',
                         subtype=None, parent_id=False, attachments=None, context=None, **kwargs):

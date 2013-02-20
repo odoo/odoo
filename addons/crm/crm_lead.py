@@ -963,6 +963,15 @@ class crm_lead(base_stage, format_address, osv.osv):
         return [lead.section_id.message_get_reply_to()[0] if lead.section_id else False
                     for lead in self.browse(cr, uid, ids, context=context)]
 
+    def message_get_suggested_recipients(self, cr, uid, ids, context=None):
+        recipients = super(crm_lead, self).message_get_suggested_recipients(cr, uid, ids, context=context)
+        for lead in self.browse(cr, uid, ids, context=context):
+            if lead.partner_id:
+                recipients[lead.id].append([lead.partner_id.id, '%s<%s>' % (lead.partner_id.name, lead.partner_id.email)])
+            elif lead.email_from:
+                recipients[lead.id].append([False, lead.email_from])
+        return recipients
+
     def message_new(self, cr, uid, msg, custom_values=None, context=None):
         """ Overrides mail_thread message_new that is called by the mailgateway
             through message_process.

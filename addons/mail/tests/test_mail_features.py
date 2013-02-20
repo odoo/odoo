@@ -119,18 +119,18 @@ class test_mail(TestMailBase):
         # Previously-created group can be emailed now - it should have an implicit alias group+frogs@...
         frog_group = self.mail_group.browse(cr, uid, frog_groups[0])
         group_messages = frog_group.message_ids
-        self.assertTrue(len(group_messages) == 2, 'New group should only have the original message + creation log')
+        self.assertTrue(len(group_messages) == 1, 'New group should only have the original message')
         mail_frog_news = MAIL_TEMPLATE.format(to='Friendly Frogs <group+frogs@example.com>', subject='news', extra='')
         self.mail_thread.message_process(cr, uid, None, mail_frog_news)
         frog_group.refresh()
-        self.assertTrue(len(frog_group.message_ids) == 3, 'Group should contain 3 messages now')
+        self.assertTrue(len(frog_group.message_ids) == 2, 'Group should contain 2 messages now')
 
         # Even with a wrong destination, a reply should end up in the correct thread
         mail_reply = MAIL_TEMPLATE.format(to='erroneous@example.com>', subject='Re: news',
                                           extra='In-Reply-To: <12321321-openerp-%d-mail.group@example.com>\n' % frog_group.id)
         self.mail_thread.message_process(cr, uid, None, mail_reply)
         frog_group.refresh()
-        self.assertTrue(len(frog_group.message_ids) == 4, 'Group should contain 4 messages now')
+        self.assertTrue(len(frog_group.message_ids) == 3, 'Group should contain 3 messages now')
 
         # No model passed and no matching alias must raise
         mail_spam = MAIL_TEMPLATE.format(to='noone@example.com', subject='spam', extra='')
