@@ -191,10 +191,14 @@ instance.web.ActionManager = instance.web.Widget.extend({
                     state = _.extend(params || {}, state);
                 }
                 if (this.inner_action.context) {
-                    if (this.inner_action.context.active_id) {
-                        state["active_id"] = this.inner_action.context.active_id;
+                    var active_id = this.inner_action.context.active_id;
+                    if (active_id) {
+                        state["active_id"] = active_id;
                     }
-                    if (this.inner_action.context.active_ids) {
+                    var active_ids = this.inner_action.context.active_ids;
+                    if (active_ids && !(active_ids.length === 1 && active_ids[0] === active_id)) {
+                        // We don't push active_ids if it's a single element array containing the active_id
+                        // This makes the url shorter in most cases.
                         state["active_ids"] = this.inner_action.context.active_ids.join(',');
                     }
                 }
@@ -231,6 +235,8 @@ instance.web.ActionManager = instance.web.Widget.extend({
                         add_context.active_ids = state.active_ids.toString().split(',').map(function(id) {
                             return parseInt(id, 10) || id;
                         });
+                    } else if (state.active_id) {
+                        add_context.active_ids = [state.active_id];
                     }
                     this.null_action();
                     action_loaded = this.do_action(state.action, { additional_context: add_context });
