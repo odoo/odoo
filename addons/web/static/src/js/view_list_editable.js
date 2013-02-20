@@ -795,7 +795,7 @@ openerp.web.list_editable = function (instance) {
     });
 
     instance.web.ListView.Groups.include(/** @lends instance.web.ListView.Groups# */{
-        passtrough_events: instance.web.ListView.Groups.prototype.passtrough_events + " edit saved",
+        passthrough_events: instance.web.ListView.Groups.prototype.passthrough_events + " edit saved",
         get_row_for: function (record) {
             return _(this.children).chain()
                 .invoke('get_row_for', record)

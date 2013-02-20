@@ -134,7 +134,9 @@ instance.web_kanban.KanbanView = instance.web.View.extend({
         switch (node.tag) {
             case 'field':
                 if (this.fields_view.fields[node.attrs.name].type === 'many2many') {
-                    this.many2manys.push(node.attrs.name);
+                    if (_.indexOf(this.many2manys, node.attrs.name) < 0) {
+                        this.many2manys.push(node.attrs.name);
+                    }
                     node.tag = 'div';
                     node.attrs['class'] = (node.attrs['class'] || '') + ' oe_form_field oe_tags';
                 } else {
@@ -227,14 +229,15 @@ instance.web_kanban.KanbanView = instance.web.View.extend({
         this.search_domain = domain;
         this.search_context = context;
         this.search_group_by = group_by;
-        $.when(this.has_been_loaded).done(function() {
+        return $.when(this.has_been_loaded).then(function() {
             self.group_by = group_by.length ? group_by[0] : self.fields_view.arch.attrs.default_group_by;
             self.group_by_field = self.fields_view.fields[self.group_by] || {};
             self.grouped_by_m2o = (self.group_by_field.type === 'many2one');
             self.$buttons.find('.oe_alternative').toggle(self.grouped_by_m2o);
             self.$el.toggleClass('oe_kanban_grouped_by_m2o', self.grouped_by_m2o);
-            var grouping = new instance.web.Model(self.dataset.model, context, domain).query().group_by(self.group_by);
-            $.when(grouping).done(function(groups) {
+            var grouping_fields = self.group_by ? [self.group_by].concat(_.keys(self.aggregates)) : undefined;
+            var grouping = new instance.web.Model(self.dataset.model, context, domain).query().group_by(grouping_fields);
+            return $.when(grouping).done(function(groups) {
                 if (groups) {
                     self.do_process_groups(groups);
                 } else {
@@ -632,9 +635,10 @@ instance.web_kanban.KanbanGroup = instance.web.Widget.extend({
             'limit': self.view.limit,
             'offset': self.dataset_offset += self.view.limit
         }).then(function(records) {
-            self.view.dataset.ids = ids.concat(self.view.dataset.ids);
+            self.view.dataset.ids = ids.concat(self.dataset.ids);
             self.do_add_records(records);
             self.compute_cards_auto_height();
+            self.view.postprocess_m2m_tags();
             return records;
         });
     },
