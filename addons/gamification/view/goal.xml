@@ -40,7 +40,7 @@
             <field name="arch" type="xml">
                 <form string="Goal" version="7.0">
                     <header>
-                        <button string="Refresh state" type="object" name="action_refresh" states="inprogress,inprogress_update" class="oe_highlight"/>
+                        <button string="Refresh state" type="object" name="action_refresh" class="oe_highlight"/>
                         <button string="Goal Reached" type="object" name="action_reach" states="inprogress,inprogress_update" />
                         <button string="Goal Failed" type="object" name="action_fail" states="inprogress,inprogress_update"/>
                         <button string="Reset Completion" type="object" name="action_cancel" states="failed,reached"/>
@@ -49,13 +49,15 @@
                     <sheet>
                         <group>
                             <group string="Reference">
-                                <field name="type_id"/>
+                                <field name="type_id" on_change="on_change_type_id(type_id)" />
                                 <field name="user_id"/>
                                 <field name="planline_id"/>
                             </group>
                             <group string="Schedule">
                                 <field name="start_date"/>
                                 <field name="end_date"/>
+                                <field name="computation_mode" invisible="1"/>
+                                <field name="remind_update_delay" attrs="{'invisible':[('computation_mode','!=', 'manually')]}"/>
                             </group>
                             <group string="Data">
                                 <field name="target_goal"/>
