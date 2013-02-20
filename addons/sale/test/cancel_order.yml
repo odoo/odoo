@@ -1,23 +1,14 @@
 -
+  Salesman can also cancel order therfore test with that user which have salesman rights,
+-
+  !context
+    uid: 'res_users_salesman'
+-
   In order to test the cancel sale order.
   I confirm order (with at least 2 lines)
 -
   !workflow {model: sale.order, action: order_confirm, ref: sale_order_8}
--
-    Create a user as 'Salesmanager for cancel order'
--
-  !record {model: res.users, id: res_users_can_so}:
-    company_id: base.main_company
-    name: Sales manager for cancel
-    login: smc
-    password: smc
-    groups_id:
-      - base.group_sale_manager
--
-  Now, check the data with sales Manager for cancel order.
--
-  !context
-    uid: 'res_users_can_so'
+
 -
   I check state of order in 'Sale Order'.
 -

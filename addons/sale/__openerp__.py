@@ -83,7 +83,7 @@ The Dashboard for the Sales Manager will include
         'test/create_sale_users.yml',
         'test/sale_order_demo.yml',
         'test/manual_order_policy.yml',
-        'test/cancel_order_sale_manager.yml',
+        'test/cancel_order.yml',
         'test/delete_order.yml',
         'test/edi_sale_order.yml',
     ],
