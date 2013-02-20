@@ -19,14 +19,22 @@
                 </form>
             </field>
         </record>
-
-        <act_window name="Product Margins"
-            res_model="product.margin"
-            src_model="product.product"
-            view_mode="form"
-            target="new"
-            key2="client_action_multi"
-            id="product_margin_act_window"/>
-
+        <record id="action_product_margin_form" model="ir.actions.act_window">
+            <field name="name">Product Margins</field>
+            <field name="res_model">product.margin</field>
+            <field name="src_model">product.product</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>
+        <record model="ir.ui.view" id="product_form_view_margin">
+             <field name="name">product.product.margin</field>
+             <field name="model">product.product</field>
+             <field name="inherit_id" ref="product.product_normal_form_view"/>
+             <field name="arch" type="xml">
+                 <xpath expr="//div[@name='buttons']" position="inside">
+                     <button string="Product Margins" name="%(action_product_margin_form)d" type="action" groups="base.group_sale_manager"/>
+                 </xpath>
+             </field>
+        </record>
     </data>
 </openerp>

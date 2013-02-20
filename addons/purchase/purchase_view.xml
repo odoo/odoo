@@ -492,15 +492,6 @@
             </field>
         </record>
 
-        <act_window
-            context="{'search_default_product_id': [active_id], 'default_product_id': active_id}"
-            id="action_purchase_line_product_tree"
-            name="Purchases"
-            res_model="purchase.order.line"
-            src_model="product.product"
-            groups="purchase.group_purchase_user"/>
-
-
         <record id="purchase_line_form_action2" model="ir.actions.act_window">
             <field name="name">On Purchase Order Lines</field>
             <field name="type">ir.actions.act_window</field>
@@ -613,12 +604,20 @@
                 </field>
             </field>
         </record>
-  
+        <record model="ir.actions.act_window" id="action_purchase_line_product_tree">
+            <field name="context">{'search_default_product_id': [active_id], 'default_product_id': active_id}</field>
+            <field name="name">Purchases</field>
+            <field name="res_model">purchase.order.line</field>
+            <field name="view_id" ref="purchase_order_line_tree"/>
+        </record>
         <record id="view_product_account_purchase_ok_form" model="ir.ui.view">
             <field name="name">product.account.purchase.ok.form.inherit</field>
             <field name="model">product.product</field>
             <field name="inherit_id" ref="account.product_normal_form_view"/>
             <field name="arch" type="xml">
+                <xpath expr="//div[@name='buttons']" position="inside">
+                   <button string="Purchase" name="%(action_purchase_line_product_tree)d" type="action" groups="purchase.group_purchase_user"/>
+                </xpath>
                 <xpath expr="//field[@name='property_account_expense']" position="replace" >
                      <field name="property_account_expense" domain="[('type','&lt;&gt;','view'),('type','&lt;&gt;','consolidation')]" attrs="{'readonly':[('purchase_ok','=',0)]}" groups="account.group_account_user"/>
                 </xpath>
@@ -627,6 +626,5 @@
                 </xpath>
             </field>
         </record>
-
     </data>
 </openerp>
