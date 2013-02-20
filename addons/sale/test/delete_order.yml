@@ -1,4 +1,9 @@
 -
+  Sales manager can only delete order therfore test with that user which have sales manager rights,
+-
+  !context
+    uid: 'res_users_salesmanager'
+-
   I try to delete In progress order and check Error Message.
 -
   !python {model: sale.order}: |
