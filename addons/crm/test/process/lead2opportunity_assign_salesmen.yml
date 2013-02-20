@@ -1,5 +1,5 @@
 -
-  During a lead to opp conversion, salesmen should be assigned to leads following the round-robin method.  Start by creating 6 leads (1 to 6) and 4 salesmen (A to D).
+  During a lead to opp conversion, salesmen should be assigned to leads following the round-robin method.  Start by creating 4 salesmen (A to D) and 6 leads (1 to 6).
 -
   !record {model: res.users, id: test_res_user_01}:
     name: 'Test user A'
@@ -21,7 +21,7 @@
     login: 'tud'
     new_password: 'tud'
 -
-  Now, check the data with Salesman.
+  Salesman creates lead.
 -
   !context
     uid: 'crm_res_users_salesman'
@@ -62,7 +62,7 @@
     partner_name: 'Agrolait SuperSeed SA'
     stage_id: stage_lead1
 -
-  I create a mass convert wizard and convert all the leads.
+  Salesman create a mass convert wizard and convert all the leads.
 -
   !python {model: crm.lead2opportunity.partner.mass}: |
     context.update({'active_model': 'crm.lead', 'active_ids': [ref("test_crm_lead_01"), ref("test_crm_lead_02"), ref("test_crm_lead_03"), ref("test_crm_lead_04"), ref("test_crm_lead_05"), ref("test_crm_lead_06")], 'active_id': ref("test_crm_lead_01")})
