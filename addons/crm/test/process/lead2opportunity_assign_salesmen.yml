@@ -1,6 +1,31 @@
 -
   During a lead to opp conversion, salesmen should be assigned to leads following the round-robin method.  Start by creating 6 leads (1 to 6) and 4 salesmen (A to D).
 -
+  !record {model: res.users, id: test_res_user_01}:
+    name: 'Test user A'
+    login: 'tua'
+    new_password: 'tua'
+-
+  !record {model: res.users, id: test_res_user_02}:
+    name: 'Test user B'
+    login: 'tub'
+    new_password: 'tub'
+-
+  !record {model: res.users, id: test_res_user_03}:
+    name: 'Test user C'
+    login: 'tuc'
+    new_password: 'tuc'
+-
+  !record {model: res.users, id: test_res_user_04}:
+    name: 'Test user D'
+    login: 'tud'
+    new_password: 'tud'
+-
+  Now, check the data with Salesman.
+-
+  !context
+    uid: 'crm_res_users_salesman'
+-
   !record {model: crm.lead, id: test_crm_lead_01}:
     type: 'lead'
     name: 'Test lead 1'
@@ -36,26 +61,6 @@
     name: 'Test lead 6'
     partner_name: 'Agrolait SuperSeed SA'
     stage_id: stage_lead1
--
-  !record {model: res.users, id: test_res_user_01}:
-    name: 'Test user A'
-    login: 'tua'
-    new_password: 'tua'
--
-  !record {model: res.users, id: test_res_user_02}:
-    name: 'Test user B'
-    login: 'tub'
-    new_password: 'tub'
--
-  !record {model: res.users, id: test_res_user_03}:
-    name: 'Test user C'
-    login: 'tuc'
-    new_password: 'tuc'
--
-  !record {model: res.users, id: test_res_user_04}:
-    name: 'Test user D'
-    login: 'tud'
-    new_password: 'tud'
 -
   I create a mass convert wizard and convert all the leads.
 -

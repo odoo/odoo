@@ -103,6 +103,7 @@ Dashboard for CRM will include:
         'crm_action_rule_demo.xml',
     ],
     'test': [
+        'test/ui/crm_access_group_users.yml',
         'test/process/communication_with_customer.yml',
         'test/process/lead2opportunity2win.yml',
         'test/process/lead2opportunity_assign_salesmen.yml',
