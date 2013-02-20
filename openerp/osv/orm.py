@@ -323,11 +323,11 @@ class Session(object):
 # Helper functions for browsing record values
 #
 
-def _browse_many2one(record, fname, column):
+def _browse_many2one(instance, fname, column):
     try:
-        model = record.session.model(column._obj)
-        cache = record._record_cache
-        fields_process = record._record_process
+        model = instance.session.model(column._obj)
+        cache = instance._record_cache
+        fields_process = instance._record_process
 
         def process(value):
             if isinstance(value, Record):
@@ -350,16 +350,17 @@ def _browse_many2one(record, fname, column):
         return lambda value: False
 
 
-def _browse_2many(record, fname, column):
-    model = record.session.model(column._obj)
-    cache = record._record_cache
-    fields_process = record._record_process
+def _browse_2many(instance, fname, column):
+    model = instance.session.model(column._obj)
+    cache = instance._record_cache
+    fields_process = instance._record_process
     return lambda value: model.browse(value or [], cache=cache, fields_process=fields_process)
 
 
-def _browse_reference(record, fname, column):
-    cache = record._record_cache
-    fields_process = record._record_process
+def _browse_reference(instance, fname, column):
+    session = instance.session
+    cache = instance._record_cache
+    fields_process = instance._record_process
 
     def process(value):
         if isinstance(value, Record):
@@ -368,7 +369,7 @@ def _browse_reference(record, fname, column):
             ref_obj, ref_id = value.split(',')
             ref_id = long(ref_id)
             if ref_id:
-                model = record.session.model(ref_obj)
+                model = session.model(ref_obj)
                 return model.browse(ref_id, cache=cache, fields_process=fields_process)
         return False
 
