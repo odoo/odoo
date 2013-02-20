@@ -228,6 +228,7 @@ class gamification_goal(osv.Model):
         return self.write(cr, uid, ids, {'state': 'inprogress'}, context=context)
 
     def action_refresh(self, cr, uid, ids, context=None):
+        """Update the state of goal, force to recomputes values"""
         return self.update(cr, uid, ids, context=context, force_update=True)
 
 

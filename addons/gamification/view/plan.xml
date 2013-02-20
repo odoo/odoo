@@ -72,8 +72,8 @@
                             </group>
                             <group string="Report">
                                 <field name="report_message_group_id" />
-                                <field name="report_message_frequency" attrs="{'invisible':[('report_message_group_id','!=', False)], 'required':[('report_message_group_id','!=', False)]}"/>
-                                <field name="report_header" attrs="{'invisible':[('report_message_group_id','!=', False)]}"/>
+                                <field name="report_message_frequency" attrs="{'invisible':[('report_message_group_id','=', False)], 'required':[('report_message_group_id','=', False)]}"/>
+                                <field name="report_header" attrs="{'invisible':[('report_message_group_id','=', False)]}"/>
                             </group>
                         </group>
                         
