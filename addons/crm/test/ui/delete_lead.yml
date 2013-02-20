@@ -1,10 +1,8 @@
 -
-  Sales manager can delete lead.
+  Sales manager Unlink the Lead.
 -
   !context
     uid: 'crm_res_users_salesmanager'
--
-  Sales manager Unlink the Lead.
 -
   !python {model: crm.lead}: |
      self.unlink(cr, uid, [ref("crm_case_4")])
