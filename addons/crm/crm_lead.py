@@ -587,12 +587,12 @@ class crm_lead(base_stage, format_address, osv.osv):
         return True
 
     def _merge_opportunity_attachments(self, cr, uid, opportunity_id, opportunities, context=None):
-        attachment = self.pool.get('ir.attachment')
+        attach_obj = self.pool.get('ir.attachment')
 
         # return attachments of opportunity
         def _get_attachments(opportunity_id):
-            attachment_ids = attachment.search(cr, uid, [('res_model', '=', self._name), ('res_id', '=', opportunity_id)], context=context)
-            return attachment.browse(cr, uid, attachment_ids, context=context)
+            attachment_ids = attach_obj.search(cr, uid, [('res_model', '=', self._name), ('res_id', '=', opportunity_id)], context=context)
+            return attach_obj.browse(cr, uid, attachment_ids, context=context)
 
         count = 1
         first_attachments = _get_attachments(opportunity_id)
@@ -607,7 +607,8 @@ class crm_lead(base_stage, format_address, osv.osv):
                         )
                         attachment.write(values)
                         count+=1
-
+            for attachment in attachments:
+                attachment.write({'res_id':opportunity_id})
         return True
 
     def merge_opportunity(self, cr, uid, ids, context=None):
