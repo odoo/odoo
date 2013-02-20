@@ -146,7 +146,7 @@ class purchase_requisition(osv.osv):
                         'notes':requisition.description,
                         'warehouse_id':requisition.warehouse_id.id ,
             })
-            purchase_order.message_post(cr, uid, [purchase_id], body=_("RFQ <b>Created</b>"), context=context)
+            purchase_order.message_post(cr, uid, [purchase_id], body=_("RFQ created"), context=context)
             res[requisition.id] = purchase_id
             for line in requisition.line_ids:
                 product = line.product_id

@@ -340,7 +340,7 @@ class sale_order(osv.osv):
             vals['name'] = self.pool.get('ir.sequence').get(cr, uid, 'sale.order') or '/'
         context = dict(context, mail_create_nolog=True)        
         res = super(sale_order, self).create(cr, uid, vals, context=context)
-        self.message_post(cr, uid, [res], body=_("Quotation <b>Created</b>"), context=context)
+        self.message_post(cr, uid, [res], body=_("Quotation created"), context=context)
         return res
 
     def button_dummy(self, cr, uid, ids, context=None):
@@ -998,7 +998,7 @@ class account_invoice(osv.Model):
     def confirm_paid(self, cr, uid, ids, context=None):
         so_ids = self.pool.get('sale.order').search(cr,uid,[('invoice_ids','in',ids)],context)
         res = super(account_invoice, self).confirm_paid(cr, uid, ids, context=None)
-        self.pool.get('sale.order').message_post(cr, uid, so_ids, body=_("Invoice <b>Paid</b>"), context=context)
+        self.pool.get('sale.order').message_post(cr, uid, so_ids, body=_("Invoice paid"), context=context)
         return res
     
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
