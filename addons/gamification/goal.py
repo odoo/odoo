@@ -105,7 +105,7 @@ class gamification_goal(osv.Model):
         for goal in self.browse(cr, uid, ids, context):
             res[goal.id] = compute_goal_completeness(goal.current, goal.target_goal)
         return res
-        
+
     def on_change_type_id(self, cr, uid, ids, type_id=False, context=None):
         goal_type = self.pool.get('gamification.goal.type')
         if not type_id:
@@ -175,54 +175,45 @@ class gamification_goal(osv.Model):
             if not force_update and goal.state not in ('inprogress','inprogress_update'): # reached ?
                 continue
 
-            if goal.type_id.computation_mode == 'sum':
-                obj = self.pool.get(goal.type_id.model_id.model)
-                field_name = goal.type_id.field_id.name
-                field_date_name = goal.type_id.field_date_id.name
-                
-                domain = safe_eval(goal.type_id.domain)
-                domain.append(('user_id', '=', goal.user_id.id))
-                if goal.start_date:
-                    domain.append((field_date_name, '>=', goal.start_date))
-                if goal.end_date:
-                    domain.append((field_date_name, '<=', goal.end_date))
-
-                res = obj.read_group(cr, uid, domain, [field_name],
-                    [''], context=context)
-                print("domain", domain, "res", res)
-                towrite = {'current': res[0][field_name]}
-                
-            elif goal.type_id.computation_mode == 'count':
-                obj = self.pool.get(goal.type_id.model_id.model)
-                field_date_name = goal.type_id.field_date_id.name
-                
-                domain = safe_eval(goal.type_id.domain)
-                domain.append(('user_id', '=', goal.user_id.id))
-                if goal.start_date:
-                    domain.append((field_date_name, '>=', goal.start_date))
-                if goal.end_date:
-                    domain.append((field_date_name, '<=', goal.end_date))
-
-                res = obj.search(cr, uid, domain, context=context)
-                print("domain", domain, "res", len(res), res)
-                towrite = {'current': len(res)}
-
-            else:
-                current = goal.current
+            if goal.type_id.computation_mode == 'manually':
                 towrite = {'current': current}
-                # computation_mode == 'manually'
+                # check for remind to update
                 if goal.remind_update_delay and goal.last_update:
                     delta_max = timedelta(days=goal.remind_update_delay)
                     if fields.date.today() - goal.last_update > delta_max:
                         towrite['state'] = 'inprogress_update'
-    
-            if (goal.type_id.condition == 'plus' and current >= goal.target_goal) \
-            or (goal.type_id.condition == 'minus' and current <= goal.target_goal):
+
+            else: # count or sum
+                obj = self.pool.get(goal.type_id.model_id.model)
+                field_date_name = goal.type_id.field_date_id.name
+                
+                domain = safe_eval(goal.type_id.domain)
+                domain.append(('user_id', '=', goal.user_id.id))
+                if goal.start_date:
+                    domain.append((field_date_name, '>=', goal.start_date))
+                if goal.end_date:
+                    domain.append((field_date_name, '<=', goal.end_date))
+
+                if goal.type_id.computation_mode == 'sum':
+                    field_name = goal.type_id.field_id.name
+                    res = obj.read_group(cr, uid, domain, [field_name],
+                        [''], context=context)
+                    towrite = {'current': res[0][field_name]}
+                
+                else: # computation mode = count
+                    res = obj.search(cr, uid, domain, context=context)
+                    towrite = {'current': len(res)}
+
+            # check goal target reached
+            if (goal.type_id.condition == 'plus' \
+                and towrite['current'] >= goal.target_goal) \
+            or (goal.type_id.condition == 'minus' \
+                and towrite['current'] <= goal.target_goal):
                 towrite['state'] = 'reached'
 
+            # check goal failure
             elif goal.end_date and fields.date.today() > goal.end_date:
                 towrite['state'] = 'failed'
-
             
             self.write(cr, uid, [goal.id], towrite, context=context)
         return True
