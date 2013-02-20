@@ -152,7 +152,23 @@ class account_invoice(osv.osv):
                           "\nPlease contact your OpenERP support channel.") % algorithm)
         return {'value': {'reference': reference}}
 
+    def _add_reference(self, cr, uid, vals, context=None):
+        reference = False
+        reference_type = 'none'
+        if vals.get('partner_id'):
+            if (vals.get('type') == 'out_invoice'):
+                reference_type = self.pool.get('res.partner').browse(cr, uid, vals['partner_id']).out_inv_comm_type
+                if reference_type:
+                    reference = self.generate_bbacomm(cr, uid, [], vals['type'], reference_type, vals['partner_id'], '', context={})['value']['reference']
+        res_update = {
+            'reference_type': reference_type or 'none',
+            'reference': reference,
+        }
+        vals.update(res_update)
+        return vals
+    
     def create(self, cr, uid, vals, context=None):
+        vals = self._add_reference(cr, uid, vals, context=context)
         if vals.has_key('reference_type'):
             reference_type = vals['reference_type']
             if reference_type == 'bba':
