@@ -255,34 +255,6 @@ class except_orm(Exception):
         self.value = value
         self.args = (name, value)
 
-class BrowseRecordError(Exception):
-    pass
-
-class browse_null(object):
-    """ Readonly python database object browser
-    """
-
-    def __init__(self):
-        self.id = False
-
-    def __getitem__(self, name):
-        return None
-
-    def __getattr__(self, name):
-        return None  # XXX: return self ?
-
-    def __int__(self):
-        return False
-
-    def __str__(self):
-        return ''
-
-    def __nonzero__(self):
-        return False
-
-    def __unicode__(self):
-        return u''
-
 
 class Session(object):
     """ An object that stores primary session data in its attributes:
@@ -365,9 +337,7 @@ def _browse_many2one(record, fname, column):
                 return value
             if isinstance(value, (list, tuple)):
                 value = value[0]
-            if value:
-                return model.browse(value, cache=cache, fields_process=fields_process)
-            return browse_null()
+            return model.browse(value, cache=cache, fields_process=fields_process)
 
         return process
 
@@ -377,14 +347,14 @@ def _browse_many2one(record, fname, column):
         # This situation can be caused by custom fields that connect objects with m2o without
         # respecting module dependencies, causing relationships to be connected to soon when
         # the target is not loaded yet.
-        return lambda value: browse_null()
+        return lambda value: False
 
 
 def _browse_2many(record, fname, column):
     model = record.session.model(column._obj)
     cache = record._record_cache
     fields_process = record._record_process
-    return lambda value: model.browse(value, cache=cache, fields_process=fields_process)
+    return lambda value: model.browse(value or [], cache=cache, fields_process=fields_process)
 
 
 def _browse_reference(record, fname, column):
@@ -400,7 +370,7 @@ def _browse_reference(record, fname, column):
             if ref_id:
                 model = record.session.model(ref_obj)
                 return model.browse(ref_id, cache=cache, fields_process=fields_process)
-        return browse_null()
+        return False
 
     return process
 
@@ -557,7 +527,7 @@ class BaseModel(object):
     corresponding model.
 
     Other instances encapsulate session data (cursor, user id, context) together
-    with model functionalities. There are three kinds of them:
+    with model functionalities. There are four kinds of them:
 
         * model: represents a model, usually given by :meth:`Session.model`;
 
@@ -568,6 +538,10 @@ class BaseModel(object):
         * recordset: represents a collection of records in the given model,
           typically returned by :meth:`~.browse`, :meth:`~.query`, or another
           record/recordset. One can iterate over it.
+
+        * null: represents an absent record (null object pattern). One can read
+          its fields like a record, but they all are either ``False``, null, or
+          empty recordsets, depending on the field's type.
 
     All those kinds can use model methods to perform some action related to the
     model or some of its records. Of course, methods applying on specific
@@ -1532,7 +1506,7 @@ class BaseModel(object):
                 property_obj = self.pool.get('ir.property')
                 prop_value = property_obj.get(cr, uid, f, self._name, context=context)
                 if prop_value:
-                    if isinstance(prop_value, (Record, browse_null)):
+                    if isinstance(prop_value, (Record, Null)):
                         defaults[f] = prop_value.id
                     else:
                         defaults[f] = prop_value
@@ -4429,14 +4403,14 @@ class BaseModel(object):
         return id_new
 
     def browse(self, cr, uid, select, context=None, cache=None, fields_process=None):
-        """ return a record or recordset corresponding to the value of parameter
-            `select` (id or list of ids).
+        """ return a record, recordset or null instance corresponding to the
+            value of parameter `select` (id, list of ids or ``False``).
 
             :param cr: database cursor
             :param uid: current user id
-            :param select: id or list of ids.
+            :param select: id, list of ids, or ``False``.
             :param context: context arguments, like lang, time zone
-            :rtype: record or recordset requested
+            :rtype: record, recordset or null requested
         """
         if cache is None:
             cache = _RecordCache()
@@ -4448,13 +4422,13 @@ class BaseModel(object):
             session = Session(cr, uid, context)
             model = self._make_instance(session=session)
 
-        if isinstance(select, (int, long)):
+        if isinstance(select, (int, long)) and select:
             return model._make_record(select, cache, fields_process=fields_process)
         elif isinstance(select, list):
             records = (model._make_record(id, cache, fields_process=fields_process) for id in select)
             return model._make_recordset(records)
         else:
-            return browse_null()
+            return model._make_null()
 
     def _store_get_values(self, cr, uid, ids, fields, context):
         """Returns an ordered list of fields.functions to call due to
@@ -5265,6 +5239,17 @@ class BaseModel(object):
         return self._make_instance(session=session, **kwargs)
 
     @api.model
+    def _make_null(self):
+        """ make a null instance """
+        # a null instance is represented as a record with id=False
+        return self._make_instance(session=self.session, _record_id=False,
+                                    _record_cache=None, _record_process=None)
+
+    def is_null(self):
+        """ test whether self is a null instance """
+        return getattr(self, '_record_id', None) is False
+
+    @api.model
     def _make_record(self, id, cache, fields_process=None):
         """ make a record instance
             :param id: the record's id
@@ -5294,6 +5279,10 @@ class BaseModel(object):
 
     def is_record(self):
         """ test whether self is a record instance """
+        return bool(getattr(self, '_record_id', None))
+
+    def is_record_or_null(self):
+        """ test whether self is a record or null instance """
         return hasattr(self, '_record_id')
 
     @api.model
@@ -5335,6 +5324,9 @@ class BaseModel(object):
         """ If ``self`` is a record, return a recordset containing ``self`` only.
             If ``self`` is a recordset, force its evaluation, and return it.
         """
+        if self.is_null():
+            return self._make_recordset([])
+
         if self.is_record():
             return self._make_recordset([self])
 
@@ -5349,7 +5341,7 @@ class BaseModel(object):
         """
         if self.is_recordset():
             return len(self) > 0
-        return True
+        return not self.is_null()
 
     def __iter__(self):
         """ Return an iterator over ``self`` (must be a recordset). """
@@ -5368,7 +5360,7 @@ class BaseModel(object):
         """ If ``self`` is a record, test whether ``item`` is a field name.
             If ``self`` is a recordset, test whether ``item`` is a record in ``self``.
         """
-        if self.is_record():
+        if self.is_record_or_null():
             return item == 'id' or item in self._all_columns
         assert self.is_recordset(), "Expected record or recordset: %s" % self
         if not isinstance(item, Record):
@@ -5400,14 +5392,14 @@ class BaseModel(object):
         if not isinstance(other, BaseModel):
             _logger.warning("Comparison of %s and %s" % (self, other))
             return False
-        if self.is_record():
+        if self.is_record_or_null():
             # compare two records
-            assert other.is_record(), "Comparing record to non-record: %s, %s" % (self, other)
+            assert other.is_record_or_null(), "Comparing record to non-record: %s, %s" % (self, other)
             return (self._name, self._record_id) == (other._name, other._record_id)
         elif self.is_recordset():
             # compare two recordsets
             assert other.is_recordset(), "Comparing recordset to non-recordset: %s, %s" % (self, other)
-            return set(self) == set(other)
+            return self._name == other._name and set(self) == set(other)
         else:
             # compare two models
             return self._name == other._name
@@ -5417,10 +5409,15 @@ class BaseModel(object):
 
     def _get_record_field(self, name):
         """ read the field ``name`` on a record instance """
-        assert self.is_record(), "Expected record instance: %s" % self
-
+        assert self.is_record_or_null(), "Expected record instance: %s" % self
         if name == 'id':
             return self._record_id
+
+        if self.is_null():
+            # return False, null or recordset, depending on the field's type
+            column = self._all_columns[name].column
+            factory = _browse_process.get(column._type)
+            return factory(self, name, column)(False) if factory else False
 
         model_cache = self._record_cache[self._name]
 
@@ -5494,7 +5491,7 @@ class BaseModel(object):
                 rs2 = rs1[:10]              # same as rs with offset 10 and limit 10
                 assert list(rs2) == list(rs[10:20])
         """
-        if self.is_record():
+        if self.is_record_or_null():
             return self._get_record_field(key)
 
         assert self.is_recordset(), "Expected record or recordset: %s" % self
@@ -5539,18 +5536,20 @@ class BaseModel(object):
         raise AttributeError(name)
 
     def __int__(self):
-        assert self.is_record(), "Expected record instance: %s" % self
+        assert self.is_record_or_null(), "Expected record instance: %s" % self
         return self._record_id
 
     def __str__(self):
         if self.is_record():
             return "Record(%s, %d)" % (self._name, self._record_id)
+        elif self.is_queryset():
+            return "Query(%s, %s)" % (self._name, self._records_search[0])
         elif self.is_recordset():
-            if hasattr(self, '_records'):
-                return "Recordset(%s, %s)" % (self._name, map(int, self))
-            else:
-                return "Query(%s, %s)" % (self._name, self._records_search[0])
-        return "Model(%s)" % self._name
+            return "Recordset(%s, %s)" % (self._name, map(int, self))
+        elif self.is_null():
+            return "Null(%s)" % self._name
+        else:
+            return "Model(%s)" % self._name
 
     def __unicode__(self):
         return unicode(str(self))
@@ -5558,14 +5557,20 @@ class BaseModel(object):
     __repr__ = __str__
 
     def __hash__(self):
-        assert self.is_record(), "Expected record instance: %s" % self
-        return hash((self._name, self._record_id))
+        if self.is_record_or_null():
+            return hash((self._name, self._record_id))
+        elif self.is_recordset():
+            # that one may be costly, use with care!
+            return hash((self._name, frozenset(map(int, self))))
+        else:
+            return hash(self._name)
 
     def refresh(self):
         """ Clear the records cache used by ``self`` by emptying the cache completely,
             preserving only the record identifiers (for prefetching optimizations).
         """
-        assert self.is_record() or self.is_recordset(), "Expected record or recordset: %s" % self
+        assert self.is_record_or_null() or self.is_recordset(), \
+            "Expected record, recordset or null: %s" % self
 
         # querysets and empty recordsets have no cache
         if not self.is_queryset() and self:
@@ -5576,6 +5581,14 @@ class BaseModel(object):
 
 
 # for instance checking
+class Null(object):
+    """ Pseudo-class for null instances:
+        ``isinstance(x, Null)`` returns ``True`` if ``x`` is null.
+    """
+    class __metaclass__(type):
+        def __instancecheck__(self, inst):
+            return isinstance(inst, BaseModel) and inst.is_null()
+
 class Record(object):
     """ Pseudo-class for record instances:
         ``isinstance(x, Record)`` returns ``True`` if ``x`` is a record.
@@ -5593,6 +5606,7 @@ class Recordset(object):
             return isinstance(inst, BaseModel) and inst.is_recordset()
 
 # extra definitions for backward compatibility
+browse_null = Null
 browse_record = Record
 browse_record_list = Recordset
 
