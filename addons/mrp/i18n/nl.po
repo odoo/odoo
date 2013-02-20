@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2012-12-21 17:04+0000\n"
-"PO-Revision-Date: 2012-12-21 23:00+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"PO-Revision-Date: 2013-02-17 17:45+0000\n"
+"Last-Translator: Erwin van der Ploeg (Endian Solutions) <Unknown>\n"
 "Language-Team: Dutch <nl@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-01-18 06:53+0000\n"
-"X-Generator: Launchpad (build 16430)\n"
+"X-Launchpad-Export-Date: 2013-02-18 05:26+0000\n"
+"X-Generator: Launchpad (build 16491)\n"
 
 #. module: mrp
 #: help:mrp.config.settings,module_mrp_repair:0
@@ -80,7 +80,7 @@ msgstr "Producten afkeuren"
 #. module: mrp
 #: view:mrp.workcenter:0
 msgid "Mrp Workcenter"
-msgstr ""
+msgstr "Productiestap"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.mrp_routing_action
@@ -203,7 +203,7 @@ msgstr "Voor ingekocht materiaal"
 #. module: mrp
 #: model:ir.ui.menu,name:mrp.menu_mrp_production_order_action
 msgid "Order Planning"
-msgstr ""
+msgstr "Order planning"
 
 #. module: mrp
 #: field:mrp.config.settings,module_mrp_operations:0
@@ -276,7 +276,7 @@ msgstr "Stamgegevens"
 #. module: mrp
 #: field:mrp.config.settings,module_mrp_byproduct:0
 msgid "Produce several products from one manufacturing order"
-msgstr ""
+msgstr "Produceer verschillende producten vanuit één productieoder."
 
 #. module: mrp
 #: help:mrp.config.settings,group_mrp_properties:0
@@ -327,7 +327,7 @@ msgstr "Refereert aan een positie in een extern plan."
 #. module: mrp
 #: model:res.groups,name:mrp.group_mrp_routings
 msgid "Manage Routings"
-msgstr ""
+msgstr "Productiestappen beheren"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_product_produce
@@ -367,6 +367,19 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Klik voor het aanmaken van een productieorder. \n"
+"              </p><p>\n"
+"                Een productieorder, gebaseerd op een materiaallijst, zal "
+"grondstoffen\n"
+"                verbruiken en gereed product produceren.\n"
+"              </p><p>\n"
+"                Productieorder worden meestal automatisch aangemaakt op "
+"basis\n"
+"                van klantbehoefte of op basis van een minimaal voorraad "
+"niveau.\n"
+"              </p>\n"
+"            "
 
 #. module: mrp
 #: sql_constraint:mrp.production:0
@@ -807,7 +820,7 @@ msgstr "Per maand"
 msgid ""
 "Unit of Measure (Unit of Measure) is the unit of measurement for the "
 "inventory control"
-msgstr ""
+msgstr "Maateenheid voor de voorraad"
 
 #. module: mrp
 #: report:bom.structure:0
@@ -895,6 +908,8 @@ msgid ""
 "The Product Unit of Measure you chose has a different category than in the "
 "product form."
 msgstr ""
+"De maateenheid van het door u gekozen product heeft een andere categorie dan "
+"in het product bestand."
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_production
@@ -1043,7 +1058,7 @@ msgstr "Eigenschappengroep"
 #. module: mrp
 #: field:mrp.config.settings,group_mrp_routings:0
 msgid "Manage routings and work orders "
-msgstr ""
+msgstr "Productiestappen en werkopdrachten beheren "
 
 #. module: mrp
 #: model:process.node,note:mrp.process_node_production0
@@ -1102,7 +1117,7 @@ msgstr "Productieorders"
 #. module: mrp
 #: selection:mrp.production,state:0
 msgid "Awaiting Raw Materials"
-msgstr ""
+msgstr "Wachten op grondstoffen"
 
 #. module: mrp
 #: field:mrp.bom,position:0
@@ -1112,7 +1127,7 @@ msgstr "Interne referentie"
 #. module: mrp
 #: field:mrp.production,product_uos_qty:0
 msgid "Product UoS Quantity"
-msgstr ""
+msgstr "Product hoeveelheid in verk. maateenheid"
 
 #. module: mrp
 #: field:mrp.bom,name:0
@@ -1206,7 +1221,7 @@ msgstr "Kosten cycli"
 #: code:addons/mrp/wizard/change_production_qty.py:88
 #, python-format
 msgid "Cannot find bill of material for this product."
-msgstr ""
+msgstr "Kan geen materiaallijst vinden voor dit product."
 
 #. module: mrp
 #: selection:mrp.workcenter.load,measure_unit:0
@@ -1241,7 +1256,7 @@ msgstr "Kostenplaatsdagboek"
 #: code:addons/mrp/report/price.py:139
 #, python-format
 msgid "Supplier Price per Unit of Measure"
-msgstr ""
+msgstr "Leveranciersprijs per maateenheid."
 
 #. module: mrp
 #: selection:mrp.workcenter.load,time_unit:0
@@ -1419,7 +1434,7 @@ msgstr "Verwerving"
 #. module: mrp
 #: field:mrp.config.settings,module_product_manufacturer:0
 msgid "Define manufacturers on products "
-msgstr ""
+msgstr "Definieer producenten bij producten "
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.action_view_mrp_product_price_wizard
@@ -1542,7 +1557,7 @@ msgstr "Stuurt de inkoop orders voor grondstoffen."
 #. module: mrp
 #: field:mrp.production.product.line,product_uos_qty:0
 msgid "Product UOS Quantity"
-msgstr ""
+msgstr "Product hoeveelheid in verk. maateenheid"
 
 #. module: mrp
 #: field:mrp.workcenter,costs_general_account_id:0
@@ -1559,6 +1574,7 @@ msgstr "Nummer verkoopopdracht"
 #, python-format
 msgid "Cannot delete a manufacturing order in state '%s'."
 msgstr ""
+"Het is niet mogelijk een productieorder te verwijderen in de status '%s'."
 
 #. module: mrp
 #: selection:mrp.production,state:0
@@ -1568,7 +1584,7 @@ msgstr "Verwerkt"
 #. module: mrp
 #: view:product.product:0
 msgid "When you sell this product, OpenERP will trigger"
-msgstr ""
+msgstr "Wanneer u dit product verkoopt, zal OpenERP"
 
 #. module: mrp
 #: field:mrp.production,origin:0
@@ -1910,7 +1926,7 @@ msgstr "Materiaallijststructuur"
 #. module: mrp
 #: field:mrp.config.settings,module_mrp_jit:0
 msgid "Generate procurement in real time"
-msgstr ""
+msgstr "Genereer verwervingen real time"
 
 #. module: mrp
 #: field:mrp.bom,date_stop:0
@@ -2094,7 +2110,7 @@ msgstr "Opzettijd in uren"
 #. module: mrp
 #: field:mrp.config.settings,module_mrp_repair:0
 msgid "Manage repairs of products "
-msgstr ""
+msgstr "Beheren van reparaties van producten "
 
 #. module: mrp
 #: help:mrp.config.settings,module_mrp_byproduct:0
@@ -2126,7 +2142,7 @@ msgstr "Toegewezen van voorraad"
 #: code:addons/mrp/report/price.py:139
 #, python-format
 msgid "Cost Price per Unit of Measure"
-msgstr ""
+msgstr "Kostprijs per maateenheid"
 
 #. module: mrp
 #: field:report.mrp.inout,date:0
@@ -2221,7 +2237,7 @@ msgstr "Materiaallijst"
 #: code:addons/mrp/mrp.py:610
 #, python-format
 msgid "Cannot find a bill of material for this product."
-msgstr ""
+msgstr "Kan geen materiaallijst vinden voor dit product."
 
 #. module: mrp
 #: view:product.product:0
@@ -2251,7 +2267,7 @@ msgstr "Producties"
 #: model:ir.model,name:mrp.model_stock_move_split
 #: view:mrp.production:0
 msgid "Split in Serial Numbers"
-msgstr ""
+msgstr "Opdelen in partijnumers"
 
 #. module: mrp
 #: help:mrp.bom,product_uos:0
@@ -2340,7 +2356,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:mrp.action_mrp_configuration
 #: view:mrp.config.settings:0
 msgid "Configure Manufacturing"
-msgstr ""
+msgstr "Productie instellen"
 
 #. module: mrp
 #: view:product.product:0
@@ -2348,11 +2364,15 @@ msgid ""
 "a manufacturing\n"
 "                        order"
 msgstr ""
+"een productie\n"
+"                        order"
 
 #. module: mrp
 #: field:mrp.config.settings,group_mrp_properties:0
 msgid "Allow several bill of materials per products using properties"
 msgstr ""
+"Sta verschillende materiaallijsten toe per product, door gebruik te maken "
+"van eigenschappen."
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.mrp_property_group_action

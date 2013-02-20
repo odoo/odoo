@@ -8,13 +8,13 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2012-12-21 17:05+0000\n"
-"PO-Revision-Date: 2013-02-14 16:15+0000\n"
+"PO-Revision-Date: 2013-02-15 07:45+0000\n"
 "Last-Translator: Erwin van der Ploeg (Endian Solutions) <Unknown>\n"
 "Language-Team: Dutch <nl@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-02-15 05:23+0000\n"
+"X-Launchpad-Export-Date: 2013-02-16 05:39+0000\n"
 "X-Generator: Launchpad (build 16491)\n"
 
 #. module: base_import
@@ -201,7 +201,7 @@ msgstr "Niet importeren"
 #: code:addons/base_import/static/src/xml/import.xml:24
 #, python-format
 msgid "Select the"
-msgstr "Selecteer de"
+msgstr "Selecteer het"
 
 #. module: base_import
 #. openerp-web
@@ -922,6 +922,16 @@ msgid ""
 "                        the company he work for. (If you want to test this \n"
 "                        example, here is a"
 msgstr ""
+"Een voorbeeld. Stel u heeft een SQL database \n"
+"                        met twee tabellen, die u wilt importeren: bedrijven "
+"\n"
+"                        en personen. Ieder persoon behoort toe aan één "
+"bedrijf. \n"
+"                        U dient dus een koppeling te maken tussen de persoon "
+"en \n"
+"                        het bedrijf, waar hij voor werkt. (Als u dit "
+"voorbeeld wilt testen \n"
+"                        heeft u hier een"
 
 #. module: base_import
 #. openerp-web
@@ -962,6 +972,19 @@ msgid ""
 "\n"
 "                        table. (like 'company_1', 'person_1' instead of '1')"
 msgstr ""
+"Om relaties tussen tabellen te beheren, \n"
+"                        kunt u gebruik maken van de \"Externe ID\" van "
+"OpenERP. \n"
+"                        Deze \"externe ID\" van een record is de unieke "
+"identiefier van \n"
+"                        dit record in de andere applicatie. Deze \"Externe "
+"ID\" moet\n"
+"                        uniek zijn bij alle records en alle objecten. Het is "
+"daarom verstandig\n"
+"                        om de externe ID te voorzien van een prefix, met de "
+"naam van de applicatie\n"
+"                        of de tabel (zoals 'bedrijf_1', 'persoon_1' in "
+"plaats van alleen '1')"
 
 #. module: base_import
 #. openerp-web
@@ -1050,6 +1073,14 @@ msgid ""
 "                        link between each person and the company they work \n"
 "                        for)."
 msgstr ""
+"Als u gegevens moet importeren van verschillende tabellen, \n"
+"                        dient u de relaties tussen de records van de "
+"verschillende\n"
+"                        tabellen aan te maken. (bijv. als u bedrijven en "
+"personen importeert\n"
+"                        dient u de koppeling tussen ieder persoon en het "
+"bedrijf\n"
+"                        waar hij voor werkt te maken."
 
 #. module: base_import
 #. openerp-web
@@ -1062,6 +1093,12 @@ msgid ""
 "                        Here is when you should use one or the other, \n"
 "                        according to your need:"
 msgstr ""
+"Afhankelijk van uw behoefte, kunt u gebruik \n"
+"                        maken van één van de drie mogelijkheden om een "
+"referentie\n"
+"                        te maken. Hier kunt u lezen wanneer u de ene of de "
+"andere\n"
+"                        methode moet gebruiken."
 
 #. module: base_import
 #. openerp-web
@@ -1177,6 +1214,19 @@ msgid ""
 "                        take care of creating or modifying each record \n"
 "                        depending if it's new or not."
 msgstr ""
+"Als u een bestand importeert welke kolommen bevat \n"
+"                        met \"Externe ID\" of \"Database ID\", dan zullen "
+"records\n"
+"                        welke al eerder zijn geïmporteerd, worden "
+"bijgewerkt, in \n"
+"                        plaats van opnieuw aangemaakt. Dit is erg handig en "
+"geeft u de\n"
+"                        mogelijkheid om een CSV bestand meerdere malen te "
+"importeren\n"
+"                        terwijl u tussentijds wijzigingen maakt in het "
+"bestand. OpenERP zal\n"
+"                        zorg dragen voor het aanmaken of bijwerken van "
+"iedere record."
 
 #. module: base_import
 #. openerp-web
@@ -1297,6 +1347,15 @@ msgid ""
 "                        to the first company). You must first import the \n"
 "                        companies and then the persons."
 msgstr ""
+"De twee aangemaakte bestanden zijn gereed om te worden geïmporteerd\n"
+"                        in OpenERP, zonder enige aanpassing. Na het "
+"importeren van deze\n"
+"                        twee CSV bestanden heeft u 4 contactpersonen en 3 "
+"bedrijven.\n"
+"                        (De eerste 2 contactpersonen zijn gekoppeld aan het "
+"eerste bedrijf).\n"
+"                        U dient eerst de bedrijven en personen  te "
+"importeren."
 
 #. module: base_import
 #. openerp-web
@@ -1310,6 +1369,13 @@ msgid ""
 "                        (displayed under the Browse CSV file bar after you \n"
 "                        select your file)."
 msgstr ""
+"Standaard wordt het scheidingsteken van het import voorbeeld \n"
+"                        ingesteld op een komma en voor de tekst "
+"aanhalingstekens.\n"
+"                        Als uw CSV bestand niet deze instellingen heeft, "
+"kunt u deze\n"
+"                        instellingen aanpassen, direct onder de knop "
+"\"Bestand kiezen\"."
 
 #. module: base_import
 #. openerp-web

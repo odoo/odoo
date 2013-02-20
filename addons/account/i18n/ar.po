@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2012-12-21 17:04+0000\n"
-"PO-Revision-Date: 2013-01-08 08:27+0000\n"
-"Last-Translator: gehad shaat <gehad.shaath@gmail.com>\n"
+"PO-Revision-Date: 2013-02-17 03:05+0000\n"
+"Last-Translator: Ahmad Khayyat <Unknown>\n"
 "Language-Team: Arabic <ar@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-01-18 06:23+0000\n"
-"X-Generator: Launchpad (build 16430)\n"
+"X-Launchpad-Export-Date: 2013-02-18 05:25+0000\n"
+"X-Generator: Launchpad (build 16491)\n"
 
 #. module: account
 #: model:process.transition,name:account.process_transition_supplierreconcilepaid0
@@ -375,7 +375,7 @@ msgstr "يسمح لك باستخدام المحاسبة التحليلية"
 #: view:account.invoice.report:0
 #: field:account.invoice.report,user_id:0
 msgid "Salesperson"
-msgstr "موظف مبيعات"
+msgstr "موظف المبيعات"
 
 #. module: account
 #: view:account.bank.statement:0
@@ -931,7 +931,7 @@ msgstr "أيام"
 #: help:account.account.template,nocreate:0
 msgid ""
 "If checked, the new chart of accounts will not contain this by default."
-msgstr "لو تم التعليم عليها، فلن يحتوي الدليل المحاسبي عليها إفتراضياً"
+msgstr "لا تدرج في الدليل المحاسبي الافتراضي"
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_account_manual_reconcile
@@ -1076,7 +1076,7 @@ msgstr "مشتريات"
 #. module: account
 #: field:account.model,lines_id:0
 msgid "Model Entries"
-msgstr "نموذج للقيود"
+msgstr ""
 
 #. module: account
 #: field:account.account,code:0
@@ -1457,7 +1457,7 @@ msgstr "بحث قوالب الضريبة"
 #: model:ir.actions.act_window,name:account.action_account_reconcile_select
 #: model:ir.actions.act_window,name:account.action_view_account_move_line_reconcile
 msgid "Reconcile Entries"
-msgstr "تسوية المدخلات"
+msgstr "تسوية القيود"
 
 #. module: account
 #: model:ir.actions.report.xml,name:account.account_overdue
@@ -1603,7 +1603,7 @@ msgstr "عدد خانات الأرقام"
 #. module: account
 #: field:account.journal,entry_posted:0
 msgid "Skip 'Draft' State for Manual Entries"
-msgstr "تخطي حالة \"المسودة\" للقيود اليدوية"
+msgstr "تخطي حالة 'المسودة' للقيود اليدوية"
 
 #. module: account
 #: code:addons/account/report/common_report_header.py:92
@@ -1675,7 +1675,7 @@ msgstr "مغلق"
 #. module: account
 #: model:ir.ui.menu,name:account.menu_finance_recurrent_entries
 msgid "Recurring Entries"
-msgstr "القيود التكرارية"
+msgstr "القيود المتكررة"
 
 #. module: account
 #: model:ir.model,name:account.model_account_fiscal_position_template
@@ -1854,7 +1854,7 @@ msgstr ""
 #: code:addons/account/account_move_line.py:857
 #, python-format
 msgid "Some entries are already reconciled."
-msgstr "بعض القيود قد تم تسويتها مسبقا."
+msgstr "بعض القيود قد تمت تسويتها مسبقا."
 
 #. module: account
 #: field:account.tax.code,sum:0
@@ -1881,7 +1881,7 @@ msgstr "حسابات معلقة"
 #. module: account
 #: view:account.open.closed.fiscalyear:0
 msgid "Cancel Fiscal Year Opening Entries"
-msgstr "الغاء القيود الافتتاحية السنة المالية الأولية"
+msgstr "إلغاء القيود الافتتاحية للسنة المالية"
 
 #. module: account
 #: report:account.journal.period.print.sale.purchase:0
@@ -2320,7 +2320,7 @@ msgstr "اذا كنت تريد التحكم باليومية عند الفتح/�
 #: selection:account.subscription,state:0
 #: selection:report.invoice.created,state:0
 msgid "Draft"
-msgstr "مسودّة"
+msgstr "مسودة"
 
 #. module: account
 #: field:account.move.reconcile,line_partial_ids:0
@@ -2331,7 +2331,7 @@ msgstr "سطور لقيود جزئية"
 #: view:account.fiscalyear:0
 #: field:account.treasury.report,fiscalyear_id:0
 msgid "Fiscalyear"
-msgstr "سنة مالية"
+msgstr "السنة المالية"
 
 #. module: account
 #: code:addons/account/wizard/account_move_bank_reconcile.py:53
@@ -2535,7 +2535,7 @@ msgstr "قالب المنتج"
 #: field:accounting.report,fiscalyear_id_cmp:0
 #: model:ir.model,name:account.model_account_fiscalyear
 msgid "Fiscal Year"
-msgstr "سنة مالية"
+msgstr "السنة المالية"
 
 #. module: account
 #: help:account.aged.trial.balance,fiscalyear_id:0
@@ -3052,7 +3052,8 @@ msgstr "رسائل غير مقروءة"
 msgid ""
 "Selected invoice(s) cannot be confirmed as they are not in 'Draft' or 'Pro-"
 "Forma' state."
-msgstr "لا يمكن تأكيد الفواتير لأنهم ليس بحالة 'مسودة' أو 'فاتورة مبدأية'"
+msgstr ""
+"لا يمكن تأكيد الفواتير المختارة لأنها ليست 'مسودات' أو 'فواتير مبدئية'."
 
 #. module: account
 #: code:addons/account/account.py:1062
@@ -3440,7 +3441,7 @@ msgstr ""
 #. module: account
 #: field:account.config.settings,has_chart_of_accounts:0
 msgid "Company has a chart of accounts"
-msgstr "الشركة لديها دليل الحسابات"
+msgstr "الشركة لديها دليل محاسبي"
 
 #. module: account
 #: model:ir.model,name:account.model_account_tax_code_template
@@ -3562,7 +3563,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:account.action_account_chart_template_form
 #: model:ir.ui.menu,name:account.menu_action_account_chart_template_form
 msgid "Chart of Accounts Templates"
-msgstr "قوالب شجرة الحسابات"
+msgstr "قوالب الدليل المحاسبي"
 
 #. module: account
 #: view:account.bank.statement:0
@@ -3834,7 +3835,7 @@ msgstr "تحويلات"
 #. module: account
 #: field:account.config.settings,expects_chart_of_accounts:0
 msgid "This company has its own chart of accounts"
-msgstr "هذه الشركة لديها دليل حسابات خاص بها"
+msgstr "هذه الشركة لديها دليل محاسبي خاص بها"
 
 #. module: account
 #: view:account.chart:0
@@ -3981,7 +3982,7 @@ msgstr "ضريبة القيمة المضافة:"
 #: model:ir.actions.act_window,name:account.action_account_tree
 #: model:ir.ui.menu,name:account.menu_action_account_tree2
 msgid "Chart of Accounts"
-msgstr "شجرة الحسابات"
+msgstr "الدليل المحاسبي"
 
 #. module: account
 #: view:account.tax.chart:0
@@ -4059,7 +4060,7 @@ msgstr "إلغاء التسوية"
 #. module: account
 #: view:account.chart.template:0
 msgid "Chart of Accounts Template"
-msgstr "قالب شجرة الحسابات"
+msgstr "قالب الدليل المحاسبي"
 
 #. module: account
 #: code:addons/account/account.py:2310
@@ -4144,8 +4145,8 @@ msgid ""
 "When monthly periods are created. The status is 'Draft'. At the end of "
 "monthly period it is in 'Done' status."
 msgstr ""
-"عند انشاء فترات شهرية. تكون الحالة 'مسودة'. عند أخر الفترة الشهرية تكون "
-"الحالة 'تم'"
+"عند انشاء فترات شهرية، تظل الحالة 'مسودة' إلى نهاية الفترة الشهرية، ثم تصبح  "
+"'تامة' آنذاك."
 
 #. module: account
 #: view:account.invoice.report:0
@@ -4381,7 +4382,7 @@ msgstr "الاسم"
 #: view:account.period:0
 #: view:account.subscription:0
 msgid "Set to Draft"
-msgstr "حفظ كمسودة"
+msgstr "مسودة"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_subscription_form
@@ -4504,7 +4505,7 @@ msgstr "بحث قوالب الضريبة"
 #. module: account
 #: model:ir.ui.menu,name:account.periodical_processing_journal_entries_validation
 msgid "Draft Entries"
-msgstr "مسودة المدخلات"
+msgstr "القيود المسودة"
 
 #. module: account
 #: help:account.config.settings,decimal_precision:0
@@ -4874,9 +4875,9 @@ msgid ""
 "you want to generate accounts of this template only when loading its child "
 "template."
 msgstr ""
-"وضع هذا  للخطأ لو انك لا تريد هذا النموذج لكي يستخدم منشطا في المعالجة التي "
-"تنشأ رسم البياني المحاسبي من النموذج . هذا يكون مفيد عندما تريد انشاء حسابات "
-"من هذا النموذج فقط عندما يتم تحميل النموذج الصغير"
+"أزل هذا الخيار  إذا كنت لا ترغب في استخدام هذه القالب عند إنشاء دليل محاسبي "
+"جديد من قالب. فائدة هذه الخيار أنه يسمح لك بإنشاء حسابات بناء على هذه القالب "
+"فقط في حالة تحميل القالب الفرعي."
 
 #. module: account
 #: view:account.use.model:0
@@ -5567,7 +5568,8 @@ msgstr "رمز الحساب (إذا كان النوع = الرمز)"
 #, python-format
 msgid ""
 "Cannot find a chart of accounts for this company, you should create one."
-msgstr "لم يتم العثور على دليل حسابي لهذه الشركة. يجب إنشاء دليل حسابي لها."
+msgstr ""
+"لم يتم العثور على دليل محاسبي لهذه الشركة. يجب إنشاء دليل محاسبي لها."
 
 #. module: account
 #: selection:account.analytic.journal,type:0
@@ -6557,7 +6559,7 @@ msgstr "إضافة معلومات"
 #: field:account.chart,fiscalyear:0
 #: view:account.fiscalyear:0
 msgid "Fiscal year"
-msgstr "سنة مالية"
+msgstr "السنة المالية"
 
 #. module: account
 #: view:account.move.reconcile:0
@@ -8056,7 +8058,7 @@ msgstr "سجل المدخلات اليومية"
 #: code:addons/account/account_invoice.py:361
 #, python-format
 msgid "Customer"
-msgstr "عميل"
+msgstr "العميل"
 
 #. module: account
 #: field:account.financial.report,name:0
@@ -8864,7 +8866,7 @@ msgstr "خط نموذج قيد اليومية"
 #: field:account.invoice.report,date_due:0
 #: field:report.invoice.created,date_due:0
 msgid "Due Date"
-msgstr "تاريخ الإستحقاق"
+msgstr "تاريخ الاستحقاق"
 
 #. module: account
 #: model:ir.ui.menu,name:account.menu_account_supplier
@@ -9755,7 +9757,7 @@ msgstr "يوليو/تموز"
 #. module: account
 #: view:account.account:0
 msgid "Chart of accounts"
-msgstr "شجرة الحسابات"
+msgstr "الدليل المحاسبي"
 
 #. module: account
 #: field:account.subscription.line,subscription_id:0
@@ -9803,7 +9805,7 @@ msgstr ""
 #. module: account
 #: field:account.move.line,date_maturity:0
 msgid "Due date"
-msgstr "تاريخ الإستحقاق"
+msgstr "تاريخ الاستحقاق"
 
 #. module: account
 #: model:account.payment.term,name:account.account_payment_term_immediate
@@ -9840,7 +9842,7 @@ msgstr "إشتراك الحساب"
 #. module: account
 #: report:account.overdue:0
 msgid "Maturity date"
-msgstr "تاريخ الإستحقاق"
+msgstr "تاريخ الاستحقاق"
 
 #. module: account
 #: view:account.subscription:0
@@ -10437,7 +10439,7 @@ msgstr "تعريف قيود تكرارية"
 #. module: account
 #: field:account.entries.report,date_maturity:0
 msgid "Date Maturity"
-msgstr "تاريخ الإستحقاق"
+msgstr "تاريخ الاستحقاق"
 
 #. module: account
 #: field:account.invoice.refund,description:0

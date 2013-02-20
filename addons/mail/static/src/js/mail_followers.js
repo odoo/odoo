@@ -209,21 +209,23 @@ openerp_mail_followers = function(session, mail) {
 
         /** Fetch subtypes, only if current user is follower */
         fetch_subtypes: function () {
+            var self = this;
             var subtype_list_ul = this.$('.oe_subtype_list').empty();
             if (! this.message_is_follower) return;
-            var context = new session.web.CompoundContext(this.build_context(), {});
-            this.ds_model.call('message_get_subscription_data', [[this.view.datarecord.id], context]).then(this.proxy('display_subtypes'));
+            var id = this.view.datarecord.id;
+            this.ds_model.call('message_get_subscription_data', [[id], new session.web.CompoundContext(this.build_context(), {})])
+                .then(function (data) {self.display_subtypes(data, id);});
         },
 
         /** Display subtypes: {'name': default, followed} */
-        display_subtypes:function (data) {
+        display_subtypes:function (data, id) {
             var self = this;
             var subtype_list_ul = this.$('.oe_subtype_list');
             var records = [];
             var nb_subtype = 0;
             subtype_list_ul.empty();
-            if (this.view.datarecord.id) {
-                records = data[this.view.datarecord.id].message_subtype_data;
+            if (data[id]) {
+                records = data[id].message_subtype_data;
             }
             _(records).each(function (record) {nb_subtype++;});
             if (nb_subtype > 1) {
