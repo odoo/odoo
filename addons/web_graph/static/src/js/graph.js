@@ -246,7 +246,7 @@ instance.web_graph.GraphView = instance.web.View.extend({
         var result = [];
         var ticks = {};
 
-        return obj.call("fields_view_get", [view_id, 'graph']).then(function(tmp) {
+        return obj.call("fields_view_get", [view_id, 'graph', context]).then(function(tmp) {
             view_get = tmp;
             fields = view_get['fields'];
             var toload = _.select(group_by, function(x) { return fields[x] === undefined });
