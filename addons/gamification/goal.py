@@ -20,52 +20,7 @@
 ##############################################################################
 
 from openerp.osv import fields, osv
-
-GAMIFICATION_GOAL_STATE = [
-    ('inprogress', 'In progress'),
-    ('inprogress_update', 'In progress (to update)'),
-    ('reached', 'Reached'),
-    ('failed', 'Failed'),
-]
-
-GAMIFICATION_PLAN_STATE = [
-    ('draft', 'Draft'),
-    ('inprogress', 'In progress'),
-    ('done', 'Done'),
-]
-
-GAMIFICATION_PERIOD_STATE = [
-    ('once', 'Manual'),
-    ('daily', 'Daily'),
-    ('weekly', 'Weekly'),
-    ('monthly', 'Monthly'),
-    ('yearly', 'Yearly')
-]
-
-GAMIFICATION_COMPUTATION_MODE = [
-    ('sum','Sum'),
-    ('count','Count'),
-    ('manually','Manually')
-]
-
-GAMIFICATION_VALIDATION_CONDITION = [
-    ('minus','<='),
-    ('plus','>=')
-]
-
-GAMIFICATION_REPORT_MODE = [
-    ('board','Leader board'),
-    ('progressbar','Personal progressbar')
-]
-
-GAMIFICATION_REPORT_FREQ = [
-    ('never','Never'),
-    ('onchange','On change'),
-    ('daily','Daily'),
-    ('weekly','Weekly'),
-    ('monthly','Monthly'),
-    ('yearly', 'Yearly')
-]
+from openerp.tools.safe_eval import safe_eval
 
 
 class gamification_goal_type(osv.Model):
@@ -82,7 +37,11 @@ class gamification_goal_type(osv.Model):
     _columns = {
         'name': fields.char('Type Name', required=True),
         'description': fields.text('Description'),
-        'computation_mode': fields.selection(GAMIFICATION_COMPUTATION_MODE,
+        'computation_mode': fields.selection([
+                ('sum','Sum'),
+                ('count','Count'),
+                ('manually','Manually')
+            ],
             string="Mode of Computation",
             help="""How is computed the goal value :\n
 - 'Sum' for the total of the values if the 'Evaluated field'\n
@@ -101,7 +60,10 @@ class gamification_goal_type(osv.Model):
         'domain': fields.char("Domain",
             help="Technical filters rules to apply",
             required=True), # how to apply it ?
-        'condition' : fields.selection(GAMIFICATION_VALIDATION_CONDITION,
+        'condition' : fields.selection([
+                ('minus','<='),
+                ('plus','>=')
+            ],
             string='Validation Condition',
             help='A goal is considered as completed when the current value is compared to the value to reach',
             required=True),
@@ -118,6 +80,15 @@ class gamification_goal_type(osv.Model):
         'domain':"[]",
     }
 
+
+
+def compute_goal_completeness(current, target_goal):
+    # more than 100% case is handled by the widget
+    if target_goal > 0:
+        return 100.0 * current / target_goal
+    else:
+        return 0.0
+
 class gamification_goal(osv.Model):
     """Goal instance for a user
 
@@ -131,11 +102,7 @@ class gamification_goal(osv.Model):
     def _get_completeness(self, cr, uid, ids, field_name, arg, context=None):
         res = {}
         for goal in self.browse(cr, uid, ids, context):
-            # more than 100% case is handled by the widget
-            if goal.target_goal > 0:
-                res[goal.id] = 100.0 * goal.current / goal.target_goal
-            else:
-                res[goal.id] = 0.0
+            res[goal.id] = compute_goal_completeness(goal.current, goal.target_goal)
         return res
 
     _columns = {
@@ -144,7 +111,7 @@ class gamification_goal(osv.Model):
             required=True,
             ondelete="cascade"),
         'user_id' : fields.many2one('res.users', string='User', required=True),
-        'plan_id' : fields.many2one('gamification.goal.plan',
+        'planline_id' : fields.many2one('gamification.goal.planline',
             string='Goal Plan',
             ondelete="cascade"),
         'start_date' : fields.date('Start Date'),
@@ -157,8 +124,14 @@ class gamification_goal(osv.Model):
             track_visibility = 'always'),
         'completeness': fields.function(_get_completeness,
             type='float',
-            string='Occupation'),
-        'state': fields.selection(GAMIFICATION_GOAL_STATE,
+            string='Completeness'),
+        'state': fields.selection([
+                ('inprogress', 'In progress'),
+                ('inprogress_update', 'In progress (to update)'),
+                ('reached', 'Reached'),
+                ('failed', 'Failed'),
+                ('canceled', 'Canceled'),
+            ],
             string='State',
             required=True,
             track_visibility = 'always'),
@@ -210,18 +183,38 @@ class gamification_goal_plan(osv.Model):
         'autojoin_group_id' : fields.many2one('res.groups',
             string='Group',
             help='Group of users whose members will automatically be added to the users'),
-        'period' : fields.selection(GAMIFICATION_PERIOD_STATE,
-            string='Period',
+        'period' : fields.selection([
+                ('once', 'Manual'),
+                ('daily', 'Daily'),
+                ('weekly', 'Weekly'),
+                ('monthly', 'Monthly'),
+                ('yearly', 'Yearly')
+            ],
+            string='Periodicity',
             help='Period of automatic goal assigment, will be done manually if none is selected',
             required=True),
-        'state': fields.selection(GAMIFICATION_PLAN_STATE,
+        'state': fields.selection([
+                ('draft', 'Draft'),
+                ('inprogress', 'In progress'),
+                ('done', 'Done'),
+            ],
             string='State',
             required=True),
-        'report_mode':fields.selection(GAMIFICATION_REPORT_MODE,
-            string="Mode",
-            help='How is displayed the results, shared or in a signle progressbar',
+        'visibility_mode':fields.selection([
+                ('board','Leader board'),
+                ('progressbar','Personal progressbar')
+            ],
+            string="Visibility",
+            help='How are displayed the results, shared or in a single progressbar',
             required=True),
-        'report_message_frequency':fields.selection(GAMIFICATION_REPORT_FREQ,
+        'report_message_frequency':fields.selection([
+                ('never','Never'),
+                ('onchange','On change'),
+                ('daily','Daily'),
+                ('weekly','Weekly'),
+                ('monthly','Monthly'),
+                ('yearly', 'Yearly')
+            ],
             string="Frequency",
             required=True),
         'report_message_group_id' : fields.many2one('mail.group',
@@ -235,7 +228,7 @@ class gamification_goal_plan(osv.Model):
     _defaults = {
         'period': 'once',
         'state': 'draft',
-        'report_mode' : 'progressbar',
+        'visibility_mode' : 'progressbar',
         'report_message_frequency' : 'onchange',
     }
 
@@ -285,6 +278,24 @@ class gamification_goal_plan(osv.Model):
         Change the state of the plan to in progress
         TODO: reopen unfinished goals ?"""
         return self.write(cr, uid, ids, {'state': 'inprogress'}, context=context)
+
+
+    def generate_goals_from_plan(self, cr, uid, ids, context=None):
+        """Generate the lsit of goals fron a plan"""
+        for plan in self.browse(cr, uid, ids, context):
+            for planline in plan.planline_ids:
+                for user in plan.user_ids:
+                    goal_obj = self.pool.get('gamification.goal')
+                    current = compute_current_value(planline.type_id, user_id)
+                    goal_id = goal_obj.create(cr, uid, {
+                        'type_id': planline.type_id,
+                        'user_id': user.id,
+                        'start_date':0,
+                        'end_date':0,
+                        'target_goal':planline.target_goal,
+                        'state':'inprogress',
+                        'last_update':fields.date.today,
+                    }, context=context)
 
 
 class gamification_goal_planline(osv.Model):

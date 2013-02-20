@@ -6,7 +6,6 @@
             <field name="name">Goal Plans</field>
             <field name="res_model">gamification.goal.plan</field>
             <field name="view_mode">tree,form</field>
-            <field name="context">{'search_default_draft_active': 1}</field>
             <field name="help" type="html">
                 <p class="oe_view_nocontent_create">
                     Click to create a goal plan. 
@@ -57,7 +56,7 @@
                             <div class="oe_edit_only">
                                 <label for="name"/>
                             </div>
-                            <field name="name"/>
+                            <field name="name" attrs="{'readonly':[('state','!=','draft')]}"/>
                         </h1>
 
                         <!-- action buttons -->
@@ -67,24 +66,24 @@
 
                         <group>
                             <group colspan="4">
-                                <field name="period"/>
+                                <field name="period" attrs="{'readonly':[('state','!=','draft')]}"/>
+                                <field name="remind_update_delays"/>
+                                <field name="visibility_mode"/>
                             </group>
                             <group string="Report">
-                                <field name="report_mode"/>
-                                <field name="report_message_frequency"/>
-                                <field name="report_message_group_id"/>
-                                <field name="report_header"/>
-                                <field name="remind_update_delays"/>
+                                <field name="report_message_group_id" />
+                                <field name="report_message_frequency" attrs="{'invisible':[('report_message_group_id','!=', False)], 'required':[('report_message_group_id','!=', False)]}"/>
+                                <field name="report_header" attrs="{'invisible':[('report_message_group_id','!=', False)]}"/>
                             </group>
                         </group>
                         
                         <group string="Planlines">
-                                <field name="planline_ids" nolabel="1" attrs="{'readonly':[('state','!=','draft')]}">
-                                    <tree string="Planline List" version="7.0" editable="bottom" >
-                                        <field name="type_id"/>
-                                        <field name="target_goal"/>
-                                    </tree>
-                                </field>
+                            <field name="planline_ids" nolabel="1">
+                                <tree string="Planline List" version="7.0" editable="bottom" >
+                                    <field name="type_id"/>
+                                    <field name="target_goal"/>
+                                </tree>
+                            </field>
                         </group>
                         
                         <group string="Subscription">
@@ -135,7 +134,7 @@
             <field name="model">gamification.goal.plan</field>
             <field name="arch" type="xml">
                 <search string="Search Goal Plans">
-                    <filter name="draft_active" string="Draft or Active Plans"
+                    <filter name="draft_inprogress" string="Non-closed Plans"
                         domain="[('state', 'in', ('inprogress', 'draft'))]"/>
                     <field name="name"/>
                     <group expand="0" string="Group By...">

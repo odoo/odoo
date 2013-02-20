@@ -5,7 +5,6 @@
             <field name="name">Goals</field>
             <field name="res_model">gamification.goal</field>
             <field name="view_mode">tree,form,calendar</field>
-            <field name="context">{'search_default_my_in_progress': 1}</field>
             <field name="help" type="html">
                 <p class="oe_view_nocontent_create">
                     Click to create a goal. 
@@ -30,7 +29,7 @@
                     <field name="end_date"/>
                     <field name="completeness" widget="progressbar"/>
                     <field name="state" invisible="1"/>
-                    <field name="plan_id" invisible="1"/>
+                    <field name="planline_id" invisible="1"/>
                 </tree>
             </field>
         </record>
@@ -41,7 +40,8 @@
             <field name="arch" type="xml">
                 <form string="Goal" version="7.0">
                     <header>
-                        <button string="Goal Reached" type="object" name="action_reach" states="inprogress,inprogress_update" class="oe_highlight"/>
+                        <button string="Refresh state" type="object" name="action_refresh" states="inprogress,inprogress_update" class="oe_highlight"/>
+                        <button string="Goal Reached" type="object" name="action_reach" states="inprogress,inprogress_update" />
                         <button string="Goal Failed" type="object" name="action_fail" states="inprogress,inprogress_update"/>
                         <button string="Reset Completion" type="object" name="action_cancel" states="failed,reached"/>
                         <field name="state" widget="statusbar" statusbar_visible="inprogress,inprogress_update" />
@@ -51,7 +51,7 @@
                             <group string="Reference">
                                 <field name="type_id"/>
                                 <field name="user_id"/>
-                                <field name="plan_id"/>
+                                <field name="planline_id"/>
                             </group>
                             <group string="Schedule">
                                 <field name="start_date"/>
@@ -89,9 +89,9 @@
             <field name="model">gamification.goal</field>
             <field name="arch" type="xml">
                 <search string="Search Goals">
-                    <filter name="my_in_progress" string="My Goals in Progress"
+                    <filter name="my_inprogress" string="My Goals in Progress"
                         domain="[('user_id', '=', uid),('state', 'in', ('inprogress', 'inprogress_update'))]"/>
-                    <field name="plan_id"/>
+                    <field name="planline_id"/>
                     <field name="user_id"/>
                     <field name="type_id"/>
                     <group expand="0" string="Group By...">
@@ -99,7 +99,6 @@
                         <filter string="Goal Type" domain="[]" context="{'group_by':'type_id'}"/>
                         <filter string="State" domain="[]" context="{'group_by':'state'}"/>
                         <filter string="End Date" domain="[]" context="{'group_by':'end_date'}"/>
-                        <filter string="Plan" domain="[]" context="{'group_by':'plan_id'}"/>
                     </group>
                 </search>
             </field>

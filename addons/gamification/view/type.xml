@@ -50,10 +50,10 @@
                             <group string="Computation">
                                 <field name="computation_mode"/>
 
-                                <!-- Hide the fields beloz if manually -->
+                                <!-- Hide the fields below if manually -->
                                 <field name="model_id" attrs="{'invisible':[('computation_mode','=','manually')], 'required':[('computation_mode','!=','manually')]}"/>
-                                <field name="field_id" attrs="{'invisible':[('computation_mode','=','manually')], 'required':[('computation_mode','!=','manually')]}" domain="[('model_id','=',model_id)]" />
-                                <field name="field_date_id" attrs="{'invisible':[('computation_mode','=','manually')], 'required':[('computation_mode','!=','manually')]}" domain="[('ttype', 'in', ('date', 'datetime')), ('model_id','=',model_id)]"/>
+                                <field name="field_id" attrs="{'invisible':[('computation_mode','!=','sum')], 'required':[('computation_mode','=','sum')]}" domain="[('model_id','=',model_id)]" />
+                                <field name="field_date_id" attrs="{'invisible':[('computation_mode','=','manually')]}" domain="[('ttype', 'in', ('date', 'datetime')), ('model_id','=',model_id)]"/>
                                 <field name="domain" attrs="{'invisible':[('computation_mode','=','manually')], 'required':[('computation_mode','!=','manually')]}"/>
                             </group>
                         </group>
