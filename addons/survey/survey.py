@@ -39,6 +39,10 @@ class survey(osv.osv):
     _name = 'survey'
     _description = 'Survey'
     _rec_name = 'title'
+    _inherit = ['ir.needaction_mixin']
+
+    def _needaction_domain_get(self, cr, uid, context=None):
+        return ['&', ('response_ids.state', 'in', ['new', 'skip']), ('response_ids.partner_id.user_id', '=', uid)]
 
     def default_get(self, cr, uid, fields, context=None):
         data = super(survey, self).default_get(cr, uid, fields, context)
@@ -603,6 +607,7 @@ survey_answer()
 class survey_response(osv.osv):
     _name = "survey.response"
     _rec_name = 'date_create'
+
     _columns = {
         'date_deadline': fields.date("Deadline date", help="Date by which the person can respond to the survey"),
         'survey_id': fields.many2one('survey', 'Survey', required=1, readonly=1, ondelete='cascade'),

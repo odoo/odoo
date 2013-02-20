@@ -265,7 +265,8 @@
                     <filter string="Closed" domain="[('state','=','close')]"/>
                     <filter string="Canceled" domain="[('state','=','cancel')]"/>
                     <separator/>
-                    <filter string="My Survey(s)" icon="terp-personal" domain="[('responsible_id','=',uid)]" help="My Survey(s)"/>
+                    <filter string="My Surveys" domain="[('responsible_id','=',uid)]" help="The surveys I am responsible of"/>
+                    <filter string="Survey to fill in" name="unread_message" domain="['&amp;', ('response_ids.state', 'in', ['new', 'skip']), ('response_ids.partner_id.user_id', '=', uid)]"/>
                     <field name="responsible_id"/>
                    <group expand="0" string="Group By...">
                        <filter string="Responsible" icon="terp-personal" domain="[]"  context="{'group_by':'responsible_id'}"/>
