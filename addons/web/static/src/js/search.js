@@ -1548,6 +1548,9 @@ instance.web.search.CustomFilters = instance.web.search.Input.extend({
             })
             .on('reset', this.proxy('clear_selection'));
         this.$el.on('submit', 'form', this.proxy('save_current'));
+        this.$el.on('click', 'input[type=checkbox]', function() {
+            $(this).siblings('input[type=checkbox]').prop('checked', false);
+        });
         this.$el.on('click', 'h4', function () {
             self.$el.toggleClass('oe_opened');
         });
