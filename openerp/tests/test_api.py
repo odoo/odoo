@@ -12,6 +12,11 @@ class TestAPI(common.TransactionCase):
         self.Partner = self.registry('res.partner')
         self.Users = self.registry('res.users')
 
+    def assertIsKind(self, value, kind, model):
+        """ check for isinstance(value, kind) and value._name == model """
+        self.assertIsInstance(value, kind)
+        self.assertEqual(value._name, model)
+
     @mute_logger('openerp.osv.orm')
     def test_00_query(self):
         """ Build a recordset, and check its contents. """
@@ -23,7 +28,7 @@ class TestAPI(common.TransactionCase):
         self.assertTrue(ids)
         self.assertTrue(partners)
         for p in partners:
-            self.assertIsInstance(p, Record)
+            self.assertIsKind(p, Record, 'res.partner')
         self.assertEqual([p.id for p in partners], ids)
 
     @mute_logger('openerp.osv.orm')
@@ -95,60 +100,49 @@ class TestAPI(common.TransactionCase):
     def test_06_fields(self):
         """ Check that relation fields return records, recordsets or nulls. """
         user = self.Users.browse(self.cr, self.uid, self.uid)
-        self.assertIsInstance(user, Record)
+        self.assertIsKind(user, Record, 'res.users')
         # Check for a programming bug: accessing 'partner_id' should read all
         # prefetched fields in the record cache, and many2many fields should not
         # be prefetched.  When rewriting the record access, I observed that
         # many2many fields may be anyway read, and put in the cache as a list of
         # ids instead of a recordset.
-        self.assertIsInstance(user.partner_id, Record)
-        self.assertIsInstance(user.groups_id, Recordset)
+        self.assertIsKind(user.partner_id, Record, 'res.partner')
+        self.assertIsKind(user.groups_id, Recordset, 'res.groups')
 
         partners = self.Partner.query(self.cr, self.uid, [])
         for name, cinfo in partners._all_columns.iteritems():
             if cinfo.column._type in ('many2one', 'reference'):
                 for p in partners:
                     if p[name]:
-                        self.assertIsInstance(p[name], Record)
+                        self.assertIsKind(p[name], Record, cinfo.column._obj)
                     else:
-                        self.assertIsInstance(p[name], Null)
+                        self.assertIsKind(p[name], Null, cinfo.column._obj)
             elif cinfo.column._type in ('one2many', 'many2many'):
                 for p in partners:
-                    self.assertIsInstance(p[name], Recordset)
+                    self.assertIsKind(p[name], Recordset, cinfo.column._obj)
 
     @mute_logger('openerp.osv.orm')
     def test_07_null(self):
-        """ Check behavior of nulls. """
+        """ Check behavior of null instances. """
         # select a partner without a parent
         partner = self.Partner.query(self.cr, self.uid, [('parent_id', '=', False)])[0]
 
-        # check partner
+        # check partner and related null instances
         self.assertTrue(partner)
-        self.assertIsInstance(partner, Record)
-        self.assertEqual(partner._name, 'res.partner')
+        self.assertIsKind(partner, Record, 'res.partner')
 
-        # check partner.parent_id
         self.assertFalse(partner.parent_id)
-        self.assertIsInstance(partner.parent_id, Null)
-        self.assertEqual(partner.parent_id._name, 'res.partner')
+        self.assertIsKind(partner.parent_id, Null, 'res.partner')
 
-        # check partner.parent_id.id
-        self.assertFalse(partner.parent_id.id)
         self.assertIs(partner.parent_id.id, False)
 
-        # check partner.parent_id.user_id
         self.assertFalse(partner.parent_id.user_id)
-        self.assertIsInstance(partner.parent_id.user_id, Null)
-        self.assertEqual(partner.parent_id.user_id._name, 'res.users')
+        self.assertIsKind(partner.parent_id.user_id, Null, 'res.users')
 
-        # check partner.parent_id.user_id.name
-        self.assertFalse(partner.parent_id.user_id.name)
         self.assertIs(partner.parent_id.user_id.name, False)
 
-        # check partner.parent_id.user_id.name.groups_id
         self.assertFalse(partner.parent_id.user_id.groups_id)
-        self.assertIsInstance(partner.parent_id.user_id.groups_id, Recordset)
-        self.assertEqual(partner.parent_id.user_id.groups_id._name, 'res.groups')
+        self.assertIsKind(partner.parent_id.user_id.groups_id, Recordset, 'res.groups')
 
     @mute_logger('openerp.osv.orm')
     def test_10_old_old(self):
