@@ -153,7 +153,7 @@ class survey(osv.osv):
             'view_mode': 'form',
             'res_model': 'survey.question.wiz',
             'type': 'ir.actions.act_window',
-            'target': 'new',
+            'target': 'inline',
             'name': self.browse(cr, uid, id, context=context).title,
             'context': context
         }
@@ -200,7 +200,7 @@ class survey(osv.osv):
             'default_use_template': bool(template_id),
             'default_template_id': template_id,
             'default_composition_mode': 'comment',
-            'mark_invoice_as_sent': True,
+            'survey_state': survey_browse.state
             })
         return {
             'type': 'ir.actions.act_window',

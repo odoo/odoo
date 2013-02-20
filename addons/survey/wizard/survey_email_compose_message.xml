@@ -35,7 +35,7 @@
                         <field name="model" invisible="1"/>
                         <field name="res_id" invisible="1"/>
                         <field name="parent_id" invisible="1"/>
-                        <field name="date_deadline"/>
+                        <field name="date_deadline" invisible="context.get('survey_state') != 'restricted'"/>
                         <field string="List of partners" name="partner_ids" widget="many2many_tags_email" placeholder="Add contacts to notify..." context="{'force_email':True, 'show_email':True}"/>
                         <field name="multi_email"/>
                         <field name="subject" placeholder="Subject..."/>
