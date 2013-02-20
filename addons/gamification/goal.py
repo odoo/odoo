@@ -145,6 +145,58 @@ class gamification_goal(osv.Model):
         'start_date': fields.date.today,
     }
 
+    def update(self, cr, uid, ids, context=None):
+        """Update the goals to recomputes values and change of states"""
+
+        for goal in self.browse(cr, uid, ids, context=context or {}):
+            if goal.state not in ('inprogress','inprogress_update'): # reached ?
+                continue
+
+            if goal.type_id.computation_mode == 'sum':
+                obj = self.pool.get(goal.type_id.model_id.model)
+                field_name = goal.type_id.field_id.name
+                field_date_name = goal.type_id.field_date_id.name
+                
+                domain = safe_eval(goal.type_id.domain)
+                domain.append(('user_id', '=', goal.user_id.id))
+                if goal.start_date:
+                    domain.append((field_date_name, '>=', goal.start_date))
+                if goal.end_date:
+                    domain.append((field_date_name, '<=', goal.end_date))
+
+                res = obj.read_group(cr, uid, domain, [field_name],
+                    [''], context=context)
+                print("domain", domain, "res", res)
+                current = res[0][field_name]
+                
+            elif goal.type_id.computation_mode == 'count':
+                obj = self.pool.get(goal.type_id.model_id.model)
+                field_date_name = goal.type_id.field_date_id.name
+                
+                domain = safe_eval(goal.type_id.domain)
+                domain.append(('user_id', '=', goal.user_id.id))
+                if goal.start_date:
+                    domain.append((field_date_name, '>=', goal.start_date))
+                if goal.end_date:
+                    domain.append((field_date_name, '<=', goal.end_date))
+
+                res = obj.search(cr, uid, domain, context=context)
+                print("domain", domain, "res", len(res), res)
+                current = len(res)
+            
+            # else computation_mode == 'manually', nothing to compute
+
+            towrite = {'current': current}
+            if (goal.type_id.condition == 'plus' and current >= goal.target_goal) \
+            or (goal.type_id.condition == 'minus' and current <= goal.target_goal):
+                towrite['state'] = 'reached'
+
+            elif goal.end_date and fields.date.today > goal.end_date:
+                towrite['state'] = 'failed'
+
+            self.write(cr, uid, [goal.id], towrite, context=context)
+        return True
+
     def action_reach(self, cr, uid, ids, context=None):
         return self.write(cr, uid, ids, {'state': 'reached'}, context=context)
 
@@ -154,6 +206,8 @@ class gamification_goal(osv.Model):
     def action_cancel(self, cr, uid, ids, context=None):
         return self.write(cr, uid, ids, {'state': 'inprogress'}, context=context)
 
+    def action_refresh(self, cr, uid, ids, context=None):
+        return self.update(cr, uid, ids, context=context)
 
 
 class gamification_goal_plan(osv.Model):
