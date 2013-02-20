@@ -512,13 +512,13 @@ class BaseModel(object):
 
     OpenERP models are created by inheriting from this class' subclasses:
 
-        * :class:`Model` for regular database-persisted models
+    *   :class:`Model` for regular database-persisted models
 
-        * :class:`TransientModel` for temporary data, stored in the database but
-          automatically vaccuumed every so often
+    *   :class:`TransientModel` for temporary data, stored in the database but
+        automatically vaccuumed every so often
 
-        * :class:`AbstractModel` for abstract super classes meant to be shared
-          by multiple inheriting model
+    *   :class:`AbstractModel` for abstract super classes meant to be shared by
+        multiple inheriting model
 
     The system automatically instantiates every model once per database. Those
     instances represent the available models on each database, and depend on
@@ -529,19 +529,20 @@ class BaseModel(object):
     Other instances encapsulate session data (cursor, user id, context) together
     with model functionalities. There are four kinds of them:
 
-        * model: represents a model, usually given by :meth:`Session.model`;
+    *   `model`: represents a model, usually given by :meth:`Session.model`;
 
-        * record: represents a record of the given model, typically returned by
-          :meth:`~.browse` or another record/recordset. One can read the fields
-          of a record as its attributes.
+    *   `record`: represents a record of the given model, typically returned by
+        :meth:`~.browse` or another record/recordset. One can read the fields of
+        a record as its attributes.
 
-        * recordset: represents a collection of records in the given model,
-          typically returned by :meth:`~.browse`, :meth:`~.query`, or another
-          record/recordset. One can iterate over it.
+    *   `recordset`: represents a collection of records in the given model,
+        typically returned by :meth:`~.browse`, :meth:`~.query`, or another
+        record/recordset. One can iterate over it.
 
-        * null: represents an absent record (null object pattern). One can read
-          its fields like a record, but they all are either ``False``, null, or
-          empty recordsets, depending on the field's type.
+    *   `null`: represents an absent record (null object pattern), typically
+        returned by :meth:`~.browse` or another record/recordset. One can read
+        its fields like a record, but they all are either ``False``, null, or
+        empty recordsets, depending on the field's type.
 
     All those kinds can use model methods to perform some action related to the
     model or some of its records. Of course, methods applying on specific
