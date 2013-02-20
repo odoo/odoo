@@ -27,7 +27,7 @@ import pdb
 import time
 
 import openerp
-from openerp import netsvc, tools
+from openerp import tools
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
 
@@ -364,7 +364,7 @@ class pos_session(osv.osv):
             ids = [ids]
 
         this_record = self.browse(cr, uid, ids[0], context=context)
-        this_record._workflow_signal('open')
+        this_record.signal_workflow('open')
 
         context.update(active_id=this_record.id)
 
@@ -442,14 +442,14 @@ class pos_session(osv.osv):
         }
 
     def _confirm_orders(self, cr, uid, ids, context=None):
-        wf_service = netsvc.LocalService("workflow")
-
+        account_move_obj = self.pool.get('account.move')
+        pos_order_obj = self.pool.get('pos.order')
         for session in self.browse(cr, uid, ids, context=context):
             order_ids = [order.id for order in session.order_ids if order.state == 'paid']
 
-            move_id = self.pool.get('account.move').create(cr, uid, {'ref' : session.name, 'journal_id' : session.config_id.journal_id.id, }, context=context)
+            move_id = account_move_obj.create(cr, uid, {'ref' : session.name, 'journal_id' : session.config_id.journal_id.id, }, context=context)
 
-            self.pool.get('pos.order')._create_account_move_line(cr, uid, order_ids, session, move_id, context=context)
+            pos_order_obj._create_account_move_line(cr, uid, order_ids, session, move_id, context=context)
 
             for order in session.order_ids:
                 if order.state not in ('paid', 'invoiced'):
@@ -457,7 +457,7 @@ class pos_session(osv.osv):
                         _('Error!'),
                         _("You cannot confirm all orders of this session, because they have not the 'paid' status"))
                 else:
-                    wf_service.trg_validate(uid, 'pos.order', order.id, 'done', cr)
+                    pos_order_obj.signal_done(cr, uid, [order.id])
 
         return True
 
@@ -519,8 +519,7 @@ class pos_order(osv.osv):
                     'journal': cash_journal.id,
                 }, context=context)
             order_ids.append(order_id)
-            wf_service = netsvc.LocalService("workflow")
-            wf_service.trg_validate(uid, 'pos.order', order_id, 'paid', cr)
+            self.signal_paid(cr, uid, [order_id])
         return order_ids
 
     def unlink(self, cr, uid, ids, context=None):
@@ -695,9 +694,8 @@ class pos_order(osv.osv):
                 }, context=context)
                 if line.qty < 0:
                     location_id, output_id = output_id, location_id
-
-            wf_service = netsvc.LocalService("workflow")
-            wf_service.trg_validate(uid, 'stock.picking', picking_id, 'button_confirm', cr)
+            
+            picking_obj.signal_button_confirm(cr, uid, [picking_id])
             picking_obj.force_assign(cr, uid, [picking_id], context)
         return True
 
@@ -707,7 +705,7 @@ class pos_order(osv.osv):
         """
         stock_picking_obj = self.pool.get('stock.picking')
         for order in self.browse(cr, uid, ids, context=context):
-            wf_service.trg_validate(uid, 'stock.picking', order.picking_id.id, 'button_cancel', cr)
+            stock_picking_obj.signal_button_cancel(cr, uid, [order.picking_id.id])
             if stock_picking_obj.browse(cr, uid, order.picking_id.id, context=context).state <> 'cancel':
                 raise osv.except_osv(_('Error!'), _('Unable to cancel the picking.'))
         self.write(cr, uid, ids, {'state': 'cancel'}, context=context)
@@ -803,7 +801,6 @@ class pos_order(osv.osv):
         return self.write(cr, uid, ids, {'state':'invoiced'}, context=context)
 
     def action_invoice(self, cr, uid, ids, context=None):
-        wf_service = netsvc.LocalService("workflow")
         inv_ref = self.pool.get('account.invoice')
         inv_line_ref = self.pool.get('account.invoice.line')
         product_obj = self.pool.get('product.product')
@@ -853,11 +850,10 @@ class pos_order(osv.osv):
                 inv_line['price_unit'] = line.price_unit
                 inv_line['discount'] = line.discount
                 inv_line['name'] = inv_name
-                inv_line['invoice_line_tax_id'] = ('invoice_line_tax_id' in inv_line)\
-                    and [(6, 0, inv_line['invoice_line_tax_id'])] or []
+                inv_line['invoice_line_tax_id'] = [(6, 0, [x.id for x in line.product_id.taxes_id] )]
                 inv_line_ref.create(cr, uid, inv_line, context=context)
             inv_ref.button_reset_taxes(cr, uid, [inv_id], context=context)
-            wf_service.trg_validate(uid, 'pos.order', order.id, 'invoice', cr)
+            self.signal_invoice(cr, uid, [order.id])
 
         if not inv_ids: return {}
 
@@ -1156,7 +1152,6 @@ class pos_order_line(osv.osv):
 
         prod = self.pool.get('product.product').browse(cr, uid, product, context=context)
 
-        taxes = prod.taxes_id
         price = price_unit * (1 - (discount or 0.0) / 100.0)
         taxes = account_tax_obj.compute_all(cr, uid, prod.taxes_id, price, qty, product=prod, partner=False)
 

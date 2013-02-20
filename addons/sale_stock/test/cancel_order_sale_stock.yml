@@ -17,11 +17,9 @@
   Now I cancel latest shipment.
 -
   !python {model: stock.picking}: |
-    import netsvc
     delivery_orders = self.search(cr, uid, [('sale_id','=',ref("sale.sale_order_8"))])
     last_delivery_order_id = delivery_orders[0]
-    wf_service = netsvc.LocalService("workflow")
-    wf_service.trg_validate(uid, 'stock.picking', last_delivery_order_id, 'button_cancel', cr)
+    self.pool.get('stock.picking').signal_button_cancel(cr, uid, [last_delivery_order_id])
 -
   I run the scheduler.
 -
@@ -50,11 +48,9 @@
   To cancel the sale order from Invoice Exception, I have to cancel the invoice of sale order.
 -
   !python {model: sale.order}: |
-    import netsvc
     invoice_ids = self.browse(cr, uid, ref("sale.sale_order_8")).invoice_ids
-    wf_service = netsvc.LocalService("workflow")
     first_invoice_id = invoice_ids[0]
-    wf_service.trg_validate(uid, 'account.invoice', first_invoice_id.id, 'invoice_cancel', cr)
+    self.pool.get('account.invoice').signal_invoice_cancel(cr, uid, [first_invoice_id.id])
 -
   I check order status in "Invoice Exception" and related invoice is in cancel state.
 -

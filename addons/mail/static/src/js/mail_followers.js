@@ -216,9 +216,12 @@ openerp_mail_followers = function(session, mail) {
         display_subtypes:function (data) {
             var self = this;
             var subtype_list_ul = this.$('.oe_subtype_list');
-            subtype_list_ul.empty();
-            var records = data[this.view.datarecord.id || this.view.dataset.ids[0]].message_subtype_data;
+            var records = [];
             var nb_subtype = 0;
+            subtype_list_ul.empty();
+            if (this.view.datarecord.id) {
+                records = data[this.view.datarecord.id].message_subtype_data;
+            }
             _(records).each(function (record) {nb_subtype++;});
             if (nb_subtype > 1) {
                 this.$('hr').show();

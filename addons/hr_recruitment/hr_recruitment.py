@@ -353,6 +353,7 @@ class hr_applicant(base_stage, osv.Model):
             'email_from': msg.get('from'),
             'email_cc': msg.get('cc'),
             'user_id': False,
+            'partner_id': msg.get('author_id', False),
         }
         if msg.get('priority'):
             defaults['priority'] = msg.get('priority')
@@ -370,7 +371,6 @@ class hr_applicant(base_stage, osv.Model):
             update_vals = {}
 
         update_vals.update({
-            'description': msg.get('body'),
             'email_from': msg.get('from'),
             'email_cc': msg.get('cc'),
         })
