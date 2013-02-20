@@ -19,7 +19,7 @@
                 </form>
             </field>
         </record>
-        <record id="action_product_margin_form" model="ir.actions.act_window">
+        <record id="product_margin_act_window" model="ir.actions.act_window">
             <field name="name">Product Margins</field>
             <field name="res_model">product.margin</field>
             <field name="src_model">product.product</field>
@@ -32,7 +32,7 @@
              <field name="inherit_id" ref="product.product_normal_form_view"/>
              <field name="arch" type="xml">
                  <xpath expr="//div[@name='buttons']" position="inside">
-                     <button string="Product Margins" name="%(action_product_margin_form)d" type="action" groups="base.group_sale_manager"/>
+                     <button string="Product Margins" name="%(product_margin_act_window)d" type="action" groups="base.group_sale_manager"/>
                  </xpath>
              </field>
         </record>
