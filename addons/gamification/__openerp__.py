@@ -31,6 +31,7 @@
         'view/goal.xml',
         'view/plan.xml',
         'view/menu.xml',
+        'cron.xml',
         ],
     'installable': True,
     'application': True,

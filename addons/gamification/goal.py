@@ -94,8 +94,7 @@ def compute_goal_completeness(current, target_goal):
 class gamification_goal(osv.Model):
     """Goal instance for a user
 
-    An individual goal for a user on a specified time period
-    """
+    An individual goal for a user on a specified time period"""
 
     _name = 'gamification.goal'
     _description = 'Gamification goal instance'
@@ -163,14 +162,22 @@ class gamification_goal(osv.Model):
         'last_update': fields.date.today,
     }
 
+
+
+    def _update_all(self, cr, uid, ids=False, context=None):
+        """Update every goal in progress"""
+        if not ids:
+            ids = self.search(cr, uid, [('state', 'in', ('inprogress','inprogress_update'))])
+        print("_update_all", ids)
+        return self.update(cr, uid, ids, context=context)
+
     def update(self, cr, uid, ids, context=None, force_update=False):
         """Update the goals to recomputes values and change of states
 
         If a goal reaches the target value, the status is set to reach
         If the end date is passed (at least +1 day, time not considered) without
         the target value being reached, the goal is set as failed
-        If the force_update parameter is false, only goals in progress are 
-        checked."""
+        :param force_update: if false, only goals in progress are checked."""
 
         for goal in self.browse(cr, uid, ids, context=context or {}):
             if not force_update and goal.state not in ('inprogress','inprogress_update'): # reached ?
@@ -276,7 +283,6 @@ class gamification_goal(osv.Model):
 
         obj = self.pool.get('gamification.goal')
         goal_ids = obj.search(cr, uid, [('planline_id', '=', planline_id)], context=context)
-        print("cancel goals", goal_ids)
         return self.write(cr, uid, goal_ids, {'state': 'canceled'}, context=context)
 
     def action_reach(self, cr, uid, ids, context=None):
@@ -388,6 +394,13 @@ class gamification_goal_plan(osv.Model):
         (_check_nonzero_users, "At least one user is required to create a non-draft goal plan", ['user_ids']),
     ]
 
+    def _update_all(self, cr, uid, ids=False, context=None):
+        """Update every plan in progress"""
+        if not ids:
+            ids = self.search(cr, uid, [('state', '=', 'inprogress')])
+        print("_update_all", ids)
+        return self.generate_goals_from_plan(cr, uid, ids, context=context)
+
     def action_start(self, cr, uid, ids, context=None):
         """Start a draft goal plan
 
@@ -402,6 +415,9 @@ class gamification_goal_plan(osv.Model):
         Recompute the current value for each goal related"""
         self.generate_goals_from_plan(cr, uid, ids, context=context)
         for plan in self.browse(cr, uid, ids, context):
+            if plan.state != 'improgress':
+                continue
+
             for planline in plan.planline_ids:
                 goal_obj = self.pool.get('gamification.goal')
                 goal_ids = goal_obj.search(cr, uid, [('planline_id', '=', planline.id)] , context=context)
