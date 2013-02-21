@@ -686,11 +686,16 @@ openerp.mail = function (session) {
                 'attachment_ids': _.map(this.attachment_ids, function (file) {return file.id;}),
                 'partner_ids': partner_ids,
                 'context': this.parent_thread.context,
+                'type': 'comment',
+                'content_subtype': 'plaintext',
             };
             if (log) {
                 values['subtype'] = false;
             }
-            this.parent_thread.ds_thread._model.call('message_post_user_api', [this.context.default_res_id], values).done(function (message_id) {
+            else {
+                values['subtype'] = 'mail.mt_comment';   
+            }
+            this.parent_thread.ds_thread._model.call('message_post', [this.context.default_res_id], values).done(function (message_id) {
                 var thread = self.parent_thread;
                 var root = thread == self.options.root_thread;
                 if (self.options.display_indented_thread < self.thread_level && thread.parent_message) {

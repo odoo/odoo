@@ -610,7 +610,7 @@ class mail_thread(osv.AbstractModel):
             else:
                 assert thread_id == 0, "Posting a message without model should be with a null res_id, to create a private message."
                 model_pool = self.pool.get('mail.thread')
-            new_msg_id = model_pool.message_post_user_api(cr, uid, [thread_id], context=context, content_subtype='html', **msg)
+            new_msg_id = model_pool.message_post(cr, uid, [thread_id], context=context, subtype='mail.mt_comment', **msg)
 
             if partner_ids:
                 # postponed after message_post, because this is an external message and we don't want to create
@@ -853,12 +853,21 @@ class mail_thread(osv.AbstractModel):
                     print 'found', message_ids
         return partner_info
 
-    def message_post(self, cr, uid, thread_id, body='', subject=None, type='notification',
+    def message_post(self, cr, uid, thread_id, body='', subject=None, content_subtype='html', type='notification',
                         subtype=None, parent_id=False, attachments=None, context=None, **kwargs):
         """ Post a new message in an existing thread, returning the new
             mail.message ID. Extra keyword arguments will be used as default
             column values for the new mail.message record.
             Auto link messages for same id and object
+
+            The purpose is to perform some pre- and post-processing:
+            - if body is plaintext: convert it into html
+            - if parent_id: handle reply to a previous message by adding the
+                parent partners to the message
+            - type and subtype: comment and mail.mt_comment by default
+            - attachment_ids: supposed not attached to any document; attach them
+                to the related document. Should only be set by Chatter.
+
             :param int thread_id: thread ID to post into, or list with one ID;
                 if False/0, mail.message model will also be set as False
             :param str body: body of the message, usually raw HTML that will
@@ -888,12 +897,22 @@ class mail_thread(osv.AbstractModel):
         if thread_id:
             model = context.get('thread_model', self._name) if self._name == 'mail.thread' else self._name
 
-        # 2. Pre-processing: attachments
-        # HACK TDE FIXME: Chatter: attachments linked to the document (not done JS-side), load the message
+        # 1: Handle content subtype: if plaintext, converto into HTML
+        if content_subtype == 'plaintext':
+            body = tools.plaintext2html(body)
+
+        # 2: Private message: add recipients (recipients and author of parent message)
+        partner_ids = set(kwargs.pop('partner_ids', []))
+        if parent_id and model == 'mail.thread':
+            parent_message = mail_message.browse(cr, uid, parent_id, context=context)
+            partner_ids |= set([partner.id for partner in parent_message.partner_ids])
+            if parent_message.author_id:
+                partner_ids.add(parent_message.author_id.id)
+
+        # 3. Attachments
+        #   - HACK TDE FIXME: Chatter: attachments linked to the document (not done JS-side), load the message
         attachment_ids = kwargs.pop('attachment_ids', []) or []  # because we could receive None (some old code sends None)
         if attachment_ids:
-            # TDE FIXME (?): when posting a private message, we use mail.thread as a model
-            # However, attaching doc to mail.thread is not possible, mail.thread does not have any table
             filtered_attachment_ids = ir_attachment.search(cr, SUPERUSER_ID, [
                 ('res_model', '=', 'mail.compose.message'),
                 ('res_id', '=', 0),
@@ -916,7 +935,7 @@ class mail_thread(osv.AbstractModel):
             }
             attachment_ids.append((0, 0, data_attach))
 
-        # fetch subtype
+        # 4: mail.message.subtype
         if subtype:
             s_data = subtype.split('.')
             if len(s_data) == 1:
@@ -968,48 +987,6 @@ class mail_thread(osv.AbstractModel):
             values.pop(x, None)
 
         return mail_message.create(cr, uid, values, context=context)
-
-    def message_post_user_api(self, cr, uid, thread_id, body='', parent_id=False,
-                                content_subtype='plaintext', context=None, **kwargs):
-        """ Wrapper on message_post, used for user input :
-            - mail gateway
-            - quick reply in Chatter (refer to mail.js), not
-                the mail.compose.message wizard
-            The purpose is to perform some pre- and post-processing:
-            - if body is plaintext: convert it into html
-            - if parent_id: handle reply to a previous message by adding the
-                parent partners to the message
-            - type and subtype: comment and mail.mt_comment by default
-            - attachment_ids: supposed not attached to any document; attach them
-                to the related document. Should only be set by Chatter.
-        """
-        mail_message_obj = self.pool.get('mail.message')
-
-        # 1.A.1: add recipients of parent message (# TDE FIXME HACK: mail.thread -> private message)
-        partner_ids = set([])
-        if parent_id and self._name == 'mail.thread':
-            parent_message = mail_message_obj.browse(cr, uid, parent_id, context=context)
-            partner_ids |= set([partner.id for partner in parent_message.partner_ids])
-            if parent_message.author_id:
-                partner_ids.add(parent_message.author_id.id)
-
-        # 1.A.2: add specified recipients
-        for item in kwargs.pop('partner_ids', []):
-            if isinstance(item, (list, tuple)):
-                partner_ids.add(item[1])
-            else:
-                partner_ids.add(item)
-
-        # 1.B: handle body, message_type and message_subtype
-        if content_subtype == 'plaintext':
-            body = tools.plaintext2html(body)
-        msg_type = kwargs.pop('type', 'comment')
-        msg_subtype = kwargs.pop('subtype', 'mail.mt_comment')
-
-        # 3. Post message
-        return self.message_post(cr, uid, thread_id=thread_id, body=body,
-                            type=msg_type, subtype=msg_subtype, parent_id=parent_id,
-                            partner_ids=list(partner_ids), context=context, **kwargs)
 
     #------------------------------------------------------
     # Followers API
