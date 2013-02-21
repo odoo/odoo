@@ -34,7 +34,7 @@ class project_configuration(osv.osv_memory):
                 This installs the module project_mrp."""),
         'module_pad': fields.boolean("Use integrated collaborative note pads on task",
             help="""Lets the company customize which Pad installation should be used to link to new pads
-                (for an example, http://ietherpad.com/).
+                (for example: http://ietherpad.com/).
                 This installs the module pad."""),
         'module_project_timesheet': fields.boolean("Record timesheet lines per tasks",
             help="""This allows you to transfer the entries under tasks defined for Project Management to
