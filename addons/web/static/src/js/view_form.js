@@ -1193,6 +1193,10 @@ instance.web.form.FormRenderingEngine = instance.web.form.FormRenderingEngineInt
         $('button', doc).each(function() {
             $(this).attr('data-button-type', $(this).attr('type')).attr('type', 'button');
         });
+        // IE's html parser is also a css parser. How convenient...
+        $('board', doc).each(function() {
+            $(this).attr('layout', $(this).attr('style'));
+        });
         return $('<div class="oe_form"/>').append(instance.web.xml_to_str(doc));
     },
     render_to: function($target) {
