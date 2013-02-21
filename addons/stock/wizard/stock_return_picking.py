@@ -29,11 +29,14 @@ import openerp.addons.decimal_precision as dp
 class stock_return_picking_memory(osv.osv_memory):
     _name = "stock.return.picking.memory"
     _rec_name = 'product_id'
+
     _columns = {
         'product_id' : fields.many2one('product.product', string="Product", required=True),
         'quantity' : fields.float("Quantity", digits_compute=dp.get_precision('Product Unit of Measure'), required=True),
         'wizard_id' : fields.many2one('stock.return.picking', string="Wizard"),
         'move_id' : fields.many2one('stock.move', "Move"),
+        'prodlot_id': fields.related('move_id', 'prodlot_id', type='many2one', relation='stock.production.lot', string='Serial Number', readonly=True),
+
     }
 
 stock_return_picking_memory()
@@ -74,7 +77,7 @@ class stock_return_picking(osv.osv_memory):
             for line in pick.move_lines:
                 qty = line.product_qty - return_history.get(line.id, 0)
                 if qty > 0:
-                    result1.append({'product_id': line.product_id.id, 'quantity': qty,'move_id':line.id})
+                    result1.append({'product_id': line.product_id.id, 'quantity': qty,'move_id':line.id, 'prodlot_id': line.prodlot_id and line.prodlot_id.id or False})
             if 'product_return_moves' in fields:
                 res.update({'product_return_moves': result1})
         return res
