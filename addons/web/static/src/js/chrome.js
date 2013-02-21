@@ -1100,6 +1100,9 @@ instance.web.UserMenu =  instance.web.Widget.extend({
         };
         this.update_promise = this.update_promise.then(fct, fct);
     },
+    on_menu_help: function() {
+        window.open('http://help.openerp.com', '_blank');
+    },
     on_menu_logout: function() {
         this.trigger('user_logout');
     },
@@ -1213,6 +1216,7 @@ instance.web.WebClient = instance.web.Client.extend({
         return $.when(this._super()).then(function() {
             if (jQuery.param !== undefined && jQuery.deparam(jQuery.param.querystring()).kitten !== undefined) {
                 $("body").addClass("kitten-mode-activated");
+                $("body").css("background-image", "url(" + instance.session.origin + "/web/static/src/img/back-enable.jpg" + ")");
                 if ($.blockUI) {
                     $.blockUI.defaults.message = '<img src="http://www.amigrave.com/kitten.gif">';
                 }
@@ -1396,8 +1400,9 @@ instance.web.WebClient = instance.web.Client.extend({
     },
     on_hashchange: function(event) {
         var self = this;
-        var state = event.getState(true);
-        if (!_.isEqual(this._current_state, state)) {
+        var stringstate = event.getState(false);
+        if (!_.isEqual(this._current_state, stringstate)) {
+            var state = event.getState(true);
             if(!state.action && state.menu_id) {
                 self.menu.has_been_loaded.done(function() {
                     self.menu.do_reload().done(function() {
@@ -1409,13 +1414,13 @@ instance.web.WebClient = instance.web.Client.extend({
                 this.action_manager.do_load_state(state, !!this._current_state);
             }
         }
-        this._current_state = state;
+        this._current_state = stringstate;
     },
     do_push_state: function(state) {
         this.set_title(state.title);
         delete state.title;
         var url = '#' + $.param(state);
-        this._current_state = _.clone(state);
+        this._current_state = $.deparam($.param(state), false);     // stringify all values
         $.bbq.pushState(url);
         this.trigger('state_pushed', state);
     },
@@ -1425,9 +1430,10 @@ instance.web.WebClient = instance.web.Client.extend({
             .then(function (result) {
                 return self.action_mutex.exec(function() {
                     if (options.needaction) {
-                        result.context = new instance.web.CompoundContext(
-                            result.context,
-                            {search_default_message_unread: true});
+                        result.context = new instance.web.CompoundContext(result.context, {
+                            search_default_message_unread: true,
+                            search_disable_custom_filters: true,
+                        });
                     }
                     var completed = $.Deferred();
                     $.when(self.action_manager.do_action(result, {
