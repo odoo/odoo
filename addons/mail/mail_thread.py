@@ -815,8 +815,29 @@ class mail_thread(osv.AbstractModel):
                         "now deprecated res.log.")
         self.message_post(cr, uid, [id], message, context=context)
 
+    def _message_add_suggested_recipient(self, result, obj, partner=None, email=None, reason='', context=None):
+        if partner and partner in obj.message_follower_ids:
+            return result
+        if partner and partner in [val[0] for val in result[obj.id]]:
+            return result
+        if email and email in [val[1] for val in result[obj.id]]:
+            return result
+        if partner and partner.email:
+            result[obj.id].append((partner.id, '%s<%s>' % (partner.name, partner.email), reason))
+        elif partner:
+            result[obj.id].append((partner.id, '%s' % (partner.name), reason))
+        else:
+            result[obj.id].append((False, email, reason))
+        return result
+
     def message_get_suggested_recipients(self, cr, uid, ids, context=None):
-        return dict.fromkeys(ids, list())
+        result = dict.fromkeys(ids, list())
+        if self._all_columns.get('user_id'):
+            for obj in self.browse(cr, SUPERUSER_ID, ids, context=context):  # SUPERUSER because of a read on res.users that would crash otherwise IMHO
+                if not obj.user_id or not obj.user_id.partner_id:
+                    continue
+                self._message_add_suggested_recipient(result, obj, partner=obj.user_id.partner_id, reason=self._all_columns['user_id'].column.string, context=context)
+        return result
 
     def message_get_partner_info_from_emails(self, cr, uid, emails, link_mail=False, context=None):
         """ Convert a list of emails into a list partner_ids and a list
@@ -827,16 +848,17 @@ class mail_thread(osv.AbstractModel):
         """
         mail_message_obj = self.pool.get('mail.message')
         partner_obj = self.pool.get('res.partner')
-        partner_info = dict()
+        result = list()
         for email in emails:
+            partner_info = {'full_name': email, 'partner_id': False}
             m = re.search(r"((.+?)\s*<)?([^<>]+@[^<>]+)>?", email, re.IGNORECASE | re.DOTALL)
+            if not m:
+                continue
             email_address = m.group(3)
-            partner_info.setdefault(email_address, dict()).setdefault('full_name', email)
             ids = partner_obj.search(cr, SUPERUSER_ID, [('email', '=', email_address)], context=context)
             if ids:
-                partner_info[email_address]['partner_id'] = ids[0]
-            else:
-                partner_info[email_address]['partner_id'] = False
+                partner_info['partner_id'] = ids[0]
+            result.append(partner_info)
 
             # link mail with this from mail to the new partner id
             if link_mail and ids:
@@ -850,7 +872,7 @@ class mail_thread(osv.AbstractModel):
                 if message_ids:
                     # mail_message_obj.write(cr, SUPERUSER_ID, message_ids, {'author_id': ids[0]}, context=context)
                     print 'found', message_ids
-        return partner_info
+        return result
 
     def message_post(self, cr, uid, thread_id, body='', subject=None,
                         content_subtype='html', type='notification', subtype=None,
@@ -1037,22 +1059,22 @@ class mail_thread(osv.AbstractModel):
             self.check_access_rights(cr, uid, 'write')
         return self.write(cr, SUPERUSER_ID, ids, {'message_follower_ids': [(3, pid) for pid in partner_ids]}, context=context)
 
-    def _message_get_auto_subscribe_fields(self, cr, uid, updated_fields, auto_follow_fields=['user_id'], context=None):
-        """ Returns the list of relational fields linking to res.users that should
-            trigger an auto subscribe. The default list checks for the fields
-            - called 'user_id'
-            - linking to res.users
-            - with track_visibility set
-            In OpenERP V7, this is sufficent for all major addon such as opportunity,
-            project, issue, recruitment, sale.
-            Override this method if a custom behavior is needed about fields
-            that automatically subscribe users.
-        """
-        user_field_lst = []
-        for name, column_info in self._all_columns.items():
-            if name in auto_follow_fields and name in updated_fields and getattr(column_info.column, 'track_visibility', False) and column_info.column._obj == 'res.users':
-                user_field_lst.append(name)
-        return user_field_lst
+    # def _message_get_auto_subscribe_fields(self, cr, uid, updated_fields, auto_follow_fields=['user_id'], context=None):
+    #     """ Returns the list of relational fields linking to res.users that should
+    #         trigger an auto subscribe. The default list checks for the fields
+    #         - called 'user_id'
+    #         - linking to res.users
+    #         - with track_visibility set
+    #         In OpenERP V7, this is sufficent for all major addon such as opportunity,
+    #         project, issue, recruitment, sale.
+    #         Override this method if a custom behavior is needed about fields
+    #         that automatically subscribe users.
+    #     """
+    #     user_field_lst = []
+    #     for name, column_info in self._all_columns.items():
+    #         if name in auto_follow_fields and name in updated_fields and getattr(column_info.column, 'track_visibility', False) and column_info.column._obj == 'res.users':
+    #             user_field_lst.append(name)
+    #     return user_field_lst
 
     def message_auto_subscribe(self, cr, uid, ids, updated_fields, context=None):
         """
@@ -1063,7 +1085,7 @@ class mail_thread(osv.AbstractModel):
         follower_obj = self.pool.get('mail.followers')
 
         # fetch auto_follow_fields
-        user_field_lst = self._message_get_auto_subscribe_fields(cr, uid, updated_fields, context=context)
+        # user_field_lst = self._message_get_auto_subscribe_fields(cr, uid, updated_fields, context=context)
 
         # fetch related record subtypes
         related_subtype_ids = subtype_obj.search(cr, uid, ['|', ('res_model', '=', False), ('parent_id.res_model', '=', self._name)], context=context)
@@ -1071,7 +1093,8 @@ class mail_thread(osv.AbstractModel):
         default_subtypes = [subtype for subtype in subtypes if subtype.res_model == False]
         related_subtypes = [subtype for subtype in subtypes if subtype.res_model != False]
         relation_fields = set([subtype.relation_field for subtype in subtypes if subtype.relation_field != False])
-        if (not related_subtypes or not any(relation in updated_fields for relation in relation_fields)) and not user_field_lst:
+        # if (not related_subtypes or not any(relation in updated_fields for relation in relation_fields)) and not user_field_lst:
+        if not related_subtypes or not any(relation in updated_fields for relation in relation_fields):
             return True
 
         for record in self.browse(cr, uid, ids, context=context):
@@ -1103,10 +1126,10 @@ class mail_thread(osv.AbstractModel):
                     for follower in follower_obj.browse(cr, SUPERUSER_ID, follower_ids, context=context):
                         new_followers.setdefault(follower.partner_id.id, set()).add(subtype.id)
 
-            # add followers coming from res.users relational fields that are tracked
-            user_ids = [getattr(record, name).id for name in user_field_lst if getattr(record, name)]
-            for partner_id in [user.partner_id.id for user in self.pool.get('res.users').browse(cr, SUPERUSER_ID, user_ids, context=context)]:
-                new_followers.setdefault(partner_id, None)
+            # # add followers coming from res.users relational fields that are tracked
+            # user_ids = [getattr(record, name).id for name in user_field_lst if getattr(record, name)]
+            # for partner_id in [user.partner_id.id for user in self.pool.get('res.users').browse(cr, SUPERUSER_ID, user_ids, context=context)]:
+            #     new_followers.setdefault(partner_id, None)
 
             for pid, subtypes in new_followers.items():
                 subtypes = list(subtypes) if subtypes is not None else None

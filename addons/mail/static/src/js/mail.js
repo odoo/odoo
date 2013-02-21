@@ -23,11 +23,15 @@ openerp.mail = function (session) {
 
         /** parse text to find email: Tagada <address@mail.fr> -> [Tagada, address@mail.fr] or False */
         parse_email: function (text) {
-            var email = text.match(/(.*)<(.*@.*)>/);
-            if (! email) {
-                return [text, false];
+            var result = text.match(/(.*)<(.*@.*)>/);
+            if (result) {
+                return [_.str.trim(result[1]), _.str.trim(result[2])];
             }
-            return [_.str.trim(email[1]), email[2]];
+            result = text.match(/(.*@.*)/);
+            if (result) {
+                return [_.str.trim(result[1]), _.str.trim(result[1])];
+            }
+            return [text, false];
         },
 
         /* Get an image in /web/binary/image?... */
@@ -592,37 +596,43 @@ openerp.mail = function (session) {
         check_recipient_partners: function () {
             var self = this;
             var check_done = $.Deferred();
-            
             var recipients = _.filter(this.recipients, function (recipient) { return recipient.checked });
-            var recipients_to_check = _.filter(recipients, function (recipient) { return (! recipient.partner_id || ! recipient.email_address) });
-            var names_to_check = _.pluck(recipients_to_check, 'full_name');
-            var names_to_remove = [];
+            var recipients_to_find = _.filter(recipients, function (recipient) { return (! recipient.partner_id) });
+            var names_to_find = _.pluck(recipients_to_find, 'full_name');
+            var recipients_to_check = _.filter(recipients, function (recipient) { return (recipient.partner_id && ! recipient.email_address) });
             var recipient_ids = _.pluck(_.filter(recipients, function (recipient) { return recipient.partner_id && recipient.email_address }), 'partner_id');
+            var names_to_remove = [];
+            var recipient_ids_to_remove = [];
 
             // some debug
             console.group('check_recipient_partners');
             console.log('recipients', recipients);
             console.log('recipient_ids', recipient_ids);
+            console.log('recipients_to_find', recipients_to_find);
             console.log('recipients_to_check', recipients_to_check);
-            console.log('names_to_check', names_to_check);
+            console.log('names_to_find', names_to_find);
 
-            // no emails -> do not make call, proceed to next step
-            if (names_to_check.length == 0) {
-                console.groupEnd();
-                return check_done.resolve(recipient_ids);
+            // have unknown names -> call message_get_partner_info_from_emails to try to find partner_id
+            var find_done = $.Deferred();
+            if (names_to_find.length > 0) {
+                find_done = self.parent_thread.ds_thread._model.call('message_get_partner_info_from_emails', [names_to_find]);
+            }
+            else {
+                find_done.resolve([]);
             }
 
-            // for each unknown email -> filter already existing partners
-            self.parent_thread.ds_thread._model.call('message_get_partner_info_from_emails', [names_to_check]).done(function (result) {
+            // for unknown names + incomplete partners -> open popup - cancel = remove from recipients
+            $.when(find_done).pipe(function (result) {
                 var emails_deferred = [];
-                _.each(result, function (partner_info) {
+                var recipient_popups = result.concat(recipients_to_check);
+
+                _.each(recipient_popups, function (partner_info) {
                     var deferred = $.Deferred()
                     emails_deferred.push(deferred);
 
                     var partner_name = partner_info.full_name;
                     var partner_id = partner_info.partner_id;
                     var parsed_email = mail.ChatterUtils.parse_email(partner_name);
-                    console.log('checking', partner_name, 'parsed email', parsed_email);
 
                     var pop = new session.web.form.FormOpenPopup(this);                    
                     pop.show_element(
@@ -641,22 +651,36 @@ openerp.mail = function (session) {
                     });
                     pop.view_form.on('on_button_cancel', self, function () {
                         names_to_remove.push(partner_name);
+                        if (partner_id) {
+                            recipient_ids_to_remove.push(partner_id);
+                        }
                     });
                 });
+
                 $.when.apply($, emails_deferred).then(function () {
-                    console.log('post truc', names_to_remove);
-                    var new_names_to_check = _.difference(names_to_check, names_to_remove);
-                    self.parent_thread.ds_thread._model.call('message_get_partner_info_from_emails', [new_names_to_check, true]).done(function (result) {
-                        _.each(result, function (partner_info) {
-                            recipient_ids.push(partner_info.partner_id);
+                    console.log('final call', names_to_remove, recipient_ids_to_remove);
+                    var new_names_to_find = _.difference(names_to_find, names_to_remove);
+                    find_done = $.Deferred();
+                    if (new_names_to_find.length > 0) {
+                        find_done = self.parent_thread.ds_thread._model.call('message_get_partner_info_from_emails', [new_names_to_find, true]);
+                    }
+                    else {
+                        find_done.resolve([]);
+                    }
+                    $.when(find_done).pipe(function (result) {
+                        var recipient_popups = result.concat(recipients_to_check);
+                        _.each(recipient_popups, function (partner_info) {
+                            if (partner_info.partner_id && _.indexOf(partner_info.partner_id, recipient_ids_to_remove) == -1) {
+                                recipient_ids.push(partner_info.partner_id);
+                            }
                         });
-                    }).pipe(function (caca) {
-                        console.log('caca', caca);
+                    }).pipe(function () {
                         check_done.resolve(recipient_ids);
+                        console.groupEnd();
                     });
                 });
             });
-            console.groupEnd();
+            
             return check_done;
         },
 
@@ -714,7 +738,7 @@ openerp.mail = function (session) {
         /* Quick composer: toggle minimal / expanded mode
          * - toggle minimal (one-liner) / expanded (textarea, buttons) mode
          * - when going into expanded mode:
-         *  - call `message_get_suggested_partners` to have a list of partners to add
+         *  - call `message_get_suggested_recipients` to have a list of partners to add
          *  - compute email_from list (list of unknown email_from to propose to create partners)
          */
         on_toggle_quick_composer: function (event) {
