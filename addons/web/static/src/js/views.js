@@ -1547,13 +1547,22 @@ instance.web.json_node_to_xml = function(node, human_readable, indent) {
     }
 };
 instance.web.xml_to_str = function(node) {
+    var str = "";
     if (window.XMLSerializer) {
-        return (new XMLSerializer()).serializeToString(node);
+        str = (new XMLSerializer()).serializeToString(node);
     } else if (window.ActiveXObject) {
-        return node.xml;
+        str = node.xml;
     } else {
         throw new Error(_t("Could not serialize XML"));
     }
+    // Browsers won't deal with self closing tags except br, hr, input, ...
+    // http://stackoverflow.com/questions/97522/what-are-all-the-valid-self-closing-elements-in-xhtml-as-implemented-by-the-maj
+    //
+    // The following regex is a bit naive but it's ok for the xmlserializer output
+    str = str.replace(/<([a-z]+)([^<>]*)\s*\/\s*>/g, function(match, tag, attrs) {
+        return "<" + tag + attrs + "></" + tag + ">";
+    });
+    return str;
 };
 
 /**
