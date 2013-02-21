@@ -885,7 +885,7 @@ class mail_thread(osv.AbstractModel):
         mail_message = self.pool.get('mail.message')
 
         # if we're processing a message directly coming from the gateway, the destination model was
-        # set in the context. 
+        # set in the context.
         model = False
         if thread_id:
             model = context.get('thread_model', self._name) if self._name == 'mail.thread' else self._name
@@ -940,6 +940,7 @@ class mail_thread(osv.AbstractModel):
             'parent_id': parent_id,
             'attachment_ids': attachment_ids,
             'subtype_id': subtype_id,
+            'partner_ids': [(4, pid) for pid in kwargs.get('partner_ids', [])],
         })
 
         # Avoid warnings about non-existing fields
@@ -970,25 +971,21 @@ class mail_thread(osv.AbstractModel):
         partner_ids = set([])
         if parent_id and self._name == 'mail.thread':
             parent_message = mail_message_obj.browse(cr, uid, parent_id, context=context)
-            partner_ids |= set([(4, partner.id) for partner in parent_message.partner_ids])
-            if parent_message.author_id.id:
-                partner_ids.add((4, parent_message.author_id.id))
+            partner_ids |= set([partner.id for partner in parent_message.partner_ids])
+            if parent_message.author_id:
+                partner_ids.add(parent_message.author_id.id)
 
         # 1.A.2: add specified recipients
-        param_partner_ids = set()
         for item in kwargs.pop('partner_ids', []):
-            if isinstance(item, (list)):
-                param_partner_ids.add((item[0], item[1]))
-            elif isinstance(item, (int, long)):
-                param_partner_ids.add((4, item))
+            if isinstance(item, (list, tuple)):
+                partner_ids.add(item[1])
             else:
-                param_partner_ids.add(item)
-        partner_ids |= param_partner_ids
+                partner_ids.add(item)
 
         # 1.A.3: add parameters recipients as follower
         # TDE FIXME in 7.1: should check whether this comes from email_list or partner_ids
-        if param_partner_ids and self._name != 'mail.thread':
-            self.message_subscribe(cr, uid, [thread_id], [pid[1] for pid in param_partner_ids], context=context)
+        if partner_ids and self._name != 'mail.thread':
+            self.message_subscribe(cr, uid, [thread_id], partner_ids, context=context)
 
         # 1.B: handle body, message_type and message_subtype
         if content_subtype == 'plaintext':

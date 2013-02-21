@@ -391,7 +391,7 @@ class test_mail(TestMailBase):
         # 1. Post a new email comment on Pigs
         self._init_mock_build_email()
         msg2_id = self.mail_group.message_post(cr, user_raoul.id, self.group_pigs_id, body=_body2, type='email', subtype='mt_comment',
-            partner_ids=[(6, 0, [p_d_id])], parent_id=msg1_id, attachments=_attachments)
+            partner_ids=[p_d_id], parent_id=msg1_id, attachments=_attachments)
         message2 = self.mail_message.browse(cr, uid, msg2_id)
         sent_emails = self._build_email_kwargs_list
         self.assertFalse(self.mail_mail.search(cr, uid, [('mail_message_id', '=', msg2_id)]), 'mail.mail notifications should have been auto-deleted!')
