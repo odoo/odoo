@@ -883,6 +883,7 @@ class mail_thread(osv.AbstractModel):
         if isinstance(thread_id, (list, tuple)):
             thread_id = thread_id and thread_id[0]
         mail_message = self.pool.get('mail.message')
+        ir_attachment = self.pool.get('ir.attachment')
 
         # if we're processing a message directly coming from the gateway, the destination model was
         # set in the context.
@@ -890,7 +891,21 @@ class mail_thread(osv.AbstractModel):
         if thread_id:
             model = context.get('thread_model', self._name) if self._name == 'mail.thread' else self._name
 
-        attachment_ids = kwargs.pop('attachment_ids', [])
+        # 2. Pre-processing: attachments
+        # HACK TDE FIXME: Chatter: attachments linked to the document (not done JS-side), load the message
+        attachment_ids = kwargs.pop('attachment_ids', []) or []  # because we could receive None (some old code sends None)
+        if attachment_ids:
+            # TDE FIXME (?): when posting a private message, we use mail.thread as a model
+            # However, attaching doc to mail.thread is not possible, mail.thread does not have any table
+            filtered_attachment_ids = ir_attachment.search(cr, SUPERUSER_ID, [
+                ('res_model', '=', 'mail.compose.message'),
+                ('res_id', '=', 0),
+                ('create_uid', '=', uid),
+                ('id', 'in', attachment_ids)], context=context)
+            if filtered_attachment_ids:
+                ir_attachment.write(cr, SUPERUSER_ID, filtered_attachment_ids, {'res_model': model, 'res_id': thread_id}, context=context)
+        attachment_ids = [(4, id) for id in attachment_ids]
+        # Handle attachments parameter, that is a dictionary of attachments
         for name, content in attachments:
             if isinstance(content, unicode):
                 content = content.encode('utf-8')
@@ -950,8 +965,7 @@ class mail_thread(osv.AbstractModel):
         return mail_message.create(cr, uid, values, context=context)
 
     def message_post_user_api(self, cr, uid, thread_id, body='', parent_id=False,
-                                attachment_ids=None, content_subtype='plaintext',
-                                context=None, **kwargs):
+                                content_subtype='plaintext', context=None, **kwargs):
         """ Wrapper on message_post, used for user input :
             - mail gateway
             - quick reply in Chatter (refer to mail.js), not
@@ -965,7 +979,6 @@ class mail_thread(osv.AbstractModel):
                 to the related document. Should only be set by Chatter.
         """
         mail_message_obj = self.pool.get('mail.message')
-        ir_attachment = self.pool.get('ir.attachment')
 
         # 1.A.1: add recipients of parent message (# TDE FIXME HACK: mail.thread -> private message)
         partner_ids = set([])
@@ -993,30 +1006,10 @@ class mail_thread(osv.AbstractModel):
         msg_type = kwargs.pop('type', 'comment')
         msg_subtype = kwargs.pop('subtype', 'mail.mt_comment')
 
-        # 2. Pre-processing: attachments
-        # HACK TDE FIXME: Chatter: attachments linked to the document (not done JS-side), load the message
-        if attachment_ids:
-            # TDE FIXME (?): when posting a private message, we use mail.thread as a model
-            # However, attaching doc to mail.thread is not possible, mail.thread does not have any table
-            model = self._name
-            if model == 'mail.thread':
-                model = False
-            filtered_attachment_ids = ir_attachment.search(cr, SUPERUSER_ID, [
-                ('res_model', '=', 'mail.compose.message'),
-                ('res_id', '=', 0),
-                ('create_uid', '=', uid),
-                ('id', 'in', attachment_ids)], context=context)
-            if filtered_attachment_ids:
-                if thread_id and model:
-                    ir_attachment.write(cr, SUPERUSER_ID, attachment_ids, {'res_model': model, 'res_id': thread_id}, context=context)
-        else:
-            attachment_ids = []
-        attachment_ids = [(4, id) for id in attachment_ids]
-
         # 3. Post message
         return self.message_post(cr, uid, thread_id=thread_id, body=body,
                             type=msg_type, subtype=msg_subtype, parent_id=parent_id,
-                            attachment_ids=attachment_ids, partner_ids=list(partner_ids), context=context, **kwargs)
+                            partner_ids=list(partner_ids), context=context, **kwargs)
 
     #------------------------------------------------------
     # Followers API
