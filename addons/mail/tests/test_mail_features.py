@@ -391,7 +391,8 @@ class test_mail(TestMailBase):
         # 1. Post a new email comment on Pigs
         self._init_mock_build_email()
         msg2_id = self.mail_group.message_post(cr, user_raoul.id, self.group_pigs_id, body=_body2, type='email', subtype='mt_comment',
-            partner_ids=[p_d_id], parent_id=msg1_id, attachments=_attachments)
+            partner_ids=[p_d_id], parent_id=msg1_id, attachments=_attachments,
+            context={'mail_post_autofollow': True})
         message2 = self.mail_message.browse(cr, uid, msg2_id)
         sent_emails = self._build_email_kwargs_list
         self.assertFalse(self.mail_mail.search(cr, uid, [('mail_message_id', '=', msg2_id)]), 'mail.mail notifications should have been auto-deleted!')
@@ -482,7 +483,7 @@ class test_mail(TestMailBase):
         self.assertEqual(compose.res_id, self.group_pigs_id, 'mail.compose.message incorrect res_id')
 
         # 2. Post the comment, get created message
-        mail_compose.send_mail(cr, uid, [compose_id])
+        mail_compose.send_mail(cr, uid, [compose_id], {'mail_post_autofollow': True})
         group_pigs.refresh()
         message = group_pigs.message_ids[0]
         # Test: mail.message: subject, body inside pre

@@ -950,8 +950,8 @@ class mail_thread(osv.AbstractModel):
             self.message_subscribe(cr, uid, [thread_id], [kwargs.get('author_id')], context=context)
 
         # automatically subscribe recipients if asked to
-        if context.get('mail_post_autofollow') and model and kwargs.get('partner_ids'):
-            self.message_subscribe(cr, uid, [thread_id], kwargs.get('partner_ids'), context=context)
+        if context.get('mail_post_autofollow') and model and partner_ids:
+            self.message_subscribe(cr, uid, [thread_id], list(partner_ids), context=context)
 
         # _mail_flat_thread: automatically set free messages to the first posted message
         if self._mail_flat_thread and not parent_id and thread_id:
@@ -979,7 +979,7 @@ class mail_thread(osv.AbstractModel):
             'parent_id': parent_id,
             'attachment_ids': attachment_ids,
             'subtype_id': subtype_id,
-            'partner_ids': [(4, pid) for pid in kwargs.get('partner_ids', [])],
+            'partner_ids': [(4, pid) for pid in partner_ids],
         })
 
         # Avoid warnings about non-existing fields
