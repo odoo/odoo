@@ -5363,7 +5363,8 @@ class BaseModel(object):
     def __eq__(self, other):
         """ Test equality between two records, two recordsets or two models. """
         if not isinstance(other, BaseModel):
-            _logger.warning("Comparison of %s and %s" % (self, other))
+            if other:
+                _logger.warning("Comparison of %s and %s" % (self, other))
             return False
         if self.is_record_or_null():
             # compare two records
