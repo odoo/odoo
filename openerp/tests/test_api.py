@@ -42,6 +42,7 @@ class TestAPI(common.TransactionCase):
         self.assertEqual(list(partners1), list(partners))
 
         partners2 = self.Partner.query(self.cr, self.uid, [])[10:]
+        self.assertIsKind(partners2, Recordset, 'res.partner')
         self.assertEqual(list(partners2), list(partners))
 
     @mute_logger('openerp.osv.orm')
@@ -55,6 +56,7 @@ class TestAPI(common.TransactionCase):
         self.assertEqual(list(partners1), list(partners))
 
         partners2 = self.Partner.query(self.cr, self.uid, [])[:10]
+        self.assertIsKind(partners2, Recordset, 'res.partner')
         self.assertEqual(list(partners2), list(partners))
 
     @mute_logger('openerp.osv.orm')
@@ -68,17 +70,8 @@ class TestAPI(common.TransactionCase):
         self.assertEqual(list(partners1), list(partners))
 
         partners2 = self.Partner.query(self.cr, self.uid, [])[3:10]
+        self.assertIsKind(partners2, Recordset, 'res.partner')
         self.assertEqual(list(partners2), list(partners))
-
-    @mute_logger('openerp.osv.orm')
-    def test_04_query_multi_slicing(self):
-        """ Build a recordset with multiple slicings, and check equivalence. """
-        ids = self.Partner.search(self.cr, self.uid, [], offset=3, limit=7)
-        partners = self.Partner.browse(self.cr, self.uid, ids)
-        self.assertTrue(partners)
-
-        partners1 = self.Partner.query(self.cr, self.uid, [])[1:10][2:12]
-        self.assertEqual(list(partners1), list(partners))
 
     @mute_logger('openerp.osv.orm')
     def test_05_immutable(self):
@@ -226,7 +219,7 @@ class TestAPI(common.TransactionCase):
     def test_50_session(self):
         """ Call session methods. """
         domain = [('name', 'ilike', 'j')]
-        partners1 = self.Partner.query(self.cr, self.uid, domain).recordset
+        partners1 = self.Partner.query(self.cr, self.uid, domain)
         self.assertTrue(partners1)
 
         # check content of partners1.session

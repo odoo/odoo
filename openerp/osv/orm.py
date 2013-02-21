@@ -5214,7 +5214,6 @@ class BaseModel(object):
         '_record_cache',
         '_record_process',
         '_records',
-        '_records_search',
     ]
 
     def with_session(self, user=None, context=None, **kwargs):
@@ -5293,24 +5292,14 @@ class BaseModel(object):
         return self._make_instance(session=self.session, _records=list(records))
 
     def is_recordset(self):
-        """ test whether self is a recordset instance (regular or queryset) """
-        return hasattr(self, '_records') or hasattr(self, '_records_search')
+        """ test whether self is a recordset instance """
+        return hasattr(self, '_records')
 
     @api.model
     def query(self, domain, offset=0, limit=None, order=None):
-        """ make a recordset instance from a domain and optional offset/limit.
-            That kind of recordset is called a "queryset".
-
-            The queryset is evaluated on demand, i.e., when iterating over its
-            records is required. Once evaluated, it becomes a regular recordset
-            with the result as its list of records.
-        """
-        return self._make_instance(session=self.session,
-                                _records_search=(domain, offset, limit, order))
-
-    def is_queryset(self):
-        """ test whether self is a queryset instance (not evaluated yet) """
-        return hasattr(self, '_records_search') and not hasattr(self, '_records')
+        """ make a recordset instance from the result of a query """
+        ids = self.search(domain, offset, limit, order)
+        return self.browse(ids)
 
     @property
     def record(self):
@@ -5318,44 +5307,37 @@ class BaseModel(object):
             and return that record
         """
         assert self.is_recordset(), "Expected recordset: %s" % self
-        assert len(self.recordset) == 1, "Expected singleton: %s" % self
+        assert len(self) == 1, "Expected singleton: %s" % self
         return self[0]
 
     @property
     def recordset(self):
-        """ If ``self`` is a record, return a recordset containing ``self`` only.
-            If ``self`` is a recordset, force its evaluation, and return it.
+        """ Return a recordset corresponding to ``self``: a singleton for a
+            record instance, itself for a recordset instance, an empty one for a
+            null instance, and all records for a model instance.
         """
         if self.is_null():
             return self._make_recordset([])
-
-        if self.is_record():
+        elif self.is_record():
             return self._make_recordset([self])
-
-        if not hasattr(self, '_records'):
-            ids = self.search(*self._records_search)
-            self._records = self.browse(ids)._records
-        return self
+        elif self.is_recordset():
+            return self
+        return self.query([])
 
     def __nonzero__(self):
-        """ If ``self`` is a recordset, test whether it is nonempty.
-            Otherwise return True.
-        """
+        """ Test whether ``self`` is nonempty and not null. """
         if self.is_recordset():
-            return len(self) > 0
+            return bool(self._records)
         return not self.is_null()
 
     def __iter__(self):
         """ Return an iterator over ``self`` (must be a recordset). """
         assert self.is_recordset(), "Expected recordset: %s" % self
-        return iter(self.recordset._records)
+        return iter(self._records)
 
     def __len__(self):
-        """ Return the size of ``self`` (must be a recordset).
-            Does not force evaluation if ``self`` is a queryset.
-        """
-        if not hasattr(self, '_records'):
-            return self.search(*self._records_search, count=True)
+        """ Return the size of ``self`` (must be a recordset). """
+        assert self.is_recordset(), "Expected recordset: %s" % self
         return len(self._records)
 
     def __contains__(self, item):
@@ -5367,7 +5349,7 @@ class BaseModel(object):
         assert self.is_recordset(), "Expected record or recordset: %s" % self
         if not isinstance(item, Record):
             _logger.warning("Unexpected: %s in %s" % (item, self))
-        return item in self.recordset._records
+        return item in self._records
 
     def __add__(self, other):
         """ Return the concatenation of two recordsets as a recordset. """
@@ -5465,15 +5447,13 @@ class BaseModel(object):
         """ If ``self`` is a record, return the value of the field named ``key``.
             If ``self`` is a recordset, return a record or a recordset from
             ``self``, depending on whether ``key`` is an integer or a slice.
-            If ``key`` is a slice and ``self`` is a queryset, return a queryset
-            with new offset and limit.
 
             Examples::
 
                 r = records[3]              # fourth record in records
                 print r['name']             # print field 'name' of record
 
-                rs = model.query(dom)       # rs is a queryset
+                rs = model.query(dom)       # rs is a recordset
                 rs1 = rs[10:]               # same as rs with offset 10
                 rs2 = rs1[:10]              # same as rs with offset 10 and limit 10
                 assert list(rs2) == list(rs[10:20])
@@ -5482,31 +5462,11 @@ class BaseModel(object):
             return self._get_record_field(key)
 
         assert self.is_recordset(), "Expected record or recordset: %s" % self
-
         if isinstance(key, slice):
-            if hasattr(self, '_records'):
-                # make a recordset with the sublist of records
-                return self._make_recordset(self._records[key])
-            else:
-                # do not evaluate self; make a recordset with new offset and limit
-                assert key.start is None or key.start >= 0, "Recordset slice cannot start with %s" % key.start
-                assert key.stop is None or key.stop >= 0, "Recordset slice cannot stop with %s" % key.stop
-                domain, offset, limit, order = self._records_search
-
-                key_offset = key.start or 0
-                offset += key_offset
-                if limit is None:
-                    if key.stop is not None:
-                        limit = max(0, key.stop - key_offset)
-                else:
-                    if key.stop is not None:
-                        limit = min(limit, key.stop)
-                    limit = max(0, limit - key_offset)
-
-                return self.query(domain, offset, limit, order)
+            # make a recordset with the sublist of records
+            return self._make_recordset(self._records[key])
         else:
-            # select a single record in the list
-            return self.recordset._records[key]
+            return self._records[key]
 
     def __getattr__(self, name):
         if name.startswith('signal_'):
@@ -5529,8 +5489,6 @@ class BaseModel(object):
     def __str__(self):
         if self.is_record():
             return "Record(%s, %d)" % (self._name, self._record_id)
-        elif self.is_queryset():
-            return "Query(%s, %s)" % (self._name, self._records_search[0])
         elif self.is_recordset():
             return "Recordset(%s, %s)" % (self._name, map(int, self))
         elif self.is_null():
@@ -5558,12 +5516,14 @@ class BaseModel(object):
         assert self.is_record_or_null() or self.is_recordset(), \
             "Expected record, recordset or null: %s" % self
 
-        # querysets and empty recordsets have no cache
-        if not self.is_queryset() and self:
-            record = self if self.is_record() else self[0]
-            for model_cache in record._record_cache.itervalues():
-                for id in model_cache.keys():
-                    model_cache[id] = {'id': id}
+        # make sure to clear all the caches accessible through a recordset
+        caches = []
+        for record in self.recordset:
+            if record._record_cache not in caches:
+                caches.append(record._record_cache)
+                for model_cache in record._record_cache.itervalues():
+                    for id in model_cache.keys():
+                        model_cache[id] = {'id': id}
 
 
 # for instance checking
