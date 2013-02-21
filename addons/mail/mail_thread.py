@@ -612,10 +612,6 @@ class mail_thread(osv.AbstractModel):
                 model_pool = self.pool.get('mail.thread')
             new_msg_id = model_pool.message_post_user_api(cr, uid, [thread_id], context=context, content_subtype='html', **msg)
 
-            # when posting an incoming email to a document: subscribe the author, if a partner, as follower
-            if model and thread_id and msg.get('author_id'):
-                model_pool.message_subscribe(cr, uid, [thread_id], [msg.get('author_id')], context=context)
-
             if partner_ids:
                 # postponed after message_post, because this is an external message and we don't want to create
                 # duplicate emails due to notifications
@@ -930,6 +926,14 @@ class mail_thread(osv.AbstractModel):
         else:
             subtype_id = False
 
+        # when posting an incoming email to a document: subscribe the author, if a partner, as follower
+        if model and thread_id and kwargs.get('author_id'):
+            self.message_subscribe(cr, uid, [thread_id], [kwargs.get('author_id')], context=context)
+
+        # automatically subscribe recipients if asked to
+        if context.get('mail_post_autofollow') and model and kwargs.get('partner_ids'):
+            self.message_subscribe(cr, uid, [thread_id], kwargs.get('partner_ids'), context=context)
+
         # _mail_flat_thread: automatically set free messages to the first posted message
         if self._mail_flat_thread and not parent_id and thread_id:
             message_ids = mail_message.search(cr, uid, ['&', ('res_id', '=', thread_id), ('model', '=', model)], context=context, order="id ASC", limit=1)
@@ -995,11 +999,6 @@ class mail_thread(osv.AbstractModel):
                 partner_ids.add(item[1])
             else:
                 partner_ids.add(item)
-
-        # 1.A.3: add parameters recipients as follower
-        # TDE FIXME in 7.1: should check whether this comes from email_list or partner_ids
-        if partner_ids and self._name != 'mail.thread':
-            self.message_subscribe(cr, uid, [thread_id], partner_ids, context=context)
 
         # 1.B: handle body, message_type and message_subtype
         if content_subtype == 'plaintext':

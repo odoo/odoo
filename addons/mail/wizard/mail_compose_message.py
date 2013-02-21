@@ -215,9 +215,6 @@ class mail_compose_message(osv.TransientModel):
                     new_attachments = email_dict.pop('attachments', [])
                     post_values['attachments'] += new_attachments
                     post_values.update(email_dict)
-                # automatically subscribe recipients if asked to
-                if context.get('mail_post_autofollow') and wizard.model and post_values.get('partner_ids'):
-                    active_model_pool.message_subscribe(cr, uid, [res_id], post_values.get('partner_ids'), context=context)
                 # post the message
                 active_model_pool.message_post(cr, uid, [res_id], type='comment', subtype='mt_comment', context=context, **post_values)
 
