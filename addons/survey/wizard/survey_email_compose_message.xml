@@ -5,7 +5,6 @@
         <!--Survey send invitation Email template -->
         <record id="email_template_survey" model="email.template">
             <field name="name">Survey - Send by Email</field>
-            <field name="email_from">${object.responsible_id and object.responsible_id.company_id and object.responsible_id.company_id.email or object.responsible_id.email or ''}</field>
             <field name="subject">${object.title}</field>
             <field name="lang">${object.lang}</field>
             <field name="model_id" ref="model_survey"/>
@@ -17,10 +16,7 @@
         Would you please spent some of your time to fill-in our survey: 
         <a href="__URL__">${object.title}</a>
     </p>
-    % if object.responsible_id:
-    <p>Thank you for choosing ${object.responsible_id.company_id.name or 'us'}!</p>
-    % endif
-    <br/>
+    <p>Thank you for choosing us!</p>
 </div>
             ]]></field>
         </record>

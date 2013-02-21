@@ -190,27 +190,18 @@ class survey_question_wiz(osv.osv_memory):
     def _survey_complete(self, cr, uid, survey_id, partner_id, sur_name_read, survey_browse, context):
         """ list of action to do when the survey is completed
         """
-        survey_obj = self.pool.get('survey')
-        sur_response_obj = self.pool.get('survey.response')
-
         # record complete
-        sur_response_obj.write(cr, uid, [sur_name_read.response], {'state': 'done'})
+        self.pool.get('survey.response').write(cr, uid, [sur_name_read.response], {'state': 'done'})
 
         # send mail to the responsible
-        survey_browse = survey_obj.browse(cr, uid, survey_id, context)
-        responsible_id = survey_browse.responsible_id and survey_browse.responsible_id.id or False
-        if survey_browse.send_response and responsible_id:
-            val = {
-                'type': 'notification',
-                'author_id': partner_id or None,
-                'partner_ids': responsible_id and [responsible_id] or None,
-                'model': 'survey',
-                'res_id': survey_id,
-                'record_name': _("Survey N° %s") % survey_id,
-                'subject': survey_browse.title or None,
-                'body': _("A survey answer is completed."),
-            }
-            self.pool.get('mail.message').create(cr, uid, val, context=context)
+        val = {
+            'type': 'notification',
+            'model': 'survey',
+            'res_id': survey_id,
+            'record_name': _("Survey N° %s") % survey_id,
+            'body': _("New response on this survey."),
+        }
+        self.pool.get('survey').message_post(cr, uid, survey_id, context=context, **val)
 
     def _check_access(self, cr, uid, survey_id, context):
         # get if the token of the partner or anonymous user is valid
@@ -442,7 +433,7 @@ class survey_question_wiz(osv.osv_memory):
                         else:
                             etree.SubElement(xml_footer, 'label', {'string': ""})
                             etree.SubElement(xml_footer, 'button', {'name': "action_next", 'string': tools.ustr(but_string), 'type': "object", 'context': tools.ustr(context), 'class': "oe_highlight"})
-                        if context.get('ir_actions_act_window_target', None):
+                        if context.get('ir_actions_act_window_target', None) != 'inline':
                             etree.SubElement(xml_footer, 'label', {'string': "or"})
                             etree.SubElement(xml_footer, 'button', {'special': "cancel", 'string': "Exit", 'class': "oe_link"})
                         etree.SubElement(xml_footer, 'label', {'string': tools.ustr(page_number + 1) + "/" + tools.ustr(total_pages), 'class': "oe_survey_title_page oe_right"})

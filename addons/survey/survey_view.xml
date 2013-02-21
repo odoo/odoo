@@ -41,18 +41,11 @@
                         </h1>
                     </div>
                     <group>
-                        <group>
-                            <field name="id" invisible="1"/>
-                            <field name="responsible_id" class="oe_inline" attrs="{'readonly':[('state','=',['close','cancel'])]}"/>
+                        <group colspan="4">
                             <field name="type" attrs="{'readonly':[('state','in',['close','cancel'])]}" class="oe_inline"/>
                             <field name="sign_in"/>
-                        </group>
-                        <group>
                             <field name="max_response_limit" attrs="{'readonly':[('state','=','close')]}"/>
-                            <field name="send_response" attrs="{'readonly':[('state','in',['close','cancel'])]}"/>
-                        </group>
-                        <group colspan="4">
-                            <field name="public_url"/>
+                            <field name="public_url" widget="url"/>
                         </group>
                     </group>
                     <field name="page_ids" colspan="4" mode="tree" attrs="{'readonly':[('state','=','close')]}">
@@ -229,7 +222,6 @@
                 <tree colors="gray:state == 'close'" string="Survey">
                     <field name="title"/>
                     <field name="type"/>
-                    <field name="responsible_id"/>
                     <field name="date_open"  string="Open Date"/>
                     <field name="tot_start_survey" string="Started"/>
                     <field name="tot_comp_survey" string="Completed"/>
@@ -254,11 +246,8 @@
                     <filter string="Closed" domain="[('state','=','close')]"/>
                     <filter string="Canceled" domain="[('state','=','cancel')]"/>
                     <separator/>
-                    <filter string="My Surveys" domain="[('responsible_id','=',uid)]" help="The surveys I am responsible of"/>
                     <filter string="Survey to fill in" name="unread_message" domain="['&amp;', ('response_ids.state', 'in', ['new', 'skip']), ('response_ids.partner_id.user_id', '=', uid)]"/>
-                    <field name="responsible_id"/>
                    <group expand="0" string="Group By...">
-                       <filter string="Responsible" icon="terp-personal" domain="[]"  context="{'group_by':'responsible_id'}"/>
                        <filter string="Type" icon="terp-stock_symbol-selection" domain="[]"  context="{'group_by':'type'}"/>
                        <filter string="Status" icon="terp-stock_effects-object-colorize" domain="[]"  context="{'group_by':'state'}"/>
                    </group>
@@ -275,7 +264,6 @@
                     <field name="date_open"/>
                     <field name="tot_comp_survey"/>
                     <field name="max_response_limit"/>
-                    <field name="responsible_id"/>
                     <field name="color"/>
                     <field name="state"/>
                     <field name="public_url"/>
@@ -305,9 +293,9 @@
                                     <br/>
                                     <ul>
                                         <li t-if="widget.view.is_action_enabled('edit')"><a name="edit_survey" string="Edit Survey" type="object">Edit Survey</a></li>
-                                        <li t-if="widget.view.is_action_enabled('edit')"><a t-att-style="record.state.raw_value != 'open'?'color:#aaaaaa;':''" name="action_survey_sent" type="object">Collect responses</a></li>
-                                        <li><a t-att-style="record.state.raw_value !== 'open'?'color:#aaaaaa;':''" name="fill_survey" type="object">Answer Survey</a></li>
-                                        <li t-if="widget.view.is_action_enabled('edit')"><a>Analyze responses</a></li>
+                                        <li t-if="record.state.raw_value === 'open' and widget.view.is_action_enabled('edit')"><a name="action_survey_sent" type="object">Collect responses</a></li>
+                                        <li><a t-if="record.state.raw_value === 'open'" name="fill_survey" type="object">Answer Survey</a></li>
+                                        <li t-if="record.tot_comp_survey.raw_value and widget.view.is_action_enabled('edit')"><a>Analyze responses</a></li>
                                     </ul>
                                 </div>
                             </div>
@@ -1140,7 +1128,6 @@
             <field name="arch" type="xml">
                 <form string="Survey Type">
                     <field name="name"/>
-                    <field name="code"/>
                 </form>
             </field>
         </record>
@@ -1151,7 +1138,6 @@
             <field name="arch" type="xml">
                 <tree string="Survey Type">
                     <field name="name"/>
-                    <field name="code"/>
                 </tree>
             </field>
         </record>

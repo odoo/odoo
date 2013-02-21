@@ -33,7 +33,6 @@ class survey_type(osv.osv):
     _description = 'Survey Type'
     _columns = {
         'name': fields.char("Name", size=128, required=1, translate=True),
-        'code': fields.char("Code", size=64),
     }
 survey_type()
 
@@ -94,11 +93,9 @@ class survey(osv.osv):
                      help="Set to one if survey is answerable only once"),
         'state': fields.selection([('draft', 'Draft'), ('open', 'Open'), ('close', 'Close'), ('cancel', 'Cancelled')], 'Status', required=1),
         'sign_in': fields.boolean('User must be sign up'),
-        'responsible_id': fields.many2one('res.users', 'Responsible', help="User responsible forsurvey"),
         'tot_start_survey': fields.function(_get_tot_start_survey, string="Total Started Survey", type="integer"),
         'tot_comp_survey': fields.function(_get_tot_comp_survey, string="Total Completed Survey", type="integer"),
         'note': fields.text('Description', size=128),
-        'send_response': fields.boolean('Email Notification on Answer'),
         'type': fields.many2one('survey.type', 'Type'),
         'color': fields.integer('Color Index'),
         'response_ids': fields.one2many('survey.response', 'survey_id', 'Responses', readonly=1),
@@ -108,7 +105,6 @@ class survey(osv.osv):
     _defaults = {
         'state': "draft",
         'sign_in': False,
-        'send_response': 1,
         'date_open': fields.datetime.now,
         'token': lambda s, cr, uid, c: uuid.uuid4(),
     }

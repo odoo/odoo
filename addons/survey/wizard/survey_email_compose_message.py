@@ -92,8 +92,8 @@ class survey_mail_compose_message(osv.TransientModel):
 
             # post the message
             values = {
-                'model': 'survey',
-                'res_id': wizard.res_id or False,
+                'model': None,
+                'res_id': None,
                 'subject': wizard.subject,
                 'body': wizard.body.replace("__URL__", url),
                 'parent_id': None,
