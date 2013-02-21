@@ -1,5 +1,10 @@
 ##YAML test on the account_voucher as depicted in this bug report: https://bugs.launchpad.net/openobject-addons/+bug/954155
 -
+  Only manager can create and take decision about bank and currency there I checkd this test with user who is finance manager.
+-
+  !context
+    uid: 'res_users_account_voucher_manager'
+-
   In order to check the payment with multi-currency in OpenERP, 
   I create an invoice in EUR and make payment in USD based on the currency rating.
 -
