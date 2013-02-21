@@ -30,18 +30,47 @@ from openerp.addons.decimal_precision import decimal_precision as dp
 class account_virtual_invoice(osv.osv):
     _name = "account.virtual.invoice"
     _auto = False
+
+    def _amount_line(self, cr, uid, ids, prop, unknow_none, unknow_dict):
+        res = {}
+        tax_obj = self.pool.get('account.tax')
+        cur_obj = self.pool.get('res.currency')
+        for line in self.browse(cr, uid, ids):
+            price = line.unit_price
+            taxes = tax_obj.compute_all(cr, uid, line.tax_ids, price, line.qty, product=line.product_id, partner=line.analytic_account_id.partner_id)
+            res[line.id] = taxes['total']
+            if line.analytic_account_id:
+                cur = line.analytic_account_id.currency_id
+                res[line.id] = cur_obj.round(cr, uid, cur, res[line.id])
+        return res
+
+    def _get_tax_lines(self, cr, uid, ids,name, arg, context=None):
+        res = {}
+        product_ids = []
+        product_obj = self.pool.get('product.product')
+        account_obj = self.pool.get('account.account')
+        for line in self.browse(cr, uid, ids, context=context):
+            res[line.id] = []
+            if not line.product_id:
+                continue
+            product = product_obj.browse(cr, uid, line.product_id.id, context=context)
+            a = product.property_account_income.id
+            if not a:
+                a = product.categ_id.property_account_income_categ.id
+            taxes = product.taxes_id and product.taxes_id or (a and account_obj.browse(cr, uid, a, context=context).tax_ids or False)
+            res[line.id] = [x.id for x in taxes]
+        return res
+
     _columns = {
-        'product_id': fields.many2one('product.product','Product(s)'),
+        'product_id': fields.many2one('product.product','Product'),
         'analytic_account_id': fields.many2one('account.analytic.account', 'Analytic Account'),
-        'user_id': fields.many2one('res.users', 'User',readonly=True),
         'name': fields.char('Description', size=64, readonly=True),
         'qty': fields.float('Quantity', readonly=True),
-        'total_qty': fields.float('Total Quantity', readonly=True),
-        'uom': fields.many2one('product.uom', 'Product Unit of Measure', required=True),
+        'uom': fields.many2one('product.uom', 'Unit of Measure', required=True),
         'unit_price': fields.float('Unit Price', readonly=True),
-        'sub_total': fields.float('Sub Total', readonly=True),
-        'product_qty':fields.float('Qty', readonly=True),
-        'total': fields.float('Total', readonly=True),
+        'sub_total': fields.function(_amount_line, string='Amount', type="float",
+            digits_compute= dp.get_precision('Account')),
+        'tax_ids':fields.function(_get_tax_lines, type='many2many', relation='account.tax', string='Taxes'),
     }
 
     _order = 'name desc'
@@ -58,11 +87,7 @@ class account_virtual_invoice(osv.osv):
         l.name as name,
         l.unit_amount as qty,
         l.product_uom_id as uom,
-        t.list_price as unit_price,
-        l.unit_amount*t.list_price as sub_total,
-        l.unit_amount*t.list_price as total,
-        l.unit_amount as total_qty
-        
+        t.list_price as unit_price
         FROM
         account_analytic_line as l 
         LEFT JOIN account_analytic_account account ON (l.account_id = account.id)
@@ -78,16 +103,26 @@ UNION
         sol.name as name,
         sol.product_uom_qty as qty,
         sol.product_uom as uom,
-        sol.price_unit as unit_price,
-        sol.price_unit*sol.product_uom_qty as sub_total,
-        sol.price_unit*sol.product_uom_qty as total,
-        sol.product_uom_qty as total_qty
+        sol.price_unit as unit_price
         FROM
         sale_order as so 
         LEFT JOIN account_analytic_account account ON (so.project_id = account.id)
     LEFT JOIN sale_order_line sol on (so.id = sol.order_id)
         WHERE so.partner_id = account.partner_id
-       
+UNION 
+
+    SELECT
+        exp.id as id,
+        account.id as analytic_account_id,
+        exp.product_id as product_id,
+        exp.name as name,
+        exp.unit_quantity as qty,
+        exp.uom_id as uom,
+        exp.unit_amount as unit_price
+        FROM
+    hr_expense_line as exp
+        LEFT JOIN account_analytic_account account ON (exp.analytic_account = account.id)
+        
         )
          """)
 account_virtual_invoice()
@@ -455,6 +490,21 @@ class account_analytic_account(osv.osv):
             res[account.id]['remaining_total'] = self._get_total_remaining(account)
             res[account.id]['toinvoice_total'] =  self._get_total_toinvoice(account)
          return res
+  
+    def _amount_all(self, cr, uid, ids, name, args, context=None):
+        res = {}
+        for account in self.browse(cr, uid, ids, context=context):
+            res[account.id] = {
+                'amount_untaxed': 0.0,
+                'amount_tax': 0.0,
+                'amount_total': 0.0
+            }
+            for line in account.virtual_invoice_line:
+                res[account.id]['amount_untaxed'] += line.sub_total
+#            for line in account.tax_line:
+#                res[account.id]['amount_tax'] += line.amount
+            res[account.id]['amount_total'] = res[account.id]['amount_tax'] + res[account.id]['amount_untaxed']
+        return res
 
     _columns = {
         'is_overdue_quantity' : fields.function(_is_overdue_quantity, method=True, type='boolean', string='Overdue Quantity',
@@ -518,6 +568,7 @@ class account_analytic_account(osv.osv):
         'remaining_total' : fields.function(_sum_of_fields, type="float",multi="sum_of_all", string="Total Remaining", help="Expectation of remaining income for this contract. Computed as the sum of remaining subtotals which, in turn, are computed as the maximum between '(Estimation - Invoiced)' and 'To Invoice' amounts"),
         'toinvoice_total' : fields.function(_sum_of_fields, type="float",multi="sum_of_all", string="Total to Invoice", help=" Sum of everything that could be invoiced for this contract."),
         'virtual_invoice_line': fields.one2many('account.virtual.invoice', 'analytic_account_id'),
+        'recurring_invoices' : fields.boolean('Recurring Invoices'),
         'rrule_type': fields.selection([
             ('daily', 'Day(s)'),
             ('weekly', 'Week(s)'),
@@ -525,6 +576,9 @@ class account_analytic_account(osv.osv):
             ], 'Recurrency', help="Let the event automatically repeat at that interval"),
         'interval': fields.integer('Repeat Every', help="Repeat every (Days/Week/Month/Year)"),
         'next_date': fields.date('Next Date'),
+        'amount_untaxed': fields.function(_amount_all, type='float', string='Total tax excluded', multi="vinvline"),
+        'amount_tax': fields.function(_amount_all, type='float', string='Taxes', multi="vinvline"),
+        'amount_total': fields.function(_amount_all, type='float', string='Total', multi="vinvline"),
     }
 
     def open_sale_order_lines(self,cr,uid,ids,context=None):
@@ -557,6 +611,23 @@ class account_analytic_account(osv.osv):
             res['value']['to_invoice'] = template.to_invoice.id
             res['value']['pricelist_id'] = template.pricelist_id.id
         return res
+
+    def onchange_recurring_invoices(self, cr, uid, ids, recurring_invoices, date_start=False, context=None):
+        result = {}
+        if not ids:
+            result = {'value': {
+                    'next_date': lambda *a: time.strftime('%Y-%m-%d'),
+                    'rrule_type':'monthly'
+                    }
+                }
+        if date_start and recurring_invoices == True:
+            result = {'value': {
+                    'next_date': date_start,
+                    'rrule_type':'monthly'
+                    }
+                }
+        return result
+
 account_analytic_account()
 
 class account_analytic_account_summary_user(osv.osv):

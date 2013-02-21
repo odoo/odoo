@@ -11,10 +11,9 @@
                 	<field name="name"/>
                 	<field name="qty"/>
                 	<field name="uom"/>
+                	<field name="tax_ids"/>
                 	<field name="unit_price"/>
                 	<field name="sub_total"/>
-                	<field name="total_qty" sum="Total Quantity"/>
-                	<field name="total" sum="Total"/>
                 </tree>
             </field>
         </record>
@@ -207,21 +206,35 @@
                                 attrs="{'required': [('invoice_on_timesheets', '=', True)]}"/>
                         </group>
                     </group>
+                    <separator string="Recurrency"/>
                     <group>
-                        <label for="interval"/>
+	                    <div>
+                    	<label for="recurring_invoices" />
+	                    <field name="recurring_invoices" on_change="onchange_recurring_invoices(recurring_invoices, date_start)" class="oe_inline"/>
+	                    </div>
+                    </group>
+                    <group attrs="{'invisible': [('recurring_invoices','=',False)]}">
+                        <label for="interval" />
                         <div>
                         <field name="interval" class="oe_inline"/>
                         <field name="rrule_type" class="oe_inline"/>
                         </div>
-                        <label for="next_date"/>
+                        <p colspan="2" >
+                            Following Invoice will be generated on <field name="next_date" class="oe_inline"/> .
+                        </p>
+                    </group>
+                    <group attrs="{'invisible': [('recurring_invoices','=',False)]}">
                         <div>
-                        <field name="next_date" class="oe_inline"/>
+                        <field name="virtual_invoice_line" readonly="1"/>
                         </div>
                     </group>
-                    <group>
+                    <group class="oe_subtotal_footer oe_right" attrs="{'invisible': [('recurring_invoices','=',False)]}">
+                        <field name="amount_untaxed" widget="monetary" options="{'currency_field': 'currency_id'}"/>
                         <div>
-                        <field name="virtual_invoice_line" class="oe_inline"/>
+                            <label for="amount_tax"/>
                         </div>
+                        <field name="amount_tax" nolabel="1" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                        <field name="amount_total" class="oe_subtotal_footer_separator" widget="monetary" options="{'currency_field': 'currency_id'}"/>
                     </group>
                  </xpath>
             </field>
