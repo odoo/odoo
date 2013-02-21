@@ -258,6 +258,9 @@ class account_analytic_account(osv.osv):
         (check_recursion, 'Error! You cannot create recursive analytic accounts.', ['parent_id']),
     ]
 
+    def name_create(self, cr, uid, name, context=None):
+        raise osv.except_osv(_('Warning'), _("Quick account creation disallowed."))
+
     def copy(self, cr, uid, id, default=None, context=None):
         if not default:
             default = {}
