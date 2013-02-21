@@ -1,4 +1,19 @@
 -
+  Create a user as 'HR Attendance Officer'
+-
+  !record {model: res.users, id: res_users_attendance_officer}:
+    company_id: base.main_company
+    name: HR Officer
+    login: ao
+    password: ao
+    groups_id:
+      - base.group_hr_user
+-
+  give the access rights of Hr Officer to test attendance process.
+-
+  !context
+    uid: 'res_users_attendance_officer'
+-
   In order to test attendance process in OpenERP, I entry of SignIn of employee.
 -
   !python {model: hr.employee}: |
