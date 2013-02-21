@@ -308,7 +308,7 @@
                     <button name="%(act_project_project_2_project_issue_all)d" string="Issues" type="action" attrs="{'invisible':[('use_issues','=', 0)]}"/>
                 </xpath>
                 <xpath expr='//page[@name="project_stages"]' position="attributes">
-                    <attribute name="attrs">{'invisible': [('use_tasks', '=', False),('use_issues','=',False)]}"</attribute>
+                    <attribute name="attrs">{'invisible': [('use_tasks', '=', False),('use_issues','=',False)]}</attribute>
 		</xpath>
                 <field name="priority" position="before">
                     <field name="project_escalation_id"/>
