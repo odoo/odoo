@@ -616,7 +616,7 @@
             <field name="inherit_id" ref="account.product_normal_form_view"/>
             <field name="arch" type="xml">
                 <xpath expr="//div[@name='buttons']" position="inside">
-                   <button string="Purchase" name="%(action_purchase_line_product_tree)d" type="action" groups="purchase.group_purchase_user"/>
+                   <button string="Purchases" name="%(action_purchase_line_product_tree)d" type="action" groups="purchase.group_purchase_user"/>
                 </xpath>
                 <xpath expr="//field[@name='property_account_expense']" position="replace" >
                      <field name="property_account_expense" domain="[('type','&lt;&gt;','view'),('type','&lt;&gt;','consolidation')]" attrs="{'readonly':[('purchase_ok','=',0)]}" groups="account.group_account_user"/>

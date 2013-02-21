@@ -70,7 +70,7 @@
             <field name="arch" type="xml">
                 <xpath expr="//div[@name='buttons']" position="inside">
                    <button string="Stock by Location" name="%(action_product_location_tree)d" type="action"  attrs="{'invisible':[('type', '!=', 'product')]}" groups="stock.group_locations"/>
-                   <button string="Move" name= "%(act_product_stock_move_open)d" type="action" attrs="{'invisible':[('type', '!=', 'product')]}" groups="stock.group_stock_user"/>
+                   <button string="Moves" name= "%(act_product_stock_move_open)d" type="action" attrs="{'invisible':[('type', '!=', 'product')]}" groups="stock.group_stock_user"/>
                 </xpath>
                 <group name="procurement_uom" position="before">
                     <group name="delay" string="Delays">
