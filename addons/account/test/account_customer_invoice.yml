@@ -12,6 +12,11 @@
     bank: base.res_bank_1
     bank_name: Reserve
 -
+  Test with that user which have rights to make Invoicing and payment and who is accountant. 
+-
+  !context
+    uid: 'res_users_account_user'
+-
   I create a customer invoice
 -
   !record {model: account.invoice, id: account_invoice_customer0, view: invoice_form}:
