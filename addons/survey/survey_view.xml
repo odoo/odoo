@@ -1118,38 +1118,6 @@
             </field>
         </record>
 
-        <!--
-            Survey Type
-        -->
-
-        <record model="ir.ui.view" id="survey_type_form">
-            <field name="name">survey_type_form</field>
-            <field name="model">survey.type</field>
-            <field name="arch" type="xml">
-                <form string="Survey Type">
-                    <field name="name"/>
-                </form>
-            </field>
-        </record>
-
-        <record model="ir.ui.view" id="survey_type_tree">
-            <field name="name">survey_type_tree</field>
-            <field name="model">survey.type</field>
-            <field name="arch" type="xml">
-                <tree string="Survey Type">
-                    <field name="name"/>
-                </tree>
-            </field>
-        </record>
-
-        <record model="ir.actions.act_window" id="action_survey_type_form">
-            <field name="name">Survey Type</field>
-            <field name="res_model">survey.type</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
-            <field name="view_id" ref="survey_type_tree"></field>
-        </record>
-
         <act_window
             context="{'search_default_survey_id': [active_id], 'default_survey_id': active_id}"
             id="act_survey_pages"
