@@ -5208,7 +5208,7 @@ class BaseModel(object):
         method = getattr(self.__class__, name)
         setattr(self.__class__, name, method.origin)
 
-    # specific attributes used by record and recordset instances
+    # specific attributes used by record, recordset and null instances
     INSTANCE_ATTRIBUTES = [
         '_record_id',
         '_record_cache',
@@ -5233,11 +5233,15 @@ class BaseModel(object):
         if kwargs:
             ctx.update(kwargs)
 
-        session = Session(cr, uid, ctx)
-        kwargs = dict((attr, getattr(self, attr))
-                    for attr in self.INSTANCE_ATTRIBUTES
-                    if hasattr(self, attr))
-        return self._make_instance(session=session, **kwargs)
+        # rebrowse record, recordset and null instances
+        if self.is_record():
+            return self.browse(cr, uid, self.id, context=ctx)
+        elif self.is_recordset:
+            return self.browse(cr, uid, map(int, self), context=ctx)
+        elif self.is_null:
+            return self.browse(cr, uid, False, context=ctx)
+
+        return self._make_instance(session=Session(cr, uid, ctx))
 
     @api.model
     def _make_null(self):

@@ -1,6 +1,6 @@
 
 from openerp.tools import mute_logger
-from openerp.osv.orm import Record, Recordset, Null
+from openerp.osv.orm import Record, Recordset, Null, except_orm
 import common
 
 
@@ -219,31 +219,40 @@ class TestAPI(common.TransactionCase):
     def test_50_session(self):
         """ Call session methods. """
         domain = [('name', 'ilike', 'j')]
-        partners1 = self.Partner.query(self.cr, self.uid, domain)
-        self.assertTrue(partners1)
+        partners = self.Partner.query(self.cr, self.uid, domain)
+        self.assertTrue(partners)
 
-        # check content of partners1.session
-        self.assertEqual(partners1.session.cr, self.cr)
-        self.assertEqual(partners1.session.uid, self.uid)
-        self.assertEqual(partners1.session.user.id, self.uid)
-        self.assertFalse(partners1.session.context)
+        # check content of partners.session
+        self.assertEqual(partners.session.cr, self.cr)
+        self.assertEqual(partners.session.uid, self.uid)
+        self.assertFalse(partners.session.context)
+        self.assertEqual(partners.session.user.id, self.uid)
 
-        # access another model from partners1.session
-        Users = partners1.session.model('res.users')
-        self.assertEqual(Users.session, partners1.session)
+        # get the partners company, and check its session data
+        partner = partners[0]
+        self.assertEqual(partner.session.uid, self.uid)
+        company = partner.company_id
+        self.assertEqual(company.session.uid, self.uid)
 
-        # pick another user
-        user1 = partners1.session.user
-        user2 = Users.query([('id', '!=', user1.id)])[0]
-        self.assertTrue(user2.is_record())
-        self.assertNotEqual(user1, user2)
+        # check that current user can modify the company
+        company.write({'name': 'Fools'})
 
-        # copy recordset with another user
-        partners2 = partners1.with_session(user=user2, lang=user2.lang or 'en_US')
-        self.assertEqual(partners2.session.user, user2)
-        self.assertNotEqual(partners2.session, partners1.session)
-        self.assertTrue(partners2.is_recordset())
-        self.assertEqual(partners2, partners1)
+        # retrieve the demo user
+        Users = partners.session.model('res.users')
+        demo = Users.query([('login', '=', 'demo')])[0]
+        self.assertNotEqual(demo.id, self.uid)
+
+        # remake recordset with demo user, and check session data
+        partners = partners.with_session(user=demo)
+        self.assertEqual(partners.session.user, demo)
+        partner = partners[0]
+        self.assertEqual(partner.session.user, demo)
+        company = partner.company_id
+        self.assertEqual(company.session.user, demo)
+
+        # demo user cannot modify the company
+        with self.assertRaises(except_orm):
+            company.write({'name': 'Pricks'})
 
     @mute_logger('openerp.osv.orm')
     def test_50_record_recordset(self):
