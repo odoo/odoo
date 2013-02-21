@@ -214,6 +214,16 @@ class base_action_rule(osv.osv):
         self._register_hook(cr, ids)
         return True
 
+    def onchange_model_id(self, cr, uid, ids, model_id, context=None):
+        if model_id:
+            model = self.pool.get('ir.model').browse(cr, uid, model_id, context=context)
+            data = {'model': model.model}
+        else:
+            data = {'model': False}
+        data.update({'filter_pre_id': False, 'filter_id': False})
+        return {'value': data}
+
+
     def _check(self, cr, uid, automatic=False, use_new_cursor=False, context=None):
         """ This Function is called by scheduler. """
         context = context or {}
