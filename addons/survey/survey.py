@@ -20,6 +20,8 @@
 ##############################################################################
 
 import copy
+from urllib import urlencode
+from urlparse import urljoin
 from datetime import datetime
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
@@ -64,6 +66,23 @@ class survey(osv.osv):
             res[id] = sur_res_obj.search(cr, uid, [('survey_id', '=', id), ('state', '=', 'done')], context=context, count=True)
         return res
 
+    def _get_public_url(self, cr, uid, ids, name, arg, context=None):
+        """ Compute if the message is unread by the current user. """
+        res = dict((id, 0) for id in ids)
+
+        base_url = self.pool.get('ir.config_parameter').get_param(cr, uid, 'web.base.url')
+        model_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'survey', 'action_complete')
+        for id in ids:
+            query = {
+                'db': cr.dbname
+            }
+            fragment = {
+                'active_id': id,
+                'action': model_id[1],
+            }
+            res[id] = urljoin(base_url, "?%s#%s" % (urlencode(query), urlencode(fragment)))
+        return res
+
     _columns = {
         'title': fields.char('Survey Title', size=128, required=1),
         'page_ids': fields.one2many('survey.page', 'survey_id', 'Page'),
@@ -81,6 +100,7 @@ class survey(osv.osv):
         'type': fields.many2one('survey.type', 'Type'),
         'color': fields.integer('Color Index'),
         'response_ids': fields.one2many('survey.response', 'survey_id', 'Responses', readonly=1),
+        'public_url': fields.function(_get_public_url, string="Public url", type="char"),
     }
     _defaults = {
         'state': "draft",

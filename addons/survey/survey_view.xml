@@ -47,7 +47,10 @@
                         </group>
                         <group>
                             <field name="max_response_limit" attrs="{'readonly':[('state','=','close')]}"/>
-                            <field name="send_response" attrs="{'readonly':[('state','=',['close','cancel'])]}"/>
+                            <field name="send_response" attrs="{'readonly':[('state','in',['close','cancel'])]}"/>
+                        </group>
+                        <group colspan="4">
+                            <field name="public_url" attrs="{'invisible':[('open_options','=','restricted')]}"/>
                         </group>
                     </group>
                     <field name="page_ids" colspan="4" mode="tree" attrs="{'readonly':[('state','=','close')]}">
@@ -273,6 +276,8 @@
                     <field name="responsible_id"/>
                     <field name="color"/>
                     <field name="state"/>
+                    <field name="open_options"/>
+                    <field name="public_url"/>
                     <templates>
                         <t t-name="kanban-box">
                             <div t-attf-class="oe_kanban_color_#{kanban_getcolor(record.color.raw_value)} oe_kanban_card oe_kanban_survey">

@@ -20,8 +20,6 @@
 ##############################################################################
 
 import re
-from urllib import urlencode
-from urlparse import urljoin
 from openerp.osv import osv
 from openerp.osv import fields
 from datetime import datetime
@@ -57,12 +55,12 @@ class survey_mail_compose_message(osv.TransientModel):
 
         emails_split = re.compile(r"[;,\n\r]+")
         survey_response_obj = self.pool.get('survey.response')
+        survey_obj = self.pool.get('survey')
         partner_obj = self.pool.get('res.partner')
         mail_mail_obj = self.pool.get('mail.mail')
         mail_message_obj = self.pool.get('mail.message')
-        base_url = self.pool.get('ir.config_parameter').get_param(cr, uid, 'web.base.url')
 
-        def create_response_and_send_mail(wizard, token, partner_id, email):
+        def create_response_and_send_mail(wizard, token, partner_id, email, public_url):
             """ Create one mail by recipients and replace __URL__ by link with identification token
             """
             # create response with token
@@ -77,23 +75,12 @@ class survey_mail_compose_message(osv.TransientModel):
                     'email': email,
                 })
 
-            # create url
-            query = {
-                'db': cr.dbname
-            }
-            fragment = {
-                'active_id': wizard.res_id,
-                'params': token,
-                'action': 'survey.action_answer_survey',
-            }
-            url = urljoin(base_url, "?%s#%s" % (urlencode(query), urlencode(fragment)))
-
             # post the message
             values = {
                 'model': 'survey',
                 'res_id': wizard.res_id or False,
                 'subject': wizard.subject,
-                'body': wizard.body.replace("__URL__", url),
+                'body': wizard.body.replace("__URL__", "%s&params=%s" % (public_url, token)),
                 'parent_id': None,
                 'partner_ids': partner_id and [(4, partner_id)] or None,
                 'notified_partner_ids': partner_id and [(4, partner_id)] or None,
@@ -134,13 +121,16 @@ class survey_mail_compose_message(osv.TransientModel):
                 if not len(emails_checked) and not len(wizard.partner_ids):
                     raise osv.except_osv(_('Warning!'), _("Please enter at least one recipient."))
 
+                publi_url = survey_obj.browse(cr, uid, wizard.res_id, context=context).public_url
+
                 for email in emails_checked:
                     partner_id = partner_obj.search(cr, uid, [('email', '=', email)], context=context)
                     partner_id = partner_id and partner_id[0] or None
-                    create_response_and_send_mail(wizard, token, partner_id, email)
                     token = create_token(wizard, partner_id, email)
+                    create_response_and_send_mail(wizard, token, partner_id, email, publi_url)
+
                 for partner in wizard.partner_ids:
                     token = create_token(wizard, partner.id, partner.email)
-                    create_response_and_send_mail(wizard, token, partner.id, partner.email)
+                    create_response_and_send_mail(wizard, token, partner.id, partner.email, publi_url)
 
         return {'type': 'ir.actions.act_window_close'}
