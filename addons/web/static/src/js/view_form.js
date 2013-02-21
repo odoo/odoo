@@ -3064,11 +3064,12 @@ instance.web.form.FieldMany2One = instance.web.form.AbstractField.extend(instanc
             }
         });
          // Autocomplete close on dialog content scroll
-        this.$input.closest(".ui-dialog .ui-dialog-content").scroll(function(){
-            if(self.$input.autocomplete("widget").is(":visible")){
+         var close_autocomplete = _.debounce(function(){
+             if(self.$input.autocomplete("widget").is(":visible")){
                 self.$input.autocomplete("close");
             }
-        });
+         }, 100);
+        this.$input.closest(".ui-dialog .ui-dialog-content").on('scroll', this, close_autocomplete)
         self.ed_def = $.Deferred();
         self.uned_def = $.Deferred();
         var ed_delay = 200;
