@@ -1,0 +1,20 @@
+-
+   Create a user as 'Accountant'
+-
+  !record {model: res.users, id: res_users_account_user}:
+    company_id: base.main_company
+    name: Accountant  
+    login: acc
+    password: acc
+    groups_id:
+      - account.group_account_user
+-
+   Create a user as 'Financial Manager'
+-
+  !record {model: res.users, id: res_users_account_manager}:
+    company_id: base.main_company
+    name: Financial Manager
+    login: fm
+    password: fm
+    groups_id:
+      - account.group_account_manager
