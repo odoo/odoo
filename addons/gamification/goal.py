@@ -123,7 +123,7 @@ class gamification_goal(osv.Model):
             ondelete="cascade"),
         'user_id' : fields.many2one('res.users', string='User', required=True),
         'planline_id' : fields.many2one('gamification.goal.planline',
-            string='Goal Plan',
+            string='Goal Planline',
             ondelete="cascade"),
         'start_date' : fields.date('Start Date'),
         'end_date' : fields.date('End Date'), # no start and end = always active
@@ -370,14 +370,14 @@ class gamification_goal_plan(osv.Model):
     }
 
     def _check_nonzero_planline(self, cr, uid, ids, context=None):
-        "checks that there is at least one planline set"
+        """checks that there is at least one planline set"""
         for plan in self.browse(cr, uid, ids, context):
             if len(plan.planline_ids) < 1:
                 return False
         return True
 
     def _check_nonzero_users(self, cr, uid, ids, context=None):
-        "checks that there is at least one user set"
+        """checks that there is at least one user set"""
         for plan in self.browse(cr, uid, ids, context):
             if len(plan.user_ids) < 1 and plan.state != 'draft':
                 return False
@@ -395,12 +395,34 @@ class gamification_goal_plan(osv.Model):
         self.generate_goals_from_plan(cr, uid, ids, context=context)
         return self.write(cr, uid, ids, {'state': 'inprogress'}, context=context)
 
+    def action_check(self, cr, uid, ids, context=None):
+        """Check a goal plan in progress
+
+        Create goals that haven't been created yet (eg: if added users of planlines)
+        Recompute the current value for each goal related"""
+        self.generate_goals_from_plan(cr, uid, ids, context=context)
+        for plan in self.browse(cr, uid, ids, context):
+            for planline in plan.planline_ids:
+                goal_obj = self.pool.get('gamification.goal')
+                goal_ids = goal_obj.search(cr, uid, [('planline_id', '=', planline.id)] , context=context)
+                goal_obj.update(cr, uid, goal_ids, context=context, force_update=True)
+
+        return True
+
+
     def action_close(self, cr, uid, ids, context=None):
         """Close a plan in progress
 
         Change the state of the plan to in done
         Does NOT close the related goals, this is handled by the goal itself"""
         return self.write(cr, uid, ids, {'state': 'done'}, context=context)
+
+    def action_reset(self, cr, uid, ids, context=None):
+        """Reset a closed goal plan
+
+        Change the state of the plan to in progress
+        Closing a pan does not affect the goals so reset as well"""
+        return self.write(cr, uid, ids, {'state': 'inprogress'}, context=context)
 
     def action_cancel(self, cr, uid, ids, context=None):
         """Cancel a plan in progress
@@ -414,13 +436,6 @@ class gamification_goal_plan(osv.Model):
                 goal_obj.cancel_goals_from_plan(cr, uid, ids, planline.id, context=context)
 
         return True
-
-    def action_reset(self, cr, uid, ids, context=None):
-        """Reset a closed goal plan
-
-        Change the state of the plan to in progress"""
-        return self.write(cr, uid, ids, {'state': 'inprogress'}, context=context)
-
 
     def generate_goals_from_plan(self, cr, uid, ids, context=None):
         """Generate the lsit of goals fron a plan"""
