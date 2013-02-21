@@ -536,9 +536,9 @@ class BaseModel(object):
         :meth:`~.browse` or another record/recordset. One can read the fields of
         a record as its attributes.
 
-    *   `recordset`: represents a collection of records in the given model,
-        typically returned by :meth:`~.browse`, :meth:`~.query`, or another
-        record/recordset. One can iterate over it.
+    *   `recordset`: represents an ordered collection of records in the given
+        model, typically returned by :meth:`~.browse`, :meth:`~.query`, or
+        another record/recordset. One can iterate over it.
 
     *   `null`: represents an absent record (null object pattern), typically
         returned by :meth:`~.browse` or another record/recordset. One can read
@@ -5374,21 +5374,6 @@ class BaseModel(object):
         assert self._name == other._name, "Mixing apples and oranges: %s, %s" % (self, other)
         return self._make_recordset(list(self) + list(other))
 
-    def __sub__(self, other):
-        """ Return a recordset made of the records in ``self`` but not in ``other``. """
-        assert self._name == other._name, "Mixing apples and oranges: %s, %s" % (self, other)
-        return self._make_recordset(set(self) - set(other))
-
-    def __and__(self, other):
-        """ Return the intersection of two recordsets. """
-        assert self._name == other._name, "Mixing apples and oranges: %s, %s" % (self, other)
-        return self._make_recordset(set(self) & set(other))
-
-    def __or__(self, other):
-        """ Return the union of two recordsets. """
-        assert self._name == other._name, "Mixing apples and oranges: %s, %s" % (self, other)
-        return self._make_recordset(set(self) | set(other))
-
     def __eq__(self, other):
         """ Test equality between two records, two recordsets or two models. """
         if not isinstance(other, BaseModel):
@@ -5401,7 +5386,7 @@ class BaseModel(object):
         elif self.is_recordset():
             # compare two recordsets
             assert other.is_recordset(), "Comparing recordset to non-recordset: %s, %s" % (self, other)
-            return self._name == other._name and set(self) == set(other)
+            return self._name == other._name and list(self) == list(other)
         else:
             # compare two models
             return self._name == other._name
@@ -5562,8 +5547,7 @@ class BaseModel(object):
         if self.is_record_or_null():
             return hash((self._name, self._record_id))
         elif self.is_recordset():
-            # that one may be costly, use with care!
-            return hash((self._name, frozenset(map(int, self))))
+            return hash((self._name, tuple(map(int, self))))
         else:
             return hash(self._name)
 

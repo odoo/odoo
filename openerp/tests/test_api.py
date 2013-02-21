@@ -270,25 +270,9 @@ class TestAPI(common.TransactionCase):
         self.assertTrue(p in ps)
 
     @mute_logger('openerp.osv.orm')
-    def test_60_and(self):
-        """ Check conjunction of recordsets. """
+    def test_60_concat(self):
+        """ Check concatenation of recordsets. """
         pa = self.Partner.query(self.cr, self.uid, [('name', 'ilike', 'a')])
         pb = self.Partner.query(self.cr, self.uid, [('name', 'ilike', 'b')])
-        pab = pa & pb
-        self.assertEqual(set(pab), set(pa) & set(pb))
-
-    @mute_logger('openerp.osv.orm')
-    def test_60_or(self):
-        """ Check union of recordsets. """
-        pa = self.Partner.query(self.cr, self.uid, [('name', 'ilike', 'a')])
-        pb = self.Partner.query(self.cr, self.uid, [('name', 'ilike', 'b')])
-        pab = pa | pb
-        self.assertEqual(set(pab), set(pa) | set(pb))
-
-    @mute_logger('openerp.osv.orm')
-    def test_60_sub(self):
-        """ Check difference of recordsets. """
-        pa = self.Partner.query(self.cr, self.uid, [('name', 'ilike', 'a')])
-        pb = self.Partner.query(self.cr, self.uid, [('name', 'ilike', 'ag')])
-        pab = pa - pb
-        self.assertEqual(set(pab), set(pa) - set(pb))
+        pab = pa + pb
+        self.assertEqual(list(pab), list(pa) + list(pb))
