@@ -25,6 +25,7 @@ from urlparse import urljoin
 from datetime import datetime
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
+import uuid
 
 
 class survey_type(osv.osv):
@@ -41,7 +42,7 @@ class survey(osv.osv):
     _name = 'survey'
     _description = 'Survey'
     _rec_name = 'title'
-    _inherit = ['ir.needaction_mixin']
+    _inherit = ['mail.thread', 'ir.needaction_mixin']
 
     def _needaction_domain_get(self, cr, uid, context=None):
         return ['&', ('response_ids.state', 'in', ['new', 'skip']), ('response_ids.partner_id.user_id', '=', uid)]
@@ -69,18 +70,19 @@ class survey(osv.osv):
     def _get_public_url(self, cr, uid, ids, name, arg, context=None):
         """ Compute if the message is unread by the current user. """
         res = dict((id, 0) for id in ids)
-
         base_url = self.pool.get('ir.config_parameter').get_param(cr, uid, 'web.base.url')
         model_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'survey', 'action_complete')
-        for id in ids:
+        survey_obj = self.pool.get('survey')
+        for survey_browse in survey_obj.browse(cr, uid, ids, context=context):
             query = {
                 'db': cr.dbname
             }
             fragment = {
-                'active_id': id,
+                'active_id': survey_browse.id,
                 'action': model_id[1],
+                'params': survey_browse.token,
             }
-            res[id] = urljoin(base_url, "?%s#%s" % (urlencode(query), urlencode(fragment)))
+            res[survey_browse.id] = urljoin(base_url, "?%s#%s" % (urlencode(query), urlencode(fragment)))
         return res
 
     _columns = {
@@ -91,7 +93,7 @@ class survey(osv.osv):
         'max_response_limit': fields.integer('Maximum Answer Limit',
                      help="Set to one if survey is answerable only once"),
         'state': fields.selection([('draft', 'Draft'), ('open', 'Open'), ('close', 'Close'), ('cancel', 'Cancelled')], 'Status', required=1),
-        'open_options': fields.selection([('all', 'Open for all people'), ('user', 'Open for sign up user'), ('restricted', 'Open with invitation')], 'Share options', required=1),
+        'sign_in': fields.boolean('User must be sign up'),
         'responsible_id': fields.many2one('res.users', 'Responsible', help="User responsible forsurvey"),
         'tot_start_survey': fields.function(_get_tot_start_survey, string="Total Started Survey", type="integer"),
         'tot_comp_survey': fields.function(_get_tot_comp_survey, string="Total Completed Survey", type="integer"),
@@ -101,12 +103,14 @@ class survey(osv.osv):
         'color': fields.integer('Color Index'),
         'response_ids': fields.one2many('survey.response', 'survey_id', 'Responses', readonly=1),
         'public_url': fields.function(_get_public_url, string="Public url", type="char"),
+        'token': fields.char('Public token', size=8, required=1),
     }
     _defaults = {
         'state': "draft",
-        'open_options': "all",
+        'sign_in': False,
         'send_response': 1,
         'date_open': fields.datetime.now,
+        'token': lambda s, cr, uid, c: uuid.uuid4(),
     }
 
     def survey_draft(self, cr, uid, ids, arg):
@@ -642,7 +646,7 @@ class survey_response(osv.osv):
 
     _columns = {
         'date_deadline': fields.date("Deadline date", help="Date by which the person can respond to the survey"),
-        'survey_id': fields.many2one('survey', 'Survey', required=1, readonly=1, ondelete='cascade'),
+        'survey_id': fields.many2one('survey', 'Survey', required=1, readonly=1, ondelete='restrict'),
         'date_create': fields.datetime('Create Date', required=1),
         'response_type': fields.selection([('manually', 'Manually'), ('link', 'Link')], 'Answer Type', required=1),
         'question_ids': fields.one2many('survey.response.line', 'response_id', 'Answer'),

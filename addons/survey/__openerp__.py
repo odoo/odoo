@@ -34,7 +34,7 @@ question and according to that survey is done. Partners are also sent mails with
 user name and password for the invitation of the survey.
     """,
     'author': 'OpenERP SA',
-    'depends': ['email_template'],
+    'depends': ['email_template', 'mail'],
     'data': [
         'survey_report.xml',
         'survey_data.xml',
