@@ -403,8 +403,9 @@
         <img class="oe_topbar_avatar" t-att-data-default-src="_s + '/web/static/src/img/user_menu_avatar.png'"/>
         <span class="oe_topbar_name"/>
         <ul class="oe_dropdown_menu">
-            <li><a href="#" data-menu="about">About OpenERP</a></li>
             <li><a href="#" data-menu="settings">Preferences</a></li>
+            <li><a href="#" data-menu="about">About OpenERP</a></li>
+            <li><a href="#" data-menu="help">Help</a></li>
             <li><a href="#" data-menu="logout">Log out</a></li>
         </ul>
     </span>
@@ -1413,8 +1414,6 @@
     <t t-jquery="thead.ui-widget-header > tr:first">
         this.removeAttr('t-if');
     </t>
-
-    <t t-jquery="tfoot &gt; tr:last-child" t-operation="replace"/>
 
     <t t-jquery="td.oe-actions">
         this.removeAttr('t-if');

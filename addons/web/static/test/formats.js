@@ -68,6 +68,12 @@ openerp.testing.section('web-formats', {
         strictEqual(
             instance.web.format_value(-0.0085, {type:'float', widget:'float_time'}),
             '-00:01');
+        strictEqual(
+            instance.web.format_value(4.9999, {type:'float', widget:'float_time'}),
+            '05:00');
+        strictEqual(
+            instance.web.format_value(-6.9999, {type:'float', widget:'float_time'}),
+            '-07:00');
     });
     test("format_float", function (instance) {
         var fl = 12.1234;

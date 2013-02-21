@@ -1186,7 +1186,7 @@ instance.web.ListView.List = instance.web.Class.extend( /** @lends instance.web.
     }
 });
 instance.web.ListView.Groups = instance.web.Class.extend( /** @lends instance.web.ListView.Groups# */{
-    passtrough_events: 'action deleted row_link',
+    passthrough_events: 'action deleted row_link',
     /**
      * Grouped display for the ListView. Handles basic DOM events and interacts
      * with the :js:class:`~DataGroup` bound to it.
@@ -1406,7 +1406,7 @@ instance.web.ListView.Groups = instance.web.Class.extend( /** @lends instance.we
             // can have selections spanning multiple links
             var selection = self.get_selection();
             $this.trigger(e, [selection.ids, selection.records]);
-        }).bind(this.passtrough_events, function (e) {
+        }).bind(this.passthrough_events, function (e) {
             // additional positional parameters are provided to trigger as an
             // Array, following the event type or event object, but are
             // provided to the .bind event handler as *args.

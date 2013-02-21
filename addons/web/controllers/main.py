@@ -13,6 +13,7 @@ import os
 import re
 import simplejson
 import time
+import urllib
 import urllib2
 import xmlrpclib
 import zlib
@@ -294,9 +295,9 @@ def manifest_list(req, extension, mods=None, db=None):
     if not req.debug:
         path = '/web/webclient/' + extension
         if mods is not None:
-            path += '?mods=' + mods
+            path += '?' + urllib.urlencode({'mods': mods})
         elif db:
-            path += '?db=' + db
+            path += '?' + urllib.urlencode({'db': db})
         return [path]
     files = manifest_glob(req, extension, addons=mods, db=db)
     i_am_diabetic = req.httprequest.environ["QUERY_STRING"].count("no_sugar") >= 1 or \
@@ -522,7 +523,7 @@ html_template = """<!DOCTYPE html>
     </head>
     <body>
         <!--[if lte IE 8]>
-        <script src="http://ajax.googleapis.com/ajax/libs/chrome-frame/1/CFInstall.min.js"></script>
+        <script src="//ajax.googleapis.com/ajax/libs/chrome-frame/1/CFInstall.min.js"></script>
         <script>CFInstall.check({mode: "overlay"});</script>
         <![endif]-->
     </body>
