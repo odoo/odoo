@@ -22,7 +22,8 @@
 from openerp.osv import fields, osv
 from openerp.tools.safe_eval import safe_eval
 
-from datetime import timedelta
+from datetime import date, timedelta
+import calendar
 
 class gamification_goal_type(osv.Model):
     """Goal type definition
@@ -218,6 +219,58 @@ class gamification_goal(osv.Model):
             self.write(cr, uid, [goal.id], towrite, context=context)
         return True
 
+    def create_goal_from_plan(self, cr, uid, ids, planline_id, user_id, start_date, context=None):
+        """If a goal for that planline and user is not already present, create it
+
+        :param planline_id: id of the planline linked to the goal
+        :param user_id: id of the user linked to the goal
+        :param start_date: first day of the plan, False for non-automatic plans
+            (where period is set to 'once')
+        If a goal matching these three parameters is already present, no goal is
+        created. In the case of manual plan (no start_date), the goal is always
+        created.
+        """
+
+        obj = self.pool.get('gamification.goal')
+        if start_date:
+            domain = [('planline_id', '=', planline_id),
+                ('user_id', '=', user_id),
+                ('start_date', '=', start_date.isoformat())]
+            res = obj.search(cr, uid, domain, context=context)
+            if len(res) > 0:
+                # already exist, skip
+                return True
+
+        planline = self.pool.get('gamification.goal.planline').browse(cr, uid, planline_id, context)
+        values = {
+            'type_id':planline.type_id.id,
+            'planline_id':planline_id,
+            'user_id':user_id,
+            'target_goal':planline.target_goal,
+        }
+
+        if start_date:
+            values['start_date'] = start_date.isoformat()
+        if planline.plan_id.period != 'once':
+            if planline.plan_id.period == 'daily':
+                values['end_date'] = start_date + timedelta(days=1)
+            elif planline.plan_id.period == 'weekly':
+                values['end_date'] = start_date + timedelta(days=7)
+            elif planline.plan_id.period == 'monthly':
+                month_range = calendar.monthrange(start_date.year, start_date.month)
+                values['end_date'] = start_date.replace(day=month_range[1])
+            elif planline.plan_id.period == 'yearly':
+                values['end_date'] = start_date.replace(month=12, day=31)
+        if planline.plan_id.remind_update_delay:
+            values['remind_update_delay'] = planline.plan_id.remind_update_delay
+        
+        obj.create(cr, uid, values, context)
+
+
+    def cancel_goal_from_plan(self, planline, user):
+        """Apply action to goals after it's plan has been canceled"""
+        pass
+
     def action_reach(self, cr, uid, ids, context=None):
         return self.write(cr, uid, ids, {'state': 'reached'}, context=context)
 
@@ -330,48 +383,59 @@ class gamification_goal_plan(osv.Model):
     def action_start(self, cr, uid, ids, context=None):
         """Start a draft goal plan
 
-        Change the state of the plan to in progress
-        TODO: generate related goals"""
+        Change the state of the plan to in progress"""
+        self.generate_goals_from_plan(cr, uid, ids, context=context)
         return self.write(cr, uid, ids, {'state': 'inprogress'}, context=context)
 
     def action_close(self, cr, uid, ids, context=None):
         """Close a plan in progress
 
         Change the state of the plan to in done
-        TODO: close the related goals"""
+        Does NOT close the related goals ?"""
         return self.write(cr, uid, ids, {'state': 'done'}, context=context)
 
     def action_cancel(self, cr, uid, ids, context=None):
         """Cancel a plan in progress
 
         Change the state of the plan to draft
-        TODO: close the related goals ?"""
-        return self.write(cr, uid, ids, {'state': 'draft'}, context=context)
+        Close the related goals"""
+        self.write(cr, uid, ids, {'state': 'draft'}, context=context)
+        for plan in self.browse(cr, uid, ids, context):
+            for planline in plan.planline_ids:
+                for user in plan.user_ids:
+                    goal_obj = self.pool.get('gamification.goal')
+                    goal_obj.cancel_goal_from_plan(planline, user)
+
+        return True
 
     def action_reset(self, cr, uid, ids, context=None):
         """Reset a closed goal plan
 
-        Change the state of the plan to in progress
-        TODO: reopen unfinished goals ?"""
+        Change the state of the plan to in progress"""
         return self.write(cr, uid, ids, {'state': 'inprogress'}, context=context)
 
 
     def generate_goals_from_plan(self, cr, uid, ids, context=None):
         """Generate the lsit of goals fron a plan"""
         for plan in self.browse(cr, uid, ids, context):
+            today = date.today() #fields.date.today()
+            if plan.period == 'daily':
+                start_date = today
+            elif plan.period == 'weekly':
+                delta = timedelta(days=today.weekday())
+                start_date = today - delta
+            elif plan.period == 'monthly':
+                delta = timedelta(days=today.day-1)
+                start_date = today - delta
+            elif plan.period == 'yearly':
+                start_date = today.replace(month=1, day=1)
+            elif plan.period == 'once':
+                start_date = False # for manual goal, start each time
+
             for planline in plan.planline_ids:
                 for user in plan.user_ids:
                     goal_obj = self.pool.get('gamification.goal')
-                    current = compute_current_value(planline.type_id, user_id)
-                    goal_id = goal_obj.create(cr, uid, {
-                        'type_id': planline.type_id,
-                        'user_id': user.id,
-                        'start_date':0,
-                        'end_date':0,
-                        'target_goal':planline.target_goal,
-                        'state':'inprogress',
-                        'last_update':fields.date.today,
-                    }, context=context)
+                    goal_obj.create_goal_from_plan(cr, uid, ids, planline.id, user.id, start_date, context=context)
 
 
 class gamification_goal_planline(osv.Model):
