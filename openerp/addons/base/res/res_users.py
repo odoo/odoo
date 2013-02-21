@@ -28,7 +28,7 @@ import openerp
 from openerp import SUPERUSER_ID
 from openerp import pooler, tools
 import openerp.exceptions
-from openerp.osv import fields,osv
+from openerp.osv import fields, osv, api
 from openerp.osv.orm import Record
 from openerp.tools.translate import _
 
@@ -243,7 +243,7 @@ class res_users(osv.osv):
         'company_id': _get_company,
         'company_ids': _get_companies,
         'groups_id': _get_group,
-        'image': lambda self, cr, uid, ctx={}: self.pool.get('res.partner')._get_default_image(cr, uid, False, ctx, colorize=True),
+        'image': api.model(lambda self: self.session.model('res.partner')._get_default_image(False, colorize=True)),
     }
 
     # User can write on a few of his own fields (but not his groups for example)

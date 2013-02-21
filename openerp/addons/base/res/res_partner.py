@@ -32,10 +32,10 @@ from openerp.osv import api, osv, fields
 from openerp.tools.translate import _
 
 class format_address(object):
-    def fields_view_get_address(self, cr, uid, arch, context={}):
-        user_obj = self.pool.get('res.users')
-        fmt = user_obj.browse(cr, SUPERUSER_ID, uid, context).company_id.country_id
-        fmt = fmt and fmt.address_format
+    @api.model
+    def fields_view_get_address(self, arch):
+        user = self.session.user.with_session(user=SUPERUSER_ID)
+        fmt = user.company_id.country_id.address_format or ''
         layouts = {
             '%(city)s %(state_code)s\n%(zip)s': """
                 <div class="address_format">
@@ -61,8 +61,8 @@ class format_address(object):
                 </div>
             """
         }
-        for k,v in layouts.items():
-            if fmt and (k in fmt):
+        for k, v in layouts.items():
+            if k in fmt:
                 doc = etree.fromstring(arch)
                 for node in doc.xpath("//div[@class='address_format']"):
                     tree = etree.fromstring(v)
@@ -72,52 +72,42 @@ class format_address(object):
         return arch
 
 
-def _tz_get(self,cr,uid, context=None):
-    return [(x, x) for x in pytz.all_timezones]
+class res_partner_category(osv.Model):
 
-class res_partner_category(osv.osv):
+    @api.recordset
+    def name_get(self):
+        """ Return the categories' display name, including their direct
+            parent by default.
 
-    def name_get(self, cr, uid, ids, context=None):
-        """Return the categories' display name, including their direct
-           parent by default.
+            If ``context['partner_category_display']`` is ``'short'``, the short
+            version of the category name (without the direct parent) is used.
+            The default is the long version.
+        """
+        if self.session.context.get('partner_category_display') == 'short':
+            return super(res_partner_category, self).name_get()
 
-        :param dict context: the ``partner_category_display`` key can be
-                             used to select the short version of the
-                             category name (without the direct parent),
-                             when set to ``'short'``. The default is
-                             the long version."""
-        if context is None:
-            context = {}
-        if context.get('partner_category_display') == 'short':
-            return super(res_partner_category, self).name_get(cr, uid, ids, context=context)
-        if isinstance(ids, (int, long)):
-            ids = [ids]
-        reads = self.read(cr, uid, ids, ['name', 'parent_id'], context=context)
         res = []
-        for record in reads:
-            name = record['name']
-            if record['parent_id']:
-                name = record['parent_id'][1] + ' / ' + name
-            res.append((record['id'], name))
+        for record in self:
+            id = record.id
+            names = []
+            while record:
+                names.append(record.name)
+                record = record.parent_id
+            res.append((id, ' / '.join(reversed(names))))
         return res
 
-    def name_search(self, cr, uid, name, args=None, operator='ilike', context=None, limit=100):
-        if not args:
-            args = []
-        if not context:
-            context = {}
+    @api.model
+    def name_search(self, name, args=None, operator='ilike', limit=100):
+        args = args or []
         if name:
-            # Be sure name_search is symetric to name_get
             name = name.split(' / ')[-1]
-            ids = self.search(cr, uid, [('name', operator, name)] + args, limit=limit, context=context)
-        else:
-            ids = self.search(cr, uid, args, limit=limit, context=context)
-        return self.name_get(cr, uid, ids, context)
+            args = [('name', operator, name)] + args
+        categories = self.query(args, limit=limit)
+        return categories.name_get()
 
-
-    def _name_get_fnc(self, cr, uid, ids, prop, unknow_none, context=None):
-        res = self.name_get(cr, uid, ids, context=context)
-        return dict(res)
+    @api.recordset
+    def _name_get_fnc(self, field_name, arg):
+        return dict(self.name_get())
 
     _description = 'Partner Categories'
     _name = 'res.partner.category'
@@ -141,6 +131,7 @@ class res_partner_category(osv.osv):
     _parent_order = 'name'
     _order = 'parent_left'
 
+
 class res_partner_title(osv.osv):
     _name = 'res.partner.title'
     _order = 'name'
@@ -153,45 +144,44 @@ class res_partner_title(osv.osv):
         'domain': 'contact',
     }
 
-def _lang_get(self, cr, uid, context=None):
-    lang_pool = self.pool.get('res.lang')
-    ids = lang_pool.search(cr, uid, [], context=context)
-    res = lang_pool.read(cr, uid, ids, ['code', 'name'], context)
-    return [(r['code'], r['name']) for r in res]
+
+@api.model
+def _lang_get(self):
+    languages = self.session.model('res.lang').query([])
+    return [(language.code, language.name) for language in languages]
+
+
+@api.model
+def _tz_get(self):
+    return [(x, x) for x in pytz.all_timezones]
 
 POSTAL_ADDRESS_FIELDS = ('street', 'street2', 'zip', 'city', 'state_id', 'country_id')
 ADDRESS_FIELDS = POSTAL_ADDRESS_FIELDS + ('email', 'phone', 'fax', 'mobile', 'website', 'ref', 'lang')
 
-class res_partner(osv.osv, format_address):
+
+class res_partner(osv.Model, format_address):
     _description = 'Partner'
     _name = "res.partner"
 
-    def _address_display(self, cr, uid, ids, name, args, context=None):
-        res = {}
-        for partner in self.browse(cr, uid, ids, context=context):
-            res[partner.id] = self._display_address(cr, uid, partner, context=context)
-        return res
+    @api.record
+    def _address_display(self, name, arg):
+        return self._display_address()
 
-    def _get_image(self, cr, uid, ids, name, args, context=None):
-        result = dict.fromkeys(ids, False)
-        for obj in self.browse(cr, uid, ids, context=context):
-            result[obj.id] = tools.image_get_resized_images(obj.image)
-        return result
+    @api.record
+    def _get_tz_offset(self, name, args):
+        return datetime.datetime.now(pytz.timezone(self.tz or 'GMT')).strftime('%z')
 
-    def _get_tz_offset(self, cr, uid, ids, name, args, context=None):
-        result = dict.fromkeys(ids, False)
-        for obj in self.browse(cr, uid, ids, context=context):
-            result[obj.id] = datetime.datetime.now(pytz.timezone(obj.tz or 'GMT')).strftime('%z')
-        return result
+    @api.record
+    def _get_image(self, name, args):
+        return tools.image_get_resized_images(self.image)
 
-    def _set_image(self, cr, uid, id, name, value, args, context=None):
-        return self.write(cr, uid, [id], {'image': tools.image_resize_image_big(value)}, context=context)
+    @api.record
+    def _set_image(self, name, value, args):
+        return self.write({'image': tools.image_resize_image_big(value)})
 
-    def _has_image(self, cr, uid, ids, name, args, context=None):
-        result = {}
-        for obj in self.browse(cr, uid, ids, context=context):
-            result[obj.id] = obj.image != False
-        return result
+    @api.record
+    def _has_image(self, name, args):
+        return self.image != False
 
     _order = "name"
     _columns = {
@@ -266,14 +256,13 @@ class res_partner(osv.osv, format_address):
         'contact_address': fields.function(_address_display,  type='char', string='Complete Address'),
     }
 
-    def _default_category(self, cr, uid, context=None):
-        if context is None:
-            context = {}
-        if context.get('category_id'):
-            return [context['category_id']]
-        return False
+    @api.model
+    def _default_category(self):
+        category_id = self.session.context.get('category_id', False)
+        return [category_id] if category_id else False
 
-    def _get_default_image(self, cr, uid, is_company, context=None, colorize=False):
+    @api.model
+    def _get_default_image(self, is_company, colorize=False):
         img_path = openerp.modules.get_module_resource('base', 'static/src/img',
                                                        ('company_image.png' if is_company else 'avatar.png'))
         with open(img_path, 'rb') as f:
@@ -285,21 +274,26 @@ class res_partner(osv.osv, format_address):
 
         return tools.image_resize_image_big(image.encode('base64'))
 
-    def fields_view_get(self, cr, user, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
-        if (not view_id) and (view_type=='form') and context and context.get('force_email', False):
-            view_id = self.pool.get('ir.model.data').get_object_reference(cr, user, 'base', 'view_partner_simple_form')[1]
-        res = super(res_partner,self).fields_view_get(cr, user, view_id, view_type, context, toolbar=toolbar, submenu=submenu)
+    @api.model
+    def fields_view_get(self, view_id=None, view_type='form', toolbar=False, submenu=False):
+        if (not view_id) and (view_type == 'form') and self.session.context.get('force_email'):
+            view_id = self.session.model('ir.model.data').get_object_reference('base', 'view_partner_simple_form')[1]
+        res = super(res_partner, self).fields_view_get(view_id, view_type, toolbar=toolbar, submenu=submenu)
         if view_type == 'form':
-            res['arch'] = self.fields_view_get_address(cr, user, res['arch'], context=context)
+            res['arch'] = self.fields_view_get_address(res['arch'])
         return res
+
+    @api.model
+    def _default_company(self):
+        return self.session.model('res.company')._company_default_get('res.partner')
 
     _defaults = {
         'active': True,
-        'lang': lambda self, cr, uid, ctx: ctx.get('lang', 'en_US'),
-        'tz': lambda self, cr, uid, ctx: ctx.get('tz', False),
+        'lang': api.model(lambda self: self.session.lang),
+        'tz': api.model(lambda self: self.session.context.get('tz', False)),
         'customer': True,
         'category_id': _default_category,
-        'company_id': lambda self, cr, uid, ctx: self.pool.get('res.company')._company_default_get(cr, uid, 'res.partner', context=ctx),
+        'company_id': _default_company,
         'color': 0,
         'is_company': False,
         'type': 'default',
@@ -307,14 +301,14 @@ class res_partner(osv.osv, format_address):
         'image': False,
     }
 
-    def copy(self, cr, uid, id, default=None, context=None):
-        if default is None:
-            default = {}
-        name = self.read(cr, uid, [id], ['name'], context)[0]['name']
-        default.update({'name': _('%s (copy)') % name})
-        return super(res_partner, self).copy(cr, uid, id, default, context)
+    @api.record
+    def copy(self, defaults):
+        context = self.session.context          # for the translation below
+        defaults['name'] = _('%s (copy)') % self.name
+        return super(res_partner, self).copy(defaults)
 
-    def onchange_type(self, cr, uid, ids, is_company, context=None):
+    @api.recordset
+    def onchange_type(self, is_company):
         value = {}
         value['title'] = False
         if is_company:
@@ -324,35 +318,33 @@ class res_partner(osv.osv, format_address):
             domain = {'title': [('domain', '=', 'contact')]}
         return {'value': value, 'domain': domain}
 
-    def onchange_address(self, cr, uid, ids, use_parent_address, parent_id, context=None):
+    @api.recordset
+    def onchange_address(self, use_parent_address, parent_id):
         def value_or_id(val):
             """ return val or val.id if val is a browse record """
-            return val if isinstance(val, (bool, int, long, float, basestring)) else val.id
+            return val.id if isinstance(val, osv.Record) else val
 
         if use_parent_address and parent_id:
-            parent = self.browse(cr, uid, parent_id, context=context)
+            parent = self.browse(parent_id)
             return {'value': dict((key, value_or_id(parent[key])) for key in ADDRESS_FIELDS)}
         return {}
 
-    def onchange_state(self, cr, uid, ids, state_id, context=None):
+    @api.recordset
+    def onchange_state(self, state_id):
         if state_id:
-            country_id = self.pool.get('res.country.state').browse(cr, uid, state_id, context).country_id.id
-            return {'value':{'country_id':country_id}}
+            state = self.session.model('res.country.state').browse(state_id)
+            return {'value': {'country_id': state.country_id.id}}
         return {}
 
-    def _check_ean_key(self, cr, uid, ids, context=None):
-        for partner_o in pooler.get_pool(cr.dbname).get('res.partner').read(cr, uid, ids, ['ean13',]):
-            thisean=partner_o['ean13']
-            if thisean and thisean!='':
-                if len(thisean)!=13:
+    @api.recordset
+    def _check_ean_key(self):
+        for partner in self:
+            value = partner.ean13
+            if value:
+                if len(value) != 13:
                     return False
-                sum=0
-                for i in range(12):
-                    if not (i % 2):
-                        sum+=int(thisean[i])
-                    else:
-                        sum+=3*int(thisean[i])
-                if math.ceil(sum/10.0)*10-sum!=int(thisean[12]):
+                res = sum(int(digit) * weight for digit, weight in zip(value, [1, 3] * 7))
+                if res % 10:
                     return False
         return True
 
@@ -379,15 +371,14 @@ class res_partner(osv.osv, format_address):
             self.update_address(cr, uid, update_ids, vals, context)
         return super(res_partner,self).write(cr, uid, ids, vals, context=context)
 
-    def create(self, cr, uid, vals, context=None):
-        if context is None:
-            context={}
-        # Update parent and siblings records
+    @api.model
+    def create(self, vals):
         if vals.get('parent_id') and vals.get('use_parent_address'):
-            domain_siblings = [('parent_id', '=', vals['parent_id']), ('use_parent_address', '=', True)]
-            update_ids = [vals['parent_id']] + self.search(cr, uid, domain_siblings, context=context)
-            self.update_address(cr, uid, update_ids, vals, context)
-        return super(res_partner,self).create(cr, uid, vals, context=context)
+            # Update parent and siblings records
+            parent = self.browse(vals['parent_id'])
+            siblings = self.query([('parent_id', '=', parent.id), ('use_parent_address', '=', True)])
+            (parent.recordset + siblings).update_address(vals)
+        return super(res_partner, self).create(vals)
 
     @api.recordset
     def update_address(self, vals):
@@ -403,7 +394,7 @@ class res_partner(osv.osv, format_address):
             if record.parent_id:
                 name = "%s (%s)" % (name, record.parent_id.name)
             if self.session.context.get('show_address'):
-                name = name + "\n" + self._display_address(record, without_company=True)
+                name = name + "\n" + record._display_address(without_company=True)
                 name = "\n".join(filter(bool, name.splitlines()))
             if self.session.context.get('show_email') and record.email:
                 name = "%s <%s>" % (name, record.email)
@@ -413,7 +404,8 @@ class res_partner(osv.osv, format_address):
     def _parse_partner_name(self, text, context=None):
         """ Supported syntax:
             - 'Raoul <raoul@grosbedon.fr>': will find name and email address
-            - otherwise: default, everything is set as the name """
+            - otherwise: default, everything is set as the name
+        """
         match = re.search(r'([^\s,<@]+@[^>\s,]+)', text)
         if match:
             email = match.group(1)
@@ -422,24 +414,27 @@ class res_partner(osv.osv, format_address):
             name, email = text, ''
         return name, email
 
-    def name_create(self, cr, uid, name, context=None):
+    @api.model
+    def name_create(self, name):
         """ Override of orm's name_create method for partners. The purpose is
             to handle some basic formats to create partners using the
             name_create.
             If only an email address is received and that the regex cannot find
             a name, the name will have the email value.
-            If 'force_email' key in context: must find the email address. """
-        if context is None:
-            context = {}
-        name, email = self._parse_partner_name(name, context=context)
-        if context.get('force_email') and not email:
+            If 'force_email' key in context: must find the email address.
+        """
+        name, email = self._parse_partner_name(name)
+        if self.session.context.get('force_email') and not email:
             raise osv.except_osv(_('Warning'), _("Couldn't create contact without email address !"))
         if not name and email:
             name = email
-        rec_id = self.create(cr, uid, {self._rec_name: name or email, 'email': email or False}, context=context)
-        return self.name_get(cr, uid, [rec_id], context)[0]
+        rec_id = self.create({self._rec_name: name or email, 'email': email or False})
+        partners = self.browse([rec_id])
+        return partners.name_get()[0]
 
-    def name_search(self, cr, uid, name, args=None, operator='ilike', context=None, limit=100):
+    @api.model
+    def name_search(self, name, args=None, operator='ilike', limit=100):
+        cr, uid, context = self.session
         if not args:
             args = []
         if name and operator in ('=', 'ilike', '=ilike', 'like', '=like'):
@@ -461,38 +456,46 @@ class res_partner(osv.osv, format_address):
                           ''' + operator + ' %(name)s ' + limit_str, query_args)
             ids = map(lambda x: x[0], cr.fetchall())
             if args:
-                ids = self.search(cr, uid, [('id', 'in', ids)] + args, limit=limit, context=context)
-            if ids:
-                return self.name_get(cr, uid, ids, context)
-        return super(res_partner,self).name_search(cr, uid, name, args, operator=operator, context=context, limit=limit)
+                partners = self.query([('id', 'in', ids)] + args, limit=limit)
+            else:
+                partners = self.browse(ids)
+            if partners:
+                return partners.name_get()
 
-    def find_or_create(self, cr, uid, email, context=None):
+        return super(res_partner, self).name_search(name, args, operator=operator, limit=limit)
+
+    @api.model
+    def find_or_create(self, email):
         """ Find a partner with the given ``email`` or use :py:method:`~.name_create`
             to create one
 
             :param str email: email-like string, which should contain at least one email,
-                e.g. ``"Raoul Grosbedon <r.g@grosbedon.fr>"``"""
+                e.g. ``"Raoul Grosbedon <r.g@grosbedon.fr>"``
+        """
         assert email, 'an email is required for find_or_create to work'
         emails = tools.email_split(email)
         if emails:
             email = emails[0]
-        ids = self.search(cr, uid, [('email','ilike',email)], context=context)
+        ids = self.search([('email', 'ilike', email)])
         if not ids:
-            return self.name_create(cr, uid, email, context=context)[0]
+            return self.name_create(email)[0]
         return ids[0]
 
-    def _email_send(self, cr, uid, ids, email_from, subject, body, on_error=None):
-        partners = self.browse(cr, uid, ids)
-        for partner in partners:
+    @api.recordset
+    def _email_send(self, email_from, subject, body, on_error=None):
+        for partner in self:
             if partner.email:
                 tools.email_send(email_from, [partner.email], subject, body, on_error)
         return True
 
-    def email_send(self, cr, uid, ids, email_from, subject, body, on_error=''):
+    @api.recordset
+    def email_send(self, email_from, subject, body, on_error=''):
+        Cron = self.session.model('ir.cron')
+        ids = map(int, self)
         while len(ids):
-            self.pool.get('ir.cron').create(cr, uid, {
+            Cron.create({
                 'name': 'Send Partner Emails',
-                'user_id': uid,
+                'user_id': self.session.uid,
                 'model': 'res.partner',
                 'function': '_email_send',
                 'args': repr([ids[:16], email_from, subject, body, on_error])
@@ -500,50 +503,48 @@ class res_partner(osv.osv, format_address):
             ids = ids[16:]
         return True
 
-    def address_get(self, cr, uid, ids, adr_pref=None):
+    @api.recordset
+    def address_get(self, adr_pref=None):
         if adr_pref is None:
             adr_pref = ['default']
-        result = {}
-        # retrieve addresses from the partner itself and its children
-        res = []
-        # need to fix the ids ,It get False value in list like ids[False]
-        if ids and ids[0]!=False:
-            for p in self.browse(cr, uid, ids):
-                res.append((p.type, p.id))
-                res.extend((c.type, c.id) for c in p.child_ids)
-        address_dict = dict(reversed(res))
-        # get the id of the (first) default address if there is one,
-        # otherwise get the id of the first address in the list
-        default_address = False
+
+        # retrieve addresses by type from the partner itself and its children
+        address_id = {}
+        for partner in self:
+            address_id[partner.type] = address_id.get(partner.type) or partner.id
+            for child in partner.child_ids:
+                address_id[child.type] = address_id.get(child.type) or child.id
+
+        # get the default address (if there is one) or the first available address
+        default_id = address_id.get('default', self[0].id)
+        res = {}
+        for addr_type in adr_pref:
+            res[addr_type] = address_id.get(addr_type, default_id)
+        return res
+
+    @api.model
+    def view_header_get(self, view_id, view_type):
+        res = super(res_partner, self).view_header_get(view_id, view_type)
         if res:
-            default_address = address_dict.get('default', res[0][1])
-        for adr in adr_pref:
-            result[adr] = address_dict.get(adr, default_address)
-        return result
+            return res
+        category_id = self.session.context.get('category_id', False)
+        category = self.session.model('res.partner.category').browse(category_id)
+        return _('Partners: ') + category.name if category else False
 
-    def view_header_get(self, cr, uid, view_id, view_type, context):
-        res = super(res_partner, self).view_header_get(cr, uid, view_id, view_type, context)
-        if res: return res
-        if not context.get('category_id', False):
-            return False
-        return _('Partners: ')+self.pool.get('res.partner.category').browse(cr, uid, context['category_id'], context).name
-
-    def main_partner(self, cr, uid):
+    @api.model
+    def main_partner(self):
         ''' Return the id of the main partner
         '''
-        model_data = self.pool.get('ir.model.data')
-        return model_data.browse(cr, uid,
-                            model_data.search(cr, uid, [('module','=','base'),
-                                                ('name','=','main_partner')])[0],
-                ).res_id
+        model_data = self.session.model('ir.model.data')
+        data = model_data.query([('module', '=', 'base'), ('name', '=', 'main_partner')])[0]
+        return data.res_id
 
-    def _display_address(self, cr, uid, address, without_company=False, context=None):
-
+    @api.record
+    def _display_address(self, without_company=False):
         '''
         The purpose of this function is to build and return an address formatted accordingly to the
         standards of the country where it belongs.
 
-        :param address: browse record of the res.partner to format
         :returns: the address formatted in a display that fit its country habits (or the default ones
             if not country is specified)
         :rtype: string
@@ -551,21 +552,21 @@ class res_partner(osv.osv, format_address):
 
         # get the information that will be injected into the display format
         # get the address format
-        address_format = address.country_id and address.country_id.address_format or \
+        address_format = self.country_id.address_format or \
               "%(street)s\n%(street2)s\n%(city)s %(state_code)s %(zip)s\n%(country_name)s"
         args = {
-            'state_code': address.state_id and address.state_id.code or '',
-            'state_name': address.state_id and address.state_id.name or '',
-            'country_code': address.country_id and address.country_id.code or '',
-            'country_name': address.country_id and address.country_id.name or '',
-            'company_name': address.parent_id and address.parent_id.name or '',
+            'state_code': self.state_id.code or '',
+            'state_name': self.state_id.name or '',
+            'country_code': self.country_id.code or '',
+            'country_name': self.country_id.name or '',
+            'company_name': self.parent_id.name or '',
         }
         address_field = ['title', 'street', 'street2', 'zip', 'city']
-        for field in address_field :
-            args[field] = getattr(address, field) or ''
+        for field in address_field:
+            args[field] = self[field] or ''
         if without_company:
             args['company_name'] = ''
-        elif address.parent_id:
+        elif self.parent_id:
             address_format = '%(company_name)s\n' + address_format
         return address_format % args
 
