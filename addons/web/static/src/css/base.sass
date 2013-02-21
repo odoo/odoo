@@ -1137,7 +1137,11 @@ $sheet-padding: 16px
     // }}}
     // ViewManager common {{{
     .oe_view_manager
+        display: table
+        height: inherit
+        width: 100%
         .oe_view_manager_body
+            display: table-row
             height: inherit
         .oe_view_manager_view_kanban
             height: inherit
@@ -2436,7 +2440,6 @@ $sheet-padding: 16px
     // }}}
 // Kitten Mode {{{
 .kitten-mode-activated
-    background-image: url(http://placekitten.com/g/1365/769)
     background-size: cover
     background-attachment: fixed
     >*

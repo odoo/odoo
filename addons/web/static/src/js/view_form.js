@@ -251,9 +251,7 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
                 this.dataset.ids.push(state.id);
             }
             this.dataset.select_id(state.id);
-            if (warm) {
-                this.do_show();
-            }
+            this.do_show({ reload: warm });
         }
     },
     /**
@@ -511,9 +509,13 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
             var on_change = widget.node.attrs.on_change;
             if (on_change) {
                 var change_spec = self.parse_on_change(on_change, widget);
-                var id = [self.datarecord.id == null ? [] : [self.datarecord.id]];
+                var ids = [];
+                if (self.datarecord.id && !instance.web.BufferedDataSet.virtual_id_regex.test(self.datarecord.id)) {
+                    // In case of a o2m virtual id, we should pass an empty ids list
+                    ids.push(self.datarecord.id);
+                }
                 def = new instance.web.Model(self.dataset.model).call(
-                    change_spec.method, id.concat(change_spec.args));
+                    change_spec.method, [ids].concat(change_spec.args));
             } else {
                 def = $.when({});
             }
@@ -2376,6 +2378,7 @@ instance.web.DateTimeWidget = instance.web.Widget.extend({
     type_of_date: "datetime",
     events: {
         'change .oe_datepicker_master': 'change_datetime',
+        'dragstart img.oe_datepicker_trigger': function () { return false; },
     },
     init: function(parent) {
         this._super(parent);
@@ -2957,7 +2960,9 @@ instance.web.form.FieldMany2One = instance.web.form.AbstractField.extend(instanc
             case $.ui.keyCode.DOWN:
                 e.stopPropagation();
             }
-        }
+        },
+        'dragstart .oe_m2o_drop_down_button img': function () { return false; },
+        'dragstart .oe_m2o_cm_button': function () { return false; }
     },
     init: function(field_manager, node) {
         this._super(field_manager, node);
@@ -4450,6 +4455,7 @@ instance.web.form.AbstractFormPopup = instance.web.Widget.extend({
      *  options:
      *  -readonly: only applicable when not in creation mode, default to false
      * - alternative_form_view
+     * - view_id
      * - write_function
      * - read_function
      * - create_function
@@ -4516,7 +4522,7 @@ instance.web.form.AbstractFormPopup = instance.web.Widget.extend({
         _.extend(options, {
             $buttons: this.$buttonpane,
         });
-        this.view_form = new instance.web.FormView(this, this.dataset, false, options);
+        this.view_form = new instance.web.FormView(this, this.dataset, this.options.view_id || false, options);
         if (this.options.alternative_form_view) {
             this.view_form.set_embedded_view(this.options.alternative_form_view);
         }
@@ -4545,6 +4551,7 @@ instance.web.form.AbstractFormPopup = instance.web.Widget.extend({
             });
             var $cbutton = self.$buttonpane.find(".oe_abstractformpopup-form-close");
             $cbutton.click(function() {
+                self.view_form.trigger('on_button_cancel');
                 self.check_exit();
             });
             self.view_form.do_show();
@@ -5216,6 +5223,8 @@ instance.web.form.FieldStatus = instance.web.form.AbstractField.extend({
         this.options.clickable = this.options.clickable || (this.node.attrs || {}).clickable || false;
         this.options.visible = this.options.visible || (this.node.attrs || {}).statusbar_visible || false;
         this.set({value: false});
+        this.field_manager.on("view_content_has_changed", this, this.render_value);
+        this.selection_mutex = new $.Mutex();
     },
     start: function() {
         if (this.options.clickable) {
@@ -5234,14 +5243,16 @@ instance.web.form.FieldStatus = instance.web.form.AbstractField.extend({
     },
     render_value: function() {
         var self = this;
-        self.get_selection().done(function() {
-            var content = QWeb.render("FieldStatus.content", {widget: self});
-            self.$el.html(content);
-            var colors = JSON.parse((self.node.attrs || {}).statusbar_colors || "{}");
-            var color = colors[self.get('value')];
-            if (color) {
-                self.$("oe_active").css("color", color);
-            }
+        self.selection_mutex.exec(function() {
+            return self.get_selection().done(function() {
+                var content = QWeb.render("FieldStatus.content", {widget: self});
+                self.$el.html(content);
+                var colors = JSON.parse((self.node.attrs || {}).statusbar_colors || "{}");
+                var color = colors[self.get('value')];
+                if (color) {
+                    self.$("oe_active").css("color", color);
+                }
+            });
         });
     },
     /** Get the selection and render it
