@@ -177,8 +177,10 @@ instance.web.form.DashBoard = instance.web.form.FormWidget.extend({
             view_mode = action_attrs.view_mode;
 
         // evaluate action_attrs context and domain
+        action_attrs.context_string = action_attrs.context;
         action_attrs.context = instance.web.pyeval.eval(
             'context', action_attrs.context || {});
+        action_attrs.domain_string = action_attrs.domain;
         action_attrs.domain = instance.web.pyeval.eval(
             'domain', action_attrs.domain || [], action_attrs.context);
         if (action_attrs.context['dashboard_merge_domains_contexts'] === false) {

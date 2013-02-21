@@ -8,25 +8,25 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2012-12-21 17:04+0000\n"
-"PO-Revision-Date: 2012-12-21 23:00+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"PO-Revision-Date: 2013-02-20 17:24+0000\n"
+"Last-Translator: krnkris <Unknown>\n"
 "Language-Team: Hungarian <hu@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-01-18 06:46+0000\n"
-"X-Generator: Launchpad (build 16430)\n"
+"X-Launchpad-Export-Date: 2013-02-21 05:44+0000\n"
+"X-Generator: Launchpad (build 16491)\n"
 
 #. module: hr_payroll
 #: field:hr.payslip.line,condition_select:0
 #: field:hr.salary.rule,condition_select:0
 msgid "Condition Based on"
-msgstr ""
+msgstr "Körülmény ezen feltételek alapján"
 
 #. module: hr_payroll
 #: selection:hr.contract,schedule_pay:0
 msgid "Monthly"
-msgstr ""
+msgstr "Havi"
 
 #. module: hr_payroll
 #: field:hr.payslip.line,rate:0
@@ -38,7 +38,7 @@ msgstr "Arány (%)"
 #: model:ir.model,name:hr_payroll.model_hr_salary_rule_category
 #: report:paylip.details:0
 msgid "Salary Rule Category"
-msgstr ""
+msgstr "Fizetési kategória szabálya"
 
 #. module: hr_payroll
 #: field:hr.payslip.worked_days,number_of_days:0
@@ -51,6 +51,8 @@ msgid ""
 "Linking a salary category to its parent is used only for the reporting "
 "purpose."
 msgstr ""
+"A fizetési kategória szülőhöz való csatolása csak jelentés készítéshez "
+"használt."
 
 #. module: hr_payroll
 #: view:hr.payslip:0
@@ -69,13 +71,13 @@ msgstr "Állapotok"
 #: view:hr.salary.rule:0
 #: field:hr.salary.rule,input_ids:0
 msgid "Inputs"
-msgstr ""
+msgstr "Hozzávalók"
 
 #. module: hr_payroll
 #: field:hr.payslip.line,parent_rule_id:0
 #: field:hr.salary.rule,parent_rule_id:0
 msgid "Parent Salary Rule"
-msgstr ""
+msgstr "Szülö fizetési szabályok"
 
 #. module: hr_payroll
 #: view:hr.employee:0
@@ -91,7 +93,7 @@ msgstr "Fizetési jegyzékek"
 #: field:hr.payroll.structure,parent_id:0
 #: field:hr.salary.rule.category,parent_id:0
 msgid "Parent"
-msgstr ""
+msgstr "Szülő"
 
 #. module: hr_payroll
 #: field:hr.contribution.register,company_id:0
@@ -117,13 +119,13 @@ msgstr "Beállítás tervezetnek"
 #. module: hr_payroll
 #: model:ir.model,name:hr_payroll.model_hr_salary_rule
 msgid "hr.salary.rule"
-msgstr ""
+msgstr "hr.salary.rule"
 
 #. module: hr_payroll
 #: view:hr.payslip:0
 #: view:hr.payslip.run:0
 msgid "to"
-msgstr ""
+msgstr "ig"
 
 #. module: hr_payroll
 #: field:hr.payslip,payslip_run_id:0
@@ -138,6 +140,9 @@ msgid ""
 "This wizard will generate payslips for all selected employee(s) based on the "
 "dates and credit note specified on Payslips Run."
 msgstr ""
+"Ez a varázsló fizetési jegyzéket készít minden kiválasztott alkalmazott "
+"részére a fizetési jegyzék futásán lévő dátumok és a fizetési meghagyások "
+"/tartozások/ alapján."
 
 #. module: hr_payroll
 #: report:contribution.register.lines:0
@@ -149,7 +154,7 @@ msgstr "Mennyiség / Arány"
 #. module: hr_payroll
 #: view:hr.salary.rule:0
 msgid "Children Definition"
-msgstr ""
+msgstr "Alárendeltek meghatározása"
 
 #. module: hr_payroll
 #: field:hr.payslip.input,payslip_id:0
@@ -169,7 +174,7 @@ msgstr "Létrehozás"
 #: help:hr.payslip.line,amount_percentage_base:0
 #: help:hr.salary.rule,amount_percentage_base:0
 msgid "result will be affected to a variable"
-msgstr ""
+msgstr "az eredmény egy változóhoz lesz rendelve"
 
 #. module: hr_payroll
 #: report:contribution.register.lines:0
@@ -179,7 +184,7 @@ msgstr "Összesen:"
 #. module: hr_payroll
 #: model:ir.actions.act_window,name:hr_payroll.act_children_salary_rules
 msgid "All Children Rules"
-msgstr ""
+msgstr "Az összes alárendelt szabály"
 
 #. module: hr_payroll
 #: view:hr.payslip:0
@@ -191,11 +196,12 @@ msgstr "Adatbevitel"
 #: constraint:hr.payslip:0
 msgid "Payslip 'Date From' must be before 'Date To'."
 msgstr ""
+"Fizetési jegyzés 'Dátumtól' értéke a 'Dátumig' értéknél kisebb kell legyen."
 
 #. module: hr_payroll
 #: view:hr.salary.rule.category:0
 msgid "Notes"
-msgstr ""
+msgstr "Jegyzetek"
 
 #. module: hr_payroll
 #: code:addons/hr_payroll/hr_payroll.py:866
@@ -205,7 +211,7 @@ msgstr ""
 #: code:addons/hr_payroll/hr_payroll.py:900
 #, python-format
 msgid "Error!"
-msgstr ""
+msgstr "Hiba!"
 
 #. module: hr_payroll
 #: report:contribution.register.lines:0
@@ -231,24 +237,24 @@ msgstr "Egyéb információ"
 #. module: hr_payroll
 #: field:hr.config.settings,module_hr_payroll_account:0
 msgid "Link your payroll to accounting system"
-msgstr ""
+msgstr "A fizetési jegyzéket rendelje hozzá egy könyvelési rendszerhez"
 
 #. module: hr_payroll
 #: help:hr.payslip.line,amount_select:0
 #: help:hr.salary.rule,amount_select:0
 msgid "The computation method for the rule amount."
-msgstr ""
+msgstr "A számítási mód az előírt mennyiségre."
 
 #. module: hr_payroll
 #: view:payslip.lines.contribution.register:0
 msgid "Contribution Register's Payslip Lines"
-msgstr ""
+msgstr "Névjegyzékek hozzáfűzése a fizetési jegyzék soraihoz"
 
 #. module: hr_payroll
 #: code:addons/hr_payroll/wizard/hr_payroll_payslips_by_employees.py:52
 #, python-format
 msgid "Warning !"
-msgstr ""
+msgstr "Figyelem!"
 
 #. module: hr_payroll
 #: report:paylip.details:0
@@ -259,7 +265,7 @@ msgstr "Részletek fizetési szabályok szerint"
 #: report:paylip.details:0
 #: report:payslip:0
 msgid "Note"
-msgstr ""
+msgstr "Jegyzet"
 
 #. module: hr_payroll
 #: field:hr.payroll.structure,code:0
@@ -272,7 +278,7 @@ msgstr "Hivatkozás"
 #. module: hr_payroll
 #: view:hr.payslip:0
 msgid "Draft Slip"
-msgstr ""
+msgstr "Jegyzék tervezet"
 
 #. module: hr_payroll
 #: code:addons/hr_payroll/hr_payroll.py:427
@@ -284,7 +290,7 @@ msgstr "Normál munkanap 100%-an fizetve"
 #: field:hr.payslip.line,condition_range_max:0
 #: field:hr.salary.rule,condition_range_max:0
 msgid "Maximum Range"
-msgstr ""
+msgstr "Maximum kiterjedés"
 
 #. module: hr_payroll
 #: report:paylip.details:0
@@ -300,12 +306,12 @@ msgstr "Szerkezet"
 #. module: hr_payroll
 #: field:hr.contribution.register,partner_id:0
 msgid "Partner"
-msgstr ""
+msgstr "Partner"
 
 #. module: hr_payroll
 #: view:hr.payslip:0
 msgid "Total Working Days"
-msgstr ""
+msgstr "Összes munka nap"
 
 #. module: hr_payroll
 #: help:hr.payslip.line,code:0
@@ -314,11 +320,13 @@ msgid ""
 "The code of salary rules can be used as reference in computation of other "
 "rules. In that case, it is case sensitive."
 msgstr ""
+"A fizetési szabály kódját hivatkozásnak lehet használni a többi szabály "
+"számításához. Ebben az esetben, ez esetekre érzékeny."
 
 #. module: hr_payroll
 #: selection:hr.contract,schedule_pay:0
 msgid "Weekly"
-msgstr ""
+msgstr "Heti"
 
 #. module: hr_payroll
 #: view:hr.payslip:0
@@ -328,7 +336,7 @@ msgstr "Kezdő dátum"
 #. module: hr_payroll
 #: view:hr.payslip:0
 msgid "Confirm"
-msgstr ""
+msgstr "Megerősítés"
 
 #. module: hr_payroll
 #: model:ir.actions.act_window,help:hr_payroll.action_contribution_register_form
@@ -344,12 +352,23 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Kattintson egy új hozzájárulás számláló rögzítéséhez.\n"
+"              </p><p>\n"
+"                Egy hozzájárulás számlálóval egy harmadik fél van bevonva az "
+"alkalmazott \n"
+"                havi fizetéséhez. Ez lehet társadalombiztosítás, egy vagyon "
+"vagy\n"
+"                bármi ami kiemel vagy beillesz pénzt a fizetési "
+"jegyzékekbe.\n"
+"              </p>\n"
+"            "
 
 #. module: hr_payroll
 #: help:hr.payslip.line,condition_range_max:0
 #: help:hr.salary.rule,condition_range_max:0
 msgid "The maximum amount, applied for this rule."
-msgstr ""
+msgstr "A maximum összeg ami erre a szabályra vonatkozik."
 
 #. module: hr_payroll
 #: help:hr.payslip.line,condition_python:0
@@ -358,12 +377,14 @@ msgid ""
 "Applied this rule for calculation if condition is true. You can specify "
 "condition like basic > 1000."
 msgstr ""
+"Ezt a szabályt érvényesítse a számításoknál ha a feltételek igazak. Olyan "
+"feltételeket köthet ki mint alap > 1000."
 
 #. module: hr_payroll
 #: report:contribution.register.lines:0
 #: report:paylip.details:0
 msgid "Register Name"
-msgstr ""
+msgstr "Feliratkozási név"
 
 #. module: hr_payroll
 #: view:hr.payslip.employees:0
@@ -373,12 +394,12 @@ msgstr "Fizetési jegyzékek alkalmazottak szerint"
 #. module: hr_payroll
 #: selection:hr.contract,schedule_pay:0
 msgid "Quarterly"
-msgstr ""
+msgstr "Negyedéves"
 
 #. module: hr_payroll
 #: selection:hr.payslip,state:0
 msgid "Waiting"
-msgstr ""
+msgstr "Várakozó"
 
 #. module: hr_payroll
 #: help:hr.salary.rule,quantity:0
@@ -391,7 +412,7 @@ msgstr ""
 #. module: hr_payroll
 #: view:hr.salary.rule:0
 msgid "Search Salary Rule"
-msgstr ""
+msgstr "Fizetési szabály keresése"
 
 #. module: hr_payroll
 #: field:hr.payslip,employee_id:0
@@ -420,18 +441,18 @@ msgstr "Fizetési jegyzék kötegek keresése"
 #: field:hr.payslip.line,amount_percentage_base:0
 #: field:hr.salary.rule,amount_percentage_base:0
 msgid "Percentage based on"
-msgstr ""
+msgstr "Százalék ez alapján"
 
 #. module: hr_payroll
 #: code:addons/hr_payroll/hr_payroll.py:85
 #, python-format
 msgid "%s (copy)"
-msgstr ""
+msgstr "%s (másolat)"
 
 #. module: hr_payroll
 #: help:hr.config.settings,module_hr_payroll_account:0
 msgid "Create journal entries from payslips"
-msgstr ""
+msgstr "Napló belyegyzések létrehozása fizetési jegyzékekből"
 
 #. module: hr_payroll
 #: field:hr.payslip,paid:0
@@ -454,12 +475,12 @@ msgstr "Fizetési jegyzék sorai"
 #. module: hr_payroll
 #: view:hr.payslip:0
 msgid "Miscellaneous"
-msgstr ""
+msgstr "Egyebek"
 
 #. module: hr_payroll
 #: selection:hr.payslip,state:0
 msgid "Rejected"
-msgstr ""
+msgstr "Elutasított"
 
 #. module: hr_payroll
 #: view:hr.payroll.structure:0
@@ -468,25 +489,25 @@ msgstr ""
 #: model:ir.actions.act_window,name:hr_payroll.action_salary_rule_form
 #: model:ir.ui.menu,name:hr_payroll.menu_action_hr_salary_rule_form
 msgid "Salary Rules"
-msgstr ""
+msgstr "Fizetési szabályok"
 
 #. module: hr_payroll
 #: code:addons/hr_payroll/hr_payroll.py:336
 #, python-format
 msgid "Refund: "
-msgstr ""
+msgstr "Visszatérítés: "
 
 #. module: hr_payroll
 #: model:ir.model,name:hr_payroll.model_payslip_lines_contribution_register
 msgid "PaySlip Lines by Contribution Registers"
-msgstr ""
+msgstr "Fizetési jegyzék sorai A Hozzájárulási bejegyzés szerint"
 
 #. module: hr_payroll
 #: view:hr.payslip:0
 #: selection:hr.payslip,state:0
 #: view:hr.payslip.run:0
 msgid "Done"
-msgstr ""
+msgstr "Kész"
 
 #. module: hr_payroll
 #: field:hr.payslip.line,appears_on_payslip:0
@@ -506,7 +527,7 @@ msgstr "Fix összeg"
 #: code:addons/hr_payroll/hr_payroll.py:365
 #, python-format
 msgid "Warning!"
-msgstr ""
+msgstr "Figyelem!"
 
 #. module: hr_payroll
 #: help:hr.payslip.line,active:0
@@ -520,7 +541,7 @@ msgstr ""
 #: field:hr.payslip,state:0
 #: field:hr.payslip.run,state:0
 msgid "Status"
-msgstr ""
+msgstr "Állapot"
 
 #. module: hr_payroll
 #: view:hr.payslip:0
@@ -542,6 +563,8 @@ msgstr "Fizetési jegyzék sor"
 #: help:hr.salary.rule,register_id:0
 msgid "Eventual third party involved in the salary payment of the employees."
 msgstr ""
+"Esetleg harmadik személy is be van vonva ennek az alkalmazottnak a fizetés "
+"kifizetéséhez."
 
 #. module: hr_payroll
 #: field:hr.payslip.worked_days,number_of_hours:0
@@ -557,13 +580,13 @@ msgstr "Fizetési jegyzék köteg"
 #: field:hr.payslip.line,condition_range_min:0
 #: field:hr.salary.rule,condition_range_min:0
 msgid "Minimum Range"
-msgstr ""
+msgstr "Minimum tartomány"
 
 #. module: hr_payroll
 #: field:hr.payslip.line,child_ids:0
 #: field:hr.salary.rule,child_ids:0
 msgid "Child Salary Rule"
-msgstr ""
+msgstr "Alárendelt fizetési szabály"
 
 #. module: hr_payroll
 #: report:contribution.register.lines:0
@@ -579,7 +602,7 @@ msgstr "Dátumig"
 #: selection:hr.payslip.line,condition_select:0
 #: selection:hr.salary.rule,condition_select:0
 msgid "Range"
-msgstr ""
+msgstr "Tartomány"
 
 #. module: hr_payroll
 #: model:ir.actions.act_window,name:hr_payroll.action_view_hr_payroll_structure_tree
@@ -590,7 +613,7 @@ msgstr "Bérszerkezet hierarchia"
 #. module: hr_payroll
 #: help:hr.employee,total_wage:0
 msgid "Sum of all current contract's wage of employee."
-msgstr ""
+msgstr "Az összes jelenleg szerződött alkalmazott fizetésének összege."
 
 #. module: hr_payroll
 #: view:hr.payslip:0
@@ -613,7 +636,7 @@ msgstr "Fizetési jegyzék számításának részletei"
 #: help:hr.payslip.line,appears_on_payslip:0
 #: help:hr.salary.rule,appears_on_payslip:0
 msgid "Used to display the salary rule on payslip."
-msgstr ""
+msgstr "A fizetési szabály fizetési jegyzéken történő kijelzésére használt."
 
 #. module: hr_payroll
 #: model:ir.model,name:hr_payroll.model_hr_payslip_input
@@ -625,24 +648,25 @@ msgstr "Fizetési jegyzék adatbevitel"
 #: model:ir.actions.act_window,name:hr_payroll.action_hr_salary_rule_category
 #: model:ir.ui.menu,name:hr_payroll.menu_hr_salary_rule_category
 msgid "Salary Rule Categories"
-msgstr ""
+msgstr "Fizetési szabály kategóriák"
 
 #. module: hr_payroll
 #: help:hr.payslip.input,contract_id:0
 #: help:hr.payslip.worked_days,contract_id:0
 msgid "The contract for which applied this input"
-msgstr ""
+msgstr "A szerződés amire ezt a bevitelt használja"
 
 #. module: hr_payroll
 #: view:hr.salary.rule:0
 msgid "Computation"
-msgstr ""
+msgstr "Számítás"
 
 #. module: hr_payroll
 #: code:addons/hr_payroll/hr_payroll.py:894
 #, python-format
 msgid "Wrong range condition defined for salary rule %s (%s)."
 msgstr ""
+"Rosszúl lett a tartomány meghatározva ehhez a fizetési szabályhoz %s (%s)."
 
 #. module: hr_payroll
 #: help:hr.payslip.input,amount:0
@@ -651,6 +675,10 @@ msgid ""
 "basic salary for per product can defined in expression like result = "
 "inputs.SALEURO.amount * contract.wage*0.01."
 msgstr ""
+"Egy számításhoz használja. Például, egy szabály az értékesítéshez 1% "
+"jutalékot ad az alap eladásra egy terméknél akkor a ennek a kifejezésnek a "
+"végeredménye = inputs.SALEURO.amount * contract.wage*0.01.  -  "
+"bevitt.ELADÁSIEURO.összeg * szerződés.fizetés*0.01."
 
 #. module: hr_payroll
 #: view:hr.payslip.line:0
@@ -677,6 +705,8 @@ msgid ""
 "If its checked, indicates that all payslips generated from here are refund "
 "payslips."
 msgstr ""
+"Ha be van jelölve, mutatja, hogy az összes innen létrehozott fizetési "
+"jegyzék az visszatérítési fizetési jegyzék."
 
 #. module: hr_payroll
 #: code:addons/hr_payroll/hr_payroll.py:871
@@ -716,7 +746,7 @@ msgstr "Dátumtól"
 #. module: hr_payroll
 #: view:hr.payslip.run:0
 msgid "Done Payslip Batches"
-msgstr ""
+msgstr "Elvégzett fizetési jegyzék kötegek"
 
 #. module: hr_payroll
 #: report:paylip.details:0
@@ -726,7 +756,7 @@ msgstr ""
 #. module: hr_payroll
 #: view:hr.salary.rule:0
 msgid "Conditions"
-msgstr ""
+msgstr "Feltételek"
 
 #. module: hr_payroll
 #: field:hr.payslip.line,amount_percentage:0
