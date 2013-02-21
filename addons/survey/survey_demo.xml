@@ -13,9 +13,8 @@
             <field name="max_response_limit">20</field>
             <field name="type" ref="survey_type2"/>
             <field name="state">open</field>
+            <field name="open_options">all</field>
             <field name="color">5</field>
-            <field name="tot_comp_survey">1</field>
-            <field name="tot_start_survey">1</field>
             <field name="date_open" eval="time.strftime('%Y-%m-%d %H:%M:%S')"/>
            </record>
 
@@ -162,8 +161,7 @@
             <field name="max_response_limit">20</field>
             <field name="type" ref="survey_type2"/>
             <field name="state">open</field>
-            <field name="tot_comp_survey">1</field>
-            <field name="tot_start_survey">1</field>
+            <field name="open_options">all</field>
             <field name="date_open" eval="time.strftime('%Y-%m-%d %H:%M:%S')"/>
            </record>
 
@@ -628,8 +626,7 @@
             <field name="max_response_limit">20</field>
             <field name="type" ref="survey_type2"/>
             <field name="state">open</field>
-            <field name="tot_comp_survey">1</field>
-            <field name="tot_start_survey">1</field>
+            <field name="open_options">all</field>
             <field name="date_open" eval="time.strftime('%Y-%m-%d %H:%M:%S')"/>
            </record>
 
@@ -1404,6 +1401,7 @@
             <field name="max_response_limit">20</field>
             <field name="type" ref="survey_type2"/>
             <field name="state">open</field>
+            <field name="open_options">all</field>
         </record>
     </data>
     <data>
@@ -2248,6 +2246,7 @@
             <field name="title">Community Survey</field>
             <field name="note">Please take a few minutes to complete this survey on the quality of service we provide. We welcome your feedback and appreciate your honesty. With your help, we hope to strengthen the bond between our clients.</field>
             <field name="state">open</field>
+            <field name="open_options">all</field>
             <field name="responsible_id" ref="base.user_root"/>
             <field eval="1" name="send_response"/>
             <field name="type" ref="survey_type3"/>

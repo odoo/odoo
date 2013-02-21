@@ -27,6 +27,7 @@ from openerp.tools import to_xml
 from datetime import datetime
 from openerp.tools.translate import _
 from openerp.tools.safe_eval import safe_eval
+import uuid
 
 DATETIME_FORMAT = "%Y-%m-%d"
 
@@ -193,7 +194,6 @@ class survey_question_wiz(osv.osv_memory):
         sur_response_obj = self.pool.get('survey.response')
 
         # record complete
-        survey_obj.write(cr, uid, survey_id, {'tot_comp_survey': survey_browse.tot_comp_survey + 1})
         sur_response_obj.write(cr, uid, [sur_name_read.response], {'state': 'done'})
 
         # send mail to the responsible
@@ -219,12 +219,13 @@ class survey_question_wiz(osv.osv_memory):
         if not survey_id:
             raise osv.except_osv(_('Warning!'), _("You do not have access to this survey."))
 
-        pid = self.pool.get('res.users').browse(cr, uid, uid, context=context).partner_id.id
+        user_browse = self.pool.get('res.users').browse(cr, uid, uid, context=context)
+        pid = user_browse.partner_id.id
         survey_browse = self.pool.get('survey').browse(cr, uid, survey_id, context=context)
 
+        # get opening response
         sur_response_obj = self.pool.get('survey.response')
         dom = [('survey_id', '=', survey_id), ('state', 'in', ['new', 'skip']), "|", ('date_deadline', '=', None), ('date_deadline', '>', datetime.now())]
-
         if context.get("survey_token"):
             response_ids = sur_response_obj.search(cr, uid, dom + [("token", "=", context.get("survey_token", None))], context=context, limit=1, order="id DESC")
         else:
@@ -237,15 +238,36 @@ class survey_question_wiz(osv.osv_memory):
             res['partner_id'] = sur_response_browse.partner_id.id or False
             res['state'] = sur_response_browse.state
 
-        # state open for all user
-        elif survey_browse.state == 'open':
-            response_id = sur_response_obj.create(cr, uid, {'state': 'new', 'response_type': 'manually', 'partner_id': pid, 'date_create': datetime.now(), 'survey_id': survey_id})
-            res['partner_id'] = pid
-            res['response_id'] = response_id
-            res['state'] = 'new'
+        # open or open for user
+        elif not context.get('edit') and survey_browse.state == 'open':
+            flag = False
+            if survey_browse.open_options == 'all':
+                # open for all user
+                flag = True
+            elif survey_browse.open_options == 'user' and user_browse and user_browse.groups_id:
+                # check anonymous
+                model_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'portal', 'group_anonymous')
+                if model_id and model_id[1] in [x.id for x in user_browse.groups_id]:
+                    flag = True
 
-        elif not context.get('edit'):
-            response_ids = sur_response_obj.search(cr, uid, [('survey_id', '=', survey_id), '|', ("token", "=", context.get("survey_token", None)), ('partner_id', '=', pid)], context=context, limit=1, order="date_deadline DESC")
+            if flag:
+                response_id = sur_response_obj.create(cr, uid, {
+                    'state': 'new',
+                    'response_type': 'manually',
+                    'partner_id': pid,
+                    'date_create': datetime.now(),
+                    'survey_id': survey_id,
+                    'token': uuid.uuid4(),
+                })
+                res['partner_id'] = pid
+                res['response_id'] = response_id
+                res['state'] = 'new'
+
+        # errors
+        if not res['response_id'] and not context.get('edit'):
+            response_ids = sur_response_obj.search(cr, uid, [('survey_id', '=', survey_id),
+                        '|', ("token", "=", context.get("survey_token", None)), ('partner_id', '=', pid)
+                    ], context=context, limit=1, order="date_deadline DESC")
             if not response_ids:
                 res['error_message'] = _("You do not have access to this survey.")
             else:

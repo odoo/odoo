@@ -209,7 +209,8 @@ class hr_evaluation(osv.osv):
                         'date_deadline': datetime.now() + relativedelta(months=1),
                         'partner_id': child.user_id and child.user_id.partner_id.id or None,
                         'email': child.work_email or None,
-                        'user_to_review_id': evaluation.employee_id.id
+                        'user_to_review_id': evaluation.employee_id.id,
+                        'response_type': 'link',
                     }, context=context)
                     if phase.wait:
                         wait = True

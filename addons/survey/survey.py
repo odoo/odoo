@@ -48,6 +48,22 @@ class survey(osv.osv):
         data = super(survey, self).default_get(cr, uid, fields, context)
         return data
 
+    def _get_tot_start_survey(self, cr, uid, ids, name, arg, context=None):
+        """ Compute if the message is unread by the current user. """
+        res = dict((id, 0) for id in ids)
+        sur_res_obj = self.pool.get('survey.response')
+        for id in ids:
+            res[id] = sur_res_obj.search(cr, uid, [('survey_id', '=', id), ('state', '=', 'skip')], context=context, count=True)
+        return res
+
+    def _get_tot_comp_survey(self, cr, uid, ids, name, arg, context=None):
+        """ Compute if the message is unread by the current user. """
+        res = dict((id, 0) for id in ids)
+        sur_res_obj = self.pool.get('survey.response')
+        for id in ids:
+            res[id] = sur_res_obj.search(cr, uid, [('survey_id', '=', id), ('state', '=', 'done')], context=context, count=True)
+        return res
+
     _columns = {
         'title': fields.char('Survey Title', size=128, required=1),
         'page_ids': fields.one2many('survey.page', 'survey_id', 'Page'),
@@ -55,10 +71,11 @@ class survey(osv.osv):
         'date_close': fields.datetime('Survey Close Date', readonly=1),
         'max_response_limit': fields.integer('Maximum Answer Limit',
                      help="Set to one if survey is answerable only once"),
-        'state': fields.selection([('draft', 'Draft'), ('open', 'Open freely'), ('restricted', 'Restricted invitation'), ('close', 'Close'), ('cancel', 'Cancelled')], 'Status'),
+        'state': fields.selection([('draft', 'Draft'), ('open', 'Open'), ('close', 'Close'), ('cancel', 'Cancelled')], 'Status', required=1),
+        'open_options': fields.selection([('all', 'Open for all people'), ('user', 'Open for sign up user'), ('restricted', 'Open with invitation')], 'Share options', required=1),
         'responsible_id': fields.many2one('res.users', 'Responsible', help="User responsible forsurvey"),
-        'tot_start_survey': fields.integer("Total Started Survey", readonly=1),
-        'tot_comp_survey': fields.integer("Total Completed Survey", readonly=1),
+        'tot_start_survey': fields.function(_get_tot_start_survey, string="Total Started Survey", type="integer"),
+        'tot_comp_survey': fields.function(_get_tot_comp_survey, string="Total Completed Survey", type="integer"),
         'note': fields.text('Description', size=128),
         'send_response': fields.boolean('Email Notification on Answer'),
         'type': fields.many2one('survey.type', 'Type'),
@@ -67,8 +84,7 @@ class survey(osv.osv):
     }
     _defaults = {
         'state': "draft",
-        'tot_start_survey': 0,
-        'tot_comp_survey': 0,
+        'open_options': "all",
         'send_response': 1,
         'date_open': fields.datetime.now,
     }
@@ -82,9 +98,6 @@ class survey(osv.osv):
     def survey_close(self, cr, uid, ids, arg):
         return self.write(cr, uid, ids, {'state': 'close', 'date_close': datetime.now()})
 
-    def survey_restricted(self, cr, uid, ids, arg):
-        return self.write(cr, uid, ids, {'state': 'restricted', 'date_close': datetime.now()})
-
     def survey_cancel(self, cr, uid, ids, arg):
         return self.write(cr, uid, ids, {'state': 'cancel', 'date_close': datetime.now()})
 
@@ -93,7 +106,6 @@ class survey(osv.osv):
         current_rec = self.read(cr, uid, ids, context=context)
         title = _("%s (copy)") % (current_rec.get('title'))
         vals.update({'title': title})
-        vals.update({'tot_start_survey': 0, 'tot_comp_survey': 0})
         return super(survey, self).copy(cr, uid, ids, vals, context=context)
 
     def action_print_survey(self, cr, uid, ids, context=None):
@@ -164,10 +176,10 @@ class survey(osv.osv):
     def edit_survey(self, cr, uid, ids, context=None):
         id = ids[0]
         context.update({
-            'active': False,
             'survey_id': id,
+            'active': True,
             'edit': True,
-            'ir_actions_act_window_target': 'new'
+            'ir_actions_act_window_target': 'new',
         })
         return {
             'view_type': 'form',
@@ -186,7 +198,7 @@ class survey(osv.osv):
         self._check_valid(cr, uid, ids, context=context)
 
         survey_browse = self.pool.get('survey').browse(cr, uid, ids, context=context)[0]
-        if survey_browse.state not in ["open", "restricted"]:
+        if survey_browse.state != "open":
             raise osv.except_osv(_('Warning!'), _("You cannot send invitations because the survey is not open."))
 
         assert len(ids) == 1, 'This option should only be used for a single id at a time.'
@@ -624,6 +636,10 @@ class survey_response(osv.osv):
         'state': "new",
         'response_type': "manually",
     }
+
+    def action_survey_resent(self, cr, uid, ids, context=None):
+        context = (context or {}).update({'survey_resent_token': True})
+        return self.pool.get('survey').action_survey_sent(cr, uid, ids, context=context)
 
     def name_get(self, cr, uid, ids, context=None):
         if not len(ids):

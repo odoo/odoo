@@ -62,7 +62,7 @@ class survey_mail_compose_message(osv.TransientModel):
         mail_message_obj = self.pool.get('mail.message')
         base_url = self.pool.get('ir.config_parameter').get_param(cr, uid, 'web.base.url')
 
-        def create_token_and_send_mail_survey(wizard, token, partner_id, email):
+        def create_response_and_send_mail(wizard, token, partner_id, email):
             """ Create one mail by recipients and replace __URL__ by link with identification token
             """
             # create response with token
@@ -106,6 +106,13 @@ class survey_mail_compose_message(osv.TransientModel):
             if mail_obj == mail_mail_obj:
                 mail_obj.send(cr, uid, [mail_id], context=context)
 
+        def create_token(wizard, partner_id, email):
+            if context.get("survey_resent_token"):
+                response_id = survey_response_obj.search(cr, uid, [('survey_id', '=', wizard.res_id), ('state', 'in', ['new', 'skip']), '|', ('partner_id', '=', partner_id), ('email', '=', email)], context=context)
+                if response_id:
+                    return survey_response_obj.search(cr, uid, response_id, ['token'], context=context)['token']
+            return uuid.uuid4()
+
         for wizard in self.browse(cr, uid, ids, context=context):
             if wizard.model == 'survey':
                 # check if __URL__ is in the text
@@ -130,8 +137,10 @@ class survey_mail_compose_message(osv.TransientModel):
                 for email in emails_checked:
                     partner_id = partner_obj.search(cr, uid, [('email', '=', email)], context=context)
                     partner_id = partner_id and partner_id[0] or None
-                    create_token_and_send_mail_survey(wizard, uuid.uuid4(), partner_id, email)
+                    create_response_and_send_mail(wizard, token, partner_id, email)
+                    token = create_token(wizard, partner_id, email)
                 for partner in wizard.partner_ids:
-                    create_token_and_send_mail_survey(wizard, uuid.uuid4(), partner.id, partner.email)
+                    token = create_token(wizard, partner.id, partner.email)
+                    create_response_and_send_mail(wizard, token, partner.id, partner.email)
 
         return {'type': 'ir.actions.act_window_close'}
