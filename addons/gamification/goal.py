@@ -236,8 +236,8 @@ class gamification_goal(osv.Model):
             domain = [('planline_id', '=', planline_id),
                 ('user_id', '=', user_id),
                 ('start_date', '=', start_date.isoformat())]
-            res = obj.search(cr, uid, domain, context=context)
-            if len(res) > 0:
+            goal_ids = obj.search(cr, uid, domain, context=context)
+            if len(goal_ids) > 0:
                 # already exist, skip
                 return True
 
@@ -264,12 +264,20 @@ class gamification_goal(osv.Model):
         if planline.plan_id.remind_update_delay:
             values['remind_update_delay'] = planline.plan_id.remind_update_delay
         
-        obj.create(cr, uid, values, context)
+        new_goal_id = obj.create(cr, uid, values, context)
+        self.update(cr, uid, [new_goal_id], context=context, force_update=True)
 
 
-    def cancel_goal_from_plan(self, planline, user):
-        """Apply action to goals after it's plan has been canceled"""
-        pass
+    def cancel_goals_from_plan(self, cr, uid, ids, planline_id, context=None):
+        """Apply action to goals after it's plan has been canceled
+
+        The status of every goal related to the planline is set to 'canceled
+        :param planline_id: the id of the planline whose plan has been canceled'"""
+
+        obj = self.pool.get('gamification.goal')
+        goal_ids = obj.search(cr, uid, [('planline_id', '=', planline_id)], context=context)
+        print("cancel goals", goal_ids)
+        return self.write(cr, uid, goal_ids, {'state': 'canceled'}, context=context)
 
     def action_reach(self, cr, uid, ids, context=None):
         return self.write(cr, uid, ids, {'state': 'reached'}, context=context)
@@ -391,20 +399,19 @@ class gamification_goal_plan(osv.Model):
         """Close a plan in progress
 
         Change the state of the plan to in done
-        Does NOT close the related goals ?"""
+        Does NOT close the related goals, this is handled by the goal itself"""
         return self.write(cr, uid, ids, {'state': 'done'}, context=context)
 
     def action_cancel(self, cr, uid, ids, context=None):
         """Cancel a plan in progress
 
         Change the state of the plan to draft
-        Close the related goals"""
+        Cancel the related goals"""
         self.write(cr, uid, ids, {'state': 'draft'}, context=context)
         for plan in self.browse(cr, uid, ids, context):
             for planline in plan.planline_ids:
-                for user in plan.user_ids:
-                    goal_obj = self.pool.get('gamification.goal')
-                    goal_obj.cancel_goal_from_plan(planline, user)
+                goal_obj = self.pool.get('gamification.goal')
+                goal_obj.cancel_goals_from_plan(cr, uid, ids, planline.id, context=context)
 
         return True
 
@@ -437,6 +444,7 @@ class gamification_goal_plan(osv.Model):
                     goal_obj = self.pool.get('gamification.goal')
                     goal_obj.create_goal_from_plan(cr, uid, ids, planline.id, user.id, start_date, context=context)
 
+        return True
 
 class gamification_goal_planline(osv.Model):
     """Gamification goal planline
