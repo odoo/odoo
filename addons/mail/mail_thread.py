@@ -767,8 +767,7 @@ class mail_thread(osv.AbstractModel):
             author_ids = self._message_find_partners(cr, uid, message, ['From'], context=context)
             if author_ids:
                 msg_dict['author_id'] = author_ids[0]
-            else:
-                msg_dict['email_from'] = decode(message.get('from'))
+            msg_dict['email_from'] = decode(message.get('from'))
         partner_ids = self._message_find_partners(cr, uid, message, ['To', 'Cc'], context=context)
         msg_dict['partner_ids'] = [(4, partner_id) for partner_id in partner_ids]
 
@@ -853,43 +852,42 @@ class mail_thread(osv.AbstractModel):
                     print 'found', message_ids
         return partner_info
 
-    def message_post(self, cr, uid, thread_id, body='', subject=None, content_subtype='html', type='notification',
-                        subtype=None, parent_id=False, attachments=None, context=None, **kwargs):
+    def message_post(self, cr, uid, thread_id, body='', subject=None,
+                        content_subtype='html', type='notification', subtype=None,
+                        parent_id=False, attachments=None, context=None, **kwargs):
         """ Post a new message in an existing thread, returning the new
-            mail.message ID. Extra keyword arguments will be used as default
-            column values for the new mail.message record.
-            Auto link messages for same id and object
-
-            The purpose is to perform some pre- and post-processing:
-            - if body is plaintext: convert it into html
-            - if parent_id: handle reply to a previous message by adding the
-                parent partners to the message
-            - type and subtype: comment and mail.mt_comment by default
-            - attachment_ids: supposed not attached to any document; attach them
-                to the related document. Should only be set by Chatter.
+            mail.message ID.
 
             :param int thread_id: thread ID to post into, or list with one ID;
                 if False/0, mail.message model will also be set as False
             :param str body: body of the message, usually raw HTML that will
                 be sanitized
-            :param str subject: optional subject
-            :param str type: mail_message.type
-            :param int parent_id: optional ID of parent message in this thread
+            :param str type: see mail_message.type field
+            :param str content_subtype:: if plaintext: convert body into html
+            :param int parent_id: handle reply to a previous message by adding the
+                parent partners to the message in case of private discussion
             :param tuple(str,str) attachments or list id: list of attachment tuples in the form
                 ``(name,content)``, where content is NOT base64 encoded
-            :return: ID of newly created mail.message
+
+            Extra keyword arguments will be used as default column values for the
+            new mail.message record. Special cases:
+                - attachment_ids: supposed not attached to any document; attach them
+                    to the related document. Should only be set by Chatter.
+            :return int: ID of newly created mail.message
         """
         if context is None:
             context = {}
         if attachments is None:
             attachments = {}
-
-        assert (not thread_id) or isinstance(thread_id, (int, long)) or \
-            (isinstance(thread_id, (list, tuple)) and len(thread_id) == 1), "Invalid thread_id; should be 0, False, an ID or a list with one ID"
-        if isinstance(thread_id, (list, tuple)):
-            thread_id = thread_id and thread_id[0]
         mail_message = self.pool.get('mail.message')
         ir_attachment = self.pool.get('ir.attachment')
+
+        assert (not thread_id) or \
+                isinstance(thread_id, (int, long)) or \
+                (isinstance(thread_id, (list, tuple)) and len(thread_id) == 1), \
+                "Invalid thread_id; should be 0, False, an ID or a list with one ID"
+        if isinstance(thread_id, (list, tuple)):
+            thread_id = thread_id[0]
 
         # if we're processing a message directly coming from the gateway, the destination model was
         # set in the context.
@@ -930,27 +928,21 @@ class mail_thread(osv.AbstractModel):
                 'datas': base64.b64encode(str(content)),
                 'datas_fname': name,
                 'description': name,
-                'res_model': context.get('thread_model') or self._name,
+                'res_model': model,
                 'res_id': thread_id,
             }
             attachment_ids.append((0, 0, data_attach))
 
         # 4: mail.message.subtype
+        subtype_id = False
         if subtype:
-            s_data = subtype.split('.')
-            if len(s_data) == 1:
-                s_data = ('mail', s_data[0])
-            ref = self.pool.get('ir.model.data').get_object_reference(cr, uid, s_data[0], s_data[1])
+            if '.' not in subtype:
+                subtype = 'mail.%s' % subtype
+            ref = self.pool.get('ir.model.data').get_object_reference(cr, uid, *subtype.split('.'))
             subtype_id = ref and ref[1] or False
-        else:
-            subtype_id = False
-
-        # when posting an incoming email to a document: subscribe the author, if a partner, as follower
-        if model and thread_id and kwargs.get('author_id'):
-            self.message_subscribe(cr, uid, [thread_id], [kwargs.get('author_id')], context=context)
 
         # automatically subscribe recipients if asked to
-        if context.get('mail_post_autofollow') and model and partner_ids:
+        if context.get('mail_post_autofollow') and thread_id and partner_ids:
             self.message_subscribe(cr, uid, [thread_id], list(partner_ids), context=context)
 
         # _mail_flat_thread: automatically set free messages to the first posted message
@@ -986,7 +978,12 @@ class mail_thread(osv.AbstractModel):
         for x in ('from', 'to', 'cc'):
             values.pop(x, None)
 
-        return mail_message.create(cr, uid, values, context=context)
+        # Create and auto subscribe the author
+        msg_id = mail_message.create(cr, uid, values, context=context)
+        message = mail_message.browse(cr, uid, msg_id, context=context)
+        if message.author_id and thread_id and type != 'notification':
+            self.message_subscribe(cr, uid, [thread_id], [message.author_id.id], context=context)
+        return msg_id
 
     #------------------------------------------------------
     # Followers API

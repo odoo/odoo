@@ -154,7 +154,7 @@ class test_mail(TestMailBase):
         new_mail = self.mail_message.browse(cr, uid, self.mail_message.search(cr, uid, [('message_id', '=', test_msg_id)])[0])
         # Test: author_id set, not email_from
         self.assertEqual(new_mail.author_id, user_raoul.partner_id, 'message process wrong author found')
-        self.assertFalse(new_mail.email_from, 'message process should not set the email_from when an author is found')
+        self.assertEqual(new_mail.email_from, user_raoul.email, 'message process wrong email_from')
 
         # Do: post a new message, with a unknown partner
         test_msg_id = '<deadcafe.1337-3@smtp.agrolait.com>'
