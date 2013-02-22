@@ -51,9 +51,9 @@ class sale_make_invoice(osv.osv_memory):
         if context is None:
             context = {}
         data = self.read(cr, uid, ids)[0]
-        order_obj.action_invoice_create(cr, uid, context.get(('active_ids'), []), data['grouped'], date_inv = data['invoice_date'])
+        order_obj.action_invoice_create(cr, uid, context.get(('active_ids'), []), data['grouped'], date_invoice = data['invoice_date'])
         order_obj.signal_manual_invoice(cr, uid, context.get(('active_ids'), []))
-    
+
         for o in order_obj.browse(cr, uid, context.get(('active_ids'), []), context=context):
             for i in o.invoice_ids:
                 newinv.append(i.id)

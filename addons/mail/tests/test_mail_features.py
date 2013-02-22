@@ -339,7 +339,7 @@ class test_mail(TestMailBase):
 
         # Mail data
         _subject = 'Pigs'
-        _mail_subject = '%s posted on %s' % (user_raoul.name, group_pigs.name)
+        _mail_subject = 'Re: %s' % (group_pigs.name)
         _body1 = '<p>Pigs rules</p>'
         _mail_body1 = '<p>Pigs rules</p>\n<div><p>Raoul</p></div>\n'
         _mail_bodyalt1 = 'Pigs rules\nRaoul\n'
