@@ -32,17 +32,18 @@ from openerp.addons.decimal_precision import decimal_precision as dp
 
 _logger = logging.getLogger(__name__)
 
-class account_virtual_invoice(osv.osv):
-    _name = "account.virtual.invoice"
+class account_analytic_invoice_line(osv.osv_memory):
+    _name = "account.analytic.invoice.line"
     _auto = False
+    _log_access = True
 
     def _amount_line(self, cr, uid, ids, prop, unknow_none, unknow_dict):
         res = {}
         tax_obj = self.pool.get('account.tax')
         cur_obj = self.pool.get('res.currency')
         for line in self.browse(cr, uid, ids):
-            price = line.unit_price
-            taxes = tax_obj.compute_all(cr, uid, line.tax_ids, price, line.qty, product=line.product_id, partner=line.analytic_account_id.partner_id)
+            price = line.price_unit
+            taxes = tax_obj.compute_all(cr, uid, line.invoice_line_tax_id, price, line.quantity, product=line.product_id, partner=line.analytic_account_id.partner_id)
             res[line.id] = taxes['total']
             if line.analytic_account_id:
                 cur = line.analytic_account_id.currency_id
@@ -70,29 +71,31 @@ class account_virtual_invoice(osv.osv):
         'product_id': fields.many2one('product.product','Product'),
         'analytic_account_id': fields.many2one('account.analytic.account', 'Analytic Account'),
         'name': fields.char('Description', size=64, readonly=True),
-        'qty': fields.float('Quantity', readonly=True),
-        'uom': fields.many2one('product.uom', 'Unit of Measure', required=True),
-        'unit_price': fields.float('Unit Price', readonly=True),
-        'sub_total': fields.function(_amount_line, string='Amount', type="float",
+        'quantity': fields.float('Quantity', readonly=True),
+        'uos_id': fields.many2one('product.uom', 'Unit of Measure', required=True),
+        'price_unit': fields.float('Unit Price', readonly=True),
+        'price_subtotal': fields.function(_amount_line, string='Amount', type="float",
             digits_compute= dp.get_precision('Account')),
-        'tax_ids':fields.function(_get_tax_lines, type='many2many', relation='account.tax', string='Taxes'),
+        'write_date': fields.datetime('Update Date' , readonly=True),
+        'invoice_line_tax_id':fields.function(_get_tax_lines, type='many2many', relation='account.tax', string='Taxes'),
     }
 
     _order = 'name desc'
 
     def init(self, cr):
-        tools.drop_view_if_exists(cr, 'account_virtual_invoice')
+        tools.drop_view_if_exists(cr, 'account_analytic_invoice_line')
         cr.execute("""
-        create or replace view account_virtual_invoice as (
+        create or replace view account_analytic_invoice_line as (
         
         SELECT
         l.id as id,
         account.id as analytic_account_id,
+        account.write_date as write_date,
         l.product_id as product_id,
         l.name as name,
-        l.unit_amount as qty,
-        l.product_uom_id as uom,
-        t.list_price as unit_price
+        l.unit_amount as quantity,
+        l.product_uom_id as uos_id,
+        t.list_price as price_unit
         FROM
         account_analytic_line as l 
         LEFT JOIN account_analytic_account account ON (l.account_id = account.id)
@@ -104,11 +107,12 @@ UNION
     SELECT
         sol.id as id,
         account.id as analytic_account_id,
+        account.write_date as write_date,
         sol.product_id as product_id,
         sol.name as name,
-        sol.product_uom_qty as qty,
-        sol.product_uom as uom,
-        sol.price_unit as unit_price
+        sol.product_uom_qty as quantity,
+        sol.product_uom as uos_id,
+        sol.price_unit as price_unit
         FROM
         sale_order as so 
         LEFT JOIN account_analytic_account account ON (so.project_id = account.id)
@@ -119,22 +123,84 @@ UNION
     SELECT
         exp.id as id,
         account.id as analytic_account_id,
+        account.write_date as write_date,
         exp.product_id as product_id,
         exp.name as name,
-        exp.unit_quantity as qty,
-        exp.uom_id as uom,
-        exp.unit_amount as unit_price
+        exp.unit_quantity as quantity,
+        exp.uom_id as uos_id,
+        exp.unit_amount as price_unit
         FROM
     hr_expense_line as exp
         LEFT JOIN account_analytic_account account ON (exp.analytic_account = account.id)
         
         )
          """)
-account_virtual_invoice()
+account_analytic_invoice_line()
 
 class account_analytic_account(osv.osv):
     _name = "account.analytic.account"
     _inherit = "account.analytic.account"
+    
+    def button_reset_taxes(self, cr, uid, ids, context=None):
+        if context is None:
+            context = {}
+        ctx = context.copy()
+        total_tax_amount = 0.0
+        for id in ids:
+            partner = self.browse(cr, uid, id, context=ctx).partner_id
+            if partner.lang:
+                ctx.update({'lang': partner.lang})
+            for taxe in self.compute_tax(cr, uid, [id], context=ctx).values():
+                total_tax_amount += taxe["tax_amount"]
+        return total_tax_amount
+    
+    def button_compute(self, cr, uid, ids, context=None, set_total=False):
+        total_tax_amount = self.button_reset_taxes(cr, uid, ids, context)
+        for inv in self.browse(cr, uid, ids, context=context):
+            if set_total:
+                self.write(cr, uid, [inv.id], {'check_total': inv.amount_total})
+        return True
+    
+    def compute_tax(self, cr, uid, ids, context=None):
+        tax_grouped = {}
+        tax_obj = self.pool.get('account.tax')
+        cur_obj = self.pool.get('res.currency')
+        inv = self.browse(cr, uid, ids[0], context=context)
+        cur = inv.currency_id
+        company_currency = inv.company_id.currency_id.id
+
+        for line in inv.invoice_line_ids:
+            for tax in tax_obj.compute_all(cr, uid, line.invoice_line_tax_id, (line.price_unit), line.quantity, line.product_id, inv.partner_id)['taxes']:
+                val={}
+                val['invoice_id'] = inv.id
+                val['name'] = tax['name']
+                val['amount'] = tax['amount']
+                val['manual'] = False
+                val['sequence'] = tax['sequence']
+                val['base'] = cur_obj.round(cr, uid, cur, tax['price_unit'] * line['quantity'])
+
+                val['base_code_id'] = tax['base_code_id']
+                val['tax_code_id'] = tax['tax_code_id']
+                val['base_amount'] = cur_obj.compute(cr, uid, inv.currency_id.id, company_currency, val['base'] * tax['base_sign'], context={'date': inv.last_invoice_date or time.strftime('%Y-%m-%d')}, round=False)
+                val['tax_amount'] = cur_obj.compute(cr, uid, inv.currency_id.id, company_currency, val['amount'] * tax['tax_sign'], context={'date': inv.last_invoice_date or time.strftime('%Y-%m-%d')}, round=False)
+                val['account_id'] = tax['account_collected_id'] or line.account_id.id
+                val['account_analytic_id'] = tax['account_analytic_collected_id']
+
+                key = (val['tax_code_id'], val['base_code_id'], val['account_id'], val['account_analytic_id'])
+                if not key in tax_grouped:
+                    tax_grouped[key] = val
+                else:
+                    tax_grouped[key]['amount'] += val['amount']
+                    tax_grouped[key]['base'] += val['base']
+                    tax_grouped[key]['base_amount'] += val['base_amount']
+                    tax_grouped[key]['tax_amount'] += val['tax_amount']
+
+        for t in tax_grouped.values():
+            t['base'] = cur_obj.round(cr, uid, cur, t['base'])
+            t['amount'] = cur_obj.round(cr, uid, cur, t['amount'])
+            t['base_amount'] = cur_obj.round(cr, uid, cur, t['base_amount'])
+            t['tax_amount'] = cur_obj.round(cr, uid, cur, t['tax_amount'])
+        return tax_grouped
 
     def _analysis_all(self, cr, uid, ids, fields, arg, context=None):
         dp = 2
@@ -192,12 +258,12 @@ class account_analytic_account(osv.osv):
                         GROUP BY product_id, user_id, to_invoice, product_uom_id, line.name""", (account.id,))
 
                     res[account.id][f] = 0.0
-                    for product_id, price, user_id, factor_id, qty, uom, line_name in cr.fetchall():
+                    for product_id, price, user_id, factor_id, quantity, uom, line_name in cr.fetchall():
                         price = -price
                         if product_id:
-                            price = self.pool.get('account.analytic.line')._get_invoice_price(cr, uid, account, product_id, user_id, qty, context)
+                            price = self.pool.get('account.analytic.line')._get_invoice_price(cr, uid, account, product_id, user_id, quantity, context)
                         factor = self.pool.get('hr_timesheet_invoice.factor').browse(cr, uid, factor_id, context=context)
-                        res[account.id][f] += price * qty * (100-factor.factor or 0.0) / 100.0
+                        res[account.id][f] += price * quantity * (100-factor.factor or 0.0) / 100.0
 
                 # sum both result on account_id
                 for id in ids:
@@ -498,17 +564,21 @@ class account_analytic_account(osv.osv):
   
     def _amount_all(self, cr, uid, ids, name, args, context=None):
         res = {}
+        tax = 0.0
         for account in self.browse(cr, uid, ids, context=context):
             res[account.id] = {
                 'amount_untaxed': 0.0,
                 'amount_tax': 0.0,
                 'amount_total': 0.0
             }
-            for line in account.virtual_invoice_line:
-                res[account.id]['amount_untaxed'] += line.sub_total
+            for line in account.invoice_line_ids:
+                print"line------------------>",line 
+                tax = self.button_reset_taxes(cr, uid, ids, context)
+                res[account.id]['amount_untaxed'] += line.price_subtotal
 #            for line in account.tax_line:
-#                res[account.id]['amount_tax'] += line.amount
+            res[account.id]['amount_tax'] = tax
             res[account.id]['amount_total'] = res[account.id]['amount_tax'] + res[account.id]['amount_untaxed']
+        print"=========587=========>",res
         return res
 
     _columns = {
@@ -572,7 +642,7 @@ class account_analytic_account(osv.osv):
         'invoiced_total' : fields.function(_sum_of_fields, type="float",multi="sum_of_all", string="Total Invoiced"),
         'remaining_total' : fields.function(_sum_of_fields, type="float",multi="sum_of_all", string="Total Remaining", help="Expectation of remaining income for this contract. Computed as the sum of remaining subtotals which, in turn, are computed as the maximum between '(Estimation - Invoiced)' and 'To Invoice' amounts"),
         'toinvoice_total' : fields.function(_sum_of_fields, type="float",multi="sum_of_all", string="Total to Invoice", help=" Sum of everything that could be invoiced for this contract."),
-        'virtual_invoice_line': fields.one2many('account.virtual.invoice', 'analytic_account_id'),
+        'invoice_line_ids': fields.one2many('account.analytic.invoice.line', 'analytic_account_id'),
         'recurring_invoices' : fields.boolean('Recurring Invoices'),
         'rrule_type': fields.selection([
             ('daily', 'Day(s)'),
@@ -676,26 +746,26 @@ class account_analytic_account(osv.osv):
         return True
 
     def cron_create_invoice(self, cr, uid, context=None):
-        res = []
-        inv_obj = self.pool.get('account.invoice')
-        journal_obj = self.pool.get('account.journal')
-        inv_lines = []
-        contract_ids = self.search(cr, uid, [('next_date','<=',time.strftime("%Y-%m-%d")), ('state','=', 'open'), ('recurring_invoices','=', True)], context=context, order='name asc')
-        a = self.pool.get('hr.timesheet.invoice.create.final').do_create(cr, uid, contract_ids, context=None)
-        contracts = self.browse(cr, uid, contract_ids, context=context)
-        for contract in contracts:
-            next_date = datetime.datetime.strptime(contract.next_date, "%Y-%m-%d")
-            interval = contract.interval
-
-            if contract.rrule_type == 'monthly':
-                new_date = next_date+relativedelta(months=+interval)
-            if contract.rrule_type == 'daily':
-                new_date = next_date+relativedelta(days=+interval)
-            if contract.rrule_type == 'weekly':
-                new_date = next_date+relativedelta(weeks=+interval)
-
-            # Link this new invoice to related contract
-            contract.write({'next_date':new_date}, context=context)
+#        res = []
+#        inv_obj = self.pool.get('account.invoice')
+#        journal_obj = self.pool.get('account.journal')
+#        inv_lines = []
+#        contract_ids = self.search(cr, uid, [('next_date','<=',time.strftime("%Y-%m-%d")), ('state','=', 'open'), ('recurring_invoices','=', True)], context=context, order='name asc')
+#        a = self.pool.get('hr.timesheet.invoice.create.final').do_create(cr, uid, contract_ids, context=None)
+#        contracts = self.browse(cr, uid, contract_ids, context=context)
+#        for contract in contracts:
+#            next_date = datetime.datetime.strptime(contract.next_date, "%Y-%m-%d")
+#            interval = contract.interval
+#
+#            if contract.rrule_type == 'monthly':
+#                new_date = next_date+relativedelta(months=+interval)
+#            if contract.rrule_type == 'daily':
+#                new_date = next_date+relativedelta(days=+interval)
+#            if contract.rrule_type == 'weekly':
+#                new_date = next_date+relativedelta(weeks=+interval)
+#
+#            # Link this new invoice to related contract
+#            contract.write({'next_date':new_date}, context=context)
         return True
 
 class account_analytic_account_summary_user(osv.osv):
