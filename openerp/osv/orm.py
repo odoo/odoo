@@ -287,10 +287,13 @@ class Session(object):
 
     def model(self, model_name):
         """ return a given model with session data """
-        model = self.registry.get(model_name)
-        if model is None:
-            raise Exception(_("Invalid access to model '%s'") % model_name)
+        model = self.registry[model_name]
         return model._make_instance(session=self)
+
+    def ref(self, xml_id):
+        """ return the record corresponding to the given `xml_id` """
+        module, name = xml_id.split('.')
+        return self.model('ir.model.data').get_object(module, name)
 
     @property
     def user(self):
