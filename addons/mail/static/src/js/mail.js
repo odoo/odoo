@@ -403,6 +403,7 @@ openerp.mail = function (session) {
             this._super(parent, datasets, options);
             this.show_compact_message = false;
             this.show_delete_attachment = true;
+            this.is_log = false;
             this.recipients = [];
             this.recipient_ids = [];
         },
@@ -505,11 +506,11 @@ openerp.mail = function (session) {
 
         bind_events: function () {
             var self = this;
-            this.$('.oe_compact').on('click', _.bind( this.on_toggle_quick_composer, this));
+            this.$('.oe_compose_post').on('click', self.on_toggle_quick_composer);
+            this.$('.oe_compose_log').on('click', self.on_toggle_quick_composer);
             this.$('input.oe_form_binary_file').on('change', _.bind( this.on_attachment_change, this));
             this.$('.oe_cancel').on('click', _.bind( this.on_cancel, this));
-            this.$('.oe_post').on('click', _.bind( this.on_message_post, this));
-            this.$('.oe_log').on('click', _.bind( this.on_message_post, this));
+            this.$('.oe_post').on('click', self.on_message_post);
             this.$('.oe_full').on('click', _.bind( this.on_compose_fullmail, this, this.id ? 'reply' : 'comment'));
             /* stack for don't close the compose form if the user click on a button */
             this.$('.oe_msg_left, .oe_msg_center').on('mousedown', _.bind( function () { this.stay_open = true; }, this));
@@ -520,7 +521,7 @@ openerp.mail = function (session) {
             this.$('textarea').autosize();
 
             // auto close
-            this.$('textarea').on('blur', _.bind( this.on_toggle_quick_composer, this));
+            this.$('textarea').on('blur', self.on_toggle_quick_composer);
 
             // event: delete child attachments off the oe_msg_attachment_list box
             this.$(".oe_msg_attachment_list").on('click', '.oe_delete', this.on_attachment_delete);
@@ -686,15 +687,13 @@ openerp.mail = function (session) {
 
         on_message_post: function (event) {
             var self = this;
-            var is_log = $(event.target).data('is_log');
-            console.log(is_log);
             if (this.do_check_attachment_upload() && (this.attachment_ids.length || this.$('textarea').val().match(/\S+/))) {
-                if (is_log) {
-                    self.do_send_message_post([], is_log);
+                if (this.is_log) {
+                    this.do_send_message_post([], this.is_log);
                 }
                 else {
                     this.check_recipient_partners().done(function (partner_ids) {
-                        self.do_send_message_post(partner_ids, is_log);
+                        self.do_send_message_post(partner_ids, self.is_log);
                     });
                 }
             }
@@ -743,6 +742,7 @@ openerp.mail = function (session) {
          */
         on_toggle_quick_composer: function (event) {
             var self = this;
+            var $input = $(event.target);
             this.compute_emails_from();
             var email_addresses = _.pluck(this.recipients, 'email_address');
             var suggested_partners = $.Deferred();
@@ -754,6 +754,7 @@ openerp.mail = function (session) {
 
             // if clicked: call for suggested recipients
             if (event.type == 'click') {
+                this.is_log = $input.hasClass('oe_compose_log');
                 suggested_partners = this.parent_thread.ds_thread.call('message_get_suggested_recipients', [[this.context.default_res_id]]).done(function (additional_recipients) {
                     var thread_recipients = additional_recipients[self.context.default_res_id];
                     console.log('message_get_suggested_recipients:', thread_recipients);
