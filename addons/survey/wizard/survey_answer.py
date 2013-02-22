@@ -210,7 +210,7 @@ class survey_question_wiz(osv.osv_memory):
 
         """
         # get if the token of the partner or anonymous user is valid
-        res = {'partner_id': False, 'response_id': False, 'state': None, 'readonly': False}
+        res = {'partner_id': False, 'response_id': False, 'state': None, 'readonly': context.get('readonly', False)}
 
         if not survey_id:
             raise osv.except_osv(_('Warning!'), _("You do not have access to this survey."))
@@ -258,7 +258,6 @@ class survey_question_wiz(osv.osv_memory):
 
         # user have a specific token or a specific partner access (for state open or restricted)
         if response_ids:
-            print response_ids
             response = sur_response_obj.browse(cr, uid, response_ids[0], context=context)
             res['response_id'] = response_ids[0]
             res['partner_id'] = response.partner_id.id or False
@@ -329,7 +328,7 @@ class survey_question_wiz(osv.osv_memory):
                     'transfer': 1,
                     'response': 0
                 }
-                wiz_id = surv_name_wiz.create(cr, uid, res_data)
+                wiz_id = surv_name_wiz.create(cr, uid, res_data, context=context)
                 sur_name_rec = surv_name_wiz.browse(cr, uid, wiz_id, context=context)
                 context.update({'sur_name_id': wiz_id})
 
@@ -368,8 +367,6 @@ class survey_question_wiz(osv.osv_memory):
 
                 # get if the token of the partner or anonymous user is valid
                 check_token = self._check_access(cr, uid, survey_id, context)
-
-                readonly = check_token['readonly'] or context.get('readonly')
 
                 # have acces to this survey
                 edit_mode = context.get('edit', False)
@@ -444,9 +441,9 @@ class survey_question_wiz(osv.osv_memory):
                         xml_group = etree.SubElement(xml_form, 'group', {'col': '1', 'colspan': '4'})
 
                         # rendering different views
-                        getattr(self, "_view_field_%s" % que_rec.type)(cr, uid, xml_group, fields, readonly, que, que_rec, context=context)
+                        getattr(self, "_view_field_%s" % que_rec.type)(cr, uid, xml_group, fields, check_token['readonly'], que, que_rec, context=context)
                         if que_rec.type in ['multiple_choice_only_one_ans', 'multiple_choice_multiple_ans', 'matrix_of_choices_only_one_ans', 'matrix_of_choices_only_multi_ans', 'rating_scale'] and que_rec.is_comment_require:
-                            self._view_field_postprocessing(cr, uid, xml_group, fields, readonly, que, que_rec, context=context)
+                            self._view_field_postprocessing(cr, uid, xml_group, fields, check_token['readonly'], que, que_rec, context=context)
 
                     xml_footer = etree.SubElement(xml_form, 'footer', {'col': '8', 'colspan': '1', 'width': "100%"})
 
@@ -456,9 +453,10 @@ class survey_question_wiz(osv.osv_memory):
                     but_string = "Next"
                     if int(page_number) + 1 == total_pages:
                         but_string = "Done"
-                    if edit_mode and int(page_number) + 1 == total_pages:
-                        etree.SubElement(xml_footer, 'label', {'string': ""})
-                        etree.SubElement(xml_footer, 'button', {'special': "cancel", 'string': 'Done', 'context': tools.ustr(context), 'class': "oe_highlight"})
+                    if (edit_mode or check_token['readonly']) and int(page_number) + 1 == total_pages:
+                        if not check_token['readonly']:
+                            etree.SubElement(xml_footer, 'label', {'string': ""})
+                            etree.SubElement(xml_footer, 'button', {'special': "cancel", 'string': 'Done', 'context': tools.ustr(context), 'class': "oe_highlight"})
                     else:
                         etree.SubElement(xml_footer, 'label', {'string': ""})
                         etree.SubElement(xml_footer, 'button', {'name': "action_next", 'string': tools.ustr(but_string), 'type': "object", 'context': tools.ustr(context), 'class': "oe_highlight"})
@@ -566,7 +564,7 @@ class survey_question_wiz(osv.osv_memory):
         check_token = self._check_access(cr, uid, context['survey_id'], context)
 
         survey_question_wiz_id = super(survey_question_wiz, self).create(cr, uid, {'name': vals.get('name')}, context=context)
-        if context.get('edit', False):
+        if context.get('edit', False) or check_token['readonly']:
             return survey_question_wiz_id
 
         for key, val in vals.items():
@@ -591,8 +589,6 @@ class survey_question_wiz(osv.osv_memory):
             response_id = check_token['response_id']
         elif not sur_name_read['response']:
             response_id = int(sur_name_read['response'])
-        else:
-            response_id = sur_response_obj.create(cr, uid, {'response_type': 'link', 'partner_id': check_token['partner_id'], 'date_create': datetime.now(), 'survey_id': context.get('survey_id')})
 
         surv_name_wiz.write(cr, uid, [context.get('sur_name_id', False)], {'response': tools.ustr(response_id)})
         sur_response_obj.write(cr, uid, response_id, {'state': 'skip'})

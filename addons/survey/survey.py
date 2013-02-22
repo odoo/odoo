@@ -712,7 +712,12 @@ class survey_response(osv.osv):
         self.pool.get('survey').check_access_rights(cr, uid, 'write')
 
         record = self.browse(cr, uid, ids[0], context=context)
-        context.update({'active': True, 'survey_id': record.survey_id.id, 'response_id': ids, 'response_no': 0, 'readonly': True})
+        context.update({
+            'ir_actions_act_window_target': 'new',
+            'survey_id': record.survey_id.id,
+            'response_id': ids,
+            'readonly': True
+            })
         return {
             'view_type': 'form',
             "view_mode": 'form',
