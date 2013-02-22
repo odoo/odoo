@@ -68,6 +68,34 @@
             </field>
         </record>
 
+        <record id="action_mail_archives_feeds" model="ir.actions.client">
+            <field name="name">Archives</field>
+            <field name="tag">mail.wall</field>
+            <field name="context">{
+              'default_model': 'res.users',
+              'default_res_id': uid
+            }</field>
+            <field name="params" eval="&quot;{
+                'domain': [
+                    '|',
+                    ('notification_ids.partner_id.user_ids', 'in', [uid]),
+                    ('author_id.user_ids', 'in', [uid]),
+                ],
+                'show_compose_message': False,
+                'show_link': False,
+                'view_mailbox': True,
+                'read_action': 'read'
+            }&quot;"/>
+            <field name="help" type="html">
+                <p>
+                    No message found and no message sent yet.
+                </p><p>
+                    Click on the top-right icon to compose a message. This
+                    message will be sent by email if it's an internal contact.
+                </p>
+            </field>
+        </record>
+
         <menuitem name="Inbox" id="portal_inbox" parent="portal_messages"
             action="action_mail_inbox_feeds_portal" sequence="10" groups="portal.group_portal"/>
         <menuitem name="To-do" id="portal_mail_starfeeds" parent="portal_messages"
