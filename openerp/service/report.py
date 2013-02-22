@@ -5,7 +5,6 @@ import logging
 import sys
 import threading
 
-import openerp.netsvc
 import openerp.pooler
 import openerp.report
 from openerp import tools

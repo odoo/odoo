@@ -25,7 +25,6 @@
     through the code of yaml tests.
 """
 
-import openerp.netsvc as netsvc
 import openerp.report
 import openerp.tools as tools
 import logging
@@ -50,7 +49,7 @@ def try_report(cr, uid, rname, ids, data=None, context=None, our_module=None):
         rname_s = rname[7:]
     else:
         rname_s = rname
-    _logger.log(netsvc.logging.TEST, "  - Trying %s.create(%r)", rname, ids)
+    _logger.log(logging.TEST, "  - Trying %s.create(%r)", rname, ids)
     res = openerp.report.render_report(cr, uid, ids, rname_s, data, context)
     if not isinstance(res, tuple):
         raise RuntimeError("Result of %s.create() should be a (data,format) tuple, now it is a %s" % \
@@ -93,7 +92,7 @@ def try_report(cr, uid, rname, ids, data=None, context=None, our_module=None):
         _logger.warning("Report %s produced a \"%s\" chunk, cannot examine it", rname, res_format)
         return False
 
-    _logger.log(netsvc.logging.TEST, "  + Report %s produced correctly.", rname)
+    _logger.log(logging.TEST, "  + Report %s produced correctly.", rname)
     return True
 
 def try_report_action(cr, uid, action_id, active_model=None, active_ids=None,
@@ -127,7 +126,7 @@ def try_report_action(cr, uid, action_id, active_model=None, active_ids=None,
     pool = pooler.get_pool(cr.dbname)
 
     def log_test(msg, *args):
-        _logger.log(netsvc.logging.TEST, "  - " + msg, *args)
+        _logger.log(logging.TEST, "  - " + msg, *args)
 
     datas = {}
     if active_model:

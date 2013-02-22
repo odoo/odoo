@@ -36,8 +36,6 @@ from openerp.tools.safe_eval import safe_eval as eval
 import openerp.pooler as pooler
 from openerp.tools.translate import _
 
-import openerp.netsvc as netsvc
-
 import zipfile
 import openerp.release as release
 
