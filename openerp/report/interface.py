@@ -45,10 +45,8 @@ class report_int(object):
     
     def __init__(self, name, register=True):
         if register:
-            print "*** Registering report `%s` but it should be registered trough data declaration instead. ***" % name
-            if not name.startswith('report.'):
-                raise Exception('ConceptionError, bad report name, should start with "report."')
-            assert name not in self._reports, 'The report "%s" already exists!' % name
+            assert name.startswith('report.'), 'Report names should start with "report.".'
+            assert name not in self._reports, 'The report "%s" already exists.' % name
             self._reports[name] = self
         else:
             # The report is instanciated at each use site, which is ok.
