@@ -7,7 +7,8 @@ Changelog
 -------
 
 - Almost removed ``LocalService()``. For reports,
-  ``openerp.report.render_report()`` can be used.
+  ``openerp.report.render_report()`` can be used. For workflows, see
+  :ref:`orm-workflows`.
 - Added the :ref:`Long polling <longpolling-worker>` worker type.
 - Added :ref:`orm-workflows` to the ORM.
 - Added :ref:`routing-decorators` to the RPC and WSGI stack.
