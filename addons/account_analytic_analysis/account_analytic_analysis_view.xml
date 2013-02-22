@@ -239,6 +239,9 @@
                         </div>
                         <field name="amount_tax" nolabel="1" widget="monetary" options="{'currency_field': 'currency_id'}"/>
                         <field name="amount_total" class="oe_subtotal_footer_separator" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                        <button name="cron_create_invoice"
+                                string="(Create Invoice)"
+                                type="object" help="Compute Invoices"/>
                     </group>
                  </xpath>
             </field>

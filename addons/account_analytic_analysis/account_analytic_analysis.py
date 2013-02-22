@@ -28,6 +28,8 @@ import openerp.tools
 from openerp import tools
 from openerp.tools.translate import _
 
+from dateutil.relativedelta import relativedelta
+
 from openerp.addons.decimal_precision import decimal_precision as dp
 
 _logger = logging.getLogger(__name__)
@@ -82,59 +84,29 @@ class account_analytic_invoice_line(osv.osv_memory):
 
     _order = 'name desc'
 
-    def init(self, cr):
-        tools.drop_view_if_exists(cr, 'account_analytic_invoice_line')
-        cr.execute("""
-        create or replace view account_analytic_invoice_line as (
-        
-        SELECT
-        l.id as id,
-        account.id as analytic_account_id,
-        account.write_date as write_date,
-        l.product_id as product_id,
-        l.name as name,
-        l.unit_amount as quantity,
-        l.product_uom_id as uos_id,
-        t.list_price as price_unit
-        FROM
-        account_analytic_line as l 
-        LEFT JOIN account_analytic_account account ON (l.account_id = account.id)
-        LEFT JOIN account_analytic_journal journal ON (l.journal_id = journal.id)
-        left join product_product p on (l.product_id=p.id)
-        left join product_template t on (p.product_tmpl_id=t.id)
-        WHERE (l.to_invoice IS NOT NULL) and (l.invoice_id IS NULL)
-UNION 
-    SELECT
-        sol.id as id,
-        account.id as analytic_account_id,
-        account.write_date as write_date,
-        sol.product_id as product_id,
-        sol.name as name,
-        sol.product_uom_qty as quantity,
-        sol.product_uom as uos_id,
-        sol.price_unit as price_unit
-        FROM
-        sale_order as so 
-        LEFT JOIN account_analytic_account account ON (so.project_id = account.id)
-    LEFT JOIN sale_order_line sol on (so.id = sol.order_id)
-        WHERE so.partner_id = account.partner_id
-UNION 
+    def _select(self):
+        select_str = """ SELECT l.id as id, account.id as analytic_account_id, account.write_date as write_date, l.product_id as product_id,
+                        l.name as name, l.unit_amount as quantity, l.product_uom_id as uos_id,t.list_price as price_unit"""
+        return select_str
 
-    SELECT
-        exp.id as id,
-        account.id as analytic_account_id,
-        account.write_date as write_date,
-        exp.product_id as product_id,
-        exp.name as name,
-        exp.unit_quantity as quantity,
-        exp.uom_id as uos_id,
-        exp.unit_amount as price_unit
-        FROM
-    hr_expense_line as exp
-        LEFT JOIN account_analytic_account account ON (exp.analytic_account = account.id)
-        
-        )
-         """)
+    def _from(self):
+        from_str = """
+                LEFT JOIN account_analytic_account account ON (l.account_id = account.id)
+                LEFT JOIN account_analytic_journal journal ON (l.journal_id = journal.id)
+                LEFT JOIN product_product p on (l.product_id=p.id)
+                LEFT JOIN product_template t on (p.product_tmpl_id=t.id)
+        """
+        return from_str
+    
+    def init(self, cr): 
+        # self._table = account_invoice_report
+        tools.drop_view_if_exists(cr, 'account_analytic_invoice_line')       
+        cr.execute("""CREATE or REPLACE VIEW account_analytic_invoice_line as (
+                      %s FROM account_analytic_line AS l %s WHERE (l.to_invoice IS NOT NULL) and (l.invoice_id IS NULL)
+                      
+        )""" % (
+        self._select(), self._from() ))
+
 account_analytic_invoice_line()
 
 class account_analytic_account(osv.osv):
@@ -745,27 +717,28 @@ class account_analytic_account(osv.osv):
 
         return True
 
-    def cron_create_invoice(self, cr, uid, context=None):
-#        res = []
-#        inv_obj = self.pool.get('account.invoice')
-#        journal_obj = self.pool.get('account.journal')
-#        inv_lines = []
-#        contract_ids = self.search(cr, uid, [('next_date','<=',time.strftime("%Y-%m-%d")), ('state','=', 'open'), ('recurring_invoices','=', True)], context=context, order='name asc')
-#        a = self.pool.get('hr.timesheet.invoice.create.final').do_create(cr, uid, contract_ids, context=None)
-#        contracts = self.browse(cr, uid, contract_ids, context=context)
-#        for contract in contracts:
-#            next_date = datetime.datetime.strptime(contract.next_date, "%Y-%m-%d")
-#            interval = contract.interval
-#
-#            if contract.rrule_type == 'monthly':
-#                new_date = next_date+relativedelta(months=+interval)
-#            if contract.rrule_type == 'daily':
-#                new_date = next_date+relativedelta(days=+interval)
-#            if contract.rrule_type == 'weekly':
-#                new_date = next_date+relativedelta(weeks=+interval)
-#
-#            # Link this new invoice to related contract
-#            contract.write({'next_date':new_date}, context=context)
+    def cron_create_invoice(self, cr, uid, ids, context=None):
+        res = []
+        inv_obj = self.pool.get('account.invoice')
+        journal_obj = self.pool.get('account.journal')
+        inv_lines = []
+        contract_ids = self.search(cr, uid, [('next_date','<=',time.strftime("%Y-%m-%d")), ('state','=', 'open'), ('recurring_invoices','=', True)], context=context, order='name asc')
+        context.update({'data':{},'active_ids': contract_ids})
+        a = self.pool.get('hr.timesheet.invoice.create.final').do_create(cr, uid, contract_ids, context=context)
+        contracts = self.browse(cr, uid, contract_ids, context=context)
+        for contract in contracts:
+            next_date = datetime.datetime.strptime(contract.next_date, "%Y-%m-%d")
+            interval = contract.interval
+
+            if contract.rrule_type == 'monthly':
+                new_date = next_date+relativedelta(months=+interval)
+            if contract.rrule_type == 'daily':
+                new_date = next_date+relativedelta(days=+interval)
+            if contract.rrule_type == 'weekly':
+                new_date = next_date+relativedelta(weeks=+interval)
+
+            # Link this new invoice to related contract
+            contract.write({'next_date':new_date}, context=context)
         return True
 
 class account_analytic_account_summary_user(osv.osv):

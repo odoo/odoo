@@ -183,6 +183,7 @@ class account_analytic_line(osv.osv):
             journal_types[line.journal_id.type].add(line.account_id.id)
         for journal_type, account_ids in journal_types.items():
             for account in analytic_account_obj.browse(cr, uid, list(account_ids), context=context):
+                print"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",account,account.partner_id,account.pricelist_id
                 partner = account.partner_id
                 if (not partner) or not (account.pricelist_id):
                     raise osv.except_osv(_('Analytic Account incomplete !'),
