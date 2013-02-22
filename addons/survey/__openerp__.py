@@ -38,7 +38,6 @@ user name and password for the invitation of the survey.
     'data': [
         'survey_report.xml',
         'survey_data.xml',
-        'wizard/survey_selection.xml',
         'wizard/survey_answer.xml',
         'security/survey_security.xml',
         'security/ir.model.access.csv',
@@ -48,6 +47,7 @@ user name and password for the invitation of the survey.
         'wizard/survey_browse_answer.xml',
         'wizard/survey_print.xml',
         'wizard/survey_email_compose_message.xml',
+        #'wizard/survey_selection.xml',
     ],
     'demo': ['survey_demo.xml'],
     'test': [

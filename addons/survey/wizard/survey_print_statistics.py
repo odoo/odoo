@@ -39,6 +39,7 @@ class survey_print_statistics(osv.osv_memory):
         res = res and res[0] or {}
         datas['form'] = res
         datas['model'] = 'survey.print.statistics'
+        print datas
         return {
             'type': 'ir.actions.report.xml',
             'report_name': 'survey.analysis',

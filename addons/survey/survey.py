@@ -173,6 +173,23 @@ class survey(osv.osv):
             }
         return report
 
+    def print_statistics(self, cr, uid, ids, context=None):
+        """
+        Print Survey Statistics in pdf format.
+        """
+        return {
+            'type': 'ir.actions.report.xml',
+            'report_name': 'survey.analysis',
+            'datas': {
+                'model': 'survey.print.statistics',
+                'ids': [],
+                'form': {
+                    'id': None,
+                    'survey_ids': ids
+                },
+            },
+        }
+
     def _check_valid(self, cr, uid, ids, context=None):
         sur_browse = self.browse(cr, uid, ids[0], context=context)
         if not sur_browse.page_ids:
@@ -182,14 +199,15 @@ class survey(osv.osv):
         self._check_valid(cr, uid, ids, context=context)
 
         id = ids[0]
-        context.update({'active': False, 'survey_id': id})
+        survey = self.browse(cr, uid, id, context=context)
+        context.update({'edit': False, 'survey_id': id, 'survey_token': survey.token})
         return {
             'view_type': 'form',
             'view_mode': 'form',
             'res_model': 'survey.question.wiz',
             'type': 'ir.actions.act_window',
             'target': 'inline',
-            'name': self.browse(cr, uid, id, context=context).title,
+            'name': survey.title,
             'context': context
         }
 
@@ -197,7 +215,6 @@ class survey(osv.osv):
         id = ids[0]
         context.update({
             'survey_id': id,
-            'active': True,
             'edit': True,
             'ir_actions_act_window_target': 'new',
         })
@@ -392,18 +409,18 @@ class survey_question(osv.osv):
     }
     _defaults = {
          'sequence': 1,
-         'type': 'multiple_choice_multiple_ans',
-         'req_error_msg': 'This question requires an answer.',
+         'type': lambda s, cr, uid, c: _('multiple_choice_multiple_ans'),
+         'req_error_msg': lambda s, cr, uid, c: _('This question requires an answer.'),
          'required_type': 'at least',
          'req_ans': 1,
          'comment_field_type': 'char',
-         'comment_label': 'Other (please specify)',
+         'comment_label': lambda s, cr, uid, c: _('Other (please specify)'),
          'comment_valid_type': 'do_not_validate',
-         'comment_valid_err_msg': 'The comment you entered is in an invalid format.',
+         'comment_valid_err_msg': lambda s, cr, uid, c: _('The comment you entered is in an invalid format.'),
          'validation_type': 'do_not_validate',
-         'validation_valid_err_msg': 'The comment you entered is in an invalid format.',
-         'numeric_required_sum_err_msg': 'The choices need to add up to [enter sum here].',
-         'make_comment_field_err_msg': 'Please enter a comment.',
+         'validation_valid_err_msg': lambda s, cr, uid, c: _('The comment you entered is in an invalid format.'),
+         'numeric_required_sum_err_msg': lambda s, cr, uid, c: _('The choices need to add up to [enter sum here].'),
+         'make_comment_field_err_msg': lambda s, cr, uid, c: _('Please enter a comment.'),
          'in_visible_answer_type': 1
     }
 

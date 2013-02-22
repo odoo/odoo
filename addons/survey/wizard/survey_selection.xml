@@ -5,7 +5,7 @@
             Display Survey List
          -->
 
-        <!--record id="view_survey_name" model="ir.ui.view">
+        <record id="view_survey_name" model="ir.ui.view">
             <field name="name">Survey</field>
             <field name="model">survey.name.wiz</field>
             <field name="arch" type="xml">
@@ -16,7 +16,7 @@
                         <button string="Cancel" class="oe_link" special="cancel" />
                     </header>
                     <group>
-                        <field name="survey_id" on_change="on_change_survey(survey_id)"/>
+                        <field name="survey_id"/>
                     </group>
                     <field name="note" placeholder="Add Description" attrs="{'readonly': [('survey_id','=',False)]}"/>
                 </form>
@@ -30,6 +30,11 @@
             <field name="view_type">form</field>
             <field name="view_mode">form</field>
             <field name="target">new</field>
-        </record-->
+        </record>
+
+        <menuitem name="Give Survey Answer" id="menu_survey_name_wiz"
+            action="action_view_survey_name" parent="menu_surveys_analyze"
+            groups="base.group_tool_manager"/>
+
     </data>
 </openerp>

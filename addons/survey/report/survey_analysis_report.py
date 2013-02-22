@@ -239,16 +239,16 @@ class survey_analysis(report_rml):
                         rml += """</blockTable>"""
 
                         if que.is_comment_require:
-#                            if que.make_comment_field:
-#                                cr.execute("select count(id) from survey_response_line where question_id = %s and comment != ''", (que.id,))
-#                                tot_res = cr.fetchone()[0]
-#                                tot_avg = 0.00
-#                                if que.tot_resp:
-#                                    tot_avg = round(float(tot_res * 100)/ que.tot_resp,2)
-#                                rml+="""<blockTable colWidths="280.0,120,100.0" style="Table1"><tr><td><para style="answer">""" +to_xml(tools.ustr(que.comment_label)) + """</para></td>
-#                                        <td><para style="answer">""" + str(tot_avg) + """%</para></td>
-#                                        <td><para style="answer">""" + tools.ustr(tot_res) + """</para></td></tr></blockTable>"""
-#                            else:
+                           # if que.make_comment_field:
+                           #     cr.execute("select count(id) from survey_response_line where question_id = %s and comment != ''", (que.id,))
+                           #     tot_res = cr.fetchone()[0]
+                           #     tot_avg = 0.00
+                           #     if que.tot_resp:
+                           #         tot_avg = round(float(tot_res * 100)/ que.tot_resp,2)
+                           #     rml+="""<blockTable colWidths="280.0,120,100.0" style="Table1"><tr><td><para style="answer">""" +to_xml(tools.ustr(que.comment_label)) + """</para></td>
+                           #             <td><para style="answer">""" + str(tot_avg) + """%</para></td>
+                           #             <td><para style="answer">""" + tools.ustr(tot_res) + """</para></td></tr></blockTable>"""
+                           # else:
                             cr.execute("select count(id) from survey_response_line where question_id = %s and comment != ''", (que.id,))
                             tot_res = cr.fetchone()[0]
                             rml += """<blockTable colWidths="450.0,50.0" style="Table1"><tr><td><para style="answer_right">""" + to_xml(tools.ustr(que.comment_label)) + """</para></td>
@@ -304,7 +304,7 @@ class survey_analysis(report_rml):
                                 cr.execute("select count(sra.answer_id),sqc.rating_weight from survey_response_line sr, survey_response_answer sra ,\
                                         survey_question_column_heading sqc where sr.id = sra.response_id and \
                                         sqc.question_id = sr.question_id  and sra.answer_id = %s and sqc.title ='%s'\
-+                                       group by sra.answer_id,sqc.rating_weight", (ans.id,matrix_ans[mat_col][1]))
+                                        group by sra.answer_id,sqc.rating_weight", (ans.id,matrix_ans[mat_col][1]))
                                 col_weight =  cr.fetchone()
 
                                 if not col_weight:

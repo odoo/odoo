@@ -6,7 +6,9 @@
 
         <menuitem name="Surveys" id="menu_surveys" parent="base.menu_tools" sequence="2" groups="base.group_tool_user,base.group_tool_manager,base.group_survey_user"/>
 
-        <menuitem name="Configuration" id="menu_surveys_configuration" parent="base.menu_tools" sequence="3" groups="base.group_tool_manager"/>
+        <menuitem name="Configuration" id="menu_surveys_configuration" parent="menu_surveys" sequence="3" groups="base.group_tool_manager"/>
+        
+        <menuitem name="Analysis" id="menu_surveys_analyze" parent="menu_surveys" sequence="4" groups="base.group_tool_manager"/>
         
         <menuitem name="Reporting" parent="base.menu_tools"
             id="base.menu_lunch_reporting" sequence="6"/>
@@ -227,9 +229,9 @@
                     <field name="tot_comp_survey" string="Completed"/>
                     <field name="state"/>
                     <button name="fill_survey" states="open"
-                        string="Answer Survey" type="object" icon="gtk-execute" context="{'survey_id': active_id}" attrs="{'invisible':[('state','!=','open')]}"/>
-                    <button name="action_print_survey" states="open,draft,close,cancel"
-                                    string="Print Answer" type="object" icon="gtk-print"/>
+                        string="Fill in survey" type="object" icon="gtk-execute" context="{'survey_id': active_id}" attrs="{'invisible':[('state','!=','open')]}"/>
+                    <button name="action_print_survey" string="Print Answer" type="object" icon="gtk-print"/>
+                    <button name="print_statistics" string="Print Statistics" states="open,close,cancel" type="object" icon="gtk-print"/>
                 </tree>
             </field>
         </record>
@@ -294,8 +296,8 @@
                                     <ul>
                                         <li t-if="widget.view.is_action_enabled('edit')"><a name="edit_survey" string="Edit Survey" type="object">Edit Survey</a></li>
                                         <li t-if="record.state.raw_value === 'open' and widget.view.is_action_enabled('edit')"><a name="action_survey_sent" type="object">Collect responses</a></li>
-                                        <li><a t-if="record.state.raw_value === 'open'" name="fill_survey" type="object">Answer Survey</a></li>
-                                        <li t-if="record.tot_comp_survey.raw_value and widget.view.is_action_enabled('edit')"><a>Analyze responses</a></li>
+                                        <li><a t-if="record.state.raw_value === 'open'" name="fill_survey" type="object">Fill in survey</a></li>
+                                        <li t-if="record.tot_comp_survey.raw_value and widget.view.is_action_enabled('edit')"><a name="print_statistics" type="object">Print Statistics</a></li>
                                     </ul>
                                 </div>
                             </div>
