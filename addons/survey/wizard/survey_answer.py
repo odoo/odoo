@@ -474,24 +474,6 @@ class survey_question_wiz(osv.osv_memory):
 
         return result
 
-    # def create_report(self, cr, uid, res_ids, report_name=False, file_name=False, context=None):
-    #     """
-    #     If any user give answer of survey then last create report of this answer and if 'E-mail Notification on Answer' set True in survey  then send mail on responsible person of this survey and attach survey answer report in pdf format.
-    #     """
-    #     if not report_name or not res_ids:
-    #         return (False, Exception('Report name and Resources ids are required !!!'))
-    #     try:
-    #         uid = 1
-    #         service = netsvc.LocalService(report_name)
-    #         (result, format) = service.create(cr, uid, res_ids, {}, context)
-    #         ret_file_name = addons.get_module_resource('survey', 'report') + file_name + '.pdf'
-    #         with open(ret_file_name, 'wb + ') as fp:
-    #             fp.write(result)
-
-    #     except Exception, e:
-    #         return (False, str(e))
-    #     return (True, ret_file_name)
-
     def default_get(self, cr, uid, fields_list, context=None):
         """
         Assign Default value in particular field. If Browse Answers wizard run then read the value into database and Assigne to a particular fields.
