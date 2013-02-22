@@ -427,8 +427,16 @@ class gamification_goal_plan(osv.Model):
                     if start_date:
                         domain.append(('start_date', '=', start_date.isoformat()))
                     
-                    # skip if goal already exist
+                    # goal existing for this planline ?
                     if len(goal_obj.search(cr, uid, domain, context=context)) > 0:
+
+                        # resume canceled goals
+                        domain.append(('state', '=', 'canceled'))
+                        canceled_goal_ids = goal_obj.search(cr, uid, domain, context=context)
+                        goal_obj.write(cr, uid, canceled_goal_ids, {'state': 'inprogress'}, context=context)
+                        goal_obj.update(cr, uid, canceled_goal_ids, context=context)
+                        
+                        # skip to next user
                         continue
 
                     values = {
@@ -456,7 +464,8 @@ class gamification_goal_plan(osv.Model):
                         values['remind_update_delay'] = planline.plan_id.remind_update_delay
 
                     new_goal_id = goal_obj.create(cr, uid, values, context)
-                    #self.update(cr, uid, [new_goal_id], context=context)
+                    
+                    goal_obj.update(cr, uid, [new_goal_id], context=context)
 
         return True
 
