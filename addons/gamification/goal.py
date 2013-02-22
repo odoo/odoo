@@ -232,65 +232,6 @@ class gamification_goal(osv.Model):
             self.write(cr, uid, [goal.id], towrite, context=context)
         return True
 
-    def create_goal_from_plan(self, cr, uid, ids, planline_id, user_id, start_date, context=None):
-        """If a goal for that planline and user is not already present, create it
-
-        :param planline_id: id of the planline linked to the goal
-        :param user_id: id of the user linked to the goal
-        :param start_date: first day of the plan, False for non-automatic plans
-            (where period is set to 'once')
-        If a goal matching these three parameters is already present, no goal is
-        created. In the case of manual plan (no start_date), the goal is always
-        created.
-        """
-
-        obj = self.pool.get('gamification.goal')
-        if start_date:
-            domain = [('planline_id', '=', planline_id),
-                ('user_id', '=', user_id),
-                ('start_date', '=', start_date.isoformat())]
-            goal_ids = obj.search(cr, uid, domain, context=context)
-            if len(goal_ids) > 0:
-                # already exist, skip
-                return True
-
-        planline = self.pool.get('gamification.goal.planline').browse(cr, uid, planline_id, context)
-        values = {
-            'type_id':planline.type_id.id,
-            'planline_id':planline_id,
-            'user_id':user_id,
-            'target_goal':planline.target_goal,
-            'state':'inprogress',
-        }
-
-        if start_date:
-            values['start_date'] = start_date.isoformat()
-        if planline.plan_id.period != 'once':
-            if planline.plan_id.period == 'daily':
-                values['end_date'] = start_date + timedelta(days=1)
-            elif planline.plan_id.period == 'weekly':
-                values['end_date'] = start_date + timedelta(days=7)
-            elif planline.plan_id.period == 'monthly':
-                month_range = calendar.monthrange(start_date.year, start_date.month)
-                values['end_date'] = start_date.replace(day=month_range[1])
-            elif planline.plan_id.period == 'yearly':
-                values['end_date'] = start_date.replace(month=12, day=31)
-        if planline.plan_id.remind_update_delay:
-            values['remind_update_delay'] = planline.plan_id.remind_update_delay
-        
-        new_goal_id = obj.create(cr, uid, values, context)
-        self.update(cr, uid, [new_goal_id], context=context)
-
-
-    def cancel_goals_from_plan(self, cr, uid, ids, planline_id, context=None):
-        """Apply action to goals after it's plan has been canceled
-
-        The status of every goal related to the planline is set to 'canceled
-        :param planline_id: the id of the planline whose plan has been canceled'"""
-
-        obj = self.pool.get('gamification.goal')
-        goal_ids = obj.search(cr, uid, [('planline_id', '=', planline_id)], context=context)
-        return self.write(cr, uid, goal_ids, {'state': 'canceled'}, context=context)
 
     def action_reach(self, cr, uid, ids, context=None):
         return self.write(cr, uid, ids, {'state': 'reached'}, context=context)
@@ -453,7 +394,9 @@ class gamification_goal_plan(osv.Model):
         for plan in self.browse(cr, uid, ids, context):
             for planline in plan.planline_ids:
                 goal_obj = self.pool.get('gamification.goal')
-                goal_obj.cancel_goals_from_plan(cr, uid, ids, planline.id, context=context)
+
+                goal_ids = goal_obj.search(cr, uid, [('planline_id', '=', planline.id)], context=context)
+                goal_obj.write(cr, uid, goal_ids, {'state': 'canceled'}, context=context)
 
         return True
 
@@ -476,8 +419,44 @@ class gamification_goal_plan(osv.Model):
 
             for planline in plan.planline_ids:
                 for user in plan.user_ids:
+                    #self.create_goal_from_plan(cr, uid, ids, planline.id, user.id, start_date, context=context)
+
                     goal_obj = self.pool.get('gamification.goal')
-                    goal_obj.create_goal_from_plan(cr, uid, ids, planline.id, user.id, start_date, context=context)
+                    domain = [('planline_id', '=', planline.id),
+                            ('user_id', '=', user.id)]
+                    if start_date:
+                        domain.append(('start_date', '=', start_date.isoformat()))
+                    
+                    # skip if goal already exist
+                    if len(goal_obj.search(cr, uid, domain, context=context)) > 0:
+                        continue
+
+                    values = {
+                        'type_id':planline.type_id.id,
+                        'planline_id':planline.id,
+                        'user_id':user.id,
+                        'target_goal':planline.target_goal,
+                        'state':'inprogress',
+                    }
+            
+                    if start_date:
+                        values['start_date'] = start_date.isoformat()
+
+                    if planline.plan_id.period == 'daily':
+                        values['end_date'] = start_date + timedelta(days=1)
+                    elif planline.plan_id.period == 'weekly':
+                        values['end_date'] = start_date + timedelta(days=7)
+                    elif planline.plan_id.period == 'monthly':
+                        month_range = calendar.monthrange(start_date.year, start_date.month)
+                        values['end_date'] = start_date.replace(day=month_range[1])
+                    elif planline.plan_id.period == 'yearly':
+                        values['end_date'] = start_date.replace(month=12, day=31)
+                    
+                    if planline.plan_id.remind_update_delay:
+                        values['remind_update_delay'] = planline.plan_id.remind_update_delay
+
+                    new_goal_id = goal_obj.create(cr, uid, values, context)
+                    #self.update(cr, uid, [new_goal_id], context=context)
 
         return True
 
