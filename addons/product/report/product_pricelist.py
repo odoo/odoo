@@ -126,6 +126,4 @@ class product_pricelist(report_sxw.rml_parse):
             price =  self.formatLang(res[0]['list_price'], digits=sale_price_digits, currency_obj=pricelist.currency_id)
         return price
 
-report_sxw.report_sxw('report.product.pricelist','product.product','addons/product/report/product_pricelist.rml',parser=product_pricelist)
-
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
