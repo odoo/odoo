@@ -90,7 +90,7 @@ def exp_report(db, uid, object, ids, datas=None, context=None):
     def go(id, uid, ids, datas, context):
         cr = openerp.pooler.get_db(db).cursor()
         try:
-            obj = openerp.netsvc.LocalService('report.'+object)
+            obj = openerp.netsvc.LocalService('report.'+object, cursor=cr)
             (result, format) = obj.create(cr, uid, ids, datas, context)
             if not result:
                 tb = sys.exc_info()

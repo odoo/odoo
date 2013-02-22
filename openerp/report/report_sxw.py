@@ -388,8 +388,8 @@ class rml_parse(object):
             self.setCompany(objects[0].company_id)
 
 class report_sxw(report_rml, preprocess.report):
-    def __init__(self, name, table, rml=False, parser=rml_parse, header='external', store=False):
-        report_rml.__init__(self, name, table, rml, '')
+    def __init__(self, name, table, rml=False, parser=rml_parse, header='external', store=False, register=True):
+        report_rml.__init__(self, name, table, rml, '', register=register)
         self.name = name
         self.parser = parser
         self.header = header

@@ -43,11 +43,17 @@ class report_int(object):
 
     _reports = {}
     
-    def __init__(self, name):
-        if not name.startswith('report.'):
-            raise Exception('ConceptionError, bad report name, should start with "report."')
-        assert name not in self._reports, 'The report "%s" already exists!' % name
-        self._reports[name] = self
+    def __init__(self, name, register=True):
+        if register:
+            print "*** Registering report `%s` but it should be registered trough data declaration instead. ***" % name
+            if not name.startswith('report.'):
+                raise Exception('ConceptionError, bad report name, should start with "report."')
+            assert name not in self._reports, 'The report "%s" already exists!' % name
+            self._reports[name] = self
+        else:
+            # The report is instanciated at each use site, which is ok.
+            pass
+
         self.__name = name
 
         self.name = name
@@ -65,8 +71,8 @@ class report_rml(report_int):
             XML -> DATAS -> RML -> PDF -> HTML
         using a XSL:RML transformation
     """
-    def __init__(self, name, table, tmpl, xsl):
-        super(report_rml, self).__init__(name)
+    def __init__(self, name, table, tmpl, xsl, register=True):
+        super(report_rml, self).__init__(name, register=register)
         self.table = table
         self.internal_header=False
         self.tmpl = tmpl

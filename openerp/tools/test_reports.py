@@ -50,7 +50,7 @@ def try_report(cr, uid, rname, ids, data=None, context=None, our_module=None):
     else:
         rname_s = rname
     _logger.log(netsvc.logging.TEST, "  - Trying %s.create(%r)", rname, ids)
-    res = netsvc.LocalService(rname).create(cr, uid, ids, data, context)
+    res = netsvc.LocalService(rname, cursor=cr).create(cr, uid, ids, data, context)
     if not isinstance(res, tuple):
         raise RuntimeError("Result of %s.create() should be a (data,format) tuple, now it is a %s" % \
                                 (rname, type(res)))

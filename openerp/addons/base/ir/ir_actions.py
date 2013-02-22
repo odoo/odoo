@@ -96,8 +96,11 @@ class report_xml(osv.osv):
         result = cr.dictfetchall()
         reports = openerp.report.interface.report_int._reports
         for r in result:
+            print ">>> Registering:", r['report_name'], "...",
             if reports.has_key('report.'+r['report_name']):
+                print " Already present."
                 continue
+            print " Done."
             if r['report_rml'] or r['report_rml_content_data']:
                 report_sxw('report.'+r['report_name'], r['model'],
                         opj('addons',r['report_rml'] or '/'), header=r['header'])
@@ -140,6 +143,7 @@ class report_xml(osv.osv):
         'report_sxw_content': fields.function(_report_content, fnct_inv=_report_content_inv, type='binary', string='SXW Content',),
         'report_rml_content': fields.function(_report_content, fnct_inv=_report_content_inv, type='binary', string='RML Content'),
 
+        'parser': fields.char('Parser Class'),
     }
     _defaults = {
         'type': 'ir.actions.report.xml',

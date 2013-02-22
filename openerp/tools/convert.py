@@ -302,6 +302,8 @@ form: module.record_id""" % (xml_id,)
             res['header'] = eval(rec.get('header','False'))
         if rec.get('report_type'):
             res['report_type'] = rec.get('report_type')
+        if rec.get('parser'):
+            res['parser'] = rec.get('parser')
 
         res['multi'] = rec.get('multi') and eval(rec.get('multi','False'))
 
