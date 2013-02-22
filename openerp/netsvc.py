@@ -46,10 +46,14 @@ import openerp
 
 _logger = logging.getLogger(__name__)
 
-# TODO LocalService is deprecated.
-def LocalService(name, cursor=None):
-    assert name == 'workflow'
-    return openerp.workflow
+def LocalService(name):
+    _logger.warning("LocalService() is deprecated.")
+
+    if name == 'workflow':
+        return openerp.workflow
+
+    if name.startswith('report.'):
+        return openerp.report.interface.report_int._reports[name]
 
 BLACK, RED, GREEN, YELLOW, BLUE, MAGENTA, CYAN, WHITE, _NOTHING, DEFAULT = range(10)
 #The background is set with 40 plus the number of the color, and the foreground with 30
