@@ -23,7 +23,7 @@
 import base64
 import logging
 
-from openerp import netsvc
+import openerp
 from openerp.osv import osv, fields
 from openerp.osv import fields
 from openerp import tools
@@ -331,16 +331,15 @@ class email_template(osv.osv):
         # Add report in attachments
         if template.report_template:
             report_name = self.render_template(cr, uid, template.report_name, template.model, res_id, context=context)
-            report_service = 'report.' + report_xml_pool.browse(cr, uid, template.report_template.id, context).report_name
+            report_service = report_xml_pool.browse(cr, uid, template.report_template.id, context).report_name
             # Ensure report is rendered using template's language
             ctx = context.copy()
             if template.lang:
                 ctx['lang'] = self.render_template(cr, uid, template.lang, template.model, res_id, context)
-            service = netsvc.LocalService(report_service)
-            (result, format) = service.create(cr, uid, [res_id], {'model': template.model}, ctx)
+            result, format = openerp.report.render_report(cr, uid, [res_id], report_service, {'model': template.model}, ctx)
             result = base64.b64encode(result)
             if not report_name:
-                report_name = report_service
+                report_name = 'report.' + report_service
             ext = "." + format
             if not report_name.endswith(ext):
                 report_name += ext
