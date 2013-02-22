@@ -42,7 +42,7 @@ class survey_browse_answer(osv.osv_memory):
         else:
             sur_response_obj = self.pool.get('survey.response')
             res_id = sur_response_obj.search(cr, uid, [('survey_id', '=', record['survey_id'][0])])
-        context.update({'active' : True,'survey_id' : record['survey_id'][0], 'response_id' : res_id, 'response_no' : 0})
+        context.update({'active': True, 'survey_id': record['survey_id'][0], 'response_id': res_id, 'response_no' : 0, 'readonly': True})
         search_obj = self.pool.get('ir.ui.view')
         search_id = search_obj.search(cr,uid,[('model','=','survey.question.wiz'),('name','=','Survey Search')])
         return {
@@ -52,7 +52,7 @@ class survey_browse_answer(osv.osv_memory):
             'type': 'ir.actions.act_window',
             'target': 'new',
             'search_view_id':search_id[0],
-            'context' : context
+            'context': context
          }
 
 survey_browse_answer()

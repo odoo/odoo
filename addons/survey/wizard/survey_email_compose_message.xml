@@ -40,9 +40,9 @@
                         </div>
                     </group>
                     <group>
-                        <field string="List of partners" name="partner_ids" widget="many2many_tags_email" placeholder="Add contacts to notify..." context="{'force_email':True, 'show_email':True}"/>
+                        <field string="List of partners" readonly="1" name="partner_ids" widget="many2many_tags_email" placeholder="Add contacts to notify..." context="{'force_email':True, 'show_email':True}"/>
                         <field name="multi_email"/>
-                        <field name="subject" placeholder="Subject..."/>
+                        <field name="subject" readonly="1" placeholder="Subject..."/>
                     </group>
                     <field name="body"/>
                     <field name="attachment_ids" widget="many2many_binary"/>
