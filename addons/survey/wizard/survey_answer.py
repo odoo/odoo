@@ -205,7 +205,7 @@ class survey_question_wiz(osv.osv_memory):
 
     def _check_access(self, cr, uid, survey_id, context):
         # get if the token of the partner or anonymous user is valid
-        res = {'partner_id': False, 'response_id': False, 'state': None, 'error_message': None}
+        res = {'partner_id': False, 'response_id': False, 'state': None}
 
         if not survey_id:
             raise osv.except_osv(_('Warning!'), _("You do not have access to this survey."))
@@ -232,11 +232,12 @@ class survey_question_wiz(osv.osv_memory):
             raise osv.except_osv(_('Warning!'), _("Please sign in to complete this survey."))
 
         # get opening response
+        response_ids = None
         sur_response_obj = self.pool.get('survey.response')
         dom = [('survey_id', '=', survey_id), ('state', 'in', ['new', 'skip']), "|", ('date_deadline', '=', None), ('date_deadline', '>', datetime.now())]
         if context.get("survey_token"):
             response_ids = sur_response_obj.search(cr, uid, dom + [("token", "=", context.get("survey_token", None))], context=context, limit=1, order="id DESC")
-        elif not anonymous:
+        if not response_ids and not anonymous:
             response_ids = sur_response_obj.search(cr, uid, dom + [('partner_id', '=', pid)], context=context, limit=1, order="date_deadline DESC")
 
         # user have a specific token or a specific partner access (for state open or restricted)
@@ -352,121 +353,110 @@ class survey_question_wiz(osv.osv_memory):
                 check_token = self._check_access(cr, uid, survey_id, context)
 
                 # have acces to this survey
-                if not check_token['error_message']:
-                    active = context.get('edit', False)
+                edit_mode = context.get('edit', False)
 
-                    if sur_name_read.page == "next" or sur_name_rec.page_no == -1:
-                        if total_pages > sur_name_rec.page_no + 1:
-                            if survey_browse.max_response_limit and survey_browse.max_response_limit <= survey_browse.tot_start_survey and not sur_name_rec.page_no + 1:
-                                survey_obj.write(cr, uid, survey_id, {'state': 'close', 'date_close': datetime.now()})
+                if sur_name_read.page == "next" or sur_name_rec.page_no == -1:
+                    if total_pages > sur_name_rec.page_no + 1:
+                        if survey_browse.max_response_limit and survey_browse.max_response_limit <= survey_browse.tot_start_survey and not sur_name_rec.page_no + 1:
+                            survey_obj.write(cr, uid, survey_id, {'state': 'close', 'date_close': datetime.now()})
 
-                            p_id = p_id[sur_name_rec.page_no + 1]
-                            surv_name_wiz.write(cr, uid, [context['sur_name_id'], ], {'page_no': sur_name_rec.page_no + 1})
-                            flag = True
-                            page_number += 1
-                        if sur_name_rec.page_no > - 1:
-                            pre_button = True
-                        else:
-                            flag = True
+                        p_id = p_id[sur_name_rec.page_no + 1]
+                        surv_name_wiz.write(cr, uid, [context['sur_name_id'], ], {'page_no': sur_name_rec.page_no + 1})
+                        flag = True
+                        page_number += 1
+                    if sur_name_rec.page_no > - 1:
+                        pre_button = True
                     else:
-                        if sur_name_rec.page_no != 0:
-                            p_id = p_id[sur_name_rec.page_no - 1]
-                            surv_name_wiz.write(cr, uid, [context['sur_name_id'], ], \
-                                                 {'page_no': sur_name_rec.page_no - 1})
-                            flag = True
-                            page_number -= 1
-
-                        if sur_name_rec.page_no > 1:
-                            pre_button = True
-
-                    # survey in progress
-                    if flag:
-                        pag_rec = page_obj.browse(cr, uid, p_id, context=context)
-                        xml_form = etree.Element('form', {'version': "7.0", 'string': tools.ustr(pag_rec and pag_rec.title or survey_browse.title)})
-                        xml_form = etree.SubElement(xml_form, 'sheet')
-
-                        if active and context.get('edit'):
-                            context.update({'page_id': tools.ustr(p_id), 'page_number': sur_name_rec.page_no, 'transfer': sur_name_read.transfer})
-                            xml_group3 = etree.SubElement(xml_form, 'group', {'col': '4', 'colspan': '4'})
-                            etree.SubElement(xml_group3, 'button', {'string': 'Add Page', 'icon': "gtk-new", 'type': 'object', 'name': "action_new_page", 'context': tools.ustr(context)})
-                            etree.SubElement(xml_group3, 'button', {'string': 'Edit Page', 'icon': "gtk-edit", 'type': 'object', 'name': "action_edit_page", 'context': tools.ustr(context)})
-                            etree.SubElement(xml_group3, 'button', {'string': 'Delete Page', 'icon': "gtk-delete", 'type': 'object', 'name': "action_delete_page", 'context': tools.ustr(context)})
-                            etree.SubElement(xml_group3, 'button', {'string': 'Add Question', 'icon': "gtk-new", 'type': 'object', 'name': "action_new_question", 'context': tools.ustr(context)})
-
-                        # FP Note
-                        xml_group = xml_form
-
-                        if wiz_id:
-                            fields["wizardid_" + str(wiz_id)] = {'type': 'char', 'size': 255, 'string': "", 'views': {}}
-                            etree.SubElement(xml_form, 'field', {'invisible': '1', 'name': "wizardid_" + str(wiz_id), 'default': str(lambda *a: 0), 'modifiers': '{"invisible": true}'})
-
-                        if pag_rec and pag_rec.note:
-                            xml_group_note = etree.SubElement(xml_form, 'group', {'col': '1', 'colspan': '4'})
-                            for que_test in pag_rec.note.split('\n'):
-                                etree.SubElement(xml_group_note, 'label', {'string': to_xml(tools.ustr(que_test)), 'align': "0.0"})
-
-                        qu_no = 0
-                        for que in (pag_rec and pag_rec.question_ids or []):
-                            qu_no += 1
-                            que_rec = que_obj.browse(cr, uid, que.id, context=context)
-                            separator_string = tools.ustr(qu_no) + "." + tools.ustr(que_rec.question)
-                            star = (not active and que_rec.is_require_answer) and '*' or ''
-                            if active and context.get('edit'):
-                                etree.SubElement(xml_form, 'separator', {'string': star + to_xml(separator_string)})
-
-                                xml_group1 = etree.SubElement(xml_form, 'group', {'col': '2', 'colspan': '2'})
-                                context.update({'question_id': tools.ustr(que.id), 'page_number': sur_name_rec.page_no, 'transfer': sur_name_read.transfer, 'page_id': p_id})
-                                etree.SubElement(xml_group1, 'button', {'string': '', 'icon': "gtk-edit", 'type': 'object', 'name': "action_edit_question", 'context': tools.ustr(context)})
-                                etree.SubElement(xml_group1, 'button', {'string': '', 'icon': "gtk-delete", 'type': 'object', 'name': "action_delete_question", 'context': tools.ustr(context)})
-                            else:
-                                etree.SubElement(xml_form, 'newline')
-                                etree.SubElement(xml_form, 'separator', {'string': star + to_xml(separator_string)})
-
-                            xml_group = etree.SubElement(xml_form, 'group', {'col': '1', 'colspan': '4'})
-
-                            # rendering different views
-                            getattr(self, "_view_field_%s" % que_rec.type)(cr, uid, xml_group, fields, readonly, que, que_rec, context=context)
-                            if que_rec.type in ['multiple_choice_only_one_ans', 'multiple_choice_multiple_ans', 'matrix_of_choices_only_one_ans', 'matrix_of_choices_only_multi_ans', 'rating_scale'] and que_rec.is_comment_require:
-                                self._view_field_postprocessing(cr, uid, xml_group, fields, readonly, que, que_rec, context=context)
-
-                        xml_footer = etree.SubElement(xml_form, 'footer', {'col': '8', 'colspan': '1', 'width': "100%"})
-
-                        if pre_button:
-                            etree.SubElement(xml_footer, 'label', {'string': ""})
-                            etree.SubElement(xml_footer, 'button', {'name': "action_previous", 'string': "Previous", 'type': "object"})
-                        but_string = "Next"
-                        if int(page_number) + 1 == total_pages:
-                            but_string = "Done"
-                        if active and int(page_number) + 1 == total_pages:
-                            etree.SubElement(xml_footer, 'label', {'string': ""})
-                            etree.SubElement(xml_footer, 'button', {'special': "cancel", 'string': 'Done', 'context': tools.ustr(context), 'class': "oe_highlight"})
-                        else:
-                            etree.SubElement(xml_footer, 'label', {'string': ""})
-                            etree.SubElement(xml_footer, 'button', {'name': "action_next", 'string': tools.ustr(but_string), 'type': "object", 'context': tools.ustr(context), 'class': "oe_highlight"})
-                        if context.get('ir_actions_act_window_target', None) != 'inline':
-                            etree.SubElement(xml_footer, 'label', {'string': "or"})
-                            etree.SubElement(xml_footer, 'button', {'special': "cancel", 'string': "Exit", 'class': "oe_link"})
-                        etree.SubElement(xml_footer, 'label', {'string': tools.ustr(page_number + 1) + "/" + tools.ustr(total_pages), 'class': "oe_survey_title_page oe_right"})
-
-                        root = xml_form.getroottree()
-                        result['arch'] = etree.tostring(root)
-                        result['fields'] = fields
-                        result['context'] = context
-
-                    # survey complete
-                    else:
-                        self._survey_complete(cr, uid, survey_id, check_token['partner_id'], sur_name_read, survey_browse, context)
-                        self._view_survey_complete(result, context)
-
-                # don't have acces to this survey
+                        flag = True
                 else:
-                    xml_form = etree.Element('form', {'string': _('No access to this survey')})
-                    etree.SubElement(xml_form, 'separator', {'string': survey_browse.title, 'colspan': "4"})
-                    etree.SubElement(xml_form, 'label', {'string': check_token['error_message']})
+                    if sur_name_rec.page_no != 0:
+                        p_id = p_id[sur_name_rec.page_no - 1]
+                        surv_name_wiz.write(cr, uid, [context['sur_name_id'], ], \
+                                             {'page_no': sur_name_rec.page_no - 1})
+                        flag = True
+                        page_number -= 1
+
+                    if sur_name_rec.page_no > 1:
+                        pre_button = True
+
+                # survey in progress
+                if flag:
+                    pag_rec = page_obj.browse(cr, uid, p_id, context=context)
+                    xml_form = etree.Element('form', {'version': "7.0", 'string': tools.ustr(pag_rec and pag_rec.title or survey_browse.title)})
+                    xml_form = etree.SubElement(xml_form, 'sheet')
+
+                    if edit_mode:
+                        context.update({'page_id': tools.ustr(p_id), 'page_number': sur_name_rec.page_no, 'transfer': sur_name_read.transfer})
+                        xml_group3 = etree.SubElement(xml_form, 'group', {'col': '4', 'colspan': '4'})
+                        etree.SubElement(xml_group3, 'button', {'string': 'Add Page', 'icon': "gtk-new", 'type': 'object', 'name': "action_new_page", 'context': tools.ustr(context)})
+                        etree.SubElement(xml_group3, 'button', {'string': 'Edit Page', 'icon': "gtk-edit", 'type': 'object', 'name': "action_edit_page", 'context': tools.ustr(context)})
+                        etree.SubElement(xml_group3, 'button', {'string': 'Delete Page', 'icon': "gtk-delete", 'type': 'object', 'name': "action_delete_page", 'context': tools.ustr(context)})
+                        etree.SubElement(xml_group3, 'button', {'string': 'Add Question', 'icon': "gtk-new", 'type': 'object', 'name': "action_new_question", 'context': tools.ustr(context)})
+
+                    # FP Note
+                    xml_group = xml_form
+
+                    if wiz_id:
+                        fields["wizardid_" + str(wiz_id)] = {'type': 'char', 'size': 255, 'string': "", 'views': {}}
+                        etree.SubElement(xml_form, 'field', {'invisible': '1', 'name': "wizardid_" + str(wiz_id), 'default': str(lambda *a: 0), 'modifiers': '{"invisible": true}'})
+
+                    if pag_rec and pag_rec.note:
+                        xml_group_note = etree.SubElement(xml_form, 'group', {'col': '1', 'colspan': '4'})
+                        for que_test in pag_rec.note.split('\n'):
+                            etree.SubElement(xml_group_note, 'label', {'string': to_xml(tools.ustr(que_test)), 'align': "0.0"})
+
+                    qu_no = 0
+                    for que in (pag_rec and pag_rec.question_ids or []):
+                        qu_no += 1
+                        que_rec = que_obj.browse(cr, uid, que.id, context=context)
+                        separator_string = tools.ustr(qu_no) + "." + tools.ustr(que_rec.question)
+                        star = (not edit_mode and que_rec.is_require_answer) and '*' or ''
+                        if edit_mode:
+                            etree.SubElement(xml_form, 'separator', {'string': star + to_xml(separator_string)})
+
+                            xml_group1 = etree.SubElement(xml_form, 'group', {'col': '2', 'colspan': '2'})
+                            context.update({'question_id': tools.ustr(que.id), 'page_number': sur_name_rec.page_no, 'transfer': sur_name_read.transfer, 'page_id': p_id})
+                            etree.SubElement(xml_group1, 'button', {'string': '', 'icon': "gtk-edit", 'type': 'object', 'name': "action_edit_question", 'context': tools.ustr(context)})
+                            etree.SubElement(xml_group1, 'button', {'string': '', 'icon': "gtk-delete", 'type': 'object', 'name': "action_delete_question", 'context': tools.ustr(context)})
+                        else:
+                            etree.SubElement(xml_form, 'newline')
+                            etree.SubElement(xml_form, 'separator', {'string': star + to_xml(separator_string)})
+
+                        xml_group = etree.SubElement(xml_form, 'group', {'col': '1', 'colspan': '4'})
+
+                        # rendering different views
+                        getattr(self, "_view_field_%s" % que_rec.type)(cr, uid, xml_group, fields, readonly, que, que_rec, context=context)
+                        if que_rec.type in ['multiple_choice_only_one_ans', 'multiple_choice_multiple_ans', 'matrix_of_choices_only_one_ans', 'matrix_of_choices_only_multi_ans', 'rating_scale'] and que_rec.is_comment_require:
+                            self._view_field_postprocessing(cr, uid, xml_group, fields, readonly, que, que_rec, context=context)
+
+                    xml_footer = etree.SubElement(xml_form, 'footer', {'col': '8', 'colspan': '1', 'width': "100%"})
+
+                    if pre_button:
+                        etree.SubElement(xml_footer, 'label', {'string': ""})
+                        etree.SubElement(xml_footer, 'button', {'name': "action_previous", 'string': "Previous", 'type': "object"})
+                    but_string = "Next"
+                    if int(page_number) + 1 == total_pages:
+                        but_string = "Done"
+                    if edit_mode and int(page_number) + 1 == total_pages:
+                        etree.SubElement(xml_footer, 'label', {'string': ""})
+                        etree.SubElement(xml_footer, 'button', {'special': "cancel", 'string': 'Done', 'context': tools.ustr(context), 'class': "oe_highlight"})
+                    else:
+                        etree.SubElement(xml_footer, 'label', {'string': ""})
+                        etree.SubElement(xml_footer, 'button', {'name': "action_next", 'string': tools.ustr(but_string), 'type': "object", 'context': tools.ustr(context), 'class': "oe_highlight"})
+                    if context.get('ir_actions_act_window_target') == 'edit':
+                        etree.SubElement(xml_footer, 'label', {'string': "or"})
+                        etree.SubElement(xml_footer, 'button', {'special': "cancel", 'string': "Exit", 'class': "oe_link"})
+                    etree.SubElement(xml_footer, 'label', {'string': tools.ustr(page_number + 1) + "/" + tools.ustr(total_pages), 'class': "oe_survey_title_page oe_right"})
+
                     root = xml_form.getroottree()
                     result['arch'] = etree.tostring(root)
-                    result['fields'] = {}
+                    result['fields'] = fields
                     result['context'] = context
+
+                # survey complete
+                else:
+                    self._survey_complete(cr, uid, survey_id, check_token['partner_id'], sur_name_read, survey_browse, context)
+                    self._view_survey_complete(result, context)
 
         return result
 
@@ -576,8 +566,6 @@ class survey_question_wiz(osv.osv_memory):
         context = context or {}
 
         check_token = self._check_access(cr, uid, context['survey_id'], context)
-        if check_token['error_message']:
-            return False
 
         survey_question_wiz_id = super(survey_question_wiz, self).create(cr, uid, {'name': vals.get('name')}, context=context)
         if context.get('edit', False):
