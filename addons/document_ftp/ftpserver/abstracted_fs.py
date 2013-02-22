@@ -9,7 +9,7 @@ import errno
 import glob
 import fnmatch
 
-from openerp import pooler, netsvc, sql_db
+from openerp import pooler, sql_db
 import openerp.service
 from openerp.service import security
 from openerp.osv import osv

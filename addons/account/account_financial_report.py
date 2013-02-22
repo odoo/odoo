@@ -24,7 +24,6 @@ from datetime import datetime
 from dateutil.relativedelta import relativedelta
 from operator import itemgetter
 
-from openerp import netsvc
 from openerp import pooler
 from openerp.osv import fields, osv
 import openerp.addons.decimal_precision as dp

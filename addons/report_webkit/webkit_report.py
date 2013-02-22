@@ -42,7 +42,6 @@ from mako.template import Template
 from mako.lookup import TemplateLookup
 from mako import exceptions
 
-from openerp import netsvc
 from openerp import pooler
 from report_helper import WebKitHelper
 from openerp.report.report_sxw import *

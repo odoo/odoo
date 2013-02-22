@@ -21,7 +21,6 @@
 import time
 
 from openerp.osv import fields, osv
-from openerp import netsvc
 from openerp import pooler
 from openerp.osv.orm import browse_record, browse_null
 from openerp.tools.translate import _

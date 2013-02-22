@@ -21,7 +21,6 @@
 
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
-from openerp import netsvc
 from openerp import pooler
 from openerp.osv import osv
 from openerp.osv import fields

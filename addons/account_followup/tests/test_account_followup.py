@@ -5,8 +5,6 @@ import datetime
 from openerp import tools
 from openerp.tests.common import TransactionCase
 
-from openerp import netsvc
-
 class TestAccountFollowup(TransactionCase):
     def setUp(self):
         """ setUp ***"""
