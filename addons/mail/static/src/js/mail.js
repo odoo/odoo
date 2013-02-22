@@ -1944,7 +1944,7 @@ openerp.mail = function (session) {
                 };
                 session.client.action_manager.do_action(action);
             });
-            this.$(".oe_write_onwall").click(function(){ self.root.thread.on_compose_message(); });
+            this.$(".oe_write_onwall").click(function (event) { self.root.thread.on_compose_message(event); });
         }
     });
 
