@@ -21,12 +21,9 @@
 ##############################################################################
 
 
-import errno
 import logging
 import logging.handlers
-import operator
 import os
-import platform
 import release
 import sys
 import threading
