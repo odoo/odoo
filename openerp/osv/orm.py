@@ -1585,7 +1585,7 @@ class BaseModel(object):
 
     def user_has_groups(self, cr, uid, groups, context=None):
         """Return true if the user is at least member of one of the groups
-           in groups_str. Typically used to resolve ``groups`` attribute
+           in groups_str. Typically used to resolve `groups` attribute
            in view and model definitions.
 
            :param str groups: comma-separated list of fully-qualified group
@@ -1912,8 +1912,8 @@ class BaseModel(object):
         :rtype: etree._Element
         """
         def set_first_of(seq, in_, to):
-            """Sets the first value of ``seq`` also found in ``in_`` to
-            the ``to`` attribute of the view being closed over.
+            """Sets the first value of `seq` also found in `in_` to
+            the `to` attribute of the view being closed over.
 
             Returns whether it's found a suitable value (and set it on
             the attribute) or not
@@ -5174,9 +5174,9 @@ class BaseModel(object):
 
     def _patch_method(self, name, method):
         """ Monkey-patch a method for all instances of this model. This replaces
-            the method called ``name`` by ``method`` in ``self``'s class.
+            the method called `name` by `method` in `self`'s class.
             The original method is then accessible via ``method.origin``, and it
-            can be restored with ``_revert_method``.
+            can be restored with :meth:`~._revert_method`.
 
             Example::
 
@@ -5202,8 +5202,8 @@ class BaseModel(object):
         setattr(self.__class__, name, method)
 
     def _revert_method(self, name):
-        """ Revert the original method of ``self`` called ``name``.
-            See ``_patch_method``.
+        """ Revert the original method of `self` called `name`.
+            See :meth:`~._patch_method`.
         """
         method = getattr(self.__class__, name)
         setattr(self.__class__, name, method.origin)
@@ -5217,8 +5217,8 @@ class BaseModel(object):
     ]
 
     def with_session(self, user=None, context=None, **kwargs):
-        """ return an instance similar to self (record or recordset, with session
-            data) with modified session data
+        """ return an instance similar to `self` (record or recordset, with
+            session data) with modified session data
 
             :param user: user (id or record) to use (if not ``None``)
             :param context: context dictionary to use (if not ``None``)
@@ -5260,8 +5260,8 @@ class BaseModel(object):
             :param id: the record's id
             :param cache: a dictionary used as ``cache[model_name][id][field_name]``,
                 storing record data shared across records, thus reducing the SQL
-                read()s.  It can speed up things a lot, but also be disastrous if
-                not discarded after write()/unlink() operations.
+                reads.  It can speed up things a lot, but also be disastrous if
+                not discarded after update/delete operations.
 
             :param fields_process: optional dictionary indexed by field type, giving
                 processing functions for field values.  The api is best explained by
@@ -5283,11 +5283,11 @@ class BaseModel(object):
                             _record_cache=cache, _record_process=fields_process)
 
     def is_record(self):
-        """ test whether self is a record instance """
+        """ test whether `self` is a record instance """
         return bool(getattr(self, '_record_id', None))
 
     def is_record_or_null(self):
-        """ test whether self is a record or null instance """
+        """ test whether `self` is a record or null instance """
         return hasattr(self, '_record_id')
 
     @api.model
@@ -5296,7 +5296,7 @@ class BaseModel(object):
         return self._make_instance(session=self.session, _records=list(records))
 
     def is_recordset(self):
-        """ test whether self is a recordset instance """
+        """ test whether `self` is a recordset instance """
         return hasattr(self, '_records')
 
     @api.model
@@ -5307,7 +5307,7 @@ class BaseModel(object):
 
     @property
     def record(self):
-        """ check that ``self`` is a recordset that contains exactly one record,
+        """ check that `self` is a recordset that contains exactly one record,
             and return that record
         """
         assert self.is_recordset(), "Expected recordset: %s" % self
@@ -5316,9 +5316,9 @@ class BaseModel(object):
 
     @property
     def recordset(self):
-        """ Return a recordset corresponding to ``self``: a singleton for a
-            record instance, itself for a recordset instance, an empty one for a
-            null instance, and all records for a model instance.
+        """ Return a recordset corresponding to `self`: a singleton for a record
+            instance, itself for a recordset instance, an empty one for a null
+            instance, and all records for a model instance.
         """
         if self.is_null():
             return self._make_recordset([])
@@ -5329,24 +5329,24 @@ class BaseModel(object):
         return self.query([])
 
     def __nonzero__(self):
-        """ Test whether ``self`` is nonempty and not null. """
+        """ Test whether `self` is nonempty and not null. """
         if self.is_recordset():
             return bool(self._records)
         return not self.is_null()
 
     def __iter__(self):
-        """ Return an iterator over ``self`` (must be a recordset). """
+        """ Return an iterator over `self` (must be a recordset). """
         assert self.is_recordset(), "Expected recordset: %s" % self
         return iter(self._records)
 
     def __len__(self):
-        """ Return the size of ``self`` (must be a recordset). """
+        """ Return the size of `self` (must be a recordset). """
         assert self.is_recordset(), "Expected recordset: %s" % self
         return len(self._records)
 
     def __contains__(self, item):
-        """ If ``self`` is a record, test whether ``item`` is a field name.
-            If ``self`` is a recordset, test whether ``item`` is a record in ``self``.
+        """ If `self` is a record, test whether `item` is a field name.
+            If `self` is a recordset, test whether `item` is a record in `self`.
         """
         if self.is_record_or_null():
             return item == 'id' or item in self._all_columns
@@ -5382,7 +5382,7 @@ class BaseModel(object):
         return not self == other
 
     def _get_record_field(self, name):
-        """ read the field ``name`` on a record instance """
+        """ read the field `name` on a record instance """
         assert self.is_record_or_null(), "Expected record instance: %s" % self
         if name == 'id':
             return self._record_id
@@ -5449,9 +5449,9 @@ class BaseModel(object):
         return model_cache[self._record_id][name]
 
     def __getitem__(self, key):
-        """ If ``self`` is a record, return the value of the field named ``key``.
-            If ``self`` is a recordset, return a record or a recordset from
-            ``self``, depending on whether ``key`` is an integer or a slice.
+        """ If `self` is a record, return the value of the field named `key`.
+            If `self` is a recordset, return a record or a recordset from
+            `self`, depending on whether `key` is an integer or a slice.
 
             Examples::
 
@@ -5515,7 +5515,7 @@ class BaseModel(object):
             return hash(self._name)
 
     def refresh(self):
-        """ Clear the records cache used by ``self`` by emptying the cache completely,
+        """ Clear the records cache used by `self` by emptying the cache completely,
             preserving only the record identifiers (for prefetching optimizations).
         """
         assert self.is_record_or_null() or self.is_recordset(), \
@@ -5533,7 +5533,7 @@ class BaseModel(object):
 
 # for instance checking
 class Null(object):
-    """ Pseudo-class for null instances:
+    """ Pseudo-class for testing null instances:
         ``isinstance(x, Null)`` returns ``True`` if ``x`` is null.
     """
     class __metaclass__(type):
@@ -5541,7 +5541,7 @@ class Null(object):
             return isinstance(inst, BaseModel) and inst.is_null()
 
 class Record(object):
-    """ Pseudo-class for record instances:
+    """ Pseudo-class for testing record instances:
         ``isinstance(x, Record)`` returns ``True`` if ``x`` is a record.
     """
     class __metaclass__(type):
@@ -5549,7 +5549,7 @@ class Record(object):
             return isinstance(inst, BaseModel) and inst.is_record()
 
 class Recordset(object):
-    """ Pseudo-class for recordset instances:
+    """ Pseudo-class for testing recordset instances:
         ``isinstance(x, Recordset)`` returns ``True`` if ``x`` is a recordset.
     """
     class __metaclass__(type):

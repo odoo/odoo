@@ -45,8 +45,10 @@
     following some heuristics based on parameter names.
 
 
-    Record-Map Methods
-    ------------------
+    .. _record-map-convention:
+
+    Record-map convention
+    ---------------------
 
     The decorators also provides support for "record-map" methods, i.e., methods
     with a specific calling convention: when called on a recordset, they return
@@ -92,12 +94,12 @@ def _wrapper(method, old_api, new_api):
 
 
 def _split_context_args(nargs, args, kwargs):
-    """ extract the context argument out of ``args`` and ``kwargs``
-        :param nargs: expected number of arguments in ``args``
+    """ extract the context argument out of `args` and `kwargs`
+        :param nargs: expected number of arguments in `args`
         :param args: arguments (tuple)
         :param kwargs: named arguments (dictionary)
-        :return: tuple ``(context, args, kwargs)``
-                where both ``args`` and ``kwargs`` are free of context argument
+        :return: tuple `(context, args, kwargs)`
+                where both `args` and `kwargs` are free of context argument
     """
     if 'context' in kwargs:
         context = kwargs['context']
@@ -112,8 +114,8 @@ def _split_context_args(nargs, args, kwargs):
 
 
 def _map_record(id, value):
-    """ if ``value`` is a record map for the given record id, return the
-        corresponding value; otherwise return ``value``
+    """ if `value` is a record map for the given record `id`, return the
+        corresponding value; otherwise return `value`
     """
     if isinstance(value, dict) and value.keys() == [id]:
         return value[id]
@@ -121,8 +123,8 @@ def _map_record(id, value):
 
 
 def model(method):
-    """ Decorate a record-style method where ``self`` is any instance with
-        session data (model, record or recordset). Such a method::
+    """ Decorate a record-style method where `self` is any instance with session
+        data (model, record or recordset). Such a method::
 
             @api.model
             def method(self, args):
@@ -144,8 +146,9 @@ def model(method):
 
 
 def record(method):
-    """ Decorate a record-style method where ``self`` is a single record. The
-        resulting method follows the record-map convention. Such a method::
+    """ Decorate a record-style method where `self` is a single record. The
+        resulting method follows the :ref:`record-map-convention`.
+        Such a method::
 
             @api.record
             def method(self, args):
@@ -181,7 +184,7 @@ def record(method):
 
 
 def recordset(method):
-    """ Decorate a record-style method where ``self`` is a recordset. Such a
+    """ Decorate a record-style method where `self` is a recordset. Such a
         method::
 
             @api.recordset
@@ -195,7 +198,7 @@ def recordset(method):
             y.method(args)
             model.method(cr, uid, ids, args, context=context)
 
-        This decorator supports record-map methods.
+        This decorator supports the :ref:`record-map-convention`.
     """
     nargs = method.func_code.co_argcount - 1
 
@@ -214,7 +217,7 @@ def recordset(method):
 
 
 def cr(method):
-    """ Decorate a traditional-style method that takes ``cr`` as a parameter.
+    """ Decorate a traditional-style method that takes `cr` as a parameter.
         Such a method::
 
             @api.cr
@@ -235,7 +238,7 @@ def cr(method):
 
 
 def cr_uid(method):
-    """ Decorate a traditional-style method that takes ``cr``, ``uid`` as
+    """ Decorate a traditional-style method that takes `cr`, `uid` as
         parameters. Such a method::
 
             @api.cr_uid
@@ -265,9 +268,9 @@ def cr_uid(method):
 
 
 def cr_uid_id(method):
-    """ Decorate a traditional-style method that takes ``cr``, ``uid``, ``id``,
-        and possibly ``context`` as parameters. The resulting method follows the
-        record-map convention. Such a method::
+    """ Decorate a traditional-style method that takes `cr`, `uid`, `id`, and
+        possibly `context` as parameters. The resulting method follows the
+        :ref:`record-map-convention`. Such a method::
 
             @api.cr_uid_id
             def method(self, cr, uid, id, args, context=None):
@@ -309,8 +312,8 @@ def cr_uid_id(method):
 
 
 def cr_uid_ids(method):
-    """ Decorate a traditional-style method that takes ``cr``, ``uid``, ``ids``,
-        and possibly ``context`` as parameters. Such a method::
+    """ Decorate a traditional-style method that takes `cr`, `uid`, `ids`, and
+        possibly `context` as parameters. Such a method::
 
             @api.cr_uid_ids
             def method(self, cr, uid, ids, args, context=None):
@@ -324,7 +327,7 @@ def cr_uid_ids(method):
             y.method(args)
             model.method(cr, uid, ids, args, context=context)
 
-        This decorator supports record-map methods.
+        This decorator supports the :ref:`record-map-convention`.
         It is generally not necessary, see :func:`versatile`.
     """
     argnames = method.func_code.co_varnames[:method.func_code.co_argcount]
@@ -349,7 +352,7 @@ def cr_uid_ids(method):
 
 
 def versatile(method):
-    """ Decorate a method to make it callable in both traditional and record
+    """ Decorate `method` to make it callable in both traditional and record
         styles. This decorator is applied automatically by the model's
         metaclass, and has no effect on already-decorated methods.
 
