@@ -1057,22 +1057,22 @@ class mail_thread(osv.AbstractModel):
             self.check_access_rights(cr, uid, 'write')
         return self.write(cr, SUPERUSER_ID, ids, {'message_follower_ids': [(3, pid) for pid in partner_ids]}, context=context)
 
-    # def _message_get_auto_subscribe_fields(self, cr, uid, updated_fields, auto_follow_fields=['user_id'], context=None):
-    #     """ Returns the list of relational fields linking to res.users that should
-    #         trigger an auto subscribe. The default list checks for the fields
-    #         - called 'user_id'
-    #         - linking to res.users
-    #         - with track_visibility set
-    #         In OpenERP V7, this is sufficent for all major addon such as opportunity,
-    #         project, issue, recruitment, sale.
-    #         Override this method if a custom behavior is needed about fields
-    #         that automatically subscribe users.
-    #     """
-    #     user_field_lst = []
-    #     for name, column_info in self._all_columns.items():
-    #         if name in auto_follow_fields and name in updated_fields and getattr(column_info.column, 'track_visibility', False) and column_info.column._obj == 'res.users':
-    #             user_field_lst.append(name)
-    #     return user_field_lst
+    def _message_get_auto_subscribe_fields(self, cr, uid, updated_fields, auto_follow_fields=['user_id'], context=None):
+        """ Returns the list of relational fields linking to res.users that should
+            trigger an auto subscribe. The default list checks for the fields
+            - called 'user_id'
+            - linking to res.users
+            - with track_visibility set
+            In OpenERP V7, this is sufficent for all major addon such as opportunity,
+            project, issue, recruitment, sale.
+            Override this method if a custom behavior is needed about fields
+            that automatically subscribe users.
+        """
+        user_field_lst = []
+        for name, column_info in self._all_columns.items():
+            if name in auto_follow_fields and name in updated_fields and getattr(column_info.column, 'track_visibility', False) and column_info.column._obj == 'res.users':
+                user_field_lst.append(name)
+        return user_field_lst
 
     def message_auto_subscribe(self, cr, uid, ids, updated_fields, context=None):
         """
@@ -1083,7 +1083,7 @@ class mail_thread(osv.AbstractModel):
         follower_obj = self.pool.get('mail.followers')
 
         # fetch auto_follow_fields
-        # user_field_lst = self._message_get_auto_subscribe_fields(cr, uid, updated_fields, context=context)
+        user_field_lst = self._message_get_auto_subscribe_fields(cr, uid, updated_fields, context=context)
 
         # fetch related record subtypes
         related_subtype_ids = subtype_obj.search(cr, uid, ['|', ('res_model', '=', False), ('parent_id.res_model', '=', self._name)], context=context)
@@ -1091,8 +1091,7 @@ class mail_thread(osv.AbstractModel):
         default_subtypes = [subtype for subtype in subtypes if subtype.res_model == False]
         related_subtypes = [subtype for subtype in subtypes if subtype.res_model != False]
         relation_fields = set([subtype.relation_field for subtype in subtypes if subtype.relation_field != False])
-        # if (not related_subtypes or not any(relation in updated_fields for relation in relation_fields)) and not user_field_lst:
-        if not related_subtypes or not any(relation in updated_fields for relation in relation_fields):
+        if (not related_subtypes or not any(relation in updated_fields for relation in relation_fields)) and not user_field_lst:
             return True
 
         for record in self.browse(cr, uid, ids, context=context):
@@ -1124,14 +1123,33 @@ class mail_thread(osv.AbstractModel):
                     for follower in follower_obj.browse(cr, SUPERUSER_ID, follower_ids, context=context):
                         new_followers.setdefault(follower.partner_id.id, set()).add(subtype.id)
 
-            # # add followers coming from res.users relational fields that are tracked
-            # user_ids = [getattr(record, name).id for name in user_field_lst if getattr(record, name)]
-            # for partner_id in [user.partner_id.id for user in self.pool.get('res.users').browse(cr, SUPERUSER_ID, user_ids, context=context)]:
-            #     new_followers.setdefault(partner_id, None)
+            # add followers coming from res.users relational fields that are tracked
+            user_ids = [getattr(record, name).id for name in user_field_lst if getattr(record, name)]
+            user_id_partner_ids = [user.partner_id.id for user in self.pool.get('res.users').browse(cr, SUPERUSER_ID, user_ids, context=context)]
+            for partner_id in user_id_partner_ids:
+                new_followers.setdefault(partner_id, None)
 
             for pid, subtypes in new_followers.items():
                 subtypes = list(subtypes) if subtypes is not None else None
                 self.message_subscribe(cr, uid, [record.id], [pid], subtypes, context=context)
+
+            # find first email message, set it as unread for auto_subscribe fields for them to have a notification
+            if user_id_partner_ids:
+                notification_obj = self.pool.get('mail.notification')
+                msg_ids = self.pool.get('mail.message').search(cr, uid, [
+                                ('model', '=', self._name),
+                                ('res_id', '=', record.id),
+                                ('type', '=', 'email')], limit=1, context=context)
+                if not msg_ids and record.message_ids:
+                    msg_ids = [record.message_ids[-1].id]
+                if msg_ids:
+                    for partner_id in user_id_partner_ids:
+                        notif_ids = notification_obj.search(cr, uid, [('partner_id', '=', partner_id), ('message_id', '=', msg_ids[0])], context=context)
+                        if notif_ids:
+                            notification_obj.write(cr, uid, notif_ids, {'read': False}, context=context)
+                        else:
+                            notification_obj.create(cr, uid, {'partner_id': partner_id, 'message_id': msg_ids[0], 'read': False}, context=context)
+
         return True
 
     #------------------------------------------------------
