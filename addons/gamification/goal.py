@@ -170,16 +170,15 @@ class gamification_goal(osv.Model):
             ids = self.search(cr, uid, [('state', 'in', ('inprogress','inprogress_update', 'reached'))])
         return self.update(cr, uid, ids, context=context)
 
-    def update(self, cr, uid, ids, context=None, force_update=False):
+    def update(self, cr, uid, ids, context=None):
         """Update the goals to recomputes values and change of states
 
         If a goal reaches the target value, the status is set to reach
         If the end date is passed (at least +1 day, time not considered) without
-        the target value being reached, the goal is set as failed
-        :param force_update: if false, only goals in progress are checked."""
+        the target value being reached, the goal is set as failed."""
 
         for goal in self.browse(cr, uid, ids, context=context or {}):
-            if not force_update and goal.state not in ('inprogress','inprogress_update','reached'):
+            if goal.state not in ('inprogress','inprogress_update','reached'):
                 # skip if goal failed or canceled
                 continue
             if goal.state == 'reached' and goal.end_date and fields.date.today() > goal.end_date:
@@ -277,7 +276,7 @@ class gamification_goal(osv.Model):
             values['remind_update_delay'] = planline.plan_id.remind_update_delay
         
         new_goal_id = obj.create(cr, uid, values, context)
-        self.update(cr, uid, [new_goal_id], context=context, force_update=True)
+        self.update(cr, uid, [new_goal_id], context=context)
 
 
     def cancel_goals_from_plan(self, cr, uid, ids, planline_id, context=None):
@@ -298,10 +297,6 @@ class gamification_goal(osv.Model):
 
     def action_cancel(self, cr, uid, ids, context=None):
         return self.write(cr, uid, ids, {'state': 'inprogress'}, context=context)
-
-    def action_refresh(self, cr, uid, ids, context=None):
-        """Update the state of goal, force to recomputes values"""
-        return self.update(cr, uid, ids, context=context, force_update=True)
 
 
 class gamification_goal_plan(osv.Model):
@@ -427,7 +422,7 @@ class gamification_goal_plan(osv.Model):
             for planline in plan.planline_ids:
                 goal_obj = self.pool.get('gamification.goal')
                 goal_ids = goal_obj.search(cr, uid, [('planline_id', '=', planline.id)] , context=context)
-                goal_obj.update(cr, uid, goal_ids, context=context, force_update=True)
+                goal_obj.update(cr, uid, goal_ids, context=context)
 
         return True
 

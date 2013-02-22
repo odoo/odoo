@@ -40,7 +40,7 @@
             <field name="arch" type="xml">
                 <form string="Goal" version="7.0">
                     <header>
-                        <button string="Refresh state" type="object" name="action_refresh" class="oe_highlight"/>
+                        <button string="Refresh state" type="object" name="update" class="oe_highlight"/>
                         <button string="Goal Reached" type="object" name="action_reach" states="inprogress,inprogress_update" />
                         <button string="Goal Failed" type="object" name="action_fail" states="inprogress,inprogress_update"/>
                         <button string="Reset Completion" type="object" name="action_cancel" states="failed,reached"/>
