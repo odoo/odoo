@@ -138,7 +138,7 @@ class report_xml(osv.osv):
                 # raise Exception, "Unhandled report type: %s" % r
                 pass
         if new_report is None:
-            new_report = interface.report_int._reports['report.' + name]
+            new_report = openerp.report.interface.report_int._reports['report.' + name]
 
         return new_report.create(cr, uid, ids, data, context)
 
