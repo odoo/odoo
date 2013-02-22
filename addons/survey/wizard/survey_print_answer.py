@@ -20,18 +20,18 @@
 ##############################################################################
 
 from openerp.osv import fields, osv
-from openerp.tools.translate import _
+
 
 class survey_print_answer(osv.osv_memory):
     _name = 'survey.print.answer'
     _columns = {
-        'response_ids': fields.many2many('survey.response','survey_print_response',\
-                            'response_id','print_id', "Answer", required="1"),
-        'orientation': fields.selection([('vertical','Portrait(Vertical)'),\
-                            ('horizontal','Landscape(Horizontal)')], 'Orientation'),
-        'paper_size': fields.selection([('letter','Letter (8.5" x 11")'),\
-                            ('legal','Legal (8.5" x 14")'),\
-                            ('a4','A4 (210mm x 297mm)')], 'Paper Size'),
+        'response_ids': fields.many2many('survey.response', 'survey_print_response',\
+                            'response_id', 'print_id', "Answer", required="1"),
+        'orientation': fields.selection([('vertical', 'Portrait(Vertical)'),\
+                            ('horizontal', 'Landscape(Horizontal)')], 'Orientation'),
+        'paper_size': fields.selection([('letter', 'Letter (8.5" x 11")'),\
+                            ('legal', 'Legal (8.5" x 14")'),\
+                            ('a4', 'A4 (210mm x 297mm)')], 'Paper Size'),
         'page_number': fields.boolean('Include Page Number'),
         'without_pagebreak': fields.boolean('Print Without Page Breaks')
     }
@@ -57,8 +57,7 @@ class survey_print_answer(osv.osv_memory):
         if context is None:
             context = {}
         datas = {'ids': context.get('active_ids', [])}
-        res = self.read(cr, uid, ids, ['response_ids', 'orientation', 'paper_size',\
-                             'page_number', 'without_pagebreak'], context=context)
+        res = self.read(cr, uid, ids, ['response_ids', 'orientation', 'paper_size', 'page_number', 'without_pagebreak'], context=context)
         res = res and res[0] or {}
         datas['form'] = res
         datas['model'] = 'survey.print.answer'

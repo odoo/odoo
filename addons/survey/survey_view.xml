@@ -893,7 +893,7 @@
             Survey Answer
         -->
 
-        <record model ="ir.ui.view" id="survey_answer_form">
+        <record model="ir.ui.view" id="survey_answer_form">
             <field name="name">survey_answer_form</field>
             <field name="model">survey.answer</field>
             <field name="arch" type="xml">
@@ -929,7 +929,7 @@
             Survey Response Line
         -->
 
-        <record model ="ir.ui.view" id= "survey_response_line_form">
+        <record model="ir.ui.view" id= "survey_response_line_form">
             <field name="name">survey_response_line_form</field>
             <field name="model">survey.response.line</field>
             <field name="arch" type="xml">
@@ -1045,7 +1045,10 @@
                     <field name="email"/>
                     <field name="response_type"/>
                     <field name="state"/>
-                    <button name="action_survey_resent" states="new,skip" string="Resent the invitation" type="object" icon="gtk-execute"/>  
+                    <button name="action_cancel" states="new,skip" string="Cancel" type="object" icon="gtk-stop"/>
+                    <button name="action_survey_resent" states="new,skip" string="Resent the invitation" type="object" icon="gtk-redo"/>
+                    <button name="action_preview" states="done" string="Preview" type="object" icon="gtk-copy"/>
+                    <button name="action_print_response" states="done" string="Print response" type="object" icon="gtk-print"/>
                 </tree>
             </field>
         </record>
@@ -1064,9 +1067,9 @@
             </field>
         </record>
 
-        <menuitem name="Survey Responses" id="menu_survey_type_form1"
-            action="action_survey_response" parent="menu_surveys_configuration"
-            groups="base.group_tool_manager" sequence="3"/>
+        <menuitem name="Surveys Responses" id="menu_survey_type_form1"
+            action="action_survey_response" parent="menu_surveys"
+            groups="base.group_tool_manager" sequence="2"/>
 
         <!--
             Survey Response Answer

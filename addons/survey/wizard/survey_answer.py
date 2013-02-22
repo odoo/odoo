@@ -204,6 +204,11 @@ class survey_question_wiz(osv.osv_memory):
         self.pool.get('survey').message_post(cr, uid, survey_id, context=context, **val)
 
     def _check_access(self, cr, uid, survey_id, context):
+        """
+        Specific check access for the survey
+        Retrun dict with the partner_id (without anonymous mode partner), response_id, state, readonly
+
+        """
         # get if the token of the partner or anonymous user is valid
         res = {'partner_id': False, 'response_id': False, 'state': None, 'readonly': False}
 
@@ -247,13 +252,13 @@ class survey_question_wiz(osv.osv_memory):
                 response_ids = context.get("response_id")
             except except_orm, e:
                 response_ids = None
-            print response_ids
         # check sign in user
         if not response_ids and not anonymous:
             response_ids = sur_response_obj.search(cr, uid, dom + [('partner_id', '=', pid)], context=context, limit=1, order="date_deadline DESC")
 
         # user have a specific token or a specific partner access (for state open or restricted)
         if response_ids:
+            print response_ids
             response = sur_response_obj.browse(cr, uid, response_ids[0], context=context)
             res['response_id'] = response_ids[0]
             res['partner_id'] = response.partner_id.id or False
@@ -1154,8 +1159,6 @@ class survey_question_wiz(osv.osv_memory):
         """
         if context is None:
             context = {}
-        search_obj = self.pool.get('ir.ui.view')
-        search_id = search_obj.search(cr, uid, [('model', '=', 'survey.question.wiz'), ('name', '=', 'Survey Search')], context=context)
         surv_name_wiz = self.pool.get('survey.name.wiz')
         surv_name_wiz.write(cr, uid, [context.get('sur_name_id', False)], {'transfer': True, 'page': next and 'next' or 'previous'})
         return {
@@ -1164,7 +1167,6 @@ class survey_question_wiz(osv.osv_memory):
             'res_model': 'survey.question.wiz',
             'type': 'ir.actions.act_window',
             'target': context.get('ir_actions_act_window_target', 'inline'),
-            'search_view_id': search_id[0],
             'context': context
         }
 

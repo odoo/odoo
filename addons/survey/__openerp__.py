@@ -44,10 +44,8 @@ user name and password for the invitation of the survey.
         'survey_view.xml',
         'wizard/survey_print_statistics.xml',
         'wizard/survey_print_answer.xml',
-        'wizard/survey_browse_answer.xml',
         'wizard/survey_print.xml',
         'wizard/survey_email_compose_message.xml',
-        #'wizard/survey_selection.xml',
     ],
     'demo': ['survey_demo.xml'],
     'test': [
@@ -58,7 +56,7 @@ user name and password for the invitation of the survey.
     ],
     'installable': True,
     'auto_install': False,
-    'images': ['images/survey_answers.jpeg','images/survey_pages.jpeg','images/surveys.jpeg'],   
+    'images': ['images/survey_answers.jpeg','images/survey_pages.jpeg','images/surveys.jpeg'],
     'css': ['static/src/css/survey.css'],
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

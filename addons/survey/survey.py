@@ -546,7 +546,6 @@ class survey_question(osv.osv):
             'res_model': 'survey.question.wiz',
             'type': 'ir.actions.act_window',
             'target': 'new',
-            #'search_view_id': self.pool.get('ir.ui.view').search(cr, uid, [('model', '=', 'survey.question.wiz'), ('name', '=', 'Survey Search')])[0],
             'context': context
         }
 
@@ -675,8 +674,57 @@ class survey_response(osv.osv):
     }
 
     def action_survey_resent(self, cr, uid, ids, context=None):
-        context = (context or {}).update({'survey_resent_token': True})
-        return self.pool.get('survey').action_survey_sent(cr, uid, ids, context=context)
+        record = self.browse(cr, uid, ids[0], context=context)
+        context = context or {}
+        context.update({
+            'survey_resent_token': True,
+            'default_partner_ids': [record.partner_id.id],
+            'multi_email': [record.email],
+            })
+
+        return self.pool.get('survey').action_survey_sent(cr, uid, [record.survey_id.id], context=context)
+
+    def action_print_response(self, cr, uid, ids, context=None):
+        """
+        Print Survey Answer in pdf format.
+        @return : Dictionary value for created survey answer report
+        """
+        return {
+            'type': 'ir.actions.report.xml',
+            'report_name': 'survey.browse.response',
+            'datas': {
+                'model': 'survey.print.statistics',
+                'form': {
+                        'response_ids': ids,
+                        'orientation': 'vertical',
+                        'paper_size': 'letter',
+                        'page_number': 0,
+                        'without_pagebreak': 0
+                    }
+                },
+            }
+
+    def action_preview(self, cr, uid, ids, context=None):
+        """
+        Get preview response
+        """
+        context = context or {}
+        self.pool.get('survey').check_access_rights(cr, uid, 'write')
+
+        record = self.browse(cr, uid, ids[0], context=context)
+        context.update({'active': True, 'survey_id': record.survey_id.id, 'response_id': ids, 'response_no': 0, 'readonly': True})
+        return {
+            'view_type': 'form',
+            "view_mode": 'form',
+            'res_model': 'survey.question.wiz',
+            'type': 'ir.actions.act_window',
+            'target': 'new',
+            'context': context
+         }
+
+    def action_cancel(self, cr, uid, ids, arg):
+        self.pool.get('survey').check_access_rights(cr, uid, 'write')
+        return self.write(cr, uid, ids, {'state': 'cancel'})
 
     def name_get(self, cr, uid, ids, context=None):
         if not len(ids):
