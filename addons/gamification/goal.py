@@ -24,6 +24,8 @@ from openerp.tools.safe_eval import safe_eval
 
 from datetime import date, timedelta
 import calendar
+import itertools
+
 
 class gamification_goal_type(osv.Model):
     """Goal type definition
@@ -112,7 +114,6 @@ class gamification_goal(osv.Model):
             return {'value':{'type_id': False}}
         goal_type = goal_type.browse(cr, uid, type_id, context=context)
         ret = {'value' : {'computation_mode' : goal_type.computation_mode}}
-        print(ret)
         return ret
 
     _columns = {
@@ -168,6 +169,7 @@ class gamification_goal(osv.Model):
         """Update every goal in progress"""
         if not ids:
             ids = self.search(cr, uid, [('state', 'in', ('inprogress','inprogress_update', 'reached'))])
+
         return self.update(cr, uid, ids, context=context)
 
     def update(self, cr, uid, ids, context=None):
@@ -247,11 +249,10 @@ class gamification_goal(osv.Model):
                 ('user_id', '=', user_id),
                 ('start_date', '=', start_date.isoformat())]
             goal_ids = obj.search(cr, uid, domain, context=context)
-            print(domain, goal_ids)
             if len(goal_ids) > 0:
                 # already exist, skip
                 return True
-        print("creating goal for", planline_id, user_id, start_date)
+
         planline = self.pool.get('gamification.goal.planline').browse(cr, uid, planline_id, context)
         values = {
             'type_id':planline.type_id.id,
@@ -399,7 +400,7 @@ class gamification_goal_plan(osv.Model):
         if not ids:
             ids = self.search(cr, uid, [('state', '=', 'inprogress'),
                 ('period', '!=', 'once')])
-        print("_update_all plans", ids)
+
         return self.generate_goals_from_plan(cr, uid, ids, context=context)
 
     def action_start(self, cr, uid, ids, context=None):
@@ -477,6 +478,22 @@ class gamification_goal_plan(osv.Model):
                     goal_obj.create_goal_from_plan(cr, uid, ids, planline.id, user.id, start_date, context=context)
 
         return True
+
+
+    def plan_subscribe_users(self, cr, uid, ids, user_ids, context=None):
+        """ Add the following users to plans
+
+        :param ids: ids of plans to which the users will be added
+        :param user_ids: ids of the users to add"""
+
+        print("subscibe users", ids, user_ids)
+        for plan in self.browse(cr,uid, ids, context):
+            subscription = [user.id for user in plan.user_ids]
+            subscription.extend(user_ids)
+            unified_subscription = list(set(subscription))
+            self.write(cr, uid, ids, {'user_ids': [(4, uid) for uid in unified_subscription]}, context=context)
+        return True
+
 
 class gamification_goal_planline(osv.Model):
     """Gamification goal planline

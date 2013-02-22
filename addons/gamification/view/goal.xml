@@ -67,7 +67,7 @@
                             </group>
                             <group string="Data">
                                 <field name="target_goal"/>
-                                <field name="current"/>
+                                <field name="current"  attrs="{'readonly':[('computation_mode','!=','manually')]}"/>
                             </group>
                         </group>
                     </sheet>
