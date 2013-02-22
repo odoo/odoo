@@ -18,6 +18,9 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
+import datetime
+import logging
+import time
 
 from openerp.osv import osv, fields
 from openerp.osv.orm import intersect, except_orm
@@ -26,6 +29,8 @@ from openerp import tools
 from openerp.tools.translate import _
 
 from openerp.addons.decimal_precision import decimal_precision as dp
+
+_logger = logging.getLogger(__name__)
 
 class account_virtual_invoice(osv.osv):
     _name = "account.virtual.invoice"
@@ -628,7 +633,70 @@ class account_analytic_account(osv.osv):
                 }
         return result
 
-account_analytic_account()
+    def cron_account_analytic_account(self, cr, uid, context=None):
+        if context is None:
+            context = {}
+        remind = {}
+
+        def fill_remind(key, domain, write_pending=False):
+            base_domain = [
+                ('type', '=', 'contract'),
+                ('partner_id', '!=', False),
+                ('manager_id', '!=', False),
+                ('manager_id.email', '!=', False),
+            ]
+            base_domain.extend(domain)
+
+            accounts_ids = self.search(cr, uid, base_domain, context=context, order='name asc')
+            accounts = self.browse(cr, uid, accounts_ids, context=context)
+            for account in accounts:
+                if write_pending:
+                    account.write({'state' : 'pending'}, context=context)
+                remind_user = remind.setdefault(account.manager_id.id, {})
+                remind_type = remind_user.setdefault(key, {})
+                remind_partner = remind_type.setdefault(account.partner_id, []).append(account)
+
+        # Already expired
+        fill_remind("old", [('state', 'in', ['pending'])])
+
+        # Expires now
+        fill_remind("new", [('state', 'in', ['draft', 'open']), '|', '&', ('date', '!=', False), ('date', '<=', time.strftime('%Y-%m-%d')), ('is_overdue_quantity', '=', True)], True)
+
+        # Expires in less than 30 days
+        fill_remind("future", [('state', 'in', ['draft', 'open']), ('date', '!=', False), ('date', '<', (datetime.datetime.now() + datetime.timedelta(30)).strftime("%Y-%m-%d"))])
+
+        context['base_url'] = self.pool.get('ir.config_parameter').get_param(cr, uid, 'web.base.url')
+        context['action_id'] = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'account_analytic_analysis', 'action_account_analytic_overdue_all')[1]
+        template_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'account_analytic_analysis', 'account_analytic_cron_email_template')[1]
+        for user_id, data in remind.items():
+            context["data"] = data
+            _logger.debug("Sending reminder to uid %s", user_id)
+            self.pool.get('email.template').send_mail(cr, uid, template_id, user_id, context=context)
+
+        return True
+
+    def cron_create_invoice(self, cr, uid, context=None):
+        res = []
+        inv_obj = self.pool.get('account.invoice')
+        journal_obj = self.pool.get('account.journal')
+        inv_lines = []
+        contract_ids = self.search(cr, uid, [('next_date','<=',time.strftime("%Y-%m-%d")), ('state','=', 'open'), ('recurring_invoices','=', True)], context=context, order='name asc')
+        a = self.pool.get('hr.timesheet.invoice.create.final').do_create(cr, uid, contract_ids, context=None)
+        contracts = self.browse(cr, uid, contract_ids, context=context)
+        for contract in contracts:
+            next_date = datetime.datetime.strptime(contract.next_date, "%Y-%m-%d")
+            interval = contract.interval
+
+            if contract.rrule_type == 'monthly':
+                new_date = next_date+relativedelta(months=+interval)
+            if contract.rrule_type == 'daily':
+                new_date = next_date+relativedelta(days=+interval)
+            if contract.rrule_type == 'weekly':
+                new_date = next_date+relativedelta(weeks=+interval)
+
+            # Link this new invoice to related contract
+            contract.write({'next_date':new_date}, context=context)
+        return True
 
 class account_analytic_account_summary_user(osv.osv):
     _name = "account_analytic_analysis.summary.user"
@@ -682,8 +750,6 @@ class account_analytic_account_summary_user(osv.osv):
                     lu.user_id as "user",
                     unit_amount
             from lu, mu)''')
-                   
-account_analytic_account_summary_user()
 
 class account_analytic_account_summary_month(osv.osv):
     _name = "account_analytic_analysis.summary.month"
@@ -744,6 +810,4 @@ class account_analytic_account_summary_month(osv.osv):
                 'GROUP BY d.month, d.account_id ' \
                 ')')
 
-
-account_analytic_account_summary_month()
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

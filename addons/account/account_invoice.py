@@ -23,7 +23,6 @@ import time
 from lxml import etree
 import openerp.addons.decimal_precision as dp
 
-from openerp import netsvc
 from openerp import pooler
 from openerp.osv import fields, osv, orm
 from openerp.tools.translate import _
@@ -80,11 +79,10 @@ class account_invoice(osv.osv):
 
     def _reconciled(self, cr, uid, ids, name, args, context=None):
         res = {}
-        wf_service = netsvc.LocalService("workflow")
         for inv in self.browse(cr, uid, ids, context=context):
             res[inv.id] = self.test_paid(cr, uid, [inv.id])
             if not res[inv.id] and inv.state == 'paid':
-                wf_service.trg_validate(uid, 'account.invoice', inv.id, 'open_test', cr)
+                self.signal_open_test(cr, uid, [inv.id])
         return res
 
     def _get_reference_type(self, cr, uid, context=None):
@@ -308,7 +306,7 @@ class account_invoice(osv.osv):
         '''
         Find the partner for which the accounting entries will be created
         '''
-        #if the chosen partner is not a company and has a parent company, use the parent for the journal entries 
+        #if the chosen partner is not a company and has a parent company, use the parent for the journal entries
         #because you want to invoice 'Agrolait, accounting department' but the journal items are for 'Agrolait'
         part = inv.partner_id
         if part.parent_id and not part.is_company:
@@ -419,7 +417,7 @@ class account_invoice(osv.osv):
         try:
             compose_form_id = ir_model_data.get_object_reference(cr, uid, 'mail', 'email_compose_message_wizard_form')[1]
         except ValueError:
-            compose_form_id = False 
+            compose_form_id = False
         ctx = dict(context)
         ctx.update({
             'default_model': 'account.invoice',
@@ -451,11 +449,15 @@ class account_invoice(osv.osv):
             context = {}
         invoices = self.read(cr, uid, ids, ['state','internal_number'], context=context)
         unlink_ids = []
+
         for t in invoices:
-            if t['state'] in ('draft', 'cancel') and t['internal_number']== False:
-                unlink_ids.append(t['id'])
+            if t['state'] not in ('draft', 'cancel'):
+                raise openerp.exceptions.Warning(_('You cannot delete an invoice which is not draft or cancelled. You should refund it instead.'))
+            elif t['internal_number']:
+                raise openerp.exceptions.Warning(_('You cannot delete an invoice after it has been validated (and received a number).  You can set it back to "Draft" state and modify its content, then re-confirm it.'))
             else:
-                raise osv.except_osv(_('Invalid Action!'), _('You can not delete an invoice which is not cancelled. You should refund it instead.'))
+                unlink_ids.append(t['id'])
+
         osv.osv.unlink(self, cr, uid, unlink_ids, context=context)
         return True
 
@@ -540,11 +542,11 @@ class account_invoice(osv.osv):
         return result
 
     def onchange_payment_term_date_invoice(self, cr, uid, ids, payment_term_id, date_invoice):
-        res = {}        
+        res = {}
         if not date_invoice:
             date_invoice = time.strftime('%Y-%m-%d')
         if not payment_term_id:
-            return {'value':{'date_due': date_invoice}} #To make sure the invoice has a due date when no payment term 
+            return {'value':{'date_due': date_invoice}} #To make sure the invoice has a due date when no payment term
         pterm_list = self.pool.get('account.payment.term').compute(cr, uid, payment_term_id, value=1, date_ref=date_invoice)
         if pterm_list:
             pterm_list = [line[0] for line in pterm_list]
@@ -560,35 +562,41 @@ class account_invoice(osv.osv):
     def onchange_partner_bank(self, cursor, user, ids, partner_bank_id=False):
         return {'value': {}}
 
-    def onchange_company_id(self, cr, uid, ids, company_id, part_id, type, invoice_line, currency_id):
+    def onchange_company_id(self, cr, uid, ids, company_id, part_id, type, invoice_line, currency_id, context=None):
         val = {}
         dom = {}
         obj_journal = self.pool.get('account.journal')
         account_obj = self.pool.get('account.account')
         inv_line_obj = self.pool.get('account.invoice.line')
+
         if company_id and part_id and type:
             acc_id = False
-            partner_obj = self.pool.get('res.partner').browse(cr,uid,part_id)
+            partner_obj = self.pool.get('res.partner').browse(cr, uid, part_id, context=context)
+
             if partner_obj.property_account_payable and partner_obj.property_account_receivable:
                 if partner_obj.property_account_payable.company_id.id != company_id and partner_obj.property_account_receivable.company_id.id != company_id:
                     property_obj = self.pool.get('ir.property')
                     rec_pro_id = property_obj.search(cr, uid, [('name','=','property_account_receivable'),('res_id','=','res.partner,'+str(part_id)+''),('company_id','=',company_id)])
                     pay_pro_id = property_obj.search(cr, uid, [('name','=','property_account_payable'),('res_id','=','res.partner,'+str(part_id)+''),('company_id','=',company_id)])
+
                     if not rec_pro_id:
                         rec_pro_id = property_obj.search(cr, uid, [('name','=','property_account_receivable'),('company_id','=',company_id)])
                     if not pay_pro_id:
                         pay_pro_id = property_obj.search(cr, uid, [('name','=','property_account_payable'),('company_id','=',company_id)])
+
                     rec_line_data = property_obj.read(cr, uid, rec_pro_id, ['name','value_reference','res_id'])
                     pay_line_data = property_obj.read(cr, uid, pay_pro_id, ['name','value_reference','res_id'])
                     rec_res_id = rec_line_data and rec_line_data[0].get('value_reference',False) and int(rec_line_data[0]['value_reference'].split(',')[1]) or False
                     pay_res_id = pay_line_data and pay_line_data[0].get('value_reference',False) and int(pay_line_data[0]['value_reference'].split(',')[1]) or False
+
                     if not rec_res_id and not pay_res_id:
-                        raise osv.except_osv(_('Configuration Error!'),
-                            _('Cannot find a chart of account, you should create one from Settings\Configuration\Accounting menu.'))
+                        raise self.pool.get('res.config.settings').get_config_warning(cr, _('Cannot find any chart of account: you can create a new one from %(menu:account.menu_account_config)s.'), context=context)
+
                     if type in ('out_invoice', 'out_refund'):
                         acc_id = rec_res_id
                     else:
                         acc_id = pay_res_id
+
                     val= {'account_id': acc_id}
             if ids:
                 if company_id:
@@ -638,10 +646,8 @@ class account_invoice(osv.osv):
     # go from canceled state to draft state
     def action_cancel_draft(self, cr, uid, ids, *args):
         self.write(cr, uid, ids, {'state':'draft'})
-        wf_service = netsvc.LocalService("workflow")
-        for inv_id in ids:
-            wf_service.trg_delete(uid, 'account.invoice', inv_id, cr)
-            wf_service.trg_create(uid, 'account.invoice', inv_id, cr)
+        self.delete_workflow(cr, uid, ids)
+        self.create_workflow(cr, uid, ids)
         return True
 
     # Workflow stuff
@@ -1145,6 +1151,11 @@ class account_invoice(osv.osv):
         return self.name_get(cr, user, ids, context)
 
     def _refund_cleanup_lines(self, cr, uid, lines, context=None):
+        """Convert records to dict of values suitable for one2many line creation
+
+            :param list(browse_record) lines: records to convert
+            :return: list of command tuple for one2many line creation [(0, 0, dict of valueis), ...]
+        """
         clean_lines = []
         for line in lines:
             clean_line = {}
@@ -1394,7 +1405,12 @@ class account_invoice_line(osv.osv):
         # XXX this gets the default account for the user's company,
         # it should get the default account for the invoice's company
         # however, the invoice's company does not reach this point
-        prop = self.pool.get('ir.property').get(cr, uid, 'property_account_income_categ', 'product.category', context=context)
+        if context is None:
+            context = {}
+        if context.get('type') in ('out_invoice','out_refund'):
+            prop = self.pool.get('ir.property').get(cr, uid, 'property_account_income_categ', 'product.category', context=context)
+        else:
+            prop = self.pool.get('ir.property').get(cr, uid, 'property_account_expense_categ', 'product.category', context=context)
         return prop and prop.id or False
 
     _defaults = {

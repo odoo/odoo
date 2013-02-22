@@ -21,7 +21,6 @@
 
 import time
 
-from openerp import netsvc
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
 
@@ -152,7 +151,6 @@ class hr_expense_expense(osv.osv):
         account_journal = self.pool.get('account.journal')
         voucher_obj = self.pool.get('account.voucher')
         currency_obj = self.pool.get('res.currency')
-        wkf_service = netsvc.LocalService("workflow")
         if context is None:
             context = {}
         for exp in self.browse(cr, uid, ids, context=context):
