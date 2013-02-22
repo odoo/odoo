@@ -862,7 +862,6 @@ class mail_thread(osv.AbstractModel):
 
             # link mail with this from mail to the new partner id
             if link_mail and ids:
-                print email, ids
                 message_ids = mail_message_obj.search(cr, SUPERUSER_ID, [
                                     '|',
                                     ('email_from', '=', email),
@@ -870,8 +869,7 @@ class mail_thread(osv.AbstractModel):
                                     ('author_id', '=', False)
                                 ], context=context)
                 if message_ids:
-                    # mail_message_obj.write(cr, SUPERUSER_ID, message_ids, {'author_id': ids[0]}, context=context)
-                    print 'found', message_ids
+                    mail_message_obj.write(cr, SUPERUSER_ID, message_ids, {'author_id': ids[0]}, context=context)
         return result
 
     def message_post(self, cr, uid, thread_id, body='', subject=None,
