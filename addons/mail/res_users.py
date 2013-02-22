@@ -132,8 +132,14 @@ class res_users(osv.Model):
             self.pool.get('res.partner').message_subscribe(cr, uid, [partner_id], partner_ids, subtype_ids=subtype_ids, context=context)
         return True
 
-    def message_create_partners_from_emails(self, cr, uid, emails, context=None):
-        return self.pool.get('res.partner').message_create_partners_from_emails(cr, uid, emails, context=context)
+    def message_get_partner_info_from_emails(self, cr, uid, emails, link_mail=False, context=None):
+        return self.pool.get('res.partner').message_get_partner_info_from_emails(cr, uid, emails, link_mail=link_mail, context=context)
+
+    def message_get_suggested_recipients(self, cr, uid, ids, context=None):
+        partner_ids = []
+        for id in ids:
+            partner_ids.append(self.browse(cr, SUPERUSER_ID, id).partner_id.id)
+        return self.pool.get('res.partner').message_get_suggested_recipients(cr, uid, partner_ids, context=context)
 
 
 class res_users_mail_group(osv.Model):
