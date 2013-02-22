@@ -167,8 +167,7 @@ class gamification_goal(osv.Model):
     def _update_all(self, cr, uid, ids=False, context=None):
         """Update every goal in progress"""
         if not ids:
-            ids = self.search(cr, uid, [('state', 'in', ('inprogress','inprogress_update'))])
-        print("_update_all", ids)
+            ids = self.search(cr, uid, [('state', 'in', ('inprogress','inprogress_update', 'reached'))])
         return self.update(cr, uid, ids, context=context)
 
     def update(self, cr, uid, ids, context=None, force_update=False):
@@ -180,11 +179,16 @@ class gamification_goal(osv.Model):
         :param force_update: if false, only goals in progress are checked."""
 
         for goal in self.browse(cr, uid, ids, context=context or {}):
-            if not force_update and goal.state not in ('inprogress','inprogress_update'): # reached ?
+            if not force_update and goal.state not in ('inprogress','inprogress_update','reached'):
+                # skip if goal failed or canceled
+                continue
+            if goal.state == 'reached' and goal.end_date and fields.date.today() > goal.end_date:
+                # only a goal reached but not passed the end date will still be 
+                # checked (to be able to improve the score)
                 continue
 
             if goal.type_id.computation_mode == 'manually':
-                towrite = {'current': current}
+                towrite = {'current':goal.current}
                 # check for remind to update
                 if goal.remind_update_delay and goal.last_update:
                     delta_max = timedelta(days=goal.remind_update_delay)
@@ -195,8 +199,8 @@ class gamification_goal(osv.Model):
                 obj = self.pool.get(goal.type_id.model_id.model)
                 field_date_name = goal.type_id.field_date_id.name
                 
-                domain = safe_eval(goal.type_id.domain)
-                domain.append(('user_id', '=', goal.user_id.id))
+                domain = safe_eval(goal.type_id.domain, 
+                    {'user_id': goal.user_id.id})
                 if goal.start_date:
                     domain.append((field_date_name, '>=', goal.start_date))
                 if goal.end_date:
@@ -244,10 +248,11 @@ class gamification_goal(osv.Model):
                 ('user_id', '=', user_id),
                 ('start_date', '=', start_date.isoformat())]
             goal_ids = obj.search(cr, uid, domain, context=context)
+            print(domain, goal_ids)
             if len(goal_ids) > 0:
                 # already exist, skip
                 return True
-
+        print("creating goal for", planline_id, user_id, start_date)
         planline = self.pool.get('gamification.goal.planline').browse(cr, uid, planline_id, context)
         values = {
             'type_id':planline.type_id.id,
@@ -327,7 +332,7 @@ class gamification_goal_plan(osv.Model):
             string='Group',
             help='Group of users whose members will automatically be added to the users'),
         'period' : fields.selection([
-                ('once', 'Manual'),
+                ('once', 'No Periodicity'),
                 ('daily', 'Daily'),
                 ('weekly', 'Weekly'),
                 ('monthly', 'Monthly'),
@@ -397,8 +402,9 @@ class gamification_goal_plan(osv.Model):
     def _update_all(self, cr, uid, ids=False, context=None):
         """Update every plan in progress"""
         if not ids:
-            ids = self.search(cr, uid, [('state', '=', 'inprogress')])
-        print("_update_all", ids)
+            ids = self.search(cr, uid, [('state', '=', 'inprogress'),
+                ('period', '!=', 'once')])
+        print("_update_all plans", ids)
         return self.generate_goals_from_plan(cr, uid, ids, context=context)
 
     def action_start(self, cr, uid, ids, context=None):

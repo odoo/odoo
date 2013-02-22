@@ -20,7 +20,7 @@
             <field name="name">Goal List</field>
             <field name="model">gamification.goal</field>
             <field name="arch" type="xml">
-                <tree string="Goal List" colors="red:state == 'failed';green:state == 'reached'"> 
+                <tree string="Goal List" colors="red:state == 'failed';green:state == 'reached';grey:state == 'canceled'"> 
                     <field name="type_id"/>
                     <field name="user_id"/>
                     <field name="current"/>
@@ -57,7 +57,12 @@
                                 <field name="start_date"/>
                                 <field name="end_date"/>
                                 <field name="computation_mode" invisible="1"/>
-                                <field name="remind_update_delay" attrs="{'invisible':[('computation_mode','!=', 'manually')]}"/>
+
+                                <label for="remind_update_delay" attrs="{'invisible':[('computation_mode','!=', 'manually')]}"/>
+                                <div attrs="{'invisible':[('computation_mode','!=', 'manually')]}">
+                                    <field name="remind_update_delay" class="oe_inline"/>
+                                    days
+                                </div>
                                 <field name="last_update" groups="base.group_no_one"/>
                             </group>
                             <group string="Data">

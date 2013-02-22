@@ -5,7 +5,6 @@
         <record forcecreate="True" id="ir_cron_check_goal"
             model="ir.cron">
             <field name="name">Run Goal Checker</field>
-            <field eval="True" name="active" />
             <field name="interval_number">1</field>
             <field name="interval_type">days</field>
             <field name="numbercall">-1</field>
@@ -15,10 +14,9 @@
             <field name="args">()</field>
         </record>
 
-        <record forcecreate="True" id="ir_cron_check_goal"
+        <record forcecreate="True" id="ir_cron_check_plan"
             model="ir.cron">
             <field name="name">Run Goal Plan Checker</field>
-            <field eval="True" name="active" />
             <field name="interval_number">1</field>
             <field name="interval_type">days</field>
             <field name="numbercall">-1</field>
@@ -27,5 +25,6 @@
             <field name="function">_update_all</field>
             <field name="args">()</field>
         </record>
+
     </data>
 </openerp>
