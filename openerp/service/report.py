@@ -7,6 +7,7 @@ import threading
 
 import openerp.netsvc
 import openerp.pooler
+import openerp.report
 from openerp import tools
 
 import security
@@ -51,8 +52,7 @@ def exp_render_report(db, uid, object, ids, datas=None, context=None):
 
     cr = openerp.pooler.get_db(db).cursor()
     try:
-        obj = openerp.netsvc.LocalService('report.'+object)
-        (result, format) = obj.create(cr, uid, ids, datas, context)
+        result, format = openerp.report.render_report(cr, uid, ids, object, datas, context)
         if not result:
             tb = sys.exc_info()
             self_reports[id]['exception'] = openerp.exceptions.DeferredException('RML is not available at specified location or not enough data to print!', tb)
@@ -90,8 +90,7 @@ def exp_report(db, uid, object, ids, datas=None, context=None):
     def go(id, uid, ids, datas, context):
         cr = openerp.pooler.get_db(db).cursor()
         try:
-            obj = openerp.netsvc.LocalService('report.'+object, cursor=cr)
-            (result, format) = obj.create(cr, uid, ids, datas, context)
+            result, format = openerp.report.render_report(cr, uid, ids, object, datas, context)
             if not result:
                 tb = sys.exc_info()
                 self_reports[id]['exception'] = openerp.exceptions.DeferredException('RML is not available at specified location or not enough data to print!', tb)

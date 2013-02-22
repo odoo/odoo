@@ -109,6 +109,39 @@ class report_xml(osv.osv):
                         opj('addons',r['report_xml']),
                         r['report_xsl'] and opj('addons',r['report_xsl']))
 
+    def render_report(self, cr, uid, ids, name, data, context=None):
+        """
+        Look up a report definition and render the report for the provided IDs.
+        """
+        import openerp
+        import operator
+        import os
+        opj = os.path.join
+
+        cr.execute("SELECT * FROM ir_act_report_xml WHERE report_name=%s", (name,))
+        new_report = None
+        for r in cr.dictfetchall():
+            if r['report_rml'] or r['report_rml_content_data']:
+                if r['parser']:
+                    kwargs = { 'parser': operator.attrgetter(r['parser'])(openerp.addons) }
+                else:
+                    kwargs = {}
+                new_report = report_sxw('report.'+r['report_name'], r['model'],
+                        opj('addons',r['report_rml'] or '/'), header=r['header'], register=False, **kwargs)
+            elif r['report_xsl']:
+                new_report = report_rml('report.'+r['report_name'], r['model'],
+                        opj('addons',r['report_xml']),
+                        r['report_xsl'] and opj('addons',r['report_xsl']), register=False)
+            else:
+                # TODO:
+                # Temporarily, we look reports up the _reports dict.
+                # raise Exception, "Unhandled report type: %s" % r
+                pass
+        if new_report is None:
+            new_report = interface.report_int._reports['report.' + name]
+
+        return new_report.create(cr, uid, ids, data, context)
+
     _name = 'ir.actions.report.xml'
     _inherit = 'ir.actions.actions'
     _table = 'ir_act_report_xml'
