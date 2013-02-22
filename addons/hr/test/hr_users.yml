@@ -1,0 +1,30 @@
+-
+  Create a user as 'HR Manager'
+-
+  !record {model: res.users, id: res_users_hr_manager}:
+    company_id: base.main_company
+    name: HR manager
+    login: hrm
+    password: hrm
+    groups_id:
+      - base.group_hr_manager
+-
+  Create a user as 'HR Officer'
+-
+  !record {model: res.users, id: res_users_hr_officer}:
+    company_id: base.main_company
+    name: HR Officer
+    login: hro
+    password: hro
+    groups_id:
+      - base.group_hr_user
+-
+  Create a user as 'Employee'
+-
+  !record {model: res.users, id: res_users_employee}:
+    company_id: base.main_company
+    name: Employee
+    login: emp
+    password: emp
+    groups_id:
+      - base.group_user

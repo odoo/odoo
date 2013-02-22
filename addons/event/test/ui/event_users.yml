@@ -1,0 +1,20 @@
+-
+  Create a user as 'Event manager'
+-
+  !record {model: res.users, id: res_users_eventmanager}:
+    company_id: base.main_company
+    name: Event manager
+    login: em
+    password: em
+    groups_id:
+      - event.group_event_manager
+-
+  Create a user as 'Event user'
+-
+  !record {model: res.users, id: res_users_eventuser}:
+    company_id: base.main_company
+    name: User
+    login: eu
+    password: eu
+    groups_id:
+      - event.group_event_user

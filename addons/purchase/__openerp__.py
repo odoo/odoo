@@ -79,6 +79,7 @@ Dashboard / Reports for Purchase Management will include:
         'test/ui/delete_order.yml',
     ],
     'demo': [
+        'test/ui/purchase_users.yml',
         'purchase_order_demo.yml',
         'purchase_demo.xml',
     ],

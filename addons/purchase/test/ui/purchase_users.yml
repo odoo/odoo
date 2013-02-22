@@ -1,0 +1,20 @@
+-
+  Create a user as 'Purchase manager'
+-
+  !record {model: res.users, id: res_users_purchase_manager}:
+    company_id: base.main_company
+    name: Purchase Manager
+    login: pm
+    password: pm
+    groups_id:
+      - purchase.group_purchase_manager
+-
+  Create a user as 'Purchase user'
+-
+  !record {model: res.users, id: res_users_purchase_user}:
+    company_id: base.main_company
+    name: Purchase User
+    login: pu
+    password: pu
+    groups_id:
+      - purchase.group_purchase_user

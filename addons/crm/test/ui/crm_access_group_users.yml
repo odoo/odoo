@@ -1,0 +1,20 @@
+-
+  Create a user as 'Salesmanager'
+-
+  !record {model: res.users, id: crm_res_users_salesmanager}:
+    company_id: base.main_company
+    name: Sales manager
+    login: csm
+    password: csm
+    groups_id:
+      - base.group_sale_manager
+-
+  Create a user as 'Salesman'
+-
+  !record {model: res.users, id: crm_res_users_salesman}:
+    company_id: base.main_company
+    name: Salesman
+    login: csu
+    password: csu
+    groups_id:
+      - base.group_sale_salesman_all_leads

@@ -62,6 +62,7 @@ You can manage:
     ],
     'demo': ['hr_demo.xml'],
     'test': [
+        'test/hr_users.yml',
         'test/open2recruit2close_job.yml',
         'test/hr_demo.yml',
     ],
