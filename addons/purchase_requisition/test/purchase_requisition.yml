@@ -83,7 +83,8 @@
 - 
   !python {model: purchase.requisition}: |
     import os
-    from openerp import netsvc, tools
-    (data, format) = netsvc.LocalService('report.purchase.requisition').create(cr, uid, [ref('purchase_requisition.requisition1')], {}, {})
+    import openerp.report
+    from openerp import tools
+    data, format = openerp.report.render_report(cr, uid, [ref('purchase_requisition.requisition1')], 'purchase.requisition', {}, {})
     if tools.config['test_report_directory']:
         file(os.path.join(tools.config['test_report_directory'], 'purchase_requisition-purchase_requisition_report.'+format), 'wb+').write(data)
