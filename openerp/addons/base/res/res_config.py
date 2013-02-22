@@ -612,7 +612,7 @@ class res_config_settings(osv.osv_memory):
         """
         Fetch the human readable name of a specified configuration option.
 
-        :param string full_field_name: the full name of the field, structured as follows: 
+        :param string full_field_name: the full name of the field, structured as follows:
             model_name.field_name (e.g.: "sale.config.settings.fetchmail_lead")
         :return string: human readable name of the field (e.g.: "Create leads from incoming mails")
         """
@@ -622,7 +622,7 @@ class res_config_settings(osv.osv_memory):
 
     def get_config_warning(self, cr, msg, context=None):
         """
-        Helper: return a Warning exception with the given message where the %(field:xxx)s 
+        Helper: return a Warning exception with the given message where the %(field:xxx)s
         and/or %(menu:yyy)s are replaced by the human readable field's name and/or menuitem's
         full path.
 
@@ -639,6 +639,14 @@ class res_config_settings(osv.osv_memory):
 
         This will return an exception containing the following message:
             Error: this action is prohibited. You should check the field Create leads from incoming mails in Settings/Configuration/Sales.
+
+        What if there is another substitution in the message already?
+        -------------------------------------------------------------
+        You could have a situation where the error message you want to upgrade already contains a substitution. Example:
+            Cannot find any account journal of %s type for this company.\n\nYou can create one in the menu: \nConfiguration\Journals\Journals.
+        What you want to do here is simply to replace the path by %menu:account.menu_account_config)s, and leave the rest alone.
+        In order to do that, you can use the double percent (%%) to escape your new substitution, like so:
+            Cannot find any account journal of %s type for this company.\n\nYou can create one in the %%(menu:account.menu_account_config)s.
         """
 
         res_config_obj = pooler.get_pool(cr.dbname).get('res.config.settings')
