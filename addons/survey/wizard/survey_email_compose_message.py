@@ -42,7 +42,7 @@ class survey_mail_compose_message(osv.TransientModel):
         return res
 
     _columns = {
-        'public': fields.boolean('Public url survey'),
+        'public': fields.boolean('Public url survey', help="You can use the public url everywhere. You can use the survey invitation together the public url."),
         'public_url': fields.function(_get_public_url, string="Public url", type="char"),
         'partner_ids': fields.many2many('res.partner',
             'survey_mail_compose_message_res_partner_rel',
@@ -54,7 +54,7 @@ class survey_mail_compose_message(osv.TransientModel):
         'date_deadline': fields.date(string="Deadline to which the invitation to respond is valid", help="Deadline to which the invitation to respond for this survey is valid. If the field is empty, the invitation is still valid."),
     }
     _defaults = {
-        'public': True,
+        'public': False,
     }
     #------------------------------------------------------
     # Wizard validation and send

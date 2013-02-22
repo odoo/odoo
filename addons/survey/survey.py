@@ -680,6 +680,7 @@ class survey_response(osv.osv):
             'survey_resent_token': True,
             'default_partner_ids': [record.partner_id.id],
             'multi_email': [record.email],
+            'default_public': False
             })
 
         return self.pool.get('survey').action_survey_sent(cr, uid, [record.survey_id.id], context=context)

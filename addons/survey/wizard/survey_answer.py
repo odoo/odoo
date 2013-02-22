@@ -21,7 +21,7 @@
 
 from lxml import etree
 
-from openerp import addons, netsvc, tools
+from openerp import tools
 from openerp.osv import fields, osv
 from openerp.tools import to_xml
 from datetime import datetime
