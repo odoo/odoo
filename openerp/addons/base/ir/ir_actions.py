@@ -118,27 +118,29 @@ class report_xml(osv.osv):
         import os
         opj = os.path.join
 
-        cr.execute("SELECT * FROM ir_act_report_xml WHERE report_name=%s", (name,))
-        new_report = None
-        for r in cr.dictfetchall():
-            if r['report_rml'] or r['report_rml_content_data']:
-                if r['parser']:
-                    kwargs = { 'parser': operator.attrgetter(r['parser'])(openerp.addons) }
-                else:
-                    kwargs = {}
-                new_report = report_sxw('report.'+r['report_name'], r['model'],
-                        opj('addons',r['report_rml'] or '/'), header=r['header'], register=False, **kwargs)
-            elif r['report_xsl']:
-                new_report = report_rml('report.'+r['report_name'], r['model'],
-                        opj('addons',r['report_xml']),
-                        r['report_xsl'] and opj('addons',r['report_xsl']), register=False)
-            else:
-                # TODO:
-                # Temporarily, we look reports up the _reports dict.
-                # raise Exception, "Unhandled report type: %s" % r
-                pass
-        if new_report is None:
+        # First lookup in the deprecated place, because if the report definition
+        # has not been updated, it is more likely the correct definition is there.
+        if 'report.' + name in openerp.report.interface.report_int._reports:
             new_report = openerp.report.interface.report_int._reports['report.' + name]
+        else:
+            cr.execute("SELECT * FROM ir_act_report_xml WHERE report_name=%s", (name,))
+            r = cr.dictfetchone()
+            if r:
+                if r['report_rml'] or r['report_rml_content_data']:
+                    if r['parser']:
+                        kwargs = { 'parser': operator.attrgetter(r['parser'])(openerp.addons) }
+                    else:
+                        kwargs = {}
+                    new_report = report_sxw('report.'+r['report_name'], r['model'],
+                            opj('addons',r['report_rml'] or '/'), header=r['header'], register=False, **kwargs)
+                elif r['report_xsl']:
+                    new_report = report_rml('report.'+r['report_name'], r['model'],
+                            opj('addons',r['report_xml']),
+                            r['report_xsl'] and opj('addons',r['report_xsl']), register=False)
+                else:
+                    raise Exception, "Unhandled report type: %s" % r
+            else:
+                raise Exception, "Required report does not exist: %s" % r
 
         return new_report.create(cr, uid, ids, data, context)
 
