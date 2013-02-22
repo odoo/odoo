@@ -49,13 +49,13 @@
                     <sheet>
                         <group>
                             <group string="Reference">
-                                <field name="type_id" on_change="on_change_type_id(type_id)" />
-                                <field name="user_id"/>
-                                <field name="planline_id" groups="base.group_no_one"/>
+                                <field name="type_id" on_change="on_change_type_id(type_id)" attrs="{'readonly':[('state','!=','draft')]}"/>
+                                <field name="user_id" attrs="{'readonly':[('state','!=','draft')]}"/>
+                                <field name="planline_id" groups="base.group_no_one"  attrs="{'readonly':[('state','!=','draft')]}"/>
                             </group>
                             <group string="Schedule">
-                                <field name="start_date"/>
-                                <field name="end_date"/>
+                                <field name="start_date" attrs="{'readonly':[('state','!=','draft')]}"/>
+                                <field name="end_date" attrs="{'readonly':[('state','!=','draft')]}"/>
                                 <field name="computation_mode" invisible="1"/>
 
                                 <label for="remind_update_delay" attrs="{'invisible':[('computation_mode','!=', 'manually')]}"/>
@@ -66,7 +66,7 @@
                                 <field name="last_update" groups="base.group_no_one"/>
                             </group>
                             <group string="Data">
-                                <field name="target_goal"/>
+                                <field name="target_goal" attrs="{'readonly':[('state','!=','draft')]}"/>
                                 <field name="current"  attrs="{'readonly':[('computation_mode','!=','manually')]}"/>
                             </group>
                         </group>

@@ -137,6 +137,7 @@ class gamification_goal(osv.Model):
             type='float',
             string='Completeness'),
         'state': fields.selection([
+                ('draft', 'Draft'),
                 ('inprogress', 'In progress'),
                 ('inprogress_update', 'In progress (to update)'),
                 ('reached', 'Reached'),
@@ -158,7 +159,7 @@ class gamification_goal(osv.Model):
 
     _defaults = {
         'current': 0,
-        'state': 'inprogress',
+        'state': 'draft',
         'start_date': fields.date.today,
         'last_update': fields.date.today,
     }
@@ -259,6 +260,7 @@ class gamification_goal(osv.Model):
             'planline_id':planline_id,
             'user_id':user_id,
             'target_goal':planline.target_goal,
+            'state':'inprogress',
         }
 
         if start_date:
