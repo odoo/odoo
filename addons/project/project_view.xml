@@ -153,7 +153,7 @@
                                 </group>
                             </group>
                         </page>
-                        <page string="Tasks Stages" attrs="{'invisible': [('use_tasks', '=', False)]}">
+                        <page string="Project Stages" attrs="{'invisible': [('use_tasks', '=', False)]}" name="project_stages">
                              <field name="type_ids"/>
                         </page>
                     </notebook>
@@ -747,6 +747,37 @@
 
         <!-- User Form -->
         <act_window context="{'search_default_user_id': [active_id], 'default_user_id': active_id}" domain="[('state', '&lt;&gt;', 'cancelled'),('state', '&lt;&gt;', 'done')]" id="act_res_users_2_project_task_opened" name="Assigned Tasks" res_model="project.task" src_model="res.users" view_mode="tree,form,gantt,calendar,graph" view_type="form"/>
+
+        <!-- Tags -->
+        <record model="ir.ui.view" id="project_category_search_view">
+            <field name="name">Tags</field>
+            <field name="model">project.category</field>
+            <field name="arch" type="xml">
+                <search string="Issue Version">
+                    <field name="name"/>
+                </search>
+            </field>
+        </record>
+        <record model="ir.ui.view" id="project_category_form_view">
+            <field name="name">Tags</field>
+            <field name="model">project.category</field>
+            <field name="arch" type="xml">
+                <form string="Tags">
+                    <field name="name"/>
+                </form>
+            </field>
+        </record>
+        <record id="project_category_action" model="ir.actions.act_window">
+            <field name="name">Tags</field>
+            <field name="res_model">project.category</field>
+            <field name="view_type">form</field>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to add a new tag.
+              </p>
+            </field>
+        </record>
+        <menuitem action="project_category_action" id="menu_project_category_act" parent="base.menu_definitions" groups="base.group_no_one"/>
 
     </data>
 </openerp>

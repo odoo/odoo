@@ -303,9 +303,9 @@ instance.web.form.DashBoard = instance.web.form.FormWidget.extend({
 instance.web.form.DashBoardLegacy = instance.web.form.DashBoard.extend({
     renderElement: function() {
         if (this.node.tag == 'hpaned') {
-            this.node.attrs.style = '2-1';
+            this.node.attrs.layout = '2-1';
         } else if (this.node.tag == 'vpaned') {
-            this.node.attrs.style = '1';
+            this.node.attrs.layout = '1';
         }
         this.node.tag = 'board';
         _.each(this.node.children, function(child) {
