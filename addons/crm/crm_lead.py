@@ -966,7 +966,7 @@ class crm_lead(base_stage, format_address, osv.osv):
         for lead in self.browse(cr, uid, ids, context=context):
             if lead.partner_id:
                 self._message_add_suggested_recipient(recipients, lead, partner=lead.partner_id, reason=_('Customer'))
-            if lead.email_from:
+            elif lead.email_from:
                 self._message_add_suggested_recipient(recipients, lead, email=lead.email_from, reason=_('Customer Email'))
         return recipients
 
