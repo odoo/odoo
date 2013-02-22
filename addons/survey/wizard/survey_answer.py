@@ -62,7 +62,7 @@ class survey_question_wiz(osv.osv_memory):
             etree.SubElement(xml_group, 'separator', {'string': tools.ustr(col.title), 'colspan': '1'})
         for row in que_rec.answer_choice_ids:
             etree.SubElement(xml_group, 'label', {'string': to_xml(tools.ustr(row.answer)) + ': -', 'align': '0.0'})
-            for col in que_col_head.browse(cr, uid, [head.id for head in que_rec.column_heading_ids]):
+            for col in que_col_head.browse(cr, uid, [head.id for head in que_rec.column_heading_ids], context=context):
                 etree.SubElement(xml_group, 'field', {'readonly': str(readonly), 'name': tools.ustr(que.id) + "_" + tools.ustr(row.id) + "_" + tools.ustr(col.id), 'nolabel': "1"})
                 fields[tools.ustr(que.id) + "_" + tools.ustr(row.id) + "_" + tools.ustr(col.id)] = {'type': 'boolean', 'string': col.title}
 
@@ -488,7 +488,7 @@ class survey_question_wiz(osv.osv_memory):
 
         for field in fields_list:
             if field.split('_')[0] == 'progress':
-                tot_page_id = self.pool.get('survey').browse(cr, uid, context.get('survey_id', False))
+                tot_page_id = self.pool.get('survey').browse(cr, uid, context.get('survey_id', False), context=context)
                 tot_per = (float(100) * (int(field.split('_')[2]) + 1) / len(tot_page_id.page_ids))
                 value[field] = tot_per
 
@@ -498,9 +498,9 @@ class survey_question_wiz(osv.osv_memory):
         response_ans = False
         sur_response_obj = self.pool.get('survey.response')
         if not context.get('edit') and check_token.get('response_id'):
-            response_ans = sur_response_obj.browse(cr, uid, check_token['response_id'])
+            response_ans = sur_response_obj.browse(cr, uid, check_token['response_id'], context=context)
         elif context.get('response_id') and int(context['response_id'][0]) > 0:
-            response_ans = sur_response_obj.browse(cr, uid, context['response_id'][context['response_no']])
+            response_ans = sur_response_obj.browse(cr, uid, context['response_id'][context['response_no']], context=context)
 
         if response_ans:
             fields_list.sort()
@@ -551,7 +551,7 @@ class survey_question_wiz(osv.osv_memory):
                 return value
 
             surv_name_wiz = self.pool.get('survey.name.wiz')
-            sur_name_read = surv_name_wiz.read(cr, uid, context.get('sur_name_id', False))
+            sur_name_read = surv_name_wiz.read(cr, uid, context.get('sur_name_id', False), context=context)
 
             for key, val in safe_eval(sur_name_read.get('store_ans', "{}")).items():
                 for field in fields_list:
@@ -604,7 +604,7 @@ class survey_question_wiz(osv.osv_memory):
         #click first time on next button then increment on total start suvey
         if not safe_eval(sur_name_read['store_ans']):
             survey_id = sur_name_read['survey_id'][0]
-            survey_browse = survey_obj.read(cr, uid, survey_id)
+            survey_browse = survey_obj.read(cr, uid, survey_id, context=context)
             survey_obj.write(cr, uid, survey_id,  {'tot_start_survey': survey_browse['tot_start_survey'] + 1})
             if context.get('cur_id'):
                 self.pool.get(context.get('object', False)).write(cr, uid, [int(context.get('cur_id', False))], {'response': response_id})
@@ -627,7 +627,7 @@ class survey_question_wiz(osv.osv_memory):
                 que_id = key.split('_')[0]
                 if que_id not in que_li:
                     que_li.append(que_id)
-                    que_rec = que_obj.read(cr, uid, [int(que_id)], [])[0]
+                    que_rec = que_obj.read(cr, uid, [int(que_id)], context=context)[0]
                     res_data = {
                         'question_id': que_id,
                         'date_create': datetime.now(),
@@ -832,9 +832,9 @@ class survey_question_wiz(osv.osv_memory):
         else:
             resp_id_list = []
             for update in click_update:
-                que_rec = que_obj.read(cr, uid, [int(sur_name_read['store_ans'][update]['question_id'])], [])[0]
-                res_ans_obj.unlink(cr, uid, res_ans_obj.search(cr, uid, [('response_id', '=', update)]))
-                surv_tbl_column_obj.unlink(cr, uid, surv_tbl_column_obj.search(cr, uid, [('response_table_id', '=', update)]))
+                que_rec = que_obj.read(cr, uid, [int(sur_name_read['store_ans'][update]['question_id'])], context=context)[0]
+                res_ans_obj.unlink(cr, uid, res_ans_obj.search(cr, uid, [('response_id', '=', update)], context=context))
+                surv_tbl_column_obj.unlink(cr, uid, surv_tbl_column_obj.search(cr, uid, [('response_table_id', '=', update)], context=context))
                 resp_id_list.append(update)
                 sur_name_read['store_ans'].update({update: {'question_id': sur_name_read['store_ans'][update]['question_id']}})
                 surv_name_wiz.write(cr, uid, [context.get('sur_name_id', False)], {'store_ans': sur_name_read['store_ans']})
@@ -1025,7 +1025,7 @@ class survey_question_wiz(osv.osv_memory):
             if type(key) == type(True):
                 context.pop(key)
         view_id = self.pool.get('ir.ui.view').search(cr, uid, [('model', '=', 'survey.question'), \
-                            ('name', '=', 'survey_question_wizard_test')])
+                            ('name', '=', 'survey_question_wizard_test')], context=context)
         return {
             'view_type': 'form',
             "view_mode": 'form',
@@ -1046,7 +1046,7 @@ class survey_question_wiz(osv.osv_memory):
             if type(key) == type(True):
                 context.pop(key)
         view_id = self.pool.get('ir.ui.view').search(cr, uid, [('model', '=', 'survey.page'), \
-                                        ('name', '=', 'survey_page_wizard_test')])
+                                        ('name', '=', 'survey_page_wizard_test')], context=context)
         return {
             'view_type': 'form',
             "view_mode": 'form',
@@ -1067,7 +1067,7 @@ class survey_question_wiz(osv.osv_memory):
             if type(key) == type(True):
                 context.pop(key)
         view_id = self.pool.get('ir.ui.view').search(cr, uid, [('model', '=', 'survey.page'), \
-                                ('name', '=', 'survey_page_wizard_test')])
+                                ('name', '=', 'survey_page_wizard_test')], context=context)
         return {
             'view_type': 'form',
             "view_mode": 'form',
@@ -1095,7 +1095,7 @@ class survey_question_wiz(osv.osv_memory):
                 return {'type': 'ir.actions.act_window_close'}
 
         search_id = self.pool.get('ir.ui.view').search(cr, uid, [('model', '=', 'survey.question.wiz'), \
-                                            ('name', '=', 'Survey Search')])
+                                            ('name', '=', 'Survey Search')], context=context)
         surv_name_wiz = self.pool.get('survey.name.wiz')
         surv_name_wiz.write(cr, uid, [context.get('sur_name_id', False)], \
                     {'transfer': True, 'page_no': context.get('page_number', False)})
@@ -1119,7 +1119,7 @@ class survey_question_wiz(osv.osv_memory):
             if type(key) == type(True):
                 context.pop(key)
         view_id = self.pool.get('ir.ui.view').search(cr, uid, [('model', '=', 'survey.question'), \
-                                ('name', '=', 'survey_question_wizard_test')])
+                                ('name', '=', 'survey_question_wizard_test')], context=context)
         return {
             'view_type': 'form',
             "view_mode": 'form',
@@ -1144,7 +1144,7 @@ class survey_question_wiz(osv.osv_memory):
         que_obj = self.pool.get('survey.question')
         que_obj.unlink(cr, uid, [context.get('question_id', False)])
         search_id = self.pool.get('ir.ui.view').search(cr, uid, [('model', '=', 'survey.question.wiz'), \
-                                        ('name', '=', 'Survey Search')])
+                                        ('name', '=', 'Survey Search')], context=context)
         surv_name_wiz = self.pool.get('survey.name.wiz')
         surv_name_wiz.write(cr, uid, [context.get('sur_name_id', False)], \
                      {'transfer': True, 'page_no': context.get('page_number', 0)})
@@ -1164,7 +1164,7 @@ class survey_question_wiz(osv.osv_memory):
         if context is None:
             context = {}
         search_obj = self.pool.get('ir.ui.view')
-        search_id = search_obj.search(cr, uid, [('model', '=', 'survey.question.wiz'), ('name', '=', 'Survey Search')])
+        search_id = search_obj.search(cr, uid, [('model', '=', 'survey.question.wiz'), ('name', '=', 'Survey Search')], context=context)
         surv_name_wiz = self.pool.get('survey.name.wiz')
         surv_name_wiz.write(cr, uid, [context.get('sur_name_id', False)], {'transfer': True, 'page': next and 'next' or 'previous'})
         return {

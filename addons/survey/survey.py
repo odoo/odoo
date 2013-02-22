@@ -85,7 +85,7 @@ class survey(osv.osv):
         return res
 
     _columns = {
-        'title': fields.char('Survey Title', size=128, required=1),
+        'title': fields.char('Survey Title', size=128, required=1, translate=True),
         'page_ids': fields.one2many('survey.page', 'survey_id', 'Page'),
         'date_open': fields.datetime('Survey Open Date', readonly=1),
         'date_close': fields.datetime('Survey Close Date', readonly=1),
@@ -95,7 +95,7 @@ class survey(osv.osv):
         'sign_in': fields.boolean('User must be sign up'),
         'tot_start_survey': fields.function(_get_tot_start_survey, string="Total Started Survey", type="integer"),
         'tot_comp_survey': fields.function(_get_tot_comp_survey, string="Total Completed Survey", type="integer"),
-        'note': fields.text('Description', size=128),
+        'note': fields.text('Description', size=128, translate=True),
         'type': fields.many2one('survey.type', 'Type'),
         'color': fields.integer('Color Index'),
         'response_ids': fields.one2many('survey.response', 'survey_id', 'Responses', readonly=1),
@@ -255,11 +255,11 @@ class survey_page(osv.osv):
     _rec_name = 'title'
     _order = 'sequence'
     _columns = {
-        'title': fields.char('Page Title', size=128, required=1),
+        'title': fields.char('Page Title', size=128, required=1, translate=True),
         'survey_id': fields.many2one('survey', 'Survey', ondelete='cascade'),
         'question_ids': fields.one2many('survey.question', 'page_id', 'Questions'),
         'sequence': fields.integer('Page Nr'),
-        'note': fields.text('Description'),
+        'note': fields.text('Description', translate=True),
     }
     _defaults = {
         'sequence': 1
@@ -320,19 +320,19 @@ class survey_question(osv.osv):
 
     _columns = {
         'page_id': fields.many2one('survey.page', 'Survey Page', ondelete='cascade', required=1),
-        'question': fields.char('Question', size=128, required=1),
+        'question': fields.char('Question', required=1, translate=True),
         'answer_choice_ids': fields.one2many('survey.answer', 'question_id', 'Answer'),
         'is_require_answer': fields.boolean('Require Answer to Question'),
         'required_type': fields.selection([('all', 'All'), ('at least', 'At Least'), ('at most', 'At Most'), ('exactly', 'Exactly'), ('a range', 'A Range')], 'Respondent must answer'),
         'req_ans': fields.integer('#Required Answer'),
         'maximum_req_ans': fields.integer('Maximum Required Answer'),
         'minimum_req_ans': fields.integer('Minimum Required Answer'),
-        'req_error_msg': fields.text('Error Message'),
+        'req_error_msg': fields.text('Error Message', translate=True),
         'allow_comment': fields.boolean('Allow Comment Field'),
         'sequence': fields.integer('Sequence'),
         'tot_resp': fields.function(_calc_response, string="Total Answer"),
         'survey': fields.related('page_id', 'survey_id', type='many2one', relation='survey', string='Survey'),
-        'descriptive_text': fields.text('Descriptive Text', size=255),
+        'descriptive_text': fields.text('Descriptive Text', size=255, translate=True),
         'column_heading_ids': fields.one2many('survey.question.column.heading', 'question_id', ' Column heading'),
         'type': fields.selection([('multiple_choice_only_one_ans', 'Multiple Choice (Only One Answer)'),
              ('multiple_choice_multiple_ans', 'Multiple Choice (Multiple Answer)'),
@@ -347,7 +347,7 @@ class survey_question(osv.osv):
              ('table', 'Table'),
             ], 'Question Type', required=1, ),
         'is_comment_require': fields.boolean('Add Comment Field'),
-        'comment_label': fields.char('Field Label', size=255),
+        'comment_label': fields.char('Field Label', size=255, translate=True),
         'comment_field_type': fields.selection([('char', 'Single Line Of Text'), ('text', 'Paragraph of Text')], 'Comment Field Type'),
         'comment_valid_type': fields.selection([('do_not_validate', '''Don't Validate Comment Text.'''),
              ('must_be_specific_length', 'Must Be Specific Length'),
@@ -362,9 +362,9 @@ class survey_question(osv.osv):
         'comment_maximum_float': fields.float('Maximum decimal number'),
         'comment_minimum_date': fields.date('Minimum date'),
         'comment_maximum_date': fields.date('Maximum date'),
-        'comment_valid_err_msg': fields.text('Error message'),
+        'comment_valid_err_msg': fields.text('Error message', translate=True),
         'make_comment_field': fields.boolean('Make Comment Field an Answer Choice'),
-        'make_comment_field_err_msg': fields.text('Error message'),
+        'make_comment_field_err_msg': fields.text('Error message', translate=True),
         'is_validation_require': fields.boolean('Validate Text'),
         'validation_type': fields.selection([('do_not_validate', '''Don't Validate Comment Text.'''), \
              ('must_be_specific_length', 'Must Be Specific Length'), \
@@ -379,15 +379,15 @@ class survey_question(osv.osv):
         'validation_maximum_float': fields.float('Maximum decimal number'),
         'validation_minimum_date': fields.date('Minimum date'),
         'validation_maximum_date': fields.date('Maximum date'),
-        'validation_valid_err_msg': fields.text('Error message'),
+        'validation_valid_err_msg': fields.text('Error message', translate=True),
         'numeric_required_sum': fields.integer('Sum of all choices'),
-        'numeric_required_sum_err_msg': fields.text('Error message'),
+        'numeric_required_sum_err_msg': fields.text('Error message', translate=True),
         'rating_allow_one_column_require': fields.boolean('Allow Only One Answer per Column (Forced Ranking)'),
         'in_visible_rating_weight': fields.boolean('Is Rating Scale Invisible?'),
         'in_visible_menu_choice': fields.boolean('Is Menu Choice Invisible?'),
         'in_visible_answer_type': fields.boolean('Is Answer Type Invisible?'),
         'comment_column': fields.boolean('Add comment column in matrix'),
-        'column_name': fields.char('Column Name', size=256),
+        'column_name': fields.char('Column Name', size=256, translate=True),
         'no_of_rows': fields.integer('No of Rows'),
     }
     _defaults = {
@@ -564,7 +564,7 @@ class survey_question_column_heading(osv.osv):
         return False
 
     _columns = {
-        'title': fields.char('Column Heading', size=128, required=1),
+        'title': fields.char('Column Heading', size=128, required=1, translate=True),
         'menu_choice': fields.text('Menu Choice'),
         'rating_weight': fields.integer('Weight'),
         'question_id': fields.many2one('survey.question', 'Question', ondelete='cascade'),
@@ -611,14 +611,14 @@ class survey_answer(osv.osv):
 
     _columns = {
         'question_id': fields.many2one('survey.question', 'Question', ondelete='cascade'),
-        'answer': fields.char('Answer', size=128, required=1),
+        'answer': fields.char('Answer', size=128, required=1, translate=True),
         'sequence': fields.integer('Sequence'),
         'response': fields.function(_calc_response_avg, string="#Answer", multi='sums'),
         'average': fields.function(_calc_response_avg, string="#Avg", multi='sums'),
         'type': fields.selection([('char', 'Character'), ('date', 'Date'), ('datetime', 'Date & Time'), \
             ('integer', 'Integer'), ('float', 'Float'), ('selection', 'Selection'), \
             ('email', 'Email')], "Type of Answer", required=1),
-        'menu_choice': fields.text('Menu Choices'),
+        'menu_choice': fields.text('Menu Choices', translate=True),
         'in_visible_answer_type': fields.boolean('Is Answer Type Invisible??')
     }
     _defaults = {
