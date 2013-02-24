@@ -1263,7 +1263,7 @@
   color: white;
   padding: 2px 4px;
   margin: 1px 6px 0 0;
-  border: 1px solid lightgrey;
+  border: 1px solid lightGray;
   text-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
   -moz-border-radius: 4px;
   -webkit-border-radius: 4px;
@@ -1295,7 +1295,7 @@
   transform: scale(1.1);
 }
 .openerp .oe_secondary_submenu .oe_active {
-  border-top: 1px solid lightgrey;
+  border-top: 1px solid lightGray;
   border-bottom: 1px solid #dedede;
   text-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
   -moz-box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.2), inset 0 -1px 3px rgba(40, 40, 40, 0.2);
@@ -2257,7 +2257,7 @@
 }
 .openerp .oe_form .oe_form_label_help[for] span, .openerp .oe_form .oe_form_label[for] span {
   font-size: 80%;
-  color: darkgreen;
+  color: darkGreen;
   vertical-align: top;
   position: relative;
   top: -4px;
@@ -2329,6 +2329,7 @@
   width: 100%;
   display: inline-block;
   padding: 2px 2px 2px 0px;
+  vertical-align: top;
 }
 .openerp .oe_form .oe_form_field input {
   margin: 0px;
@@ -2372,7 +2373,6 @@
   white-space: nowrap;
 }
 .openerp .oe_form .oe_form_field_boolean {
-  padding-top: 4px;
   width: auto;
 }
 .openerp .oe_form .oe_datepicker_container {
@@ -3094,6 +3094,24 @@
   color: #333333;
 }
 
+@-moz-document url-prefix() {
+  .openerp .oe_view_manager .oe_view_manager_switch li {
+    line-height: 21px;
+  }
+  .openerp .oe_searchview .oe_searchview_search {
+    top: -1px;
+  }
+  .openerp .oe_form_field_many2one .oe_m2o_cm_button {
+    line-height: 18px;
+  }
+  .openerp .oe_secondary_submenu {
+    line-height: 14px;
+  }
+  .openerp .oe_webclient .oe_star_on, .openerp .oe_webclient .oe_star_off {
+    top: 0px;
+  }
+}
+
 .kitten-mode-activated {
   background-size: cover;
   background-attachment: fixed;
@@ -3313,6 +3331,7 @@ div.ui-widget-overlay {
     overflow: hidden !important;
   }
 }
+
 .blockUI.blockOverlay {
   background-color: black;
   opacity: 0.6;
