@@ -393,18 +393,14 @@ class test_required_string_field(ImporterCase):
     def test_empty(self):
         result = self.import_(['value'], [[]])
         self.assertEqual(result['messages'], [message(
-            u"Missing required value for the field 'value'. This might be "
-            u"'unknown' in the current model, or a field of the same name in "
-            u"an o2m.")])
+            u"Missing required value for the field 'value' (unknown)")])
         self.assertIs(result['ids'], False)
 
     @mute_logger('openerp.sql_db', 'openerp.osv.orm')
     def test_not_provided(self):
         result = self.import_(['const'], [['12']])
         self.assertEqual(result['messages'], [message(
-            u"Missing required value for the field 'value'. This might be "
-            u"'unknown' in the current model, or a field of the same name in "
-            u"an o2m.")])
+            u"Missing required value for the field 'unknown'")])
         self.assertIs(result['ids'], False)
 
 class test_text(ImporterCase):
