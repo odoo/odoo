@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2012-12-21 17:04+0000\n"
-"PO-Revision-Date: 2013-01-30 10:13+0000\n"
-"Last-Translator: psyray <Unknown>\n"
+"PO-Revision-Date: 2013-02-22 12:52+0000\n"
+"Last-Translator: Eric Vernichon <eric@vernichon.fr>\n"
 "Language-Team: French <fr@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-01-31 05:17+0000\n"
-"X-Generator: Launchpad (build 16455)\n"
+"X-Launchpad-Export-Date: 2013-02-23 06:07+0000\n"
+"X-Generator: Launchpad (build 16506)\n"
 
 #. module: account
 #: model:process.transition,name:account.process_transition_supplierreconcilepaid0
@@ -1941,6 +1941,8 @@ msgid ""
 "Select a configuration package to setup automatically your\n"
 "                        taxes and chart of accounts."
 msgstr ""
+"Choisissez un ensemble de configuration pour configurer automatiquement vos\n"
+"                        taxes et votre plan comptable."
 
 #. module: account
 #: view:account.analytic.account:0
@@ -2297,6 +2299,8 @@ msgstr "Journal :"
 #: sql_constraint:account.fiscal.position.tax:0
 msgid "A tax fiscal position could be defined only once time on same taxes."
 msgstr ""
+"Une position fiscale budgétaire ne peut être défini qu'une seule fois sur "
+"les mêmes taxes."
 
 #. module: account
 #: view:account.tax:0
@@ -3167,6 +3171,7 @@ msgstr "Ventes par compte"
 #, python-format
 msgid "You cannot delete a posted journal entry \"%s\"."
 msgstr ""
+"Vous ne pouvez pas supprimer une entrée \"%s\" validée dans le journal ."
 
 #. module: account
 #: view:account.invoice:0
@@ -3265,12 +3270,12 @@ msgstr ""
 #: view:account.unreconcile:0
 #: view:account.unreconcile.reconcile:0
 msgid "Unreconcile Transactions"
-msgstr ""
+msgstr "Transactions non lettrées"
 
 #. module: account
 #: field:wizard.multi.charts.accounts,only_one_chart_template:0
 msgid "Only One Chart Template Available"
-msgstr ""
+msgstr "Un seul modèle de graphique disponible"
 
 #. module: account
 #: view:account.chart.template:0
@@ -3381,7 +3386,7 @@ msgstr "Balance générale"
 #: code:addons/account/account.py:431
 #, python-format
 msgid "Unable to adapt the initial balance (negative value)."
-msgstr ""
+msgstr "Incapable d'adapter le solde initial (valeur négative)."
 
 #. module: account
 #: selection:account.invoice,type:0
@@ -3481,6 +3486,8 @@ msgstr "Toujours"
 msgid ""
 "Full accounting features: journals, legal statements, chart of accounts, etc."
 msgstr ""
+"Fonctions de comptabilité complète: journaux, déclarations légales, plan "
+"comptable, etc."
 
 #. module: account
 #: view:account.analytic.line:0
@@ -3537,7 +3544,7 @@ msgstr "Fichier électronique"
 #. module: account
 #: field:account.move.line,reconcile:0
 msgid "Reconcile Ref"
-msgstr ""
+msgstr "Référence de lettrage"
 
 #. module: account
 #: field:account.config.settings,has_chart_of_accounts:0
@@ -3792,6 +3799,9 @@ msgid ""
 "centralized counterpart box in the related journal from the configuration "
 "menu."
 msgstr ""
+"Vous ne pouvez pas créer une facture sur un journal centralisé. Décochez la "
+"case contrepartie centralisée pour le journal concerné dans le menu de "
+"configuration."
 
 #. module: account
 #: field:account.bank.statement,balance_start:0
@@ -3824,6 +3834,9 @@ msgid ""
 "You cannot create journal items with a secondary currency without recording "
 "both 'currency' and 'amount currency' field."
 msgstr ""
+"Vous ne pouvez pas créer d'écritures comptables avec une monnaie secondaire "
+"sans enregistrer à la fois le champ 'devise' et le champ 'montant de la "
+"devise'."
 
 #. module: account
 #: field:account.financial.report,display_detail:0
@@ -3852,6 +3865,10 @@ msgid ""
 "quotations with a button \"Pay with  Paypal\" in automated emails or through "
 "the OpenERP portal."
 msgstr ""
+"Compte Paypal (e-mail) pour recevoir des paiements en ligne (carte de "
+"crédit, etc) Si vous définissez un compte Paypal, le client sera en mesure "
+"de payer vos factures ou devis avec un bouton \"Payer avec PayPal\" dans les "
+"emails automatiques ou via le portail OpenERP ."
 
 #. module: account
 #: code:addons/account/account_move_line.py:535
@@ -3862,6 +3879,10 @@ msgid ""
 "You can create one in the menu: \n"
 "Configuration/Journals/Journals."
 msgstr ""
+"Aucun journal de type %s n'a été trouvé pour cette société.\n"
+"\n"
+"Vous pouvez en créer un depuis le menu: \n"
+"Configuration/Journaux/Journaux"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_unreconcile
@@ -3930,6 +3951,8 @@ msgid ""
 "You have not supplied enough arguments to compute the initial balance, "
 "please select a period and a journal in the context."
 msgstr ""
+"Vous n'avez pas fourni suffisamment d'arguments pour calculer le solde "
+"initial, merci de choisir la période et le journal correspondant."
 
 #. module: account
 #: model:ir.actions.report.xml,name:account.account_transfers
@@ -4026,6 +4049,9 @@ msgid ""
 "You cannot modify a posted entry of this journal.\n"
 "First you should set the journal to allow cancelling entries."
 msgstr ""
+"Vous ne pouvez pas modifier une entrée validée dans ce journal.\n"
+"Vous devez, en premier lieu, modifier le journal afin de permettre "
+"l'annulation d'entrées."
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_print_sale_purchase_journal
@@ -4063,7 +4089,7 @@ msgstr "Créer un compte"
 #: code:addons/account/wizard/account_fiscalyear_close.py:62
 #, python-format
 msgid "The entries to reconcile should belong to the same company."
-msgstr ""
+msgstr "Les entrées à lettrer doivent appartenir à la même société"
 
 #. module: account
 #: field:account.invoice.tax,tax_amount:0
@@ -4347,7 +4373,7 @@ msgstr "Taux de taxe"
 #. module: account
 #: field:account.config.settings,complete_tax_set:0
 msgid "Complete set of taxes"
-msgstr ""
+msgstr "Ensemble complet de taxes"
 
 #. module: account
 #: field:account.account,name:0
@@ -4398,7 +4424,7 @@ msgstr "Identifiant du partenaire"
 #: help:account.bank.statement,message_ids:0
 #: help:account.invoice,message_ids:0
 msgid "Messages and communication history"
-msgstr ""
+msgstr "Historique des messages et communications"
 
 #. module: account
 #: help:account.journal,analytic_journal_id:0
@@ -4597,6 +4623,8 @@ msgid ""
 "This payment term will be used instead of the default one for sale orders "
 "and customer invoices"
 msgstr ""
+"Ce délai de paiement sera utilisé à la place de celui par défaut pour les "
+"commandes et les factures clients"
 
 #. module: account
 #: view:account.config.settings:0
@@ -4624,7 +4652,7 @@ msgstr "Ecritures validées"
 #. module: account
 #: field:account.move.line,blocked:0
 msgid "No Follow-up"
-msgstr ""
+msgstr "Aucun suivi"
 
 #. module: account
 #: view:account.tax.template:0
@@ -4982,7 +5010,7 @@ msgstr "Écritures comptables à lettrer"
 #. module: account
 #: model:ir.model,name:account.model_account_tax_template
 msgid "Templates for Taxes"
-msgstr ""
+msgstr "Modèles de taxes"
 
 #. module: account
 #: sql_constraint:account.period:0
@@ -5033,6 +5061,9 @@ msgid ""
 "Error!\n"
 "You cannot create an account which has parent account of different company."
 msgstr ""
+"Erreur!\n"
+"Vous ne pouvez pas créer un compte dont le parent appartient à une autre "
+"société."
 
 #. module: account
 #: code:addons/account/account_invoice.py:631
@@ -5845,7 +5876,7 @@ msgstr "Inclure dans le Montant de Base"
 #. module: account
 #: field:account.invoice,supplier_invoice_number:0
 msgid "Supplier Invoice Number"
-msgstr ""
+msgstr "Numéro de facture fournisseur"
 
 #. module: account
 #: help:account.payment.term.line,days:0
