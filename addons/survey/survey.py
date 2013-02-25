@@ -99,7 +99,7 @@ class survey(osv.osv):
         'type': fields.many2one('survey.type', 'Type'),
         'color': fields.integer('Color Index'),
         'response_ids': fields.one2many('survey.response', 'survey_id', 'Responses', readonly=1),
-        'public_url': fields.function(_get_public_url, string="Public url", type="char"),
+        'public_url': fields.function(_get_public_url, string="Public web link", type="char"),
         'token': fields.char('Public token', size=8, required=1),
     }
     _defaults = {

@@ -30,23 +30,45 @@
                     <field name="model" invisible="1"/>
                     <field name="res_id" invisible="1"/>
                     <field name="parent_id" invisible="1"/>
-                    <group col="4">
+                    <group col="2">
                         <field name="public"/>
-                        <div class="oe_survey_email_public">
-                            <label for="date_deadline" attrs="{'invisible':[('public','=',True)]}"/>
-                            <field name="date_deadline" attrs="{'invisible':[('public','=',True)]}"/>
-                            <label for="public_url" attrs="{'invisible':[('public','=',False)]}"/>
-                            <field name="public_url" attrs="{'invisible':[('public','=',False)]}" widget="url"/>
+                    </group>
+                    <group col="1" attrs="{'invisible':[('public','in',['email', 'email_public_link'])]}" class="oe_survey_email_public">
+                        <div>
+                            You can share your survey web public link and/or send private invitations to your audience.<br/>
+                            People can response once per invitation, and whenever they want with the public web link.
+                        </div>
+                        <div class="oe_survey_url_label">Copy, paste and share the web link below to your audience.</div>
+                        <div class="oe_survey_url">
+                            <field name="public_url" widget="url"/>
+                        </div>
+                        <div class="oe_survey_url_label">Copy and paste the HTML code below to add this web link to any webpage.</div>
+                        <div class="oe_survey_url">
+                            <field name="public_url_html"/>
                         </div>
                     </group>
-                    <group>
-                        <field string="List of partners" name="partner_ids" widget="many2many_tags_email" placeholder="Add contacts to notify..." context="{'force_email':True, 'show_email':True}"/>
-                        <field name="multi_email"/>
-                        <field name="subject" placeholder="Subject..."/>
+                    <group col="1" attrs="{'invisible':['|',('public','=',False),('public','in',['public_link'])]}">
+                        <group col="2">
+                            <field string="List of partners" name="partner_ids" widget="many2many_tags_email" placeholder="Add contacts to notify..." context="{'force_email':True, 'show_email':True}"/>
+                            <field name="multi_email"/>
+                            <field name="subject" placeholder="Subject..."/>
+                        </group>
+                        <field name="body"/>
+                        <group col="2">
+                            <div>
+                                <label for="attachment_ids"/>
+                                <field name="attachment_ids" widget="many2many_binary"/>
+                            </div>
+                            <div class="oe_survey_date_deadline">
+                                <label for="date_deadline"/>
+                                <field name="date_deadline"/>
+                            </div>
+                        </group>
                     </group>
-                    <field name="body"/>
-                    <field name="attachment_ids" widget="many2many_binary"/>
-                    <footer>
+                    <footer attrs="{'invisible':[('public','in',['email', 'email_public_link'])]}">
+                        <button string="Close" class="oe_link" special="cancel" />
+                    </footer>
+                    <footer attrs="{'invisible':['|',('public','=',False),('public','in',['public_link'])]}">
                         <button string="Send" name="send_mail" type="object" class="oe_highlight"/>
                         or
                         <button string="Cancel" class="oe_link" special="cancel" />

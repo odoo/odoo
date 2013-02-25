@@ -36,14 +36,28 @@ class survey_mail_compose_message(osv.TransientModel):
     def _get_public_url(self, cr, uid, ids, name, arg, context=None):
         """ Compute if the message is unread by the current user. """
         res = dict((id, 0) for id in ids)
+        print ids
         survey_obj = self.pool.get('survey')
         for wizard in self.browse(cr, uid, ids, context=context):
             res[wizard.id] = survey_obj.browse(cr, uid, wizard.res_id, context=context).public_url
         return res
 
+    def _get_public_url_html(self, cr, uid, ids, name, arg, context=None):
+        """ Compute if the message is unread by the current user. """
+        urls = self._get_public_url(cr, uid, ids, name, arg, context=context)
+        print urls
+        for url, key in urls:
+            print url, key
+            urls[key] = '<a href="%s">%s</a>' % (url, _("Click here to take survey"))
+        return urls
+
     _columns = {
-        'public': fields.boolean('Public url survey', help="You can use the public url everywhere. You can use the survey invitation together the public url."),
+        'public': fields.selection([('public_link', 'Get and share the public web link below to your audience.'), \
+                ('email_public_link', 'Get and send by email the public web link below to your audience.'),\
+                ('email', 'Send private invitation to your audience (only one response by invitation).')],
+            string='Share options', required=True),
         'public_url': fields.function(_get_public_url, string="Public url", type="char"),
+        'public_url_html': fields.function(_get_public_url_html, string="Public HTML web link", type="char"),
         'partner_ids': fields.many2many('res.partner',
             'survey_mail_compose_message_res_partner_rel',
             'wizard_id', 'partner_id', 'Additional contacts'),
@@ -54,7 +68,7 @@ class survey_mail_compose_message(osv.TransientModel):
         'date_deadline': fields.date(string="Deadline to which the invitation to respond is valid", help="Deadline to which the invitation to respond for this survey is valid. If the field is empty, the invitation is still valid."),
     }
     _defaults = {
-        'public': False,
+        'public': 'email',
     }
     #------------------------------------------------------
     # Wizard validation and send
@@ -88,7 +102,7 @@ class survey_mail_compose_message(osv.TransientModel):
                 })
 
             #set url
-            url = not wizard.public and re.sub(r'params=[^&]+', 'params=%s' % token, wizard.public_url) or wizard.public_url
+            url = wizard.public == 'email' and re.sub(r'params=[^&]+', 'params=%s' % token, wizard.public_url) or wizard.public_url
 
             # post the message
             values = {
@@ -151,5 +165,7 @@ class survey_mail_compose_message(osv.TransientModel):
     def default_get(self, cr, uid, fields, context=None):
         value = super(survey_mail_compose_message, self).default_get(cr, uid, fields, context=context)
         if value.get('res_id'):
-            value['public_url'] = self.pool.get('survey').browse(cr, uid, value['res_id'], context=context).public_url
+            public_url = self.pool.get('survey').browse(cr, uid, value['res_id'], context=context).public_url
+            value['public_url'] = public_url
+            value['public_url_html'] = '<a href="%s">%s</a>' % (public_url, _("Click here to take survey"))
         return value
