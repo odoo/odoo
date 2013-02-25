@@ -154,7 +154,7 @@ class test_mail(TestMailBase):
         new_mail = self.mail_message.browse(cr, uid, self.mail_message.search(cr, uid, [('message_id', '=', test_msg_id)])[0])
         # Test: author_id set, not email_from
         self.assertEqual(new_mail.author_id, user_raoul.partner_id, 'message process wrong author found')
-        self.assertFalse(new_mail.email_from, 'message process should not set the email_from when an author is found')
+        self.assertEqual(new_mail.email_from, user_raoul.email, 'message process wrong email_from')
 
         # Do: post a new message, with a unknown partner
         test_msg_id = '<deadcafe.1337-3@smtp.agrolait.com>'
@@ -524,7 +524,7 @@ class test_mail(TestMailBase):
         # 1. mass_mail on pigs and bird
         compose_id = mail_compose.create(cr, uid,
             {'subject': _subject, 'body': '${object.description}'},
-            {'default_composition_mode': 'mass_mail', 'default_model': 'mail.group', 'default_res_id': False,
+            {'default_composition_mode': 'mass_mail', 'default_model': 'mail.group', 'default_res_id': False, 'default_notify': True,
                 'active_ids': [self.group_pigs_id, group_bird_id]})
         compose = mail_compose.browse(cr, uid, compose_id)
 

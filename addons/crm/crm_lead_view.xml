@@ -577,5 +577,21 @@
             </field>
         </record>
 
+        <!--
+            MASS MAILING
+        -->
+        <act_window name="Mass Mailing"
+                res_model="mail.compose.message"
+                src_model="crm.lead"
+                view_mode="form"
+                multi="True"
+                target="new"
+                key2="client_action_multi"
+                id="crm.action_lead_mass_mail"
+                context="{
+                            'default_composition_mode': 'mass_mail',
+                            'default_email_to':'{$object.email or \'\'}',
+                        }"/>
+
     </data>
 </openerp>

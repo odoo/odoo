@@ -25,6 +25,8 @@
                                     </group>
                                     <group>
                                         <field name="partner_ids" widget="many2many_tags"/>
+                                        <field name="notified_partner_ids" widget="many2many_tags"/>
+                                        <field name="recipient_ids" widget="many2many_tags"/>
                                     </group>
                                 </group>
                                 <notebook>
@@ -67,7 +69,7 @@
                     <field name="subject"/>
                     <field name="author_id" string="User"/>
                     <field name="message_id" invisible="1"/>
-                    <field name="partner_ids" invisible="1"/>
+                    <field name="recipient_ids" invisible="1"/>
                     <field name="model" invisible="1"/>
                     <field name="res_id" invisible="1"/>
                     <field name="email_from" invisible="1"/>
@@ -97,7 +99,7 @@
                     <filter icon="terp-camera_test" name="type_notification" string="Notification" domain="[('type','=','notification')]"/>
                     <group expand="0" string="Extended Filters...">
                         <field name="author_id"/>
-                        <field name="partner_ids"/>
+                        <field name="recipient_ids"/>
                         <field name="model"/>
                         <field name="res_id"/>
                     </group>

@@ -22,6 +22,7 @@
 from openerp import tools
 from openerp.osv import osv, fields
 
+
 def _reopen(self, res_id, model):
     return {'type': 'ir.actions.act_window',
             'view_mode': 'form',
@@ -35,6 +36,7 @@ def _reopen(self, res_id, model):
                 'default_model': model,
             },
     }
+
 
 class mail_compose_message(osv.TransientModel):
     _inherit = 'mail.compose.message'
@@ -59,13 +61,25 @@ class mail_compose_message(osv.TransientModel):
     _columns = {
         # incredible hack of the day: size=-1 means we want an int db column instead of an str one
         'template_id': fields.selection(_get_templates, 'Template', size=-1),
+        'partner_to': fields.char('To (Partner IDs)', readonly=True,
+            help="Comma-separated list of recipient partners ids (placeholders may be used here)"),
+        'email_to': fields.char('To (Emails)', readonly=True,
+            help="Comma-separated recipient addresses (placeholders may be used here)",),
+        'email_cc': fields.char('Cc (Emails)', readonly=True,
+            help="Carbon copy recipients (placeholders may be used here)"),
+    }
+
+    _defaults = {
+        'partner_to': lambda self, cr, uid, ctx={}: '',
+        'email_to': lambda self, cr, uid, ctx={}: '',
+        'email_cc': lambda self, cr, uid, ctx={}: '',
     }
 
     def onchange_template_id(self, cr, uid, ids, template_id, composition_mode, model, res_id, context=None):
         """ - mass_mailing: we cannot render, so return the template values
             - normal mode: return rendered values """
         if template_id and composition_mode == 'mass_mail':
-            values = self.pool.get('email.template').read(cr, uid, template_id, ['email_from', 'partner_to', 'reply_to', 'subject', 'body_html'], context)
+            values = self.pool.get('email.template').read(cr, uid, template_id, ['subject', 'body_html', 'email_from', 'email_to', 'email_cc', 'partner_to', 'reply_to'], context)
             values.pop('id')
         elif template_id:
             # FIXME odo: change the mail generation to avoid attachment duplication
@@ -80,11 +94,11 @@ class mail_compose_message(osv.TransientModel):
                     'datas_fname': attach_fname,
                     'res_model': model,
                     'res_id': res_id,
-                    'type': 'binary', # override default_type from context, possibly meant for another model!
+                    'type': 'binary',  # override default_type from context, possibly meant for another model!
                 }
                 values['attachment_ids'].append(ir_attach_obj.create(cr, uid, data_attach, context=context))
         else:
-            values = self.default_get(cr, uid, ['body', 'subject', 'partner_ids', 'attachment_ids'], context=context)
+            values = self.default_get(cr, uid, ['subject', 'body', 'email_from', 'email_to', 'email_cc', 'partner_to', 'reply_to', 'attachment_ids'], context=context)
 
         if values.get('body_html'):
             values['body'] = values.pop('body_html')
@@ -122,7 +136,7 @@ class mail_compose_message(osv.TransientModel):
             mail.compose.message, transform email_cc and email_to into partner_ids """
         template_values = self.pool.get('email.template').generate_email(cr, uid, template_id, res_id, context=context)
         # filter template values
-        fields = ['body_html', 'subject', 'email_to', 'partner_to', 'email_cc', 'attachments']
+        fields = ['subject', 'body_html', 'email_from', 'email_to', 'partner_to', 'email_cc',  'reply_to', 'attachments']
         values = dict((field, template_values[field]) for field in fields if template_values.get(field))
         values['body'] = values.pop('body_html', '')
         # transform email_to, email_cc into partner_ids
@@ -150,6 +164,20 @@ class mail_compose_message(osv.TransientModel):
             values = {}
         # get values to return
         email_dict = super(mail_compose_message, self).render_message(cr, uid, wizard, res_id, context)
+
+        email_to = self.render_template(cr, uid, wizard.email_to, wizard.model, res_id, context)
+        email_cc = self.render_template(cr, uid, wizard.email_cc, wizard.model, res_id, context)
+        partner_to = self.render_template(cr, uid, wizard.partner_to, wizard.model, res_id, context)
+        email_dict['partner_ids'] = []
+
+        mails = tools.email_split((email_to or '') + ' ' + (email_cc or ''))
+        for mail in mails:
+            partner_id = self.pool.get('res.partner').find_or_create(cr, uid, mail, context=context)
+            email_dict['partner_ids'].append(partner_id)
+        if partner_to:
+            for partner_id in partner_to.split(','):
+                email_dict['partner_ids'].append(int(partner_id))
+
         values.update(email_dict)
         return values
 

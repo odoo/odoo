@@ -12,25 +12,31 @@
                         <field name="model" invisible="1"/>
                         <field name="res_id" invisible="1"/>
                         <field name="parent_id" invisible="1"/>
+                        <field name="post"  groups="base.group_no_one"/>
+                        <field name="notify"  groups="base.group_no_one"/>
                         <!-- visible wizard -->
-                        <label for="partner_ids" string="Recipients"/>
-                        <div groups="base.group_user">
-                            <span attrs="{'invisible':['|', ('model', '=', False), ('composition_mode', '!=', 'mass_mail')]}">
-                                Followers of selected items and
-                            </span>
-                            <span attrs="{'invisible':['|', ('model', '=', False), ('composition_mode', '=', 'mass_mail')]}">
+                        <field name="email_from"
+                            attrs="{'invisible':[('composition_mode', '!=', 'mass_mail')]}"/>
+                        <label for="partner_ids" string="Recipients"
+                            attrs="{'invisible':[('composition_mode', '=', 'mass_mail')]}"/>
+                        <div groups="base.group_user"
+                            attrs="{'invisible':[('composition_mode', '=', 'mass_mail')]}">
+                            <span attrs="{'invisible':[('model', '=', False)]}">
                                 Followers of
-                                <field name="record_name" readonly="1" class="oe_inline"
-                                    attrs="{'invisible':[('model', '=', False)]}"/>
-                                and 
+                                <field name="record_name" readonly="1" class="oe_inline"/>
+                                and
                             </span>
                             <field name="partner_ids" widget="many2many_tags_email" placeholder="Add contacts to notify..."
                                 context="{'force_email':True, 'show_email':True}"/>
                         </div>
-                        <field name="subject" placeholder="Subject..."/>
+                        <field name="same_thread"/>
+                        <field name="reply_to" placeholder="Email address te redirect replies..."
+                            attrs="{'invisible':[('same_thread', '=', True)],
+                                    'required':[('same_thread', '!=', True)]}"/>
+                        <field name="subject" placeholder="Subject..." required="True"/>
                     </group>
                     <field name="body"/>
-                    <field name="attachment_ids" widget="many2many_binary"/>
+                    <field name="attachment_ids" widget="many2many_binary" string="Attach a file"/>
                     <footer>
                         <button string="Send" name="send_mail" type="object" class="oe_highlight"/>
                         or
@@ -59,6 +65,9 @@
                 target="new"
                 key2="client_action_multi"
                 id="base.action_partner_mass_mail"
-                context="{'default_composition_mode': 'mass_mail'}"/>
+                context="{
+                            'default_composition_mode': 'mass_mail',
+                            'default_partner_to': '${object.id or \'\'}',
+                        }"/>
     </data>
 </openerp>

@@ -130,6 +130,7 @@ class test_message_compose(TestMailBase):
         # 1. Mass_mail on pigs and bird, with a default_partner_ids set to check he is correctly added
         context = {
             'default_composition_mode': 'mass_mail',
+            'default_notify': True,
             'default_model': 'mail.group',
             'default_res_id': self.group_pigs_id,
             'default_template_id': email_template_id,
