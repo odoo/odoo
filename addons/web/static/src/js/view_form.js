@@ -2333,7 +2333,7 @@ instance.web.form.FieldUrl = instance.web.form.FieldChar.extend({
             this._super();
         } else {
             var tmp = this.get('value');
-            var s = /(\w+):(.+)/.exec(tmp);
+            var s = /(\w+):(.+)|^\.{0,2}\//.exec(tmp);
             if (!s) {
                 tmp = "http://" + this.get('value');
             }
