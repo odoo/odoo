@@ -1311,7 +1311,7 @@ class Binary(openerpweb.Controller):
                 'id':  attachment_id
             }
         except Exception:
-            args = {'error':e.faultCode }
+            args = {'error': "Something horrible happened"}
         return out % (simplejson.dumps(callback), simplejson.dumps(args))
 
     @openerpweb.httprequest
