@@ -170,20 +170,20 @@ class test_message_compose(TestMailBase):
         self.assertEqual(set(message_bird_pids), set(partner_ids), 'mail.message on bird notified_partner_ids incorrect')
 
         # ----------------------------------------
-        # CASE4: test newly introduced email_recipients field
+        # CASE4: test newly introduced partner_to field
         # ----------------------------------------
 
         # get already-created partners back
         p_b_id = self.res_partner.search(cr, uid, [('email', '=', 'b@b.b')])[0]
         p_c_id = self.res_partner.search(cr, uid, [('email', '=', 'c@c.c')])[0]
         p_d_id = self.res_partner.search(cr, uid, [('email', '=', 'd@d.d')])[0]
-        # modify template: use email_recipients, use template and email address in email_to to test all features together
+        # modify template: use partner_to, use template and email address in email_to to test all features together
         user_model_id = self.registry('ir.model').search(cr, uid, [('model', '=', 'res.users')])[0]
         email_template.write(cr, uid, [email_template_id], {
             'model_id': user_model_id,
             'body_html': '${object.login}',
             'email_to': '${object.email} c@c',
-            'email_recipients': '%i,%i' % (p_b_id, p_c_id),
+            'partner_to': '%i,%i' % (p_b_id, p_c_id),
             'email_cc': 'd@d',
             })
         # patner by email + partner by id (no double)

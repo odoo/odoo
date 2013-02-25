@@ -65,7 +65,7 @@ class mail_compose_message(osv.TransientModel):
         """ - mass_mailing: we cannot render, so return the template values
             - normal mode: return rendered values """
         if template_id and composition_mode == 'mass_mail':
-            values = self.pool.get('email.template').read(cr, uid, template_id, ['subject', 'body_html'], context)
+            values = self.pool.get('email.template').read(cr, uid, template_id, ['email_from', 'partner_to', 'reply_to', 'subject', 'body_html'], context)
             values.pop('id')
         elif template_id:
             # FIXME odo: change the mail generation to avoid attachment duplication
@@ -122,7 +122,7 @@ class mail_compose_message(osv.TransientModel):
             mail.compose.message, transform email_cc and email_to into partner_ids """
         template_values = self.pool.get('email.template').generate_email(cr, uid, template_id, res_id, context=context)
         # filter template values
-        fields = ['body_html', 'subject', 'email_to', 'email_recipients', 'email_cc', 'attachments']
+        fields = ['body_html', 'subject', 'email_to', 'partner_to', 'email_cc', 'attachments']
         values = dict((field, template_values[field]) for field in fields if template_values.get(field))
         values['body'] = values.pop('body_html', '')
         # transform email_to, email_cc into partner_ids
@@ -132,9 +132,9 @@ class mail_compose_message(osv.TransientModel):
         for mail in mails:
             partner_id = self.pool.get('res.partner').find_or_create(cr, uid, mail, context=context)
             values['partner_ids'].append(partner_id)
-        email_recipients = values.pop('email_recipients', '')
-        if email_recipients:
-            for partner_id in email_recipients.split(','):
+        partner_to = values.pop('partner_to', '')
+        if partner_to:
+            for partner_id in partner_to.split(','):
                 values['partner_ids'].append(int(partner_id))
 
         values['partner_ids'] = list(set(values['partner_ids']))
