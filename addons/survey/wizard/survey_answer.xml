@@ -5,7 +5,7 @@
         <!--
             Survey Question Wizard
          -->
-        <record id="view_survey_question_message" model="ir.ui.view">           
+        <record id="view_survey_question_message" model="ir.ui.view">
             <field name="name">Survey Answer</field>
             <field name="model">survey.question.wiz</field>
             <field name="arch" type="xml">
@@ -33,7 +33,7 @@
             <field name="target">new</field>
         </record>
 
-        <record id="action_complete" model="ir.actions.act_window">
+        <record id="action_fill_survey" model="ir.actions.act_window">
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">survey.question.wiz</field>
             <field name="view_type">form</field>
@@ -42,5 +42,32 @@
             <field name="context">{'survey_id': active_id, 'survey_token': params, 'ir_actions_act_window_target': 'inline'}</field>
         </record>
 
+        <!--
+            Survey Question Wizard - Complete survey
+         -->
+        <record id="view_survey_complete_survey" model="ir.ui.view">           
+            <field name="name">Complete Survey Answer</field>
+            <field name="model">survey.question.wiz</field>
+            <field name="arch" type="xml">
+                <form string="Your Messages"  version="7.0">
+                    <sheet>
+                        <div>
+                            <br/><br/>
+                            <h2>Thanks for competing this survey.</h2>
+                            <h2>Now join OpenERP to facilitate your professional life.</h2>
+                            <ul>
+                                <li>Surveys</li>
+                                <li>Accounting</li>
+                                <li>CRM and Marketing</li>
+                                <li>Project Managment</li>
+                                <li>...</li>
+                            </ul>
+                            <div>Register with OpenERP today</div>
+                            <button class="oe_highlight" string="Sign Up FREE"/>
+                        </div>
+                    </sheet>
+                </form>
+            </field>
+        </record>
     </data>
 </openerp>

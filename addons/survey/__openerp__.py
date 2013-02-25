@@ -38,10 +38,10 @@ user name and password for the invitation of the survey.
     'data': [
         'survey_report.xml',
         'survey_data.xml',
-        'wizard/survey_answer.xml',
         'security/survey_security.xml',
         'security/ir.model.access.csv',
         'survey_view.xml',
+        'wizard/survey_answer.xml',
         'wizard/survey_print_statistics.xml',
         'wizard/survey_print_answer.xml',
         'wizard/survey_print.xml',

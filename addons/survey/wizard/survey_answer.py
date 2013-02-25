@@ -175,25 +175,9 @@ class survey_question_wiz(osv.osv_memory):
             etree.SubElement(xml_group, 'field', {'modifiers': readonly and '{"readonly": 1}' or '{}', 'name': tools.ustr(que.id) + "_other", 'nolabel': "1", 'colspan': "4"})
             fields[tools.ustr(que.id) + "_other"] = {'type': que_rec.comment_field_type, 'string': '', 'views': {}}
 
-    def _view_survey_complete(self, result, context):
-        """ rendering of the message displayed when the survey is completed
-        """
-        xml_form = etree.Element('form', {'string': _('Complete Survey Answer')})
-        #xml_footer = etree.SubElement(xml_form, 'footer', {'col': '6', 'colspan': '4', 'class': 'oe_survey_title_height'})
-        etree.SubElement(xml_form, 'separator', {'string': 'Survey Completed', 'colspan': "4"})
-        etree.SubElement(xml_form, 'label', {'string': 'Thanks for your Answer'})
-        etree.SubElement(xml_form, 'newline')
-        root = xml_form.getroottree()
-        result['arch'] = etree.tostring(root)
-        result['fields'] = {}
-        result['context'] = context
-
-    def _survey_complete(self, cr, uid, survey_id, sur_name_read, survey_browse, context):
+    def _survey_complete(self, cr, uid, survey_id, context):
         """ list of action to do when the survey is completed
         """
-        # record complete
-        self.pool.get('survey.response').write(cr, SUPERUSER_ID, [sur_name_read.response_id], {'state': 'done'})
-
         # send mail to the responsible
         val = {
             'type': 'notification',
@@ -210,7 +194,7 @@ class survey_question_wiz(osv.osv_memory):
         * response_id
         * state
         * readonly
-        If it's a public token, return the dictionnary with response_id = False
+        If it's a public token or survey_id = False, return the dictionnary with response_id = False
         If no response and the token doesn't match with the survey public token,
         This function raise an exception
 
@@ -219,7 +203,7 @@ class survey_question_wiz(osv.osv_memory):
         res = {'response_id': False, 'state': None, 'readonly': context.get('readonly', False)}
 
         if not survey_id:
-            raise osv.except_osv(_('Warning!'), _("You do not have access to this survey."))
+            return res
 
         survey_obj = self.pool.get('survey')
         survey_browse = survey_obj.browse(cr, SUPERUSER_ID, survey_id, context=context)
@@ -238,9 +222,9 @@ class survey_question_wiz(osv.osv_memory):
 
         # check open and sign in
         if not context.get('edit') and survey_browse.state != "open":
-            raise osv.except_osv(_('Warning!'), _("You cannot answer because the survey is not open."))
+            raise osv.except_osv(_('Access Denied!'), _("You cannot answer because the survey is not open."))
         if anonymous and survey_browse.sign_in:
-            raise osv.except_osv(_('Warning!'), _("Please sign in to complete this survey."))
+            raise osv.except_osv(_('Access Denied!'), _("Please sign in to complete this survey."))
 
         # get opening response
         response_ids = None
@@ -276,16 +260,16 @@ class survey_question_wiz(osv.osv_memory):
                 response_ids = sur_response_obj.search(cr, SUPERUSER_ID, [('survey_id', '=', survey_id), ('partner_id', '=', pid)], context=context, limit=1)
 
             if not response_ids:
-                raise osv.except_osv(_('Warning!'), _("You do not have access to this survey."))
+                raise osv.except_osv(_('Access Denied!'), _("You do not have access to this survey."))
             else:
                 response = sur_response_obj.browse(cr, SUPERUSER_ID, response_ids[0], context=context)
                 if response.state == 'done':
-                    #raise osv.except_osv(_('Warning!'), _("You have already answered this survey, Thank you."))
+                    #raise osv.except_osv(_('Access Denied!'), _("You have already answered this survey, Thank you."))
                     res['response_id'] = context.get('response_id') and int(context['response_id'][0])
                     res['state'] = 'done'
                     res['readonly'] = True
                 elif response.date_deadline and datetime.strptime(response.date_deadline, DATETIME_FORMAT) < datetime.now():
-                    raise osv.except_osv(_('Warning!'), _("The deadline for responding to this survey is exceeded since %s") % response.date_deadline)
+                    raise osv.except_osv(_('Access Denied!'), _("The deadline for responding to this survey is exceeded since %s") % response.date_deadline)
                 else:
                     raise osv.except_osv(_('Access Denied!'), _("You do not have access to this survey."))
 
@@ -385,7 +369,7 @@ class survey_question_wiz(osv.osv_memory):
                     if sur_name_rec.page_no > 1:
                         pre_button = True
 
-                # survey in progress
+                # survey in progress (not complete)
                 if flag:
                     pag_rec = page_obj.browse(cr, SUPERUSER_ID, p_id, context=context)
                     xml_form = etree.Element('form', {'version': "7.0", 'string': tools.ustr(pag_rec and pag_rec.title or survey_browse.title)})
@@ -394,10 +378,10 @@ class survey_question_wiz(osv.osv_memory):
                     if edit_mode:
                         context.update({'page_id': tools.ustr(p_id), 'page_number': sur_name_rec.page_no, 'transfer': sur_name_read.transfer})
                         xml_group3 = etree.SubElement(xml_form, 'group', {'col': '4', 'colspan': '4'})
-                        etree.SubElement(xml_group3, 'button', {'string': 'Add Page', 'icon': "gtk-new", 'type': 'object', 'name': "action_new_page", 'context': tools.ustr(context)})
-                        etree.SubElement(xml_group3, 'button', {'string': 'Edit Page', 'icon': "gtk-edit", 'type': 'object', 'name': "action_edit_page", 'context': tools.ustr(context)})
-                        etree.SubElement(xml_group3, 'button', {'string': 'Delete Page', 'icon': "gtk-delete", 'type': 'object', 'name': "action_delete_page", 'context': tools.ustr(context)})
-                        etree.SubElement(xml_group3, 'button', {'string': 'Add Question', 'icon': "gtk-new", 'type': 'object', 'name': "action_new_question", 'context': tools.ustr(context)})
+                        etree.SubElement(xml_group3, 'button', {'string': _('Add Page'), 'icon': "gtk-new", 'type': 'object', 'name': "action_new_page", 'context': tools.ustr(context)})
+                        etree.SubElement(xml_group3, 'button', {'string': _('Edit Page'), 'icon': "gtk-edit", 'type': 'object', 'name': "action_edit_page", 'context': tools.ustr(context)})
+                        etree.SubElement(xml_group3, 'button', {'string': _('Delete Page'), 'icon': "gtk-delete", 'type': 'object', 'name': "action_delete_page", 'context': tools.ustr(context)})
+                        etree.SubElement(xml_group3, 'button', {'string': _('Add Question'), 'icon': "gtk-new", 'type': 'object', 'name': "action_new_question", 'context': tools.ustr(context)})
 
                     # FP Note
                     xml_group = xml_form
@@ -439,31 +423,23 @@ class survey_question_wiz(osv.osv_memory):
 
                     if pre_button:
                         etree.SubElement(xml_footer, 'label', {'string': ""})
-                        etree.SubElement(xml_footer, 'button', {'name': "action_previous", 'string': "Previous", 'type': "object"})
-                    but_string = "Next"
+                        etree.SubElement(xml_footer, 'button', {'name': "action_previous", 'string': _("Previous"), 'type': "object"})
                     if int(page_number) + 1 == total_pages:
-                        but_string = "Done"
-                    if (edit_mode or response_info['readonly']) and int(page_number) + 1 == total_pages:
                         if not response_info['readonly']:
                             etree.SubElement(xml_footer, 'label', {'string': ""})
-                            etree.SubElement(xml_footer, 'button', {'special': "cancel", 'string': 'Done', 'context': tools.ustr(context), 'class': "oe_highlight"})
+                            etree.SubElement(xml_footer, 'button', {'name': "action_done", 'string': _('Done'), 'type': "object", 'context': tools.ustr(context), 'class': "oe_highlight"})
                     else:
                         etree.SubElement(xml_footer, 'label', {'string': ""})
-                        etree.SubElement(xml_footer, 'button', {'name': "action_next", 'string': tools.ustr(but_string), 'type': "object", 'context': tools.ustr(context), 'class': "oe_highlight"})
+                        etree.SubElement(xml_footer, 'button', {'name': "action_next", 'string': _("Next"), 'type': "object", 'context': tools.ustr(context), 'class': not response_info['readonly'] and "oe_highlight" or ""})
                     if context.get('ir_actions_act_window_target') == 'edit':
-                        etree.SubElement(xml_footer, 'label', {'string': "or"})
-                        etree.SubElement(xml_footer, 'button', {'special': "cancel", 'string': "Exit", 'class': "oe_link"})
+                        etree.SubElement(xml_footer, 'label', {'string': _("or")})
+                        etree.SubElement(xml_footer, 'button', {'special': "cancel", 'string': _("Exit"), 'class': "oe_link"})
                     etree.SubElement(xml_footer, 'label', {'string': tools.ustr(page_number + 1) + "/" + tools.ustr(total_pages), 'class': "oe_survey_title_page oe_right"})
 
                     root = xml_form.getroottree()
                     result['arch'] = etree.tostring(root)
                     result['fields'] = fields
                     result['context'] = context
-
-                # survey complete
-                else:
-                    self._survey_complete(cr, uid, survey_id, sur_name_read, survey_browse, context)
-                    self._view_survey_complete(result, context)
 
         return result
 
@@ -593,12 +569,6 @@ class survey_question_wiz(osv.osv_memory):
             surv_name_wiz.write(cr, uid, [context.get('sur_name_id', False)], {'response_id': response_id})
             sur_name_read.update({'response_id': response_id})
 
-        print ""
-        print response_info['response_id']
-        print sur_name_read['response_id']
-        print response_id
-        print sur_name_read
-        print ""
         sur_response_obj.write(cr, SUPERUSER_ID, response_id, {'state': 'skip'})
 
         #click first time on next button then increment on total start suvey
@@ -1160,10 +1130,6 @@ class survey_question_wiz(osv.osv_memory):
         """
         if context is None:
             context = {}
-
-        print ""
-        print context
-        print ""
         surv_name_wiz = self.pool.get('survey.name.wiz')
         surv_name_wiz.write(cr, uid, [context.get('sur_name_id', False)], {'transfer': True, 'page': next and 'next' or 'previous'})
         return {
@@ -1184,6 +1150,32 @@ class survey_question_wiz(osv.osv_memory):
         """ Goes to previous page.
         """
         return self._action_next_previous(cr, uid, ids, False, context=context)
+
+    def action_done(self, cr, uid, ids, context=None):
+        """ Goes to previous page.
+        """
+        response_info = self.get_response_info_from_token(cr, uid, context['survey_id'], context)
+        if response_info['response_id']:
+            response_id = response_info['response_id']
+        else:
+            surv_name_wiz = self.pool.get('survey.name.wiz')
+            sur_name_read = surv_name_wiz.read(cr, uid, context.get('sur_name_id', False), context=context)
+            if sur_name_read['response_id'] and sur_name_read['response_id'][0]:
+                response_id = sur_name_read['response_id'][0]
+        self.pool.get('survey.response').write(cr, SUPERUSER_ID, [response_id], {'state': 'done'})
+        self._survey_complete(cr, uid, context['survey_id'], context)
+
+        ir_model_data = self.pool.get('ir.model.data')
+        view_id = ir_model_data.get_object_reference(cr, uid, 'survey', 'view_survey_complete_survey')[1]
+        return {
+            'view_type': 'form',
+            "view_mode": 'form',
+            'res_model': 'survey.question.wiz',
+            'type': 'ir.actions.act_window',
+            'target': context.get('ir_actions_act_window_target', 'inline'),
+            'context': context,
+            'view_id': view_id,
+        }
 
 survey_question_wiz()
 

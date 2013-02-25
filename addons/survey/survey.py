@@ -70,7 +70,7 @@ class survey(osv.osv):
         """ Compute if the message is unread by the current user. """
         res = dict((id, 0) for id in ids)
         base_url = self.pool.get('ir.config_parameter').get_param(cr, uid, 'web.base.url')
-        model_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'survey', 'action_complete')
+        model_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'survey', 'action_fill_survey')
         survey_obj = self.pool.get('survey')
         for survey_browse in survey_obj.browse(cr, uid, ids, context=context):
             query = {
