@@ -43,7 +43,7 @@
                            attrs="{'invisible': ['|','|','|',('picking_ids','=',False),('picking_ids','=',[]), ('state', 'not in', ('progress','manual')),('shipped','=',True)]}" groups="base.group_user"/>
                    </xpath>
                     <xpath expr="//button[@name='action_cancel']" position="after">
-                        <button name="ship_cancel" states="shipping_except" string="Cancel"/>
+                        <button name="ship_cancel" states="shipping_except" string="Cancel Order"/>
                     </xpath>
                     <field name="state" position="replace">
                         <field name="state" widget="statusbar" statusbar_visible="draft,sent,progress,invoiced,done" statusbar_colors='{"shipping_except":"red","invoice_except":"red","waiting_date":"blue"}'/>
