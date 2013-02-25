@@ -68,6 +68,10 @@
             <field name="model">product.product</field>
             <field name="inherit_id" ref="product.product_normal_form_view"/>
             <field name="arch" type="xml">
+                <xpath expr="//div[@name='buttons']" position="inside">
+                   <button string="Inventory" name="%(action_product_location_tree)d" type="action"  attrs="{'invisible':[('type', '=', 'service')]}" groups="stock.group_locations"/>
+                   <button string="Moves" name= "%(act_product_stock_move_open)d" type="action" attrs="{'invisible':[('type', '=', 'service')]}" groups="stock.group_stock_user"/>
+                </xpath>
                 <group name="procurement_uom" position="before">
                     <group name="delay" string="Delays">
                         <label for="produce_delay" attrs="{'invisible':[('type','=','service')]}"/>
@@ -88,13 +92,16 @@
                         <label for="qty_available"/>
                             <div>
                                 <field name="qty_available" class="oe_inline"/>
-                                <button name="%(action_view_change_product_quantity)d" string="update"
-                                type="action"
-                                class="oe_link"/>
+                                <button name="%(action_view_change_product_quantity)d" string="⇒ Update"
+                                    type="action"
+                                    class="oe_link"/>
                             </div>
+                        <label for="incoming_qty"/>
+                        <div>
                             <field name="incoming_qty" class="oe_inline"/>
-                            <field name="outgoing_qty" class="oe_inline"/>
-                            <field name="virtual_available" class="oe_inline"/>
+                        </div>
+                        <field name="outgoing_qty" class="oe_inline"/>
+                        <field name="virtual_available" class="oe_inline"/>
                     </group>
                     <group name="lot" groups="stock.group_tracking_lot,stock.group_production_lot" string="Lots">
                         <field name="track_production" groups="stock.group_production_lot"/>
