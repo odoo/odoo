@@ -49,7 +49,7 @@
                         <field name="state" widget="statusbar" statusbar_visible="draft,sent,progress,invoiced,done" statusbar_colors='{"shipping_except":"red","invoice_except":"red","waiting_date":"blue"}'/>
                     </field>
                    <field name="shop_id" position="replace">
-                        <field name="shop_id" on_change="onchange_shop_id(shop_id, context)" context="{'partner_id': partner_id}" widget="selection" groups="stock.group_locations"/>
+                        <field name="shop_id" on_change="onchange_shop_id(shop_id)" widget="selection" groups="stock.group_locations"/>
                    </field>
                    <field name="product_id" position="replace">
                        <field name="product_id"
