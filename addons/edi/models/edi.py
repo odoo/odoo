@@ -459,7 +459,7 @@ class EDIMixin(object):
             db = pooler.get_db(cr.dbname)
             local_cr = None
             try:
-                time.sleep(3) # lame workaround to wait for commit of parent transaction
+                time.sleep(60) # lame workaround to wait for commit of parent transaction
                 # grab a fresh browse_record on local cursor
                 local_cr = db.cursor()
                 web_root_url = self.pool.get('ir.config_parameter').get_param(local_cr, uid, 'web.base.url')
