@@ -44,7 +44,7 @@ import openerp
 _logger = logging.getLogger(__name__)
 
 def LocalService(name):
-    _logger.warning("LocalService() is deprecated.")
+    _logger.warning("LocalService('%s') is deprecated." % name)
 
     if name == 'workflow':
         return openerp.workflow
