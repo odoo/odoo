@@ -557,7 +557,7 @@ openerp.testing.section('completions', {
             return [[42, "choice 1"], [43, "choice @"]];
         });
 
-        var view = {inputs: []};
+        var view = {inputs: [], dataset: {get_context: function () {}}};
         var f = new instance.web.search.ManyToOneField(
             {attrs: {string: 'Dummy'}}, {relation: 'dummy.model'}, view);
         return f.complete("bob")
@@ -586,7 +586,7 @@ openerp.testing.section('completions', {
             strictEqual(kwargs.name, 'bob');
             return [];
         });
-        var view = {inputs: []};
+        var view = {inputs: [], dataset: {get_context: function () {}}};
         var f = new instance.web.search.ManyToOneField(
             {attrs: {string: 'Dummy'}}, {relation: 'dummy.model'}, view);
         return f.complete("bob")
@@ -601,11 +601,14 @@ openerp.testing.section('completions', {
                 name: 'bob',
                 limit: 8,
                 args: [['foo', '=', 'bar']],
-                context: {},
+                context: {flag: 1},
             }, "should use filtering domain");
             return [[42, "Match"]];
         });
-        var view = {inputs: []};
+        var view = {
+            inputs: [],
+            dataset: {get_context: function () { return {flag: 1}; }}
+        };
         var f = new instance.web.search.ManyToOneField(
             {attrs: {string: 'Dummy', domain: '[["foo", "=", "bar"]]'}},
             {relation: 'dummy.model'}, view);
