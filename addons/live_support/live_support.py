@@ -96,7 +96,7 @@ class live_support_channel(osv.osv):
         for record in self.browse(cr, uid, ids, context=context):
             res[record.id] = False
             for user in record.user_ids:
-                if user.user.id == uid:
+                if user.id == uid:
                     res[record.id] = True
                     break
         return res
@@ -119,7 +119,7 @@ class live_support_channel(osv.osv):
 
     _columns = {
         'name': fields.char(string="Channel Name", size=200, required=True),
-        'user_ids': fields.many2many('im.user', 'live_support_channel_im_user', 'channel_id', 'user_id', domain=[["user", "!=", False]], string="Users"),
+        'user_ids': fields.many2many('res.users', 'live_support_channel_im_user', 'channel_id', 'user_id', string="Users"),
         'are_you_inside': fields.function(_are_you_inside, type='boolean', string='Are you inside the matrix?', store=False),
         'script': fields.function(_script, type='text', string='Script', store=False),
         'web_page': fields.function(_web_page, type='url', string='Web Page', store=False, size="200"),
@@ -148,8 +148,7 @@ class live_support_channel(osv.osv):
     }
 
     def _default_user_ids(self, cr, uid, context=None):
-        my_id = self.pool.get("im.user").get_by_user_id(cr, uid, uid, context)["id"]
-        return [(6, 0, [my_id])]
+        return [(6, 0, [uid])]
 
     _defaults = {
         'button_text': "Have a Question? Chat with us.",
@@ -160,11 +159,13 @@ class live_support_channel(osv.osv):
     }
 
     def get_available_user(self, cr, uid, channel_id, context=None):
-        channel = self.browse(cr, uid, channel_id, context=context)
+        channel = self.browse(cr, openerp.SUPERUSER_ID, channel_id, context=context)
         users = []
         for user in channel.user_ids:
-            if user.im_status:
-                users.append(user)
+            iuid = self.pool.get("im.user").get_by_user_id(cr, uid, user.id, context=context)["id"]
+            imuser = self.pool.get("im.user").browse(cr, uid, iuid, context=context)
+            if imuser.im_status:
+                users.append(imuser)
         if len(users) == 0:
             return False
         return random.choice(users).id
@@ -189,21 +190,12 @@ class live_support_channel(osv.osv):
         }
 
     def join(self, cr, uid, ids, context=None):
-        my_id = self.pool.get("im.user").get_by_user_id(cr, uid, uid, context)["id"]
-        self.write(cr, uid, ids, {'user_ids': [(4, my_id)]})
+        self.write(cr, uid, ids, {'user_ids': [(4, uid)]})
         return True
 
     def quit(self, cr, uid, ids, context=None):
-        my_id = self.pool.get("im.user").get_by_user_id(cr, uid, uid, context)["id"]
-        self.write(cr, uid, ids, {'user_ids': [(3, my_id)]})
+        self.write(cr, uid, ids, {'user_ids': [(3, uid)]})
         return True
-
-
-class im_user(osv.osv):
-    _inherit = 'im.user'
-    _columns = {
-        'support_channel_ids': fields.many2many('live_support.channel', 'live_support_channel_im_user', 'user_id', 'channel_id', string="Support Channels"),
-    }
 
 
 class im_message(osv.osv):
