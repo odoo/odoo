@@ -318,6 +318,28 @@ openerp.testing.section('defaults', {
                     "facet value should match provided default's selection");
             });
     });
+    test("M2O default: value array", {asserts: 2}, function (instance, $s, mock) {
+        var view = {inputs: []}, id = 5;
+        var f = new instance.web.search.ManyToOneField(
+            {attrs: {name: 'dummy', string: 'Dummy'}},
+            {relation: 'dummy.model.name'},
+            view);
+        mock('dummy.model.name:name_get', function (args) {
+            equal(args[0], id);
+            return [[id, "DumDumDum"]];
+        });
+        return f.facet_for_defaults({dummy: [id]})
+        .done(function (facet) {
+            var model = facet;
+            if (!(model instanceof instance.web.search.Facet)) {
+                model = new instance.web.search.Facet(facet);
+            }
+            deepEqual(
+                model.values.toJSON(),
+                [{label: "DumDumDum", value: id}],
+                "should support default as a singleton");
+        });
+    });
     test("M2O default: value", {asserts: 1}, function (instance, $s, mock) {
         var view = {inputs: []}, id = 4;
         var f = new instance.web.search.ManyToOneField(
@@ -330,6 +352,15 @@ openerp.testing.section('defaults', {
                 ok(!facet, "an invalid m2o default should yield a non-facet");
             });
     });
+    test("M2O default: values", {rpc: false}, function (instance) {
+        var view = {inputs: []};
+        var f = new instance.web.search.ManyToOneField(
+            {attrs: {name: 'dummy', string: 'Dummy'}},
+            {relation: 'dummy.model.name'},
+            view);
+        raises(function () { f.facet_for_defaults({dummy: [6, 7]}) },
+               "should not accept multiple default values");
+    })
 });
 openerp.testing.section('completions', {
     dependencies: ['web.search'],
