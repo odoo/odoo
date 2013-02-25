@@ -364,5 +364,19 @@
             </field>
         </record>
 
+        <!- res.partner -->
+        <record model="ir.ui.view" id="res_partner_issues_button_view">
+            <field name="name">res.partner.issues.button.view</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="base.view_partner_form" />
+            <field name="priority" eval="10"/>
+            <field name="arch" type="xml">
+                <xpath expr="//div[@name='buttons']" position="inside">
+                    <button type="action" string="Issues" attrs="{'invisible': [('customer', '=', False)]}"
+                        name="%(act_project_project_2_project_issue_all)d" context="{'search_default_partner_id': active_id, 'default_partner_id': active_id}"/>
+                </xpath>
+            </field>
+        </record>
+
     </data>
 </openerp>
