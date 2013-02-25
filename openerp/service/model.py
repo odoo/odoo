@@ -98,8 +98,6 @@ def check(f):
             if openerp.pooler.get_pool(dbname)._init:
                 raise openerp.exceptions.Warning('Currently, this database is not fully loaded and can not be used.')
             return f(dbname, *args, **kwargs)
-        except except_orm:
-            raise
         except IntegrityError, inst:
             osv_pool = openerp.pooler.get_pool(dbname)
             for key in osv_pool._sql_error.keys():
@@ -127,8 +125,6 @@ def check(f):
                 raise openerp.osv.orm.except_orm(_('Integrity Error'), msg)
             else:
                 raise openerp.osv.orm.except_orm(_('Integrity Error'), inst[0])
-        except Exception:
-            raise
 
     return wrapper
 
