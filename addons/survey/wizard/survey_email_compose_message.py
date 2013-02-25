@@ -54,7 +54,7 @@ class survey_mail_compose_message(osv.TransientModel):
     _columns = {
         'public': fields.selection([('public_link', 'Get and share the public web link below to your audience.'), \
                 ('email_public_link', 'Get and send by email the public web link below to your audience.'),\
-                ('email', 'Send private invitation to your audience (only one response by invitation).')],
+                ('email', 'Send private invitation to your audience (only one response per recipient and per invitation).')],
             string='Share options', required=True),
         'public_url': fields.function(_get_public_url, string="Public url", type="char"),
         'public_url_html': fields.function(_get_public_url_html, string="Public HTML web link", type="char"),
