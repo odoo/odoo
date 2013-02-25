@@ -6,14 +6,15 @@
             <field name="name">account.analytic.invoice.line.tree</field>
             <field name="model">account.analytic.invoice.line</field>
             <field name="arch" type="xml">
-                <tree string="Account Virtual Invoice" create="false">
+                <tree string="Account Analytic Line">
                     <field name="product_id"/>
                 	<field name="name"/>
                 	<field name="quantity"/>
-                	<field name="uos_id"/>
-                	<field name="invoice_line_tax_id"/>
+                	<field name="uom_id"/>
+                	<field name="tax_ids"/>
                 	<field name="price_unit"/>
                 	<field name="price_subtotal"/>
+                	<field name="invoiced"/>
                 </tree>
             </field>
         </record>
@@ -46,7 +47,7 @@
                             <field name="quantity" class="oe_inline"/>
                             </td>
                             <td width="100px">
-                            <field name="uos_id" class="oe_inline"/>
+                            <field name="uom_id" class="oe_inline"/>
                             </td>
                             <td width="100px">
                             <field name="price_unit" class="oe_inline"/>
@@ -215,7 +216,7 @@
 	                    </div>
                     </group>
                     <group attrs="{'invisible': [('recurring_invoices','=',False)]}">
-                        <label for="interval" />
+                        <label for="interval"/>
                         <div>
                         <field name="interval" class="oe_inline"/>
                         <field name="rrule_type" class="oe_inline"/>
@@ -226,7 +227,17 @@
                     </group>
                     <group attrs="{'invisible': [('recurring_invoices','=',False)]}">
                         <div>
-                        <field name="invoice_line_ids" readonly="1"/>
+                        	<field name="invoice_line_ids">
+                        		<tree string="Account Analytic Lines" editable="bottom">
+                        			<field name="product_id" on_change="product_id_change(product_id, uom_id, quantity, name, parent.partner_id, price_unit, parent.currency_id, False, context, parent.company_id)"/>
+				                	<field name="name"/>
+				                	<field name="quantity"/>
+				                	<field name="uom_id"/>
+				                	<field name="tax_ids"/>
+				                	<field name="price_unit"/>
+				                	<field name="price_subtotal"/>
+                        		</tree>
+                        	</field>
                         </div>
                     </group>
                     <group class="oe_subtotal_footer oe_right" attrs="{'invisible': [('recurring_invoices','=',False)]}">
