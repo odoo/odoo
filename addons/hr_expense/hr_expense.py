@@ -52,6 +52,12 @@ class hr_expense_expense(osv.osv):
             res[expense.id] = total
         return res
 
+    def _get_expense_line(self, cr, uid, ids, context=None):
+        result = {}
+        for line in self.pool.get('hr.expense.line').browse(cr, uid, ids, context=context):
+            result[line.expense_id.id] = True
+        return result.keys()
+
     def _get_currency(self, cr, uid, context=None):
         user = self.pool.get('res.users').browse(cr, uid, [uid], context=context)[0]
         if user.company_id:
@@ -84,7 +90,7 @@ class hr_expense_expense(osv.osv):
         'account_move_id': fields.many2one('account.move', 'Ledger Posting'),
         'line_ids': fields.one2many('hr.expense.line', 'expense_id', 'Expense Lines', readonly=True, states={'draft':[('readonly',False)]} ),
         'note': fields.text('Note'),
-        'amount': fields.function(_amount, string='Total Amount', digits_compute=dp.get_precision('Account'), store=True),
+        'amount': fields.function(_amount, string='Total Amount', digits_compute=dp.get_precision('Account'), store={'hr.expense.line': (_get_expense_line, None, 20)}),
         'voucher_id': fields.many2one('account.voucher', "Employee's Receipt"),
         'currency_id': fields.many2one('res.currency', 'Currency', required=True, readonly=True, states={'draft':[('readonly',False)], 'confirm':[('readonly',False)]}),
         'department_id':fields.many2one('hr.department','Department', readonly=True, states={'draft':[('readonly',False)], 'confirm':[('readonly',False)]}),
