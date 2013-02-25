@@ -247,7 +247,7 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
 
     do_load_state: function(state, warm) {
         if (state.id && this.datarecord.id != state.id) {
-            if (!this.dataset.get_id_index(state.id)) {
+            if (this.dataset.get_id_index(state.id) === null) {
                 this.dataset.ids.push(state.id);
             }
             this.dataset.select_id(state.id);
