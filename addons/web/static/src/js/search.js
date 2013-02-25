@@ -1477,6 +1477,8 @@ instance.web.search.ManyToOneField = instance.web.search.CharField.extend({
         // FIXME: "concurrent" searches (multiple requests, mis-ordered responses)
         return this.model.call('name_search', [], {
             name: needle,
+            args: instance.web.pyeval.eval(
+                'domains', this.attrs.domain ? [this.attrs.domain] : []),
             limit: 8,
             context: {}
         }).then(function (results) {

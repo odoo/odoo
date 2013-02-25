@@ -594,6 +594,23 @@ openerp.testing.section('completions', {
                 ok(!c, "no match should yield no completion");
             });
     });
+    test("M2O filtered", {asserts: 2}, function (instance, $s, mock) {
+        mock('dummy.model:name_search', function (args, kwargs) {
+            deepEqual(args, [], "should have no positional arguments");
+            deepEqual(kwargs, {
+                name: 'bob',
+                limit: 8,
+                args: [['foo', '=', 'bar']],
+                context: {},
+            }, "should use filtering domain");
+            return [[42, "Match"]];
+        });
+        var view = {inputs: []};
+        var f = new instance.web.search.ManyToOneField(
+            {attrs: {string: 'Dummy', domain: '[["foo", "=", "bar"]]'}},
+            {relation: 'dummy.model'}, view);
+        return f.complete("bob");
+    });
 });
 openerp.testing.section('search-serialization', {
     dependencies: ['web.search'],
