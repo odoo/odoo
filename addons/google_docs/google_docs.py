@@ -126,7 +126,7 @@ class google_docs_ir_attachment(osv.osv):
             #copy the document you choose in the configuration
             copy_resource = client.copy_resource(doc, name_gdocs)
         except:
-            raise osv.except_osv(_('Google Docs Error!'), _("Your resource id is not correct. You can find the id in the google docs URL."))
+            raise osv.except_osv(_('Google Drive Error!'), _("Your resource id is not correct. You can find the id in the google docs URL."))
         # create an ir.attachment
         self.create(cr, uid, {
             'res_model': res_model,
@@ -150,7 +150,7 @@ class google_docs_ir_attachment(osv.osv):
           :return: the google document object created
         '''
         if len(ids) != 1:
-            raise osv.except_osv(_('Google Docs Error!'), _("Creating google docs may only be done by one at a time."))
+            raise osv.except_osv(_('Google Drive Error!'), _("Creating google drive may only be done by one at a time."))
         res_id = ids[0]
         pool_ir_attachment = self.pool.get('ir.attachment')
         pool_gdoc_config = self.pool.get('google.docs.config')
@@ -164,7 +164,7 @@ class google_docs_ir_attachment(osv.osv):
             try:
                 name_gdocs = name_gdocs % model_fields_dic
             except:
-                raise osv.except_osv(_('Key Error!'), _("Your Google Doc Name Pattern's key does not found in object."))
+                raise osv.except_osv(_('Key Error!'), _("Your Google Drive Name Pattern's key does not found in object."))
             google_template_id = pool_gdoc_config.browse(cr, uid, google_docs_config[0], context=context).gdocs_resource_id
             google_document = pool_ir_attachment.copy_gdoc(cr, uid, res_model, res_id, name_gdocs, google_template_id, context=context)
         else:
@@ -173,7 +173,7 @@ class google_docs_ir_attachment(osv.osv):
 
 class config(osv.osv):
     _name = 'google.docs.config'
-    _description = "Google Docs templates config"
+    _description = "Google Drive templates config"
 
     _columns = {
         'model_id': fields.many2one('ir.model', 'Model', required=True),
@@ -185,7 +185,7 @@ This is the id of the template document, on google side. You can find it thanks 
 *for a drawing document with url like `https://docs.google.com/a/openerp.com/drawings/d/123456789/edit`, the ID is `drawings:123456789`
 ...
 ''', required=True),
-        'name_template': fields.char('Google Doc Name Pattern', size=64, help='Choose how the new google docs will be named, on google side. Eg. gdoc_%(field_name)s', required=True),
+        'name_template': fields.char('Google Drive Name Pattern', size=64, help='Choose how the new google drive will be named, on google side. Eg. gdoc_%(field_name)s', required=True),
     }
 
     _defaults = {

@@ -8,7 +8,7 @@
             <field name="name">google_docs.config.tree</field>
             <field name="model">google.docs.config</field>
             <field name="arch" type="xml">
-                <tree string="Google Docs Configuration">
+                <tree string="Google Drive Configuration">
                     <field name="model_id"/>
                     <field name="name_template"/>
                 </tree>
@@ -19,7 +19,7 @@
             <field name="name">google_docs.config.form</field>
             <field name="model">google.docs.config</field>
             <field name="arch" type="xml">
-                <form string="Google Docs Configuration" version="7.0">
+                <form string="Google Drive Configuration" version="7.0">
                 <group>
                     <field name="model_id"/>
                     <label for='gdocs_resource_id'/>
@@ -48,7 +48,7 @@ This is the id of the template document, on google side. You can find it thanks 
             <field name='view_type'>form</field>
             <field name='view_id' ref='view_google_docs_config_tree'/>
         </record>
-        <menuitem name='Google Docs configuration' id='menu_gdocs_config' parent='base.menu_administration'/>
+        <menuitem name='Google Drive configuration' id='menu_gdocs_config' parent='document.menu_document_management_configuration'/>
         <menuitem name='Models configuration' id='menu_gdocs_model_config' parent='menu_gdocs_config' action='action_google_docs_users_config'/>
     </data>
 </openerp>

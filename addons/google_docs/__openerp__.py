@@ -20,7 +20,7 @@
 ##############################################################################
 
 {
-    'name': 'Google Docs integration',
+    'name': 'Google Drive integration',
     'version': '0.2',
     'author': 'OpenERP SA',
     'website': 'http://openerp.com',
