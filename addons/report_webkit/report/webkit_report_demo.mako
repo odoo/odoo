@@ -10,5 +10,8 @@
         <li>${report.name}</li>
     % endfor
     </ul>
+
+    <p>If this report does not contain headers, it is because you have a badly compiled wkhtmltopdf. Consider installing
+        the static version distributed on the official web site: <a href="https://code.google.com/p/wkhtmltopdf/">https://code.google.com/p/wkhtmltopdf/</a>.</p>
 </body>
 </html>
