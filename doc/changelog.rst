@@ -6,6 +6,7 @@ Changelog
 `trunk`
 -------
 
+- Removed support for the ``NET-RPC`` protocol.
 - Added the :ref:`Long polling <longpolling-worker>` worker type.
 - Added :ref:`orm-workflows` to the ORM.
 - Added :ref:`routing-decorators` to the RPC and WSGI stack.
