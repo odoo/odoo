@@ -2402,6 +2402,11 @@ instance.web.DateTimeWidget = instance.web.Widget.extend({
             showButtonPanel: true,
             firstDay: Date.CultureInfo.firstDayOfWeek
         });
+        // Some clicks in the datepicker dialog are not stopped by the
+        // datepicker and "bubble through", unexpectedly triggering the bus's
+        // click event. Prevent that.
+        this.picker('widget').click(function (e) { e.stopPropagation(); });
+
         this.$el.find('img.oe_datepicker_trigger').click(function() {
             if (self.get("effective_readonly") || self.picker('widget').is(':visible')) {
                 self.$input.focus();
