@@ -39,7 +39,7 @@ def register_report(name, model, tmpl_path, parser=rml_parse):
     """Register the report into the services"""
     name = 'report.%s' % name
     if name in openerp.report.interface.report_int._reports:
-        service = openerp.report.interface.report_int[name]
+        service = openerp.report.interface.report_int._reports[name]
         if isinstance(service, WebKitParser):
             #already instantiated properly, skip it
             return
