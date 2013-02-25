@@ -45,7 +45,7 @@ def register_report(name, model, tmpl_path, parser=rml_parse):
             return
         if hasattr(service, 'parser'):
             parser = service.parser
-        del openerp.report.interface.report_int[name]
+        del openerp.report.interface.report_int._reports[name]
     WebKitParser(name, model, tmpl_path, parser=parser)
 
 
