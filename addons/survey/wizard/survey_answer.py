@@ -27,6 +27,7 @@ from openerp.tools import to_xml
 from datetime import datetime
 from openerp.tools.translate import _
 from openerp.tools.safe_eval import safe_eval
+from openerp import SUPERUSER_ID
 import uuid
 
 DATETIME_FORMAT = "%Y-%m-%d"
@@ -62,7 +63,7 @@ class survey_question_wiz(osv.osv_memory):
             etree.SubElement(xml_group, 'separator', {'string': tools.ustr(col.title), 'colspan': '1'})
         for row in que_rec.answer_choice_ids:
             etree.SubElement(xml_group, 'label', {'string': to_xml(tools.ustr(row.answer)) + ': -', 'align': '0.0'})
-            for col in que_col_head.browse(cr, uid, [head.id for head in que_rec.column_heading_ids], context=context):
+            for col in que_col_head.browse(cr, SUPERUSER_ID, [head.id for head in que_rec.column_heading_ids], context=context):
                 etree.SubElement(xml_group, 'field', {'modifiers': readonly and '{"readonly": 1}' or '{}', 'name': tools.ustr(que.id) + "_" + tools.ustr(row.id) + "_" + tools.ustr(col.id), 'nolabel': "1"})
                 fields[tools.ustr(que.id) + "_" + tools.ustr(row.id) + "_" + tools.ustr(col.id)] = {'type': 'boolean', 'string': col.title}
 
@@ -187,11 +188,11 @@ class survey_question_wiz(osv.osv_memory):
         result['fields'] = {}
         result['context'] = context
 
-    def _survey_complete(self, cr, uid, survey_id, partner_id, sur_name_read, survey_browse, context):
+    def _survey_complete(self, cr, uid, survey_id, sur_name_read, survey_browse, context):
         """ list of action to do when the survey is completed
         """
         # record complete
-        self.pool.get('survey.response').write(cr, uid, [sur_name_read.response], {'state': 'done'})
+        self.pool.get('survey.response').write(cr, SUPERUSER_ID, [sur_name_read.response_id], {'state': 'done'})
 
         # send mail to the responsible
         val = {
@@ -201,23 +202,28 @@ class survey_question_wiz(osv.osv_memory):
             'record_name': _("Survey N° %s") % survey_id,
             'body': _("New response on this survey."),
         }
-        self.pool.get('survey').message_post(cr, uid, survey_id, context=context, **val)
+        self.pool.get('survey').message_post(cr, SUPERUSER_ID, survey_id, context=context, **val)
 
-    def _check_access(self, cr, uid, survey_id, context):
+    def get_response_info_from_token(self, cr, uid, survey_id, context):
         """
-        Specific check access for the survey
-        Retrun dict with the partner_id (without anonymous mode partner), response_id, state, readonly
+        Get the response informations and return a dictionnary
+        * response_id
+        * state
+        * readonly
+        If it's a public token, return the dictionnary with response_id = False
+        If no response and the token doesn't match with the survey public token,
+        This function raise an exception
 
         """
         # get if the token of the partner or anonymous user is valid
-        res = {'partner_id': False, 'response_id': False, 'state': None, 'readonly': context.get('readonly', False)}
+        res = {'response_id': False, 'state': None, 'readonly': context.get('readonly', False)}
 
         if not survey_id:
             raise osv.except_osv(_('Warning!'), _("You do not have access to this survey."))
 
         survey_obj = self.pool.get('survey')
-        survey_browse = survey_obj.browse(cr, uid, survey_id, context=context)
-        user_browse = self.pool.get('res.users').browse(cr, uid, uid, context=context)
+        survey_browse = survey_obj.browse(cr, SUPERUSER_ID, survey_id, context=context)
+        user_browse = self.pool.get('res.users').browse(cr, SUPERUSER_ID, uid, context=context)
         pid = user_browse.partner_id.id
         model_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'portal', 'group_anonymous')
         anonymous = model_id and model_id[1] in [x.id for x in user_browse.groups_id]
@@ -243,7 +249,7 @@ class survey_question_wiz(osv.osv_memory):
 
         # check for private token
         if context.get("survey_token"):
-            response_ids = sur_response_obj.search(cr, uid, dom + [("token", "=", context.get("survey_token"))], context=context, limit=1, order="id DESC")
+            response_ids = sur_response_obj.search(cr, SUPERUSER_ID, dom + [("token", "=", context.get("survey_token"))], context=context, limit=1, order="id DESC")
         # check for admin preview responses
         if not response_ids and context.get("response_id"):
             try:
@@ -254,42 +260,25 @@ class survey_question_wiz(osv.osv_memory):
                 response_ids = None
         # check sign in user
         if not response_ids and not anonymous:
-            response_ids = sur_response_obj.search(cr, uid, dom + [('partner_id', '=', pid)], context=context, limit=1, order="date_deadline DESC")
+            response_ids = sur_response_obj.search(cr, SUPERUSER_ID, dom + [('partner_id', '=', pid)], context=context, limit=1, order="date_deadline DESC")
 
         # user have a specific token or a specific partner access (for state open or restricted)
         if response_ids:
-            response = sur_response_obj.browse(cr, uid, response_ids[0], context=context)
+            response = sur_response_obj.browse(cr, SUPERUSER_ID, response_ids[0], context=context)
             res['response_id'] = response_ids[0]
-            res['partner_id'] = response.partner_id.id or False
             res['state'] = response.state
 
-        # open new response
-        elif survey_browse.state == 'open' and survey_browse.token == context.get("survey_token"):
-            token = uuid.uuid4()
-            response_id = sur_response_obj.create(cr, uid, {
-                'state': 'new',
-                'response_type': 'manually',
-                'partner_id': pid,
-                'date_create': datetime.now(),
-                'survey_id': survey_id,
-                'token': token,
-            })
-            context.update({"survey_token": str(token)})
-            res['partner_id'] = pid
-            res['response_id'] = response_id
-            res['state'] = 'new'
-
         # errors
-        if not res['response_id'] and not context.get('edit'):
+        if not res['response_id'] and not context.get('edit') and (survey_browse.state != 'open' or survey_browse.token != context.get("survey_token")):
 
-            response_ids = sur_response_obj.search(cr, uid, [('survey_id', '=', survey_id), ("token", "=", context.get("survey_token", None))], context=context, limit=1)
+            response_ids = sur_response_obj.search(cr, SUPERUSER_ID, [('survey_id', '=', survey_id), ("token", "=", context.get("survey_token", None))], context=context, limit=1)
             if not response_ids:
-                response_ids = sur_response_obj.search(cr, uid, [('survey_id', '=', survey_id), ('partner_id', '=', pid)], context=context, limit=1)
+                response_ids = sur_response_obj.search(cr, SUPERUSER_ID, [('survey_id', '=', survey_id), ('partner_id', '=', pid)], context=context, limit=1)
 
             if not response_ids:
                 raise osv.except_osv(_('Warning!'), _("You do not have access to this survey."))
             else:
-                response = sur_response_obj.browse(cr, uid, response_ids[0], context=context)
+                response = sur_response_obj.browse(cr, SUPERUSER_ID, response_ids[0], context=context)
                 if response.state == 'done':
                     #raise osv.except_osv(_('Warning!'), _("You have already answered this survey, Thank you."))
                     res['response_id'] = context.get('response_id') and int(context['response_id'][0])
@@ -298,7 +287,8 @@ class survey_question_wiz(osv.osv_memory):
                 elif response.date_deadline and datetime.strptime(response.date_deadline, DATETIME_FORMAT) < datetime.now():
                     raise osv.except_osv(_('Warning!'), _("The deadline for responding to this survey is exceeded since %s") % response.date_deadline)
                 else:
-                    raise osv.except_osv(_('Warning!'), _("You do not have access to this survey."))
+                    raise osv.except_osv(_('Access Denied!'), _("You do not have access to this survey."))
+
         return res
 
     def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
@@ -326,7 +316,7 @@ class survey_question_wiz(osv.osv_memory):
                     'page_no': -1,
                     'page': 'next',
                     'transfer': 1,
-                    'response': 0
+                    'response_id': None,
                 }
                 wiz_id = surv_name_wiz.create(cr, uid, res_data, context=context)
                 sur_name_rec = surv_name_wiz.browse(cr, uid, wiz_id, context=context)
@@ -349,8 +339,8 @@ class survey_question_wiz(osv.osv_memory):
                     return super(survey_question_wiz, self).\
                                 fields_view_get(cr, uid, view_id=view_id, view_type=view_type, context=context,
                                         toolbar=toolbar, submenu=submenu)
-            survey_browse = survey_obj.browse(cr, uid, survey_id, context=context)
-            p_id = map(lambda x: x.id, survey_browse.page_ids)
+            survey_browse = survey_obj.browse(cr, SUPERUSER_ID, survey_id, context=context)
+            p_id = [page.id for page in survey_browse.page_ids]
             total_pages = len(p_id)
             pre_button = False
 
@@ -366,7 +356,7 @@ class survey_question_wiz(osv.osv_memory):
                 fields = {}
 
                 # get if the token of the partner or anonymous user is valid
-                check_token = self._check_access(cr, uid, survey_id, context)
+                response_info = self.get_response_info_from_token(cr, uid, survey_id, context)
 
                 # have acces to this survey
                 edit_mode = context.get('edit', False)
@@ -374,7 +364,7 @@ class survey_question_wiz(osv.osv_memory):
                 if sur_name_read.page == "next" or sur_name_rec.page_no == -1:
                     if total_pages > sur_name_rec.page_no + 1:
                         if survey_browse.max_response_limit and survey_browse.max_response_limit <= survey_browse.tot_start_survey and not sur_name_rec.page_no + 1:
-                            survey_obj.write(cr, uid, survey_id, {'state': 'close', 'date_close': datetime.now()})
+                            survey_obj.write(cr, SUPERUSER_ID, survey_id, {'state': 'close', 'date_close': datetime.now()})
 
                         p_id = p_id[sur_name_rec.page_no + 1]
                         surv_name_wiz.write(cr, uid, [context['sur_name_id'], ], {'page_no': sur_name_rec.page_no + 1})
@@ -397,7 +387,7 @@ class survey_question_wiz(osv.osv_memory):
 
                 # survey in progress
                 if flag:
-                    pag_rec = page_obj.browse(cr, uid, p_id, context=context)
+                    pag_rec = page_obj.browse(cr, SUPERUSER_ID, p_id, context=context)
                     xml_form = etree.Element('form', {'version': "7.0", 'string': tools.ustr(pag_rec and pag_rec.title or survey_browse.title)})
                     xml_form = etree.SubElement(xml_form, 'sheet')
 
@@ -424,7 +414,7 @@ class survey_question_wiz(osv.osv_memory):
                     qu_no = 0
                     for que in (pag_rec and pag_rec.question_ids or []):
                         qu_no += 1
-                        que_rec = que_obj.browse(cr, uid, que.id, context=context)
+                        que_rec = que_obj.browse(cr, SUPERUSER_ID, que.id, context=context)
                         separator_string = tools.ustr(qu_no) + "." + tools.ustr(que_rec.question)
                         star = que_rec.is_require_answer and '*' or ''
                         if edit_mode:
@@ -441,9 +431,9 @@ class survey_question_wiz(osv.osv_memory):
                         xml_group = etree.SubElement(xml_form, 'group', {'col': '1', 'colspan': '4'})
 
                         # rendering different views
-                        getattr(self, "_view_field_%s" % que_rec.type)(cr, uid, xml_group, fields, check_token['readonly'], que, que_rec, context=context)
+                        getattr(self, "_view_field_%s" % que_rec.type)(cr, uid, xml_group, fields, response_info['readonly'], que, que_rec, context=context)
                         if que_rec.type in ['multiple_choice_only_one_ans', 'multiple_choice_multiple_ans', 'matrix_of_choices_only_one_ans', 'matrix_of_choices_only_multi_ans', 'rating_scale'] and que_rec.is_comment_require:
-                            self._view_field_postprocessing(cr, uid, xml_group, fields, check_token['readonly'], que, que_rec, context=context)
+                            self._view_field_postprocessing(cr, uid, xml_group, fields, response_info['readonly'], que, que_rec, context=context)
 
                     xml_footer = etree.SubElement(xml_form, 'footer', {'col': '8', 'colspan': '1', 'width': "100%"})
 
@@ -453,8 +443,8 @@ class survey_question_wiz(osv.osv_memory):
                     but_string = "Next"
                     if int(page_number) + 1 == total_pages:
                         but_string = "Done"
-                    if (edit_mode or check_token['readonly']) and int(page_number) + 1 == total_pages:
-                        if not check_token['readonly']:
+                    if (edit_mode or response_info['readonly']) and int(page_number) + 1 == total_pages:
+                        if not response_info['readonly']:
                             etree.SubElement(xml_footer, 'label', {'string': ""})
                             etree.SubElement(xml_footer, 'button', {'special': "cancel", 'string': 'Done', 'context': tools.ustr(context), 'class': "oe_highlight"})
                     else:
@@ -472,7 +462,7 @@ class survey_question_wiz(osv.osv_memory):
 
                 # survey complete
                 else:
-                    self._survey_complete(cr, uid, survey_id, check_token['partner_id'], sur_name_read, survey_browse, context)
+                    self._survey_complete(cr, uid, survey_id, sur_name_read, survey_browse, context)
                     self._view_survey_complete(result, context)
 
         return result
@@ -487,16 +477,16 @@ class survey_question_wiz(osv.osv_memory):
 
         for field in fields_list:
             if field.split('_')[0] == 'progress':
-                tot_page_id = self.pool.get('survey').browse(cr, uid, context.get('survey_id', False), context=context)
+                tot_page_id = self.pool.get('survey').browse(cr, SUPERUSER_ID, context.get('survey_id', False), context=context)
                 tot_per = (float(100) * (int(field.split('_')[2]) + 1) / len(tot_page_id.page_ids))
                 value[field] = tot_per
 
-        check_token = self._check_access(cr, uid, context.get('survey_id'), context)
+        response_info = self.get_response_info_from_token(cr, uid, context.get('survey_id'), context)
 
         response_ans = False
         sur_response_obj = self.pool.get('survey.response')
-        if not context.get('edit') and check_token.get('response_id'):
-            response_ans = sur_response_obj.browse(cr, uid, check_token['response_id'], context=context)
+        if not context.get('edit') and response_info.get('response_id'):
+            response_ans = sur_response_obj.browse(cr, SUPERUSER_ID, response_info['response_id'], context=context)
 
         if response_ans:
             fields_list.sort()
@@ -561,10 +551,12 @@ class survey_question_wiz(osv.osv_memory):
         """
         context = context or {}
 
-        check_token = self._check_access(cr, uid, context['survey_id'], context)
+        sur_response_obj = self.pool.get('survey.response')
+
+        response_info = self.get_response_info_from_token(cr, uid, context['survey_id'], context)
 
         survey_question_wiz_id = super(survey_question_wiz, self).create(cr, uid, {'name': vals.get('name')}, context=context)
-        if context.get('edit', False) or check_token['readonly']:
+        if context.get('edit', False) or response_info['readonly']:
             return survey_question_wiz_id
 
         for key, val in vals.items():
@@ -577,29 +569,42 @@ class survey_question_wiz(osv.osv_memory):
         click_state = True
         click_update = []
         surv_name_wiz = self.pool.get('survey.name.wiz')
-        sur_response_obj = self.pool.get('survey.response')
         surv_tbl_column_obj = self.pool.get('survey.tbl.column.heading')
-        survey_obj = self.pool.get('survey')
         resp_obj = self.pool.get('survey.response.line')
         res_ans_obj = self.pool.get('survey.response.answer')
         que_obj = self.pool.get('survey.question')
         sur_name_read = surv_name_wiz.read(cr, uid, context.get('sur_name_id', False), context=context)
 
-        if check_token['response_id']:
-            response_id = check_token['response_id']
-        elif not sur_name_read['response']:
-            response_id = int(sur_name_read['response'])
+        if response_info['response_id']:
+            response_id = response_info['response_id']
+        elif sur_name_read['response_id'] and sur_name_read['response_id'][0]:
+            response_id = sur_name_read['response_id'][0]
+        else:
+            user_browse = self.pool.get('res.users').browse(cr, SUPERUSER_ID, uid, context=context)
+            pid = user_browse.partner_id.id
+            response_id = sur_response_obj.create(cr, SUPERUSER_ID, {
+                'state': 'new',
+                'response_type': 'manually',
+                'partner_id': pid,
+                'date_create': datetime.now(),
+                'survey_id': context['survey_id'],
+                'token': uuid.uuid4(),
+            })
+            surv_name_wiz.write(cr, uid, [context.get('sur_name_id', False)], {'response_id': response_id})
+            sur_name_read.update({'response_id': response_id})
 
-        surv_name_wiz.write(cr, uid, [context.get('sur_name_id', False)], {'response': tools.ustr(response_id)})
-        sur_response_obj.write(cr, uid, response_id, {'state': 'skip'})
+        print ""
+        print response_info['response_id']
+        print sur_name_read['response_id']
+        print response_id
+        print sur_name_read
+        print ""
+        sur_response_obj.write(cr, SUPERUSER_ID, response_id, {'state': 'skip'})
 
         #click first time on next button then increment on total start suvey
         if not safe_eval(sur_name_read['store_ans']):
-            survey_id = sur_name_read['survey_id'][0]
-            survey_browse = survey_obj.read(cr, uid, survey_id, context=context)
-            survey_obj.write(cr, uid, survey_id,  {'tot_start_survey': survey_browse['tot_start_survey'] + 1})
             if context.get('cur_id'):
-                self.pool.get(context.get('object', False)).write(cr, uid, [int(context.get('cur_id', False))], {'response': response_id})
+                self.pool.get(context.get('object', False)).write(cr, uid, [int(context.get('cur_id', False))], {'response_id': response_id})
                 if context.get('request', False):
                     self.pool.get(context.get('object', False)).survey_req_done(cr, uid, [int(context.get('cur_id'))], context)
         if sur_name_read['store_ans'] and type(safe_eval(sur_name_read['store_ans'])) == dict:
@@ -619,14 +624,14 @@ class survey_question_wiz(osv.osv_memory):
                 que_id = key.split('_')[0]
                 if que_id not in que_li:
                     que_li.append(que_id)
-                    que_rec = que_obj.read(cr, uid, [int(que_id)], context=context)[0]
+                    que_rec = que_obj.read(cr, SUPERUSER_ID, [int(que_id)], context=context)[0]
                     res_data = {
                         'question_id': que_id,
                         'date_create': datetime.now(),
                         'state': 'done',
                         'response_id': response_id
                     }
-                    resp_id = resp_obj.create(cr, uid, res_data)
+                    resp_id = resp_obj.create(cr, SUPERUSER_ID, res_data)
                     resp_id_list.append(resp_id)
                     sur_name_read['store_ans'].update({resp_id: {'question_id': que_id}})
                     surv_name_wiz.write(cr, uid, [context.get('sur_name_id', False)], {'store_ans': sur_name_read['store_ans']})
@@ -640,7 +645,7 @@ class survey_question_wiz(osv.osv_memory):
 
                     for key1, val1 in vals.items():
                         if val1 and key1.split('_')[1] == "table" and key1.split('_')[0] == que_id:
-                            surv_tbl_column_obj.create(cr, uid, {'response_table_id': resp_id, 'column_id': key1.split('_')[2], 'name': key1.split('_')[3], 'value': val1})
+                            surv_tbl_column_obj.create(cr, SUPERUSER_ID, {'response_table_id': resp_id, 'column_id': key1.split('_')[2], 'name': key1.split('_')[3], 'value': val1})
                             sur_name_read['store_ans'][resp_id].update({key1: val1})
                             select_count += 1
 
@@ -653,11 +658,11 @@ class survey_question_wiz(osv.osv_memory):
 
                         elif val1 and key1.split('_')[1] == "selection" and key1.split('_')[0] == que_id:
                             if len(key1.split('_')) > 2:
-                                ans_create_id = res_ans_obj.create(cr, uid, {'response_id': resp_id, 'answer_id': key1.split('_')[-1], 'column_id': val1})
+                                ans_create_id = res_ans_obj.create(cr, SUPERUSER_ID, {'response_id': resp_id, 'answer_id': key1.split('_')[-1], 'column_id': val1})
                                 selected_value.append(val1)
                                 response_list.append(str(ans_create_id) + "_" + str(key1.split('_')[-1]))
                             else:
-                                ans_create_id = res_ans_obj.create(cr, uid, {'response_id': resp_id, 'answer_id': val1})
+                                ans_create_id = res_ans_obj.create(cr, SUPERUSER_ID, {'response_id': resp_id, 'answer_id': val1})
                             sur_name_read['store_ans'][resp_id].update({key1: val1})
                             select_count += 1
 
@@ -695,11 +700,11 @@ class survey_question_wiz(osv.osv_memory):
                                         sur_name_read['store_ans'].pop(res)
                                     raise osv.except_osv(_('Warning!'), "'" + que_rec['question'] + "'  \n" + tools.ustr(que_rec['comment_valid_err_msg']))
 
-                                resp_obj.write(cr, uid, resp_id, {'comment': val1})
+                                resp_obj.write(cr, SUPERUSER_ID, resp_id, {'comment': val1})
                                 sur_name_read['store_ans'][resp_id].update({key1: val1})
 
                         elif val1 and key1.split('_')[1] == "comment" and key1.split('_')[0] == que_id:
-                            resp_obj.write(cr, uid, resp_id, {'comment': val1})
+                            resp_obj.write(cr, SUPERUSER_ID, resp_id, {'comment': val1})
                             sur_name_read['store_ans'][resp_id].update({key1: val1})
                             select_count += 1
 
@@ -735,9 +740,9 @@ class survey_question_wiz(osv.osv_memory):
                                 raise osv.except_osv(_('Warning!'), "'" + que_rec['question'] + "'  \n" + tools.ustr(que_rec['validation_valid_err_msg']))
 
                             if key1.split('_')[1] == "single":
-                                resp_obj.write(cr, uid, resp_id, {'single_text': val1})
+                                resp_obj.write(cr, SUPERUSER_ID, resp_id, {'single_text': val1})
                             else:
-                                ans_create_id = res_ans_obj.create(cr, uid, {'response_id': resp_id, 'answer_id': key1.split('_')[1], 'answer': val1})
+                                ans_create_id = res_ans_obj.create(cr, SUPERUSER_ID, {'response_id': resp_id, 'answer_id': key1.split('_')[1], 'answer': val1})
 
                             sur_name_read['store_ans'][resp_id].update({key1: val1})
                             select_count += 1
@@ -746,7 +751,7 @@ class survey_question_wiz(osv.osv_memory):
                             if not val1 == "0":
                                 try:
                                     numeric_sum += int(val1)
-                                    ans_create_id = res_ans_obj.create(cr, uid, {'response_id': resp_id, 'answer_id': key1.split('_')[1], 'answer': val1})
+                                    ans_create_id = res_ans_obj.create(cr, SUPERUSER_ID, {'response_id': resp_id, 'answer_id': key1.split('_')[1], 'answer': val1})
                                     sur_name_read['store_ans'][resp_id].update({key1: val1})
                                     select_count += 1
                                 except:
@@ -756,17 +761,17 @@ class survey_question_wiz(osv.osv_memory):
 
                         elif val1 and que_id == key1.split('_')[0] and len(key1.split('_')) == 3:
                             if type(val1) == type('') or type(val1) == type(u''):
-                                ans_create_id = res_ans_obj.create(cr, uid, {'response_id': resp_id, 'answer_id': key1.split('_')[1], 'column_id': key1.split('_')[2], 'value_choice': val1})
+                                ans_create_id = res_ans_obj.create(cr, SUPERUSER_ID, {'response_id': resp_id, 'answer_id': key1.split('_')[1], 'column_id': key1.split('_')[2], 'value_choice': val1})
                                 sur_name_read['store_ans'][resp_id].update({key1: val1})
                             else:
-                                ans_create_id = res_ans_obj.create(cr, uid, {'response_id': resp_id, 'answer_id': key1.split('_')[1], 'column_id': key1.split('_')[2]})
+                                ans_create_id = res_ans_obj.create(cr, SUPERUSER_ID, {'response_id': resp_id, 'answer_id': key1.split('_')[1], 'column_id': key1.split('_')[2]})
                                 sur_name_read['store_ans'][resp_id].update({key1: True})
 
                             matrix_list.append(key1.split('_')[0] + '_' + key1.split('_')[1])
                             select_count += 1
 
                         elif val1 and que_id == key1.split('_')[0] and len(key1.split('_')) == 2:
-                            ans_create_id = res_ans_obj.create(cr, uid, {'response_id': resp_id, 'answer_id': key1.split('_')[-1], 'answer': val1})
+                            ans_create_id = res_ans_obj.create(cr, SUPERUSER_ID, {'response_id': resp_id, 'answer_id': key1.split('_')[-1], 'answer': val1})
                             sur_name_read['store_ans'][resp_id].update({key1: val1})
                             select_count += 1
                         surv_name_wiz.write(cr, uid, [context.get('sur_name_id', False)], {'store_ans': sur_name_read['store_ans']})
@@ -775,7 +780,7 @@ class survey_question_wiz(osv.osv_memory):
                         if val and key.split('_')[1] == "commentcolumn" and key.split('_')[0] == que_id:
                             for res_id in response_list:
                                 if key.split('_')[2] in res_id.split('_')[1]:
-                                    res_ans_obj.write(cr, uid, [res_id.split('_')[0]], {'comment_field': val})
+                                    res_ans_obj.write(cr, SUPERUSER_ID, [res_id.split('_')[0]], {'comment_field': val})
                                     sur_name_read['store_ans'][resp_id].update({key: val})
 
                     if comment_field and comment_value:
@@ -789,7 +794,7 @@ class survey_question_wiz(osv.osv_memory):
                         raise osv.except_osv(_('Warning!'), "'" + que_rec['question'] + "'\n" + _("You cannot select the same answer more than one time."))
 
                     if not select_count:
-                        resp_obj.write(cr, uid, resp_id, {'state': 'skip'})
+                        resp_obj.write(cr, SUPERUSER_ID, resp_id, {'state': 'skip'})
 
                     if que_rec['numeric_required_sum'] and numeric_sum > que_rec['numeric_required_sum']:
                         for res in resp_id_list:
@@ -824,9 +829,9 @@ class survey_question_wiz(osv.osv_memory):
         else:
             resp_id_list = []
             for update in click_update:
-                que_rec = que_obj.read(cr, uid, [int(sur_name_read['store_ans'][update]['question_id'])], context=context)[0]
-                res_ans_obj.unlink(cr, uid, res_ans_obj.search(cr, uid, [('response_id', '=', update)], context=context))
-                surv_tbl_column_obj.unlink(cr, uid, surv_tbl_column_obj.search(cr, uid, [('response_table_id', '=', update)], context=context))
+                que_rec = que_obj.read(cr, SUPERUSER_ID, [int(sur_name_read['store_ans'][update]['question_id'])], context=context)[0]
+                res_ans_obj.unlink(cr, SUPERUSER_ID, res_ans_obj.search(cr, SUPERUSER_ID, [('response_id', '=', update)], context=context))
+                surv_tbl_column_obj.unlink(cr, SUPERUSER_ID, surv_tbl_column_obj.search(cr, SUPERUSER_ID, [('response_table_id', '=', update)], context=context))
                 resp_id_list.append(update)
                 sur_name_read['store_ans'].update({update: {'question_id': sur_name_read['store_ans'][update]['question_id']}})
                 surv_name_wiz.write(cr, uid, [context.get('sur_name_id', False)], {'store_ans': sur_name_read['store_ans']})
@@ -842,25 +847,25 @@ class survey_question_wiz(osv.osv_memory):
                     ans_id_len = key.split('_')
                     if ans_id_len[0] == sur_name_read['store_ans'][update]['question_id']:
                         if val and key.split('_')[1] == "table":
-                            surv_tbl_column_obj.create(cr, uid, {'response_table_id': update, 'column_id': key.split('_')[2], 'name': key.split('_')[3], 'value': val})
+                            surv_tbl_column_obj.create(cr, SUPERUSER_ID, {'response_table_id': update, 'column_id': key.split('_')[2], 'name': key.split('_')[3], 'value': val})
                             sur_name_read['store_ans'][update].update({key: val})
-                            resp_obj.write(cr, uid, update, {'state': 'done'})
+                            resp_obj.write(cr, SUPERUSER_ID, update, {'state': 'done'})
 
                         elif val and key.split('_')[1] == "otherfield":
                             comment_field = True
                             sur_name_read['store_ans'][update].update({key: val})
                             select_count += 1
-                            surv_name_wiz.write(cr, uid, [context.get('sur_name_id', False)], {'store_ans': sur_name_read['store_ans']})
+                            surv_name_wiz.write(cr, SUPERUSER_ID, [context.get('sur_name_id', False)], {'store_ans': sur_name_read['store_ans']})
                             continue
 
                         elif val and key.split('_')[1] == "selection":
                             if len(key.split('_')) > 2:
-                                ans_create_id = res_ans_obj.create(cr, uid, {'response_id': update, 'answer_id': key.split('_')[-1], 'column_id': val})
+                                ans_create_id = res_ans_obj.create(cr, SUPERUSER_ID, {'response_id': update, 'answer_id': key.split('_')[-1], 'column_id': val})
                                 selected_value.append(val)
                                 response_list.append(str(ans_create_id) + "_" + str(key.split('_')[-1]))
                             else:
-                                ans_create_id = res_ans_obj.create(cr, uid, {'response_id': update, 'answer_id': val})
-                            resp_obj.write(cr, uid, update, {'state': 'done'})
+                                ans_create_id = res_ans_obj.create(cr, SUPERUSER_ID, {'response_id': update, 'answer_id': val})
+                            resp_obj.write(cr, SUPERUSER_ID, update, {'state': 'done'})
                             sur_name_read['store_ans'][update].update({key: val})
                             select_count += 1
 
@@ -894,11 +899,11 @@ class survey_question_wiz(osv.osv_memory):
                                             error = True
                                 if error:
                                     raise osv.except_osv(_('Warning!'), "'" + que_rec['question'] + "'  \n" + tools.ustr(que_rec['comment_valid_err_msg']))
-                                resp_obj.write(cr, uid, update, {'comment': val, 'state': 'done'})
+                                resp_obj.write(cr, SUPERUSER_ID, update, {'comment': val, 'state': 'done'})
                                 sur_name_read['store_ans'][update].update({key: val})
 
                         elif val and key.split('_')[1] == "comment":
-                            resp_obj.write(cr, uid, update, {'comment': val, 'state': 'done'})
+                            resp_obj.write(cr, SUPERUSER_ID, update, {'comment': val, 'state': 'done'})
                             sur_name_read['store_ans'][update].update({key: val})
                             select_count += 1
 
@@ -931,10 +936,10 @@ class survey_question_wiz(osv.osv_memory):
                             if error:
                                 raise osv.except_osv(_('Warning!'), "'" + que_rec['question'] + "'  \n" + tools.ustr(que_rec['validation_valid_err_msg']))
                             if key.split('_')[1] == "single":
-                                resp_obj.write(cr, uid, update, {'single_text': val, 'state': 'done'})
+                                resp_obj.write(cr, SUPERUSER_ID, update, {'single_text': val, 'state': 'done'})
                             else:
-                                resp_obj.write(cr, uid, update, {'state': 'done'})
-                                ans_create_id = res_ans_obj.create(cr, uid, {'response_id': update, 'answer_id': ans_id_len[1], 'answer': val})
+                                resp_obj.write(cr, SUPERUSER_ID, update, {'state': 'done'})
+                                ans_create_id = res_ans_obj.create(cr, SUPERUSER_ID, {'response_id': update, 'answer_id': ans_id_len[1], 'answer': val})
                             sur_name_read['store_ans'][update].update({key: val})
                             select_count += 1
 
@@ -942,36 +947,36 @@ class survey_question_wiz(osv.osv_memory):
                             if not val == "0":
                                 try:
                                     numeric_sum += int(val)
-                                    resp_obj.write(cr, uid, update, {'state': 'done'})
-                                    ans_create_id = res_ans_obj.create(cr, uid, {'response_id': update, 'answer_id': ans_id_len[1], 'answer': val})
+                                    resp_obj.write(cr, SUPERUSER_ID, update, {'state': 'done'})
+                                    ans_create_id = res_ans_obj.create(cr, SUPERUSER_ID, {'response_id': update, 'answer_id': ans_id_len[1], 'answer': val})
                                     sur_name_read['store_ans'][update].update({key: val})
                                     select_count += 1
                                 except:
                                     raise osv.except_osv(_('Warning!'), "'" + que_rec['question'] + "'\n" + _("Please enter an integer value."))
 
                         elif val and len(key.split('_')) == 3:
-                            resp_obj.write(cr, uid, update, {'state': 'done'})
+                            resp_obj.write(cr, SUPERUSER_ID, update, {'state': 'done'})
                             if type(val) == type('') or type(val) == type(u''):
-                                ans_create_id = res_ans_obj.create(cr, uid, {'response_id': update, 'answer_id': ans_id_len[1], 'column_id': ans_id_len[2], 'value_choice': val})
+                                ans_create_id = res_ans_obj.create(cr, SUPERUSER_ID, {'response_id': update, 'answer_id': ans_id_len[1], 'column_id': ans_id_len[2], 'value_choice': val})
                                 sur_name_read['store_ans'][update].update({key: val})
                             else:
-                                ans_create_id = res_ans_obj.create(cr, uid, {'response_id': update, 'answer_id': ans_id_len[1], 'column_id': ans_id_len[2]})
+                                ans_create_id = res_ans_obj.create(cr, SUPERUSER_ID, {'response_id': update, 'answer_id': ans_id_len[1], 'column_id': ans_id_len[2]})
                                 sur_name_read['store_ans'][update].update({key: True})
                             matrix_list.append(key.split('_')[0] + '_' + key.split('_')[1])
                             select_count += 1
 
                         elif val and len(key.split('_')) == 2:
-                            resp_obj.write(cr, uid, update, {'state': 'done'})
-                            ans_create_id = res_ans_obj.create(cr, uid, {'response_id': update, 'answer_id': ans_id_len[-1], 'answer': val})
+                            resp_obj.write(cr, SUPERUSER_ID, update, {'state': 'done'})
+                            ans_create_id = res_ans_obj.create(cr, SUPERUSER_ID, {'response_id': update, 'answer_id': ans_id_len[-1], 'answer': val})
                             sur_name_read['store_ans'][update].update({key: val})
                             select_count += 1
-                        surv_name_wiz.write(cr, uid, [context.get('sur_name_id', False)], {'store_ans': sur_name_read['store_ans']})
+                        surv_name_wiz.write(cr, SUPERUSER_ID, [context.get('sur_name_id', False)], {'store_ans': sur_name_read['store_ans']})
 
                 for key, val in vals.items():
                     if val and key.split('_')[1] == "commentcolumn" and key.split('_')[0] == sur_name_read['store_ans'][update]['question_id']:
                         for res_id in response_list:
                             if key.split('_')[2] in res_id.split('_')[1]:
-                                res_ans_obj.write(cr, uid, [res_id.split('_')[0]], {'comment_field': val})
+                                res_ans_obj.write(cr, SUPERUSER_ID, [res_id.split('_')[0]], {'comment_field': val})
                                 sur_name_read['store_ans'][update].update({key: val})
 
                 if comment_field and comment_value:
@@ -984,7 +989,7 @@ class survey_question_wiz(osv.osv_memory):
                     raise osv.except_osv(_('Warning!'), "'" + que_rec['question'] + "' " + tools.ustr(que_rec['numeric_required_sum_err_msg']))
 
                 if not select_count:
-                    resp_obj.write(cr, uid, update, {'state': 'skip'})
+                    resp_obj.write(cr, SUPERUSER_ID, update, {'state': 'skip'})
 
                 if que_rec['type'] in ['multiple_textboxes_diff_type', 'multiple_choice_multiple_ans', 'matrix_of_choices_only_one_ans', 'matrix_of_choices_only_multi_ans', 'rating_scale', 'multiple_textboxes', 'numerical_textboxes', 'date', 'date_and_time'] and que_rec['is_require_answer']:
                     if matrix_list:
@@ -1155,6 +1160,10 @@ class survey_question_wiz(osv.osv_memory):
         """
         if context is None:
             context = {}
+
+        print ""
+        print context
+        print ""
         surv_name_wiz = self.pool.get('survey.name.wiz')
         surv_name_wiz.write(cr, uid, [context.get('sur_name_id', False)], {'transfer': True, 'page': next and 'next' or 'previous'})
         return {

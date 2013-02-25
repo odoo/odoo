@@ -32,15 +32,16 @@ class survey_name_wiz(osv.osv_memory):
         'page': fields.char('Page Position', size=12),
         'transfer': fields.boolean('Page Transfer'),
         'store_ans': fields.text('Store Answer'),
-        'response': fields.char('Answer', size=16)
+        'response_id': fields.many2one('survey.response', 'Answer'),
     }
     _defaults = {
         'page_no': -1,
         'page': 'next',
         'transfer': 1,
-        'response': 0,
+        'response_id': 0,
         'survey_id': lambda self, cr, uid, context: context.get('survey_id', False),
-        'store_ans': '{}' #Setting the default pattern as '{}' as the field is of type text. The field always gets the value in dict format
+        #Setting the default pattern as '{}' as the field is of type text. The field always gets the value in dict format
+        'store_ans': '{}'
     }
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
