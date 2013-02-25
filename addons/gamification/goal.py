@@ -382,7 +382,7 @@ class gamification_goal_plan(osv.Model):
         """Reset a closed goal plan
 
         Change the state of the plan to in progress
-        Closing a pan does not affect the goals so reset as well"""
+        Closing a plan does not affect the goals so neither does reset"""
         return self.write(cr, uid, ids, {'state': 'inprogress'}, context=context)
 
     def action_cancel(self, cr, uid, ids, context=None):
@@ -403,7 +403,7 @@ class gamification_goal_plan(osv.Model):
     def generate_goals_from_plan(self, cr, uid, ids, context=None):
         """Generate the lsit of goals fron a plan"""
         for plan in self.browse(cr, uid, ids, context):
-            today = date.today() #fields.date.today()
+            today = date.today()
             if plan.period == 'daily':
                 start_date = today
             elif plan.period == 'weekly':
@@ -485,6 +485,68 @@ class gamification_goal_plan(osv.Model):
         return True
 
 
+    def report_progress(self, cr, uid, ids, context=None):
+        """Post report about the progress of the goals"""
+        
+        goal_obj = self.pool.get('gamification.goal')
+        
+        for plan in self.browse(cr, uid, ids, context=context):
+            if plan.visibility_mode == 'board':
+                # generate a shared report
+                pass
+            else:
+                # generate individual reports
+                report_title = "Individual Report for {0} - {1}".format(plan.name, fields.date.today())
+                for user in plan.user_ids:
+                    goal_ids = self.get_current_related_user_goals(cr, uid, plan.id, user.id, context)
+
+                    for goal in goal_obj.browse(cr, uid, goal_ids, context=context):
+                        pass
+
+            
+    def get_current_related_user_goals(self, cr, uid, plan_id, user_id, context=None):
+        """Get the ids of goals linked to a plan for the current instance
+
+        If several goals are linked to the same planline and user, only the
+        latest instance of the plan is checked (eg :if the plan is monthly,
+        return the goals started the 1st of this month).
+        """
+
+        plan in self.browse(cr, uid, plan_id, context=context)
+        today = date.today()
+        if plan.period == 'daily':
+            start_date = today
+        elif plan.period == 'weekly':
+            delta = timedelta(days=today.weekday())
+            start_date = today - delta
+        elif plan.period == 'monthly':
+            delta = timedelta(days=today.day-1)
+            start_date = today - delta
+        elif plan.period == 'yearly':
+            start_date = today.replace(month=1, day=1)
+        elif plan.period == 'once':
+            start_date = False # for manual goal, start each time
+
+        goal_obj = self.pool.get('gamification.goal')
+        related_goal_ids = []
+
+        for planline in plan.planline_ids:
+            domain = [('planline_id', '=', planline.id),
+                ('user_id', '=', user_id)]
+
+            if start_date:
+                domain.append(('start_date', '=', start_date.isoformat()))
+
+            goal_ids = goal_obj.search(cr, uid, domain, context=context)
+            if len(goal_ids) == 1:
+                related_goal_ids.append(goal_ids[0])
+            elif len(goal_ids) == 0:
+                # this goal has been deleted
+                raise osv.except_osv(_('Warning!'), _('Planline {0} has no goal present for user {1} at date {2}'.format(planline.id, user.id, start_date)))
+            else: # more than one goal ?
+                raise osv.except_osv(_('Warning!'), _('Duplicate goals for planline {0}, user {1}, date {2}'.format(planline.id, user.id, start_date)))
+                related_goal_ids.extend(goal_ids)
+
 class gamification_goal_planline(osv.Model):
     """Gamification goal planline
 
@@ -528,3 +590,6 @@ class gamification_goal_planline(osv.Model):
                 'gamification.goal.type': (_get_planline_types, ['sequence'], 10),
                 }),
     }
+
+# class gamification_goal_report(osv.Model):
+#     _name = 'gamification.goal.report'
