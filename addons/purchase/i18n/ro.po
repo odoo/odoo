@@ -8,13 +8,13 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2012-12-21 17:04+0000\n"
-"PO-Revision-Date: 2013-02-23 09:32+0000\n"
+"PO-Revision-Date: 2013-02-24 06:33+0000\n"
 "Last-Translator: Fekete Mihai <mihai@erpsystems.ro>\n"
 "Language-Team: Romanian <ro@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-02-24 05:12+0000\n"
+"X-Launchpad-Export-Date: 2013-02-25 05:40+0000\n"
 "X-Generator: Launchpad (build 16506)\n"
 
 #. module: purchase
@@ -920,7 +920,7 @@ msgstr "Data la care a fost creat acest document."
 #. module: purchase
 #: field:purchase.order,message_is_follower:0
 msgid "Is a Follower"
-msgstr ""
+msgstr "Este o Urmare"
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.action_purchase_order_report_graph
@@ -1725,6 +1725,19 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<clasa p=\"oe_vizualizare_niciuncontinut_creeaza\">\n"
+"                Clic pentru a crea o cerere pentru cotatie.\n"
+"              </p><p>\n"
+"                Cotatia contine istoricul discutiilor/negocierilor\n"
+"                pe care le-ati avut cu furnizorul dumneavoastra. Odata "
+"confirmata, o cerere pentru\n"
+"                cotatie este transformata intr-o comanda de achizitie.\n"
+"              </p><p>\n"
+"                Majoritatea propunerilor de comenzi de achizitie sunt create "
+"automat\n"
+"                de OpenERP pe baza nevoilor de inventar.\n"
+"              </p>\n"
+"            "
 
 #. module: purchase
 #: model:process.transition,note:purchase.process_transition_approvingpurchaseorder0
@@ -1826,6 +1839,15 @@ msgid ""
 "* The 'Cancelled' status is set automatically when user cancel purchase "
 "order."
 msgstr ""
+" * Starea 'Ciorna' este setata automat atunci cand comanda de aschizitie se "
+"afla in starea de ciorna.                                        \n"
+"* Starea 'Confirmat' este setata automat ca si confirmata atunci cand "
+"comanda de achizitie este in starea confirmata.                              "
+"          \n"
+"* Starea 'Efectaut' este setata automat atunci cand comanda de achizitie "
+"este setata ca efectuata.                                        \n"
+"* Starea 'Anulat' este setata automat atunci cand utilizatorul anuleaza "
+"comanda de achizitie."
 
 #. module: purchase
 #: field:purchase.order,invoiced:0
@@ -1875,6 +1897,10 @@ msgid ""
 "lines on a purchase order between several accounts and analytic plans.\n"
 "                This installs the module purchase_analytic_plans."
 msgstr ""
+"Ii permite utilizatorului sa mentina mai multe planuri de analiza. Acestea "
+"va permit sa impartiti liniile unei comenzi de achizitii in mai multe "
+"conturi si planuri analitice.\n"
+"                Acesta instaleaza modulul purchase_analytic_plans."
 
 #. module: purchase
 #: field:purchase.order,location_id:0
@@ -1993,6 +2019,13 @@ msgid ""
 "paid and received, the status becomes 'Done'. If a cancel action occurs in "
 "the invoice or in the reception of goods, the status becomes in exception."
 msgstr ""
+"Starea comenzii de achizitii sau a cererii pentru cotatie. O cotatie este o "
+"comanda de achizitie in starea 'Ciorna'. Apoi comanda trebuie confirmata de "
+"catre utilizator, iar starea devine 'Confirmata'. Apoi furnizorul trebuie sa "
+"confirme comanda pentru a modifica starea in 'Aprobata'. Atunci cand comanda "
+"de achizitie este platita si primita, starea devine 'Efectuata'. Daca are "
+"loc o actiune de anulare in factura sau la receptia marfii, starea devine in "
+"exceptie."
 
 #. module: purchase
 #: selection:purchase.order,state:0
@@ -2063,7 +2096,7 @@ msgstr ""
 #. module: purchase
 #: field:purchase.order,message_follower_ids:0
 msgid "Followers"
-msgstr ""
+msgstr "Urmari"
 
 #. module: purchase
 #: help:purchase.config.settings,module_purchase_requisition:0
@@ -2075,6 +2108,12 @@ msgid ""
 "            to one supplier or if you want a purchase requisition to "
 "negotiate with several suppliers."
 msgstr ""
+"Rechizitiile de cumparare sunt utilizate atunci cand doriti sa cereti oferte "
+"de la mai multi furnizori pentru un anumit set de produse.\n"
+"            Puteti configura fiecare produs daca faceti direct o Cerere de "
+"Cotatie\n"
+"            unui furnizor sau daca doriti o rechizitie de cumparare pentru a "
+"negocia cu mai multi furnizori."
 
 #. module: purchase
 #: field:purchase.order.line,invoice_lines:0
@@ -2126,6 +2165,9 @@ msgid ""
 "amount.\n"
 "                This installs the module purchase_double_validation."
 msgstr ""
+"Ofera un mecanism dublu de validare pentru achizitiile care depasesc suma "
+"minima.\n"
+"                Acesta instaleaza modulul purchase_double_validation."
 
 #. module: purchase
 #: code:addons/purchase/edi/purchase_order.py:132
@@ -2137,7 +2179,7 @@ msgstr "Lista de preturi EDI (%s)"
 #: view:purchase.report:0
 #: field:purchase.report,product_uom:0
 msgid "Reference Unit of Measure"
-msgstr ""
+msgstr "Unitatea de Masura de Referinta"
 
 #. module: purchase
 #: model:process.node,note:purchase.process_node_packinginvoice0
@@ -2190,7 +2232,7 @@ msgstr "Lista produselor comandate."
 #. module: purchase
 #: view:purchase.order:0
 msgid "Incoming Shipments & Invoices"
-msgstr ""
+msgstr "Transporturi Primite & Facturi"
 
 #. module: purchase
 #: selection:purchase.order,state:0
@@ -2263,6 +2305,13 @@ msgid ""
 "Bases on incoming shipments: let you create an invoice when receptions are "
 "validated."
 msgstr ""
+"Pe baza liniilor Comenzii de Achizitie: introduceti linii individuale in "
+"'Control Factura > Pe baza liniilor CdeA' de unde puteti crea o factura in "
+"mod selectiv.\n"
+"Pe baza facturii generate: creati o factura ciorna pe care o puteti valida "
+"mai tarziu.\n"
+"Pe baza transporturilor primite: va permite sa creati o factura atunci cand "
+"receptiile sunt validate."
 
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_partner_categories_in_form
@@ -2282,7 +2331,7 @@ msgstr "Nr Cererii de cotatie"
 #. module: purchase
 #: view:purchase.config.settings:0
 msgid "Invoicing Settings"
-msgstr ""
+msgstr "Setari Facturare"
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.action_purchase_order_by_user_all
@@ -2292,13 +2341,13 @@ msgstr "Total Comenzi după Utilizator pe luna"
 #. module: purchase
 #: selection:purchase.order,invoice_method:0
 msgid "Based on incoming shipments"
-msgstr ""
+msgstr "Pe baza transporturilor primite"
 
 #. module: purchase
 #: code:addons/purchase/purchase.py:1018
 #, python-format
 msgid "No default supplier defined for this product"
-msgstr ""
+msgstr "Nu exista niciun furnizor implicit definit pentru acest produs"
 
 #. module: purchase
 #: view:purchase.report:0
@@ -2337,7 +2386,7 @@ msgstr "Februarie"
 #: model:ir.actions.act_window,name:purchase.action_invoice_pending
 #: model:ir.ui.menu,name:purchase.menu_procurement_management_pending_invoice
 msgid "On Draft Invoices"
-msgstr ""
+msgstr "In Facturile Ciorna"
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.action_purchase_order_report_all
@@ -2363,7 +2412,7 @@ msgstr "Suma totala"
 #. module: purchase
 #: model:ir.model,name:purchase.model_product_template
 msgid "Product Template"
-msgstr ""
+msgstr "Sablon Produs"
 
 #. module: purchase
 #: view:purchase.order.group:0
@@ -2396,7 +2445,7 @@ msgstr ""
 #. module: purchase
 #: field:purchase.order,message_summary:0
 msgid "Summary"
-msgstr ""
+msgstr "Rezumat"
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.purchase_pricelist_version_action
@@ -2407,7 +2456,7 @@ msgstr "Versiuni ale Listei de preturi"
 #. module: purchase
 #: field:purchase.order,payment_term_id:0
 msgid "Payment Term"
-msgstr ""
+msgstr "Termen de plata"
 
 #. module: purchase
 #: view:purchase.order:0
@@ -2423,7 +2472,7 @@ msgstr "An"
 #. module: purchase
 #: selection:purchase.config.settings,default_invoice_method:0
 msgid "Based on purchase order lines"
-msgstr ""
+msgstr "Pe baza liniilor comenzii de achizitie"
 
 #. module: purchase
 #: model:ir.actions.act_window,help:purchase.act_res_partner_2_purchase_order
@@ -2440,6 +2489,17 @@ msgid ""
 "                </p>\n"
 "            "
 msgstr ""
+"<clasa p=\"oe_vizualizare_niciuncontinut_creeaza\">\n"
+"                    Acest furnizor nu are nicio comanda de achizitie. Clic "
+"pentru a crea o noua CdC.\n"
+"                </p><p>\n"
+"                    Cererea de cotatie este primul pas al fluxului de "
+"cumparare. Odata\n"
+"                    transformata intr-o comanda de achizitie, veti putea sa "
+"controlati receptia\n"
+"                    produselor si factura furnizorului.\n"
+"                </p>\n"
+"            "
 
 #. module: purchase
 #: view:purchase.report:0
