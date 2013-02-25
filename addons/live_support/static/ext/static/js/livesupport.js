@@ -197,6 +197,8 @@ define(["nova", "underscore", "oeclient", "require", "jquery",
                     self.activated = true;
                     $(window).on("unload", self.unload_event_handler);
                     self.poll();
+                } else {
+                    return $.Deferred().reject();
                 }
             });
         },
