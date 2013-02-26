@@ -272,6 +272,13 @@ class gamification_goal(osv.Model):
         return self.write(cr, uid, ids, {'state': 'inprogress'}, context=context)
 
 
+    def write(self, cr, uid, ids, vals, context=None):
+        for goal in self.browse(cr, uid, ids, vals):
+            vals['last_update'] = fields.date.today()        
+        write_res = super(gamification_goal, self).write(cr, uid, ids, vals, context=context)
+        return write_res
+
+
 class gamification_goal_plan(osv.Model):
     """Gamification goal plan
 
@@ -536,7 +543,7 @@ class gamification_goal_plan(osv.Model):
                     # most complete first, current if same percentage (eg: if several 100%)
                     sorted_planline_goals = enumerate(sorted(planlines_stats, key=lambda k: (k['completeness'], k['current']), reverse=True))
                     template_context['planlines'].append({'goal_type':planline.type_id.name, 'list':sorted_planline_goals})
-                    
+
                 self.pool.get('email.template').send_mail(cr, uid, template_id, plan.id, context=template_context)
 
             else:
