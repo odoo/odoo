@@ -66,7 +66,7 @@ openerp.auth_signup = function(instance) {
                     });
                 } else {
                     // TODO: support multiple database mode
-                    this.set('login-mode', 'default');
+                    self.set('login-mode', 'default');
                 }
             });
         },
