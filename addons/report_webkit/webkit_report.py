@@ -38,10 +38,6 @@ import tempfile
 import time
 import logging
 
-from mako.template import Template
-from mako.lookup import TemplateLookup
-from mako import exceptions
-
 from openerp import netsvc
 from openerp import pooler
 from report_helper import WebKitHelper
@@ -50,16 +46,46 @@ from openerp import addons
 from openerp import tools
 from openerp.tools.translate import _
 from openerp.osv.osv import except_osv
+from urllib import urlencode, quote as quote
 
 _logger = logging.getLogger(__name__)
+
+try:
+    # We use a jinja2 sandboxed environment to render mako templates.
+    # Note that the rendering does not cover all the mako syntax, in particular
+    # arbitrary Python statements are not accepted, and not all expressions are
+    # allowed: only "public" attributes (not starting with '_') of objects may
+    # be accessed.
+    # This is done on purpose: it prevents incidental or malicious execution of
+    # Python code that may break the security of the server.
+    from jinja2.sandbox import SandboxedEnvironment
+    mako_template_env = SandboxedEnvironment(
+        block_start_string="<%",
+        block_end_string="%>",
+        variable_start_string="${",
+        variable_end_string="}",
+        comment_start_string="<%doc>",
+        comment_end_string="</%doc>",
+        line_statement_prefix="%",
+        line_comment_prefix="##",
+        trim_blocks=True,               # do not output newline after blocks
+        autoescape=True,                # XML/HTML automatic escaping
+    )
+    mako_template_env.globals.update({
+        'str': str,
+        'quote': quote,
+        'urlencode': urlencode,
+    })
+except ImportError:
+    _logger.warning("jinja2 not available, templating features will not work!")
 
 def mako_template(text):
     """Build a Mako template.
 
     This template uses UTF-8 encoding
     """
-    tmp_lookup  = TemplateLookup() #we need it in order to allow inclusion and inheritance
-    return Template(text, input_encoding='utf-8', output_encoding='utf-8', lookup=tmp_lookup)
+
+    return mako_template_env.from_string(text)
 
 class WebKitParser(report_sxw):
     """Custom class that use webkit to render HTML reports
@@ -242,64 +268,62 @@ class WebKitParser(report_sxw):
         if not css :
             css = ''
 
-        #default_filters=['unicode', 'entity'] can be used to set global filter
         body_mako_tpl = mako_template(template)
         helper = WebKitHelper(cursor, uid, report_xml.id, context)
         if report_xml.precise_mode:
             for obj in objs:
                 self.parser_instance.localcontext['objects'] = [obj]
                 try :
-                    html = body_mako_tpl.render(helper=helper,
-                                                css=css,
-                                                _=self.translate_call,
-                                                **self.parser_instance.localcontext)
+                    html = body_mako_tpl.render(dict({"helper":helper,
+                                                "css":css,
+                                                "_":self.translate_call},
+                                                **self.parser_instance.localcontext))
                     htmls.append(html)
-                except Exception:
-                    msg = exceptions.text_error_template().render()
+                except Exception, e:
+                    msg = u"%s" % e
                     _logger.error(msg)
                     raise except_osv(_('Webkit render!'), msg)
         else:
             try :
-                html = body_mako_tpl.render(helper=helper,
-                                            css=css,
-                                            _=self.translate_call,
-                                            **self.parser_instance.localcontext)
+                html = body_mako_tpl.render(dict({"helper":helper,
+                                                "css":css,
+                                                "_":self.translate_call},
+                                            **self.parser_instance.localcontext))
                 htmls.append(html)
             except Exception:
-                msg = exceptions.text_error_template().render()
+                msg = u"%s" % e
                 _logger.error(msg)
                 raise except_osv(_('Webkit render!'), msg)
         head_mako_tpl = mako_template(header)
         try :
-            head = head_mako_tpl.render(helper=helper,
-                                        css=css,
-                                        _=self.translate_call,
-                                        _debug=False,
-                                        **self.parser_instance.localcontext)
-        except Exception:
-            raise except_osv(_('Webkit render!'),
-                exceptions.text_error_template().render())
+            head = head_mako_tpl.render(dict({"helper":helper,
+                                                "css":css,
+                                                "_":self.translate_call,
+                                                "_debug":False},
+                                        **self.parser_instance.localcontext))
+        except Exception, e:
+            raise except_osv(_('Webkit render!'), u"%s" % e)
         foot = False
         if footer :
             foot_mako_tpl = mako_template(footer)
             try :
-                foot = foot_mako_tpl.render(helper=helper,
-                                            css=css,
-                                            _=self.translate_call,
-                                            **self.parser_instance.localcontext)
-            except:
-                msg = exceptions.text_error_template().render()
+                foot = foot_mako_tpl.render(dict({"helper":helper,
+                                                "css":css,
+                                                "_":self.translate_call},
+                                            **self.parser_instance.localcontext))
+            except Exception, e:
+                msg = u"%s" % e
                 _logger.error(msg)
                 raise except_osv(_('Webkit render!'), msg)
         if report_xml.webkit_debug :
             try :
-                deb = head_mako_tpl.render(helper=helper,
-                                           css=css,
-                                           _debug=tools.ustr("\n".join(htmls)),
-                                           _=self.translate_call,
-                                           **self.parser_instance.localcontext)
-            except Exception:
-                msg = exceptions.text_error_template().render()
+                deb = head_mako_tpl.render(dict({"helper":helper,
+                                                "css":css,
+                                                "_":self.translate_call,
+                                                "_debug":tools.ustr("\n".join(htmls))},
+                                           **self.parser_instance.localcontext))
+            except Exception, e:
+                msg = u"%s" % e
                 _logger.error(msg)
                 raise except_osv(_('Webkit render!'), msg)
             return (deb, 'html')
