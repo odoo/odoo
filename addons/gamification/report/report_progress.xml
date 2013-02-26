@@ -12,9 +12,9 @@
     </data>
 
     <data>
-        <!--Email template -->
+        <!--Email template for individual report -->
         <record id="email_template_gamification_individual" model="email.template">
-            <field name="name">Individual Report - Send by Email</field>
+            <field name="name">Individual Goal Report - Send by Email</field>
             <field name="email_from">noreply@localhost</field>
             <field name="subject">Individual report - ${object.name}</field>
             <field name="email_recipients">${object.report_message_group_id.alias_id.name_get()[0][1]}</field>
@@ -24,7 +24,7 @@
 <div>
     <h1>Individual report - ${object.name}</h1>
 
-    <p>Hello ${ctx['user'].name}, bellow are your latest results for the plan ${object.name}.</p>
+    <p>Hello, bellow are the latest results for the plan ${object.name} for ${ctx['user'].name}.</p>
 
     <table width="100%" border="1">
     <tr>
@@ -42,6 +42,43 @@
         </tr>
     % endfor
     </table>
+
+</div>
+            ]]></field>
+        </record>
+
+        <!-- Email template for leaderboard -->
+        <record id="email_template_gamification_leaderboard" model="email.template">
+            <field name="name">Leaderboard Goal Report - Send by Email</field>
+            <field name="email_from">noreply@localhost</field>
+            <field name="subject">${object.name} group report</field>
+            <field name="email_recipients">${object.report_message_group_id.alias_id.name_get()[0][1]}</field>
+            <field name="model_id" ref="gamification.model_gamification_goal_plan"/>
+            <field name="auto_delete" eval="True"/>
+            <field name="body_html"><![CDATA[
+<div>
+    <h1>Group report - ${object.name}</h1>
+
+    <p>Hello, 
+
+    Bellow are the latest results for the plan ${object.name} for the group ${object.report_message_group_id.name}</p>
+
+    % for planline in ctx['planlines']:
+        <h2>${planline['goal_type']}</h2>
+        <table width="100%" border="1">
+            <th>#</th>
+            <th>User</th>
+            <th>Completeness</th>
+            <th>Current</th>
+        % for idx, goal in planline['list']:
+            <tr>
+                <td>${idx+1}</td>
+                <td>${goal.completeness}</td>
+                <td>${goal.current}/${goal.target_goal}</td>
+            </tr>
+        % endfor
+        </table>
+    % endfor
 
 </div>
             ]]></field>

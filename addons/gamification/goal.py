@@ -29,6 +29,33 @@ import calendar
 import itertools
 
 
+def start_end_date_for_period(period):
+    """Return the start and end date for a goal period based on today
+
+    :return (start_date, end_date), datetime.date objects, False if the period is
+    not defined or unknown"""
+    today = date.today()
+    if period == 'daily':
+        start_date = today
+        end_date = start_date # ? + timedelta(days=1)
+    elif period == 'weekly':
+        delta = timedelta(days=today.weekday())
+        start_date = today - delta
+        end_date = start_date + timedelta(days=7)
+    elif period == 'monthly':
+        month_range = calendar.monthrange(today.year, today.month)
+        start_date = today.replace(day=month_range[0])
+        end_date = today.replace(day=month_range[1])
+    elif period == 'yearly':
+        start_date = today.replace(month=1, day=1)
+        end_date = today.replace(month=12, day=31)
+    else: # period == 'once':
+        start_date = False # for manual goal, start each time
+        end_date = False
+    
+    return (start_date, end_date)
+
+
 class gamification_goal_type(osv.Model):
     """Goal type definition
 
@@ -405,19 +432,7 @@ class gamification_goal_plan(osv.Model):
     def generate_goals_from_plan(self, cr, uid, ids, context=None):
         """Generate the lsit of goals fron a plan"""
         for plan in self.browse(cr, uid, ids, context):
-            today = date.today()
-            if plan.period == 'daily':
-                start_date = today
-            elif plan.period == 'weekly':
-                delta = timedelta(days=today.weekday())
-                start_date = today - delta
-            elif plan.period == 'monthly':
-                delta = timedelta(days=today.day-1)
-                start_date = today - delta
-            elif plan.period == 'yearly':
-                start_date = today.replace(month=1, day=1)
-            elif plan.period == 'once':
-                start_date = False # for manual goal, start each time
+            (start_date, end_date) = start_end_date_for_period(plan.period)
 
             for planline in plan.planline_ids:
                 for user in plan.user_ids:
@@ -427,7 +442,7 @@ class gamification_goal_plan(osv.Model):
                     domain = [('planline_id', '=', planline.id),
                             ('user_id', '=', user.id)]
                     if start_date:
-                        domain.append(('start_date', '=', start_date.isoformat()))
+                        domain.append(('start_date', '=', start_date))
                     
                     # goal existing for this planline ?
                     if len(goal_obj.search(cr, uid, domain, context=context)) > 0:
@@ -451,17 +466,9 @@ class gamification_goal_plan(osv.Model):
             
                     if start_date:
                         values['start_date'] = start_date.isoformat()
+                    if end_date:
+                        values['end_date'] = end_date.isoformat()
 
-                    if planline.plan_id.period == 'daily':
-                        values['end_date'] = start_date + timedelta(days=1)
-                    elif planline.plan_id.period == 'weekly':
-                        values['end_date'] = start_date + timedelta(days=7)
-                    elif planline.plan_id.period == 'monthly':
-                        month_range = calendar.monthrange(start_date.year, start_date.month)
-                        values['end_date'] = start_date.replace(day=month_range[1])
-                    elif planline.plan_id.period == 'yearly':
-                        values['end_date'] = start_date.replace(month=12, day=31)
-                    
                     if planline.plan_id.remind_update_delay:
                         values['remind_update_delay'] = planline.plan_id.remind_update_delay
 
@@ -492,50 +499,70 @@ class gamification_goal_plan(osv.Model):
         goal_obj = self.pool.get('gamification.goal')
 
         for plan in self.browse(cr, uid, ids, context=context):
+            if not plan.report_message_group_id:
+                # no report group, skipping
+                continue
+
+            # copy of context to access more variables in templates
+            template_context = dict(context)
             if plan.visibility_mode == 'board':
                 # generate a shared report
-                pass
+                template_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'gamification', 'email_template_gamification_leaderboard')[1]
+
+                # unsorted list of planline                
+                template_context['planlines'] = []
+                for planline in plan.planline_ids:
+
+                    (start_date, end_date) = start_end_date_for_period(plan.period)
+                    domain = [
+                        ('planline_id', '=', planline.id),
+                        ('state', 'in', ('inprogress', 'inprogress_update',
+                            'reached', 'failed')),
+                    ]
+                    if start_date:
+                        domain.append(('start_date', '=', start_date.isoformat()))
+ 
+                    goal_ids = goal_obj.search(cr, uid, domain, context=context)
+                    
+                    planlines_stats = []
+                    for goal in goal_obj.browse(cr, uid, goal_ids, context=context):
+                        planlines_stats.append({
+                            'user': goal.user_id,
+                            'current':goal.current,
+                            'target_goal':goal.target_goal,
+                            'completeness':goal.completeness,
+                        })
+
+                    # most complete first, current if same percentage (eg: if several 100%)
+                    sorted_planline_goals = enumerate(sorted(planlines_stats, key=lambda k: (k['completeness'], k['current']), reverse=True))
+                    template_context['planlines'].append({'goal_type':planline.type_id.name, 'list':sorted_planline_goals})
+                    
+                self.pool.get('email.template').send_mail(cr, uid, template_id, plan.id, context=template_context)
+
             else:
-                if not plan.report_message_group_id:
-                    continue
-                
                 # generate individual reports
                 template_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'gamification', 'email_template_gamification_individual')[1]
-
                 for user in plan.user_ids:
                     
                     goal_ids = self.get_current_related_user_goals(cr, uid, plan.id, user.id, context)
                     if len(goal_ids) == 0:
                         continue
 
-                    template_context = dict(context)
                     template_context['goals'] = goal_obj.browse(cr, uid, goal_ids, context=context)
                     template_context['user'] = user
                     self.pool.get('email.template').send_mail(cr, uid, template_id, plan.id, context=template_context)
+        return True
 
-
-    def get_current_related_user_goals(self, cr, uid, plan_id, user_id, context=None):
+    def get_current_related_goals(self, cr, uid, plan_id, user_id, context=None):
         """Get the ids of goals linked to a plan for the current instance
 
         If several goals are linked to the same planline and user, only the
-        latest instance of the plan is checked (eg :if the plan is monthly,
+        latest instance of the plan is checked (eg: if the plan is monthly,
         return the goals started the 1st of this month).
         """
 
         plan = self.browse(cr, uid, plan_id, context=context)
-        today = date.today()
-        if plan.period == 'daily':
-            start_date = today
-        elif plan.period == 'weekly':
-            delta = timedelta(days=today.weekday())
-            start_date = today - delta
-        elif plan.period == 'monthly':
-            delta = timedelta(days=today.day-1)
-            start_date = today - delta
-        elif plan.period == 'yearly':
-            start_date = today.replace(month=1, day=1)
-        elif plan.period == 'once':
-            start_date = False # for manual goal, start each time
+        (start_date, end_date) = start_end_date_for_period(plan.period)
 
         goal_obj = self.pool.get('gamification.goal')
         related_goal_ids = []
