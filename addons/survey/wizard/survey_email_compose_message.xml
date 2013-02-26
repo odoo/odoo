@@ -12,11 +12,10 @@
             <field name="body_html"><![CDATA[
 <div style="font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); ">
     <p>Hello,</p>
-    <p>
-        Would you please spent some of your time to fill-in our survey: 
-        <a href="__URL__">${object.title}</a>
-    </p>
-    <p>Thank you for choosing us!</p>
+    <p>We are conducting a survey, and you response would be appreciated.</p>
+    <p><br/>Here is a link to the survey: <br/><a href="__URL__">${object.title}</a></p>
+    <p><br/>This link is uniquely tied to this survey and your email address. Please do not forward this message.</p>
+    <p>Thanks for your participation!</p>
 </div>
 ]]></field>
         </record>
@@ -53,7 +52,7 @@
                             <field name="multi_email"/>
                             <field name="subject" placeholder="Subject..."/>
                         </group>
-                        <field name="body"/>
+                        <field name="body" help="__URL__ will be automatically transformed into web address (public or private, depending on your choice). You can click on 'Show Source' button to see __URL__ in the link tag on the email template."/>
                         <group col="2">
                             <div>
                                 <label for="attachment_ids"/>
