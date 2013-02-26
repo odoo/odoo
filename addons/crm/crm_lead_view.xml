@@ -2,7 +2,6 @@
 <openerp>
     <data>
 
-
         <!--
             CRM CASE STAGE
         -->
@@ -110,7 +109,7 @@
                             string="Phone Calls"/>
                     </div>
                     <div class="oe_title">
-                        <label for="name" class="oe_edit_only" string="Lead Description"/>
+                        <label for="name" class="oe_edit_only"/>
                         <h1><field name="name" placeholder="Describe the lead..."/></h1>
                     </div>
                     <group>
@@ -217,9 +216,8 @@
             <field name="arch" type="xml">
                 <tree string="Leads" fonts="bold:message_unread==True" colors="grey:state in ('cancel', 'done')">
                     <field name="date_deadline" invisible="1"/>
-                    <field name="create_date" groups="base.group_no_one"/>
+                    <field name="create_date"/>
                     <field name="name"/>
-                    <field name="type"/>
                     <field name="contact_name"/>
                     <field name="country_id" invisible="context.get('invisible_country', True)"/>
                     <field name="email_from"/>
@@ -390,8 +388,7 @@
                             <button string="Meeting"
                                 name="action_makeMeeting"
                                 type="object"
-                                context="{'search_default_attendee_id': active_id, 'default_attendee_id' : active_id}"
-                               />
+                                context="{'search_default_attendee_id': active_id, 'default_attendee_id' : active_id}"/>
                         </div>
                         <div class="oe_title">
                             <label for="name" class="oe_edit_only"/>
@@ -512,7 +509,7 @@
             <field name="arch" type="xml">
                 <tree string="Opportunities" fonts="bold:message_unread==True" colors="gray:state in ('cancel', 'done');red:date_deadline and (date_deadline &lt; current_date)">
                     <field name="date_deadline" invisible="1"/>
-                    <field name="create_date" groups="base.group_no_one"/>
+                    <field name="create_date"/>
                     <field name="name" string="Opportunity"/>
                     <field name="partner_id" string="Customer"/>
                     <field name="country_id" invisible="context.get('invisible_country', True)"/>
@@ -527,8 +524,8 @@
                     <field name="user_id"/>
                     <field name="referred" invisible="1"/>
                     <field name="priority" invisible="1"/>
-                    <field name="state" groups="base.group_no_one"/>
                     <field name="message_unread" invisible="1"/>
+                    <field name="state" invisible="1"/>
                 </tree>
             </field>
         </record>

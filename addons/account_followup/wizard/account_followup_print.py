@@ -26,8 +26,6 @@ from openerp import tools
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
 
-from openerp import SUPERUSER_ID
-
 class account_followup_stat_by_partner(osv.osv):
     _name = "account_followup.stat.by.partner"
     _description = "Follow-up Statistics by Partner"
@@ -315,13 +313,6 @@ class account_followup_print(osv.osv_memory):
                 if stat_line_id not in partner_list:
                     partner_list.append(stat_line_id)
                 to_update[str(id)]= {'level': fups[followup_line_id][1], 'partner_id': stat_line_id}
-        #Remove partners that are other companies in OpenERP
-        comp_obj = self.pool.get("res.company")
-        comp_ids = comp_obj.search(cr, SUPERUSER_ID, [], context=context)
-        for comp in comp_obj.browse(cr, SUPERUSER_ID, comp_ids, context=context): 
-            company_partner_wiz_id = comp.partner_id.id * 10000 + company_id
-            if company_partner_wiz_id in partner_list:
-                partner_list.remove(company_partner_wiz_id)
         return {'partner_ids': partner_list, 'to_update': to_update}
 
 account_followup_print()
