@@ -93,21 +93,23 @@ class mail_thread(osv.AbstractModel):
         """ Computes:
             - message_unread: has uid unread message for the document
             - message_summary: html snippet summarizing the Chatter for kanban views """
-        res = dict((id, dict(message_unread=False, message_summary=' ')) for id in ids)
+        res = dict((id, dict(message_unread=False, message_unread_count=0, message_summary=' ')) for id in ids)
         user_pid = self.pool.get('res.users').read(cr, uid, uid, ['partner_id'], context=context)['partner_id'][0]
 
         # search for unread messages, directly in SQL to improve performances
-        cr.execute("""  SELECT m.res_id, COUNT(n.message_id) as nb FROM mail_message m
+        cr.execute("""  SELECT m.res_id FROM mail_message m
                         RIGHT JOIN mail_notification n
                         ON (n.message_id = m.id AND n.partner_id = %s AND (n.read = False or n.read IS NULL))
-                        WHERE m.model = %s AND m.res_id in %s
-                        GROUP BY m.res_id""",
+                        WHERE m.model = %s AND m.res_id in %s""",
                     (user_pid, self._name, tuple(ids),))
         for result in cr.fetchall():
             res[result[0]]['message_unread'] = True
-            if result[1]:
-                title = result[1] > 1 and _("You have %d unread messages") % result[1] or _("You have one unread message")
-                res[result[0]]['message_summary'] = "<span class='oe_kanban_mail_new' title='%s'><span class='oe_e'>9</span> %d %s</span>" % (title, result[1], _("New"))
+            res[result[0]]['message_unread_count'] += 1
+
+        for id in ids:
+            if res[id]['message_unread_count']:
+                title = res[id]['message_unread_count'] > 1 and _("You have %d unread messages") % res[id]['message_unread_count'] or _("You have one unread message")
+                res[id]['message_summary'] = "<span class='oe_kanban_mail_new' title='%s'><span class='oe_e'>9</span> %d %s</span>" % (title, res[id].pop('message_unread_count'), _("New"))
         return res
 
     def _get_subscription_data(self, cr, uid, ids, name, args, context=None):
@@ -816,6 +818,9 @@ class mail_thread(osv.AbstractModel):
         self.message_post(cr, uid, [id], message, context=context)
 
     def _message_add_suggested_recipient(self, result, obj, partner=None, email=None, reason='', context=None):
+        """ Called by message_get_suggested_recipients, to add a suggested
+            recipient in the result dictionary. The form is :
+                partner_id, partner_name<partner_email> or partner_name, reason """
         if partner and partner in obj.message_follower_ids:
             return result
         if partner and partner in [val[0] for val in result[obj.id]]:
@@ -831,9 +836,11 @@ class mail_thread(osv.AbstractModel):
         return result
 
     def message_get_suggested_recipients(self, cr, uid, ids, context=None):
+        """ Returns suggested recipients for ids. Those are a list of
+            tuple (partner_id, partner_name, reason), to be managed by Chatter. """
         result = dict.fromkeys(ids, list())
         if self._all_columns.get('user_id'):
-            for obj in self.browse(cr, SUPERUSER_ID, ids, context=context):  # SUPERUSER because of a read on res.users that would crash otherwise IMHO
+            for obj in self.browse(cr, SUPERUSER_ID, ids, context=context):  # SUPERUSER because of a read on res.users that would crash otherwise
                 if not obj.user_id or not obj.user_id.partner_id:
                     continue
                 self._message_add_suggested_recipient(result, obj, partner=obj.user_id.partner_id, reason=self._all_columns['user_id'].column.string, context=context)
