@@ -8,13 +8,13 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2012-12-21 17:05+0000\n"
-"PO-Revision-Date: 2013-02-23 13:06+0000\n"
+"PO-Revision-Date: 2013-02-25 15:55+0000\n"
 "Last-Translator: Erwin van der Ploeg (Endian Solutions) <Unknown>\n"
 "Language-Team: Dutch <nl@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-02-24 05:12+0000\n"
+"X-Launchpad-Export-Date: 2013-02-26 05:34+0000\n"
 "X-Generator: Launchpad (build 16506)\n"
 
 #. module: portal
@@ -168,6 +168,7 @@ msgstr ""
 #: help:portal.wizard,portal_id:0
 msgid "The portal that users can be added in or removed from."
 msgstr ""
+"Het portaal waarin gebruikers kunnen worden aangemaakt of worden verwijderd."
 
 #. module: portal
 #: code:addons/portal/wizard/share_wizard.py:38
@@ -343,6 +344,8 @@ msgstr "Nieuws"
 msgid ""
 "You can finish the configuration in the <a href=\"%s\">Bank&Cash settings</a>"
 msgstr ""
+"U kunt de instellingen afronden in de  <a href=\"%s\">Bank en Kas "
+"instellingen</a>"
 
 #. module: portal
 #: view:portal.payment.acquirer:0
@@ -425,6 +428,22 @@ msgid ""
 "OpenERP - Open Source Business Applications\n"
 "http://www.openerp.com\n"
 msgstr ""
+"Dear %(name)s,\n"
+"\n"
+"U heeft toegang gekregen tot %(portal)s.\n"
+"\n"
+"Uw login gegevens zijn:\n"
+"Database: %(db)s\n"
+"Gebruikersnaam: %(login)s\n"
+"\n"
+"Om het aanmeld proces te voltooien, klikt u op de volgende link:\n"
+"%(url)s\n"
+"\n"
+"%(welcome_message)s\n"
+"\n"
+"--\n"
+"OpenERP - Open Source Business Applications\n"
+"http://www.openerp.com\n"
 
 #. module: portal
 #: view:portal.wizard:0
@@ -452,6 +471,23 @@ msgid ""
 "% endif\n"
 "            "
 msgstr ""
+"\n"
+"% if object.company_id.paypal_account:\n"
+"<form action=\"https://www.paypal.com/cgi-bin/webscr\" method=\"post\" "
+"target=\"_blank\">\n"
+"  <input type=\"hidden\" name=\"cmd\" value=\"_xclick\"/>\n"
+"  <input type=\"hidden\" name=\"business\" "
+"value=\"${object.company_id.paypal_account}\"/>\n"
+"  <input type=\"hidden\" name=\"item_name\" "
+"value=\"${object.company_id.name} ${kind.title()} ${reference}\"/>\n"
+"  <input type=\"hidden\" name=\"amount\" value=\"${amount}\"/>\n"
+"  <input type=\"hidden\" name=\"currency_code\" "
+"value=\"${currency.name}\"/>\n"
+"  <input type=\"image\" name=\"submit\" "
+"src=\"https://www.paypal.com/en_US/i/btn/btn_paynowCC_LG.gif\"/>\n"
+"</form>\n"
+"% endif\n"
+"            "
 
 #. module: portal
 #: model:ir.model,name:portal.model_portal_wizard_user
@@ -474,7 +510,7 @@ msgstr "Zichtbaar"
 #: code:addons/portal/wizard/share_wizard.py:39
 #, python-format
 msgid "Existing Groups (e.g Portal Groups)"
-msgstr ""
+msgstr "Bestaande groepen (bijv. Portaal groepen)"
 
 #. module: portal
 #: view:portal.wizard:0

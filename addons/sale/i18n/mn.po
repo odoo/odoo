@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2012-12-21 17:04+0000\n"
-"PO-Revision-Date: 2013-02-20 02:46+0000\n"
-"Last-Translator: Altangerel <worstnaemeva@gmail.com>\n"
+"PO-Revision-Date: 2013-02-26 02:14+0000\n"
+"Last-Translator: gobi <Unknown>\n"
 "Language-Team: Mongolian <mn@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-02-21 05:44+0000\n"
-"X-Generator: Launchpad (build 16491)\n"
+"X-Launchpad-Export-Date: 2013-02-26 05:34+0000\n"
+"X-Generator: Launchpad (build 16506)\n"
 
 #. module: sale
 #: model:res.groups,name:sale.group_analytic_accounting
@@ -1353,6 +1353,10 @@ msgid ""
 "                    or a fixed price (for advances) directly from the sales "
 "order form if you prefer."
 msgstr ""
+"Эдгээр захиалгын мөрүүдэд байгаа бүх зүйлс нэхэмжлэгдэнэ. Түүнчлэн "
+"борлуулалтын \n"
+"                    захиалгын маягтаас хувиар юмуу тогтмол дүнгээр "
+"урьдчилгаа нэхэмжлэл үүсгэх мөн боломжтой."
 
 #. module: sale
 #: help:sale.config.settings,module_warning:0
@@ -1362,6 +1366,13 @@ msgid ""
 "Example: Product: this product is deprecated, do not purchase more than 5.\n"
 "                Supplier: don't forget to ask for an express delivery."
 msgstr ""
+"Бараанд анхааруулга нэмэх боломжийг олгодог бөгөөд ингэснээр тухайн барааг "
+"зарах энэ анхааруулга гарна. Эсвэл өгөгдсөн нэг захиалагчид зориулан "
+"анхааруулж болно.\n"
+"Жишээлбэл: Бараа: Энэ бараа хэрэгцээнээс хасагдаж байгаа 5-с олныг битгий "
+"худалдаж ав.\n"
+"                Нийлүүлэгч: яаралтай хүргэлт байгаа эсэхийг асуухаа мартаж "
+"болохгүй."
 
 #. module: sale
 #: field:sale.order,paypal_url:0
@@ -1381,12 +1392,12 @@ msgstr "Нэхэмжлэл Харах"
 #. module: sale
 #: field:sale.advance.payment.inv,advance_payment_method:0
 msgid "What do you want to invoice?"
-msgstr ""
+msgstr "Юуг нэхэмжилмээр байна?"
 
 #. module: sale
 #: field:sale.config.settings,group_sale_pricelist:0
 msgid "Use pricelists to adapt your price per customers"
-msgstr ""
+msgstr "Үнийн хүснэгтийг ашиглан захиалгчидаар үнийг тохируулж болно"
 
 #. module: sale
 #: model:process.transition,note:sale.process_transition_confirmquotation0
@@ -1423,7 +1434,7 @@ msgstr "Тохирох үнийн жагсаалт олдсонгүй !"
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:115
 #, python-format
 msgid "Advance of %s %s"
-msgstr ""
+msgstr "%s %s-н урьдчилгаа"
 
 #. module: sale
 #: view:sale.report:0
@@ -1442,7 +1453,7 @@ msgstr "Үнийн санал"
 #. module: sale
 #: help:account.config.settings,module_sale_analytic_plans:0
 msgid "This allows install module sale_analytic_plans."
-msgstr ""
+msgstr "Энэ нь sale_analytic_plans модулийг суулгана."
 
 #. module: sale
 #: view:sale.order:0
@@ -1457,7 +1468,7 @@ msgstr "Идэвхтэй борлуулалтын захиалгын хүргэ�
 #. module: sale
 #: field:sale.config.settings,module_sale_margin:0
 msgid "Display margins on sales orders"
-msgstr ""
+msgstr "Борлуулалтын захиалга дээр зөрүүг харуулна"
 
 #. module: sale
 #: help:sale.order,invoice_ids:0
@@ -1478,7 +1489,7 @@ msgstr "Таны дугаар"
 #. module: sale
 #: view:sale.advance.payment.inv:0
 msgid "Show Lines to Invoice"
-msgstr ""
+msgstr "Нэхэмжлэх мөрүүдийг харуулах"
 
 #. module: sale
 #: field:sale.report,date:0
@@ -1611,7 +1622,7 @@ msgstr "Борлуулалтын Захиалга "
 #: model:mail.message.subtype,description:sale.mt_order_sent
 #: model:mail.message.subtype,name:sale.mt_order_sent
 msgid "Quotation send"
-msgstr ""
+msgstr "Үнийн санал илгээгдсэн"
 
 #. module: sale
 #: view:sale.order.line:0
@@ -1642,6 +1653,13 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p>\n"
+"                Энд нэхэмжлэгдэх мөрүүд байна. Та борлуулалтын захиалгыг \n"
+"                хэсэгчлэн мөрүүдээс сонгож нэхэмжлэх боломжтой. Хэрэв \n"
+"                хүргэлтээс нэхэмжлэх бол энэ нь хэрэггүй мөн борлуулалтын \n"
+"                бүхлээр нь нэхэмжлэх бол мөн хэрэггүй. \n"
+"              </p>\n"
+"            "
 
 #. module: sale
 #: report:sale.order:0
@@ -1658,7 +1676,7 @@ msgstr "Ижил харилцагчийн бүлэг борлуулалт ялг
 #. module: sale
 #: view:sale.advance.payment.inv:0
 msgid "Invoice Sales Order"
-msgstr ""
+msgstr "Борлуулалтын захиалгыг нэхэмжлэх"
 
 #. module: sale
 #: help:sale.order,invoice_quantity:0
@@ -1667,11 +1685,13 @@ msgid ""
 "invoice).                                              You have to choose  "
 "if you want your invoice based on ordered "
 msgstr ""
+"Борлуулалтын захиалга нь автоматаар ноорог нэхэмжлэлийг үүсгэх болно. Хэрэв "
+"захиалга дээр нэхэмжлэх суурилах бол сонгох ёстой. "
 
 #. module: sale
 #: field:sale.config.settings,module_account_analytic_analysis:0
 msgid "Use contracts management"
-msgstr ""
+msgstr "Гэрээний менежментийг хэрэглэх"
 
 #. module: sale
 #: code:addons/sale/sale.py:945
@@ -1680,6 +1700,8 @@ msgid ""
 "Cannot find a pricelist line matching this product and quantity.\n"
 "You have to change either the product, the quantity or the pricelist."
 msgstr ""
+"Энэ бараа болон тоо хэмжээнд тохирох үнийн хүснэгт олдохгүй байна.\n"
+"Бараа, тоо хэмжээ, үнийн хүснэгтийн аль нэгийг өөрчлөх хэрэгтэй."
 
 #. module: sale
 #: model:ir.model,name:sale.model_sale_advance_payment_inv
@@ -1815,6 +1837,91 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
+"\n"
+"<div style=\"font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-"
+"serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; \">\n"
+"\n"
+"    <p>Hello ${object.partner_id.name},</p>\n"
+"    \n"
+"    <p>Манай ${object.company_id.name}-с таны ${object.state in ('draft', "
+"'sent') and 'quotation' or 'order confirmation'} : </p>\n"
+"\n"
+"    <p style=\"border-left: 1px solid #8e0000; margin-left: 30px;\">\n"
+"       &nbsp;&nbsp;<strong>REFERENCES</strong><br />\n"
+"       &nbsp;&nbsp;Order number: <strong>${object.name}</strong><br />\n"
+"       &nbsp;&nbsp;Order total: <strong>${object.amount_total} "
+"${object.pricelist_id.currency_id.name}</strong><br />\n"
+"       &nbsp;&nbsp;Order date: ${object.date_order}<br />\n"
+"       % if object.origin:\n"
+"       &nbsp;&nbsp;Order reference: ${object.origin}<br />\n"
+"       % endif\n"
+"       % if object.client_order_ref:\n"
+"       &nbsp;&nbsp;Your reference: ${object.client_order_ref}<br />\n"
+"       % endif\n"
+"       % if object.user_id:\n"
+"       &nbsp;&nbsp;Таны холбогдох хаяг: <a "
+"href=\"mailto:${object.user_id.email or "
+"''}?subject=Order%20${object.name}\">${object.user_id.name}</a>\n"
+"       % endif\n"
+"    </p>\n"
+"\n"
+"    % if object.paypal_url:\n"
+"    <br/>\n"
+"    <p>Мөн та шууд Paypal-р төлж болно:</p>\n"
+"        <a style=\"margin-left: 120px;\" href=\"${object.paypal_url}\">\n"
+"            <img class=\"oe_edi_paypal_button\" "
+"src=\"https://www.paypal.com/en_US/i/btn/btn_paynowCC_LG.gif\"/>\n"
+"        </a>\n"
+"    % endif\n"
+"\n"
+"    <br/>\n"
+"    <p>Хэрэв асуулт байвал бидэнтэй эргэлзэлгүй холбогдоорой.</p>\n"
+"    <p>${object.company_id.name or 'Биднийг'} сонгосонд баярлалаа!</p>\n"
+"    <br/>\n"
+"    <br/>\n"
+"    <div style=\"width: 375px; margin: 0px; padding: 0px; background-color: "
+"#8E0000; border-top-left-radius: 5px 5px; border-top-right-radius: 5px 5px; "
+"background-repeat: repeat no-repeat;\">\n"
+"        <h3 style=\"margin: 0px; padding: 2px 14px; font-size: 12px; color: "
+"#DDD;\">\n"
+"            <strong style=\"text-"
+"transform:uppercase;\">${object.company_id.name}</strong></h3>\n"
+"    </div>\n"
+"    <div style=\"width: 347px; margin: 0px; padding: 5px 14px; line-height: "
+"16px; background-color: #F2F2F2;\">\n"
+"        <span style=\"color: #222; margin-bottom: 5px; display: block; \">\n"
+"        % if object.company_id.street:\n"
+"            ${object.company_id.street}<br/>\n"
+"        % endif\n"
+"        % if object.company_id.street2:\n"
+"            ${object.company_id.street2}<br/>\n"
+"        % endif\n"
+"        % if object.company_id.city or object.company_id.zip:\n"
+"            ${object.company_id.zip} ${object.company_id.city}<br/>\n"
+"        % endif\n"
+"        % if object.company_id.country_id:\n"
+"            ${object.company_id.state_id and ('%s, ' % "
+"object.company_id.state_id.name) or ''} ${object.company_id.country_id.name "
+"or ''}<br/>\n"
+"        % endif\n"
+"        </span>\n"
+"        % if object.company_id.phone:\n"
+"            <div style=\"margin-top: 0px; margin-right: 0px; margin-bottom: "
+"0px; margin-left: 0px; padding-top: 0px; padding-right: 0px; padding-bottom: "
+"0px; padding-left: 0px; \">\n"
+"                Phone:&nbsp; ${object.company_id.phone}\n"
+"            </div>\n"
+"        % endif\n"
+"        % if object.company_id.website:\n"
+"            <div>\n"
+"                Web :&nbsp;<a "
+"href=\"${object.company_id.website}\">${object.company_id.website}</a>\n"
+"            </div>\n"
+"        %endif\n"
+"        <p></p>\n"
+"    </div>\n"
+"</div>\n"
+"            "
 
 #. module: sale
 #: view:sale.order.line:0

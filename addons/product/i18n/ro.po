@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2012-12-21 17:06+0000\n"
-"PO-Revision-Date: 2013-02-10 12:08+0000\n"
+"PO-Revision-Date: 2013-02-25 17:40+0000\n"
 "Last-Translator: Fekete Mihai <mihai@erpsystems.ro>\n"
 "Language-Team: Romanian <ro@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-02-11 05:35+0000\n"
-"X-Generator: Launchpad (build 16482)\n"
+"X-Launchpad-Export-Date: 2013-02-26 05:34+0000\n"
+"X-Generator: Launchpad (build 16506)\n"
 
 #. module: product
 #: field:product.packaging,rows:0
@@ -25,7 +25,7 @@ msgstr "Numar de Straturi"
 #. module: product
 #: help:product.pricelist.item,base:0
 msgid "Base price for computation."
-msgstr ""
+msgstr "Pretul de baza pentru calcul."
 
 #. module: product
 #: help:product.product,seller_qty:0
@@ -36,7 +36,7 @@ msgstr ""
 #. module: product
 #: model:product.template,name:product.product_product_34_product_template
 msgid "Webcam"
-msgstr ""
+msgstr "Webcam"
 
 #. module: product
 #: field:product.product,incoming_qty:0
@@ -46,12 +46,12 @@ msgstr "Primite"
 #. module: product
 #: view:product.product:0
 msgid "Product Name"
-msgstr ""
+msgstr "Numele Produsului"
 
 #. module: product
 #: view:product.template:0
 msgid "Second Unit of Measure"
-msgstr ""
+msgstr "A Doua Unitate de Masura"
 
 #. module: product
 #: help:res.partner,property_product_pricelist:0
@@ -75,7 +75,7 @@ msgstr "Fix"
 #. module: product
 #: model:product.template,name:product.product_product_10_product_template
 msgid "Mouse, Optical"
-msgstr ""
+msgstr "Mouse, Optic"
 
 #. module: product
 #: view:product.template:0
@@ -92,11 +92,13 @@ msgstr "Numele regulii"
 msgid ""
 "Base price to compute the customer price. Sometimes called the catalog price."
 msgstr ""
+"Pretul de baza pentru calcularea pretului clientului. Uneori este numit "
+"pretul de catalog."
 
 #. module: product
 #: model:product.template,name:product.product_product_3_product_template
 msgid "PC Assemble SC234"
-msgstr ""
+msgstr "PC Asamblare SC234"
 
 #. module: product
 #: help:product.product,message_summary:0
@@ -104,18 +106,20 @@ msgid ""
 "Holds the Chatter summary (number of messages, ...). This summary is "
 "directly in html format in order to be inserted in kanban views."
 msgstr ""
+"Contine rezumatul Chatter (numar de mesaje, ...). Acest rezumat este direct "
+"in format HTML, cu scopul de a se introduce in vizualizari kanban."
 
 #. module: product
 #: code:addons/product/pricelist.py:179
 #: code:addons/product/product.py:208
 #, python-format
 msgid "Warning!"
-msgstr ""
+msgstr "Avertisment!"
 
 #. module: product
 #: field:product.product,image_small:0
 msgid "Small-sized image"
-msgstr ""
+msgstr "Imagine de dimensiune mica"
 
 #. module: product
 #: code:addons/product/product.py:176
@@ -140,7 +144,7 @@ msgstr "Numele regulii explicite pentru aceasta linie a listei de preturi."
 #. module: product
 #: field:product.template,uos_coeff:0
 msgid "Unit of Measure -> UOS Coeff"
-msgstr ""
+msgstr "Unitatea de Masura -> UOS Coef"
 
 #. module: product
 #: field:product.price_list,price_list:0
@@ -150,7 +154,7 @@ msgstr "Lista de preturi"
 #. module: product
 #: model:product.template,name:product.product_product_4_product_template
 msgid "PC Assemble SC349"
-msgstr ""
+msgstr "PC Asamlare SC349"
 
 #. module: product
 #: help:product.product,seller_delay:0
@@ -198,6 +202,8 @@ msgid ""
 "Error! You cannot define the decimal precision of 'Account' as greater than "
 "the rounding factor of the company's main currency"
 msgstr ""
+"Eroare! Nu puteti defini precizia zecimala a 'Contului' ca fiind mai mare "
+"decat factorul de rotunjire al monedeo principale a companiei"
 
 #. module: product
 #: field:product.category,parent_id:0
@@ -207,7 +213,7 @@ msgstr "Categoria superioara"
 #. module: product
 #: model:product.template,description:product.product_product_33_product_template
 msgid "Headset for laptop PC with USB connector."
-msgstr ""
+msgstr "Set de casti pentru laptop PC cu conectare USB."
 
 #. module: product
 #: model:product.category,name:product.product_category_all
@@ -225,6 +231,8 @@ msgid ""
 "Error! You cannot define a rounding factor for the company's main currency "
 "that is smaller than the decimal precision of 'Account'."
 msgstr ""
+"Eroare! Nu puteti defini un factor de rotunjire pentru moneda principala a "
+"companiei care este mai mic decat precizia zecimala a 'Contului'."
 
 #. module: product
 #: help:product.product,outgoing_qty:0
@@ -239,6 +247,16 @@ msgid ""
 "Otherwise, this includes goods leaving any Stock Location with 'internal' "
 "type."
 msgstr ""
+"Cantitatea de produse care sunt planificate sa plece.\n"
+"In contextul unei singure Locatii a Stocului, aceasta include bunurile care "
+"pleaca din aceasta Locatie, sau oricare dintre subordonatele ei.\n"
+"In contextul unui singur Depozit, acesta include bunurile care pleaca din "
+"Locatia Stocului acestui Depozit, sau oricare dintre subordonatii lui.\n"
+"In contextul unui singur Magazin, acesta include bunurile care pleaca din "
+"Locatia de Stoc a Depozitului acestui Magazin, sau oricare dintre "
+"subordonatii lui.\n"
+"In caz contrar, acesta include bunurile care pleaca din orice Locatie a "
+"Stocului de tip 'intern'."
 
 #. module: product
 #: model:product.template,description_sale:product.product_product_42_product_template
@@ -246,6 +264,8 @@ msgid ""
 "Office Editing Software with word processing, spreadsheets, presentations, "
 "graphics, and databases..."
 msgstr ""
+"Software de Editare Office cu procesare de text, foi de calcul, prezentari, "
+"grafica si baze de date..."
 
 #. module: product
 #: field:product.product,seller_id:0
@@ -267,6 +287,7 @@ msgstr "Ambalare"
 msgid ""
 "If unchecked, it will allow you to hide the product without removing it."
 msgstr ""
+"Daca ramane nebifat, va va permite sa ascundeti produsul fara a-l sterge."
 
 #. module: product
 #: view:product.product:0
@@ -278,7 +299,7 @@ msgstr "Categorie"
 #. module: product
 #: model:product.template,name:product.product_product_25_product_template
 msgid "Laptop E5023"
-msgstr ""
+msgstr "Laptop E5023"
 
 #. module: product
 #: help:product.packaging,ul_qty:0
@@ -288,7 +309,7 @@ msgstr "Numarul de pachete dupa strat"
 #. module: product
 #: model:product.template,name:product.product_product_30_product_template
 msgid "Pen drive, SP-4"
-msgstr ""
+msgstr "Mecanism de antrenare a penitei, SP-4"
 
 #. module: product
 #: field:product.packaging,qty:0
@@ -298,7 +319,7 @@ msgstr "Cantitatea dupa Ambalaj"
 #. module: product
 #: model:product.template,name:product.product_product_29_product_template
 msgid "Pen drive, SP-2"
-msgstr ""
+msgstr "Mecanism de antrenare a penitei, SP-2"
 
 #. module: product
 #: view:product.product:0
@@ -342,6 +363,17 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<clasa p=\"oe_vizualizare_niciuncontinut_creeaza\">\n"
+"                Clic pentru a adauga un nou tip de ambalare.\n"
+"              </p><p>\n"
+"                Tipul de ambalare defineste atat dimensiunile, cat si "
+"numarul\n"
+"                de produse per ambalaj. Acest lucru va asigura vanzarea de "
+"catre agentul de vanzari a\n"
+"                numarului corect de produse, in functie de ambalajul "
+"selectat.\n"
+"              </p>\n"
+"            "
 
 #. module: product
 #: field:product.template,product_manager:0
@@ -351,7 +383,7 @@ msgstr "Manager produs"
 #. module: product
 #: model:product.template,name:product.product_product_7_product_template
 msgid "17” LCD Monitor"
-msgstr ""
+msgstr "Monitor LCD de 17\""
 
 #. module: product
 #: field:product.supplierinfo,product_name:0
@@ -377,7 +409,7 @@ msgstr "Lungimea pachetului"
 #. module: product
 #: field:product.product,message_summary:0
 msgid "Summary"
-msgstr ""
+msgstr "Rezumat"
 
 #. module: product
 #: help:product.template,weight_net:0
@@ -402,6 +434,8 @@ msgid ""
 "Specify a product if this rule only applies to one product. Keep empty "
 "otherwise."
 msgstr ""
+"Specificati un produs daca aceasta regula se aplica doar unui produs. In caz "
+"contrar, lasati necompletat."
 
 #. module: product
 #: model:product.uom.categ,name:product.product_uom_categ_kgm
@@ -421,6 +455,17 @@ msgid ""
 "Otherwise, this includes goods stored in any Stock Location with 'internal' "
 "type."
 msgstr ""
+"Cantitatea estimata (calculata drept Cantitatea Disponibila - Iesire + "
+"Intrare)\n"
+"In contextul unei singure Locatii a Stocului, aceasta include marfa stocata "
+"in aceasta locatie, sau oricare dintre locatiile secundare.\n"
+"In contextul unui singur Depozit, acesta include marfa stocata in Locatia "
+"Stocului a acestui Depozit, sau oricare dintre depozitele secundare.\n"
+"In contextul unui singur Magazin, acesta include marfa stocata in Locatia "
+"Stocului Depozitului acestui Magazin, sau oricare dintre magazinele "
+"secundare.\n"
+"In caz contrar, acesta include marfa stocata in orice Locatie a Stocului de "
+"tip 'intern'."
 
 #. module: product
 #: field:product.packaging,height:0
@@ -430,12 +475,12 @@ msgstr "Inaltime"
 #. module: product
 #: view:product.product:0
 msgid "Procurements"
-msgstr ""
+msgstr "Aprovizionari"
 
 #. module: product
 #: model:res.groups,name:product.group_mrp_properties
 msgid "Manage Properties of Product"
-msgstr ""
+msgstr "Gestionati Proprietatile Produsului"
 
 #. module: product
 #: help:product.uom,factor:0
@@ -444,6 +489,9 @@ msgid ""
 "Measure for this category:\n"
 "1 * (reference unit) = ratio * (this unit)"
 msgstr ""
+"Cat de mult sau de putin este comparata aceasta unitate cu Unitatea de "
+"Masura de referinta pentru aceasta categorie:\n"
+"1 * (unitatea de referinta) = raport * (aceasta unitate)"
 
 #. module: product
 #: model:ir.model,name:product.model_pricelist_partnerinfo
@@ -478,7 +526,7 @@ msgstr "Vanzari & Achizitii"
 #. module: product
 #: model:product.template,name:product.product_product_44_product_template
 msgid "GrapWorks Software"
-msgstr ""
+msgstr "GrapWorks Software"
 
 #. module: product
 #: model:product.uom.categ,name:product.uom_categ_wtime
@@ -488,7 +536,7 @@ msgstr "Program de lucru"
 #. module: product
 #: model:product.template,name:product.product_product_42_product_template
 msgid "Office Suite"
-msgstr ""
+msgstr "Suita Office"
 
 #. module: product
 #: field:product.template,mes_type:0
@@ -498,12 +546,12 @@ msgstr "Tipul masurii"
 #. module: product
 #: model:product.template,name:product.product_product_32_product_template
 msgid "Headset standard"
-msgstr ""
+msgstr "Set de casti standard"
 
 #. module: product
 #: model:product.uom,name:product.product_uom_day
 msgid "Day(s)"
-msgstr ""
+msgstr "Zi (zile)"
 
 #. module: product
 #: help:product.product,incoming_qty:0
@@ -525,6 +573,8 @@ msgid ""
 "Error: The default Unit of Measure and the purchase Unit of Measure must be "
 "in the same category."
 msgstr ""
+"Eroare: Unitatea de masura implicita si Unitatea de masura pentru achizitie "
+"trebuie sa fie in aceeasi categorie."
 
 #. module: product
 #: model:ir.model,name:product.model_product_uom_categ
@@ -539,7 +589,7 @@ msgstr "Cutie 20x20x40"
 #. module: product
 #: field:product.template,warranty:0
 msgid "Warranty"
-msgstr ""
+msgstr "Garantie"
 
 #. module: product
 #: view:product.pricelist.item:0
@@ -556,7 +606,7 @@ msgstr ""
 #. module: product
 #: model:res.groups,name:product.group_purchase_pricelist
 msgid "Purchase Pricelists"
-msgstr ""
+msgstr "Lista de preţuri de Aprovizionare"
 
 #. module: product
 #: model:product.template,name:product.product_product_5_product_template
