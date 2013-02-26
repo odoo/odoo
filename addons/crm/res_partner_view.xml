@@ -105,15 +105,6 @@
                         context="{'search_default_partner_id': active_id, 'default_duration': 1.0}" />
                     <button type="action" string="Opportunities" attrs="{'invisible': [('customer', '=', False)]}"
                         name="%(crm.crm_case_category_act_oppor11)d" context="{'search_default_partner_id': active_id}"/>
-                    <button type="action" string="Invoices" 
-                        name="%(account.action_invoice_tree)d" 
-                        context="{'search_default_partner_id': active_id,'default_partner_id': active_id}" groups="account.group_account_user"/>
-                    <button type="action" string="Contracts/Analytic Accounts" 
-                        name="%(account.action_account_analytic_account_form)d" 
-                        context="{'search_default_partner_id':[active_id], 'default_partner_id': active_id}"/>
-                    <button type="action" string="Journal Items" 
-                        name="%(account.action_account_moves_all_tree)d" 
-                        context="{'search_default_partner_id':[active_id], 'default_partner_id': active_id}" groups="account.group_account_manager"/>
                 </xpath>
             </field>
         </record>
