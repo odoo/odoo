@@ -20,39 +20,44 @@ self_id_protect = threading.Semaphore()
 
 # This should be moved to openerp.modules.db, along side initialize().
 def _initialize_db(id, db_name, demo, lang, user_password):
-    cr = None
     try:
-        self_actions[id]['progress'] = 0
-        cr = openerp.sql_db.db_connect(db_name).cursor()
-        openerp.modules.db.initialize(cr) # TODO this should be removed as it is done by pooler.restart_pool.
-        openerp.tools.config['lang'] = lang
-        cr.commit()
-        cr.close()
+        cr = None
+        try:
+            self_actions[id]['progress'] = 0
+            cr = openerp.sql_db.db_connect(db_name).cursor()
+            openerp.modules.db.initialize(cr) # TODO this should be removed as it is done by pooler.restart_pool.
+            openerp.tools.config['lang'] = lang
+            cr.commit()
+        finally:
+            if cr:
+                cr.close()
+                cr = None
 
         pool = openerp.pooler.restart_pool(db_name, demo, self_actions[id],
                                    update_module=True)[1]
 
-        cr = openerp.sql_db.db_connect(db_name).cursor()
+        try:
+            cr = openerp.sql_db.db_connect(db_name).cursor()
 
-        if lang:
-            modobj = pool.get('ir.module.module')
-            mids = modobj.search(cr, SUPERUSER_ID, [('state', '=', 'installed')])
-            modobj.update_translations(cr, SUPERUSER_ID, mids, lang)
+            if lang:
+                modobj = pool.get('ir.module.module')
+                mids = modobj.search(cr, SUPERUSER_ID, [('state', '=', 'installed')])
+                modobj.update_translations(cr, SUPERUSER_ID, mids, lang)
 
-        # update admin's password and lang
-        values = {'password': user_password, 'lang': lang}
-        pool.get('res.users').write(cr, SUPERUSER_ID, [SUPERUSER_ID], values)
+            # update admin's password and lang
+            values = {'password': user_password, 'lang': lang}
+            pool.get('res.users').write(cr, SUPERUSER_ID, [SUPERUSER_ID], values)
 
-        cr.execute('SELECT login, password FROM res_users ORDER BY login')
-        self_actions[id].update(users=cr.dictfetchall(), clean=True)
-        cr.commit()
-        cr.close()
+            cr.execute('SELECT login, password FROM res_users ORDER BY login')
+            self_actions[id].update(users=cr.dictfetchall(), clean=True)
+            cr.commit()
+        finally:
+            if cr:
+                cr.close()
     except Exception, e:
         self_actions[id].update(clean=False, exception=e)
         _logger.exception('CREATE DATABASE failed:')
         self_actions[id]['traceback'] = traceback.format_exc()
-        if cr:
-            cr.close()
 
 def dispatch(method, params):
     if method in [ 'create', 'get_progress', 'drop', 'dump',
