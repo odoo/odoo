@@ -24,7 +24,6 @@ openerp.auth_signup = function(instance) {
         },
         start: function() {
             var self = this;
-            this.set({ 'login-mode': 'default' });
             return this._super().then(function() {
                 // to switch between the signup and regular login form
                 self.$('a.oe_signup_signup').click(function(ev) {
@@ -63,7 +62,11 @@ openerp.auth_signup = function(instance) {
                     self.rpc("/auth_signup/get_config", {dbname: dbname}).done(function(result) {
                         self.signup_enabled = result.signup;
                         self.reset_password_enabled = result.reset_password;
+                        self.set({ 'login-mode': 'default' });
                     });
+                } else {
+                    // TODO: support multiple database mode
+                    this.set({ 'login-mode': 'default' });
                 }
             });
         },
