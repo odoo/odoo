@@ -224,7 +224,7 @@ class survey_question_wiz(osv.osv_memory):
         if not context.get('edit') and survey_browse.state != "open":
             raise osv.except_osv(_('Access Denied!'), _("You cannot answer because the survey is not open."))
         if anonymous and survey_browse.sign_in:
-            raise osv.except_osv(_('Access Denied!'), _("Please sign in to complete this survey."))
+            raise osv.except_osv(_('Access Denied!'), _("Please Login to complete this survey."))
 
         # get opening response
         response_ids = None
