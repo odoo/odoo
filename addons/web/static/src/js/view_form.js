@@ -5241,10 +5241,20 @@ instance.web.form.FieldStatus = instance.web.form.AbstractField.extend({
         this.options.clickable = this.options.clickable || (this.node.attrs || {}).clickable || false;
         this.options.visible = this.options.visible || (this.node.attrs || {}).statusbar_visible || false;
         this.set({value: false});
-        this.field_manager.on("view_content_has_changed", this, this.render_value);
-        this.selection_mutex = new $.Mutex();
+        this.selection = [];
+        this.set("selection", []);
+        this.selection_dm = new instance.web.DropMisordered();
     },
     start: function() {
+        this.field_manager.on("view_content_has_changed", this, this.calc_domain);
+        this.calc_domain();
+        this.on("change:value", this, this.get_selection);
+        this.on("change:evaluated_selection_domain", this, this.get_selection);
+        this.get_selection();
+        this.on("change:selection", this, function() {
+            this.selection = this.get("selection");
+            this.render_value();
+        });
         if (this.options.clickable) {
             this.$el.on('click','li',this.on_click_stage);
         }
@@ -5261,17 +5271,22 @@ instance.web.form.FieldStatus = instance.web.form.AbstractField.extend({
     },
     render_value: function() {
         var self = this;
-        self.selection_mutex.exec(function() {
-            return self.get_selection().done(function() {
-                var content = QWeb.render("FieldStatus.content", {widget: self});
-                self.$el.html(content);
-                var colors = JSON.parse((self.node.attrs || {}).statusbar_colors || "{}");
-                var color = colors[self.get('value')];
-                if (color) {
-                    self.$("oe_active").css("color", color);
-                }
-            });
-        });
+        var content = QWeb.render("FieldStatus.content", {widget: self});
+        self.$el.html(content);
+        var colors = JSON.parse((self.node.attrs || {}).statusbar_colors || "{}");
+        var color = colors[self.get('value')];
+        if (color) {
+            self.$("oe_active").css("color", color);
+        }
+    },
+    calc_domain: function() {
+        var d = instance.web.pyeval.eval('domain', this.build_domain());
+        domain = ['|', ['id', '=', this.get('value')]].concat(d);
+        console.log("domain", JSON.stringify(domain));
+        if (! _.isEqual(domain, this.get("evaluated_selection_domain"))) {
+            console.log("changing domain");
+            this.set("evaluated_selection_domain", domain);
+        }
     },
     /** Get the selection and render it
      *  selection: [[identifier, value_to_display], ...]
@@ -5280,32 +5295,38 @@ instance.web.form.FieldStatus = instance.web.form.AbstractField.extend({
      */
     get_selection: function() {
         var self = this;
-        self.selection = [];
-        if (this.field.type == "many2one") {
-            var domain = [];
-            if(!_.isEmpty(this.field.domain) || !_.isEmpty(this.node.attrs.domain)) {
-                var d = instance.web.pyeval.eval('domain', self.build_domain());
-                domain = ['|', ['id', '=', self.get('value')]].concat(d);
-            }
-            var ds = new instance.web.DataSetSearch(this, this.field.relation, self.build_context(), domain);
-            return ds.read_slice(['name'], {}).then(function (records) {
-                for(var i = 0; i < records.length; i++) {
-                    self.selection.push([records[i].id, records[i].name]);
+        var selection = [];
+        console.log("getselection");
+
+        var calculation = _.bind(function() {
+            if (this.field.type == "many2one") {
+                var domain = [];
+                var ds = new instance.web.DataSetSearch(this, this.field.relation,
+                    self.build_context(), this.get("evaluated_selection_domain"));
+                return ds.read_slice(['name'], {}).then(function (records) {
+                    for(var i = 0; i < records.length; i++) {
+                        selection.push([records[i].id, records[i].name]);
+                    }
+                });
+            } else {
+                // For field type selection filter values according to
+                // statusbar_visible attribute of the field. For example:
+                // statusbar_visible="draft,open".
+                var select = this.field.selection;
+                for(var i=0; i < select.length; i++) {
+                    var key = select[i][0];
+                    if(key == this.get('value') || !this.options.visible || this.options.visible.indexOf(key) != -1) {
+                        selection.push(select[i]);
+                    }
                 }
-            });
-        } else {
-            // For field type selection filter values according to
-            // statusbar_visible attribute of the field. For example:
-            // statusbar_visible="draft,open".
-            var selection = this.field.selection;
-            for(var i=0; i < selection.length; i++) {
-                var key = selection[i][0];
-                if(key == this.get('value') || !this.options.visible || this.options.visible.indexOf(key) != -1) {
-                    this.selection.push(selection[i]);
-                }
+                return $.when();
             }
-            return $.when();
-        }
+        }, this);
+        this.selection_dm.add(calculation()).then(function () {
+            if (! _.isEqual(selection, self.get("selection"))) {
+                self.set("selection", selection);
+            }
+        });
     },
     on_click_stage: function (ev) {
         var self = this;
