@@ -119,7 +119,7 @@
         template to the recipients list
         -->
     <t t-name="mail.thread.list_recipients">
-        <div class="oe_mail_list_recipients">
+        <div class="oe_mail_list_recipients" t-if="!widget.is_log">
             To:
             <t t-if="!widget.is_private">
                 <span class="oe_all_follower">
