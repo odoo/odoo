@@ -453,7 +453,7 @@ def get_pg_type(f, type_override=None):
     return pg_type
 
 
-class MetaModel(type):
+class MetaModel(api.Meta):
     """ Metaclass for the models.
 
     This class is used as the metaclass for the class :class:`BaseModel` to
@@ -464,13 +464,6 @@ class MetaModel(type):
     """
 
     module_to_models = {}
-
-    def __new__(meta, name, bases, attrs):
-        # automatically decorate methods with 'versatile'
-        for key in attrs:
-            if not key.startswith('__') and callable(attrs[key]):
-                attrs[key] = api.versatile(attrs[key])
-        return type.__new__(meta, name, bases, attrs)
 
     def __init__(self, name, bases, attrs):
         if not self._register:

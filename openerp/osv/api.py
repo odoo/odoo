@@ -73,6 +73,16 @@
 from functools import wraps
 
 
+class Meta(type):
+    """ Metaclass that automatically decorates methods with :func:`versatile`. """
+
+    def __new__(meta, name, bases, attrs):
+        for key, value in attrs.items():
+            if not key.startswith('__') and callable(value):
+                attrs[key] = versatile(value)
+        return type.__new__(meta, name, bases, attrs)
+
+
 def _wrapper(method, old_api, new_api):
     """ return a wrapper for a method that combines both api styles
         :param method: the original method
