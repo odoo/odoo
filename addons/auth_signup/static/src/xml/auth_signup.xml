@@ -28,6 +28,9 @@
                 <a class="oe_signup_reset_password" data-modes="default" href="#">Reset password</a>
             </li>
         </t>
+        <t t-jquery=".oe_login_manage_db">
+            this.attr('data-modes', 'default');
+        </t>
     </t>
 
 </templates>
