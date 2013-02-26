@@ -71,9 +71,14 @@
             <th>Completeness</th>
             <th>Current</th>
         % for idx, goal in planline['list']:
-            <tr>
+            <tr
+                % if goal.completeness >= 100:
+                    style="font-weight:bold;""
+                % endif
+                >
                 <td>${idx+1}</td>
-                <td>${goal.completeness}</td>
+                <td>${goal.user.name}</td>
+                <td>${goal.completeness}%</td>
                 <td>${goal.current}/${goal.target_goal}</td>
             </tr>
         % endfor
