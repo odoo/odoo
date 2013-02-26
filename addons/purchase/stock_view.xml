@@ -49,7 +49,7 @@
                             name="view_picking"
                             string="Incoming Shipments" states="approved"/>
                         <button type="object"  name="invoice_open"
-                            string="Invoices" attrs="{'invisible': [('state', '=', 'draft')]}"/> 
+                            string="Invoices" attrs="{'invisible': [('state', 'in', ['draft','sent'])]}"/> 
                     </div>
                 </xpath>
             </field>
