@@ -124,8 +124,11 @@ class account_analytic_line(osv.osv):
                     price = pro_price_obj.price_get(cr,uid,[pl], data.get('product', False) or product_id, qty or 1.0, account.partner_id.id, context=ctx)[pl]
                 else:
                     price = 0.0
-
-                taxes = product.taxes_id
+                product_tax = product_obj.browse(cr, uid, data.get('product', product_id), context=context)
+                if data.get('product', product_id):
+                    taxes = product_tax.taxes_id
+                else:
+                    taxes = product.taxes_id
                 tax = fiscal_pos_obj.map_tax(cr, uid, account.partner_id.property_account_position, taxes)
                 account_id = product.product_tmpl_id.property_account_income.id or product.categ_id.property_account_income_categ.id
                 if not account_id:
