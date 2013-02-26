@@ -5,6 +5,8 @@ openerp.auth_signup = function(instance) {
     instance.web.Login.include({
         init: function() {
             this._super.apply(this, arguments);
+            this.signup_enabled = false;
+            this.reset_password_enabled = false;
             this.on('change:login-mode', this, function() {
                 /*
                  * Switches the login box to the select mode
@@ -16,6 +18,8 @@ openerp.auth_signup = function(instance) {
                     var modes = $(this).data('modes').split(/\s+/);
                     $(this).toggle(modes.indexOf(mode) > -1);
                 });
+                self.$('a.oe_signup_signup:visible').toggle(this.signup_enabled);
+                self.$('a.oe_signup_reset_password:visible').toggle(this.reset_password_enabled);
             });
         },
         start: function() {
@@ -56,15 +60,10 @@ openerp.auth_signup = function(instance) {
                 self.$('a.oe_signup_reset_password').click(self.do_reset_password);
 
                 if (dbname) {
-                    self.rpc("/auth_signup/get_config", {dbname: dbname})
-                        .done(function(result) {
-                            if (result.signup) {
-                                self.set({ 'login-mode': 'signup' });
-                            }
-                            if (result.reset_password) {
-                                self.set({ 'login-mode': 'reset' });
-                            }
-                        });
+                    self.rpc("/auth_signup/get_config", {dbname: dbname}).done(function(result) {
+                        self.signup_enabled = result.signup;
+                        self.reset_password_enabled = result.reset_password;
+                    });
                 }
             });
         },
@@ -97,6 +96,7 @@ openerp.auth_signup = function(instance) {
             this.show_error(_t("Invalid signup token"));
             delete this.params.db;
             delete this.params.token;
+            this.set({ 'login-mode': 'default' });
         },
 
         on_submit: function(ev) {
