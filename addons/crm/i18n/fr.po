@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2012-12-21 17:04+0000\n"
-"PO-Revision-Date: 2013-01-31 09:52+0000\n"
+"PO-Revision-Date: 2013-02-22 13:05+0000\n"
 "Last-Translator: David Halgand <david.halgand@free.fr>\n"
 "Language-Team: French <fr@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-02-01 05:49+0000\n"
-"X-Generator: Launchpad (build 16455)\n"
+"X-Launchpad-Export-Date: 2013-02-23 06:08+0000\n"
+"X-Generator: Launchpad (build 16506)\n"
 
 #. module: crm
 #: view:crm.lead.report:0
@@ -1362,6 +1362,9 @@ msgid ""
 "set to 'Done'. If the case needs to be reviewed then the Status is  set to "
 "'Pending'."
 msgstr ""
+"Le statut est \"Brouillon\", quand un cas est créé. Si le cas est en cours, "
+"le statut est \"Ouvert\". Lorsque le cas est terminé, le statut est "
+"\"Terminé\". Si le cas doit être examiné alors le statut est \"En attente\"."
 
 #. module: crm
 #: model:crm.case.section,name:crm.crm_case_section_1
@@ -1674,6 +1677,10 @@ msgid ""
 "stage. For example, if a stage is related to the status 'Close', when your "
 "document reaches this stage, it is automatically closed."
 msgstr ""
+"Le statut de votre document sera automatiquement changer en fonction de "
+"l'étape sélectionnée. Par exemple, si une étape est liée au statut "
+"\"Fermé\", lorsque votre document atteint ce stade, il est automatiquement "
+"fermé."
 
 #. module: crm
 #: view:crm.lead2opportunity.partner.mass:0
@@ -1842,7 +1849,7 @@ msgstr "Mode de paiement"
 #. module: crm
 #: model:ir.model,name:crm.model_crm_lead2opportunity_partner_mass
 msgid "Mass Lead To Opportunity Partner"
-msgstr ""
+msgstr "Transformation des pistes en opportunités (en masse)"
 
 #. module: crm
 #: view:sale.config.settings:0
@@ -2203,6 +2210,8 @@ msgid ""
 "Follow this salesteam to automatically track the events associated to users "
 "of this team."
 msgstr ""
+"Suivez cette équipe de vente pour suivre automatiquement les événements "
+"associés aux utilisateurs de cette équipe."
 
 #. module: crm
 #: view:crm.lead:0
@@ -2455,7 +2464,7 @@ msgstr ""
 #. module: crm
 #: field:crm.case.stage,fold:0
 msgid "Fold by Default"
-msgstr ""
+msgstr "Plié par défaut"
 
 #. module: crm
 #: field:crm.case.stage,state:0
@@ -3192,7 +3201,7 @@ msgstr "Lettre d'information"
 #. module: crm
 #: model:mail.message.subtype,name:crm.mt_salesteam_lead_stage
 msgid "Opportunity Stage Changed"
-msgstr ""
+msgstr "Étape de l'opportunité modifiée"
 
 #. module: crm
 #: model:ir.actions.act_window,help:crm.crm_lead_stage_act
@@ -3206,3 +3215,12 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                 Cliquez pour définir une nouvelle étape dans votre conduit "
+"piste/opportunité.\n"
+"               </ p>\n"
+"                 Les étapes permettront aux vendeurs de suivre facilement où "
+"sont rendus leurs\n"
+"                 pistes ou opportunités dans le cycle de vente.\n"
+"               </ p>\n"
+"            "

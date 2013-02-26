@@ -448,7 +448,7 @@
             <field name="model">stock.move</field>
             <field name="field_parent">move_history_ids</field>
             <field name="arch" type="xml">
-                <tree colors="grey:state == 'cancel'" string="Moves">
+                <tree colors="grey:state == 'cancel'" string="Moves" create="false">
                     <field name="product_id"/>
                     <field name="product_qty"/>
                     <field name="product_uom"  string="Unit of Measure" groups="product.group_uom"/>
@@ -471,7 +471,7 @@
             <field name="model">stock.move</field>
             <field name="field_parent">move_history_ids2</field>
             <field name="arch" type="xml">
-                <tree colors="grey:state == 'cancel'" string="Moves">
+                <tree colors="grey:state == 'cancel'" string="Moves" create="false">
                     <field name="product_id"/>
                     <field name="product_qty"/>
                     <field name="product_uom"  string="Unit of Measure" groups="product.group_uom"/>
@@ -1356,7 +1356,7 @@
             <field eval="3" name="priority"/>
             <field name="arch" type="xml">
                 <search string="Stock Moves">
-                    <field name="origin" domain="['|',('origin','ilike',self),('picking_id','ilike',self)]" string="Reference"/>
+                    <field name="origin" filter_domain="['|',('origin','ilike',self),('picking_id','ilike',self)]" string="Reference"/>
                     <field name="date" groups="base.group_no_one"/>
 
                     <filter icon="terp-camera_test" string="Ready" name="ready" domain="[('state','=','assigned')]" help="Stock moves that are Available (Ready to process)"/>

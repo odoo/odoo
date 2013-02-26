@@ -8,13 +8,13 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2012-12-21 17:04+0000\n"
-"PO-Revision-Date: 2013-02-21 19:43+0000\n"
+"PO-Revision-Date: 2013-02-24 09:33+0000\n"
 "Last-Translator: Fekete Mihai <mihai@erpsystems.ro>\n"
 "Language-Team: Romanian <ro@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-02-22 05:44+0000\n"
+"X-Launchpad-Export-Date: 2013-02-25 05:40+0000\n"
 "X-Generator: Launchpad (build 16506)\n"
 
 #. module: project
@@ -1247,6 +1247,16 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<clasa p=\"oe_vizualizare_niciuncontinut_creeaza\">\n"
+"                Clic pentru a adauga o etapa la reteaua de sarcini.\n"
+"              </p><p>\n"
+"                Definiti pasii care vor fi utilizati in proiect de la\n"
+"                crearea sarcinii pana la finalizarea sarcinii sau a "
+"problemei.\n"
+"                Veti utiliza aceste etape pentru a urmari progresul in\n"
+"                rezolvarea unei sarcini sau a unei probleme.\n"
+"              </p>\n"
+"            "
 
 #. module: project
 #: help:project.task,total_hours:0
@@ -1301,7 +1311,7 @@ msgstr "Echipa"
 #. module: project
 #: help:project.config.settings,time_unit:0
 msgid "This will set the unit of measure used in projects and tasks."
-msgstr ""
+msgstr "Acesta va seta unitatea de masura folosita in proiecte si sarcini."
 
 #. module: project
 #: selection:project.task,priority:0
@@ -1355,7 +1365,7 @@ msgstr "Titlu pentru validarea sarcinii dumneavoastra"
 #. module: project
 #: field:project.config.settings,time_unit:0
 msgid "Working time unit"
-msgstr ""
+msgstr "Unitatea timpului de lucru"
 
 #. module: project
 #: view:project.project:0
@@ -1371,7 +1381,7 @@ msgstr "Scazut(a)"
 #. module: project
 #: selection:project.project,state:0
 msgid "Closed"
-msgstr ""
+msgstr "Inchis(a)"
 
 #. module: project
 #: view:project.project:0
@@ -1390,7 +1400,7 @@ msgstr "In asteptare"
 #. module: project
 #: field:project.task,categ_ids:0
 msgid "Tags"
-msgstr ""
+msgstr "Etichete"
 
 #. module: project
 #: model:ir.model,name:project.model_project_task_history
@@ -1410,7 +1420,7 @@ msgstr ""
 #. module: project
 #: help:project.config.settings,group_manage_delegation_task:0
 msgid "Allows you to delegate tasks to other users."
-msgstr ""
+msgstr "Va permite sa delegati sarcini altor utilizatori."
 
 #. module: project
 #: field:project.project,active:0
@@ -1420,7 +1430,7 @@ msgstr "Activ(a)"
 #. module: project
 #: model:ir.model,name:project.model_project_category
 msgid "Category of project's task, issue, ..."
-msgstr ""
+msgstr "Categoria sarcinii proiectului, a problemei, ..."
 
 #. module: project
 #: help:project.project,resource_calendar_id:0
@@ -1439,7 +1449,7 @@ msgstr ""
 #. module: project
 #: view:project.config.settings:0
 msgid "Helpdesk & Support"
-msgstr ""
+msgstr "Serviciul de Asistenta si Suport"
 
 #. module: project
 #: help:report.project.task.user,opening_days:0
@@ -1464,7 +1474,7 @@ msgstr ""
 #: code:addons/project/project.py:220
 #, python-format
 msgid "Attachments"
-msgstr ""
+msgstr "Atasamente"
 
 #. module: project
 #: view:project.task:0
@@ -1487,6 +1497,9 @@ msgid ""
 "You cannot delete a project containing tasks. You can either delete all the "
 "project's tasks and then delete the project or simply deactivate the project."
 msgstr ""
+"Nu puteti sterge un proiect care contine sarcini. Puteti fie sa stergeti "
+"toate sarcinile proiectului si apoi sa stergeti proiectul, fie pur si simplu "
+"sa dezactivati proiectul."
 
 #. module: project
 #: model:process.transition.action,name:project.process_transition_action_draftopentask0
@@ -1497,7 +1510,7 @@ msgstr "Deschideti"
 #. module: project
 #: field:project.project,privacy_visibility:0
 msgid "Privacy / Visibility"
-msgstr ""
+msgstr "Confidentialitate/Vizibilitate"
 
 #. module: project
 #: view:project.task:0
@@ -1511,7 +1524,7 @@ msgstr "Ore ramase"
 #. module: project
 #: model:mail.message.subtype,description:project.mt_task_stage
 msgid "Stage changed"
-msgstr ""
+msgstr "Etapa schimbata"
 
 #. module: project
 #: constraint:project.task:0
@@ -1545,7 +1558,7 @@ msgstr "Total ore"
 #. module: project
 #: model:ir.model,name:project.model_project_config_settings
 msgid "project.config.settings"
-msgstr ""
+msgstr "proiect.config.setari"
 
 #. module: project
 #: model:project.task.type,name:project.project_tt_development
@@ -1582,6 +1595,10 @@ msgid ""
 "                (by default, http://ietherpad.com/).\n"
 "                This installs the module pad."
 msgstr ""
+"Ii permite companiei sa personalizeze care instalare Pad ar trebui folosita "
+"pentru legarea la noi platforme\n"
+"                (implicit, http://ietherpad.com/).\n"
+"                Acesta instaleaza modulul pad."
 
 #. module: project
 #: field:project.task,id:0
@@ -1611,12 +1628,12 @@ msgstr "Atribuiti lui"
 #. module: project
 #: model:res.groups,name:project.group_time_work_estimation_tasks
 msgid "Time Estimation on Tasks"
-msgstr ""
+msgstr "Estimarea Timpului la Sarcini"
 
 #. module: project
 #: field:project.task,total_hours:0
 msgid "Total"
-msgstr ""
+msgstr "Total"
 
 #. module: project
 #: model:process.node,note:project.process_node_taskbydelegate0
@@ -1626,7 +1643,7 @@ msgstr "Delegati-va sarcina altor utilizatori"
 #. module: project
 #: model:mail.message.subtype,description:project.mt_task_started
 msgid "Task started"
-msgstr ""
+msgstr "Sarcina inceputa"
 
 #. module: project
 #: help:project.task.reevaluate,remaining_hours:0
@@ -1639,6 +1656,8 @@ msgid ""
 "This stage is not visible, for example in status bar or kanban view, when "
 "there are no records in that stage to display."
 msgstr ""
+"Aceasta etapa nu este vizibila, de exemplu in bara status sau in "
+"vizualizarea kanban, atunci cand nu exista inregistrari de afisat."
 
 #. module: project
 #: view:project.task:0
@@ -1668,7 +1687,7 @@ msgstr "Proiecte in asteptare"
 #. module: project
 #: view:project.task:0
 msgid "Remaining"
-msgstr ""
+msgstr "Ramas(a)"
 
 #. module: project
 #: field:project.task,progress:0
@@ -1693,21 +1712,27 @@ msgid ""
 "                editing and deleting either ways.\n"
 "                This installs the module project_timesheet."
 msgstr ""
+"Va permite sa transferati inregistrarile din sarcinile definite pentru "
+"Managementul Proiectelor in\n"
+"                inregistrarile liniilor fiselor de pontaj pentru anumite "
+"date si utilizatori, cu scopul de a le crea,\n"
+"                edita si sterge.\n"
+"                Intaleaza modulul project_timesheet."
 
 #. module: project
 #: field:project.config.settings,module_project_issue:0
 msgid "Track issues and bugs"
-msgstr ""
+msgstr "Urmariti problemele si erorile"
 
 #. module: project
 #: field:project.config.settings,module_project_mrp:0
 msgid "Generate tasks from sale orders"
-msgstr ""
+msgstr "Generati sarcini din comenzile de vanzare"
 
 #. module: project
 #: model:ir.ui.menu,name:project.menu_task_types_view
 msgid "Task Stages"
-msgstr ""
+msgstr "Etapele Sarcinii"
 
 #. module: project
 #: model:process.node,note:project.process_node_drafttask0
@@ -1718,7 +1743,7 @@ msgstr "Definiti Solicitarile si Setati Orele Planificate."
 #: field:project.project,message_ids:0
 #: field:project.task,message_ids:0
 msgid "Messages"
-msgstr ""
+msgstr "Mesaje"
 
 #. module: project
 #: field:project.project,color:0
@@ -1766,6 +1791,16 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<clasa p=\"oe_vizualizare_niciuncontinut_creeaza\">\n"
+"                Clic pentru a crea o sarcina noua.\n"
+"              </p><p>\n"
+"                Managementul proiectelor OpenERP va permite sa gestionati "
+"reteaua\n"
+"                de sarcini pentru a face lucrurile eficient. Puteti sa\n"
+"                urmariti progresul, sa discutati sarcinile, sa atasati "
+"documente, etc.\n"
+"              </p>\n"
+"            "
 
 #. module: project
 #: field:project.task,date_end:0
@@ -1776,17 +1811,17 @@ msgstr "Data de sfarsit"
 #. module: project
 #: field:project.task.type,state:0
 msgid "Related Status"
-msgstr ""
+msgstr "Status Asociat"
 
 #. module: project
 #: view:project.project:0
 msgid "Documents"
-msgstr ""
+msgstr "Documente"
 
 #. module: project
 #: model:mail.message.subtype,description:project.mt_task_new
 msgid "Task created"
-msgstr ""
+msgstr "Sarcina creata"
 
 #. module: project
 #: view:report.project.task.user:0
@@ -1798,7 +1833,7 @@ msgstr "# de Zile"
 #: field:project.project,message_follower_ids:0
 #: field:project.task,message_follower_ids:0
 msgid "Followers"
-msgstr ""
+msgstr "Urmari"
 
 #. module: project
 #: selection:project.project,state:0
@@ -1836,7 +1871,7 @@ msgstr "Validare Sarcina"
 #. module: project
 #: field:project.config.settings,module_project_long_term:0
 msgid "Manage resources planning on gantt view"
-msgstr ""
+msgstr "Gestionait planificarea resurselor in vizualizarea Gantt"
 
 #. module: project
 #: view:project.task:0
@@ -1895,7 +1930,7 @@ msgstr "Proiecte"
 #. module: project
 #: model:res.groups,name:project.group_tasks_work_on_tasks
 msgid "Task's Work on Tasks"
-msgstr ""
+msgstr "Sarcina de lucru pe Sarcini"
 
 #. module: project
 #: help:project.task.delegate,name:0
@@ -1938,7 +1973,7 @@ msgstr "Decembrie"
 #: view:project.task.delegate:0
 #: view:project.task.reevaluate:0
 msgid "or"
-msgstr ""
+msgstr "sau"
 
 #. module: project
 #: help:project.config.settings,module_project_mrp:0
@@ -1951,6 +1986,13 @@ msgid ""
 "'Manufacture'.\n"
 "                This installs the module project_mrp."
 msgstr ""
+"Aceasta caracteristica creeaza automat sarcini ale proiectului din produsele "
+"servicii in comenzile de vanzare.\n"
+"                Mai exact, sarcinile sunt create pentru liniile de "
+"aprovizionare cu produse de tipul 'Serviciu',\n"
+"                metoda de achizitionare 'Facut la Comanda', si metoda de "
+"aprovizionare 'Fabricatie'.\n"
+"                Instaleaza modulul project_mrp."
 
 #. module: project
 #: help:project.task.delegate,planned_hours:0
@@ -1962,7 +2004,7 @@ msgstr ""
 #. module: project
 #: model:project.category,name:project.project_category_03
 msgid "Experiment"
-msgstr ""
+msgstr "Experiment"
 
 #. module: project
 #: model:process.transition.action,name:project.process_transition_action_opendrafttask0
@@ -1980,7 +2022,7 @@ msgstr "Starea Kanban"
 #. module: project
 #: field:project.config.settings,module_project_timesheet:0
 msgid "Record timesheet lines per tasks"
-msgstr ""
+msgstr "Inregistrati liniile fiselor de pontaj pe sarcini"
 
 #. module: project
 #: model:ir.model,name:project.model_report_project_task_user
@@ -2017,12 +2059,14 @@ msgid ""
 "The kind of document created when an email is received on this project's "
 "email alias"
 msgstr ""
+"Tipul de document creat atunci cand un email este primit pe acest alias de "
+"email al proiectului"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.action_config_settings
 #: view:project.config.settings:0
 msgid "Configure Project"
-msgstr ""
+msgstr "Configurati Proiectul"
 
 #. module: project
 #: view:project.task.history.cumulative:0
@@ -2054,7 +2098,7 @@ msgstr "Va rugam mai intai sa stergeti proiectul asociat acestui cont."
 #: model:mail.message.subtype,name:project.mt_project_task_new
 #: model:mail.message.subtype,name:project.mt_task_new
 msgid "Task Created"
-msgstr ""
+msgstr "Sarcina Creata"
 
 #. module: project
 #: view:report.project.task.user:0
@@ -2072,12 +2116,12 @@ msgstr "Proiecte la care sunt manager"
 #: selection:project.task.history,kanban_state:0
 #: selection:project.task.history.cumulative,kanban_state:0
 msgid "Ready for next stage"
-msgstr ""
+msgstr "Pregatit(a) pentru etapa urmatoare"
 
 #. module: project
 #: field:project.task.type,case_default:0
 msgid "Default for New Projects"
-msgstr ""
+msgstr "Implicit pentru Proiecte Noi"
 
 #. module: project
 #: view:project.task:0
@@ -2117,11 +2161,14 @@ msgid ""
 "resource allocation.\n"
 "                This installs the module project_long_term."
 msgstr ""
+"Un modul de management al proiectelor pe termen lung care urmareste "
+"planificarea, programarea si alocarea resurselor.\n"
+"                Instaleaza modulul project_long_term."
 
 #. module: project
 #: model:mail.message.subtype,description:project.mt_task_closed
 msgid "Task closed"
-msgstr ""
+msgstr "Sarcina inchisa"
 
 #. module: project
 #: selection:report.project.task.user,month:0
@@ -2149,17 +2196,19 @@ msgid ""
 "Provides timesheet support for the issues/bugs management in project.\n"
 "                This installs the module project_issue_sheet."
 msgstr ""
+"Ofera suport pontaj pentru managementul problemelor/erorilor din proiect.\n"
+"                Instaleaza modulul project_issue_sheet."
 
 #. module: project
 #: selection:project.project,privacy_visibility:0
 msgid "Followers Only"
-msgstr ""
+msgstr "Doar Urmari"
 
 #. module: project
 #: view:board.board:0
 #: field:project.project,task_count:0
 msgid "Open Tasks"
-msgstr ""
+msgstr "Deschide Sarcini"
 
 #. module: project
 #: field:project.project,priority:0

@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2012-12-21 17:04+0000\n"
-"PO-Revision-Date: 2012-12-21 23:00+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"PO-Revision-Date: 2013-02-25 11:45+0000\n"
+"Last-Translator: Jānis <Unknown>\n"
 "Language-Team: Latvian <lv@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-01-18 06:26+0000\n"
-"X-Generator: Launchpad (build 16430)\n"
+"X-Launchpad-Export-Date: 2013-02-26 05:34+0000\n"
+"X-Generator: Launchpad (build 16506)\n"
 
 #. module: account
 #: model:process.transition,name:account.process_transition_supplierreconcilepaid0
@@ -38,7 +38,7 @@ msgstr ""
 #. module: account
 #: view:account.move.reconcile:0
 msgid "Journal Entry Reconcile"
-msgstr "Sasaistīt Žurnāla Rindas"
+msgstr "Saistīt reģistru ierakstus"
 
 #. module: account
 #: view:account.account:0
@@ -154,7 +154,7 @@ msgstr "Uzmanību!"
 #: code:addons/account/account.py:3149
 #, python-format
 msgid "Miscellaneous Journal"
-msgstr ""
+msgstr "Dažādi reģistri"
 
 #. module: account
 #: code:addons/account/wizard/account_open_closed_fiscalyear.py:39
@@ -205,8 +205,8 @@ msgid ""
 "invoice) to create analytic entries, OpenERP will look for a matching "
 "journal of the same type."
 msgstr ""
-"Tiek norādīts analītiskā žurnāla tips. Veidojot jaunu dokumentu, kuram "
-"nepieciešami arī analītiskie ieraksti, OpenERP piemeklēs žurnālu ar "
+"Tiek norādīts analītiskā reģistra tips. Veidojot jaunu dokumentu, kuram "
+"nepieciešami arī analītiskie ieraksti, OpenERP piemeklēs reģistru ar "
 "atbilstošu tipu."
 
 #. module: account
@@ -516,7 +516,7 @@ msgstr ""
 #: model:ir.model,name:account.model_account_journal
 #: field:validate.account.move,journal_id:0
 msgid "Journal"
-msgstr "Žurnāls"
+msgstr "Reģistrs"
 
 #. module: account
 #: model:ir.model,name:account.model_account_invoice_confirm
@@ -536,7 +536,7 @@ msgstr ""
 #. module: account
 #: field:account.bank.statement,account_id:0
 msgid "Account used in this journal"
-msgstr "Žurnālā izmantotais konts"
+msgstr "Reģistram izmantotais konts"
 
 #. module: account
 #: help:account.aged.trial.balance,chart_account_id:0
@@ -605,7 +605,7 @@ msgstr ""
 #. module: account
 #: field:account.config.settings,decimal_precision:0
 msgid "Decimal precision on journal entries"
-msgstr ""
+msgstr "Decimālā precizitāte reģistru ierakstiem"
 
 #. module: account
 #: selection:account.config.settings,period:0
@@ -709,7 +709,7 @@ msgstr "Sākuma Ierakstu Periods"
 #. module: account
 #: model:ir.model,name:account.model_account_journal_period
 msgid "Journal Period"
-msgstr "Žurnāla periods"
+msgstr "Reģistra periods"
 
 #. module: account
 #: constraint:account.move:0
@@ -875,7 +875,7 @@ msgstr "Atsaiste"
 #. module: account
 #: model:ir.model,name:account.model_account_analytic_journal_report
 msgid "Account Analytic Journal"
-msgstr "Konta Analītiskais Žurnāls"
+msgstr "Konta analītiskais reģistrs"
 
 #. module: account
 #: view:account.invoice:0
@@ -978,7 +978,7 @@ msgstr "Nav apmaksāts"
 #. module: account
 #: field:account.config.settings,purchase_journal_id:0
 msgid "Purchase journal"
-msgstr ""
+msgstr "Iegādes reģistrs"
 
 #. module: account
 #: model:mail.message.subtype,description:account.mt_invoice_paid
@@ -1031,7 +1031,7 @@ msgstr "Paplašinātie filtri..."
 #. module: account
 #: model:ir.ui.menu,name:account.menu_account_central_journal
 msgid "Centralizing Journal"
-msgstr "Cenralizētais Žurnāls"
+msgstr "Centralizētais reģistrs"
 
 #. module: account
 #: selection:account.journal,type:0
@@ -1098,7 +1098,7 @@ msgstr ""
 #: code:addons/account/account_move_line.py:195
 #, python-format
 msgid "No Analytic Journal !"
-msgstr "Nav norādīts analītiskais žurnāls!"
+msgstr "Nav norādīts analītiskais reģistrs!"
 
 #. module: account
 #: report:account.partner.balance:0
@@ -1481,7 +1481,7 @@ msgstr ""
 #. module: account
 #: model:ir.model,name:account.model_account_entries_report
 msgid "Journal Items Analysis"
-msgstr "Žurnāla grāmatojumu Analīze"
+msgstr "Reģistra grāmatojumu analīze"
 
 #. module: account
 #: model:ir.ui.menu,name:account.next_id_22
@@ -1690,7 +1690,7 @@ msgstr "Meklēt Bankas Izrakstus"
 #. module: account
 #: view:account.move.line:0
 msgid "Unposted Journal Items"
-msgstr ""
+msgstr "Nenogrāmatoti reģistru ieraksti"
 
 #. module: account
 #: view:account.chart.template:0
@@ -1875,8 +1875,8 @@ msgid ""
 "If the active field is set to False, it will allow you to hide the journal "
 "period without removing it."
 msgstr ""
-"Uzliekot vērtību \"False\" laukam Aktīvs, iespējams slēpt žurnāla periodu to "
-"neizdzēšot."
+"Uzliekot vērtību \"False\" laukam Aktīvs, iespējams slēpt reģistra periodu "
+"to neizdzēšot."
 
 #. module: account
 #: field:account.report.general.ledger,sortby:0
@@ -1907,7 +1907,7 @@ msgstr ""
 #. module: account
 #: model:ir.model,name:account.model_account_common_journal_report
 msgid "Account Common Journal Report"
-msgstr "Žurnālu Izdruka"
+msgstr "Konta kopējā reģistra atskaite"
 
 #. module: account
 #: selection:account.partner.balance,display_partner:0
@@ -2134,7 +2134,7 @@ msgstr "Kopā"
 #. module: account
 #: model:ir.actions.report.xml,name:account.account_journal_sale_purchase
 msgid "Sale/Purchase Journal"
-msgstr ""
+msgstr "Iegādes/Realizācijas reģistrs"
 
 #. module: account
 #: view:account.analytic.account:0
@@ -2146,7 +2146,7 @@ msgstr "Analītiskais konts"
 #: code:addons/account/account_bank_statement.py:405
 #, python-format
 msgid "Please verify that an account is defined in the journal."
-msgstr "Pārbaudiet, vai žurnālam ir definēts konts."
+msgstr "Pārbaudiet, vai reģistram ir definēts konts."
 
 #. module: account
 #: selection:account.entries.report,move_line_state:0
@@ -2163,7 +2163,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:account.action_account_print_journal
 #: model:ir.model,name:account.model_account_print_journal
 msgid "Account Print Journal"
-msgstr "Kontu Drukas Žurnāls"
+msgstr "Konta reģistra atskaite"
 
 #. module: account
 #: model:ir.model,name:account.model_product_category
@@ -2193,7 +2193,7 @@ msgstr ""
 #: code:addons/account/static/src/xml/account_move_line_quickadd.xml:14
 #, python-format
 msgid "Journal :"
-msgstr ""
+msgstr "Reģistrs :"
 
 #. module: account
 #: sql_constraint:account.fiscal.position.tax:0
@@ -3042,7 +3042,7 @@ msgstr "Pārdošanas dati pēc Konta"
 #: code:addons/account/account.py:1411
 #, python-format
 msgid "You cannot delete a posted journal entry \"%s\"."
-msgstr ""
+msgstr "Nogrāmatotu \"%s\" reģistra ierakstu nevar dzēst."
 
 #. module: account
 #: view:account.invoice:0
@@ -3052,7 +3052,7 @@ msgstr ""
 #. module: account
 #: field:account.config.settings,sale_journal_id:0
 msgid "Sale journal"
-msgstr ""
+msgstr "Realizācijas reģistrs"
 
 #. module: account
 #: code:addons/account/account.py:2298
@@ -3060,7 +3060,7 @@ msgstr ""
 #: code:addons/account/account_move_line.py:195
 #, python-format
 msgid "You have to define an analytic journal on the '%s' journal!"
-msgstr "Žurnālam '%s'  ir jādefinē atbilstošs analītiskais žurnāls!"
+msgstr "Reģistrs '%s' ir jādefinē atbilstošs analītiskais reģistrs!"
 
 #. module: account
 #: code:addons/account/account.py:781
@@ -3069,6 +3069,7 @@ msgid ""
 "This journal already contains items, therefore you cannot modify its company "
 "field."
 msgstr ""
+"Šis reģistrs jau satur ierakstus, tādēļ Jūs nevarat labot tā uzņēmuma lauku."
 
 #. module: account
 #: code:addons/account/account.py:409
@@ -3299,7 +3300,7 @@ msgstr "Nodokļu Veidņu Saraksts"
 #. module: account
 #: model:ir.ui.menu,name:account.menu_account_print_sale_purchase_journal
 msgid "Sale/Purchase Journals"
-msgstr ""
+msgstr "Iegādes/Realizācijas reģistri"
 
 #. module: account
 #: help:account.account,currency_mode:0
@@ -3348,6 +3349,7 @@ msgstr "Vienmēr"
 msgid ""
 "Full accounting features: journals, legal statements, chart of accounts, etc."
 msgstr ""
+"Pilnas grāmatvedības funkcijas: reģistri, izraksti, kontu plāni, utt."
 
 #. module: account
 #: view:account.analytic.line:0
@@ -3524,7 +3526,7 @@ msgid ""
 "This wizard will validate all journal entries of a particular journal and "
 "period. Once journal entries are validated, you can not update them anymore."
 msgstr ""
-"Vednis apstiprinās visus noteikta žurnāla un perioda grāmatojumus. Pēc "
+"Vednis apstiprinās visus noteikta reģistra un perioda grāmatojumus. Pēc "
 "apstiprināšanas tos vairs nevarēs mainīt."
 
 #. module: account
@@ -3602,7 +3604,7 @@ msgstr "Atstājiet neaizpildītu, lai lietotu izdevumu kontu"
 #: model:ir.ui.menu,name:account.menu_journals
 #: model:ir.ui.menu,name:account.menu_journals_report
 msgid "Journals"
-msgstr "Žurnāli"
+msgstr "Reģistri"
 
 #. module: account
 #: field:account.partner.reconcile.process,to_reconcile:0
@@ -3749,7 +3751,7 @@ msgstr "Nodokļu Plāns"
 #. module: account
 #: view:account.journal:0
 msgid "Search Account Journal"
-msgstr "Meklēt Žurnālā"
+msgstr "Meklēt konta reģistru"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_invoice_tree_pending_invoice
@@ -3783,7 +3785,7 @@ msgid ""
 "All selected journal entries will be validated and posted. It means you "
 "won't be able to modify their accounting fields anymore."
 msgstr ""
-"Visi žurnāla ieraksti tiks apstiprināti un grāmatoti. To nevarēs vēlāk "
+"Visi reģistra ieraksti tiks apstiprināti un grāmatoti. To nevarēs vēlāk "
 "mainīt."
 
 #. module: account
@@ -3874,11 +3876,13 @@ msgid ""
 "You cannot modify a posted entry of this journal.\n"
 "First you should set the journal to allow cancelling entries."
 msgstr ""
+"Jūs nevarat labot šī reģistra grāmatojumu.\n"
+"Jums jāuzstāda atļauja reģistrā atcelt grāmatojumus."
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_print_sale_purchase_journal
 msgid "Print Sale/Purchase Journal"
-msgstr ""
+msgstr "Drukāt Iegāde/Realizācijas reģistru"
 
 #. module: account
 #: view:account.installer:0
@@ -3919,7 +3923,7 @@ msgstr "Summa pēc Nodokļa Koda"
 #. module: account
 #: view:account.move.line:0
 msgid "Unreconciled Journal Items"
-msgstr ""
+msgstr "Nesaistītie kontējumi"
 
 #. module: account
 #: selection:account.account.type,close_method:0
@@ -4213,7 +4217,7 @@ msgstr "Izdošanas datums"
 #: code:addons/account/wizard/account_fiscalyear_close.py:100
 #, python-format
 msgid "The journal must have default credit and debit account."
-msgstr ""
+msgstr "Šim reģistram obligāti jānorāda debeta un kredīta konts."
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_bank_tree
@@ -4235,7 +4239,7 @@ msgstr ""
 #. module: account
 #: help:account.journal,analytic_journal_id:0
 msgid "Journal for analytic entries"
-msgstr "Žurnāls analītiskajiem ierakstiem"
+msgstr "Analītisko ierakstu reģistrs"
 
 #. module: account
 #: constraint:account.aged.trial.balance:0
@@ -4288,7 +4292,7 @@ msgstr "Grāmatvedība"
 #. module: account
 #: view:account.entries.report:0
 msgid "Journal Entries with period in current year"
-msgstr ""
+msgstr "Tekošā gada perioda reģistra ieraksti"
 
 #. module: account
 #: field:account.account,child_consol_ids:0
@@ -4441,7 +4445,7 @@ msgstr "Noņemot lauka aktīvs atzīmi, iespējams noslēpt kontu to nedzēšot.
 #. module: account
 #: view:account.move.line:0
 msgid "Posted Journal Items"
-msgstr ""
+msgstr "Nogrāmatotie reģistra ieraksti"
 
 #. module: account
 #: field:account.move.line,blocked:0
@@ -4559,7 +4563,7 @@ msgstr "Mēnesis"
 #: code:addons/account/account.py:668
 #, python-format
 msgid "You cannot change the code of account which contains journal items!"
-msgstr ""
+msgstr "Jūs nevarat mainīt konta kodu kurš satur reģistra ierakstus!"
 
 #. module: account
 #: field:account.config.settings,purchase_sequence_prefix:0
@@ -4775,7 +4779,7 @@ msgstr ""
 #. module: account
 #: model:ir.model,name:account.model_account_journal_select
 msgid "Account Journal Select"
-msgstr "Izvēlēties Grāmatvedības Žurnālu"
+msgstr "Izvēlēties grāmatvedības reģistru"
 
 #. module: account
 #: view:account.tax.template:0
@@ -4786,7 +4790,7 @@ msgstr "Kredītrēķini"
 #: view:account.move.line:0
 #: model:ir.actions.act_window,name:account.action_account_manual_reconcile
 msgid "Journal Items to Reconcile"
-msgstr ""
+msgstr "Reģistru ieraksti sasaistei"
 
 #. module: account
 #: model:ir.model,name:account.model_account_tax_template
@@ -5743,7 +5747,7 @@ msgstr "Rēķinu Atskaišu skaits Pēdējo 15 dienu laikā"
 #. module: account
 #: field:account.fiscalyear,end_journal_period_id:0
 msgid "End of Year Entries Journal"
-msgstr "Gada Slēguma Ierakstu Žurnāls"
+msgstr "Gada slēguma ierakstu reģistrs"
 
 #. module: account
 #: view:account.invoice:0
@@ -5956,7 +5960,7 @@ msgstr "Automātiski Saistīt Kontus"
 #: view:account.move:0
 #: view:account.move.line:0
 msgid "Journal Item"
-msgstr "Žurnāla Vienums"
+msgstr "Kontējums"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_fiscalyear_close
@@ -5985,7 +5989,7 @@ msgstr "Izveides Datums"
 #: model:ir.actions.act_window,name:account.action_account_analytic_journal_form
 #: model:ir.ui.menu,name:account.account_def_analytic_journal
 msgid "Analytic Journals"
-msgstr "Analītiskie Žurnāli"
+msgstr "Analītiskie reģistri"
 
 #. module: account
 #: field:account.account,child_id:0
@@ -6263,7 +6267,7 @@ msgstr ""
 #. module: account
 #: field:account.journal.period,name:0
 msgid "Journal-Period Name"
-msgstr "Žurnāla-Perioda Nosaukums"
+msgstr "Reģistra-Perioda nosaukums"
 
 #. module: account
 #: field:account.invoice.tax,factor_base:0
@@ -6273,7 +6277,7 @@ msgstr "Bāzes koda reizinājuma faktors"
 #. module: account
 #: help:account.journal,company_id:0
 msgid "Company related to this journal"
-msgstr "Žurnāla uzņēmums"
+msgstr "Reģistra uzņēmums"
 
 #. module: account
 #: help:account.config.settings,group_multi_currency:0
@@ -6534,7 +6538,7 @@ msgstr "Ieņēmumu"
 #. module: account
 #: constraint:account.move.line:0
 msgid "You cannot create journal items on closed account."
-msgstr ""
+msgstr "Jūs nevarat izveidot reģistru ierakstus slēgtā periodā."
 
 #. module: account
 #: code:addons/account/account_invoice.py:610
@@ -6588,7 +6592,7 @@ msgstr ""
 #: code:addons/account/wizard/pos_box.py:33
 #, python-format
 msgid "Please check that the field 'Journal' is set on the Bank Statement"
-msgstr ""
+msgstr "Lūdzu pārbaudiet vai ir aizpildīts lauks 'Reģistrs' Bankas izrakstā"
 
 #. module: account
 #: selection:account.tax,type:0
@@ -6603,7 +6607,7 @@ msgstr ""
 #. module: account
 #: selection:account.report.general.ledger,sortby:0
 msgid "Journal & Partner"
-msgstr "Žurnāls un Partneris"
+msgstr "Reģistrs un partneris"
 
 #. module: account
 #: field:account.automatic.reconcile,power:0
@@ -6716,7 +6720,7 @@ msgstr "Likviditāte"
 #: model:ir.actions.act_window,name:account.action_account_analytic_journal_open_form
 #: model:ir.ui.menu,name:account.account_analytic_journal_entries
 msgid "Analytic Journal Items"
-msgstr "Analītiskā Žurnāla Ieraksti"
+msgstr "Analītiskie reģistra ieraksti"
 
 #. module: account
 #: field:account.config.settings,has_default_company:0
@@ -6751,7 +6755,7 @@ msgstr ""
 #. module: account
 #: sql_constraint:account.journal:0
 msgid "The name of the journal must be unique per company !"
-msgstr "Žurnāla nosaukumam katram uzņēmumam ir jābūt unikālam!"
+msgstr "Katra uzņēmuma reģistra nosaukumam jābūt unikālam!"
 
 #. module: account
 #: field:account.account.template,nocreate:0
@@ -6851,7 +6855,7 @@ msgstr "account.sequence.fiscalyear"
 #: model:ir.model,name:account.model_account_analytic_journal
 #: model:ir.ui.menu,name:account.account_analytic_journal_print
 msgid "Analytic Journal"
-msgstr "Analītskais Žurnāls"
+msgstr "Analītiskais reģistrs"
 
 #. module: account
 #: view:account.entries.report:0
@@ -6986,7 +6990,7 @@ msgstr "Python pirmkods"
 #. module: account
 #: view:account.entries.report:0
 msgid "Journal Entries with period in current period"
-msgstr ""
+msgstr "Tekošā perioda reģistra ieraksti ar periodu"
 
 #. module: account
 #: help:account.journal,update_posted:0
@@ -6994,7 +6998,8 @@ msgid ""
 "Check this box if you want to allow the cancellation the entries related to "
 "this journal or of the invoice related to this journal"
 msgstr ""
-"Atzīmēt, ja vēlaties atļaut žurnālu grāmatojumu vai žurnālu rēķinu atcelšanu"
+"Atzīmēt, ja vēlaties atļaut reģistra grāmatojumu vai reģistra rēķinu "
+"atcelšanu"
 
 #. module: account
 #: view:account.fiscalyear.close:0
@@ -7167,7 +7172,7 @@ msgstr ""
 #. module: account
 #: view:account.journal.select:0
 msgid "Journal Select"
-msgstr "Izvēlēties Žurnālu"
+msgstr "Izvēlēties reģistru"
 
 #. module: account
 #: view:account.bank.statement:0
@@ -7436,7 +7441,7 @@ msgstr "Nodokļu Kontu Veidne"
 #. module: account
 #: view:account.journal.select:0
 msgid "Are you sure you want to open Journal Entries?"
-msgstr "Vai vēlaties atvērt Žurnāla Kontējumus?"
+msgstr "Vai vēlaties atvērt grāmatojumus?"
 
 #. module: account
 #: view:account.state.open:0
@@ -7547,7 +7552,7 @@ msgid ""
 "new counterpart but will share the same counterpart. This is used in fiscal "
 "year closing."
 msgstr ""
-"Atzīmēt šo lauku, lai norādītu, ka katrs šī žurnāla ieraksts neveidos jaunu "
+"Atzīmēt šo lauku, lai norādītu, ka katrs šī reģistra ieraksts neveidos jaunu "
 "pretējo kontējumu. Tiek lietots fiskālā gada slēgšanā."
 
 #. module: account
@@ -7635,7 +7640,7 @@ msgstr ""
 #: view:account.journal:0
 #: field:res.partner.bank,journal_id:0
 msgid "Account Journal"
-msgstr "Konta Žurnāls"
+msgstr "Konta reģistrs"
 
 #. module: account
 #: field:account.config.settings,tax_calculation_rounding_method:0
@@ -7691,6 +7696,8 @@ msgid ""
 "There is no default credit account defined \n"
 "on journal \"%s\"."
 msgstr ""
+"Nav nodefinēts noklusētais kredīta konts \n"
+"reģistram \"%s\"."
 
 #. module: account
 #: view:account.invoice.line:0
@@ -7808,7 +7815,7 @@ msgstr ""
 #: code:addons/account/account.py:3145
 #, python-format
 msgid "Sales Journal"
-msgstr "Realizācijas Žurnāls"
+msgstr "Realizācijas reģistrs"
 
 #. module: account
 #: model:ir.model,name:account.model_account_invoice_tax
@@ -7840,7 +7847,7 @@ msgstr ""
 #. module: account
 #: view:account.move:0
 msgid "Unposted Journal Entries"
-msgstr ""
+msgstr "Nenogrāmatotie grāmatojumi"
 
 #. module: account
 #: help:account.invoice.refund,date:0
@@ -7946,7 +7953,7 @@ msgstr ""
 #: view:validate.account.move:0
 #: view:validate.account.move.lines:0
 msgid "Post Journal Entries"
-msgstr "Veikt Grāmatojumus"
+msgstr "Veikt grāmatojumus"
 
 #. module: account
 #: selection:account.bank.statement.line,type:0
@@ -8008,7 +8015,7 @@ msgstr ""
 #. module: account
 #: selection:account.print.journal,sort_selection:0
 msgid "Journal Entry Number"
-msgstr ""
+msgstr "Grāmatojumu numurs"
 
 #. module: account
 #: view:account.financial.report:0
@@ -8217,8 +8224,7 @@ msgstr ""
 msgid ""
 "Select Fiscal Year which you want to remove entries for its End of year "
 "entries journal"
-msgstr ""
-"Izvēlēties Fiskālo Gadu, kuram dzēst Gada Beigu grāmatojumus žurnālā."
+msgstr "Izvēlēties Fiskālo Gadu, kuram dzēst Gada Beigu grāmatojumus"
 
 #. module: account
 #: field:account.tax.template,type_tax_use:0
@@ -8253,7 +8259,7 @@ msgstr "Automātiska ievade"
 #: help:account.account,reconcile:0
 msgid ""
 "Check this box if this account allows reconciliation of journal items."
-msgstr ""
+msgstr "Atzīmēt, ja šim kontam ir atļautas kontējumu sasaistes."
 
 #. module: account
 #: report:account.analytic.account.inverted.balance:0
@@ -8363,13 +8369,13 @@ msgstr ""
 #: code:addons/account/account.py:3148
 #, python-format
 msgid "Purchase Refund Journal"
-msgstr "Iepirkumu Kredītrēķinu Žurnāls"
+msgstr "Iegādes kredītrēķinu reģistrs"
 
 #. module: account
 #: code:addons/account/account.py:1297
 #, python-format
 msgid "Please define a sequence on the journal."
-msgstr ""
+msgstr "Lūdzu norādiet reģistra sekvenci."
 
 #. module: account
 #: help:account.tax.template,amount:0
@@ -8389,7 +8395,7 @@ msgstr ""
 #. module: account
 #: help:account.journal,user_id:0
 msgid "The user responsible for this journal"
-msgstr "Atbildīgais par žurnālu."
+msgstr "Atbildīgais par reģistru"
 
 #. module: account
 #: help:account.config.settings,module_account_followup:0
@@ -8455,7 +8461,7 @@ msgstr "Standarta Atskaites"
 #. module: account
 #: field:account.move.line.reconcile.writeoff,journal_id:0
 msgid "Write-Off Journal"
-msgstr "Norakstīšanas Žurnāls"
+msgstr "Norakstīšanas reģistrs"
 
 #. module: account
 #: field:account.chart.template,property_account_income_categ:0
@@ -8678,7 +8684,7 @@ msgstr "Fiskālā gada Slēgšanas stāvoklis"
 #. module: account
 #: field:account.invoice.refund,journal_id:0
 msgid "Refund Journal"
-msgstr "Kredītrēķinu Žurnāls"
+msgstr "Kredītrēķinu reģistrs"
 
 #. module: account
 #: report:account.account.balance:0
@@ -8731,7 +8737,7 @@ msgstr "Apmaksas Noteikumu Rinda"
 #: code:addons/account/account.py:3146
 #, python-format
 msgid "Purchase Journal"
-msgstr "Iepirkuma Žurnāls"
+msgstr "Iegādes reģistrs"
 
 #. module: account
 #: field:account.invoice,amount_untaxed:0
@@ -8746,7 +8752,7 @@ msgstr "Drukāt Nodokļu Deklarāciju"
 #. module: account
 #: view:account.model.line:0
 msgid "Journal Entry Model Line"
-msgstr "Žurnāla Ievades Modeļa Rinda"
+msgstr "Grāmatojuma modeļa rinda"
 
 #. module: account
 #: view:account.invoice:0
@@ -8894,7 +8900,7 @@ msgstr "Analītiskās Izmaksas"
 #: report:account.general.journal:0
 #: field:account.journal,name:0
 msgid "Journal Name"
-msgstr "Žurnāla Nosaukums"
+msgstr "Reģistra nosaukums"
 
 #. module: account
 #: code:addons/account/account_move_line.py:832
@@ -9066,7 +9072,7 @@ msgstr "nezināms"
 #: code:addons/account/account.py:3150
 #, python-format
 msgid "Opening Entries Journal"
-msgstr "Sākuma Atlikumu Kontējumu Žurnāls"
+msgstr "Sākuma atlikumu ierakstu reģistrs"
 
 #. module: account
 #: model:process.transition,note:account.process_transition_customerinvoice0
@@ -9121,7 +9127,7 @@ msgstr "Python Kods"
 #. module: account
 #: field:account.analytic.journal,code:0
 msgid "Journal Code"
-msgstr "Žurnāla Kods"
+msgstr "Reģistra kods"
 
 #. module: account
 #: view:account.invoice:0
@@ -9138,7 +9144,7 @@ msgstr "Kontējumi"
 #. module: account
 #: model:ir.actions.act_window,name:account.action_open_journal_button
 msgid "Open Journal"
-msgstr "Atvērt Žurnālu"
+msgstr "Atvērt reģistru"
 
 #. module: account
 #: report:account.analytic.account.journal:0
@@ -9161,7 +9167,7 @@ msgstr ""
 #: code:addons/account/account.py:3147
 #, python-format
 msgid "Sales Refund Journal"
-msgstr "Realizācija. Kredītrēķinu Žurnāls"
+msgstr "Realizācijas kredītrēķinu reģistrs"
 
 #. module: account
 #: view:account.move:0
@@ -9192,7 +9198,7 @@ msgstr "Fiskālo gadu un periodu Slēgšanas stāvokļi"
 #. module: account
 #: field:account.config.settings,purchase_refund_journal_id:0
 msgid "Purchase refund journal"
-msgstr ""
+msgstr "Iegādes kredītrēķinu reģistrs"
 
 #. module: account
 #: view:account.analytic.line:0
@@ -9572,7 +9578,7 @@ msgid ""
 "in the journal definition for reconciliation."
 msgstr ""
 "Nepieciešams definēt bankas kontu\n"
-"sasaistes ierakstu žurnālam."
+"sasaistes ierakstu reģistram."
 
 #. module: account
 #: help:account.journal,sequence_id:0
@@ -9950,7 +9956,7 @@ msgstr "Žurnālu Apgrozījums"
 #. module: account
 #: view:account.model:0
 msgid "Journal Entry Model"
-msgstr "Grāmatojuma Modelis"
+msgstr "Grāmatojuma modelis"
 
 #. module: account
 #: code:addons/account/account.py:1064
@@ -10041,7 +10047,7 @@ msgstr ""
 #: code:addons/account/account_invoice.py:387
 #, python-format
 msgid "There is no Sale/Purchase Journal(s) defined."
-msgstr ""
+msgstr "Nav nodefinēts Iegādes/Realizācijas reģistrs(-i)."
 
 #. module: account
 #: view:account.move.line.reconcile.select:0
@@ -10391,7 +10397,7 @@ msgstr "Beigu periods"
 #. module: account
 #: sql_constraint:account.journal:0
 msgid "The code of the journal must be unique per company !"
-msgstr "Žurnāla kodam ir jābūt unikālam katram uzņēmumam!"
+msgstr "Reģistra kodam jābūt unikālam katram uzņēmumam!"
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_account_invoice_report_all
@@ -10884,7 +10890,7 @@ msgstr "Nākotnē"
 #. module: account
 #: view:account.move.line:0
 msgid "Search Journal Items"
-msgstr "Meklēt Žurnāla Grāmatojumus"
+msgstr "Meklēt kontējumus"
 
 #. module: account
 #: help:account.tax,base_sign:0
