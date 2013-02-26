@@ -48,6 +48,7 @@ class invite_wizard(osv.osv_memory):
                         help='Id of the followed resource'),
         'partner_ids': fields.many2many('res.partner', string='Partners'),
         'message': fields.html('Message'),
+        'send_mail': fields.boolean('Send an email'),
     }
 
     def add_followers(self, cr, uid, ids, context=None):
@@ -60,7 +61,7 @@ class invite_wizard(osv.osv_memory):
             model_obj.message_subscribe(cr, uid, [wizard.res_id], new_follower_ids, context=context)
 
             # send an email
-            if wizard.message:
+            if wizard.send_mail and wizard.message:
                 # add signature
                 signature_company = self.pool.get('mail.notification').get_signature_footer(cr, uid, user_id=uid, res_model=wizard.res_model, res_id=wizard.res_id, context=context)
                 wizard.message = tools.append_content_to_html(wizard.message, signature_company, plaintext=False, container_tag='div')
