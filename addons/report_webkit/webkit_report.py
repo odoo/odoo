@@ -87,6 +87,32 @@ def mako_template(text):
 
     return mako_template_env.from_string(text)
 
+_extender_functions = {}
+
+def webkit_report_extender(report_name):
+    """
+    A decorator to define functions to extend the context used in a template rendering.
+    report_name must be the xml id of the desired report (it is mandatory to indicate the
+    module in that xml id).
+
+    The given function will be called at the creation of the report. The following arguments
+    will be passed to it (in this order):
+    - pool The model pool.
+    - cr The cursor.
+    - uid The user id.
+    - localcontext The context given to the template engine to render the templates for the
+        current report. This is the context that should be modified.
+    - context The OpenERP context.
+    """
+    def fct1(fct):
+        lst = _extender_functions.get(report_name)
+        if not lst:
+            lst = []
+            _extender_functions[report_name] = lst
+        lst.append(fct)
+        return fct
+    return fct1
+
 class WebKitParser(report_sxw):
     """Custom class that use webkit to render HTML reports
        Code partially taken from report openoffice. Thanks guys :)
@@ -227,6 +253,17 @@ class WebKitParser(report_sxw):
     def create_single_pdf(self, cursor, uid, ids, data, report_xml, context=None):
         """generate the PDF"""
 
+        # just try to find an xml id for the report
+        cr = cursor
+        import openerp.pooler as pooler
+        pool = pooler.get_pool(cr.dbname)
+        found_xml_ids = pool.get("ir.model.data").search(cr, uid, [["model", "=", "ir.actions.report.xml"], \
+            ["res_id", "=", report_xml.id]], context=context)
+        xml_id = None
+        if found_xml_ids:
+            xml_id = pool.get("ir.model.data").read(cr, uid, found_xml_ids[0], ["module", "name"])
+            xml_id = "%s.%s" % (xml_id["module"], xml_id["name"])
+
         if context is None:
             context={}
         htmls = []
@@ -270,14 +307,22 @@ class WebKitParser(report_sxw):
 
         body_mako_tpl = mako_template(template)
         helper = WebKitHelper(cursor, uid, report_xml.id, context)
+        self.parser_instance.localcontext['helper'] = helper
+        self.parser_instance.localcontext['css'] = css
+        self.parser_instance.localcontext['_'] = self.translate_call
+
+        # apply extender functions
+        additional = {}
+        if xml_id in _extender_functions:
+            for fct in _extender_functions[xml_id]:
+                fct(pool, cr, uid, self.parser_instance.localcontext, context)
+
         if report_xml.precise_mode:
-            for obj in objs:
-                self.parser_instance.localcontext['objects'] = [obj]
+            ctx = dict(self.parser_instance.localcontext)
+            for obj in self.parser_instance.localcontext['objects']:
+                ctx['objects'] = [obj]
                 try :
-                    html = body_mako_tpl.render(dict({"helper":helper,
-                                                "css":css,
-                                                "_":self.translate_call},
-                                                **self.parser_instance.localcontext))
+                    html = body_mako_tpl.render(dict(ctx))
                     htmls.append(html)
                 except Exception, e:
                     msg = u"%s" % e
@@ -285,10 +330,7 @@ class WebKitParser(report_sxw):
                     raise except_osv(_('Webkit render!'), msg)
         else:
             try :
-                html = body_mako_tpl.render(dict({"helper":helper,
-                                                "css":css,
-                                                "_":self.translate_call},
-                                            **self.parser_instance.localcontext))
+                html = body_mako_tpl.render(dict(self.parser_instance.localcontext))
                 htmls.append(html)
             except Exception:
                 msg = u"%s" % e
@@ -296,20 +338,14 @@ class WebKitParser(report_sxw):
                 raise except_osv(_('Webkit render!'), msg)
         head_mako_tpl = mako_template(header)
         try :
-            head = head_mako_tpl.render(dict({"helper":helper,
-                                                "css":css,
-                                                "_":self.translate_call,
-                                                "_debug":False},
-                                        **self.parser_instance.localcontext))
+            head = head_mako_tpl.render(dict(self.parser_instance.localcontext, _debug=False))
         except Exception, e:
             raise except_osv(_('Webkit render!'), u"%s" % e)
         foot = False
         if footer :
             foot_mako_tpl = mako_template(footer)
             try :
-                foot = foot_mako_tpl.render(dict({"helper":helper,
-                                                "css":css,
-                                                "_":self.translate_call},
+                foot = foot_mako_tpl.render(dict({},
                                             **self.parser_instance.localcontext))
             except Exception, e:
                 msg = u"%s" % e
@@ -317,11 +353,7 @@ class WebKitParser(report_sxw):
                 raise except_osv(_('Webkit render!'), msg)
         if report_xml.webkit_debug :
             try :
-                deb = head_mako_tpl.render(dict({"helper":helper,
-                                                "css":css,
-                                                "_":self.translate_call,
-                                                "_debug":tools.ustr("\n".join(htmls))},
-                                           **self.parser_instance.localcontext))
+                deb = head_mako_tpl.render(dict(self.parser_instance.localcontext, _debug=tools.ustr("\n".join(htmls))))
             except Exception, e:
                 msg = u"%s" % e
                 _logger.error(msg)
