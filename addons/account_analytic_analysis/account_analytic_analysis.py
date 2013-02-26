@@ -267,12 +267,12 @@ class account_analytic_account(osv.osv):
                         GROUP BY product_id, user_id, to_invoice, product_uom_id, line.name""", (account.id,))
 
                     res[account.id][f] = 0.0
-                    for product_id, price, user_id, factor_id, quantity, uom, line_name in cr.fetchall():
+                    for product_id, price, user_id, factor_id, qty, uom, line_name in cr.fetchall():
                         price = -price
                         if product_id:
-                            price = self.pool.get('account.analytic.line')._get_invoice_price(cr, uid, account, product_id, user_id, quantity, context)
+                            price = self.pool.get('account.analytic.line')._get_invoice_price(cr, uid, account, product_id, user_id, qty, context)
                         factor = self.pool.get('hr_timesheet_invoice.factor').browse(cr, uid, factor_id, context=context)
-                        res[account.id][f] += price * quantity * (100-factor.factor or 0.0) / 100.0
+                        res[account.id][f] += price * qty * (100-factor.factor or 0.0) / 100.0
 
                 # sum both result on account_id
                 for id in ids:
@@ -787,9 +787,11 @@ class account_analytic_account(osv.osv):
         journal_obj = self.pool.get('account.journal')
         if context is None:
             context = {}
-        contract_ids = self.search(cr, uid, [('next_date','=',time.strftime("%Y-%m-%d")), ('state','=', 'open'), ('recurring_invoices','=', True)], context=context, order='name asc')
+        contract_ids = self.search(cr, uid, [('next_date','=',time.strftime("%Y-%m-%d")), ('state','=', 'open'), ('recurring_invoices','=', True)])
         if contract_ids:
             for contract in self.browse(cr, uid, contract_ids):
+                if not contract.partner_id:
+                    raise osv.except_osv(_('No Partner Defined !'),_("You must first select a Customer for Contract %s!") % contract.name )
                 journal_ids = journal_obj.search(cr, uid, [('type', '=','sale'),('company_id', '=', contract.company_id.id)], limit=1)
                 if not journal_ids:
                     raise osv.except_osv(_('Error!'),
