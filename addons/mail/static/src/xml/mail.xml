@@ -41,15 +41,22 @@
             </div>
         </div>
         <div t-if="widget.show_compact_message and !widget.show_composer and !widget.options.readonly" t-attf-class="oe_msg oe_msg_composer_compact #{widget.thread_level and widget.options.display_indented_thread > -1 ? 'oe_msg_indented' : ''}">
-            <div class="field_text oe_compact">
-                <a class="oe_compose_post">
+            <t t-if="widget.options.view_mailbox">
+                <div class="field_text oe_compact oe_compact_inbox">
                     <t t-if="widget.options.compose_placeholder" t-raw="widget.options.compose_placeholder"/>
-                    <t t-if="!widget.options.compose_placeholder and !widget.options.view_mailbox">Share a message</t>
-                    <t t-if="!widget.options.compose_placeholder and widget.options.view_mailbox">Share with my followers</t>
-                </a>
-                <span class="oe_grey">or</span>
-                <a class="oe_compose_log">Log a note</a>
-            </div>
+                    <t t-if="!widget.options.compose_placeholder and widget.options.view_mailbox">Share with my followers...</t>
+                </div>
+            </t>
+            <t t-if="!widget.options.view_mailbox">
+                <div class="field_text oe_compact oe_compact_record">
+                    <a class="oe_compose_post">
+                        <t t-if="widget.options.compose_placeholder" t-raw="widget.options.compose_placeholder"/>
+                        <t t-if="!widget.options.compose_placeholder and !widget.options.view_mailbox">Share a message</t>
+                    </a>
+                    <span class="oe_grey">or</span>
+                    <a class="oe_compose_log">Log a note</a>
+                </div>
+            </t>
         </div>
         <span t-if="!(widget.show_compact_message and !widget.show_composer) and !widget.show_composer" class="oe_placeholder_compose"></span>
     </t>
