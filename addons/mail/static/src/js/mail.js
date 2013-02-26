@@ -606,14 +606,6 @@ openerp.mail = function (session) {
             var names_to_remove = [];
             var recipient_ids_to_remove = [];
 
-            // some debug
-            console.group('check_recipient_partners');
-            console.log('recipients', recipients);
-            console.log('recipient_ids', recipient_ids);
-            console.log('recipients_to_find', recipients_to_find);
-            console.log('recipients_to_check', recipients_to_check);
-            console.log('names_to_find', names_to_find);
-
             // have unknown names -> call message_get_partner_info_from_emails to try to find partner_id
             var find_done = $.Deferred();
             if (names_to_find.length > 0) {
@@ -660,7 +652,6 @@ openerp.mail = function (session) {
                 });
 
                 $.when.apply($, emails_deferred).then(function () {
-                    console.log('final call', names_to_remove, recipient_ids_to_remove);
                     var new_names_to_find = _.difference(names_to_find, names_to_remove);
                     find_done = $.Deferred();
                     if (new_names_to_find.length > 0) {
@@ -678,7 +669,6 @@ openerp.mail = function (session) {
                         });
                     }).pipe(function () {
                         check_done.resolve(recipient_ids);
-                        console.groupEnd();
                     });
                 });
             });
@@ -748,17 +738,11 @@ openerp.mail = function (session) {
             var email_addresses = _.pluck(this.recipients, 'email_address');
             var suggested_partners = $.Deferred();
 
-            // some debug
-            console.group('on_toggle_quick_composer');
-            console.log('event', event);
-            console.log('computed recipients', this.recipients);
-
             // if clicked: call for suggested recipients
             if (event.type == 'click') {
                 this.is_log = $input.hasClass('oe_compose_log');
                 suggested_partners = this.parent_thread.ds_thread.call('message_get_suggested_recipients', [[this.context.default_res_id]]).done(function (additional_recipients) {
                     var thread_recipients = additional_recipients[self.context.default_res_id];
-                    console.log('message_get_suggested_recipients:', thread_recipients);
                     _.each(thread_recipients, function (recipient) {
                         var parsed_email = mail.ChatterUtils.parse_email(recipient[1]);
                         if (_.indexOf(email_addresses, parsed_email[1]) == -1) {
@@ -779,8 +763,6 @@ openerp.mail = function (session) {
 
             // when call for suggested partners finished: re-render the widget
             $.when(suggested_partners).pipe(function (additional_recipients) {
-                console.log('recipients after toogle', self.recipients);
-                console.groupEnd();
                 if ((!self.stay_open || (event && event.type == 'click')) && (!self.show_composer || !self.$('textarea:not(.oe_compact)').val().match(/\S+/) && !self.attachment_ids.length)) {
                     self.show_composer = !self.show_composer || self.stay_open;
                     self.reinit();
