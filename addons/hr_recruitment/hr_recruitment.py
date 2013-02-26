@@ -420,12 +420,13 @@ class hr_applicant(base_stage, osv.Model):
         act_window = self.pool.get('ir.actions.act_window')
         emp_id = False
         for applicant in self.browse(cr, uid, ids, context=context):
-            address_id = False
+            address_id = contact_name = False
             if applicant.partner_id:
                 address_id = self.pool.get('res.partner').address_get(cr,uid,[applicant.partner_id.id],['contact'])['contact']
-            if applicant.job_id:
+                contact_name = self.pool.get('res.partner').name_get(cr,uid,[applicant.partner_id.id])[0][1]
+            if applicant.job_id and (applicant.partner_name or contact_name):
                 applicant.job_id.write({'no_of_recruitment': applicant.job_id.no_of_recruitment - 1})
-                emp_id = hr_employee.create(cr,uid,{'name': applicant.partner_name or applicant.name,
+                emp_id = hr_employee.create(cr,uid,{'name': applicant.partner_name or contact_name,
                                                      'job_id': applicant.job_id.id,
                                                      'address_home_id': address_id,
                                                      'department_id': applicant.department_id.id
@@ -433,7 +434,7 @@ class hr_applicant(base_stage, osv.Model):
                 self.write(cr, uid, [applicant.id], {'emp_id': emp_id}, context=context)
                 self.case_close(cr, uid, [applicant.id], context)
             else:
-                raise osv.except_osv(_('Warning!'), _('You must define Applied Job for this applicant.'))
+                raise osv.except_osv(_('Warning!'), _('You must define an Applied Job and a Contact Name for this applicant.'))
 
         action_model, action_id = model_data.get_object_reference(cr, uid, 'hr', 'open_view_employee_list')
         dict_act_window = act_window.read(cr, uid, action_id, [])
