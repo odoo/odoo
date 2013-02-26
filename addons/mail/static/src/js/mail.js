@@ -549,6 +549,7 @@ openerp.mail = function (session) {
                     'default_body': mail.ChatterUtils.get_text2html(self.$el ? (self.$el.find('textarea:not(.oe_compact)').val() || '') : ''),
                     'default_attachment_ids': self.attachment_ids,
                     'default_partner_ids': partner_ids,
+                    'mail_post_autofollow': true,
                 };
                 if (self.is_log) {
                     _.extend(context, {'mail_compose_log': true});
@@ -707,7 +708,7 @@ openerp.mail = function (session) {
                 'parent_id': this.context.default_parent_id,
                 'attachment_ids': _.map(this.attachment_ids, function (file) {return file.id;}),
                 'partner_ids': partner_ids,
-                'context': this.parent_thread.context,
+                'context': _.extend(this.parent_thread.context, {'mail_post_autofollow': true}),
                 'type': 'comment',
                 'content_subtype': 'plaintext',
             };
