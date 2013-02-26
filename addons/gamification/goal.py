@@ -273,8 +273,9 @@ class gamification_goal(osv.Model):
 
 
     def write(self, cr, uid, ids, vals, context=None):
+        """Overwrite the write method to update the last_update field to today"""
         for goal in self.browse(cr, uid, ids, vals):
-            vals['last_update'] = fields.date.today()        
+            vals['last_update'] = fields.date.today()
         write_res = super(gamification_goal, self).write(cr, uid, ids, vals, context=context)
         return write_res
 
