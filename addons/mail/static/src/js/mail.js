@@ -535,9 +535,14 @@ openerp.mail = function (session) {
             if(!this.do_check_attachment_upload()) {
                 return false;
             }
-
-            // create list of new partners
-            this.check_recipient_partners().done(function (partner_ids) {
+            var recipient_done = $.Deferred();
+            if (this.is_log) {
+                recipient_done.resolve([]);
+            }
+            else {
+                recipient_done = this.check_recipient_partners();
+            }
+            $.when(recipient_done).done(function (partner_ids) {
                 var context = {
                     'default_composition_mode': default_composition_mode,
                     'default_parent_id': self.id,
