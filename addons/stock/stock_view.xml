@@ -448,7 +448,7 @@
             <field name="model">stock.move</field>
             <field name="field_parent">move_history_ids</field>
             <field name="arch" type="xml">
-                <tree colors="grey:state == 'cancel'" string="Moves">
+                <tree colors="grey:state == 'cancel'" string="Moves" create="false">
                     <field name="product_id"/>
                     <field name="product_qty"/>
                     <field name="product_uom"  string="Unit of Measure" groups="product.group_uom"/>
@@ -471,7 +471,7 @@
             <field name="model">stock.move</field>
             <field name="field_parent">move_history_ids2</field>
             <field name="arch" type="xml">
-                <tree colors="grey:state == 'cancel'" string="Moves">
+                <tree colors="grey:state == 'cancel'" string="Moves" create="false">
                     <field name="product_id"/>
                     <field name="product_qty"/>
                     <field name="product_uom"  string="Unit of Measure" groups="product.group_uom"/>
