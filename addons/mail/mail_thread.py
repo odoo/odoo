@@ -1135,7 +1135,6 @@ class mail_thread(osv.AbstractModel):
 
             # find first email message, set it as unread for auto_subscribe fields for them to have a notification
             if user_id_partner_ids:
-                notification_obj = self.pool.get('mail.notification')
                 msg_ids = self.pool.get('mail.message').search(cr, uid, [
                                 ('model', '=', self._name),
                                 ('res_id', '=', record.id),
@@ -1143,12 +1142,7 @@ class mail_thread(osv.AbstractModel):
                 if not msg_ids and record.message_ids:
                     msg_ids = [record.message_ids[-1].id]
                 if msg_ids:
-                    for partner_id in user_id_partner_ids:
-                        notif_ids = notification_obj.search(cr, uid, [('partner_id', '=', partner_id), ('message_id', '=', msg_ids[0])], context=context)
-                        if notif_ids:
-                            notification_obj.write(cr, uid, notif_ids, {'read': False}, context=context)
-                        else:
-                            notification_obj.create(cr, uid, {'partner_id': partner_id, 'message_id': msg_ids[0], 'read': False}, context=context)
+                    self.pool.get('mail.notification')._notify(cr, uid, msg_ids[0], partners_to_notify=user_id_partner_ids, context=context)
 
         return True
 
