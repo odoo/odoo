@@ -4,7 +4,7 @@
   I set the survey in Open state.
 -
   !python {model: survey}: |
-    sur = self.survey_open(cr, uid, [ref("survey_Initial_partner_feedback")], context)
+    self.survey_open(cr, uid, [ref("survey_Initial_partner_feedback")], context)
 -
   I check state of survey is open or not.
 -
@@ -25,7 +25,7 @@
   I set the state of the survey open.
 -
   !python {model: survey}: |
-    sur = self.survey_open(cr, uid, [ref("survey_Initial_partner_feedback")], context)
+    self.survey_open(cr, uid, [ref("survey_Initial_partner_feedback")], context)
 -
   In order to print the survey I click on Print.
 -
@@ -33,11 +33,16 @@
     id = self.create(cr, uid, {'survey_ids': [(6,0,[ref('survey.survey_Initial_partner_feedback')])]})
     self.action_next(cr, uid, [id], context)
 -
-  In order to answer the survey I click on "Answer a Survey" wizard.
+  In order to answer the survey I click on "Answer a Survey" with a public token.
 -
-  !python {model: survey.name.wiz}: |
-    id = self.create(cr, uid, {'survey_id': ref("survey_Initial_partner_feedback")})
-    self.action_next(cr, uid, [id], context)
+  !python {model: survey.question.wiz}: |
+    ctx = {}
+    ref_id = ref("survey_Initial_partner_feedback")
+    survey = self.pool.get('survey').browse(cr, uid, ref_id, ctx)
+    ctx.update({'survey_id': ref_id, 'survey_token': survey.token})
+    fields_view = self.fields_view_get(self, cr, uid, view_id=None, view_type='form', ctx)
+    id = self.create(cr, uid, {}, ctx)
+    self.action_next(cr, uid, [id], ctx)
 -
   I give the answer of the first and second page of the survey.
 -
