@@ -21,20 +21,13 @@ openerp.auth_signup = function(instance) {
         start: function() {
             var self = this;
             this.set({ 'login-mode': 'default' });
-            var d = this._super();
-            d.done(function() {
+            return this._super().then(function() {
                 // to switch between the signup and regular login form
                 self.$('a.oe_signup_signup').click(function(ev) {
-                    if (ev) {
-                        ev.preventDefault();
-                    }
                     self.set({ 'login-mode': 'signup' });
                     return false;
                 });
                 self.$('a.oe_signup_back').click(function(ev) {
-                    if (ev) {
-                        ev.preventDefault();
-                    }
                     self.set({ 'login-mode': 'default' });
                     delete self.params.token;
                     return false;
@@ -53,7 +46,7 @@ openerp.auth_signup = function(instance) {
                 if (dbname && self.params.token) {
                     self.rpc("/auth_signup/retrieve", {dbname: dbname, token: self.params.token})
                         .done(self.on_token_loaded)
-                        .fail(self.on_token_failed)
+                        .fail(self.on_token_failed);
                 }
                 if (dbname && self.params.login) {
                     self.$("form input[name=login]").val(self.params.login);
@@ -74,7 +67,6 @@ openerp.auth_signup = function(instance) {
                         });
                 }
             });
-            return d;
         },
 
         on_token_loaded: function(result) {
@@ -169,7 +161,7 @@ openerp.auth_signup = function(instance) {
                 this.do_warn(_t("Login"), _t("No database selected !"));
                 return false;
             } else if (!login) {
-                this.do_warn(_t("Login"), _t("Please enter a username or email address."))
+                this.do_warn(_t("Login"), _t("Please enter a username or email address."));
                 return false;
             }
             var params = {
