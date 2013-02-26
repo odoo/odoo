@@ -49,7 +49,7 @@
                     <group col="1" attrs="{'invisible':['|',('public','=',False),('public','in',['public_link'])]}">
                         <group col="2">
                             <field string="List of partners" name="partner_ids" widget="many2many_tags_email" placeholder="Add contacts to notify..." context="{'force_email':True, 'show_email':True}"/>
-                            <field name="multi_email"/>
+                            <field name="multi_email" on_change="onchange_multi_email(multi_email, context)" no_resize="1"/>
                             <field name="subject" placeholder="Subject..."/>
                         </group>
                         <field name="body" help="__URL__ will be automatically transformed into web address (public or private, depending on your choice). You can click on 'Show Source' button to see __URL__ in the link tag on the email template."/>

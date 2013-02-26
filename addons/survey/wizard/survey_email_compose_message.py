@@ -26,6 +26,8 @@ from datetime import datetime
 from openerp.tools.translate import _
 import uuid
 
+emails_split = re.compile(r"[;,\n\r]+")
+
 
 class survey_mail_compose_message(osv.TransientModel):
     _name = 'survey.mail.compose.message'
@@ -70,6 +72,21 @@ class survey_mail_compose_message(osv.TransientModel):
     _defaults = {
         'public': 'email',
     }
+
+    def onchange_multi_email(self, cr, uid, ids, multi_email, context=None):
+        emails = list(set(emails_split.split(multi_email or "")))
+        emails_checked = []
+        for email in emails:
+            email = email.strip()
+            if email:
+                if not re.search(r"^[^@]+@[^@]+$", email):
+                    raise osv.except_osv(_('Warning!'), _("An email address is incorrect: '%s'" % email))
+                else:
+                    emails_checked.append(email)
+        emails_checked.sort()
+        values = {'multi_email': '\n'.join(emails_checked)}
+        return {'value': values}
+
     #------------------------------------------------------
     # Wizard validation and send
     #------------------------------------------------------
@@ -80,7 +97,6 @@ class survey_mail_compose_message(osv.TransientModel):
         if context is None:
             context = {}
 
-        emails_split = re.compile(r"[;,\n\r]+")
         survey_response_obj = self.pool.get('survey.response')
         partner_obj = self.pool.get('res.partner')
         mail_mail_obj = self.pool.get('mail.mail')
@@ -139,18 +155,13 @@ class survey_mail_compose_message(osv.TransientModel):
                 emails = list(set(emails_split.split(wizard.multi_email or "")) - set([partner.email for partner in wizard.partner_ids]))
 
                 # quick check of email list
-                emails_checked = []
+                emails_list = []
                 for email in emails:
-                    email = email.strip()
-                    if email:
-                        if not re.search(r"^[^@]+@[^@]+$", email):
-                            raise osv.except_osv(_('Warning!'), _("An email address is incorrect: '%s'" % email))
-                        else:
-                            emails_checked.append(email)
-                if not len(emails_checked) and not len(wizard.partner_ids):
+                    emails_list.append(email.strip())
+                if not len(emails_list) and not len(wizard.partner_ids):
                     raise osv.except_osv(_('Warning!'), _("Please enter at least one recipient."))
 
-                for email in emails_checked:
+                for email in emails_list:
                     partner_id = partner_obj.search(cr, uid, [('email', '=', email)], context=context)
                     partner_id = partner_id and partner_id[0] or None
                     token = create_token(wizard, partner_id, email)
