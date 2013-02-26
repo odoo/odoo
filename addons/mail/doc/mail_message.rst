@@ -21,6 +21,8 @@ should inherit from this class.
 ClientAction (ir.actions.client)
 ++++++++++++++++++++++++++++++++
 
+.. code-block:: xml
+
      <record id="action_mail_inbox_feeds" model="ir.actions.client">
          <field name="name">Inbox</field>
          <field name="tag">mail.wall</field>
@@ -36,6 +38,7 @@ ClientAction (ir.actions.client)
       'mail_thread' widget for field on standard view. (default value like a thread for 
          record, view on flat mode, no reply, no read/unread)
       'mail.widget' it's the root thread, used by 'mail.wall' and 'mail_thread'
+
  - ``help`` : Text HTML to display if there are no message
  - ``context`` : insert 'default_model' and 'default_res_id'
  - ``params`` : options for the widget

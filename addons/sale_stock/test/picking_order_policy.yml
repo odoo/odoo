@@ -22,7 +22,7 @@
   !python {model: sale.order}: |
     from datetime import datetime, timedelta
     from dateutil.relativedelta import relativedelta
-    from tools import DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT
+    from openerp.tools import DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT
     order = self.browse(cr, uid, ref("sale.sale_order_6"))
     for order_line in order.order_line:
         procurement = order_line.procurement_id
@@ -44,7 +44,7 @@
   !python {model: sale.order}: |
     from datetime import datetime, timedelta
     from dateutil.relativedelta import relativedelta
-    from tools import DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT
+    from openerp.tools import DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT
     sale_order = self.browse(cr, uid, ref("sale.sale_order_6"))
     assert sale_order.picking_ids, "Delivery order is not created."
     for picking in sale_order.picking_ids:
@@ -132,11 +132,10 @@
   I open the Invoice.
 -
   !python {model: sale.order}: |
-    import netsvc
-    wf_service = netsvc.LocalService("workflow")
     so = self.browse(cr, uid, ref("sale.sale_order_6"))
+    account_invoice_obj = self.pool.get('account.invoice')
     for invoice in so.invoice_ids:
-      wf_service.trg_validate(uid, 'account.invoice', invoice.id, 'invoice_open', cr)
+      account_invoice_obj.signal_invoice_open(cr, uid, [invoice.id])
 -
   I pay the invoice
 -
@@ -162,7 +161,8 @@
   I print a sale order report.
 -
   !python {model: sale.order}: |
-    import netsvc, tools, os
+    import os
+    from openerp import netsvc, tools
     (data, format) = netsvc.LocalService('report.sale.order').create(cr, uid, [ref('sale.sale_order_6')], {}, {})
     if tools.config['test_report_directory']:
         file(os.path.join(tools.config['test_report_directory'], 'sale-sale_order.'+format), 'wb+').write(data)

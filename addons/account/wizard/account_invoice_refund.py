@@ -23,7 +23,6 @@ import time
 
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
-from openerp import netsvc
 
 class account_invoice_refund(osv.osv_memory):
 
@@ -90,7 +89,6 @@ class account_invoice_refund(osv.osv_memory):
         account_m_line_obj = self.pool.get('account.move.line')
         mod_obj = self.pool.get('ir.model.data')
         act_obj = self.pool.get('ir.actions.act_window')
-        wf_service = netsvc.LocalService('workflow')
         inv_tax_obj = self.pool.get('account.invoice.tax')
         inv_line_obj = self.pool.get('account.invoice.line')
         res_users_obj = self.pool.get('res.users')
@@ -161,8 +159,7 @@ class account_invoice_refund(osv.osv_memory):
                             to_reconcile_ids[line.account_id.id] = [line.id]
                         if type(line.reconcile_id) != osv.orm.browse_null:
                             reconcile_obj.unlink(cr, uid, line.reconcile_id.id)
-                    wf_service.trg_validate(uid, 'account.invoice', \
-                                        refund.id, 'invoice_open', cr)
+                    inv_obj.signal_invoice_open(cr, uid, [refund.id])
                     refund = inv_obj.browse(cr, uid, refund_id[0], context=context)
                     for tmpline in  refund.move_id.line_id:
                         if tmpline.account_id.id == inv.account_id.id:
@@ -183,9 +180,9 @@ class account_invoice_refund(osv.osv_memory):
                                     'journal_id', 'period_id'], context=context)
                         invoice = invoice[0]
                         del invoice['id']
-                        invoice_lines = inv_line_obj.read(cr, uid, invoice['invoice_line'], context=context)
+                        invoice_lines = inv_line_obj.browse(cr, uid, invoice['invoice_line'], context=context)
                         invoice_lines = inv_obj._refund_cleanup_lines(cr, uid, invoice_lines)
-                        tax_lines = inv_tax_obj.read(cr, uid, invoice['tax_line'], context=context)
+                        tax_lines = inv_tax_obj.browse(cr, uid, invoice['tax_line'], context=context)
                         tax_lines = inv_obj._refund_cleanup_lines(cr, uid, tax_lines)
                         invoice.update({
                             'type': inv.type,

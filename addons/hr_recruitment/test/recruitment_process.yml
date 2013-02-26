@@ -4,7 +4,7 @@
   An applicant is interested in the job position. So he sends a resume by email.
 -
   !python {model: mail.thread}: |
-    import addons
+    from openerp import addons
     request_file = open(addons.get_module_resource('hr_recruitment','test', 'resume.eml'),'rb')
     request_message = request_file.read()
     self.message_process(cr, uid, 'hr.applicant', request_message)

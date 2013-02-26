@@ -58,7 +58,7 @@
             <field name="arch" type="xml">
                 <form string="Issue" version="7.0">
                 <header>
-                    <button name="case_close" string="Done" type="object" 
+                    <button name="case_close" string="Done" type="object"
                             states="open" groups="base.group_user"/>
                     <button name="case_close" string="Done" type="object"
                             states="draft,pending" groups="base.group_user"/>
@@ -68,7 +68,13 @@
                 </header>
                 <sheet string="Issue">
                     <label for="name" class="oe_edit_only"/>
-                    <h1><field name="name"/></h1>
+                    <h1>
+                        <field name="name" class="oe_inline"/>
+                        <field name="kanban_state" invisible='1'/>
+                        <button name="set_kanban_state_done" help="In Progress" attrs="{'invisible': [('kanban_state', 'in', ['done','blocked'])]}" type="object" icon="gtk-normal" class="oe_link oe_right"/>
+                        <button name="set_kanban_state_blocked" help="Ready for Next Stage" attrs="{'invisible': [('kanban_state', 'in', ['normal','blocked'])]}" type="object" icon="gtk-yes" class="oe_link oe_right"/>
+                        <button name="set_kanban_state_normal" help="Blocked" attrs="{'invisible': [('kanban_state', 'in', ['done','normal'])]}" type="object" icon="gtk-no" class="oe_link oe_right"/>
+                    </h1>
                     <group>
                         <group groups="base.group_user">
                             <field name="user_id"/>
@@ -129,11 +135,11 @@
                 <tree string="Issue Tracker Tree" fonts="bold:message_unread==True" colors="black:state=='open';blue:state=='pending';grey:state in ('cancel', 'done')">
                     <field name="message_unread" invisible="1"/>
                     <field name="id"/>
-                    <field name="create_date" groups="base.group_no_one"/>
                     <field name="name"/>
                     <field name="partner_id"/>
                     <field name="project_id"/>
                     <field name="priority" string="Priority" groups="base.group_user"/>
+                    <field name="create_date"/>
                     <field name="version_id" widget="selection"/>
                     <field name="user_id"/>
                     <field name="progress" widget="progressbar" attrs="{'invisible':[('task_id','=',False)]}"/>
@@ -157,7 +163,7 @@
                     <filter string="New" icon="terp-document-new" domain="[('state','=','draft')]" help="New Issues"/>
                     <filter string="To Do" domain="[('state','=','open')]" help="To Do Issues" icon="terp-check"/>
                     <separator/>
-                    <filter string="Unassigned Issues" domain="[('user_id','=',False)]"  help="Unassigned Issues" icon="terp-personal-" />
+                    <filter string="Unassigned Issues" domain="[('user_id','=',False)]"  help="Unassigned Issues" icon="terp-personal-"/>
                     <field name="user_id"/>
                     <field name="project_id"/>
                     <field name="categ_ids"/>

@@ -124,7 +124,8 @@
   I fill $1000 for the previously encoded invoice
 -
   !python {model: account.voucher}: |
-    import netsvc, time
+    import time
+    from openerp import netsvc
     vals = {}
     voucher_id = self.browse(cr, uid, ref('account_voucher_case_5_supplier_flow'))
     for item in voucher_id.line_dr_ids:

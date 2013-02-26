@@ -127,7 +127,7 @@ class account_followup_print(osv.osv_memory):
         'email_body': fields.text('Email Body'),
         'summary': fields.text('Summary', readonly=True),
         'test_print': fields.boolean('Test Print', 
-                                     help='Check if you want to print follow-ups without changing follow-ups level.'),
+                                     help='Check if you want to print follow-ups without changing follow-up level.'),
     }
 
     def _get_followup(self, cr, uid, context=None):
@@ -204,7 +204,7 @@ class account_followup_print(osv.osv_memory):
             if not part.unreconciled_aml_ids: 
                 partners_to_clear.append(part.id)
         self.pool.get('res.partner').action_done(cr, uid, partners_to_clear, context=context)
-        return len(ids)
+        return len(partners_to_clear)
 
     def do_process(self, cr, uid, ids, context=None):
         if context is None:

@@ -343,7 +343,7 @@ class account_journal_cashbox_line(osv.osv):
     _rec_name = 'pieces'
     _columns = {
         'pieces': fields.float('Values', digits_compute=dp.get_precision('Account')),
-        'journal_id' : fields.many2one('account.journal', 'Journal', required=True, select=1),
+        'journal_id' : fields.many2one('account.journal', 'Journal', required=True, select=1, ondelete="cascade"),
     }
 
     _order = 'pieces asc'
