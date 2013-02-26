@@ -100,10 +100,10 @@ class account_analytic_invoice_line(osv.osv):
         }
 
 
-    def product_id_change(self, cr, uid, ids, product, uom_id, qty=0, name='', partner_id=False, price_unit=False, currency_id=False, fiscal_position=False, context=None, company_id=None):
-        print"\n\n-------->",product
+    def product_id_change(self, cr, uid, ids, product, uom_id, qty=0, name='', partner_id=False, price_unit=False, currency_id=False, company_id=None, context=None):
         if context is None:
             context = {}
+        fposition_id = False
         company_id = company_id or False
         context.update({'company_id': company_id, 'force_company': company_id})
         if not partner_id:

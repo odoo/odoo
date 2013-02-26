@@ -229,7 +229,7 @@
                         <div>
                         	<field name="invoice_line_ids">
                         		<tree string="Account Analytic Lines" editable="bottom">
-                        			<field name="product_id" on_change="product_id_change(product_id, uom_id, quantity, name, parent.partner_id, price_unit, parent.currency_id, False, context, parent.company_id)"/>
+                        			<field name="product_id" on_change="product_id_change(product_id, uom_id, quantity, name, parent.partner_id, price_unit, parent.currency_id, parent.company_id)"/>
 				                	<field name="name"/>
 				                	<field name="quantity"/>
 				                	<field name="uom_id"/>
