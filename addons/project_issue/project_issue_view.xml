@@ -59,6 +59,8 @@
                 <sheet string="Issue">
                     <label for="name" class="oe_edit_only"/>
                     <h1><field name="name"/></h1>
+                    <label for="categ_ids" class="oe_edit_only"/>
+                    <field name="categ_ids" widget="many2many_tags"/>
                     <group>
                         <group groups="base.group_user">
                             <field name="user_id"/>
@@ -71,7 +73,7 @@
                             </div>
                         </group>
                         <group>
-                            <field name="categ_ids" widget="many2many_tags"/>
+                            <field name="id"/>
                             <field name="version_id" groups="base.group_user"/>
                             <field name="priority" groups="base.group_user"/>
                             <label for="task_id" groups="base.group_user"/>
@@ -94,11 +96,8 @@
                                 <field name="inactivity_days"/>
                                 <field name="days_since_creation"/>
                             </group>
-                            <group string="References">
-                                <field name="id"/>
-                                <field name="active"/>
-                            </group>
                             <group string="Status" groups="base.group_no_one">
+                                <field name="active"/>
                                 <field name="state" string="Status"/>
                             </group>
                         </page>
