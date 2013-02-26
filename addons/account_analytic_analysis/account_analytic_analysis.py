@@ -791,7 +791,7 @@ class account_analytic_account(osv.osv):
         if contract_ids:
             for contract in self.browse(cr, uid, contract_ids):
                 if not contract.partner_id:
-                    raise osv.except_osv(_('No Partner Defined !'),_("You must first select a Customer for Contract %s!") % contract.name )
+                    raise osv.except_osv(_('No Customer Defined !'),_("You must first select a Customer for Contract %s!") % contract.name )
                 journal_ids = journal_obj.search(cr, uid, [('type', '=','sale'),('company_id', '=', contract.company_id.id)], limit=1)
                 if not journal_ids:
                     raise osv.except_osv(_('Error!'),
