@@ -20,7 +20,8 @@ class m(openerp.osv.osv.Model):
         raise openerp.exceptions.Warning('description')
 
     def generate_redirect_warning(self, cr, uid, ids, context=None):
-        raise openerp.exceptions.RedirectWarning('description', self.pool.get('ir.model.data').get_object_reference(cr, uid, 'base', 'menu_action_res_users'), 'go to the redirection')
+        dummy, action_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'test_exceptions', 'action_test_exceptions')
+        raise openerp.exceptions.RedirectWarning('description', action_id, 'go to the redirection')
 
     def generate_access_denied(self, cr, uid, ids, context=None):
         raise openerp.exceptions.AccessDenied()

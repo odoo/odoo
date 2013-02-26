@@ -31,6 +31,7 @@ import time
 import cron
 import wsgi_server
 
+import openerp
 import openerp.modules
 import openerp.netsvc
 import openerp.osv
@@ -85,12 +86,14 @@ def start_services():
     # Start the WSGI server.
     wsgi_server.start_service()
     # Start the main cron thread.
-    cron.start_service()
+    if not openerp.evented:
+        cron.start_service()
 
 def stop_services():
     """ Stop all services. """
     # stop services
-    cron.stop_service()
+    if not openerp.evented:
+        cron.stop_service()
     wsgi_server.stop_service()
 
     _logger.info("Initiating shutdown")

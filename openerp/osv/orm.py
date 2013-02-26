@@ -4774,12 +4774,16 @@ class BaseModel(object):
         limit_str = limit and ' limit %d' % limit or ''
         offset_str = offset and ' offset %d' % offset or ''
         where_str = where_clause and (" WHERE %s" % where_clause) or ''
+        query_str = 'SELECT "%s".id FROM ' % self._table + from_clause + where_str + order_by + limit_str + offset_str
 
         if count:
-            cr.execute('SELECT count("%s".id) FROM ' % self._table + from_clause + where_str + limit_str + offset_str, where_clause_params)
-            res = cr.fetchall()
-            return res[0][0]
-        cr.execute('SELECT "%s".id FROM ' % self._table + from_clause + where_str + order_by + limit_str + offset_str, where_clause_params)
+            # /!\ the main query must be executed as a subquery, otherwise
+            # offset and limit apply to the result of count()!
+            cr.execute('SELECT count(*) FROM (%s) AS count' % query_str, where_clause_params)
+            res = cr.fetchone()
+            return res[0]
+
+        cr.execute(query_str, where_clause_params)
         res = cr.fetchall()
 
         # TDE note: with auto_join, we could have several lines about the same result
@@ -5635,8 +5639,7 @@ def convert_pgerror_23502(model, fields, info, e):
     message = _(u"Missing required value for the field '%s'.") % field_name
     field = fields.get(field_name)
     if field:
-        message = _(u"%s This might be '%s' in the current model, or a field "
-                    u"of the same name in an o2m.") % (message, field['string'])
+        message = _(u"Missing required value for the field '%s' (%s)") % (field['string'], field_name)
     return {
         'message': message,
         'field': field_name,

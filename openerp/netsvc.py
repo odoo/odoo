@@ -205,8 +205,8 @@ def log(logger, level, prefix, msg, depth=None):
 def dispatch_rpc(service_name, method, params):
     """ Handle a RPC call.
 
-    This is pure Python code, the actual marshalling (from/to XML-RPC or
-    NET-RPC) is done in a upper layer.
+    This is pure Python code, the actual marshalling (from/to XML-RPC) is done
+    in a upper layer.
     """
     try:
         rpc_request = logging.getLogger(__name__ + '.rpc.request')
@@ -247,11 +247,15 @@ def dispatch_rpc(service_name, method, params):
                 log(rpc_request,logging.DEBUG, logline, replace_request_password(params), depth=1)
 
         return result
+    except openerp.osv.orm.except_orm:
+        raise
     except openerp.exceptions.AccessError:
         raise
     except openerp.exceptions.AccessDenied:
         raise
     except openerp.exceptions.Warning:
+        raise
+    except openerp.exceptions.RedirectWarning:
         raise
     except openerp.exceptions.DeferredException, e:
         _logger.exception(tools.exception_to_unicode(e))
