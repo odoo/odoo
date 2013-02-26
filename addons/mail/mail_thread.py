@@ -821,17 +821,17 @@ class mail_thread(osv.AbstractModel):
         """ Called by message_get_suggested_recipients, to add a suggested
             recipient in the result dictionary. The form is :
                 partner_id, partner_name<partner_email> or partner_name, reason """
-        if partner and partner in obj.message_follower_ids:
+        if partner and partner in obj.message_follower_ids:  # recipient already in the followers -> skip
             return result
-        if partner and partner in [val[0] for val in result[obj.id]]:
+        if partner and partner in [val[0] for val in result[obj.id]]:  # already existing partner ID -> skip
             return result
-        if email and email in [val[1] for val in result[obj.id]]:
+        if email and email in [val[1] for val in result[obj.id]]:  # already existing email -> skip
             return result
-        if partner and partner.email:
+        if partner and partner.email:  # complete profile: id, name <email>
             result[obj.id].append((partner.id, '%s<%s>' % (partner.name, partner.email), reason))
-        elif partner:
+        elif partner:  # incomplete profile: id, name
             result[obj.id].append((partner.id, '%s' % (partner.name), reason))
-        else:
+        else:  # unknown partner, we are probably managing an email address
             result[obj.id].append((False, email, reason))
         return result
 
