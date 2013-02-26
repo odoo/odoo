@@ -49,7 +49,6 @@ class procurement_order(osv.osv):
         proc_obj = self.pool.get('procurement.order')
         move_obj = self.pool.get('stock.move')
         picking_obj=self.pool.get('stock.picking')
-        wf_service = netsvc.LocalService("workflow")
         for proc in proc_obj.browse(cr, uid, ids, context=context):
             line = None
             for line in proc.product_id.flow_pull_ids:
@@ -109,9 +108,8 @@ class procurement_order(osv.osv):
                 'procure_method': line.procure_method,
                 'move_id': move_id,
             })
-            wf_service = netsvc.LocalService("workflow")
-            wf_service.trg_validate(uid, 'stock.picking', picking_id, 'button_confirm', cr)
-            wf_service.trg_validate(uid, 'procurement.order', proc_id, 'button_confirm', cr)
+            self.pool.get('stock.picking').signal_button_confirm(cr, uid, [picking_id])
+            self.signal_button_confirm(cr, uid, [proc_id])
             if proc.move_id:
                 move_obj.write(cr, uid, [proc.move_id.id],
                     {'location_id':proc.location_id.id})
@@ -119,9 +117,8 @@ class procurement_order(osv.osv):
             self.write(cr, uid, [proc.id], {'state':'running', 'message': msg})
             self.message_post(cr, uid, [proc.id], body=msg, context=context)
             # trigger direct processing (the new procurement shares the same planned date as the original one, which is already being processed)
-            wf_service.trg_validate(uid, 'procurement.order', proc_id, 'button_check', cr)
+            self.signal_button_check(cr, uid, [proc_id]) # TODO is it necessary to interleave the calls?
         return False
 
-procurement_order()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

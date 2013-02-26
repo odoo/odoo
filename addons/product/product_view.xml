@@ -38,7 +38,6 @@
                     <field name="name"/>
                     <field name="categ_id" invisible="1"/>
                     <field name="type" invisible="1"/>
-                    <field name="variants" groups="product.group_product_variant"/>
                     <field name="uom_id" string="Unit of Measure" groups="product.group_uom"/>
                     <field name="qty_available"/>
                     <field name="virtual_available"/>
@@ -89,11 +88,6 @@
                                         <div name="ean">
                                             <field name="ean13" placeholder="e.g. 5901234123457"/>
                                         </div>
-                                    </group>
-                                    <group>
-                                        <field groups="product.group_product_variant" name="variants"/>
-                                        <field name="price_margin" groups="product.group_product_variant"/>
-                                        <field name="price_extra" groups="product.group_product_variant"/>
                                     </group>
                                 </group>
                                 <field name="description" placeholder="describe the product characteristics..."/>
@@ -617,6 +611,7 @@
             </field>
         </record>
 
+        <!-- Variants -->
         <record id="product_variant_form_view" model="ir.ui.view">
             <field name="name">product.variant.form</field>
             <field name="model">product.product</field>
@@ -625,7 +620,7 @@
                     <group col="4">
                         <field name="product_tmpl_id"/>
                         <field name="active"/>
-                        <field name="variants"/>
+                        <field name="variants" required="1"/>
                         <field name="default_code"/>
                         <field name="price_margin"/>
                         <field name="price_extra"/>
@@ -633,22 +628,53 @@
                 </form>
             </field>
         </record>
-
         <record id="product_variant_tree_view" model="ir.ui.view">
             <field name="name">product.variant.tree</field>
             <field name="model">product.product</field>
             <field name="arch" type="xml">
                 <tree string="Product Variant">
                     <field name="product_tmpl_id"/>
-                    <field name="active"/>
                     <field name="variants"/>
                     <field name="default_code"/>
                     <field name="price_margin"/>
                     <field name="price_extra"/>
+                    <field name="company_id" invisible="1"/>
+                    <field name="type" invisible="1"/>
+                    <field name="uom_id" invisible="1"/>
+                    <field name="categ_id" invisible="1"/>
                 </tree>
             </field>
         </record>
+        <record id="product_variant_action" model="ir.actions.act_window">
+            <field name="name">Product Variants</field>
+            <field name="type">ir.actions.act_window</field>
+            <!--<field name="domain">[('variants','&lt;&gt;', False)]</field>-->
+            <field name="res_model">product.product</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form,kanban</field>
+            <field name="view_id" ref="product_variant_tree_view"/>
+            <field name="search_view_id" ref="product_search_form_view"/>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to define a new variant of product.
+              </p>
+            </field>
+        </record>
+        <record id="tree_view_product_variant" model="ir.actions.act_window.view">
+            <field name="sequence" eval="10"/>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="product_variant_tree_view"/>
+            <field name="act_window_id" ref="product_variant_action"/>
+        </record>
+        <record id="form_view_product_variant" model="ir.actions.act_window.view">
+            <field name="sequence" eval="20"/>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="product_variant_form_view"/>
+            <field name="act_window_id" ref="product_variant_action"/>
+        </record>
+        <menuitem action="product.product_variant_action" id="product.menu_variant_product" parent="base.menu_product" sequence="100" groups="product.group_product_variant"/>
 
+        <!-- templates -->
         <record id="product_template_tree_view" model="ir.ui.view">
             <field name="name">product.template.product.tree</field>
             <field name="model">product.template</field>

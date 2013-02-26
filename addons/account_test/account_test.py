@@ -28,12 +28,7 @@
 #
 ##############################################################################
 
-from openerp.osv import fields,osv
-import pooler
-import netsvc
-import time
-from xml import dom
-
+from openerp.osv import fields, osv
 
 CODE_EXEC_DEFAULT = '''\
 res = []

@@ -78,6 +78,13 @@ class mail_mail(osv.Model):
         'email_from': lambda self, cr, uid, ctx=None: self._get_default_from(cr, uid, ctx),
     }
 
+    def default_get(self, cr, uid, fields, context=None):
+        # protection for `default_type` values leaking from menu action context (e.g. for invoices)
+        # To remove when automatic context propagation is removed in web client
+        if context and context.get('default_type') and context.get('default_type') not in self._all_columns['type'].column.selection:
+            context = dict(context, default_type = None)
+        return super(mail_mail, self).default_get(cr, uid, fields, context=context)
+
     def create(self, cr, uid, values, context=None):
         if 'notification' not in values and values.get('mail_message_id'):
             values['notification'] = True

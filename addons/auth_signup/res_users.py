@@ -246,17 +246,29 @@ class res_users(osv.Model):
         partner_ids = [user.partner_id.id for user in self.browse(cr, uid, ids, context)]
         res_partner.signup_prepare(cr, uid, partner_ids, signup_type="reset", expiration=now(days=+1), context=context)
 
+        if not context:
+            context = {}
+
         # send email to users with their signup url
-        template = self.pool.get('ir.model.data').get_object(cr, uid, 'auth_signup', 'reset_password_email')
+        template = False
+        if context.get('create_user'):
+            try:
+                template = self.pool.get('ir.model.data').get_object(cr, uid, 'auth_signup', 'set_password_email')
+            except ValueError:
+                pass
+        if not bool(template):
+            template = self.pool.get('ir.model.data').get_object(cr, uid, 'auth_signup', 'reset_password_email')
         mail_obj = self.pool.get('mail.mail')
         assert template._name == 'email.template'
+
         for user in self.browse(cr, uid, ids, context):
             if not user.email:
                 raise osv.except_osv(_("Cannot send email: user has no email address."), user.name)
             mail_id = self.pool.get('email.template').send_mail(cr, uid, template.id, user.id, True, context=context)
             mail_state = mail_obj.read(cr, uid, mail_id, ['state'], context=context)
+
             if mail_state and mail_state['state'] == 'exception':
-                raise osv.except_osv(_("Cannot send email: no outgoing email server configured.\nYou can configure it under Settings/General Settings."), user.name)
+                raise self.pool.get('res.config.settings').get_config_warning(cr, _("Cannot send email: no outgoing email server configured.\nYou can configure it under %(menu:base_setup.menu_general_configuration)s."), context)
             else:
                 return {
                     'type': 'ir.actions.client',
@@ -274,5 +286,6 @@ class res_users(osv.Model):
         user_id = super(res_users, self).create(cr, uid, values, context=context)
         user = self.browse(cr, uid, user_id, context=context)
         if context and context.get('reset_password') and user.email:
-            user.action_reset_password()
+            ctx = dict(context, create_user=True)
+            self.action_reset_password(cr, uid, [user.id], context=ctx)
         return user_id
