@@ -163,10 +163,10 @@ openerp.auth_signup = function(instance) {
             var login = this.$("form input[name=login]").val();
             if (!db) {
                 this.do_warn(_t("Login"), _t("No database selected !"));
-                return $.Deferred.reject();
+                return $.Deferred().reject();
             } else if (!login) {
                 this.do_warn(_t("Login"), _t("Please enter a username or email address."));
-                return $.Deferred.reject();
+                return $.Deferred().reject();
             }
             return self.rpc("/auth_signup/reset_password", { dbname: db, login: login }).done(function(result) {
                 self.show_error(_t("An email has been sent with credentials to reset your password"));
