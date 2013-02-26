@@ -46,7 +46,7 @@ class Logger(object):
         _logger.warning(
             "notifyChannel API shouldn't be used anymore, please use "
             "the standard `logging` module instead.")
-        from service.web_services import common
+        from service import common
 
         log = logging.getLogger(__name__ + '.deprecated.' + ustr(name))
 
@@ -63,7 +63,7 @@ class Logger(object):
         try:
             msg = ustr(msg).strip()
             if level in (LOG_ERROR, LOG_CRITICAL): # and tools.config.get_misc('debug','env_info',False):
-                msg = common().exp_get_server_environment() + "\n" + msg
+                msg = common.exp_get_server_environment() + "\n" + msg
 
             result = msg.split('\n')
         except UnicodeDecodeError:

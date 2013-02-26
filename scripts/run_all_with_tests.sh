@@ -12,6 +12,5 @@ rm openerp-server.log
     --stop-after-init \
     --no-xmlrpc \
     --no-xmlrpcs \
-    --no-netrpc \
     --test-enable \
     --logfile=openerp-server.log 

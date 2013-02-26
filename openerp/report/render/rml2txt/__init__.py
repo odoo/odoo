@@ -21,7 +21,6 @@
 
 from rml2txt import parseString, parseNode
 
-#.apidoc title: RML to TXT engine
 
 """ This engine is the minimalistic renderer of RML documents into text files,
     using spaces and newlines to format.

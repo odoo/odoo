@@ -21,7 +21,6 @@
 
 from html2html import parseString
 
-#.apidoc title: HTML to HTML engine
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

@@ -62,48 +62,12 @@ class AddonsImportHook(object):
     backward compatibility, `import <module>` is still supported. Now they
     are living in `openerp.addons`. The good way to import such modules is
     thus `import openerp.addons.module`.
-
-    For backward compatibility, loading an addons puts it in `sys.modules`
-    under both the legacy (short) name, and the new (longer) name. This
-    ensures that
-        import hr
-        import openerp.addons.hr
-    loads the hr addons only once.
-
-    When an OpenERP addons name clashes with some other installed Python
-    module (for instance this is the case of the `resource` addons),
-    obtaining the OpenERP addons is only possible with the long name. The
-    short name will give the expected Python module.
-
-    Instead of relying on some addons path, an alternative approach would be
-    to use pkg_resources entry points from already installed Python libraries
-    (and install our addons as such). Even when implemented, we would still
-    have to support the addons path approach for backward compatibility.
     """
 
     def find_module(self, module_name, package_path):
         module_parts = module_name.split('.')
         if len(module_parts) == 3 and module_name.startswith('openerp.addons.'):
             return self # We act as a loader too.
-
-        # TODO list of loadable modules can be cached instead of always
-        # calling get_module_path().
-        if len(module_parts) == 1 and \
-            get_module_path(module_parts[0],
-                display_warning=False):
-            try:
-                # Check if the bare module name clashes with another module.
-                f, path, descr = imp.find_module(module_parts[0])
-                _logger.warning("""
-Ambiguous import: the OpenERP module `%s` is shadowed by another
-module (available at %s).
-To import it, use `import openerp.addons.<module>.`.""" % (module_name, path))
-                return
-            except ImportError, e:
-                # Using `import <module_name>` instead of
-                # `import openerp.addons.<module_name>` is ugly but not harmful
-                # and kept for backward compatibility.
-                return self # We act as a loader too.
 
     def load_module(self, module_name):
 
@@ -113,29 +77,9 @@ To import it, use `import openerp.addons.<module>.`.""" % (module_name, path))
             if module_name in sys.modules:
                 return sys.modules[module_name]
 
-        if len(module_parts) == 1:
-            module_part = module_parts[0]
-            if module_part in sys.modules:
-                return sys.modules[module_part]
-
-        try:
-            # Check if the bare module name shadows another module.
-            f, path, descr = imp.find_module(module_part)
-            is_shadowing = True
-        except ImportError, e:
-            # Using `import <module_name>` instead of
-            # `import openerp.addons.<module_name>` is ugly but not harmful
-            # and kept for backward compatibility.
-            is_shadowing = False
-
         # Note: we don't support circular import.
         f, path, descr = imp.find_module(module_part, ad_paths)
         mod = imp.load_module('openerp.addons.' + module_part, f, path, descr)
-        if not is_shadowing:
-            sys.modules[module_part] = mod
-            for k in sys.modules.keys():
-                if k.startswith('openerp.addons.' + module_part):
-                    sys.modules[k[len('openerp.addons.'):]] = sys.modules[k]
         sys.modules['openerp.addons.' + module_part] = mod
         return mod
 
@@ -226,7 +170,7 @@ def zip_directory(directory, b64enc=True, src=True):
         base = os.path.basename(path)
         for f in osutil.listdir(path, True):
             bf = os.path.basename(f)
-            if not RE_exclude.search(bf) and (src or bf in ('__openerp__.py', '__terp__.py') or not bf.endswith('.py')):
+            if not RE_exclude.search(bf) and (src or bf == '__openerp__.py' or not bf.endswith('.py')):
                 archive.write(os.path.join(path, f), os.path.join(base, f))
 
     archname = StringIO()
@@ -310,8 +254,6 @@ def load_information_from_description_file(module):
     """
 
     terp_file = get_module_resource(module, '__openerp__.py')
-    if not terp_file:
-        terp_file = get_module_resource(module, '__terp__.py')
     mod_path = get_module_path(module)
     if terp_file:
         info = {}
@@ -354,8 +296,7 @@ def load_information_from_description_file(module):
 
     #TODO: refactor the logger in this file to follow the logging guidelines
     #      for 6.0
-    _logger.debug('module %s: no descriptor file'
-        ' found: __openerp__.py or __terp__.py (deprecated)', module)
+    _logger.debug('module %s: no __openerp__.py file found.', module)
     return {}
 
 
@@ -400,7 +341,7 @@ def load_openerp_module(module_name):
     initialize_sys_path()
     try:
         mod_path = get_module_path(module_name)
-        zip_mod_path = mod_path + '.zip'
+        zip_mod_path = '' if not mod_path else mod_path + '.zip'
         if not os.path.isfile(zip_mod_path):
             __import__('openerp.addons.' + module_name)
         else:

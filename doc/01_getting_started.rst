@@ -103,9 +103,6 @@ General Options
   --logfile=LOGFILE                   file where the server log will be stored
   -n INTERFACE, --interface=INTERFACE specify the TCP IP address
   -p PORT, --port=PORT                specify the TCP port
-  --net_interface=NETINTERFACE        specify the TCP IP address for netrpc
-  --net_port=NETPORT                  specify the TCP port for netrpc
-  --no-netrpc                         disable netrpc
   --no-xmlrpc                         disable xmlrpc
   -i INIT, --init=INIT                init a module (use "all" for all modules)
   --without-demo=WITHOUT_DEMO         load demo data for a module (use "all" for all modules)
