@@ -744,6 +744,7 @@ class users_view(osv.osv):
 
     def create(self, cr, uid, values, context=None):
         self._set_reified_groups(values)
+
         return super(users_view, self).create(cr, uid, values, context)
 
     def write(self, cr, uid, ids, values, context=None):
@@ -778,23 +779,21 @@ class users_view(osv.osv):
             values['groups_id'] = [(3, id) for id in remove] + [(4, id) for id in add]
 
     def default_get(self, cr, uid, fields, context=None):
-        # add "default_groups_ref" inside the context to set default value for group_id with xml values
-        if context.get("default_groups_ref", None) and isinstance(context.get("default_groups_ref"), list):
-            context['default_groups_id'] = []
-            ir_model_data = self.pool.get('ir.model.data')
-            for group in context.get("default_groups_ref"):
-                group_split = group.split('.')
-                if  len(group_split) != 2 or \
-                    not group_split[0] or not isinstance(group_split[0], (str, unicode, basestring)) or \
-                    not group_split[1] or not isinstance(group_split[1], (str, unicode, basestring)):
-                    raise osv.except_osv(_('Invalid context value'), _('Invalid context default_groups_ref value (model.name_id) : "%s"') % group)
-                model_data_ids = ir_model_data.search(cr, SUPERUSER_ID, [('model', '=', 'res.groups'), ('module', '=', group_split[0]), ('name', '=', group_split[1])])
-                context['default_groups_id'] += [group_data['res_id'] for group_data in ir_model_data.read(cr, SUPERUSER_ID, model_data_ids, ['res_id'])]
-        
         group_fields, fields = partition(is_reified_group, fields)
         fields1 = (fields + ['groups_id']) if group_fields else fields
         values = super(users_view, self).default_get(cr, uid, fields1, context)
         self._get_reified_groups(group_fields, values)
+
+        # add "default_groups_ref" inside the context to set default value for group_id with xml values
+        if 'groups_id' in fields and isinstance(context.get("default_groups_ref"), list):
+            groups = []
+            for group_xml_id in context["default_groups_ref"]:
+                group_split = group.split('.')
+                if  len(group_split) != 2:
+                    raise osv.except_osv(_('Invalid context value'), _('Invalid context default_groups_ref value (model.name_id) : "%s"') % group)
+                temp, group_id = ir_model_data.get_object_reference(cr, uid,  group_split[0], group_split[1]);
+                groups += [group_id]
+            values['groups_id'] = groups
         return values
 
     def read(self, cr, uid, ids, fields=None, context=None, load='_classic_read'):
