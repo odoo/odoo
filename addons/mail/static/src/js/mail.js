@@ -545,6 +545,9 @@ openerp.mail = function (session) {
                     'default_attachment_ids': self.attachment_ids,
                     'default_partner_ids': partner_ids,
                 };
+                if (self.is_log) {
+                    _.extend(context, {'mail_compose_log': true});
+                }
                 if (default_composition_mode != 'reply' && self.context.default_model && self.context.default_res_id) {
                     context.default_model = self.context.default_model;
                     context.default_res_id = self.context.default_res_id;

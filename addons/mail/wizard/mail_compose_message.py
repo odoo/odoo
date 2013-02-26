@@ -191,6 +191,7 @@ class mail_compose_message(osv.TransientModel):
         if context is None:
             context = {}
         active_ids = context.get('active_ids')
+        is_log = context.get('mail_compose_log', False)
 
         for wizard in self.browse(cr, uid, ids, context=context):
             mass_mail_mode = wizard.composition_mode == 'mass_mail'
@@ -216,7 +217,10 @@ class mail_compose_message(osv.TransientModel):
                     post_values['attachments'] += new_attachments
                     post_values.update(email_dict)
                 # post the message
-                active_model_pool.message_post(cr, uid, [res_id], type='comment', subtype='mt_comment', context=context, **post_values)
+                subtype = 'mail.mt_comment'
+                if is_log:
+                    subtype = False
+                active_model_pool.message_post(cr, uid, [res_id], type='comment', subtype=subtype, context=context, **post_values)
 
         return {'type': 'ir.actions.act_window_close'}
 
