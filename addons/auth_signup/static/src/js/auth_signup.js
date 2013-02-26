@@ -27,11 +27,11 @@ openerp.auth_signup = function(instance) {
             return this._super().then(function() {
                 // to switch between the signup and regular login form
                 self.$('a.oe_signup_signup').click(function(ev) {
-                    self.set({ 'login-mode': 'signup' });
+                    self.set('login-mode', 'signup');
                     return false;
                 });
                 self.$('a.oe_signup_back').click(function(ev) {
-                    self.set({ 'login-mode': 'default' });
+                    self.set('login-mode', 'default');
                     delete self.params.token;
                     return false;
                 });
@@ -62,11 +62,11 @@ openerp.auth_signup = function(instance) {
                     self.rpc("/auth_signup/get_config", {dbname: dbname}).done(function(result) {
                         self.signup_enabled = result.signup;
                         self.reset_password_enabled = result.reset_password;
-                        self.set({ 'login-mode': 'default' });
+                        self.set('login-mode', 'default');
                     });
                 } else {
                     // TODO: support multiple database mode
-                    this.set({ 'login-mode': 'default' });
+                    this.set('login-mode', 'default');
                 }
             });
         },
@@ -77,7 +77,7 @@ openerp.auth_signup = function(instance) {
             this.on_db_loaded([result.db]);
             if (result.token) {
                 // switch to signup mode, set user name and login
-                this.set({ 'login-mode': this.params.type === 'reset' ? 'reset' : 'signup' });
+                this.set('login-mode', (this.params.type === 'reset' ? 'reset' : 'signup'));
                 this.$("form input[name=name]").val(result.name).attr("readonly", "readonly");
                 if (result.login) {
                     this.$("form input[name=login]").val(result.login).attr("readonly", "readonly");
@@ -87,7 +87,7 @@ openerp.auth_signup = function(instance) {
             } else {
                 // remain in login mode, set login if present
                 delete this.params.token;
-                this.set({ 'login-mode': 'default' });
+                this.set('login-mode', 'default');
                 this.$("form input[name=login]").val(result.login || "");
             }
         },
@@ -99,7 +99,7 @@ openerp.auth_signup = function(instance) {
             this.show_error(_t("Invalid signup token"));
             delete this.params.db;
             delete this.params.token;
-            this.set({ 'login-mode': 'default' });
+            this.set('login-mode', 'default');
         },
 
         on_submit: function(ev) {
@@ -170,7 +170,7 @@ openerp.auth_signup = function(instance) {
             }
             return self.rpc("/auth_signup/reset_password", { dbname: db, login: login }).done(function(result) {
                 self.show_error(_t("An email has been sent with credentials to reset your password"));
-                self.set({ 'login-mode': 'default' });
+                self.set('login-mode', 'default');
             }).fail(function(result, ev) {
                 ev.preventDefault();
                 self.show_error(result.message);
