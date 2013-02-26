@@ -85,15 +85,12 @@ class account_analytic_invoice_line(osv.osv):
         'price_unit': fields.float('Unit Price'),
         'price_subtotal': fields.function(_amount_line, string='Amount', type="float",
             digits_compute= dp.get_precision('Account')),
-        'write_date': fields.datetime('Update Date' , readonly=True),
         'tax_ids':fields.function(_get_tax_lines, type='many2many', relation='account.tax', string='Taxes'),
         'invoice_id': fields.many2one('account.invoice', 'Invoice Reference', ondelete='cascade', select=True),
-        'invoiced': fields.boolean('Invoiced')
     }
     _order = 'name desc'
 
     _defaults = {
-        'invoiced': False,
         'uom_id' : _get_uom_id,
         'quantity' : 1,
         'price_unit': 0.0,
@@ -103,15 +100,16 @@ class account_analytic_invoice_line(osv.osv):
     def product_id_change(self, cr, uid, ids, product, uom_id, qty=0, name='', partner_id=False, price_unit=False, currency_id=False, company_id=None, context=None):
         if context is None:
             context = {}
+        uom_obj = self.pool.get('product.uom')
+        
         company_id = company_id or False
         context.update({'company_id': company_id, 'force_company': company_id})
+        
         if not product:
             return {'value': {'price_unit': 0.0}, 'domain':{'product_uom':[]}}
         if not partner_id:
             raise osv.except_osv(_('No Partner Defined !'),_("You must first select a Customer !") )
         part = self.pool.get('res.partner').browse(cr, uid, partner_id, context=context)
-        fpos_obj = self.pool.get('account.fiscal.position')
-        fpos = False
         
         if part.lang:
             context.update({'lang': part.lang})
@@ -121,15 +119,11 @@ class account_analytic_invoice_line(osv.osv):
         a = res.property_account_income.id
         if not a:
             a = res.categ_id.property_account_income_categ.id
-        a = fpos_obj.map_account(cr, uid, fpos, a)
         if a:
             result['account_id'] = a
 
         taxes = res.taxes_id and res.taxes_id or (a and self.pool.get('account.account').browse(cr, uid, a, context=context).tax_ids or False)
-        tax_id = fpos_obj.map_tax(cr, uid, fpos, taxes)
-        result.update( {'price_unit': res.list_price or res.standard_price,'tax_ids': tax_id} )
-        result['name'] = res.partner_ref
-        result['uom_id'] = uom_id or res.uom_id.id
+        result.update( {'name':res.partner_ref,'uom_id': uom_id or res.uom_id.id, 'price_unit': res.list_price or res.standard_price,'tax_ids': [x.id for x in taxes]} )
         if res.description:
             result['name'] += '\n'+res.description
 
@@ -144,9 +138,9 @@ class account_analytic_invoice_line(osv.osv):
             new_price = res_final['value']['price_unit'] * currency.rate
             res_final['value']['price_unit'] = new_price
         
-        if result['uom_id'] and result['uom_id'] != res.uom_id.id:
-            selected_uom = self.pool.get('product.uom').browse(cr, uid, result['uom_id'], context=context)
-            new_price = self.pool.get('product.uom')._compute_price(cr, uid, res.uom_id.id, res_final['value']['price_unit'], result['uom_id'])
+        if result['uom_id'] != res.uom_id.id:
+            selected_uom = uom_obj.browse(cr, uid, result['uom_id'], context=context)
+            new_price = uom_obj._compute_price(cr, uid, res.uom_id.id, res_final['value']['price_unit'], result['uom_id'])
             res_final['value']['price_unit'] = new_price
         return res_final
 
@@ -705,16 +699,23 @@ class account_analytic_account(osv.osv):
             res['value']['pricelist_id'] = template.pricelist_id.id
         return res
 
+    def onchange_next_date(self, cr, uid, ids, next_date,context=None):
+        value = {}
+        current_date = time.strftime('%Y-%m-%d')
+        if next_date and next_date < current_date:
+            value = {'value':{'next_date': self.browse(cr, uid,ids[0]).next_date}}
+            raise osv.except_osv(_('Warning!'), _("Define Next Date Greater or Same as Current Date."))
+        return {'value':value}
+
     def onchange_recurring_invoices(self, cr, uid, ids, recurring_invoices, date_start=False, context=None):
-        result = {}
-        if ids:
-            if date_start and recurring_invoices == True:
-                result = {'value': {
-                        'next_date': date_start,
-                        'rrule_type':'monthly'
-                        }
+        value = {}
+        if ids and date_start and recurring_invoices == True:
+            value = {'value': {
+                    'next_date': date_start,
+                    'rrule_type':'monthly'
                     }
-        return result
+                }
+        return {'value':value}
 
     def cron_account_analytic_account(self, cr, ids, uid, context=None):
         if context is None:

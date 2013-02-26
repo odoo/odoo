@@ -2,75 +2,6 @@
 <openerp>
     <data>
 
-        <record id="view_account_analytic_invoice_line_tree" model="ir.ui.view">
-            <field name="name">account.analytic.invoice.line.tree</field>
-            <field name="model">account.analytic.invoice.line</field>
-            <field name="arch" type="xml">
-                <tree string="Account Analytic Line">
-                    <field name="product_id"/>
-                	<field name="name"/>
-                	<field name="quantity"/>
-                	<field name="uom_id"/>
-                	<field name="tax_ids"/>
-                	<field name="price_unit"/>
-                	<field name="price_subtotal"/>
-                	<field name="invoiced"/>
-                </tree>
-            </field>
-        </record>
-
-        <record id="view_account_analytic_invoice_line_form" model="ir.ui.view">
-            <field name="name">account.analytic.invoice.line.form</field>
-            <field name="model">account.analytic.invoice.line</field>
-            <field name="arch" type="xml">
-                <form string="Account Virtual Invoice" version="7.0">
-                    <sheet string="Account Virtual Invoice">
-                        <table class="oe_form_analytic_account">
-                            <tr>
-                            <th class="oe_timesheet_grey" width="100px"><label string="Product"/></th>
-                            <th class="oe_timesheet_grey" width="100px"><label string="Description"/></th>
-                            <th class="oe_timesheet_grey" width="100px"><label string="Quantity"/></th>
-                            <th class="oe_timesheet_grey" width="100px"><label string="UOM"/></th>
-                            <th class="oe_timesheet_grey" width="100px"><label string="Unit Price"/></th>
-                            <th class="oe_timesheet_grey" width="100px"><label string="Sub total"/></th>
-                            <th width="30px"></th>
-                            <th></th>
-                            </tr>
-                            <tr>
-                            <td width="100px">
-                            <field name="product_id" class="oe_inline"/>
-                            </td>
-                            <td width="100px">
-                            <field name="name" class="oe_inline"/>
-                            </td>
-                            <td width="100px">
-                            <field name="quantity" class="oe_inline"/>
-                            </td>
-                            <td width="100px">
-                            <field name="uom_id" class="oe_inline"/>
-                            </td>
-                            <td width="100px">
-                            <field name="price_unit" class="oe_inline"/>
-                            </td>
-                            <td width="100px">
-                            <field name="price_subtotal" class="oe_inline"/>
-                            </td>
-                            <td width="30px"></td>
-                            <td></td>
-                            </tr>
-                        </table>
-                   </sheet>
-                </form>
-            </field>
-        </record>
-
-        <record id="action_account_analytic_invoice_line" model="ir.actions.act_window">
-            <field name="name">Account Virtual Invoice</field>
-            <field name="res_model">account.analytic.invoice.line</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
-        </record>
-
         <!--
         Analytic Account form
         -->
@@ -222,7 +153,7 @@
                         <field name="rrule_type" class="oe_inline"/>
                         </div>
                         <p colspan="2" >
-                            Following Invoice will be generated on <field name="next_date" class="oe_inline"/>.
+                            Following Invoice will be generated on <field name="next_date" on_change="onchange_next_date(next_date)" class="oe_inline"/>.
                         </p>
                     </group>
                     <group attrs="{'invisible': [('recurring_invoices','=',False)]}">
@@ -416,8 +347,5 @@
             </field>
         </record>
         <menuitem action="template_of_contract_action" id="menu_template_of_contract_action" parent="base.menu_base_config"/>
-        <menuitem action="action_account_analytic_invoice_line"
-            id="menu_action_account_analytic_invoice_line"
-            parent="menu_template_of_contract_action" sequence="4"/>
     </data>
 </openerp>
