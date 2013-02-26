@@ -3,28 +3,39 @@ openerp.auth_signup = function(instance) {
     var _t = instance.web._t;
 
     instance.web.Login.include({
+        init: function() {
+            this._super.apply(this, arguments);
+            this.on('change:login-mode', this, function() {
+                /*
+                 * Switches the login box to the select mode
+                 * whith mode == [default|signup|reset]
+                 */
+                var self = this;
+                var mode = this.get('login-mode') || 'default';
+                self.$('*[data-modes]').each(function() {
+                    var modes = $(this).data('modes').split(/\s+/);
+                    $(this).toggle(modes.indexOf(mode) > -1);
+                });
+            });
+        },
         start: function() {
             var self = this;
+            this.set({ 'login-mode': 'default' });
             var d = this._super();
             d.done(function() {
-                self.$(".oe_signup_show").hide();
                 // to switch between the signup and regular login form
                 self.$('a.oe_signup_signup').click(function(ev) {
                     if (ev) {
                         ev.preventDefault();
                     }
-                    self.$el.addClass("oe_login_signup");
-                    self.$(".oe_signup_show").show();
-                    self.$(".oe_signup_hide").hide();
+                    self.set({ 'login-mode': 'signup' });
                     return false;
                 });
                 self.$('a.oe_signup_back').click(function(ev) {
                     if (ev) {
                         ev.preventDefault();
                     }
-                    self.$el.removeClass("oe_login_signup");
-                    self.$(".oe_signup_show").hide();
-                    self.$(".oe_signup_hide").show();
+                    self.set({ 'login-mode': 'default' });
                     delete self.params.token;
                     return false;
                 });
@@ -51,22 +62,18 @@ openerp.auth_signup = function(instance) {
                 // bind reset password link
                 self.$('a.oe_signup_reset_password').click(self.do_reset_password);
 
-                // make signup link and reset password link visible only when enabled
-                self.$('a.oe_signup_signup').hide();
-                self.$('a.oe_signup_reset_password').hide();
                 if (dbname) {
                     self.rpc("/auth_signup/get_config", {dbname: dbname})
                         .done(function(result) {
                             if (result.signup) {
-                                self.$('a.oe_signup_signup').show();
+                                self.set({ 'login-mode': 'signup' });
                             }
                             if (result.reset_password) {
-                                self.$('a.oe_signup_reset_password').show();
+                                self.set({ 'login-mode': 'reset' });
                             }
                         });
                 }
             });
-
             return d;
         },
 
@@ -76,9 +83,7 @@ openerp.auth_signup = function(instance) {
             this.on_db_loaded([result.db]);
             if (result.token) {
                 // switch to signup mode, set user name and login
-                this.$el.addClass("oe_login_signup");
-                self.$(".oe_signup_show").show();
-                self.$(".oe_signup_hide").hide();
+                this.set({ 'login-mode': 'signup' });
                 this.$("form input[name=name]").val(result.name).attr("readonly", "readonly");
                 if (result.login) {
                     this.$("form input[name=login]").val(result.login).attr("readonly", "readonly");
@@ -88,6 +93,7 @@ openerp.auth_signup = function(instance) {
             } else {
                 // remain in login mode, set login if present
                 delete this.params.token;
+                this.set({ 'login-mode': 'default' });
                 this.$("form input[name=login]").val(result.login || "");
             }
         },
@@ -105,7 +111,8 @@ openerp.auth_signup = function(instance) {
             if (ev) {
                 ev.preventDefault();
             }
-            if (this.$el.hasClass("oe_login_signup")) {
+            var login_mode = this.get('login-mode');
+            if (login_mode === 'signup' || login_mode === 'reset') {
                 // signup user (or reset password)
                 var db = this.$("form [name=db]").val();
                 var name = this.$("form input[name=name]").val();
