@@ -485,6 +485,15 @@ class project_issue(base_stage, osv.osv):
         return [issue.project_id.message_get_reply_to()[0] if issue.project_id else False
                     for issue in self.browse(cr, uid, ids, context=context)]
 
+    def message_get_suggested_recipients(self, cr, uid, ids, context=None):
+        recipients = super(project_issue, self).message_get_suggested_recipients(cr, uid, ids, context=context)
+        for issue in self.browse(cr, uid, ids, context=context):
+            if issue.partner_id:
+                self._message_add_suggested_recipient(recipients, issue, partner=issue.partner_id, reason=_('Customer'))
+            elif issue.email_from:
+                self._message_add_suggested_recipient(recipients, issue, email=issue.email_from, reason=_('Customer Email'))
+        return recipients
+
     def message_new(self, cr, uid, msg, custom_values=None, context=None):
         """ Overrides mail_thread message_new that is called by the mailgateway
             through message_process.
