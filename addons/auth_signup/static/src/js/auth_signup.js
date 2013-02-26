@@ -74,7 +74,7 @@ openerp.auth_signup = function(instance) {
             this.on_db_loaded([result.db]);
             if (result.token) {
                 // switch to signup mode, set user name and login
-                this.set({ 'login-mode': 'signup' });
+                this.set({ 'login-mode': this.params.type === 'reset' ? 'reset' : 'signup' });
                 this.$("form input[name=name]").val(result.name).attr("readonly", "readonly");
                 if (result.login) {
                     this.$("form input[name=login]").val(result.login).attr("readonly", "readonly");
@@ -155,21 +155,23 @@ openerp.auth_signup = function(instance) {
             if (ev) {
                 ev.preventDefault();
             }
+            var self = this;
             var db = this.$("form [name=db]").val();
             var login = this.$("form input[name=login]").val();
             if (!db) {
                 this.do_warn(_t("Login"), _t("No database selected !"));
-                return false;
+                return $.Deferred.reject();
             } else if (!login) {
                 this.do_warn(_t("Login"), _t("Please enter a username or email address."));
-                return false;
+                return $.Deferred.reject();
             }
-            var params = {
-                dbname : db,
-                login: login,
-            };
-            var url = "/auth_signup/reset_password?" + $.param(params);
-            window.location = url;
+            return self.rpc("/auth_signup/reset_password", { dbname: db, login: login }).done(function(result) {
+                self.show_error(_t("An email has been sent with credentials to reset your password"));
+                self.set({ 'login-mode': 'default' });
+            }).fail(function(result, ev) {
+                ev.preventDefault();
+                self.show_error(result.message);
+            });
         },
     });
 };
