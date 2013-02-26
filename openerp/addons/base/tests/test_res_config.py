@@ -39,10 +39,10 @@ class test_res_config(common.TransactionCase):
         res = self.res_config.get_option_path(self.cr, self.uid, self.menu_xml_id, context=None)
 
         # Check types
-        self.assertTrue(isinstance(res, tuple)), "The result of get_option_path() should be a tuple (got %s)" % type(res)
+        self.assertIsInstance(res, tuple)
         self.assertEqual(len(res), 2), "The tuple should contain 2 elements (got %s)" % len(res)
-        self.assertTrue(isinstance(res[0], basestring)), "The first element of the tuple should be a string (got %s)" % type(res[0])
-        self.assertTrue(isinstance(res[1], long)), "The second element of the tuple should be an long (got %s)" % type(res[1])
+        self.assertIsInstance(res[0], basestring)
+        self.assertIsInstance(res[1], long)
 
         # Check returned values
         self.assertEqual(res[0], self.expected_path)
@@ -53,7 +53,7 @@ class test_res_config(common.TransactionCase):
         res = self.res_config.get_option_name(self.cr, self.uid, self.full_field_name, context=None)
 
         # Check type
-        self.assertTrue(isinstance(res, basestring)), "Result type mismatch: expected basestring, got %s" % type(res)
+        self.assertIsInstance(res, basestring)
 
         # Check returned value
         self.assertEqual(res, self.expected_name)
@@ -63,7 +63,7 @@ class test_res_config(common.TransactionCase):
         res = self.res_config.get_config_warning(self.cr, self.error_msg, context=None)
 
         # Check type
-        self.assertTrue(isinstance(res, openerp.exceptions.RedirectWarning)), "Result type mismatch: expected openerp.exceptions.RedirectWarning, got %s" % type(res)
+        self.assertIsInstance(res, openerp.exceptions.RedirectWarning)
 
         # Check returned value
         self.assertEqual(res.args[0], self.expected_final_error_msg)
@@ -74,7 +74,7 @@ class test_res_config(common.TransactionCase):
         res = self.res_config.get_config_warning(self.cr, self.error_msg_wo_menu, context=None)
 
         # Check type
-        self.assertTrue(isinstance(res, openerp.exceptions.Warning)), "Result type mismatch: expected openerp.exceptions.Warning, got %s" % type(res)
+        self.assertIsInstance(res, openerp.exceptions.Warning)
 
         # Check returned value
         self.assertEqual(res.args[0], self.expected_final_error_msg_wo_menu)
