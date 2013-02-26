@@ -9,7 +9,6 @@ class res_users_gamification_group(osv.Model):
     _inherit = ['res.users']
 
     def write(self, cr, uid, ids, vals, context=None):
-        print("Overwrite res_users_gamification_group", ids)
         write_res = super(res_users_gamification_group, self).write(cr, uid, ids, vals, context=context)
         if vals.get('groups_id'):
             # form: {'group_ids': [(3, 10), (3, 3), (4, 10), (4, 3)]} or {'group_ids': [(6, 0, [ids]}
@@ -31,7 +30,6 @@ class res_groups_gamification_group(osv.Model):
     _inherit = 'res.groups'
 
     def write(self, cr, uid, ids, vals, context=None):
-        print("Overwrite res_groups_gamification_group", ids)
         write_res = super(res_groups_gamification_group, self).write(cr, uid, ids, vals, context=context)
         if vals.get('users'):
             # form: {'group_ids': [(3, 10), (3, 3), (4, 10), (4, 3)]} or {'group_ids': [(6, 0, [ids]}

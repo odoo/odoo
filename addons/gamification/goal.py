@@ -2,25 +2,27 @@
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2013 Tiny SPRL (<http://openerp.com>).
+#    Copyright (C) 2010-Today OpenERP SA (<http://www.openerp.com>)
 #
 #    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU Affero General Public License as
-#    published by the Free Software Foundation, either version 3 of the
-#    License, or (at your option) any later version.
+#    it under the terms of the GNU General Public License as published by
+#    the Free Software Foundation, either version 3 of the License, or
+#    (at your option) any later version.
 #
 #    This program is distributed in the hope that it will be useful,
 #    but WITHOUT ANY WARRANTY; without even the implied warranty of
 #    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU Affero General Public License for more details.
+#    GNU General Public License for more details.
 #
-#    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#    You should have received a copy of the GNU General Public License
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>
 #
 ##############################################################################
 
 from openerp.osv import fields, osv
 from openerp.tools.safe_eval import safe_eval
+
+from mako.template import Template as MakoTemplate
 
 from datetime import date, timedelta
 import calendar
@@ -476,7 +478,6 @@ class gamification_goal_plan(osv.Model):
         :param ids: ids of plans to which the users will be added
         :param user_ids: ids of the users to add"""
 
-        print("subscibe users", ids, user_ids)
         for plan in self.browse(cr,uid, ids, context):
             subscription = [user.id for user in plan.user_ids]
             subscription.extend(user_ids)
@@ -489,21 +490,30 @@ class gamification_goal_plan(osv.Model):
         """Post report about the progress of the goals"""
         
         goal_obj = self.pool.get('gamification.goal')
-        
+
         for plan in self.browse(cr, uid, ids, context=context):
             if plan.visibility_mode == 'board':
                 # generate a shared report
                 pass
             else:
+                if not plan.report_message_group_id:
+                    continue
+                
                 # generate individual reports
-                report_title = "Individual Report for {0} - {1}".format(plan.name, fields.date.today())
+                template_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'gamification', 'email_template_gamification_individual')[1]
+
                 for user in plan.user_ids:
+                    
                     goal_ids = self.get_current_related_user_goals(cr, uid, plan.id, user.id, context)
+                    if len(goal_ids) == 0:
+                        continue
 
-                    for goal in goal_obj.browse(cr, uid, goal_ids, context=context):
-                        pass
+                    template_context = dict(context)
+                    template_context['goals'] = goal_obj.browse(cr, uid, goal_ids, context=context)
+                    template_context['user'] = user
+                    self.pool.get('email.template').send_mail(cr, uid, template_id, plan.id, context=template_context)
 
-            
+
     def get_current_related_user_goals(self, cr, uid, plan_id, user_id, context=None):
         """Get the ids of goals linked to a plan for the current instance
 
@@ -512,7 +522,7 @@ class gamification_goal_plan(osv.Model):
         return the goals started the 1st of this month).
         """
 
-        plan in self.browse(cr, uid, plan_id, context=context)
+        plan = self.browse(cr, uid, plan_id, context=context)
         today = date.today()
         if plan.period == 'daily':
             start_date = today
@@ -542,10 +552,12 @@ class gamification_goal_plan(osv.Model):
                 related_goal_ids.append(goal_ids[0])
             elif len(goal_ids) == 0:
                 # this goal has been deleted
-                raise osv.except_osv(_('Warning!'), _('Planline {0} has no goal present for user {1} at date {2}'.format(planline.id, user.id, start_date)))
+                raise osv.except_osv('Warning!','Planline {0} has no goal present for user {1} at date {2}'.format(planline.id, user.id, start_date))
             else: # more than one goal ?
-                raise osv.except_osv(_('Warning!'), _('Duplicate goals for planline {0}, user {1}, date {2}'.format(planline.id, user.id, start_date)))
+                raise osv.except_osv('Warning!', 'Duplicate goals for planline {0}, user {1}, date {2}'.format(planline.id, user.id, start_date))
                 related_goal_ids.extend(goal_ids)
+
+        return related_goal_ids
 
 class gamification_goal_planline(osv.Model):
     """Gamification goal planline
@@ -590,6 +602,3 @@ class gamification_goal_planline(osv.Model):
                 'gamification.goal.type': (_get_planline_types, ['sequence'], 10),
                 }),
     }
-
-# class gamification_goal_report(osv.Model):
-#     _name = 'gamification.goal.report'
