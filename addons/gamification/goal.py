@@ -22,11 +22,50 @@
 from openerp.osv import fields, osv
 from openerp.tools.safe_eval import safe_eval
 
-from mako.template import Template as MakoTemplate
-
 from datetime import date, datetime, timedelta
+from mako.template import Template as MakoTemplate
+from urllib import urlencode, quote as quote
+
 import calendar
 import itertools
+import logging
+import os.path
+
+_logger = logging.getLogger(__name__)
+
+GAMIFICATION_PATH = os.path.dirname(os.path.abspath(__file__))
+
+try:
+    # We use a jinja2 sandboxed environment to render mako templates.
+    # Note that the rendering does not cover all the mako syntax, in particular
+    # arbitrary Python statements are not accepted, and not all expressions are
+    # allowed: only "public" attributes (not starting with '_') of objects may
+    # be accessed.
+    # This is done on purpose: it prevents incidental or malicious execution of
+    # Python code that may break the security of the server.
+    from jinja2.sandbox import SandboxedEnvironment
+    from jinja2 import FileSystemLoader
+    mako_template_env = SandboxedEnvironment(
+        loader=FileSystemLoader(os.path.join(GAMIFICATION_PATH,'templates/')),
+        block_start_string="<%",
+        block_end_string="%>",
+        variable_start_string="${",
+        variable_end_string="}",
+        comment_start_string="<%doc>",
+        comment_end_string="</%doc>",
+        line_statement_prefix="%",
+        line_comment_prefix="##",
+        trim_blocks=True,               # do not output newline after blocks
+        autoescape=True,                # XML/HTML automatic escaping
+    )
+    mako_template_env.globals.update({
+        'str': str,
+        'quote': quote,
+        'urlencode': urlencode,
+    })
+except ImportError:
+    _logger.warning("jinja2 not available, templating features will not work!")
+
 
 
 def start_end_date_for_period(period):
@@ -221,12 +260,13 @@ class gamification_goal(osv.Model):
                 if goal.remind_update_delay and goal.last_update:
                     delta_max = timedelta(days=goal.remind_update_delay)
                     last_update = datetime.strptime(goal.last_update,'%Y-%m-%d').date()
-                    if date.today() - last_update > delta_max:
+                    if date.today() - last_update > delta_max and goal.state == 'inprogress':
                         towrite['state'] = 'inprogress_update'
 
                         # generate a remind report
-                        template_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'gamification', 'email_template_goal_reminder')[1]
-                        self.pool.get('email.template').send_mail(cr, uid, template_id, goal.id, context=context)
+                        body_html = mako_template_env.get_template('reminder.mako').render({'object':goal})
+                        self.pool.get('mail.thread').message_post(cr, goal.user_id.id, False, body=body_html, context=context)
+                        #self.pool.get('email.template').send_mail(cr, uid, template_id, goal.id, context=context)
                         
             else: # count or sum
                 obj = self.pool.get(goal.type_id.model_id.model)
@@ -280,7 +320,9 @@ class gamification_goal(osv.Model):
     def write(self, cr, uid, ids, vals, context=None):
         """Overwrite the write method to update the last_update field to today"""
         for goal in self.browse(cr, uid, ids, vals):
-            vals['last_update'] = fields.date.today()
+            # TODO if current in vals
+            #vals['last_update'] = fields.date.today()
+            pass
         write_res = super(gamification_goal, self).write(cr, uid, ids, vals, context=context)
         return write_res
 
@@ -553,10 +595,9 @@ class gamification_goal_plan(osv.Model):
             template_context = dict(context)
             if plan.visibility_mode == 'board':
                 # generate a shared report
-                template_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'gamification', 'email_template_gamification_leaderboard')[1]
+                template_id = self.pool.get('ir.model.data').get_object(cr, uid, 'gamification', 'email_template_gamification_leaderboard')
 
-                # unsorted list of planline                
-                template_context['planlines'] = []
+                planlines_boards = []
                 for planline in plan.planline_ids:
 
                     (start_date, end_date) = start_end_date_for_period(plan.period)
@@ -567,12 +608,12 @@ class gamification_goal_plan(osv.Model):
                     ]
                     if start_date:
                         domain.append(('start_date', '=', start_date.isoformat()))
- 
-                    goal_ids = goal_obj.search(cr, uid, domain, context=context)
                     
-                    planlines_stats = []
+
+                    board_goals = []
+                    goal_ids = goal_obj.search(cr, uid, domain, context=context)
                     for goal in goal_obj.browse(cr, uid, goal_ids, context=context):
-                        planlines_stats.append({
+                        board_goals.append({
                             'user': goal.user_id,
                             'current':goal.current,
                             'target_goal':goal.target_goal,
@@ -580,23 +621,30 @@ class gamification_goal_plan(osv.Model):
                         })
 
                     # most complete first, current if same percentage (eg: if several 100%)
-                    sorted_planline_goals = enumerate(sorted(planlines_stats, key=lambda k: (k['completeness'], k['current']), reverse=True))
-                    template_context['planlines'].append({'goal_type':planline.type_id.name, 'list':sorted_planline_goals})
+                    sorted_board = enumerate(sorted(board_goals, key=lambda k: (k['completeness'], k['current']), reverse=True))
+                    planlines_boards.append({'goal_type':planline.type_id.name, 'board_goals':sorted_board})
 
-                self.pool.get('email.template').send_mail(cr, uid, template_id, plan.id, context=template_context)
+                body_html = mako_template_env.get_template('group_progress.mako').render({'object':plan, 'planlines_boards':planlines_boards})
+                self.pool.get('mail.thread').message_post(cr, [user.id for user in plan.user_ids], False, body=body_html, context=context)
+                #self.pool.get('email.template').send_mail(cr, uid, template_id, plan.id, context=template_context)
 
             else:
                 # generate individual reports
                 template_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'gamification', 'email_template_gamification_individual')[1]
                 for user in plan.user_ids:
                     
-                    goal_ids = self.get_current_related_user_goals(cr, uid, plan.id, user.id, context)
+                    goal_ids = self.get_current_related_goals(cr, uid, plan.id, user.id, context=context)
                     if len(goal_ids) == 0:
                         continue
 
-                    template_context['goals'] = goal_obj.browse(cr, uid, goal_ids, context=context)
-                    template_context['user'] = user
-                    self.pool.get('email.template').send_mail(cr, uid, template_id, plan.id, context=template_context)
+                    variables = {
+                        'object':plan,
+                        'user':user,
+                        'goals':goal_obj.browse(cr, uid, goal_ids, context=context)
+                    }
+                    body_html = mako_template_env.get_template('personal_progress.mako').render(variables)
+                    self.pool.get('mail.thread').message_post(cr, user.id, False, body=body_html, context=context)
+                    #self.pool.get('email.template').send_mail(cr, uid, template_id, plan.id, context=template_context)
         return True
 
 
@@ -616,19 +664,14 @@ class gamification_goal_plan(osv.Model):
 
         for planline in plan.planline_ids:
             domain = [('planline_id', '=', planline.id),
-                ('user_id', '=', user_id)]
+                ('user_id', '=', user_id),
+                ('state','in',('inprogress','inprogress_update','reached'))]
 
             if start_date:
                 domain.append(('start_date', '=', start_date.isoformat()))
 
             goal_ids = goal_obj.search(cr, uid, domain, context=context)
-            related_goal_ids.append(goal_ids[0])
-            if len(goal_ids) == 0:
-                # this goal has been deleted
-                raise osv.except_osv('Warning!','Planline {0} has no goal present for user {1} at date {2}'.format(planline.id, user.id, start_date))
-            else: # more than one goal ?
-                raise osv.except_osv('Warning!', 'Duplicate goals for planline {0}, user {1}, date {2}'.format(planline.id, user.id, start_date))
-                related_goal_ids.extend(goal_ids)
+            related_goal_ids.extend(goal_ids)
 
         return related_goal_ids
 

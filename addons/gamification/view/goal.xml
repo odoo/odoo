@@ -41,16 +41,13 @@
                 <form string="Goal" version="7.0">
                     <header>
                         <button string="Start goal" type="object" name="action_start" states="draft" class="oe_highlight"/>
-                        <button string="Refresh state" type="object" name="update" states="inprogress,inprogress_update,failed,reached" class="oe_highlight"/>
+                        
                         <button string="Goal Reached" type="object" name="action_reach" states="inprogress,inprogress_update" />
                         <button string="Goal Failed" type="object" name="action_fail" states="inprogress,inprogress_update"/>
                         <button string="Reset Completion" type="object" name="action_cancel" states="failed,reached"/>
                         <field name="state" widget="statusbar" statusbar_visible="inprogress" />
                     </header>
                     <sheet>
-                        <div class="oe_right oe_button_box" attrs="{'invisible':[('computation_mode','!=', 'manually')]}">
-                            <button name="write" type="object" string="The current value is up to date" help="Indicate that the current value of the manual goal is still correct and avoid reminders"/>
-                        </div>
                         <group>
                             <group string="Reference">
                                 <field name="type_id" on_change="on_change_type_id(type_id)" attrs="{'readonly':[('state','!=','draft')]}"/>
@@ -69,9 +66,14 @@
                                 </div>
                                 <field name="last_update" groups="base.group_no_one"/>
                             </group>
-                            <group string="Data">
+                            <group string="Data" colspan="4">
                                 <field name="target_goal" attrs="{'readonly':[('state','!=','draft')]}"/>
-                                <field name="current"  attrs="{'readonly':[('computation_mode','!=','manually')]}"/>
+                                <label for="current" />
+                                <div>
+                                    <field name="current"  attrs="{'readonly':[('computation_mode','!=','manually')]}" class="oe_inline"/>
+                                    <button string="Refresh state" type="object" name="update" states="inprogress,inprogress_update,failed,reached" class="oe_highlight oe_inline"/>
+                                    <button name="write" type="object" string="The current value is up to date" help="Indicate that the current value of the manual goal is still correct and avoid reminders" attrs="{'invisible':[('computation_mode','!=', 'manually')]}"/>
+                                </div>
                             </group>
                         </group>
                     </sheet>
