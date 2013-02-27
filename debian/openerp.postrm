@@ -6,6 +6,7 @@ case "${1}" in
     remove)
         deluser --quiet --system "openerp" || true
         delgroup --quiet --system --only-if-empty "openerp" || true
+        find /var/lib/openerp -path '/var/lib/openerp/*' ! -path '/var/lib/openerp/filestore*' -delete
         ;;
 
     purge)
