@@ -344,7 +344,7 @@ class survey_question(osv.osv):
         'minimum_req_ans': fields.integer('Minimum Required Answer'),
         'req_error_msg': fields.text('Error Message', translate=True),
         'allow_comment': fields.boolean('Allow Comment Field'),
-        'sequence': fields.integer('Sequence', select=True),
+        'sequence': fields.integer('Sequence'),
         'tot_resp': fields.function(_calc_response, string="Total Answer"),
         'survey': fields.related('page_id', 'survey_id', type='many2one', relation='survey', string='Survey'),
         'descriptive_text': fields.text('Descriptive Text', size=255, translate=True),
@@ -626,7 +626,7 @@ class survey_answer(osv.osv):
     _columns = {
         'question_id': fields.many2one('survey.question', 'Question', ondelete='cascade'),
         'answer': fields.char('Answer', size=128, required=1, translate=True),
-        'sequence': fields.integer('Sequence', select=True),
+        'sequence': fields.integer('Sequence'),
         'response': fields.function(_calc_response_avg, string="#Answer", multi='sums'),
         'average': fields.function(_calc_response_avg, string="#Avg", multi='sums'),
         'type': fields.selection([('char', 'Character'), ('date', 'Date'), ('datetime', 'Date & Time'), \

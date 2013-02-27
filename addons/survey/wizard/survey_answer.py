@@ -178,13 +178,13 @@ class survey_question_wiz(osv.osv_memory):
     def _survey_complete(self, cr, uid, survey_id, context):
         """ list of action to do when the survey is completed
         """
-        # send mail to the responsible
+        user_browse = self.pool.get('res.users').browse(cr, SUPERUSER_ID, uid, context=context)
         val = {
             'type': 'notification',
             'model': 'survey',
             'res_id': survey_id,
             'record_name': _("Survey N° %s") % survey_id,
-            'body': _("New response on this survey."),
+            'body': _("%s have post a new response on this survey.") % user_browse.name,
         }
         self.pool.get('survey').message_post(cr, SUPERUSER_ID, survey_id, context=context, **val)
 
@@ -1158,7 +1158,6 @@ class survey_question_wiz(osv.osv_memory):
                 response_id = sur_name_read['response_id'][0]
 
         self.pool.get('survey.response').write(cr, SUPERUSER_ID, [response_id], {'state': 'done'})
-        self._survey_complete(cr, uid, context['survey_id'], context)
 
         ir_model_data = self.pool.get('ir.model.data')
         user_browse = self.pool.get('res.users').browse(cr, SUPERUSER_ID, uid, context=context)
@@ -1168,6 +1167,8 @@ class survey_question_wiz(osv.osv_memory):
             model, view_id = ir_model_data.get_object_reference(cr, uid, 'survey', 'view_survey_complete_survey_anonymous')
         else:
             model, view_id = ir_model_data.get_object_reference(cr, uid, 'survey', 'view_survey_complete_survey')
+
+        self._survey_complete(cr, uid, context['survey_id'], context)
 
         return {
             'view_type': 'form',
