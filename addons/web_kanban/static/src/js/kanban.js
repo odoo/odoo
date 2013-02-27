@@ -237,7 +237,7 @@ instance.web_kanban.KanbanView = instance.web.View.extend({
             self.$el.toggleClass('oe_kanban_grouped_by_m2o', self.grouped_by_m2o);
             var grouping_fields = self.group_by ? [self.group_by].concat(_.keys(self.aggregates)) : undefined;
             var grouping = new instance.web.Model(self.dataset.model, context, domain).query().group_by(grouping_fields);
-            return $.when(grouping).done(function(groups) {
+            return self.alive($.when(grouping)).done(function(groups) {
                 if (groups) {
                     self.do_process_groups(groups);
                 } else {

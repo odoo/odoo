@@ -514,8 +514,8 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
                     // In case of a o2m virtual id, we should pass an empty ids list
                     ids.push(self.datarecord.id);
                 }
-                def = new instance.web.Model(self.dataset.model).call(
-                    change_spec.method, [ids].concat(change_spec.args));
+                def = self.alive(new instance.web.Model(self.dataset.model).call(
+                    change_spec.method, [ids].concat(change_spec.args)));
             } else {
                 def = $.when({});
             }
@@ -533,9 +533,9 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
                     var condition = fieldname + '=' + value_;
 
                     if (value_) {
-                        return new instance.web.Model('ir.values').call(
+                        return self.alive(new instance.web.Model('ir.values').call(
                             'get_defaults', [self.model, condition]
-                        ).then(function (results) {
+                        )).then(function (results) {
                             if (!results.length) {
                                 return response;
                             }
@@ -5367,8 +5367,8 @@ instance.web.form.FieldMonetary = instance.web.form.FieldFloat.extend({
             this.set({"currency_info": null});
             return;
         }
-        return this.ci_dm.add(new instance.web.Model("res.currency").query(["symbol", "position"])
-            .filter([["id", "=", self.get("currency")]]).first()).then(function(res) {
+        return this.ci_dm.add(self.alive(new instance.web.Model("res.currency").query(["symbol", "position"])
+            .filter([["id", "=", self.get("currency")]]).first())).then(function(res) {
             self.set({"currency_info": res});
         });
     },
