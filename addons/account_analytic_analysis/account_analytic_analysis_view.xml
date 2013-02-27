@@ -152,7 +152,7 @@
                         <field name="interval" class="oe_inline"/>
                         <field name="rrule_type" class="oe_inline"/>
                         </div>
-                        <p colspan="2" >
+                        <p colspan="2" class="oe_grey">
                             Following Invoice will be generated on <field name="next_date" on_change="onchange_next_date(next_date)" class="oe_inline"/>.
                         </p>
                     </group>
@@ -164,7 +164,7 @@
 				                	<field name="name"/>
 				                	<field name="quantity"/>
 				                	<field name="uom_id"/>
-				                	<field name="tax_ids"/>
+				                	<field name="tax_ids" widget="many2many_tags" readonly="0"/>
 				                	<field name="price_unit"/>
 				                	<field name="price_subtotal"/>
                         		</tree>
@@ -181,9 +181,6 @@
                         </div>
                         <field name="amount_tax" nolabel="1" widget="monetary" options="{'currency_field': 'currency_id'}"/>
                         <field name="amount_total" class="oe_subtotal_footer_separator" widget="monetary" options="{'currency_field': 'currency_id'}"/>
-                        <button name="cron_create_invoice"
-                                string="(Create Invoice)"
-                                type="object" help="Compute Invoices"/>
                     </group>
                  </xpath>
             </field>

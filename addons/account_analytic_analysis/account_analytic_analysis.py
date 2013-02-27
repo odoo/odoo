@@ -123,7 +123,7 @@ class account_analytic_invoice_line(osv.osv):
             result['account_id'] = a
 
         taxes = res.taxes_id and res.taxes_id or (a and self.pool.get('account.account').browse(cr, uid, a, context=context).tax_ids or False)
-        result.update( {'name':res.partner_ref,'uom_id': uom_id or res.uom_id.id, 'price_unit': res.list_price or res.standard_price,'tax_ids': [x.id for x in taxes]} )
+        result.update({'name':res.partner_ref,'uom_id': uom_id or res.uom_id.id, 'price_unit': res.list_price or res.standard_price,'tax_ids': [x.id for x in taxes]})
         if res.description:
             result['name'] += '\n'+res.description
 
@@ -781,7 +781,7 @@ class account_analytic_account(osv.osv):
             inv_line_id.append(line_id)
         return inv_line_id
 
-    def cron_create_invoice(self, cr, uid, context=None):
+    def cron_create_invoice(self, cr, ids, uid, context=None):
         inv_obj = self.pool.get('account.invoice')
         obj_invoice_line = self.pool.get('account.invoice.line')
         journal_obj = self.pool.get('account.journal')
