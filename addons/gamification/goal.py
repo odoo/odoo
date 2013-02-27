@@ -208,7 +208,7 @@ class gamification_goal(osv.Model):
         
         for goal in self.browse(cr, uid, ids, context=context or {}):
             if goal.state not in ('inprogress','inprogress_update','reached'):
-                # skip if goal failed or canceled
+                # skip if goal draft, failed or canceled
                 continue
             if goal.state == 'reached' and goal.end_date and fields.date.today() > goal.end_date:
                 # only a goal reached but not passed the end date will still be 
@@ -263,6 +263,9 @@ class gamification_goal(osv.Model):
             self.write(cr, uid, [goal.id], towrite, context=context)
         return True
 
+    def action_start(self, cr, uid, ids, context=None):
+        self.write(cr, uid, ids, {'state': 'inprogress'}, context=context)
+        return self.update(cr, uid, ids, context=context)
 
     def action_reach(self, cr, uid, ids, context=None):
         return self.write(cr, uid, ids, {'state': 'reached'}, context=context)
