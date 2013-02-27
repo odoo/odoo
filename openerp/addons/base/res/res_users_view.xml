@@ -108,10 +108,11 @@
                         <separator/>
                         <div>
                             You are creating a new user.
-                            <span invisible="not context.get('default_groups_ref',False)">
-                                This user will have the access rights to be able to do the task assigned to it. You can see this list of groups of access rights on the field of the form view.
-                            </span>
                             You should use the "Settings > Users" menu to change his access rights and other settings.
+                            <div invisible="not context.get('default_groups_ref')">
+                                This user will have the access rights to be able to do the task assigned to it:
+                                <field name="groups_id" readonly="1" widget="many2many_tags" style="display: inline;"/>
+                            </div>
                         </div>
                         <group>
                             <field name="phone" placeholder="e.g. +32.81.81.37.00"/>
