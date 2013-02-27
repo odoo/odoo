@@ -110,8 +110,7 @@
                                     <group name="status" string="Status">
                                         <field name="state"/>
                                         <field name="product_manager"
-                                        context="{'default_groups_ref': ['base.group_sale_manager', 'base.group_user']}"
-                                        help="If you use the quick create, the new user will have access to 'Sales' as a manager and will be added as an employee."/>
+                                        context="{'default_groups_ref': ['base.group_sale_manager', 'base.group_user']}"/>
                                     </group>
                                     <group name="Weights" groups="product.group_stock_packaging" string="Weights">
                                         <field digits="(14, 3)" name="volume" attrs="{'readonly':[('type','=','service')]}"/>

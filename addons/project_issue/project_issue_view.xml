@@ -78,8 +78,7 @@
                     <group>
                         <group groups="base.group_user">
                             <field name="user_id" 
-                                context="{'default_groups_ref': ['project.group_project_user', 'base.group_user']}"
-                                help="If you use the quick create, the new user will have access to 'Project' as a user and will be added as an employee."/>
+                                context="{'default_groups_ref': ['project.group_project_user', 'base.group_user']}"/>
                             <field name="partner_id"  on_change="onchange_partner_id(partner_id, email_from)"/>
                             <field name="email_from"/>
                             <label for="project_id" groups="base.group_user"/>

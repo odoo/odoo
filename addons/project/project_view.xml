@@ -102,8 +102,7 @@
                             <field name="privacy_visibility"/>
                             <field name="user_id" string="Project Manager" 
                                 attrs="{'readonly':[('state','in',['close', 'cancelled'])]}" 
-                                context="{'default_groups_ref': ['project.group_project_user', 'project.group_project_manager', 'base.group_user']}"
-                                help="If you use the quick create, the new user will have access to 'Project' as a manager and will be added as an employee."/>
+                                context="{'default_groups_ref': ['project.group_project_user', 'project.group_project_manager', 'base.group_user']}"/>
                         </group>
                         <group>
                             <field name="partner_id" on_change="onchange_partner_id(partner_id)"/>
