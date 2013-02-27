@@ -31,19 +31,19 @@
   ensure that only product taxes of the current session's company are considered
   (this tax should be ignore when computing order's taxes in following tests)
 -
-  !record {model: account.tax, id: account_tax_05_incl_chicago}:
-    name: VAT 05 perc Excl (US)
+  !record {model: account.tax, id: account_tax_05_incl_shop0}:
+    name: VAT 05 perc Excl (Shop0)
     type: percent
     amount: 0.05
     account_paid_id: account.iva
     account_collected_id: account.iva
     price_include: 0
-    company_id: stock.res_company_1
+    company_id: stock.res_company_shop0
 -
   I assign those 5 percent taxes on the PC2 product as a sale taxes
 -
   !record {model: product.product, id: product.product_product_pc2}:
-    taxes_id: [account_tax_05_incl, account_tax_05_incl_chicago]
+    taxes_id: [account_tax_05_incl, account_tax_05_incl_shop0]
 -
   I create a PoS order with 2 units of PC1 at 450 EUR (Tax Incl) and 3 units of PC2 at 300 EUR. (Tax Excl)
 -
