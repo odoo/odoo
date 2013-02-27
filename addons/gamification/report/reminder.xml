@@ -5,7 +5,7 @@
             <field name="name">Goal Update Reminder - Send by Email</field>
             <field name="email_from">noreply@localhost</field>
             <field name="subject">Goal Update Reminder</field>
-            <field name="email_recipients">${object.user_id.email}</field>
+            <field name="email_recipients">${object.user_id.alias_id.name_get()[0][1]}</field>
             <field name="model_id" ref="gamification.model_gamification_goal"/>
             <field name="auto_delete" eval="True"/>
             <field name="body_html"><![CDATA[
