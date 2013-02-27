@@ -32,8 +32,6 @@
         'view/plan.xml',
         'view/menu.xml',
         'cron.xml',
-        'report/report_progress.xml',
-        'report/reminder.xml',
         ],
     'installable': True,
     'application': True,

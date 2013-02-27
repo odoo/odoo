@@ -265,7 +265,10 @@ class gamification_goal(osv.Model):
 
                         # generate a remind report
                         body_html = mako_template_env.get_template('reminder.mako').render({'object':goal})
-                        self.pool.get('mail.thread').message_post(cr, goal.user_id.id, False, body=body_html, context=context)
+                        self.pool.get('mail.thread').message_post(cr, uid, False, 
+                            body=body_html,
+                            partner_ids=[goal.user_id.partner_id.id],
+                            context=context)
                         #self.pool.get('email.template').send_mail(cr, uid, template_id, goal.id, context=context)
                         
             else: # count or sum
@@ -321,8 +324,7 @@ class gamification_goal(osv.Model):
         """Overwrite the write method to update the last_update field to today"""
         for goal in self.browse(cr, uid, ids, vals):
             # TODO if current in vals
-            #vals['last_update'] = fields.date.today()
-            pass
+            vals['last_update'] = fields.date.today()
         write_res = super(gamification_goal, self).write(cr, uid, ids, vals, context=context)
         return write_res
 
@@ -595,8 +597,6 @@ class gamification_goal_plan(osv.Model):
             template_context = dict(context)
             if plan.visibility_mode == 'board':
                 # generate a shared report
-                template_id = self.pool.get('ir.model.data').get_object(cr, uid, 'gamification', 'email_template_gamification_leaderboard')
-
                 planlines_boards = []
                 for planline in plan.planline_ids:
 
@@ -625,12 +625,14 @@ class gamification_goal_plan(osv.Model):
                     planlines_boards.append({'goal_type':planline.type_id.name, 'board_goals':sorted_board})
 
                 body_html = mako_template_env.get_template('group_progress.mako').render({'object':plan, 'planlines_boards':planlines_boards})
-                self.pool.get('mail.thread').message_post(cr, [user.id for user in plan.user_ids], False, body=body_html, context=context)
+                self.pool.get('mail.thread').message_post(cr, uid, False,
+                    body=body_html,
+                    partner_ids=[user.partner_id.id for user in plan.user_ids],
+                    context=context)
                 #self.pool.get('email.template').send_mail(cr, uid, template_id, plan.id, context=template_context)
 
             else:
                 # generate individual reports
-                template_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'gamification', 'email_template_gamification_individual')[1]
                 for user in plan.user_ids:
                     
                     goal_ids = self.get_current_related_goals(cr, uid, plan.id, user.id, context=context)
@@ -643,7 +645,10 @@ class gamification_goal_plan(osv.Model):
                         'goals':goal_obj.browse(cr, uid, goal_ids, context=context)
                     }
                     body_html = mako_template_env.get_template('personal_progress.mako').render(variables)
-                    self.pool.get('mail.thread').message_post(cr, user.id, False, body=body_html, context=context)
+                    self.pool.get('mail.thread').message_post(cr, uid, False,
+                        body=body_html,
+                        partner_ids=[user.partner_id.id],
+                        context=context)
                     #self.pool.get('email.template').send_mail(cr, uid, template_id, plan.id, context=template_context)
         return True
 
