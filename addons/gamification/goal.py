@@ -447,6 +447,29 @@ class gamification_goal_plan(osv.Model):
 
         return True
 
+    def action_show_related_goals(self, cr, uid, ids, context=None):
+        """ This opens goal view with a restriction to the list of goals from this plan only
+            @return: the goal view
+        """
+        # get ids of related goals 
+        goal_obj = self.pool.get('gamification.goal')
+        related_goal_ids = []
+        for plan in self.browse(cr, uid, ids, context=context):
+            for planline in plan.planline_ids:
+                goal_ids = goal_obj.search(cr, uid, [('planline_id', '=', planline.id)], context=context)
+                related_goal_ids.extend(goal_ids)
+        
+        # process the new view
+        if context is None:
+            context = {}
+        res = self.pool.get('ir.actions.act_window').for_xml_id(cr, uid ,'gamification','goals_from_plan_act', context=context)
+        res['context'] = context
+        res['context'].update({
+            'default_id': related_goal_ids
+        })
+        res['domain'] = [('id','in', related_goal_ids)]
+        return res
+
     def generate_goals_from_plan(self, cr, uid, ids, context=None):
         """Generate the lsit of goals fron a plan"""
         for plan in self.browse(cr, uid, ids, context):
@@ -571,6 +594,7 @@ class gamification_goal_plan(osv.Model):
                     self.pool.get('email.template').send_mail(cr, uid, template_id, plan.id, context=template_context)
         return True
 
+
     def get_current_related_goals(self, cr, uid, plan_id, user_id, context=None):
         """Get the ids of goals linked to a plan for the current instance
 
@@ -593,9 +617,8 @@ class gamification_goal_plan(osv.Model):
                 domain.append(('start_date', '=', start_date.isoformat()))
 
             goal_ids = goal_obj.search(cr, uid, domain, context=context)
-            if len(goal_ids) == 1:
-                related_goal_ids.append(goal_ids[0])
-            elif len(goal_ids) == 0:
+            related_goal_ids.append(goal_ids[0])
+            if len(goal_ids) == 0:
                 # this goal has been deleted
                 raise osv.except_osv('Warning!','Planline {0} has no goal present for user {1} at date {2}'.format(planline.id, user.id, start_date))
             else: # more than one goal ?

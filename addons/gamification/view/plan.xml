@@ -31,12 +31,11 @@
             </field>
         </record>
 
-        <record id="act_show_goals_from_plan" model="ir.actions.act_window">
+        <record id="goals_from_plan_act" model="ir.actions.act_window">
             <field name="res_model">gamification.goal</field>
             <field name="view_type">form</field>
             <field name="name">Related Goals</field>
             <field name="view_mode">tree,form</field>
-            <field name="context">{'search_default_plan_id': [active_id], 'default_plan_id': active_id}</field>
         </record>
 
         <record id="goal_plan_form_view" model="ir.ui.view">
@@ -63,7 +62,7 @@
 
                         <!-- action buttons -->
                         <div class="oe_right oe_button_box">
-                            <button name="%(act_show_goals_from_plan)d" type="action" string="Related Goals" help="show all the generated goals for this plan"/>
+                            <button name="action_show_related_goals" type="object" string="Related Goals" help="show all the generated goals for this plan"/>
                         </div>
 
                         <group>
