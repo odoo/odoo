@@ -70,12 +70,38 @@
                             <group colspan="4">
                                 <field name="period" attrs="{'readonly':[('state','!=','draft')]}"/>
                                 <field name="remind_update_delay"/>
-                                <field name="visibility_mode"/>
+                                
                             </group>
-                            <group string="Report">
-                                <field name="report_message_group_id" />
-                                <field name="report_message_frequency" attrs="{'invisible':[('report_message_group_id','=', False)], 'required':[('report_message_group_id','=', False)]}"/>
-                                <field name="report_header" attrs="{'invisible':[('report_message_group_id','=', False)]}"/>
+                            <group string="Notify" colspan="4">
+                                <label for="visibility_mode"/>
+                                <div>
+                                    <field name="visibility_mode" colspan="2" />
+
+                                    <group name="visibility_mode_help" class="oe_grey oe_edit_only" colspan="1">
+                                        <p attrs="{'invisible': [('visibility_mode','!=','board')]}">
+                                           In Leaderboard mode, the reports will contain the progress of users of this plan.
+                                        </p>
+                                        <p attrs="{'invisible': [('visibility_mode','!=','progressbar')]}">
+                                           In Personal Progressbar mode, the progress of each user can only be seen by himself and the followers of this plan.
+                                        </p>
+                                    </group>
+                                </div>
+
+                                <field name="report_message_frequency" />
+                                <field name="report_header" />
+                                
+                                <label for="report_message_group_id"/>
+                                <div>
+                                    <field name="report_message_group_id" />
+                                    <group name="report_help" class="oe_grey oe_edit_only" col="2" colspan="2">
+                                       <p attrs="{'invisible': [('report_message_group_id','!=',False)]}">
+                                           Select a group that will receive a copy of the reports.
+                                       </p>
+                                       <p attrs="{'invisible': [('report_message_group_id','=',False)]}">
+                                           A copy of the report that user recieve will be sent to this group.
+                                       </p>
+                                   </group>
+                               </div>
                             </group>
                         </group>
                         
@@ -90,7 +116,7 @@
                         
                         <group string="Subscription">
                             <group colspan="4">
-                                <field name="autojoin_group_id" string="Group" />
+                                <field name="autojoin_group_id" />
                             </group>
                             <group colspan="4">
                                 <field name="user_ids" widget="many2many_kanban">

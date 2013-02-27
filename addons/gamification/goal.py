@@ -305,7 +305,7 @@ class gamification_goal_plan(osv.Model):
             help="list of goals that will be set",
             required=True),
         'autojoin_group_id' : fields.many2one('res.groups',
-            string='Group',
+            string='Auto-join Group',
             help='Group of users whose members will automatically be added to the users'),
         'period' : fields.selection([
                 ('once', 'No Periodicity'),
@@ -342,8 +342,8 @@ class gamification_goal_plan(osv.Model):
             string="Frequency",
             required=True),
         'report_message_group_id' : fields.many2one('mail.group',
-            string='Report to',
-            help='Group that will receive the report in addition to the user'),
+            string='Send a copy to',
+            help='Group that will receive a copy of the report in addition to the user'),
         'report_header' : fields.text('Report Header'),
         'remind_update_delay' : fields.integer('Remind delay',
             help="The number of days after which the user assigned to a manual goal will be reminded. Never reminded if no value is specified.")
@@ -374,6 +374,16 @@ class gamification_goal_plan(osv.Model):
         (_check_nonzero_planline, "At least one planline is required to create a goal plan", ['planline_ids']),
         (_check_nonzero_users, "At least one user is required to create a non-draft goal plan", ['user_ids']),
     ]
+
+    def write(self, cr, uid, ids, vals, context=None):
+        """Overwrite the write method to add the user of groups"""
+        write_res = super(gamification_goal_plan, self).write(cr, uid, ids, vals, context=context)
+        
+        # add users when change the group auto-subscription
+        if 'autojoin_group_id' in vals:
+            new_group = self.pool.get('res.groups').browse(cr, uid, vals['autojoin_group_id'], context=context)
+            self.plan_subscribe_users(cr, uid, ids, [user.id for user in new_group.users], context=context)
+        return write_res
 
     def _update_all(self, cr, uid, ids=False, context=None):
         """Update every plan in progress"""
@@ -487,7 +497,7 @@ class gamification_goal_plan(osv.Model):
         return True
 
 
-    def plan_subscribe_users(self, cr, uid, ids, user_ids, context=None):
+    def plan_subscribe_users(self, cr, uid, ids, new_user_ids, context=None):
         """ Add the following users to plans
 
         :param ids: ids of plans to which the users will be added
@@ -495,7 +505,7 @@ class gamification_goal_plan(osv.Model):
 
         for plan in self.browse(cr,uid, ids, context):
             subscription = [user.id for user in plan.user_ids]
-            subscription.extend(user_ids)
+            subscription.extend(new_user_ids)
             unified_subscription = list(set(subscription))
             self.write(cr, uid, ids, {'user_ids': [(4, uid) for uid in unified_subscription]}, context=context)
         return True
