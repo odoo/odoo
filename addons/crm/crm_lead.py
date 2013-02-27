@@ -711,7 +711,7 @@ class crm_lead(base_stage, format_address, osv.osv):
             'parent_id': parent_id,
             'phone': lead.phone,
             'mobile': lead.mobile,
-            'email': lead.email_from and tools.email_split(lead.email_from)[0],
+            'email': tools.email_split(lead.email_from) and tools.email_split(lead.email_from)[0] or False,
             'fax': lead.fax,
             'title': lead.title and lead.title.id or False,
             'function': lead.function,
