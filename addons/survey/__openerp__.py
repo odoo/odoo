@@ -49,10 +49,8 @@ user name and password for the invitation of the survey.
     ],
     'demo': ['survey_demo.xml'],
     'test': [
-        'test/draft2open2close_survey.yml',
-        'test/draft2open2close_request.yml',
-        'test/survey_question_type.yml',
         'test/survey_report.yml',
+        'survey_response.py',
     ],
     'installable': True,
     'auto_install': False,

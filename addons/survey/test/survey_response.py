@@ -114,3 +114,5 @@ class test_survey_answer():
 
         # I check state of Survey is close or not.
         self.assertEqual(self.survey_browse.state, 'close', 'Survey should be in cancel state')
+
+        # sur_question = self.on_change_type(cr, uid, [ref("survey_Initial_partner_feedback")], 'multiple_textboxes_diff_type')
