@@ -1084,7 +1084,7 @@ instance.web.UserMenu =  instance.web.Widget.extend({
             if (!self.session.uid)
                 return;
             var func = new instance.web.Model("res.users").get_func("read");
-            return func(self.session.uid, ["name", "company_id"]).then(function(res) {
+            return self.alive(func(self.session.uid, ["name", "company_id"])).then(function(res) {
                 var topbar_name = res.name;
                 if(instance.session.debug)
                     topbar_name = _.str.sprintf("%s (%s)", topbar_name, instance.session.db);
@@ -1303,7 +1303,7 @@ instance.web.WebClient = instance.web.Client.extend({
     },
     logo_edit: function(ev) {
         var self = this;
-        new instance.web.Model("res.users").get_func("read")(this.session.uid, ["company_id"]).then(function(res) {
+        new self.alive(instance.web.Model("res.users").get_func("read")(this.session.uid, ["company_id"])).then(function(res) {
             self.rpc("/web/action/load", { action_id: "base.action_res_company_form" }).done(function(result) {
                 result.res_id = res['company_id'][0];
                 result.target = "new";
@@ -1324,7 +1324,7 @@ instance.web.WebClient = instance.web.Client.extend({
     },
     check_timezone: function() {
         var self = this;
-        return new instance.web.Model('res.users').call('read', [[this.session.uid], ['tz_offset']]).then(function(result) {
+        return self.alive(new instance.web.Model('res.users').call('read', [[this.session.uid], ['tz_offset']])).then(function(result) {
             var user_offset = result[0]['tz_offset'];
             var offset = -(new Date().getTimezoneOffset());
             // _.str.sprintf()'s zero front padding is buggy with signed decimals, so doing it manually
