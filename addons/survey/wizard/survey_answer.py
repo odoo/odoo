@@ -990,8 +990,7 @@ class survey_question_wiz(osv.osv_memory):
         for key, val in context.items():
             if type(key) == type(True):
                 context.pop(key)
-        view_id = self.pool.get('ir.ui.view').search(cr, uid, [('model', '=', 'survey.question'), \
-                            ('name', '=', 'survey_question_wizard_test')], context=context)
+        view_id = self.pool.get('ir.ui.view').search(cr, uid, [('model', '=', 'survey.question'), ('name', '=', 'survey_question_wizard_test')], context=context)
         return {
             'view_type': 'form',
             "view_mode": 'form',
@@ -1011,8 +1010,7 @@ class survey_question_wiz(osv.osv_memory):
         for key, val in context.items():
             if type(key) == type(True):
                 context.pop(key)
-        view_id = self.pool.get('ir.ui.view').search(cr, uid, [('model', '=', 'survey.page'), \
-                                        ('name', '=', 'survey_page_wizard_test')], context=context)
+        view_id = self.pool.get('ir.ui.view').search(cr, uid, [('model', '=', 'survey.page'), ('name', '=', 'survey_page_wizard_test')], context=context)
         return {
             'view_type': 'form',
             "view_mode": 'form',
@@ -1032,8 +1030,7 @@ class survey_question_wiz(osv.osv_memory):
         for key, val in context.items():
             if type(key) == type(True):
                 context.pop(key)
-        view_id = self.pool.get('ir.ui.view').search(cr, uid, [('model', '=', 'survey.page'), \
-                                ('name', '=', 'survey_page_wizard_test')], context=context)
+        view_id = self.pool.get('ir.ui.view').search(cr, uid, [('model', '=', 'survey.page'), ('name', '=', 'survey_page_wizard_test')], context=context)
         return {
             'view_type': 'form',
             "view_mode": 'form',
@@ -1060,8 +1057,7 @@ class survey_question_wiz(osv.osv_memory):
             if not survey.page_ids:
                 return {'type': 'ir.actions.act_window_close'}
 
-        search_id = self.pool.get('ir.ui.view').search(cr, uid, [('model', '=', 'survey.question.wiz'), \
-                                            ('name', '=', 'Survey Search')], context=context)
+        search_id = self.pool.get('ir.ui.view').search(cr, uid, [('model', '=', 'survey.question.wiz'), ('name', '=', 'Survey Search')], context=context)
         surv_name_wiz = self.pool.get('survey.name.wiz')
         surv_name_wiz.write(cr, uid, [context.get('sur_name_id', False)], \
                     {'transfer': True, 'page_no': context.get('page_number', False)})
@@ -1084,8 +1080,7 @@ class survey_question_wiz(osv.osv_memory):
         for key, val in context.items():
             if type(key) == type(True):
                 context.pop(key)
-        view_id = self.pool.get('ir.ui.view').search(cr, uid, [('model', '=', 'survey.question'), \
-                                ('name', '=', 'survey_question_wizard_test')], context=context)
+        view_id = self.pool.get('ir.ui.view').search(cr, uid, [('model', '=', 'survey.question'), ('name', '=', 'survey_question_wizard_test')], context=context)
         return {
             'view_type': 'form',
             "view_mode": 'form',
@@ -1109,8 +1104,7 @@ class survey_question_wiz(osv.osv_memory):
 
         que_obj = self.pool.get('survey.question')
         que_obj.unlink(cr, uid, [context.get('question_id', False)])
-        search_id = self.pool.get('ir.ui.view').search(cr, uid, [('model', '=', 'survey.question.wiz'), \
-                                        ('name', '=', 'Survey Search')], context=context)
+        search_id = self.pool.get('ir.ui.view').search(cr, uid, [('model', '=', 'survey.question.wiz'), ('name', '=', 'Survey Search')], context=context)
         surv_name_wiz = self.pool.get('survey.name.wiz')
         surv_name_wiz.write(cr, uid, [context.get('sur_name_id', False)], \
                      {'transfer': True, 'page_no': context.get('page_number', 0)})
