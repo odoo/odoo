@@ -67,10 +67,11 @@ class StockMove(osv.osv):
         'procurements': fields.one2many('procurement.order', 'move_id', 'Procurements'),
     }
 
-    def copy(self, cr, uid, id, default=None, context=None):
-        default = default or {}
+    def copy_data(self, cr, uid, id, default=None, context=None):
+        if default is None:
+            default = {}
         default['procurements'] = []
-        return super(StockMove, self).copy(cr, uid, id, default, context=context)
+        return super(StockMove, self).copy_data(cr, uid, id, default, context=context)
 
 StockMove()
 
