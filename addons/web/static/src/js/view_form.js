@@ -5282,9 +5282,7 @@ instance.web.form.FieldStatus = instance.web.form.AbstractField.extend({
     calc_domain: function() {
         var d = instance.web.pyeval.eval('domain', this.build_domain());
         domain = ['|', ['id', '=', this.get('value')]].concat(d);
-        console.log("domain", JSON.stringify(domain));
         if (! _.isEqual(domain, this.get("evaluated_selection_domain"))) {
-            console.log("changing domain");
             this.set("evaluated_selection_domain", domain);
         }
     },
@@ -5296,7 +5294,6 @@ instance.web.form.FieldStatus = instance.web.form.AbstractField.extend({
     get_selection: function() {
         var self = this;
         var selection = [];
-        console.log("getselection");
 
         var calculation = _.bind(function() {
             if (this.field.type == "many2one") {
