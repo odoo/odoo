@@ -31,7 +31,7 @@ class test_invite(TestMailBase):
         # Do: create a mail_wizard_invite, validate it
         self._init_mock_build_email()
         context = {'default_res_model': 'mail.group', 'default_res_id': self.group_pigs_id}
-        mail_invite_id = mail_invite.create(cr, self.user_raoul_id, {'partner_ids': [(4, self.partner_bert_id)]}, context)
+        mail_invite_id = mail_invite.create(cr, self.user_raoul_id, {'partner_ids': [(4, self.partner_bert_id)], 'send_mail': True}, context)
         mail_invite.add_followers(cr, self.user_raoul_id, [mail_invite_id], {'default_model': 'mail.group', 'default_res_id': 0})
 
         # Test: Pigs followers should contain Admin, Bert
