@@ -8,8 +8,7 @@
 
         <menuitem name="Configuration" id="menu_surveys_configuration" parent="menu_surveys" sequence="3" groups="base.group_tool_manager"/>
         
-        <menuitem name="Reporting" parent="base.menu_tools"
-            id="base.menu_lunch_reporting" sequence="6"/>
+        <menuitem name="Reporting" parent="base.menu_tools" id="base.menu_lunch_reporting" sequence="6"/>
         <menuitem name="Reporting" id="menu_reporting" parent="menu_surveys" sequence="60"/>
         <menuitem id="base.next_id_10" name="Survey" parent="base.menu_reporting" sequence="1" groups="base.group_survey_user"/>
 
@@ -23,7 +22,7 @@
             <field name="arch" type="xml">
                 <form string="Survey" version="7.0">
                 <header>
-                    <button name="survey_draft" string="Draft" states="cancel" type="object"/>
+                    <button name="survey_draft" string="Draft" states="cancel,close" type="object"/>
                     <button name="survey_open" class="oe_highlight" string="Open" states="draft,close" type="object"/>
                     <button name="survey_close" string="Close" states="open" type="object" class="oe_highlight"/>
                     <button name="survey_cancel" string="Cancel" states="draft" type="object"/>
@@ -441,7 +440,7 @@
                 <data>
                     <xpath expr="//group[@colspan='4']" position="after">
                         <group colspan="4">
-                            <button name="survey_save"  string="Ok" type="object" icon="gtk-go-forward"/>
+                            <button name="survey_save"  string="Ok" type="object" icon="gtk-go-forward" invisible="not context.get('show_button_ok')"/>
                         </group>
                     </xpath>
                 </data>
@@ -699,7 +698,6 @@
             name="Questions"
             res_model="survey.question"
             src_model="survey"/>
-
 
         <act_window
             context="{'search_default_page_id': active_id, 'default_page_id': active_id}"

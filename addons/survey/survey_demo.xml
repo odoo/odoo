@@ -10,7 +10,7 @@
         <record model="survey" id="survey_Initial_partner_feedback">
             <field name="title">Initial Partner Feedback</field>
             <field name="max_response_limit">20</field>
-            <field name="type" ref="survey_type2"/>
+            <field name="type" ref="survey_type1"/>
             <field name="state">open</field>
             <field name="authenticate">0</field>
             <field name="color">5</field>
@@ -157,7 +157,7 @@
         <record model="survey" id="survey_partner_feedback">
             <field name="title">OpenERP Partner Feedback</field>
             <field name="max_response_limit">20</field>
-            <field name="type" ref="survey_type2"/>
+            <field name="type" ref="survey_type1"/>
             <field name="state">open</field>
             <field name="authenticate">0</field>
             <field name="date_open" eval="time.strftime('%Y-%m-%d %H:%M:%S')"/>
@@ -621,7 +621,7 @@
         <record model="survey" id="survey_odoo_feedback">
             <field name="title">Odoo Feedback</field>
             <field name="max_response_limit">20</field>
-            <field name="type" ref="survey_type2"/>
+            <field name="type" ref="survey_type1"/>
             <field name="state">open</field>
             <field name="authenticate">0</field>
             <field name="date_open" eval="time.strftime('%Y-%m-%d %H:%M:%S')"/>
@@ -1395,7 +1395,7 @@
             <field eval="&quot;&quot;&quot;OpenERP Feedback&quot;&quot;&quot;" name="title"/>
             <field name="color">4</field>
             <field name="max_response_limit">20</field>
-            <field name="type" ref="survey_type2"/>
+            <field name="type" ref="survey_type1"/>
             <field name="state">open</field>
             <field name="authenticate">0</field>
         </record>
@@ -2243,7 +2243,7 @@
             <field name="note">Please take a few minutes to complete this survey on the quality of service we provide. We welcome your feedback and appreciate your honesty. With your help, we hope to strengthen the bond between our clients.</field>
             <field name="state">open</field>
             <field name="authenticate">0</field>
-            <field name="type" ref="survey_type3"/>
+            <field name="type" ref="survey_type2"/>
             <field name="max_response_limit">20</field>
         </record>
     </data>

@@ -988,9 +988,10 @@ class survey_question_wiz(osv.osv_memory):
         if context is None:
             context = {}
         for key, val in context.items():
-            if type(key) == type(True):
+            if isinstance(key, bool):
                 context.pop(key)
         view_id = self.pool.get('ir.ui.view').search(cr, uid, [('model', '=', 'survey.question'), ('name', '=', 'survey_question_wizard_test')], context=context)
+        context.update({'show_button_ok': True})
         return {
             'view_type': 'form',
             "view_mode": 'form',
@@ -1078,9 +1079,10 @@ class survey_question_wiz(osv.osv_memory):
         if context is None:
             context = {}
         for key, val in context.items():
-            if type(key) == type(True):
+            if isinstance(key, bool):
                 context.pop(key)
         view_id = self.pool.get('ir.ui.view').search(cr, uid, [('model', '=', 'survey.question'), ('name', '=', 'survey_question_wizard_test')], context=context)
+        context.update({'show_button_ok': True})
         return {
             'view_type': 'form',
             "view_mode": 'form',
