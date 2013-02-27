@@ -188,7 +188,7 @@ class survey_question_wiz(osv.osv_memory):
         }
         self.pool.get('survey').message_post(cr, SUPERUSER_ID, survey_id, context=context, **val)
 
-    def get_response_info_from_token(self, cr, uid, survey_id, context):
+    def get_response_info_from_token(self, cr, uid, survey_id, survey_token, context=None):
         """
         Get the response informations and return a dictionnary
         * response_id
@@ -199,7 +199,7 @@ class survey_question_wiz(osv.osv_memory):
         This function raise an exception
 
         """
-        # get if the token of the partner or anonymous user is valid
+        context = context or {}
         res = {'response_id': False, 'state': None, 'readonly': context.get('readonly', False)}
 
         if not survey_id:
@@ -223,7 +223,7 @@ class survey_question_wiz(osv.osv_memory):
         # check open and sign in
         if not context.get('edit') and survey_browse.state != "open":
             raise osv.except_osv(_('Access Denied!'), _("You cannot answer because the survey is not open."))
-        if anonymous and survey_browse.sign_in:
+        if anonymous and survey_browse.authenticate:
             raise osv.except_osv(_('Access Denied!'), _("Please Login to complete this survey."))
 
         # get opening response
@@ -232,8 +232,8 @@ class survey_question_wiz(osv.osv_memory):
         dom = [('survey_id', '=', survey_id), ('state', 'in', ['new', 'skip']), "|", ('date_deadline', '=', None), ('date_deadline', '>', datetime.now())]
 
         # check for private token
-        if context.get("survey_token"):
-            response_ids = sur_response_obj.search(cr, SUPERUSER_ID, dom + [("token", "=", context.get("survey_token"))], context=context, limit=1, order="id DESC")
+        if survey_token:
+            response_ids = sur_response_obj.search(cr, SUPERUSER_ID, dom + [("token", "=", survey_token)], context=context, limit=1, order="id DESC")
         # check for admin preview responses
         if not response_ids and context.get("response_id"):
             try:
@@ -253,7 +253,7 @@ class survey_question_wiz(osv.osv_memory):
             res['state'] = response.state
 
         # errors
-        if not res['response_id'] and not context.get('edit') and (survey_browse.state != 'open' or survey_browse.token != context.get("survey_token")):
+        if not res['response_id'] and not context.get('edit') and (survey_browse.state != 'open' or survey_browse.token != survey_token):
 
             response_ids = sur_response_obj.search(cr, SUPERUSER_ID, [('survey_id', '=', survey_id), ("token", "=", context.get("survey_token", None))], context=context, limit=1)
             if not response_ids:
@@ -340,7 +340,7 @@ class survey_question_wiz(osv.osv_memory):
                 fields = {}
 
                 # get if the token of the partner or anonymous user is valid
-                response_info = self.get_response_info_from_token(cr, uid, survey_id, context)
+                response_info = self.get_response_info_from_token(cr, uid, survey_id, context.get("survey_token"), context)
 
                 # have acces to this survey
                 edit_mode = context.get('edit', False)
@@ -457,7 +457,7 @@ class survey_question_wiz(osv.osv_memory):
                 tot_per = (float(100) * (int(field.split('_')[2]) + 1) / len(tot_page_id.page_ids))
                 value[field] = tot_per
 
-        response_info = self.get_response_info_from_token(cr, uid, context.get('survey_id'), context)
+        response_info = self.get_response_info_from_token(cr, uid, context.get('survey_id'), context.get("survey_token"), context)
 
         response_ans = False
         sur_response_obj = self.pool.get('survey.response')
@@ -529,7 +529,7 @@ class survey_question_wiz(osv.osv_memory):
 
         sur_response_obj = self.pool.get('survey.response')
 
-        response_info = self.get_response_info_from_token(cr, uid, context['survey_id'], context)
+        response_info = self.get_response_info_from_token(cr, uid, context['survey_id'], context.get("survey_token"), context)
 
         survey_question_wiz_id = super(survey_question_wiz, self).create(cr, uid, {'name': vals.get('name')}, context=context)
         if context.get('edit', False) or response_info['readonly']:
@@ -1154,7 +1154,7 @@ class survey_question_wiz(osv.osv_memory):
     def action_done(self, cr, uid, ids, context=None):
         """ Goes to previous page.
         """
-        response_info = self.get_response_info_from_token(cr, uid, context['survey_id'], context)
+        response_info = self.get_response_info_from_token(cr, uid, context['survey_id'], context.get("survey_token"), context)
         if response_info['response_id']:
             response_id = response_info['response_id']
         else:
@@ -1175,6 +1175,36 @@ class survey_question_wiz(osv.osv_memory):
             'target': context.get('ir_actions_act_window_target', 'inline'),
             'context': context,
             'view_id': view_id,
+        }
+
+    def _action_filling(self, cr, uid, ids, context=None):
+        """ Check if the user have access to the survey and open survey
+        """
+        context.update({
+            'survey_id': context['active_id'], 
+            'survey_token': context['params'], 
+            'ir_actions_act_window_target': 'inline'})
+
+        # check if the user must be authenticate
+        survey_browse = self.pool.get('survey').browse(cr, SUPERUSER_ID, context['survey_id'], context=context)
+        user_browse = self.pool.get('res.users').browse(cr, SUPERUSER_ID, uid, context=context)
+        model_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'portal', 'group_anonymous')
+        anonymous = model_id and model_id[1] in [x.id for x in user_browse.groups_id]
+        if anonymous and survey_browse.state == "open" and survey_browse.authenticate:
+            return {
+                'type': 'ir.actions.client',
+                'tag': 'login',
+                'context': context,
+            }
+
+        response_info = self.get_response_info_from_token(cr, uid, context['survey_id'], context['survey_token'], context)
+        return {
+            'view_type': 'form',
+            "view_mode": 'form',
+            'res_model': 'survey.question.wiz',
+            'type': 'ir.actions.act_window',
+            'target': 'inline',
+            'context': context,
         }
 
 survey_question_wiz()

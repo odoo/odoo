@@ -70,7 +70,6 @@ class survey(osv.osv):
         """ Compute if the message is unread by the current user. """
         res = dict((id, 0) for id in ids)
         base_url = self.pool.get('ir.config_parameter').get_param(cr, uid, 'web.base.url')
-        model_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'survey', 'action_fill_survey')
         survey_obj = self.pool.get('survey')
         for survey_browse in survey_obj.browse(cr, uid, ids, context=context):
             query = {
@@ -78,7 +77,7 @@ class survey(osv.osv):
             }
             fragment = {
                 'active_id': survey_browse.id,
-                'action': model_id[1],
+                'action': 'survey.action_filling',
                 'params': survey_browse.token,
             }
             res[survey_browse.id] = urljoin(base_url, "?%s#%s" % (urlencode(query), urlencode(fragment)))
@@ -92,7 +91,7 @@ class survey(osv.osv):
         'max_response_limit': fields.integer('Maximum Answer Limit',
                      help="Set to one if survey is answerable only once"),
         'state': fields.selection([('draft', 'Draft'), ('open', 'Open'), ('close', 'Close'), ('cancel', 'Cancelled')], 'Status', required=1),
-        'sign_in': fields.boolean('User must be sign up'),
+        'authenticate': fields.boolean('User must be authenticate'),
         'tot_start_survey': fields.function(_get_tot_start_survey, string="Total Started Survey", type="integer"),
         'tot_comp_survey': fields.function(_get_tot_comp_survey, string="Total Completed Survey", type="integer"),
         'note': fields.text('Description', size=128, translate=True),
@@ -104,7 +103,7 @@ class survey(osv.osv):
     }
     _defaults = {
         'state': "draft",
-        'sign_in': False,
+        'authenticate': False,
         'date_open': fields.datetime.now,
         'token': lambda s, cr, uid, c: uuid.uuid4(),
     }

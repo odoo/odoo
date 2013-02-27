@@ -33,13 +33,13 @@
             <field name="target">new</field>
         </record>
 
-        <record id="action_fill_survey" model="ir.actions.act_window">
-            <field name="type">ir.actions.act_window</field>
-            <field name="res_model">survey.question.wiz</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">form</field>
-            <field name="target">inline</field>
-            <field name="context">{'survey_id': active_id, 'survey_token': params, 'ir_actions_act_window_target': 'inline'}</field>
+        <record id="action_filling" model="ir.actions.server">
+            <field name="name">Filling Survey</field>
+            <field name="type">ir.actions.server</field>
+            <field name="state">code</field>
+            <field name="model_id" ref="model_survey_question_wiz"/>
+            <field name="code">action = self._action_filling(cr, uid, None, context)</field>
+            <field name="condition">True</field>
         </record>
 
         <!--
