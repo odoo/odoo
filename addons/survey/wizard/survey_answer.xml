@@ -45,9 +45,29 @@
         <!--
             Survey Question Wizard - Complete survey
          -->
+
         <record id="view_survey_complete_survey" model="ir.ui.view">           
             <field name="name">Complete Survey Answer</field>
             <field name="model">survey.question.wiz</field>
+            <field name="priority">1</field>
+            <field name="arch" type="xml">
+                <form string="Your Messages"  version="7.0">
+                    <sheet>
+                        <div>
+                            <br/><br/>
+                            <h2>Thanks for completing this survey.</h2>
+                            <br/><br/>
+                        </div>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_survey_complete_survey_anonymous" model="ir.ui.view">           
+            <field name="name">Complete Survey Answer</field>
+            <field name="model">survey.question.wiz</field>
+            <field name="priority">2</field>
+            <field name="target">inline</field>
             <field name="arch" type="xml">
                 <form string="Your Messages"  version="7.0">
                     <sheet>
@@ -63,11 +83,12 @@
                                 <li>...</li>
                             </ul>
                             <div style="margin-bottom: 20px;margin-top: 30px;font-weight: bold;">Register with OpenERP today!</div>
-                            <button style="margin-left:0" class="oe_highlight" string="Sign Up FREE"/>
+                            <a href="https://accounts.openerp.com/" class="oe_survey_button">Sign Up FREE</a>
                         </div>
                     </sheet>
                 </form>
             </field>
         </record>
+
     </data>
 </openerp>

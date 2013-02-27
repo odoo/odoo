@@ -42,7 +42,7 @@ class test_survey_answer():
             'max_response_limit': 20,
             'type': ref("survey_type2"),
             'state': 'draft',
-            'sign_in': 0,
+            'authenticate': 0,
             'date_open': time.strftime('%Y-%m-%d %H:%M:%S')
           })
 

@@ -348,7 +348,7 @@ class survey_question_wiz(osv.osv_memory):
                 if sur_name_read.page == "next" or sur_name_rec.page_no == -1:
                     if total_pages > sur_name_rec.page_no + 1:
                         if survey_browse.max_response_limit and survey_browse.max_response_limit <= survey_browse.tot_start_survey and not sur_name_rec.page_no + 1:
-                            survey_obj.write(cr, SUPERUSER_ID, survey_id, {'state': 'close', 'date_close': datetime.now()})
+                            survey_obj.write(cr, SUPERUSER_ID, survey_id, {'state': 'close', 'date_close': datetime.now()}, context=context)
 
                         p_id = p_id[sur_name_rec.page_no + 1]
                         surv_name_wiz.write(cr, uid, [context['sur_name_id'], ], {'page_no': sur_name_rec.page_no + 1})
@@ -361,8 +361,7 @@ class survey_question_wiz(osv.osv_memory):
                 else:
                     if sur_name_rec.page_no != 0:
                         p_id = p_id[sur_name_rec.page_no - 1]
-                        surv_name_wiz.write(cr, uid, [context['sur_name_id'], ], \
-                                             {'page_no': sur_name_rec.page_no - 1})
+                        surv_name_wiz.write(cr, uid, [context['sur_name_id'], ], {'page_no': sur_name_rec.page_no - 1})
                         flag = True
                         page_number -= 1
 
@@ -663,7 +662,7 @@ class survey_question_wiz(osv.osv_memory):
                                         error = True
                                 elif que_rec['is_comment_require'] and que_rec['comment_valid_type'] == 'must_be_email_address':
                                     import re
-                                    if re.match("^[a-zA-Z0-9._%- + ] + @[a-zA-Z0-9._%-] + .[a-zA-Z]{2, 6}$", val1) == None:
+                                    if not re.match("^[a-zA-Z0-9._%- + ] + @[a-zA-Z0-9._%-] + .[a-zA-Z]{2, 6}$", val1):
                                             error = True
                                 if error:
                                     for res in resp_id_list:
@@ -702,7 +701,7 @@ class survey_question_wiz(osv.osv_memory):
                                     error = True
                             elif que_rec['is_validation_require'] and que_rec['validation_type'] == 'must_be_email_address':
                                 import re
-                                if re.match("^[a-zA-Z0-9._%- + ] + @[a-zA-Z0-9._%-] + .[a-zA-Z]{2, 6}$", val1) == None:
+                                if not re.match("^[a-zA-Z0-9._%- + ] + @[a-zA-Z0-9._%-] + .[a-zA-Z]{2, 6}$", val1):
                                         error = True
                             if error:
                                 for res in resp_id_list:
@@ -1154,19 +1153,28 @@ class survey_question_wiz(osv.osv_memory):
     def action_done(self, cr, uid, ids, context=None):
         """ Goes to previous page.
         """
+
         response_info = self.get_response_info_from_token(cr, uid, context['survey_id'], context.get("survey_token"), context)
         if response_info['response_id']:
             response_id = response_info['response_id']
         else:
-            surv_name_wiz = self.pool.get('survey.name.wiz')
-            sur_name_read = surv_name_wiz.read(cr, uid, context.get('sur_name_id', False), context=context)
+            # public access
+            sur_name_read = self.pool.get('survey.name.wiz').read(cr, uid, context.get('sur_name_id', False), context=context)
             if sur_name_read['response_id'] and sur_name_read['response_id'][0]:
                 response_id = sur_name_read['response_id'][0]
+
         self.pool.get('survey.response').write(cr, SUPERUSER_ID, [response_id], {'state': 'done'})
         self._survey_complete(cr, uid, context['survey_id'], context)
 
         ir_model_data = self.pool.get('ir.model.data')
-        view_id = ir_model_data.get_object_reference(cr, uid, 'survey', 'view_survey_complete_survey')[1]
+        user_browse = self.pool.get('res.users').browse(cr, SUPERUSER_ID, uid, context=context)
+        model_id = ir_model_data.get_object_reference(cr, uid, 'portal', 'group_anonymous')
+        anonymous = model_id and model_id[1] in [x.id for x in user_browse.groups_id]
+        if anonymous:
+            model, view_id = ir_model_data.get_object_reference(cr, uid, 'survey', 'view_survey_complete_survey_anonymous')
+        else:
+            model, view_id = ir_model_data.get_object_reference(cr, uid, 'survey', 'view_survey_complete_survey')
+
         return {
             'view_type': 'form',
             "view_mode": 'form',
@@ -1181,8 +1189,8 @@ class survey_question_wiz(osv.osv_memory):
         """ Check if the user have access to the survey and open survey
         """
         context.update({
-            'survey_id': context['active_id'], 
-            'survey_token': context['params'], 
+            'survey_id': context['active_id'],
+            'survey_token': context['params'],
             'ir_actions_act_window_target': 'inline'})
 
         # check if the user must be authenticate
@@ -1197,7 +1205,7 @@ class survey_question_wiz(osv.osv_memory):
                 'context': context,
             }
 
-        response_info = self.get_response_info_from_token(cr, uid, context['survey_id'], context['survey_token'], context)
+        self.get_response_info_from_token(cr, uid, context['survey_id'], context['survey_token'], context)
         return {
             'view_type': 'form',
             "view_mode": 'form',

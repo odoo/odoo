@@ -91,7 +91,7 @@ class survey(osv.osv):
         'max_response_limit': fields.integer('Maximum Answer Limit',
                      help="Set to one if survey is answerable only once"),
         'state': fields.selection([('draft', 'Draft'), ('open', 'Open'), ('close', 'Close'), ('cancel', 'Cancelled')], 'Status', required=1),
-        'authenticate': fields.boolean('User must be authenticate'),
+        'authenticate': fields.boolean('User must be sign up'),
         'tot_start_survey': fields.function(_get_tot_start_survey, string="Total Started Survey", type="integer"),
         'tot_comp_survey': fields.function(_get_tot_comp_survey, string="Total Completed Survey", type="integer"),
         'note': fields.text('Description', size=128, translate=True),

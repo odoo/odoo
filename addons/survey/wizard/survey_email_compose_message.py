@@ -38,7 +38,6 @@ class survey_mail_compose_message(osv.TransientModel):
     def _get_public_url(self, cr, uid, ids, name, arg, context=None):
         """ Compute if the message is unread by the current user. """
         res = dict((id, 0) for id in ids)
-        print ids
         survey_obj = self.pool.get('survey')
         for wizard in self.browse(cr, uid, ids, context=context):
             res[wizard.id] = survey_obj.browse(cr, uid, wizard.res_id, context=context).public_url
@@ -47,9 +46,7 @@ class survey_mail_compose_message(osv.TransientModel):
     def _get_public_url_html(self, cr, uid, ids, name, arg, context=None):
         """ Compute if the message is unread by the current user. """
         urls = self._get_public_url(cr, uid, ids, name, arg, context=context)
-        print urls
-        for url, key in urls:
-            print url, key
+        for key, url in urls.items():
             urls[key] = '<a href="%s">%s</a>' % (url, _("Click here to take survey"))
         return urls
 
@@ -62,11 +59,11 @@ class survey_mail_compose_message(osv.TransientModel):
         'public_url_html': fields.function(_get_public_url_html, string="Public HTML web link", type="char"),
         'partner_ids': fields.many2many('res.partner',
             'survey_mail_compose_message_res_partner_rel',
-            'wizard_id', 'partner_id', 'Additional contacts'),
+            'wizard_id', 'partner_id', 'Existing contacts'),
         'attachment_ids': fields.many2many('ir.attachment',
             'survey_mail_compose_message_ir_attachments_rel',
             'wizard_id', 'attachment_id', 'Attachments'),
-        'multi_email': fields.text(string='List of emails', help="This list of emails of recipients will not converted in partner. Emails separated by commas, semicolons or newline."),
+        'multi_email': fields.text(string='List of emails', help="This list of emails of recipients will not converted in contacts. Emails separated by commas, semicolons or newline."),
         'date_deadline': fields.date(string="Deadline to which the invitation to respond is valid", help="Deadline to which the invitation to respond for this survey is valid. If the field is empty, the invitation is still valid."),
     }
     _defaults = {
@@ -157,7 +154,9 @@ class survey_mail_compose_message(osv.TransientModel):
                 # quick check of email list
                 emails_list = []
                 for email in emails:
-                    emails_list.append(email.strip())
+                    email = email.strip()
+                    if email:
+                        emails_list.append(email)
                 if not len(emails_list) and not len(wizard.partner_ids):
                     raise osv.except_osv(_('Warning!'), _("Please enter at least one recipient."))
 
