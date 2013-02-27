@@ -79,9 +79,11 @@ Hello ${object.name},
            <field name="interval_number">1</field>
            <field name="interval_type">minutes</field>
            <field name="numbercall">-1</field>
-           <field eval="'account.analytic.account'" name="model" />
-           <field eval="'cron_create_invoice'" name="function" />
-           <field eval="'()'" name="args" />
+           <field name="doall" eval="True"/>
+           <field name="active" eval="True"/>
+           <field name="model" eval="'account.analytic.account'"/>
+           <field name="function" eval="'cron_create_invoice'"/>
+           <field name="args" eval="'()'"/>
         </record>
 
     </data>

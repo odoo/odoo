@@ -781,7 +781,7 @@ class account_analytic_account(osv.osv):
             inv_line_id.append(line_id)
         return inv_line_id
 
-    def cron_create_invoice(self, cr, ids, uid, context=None):
+    def cron_create_invoice(self, cr, uid, automatic=False, use_new_cursor=False, context=None):
         inv_obj = self.pool.get('account.invoice')
         obj_invoice_line = self.pool.get('account.invoice.line')
         journal_obj = self.pool.get('account.journal')
