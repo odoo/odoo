@@ -24,7 +24,7 @@ from openerp.tools.safe_eval import safe_eval
 
 from mako.template import Template as MakoTemplate
 
-from datetime import date, timedelta
+from datetime import date, datetime, timedelta
 import calendar
 import itertools
 
@@ -115,13 +115,6 @@ class gamification_goal_type(osv.Model):
 
 
 
-def compute_goal_completeness(current, target_goal):
-    # more than 100% case is handled by the widget
-    if target_goal > 0:
-        return 100.0 * current / target_goal
-    else:
-        return 0.0
-
 class gamification_goal(osv.Model):
     """Goal instance for a user
 
@@ -132,9 +125,14 @@ class gamification_goal(osv.Model):
     _inherit = 'mail.thread'
 
     def _get_completeness(self, cr, uid, ids, field_name, arg, context=None):
+        """Return the percentage of completeness of the goal, between 0 and 100"""
         res = {}
         for goal in self.browse(cr, uid, ids, context):
-            res[goal.id] = compute_goal_completeness(goal.current, goal.target_goal)
+            if goal.current > 0:
+                res[goal.id] = min(100, round(100.0 * goal.current / goal.target_goal, 2))
+            else:
+                res[goal.id] = 0.0
+            
         return res
 
     def on_change_type_id(self, cr, uid, ids, type_id=False, context=None):
@@ -194,7 +192,6 @@ class gamification_goal(osv.Model):
     }
 
 
-
     def _update_all(self, cr, uid, ids=False, context=None):
         """Update every goal in progress"""
         if not ids:
@@ -208,7 +205,7 @@ class gamification_goal(osv.Model):
         If a goal reaches the target value, the status is set to reach
         If the end date is passed (at least +1 day, time not considered) without
         the target value being reached, the goal is set as failed."""
-
+        
         for goal in self.browse(cr, uid, ids, context=context or {}):
             if goal.state not in ('inprogress','inprogress_update','reached'):
                 # skip if goal failed or canceled
@@ -223,9 +220,14 @@ class gamification_goal(osv.Model):
                 # check for remind to update
                 if goal.remind_update_delay and goal.last_update:
                     delta_max = timedelta(days=goal.remind_update_delay)
-                    if fields.date.today() - goal.last_update > delta_max:
+                    last_update = datetime.strptime(goal.last_update,'%Y-%m-%d').date()
+                    if date.today() - last_update > delta_max:
                         towrite['state'] = 'inprogress_update'
 
+                        # generate a remind report
+                        template_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'gamification', 'email_template_goal_reminder')[1]
+                        self.pool.get('email.template').send_mail(cr, uid, template_id, goal.id, context=context)
+                        
             else: # count or sum
                 obj = self.pool.get(goal.type_id.model_id.model)
                 field_date_name = goal.type_id.field_date_id.name

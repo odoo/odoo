@@ -1,17 +1,6 @@
 <?xml version="1.0" ?>
 <openerp>
     <data>
-        <!-- EDI related Email Templates menu -->
-        <record model="ir.actions.act_window" id="action_email_templates">
-            <field name="name">Email Templates</field>
-            <field name="res_model">email.template</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">form,tree</field>
-            <field name="view_id" ref="email_template.email_template_tree" />
-        </record>
-    </data>
-
-    <data>
         <!--Email template for individual report -->
         <record id="email_template_gamification_individual" model="email.template">
             <field name="name">Individual Goal Report - Send by Email</field>
