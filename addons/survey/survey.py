@@ -88,8 +88,7 @@ class survey(osv.osv):
         'page_ids': fields.one2many('survey.page', 'survey_id', 'Page'),
         'date_open': fields.datetime('Survey Open Date', readonly=1),
         'date_close': fields.datetime('Survey Close Date', readonly=1),
-        'max_response_limit': fields.integer('Maximum Answer Limit',
-                     help="Set to one if survey is answerable only once"),
+        'max_response_limit': fields.integer('Maximum Answer Limit', help="Set to one if survey is answerable only once"),
         'state': fields.selection([('draft', 'Draft'), ('open', 'Open'), ('close', 'Close'), ('cancel', 'Cancelled')], 'Status', required=1),
         'authenticate': fields.boolean('User must be sign up'),
         'tot_start_survey': fields.function(_get_tot_start_survey, string="Total Started Survey", type="integer"),
@@ -407,20 +406,20 @@ class survey_question(osv.osv):
         'no_of_rows': fields.integer('No of Rows'),
     }
     _defaults = {
-         'sequence': 1,
-         'type': lambda s, cr, uid, c: _('multiple_choice_multiple_ans'),
-         'req_error_msg': lambda s, cr, uid, c: _('This question requires an answer.'),
-         'required_type': 'at least',
-         'req_ans': 1,
-         'comment_field_type': 'char',
-         'comment_label': lambda s, cr, uid, c: _('Other (please specify)'),
-         'comment_valid_type': 'do_not_validate',
-         'comment_valid_err_msg': lambda s, cr, uid, c: _('The comment you entered is in an invalid format.'),
-         'validation_type': 'do_not_validate',
-         'validation_valid_err_msg': lambda s, cr, uid, c: _('The comment you entered is in an invalid format.'),
-         'numeric_required_sum_err_msg': lambda s, cr, uid, c: _('The choices need to add up to [enter sum here].'),
-         'make_comment_field_err_msg': lambda s, cr, uid, c: _('Please enter a comment.'),
-         'in_visible_answer_type': 1
+        'sequence': 1,
+        'type': lambda s, cr, uid, c: _('multiple_choice_multiple_ans'),
+        'req_error_msg': lambda s, cr, uid, c: _('This question requires an answer.'),
+        'required_type': 'at least',
+        'req_ans': 1,
+        'comment_field_type': 'char',
+        'comment_label': lambda s, cr, uid, c: _('Other (please specify)'),
+        'comment_valid_type': 'do_not_validate',
+        'comment_valid_err_msg': lambda s, cr, uid, c: _('The comment you entered is in an invalid format.'),
+        'validation_type': 'do_not_validate',
+        'validation_valid_err_msg': lambda s, cr, uid, c: _('The comment you entered is in an invalid format.'),
+        'numeric_required_sum_err_msg': lambda s, cr, uid, c: _('The choices need to add up to [enter sum here].'),
+        'make_comment_field_err_msg': lambda s, cr, uid, c: _('Please enter a comment.'),
+        'in_visible_answer_type': 1
     }
 
     def on_change_type(self, cr, uid, ids, type, context=None):
@@ -679,8 +678,8 @@ class survey_response(osv.osv):
             'survey_resent_token': True,
             'default_partner_ids': [record.partner_id.id],
             'multi_email': [record.email],
-            'default_public': False
-            })
+            'default_public': 'email',
+        })
 
         return self.pool.get('survey').action_survey_sent(cr, uid, [record.survey_id.id], context=context)
 
@@ -716,8 +715,8 @@ class survey_response(osv.osv):
             'ir_actions_act_window_target': 'new',
             'survey_id': record.survey_id.id,
             'response_id': ids,
-            'readonly': True
-            })
+            'readonly': True,
+        })
         return {
             'view_type': 'form',
             "view_mode": 'form',
@@ -725,7 +724,7 @@ class survey_response(osv.osv):
             'type': 'ir.actions.act_window',
             'target': 'new',
             'context': context
-         }
+        }
 
     def action_cancel(self, cr, uid, ids, arg):
         self.pool.get('survey').check_access_rights(cr, uid, 'write')
