@@ -5046,12 +5046,9 @@ instance.web.form.FieldMany2ManyBinaryMultiFiles = instance.web.form.AbstractFie
         this.$el.on('change', 'input.oe_form_binary_file', this.on_file_change );
     },
     set_value: function(value_) {
-        var self = this;
         value_ = value_ || [];
         if (value_.length >= 1 && value_[0] instanceof Array) {
             value_ = value_[0][2];
-        } else if (value_.length >= 1 && value_[0] instanceof Object) {
-            value_ = _.map(value_, function (value) { self.data[value.id] = value; return value.id;});
         }
         this._super(value_);
     },
