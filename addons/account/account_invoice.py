@@ -22,6 +22,7 @@
 import time
 from lxml import etree
 import openerp.addons.decimal_precision as dp
+import openerp.exceptions
 
 from openerp import netsvc
 from openerp import pooler

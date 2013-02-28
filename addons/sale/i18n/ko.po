@@ -8,19 +8,19 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2012-12-21 17:04+0000\n"
-"PO-Revision-Date: 2012-12-21 23:00+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"PO-Revision-Date: 2013-02-27 09:00+0000\n"
+"Last-Translator: Josh Kim <joshkkim@gmail.com>\n"
 "Language-Team: Korean <ko@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-01-18 07:05+0000\n"
-"X-Generator: Launchpad (build 16430)\n"
+"X-Launchpad-Export-Date: 2013-02-28 05:31+0000\n"
+"X-Generator: Launchpad (build 16506)\n"
 
 #. module: sale
 #: model:res.groups,name:sale.group_analytic_accounting
 msgid "Analytic Accounting for Sales"
-msgstr ""
+msgstr "판매의 분석 회계"
 
 #. module: sale
 #: model:process.transition,name:sale.process_transition_confirmquotation0
@@ -30,7 +30,7 @@ msgstr "견적 확정"
 #. module: sale
 #: view:board.board:0
 msgid "Sales Dashboard"
-msgstr ""
+msgstr "판매 대시보드"
 
 #. module: sale
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:92
@@ -42,19 +42,19 @@ msgstr ""
 #: model:ir.actions.act_window,name:sale.action_order_line_tree2
 #: model:ir.ui.menu,name:sale.menu_invoicing_sales_order_lines
 msgid "Order Lines to Invoice"
-msgstr ""
+msgstr "송장 발행 대상 주문 입력줄"
 
 #. module: sale
 #: field:sale.order,date_confirm:0
 msgid "Confirmation Date"
-msgstr ""
+msgstr "확정일"
 
 #. module: sale
 #: view:sale.order:0
 #: view:sale.order.line:0
 #: view:sale.report:0
 msgid "Group By..."
-msgstr ""
+msgstr "분류 기준..."
 
 #. module: sale
 #: field:sale.order.line,address_allotment_id:0
@@ -64,12 +64,12 @@ msgstr "Allotment 파트너"
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_view_sale_advance_payment_inv
 msgid "Invoice Order"
-msgstr ""
+msgstr "주문에 대한 송장 발행"
 
 #. module: sale
 #: view:sale.config.settings:0
 msgid "Product Features"
-msgstr ""
+msgstr "상품 특징"
 
 #. module: sale
 #: help:sale.config.settings,module_account_analytic_analysis:0
@@ -90,49 +90,51 @@ msgid ""
 "${(object.name or '').replace('/','_')}_${object.state == 'draft' and "
 "'draft' or ''}"
 msgstr ""
+"${(object.name or '').replace('/','_')}_${object.state == 'draft' and "
+"'draft' or ''}"
 
 #. module: sale
 #: view:sale.order.line:0
 #: field:sale.report,product_uom:0
 msgid "Unit of Measure"
-msgstr ""
+msgstr "계수 단위"
 
 #. module: sale
 #: field:sale.order.line,type:0
 msgid "Procurement Method"
-msgstr ""
+msgstr "조달 방식"
 
 #. module: sale
 #: help:sale.order,date_confirm:0
 msgid "Date on which sales order is confirmed."
-msgstr ""
+msgstr "판매 주문이 확정된 날짜"
 
 #. module: sale
 #: field:account.config.settings,module_sale_analytic_plans:0
 msgid "Use multiple analytic accounts on sales"
-msgstr ""
+msgstr "판매에 다중 분석 계정 사용"
 
 #. module: sale
 #: selection:sale.report,month:0
 msgid "March"
-msgstr ""
+msgstr "3월"
 
 #. module: sale
 #: code:addons/sale/sale.py:559
 #, python-format
 msgid "First cancel all invoices attached to this sales order."
-msgstr ""
+msgstr "먼저 해당 판매 주문에 첨부된 모든 송장을 취소하세요."
 
 #. module: sale
 #: view:sale.order:0
 msgid "Quotation Number"
-msgstr ""
+msgstr "견적 번호"
 
 #. module: sale
 #: view:sale.order:0
 #: field:sale.order,message_unread:0
 msgid "Unread Messages"
-msgstr ""
+msgstr "읽지 않은 메시지"
 
 #. module: sale
 #: field:sale.order,company_id:0
@@ -141,43 +143,43 @@ msgstr ""
 #: field:sale.report,company_id:0
 #: field:sale.shop,company_id:0
 msgid "Company"
-msgstr ""
+msgstr "업체"
 
 #. module: sale
 #: field:sale.make.invoice,invoice_date:0
 msgid "Invoice Date"
-msgstr ""
+msgstr "송장 발행일"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_order_line_tree3
 msgid "Uninvoiced and Delivered Lines"
-msgstr "인보이스되지 않고 배송된 라인들"
+msgstr "송장 미발행 및 배송 완료 입력줄"
 
 #. module: sale
 #: model:mail.message.subtype,description:sale.mt_order_confirmed
 msgid "Quotation confirmed"
-msgstr ""
+msgstr "견적 확정됨"
 
 #. module: sale
 #: selection:sale.order,state:0
 #: selection:sale.report,state:0
 msgid "Invoice Exception"
-msgstr "인보이스 예외"
+msgstr "송장 예외"
 
 #. module: sale
 #: view:sale.order:0
 msgid "Quotation "
-msgstr ""
+msgstr "견적 "
 
 #. module: sale
 #: selection:sale.order,state:0
 msgid "Draft Quotation"
-msgstr ""
+msgstr "견적 초안"
 
 #. module: sale
 #: field:sale.order,partner_shipping_id:0
 msgid "Delivery Address"
-msgstr ""
+msgstr "배송 주소"
 
 #. module: sale
 #: view:sale.report:0
@@ -200,7 +202,7 @@ msgstr "소계"
 #: view:sale.report:0
 #: field:sale.report,day:0
 msgid "Day"
-msgstr ""
+msgstr "일"
 
 #. module: sale
 #: model:process.transition.action,name:sale.process_transition_action_cancelorder0
@@ -215,54 +217,54 @@ msgstr "중량"
 #. module: sale
 #: view:sale.config.settings:0
 msgid "Warehouse Features"
-msgstr ""
+msgstr "창고 특징"
 
 #. module: sale
 #: field:sale.config.settings,time_unit:0
 msgid "The default working time unit for services is"
-msgstr ""
+msgstr "서비스에 대한 기본 업무시간:"
 
 #. module: sale
 #: field:sale.order.line,product_uom:0
 msgid "Unit of Measure "
-msgstr ""
+msgstr "계수 단위 "
 
 #. module: sale
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:101
 #, python-format
 msgid "Incorrect Data"
-msgstr ""
+msgstr "올바르지 않은 데이터"
 
 #. module: sale
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:102
 #, python-format
 msgid "The value of Advance Amount must be positive."
-msgstr ""
+msgstr "선지급액의 금액은 양수여야 합니다."
 
 #. module: sale
 #: help:sale.config.settings,group_discount_per_so_line:0
 msgid "Allows you to apply some discount per sales order line."
-msgstr ""
+msgstr "판매 주문 입력줄마다 할인율을 적용할 수 있도록 함."
 
 #. module: sale
 #: view:sale.order.line:0
 msgid "Sales Order Lines that are in 'done' state"
-msgstr ""
+msgstr "'완료' 상태의 판매 주문 입력줄"
 
 #. module: sale
 #: selection:sale.order.line,type:0
 msgid "on order"
-msgstr "주문 상"
+msgstr "주문 중"
 
 #. module: sale
 #: field:sale.order,message_ids:0
 msgid "Messages"
-msgstr ""
+msgstr "메시지"
 
 #. module: sale
 #: field:sale.report,state:0
 msgid "Order Status"
-msgstr ""
+msgstr "주문 상태"
 
 #. module: sale
 #: field:sale.order,amount_tax:0
@@ -273,12 +275,12 @@ msgstr "세금"
 #. module: sale
 #: field:sale.order,amount_untaxed:0
 msgid "Untaxed Amount"
-msgstr "과세되지 않은 금액"
+msgstr "비과세액"
 
 #. module: sale
 #: field:sale.config.settings,module_project:0
 msgid "Project"
-msgstr ""
+msgstr "프로젝트"
 
 #. module: sale
 #: code:addons/sale/sale.py:360
@@ -288,12 +290,12 @@ msgstr ""
 #: code:addons/sale/sale.py:772
 #, python-format
 msgid "Error!"
-msgstr ""
+msgstr "오류!"
 
 #. module: sale
 #: report:sale.order:0
 msgid "Net Total :"
-msgstr "순 합계:"
+msgstr "순 합계 :"
 
 #. module: sale
 #: help:sale.order.line,type:0
@@ -320,38 +322,38 @@ msgstr ""
 #: selection:sale.order.line,state:0
 #: selection:sale.report,state:0
 msgid "Cancelled"
-msgstr ""
+msgstr "취소됨"
 
 #. module: sale
 #: view:sale.order.line:0
 msgid "Sales Order Lines related to a Sales Order of mine"
-msgstr ""
+msgstr "내 판매 주문에 관련된 판매 주문 입력줄"
 
 #. module: sale
 #: selection:sale.order,state:0
 msgid "Quotation Sent"
-msgstr ""
+msgstr "견적 전송 완료"
 
 #. module: sale
 #: model:ir.model,name:sale.model_mail_compose_message
 msgid "Email composition wizard"
-msgstr ""
+msgstr "이메일 작성 마법사"
 
 #. module: sale
 #: help:sale.order,message_unread:0
 msgid "If checked new messages require your attention."
-msgstr ""
+msgstr "체크할 경우, 새로운 메시지를 주목할 필요가 있습니다."
 
 #. module: sale
 #: selection:sale.order,state:0
 #: selection:sale.report,state:0
 msgid "Shipping Exception"
-msgstr "선적 예외"
+msgstr "배송 예외"
 
 #. module: sale
 #: field:sale.order.line,product_uos_qty:0
 msgid "Quantity (UoS)"
-msgstr ""
+msgstr "수량 (판매 단위)"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_shop_form
@@ -359,27 +361,27 @@ msgstr ""
 #: view:sale.report:0
 #: field:sale.report,shop_id:0
 msgid "Shop"
-msgstr "샵"
+msgstr "매장"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_orders_exception
 msgid "Sales in Exception"
-msgstr "예외적 판매"
+msgstr "예외적인 판매"
 
 #. module: sale
 #: field:sale.order,partner_invoice_id:0
 msgid "Invoice Address"
-msgstr "인보이스 주소"
+msgstr "송장 발행 주소"
 
 #. module: sale
 #: help:sale.order,create_date:0
 msgid "Date on which sales order is created."
-msgstr ""
+msgstr "판매 주문이 생성된 날짜."
 
 #. module: sale
 #: view:res.partner:0
 msgid "False"
-msgstr ""
+msgstr "거짓"
 
 #. module: sale
 #: help:sale.advance.payment.inv,advance_payment_method:0
@@ -395,12 +397,12 @@ msgstr ""
 #: view:sale.make.invoice:0
 #: view:sale.order.line.make.invoice:0
 msgid "Create Invoices"
-msgstr ""
+msgstr "송장 생성"
 
 #. module: sale
 #: report:sale.order:0
 msgid "Tax"
-msgstr ""
+msgstr "세금"
 
 #. module: sale
 #: code:addons/sale/sale.py:270
@@ -408,7 +410,7 @@ msgstr ""
 #: code:addons/sale/sale.py:976
 #, python-format
 msgid "Invalid Action!"
-msgstr ""
+msgstr "유효하지 않은 액션!"
 
 #. module: sale
 #: help:sale.order,state:0
@@ -424,13 +426,13 @@ msgstr ""
 #. module: sale
 #: field:sale.report,date_confirm:0
 msgid "Date Confirm"
-msgstr ""
+msgstr "날짜 확정"
 
 #. module: sale
 #: view:sale.report:0
 #: field:sale.report,nbr:0
 msgid "# of Lines"
-msgstr ""
+msgstr "입력줄 개수"
 
 #. module: sale
 #: help:sale.order,message_summary:0
@@ -448,36 +450,36 @@ msgstr ""
 #: view:sale.report:0
 #: field:sale.report,product_uom_qty:0
 msgid "# of Qty"
-msgstr ""
+msgstr "수량 개수"
 
 #. module: sale
 #: report:sale.order:0
 msgid "Fax :"
-msgstr "팩스:"
+msgstr "팩스 :"
 
 #. module: sale
 #: code:addons/sale/sale.py:270
 #, python-format
 msgid ""
 "In order to delete a confirmed sales order, you must cancel it before !"
-msgstr ""
+msgstr "확정된 판매 주문을 삭제하려면 먼저 해당 주문을 취소해야 합니다 !"
 
 #. module: sale
 #: view:sale.order:0
 msgid "(update)"
-msgstr ""
+msgstr "(업데이트)"
 
 #. module: sale
 #: model:ir.model,name:sale.model_res_partner
 #: view:sale.report:0
 #: field:sale.report,partner_id:0
 msgid "Partner"
-msgstr ""
+msgstr "협력업체"
 
 #. module: sale
 #: view:sale.config.settings:0
 msgid "Contract Features"
-msgstr ""
+msgstr "견적 특징"
 
 #. module: sale
 #: code:addons/sale/sale.py:280
@@ -491,22 +493,22 @@ msgstr ""
 #: selection:sale.order,state:0
 #, python-format
 msgid "Sales Order"
-msgstr ""
+msgstr "판매 주문"
 
 #. module: sale
 #: model:res.groups,name:sale.group_invoice_so_lines
 msgid "Enable Invoicing Sales order lines"
-msgstr ""
+msgstr "판매 주문 입력줄 송장 발행 활성화"
 
 #. module: sale
 #: model:ir.model,name:sale.model_sale_order_line
 msgid "Sales Order Line"
-msgstr ""
+msgstr "판매 주문 입력줄"
 
 #. module: sale
 #: field:sale.advance.payment.inv,amount:0
 msgid "Advance Amount"
-msgstr ""
+msgstr "선지불액"
 
 #. module: sale
 #: help:sale.order,invoice_exists:0
@@ -523,17 +525,17 @@ msgstr ""
 #. module: sale
 #: field:sale.config.settings,module_analytic_user_function:0
 msgid "One employee can have different roles per contract"
-msgstr ""
+msgstr "직원 한 명이 계약 별로 다른 역할을 수행할 수 있습니다."
 
 #. module: sale
 #: selection:sale.advance.payment.inv,advance_payment_method:0
 msgid "Invoice the whole sales order"
-msgstr ""
+msgstr "전체 판매 주문에 대한 송장 발행"
 
 #. module: sale
 #: field:sale.shop,payment_default_id:0
 msgid "Default Payment Term"
-msgstr "디폴트 결제 조건"
+msgstr "기본 결제 조건"
 
 #. module: sale
 #: model:process.transition.action,name:sale.process_transition_action_confirm0
@@ -543,89 +545,89 @@ msgstr "확정"
 #. module: sale
 #: field:sale.config.settings,timesheet:0
 msgid "Prepare invoices based on timesheets"
-msgstr ""
+msgstr "타임시트 기준으로 송장 준비"
 
 #. module: sale
 #: code:addons/sale/sale.py:812
 #, python-format
 msgid "You cannot cancel a sales order line that has already been invoiced."
-msgstr ""
+msgstr "이미 송장이 발행된 판매 주문 입력줄을 취소할 수 없습니다."
 
 #. module: sale
 #: view:account.invoice.report:0
 #: view:board.board:0
 #: model:ir.actions.act_window,name:sale.action_turnover_by_month
 msgid "Monthly Turnover"
-msgstr ""
+msgstr "월간 매출액"
 
 #. module: sale
 #: selection:sale.order,invoice_quantity:0
 msgid "Shipped Quantities"
-msgstr "선적 수량"
+msgstr "배송된 수량"
 
 #. module: sale
 #: view:sale.report:0
 #: field:sale.report,year:0
 msgid "Year"
-msgstr ""
+msgstr "년"
 
 #. module: sale
 #: field:sale.config.settings,group_uom:0
 msgid "Allow using different units of measures"
-msgstr ""
+msgstr "다른 계수 단위를 사용할 수 있도록 함"
 
 #. module: sale
 #: model:mail.message.subtype,name:sale.mt_order_confirmed
 msgid "Sales Order Confirmed"
-msgstr ""
+msgstr "확정된 판매 주문"
 
 #. module: sale
 #: view:sale.order:0
 msgid "Sales Order that haven't yet been confirmed"
-msgstr ""
+msgstr "아직 확정되지 않은 판매 주문"
 
 #. module: sale
 #: view:sale.order:0
 msgid "Print"
-msgstr ""
+msgstr "인쇄"
 
 #. module: sale
 #: report:sale.order:0
 msgid "Order N°"
-msgstr "주문 N°"
+msgstr "주문 번호"
 
 #. module: sale
 #: view:sale.order:0
 #: field:sale.order,order_line:0
 msgid "Order Lines"
-msgstr "주문 라인"
+msgstr "주문 입력줄"
 
 #. module: sale
 #: report:sale.order:0
 msgid "Disc.(%)"
-msgstr "Disc.(%)"
+msgstr "할인율(%)"
 
 #. module: sale
 #: code:addons/sale/sale.py:756
 #, python-format
 msgid "Please define income account for this product: \"%s\" (id:%d)."
-msgstr ""
+msgstr "해당 상품의 소득금액을 정의하세요: \"%s\" (id:%d)."
 
 #. module: sale
 #: field:sale.order.line,invoice_lines:0
 msgid "Invoice Lines"
-msgstr "인보이스 라인"
+msgstr "송장 입력줄"
 
 #. module: sale
 #: view:sale.report:0
 #: field:sale.report,price_total:0
 msgid "Total Price"
-msgstr ""
+msgstr "총액"
 
 #. module: sale
 #: help:account.config.settings,group_analytic_account_for_sales:0
 msgid "Allows you to specify an analytic account on sales orders."
-msgstr ""
+msgstr "판매 주문에 분석 계정을 지정할 수 있도록 함."
 
 #. module: sale
 #: help:sale.config.settings,module_sale_journal:0
@@ -639,24 +641,24 @@ msgstr ""
 #. module: sale
 #: help:sale.make.invoice,grouped:0
 msgid "Check the box to group the invoices for the same customers"
-msgstr ""
+msgstr "동일한 고객의 송장을 분류하려면 상자를 체크하세요"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_sale_order_make_invoice
 #: model:ir.actions.act_window,name:sale.action_view_sale_order_line_make_invoice
 msgid "Make Invoices"
-msgstr ""
+msgstr "송장 작성"
 
 #. module: sale
 #: code:addons/sale/res_config.py:89
 #, python-format
 msgid "Hour"
-msgstr ""
+msgstr "시"
 
 #. module: sale
 #: field:res.partner,sale_order_count:0
 msgid "# of Sales Order"
-msgstr ""
+msgstr "판매 주문 개수"
 
 #. module: sale
 #: help:sale.config.settings,timesheet:0
@@ -671,18 +673,18 @@ msgstr ""
 #. module: sale
 #: field:sale.order,create_date:0
 msgid "Creation Date"
-msgstr ""
+msgstr "생성일"
 
 #. module: sale
 #: view:sale.order:0
 #: view:sale.order.line:0
 msgid "To Invoice"
-msgstr ""
+msgstr "송장 발행 대상"
 
 #. module: sale
 #: help:sale.order,partner_invoice_id:0
 msgid "Invoice address for current sales order."
-msgstr ""
+msgstr "현재 판매 주문의 송장 발행 주소"
 
 #. module: sale
 #: selection:sale.order,invoice_quantity:0
@@ -692,7 +694,7 @@ msgstr "주문된 수량"
 #. module: sale
 #: view:sale.report:0
 msgid "Ordered Year of the sales order"
-msgstr ""
+msgstr "판매 주문의 주문 년도"
 
 #. module: sale
 #: model:res.groups,name:sale.group_delivery_invoice_address
@@ -709,17 +711,17 @@ msgstr "수량"
 #. module: sale
 #: report:sale.order:0
 msgid "Total :"
-msgstr "합계:"
+msgstr "합계 :"
 
 #. module: sale
 #: view:sale.order.line:0
 msgid "Sales Order Lines ready to be invoiced"
-msgstr ""
+msgstr "송장 발행 준비가 완료된 판매 주문 입력줄"
 
 #. module: sale
 #: view:sale.report:0
 msgid "My Sales"
-msgstr ""
+msgstr "내 판매"
 
 #. module: sale
 #: field:sale.order,name:0
@@ -730,12 +732,12 @@ msgstr "주문 참조"
 #. module: sale
 #: field:sale.order,fiscal_position:0
 msgid "Fiscal Position"
-msgstr "회계 포지션"
+msgstr "재정 위상"
 
 #. module: sale
 #: selection:sale.report,month:0
 msgid "July"
-msgstr ""
+msgstr "7월"
 
 #. module: sale
 #: help:sale.order.line,state:0
@@ -754,7 +756,7 @@ msgstr ""
 #. module: sale
 #: view:sale.config.settings:0
 msgid "Default Options"
-msgstr ""
+msgstr "기본 옵션"
 
 #. module: sale
 #: code:addons/sale/sale.py:953
@@ -762,12 +764,12 @@ msgstr ""
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:95
 #, python-format
 msgid "Configuration Error!"
-msgstr ""
+msgstr "구성 오류!"
 
 #. module: sale
 #: field:account.config.settings,group_analytic_account_for_sales:0
 msgid "Analytic accounting for sales"
-msgstr ""
+msgstr "판매의 분석 회계"
 
 #. module: sale
 #: view:sale.order:0
@@ -788,81 +790,81 @@ msgstr ""
 #. module: sale
 #: view:sale.order:0
 msgid "Send by Email"
-msgstr ""
+msgstr "이메일로 전송"
 
 #. module: sale
 #: code:addons/sale/edi/sale_order.py:140
 #, python-format
 msgid "EDI Pricelist (%s)"
-msgstr ""
+msgstr "EDI 가격표 (%s)"
 
 #. module: sale
 #: selection:sale.order,order_policy:0
 msgid "On Delivery Order"
-msgstr ""
+msgstr "배송 주문 상"
 
 #. module: sale
 #: view:sale.config.settings:0
 msgid "Invoicing Process"
-msgstr ""
+msgstr "송장 발행 과정"
 
 #. module: sale
 #: view:sale.order:0
 msgid "Order Date"
-msgstr ""
+msgstr "주문일"
 
 #. module: sale
 #: view:sale.order:0
 msgid "Sales Order done"
-msgstr ""
+msgstr "판매 주문 완료"
 
 #. module: sale
 #: code:addons/sale/sale.py:361
 #, python-format
 msgid "Please define sales journal for this company: \"%s\" (id:%d)."
-msgstr ""
+msgstr "해당 업체의 판매 장부를 정의하세요: \"%s\" (id:%d)."
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.act_res_partner_2_sale_order
 #: view:res.partner:0
 msgid "Quotations and Sales"
-msgstr ""
+msgstr "견적 및 판매"
 
 #. module: sale
 #: field:sale.order,invoiced:0
 msgid "Paid"
-msgstr "지불됨"
+msgstr "결제됨"
 
 #. module: sale
 #: help:sale.config.settings,group_uom:0
 msgid ""
 "Allows you to select and maintain different units of measure for products."
-msgstr ""
+msgstr "상품의 각기 다른 계수 단위를 선택 및 관리할 수 있도록 함."
 
 #. module: sale
 #: view:sale.report:0
 msgid "Reference Unit of Measure"
-msgstr ""
+msgstr "기준 계수 단위"
 
 #. module: sale
 #: view:sale.advance.payment.inv:0
 msgid "Create and View Invoice"
-msgstr ""
+msgstr "송장 생성 및 보기"
 
 #. module: sale
 #: view:sale.order.line:0
 msgid "Sales order lines done"
-msgstr ""
+msgstr "판매 주문 입력줄  완료"
 
 #. module: sale
 #: field:sale.make.invoice,grouped:0
 msgid "Group the invoices"
-msgstr "인보이스 그룹화"
+msgstr "송장 분류"
 
 #. module: sale
 #: help:sale.advance.payment.inv,amount:0
 msgid "The amount to be invoiced in advance."
-msgstr ""
+msgstr "송장 사전 발행 대상 금액"
 
 #. module: sale
 #: model:ir.model,name:sale.model_sale_make_invoice
@@ -873,7 +875,7 @@ msgstr ""
 #: code:addons/sale/sale.py:300
 #, python-format
 msgid "Pricelist Warning!"
-msgstr ""
+msgstr "가격표 경고!"
 
 #. module: sale
 #: field:sale.order.line,discount:0
@@ -893,7 +895,7 @@ msgstr ""
 #. module: sale
 #: view:sale.order.line.make.invoice:0
 msgid "Create & View Invoice"
-msgstr ""
+msgstr "송장 생성 & 보기"
 
 #. module: sale
 #: view:board.board:0
@@ -904,12 +906,12 @@ msgstr "내 견적"
 #. module: sale
 #: field:sale.order,invoice_ids:0
 msgid "Invoices"
-msgstr "인보이스"
+msgstr "송장"
 
 #. module: sale
 #: selection:sale.report,month:0
 msgid "December"
-msgstr ""
+msgstr "12월"
 
 #. module: sale
 #: view:sale.config.settings:0
@@ -919,13 +921,13 @@ msgstr ""
 #. module: sale
 #: view:sale.order.line:0
 msgid "Shipped"
-msgstr ""
+msgstr "배송됨"
 
 #. module: sale
 #: view:sale.report:0
 #: field:sale.report,month:0
 msgid "Month"
-msgstr ""
+msgstr "월"
 
 #. module: sale
 #: field:sale.order,currency_id:0
@@ -935,13 +937,13 @@ msgstr ""
 #. module: sale
 #: view:sale.order.line:0
 msgid "Uninvoiced"
-msgstr ""
+msgstr "송장 미발행됨"
 
 #. module: sale
 #: view:sale.report:0
 #: field:sale.report,categ_id:0
 msgid "Category of Product"
-msgstr ""
+msgstr "상품의 분류"
 
 #. module: sale
 #: code:addons/sale/sale.py:558
@@ -952,7 +954,7 @@ msgstr ""
 #. module: sale
 #: view:sale.order:0
 msgid "Recreate Invoice"
-msgstr "인보이스 다시 생성"
+msgstr "송장 재생성"
 
 #. module: sale
 #: field:sale.config.settings,module_warning:0
@@ -962,7 +964,7 @@ msgstr ""
 #. module: sale
 #: field:sale.shop,name:0
 msgid "Shop Name"
-msgstr ""
+msgstr "매장명"
 
 #. module: sale
 #: view:sale.order:0
@@ -972,19 +974,19 @@ msgstr ""
 #. module: sale
 #: report:sale.order:0
 msgid "Taxes :"
-msgstr "세금:"
+msgstr "세금 :"
 
 #. module: sale
 #: field:sale.order,invoice_exists:0
 #: field:sale.order.line,invoiced:0
 msgid "Invoiced"
-msgstr "인보이스됨"
+msgstr "송장 발행됨"
 
 #. module: sale
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:202
 #, python-format
 msgid "Advance Invoice"
-msgstr "Advance Invoice"
+msgstr "선불 송장"
 
 #. module: sale
 #: help:sale.config.settings,group_invoice_so_lines:0
@@ -1007,13 +1009,13 @@ msgstr ""
 #. module: sale
 #: selection:sale.report,state:0
 msgid "In Progress"
-msgstr ""
+msgstr "진행 중"
 
 #. module: sale
 #: code:addons/sale/sale.py:857
 #, python-format
 msgid "No Customer Defined !"
-msgstr ""
+msgstr "고객이 정의되지 않음 !"
 
 #. module: sale
 #: field:sale.config.settings,module_sale_stock:0
@@ -1024,7 +1026,7 @@ msgstr ""
 #: view:sale.make.invoice:0
 #: view:sale.order.line.make.invoice:0
 msgid "Create invoices"
-msgstr "인보이스 생성"
+msgstr "송장 생성"
 
 #. module: sale
 #: selection:sale.order.line,state:0
@@ -1040,7 +1042,7 @@ msgstr ""
 #. module: sale
 #: model:ir.model,name:sale.model_sale_order_line_make_invoice
 msgid "Sale OrderLine Make_invoice"
-msgstr ""
+msgstr "Sale OrderLine Make_invoice"
 
 #. module: sale
 #: selection:sale.order.line,state:0
@@ -1050,7 +1052,7 @@ msgstr "초안"
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_email_templates
 msgid "Email Templates"
-msgstr ""
+msgstr "이메일 양식"
 
 #. module: sale
 #: help:sale.order.line,address_allotment_id:0
@@ -1066,7 +1068,7 @@ msgstr ""
 #: selection:sale.order,state:0
 #: selection:sale.report,state:0
 msgid "Waiting Schedule"
-msgstr "대기 스케줄"
+msgstr "대기 일정"
 
 #. module: sale
 #: field:sale.order,note:0
@@ -1083,7 +1085,7 @@ msgstr "판매 주문"
 #. module: sale
 #: help:sale.order,amount_tax:0
 msgid "The tax amount."
-msgstr ""
+msgstr "세액"
 
 #. module: sale
 #: field:sale.order,invoiced_rate:0
@@ -1098,7 +1100,7 @@ msgstr ""
 #. module: sale
 #: selection:sale.report,month:0
 msgid "August"
-msgstr ""
+msgstr "8월"
 
 #. module: sale
 #: model:process.node,note:sale.process_node_saleorder0
@@ -1108,12 +1110,12 @@ msgstr ""
 #. module: sale
 #: view:sale.order.line:0
 msgid "To Do"
-msgstr ""
+msgstr "과제"
 
 #. module: sale
 #: selection:sale.report,month:0
 msgid "June"
-msgstr ""
+msgstr "6월"
 
 #. module: sale
 #: model:ir.actions.act_window,help:sale.action_shop_form
@@ -1139,7 +1141,7 @@ msgstr "주문"
 #: model:ir.ui.menu,name:sale.menu_report_product_all
 #: view:sale.report:0
 msgid "Sales Analysis"
-msgstr ""
+msgstr "판매 분석"
 
 #. module: sale
 #: field:sale.order,message_is_follower:0
@@ -1156,12 +1158,12 @@ msgstr ""
 #. module: sale
 #: model:ir.model,name:sale.model_sale_report
 msgid "Sales Orders Statistics"
-msgstr ""
+msgstr "판매 주문 통계"
 
 #. module: sale
 #: field:sale.order,date_order:0
 msgid "Date"
-msgstr ""
+msgstr "날짜"
 
 #. module: sale
 #: report:sale.order:0
@@ -1177,12 +1179,12 @@ msgstr ""
 #. module: sale
 #: selection:sale.report,month:0
 msgid "November"
-msgstr ""
+msgstr "11월"
 
 #. module: sale
 #: view:sale.report:0
 msgid "Extended Filters..."
-msgstr ""
+msgstr "확장 필터..."
 
 #. module: sale
 #: model:process.node,name:sale.process_node_quotation0
@@ -1204,7 +1206,7 @@ msgstr "예외"
 #. module: sale
 #: selection:sale.report,month:0
 msgid "October"
-msgstr ""
+msgstr "10월"
 
 #. module: sale
 #: model:process.transition,note:sale.process_transition_invoice0
@@ -1218,7 +1220,7 @@ msgstr ""
 #: model:ir.model,name:sale.model_sale_shop
 #: view:sale.shop:0
 msgid "Sales Shop"
-msgstr ""
+msgstr "판매 매장"
 
 #. module: sale
 #: help:sale.config.settings,module_sale_stock:0
@@ -1239,7 +1241,7 @@ msgstr ""
 #. module: sale
 #: selection:sale.report,month:0
 msgid "January"
-msgstr ""
+msgstr "1월"
 
 #. module: sale
 #: field:sale.config.settings,group_discount_per_so_line:0
@@ -1277,7 +1279,7 @@ msgstr ""
 #. module: sale
 #: help:sale.order,project_id:0
 msgid "The analytic account related to a sales order."
-msgstr ""
+msgstr "판매 주문과 관련된 분석 계정."
 
 #. module: sale
 #: view:sale.order:0
@@ -1299,7 +1301,7 @@ msgstr ""
 msgid ""
 "The salesman confirms the quotation. The state of the sales order becomes "
 "'In progress' or 'Manual in progress'."
-msgstr ""
+msgstr "영업사원이 견적을 확정합니다. 판매 주문의 상태는 '진행 중' 또는 '수동 진행 중'이 됩니다."
 
 #. module: sale
 #: code:addons/sale/sale.py:935
@@ -1308,17 +1310,19 @@ msgid ""
 "You have to select a pricelist or a customer in the sales form !\n"
 "Please set one before choosing a product."
 msgstr ""
+"판매 양식에 가격표 또는 고객을 선택해야 합니다 !\n"
+"상품 선택 전 설정하세요."
 
 #. module: sale
 #: help:sale.order,origin:0
 msgid "Reference of the document that generated this sales order request."
-msgstr ""
+msgstr "해당 판매 주문 요청을 생성한 문서의 참조"
 
 #. module: sale
 #: code:addons/sale/sale.py:948
 #, python-format
 msgid "No valid pricelist line found ! :"
-msgstr ""
+msgstr "유효한 가격표 입력줄을 찾을 수 없습니다 ! :"
 
 #. module: sale
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:113
@@ -1339,7 +1343,7 @@ msgstr ""
 #: view:sale.order:0
 #: view:sale.report:0
 msgid "Quotations"
-msgstr ""
+msgstr "견적"
 
 #. module: sale
 #: help:account.config.settings,module_sale_analytic_plans:0
@@ -1349,7 +1353,7 @@ msgstr ""
 #. module: sale
 #: view:sale.order:0
 msgid "Ignore Exception"
-msgstr ""
+msgstr "예외 무시"
 
 #. module: sale
 #: help:sale.order,partner_shipping_id:0
@@ -1382,14 +1386,14 @@ msgstr ""
 #. module: sale
 #: field:sale.report,date:0
 msgid "Date Order"
-msgstr ""
+msgstr "주문 날짜 부여"
 
 #. module: sale
 #: field:sale.order,pricelist_id:0
 #: field:sale.report,pricelist_id:0
 #: field:sale.shop,pricelist_id:0
 msgid "Pricelist"
-msgstr "가격리스트"
+msgstr "가격표"
 
 #. module: sale
 #: report:sale.order:0
@@ -1400,12 +1404,12 @@ msgstr "TVA:"
 #: code:addons/sale/sale.py:441
 #, python-format
 msgid "Customer Invoices"
-msgstr ""
+msgstr "고객 송장"
 
 #. module: sale
 #: model:process.node,note:sale.process_node_order0
 msgid "Confirmed sales order to invoice."
-msgstr ""
+msgstr "송장 발행 대상 확정 판매 주문"
 
 #. module: sale
 #: field:sale.order.line,sequence:0
@@ -1438,12 +1442,12 @@ msgstr "수량"
 #. module: sale
 #: selection:sale.order.line,type:0
 msgid "from stock"
-msgstr "스톡으로부터"
+msgstr "재고로 부터"
 
 #. module: sale
 #: report:sale.order:0
 msgid "Quotation Date"
-msgstr ""
+msgstr "견적일"
 
 #. module: sale
 #: field:sale.order,amount_total:0
@@ -1463,7 +1467,7 @@ msgstr "완료"
 #. module: sale
 #: report:sale.order:0
 msgid "Invoice address :"
-msgstr "인보이스 주소:"
+msgstr "송장 발행 주소 :"
 
 #. module: sale
 #: code:addons/sale/wizard/sale_line_invoice.py:124
@@ -1471,12 +1475,12 @@ msgstr "인보이스 주소:"
 #: view:sale.order:0
 #, python-format
 msgid "Invoice"
-msgstr "인보이스"
+msgstr "송장"
 
 #. module: sale
 #: view:sale.order.line:0
 msgid "My Sales Order Lines"
-msgstr ""
+msgstr "내 판매 주문 입력줄"
 
 #. module: sale
 #: model:process.transition.action,name:sale.process_transition_action_cancel0
@@ -1497,7 +1501,7 @@ msgstr ""
 #: code:addons/sale/sale.py:937
 #, python-format
 msgid "No Pricelist ! : "
-msgstr ""
+msgstr "가격표가 없음 ! : "
 
 #. module: sale
 #: view:sale.order:0
@@ -1513,7 +1517,7 @@ msgstr ""
 #. module: sale
 #: view:sale.order.line:0
 msgid "Search Uninvoiced Lines"
-msgstr ""
+msgstr "송장 미발행 입력줄 검색"
 
 #. module: sale
 #: model:ir.model,name:sale.model_account_config_settings
@@ -1523,7 +1527,7 @@ msgstr ""
 #. module: sale
 #: sql_constraint:sale.order:0
 msgid "Order Reference must be unique per Company!"
-msgstr ""
+msgstr "주무문 참조는 업체 별로 유일해야 합니다!"
 
 #. module: sale
 #: model:ir.actions.act_window,help:sale.action_order_line_tree2
@@ -1543,14 +1547,14 @@ msgstr ""
 #. module: sale
 #: report:sale.order:0
 msgid "Shipping address :"
-msgstr "선적 주소:"
+msgstr "배송 주소 :"
 
 #. module: sale
 #: code:addons/sale/sale.py:502
 #, python-format
 msgid ""
 "You cannot group sales having different currencies for the same partner."
-msgstr ""
+msgstr "동일한 협력업체에 서로 다른 통화의 판매를 함께 분류할 수 없습니다."
 
 #. module: sale
 #: view:sale.advance.payment.inv:0
@@ -1591,28 +1595,28 @@ msgstr ""
 #: field:sale.order,order_policy:0
 #: view:sale.order.line:0
 msgid "Create Invoice"
-msgstr "인보이스 생성"
+msgstr "송장 생성"
 
 #. module: sale
 #: help:sale.order,amount_untaxed:0
 msgid "The amount without tax."
-msgstr ""
+msgstr "세금 미포함 금액"
 
 #. module: sale
 #: view:sale.order.line:0
 msgid "Order reference"
-msgstr ""
+msgstr "주문 참조"
 
 #. module: sale
 #: help:sale.order,invoiced:0
 msgid "It indicates that an invoice has been paid."
-msgstr ""
+msgstr "송장에 대한 지불이 완료되었음을 표시합니다."
 
 #. module: sale
 #: report:sale.order:0
 #: field:sale.order.line,price_unit:0
 msgid "Unit Price"
-msgstr "유닛 가격"
+msgstr "단가"
 
 #. module: sale
 #: selection:sale.advance.payment.inv,advance_payment_method:0
@@ -1622,7 +1626,7 @@ msgstr ""
 #. module: sale
 #: view:sale.order:0
 msgid "Other Information"
-msgstr ""
+msgstr "기타 정보"
 
 #. module: sale
 #: model:email.template,body_html:sale.email_template_edi_sale
@@ -1724,7 +1728,7 @@ msgstr "상품"
 #. module: sale
 #: help:sale.order,amount_total:0
 msgid "The total amount."
-msgstr ""
+msgstr "총액"
 
 #. module: sale
 #: view:sale.order:0
@@ -1740,7 +1744,7 @@ msgstr ""
 #. module: sale
 #: selection:sale.report,month:0
 msgid "May"
-msgstr ""
+msgstr "5월"
 
 #. module: sale
 #: model:email.template,subject:sale.email_template_edi_sale
@@ -1783,7 +1787,7 @@ msgstr "견적 / 주문"
 #. module: sale
 #: report:sale.order:0
 msgid "Tel. :"
-msgstr "전화:"
+msgstr "전화 :"
 
 #. module: sale
 #: view:sale.make.invoice:0
@@ -1826,7 +1830,7 @@ msgstr ""
 #. module: sale
 #: model:process.node,note:sale.process_node_invoice0
 msgid "To be reviewed by the accountant."
-msgstr ""
+msgstr "회계사가 검토 예정."
 
 #. module: sale
 #: model:res.groups,name:sale.group_mrp_properties
@@ -1858,7 +1862,7 @@ msgstr ""
 #. module: sale
 #: selection:sale.report,month:0
 msgid "February"
-msgstr ""
+msgstr "2월"
 
 #. module: sale
 #: model:ir.actions.act_window,help:sale.action_orders
@@ -1878,7 +1882,7 @@ msgstr ""
 #. module: sale
 #: field:sale.order,invoice_quantity:0
 msgid "Invoice on"
-msgstr "인보이스 날짜"
+msgstr "송장 발행 예정일:"
 
 #. module: sale
 #: selection:sale.advance.payment.inv,advance_payment_method:0
@@ -1893,12 +1897,12 @@ msgstr ""
 #. module: sale
 #: selection:sale.report,month:0
 msgid "September"
-msgstr ""
+msgstr "9월"
 
 #. module: sale
 #: report:sale.order:0
 msgid "Date Ordered"
-msgstr "주문 날짜"
+msgstr "주문일"
 
 #. module: sale
 #: selection:sale.order,order_policy:0
@@ -1908,27 +1912,27 @@ msgstr ""
 #. module: sale
 #: field:sale.order.line,product_uos:0
 msgid "Product UoS"
-msgstr ""
+msgstr "상품 판매 단위"
 
 #. module: sale
 #: model:process.node,note:sale.process_node_quotation0
 msgid "Draft state of sales order"
-msgstr ""
+msgstr "판매 주문의 초안 상태"
 
 #. module: sale
 #: field:sale.order,origin:0
 msgid "Source Document"
-msgstr ""
+msgstr "소스 문서"
 
 #. module: sale
 #: selection:sale.report,month:0
 msgid "April"
-msgstr ""
+msgstr "4월"
 
 #. module: sale
 #: selection:sale.report,state:0
 msgid "Manual In Progress"
-msgstr ""
+msgstr "수작업 진행 중"
 
 #. module: sale
 #: code:addons/sale/wizard/sale_line_invoice.py:110
@@ -1977,7 +1981,7 @@ msgstr ""
 #: view:sale.order:0
 #: view:sale.order.line:0
 msgid "Search Sales Order"
-msgstr ""
+msgstr "판매 주문 검색"
 
 #. module: sale
 #: report:sale.order:0
@@ -1997,12 +2001,12 @@ msgstr ""
 #. module: sale
 #: view:sale.report:0
 msgid "Ordered month of the sales order"
-msgstr ""
+msgstr "판매 주문의 주문월"
 
 #. module: sale
 #: model:process.transition,name:sale.process_transition_saleinvoice0
 msgid "From a sales order"
-msgstr ""
+msgstr "판매 주문으로 부터"
 
 #. module: sale
 #: view:sale.order.line:0
@@ -2021,7 +2025,7 @@ msgstr ""
 #. module: sale
 #: view:sale.order:0
 msgid "UoS"
-msgstr ""
+msgstr "판매 단위"
 
 #. module: sale
 #: selection:sale.advance.payment.inv,advance_payment_method:0
@@ -2043,7 +2047,7 @@ msgstr "결제 조건"
 #. module: sale
 #: view:sale.order:0
 msgid "Sales Order ready to be invoiced"
-msgstr ""
+msgstr "판매 주문 송장 발행 준비 완료"
 
 #. module: sale
 #: field:sale.config.settings,group_invoice_so_lines:0
@@ -2062,12 +2066,12 @@ msgstr ""
 #: view:sale.order:0
 #: view:sale.order.line:0
 msgid "Sales Order Lines"
-msgstr "판매 주문 라인"
+msgstr "판매 주문 입력줄"
 
 #. module: sale
 #: help:sale.order,pricelist_id:0
 msgid "Pricelist for current sales order."
-msgstr ""
+msgstr "현재 판매 주문을 위한 가격표."
 
 #. module: sale
 #: report:sale.order:0
@@ -2082,12 +2086,12 @@ msgstr ""
 #. module: sale
 #: field:sale.order,client_order_ref:0
 msgid "Customer Reference"
-msgstr ""
+msgstr "고객 참조"
 
 #. module: sale
 #: view:sale.report:0
 msgid "Picked"
-msgstr "인수됨"
+msgstr "픽 완료"
 
 #. module: sale
 #: help:sale.config.settings,module_sale_margin:0
@@ -2109,7 +2113,7 @@ msgstr ""
 #. module: sale
 #: view:sale.order:0
 msgid "Total Tax Included"
-msgstr ""
+msgstr "포함된 총 세액"
 
 #. module: sale
 #: view:sale.order:0
@@ -2127,4 +2131,4 @@ msgstr ""
 #. module: sale
 #: view:sale.report:0
 msgid "Ordered date of the sales order"
-msgstr ""
+msgstr "판매 주문의 주문일"

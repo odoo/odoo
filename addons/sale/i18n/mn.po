@@ -8,13 +8,13 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2012-12-21 17:04+0000\n"
-"PO-Revision-Date: 2013-02-26 02:14+0000\n"
+"PO-Revision-Date: 2013-02-26 09:40+0000\n"
 "Last-Translator: gobi <Unknown>\n"
 "Language-Team: Mongolian <mn@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-02-26 05:34+0000\n"
+"X-Launchpad-Export-Date: 2013-02-27 05:08+0000\n"
 "X-Generator: Launchpad (build 16506)\n"
 
 #. module: sale
@@ -1939,7 +1939,7 @@ msgstr "Бүх дүн."
 #. module: sale
 #: view:sale.order:0
 msgid "Confirm Sale"
-msgstr ""
+msgstr "Борлуулалт Батлах"
 
 #. module: sale
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:96
@@ -1958,6 +1958,8 @@ msgid ""
 "${object.company_id.name} ${object.state in ('draft', 'sent') and "
 "'Quotation' or 'Order'} (Ref ${object.name or 'n/a' })"
 msgstr ""
+"${object.company_id.name} ${object.state in ('draft', 'sent') and "
+"'Quotation' or 'Order'} (Ref ${object.name or 'n/a' })"
 
 #. module: sale
 #: report:sale.order:0
@@ -1974,6 +1976,12 @@ msgid ""
 "Before delivery: A draft invoice is created from the sales order and must be "
 "paid before the products can be delivered."
 msgstr ""
+"Шаардлагаар: Ноорог нэхэмжлэл нь борлуулалтын захиалгаас шаардлагатай үед "
+"үүсгэгдэнэ.\n"
+"Хүргэлтийн захиалгаар: Бараанууд хүргэгдэхэд хүргэлтийн захиалгаас ноорог "
+"нэхэмжлэл үүснэ. \n"
+"Хүргэлтийн өмнө: Ноорог нэхэмжлэл нь борлуулалтын захиалгаас үүсгэгдэх "
+"бөгөөд бараа хүргэгдэхээс өмнө төлөгдсөн байх ёстой."
 
 #. module: sale
 #: model:ir.actions.act_window,help:sale.action_order_report_all
@@ -2025,6 +2033,20 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Шинэ борлуулалтын эхний алхам болох үнийн санал \n"
+"                үүсгэхдээ дарна.\n"
+"              </p><p>\n"
+"                OpenERP нь борлуулалтын бүтэн ажлын урсгалыг оновчтой \n"
+"                удирдахад тусладаг:\n"
+"                үнийн саналаас борлуулалтын захиалга, хүргэлт, нэхэмжлэл, \n"
+"                төлбөр цуглуулах ажлуудыг гүйцэтгэнэ.\n"
+"              </p><p>\n"
+"                Нийгмийн сүлжээний боломж нь борлуулалтын захиалга бүр \n"
+"                дээр хэлэлцүүлэг явуулах боломжоор тусладаг, захиалагч нь \n"
+"                борлуулалтын захиалгын явцыг хянах боломжтой болно.\n"
+"              </p>\n"
+"            "
 
 #. module: sale
 #: view:res.partner:0
@@ -2038,6 +2060,8 @@ msgid ""
 "There is no Fiscal Position defined or Income category account defined for "
 "default properties of Product categories."
 msgstr ""
+"Санхүүгийн харгалзаа тодорхойлогдоогүй байна эсвэл Барааны ангилалын үндсэн "
+"үзүүлэлтэд Орлогын ангилал тодорхойлогдоогүй байна."
 
 #. module: sale
 #: model:process.node,note:sale.process_node_invoice0
@@ -2047,7 +2071,7 @@ msgstr "Нягтлан бодогчоор хянагдана."
 #. module: sale
 #: model:res.groups,name:sale.group_mrp_properties
 msgid "Properties on lines"
-msgstr ""
+msgstr "Мөрүүд дээрх үзүүлэлтүүд"
 
 #. module: sale
 #: selection:sale.order,state:0
@@ -2057,7 +2081,7 @@ msgstr "Нэхэмжлэх борлуулалт"
 #. module: sale
 #: view:sale.order:0
 msgid "Order Number"
-msgstr ""
+msgstr "Захиалгын Дугаар"
 
 #. module: sale
 #: view:sale.order:0
@@ -2090,6 +2114,18 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Үнийн санал үүсгэхдээ дарна. Дараа нь Борлуулалтын захиалга "
+"руу \n"
+"                хөрвүүлэх боломжтой.\n"
+"              </p><p>\n"
+"                OpenERP нь борлуулалтын бүх урсгалын оновчтой удирдахад "
+"тусладаг, \n"
+"                үүнд: \n"
+"                үнийн санал, борлуулалтын захиалга, хүргэлт, нэхэмжлэл болон "
+"төлбөр.\n"
+"              </p>\n"
+"            "
 
 #. module: sale
 #: field:sale.order,invoice_quantity:0
@@ -2099,7 +2135,7 @@ msgstr "Нэхэмжлэл нь"
 #. module: sale
 #: selection:sale.advance.payment.inv,advance_payment_method:0
 msgid "Fixed price (deposit)"
-msgstr ""
+msgstr "Тогтмол үнэ (урьдчилгаа)"
 
 #. module: sale
 #: model:ir.model,name:sale.model_sale_config_settings
@@ -2119,7 +2155,7 @@ msgstr "Захиалсан огноо"
 #. module: sale
 #: selection:sale.order,order_policy:0
 msgid "Before Delivery"
-msgstr ""
+msgstr "Хүргэхийн өмнө"
 
 #. module: sale
 #: field:sale.order.line,product_uos:0
@@ -2178,6 +2214,20 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Энэ захиалагчид үнийн санал эсвэл борлуулалтын захиалга \n"
+"                үүсгэхдээ дарна.\n"
+"              </p><p>\n"
+"                OpenERP нь борлуулалтын бүтэн ажлын урсгалыг оновчтой \n"
+"                удирдахад тусладаг:\n"
+"                үнийн саналаас борлуулалтын захиалга, хүргэлт, нэхэмжлэл, \n"
+"                төлбөр цуглуулах ажлуудыг гүйцэтгэнэ.\n"
+"              </p><p>\n"
+"                Нийгмийн сүлжээний боломж нь борлуулалтын захиалга бүр \n"
+"                дээр хэлэлцүүлэг явуулах боломжоор тусладаг, захиалагч нь \n"
+"                борлуулалтын захиалгын явцыг хянах боломжтой болно.\n"
+"              </p>\n"
+"            "
 
 #. module: sale
 #: field:sale.order,message_summary:0
@@ -2209,6 +2259,9 @@ msgid ""
 "with\n"
 "                        your customer."
 msgstr ""
+"Өөрийн үйлчилгээг менежмент хийх боломжтой байхын тулд гэрээг ашиглана.\n"
+"                        Түүнчэн нэг гэрээний захиалагчийн олон нэхэмжлэхийг "
+"ашиглана."
 
 #. module: sale
 #: view:sale.report:0
@@ -2224,6 +2277,7 @@ msgstr "Борлуулалтын захиалгаас"
 #: view:sale.order.line:0
 msgid "Confirmed sales order lines, not yet delivered"
 msgstr ""
+"Батлагдсан бөгөөд хараахан хүргэгдээгүй борлуулалтын захиалгын мөрүүд"
 
 #. module: sale
 #: model:process.transition,note:sale.process_transition_saleinvoice0
@@ -2245,13 +2299,13 @@ msgstr "Б.Н"
 #. module: sale
 #: selection:sale.advance.payment.inv,advance_payment_method:0
 msgid "Some order lines"
-msgstr ""
+msgstr "Захиалгын зарим мөрүүд"
 
 #. module: sale
 #: code:addons/sale/sale.py:976
 #, python-format
 msgid "Cannot delete a sales order line which is in state '%s'."
-msgstr ""
+msgstr "'%s' төлөвтэй борлуулалтын захиалгын мөрийг устгах боломжгүй."
 
 #. module: sale
 #: report:sale.order:0
@@ -2267,7 +2321,7 @@ msgstr "Нэхэмжлэхэд бэлэн Борлуулалтын Захиал�
 #. module: sale
 #: field:sale.config.settings,group_invoice_so_lines:0
 msgid "Generate invoices based on the sales order lines"
-msgstr ""
+msgstr "Борлуулалтын захиалгын мөрүүдэд суурилсан нэхэмжлэлийг үүсгэх"
 
 #. module: sale
 #: view:sale.advance.payment.inv:0
@@ -2296,7 +2350,7 @@ msgstr "Үнийн санал №"
 #. module: sale
 #: model:res.groups,name:sale.group_discount_per_so_line
 msgid "Discount on lines"
-msgstr ""
+msgstr "Мөрүүд дахь хөнгөлөлт"
 
 #. module: sale
 #: field:sale.order,client_order_ref:0
@@ -2316,6 +2370,10 @@ msgid ""
 "between the Unit Price and Cost Price.\n"
 "                This installs the module sale_margin."
 msgstr ""
+"Энэ нь борлуулалтын захиалга дээр 'Зөрүү'-г нэмдэг.\n"
+"                Энэ нь Зарах үнэ болон Өртөг үнийн зөрүүг тооцоолж бохир "
+"ашгийг харуулдаг.\n"
+"                Энэ нь sale_margin модулийн суулгадаг."
 
 #. module: sale
 #: code:addons/sale/sale.py:857
@@ -2324,6 +2382,8 @@ msgid ""
 "Before choosing a product,\n"
 " select a customer in the sales form."
 msgstr ""
+"Бараа сонгохын өмнө,\n"
+" борлуулалтын маягтанд барааг сонгоно."
 
 #. module: sale
 #: view:sale.order:0
@@ -2333,7 +2393,7 @@ msgstr "Татвартай нийлбэр"
 #. module: sale
 #: view:sale.order:0
 msgid "New Copy of Quotation"
-msgstr ""
+msgstr "Үнийн саналын шинэ хуулбар"
 
 #. module: sale
 #: view:sale.advance.payment.inv:0
@@ -2342,6 +2402,8 @@ msgid ""
 "                        will create a draft invoice that can be modified\n"
 "                        before validation."
 msgstr ""
+"Энэ захиалгыг яаж нэхэмжлэхийг сонгоно. Энэ нь цохохын өмнө \n"
+"                        засварлах боломжтой ноорог нэхэмжлэлийг үүсгэнэ."
 
 #. module: sale
 #: view:sale.report:0

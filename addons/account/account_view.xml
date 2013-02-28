@@ -435,15 +435,15 @@
                                 <group string="Accounts">
                                     <field name="profit_account_id" domain="[('type','!=','view')]"/>
                                     <field name="loss_account_id" domain="[('type','!=','view')]"/>
-                                    <field name="internal_account_id"/>
+                                    <field name="internal_account_id" domain="[('type','!=','view')]"/>
                                 </group>
                                 <group string="Miscellaneous">
                                     <field name="with_last_closing_balance"/>
-                                    <field name="cash_control"/>
+                                    <field name="cash_control" attrs="{'invisible':[('type','not in', ('cash',))]}"/>
                                 </group>
                             </group>
-                            <separator string="Available Coins" colspan="4" attrs="{'invisible' : [('cash_control', '=', False)] }"/>
-                            <field name="cashbox_line_ids" nolabel="1" string="Unit Of Currency Definition" colspan="4" attrs="{'invisible' : [('cash_control', '=', False)]}">
+                            <separator string="Available Coins" colspan="4" attrs="{'invisible' : ['|',('cash_control', '=', False),('type','not in', ('cash',))] }"/>
+                            <field name="cashbox_line_ids" nolabel="1" string="Unit Of Currency Definition" colspan="4" attrs="{'invisible' : ['|',('cash_control', '=', False),('type','not in', ('cash',))]}">
                                 <tree string="CashBox Lines" editable="bottom">
                                     <field name="pieces" />
                                 </tree>
@@ -1206,6 +1206,8 @@
                     <field name="name"/>
                     <field name="partner_id"/>
                     <field name="account_id"/>
+                    <field name="period_id" invisible="1"/>
+                    <field name="journal_id" invisible="1"/>
                     <field name="reconcile_partial_id"/>
                     <field name="state" invisible="1"/>
                     <field name="debit" sum="Total debit"/>

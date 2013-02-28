@@ -68,7 +68,7 @@
             </field>
         </record>
 
-        <record id="action_mail_archives_feeds" model="ir.actions.client">
+        <record id="action_mail_archives_feeds_portal" model="ir.actions.client">
             <field name="name">Archives</field>
             <field name="tag">mail.wall</field>
             <field name="context">{
@@ -100,6 +100,8 @@
             action="action_mail_inbox_feeds_portal" sequence="10" groups="portal.group_portal"/>
         <menuitem name="To-do" id="portal_mail_starfeeds" parent="portal_messages"
             action="action_mail_star_feeds_portal" sequence="20" groups="portal.group_portal"/>
+        <menuitem name="Archives" id="portal_mail_archivesfeeds" parent="portal_messages"
+            action="action_mail_archives_feeds_portal" sequence="30" groups="portal.group_portal"/>
 
         <!--
             Create menu items that we'll leave empty for now - they'll be
