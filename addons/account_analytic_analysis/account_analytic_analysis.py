@@ -662,14 +662,14 @@ class account_analytic_account(osv.osv):
             ], 'Recurrency', help="Let the event automatically repeat at that interval"),
         'interval': fields.integer('Repeat Every', help="Repeat every (Days/Week/Month/Year)"),
         'next_date': fields.date('Next Date'),
-        'amount_untaxed': fields.function(_amount_all, digits_compute=dp.get_precision('Account'), string='Subtotal', track_visibility='always',
+        'amount_untaxed': fields.function(_amount_all, digits_compute=dp.get_precision('Account'), string='Total tax excluded', track_visibility='always',
             store={
                 'account.analytic.account': (lambda self, cr, uid, ids, c={}: ids, ['invoice_line_ids'], 20),
                 'account.invoice.tax': (_get_invoice_tax, None, 20),
                 'account.analytic.invoice.line': (_get_invoice_line, ['price_unit','tax_ids','quantity','analytic_account_id'], 20),
             },
             multi='all'),
-        'amount_tax': fields.function(_amount_all, digits_compute=dp.get_precision('Account'), string='Tax',
+        'amount_tax': fields.function(_amount_all, digits_compute=dp.get_precision('Account'), string='Taxes',
             store={
                 'account.analytic.account': (lambda self, cr, uid, ids, c={}: ids, ['invoice_line_ids'], 20),
                 'account.invoice.tax': (_get_invoice_tax, None, 20),
