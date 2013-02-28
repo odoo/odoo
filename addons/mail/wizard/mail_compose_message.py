@@ -214,7 +214,7 @@ class mail_compose_message(osv.TransientModel):
                     new_partner_ids = email_dict.pop('partner_ids', [])
                     post_values['partner_ids'] += [(4, partner_id) for partner_id in new_partner_ids]
                     new_attachment_ids = email_dict.pop('attachment_ids', [])
-                    post_values['attachments'] += new_attachment_ids
+                    post_values['attachment_ids'] += [(4, attach_id) for attach_id in new_attachment_ids]
                     new_attachments = email_dict.pop('attachments', [])
                     post_values['attachments'] += new_attachments
                     post_values.update(email_dict)
