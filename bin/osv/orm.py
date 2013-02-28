@@ -3256,12 +3256,18 @@ class orm(orm_template):
 
         self.pool.get('ir.model.access').check(cr, uid, self._name, 'unlink', context=context)
 
-        properties = self.pool.get('ir.property')
+        ir_property = self.pool.get('ir.property')
+
+        # Check if the records are used as default properties.
         domain = [('res_id', '=', False),
                   ('value_reference', 'in', ['%s,%s' % (self._name, i) for i in ids]),
                  ]
-        if properties.search(cr, uid, domain, context=context):
+        if ir_property.search(cr, uid, domain, context=context):
             raise except_orm(_('Error'), _('Unable to delete this document because it is used as a default property'))
+
+        # Delete the records' properties.
+        property_ids = ir_property.search(cr, uid, [('res_id', 'in', ['%s,%s' % (self._name, i) for i in ids])], context=context)
+        ir_property.unlink(cr, uid, property_ids, context=context)
 
         wf_service = netsvc.LocalService("workflow")
         for oid in ids:
