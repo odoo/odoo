@@ -207,7 +207,6 @@ class hr_evaluation(osv.osv):
                         'evaluation_id': evaluation.id,
                         'survey_id': phase.survey_id.id,
                         'date_deadline': datetime.now() + relativedelta(months=1),
-                        'partner_id': child.user_id and child.user_id.partner_id.id or None,
                         'email': child.work_email or None,
                         'user_to_review_id': evaluation.employee_id.id,
                         'response_type': 'link',
@@ -248,8 +247,8 @@ class hr_evaluation(osv.osv):
 
     def button_cancel(self, cr, uid, ids, context=None):
         interview_obj = self.pool.get('hr.evaluation.interview')
-        evaluation = self.browse(cr, uid, ids[0], context)
-        interview_obj.survey_req_cancel(cr, uid, [r.id for r in evaluation.survey_response_ids])
+        evaluation = self.browse(cr, uid, ids[0], context=context)
+        interview_obj.action_cancel(cr, uid, [r.id for r in evaluation.survey_response_ids], context=context)
         self.write(cr, uid, ids, {'state': 'cancel'}, context=context)
         return True
 
@@ -301,11 +300,33 @@ class hr_evaluation_interview(osv.osv):
         'response_id': fields.many2one('survey.response', 'Request_id', ondelete='cascade', required=True),
         'user_to_review_id': fields.many2one('hr.employee', 'Employee to Interview'),
         'evaluation_id': fields.many2one('hr_evaluation.evaluation', 'Appraisal Form'),
-        'user_id': fields.many2one('res.users', 'Interviewer', readonly=1),
+        'user_id': fields.many2one('res.users', 'Interviewer'),
     }
     _defaults = {
         'is_evaluation': True,
     }
+
+    def action_survey_resent(self, cr, uid, ids, context=None):
+        record = self.browse(cr, uid, ids[0], context=context)
+        return self.pool.get('survey.response').action_survey_resent(cr, uid, [record.response_id.id], context=context)
+
+    def action_print_response(self, cr, uid, ids, context=None):
+        record = self.browse(cr, uid, ids[0], context=context)
+        return self.pool.get('survey.response').action_print_response(cr, uid, [record.response_id.id], context=context)
+
+    def action_preview(self, cr, uid, ids, context=None):
+        record = self.browse(cr, uid, ids[0], context=context)
+        return self.pool.get('survey.response').action_preview(cr, uid, [record.response_id.id], context=context)
+
+    def action_cancel(self, cr, uid, ids, context=None):
+        record = self.browse(cr, uid, ids[0], context=context)
+        return self.pool.get('survey.response').action_cancel(cr, uid, [record.response_id.id], context=context)
+
+    def action_fill(self, cr, uid, ids, context=None):
+        record = self.browse(cr, uid, ids[0], context=context)
+        action = self.pool.get('survey.response').action_preview(cr, uid, [record.response_id.id], context=None)
+        action['context']['readonly'] = False
+        return action
 
     def _needaction_domain_get(self, cr, uid, context=None):
         return ['|',
@@ -343,10 +364,6 @@ class hr_evaluation_interview(osv.osv):
             if not flag and wating_id:
                 self.survey_req_waiting_answer(cr, uid, [wating_id], context=context)
         self.write(cr, uid, ids, {'state': 'done'}, context=context)
-        return True
-
-    def survey_req_cancel(self, cr, uid, ids, context=None):
-        self.write(cr, uid, ids, {'state': 'cancel'}, context=context)
         return True
 
     def action_print_survey(self, cr, uid, ids, context=None):

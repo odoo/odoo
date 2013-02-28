@@ -675,11 +675,10 @@ class survey_response(osv.osv):
         context = context or {}
         context.update({
             'survey_resent_token': True,
-            'default_partner_ids': [record.partner_id.id],
-            'multi_email': [record.email],
+            'default_partner_ids': record.partner_id and [record.partner_id.id] or [],
+            'default_multi_email': record.email or "",
             'default_public': 'email',
         })
-
         return self.pool.get('survey').action_survey_sent(cr, uid, [record.survey_id.id], context=context)
 
     def action_print_response(self, cr, uid, ids, context=None):
@@ -725,7 +724,7 @@ class survey_response(osv.osv):
             'context': context
         }
 
-    def action_cancel(self, cr, uid, ids, arg):
+    def action_cancel(self, cr, uid, ids, context=None):
         self.pool.get('survey').check_access_rights(cr, uid, 'write')
         return self.write(cr, uid, ids, {'state': 'cancel'})
 

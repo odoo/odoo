@@ -19,6 +19,9 @@
 ]]></field>
         </record>
 
+        <!--Survey send
+            Context['survey_resent_token'], if True, hidde share option, emails list and partner_ids
+        -->
         <record model="ir.ui.view" id="survey_email_compose_message">
             <field name="name">survey.mail.compose.message.form</field>
             <field name="model">survey.mail.compose.message</field>
@@ -28,10 +31,10 @@
                     <field name="model" invisible="1"/>
                     <field name="res_id" invisible="1"/>
                     <field name="parent_id" invisible="1"/>
-                    <group col="2">
+                    <group col="2" invisible="context.get('survey_resent_token')">
                         <field name="public"/>
                     </group>
-                    <group col="1" attrs="{'invisible':[('public','in',['email', 'email_public_link'])]}" class="oe_survey_email_public">
+                    <group col="1" invisible="context.get('survey_resent_token')" attrs="{'invisible':[('public','in',['email', 'email_public_link'])]}" class="oe_survey_email_public">
                         <div>
                             You can share your survey web public link and/or send private invitations to your audience.<br/>
                             People can response once per invitation, and whenever they want with the public web link.
@@ -47,8 +50,8 @@
                     </group>
                     <group col="1" attrs="{'invisible':['|',('public','=',False),('public','in',['public_link'])]}">
                         <group col="2">
-                            <field name="partner_ids" widget="many2many_tags_email" placeholder="Add list of existing contacts..." context="{'force_email':True, 'show_email':True}"/>
-                            <field name="multi_email" placeholder="Add list of email of recipients (will not converted in partner), separated by commas, semicolons or newline..." on_change="onchange_multi_email(multi_email, context)" no_resize="1"/>
+                            <field invisible="context.get('survey_resent_token')" name="partner_ids" widget="many2many_tags_email" placeholder="Add list of existing contacts..." context="{'force_email':True, 'show_email':True}"/>
+                            <field invisible="context.get('survey_resent_token')" name="multi_email" placeholder="Add list of email of recipients (will not converted in partner), separated by commas, semicolons or newline..." on_change="onchange_multi_email(multi_email, context)" no_resize="1"/>
                             <field name="subject" placeholder="Subject..."/>
                         </group>
                         <field name="body" help="__URL__ will be automatically transformed into web address (public or private, depending on your choice). You can click on 'Show Source' button to see __URL__ in the link tag on the email template."/>

@@ -149,6 +149,10 @@ class survey_mail_compose_message(osv.TransientModel):
                     raise osv.except_osv(_('Warning!'), _("The content of the text don't contain '__URL__'. \
                         __URL__ is automaticaly converted into the special url of the survey."))
 
+                if not wizard.multi_email and not wizard.partner_ids and (context.get('default_partner_ids') or context.get('default_multi_email')):
+                    wizard.multi_email = context.get('default_multi_email')
+                    wizard.partner_ids = context.get('default_partner_ids')
+
                 emails = list(set(emails_split.split(wizard.multi_email or "")) - set([partner.email for partner in wizard.partner_ids]))
 
                 # quick check of email list

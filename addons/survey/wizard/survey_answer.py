@@ -430,7 +430,7 @@ class survey_question_wiz(osv.osv_memory):
                     else:
                         etree.SubElement(xml_footer, 'label', {'string': ""})
                         etree.SubElement(xml_footer, 'button', {'name': "action_next", 'string': _("Next"), 'type': "object", 'context': tools.ustr(context), 'class': not response_info['readonly'] and "oe_highlight" or ""})
-                    if context.get('ir_actions_act_window_target') == 'edit':
+                    if context.get('ir_actions_act_window_target') != 'inline':
                         etree.SubElement(xml_footer, 'label', {'string': _("or")})
                         etree.SubElement(xml_footer, 'button', {'special': "cancel", 'string': _("Exit"), 'class': "oe_link"})
                     etree.SubElement(xml_footer, 'label', {'string': tools.ustr(page_number + 1) + "/" + tools.ustr(total_pages), 'class': "oe_survey_title_page oe_right"})
@@ -1132,7 +1132,7 @@ class survey_question_wiz(osv.osv_memory):
             "view_mode": 'form',
             'res_model': 'survey.question.wiz',
             'type': 'ir.actions.act_window',
-            'target': context.get('ir_actions_act_window_target', 'inline'),
+            'target': context.get('ir_actions_act_window_target', 'new'),
             'context': context
         }
 
@@ -1180,7 +1180,7 @@ class survey_question_wiz(osv.osv_memory):
             "view_mode": 'form',
             'res_model': 'survey.question.wiz',
             'type': 'ir.actions.act_window',
-            'target': context.get('ir_actions_act_window_target', 'inline'),
+            'target': context.get('ir_actions_act_window_target', 'new'),
             'context': context,
             'view_id': view_id,
         }
