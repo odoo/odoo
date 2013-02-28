@@ -22,20 +22,27 @@
                 <form string="Google Drive Configuration" version="7.0">
                 <group>
                     <field name="model_id"/>
-                    <label for='gdocs_resource_id'/>
+                    <label for='filter_id'/>
                     <div>
-                        <field name='gdocs_resource_id'/>
+                        <field name='filter_id'/>
                         <p class="oe_grey">
-This is the id of the template document, on google side. You can find it thanks to its URL:
-<ul>
-<li>for a text document with url like `https://docs.google.com/a/openerp.com/document/d/123456789/edit`, the ID is `document:123456789`</li>
-<li>for a spreadsheet document with url like `https://docs.google.com/a/openerp.com/spreadsheet/ccc?key=123456789#gid=0`, the ID is `spreadsheet:123456789`</li>
-<li>for a presentation (slide show) document with url like `https://docs.google.com/a/openerp.com/presentation/d/123456789/edit#slide=id.p`, the ID is `presentation:123456789`</li>
-<li>for a drawing document with url like `https://docs.google.com/a/openerp.com/drawings/d/123456789/edit`, the ID is `drawings:123456789`</li>
-</ul>
+					To Create a new filter, go to the list of documents you want to attach a google document to and 
+					save the filter.Then come back ti this view.The saved filter will be available in the filed above.
+					For instance,to attach a document to the sales orders of Agrolait,you go to sales orders list view,
+					filter on Agrolait and save the filter.
                         </p>
                     </div>
-                    <field name='name_template'/>
+                    <field name='template_url' placeholder="https://docs.google.com/document/d/1vOtpJK9scIQz6taD9tJRIETWbEw3fSiaQHArsJYcua4/edit"/>
+                    <label for='name_template'/>
+                    <div>
+                    	<field name='name_template'/>
+                    	<p class="oe_grey">
+                    		The name of the attached document can use fixed or variable data. To distinguish between documents in
+					Google Drive,use fixed words and fields.For instance,in the example above,if you wrote Agrolait_%%(name)s_Sales
+					in the Google Drive name field,the document in your Google Drive and in OpenERP attachment will be named
+					'Agrolait_SO0001_Sales'.
+                    	</p>
+                    </div>
                 </group>
                 </form>
             </field>

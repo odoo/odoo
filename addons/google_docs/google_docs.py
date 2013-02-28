@@ -177,14 +177,8 @@ class config(osv.osv):
 
     _columns = {
         'model_id': fields.many2one('ir.model', 'Model', required=True),
-        'gdocs_resource_id': fields.char('Google Resource ID to Use as Template', size=64, help='''
-This is the id of the template document, on google side. You can find it thanks to its URL: 
-*for a text document with url like `https://docs.google.com/a/openerp.com/document/d/123456789/edit`, the ID is `document:123456789`
-*for a spreadsheet document with url like `https://docs.google.com/a/openerp.com/spreadsheet/ccc?key=123456789#gid=0`, the ID is `spreadsheet:123456789`
-*for a presentation (slide show) document with url like `https://docs.google.com/a/openerp.com/presentation/d/123456789/edit#slide=id.p`, the ID is `presentation:123456789`
-*for a drawing document with url like `https://docs.google.com/a/openerp.com/drawings/d/123456789/edit`, the ID is `drawings:123456789`
-...
-''', required=True),
+        'filter_id' : fields.many2one('ir.filters', 'Filter'),
+        'template_url': fields.char('Template Url', required=True, size=1024),
         'name_template': fields.char('Google Drive Name Pattern', size=64, help='Choose how the new google drive will be named, on google side. Eg. gdoc_%(field_name)s', required=True),
     }
 
