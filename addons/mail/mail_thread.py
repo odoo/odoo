@@ -817,15 +817,19 @@ class mail_thread(osv.AbstractModel):
                         "now deprecated res.log.")
         self.message_post(cr, uid, [id], message, context=context)
 
-    def _message_add_suggested_recipient(self, result, obj, partner=None, email=None, reason='', context=None):
+    def _message_add_suggested_recipient(self, cr, uid, result, obj, partner=None, email=None, reason='', context=None):
         """ Called by message_get_suggested_recipients, to add a suggested
             recipient in the result dictionary. The form is :
                 partner_id, partner_name<partner_email> or partner_name, reason """
+        if email and not partner:
+            partner_info = self.message_get_partner_info_from_emails(cr, uid, [email], context=context)[0]
+            if partner_info.get('partner_id'):
+                partner = self.pool.get('res.partner').browse(cr, SUPERUSER_ID, [partner_info.get('partner_id')], context=context)[0]
+        if email and email in [val[1] for val in result[obj.id]]:  # already existing email -> skip
+            return result
         if partner and partner in obj.message_follower_ids:  # recipient already in the followers -> skip
             return result
         if partner and partner in [val[0] for val in result[obj.id]]:  # already existing partner ID -> skip
-            return result
-        if email and email in [val[1] for val in result[obj.id]]:  # already existing email -> skip
             return result
         if partner and partner.email:  # complete profile: id, name <email>
             result[obj.id].append((partner.id, '%s<%s>' % (partner.name, partner.email), reason))
@@ -843,7 +847,7 @@ class mail_thread(osv.AbstractModel):
             for obj in self.browse(cr, SUPERUSER_ID, ids, context=context):  # SUPERUSER because of a read on res.users that would crash otherwise
                 if not obj.user_id or not obj.user_id.partner_id:
                     continue
-                self._message_add_suggested_recipient(result, obj, partner=obj.user_id.partner_id, reason=self._all_columns['user_id'].column.string, context=context)
+                self._message_add_suggested_recipient(cr, uid, result, obj, partner=obj.user_id.partner_id, reason=self._all_columns['user_id'].column.string, context=context)
         return result
 
     def message_get_partner_info_from_emails(self, cr, uid, emails, link_mail=False, context=None):

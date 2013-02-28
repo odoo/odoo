@@ -489,9 +489,9 @@ class project_issue(base_stage, osv.osv):
         recipients = super(project_issue, self).message_get_suggested_recipients(cr, uid, ids, context=context)
         for issue in self.browse(cr, uid, ids, context=context):
             if issue.partner_id:
-                self._message_add_suggested_recipient(recipients, issue, partner=issue.partner_id, reason=_('Customer'))
+                self._message_add_suggested_recipient(cr, uid, recipients, issue, partner=issue.partner_id, reason=_('Customer'))
             elif issue.email_from:
-                self._message_add_suggested_recipient(recipients, issue, email=issue.email_from, reason=_('Customer Email'))
+                self._message_add_suggested_recipient(cr, uid, recipients, issue, email=issue.email_from, reason=_('Customer Email'))
         return recipients
 
     def message_new(self, cr, uid, msg, custom_values=None, context=None):
