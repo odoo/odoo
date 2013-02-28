@@ -5,13 +5,11 @@
 </head>
 <body>
 	<header>
-	    % if object.report_header
-	    	${object.report_header}
-	    % endif
-	</header>
-    
-    <p>Below are the latest results for the plan ${object.name} for ${user.name}.</p>
+        <strong>${object.name}</strong>
+    </header>
 
+    <p class="oe_grey">${object.report_header or ''}</p>
+    <br/><br/>
     <table width="100%" border="1">
     <tr>
         <th>Goal</th>
@@ -26,6 +24,9 @@
             <td>${goal.current}</td>
             <td>${goal.completeness} %</td>
         </tr>
+
+        <br/><br/>  
+    
     % endfor
     </table>
 </body>

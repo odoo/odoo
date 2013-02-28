@@ -5,10 +5,10 @@
 </head>
 <body>
 	<header>
-	    % if object.report_header
-	    	${object.report_header}
-	    % endif
+	    <strong>Reminder ${object.name}</strong>
 	</header>
+
+	<p class="oe_grey">${object.report_header or ''}</p>
     
     <p>You have not updated your progress for the goal ${object.type_id.name} (currently reached at ${object.completeness}%) for at least ${object.remind_update_delay}. Do not forget to do it.</p>
 

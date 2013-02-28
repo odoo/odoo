@@ -338,9 +338,6 @@ class gamification_goal_plan(osv.Model):
         template_env = TemplateHelper()
 
         for plan in self.browse(cr, uid, ids, context=context):
-            if not plan.report_message_group_id:
-                # no report group, skipping
-                continue
 
             if plan.visibility_mode == 'board':
                 # generate a shared report
@@ -372,15 +369,17 @@ class gamification_goal_plan(osv.Model):
                     planlines_boards.append({'goal_type':planline.type_id.name, 'board_goals':sorted_board})
 
                 body_html = template_env.get_template('group_progress.mako').render({'object':plan, 'planlines_boards':planlines_boards})
+                print(body_html)
                 self.message_post(cr, uid, plan.id,
                     body=body_html,
                     partner_ids=[user.partner_id.id for user in plan.user_ids],
                     context=context,
                     subtype='mail.mt_comment')
-                self.pool.get('mail.group').message_post(cr, uid, plan.report_message_group_id.id,
-                    body=body_html,
-                    context=context,
-                    subtype='mail.mt_comment')
+                if plan.report_message_group_id:
+                    self.pool.get('mail.group').message_post(cr, uid, plan.report_message_group_id.id,
+                        body=body_html,
+                        context=context,
+                        subtype='mail.mt_comment')
                 
             else:
                 # generate individual reports
@@ -401,10 +400,11 @@ class gamification_goal_plan(osv.Model):
                         partner_ids=[user.partner_id.id],
                         context=context,
                         subtype='mail.mt_comment')
-                    self.pool.get('mail.group').message_post(cr, uid, plan.report_message_group_id.id,
-                        body=body_html,
-                        context=context,
-                        subtype='mail.mt_comment')
+                    if plan.report_message_group_id:
+                        self.pool.get('mail.group').message_post(cr, uid, plan.report_message_group_id.id,
+                            body=body_html,
+                            context=context,
+                            subtype='mail.mt_comment')
         return True
 
 

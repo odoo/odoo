@@ -223,7 +223,7 @@ class gamification_goal(osv.Model):
                 else: # computation mode = count
                     res = obj.search(cr, uid, domain, context=context)
                     towrite = {'current': len(res)}
-
+                print(domain, res)
             # check goal target reached
             if (goal.type_id.condition == 'plus' \
                 and towrite['current'] >= goal.target_goal) \

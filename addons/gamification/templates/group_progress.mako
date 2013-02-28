@@ -9,8 +9,8 @@
 	</header>
 
 	<p class="oe_grey">${object.report_header or ''}</p>
-
-    % for planline in planlines_boards:
+	<br/><br/>
+	% for planline in planlines_boards:
         
         <table width="100%" border="1">
         	<tr>
