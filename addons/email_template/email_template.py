@@ -379,11 +379,11 @@ class email_template(osv.osv):
         # manage attachments
         attachment_ids = values.pop('attachment_ids', [])
         attachments = values.pop('attachments', [])
-        for fname, fcontent in attachments:
+        for attachment in attachments:
             attachment_data = {
-                    'name': fname,
-                    'datas_fname': fname,
-                    'datas': fcontent,
+                    'name': attachment[0],
+                    'datas_fname': attachment[0],
+                    'datas': attachment[1],
                     'res_model': values.get('model', False),
                     'res_id': values.get('res_id', False),
             }
