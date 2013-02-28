@@ -589,7 +589,13 @@ class gamification_goal_plan(osv.Model):
 
 
     def report_progress(self, cr, uid, ids, users=False, context=None):
-        """Post report about the progress of the goals"""
+        """Post report about the progress of the goals
+
+        :param list(int) ids: the list of plan ids that need to be reported
+        :param list(res.users) users: the list of users that are concerned by
+          the report. If False, will send the report to every user concerned
+          (goal users and group that recieves a copy). Only used for plan with
+          a visibility mode set to 'personal'."""
         
         context = context or {}
         goal_obj = self.pool.get('gamification.goal')
@@ -641,7 +647,7 @@ class gamification_goal_plan(osv.Model):
                 
             else:
                 # generate individual reports
-                for user in plan.user_ids:
+                for user in users or plan.user_ids:
                     
                     goal_ids = self.get_current_related_goals(cr, uid, plan.id, user.id, context=context)
                     if len(goal_ids) == 0:
