@@ -8,13 +8,13 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2012-12-21 17:04+0000\n"
-"PO-Revision-Date: 2013-02-23 12:33+0000\n"
+"PO-Revision-Date: 2013-02-27 08:20+0000\n"
 "Last-Translator: gobi <Unknown>\n"
 "Language-Team: Mongolian <mn@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-02-24 05:12+0000\n"
+"X-Launchpad-Export-Date: 2013-02-28 05:31+0000\n"
 "X-Generator: Launchpad (build 16506)\n"
 
 #. module: stock
@@ -33,6 +33,8 @@ msgid ""
 "Shirts, for the same \"Linux T-Shirt\", you may have variants on  sizes or "
 "colors; S, M, L, XL, XXL."
 msgstr ""
+"Бараанд олон хувилбар боломжийг олгоно. Тухайлбал хэрэв подвалк зардаг бол "
+"ижилхэн Линукс подвалк боловч ялгаатай өнгө, хэмжээтэй байж болно."
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_move_split_lines
@@ -130,7 +132,7 @@ msgstr "Барааны хөдөлгөөн"
 #: code:addons/stock/stock.py:2580
 #, python-format
 msgid "Please provide proper quantity."
-msgstr ""
+msgstr "Зөв тоо хэмжээг оруулна уу"
 
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_stock_inventory_control
@@ -201,7 +203,7 @@ msgstr "Нөөцийн тооллого"
 #. module: stock
 #: selection:stock.location.product,type:0
 msgid "Analyse a Period"
-msgstr ""
+msgstr "Мөчлөгийг шинжлэх"
 
 #. module: stock
 #: view:report.stock.move:0
@@ -253,7 +255,7 @@ msgstr "Оноогдсон Хүргэх Захиалгууд"
 #: code:addons/stock/wizard/stock_change_standard_price.py:107
 #, python-format
 msgid "Active ID is not set in Context."
-msgstr ""
+msgstr "Агуулгад Идэвхтэй ID тохируулагдаагүй байна."
 
 #. module: stock
 #: selection:stock.picking,invoice_state:0
@@ -333,7 +335,7 @@ msgstr ""
 #. module: stock
 #: view:product.product:0
 msgid "Forecasted:"
-msgstr ""
+msgstr "Урьдчилан таамагласан:"
 
 #. module: stock
 #: view:stock.partial.move:0
@@ -383,6 +385,7 @@ msgstr "Харилцагаар Бүлэглэх"
 #: help:stock.picking.out,move_type:0
 msgid "It specifies goods to be deliver partially or all at once"
 msgstr ""
+"Бараа хэсэгчлэн хүргэгдэх үү эсэвэл нэг мөсөн хүргэгдэхүү гэдэгийг заана"
 
 #. module: stock
 #: model:ir.model,name:stock.model_res_partner
@@ -400,7 +403,7 @@ msgstr "Харилцагч"
 #. module: stock
 #: field:stock.config.settings,module_claim_from_delivery:0
 msgid "Allow claim on deliveries"
-msgstr ""
+msgstr "Хүргэлтийн гомдлыг зөвшөөрнө"
 
 #. module: stock
 #: selection:stock.return.picking,invoice_state:0
@@ -416,12 +419,12 @@ msgstr "Барааны хөдөлгөөн боловсруулагдлаа"
 #: field:stock.inventory.line.split,use_exist:0
 #: field:stock.move.split,use_exist:0
 msgid "Existing Serial Numbers"
-msgstr ""
+msgstr "Байгаа цувралын дугаарууд"
 
 #. module: stock
 #: model:res.groups,name:stock.group_inventory_valuation
 msgid "Manage Inventory valuation"
-msgstr ""
+msgstr "Тооллогын үнэлгээний менежментийн"
 
 #. module: stock
 #: model:stock.location,name:stock.stock_location_suppliers
@@ -452,7 +455,7 @@ msgstr "Дотоод байрлал"
 #. module: stock
 #: view:stock.move:0
 msgid "Split in Serial Number"
-msgstr ""
+msgstr "Цувралын дугаараар салгах"
 
 #. module: stock
 #: view:stock.location:0
@@ -510,7 +513,7 @@ msgstr "Тоо Хэмжээгээр"
 #. module: stock
 #: model:ir.actions.client,name:stock.action_client_warehouse_menu
 msgid "Open Warehouse Menu"
-msgstr ""
+msgstr "Агуулах Менюг нээх"
 
 #. module: stock
 #: field:stock.warehouse,lot_output_id:0
@@ -526,7 +529,7 @@ msgstr "Хуваах"
 #. module: stock
 #: field:stock.config.settings,module_product_expiry:0
 msgid "Expiry date on serial numbers"
-msgstr ""
+msgstr "Цувралын дугааруудад дуусах огноо"
 
 #. module: stock
 #: field:stock.move,price_currency_id:0
@@ -550,7 +553,7 @@ msgstr ""
 #. module: stock
 #: field:stock.config.settings,group_stock_tracking_lot:0
 msgid "Track serial number on logistic units (pallets)"
-msgstr ""
+msgstr "Серийн дугаарыг логистикийн нэгж (подон)-д хөтлөх"
 
 #. module: stock
 #: help:product.template,sale_delay:0
@@ -559,6 +562,8 @@ msgid ""
 "the delivery of the finished products. It's the time you promise to your "
 "customers."
 msgstr ""
+"Захиалагч батласнаас барааг хүргэж дуусах хүртэлх дундаж хүлээлт өдөрөөр. "
+"Энэ нь захиалагчид таны амлаж чадах огноо байна."
 
 #. module: stock
 #: code:addons/stock/product.py:196
@@ -808,12 +813,12 @@ msgstr "Баглаа"
 #. module: stock
 #: selection:stock.location.product,type:0
 msgid "Analyse Current Inventory"
-msgstr ""
+msgstr "Одоогийн Нөөцийг Шинжлэх"
 
 #. module: stock
 #: view:stock.move:0
 msgid "To Do"
-msgstr ""
+msgstr "Хийх ажил"
 
 #. module: stock
 #: selection:report.stock.inventory,month:0
