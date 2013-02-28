@@ -5234,12 +5234,8 @@ class BaseModel(object):
             ctx.update(kwargs)
 
         # rebrowse record, recordset and null instances
-        if self.is_record():
-            return self.browse(cr, uid, self.id, context=ctx)
-        elif self.is_recordset:
-            return self.browse(cr, uid, map(int, self), context=ctx)
-        elif self.is_null:
-            return self.browse(cr, uid, False, context=ctx)
+        if self.is_record_or_null() or self.is_recordset():
+            return self.browse(cr, uid, self.unbrowse(), context=ctx)
 
         return self._make_instance(session=Session(cr, uid, ctx))
 
@@ -5327,6 +5323,12 @@ class BaseModel(object):
         elif self.is_recordset():
             return self
         return self.query([])
+
+    def unbrowse(self):
+        """ Return the `id`/`ids` corresponding to a record/recordset/null instance. """
+        if self.is_record_or_null():
+            return self.id
+        return map(int, self)
 
     def __nonzero__(self):
         """ Test whether `self` is nonempty and not null. """
