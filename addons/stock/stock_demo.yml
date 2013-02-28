@@ -1,4 +1,9 @@
 -
+  Only stock manager can create location,warehouse and product, so let's check data with giving the access rights of manager
+-
+  !context
+    uid: 'res_users_stock_manager'
+-
  !record {model: stock.location, id: location_monitor}:
     name: chicago shop
     usage: internal
@@ -40,6 +45,11 @@
     cost_method: average
     property_stock_account_input: account.conf_o_income
     property_stock_account_output: account.conf_o_expense
+-
+  Stock user can handled production lot,inventory and picking, so let's check data with giving the access rights of user
+-
+  !context
+    uid: 'res_users_stock_user'
 -
  !record {model: stock.production.lot, id: lot_monitor_0}:
     name: Lot0 for LCD Monitor
