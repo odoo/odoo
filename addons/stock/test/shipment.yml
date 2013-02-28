@@ -165,11 +165,11 @@
     for account_move_line in account_move.line_id:
         for stock_move in incomming_shipment.move_lines:
             if account_move_line.account_id.id == stock_move.product_id.property_stock_account_input.id:
-                assert account_move_line.credit == 800.0, "Credit amount does not correspond."
+                assert account_move_line.credit == 10000.0, "Credit amount does not correspond."
                 assert account_move_line.debit == 0.0, "Debit amount does not correspond."
             else:
                 assert account_move_line.credit == 0.0, "Credit amount does not correspond."
-                assert account_move_line.debit == 800.0, "Debit amount does not correspond."
+                assert account_move_line.debit == 10000.0, "Debit amount does not correspond."
 -
   I consume 1 unit 15” LCD Monitor from each incoming lots into internal production.
 -
@@ -193,7 +193,7 @@
   !python {model: stock.location}: |
     ctx = {'product_id': ref('product_product_6')}
     refrigerator_location = self.pool.get('stock.location').browse(cr, uid, ref('location_monitor'), context=ctx)
-    assert refrigerator_location.stock_real == 36.0, 'stock does not correspond in stock location shop0.'
+    assert refrigerator_location.stock_real == 136.0, 'stock does not correspond in stock location shop0.'
     scrapped_location = self.browse(cr, uid, ref('stock_location_scrapped'), context=ctx)
     assert scrapped_location.stock_real == 1*4, 'scraped stock does not correspond in scrap location.'
     
