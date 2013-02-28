@@ -788,8 +788,10 @@ class account_voucher(osv.osv):
             if not currency_pool.is_zero(cr, uid, inv_currency_id, line_total):
                 diff = line_total
                 account_id = False
+                analytic_account_id = False
                 if inv.payment_option == 'with_writeoff':
                     account_id = inv.writeoff_acc_id.id
+                    analytic_account_id = inv.analytic_id.id or False
                 elif inv.type in ('sale', 'receipt'):
                     account_id = inv.partner_id.property_account_receivable.id
                 else:
@@ -802,7 +804,7 @@ class account_voucher(osv.osv):
                     'date': inv.date,
                     'credit': diff > 0 and diff or 0.0,
                     'debit': diff < 0 and -diff or 0.0,
-                    'analytic_account_id': inv.analytic_id and inv.analytic_id.id or False,
+                    'analytic_account_id': analytic_account_id,
                     #'amount_currency': company_currency <> current_currency and currency_pool.compute(cr, uid, company_currency, current_currency, diff * -1, context=context_multi_currency) or 0.0,
                     #'currency_id': company_currency <> current_currency and current_currency or False,
                 }
