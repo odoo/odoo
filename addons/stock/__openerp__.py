@@ -59,7 +59,6 @@ Dashboard / Reports for Warehouse Management will include:
     'sequence': 16,
     'demo': [
         'stock_demo.xml',
-#        'stock_demo.yml',
     ],
     'data': [
         'security/stock_security.xml',
@@ -91,9 +90,10 @@ Dashboard / Reports for Warehouse Management will include:
         'res_config_view.xml',
     ],
     'test': [
-#        'test/opening_stock.yml',
-#        'test/shipment.yml',
-#        'test/stock_report.yml',
+        'stock_demo.yml',
+        'test/opening_stock.yml',
+        'test/shipment.yml',
+        #'test/stock_report.yml',
     ],
     'installable': True,
     'application': True,

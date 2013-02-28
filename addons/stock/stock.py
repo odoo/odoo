@@ -2233,7 +2233,6 @@ class stock_move(osv.osv):
 
         acc_valuation = accounts.get('property_stock_valuation_account_id', False)
         journal_id = accounts['stock_journal']
-
         if acc_dest == acc_valuation:
             raise osv.except_osv(_('Error!'),  _('Cannot create Journal Entry, Output Account of this product and Valuation account on category of this product are same.'))
 
