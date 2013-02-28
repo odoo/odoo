@@ -93,6 +93,14 @@ class WebRequest(object):
         if not self.session:
             self.session = session.OpenERPSession()
             self.httpsession[self.session_id] = self.session
+
+        # set db/uid trackers - they're cleaned up at the end of the
+        # WSGI dispatching phase in openerp.service.wsgi_server.application
+        if self.session._db:
+            threading.current_thread().dbname = self.session._db
+        if self.session._uid:
+            threading.current_thread().uid = self.session._uid
+
         self.context = self.params.pop('context', {})
         self.debug = self.params.pop('debug', False) is not False
         # Determine self.lang
