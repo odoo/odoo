@@ -1278,13 +1278,15 @@
                 </t>
             </div>
         </t>
-        <t t-if="widget.get('effective_readonly')" t-foreach="widget.get('value')" t-as="id">
-            <t t-set="file" t-value="widget.data[id]"/>
-            <div>
-                <a t-att-href="file.url" t-attf-title="{(file.name || file.filename) + (file.date?' \n('+file.date+')':'' )}">
-                    <t t-raw="file.name || file.filename"/>
-                </a>
-            </div>
+        <t t-if="widget.get('effective_readonly')">
+            <t t-foreach="widget.get('value')" t-as="id">
+                <t t-set="file" t-value="widget.data[id]"/>
+                <div>
+                    <a t-att-href="file.url" t-attf-title="{(file.name || file.filename) + (file.date?' \n('+file.date+')':'' )}">
+                        <t t-raw="file.name || file.filename"/>
+                    </a>
+                </div>
+            </t>
         </t>
     </div>
 </t>

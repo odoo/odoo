@@ -5021,7 +5021,7 @@ instance.web.form.FieldBinaryImage = instance.web.form.FieldBinary.extend({
 });
 
 /**
- * Widget for (one2many field) to upload one or more file in same time and display in list.
+ * Widget for (many2many field) to upload one or more file in same time and display in list.
  * The user can delete his files.
  * Options on attribute ; "blockui" {Boolean} block the UI or not
  * during the file is uploading
@@ -5046,40 +5046,15 @@ instance.web.form.FieldMany2ManyBinaryMultiFiles = instance.web.form.AbstractFie
         this.$el.on('change', 'input.oe_form_binary_file', this.on_file_change );
     },
     set_value: function(value_) {
-        var value_ = value_ || [];
-        var ids = [];
-        if(value_ instanceof Array) {
-            _.each(value_, function(command) {
-                if (command instanceof Array) {
-                    switch (command[0]) {
-                        case commands.CREATE:
-                            ids = ids.concat(command[2]);
-                            return;
-                        case commands.REPLACE_WITH:
-                            ids = ids.concat(command[2]);
-                            return;
-                        case commands.UPDATE:
-                            ids = ids.concat(command[2]);
-                            return;
-                        case commands.LINK_TO:
-                            ids = ids.concat(command[1]);
-                            return;
-                        case commands.DELETE:
-                            ids = _.filter(ids, function (id) { return id != command[1];});
-                            return;
-                        case commands.DELETE_ALL:
-                            ids = [];
-                            return;
-                    }
-                } else if (typeof command == 'number') {
-                    ids.push(command);
-                }
-            });
+        value_ = value_ || [];
+        if (value_.length >= 1 && value_[0] instanceof Array) {
+            value_ = value_[0][2];
         }
-        this._super( ids );
+        this._super(value_);
     },
     get_value: function() {
-        return _.map(this.get('value'), function (id) { return commands.link_to( id ); });
+        var tmp = [commands.replace_with(this.get("value"))];
+        return tmp;
     },
     get_file_url: function (attachment) {
         return this.session.url('/web/binary/saveas', {model: 'ir.attachment', field: 'datas', filename_field: 'datas_fname', id: attachment['id']});
@@ -5181,7 +5156,7 @@ instance.web.form.FieldMany2ManyBinaryMultiFiles = instance.web.form.AbstractFie
                     'url': this.get_file_url(result)
                 };
             }
-            var values = this.get('value');
+            var values = _.clone(this.get('value'));
             values.push(result.id);
             this.set({'value': values});
         }
