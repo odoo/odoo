@@ -15,6 +15,7 @@ import simplejson
 import time
 import urllib
 import urllib2
+import urlparse
 import xmlrpclib
 import zlib
 from xml.etree import ElementTree
@@ -84,6 +85,7 @@ def rjsmin(script):
     return result
 
 def db_list(req):
+    return ['v7bis']
     proxy = req.session.proxy("db")
     dbs = proxy.list()
     h = req.httprequest.environ['HTTP_HOST'].split(':')[0]
@@ -535,9 +537,17 @@ class Home(openerpweb.Controller):
 
     @openerpweb.httprequest
     def index(self, req, s_action=None, db=None, **kw):
+        dbl = db_list(req)
         if not db:
-            # TODO: maybe redirect to ?db=xxx instead of implicit db set ??
-            db = req.httprequest.cookies.get('last_db_login_success')
+            first = dbl[0] if dbl else None
+            db = req.httprequest.cookies.get('last_used_database') or first
+        if db not in dbl:
+            db = None
+        if db and req.params.get('db') is not db and len(dbl) > 1:
+            query = dict(urlparse.parse_qsl(req.httprequest.query_string, keep_blank_values=True))
+            query.update({ 'db': db })
+            return werkzeug.utils.redirect('?' + urllib.urlencode(query), 303)
+
         js = "\n        ".join('<script type="text/javascript" src="%s"></script>' % i for i in manifest_list(req, 'js', db=db))
         css = "\n        ".join('<link rel="stylesheet" href="%s">' % i for i in manifest_list(req, 'css', db=db))
 
