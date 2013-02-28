@@ -765,6 +765,7 @@ openerp.mail = function (session) {
                                 'full_name': recipient[1],
                                 'name': parsed_email[0],
                                 'email_address': parsed_email[1],
+                                'reason': recipient[2],
                             })
                         }
                     });
@@ -826,7 +827,9 @@ openerp.mail = function (session) {
                                             'name': thread.author_id[2],
                                             'email_address': thread.author_id[3],
                                             'partner_id': false,
-                                            'checked': true });
+                                            'checked': true,
+                                            'reason': 'Incoming email author'
+                                        });
                 }
             });
             return self.recipients;

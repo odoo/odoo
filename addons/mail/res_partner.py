@@ -46,7 +46,7 @@ class res_partner_mail(osv.Model):
     def message_get_suggested_recipients(self, cr, uid, ids, context=None):
         recipients = super(res_partner_mail, self).message_get_suggested_recipients(cr, uid, ids, context=context)
         for partner in self.browse(cr, uid, ids, context=context):
-            self._message_add_suggested_recipient(cr, uid, recipients, partner, partner=partner, reason=_('Customer'))
+            self._message_add_suggested_recipient(cr, uid, recipients, partner, partner=partner, reason=_('Partner Profile'))
         return recipients
 
     def message_post(self, cr, uid, thread_id, **kwargs):
