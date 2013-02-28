@@ -265,11 +265,11 @@ class gamification_goal(osv.Model):
 
                         # generate a remind report
                         body_html = mako_template_env.get_template('reminder.mako').render({'object':goal})
-                        self.pool.get('mail.thread').message_post(cr, uid, False, 
+                        self.message_post(cr, uid, goal.id,
                             body=body_html,
                             partner_ids=[goal.user_id.partner_id.id],
-                            context=context)
-                        #self.pool.get('email.template').send_mail(cr, uid, template_id, goal.id, context=context)
+                            context=context,
+                            subtype='mail.mt_comment')
                         
             else: # count or sum
                 obj = self.pool.get(goal.type_id.model_id.model)
