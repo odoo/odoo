@@ -1,4 +1,9 @@
 -
+  Only stock manager can change the price and update stock of products, so let's check data with giving the access rights of manager
+-
+  !context
+    uid: 'res_users_stock_manager'
+-
   I update the price of the 15” LCD Monitor.
 -
   !python {model: stock.change.standard.price}: |
@@ -33,6 +38,11 @@
     product = self.browse(cr, uid, ref('product_product_6'), context=context)
     assert product.qty_available == 10, "Stock is not updated."
 -
+  Stock user can merge inventory, so let's check data with giving the access rights of user.
+-
+  !context
+    uid: 'res_users_stock_user'
+-
   I merge inventory.
 -
   !python {model: stock.inventory.merge }: |
@@ -43,10 +53,20 @@
   !python {model: stock.inventory.merge }: |
     self.do_merge(cr, uid, [ref('merge_inventory')], context=context)
 -
+  Only stock manager cancelled inventory, so let's check data with giving the access rights of manager
+-
+  !context
+    uid: 'res_users_stock_manager'
+-
   I cancel inventory.
 -
   !python {model: stock.inventory}: |
    self.action_cancel_inventory(cr, uid, [ref('stock_inventory_0')])
+-
+  stock user can reset inventory, so let's check data with giving the access rights of user
+-
+  !context
+    uid: 'res_users_stock_user'
 -
   I reset to draft inventory.
 -
@@ -109,10 +129,20 @@
     product = self.browse(cr, uid, ref('product_product_6'), context=context)
     assert product.virtual_available == 100, "Vitual stock is not updated."
 -
+  Only stock manager can close physical inventory, so let's check data with giving the access rights of manager
+-
+  !context
+    uid: 'res_users_stock_manager'
+-
   I close physical inventory of 15” LCD Monitor.
 -
   !python {model: stock.inventory}: |
     self.action_done(cr, uid, [ref('stock_inventory_0')], context=context)
+-
+  Stock user can check closed move and real stock, so let's check data with giving the access rights of user
+-
+  !context
+    uid: 'res_users_stock_user'
 -
   I check closed move and real stock of 15” LCD Monitor after closed physical inventory.
 -
