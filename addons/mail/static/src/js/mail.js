@@ -550,6 +550,7 @@ openerp.mail = function (session) {
                     'default_attachment_ids': self.attachment_ids,
                     'default_partner_ids': partner_ids,
                     'mail_post_autofollow': true,
+                    'mail_post_autofollow_partner_ids': partner_ids,
                 };
                 if (self.is_log) {
                     _.extend(context, {'mail_compose_log': true});
@@ -708,7 +709,10 @@ openerp.mail = function (session) {
                 'parent_id': this.context.default_parent_id,
                 'attachment_ids': _.map(this.attachment_ids, function (file) {return file.id;}),
                 'partner_ids': partner_ids,
-                'context': _.extend(this.parent_thread.context, {'mail_post_autofollow': true}),
+                'context': _.extend(this.parent_thread.context, {
+                    'mail_post_autofollow': true,
+                    'mail_post_autofollow_partner_ids': partner_ids,
+                }),
                 'type': 'comment',
                 'content_subtype': 'plaintext',
             };
