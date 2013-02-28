@@ -103,8 +103,13 @@
             <field name="model">gamification.goal</field>
             <field name="arch" type="xml">
                 <search string="Search Goals">
-                    <filter name="my_inprogress" string="My Goals in Progress"
-                        domain="[('user_id', '=', uid),('state', 'in', ('inprogress', 'inprogress_update'))]"/>
+                    <filter name="my" string="My Goals" domain="[('user_id', '=', uid)]"/>
+                    <separator/>
+                    <filter name="draft" string="Draft" domain="[('state', '=', 'draft')]"/>
+                    <filter name="inprogress" string="In Progress" domain="[('state', 'in', ('inprogress', 'inprogress_update'))]"/>
+                    <filter name="closed" string="Closed" domain="[('state', 'in', ('reached', 'failed'))]"/>
+                    <separator/>
+
                     <field name="planline_id"/>
                     <field name="user_id"/>
                     <field name="type_id"/>
