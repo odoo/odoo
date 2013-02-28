@@ -71,7 +71,6 @@ class mail_compose_message(osv.TransientModel):
             # FIXME odo: change the mail generation to avoid attachment duplication
             values = self.generate_email_for_composer(cr, uid, template_id, res_id, context=context)
             # transform attachments into attachment_ids
-            values['attachment_ids'] = []
             ir_attach_obj = self.pool.get('ir.attachment')
             for attach_fname, attach_datas in values.pop('attachments', []):
                 data_attach = {
@@ -80,7 +79,7 @@ class mail_compose_message(osv.TransientModel):
                     'datas_fname': attach_fname,
                     'res_model': model,
                     'res_id': res_id,
-                    'type': 'binary', # override default_type from context, possibly meant for another model!
+                    'type': 'binary',  # override default_type from context, possibly meant for another model!
                 }
                 values['attachment_ids'].append(ir_attach_obj.create(cr, uid, data_attach, context=context))
         else:
@@ -122,7 +121,7 @@ class mail_compose_message(osv.TransientModel):
             mail.compose.message, transform email_cc and email_to into partner_ids """
         template_values = self.pool.get('email.template').generate_email(cr, uid, template_id, res_id, context=context)
         # filter template values
-        fields = ['body_html', 'subject', 'email_to', 'email_recipients', 'email_cc', 'attachments']
+        fields = ['body_html', 'subject', 'email_to', 'email_recipients', 'email_cc', 'attachment_ids', 'attachments']
         values = dict((field, template_values[field]) for field in fields if template_values.get(field))
         values['body'] = values.pop('body_html', '')
         # transform email_to, email_cc into partner_ids

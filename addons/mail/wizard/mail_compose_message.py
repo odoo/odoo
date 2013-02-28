@@ -205,13 +205,16 @@ class mail_compose_message(osv.TransientModel):
                     'body': wizard.body,
                     'parent_id': wizard.parent_id and wizard.parent_id.id,
                     'partner_ids': [(4, partner.id) for partner in wizard.partner_ids],
-                    'attachments': [(attach.datas_fname or attach.name, base64.b64decode(attach.datas)) for attach in wizard.attachment_ids],
+                    'attachments': [],
+                    'attachment_ids': [(4, attach.id) for attach in wizard.attachment_ids],
                 }
                 # mass mailing: render and override default values
                 if mass_mail_mode and wizard.model:
                     email_dict = self.render_message(cr, uid, wizard, res_id, context=context)
                     new_partner_ids = email_dict.pop('partner_ids', [])
                     post_values['partner_ids'] += [(4, partner_id) for partner_id in new_partner_ids]
+                    new_attachment_ids = email_dict.pop('attachment_ids', [])
+                    post_values['attachments'] += new_attachment_ids
                     new_attachments = email_dict.pop('attachments', [])
                     post_values['attachments'] += new_attachments
                     post_values.update(email_dict)
