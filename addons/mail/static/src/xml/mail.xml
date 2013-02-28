@@ -256,12 +256,13 @@
                     <t t-if="widget.attachment_ids.length > 0">
                         <div class="oe_msg_attachment_list"></div>
                     </t>
-                    From: <a t-if="widget.author_id and widget.options.show_link and widget.author_id[0]" t-attf-href="#model=res.partner&amp;id=#{widget.author_id[0]}"><t t-raw="widget.author_id[2]"/></a>
+                    <a t-if="widget.author_id and widget.options.show_link and widget.author_id[0]" t-attf-href="#model=res.partner&amp;id=#{widget.author_id[0]}"><t t-raw="widget.author_id[2]"/></a>
                     <span t-if="widget.author_id and (!widget.options.show_link or !widget.author_id[0])"><t t-raw="widget.author_id[2]"/></span>
-                    <span class='oe_subtle'>•</span>
-                    To: 
                     <t t-if="widget.partner_ids.length == 0">
-                        Nobody
+                        logged a note
+                    </t>
+                    <t t-if="widget.partner_ids.length > 0">
+                        to
                     </t>
                     <t t-foreach="widget.partner_ids.slice(0, 3)" t-as="partner">
                         <span t-attf-class="oe_partner_follower">
