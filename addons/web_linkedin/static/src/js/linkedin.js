@@ -69,6 +69,7 @@ openerp.web_linkedin = function(instance) {
                 if (self.linkedin_added) {
                     return self.linkedin_def;
                 }
+                self.$linkedin = $('<div class="oe_linkedin_login_hidden" style="display:none;"><script type="in/Login"></script></div>');
 
                 self.error_catcher(function (error) {
                     if (!!error.caller.match(/API Key is invalid/)) {
@@ -82,8 +83,8 @@ openerp.web_linkedin = function(instance) {
                         return false;
                     }
                 });
+                window.setTimeout(function () {self.error_catcher(false);}, 60000);
 
-                self.$linkedin = $('<div class="oe_linkedin_login_hidden" style="display:none;"><script type="in/Login"></script></div>');
                 $("body").append(self.$linkedin);
                 var tag = document.createElement('script');
                 tag.type = 'text/javascript';
