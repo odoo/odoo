@@ -1149,7 +1149,7 @@ class survey_question_wiz(osv.osv_memory):
     def action_done(self, cr, uid, ids, context=None):
         """ Goes to previous page.
         """
-
+        response_id = None
         response_info = self.get_response_info_from_token(cr, uid, context['survey_id'], context.get("survey_token"), context)
         if response_info['response_id']:
             response_id = response_info['response_id']
@@ -1159,7 +1159,10 @@ class survey_question_wiz(osv.osv_memory):
             if sur_name_read['response_id'] and sur_name_read['response_id'][0]:
                 response_id = sur_name_read['response_id'][0]
 
-        self.pool.get('survey.response').write(cr, SUPERUSER_ID, [response_id], {'state': 'done'})
+        if response_id:
+            self.pool.get('survey.response').write(cr, SUPERUSER_ID, [response_id], {'state': 'done'})
+        else:
+            return {'type': 'ir.actions.act_window_close'}
 
         ir_model_data = self.pool.get('ir.model.data')
         user_browse = self.pool.get('res.users').browse(cr, SUPERUSER_ID, uid, context=context)
