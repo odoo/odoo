@@ -72,6 +72,12 @@
 
 from functools import wraps
 
+#
+# The following attributes are used on methods:
+#    method._api: decorator function, both on original and wrapping method
+#    method._orig: original method, on wrapping method
+#
+
 
 class Meta(type):
     """ Metaclass that automatically decorates methods with :func:`versatile`. """
@@ -79,11 +85,12 @@ class Meta(type):
     def __new__(meta, name, bases, attrs):
         for key, value in attrs.items():
             if not key.startswith('__') and callable(value):
-                attrs[key] = versatile(value)
+                if not hasattr(value, '_api'):
+                    attrs[key] = versatile(value)
         return type.__new__(meta, name, bases, attrs)
 
 
-def _wrapper(method, old_api, new_api):
+def _make_wrapper(method, old_api, new_api):
     """ return a wrapper for a method that combines both api styles
         :param method: the original method
         :param old_api: the function that implements the traditional-style api
@@ -99,7 +106,8 @@ def _wrapper(method, old_api, new_api):
         else:
             return new_api(self, *args, **kwargs)
 
-    wrapper.versatile = True
+    wrapper._api = method._api
+    wrapper._orig = method
     return wrapper
 
 
@@ -145,6 +153,7 @@ def model(method):
             model.method(args)
             model.method(cr, uid, args, context=context)
     """
+    method._api = model
     nargs = method.func_code.co_argcount - 1
 
     def old_api(self, cr, uid, *args, **kwargs):
@@ -152,7 +161,7 @@ def model(method):
         m = self.browse(cr, uid, [], context)
         return method(m, *args, **kwargs)
 
-    return _wrapper(method, old_api, method)
+    return _make_wrapper(method, old_api, method)
 
 
 def record(method):
@@ -177,6 +186,7 @@ def record(method):
             y.method(args)
             model.method(cr, uid, [id, ...], args, context=context)
     """
+    method._api = record
     nargs = method.func_code.co_argcount - 1
 
     def old_api(self, cr, uid, ids, *args, **kwargs):
@@ -190,7 +200,7 @@ def record(method):
         else:
             return dict((x.id, method(x, *args, **kwargs)) for x in self)
 
-    return _wrapper(method, old_api, new_api)
+    return _make_wrapper(method, old_api, new_api)
 
 
 def recordset(method):
@@ -210,6 +220,7 @@ def recordset(method):
 
         This decorator supports the :ref:`record-map-convention`.
     """
+    method._api = recordset
     nargs = method.func_code.co_argcount - 1
 
     def old_api(self, cr, uid, ids, *args, **kwargs):
@@ -223,7 +234,7 @@ def recordset(method):
         else:
             return method(self, *args, **kwargs)
 
-    return _wrapper(method, old_api, new_api)
+    return _make_wrapper(method, old_api, new_api)
 
 
 def cr(method):
@@ -241,10 +252,12 @@ def cr(method):
 
         This decorator is generally not necessary, see :func:`versatile`.
     """
+    method._api = cr
+
     def new_api(self, *args, **kwargs):
         return method(self, self.session.cr, *args, **kwargs)
 
-    return _wrapper(method, method, new_api)
+    return _make_wrapper(method, method, new_api)
 
 
 def cr_uid(method):
@@ -262,6 +275,7 @@ def cr_uid(method):
 
         This decorator is generally not necessary, see :func:`versatile`.
     """
+    method._api = cr_uid
     argnames = method.func_code.co_varnames[:method.func_code.co_argcount]
     if 'context' in argnames:
         def new_api(self, *args, **kwargs):
@@ -274,7 +288,7 @@ def cr_uid(method):
             cr, uid, context = self.session
             return method(self, cr, uid, *args, **kwargs)
 
-    return _wrapper(method, method, new_api)
+    return _make_wrapper(method, method, new_api)
 
 
 def cr_uid_id(method):
@@ -300,6 +314,7 @@ def cr_uid_id(method):
 
         This decorator is generally not necessary, see :func:`versatile`.
     """
+    method._api = cr_uid_id
     argnames = method.func_code.co_varnames[:method.func_code.co_argcount]
     if 'context' in argnames:
         def new_api(self, *args, **kwargs):
@@ -318,7 +333,7 @@ def cr_uid_id(method):
             else:
                 return dict((x.id, method(self, cr, uid, x.id, *args, **kwargs)) for x in self)
 
-    return _wrapper(method, method, new_api)
+    return _make_wrapper(method, method, new_api)
 
 
 def cr_uid_ids(method):
@@ -340,6 +355,7 @@ def cr_uid_ids(method):
         This decorator supports the :ref:`record-map-convention`.
         It is generally not necessary, see :func:`versatile`.
     """
+    method._api = cr_uid_ids
     argnames = method.func_code.co_varnames[:method.func_code.co_argcount]
     if 'context' in argnames:
         def new_api(self, *args, **kwargs):
@@ -358,7 +374,13 @@ def cr_uid_ids(method):
             else:
                 return method(self, cr, uid, map(int, self), *args, **kwargs)
 
-    return _wrapper(method, method, new_api)
+    return _make_wrapper(method, method, new_api)
+
+
+def notversatile(method):
+    """ Decorate a method to prevent any effect from :func:`versatile`. """
+    method._api = False
+    return method
 
 
 def versatile(method):
@@ -376,9 +398,6 @@ def versatile(method):
         Method calls are considered traditional style when their first parameter
         is a database cursor.
     """
-    if hasattr(method, 'versatile'):
-        return method
-
     # introspection on argument names to determine api style
     argnames = method.func_code.co_varnames[:method.func_code.co_argcount]
     if len(argnames) < 4:
@@ -397,11 +416,4 @@ def versatile(method):
                 return cr(method)
 
     # no versatile wrapping by default
-    method.versatile = False
-    return method
-
-
-def notversatile(method):
-    """ Decorate a method to disable any effect from :func:`versatile`. """
-    method.versatile = False
-    return method
+    return notversatile(method)
