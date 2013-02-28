@@ -60,6 +60,12 @@
                  default for multicompany setups. -->
             <field name="domain_force">['|','|',('company_id.child_ids','child_of',[user.company_id.id]),('company_id','child_of',[user.company_id.id]),('company_id','=',False)]</field>
         </record>
+        
+        <record model="ir.rule" id="res_partner_bank_rule">
+            <field name="name">res.partner.bank company</field>
+            <field name="model_id" ref="model_res_partner_bank"/>
+            <field name="domain_force">['|','|',('company_id.child_ids','child_of',[user.company_id.id]),('company_id','child_of',[user.company_id.id]),('company_id','=',False)]</field>
+        </record>
 
         <record model="ir.rule" id="multi_company_default_rule">
             <field name="name">Multi_company_default company</field>
