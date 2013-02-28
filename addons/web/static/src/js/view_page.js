@@ -263,7 +263,7 @@ openerp.web.page = function (openerp) {
         },
         set_value: function(value) {
             this._super.apply(this, arguments);
-            this.$element.find('a').show(!!value);
+            this.$element.find('a').toggle(!!value);
             if (value) {
                 var show_value = _t("Download") + " " + (this.view.datarecord[this.node.attrs.filename] || '');
                 this.$element.find('a').text(show_value);
