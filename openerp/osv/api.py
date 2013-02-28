@@ -34,11 +34,11 @@
         ids = model.search(cr, uid, DOMAIN, context=context)
         model.write(cr, uid, ids, VALUES, context=context)
 
-    may be written as::
+    may also be written as::
 
         # model and records both carry the (cr, uid, context) attached to self
         model = self.session.model(MODEL)
-        records = model.query(DOMAIN)
+        records = model.search(DOMAIN)
         records.write(VALUES)
 
     Methods written in the "traditional" style are automatically decorated,
@@ -71,23 +71,106 @@
 """
 
 from functools import wraps
+import logging
+
+_logger = logging.getLogger(__name__)
+
 
 #
 # The following attributes are used on methods:
 #    method._api: decorator function, both on original and wrapping method
-#    method._orig: original method, on wrapping method
+#    method._returns: set by @returns, both on original and wrapping method
+#    method._orig: original method, on wrapping method only
 #
+
+def _get_returns(method):
+    return getattr(method, '_returns', None)
 
 
 class Meta(type):
     """ Metaclass that automatically decorates methods with :func:`versatile`. """
 
     def __new__(meta, name, bases, attrs):
+        # dummy parent class to catch overridden methods decorated with 'returns'
+        parent = type.__new__(meta, name, bases, {})
+
         for key, value in attrs.items():
             if not key.startswith('__') and callable(value):
+                # make the method inherit from @returns decorators
+                if not _get_returns(value) and _get_returns(getattr(parent, key, None)):
+                    model = _get_returns(getattr(parent, key))
+                    _logger.debug("Method %s.%s inherited @returns(%r)", name, value.__name__, model)
+                    value = returns(model)(value)
+
+                # guess calling convention if none is given
                 if not hasattr(value, '_api'):
-                    attrs[key] = versatile(value)
+                    value = versatile(value)
+
+                attrs[key] = value
+
         return type.__new__(meta, name, bases, attrs)
+
+
+def returns(model):
+    """ Make a decorator for methods that return instances of `model`, which is
+        either a model name, or ``'self'`` for the current model.
+
+        The decorator adapts the method output to the api style: `id`, `ids` or
+        ``False`` when called in the traditional style, or a record, recordset
+        or null when called in the record style.
+
+        This decorator supports the :ref:`record-map-convention`.
+    """
+    def decorate(method):
+        if hasattr(method, '_orig'):
+            # decorate the original method, and re-apply the api decorator
+            origin = method._orig
+            origin._returns = model
+            return origin._api(origin)
+        else:
+            method._returns = model
+            return method
+
+    return decorate
+
+
+def _returns_old(method, func):
+    """ adapts `func` to the traditional-style returning convention of `method`;
+        `func` must follow the record-style returning convention
+    """
+    if _get_returns(method):
+        def wrapper(self, *args, **kwargs):
+            res = func(self, *args, **kwargs)
+            if isinstance(res, dict):
+                return dict((k, v.unbrowse()) for k, v in res.iteritems())
+            return res.unbrowse()
+        return wrapper
+    else:
+        return func
+
+
+def _returns_new(method, func):
+    """ adapts `func` to the record-style returning convention of `method`;
+        `func` must follow the traditional-style returning convention
+    """
+    model = _get_returns(method)
+    if model == 'self':
+        def wrapper(self, *args, **kwargs):
+            res = func(self, *args, **kwargs)
+            if isinstance(res, dict):
+                return dict((k, self.browse(v)) for k, v in res.iteritems())
+            return self.browse(res)
+        return wrapper
+    elif model:
+        def wrapper(self, *args, **kwargs):
+            mod = self.session.model(model)
+            res = func(self, *args, **kwargs)
+            if isinstance(res, dict):
+                return dict((k, mod.browse(v)) for k, v in res.iteritems())
+            return mod.browse(res)
+        return wrapper
+    else:
+        return func
 
 
 def _make_wrapper(method, old_api, new_api):
@@ -107,6 +190,7 @@ def _make_wrapper(method, old_api, new_api):
             return new_api(self, *args, **kwargs)
 
     wrapper._api = method._api
+    wrapper._returns = _get_returns(method)
     wrapper._orig = method
     return wrapper
 
@@ -158,10 +242,10 @@ def model(method):
 
     def old_api(self, cr, uid, *args, **kwargs):
         context, args, kwargs = _split_context_args(nargs, args, kwargs)
-        m = self.browse(cr, uid, [], context)
-        return method(m, *args, **kwargs)
+        obj = self.browse(cr, uid, [], context)
+        return method(obj, *args, **kwargs)
 
-    return _make_wrapper(method, old_api, method)
+    return _make_wrapper(method, _returns_old(method, old_api), method)
 
 
 def record(method):
@@ -200,7 +284,7 @@ def record(method):
         else:
             return dict((x.id, method(x, *args, **kwargs)) for x in self)
 
-    return _make_wrapper(method, old_api, new_api)
+    return _make_wrapper(method, _returns_old(method, old_api), new_api)
 
 
 def recordset(method):
@@ -234,7 +318,7 @@ def recordset(method):
         else:
             return method(self, *args, **kwargs)
 
-    return _make_wrapper(method, old_api, new_api)
+    return _make_wrapper(method, _returns_old(method, old_api), new_api)
 
 
 def cr(method):
@@ -257,7 +341,7 @@ def cr(method):
     def new_api(self, *args, **kwargs):
         return method(self, self.session.cr, *args, **kwargs)
 
-    return _make_wrapper(method, method, new_api)
+    return _make_wrapper(method, method, _returns_new(method, new_api))
 
 
 def cr_uid(method):
@@ -288,7 +372,7 @@ def cr_uid(method):
             cr, uid, context = self.session
             return method(self, cr, uid, *args, **kwargs)
 
-    return _make_wrapper(method, method, new_api)
+    return _make_wrapper(method, method, _returns_new(method, new_api))
 
 
 def cr_uid_id(method):
@@ -333,7 +417,7 @@ def cr_uid_id(method):
             else:
                 return dict((x.id, method(self, cr, uid, x.id, *args, **kwargs)) for x in self)
 
-    return _make_wrapper(method, method, new_api)
+    return _make_wrapper(method, method, _returns_new(method, new_api))
 
 
 def cr_uid_ids(method):
@@ -374,7 +458,7 @@ def cr_uid_ids(method):
             else:
                 return method(self, cr, uid, map(int, self), *args, **kwargs)
 
-    return _make_wrapper(method, method, new_api)
+    return _make_wrapper(method, method, _returns_new(method, new_api))
 
 
 def notversatile(method):

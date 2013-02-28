@@ -428,9 +428,8 @@ class res_partner(osv.Model, format_address):
             raise osv.except_osv(_('Warning'), _("Couldn't create contact without email address !"))
         if not name and email:
             name = email
-        rec_id = self.create({self._rec_name: name or email, 'email': email or False})
-        partners = self.browse([rec_id])
-        return partners.name_get()[0]
+        partner = self.create({self._rec_name: name or email, 'email': email or False})
+        return partner.recordset.name_get()[0]
 
     @api.model
     def name_search(self, name, args=None, operator='ilike', limit=100):
@@ -456,7 +455,7 @@ class res_partner(osv.Model, format_address):
                           ''' + operator + ' %(name)s ' + limit_str, query_args)
             ids = map(lambda x: x[0], cr.fetchall())
             if args:
-                partners = self.query([('id', 'in', ids)] + args, limit=limit)
+                partners = self.search([('id', 'in', ids)] + args, limit=limit)
             else:
                 partners = self.browse(ids)
             if partners:
@@ -465,6 +464,7 @@ class res_partner(osv.Model, format_address):
         return super(res_partner, self).name_search(name, args, operator=operator, limit=limit)
 
     @api.model
+    @api.returns('self')
     def find_or_create(self, email):
         """ Find a partner with the given ``email`` or use :py:method:`~.name_create`
             to create one
@@ -476,10 +476,10 @@ class res_partner(osv.Model, format_address):
         emails = tools.email_split(email)
         if emails:
             email = emails[0]
-        ids = self.search([('email', 'ilike', email)])
-        if not ids:
-            return self.name_create(email)[0]
-        return ids[0]
+        partners = self.search([('email', 'ilike', email)])
+        if partners:
+            return partners[0]
+        return self.browse(self.name_create(email)[0])
 
     @api.recordset
     def _email_send(self, email_from, subject, body, on_error=None):
@@ -532,12 +532,10 @@ class res_partner(osv.Model, format_address):
         return _('Partners: ') + category.name if category else False
 
     @api.model
+    @api.returns('self')
     def main_partner(self):
-        ''' Return the id of the main partner
-        '''
-        model_data = self.session.model('ir.model.data')
-        data = model_data.query([('module', '=', 'base'), ('name', '=', 'main_partner')])[0]
-        return data.res_id
+        ''' Return the main partner '''
+        return self.session.ref('base.main_partner')
 
     @api.record
     def _display_address(self, without_company=False):

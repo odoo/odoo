@@ -1,6 +1,6 @@
 
 from openerp.tools import mute_logger
-from openerp.osv.orm import Record, Recordset, Null, except_orm
+from openerp.osv.orm import Session, Record, Recordset, Null, except_orm
 import common
 
 
@@ -9,8 +9,9 @@ class TestAPI(common.TransactionCase):
 
     def setUp(self):
         super(TestAPI, self).setUp()
-        self.Partner = self.registry('res.partner')
-        self.Users = self.registry('res.users')
+        self.session = Session(self.cr, self.uid, None)
+        self.Partner = self.session.model('res.partner')
+        self.Users = self.session.model('res.users')
 
     def assertIsKind(self, value, kind, model):
         """ check for isinstance(value, kind) and value._name == model """
@@ -30,6 +31,9 @@ class TestAPI(common.TransactionCase):
         for p in partners:
             self.assertIsKind(p, Record, 'res.partner')
         self.assertEqual([p.id for p in partners], ids)
+
+        partners2 = self.Partner.search(domain)
+        self.assertEqual(partners, partners2)
 
     @mute_logger('openerp.osv.orm')
     def test_01_query_offset(self):

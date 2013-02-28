@@ -2223,6 +2223,7 @@ class BaseModel(object):
             return len(res)
         return res
 
+    @api.returns('self')
     def search(self, cr, user, args, offset=0, limit=None, order=None, context=None, count=False):
         """
         Search for records based on a search domain.
@@ -4187,6 +4188,7 @@ class BaseModel(object):
     #
     # TODO: Should set perm to user.xxx
     #
+    @api.returns('self')
     def create(self, cr, user, vals, context=None):
         """
         Create a new record for the model.
@@ -4925,7 +4927,7 @@ class BaseModel(object):
             record['res_id'] = new_id
             trans_obj.create(cr, uid, record, context=context)
 
-
+    @api.returns('self')
     def copy(self, cr, uid, id, default=None, context=None):
         """
         Duplicate record with given id updating it with default values
@@ -5298,8 +5300,7 @@ class BaseModel(object):
     @api.model
     def query(self, domain, offset=0, limit=None, order=None):
         """ make a recordset instance from the result of a query """
-        ids = self.search(domain, offset, limit, order)
-        return self.browse(ids)
+        return self.search(domain, offset, limit, order)
 
     @property
     def record(self):
