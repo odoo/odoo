@@ -604,14 +604,6 @@ instance.web.Login =  instance.web.Widget.extend({
         if (this.params.login_successful) {
             this.on('login_successful', this, this.params.login_successful);
         }
-
-        if (this.has_local_storage && this.remember_credentials) {
-            this.selected_db = localStorage.getItem('last_db_login_success');
-            this.selected_login = localStorage.getItem('last_login_login_success');
-            if (jQuery.deparam(jQuery.param.querystring()).debug !== undefined) {
-                this.selected_password = localStorage.getItem('last_password_login_success');
-            }
-        }
     },
     start: function() {
         var self = this;
@@ -671,6 +663,12 @@ instance.web.Login =  instance.web.Widget.extend({
         } else {
             this.$('div.oe_login_dbpane').show();
         }
+        if (this.has_local_storage && this.remember_credentials) {
+            this.$("[name=login]").val(localStorage.getItem(this.selected_db + '|last_login') || '');
+            if (this.session.debug) {
+                this.$("[name=password]").val(localStorage.getItem(this.selected_db + '|last_password') || '');
+            }
+        }
     },
     on_db_failed: function (error, event) {
         if (error.data.fault_code === 'AccessDenied') {
@@ -704,17 +702,10 @@ instance.web.Login =  instance.web.Widget.extend({
         self.$(".oe_login_pane").fadeOut("slow");
         return this.session.session_authenticate(db, login, password).then(function() {
             self.remember_last_used_database(db);
-            if (self.has_local_storage) {
-                if(self.remember_credentials) {
-                    localStorage.setItem('last_db_login_success', db);
-                    localStorage.setItem('last_login_login_success', login);
-                    if (jQuery.deparam(jQuery.param.querystring()).debug !== undefined) {
-                        localStorage.setItem('last_password_login_success', password);
-                    }
-                } else {
-                    localStorage.setItem('last_db_login_success', '');
-                    localStorage.setItem('last_login_login_success', '');
-                    localStorage.setItem('last_password_login_success', '');
+            if (self.has_local_storage && self.remember_credentials) {
+                localStorage.setItem(db + '|last_login', login);
+                if (self.session.debug) {
+                    localStorage.setItem(db + '|last_password', password);
                 }
             }
             self.trigger('login_successful');

@@ -85,7 +85,6 @@ def rjsmin(script):
     return result
 
 def db_list(req):
-    return ['v7bis']
     proxy = req.session.proxy("db")
     dbs = proxy.list()
     h = req.httprequest.environ['HTTP_HOST'].split(':')[0]
