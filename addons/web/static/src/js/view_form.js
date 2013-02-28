@@ -5373,10 +5373,10 @@ instance.web.form.FieldMonetary = instance.web.form.FieldFloat.extend({
         });
     },
     parse_value: function(val, def) {
-        return instance.web.parse_value(val, {type: "float"}, def);
+        return instance.web.parse_value(val, {type: "float", digits: (this.node.attrs || {}).digits || this.field.digits}, def);
     },
     format_value: function(val, def) {
-        return instance.web.format_value(val, {type: "float"}, def);
+        return instance.web.format_value(val, {type: "float", digits: (this.node.attrs || {}).digits || this.field.digits}, def);
     },
 });
 
