@@ -2659,6 +2659,7 @@ instance.web.form.FieldBoolean = instance.web.form.AbstractField.extend({
         }, this));
         var check_readonly = function() {
             self.$checkbox.prop('disabled', self.get("effective_readonly"));
+            self.click_disabled_boolean();
         };
         this.on("change:effective_readonly", this, check_readonly);
         check_readonly.call(this);
@@ -2669,7 +2670,19 @@ instance.web.form.FieldBoolean = instance.web.form.AbstractField.extend({
     },
     focus: function() {
         this.$checkbox[0].focus();
+    },
+    click_disabled_boolean: function(){
+        var $disabled = $(document).find('input[type=checkbox]:disabled');
+        $disabled.each(function (){
+            var $parent = $(this).closest("span");
+            if($(this).next('div')){
+                $(this).next('div').remove();
+            }
+            var $overlay = $("<div class=boolean />");
+            $parent.append($overlay);
+        });
     }
+   
 });
 
 /**
