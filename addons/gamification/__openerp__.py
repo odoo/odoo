@@ -27,10 +27,8 @@
     'description': """Gamification of goals""",
 
     'data': [
-        'view/type.xml',
-        'view/goal.xml',
-        'view/plan.xml',
-        'view/menu.xml',
+        'goal_view.xml',
+        'plan_view.xml',
         'cron.xml',
         ],
     'installable': True,
