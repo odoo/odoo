@@ -58,24 +58,6 @@ class account_analytic_invoice_line(osv.osv):
         except Exception, ex:
             return False
 
-
-    def _get_tax_lines(self, cr, uid, ids,name, arg, context=None):
-        res = {}
-        product_ids = []
-        product_obj = self.pool.get('product.product')
-        account_obj = self.pool.get('account.account')
-        for line in self.browse(cr, uid, ids, context=context):
-            res[line.id] = []
-            if not line.product_id:
-                continue
-            product = product_obj.browse(cr, uid, line.product_id.id, context=context)
-            a = product.property_account_income.id
-            if not a:
-                a = product.categ_id.property_account_income_categ.id
-            taxes = product.taxes_id and product.taxes_id or (a and account_obj.browse(cr, uid, a, context=context).tax_ids or False)
-            res[line.id] = [x.id for x in taxes]
-        return res
-
     _columns = {
         'product_id': fields.many2one('product.product','Product'),
         'analytic_account_id': fields.many2one('account.analytic.account', 'Analytic Account'),
@@ -85,8 +67,7 @@ class account_analytic_invoice_line(osv.osv):
         'price_unit': fields.float('Unit Price'),
         'price_subtotal': fields.function(_amount_line, string='Amount', type="float",
             digits_compute= dp.get_precision('Account')),
-        'tax_ids':fields.function(_get_tax_lines, type='many2many', relation='account.tax', string='Taxes'),
-        'invoice_id': fields.many2one('account.invoice', 'Invoice Reference', ondelete='cascade', select=True),
+        'tax_ids':fields.many2many('account.tax', 'analytic_account_invoice_line_tax', 'invoice_line_id', 'tax_id', 'Taxes'),
     }
     _order = 'name desc'
 
@@ -96,6 +77,18 @@ class account_analytic_invoice_line(osv.osv):
         'price_unit': 0.0,
         }
 
+    def copy(self, cr, uid, id, default=None, context=None):
+        default = default or {}
+        data = self.browse(cr, uid, id)
+        default.update({'product_id': data.product_id.id,
+                        'name': data.name,
+                        'quantity': data.quantity,
+                        'uom_id': data.uom_id.id,
+                        'price_unit': data.price_unit,
+                        'price_subtotal': data.price_subtotal,
+                        'analytic_account_id' : False,
+                        'tax_ids': [(6, 0, [x.id for x in data.tax_ids])]})
+        return super(account_analytic_invoice_line, self).copy(cr, uid, id, default, context)
 
     def product_id_change(self, cr, uid, ids, product, uom_id, qty=0, name='', partner_id=False, price_unit=False, currency_id=False, company_id=None, context=None):
         if context is None:
@@ -587,6 +580,18 @@ class account_analytic_account(osv.osv):
             res[account.id]['amount_total'] = res[account.id]['amount_tax'] + res[account.id]['amount_untaxed']
         return res
 
+    def _get_invoice_line(self, cr, uid, ids, context=None):
+        result = {}
+        for line in self.pool.get('account.analytic.invoice.line').browse(cr, uid, ids, context=context):
+            result[line.analytic_account_id.id] = True
+        return result.keys()
+
+    def _get_invoice_tax(self, cr, uid, ids, context=None):
+        result = {}
+        for tax in self.pool.get('account.invoice.tax').browse(cr, uid, ids, context=context):
+            result[tax.invoice_id.id] = True
+        return result.keys()
+
     _columns = {
         'is_overdue_quantity' : fields.function(_is_overdue_quantity, method=True, type='boolean', string='Overdue Quantity',
                                                 store={
@@ -648,7 +653,7 @@ class account_analytic_account(osv.osv):
         'invoiced_total' : fields.function(_sum_of_fields, type="float",multi="sum_of_all", string="Total Invoiced"),
         'remaining_total' : fields.function(_sum_of_fields, type="float",multi="sum_of_all", string="Total Remaining", help="Expectation of remaining income for this contract. Computed as the sum of remaining subtotals which, in turn, are computed as the maximum between '(Estimation - Invoiced)' and 'To Invoice' amounts"),
         'toinvoice_total' : fields.function(_sum_of_fields, type="float",multi="sum_of_all", string="Total to Invoice", help=" Sum of everything that could be invoiced for this contract."),
-        'invoice_line_ids': fields.one2many('account.analytic.invoice.line', 'analytic_account_id'),
+        'invoice_line_ids': fields.one2many('account.analytic.invoice.line', 'analytic_account_id', 'Analytic Lines'),
         'recurring_invoices' : fields.boolean('Recurring Invoices'),
         'rrule_type': fields.selection([
             ('daily', 'Day(s)'),
@@ -657,9 +662,27 @@ class account_analytic_account(osv.osv):
             ], 'Recurrency', help="Let the event automatically repeat at that interval"),
         'interval': fields.integer('Repeat Every', help="Repeat every (Days/Week/Month/Year)"),
         'next_date': fields.date('Next Date'),
-        'amount_untaxed': fields.function(_amount_all, type='float', string='Total tax excluded', multi="vinvline"),
-        'amount_tax': fields.function(_amount_all, type='float', string='Taxes', multi="vinvline"),
-        'amount_total': fields.function(_amount_all, type='float', string='Total', multi="vinvline"),
+        'amount_untaxed': fields.function(_amount_all, digits_compute=dp.get_precision('Account'), string='Subtotal', track_visibility='always',
+            store={
+                'account.analytic.account': (lambda self, cr, uid, ids, c={}: ids, ['invoice_line_ids'], 20),
+                'account.invoice.tax': (_get_invoice_tax, None, 20),
+                'account.analytic.invoice.line': (_get_invoice_line, ['price_unit','tax_ids','quantity','analytic_account_id'], 20),
+            },
+            multi='all'),
+        'amount_tax': fields.function(_amount_all, digits_compute=dp.get_precision('Account'), string='Tax',
+            store={
+                'account.analytic.account': (lambda self, cr, uid, ids, c={}: ids, ['invoice_line_ids'], 20),
+                'account.invoice.tax': (_get_invoice_tax, None, 20),
+                'account.analytic.invoice.line': (_get_invoice_line, ['price_unit','tax_ids','quantity','analytic_account_id'], 20),
+            },
+            multi='all'),
+        'amount_total': fields.function(_amount_all, digits_compute=dp.get_precision('Account'), string='Total',
+            store={
+                'account.analytic.account': (lambda self, cr, uid, ids, c={}: ids, ['invoice_line_ids'], 20),
+                'account.invoice.tax': (_get_invoice_tax, None, 20),
+                'account.analytic.invoice.line': (_get_invoice_line, ['price_unit','tax_ids','quantity','analytic_account_id'], 20),
+            },
+            multi='all'),
     }
 
     _defaults = {
@@ -689,14 +712,23 @@ class account_analytic_account(osv.osv):
         if not template_id:
             return {}
         res = super(account_analytic_account, self).on_change_template(cr, uid, ids, template_id, context=context)
+        obj_analytic_line = self.pool.get('account.analytic.invoice.line')
         if template_id and 'value' in res:
             template = self.browse(cr, uid, template_id, context=context)
+            invoice_line_ids = []
+            for x in template.invoice_line_ids:
+                invoice_line_ids.append(obj_analytic_line.copy(cr, uid, x.id, {}, context))
             res['value']['fix_price_invoices'] = template.fix_price_invoices
             res['value']['invoice_on_timesheets'] = template.invoice_on_timesheets
             res['value']['hours_qtt_est'] = template.hours_qtt_est
             res['value']['amount_max'] = template.amount_max
             res['value']['to_invoice'] = template.to_invoice.id
             res['value']['pricelist_id'] = template.pricelist_id.id
+            res['value']['partner_id'] = template.partner_id.id
+            res['value']['recurring_invoices'] = template.recurring_invoices
+            res['value']['interval'] = template.interval
+            res['value']['rrule_type'] = template.rrule_type
+            res['value']['invoice_line_ids'] = [(4, id) for id in invoice_line_ids]
         return res
 
     def onchange_next_date(self, cr, uid, ids, next_date,context=None):
@@ -759,7 +791,7 @@ class account_analytic_account(osv.osv):
 
         return True
 
-    def _prepare_invoice_line(self, cr, uid, contract, contract_line_ids, invoice_id,context=None):
+    def _prepare_invoice_line(self, cr, uid, contract, contract_line_ids, invoice_id, context=None):
         if context is None:
             context = {}
         inv_line_id = []
@@ -769,12 +801,13 @@ class account_analytic_account(osv.osv):
             invoice_line_vals = {
                 'name': line.name,
                 'origin': line.analytic_account_id.name,
-                'account_id': contract.id,
+                'account_id': contract.partner_id.property_account_receivable.id or contract.partner_id.property_account_receivable or False,
+                'account_analytic_id': contract.id,
                 'price_unit': line.price_unit,
                 'quantity': line.quantity,
-                'invoice_id': invoice_id,
                 'uos_id': line.uom_id.id or False,
                 'product_id': line.product_id.id or False,
+                'invoice_id' : invoice_id,
                 'invoice_line_tax_id': [(6, 0, [x.id for x in line.tax_ids])],
             }
             line_id = obj_invoice_line.create(cr, uid, invoice_line_vals, context=context)
@@ -807,7 +840,6 @@ class account_analytic_account(osv.osv):
                        'date_invoice': contract.next_date,
                        'origin': contract.name,
                        'company_id': contract.company_id.id,
-                       'contract_id': contract.id,
                     }
                 contract_line_ids = self.pool.get('account.analytic.invoice.line').search(cr, uid, [('analytic_account_id', '=', contract.id)], context=context)
                 if contract_line_ids:
