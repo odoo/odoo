@@ -329,8 +329,8 @@ class gamification_goal(osv.Model):
         """Overwrite the write method to update the last_update field to today"""
         for goal in self.browse(cr, uid, ids, vals):
             vals['last_update'] = fields.date.today()
-            if 'current' in vals:
 
+            if 'current' in vals:
                 if 'just_created' in context:
                     # new goals should not be reported
                     continue
@@ -448,12 +448,37 @@ class gamification_goal_plan(osv.Model):
         return write_res
 
     def _update_all(self, cr, uid, ids=False, context=None):
-        """Update every plan in progress"""
-        if not ids:
-            ids = self.search(cr, uid, [('state', '=', 'inprogress'),
-                ('period', '!=', 'once')])
+        """Update the plans
 
-        return self.generate_goals_from_plan(cr, uid, ids, context=context)
+        Create the goals for planlines not linked to goals (eg: modified the 
+            plan to add planlines)
+        :param list(int) ids: the ids of the plans to update, if False will 
+        update every goal in progress"""
+
+        if not ids:
+            ids = self.search(cr, uid, [('state', '=', 'inprogress')])
+
+        goal_obj = self.pool.get('gamification.goal')
+        planline_obj = self.pool.get('gamification.goal.planline')
+
+        self.generate_goals_from_plan(cr, uid, ids, context=context)
+        for plan in self.browse(cr, uid, ids, context):
+            for planline in plan.planline_ids:
+                goal_ids = goal_obj.search(cr, uid, [('planline_id', '=', planline.id)] , context=context)
+                goal_obj.update(cr, uid, goal_ids, context=context)
+
+            # useless, goals removed in cascade
+            # current_planlines = [planline.id for planline in plan.planline_ids]
+            # print(current_planlines)
+            # related_planlines = planline_obj.search(cr, uid, [('plan_id','=',plan.id)])
+            # print(related_planlines)
+            # # the list of planlines linked to the plan but not in plan.planline_ids
+            # excluded_planlines = [plid for plid in related_planlines if plid not in current_planlines ]
+            # print(excluded_planlines)
+            # excluded_goals = goal_obj.search(cr, uid, [('planline_id', 'in', excluded_planlines)], context=context)
+            # print(excluded_goals)
+            # goal_obj.write(cr, uid, excluded_goals, {'state': 'canceled'}, context=context)
+
 
     def action_start(self, cr, uid, ids, context=None):
         """Start a draft goal plan
@@ -463,21 +488,11 @@ class gamification_goal_plan(osv.Model):
         return self.write(cr, uid, ids, {'state': 'inprogress'}, context=context)
 
     def action_check(self, cr, uid, ids, context=None):
-        """Check a goal plan in progress
+        """Check a goal plan
 
         Create goals that haven't been created yet (eg: if added users of planlines)
         Recompute the current value for each goal related"""
-        self.generate_goals_from_plan(cr, uid, ids, context=context)
-        for plan in self.browse(cr, uid, ids, context):
-            if plan.state != 'improgress':
-                continue
-
-            for planline in plan.planline_ids:
-                goal_obj = self.pool.get('gamification.goal')
-                goal_ids = goal_obj.search(cr, uid, [('planline_id', '=', planline.id)] , context=context)
-                goal_obj.update(cr, uid, goal_ids, context=context)
-
-        return True
+        return self._update_all(cr, uid, ids, context=context)    
 
 
     def action_close(self, cr, uid, ids, context=None):
