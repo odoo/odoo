@@ -319,19 +319,27 @@ class gamification_goal(osv.Model):
     def action_cancel(self, cr, uid, ids, context=None):
         return self.write(cr, uid, ids, {'state': 'inprogress'}, context=context)
 
-
+    def create(self, cr, uid, vals, context=None):
+        """Overwrite the create method to add a 'just_created' field to True"""
+        context = context or {}
+        context['just_created'] = True
+        return super(gamification_goal, self).create(cr, uid, vals, context=context)
+        
     def write(self, cr, uid, ids, vals, context=None):
         """Overwrite the write method to update the last_update field to today"""
         for goal in self.browse(cr, uid, ids, vals):
-            # TODO if current in vals
+            vals['last_update'] = fields.date.today()
             if 'current' in vals:
-                vals['last_update'] = fields.date.today()
-                if goal.report_message_frequency == 'onchange':
+
+                if 'just_created' in context:
+                    # new goals should not be reported
+                    continue
+
+                if goal.planline_id and goal.planline_id.plan_id.report_message_frequency == 'onchange':
                     plan_obj = self.pool.get('gamification.goal.plan')
                     plan_obj.report_progress(cr, uid, [goal.planline_id.plan_id.id], users=[goal.user_id], context=context)
-        write_res = super(gamification_goal, self).write(cr, uid, ids, vals, context=context)
-        return write_res
-
+        return super(gamification_goal, self).write(cr, uid, ids, vals, context=context)
+        
 
 class gamification_goal_plan(osv.Model):
     """Gamification goal plan
