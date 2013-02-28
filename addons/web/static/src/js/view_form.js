@@ -4985,6 +4985,13 @@ instance.web.form.FieldBinaryImage = instance.web.form.FieldBinary.extend({
             url = this.placeholder;
         }
         var $img = $(QWeb.render("FieldBinaryImage-img", { widget: this, url: url }));
+        $($img).click(function(e) {
+            if(self.view.get("actual_mode") == "view") {
+                var $button = $(".oe_form_button_edit");
+                $button.openerpBounce();
+                e.stopPropagation();
+            }
+        });
         this.$el.find('> img').remove();
         this.$el.prepend($img);
         $img.load(function() {
