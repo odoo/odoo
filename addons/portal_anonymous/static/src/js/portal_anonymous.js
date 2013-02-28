@@ -45,10 +45,10 @@ openerp.portal_anonymous = function(instance) {
             var self = this;
             return $.when(this._super()).then(function() {
                 var dblist = self.db_list || [];
-                if (!self.session.session_is_valid() && dblist.length === 1 && !(self.params.token || self.params.login)) {
+                if (!self.session.session_is_valid() && !(self.params.token || self.params.login)) {
                     self.remember_credentials = false;
                     // XXX get login/pass from server (via a rpc call) ?
-                    return self.do_login(dblist[0], 'anonymous', 'anonymous');
+                    return self.do_login(self.selected_db, 'anonymous', 'anonymous');
                 }
             });
         },
@@ -69,15 +69,17 @@ openerp.portal_anonymous = function(instance) {
                 var p = self.getParent();
                 var am = p.action_manager;
                 p.$el.find('.oe_leftbar').hide();
-                am.do_action({
-                    type:'ir.actions.client',
-                    tag:'login',
-                    target: 'current',
-                    params: {
-                        login_successful: function() {
-                            am.do_action("reload");
+                self.session.session_logout().done(function () {
+                    am.do_action({
+                        type:'ir.actions.client',
+                        tag:'login',
+                        target: 'current',
+                        params: {
+                            login_successful: function() {
+                                am.do_action("reload");
+                            }
                         }
-                    }
+                    });
                 });
             });
         }
