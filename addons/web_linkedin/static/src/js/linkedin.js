@@ -193,15 +193,15 @@ openerp.web_linkedin = function(instance) {
         create_or_modify_company: function (entity) {
             var self = this;
             var to_change = {};
-            var defs = [];
+            var image_def = null;
             to_change.is_company = true;
             to_change.name = entity.name;
             to_change.image = false;
             if (entity.logoUrl) {
-                defs.push(self.rpc('/web_linkedin/binary/url2binary',
+                image_def = self.rpc('/web_linkedin/binary/url2binary',
                                    {'url': entity.logoUrl}).then(function(data){
                     to_change.image = data;
-                }));
+                });
             }
             to_change.website = entity.websiteUrl;
             to_change.phone = false;
@@ -218,45 +218,48 @@ openerp.web_linkedin = function(instance) {
 
             to_change.child_ids = [];
             var children_def = $.Deferred();
-            defs.push(children_def);
             IN.API.PeopleSearch().fields(commonPeopleFields).params({
                     "company-name" : entity.universalName,
                     "current-company": true,
                     "count": 50,
                 }).result(function (result) {
                     console.debug("Linkedin pepople in this company found :", result.numResults, "=>", result.people._count, result.people.values);
-                    result = _.reject(result.people.values || [], function(el) {
+                    var result = _.reject(result.people.values || [], function(el) {
                         return ! el.formattedName;
                     });
-                    var defs = [];
-                    _.each(result, function (el) {
-                        el.__type = "people";
-                        el.__company = entity.universalName;
-                        el.parent_id = self.field_manager.datarecord.id || false;
-                        defs.push(self.create_or_modify_partner(el, true).then(function (data) {
+                    self.create_or_modify_company_partner(result).then(function (childs_to_change) {
+                        _.each(childs_to_change, function (data) {
                             // [0,0,data] if it's a new partner
                             to_change.child_ids.push( data.id ? [1, data.id, data] : [0, 0, data] );
-                        }));
-                    });
-                    $.when.apply($, defs).then(function () {
+                        });
                         children_def.resolve();
                     });
                 }).error(function () {
                     children_def.reject();
                 });
             
-            return $.when.apply($, defs).then(function () {
+            return $.when(image_def, children_def).then(function () {
                 return to_change;
             });
         },
         create_or_modify_partner: function (entity, rpc_search_similar_partner) {
             var self = this;
+            return this.create_or_modify_partner_change(entity).then(function (to_change) {
+                // find similar partners
+                _.each(to_change, function (val, key) {
+                    if (self.field_manager.datarecord[key]) {
+                        to_change[key] = self.field_manager.datarecord[key];
+                    }
+                });
+            });
+        },
+        create_or_modify_partner_change: function (entity) {
             var to_change = {};
             var defs = [];
             to_change.is_company = false;
             to_change.name = entity.formattedName;
             if (entity.pictureUrl) {
-                defs.push(self.rpc('/web_linkedin/binary/url2binary',
+                defs.push(this.rpc('/web_linkedin/binary/url2binary',
                                    {'url': entity.pictureUrl}).then(function(data){
                     to_change.image = data;
                 }));
@@ -273,7 +276,7 @@ openerp.web_linkedin = function(instance) {
                 var position = positions[key];
                 if (position.isCurrent) {
                     var company_name = position.company ? position.company.name : false;
-                    if (!entity.parent_id && company_name) {
+                    if (!entity.parent_id && entity.parent_id !== 0 && company_name) {
                         defs.push(new instance.web.DataSetSearch(this, 'res.partner').call("search", [[["name", "=", company_name]]]).then(function (data) {
                             if(data[0]) to_change.parent_id = data[0];
                             else position.title = position.title + ' (' + company_name + ') ';
@@ -292,49 +295,40 @@ openerp.web_linkedin = function(instance) {
             to_change.linkedin_url = to_change.linkedin_public_url = entity.publicProfileUrl || false;
             to_change.linkedin_id = entity.id || false;
 
-            // find similar partners
-            if (rpc_search_similar_partner) {
-                defs.push(new instance.web.DataSetSearch(this, 'res.partner').call("search", [[ 
-                        "|", ["linkedin_id", "=", to_change.linkedin_id], "&", ["linkedin_id", "=", false],
-                        "|", ["name", "ilike", entity.firstName +"%"+ entity.lastName], ["name", "ilike", entity.lastName +"%"+ entity.firstName] 
-                    ]]).then(function (data) {
-                    to_change.id = data[0] || false;
-                    if (to_change.id) {
-                        // remove data if allready set
-                        defs.push(new instance.web.DataSetSearch(this, 'res.partner').call("read", [[to_change.id], [
-                            "image",
-                            "mobile",
-                            "phone",
-                            "parent_id",
-                            "name",
-                            "email",
-                            "function",
-                            "linkedin_id",
-                        ]]).then(function (partners) {
-                            if (partners[0].linkedin_id && partners[0].linkedin_id != to_change.linkedin_id) {
-                                delete to_change.id;
-                            } else {
-                                _.each(partners[0], function (val, key) {
-                                    if (val) {
-                                        to_change[key] = typeof val == "object" && key.match(/_id$/) ? val[0] : val;
-                                    }
-                                });
-                            }
-                        }));
-                    }
-                }));
-            } else {
-                _.each(to_change, function (val, key) {
-                    if (self.field_manager.datarecord[key]) {
-                        to_change[key] = self.field_manager.datarecord[key];
-                    }
-                });
-            }
-            
             return $.when.apply($, defs).then(function () {
                 return to_change;
             });
         },
+        create_or_modify_company_partner: function (entities) {
+            var self = this;
+            var deferrer = $.Deferred();
+            var defs = [];
+            var childs_to_change = [];
+
+            _.each(entities, function (entity, key) {
+                var entity = _.extend(entity, {
+                    '__type': "people",
+                    '__company': entity.universalName,
+                    'parent_id': self.field_manager.datarecord.id || 0
+                });
+                defs.push(self.create_or_modify_partner_change(entity).then(function (to_change) {
+                    childs_to_change[key] = to_change;
+                }));
+            });
+            $.when.apply($, defs).then(function () {
+                new instance.web.DataSetSearch(this, 'res.partner').call("linkedin_check_similar_partner", [entities]).then(function (partners) {
+                    _.each(partners, function (partner, i) {
+                        _.each(partner, function (val, key) {
+                            if (val) {
+                                childs_to_change[i][key] = val;
+                            }
+                        });
+                    });
+                    deferrer.resolve(childs_to_change);
+                });
+            });
+            return deferrer;
+        }
     });
     instance.web.form.widgets.add('linkedin', 'instance.web_linkedin.Linkedin');
     

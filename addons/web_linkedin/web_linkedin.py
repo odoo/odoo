@@ -65,6 +65,27 @@ class web_linkedin_fields(osv.Model):
             res[partner.id] = partner.linkedin_url
         return res
 
+    def linkedin_check_similar_partner(self, cr, uid, linkedin_datas, context=None):
+        res = []
+        res_partner = self.pool.get('res.partner')
+        for linkedin_data in linkedin_datas:
+            partner_ids = res_partner.search(cr, uid, ["|", ("linkedin_id", "=", linkedin_data['id']), 
+                    "&", ("linkedin_id", "=", False), 
+                    "|", ("name", "ilike", linkedin_data['firstName'] + "%" + linkedin_data['lastName']), ("name", "ilike", linkedin_data['lastName'] + "%" + linkedin_data['firstName'])], context=context)
+            if partner_ids:
+                partner = res_partner.read(cr, uid, partner_ids[0], ["image", "mobile", "phone", "parent_id", "name", "email", "function", "linkedin_id"], context=context)
+                if partner['linkedin_id'] and partner['linkedin_id'] != linkedin_data['id']:
+                    partner.pop('id')
+                if partner['parent_id']:
+                    partner['parent_id'] = partner['parent_id'][0]
+                for key, val in partner.items():
+                    if not val:
+                        partner.pop(key)
+                res.append(partner)
+            else:
+                res.append({})
+        return res
+
     _columns = {
         'linkedin_id': fields.char(string="LinkedIn ID", size=50),
         'linkedin_url': fields.char(string="LinkedIn url", size=100, store=True),
