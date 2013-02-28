@@ -5,16 +5,17 @@
 </head>
 <body>
 	<header>
-	    % if object.report_header
-	    	${object.report_header}
-	    % endif
+	    <strong>${object.name}</strong>
 	</header>
-    
-    Below are the latest results for the plan <strong>${object.name}</strong> for the group <em>${object.report_message_group_id.name}</em>.</p>
-    !${planlines_boards}!
+
+	<p class="oe_grey">${object.report_header or ''}</p>
+
     % for planline in planlines_boards:
-        <h2>${planline['goal_type']}</h2>
+        
         <table width="100%" border="1">
+        	<tr>
+        		<th colspan="4">${planline['goal_type']}</th>
+        	</tr>
         	<tr>
 	            <th>#</th>
 	            <th>User</th>
@@ -34,5 +35,8 @@
 	            </tr>
 	        % endfor
         </table>
+
+        <br/><br/>
+
     % endfor
 </body>

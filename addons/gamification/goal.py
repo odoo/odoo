@@ -324,7 +324,11 @@ class gamification_goal(osv.Model):
         """Overwrite the write method to update the last_update field to today"""
         for goal in self.browse(cr, uid, ids, vals):
             # TODO if current in vals
-            vals['last_update'] = fields.date.today()
+            if 'current' in vals:
+                vals['last_update'] = fields.date.today()
+                if goal.report_message_frequency == 'onchange':
+                    plan_obj = self.pool.get('gamification.goal.plan')
+                    plan_obj.report_progress(cr, uid, [goal.planline_id.plan_id.id], users=[goal.user_id], context=context)
         write_res = super(gamification_goal, self).write(cr, uid, ids, vals, context=context)
         return write_res
 
@@ -342,6 +346,7 @@ class gamification_goal_plan(osv.Model):
 
     _name = 'gamification.goal.plan'
     _description = 'Gamification goal plan'
+    _inherit = 'mail.thread'
 
     _columns = {
         'name' : fields.char('Plan Name', required=True),
@@ -583,9 +588,10 @@ class gamification_goal_plan(osv.Model):
         return True
 
 
-    def report_progress(self, cr, uid, ids, context=None):
+    def report_progress(self, cr, uid, ids, users=False, context=None):
         """Post report about the progress of the goals"""
         
+        context = context or {}
         goal_obj = self.pool.get('gamification.goal')
 
         for plan in self.browse(cr, uid, ids, context=context):
@@ -593,8 +599,6 @@ class gamification_goal_plan(osv.Model):
                 # no report group, skipping
                 continue
 
-            # copy of context to access more variables in templates
-            template_context = dict(context)
             if plan.visibility_mode == 'board':
                 # generate a shared report
                 planlines_boards = []
@@ -625,12 +629,16 @@ class gamification_goal_plan(osv.Model):
                     planlines_boards.append({'goal_type':planline.type_id.name, 'board_goals':sorted_board})
 
                 body_html = mako_template_env.get_template('group_progress.mako').render({'object':plan, 'planlines_boards':planlines_boards})
-                self.pool.get('mail.thread').message_post(cr, uid, False,
+                self.message_post(cr, uid, plan.id,
                     body=body_html,
                     partner_ids=[user.partner_id.id for user in plan.user_ids],
-                    context=context)
-                #self.pool.get('email.template').send_mail(cr, uid, template_id, plan.id, context=template_context)
-
+                    context=context,
+                    subtype='mail.mt_comment')
+                self.pool.get('mail.group').message_post(cr, uid, plan.report_message_group_id.id,
+                    body=body_html,
+                    context=context,
+                    subtype='mail.mt_comment')
+                
             else:
                 # generate individual reports
                 for user in plan.user_ids:
@@ -645,11 +653,16 @@ class gamification_goal_plan(osv.Model):
                         'goals':goal_obj.browse(cr, uid, goal_ids, context=context)
                     }
                     body_html = mako_template_env.get_template('personal_progress.mako').render(variables)
-                    self.pool.get('mail.thread').message_post(cr, uid, False,
+                    
+                    self.message_post(cr, uid, plan.id,
                         body=body_html,
                         partner_ids=[user.partner_id.id],
-                        context=context)
-                    #self.pool.get('email.template').send_mail(cr, uid, template_id, plan.id, context=template_context)
+                        context=context,
+                        subtype='mail.mt_comment')
+                    self.pool.get('mail.group').message_post(cr, uid, plan.report_message_group_id.id,
+                        body=body_html,
+                        context=context,
+                        subtype='mail.mt_comment')
         return True
 
 
