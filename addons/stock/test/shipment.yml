@@ -192,8 +192,8 @@
 -
   !python {model: stock.location}: |
     ctx = {'product_id': ref('product_product_6')}
-    refrigerator_location = self.pool.get('stock.location').browse(cr, uid, ref('location_monitor'), context=ctx)
-    assert refrigerator_location.stock_real == 136.0, 'stock does not correspond in stock location shop0.'
+    monitor_location = self.pool.get('stock.location').browse(cr, uid, ref('location_monitor'), context=ctx)
+    assert monitor_location.stock_real == 136.0, 'stock does not correspond in stock location shop0.'
     scrapped_location = self.browse(cr, uid, ref('stock_location_scrapped'), context=ctx)
     assert scrapped_location.stock_real == 1*4, 'scraped stock does not correspond in scrap location.'
     

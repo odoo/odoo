@@ -93,7 +93,7 @@ Dashboard / Reports for Warehouse Management will include:
         'stock_demo.yml',
         'test/opening_stock.yml',
         'test/shipment.yml',
-        #'test/stock_report.yml',
+        'test/stock_report.yml',
     ],
     'installable': True,
     'application': True,
