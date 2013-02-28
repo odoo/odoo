@@ -55,6 +55,22 @@
             <field name='view_type'>form</field>
             <field name='view_id' ref='view_google_docs_config_tree'/>
         </record>
+
+        <record id="inherited_google_view_general_configuration" model="ir.ui.view">
+        <field name="name">General Settings</field>
+        <field name="model">base.config.settings</field>
+        <field name="inherit_id" ref="base_setup.view_general_configuration"/>
+        <field name="arch" type="xml">
+          <xpath expr="//div[@name='google_docs']" position="after">
+            <div attrs="{'invisible': [('module_google_docs','=',False)]}">
+                <button type="action"
+                name="%(google_docs.action_google_docs_users_config)d"
+                string="Configure Template" class="oe_link"/>
+            </div>
+          </xpath>
+        </field>
+    </record>
+
         <menuitem name='Google Drive configuration' id='menu_gdocs_config' parent='base.menu_administration'/>
         <menuitem name='Models configuration' id='menu_gdocs_model_config' parent='menu_gdocs_config' action='action_google_docs_users_config'/>
     </data>
