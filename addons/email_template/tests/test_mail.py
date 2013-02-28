@@ -48,8 +48,8 @@ class test_message_compose(TestMailBase):
         _body_html1 = 'Fans of Pigs, unite !'
         _body_html2 = 'I am angry !'
         _attachments = [
-            {'name': 'First', 'datas_fname': 'first.txt', 'datas': base64.b64encode('My first attachment')},
-            {'name': 'Second', 'datas_fname': 'second.txt', 'datas': base64.b64encode('My second attachment')}
+            {'name': 'First', 'datas_fname': 'first.txt', 'datas': base64.b64encode('My first attachment'), 'res_model': 'dummy.model'},
+            {'name': 'Second', 'datas_fname': 'second.txt', 'datas': base64.b64encode('My second attachment'), 'res_model': 'dummy.model'}
             ]
         _attachments_test = [('first.txt', 'My first attachment'), ('second.txt', 'My second attachment')]
 
@@ -118,7 +118,7 @@ class test_message_compose(TestMailBase):
         # Test: mail.compose.message: attachments
         # Test: mail.message: attachments
         for attach in compose.attachment_ids:
-            self.assertEqual(attach.res_model, 'mail.group', 'mail.message attachment res_model incorrect')
+            self.assertEqual(attach.res_model, 'dummy.model', 'mail.message attachment res_model through templat was overriden')
             self.assertEqual(attach.res_id, self.group_pigs_id, 'mail.message attachment res_id incorrect')
             self.assertIn((attach.name, base64.b64decode(attach.datas)), _attachments_test,
                 'mail.message attachment name / data incorrect')
