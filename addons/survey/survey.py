@@ -198,7 +198,7 @@ class survey(osv.osv):
 
         id = ids[0]
         survey = self.browse(cr, uid, id, context=context)
-        context.update({'edit': False, 'survey_id': id, 'survey_token': survey.token})
+        context.update({'edit': False, 'survey_id': id, 'survey_token': survey.token, 'ir_actions_act_window_target': 'inline'})
         return {
             'view_type': 'form',
             'view_mode': 'form',

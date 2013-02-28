@@ -1166,12 +1166,13 @@ class survey_question_wiz(osv.osv_memory):
 
         ir_model_data = self.pool.get('ir.model.data')
         user_browse = self.pool.get('res.users').browse(cr, SUPERUSER_ID, uid, context=context)
-        model_id = ir_model_data.get_object_reference(cr, uid, 'portal', 'group_anonymous')
-        anonymous = model_id and model_id[1] in [x.id for x in user_browse.groups_id]
-        if anonymous:
-            model, view_id = ir_model_data.get_object_reference(cr, uid, 'survey', 'view_survey_complete_survey_anonymous')
-        else:
+        model_id = ir_model_data.get_object_reference(cr, uid, 'base', 'group_user')
+        employee = model_id and model_id[1] in [x.id for x in user_browse.groups_id]
+
+        if employee:
             model, view_id = ir_model_data.get_object_reference(cr, uid, 'survey', 'view_survey_complete_survey')
+        else:
+            model, view_id = ir_model_data.get_object_reference(cr, uid, 'survey', 'view_survey_complete_survey_external')
 
         self._survey_complete(cr, uid, context['survey_id'], context)
 
