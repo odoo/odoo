@@ -535,6 +535,9 @@ class Home(openerpweb.Controller):
 
     @openerpweb.httprequest
     def index(self, req, s_action=None, db=None, **kw):
+        if not db:
+            # TODO: maybe redirect to ?db=xxx instead of implicit db set ??
+            db = req.httprequest.cookies.get('last_db_login_success')
         js = "\n        ".join('<script type="text/javascript" src="%s"></script>' % i for i in manifest_list(req, 'js', db=db))
         css = "\n        ".join('<link rel="stylesheet" href="%s">' % i for i in manifest_list(req, 'css', db=db))
 

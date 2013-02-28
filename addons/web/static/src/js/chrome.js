@@ -619,9 +619,18 @@ instance.web.Login =  instance.web.Widget.extend({
         self.$el.find('.oe_login_manage_db').click(function() {
             self.do_action("database_manager");
         });
+        self.on('change:database_selector', this, function() {
+            var params = $.deparam.querystring();
+            params.db = self.get('database_selector');
+            self.$('.oe_login_dbpane').empty().text(_t('Loading...'));
+            window.location = '/?' + $.param(params);
+        });
         var d = $.when();
         if ($.deparam.querystring().db) {
             self.params.db = $.deparam.querystring().db;
+        }
+        if (self.params.db) {
+            self.selected_db = self.params.db;
         }
         if ($.param.fragment().token) {
             self.params.token = $.param.fragment().token;
@@ -630,17 +639,22 @@ instance.web.Login =  instance.web.Widget.extend({
         if (self.params.db && self.params.login && self.params.password) {
             d = self.do_login(self.params.db, self.params.login, self.params.password);
         } else {
-            if (self.params.db) {
-                self.on_db_loaded([self.params.db])
-            } else {
+            // TODO: removing following code breaks portal anonymous
+            //if (self.params.db) {
+            //    self.on_db_loaded([self.params.db])
+            //} else {
                 d = self.rpc("/web/database/get_list", {}).done(self.on_db_loaded).fail(self.on_db_failed);
-            }
+            //}
         }
         return d;
     },
     on_db_loaded: function (result) {
+        var self = this;
         this.db_list = result;
         this.$("[name=db]").replaceWith(QWeb.render('Login.dblist', { db_list: this.db_list, selected_db: this.selected_db}));
+        this.$('select[name=db]').on('change', function(ev) {
+            self.set('database_selector', $(this).val());
+        });
         if(this.db_list.length === 0) {
             this.do_action("database_manager");
         } else if(this.db_list.length === 1) {
@@ -680,6 +694,15 @@ instance.web.Login =  instance.web.Widget.extend({
         self.hide_error();
         self.$(".oe_login_pane").fadeOut("slow");
         return this.session.session_authenticate(db, login, password).then(function() {
+            // This cookie will be used server side in order to avoid db reloading on next visit
+            var ttl = 24 * 60 * 60 * 365;
+            document.cookie = [
+                'last_db_login_success=' + db,
+                'path=/',
+                'max-age=' + ttl,
+                'expires=' + new Date(new Date().getTime() + ttl * 1000).toGMTString()
+            ].join(';');
+
             if (self.has_local_storage) {
                 if(self.remember_credentials) {
                     localStorage.setItem('last_db_login_success', db);
