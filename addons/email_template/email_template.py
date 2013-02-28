@@ -351,7 +351,7 @@ class email_template(osv.osv):
             attachment_ids.append(attach.id)
 
         values['attachments'] = attachments
-        values['attachment_ids'] = attachments
+        values['attachment_ids'] = attachment_ids
         return values
 
     def send_mail(self, cr, uid, template_id, res_id, force_send=False, context=None):
