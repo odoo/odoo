@@ -2374,6 +2374,16 @@
 }
 .openerp .oe_form .oe_form_field_boolean {
   width: auto;
+  height: 14px;
+}
+.openerp .oe_form .oe_form_field_boolean .boolean {
+  position: relative;
+  top: -20px;
+  width: 14px;
+  height: 14px;
+  z-index: 10000;
+  backgroundColor: "#fff";
+  opacity: 0;
 }
 .openerp .oe_form .oe_datepicker_container {
   display: none;
@@ -3167,16 +3177,6 @@ div.ui-widget-overlay {
 
 .openerp_ie .oe_form_field_boolean input {
   background: white;
-}
-.openerp .oe_form_field_boolean .boolean{
-   position: relative;
-   top: -14px;
-   width: 14px;
-   height: 14px;
-   z-index:10000;
-   // IE needs a color in order for the layer to respond to mouse events
-   backgroundColor: "#fff";
-   opacity: 0;
 }
 .openerp_ie .db_option_table .oe_form_field_selection {
   width: auto;
