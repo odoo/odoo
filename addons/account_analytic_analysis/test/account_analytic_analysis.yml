@@ -1,0 +1,62 @@
+-
+  In order to test Contract Recurrent Invoice I create a new Contract Template 
+-
+  !record {model: account.analytic.account, id: account_analytic_account_0}:
+    name: Loan EMI Agrement
+    company_id: base.main_company
+    partner_id: base.main_partner
+    date_start: !eval time.strftime('%Y-%m-%d')
+    recurring_invoices : 1
+    interval : 1
+    rrule_type : 'monthly'
+    next_date : !eval time.strftime('%Y-%m-%d')
+    invoice_line_ids:
+      - product_id: product.product_product_consultant
+        quantity: 1.0
+        price_unit: 75.0
+-
+  Genrate Agrement Contract from of 'Loan EMI Agrement' template.
+-
+  !python {model: account.analytic.account}: |
+    data = {
+        'name':  'Agrement of the loan EMI',
+        'template_id': ref("account_analytic_account_0"),
+        }
+    contract_id = self.create(cr, uid, data)
+    assert contract_id, "contract has not been created correctly"
+-
+  Genrate Invoice of agrement for current month
+-
+  !python {model: account.analytic.account}: |
+    data = {
+        'name':  'Agrement of the loan for current month',
+        'template_id': ref("account_analytic_account_0"),
+        }
+    contract_id = self.create(cr, uid, data)
+    assert contract_id, "contract has not been created correctly"
+  
+    self._amount_all(cr, uid, [contract_id], '', {}, {})
+    template = self.browse(cr, uid, ref('account_analytic_account_0'))
+    res = self.on_change_template(cr, uid, contract_id, template.id, {})
+    self.write(cr, uid, contract_id, res['value'])
+    line_obj = self.pool.get('account.analytic.invoice.line')
+    
+    contract = self.browse(cr, uid, contract_id)
+    
+    assert template.partner_id.id == contract.partner_id.id or res['value']['partner_id'], "Customer of contract is not match with Contract Template"
+    assert template.company_id.id == contract.company_id.id, "Company of contract is not match with Contract Template"
+    assert template.date_start == contract.date_start, "Start Date of contract is not match with Contract Template"
+    assert template.interval == contract.interval, "Interval of contract is not match with Contract Template"
+    from dateutil.relativedelta import relativedelta
+    import datetime
+    self.cron_create_invoice(cr, uid, False, False, None)
+    invoice_obj = self.pool.get('account.invoice')
+    contract_invoice = invoice_obj.search(cr, uid, [('origin','=','Agrement of the loan for current month')])
+    template_invoice = invoice_obj.search(cr, uid, [('origin','=','Loan EMI Agrement')])
+    inv = invoice_obj.browse(cr ,uid, contract_invoice)[0]
+    result = invoice_obj._amount_all(cr, uid, contract_invoice, '', {}, {})
+    assert inv.state == 'draft', 'Contract created invoice not in draft state.'
+    assert inv.amount_untaxed == contract.amount_untaxed, "Contract Invoice's Total tax excluded is not same as contract"
+    assert inv.amount_tax == contract.amount_tax, "Contract Invoice's Taxes is not same as contract"
+    assert inv.amount_total == contract.amount_total, "Contract Invoice's Total is not same as contract"
+    

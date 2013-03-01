@@ -59,11 +59,11 @@ class account_analytic_invoice_line(osv.osv):
             return False
 
     _columns = {
-        'product_id': fields.many2one('product.product','Product'),
+        'product_id': fields.many2one('product.product','Product', required=True),
         'analytic_account_id': fields.many2one('account.analytic.account', 'Analytic Account'),
         'name': fields.char('Description', size=64),
-        'quantity': fields.float('Quantity'),
-        'uom_id': fields.many2one('product.uom', 'Unit of Measure', required=True),
+        'quantity': fields.float('Quantity', required=True),
+        'uom_id': fields.many2one('product.uom', 'Unit of Measure'),
         'price_unit': fields.float('Unit Price'),
         'price_subtotal': fields.function(_amount_line, string='Amount', type="float",
             digits_compute= dp.get_precision('Account')),
@@ -115,8 +115,11 @@ class account_analytic_invoice_line(osv.osv):
         if a:
             result['account_id'] = a
 
-        taxes = res.taxes_id and res.taxes_id or (a and self.pool.get('account.account').browse(cr, uid, a, context=context).tax_ids or False)
-        result.update({'name':res.partner_ref,'uom_id': uom_id or res.uom_id.id, 'price_unit': res.list_price or res.standard_price,'tax_ids': [x.id for x in taxes]})
+        taxes = res.taxes_id and res.taxes_id or (a and self.pool.get('account.account').browse(cr, uid, a, context=context).tax_ids or False) or False
+        tax_ids = False
+        if taxes:
+            tax_ids = [x.id for x in taxes]
+        result.update({'name':res.partner_ref or False,'uom_id': uom_id or res.uom_id.id or False, 'price_unit': res.list_price or res.standard_price or False,'tax_ids': tax_ids})
         if res.description:
             result['name'] += '\n'+res.description
 
@@ -799,7 +802,7 @@ class account_analytic_account(osv.osv):
         obj_contract_line = self.pool.get('account.analytic.invoice.line')
         for line in obj_contract_line.browse(cr, uid, contract_line_ids):
             invoice_line_vals = {
-                'name': line.name,
+                'name': contract.name+line.product_id.name,
                 'origin': line.analytic_account_id.name,
                 'account_id': contract.partner_id.property_account_receivable.id or contract.partner_id.property_account_receivable or False,
                 'account_analytic_id': contract.id,
@@ -846,17 +849,15 @@ class account_analytic_account(osv.osv):
                     invoice_id = inv_obj.create(cr, uid, inv_data, context=context)
                     self._prepare_invoice_line(cr, uid, contract, contract_line_ids, invoice_id,context=context)
                     inv_obj.button_compute(cr, uid, [invoice_id])
-                    
                     next_date = datetime.datetime.strptime(contract.next_date, "%Y-%m-%d")
                     interval = contract.interval
-        
                     if contract.rrule_type == 'monthly':
                         new_date = next_date+relativedelta(months=+interval)
                     if contract.rrule_type == 'daily':
                         new_date = next_date+relativedelta(days=+interval)
                     if contract.rrule_type == 'weekly':
                         new_date = next_date+relativedelta(weeks=+interval)
-                    contract.write({'next_date':new_date}, context=context)
+                    self.write(cr, uid, contract.id, {'next_date':'2013-04-01 00:00:00'}, context=context)
         return True
 
 class account_analytic_account_summary_user(osv.osv):
