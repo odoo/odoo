@@ -42,7 +42,7 @@ def start_end_date_for_period(period):
         end_date = start_date + timedelta(days=7)
     elif period == 'monthly':
         month_range = calendar.monthrange(today.year, today.month)
-        start_date = today.replace(day=month_range[0])
+        start_date = today.replace(day=1)
         end_date = today.replace(day=month_range[1])
     elif period == 'yearly':
         start_date = today.replace(month=1, day=1)
@@ -369,7 +369,7 @@ class gamification_goal_plan(osv.Model):
                     planlines_boards.append({'goal_type':planline.type_id.name, 'board_goals':sorted_board})
 
                 body_html = template_env.get_template('group_progress.mako').render({'object':plan, 'planlines_boards':planlines_boards})
-                print(body_html)
+                
                 self.message_post(cr, uid, plan.id,
                     body=body_html,
                     partner_ids=[user.partner_id.id for user in plan.user_ids],
@@ -395,6 +395,8 @@ class gamification_goal_plan(osv.Model):
                     }
                     body_html = template_env.get_template('personal_progress.mako').render(variables)
                     
+                    # FIXME mail NOT sent -> no followers
+                    # FIXME huge blank space
                     self.message_post(cr, uid, plan.id,
                         body=body_html,
                         partner_ids=[user.partner_id.id],
