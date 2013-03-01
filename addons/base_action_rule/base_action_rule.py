@@ -108,15 +108,6 @@ class base_action_rule(osv.osv):
 
     def _process(self, cr, uid, action, record_ids, context=None):
         """ process the given action on the records """
-        # execute server actions
-        model = self.pool.get(action.model_id.model)
-        if action.server_action_ids:
-            server_action_ids = map(int, action.server_action_ids)
-            for record in model.browse(cr, uid, record_ids, context):
-                action_server_obj = self.pool.get('ir.actions.server')
-                ctx = dict(context, active_model=model._name, active_ids=[record.id], active_id=record.id)
-                action_server_obj.run(cr, uid, server_action_ids, context=ctx)
-
         # modify records
         values = {}
         if 'date_action_last' in model._all_columns:
@@ -129,6 +120,15 @@ class base_action_rule(osv.osv):
         if action.act_followers and hasattr(model, 'message_subscribe'):
             follower_ids = map(int, action.act_followers)
             model.message_subscribe(cr, uid, record_ids, follower_ids, context=context)
+
+        # execute server actions
+        model = self.pool.get(action.model_id.model)
+        if action.server_action_ids:
+            server_action_ids = map(int, action.server_action_ids)
+            for record in model.browse(cr, uid, record_ids, context):
+                action_server_obj = self.pool.get('ir.actions.server')
+                ctx = dict(context, active_model=model._name, active_ids=[record.id], active_id=record.id)
+                action_server_obj.run(cr, uid, server_action_ids, context=ctx)
 
         return True
 
