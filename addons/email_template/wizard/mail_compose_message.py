@@ -61,6 +61,25 @@ class mail_compose_message(osv.TransientModel):
         'template_id': fields.selection(_get_templates, 'Template', size=-1),
     }
 
+    def send_mail(self, cr, uid, ids, context=None):
+        """ Override of send_mail to duplicate attachments linked to the email.template.
+            Indeed, basic mail.compose.message wizard duplicates attachments in mass
+            mailing mode. But in 'single post' mode, attachments of an email template
+            also have to be duplicated to avoid changing their ownership. """
+        for wizard in self.browse(cr, uid, ids, context=context):
+            if not wizard.attachment_ids or wizard.composition_mode == 'mass_mail' or not wizard.template_id:
+                continue
+            active_model_pool_name = wizard.model if wizard.model else 'mail.thread'
+            template = self.pool.get('email.template').browse(cr, uid, wizard.template_id, context=context)
+            new_attachment_ids = []
+            for attachment in wizard.attachment_ids:
+                if attachment in template.attachment_ids:
+                    new_attachment_ids.append(self.pool.get('ir.attachment').copy(cr, uid, attachment.id, {'res_model': active_model_pool_name, 'res_id': wizard.res_id}, context=context))
+                else:
+                    new_attachment_ids.append(attachment.id)
+                self.write(cr, uid, wizard.id, {'attachment_ids': [(6, 0, new_attachment_ids)]}, context=context)
+        return super(mail_compose_message, self).send_mail(cr, uid, ids, context=context)
+
     def onchange_template_id(self, cr, uid, ids, template_id, composition_mode, model, res_id, context=None):
         """ - mass_mailing: we cannot render, so return the template values
             - normal mode: return rendered values """
