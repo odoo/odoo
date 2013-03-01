@@ -169,7 +169,9 @@ class ir_model(osv.osv):
         if not context.get(MODULE_UNINSTALL_FLAG):
             # only reload pool for normal unlink. For module uninstall the
             # reload is done independently in openerp.modules.loading
+            cr.commit() # must be committed before reloading registry in new cursor
             pooler.restart_pool(cr.dbname)
+            openerp.modules.registry.RegistryManager.signal_registry_change(cr.dbname)
 
         return res
 
@@ -307,7 +309,6 @@ class ir_model_fields(osv.osv):
             if column_name and (result and result[0] == 'r'):
                 cr.execute('ALTER table "%s" DROP column "%s" cascade' % (model._table, field.name))
             model._columns.pop(field.name, None)
-            openerp.modules.registry.RegistryManager.signal_registry_change(cr.dbname)
         return True
 
     def unlink(self, cr, user, ids, context=None):
@@ -321,6 +322,9 @@ class ir_model_fields(osv.osv):
 
         self._drop_column(cr, user, ids, context)
         res = super(ir_model_fields, self).unlink(cr, user, ids, context)
+        if not context.get(MODULE_UNINSTALL_FLAG):
+            cr.commit()
+            openerp.modules.registry.RegistryManager.signal_registry_change(cr.dbname)
         return res
 
     def create(self, cr, user, vals, context=None):
@@ -469,7 +473,7 @@ class ir_model_fields(osv.osv):
                 for col_name, col_prop, val in patch_struct[1]:
                     setattr(obj._columns[col_name], col_prop, val)
                 obj._auto_init(cr, ctx)
-                openerp.modules.registry.RegistryManager.signal_registry_change(cr.dbname)
+            openerp.modules.registry.RegistryManager.signal_registry_change(cr.dbname)
         return res
 
 class ir_model_constraint(Model):

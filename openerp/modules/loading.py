@@ -34,6 +34,7 @@ import openerp
 import openerp.modules.db
 import openerp.modules.graph
 import openerp.modules.migration
+import openerp.modules.registry
 import openerp.osv as osv
 import openerp.pooler as pooler
 import openerp.tools as tools
