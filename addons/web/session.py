@@ -18,6 +18,9 @@ _logger = logging.getLogger(__name__)
 class AuthenticationError(Exception):
     pass
 
+class SessionExpiredException(Exception):
+    pass
+
 class Service(object):
     def __init__(self, session, service_name):
         self.session = session
@@ -82,7 +85,7 @@ class OpenERPSession(object):
         self.jsonp_requests = {}     # FIXME use a LRU
 
     def send(self, service_name, method, *args):
-        code_string = "warning -- %s\n\n%s"
+        code_string = u"warning -- %s\n\n%s"
         try:
             return openerp.netsvc.dispatch_rpc(service_name, method, args)
         except openerp.osv.osv.except_osv, e:
@@ -92,13 +95,13 @@ class OpenERPSession(object):
         except openerp.exceptions.AccessError, e:
             raise xmlrpclib.Fault(code_string % ("AccessError", e), '')
         except openerp.exceptions.AccessDenied, e:
-            raise xmlrpclib.Fault('AccessDenied', str(e))
+            raise xmlrpclib.Fault('AccessDenied', openerp.tools.ustr(e))
         except openerp.exceptions.DeferredException, e:
             formatted_info = "".join(traceback.format_exception(*e.traceback))
-            raise xmlrpclib.Fault(openerp.tools.ustr(e.message), formatted_info)
+            raise xmlrpclib.Fault(openerp.tools.ustr(e), formatted_info)
         except Exception, e:
             formatted_info = "".join(traceback.format_exception(*(sys.exc_info())))
-            raise xmlrpclib.Fault(openerp.tools.exception_to_unicode(e), formatted_info)
+            raise xmlrpclib.Fault(openerp.tools.ustr(e), formatted_info)
 
     def proxy(self, service):
         return Service(self, service)
@@ -152,6 +155,8 @@ class OpenERPSession(object):
         :type model: str
         :rtype: a model object
         """
+        if self._db == False:
+            raise SessionExpiredException("Session expired")
 
         return Model(self, model)
 

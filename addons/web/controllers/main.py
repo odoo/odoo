@@ -13,6 +13,7 @@ import os
 import re
 import simplejson
 import time
+import urllib
 import urllib2
 import xmlrpclib
 import zlib
@@ -294,9 +295,9 @@ def manifest_list(req, extension, mods=None, db=None):
     if not req.debug:
         path = '/web/webclient/' + extension
         if mods is not None:
-            path += '?mods=' + mods
+            path += '?' + urllib.urlencode({'mods': mods})
         elif db:
-            path += '?db=' + db
+            path += '?' + urllib.urlencode({'db': db})
         return [path]
     files = manifest_glob(req, extension, addons=mods, db=db)
     i_am_diabetic = req.httprequest.environ["QUERY_STRING"].count("no_sugar") >= 1 or \
@@ -877,7 +878,7 @@ class Session(openerpweb.Controller):
         """
         saved_actions = req.httpsession.get('saved_actions')
         if not saved_actions:
-            saved_actions = {"next":0, "actions":{}}
+            saved_actions = {"next":1, "actions":{}}
             req.httpsession['saved_actions'] = saved_actions
         # we don't allow more than 10 stored actions
         if len(saved_actions["actions"]) >= 10:

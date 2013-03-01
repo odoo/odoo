@@ -247,13 +247,11 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
 
     do_load_state: function(state, warm) {
         if (state.id && this.datarecord.id != state.id) {
-            if (!this.dataset.get_id_index(state.id)) {
+            if (this.dataset.get_id_index(state.id) === null) {
                 this.dataset.ids.push(state.id);
             }
             this.dataset.select_id(state.id);
-            if (warm) {
-                this.do_show();
-            }
+            this.do_show({ reload: warm });
         }
     },
     /**
@@ -511,9 +509,13 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
             var on_change = widget.node.attrs.on_change;
             if (on_change) {
                 var change_spec = self.parse_on_change(on_change, widget);
-                var id = [self.datarecord.id == null ? [] : [self.datarecord.id]];
-                def = new instance.web.Model(self.dataset.model).call(
-                    change_spec.method, id.concat(change_spec.args));
+                var ids = [];
+                if (self.datarecord.id && !instance.web.BufferedDataSet.virtual_id_regex.test(self.datarecord.id)) {
+                    // In case of a o2m virtual id, we should pass an empty ids list
+                    ids.push(self.datarecord.id);
+                }
+                def = self.alive(new instance.web.Model(self.dataset.model).call(
+                    change_spec.method, [ids].concat(change_spec.args)));
             } else {
                 def = $.when({});
             }
@@ -531,9 +533,9 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
                     var condition = fieldname + '=' + value_;
 
                     if (value_) {
-                        return new instance.web.Model('ir.values').call(
+                        return self.alive(new instance.web.Model('ir.values').call(
                             'get_defaults', [self.model, condition]
-                        ).then(function (results) {
+                        )).then(function (results) {
                             if (!results.length) {
                                 return response;
                             }
@@ -573,19 +575,14 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
                 ]
             });
         }
-        if (result.domain) {
-            function edit_domain(node) {
-                if (typeof node !== "object") {
-                    return;
-                }
-                var new_domain = result.domain[node.attrs.name];
-                if (new_domain) {
-                    node.attrs.domain = new_domain;
-                }
-                _(node.children).each(edit_domain);
-            }
-            edit_domain(this.fields_view.arch);
-        }
+
+        var fields = this.fields;
+        _(result.domain).each(function (domain, fieldname) {
+            var field = fields[fieldname];
+            if (!field) { return; }
+            field.node.attrs.domain = domain;
+        });
+
         return $.Deferred().resolve();
         } catch(e) {
             console.error(e);
@@ -842,11 +839,10 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
                     save_deferral = self.dataset.create(values).then(function(r) {
                         return self.record_created(r, prepend_on_create);
                     }, null);
-                } else if (_.isEmpty(values) && ! self.force_dirty) {
+                } else if (_.isEmpty(values)) {
                     // Not dirty, noop save
                     save_deferral = $.Deferred().resolve({}).promise();
                 } else {
-                    self.force_dirty = false;
                     // Write save
                     save_deferral = self.dataset.write(self.datarecord.id, values, {}).then(function(r) {
                         return self.record_saved(r);
@@ -1196,6 +1192,10 @@ instance.web.form.FormRenderingEngine = instance.web.form.FormRenderingEngineInt
         // IE won't allow custom button@type and will revert it to spec default : 'submit'
         $('button', doc).each(function() {
             $(this).attr('data-button-type', $(this).attr('type')).attr('type', 'button');
+        });
+        // IE's html parser is also a css parser. How convenient...
+        $('board', doc).each(function() {
+            $(this).attr('layout', $(this).attr('style'));
         });
         return $('<div class="oe_form"/>').append(instance.web.xml_to_str(doc));
     },
@@ -1916,18 +1916,20 @@ instance.web.form.WidgetButton = instance.web.form.FormWidget.extend({
                     modal: true,
                     buttons: [
                         {text: _t("Cancel"), click: function() {
-                                def.resolve();
                                 $(this).dialog("close");
                             }
                         },
                         {text: _t("Ok"), click: function() {
-                                self.on_confirmed().done(function() {
-                                    def.resolve();
+                                var self2 = this;
+                                self.on_confirmed().always(function() {
+                                    $(self2).dialog("close");
                                 });
-                                $(this).dialog("close");
                             }
-                        }
-                    ]
+                        },
+                    ],
+                    beforeClose: function() {
+                        def.resolve();
+                    },
                 });
                 return def.promise();
             } else {
@@ -1935,7 +1937,6 @@ instance.web.form.WidgetButton = instance.web.form.FormWidget.extend({
             }
         };
         if (!this.node.attrs.special) {
-            this.view.force_dirty = true;
             return this.view.recursive_save().then(exec_action);
         } else {
             return exec_action();
@@ -2334,7 +2335,7 @@ instance.web.form.FieldUrl = instance.web.form.FieldChar.extend({
             this._super();
         } else {
             var tmp = this.get('value');
-            var s = /(\w+):(.+)/.exec(tmp);
+            var s = /(\w+):(.+)|^\.{0,2}\//.exec(tmp);
             if (!s) {
                 tmp = "http://" + this.get('value');
             }
@@ -2383,6 +2384,7 @@ instance.web.DateTimeWidget = instance.web.Widget.extend({
     type_of_date: "datetime",
     events: {
         'change .oe_datepicker_master': 'change_datetime',
+        'dragstart img.oe_datepicker_trigger': function () { return false; },
     },
     init: function(parent) {
         this._super(parent);
@@ -2402,6 +2404,11 @@ instance.web.DateTimeWidget = instance.web.Widget.extend({
             showButtonPanel: true,
             firstDay: Date.CultureInfo.firstDayOfWeek
         });
+        // Some clicks in the datepicker dialog are not stopped by the
+        // datepicker and "bubble through", unexpectedly triggering the bus's
+        // click event. Prevent that.
+        this.picker('widget').click(function (e) { e.stopPropagation(); });
+
         this.$el.find('img.oe_datepicker_trigger').click(function() {
             if (self.get("effective_readonly") || self.picker('widget').is(':visible')) {
                 self.$input.focus();
@@ -2964,7 +2971,9 @@ instance.web.form.FieldMany2One = instance.web.form.AbstractField.extend(instanc
             case $.ui.keyCode.DOWN:
                 e.stopPropagation();
             }
-        }
+        },
+        'dragstart .oe_m2o_drop_down_button img': function () { return false; },
+        'dragstart .oe_m2o_cm_button': function () { return false; }
     },
     init: function(field_manager, node) {
         this._super(field_manager, node);
@@ -3065,6 +3074,15 @@ instance.web.form.FieldMany2One = instance.web.form.AbstractField.extend(instanc
                 }
             }
         });
+
+        // Autocomplete close on dialog content scroll
+        var close_autocomplete = _.debounce(function() {
+            if (self.$input.autocomplete("widget").is(":visible")) {
+                self.$input.autocomplete("close");
+            }
+        }, 50);
+        this.$input.closest(".ui-dialog .ui-dialog-content").on('scroll', this, close_autocomplete);
+
         self.ed_def = $.Deferred();
         self.uned_def = $.Deferred();
         var ed_delay = 200;
@@ -4457,6 +4475,7 @@ instance.web.form.AbstractFormPopup = instance.web.Widget.extend({
      *  options:
      *  -readonly: only applicable when not in creation mode, default to false
      * - alternative_form_view
+     * - view_id
      * - write_function
      * - read_function
      * - create_function
@@ -4523,7 +4542,7 @@ instance.web.form.AbstractFormPopup = instance.web.Widget.extend({
         _.extend(options, {
             $buttons: this.$buttonpane,
         });
-        this.view_form = new instance.web.FormView(this, this.dataset, false, options);
+        this.view_form = new instance.web.FormView(this, this.dataset, this.options.view_id || false, options);
         if (this.options.alternative_form_view) {
             this.view_form.set_embedded_view(this.options.alternative_form_view);
         }
@@ -4552,6 +4571,7 @@ instance.web.form.AbstractFormPopup = instance.web.Widget.extend({
             });
             var $cbutton = self.$buttonpane.find(".oe_abstractformpopup-form-close");
             $cbutton.click(function() {
+                self.view_form.trigger('on_button_cancel');
                 self.check_exit();
             });
             self.view_form.do_show();
@@ -4946,7 +4966,7 @@ instance.web.form.FieldBinaryFile = instance.web.form.FieldBinary.extend({
             }
             this.$el.find('input').eq(0).val(show_value);
         } else {
-            this.$el.find('a').show(!!this.get('value'));
+            this.$el.find('a').toggle(!!this.get('value'));
             if (this.get('value')) {
                 var show_value = _t("Download")
                 if (this.view)
@@ -5223,8 +5243,20 @@ instance.web.form.FieldStatus = instance.web.form.AbstractField.extend({
         this.options.clickable = this.options.clickable || (this.node.attrs || {}).clickable || false;
         this.options.visible = this.options.visible || (this.node.attrs || {}).statusbar_visible || false;
         this.set({value: false});
+        this.selection = [];
+        this.set("selection", []);
+        this.selection_dm = new instance.web.DropMisordered();
     },
     start: function() {
+        this.field_manager.on("view_content_has_changed", this, this.calc_domain);
+        this.calc_domain();
+        this.on("change:value", this, this.get_selection);
+        this.on("change:evaluated_selection_domain", this, this.get_selection);
+        this.get_selection();
+        this.on("change:selection", this, function() {
+            this.selection = this.get("selection");
+            this.render_value();
+        });
         if (this.options.clickable) {
             this.$el.on('click','li',this.on_click_stage);
         }
@@ -5241,15 +5273,20 @@ instance.web.form.FieldStatus = instance.web.form.AbstractField.extend({
     },
     render_value: function() {
         var self = this;
-        self.get_selection().done(function() {
-            var content = QWeb.render("FieldStatus.content", {widget: self});
-            self.$el.html(content);
-            var colors = JSON.parse((self.node.attrs || {}).statusbar_colors || "{}");
-            var color = colors[self.get('value')];
-            if (color) {
-                self.$("oe_active").css("color", color);
-            }
-        });
+        var content = QWeb.render("FieldStatus.content", {widget: self});
+        self.$el.html(content);
+        var colors = JSON.parse((self.node.attrs || {}).statusbar_colors || "{}");
+        var color = colors[self.get('value')];
+        if (color) {
+            self.$("oe_active").css("color", color);
+        }
+    },
+    calc_domain: function() {
+        var d = instance.web.pyeval.eval('domain', this.build_domain());
+        domain = ['|', ['id', '=', this.get('value')]].concat(d);
+        if (! _.isEqual(domain, this.get("evaluated_selection_domain"))) {
+            this.set("evaluated_selection_domain", domain);
+        }
     },
     /** Get the selection and render it
      *  selection: [[identifier, value_to_display], ...]
@@ -5258,32 +5295,37 @@ instance.web.form.FieldStatus = instance.web.form.AbstractField.extend({
      */
     get_selection: function() {
         var self = this;
-        self.selection = [];
-        if (this.field.type == "many2one") {
-            var domain = [];
-            if(!_.isEmpty(this.field.domain) || !_.isEmpty(this.node.attrs.domain)) {
-                var d = instance.web.pyeval.eval('domain', self.build_domain());
-                domain = ['|', ['id', '=', self.get('value')]].concat(d);
-            }
-            var ds = new instance.web.DataSetSearch(this, this.field.relation, self.build_context(), domain);
-            return ds.read_slice(['name'], {}).then(function (records) {
-                for(var i = 0; i < records.length; i++) {
-                    self.selection.push([records[i].id, records[i].name]);
+        var selection = [];
+
+        var calculation = _.bind(function() {
+            if (this.field.type == "many2one") {
+                var domain = [];
+                var ds = new instance.web.DataSetSearch(this, this.field.relation,
+                    self.build_context(), this.get("evaluated_selection_domain"));
+                return ds.read_slice(['name'], {}).then(function (records) {
+                    for(var i = 0; i < records.length; i++) {
+                        selection.push([records[i].id, records[i].name]);
+                    }
+                });
+            } else {
+                // For field type selection filter values according to
+                // statusbar_visible attribute of the field. For example:
+                // statusbar_visible="draft,open".
+                var select = this.field.selection;
+                for(var i=0; i < select.length; i++) {
+                    var key = select[i][0];
+                    if(key == this.get('value') || !this.options.visible || this.options.visible.indexOf(key) != -1) {
+                        selection.push(select[i]);
+                    }
                 }
-            });
-        } else {
-            // For field type selection filter values according to
-            // statusbar_visible attribute of the field. For example:
-            // statusbar_visible="draft,open".
-            var selection = this.field.selection;
-            for(var i=0; i < selection.length; i++) {
-                var key = selection[i][0];
-                if(key == this.get('value') || !this.options.visible || this.options.visible.indexOf(key) != -1) {
-                    this.selection.push(selection[i]);
-                }
+                return $.when();
             }
-            return $.when();
-        }
+        }, this);
+        this.selection_dm.add(calculation()).then(function () {
+            if (! _.isEqual(selection, self.get("selection"))) {
+                self.set("selection", selection);
+            }
+        });
     },
     on_click_stage: function (ev) {
         var self = this;
@@ -5327,16 +5369,16 @@ instance.web.form.FieldMonetary = instance.web.form.FieldFloat.extend({
             this.set({"currency_info": null});
             return;
         }
-        return this.ci_dm.add(new instance.web.Model("res.currency").query(["symbol", "position"])
-            .filter([["id", "=", self.get("currency")]]).first()).then(function(res) {
+        return this.ci_dm.add(self.alive(new instance.web.Model("res.currency").query(["symbol", "position"])
+            .filter([["id", "=", self.get("currency")]]).first())).then(function(res) {
             self.set({"currency_info": res});
         });
     },
     parse_value: function(val, def) {
-        return instance.web.parse_value(val, {type: "float"}, def);
+        return instance.web.parse_value(val, {type: "float", digits: (this.node.attrs || {}).digits || this.field.digits}, def);
     },
     format_value: function(val, def) {
-        return instance.web.format_value(val, {type: "float"}, def);
+        return instance.web.format_value(val, {type: "float", digits: (this.node.attrs || {}).digits || this.field.digits}, def);
     },
 });
 

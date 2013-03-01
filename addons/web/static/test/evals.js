@@ -282,7 +282,7 @@ openerp.testing.section('eval.edc', {
                 db: '3',
                 login: user.login,
                 uid: user.id,
-                context: {
+                user_context: {
                     uid: user.id,
                     lang: user.lang,
                     tz: user.tz

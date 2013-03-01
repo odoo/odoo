@@ -42,6 +42,16 @@ instance.web.Notification =  instance.web.Widget.extend({
     }
 });
 
+instance.web.action_notify = function(element, action) {
+    element.do_notify(action.params.title, action.params.text, action.params.sticky);
+};
+instance.web.client_actions.add("action_notify", "instance.web.action_notify");
+
+instance.web.action_warn = function(element, action) {
+    element.do_warn(action.params.title, action.params.text, action.params.sticky);
+};
+instance.web.client_actions.add("action_warn", "instance.web.action_warn");
+
 /**
  * The very minimal function everything should call to create a dialog
  * in OpenERP Web Client.
@@ -235,6 +245,11 @@ instance.web.CrashManager = instance.web.Class.extend({
 
     rpc_error: function(error) {
         if (!this.active) {
+            return;
+        }
+        // yes, exception handling is shitty
+        if (error.code === 300 && error.data && error.data.type == "client_exception" && error.data.debug.match("SessionExpiredException")) {
+            this.show_warning({type: "Session Expired", data: { fault_code: "Your OpenERP session expired. Please refresh the current web page." }});
             return;
         }
         if (error.data.fault_code) {
@@ -466,6 +481,7 @@ instance.web.DatabaseManager = instance.web.Widget.extend({
                         self.do_action("reload");
                     },
                 },
+                _push_me: false,
             };
             self.do_action(client_action);
         });
@@ -606,6 +622,9 @@ instance.web.Login =  instance.web.Widget.extend({
         var d = $.when();
         if ($.deparam.querystring().db) {
             self.params.db = $.deparam.querystring().db;
+        }
+        if ($.param.fragment().token) {
+            self.params.token = $.param.fragment().token;
         }
         // used by dbmanager.do_create via internal client action
         if (self.params.db && self.params.login && self.params.password) {
@@ -850,7 +869,7 @@ instance.web.Menu =  instance.web.Widget.extend({
         this.needaction_data = data;
         _.each(this.needaction_data, function (item, menu_id) {
             var $item = self.$secondary_menus.find('a[data-menu="' + menu_id + '"]');
-            $item.remove('oe_menu_counter');
+            $item.find('.oe_menu_counter').remove();
             if (item.needaction_counter && item.needaction_counter > 0) {
                 $item.append(QWeb.render("Menu.needaction_counter", { widget : item }));
             }
@@ -1013,26 +1032,24 @@ instance.web.UserMenu =  instance.web.Widget.extend({
             if (!self.session.uid)
                 return;
             var func = new instance.web.Model("res.users").get_func("read");
-            return func(self.session.uid, ["name", "company_id"]).then(function(res) {
+            return self.alive(func(self.session.uid, ["name", "company_id"])).then(function(res) {
                 var topbar_name = res.name;
                 if(instance.session.debug)
                     topbar_name = _.str.sprintf("%s (%s)", topbar_name, instance.session.db);
                 if(res.company_id[0] > 1)
                     topbar_name = _.str.sprintf("%s (%s)", topbar_name, res.company_id[1]);
                 self.$el.find('.oe_topbar_name').text(topbar_name);
-                if(!instance.session.debug) {
-                    self.rpc("/web/database/get_list", {}).done( function(result) {
-                       if (result.length > 1) {
-                            topbar_name = _.str.sprintf("%s (%s)", topbar_name, instance.session.db);
-                       }
-                        self.$el.find('.oe_topbar_name').text(topbar_name);
-                    });
+                if (!instance.session.debug) {
+                    topbar_name = _.str.sprintf("%s (%s)", topbar_name, instance.session.db);
                 }
                 var avatar_src = self.session.url('/web/binary/image', {model:'res.users', field: 'image_small', id: self.session.uid});
                 $avatar.attr('src', avatar_src);
             });
         };
         this.update_promise = this.update_promise.then(fct, fct);
+    },
+    on_menu_help: function() {
+        window.open('http://help.openerp.com', '_blank');
     },
     on_menu_logout: function() {
         this.trigger('user_logout');
@@ -1144,6 +1161,7 @@ instance.web.WebClient = instance.web.Client.extend({
         return $.when(this._super()).then(function() {
             if (jQuery.param !== undefined && jQuery.deparam(jQuery.param.querystring()).kitten !== undefined) {
                 $("body").addClass("kitten-mode-activated");
+                $("body").css("background-image", "url(" + instance.session.origin + "/web/static/src/img/back-enable.jpg" + ")");
                 if ($.blockUI) {
                     $.blockUI.defaults.message = '<img src="http://www.amigrave.com/kitten.gif">';
                 }
@@ -1208,7 +1226,7 @@ instance.web.WebClient = instance.web.Client.extend({
     },
     logo_edit: function(ev) {
         var self = this;
-        new instance.web.Model("res.users").get_func("read")(this.session.uid, ["company_id"]).then(function(res) {
+        new self.alive(instance.web.Model("res.users").get_func("read")(this.session.uid, ["company_id"])).then(function(res) {
             self.rpc("/web/action/load", { action_id: "base.action_res_company_form" }).done(function(result) {
                 result.res_id = res['company_id'][0];
                 result.target = "new";
@@ -1229,7 +1247,7 @@ instance.web.WebClient = instance.web.Client.extend({
     },
     check_timezone: function() {
         var self = this;
-        return new instance.web.Model('res.users').call('read', [[this.session.uid], ['tz_offset']]).then(function(result) {
+        return self.alive(new instance.web.Model('res.users').call('read', [[this.session.uid], ['tz_offset']])).then(function(result) {
             var user_offset = result[0]['tz_offset'];
             var offset = -(new Date().getTimezoneOffset());
             // _.str.sprintf()'s zero front padding is buggy with signed decimals, so doing it manually
@@ -1305,8 +1323,9 @@ instance.web.WebClient = instance.web.Client.extend({
     },
     on_hashchange: function(event) {
         var self = this;
-        var state = event.getState(true);
-        if (!_.isEqual(this._current_state, state)) {
+        var stringstate = event.getState(false);
+        if (!_.isEqual(this._current_state, stringstate)) {
+            var state = event.getState(true);
             if(!state.action && state.menu_id) {
                 self.menu.has_been_loaded.done(function() {
                     self.menu.do_reload().done(function() {
@@ -1318,13 +1337,13 @@ instance.web.WebClient = instance.web.Client.extend({
                 this.action_manager.do_load_state(state, !!this._current_state);
             }
         }
-        this._current_state = state;
+        this._current_state = stringstate;
     },
     do_push_state: function(state) {
         this.set_title(state.title);
         delete state.title;
         var url = '#' + $.param(state);
-        this._current_state = _.clone(state);
+        this._current_state = $.deparam($.param(state), false);     // stringify all values
         $.bbq.pushState(url);
         this.trigger('state_pushed', state);
     },
@@ -1334,9 +1353,10 @@ instance.web.WebClient = instance.web.Client.extend({
             .then(function (result) {
                 return self.action_mutex.exec(function() {
                     if (options.needaction) {
-                        result.context = new instance.web.CompoundContext(
-                            result.context,
-                            {search_default_message_unread: true});
+                        result.context = new instance.web.CompoundContext(result.context, {
+                            search_default_message_unread: true,
+                            search_disable_custom_filters: true,
+                        });
                     }
                     var completed = $.Deferred();
                     $.when(self.action_manager.do_action(result, {
@@ -1357,13 +1377,9 @@ instance.web.WebClient = instance.web.Client.extend({
             });
     },
     set_content_full_screen: function(fullscreen) {
-        if (fullscreen) {
-            $(".oe_webclient", this.$el).addClass("oe_content_full_screen");
-            $("body").css({'overflow-y':'hidden'});
-        } else {
-            $(".oe_webclient", this.$el).removeClass("oe_content_full_screen");
-            $("body").css({'overflow-y':'scroll'});
-        }
+        $(document.body).css('overflow-y', fullscreen ? 'hidden' : 'scroll');
+        this.$('.oe_webclient').toggleClass(
+            'oe_content_full_screen', fullscreen);
     },
     has_uncommitted_changes: function() {
         var $e = $.Event('clear_uncommitted_changes');

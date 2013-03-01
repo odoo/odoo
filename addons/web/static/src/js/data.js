@@ -860,8 +860,16 @@ instance.web.BufferedDataSet = instance.web.DataSetStatic.extend({
         }
         return completion.promise();
     },
-    call_button: function (method, args) {
-        var id = args[0][0], index;
+    /**
+     * Invalidates caching of a record in the dataset to ensure the next read
+     * of that record will hit the server.
+     *
+     * Of use when an action is going to remote-alter a record which will then
+     * need to be reloaded, e.g. action button.
+     *
+     * @param {Object} id record to remove from the BDS's cache
+     */
+    evict_record: function (id) {
         for(var i=0, len=this.cache.length; i<len; ++i) {
             var record = this.cache[i];
             // if record we call the button upon is in the cache
@@ -871,7 +879,14 @@ instance.web.BufferedDataSet = instance.web.DataSetStatic.extend({
                 break;
             }
         }
+    },
+    call_button: function (method, args) {
+        this.evict_record(args[0][0]);
         return this._super(method, args);
+    },
+    exec_workflow: function (id, signal) {
+        this.evict_record(id);
+        return this._super(id, signal);
     },
     alter_ids: function(n_ids) {
         this._super(n_ids);

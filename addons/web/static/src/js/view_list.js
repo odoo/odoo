@@ -321,9 +321,9 @@ instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListVi
                             .appendTo($this.empty())
                             .click(function (e) {e.stopPropagation();})
                             .append('<option value="80">80</option>' +
-                                    '<option value="100">100</option>' +
                                     '<option value="200">200</option>' +
                                     '<option value="500">500</option>' +
+                                    '<option value="2000">2000</option>' +
                                     '<option value="NaN">' + _t("Unlimited") + '</option>')
                             .change(function () {
                                 var val = parseInt($select.val(), 10);
@@ -348,12 +348,27 @@ instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListVi
             this.sidebar.add_toolbar(this.fields_view.toolbar);
             this.sidebar.$el.hide();
         }
+        //Sort
+        if(this.dataset._sort.length){
+            if(this.dataset._sort[0].indexOf('-') == -1){
+                this.$el.find('th[data-id=' + this.dataset._sort[0] + ']').addClass("sortdown");
+            }else {
+                this.$el.find('th[data-id=' + this.dataset._sort[0].split('-')[1] + ']').addClass("sortup");
+            }
+        }
         this.trigger('list_view_loaded', data, this.grouped);
     },
     sort_by_column: function (e) {
         e.stopPropagation();
         var $column = $(e.currentTarget);
-        this.dataset.sort($column.data('id'));
+        var col_name = $column.data('id')
+        var field = this.fields_view.fields[col_name];
+        // test if the field is a function field with store=false, since it's impossible
+        // for the server to sort those fields we desactivate the feature
+        if (field && field.store === false) {
+            return false;
+        }
+        this.dataset.sort(col_name);
         if($column.hasClass("sortdown") || $column.hasClass("sortup"))  {
             $column.toggleClass("sortup sortdown");
         } else {
@@ -1171,7 +1186,7 @@ instance.web.ListView.List = instance.web.Class.extend( /** @lends instance.web.
     }
 });
 instance.web.ListView.Groups = instance.web.Class.extend( /** @lends instance.web.ListView.Groups# */{
-    passtrough_events: 'action deleted row_link',
+    passthrough_events: 'action deleted row_link',
     /**
      * Grouped display for the ListView. Handles basic DOM events and interacts
      * with the :js:class:`~DataGroup` bound to it.
@@ -1391,7 +1406,7 @@ instance.web.ListView.Groups = instance.web.Class.extend( /** @lends instance.we
             // can have selections spanning multiple links
             var selection = self.get_selection();
             $this.trigger(e, [selection.ids, selection.records]);
-        }).bind(this.passtrough_events, function (e) {
+        }).bind(this.passthrough_events, function (e) {
             // additional positional parameters are provided to trigger as an
             // Array, following the event type or event object, but are
             // provided to the .bind event handler as *args.
@@ -2197,7 +2212,7 @@ instance.web.list.Binary = instance.web.list.Column.extend({
         if (value && value.substr(0, 10).indexOf(' ') == -1) {
             download_url = "data:application/octet-stream;base64," + value;
         } else {
-            download_url = this.session.url('/web/binary/saveas', {model: options.model, field: this.id, id: options.id});
+            download_url = instance.session.url('/web/binary/saveas', {model: options.model, field: this.id, id: options.id});
             if (this.filename) {
                 download_url += '&filename_field=' + this.filename;
             }
