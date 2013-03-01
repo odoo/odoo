@@ -297,7 +297,7 @@ class hr_evaluation_interview(osv.osv):
     _rec_name = 'response_id'
     _description = 'Appraisal Interview'
     _columns = {
-        'response_id': fields.many2one('survey.response', 'Request_id', ondelete='cascade', required=True),
+        'response_id': fields.many2one('survey.response', 'interview_id', ondelete='cascade', required=True),
         'user_to_review_id': fields.many2one('hr.employee', 'Employee to Interview'),
         'evaluation_id': fields.many2one('hr_evaluation.evaluation', 'Appraisal Form'),
         'user_id': fields.many2one('res.users', 'Interviewer'),

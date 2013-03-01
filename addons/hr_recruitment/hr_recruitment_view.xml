@@ -52,7 +52,7 @@
                 <field name="date_action" invisible="context.get('invisible_next_date', True)"/>
                 <field name="source_id" invisible="1"/>
                 <field name="survey" invisible="1"/>
-                <field name="response" invisible="1"/>
+                <field name="response_id" invisible="1"/>
                 <field name="priority"/>
                 <field name="type_id" invisible="1"/>
                 <field name="availability" invisible="1"/>
@@ -83,7 +83,7 @@
                         string="Schedule Meeting" help="Schedule interview with this applicant"/>
                     <button name="%(survey.action_view_survey_question_message)d" type="action"
                         string="Start Interview" help="Answer related job question"
-                        context="{'survey_id': survey, 'response_id': [response_id], 'response_no':0 ,'active' : response, 'object' : 'hr.applicant'}"
+                        context="{'survey_id': survey, 'response_id': [response_id]}"
                         attrs="{'invisible':[('survey','=',False)]}"/>
                     <button name="action_print_survey" type="object"
                         string="Print Interview" help="Print interview report"
