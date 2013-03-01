@@ -1137,7 +1137,11 @@ $sheet-padding: 16px
     // }}}
     // ViewManager common {{{
     .oe_view_manager
+        display: table
+        height: inherit
+        width: 100%
         .oe_view_manager_body
+            display: table-row
             height: inherit
         .oe_view_manager_view_kanban
             height: inherit
@@ -1845,6 +1849,7 @@ $sheet-padding: 16px
             width: 100%
             display: inline-block
             padding: 2px 2px 2px 0px
+            vertical-align: top
             input
                 margin: 0px
         input[type="text"], input[type="password"], input[type="file"], select
@@ -1872,7 +1877,6 @@ $sheet-padding: 16px
         .oe_form_field_datetime
             white-space: nowrap
         .oe_form_field_boolean
-            padding-top: 4px
             width: auto
         .oe_datepicker_container
             display: none
@@ -2434,9 +2438,22 @@ $sheet-padding: 16px
         float: right
         color: #333
     // }}}
+@-moz-document url-prefix()
+    .openerp
+        .oe_view_manager .oe_view_manager_switch li
+            line-height: 21px
+        .oe_searchview .oe_searchview_search
+            top: -1px
+        .oe_form_field_many2one .oe_m2o_cm_button
+            line-height: 18px
+        .oe_secondary_submenu
+            line-height: 14px
+        .oe_webclient
+            .oe_star_on, .oe_star_off
+                top: 0px
+
 // Kitten Mode {{{
 .kitten-mode-activated
-    background-image: url(http://placekitten.com/g/1365/769)
     background-size: cover
     background-attachment: fixed
     >*

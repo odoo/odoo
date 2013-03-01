@@ -318,6 +318,28 @@ openerp.testing.section('defaults', {
                     "facet value should match provided default's selection");
             });
     });
+    test("M2O default: value array", {asserts: 2}, function (instance, $s, mock) {
+        var view = {inputs: []}, id = 5;
+        var f = new instance.web.search.ManyToOneField(
+            {attrs: {name: 'dummy', string: 'Dummy'}},
+            {relation: 'dummy.model.name'},
+            view);
+        mock('dummy.model.name:name_get', function (args) {
+            equal(args[0], id);
+            return [[id, "DumDumDum"]];
+        });
+        return f.facet_for_defaults({dummy: [id]})
+        .done(function (facet) {
+            var model = facet;
+            if (!(model instanceof instance.web.search.Facet)) {
+                model = new instance.web.search.Facet(facet);
+            }
+            deepEqual(
+                model.values.toJSON(),
+                [{label: "DumDumDum", value: id}],
+                "should support default as a singleton");
+        });
+    });
     test("M2O default: value", {asserts: 1}, function (instance, $s, mock) {
         var view = {inputs: []}, id = 4;
         var f = new instance.web.search.ManyToOneField(
@@ -330,6 +352,15 @@ openerp.testing.section('defaults', {
                 ok(!facet, "an invalid m2o default should yield a non-facet");
             });
     });
+    test("M2O default: values", {rpc: false}, function (instance) {
+        var view = {inputs: []};
+        var f = new instance.web.search.ManyToOneField(
+            {attrs: {name: 'dummy', string: 'Dummy'}},
+            {relation: 'dummy.model.name'},
+            view);
+        raises(function () { f.facet_for_defaults({dummy: [6, 7]}) },
+               "should not accept multiple default values");
+    })
 });
 openerp.testing.section('completions', {
     dependencies: ['web.search'],
@@ -526,7 +557,7 @@ openerp.testing.section('completions', {
             return [[42, "choice 1"], [43, "choice @"]];
         });
 
-        var view = {inputs: []};
+        var view = {inputs: [], dataset: {get_context: function () {}}};
         var f = new instance.web.search.ManyToOneField(
             {attrs: {string: 'Dummy'}}, {relation: 'dummy.model'}, view);
         return f.complete("bob")
@@ -555,13 +586,33 @@ openerp.testing.section('completions', {
             strictEqual(kwargs.name, 'bob');
             return [];
         });
-        var view = {inputs: []};
+        var view = {inputs: [], dataset: {get_context: function () {}}};
         var f = new instance.web.search.ManyToOneField(
             {attrs: {string: 'Dummy'}}, {relation: 'dummy.model'}, view);
         return f.complete("bob")
             .done(function (c) {
                 ok(!c, "no match should yield no completion");
             });
+    });
+    test("M2O filtered", {asserts: 2}, function (instance, $s, mock) {
+        mock('dummy.model:name_search', function (args, kwargs) {
+            deepEqual(args, [], "should have no positional arguments");
+            deepEqual(kwargs, {
+                name: 'bob',
+                limit: 8,
+                args: [['foo', '=', 'bar']],
+                context: {flag: 1},
+            }, "should use filtering domain");
+            return [[42, "Match"]];
+        });
+        var view = {
+            inputs: [],
+            dataset: {get_context: function () { return {flag: 1}; }}
+        };
+        var f = new instance.web.search.ManyToOneField(
+            {attrs: {string: 'Dummy', domain: '[["foo", "=", "bar"]]'}},
+            {relation: 'dummy.model'}, view);
+        return f.complete("bob");
     });
 });
 openerp.testing.section('search-serialization', {
@@ -1036,6 +1087,44 @@ openerp.testing.section('saved_filters', {
                 view.query.remove(view.query.at(0));
                 ok(!$row.hasClass('oe_selected'),
                     "should not be checked anymore");
+            });
+    });
+    test('toggling', {asserts: 2}, function (instance, $fix, mock) {
+        var view = makeSearchView(instance);
+        mock('ir.filters:get_filters', function () {
+            return [{name: 'filter name', user_id: 42, id: 1}];
+        });
+
+        return view.appendTo($fix)
+            .done(function () {
+                var $row = $fix.find('.oe_searchview_custom li:first').click();
+                equal(view.query.length, 1, "should have one facet");
+                $row.click();
+                equal(view.query.length, 0, "should have removed facet");
+            });
+    });
+    test('replacement', {asserts: 4}, function (instance, $fix, mock) {
+        var view = makeSearchView(instance);
+        mock('ir.filters:get_filters', function () {
+            return [
+                {name: 'f', user_id: 42, id: 1, context: {'private': 1}},
+                {name: 'f', user_id: false, id: 2, context: {'private': 0}}
+            ];
+        });
+        return view.appendTo($fix)
+            .done(function () {
+                $fix.find('.oe_searchview_custom li:eq(0)').click();
+                equal(view.query.length, 1, "should have one facet");
+                deepEqual(
+                    view.query.at(0).get('field').get_context(),
+                    {'private': 1},
+                    "should have selected first filter");
+                $fix.find('.oe_searchview_custom li:eq(1)').click();
+                equal(view.query.length, 1, "should have one facet");
+                deepEqual(
+                    view.query.at(0).get('field').get_context(),
+                    {'private': 0},
+                    "should have selected second filter");
             });
     });
 });
