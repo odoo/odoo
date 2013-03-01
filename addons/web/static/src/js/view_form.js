@@ -1916,18 +1916,20 @@ instance.web.form.WidgetButton = instance.web.form.FormWidget.extend({
                     modal: true,
                     buttons: [
                         {text: _t("Cancel"), click: function() {
-                                def.resolve();
                                 $(this).dialog("close");
                             }
                         },
                         {text: _t("Ok"), click: function() {
-                                self.on_confirmed().done(function() {
-                                    def.resolve();
+                                var self2 = this;
+                                self.on_confirmed().always(function() {
+                                    $(self2).dialog("close");
                                 });
-                                $(this).dialog("close");
                             }
-                        }
-                    ]
+                        },
+                    ],
+                    beforeClose: function() {
+                        def.resolve();
+                    },
                 });
                 return def.promise();
             } else {
