@@ -757,7 +757,7 @@ class mail_thread(osv.AbstractModel):
             _logger.debug('Parsing Message without message-id, generating a random one: %s', message_id)
         msg_dict['message_id'] = message_id
 
-        if 'Subject' in message:
+        if message.get('Subject'):
             msg_dict['subject'] = decode(message.get('Subject'))
 
         # Envelope fields not stored in mail.message but made available for message_new()
@@ -765,7 +765,7 @@ class mail_thread(osv.AbstractModel):
         msg_dict['to'] = decode(message.get('to'))
         msg_dict['cc'] = decode(message.get('cc'))
 
-        if 'From' in message:
+        if message.get('From'):
             author_ids = self._message_find_partners(cr, uid, message, ['From'], context=context)
             if author_ids:
                 msg_dict['author_id'] = author_ids[0]
@@ -773,7 +773,7 @@ class mail_thread(osv.AbstractModel):
         partner_ids = self._message_find_partners(cr, uid, message, ['To', 'Cc'], context=context)
         msg_dict['partner_ids'] = [(4, partner_id) for partner_id in partner_ids]
 
-        if 'Date' in message:
+        if message.get('Date'):
             try:
                 date_hdr = decode(message.get('Date'))
                 parsed_date = dateutil.parser.parse(date_hdr, fuzzy=True)
@@ -791,12 +791,12 @@ class mail_thread(osv.AbstractModel):
                 stored_date = datetime.datetime.now()
             msg_dict['date'] = stored_date.strftime(tools.DEFAULT_SERVER_DATETIME_FORMAT)
 
-        if 'In-Reply-To' in message:
+        if message.get('In-Reply-To'):
             parent_ids = self.pool.get('mail.message').search(cr, uid, [('message_id', '=', decode(message['In-Reply-To']))])
             if parent_ids:
                 msg_dict['parent_id'] = parent_ids[0]
 
-        if 'References' in message and 'parent_id' not in msg_dict:
+        if message.get('References') and 'parent_id' not in msg_dict:
             parent_ids = self.pool.get('mail.message').search(cr, uid, [('message_id', 'in',
                                                                          [x.strip() for x in decode(message['References']).split()])])
             if parent_ids:
