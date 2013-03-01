@@ -601,7 +601,11 @@ class objects_proxy(netsvc.ExportService):
 
     def dispatch(self, method, params):
         (db, uid, passwd ) = params[0:3]
+
+        # set uid tracker - cleaned up at the WSGI
+        # dispatching phase in openerp.service.wsgi_server.application
         threading.current_thread().uid = uid
+
         params = params[3:]
         if method == 'obj_list':
             raise NameError("obj_list has been discontinued via RPC as of 6.0, please query ir.model directly!")

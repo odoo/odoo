@@ -189,7 +189,6 @@ class object_proxy(object):
 
     @check
     def execute(self, db, uid, obj, method, *args, **kw):
-        threading.currentThread().dbname = db
         cr = pooler.get_db(db).cursor()
         try:
             try:

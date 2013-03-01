@@ -290,8 +290,6 @@ def dispatch_rpc(service_name, method, params):
             if rpc_request and rpc_response_flag:
                 log(rpc_request,logging.DEBUG,'%s.%s'%(service_name,method), replace_request_password(params))
 
-        threading.current_thread().uid = None
-        threading.current_thread().dbname = None
         result = ExportService.getService(service_name).dispatch(method, params)
 
         if rpc_request_flag or rpc_response_flag:
