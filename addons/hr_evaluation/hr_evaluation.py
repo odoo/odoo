@@ -147,7 +147,7 @@ class hr_evaluation(osv.osv):
             ('3', 'Exceeds expectations'),
             ('4', 'Significantly exceeds expectations'),
         ], "Appreciation", help="This is the appreciation on which the evaluation is summarized."),
-        'survey_response_ids': fields.one2many('hr.evaluation.interview', 'evaluation_id', 'Appraisal Forms'),
+        'interview_ids': fields.one2many('hr.evaluation.interview', 'evaluation_id', 'Appraisal Forms'),
         'plan_id': fields.many2one('hr_evaluation.plan', 'Plan', required=True),
         'state': fields.selection([
             ('draft', 'New'),
@@ -237,7 +237,7 @@ class hr_evaluation(osv.osv):
         for evaluation in self.browse(cr, uid, ids, context=context):
             if evaluation.employee_id and evaluation.employee_id.parent_id and evaluation.employee_id.parent_id.user_id:
                 self.message_subscribe_users(cr, uid, [evaluation.id], user_ids=[evaluation.employee_id.parent_id.user_id.id], context=context)
-            if len(evaluation.survey_response_ids) != len(request_obj.search(cr, uid, [('evaluation_id', '=', evaluation.id), ('state', 'in', ['done', 'cancel'])], context=context)):
+            if len(evaluation.interview_ids) != len(request_obj.search(cr, uid, [('evaluation_id', '=', evaluation.id), ('state', 'in', ['done', 'cancel'])], context=context)):
                 raise osv.except_osv(_('Warning!'), _("You cannot change state, because some appraisal(s) are in waiting answer or draft state."))
         return True
 
@@ -248,7 +248,7 @@ class hr_evaluation(osv.osv):
     def button_cancel(self, cr, uid, ids, context=None):
         interview_obj = self.pool.get('hr.evaluation.interview')
         evaluation = self.browse(cr, uid, ids[0], context=context)
-        interview_obj.action_cancel(cr, uid, [r.id for r in evaluation.survey_response_ids], context=context)
+        interview_obj.action_cancel(cr, uid, [r.id for r in evaluation.interview_ids], context=context)
         self.write(cr, uid, ids, {'state': 'cancel'}, context=context)
         return True
 
@@ -262,7 +262,7 @@ class hr_evaluation(osv.osv):
         if context is None:
             context = {}
         default = default.copy()
-        default['survey_response_ids'] = []
+        default['interview_ids'] = []
         return super(hr_evaluation, self).copy(cr, uid, id, default, context=context)
 
     def write(self, cr, uid, ids, vals, context=None):
@@ -274,7 +274,7 @@ class hr_evaluation(osv.osv):
             new_vals = {'date_deadline': vals.get('date')}
             obj_hr_eval_iterview = self.pool.get('hr.evaluation.interview')
             for evalutation in self.browse(cr, uid, ids, context=context):
-                for survey_req in evalutation.survey_response_ids:
+                for survey_req in evalutation.interview_ids:
                     obj_hr_eval_iterview.write(cr, uid, [survey_req.id], new_vals, context=context)
         return super(hr_evaluation, self).write(cr, uid, ids, vals, context=context)
 
@@ -323,8 +323,7 @@ class hr_evaluation_interview(osv.osv):
         return self.pool.get('survey.response').action_cancel(cr, uid, [record.response_id.id], context=context)
 
     def action_fill(self, cr, uid, ids, context=None):
-        record = self.browse(cr, uid, ids[0], context=context)
-        action = self.pool.get('survey.response').action_preview(cr, uid, [record.response_id.id], context=None)
+        action = self.action_preview(cr, uid, ids, context=context)
         action['context']['readonly'] = False
         return action
 
@@ -349,12 +348,12 @@ class hr_evaluation_interview(osv.osv):
 
     def survey_req_done(self, cr, uid, ids, context=None):
         hr_eval_obj = self.pool.get('hr_evaluation.evaluation')
-        for id in self.browse(cr, uid, ids, context=context):
+        for interview in self.browse(cr, uid, ids, context=context):
             flag = False
             wating_id = 0
-            if not id.evaluation_id.id:
+            if not interview.evaluation_id.id:
                 raise osv.except_osv(_('Warning!'), _("You cannot start evaluation without Appraisal."))
-            records = hr_eval_obj.browse(cr, uid, [id.evaluation_id.id], context=context)[0].survey_response_ids
+            records = hr_eval_obj.browse(cr, uid, [interview.evaluation_id.id], context=context)[0].interview_ids
             for child in records:
                 if child.state == "new":
                     wating_id = child.id

@@ -668,6 +668,7 @@ class survey_response(osv.osv):
         'date_create': datetime.now(),
         'state': "new",
         'response_type': "manually",
+        'token': lambda s, cr, uid, c: uuid.uuid4(),
     }
 
     def action_survey_resent(self, cr, uid, ids, context=None):

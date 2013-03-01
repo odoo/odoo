@@ -33,6 +33,29 @@ import uuid
 DATETIME_FORMAT = "%Y-%m-%d"
 
 
+class survey_name_wiz(osv.osv_memory):
+    _name = 'survey.name.wiz'
+
+    _columns = {
+        'survey_id': fields.many2one('survey', 'Survey', required=True, ondelete='cascade', domain=[('state', '=', 'open')]),
+        'page_no': fields.integer('Page Number'),
+        'note': fields.text("Description"),
+        'page': fields.char('Page Position', size=12),
+        'transfer': fields.boolean('Page Transfer'),
+        'store_ans': fields.text('Store Answer'),
+        'response_id': fields.many2one('survey.response', 'Answer'),
+    }
+    _defaults = {
+        'page_no': -1,
+        'page': 'next',
+        'transfer': 1,
+        'response_id': 0,
+        'survey_id': lambda self, cr, uid, context: context.get('survey_id', False),
+        #Setting the default pattern as '{}' as the field is of type text. The field always gets the value in dict format
+        'store_ans': '{}'
+    }
+
+
 class survey_question_wiz(osv.osv_memory):
     _name = 'survey.question.wiz'
     _columns = {
@@ -209,8 +232,8 @@ class survey_question_wiz(osv.osv_memory):
         survey_browse = survey_obj.browse(cr, SUPERUSER_ID, survey_id, context=context)
         user_browse = self.pool.get('res.users').browse(cr, SUPERUSER_ID, uid, context=context)
         pid = user_browse.partner_id.id
-        model_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'portal', 'group_anonymous')
-        anonymous = model_id and model_id[1] in [x.id for x in user_browse.groups_id]
+        model_id = self.pool.get('ir.model.data').search(cr, uid, [('module', '=', 'portal'), ('name', '=', 'group_anonymous')], context=context)
+        anonymous = model_id and model_id[0] in [x.id for x in user_browse.groups_id]
 
         # to do: check if context.get('edit') is allow
         if context.get('edit'):
@@ -239,7 +262,7 @@ class survey_question_wiz(osv.osv_memory):
             try:
                 survey_obj.check_access_rights(cr, uid, 'write')
                 survey_obj.check_access_rule(cr, uid, [survey_id], 'write', context=context)
-                response_ids = context.get("response_id")
+                response_ids = [context.get("response_id")]
             except except_orm, e:
                 response_ids = None
         # check sign in user
@@ -263,8 +286,9 @@ class survey_question_wiz(osv.osv_memory):
                 raise osv.except_osv(_('Access Denied!'), _("You do not have access to this survey."))
             else:
                 response = sur_response_obj.browse(cr, SUPERUSER_ID, response_ids[0], context=context)
-                if response.state == 'done':
-                    #raise osv.except_osv(_('Access Denied!'), _("You have already answered this survey, Thank you."))
+                if response.state == 'cancel':
+                    raise osv.except_osv(_('Access Denied!'), _("You do not have access to this survey because, your survey access is canceled."))
+                elif response.state == 'done':
                     res['response_id'] = context.get('response_id') and int(context['response_id'][0])
                     res['state'] = 'done'
                     res['readonly'] = True
@@ -1197,8 +1221,8 @@ class survey_question_wiz(osv.osv_memory):
         # check if the user must be authenticate
         survey_browse = self.pool.get('survey').browse(cr, SUPERUSER_ID, context['survey_id'], context=context)
         user_browse = self.pool.get('res.users').browse(cr, SUPERUSER_ID, uid, context=context)
-        model_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'portal', 'group_anonymous')
-        anonymous = model_id and model_id[1] in [x.id for x in user_browse.groups_id]
+        model_id = self.pool.get('ir.model.data').search(cr, uid, [('module', '=', 'portal'), ('name', '=', 'group_anonymous')], context=context)
+        anonymous = model_id and model_id[0] in [x.id for x in user_browse.groups_id]
         if anonymous and survey_browse.state == "open" and survey_browse.authenticate:
             return {
                 'type': 'ir.actions.client',

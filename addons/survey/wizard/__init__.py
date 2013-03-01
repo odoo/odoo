@@ -22,7 +22,6 @@
 import survey_email_compose_message
 import survey_print_statistics
 import survey_print_answer
-import survey_selection
 import survey_answer
 import survey_print
 

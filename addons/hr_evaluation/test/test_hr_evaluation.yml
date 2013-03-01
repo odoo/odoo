@@ -33,22 +33,25 @@
   I check that state is "Plan in progress" and "Interview Request" record is created
 -
   !python {model: hr_evaluation.evaluation}: |
-    interview_obj = self.pool.get('hr.evaluation.interview')
     evaluation = self.browse(cr, uid, ref('hr_evaluation_evaluation_0') , context)
     assert evaluation.state == 'wait', "Evaluation should be 'Plan in progress' state"
+    interview_obj = self.pool.get('hr.evaluation.interview')
     interview_ids = interview_obj.search(cr, uid, [('evaluation_id','=', ref('hr_evaluation_evaluation_0'))])
     assert len(interview_ids), "Interview evaluation survey not created"
 -
   Give answer of the first page in "Employee Evaluation" survey.
 -
   !python {model: survey.question.wiz}: |
-    name_wiz_obj=self.pool.get('survey.name.wiz')
+    name_wiz_obj = self.pool.get('survey.name.wiz')
     interview_obj = self.pool.get('hr.evaluation.interview')
     interview_ids = interview_obj.search(cr, uid, [('evaluation_id','=', ref('hr_evaluation_evaluation_0'))])
     assert len(interview_ids), "Interview evaluation survey not created"
-    ctx = {'active_model':'hr.evaluation.interview', 'active_id': interview_ids[0], 'active_ids': [interview_ids], 'survey_id': ref("survey_2")}
-    name_id = name_wiz_obj.create(cr, uid, {'survey_id': ref("survey_2")})
-    ctx ["sur_name_id"] = name_id
+    interview_data = interview_obj.browse(cr, uid, interview_ids[0])
+    assert interview_data.response_id.state != 'new', 'Response should be in new state'
+    response_id = interview_data.response_id.id
+    ctx = {'survey_id': ref("survey_2"), 'response_id': response_id}
+    name_id = name_wiz_obj.create(cr, uid, {'survey_id': ref("survey_2"), 'response_id': response_id }, context = ctx)
+    ctx["sur_name_id"] = name_id
     self.create(cr, uid, {str(ref("survey_question_2")) +"_" +str(ref("survey_answer_1")) + "_multi" :'tpa',
                str(ref("survey_question_2")) +"_" +str(ref("survey_answer_10")) + "_multi" :'application eng',
                str(ref("survey_question_2")) +"_" +str(ref("survey_answer_20")) + "_multi" :'3',
@@ -59,10 +62,10 @@
   I close this Evaluation survey by giving answer of questions.
 -
   !python {model: hr_evaluation.evaluation}: |
-    interview_obj = self.pool.get('hr.evaluation.interview')
     evaluation = self.browse(cr, uid, ref('hr_evaluation_evaluation_0'))
-    interview_obj.survey_req_done(cr, uid, [r.id for r in evaluation.survey_request_ids])
-    for survey in evaluation.survey_request_ids:
+    interview_obj = self.pool.get('hr.evaluation.interview')
+    interview_obj.survey_req_done(cr, uid, [r.id for r in evaluation.interview_ids])
+    for survey in evaluation.interview_ids:
         interview = interview_obj.browse(cr, uid, survey.id, context)
         assert interview.state == "done", 'survey must be in done state'
 -
@@ -70,7 +73,7 @@
 -
   !python {model: hr_evaluation.evaluation}: |
     evaluation = self.browse(cr, uid, ref('hr_evaluation_evaluation_0'))
-    self.pool.get('hr.evaluation.interview').action_print_survey(cr, uid, [r.id for r in evaluation.survey_request_ids])
+    self.pool.get('hr.evaluation.interview').action_print_survey(cr, uid, [r.id for r in evaluation.interview_ids])
 -
   I click on "Final Validation" button to finalise evaluation.
 -

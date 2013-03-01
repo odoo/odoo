@@ -78,41 +78,41 @@ class test_survey_answer():
         id = self.obj_survey_question_wiz.create(cr, uid, {}, ctx)
         self.obj_survey_question_wiz.action_next(cr, uid, [id], ctx)
 
-        # I give the answer of the first and second page of the survey.
-        #ctx = {'active_model':'survey', 'active_id': self.survey_id, 'active_ids': [self.survey_id]}
-        self.obj_survey_question_wiz.fields_view_get(cr, uid, ref("survey.view_survey_question_message"),"form", context=ctx)
-        values = self.obj_survey_question_wiz.default_get(cr, uid, ['name'], ctx)
-        id = self.obj_survey_question_wiz.create(cr, uid, {str(ref("survey_initial_question_company_name")) +"_single" :'Tiny' , str(ref("survey_initial_question_company_size")) + "_selection" : int(ref("survey.survey_initial_question_company_size_51")), }, context)
-        self.obj_survey_question_wiz.action_next(cr, uid, [id], context)
-        id = self.obj_survey_question_wiz.create(cr, uid, {str(ref("survey_initial_question_contract_customers")) + "_selection" : int(ref("survey_initial_answer_sometimes")), str(ref("survey_initial_question_sell_to_your_customers")) + "_selection" : int(ref("survey_initial_answer_maintenance_contract")), }, context)
-        self.obj_survey_question_wiz.action_next(cr, uid, [id], context)
+        # # I give the answer of the first and second page of the survey.
+        # #ctx = {'active_model':'survey', 'active_id': self.survey_id, 'active_ids': [self.survey_id]}
+        # self.obj_survey_question_wiz.fields_view_get(cr, uid, ref("survey.view_survey_question_message"),"form", context=ctx)
+        # values = self.obj_survey_question_wiz.default_get(cr, uid, ['name'], ctx)
+        # id = self.obj_survey_question_wiz.create(cr, uid, {str(ref("survey_initial_question_company_name")) +"_single" :'Tiny' , str(ref("survey_initial_question_company_size")) + "_selection" : int(ref("survey.survey_initial_question_company_size_51")), }, context)
+        # self.obj_survey_question_wiz.action_next(cr, uid, [id], context)
+        # id = self.obj_survey_question_wiz.create(cr, uid, {str(ref("survey_initial_question_contract_customers")) + "_selection" : int(ref("survey_initial_answer_sometimes")), str(ref("survey_initial_question_sell_to_your_customers")) + "_selection" : int(ref("survey_initial_answer_maintenance_contract")), }, context)
+        # self.obj_survey_question_wiz.action_next(cr, uid, [id], context)
 
-        # I edit questions of the survey as per requirement.
-        id = self.obj_survey_name_wiz.create(cr, uid, {'survey_id': self.survey_id})
-        ctx.update({'question_id': ref('survey_initial_question_company_name'), 'page_number': -1, 'sur_name_id': id})
-        self.obj_survey_question_wiz.action_edit_question(cr, uid, [ref('survey_initial_question_company_name')], context=ctx)
-        self.obj_survey_question_wiz.action_delete_question(cr, uid, [ref('survey_initial_question_company_name')], context=ctx)
-        self.obj_survey_question_wiz.action_new_question(cr, uid, [], context=ctx)
+        # # I edit questions of the survey as per requirement.
+        # id = self.obj_survey_name_wiz.create(cr, uid, {'survey_id': self.survey_id})
+        # ctx.update({'question_id': ref('survey_initial_question_company_name'), 'page_number': -1, 'sur_name_id': id})
+        # self.obj_survey_question_wiz.action_edit_question(cr, uid, [ref('survey_initial_question_company_name')], context=ctx)
+        # self.obj_survey_question_wiz.action_delete_question(cr, uid, [ref('survey_initial_question_company_name')], context=ctx)
+        # self.obj_survey_question_wiz.action_new_question(cr, uid, [], context=ctx)
 
-        # I edit Page of the survey as per requirement.
-        id = self.obj_survey_name_wiz.create(cr, uid, {'survey_id': self.survey_id})
-        ctx.update({'page_id': ref('survey_initial_page_Contracts'), 'sur_name_id': id})
-        self.obj_survey_question_wiz.action_edit_page(cr, uid, [ref('survey_initial_page_Contracts')], context=ctx)
-        self.obj_survey_question_wiz.action_delete_page(cr, uid, [ref('survey_initial_page_Contracts')], context=ctx)
-        self.obj_survey_question_wiz.action_new_page(cr, uid, [], context=ctx)
+        # # I edit Page of the survey as per requirement.
+        # id = self.obj_survey_name_wiz.create(cr, uid, {'survey_id': self.survey_id})
+        # ctx.update({'page_id': ref('survey_initial_page_Contracts'), 'sur_name_id': id})
+        # self.obj_survey_question_wiz.action_edit_page(cr, uid, [ref('survey_initial_page_Contracts')], context=ctx)
+        # self.obj_survey_question_wiz.action_delete_page(cr, uid, [ref('survey_initial_page_Contracts')], context=ctx)
+        # self.obj_survey_question_wiz.action_new_page(cr, uid, [], context=ctx)
 
-        # In order to send invitation to the users I click on "Send Invitation" wizard.
+        # # In order to send invitation to the users I click on "Send Invitation" wizard.
 
-        # I set the survey in Cancel state.
-        self.obj_survey.survey_cancel(cr, uid, [self.survey_id], context)
+        # # I set the survey in Cancel state.
+        # self.obj_survey.survey_cancel(cr, uid, [self.survey_id], context)
 
-        # I check state of survey is cancel or not.
-        self.assertEqual(self.survey_browse.state, 'cancel', 'Survey should be in cancel state')
+        # # I check state of survey is cancel or not.
+        # self.assertEqual(self.survey_browse.state, 'cancel', 'Survey should be in cancel state')
 
-        # I set the survey in close state.
-        self.obj_survey.survey_close(cr, uid, [self.survey_id], context)
+        # # I set the survey in close state.
+        # self.obj_survey.survey_close(cr, uid, [self.survey_id], context)
 
-        # I check state of Survey is close or not.
-        self.assertEqual(self.survey_browse.state, 'close', 'Survey should be in cancel state')
+        # # I check state of Survey is close or not.
+        # self.assertEqual(self.survey_browse.state, 'close', 'Survey should be in cancel state')
 
-        # sur_question = self.on_change_type(cr, uid, [ref("survey_Initial_partner_feedback")], 'multiple_textboxes_diff_type')
+        # # sur_question = self.on_change_type(cr, uid, [ref("survey_Initial_partner_feedback")], 'multiple_textboxes_diff_type')

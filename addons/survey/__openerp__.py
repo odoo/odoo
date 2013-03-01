@@ -50,7 +50,7 @@ user name and password for the invitation of the survey.
     'demo': ['survey_demo.xml'],
     'test': [
         'test/survey_report.yml',
-        'survey_response.py',
+        'test/survey_response.py',
     ],
     'installable': True,
     'auto_install': False,
