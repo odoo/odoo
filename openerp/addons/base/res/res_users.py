@@ -3,7 +3,7 @@
 #
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
-#    Copyright (C) 2010-2012 OpenERP s.a. (<http://openerp.com>).
+#    Copyright (C) 2010-2013 OpenERP s.a. (<http://openerp.com>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -426,7 +426,9 @@ class res_users(osv.osv):
                 cr = pooler.get_db(db).cursor()
                 try:
                     base = user_agent_env['base_location']
-                    self.pool.get('ir.config_parameter').set_param(cr, uid, 'web.base.url', base)
+                    ICP = self.pool.get('ir.config_parameter')
+                    if not ICP.get_param(cr, uid, 'web.base.url.freeze'):
+                        ICP.set_param(cr, uid, 'web.base.url', base)
                     cr.commit()
                 except Exception:
                     _logger.exception("Failed to update web.base.url configuration parameter")
