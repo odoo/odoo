@@ -411,7 +411,6 @@ class module(osv.osv):
         if to_install_ids:
             self.button_install(cr, uid, to_install_ids, context=context)
 
-        openerp.modules.registry.RegistryManager.signal_registry_change(cr.dbname)
         return dict(ACTION_DICT, name=_('Install'))
 
     def button_immediate_install(self, cr, uid, ids, context=None):
@@ -500,7 +499,6 @@ class module(osv.osv):
             raise orm.except_orm(_('Error'), _("The `base` module cannot be uninstalled"))
         dep_ids = self.downstream_dependencies(cr, uid, ids, context=context)
         self.write(cr, uid, ids + dep_ids, {'state': 'to remove'})
-        openerp.modules.registry.RegistryManager.signal_registry_change(cr.dbname)
         return dict(ACTION_DICT, name=_('Uninstall'))
 
     def button_uninstall_cancel(self, cr, uid, ids, context=None):

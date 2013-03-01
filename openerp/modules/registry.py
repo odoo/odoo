@@ -232,6 +232,9 @@ class RegistryManager(object):
 
         registry.ready = True
 
+        if update_module:
+            # only in case of update, otherwise we'll have an infinite reload loop!
+            cls.signal_registry_change(db_name)
         return registry
 
     @classmethod

@@ -360,7 +360,6 @@ class res_config_installer(osv.osv_memory):
             modules.search(cr, uid, [('name','in',to_install)]),
             'to install', ['uninstalled'], context=context)
         cr.commit()
-        openerp.modules.registry.RegistryManager.signal_registry_change(cr.dbname)
         new_db, self.pool = pooler.restart_pool(cr.dbname, update_module=True)
 
 res_config_installer()
