@@ -369,10 +369,9 @@ class gamification_goal_plan(osv.Model):
                     planlines_boards.append({'goal_type':planline.type_id.name, 'board_goals':sorted_board})
 
                 body_html = template_env.get_template('group_progress.mako').render({'object':plan, 'planlines_boards':planlines_boards})
-                
                 self.message_post(cr, uid, plan.id,
                     body=body_html,
-                    partner_ids=[user.partner_id.id for user in plan.user_ids],
+                    partner_ids=[(6, 0, [user.partner_id.id for user in plan.user_ids])],
                     context=context,
                     subtype='mail.mt_comment')
                 if plan.report_message_group_id:
@@ -395,11 +394,10 @@ class gamification_goal_plan(osv.Model):
                     }
                     body_html = template_env.get_template('personal_progress.mako').render(variables)
                     
-                    # FIXME mail NOT sent -> no followers
                     # FIXME huge blank space
                     self.message_post(cr, uid, plan.id,
                         body=body_html,
-                        partner_ids=[user.partner_id.id],
+                        partner_ids=[(6, 0, [user.partner_id.id])],
                         context=context,
                         subtype='mail.mt_comment')
                     if plan.report_message_group_id:
