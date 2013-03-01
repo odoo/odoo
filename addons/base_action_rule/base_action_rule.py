@@ -117,6 +117,8 @@ class base_action_rule(osv.osv):
 
     def _process(self, cr, uid, action, record_ids, context=None):
         """ process the given action on the records """
+        model = self.pool.get(action.model_id.model)
+
         # modify records
         values = {}
         if 'date_action_last' in model._all_columns:
@@ -131,7 +133,6 @@ class base_action_rule(osv.osv):
             model.message_subscribe(cr, uid, record_ids, follower_ids, context=context)
 
         # execute server actions
-        model = self.pool.get(action.model_id.model)
         if action.server_action_ids:
             server_action_ids = map(int, action.server_action_ids)
             for record in model.browse(cr, uid, record_ids, context):
