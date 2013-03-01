@@ -85,10 +85,11 @@
     <record id="survey_job_0" model="survey">
         <field name="title">Job Survey</field>
         <field name="max_response_limit">20</field>
-        <field eval="[(6,0,[])]" name="users"/>
         <field name="type" ref="survey.survey_type1"/>
         <field name="responsible_id" ref="base.user_root"/>
-        <field name="response_user">5</field>
+        <field name="max_response_limit">15</field>
+        <field name="state">open</field>
+        <field name="sign_in">1</field>
     </record>
     <record id="survey_page_job_0" model="survey.page">
         <field name="title">Default Section</field>

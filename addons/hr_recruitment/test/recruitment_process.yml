@@ -75,7 +75,8 @@
 -
   !python {model: survey.question.wiz}: |
     ctx = context.copy()
-    ctx.update({'active_model': 'hr.applicant', 'active_id': ref("hr_case_programmer"), 'active_ids': [ref("hr_case_programmer")], 'survey_id': ref("survey_job_0")})
+    applicant = self.pool.get('hr.applicant').browse(cr, uid, ref("hr_case_programmer"), context=context)
+    ctx.update({'survey_id': ref("survey_job_0"), 'survey_token': applicant.job_id.survey_id.token})
     self.fields_view_get(cr, uid, ref("survey.view_survey_question_message"),"form", context=ctx)
     vals = self.default_get(cr, uid , [], context=ctx)
     self.create(cr, uid, vals, context=ctx)
