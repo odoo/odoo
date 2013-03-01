@@ -70,6 +70,14 @@
 
 """
 
+__all__ = [
+    'Meta', 'guess', 'noguess',
+    'model', 'record', 'recordset',
+    'cr', 'cr_context', 'cr_uid', 'cr_uid_context',
+    'cr_uid_id', 'cr_uid_id_context', 'cr_uid_ids', 'cr_uid_ids_context',
+    'returns',
+]
+
 from functools import wraps
 import logging
 
@@ -88,7 +96,10 @@ def _get_returns(method):
 
 
 class Meta(type):
-    """ Metaclass that automatically decorates methods with :func:`versatile`. """
+    """ Metaclass that automatically decorates traditional-style methods by
+        guessing their API. It also implements the inheritance of the
+        :func:`returns` decorators.
+    """
 
     def __new__(meta, name, bases, attrs):
         # dummy parent class to catch overridden methods decorated with 'returns'
@@ -104,7 +115,7 @@ class Meta(type):
 
                 # guess calling convention if none is given
                 if not hasattr(value, '_api'):
-                    value = versatile(value)
+                    value = guess(value)
 
                 attrs[key] = value
 
@@ -112,14 +123,29 @@ class Meta(type):
 
 
 def returns(model):
-    """ Make a decorator for methods that return instances of `model`, which is
-        either a model name, or ``'self'`` for the current model.
+    """ Return a decorator for methods that return instances of `model`.
+
+        :param model: the name of a model, or ``'self'`` for the current model
 
         The decorator adapts the method output to the api style: `id`, `ids` or
-        ``False`` when called in the traditional style, or a record, recordset
-        or null when called in the record style.
+        ``False`` for the traditional style, and record, recordset or null for
+        the record style::
 
-        This decorator supports the :ref:`record-map-convention`.
+            @model
+            @returns('res.partner')
+            def find_partner(self, arg):
+                ...     # return some record
+
+            # output depends on call style: traditional vs record style
+            partner_id = model.find_partner(cr, uid, arg, context=context)
+            partner_record = model.find_partner(arg)
+
+        Note that the decorated method must satisfy that convention.
+
+        Those decorators are automatically *inherited*: a method that overrides
+        a decorated existing method will be decorated with the same
+        ``@returns(model)``.
+        They also supports the :ref:`record-map-convention`.
     """
     def decorate(method):
         if hasattr(method, '_orig'):
@@ -321,63 +347,88 @@ def recordset(method):
     return _make_wrapper(method, _returns_old(method, old_api), new_api)
 
 
+def _kwargs_context(kwargs, context):
+    """ add the `context` parameter in `kwargs` """
+    return dict(kwargs, context=context) if 'context' not in kwargs else kwargs
+
+
 def cr(method):
     """ Decorate a traditional-style method that takes `cr` as a parameter.
-        Such a method::
-
-            @api.cr
-            def method(self, cr, args):
-                ...
-
-        may be called in both record and traditional styles, like::
+        Such a method may be called in both record and traditional styles, like::
 
             obj.method(args)            # record style
             obj.method(cr, args)        # traditional style
-
-        This decorator is generally not necessary, see :func:`versatile`.
     """
     method._api = cr
 
     def new_api(self, *args, **kwargs):
-        return method(self, self.session.cr, *args, **kwargs)
+        cr, uid, context = self.session
+        return method(self, cr, *args, **kwargs)
+
+    return _make_wrapper(method, method, _returns_new(method, new_api))
+
+
+def cr_context(method):
+    """ Decorate a traditional-style method that takes `cr`, `context` as parameters. """
+    method._api = cr_context
+
+    def new_api(self, *args, **kwargs):
+        cr, uid, context = self.session
+        kwargs = _kwargs_context(kwargs, context)
+        return method(self, cr, *args, **kwargs)
 
     return _make_wrapper(method, method, _returns_new(method, new_api))
 
 
 def cr_uid(method):
-    """ Decorate a traditional-style method that takes `cr`, `uid` as
-        parameters. Such a method::
+    """ Decorate a traditional-style method that takes `cr`, `uid` as parameters. """
+    method._api = cr_uid
 
-            @api.cr_uid
-            def method(self, cr, uid, args, context=None):
-                ...
+    def new_api(self, *args, **kwargs):
+        cr, uid, context = self.session
+        return method(self, cr, uid, *args, **kwargs)
 
-        may be called in both record and traditional styles, like::
+    return _make_wrapper(method, method, _returns_new(method, new_api))
+
+
+def cr_uid_context(method):
+    """ Decorate a traditional-style method that takes `cr`, `uid`, `context` as
+        parameters. Such a method may be called in both record and traditional
+        styles, like::
 
             obj.method(args)
             obj.method(cr, uid, args, context=context)
-
-        This decorator is generally not necessary, see :func:`versatile`.
     """
-    method._api = cr_uid
-    argnames = method.func_code.co_varnames[:method.func_code.co_argcount]
-    if 'context' in argnames:
-        def new_api(self, *args, **kwargs):
-            cr, uid, context = self.session
-            if 'context' not in kwargs:
-                kwargs = dict(kwargs, context=context)
-            return method(self, cr, uid, *args, **kwargs)
-    else:
-        def new_api(self, *args, **kwargs):
-            cr, uid, context = self.session
-            return method(self, cr, uid, *args, **kwargs)
+    method._api = cr_uid_context
+
+    def new_api(self, *args, **kwargs):
+        cr, uid, context = self.session
+        kwargs = _kwargs_context(kwargs, context)
+        return method(self, cr, uid, *args, **kwargs)
 
     return _make_wrapper(method, method, _returns_new(method, new_api))
 
 
 def cr_uid_id(method):
-    """ Decorate a traditional-style method that takes `cr`, `uid`, `id`, and
-        possibly `context` as parameters. The resulting method follows the
+    """ Decorate a traditional-style method that takes `cr`, `uid`, `id` as
+        parameters. Such a method may be called in both record and traditional
+        styles. The resulting method follows the :ref:`record-map-convention`.
+    """
+    method._api = cr_uid_id
+
+    def new_api(self, *args, **kwargs):
+        cr, uid, context = self.session
+        if self.is_record():
+            return method(self, cr, uid, self.id, *args, **kwargs)
+        else:
+            return dict((x.id, method(self, cr, uid, x.id, *args, **kwargs)) for x in self)
+
+    return _make_wrapper(method, method, _returns_new(method, new_api))
+
+
+def cr_uid_id_context(method):
+    """ Decorate a traditional-style method that takes `cr`, `uid`, `id`,
+        `context` as parameters. The resulting method follows the
         :ref:`record-map-convention`. Such a method::
 
             @api.cr_uid_id
@@ -395,36 +446,42 @@ def cr_uid_id(method):
 
             # call on recordset => {id: value}
             y.method(args)
-
-        This decorator is generally not necessary, see :func:`versatile`.
     """
-    method._api = cr_uid_id
-    argnames = method.func_code.co_varnames[:method.func_code.co_argcount]
-    if 'context' in argnames:
-        def new_api(self, *args, **kwargs):
-            cr, uid, context = self.session
-            if 'context' not in kwargs:
-                kwargs = dict(kwargs, context=context)
-            if self.is_record():
-                return method(self, cr, uid, self.id, *args, **kwargs)
-            else:
-                return dict((x.id, method(self, cr, uid, x.id, *args, **kwargs)) for x in self)
-    else:
-        def new_api(self, *args, **kwargs):
-            cr, uid, context = self.session
-            if self.is_record():
-                return method(self, cr, uid, self.id, *args, **kwargs)
-            else:
-                return dict((x.id, method(self, cr, uid, x.id, *args, **kwargs)) for x in self)
+    method._api = cr_uid_id_context
+
+    def new_api(self, *args, **kwargs):
+        cr, uid, context = self.session
+        kwargs = _kwargs_context(kwargs, context)
+        if self.is_record():
+            return method(self, cr, uid, self.id, *args, **kwargs)
+        else:
+            return dict((x.id, method(self, cr, uid, x.id, *args, **kwargs)) for x in self)
 
     return _make_wrapper(method, method, _returns_new(method, new_api))
 
 
 def cr_uid_ids(method):
-    """ Decorate a traditional-style method that takes `cr`, `uid`, `ids`, and
-        possibly `context` as parameters. Such a method::
+    """ Decorate a traditional-style method that takes `cr`, `uid`, `ids` as
+        parameters. Such a method may be called in both record and traditional
+        styles. This decorator supports the :ref:`record-map-convention`.
+    """
+    method._api = cr_uid_ids
 
-            @api.cr_uid_ids
+    def new_api(self, *args, **kwargs):
+        cr, uid, context = self.session
+        if self.is_record():
+            return _map_record(self.id, method(self, cr, uid, [self.id], *args, **kwargs))
+        else:
+            return method(self, cr, uid, map(int, self), *args, **kwargs)
+
+    return _make_wrapper(method, method, _returns_new(method, new_api))
+
+
+def cr_uid_ids_context(method):
+    """ Decorate a traditional-style method that takes `cr`, `uid`, `ids`,
+        `context` as parameters. Such a method::
+
+            @api.cr_uid_ids_context
             def method(self, cr, uid, ids, args, context=None):
                 ...
 
@@ -437,37 +494,28 @@ def cr_uid_ids(method):
             model.method(cr, uid, ids, args, context=context)
 
         This decorator supports the :ref:`record-map-convention`.
-        It is generally not necessary, see :func:`versatile`.
+        It is generally not necessary, see :func:`guess`.
     """
-    method._api = cr_uid_ids
-    argnames = method.func_code.co_varnames[:method.func_code.co_argcount]
-    if 'context' in argnames:
-        def new_api(self, *args, **kwargs):
-            cr, uid, context = self.session
-            if 'context' not in kwargs:
-                kwargs = dict(kwargs, context=context)
-            if self.is_record():
-                return _map_record(self.id, method(self, cr, uid, [self.id], *args, **kwargs))
-            else:
-                return method(self, cr, uid, map(int, self), *args, **kwargs)
-    else:
-        def new_api(self, *args, **kwargs):
-            cr, uid, context = self.session
-            if self.is_record():
-                return _map_record(self.id, method(self, cr, uid, [self.id], *args, **kwargs))
-            else:
-                return method(self, cr, uid, map(int, self), *args, **kwargs)
+    method._api = cr_uid_ids_context
+
+    def new_api(self, *args, **kwargs):
+        cr, uid, context = self.session
+        kwargs = _kwargs_context(kwargs, context)
+        if self.is_record():
+            return _map_record(self.id, method(self, cr, uid, [self.id], *args, **kwargs))
+        else:
+            return method(self, cr, uid, map(int, self), *args, **kwargs)
 
     return _make_wrapper(method, method, _returns_new(method, new_api))
 
 
-def notversatile(method):
-    """ Decorate a method to prevent any effect from :func:`versatile`. """
+def noguess(method):
+    """ Decorate a method to prevent any effect from :func:`guess`. """
     method._api = False
     return method
 
 
-def versatile(method):
+def guess(method):
     """ Decorate `method` to make it callable in both traditional and record
         styles. This decorator is applied automatically by the model's
         metaclass, and has no effect on already-decorated methods.
@@ -476,8 +524,9 @@ def versatile(method):
         or ``cursor`` for the cursor, ``uid`` or ``user`` for the user id,
         ``id`` or ``ids`` for a list of record ids, and ``context`` for the
         context dictionary. If a traditional API is recognized, one of the
-        decorators :func:`cr`, :func:`cr_uid`, :func:`cr_uid_id`,
-        :func:`cr_uid_ids` is applied on the method.
+        decorators :func:`cr`, :func:`cr_context`, :func:`cr_uid`,
+        :func:`cr_uid_context`, :func:`cr_uid_id`, :func:`cr_uid_id_context`,
+        :func:`cr_uid_ids`, :func:`cr_uid_ids_context` is applied on the method.
 
         Method calls are considered traditional style when their first parameter
         is a database cursor.
@@ -491,13 +540,23 @@ def versatile(method):
         if argnames[1] in ('cr', 'cursor'):
             if argnames[2] in ('uid', 'user'):
                 if argnames[3] == 'ids':
-                    return cr_uid_ids(method)
+                    if 'context' in argnames:
+                        return cr_uid_ids_context(method)
+                    else:
+                        return cr_uid_ids(method)
                 elif argnames[3] == 'id':
-                    return cr_uid_id(method)
+                    if 'context' in argnames:
+                        return cr_uid_id_context(method)
+                    else:
+                        return cr_uid_id(method)
+                elif 'context' in argnames:
+                    return cr_uid_context(method)
                 else:
                     return cr_uid(method)
+            elif 'context' in argnames:
+                return cr_context(method)
             else:
                 return cr(method)
 
-    # no versatile wrapping by default
-    return notversatile(method)
+    # no wrapping by default
+    return noguess(method)
