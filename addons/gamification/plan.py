@@ -70,7 +70,7 @@ class gamification_goal_plan(osv.Model):
     _inherit = 'mail.thread'
 
     _columns = {
-        'name' : fields.char('Plan Name', required=True),
+        'name' : fields.char('Plan Name', required=True, translate=True),
         'user_ids' : fields.many2many('res.users',
             string='Users',
             help="list of users to which the goal will be set"),
@@ -90,7 +90,7 @@ class gamification_goal_plan(osv.Model):
                 ('yearly', 'Yearly')
             ],
             string='Periodicity',
-            help='Period of automatic goal assigment, will be done manually if none is selected',
+            help='Period of automatic goal assigment. If none is selected, should be launched manually.',
             required=True),
         'state': fields.selection([
                 ('draft', 'Draft'),
@@ -114,14 +114,14 @@ class gamification_goal_plan(osv.Model):
                 ('monthly','Monthly'),
                 ('yearly', 'Yearly')
             ],
-            string="Frequency",
+            string="Report Frequency",
             required=True),
         'report_message_group_id' : fields.many2one('mail.group',
             string='Send a copy to',
             help='Group that will receive a copy of the report in addition to the user'),
         'report_header' : fields.text('Report Header'),
         'remind_update_delay' : fields.integer('Remind delay',
-            help="The number of days after which the user assigned to a manual goal will be reminded. Never reminded if no value is specified.")
+            help="The number of days after which the user assigned to a manual goal will be reminded. Never reminded if no value or zero is specified.")
         }
 
     _defaults = {
@@ -160,25 +160,32 @@ class gamification_goal_plan(osv.Model):
             self.plan_subscribe_users(cr, uid, ids, [user.id for user in new_group.users], context=context)
         return write_res
 
+
     def _update_all(self, cr, uid, context=None, ids=False):
-        """Update the plans
+        """Update the plans and goals
 
         Create the goals for planlines not linked to goals (eg: modified the 
             plan to add planlines)
         :param list(int) ids: the ids of the plans to update, if False will 
         update only goals in progress."""
-
+        if not context: context = {}        
         if not ids:
             ids = self.search(cr, uid, [('state', '=', 'inprogress')])
 
-        goal_obj = self.pool.get('gamification.goal')
-        planline_obj = self.pool.get('gamification.goal.planline')
-
         self.generate_goals_from_plan(cr, uid, ids, context=context)
-        for plan in self.browse(cr, uid, ids, context):
-            for planline in plan.planline_ids:
-                goal_ids = goal_obj.search(cr, uid, [('planline_id', '=', planline.id)] , context=context)
-                goal_obj.update(cr, uid, goal_ids, context=context)
+        
+        # update goals
+        goal_obj = self.pool.get('gamification.goal')
+        goal_ids = goal_obj.search(cr, uid, [
+                '&',
+                    ('state', 'in', ('inprogress','inprogress_update', 'reached')),
+                    '|',
+                        ('end_date', '>=', fields.date.today()),
+                        ('end_date', '=', False)
+                ], context=context)
+        goal_obj.update(cr, uid, goal_ids, context=context)
+
+        self.report_progress(cr, uid, ids, context=context)
 
     def action_start(self, cr, uid, ids, context=None):
         """Start a draft goal plan
@@ -362,6 +369,7 @@ class gamification_goal_plan(osv.Model):
                     planlines_boards.append({'goal_type':planline.type_id.name, 'board_goals':sorted_board})
 
                 body_html = template_env.get_template('group_progress.mako').render({'object':plan, 'planlines_boards':planlines_boards})
+                
                 self.message_post(cr, uid, plan.id,
                     body=body_html,
                     partner_ids=[(6, 0, [user.partner_id.id for user in plan.user_ids])],
@@ -387,7 +395,6 @@ class gamification_goal_plan(osv.Model):
                     }
                     body_html = template_env.get_template('personal_progress.mako').render(variables)
                     
-                    # FIXME huge blank space
                     self.message_post(cr, uid, plan.id,
                         body=body_html,
                         partner_ids=[(6, 0, [user.partner_id.id])],

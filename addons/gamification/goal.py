@@ -38,7 +38,7 @@ class gamification_goal_type(osv.Model):
     _order = "sequence"
 
     _columns = {
-        'name': fields.char('Type Name', required=True),
+        'name': fields.char('Type Name', required=True, translate=True),
         'description': fields.text('Description'),
         'computation_mode': fields.selection([
                 ('sum','Sum'),
@@ -162,20 +162,6 @@ class gamification_goal(osv.Model):
     }
 
 
-    def _update_all(self, cr, uid, context=None, ids=False):
-        """Update every goal in progress or reached whose date is not passed"""
-        if not context: context = {}
-        if not ids:
-            ids = self.search(cr, uid, [
-                '&',
-                    ('state', 'in', ('inprogress','inprogress_update', 'reached')),
-                    '|',
-                        ('end_date', '>=', fields.date.today()),
-                        ('end_date', '=', False)
-                ])
-
-        return self.update(cr, uid, ids, context=context)
-
     def update(self, cr, uid, ids, context=None):
         """Update the goals to recomputes values and change of states
 
@@ -232,7 +218,7 @@ class gamification_goal(osv.Model):
                 else: # computation mode = count
                     res = obj.search(cr, uid, domain, context=context)
                     towrite = {'current': len(res)}
-                print(domain, res)
+                
             # check goal target reached
             if (goal.type_id.condition == 'plus' \
                 and towrite['current'] >= goal.target_goal) \
