@@ -19,8 +19,8 @@ class base_action_rule_test(common.TransactionCase):
             'name': "Lead is in done state",
             'is_default': False,
             'model_id': 'base.action.rule.lead.test',
-            'domain' : "[('state','=','done')]",
-            }, context=context)
+            'domain': "[('state','=','done')]",
+        }, context=context)
 
     def create_filter_draft(self, cr, uid, context=None):
         filter_pool = self.registry('ir.filters')
@@ -40,16 +40,16 @@ class base_action_rule_test(common.TransactionCase):
             'user_id': self.admin,
             }, context=context)
 
-    def create_rule(self, cr, uid, filter_id=False, filter_pre_id=False, context=None):
+    def create_rule(self, cr, uid, kind, filter_id=False, filter_pre_id=False, context=None):
         """
             The "Rule 1" says that when a lead goes to the 'draft' state, the responsible for that lead changes to user "demo"
         """
         return self.base_action_rule.create(cr,uid,{
-            'name' : "Rule 1",
+            'name': "Rule 1",
             'model_id': self.registry('ir.model').search(cr, uid, [('model','=','base.action.rule.lead.test')], context=context)[0],
-            'active' : 1,
-            'filter_pre_id' : filter_pre_id,
-            'filter_id' : filter_id,
+            'kind': kind,
+            'filter_pre_id': filter_pre_id,
+            'filter_id': filter_id,
             'act_user_id': self.demo,
             }, context=context)
 
@@ -64,7 +64,7 @@ class base_action_rule_test(common.TransactionCase):
         """
         cr, uid = self.cr, self.uid
         filter_draft = self.create_filter_draft(cr, uid)
-        self.create_rule(cr, uid, filter_pre_id=filter_draft)
+        self.create_rule(cr, uid, 'write', filter_pre_id=filter_draft)
         new_lead_id = self.create_lead_test_1(cr, uid)
         new_lead = self.model.browse(cr, uid, new_lead_id)
         self.assertEquals(new_lead.state, 'draft')
@@ -73,11 +73,11 @@ class base_action_rule_test(common.TransactionCase):
 
     def test_01_check_to_state_draft_post(self):
         """
-        Check that a new record (with state = draft) changes its responsible when there is a postcondition filter which check that the state is draft.
+        Check that a new record changes its responsible when there is a postcondition filter which check that the state is draft.
         """
         cr, uid = self.cr, self.uid
         filter_draft = self.create_filter_draft(cr, uid)
-        self.create_rule(cr, uid, filter_id=filter_draft)
+        self.create_rule(cr, uid, 'create')
         new_lead_id = self.create_lead_test_1(cr, uid)
         new_lead = self.model.browse(cr, uid, new_lead_id)
         self.assertEquals(new_lead.state, 'draft')
@@ -95,7 +95,7 @@ class base_action_rule_test(common.TransactionCase):
         cr, uid = self.cr, self.uid
         filter_draft = self.create_filter_draft(cr, uid)
         filter_done = self.create_filter_done(cr, uid)
-        self.create_rule(cr, uid, filter_pre_id=filter_draft, filter_id=filter_done)
+        self.create_rule(cr, uid, 'write', filter_pre_id=filter_draft, filter_id=filter_done)
         new_lead_id = self.create_lead_test_1(cr, uid)
         new_lead = self.model.browse(cr, uid, new_lead_id)
         self.assertEquals(new_lead.state, 'draft')
@@ -133,7 +133,7 @@ class base_action_rule_test(common.TransactionCase):
         cr, uid = self.cr, self.uid
         filter_draft = self.create_filter_draft(cr, uid)
         filter_done = self.create_filter_done(cr, uid)
-        self.create_rule(cr, uid, filter_pre_id=filter_draft, filter_id=filter_done)
+        self.create_rule(cr, uid, 'write', filter_pre_id=filter_draft, filter_id=filter_done)
         new_lead_id = self.create_lead_test_1(cr, uid)
         new_lead = self.model.browse(cr, uid, new_lead_id)
         self.assertEquals(new_lead.state, 'draft')
