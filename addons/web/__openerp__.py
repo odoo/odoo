@@ -26,6 +26,7 @@ This module provides the core of the OpenERP Web Client.
         "static/lib/spinjs/spin.js",
         "static/lib/jquery.autosize/jquery.autosize.js",
         "static/lib/jquery.blockUI/jquery.blockUI.js",
+        "static/lib/jquery.placeholder/jquery.placeholder.js",
         "static/lib/jquery.ui/js/jquery-ui-1.9.1.custom.js",
         "static/lib/jquery.ui.timepicker/js/jquery-ui-timepicker-addon.js",
         "static/lib/jquery.ui.notify/js/jquery.notify.js",
