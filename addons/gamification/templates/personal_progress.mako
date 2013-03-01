@@ -1,15 +1,6 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <style type="text_css">${css}</style>
-</head>
-<body>
-	<header>
-        <strong>${object.name}</strong>
-    </header>
-    <p class="oe_grey">${object.report_header or ''}</p>
-    <br><br>
-    <table width="100%" border="1">
+<% extends 'base.mako' %>
+
+<% block body %><table width="100%" border="1">
     <tr>
         <th>Goal</th>
         <th>Target</th>
@@ -23,9 +14,6 @@
             <td>${goal.current}</td>
             <td>${goal.completeness} %</td>
         </tr>
-
-        <br/><br/>  
-    
     % endfor
     </table>
-</body>
+<% endblock %>

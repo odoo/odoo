@@ -1,17 +1,7 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <style type="text_css">${css}</style>
-</head>
-<body>
-	<header>
-	    <strong>${object.name}</strong>
-	</header>
+<% extends 'base.mako' %>
 
-	<p class="oe_grey">${object.report_header or ''}</p>
-	<br/><br/>
-	% for planline in planlines_boards:
-        
+<% block body %>
+	% for planline in planlines_boards: 
         <table width="100%" border="1">
         	<tr>
         		<th colspan="4">${planline['goal_type']}</th>
@@ -39,4 +29,4 @@
         <br/><br/>
 
     % endfor
-</body>
+<% endblock %>
