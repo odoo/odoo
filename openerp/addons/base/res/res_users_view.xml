@@ -92,10 +92,7 @@
             <field name="arch" type="xml">
                 <form string="Users" version="7.0">
                     <sheet>
-                        <div class="oe_right oe_button_box">
-                            <button string="Change Password" type="action" name="%(change_password_wizard_action)d"
-                                help="Change the user password."/>
-                        </div>
+                        <field name="id" invisible="1"/>
                         <field name="image" widget='image' class="oe_avatar oe_left" options='{"preview_image": "image_medium"}'/>
                         <div class="oe_title">
                             <label for="name" class="oe_edit_only"/>
@@ -104,21 +101,19 @@
                             <h2><field name="login"/></h2>
                             <label for="company_id" class="oe_edit_only" groups="base.group_multi_company"/>
                             <field name="company_id" context="{'user_preference': 0}" groups="base.group_multi_company"/>
+                            <span attrs="{'invisible': [('id', '>', 0)]}">
+                                You are creating a new user.
+                            </span>
                         </div>
                         <separator/>
-                        <div>
-                            You are creating a new user.
-                            You should use the "Settings > Users" menu to change his access rights and other settings.
-                            <div invisible="not context.get('default_groups_ref')">
-                                This user will have the access rights to be able to do the task assigned to it:
-                                <field name="groups_id" readonly="1" widget="many2many_tags" style="display: inline;"/>
-                            </div>
+                        <div style="padding: 10px 0" attrs="{'invisible': [('id', '>', 0)]}">
+                            This new user will have the access rights: <field name="groups_id" readonly="1" widget="many2many_tags" style="display: inline;"/>. To refine access rights, ou can create users from the menu Settings / Users.
                         </div>
                         <group>
                             <field name="phone" placeholder="e.g. +32.81.81.37.00"/>
                             <field name="mobile"/>
                             <field name="fax"/>
-                            <field name="email" widget="email"/>
+                            <field name="email" widget="email" required="True"/>
                         </group>
                     </sheet>
                 </form>
@@ -145,6 +140,17 @@
                             <field name="company_id" context="{'user_preference': 0}" groups="base.group_multi_company"/>
                         </div>
                         <notebook colspan="4">
+                            <page string="Access Rights">
+                                <group>
+                                    <field name="active"/>
+                                </group>
+                                <group string="Allowed Companies" groups="base.group_multi_company">
+                                    <field name="company_ids" nolabel="1" widget="many2many_tags"/>
+                                </group>
+                                <group col="4">
+                                    <field name="groups_id"/>
+                                </group>
+                            </page>
                             <page string="Contact">
                                 <group>
                                     <field name="phone" placeholder="e.g. +32.81.81.37.00"/>
@@ -166,17 +172,6 @@
                                 </group>
                                 <group string="Email preferences">
                                     <field name="signature"/>
-                                </group>
-                            </page>
-                            <page string="Access Rights">
-                                <group>
-                                    <field name="active"/>
-                                </group>
-                                <group string="Allowed Companies" groups="base.group_multi_company">
-                                    <field name="company_ids" nolabel="1" widget="many2many_tags"/>
-                                </group>
-                                <group col="4">
-                                    <field name="groups_id"/>
                                 </group>
                             </page>
                         </notebook>
