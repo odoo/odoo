@@ -50,6 +50,7 @@ class base_action_rule(osv.osv):
 
     _name = 'base.action.rule'
     _description = 'Action Rules'
+    _order = 'sequence'
 
     _columns = {
         'name':  fields.char('Rule Name', size=64, required=True),
@@ -81,10 +82,10 @@ class base_action_rule(osv.osv):
             ondelete='restrict',
             domain="[('model_id', '=', model_id.model)]",
             help="If present, this condition must be satisfied before the update of the record."),
-        'filter_id': fields.many2one('ir.filters', string='After Update Filter',
+        'filter_id': fields.many2one('ir.filters', string='Filter',
             ondelete='restrict',
             domain="[('model_id', '=', model_id.model)]",
-            help="If present, this condition must be satisfied after the update of the record."),
+            help="If present, this condition must be satisfied before executing the action rule."),
         'last_run': fields.datetime('Last Run', readonly=1),
     }
 
@@ -93,7 +94,15 @@ class base_action_rule(osv.osv):
         'trg_date_range_type': 'day',
     }
 
-    _order = 'sequence'
+    def onchange_kind(self, cr, uid, ids, kind, context=None):
+        clear_fields = []
+        if kind == 'create':
+            clear_fields = ['filter_pre_id', 'trg_date_id', 'trg_date_range', 'trg_date_range_type']
+        elif kind == 'write':
+            clear_fields = ['trg_date_id', 'trg_date_range', 'trg_date_range_type']
+        elif kind == 'cron':
+            clear_fields = ['filter_pre_id']
+        return {'value': dict.fromkeys(clear_fields, False)}
 
     def _filter(self, cr, uid, action, action_filter, record_ids, context=None):
         """ filter the list record_ids that satisfy the action filter """

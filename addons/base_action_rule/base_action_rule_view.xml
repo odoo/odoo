@@ -26,24 +26,32 @@
                         <notebook>
                             <page string="Conditions">
                                 <group>
-                                    <group name="filter" string="Filter Condition">
-                                        <field name="filter_pre_id" domain="[('model_id','=',model), ('user_id', '=', False)]" context="{'default_model_id': model}"/>
-                                        <field name="filter_id" domain="[('model_id','=',model), ('user_id', '=', False)]" context="{'default_model_id': model}"/>
-                                    </group>
-                                    <group name="timing" string="Timer">
-                                        <field name="trg_date_id"/>
-                                        <label for="trg_date_range" string="Delay After Trigger Date" attrs="{'invisible': [('trg_date_id','=',False)]}"/>
-                                        <div attrs="{'invisible': [('trg_date_id','=',False)]}">
-                                            <field name="trg_date_range" class="oe_inline"/>
-                                            <field name="trg_date_range_type" class="oe_inline" attrs="{'required': [('trg_date_id','!=',False)]}"/>
-                                        </div>
-                                    </group>
+                                    <field name="kind" required="1"
+                                        on_change="onchange_kind(kind)"/>
+                                    <field name="filter_pre_id"
+                                        domain="[('model_id','=',model), ('user_id', '=', False)]"
+                                        context="{'default_model_id': model}"
+                                        attrs="{'invisible': [('kind', '!=', 'write')]}"/>
+                                    <field name="filter_id"
+                                        domain="[('model_id','=',model), ('user_id', '=', False)]"
+                                        context="{'default_model_id': model}"/>
+                                    <field name="trg_date_id"
+                                        attrs="{'invisible': [('kind', '!=', 'cron')]}"/>
+                                    <label for="trg_date_range" string="Delay After Trigger Date"
+                                        attrs="{'invisible': [('trg_date_id','=',False)]}"/>
+                                    <div attrs="{'invisible': [('trg_date_id','=',False)]}">
+                                        <field name="trg_date_range" class="oe_inline"/>
+                                        <field name="trg_date_range_type" class="oe_inline" attrs="{'required': [('trg_date_id','!=',False)]}"/>
+                                    </div>
                                 </group>
-                                <p class="oe_grey">
-                                    <b>Select a filter or a timer as condition.</b><br/> An action rule is checked when you create or modify the "Related Document Model". The precondition filter is checked right before the modification while the postcondition filter is checked after the modification. A precondition filter will therefore not work during a creation.<br/>
-                                    <b>To create a new filter:</b><br/>
-                                    - Go to your "Related Document Model" page and set the filter parameters in the "Search" view (Example of filter based on Leads/Opportunities: Creation Date "is equal to" 01/01/2012)<br/>
-                                    - In this same "Search" view, select the menu "Save Current Filter", enter the name (Ex: Create the 01/01/2012) and add the option "Share with all users"<br/>
+                                <p>
+                                    Select when the action must be run, and add filters and/or timing conditions.
+                                    <br/>
+                                    In order to create a new filter:
+                                    <ul>
+                                        <li>Go to your "Related Document Model" page and set the filter parameters in the "Search" view (Example of filter based on Leads/Opportunities: Creation Date "is equal to" 01/01/2012)</li>
+                                        <li>In this same "Search" view, select the menu "Save Current Filter", enter the name (Ex: Create the 01/01/2012) and add the option "Share with all users"</li>
+                                    </ul>
                                     The filter must therefore be available in this page.
                                 </p>
                             </page>
@@ -76,6 +84,7 @@
                 <tree string="Action Rule">
                     <field name="sequence"/>
                     <field name="name"/>
+                    <field name="kind"/>
                     <field name="filter_id"/>
                 </tree>
             </field>
