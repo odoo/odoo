@@ -162,17 +162,26 @@ class gamification_goal(osv.Model):
     }
 
 
-    def _update_all(self, cr, uid, ids=False, context=None):
-        """Update every goal in progress"""
+    def _update_all(self, cr, uid, context=None, ids=False):
+        """Update every goal in progress or reached whose date is not passed"""
+        if not context: context = {}
         if not ids:
-            ids = self.search(cr, uid, [('state', 'in', ('inprogress','inprogress_update', 'reached'))])
+            ids = self.search(cr, uid, [
+                '&',
+                    ('state', 'in', ('inprogress','inprogress_update', 'reached')),
+                    '|',
+                        ('end_date', '>=', fields.date.today()),
+                        ('end_date', '=', False)
+                ])
 
         return self.update(cr, uid, ids, context=context)
 
     def update(self, cr, uid, ids, context=None):
         """Update the goals to recomputes values and change of states
 
-        If a goal reaches the target value, the status is set to reach
+        If a manual goal is not updated for enough time, the user will be
+        reminded to do so (done only once, in 'inprogress' state).
+        If a goal reaches the target value, the status is set to reached
         If the end date is passed (at least +1 day, time not considered) without
         the target value being reached, the goal is set as failed."""
         
@@ -239,16 +248,31 @@ class gamification_goal(osv.Model):
         return True
 
     def action_start(self, cr, uid, ids, context=None):
+        """Mark a goal as started.
+
+        This should only be used when creating goals manually (in draft state)"""
         self.write(cr, uid, ids, {'state': 'inprogress'}, context=context)
         return self.update(cr, uid, ids, context=context)
 
     def action_reach(self, cr, uid, ids, context=None):
+        """Mark a goal as reached.
+
+        If the target goal condition is not met, the state will be reset to In
+        Progress at the next goal update until the end date."""
         return self.write(cr, uid, ids, {'state': 'reached'}, context=context)
 
     def action_fail(self, cr, uid, ids, context=None):
+        """Set the state of the goal to failed.
+
+        A failed goal will be ignored in future checks."""
         return self.write(cr, uid, ids, {'state': 'failed'}, context=context)
 
     def action_cancel(self, cr, uid, ids, context=None):
+        """Reset the completion after setting a goal as reached or failed.
+
+        This is only the current state, if the date and/or target criterias
+        match the conditions for a change of state, this will be applied at the 
+        next goal update."""
         return self.write(cr, uid, ids, {'state': 'inprogress'}, context=context)
 
     def create(self, cr, uid, vals, context=None):
@@ -258,7 +282,10 @@ class gamification_goal(osv.Model):
         return super(gamification_goal, self).create(cr, uid, vals, context=context)
         
     def write(self, cr, uid, ids, vals, context=None):
-        """Overwrite the write method to update the last_update field to today"""
+        """Overwrite the write method to update the last_update field to today
+
+        If the current value is changed and the report frequency is set to On 
+        change, q report is generated"""
         for goal in self.browse(cr, uid, ids, vals):
             vals['last_update'] = fields.date.today()
 

@@ -160,13 +160,13 @@ class gamification_goal_plan(osv.Model):
             self.plan_subscribe_users(cr, uid, ids, [user.id for user in new_group.users], context=context)
         return write_res
 
-    def _update_all(self, cr, uid, ids=False, context=None):
+    def _update_all(self, cr, uid, context=None, ids=False):
         """Update the plans
 
         Create the goals for planlines not linked to goals (eg: modified the 
             plan to add planlines)
         :param list(int) ids: the ids of the plans to update, if False will 
-        update every goal in progress"""
+        update only goals in progress."""
 
         if not ids:
             ids = self.search(cr, uid, [('state', '=', 'inprogress')])
@@ -179,19 +179,6 @@ class gamification_goal_plan(osv.Model):
             for planline in plan.planline_ids:
                 goal_ids = goal_obj.search(cr, uid, [('planline_id', '=', planline.id)] , context=context)
                 goal_obj.update(cr, uid, goal_ids, context=context)
-
-            # useless, goals removed in cascade
-            # current_planlines = [planline.id for planline in plan.planline_ids]
-            # print(current_planlines)
-            # related_planlines = planline_obj.search(cr, uid, [('plan_id','=',plan.id)])
-            # print(related_planlines)
-            # # the list of planlines linked to the plan but not in plan.planline_ids
-            # excluded_planlines = [plid for plid in related_planlines if plid not in current_planlines ]
-            # print(excluded_planlines)
-            # excluded_goals = goal_obj.search(cr, uid, [('planline_id', 'in', excluded_planlines)], context=context)
-            # print(excluded_goals)
-            # goal_obj.write(cr, uid, excluded_goals, {'state': 'canceled'}, context=context)
-
 
     def action_start(self, cr, uid, ids, context=None):
         """Start a draft goal plan
@@ -261,7 +248,12 @@ class gamification_goal_plan(osv.Model):
         return res
 
     def generate_goals_from_plan(self, cr, uid, ids, context=None):
-        """Generate the lsit of goals fron a plan"""
+        """Generate the list of goals linked to a plan.
+
+        If goals already exist for this planline, the planline is skipped. This 
+        can be called after each change in the user or planline list.
+        :param list(int) ids: the list of plan concerned"""
+
         for plan in self.browse(cr, uid, ids, context):
             (start_date, end_date) = start_end_date_for_period(plan.period)
 
@@ -314,11 +306,12 @@ class gamification_goal_plan(osv.Model):
         """ Add the following users to plans
 
         :param ids: ids of plans to which the users will be added
-        :param user_ids: ids of the users to add"""
+        :param new_user_ids: ids of the users to add"""
 
         for plan in self.browse(cr,uid, ids, context):
             subscription = [user.id for user in plan.user_ids]
             subscription.extend(new_user_ids)
+            # remove duplicates
             unified_subscription = list(set(subscription))
             self.write(cr, uid, ids, {'user_ids': [(4, uid) for uid in unified_subscription]}, context=context)
         return True

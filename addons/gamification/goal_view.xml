@@ -58,7 +58,7 @@
                             </group>
                             <group string="Schedule">
                                 <field name="start_date" attrs="{'readonly':[('state','!=','draft')]}"/>
-                                <field name="end_date" attrs="{'readonly':[('state','!=','draft')]}"/>
+                                <field name="end_date" />
                                 <field name="computation_mode" invisible="1"/>
 
                                 <label for="remind_update_delay" attrs="{'invisible':[('computation_mode','!=', 'manually')]}"/>

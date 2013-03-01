@@ -7,9 +7,8 @@
 	<header>
         <strong>${object.name}</strong>
     </header>
-
     <p class="oe_grey">${object.report_header or ''}</p>
-    <br/><br/>
+    <br><br>
     <table width="100%" border="1">
     <tr>
         <th>Goal</th>
