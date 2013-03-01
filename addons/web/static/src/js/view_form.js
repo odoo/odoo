@@ -2220,6 +2220,18 @@ instance.web.form.ReinitializeFieldMixin =  _.extend({}, instance.web.form.Reini
     },
 });
 
+/**
+    Some hack to make placeholders work in ie9.
+*/
+if ($.browser.msie && $.browser.version === "9.0") {
+    document.addEventListener("DOMNodeInserted",function(event){
+        var nodename =  event.target.nodeName.toLowerCase();
+        if ( nodename === "input" || nodename == "textarea" ) {
+            $(event.target).placeholder();
+        }
+    });
+}
+
 instance.web.form.FieldChar = instance.web.form.AbstractField.extend(instance.web.form.ReinitializeFieldMixin, {
     template: 'FieldChar',
     widget_class: 'oe_form_field_char',

@@ -523,20 +523,8 @@ html_template = """<!DOCTYPE html>
     </head>
     <body>
         <!--[if lte IE 8]>
-            <script src="http://ajax.googleapis.com/ajax/libs/chrome-frame/1/CFInstall.min.js"></script>
-            <script>CFInstall.check({mode: "overlay"});</script>
-        <![endif]-->
-        
-         <!--[if lte IE 9]>
-            <script src="/web/static/lib/jquery.placeholder/jquery.placeholder.min.js"></script>
-            <script>
-                document.addEventListener("DOMNodeInserted",function(event){
-                    var nodename =  event.target.nodeName.toLowerCase();
-                    if ( nodename === "input" || nodename == "textarea" ) {
-                        $(event.target).placeholder();
-                    }
-                });    
-            </script>
+        <script src="http://ajax.googleapis.com/ajax/libs/chrome-frame/1/CFInstall.min.js"></script>
+        <script>CFInstall.check({mode: "overlay"});</script>
         <![endif]-->
     </body>
 </html>
