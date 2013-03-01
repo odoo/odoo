@@ -204,8 +204,8 @@
             </field>
         </record>
 
-        <!-- menus -->
-        <menuitem id="gamification_menu" name="Gamification Tools" parent="base.menu_administration"/>
+        <!-- menus in settings - technical feature required -->
+        <menuitem id="gamification_menu" name="Gamification Tools" parent="base.menu_administration" groups="base.group_no_one" />
             <menuitem id="gamification_goal_menu" parent="gamification_menu" action="goal_list_action" sequence="0"/>
             <menuitem id="gamification_plan_menu" parent="gamification_menu" action="goal_plan_list_action" sequence="10"/>
             <menuitem id="gamification_type_menu" parent="gamification_menu" action="goal_type_list_action" sequence="20"/>
