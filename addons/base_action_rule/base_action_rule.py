@@ -61,6 +61,9 @@ class base_action_rule(osv.osv):
             help="When unchecked, the rule is hidden and will not be executed."),
         'sequence': fields.integer('Sequence',
             help="Gives the sequence order when displaying a list of rules."),
+        'kind': fields.selection(
+            [('create', 'On Creation'), ('write', 'On Update'), ('cron', 'Based on Timed Condition')],
+            string='When to Run'),
         'trg_date_id': fields.many2one('ir.model.fields', string='Trigger Date',
             domain="[('model_id', '=', model_id), ('ttype', 'in', ('date', 'datetime'))]"),
         'trg_date_range': fields.integer('Delay after trigger date',
@@ -133,7 +136,7 @@ class base_action_rule(osv.osv):
         """ Return a wrapper around `old_create` calling both `old_create` and
             `_process`, in that order.
         """
-        def wrapper(cr, uid, vals, context=None):
+        def create(cr, uid, vals, context=None):
             # avoid loops or cascading actions
             if context and context.get('action'):
                 return old_create(cr, uid, vals, context=context)
@@ -141,8 +144,8 @@ class base_action_rule(osv.osv):
             context = dict(context or {}, action=True)
             new_id = old_create(cr, uid, vals, context=context)
 
-            # as it is a new record, we do not consider the actions that have a prefilter
-            action_dom = [('model', '=', model), ('trg_date_id', '=', False), ('filter_pre_id', '=', False)]
+            # retrieve the action rules to run on creation
+            action_dom = [('model', '=', model), ('kind', '=', 'create')]
             action_ids = self.search(cr, uid, action_dom, context=context)
 
             # check postconditions, and execute actions on the records that satisfy them
@@ -151,13 +154,13 @@ class base_action_rule(osv.osv):
                     self._process(cr, uid, action, [new_id], context=context)
             return new_id
 
-        return wrapper
+        return create
 
     def _wrap_write(self, old_write, model):
         """ Return a wrapper around `old_write` calling both `old_write` and
             `_process`, in that order.
         """
-        def wrapper(cr, uid, ids, vals, context=None):
+        def write(cr, uid, ids, vals, context=None):
             # avoid loops or cascading actions
             if context and context.get('action'):
                 return old_write(cr, uid, ids, vals, context=context)
@@ -165,8 +168,8 @@ class base_action_rule(osv.osv):
             context = dict(context or {}, action=True)
             ids = [ids] if isinstance(ids, (int, long, str)) else ids
 
-            # retrieve the action rules to possibly execute
-            action_dom = [('model', '=', model), ('trg_date_id', '=', False)]
+            # retrieve the action rules to run on update
+            action_dom = [('model', '=', model), ('kind', '=', 'write')]
             action_ids = self.search(cr, uid, action_dom, context=context)
             actions = self.browse(cr, uid, action_ids, context=context)
 
@@ -185,7 +188,7 @@ class base_action_rule(osv.osv):
                     self._process(cr, uid, action, post_ids, context=context)
             return True
 
-        return wrapper
+        return write
 
     def _register_hook(self, cr, ids=None):
         """ Wrap the methods `create` and `write` of the models specified by
@@ -217,8 +220,8 @@ class base_action_rule(osv.osv):
     def _check(self, cr, uid, automatic=False, use_new_cursor=False, context=None):
         """ This Function is called by scheduler. """
         context = context or {}
-        # retrieve all the action rules that have a trg_date_id and no precondition
-        action_dom = [('trg_date_id', '!=', False), ('filter_pre_id', '=', False)]
+        # retrieve all the action rules to run based on a timed condition
+        action_dom = [('kind', '=', 'cron')]
         action_ids = self.search(cr, uid, action_dom, context=context)
         for action in self.browse(cr, uid, action_ids, context=context):
             now = datetime.now()
