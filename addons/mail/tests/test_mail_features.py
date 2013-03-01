@@ -119,18 +119,18 @@ class test_mail(TestMailBase):
         # Previously-created group can be emailed now - it should have an implicit alias group+frogs@...
         frog_group = self.mail_group.browse(cr, uid, frog_groups[0])
         group_messages = frog_group.message_ids
-        self.assertTrue(len(group_messages) == 2, 'New group should only have the original message + creation log')
+        self.assertTrue(len(group_messages) == 1, 'New group should only have the original message')
         mail_frog_news = MAIL_TEMPLATE.format(to='Friendly Frogs <group+frogs@example.com>', subject='news', extra='')
         self.mail_thread.message_process(cr, uid, None, mail_frog_news)
         frog_group.refresh()
-        self.assertTrue(len(frog_group.message_ids) == 3, 'Group should contain 3 messages now')
+        self.assertTrue(len(frog_group.message_ids) == 2, 'Group should contain 2 messages now')
 
         # Even with a wrong destination, a reply should end up in the correct thread
         mail_reply = MAIL_TEMPLATE.format(to='erroneous@example.com>', subject='Re: news',
                                           extra='In-Reply-To: <12321321-openerp-%d-mail.group@example.com>\n' % frog_group.id)
         self.mail_thread.message_process(cr, uid, None, mail_reply)
         frog_group.refresh()
-        self.assertTrue(len(frog_group.message_ids) == 4, 'Group should contain 4 messages now')
+        self.assertTrue(len(frog_group.message_ids) == 3, 'Group should contain 3 messages now')
 
         # No model passed and no matching alias must raise
         mail_spam = MAIL_TEMPLATE.format(to='noone@example.com', subject='spam', extra='')
@@ -154,7 +154,7 @@ class test_mail(TestMailBase):
         new_mail = self.mail_message.browse(cr, uid, self.mail_message.search(cr, uid, [('message_id', '=', test_msg_id)])[0])
         # Test: author_id set, not email_from
         self.assertEqual(new_mail.author_id, user_raoul.partner_id, 'message process wrong author found')
-        self.assertFalse(new_mail.email_from, 'message process should not set the email_from when an author is found')
+        self.assertEqual(new_mail.email_from, user_raoul.email, 'message process wrong email_from')
 
         # Do: post a new message, with a unknown partner
         test_msg_id = '<deadcafe.1337-3@smtp.agrolait.com>'
@@ -391,7 +391,8 @@ class test_mail(TestMailBase):
         # 1. Post a new email comment on Pigs
         self._init_mock_build_email()
         msg2_id = self.mail_group.message_post(cr, user_raoul.id, self.group_pigs_id, body=_body2, type='email', subtype='mt_comment',
-            partner_ids=[(6, 0, [p_d_id])], parent_id=msg1_id, attachments=_attachments)
+            partner_ids=[p_d_id], parent_id=msg1_id, attachments=_attachments,
+            context={'mail_post_autofollow': True})
         message2 = self.mail_message.browse(cr, uid, msg2_id)
         sent_emails = self._build_email_kwargs_list
         self.assertFalse(self.mail_mail.search(cr, uid, [('mail_message_id', '=', msg2_id)]), 'mail.mail notifications should have been auto-deleted!')
@@ -482,7 +483,7 @@ class test_mail(TestMailBase):
         self.assertEqual(compose.res_id, self.group_pigs_id, 'mail.compose.message incorrect res_id')
 
         # 2. Post the comment, get created message
-        mail_compose.send_mail(cr, uid, [compose_id])
+        mail_compose.send_mail(cr, uid, [compose_id], {'mail_post_autofollow': True})
         group_pigs.refresh()
         message = group_pigs.message_ids[0]
         # Test: mail.message: subject, body inside pre

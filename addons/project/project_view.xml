@@ -476,7 +476,6 @@
                     <field name="remaining_hours" sum="Remaining Time" groups="project.group_time_work_estimation_tasks"/>
                     <field name="date_deadline"/>
                     <field name="message_summary"/>
-                    <field name="message_unread"/>
                     <field name="categ_ids"/>
                     <templates>
                     <t t-name="kanban-box">
@@ -523,6 +522,7 @@
                                     </span>
                                 </div>
                                 <div class="oe_kanban_footer_left" style="margin-top:5px;">
+                                    <t t-raw="record.message_summary.raw_value"/>
                                     <field name="categ_ids"/>
                                 </div>
                             </div>
