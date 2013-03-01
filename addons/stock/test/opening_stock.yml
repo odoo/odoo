@@ -1,67 +1,87 @@
 -
-  I update the price of the Ice-cream.
+  Only stock manager can change the price and update stock of products, so let's check data with giving the access rights of manager
+-
+  !context
+    uid: 'res_users_stock_manager'
+-
+  I update the price of the 15” LCD Monitor.
 -
   !python {model: stock.change.standard.price}: |
-    context.update({'active_model':'product.product', 'active_id': ref('product_icecream'), 'active_ids':[ref('product_icecream')]})
+    context.update({'active_model':'product.product', 'active_id': ref('product_product_6'), 'active_ids':[ref('product_product_6')]})
 -
   !record {model: stock.change.standard.price, id: change_price}:
-    new_price: 120
+    new_price: 1500
 -
   !python {model: stock.change.standard.price}: |
     self.change_price(cr, uid, [ref('change_price')], context=context)
 -
-  I check price of Ice-cream after update price.
+  I check price of 15” LCD Monitor after update price.
 -
   !python {model: product.product}: |
-    product = self.browse(cr, uid, ref('product_icecream'), context=context)
-    assert product.standard_price == 120, "Price is not updated."
+    product = self.browse(cr, uid, ref('product_product_6'), context=context)
+    assert product.standard_price == 1500, "Price is not updated."
 -
-  I update the current stock of the Ice-cream with 10 kgm in Small Refrigerator in lot0.
+  I update the current stock of the 15” LCD Monitor with 10 unit in stock location shop1 in lot0.
 -
   !record {model: stock.change.product.qty, id: change_qty}:
-    location_id: location_refrigerator_small
+    location_id: location_monitor_small
     new_quantity: 10
-    product_id: product_icecream
-    prodlot_id: lot_icecream_1
+    product_id: product_product_6
+    prodlot_id: lot_monitor_1
 -
   !python {model: stock.change.product.qty}: |
     self.change_product_qty(cr, uid, [ref('change_qty')], context=context)
 -
-  I check available stock of Ice-cream after update stock.
+  I check available stock of 15” LCD Monitor after update stock.
 -
   !python {model: product.product}: |
-    product = self.browse(cr, uid, ref('product_icecream'), context=context)
+    product = self.browse(cr, uid, ref('product_product_6'), context=context)
     assert product.qty_available == 10, "Stock is not updated."
+-
+  Stock user can merge inventory, so let's check data with giving the access rights of user.
+-
+  !context
+    uid: 'res_users_stock_user'
 -
   I merge inventory.
 -
   !python {model: stock.inventory.merge }: |
-    context.update({'active_model': 'stock.inventory', 'active_id': ref('stock_inventory_icecream'), 'active_ids': [ref('stock_inventory_icecream')]})
+    context.update({'active_model': 'stock.inventory', 'active_id': ref('stock_inventory_0'), 'active_ids': [ref('stock_inventory_0')]})
 -
   !record {model: stock.inventory.merge, id: merge_inventory}:
 -
   !python {model: stock.inventory.merge }: |
     self.do_merge(cr, uid, [ref('merge_inventory')], context=context)
 -
+  Only stock manager cancelled inventory, so let's check data with giving the access rights of manager
+-
+  !context
+    uid: 'res_users_stock_manager'
+-
   I cancel inventory.
 -
   !python {model: stock.inventory}: |
-   self.action_cancel_inventory(cr, uid, [ref('stock_inventory_icecream')])
+   self.action_cancel_inventory(cr, uid, [ref('stock_inventory_0')])
+-
+  stock user can reset inventory, so let's check data with giving the access rights of user
+-
+  !context
+    uid: 'res_users_stock_user'
 -
   I reset to draft inventory.
 -
   !python {model: stock.inventory}: |
-    self.action_cancel_draft(cr, uid, [ref('stock_inventory_icecream')])
+    self.action_cancel_draft(cr, uid, [ref('stock_inventory_0')])
 -
-  I confirm physical inventory of Ice-cream which are came in different lots.
+  I confirm physical inventory of 15” LCD Monitor which are came in different lots.
 -
   !python {model: stock.inventory}: |
-    self.action_confirm(cr, uid, [ref('stock_inventory_icecream')], context=context)
+    self.action_confirm(cr, uid, [ref('stock_inventory_0')], context=context)
 -
   I check move details after confirmed physical inventory.
 -
   !python {model: stock.inventory}: |
-    inventory = self.browse(cr, uid, ref('stock_inventory_icecream'), context=context)
+    inventory = self.browse(cr, uid, ref('stock_inventory_0'), context=context)
     assert len(inventory.move_ids) == len(inventory.inventory_line_id), "moves are not correspond."
     for move_line in inventory.move_ids:
         for line in inventory.inventory_line_id:
@@ -77,15 +97,15 @@
   I split inventory line.
 -
   !python {model: stock.inventory.line.split}: |
-    context.update({'active_model': 'stock.inventory.line', 'active_id': ref('stock_inventory_line_icecream_lot0'), 'active_ids': [ref('stock_inventory_line_icecream_lot0')]})
+    context.update({'active_model': 'stock.inventory.line', 'active_id': ref('stock_inventory_line_3'), 'active_ids': [ref('stock_inventory_line_3')]})
 -
   !record {model: stock.inventory.line.split, id: split_inventory_lot0}:
     use_exist: True
     line_exist_ids:
         - quantity: 6
-          prodlot_id: lot_icecream_0
+          prodlot_id: lot_monitor_0
         - quantity: 4
-          prodlot_id: lot_icecream_0
+          prodlot_id: lot_monitor_0
 -
   !python {model: stock.inventory.line.split }: |
     self.split_lot(cr, uid, [ref('split_inventory_lot0')], context=context)
@@ -93,39 +113,49 @@
   I fill inventory line.
 -
   !python {model: stock.fill.inventory}: |
-    context.update({'active_model': 'stock.inventory', 'active_id': ref('stock_inventory_icecream'), 'active_ids': [ref('stock_inventory_icecream')]})
+    context.update({'active_model': 'stock.inventory', 'active_id': ref('stock_inventory_0'), 'active_ids': [ref('stock_inventory_0')]})
 -
   !record {model: stock.fill.inventory, id: fill_inventory}:
-    location_id: location_refrigerator
+    location_id: location_monitor
     recursive: True
 -
   !python {model: stock.fill.inventory }: |
     self.fill_inventory(cr, uid, [ref('fill_inventory')], context=context)
 
 -
-  Now I check vitual stock of Ice-cream after confirmed physical inventory.
+  Now I check vitual stock of 15” LCD Monitor after confirmed physical inventory.
 -
   !python {model: product.product}: |
-    product = self.browse(cr, uid, ref('product_icecream'), context=context)
+    product = self.browse(cr, uid, ref('product_product_6'), context=context)
     assert product.virtual_available == 100, "Vitual stock is not updated."
 -
-  I close physical inventory of Ice-cream.
+  Only stock manager can close physical inventory, so let's check data with giving the access rights of manager
+-
+  !context
+    uid: 'res_users_stock_manager'
+-
+  I close physical inventory of 15” LCD Monitor.
 -
   !python {model: stock.inventory}: |
-    self.action_done(cr, uid, [ref('stock_inventory_icecream')], context=context)
+    self.action_done(cr, uid, [ref('stock_inventory_0')], context=context)
 -
-  I check closed move and real stock of Ice-cream after closed physical inventory.
+  Stock user can check closed move and real stock, so let's check data with giving the access rights of user
+-
+  !context
+    uid: 'res_users_stock_user'
+-
+  I check closed move and real stock of 15” LCD Monitor after closed physical inventory.
 -
   !python {model: stock.inventory}: |
-    inventory = self.browse(cr, uid, ref('stock_inventory_icecream'), context=context)
+    inventory = self.browse(cr, uid, ref('stock_inventory_0'), context=context)
     assert inventory.state == 'done', "inventory is not closed."
     for move_line in inventory.move_ids:
         assert move_line.state == 'done', "Move is not closed."
-    product = self.pool.get('product.product').browse(cr, uid, ref('product_icecream'), context=context)
+    product = self.pool.get('product.product').browse(cr, uid, ref('product_product_6'), context=context)
     product.qty_available == 100, "Real stock is not updated."
 -
   I check stock in lot.
 -
   !python {model: stock.production.lot}: |
-    lot = self.browse(cr, uid, ref('lot_icecream_0'), context=context)
+    lot = self.browse(cr, uid, ref('lot_monitor_0'), context=context)
     assert lot.stock_available == 50, "Stock in lot is not correspond."
