@@ -314,7 +314,7 @@ class Session(object):
         """ return the current language (as a record) """
         if not hasattr(self, '_language'):
             try:
-                languages = self.model('res.lang').query([('code', '=', self.lang)])
+                languages = self.model('res.lang').search([('code', '=', self.lang)])
                 self._language = languages.record
             except Exception:
                 context = self.context      # for translating the message below
@@ -533,7 +533,7 @@ class BaseModel(object):
         a record as its attributes.
 
     *   `recordset`: represents an ordered collection of records in the given
-        model, typically returned by :meth:`~.browse`, :meth:`~.query`, or
+        model, typically returned by :meth:`~.browse`, :meth:`~.search`, or
         another record/recordset. One can iterate over it.
 
     *   `null`: represents an absent record (null object pattern), typically
@@ -5191,7 +5191,7 @@ class BaseModel(object):
                 model._patch_method('write', do_write)
 
                 # this will call do_write
-                records = model.query([...])
+                records = model.search([...])
                 records.write(...)
 
                 # restore the original method
@@ -5297,11 +5297,6 @@ class BaseModel(object):
         """ test whether `self` is a recordset instance """
         return hasattr(self, '_records')
 
-    @api.model
-    def query(self, domain, offset=0, limit=None, order=None):
-        """ make a recordset instance from the result of a query """
-        return self.search(domain, offset, limit, order)
-
     @property
     def record(self):
         """ check that `self` is a recordset that contains exactly one record,
@@ -5323,7 +5318,7 @@ class BaseModel(object):
             return self._make_recordset([self])
         elif self.is_recordset():
             return self
-        return self.query([])
+        return self.search([])
 
     def unbrowse(self):
         """ Return the `id`/`ids` corresponding to a record/recordset/null instance. """
@@ -5461,7 +5456,7 @@ class BaseModel(object):
                 r = records[3]              # fourth record in records
                 print r['name']             # print field 'name' of record
 
-                rs = model.query(dom)       # rs is a recordset
+                rs = model.search(dom)      # rs is a recordset
                 rs1 = rs[10:]               # same as rs with offset 10
                 rs2 = rs1[:10]              # same as rs with offset 10 and limit 10
                 assert list(rs2) == list(rs[10:20])

@@ -102,7 +102,7 @@ class res_partner_category(osv.Model):
         if name:
             name = name.split(' / ')[-1]
             args = [('name', operator, name)] + args
-        categories = self.query(args, limit=limit)
+        categories = self.search(args, limit=limit)
         return categories.name_get()
 
     @api.recordset
@@ -147,7 +147,7 @@ class res_partner_title(osv.osv):
 
 @api.model
 def _lang_get(self):
-    languages = self.session.model('res.lang').query([])
+    languages = self.session.model('res.lang').search([])
     return [(language.code, language.name) for language in languages]
 
 
@@ -302,10 +302,10 @@ class res_partner(osv.Model, format_address):
     }
 
     @api.record
-    def copy(self, defaults):
-        context = self.session.context          # for the translation below
-        defaults['name'] = _('%s (copy)') % self.name
-        return super(res_partner, self).copy(defaults)
+    def copy(self, default=None):
+        default = default if default is not None else {}
+        default['name'] = _('%s (copy)') % self.name
+        return super(res_partner, self).copy(default)
 
     @api.recordset
     def onchange_type(self, is_company):
@@ -354,29 +354,29 @@ class res_partner(osv.Model, format_address):
         # Update parent and siblings or children records
         if isinstance(ids, (int, long)):
             ids = [ids]
-        if vals.get('is_company')==False:
-            vals.update({'child_ids' : [(5,)]})
+        if vals.get('is_company') == False:
+            vals.update({'child_ids': [(5,)]})
         for partner in self.browse(cr, uid, ids, context=context):
             update_ids = []
             if partner.is_company:
                 domain_children = [('parent_id', '=', partner.id), ('use_parent_address', '=', True)]
                 update_ids = self.search(cr, uid, domain_children, context=context)
             elif partner.parent_id:
-                 if vals.get('use_parent_address')==True:
-                     domain_siblings = [('parent_id', '=', partner.parent_id.id), ('use_parent_address', '=', True)]
-                     update_ids = [partner.parent_id.id] + self.search(cr, uid, domain_siblings, context=context)
-                 if 'use_parent_address' not in vals and  partner.use_parent_address:
+                if vals.get('use_parent_address') == True:
+                    domain_siblings = [('parent_id', '=', partner.parent_id.id), ('use_parent_address', '=', True)]
+                    update_ids = [partner.parent_id.id] + self.search(cr, uid, domain_siblings, context=context)
+                if 'use_parent_address' not in vals and partner.use_parent_address:
                     domain_siblings = [('parent_id', '=', partner.parent_id.id), ('use_parent_address', '=', True)]
                     update_ids = [partner.parent_id.id] + self.search(cr, uid, domain_siblings, context=context)
             self.update_address(cr, uid, update_ids, vals, context)
-        return super(res_partner,self).write(cr, uid, ids, vals, context=context)
+        return super(res_partner, self).write(cr, uid, ids, vals, context=context)
 
     @api.model
     def create(self, vals):
         if vals.get('parent_id') and vals.get('use_parent_address'):
             # Update parent and siblings records
             parent = self.browse(vals['parent_id'])
-            siblings = self.query([('parent_id', '=', parent.id), ('use_parent_address', '=', True)])
+            siblings = self.search([('parent_id', '=', parent.id), ('use_parent_address', '=', True)])
             (parent.recordset + siblings).update_address(vals)
         return super(res_partner, self).create(vals)
 
