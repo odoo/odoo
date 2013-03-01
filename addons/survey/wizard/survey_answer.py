@@ -402,7 +402,10 @@ class survey_question_wiz(osv.osv_memory):
                         context.update({'page_id': tools.ustr(p_id), 'page_number': sur_name_rec.page_no, 'transfer': sur_name_read.transfer})
                         xml_group3 = etree.SubElement(xml_form, 'group', {'col': '4', 'colspan': '4'})
                         etree.SubElement(xml_group3, 'button', {'string': _('Add Page'), 'icon': "gtk-new", 'type': 'object', 'name': "action_new_page", 'context': tools.ustr(context)})
-                        etree.SubElement(xml_group3, 'button', {'string': _('Edit Page'), 'icon': "gtk-edit", 'type': 'object', 'name': "action_edit_page", 'context': tools.ustr(context)})
+                        if total_pages:
+                            etree.SubElement(xml_group3, 'button', {'string': _('Edit Page'), 'icon': "gtk-edit", 'type': 'object', 'name': "action_edit_page", 'context': tools.ustr(context)})
+                        else:
+                            etree.SubElement(xml_group3, 'button', {'string': _('Edit Page'), 'icon': "gtk-edit", 'type': 'object', 'name': "action_new_page", 'context': tools.ustr(context)})
                         etree.SubElement(xml_group3, 'button', {'string': _('Delete Page'), 'icon': "gtk-delete", 'type': 'object', 'name': "action_delete_page", 'context': tools.ustr(context)})
                         etree.SubElement(xml_group3, 'button', {'string': _('Add Question'), 'icon': "gtk-new", 'type': 'object', 'name': "action_new_question", 'context': tools.ustr(context)})
 
