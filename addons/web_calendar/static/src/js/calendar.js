@@ -353,6 +353,7 @@ openerp.web_calendar.CalendarView = openerp.web.View.extend({
         var self = this,
             data = this.get_event_data(event_obj),
             index = this.dataset.get_id_index(event_id);
+        delete(data.name)
         if (index != null) {
             event_id = this.dataset.ids[index];
             this.dataset.write(event_id, data, {})
@@ -403,7 +404,9 @@ openerp.web_calendar.CalendarView = openerp.web.View.extend({
         }
     },
     get_event_data: function(event_obj) {
-        var data = {};
+        var data = {
+            name: event_obj.text
+        };
         data[this.date_start] = openerp.web.datetime_to_str(event_obj.start_date);
         if (this.date_stop) {
             data[this.date_stop] = openerp.web.datetime_to_str(event_obj.end_date);
