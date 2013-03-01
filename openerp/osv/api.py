@@ -148,8 +148,11 @@ def returns(model):
         ``@returns(model)``.
         They also supports the :ref:`record-map-convention`.
     """
-    if _get_returns(model):
+    if callable(model):
+        # model is a method, check its own @returns decoration
         model = _get_returns(model)
+        if not model:
+            return lambda method: method
 
     def decorate(method):
         if hasattr(method, '_orig'):
