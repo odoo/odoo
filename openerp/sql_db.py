@@ -41,7 +41,6 @@ import psycopg2.extensions
 from psycopg2.extensions import ISOLATION_LEVEL_AUTOCOMMIT, ISOLATION_LEVEL_READ_COMMITTED, ISOLATION_LEVEL_REPEATABLE_READ
 from psycopg2.pool import PoolError
 from psycopg2.psycopg1 import cursor as psycopg1cursor
-from threading import currentThread
 
 psycopg2.extensions.register_type(psycopg2.extensions.UNICODE)
 
@@ -520,7 +519,6 @@ def db_connect(db_name):
     global _Pool
     if _Pool is None:
         _Pool = ConnectionPool(int(tools.config['db_maxconn']))
-    currentThread().dbname = db_name
     return Connection(_Pool, db_name)
 
 def close_db(db_name):
@@ -528,9 +526,6 @@ def close_db(db_name):
     global _Pool
     if _Pool:
         _Pool.close_all(dsn(db_name))
-    ct = currentThread()
-    if hasattr(ct, 'dbname'):
-        delattr(ct, 'dbname')
 
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
