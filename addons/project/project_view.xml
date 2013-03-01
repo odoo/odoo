@@ -102,7 +102,7 @@
                             <field name="privacy_visibility"/>
                             <field name="user_id" string="Project Manager" 
                                 attrs="{'readonly':[('state','in',['close', 'cancelled'])]}" 
-                                context="{'default_groups_ref': ['project.group_project_user', 'project.group_project_manager', 'base.group_user']}"/>
+                                context="{'default_groups_ref': ['project.group_project_manager']}"/>
                         </group>
                         <group>
                             <field name="partner_id" on_change="onchange_partner_id(partner_id)"/>
@@ -386,7 +386,7 @@
                             <field name="user_id" 
                                 attrs="{'readonly':[('state','in',['done', 'cancelled'])]}" 
                                 options='{"no_open": True}'
-                                context="{'default_groups_ref': ['project.group_project_user', 'base.group_user']}"
+                                context="{'default_groups_ref': ['project.group_project_user']}"
                                 help="If you use the quick create, the new user will have access of 'Project' as a user and will be added as an employee"/>
                             <field name="planned_hours" widget="float_time"
                                     groups="project.group_time_work_estimation_tasks"
