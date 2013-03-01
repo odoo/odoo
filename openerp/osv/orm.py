@@ -5199,9 +5199,10 @@ class BaseModel(object):
         """
         origin = getattr(self.__class__, name)
         method.origin = origin
-        method = api.versatile(method)
-        method.origin = origin
-        setattr(self.__class__, name, method)
+        # propagate @returns from origin to method, and apply api decorator
+        wrapped = api.guess(api.returns(origin)(method))
+        wrapped.origin = origin
+        setattr(self.__class__, name, wrapped)
 
     def _revert_method(self, name):
         """ Revert the original method of `self` called `name`.

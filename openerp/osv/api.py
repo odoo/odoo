@@ -109,9 +109,9 @@ class Meta(type):
             if not key.startswith('__') and callable(value):
                 # make the method inherit from @returns decorators
                 if not _get_returns(value) and _get_returns(getattr(parent, key, None)):
-                    model = _get_returns(getattr(parent, key))
-                    _logger.debug("Method %s.%s inherited @returns(%r)", name, value.__name__, model)
-                    value = returns(model)(value)
+                    value = returns(getattr(parent, key))(value)
+                    _logger.debug("Method %s.%s inherited @returns(%r)",
+                                  name, value.__name__, _get_returns(value))
 
                 # guess calling convention if none is given
                 if not hasattr(value, '_api'):
@@ -125,7 +125,8 @@ class Meta(type):
 def returns(model):
     """ Return a decorator for methods that return instances of `model`.
 
-        :param model: the name of a model, or ``'self'`` for the current model
+        :param model: a model name, ``'self'`` for the current model, or a method
+            (in which case the model is taken from that method's decorator)
 
         The decorator adapts the method output to the api style: `id`, `ids` or
         ``False`` for the traditional style, and record, recordset or null for
@@ -147,6 +148,9 @@ def returns(model):
         ``@returns(model)``.
         They also supports the :ref:`record-map-convention`.
     """
+    if _get_returns(model):
+        model = _get_returns(model)
+
     def decorate(method):
         if hasattr(method, '_orig'):
             # decorate the original method, and re-apply the api decorator
