@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2012-12-21 17:04+0000\n"
-"PO-Revision-Date: 2013-02-27 08:20+0000\n"
+"PO-Revision-Date: 2013-02-28 15:12+0000\n"
 "Last-Translator: gobi <Unknown>\n"
 "Language-Team: Mongolian <mn@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-02-28 05:31+0000\n"
-"X-Generator: Launchpad (build 16506)\n"
+"X-Launchpad-Export-Date: 2013-03-01 05:40+0000\n"
+"X-Generator: Launchpad (build 16514)\n"
 
 #. module: stock
 #: field:stock.inventory.line.split,line_exist_ids:0
@@ -589,6 +589,8 @@ msgid ""
 "Quantities, Units of Measure, Products and Locations cannot be modified on "
 "stock moves that have already been processed (except by the Administrator)."
 msgstr ""
+"Тоо хэмжээ, хэмжих нэгж, бараа, байрлал зэрэг нь боловсруулагдсан агуулахын "
+"хөдөлгөөн дээр засварлагдах боломжгүй (зөвхөн Администратор л чадна)."
 
 #. module: stock
 #: help:report.stock.move,type:0
@@ -613,6 +615,14 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Дотоод хөдөлгөөний хүсэлтийг үүсгэхдээ дарна. \n"
+"              </p><p>\n"
+"                Ихэнх ажлууд нь OpenERP-д таны урьдчилсан тохируулсан "
+"логистикийн дүрэмээр автоматаар явагдана. Гэхдээ та мөн гараараа агуулахын "
+"хөдөлгөөнийг хөтлөж хийж болно. \n"
+"              </p>\n"
+"            "
 
 #. module: stock
 #: model:ir.actions.report.xml,name:stock.report_move_labels
@@ -623,7 +633,7 @@ msgstr "Зүйлийн Шошго"
 #: code:addons/stock/stock.py:1356
 #, python-format
 msgid "Back order <em>%s</em> has been <b>created</b>."
-msgstr ""
+msgstr "Буцсан захиалга <em>%s</em> <b>үүсгэгдлээ</b>."
 
 #. module: stock
 #: model:ir.model,name:stock.model_report_stock_move
@@ -640,7 +650,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model,name:stock.model_stock_report_tracklots
 msgid "Stock report by logistic serial number"
-msgstr ""
+msgstr "Агуулахын тайлан логистикийн серийн дугаараар"
 
 #. module: stock
 #: help:product.product,track_outgoing:0
@@ -648,6 +658,8 @@ msgid ""
 "Forces to specify a Serial Number for all moves containing this product and "
 "going to a Customer Location"
 msgstr ""
+"Энэ барааг агуулж байгаа бүх бараанд Серийн Дугаарыг захиалагчийн байрлал "
+"хүртэл шаардана"
 
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_stock_products_moves
@@ -695,6 +707,7 @@ msgstr "Хүлээн авсан тасалбар"
 msgid ""
 "Serial number quantity %d of %s is larger than available quantity (%d)!"
 msgstr ""
+"Серийн дугаарын %d тоо ширхэг %s бараанд байгаа тоо хэмжээ (%d)-с их байна!"
 
 #. module: stock
 #: report:stock.picking.list:0
@@ -832,6 +845,8 @@ msgid ""
 "Forces to specify a Serial Number for all moves containing this product and "
 "coming from a Supplier Location"
 msgstr ""
+"Энэ барааг агуулсан бүх хөдөлгөөнд Нийлүүлэгчийн байрлалаас эхлээд серийн "
+"дугаарыг шаардана"
 
 #. module: stock
 #: help:stock.config.settings,group_uos:0
@@ -841,6 +856,9 @@ msgid ""
 "                For instance, you can sell pieces of meat that you invoice "
 "based on their weight."
 msgstr ""
+"Борлуулалтын нэгжээр барааг борлуулах боломжийг олгодог бөгөөд нэхэмжлэл нь "
+"ялгаатай хэмжих нэгж дээр суурилж болно. Жишээлбэл: махыг ширхэгээр зараад "
+"жингээр нь нэхэмжилж болох юм."
 
 #. module: stock
 #: field:product.template,property_stock_procurement:0
@@ -879,6 +897,8 @@ msgid ""
 "Please define stock output account for this product or its category: \"%s\" "
 "(id: %d)"
 msgstr ""
+"Бараа эсвэл барааны ангилалд агуулахаас гарах дансыг тодорхойлно уу: \"%s\" "
+"(id: %d)"
 
 #. module: stock
 #: field:stock.picking,message_summary:0
@@ -961,6 +981,8 @@ msgid ""
 "This field is for internal purpose. It is used to decide if the column "
 "production lot has to be shown on the moves or not."
 msgstr ""
+"Энэ талбар нь дотоод зорилготой. Энэ нь барааны цувралын дугаар нь "
+"хөдөлгөөнүүдэд харуулах эсэхийг заахад хэрэглэгдэнэ."
 
 #. module: stock
 #: selection:product.product,valuation:0
@@ -995,6 +1017,8 @@ msgid ""
 "You cannot cancel the picking as some moves have been done. You should "
 "cancel the picking lines."
 msgstr ""
+"Зарим хөдөлгөөнүүд хийгдсэн бэлтгэлтийг цуцлах боломжгүй. Харин бэлтгэлтийг "
+"мөрүүдийг цуцлах нь зохимжтой."
 
 #. module: stock
 #: field:stock.config.settings,decimal_precision:0
@@ -1039,13 +1063,13 @@ msgstr "Нөөцийн байрлал"
 #. module: stock
 #: constraint:stock.move:0
 msgid "You must assign a serial number for this product."
-msgstr ""
+msgstr "Энэ бараанд та серийн дугаарыг оноох ёстой."
 
 #. module: stock
 #: code:addons/stock/stock.py:2255
 #, python-format
 msgid "Please define journal on the product category: \"%s\" (id: %d)"
-msgstr ""
+msgstr "Барааны ангилал дээр журналыг тодорхойлно уу: \"%s\" (id: %d)"
 
 #. module: stock
 #: view:stock.move:0
@@ -1154,7 +1178,7 @@ msgstr "Эсрэг шилжүүлэг"
 #. module: stock
 #: field:stock.config.settings,group_uos:0
 msgid "Invoice products in a different unit of measure than the sales order"
-msgstr ""
+msgstr "Борлуулалтын захиалгаас ялгаатай хэмжих нэгжээр барааг нэхэмжлэх"
 
 #. module: stock
 #: help:stock.location,active:0
@@ -1176,6 +1200,8 @@ msgid ""
 "No products to return (only lines in Done state and not fully returned yet "
 "can be returned)!"
 msgstr ""
+"Буцаах бараа алга (Зөвхөн хийгдсэн төлөвтэй мөр эсвэл бүрэн буцаагдаагүй "
+"мөрүүд буцаах боломжтой)!"
 
 #. module: stock
 #: view:stock.picking:0
@@ -1207,12 +1233,12 @@ msgstr "Барааны Үнэлгээний Данс"
 #. module: stock
 #: view:stock.config.settings:0
 msgid "Apply"
-msgstr ""
+msgstr "Хэрэглэх"
 
 #. module: stock
 #: field:product.template,loc_row:0
 msgid "Row"
-msgstr ""
+msgstr "Мөр"
 
 #. module: stock
 #: field:product.template,property_stock_production:0
@@ -1296,6 +1322,8 @@ msgstr "Зохиогч"
 msgid ""
 "You are moving %.2f %s but only %.2f %s available for this serial number."
 msgstr ""
+"Та %.2f %s зөөж байгаа боловч энэ серийн дугаарт бэлэн байгаа нь ердөө %.2f "
+"%s байна."
 
 #. module: stock
 #: report:stock.picking.list:0
@@ -1305,7 +1333,7 @@ msgstr "Дотоодын тээвэрлэлт:"
 #. module: stock
 #: view:stock.inventory.line:0
 msgid "Split Inventory Line"
-msgstr ""
+msgstr "Тооллогын мөрийг хуваах"
 
 #. module: stock
 #: selection:stock.location,chained_auto_packing:0
@@ -1352,6 +1380,7 @@ msgid ""
 "Allows you to create and manage your packaging dimensions and types you want "
 "to be maintained in your system."
 msgstr ""
+"Танд системээр баглалтын хэмжээс, төрөлийг менежмент хийх боломжийг олгодог."
 
 #. module: stock
 #: selection:report.stock.inventory,month:0
@@ -1399,6 +1428,14 @@ msgid ""
 "* Available: When products are reserved, it is set to 'Available'.\n"
 "* Done: When the shipment is processed, the state is 'Done'."
 msgstr ""
+"* Шинэ: Агуулахын хөдөлгөөн үүсгэгдээд хараахан батлагдаагүй.\n"
+"* Өөр хөдөлгөөн хүлээж буй: Энэ хөдөлгөөн нь өөр хөдөлгөөнийг хүлээж буй, "
+"тухайлбал хэлхээт урсгалд.\n"
+"* Бэлэн болохыг хүлээж буй: Татан авалтын шийдэл хараахан тодорхой болоогүй. "
+"Энэ нь товлогчийн ажиллахыг хүлээж буй байж болох бөгөөд худалдан авах, "
+"үйлдвэрлэх захиалга үүсэхийг хүлээж байж болно...\n"
+"* Бэлэн: Бараа нь агуулахад бэлэн байгаа.\n"
+"* Хийгдсэн: Хүргэлт хийгдсэн."
 
 #. module: stock
 #: model:stock.location,name:stock.stock_location_locations_partner
@@ -1456,6 +1493,14 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Шинэ журнал үүсгэхдээ дарна. \n"
+"              </p><p>\n"
+"                Агуулахын журналийн систем нь ажлын төрөл эсвэл "
+"ажилчин/багийн хийж ажилд журналыг оноох боломжийг өгдөг. Агуулахын "
+"журналийн жишээ гэвэл: чанарын шалгалт, бэлтгэлт, баглалт, гэх мэт.\n"
+"              </p>\n"
+"            "
 
 #. module: stock
 #: help:stock.location,chained_auto_packing:0
@@ -1476,7 +1521,7 @@ msgstr ""
 #. module: stock
 #: view:stock.split.into:0
 msgid "Quantity to Leave in the Current Pack"
-msgstr ""
+msgstr "Идэвхтэй багцад гарах тоо хэмжээ"
 
 #. module: stock
 #: view:stock.tracking:0
@@ -1497,7 +1542,7 @@ msgstr "Өөр Хөдөлгөөнийг Хүлээж байна."
 #: help:stock.change.product.qty,new_quantity:0
 msgid ""
 "This quantity is expressed in the Default Unit of Measure of the product."
-msgstr ""
+msgstr "Тоо хэмжээ нь барааны үндсэн хэмжих нэгжээр илэрхийлэгдэнэ."
 
 #. module: stock
 #: help:stock.move,price_unit:0
@@ -1540,12 +1585,12 @@ msgstr "Зөвхөн ноорог хөдөлгөөнийг л устгах бо�
 #: code:addons/stock/stock.py:1665
 #, python-format
 msgid "You cannot move product %s to a location of type view %s."
-msgstr ""
+msgstr "Та %s барааг харах төрөлтэй %s байрлал руу зөөх боломжгүй."
 
 #. module: stock
 #: view:stock.inventory:0
 msgid "Split in serial numbers"
-msgstr ""
+msgstr "Серийн дугаараар салгах"
 
 #. module: stock
 #: view:stock.move:0
@@ -1577,7 +1622,7 @@ msgstr "Нэмэлт Мэдээлэл"
 #: code:addons/stock/stock.py:2648
 #, python-format
 msgid "Missing partial picking data for move #%s."
-msgstr ""
+msgstr "#%s хөдөлгөөний хэсэгчилсэн бэлтгэлтийн өгөгдөл алга."
 
 #. module: stock
 #: field:stock.location.product,from_date:0
@@ -1772,6 +1817,7 @@ msgstr "Эцэг байрлал"
 #, python-format
 msgid "Please define stock output account for this product: \"%s\" (id: %d)."
 msgstr ""
+"Дараах бараанд агуулахын гарах дансыг тодорхойлно уу: \"%s\" (id: %d)."
 
 #. module: stock
 #: help:stock.location,company_id:0
@@ -1787,7 +1833,7 @@ msgstr "Урьтал хугацааг хэлхэх"
 #. module: stock
 #: field:stock.config.settings,group_uom:0
 msgid "Manage different units of measure for products"
-msgstr ""
+msgstr "Барааны ондоо хэмжих нэгжийн менежмент"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_invoice_onshipping
@@ -1798,12 +1844,12 @@ msgstr "Хүргэлтээс барааны нэхэмжлэл"
 #: code:addons/stock/stock.py:2475
 #, python-format
 msgid "Please provide a positive quantity to scrap."
-msgstr ""
+msgstr "Устгах тоо хэмжээнд эерэг утга оруулна уу"
 
 #. module: stock
 #: model:stock.location,name:stock.stock_location_shop1
 msgid "Your Company, Birmingham shop"
-msgstr ""
+msgstr "Таны компани, Birmingham дэлгүүр"
 
 #. module: stock
 #: view:product.product:0
@@ -1822,7 +1868,7 @@ msgstr "Нэгжийн өртөгийг илэрхийлсэн валют"
 #: selection:stock.picking.in,move_type:0
 #: selection:stock.picking.out,move_type:0
 msgid "Partial"
-msgstr ""
+msgstr "Хэсэгчилсэн"
 
 #. module: stock
 #: selection:report.stock.inventory,month:0
@@ -1833,7 +1879,7 @@ msgstr "9-р сар"
 #. module: stock
 #: view:product.product:0
 msgid "days"
-msgstr ""
+msgstr "өдөр"
 
 #. module: stock
 #: model:ir.model,name:stock.model_report_stock_inventory
@@ -1861,7 +1907,7 @@ msgstr "Арын Захиалга уу"
 #. module: stock
 #: report:stock.picking.list:0
 msgid "Incoming Shipment :"
-msgstr ""
+msgstr "Ирж буй хүргэлт :"
 
 #. module: stock
 #: field:stock.location,valuation_out_account_id:0
@@ -1889,6 +1935,8 @@ msgid ""
 "Check this option to select existing serial numbers in the list below, "
 "otherwise you should enter new ones line by line."
 msgstr ""
+"Доорх жагсаалтад байгаа серийн дугаар сонгохоор бол энэ сонголтыг сонгоно, "
+"үгүй бол мөр мөрөөр шинээр оруулна."
 
 #. module: stock
 #: selection:report.stock.move,type:0
@@ -1922,6 +1970,8 @@ msgid ""
 "This stock location will be used, instead of the default one, as the source "
 "location for stock moves generated by manufacturing orders."
 msgstr ""
+"Энэ байрлал нь үйлдвэрлэлийн захиалгаар үүсэх агуулахын хөдөлгөөний анхны "
+"байрлалын гарах байрлалын оронд сонгогдож хэрэглэгдэнэ."
 
 #. module: stock
 #: help:stock.move,date_expected:0
@@ -1947,7 +1997,7 @@ msgstr "Тавиур 2"
 #: code:addons/stock/stock.py:529
 #, python-format
 msgid "You cannot remove a lot line."
-msgstr ""
+msgstr "Цувралын мөрийг та устгаж чадахгүй."
 
 #. module: stock
 #: help:stock.location,posx:0
@@ -1984,6 +2034,8 @@ msgid ""
 "This stock location will be used, instead of the default one, as the source "
 "location for stock moves generated when you do an inventory."
 msgstr ""
+"Энэ байрлал нь тооллогоор үүсэх агуулахын хөдөлгөөний анхны байрлалын гарах "
+"байрлалын оронд сонгогдож хэрэглэгдэнэ."
 
 #. module: stock
 #: help:product.template,property_stock_account_output:0

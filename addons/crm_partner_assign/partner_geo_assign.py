@@ -157,8 +157,9 @@ class crm_lead(osv.osv):
             self.assign_geo_localize(cr, uid, [lead.id], lead.partner_latitude, lead.partner_longitude, context=context)
             partner = res_partner.browse(cr, uid, partner_id, context=context)
             if partner.user_id:
+                salesteam_id = partner.section_id and partner.section_id.id or False
                 for lead_id in ids:
-                    self.allocate_salesman(cr, uid, [lead_id], [partner.user_id.id], context=context)
+                    self.allocate_salesman(cr, uid, [lead_id], [partner.user_id.id], team_id=salesteam_id, context=context)
             self.write(cr, uid, [lead.id], {'date_assign': fields.date.context_today(self,cr,uid,context=context), 'partner_assigned_id': partner_id}, context=context)
         return res
 
