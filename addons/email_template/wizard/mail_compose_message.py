@@ -150,8 +150,8 @@ class mail_compose_message(osv.TransientModel):
             values = {}
         # get values to return
         email_dict = super(mail_compose_message, self).render_message(cr, uid, wizard, res_id, context)
-        email_dict.update(values)
-        return email_dict
+        values.update(email_dict)
+        return values
 
     def render_template(self, cr, uid, template, model, res_id, context=None):
         return self.pool.get('email.template').render_template(cr, uid, template, model, res_id, context=context)

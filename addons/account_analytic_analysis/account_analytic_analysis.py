@@ -18,6 +18,9 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
+import datetime
+import logging
+import time
 
 from openerp.osv import osv, fields
 from openerp.osv.orm import intersect, except_orm
@@ -26,6 +29,7 @@ from openerp.tools.translate import _
 
 from openerp.addons.decimal_precision import decimal_precision as dp
 
+_logger = logging.getLogger(__name__)
 
 class account_analytic_account(osv.osv):
     _name = "account.analytic.account"
@@ -484,7 +488,48 @@ class account_analytic_account(osv.osv):
             res['value']['to_invoice'] = template.to_invoice.id
             res['value']['pricelist_id'] = template.pricelist_id.id
         return res
-account_analytic_account()
+
+    def cron_account_analytic_account(self, cr, uid, context=None):
+        if context is None:
+            context = {}
+        remind = {}
+
+        def fill_remind(key, domain, write_pending=False):
+            base_domain = [
+                ('type', '=', 'contract'),
+                ('partner_id', '!=', False),
+                ('manager_id', '!=', False),
+                ('manager_id.email', '!=', False),
+            ]
+            base_domain.extend(domain)
+
+            accounts_ids = self.search(cr, uid, base_domain, context=context, order='name asc')
+            accounts = self.browse(cr, uid, accounts_ids, context=context)
+            for account in accounts:
+                if write_pending:
+                    account.write({'state' : 'pending'}, context=context)
+                remind_user = remind.setdefault(account.manager_id.id, {})
+                remind_type = remind_user.setdefault(key, {})
+                remind_partner = remind_type.setdefault(account.partner_id, []).append(account)
+
+        # Already expired
+        fill_remind("old", [('state', 'in', ['pending'])])
+
+        # Expires now
+        fill_remind("new", [('state', 'in', ['draft', 'open']), '|', '&', ('date', '!=', False), ('date', '<=', time.strftime('%Y-%m-%d')), ('is_overdue_quantity', '=', True)], True)
+
+        # Expires in less than 30 days
+        fill_remind("future", [('state', 'in', ['draft', 'open']), ('date', '!=', False), ('date', '<', (datetime.datetime.now() + datetime.timedelta(30)).strftime("%Y-%m-%d"))])
+
+        context['base_url'] = self.pool.get('ir.config_parameter').get_param(cr, uid, 'web.base.url')
+        context['action_id'] = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'account_analytic_analysis', 'action_account_analytic_overdue_all')[1]
+        template_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'account_analytic_analysis', 'account_analytic_cron_email_template')[1]
+        for user_id, data in remind.items():
+            context["data"] = data
+            _logger.debug("Sending reminder to uid %s", user_id)
+            self.pool.get('email.template').send_mail(cr, uid, template_id, user_id, context=context)
+
+        return True
 
 class account_analytic_account_summary_user(osv.osv):
     _name = "account_analytic_analysis.summary.user"
@@ -538,8 +583,6 @@ class account_analytic_account_summary_user(osv.osv):
                     lu.user_id as "user",
                     unit_amount
             from lu, mu)''')
-                   
-account_analytic_account_summary_user()
 
 class account_analytic_account_summary_month(osv.osv):
     _name = "account_analytic_analysis.summary.month"
@@ -600,6 +643,4 @@ class account_analytic_account_summary_month(osv.osv):
                 'GROUP BY d.month, d.account_id ' \
                 ')')
 
-
-account_analytic_account_summary_month()
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
