@@ -476,7 +476,16 @@ $sheet-padding: 16px
     .oe_tag_dark
         background: $tag-bg-dark
         color: #eee
-
+    .oe_form_field_radio
+        .oe_radio_input
+            cursor: pointer
+            display: inline-block
+            width: 20px
+            background: transparent url(/web/static/src/img/icons/gtk-no.png) no-repeat 0px 0px
+        .oe_radio_input_on
+            background: transparent url(/web/static/src/img/icons/gtk-yes.png) no-repeat 0px 0px
+        .oe_radio_label
+            cursor: help
     .oe_tags
         &.oe_inline
             min-width: 250px

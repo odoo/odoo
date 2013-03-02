@@ -2776,21 +2776,7 @@ instance.web.form.FieldSelection = instance.web.form.AbstractField.extend(instan
         });
     }
 });
-/*
-<select t-if="!widget.get('effective_readonly')"
-            t-att-name="widget.name"
-            t-att-tabindex="widget.node.attrs.tabindex"
-            t-att-autofocus="widget.node.attrs.autofocus"
-            t-att-id="widget.id_for_label">
-                <t t-foreach="widget.values" t-as="option">
-                    <option>
-                        <t t-esc="widget.node.attrs.placeholder" t-if="option[0] === false and widget.node.attrs.placeholder"/>
-                        <t t-esc="option[1]" t-if="option[0] !== false"/>
-                    </option>
-                </t>
-        </select>
 
-*/
 
 instance.web.form.FieldRadio = instance.web.form.AbstractField.extend(instance.web.form.ReinitializeFieldMixin, {
     template: 'FieldRadio',
@@ -2807,7 +2793,7 @@ instance.web.form.FieldRadio = instance.web.form.AbstractField.extend(instance.w
         if (this.horizontal) {
             var width = Math.floor(100 / self.field.selection.length);
             if (!this.noradiolabel) {
-                var $tr = $('<tr/>');
+                var $tr = $('<tr class="oe_radio_header"/>');
                 _.each(this.field.selection, function (value) {
                     $tr.append('<th width="' + width + '%">' + value[1] + "</th>");
                 });
@@ -2820,7 +2806,7 @@ instance.web.form.FieldRadio = instance.web.form.AbstractField.extend(instance.w
                 this.$table.append($column);
             }
         }
-        this.$el.on('click', '.oe_radio_button,.oe_radio_label', function (event) {
+        this.$el.on('click', '.oe_radio_input,.oe_radio_label', function (event) {
             if (!self.get("effective_readonly")) {
                 var value = $(event.target).attr('data');
                 if (!self.field.required && value == self.get_value()) {
@@ -2832,19 +2818,18 @@ instance.web.form.FieldRadio = instance.web.form.AbstractField.extend(instance.w
     },
     render_value_input: function (value) {
         var check = value[0] == this.get_value();
-        return '<span class="oe_radio_button ' + (check ? 'oe_radio_button_on' : '') + '" data="' + value[0] + '">' + check + '</span>';
+        return '<span class="oe_radio_input ' + (check ? 'oe_radio_input_on' : '') + '" data="' + value[0] + '">&nbsp;</span>';
     },
     render_value: function () {
         var self = this;
+        this.$table.find("tr:not(.oe_radio_header)").remove();
         if (this.horizontal) {
-            this.$table.find(!this.noradiolabel ? "tr:not(:first)": "tr").remove();
             var $tr = $('<tr/>');
             _.each(this.field.selection, function (value) {
                 $tr.append('<td>' + self.render_value_input(value) + '</td>');
             });
             this.$table.append($tr);
         } else {
-            this.$table.find("tr").remove();
             _.each(this.field.selection, function (value) {
                 self.$table.append('<tr><td>' + self.render_value_input(value) + '</td>' + (!self.noradiolabel ? '<th class="oe_radio_label" data="' + value[0] + '">' + value[1] + '</th>' : '') +'</tr>');
             });
