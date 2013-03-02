@@ -2776,6 +2776,71 @@ instance.web.form.FieldSelection = instance.web.form.AbstractField.extend(instan
         });
     }
 });
+/*
+<select t-if="!widget.get('effective_readonly')"
+            t-att-name="widget.name"
+            t-att-tabindex="widget.node.attrs.tabindex"
+            t-att-autofocus="widget.node.attrs.autofocus"
+            t-att-id="widget.id_for_label">
+                <t t-foreach="widget.values" t-as="option">
+                    <option>
+                        <t t-esc="widget.node.attrs.placeholder" t-if="option[0] === false and widget.node.attrs.placeholder"/>
+                        <t t-esc="option[1]" t-if="option[0] !== false"/>
+                    </option>
+                </t>
+        </select>
+
+*/
+
+instance.web.form.FieldRadio = instance.web.form.AbstractField.extend(instance.web.form.ReinitializeFieldMixin, {
+    template: 'FieldRadio',
+    init: function(field_manager, node) {
+        var self = this;
+        this._super(field_manager, node);
+        this.node = node;
+    },
+    initialize_content: function() {
+        var self = this;
+        this.$table = $('<table width="100%"/>');
+        this.$el.append(this.$table);
+        if (this.node.horizontal) {
+            var $tr = $('<tr/>');
+            _.each(this.field.selection, function (value) {
+                self.$tr.append("<th>" + value[1] + "</th>");
+            });
+            this.$table.append($tr);
+        }
+        this.$el.on('click', '.oe_radio_button,.oe_radio_label', function (event) {
+            if (!self.get("effective_readonly")) {
+                var value = $(event.target).attr('data');
+                if (!self.field.required && value == self.get_value()) {
+                    value = false;
+                }
+                self.set_value(value);
+            }
+        });
+    },
+    render_value_input: function (value) {
+        var check = value[0] == this.get_value();
+        return '<span class="oe_radio_button ' + (check ? 'oe_radio_button_on' : '') + '" data="' + value[0] + '">' + check + '</span>';
+    },
+    render_value: function () {
+        var self = this;
+        if (this.node.horizontal) {
+            this.$table.find("tr:eq(2,)").remove();
+            var $tr = $('<tr/>');
+            _.each(this.field.selection, function (value) {
+                self.$tr.append('<td>' + self.render_value_input(value) + '</td>');
+            });
+            this.$table.append($tr);
+        } else {
+            this.$table.find("tr").remove();
+            _.each(this.field.selection, function (value) {
+                self.$table.append('<tr><td>' + self.render_value_input(value) + '</td><th class="oe_radio_label" data="' + value[0] + '">' + value[1] + '</th></tr>');
+            });
+        }
+    }
+});
 
 // jquery autocomplete tweak to allow html and classnames
 (function() {
@@ -5362,6 +5427,7 @@ instance.web.form.widgets = new instance.web.Registry({
     'date' : 'instance.web.form.FieldDate',
     'datetime' : 'instance.web.form.FieldDatetime',
     'selection' : 'instance.web.form.FieldSelection',
+    'radio' : 'instance.web.form.FieldRadio',
     'many2one' : 'instance.web.form.FieldMany2One',
     'many2onebutton' : 'instance.web.form.Many2OneButton',
     'many2many' : 'instance.web.form.FieldMany2Many',
