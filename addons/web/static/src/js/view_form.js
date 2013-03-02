@@ -2797,18 +2797,28 @@ instance.web.form.FieldRadio = instance.web.form.AbstractField.extend(instance.w
     init: function(field_manager, node) {
         var self = this;
         this._super(field_manager, node);
-        this.node = node;
+        this.horizontal = !!node.attrs.horizontal;
+        this.noradiolabel = !!node.attrs.noradiolabel;
     },
     initialize_content: function() {
         var self = this;
         this.$table = $('<table width="100%"/>');
         this.$el.append(this.$table);
-        if (this.node.horizontal) {
-            var $tr = $('<tr/>');
-            _.each(this.field.selection, function (value) {
-                self.$tr.append("<th>" + value[1] + "</th>");
-            });
-            this.$table.append($tr);
+        if (this.horizontal) {
+            var width = Math.floor(100 / self.field.selection.length);
+            if (!this.noradiolabel) {
+                var $tr = $('<tr/>');
+                _.each(this.field.selection, function (value) {
+                    $tr.append('<th width="' + width + '%">' + value[1] + "</th>");
+                });
+                this.$table.append($tr);
+            } else {
+                var $column = $('<columns/>');
+                _.each(this.field.selection, function (value) {
+                    $column.append('<col width="' + width + '%"/>');
+                });
+                this.$table.append($column);
+            }
         }
         this.$el.on('click', '.oe_radio_button,.oe_radio_label', function (event) {
             if (!self.get("effective_readonly")) {
@@ -2826,17 +2836,17 @@ instance.web.form.FieldRadio = instance.web.form.AbstractField.extend(instance.w
     },
     render_value: function () {
         var self = this;
-        if (this.node.horizontal) {
-            this.$table.find("tr:eq(2,)").remove();
+        if (this.horizontal) {
+            this.$table.find(!this.noradiolabel ? "tr:not(:first)": "tr").remove();
             var $tr = $('<tr/>');
             _.each(this.field.selection, function (value) {
-                self.$tr.append('<td>' + self.render_value_input(value) + '</td>');
+                $tr.append('<td>' + self.render_value_input(value) + '</td>');
             });
             this.$table.append($tr);
         } else {
             this.$table.find("tr").remove();
             _.each(this.field.selection, function (value) {
-                self.$table.append('<tr><td>' + self.render_value_input(value) + '</td><th class="oe_radio_label" data="' + value[0] + '">' + value[1] + '</th></tr>');
+                self.$table.append('<tr><td>' + self.render_value_input(value) + '</td>' + (!self.noradiolabel ? '<th class="oe_radio_label" data="' + value[0] + '">' + value[1] + '</th>' : '') +'</tr>');
             });
         }
     }
