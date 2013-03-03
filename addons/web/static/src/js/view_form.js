@@ -2787,51 +2787,70 @@ instance.web.form.FieldRadio = instance.web.form.AbstractField.extend(instance.w
         this.noradiolabel = !!node.attrs.noradiolabel;
     },
     initialize_content: function() {
-        var self = this;
         this.$table = $('<table width="100%"/>');
         this.$el.append(this.$table);
-        if (this.horizontal) {
-            var width = Math.floor(100 / self.field.selection.length);
-            if (!this.noradiolabel) {
-                var $tr = $('<tr class="oe_radio_header"/>');
-                _.each(this.field.selection, function (value) {
-                    $tr.append('<th width="' + width + '%">' + value[1] + "</th>");
-                });
-                this.$table.append($tr);
-            } else {
-                var $column = $('<columns/>');
-                _.each(this.field.selection, function (value) {
-                    $column.append('<col width="' + width + '%"/>');
-                });
-                this.$table.append($column);
-            }
-        }
-        this.$el.on('click', '.oe_radio_input,.oe_radio_label', function (event) {
+    },
+    _action_click: function ($tag, value) {
+        var self = this;
+        $tag.on('click', $tag, function (event) {
             if (!self.get("effective_readonly")) {
-                var value = $(event.target).attr('data');
-                if (!self.field.required && value == self.get_value()) {
-                    value = false;
+                if (!self.field.required && value[0] == self.get_value()) {
+                    self.set_value(undefined);
+                } else {
+                    self.set_value(value[0]);
                 }
-                self.set_value(value);
             }
         });
     },
-    render_value_input: function (value) {
+    _render_input: function (value) {
         var check = value[0] == this.get_value();
-        return '<span class="oe_radio_input ' + (check ? 'oe_radio_input_on' : '') + '" data="' + value[0] + '">&nbsp;</span>';
+        var $input = $('<span class="oe_radio_input ' + (check ? 'oe_radio_input_on' : '') + '">&nbsp;</span>');
+        this._action_click($input, value);
+        return $input;
+    },
+    _render_label: function (value, width) {
+        $label = $('<th class="oe_radio_label" ' + (width ? 'width="' + width + '%"' : '') + '>' + value[1] + '</th>');
+        this._action_click($label, value);
+        return $label;
     },
     render_value: function () {
         var self = this;
-        this.$table.find("tr:not(.oe_radio_header)").remove();
+        this.$table.empty();
+
         if (this.horizontal) {
+            var width = Math.floor(100 / this.field.selection.length);
+            if (!this.noradiolabel) {
+                var $tr = $('<tr class="oe_radio_header"/>');
+                _.each(this.field.selection, function (value) {
+                    $tr.append(self._render_label(value, width));
+                });
+                this.$table.append($tr);
+            }
+
             var $tr = $('<tr/>');
             _.each(this.field.selection, function (value) {
-                $tr.append('<td>' + self.render_value_input(value) + '</td>');
+                var $td = $('<td/>');
+                $td.append(self._render_input(value));
+                $tr.append($td);
             });
             this.$table.append($tr);
-        } else {
+        }
+        else if (self.get("effective_readonly")) {
+            var value = _.find(this.field.selection, function (val) { return val[0] == self.get_value() });
+            this.$table.append("<tr><td>" + (value ? value[1] : "") + "</td></tr>")
+        }
+        else {
             _.each(this.field.selection, function (value) {
-                self.$table.append('<tr><td>' + self.render_value_input(value) + '</td>' + (!self.noradiolabel ? '<th class="oe_radio_label" data="' + value[0] + '">' + value[1] + '</th>' : '') +'</tr>');
+                var $tr = $('<tr/>');
+                var $td = $('<td/>');
+                $td.append(self._render_input(value));
+                $tr.append($td);
+                if (!self.noradiolabel) {
+                    var $td = $('<td/>');
+                    $td.append(self._render_label(value));
+                    $tr.append($td);
+                }
+                self.$table.append($tr);
             });
         }
     }
