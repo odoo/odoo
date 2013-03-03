@@ -2783,9 +2783,9 @@ instance.web.form.FieldRadio = instance.web.form.AbstractField.extend(instance.w
     init: function(field_manager, node) {
         var self = this;
         this._super(field_manager, node);
-        this.horizontal = !!node.attrs.horizontal;
-        this.no_radiolabel = !!node.attrs.no_radiolabel;
-        this.display_readonly = !!node.attrs.display_readonly;
+        this.horizontal = +node.attrs.horizontal;
+        this.no_radiolabel = +node.attrs.no_radiolabel;
+        this.display_readonly = +node.attrs.display_readonly;
     },
     initialize_content: function() {
         this.$table = $('<table width="100%"/>');
