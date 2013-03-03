@@ -2784,7 +2784,8 @@ instance.web.form.FieldRadio = instance.web.form.AbstractField.extend(instance.w
         var self = this;
         this._super(field_manager, node);
         this.horizontal = !!node.attrs.horizontal;
-        this.noradiolabel = !!node.attrs.noradiolabel;
+        this.no_radiolabel = !!node.attrs.no_radiolabel;
+        this.display_readonly = !!node.attrs.display_readonly;
     },
     initialize_content: function() {
         this.$table = $('<table width="100%"/>');
@@ -2817,9 +2818,13 @@ instance.web.form.FieldRadio = instance.web.form.AbstractField.extend(instance.w
         var self = this;
         this.$table.empty();
 
-        if (this.horizontal) {
+        if (self.get("effective_readonly") && !self.display_readonly) {
+            var value = _.find(this.field.selection, function (val) { return val[0] == self.get_value() });
+            this.$table.append("<tr><td>" + (value ? value[1] : "") + "</td></tr>")
+        }
+        else if (this.horizontal) {
             var width = Math.floor(100 / this.field.selection.length);
-            if (!this.noradiolabel) {
+            if (!this.no_radiolabel) {
                 var $tr = $('<tr class="oe_radio_header"/>');
                 _.each(this.field.selection, function (value) {
                     $tr.append(self._render_label(value, width));
@@ -2835,17 +2840,13 @@ instance.web.form.FieldRadio = instance.web.form.AbstractField.extend(instance.w
             });
             this.$table.append($tr);
         }
-        else if (self.get("effective_readonly")) {
-            var value = _.find(this.field.selection, function (val) { return val[0] == self.get_value() });
-            this.$table.append("<tr><td>" + (value ? value[1] : "") + "</td></tr>")
-        }
         else {
             _.each(this.field.selection, function (value) {
                 var $tr = $('<tr/>');
                 var $td = $('<td/>');
                 $td.append(self._render_input(value));
                 $tr.append($td);
-                if (!self.noradiolabel) {
+                if (!self.no_radiolabel) {
                     var $td = $('<td/>');
                     $td.append(self._render_label(value));
                     $tr.append($td);
