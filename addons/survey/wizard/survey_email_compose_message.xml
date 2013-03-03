@@ -32,7 +32,7 @@
                     <field name="res_id" invisible="1"/>
                     <field name="parent_id" invisible="1"/>
                     <group col="2" invisible="context.get('survey_resent_token')">
-                        <field name="public"/>
+                        <field name="public" widget="radio"/>
                     </group>
                     <group col="1" invisible="context.get('survey_resent_token')" attrs="{'invisible':[('public','in',['email', 'email_public_link'])]}" class="oe_survey_email_public">
                         <div>

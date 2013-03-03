@@ -172,10 +172,12 @@ class survey_question_wiz(osv.osv_memory):
             col = "2"
             colspan = "2"
         xml_group = etree.SubElement(xml_group, 'group', {'col': tools.ustr(col), 'colspan': tools.ustr(colspan)})
+        first = True
         for row in que_rec.answer_choice_ids:
             etree.SubElement(xml_group, 'newline')
-            etree.SubElement(xml_group, 'field', {'modifiers': readonly and '{"readonly": 1}' or '{}', 'name': tools.ustr(que.id) + "_selection_" + tools.ustr(row.id), 'string': to_xml(tools.ustr(row.answer))})
-            selection = [('', '')]
+            etree.SubElement(xml_group, 'field', {'widget': 'radio', 'horizontal': '1', 'no_radiolabel': not first and '1' or '0', 'modifiers': readonly and '{"readonly": 1}' or '{}', 'name': tools.ustr(que.id) + "_selection_" + tools.ustr(row.id), 'string': to_xml(tools.ustr(row.answer))})
+            first = False
+            selection = []
             for col in que_rec.column_heading_ids:
                 selection.append((str(col.id), col.title))
             fields[tools.ustr(que.id) + "_selection_" + tools.ustr(row.id)] = {'type': 'selection', 'selection': selection, 'string': "Answer"}
