@@ -145,6 +145,307 @@ class hr_expense_expense(osv.osv):
     def expense_canceled(self, cr, uid, ids, context=None):
         return self.write(cr, uid, ids, {'state': 'cancelled'}, context=context)
 
+
+    def account_move_get(self, cr, uid, expense_id, journal_id, context=None):
+        '''
+        This method prepare the creation of the account move related to the given expense.
+
+        :param expense_id: Id of voucher for which we are creating account_move.
+        :return: mapping between fieldname and value of account move to create
+        :rtype: dict
+        '''
+        
+        
+        #Search for the period corresponding with confirmation date
+        expense_brw = self.browse(cr,uid,expense_id,context)
+        period_obj = self.pool.get('account.period')
+        company_id = expense_brw.company_id.id
+        ctx = context
+        ctx.update({'company_id': company_id})
+        date = expense_brw.date_confirm
+        pids = period_obj.find(cr, uid, date, context=ctx)
+        try:
+            period_id = pids[0]
+        except: 
+            raise osv.except_osv(_('Error! '), 
+                        _('Please define periods!'))
+        period = period_obj.browse(cr, uid, period_id, context=context)
+        
+        seq_obj = self.pool.get('ir.sequence')
+
+        journal = self.pool.get('account.journal').browse(cr, uid, journal_id, context=context)
+        if journal.sequence_id:
+            if not journal.sequence_id.active:
+                raise osv.except_osv(_('Configuration Error !'),
+                    _('Please activate the sequence of selected journal !'))
+            c = dict(context)
+            c.update({'fiscalyear_id': period.fiscalyear_id.id})
+            name = seq_obj.next_by_id(cr, uid, journal.sequence_id.id, context=c)
+        else:
+            raise osv.except_osv(_('Error!'),
+                        _('Please define a sequence on the journal.'))
+        #Look for the next expense number
+        ref = seq_obj.get(cr, uid, 'hr.expense.invoice')
+
+        move = {
+            'name': name,
+            'journal_id': journal_id,
+            'narration': '',
+            'date': expense_brw.date_confirm,
+            'ref': ref,
+            'period_id': period_id,
+        }
+        return move
+
+    def line_get_convert(self, cr, uid, x, part, date, context=None):
+        return {
+            'date_maturity': x.get('date_maturity', False),
+            'partner_id': part.id,
+            'name': x['name'][:64],
+            'date': date,
+            'debit': x['price']>0 and x['price'],
+            'credit': x['price']<0 and -x['price'],
+            'account_id': x['account_id'],
+            'analytic_lines': x.get('analytic_lines', False),
+            'amount_currency': x['price']>0 and abs(x.get('amount_currency', False)) or -abs(x.get('amount_currency', False)),
+            'currency_id': x.get('currency_id', False),
+            'tax_code_id': x.get('tax_code_id', False),
+            'tax_amount': x.get('tax_amount', False),
+            'ref': x.get('ref', False),
+            'quantity': x.get('quantity',1.00),
+            'product_id': x.get('product_id', False),
+            'product_uom_id': x.get('uos_id', False),
+            'analytic_account_id': x.get('account_analytic_id', False),
+        }
+
+    def compute_expense_totals(self, cr, uid, inv, company_currency, ref, invoice_move_lines, context=None):
+        if context is None:
+            context={}
+        total = 0
+        total_currency = 0
+        cur_obj = self.pool.get('res.currency')
+        for i in invoice_move_lines:
+            if inv.currency_id.id != company_currency:
+                context.update({'date': inv.date_confirm or time.strftime('%Y-%m-%d')})
+                i['currency_id'] = inv.currency_id.id
+                i['amount_currency'] = i['price']
+                i['price'] = cur_obj.compute(cr, uid, inv.currency_id.id,
+                        company_currency, i['price'],
+                        context=context)
+            else:
+                i['amount_currency'] = False
+                i['currency_id'] = False
+            i['ref'] = ref
+            total -= i['price']
+            total_currency -= i['amount_currency'] or i['price']
+        return total, total_currency, invoice_move_lines
+
+
+    def action_move_create(self, cr, uid, ids, context=None):
+        property_obj = self.pool.get('ir.property')
+        sequence_obj = self.pool.get('ir.sequence')
+        analytic_journal_obj = self.pool.get('account.analytic.journal')
+        account_journal = self.pool.get('account.journal')
+        voucher_obj = self.pool.get('account.voucher')
+        currency_obj = self.pool.get('res.currency')
+        ait_obj = self.pool.get('account.invoice.tax')
+        move_obj = self.pool.get('account.move')
+        if context is None:
+            context = {}
+        for exp in self.browse(cr, uid, ids, context=context):
+            company_id = exp.company_id.id
+            lines = []
+            total = 0.0
+            ctx = context.copy()
+            ctx.update({'date': exp.date})
+            journal = False
+            if exp.journal_id:
+                journal = exp.journal_id
+            else:
+                journal_id = voucher_obj._get_journal(cr, uid, context={'type': 'purchase', 'company_id': company_id})
+                if journal_id:
+                    journal = account_journal.browse(cr, uid, journal_id, context=context)
+            if not journal:
+                raise osv.except_osv(_('Error!'), _("No expense journal found. Please make sure you have a journal with type 'purchase' configured."))
+            if not journal.sequence_id:
+                raise osv.except_osv(_('Error!'), _('Please define sequence on the journal related to this invoice.'))
+            company_currency = exp.company_id.currency_id.id
+            current_currency = exp.currency_id
+#            for line in exp.line_ids: 
+#                if line.product_id:
+#                    acc = line.product_id.property_account_expense
+#                    if not acc:
+#                        acc = line.product_id.categ_id.property_account_expense_categ
+#                else:
+#                    acc = property_obj.get(cr, uid, 'property_account_expense_categ', 'product.category', context={'force_company': company_id})
+#                    if not acc:
+#                        raise osv.except_osv(_('Error!'), _('Please configure Default Expense account for Product purchase: `property_account_expense_categ`.'))
+#                total_amount = line.total_amount
+#                if journal.currency:
+#                    if exp.currency_id != journal.currency:
+#                        total_amount = currency_obj.compute(cr, uid, exp.currency_id.id, journal.currency.id, total_amount, context=ctx)
+#                elif exp.currency_id != exp.company_id.currency_id:
+#                    total_amount = currency_obj.compute(cr, uid, exp.currency_id.id, exp.company_id.currency_id.id, total_amount, context=ctx)
+#                lines.append((0, False, {
+#                    'name': line.name,
+#                    'account_id': acc.id,
+#                    'account_analytic_id': line.analytic_account.id,
+#                    'amount': total_amount,
+#                    'type': 'dr'
+#                }))
+#                total += total_amount
+            if not exp.employee_id.address_home_id:
+                raise osv.except_osv(_('Error!'), _('The employee must have a home address.'))
+            acc = exp.employee_id.address_home_id.property_account_payable.id
+            
+            #From action_move_line_create of voucher
+            move_id = move_obj.create(cr, uid, self.account_move_get(cr, uid, exp.id, journal.id, context=context), context=context)
+            move = move_obj.browse(cr, uid, move_id, context=context)
+            #iml = self._get_analytic_lines
+            
+            # within: iml = self.pool.get('account.invoice.line').move_line_get
+            iml = self.move_line_get(cr, uid, exp.id, context=context)
+            
+            #Write taxes on the lines which should automatically add the necessary extra lines upon creation
+            
+            
+            
+            diff_currency_p = exp.currency_id.id <> company_currency
+            # create one move line for the total
+            total = 0
+            total_currency = 0
+            total, total_currency, iml = self.compute_expense_totals(cr, uid, exp, company_currency, exp.name, iml, context=ctx)
+            
+            
+            #Need to have counterline: 
+            
+            iml.append({
+                    'type':'dest', 
+                    'name':'/',
+                    'price':total, 
+                    'account_id': acc, 
+                    'date_maturity': exp.date_confirm, 
+                    'amount_currency': diff_currency_p and total_currency or False, 
+                    'currency_id': diff_currency_p and exp.currency_id.id or False, 
+                    'ref': exp.name
+                    })
+            
+            line = map(lambda x:(0,0,self.line_get_convert(cr, uid, x, exp.user_id.partner_id, exp.date_confirm, context=ctx)),iml)
+            move_obj.write(cr, uid, [move_id], {'line_id':line}, context=ctx)
+            self.write(cr, uid, ids, {'account_move_id':move_id, 'state':'done'}, context=context)
+            
+            
+            #compute_taxes = ait_obj.compute(cr, uid, , context=context)
+            
+            
+            
+#    return {
+#        'type':'src', 
+#        'name':line.name.split('\n')[0][:64], 
+#        'price_unit':line.price_unit, 
+#        'quantity':line.quantity, 
+#        'price':line.price_subtotal, 
+#        'account_id':line.account_id.id, 
+#        'product_id':line.product_id.id, 
+#        'uos_id':line.uos_id.id, 
+#        'account_analytic_id':line.account_analytic_id.id, 
+#        'taxes':line.invoice_line_tax_id}
+
+
+    def move_line_get(self, cr, uid, expense_id, context=None):
+        res = []
+        tax_obj = self.pool.get('account.tax')
+        cur_obj = self.pool.get('res.currency')
+        if context is None:
+            context = {}
+        exp = self.browse(cr, uid, expense_id, context=context)
+        company_currency = exp.company_id.currency_id.id
+
+        for line in exp.line_ids:
+            mres = self.move_line_get_item(cr, uid, line, context)
+            if not mres:
+                continue
+            res.append(mres)
+            tax_code_found= False
+            
+            #Calculate tax according to default tax on product
+            
+            #Taken from product_id_onchange in account.invoice
+            if line.product_id:
+                fposition_id = False
+                fpos_obj = self.pool.get('account.fiscal.position')
+                fpos = fposition_id and fpos_obj.browse(cr, uid, fposition_id, context=context) or False
+                product = line.product_id
+                taxes = product.supplier_taxes_id
+                #If taxes are not related to the product, maybe they are in the account
+                if not taxes:
+                    a = product.property_account_expense.id #Why is not there a check here?
+                    if not a:
+                        a = product.categ_id.property_account_expense_categ.id
+                    a = fpos_obj.map_account(cr, uid, fpos, a)
+                    taxes = a and self.pool.get('account.account').browse(cr, uid, a, context=context).tax_ids or False
+                tax_id = fpos_obj.map_tax(cr, uid, fpos, taxes)
+            #Calculating tax on the line and creating move?
+            for tax in tax_obj.compute_all(cr, uid, taxes,
+                    line.unit_amount ,
+                    line.unit_quantity, line.product_id,
+                    exp.user_id.partner_id)['taxes']:
+                tax_code_id = tax['base_code_id']
+                tax_amount = line.total_amount * tax['base_sign']
+                if tax_code_found:
+                    if not tax_code_id:
+                        continue
+                    res.append(self.move_line_get_item(cr, uid, line, context))
+                    res[-1]['price'] = 0.0
+                    res[-1]['account_analytic_id'] = False
+                elif not tax_code_id:
+                    continue
+                tax_code_found = True
+                res[-1]['tax_code_id'] = tax_code_id
+                res[-1]['tax_amount'] = cur_obj.compute(cr, uid, exp.currency_id.id, company_currency, tax_amount, context={'date': exp.date_confirm})
+                
+                #Will create the tax here as we don't have the access 
+                assoc_tax = {
+                             'type':'tax',
+                             'name':tax['name'],
+                             'price_unit': tax['price_unit'],
+                             'quantity': 1,
+                             'price':  tax['amount'] * tax['base_sign'] or 0.0,
+                             'account_id': tax['account_collected_id'],
+                             'tax_code_id': tax['tax_code_id'],
+                             'tax_amount': tax['amount'] * tax['base_sign'],
+                             }
+                res.append(assoc_tax)
+        return res
+
+    def move_line_get_item(self, cr, uid, line, context=None):
+        company = line.expense_id.company_id
+        property_obj = self.pool.get('ir.property')
+        if line.product_id:
+            acc = line.product_id.property_account_expense
+            if not acc:
+                acc = line.product_id.categ_id.property_account_expense_categ
+        else:
+            acc = property_obj.get(cr, uid, 'property_account_expense_categ', 'product.category', context={'force_company': company.id})
+            if not acc:
+                raise osv.except_osv(_('Error!'), _('Please configure Default Expense account for Product purchase: `property_account_expense_categ`.'))
+        return {
+            'type':'src',
+            'name': line.name.split('\n')[0][:64],
+            'price_unit':line.unit_amount,
+            'quantity':line.unit_quantity,
+            'price':line.total_amount,
+            'account_id':acc.id,
+            'product_id':line.product_id.id,
+            'uos_id':line.uom_id.id,
+            'account_analytic_id':line.analytic_account.id,
+            #'taxes':line.invoice_line_tax_id,
+        }
+
+
+
+
+
     def action_receipt_create(self, cr, uid, ids, context=None):
         property_obj = self.pool.get('ir.property')
         sequence_obj = self.pool.get('ir.sequence')
