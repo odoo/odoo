@@ -190,6 +190,7 @@
                     <field name="user_id"/>
                     <field name="date_deadline"/>
                     <field name="kanban_state"/>
+                    <field name="message_summary"/>
                     <templates>
                         <t t-name="kanban-tooltip">
                            <ul class="oe_kanban_tooltip">
@@ -239,6 +240,9 @@
                                             </t>
                                             <img t-att-src="kanban_image('res.users', 'image_small', record.user_id.raw_value)" t-att-title="record.user_id.value" width="24" height="24" class="oe_kanban_avatar"/>
                                         </div>
+                                    </div>
+                                    <div class="oe_kanban_footer_left">
+                                        <t t-raw="record.message_summary.raw_value"/>
                                     </div>
                                 </div>
                                 <div class="oe_clear"></div>

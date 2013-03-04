@@ -20,14 +20,11 @@
 #
 ##############################################################################
 
-import re
-import time
-from openerp import tools
-
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
 
-class crm_lead_forward_to_partner(osv.osv_memory):
+
+class crm_lead_forward_to_partner(osv.TransientModel):
     """ Forward info history to partners. """
     _name = 'crm.lead.forward.to.partner'
     _inherit = "mail.compose.message"
@@ -116,15 +113,7 @@ class crm_lead_forward_to_partner(osv.osv_memory):
             value = self.default_get(cr, uid, ['body', 'email_to', 'email_cc', 'subject', 'history_mode'], context=context)
             self.write(cr, uid, ids, value, context=context)
 
-        self.send_mail(cr, uid, ids, context=context)
-        # for case in lead.browse(cr, uid, lead_ids, context=context):
-            # TODO: WHAT TO DO WITH THAT ?
-            # if (this.send_to == 'partner' and this.partner_id):
-            #     lead.assign_partner(cr, uid, [case.id], this.partner_id.id, context=context)
-
-            # if this.send_to == 'user':
-            #     lead.allocate_salesman(cr, uid, [case.id], [this.user_id.id], context=context)
-        return res
+        return self.send_mail(cr, uid, ids, context=context)
 
     def _get_info_body(self, cr, uid, lead, context=None):
         field_names = []

@@ -930,7 +930,7 @@ class crm_lead(base_stage, format_address, osv.osv):
         try:
             compose_form_id = ir_model_data.get_object_reference(cr, uid, 'mail', 'email_compose_message_wizard_form')[1]
         except ValueError:
-            compose_form_id = False 
+            compose_form_id = False
         if context is None:
             context = {}
         ctx = context.copy()
@@ -960,6 +960,15 @@ class crm_lead(base_stage, format_address, osv.osv):
         """ Override to get the reply_to of the parent project. """
         return [lead.section_id.message_get_reply_to()[0] if lead.section_id else False
                     for lead in self.browse(cr, uid, ids, context=context)]
+
+    def message_get_suggested_recipients(self, cr, uid, ids, context=None):
+        recipients = super(crm_lead, self).message_get_suggested_recipients(cr, uid, ids, context=context)
+        for lead in self.browse(cr, uid, ids, context=context):
+            if lead.partner_id:
+                self._message_add_suggested_recipient(cr, uid, recipients, lead, partner=lead.partner_id, reason=_('Customer'))
+            elif lead.email_from:
+                self._message_add_suggested_recipient(cr, uid, recipients, lead, email=lead.email_from, reason=_('Customer Email'))
+        return recipients
 
     def message_new(self, cr, uid, msg, custom_values=None, context=None):
         """ Overrides mail_thread message_new that is called by the mailgateway
