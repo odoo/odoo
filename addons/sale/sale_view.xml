@@ -163,7 +163,7 @@
                             <field name="shop_id" groups="base.group_no_one" on_change="onchange_shop_id(shop_id, context)" widget="selection"/>
                             <field name="client_order_ref"/>
                             <field domain="[('type','=','sale')]" name="pricelist_id" groups="product.group_sale_pricelist" on_change="onchange_pricelist_id(pricelist_id,order_line)"/>
-                            <field name="currency_id" invisible="1"/>
+                            <field name="currency_id" groups="base.group_multi_currency"/>
                         </group>
                     </group>
                     <notebook>

@@ -191,7 +191,7 @@
                             <field name="partner_id" on_change="onchange_partner_id(partner_id)" context="{'search_default_supplier':1,'default_supplier':1,'default_customer':0}" domain="[('supplier','=',True)]"/>
                             <field name="partner_ref"/>
                             <field domain="[('type','=','purchase')]" name="pricelist_id" groups="product.group_purchase_pricelist" on_change="onchange_pricelist(pricelist_id, context)"/>
-                            <field name="currency_id" invisible='1'/>
+                            <field name="currency_id" groups="base.group_multi_currency"/>
                             <field name="journal_id" invisible='1'/>
                         </group>
                         <group>

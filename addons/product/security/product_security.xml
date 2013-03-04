@@ -10,11 +10,13 @@
     <record id="group_sale_pricelist" model="res.groups">
         <field name="name">Sales Pricelists</field>
         <field name="category_id" ref="base.module_category_hidden"/>
+        <field name="implied_ids" eval="[(4, ref('base.group_multi_currency'))]"/>
     </record>
 
     <record id="group_purchase_pricelist" model="res.groups">
         <field name="name">Purchase Pricelists</field>
         <field name="category_id" ref="base.module_category_hidden"/>
+        <field name="implied_ids" eval="[(4, ref('base.group_multi_currency'))]"/>
     </record>
 	
 	<record id="group_costing_method" model="res.groups">
