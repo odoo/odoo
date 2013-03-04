@@ -608,7 +608,7 @@ class actions_server(osv.osv):
                     .read(cr, uid, action.action_id.id, context=context)
 
             if action.state=='code':
-                eval(action.code, cxt, mode="exec", nocopy=True) # nocopy allows to return 'action'
+                eval(action.code.strip(), cxt, mode="exec", nocopy=True) # nocopy allows to return 'action'
                 if 'action' in cxt:
                     return cxt['action']
 
