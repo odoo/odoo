@@ -5264,11 +5264,11 @@ instance.web.form.FieldStatus = instance.web.form.AbstractField.extend({
         this.calc_domain();
         this.on("change:value", this, this.get_selection);
         this.on("change:evaluated_selection_domain", this, this.get_selection);
-        this.get_selection();
         this.on("change:selection", this, function() {
             this.selection = this.get("selection");
             this.render_value();
         });
+        this.get_selection();
         if (this.options.clickable) {
             this.$el.on('click','li',this.on_click_stage);
         }
