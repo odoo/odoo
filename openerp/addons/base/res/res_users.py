@@ -172,6 +172,10 @@ class res_users(osv.osv):
                 }
         }
 
+    def onchange_state(self, cr, uid, ids, state_id, context=None):
+        partner_ids = [user.partner_id.id for user in self.browse(cr, uid, ids, context=context)]
+        return self.pool.get('res.partner').onchange_state(cr, uid, partner_ids, state_id, context=context)
+
     def onchange_type(self, cr, uid, ids, is_company, context=None):
         """ Wrapper on the user.partner onchange_type, because some calls to the
             partner form view applied to the user may trigger the
