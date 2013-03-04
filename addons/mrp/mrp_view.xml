@@ -625,8 +625,8 @@
                     <button name="force_production" states="picking_except" string="Force Reservation" type="object"/>
                     <button name="button_produce" states="ready" string="Mark as Started"/>
                     <button name="button_recreate" states="picking_except" string="Recreate Picking"/>
-                    <button name="button_cancel" states="draft,ready,in_production,picking_except" string="Cancel"/>
-                    <button name="action_cancel" type="object" states="confirmed" string="Cancel"/>
+                    <button name="button_cancel" states="draft,ready,in_production,picking_except" string="Cancel Production"/>
+                    <button name="action_cancel" type="object" states="confirmed" string="Cancel Production"/>
                     <field name="state" widget="statusbar" statusbar_visible="draft,ready,in_production,done" statusbar_colors='{"picking_except":"red","confirmed":"blue"}'/>
                 </header>
                 <sheet>
