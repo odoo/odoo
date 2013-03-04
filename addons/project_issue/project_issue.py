@@ -558,12 +558,13 @@ class project(osv.osv):
         res = dict.fromkeys(ids, 0)
         issue_ids = self.pool.get('project.issue').search(cr, uid, [('project_id', 'in', ids)])
         for issue in self.pool.get('project.issue').browse(cr, uid, issue_ids, context):
-            res[issue.project_id.id] += 1
+            if issue.state not in ('done', 'cancel'):
+                res[issue.project_id.id] += 1
         return res
 
     _columns = {
         'project_escalation_id' : fields.many2one('project.project','Project Escalation', help='If any issue is escalated from the current Project, it will be listed under the project selected here.', states={'close':[('readonly',True)], 'cancelled':[('readonly',True)]}),
-        'issue_count': fields.function(_issue_count, type='integer'),
+        'issue_count': fields.function(_issue_count, type='integer', string="Unclosed Issues"),
     }
 
     def _check_escalation(self, cr, uid, ids, context=None):
