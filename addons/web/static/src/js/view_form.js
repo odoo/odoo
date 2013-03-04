@@ -2810,7 +2810,7 @@ instance.web.form.FieldRadio = instance.web.form.AbstractField.extend(instance.w
         return $input;
     },
     _render_label: function (value, width) {
-        $label = $('<th class="oe_radio_label" ' + (width ? 'width="' + width + '%"' : '') + '>' + value[1] + '</th>');
+        $label = $('<th class="oe_radio_label" ' + (width ? 'style="width:' + width + '%"' : '') + '>' + value[1] + '</th>');
         this._action_click($label, value);
         return $label;
     },
