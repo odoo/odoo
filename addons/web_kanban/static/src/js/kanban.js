@@ -456,7 +456,7 @@ instance.web_kanban.KanbanView = instance.web.View.extend({
         var self = this;
         if (this.groups.group_by
             || !this.options.action
-            || (!this.options.action.help)) {
+            || (!this.options.action.help && !this.options.action.dynamic_help)) {
             return;
         }
         this.$el.find('table:first').css("position", "absolute");
