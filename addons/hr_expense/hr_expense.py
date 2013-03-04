@@ -385,6 +385,8 @@ class hr_expense_expense(osv.osv):
                     a = fpos_obj.map_account(cr, uid, fpos, a)
                     taxes = a and self.pool.get('account.account').browse(cr, uid, a, context=context).tax_ids or False
                 tax_id = fpos_obj.map_tax(cr, uid, fpos, taxes)
+            else:
+                taxes = []
             #Calculating tax on the line and creating move?
             for tax in tax_obj.compute_all(cr, uid, taxes,
                     line.unit_amount ,
