@@ -518,7 +518,7 @@ openerp.mail = function (session) {
                     'default_composition_mode': default_composition_mode,
                     'default_parent_id': self.id,
                     'default_body': mail.ChatterUtils.get_text2html(self.$el ? (self.$el.find('textarea:not(.oe_compact)').val() || '') : ''),
-                    'default_attachment_ids': self.attachment_ids,
+                    'default_attachment_ids': _.map(self.attachment_ids, function (file) {return file.id;}),
                     'default_partner_ids': partner_ids,
                 };
                 if (default_composition_mode != 'reply' && self.context.default_model && self.context.default_res_id) {
