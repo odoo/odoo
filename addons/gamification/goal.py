@@ -282,6 +282,6 @@ class gamification_goal(osv.Model):
 
                 if goal.planline_id and goal.planline_id.plan_id.report_message_frequency == 'onchange':
                     plan_obj = self.pool.get('gamification.goal.plan')
-                    plan_obj.report_progress(cr, uid, [goal.planline_id.plan_id.id], users=[goal.user_id], context=context)
+                    plan_obj.report_progress(cr, uid, goal.planline_id.plan_id, users=[goal.user_id], context=context)
         return super(gamification_goal, self).write(cr, uid, ids, vals, context=context)
         
