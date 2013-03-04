@@ -1002,6 +1002,8 @@ class mail_compose_message(osv.Model):
 
     def send_mail(self, cr, uid, ids, context=None):
         context = context or {}
+        if context.get('mark_invoice_as_sent'):
+            self.pool.get('account.invoice').message_post(cr, uid,[context['default_res_id']], body=_("Invoice sent"), context=context)
         if context.get('default_model') == 'sale.order' and context.get('default_res_id') and context.get('mark_so_as_sent'):
             context = dict(context, mail_post_autofollow=True)
             self.pool.get('sale.order').signal_quotation_sent(cr, uid, [context['default_res_id']])
