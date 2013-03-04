@@ -894,7 +894,6 @@ class task(base_stage, osv.osv):
         context['dynamic_help_model'] = 'project.project'
         context['dynamic_help_id'] = context.get('default_project_id', None)
         context['dynamic_help_documents'] = _("tasks")
-        print context
         return super(task, self).dynamic_help(cr, uid, help, context=context)
 
     # ----------------------------------------

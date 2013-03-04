@@ -161,10 +161,12 @@
                                 <field name="active"/>
                             </group>
                             <group colspan="4">
-                                <field name="alias_id" invisible="1" required="0"/>
-                                <label for="alias_name" attrs="{'invisible': [('alias_domain', '=', False)]}"/>
+                                <label for="alias_id"/>
                                 <div class="oe_inline" attrs="{'invisible': [('alias_domain', '=', False)]}">
-                                    <field name="alias_name" class="oe_inline" attrs="{'required': [('alias_id', '!=', False)]}"/>@<field name="alias_domain" class="oe_inline"/>
+                                    <field name="alias_id" class="oe_inline oe_read_only" required="0" nolabel="1"/>
+                                    <span class="oe_edit_only" name="edit_alias">
+                                        <field name="alias_name" class="oe_inline" attrs="{'required': [('alias_id', '!=', False)]}"/>@<field class="oe_inline" name="alias_domain"/>
+                                    </span>
                                  </div>
                             </group>
                         </group>

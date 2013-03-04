@@ -332,9 +332,10 @@
                 <field name="priority" position="before">
                     <field name="project_escalation_id"/>
                 </field>
-                <field name="alias_domain" position="after">
-                    <label for="alias_model" class="oe_edit_only" string="creates"/><field name="alias_model" class="oe_edit_only oe_inline"/>
-                </field>
+                <xpath expr='//span[@name="edit_alias"]' position='after'>
+                    <label for="alias_model" string="creates" class="oe_inline"/>
+                    <field name="alias_model" class="oe_inline" widget="radio"/>
+                </xpath>
             </field>
        </record>
 

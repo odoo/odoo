@@ -104,12 +104,6 @@
                         <group>
                             <field name="privacy_visibility"/>
                             <field name="user_id" string="Project Manager" attrs="{'readonly':[('state','in',['close', 'cancelled'])]}"/>
-
-                            <field name="alias_id" invisible="1" required="0"/>
-                            <label for="alias_name" attrs="{'invisible': [('alias_domain', '=', False)]}"/>
-                            <div attrs="{'invisible': [('alias_domain', '=', False)]}">
-                                <field name="alias_name" class="oe_inline" attrs="{'required': [('alias_id', '!=', False)]}"/>@<field name="alias_domain" class="oe_inline"/>
-                            </div>
                         </group>
                         <group>
                             <field name="partner_id" on_change="onchange_partner_id(partner_id)"/>
@@ -117,6 +111,15 @@
                                 To invoice or setup invoicing and renewal options, go to the related contract: <field name="analytic_account_id" readonly="1" required="0" class="oe_inline"/>.
                             </p>
                         </group>
+                    </group>
+                    <group colspan="4">
+                        <label for="alias_id"/>
+                        <div class="oe_inline" attrs="{'invisible': [('alias_domain', '=', False)]}">
+                            <field name="alias_id" class="oe_inline oe_read_only" required="0" nolabel="1"/>
+                            <span class="oe_edit_only" name="edit_alias">
+                                <field name="alias_name" class="oe_inline" attrs="{'required': [('alias_id', '!=', False)]}"/>@<field class="oe_inline" name="alias_domain"/>
+                            </span>
+                         </div>
                     </group>
                     <notebook>
                         <page string="Team" name="team">
