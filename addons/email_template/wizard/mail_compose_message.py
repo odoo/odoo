@@ -84,20 +84,21 @@ class mail_compose_message(osv.TransientModel):
         """ - mass_mailing: we cannot render, so return the template values
             - normal mode: return rendered values """
         if template_id and composition_mode == 'mass_mail':
-            values = self.pool.get('email.template').read(cr, uid, template_id, ['subject', 'body_html'], context)
+            values = self.pool.get('email.template').read(cr, uid, template_id, ['subject', 'body_html', 'attachment_ids'], context)
             values.pop('id')
         elif template_id:
             # FIXME odo: change the mail generation to avoid attachment duplication
             values = self.generate_email_for_composer(cr, uid, template_id, res_id, context=context)
-            # transform attachments into attachment_ids
+            # transform attachments into attachment_ids; not attached to the document because this will
+            # be done further in the posting process, allowing to clean database if email not send
             ir_attach_obj = self.pool.get('ir.attachment')
             for attach_fname, attach_datas in values.pop('attachments', []):
                 data_attach = {
                     'name': attach_fname,
                     'datas': attach_datas,
                     'datas_fname': attach_fname,
-                    'res_model': model,
-                    'res_id': res_id,
+                    'res_model': 'mail.compose.message',
+                    'res_id': 0,
                     'type': 'binary',  # override default_type from context, possibly meant for another model!
                 }
                 values['attachment_ids'].append(ir_attach_obj.create(cr, uid, data_attach, context=context))
@@ -140,12 +141,15 @@ class mail_compose_message(osv.TransientModel):
             mail.compose.message, transform email_cc and email_to into partner_ids """
         template_values = self.pool.get('email.template').generate_email(cr, uid, template_id, res_id, context=context)
         # filter template values
+        values = {
+            'attachment_ids': [],
+            'partner_ids': [],
+        }
         fields = ['body_html', 'subject', 'email_to', 'email_recipients', 'email_cc', 'attachment_ids', 'attachments']
-        values = dict((field, template_values[field]) for field in fields if template_values.get(field))
+        values.update(dict((field, template_values[field]) for field in fields if template_values.get(field)))
         values['body'] = values.pop('body_html', '')
-        # transform email_to, email_cc into partner_ids
-        values['partner_ids'] = []
 
+        # transform email_to, email_cc into partner_ids
         mails = tools.email_split(values.pop('email_to', '') + ' ' + values.pop('email_cc', ''))
         for mail in mails:
             partner_id = self.pool.get('res.partner').find_or_create(cr, uid, mail, context=context)

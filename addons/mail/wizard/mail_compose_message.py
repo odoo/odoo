@@ -214,8 +214,10 @@ class mail_compose_message(osv.TransientModel):
                     email_dict = self.render_message(cr, uid, wizard, res_id, context=context)
                     post_values['partner_ids'] += email_dict.pop('partner_ids', [])
                     post_values['attachments'] = email_dict.pop('attachments', [])
-                    post_values['attachment_ids'] += email_dict.pop('attachment_ids', [])
-                    # we must duplicate attachments, as each document will have its own copy of the attachment
+                    # manage attachments :
+                    # - do not re-add attachments from template already displayed
+                    # - duplicate template attachments because of ownership concept in OpenERP
+                    post_values['attachment_ids'] += filter(lambda item: item not in post_values['attachment_ids'], email_dict.pop('attachment_ids', []))
                     attachment_ids = []
                     for attach_id in post_values.pop('attachment_ids'):
                         new_attach_id = ir_attachment_obj.copy(cr, uid, attach_id, {'res_model': active_model_pool_name, 'res_id': res_id}, context=context)
@@ -227,8 +229,8 @@ class mail_compose_message(osv.TransientModel):
                 active_model_pool.message_post(cr, uid, [res_id], type='comment', subtype=subtype, context=context, **post_values)
 
             # mass mailing: delete mail.compose.message attachments, added by the user and that have been duplicated
-            if mass_mail_mode and wizard.attachment_ids:
-                wizard.attachment_ids.unlink()
+            if wizard.attachment_ids:
+                ir_attachment_obj.unlink(cr, uid, [attach.id for attach in wizard.attachment_ids if attach.res_model == self._name], context=context)
 
         return {'type': 'ir.actions.act_window_close'}
 
@@ -239,6 +241,7 @@ class mail_compose_message(osv.TransientModel):
         return {
             'subject': self.render_template(cr, uid, wizard.subject, wizard.model, res_id, context),
             'body': self.render_template(cr, uid, wizard.body, wizard.model, res_id, context),
+            'attachment_ids': [attach.id for attach in wizard.attachment_ids],
         }
 
     def render_template(self, cr, uid, template, model, res_id, context=None):
