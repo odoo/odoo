@@ -1916,18 +1916,20 @@ instance.web.form.WidgetButton = instance.web.form.FormWidget.extend({
                     modal: true,
                     buttons: [
                         {text: _t("Cancel"), click: function() {
-                                def.resolve();
                                 $(this).dialog("close");
                             }
                         },
                         {text: _t("Ok"), click: function() {
-                                self.on_confirmed().done(function() {
-                                    def.resolve();
+                                var self2 = this;
+                                self.on_confirmed().always(function() {
+                                    $(self2).dialog("close");
                                 });
-                                $(this).dialog("close");
                             }
-                        }
-                    ]
+                        },
+                    ],
+                    beforeClose: function() {
+                        def.resolve();
+                    },
                 });
                 return def.promise();
             } else {
@@ -2217,6 +2219,18 @@ instance.web.form.ReinitializeFieldMixin =  _.extend({}, instance.web.form.Reini
         this.render_value();
     },
 });
+
+/**
+    Some hack to make placeholders work in ie9.
+*/
+if ($.browser.msie && $.browser.version === "9.0") {
+    document.addEventListener("DOMNodeInserted",function(event){
+        var nodename =  event.target.nodeName.toLowerCase();
+        if ( nodename === "input" || nodename == "textarea" ) {
+            $(event.target).placeholder();
+        }
+    });
+}
 
 instance.web.form.FieldChar = instance.web.form.AbstractField.extend(instance.web.form.ReinitializeFieldMixin, {
     template: 'FieldChar',
@@ -5373,10 +5387,10 @@ instance.web.form.FieldMonetary = instance.web.form.FieldFloat.extend({
         });
     },
     parse_value: function(val, def) {
-        return instance.web.parse_value(val, {type: "float"}, def);
+        return instance.web.parse_value(val, {type: "float", digits: (this.node.attrs || {}).digits || this.field.digits}, def);
     },
     format_value: function(val, def) {
-        return instance.web.format_value(val, {type: "float"}, def);
+        return instance.web.format_value(val, {type: "float", digits: (this.node.attrs || {}).digits || this.field.digits}, def);
     },
 });
 

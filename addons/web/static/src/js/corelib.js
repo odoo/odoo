@@ -232,13 +232,17 @@ instance.web.ParentedMixin = {
         Utility method to only execute asynchronous actions if the current
         object has not been destroyed.
 
-        @param {Promise} promise The promise representing the asynchronous action.
-        @param {bool} reject Defaults to false. If true, the returned promise will be
-            rejected with no arguments if the current object is destroyed. If false,
-            the returned promise will never be resolved nor rejected.
-        @returns {Promise} A promise that will mirror the given promise if everything goes
-            fine but will either be rejected with no arguments or never resolved if the
-            current object is destroyed.
+        @param {$.Deferred} promise The promise representing the asynchronous
+                                    action.
+        @param {bool} [reject=false] If true, the returned promise will be
+                                     rejected with no arguments if the current
+                                     object is destroyed. If false, the
+                                     returned promise will never be resolved
+                                     or rejected.
+        @returns {$.Deferred} A promise that will mirror the given promise if
+                              everything goes fine but will either be rejected
+                              with no arguments or never resolved if the
+                              current object is destroyed.
     */
     alive: function(promise, reject) {
         var def = $.Deferred();
