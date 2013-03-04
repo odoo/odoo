@@ -2777,10 +2777,14 @@ instance.web.form.FieldSelection = instance.web.form.AbstractField.extend(instan
     }
 });
 
-
 instance.web.form.FieldRadio = instance.web.form.AbstractField.extend(instance.web.form.ReinitializeFieldMixin, {
     template: 'FieldRadio',
     init: function(field_manager, node) {
+        /* Radio button widget: Attributes options:
+        * - "horizontal" to display in column
+        * - "no_radiolabel" don't display text values
+        * - "display_readonly" to display radio button (not clickable) in read only mode
+        */
         var self = this;
         this._super(field_manager, node);
         this.horizontal = +node.attrs.horizontal;
