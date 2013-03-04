@@ -182,7 +182,8 @@ class gamification_goal_plan(osv.Model):
         # add users when change the group auto-subscription
         if 'autojoin_group_id' in vals:
             new_group = self.pool.get('res.groups').browse(cr, uid, vals['autojoin_group_id'], context=context)
-            self.plan_subscribe_users(cr, uid, ids, [user.id for user in new_group.users], context=context)
+            if new_group:
+                self.plan_subscribe_users(cr, uid, ids, [user.id for user in new_group.users], context=context)
         return write_res
 
 
@@ -235,6 +236,11 @@ class gamification_goal_plan(osv.Model):
         """Start a draft goal plan
 
         Change the state of the plan to in progress"""
+        # subscribe users if autojoin group
+        for plan in self.browse(cr, uid, ids, context=context):
+            if plan.autojoin_group_id:
+                self.plan_subscribe_users(cr, uid, ids, [user.id for user in plan.autojoin_group_id.users], context=context)
+
         self.generate_goals_from_plan(cr, uid, ids, context=context)
         return self.write(cr, uid, ids, {'state': 'inprogress'}, context=context)
 
@@ -488,7 +494,7 @@ class gamification_goal_plan(osv.Model):
                         context=context,
                         subtype='mail.mt_comment')
         return True
-        
+
 
 class gamification_goal_planline(osv.Model):
     """Gamification goal planline
