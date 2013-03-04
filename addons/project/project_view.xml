@@ -386,8 +386,7 @@
                             <field name="user_id" 
                                 attrs="{'readonly':[('state','in',['done', 'cancelled'])]}" 
                                 options='{"no_open": True}'
-                                context="{'default_groups_ref': ['project.group_project_user']}"
-                                help="If you use the quick create, the new user will have access of 'Project' as a user and will be added as an employee"/>
+                                context="{'default_groups_ref': ['project.group_project_user']}"/>
                             <field name="planned_hours" widget="float_time"
                                     groups="project.group_time_work_estimation_tasks"
                                     on_change="onchange_planned(planned_hours, effective_hours)"/>
