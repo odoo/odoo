@@ -42,19 +42,6 @@ class stock_picking(osv.osv):
     _defaults = {
         'sale_id': False
     }
-    
-    def action_done(self, cr, uid, ids, context=None):
-        """Changes picking state to done.
-        
-        This method is called at the end of the workflow by the activity "done".
-        @return: True
-        """
-        for record in self.browse(cr, uid, ids, context):
-            if record.type == "out" and record.sale_id:
-                for sale in self.pool.get('sale.order').browse(cr, uid, [record.sale_id.id], context):
-                    sale.message_post(body=_("Products delivered"))            
-            return super(stock_picking, self).action_done(cr, uid, ids, context=context)
-    
     def get_currency_id(self, cursor, user, picking):
         if picking.sale_id:
             return picking.sale_id.pricelist_id.currency_id.id
