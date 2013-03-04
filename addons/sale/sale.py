@@ -261,6 +261,7 @@ class sale_order(osv.osv):
         'shop_id': _get_default_shop,
         'partner_invoice_id': lambda self, cr, uid, context: context.get('partner_id', False) and self.pool.get('res.partner').address_get(cr, uid, [context['partner_id']], ['invoice'])['invoice'],
         'partner_shipping_id': lambda self, cr, uid, context: context.get('partner_id', False) and self.pool.get('res.partner').address_get(cr, uid, [context['partner_id']], ['delivery'])['delivery'],
+        'note': lambda self, cr, uid, context: self.pool.get('res.users').browse(cr, uid, uid, context=context).company_id.sale_note
     }
     _sql_constraints = [
         ('name_uniq', 'unique(name, company_id)', 'Order Reference must be unique per Company!'),
@@ -310,6 +311,13 @@ class sale_order(osv.osv):
         }
         return {'warning': warning, 'value': value}
 
+    def get_salenote(self, cr, uid, ids, partner_id, context=None):
+        context_lang = context.copy() 
+        if partner_id:
+            partner_lang = self.pool.get('res.partner').browse(cr, uid, partner_id, context=context).lang
+            context_lang.update({'lang': partner_lang})
+        return self.pool.get('res.users').browse(cr, uid, uid, context=context_lang).company_id.sale_note
+            
     def onchange_partner_id(self, cr, uid, ids, part, context=None):
         if not part:
             return {'value': {'partner_invoice_id': False, 'partner_shipping_id': False,  'payment_term': False, 'fiscal_position': False}}
@@ -333,6 +341,8 @@ class sale_order(osv.osv):
         }
         if pricelist:
             val['pricelist_id'] = pricelist
+        sale_note = self.get_salenote(cr, uid, ids, part.id, context=context)
+        if sale_note: val.update({'note': sale_note})  
         return {'value': val}
 
     def create(self, cr, uid, vals, context=None):
@@ -978,6 +988,11 @@ class sale_order_line(osv.osv):
                 raise osv.except_osv(_('Invalid Action!'), _('Cannot delete a sales order line which is in state \'%s\'.') %(rec.state,))
         return super(sale_order_line, self).unlink(cr, uid, ids, context=context)
 
+class res_company(osv.Model):
+    _inherit = "res.company"
+    _columns = {
+        'sale_note': fields.text('Default Terms and Conditions', translate=True, help="Default terms and conditions for quotations."),
+    }
 
 class mail_compose_message(osv.Model):
     _inherit = 'mail.compose.message'
