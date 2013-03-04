@@ -295,7 +295,7 @@ class account_analytic_account(osv.osv):
         res = {}
         for account in self.browse(cr, uid, ids, context=context):
             res[account.id] = 0.0
-            sale_ids = sale_obj.search(cr, uid, [('project_id','=', account.id), ('partner_id', '=', account.partner_id.id), ('state', '=', 'manual')], context=context)
+            sale_ids = sale_obj.search(cr, uid, ['|', ('project_id','=', account.id), ('partner_id', '=', account.partner_id.id), ('state', '=', 'manual')], context=context)
             for sale in sale_obj.browse(cr, uid, sale_ids, context=context):
                 if not sale.invoiced:
                     res[account.id] += sale.amount_untaxed
