@@ -859,7 +859,7 @@ class account_analytic_account(osv.osv):
                         new_date = next_date+relativedelta(days=+interval)
                     elif contract.rrule_type == 'weekly':
                         new_date = next_date+relativedelta(weeks=+interval)
-                    self.write(cr, uid, contract.id, {'next_date': new_date}, context=context)
+                    self.write(cr, uid, [contract.id], {'next_date': new_date}, context=context)
         return True
 
 class account_analytic_account_summary_user(osv.osv):

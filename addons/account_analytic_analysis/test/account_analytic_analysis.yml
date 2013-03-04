@@ -5,11 +5,8 @@
     name: Loan EMI Agrement
     company_id: base.main_company
     partner_id: base.main_partner
-    date_start: !eval time.strftime('%Y-%m-%d')
     recurring_invoices : 1
     interval : 1
-    rrule_type : monthly
-    next_date : !eval time.strftime('%Y-%m-%d')
     invoice_line_ids:
       - product_id: product.product_product_consultant
         quantity: 1.0
@@ -38,7 +35,7 @@
     self._amount_all(cr, uid, [contract_id], '', {}, {})
     template = self.browse(cr, uid, ref('account_analytic_account_0'))
     res = self.on_change_template(cr, uid, contract_id, template.id, {})
-    self.write(cr, uid, contract_id, res['value'])
+    self.write(cr, uid, [contract_id], res['value'])
     line_obj = self.pool.get('account.analytic.invoice.line')
     contract = self.browse(cr, uid, contract_id)
     assert template.partner_id.id == contract.partner_id.id or res['value']['partner_id'], "Customer of contract is not match with Contract Template"
