@@ -2787,10 +2787,6 @@ instance.web.form.FieldRadio = instance.web.form.AbstractField.extend(instance.w
         this.no_radiolabel = +node.attrs.no_radiolabel;
         this.display_readonly = +node.attrs.display_readonly;
     },
-    initialize_content: function() {
-        this.$table = $('<table width="100%"/>');
-        this.$el.append(this.$table);
-    },
     _action_click: function ($tag, value) {
         var self = this;
         $tag.on('click', $tag, function (event) {
@@ -2816,13 +2812,14 @@ instance.web.form.FieldRadio = instance.web.form.AbstractField.extend(instance.w
     },
     render_value: function () {
         var self = this;
-        this.$table.empty();
-
+        this.$el.empty();
         if (self.get("effective_readonly") && !self.display_readonly) {
             var value = _.find(this.field.selection, function (val) { return val[0] == self.get_value() });
-            this.$table.append("<tr><td>" + (value ? value[1] : "") + "</td></tr>")
+            this.$el.append(value ? value[1] : "");
         }
         else if (this.horizontal) {
+            this.$table = $('<table width="100%"/>');
+            this.$el.append(this.$table);
             var width = Math.floor(100 / this.field.selection.length);
             if (!this.no_radiolabel) {
                 var $tr = $('<tr class="oe_radio_header"/>');
@@ -2841,9 +2838,11 @@ instance.web.form.FieldRadio = instance.web.form.AbstractField.extend(instance.w
             this.$table.append($tr);
         }
         else {
+            this.$table = $('<table width="100%"/>');
+            this.$el.append(this.$table);
             _.each(this.field.selection, function (value) {
                 var $tr = $('<tr/>');
-                var $td = $('<td/>');
+                var $td = $('<td width="20"/>');
                 $td.append(self._render_input(value));
                 $tr.append($td);
                 if (!self.no_radiolabel) {
