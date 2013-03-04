@@ -20,6 +20,7 @@
 ##############################################################################
 
 from openerp.addons.base_status.base_stage import base_stage
+from openerp.addons.project.project import _TASK_STATE
 from openerp.addons.crm import crm
 from datetime import datetime
 from openerp.osv import fields,osv
@@ -40,9 +41,6 @@ class project_issue_version(osv.osv):
         'active': 1,
     }
 project_issue_version()
-
-_ISSUE_STATE = [('draft', 'New'), ('open', 'In Progress'), ('cancel', 'Cancelled'), ('done', 'Done'), ('pending', 'Pending')]
-
 
 class project_issue(base_stage, osv.osv):
     _name = "project.issue"
@@ -252,7 +250,7 @@ class project_issue(base_stage, osv.osv):
         'company_id': fields.many2one('res.company', 'Company'),
         'description': fields.text('Private Note'),
         'state': fields.related('stage_id', 'state', type="selection", store=True,
-                selection=_ISSUE_STATE, string="Status", readonly=True,
+                selection=_TASK_STATE, string="Status", readonly=True,
                 help='The status is set to \'Draft\', when a case is created.\
                       If the case is in progress the status is set to \'Open\'.\
                       When the case is over, the status is set to \'Done\'.\
@@ -558,7 +556,7 @@ class project(osv.osv):
         res = dict.fromkeys(ids, 0)
         issue_ids = self.pool.get('project.issue').search(cr, uid, [('project_id', 'in', ids)])
         for issue in self.pool.get('project.issue').browse(cr, uid, issue_ids, context):
-            if issue.state not in ('done', 'cancel'):
+            if issue.state not in ('done', 'cancelled'):
                 res[issue.project_id.id] += 1
         return res
 
