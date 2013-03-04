@@ -50,45 +50,22 @@ class account_analytic_invoice_line(osv.osv):
                 res[line.id] = cur_obj.round(cr, uid, cur, res[line.id])
         return res
 
-    def _get_uom_id(self, cr, uid, *args):
-        try:
-            proxy = self.pool.get('ir.model.data')
-            result = proxy.get_object_reference(cr, uid, 'product', 'product_uom_unit')
-            return result[1]
-        except Exception, ex:
-            return False
-
     _columns = {
-        'product_id': fields.many2one('product.product','Product', required=True),
+        'product_id': fields.many2one('product.product','Product'),
         'analytic_account_id': fields.many2one('account.analytic.account', 'Analytic Account'),
-        'name': fields.char('Description', size=64),
+        'name': fields.char('Description', size=64, required=True),
         'quantity': fields.float('Quantity', required=True),
         'uom_id': fields.many2one('product.uom', 'Unit of Measure'),
-        'price_unit': fields.float('Unit Price'),
-        'price_subtotal': fields.function(_amount_line, string='Amount', type="float",
+        'price_unit': fields.float('Unit Price', required=True),
+        'price_subtotal': fields.function(_amount_line, string='Sub Total', type="float",
             digits_compute= dp.get_precision('Account')),
         'tax_ids':fields.many2many('account.tax', 'analytic_account_invoice_line_tax', 'invoice_line_id', 'tax_id', 'Taxes'),
     }
     _order = 'name desc'
 
     _defaults = {
-        'uom_id' : _get_uom_id,
         'quantity' : 1,
-        'price_unit': 0.0,
         }
-
-    def copy(self, cr, uid, id, default=None, context=None):
-        default = default or {}
-        data = self.browse(cr, uid, id)
-        default.update({'product_id': data.product_id.id,
-                        'name': data.name,
-                        'quantity': data.quantity,
-                        'uom_id': data.uom_id.id,
-                        'price_unit': data.price_unit,
-                        'price_subtotal': data.price_subtotal,
-                        'analytic_account_id' : False,
-                        'tax_ids': [(6, 0, [x.id for x in data.tax_ids])]})
-        return super(account_analytic_invoice_line, self).copy(cr, uid, id, default, context)
 
     def product_id_change(self, cr, uid, ids, product, uom_id, qty=0, name='', partner_id=False, price_unit=False, currency_id=False, company_id=None, context=None):
         if context is None:
@@ -662,7 +639,7 @@ class account_analytic_account(osv.osv):
             ('daily', 'Day(s)'),
             ('weekly', 'Week(s)'),
             ('monthly', 'Month(s)')
-            ], 'Recurrency', help="Let the event automatically repeat at that interval"),
+            ], 'Recurrency', help="Invoice automatically repeat at specified interval"),
         'interval': fields.integer('Repeat Every', help="Repeat every (Days/Week/Month/Year)"),
         'next_date': fields.date('Next Date'),
         'amount_untaxed': fields.function(_amount_all, digits_compute=dp.get_precision('Account'), string='Total tax excluded', track_visibility='always',
@@ -738,7 +715,6 @@ class account_analytic_account(osv.osv):
         value = {}
         current_date = time.strftime('%Y-%m-%d')
         if next_date and next_date < current_date:
-            value = {'value':{'next_date': self.browse(cr, uid,ids[0]).next_date}}
             raise osv.except_osv(_('Warning!'), _("Define Next Date Greater or Same as Current Date."))
         return {'value':value}
 
@@ -802,7 +778,7 @@ class account_analytic_account(osv.osv):
         obj_contract_line = self.pool.get('account.analytic.invoice.line')
         for line in obj_contract_line.browse(cr, uid, contract_line_ids):
             invoice_line_vals = {
-                'name': contract.name+line.product_id.name,
+                'name': contract.name,
                 'origin': line.analytic_account_id.name,
                 'account_id': contract.partner_id.property_account_receivable.id or contract.partner_id.property_account_receivable or False,
                 'account_analytic_id': contract.id,
