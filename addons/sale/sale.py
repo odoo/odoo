@@ -991,7 +991,7 @@ class sale_order_line(osv.osv):
 class res_company(osv.Model):
     _inherit = "res.company"
     _columns = {
-        'sale_note': fields.text('sales_note', translate=True, help="Default terms and conditions for quotations."),
+        'sale_note': fields.text('Default Terms and Conditions', translate=True, help="Default terms and conditions for quotations."),
     }
 
 class mail_compose_message(osv.Model):
