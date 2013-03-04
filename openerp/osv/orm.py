@@ -330,7 +330,6 @@ def _browse_many2one(instance, fname, column):
     try:
         model = instance.session.model(column._obj)
         cache = instance._record_cache
-        fields_process = instance._record_process
 
         def process(value):
             if isinstance(value, Record):
@@ -340,7 +339,7 @@ def _browse_many2one(instance, fname, column):
                 return value
             if isinstance(value, (list, tuple)):
                 value = value[0]
-            return model.browse(value, cache=cache, fields_process=fields_process)
+            return model.browse(value, cache=cache)
 
         return process
 
@@ -356,14 +355,12 @@ def _browse_many2one(instance, fname, column):
 def _browse_2many(instance, fname, column):
     model = instance.session.model(column._obj)
     cache = instance._record_cache
-    fields_process = instance._record_process
-    return lambda value: model.browse(value or [], cache=cache, fields_process=fields_process)
+    return lambda value: model.browse(value or [], cache=cache)
 
 
 def _browse_reference(instance, fname, column):
     session = instance.session
     cache = instance._record_cache
-    fields_process = instance._record_process
 
     def process(value):
         if isinstance(value, Record):
@@ -373,13 +370,13 @@ def _browse_reference(instance, fname, column):
             ref_id = long(ref_id)
             if ref_id:
                 model = session.model(ref_obj)
-                return model.browse(ref_id, cache=cache, fields_process=fields_process)
+                return model.browse(ref_id, cache=cache)
         return False
 
     return process
 
 
-_browse_process = {
+_browse_relation = {
     'many2one': _browse_many2one,
     'many2many': _browse_2many,
     'one2many': _browse_2many,
@@ -4402,7 +4399,7 @@ class BaseModel(object):
         self.create_workflow(cr, user, [id_new], context=context)
         return id_new
 
-    def browse(self, cr, uid, select, context=None, cache=None, fields_process=None):
+    def browse(self, cr, uid, select, context=None, cache=None):
         """ return a record, recordset or null instance corresponding to the
             value of parameter `select` (id, list of ids or ``False``).
 
@@ -4423,9 +4420,9 @@ class BaseModel(object):
             model = self._make_instance(session=session)
 
         if isinstance(select, (int, long)) and select:
-            return model._make_record(select, cache, fields_process=fields_process)
+            return model._make_record(select, cache)
         elif isinstance(select, list):
-            records = (model._make_record(id, cache, fields_process=fields_process) for id in select)
+            records = (model._make_record(id, cache) for id in select)
             return model._make_recordset(records)
         else:
             return model._make_null()
@@ -5215,7 +5212,6 @@ class BaseModel(object):
     INSTANCE_ATTRIBUTES = [
         '_record_id',
         '_record_cache',
-        '_record_process',
         '_records',
     ]
 
@@ -5246,40 +5242,26 @@ class BaseModel(object):
     def _make_null(self):
         """ make a null instance """
         # a null instance is represented as a record with id=False
-        return self._make_instance(session=self.session, _record_id=False,
-                                    _record_cache=None, _record_process=None)
+        return self._make_instance(session=self.session, _record_id=False, _record_cache=None)
 
     def is_null(self):
         """ test whether self is a null instance """
         return getattr(self, '_record_id', None) is False
 
     @api.model
-    def _make_record(self, id, cache, fields_process=None):
+    def _make_record(self, id, cache):
         """ make a record instance
             :param id: the record's id
             :param cache: a dictionary used as ``cache[model_name][id][field_name]``,
                 storing record data shared across records, thus reducing the SQL
                 reads.  It can speed up things a lot, but also be disastrous if
                 not discarded after update/delete operations.
-
-            :param fields_process: optional dictionary indexed by field type, giving
-                processing functions for field values.  The api is best explained by
-                the value processing::
-
-                    # process the value of field with given type, name, and column
-                    factory = fields_process[field_type]
-                    process = factory(model, field_name, field_column)
-                    result = process(value)
         """
         # insert an entry in the cache if necessary
         model_cache = cache[self._name]
         if id not in model_cache:
             model_cache[id] = {'id': id}
-
-        if fields_process is None:
-            fields_process = {}
-        return self._make_instance(session=self.session, _record_id=id,
-                            _record_cache=cache, _record_process=fields_process)
+        return self._make_instance(session=self.session, _record_id=id, _record_cache=cache)
 
     def is_record(self):
         """ test whether `self` is a record instance """
@@ -5389,7 +5371,7 @@ class BaseModel(object):
         if self.is_null():
             # return False, null or recordset, depending on the field's type
             column = self._all_columns[name].column
-            factory = _browse_process.get(column._type)
+            factory = _browse_relation.get(column._type)
             return factory(self, name, column)(False) if factory else False
 
         model_cache = self._record_cache[self._name]
@@ -5428,7 +5410,7 @@ class BaseModel(object):
                 raise KeyError('Field %s not found in %s' % (name, self))
 
             for fname, column in fields_to_fetch:
-                factory = self._record_process.get(column._type) or _browse_process.get(column._type)
+                factory = _browse_relation.get(column._type)
                 if factory:
                     # post-process the values, and update the cache
                     process = factory(self, fname, column)

@@ -69,76 +69,6 @@ rml2sxw = {
 def get_date_length(date_format=DEFAULT_SERVER_DATE_FORMAT):
     return len((datetime.now()).strftime(date_format))
 
-def _process_int(record, fname, column):
-    language = record.session.language
-
-    class processor(int):
-        def __init__(self, value):
-            super(processor, self).__init__()
-            self.value = value or 0
-
-        def __str__(self):
-            return language.format("%.d", self.value, True)
-
-    return processor
-
-def _process_float(record, fname, column):
-    language = record.session.language
-    digits = column.digits[1] if column.digits else 2
-    float_format = "%%.%df" % digits
-
-    class processor(float):
-        def __init__(self, value):
-            super(processor, self).__init__()
-            self.value = value or 0.0
-
-        def __str__(self):
-            return language.format(float_format, self.value, True)
-
-    return processor
-
-def _process_date(record, fname, column):
-    date_length = get_date_length()
-    date_format = record.session.language.date_format
-
-    class processor(str):
-        def __init__(self, value):
-            super(processor, self).__init__()
-            self.value = value or ''
-
-        def __str__(self):
-            if self.value:
-                date = datetime.strptime(self.value[:date_length], DEFAULT_SERVER_DATE_FORMAT)
-                return date.strftime(date_format)
-            return self.value
-
-    return processor
-
-def _process_datetime(record, fname, column):
-    language = record.session.language
-    datetime_format = "%s %s" % (language.date_format, language.time_format)
-
-    class processor(str):
-        def __init__(self, value):
-            super(processor, self).__init__()
-            self.value = value or ''
-
-        def __str__(self):
-            if self.value:
-                dt = datetime.strptime(self.value, DEFAULT_SERVER_DATETIME_FORMAT)
-                return dt.strftime(datetime_format)
-            return self.value
-
-    return processor
-
-
-_fields_process = {
-    'integer': _process_int,
-    'float': _process_float,
-    'date': _process_date,
-    'datetime' : _process_datetime,
-}
-
 
 class rml_parse(object):
     def __init__(self, cr, uid, name, parents=rml_parents, tag=rml_tag, context=None):
@@ -395,7 +325,7 @@ class report_sxw(report_rml, preprocess.report):
 
     def getObjects(self, cr, uid, ids, context):
         table_obj = pooler.get_pool(cr.dbname).get(self.table)
-        return table_obj.browse(cr, uid, ids, context=context, fields_process=_fields_process)
+        return table_obj.browse(cr, uid, ids, context=context)
 
     def create(self, cr, uid, ids, data, context=None):
         if context is None:
