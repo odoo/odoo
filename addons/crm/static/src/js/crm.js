@@ -7,12 +7,5 @@ openerp.crm = function(openerp) {
                 this._super.apply(this, arguments);
             }
         },
-        start: function() {
-            this.$(".oe_kanban_crm_salesteams_alias").click(function (event) {
-                event.stopPropagation();
-                $(this).find("input")[0].select();
-            })
-            this._super();
-        },
     });
 };

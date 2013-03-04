@@ -98,7 +98,7 @@
                                 <div class="oe_kanban_content">
                                     <h4><field name="name"/></h4>
                                     <div class="oe_kanban_crm_salesteams_alias" t-if="record.alias_id.value">
-                                        <span class="oe_e">%%</span><input t-att-value="record.alias_id.raw_value[1]" readonly="1"/>
+                                        <span class="oe_e">%%</span><small><field name="alias_id"/></small>
                                     </div>
                                     <div class="oe_kanban_crm_salesteams_list">
                                         <a name="%(crm_case_form_view_salesteams_lead)d" type="action" style="margin-right: 10px">
