@@ -26,6 +26,9 @@
                         </div>
                     </div>
                 </xpath>
+                <field name="partner_id" position="attributes">
+                    <attribute name="attrs">{'required': [('invoice_on_timesheets', '=', True)]}</attribute>
+                </field>
                 <xpath expr='//group[@name="invoice_on_timesheets"]' position="replace">
                 </xpath>
                 <xpath expr='//separator[@name="description"]' position='before'>
