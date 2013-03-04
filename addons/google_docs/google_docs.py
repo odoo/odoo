@@ -182,6 +182,17 @@ class config(osv.osv):
         'name_template': fields.char('Google Drive Name Pattern', size=64, help='Choose how the new google drive will be named, on google side. Eg. gdoc_%(field_name)s', required=True),
     }
 
+    def onchange_model_id(self, cr, uid, ids, model_id):
+        res = {'domain':{'filter_id':[]}}
+        if model_id:
+            model_name = self.pool.get('ir.model').read(cr, uid, model_id, ['model'])
+            if model_name:
+                mod_name = model_name['model']
+                res['domain'] = {'filter_id': [('model_id', '=', mod_name)]}
+        else:
+            res['value'] = {'filter_id': False}
+        return res
+
     _defaults = {
         'name_template': 'gdoc_%(name)s',
     }
