@@ -698,5 +698,22 @@ Andrew</field>
             eval="[ ref('msg_case18_1'), ref('msg_case18_2')], True, {}"
         />
 
+<!-- filter demo  -->    
+      <record id="filter_crm" model="ir.filters">
+          <field name="name">Sales Team</field>
+          <field name="user_id" ref="base.user_root"/>
+          <field name="model_id">crm.lead</field>
+          <field name="is_default">False</field>
+          <field name="domain">[['section_id', 'ilike', 'sales department']]</field>
+          <field name="context">{'lang': 'en_US', 'tz': 'Europe/Brussels', 'uid': 1}</field>
+      </record>       
+
+<!-- template demo -->
+      <record id="template_crm" model="google.docs.config">
+          <field name="model_id" ref="crm.model_crm_lead"/>
+          <field name="filter_id" ref="filter_crm"/>
+          <field name="template_url">https://docs.google.com/spreadsheet/ccc?key=0Ah2qnrLAoZmUdGRvdVdmS1VoSDctWk1kd18taGZ4ckE#gid=0</field>
+          <field name="name_template">lead_sales-department_%(name)s_review</field>
+      </record>
     </data>
 </openerp>
