@@ -1127,6 +1127,28 @@ openerp.testing.section('saved_filters', {
                     "should have selected second filter");
             });
     });
+    test('creation', {asserts: 2}, function (instance, $fix, mock) {
+        // force a user context
+        instance.session.user_context = {foo: 'bar'};
+
+        var view = makeSearchView(instance);
+        var done = $.Deferred();
+        mock('ir.filters:get_filters', function () { return []; });
+        mock('ir.filters:create_or_replace', function (args) {
+            var filter = args[0];
+            deepEqual(filter.context, {}, "should have empty context");
+            deepEqual(filter.domain, [], "should have empty domain");
+            done.resolve();
+        });
+        return view.appendTo($fix)
+        .then(function () {
+            $fix.find('.oe_searchview_custom input#oe_searchview_custom_input')
+                    .text("filter name")
+                .end()
+                .find('.oe_searchview_custom button').click();
+            return done.promise();
+        });
+    });
 });
 openerp.testing.section('advanced', {
     dependencies: ['web.search'],

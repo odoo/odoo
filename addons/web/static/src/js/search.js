@@ -1680,6 +1680,13 @@ instance.web.search.CustomFilters = instance.web.search.Input.extend({
             if (!_.isEmpty(results.group_by)) {
                 results.context.group_by = results.group_by;
             }
+            // Don't save user_context keys in the custom filter, otherwise end
+            // up with e.g. wrong uid or lang stored *and used in subsequent
+            // reqs*
+            var ctx = results.context;
+            _(_.keys(instance.session.user_context)).each(function (key) {
+                delete ctx[key];
+            });
             var filter = {
                 name: $name.val(),
                 user_id: private_filter ? instance.session.uid : false,
