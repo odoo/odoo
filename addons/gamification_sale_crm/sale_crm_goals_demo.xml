@@ -1,0 +1,63 @@
+<?xml version="1.0"?>
+<openerp>
+    <data>
+
+        <!-- plans -->
+        <record model="gamification.goal.plan" id="plan_crm_sale">
+            <field name="user_ids" eval="[(4,ref('base.user_demo'))]" />
+            <field name="state">inprogress</field>
+        </record>
+
+        <!-- goals -->
+        <record model="gamification.goal" id="goal_crm_sale1">
+            <field name="type_id" eval="ref('type_crm_tot_invoices')" />
+            <field name="user_id" eval="ref('base.user_demo')" />
+            <field name="planline_id" eval="ref('planline_crm_sale1')" />
+            <field name="start_date" eval="time.strftime('2013-03-01')" />
+            <field name="end_date" eval="time.strftime('2013-03-31')" />
+            <field name="target_goal">2000</field>
+            <field name="state">inprogress</field>
+        </record>
+
+        <record model="gamification.goal" id="goal_crm_sale2">
+            <field name="type_id" eval="ref('type_crm_lead_delay_close')" />
+            <field name="user_id" eval="ref('base.user_demo')" />
+            <field name="planline_id" eval="ref('planline_crm_sale2')" />
+            <field name="start_date" eval="time.strftime('2013-03-01')" />
+            <field name="end_date" eval="time.strftime('2013-03-31')" />
+            <field name="target_goal">20</field>
+            <field name="state">inprogress</field>
+        </record>
+
+        <record model="gamification.goal" id="goal_crm_sale3">
+            <field name="type_id" eval="ref('type_crm_nbr_sale_order_created')" />
+            <field name="user_id" eval="ref('base.user_demo')" />
+            <field name="planline_id" eval="ref('planline_crm_sale3')" />
+            <field name="start_date" eval="time.strftime('2013-03-01')" />
+            <field name="end_date" eval="time.strftime('2013-03-31')" />
+            <field name="target_goal">5</field>
+            <field name="state">inprogress</field>
+        </record>
+
+        <record model="gamification.goal" id="goal_crm_sale4">
+            <field name="type_id" eval="ref('type_crm_nbr_paid_sale_order')" />
+            <field name="user_id" eval="ref('base.user_demo')" />
+            <field name="planline_id" eval="ref('planline_crm_sale4')" />
+            <field name="start_date" eval="time.strftime('2013-03-01')" />
+            <field name="end_date" eval="time.strftime('2013-03-31')" />
+            <field name="target_goal">5</field>
+            <field name="state">inprogress</field>
+        </record>
+
+        <record model="gamification.goal" id="goal_crm_sale5">
+            <field name="type_id" eval="ref('type_crm_nbr_customer_refunds')" />
+            <field name="user_id" eval="ref('base.user_demo')" />
+            <field name="planline_id" eval="ref('planline_crm_sale5')" />
+            <field name="start_date" eval="time.strftime('2013-03-01')" />
+            <field name="end_date" eval="time.strftime('2013-03-31')" />
+            <field name="target_goal">4</field>
+            <field name="state">inprogress</field>
+        </record>
+        
+    </data>
+</openerp>

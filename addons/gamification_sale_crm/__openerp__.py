@@ -26,8 +26,7 @@
     'depends': ['gamification','sale_crm'],
     'description': """Example of goal types and plans that can be used related to the usage of the CRM Sale module.""",
 
-    'data': [
-    	'sale_crm_goals.xml',
-        ],
+    'data': ['sale_crm_goals.xml'],
+    'demo': ['sale_crm_goals_demo.xml'],
     'auto_install': True,
 }
