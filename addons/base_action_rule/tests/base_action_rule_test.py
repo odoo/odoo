@@ -64,7 +64,7 @@ class base_action_rule_test(common.TransactionCase):
         """
         cr, uid = self.cr, self.uid
         filter_draft = self.create_filter_draft(cr, uid)
-        self.create_rule(cr, uid, 'write', filter_pre_id=filter_draft)
+        self.create_rule(cr, uid, 'on_write', filter_pre_id=filter_draft)
         new_lead_id = self.create_lead_test_1(cr, uid)
         new_lead = self.model.browse(cr, uid, new_lead_id)
         self.assertEquals(new_lead.state, 'draft')
@@ -77,7 +77,7 @@ class base_action_rule_test(common.TransactionCase):
         """
         cr, uid = self.cr, self.uid
         filter_draft = self.create_filter_draft(cr, uid)
-        self.create_rule(cr, uid, 'create')
+        self.create_rule(cr, uid, 'on_create')
         new_lead_id = self.create_lead_test_1(cr, uid)
         new_lead = self.model.browse(cr, uid, new_lead_id)
         self.assertEquals(new_lead.state, 'draft')
@@ -95,7 +95,7 @@ class base_action_rule_test(common.TransactionCase):
         cr, uid = self.cr, self.uid
         filter_draft = self.create_filter_draft(cr, uid)
         filter_done = self.create_filter_done(cr, uid)
-        self.create_rule(cr, uid, 'write', filter_pre_id=filter_draft, filter_id=filter_done)
+        self.create_rule(cr, uid, 'on_write', filter_pre_id=filter_draft, filter_id=filter_done)
         new_lead_id = self.create_lead_test_1(cr, uid)
         new_lead = self.model.browse(cr, uid, new_lead_id)
         self.assertEquals(new_lead.state, 'draft')
@@ -133,7 +133,7 @@ class base_action_rule_test(common.TransactionCase):
         cr, uid = self.cr, self.uid
         filter_draft = self.create_filter_draft(cr, uid)
         filter_done = self.create_filter_done(cr, uid)
-        self.create_rule(cr, uid, 'write', filter_pre_id=filter_draft, filter_id=filter_done)
+        self.create_rule(cr, uid, 'on_write', filter_pre_id=filter_draft, filter_id=filter_done)
         new_lead_id = self.create_lead_test_1(cr, uid)
         new_lead = self.model.browse(cr, uid, new_lead_id)
         self.assertEquals(new_lead.state, 'draft')

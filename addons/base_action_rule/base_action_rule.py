@@ -63,7 +63,7 @@ class base_action_rule(osv.osv):
         'sequence': fields.integer('Sequence',
             help="Gives the sequence order when displaying a list of rules."),
         'kind': fields.selection(
-            [('create', 'On Creation'), ('write', 'On Update'), ('cron', 'Based on Timed Condition')],
+            [('on_create', 'On Creation'), ('on_write', 'On Update'), ('on_time', 'Based on Timed Condition')],
             string='When to Run'),
         'trg_date_id': fields.many2one('ir.model.fields', string='Trigger Date',
             domain="[('model_id', '=', model_id), ('ttype', 'in', ('date', 'datetime'))]"),
@@ -96,11 +96,11 @@ class base_action_rule(osv.osv):
 
     def onchange_kind(self, cr, uid, ids, kind, context=None):
         clear_fields = []
-        if kind == 'create':
+        if kind == 'on_create':
             clear_fields = ['filter_pre_id', 'trg_date_id', 'trg_date_range', 'trg_date_range_type']
-        elif kind == 'write':
+        elif kind == 'on_write':
             clear_fields = ['trg_date_id', 'trg_date_range', 'trg_date_range_type']
-        elif kind == 'cron':
+        elif kind == 'on_time':
             clear_fields = ['filter_pre_id']
         return {'value': dict.fromkeys(clear_fields, False)}
 
@@ -155,7 +155,7 @@ class base_action_rule(osv.osv):
             new_id = old_create(cr, uid, vals, context=context)
 
             # retrieve the action rules to run on creation
-            action_dom = [('model', '=', model), ('kind', '=', 'create')]
+            action_dom = [('model', '=', model), ('kind', '=', 'on_create')]
             action_ids = self.search(cr, uid, action_dom, context=context)
 
             # check postconditions, and execute actions on the records that satisfy them
@@ -179,7 +179,7 @@ class base_action_rule(osv.osv):
             ids = [ids] if isinstance(ids, (int, long, str)) else ids
 
             # retrieve the action rules to run on update
-            action_dom = [('model', '=', model), ('kind', '=', 'write')]
+            action_dom = [('model', '=', model), ('kind', '=', 'on_write')]
             action_ids = self.search(cr, uid, action_dom, context=context)
             actions = self.browse(cr, uid, action_ids, context=context)
 
@@ -231,7 +231,7 @@ class base_action_rule(osv.osv):
         """ This Function is called by scheduler. """
         context = context or {}
         # retrieve all the action rules to run based on a timed condition
-        action_dom = [('kind', '=', 'cron')]
+        action_dom = [('kind', '=', 'on_time')]
         action_ids = self.search(cr, uid, action_dom, context=context)
         for action in self.browse(cr, uid, action_ids, context=context):
             now = datetime.now()

@@ -31,12 +31,12 @@
                                     <field name="filter_pre_id"
                                         domain="[('model_id','=',model), ('user_id', '=', False)]"
                                         context="{'default_model_id': model}"
-                                        attrs="{'invisible': [('kind', '!=', 'write')]}"/>
+                                        attrs="{'invisible': [('kind', '!=', 'on_write')]}"/>
                                     <field name="filter_id"
                                         domain="[('model_id','=',model), ('user_id', '=', False)]"
                                         context="{'default_model_id': model}"/>
                                     <field name="trg_date_id"
-                                        attrs="{'invisible': [('kind', '!=', 'cron')]}"/>
+                                        attrs="{'invisible': [('kind', '!=', 'on_time')]}"/>
                                     <label for="trg_date_range" string="Delay After Trigger Date"
                                         attrs="{'invisible': [('trg_date_id','=',False)]}"/>
                                     <div attrs="{'invisible': [('trg_date_id','=',False)]}">
