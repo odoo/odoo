@@ -45,25 +45,6 @@ _intervalTypes = {
 DT_FMT = '%Y-%m-%d %H:%M:%S'
 
 
-def _process_selection(record, fname, column):
-    # call fields_get to retrieve the translation of the field's values
-    selection = dict(record.fields_get([fname])[fname]['selection'])
-
-    class processor(object):
-        def __init__(self, value):
-            self.value = value
-
-        def __str__(self, value):
-            return selection.get(self.value, '')
-
-    return processor
-
-
-translate_selections = {
-    'selection': _process_selection,
-}
-
-
 class marketing_campaign(osv.osv):
     _name = "marketing.campaign"
     _description = "Marketing Campaign"
@@ -501,20 +482,30 @@ class marketing_campaign_transition(osv.osv):
     _description = "Campaign Transition"
 
     _interval_units = [
-        ('hours', 'Hour(s)'), ('days', 'Day(s)'),
-        ('months', 'Month(s)'), ('years','Year(s)')
+        ('hours', 'Hour(s)'),
+        ('days', 'Day(s)'),
+        ('months', 'Month(s)'),
+        ('years', 'Year(s)'),
     ]
 
     def _get_name(self, cr, uid, ids, fn, args, context=None):
-        result = dict.fromkeys(ids, False)
+        # name formatters that depend on trigger
         formatters = {
             'auto': _('Automatic transition'),
             'time': _('After %(interval_nbr)d %(interval_type)s'),
             'cosmetic': _('Cosmetic'),
         }
-        for tr in self.browse(cr, uid, ids, context=context,
-                              fields_process=translate_selections):
-            result[tr.id] = formatters[tr.trigger.value] % tr
+        # get the translations of the values of selection field 'interval_type'
+        fields = self.fields_get(cr, uid, ['interval_type'], context=context)
+        interval_type_selection = dict(fields['interval_type']['selection'])
+
+        result = dict.fromkeys(ids, False)
+        for trans in self.browse(cr, uid, ids, context=context):
+            values = {
+                'interval_nbr': trans.interval_nbr,
+                'interval_type': interval_type_selection.get(trans.interval_type, ''),
+            }
+            result[trans.id] = formatters[trans.trigger] % values
         return result
 
 
