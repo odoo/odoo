@@ -98,7 +98,7 @@ class mail_thread(osv.AbstractModel):
             alias = object_id.alias_id and object_id.alias_id.name_get() or False
             if alias and alias[0] and alias[0][1]:
                 email = alias[0][1]
-                return "%s %s" % (help, _("<div class='oe_view_nocontent_create_alias'>You can also create %s by sending an email to: <b>%s</b></div>" % (context.get('dynamic_help_documents', _("documents")), email)))
+                return "%s %s" % (_("<p class='oe_view_nocontent_create'>Click to add a new %s or create this by sending an email to: <a href='mailto:%s'>%s</a></p>" % (context.get('dynamic_help_documents', _("documents")), email, email)), help)
         else:
             model_id = self.pool.get('ir.model').search(cr, uid, [("model", "=", self._name)], context=context)[0]
             alias_obj = self.pool.get('mail.alias')
@@ -106,7 +106,7 @@ class mail_thread(osv.AbstractModel):
             if alias_ids:
                 for alias in alias_obj.browse(cr, uid, alias_ids, context=context):
                     email = "%s@%s" % (alias.alias_name, alias.alias_domain)
-                    return "%s %s" % (help, _("<div class='oe_view_nocontent_create_alias'>You can also create %s by sending an email. <br/>For example send an email to: <b>%s</b></div>" % (context.get('dynamic_help_documents', _("documents")), email)))
+                    return "%s %s" % (_("<p class='oe_view_nocontent_create'>Click to add a new %s or create this by sending an email, for example to: <a href='mailto:%s'>%s</a></p>" % (context.get('dynamic_help_documents', _("documents")), email, email)), help)
         return help
 
     def _get_message_data(self, cr, uid, ids, name, args, context=None):

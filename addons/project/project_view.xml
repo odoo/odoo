@@ -56,9 +56,7 @@
             }</field>
             <field name="search_view_id" ref="view_task_search_form"/>
             <field name="help" type="html">
-              <p class="oe_view_nocontent_create">
-                Click to create a new task.
-              </p><p>
+              <p>
                 OpenERP's project management allows you to manage the pipeline
                 of tasks in order to get things done efficiently. You can
                 track progress, discuss on tasks, attach documents, etc.
@@ -114,7 +112,7 @@
                     </group>
                     <group colspan="4">
                         <label for="alias_id"/>
-                        <div class="oe_inline" attrs="{'invisible': [('alias_domain', '=', False)]}">
+                        <div class="oe_inline">
                             <field name="alias_id" class="oe_inline oe_read_only" required="0" nolabel="1"/>
                             <span class="oe_edit_only" name="edit_alias">
                                 <field name="alias_name" class="oe_inline" attrs="{'required': [('alias_id', '!=', False)]}"/>@<field class="oe_inline" name="alias_domain"/>
@@ -619,9 +617,7 @@
             <field name="view_mode">kanban,tree,form,calendar,gantt,graph</field>
             <field name="search_view_id" ref="view_task_search_form"/>
             <field name="help" type="html">
-              <p class="oe_view_nocontent_create">
-                Click to create a new task.
-              </p><p>
+              <p>
                 OpenERP's project management allows you to manage the pipeline
                 of tasks in order to get things done efficiently. You can
                 track progress, discuss on tasks, attach documents, etc.
