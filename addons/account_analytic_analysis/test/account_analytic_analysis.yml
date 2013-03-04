@@ -15,7 +15,7 @@
         quantity: 1.0
         price_unit: 75.0
 -
-  Genrate Agrement Contract from of 'Loan EMI Agrement' template.
+  Genrate 'Agrement of the loan EMI' Contract from 'Loan EMI Agrement' template.
 -
   !python {model: account.analytic.account}: |
     data = {
@@ -25,7 +25,7 @@
     contract_id = self.create(cr, uid, data)
     assert contract_id, "contract has not been created correctly"
 -
-  Genrate Invoice of agrement for current month
+  Genrate Invoice of 'Agrement of the loan EMI' for current month
 -
   !python {model: account.analytic.account}: |
     data = {
@@ -40,9 +40,7 @@
     res = self.on_change_template(cr, uid, contract_id, template.id, {})
     self.write(cr, uid, contract_id, res['value'])
     line_obj = self.pool.get('account.analytic.invoice.line')
-    
     contract = self.browse(cr, uid, contract_id)
-    
     assert template.partner_id.id == contract.partner_id.id or res['value']['partner_id'], "Customer of contract is not match with Contract Template"
     assert template.company_id.id == contract.company_id.id, "Company of contract is not match with Contract Template"
     assert template.date_start == contract.date_start, "Start Date of contract is not match with Contract Template"
@@ -59,4 +57,3 @@
     assert inv.amount_untaxed == contract.amount_untaxed, "Contract Invoice's Total tax excluded is not same as contract"
     assert inv.amount_tax == contract.amount_tax, "Contract Invoice's Taxes is not same as contract"
     assert inv.amount_total == contract.amount_total, "Contract Invoice's Total is not same as contract"
-    

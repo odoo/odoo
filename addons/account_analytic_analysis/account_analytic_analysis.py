@@ -806,58 +806,60 @@ class account_analytic_account(osv.osv):
                 'origin': line.analytic_account_id.name,
                 'account_id': contract.partner_id.property_account_receivable.id or contract.partner_id.property_account_receivable or False,
                 'account_analytic_id': contract.id,
-                'price_unit': line.price_unit,
+                'price_unit': line.price_unit or 0.0,
                 'quantity': line.quantity,
                 'uos_id': line.uom_id.id or False,
                 'product_id': line.product_id.id or False,
                 'invoice_id' : invoice_id,
-                'invoice_line_tax_id': [(6, 0, [x.id for x in line.tax_ids])],
+                'invoice_line_tax_id': [(6, 0, [x.id for x in line.tax_ids])] or False,
             }
             line_id = obj_invoice_line.create(cr, uid, invoice_line_vals, context=context)
             inv_line_id.append(line_id)
         return inv_line_id
 
     def cron_create_invoice(self, cr, uid, automatic=False, use_new_cursor=False, context=None):
+        current_date =  time.strftime('%Y-%m-%d')
         inv_obj = self.pool.get('account.invoice')
         obj_invoice_line = self.pool.get('account.invoice.line')
         journal_obj = self.pool.get('account.journal')
         if context is None:
             context = {}
-        contract_ids = self.search(cr, uid, [('next_date','=',time.strftime("%Y-%m-%d")), ('state','=', 'open'), ('recurring_invoices','=', True)])
+        contract_ids = self.search(cr, uid, [('next_date','=', current_date), ('state','=', 'open'), ('recurring_invoices','=', True)])
         if contract_ids:
             for contract in self.browse(cr, uid, contract_ids):
-                if not contract.partner_id:
-                    raise osv.except_osv(_('No Customer Defined !'),_("You must first select a Customer for Contract %s!") % contract.name )
-                journal_ids = journal_obj.search(cr, uid, [('type', '=','sale'),('company_id', '=', contract.company_id.id)], limit=1)
-                if not journal_ids:
-                    raise osv.except_osv(_('Error!'),
-                    _('Define sale journal for this company: "%s" (id:%d).') % (contract.company_id.name, contract.company_id.id))
-                inv_data = {
-                       'name': contract.name,
-                       'reference': contract.code,
-                       'account_id': contract.partner_id.property_account_receivable.id or contract.partner_id.property_account_receivable or False,
-                       'type': 'out_invoice',
-                       'partner_id': contract.partner_id.id,
-                       'currency_id': contract.partner_id.property_product_pricelist.id,
-                       'journal_id': len(journal_ids) and journal_ids[0] or False,
-                       'date_invoice': contract.next_date,
-                       'origin': contract.name,
-                       'company_id': contract.company_id.id,
-                    }
                 contract_line_ids = self.pool.get('account.analytic.invoice.line').search(cr, uid, [('analytic_account_id', '=', contract.id)], context=context)
                 if contract_line_ids:
+                    if not contract.partner_id:
+                        raise osv.except_osv(_('No Customer Defined !'),_("You must first select a Customer for Contract %s!") % contract.name )
+                    journal_ids = journal_obj.search(cr, uid, [('type', '=','sale'),('company_id', '=', contract.company_id.id or False)], limit=1)
+                    if not journal_ids:
+                        raise osv.except_osv(_('Error!'),
+                        _('Define sale journal for this company: "%s" (id:%d).') % (contract.company_id.name or False, contract.company_id.id or False))
+                    inv_data = {
+                           'name': contract.name,
+                           'reference': contract.code or False,
+                           'account_id': contract.partner_id.property_account_receivable.id or contract.partner_id.property_account_receivable or False,
+                           'type': 'out_invoice',
+                           'partner_id': contract.partner_id.id,
+                           'currency_id': contract.partner_id.property_product_pricelist.id or False,
+                           'journal_id': len(journal_ids) and journal_ids[0] or False,
+                           'date_invoice': contract.next_date,
+                           'origin': contract.name,
+                           'company_id': contract.company_id.id or False,
+                        }
                     invoice_id = inv_obj.create(cr, uid, inv_data, context=context)
                     self._prepare_invoice_line(cr, uid, contract, contract_line_ids, invoice_id,context=context)
                     inv_obj.button_compute(cr, uid, [invoice_id])
-                    next_date = datetime.datetime.strptime(contract.next_date, "%Y-%m-%d")
+                    next_date = datetime.datetime.strptime(contract.next_date, "%Y-%m-%d") or datetime.datetime.strptime(current_date, "%Y-%m-%d")
                     interval = contract.interval
+                    new_date = next_date
                     if contract.rrule_type == 'monthly':
                         new_date = next_date+relativedelta(months=+interval)
-                    if contract.rrule_type == 'daily':
+                    elif contract.rrule_type == 'daily':
                         new_date = next_date+relativedelta(days=+interval)
-                    if contract.rrule_type == 'weekly':
+                    elif contract.rrule_type == 'weekly':
                         new_date = next_date+relativedelta(weeks=+interval)
-                    self.write(cr, uid, contract.id, {'next_date':'2013-04-01 00:00:00'}, context=context)
+                    self.write(cr, uid, contract.id, {'next_date': new_date}, context=context)
         return True
 
 class account_analytic_account_summary_user(osv.osv):

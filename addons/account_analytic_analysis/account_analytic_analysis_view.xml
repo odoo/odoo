@@ -31,6 +31,9 @@
                         </div>
                     </div>
                 </xpath>
+                <xpath expr='//field[@name="partner_id"]' position="replace">
+                	<field name="partner_id" on_change="on_change_partner_id(partner_id, name)" attrs="{'required': [('recurring_invoices', '=', True)]}"/>
+                </xpath>
                 <xpath expr='//group[@name="invoice_on_timesheets"]' position="replace">
                 </xpath>
                 <xpath expr='//separator[@name="description"]' position='before'>
@@ -146,11 +149,11 @@
 	                    <field name="recurring_invoices" on_change="onchange_recurring_invoices(recurring_invoices, date_start)" class="oe_inline"/>
 	                    </div>
                     </group>
-                    <group attrs="{'invisible': [('recurring_invoices','=',False)]}">
+                    <group attrs="{'invisible': [('recurring_invoices','!=',True)]}">
                         <label for="interval"/>
                         <div>
-                        <field name="interval" class="oe_inline"/>
-                        <field name="rrule_type" class="oe_inline"/>
+                        <field name="interval" class="oe_inline" attrs="{'required': [('recurring_invoices', '=', True)]}"/>
+                        <field name="rrule_type" class="oe_inline" attrs="{'required': [('recurring_invoices', '=', True)]}"/>
                         </div>
                         <p colspan="2" class="oe_grey">
                             Following Invoice will be generated on <field name="next_date" on_change="onchange_next_date(next_date)" class="oe_inline"/>.
