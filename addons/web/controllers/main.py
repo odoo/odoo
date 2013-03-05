@@ -94,15 +94,25 @@ def db_list(req):
     return dbs
 
 def db_monodb(req):
-    # if only one db exists, return it else return False
     try:
         dbs = db_list(req)
-        if len(dbs) == 1:
-            return dbs[0]
     except xmlrpclib.Fault:
         # ignore access denied
-        pass
-    return False
+        dbs = []
+
+    db = db_url = req.params.get('db') or False
+    if not db:
+        first_db = dbs[0] if dbs else False
+        db = req.httprequest.cookies.get('last_used_database') or first_db
+    if db not in dbs:
+        db = False
+
+    redirect = False
+    if db and db_url is not db and len(dbs) > 1:
+        query = dict(urlparse.parse_qsl(req.httprequest.query_string, keep_blank_values=True))
+        query.update({ 'db': db })
+        redirect = req.httprequest.path + '?' + urllib.urlencode(query)
+    return [db, dbs, redirect]
 
 def module_topological_sort(modules):
     """ Return a list of module names sorted so that their dependencies of the
@@ -197,7 +207,7 @@ def module_boot(req, db=None):
     for i in server_wide_modules:
         if i in openerpweb.addons_manifest:
             serverside.append(i)
-    monodb = db or db_monodb(req)
+    monodb = db or db_monodb(req)[0]
     if monodb:
         dbside = module_installed_bypass_session(monodb)
         dbside = [i for i in dbside if i not in serverside]
@@ -536,16 +546,9 @@ class Home(openerpweb.Controller):
 
     @openerpweb.httprequest
     def index(self, req, s_action=None, db=None, **kw):
-        dbl = db_list(req)
-        if not db:
-            first = dbl[0] if dbl else None
-            db = req.httprequest.cookies.get('last_used_database') or first
-        if db not in dbl:
-            db = None
-        if db and req.params.get('db') is not db and len(dbl) > 1:
-            query = dict(urlparse.parse_qsl(req.httprequest.query_string, keep_blank_values=True))
-            query.update({ 'db': db })
-            return werkzeug.utils.redirect('?' + urllib.urlencode(query), 303)
+        db, dbs, redir = db_monodb(req)
+        if redir:
+            return werkzeug.utils.redirect(redir, 303)
 
         js = "\n        ".join('<script type="text/javascript" src="%s"></script>' % i for i in manifest_list(req, 'js', db=db))
         css = "\n        ".join('<link rel="stylesheet" href="%s">' % i for i in manifest_list(req, 'css', db=db))
@@ -1331,7 +1334,7 @@ class Binary(openerpweb.Controller):
             dbname = req.session._db
             uid = req.session._uid
         elif dbname is None:
-            dbname = db_monodb(req)
+            dbname = db_monodb(req)[0]
 
         if uid is None:
             uid = openerp.SUPERUSER_ID
