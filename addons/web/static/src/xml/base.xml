@@ -1061,8 +1061,9 @@
             t-att-name="widget.name"
             t-att-placeholder="placeholder"
             class="oe_datepicker_master"
-        /><img class="oe_input_icon oe_datepicker_trigger" t-att-src='_s + "/web/static/src/img/ui/field_calendar.png"'
-             title="Select date" width="16" height="16" border="0"/>
+        /><img class="oe_input_icon oe_datepicker_trigger" draggable="false"
+               t-att-src='_s + "/web/static/src/img/ui/field_calendar.png"'
+               title="Select date" width="16" height="16" border="0"/>
     </span>
 </t>
 <t t-name="FieldDate">
@@ -1096,7 +1097,7 @@
         </t>
         <t t-if="!widget.get('effective_readonly')">
             <a t-if="! widget.options.no_open" href="#" tabindex="-1"
-                class="oe_m2o_cm_button oe_e">/</a>
+                class="oe_m2o_cm_button oe_e" draggable="false">/</a>
             <div>
                 <input type="text"
                     t-att-id="widget.id_for_label"
@@ -1105,7 +1106,7 @@
                     t-att-placeholder="widget.node.attrs.placeholder"
                 />
                 <span class="oe_m2o_drop_down_button">
-                    <img t-att-src='_s + "/web/static/src/img/down-arrow.png"'/>
+                    <img t-att-src='_s + "/web/static/src/img/down-arrow.png"' draggable="false"/>
                 </span>
             </div>
         </t>
@@ -1814,7 +1815,7 @@
         <tr>
             <td t-foreach="records[0]" t-as="column">
                 <input class="sel_fields" placeholder="--- Don't Import ---"/><span class="oe_m2o_drop_down_button">
-                        <img t-att-src='_s + "/web/static/src/img/down-arrow.png"' /></span>
+                        <img t-att-src='_s + "/web/static/src/img/down-arrow.png"' draggable="false"/></span>
             </td>
         </tr>
         <tr t-foreach="records" t-as="record" class="oe_import_grid-row">

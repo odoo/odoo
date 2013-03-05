@@ -2396,7 +2396,6 @@ instance.web.DateTimeWidget = instance.web.Widget.extend({
     type_of_date: "datetime",
     events: {
         'change .oe_datepicker_master': 'change_datetime',
-        'dragstart img.oe_datepicker_trigger': function () { return false; },
     },
     init: function(parent) {
         this._super(parent);
@@ -2984,8 +2983,6 @@ instance.web.form.FieldMany2One = instance.web.form.AbstractField.extend(instanc
                 e.stopPropagation();
             }
         },
-        'dragstart .oe_m2o_drop_down_button img': function () { return false; },
-        'dragstart .oe_m2o_cm_button': function () { return false; }
     },
     init: function(field_manager, node) {
         this._super(field_manager, node);
