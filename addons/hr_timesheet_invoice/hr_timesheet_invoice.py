@@ -63,6 +63,13 @@ class account_analytic_account(osv.osv):
 
         return res
 
+    def _get_default_to_invoice(self, cr, uid, context=None):
+        try:
+            invoice_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'hr_timesheet_invoice', 'timesheet_invoice_factor1')[1]
+        except ValueError:
+            invoice_id = False
+        return invoice_id
+
     _inherit = "account.analytic.account"
     _columns = {
         'pricelist_id': fields.many2one('product.pricelist', 'Pricelist',
@@ -76,6 +83,7 @@ class account_analytic_account(osv.osv):
     }
     _defaults = {
         'pricelist_id': lambda self, cr, uid, ctx: ctx.get('pricelist_id', False),
+        'to_invoice': _get_default_to_invoice,
     }
 
     def on_change_partner_id(self, cr, uid, ids, partner_id, name, context=None):
