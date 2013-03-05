@@ -24,7 +24,6 @@
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 ###############################################################################
 
-#.apidoc title: HTTP Layer library (websrv_lib)
 
 """ Framework for generic http servers
 

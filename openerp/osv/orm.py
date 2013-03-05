@@ -19,8 +19,6 @@
 #
 ##############################################################################
 
-#.apidoc title: Object Relational Mapping
-#.apidoc module-mods: member-order: bysource
 
 """
   Object relational mapping to database (postgresql) module
@@ -61,7 +59,6 @@ from lxml import etree
 
 import fields
 import openerp
-import openerp.netsvc as netsvc
 import openerp.tools as tools
 from openerp.tools.config import config
 from openerp.tools.misc import CountingStream
@@ -1077,7 +1074,7 @@ class BaseModel(object):
 
         # Validate rec_name
         if self._rec_name is not None:
-            assert self._rec_name in self._columns.keys() + ['id'], "Invalid rec_name %s for model %s" % (self._rec_name, self._name)
+            assert self._rec_name in self._all_columns.keys() + ['id'], "Invalid rec_name %s for model %s" % (self._rec_name, self._name)
         else:
             self._rec_name = 'name'
 
@@ -1362,11 +1359,9 @@ class BaseModel(object):
                      noupdate=noupdate, res_id=id, context=context))
                 cr.execute('RELEASE SAVEPOINT model_load_save')
             except psycopg2.Warning, e:
-                _logger.exception('Failed to import record %s', record)
                 messages.append(dict(info, type='warning', message=str(e)))
                 cr.execute('ROLLBACK TO SAVEPOINT model_load_save')
             except psycopg2.Error, e:
-                _logger.exception('Failed to import record %s', record)
                 messages.append(dict(
                     info, type='error',
                     **PGERROR_TO_OE[e.pgcode](self, fg, info, e)))
@@ -2287,7 +2282,7 @@ class BaseModel(object):
                          if view_type == 'tree' or not action[2].get('multi')]
             resprint = [clean(print_) for print_ in resprint
                         if view_type == 'tree' or not print_[2].get('multi')]
-            #When multi="True" set it will display only in More of the list view 
+            #When multi="True" set it will display only in More of the list view
             resrelate = [clean(action) for action in resrelate
                          if (action[2].get('multi') and view_type == 'tree') or (not action[2].get('multi') and view_type == 'form')]
 
@@ -2682,17 +2677,17 @@ class BaseModel(object):
 
         order = orderby or groupby
         data_ids = self.search(cr, uid, [('id', 'in', alldata.keys())], order=order, context=context)
-        
+
         # the IDs of records that have groupby field value = False or '' should be included too
         data_ids += set(alldata.keys()).difference(data_ids)
-        
-        if groupby:   
+
+        if groupby:
             data = self.read(cr, uid, data_ids, [groupby], context=context)
             # restore order of the search as read() uses the default _order (this is only for groups, so the footprint of data should be small):
             data_dict = dict((d['id'], d[groupby] ) for d in data)
             result = [{'id': i, groupby: data_dict[i]} for i in data_ids]
         else:
-            result = [{'id': i} for i in data_ids] 
+            result = [{'id': i} for i in data_ids]
 
         for d in result:
             if groupby:
@@ -2756,7 +2751,7 @@ class BaseModel(object):
             return
         _logger.info('Computing parent left and right for table %s...', self._table)
         def browse_rec(root, pos=0):
-# TODO: set order
+            # TODO: set order
             where = self._parent_name+'='+str(root)
             if not root:
                 where = self._parent_name+' IS NULL'
@@ -3555,7 +3550,7 @@ class BaseModel(object):
             if field_name not in self._all_columns:
                 return True
             field = self._all_columns[field_name].column
-            if field.groups:
+            if user != SUPERUSER_ID and field.groups:
                 return self.user_has_groups(cr, user, groups=field.groups, context=context)
             else:
                 return True
@@ -3867,7 +3862,7 @@ class BaseModel(object):
                 if operation in ('read','unlink'):
                     # No need to warn about deleting an already deleted record.
                     # And no error when reading a record that was deleted, to prevent spurious
-                    # errors for non-transactional search/read sequences coming from clients 
+                    # errors for non-transactional search/read sequences coming from clients
                     return
                 _logger.warning('Failed operation on deleted record(s): %s, uid: %s, model: %s', operation, uid, self._name)
                 raise except_orm(_('Missing document(s)'),
@@ -3914,19 +3909,43 @@ class BaseModel(object):
                     returned_ids = [x['id'] for x in cr.dictfetchall()]
                     self._check_record_rules_result_count(cr, uid, sub_ids, returned_ids, operation, context=context)
 
-    def _workflow_trigger(self, cr, uid, ids, trigger, context=None):
-        """Call given workflow trigger as a result of a CRUD operation"""
-        wf_service = netsvc.LocalService("workflow")
+    def create_workflow(self, cr, uid, ids, context=None):
+        """Create a workflow instance for each given record IDs."""
+        from openerp import workflow
         for res_id in ids:
-            getattr(wf_service, trigger)(uid, self._name, res_id, cr)
+            workflow.trg_create(uid, self._name, res_id, cr)
+        return True
 
-    def _workflow_signal(self, cr, uid, ids, signal, context=None):
+    def delete_workflow(self, cr, uid, ids, context=None):
+        """Delete the workflow instances bound to the given record IDs."""
+        from openerp import workflow
+        for res_id in ids:
+            workflow.trg_delete(uid, self._name, res_id, cr)
+        return True
+
+    def step_workflow(self, cr, uid, ids, context=None):
+        """Reevaluate the workflow instances of the given record IDs."""
+        from openerp import workflow
+        for res_id in ids:
+            workflow.trg_write(uid, self._name, res_id, cr)
+        return True
+
+    def signal_workflow(self, cr, uid, ids, signal, context=None):
         """Send given workflow signal and return a dict mapping ids to workflow results"""
-        wf_service = netsvc.LocalService("workflow")
+        from openerp import workflow
         result = {}
         for res_id in ids:
-            result[res_id] = wf_service.trg_validate(uid, self._name, res_id, signal, cr)
+            result[res_id] = workflow.trg_validate(uid, self._name, res_id, signal, cr)
         return result
+
+    def redirect_workflow(self, cr, uid, old_new_ids, context=None):
+        """ Rebind the workflow instance bound to the given 'old' record IDs to
+            the given 'new' IDs. (``old_new_ids`` is a list of pairs ``(old, new)``.
+        """
+        from openerp import workflow
+        for old_id, new_id in old_new_ids:
+            workflow.trg_redirect(uid, self._name, old_id, new_id, cr)
+        return True
 
     def unlink(self, cr, uid, ids, context=None):
         """
@@ -3966,7 +3985,7 @@ class BaseModel(object):
         property_ids = ir_property.search(cr, uid, [('res_id', 'in', ['%s,%s' % (self._name, i) for i in ids])], context=context)
         ir_property.unlink(cr, uid, property_ids, context=context)
 
-        self._workflow_trigger(cr, uid, ids, 'trg_delete', context=context)
+        self.delete_workflow(cr, uid, ids, context=context)
 
         self.check_access_rule(cr, uid, ids, 'unlink', context=context)
         pool_model_data = self.pool.get('ir.model.data')
@@ -4271,7 +4290,7 @@ class BaseModel(object):
                     todo.append(id)
             self.pool.get(object)._store_set_values(cr, user, todo, fields_to_recompute, context)
 
-        self._workflow_trigger(cr, user, ids, 'trg_write', context=context)
+        self.step_workflow(cr, user, ids, context=context)
         return True
 
     #
@@ -4355,12 +4374,12 @@ class BaseModel(object):
                 del vals[self._inherits[table]]
 
             record_id = tocreate[table].pop('id', None)
-            
+
             # When linking/creating parent records, force context without 'no_store_function' key that
-            # defers stored functions computing, as these won't be computed in batch at the end of create(). 
+            # defers stored functions computing, as these won't be computed in batch at the end of create().
             parent_context = dict(context)
             parent_context.pop('no_store_function', None)
-            
+
             if record_id is None or not record_id:
                 record_id = self.pool.get(table).create(cr, user, tocreate[table], context=parent_context)
             else:
@@ -4409,7 +4428,7 @@ class BaseModel(object):
                 upd0 = upd0 + ',"' + field + '"'
                 upd1 = upd1 + ',' + self._columns[field]._symbol_set[0]
                 upd2.append(self._columns[field]._symbol_set[1](vals[field]))
-                #for the function fields that receive a value, we set them directly in the database 
+                #for the function fields that receive a value, we set them directly in the database
                 #(they may be required), but we also need to trigger the _fct_inv()
                 if (hasattr(self._columns[field], '_fnct_inv')) and not isinstance(self._columns[field], fields.related):
                     #TODO: this way to special case the related fields is really creepy but it shouldn't be changed at
@@ -4487,7 +4506,7 @@ class BaseModel(object):
                 self.name_get(cr, user, [id_new], context=context)[0][1] + \
                 "' " + _("created.")
             self.log(cr, user, id_new, message, True, context=context)
-        self._workflow_trigger(cr, user, [id_new], 'trg_create', context=context)
+        self.create_workflow(cr, user, [id_new], context=context)
         return id_new
 
     def browse(self, cr, uid, select, context=None, list_class=None, fields_process=None):
@@ -4850,12 +4869,16 @@ class BaseModel(object):
         limit_str = limit and ' limit %d' % limit or ''
         offset_str = offset and ' offset %d' % offset or ''
         where_str = where_clause and (" WHERE %s" % where_clause) or ''
+        query_str = 'SELECT "%s".id FROM ' % self._table + from_clause + where_str + order_by + limit_str + offset_str
 
         if count:
-            cr.execute('SELECT count("%s".id) FROM ' % self._table + from_clause + where_str + limit_str + offset_str, where_clause_params)
-            res = cr.fetchall()
-            return res[0][0]
-        cr.execute('SELECT "%s".id FROM ' % self._table + from_clause + where_str + order_by + limit_str + offset_str, where_clause_params)
+            # /!\ the main query must be executed as a subquery, otherwise
+            # offset and limit apply to the result of count()!
+            cr.execute('SELECT count(*) FROM (%s) AS count' % query_str, where_clause_params)
+            res = cr.fetchone()
+            return res[0]
+
+        cr.execute(query_str, where_clause_params)
         res = cr.fetchall()
 
         # TDE note: with auto_join, we could have several lines about the same result
@@ -5251,6 +5274,14 @@ class BaseModel(object):
         """ stuff to do right after the registry is built """
         pass
 
+    def __getattr__(self, name):
+        if name.startswith('signal_'):
+            signal_name = name[len('signal_'):]
+            assert signal_name
+            return (lambda *args, **kwargs:
+                    self.signal_workflow(*args, signal=signal_name, **kwargs))
+        return super(BaseModel, self).__getattr__(name)
+
 # keep this import here, at top it will cause dependency cycle errors
 import expression
 
@@ -5321,6 +5352,20 @@ def convert_pgerror_23502(model, fields, info, e):
     message = _(u"Missing required value for the field '%s'.") % field_name
     field = fields.get(field_name)
     if field:
+        message = _(u"Missing required value for the field '%s' (%s)") % (field['string'], field_name)
+    return {
+        'message': message,
+        'field': field_name,
+    }
+def convert_pgerror_23505(model, fields, info, e):
+    m = re.match(r'^duplicate key (?P<field>\w+) violates unique constraint',
+                 str(e))
+    field_name = m.group('field')
+    if not m or field_name not in fields:
+        return {'message': unicode(e)}
+    message = _(u"The value for the field '%s' already exists.") % field_name
+    field = fields.get(field_name)
+    if field:
         message = _(u"%s This might be '%s' in the current model, or a field "
                     u"of the same name in an o2m.") % (message, field['string'])
     return {
@@ -5333,5 +5378,7 @@ PGERROR_TO_OE = collections.defaultdict(
     lambda: (lambda model, fvg, info, pgerror: {'message': unicode(pgerror)}), {
     # not_null_violation
     '23502': convert_pgerror_23502,
+    # unique constraint error
+    '23505': convert_pgerror_23505,
 })
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

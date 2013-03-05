@@ -189,6 +189,8 @@ class rml_parse(object):
         return newtag, attrs
 
     def _ellipsis(self, char, size=100, truncation_str='...'):
+        if not char:
+            return ''
         if len(char) <= size:
             return char
         return char[:size-len(truncation_str)] + truncation_str

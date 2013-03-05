@@ -393,18 +393,14 @@ class test_required_string_field(ImporterCase):
     def test_empty(self):
         result = self.import_(['value'], [[]])
         self.assertEqual(result['messages'], [message(
-            u"Missing required value for the field 'value'. This might be "
-            u"'unknown' in the current model, or a field of the same name in "
-            u"an o2m.")])
+            u"Missing required value for the field 'unknown' (value)")])
         self.assertIs(result['ids'], False)
 
     @mute_logger('openerp.sql_db', 'openerp.osv.orm')
     def test_not_provided(self):
         result = self.import_(['const'], [['12']])
         self.assertEqual(result['messages'], [message(
-            u"Missing required value for the field 'value'. This might be "
-            u"'unknown' in the current model, or a field of the same name in "
-            u"an o2m.")])
+            u"Missing required value for the field 'unknown' (value)")])
         self.assertIs(result['ids'], False)
 
 class test_text(ImporterCase):
@@ -1149,3 +1145,29 @@ class test_datetime(ImporterCase):
         self.assertEqual(
             values(self.read(domain=[('id', 'in', result['ids'])])),
             ['2012-02-03 11:11:11'])
+
+class test_unique(ImporterCase):
+    model_name = 'export.unique'
+
+    @mute_logger('openerp.sql_db')
+    def test_unique(self):
+        result = self.import_(['value'], [
+            ['1'],
+            ['1'],
+            ['2'],
+            ['3'],
+            ['3'],
+        ])
+        self.assertFalse(result['ids'])
+        self.assertEqual(result['messages'], [
+            dict(message=u"The value for the field 'value' already exists. "
+                         u"This might be 'unknown' in the current model, "
+                         u"or a field of the same name in an o2m.",
+                 type='error', rows={'from': 1, 'to': 1},
+                 record=1, field='value'),
+            dict(message=u"The value for the field 'value' already exists. "
+                         u"This might be 'unknown' in the current model, "
+                         u"or a field of the same name in an o2m.",
+                 type='error', rows={'from': 4, 'to': 4},
+                 record=4, field='value'),
+        ])

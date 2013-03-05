@@ -141,7 +141,6 @@ from openerp.osv import fields
 from openerp.osv.orm import MAGIC_COLUMNS
 import openerp.tools as tools
 
-#.apidoc title: Domain Expressions
 
 # Domain operators.
 NOT_OPERATOR = '!'
