@@ -326,60 +326,33 @@ class Session(object):
 # Helper functions for browsing record values
 #
 
-def _browse_many2one(instance, fname, column):
-    try:
-        model = instance.session.model(column._obj)
-        cache = instance._record_cache
-
-        def process(value):
-            if isinstance(value, Record):
-                # FIXME: this happen when a _inherits object overwrites a field
-                # of its parent. Need testing to be sure we got the right object
-                # and not the parent one.
-                return value
-            if isinstance(value, (list, tuple)):
-                value = value[0]
-            return model.browse(value, cache=cache)
-
-        return process
-
-    except Exception:
-        # In some cases the target model is not available yet, so we must ignore it,
-        # which is safe in most cases, this value will just be loaded later when needed.
-        # This situation can be caused by custom fields that connect objects with m2o without
-        # respecting module dependencies, causing relationships to be connected to soon when
-        # the target is not loaded yet.
-        return lambda value: False
+def _browse_one(record, column, value):
+    model = record.session.model(column._obj)
+    return model.browse(value, cache=record._record_cache)
 
 
-def _browse_2many(instance, fname, column):
-    model = instance.session.model(column._obj)
-    cache = instance._record_cache
-    return lambda value: model.browse(value or [], cache=cache)
+def _browse_many(record, column, value):
+    model = record.session.model(column._obj)
+    return model.browse(value or [], cache=record._record_cache)
 
 
-def _browse_reference(instance, fname, column):
-    session = instance.session
-    cache = instance._record_cache
-
-    def process(value):
-        if isinstance(value, Record):
-            return value
-        if value:
-            ref_obj, ref_id = value.split(',')
-            ref_id = long(ref_id)
-            if ref_id:
-                model = session.model(ref_obj)
-                return model.browse(ref_id, cache=cache)
-        return False
-
-    return process
+def _browse_reference(record, column, value):
+    if value:
+        ref_obj, ref_id = value.split(',')
+        ref_id = long(ref_id)
+        if ref_id:
+            model = record.session.model(ref_obj)
+            return model.browse(ref_id, cache=record._record_cache)
+    return False
 
 
-_browse_relation = {
-    'many2one': _browse_many2one,
-    'many2many': _browse_2many,
-    'one2many': _browse_2many,
+_browse_default = lambda record, column, value: value
+
+
+_browse_functions = {
+    'many2one': _browse_one,
+    'many2many': _browse_many,
+    'one2many': _browse_many,
     'reference': _browse_reference,
 }
 
@@ -5368,34 +5341,27 @@ class BaseModel(object):
         if name == 'id':
             return self._record_id
 
+        # fetch the definition of the field which was asked for
+        column = self._all_columns[name].column
+        browse_function = _browse_functions.get(column._type, _browse_default)
+
         if self.is_null():
             # return False, null or recordset, depending on the field's type
-            column = self._all_columns[name].column
-            factory = _browse_relation.get(column._type)
-            return factory(self, name, column)(False) if factory else False
+            return browse_function(self, column, False)
 
         model_cache = self._record_cache[self._name]
 
         if name not in model_cache[self._record_id]:
-            # fetch the definition of the field which was asked for
-            if name in self._all_columns:
-                column = self._all_columns[name].column
-            else:
-                error_msg = "Field '%s' does not exist in record '%s'" % (name, self)
-                _logger.warning(error_msg)
-                if _logger.isEnabledFor(logging.DEBUG):
-                    _logger.debug(''.join(traceback.format_stack()))
-                raise KeyError(error_msg)
-
-            # determine which fields we will fetch
+            # determine which fields to fetch
             if column._prefetch:
-                # the field is a classic one or a many2one, we fetch all classic and many2one fields
-                fields_to_fetch = [(key, cinfo.column)
+                # the field is a classic one or a many2one, fetch all classic and many2one fields
+                fields_to_fetch = [
+                    (key, cinfo.column)
                     for key, cinfo in self._all_columns.iteritems()
                     if cinfo.column._classic_write
                 ]
             else:
-                # otherwise we fetch only that field
+                # otherwise fetch only that field
                 fields_to_fetch = [(name, column)]
 
             # read the records in the same model that don't have the field yet
@@ -5404,30 +5370,23 @@ class BaseModel(object):
             field_names = [key for key, col in fields_to_fetch]
             result = self.read(cr, uid, ids, field_names, context=context, load="_classic_write")
 
-            if not result:
-                # Where did those ids come from? Perhaps old entries in ir_model_data?
-                _logger.warning("No result found for ids %s in %s", ids, self)
-                raise KeyError('Field %s not found in %s' % (name, self))
-
-            for fname, column in fields_to_fetch:
-                factory = _browse_relation.get(column._type)
-                if factory:
-                    # post-process the values, and update the cache
-                    process = factory(self, fname, column)
-                    for data in result:
-                        model_cache[data['id']][fname] = process(data[fname])
-                else:
-                    # no processing, simply update the cache
-                    for data in result:
-                        model_cache[data['id']][fname] = data[fname]
+            # update the cache with the results
+            for data in result:
+                values = {}
+                for fname, fcolumn in fields_to_fetch:
+                    value = data[fname]
+                    if fcolumn._type == 'many2one' and isinstance(value, (tuple, list)):
+                        value = value[0]
+                    values[fname] = value
+                model_cache[data['id']].update(values)
 
         if not name in model_cache[self._record_id]:
-            # How did this happen? Could be a missing model due to custom fields used too soon, see above.
+            # How did this happen? Could be a missing model due to custom fields used too soon.
             _logger.error("Fields to fetch: %s, Field values: %s", field_names, result)
             _logger.error("Cached: %s, Table: %s", model_cache[self._record_id], self._name)
-            raise KeyError(_('Unknown attribute %s in %s ') % (name, self))
+            raise KeyError(_('Unknown field %s in %s ') % (name, self))
 
-        return model_cache[self._record_id][name]
+        return browse_function(self, column, model_cache[self._record_id][name])
 
     def __getitem__(self, key):
         """ If `self` is a record, return the value of the field named `key`.
