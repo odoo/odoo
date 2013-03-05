@@ -94,6 +94,17 @@ def db_list(req):
     return dbs
 
 def db_monodb(req):
+    # if only one db exists, return it else return False
+    try:
+        dbs = db_list(req)
+        if len(dbs) == 1:
+            return dbs[0]
+    except xmlrpclib.Fault:
+        # ignore access denied
+        pass
+    return False
+
+def db_monodb_list(req):
     try:
         dbs = db_list(req)
     except xmlrpclib.Fault:
@@ -207,7 +218,7 @@ def module_boot(req, db=None):
     for i in server_wide_modules:
         if i in openerpweb.addons_manifest:
             serverside.append(i)
-    monodb = db or db_monodb(req)[0]
+    monodb = db or db_monodb(req)
     if monodb:
         dbside = module_installed_bypass_session(monodb)
         dbside = [i for i in dbside if i not in serverside]
@@ -546,7 +557,7 @@ class Home(openerpweb.Controller):
 
     @openerpweb.httprequest
     def index(self, req, s_action=None, db=None, **kw):
-        db, dbs, redir = db_monodb(req)
+        db, dbs, redir = db_monodb_list(req)
         if redir:
             return werkzeug.utils.redirect(redir, 303)
 
@@ -1334,7 +1345,7 @@ class Binary(openerpweb.Controller):
             dbname = req.session._db
             uid = req.session._uid
         elif dbname is None:
-            dbname = db_monodb(req)[0]
+            dbname = db_monodb(req)
 
         if uid is None:
             uid = openerp.SUPERUSER_ID
