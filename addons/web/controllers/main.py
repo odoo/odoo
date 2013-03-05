@@ -123,7 +123,7 @@ def db_monodb_list(req):
         query = dict(urlparse.parse_qsl(req.httprequest.query_string, keep_blank_values=True))
         query.update({ 'db': db })
         redirect = req.httprequest.path + '?' + urllib.urlencode(query)
-    return [db, dbs, redirect]
+    return (db, dbs, redirect)
 
 def module_topological_sort(modules):
     """ Return a list of module names sorted so that their dependencies of the
