@@ -24,8 +24,8 @@ instance.web_gantt.GanttView = instance.web.View.extend({
         var self = this;
         this.fields_view = fields_view_get;
         this.$el.addClass(this.fields_view.arch.attrs['class']);
-        return new instance.web.Model(this.dataset.model)
-            .call('fields_get').then(function (fields) {
+        return self.alive(new instance.web.Model(this.dataset.model)
+            .call('fields_get')).then(function (fields) {
                 self.fields = fields;
                 self.has_been_loaded.resolve();
             });
