@@ -264,6 +264,18 @@ class hr_employee(osv.osv):
         image_path = addons.get_module_resource('hr', 'static/src/img', 'default_image.png')
         return tools.image_resize_image_big(open(image_path, 'rb').read().encode('base64'))
 
+
+    def action_follow(self, cr, uid, ids, context=None):
+        """ Wrapper because message_subscribe_users take a user_ids=None
+            that receive the context without the wrapper. """
+        return self.message_subscribe_users(cr, uid, ids, context=context)
+
+    def action_unfollow(self, cr, uid, ids, context=None):
+        """ Wrapper because message_unsubscribe_users take a user_ids=None
+            that receive the context without the wrapper. """
+        return self.message_unsubscribe_users(cr, uid, ids, context=context)
+
+
     _defaults = {
         'active': 1,
         'image': _get_default_image,

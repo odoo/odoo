@@ -27,23 +27,32 @@
                             </h1>
                             <label for="category_ids" class="oe_edit_only" groups="base.group_hr_user"/>
                             <field name="category_ids" widget="many2many_tags" placeholder="e.g. Part Time" groups="base.group_hr_user"/>
+
+                            <label for="job_id" class="oe_edit_only"/><field name="job_id" options='{"no_open": True}' domain="[('state','!=','old')]" context="{'form_view_ref': 'hr.view_hr_job_employee_form'}"/>
+                            <label for="work_phone" class="oe_edit_only"/><field name="work_phone"/>
+                            <label for="work_email" class="oe_edit_only"/><field name="work_email" widget="email"/>
+
                         </div>
                         <div class="oe_right oe_button_box" name="button_box">
                             <!-- Put here related buttons -->
                         </div>
                         <notebook>
+                            <page string="Public Profile">
+                                <div class="oe_chatter">
+                                    <field name="message_follower_ids" widget="mail_followers"/>
+                                    <field name="message_ids" widget="mail_thread"/>
+                                </div>
+                            </page>
                             <page string="Public Information">
                                 <group>
                                     <group string="Contact Information">
                                         <field name="address_id" on_change="onchange_address_id(address_id)" context="{'show_address': 1}" options='{"always_reload": True, "highlight_first_line": True}'/>
-                                        <field name="work_email" widget="email"/>
                                         <field name="work_phone"/>
                                         <field name="mobile_phone"/>
                                         <field name="work_location"/>
                                     </group>
                                     <group string="Position">
                                         <field name="department_id" on_change="onchange_department_id(department_id)"/>
-                                        <field name="job_id" options='{"no_open": True}' domain="[('state','!=','old')]" context="{'form_view_ref': 'hr.view_hr_job_employee_form'}"/>
                                         <field name="parent_id"/>
                                         <field name="coach_id"/>
                                     </group>
@@ -84,10 +93,6 @@
                             </page>
                         </notebook>
                     </sheet>
-                    <div class="oe_chatter">
-                        <field name="message_follower_ids" widget="mail_followers"/>
-                        <field name="message_ids" widget="mail_thread"/>
-                    </div>
                 </form>
             </field>
         </record>
@@ -127,14 +132,16 @@
                 </search>
              </field>
          </record>
-        <!-- HR Kanban View  -->
 
+
+    <!-- HR Kanban View  -->
     <record model="ir.ui.view" id="hr_kanban_view_employees">
         <field name="name">HR - Employess Kanban</field>
         <field name="model">hr.employee</field>
         <field name="arch" type="xml">
             <kanban>
                 <field name="last_login"/>
+                <field name="message_is_follower"/>
                 <templates>
                     <t t-name="kanban-box">
                         <div class="oe_employee_vignette">
@@ -157,6 +164,10 @@
                                     <li t-if="record.mobile_phone.raw_value">Mobile: <field name="mobile_phone"/></li>
                                     <li t-if="record.work_email.raw_value"><a t-attf-href="mailto:#{record.work_email.value}"><field name="work_email"/></a></li>
                                 </ul>
+                                <div class="oe_group_button">
+                                    <button t-if="record.message_is_follower.raw_value" name="action_unfollow" type="object" class="oe_group_join">Unfollow</button>
+                                    <button t-if="! record.message_is_follower.raw_value" name="action_follow" type="object">Follow</button>
+                                </div>
                             </div>
                         </div>
                         <script>
