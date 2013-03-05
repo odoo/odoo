@@ -20,7 +20,6 @@
 ##############################################################################
 
 from openerp.osv import fields, osv
-from openerp.tools.translate import _
 
 class stock_move(osv.osv):
     _inherit = 'stock.move'

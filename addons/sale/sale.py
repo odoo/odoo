@@ -1029,6 +1029,6 @@ class stock_picking(osv.osv):
         for record in self.browse(cr, uid, ids, context):
             if record.type == "out" and record.sale_id:
                 self.pool.get('sale.order').message_post(cr, uid, [record.sale_id.id],body=_("Products delivered"), context=context)            
-            return super(stock_picking, self).action_done(cr, uid, ids, context=context)
+            return super(stock_picking, self).action_done(cr, uid, ids, context=None)
     
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

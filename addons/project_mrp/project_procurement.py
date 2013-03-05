@@ -92,7 +92,7 @@ class procurement_order(osv.osv):
             body = _("Task created")
             self.message_post(cr, uid, [procurement.id], body=body, context=context)
             if procurement.sale_line_id and procurement.sale_line_id.order_id:
-              procurement.sale_line_id.order_id.message_post(body=body)
+                procurement.sale_line_id.order_id.message_post(body=body)
 
 procurement_order()
 
