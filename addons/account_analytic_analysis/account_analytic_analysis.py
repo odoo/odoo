@@ -25,9 +25,7 @@ import time
 from openerp.osv import osv, fields
 from openerp.osv.orm import intersect, except_orm
 import openerp.tools
-from openerp import tools
 from openerp.tools.translate import _
-
 from dateutil.relativedelta import relativedelta
 
 from openerp.addons.decimal_precision import decimal_precision as dp
@@ -42,13 +40,18 @@ class account_analytic_invoice_line(osv.osv):
         tax_obj = self.pool.get('account.tax')
         cur_obj = self.pool.get('res.currency')
         for line in self.browse(cr, uid, ids):
-            price = line.price_unit
-            taxes = tax_obj.compute_all(cr, uid, line.tax_ids, price, line.quantity, product=line.product_id, partner=line.analytic_account_id.partner_id)
+            taxes = tax_obj.compute_all(cr, uid, line.tax_ids, line.price_unit, line.quantity, product=line.product_id, partner=line.analytic_account_id.partner_id)
             res[line.id] = taxes['total']
             if line.analytic_account_id:
                 cur = line.analytic_account_id.currency_id
                 res[line.id] = cur_obj.round(cr, uid, cur, res[line.id])
         return res
+
+    def _default_account_id(self, cr, uid, context=None):
+        if context is None:
+            context = {}
+        prop = self.pool.get('ir.property').get(cr, uid, 'property_account_income_categ', 'product.category', context=context)
+        return prop and prop.id or False
 
     _columns = {
         'product_id': fields.many2one('product.product','Product'),
@@ -56,43 +59,54 @@ class account_analytic_invoice_line(osv.osv):
         'name': fields.char('Description', size=64, required=True),
         'quantity': fields.float('Quantity', required=True),
         'uom_id': fields.many2one('product.uom', 'Unit of Measure'),
+        'account_id': fields.many2one('account.account', 'Account', required=True, domain=[('type','<>','view'), ('type', '<>', 'closed')], help="The account related to the selected product."),
         'price_unit': fields.float('Unit Price', required=True),
-        'price_subtotal': fields.function(_amount_line, string='Sub Total', type="float",
-            digits_compute= dp.get_precision('Account')),
-        'tax_ids':fields.many2many('account.tax', 'analytic_account_invoice_line_tax', 'invoice_line_id', 'tax_id', 'Taxes'),
+        'price_subtotal': fields.function(_amount_line, string='Sub Total', type="float",digits_compute= dp.get_precision('Account')),
+        'tax_ids':fields.many2many('account.tax', 'analytic_account_invoice_line_tax', 'invoice_line_id', 'tax_id', 'Taxes', domain=[('parent_id','=',False)]),
     }
-    _order = 'name desc'
-
     _defaults = {
         'quantity' : 1,
+        'account_id': _default_account_id,
         }
+
+    def copy(self, cr, uid, id, default=None, context=None):
+        default = default or {}
+        data = self.browse(cr, uid, id)
+        default.update({'product_id': data.product_id.id,
+                        'name': data.name,
+                        'quantity': data.quantity,
+                        'uom_id': data.uom_id.id,
+                        'price_unit': data.price_unit,
+                        'price_subtotal': data.price_subtotal,
+                        'analytic_account_id' : False,
+                        'tax_ids': [(6, 0, [x.id for x in data.tax_ids])]})
+        return super(account_analytic_invoice_line, self).copy(cr, uid, id, default, context)
 
     def product_id_change(self, cr, uid, ids, product, uom_id, qty=0, name='', partner_id=False, price_unit=False, currency_id=False, company_id=None, context=None):
         if context is None:
             context = {}
         uom_obj = self.pool.get('product.uom')
-        
         company_id = company_id or False
         context.update({'company_id': company_id, 'force_company': company_id})
-        
+
         if not product:
             return {'value': {'price_unit': 0.0}, 'domain':{'product_uom':[]}}
         if not partner_id:
             raise osv.except_osv(_('No Partner Defined !'),_("You must first select a Customer !") )
         part = self.pool.get('res.partner').browse(cr, uid, partner_id, context=context)
-        
+
         if part.lang:
             context.update({'lang': part.lang})
         result = {}
         res = self.pool.get('product.product').browse(cr, uid, product, context=context)
 
-        a = res.property_account_income.id
-        if not a:
-            a = res.categ_id.property_account_income_categ.id
-        if a:
-            result['account_id'] = a
+        acc = res.property_account_income.id
+        if not acc:
+            acc = res.categ_id.property_account_income_categ.id
+        if acc:
+            result['account_id'] = acc
 
-        taxes = res.taxes_id and res.taxes_id or (a and self.pool.get('account.account').browse(cr, uid, a, context=context).tax_ids or False) or False
+        taxes = res.taxes_id and res.taxes_id or (acc and self.pool.get('account.account').browse(cr, uid, acc, context=context).tax_ids or False) or False
         tax_ids = False
         if taxes:
             tax_ids = [x.id for x in taxes]
@@ -122,7 +136,7 @@ account_analytic_invoice_line()
 class account_analytic_account(osv.osv):
     _name = "account.analytic.account"
     _inherit = "account.analytic.account"
-    
+
     def button_reset_taxes(self, cr, uid, ids, context=None):
         if context is None:
             context = {}
@@ -132,27 +146,20 @@ class account_analytic_account(osv.osv):
             partner = self.browse(cr, uid, id, context=ctx).partner_id
             if partner.lang:
                 ctx.update({'lang': partner.lang})
-            for taxe in self.compute_tax(cr, uid, [id], context=ctx).values():
+            for taxe in self.compute_tax(cr, uid, id, context=ctx).values():
                 total_tax_amount += taxe["tax_amount"]
         return total_tax_amount
-    
-    def button_compute(self, cr, uid, ids, context=None, set_total=False):
-        total_tax_amount = self.button_reset_taxes(cr, uid, ids, context)
-        for inv in self.browse(cr, uid, ids, context=context):
-            if set_total:
-                self.write(cr, uid, [inv.id], {'check_total': inv.amount_total})
-        return True
-    
+
     def compute_tax(self, cr, uid, ids, context=None):
         tax_grouped = {}
         tax_obj = self.pool.get('account.tax')
         cur_obj = self.pool.get('res.currency')
-        inv = self.browse(cr, uid, ids[0], context=context)
+        inv = self.browse(cr, uid, ids, context=context)
         cur = inv.currency_id
         company_currency = inv.company_id.currency_id.id
 
         for line in inv.invoice_line_ids:
-            for tax in tax_obj.compute_all(cr, uid, line.tax_ids, (line.price_unit), line.quantity, line.product_id, inv.partner_id)['taxes']:
+            for tax in tax_obj.compute_all(cr, uid, line.tax_ids, line.price_unit, line.quantity, line.product_id, inv.partner_id)['taxes']:
                 val={}
                 val['invoice_id'] = inv.id
                 val['name'] = tax['name']
@@ -160,7 +167,6 @@ class account_analytic_account(osv.osv):
                 val['manual'] = False
                 val['sequence'] = tax['sequence']
                 val['base'] = cur_obj.round(cr, uid, cur, tax['price_unit'] * line['quantity'])
-
                 val['base_code_id'] = tax['base_code_id']
                 val['tax_code_id'] = tax['tax_code_id']
                 val['base_amount'] = cur_obj.compute(cr, uid, inv.currency_id.id, company_currency, val['base'] * tax['base_sign'], context={'date': inv.last_invoice_date or time.strftime('%Y-%m-%d')}, round=False)
@@ -183,6 +189,41 @@ class account_analytic_account(osv.osv):
             t['base_amount'] = cur_obj.round(cr, uid, cur, t['base_amount'])
             t['tax_amount'] = cur_obj.round(cr, uid, cur, t['tax_amount'])
         return tax_grouped
+
+    def _amount_all(self, cr, uid, ids, name, args, context=None):
+        res = {}
+        tax = 0.0
+        for account in self.browse(cr, uid, ids, context=context):
+            res[account.id] = {
+                'amount_untaxed': 0.0,
+                'amount_tax': tax,
+                'amount_total': 0.0
+            }
+            for line in account.invoice_line_ids:
+                tax = self.button_reset_taxes(cr, uid, ids, context)
+                res[account.id]['amount_untaxed'] += line.price_subtotal
+            res[account.id]['amount_tax'] = tax
+            res[account.id]['amount_total'] = res[account.id]['amount_tax'] + res[account.id]['amount_untaxed']
+        return res
+
+    def button_compute(self, cr, uid, ids, context=None, set_total=False):
+        total_tax_amount = self.button_reset_taxes(cr, uid, ids, context)
+        for inv in self.browse(cr, uid, ids, context=context):
+            if set_total:
+                self.write(cr, uid, [inv.id], {'check_total': inv.amount_total})
+        return True
+
+    def _get_invoice_line(self, cr, uid, ids, context=None):
+        result = {}
+        for line in self.pool.get('account.analytic.invoice.line').browse(cr, uid, ids, context=context):
+            result[line.analytic_account_id.id] = True
+        return result.keys()
+
+    def _get_invoice_tax(self, cr, uid, ids, context=None):
+        result = {}
+        for tax in self.pool.get('account.invoice.tax').browse(cr, uid, ids, context=context):
+            result[tax.invoice_id.id] = True
+        return result.keys()
 
     def _analysis_all(self, cr, uid, ids, fields, arg, context=None):
         dp = 2
@@ -543,34 +584,6 @@ class account_analytic_account(osv.osv):
             res[account.id]['remaining_total'] = self._get_total_remaining(account)
             res[account.id]['toinvoice_total'] =  self._get_total_toinvoice(account)
          return res
-  
-    def _amount_all(self, cr, uid, ids, name, args, context=None):
-        res = {}
-        tax = 0.0
-        for account in self.browse(cr, uid, ids, context=context):
-            res[account.id] = {
-                'amount_untaxed': 0.0,
-                'amount_tax': 0.0,
-                'amount_total': 0.0
-            }
-            for line in account.invoice_line_ids:
-                tax = self.button_reset_taxes(cr, uid, ids, context)
-                res[account.id]['amount_untaxed'] += line.price_subtotal
-            res[account.id]['amount_tax'] = tax
-            res[account.id]['amount_total'] = res[account.id]['amount_tax'] + res[account.id]['amount_untaxed']
-        return res
-
-    def _get_invoice_line(self, cr, uid, ids, context=None):
-        result = {}
-        for line in self.pool.get('account.analytic.invoice.line').browse(cr, uid, ids, context=context):
-            result[line.analytic_account_id.id] = True
-        return result.keys()
-
-    def _get_invoice_tax(self, cr, uid, ids, context=None):
-        result = {}
-        for tax in self.pool.get('account.invoice.tax').browse(cr, uid, ids, context=context):
-            result[tax.invoice_id.id] = True
-        return result.keys()
 
     _columns = {
         'is_overdue_quantity' : fields.function(_is_overdue_quantity, method=True, type='boolean', string='Overdue Quantity',
@@ -669,7 +682,7 @@ class account_analytic_account(osv.osv):
         'interval': 1,
         'next_date': lambda *a: time.strftime('%Y-%m-%d'),
         'rrule_type':'monthly'
-    }
+                }
 
     def open_sale_order_lines(self,cr,uid,ids,context=None):
         if context is None:
@@ -691,24 +704,27 @@ class account_analytic_account(osv.osv):
     def on_change_template(self, cr, uid, ids, template_id, context=None):
         if not template_id:
             return {}
-        res = super(account_analytic_account, self).on_change_template(cr, uid, ids, template_id, context=context)
         obj_analytic_line = self.pool.get('account.analytic.invoice.line')
-        if template_id and 'value' in res:
-            template = self.browse(cr, uid, template_id, context=context)
-            invoice_line_ids = []
-            for x in template.invoice_line_ids:
-                invoice_line_ids.append(obj_analytic_line.copy(cr, uid, x.id, {}, context))
-            res['value']['fix_price_invoices'] = template.fix_price_invoices
-            res['value']['invoice_on_timesheets'] = template.invoice_on_timesheets
-            res['value']['hours_qtt_est'] = template.hours_qtt_est
-            res['value']['amount_max'] = template.amount_max
-            res['value']['to_invoice'] = template.to_invoice.id
-            res['value']['pricelist_id'] = template.pricelist_id.id
-            res['value']['partner_id'] = template.partner_id.id
-            res['value']['recurring_invoices'] = template.recurring_invoices
-            res['value']['interval'] = template.interval
-            res['value']['rrule_type'] = template.rrule_type
-            res['value']['invoice_line_ids'] = [(4, id) for id in invoice_line_ids]
+        res = super(account_analytic_account, self).on_change_template(cr, uid, ids, template_id, context=context)
+        for analytic_account in self.browse(cr, uid, ids):
+            if analytic_account.invoice_line_ids: 
+                obj_analytic_line.unlink(cr, uid, [x.id for x in analytic_account.invoice_line_ids])
+        template = self.browse(cr, uid, template_id, context=context)
+        invoice_line_ids = []
+        for x in template.invoice_line_ids:
+            lines = obj_analytic_line.copy(cr, uid, x.id, {}, context)
+            invoice_line_ids.append(lines)
+        res['value']['fix_price_invoices'] = template.fix_price_invoices
+        res['value']['invoice_on_timesheets'] = template.invoice_on_timesheets
+        res['value']['hours_qtt_est'] = template.hours_qtt_est
+        res['value']['amount_max'] = template.amount_max
+        res['value']['to_invoice'] = template.to_invoice.id
+        res['value']['pricelist_id'] = template.pricelist_id.id
+        res['value']['partner_id'] = template.partner_id.id
+        res['value']['recurring_invoices'] = template.recurring_invoices
+        res['value']['interval'] = template.interval
+        res['value']['rrule_type'] = template.rrule_type
+        res['value']['invoice_line_ids'] = [(4, id) for id in invoice_line_ids]
         return res
 
     def onchange_next_date(self, cr, uid, ids, next_date,context=None):
@@ -728,7 +744,7 @@ class account_analytic_account(osv.osv):
                 }
         return {'value':value}
 
-    def cron_account_analytic_account(self, cr, ids, uid, context=None):
+    def cron_account_analytic_account(self, cr, uid, context=None):
         if context is None:
             context = {}
         remind = {}
@@ -778,7 +794,7 @@ class account_analytic_account(osv.osv):
         obj_contract_line = self.pool.get('account.analytic.invoice.line')
         for line in obj_contract_line.browse(cr, uid, contract_line_ids):
             invoice_line_vals = {
-                'name': contract.name,
+                'name': line.name,
                 'origin': line.analytic_account_id.name,
                 'account_id': contract.partner_id.property_account_receivable.id or contract.partner_id.property_account_receivable or False,
                 'account_analytic_id': contract.id,
