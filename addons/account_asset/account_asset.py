@@ -369,7 +369,7 @@ class account_asset_depreciation_line(osv.osv):
     _columns = {
         'name': fields.char('Depreciation Name', size=64, required=True, select=1),
         'sequence': fields.integer('Sequence', required=True),
-        'asset_id': fields.many2one('account.asset.asset', 'Asset', required=True),
+        'asset_id': fields.many2one('account.asset.asset', 'Asset', required=True, ondelete='cascade'),
         'parent_state': fields.related('asset_id', 'state', type='char', string='State of Asset'),
         'amount': fields.float('Current Depreciation', digits_compute=dp.get_precision('Account'), required=True),
         'remaining_value': fields.float('Next Period Depreciation', digits_compute=dp.get_precision('Account'),required=True),
