@@ -291,9 +291,10 @@ Function .onInit
     !insertmacro MUI_LANGDLL_DISPLAY
 
     ClearErrors
-    EnumRegKey $0 HKLM "SOFTWARE\PostgreSQL" 0
+    EnumRegKey $0 HKLM "SOFTWARE\PostgreSQL\Installations" 0
+    StrCmp $0 "" DoInstallPostgreSQL
     IfErrors DoInstallPostgreSQL 0
-        StrCpy $HasPostgreSQL 1
+    StrCpy $HasPostgreSQL 1
 
     DoInstallPostgreSQL:
 FunctionEnd
