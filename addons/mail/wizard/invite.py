@@ -66,7 +66,7 @@ class invite_wizard(osv.osv_memory):
             model_obj.message_subscribe(cr, uid, [wizard.res_id], new_follower_ids, context=context)
 
             ir_model = self.pool.get('ir.model')
-            model_ids = ir_model.search(cr, uid, [('model', '=', self.pool.get(result.get('res_model'))._name)], context=context)
+            model_ids = ir_model.search(cr, uid, [('model', '=', model_obj._name)], context=context)
             model_name = ir_model.name_get(cr, uid, model_ids, context=context)[0][1]
             
             # send an email
