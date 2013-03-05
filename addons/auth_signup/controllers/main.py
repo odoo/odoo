@@ -51,9 +51,8 @@ class Controller(openerp.addons.web.http.Controller):
         return user_info
 
     @openerp.addons.web.http.jsonrequest
-    def signup(self, req, dbname, token, name, login, password):
+    def signup(self, req, dbname, token, **values):
         """ sign up a user (new or existing)"""
-        values = {'name': name, 'login': login, 'password': password}
         try:
             self._signup_with_values(req, dbname, token, values)
         except SignupError, e:
