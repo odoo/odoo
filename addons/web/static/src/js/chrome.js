@@ -589,6 +589,11 @@ instance.web.client_actions.add("database_manager", "instance.web.DatabaseManage
 instance.web.Login =  instance.web.Widget.extend({
     template: "Login",
     remember_credentials: true,
+    events: {
+        'change input[name=db],select[name=db]': function(ev) {
+            this.set('database_selector', $(ev.currentTarget).val());
+        },
+    },
 
     init: function(parent, action) {
         this._super(parent);
@@ -599,6 +604,12 @@ instance.web.Login =  instance.web.Widget.extend({
         this.params = action.params || {};
         if (_.isEmpty(this.params)) {
             this.params = $.bbq.getState(true);
+        }
+        if ($.deparam.querystring().db) {
+            this.params.db = $.deparam.querystring().db;
+        }
+        if (this.params.db) {
+            this.selected_db = this.params.db;
         }
 
         if (this.params.login_successful) {
@@ -612,19 +623,9 @@ instance.web.Login =  instance.web.Widget.extend({
             self.do_action("database_manager");
         });
         self.on('change:database_selector', this, function() {
-            var params = $.deparam.querystring();
-            params.db = self.get('database_selector');
-            self.remember_last_used_database(params.db);
-            self.$('.oe_login_dbpane').empty().text(_t('Loading...'));
-            window.location = '/?' + $.param(params);
+            this.database_selected(this.get('database_selector'));
         });
         var d = $.when();
-        if ($.deparam.querystring().db) {
-            self.params.db = $.deparam.querystring().db;
-        }
-        if (self.params.db) {
-            self.selected_db = self.params.db;
-        }
         if ($.param.fragment().token) {
             self.params.token = $.param.fragment().token;
         }
@@ -646,6 +647,13 @@ instance.web.Login =  instance.web.Widget.extend({
             'expires=' + new Date(new Date().getTime() + ttl * 1000).toGMTString()
         ].join(';');
     },
+    database_selected: function(db) {
+        var params = $.deparam.querystring();
+        params.db = db;
+        this.remember_last_used_database(db);
+        this.$('.oe_login_dbpane').empty().text(_t('Loading...'));
+        window.location = '/?' + $.param(params);
+    },
     on_db_loaded: function (result) {
         var self = this;
         this.db_list = result;
@@ -653,9 +661,6 @@ instance.web.Login =  instance.web.Widget.extend({
             this.selected_db = result[0];
         }
         this.$("[name=db]").replaceWith(QWeb.render('Login.dblist', { db_list: this.db_list, selected_db: this.selected_db}));
-        this.$('select[name=db]').on('change', function(ev) {
-            self.set('database_selector', $(this).val());
-        });
         if(this.db_list.length === 0) {
             this.do_action("database_manager");
         } else if(this.db_list.length === 1) {
