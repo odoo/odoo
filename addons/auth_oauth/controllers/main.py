@@ -90,7 +90,7 @@ class OAuthController(oeweb.Controller):
         """login user via OpenERP Account provider"""
         dbname = kw.pop('db', None)
         if not dbname:
-            dbname = db_monodb(req)
+            dbname = db_monodb(req)[0]
         if not dbname:
             return BadRequest()
 
