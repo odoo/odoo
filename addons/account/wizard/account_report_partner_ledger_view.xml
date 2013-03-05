@@ -23,7 +23,7 @@
         </record>
 
          <record id="action_account_partner_ledger" model="ir.actions.act_window">
-             <field name="name">Select Period</field>
+             <field name="name">Partner Ledger</field>
              <field name="res_model">account.partner.ledger</field>
              <field name="type">ir.actions.act_window</field>
              <field name="view_type">form</field>
@@ -31,6 +31,13 @@
              <field name="view_id" ref="account_partner_ledger_view"/>
              <field name="context">{}</field>
              <field name="target">new</field>
+       </record>
+
+       <record model="ir.values" id="ir_values_account_partner_ledger">
+           <field name="key2" eval="'client_print_multi'"/>
+           <field name="model" eval="'res.partner'"/>
+           <field name="name">Print Partner Ledger</field>
+           <field name="value" eval="'ir.actions.act_window,%d'%action_account_partner_ledger"/>
        </record>
 
         <menuitem icon="STOCK_PRINT"

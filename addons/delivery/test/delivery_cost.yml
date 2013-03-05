@@ -31,7 +31,8 @@
   I print a Delivery Order report.
 -
   !python {model: stock.picking}: |
-    import netsvc, tools, os
+    import os
+    from openerp import netsvc, tools
     sale = self.pool.get('sale.order')
     sale_order = sale.browse(cr, uid, ref("sale.sale_order_6"))
     ship_ids = [x.id for x in sale_order.picking_ids]

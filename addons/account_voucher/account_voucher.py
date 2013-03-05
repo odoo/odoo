@@ -22,7 +22,6 @@
 import time
 from lxml import etree
 
-from openerp import netsvc
 from openerp.osv import fields, osv
 import openerp.addons.decimal_precision as dp
 from openerp.tools.translate import _
@@ -50,13 +49,25 @@ class account_config_settings(osv.osv_memory):
             'company_id', 'income_currency_exchange_account_id',
             type='many2one',
             relation='account.account',
-            string="Gain Exchange Rate Account"),
+            string="Gain Exchange Rate Account", 
+            domain="[('type', '=', 'other')]"),
         'expense_currency_exchange_account_id': fields.related(
             'company_id', 'expense_currency_exchange_account_id',
             type="many2one",
             relation='account.account',
-            string="Loss Exchange Rate Account"),
+            string="Loss Exchange Rate Account",
+            domain="[('type', '=', 'other')]"),
     }
+    def onchange_company_id(self, cr, uid, ids, company_id, context=None):
+        res = super(account_config_settings, self).onchange_company_id(cr, uid, ids, company_id, context=context)
+        if company_id:
+            company = self.pool.get('res.company').browse(cr, uid, company_id, context=context)
+            res['value'].update({'income_currency_exchange_account_id': company.income_currency_exchange_account_id and company.income_currency_exchange_account_id.id or False, 
+                                 'expense_currency_exchange_account_id': company.expense_currency_exchange_account_id and company.expense_currency_exchange_account_id.id or False})
+        else: 
+            res['value'].update({'income_currency_exchange_account_id': False, 
+                                 'expense_currency_exchange_account_id': False})
+        return res
 
 class account_voucher(osv.osv):
     def _check_paid(self, cr, uid, ids, name, args, context=None):
@@ -820,10 +831,7 @@ class account_voucher(osv.osv):
         return vals
 
     def button_proforma_voucher(self, cr, uid, ids, context=None):
-        context = context or {}
-        wf_service = netsvc.LocalService("workflow")
-        for vid in ids:
-            wf_service.trg_validate(uid, 'account.voucher', vid, 'proforma_voucher', cr)
+        self.signal_proforma_voucher(cr, uid, ids)
         return {'type': 'ir.actions.act_window_close'}
 
     def proforma_voucher(self, cr, uid, ids, context=None):
@@ -831,9 +839,7 @@ class account_voucher(osv.osv):
         return True
 
     def action_cancel_draft(self, cr, uid, ids, context=None):
-        wf_service = netsvc.LocalService("workflow")
-        for voucher_id in ids:
-            wf_service.trg_create(uid, 'account.voucher', voucher_id, cr)
+        self.create_workflow(cr, uid, ids)
         self.write(cr, uid, ids, {'state':'draft'})
         return True
 
@@ -962,7 +968,9 @@ class account_voucher(osv.osv):
             if not voucher_brw.journal_id.sequence_id.active:
                 raise osv.except_osv(_('Configuration Error !'),
                     _('Please activate the sequence of selected journal !'))
-            name = seq_obj.next_by_id(cr, uid, voucher_brw.journal_id.sequence_id.id, context=context)
+            c = dict(context)
+            c.update({'fiscalyear_id': voucher_brw.period_id.fiscalyear_id.id})
+            name = seq_obj.next_by_id(cr, uid, voucher_brw.journal_id.sequence_id.id, context=c)
         else:
             raise osv.except_osv(_('Error!'),
                         _('Please define a sequence on the journal.'))
@@ -977,7 +985,7 @@ class account_voucher(osv.osv):
             'narration': voucher_brw.narration,
             'date': voucher_brw.date,
             'ref': ref,
-            'period_id': voucher_brw.period_id and voucher_brw.period_id.id or False
+            'period_id': voucher_brw.period_id.id,
         }
         return move
 
@@ -1506,7 +1514,6 @@ class account_bank_statement(osv.osv):
 
     def create_move_from_st_line(self, cr, uid, st_line_id, company_currency_id, next_number, context=None):
         voucher_obj = self.pool.get('account.voucher')
-        wf_service = netsvc.LocalService("workflow")
         move_line_obj = self.pool.get('account.move.line')
         bank_st_line_obj = self.pool.get('account.bank.statement.line')
         st_line = bank_st_line_obj.browse(cr, uid, st_line_id, context=context)
@@ -1514,7 +1521,7 @@ class account_bank_statement(osv.osv):
             voucher_obj.write(cr, uid, [st_line.voucher_id.id], {'number': next_number}, context=context)
             if st_line.voucher_id.state == 'cancel':
                 voucher_obj.action_cancel_draft(cr, uid, [st_line.voucher_id.id], context=context)
-            wf_service.trg_validate(uid, 'account.voucher', st_line.voucher_id.id, 'proforma_voucher', cr)
+            voucher_obj.signal_proforma_voucher(cr, uid, [st_line.voucher_id.id])
 
             v = voucher_obj.browse(cr, uid, st_line.voucher_id.id, context=context)
             bank_st_line_obj.write(cr, uid, [st_line_id], {

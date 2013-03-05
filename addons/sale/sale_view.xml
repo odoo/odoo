@@ -538,17 +538,36 @@
             <field name="domain">[('invoiced','&lt;&gt;', 1),('state','=','done')]</field>
             <field name="filter" eval="True"/>
         </record>
-
-        <act_window
-            context="{'search_default_product_id': active_id, 'default_product_id': active_id}"
-            id="action_order_line_product_tree"
-            name="Sales Order Lines"
-            res_model="sale.order.line"
-            src_model="product.product"
-            groups="base.group_sale_salesman"/>
-
+        <record id="action_order_line_product_tree" model="ir.actions.act_window">
+            <field name="context">{'search_default_product_id': active_id, 'default_product_id': active_id}</field>
+            <field name="name">Sales Order Lines</field>
+            <field name="res_model">sale.order.line</field>
+            <field name="view_id" ref="view_order_line_tree"/>
+        </record>
+        <record model="ir.ui.view" id="product_form_view_sale_order_button">
+            <field name="name">product.product.sale.order</field>
+            <field name="model">product.product</field>
+            <field name="inherit_id" ref="product.product_normal_form_view"/>
+            <field name="arch" type="xml">
+                <xpath expr="//div[@name='buttons']" position="inside">
+                    <button string="Sales" name="%(action_order_line_product_tree)d" type="action" groups="base.group_sale_salesman"/>
+                </xpath>
+            </field>
+        </record>
         <menuitem id="base.menu_invoiced" name="Invoicing" parent="base.menu_base_partner" sequence="5"/>
         <menuitem id="menu_invoicing_sales_order_lines" parent="base.menu_invoiced" action="action_order_line_tree2" sequence="10" groups="sale.group_invoice_so_lines"/>
 
+        <record model="ir.ui.view" id="view_company_inherit_form2">
+            <field name="name">res.company.form.inherit</field>
+            <field name="inherit_id" ref="base.view_company_form"/>
+            <field name="model">res.company</field>
+            <field name="arch" type="xml">
+                <xpath expr="//group[@name='account_grp']" position="after">
+                    <group name="sale_grp" string="Sales">
+                        <field name="sale_note" nolabel="1" placeholder="Default terms &amp; conditions..."/>
+                    </group>
+                </xpath>
+            </field>
+        </record>
     </data>
 </openerp>

@@ -19,10 +19,12 @@
 #
 ##############################################################################
 
+from operator import attrgetter
+import time
+
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
 from openerp import netsvc
-import time
 import openerp.addons.decimal_precision as dp
 
 # Procurement
@@ -42,7 +44,6 @@ class mrp_property_group(osv.osv):
         'name': fields.char('Property Group', size=64, required=True),
         'description': fields.text('Description'),
     }
-mrp_property_group()
 
 class mrp_property(osv.osv):
     """
@@ -59,7 +60,6 @@ class mrp_property(osv.osv):
     _defaults = {
         'composition': lambda *a: 'min',
     }
-mrp_property()
 
 class StockMove(osv.osv):
     _inherit = 'stock.move'
@@ -72,7 +72,6 @@ class StockMove(osv.osv):
         default['procurements'] = []
         return super(StockMove, self).copy(cr, uid, id, default, context=context)
 
-StockMove()
 
 class procurement_order(osv.osv):
     """
@@ -103,7 +102,7 @@ class procurement_order(osv.osv):
             readonly=True, required=True, help="If you encode manually a Procurement, you probably want to use" \
             " a make to order method."),
         'note': fields.text('Note'),
-        'message': fields.char('Latest error', size=124, help="Exception occurred while computing procurement orders."),
+        'message': fields.text('Latest error', help="Exception occurred while computing procurement orders."),
         'state': fields.selection([
             ('draft','Draft'),
             ('cancel','Cancelled'),
@@ -367,9 +366,20 @@ class procurement_order(osv.osv):
 
                 if message:
                     message = _("Procurement '%s' is in exception: ") % (procurement.name) + message
-                    cr.execute('update procurement_order set message=%s where id=%s', (message, procurement.id))
+                    #temporary context passed in write to prevent an infinite loop
+                    ctx_wkf = dict(context or {})
+                    ctx_wkf['workflow.trg_write.%s' % self._name] = False
+                    self.write(cr, uid, [procurement.id], {'message': message},context=ctx_wkf)
                     self.message_post(cr, uid, [procurement.id], body=message, context=context)
         return ok
+
+    def step_workflow(self, cr, uid, ids, context=None):
+        """ Don't trigger workflow for the element specified in trigger """
+        wkf_op_key = 'workflow.trg_write.%s' % self._name
+        if context and not context.get(wkf_op_key, True):
+            # make sure we don't have a trigger loop while processing triggers
+            return 
+        return super(procurement_order, self).step_workflow(cr, uid, ids, context=context)
 
     def action_produce_assign_service(self, cr, uid, ids, context=None):
         """ Changes procurement state to Running.
@@ -456,15 +466,12 @@ class procurement_order(osv.osv):
 
 class StockPicking(osv.osv):
     _inherit = 'stock.picking'
-    def test_finished(self, cursor, user, ids):
-        wf_service = netsvc.LocalService("workflow")
-        res = super(StockPicking, self).test_finished(cursor, user, ids)
-        for picking in self.browse(cursor, user, ids):
+    def test_finished(self, cr, uid, ids):
+        res = super(StockPicking, self).test_finished(cr, uid, ids)
+        for picking in self.browse(cr, uid, ids):
             for move in picking.move_lines:
                 if move.state == 'done' and move.procurements:
-                    for procurement in move.procurements:
-                        wf_service.trg_validate(user, 'procurement.order',
-                            procurement.id, 'button_check', cursor)
+                    self.pool.get('procurement.order').signal_button_check(cr, uid, map(attrgetter('id'), move.procurements))
         return res
 
 class stock_warehouse_orderpoint(osv.osv):

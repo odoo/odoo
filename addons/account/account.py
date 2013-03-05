@@ -3521,7 +3521,7 @@ class account_bank_accounts_wizard(osv.osv_memory):
 
     _columns = {
         'acc_name': fields.char('Account Name.', size=64, required=True),
-        'bank_account_id': fields.many2one('wizard.multi.charts.accounts', 'Bank Account', required=True),
+        'bank_account_id': fields.many2one('wizard.multi.charts.accounts', 'Bank Account', required=True, ondelete='cascade'),
         'currency_id': fields.many2one('res.currency', 'Secondary Currency', help="Forces all moves for this account to have this secondary currency."),
         'account_type': fields.selection([('cash','Cash'), ('check','Check'), ('bank','Bank')], 'Account Type', size=32),
     }

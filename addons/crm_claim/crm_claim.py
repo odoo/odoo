@@ -195,6 +195,7 @@ class crm_claim(base_stage, osv.osv):
             'description': desc,
             'email_from': msg.get('from'),
             'email_cc': msg.get('cc'),
+            'partner_id': msg.get('author_id', False),
         }
         if msg.get('priority'):
             defaults['priority'] = msg.get('priority')
