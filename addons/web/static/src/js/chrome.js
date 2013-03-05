@@ -663,7 +663,7 @@ instance.web.Login =  instance.web.Widget.extend({
         this.remember_last_used_database(db);
         this.$('.oe_login_dbpane').empty().text(_t('Loading...'));
         this.$('[name=login], [name=password]').prop('readonly', true);
-        window.location = '/?' + $.param(params);
+        instance.web.redirect('/?' + $.param(params));
     },
     on_db_loaded: function (result) {
         var self = this;
