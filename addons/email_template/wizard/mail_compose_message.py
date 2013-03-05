@@ -131,6 +131,19 @@ class mail_compose_message(osv.TransientModel):
     # Wizard validation and send
     #------------------------------------------------------
 
+    def _get_or_create_partners_from_values(self, cr, uid, rendered_values, context=None):
+        """ Check for email_to, email_cc, partner_to """
+        partner_ids = []
+        mails = tools.email_split(rendered_values.pop('email_to', '') + ' ' + rendered_values.pop('email_cc', ''))
+        for mail in mails:
+            partner_id = self.pool.get('res.partner').find_or_create(cr, uid, mail, context=context)
+            partner_ids.append(partner_id)
+        partner_to = rendered_values.pop('partner_to', '')
+        if partner_to:
+            for partner_id in partner_to.split(','):
+                partner_ids.append(int(partner_id))
+        return partner_ids
+
     def generate_email_for_composer(self, cr, uid, template_id, res_id, context=None):
         """ Call email_template.generate_email(), get fields relevant for
             mail.compose.message, transform email_cc and email_to into partner_ids """
@@ -140,19 +153,7 @@ class mail_compose_message(osv.TransientModel):
         values = dict((field, template_values[field]) for field in fields if template_values.get(field))
         values['body'] = values.pop('body_html', '')
         # transform email_to, email_cc into partner_ids
-        values['partner_ids'] = []
-
-        mails = tools.email_split(values.pop('email_to', '') + ' ' + values.pop('email_cc', ''))
-        for mail in mails:
-            partner_id = self.pool.get('res.partner').find_or_create(cr, uid, mail, context=context)
-            values['partner_ids'].append(partner_id)
-        partner_to = values.pop('partner_to', '')
-        if partner_to:
-            for partner_id in partner_to.split(','):
-                values['partner_ids'].append(int(partner_id))
-
-        values['partner_ids'] = list(set(values['partner_ids']))
-
+        values['partner_ids'] = self._get_or_create_partners_from_values(cr, uid, values, context=context)
         return values
 
     def render_message(self, cr, uid, wizard, res_id, context=None):
@@ -164,20 +165,12 @@ class mail_compose_message(osv.TransientModel):
             values = {}
         # get values to return
         email_dict = super(mail_compose_message, self).render_message(cr, uid, wizard, res_id, context)
-
-        email_to = self.render_template(cr, uid, wizard.email_to, wizard.model, res_id, context)
-        email_cc = self.render_template(cr, uid, wizard.email_cc, wizard.model, res_id, context)
-        partner_to = self.render_template(cr, uid, wizard.partner_to, wizard.model, res_id, context)
-        email_dict['partner_ids'] = []
-
-        mails = tools.email_split((email_to or '') + ' ' + (email_cc or ''))
-        for mail in mails:
-            partner_id = self.pool.get('res.partner').find_or_create(cr, uid, mail, context=context)
-            email_dict['partner_ids'].append(partner_id)
-        if partner_to:
-            for partner_id in partner_to.split(','):
-                email_dict['partner_ids'].append(int(partner_id))
-
+        email_dict['email_to'] = self.render_template(cr, uid, wizard.email_to, wizard.model, res_id, context)
+        email_dict['email_cc'] = self.render_template(cr, uid, wizard.email_cc, wizard.model, res_id, context)
+        email_dict['partner_to'] = self.render_template(cr, uid, wizard.partner_to, wizard.model, res_id, context)
+        # transform email_to, email_cc into partner_ids
+        email_dict['partner_ids'] = self._get_or_create_partners_from_values(cr, uid, email_dict, context=context)
+        # update template values by wizard values
         values.update(email_dict)
         return values
 
