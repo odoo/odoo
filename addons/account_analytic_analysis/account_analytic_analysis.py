@@ -531,6 +531,9 @@ class account_analytic_account(osv.osv):
 
         return True
 
+    def onchange_invoice_on_timesheets(self, cr, uid, ids, invoice_on_timesheets, context=None):
+        return {'value': {'use_timesheets': invoice_on_timesheets}}
+
 class account_analytic_account_summary_user(osv.osv):
     _name = "account_analytic_analysis.summary.user"
     _description = "Hours Summary by User"

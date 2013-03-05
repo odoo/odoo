@@ -78,7 +78,7 @@
                             <td class="oe_timesheet_grey">
                                 <label for="invoice_on_timesheets"/>
                             </td><td class="oe_timesheet_grey">
-                                <field name="invoice_on_timesheets"/>
+                                <field name="invoice_on_timesheets" on_change="onchange_invoice_on_timesheets(invoice_on_timesheets)"/>
                             </td><td>
                                 <field class="oe_inline" name="hours_qtt_est" attrs="{'invisible': [('invoice_on_timesheets','=',False)]}"/>
                             </td><td>
