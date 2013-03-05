@@ -346,12 +346,14 @@ class sale_order(osv.osv):
         return {'value': val}
 
     def create(self, cr, uid, vals, context=None):
-        if vals.get('name','/')=='/':
+        if context is None:
+            context = {}
+        if vals.get('name', '/') == '/':
             vals['name'] = self.pool.get('ir.sequence').get(cr, uid, 'sale.order') or '/'
-        context = dict(context, mail_create_nolog=True)        
-        res = super(sale_order, self).create(cr, uid, vals, context=context)
-        self.message_post(cr, uid, [res], body=_("Quotation created"), context=context)
-        return res
+        context.update({'mail_create_nolog': True})
+        new_id = super(sale_order, self).create(cr, uid, vals, context=context)
+        self.message_post(cr, uid, [new_id], body=_("Quotation created"), context=context)
+        return new_id
 
     def button_dummy(self, cr, uid, ids, context=None):
         return True
@@ -997,38 +999,39 @@ class res_company(osv.Model):
         'sale_note': fields.text('Default Terms and Conditions', translate=True, help="Default terms and conditions for quotations."),
     }
 
+
 class mail_compose_message(osv.Model):
     _inherit = 'mail.compose.message'
 
     def send_mail(self, cr, uid, ids, context=None):
         context = context or {}
-        if context.get('mark_invoice_as_sent'):
-            self.pool.get('account.invoice').message_post(cr, uid,[context['default_res_id']], body=_("Invoice sent"), context=context)
         if context.get('default_model') == 'sale.order' and context.get('default_res_id') and context.get('mark_so_as_sent'):
             context = dict(context, mail_post_autofollow=True)
             self.pool.get('sale.order').signal_quotation_sent(cr, uid, [context['default_res_id']])
         return super(mail_compose_message, self).send_mail(cr, uid, ids, context=context)
 
+
 class account_invoice(osv.Model):
     _inherit = 'account.invoice'
-    
+
     def confirm_paid(self, cr, uid, ids, context=None):
-        so_ids = self.pool.get('sale.order').search(cr,uid,[('invoice_ids','in',ids)],context)
-        res = super(account_invoice, self).confirm_paid(cr, uid, ids, context=None)
-        self.pool.get('sale.order').message_post(cr, uid, so_ids, body=_("Invoice paid"), context=context)
+        sale_order_obj = self.pool.get('sale.order')
+        res = super(account_invoice, self).confirm_paid(cr, uid, ids, context=context)
+        so_ids = sale_order_obj.search(cr, uid, [('invoice_ids', 'in', ids)], context=context)
+        sale_order_obj.message_post(cr, uid, so_ids, body=_("Invoice paid"), context=context)
         return res
+
+
 class stock_picking(osv.osv):
     _inherit = 'stock.picking'
-    
+
     def action_done(self, cr, uid, ids, context=None):
-        """Changes picking state to done.
-        
-        This method is called at the end of the workflow by the activity "done".
-        @return: True
+        """ Changes picking state to done. This method is called at the end of
+            the workflow by the activity "done".
         """
         for record in self.browse(cr, uid, ids, context):
             if record.type == "out" and record.sale_id:
-                self.pool.get('sale.order').message_post(cr, uid, [record.sale_id.id],body=_("Products delivered"), context=context)            
-            return super(stock_picking, self).action_done(cr, uid, ids, context=None)
-    
+                self.pool.get('sale.order').message_post(cr, uid, [record.sale_id.id], body=_("Products delivered"), context=context)
+            return super(stock_picking, self).action_done(cr, uid, ids, context=context)
+
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

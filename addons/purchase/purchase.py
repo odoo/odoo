@@ -731,6 +731,9 @@ class purchase_order(osv.osv):
             list_key.sort()
             return tuple(list_key)
 
+        if context is None:
+            context = {}
+
         # Compute what the new orders should contain
 
         new_orders = {}
@@ -794,9 +797,7 @@ class purchase_order(osv.osv):
             order_data['order_line'] = [(0, 0, value) for value in order_data['order_line'].itervalues()]
 
             # create the new order
-            if not context:
-                context = {}
-            context.update({ 'mail_create_nolog' : True })
+            context.update({'mail_create_nolog': True})
             neworder_id = self.create(cr, uid, order_data)
             self.message_post(cr, uid, [neworder_id], body=_("RFQ created"), context=context)
             orders_info.update({neworder_id: old_ids})
@@ -1197,19 +1198,24 @@ class mail_compose_message(osv.Model):
             self.pool.get('purchase.order').signal_send_rfq(cr, uid, [context['default_res_id']])
         return super(mail_compose_message, self).send_mail(cr, uid, ids, context=context)
 
+
 class account_invoice(osv.Model):
+    """ Override account_invoice to add Chatter messages on the related purchase
+        orders, logging the invoice reception or payment. """
     _inherit = 'account.invoice'
 
     def invoice_validate(self, cr, uid, ids, context=None):
-        po_ids = self.pool.get('purchase.order').search(cr,uid,[('invoice_ids','in',ids)],context)
-        res = super(account_invoice, self).invoice_validate(cr, uid, ids, context=None)
-        self.pool.get('purchase.order').message_post(cr, uid, po_ids, body=_("Invoice received"), context=context)
-        return res 
-    
+        res = super(account_invoice, self).invoice_validate(cr, uid, ids, context=context)
+        purchase_order_obj = self.pool.get('purchase.order')
+        po_ids = purchase_order_obj.search(cr, uid, [('invoice_ids', 'in', ids)], context=context)
+        purchase_order_obj.message_post(cr, uid, po_ids, body=_("Invoice received"), context=context)
+        return res
+
     def confirm_paid(self, cr, uid, ids, context=None):
-        po_ids = self.pool.get('purchase.order').search(cr,uid,[('invoice_ids','in',ids)],context)
-        res = super(account_invoice, self).confirm_paid(cr, uid, ids, context=None)
-        self.pool.get('purchase.order').message_post(cr, uid, po_ids, body=_("Invoice paid"), context=context)
+        res = super(account_invoice, self).confirm_paid(cr, uid, ids, context=context)
+        purchase_order_obj = self.pool.get('purchase.order')
+        po_ids = purchase_order_obj.search(cr, uid, [('invoice_ids', 'in', ids)], context=context)
+        purchase_order_obj.message_post(cr, uid, po_ids, body=_("Invoice paid"), context=context)
         return res
 
 
