@@ -18,7 +18,7 @@
                         <field name="subject" placeholder="Subject..." required="True"/>
                         <field name="post"  groups="base.group_no_one"/>
                         <field name="notify"  groups="base.group_no_one"
-                            attrs="{'invisible':[('post', '=', True)]}"/>
+                            attrs="{'invisible':[('post', '!=', True)]}"/>
                         <field name="same_thread"/>
                         <field name="reply_to" placeholder="Email address te redirect replies..."
                             attrs="{'invisible':[('same_thread', '=', True)],
