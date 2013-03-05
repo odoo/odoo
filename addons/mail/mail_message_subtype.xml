@@ -5,7 +5,6 @@
         <record model="ir.ui.view" id="view_message_subtype_tree">
             <field name="name">mail.message.subtype.tree</field>
             <field name="model">mail.message.subtype</field>
-            <field name="priority">10</field>
             <field name="arch" type="xml">
                 <tree string="Subtype">
                     <field name="name"/>
@@ -34,11 +33,25 @@
             </field>
         </record>
 
+
+        <record model="ir.ui.view" id="view_edit_message_subtype_tree">
+            <field name="name">edit.message.subtype.tree</field>
+            <field name="model">mail.message.subtype</field>
+            <field name="priority">9</field>
+            <field name="arch" type="xml">
+                <tree string="Edit Subtype" editable="top">
+                    <field name="name"/>
+                </tree>
+            </field>
+        </record>
+
+
         <record model="ir.actions.act_window" id="action_view_message_subtype">
             <field name="name">Subtypes</field>
             <field name="res_model">mail.message.subtype</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="view_message_subtype_tree"/>
         </record>
         <menuitem name="Subtypes" id="menu_message_subtype" parent="base.menu_email" action="action_view_message_subtype"/>
 

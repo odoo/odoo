@@ -74,8 +74,27 @@ openerp_mail_followers = function(session, mail) {
             this.$el.on('click', '.oe_subtype_list input', self.do_update_subscription);
             // event: click on 'invite' button, that opens the invite wizard
             this.$('.oe_invite').on('click', self.on_invite_follower);
+            this.$el.on('click', '.oe_edit_subtype', self.on_edit_subtype);
             this.$el.on('click', '.oe_remove_follower', self.on_remove_follower);
             this.$el.on('click', '.oe_show_more', self.on_show_more_followers)
+        },
+
+        on_edit_subtype: function() {
+            var self = this;
+            var action = {
+                type: 'ir.actions.act_window',
+                res_model: 'mail.message.subtype',
+                domain: [['res_model','=', self.view.model]],
+                view_mode: 'list',
+                view_type: 'list',
+                views: [[false, 'list']],
+                target: 'new',
+            }
+            this.do_action(action, {
+                on_close: function() {
+                    self.read_value();
+                },
+            });
         },
 
         on_invite_follower: function (event) {
