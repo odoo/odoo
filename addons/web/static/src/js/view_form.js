@@ -4275,6 +4275,7 @@ instance.web.form.Many2ManyListView = instance.web.ListView.extend(/** @lends in
             });
         }
      },
+    is_action_enabled: function () { return true; },
 });
 
 instance.web.form.FieldMany2ManyKanban = instance.web.form.AbstractField.extend(instance.web.form.CompletionFieldMixin, {
