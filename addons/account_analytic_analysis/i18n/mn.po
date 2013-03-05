@@ -8,19 +8,19 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2012-12-21 17:04+0000\n"
-"PO-Revision-Date: 2013-02-15 05:38+0000\n"
-"Last-Translator: Altangerel <worstnaemeva@gmail.com>\n"
+"PO-Revision-Date: 2013-03-04 22:32+0000\n"
+"Last-Translator: gobi <Unknown>\n"
 "Language-Team: Mongolian <mn@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-02-16 05:39+0000\n"
-"X-Generator: Launchpad (build 16491)\n"
+"X-Launchpad-Export-Date: 2013-03-05 05:38+0000\n"
+"X-Generator: Launchpad (build 16514)\n"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
 msgid "No order to invoice, create"
-msgstr ""
+msgstr "Нэхэмжлэх, үүсгэх захиалга алга"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
@@ -68,6 +68,10 @@ msgid ""
 "to\n"
 "                            define the customer invoice price rate."
 msgstr ""
+"Цагийн хуудас дээр нэхэмжлэхэд, OpenERP нь ажилчин бүрт тодорхойлогдсон цаг "
+"бүртгэлийн \n"
+"                          барааны гэрээний үнийн хүснэгтийг хэрэглэж "
+"захиалагчид нэхэмжилдэг."
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
@@ -97,13 +101,13 @@ msgstr "Бүх хэрэглэгчидийн нэхэмжилсэн дансны 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,timesheet_ca_invoiced:0
 msgid "Sum of timesheet lines invoiced for this contract."
-msgstr ""
+msgstr "Энэ гэрээнд нэхэмжлэгдсэн цагийн хуудсын мөрийн нийлбэр"
 
 #. module: account_analytic_analysis
 #: code:addons/account_analytic_analysis/account_analytic_analysis.py:462
 #, python-format
 msgid "Sales Order Lines of %s"
-msgstr ""
+msgstr "%s-н Борлуулалтын Захиалгын Мөрүүд"
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,revenue_per_hour:0
@@ -146,6 +150,17 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Шинэ гэрээ тодорхойлохдоо дарна.\n"
+"              </p><p>\n"
+"                Энд шинэчлэх шаардлагатай гэрээнүүд байна. Өөрөөр хэлбэл "
+"дуусах өдөр хэтэрсэн эсвэл зөвшөөрөгдсөн хүн хүч хэтэрсэн гэрээнүүд юм.\n"
+"              </p><p>\n"
+"                OpenERP нь автоматаар шинэчлэх шаардлагатай гэрээнүүдийг "
+"хүлээж буй төлөвт оруулдаг. Тохиролцол явагдсан дараагаар борлуулалтын "
+"ажилтан гэрээг хаах юмуу шинэчилдэг.\n"
+"              </p>\n"
+"            "
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
@@ -160,7 +175,7 @@ msgstr "Дансны менежер"
 #. module: account_analytic_analysis
 #: help:account.analytic.account,remaining_hours_to_invoice:0
 msgid "Computed using the formula: Maximum Time - Total Invoiced Time"
-msgstr ""
+msgstr "Дараах томъёогоор тооцоологддог: Максимум цаг - Бүх нэхэмжилсэн цаг"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
@@ -175,7 +190,7 @@ msgstr "Гэрээнүүд оноогдоогүй байна"
 #. module: account_analytic_analysis
 #: help:account.analytic.account,theorical_margin:0
 msgid "Computed using the formula: Theoretical Revenue - Total Costs"
-msgstr ""
+msgstr "Дараах томъёогоор тооцоологддог: Онолын Орлого - Нийт Өртөг"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,hours_qtt_invoiced:0
@@ -196,6 +211,8 @@ msgid ""
 "{'required': [('type','=','contract')], 'invisible': [('type','in',['view', "
 "'normal','template'])]}"
 msgstr ""
+"{'required': [('type','=','contract')], 'invisible': [('type','in',['view', "
+"'normal','template'])]}"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,real_margin_rate:0
@@ -225,7 +242,7 @@ msgstr "Нэхэмжлэх, үүсгэх зүйлс алга"
 #. module: account_analytic_analysis
 #: model:res.groups,name:account_analytic_analysis.group_template_required
 msgid "Mandatory use of templates in contracts"
-msgstr ""
+msgstr "Гэрээн дах үлгэрийн зайлшгүй хэрэглээ"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,hours_quantity:0
@@ -390,6 +407,14 @@ msgid ""
 "                </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                    Гэрээний үлгэрийг үүсгэхдээ энд дарна.\n"
+"                </p><p>\n"
+"                    Үлгэр нь гэрээ/төслийг урьдчилан тохируулдаг бөгөөд "
+"ингэснээр борлуулалтына ажилтан шууд сонгон хурдан хугацаанд гэрээний нөхцөл "
+"зэрэгийг тохируулах боломжтой болдог.\n"
+"                </p>\n"
+"            "
 
 #. module: account_analytic_analysis
 #: model:ir.model,name:account_analytic_analysis.model_account_analytic_analysis_summary_user
@@ -407,6 +432,8 @@ msgid ""
 "Allows you to set the template field as required when creating an analytic "
 "account or a contract."
 msgstr ""
+"Шинжилгээний данс болон гэрээг үүсгэхэд үлгэр талбарыг заавал шаардагдах "
+"болгох боломжийг олгодог."
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,hours_qtt_invoiced:0
@@ -435,6 +462,15 @@ msgid ""
 "                </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                    Шинэ гэрээ үүсгэхдээ дарна.\n"
+"                </p><p>\n"
+"                    Гэрээг ашиглан даалгавар, асуудал, цагийн хуудас, "
+"хийгдсэн ажил дээрх нэхэмжлэл, зардал, борлуулалтын захиалга зэрэгийг хянаж "
+"дагаж болно. OpenERP нь автоматаар зөв борлуулалтынажилтанд гэрээг шинэчлэх "
+"талаар автомат сануулгыг хэлэх явдлыг менежмент хийдэг.\n"
+"                </p>\n"
+"            "
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,toinvoice_total:0
@@ -485,6 +521,12 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p>\n"
+"                Энд таны хийсэн бөгөөд захиалагчаас нэхэмжилж болох худалдан "
+"авалт болон цагийн хуудасуудын жагсаалт байна. Хэрэв нэхэмжлэх шаардлагатай "
+"ажлуудыг хөтлөх шаардлагатай бол цагийн хуудас менюг ашиглах хэрэгтэй.\n"
+"              </p>\n"
+"            "
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,hours_qtt_non_invoiced:0
@@ -508,6 +550,9 @@ msgid ""
 "remaining subtotals which, in turn, are computed as the maximum between "
 "'(Estimation - Invoiced)' and 'To Invoice' amounts"
 msgstr ""
+"Энэ гэрээн дах үлдэгдэл орлогын таамаглал. Үлдэж буйю дэд дүнгийн нийлбэрээр "
+"тооцоологдоно. Өөрөөр хэлбэл '(Таамаглагдсан - Нэхэмжилсэн)' болон "
+"'Нэхэмжлэх'-н хоорондын хамгийн ялгаагаар тооцоологдоно."
 
 #. module: account_analytic_analysis
 #: model:ir.actions.act_window,name:account_analytic_analysis.action_account_analytic_overdue
@@ -518,7 +563,7 @@ msgstr "Шинэчлэх Гэрээнүүд"
 #. module: account_analytic_analysis
 #: help:account.analytic.account,toinvoice_total:0
 msgid " Sum of everything that could be invoiced for this contract."
-msgstr ""
+msgstr " Энэ гэрээнд нэхэмжилж болох бүх зүйлсийн нийлбэр."
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,theorical_margin:0
@@ -610,11 +655,12 @@ msgstr "Нийт хугацаа"
 msgid ""
 "the field template of the analytic accounts and contracts will be required."
 msgstr ""
+"үлгэрийн талбар нь шинжилгээний данс болон гэрээнд заавал шаардагдана."
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,invoice_on_timesheets:0
 msgid "On Timesheets"
-msgstr ""
+msgstr "Цагийн хуудсуудад"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
