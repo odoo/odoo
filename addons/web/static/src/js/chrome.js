@@ -633,7 +633,17 @@ instance.web.Login =  instance.web.Widget.extend({
         if (self.params.db && self.params.login && self.params.password) {
             d = self.do_login(self.params.db, self.params.login, self.params.password);
         } else {
-            d = self.rpc("/web/database/get_list", {}).done(self.on_db_loaded).fail(self.on_db_failed);
+            d = self.rpc("/web/database/get_list", {})
+                .done(self.on_db_loaded)
+                .fail(self.on_db_failed)
+                .always(function() {
+                    if (self.selected_db && self.has_local_storage && self.remember_credentials) {
+                        self.$("[name=login]").val(localStorage.getItem(self.selected_db + '|last_login') || '');
+                        if (self.session.debug) {
+                            self.$("[name=password]").val(localStorage.getItem(self.selected_db + '|last_password') || '');
+                        }
+                    }
+                });
         }
         return d;
     },
@@ -652,6 +662,7 @@ instance.web.Login =  instance.web.Widget.extend({
         params.db = db;
         this.remember_last_used_database(db);
         this.$('.oe_login_dbpane').empty().text(_t('Loading...'));
+        this.$('[name=login], [name=password]').prop('readonly', true);
         window.location = '/?' + $.param(params);
     },
     on_db_loaded: function (result) {
@@ -667,12 +678,6 @@ instance.web.Login =  instance.web.Widget.extend({
             this.$('div.oe_login_dbpane').hide();
         } else {
             this.$('div.oe_login_dbpane').show();
-        }
-        if (this.has_local_storage && this.remember_credentials) {
-            this.$("[name=login]").val(localStorage.getItem(this.selected_db + '|last_login') || '');
-            if (this.session.debug) {
-                this.$("[name=password]").val(localStorage.getItem(this.selected_db + '|last_password') || '');
-            }
         }
     },
     on_db_failed: function (error, event) {
