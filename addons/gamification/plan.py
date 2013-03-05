@@ -177,8 +177,13 @@ class gamification_goal_plan(osv.Model):
 
     def write(self, cr, uid, ids, vals, context=None):
         """Overwrite the write method to add the user of groups"""
+        if context is None:
+            context = {}
+        if not ids:
+            return True
+
         write_res = super(gamification_goal_plan, self).write(cr, uid, ids, vals, context=context)
-        
+
         # add users when change the group auto-subscription
         if 'autojoin_group_id' in vals:
             new_group = self.pool.get('res.groups').browse(cr, uid, vals['autojoin_group_id'], context=context)
@@ -376,7 +381,8 @@ class gamification_goal_plan(osv.Model):
             subscription.extend(new_user_ids)
             # remove duplicates
             unified_subscription = list(set(subscription))
-            self.write(cr, uid, ids, {'user_ids': [(4, uid) for uid in unified_subscription]}, context=context)
+
+            self.write(cr, uid, ids, {'user_ids': [(4, user) for user in unified_subscription]}, context=context)
         return True
 
 
