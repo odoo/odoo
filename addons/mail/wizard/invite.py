@@ -32,8 +32,8 @@ class invite_wizard(osv.osv_memory):
 
     def default_get(self, cr, uid, fields, context=None):
         result = super(invite_wizard, self).default_get(cr, uid, fields, context=context)
+        user_name = self.pool.get('res.users').name_get(cr, uid, [uid], context=context)[0][1]
         if 'message' in fields and result.get('res_model') and result.get('res_id'):
-            user_name = self.pool.get('res.users').name_get(cr, uid, [uid], context=context)[0][1]
             ir_model = self.pool.get('ir.model')
             model_ids = ir_model.search(cr, uid, [('model', '=', self.pool.get(result.get('res_model'))._name)], context=context)
             model_name = ir_model.name_get(cr, uid, model_ids, context=context)[0][1]
@@ -42,7 +42,7 @@ class invite_wizard(osv.osv_memory):
             message = _('<div>%s invited you to follow %s document: %s.</div>' % (user_name, model_name, document_name))
             result['message'] = message
         elif 'message' in fields:
-            result['message'] = _('<div>You have been invited to follow a new document.</div>')
+            result['message'] = _('<div>%s invited you to follow a new document.</div>' % user_name)
         return result
 
     _columns = {
@@ -65,6 +65,10 @@ class invite_wizard(osv.osv_memory):
             new_follower_ids = [p.id for p in wizard.partner_ids if p not in document.message_follower_ids]
             model_obj.message_subscribe(cr, uid, [wizard.res_id], new_follower_ids, context=context)
 
+            ir_model = self.pool.get('ir.model')
+            model_ids = ir_model.search(cr, uid, [('model', '=', self.pool.get(result.get('res_model'))._name)], context=context)
+            model_name = ir_model.name_get(cr, uid, model_ids, context=context)[0][1]
+            
             # send an email
             if wizard.send_mail and wizard.message:
                 # add signature
@@ -78,7 +82,7 @@ class invite_wizard(osv.osv_memory):
                     mail_id = mail_mail.create(cr, uid, {
                         'model': wizard.res_model,
                         'res_id': wizard.res_id,
-                        'subject': 'Invitation to follow %s' % document.name_get()[0][1],
+                        'subject': 'Invitation to follow %s document' % model_name,
                         'body_html': '%s' % wizard.message,
                         'auto_delete': True,
                         }, context=context)
