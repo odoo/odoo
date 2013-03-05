@@ -256,17 +256,17 @@ class except_orm(Exception):
         self.args = (name, value)
 
 
-class Session(object):
-    """ An object that stores primary session data in its attributes:
+class Scope(object):
+    """ An object that provides an execution environment for the ORM instances:
 
          - :attr:`cr`, the current database cursor;
          - :attr:`uid`, the current user id;
          - :attr:`context`, the current context dictionary.
 
-        Iterating over a session returns the three attributes above, in that
+        Iterating over a scope returns the three attributes above, in that
         order. Useful to retrieve data in a destructuring assignment::
 
-            cr, uid, context = session
+            cr, uid, context = scope
     """
     def __init__(self, cr, uid, context):
         self.cr = cr
@@ -280,15 +280,15 @@ class Session(object):
         yield self.context
 
     def __eq__(self, other):
-        return isinstance(other, (Session, tuple)) and tuple(self) == tuple(other)
+        return isinstance(other, (Scope, tuple)) and tuple(self) == tuple(other)
 
     def __ne__(self, other):
         return not self == other
 
     def model(self, model_name):
-        """ return a given model with session data """
+        """ return a given model with scope """
         model = self.registry[model_name]
-        return model._make_instance(session=self)
+        return model._make_instance(scope=self)
 
     def ref(self, xml_id):
         """ return the record corresponding to the given `xml_id` """
@@ -327,12 +327,12 @@ class Session(object):
 #
 
 def _browse_one(record, column, value):
-    model = record.session.model(column._obj)
+    model = record.scope.model(column._obj)
     return model.browse(value, cache=record._record_cache)
 
 
 def _browse_many(record, column, value):
-    model = record.session.model(column._obj)
+    model = record.scope.model(column._obj)
     return model.browse(value or [], cache=record._record_cache)
 
 
@@ -341,7 +341,7 @@ def _browse_reference(record, column, value):
         ref_obj, ref_id = value.split(',')
         ref_id = long(ref_id)
         if ref_id:
-            model = record.session.model(ref_obj)
+            model = record.scope.model(ref_obj)
             return model.browse(ref_id, cache=record._record_cache)
     return False
 
@@ -493,10 +493,10 @@ class BaseModel(object):
     instance is built from the Python classes that create and inherit from the
     corresponding model.
 
-    Other instances encapsulate session data (cursor, user id, context) together
-    with model functionalities. There are four kinds of them:
+    Other instances encapsulate a scope (cursor, user id, context) together with
+    model functionalities. There are four kinds of them:
 
-    *   `model`: represents a model, usually given by :meth:`Session.model`;
+    *   `model`: represents a model, usually given by :meth:`Scope.model`;
 
     *   `record`: represents a record of the given model, typically returned by
         :meth:`~.browse` or another record/recordset. One can read the fields of
@@ -536,8 +536,8 @@ class BaseModel(object):
     _description = None
     _needaction = False
 
-    # session data, for records and recordsets
-    session = None
+    # scope, for records and recordsets
+    scope = None
 
     # dict of {field:method}, with method returning the (name_get of records, {id: fold})
     # to include in the _read_group, if grouped on this field
@@ -4386,11 +4386,10 @@ class BaseModel(object):
             cache = _RecordCache()
         # need to accepts ints and longs because ids coming from a method
         # launched by button in the interface have a type long...
-        if self.session == (cr, uid, context):
+        if self.scope == (cr, uid, context):
             model = self
         else:
-            session = Session(cr, uid, context)
-            model = self._make_instance(session=session)
+            model = self._make_instance(scope=Scope(cr, uid, context))
 
         if isinstance(select, (int, long)) and select:
             return model._make_record(select, cache)
@@ -5188,15 +5187,15 @@ class BaseModel(object):
         '_records',
     ]
 
-    def with_session(self, user=None, context=None, **kwargs):
+    def with_scope(self, user=None, context=None, **kwargs):
         """ return an instance similar to `self` (record or recordset, with
-            session data) with modified session data
+            scope) with modified scope
 
             :param user: user (id or record) to use (if not ``None``)
             :param context: context dictionary to use (if not ``None``)
             :param kwargs: named arguments to update the context
         """
-        cr, uid, ctx = self.session
+        cr, uid, ctx = self.scope
 
         if user is not None:
             uid = int(user) if isinstance(user, Record) else user
@@ -5209,13 +5208,13 @@ class BaseModel(object):
         if self.is_record_or_null() or self.is_recordset():
             return self.browse(cr, uid, self.unbrowse(), context=ctx)
 
-        return self._make_instance(session=Session(cr, uid, ctx))
+        return self._make_instance(scope=Scope(cr, uid, ctx))
 
     @api.model
     def _make_null(self):
         """ make a null instance """
         # a null instance is represented as a record with id=False
-        return self._make_instance(session=self.session, _record_id=False, _record_cache=None)
+        return self._make_instance(scope=self.scope, _record_id=False, _record_cache=None)
 
     def is_null(self):
         """ test whether self is a null instance """
@@ -5234,7 +5233,7 @@ class BaseModel(object):
         model_cache = cache[self._name]
         if id not in model_cache:
             model_cache[id] = {'id': id}
-        return self._make_instance(session=self.session, _record_id=id, _record_cache=cache)
+        return self._make_instance(scope=self.scope, _record_id=id, _record_cache=cache)
 
     def is_record(self):
         """ test whether `self` is a record instance """
@@ -5247,7 +5246,7 @@ class BaseModel(object):
     @api.model
     def _make_recordset(self, records):
         """ make a recordset instance from a collection of records """
-        return self._make_instance(session=self.session, _records=list(records))
+        return self._make_instance(scope=self.scope, _records=list(records))
 
     def is_recordset(self):
         """ test whether `self` is a recordset instance """
@@ -5365,7 +5364,7 @@ class BaseModel(object):
                 fields_to_fetch = [(name, column)]
 
             # read the records in the same model that don't have the field yet
-            cr, uid, context = self.session
+            cr, uid, context = self.scope
             ids = [id for id, values in model_cache.iteritems() if name not in values]
             field_names = [key for key, col in fields_to_fetch]
             result = self.read(cr, uid, ids, field_names, context=context, load="_classic_write")

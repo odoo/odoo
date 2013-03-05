@@ -34,7 +34,7 @@ from openerp.tools.translate import _
 class format_address(object):
     @api.model
     def fields_view_get_address(self, arch):
-        user = self.session.user.with_session(user=SUPERUSER_ID)
+        user = self.scope.user.with_scope(user=SUPERUSER_ID)
         fmt = user.company_id.country_id.address_format or ''
         layouts = {
             '%(city)s %(state_code)s\n%(zip)s': """
@@ -83,7 +83,7 @@ class res_partner_category(osv.Model):
             version of the category name (without the direct parent) is used.
             The default is the long version.
         """
-        if self.session.context.get('partner_category_display') == 'short':
+        if self.scope.context.get('partner_category_display') == 'short':
             return super(res_partner_category, self).name_get()
 
         res = []
@@ -147,7 +147,7 @@ class res_partner_title(osv.osv):
 
 @api.model
 def _lang_get(self):
-    languages = self.session.model('res.lang').search([])
+    languages = self.scope.model('res.lang').search([])
     return [(language.code, language.name) for language in languages]
 
 
@@ -258,7 +258,7 @@ class res_partner(osv.Model, format_address):
 
     @api.model
     def _default_category(self):
-        category_id = self.session.context.get('category_id', False)
+        category_id = self.scope.context.get('category_id', False)
         return [category_id] if category_id else False
 
     @api.model
@@ -276,8 +276,8 @@ class res_partner(osv.Model, format_address):
 
     @api.model
     def fields_view_get(self, view_id=None, view_type='form', toolbar=False, submenu=False):
-        if (not view_id) and (view_type == 'form') and self.session.context.get('force_email'):
-            view_id = self.session.model('ir.model.data').get_object_reference('base', 'view_partner_simple_form')[1]
+        if (not view_id) and (view_type == 'form') and self.scope.context.get('force_email'):
+            view_id = self.scope.model('ir.model.data').get_object_reference('base', 'view_partner_simple_form')[1]
         res = super(res_partner, self).fields_view_get(view_id, view_type, toolbar=toolbar, submenu=submenu)
         if view_type == 'form':
             res['arch'] = self.fields_view_get_address(res['arch'])
@@ -285,12 +285,12 @@ class res_partner(osv.Model, format_address):
 
     @api.model
     def _default_company(self):
-        return self.session.model('res.company')._company_default_get('res.partner')
+        return self.scope.model('res.company')._company_default_get('res.partner')
 
     _defaults = {
         'active': True,
-        'lang': api.model(lambda self: self.session.lang),
-        'tz': api.model(lambda self: self.session.context.get('tz', False)),
+        'lang': api.model(lambda self: self.scope.lang),
+        'tz': api.model(lambda self: self.scope.context.get('tz', False)),
         'customer': True,
         'category_id': _default_category,
         'company_id': _default_company,
@@ -332,7 +332,7 @@ class res_partner(osv.Model, format_address):
     @api.recordset
     def onchange_state(self, state_id):
         if state_id:
-            state = self.session.model('res.country.state').browse(state_id)
+            state = self.scope.model('res.country.state').browse(state_id)
             return {'value': {'country_id': state.country_id.id}}
         return {}
 
@@ -393,10 +393,10 @@ class res_partner(osv.Model, format_address):
             name = record.name
             if record.parent_id:
                 name = "%s (%s)" % (name, record.parent_id.name)
-            if self.session.context.get('show_address'):
+            if self.scope.context.get('show_address'):
                 name = name + "\n" + record._display_address(without_company=True)
                 name = "\n".join(filter(bool, name.splitlines()))
-            if self.session.context.get('show_email') and record.email:
+            if self.scope.context.get('show_email') and record.email:
                 name = "%s <%s>" % (name, record.email)
             res.append((record.id, name))
         return res
@@ -424,7 +424,7 @@ class res_partner(osv.Model, format_address):
             If 'force_email' key in context: must find the email address.
         """
         name, email = self._parse_partner_name(name)
-        if self.session.context.get('force_email') and not email:
+        if self.scope.context.get('force_email') and not email:
             raise osv.except_osv(_('Warning'), _("Couldn't create contact without email address !"))
         if not name and email:
             name = email
@@ -433,7 +433,7 @@ class res_partner(osv.Model, format_address):
 
     @api.model
     def name_search(self, name, args=None, operator='ilike', limit=100):
-        cr, uid, context = self.session
+        cr, uid, context = self.scope
         if not args:
             args = []
         if name and operator in ('=', 'ilike', '=ilike', 'like', '=like'):
@@ -490,12 +490,12 @@ class res_partner(osv.Model, format_address):
 
     @api.recordset
     def email_send(self, email_from, subject, body, on_error=''):
-        Cron = self.session.model('ir.cron')
+        Cron = self.scope.model('ir.cron')
         ids = map(int, self)
         while len(ids):
             Cron.create({
                 'name': 'Send Partner Emails',
-                'user_id': self.session.uid,
+                'user_id': self.scope.uid,
                 'model': 'res.partner',
                 'function': '_email_send',
                 'args': repr([ids[:16], email_from, subject, body, on_error])
@@ -527,15 +527,15 @@ class res_partner(osv.Model, format_address):
         res = super(res_partner, self).view_header_get(view_id, view_type)
         if res:
             return res
-        category_id = self.session.context.get('category_id', False)
-        category = self.session.model('res.partner.category').browse(category_id)
+        category_id = self.scope.context.get('category_id', False)
+        category = self.scope.model('res.partner.category').browse(category_id)
         return _('Partners: ') + category.name if category else False
 
     @api.model
     @api.returns('self')
     def main_partner(self):
         ''' Return the main partner '''
-        return self.session.ref('base.main_partner')
+        return self.scope.ref('base.main_partner')
 
     @api.record
     def _display_address(self, without_company=False):

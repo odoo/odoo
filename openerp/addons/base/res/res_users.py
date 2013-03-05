@@ -243,7 +243,7 @@ class res_users(osv.osv):
         'company_id': _get_company,
         'company_ids': _get_companies,
         'groups_id': _get_group,
-        'image': api.model(lambda self: self.session.model('res.partner')._get_default_image(False, colorize=True)),
+        'image': api.model(lambda self: self.scope.model('res.partner')._get_default_image(False, colorize=True)),
     }
 
     # User can write on a few of his own fields (but not his groups for example)

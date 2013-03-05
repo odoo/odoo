@@ -1,6 +1,6 @@
 
 from openerp.tools import mute_logger
-from openerp.osv.orm import Session, Record, Recordset, Null, except_orm
+from openerp.osv.orm import Scope, Record, Recordset, Null, except_orm
 import common
 
 
@@ -9,9 +9,9 @@ class TestAPI(common.TransactionCase):
 
     def setUp(self):
         super(TestAPI, self).setUp()
-        self.session = Session(self.cr, self.uid, None)
-        self.Partner = self.session.model('res.partner')
-        self.Users = self.session.model('res.users')
+        self.scope = Scope(self.cr, self.uid, None)
+        self.Partner = self.scope.model('res.partner')
+        self.Users = self.scope.model('res.users')
 
     def assertIsKind(self, value, kind, model):
         """ check for isinstance(value, kind) and value._name == model """
@@ -200,22 +200,22 @@ class TestAPI(common.TransactionCase):
             self.assertEqual(res[0][0], p.id)
 
     @mute_logger('openerp.osv.orm')
-    def test_50_session(self):
-        """ Call session methods. """
+    def test_50_scope(self):
+        """ Call scope methods. """
         partners = self.Partner.search([('name', 'ilike', 'j')])
         self.assertTrue(partners)
 
-        # check content of partners.session
-        self.assertEqual(partners.session.cr, self.cr)
-        self.assertEqual(partners.session.uid, self.uid)
-        self.assertFalse(partners.session.context)
-        self.assertEqual(partners.session.user.id, self.uid)
+        # check content of partners.scope
+        self.assertEqual(partners.scope.cr, self.cr)
+        self.assertEqual(partners.scope.uid, self.uid)
+        self.assertFalse(partners.scope.context)
+        self.assertEqual(partners.scope.user.id, self.uid)
 
-        # get the partners company, and check its session data
+        # get the partners company, and check its scope
         partner = partners[0]
-        self.assertEqual(partner.session.uid, self.uid)
+        self.assertEqual(partner.scope.uid, self.uid)
         company = partner.company_id
-        self.assertEqual(company.session.uid, self.uid)
+        self.assertEqual(company.scope.uid, self.uid)
 
         # check that current user can modify the company
         company.write({'name': 'Fools'})
@@ -224,13 +224,13 @@ class TestAPI(common.TransactionCase):
         demo = self.Users.search([('login', '=', 'demo')])[0]
         self.assertNotEqual(demo.id, self.uid)
 
-        # remake recordset with demo user, and check session data
-        partners = partners.with_session(user=demo)
-        self.assertEqual(partners.session.user, demo)
+        # remake recordset with demo user, and check scope
+        partners = partners.with_scope(user=demo)
+        self.assertEqual(partners.scope.user, demo)
         partner = partners[0]
-        self.assertEqual(partner.session.user, demo)
+        self.assertEqual(partner.scope.user, demo)
         company = partner.company_id
-        self.assertEqual(company.session.user, demo)
+        self.assertEqual(company.scope.user, demo)
 
         # demo user cannot modify the company
         with self.assertRaises(except_orm):

@@ -37,7 +37,7 @@
     may also be written as::
 
         # model and records both carry the (cr, uid, context) attached to self
-        model = self.session.model(MODEL)
+        model = self.scope.model(MODEL)
         records = model.search(DOMAIN)
         records.write(VALUES)
 
@@ -196,7 +196,7 @@ def _returns_new(method, func):
         return wrapper
     elif model:
         def wrapper(self, *args, **kwargs):
-            mod = self.session.model(model)
+            mod = self.scope.model(model)
             res = func(self, *args, **kwargs)
             if isinstance(res, dict):
                 return dict((k, mod.browse(v)) for k, v in res.iteritems())
@@ -258,8 +258,8 @@ def _map_record(id, value):
 
 
 def model(method):
-    """ Decorate a record-style method where `self` is any instance with session
-        data (model, record or recordset). Such a method::
+    """ Decorate a record-style method where `self` is any instance with scope
+        (model, record or recordset). Such a method::
 
             @api.model
             def method(self, args):
@@ -369,7 +369,7 @@ def cr(method):
     method._api = cr
 
     def new_api(self, *args, **kwargs):
-        cr, uid, context = self.session
+        cr, uid, context = self.scope
         return method(self, cr, *args, **kwargs)
 
     return _make_wrapper(method, method, _returns_new(method, new_api))
@@ -380,7 +380,7 @@ def cr_context(method):
     method._api = cr_context
 
     def new_api(self, *args, **kwargs):
-        cr, uid, context = self.session
+        cr, uid, context = self.scope
         kwargs = _kwargs_context(kwargs, context)
         return method(self, cr, *args, **kwargs)
 
@@ -392,7 +392,7 @@ def cr_uid(method):
     method._api = cr_uid
 
     def new_api(self, *args, **kwargs):
-        cr, uid, context = self.session
+        cr, uid, context = self.scope
         return method(self, cr, uid, *args, **kwargs)
 
     return _make_wrapper(method, method, _returns_new(method, new_api))
@@ -409,7 +409,7 @@ def cr_uid_context(method):
     method._api = cr_uid_context
 
     def new_api(self, *args, **kwargs):
-        cr, uid, context = self.session
+        cr, uid, context = self.scope
         kwargs = _kwargs_context(kwargs, context)
         return method(self, cr, uid, *args, **kwargs)
 
@@ -424,7 +424,7 @@ def cr_uid_id(method):
     method._api = cr_uid_id
 
     def new_api(self, *args, **kwargs):
-        cr, uid, context = self.session
+        cr, uid, context = self.scope
         if self.is_record():
             return method(self, cr, uid, self.id, *args, **kwargs)
         else:
@@ -457,7 +457,7 @@ def cr_uid_id_context(method):
     method._api = cr_uid_id_context
 
     def new_api(self, *args, **kwargs):
-        cr, uid, context = self.session
+        cr, uid, context = self.scope
         kwargs = _kwargs_context(kwargs, context)
         if self.is_record():
             return method(self, cr, uid, self.id, *args, **kwargs)
@@ -475,7 +475,7 @@ def cr_uid_ids(method):
     method._api = cr_uid_ids
 
     def new_api(self, *args, **kwargs):
-        cr, uid, context = self.session
+        cr, uid, context = self.scope
         if self.is_record():
             return _map_record(self.id, method(self, cr, uid, [self.id], *args, **kwargs))
         else:
@@ -506,7 +506,7 @@ def cr_uid_ids_context(method):
     method._api = cr_uid_ids_context
 
     def new_api(self, *args, **kwargs):
-        cr, uid, context = self.session
+        cr, uid, context = self.scope
         kwargs = _kwargs_context(kwargs, context)
         if self.is_record():
             return _map_record(self.id, method(self, cr, uid, [self.id], *args, **kwargs))
