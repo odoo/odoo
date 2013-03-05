@@ -115,8 +115,6 @@ def db_monodb_list(req):
     if not db:
         first_db = dbs[0] if dbs else False
         db = req.httprequest.cookies.get('last_used_database') or first_db
-    if db not in dbs:
-        db = False
 
     redirect = False
     if db and db_url is not db and len(dbs) > 1:
