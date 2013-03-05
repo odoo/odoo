@@ -93,17 +93,6 @@ def db_list(req):
     dbs = [i for i in dbs if re.match(r, i)]
     return dbs
 
-def db_monodb(req):
-    # if only one db exists, return it else return False
-    try:
-        dbs = db_list(req)
-        if len(dbs) == 1:
-            return dbs[0]
-    except xmlrpclib.Fault:
-        # ignore access denied
-        pass
-    return False
-
 def db_monodb_list(req):
     try:
         dbs = db_list(req)
@@ -117,11 +106,15 @@ def db_monodb_list(req):
         db = req.httprequest.cookies.get('last_used_database') or first_db
 
     redirect = False
-    if db and db_url is not db and len(dbs) > 1:
+    if db and db_url != db and len(dbs) > 1:
         query = dict(urlparse.parse_qsl(req.httprequest.query_string, keep_blank_values=True))
         query.update({ 'db': db })
         redirect = req.httprequest.path + '?' + urllib.urlencode(query)
     return (db, dbs, redirect)
+
+def db_monodb(req):
+    # if only one db exists, return it else return False
+    return db_monodb_list(req)[0]
 
 def module_topological_sort(modules):
     """ Return a list of module names sorted so that their dependencies of the
