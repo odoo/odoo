@@ -33,4 +33,5 @@
         ],
     'installable': True,
     'application': True,
+    'css': ['static/src/css/goal.css'],
 }

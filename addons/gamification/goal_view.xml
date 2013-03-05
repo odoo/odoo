@@ -6,7 +6,7 @@
         <record id="goal_list_action" model="ir.actions.act_window">
             <field name="name">Goals</field>
             <field name="res_model">gamification.goal</field>
-            <field name="view_mode">tree,form,calendar</field>
+            <field name="view_mode">tree,form,calendar,kanban</field>
             <field name="help" type="html">
                 <p class="oe_view_nocontent_create">
                     Click to create a goal. 
@@ -122,6 +122,34 @@
                         <filter string="End Date" domain="[]" context="{'group_by':'end_date'}"/>
                     </group>
                 </search>
+            </field>
+        </record>
+
+        <record id="goal_kanban_view" model="ir.ui.view" >
+            <field name="name">Goal Kanban View</field>
+            <field name="model">gamification.goal</field>
+            <field name="arch" type="xml">
+                <kanban version="7.0" class="oe_background_grey">
+                    <field name="type_id"/>
+                    <field name="user_id"/>
+                    <field name="current"/>
+                    <field name="completeness"/>
+                    <field name="state"/>
+                    <field name="target_goal"/>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div t-attf-class="oe_kanban_card oe_kanban_global_click oe_kanban_goal oe_kanban_color_#{record.state.raw_value}">
+                                <div class="oe_kanban_content">
+                                    <h4><field name="type_id"/></h4>
+                                    <div class="oe_kanban_project_list">
+                                        <t t-esc="Math.round(record.current.raw_value)"/>/<t t-esc="Math.round(record.target_goal.raw_value)"/>
+                                        &#10216;<t t-esc="Math.round(record.completeness.raw_value)"/>%%&#10217;
+                                    </div>
+                                </div>
+                            </div>
+                        </t>
+                    </templates>7
+                </kanban>
             </field>
         </record>
 
