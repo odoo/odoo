@@ -124,9 +124,9 @@ class test_portal(TestMailBase):
         # Test: (pretend to) send email and check subject, body
         self.assertEqual(len(self._build_email_kwargs_list), 1, 'sent email number incorrect, should be only for Bert')
         for sent_email in self._build_email_kwargs_list:
-            self.assertEqual(sent_email.get('subject'), 'Invitation to follow Pigs',
+            self.assertEqual(sent_email.get('subject'), 'Invitation to follow Discussion group document',
                              'subject of invitation email is incorrect')
-            self.assertTrue('You have been invited to follow Pigs' in sent_email.get('body'),
+            self.assertTrue('Administrator invited you to follow Discussion group document: Pigs' in sent_email.get('body'),
                             'body of invitation email is incorrect')
             self.assertTrue(partner_carine.signup_url in sent_email.get('body'),
                             'body of invitation email does not contain signup url')
