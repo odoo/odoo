@@ -697,10 +697,10 @@ instance.web.Widget = instance.web.Controller.extend({
      * Method called after rendering. Mostly used to bind actions, perform asynchronous
      * calls, etc...
      *
-     * By convention, the method should return a promise to inform the caller when
-     * this widget has been initialized.
+     * By convention, this method should return an object that can be passed to $.when() 
+     * to inform the caller when this widget has been initialized.
      *
-     * @returns {jQuery.Deferred}
+     * @returns {jQuery.Deferred or any}
      */
     start: function() {
         return $.when();
