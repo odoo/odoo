@@ -142,8 +142,12 @@
                                 <div class="oe_kanban_content">
                                     <h4><field name="type_id"/></h4>
                                     <div class="oe_kanban_project_list">
-                                        <t t-esc="Math.round(record.current.raw_value)"/>/<t t-esc="Math.round(record.target_goal.raw_value)"/>
+                                        <p>
+                                            <t t-esc="Math.round(record.current.raw_value)"/>/<t t-esc="Math.round(record.target_goal.raw_value)"/>
                                         &#10216;<t t-esc="Math.round(record.completeness.raw_value)"/>%%&#10217;
+                                            <br/>
+                                            <small>End: <field name="end_date" /></small>
+                                        </p>
                                     </div>
                                 </div>
                             </div>

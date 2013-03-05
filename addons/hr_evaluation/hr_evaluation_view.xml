@@ -147,6 +147,11 @@
             <xpath expr="//div[@name='button_box']" position="inside">
                 <button name="%(act_hr_employee_2_hr__evaluation_interview)d" string="Appraisal Interviews" type="action"/>
             </xpath>
+            <xpath expr="//page[@string='Public Information']" position="after">
+                <page string="Goals">
+                    <field name="goal_ids" widget="many2many_kanban" />
+                </page>
+            </xpath>
             </field>
         </record>
 
