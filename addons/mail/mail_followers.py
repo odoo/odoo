@@ -80,6 +80,7 @@ class mail_notification(osv.Model):
 
             :param browse_record message: mail.message to notify
         """
+        has_opt_out = self.pool.get('res.partner')._all_columns.get('opt_out')
         notify_pids = []
         for notification in message.notification_ids:
             if notification.read:
@@ -91,8 +92,8 @@ class mail_notification(osv.Model):
             # Do not send to partners without email address defined
             if not partner.email:
                 continue
-            # Partner does not want to receive any emails
-            if partner.notification_email_send == 'none':
+            # Partner does not want to receive any emails or is opt-out
+            if partner.notification_email_send == 'none' or (has_opt_out and partner.opt_out):
                 continue
             # Partner wants to receive only emails and comments
             if partner.notification_email_send == 'comment' and message.type not in ('email', 'comment'):
@@ -119,7 +120,9 @@ class mail_notification(osv.Model):
             return True
         # browse as SUPERUSER_ID because of access to res_partner not necessarily allowed
         msg = self.pool.get('mail.message').browse(cr, SUPERUSER_ID, msg_id, context=context)
+        print 'before partner_to_notify', partners_to_notify
         partners_to_notify = self.get_partners_to_notify(cr, uid, msg, partners_to_notify=partners_to_notify, context=context)
+        print 'partner_to_notify', partners_to_notify
         if not partners_to_notify:
             return True
 
@@ -144,6 +147,8 @@ class mail_notification(osv.Model):
         }
         if msg.email_from:
             mail_values['email_from'] = msg.email_from
+        if msg.reply_to:
+            mail_values['reply_to'] = msg.reply_to
         email_notif_id = mail_mail.create(cr, uid, mail_values, context=context)
         try:
             return mail_mail.send(cr, uid, [email_notif_id], context=context)
