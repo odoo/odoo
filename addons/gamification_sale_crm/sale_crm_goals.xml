@@ -79,7 +79,7 @@
             <field name="computation_mode">count</field>
             <field name="model_id" eval="ref('sale.model_sale_order')" />
             <field name="field_date_id" eval="ref('sale.field_sale_order_date_confirm')" />
-            <field name="domain">[('user_id','=',user_id),('paid','=',True)]</field>
+            <field name="domain">[('user_id','=',user_id),('invoiced','=',True)]</field>
         </record>
 
         <record model="gamification.goal.type" id="type_crm_tot_paid_sale_order">
