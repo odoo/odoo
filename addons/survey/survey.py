@@ -347,7 +347,7 @@ class survey_question(osv.osv):
         'sequence': fields.integer('Sequence'),
         'tot_resp': fields.function(_calc_response, string="Total Answer"),
         'survey': fields.related('page_id', 'survey_id', type='many2one', relation='survey', string='Survey'),
-        'descriptive_text': fields.text('Descriptive Text', size=255, translate=True),
+        'descriptive_text': fields.text('Descriptive Text', translate=True),
         'column_heading_ids': fields.one2many('survey.question.column.heading', 'question_id', ' Column heading'),
         'type': fields.selection([('multiple_choice_only_one_ans', 'Multiple Choice (Only One Answer)'),
              ('multiple_choice_multiple_ans', 'Multiple Choice (Multiple Answer)'),

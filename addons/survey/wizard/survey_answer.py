@@ -175,7 +175,8 @@ class survey_question_wiz(osv.osv_memory):
         first = True
         for row in que_rec.answer_choice_ids:
             etree.SubElement(xml_group, 'newline')
-            etree.SubElement(xml_group, 'field', {'widget': 'radio', 'horizontal': '1', 'no_radiolabel': not first and '1' or '0', 'modifiers': readonly and '{"readonly": 1}' or '{}', 'name': tools.ustr(que.id) + "_selection_" + tools.ustr(row.id), 'string': to_xml(tools.ustr(row.answer))})
+            etree.SubElement(xml_group, 'label', {'for': tools.ustr(que.id) + "_selection_" + tools.ustr(row.id), 'string': to_xml(tools.ustr(row.answer))})
+            etree.SubElement(xml_group, 'field', {'widget': 'radio', 'horizontal': '1', 'no_radiolabel': not first and '1' or '0', 'modifiers': readonly and '{"readonly": 1}' or '{}', 'name': tools.ustr(que.id) + "_selection_" + tools.ustr(row.id), 'nolabel': "1"})
             first = False
             selection = []
             for col in que_rec.column_heading_ids:
