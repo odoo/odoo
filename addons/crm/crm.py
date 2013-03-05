@@ -153,7 +153,6 @@ class crm_case_section(osv.osv):
     _defaults = {
         'active': 1,
         'stage_ids': _get_stage_common,
-        'alias_domain': False, # always hide alias during creation
     }
 
     _sql_constraints = [
