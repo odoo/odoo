@@ -1446,11 +1446,11 @@ instance.web.View = instance.web.Widget.extend({
  * Performs a fields_view_get and apply postprocessing.
  * return a {$.Deferred} resolved with the fvg
  *
- * @param {Object} [args]
+ * @param {Object} args
  * @param {String|Object} args.model instance.web.Model instance or string repr of the model
- * @param {null|Object} args.context context if args.model is a string
- * @param {null|Number} args.view_id id of the view to be loaded, default view if null
- * @param {null|String} args.view_type type of view to be loaded if view_id is null
+ * @param {Object} [args.context] context if args.model is a string
+ * @param {Number} [args.view_id] id of the view to be loaded, default view if null
+ * @param {String} [args.view_type] type of view to be loaded if view_id is null
  * @param {Boolean} [args.toolbar=false] get the toolbar definition
  */
 instance.web.fields_view_get = function(args) {
