@@ -12,11 +12,17 @@
                         <field name="model" invisible="1"/>
                         <field name="res_id" invisible="1"/>
                         <field name="parent_id" invisible="1"/>
-                        <field name="post"  groups="base.group_no_one"/>
-                        <field name="notify"  groups="base.group_no_one"/>
                         <!-- visible wizard -->
                         <field name="email_from"
                             attrs="{'invisible':[('composition_mode', '!=', 'mass_mail')]}"/>
+                        <field name="subject" placeholder="Subject..." required="True"/>
+                        <field name="post"  groups="base.group_no_one"/>
+                        <field name="notify"  groups="base.group_no_one"
+                            attrs="{'invisible':[('post', '=', True)]}"/>
+                        <field name="same_thread"/>
+                        <field name="reply_to" placeholder="Email address te redirect replies..."
+                            attrs="{'invisible':[('same_thread', '=', True)],
+                                    'required':[('same_thread', '!=', True)]}"/>
                         <label for="partner_ids" string="Recipients"
                             attrs="{'invisible':[('composition_mode', '=', 'mass_mail')]}"/>
                         <div groups="base.group_user"
@@ -29,11 +35,6 @@
                             <field name="partner_ids" widget="many2many_tags_email" placeholder="Add contacts to notify..."
                                 context="{'force_email':True, 'show_email':True}"/>
                         </div>
-                        <field name="same_thread"/>
-                        <field name="reply_to" placeholder="Email address te redirect replies..."
-                            attrs="{'invisible':[('same_thread', '=', True)],
-                                    'required':[('same_thread', '!=', True)]}"/>
-                        <field name="subject" placeholder="Subject..." required="True"/>
                     </group>
                     <field name="body"/>
                     <field name="attachment_ids" widget="many2many_binary" string="Attach a file"/>
