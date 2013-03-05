@@ -232,6 +232,20 @@ class TestAPI(common.TransactionCase):
         company = partner.company_id
         self.assertEqual(company.scope.user, demo)
 
+        outer_scope = Scope.current()
+
+        with Scope(self.cr, self.uid, None):
+            self.assertNotEqual(Scope.current(), outer_scope)
+            self.assertEqual(Scope.current().uid, self.uid)
+
+            with Scope(self.cr, demo.id, None):
+                self.assertNotEqual(Scope.current().uid, self.uid)
+                self.assertEqual(Scope.current().uid, demo.id)
+
+            self.assertEqual(Scope.current().uid, self.uid)
+
+        self.assertEqual(Scope.current(), outer_scope)
+
         # demo user cannot modify the company
         with self.assertRaises(except_orm):
             company.write({'name': 'Pricks'})

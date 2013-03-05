@@ -50,8 +50,8 @@ import operator
 import pickle
 import re
 import simplejson
+import threading
 import time
-import traceback
 
 import psycopg2
 from lxml import etree
@@ -268,6 +268,9 @@ class Scope(object):
 
             cr, uid, context = scope
     """
+    _local = threading.local()
+    _local.current = None
+
     def __init__(self, cr, uid, context):
         self.cr = cr
         self.uid = uid
@@ -284,6 +287,20 @@ class Scope(object):
 
     def __ne__(self, other):
         return not self == other
+
+    @classmethod
+    def current(cls):
+        return cls._local.current
+
+    def __enter__(self):
+        if self != self._local.current:
+            self.parent = self._local.current
+            self._local.current = self
+        return self.current()
+
+    def __exit__(self, exc_type, exc_value, traceback):
+        if self is self._local.current:
+            self._local.current = self.parent
 
     def model(self, model_name):
         """ return a given model with scope """
