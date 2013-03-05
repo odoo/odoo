@@ -415,21 +415,16 @@ class mrp_production(osv.osv):
         dest_location_id = self.pool.get('ir.model.data').get_object(cr, uid, 'stock', 'stock_location_stock', context=context)
         return dest_location_id.id
 
-    def _product_progress(self, cr, uid, ids, prop, unknow_none, context=None):
-        """ To obtain product quantity
-        @return: Dictionary of values.
-        """
-        result = {}
-        for prod in self.browse(cr, uid, ids, context=context):
-            done = 0.0
-            if prod.product_qty:
-                for move in prod.move_created_ids2:
-                    if move.product_id == prod.product_id:
-                        if not move.scrapped:
-                            done += move.product_qty
-                result[prod.id] = done / prod.product_qty * 100
-            else:
-                result[prod.id] = 100
+    def _get_progress(self, cr, uid, ids, name, arg, context=None):
+        """ Return product quantity percentage """
+        result = dict.fromkeys(ids, 100)
+        for mrp_production in self.browse(cr, uid, ids, context=context):
+            if mrp_production.product_qty:
+                done = 0.0
+                for move in mrp_production.move_created_ids2:
+                    if not move.scrapped and move.product_id == mrp_production.product_id:
+                        done += move.product_qty
+                result[mrp_production.id] = done / mrp_production.product_qty * 100
         return result
 
     _columns = {
@@ -444,8 +439,8 @@ class mrp_production(osv.osv):
         'product_uom': fields.many2one('product.uom', 'Product Unit of Measure', required=True, readonly=True, states={'draft': [('readonly', False)]}),
         'product_uos_qty': fields.float('Product UoS Quantity', readonly=True, states={'draft': [('readonly', False)]}),
         'product_uos': fields.many2one('product.uom', 'Product UoS', readonly=True, states={'draft': [('readonly', False)]}),
-
-        'product_progress': fields.function(_product_progress, type='float', string='Progress of the production'),
+        'progress': fields.function(_get_progress, type='float',
+            string='Production progress'),
 
         'location_src_id': fields.many2one('stock.location', 'Raw Materials Location', required=True,
             readonly=True, states={'draft':[('readonly',False)]},
