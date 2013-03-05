@@ -35,7 +35,7 @@
   
     self._amount_all(cr, uid, [contract_id], '', {}, {})
     template = self.browse(cr, uid, ref('account_analytic_account_0'))
-    res = self.on_change_template(cr, uid, contract_id, template.id, {})
+    res = self.on_change_template(cr, uid, [contract_id], template.id, {})
     self.write(cr, uid, [contract_id], res['value'])
     line_obj = self.pool.get('account.analytic.invoice.line')
     contract = self.browse(cr, uid, contract_id)

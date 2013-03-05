@@ -59,7 +59,7 @@ class account_analytic_invoice_line(osv.osv):
         'name': fields.char('Description', size=64, required=True),
         'quantity': fields.float('Quantity', required=True),
         'uom_id': fields.many2one('product.uom', 'Unit of Measure'),
-        'account_id': fields.many2one('account.account', 'Account', required=True, domain=[('type','<>','view'), ('type', '<>', 'closed')], help="The account related to the selected product."),
+        'account_id': fields.many2one('account.account', 'Account', domain=[('type','<>','view'), ('type', '<>', 'closed')], help="The account related to the selected product."),
         'price_unit': fields.float('Unit Price', required=True),
         'price_subtotal': fields.function(_amount_line, string='Sub Total', type="float",digits_compute= dp.get_precision('Account')),
         'tax_ids':fields.many2many('account.tax', 'analytic_account_invoice_line_tax', 'invoice_line_id', 'tax_id', 'Taxes', domain=[('parent_id','=',False)]),
@@ -146,7 +146,7 @@ class account_analytic_account(osv.osv):
             partner = self.browse(cr, uid, id, context=ctx).partner_id
             if partner.lang:
                 ctx.update({'lang': partner.lang})
-            for taxe in self.compute_tax(cr, uid, id, context=ctx).values():
+            for taxe in self.compute_tax(cr, uid, [id], context=ctx).values():
                 total_tax_amount += taxe["tax_amount"]
         return total_tax_amount
 
@@ -154,7 +154,7 @@ class account_analytic_account(osv.osv):
         tax_grouped = {}
         tax_obj = self.pool.get('account.tax')
         cur_obj = self.pool.get('res.currency')
-        inv = self.browse(cr, uid, ids, context=context)
+        inv = self.browse(cr, uid, ids, context=context)[0]
         cur = inv.currency_id
         company_currency = inv.company_id.currency_id.id
 
@@ -709,6 +709,7 @@ class account_analytic_account(osv.osv):
         for analytic_account in self.browse(cr, uid, ids):
             if analytic_account.invoice_line_ids: 
                 obj_analytic_line.unlink(cr, uid, [x.id for x in analytic_account.invoice_line_ids])
+
         template = self.browse(cr, uid, template_id, context=context)
         invoice_line_ids = []
         for x in template.invoice_line_ids:
