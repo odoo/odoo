@@ -15,6 +15,18 @@
                 </field>
         </record>
 
+       <record id="view_res_partner_filter_crm" model="ir.ui.view">
+            <field name="name">res.partner.select.crm</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="base.view_res_partner_filter"/>
+            <field name="arch" type="xml">
+                    <filter string="Suppliers" position="after">
+                        <filter string="Not opt-out"  domain="[('opt_out', '=', False)]"
+                                help="Is not opt-out and can be included in mass mailing campaigns" />
+                    </filter>
+            </field>
+        </record>
+
         <!-- open meetings related to given partner -->
         <record id="crm_meeting_partner" model="ir.actions.act_window">
             <field name="name">Meetings</field>
