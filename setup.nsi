@@ -292,8 +292,8 @@ Function .onInit
 
     ClearErrors
     EnumRegKey $0 HKLM "SOFTWARE\PostgreSQL\Installations" 0
-    StrCmp $0 "" DoInstallPostgreSQL
     IfErrors DoInstallPostgreSQL 0
+    StrCmp $0 "" DoInstallPostgreSQL
     StrCpy $HasPostgreSQL 1
 
     DoInstallPostgreSQL:
