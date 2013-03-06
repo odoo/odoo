@@ -33,7 +33,10 @@
         'security/ir.model.access.csv',
         'res_config_user_view.xml'
     ],
-    'depends': ['google_base_account','document'],
+    'demo': [
+        'google_docs_demo.xml'
+    ],
+    'depends': ['google_base_account','crm'],
     'description': """
 Module to attach a google document to any model.
 ================================================

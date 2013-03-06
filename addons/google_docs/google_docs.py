@@ -231,7 +231,6 @@ class config(osv.osv):
             # as it is a new record, we do not consider the actions that have a prefilter
             action_dom = [('model_id', '=', model)]
             config_ids = self.search(cr, uid, action_dom, context=context)
-#
 #            # check postconditions, and execute actions on the records that satisfy them
             for action in self.browse(cr, uid, config_ids, context=context):
                 if self._filter(cr, uid, action, action.filter_id, [new_id], context=context):
