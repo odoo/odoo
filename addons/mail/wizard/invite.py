@@ -74,9 +74,11 @@ class invite_wizard(osv.osv_memory):
                 signature = user_id and user_id["signature"] or ''
                 if signature:
                     wizard.message = tools.append_content_to_html(wizard.message, signature, plaintext=True, container_tag='div')
-                # send mail to new followers, unless it is opt-out or notifications is set to None
+                # send mail to new followers, unless it is opt-out
+                # FIXME 8.0: use notification_email_send, send a wall message
+                # and let mail handle email notification
                 for follower in new_followers:
-                    if follower.notification_email_send == 'none' or (has_opt_out and follower.opt_out):
+                    if has_opt_out and follower.opt_out:
                         continue
                     mail_mail = self.pool.get('mail.mail')
                     # the invite wizard should create a private message not related to any object -> no model, no res_id
