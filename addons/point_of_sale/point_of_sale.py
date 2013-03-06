@@ -1053,7 +1053,7 @@ class pos_order(osv.osv):
                     'name': _('Tax') + ' ' + tax.name,
                     'quantity': line.qty,
                     'product_id': line.product_id.id,
-                    'account_id': key[account_pos],
+                    'account_id': key[account_pos] or income_account,
                     'credit': ((tax_amount>0) and tax_amount) or 0.0,
                     'debit': ((tax_amount<0) and -tax_amount) or 0.0,
                     'tax_code_id': key[tax_code_pos],
