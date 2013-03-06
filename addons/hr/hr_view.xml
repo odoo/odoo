@@ -27,10 +27,6 @@
                             </h1>
                             <label for="category_ids" class="oe_edit_only" groups="base.group_hr_user"/>
                             <field name="category_ids" widget="many2many_tags" placeholder="e.g. Part Time" groups="base.group_hr_user"/>
-
-                            <field name="job_id" options='{"no_open": True}' domain="[('state','!=','old')]" context="{'form_view_ref': 'hr.view_hr_job_employee_form'}"/>
-                            <field name="work_phone"/>
-                            <field name="work_email" widget="email"/>
                         </div>
                         <div class="oe_right oe_button_box" name="button_box">
                             <!-- Put here related buttons -->
@@ -41,6 +37,7 @@
                         <notebook>
                             <page string="Public Profile">
                                 <div class="oe_chatter">
+                                    <field name="message_follower_ids" widget="mail_followers"/>
                                     <field name="message_ids" widget="mail_thread"/>
                                 </div>
                             </page>
@@ -48,7 +45,12 @@
                                 <group>
                                     <group string="Contact Information">
                                         <field name="address_id" on_change="onchange_address_id(address_id)" context="{'show_address': 1}" options='{"always_reload": True, "highlight_first_line": True}'/>
-                                        
+                                        <field name="work_phone"/>
+                                        <field name="mobile_phone"/>
+                                        <field name="work_location"/>
+                                    </group>
+                                    <group string="Position">
+                                        <field name="department_id" on_change="onchange_department_id(department_id)"/>
                                         <field name="parent_id"/>
                                         <field name="coach_id"/>
                                     </group>
