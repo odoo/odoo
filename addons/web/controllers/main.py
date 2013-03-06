@@ -109,7 +109,9 @@ def db_monodb_redirect(req):
         dbs = []
 
     # 2 use the database from the cookie if it's listable and still listed
-    db = req.httprequest.cookies.get('last_used_database') or False
+    cookie_db = req.httprequest.cookies.get('last_used_database')
+    if cookie_db in dbs:
+        db = cookie_db
 
     # 3 use the first db
     if dbs and not db:
