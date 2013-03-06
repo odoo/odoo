@@ -533,27 +533,20 @@ def trans_parse_rml(de):
         res.extend(trans_parse_rml(n))
     return res
 
-def trans_parse_view(de):
+TRANSLATABLE_VIEW_ATTRS = ['string', 'help', 'sum', 'confirm', 'placeholder']
+def extract_translatable_view_strings(de):
     res = []
     if not isinstance(de, SKIPPED_ELEMENT_TYPES) and de.text and de.text.strip():
         res.append(de.text.strip().encode("utf8"))
     if de.tail and de.tail.strip():
         res.append(de.tail.strip().encode("utf8"))
-    if de.tag == 'attribute' and de.get("name") == 'string':
-        if de.text:
-            res.append(de.text.encode("utf8"))
-    if de.get("string"):
-        res.append(de.get('string').encode("utf8"))
-    if de.get("help"):
-        res.append(de.get('help').encode("utf8"))
-    if de.get("sum"):
-        res.append(de.get('sum').encode("utf8"))
-    if de.get("confirm"):
-        res.append(de.get('confirm').encode("utf8"))
-    if de.get("placeholder"):
-        res.append(de.get('placeholder').encode("utf8"))
+    for attr in TRANSLATABLE_VIEW_ATTRS:
+        if de.get(attr):
+            res.append(de.get(attr).encode('utf8'))
+        if de.tag == 'attribute' and de.get('name') == attr and de.text:
+            res.append(de.text.encode('utf8'))
     for n in de:
-        res.extend(trans_parse_view(n))
+        res.extend(extract_translatable_view_strings(n))
     return res
 
 # tests whether an object is in a list of modules
@@ -673,7 +666,7 @@ def trans_generate(lang, modules, cr):
 
         if model=='ir.ui.view':
             d = etree.XML(encode(obj.arch))
-            for t in trans_parse_view(d):
+            for t in extract_translatable_view_strings(d):
                 push_translation(module, 'view', encode(obj.model), 0, t)
         elif model=='ir.actions.wizard':
             service_name = 'wizard.'+encode(obj.wiz_name)
@@ -710,7 +703,7 @@ def trans_generate(lang, modules, cr):
                         arch = result['arch']
                         if arch and not isinstance(arch, UpdateableStr):
                             d = etree.XML(arch)
-                            for t in trans_parse_view(d):
+                            for t in extract_translatable_view_strings(d):
                                 push_translation(module, 'wizard_view', name, 0, t)
 
                         # export button labels
