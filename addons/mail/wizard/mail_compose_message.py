@@ -214,7 +214,7 @@ class mail_compose_message(osv.TransientModel):
                     post_values['attachments'] = email_dict.pop('attachments', [])
                     attachment_ids = []
                     for attach_id in post_values.pop('attachment_ids'):
-                        new_attach_id = ir_attachment_obj.copy(cr, uid, attach_id, {'res_model': active_model_pool_name, 'res_id': res_id}, context=context)
+                        new_attach_id = ir_attachment_obj.copy(cr, uid, attach_id, {'res_model': self._name, 'res_id': wizard.id}, context=context)
                         attachment_ids.append(new_attach_id)
                     post_values['attachment_ids'] = attachment_ids
                     post_values.update(email_dict)
