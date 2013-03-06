@@ -557,5 +557,17 @@
         <menuitem id="base.menu_invoiced" name="Invoicing" parent="base.menu_base_partner" sequence="5"/>
         <menuitem id="menu_invoicing_sales_order_lines" parent="base.menu_invoiced" action="action_order_line_tree2" sequence="10" groups="sale.group_invoice_so_lines"/>
 
+        <record model="ir.ui.view" id="view_company_inherit_form2">
+            <field name="name">res.company.form.inherit</field>
+            <field name="inherit_id" ref="base.view_company_form"/>
+            <field name="model">res.company</field>
+            <field name="arch" type="xml">
+                <xpath expr="//group[@name='account_grp']" position="after">
+                    <group name="sale_grp" string="Sales">
+                        <field name="sale_note" nolabel="1" placeholder="Default terms &amp; conditions..."/>
+                    </group>
+                </xpath>
+            </field>
+        </record>
     </data>
 </openerp>
