@@ -375,25 +375,25 @@ class email_template(osv.osv):
         values = self.generate_email(cr, uid, template_id, res_id, context=context)
         assert values.get('email_from'), 'email_from is missing or empty after template rendering, send_mail() cannot proceed'
         del values['email_recipients']  # TODO Properly use them.
-        template = self.get_email_template(cr, uid, template_id, res_id, context=context)
-
-        # manage attachments
         attachment_ids = values.pop('attachment_ids', [])
         attachments = values.pop('attachments', [])
+        msg_id = mail_mail.create(cr, uid, values, context=context)
+
+        # manage attachments
         for attachment in attachments:
             attachment_data = {
                     'name': attachment[0],
                     'datas_fname': attachment[0],
                     'datas': attachment[1],
-                    'res_model': template.model,
-                    'res_id': res_id,
+                    'res_model': 'mail.message',
+                    'res_id': msg_id,
             }
             context.pop('default_type', None)
             attachment_ids.append(ir_attachment.create(cr, uid, attachment_data, context=context))
         if attachment_ids:
             values['attachment_ids'] = [(6, 0, attachment_ids)]
+            mail_mail.write(cr, uid, msg_id, {'attachment_ids': [(6, 0, attachment_ids)]}, context=context)
 
-        msg_id = mail_mail.create(cr, uid, values, context=context)
         if force_send:
             mail_mail.send(cr, uid, [msg_id], context=context)
         return msg_id
