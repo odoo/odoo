@@ -69,19 +69,6 @@ class account_analytic_invoice_line(osv.osv):
         'account_id': _default_account_id,
     }
 
-    def copy(self, cr, uid, id, default=None, context=None):
-        default = default or {}
-        data = self.browse(cr, uid, id)
-        default.update({'product_id': data.product_id.id,
-                        'name': data.name,
-                        'quantity': data.quantity,
-                        'uom_id': data.uom_id.id,
-                        'price_unit': data.price_unit,
-                        'price_subtotal': data.price_subtotal,
-                        'analytic_account_id' : False,
-                        'tax_ids': [(6, 0, [x.id for x in data.tax_ids])]})
-        return super(account_analytic_invoice_line, self).copy(cr, uid, id, default, context)
-
     def product_id_change(self, cr, uid, ids, product, uom_id, qty=0, name='', partner_id=False, price_unit=False, currency_id=False, company_id=None, context=None):
         if context is None:
             context = {}
@@ -682,7 +669,7 @@ class account_analytic_account(osv.osv):
         'interval': 1,
         'next_date': lambda *a: time.strftime('%Y-%m-%d'),
         'rrule_type':'monthly'
-                }
+    }
 
     def open_sale_order_lines(self,cr,uid,ids,context=None):
         if context is None:
@@ -706,15 +693,16 @@ class account_analytic_account(osv.osv):
             return {}
         obj_analytic_line = self.pool.get('account.analytic.invoice.line')
         res = super(account_analytic_account, self).on_change_template(cr, uid, ids, template_id, context=context)
-        for analytic_account in self.browse(cr, uid, ids):
-            if analytic_account.invoice_line_ids: 
-                obj_analytic_line.unlink(cr, uid, [x.id for x in analytic_account.invoice_line_ids])
-
-        template = self.browse(cr, uid, template_id, context=context)
+        analytic_account = self.browse(cr, uid, template_id, context=context)
         invoice_line_ids = []
+        #TO FIX: do not use write here. need another solution to unlink
+        self.write(cr, uid, analytic_account.id, {'invoice_line_ids': []})
+        
+        template = self.browse(cr, uid, template_id, context=context)
         for x in template.invoice_line_ids:
-            lines = obj_analytic_line.copy(cr, uid, x.id, {}, context)
-            invoice_line_ids.append(lines)
+            line = x.read([],load='_classic_write')[0]
+            line['analytic_account_id'] = analytic_account.id
+            invoice_line_ids.append((0, 0, line))
         res['value']['fix_price_invoices'] = template.fix_price_invoices
         res['value']['invoice_on_timesheets'] = template.invoice_on_timesheets
         res['value']['hours_qtt_est'] = template.hours_qtt_est
@@ -725,7 +713,7 @@ class account_analytic_account(osv.osv):
         res['value']['recurring_invoices'] = template.recurring_invoices
         res['value']['interval'] = template.interval
         res['value']['rrule_type'] = template.rrule_type
-        res['value']['invoice_line_ids'] = [(4, id) for id in invoice_line_ids]
+        res['value']['invoice_line_ids'] = invoice_line_ids
         return res
 
     def onchange_next_date(self, cr, uid, ids, next_date,context=None):
@@ -810,37 +798,46 @@ class account_analytic_account(osv.osv):
             inv_line_id.append(line_id)
         return inv_line_id
 
+    def _prepare_invoice(self, cr, uid, contract, context=None):
+        if context is None:
+            context = {}
+        inv_id = []
+        inv_obj = self.pool.get('account.invoice')
+        journal_obj = self.pool.get('account.journal')
+
+        if not contract.partner_id:
+            raise osv.except_osv(_('No Customer Defined !'),_("You must first select a Customer for Contract %s!") % contract.name )
+        journal_ids = journal_obj.search(cr, uid, [('type', '=','sale'),('company_id', '=', contract.company_id.id or False)], limit=1)
+        if not journal_ids:
+            raise osv.except_osv(_('Error!'),
+            _('Define sale journal for this company: "%s" (id:%d).') % (contract.company_id.name or False, contract.company_id.id or False))
+        inv_data = {
+               'name': contract.name,
+               'reference': contract.code or False,
+               'account_id': contract.partner_id.property_account_receivable.id or contract.partner_id.property_account_receivable or False,
+               'type': 'out_invoice',
+               'partner_id': contract.partner_id.id,
+               'currency_id': contract.partner_id.property_product_pricelist.id or False,
+               'journal_id': len(journal_ids) and journal_ids[0] or False,
+               'date_invoice': contract.next_date,
+               'origin': contract.name,
+               'company_id': contract.company_id.id or False,
+            }
+        invoice_id = inv_obj.create(cr, uid, inv_data, context=context)
+        return invoice_id
+
     def cron_create_invoice(self, cr, uid, automatic=False, use_new_cursor=False, context=None):
+        if context is None:
+            context = {}
         current_date =  time.strftime('%Y-%m-%d')
         inv_obj = self.pool.get('account.invoice')
         obj_invoice_line = self.pool.get('account.invoice.line')
-        journal_obj = self.pool.get('account.journal')
-        if context is None:
-            context = {}
         contract_ids = self.search(cr, uid, [('next_date','=', current_date), ('state','=', 'open'), ('recurring_invoices','=', True)])
         if contract_ids:
             for contract in self.browse(cr, uid, contract_ids):
                 contract_line_ids = self.pool.get('account.analytic.invoice.line').search(cr, uid, [('analytic_account_id', '=', contract.id)], context=context)
                 if contract_line_ids:
-                    if not contract.partner_id:
-                        raise osv.except_osv(_('No Customer Defined !'),_("You must first select a Customer for Contract %s!") % contract.name )
-                    journal_ids = journal_obj.search(cr, uid, [('type', '=','sale'),('company_id', '=', contract.company_id.id or False)], limit=1)
-                    if not journal_ids:
-                        raise osv.except_osv(_('Error!'),
-                        _('Define sale journal for this company: "%s" (id:%d).') % (contract.company_id.name or False, contract.company_id.id or False))
-                    inv_data = {
-                           'name': contract.name,
-                           'reference': contract.code or False,
-                           'account_id': contract.partner_id.property_account_receivable.id or contract.partner_id.property_account_receivable or False,
-                           'type': 'out_invoice',
-                           'partner_id': contract.partner_id.id,
-                           'currency_id': contract.partner_id.property_product_pricelist.id or False,
-                           'journal_id': len(journal_ids) and journal_ids[0] or False,
-                           'date_invoice': contract.next_date,
-                           'origin': contract.name,
-                           'company_id': contract.company_id.id or False,
-                        }
-                    invoice_id = inv_obj.create(cr, uid, inv_data, context=context)
+                    invoice_id = self._prepare_invoice(cr, uid, contract, context=context)
                     self._prepare_invoice_line(cr, uid, contract, contract_line_ids, invoice_id,context=context)
                     inv_obj.button_compute(cr, uid, [invoice_id])
                     next_date = datetime.datetime.strptime(contract.next_date, "%Y-%m-%d") or datetime.datetime.strptime(current_date, "%Y-%m-%d")

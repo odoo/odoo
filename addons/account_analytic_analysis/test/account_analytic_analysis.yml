@@ -26,6 +26,8 @@
   Genrate Invoice of 'Agrement of the loan EMI' for current month
 -
   !python {model: account.analytic.account}: |
+    from dateutil.relativedelta import relativedelta
+    import datetime
     data = {
         'name':  'Agrement of the loan for current month',
         'template_id': ref("account_analytic_account_0"),
@@ -43,8 +45,6 @@
     assert template.company_id.id == contract.company_id.id, "Company of contract is not match with Contract Template"
     assert template.date_start == contract.date_start, "Start Date of contract is not match with Contract Template"
     assert template.interval == contract.interval, "Interval of contract is not match with Contract Template"
-    from dateutil.relativedelta import relativedelta
-    import datetime
     self.cron_create_invoice(cr, uid, False, False, None)
     invoice_obj = self.pool.get('account.invoice')
     contract_invoice = invoice_obj.search(cr, uid, [('origin','=','Agrement of the loan for current month')])
