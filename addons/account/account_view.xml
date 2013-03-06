@@ -161,7 +161,7 @@
               </p>
             </field>
         </record>
-        <menuitem id="menu_action_account_period" action="action_account_period" parent="account.next_id_23" groups="base.group_no_one"/>
+        <menuitem id="menu_action_account_period" action="action_account_period" parent="account.next_id_23"/>
 
         <!-- Accounts -->
         <record id="view_account_form" model="ir.ui.view">
@@ -552,7 +552,7 @@
                 <header>
                     <button name="button_confirm_bank" states="draft" string="Confirm" type="object" class="oe_highlight"/>
                     <button name="button_dummy" states="draft" string="Compute" type="object" class="oe_highlight"/>
-                    <button name="button_cancel" states="confirm" string="Cancel" type="object"/>
+                    <button name="button_cancel" states="confirm" string="Cancel Statement" type="object"/>
                     <field name="state" widget="statusbar" statusbar_visible="draft,confirm"/>
                 </header>
                 <sheet>
@@ -1258,7 +1258,7 @@
                 <form string="Account Entry" version="7.0">
                 <header>
                     <button name="button_validate" states="draft" string="Post" type="object" class="oe_highlight" groups="account.group_account_invoice"/>
-                    <button name="button_cancel" states="posted" string="Cancel" type="object" groups="account.group_account_invoice"/>
+                    <button name="button_cancel" states="posted" string="Cancel Entry" type="object" groups="account.group_account_invoice"/>
                     <field name="state" widget="statusbar"/>
                 </header>
                 <sheet string="Journal Entries" >
@@ -2260,7 +2260,7 @@
                 <header>
                     <button name="button_confirm_cash" states="open" string="Close CashBox" type="object" class="oe_highlight"/>
                     <button name="button_open" states="draft" string="Open CashBox" type="object" class="oe_highlight"/>
-                    <button name="button_cancel" states="confirm,open" string="Cancel" type="object"/>
+                    <button name="button_cancel" states="confirm,open" string="Cancel CashBox" type="object"/>
                     <field name="state" widget="statusbar" nolabel="1" statusbar_visible="draft,confirm"/>
                 </header>
                 <sheet string="Statement">

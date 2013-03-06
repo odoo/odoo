@@ -93,7 +93,7 @@ class mail_notification(osv.Model):
             # Do not send to partners without email address defined
             if not partner.email:
                 continue
-            # Partner does not want to receive any emails
+            # Partner does not want to receive any emails or is opt-out
             if partner.notification_email_send == 'none':
                 continue
             # Partner wants to receive only emails and comments

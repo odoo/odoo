@@ -1873,6 +1873,14 @@ class account_tax(osv.osv):
             return result in the context
             Ex: result=round(price_unit*0.21,4)
     """
+    def copy(self, cr, uid, id, default=None, context=None):
+        if default is None:
+            default = {}
+        name = self.read(cr, uid, id, ['name'], context=context)['name']
+        default = default.copy()
+        default.update({'name': name + _(' (Copy)')})
+        return super(account_tax, self).copy(cr, uid, id, default=default, context=context)
+
 
     def get_precision_tax():
         def change_digit_tax(cr):

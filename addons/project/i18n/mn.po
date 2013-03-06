@@ -8,13 +8,13 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2012-12-21 17:04+0000\n"
-"PO-Revision-Date: 2013-03-01 12:06+0000\n"
+"PO-Revision-Date: 2013-03-05 00:59+0000\n"
 "Last-Translator: gobi <Unknown>\n"
 "Language-Team: Mongolian <mn@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-03-02 05:22+0000\n"
+"X-Launchpad-Export-Date: 2013-03-06 06:22+0000\n"
 "X-Generator: Launchpad (build 16514)\n"
 
 #. module: project
@@ -232,7 +232,7 @@ msgstr "Оноогдсон"
 #: model:mail.message.subtype,name:project.mt_project_task_closed
 #: model:mail.message.subtype,name:project.mt_task_closed
 msgid "Task Done"
-msgstr "Үүрэг Дууслаа"
+msgstr "Даалгавар Хийгдсэн"
 
 #. module: project
 #: view:project.project:0
@@ -273,7 +273,7 @@ msgstr "Төслийн даалгавар ацаглах"
 #: model:mail.message.subtype,name:project.mt_project_task_started
 #: model:mail.message.subtype,name:project.mt_task_started
 msgid "Task Started"
-msgstr "Үүрэг Эхэллээ"
+msgstr "Даалгавар Эхэлсэн"
 
 #. module: project
 #: view:project.task:0
@@ -293,7 +293,7 @@ msgstr "Гишүүн"
 #. module: project
 #: view:project.task:0
 msgid "Cancel Task"
-msgstr "Үүрэг Цуцлах"
+msgstr "Даалгавар Цуцлах"
 
 #. module: project
 #: help:project.project,members:0
@@ -441,13 +441,13 @@ msgstr "Төлөвлөсөн цагийг шалгах"
 #. module: project
 #: field:project.config.settings,module_pad:0
 msgid "Use integrated collaborative note pads on task"
-msgstr "Даалгавар дээр хамтран ажиллах тэмдэглэлийн наалтыг хэрэглэх"
+msgstr "Даалгавар дээр хамтран ажиллах тэмдэглэлийн хавтанг хэрэглэх"
 
 #. module: project
 #: model:mail.message.subtype,name:project.mt_project_task_blocked
 #: model:mail.message.subtype,name:project.mt_task_blocked
 msgid "Task Blocked"
-msgstr "Үүрэг хаалттай"
+msgstr "Даалгавар Хоригдсон"
 
 #. module: project
 #: model:process.node,note:project.process_node_opentask0
@@ -467,7 +467,7 @@ msgstr "oe_kanban_text_red"
 #. module: project
 #: model:mail.message.subtype,description:project.mt_task_blocked
 msgid "Task blocked"
-msgstr "Үүрэг хаалттай"
+msgstr "Даалгавар Хоригдсон"
 
 #. module: project
 #: view:project.task:0
@@ -1240,6 +1240,16 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Асуудлын сувагт шинэ үе нэмэхдээ дарна.\n"
+"              </p><p>\n"
+"                Төсөлд даалгавар болон асуудлыг үүсэхээс эхлээд дуусах "
+"хүртэлх \n"
+"                алхамуудыг тодорхойлно. Энэ үеүүдийг даалгавар болон "
+"асуудлыг \n"
+"                шийдвэрлэх явцыг хөтлөхөд ашиглана.\n"
+"              </p>\n"
+"            "
 
 #. module: project
 #: help:project.task,total_hours:0
@@ -1257,7 +1267,7 @@ msgstr "%s (хуулбар)"
 #. module: project
 #: model:mail.message.subtype,name:project.mt_project_task_stage
 msgid "Task Stage Changed"
-msgstr ""
+msgstr "Даалгаврын Үе Өөрчлөгдлөө"
 
 #. module: project
 #: view:project.task:0
@@ -1384,7 +1394,7 @@ msgstr "Шийд хүлээсэн"
 #. module: project
 #: field:project.task,categ_ids:0
 msgid "Tags"
-msgstr "Тойгууд"
+msgstr "Пайзууд"
 
 #. module: project
 #: model:ir.model,name:project.model_project_task_history
@@ -1577,6 +1587,10 @@ msgid ""
 "                (by default, http://ietherpad.com/).\n"
 "                This installs the module pad."
 msgstr ""
+"Шинэ хавтанд ямар Хавтангийн суулгац хэрэглэгдэхийг компанид өөриймшүүлэх "
+"боломжийг олгоно\n"
+"                (анхныхаараа бол, http://ietherpad.com/).\n"
+"                Энэ нь pad модулийг суулгадаг."
 
 #. module: project
 #: field:project.task,id:0
@@ -1619,7 +1633,7 @@ msgstr "Өөр хэрэглэгчид өөрийн даалгаврыг ацаг
 #. module: project
 #: model:mail.message.subtype,description:project.mt_task_started
 msgid "Task started"
-msgstr "Үүрэг эхэллээ"
+msgstr "Даалгавар эхэлсэн"
 
 #. module: project
 #: help:project.task.reevaluate,remaining_hours:0
@@ -1688,6 +1702,11 @@ msgid ""
 "                editing and deleting either ways.\n"
 "                This installs the module project_timesheet."
 msgstr ""
+"Энэ нь Төслийн менежментийн дор тодорхойлогдсон \n"
+"                байгаа даалгавруудыг цагийн хуудас руу тодорхой огноо, "
+"хэрэглэгчдээр \n"
+"                зөөх, үүсгэх, засварлах, устгах боломжийг олгодог.\n"
+"                Энэ нь project_timesheet модулийг суулгадаг."
 
 #. module: project
 #: field:project.config.settings,module_project_issue:0
@@ -1761,6 +1780,15 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Шинэ даалгавар үүсгэхдээ дарна.\n"
+"              </p><p>\n"
+"                OpenERP'-н төслийн менежмент нь даалгавруудын сувгуудыг "
+"менежмент хийж бүх ажил хийгдэх явдлыг оновчтойгоор хийх боломжийг олгодог. "
+"Явцыг хөтлөх, даалгавар дээр хэлэлцэх, баримт хавсаргах гэх ажлыг хийх "
+"боломжтой.\n"
+"              </p>\n"
+"            "
 
 #. module: project
 #: field:project.task,date_end:0
@@ -1781,7 +1809,7 @@ msgstr "Баримтууд"
 #. module: project
 #: model:mail.message.subtype,description:project.mt_task_new
 msgid "Task created"
-msgstr "Үүрэг үүслээ"
+msgstr "Даалгавар үүссэн"
 
 #. module: project
 #: view:report.project.task.user:0
@@ -1946,6 +1974,13 @@ msgid ""
 "'Manufacture'.\n"
 "                This installs the module project_mrp."
 msgstr ""
+"Энэ боломж нь борлуулалтын захиалга дээрх үйлчилгээ төрөлтэй бараанаас "
+"төслийн даалгаврыг автоматаар үүсгэдэг.\n"
+"                Бүр тодруулбал, бараан нь 'Үйлчилгээ' төрөлтэй, \n"
+"                'Захиалуулах' татан авалтын аргатай, 'Үйлдвэрлэх' "
+"нийлүүлэлтийн аргатай \n"
+"                байвал даалгавар үүсгэгддэг.\n"
+"                Энэ нь project_mrp модулийг суулгадаг."
 
 #. module: project
 #: help:project.task.delegate,planned_hours:0
@@ -1973,7 +2008,7 @@ msgstr "Канбан Төлөв"
 #. module: project
 #: field:project.config.settings,module_project_timesheet:0
 msgid "Record timesheet lines per tasks"
-msgstr ""
+msgstr "Даалгавруудаар цагийн хуудсыг хөтлөнө"
 
 #. module: project
 #: model:ir.model,name:project.model_report_project_task_user
@@ -2010,12 +2045,13 @@ msgid ""
 "The kind of document created when an email is received on this project's "
 "email alias"
 msgstr ""
+"Энэ төслийн имэйлийн өөр нэр дээр имэйл ирэхэд үүсгэгдэх баримтын төрөл"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.action_config_settings
 #: view:project.config.settings:0
 msgid "Configure Project"
-msgstr ""
+msgstr "Төслийг Тохируулах"
 
 #. module: project
 #: view:project.task.history.cumulative:0
@@ -2047,7 +2083,7 @@ msgstr "Энэ данстай холбогдсон төслийг эхлээд �
 #: model:mail.message.subtype,name:project.mt_project_task_new
 #: model:mail.message.subtype,name:project.mt_task_new
 msgid "Task Created"
-msgstr "Үүрэг Үүслээ"
+msgstr "Даалгавар Үүссэн"
 
 #. module: project
 #: view:report.project.task.user:0
@@ -2065,12 +2101,12 @@ msgstr "Би менежер нь байгаа төслүүд"
 #: selection:project.task.history,kanban_state:0
 #: selection:project.task.history.cumulative,kanban_state:0
 msgid "Ready for next stage"
-msgstr ""
+msgstr "Дараагийн үед бэлэн"
 
 #. module: project
 #: field:project.task.type,case_default:0
 msgid "Default for New Projects"
-msgstr ""
+msgstr "Шинэ төсөл зориулсан анхны утга"
 
 #. module: project
 #: view:project.task:0
@@ -2110,11 +2146,14 @@ msgid ""
 "resource allocation.\n"
 "                This installs the module project_long_term."
 msgstr ""
+"Урт хугацааны төслийн менежментийн модуль бөгөөд төлөвлөлт, товлолт, нөөц "
+"хуваарилалтыг хийнэ.\n"
+"                Энэ нь project_long_term модулийг суулгадаг."
 
 #. module: project
 #: model:mail.message.subtype,description:project.mt_task_closed
 msgid "Task closed"
-msgstr "Үүрэг хаагдлаа"
+msgstr "Даалгавар Хаагдсан"
 
 #. module: project
 #: selection:report.project.task.user,month:0
@@ -2142,6 +2181,8 @@ msgid ""
 "Provides timesheet support for the issues/bugs management in project.\n"
 "                This installs the module project_issue_sheet."
 msgstr ""
+"Төсөл дахь асуудал/алдааны менежментэд цагийн хуудсыг дэмждэг.\n"
+"                Энэ нь project_issue_sheet модулийг суулгадаг."
 
 #. module: project
 #: selection:project.project,privacy_visibility:0
@@ -2152,7 +2193,7 @@ msgstr "Зөвхөн дагагчид"
 #: view:board.board:0
 #: field:project.project,task_count:0
 msgid "Open Tasks"
-msgstr "Нээллттэй үүрэг"
+msgstr "Нээллттэй даалгаврууд"
 
 #. module: project
 #: field:project.project,priority:0
