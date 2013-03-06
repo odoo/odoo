@@ -1555,12 +1555,17 @@ instance.web.xml_to_str = function(node) {
     } else {
         throw new Error(_t("Could not serialize XML"));
     }
-    // Browsers won't deal with self closing tags except br, hr, input, ...
-    // http://stackoverflow.com/questions/97522/what-are-all-the-valid-self-closing-elements-in-xhtml-as-implemented-by-the-maj
-    //
+    // Browsers won't deal with self closing tags except void elements:
+    // http://www.w3.org/TR/html-markup/syntax.html
+    var void_elements = 'area base br col command embed hr img input keygen link meta param source track wbr'.split(' ');
+
     // The following regex is a bit naive but it's ok for the xmlserializer output
     str = str.replace(/<([a-z]+)([^<>]*)\s*\/\s*>/g, function(match, tag, attrs) {
-        return "<" + tag + attrs + "></" + tag + ">";
+        if (void_elements.indexOf(tag) < 0) {
+            return "<" + tag + attrs + "></" + tag + ">";
+        } else {
+            return match;
+        }
     });
     return str;
 };
