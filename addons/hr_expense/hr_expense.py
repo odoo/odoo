@@ -145,6 +145,9 @@ class hr_expense_expense(osv.osv):
     def expense_canceled(self, cr, uid, ids, context=None):
         return self.write(cr, uid, ids, {'state': 'cancelled'}, context=context)
 
+    def action_receipt_create(self, cr, uid, ids, context=None):
+        raise osv.except_osv(_('Error!'), _('Deprecated function used'))
+
     def account_move_get(self, cr, uid, expense_id, context=None):
         '''
         This method prepare the creation of the account move related to the given expense.
@@ -354,28 +357,26 @@ class hr_expense_expense(osv.osv):
             #'taxes':line.invoice_line_tax_id,
         }
 
-
-    def action_receipt_create(self, cr, uid, ids, context=None):
-        raise osv.except_osv(_('Error!'), _('Deprecated function used'))
-    
-    def action_view_receipt(self, cr, uid, ids, context=None):
-        raise osv.except_osv(_('Error!'), _('Deprecated function used'))
+    def action_view_move(self, cr, uid, ids, context=None):
         '''
-        This function returns an action that display existing receipt of given expense ids.
+        This function returns an action that display existing account.move of given expense ids.
         '''
         assert len(ids) == 1, 'This option should only be used for a single id at a time'
         voucher_id = self.browse(cr, uid, ids[0], context=context).voucher_id.id
-        res = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'account_voucher', 'view_purchase_receipt_form')
+        try:
+            dummy, view_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'account', 'view_move_form')
+        except:
+            view_id = False
         result = {
-            'name': _('Expense Receipt'),
+            'name': _('Expense Account Move'),
             'view_type': 'form',
             'view_mode': 'form',
-            'view_id': res and res[1] or False,
-            'res_model': 'account.voucher',
+            'view_id': view_id,
+            'res_model': 'account.move',
             'type': 'ir.actions.act_window',
             'nodestroy': True,
             'target': 'current',
-            'res_id': voucher_id,
+            'res_id': account_move_id,
         }
         return result
 
