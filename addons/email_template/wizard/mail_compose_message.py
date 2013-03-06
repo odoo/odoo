@@ -69,12 +69,11 @@ class mail_compose_message(osv.TransientModel):
         for wizard in self.browse(cr, uid, ids, context=context):
             if not wizard.attachment_ids or wizard.composition_mode == 'mass_mail' or not wizard.template_id:
                 continue
-            active_model_pool_name = wizard.model if wizard.model else 'mail.thread'
             template = self.pool.get('email.template').browse(cr, uid, wizard.template_id, context=context)
             new_attachment_ids = []
             for attachment in wizard.attachment_ids:
                 if attachment in template.attachment_ids:
-                    new_attachment_ids.append(self.pool.get('ir.attachment').copy(cr, uid, attachment.id, {'res_model': active_model_pool_name, 'res_id': wizard.res_id}, context=context))
+                    new_attachment_ids.append(self.pool.get('ir.attachment').copy(cr, uid, attachment.id, {'res_model': 'mail.compose.message', 'res_id': wizard.id}, context=context))
                 else:
                     new_attachment_ids.append(attachment.id)
                 self.write(cr, uid, wizard.id, {'attachment_ids': [(6, 0, new_attachment_ids)]}, context=context)
@@ -87,10 +86,10 @@ class mail_compose_message(osv.TransientModel):
             values = self.pool.get('email.template').read(cr, uid, template_id, ['subject', 'body_html', 'attachment_ids'], context)
             values.pop('id')
         elif template_id:
-            # FIXME odo: change the mail generation to avoid attachment duplication
             values = self.generate_email_for_composer(cr, uid, template_id, res_id, context=context)
             # transform attachments into attachment_ids; not attached to the document because this will
             # be done further in the posting process, allowing to clean database if email not send
+            values['attachment_ids'] = values.pop('attachment_ids', [])
             ir_attach_obj = self.pool.get('ir.attachment')
             for attach_fname, attach_datas in values.pop('attachments', []):
                 data_attach = {
@@ -141,15 +140,12 @@ class mail_compose_message(osv.TransientModel):
             mail.compose.message, transform email_cc and email_to into partner_ids """
         template_values = self.pool.get('email.template').generate_email(cr, uid, template_id, res_id, context=context)
         # filter template values
-        values = {
-            'attachment_ids': [],
-            'partner_ids': [],
-        }
         fields = ['body_html', 'subject', 'email_to', 'email_recipients', 'email_cc', 'attachment_ids', 'attachments']
-        values.update(dict((field, template_values[field]) for field in fields if template_values.get(field)))
+        values = dict((field, template_values[field]) for field in fields if template_values.get(field))
         values['body'] = values.pop('body_html', '')
 
         # transform email_to, email_cc into partner_ids
+        values['partner_ids'] = []
         mails = tools.email_split(values.pop('email_to', '') + ' ' + values.pop('email_cc', ''))
         for mail in mails:
             partner_id = self.pool.get('res.partner').find_or_create(cr, uid, mail, context=context)
@@ -170,6 +166,8 @@ class mail_compose_message(osv.TransientModel):
             values = self.generate_email_for_composer(cr, uid, wizard.template_id, res_id, context=context)
         else:
             values = {}
+        # remove attachments as they should not be rendered
+        values.pop('attachment_ids', None)
         # get values to return
         email_dict = super(mail_compose_message, self).render_message(cr, uid, wizard, res_id, context)
         values.update(email_dict)
