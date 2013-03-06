@@ -300,12 +300,7 @@ def manifest_list(req, extension, mods=None, db=None):
             path += '?' + urllib.urlencode({'db': db})
         return [path]
     files = manifest_glob(req, extension, addons=mods, db=db)
-    i_am_diabetic = req.httprequest.environ["QUERY_STRING"].count("no_sugar") >= 1 or \
-                    req.httprequest.environ.get('HTTP_REFERER', '').count("no_sugar") >= 1
-    if i_am_diabetic:
-        return [wp for _fp, wp in files]
-    else:
-        return ['%s?debug=%s' % (wp, os.path.getmtime(fp)) for fp, wp in files]
+    return [wp for _fp, wp in files]
 
 def get_last_modified(files):
     """ Returns the modification time of the most recently modified
