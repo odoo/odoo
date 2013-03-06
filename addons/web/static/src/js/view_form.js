@@ -3020,6 +3020,26 @@ instance.web.form.FieldMany2One = instance.web.form.AbstractField.extend(instanc
         if (!this.get("effective_readonly"))
             this.render_editable();
     },
+    destroy_content: function () {
+        if (this.$drop_down) {
+            this.$drop_down.off('click');
+            delete this.$drop_down;
+        }
+        if (this.$input) {
+            this.$input.closest(".ui-dialog .ui-dialog-content").off('scroll');
+            this.$input.off('keyup blur autocompleteclose autocompleteopen ' +
+                            'focus focusout change keydown');
+            delete this.$input;
+        }
+        if (this.$follow_button) {
+            this.$follow_button.off('blur focus click');
+            delete this.$follow_button;
+        }
+    },
+    destroy: function () {
+        this.destroy_content();
+        return this._super();
+    },
     init_error_displayer: function() {
         // nothing
     },
