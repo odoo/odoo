@@ -262,7 +262,8 @@ class config(osv.osv):
             model_fields_dic = self.pool.get(action.model_id.model).read(cr, uid, record_id, [], context=context)
             name_gdocs = action.name_template
             name_gdocs = name_gdocs.replace('model',action.model_id.name)
-            name_gdocs = name_gdocs.replace('filter',action.filter_id.name)
+            if action.filter_id:
+                name_gdocs = name_gdocs.replace('filter',action.filter_id.name)
             try:
                 name_gdocs = name_gdocs % model_fields_dic
             except:
