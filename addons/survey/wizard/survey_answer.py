@@ -172,7 +172,7 @@ class survey_question_wiz(osv.osv_memory):
         for row in que_rec.answer_choice_ids:
             name_select = tools.ustr(que.id) + "_selection_" + tools.ustr(row.id)
             etree.SubElement(xml_group, 'newline')
-            etree.SubElement(xml_group, 'label', {'for': name_select, 'string': tools.ustr(row.answer), 'class': 'oe_survey_matrix_of_choices_row'})
+            etree.SubElement(xml_group, 'label', {'for': name_select, 'string': tools.ustr(row.answer)})
             etree.SubElement(xml_group, 'field', {'widget': 'radio', 'horizontal': '1', 'no_radiolabel': not first and '1' or '0', 'modifiers': readonly, 'name': name_select, 'nolabel': "1"})
             selection = []
             for col in que_rec.column_heading_ids:
@@ -181,7 +181,7 @@ class survey_question_wiz(osv.osv_memory):
                 name_comment = tools.ustr(que.id) + "_commentcolumn_" + tools.ustr(row.id) + "_field"
                 if first:
                     div_group = etree.SubElement(xml_group, 'div', {'class': 'oe_survey_matrix_of_choices_comment'})
-                    etree.SubElement(div_group, 'label', {'string': tools.ustr(row.answer)})
+                    etree.SubElement(div_group, 'label', {'string': tools.ustr(que.column_name)})
                     etree.SubElement(div_group, 'newline')
                     etree.SubElement(div_group, 'field', {'modifiers': readonly, 'name': name_comment, 'nolabel': "1"})
                 else:
@@ -430,8 +430,9 @@ class survey_question_wiz(osv.osv_memory):
                     for que in (pag_rec and pag_rec.question_ids or []):
                         qu_no += 1
                         que_rec = que_obj.browse(cr, SUPERUSER_ID, que.id, context=context)
-                        separator_string = tools.ustr(qu_no) + "." + tools.ustr(que_rec.question)
+                        separator_string = tools.ustr(qu_no) + ". " + tools.ustr(que_rec.question)
                         star = que_rec.is_require_answer and '*' or ''
+                        # display title
                         etree.SubElement(xml_form, 'separator', {'string': star + to_xml(separator_string)})
                         if edit_mode:
                             xml_group1 = etree.SubElement(xml_form, 'group', {'col': '2', 'colspan': '2'})
@@ -439,13 +440,14 @@ class survey_question_wiz(osv.osv_memory):
                             etree.SubElement(xml_group1, 'button', {'string': '', 'icon': "gtk-edit", 'type': 'object', 'name': "action_edit_question", 'context': tools.ustr(context)})
                             etree.SubElement(xml_group1, 'button', {'string': '', 'icon': "gtk-delete", 'type': 'object', 'name': "action_delete_question", 'context': tools.ustr(context)})
 
-                        xml_group = etree.SubElement(xml_form, 'group', {'col': '1', 'colspan': '4'})
+                        xml_group = etree.SubElement(xml_form, 'group', {'col': '1', 'colspan': '4', 'class': 'oe_survey_%s' % que_rec.type})
 
-                        if que_rec.type not in ['descriptive_text']:
-                            self._view_field_descriptive_text(cr, uid, xml_group, fields, '{"readonly": 1}', que, que_rec, context=context)
-
-                        # rendering different views
                         readonly = response_info['readonly'] and '{"readonly": 1}' or '{}'
+                        # display description
+                        if que_rec.type not in ['descriptive_text']:
+                            self._view_field_descriptive_text(cr, uid, xml_group, fields, readonly, que, que_rec, context=context)
+                            etree.SubElement(xml_group, 'newline')
+                        # rendering different views
                         getattr(self, "_view_field_%s" % que_rec.type)(cr, uid, xml_group, fields, readonly, que, que_rec, context=context)
                         if que_rec.type in ['multiple_choice_only_one_ans', 'multiple_choice_multiple_ans', 'matrix_of_choices_only_one_ans', 'matrix_of_choices_only_multi_ans', 'rating_scale'] and que_rec.is_comment_require:
                             self._view_field_postprocessing(cr, uid, xml_group, fields, response_info['readonly'], que, que_rec, context=context)

@@ -69,9 +69,18 @@
     text-decoration: none !important;
 }
 
-.openerp .oe_survey_answer label {
-    max-width: 260px;
-    white-space: normal !important;
+.openerp .oe_form .oe_survey_answer .oe_form_sheet label {
+    max-width: 280px;
+    white-space: normal;
     font-weight: bold;
     padding-right: 8px;
+}
+
+.openerp .oe_form .oe_survey_answer .oe_survey_matrix_of_choices_only_one_ans label,
+.openerp .oe_form .oe_survey_answer .matrix_of_choices_only_multi_ans label {
+    min-width: 240px;
+}
+.openerp .oe_popup_form .oe_form_sheet.oe_survey,
+.openerp .oe_popup_form .oe_form_sheetbg.oe_survey {
+    padding-top: 0;
 }

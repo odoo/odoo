@@ -345,8 +345,8 @@ class survey_question(osv.osv):
         'req_error_msg': fields.text('Error Message', translate=True),
         'allow_comment': fields.boolean('Allow Comment Field'),
         'sequence': fields.integer('Sequence'),
-        'tot_resp': fields.function(_calc_response, string="Total Answer"),
-        'survey': fields.related('page_id', 'survey_id', type='many2one', relation='survey', string='Survey'),
+        'tot_resp': fields.function(_calc_response, type="integer", string="Total Answer"),
+        'survey_id': fields.related('page_id', 'survey_id', type='many2one', relation='survey', string='Survey'),
         'descriptive_text': fields.html('Descriptive Text', translate=True),
         'column_heading_ids': fields.one2many('survey.question.column.heading', 'question_id', ' Column heading'),
         'type': fields.selection([('multiple_choice_only_one_ans', 'Multiple Choice (Only One Answer)'),
@@ -410,6 +410,7 @@ class survey_question(osv.osv):
     }
     _defaults = {
         'sequence': 1,
+        'page_id': lambda s, cr, uid, c: c.get('page_id'),
         'type': lambda s, cr, uid, c: _('multiple_choice_multiple_ans'),
         'req_error_msg': lambda s, cr, uid, c: _('This question requires an answer.'),
         'required_type': 'at least',
@@ -448,6 +449,12 @@ class survey_question(osv.osv):
             val.update({'in_visible_rating_weight': True, 'in_visible_menu_choice': True, \
                          'in_visible_answer_type': True})
             return {'value': val}
+
+    def on_change_page_id(self, cr, uid, ids, page_id, context=None):
+        if page_id:
+            page = self.pool.get('survey.page').browse(cr, uid, page_id, context=context)
+            return {'survey_id': page.survey_id.id}
+        return {'value': {}}
 
     def write(self, cr, uid, ids, vals, context=None):
         questions = self.read(cr, uid, ids, ['answer_choice_ids', 'type', 'required_type', \
@@ -511,14 +518,14 @@ class survey_question(osv.osv):
         return super(survey_question, self).write(cr, uid, ids, vals, context=context)
 
     def create(self, cr, uid, vals, context=None):
-        page = self.pool.get('survey.page').browse(cr, uid, 'page_id' in vals and vals['page_id'] or context['page_id'], context=context).title
+        page = self.pool.get('survey.page').browse(cr, uid, 'page_id' in vals and vals['page_id'] or context['page_id'], context=context)
         if 'answer_choice_ids' in vals and not len(vals.get('answer_choice_ids', [])) and \
             vals.get('type') not in ['descriptive_text', 'single_textbox', 'comment', 'table']:
-            raise osv.except_osv(_('Warning!'), _('You must enter one or more answers for question "%s" of page %s .') % (vals['question'], page))
+            raise osv.except_osv(_('Warning!'), _('You must enter one or more answers for question "%s" of page %s .') % (vals['question'], page.title))
 
         if 'column_heading_ids' in vals and not len(vals.get('column_heading_ids', [])) and \
             vals.get('type') in ['matrix_of_choices_only_one_ans', 'matrix_of_choices_only_multi_ans', 'rating_scale']:
-            raise osv.except_osv(_('Warning!'), _('You must enter one or more column headings for question "%s" of page %s.') % (vals['question'], page))
+            raise osv.except_osv(_('Warning!'), _('You must enter one or more column headings for question "%s" of page %s.') % (vals['question'], page.title))
 
         if 'is_require_answer' in vals and vals.get('type') in ['multiple_choice_multiple_ans', 'matrix_of_choices_only_one_ans', \
             'matrix_of_choices_only_multi_ans', 'rating_scale', 'multiple_textboxes', 'numerical_textboxes', 'date', 'date_and_time']:
@@ -549,14 +556,6 @@ class survey_question(osv.osv):
             'target': 'new',
             'context': context
         }
-
-    def default_get(self, cr, uid, fields, context=None):
-        if context is None:
-            context = {}
-        data = super(survey_question, self).default_get(cr, uid, fields, context)
-        if context.get('page_id'):
-            data['page_id'] = context.get('page_id', False)
-        return data
 
 survey_question()
 
@@ -755,14 +754,11 @@ class survey_response_line(osv.osv):
     _columns = {
         'response_id': fields.many2one('survey.response', 'Answer', ondelete='cascade'),
         'date_create': fields.datetime('Create Date', required=1),
-        'state': fields.selection([('draft', 'Draft'), ('done', 'Answered'), ('skip', 'Skiped')], \
-                                   'Status', readonly=True),
-        'question_id': fields.many2one('survey.question', 'Question'),
-        'page_id': fields.related('question_id', 'page_id', type='many2one', \
-                                  relation='survey.page', string='Page'),
+        'state': fields.selection([('draft', 'Draft'), ('done', 'Answered'), ('skip', 'Skiped')], 'Status', readonly=True),
+        'question_id': fields.many2one('survey.question', 'Question', ondelete='restrict'),
+        'page_id': fields.related('question_id', 'page_id', type='many2one', relation='survey.page', string='Page', ondelete='restrict'),
         'response_answer_ids': fields.one2many('survey.response.answer', 'response_id', 'Answer'),
-        'response_table_ids': fields.one2many('survey.tbl.column.heading', \
-                                    'response_table_id', 'Answer'),
+        'response_table_ids': fields.one2many('survey.tbl.column.heading', 'response_table_id', 'Answer'),
         'comment': fields.text('Notes'),
         'single_text': fields.char('Text', size=255),
     }

@@ -6,7 +6,7 @@
 
         <menuitem name="Surveys" id="menu_surveys" parent="base.menu_tools" sequence="2" groups="base.group_tool_user,base.group_tool_manager,base.group_survey_user"/>
 
-        <menuitem name="Configuration" id="menu_surveys_configuration" parent="menu_surveys" sequence="3" groups="base.group_tool_manager"/>
+        <menuitem name="Configuration" id="menu_surveys_configuration" parent="menu_surveys" sequence="50" groups="base.group_tool_manager"/>
         
         <menuitem name="Reporting" parent="base.menu_tools" id="base.menu_lunch_reporting" sequence="6"/>
         <menuitem name="Reporting" id="menu_reporting" parent="menu_surveys" sequence="60"/>
@@ -28,7 +28,7 @@
                     <button name="survey_cancel" string="Cancel" states="draft" type="object"/>
                     <field name="state" widget="statusbar" nolabel="1" attrs="{'invisible':[('state','=','cancel')]}" statusbar_visible="draft,open,close"/>
                 </header>
-                <sheet>
+                <sheet class="oe_survey">
                     <div class="oe_button_box oe_right">
                         <button name="action_print_survey" states="draft,open,close,cancel" string="Print Answer" type="object"/>
                         <button name="edit_survey" states="draft,open,close,cancel" string="Edit Survey" type="object"/>
@@ -47,7 +47,7 @@
                             <field name="public_url" widget="url"/>
                         </group>
                     </group>
-                    <field name="page_ids" colspan="4" mode="tree" attrs="{'readonly':[('state','=','close')]}">
+                    <field name="page_ids" colspan="4" mode="tree" attrs="{'readonly':[('state','=','close')]}" context="{'default_survey_id': active_id}">
                         <tree string="Survey Question">
                             <field name="sequence" widget="handle"/>
                             <field name="title"/>
@@ -141,7 +141,8 @@
                                     </div>
                                     <br/>
                                     <ul>
-                                        <li t-if="widget.view.is_action_enabled('edit')"><a name="edit_survey" string="Edit Survey" type="object">Edit Survey</a></li>
+                                        <li t-if="widget.view.is_action_enabled('edit')"><a name="edit_survey" type="object">Edit Survey</a></li>
+                                        <li t-if="widget.view.is_action_enabled('edit')"><a name="action_print_survey" type="object">Print Survey</a></li>
                                         <li t-if="record.state.raw_value === 'open' and widget.view.is_action_enabled('edit')"><a name="action_survey_sent" type="object">Collect responses</a></li>
                                         <li><a t-if="record.state.raw_value === 'open'" name="fill_survey" type="object">Fill in survey</a></li>
                                         <li t-if="record.tot_comp_survey.raw_value and widget.view.is_action_enabled('edit')"><a name="print_statistics" type="object">Print Statistics</a></li>
@@ -188,7 +189,10 @@
             <field name="model">survey.page</field>
             <field name="arch" type="xml">
                 <form string="Survey Page" version="7.0">
-                    <sheet>
+                    <sheet class="oe_survey">
+                        <group col="2" invisible="context.get('edit')">
+                            <field name="survey_id"/>
+                        </group>
                         <label for="title" class="oe_edit_only"/>
                         <h1>
                             <field name="title"/>
@@ -196,7 +200,7 @@
                         <group colspan="4" col="1">
                             <field name="note" nolabel="1" placeholder="Description on the survey page..."/>
                             <field name="question_ids" nolabel="1" mode="tree">
-                                <tree string="Survey Question">
+                                <tree string="Survey Question" context="{'default_page_id': active_id}">
                                     <field name="sequence" widget="handle"/>
                                     <field name="question"/>
                                     <field name="type"/>
@@ -248,6 +252,10 @@
             action="action_survey_page_form" parent="menu_surveys_configuration"
             groups="base.group_no_one" sequence="1"/>
 
+        <menuitem name="Surveys Pages" id="menu_survey_page_form1"
+            action="action_survey_page_form" parent="menu_surveys"
+            groups="base.group_tool_manager" sequence="4"/>
+
         <record model="ir.ui.view" id="survey_page_wizard_test1">
             <field name="name">survey_page_wizard_test</field>
             <field name="model">survey.page</field>
@@ -273,14 +281,22 @@
             <field name="name">survey_question_form</field>
             <field name="model">survey.question</field>
             <field name="arch" type="xml">
-                <form string="Survey Question">
-                    <field name="question" colspan="4"/>
-                    <field name="descriptive_text" colspan="4"/>
-                    <field name="type" on_change="on_change_type(type)"/>
+                <form string="Survey Question" version="7.0">
+                    <sheet class="oe_survey">
                     <field name="in_visible_rating_weight" invisible="1"/>
                     <field name="in_visible_menu_choice" invisible="1"/>
                     <field name="in_visible_answer_type" invisible="1"/>
                     <group colspan="4" col="1">
+                        <group col="2" invisible="context.get('edit')">
+                            <field name="tot_resp"/>
+                            <field name="survey_id" readonly="1"/>
+                            <field name="page_id" on_change="on_change_page_id(page_id)"/>
+                        </group>
+                        <group col="2">
+                            <field name="type" on_change="on_change_type(type)"/>
+                            <field name="question" nolabel="1" colspan="2"/>
+                            <field name="descriptive_text" nolabel="1" colspan="2"/>
+                        </group>
                         <group string="Answer" attrs="{'invisible':[('type','not in',['multiple_textboxes_diff_type', 'multiple_choice_only_one_ans', 'multiple_choice_multiple_ans', 'matrix_of_choices_only_one_ans', 'matrix_of_choices_only_multi_ans', 'rating_scale', 'multiple_textboxes', 'numerical_textboxes', 'date', 'date_and_time', 'table'])]}">
                            <group colspan="4" attrs="{'invisible':[('type','=','table')]}">
                                <field name="answer_choice_ids" nolabel="1" colspan="4" context="{'in_visible_answer_type': in_visible_answer_type}"/>
@@ -385,6 +401,7 @@
                             </group>
                         </group>
                     </group>
+                    </sheet>
                 </form>
             </field>
         </record>
@@ -397,7 +414,7 @@
                     <field name="sequence" widget="handle"/>
                     <field name="question"/>
                     <field name="page_id"/>
-                    <field name="survey"/>
+                    <field name="survey_id"/>
                     <field name="type"/>
                 </tree>
             </field>
@@ -409,7 +426,7 @@
             <field name="arch" type="xml">
                 <search string="Search Question">
                     <field name="question" string="Question"/>
-                    <field name="survey"/>
+                    <field name="survey_id"/>
                     <field name="type"/>
                     <field name="page_id"/>
                     <group expand="0" string="Group By...">
@@ -447,6 +464,10 @@
         <menuitem name="Survey Questions" id="menu_survey_question_form1"
             action="action_survey_question_form" parent="menu_surveys_configuration"
             groups="base.group_no_one" sequence="2"/>
+
+        <menuitem name="Surveys Questions" id="menu_survey_question_form1"
+            action="action_survey_question_form" parent="menu_surveys"
+            groups="base.group_tool_manager" sequence="3"/>
 
         <!--
             Survey Answer
