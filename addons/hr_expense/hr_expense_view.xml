@@ -67,7 +67,7 @@
                     <button name="refuse" states="confirm,accepted" string="Refuse" type="workflow" groups="base.group_hr_user" />
                     <button name="draft" states="confirm,cancelled" string="Set to Draft" type="workflow" groups="base.group_hr_user" />
                     <button name="done" states="accepted" string="Generate Accounting Entries" type="workflow" groups="account.group_account_invoice" class="oe_highlight"/>
-                    <button name="action_view_move" states="done" string="Open Account Item" type="object" groups="account.group_account_invoice"/>
+                    <button name="action_view_move" states="done" string="Open Accounting Entries" type="object" groups="account.group_account_invoice"/>
                     <field name="state" widget="statusbar" statusbar_visible="draft,confirm,accepted,done" statusbar_colors='{"confirm":"blue","cancelled":"red"}'/>
                 </header>
                 <sheet>
@@ -134,7 +134,7 @@
                                 <group string="Accounting Data">
                                     <field name="journal_id" widget="selection" domain="[('type', '=', 'purchase')]"/>
                                     <field name="account_move_id"/>
-                                    <field name="voucher_id" context="{'form_view_ref': 'account_voucher.view_purchase_receipt_form'}"/>
+                                    <field name="voucher_id" invisible="1" context="{'form_view_ref': 'account_voucher.view_purchase_receipt_form'}"/>
                                 </group>
                             </group>
                         </page>

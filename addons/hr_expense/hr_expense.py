@@ -362,10 +362,11 @@ class hr_expense_expense(osv.osv):
         This function returns an action that display existing account.move of given expense ids.
         '''
         assert len(ids) == 1, 'This option should only be used for a single id at a time'
-        voucher_id = self.browse(cr, uid, ids[0], context=context).voucher_id.id
+        expense = self.browse(cr, uid, ids[0], context=context)
+        assert expense.account_move_id
         try:
             dummy, view_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'account', 'view_move_form')
-        except:
+        except ValueError, e:
             view_id = False
         result = {
             'name': _('Expense Account Move'),
@@ -376,7 +377,7 @@ class hr_expense_expense(osv.osv):
             'type': 'ir.actions.act_window',
             'nodestroy': True,
             'target': 'current',
-            'res_id': account_move_id,
+            'res_id': expense.account_move_id.id,
         }
         return result
 
