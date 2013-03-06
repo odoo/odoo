@@ -35,7 +35,15 @@ def data():
         r["Microsoft.VC90.CRT"] = glob.glob('C:\Microsoft.VC90.CRT\*.*')
 
         import babel
-        r["localedata"] = glob.glob(os.path.join(os.path.dirname(babel.__file__), "localedata", '*'))
+        # Add data, but also some .py files py2exe won't include automatically.
+        # TODO This should probably go under `packages`, instead of `data`,
+        # but this will work fine (especially since we don't use the ZIP file
+        # approach).
+        r["babel/localedata"] = glob.glob(os.path.join(os.path.dirname(babel.__file__), "localedata", '*'))
+        others = ['global.dat', 'numbers.py', 'support.py']
+        r["babel"] = map(lambda f: os.path.join(os.path.dirname(babel.__file__), f), others)
+        others = ['frontend.py', 'mofile.py']
+        r["babel/messages"] = map(lambda f: os.path.join(os.path.dirname(babel.__file__), "messages", f), others)
 
         import pytz
         tzdir = os.path.dirname(pytz.__file__)
