@@ -415,6 +415,18 @@ class mrp_production(osv.osv):
         dest_location_id = self.pool.get('ir.model.data').get_object(cr, uid, 'stock', 'stock_location_stock', context=context)
         return dest_location_id.id
 
+    def _get_progress(self, cr, uid, ids, name, arg, context=None):
+        """ Return product quantity percentage """
+        result = dict.fromkeys(ids, 100)
+        for mrp_production in self.browse(cr, uid, ids, context=context):
+            if mrp_production.product_qty:
+                done = 0.0
+                for move in mrp_production.move_created_ids2:
+                    if not move.scrapped and move.product_id == mrp_production.product_id:
+                        done += move.product_qty
+                result[mrp_production.id] = done / mrp_production.product_qty * 100
+        return result
+
     _columns = {
         'name': fields.char('Reference', size=64, required=True, readonly=True, states={'draft': [('readonly', False)]}),
         'origin': fields.char('Source Document', size=64, readonly=True, states={'draft': [('readonly', False)]},
@@ -427,6 +439,8 @@ class mrp_production(osv.osv):
         'product_uom': fields.many2one('product.uom', 'Product Unit of Measure', required=True, readonly=True, states={'draft': [('readonly', False)]}),
         'product_uos_qty': fields.float('Product UoS Quantity', readonly=True, states={'draft': [('readonly', False)]}),
         'product_uos': fields.many2one('product.uom', 'Product UoS', readonly=True, states={'draft': [('readonly', False)]}),
+        'progress': fields.function(_get_progress, type='float',
+            string='Production progress'),
 
         'location_src_id': fields.many2one('stock.location', 'Raw Materials Location', required=True,
             readonly=True, states={'draft':[('readonly',False)]},
@@ -773,7 +787,7 @@ class mrp_production(osv.osv):
                     new_parent_ids.append(final_product.id)
             for new_parent_id in new_parent_ids:
                 stock_mov_obj.write(cr, uid, [raw_product.id], {'move_history_ids': [(4,new_parent_id)]})
-
+        self.message_post(cr, uid, production_id, body=_("%s produced") % self._description, context=context)
         self.signal_button_produce_done(cr, uid, [production_id])
         return True
 
