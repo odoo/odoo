@@ -2396,7 +2396,7 @@ class stock_move(osv.osv):
         processing of the given stock move.
         """
         # prepare default values considering that the destination accounts have the reference_currency_id as their main currency
-        partner_id = (move.picking_id.partner_id and move.picking_id.partner_id.id and move.picking_id.partner_id.id) or False
+        partner_id = (move.picking_id.partner_id and self.pool.get('res.partner')._find_accounting_partner(move.picking_id.partner_id).id) or False
         debit_line_vals = {
                     'name': move.name,
                     'product_id': move.product_id and move.product_id.id or False,

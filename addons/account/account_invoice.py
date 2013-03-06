@@ -305,16 +305,7 @@ class account_invoice(osv.osv):
         ('number_uniq', 'unique(number, company_id, journal_id, type)', 'Invoice Number must be unique per Company!'),
     ]
 
-    def _find_partner(self, inv):
-        '''
-        Find the partner for which the accounting entries will be created
-        '''
-        #if the chosen partner is not a company and has a parent company, use the parent for the journal entries
-        #because you want to invoice 'Agrolait, accounting department' but the journal items are for 'Agrolait'
-        part = inv.partner_id
-        if part.parent_id and not part.is_company:
-            part = part.parent_id
-        return part
+
 
 
     def fields_view_get(self, cr, uid, view_id=None, view_type=False, context=None, toolbar=False, submenu=False):
@@ -980,7 +971,7 @@ class account_invoice(osv.osv):
 
             date = inv.date_invoice or time.strftime('%Y-%m-%d')
 
-            part = self._find_partner(inv)
+            part = self.pool.get("res.partner")._find_accounting_partner(inv.partner_id)
 
             line = map(lambda x:(0,0,self.line_get_convert(cr, uid, x, part.id, date, context=ctx)),iml)
 
@@ -1751,6 +1742,16 @@ class res_partner(osv.osv):
     _columns = {
         'invoice_ids': fields.one2many('account.invoice.line', 'partner_id', 'Invoices', readonly=True),
     }
+
+    def _find_accounting_partner(self, part):
+        '''
+        Find the partner for which the accounting entries will be created
+        '''
+        #if the chosen partner is not a company and has a parent company, use the parent for the journal entries
+        #because you want to invoice 'Agrolait, accounting department' but the journal items are for 'Agrolait'
+        if part.parent_id and not part.is_company:
+            part = part.parent_id
+        return part
 
     def copy(self, cr, uid, id, default=None, context=None):
         default = default or {}
