@@ -2574,7 +2574,9 @@ instance.web.form.FieldText = instance.web.form.AbstractField.extend(instance.we
         }
     },
     commit_value: function () {
-        this.store_dom_value();
+        if (! this.get("effective_readonly") && this.$textarea) {
+            this.store_dom_value();
+        }
         return this._super();
     },
     store_dom_value: function () {
