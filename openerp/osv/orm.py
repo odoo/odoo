@@ -256,6 +256,9 @@ class except_orm(Exception):
         self.args = (name, value)
 
 
+_scope = threading.local()
+_scope.current = None
+
 class Scope(object):
     """ An object that provides an execution environment for the ORM instances:
 
@@ -263,17 +266,20 @@ class Scope(object):
          - :attr:`uid`, the current user id;
          - :attr:`context`, the current context dictionary.
 
+        An execution environment is created by providing a scope to the
+        statement ``with``::
+
+            with Scope(cr, uid, context):
+                # statements execute in given scope
+
         Iterating over a scope returns the three attributes above, in that
         order. Useful to retrieve data in a destructuring assignment::
 
             cr, uid, context = scope
     """
-    _local = threading.local()
-    _local.current = None
-
     def __init__(self, cr, uid, context):
         self.cr = cr
-        self.uid = uid
+        self.uid = int(uid)
         self.context = context if context is not None else {}
         self.registry = RegistryManager.get(cr.dbname)
 
@@ -288,19 +294,58 @@ class Scope(object):
     def __ne__(self, other):
         return not self == other
 
-    @classmethod
-    def current(cls):
-        return cls._local.current
-
     def __enter__(self):
-        if self != self._local.current:
-            self.parent = self._local.current
-            self._local.current = self
-        return self.current()
+        if self != _scope.current:
+            self.parent = _scope.current
+            _scope.current = self
+        return _scope.current
 
     def __exit__(self, exc_type, exc_value, traceback):
-        if self is self._local.current:
-            self._local.current = self.parent
+        if self is _scope.current:
+            _scope.current = self.parent
+
+    @classmethod
+    def current(cls):
+        """ return the current scope """
+        return _scope.current
+
+    @classmethod
+    def root(cls):
+        """ return the outermost scope """
+        scope = cls.current()
+        while scope.parent:
+            scope = scope.parent
+        return scope
+
+    @classmethod
+    def set(cls, *args, **kwargs):
+        """ Return a scope based on the current scope with modified parameters.
+
+            :param args: contains a database cursor to change the current
+                cursor, a user id or record to change the current user, a
+                context dictionary to change the current context
+            :param kwargs: a set of key-value pairs to update the context
+        """
+        cr, uid, context = cls.current()
+        for arg in args:
+            if isinstance(arg, dict):
+                context = arg
+            elif isinstance(arg, (BaseModel, int, long)):
+                uid = int(arg)
+            elif isinstance(arg, openerp.sql_db.Cursor):
+                cr = arg
+            else:
+                raise Exception("Unexpected argument: %s", arg)
+        context = dict(context)
+        context.update(**kwargs)
+        return Scope(cr, uid, context)
+
+    @classmethod
+    def SUDO(cls):
+        """ Return a scope based on the current scope, and such that security
+            checks are not checked.
+        """
+        return cls.set(SUPERUSER_ID)
 
     def model(self, model_name):
         """ return a given model with scope """

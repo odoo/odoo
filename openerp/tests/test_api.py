@@ -201,7 +201,45 @@ class TestAPI(common.TransactionCase):
 
     @mute_logger('openerp.osv.orm')
     def test_50_scope(self):
-        """ Call scope methods. """
+        """ Test scope nesting. """
+        # retrieve another user
+        user = self.Users.search([('id', '!=', self.uid)])[0]
+        self.assertNotEqual(user.id, self.uid)
+
+        scope0 = Scope.current()
+
+        with Scope(self.cr, self.uid, None) as scope1:
+            self.assertEqual(Scope.current(), scope1)
+            self.assertNotEqual(scope1, scope0)
+            self.assertEqual(scope1.uid, self.uid)
+
+            try:
+                with Scope.set(user, lang=user.lang) as scope2:
+                    self.assertEqual(scope2.cr, self.cr)
+                    self.assertEqual(scope2.user, user)
+                    self.assertEqual(scope2.context, {'lang': user.lang})
+
+                    with Scope.SUDO():
+                        self.assertEqual(Scope.current().uid, 1)
+
+                    self.assertEqual(Scope.current(), scope2)
+
+                    with Scope.SUDO():
+                        self.assertEqual(Scope.current().uid, 1)
+                        raise Exception()       # exit scope with an exception
+
+                    self.assertTrue(False, "Unreachable statement")
+
+            except Exception:
+                pass
+
+            self.assertEqual(Scope.current(), scope1)
+
+        self.assertEqual(Scope.current(), scope0)
+
+    @mute_logger('openerp.osv.orm')
+    def test_55_scope(self):
+        """ Test scope on records. """
         partners = self.Partner.search([('name', 'ilike', 'j')])
         self.assertTrue(partners)
 
@@ -231,20 +269,6 @@ class TestAPI(common.TransactionCase):
         self.assertEqual(partner.scope.user, demo)
         company = partner.company_id
         self.assertEqual(company.scope.user, demo)
-
-        outer_scope = Scope.current()
-
-        with Scope(self.cr, self.uid, None):
-            self.assertNotEqual(Scope.current(), outer_scope)
-            self.assertEqual(Scope.current().uid, self.uid)
-
-            with Scope(self.cr, demo.id, None):
-                self.assertNotEqual(Scope.current().uid, self.uid)
-                self.assertEqual(Scope.current().uid, demo.id)
-
-            self.assertEqual(Scope.current().uid, self.uid)
-
-        self.assertEqual(Scope.current(), outer_scope)
 
         # demo user cannot modify the company
         with self.assertRaises(except_orm):
