@@ -255,7 +255,6 @@
             <field name="arch" type="xml">
                 <form string="Survey Pages">
                     <field name="title" colspan="4"/>
-                    <field name="sequence"/>
                     <separator string="Description" colspan="4"/>
                     <field name="note" colspan="4" nolabel="1"/>
                       <group colspan="4">
@@ -276,6 +275,7 @@
             <field name="arch" type="xml">
                 <form string="Survey Question">
                     <field name="question" colspan="4"/>
+                    <field name="descriptive_text" colspan="4"/>
                     <field name="type" on_change="on_change_type(type)"/>
                     <field name="in_visible_rating_weight" invisible="1"/>
                     <field name="in_visible_menu_choice" invisible="1"/>
@@ -384,9 +384,6 @@
                                 </group>
                             </group>
                         </group>
-                        <group string="Descriptive Text" attrs="{'invisible':[('type','not in',['descriptive_text'])]}">
-                            <field name="descriptive_text" colspan="4" nolabel="1"/>
-                        </group>
                     </group>
                 </form>
             </field>
@@ -461,7 +458,6 @@
             <field name="arch" type="xml">
                 <form string="Survey Answer">
                     <field name="answer" colspan="4"/>
-                    <field name="sequence"/>
                     <field name="in_visible_answer_type" invisible="1"/>
                        <group colspan="4" attrs="{'invisible':[('in_visible_answer_type','=',True)]}">
                         <field name="type" colspan="2"/>
