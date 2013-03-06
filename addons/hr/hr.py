@@ -276,6 +276,25 @@ class hr_employee(osv.osv):
         return self.message_unsubscribe_users(cr, uid, ids, context=context)
 
 
+    def message_post_user_api(self, cr, uid, thread_id, context=None, **kwargs):
+        """Overwrite the message_post method when using the send to my followers screen
+
+        The context should be extended with sent_from_action_mail_inbox_feeds 
+        and default_res_id contains the id of the user linked to the employee 
+        that will be linked the message (done from the action_mail_inbox_feeds
+        view)"""
+
+        print("message_post_user_api", uid, thread_id, context)
+        if 'sent_from_action_mail_inbox_feeds' in context and 'default_res_id' in context:
+            employee_ids = self.search(cr, uid, [('user_id','=',context['default_res_id'])], context=context)
+            if len(employee_ids) > 0:
+                for employee_id in employee_ids:
+                    res = super(hr_employee, self).message_post_user_api(cr, uid, employee_id, context=context, **kwargs)
+                return res
+
+        # if no overwrite or no linked employee, send message as usual
+        return super(hr_employee, self).message_post_user_api(cr, uid, thread_id, context=context, **kwargs)
+
     _defaults = {
         'active': 1,
         'image': _get_default_image,

@@ -4,8 +4,9 @@
 
         <record id="mail.action_mail_inbox_feeds" model="ir.actions.client">
             <field name="context">{
-              'default_model': 'res.users', 
+              'default_model': 'hr.employee', 
               'default_res_id': uid,
+              'sent_from_action_mail_inbox_feeds': True,
             }</field>
             <field name="params" eval="&quot;{
                 'domain': [
