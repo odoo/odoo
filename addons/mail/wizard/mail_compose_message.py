@@ -222,10 +222,6 @@ class mail_compose_message(osv.TransientModel):
                 subtype = 'mail.mt_comment' if not context.get('mail_compose_log', False) else False
                 active_model_pool.message_post(cr, uid, [res_id], type='comment', subtype=subtype, context=context, **post_values)
 
-            # mass mailing: delete mail.compose.message attachments, added by the user and that have been duplicated
-            if wizard.attachment_ids:
-                ir_attachment_obj.unlink(cr, uid, [attach.id for attach in wizard.attachment_ids if attach.res_model == self._name], context=context)
-
         return {'type': 'ir.actions.act_window_close'}
 
     def render_message(self, cr, uid, wizard, res_id, context=None):
