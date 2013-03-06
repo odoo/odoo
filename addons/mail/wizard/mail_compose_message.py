@@ -19,10 +19,8 @@
 #
 ##############################################################################
 
-import base64
 import re
 from openerp import tools
-
 from openerp.osv import osv
 from openerp.osv import fields
 from openerp.tools.safe_eval import safe_eval as eval
@@ -214,10 +212,6 @@ class mail_compose_message(osv.TransientModel):
                     email_dict = self.render_message(cr, uid, wizard, res_id, context=context)
                     post_values['partner_ids'] += email_dict.pop('partner_ids', [])
                     post_values['attachments'] = email_dict.pop('attachments', [])
-                    # manage attachments :
-                    # - do not re-add attachments from template already displayed
-                    # - duplicate template attachments because of ownership concept in OpenERP
-                    post_values['attachment_ids'] += filter(lambda item: item not in post_values['attachment_ids'], email_dict.pop('attachment_ids', []))
                     attachment_ids = []
                     for attach_id in post_values.pop('attachment_ids'):
                         new_attach_id = ir_attachment_obj.copy(cr, uid, attach_id, {'res_model': active_model_pool_name, 'res_id': res_id}, context=context)
@@ -241,7 +235,6 @@ class mail_compose_message(osv.TransientModel):
         return {
             'subject': self.render_template(cr, uid, wizard.subject, wizard.model, res_id, context),
             'body': self.render_template(cr, uid, wizard.body, wizard.model, res_id, context),
-            'attachment_ids': [attach.id for attach in wizard.attachment_ids],
         }
 
     def render_template(self, cr, uid, template, model, res_id, context=None):
