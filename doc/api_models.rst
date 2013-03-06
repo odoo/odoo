@@ -1,13 +1,13 @@
 
-ORM and models
+ORM and Models
 ==============
 
 .. automodule:: openerp.osv.orm
    :members:
    :undoc-members:
 
-API decorators
-==============
+API Scope and Decorators
+========================
 
 .. automodule:: openerp.osv.api
    :members:

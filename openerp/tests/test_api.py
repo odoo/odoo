@@ -1,6 +1,7 @@
 
 from openerp.tools import mute_logger
-from openerp.osv.orm import Scope, Record, Recordset, Null, except_orm
+from openerp.osv.api import Scope
+from openerp.osv.orm import Record, Recordset, Null, except_orm
 import common
 
 

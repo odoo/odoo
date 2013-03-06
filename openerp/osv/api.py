@@ -19,14 +19,15 @@
 #
 ##############################################################################
 
-""" These method decorators aim at managing two different API styles, namely the
-    "traditional" and "record" styles.
+""" This module provides the elements for managing two different API styles,
+    namely the "traditional" and "record" styles.
 
     In the "traditional" style, parameters like the database cursor, user id,
     context dictionary and record ids (usually denoted as ``cr``, ``uid``,
     ``context``, ``ids``) are passed explicitly to all methods. In the "record"
-    style, those parameters are encapsulated in the model instance, which gives
-    it a more object-oriented feel.
+    style, those parameters are hidden in an execution environment (a "scope")
+    and the methods only refer to model instances, which gives it a more object-
+    oriented feel.
 
     For instance, the statements::
 
@@ -36,10 +37,10 @@
 
     may also be written as::
 
-        # model and records both carry the (cr, uid, context) attached to self
-        model = self.scope.model(MODEL)
-        records = model.search(DOMAIN)
-        records.write(VALUES)
+        with Scope(cr, uid, context) as scope:
+            model = scope.model(MODEL)
+            records = model.search(DOMAIN)
+            records.write(VALUES)
 
     Methods written in the "traditional" style are automatically decorated,
     following some heuristics based on parameter names.
@@ -71,7 +72,7 @@
 """
 
 __all__ = [
-    'Meta', 'guess', 'noguess',
+    'Scope', 'Meta', 'guess', 'noguess',
     'model', 'record', 'recordset',
     'cr', 'cr_context', 'cr_uid', 'cr_uid_context',
     'cr_uid_id', 'cr_uid_id_context', 'cr_uid_ids', 'cr_uid_ids_context',
@@ -80,8 +81,134 @@ __all__ = [
 
 from functools import wraps
 import logging
+import threading
 
 _logger = logging.getLogger(__name__)
+
+_scope = threading.local()
+_scope.current = None
+
+
+class Scope(object):
+    """ A scope wraps environment data for the ORM instances:
+
+         - :attr:`cr`, the current database cursor;
+         - :attr:`uid`, the current user id;
+         - :attr:`context`, the current context dictionary.
+
+        An execution environment is created by a statement ``with``::
+
+            with Scope(cr, uid, context):
+                # statements execute in given scope
+
+        Iterating over a scope returns the three attributes above, in that
+        order. This is useful to retrieve data in a destructuring assignment::
+
+            cr, uid, context = scope
+    """
+    def __init__(self, cr, uid, context):
+        self.cr = cr
+        self.uid = int(uid)
+        self.context = context if context is not None else {}
+        self.registry = RegistryManager.get(cr.dbname)
+
+    def __iter__(self):
+        yield self.cr
+        yield self.uid
+        yield self.context
+
+    def __eq__(self, other):
+        return isinstance(other, (Scope, tuple)) and tuple(self) == tuple(other)
+
+    def __ne__(self, other):
+        return not self == other
+
+    def __enter__(self):
+        if self != _scope.current:
+            self.parent = _scope.current
+            _scope.current = self
+        return _scope.current
+
+    def __exit__(self, exc_type, exc_value, traceback):
+        if self is _scope.current:
+            _scope.current = self.parent
+
+    @classmethod
+    def current(cls):
+        """ return the current scope """
+        return _scope.current
+
+    @classmethod
+    def root(cls):
+        """ return the outermost scope """
+        scope = cls.current()
+        while scope.parent:
+            scope = scope.parent
+        return scope
+
+    @classmethod
+    def set(cls, *args, **kwargs):
+        """ Return a scope based on the current scope with modified parameters.
+
+            :param args: contains a database cursor to change the current
+                cursor, a user id or record to change the current user, a
+                context dictionary to change the current context
+            :param kwargs: a set of key-value pairs to update the context
+        """
+        cr, uid, context = cls.current()
+        for arg in args:
+            if isinstance(arg, dict):
+                context = arg
+            elif isinstance(arg, (BaseModel, int, long)):
+                uid = int(arg)
+            elif isinstance(arg, Cursor):
+                cr = arg
+            else:
+                raise Exception("Unexpected argument: %s", arg)
+        context = dict(context)
+        context.update(**kwargs)
+        return Scope(cr, uid, context)
+
+    @classmethod
+    def SUDO(cls):
+        """ Return a scope based on the current scope, with the superuser. """
+        return cls.set(SUPERUSER_ID)
+
+    def model(self, model_name):
+        """ return a given model with scope """
+        model = self.registry[model_name]
+        return model._make_instance(scope=self)
+
+    def ref(self, xml_id):
+        """ return the record corresponding to the given `xml_id` """
+        module, name = xml_id.split('.')
+        return self.model('ir.model.data').get_object(module, name)
+
+    @property
+    def user(self):
+        """ return the current user (as a record) """
+        if not hasattr(self, '_user'):
+            self._user = self.model('res.users').browse(self.uid)
+        return self._user
+
+    @property
+    def lang(self):
+        """ return the current language code """
+        if not hasattr(self, '_lang'):
+            self._lang = self.context.get('lang') or 'en_US'
+        return self._lang
+
+    @property
+    def language(self):
+        """ return the current language (as a record) """
+        if not hasattr(self, '_language'):
+            try:
+                languages = self.model('res.lang').search([('code', '=', self.lang)])
+                self._language = languages.record
+            except Exception:
+                context = self.context      # for translating the message below
+                raise Exception(_('Language with code "%s" is not defined in your system !\nDefine it through the Administration menu.') % (self.lang,))
+        return self._language
 
 
 #
@@ -212,8 +339,6 @@ def _make_wrapper(method, old_api, new_api):
         :param old_api: the function that implements the traditional-style api
         :param new_api: the function that implements the record-style api
     """
-    from openerp.sql_db import Cursor
-
     @wraps(method)
     def wrapper(self, *args, **kwargs):
         cr = kwargs.get('cr') or kwargs.get('cursor') or (args and args[0])
@@ -567,3 +692,11 @@ def guess(method):
 
     # no wrapping by default
     return noguess(method)
+
+
+# keep those imports here in order to handle cyclic dependencies correctly
+from openerp import SUPERUSER_ID
+from openerp.osv.orm import BaseModel
+from openerp.sql_db import Cursor
+from openerp.tools.translate import _
+from openerp.modules.registry import RegistryManager

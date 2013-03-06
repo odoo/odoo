@@ -50,7 +50,6 @@ import operator
 import pickle
 import re
 import simplejson
-import threading
 import time
 
 import psycopg2
@@ -64,7 +63,6 @@ from openerp.tools.config import config
 from openerp.tools.misc import CountingStream
 from openerp.tools.safe_eval import safe_eval as eval
 from openerp.tools.translate import _
-from openerp.modules.registry import RegistryManager
 from openerp import SUPERUSER_ID
 from query import Query
 
@@ -256,134 +254,6 @@ class except_orm(Exception):
         self.args = (name, value)
 
 
-_scope = threading.local()
-_scope.current = None
-
-class Scope(object):
-    """ An object that provides an execution environment for the ORM instances:
-
-         - :attr:`cr`, the current database cursor;
-         - :attr:`uid`, the current user id;
-         - :attr:`context`, the current context dictionary.
-
-        An execution environment is created by providing a scope to the
-        statement ``with``::
-
-            with Scope(cr, uid, context):
-                # statements execute in given scope
-
-        Iterating over a scope returns the three attributes above, in that
-        order. Useful to retrieve data in a destructuring assignment::
-
-            cr, uid, context = scope
-    """
-    def __init__(self, cr, uid, context):
-        self.cr = cr
-        self.uid = int(uid)
-        self.context = context if context is not None else {}
-        self.registry = RegistryManager.get(cr.dbname)
-
-    def __iter__(self):
-        yield self.cr
-        yield self.uid
-        yield self.context
-
-    def __eq__(self, other):
-        return isinstance(other, (Scope, tuple)) and tuple(self) == tuple(other)
-
-    def __ne__(self, other):
-        return not self == other
-
-    def __enter__(self):
-        if self != _scope.current:
-            self.parent = _scope.current
-            _scope.current = self
-        return _scope.current
-
-    def __exit__(self, exc_type, exc_value, traceback):
-        if self is _scope.current:
-            _scope.current = self.parent
-
-    @classmethod
-    def current(cls):
-        """ return the current scope """
-        return _scope.current
-
-    @classmethod
-    def root(cls):
-        """ return the outermost scope """
-        scope = cls.current()
-        while scope.parent:
-            scope = scope.parent
-        return scope
-
-    @classmethod
-    def set(cls, *args, **kwargs):
-        """ Return a scope based on the current scope with modified parameters.
-
-            :param args: contains a database cursor to change the current
-                cursor, a user id or record to change the current user, a
-                context dictionary to change the current context
-            :param kwargs: a set of key-value pairs to update the context
-        """
-        cr, uid, context = cls.current()
-        for arg in args:
-            if isinstance(arg, dict):
-                context = arg
-            elif isinstance(arg, (BaseModel, int, long)):
-                uid = int(arg)
-            elif isinstance(arg, openerp.sql_db.Cursor):
-                cr = arg
-            else:
-                raise Exception("Unexpected argument: %s", arg)
-        context = dict(context)
-        context.update(**kwargs)
-        return Scope(cr, uid, context)
-
-    @classmethod
-    def SUDO(cls):
-        """ Return a scope based on the current scope, and such that security
-            checks are not checked.
-        """
-        return cls.set(SUPERUSER_ID)
-
-    def model(self, model_name):
-        """ return a given model with scope """
-        model = self.registry[model_name]
-        return model._make_instance(scope=self)
-
-    def ref(self, xml_id):
-        """ return the record corresponding to the given `xml_id` """
-        module, name = xml_id.split('.')
-        return self.model('ir.model.data').get_object(module, name)
-
-    @property
-    def user(self):
-        """ return the current user (as a record) """
-        if not hasattr(self, '_user'):
-            self._user = self.model('res.users').browse(self.uid)
-        return self._user
-
-    @property
-    def lang(self):
-        """ return the current language code """
-        if not hasattr(self, '_lang'):
-            self._lang = self.context.get('lang') or 'en_US'
-        return self._lang
-
-    @property
-    def language(self):
-        """ return the current language (as a record) """
-        if not hasattr(self, '_language'):
-            try:
-                languages = self.model('res.lang').search([('code', '=', self.lang)])
-                self._language = languages.record
-            except Exception:
-                context = self.context      # for translating the message below
-                raise Exception(_('Language with code "%s" is not defined in your system !\nDefine it through the Administration menu.') % (self.lang,))
-        return self._language
-
-
 #
 # Helper functions for browsing record values
 #
@@ -558,7 +428,8 @@ class BaseModel(object):
     Other instances encapsulate a scope (cursor, user id, context) together with
     model functionalities. There are four kinds of them:
 
-    *   `model`: represents a model, usually given by :meth:`Scope.model`;
+    *   `model`: represents a model, usually given by
+        :meth:`openerp.osv.api.Scope.model`;
 
     *   `record`: represents a record of the given model, typically returned by
         :meth:`~.browse` or another record/recordset. One can read the fields of
@@ -4451,7 +4322,7 @@ class BaseModel(object):
         if self.scope == (cr, uid, context):
             model = self
         else:
-            model = self._make_instance(scope=Scope(cr, uid, context))
+            model = self._make_instance(scope=api.Scope(cr, uid, context))
 
         if isinstance(select, (int, long)) and select:
             return model._make_record(select, cache)
@@ -5270,7 +5141,7 @@ class BaseModel(object):
         if self.is_record_or_null() or self.is_recordset():
             return self.browse(cr, uid, self.unbrowse(), context=ctx)
 
-        return self._make_instance(scope=Scope(cr, uid, ctx))
+        return self._make_instance(scope=api.Scope(cr, uid, ctx))
 
     @api.model
     def _make_null(self):
