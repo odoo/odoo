@@ -125,7 +125,7 @@ class survey_question_wiz(osv.osv_memory):
 
     def _view_field_descriptive_text(self, cr, uid, xml_group, fields, readonly, que, que_rec, context=None):
         if que_rec.descriptive_text:
-            html = lxml.html.fromstring('<div class="oe_survey_descriptive_text">%s</div>' % que_rec.descriptive_text)
+            html = lxml.html.fromstring('<div>%s</div>' % "<br/>".join(que_rec.descriptive_text.split('\n')))
             xml_group.insert(0, html)
 
     def _view_field_single_textbox(self, cr, uid, xml_group, fields, readonly, que, que_rec, context=None):

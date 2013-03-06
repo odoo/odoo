@@ -348,7 +348,7 @@ class survey_question(osv.osv):
         'sequence': fields.integer('Sequence'),
         'tot_resp': fields.function(_calc_response, type="integer", string="Total Answer"),
         'survey_id': fields.related('page_id', 'survey_id', type='many2one', relation='survey', string='Survey'),
-        'descriptive_text': fields.html('Descriptive Text', translate=True),
+        'descriptive_text': fields.text('Descriptive Text', translate=True),
         'column_heading_ids': fields.one2many('survey.question.column.heading', 'question_id', ' Column heading'),
         'type': fields.selection([('multiple_choice_only_one_ans', 'Multiple Choice (Only One Answer)'),
                 ('multiple_choice_multiple_ans', 'Multiple Choice (Multiple Answer)'),
@@ -454,7 +454,7 @@ class survey_question(osv.osv):
     def on_change_page_id(self, cr, uid, ids, page_id, context=None):
         if page_id:
             page = self.pool.get('survey.page').browse(cr, uid, page_id, context=context)
-            return {'survey_id': page.survey_id.id}
+            return {'survey_id': page.survey_id and page.survey_id.id}
         return {'value': {}}
 
     def write(self, cr, uid, ids, vals, context=None):
