@@ -166,7 +166,7 @@ class hr_expense_expense(osv.osv):
             if not journal_id:
                 raise osv.except_osv(_('Error!'), _("No expense journal found. Please make sure you have a journal with type 'purchase' configured."))
             journal_id = journal_id[0]
-        return self.pool.get('account_move').account_move_prepare(cr, uid, journal_id, date=date, ref=ref, company_id=company_id, context=context)
+        return self.pool.get('account.move').account_move_prepare(cr, uid, journal_id, date=date, ref=ref, company_id=company_id, context=context)
 
     def line_get_convert(self, cr, uid, x, part, date, context=None):
         #partner_id  = self.pool.get('res.partner')._find_partner(part)
