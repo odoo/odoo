@@ -190,7 +190,7 @@
             <field name="arch" type="xml">
                 <form string="Survey Page" version="7.0">
                     <sheet class="oe_survey">
-                        <group col="2" invisible="context.get('edit')">
+                        <group col="2" invisible="context.get('edit')" attrs="{'invisible': [('survey_id','!=',None)]}">
                             <field name="survey_id"/>
                         </group>
                         <label for="title" class="oe_edit_only"/>
@@ -287,7 +287,7 @@
                     <field name="in_visible_menu_choice" invisible="1"/>
                     <field name="in_visible_answer_type" invisible="1"/>
                     <group colspan="4" col="1">
-                        <group col="2" invisible="context.get('edit')">
+                        <group col="2" invisible="context.get('edit')" attrs="{'invisible': [('page_id','!=',None)]}">
                             <field name="tot_resp"/>
                             <field name="survey_id" readonly="1"/>
                             <field name="page_id" on_change="on_change_page_id(page_id)"/>
