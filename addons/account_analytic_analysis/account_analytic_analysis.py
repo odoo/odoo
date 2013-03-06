@@ -527,7 +527,7 @@ class account_analytic_account(osv.osv):
         for user_id, data in remind.items():
             context["data"] = data
             _logger.debug("Sending reminder to uid %s", user_id)
-            self.pool.get('email.template').send_mail(cr, uid, template_id, user_id, context=context)
+            self.pool.get('email.template').send_mail(cr, uid, template_id, user_id, True, context=context)
 
         return True
 
