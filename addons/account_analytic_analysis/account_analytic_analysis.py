@@ -67,7 +67,7 @@ class account_analytic_invoice_line(osv.osv):
     _defaults = {
         'quantity' : 1,
         'account_id': _default_account_id,
-        }
+    }
 
     def copy(self, cr, uid, id, default=None, context=None):
         default = default or {}

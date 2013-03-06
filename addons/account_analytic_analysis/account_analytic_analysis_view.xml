@@ -1,11 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
-
-        <!--
-        Analytic Account form
-        -->
-
         <record model="ir.actions.act_window" id="action_sales_order">
             <field name="name">Sales Orders</field>
             <field name="res_model">sale.order</field>
@@ -144,16 +139,16 @@
                     </group>
                     <separator string="Recurrency"/>
                     <group>
-	                    <div>
-                    	<label for="recurring_invoices" />
-	                    <field name="recurring_invoices" on_change="onchange_recurring_invoices(recurring_invoices, date_start)" class="oe_inline"/>
-	                    </div>
+                        <div>
+                            <label for="recurring_invoices" />
+                            <field name="recurring_invoices" on_change="onchange_recurring_invoices(recurring_invoices, date_start)" class="oe_inline"/>
+                        </div>
                     </group>
                     <group attrs="{'invisible': [('recurring_invoices','!=',True)]}">
                         <label for="interval"/>
                         <div>
-                        <field name="interval" class="oe_inline" attrs="{'required': [('recurring_invoices', '=', True)]}"/>
-                        <field name="rrule_type" class="oe_inline" attrs="{'required': [('recurring_invoices', '=', True)]}"/>
+                            <field name="interval" class="oe_inline" attrs="{'required': [('recurring_invoices', '=', True)]}"/>
+                            <field name="rrule_type" class="oe_inline" attrs="{'required': [('recurring_invoices', '=', True)]}"/>
                         </div>
                         <p colspan="2" class="oe_grey">
                             Following Invoice will be generated on <field name="next_date" on_change="onchange_next_date(next_date)" class="oe_inline"/>.
@@ -161,17 +156,17 @@
                     </group>
                     <group attrs="{'invisible': [('recurring_invoices','=',False)]}">
                         <div>
-                        	<field name="invoice_line_ids">
-                        		<tree string="Account Analytic Lines" editable="bottom">
-                        			<field name="product_id" on_change="product_id_change(product_id, uom_id, quantity, name, parent.partner_id, price_unit, parent.currency_id, parent.company_id)"/>
-				                	<field name="name"/>
-				                	<field name="quantity"/>
-				                	<field name="uom_id"/>
-				                	<field name="tax_ids" widget="many2many_tags" readonly="0"/>
-				                	<field name="price_unit"/>
-				                	<field name="price_subtotal"/>
-                        		</tree>
-                        	</field>
+                            <field name="invoice_line_ids">
+                                <tree string="Account Analytic Lines" editable="bottom">
+                                    <field name="product_id" on_change="product_id_change(product_id, uom_id, quantity, name, parent.partner_id, price_unit, parent.currency_id, parent.company_id)"/>
+                                    <field name="name"/>
+                                    <field name="quantity"/>
+                                    <field name="uom_id"/>
+                                    <field name="tax_ids" widget="many2many_tags" readonly="0"/>
+                                    <field name="price_unit"/>
+                                    <field name="price_subtotal"/>
+                                </tree>
+                            </field>
                         </div>
                     </group>
                     <group class="oe_subtotal_footer oe_right" attrs="{'invisible': [('recurring_invoices','=',False)]}">
@@ -179,8 +174,8 @@
                         <div>
                             <label for="amount_tax"/>
                             <button name="button_reset_taxes"
-                                string="(update)" class="oe_link oe_edit_only"
-                                type="object" help="Recompute taxes and total"/>
+                            string="(update)" class="oe_link oe_edit_only"
+                            type="object" help="Recompute taxes and total"/>
                         </div>
                         <field name="amount_tax" nolabel="1" widget="monetary" options="{'currency_field': 'currency_id'}"/>
                         <field name="amount_total" class="oe_subtotal_footer_separator" widget="monetary" options="{'currency_field': 'currency_id'}"/>
