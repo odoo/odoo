@@ -93,7 +93,9 @@ class gamification_goal_plan(osv.Model):
         'name' : fields.char('Plan Name', required=True, translate=True),
         'user_ids' : fields.many2many('res.users',
             string='Users',
-            help="list of users to which the goal will be set"),
+            help="List of users to which the goal will be set"),
+        'manager_id' : fields.many2one('res.users', required=True,
+            string='Manager', help="The user that will be able to access the user goals and modify the plan."),
         'planline_ids' : fields.one2many('gamification.goal.planline',
             'plan_id',
             string='Planline',
@@ -156,6 +158,7 @@ class gamification_goal_plan(osv.Model):
         'report_message_frequency' : 'onchange',
         'last_report_date' : fields.date.today,
         'start_date' : fields.date.today,
+        'manager_id' : lambda s, cr, uid, c: uid,
     }
 
     def _check_nonzero_planline(self, cr, uid, ids, context=None):

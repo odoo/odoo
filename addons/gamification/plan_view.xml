@@ -26,7 +26,8 @@
                 <tree string="Goal types" colors="blue:state == 'draft';grey:state == 'done'">
                     <field name="name"/>
                     <field name="period"/>
-                    <field name="state" invisible="1"/>
+                    <field name="manager_id"/>
+                    <field name="state"/>
                 </tree>
             </field>
         </record>
@@ -67,6 +68,7 @@
 
                         <group>
                             <group colspan="4">
+                                <field name="manager_id"/>
                                 <field name="start_date" attrs="{'readonly':[('state','!=','draft')]}"/>
                                 <field name="period" attrs="{'readonly':[('state','!=','draft')]}"/>
                                 <field name="remind_update_delay"/>
