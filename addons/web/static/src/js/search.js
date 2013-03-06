@@ -324,7 +324,10 @@ instance.web.SearchView = instance.web.Widget.extend(/** @lends instance.web.Sea
                 e.preventDefault();
                 break;
             }
-        }
+        },
+        'autocompleteopen': function () {
+            this.$el.autocomplete('widget').css('z-index', 3);
+        },
     },
     /**
      * @constructs instance.web.SearchView
@@ -457,7 +460,7 @@ instance.web.SearchView = instance.web.Widget.extend(/** @lends instance.web.Sea
             autoFocus: true,
             minLength: 1,
             delay: 0
-        }).css('z-index', 3).data('autocomplete');
+        }).data('autocomplete');
 
         // MonkeyPatch autocomplete instance
         _.extend(autocomplete, {
