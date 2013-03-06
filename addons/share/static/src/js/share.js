@@ -16,7 +16,7 @@ openerp.share = function(session) {
             domains: [domain],
             contexts: [view.dataset.context]
         }).done(function (result) {
-            Share.create({
+            $.when(Share.create({
                 name: action.name,
                 record_name: rec_name,
                 domain: result.domain,
@@ -24,8 +24,8 @@ openerp.share = function(session) {
                 user_type: user_type || 'embedded',
                 view_type: view.fields_view.type,
                 invite: invite || false,
-            }).done(function(share_id) {
-                var step1 = Share.call('go_step_1', [[share_id]]).done(function(result) {
+            })).then(function(share_id) {
+                var step1 = Share.call('go_step_1', [[share_id], result.context]).done(function(result) {
                     var action = result;
                     self.do_action(action);
                 });
