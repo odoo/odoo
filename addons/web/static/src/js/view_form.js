@@ -2559,42 +2559,43 @@ instance.web.form.FieldText = instance.web.form.AbstractField.extend(instance.we
         },
         'change textarea': 'store_dom_value',
     },
-    init: function (field_manager, node) {
-        this._super(field_manager, node);
-    },
     initialize_content: function() {
         var self = this;
-        this.$textarea = this.$el.find('textarea');
-        this.auto_sized = false;
-        this.default_height = this.$textarea.css('height');
-        if (this.get("effective_readonly")) {
-            this.$textarea.attr('disabled', 'disabled');
+        if (! this.get("effective_readonly")) {
+            this.$textarea = this.$el.find('textarea');
+            this.auto_sized = false;
+            this.default_height = this.$textarea.css('height');
+            if (this.get("effective_readonly")) {
+                this.$textarea.attr('disabled', 'disabled');
+            }
+            this.setupFocus(this.$textarea);
+        } else {
+            this.$textarea = undefined;
         }
-        this.setupFocus(this.$textarea);
     },
     commit_value: function () {
         this.store_dom_value();
         return this._super();
     },
     store_dom_value: function () {
-        if (!this.get('effective_readonly') && this.$('textarea').length) {
-            this.internal_set_value(
-                instance.web.parse_value(
-                    this.$textarea.val(),
-                    this));
-        }
+        this.internal_set_value(instance.web.parse_value(this.$textarea.val(), this));
     },
     render_value: function() {
-        var show_value = instance.web.format_value(this.get('value'), this, '');
-        if (show_value === '') {
-            this.$textarea.css('height', parseInt(this.default_height)+"px");
-        }
-        this.$textarea.val(show_value);
-        if (! this.auto_sized) {
-            this.auto_sized = true;
-            this.$textarea.autosize();
+        if (! this.get("effective_readonly")) {
+            var show_value = instance.web.format_value(this.get('value'), this, '');
+            if (show_value === '') {
+                this.$textarea.css('height', parseInt(this.default_height)+"px");
+            }
+            this.$textarea.val(show_value);
+            if (! this.auto_sized) {
+                this.auto_sized = true;
+                this.$textarea.autosize();
+            } else {
+                this.$textarea.trigger("autosize");
+            }
         } else {
-            this.$textarea.trigger("autosize");
+            var txt = this.get("value");
+            this.$(".oe_form_text_content").text(txt);
         }
     },
     is_syntax_valid: function() {
@@ -2612,14 +2613,18 @@ instance.web.form.FieldText = instance.web.form.AbstractField.extend(instance.we
         return this.get('value') === '' || this._super();
     },
     focus: function($el) {
-        this.$textarea[0].focus();
+        if (!this.get("effective_readonly") && this.$textarea) {
+            this.$textarea[0].focus();
+        }
     },
     set_dimensions: function (height, width) {
         this._super(height, width);
-        this.$textarea.css({
-            width: width,
-            minHeight: height
-        });
+        if (!this.get("effective_readonly") && this.$textarea) {
+            this.$textarea.css({
+                width: width,
+                minHeight: height
+            });
+        }
     },
 });
 
