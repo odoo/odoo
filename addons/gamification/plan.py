@@ -112,6 +112,7 @@ class gamification_goal_plan(osv.Model):
             string='Periodicity',
             help='Period of automatic goal assigment. If none is selected, should be launched manually.',
             required=True),
+        'start_date' : fields.date('Starting Date', help="The day a new plan will be automatically started. The start and end dates for goals are still defined by the periodicity (eg: weekly goals run from Monday to Sunday)."),
         'state': fields.selection([
                 ('draft', 'Draft'),
                 ('inprogress', 'In progress'),
@@ -153,7 +154,8 @@ class gamification_goal_plan(osv.Model):
         'state': 'draft',
         'visibility_mode' : 'progressbar',
         'report_message_frequency' : 'onchange',
-        'last_report_date' : fields.date.today
+        'last_report_date' : fields.date.today,
+        'start_date' : fields.date.today,
     }
 
     def _check_nonzero_planline(self, cr, uid, ids, context=None):
@@ -192,14 +194,19 @@ class gamification_goal_plan(osv.Model):
         return write_res
 
 
-    def _update_all(self, cr, uid, context=None, ids=False):
-        """Update the plans and goals
+    def _cron_update(self, cr, uid, context=None, ids=False):
+        """Daily cron check.
 
+        Start planned plans (in draft and with start_date = today)
         Create the goals for planlines not linked to goals (eg: modified the 
             plan to add planlines)
-        :param list(int) ids: the ids of the plans to update, if False will 
-        update only plans in progress."""
-        if not context: context = {}        
+        Update every goal running"""
+        if not context: context = {}
+
+        # start planned plans
+        planned_plan_ids = self.search(cr, uid, [('state', '=', 'draft'),('start_date','=',fields.date.today())])
+        self.action_start(cr, uid, planned_plan_ids, context=context)
+
         if not ids:
             ids = self.search(cr, uid, [('state', '=', 'inprogress')])
 
@@ -208,14 +215,25 @@ class gamification_goal_plan(osv.Model):
         goal_obj = self.pool.get('gamification.goal')
         # we use yesterday to update the goals that just ended
         yesterday = date.today() - timedelta(days=1)
+        # TOCHECK conflict with date rule in goal update() function
         goal_ids = goal_obj.search(cr, uid, [
                 '&',
-                    ('state', 'in', ('inprogress','inprogress_update', 'reached')),
+                    ('state', 'not in', ('draft','canceled')),
                     '|',
                         ('end_date', '>=', yesterday.isoformat()),
                         ('end_date', '=', False)
                 ], context=context)
         goal_obj.update(cr, uid, goal_ids, context=context)
+
+        return self._update_all(cr, uid, ids, context=context)
+
+
+    def _update_all(self, cr, uid, ids, context=None):
+        """Update the plans and related goals
+
+        :param list(int) ids: the ids of the plans to update, if False will 
+        update only plans in progress."""
+        if not context: context = {}
 
         for plan in self.browse(cr, uid, ids, context=context):
             # goals closed but still opened at the last report date
@@ -246,15 +264,15 @@ class gamification_goal_plan(osv.Model):
             if plan.autojoin_group_id:
                 self.plan_subscribe_users(cr, uid, ids, [user.id for user in plan.autojoin_group_id.users], context=context)
 
-        self.generate_goals_from_plan(cr, uid, ids, context=context)
-        return self.write(cr, uid, ids, {'state': 'inprogress'}, context=context)
+        self.write(cr, uid, ids, {'state': 'inprogress'}, context=context)
+        return self.generate_goals_from_plan(cr, uid, ids, context=context)
 
     def action_check(self, cr, uid, ids, context=None):
         """Check a goal plan
 
         Create goals that haven't been created yet (eg: if added users of planlines)
         Recompute the current value for each goal related"""
-        return self._update_all(cr, uid, ids=ids, context=context)    
+        return self._update_all(cr, uid, ids=ids, context=context)
 
 
     def action_close(self, cr, uid, ids, context=None):
@@ -324,11 +342,10 @@ class gamification_goal_plan(osv.Model):
 
         for plan in self.browse(cr, uid, ids, context):
             (start_date, end_date) = start_end_date_for_period(plan.period)
-
+            
             for planline in plan.planline_ids:
                 for user in plan.user_ids:
-                    #self.create_goal_from_plan(cr, uid, ids, planline.id, user.id, start_date, context=context)
-
+                    
                     goal_obj = self.pool.get('gamification.goal')
                     domain = [('planline_id', '=', planline.id),
                             ('user_id', '=', user.id)]

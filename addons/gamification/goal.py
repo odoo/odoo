@@ -40,6 +40,7 @@ class gamification_goal_type(osv.Model):
     _columns = {
         'name': fields.char('Type Name', required=True, translate=True),
         'description': fields.text('Description'),
+        'unit': fields.char('Unit', help="The unit of the target and current values", translate=True),
         'computation_mode': fields.selection([
                 ('sum','Sum'),
                 ('count','Count'),
@@ -64,8 +65,8 @@ class gamification_goal_type(osv.Model):
             help="Technical filters rules to apply",
             required=True), # how to apply it ?
         'condition' : fields.selection([
-                ('minus','<='),
-                ('plus','>=')
+                ('lower','<='),
+                ('higher','>=')
             ],
             string='Validation Condition',
             help='A goal is considered as completed when the current value is compared to the value to reach',
@@ -78,7 +79,7 @@ class gamification_goal_type(osv.Model):
     _order = 'sequence'
     _defaults = {
         'sequence': 1,
-        'condition': 'plus',
+        'condition': 'higher',
         'computation_mode':'manually',
         'domain':"[]",
     }
@@ -158,7 +159,6 @@ class gamification_goal(osv.Model):
         'current': 0,
         'state': 'draft',
         'start_date': fields.date.today,
-        'last_update': fields.date.today,
     }
 
 
@@ -172,12 +172,11 @@ class gamification_goal(osv.Model):
         the target value being reached, the goal is set as failed."""
         
         for goal in self.browse(cr, uid, ids, context=context or {}):
-            if goal.state not in ('inprogress','inprogress_update','reached'):
-                # skip if goal draft, failed or canceled
+            if goal.state in ('draft','canceled'):
+                # skip if goal draft or canceled
                 continue
-            if goal.state == 'reached' and goal.end_date and fields.date.today() > goal.end_date:
-                # only a goal reached but not passed the end date will still be 
-                # checked (to be able to improve the score)
+            if goal.last_update and goal.end_date and goal.last_update > goal.end_date:
+                # skip if a goal is finished (updated after the goal end date)
                 continue
 
             if goal.type_id.computation_mode == 'manually':
@@ -220,9 +219,9 @@ class gamification_goal(osv.Model):
                     towrite = {'current': len(res)}
                 
             # check goal target reached
-            if (goal.type_id.condition == 'plus' \
+            if (goal.type_id.condition == 'higher' \
                 and towrite['current'] >= goal.target_goal) \
-            or (goal.type_id.condition == 'minus' \
+            or (goal.type_id.condition == 'lower' \
                 and towrite['current'] <= goal.target_goal):
                 towrite['state'] = 'reached'
 

@@ -44,7 +44,7 @@
             <field name="arch" type="xml">
                 <form string="Goal types" version="7.0">
                     <header>
-                        <button string="Start Plan" type="object" name="action_start" states="draft" class="oe_highlight"/>
+                        <button string="Manual Start" type="object" name="action_start" states="draft" class="oe_highlight"/>
                         <button string="Check Plan" type="object" name="action_check" states="inprogress"/>
                         <button string="Close Plan" type="object" name="action_close" states="inprogress" class="oe_highlight"/>
                         <button string="Reset to Draft" type="object" name="action_cancel" states="inprogress"/>
@@ -67,6 +67,7 @@
 
                         <group>
                             <group colspan="4">
+                                <field name="start_date" attrs="{'readonly':[('state','!=','draft')]}"/>
                                 <field name="period" attrs="{'readonly':[('state','!=','draft')]}"/>
                                 <field name="remind_update_delay"/>
                                 

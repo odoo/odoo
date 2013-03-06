@@ -12,12 +12,13 @@
             <field name="field_date_id" eval="ref('account.field_account_invoice_report_day')" />
             <field name="domain">[('state','!=','cancel'),('user_id','=',user_id)]</field>
         </record> 
+        <!-- filtre ajout seulement customer -->
 
         <record model="gamification.goal.type" id="type_crm_lead_delay_open">
-            <field name="name">Delay to Open</field>
+            <field name="name">Time to Qualify a Lead</field>
             <field name="description">The average number of days to open the case (less than)</field>
             <field name="computation_mode">sum</field>
-            <field name="condition">minus</field>
+            <field name="condition">lower</field>
             <field name="model_id" eval="ref('crm.model_crm_lead_report')" />
             <field name="field_id" eval="ref('crm.field_crm_lead_report_delay_close')" />
             <field name="field_date_id" eval="ref('crm.field_crm_lead_report_date_closed')" />
@@ -25,10 +26,10 @@
         </record> 
 
         <record model="gamification.goal.type" id="type_crm_lead_delay_close">
-            <field name="name">Delay to Close</field>
+            <field name="name">Days to Close a Deal</field>
             <field name="description">The average number of days to close the case (less than)</field>
             <field name="computation_mode">sum</field>
-            <field name="condition">minus</field>
+            <field name="condition">lower</field>
             <field name="model_id" eval="ref('crm.model_crm_lead_report')" />
             <field name="field_id" eval="ref('crm.field_crm_lead_report_delay_open')" />
             <field name="field_date_id" eval="ref('crm.field_crm_lead_report_opening_date')" />
@@ -95,8 +96,9 @@
 
         <record model="gamification.goal.type" id="type_crm_nbr_customer_refunds">
             <field name="name"># Customer Refunds</field>
-            <field name="description"></field>
+            <field name="description">Refund the least customers</field>
             <field name="computation_mode">count</field>
+            <field name="condition">lower</field>
             <field name="model_id" eval="ref('account.model_account_invoice')" />
             <field name="field_date_id" eval="ref('account.field_account_invoice_date_invoice')" />
             <field name="domain">[('state','!=','cancel'),('user_id','=',user_id),('type','=','out_refund')]</field>
@@ -106,6 +108,7 @@
             <field name="name">Total Customer Refunds</field>
             <field name="description"></field>
             <field name="computation_mode">sum</field>
+            <field name="condition">higher</field>
             <field name="model_id" eval="ref('account.model_account_invoice')" />
             <field name="field_id" eval="ref('account.field_account_invoice_amount_total')" />
             <field name="field_date_id" eval="ref('account.field_account_invoice_date_invoice')" />
