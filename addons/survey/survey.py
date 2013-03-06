@@ -136,16 +136,18 @@ class survey(osv.osv):
         @param context: A standard dictionary forcontextual values
         @return: Dictionary value forprint survey form.
         """
+        page_setting = {'orientation': 'vertical', 'without_pagebreak': 0, 'paper_size': 'letter', 'page_number': 1, 'survey_title': 1}
+
         if context is None:
             context = {}
         datas = {}
+        response_id = None
         if 'response_id' in context:
             response_id = context.get('response_id', 0)
             datas['ids'] = [context.get('survey_id', 0)]
-        else:
+        elif 'print_response' in context:
             response_id = self.pool.get('survey.response').search(cr, uid, [('survey_id', '=', ids)], context=context)
             datas['ids'] = ids
-        page_setting = {'orientation': 'vertical', 'without_pagebreak': 0, 'paper_size': 'letter', 'page_number': 1, 'survey_title': 1}
         report = {}
         if response_id and response_id[0]:
             context.update({'survey_id': datas['ids']})
@@ -159,7 +161,6 @@ class survey(osv.osv):
                 'nodestroy': True,
             }
         else:
-
             datas['form'] = page_setting
             datas['model'] = 'survey.print'
             report = {
@@ -564,6 +565,7 @@ class survey_question_column_heading(osv.osv):
     _name = 'survey.question.column.heading'
     _description = 'Survey Question Column Heading'
     _rec_name = 'title'
+    _order = 'sequence'
 
     def _get_in_visible_rating_weight(self, cr, uid, context=None):
         if context is None:
@@ -581,6 +583,7 @@ class survey_question_column_heading(osv.osv):
 
     _columns = {
         'title': fields.char('Column Heading', size=128, required=1, translate=True),
+        'sequence': fields.integer('Sequence'),
         'menu_choice': fields.text('Menu Choice'),
         'rating_weight': fields.integer('Weight'),
         'question_id': fields.many2one('survey.question', 'Question', ondelete='cascade'),
@@ -588,8 +591,8 @@ class survey_question_column_heading(osv.osv):
         'in_visible_menu_choice': fields.boolean('Is Menu Choice Invisible??')
     }
     _defaults = {
-       'in_visible_rating_weight': _get_in_visible_rating_weight,
-       'in_visible_menu_choice': _get_in_visible_menu_choice,
+        'in_visible_rating_weight': _get_in_visible_rating_weight,
+        'in_visible_menu_choice': _get_in_visible_menu_choice,
     }
 survey_question_column_heading()
 
