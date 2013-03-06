@@ -45,6 +45,7 @@
                                 <group>
                                     <group string="Contact Information">
                                         <field name="address_id" on_change="onchange_address_id(address_id)" context="{'show_address': 1}" options='{"always_reload": True, "highlight_first_line": True}'/>
+                                        <field name="work_email" widget="email"/>
                                         <field name="work_phone"/>
                                         <field name="mobile_phone"/>
                                         <field name="work_location"/>
