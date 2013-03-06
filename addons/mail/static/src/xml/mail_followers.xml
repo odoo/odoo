@@ -32,7 +32,7 @@
     <div t-name="mail.followers.partner" class='oe_partner'>
         <img class="oe_mail_thumbnail oe_mail_frame" t-attf-src="{record.avatar_url}"/>
         <a t-attf-href="#model=res.partner&amp;id=#{record.id}"><t t-raw="record.name"/></a>
-        <a t-if="widget.view_is_editable" class="oe_edit_subtype" title="Edit Subtype" t-att-data-id="record.id">Edit</a>
+        <img class="oe_edit_subtype" t-att-src='_s + "/mail/static/src/img/icon-edit.gif"' title="Edit Subtype" t-att-data-id="record.id"/>
         <span t-if="widget.view_is_editable" class="oe_remove_follower oe_e" title="Remove this follower" t-att-data-id="record.id">X</span>
     </div>
     
