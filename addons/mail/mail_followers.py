@@ -80,7 +80,6 @@ class mail_notification(osv.Model):
 
             :param browse_record message: mail.message to notify
         """
-        has_opt_out = self.pool.get('res.partner')._all_columns.get('opt_out')
         notify_pids = []
         for notification in message.notification_ids:
             if notification.read:
@@ -93,7 +92,7 @@ class mail_notification(osv.Model):
             if not partner.email:
                 continue
             # Partner does not want to receive any emails or is opt-out
-            if partner.notification_email_send == 'none' or (has_opt_out and partner.opt_out):
+            if partner.notification_email_send == 'none':
                 continue
             # Partner wants to receive only emails and comments
             if partner.notification_email_send == 'comment' and message.type not in ('email', 'comment'):
