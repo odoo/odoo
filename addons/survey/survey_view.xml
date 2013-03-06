@@ -22,6 +22,7 @@
             <field name="arch" type="xml">
                 <form string="Survey" version="7.0">
                 <header>
+                    <button name="edit_survey" states="draft,open,close,cancel" string="Edit Survey" type="object" class="oe_highlight"/>
                     <button name="survey_draft" string="Draft" states="cancel,close" type="object"/>
                     <button name="survey_open" class="oe_highlight" string="Open" states="draft,close" type="object"/>
                     <button name="survey_close" string="Close" states="open" type="object" class="oe_highlight"/>
@@ -31,7 +32,7 @@
                 <sheet class="oe_survey">
                     <div class="oe_button_box oe_right">
                         <button name="action_print_survey" states="draft,open,close,cancel" string="Print Answer" type="object"/>
-                        <button name="edit_survey" states="draft,open,close,cancel" string="Edit Survey" type="object"/>
+                        <button name="edit_survey" states="draft,open,close,cancel" string="Edit Survey" type="object" class="oe_highlight"/>
                     </div>
                     <div class="oe_title">
                         <label for="title" class="oe_edit_only"/>
@@ -250,11 +251,7 @@
 
         <menuitem name="Survey Pages" id="menu_survey_page_form1"
             action="action_survey_page_form" parent="menu_surveys_configuration"
-            groups="base.group_no_one" sequence="1"/>
-
-        <menuitem name="Surveys Pages" id="menu_survey_page_form1"
-            action="action_survey_page_form" parent="menu_surveys"
-            groups="base.group_tool_manager" sequence="4"/>
+            groups="base.group_tool_manager" sequence="1"/>
 
         <record model="ir.ui.view" id="survey_page_wizard_test1">
             <field name="name">survey_page_wizard_test</field>
@@ -463,11 +460,7 @@
 
         <menuitem name="Survey Questions" id="menu_survey_question_form1"
             action="action_survey_question_form" parent="menu_surveys_configuration"
-            groups="base.group_no_one" sequence="2"/>
-
-        <menuitem name="Surveys Questions" id="menu_survey_question_form1"
-            action="action_survey_question_form" parent="menu_surveys"
-            groups="base.group_tool_manager" sequence="3"/>
+            groups="base.group_tool_manager" sequence="2"/>
 
         <!--
             Survey Answer
