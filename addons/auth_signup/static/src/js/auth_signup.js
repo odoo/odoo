@@ -97,42 +97,49 @@ openerp.auth_signup = function(instance) {
             this.set('login_mode', 'default');
         },
 
+        get_params: function(){
+            // signup user (or reset password)
+            var db = this.$("form [name=db]").val();
+            var name = this.$("form input[name=name]").val();
+            var login = this.$("form input[name=login]").val();
+            var password = this.$("form input[name=password]").val();
+            var confirm_password = this.$("form input[name=confirm_password]").val();
+            if (!db) {
+                this.do_warn(_t("Login"), _t("No database selected !"));
+                return false;
+            } else if (!name) {
+                this.do_warn(_t("Login"), _t("Please enter a name."));
+                return false;
+            } else if (!login) {
+                this.do_warn(_t("Login"), _t("Please enter a username."));
+                return false;
+            } else if (!password || !confirm_password) {
+                this.do_warn(_t("Login"), _t("Please enter a password and confirm it."));
+                return false;
+            } else if (password !== confirm_password) {
+                this.do_warn(_t("Login"), _t("Passwords do not match; please retype them."));
+                return false;
+            }
+            var params = {
+                dbname : db,
+                token: this.params.token || "",
+                name: name,
+                login: login,
+                password: password,
+            };
+            return params;
+        },
+
         on_submit: function(ev) {
             if (ev) {
                 ev.preventDefault();
             }
             var login_mode = this.get('login_mode');
             if (login_mode === 'signup' || login_mode === 'reset') {
-                // signup user (or reset password)
-                var db = this.$("form [name=db]").val();
-                var name = this.$("form input[name=name]").val();
-                var login = this.$("form input[name=login]").val();
-                var password = this.$("form input[name=password]").val();
-                var confirm_password = this.$("form input[name=confirm_password]").val();
-                if (!db) {
-                    this.do_warn(_t("Login"), _t("No database selected !"));
-                    return false;
-                } else if (!name) {
-                    this.do_warn(_t("Login"), _t("Please enter a name."));
-                    return false;
-                } else if (!login) {
-                    this.do_warn(_t("Login"), _t("Please enter a username."));
-                    return false;
-                } else if (!password || !confirm_password) {
-                    this.do_warn(_t("Login"), _t("Please enter a password and confirm it."));
-                    return false;
-                } else if (password !== confirm_password) {
-                    this.do_warn(_t("Login"), _t("Passwords do not match; please retype them."));
+                var params = this.get_params();
+                if (_.isEmpty(params)){
                     return false;
                 }
-                var params = {
-                    dbname : db,
-                    token: this.params.token || "",
-                    name: name,
-                    login: login,
-                    password: password,
-                };
-
                 var self = this,
                     super_ = this._super;
                 this.rpc('/auth_signup/signup', params)

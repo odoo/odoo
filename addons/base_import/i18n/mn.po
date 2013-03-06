@@ -8,28 +8,28 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2012-12-21 17:05+0000\n"
-"PO-Revision-Date: 2013-02-20 02:20+0000\n"
-"Last-Translator: Altangerel <worstnaemeva@gmail.com>\n"
+"PO-Revision-Date: 2013-03-04 14:12+0000\n"
+"Last-Translator: gobi <Unknown>\n"
 "Language-Team: Mongolian <mn@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-02-21 05:44+0000\n"
-"X-Generator: Launchpad (build 16491)\n"
+"X-Launchpad-Export-Date: 2013-03-05 05:38+0000\n"
+"X-Generator: Launchpad (build 16514)\n"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/js/import.js:420
 #, python-format
 msgid "Get all possible values"
-msgstr ""
+msgstr "Бүх боломжит утгыг авах"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/xml/import.xml:71
 #, python-format
 msgid "Need to import data from an other application?"
-msgstr ""
+msgstr "Өөр програмаас өгөгдөл импортлох хэрэгтэй байна уу?"
 
 #. module: base_import
 #. openerp-web
@@ -47,6 +47,14 @@ msgid ""
 "give \n"
 "                        you an example for Products and their Categories."
 msgstr ""
+"Гадаад ID-г хэрэглэбэл CSV файлыг гадаад ID буюу \"External ID\" \n"
+"                       гэсэн баганаар бичлэг бүрт гадаад ID тодорхойлон \n"
+"                       импортлож болно. Дараа нь энэ бичлэг рүү \n"
+"                       \"Field/External ID\" буюу \"Талбар/Гадаад ID\" гэсэн "
+"\n"
+"                       байдлаар сурвалж болгон холбох боломжтой. \n"
+"                       Дараах хоёр CSV файл нь Бараа болон түүний \n"
+"                       ангилалын хувьд жишээ болж байна."
 
 #. module: base_import
 #. openerp-web
@@ -56,6 +64,9 @@ msgid ""
 "How to export/import different tables from an SQL \n"
 "                        application to OpenERP?"
 msgstr ""
+"SQL-н програмуудаас ялгаатай хүснэгтийг OpenERP-руу \n"
+"                                                             яаж импортлох "
+"вэ?"
 
 #. module: base_import
 #. openerp-web
@@ -72,6 +83,9 @@ msgid ""
 "Country/Database ID: the unique OpenERP ID for a \n"
 "                        record, defined by the ID postgresql column"
 msgstr ""
+"Улс/Өгөгдлийн баазын ID: бичлэгийн үл давхцах \n"
+"                                                 OpenERP ID, ID postgresql "
+"баганаар тодорхойлогдсон"
 
 #. module: base_import
 #. openerp-web
@@ -87,6 +101,14 @@ msgid ""
 "\n"
 "                        have a unique Database ID)"
 msgstr ""
+"Хэрэглээ \n"
+"                        Улс/Өгөгдлийн баазын ID: Энэ бичлэгийн цөөхөн "
+"хэрэглэх нь \n"
+"                        зохимжтой. Үүнийг голдуу хөгжүүлэгчид зөрчил "
+"үүсгэхгүйн \n"
+"                        тулд голдуу хэрэглэдэг. (ижил нэртэй бичлэгүүдтэй "
+"байж \n"
+"                        болох боловч өгөгдлийн баазын ID үл давхцах байна)"
 
 #. module: base_import
 #. openerp-web
@@ -107,7 +129,7 @@ msgstr ""
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_tests_models_m2o
 msgid "base_import.tests.models.m2o"
-msgstr ""
+msgstr "base_import.tests.models.m2o"
 
 #. module: base_import
 #. openerp-web
@@ -121,6 +143,12 @@ msgid ""
 "companies) TO \n"
 "                        '/tmp/company.csv' with CSV HEADER;"
 msgstr ""
+"copy \n"
+"                        (select 'company_'||id as \"External "
+"ID\",company_name \n"
+"                        as \"Name\",'True' as \"Is a Company\" from "
+"companies) TO \n"
+"                        '/tmp/company.csv' with CSV HEADER;"
 
 #. module: base_import
 #. openerp-web
