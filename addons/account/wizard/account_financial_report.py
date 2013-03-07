@@ -54,6 +54,11 @@ class accounting_report(osv.osv_memory):
             'target_move': 'posted',
             'account_report_id': _get_account_report,
     }
+    
+    def _build_contexts(self, cr, uid, ids, data, context=None):
+        result = super(accounting_report, self)._build_contexts(cr, uid, ids,data, context=context)
+        result['state'] = 'target_move' in data['form'] and data['form']['target_move'] or ''
+        return result
 
     def _build_comparison_context(self, cr, uid, ids, data, context=None):
         if context is None:
@@ -62,6 +67,7 @@ class accounting_report(osv.osv_memory):
         result['fiscalyear'] = 'fiscalyear_id_cmp' in data['form'] and data['form']['fiscalyear_id_cmp'] or False
         result['journal_ids'] = 'journal_ids' in data['form'] and data['form']['journal_ids'] or False
         result['chart_account_id'] = 'chart_account_id' in data['form'] and data['form']['chart_account_id'] or False
+        result['state'] = 'target_move' in data['form'] and data['form']['target_move'] or ''
         if data['form']['filter_cmp'] == 'filter_date':
             result['date_from'] = data['form']['date_from_cmp']
             result['date_to'] = data['form']['date_to_cmp']
@@ -86,7 +92,7 @@ class accounting_report(osv.osv_memory):
         return res
 
     def _print_report(self, cr, uid, ids, data, context=None):
-        data['form'].update(self.read(cr, uid, ids, ['date_from_cmp',  'debit_credit', 'date_to_cmp',  'fiscalyear_id_cmp', 'period_from_cmp', 'period_to_cmp',  'filter_cmp', 'account_report_id', 'enable_filter', 'label_filter'], context=context)[0])
+        data['form'].update(self.read(cr, uid, ids, ['date_from_cmp',  'debit_credit', 'date_to_cmp',  'fiscalyear_id_cmp', 'period_from_cmp', 'period_to_cmp',  'filter_cmp', 'account_report_id', 'enable_filter', 'label_filter','target_move'], context=context)[0])
         return {
             'type': 'ir.actions.report.xml',
             'report_name': 'account.financial.report',
