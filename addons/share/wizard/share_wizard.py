@@ -614,8 +614,8 @@ class share_wizard(osv.TransientModel):
                     # other groups, so we duplicate if needed
                     rule = self._check_personal_rule_or_duplicate(cr, group_id, rule, context=context)
                     eval_ctx = rule_obj._eval_context_for_combinations()
-                    org_domain = expression.normalize(eval(rule.domain_force, eval_ctx))
-                    new_clause = expression.normalize(eval(domain, eval_ctx))
+                    org_domain = expression.normalize_domain(eval(rule.domain_force, eval_ctx))
+                    new_clause = expression.normalize_domain(eval(domain, eval_ctx))
                     combined_domain = expression.AND([new_clause, org_domain])
                     rule.write({'domain_force': combined_domain, 'name': rule.name + _('(Modified)')})
                     _logger.debug("Combining sharing rule %s on model %s with domain: %s", rule.id, model_id, domain)
