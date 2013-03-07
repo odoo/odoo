@@ -18,6 +18,7 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
+from dateutil.relativedelta import relativedelta
 import datetime
 import logging
 import time
@@ -26,7 +27,6 @@ from openerp.osv import osv, fields
 from openerp.osv.orm import intersect, except_orm
 import openerp.tools
 from openerp.tools.translate import _
-from dateutil.relativedelta import relativedelta
 
 from openerp.addons.decimal_precision import decimal_precision as dp
 
