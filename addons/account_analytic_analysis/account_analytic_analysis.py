@@ -693,7 +693,6 @@ class account_analytic_account(osv.osv):
             return {}
         obj_analytic_line = self.pool.get('account.analytic.invoice.line')
         res = super(account_analytic_account, self).on_change_template(cr, uid, ids, template_id, context=context)
-        analytic_account = self.browse(cr, uid, template_id, context=context)
         invoice_line_ids = []
         if ids:
             acc = self.browse(cr, uid, ids, context=context)[0]
@@ -703,7 +702,7 @@ class account_analytic_account(osv.osv):
         template = self.browse(cr, uid, template_id, context=context)
         for x in template.invoice_line_ids:
             line = x.read([],load='_classic_write')[0]
-            line['analytic_account_id'] = analytic_account.id
+            line['analytic_account_id'] = False
             invoice_line_ids.append((0, 0, line))
         res['value']['fix_price_invoices'] = template.fix_price_invoices
         res['value']['invoice_on_timesheets'] = template.invoice_on_timesheets
