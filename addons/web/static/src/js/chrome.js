@@ -783,6 +783,7 @@ instance.web.Reload = function(parent, action) {
     var l = window.location;
 
     var sobj = $.deparam(l.search.substr(1));
+    sobj.ts = new Date().getTime();
     if (params.url_search) {
         sobj = _.extend(sobj, params.url_search);
     }
