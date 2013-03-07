@@ -65,6 +65,7 @@ class email_template(osv.osv):
     "Templates for sending email"
     _name = "email.template"
     _description = 'Email Templates'
+    _order = 'name'
 
     def render_template(self, cr, uid, template, model, res_id, context=None):
         """Render the given template text, replace mako expressions ``${expr}``
