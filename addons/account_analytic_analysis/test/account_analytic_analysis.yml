@@ -8,34 +8,21 @@
     recurring_invoices : 1
     interval : 1
     invoice_line_ids:
-      - product_id: product.product_product_consultant
-        name: 'Service'
+      - name: 'Service'
         quantity: 1.0
         price_unit: 75.0
+        product_id: product.product_product_consultant
 -
-  Genrate 'Agrement of the loan EMI' Contract from 'Loan EMI Agrement' template.
--
-  !python {model: account.analytic.account}: |
-    data = {
-        'name':  'Agrement of the loan EMI',
-        'template_id': ref("account_analytic_account_0"),
-        }
-    contract_id = self.create(cr, uid, data)
-    assert contract_id, "contract has not been created correctly"
--
-  Genrate Invoice of 'Agrement of the loan EMI' for current month
+  Genrate 'Agrement of the loan EMI' Contract from 'Loan EMI Agrement'Ttemplate.
 -
   !python {model: account.analytic.account}: |
-    from dateutil.relativedelta import relativedelta
-    import datetime
-    data = {
-        'name':  'Agrement of the loan for current month',
-        'template_id': ref("account_analytic_account_0"),
-        }
-    contract_id = self.create(cr, uid, data)
-    assert contract_id, "contract has not been created correctly"
+    data ={
+            'name': 'Agrement of the loan EMI',
+            'template_id': ref("account_analytic_account_0"),
+    }
     context = None
-    self._amount_all(cr, uid, [contract_id], '', {}, context=context)
+    contract_id = self.create(cr, uid, data, context=context)
+    assert contract_id, "contract has not been created correctly"
     template = self.browse(cr, uid, ref('account_analytic_account_0'),context=context)
     res = self.on_change_template(cr, uid, [contract_id], template.id, context=context)
     self.write(cr, uid, [contract_id], res['value'], context=context)
@@ -45,11 +32,21 @@
     assert template.company_id.id == contract.company_id.id, "Company of contract is not match with Contract Template"
     assert template.date_start == contract.date_start, "Start Date of contract is not match with Contract Template"
     assert template.interval == contract.interval, "Interval of contract is not match with Contract Template"
+-
+  Genrate Invoice of 'Agrement of the loan EMI' for current month.
+-
+  !python {model: account.analytic.account}: |
+    context = None
+    contract_id = self.search(cr, uid, [('name','=','Agrement of the loan EMI')])
+    assert contract_id, "contract has not been created."
+    template = self.browse(cr, uid, ref('account_analytic_account_0'),context=context)
+    res = self.on_change_template(cr, uid, contract_id, template.id, context=context)
     self.cron_create_invoice(cr, uid, False, False, None)
     invoice_obj = self.pool.get('account.invoice')
-    contract_invoice = invoice_obj.search(cr, uid, [('origin','=','Agrement of the loan for current month')])
+    contract_invoice = invoice_obj.search(cr, uid, [('origin','=','Agrement of the loan EMI')])
     template_invoice = invoice_obj.search(cr, uid, [('origin','=','Loan EMI Agrement')])
     inv = invoice_obj.browse(cr ,uid, contract_invoice, context=context)[0]
+    contract = self.browse(cr, uid, contract_id, context=context)[0]
     result = invoice_obj._amount_all(cr, uid, contract_invoice, '', {}, {})
     assert inv.state == 'draft', 'Contract created invoice not in draft state.'
     assert inv.amount_untaxed == contract.amount_untaxed, "Contract Invoice's Total tax excluded is not same as contract"
