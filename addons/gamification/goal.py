@@ -152,7 +152,13 @@ class gamification_goal(osv.Model):
         'remind_update_delay' : fields.integer('Remind delay',
             help="The number of days after which the user assigned to a manual goal will be reminded. Never reminded if no value is specified."),
         'last_update' : fields.date('Last Update',
-            help="In case of manual goal, reminders are sent if the goal as not been updated for a while (defined in goal plan). Ignored in case of non-manual goal or goal not linked to a plan."), #
+            help="In case of manual goal, reminders are sent if the goal as not been updated for a while (defined in goal plan). Ignored in case of non-manual goal or goal not linked to a plan."),
+        'type_description': fields.related('type_id','description',
+            type='char',
+            string='Type Description'),
+        'type_unit': fields.related('type_id','unit',
+            type='char',
+            string='Type Description'),
     }
 
     _defaults = {

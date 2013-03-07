@@ -141,9 +141,13 @@
                             <div t-attf-class="oe_kanban_card oe_kanban_global_click oe_kanban_goal oe_kanban_color_#{record.state.raw_value}">
                                 <div class="oe_kanban_content">
                                     <h4><field name="type_id"/></h4>
+                                    <t t-if="record.type_description.value">
+                                        <em><field name="type_description"/></em>
+                                    </t>
                                     <div class="oe_kanban_project_list">
                                         <p>
                                             <t t-esc="Math.round(record.current.raw_value)"/>/<t t-esc="Math.round(record.target_goal.raw_value)"/>
+                                            <t t-if="record.type_unit.value"><field name="type_unit"/></t>
                                         &#10216;<t t-esc="Math.round(record.completeness.raw_value)"/>%%&#10217;
                                             <br/>
                                             <small>End: <field name="end_date" /></small>

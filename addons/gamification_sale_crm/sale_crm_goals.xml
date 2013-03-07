@@ -7,6 +7,7 @@
             <field name="name">Total Invoiced</field>
             <field name="description"></field>
             <field name="computation_mode">sum</field>
+            <field name="unit">€</field>
             <field name="model_id" eval="ref('account.model_account_invoice_report')" />
             <field name="field_id" eval="ref('account.field_account_invoice_report_price_total')" />
             <field name="field_date_id" eval="ref('account.field_account_invoice_report_day')" />
@@ -18,6 +19,7 @@
             <field name="description">The average number of days to open the case (lower than)</field>
             <field name="computation_mode">sum</field>
             <field name="condition">lower</field>
+            <field name="unit">days</field>
             <field name="model_id" eval="ref('crm.model_crm_lead_report')" />
             <field name="field_id" eval="ref('crm.field_crm_lead_report_delay_close')" />
             <field name="field_date_id" eval="ref('crm.field_crm_lead_report_date_closed')" />
@@ -29,6 +31,7 @@
             <field name="description">The average number of days to close the case (lower than)</field>
             <field name="computation_mode">sum</field>
             <field name="condition">lower</field>
+            <field name="unit">days</field>
             <field name="model_id" eval="ref('crm.model_crm_lead_report')" />
             <field name="field_id" eval="ref('crm.field_crm_lead_report_delay_open')" />
             <field name="field_date_id" eval="ref('crm.field_crm_lead_report_opening_date')" />
@@ -40,6 +43,7 @@
             <field name="name"># Logged Calls</field>
             <field name="description">Log a certain number of calls to reach this goal</field>
             <field name="computation_mode">count</field>
+            <field name="unit">calls</field>
             <field name="model_id" eval="ref('crm.model_crm_phonecall')" />
             <field name="field_date_id" eval="ref('crm.field_crm_phonecall_date_closed')" />
             <field name="domain">[('user_id','=',user_id),('type','='),('state','=','done')]</field>
@@ -49,6 +53,7 @@
             <field name="name"># New Leads</field>
             <field name="description">Based on the creation date</field>
             <field name="computation_mode">count</field>
+            <field name="unit">leads</field>
             <field name="model_id" eval="ref('crm.model_crm_lead')" />
             <field name="field_date_id" eval="ref('crm.field_crm_lead_create_date')" />
             <field name="domain">[('user_id','=',user_id)]</field>
@@ -58,6 +63,7 @@
             <field name="name"># New Opportunities</field>
             <field name="description">Based on the opening date</field>
             <field name="computation_mode">count</field>
+            <field name="unit">opportunities</field>
             <field name="model_id" eval="ref('crm.model_crm_lead')" />
             <field name="field_date_id" eval="ref('crm.field_crm_lead_date_open')" />
             <field name="domain">[('user_id','=',user_id),('type','=','opportunity')]</field>
@@ -67,6 +73,7 @@
             <field name="name"># New Sales Orders</field>
             <field name="description">Based on the creation date</field>
             <field name="computation_mode">count</field>
+            <field name="unit">orders</field>
             <field name="model_id" eval="ref('sale.model_sale_order')" />
             <field name="field_date_id" eval="ref('sale.field_sale_order_date_order')" />
             <field name="domain">[('user_id','=',user_id),('state','not in',('draft', 'sent', 'cancel'))]</field>
@@ -76,6 +83,7 @@
             <field name="name"># Paid Sales Orders</field>
             <field name="description">Based on the invoice date</field>
             <field name="computation_mode">count</field>
+            <field name="unit">orders</field>
             <field name="model_id" eval="ref('account.model_account_invoice_report')" />
             <field name="field_date_id" eval="ref('account.field_account_invoice_report_day')" />
             <field name="domain">[('state','=','paid'),('user_id','=',user_id),('type','=','out_invoice')]</field>
@@ -84,6 +92,7 @@
             <field name="name">Total Paid Sales Orders</field>
             <field name="description">Based on the invoice date</field>
             <field name="computation_mode">count</field>
+            <field name="unit">€</field>
             <field name="model_id" eval="ref('account.model_account_invoice_report')" />
             <field name="field_id" eval="ref('account.field_account_invoice_report_price_total')" />
             <field name="field_date_id" eval="ref('account.field_account_invoice_report_day')" />
@@ -96,6 +105,7 @@
             <field name="description">Refund the least customers (lower than)</field>
             <field name="computation_mode">count</field>
             <field name="condition">lower</field>
+            <field name="unit">invoices</field>
             <field name="model_id" eval="ref('account.model_account_invoice_report')" />
             <field name="field_date_id" eval="ref('account.field_account_invoice_report_day')" />
             <field name="domain">[('state','!=','cancel'),('user_id','=',user_id),('type','=','out_refund')]</field>
@@ -105,6 +115,7 @@
             <field name="description">The total refunded value is a negative value. Validated when higher (min refunded).</field>
             <field name="computation_mode">sum</field>
             <field name="condition">higher</field>
+            <field name="unit">€</field>
             <field name="model_id" eval="ref('account.model_account_invoice_report')" />
             <field name="field_id" eval="ref('account.field_account_invoice_report_price_total')" />
             <field name="field_date_id" eval="ref('account.field_account_invoice_report_day')" />
