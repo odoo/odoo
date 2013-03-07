@@ -933,7 +933,7 @@ class mail_thread(osv.AbstractModel):
         # 2: Private message: add recipients (recipients and author of parent message)
         #   + legacy-code management (! we manage only 4 and 6 commands)
         partner_ids = set()
-        kwargs_partner_ids = set(kwargs.pop('partner_ids', []))
+        kwargs_partner_ids = kwargs.pop('partner_ids', [])
         for partner_id in kwargs_partner_ids:
             if isinstance(partner_id, (list, tuple)) and partner_id[0] == 4 and len(partner_id) == 2:
                 partner_ids.add(partner_id[1])
