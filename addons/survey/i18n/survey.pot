@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 7.0alpha\n"
+"Project-Id-Version: OpenERP Server 7.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-12-21 17:06+0000\n"
-"PO-Revision-Date: 2012-12-21 17:06+0000\n"
+"POT-Creation-Date: 2013-03-07 08:39+0000\n"
+"PO-Revision-Date: 2013-03-07 08:39+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -66,8 +66,8 @@ msgid "Surveys"
 msgstr ""
 
 #. module: survey
-#: field:survey.question,in_visible_answer_type:0
-msgid "Is Answer Type Invisible?"
+#: view:survey.request:0
+msgid "Cancel Request"
 msgstr ""
 
 #. module: survey
@@ -458,6 +458,11 @@ msgid "From"
 msgstr ""
 
 #. module: survey
+#: view:survey:0
+msgid "Cancel Survey"
+msgstr ""
+
+#. module: survey
 #: selection:survey.question,comment_valid_type:0
 #: selection:survey.question,validation_type:0
 msgid "Don't Validate Comment Text."
@@ -541,6 +546,13 @@ msgstr ""
 #: selection:survey.answer,type:0
 #: field:survey.request,email:0
 msgid "Email"
+msgstr ""
+
+#. module: survey
+#: view:survey:0
+#: view:survey.page:0
+#: view:survey.question:0
+msgid "Required Answer"
 msgstr ""
 
 #. module: survey
@@ -679,6 +691,11 @@ msgstr ""
 #: code:addons/survey/survey.py:477
 #, python-format
 msgid "Maximum Required Answer you                                     entered for your maximum is greater than the number of answer.                                     Please use a number that is smaller than %d."
+msgstr ""
+
+#. module: survey
+#: view:survey:0
+msgid "Survey description..."
 msgstr ""
 
 #. module: survey
@@ -1038,10 +1055,8 @@ msgid "Multiple Textboxes With Different Type"
 msgstr ""
 
 #. module: survey
-#: view:survey:0
-#: view:survey.page:0
-#: view:survey.question:0
-msgid "Required Answer"
+#: view:survey.name.wiz:0
+msgid "Add Description"
 msgstr ""
 
 #. module: survey
@@ -1080,8 +1095,14 @@ msgid "Date"
 msgstr ""
 
 #. module: survey
-#: selection:survey.answer,type:0
-msgid "Integer"
+#: view:survey:0
+msgid "All New Survey"
+msgstr ""
+
+#. module: survey
+#: view:survey:0
+#: view:survey.page:0
+msgid "Description on the survey page..."
 msgstr ""
 
 #. module: survey
@@ -1168,8 +1189,8 @@ msgid "Is Rating Scale Invisible?"
 msgstr ""
 
 #. module: survey
-#: view:survey:0
-msgid "All New Survey"
+#: selection:survey.answer,type:0
+msgid "Integer"
 msgstr ""
 
 #. module: survey
@@ -1260,13 +1281,11 @@ msgid "Allow Only One Answer per Column (Forced Ranking)"
 msgstr ""
 
 #. module: survey
-#: view:survey:0
 #: view:survey.browse.answer:0
 #: view:survey.name.wiz:0
 #: view:survey.print:0
 #: view:survey.print.answer:0
 #: view:survey.print.statistics:0
-#: view:survey.request:0
 #: view:survey.send.invitation:0
 msgid "Cancel"
 msgstr ""
@@ -1687,6 +1706,11 @@ msgstr ""
 #. module: survey
 #: field:survey.question,type:0
 msgid "Question Type"
+msgstr ""
+
+#. module: survey
+#: field:survey.question,in_visible_answer_type:0
+msgid "Is Answer Type Invisible?"
 msgstr ""
 
 #. module: survey
