@@ -283,6 +283,7 @@ class hr_expense_expense(osv.osv):
             
             #Calculate tax according to default tax on product
             
+            taxes = []
             #Taken from product_id_onchange in account.invoice
             if line.product_id:
                 fposition_id = False
@@ -299,7 +300,7 @@ class hr_expense_expense(osv.osv):
                     taxes = a and self.pool.get('account.account').browse(cr, uid, a, context=context).tax_ids or False
                 tax_id = fpos_obj.map_tax(cr, uid, fpos, taxes)
             if not taxes:
-                taxes = []
+                continue
             #Calculating tax on the line and creating move?
             for tax in tax_obj.compute_all(cr, uid, taxes,
                     line.unit_amount ,
@@ -354,7 +355,6 @@ class hr_expense_expense(osv.osv):
             'product_id':line.product_id.id,
             'uos_id':line.uom_id.id,
             'account_analytic_id':line.analytic_account.id,
-            #'taxes':line.invoice_line_tax_id,
         }
 
     def action_view_move(self, cr, uid, ids, context=None):
