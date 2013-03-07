@@ -883,9 +883,9 @@ class mail_thread(osv.AbstractModel):
                     mail_message_obj.write(cr, SUPERUSER_ID, message_ids, {'author_id': ids[0]}, context=context)
         return result
 
-    def message_post(self, cr, uid, thread_id, body='', subject=None,
-                        content_subtype='html', type='notification', subtype=None,
-                        parent_id=False, attachments=None, context=None, **kwargs):
+    def message_post(self, cr, uid, thread_id, body='', subject=None, type='notification',
+                        subtype=None, parent_id=False, attachments=None, context=None,
+                        content_subtype='html', **kwargs):
         """ Post a new message in an existing thread, returning the new
             mail.message ID.
 
@@ -1030,11 +1030,19 @@ class mail_thread(osv.AbstractModel):
             self.message_subscribe(cr, uid, [thread_id], [message.author_id.id], context=context)
         return msg_id
 
+    #------------------------------------------------------
+    # Compatibility methods: do not use
+    # TDE TODO: remove me in 8.0
+    #------------------------------------------------------
+
+    def message_create_partners_from_emails(self, cr, uid, emails, context=None):
+        return {'partner_ids': [], 'new_partner_ids': []}
+
     def message_post_user_api(self, cr, uid, thread_id, body='', parent_id=False,
                                 attachment_ids=None, content_subtype='plaintext',
                                 context=None, **kwargs):
         return self.message_post(cr, uid, thread_id, body=body, parent_id=parent_id,
-                                    attachment_ids=attachment_ids, content_suibtype=content_subtype,
+                                    attachment_ids=attachment_ids, content_subtype=content_subtype,
                                     context=context, **kwargs)
 
     #------------------------------------------------------
