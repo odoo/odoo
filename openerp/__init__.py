@@ -22,6 +22,17 @@
 """ OpenERP core library.
 
 """
+
+# Make sure the OpenERP server runs in UTC. This is especially necessary
+# under Windows as under Linux it seems the real import of time is
+# sufficiently deferred so that setting the TZ environment variable
+# in openerp.cli.server was working.
+import os
+os.environ['TZ'] = 'UTC' # Set the timezone...
+import time              # ... *then* import time.
+del os
+del time
+
 # The hard-coded super-user id (a.k.a. administrator, or root user).
 SUPERUSER_ID = 1
 

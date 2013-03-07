@@ -219,8 +219,6 @@ def quit_on_signals():
     sys.exit(0)
 
 def main(args):
-    os.environ["TZ"] = "UTC"
-
     check_root_user()
     openerp.tools.config.parse_config(args)
 
