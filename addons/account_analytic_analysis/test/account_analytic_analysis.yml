@@ -34,13 +34,13 @@
         }
     contract_id = self.create(cr, uid, data)
     assert contract_id, "contract has not been created correctly"
-  
-    self._amount_all(cr, uid, [contract_id], '', {}, {})
-    template = self.browse(cr, uid, ref('account_analytic_account_0'))
-    res = self.on_change_template(cr, uid, [contract_id], template.id, {})
-    self.write(cr, uid, [contract_id], res['value'])
+    context = None
+    self._amount_all(cr, uid, [contract_id], '', {}, context=context)
+    template = self.browse(cr, uid, ref('account_analytic_account_0'),context=context)
+    res = self.on_change_template(cr, uid, [contract_id], template.id, context=context)
+    self.write(cr, uid, [contract_id], res['value'], context=context)
     line_obj = self.pool.get('account.analytic.invoice.line')
-    contract = self.browse(cr, uid, contract_id)
+    contract = self.browse(cr, uid, contract_id, context=context)
     assert template.partner_id.id == contract.partner_id.id or res['value']['partner_id'], "Customer of contract is not match with Contract Template"
     assert template.company_id.id == contract.company_id.id, "Company of contract is not match with Contract Template"
     assert template.date_start == contract.date_start, "Start Date of contract is not match with Contract Template"
@@ -49,7 +49,7 @@
     invoice_obj = self.pool.get('account.invoice')
     contract_invoice = invoice_obj.search(cr, uid, [('origin','=','Agrement of the loan for current month')])
     template_invoice = invoice_obj.search(cr, uid, [('origin','=','Loan EMI Agrement')])
-    inv = invoice_obj.browse(cr ,uid, contract_invoice)[0]
+    inv = invoice_obj.browse(cr ,uid, contract_invoice, context=context)[0]
     result = invoice_obj._amount_all(cr, uid, contract_invoice, '', {}, {})
     assert inv.state == 'draft', 'Contract created invoice not in draft state.'
     assert inv.amount_untaxed == contract.amount_untaxed, "Contract Invoice's Total tax excluded is not same as contract"

@@ -35,11 +35,11 @@ _logger = logging.getLogger(__name__)
 class account_analytic_invoice_line(osv.osv):
     _name = "account.analytic.invoice.line"
 
-    def _amount_line(self, cr, uid, ids, prop, unknow_none, unknow_dict):
+    def _amount_line(self, cr, uid, ids, prop, unknow_none, unknow_dict, context=None):
         res = {}
         tax_obj = self.pool.get('account.tax')
         cur_obj = self.pool.get('res.currency')
-        for line in self.browse(cr, uid, ids):
+        for line in self.browse(cr, uid, ids, context=context):
             taxes = tax_obj.compute_all(cr, uid, line.tax_ids, line.price_unit, line.quantity, product=line.product_id, partner=line.analytic_account_id.partner_id)
             res[line.id] = taxes['total']
             if line.analytic_account_id:
@@ -695,9 +695,11 @@ class account_analytic_account(osv.osv):
         res = super(account_analytic_account, self).on_change_template(cr, uid, ids, template_id, context=context)
         analytic_account = self.browse(cr, uid, template_id, context=context)
         invoice_line_ids = []
-        #TO FIX: do not use write here. need another solution to unlink
-        self.write(cr, uid, analytic_account.id, {'invoice_line_ids': []})
-        
+        if ids:
+            acc = self.browse(cr, uid, ids, context=context)[0]
+            if acc.invoice_line_ids:
+                for l in acc.invoice_line_ids:
+                    self.write(cr, uid, analytic_account.id, {'invoice_line_ids': [(2, l.id)]})
         template = self.browse(cr, uid, template_id, context=context)
         for x in template.invoice_line_ids:
             line = x.read([],load='_classic_write')[0]
@@ -781,7 +783,7 @@ class account_analytic_account(osv.osv):
         inv_line_id = []
         obj_invoice_line = self.pool.get('account.invoice.line')
         obj_contract_line = self.pool.get('account.analytic.invoice.line')
-        for line in obj_contract_line.browse(cr, uid, contract_line_ids):
+        for line in obj_contract_line.browse(cr, uid, contract_line_ids, context=context):
             invoice_line_vals = {
                 'name': line.name,
                 'origin': line.analytic_account_id.name,
@@ -834,7 +836,7 @@ class account_analytic_account(osv.osv):
         obj_invoice_line = self.pool.get('account.invoice.line')
         contract_ids = self.search(cr, uid, [('next_date','=', current_date), ('state','=', 'open'), ('recurring_invoices','=', True)])
         if contract_ids:
-            for contract in self.browse(cr, uid, contract_ids):
+            for contract in self.browse(cr, uid, contract_ids, context=context):
                 contract_line_ids = self.pool.get('account.analytic.invoice.line').search(cr, uid, [('analytic_account_id', '=', contract.id)], context=context)
                 if contract_line_ids:
                     invoice_id = self._prepare_invoice(cr, uid, contract, context=context)
