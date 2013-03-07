@@ -1297,6 +1297,11 @@ class account_analytic_account(osv.osv):
             context = {}
         if vals.get('child_ids', False) and context.get('analytic_project_copy', False):
             vals['child_ids'] = []
+        if vals['partner_id']:
+            partner = self.pool.get('res.partner').browse(cr, uid, vals['partner_id'], context=context)
+            pricelist = partner.property_product_pricelist and partner.property_product_pricelist.id or False
+            if pricelist:
+                vals['pricelist_id'] = pricelist
         analytic_account_id = super(account_analytic_account, self).create(cr, uid, vals, context=context)
         self.project_create(cr, uid, analytic_account_id, vals, context=context)
         return analytic_account_id
