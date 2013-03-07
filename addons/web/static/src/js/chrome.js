@@ -478,7 +478,16 @@ instance.web.DatabaseManager = instance.web.Widget.extend({
                     'login': 'admin',
                     'password': form_obj['create_admin_pwd'],
                     'login_successful': function() {
-                        self.do_action("reload");
+                        var action = {
+                            type: "ir.actions.client",
+                            tag: 'reload',
+                            params: {
+                                url_search : {
+                                    db: form_obj['db_name'],
+                                },
+                            }
+                        };
+                        self.do_action(action);
                     },
                 },
                 _push_me: false,
@@ -605,7 +614,9 @@ instance.web.Login =  instance.web.Widget.extend({
         if (_.isEmpty(this.params)) {
             this.params = $.bbq.getState(true);
         }
-        if ($.deparam.querystring().db) {
+        if (action && action.params && action.params.db) {
+            this.params.db = action.params.db;
+        } else if ($.deparam.querystring().db) {
             this.params.db = $.deparam.querystring().db;
         }
         if (this.params.db) {
@@ -772,7 +783,9 @@ instance.web.Reload = function(parent, action) {
     var l = window.location;
 
     var sobj = $.deparam(l.search.substr(1));
-    sobj.ts = new Date().getTime();
+    if (params.url_search) {
+        sobj = _.extend(sobj, params.url_search);
+    }
     var search = '?' + $.param(sobj);
 
     var hash = l.hash;
