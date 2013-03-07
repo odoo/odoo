@@ -48,8 +48,8 @@ class test_message_compose(TestMailBase):
         _body_html1 = 'Fans of Pigs, unite !'
         _body_html2 = 'I am angry !'
         _attachments = [
-            {'name': 'First', 'datas_fname': 'first.txt', 'datas': base64.b64encode('My first attachment')},
-            {'name': 'Second', 'datas_fname': 'second.txt', 'datas': base64.b64encode('My second attachment')},
+            {'name': 'First', 'datas_fname': 'first.txt', 'datas': base64.b64encode('My first attachment'), 'res_model': 'res.partner', 'res_id': self.partner_admin_id},
+            {'name': 'Second', 'datas_fname': 'second.txt', 'datas': base64.b64encode('My second attachment'), 'res_model': 'res.partner', 'res_id': self.partner_admin_id},
             ]
         _attachments_test = [('first.txt', 'My first attachment'), ('second.txt', 'My second attachment')]
 
@@ -115,10 +115,10 @@ class test_message_compose(TestMailBase):
         self.assertEqual(compose.subject, _subject1, 'mail.compose.message subject incorrect')
         self.assertIn(_body_html1, compose.body, 'mail.compose.message body incorrect')
         self.assertEqual(set(message_pids), set(partner_ids), 'mail.compose.message partner_ids incorrect')
-        # Test: mail.compose.message: attachments
+        # Test: mail.compose.message: attachments (owner has not been modified)
         for attach in compose.attachment_ids:
-            self.assertEqual(attach.res_model, False, 'mail.compose.message attachment res_model through templat was overriden')
-            self.assertEqual(attach.res_id, 0, 'mail.compose.message attachment res_id incorrect')
+            self.assertEqual(attach.res_model, 'res.partner', 'mail.compose.message attachment res_model through templat was overriden')
+            self.assertEqual(attach.res_id, self.partner_admin_id, 'mail.compose.message attachment res_id incorrect')
             self.assertIn((attach.datas_fname, base64.b64decode(attach.datas)), _attachments_test,
                 'mail.message attachment name / data incorrect')
         # Test: mail.message: attachments
