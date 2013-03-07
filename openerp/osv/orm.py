@@ -3204,7 +3204,8 @@ class BaseModel(object):
 
         cr.commit()     # start a new transaction
 
-        self._add_sql_constraints(cr)
+        if getattr(self, '_auto', True):
+            self._add_sql_constraints(cr)
 
         if create:
             self._execute_sql(cr)
