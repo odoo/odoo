@@ -216,6 +216,45 @@
         <field eval="0" name="allow_comment"/>
     </record>
 
+	<!-- Templates DATA for  refuse and approve -->
+		 
+    <record id="email_template_refuse_applicant" model="email.template">
+        <field name="name">For Refuse Application</field>
+        <field name="email_from">${object.user.email or ''}</field>
+        <field name="subject">We refuse your Application</field>
+        <field name="email_to">${object.email_from}</field>
+        <field name="lang">${object.lang}</field>
+        <field name="model_id" ref="hr_recruitment.model_hr_applicant"/>
+        <field eval="0" name="user_signature"/>
+        <field name="body_html"><![CDATA[<p>Dear Madam, Dear Sir,</p>
+        <p>We thank you for your interest in our company and for your application.
+        Unfortunately, your profile does not match with our needs or our recruitment campaign has reached its term.</p>
+        <p>If you want more details, feel free to contact us by phone.</p>
+        <p>Kind regards,</p>
+        <br/>
+         ${object.user_id.name}
+        <br/>]]></field>
+    </record>
+
+    <record id="email_template_approve_applicant" model="email.template">
+        <field name="name">Intrested in Applicastion</field>
+        <field name="email_from">${object.user.email or ''}</field>
+        <field name="email_to">{object.email_from}</field>
+        <field name="subject">We Intrested in your Application</field>
+        <field name="lang">${object.lang}</field>
+        <field name="model_id" ref="hr_recruitment.model_hr_applicant"/>
+        <field eval="0" name="user_signature"/>
+        <field name="body_html"><![CDATA[<p>Dear Applicant,</p>
+        <p>Congrats! Your resume's got our interest!
+        I will call you as soon as possible to make a 10 minutes phone interview and  plan a first meeting.</p>
+        <p>If we can’t reach you or if you miss our call, feel free to reach me back on the number 001 312 349 3030
+        If I do not answer, please let me a message with some schedules to call you back.</p>
+        <p>Kind regards,</p>
+        <br/>
+         ${object.user_id.name}
+        <br/>]]></field>
+    </record>
+            
     <record id="survey_answer_job_70" model="survey.answer">
         <field name="in_visible_answer_type">1</field>
         <field name="answer">Male</field>
