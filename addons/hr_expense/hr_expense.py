@@ -172,8 +172,7 @@ class hr_expense_expense(osv.osv):
         return self.pool.get('account.move').account_move_prepare(cr, uid, journal_id, date=date, ref=ref, company_id=company_id, context=context)
 
     def line_get_convert(self, cr, uid, x, part, date, context=None):
-        #partner_id  = self.pool.get('res.partner')._find_partner(part)
-        partner_id = part.id
+        partner_id  = self.pool.get('res.partner')._find_accounting_partner(part).id
         return {
             'date_maturity': x.get('date_maturity', False),
             'partner_id': partner_id,
@@ -260,7 +259,7 @@ class hr_expense_expense(osv.osv):
                     'ref': exp.name
                     })
             
-            lines = map(lambda x:(0,0,self.line_get_convert(cr, uid, x, exp.user_id.partner_id, exp.date_confirm, context=context)),iml)
+            lines = map(lambda x:(0,0,self.line_get_convert(cr, uid, x, exp.employee_id.address_home_id, exp.date_confirm, context=context)),iml)
             move_obj.write(cr, uid, [move_id], {'line_id': lines}, context=context)
             self.write(cr, uid, ids, {'account_move_id': move_id, 'state': 'done'}, context=context)
         return True
