@@ -699,7 +699,7 @@ class account_analytic_account(osv.osv):
             acc = self.browse(cr, uid, ids, context=context)[0]
             if acc.invoice_line_ids:
                 for l in acc.invoice_line_ids:
-                    self.write(cr, uid, analytic_account.id, {'invoice_line_ids': [(2, l.id)]})
+                    invoice_line_ids.append((2, l.id))
         template = self.browse(cr, uid, template_id, context=context)
         for x in template.invoice_line_ids:
             line = x.read([],load='_classic_write')[0]
