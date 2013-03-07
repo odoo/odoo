@@ -938,7 +938,7 @@ class mail_thread(osv.AbstractModel):
             if isinstance(partner_id, (list, tuple)) and partner_id[0] == 4 and len(partner_id) == 2:
                 partner_ids.add(partner_id[1])
             if isinstance(partner_id, (list, tuple)) and partner_id[0] == 6 and len(partner_id) == 3:
-                partner_ids |= partner_id[2]
+                partner_ids |= set(partner_id[2])
             elif isinstance(partner_id, (int, long)):
                 partner_ids.add(partner_id)
             else:
