@@ -53,7 +53,7 @@
                                 <field class="oe_inline" name="remaining_ca" attrs="{'invisible': [('fix_price_invoices','=',False)]}"/>
                             </td><td>
                                 <field class="oe_inline" name="fix_price_to_invoice" attrs="{'invisible': [('fix_price_invoices','=',False)]}"/>
-                            </td><td attrs="{'invisible': [('fix_price_invoices','=',False)]}" class="oe_timesheet_action">
+                            </td><td attrs="{'invisible': ['|',('fix_price_invoices','=',False),('type','=','template')]}" class="oe_timesheet_action">
                                 <span attrs="{'invisible': [('fix_price_to_invoice','=',0.0)]}" class="oe_grey">
                                     <button name="open_sale_order_lines"
                                         class="oe_link"
@@ -84,7 +84,7 @@
                                 <field class="oe_inline" name="remaining_hours_to_invoice" attrs="{'invisible': [('invoice_on_timesheets','=',False)]}"/>
                             </td><td>
                                 <field class="oe_inline" name="ca_to_invoice" attrs="{'invisible': [('invoice_on_timesheets','=',False)]}"/>
-                            </td><td class="oe_timesheet_action" attrs="{'invisible': [('invoice_on_timesheets','=',False)]}">
+                            </td><td class="oe_timesheet_action" attrs="{'invisible': ['|',('invoice_on_timesheets','=',False),('type','=','template')]}">
                                 <span attrs="{'invisible': [('ca_to_invoice','=',0.0)]}" class="oe_grey">
                                     <button name="%(hr_timesheet_invoice.action_hr_timesheet_invoice_create_final)d"
                                         type="action"

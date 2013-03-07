@@ -21,7 +21,7 @@
                             <field class="oe_form_inline" name="remaining_expense" attrs="{'invisible': [('charge_expenses','=',False)]}"/>
                         </td><td>
                             <field class="oe_form_inline" name="expense_to_invoice" attrs="{'invisible': [('charge_expenses','=',False)]}"/>
-                        </td><td attrs="{'invisible': [('charge_expenses','=',False)]}" class="oe_timesheet_action">
+                        </td><td attrs="{'invisible': ['|',('charge_expenses','=',False),('type','=','template')]}" class="oe_timesheet_action">
                             <span attrs="{'invisible': [('expense_to_invoice','=',0)]}" class="oe_grey">
                                 <button
                                     name="hr_to_invoice_expense"
