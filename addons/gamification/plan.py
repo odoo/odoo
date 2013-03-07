@@ -242,11 +242,11 @@ class gamification_goal_plan(osv.Model):
             # goals closed but still opened at the last report date
             closed_goals_to_report = []
             for planline in plan.planline_ids:
-                closed_goals_to_report.extend( goal_obj.search(cr, uid, [
+                closed_goals_to_report.extend(goal_obj.search(cr, uid, [
                     ('planline_id','=',planline.id),
                     ('start_date', '>=', plan.last_report_date),
                     ('end_date', '<=', plan.last_report_date)
-                    ]) )
+                    ]))
 
             if len(closed_goals_to_report) > 0:
                 # some goals need a final report
