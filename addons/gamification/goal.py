@@ -35,7 +35,6 @@ class gamification_goal_type(osv.Model):
     """
     _name = 'gamification.goal.type'
     _description = 'Gamification goal type'
-    _order = "sequence"
 
     _columns = {
         'name': fields.char('Type Name', required=True, translate=True),
@@ -103,7 +102,7 @@ class gamification_goal(osv.Model):
                 res[goal.id] = min(100, round(100.0 * goal.current / goal.target_goal, 2))
             else:
                 res[goal.id] = 0.0
-            
+
         return res
 
     def on_change_type_id(self, cr, uid, ids, type_id=False, context=None):
@@ -166,6 +165,7 @@ class gamification_goal(osv.Model):
         'state': 'draft',
         'start_date': fields.date.today,
     }
+    _order = 'last_update desc, end_date, type_id'
 
 
     def update(self, cr, uid, ids, context=None):
