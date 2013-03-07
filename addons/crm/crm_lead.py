@@ -975,12 +975,10 @@ class crm_lead(base_stage, format_address, osv.osv):
             through message_process.
             This override updates the document according to the email.
         """
-        if custom_values is None: custom_values = {}
-
-        desc = html2plaintext(msg.get('body')) if msg.get('body') else ''
+        if custom_values is None:
+            custom_values = {}
         defaults = {
             'name':  msg.get('subject') or _("No Subject"),
-            'description': desc,
             'email_from': msg.get('from'),
             'email_cc': msg.get('cc'),
             'partner_id': msg.get('author_id', False),
