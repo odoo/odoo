@@ -1024,9 +1024,12 @@ class crm_lead(base_stage, format_address, osv.osv):
 
     def schedule_phonecall_send_note(self, cr, uid, ids, phonecall_id, action, context=None):
         phonecall = self.pool.get('crm.phonecall').browse(cr, uid, [phonecall_id], context=context)[0]
-        if action == 'log': prefix = 'Logged'
-        else: prefix = 'Scheduled'
-        message = _("<b>%s a call</b> for the <em>%s</em>.") % (prefix, phonecall.date)
+        if action == 'log':
+            prefix = 'Logged'
+        else:
+            prefix = 'Scheduled'
+        suffix = ' %s' % phonecall.description
+        message = _("%s a call for %s.%s") % (prefix, phonecall.date, suffix)
         return self.message_post(cr, uid, ids, body=message, context=context)
 
     def onchange_state(self, cr, uid, ids, state_id, context=None):

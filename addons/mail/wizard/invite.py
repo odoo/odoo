@@ -19,7 +19,6 @@
 #
 ##############################################################################
 
-from openerp import SUPERUSER_ID
 from openerp import tools
 from openerp.osv import osv
 from openerp.osv import fields
@@ -52,19 +51,12 @@ class invite_wizard(osv.osv_memory):
     }
 
     def add_followers(self, cr, uid, ids, context=None):
-        # TDE FIXME HACK: as notification_email_send is not present on the partner
-        # form view, and as opt_out can be used once CRM is installed, we have to
-        # perform this ugly columns check to use the parameter
-        # Please remove me in 8.0 (hint: remove opt_out -> notification to 'never')
-        has_opt_out = self.pool.get('res.partner')._all_columns.get('opt_out')
-
-        for wizard in self.browse(cr, SUPERUSER_ID, ids, context=context):
+        for wizard in self.browse(cr, uid, ids, context=context):
             model_obj = self.pool.get(wizard.res_model)
             document = model_obj.browse(cr, uid, wizard.res_id, context=context)
 
             # filter partner_ids to get the new followers, to avoid sending email to already following partners
-            new_followers = [p for p in wizard.partner_ids if p.id not in document.message_follower_ids]
-            new_follower_ids = [p.id for p in new_followers]
+            new_follower_ids = [p.id for p in wizard.partner_ids if p.id not in document.message_follower_ids]
             model_obj.message_subscribe(cr, uid, [wizard.res_id], new_follower_ids, context=context)
 
             # send an email
@@ -74,12 +66,8 @@ class invite_wizard(osv.osv_memory):
                 signature = user_id and user_id["signature"] or ''
                 if signature:
                     wizard.message = tools.append_content_to_html(wizard.message, signature, plaintext=True, container_tag='div')
-                # send mail to new followers, unless it is opt-out
-                # FIXME 8.0: use notification_email_send, send a wall message
-                # and let mail handle email notification
-                for follower in new_followers:
-                    if has_opt_out and follower.opt_out:
-                        continue
+                # FIXME 8.0: use notification_email_send, send a wall message and let mail handle email notification + message box
+                for follower_id in new_follower_ids:
                     mail_mail = self.pool.get('mail.mail')
                     # the invite wizard should create a private message not related to any object -> no model, no res_id
                     mail_id = mail_mail.create(cr, uid, {
@@ -89,5 +77,5 @@ class invite_wizard(osv.osv_memory):
                         'body_html': '%s' % wizard.message,
                         'auto_delete': True,
                         }, context=context)
-                    mail_mail.send(cr, uid, [mail_id], recipient_ids=[follower.id], context=context)
+                    mail_mail.send(cr, uid, [mail_id], recipient_ids=[follower_id], context=context)
         return {'type': 'ir.actions.act_window_close'}

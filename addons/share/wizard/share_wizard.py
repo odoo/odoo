@@ -660,7 +660,7 @@ class share_wizard(osv.TransientModel):
         self._assert(wizard_data.action_id and wizard_data.access_mode,
                      _('Action and Access Mode are required to create a shared access.'),
                      context=context)
-        self._assert(self.has_share(cr, uid, context=context),
+        self._assert(self.has_share(cr, uid, wizard_data, context=context),
                      _('You must be a member of the Share/User group to use the share wizard.'),
                      context=context)
         if wizard_data.user_type == 'emails':

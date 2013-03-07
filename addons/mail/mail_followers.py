@@ -82,11 +82,6 @@ class mail_notification(osv.Model):
             :param list partners_to_notify: optional list of partner ids restricting
                 the notifications to process
         """
-        # TDE FIXME HACK: as notification_email_send is not present on the partner
-        # form view, and as opt_out can be used once CRM is installed, we have to
-        # perform this ugly columns check to use the parameter
-        # Please remove me in 8.0 (hint: remove opt_out -> notification to 'never')
-        has_opt_out = self.pool.get('res.partner')._all_columns.get('opt_out')
         notify_pids = []
         for notification in message.notification_ids:
             if notification.read:
@@ -99,7 +94,7 @@ class mail_notification(osv.Model):
             if not partner.email:
                 continue
             # Partner does not want to receive any emails or is opt-out
-            if partner.notification_email_send == 'none' or (has_opt_out and partner.opt_out):
+            if partner.notification_email_send == 'none':
                 continue
             # Partner wants to receive only emails and comments
             if partner.notification_email_send == 'comment' and message.type not in ('email', 'comment'):
