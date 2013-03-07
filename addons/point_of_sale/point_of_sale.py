@@ -977,8 +977,12 @@ class pos_order(osv.osv):
                 else:
                     grouped_data[key].append(values)
 
+            #because of the weird way the pos order is written, we need to make sure there is at least one line, 
+            #because just after the 'for' loop there are references to 'line' and 'income_account' variables (that 
+            #are set inside the for loop)
+            #TOFIX: a deep refactoring of this method (and class!) is needed in order to get rid of this stupid hack
+            assert order.lines, _('The POS order must have lines when calling this method')
             # Create an move for each order line
-
             for line in order.lines:
                 tax_amount = 0
                 taxes = [t for t in line.product_id.taxes_id]
@@ -1053,7 +1057,7 @@ class pos_order(osv.osv):
                     'name': _('Tax') + ' ' + tax.name,
                     'quantity': line.qty,
                     'product_id': line.product_id.id,
-                    'account_id': key[account_pos],
+                    'account_id': key[account_pos] or income_account,
                     'credit': ((tax_amount>0) and tax_amount) or 0.0,
                     'debit': ((tax_amount<0) and -tax_amount) or 0.0,
                     'tax_code_id': key[tax_code_pos],
