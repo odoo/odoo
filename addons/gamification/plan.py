@@ -213,8 +213,6 @@ class gamification_goal_plan(osv.Model):
         if not ids:
             ids = self.search(cr, uid, [('state', '=', 'inprogress')])
 
-        self.generate_goals_from_plan(cr, uid, ids, context=context)
-        
         goal_obj = self.pool.get('gamification.goal')
         # we use yesterday to update the goals that just ended
         yesterday = date.today() - timedelta(days=1)
@@ -237,6 +235,9 @@ class gamification_goal_plan(osv.Model):
         :param list(int) ids: the ids of the plans to update, if False will 
         update only plans in progress."""
         if not context: context = {}
+        goal_obj = self.pool.get('gamification.goal')
+
+        self.generate_goals_from_plan(cr, uid, ids, context=context)
 
         for plan in self.browse(cr, uid, ids, context=context):
             # goals closed but still opened at the last report date

@@ -10,13 +10,12 @@
             <field name="model_id" eval="ref('account.model_account_invoice_report')" />
             <field name="field_id" eval="ref('account.field_account_invoice_report_price_total')" />
             <field name="field_date_id" eval="ref('account.field_account_invoice_report_day')" />
-            <field name="domain">[('state','!=','cancel'),('user_id','=',user_id)]</field>
-        </record> 
-        <!-- filtre ajout seulement customer -->
+            <field name="domain">[('state','!=','cancel'),('user_id','=',user_id),('type','=','out_invoice')]</field>
+        </record>
 
         <record model="gamification.goal.type" id="type_crm_lead_delay_open">
             <field name="name">Time to Qualify a Lead</field>
-            <field name="description">The average number of days to open the case (less than)</field>
+            <field name="description">The average number of days to open the case (lower than)</field>
             <field name="computation_mode">sum</field>
             <field name="condition">lower</field>
             <field name="model_id" eval="ref('crm.model_crm_lead_report')" />
@@ -27,7 +26,7 @@
 
         <record model="gamification.goal.type" id="type_crm_lead_delay_close">
             <field name="name">Days to Close a Deal</field>
-            <field name="description">The average number of days to close the case (less than)</field>
+            <field name="description">The average number of days to close the case (lower than)</field>
             <field name="computation_mode">sum</field>
             <field name="condition">lower</field>
             <field name="model_id" eval="ref('crm.model_crm_lead_report')" />
@@ -73,45 +72,42 @@
             <field name="domain">[('user_id','=',user_id),('state','not in',('draft', 'sent', 'cancel'))]</field>
         </record>
 
-
         <record model="gamification.goal.type" id="type_crm_nbr_paid_sale_order">
             <field name="name"># Paid Sales Orders</field>
-            <field name="description">Based on the confirmation date</field>
+            <field name="description">Based on the invoice date</field>
             <field name="computation_mode">count</field>
-            <field name="model_id" eval="ref('sale.model_sale_order')" />
-            <field name="field_date_id" eval="ref('sale.field_sale_order_date_confirm')" />
-            <field name="domain">[('user_id','=',user_id),('invoiced','=',True)]</field>
+            <field name="model_id" eval="ref('account.model_account_invoice_report')" />
+            <field name="field_date_id" eval="ref('account.field_account_invoice_report_day')" />
+            <field name="domain">[('state','=','paid'),('user_id','=',user_id),('type','=','out_invoice')]</field>
         </record>
-
         <record model="gamification.goal.type" id="type_crm_tot_paid_sale_order">
             <field name="name">Total Paid Sales Orders</field>
-            <field name="description">Based on the confirmation date</field>
-            <field name="computation_mode">sum</field>
-            <field name="model_id" eval="ref('sale.model_sale_order')" />
-            <field name="field_id" eval="ref('sale.field_sale_order_amount_total')" />
-            <field name="field_date_id" eval="ref('sale.field_sale_order_date_confirm')" />
-            <field name="domain">[('user_id','=',user_id),('invoiced','=',True)]</field>
+            <field name="description">Based on the invoice date</field>
+            <field name="computation_mode">count</field>
+            <field name="model_id" eval="ref('account.model_account_invoice_report')" />
+            <field name="field_id" eval="ref('account.field_account_invoice_report_price_total')" />
+            <field name="field_date_id" eval="ref('account.field_account_invoice_report_day')" />
+            <field name="domain">[('state','=','paid'),('user_id','=',user_id),('type','=','out_invoice')]</field>
         </record>
 
 
         <record model="gamification.goal.type" id="type_crm_nbr_customer_refunds">
             <field name="name"># Customer Refunds</field>
-            <field name="description">Refund the least customers</field>
+            <field name="description">Refund the least customers (lower than)</field>
             <field name="computation_mode">count</field>
             <field name="condition">lower</field>
-            <field name="model_id" eval="ref('account.model_account_invoice')" />
-            <field name="field_date_id" eval="ref('account.field_account_invoice_date_invoice')" />
+            <field name="model_id" eval="ref('account.model_account_invoice_report')" />
+            <field name="field_date_id" eval="ref('account.field_account_invoice_report_day')" />
             <field name="domain">[('state','!=','cancel'),('user_id','=',user_id),('type','=','out_refund')]</field>
         </record>
-
         <record model="gamification.goal.type" id="type_crm_tot_customer_refunds">
             <field name="name">Total Customer Refunds</field>
-            <field name="description"></field>
+            <field name="description">The total refunded value is a negative value. Validated when higher (min refunded).</field>
             <field name="computation_mode">sum</field>
             <field name="condition">higher</field>
-            <field name="model_id" eval="ref('account.model_account_invoice')" />
-            <field name="field_id" eval="ref('account.field_account_invoice_amount_total')" />
-            <field name="field_date_id" eval="ref('account.field_account_invoice_date_invoice')" />
+            <field name="model_id" eval="ref('account.model_account_invoice_report')" />
+            <field name="field_id" eval="ref('account.field_account_invoice_report_price_total')" />
+            <field name="field_date_id" eval="ref('account.field_account_invoice_report_day')" />
             <field name="domain">[('state','!=','cancel'),('user_id','=',user_id),('type','=','out_refund')]</field>
         </record>
 
@@ -160,7 +156,7 @@
 
         <!-- plans -->
         <record model="gamification.goal.plan" id="plan_crm_sale">
-            <field name="name">Saleperson</field>
+            <field name="name">Salesperson</field>
             <field name="period">monthly</field>
             <field name="visibility_mode">board</field>
             <field name="autojoin_group_id" eval="ref('base.group_sale_salesman')" />
