@@ -1020,7 +1020,9 @@ instance.web.search.FilterGroup = instance.web.search.Input.extend(/** @lends in
         // create a GroupbyGroup instead of the current FilterGroup
         if (!(this instanceof instance.web.search.GroupbyGroup) &&
               _(filters).all(function (f) {
-                  return f.attrs.context && f.attrs.context.group_by; })) {
+                  if (!f.attrs.context) { return false; }
+                  var c = instance.web.pyeval.eval('context', f.attrs.context);
+                  return !_.isEmpty(c.group_by);})) {
             return new instance.web.search.GroupbyGroup(filters, parent);
         }
         this._super(parent);
