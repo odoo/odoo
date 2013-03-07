@@ -26,6 +26,9 @@
                         </div>
                     </div>
                 </xpath>
+                <field name="partner_id" position="attributes">
+                    <attribute name="attrs">{'required': [('invoice_on_timesheets', '=', True)]}</attribute>
+                </field>
                 <xpath expr='//group[@name="invoice_on_timesheets"]' position="replace">
                 </xpath>
                 <xpath expr='//separator[@name="description"]' position='before'>
@@ -57,7 +60,7 @@
                                 <span attrs="{'invisible': [('fix_price_to_invoice','=',0.0)]}" class="oe_grey">
                                     <button name="open_sale_order_lines"
                                         class="oe_link"
-                                        string="⇒ Invoice" type="object"
+                                        string="⇒ To invoice" type="object"
                                         context="{'default_partner_id': [partner_id],'default_project_id': active_id,'search_default_uninvoiced': 1,'search_default_project_id': active_id,'search_default_partner_id': [partner_id]}"/>
                                     or view
                                 </span>
@@ -65,17 +68,17 @@
                                 <span attrs="{'invisible': ['|',('fix_price_to_invoice','&lt;&gt;',0.0 ),('partner_id','=',False)]}" class="oe_grey">
                                     No order to invoice, create
                                 </span>
-                                <button name="%(action_sales_order)d" string="Sale Orders"
+                                <button name="%(action_sales_order)d" string="Sales Orders"
                                     type="action"
                                     class="oe_link"
-                                    context="{'default_partner_id': [partner_id], 'search_default_partner_id': [partner_id],'search_default_project_id': [active_id],'default_project_id': [active_id]}"
+                                    context="{'default_partner_id': [partner_id], 'search_default_project_id': [active_id],'default_project_id': [active_id]}"
                                     />
                             </td>
                         </tr><tr>
                             <td class="oe_timesheet_grey">
                                 <label for="invoice_on_timesheets"/>
                             </td><td class="oe_timesheet_grey">
-                                <field name="invoice_on_timesheets"/>
+                                <field name="invoice_on_timesheets" on_change="onchange_invoice_on_timesheets(invoice_on_timesheets)"/>
                             </td><td>
                                 <field class="oe_inline" name="hours_qtt_est" attrs="{'invisible': [('invoice_on_timesheets','=',False)]}"/>
                             </td><td>
@@ -157,7 +160,7 @@
             <field name="model">account.analytic.account</field>
             <field name="inherit_id" ref="account.view_account_analytic_account_list"/>
             <field name="arch" type="xml">
-                <field name="date" position="before">
+                <field name="date_start" position="before">
                     <field name="last_invoice_date"/>
                     <field name="toinvoice_total"/>
                     <field name="remaining_hours"/>

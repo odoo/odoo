@@ -63,6 +63,20 @@ class account_analytic_account(osv.osv):
 
         return res
 
+    def _get_default_to_invoice(self, cr, uid, context=None):
+        try:
+            invoice_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'hr_timesheet_invoice', 'timesheet_invoice_factor1')[1]
+        except ValueError:
+            invoice_id = False
+        return invoice_id
+
+    def _get_default_pricelist_id(self, cr, uid, context=None):
+        try:
+            pricelist_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'product', 'list0')[1]
+        except ValueError:
+            pricelist_id = False
+        return pricelist_id
+
     _inherit = "account.analytic.account"
     _columns = {
         'pricelist_id': fields.many2one('product.pricelist', 'Pricelist',
@@ -75,7 +89,8 @@ class account_analytic_account(osv.osv):
             help="You usually invoice 100% of the timesheets. But if you mix fixed price and timesheet invoicing, you may use another ratio. For instance, if you do a 20% advance invoice (fixed price, based on a sales order), you should invoice the rest on timesheet with a 80% ratio."),
     }
     _defaults = {
-        'pricelist_id': lambda self, cr, uid, ctx: ctx.get('pricelist_id', False),
+        'pricelist_id': _get_default_pricelist_id,
+        'to_invoice': _get_default_to_invoice,
     }
 
     def on_change_partner_id(self, cr, uid, ids, partner_id, name, context=None):
