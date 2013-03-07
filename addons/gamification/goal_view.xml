@@ -146,7 +146,7 @@
                                     </t>
                                     <div class="oe_kanban_project_list">
                                         <p>
-                                            <t t-esc="Math.round(record.current.raw_value)"/>/<t t-esc="Math.round(record.target_goal.raw_value)"/>
+                                            <big><t t-esc="Math.round(record.current.raw_value)"/>/<t t-esc="Math.round(record.target_goal.raw_value)"/></big>
                                             <t t-if="record.type_unit.value"><field name="type_unit"/></t>
                                         &#10216;<t t-esc="Math.round(record.completeness.raw_value)"/>%%&#10217;
                                             <br/>
