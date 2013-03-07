@@ -163,6 +163,7 @@ class purchase_order(osv.osv):
         'state': {
             'purchase.mt_rfq_confirmed': lambda self, cr, uid, obj, ctx=None: obj['state'] == 'confirmed',
             'purchase.mt_rfq_approved': lambda self, cr, uid, obj, ctx=None: obj['state'] == 'approved',
+            'purchase.mt_rfq_done': lambda self, cr, uid, obj, ctx=None: obj['state'] == 'done',
         },
     }
     _columns = {
@@ -247,7 +248,11 @@ class purchase_order(osv.osv):
     def create(self, cr, uid, vals, context=None):
         if vals.get('name','/')=='/':
             vals['name'] = self.pool.get('ir.sequence').get(cr, uid, 'purchase.order') or '/'
+        if context is None:
+            context = {}
+        context.update({'mail_create_nolog': True})
         order =  super(purchase_order, self).create(cr, uid, vals, context=context)
+        self.message_post(cr, uid, [order], body=_("RFQ created"), context=context)
         return order
 
     def unlink(self, cr, uid, ids, context=None):
@@ -673,6 +678,7 @@ class purchase_order(osv.osv):
 
     def picking_done(self, cr, uid, ids, context=None):
         self.write(cr, uid, ids, {'shipped':1,'state':'approved'}, context=context)
+        self.message_post(cr, uid, ids, body=_("Products received"), context=context)
         return True
 
     def copy(self, cr, uid, id, default=None, context=None):
@@ -724,6 +730,9 @@ class purchase_order(osv.osv):
                 list_key.append((field, field_val))
             list_key.sort()
             return tuple(list_key)
+
+        if context is None:
+            context = {}
 
         # Compute what the new orders should contain
 
@@ -788,7 +797,9 @@ class purchase_order(osv.osv):
             order_data['order_line'] = [(0, 0, value) for value in order_data['order_line'].itervalues()]
 
             # create the new order
+            context.update({'mail_create_nolog': True})
             neworder_id = self.create(cr, uid, order_data)
+            self.message_post(cr, uid, [neworder_id], body=_("RFQ created"), context=context)
             orders_info.update({neworder_id: old_ids})
             allorders.append(neworder_id)
 
@@ -1186,5 +1197,26 @@ class mail_compose_message(osv.Model):
             context = dict(context, mail_post_autofollow=True)
             self.pool.get('purchase.order').signal_send_rfq(cr, uid, [context['default_res_id']])
         return super(mail_compose_message, self).send_mail(cr, uid, ids, context=context)
+
+
+class account_invoice(osv.Model):
+    """ Override account_invoice to add Chatter messages on the related purchase
+        orders, logging the invoice reception or payment. """
+    _inherit = 'account.invoice'
+
+    def invoice_validate(self, cr, uid, ids, context=None):
+        res = super(account_invoice, self).invoice_validate(cr, uid, ids, context=context)
+        purchase_order_obj = self.pool.get('purchase.order')
+        po_ids = purchase_order_obj.search(cr, uid, [('invoice_ids', 'in', ids)], context=context)
+        purchase_order_obj.message_post(cr, uid, po_ids, body=_("Invoice received"), context=context)
+        return res
+
+    def confirm_paid(self, cr, uid, ids, context=None):
+        res = super(account_invoice, self).confirm_paid(cr, uid, ids, context=context)
+        purchase_order_obj = self.pool.get('purchase.order')
+        po_ids = purchase_order_obj.search(cr, uid, [('invoice_ids', 'in', ids)], context=context)
+        purchase_order_obj.message_post(cr, uid, po_ids, body=_("Invoice paid"), context=context)
+        return res
+
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
