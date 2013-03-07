@@ -182,8 +182,7 @@ class gamification_goal_plan(osv.Model):
 
     def write(self, cr, uid, ids, vals, context=None):
         """Overwrite the write method to add the user of groups"""
-        if context is None:
-            context = {}
+        context = context or {}
         if not ids:
             return True
 
@@ -413,7 +412,7 @@ class gamification_goal_plan(osv.Model):
         :param plan: the plan object that need to be reported
         :param list(res.users) users: the list of users that are concerned by
           the report. If False, will send the report to every user concerned
-          (goal users and group that recieves a copy). Only used for plan with
+          (goal users and group that receive a copy). Only used for plan with
           a visibility mode set to 'personal'.
         :param list(int) goal_ids: the list of goal ids linked to the plan for 
           the report. If not specified, use the goals for the current plan 
