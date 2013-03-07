@@ -128,6 +128,16 @@ def db_monodb(req):
     # if only one db exists, return it else return False
     return db_monodb_redirect(req)[0]
 
+def redirect_with_hash(req, url, code=303):
+    if req.httprequest.user_agent.browser == 'msie':
+        try:
+            version = float(req.httprequest.user_agent.version)
+            if version < 10:
+                return "<html><head><script>window.location = '%s#' + location.hash;</script></head></html>" % url
+        except Exception:
+            pass
+    return werkzeug.utils.redirect(url, code)
+
 def module_topological_sort(modules):
     """ Return a list of module names sorted so that their dependencies of the
     modules are listed before the module itself
@@ -566,7 +576,7 @@ class Home(openerpweb.Controller):
     def index(self, req, s_action=None, db=None, **kw):
         db, redir = db_monodb_redirect(req)
         if redir:
-            return werkzeug.utils.redirect(redir, 303)
+            return redirect_with_hash(req, redir)
 
         js = "\n        ".join('<script type="text/javascript" src="%s"></script>' % i for i in manifest_list(req, 'js', db=db))
         css = "\n        ".join('<link rel="stylesheet" href="%s">' % i for i in manifest_list(req, 'css', db=db))
