@@ -51,7 +51,7 @@ class sale_order(osv.osv):
     _description = "Sales Order"
     _track = {
         'state': {
-            'sale.mt_order_confirmed': lambda self, cr, uid, obj, ctx=None: obj['state'] in ['manual', 'progress'],
+            'sale.mt_order_confirmed': lambda self, cr, uid, obj, ctx=None: obj['state'] in ['manual'],
             'sale.mt_order_sent': lambda self, cr, uid, obj, ctx=None: obj['state'] in ['sent']
         },
     }
@@ -261,6 +261,7 @@ class sale_order(osv.osv):
         'shop_id': _get_default_shop,
         'partner_invoice_id': lambda self, cr, uid, context: context.get('partner_id', False) and self.pool.get('res.partner').address_get(cr, uid, [context['partner_id']], ['invoice'])['invoice'],
         'partner_shipping_id': lambda self, cr, uid, context: context.get('partner_id', False) and self.pool.get('res.partner').address_get(cr, uid, [context['partner_id']], ['delivery'])['delivery'],
+        'note': lambda self, cr, uid, context: self.pool.get('res.users').browse(cr, uid, uid, context=context).company_id.sale_note
     }
     _sql_constraints = [
         ('name_uniq', 'unique(name, company_id)', 'Order Reference must be unique per Company!'),
@@ -310,6 +311,13 @@ class sale_order(osv.osv):
         }
         return {'warning': warning, 'value': value}
 
+    def get_salenote(self, cr, uid, ids, partner_id, context=None):
+        context_lang = context.copy() 
+        if partner_id:
+            partner_lang = self.pool.get('res.partner').browse(cr, uid, partner_id, context=context).lang
+            context_lang.update({'lang': partner_lang})
+        return self.pool.get('res.users').browse(cr, uid, uid, context=context_lang).company_id.sale_note
+            
     def onchange_partner_id(self, cr, uid, ids, part, context=None):
         if not part:
             return {'value': {'partner_invoice_id': False, 'partner_shipping_id': False,  'payment_term': False, 'fiscal_position': False}}
@@ -333,12 +341,19 @@ class sale_order(osv.osv):
         }
         if pricelist:
             val['pricelist_id'] = pricelist
+        sale_note = self.get_salenote(cr, uid, ids, part.id, context=context)
+        if sale_note: val.update({'note': sale_note})  
         return {'value': val}
 
     def create(self, cr, uid, vals, context=None):
-        if vals.get('name','/')=='/':
+        if context is None:
+            context = {}
+        if vals.get('name', '/') == '/':
             vals['name'] = self.pool.get('ir.sequence').get(cr, uid, 'sale.order') or '/'
-        return super(sale_order, self).create(cr, uid, vals, context=context)
+        context.update({'mail_create_nolog': True})
+        new_id = super(sale_order, self).create(cr, uid, vals, context=context)
+        self.message_post(cr, uid, [new_id], body=_("Quotation created"), context=context)
+        return new_id
 
     def button_dummy(self, cr, uid, ids, context=None):
         return True
@@ -978,6 +993,12 @@ class sale_order_line(osv.osv):
                 raise osv.except_osv(_('Invalid Action!'), _('Cannot delete a sales order line which is in state \'%s\'.') %(rec.state,))
         return super(sale_order_line, self).unlink(cr, uid, ids, context=context)
 
+class res_company(osv.Model):
+    _inherit = "res.company"
+    _columns = {
+        'sale_note': fields.text('Default Terms and Conditions', translate=True, help="Default terms and conditions for quotations."),
+    }
+
 
 class mail_compose_message(osv.Model):
     _inherit = 'mail.compose.message'
@@ -988,5 +1009,29 @@ class mail_compose_message(osv.Model):
             context = dict(context, mail_post_autofollow=True)
             self.pool.get('sale.order').signal_quotation_sent(cr, uid, [context['default_res_id']])
         return super(mail_compose_message, self).send_mail(cr, uid, ids, context=context)
+
+
+class account_invoice(osv.Model):
+    _inherit = 'account.invoice'
+
+    def confirm_paid(self, cr, uid, ids, context=None):
+        sale_order_obj = self.pool.get('sale.order')
+        res = super(account_invoice, self).confirm_paid(cr, uid, ids, context=context)
+        so_ids = sale_order_obj.search(cr, uid, [('invoice_ids', 'in', ids)], context=context)
+        sale_order_obj.message_post(cr, uid, so_ids, body=_("Invoice paid"), context=context)
+        return res
+
+
+class stock_picking(osv.osv):
+    _inherit = 'stock.picking'
+
+    def action_done(self, cr, uid, ids, context=None):
+        """ Changes picking state to done. This method is called at the end of
+            the workflow by the activity "done".
+        """
+        for record in self.browse(cr, uid, ids, context):
+            if record.type == "out" and record.sale_id:
+                self.pool.get('sale.order').message_post(cr, uid, [record.sale_id.id], body=_("Products delivered"), context=context)
+        return super(stock_picking, self).action_done(cr, uid, ids, context=context)
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
