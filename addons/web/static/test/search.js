@@ -855,11 +855,11 @@ openerp.testing.section('search.serialization', {
     test('FilterGroup', {asserts: 6}, function (instance) {
         var view = {inputs: [], query: {on: function () {}}};
         var filter_a = new instance.web.search.Filter(
-            {attrs: {name: 'a', context: 'c1', domain: 'd1'}}, view);
+            {attrs: {name: 'a', context: '{"c1": True}', domain: 'd1'}}, view);
         var filter_b = new instance.web.search.Filter(
-            {attrs: {name: 'b', context: 'c2', domain: 'd2'}}, view);
+            {attrs: {name: 'b', context: '{"c2": True}', domain: 'd2'}}, view);
         var filter_c = new instance.web.search.Filter(
-            {attrs: {name: 'c', context: 'c3', domain: 'd3'}}, view);
+            {attrs: {name: 'c', context: '{"c3": True}', domain: 'd3'}}, view);
         var group = new instance.web.search.FilterGroup(
             [filter_a, filter_b, filter_c], view);
         return group.facet_for_defaults({a: true, c: true})
@@ -880,7 +880,7 @@ openerp.testing.section('search.serialization', {
                 equal(context.__ref, 'compound_context',
                     "context should be compound");
                 deepEqual(context.__contexts, [
-                    'c1', 'c3'
+                    '{"c1": True}', '{"c3": True}'
                 ], "context should merge all filter contexts");
                 ok(!context.get_eval_context(), "context should have no evaluation context");
             });
