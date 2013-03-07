@@ -120,13 +120,6 @@ class res_users(osv.Model):
         partner_id = self._message_post_get_pid(cr, uid, thread_id, context=context)
         return self.pool.get('res.partner').message_post(cr, uid, partner_id, context=context, **kwargs)
 
-    def message_post_user_api(self, cr, uid, thread_id, context=None, **kwargs):
-        """ Redirect the posting of message on res.users to the related partner.
-            This is done because when giving the context of Chatter on the
-            various mailboxes, we do not have access to the current partner_id. """
-        partner_id = self._message_post_get_pid(cr, uid, thread_id, context=context)
-        return self.pool.get('res.partner').message_post_user_api(cr, uid, partner_id, context=context, **kwargs)
-
     def message_update(self, cr, uid, ids, msg_dict, update_vals=None, context=None):
         for id in ids:
             partner_id = self.browse(cr, SUPERUSER_ID, id).partner_id.id
