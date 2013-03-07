@@ -39,26 +39,8 @@ def _reopen(self, res_id, model):
 class mail_compose_message(osv.TransientModel):
     _inherit = 'mail.compose.message'
 
-    def _get_templates(self, cr, uid, context=None):
-        if context is None:
-            context = {}
-        model = False
-        email_template_obj = self.pool.get('email.template')
-        message_id = context.get('default_parent_id', context.get('message_id', context.get('active_id')))
-
-        if context.get('default_composition_mode') == 'reply' and message_id:
-            message_data = self.pool.get('mail.message').browse(cr, uid, message_id, context=context)
-            if message_data:
-                model = message_data.model
-        else:
-            model = context.get('default_model', context.get('active_model'))
-
-        record_ids = email_template_obj.search(cr, uid, [('model', '=', model)], context=context)
-        return email_template_obj.name_get(cr, uid, record_ids, context) + [(False, '')]
-
     _columns = {
-        # incredible hack of the day: size=-1 means we want an int db column instead of an str one
-        'template_id': fields.selection(_get_templates, 'Template', size=-1),
+        'template_id': fields.many2one('email.template', 'Use template',select=True),
     }
 
     def onchange_template_id(self, cr, uid, ids, template_id, composition_mode, model, res_id, context=None):
