@@ -450,7 +450,7 @@ class survey_question_wiz(osv.osv_memory):
                         # rendering different views
                         getattr(self, "_view_field_%s" % que_rec.type)(cr, uid, xml_group, fields, readonly, que, que_rec, context=context)
                         if que_rec.type in ['multiple_choice_only_one_ans', 'multiple_choice_multiple_ans', 'matrix_of_choices_only_one_ans', 'matrix_of_choices_only_multi_ans', 'rating_scale'] and que_rec.is_comment_require:
-                            self._view_field_postprocessing(cr, uid, xml_group, fields, response_info['readonly'], que, que_rec, context=context)
+                            self._view_field_postprocessing(cr, uid, xml_group, fields, readonly, que, que_rec, context=context)
 
                     xml_footer = etree.SubElement(xml_form, 'footer', {'col': '8', 'width': "100%"})
 
