@@ -87,12 +87,13 @@ class ormcache(object):
 
 class ormcache_multi(ormcache):
     def __init__(self, skiparg=2, size=8192, multi=3):
+        assert skiparg <= multi
         super(ormcache_multi, self).__init__(skiparg, size)
         self.multi = multi
 
     def lookup(self, method, *args, **kwargs):
         d = self.lru(args[0])
-        base_key = args[self.skiparg:]
+        base_key = args[self.skiparg:self.multi] + args[self.multi+1:]
         ids = args[self.multi]
         result = {}
         missed = []
