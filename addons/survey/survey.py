@@ -718,7 +718,7 @@ class survey_response(osv.osv):
         context.update({
             'ir_actions_act_window_target': 'new',
             'survey_id': record.survey_id.id,
-            'response_id': ids,
+            'response_id': ids[0],
             'readonly': True,
         })
         return {
