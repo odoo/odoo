@@ -810,7 +810,8 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
         try {
             var form_invalid = false,
                 values = {},
-                first_invalid_field = null;
+                first_invalid_field = null,
+                readonly_values = {};
             for (var f in self.fields) {
                 if (!self.fields.hasOwnProperty(f)) { continue; }
                 f = self.fields[f];
@@ -819,11 +820,15 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
                     if (!first_invalid_field) {
                         first_invalid_field = f;
                     }
-                } else if (f.name !== 'id' && !f.get("readonly") && (!self.datarecord.id || f._dirty_flag)) {
+                } else if (f.name !== 'id' && (!self.datarecord.id || f._dirty_flag)) {
                     // Special case 'id' field, do not save this field
                     // on 'create' : save all non readonly fields
                     // on 'edit' : save non readonly modified fields
-                    values[f.name] = f.get_value();
+                    if (!f.get("readonly")) {
+                        values[f.name] = f.get_value();
+                    } else {
+                        readonly_values[f.name] = f.get_value();
+                    }
                 }
             }
             if (form_invalid) {
@@ -836,7 +841,7 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
                 var save_deferral;
                 if (!self.datarecord.id) {
                     // Creation save
-                    save_deferral = self.dataset.create(values).then(function(r) {
+                    save_deferral = self.dataset.create(values, {readonly_fields: readonly_values}).then(function(r) {
                         return self.record_created(r, prepend_on_create);
                     }, null);
                 } else if (_.isEmpty(values)) {
@@ -844,7 +849,7 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
                     save_deferral = $.Deferred().resolve({}).promise();
                 } else {
                     // Write save
-                    save_deferral = self.dataset.write(self.datarecord.id, values, {}).then(function(r) {
+                    save_deferral = self.dataset.write(self.datarecord.id, values, {readonly_fields: readonly_values}).then(function(r) {
                         return self.record_saved(r);
                     }, null);
                 }
@@ -3700,8 +3705,8 @@ instance.web.form.One2ManyViewManager = instance.web.ViewManager.extend({
         var pop = new instance.web.form.FormOpenPopup(this);
         pop.show_element(self.o2m.field.relation, id, self.o2m.build_context(), {
             title: _t("Open: ") + self.o2m.string,
-            create_function: function(data) {
-                return self.o2m.dataset.create(data).done(function(r) {
+            create_function: function(data, options) {
+                return self.o2m.dataset.create(data, options).done(function(r) {
                     self.o2m.dataset.set_ids(self.o2m.dataset.ids.concat([r]));
                     self.o2m.dataset.trigger("dataset_changed", r);
                 });
@@ -3791,11 +3796,11 @@ instance.web.form.One2ManyListView = instance.web.ListView.extend({
                     title: _t("Create: ") + self.o2m.string,
                     initial_view: "form",
                     alternative_form_view: self.o2m.field.views ? self.o2m.field.views["form"] : undefined,
-                    create_function: function(data, callback, error_callback) {
-                        return self.o2m.dataset.create(data).done(function(r) {
+                    create_function: function(data, options) {
+                        return self.o2m.dataset.create(data, options).done(function(r) {
                             self.o2m.dataset.set_ids(self.o2m.dataset.ids.concat([r]));
                             self.o2m.dataset.trigger("dataset_changed", r);
-                        }).done(callback).fail(error_callback);
+                        });
                     },
                     read_function: function() {
                         return self.o2m.dataset.read_ids.apply(self.o2m.dataset, arguments);
@@ -4514,9 +4519,9 @@ instance.web.form.AbstractFormPopup = instance.web.Widget.extend({
         this.created_elements = [];
         this.dataset = new instance.web.ProxyDataSet(this, this.model, this.context);
         this.dataset.read_function = this.options.read_function;
-        this.dataset.create_function = function(data, sup) {
+        this.dataset.create_function = function(data, options, sup) {
             var fct = self.options.create_function || sup;
-            return fct.call(this, data).done(function(r) {
+            return fct.call(this, data, options).done(function(r) {
                 self.trigger('create_completed saved', r);
                 self.created_elements.push(r);
             });
