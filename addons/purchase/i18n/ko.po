@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-21 17:04+0000\n"
+"POT-Creation-Date: 2013-03-07 08:37+0000\n"
 "PO-Revision-Date: 2012-12-21 23:00+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Korean <ko@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-01-18 07:03+0000\n"
-"X-Generator: Launchpad (build 16430)\n"
+"X-Launchpad-Export-Date: 2013-03-08 05:58+0000\n"
+"X-Generator: Launchpad (build 16523)\n"
 
 #. module: purchase
 #: model:res.groups,name:purchase.group_analytic_accounting
@@ -62,6 +62,11 @@ msgstr "가격리스트는 이 구매 주문에 이용되는 통화를 설정하
 #: view:purchase.report:0
 #: field:purchase.report,day:0
 msgid "Day"
+msgstr ""
+
+#. module: purchase
+#: view:purchase.order:0
+msgid "Cancel Order"
 msgstr ""
 
 #. module: purchase
@@ -727,6 +732,11 @@ msgid "RFQ"
 msgstr "RFQ"
 
 #. module: purchase
+#: view:purchase.order:0
+msgid "Send by Email"
+msgstr ""
+
+#. module: purchase
 #: report:purchase.order:0
 #: view:purchase.order:0
 #: field:purchase.order,date_order:0
@@ -895,7 +905,6 @@ msgstr "수량"
 #: model:process.transition.action,name:purchase.process_transition_action_approvingcancelpurchaseorder0
 #: model:process.transition.action,name:purchase.process_transition_action_cancelpurchaseorder0
 #: view:purchase.config.settings:0
-#: view:purchase.order:0
 #: view:purchase.order.group:0
 #: view:purchase.order.line_invoice:0
 msgid "Cancel"
@@ -1183,6 +1192,11 @@ msgid "Products"
 msgstr ""
 
 #. module: purchase
+#: view:purchase.order:0
+msgid "Terms and conditions..."
+msgstr ""
+
+#. module: purchase
 #: model:ir.model,name:purchase.model_stock_move
 msgid "Stock Move"
 msgstr ""
@@ -1383,8 +1397,8 @@ msgid "PO: %s"
 msgstr ""
 
 #. module: purchase
-#: view:purchase.order:0
-msgid "Send by EMail"
+#: model:process.node,note:purchase.process_node_packinginvoice0
+msgid "Outgoing products to invoice"
 msgstr ""
 
 #. module: purchase
@@ -1902,11 +1916,6 @@ msgstr ""
 #: view:purchase.report:0
 #: field:purchase.report,product_uom:0
 msgid "Reference Unit of Measure"
-msgstr ""
-
-#. module: purchase
-#: model:process.node,note:purchase.process_node_packinginvoice0
-msgid "Outgoing products to invoice"
 msgstr ""
 
 #. module: purchase

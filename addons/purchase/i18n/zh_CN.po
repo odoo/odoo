@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-21 17:04+0000\n"
+"POT-Creation-Date: 2013-03-07 08:37+0000\n"
 "PO-Revision-Date: 2012-12-26 12:35+0000\n"
 "Last-Translator: 盈通 ccdos <ccdos@163.com>\n"
 "Language-Team: Chinese (Simplified) <zh_CN@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-01-18 07:04+0000\n"
-"X-Generator: Launchpad (build 16430)\n"
+"X-Launchpad-Export-Date: 2013-03-08 05:59+0000\n"
+"X-Generator: Launchpad (build 16523)\n"
 
 #. module: purchase
 #: model:res.groups,name:purchase.group_analytic_accounting
@@ -65,6 +65,11 @@ msgstr "价格表设定采购订单使用的币别。它还决定选定产品/�
 #: field:purchase.report,day:0
 msgid "Day"
 msgstr "天"
+
+#. module: purchase
+#: view:purchase.order:0
+msgid "Cancel Order"
+msgstr ""
 
 #. module: purchase
 #: view:purchase.report:0
@@ -761,6 +766,11 @@ msgid "RFQ"
 msgstr "询价单"
 
 #. module: purchase
+#: view:purchase.order:0
+msgid "Send by Email"
+msgstr ""
+
+#. module: purchase
 #: report:purchase.order:0
 #: view:purchase.order:0
 #: field:purchase.order,date_order:0
@@ -929,7 +939,6 @@ msgstr "数量"
 #: model:process.transition.action,name:purchase.process_transition_action_approvingcancelpurchaseorder0
 #: model:process.transition.action,name:purchase.process_transition_action_cancelpurchaseorder0
 #: view:purchase.config.settings:0
-#: view:purchase.order:0
 #: view:purchase.order.group:0
 #: view:purchase.order.line_invoice:0
 msgid "Cancel"
@@ -1292,6 +1301,11 @@ msgid "Products"
 msgstr "产品"
 
 #. module: purchase
+#: view:purchase.order:0
+msgid "Terms and conditions..."
+msgstr ""
+
+#. module: purchase
 #: model:ir.model,name:purchase.model_stock_move
 msgid "Stock Move"
 msgstr "库存调拨"
@@ -1499,9 +1513,9 @@ msgid "PO: %s"
 msgstr "PO: %s"
 
 #. module: purchase
-#: view:purchase.order:0
-msgid "Send by EMail"
-msgstr "通过email 发送"
+#: model:process.node,note:purchase.process_node_packinginvoice0
+msgid "Outgoing products to invoice"
+msgstr "出仓产品要开发票"
 
 #. module: purchase
 #: code:addons/purchase/purchase.py:515
@@ -2046,11 +2060,6 @@ msgid "Reference Unit of Measure"
 msgstr "参考计量单位"
 
 #. module: purchase
-#: model:process.node,note:purchase.process_node_packinginvoice0
-msgid "Outgoing products to invoice"
-msgstr "出仓产品要开发票"
-
-#. module: purchase
 #: report:purchase.order:0
 #: field:purchase.report,validator:0
 msgid "Validated By"
@@ -2355,3 +2364,6 @@ msgstr ""
 #: view:purchase.report:0
 msgid "Orders"
 msgstr "订单"
+
+#~ msgid "Send by EMail"
+#~ msgstr "通过email 发送"

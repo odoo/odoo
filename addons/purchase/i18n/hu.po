@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-21 17:04+0000\n"
+"POT-Creation-Date: 2013-03-07 08:37+0000\n"
 "PO-Revision-Date: 2013-02-07 13:29+0000\n"
 "Last-Translator: krnkris <Unknown>\n"
 "Language-Team: Hungarian <hu@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-02-08 05:24+0000\n"
-"X-Generator: Launchpad (build 16482)\n"
+"X-Launchpad-Export-Date: 2013-03-08 05:58+0000\n"
+"X-Generator: Launchpad (build 16523)\n"
 
 #. module: purchase
 #: model:res.groups,name:purchase.group_analytic_accounting
@@ -71,6 +71,11 @@ msgstr ""
 #: field:purchase.report,day:0
 msgid "Day"
 msgstr "Nap"
+
+#. module: purchase
+#: view:purchase.order:0
+msgid "Cancel Order"
+msgstr ""
 
 #. module: purchase
 #: view:purchase.report:0
@@ -824,6 +829,11 @@ msgid "RFQ"
 msgstr "Ajánlatkérés"
 
 #. module: purchase
+#: view:purchase.order:0
+msgid "Send by Email"
+msgstr ""
+
+#. module: purchase
 #: report:purchase.order:0
 #: view:purchase.order:0
 #: field:purchase.order,date_order:0
@@ -993,7 +1003,6 @@ msgstr "Mennyiség"
 #: model:process.transition.action,name:purchase.process_transition_action_approvingcancelpurchaseorder0
 #: model:process.transition.action,name:purchase.process_transition_action_cancelpurchaseorder0
 #: view:purchase.config.settings:0
-#: view:purchase.order:0
 #: view:purchase.order.group:0
 #: view:purchase.order.line_invoice:0
 msgid "Cancel"
@@ -1295,6 +1304,11 @@ msgid "Products"
 msgstr "Termékek"
 
 #. module: purchase
+#: view:purchase.order:0
+msgid "Terms and conditions..."
+msgstr ""
+
+#. module: purchase
 #: model:ir.model,name:purchase.model_stock_move
 msgid "Stock Move"
 msgstr "Készletmozgás"
@@ -1512,9 +1526,9 @@ msgid "PO: %s"
 msgstr "Beszerzési megrendelés: %s"
 
 #. module: purchase
-#: view:purchase.order:0
-msgid "Send by EMail"
-msgstr "Email-el elküldve"
+#: model:process.node,note:purchase.process_node_packinginvoice0
+msgid "Outgoing products to invoice"
+msgstr "Számlázandó kimenő termékek"
 
 #. module: purchase
 #: code:addons/purchase/purchase.py:515
@@ -2087,11 +2101,6 @@ msgid "Reference Unit of Measure"
 msgstr "Referencia mértékegység"
 
 #. module: purchase
-#: model:process.node,note:purchase.process_node_packinginvoice0
-msgid "Outgoing products to invoice"
-msgstr "Számlázandó kimenő termékek"
-
-#. module: purchase
 #: report:purchase.order:0
 #: field:purchase.report,validator:0
 msgid "Validated By"
@@ -2409,3 +2418,6 @@ msgstr ""
 #: view:purchase.report:0
 msgid "Orders"
 msgstr "Megrendelések"
+
+#~ msgid "Send by EMail"
+#~ msgstr "Email-el elküldve"

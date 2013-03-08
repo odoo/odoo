@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-21 17:04+0000\n"
+"POT-Creation-Date: 2013-03-07 08:37+0000\n"
 "PO-Revision-Date: 2013-02-24 11:04+0000\n"
 "Last-Translator: krnkris <Unknown>\n"
 "Language-Team: Hungarian <hu@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-02-25 05:40+0000\n"
-"X-Generator: Launchpad (build 16506)\n"
+"X-Launchpad-Export-Date: 2013-03-08 05:44+0000\n"
+"X-Generator: Launchpad (build 16523)\n"
 
 #. module: hr_evaluation
 #: help:hr_evaluation.plan.phase,send_anonymous_manager:0
@@ -33,6 +33,11 @@ msgstr "Értékelés elindítása"
 #: view:hr_evaluation.plan:0
 msgid "Group By..."
 msgstr "Csoportosítás..."
+
+#. module: hr_evaluation
+#: view:hr_evaluation.evaluation:0
+msgid "Cancel Appraisal"
+msgstr ""
 
 #. module: hr_evaluation
 #: field:hr.evaluation.interview,request_id:0
@@ -160,13 +165,9 @@ msgid "Ending Date"
 msgstr "Záró dátum"
 
 #. module: hr_evaluation
-#: help:hr_evaluation.evaluation,note_action:0
-msgid ""
-"If the evaluation does not meet the expectations, you can proposean action "
-"plan"
-msgstr ""
-"Ha az értékelés nem az elvárásoknak megfelelő, akkor javasolhat egy művelet "
-"tervet"
+#: field:hr_evaluation.plan,month_first:0
+msgid "First Appraisal in (months)"
+msgstr "Első értékelés ebben  (hónapban)"
 
 #. module: hr_evaluation
 #: view:hr_evaluation.plan.phase:0
@@ -250,6 +251,11 @@ msgstr "Folyamatban lévő értékelések"
 #: model:ir.model,name:hr_evaluation.model_survey_request
 msgid "survey.request"
 msgstr "survey.request"
+
+#. module: hr_evaluation
+#: view:hr.evaluation.interview:0
+msgid "Cancel Survey"
+msgstr ""
 
 #. module: hr_evaluation
 #: view:hr_evaluation.plan.phase:0
@@ -507,9 +513,13 @@ msgid "Legend"
 msgstr "Magyarázat"
 
 #. module: hr_evaluation
-#: field:hr_evaluation.plan,month_first:0
-msgid "First Appraisal in (months)"
-msgstr "Első értékelés ebben  (hónapban)"
+#: help:hr_evaluation.evaluation,note_action:0
+msgid ""
+"If the evaluation does not meet the expectations, you can proposean action "
+"plan"
+msgstr ""
+"Ha az értékelés nem az elvárásoknak megfelelő, akkor javasolhat egy művelet "
+"tervet"
 
 #. module: hr_evaluation
 #: selection:hr.evaluation.report,state:0
@@ -724,12 +734,6 @@ msgid "Appraisal Interview"
 msgstr "Értékelés interjú"
 
 #. module: hr_evaluation
-#: view:hr.evaluation.interview:0
-#: view:hr_evaluation.evaluation:0
-msgid "Cancel"
-msgstr "Mégsem"
-
-#. module: hr_evaluation
 #: view:hr.evaluation.report:0
 msgid "In Progress"
 msgstr "Folyamatban"
@@ -873,6 +877,11 @@ msgid "You cannot start evaluation without Appraisal."
 msgstr "Nem indíthat el elemézt értékelés nélkül."
 
 #. module: hr_evaluation
+#: view:hr_evaluation.evaluation:0
+msgid "Appraisal Summary..."
+msgstr ""
+
+#. module: hr_evaluation
 #: field:hr.evaluation.interview,user_to_review_id:0
 msgid "Employee to Interview"
 msgstr "Munkavállalói interjú"
@@ -961,3 +970,11 @@ msgstr "Értékelés összegzés"
 #: field:hr.employee,evaluation_date:0
 msgid "Next Appraisal Date"
 msgstr "Következő értékelés dátuma"
+
+#. module: hr_evaluation
+#: view:hr_evaluation.evaluation:0
+msgid "Action Plan..."
+msgstr ""
+
+#~ msgid "Cancel"
+#~ msgstr "Mégsem"

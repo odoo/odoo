@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-21 17:06+0000\n"
+"POT-Creation-Date: 2013-03-07 08:38+0000\n"
 "PO-Revision-Date: 2012-12-21 23:00+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Chinese (Simplified) <zh_CN@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-01-18 07:00+0000\n"
-"X-Generator: Launchpad (build 16430)\n"
+"X-Launchpad-Export-Date: 2013-03-08 05:55+0000\n"
+"X-Generator: Launchpad (build 16523)\n"
 
 #. module: product
 #: field:product.packaging,rows:0
@@ -279,6 +279,11 @@ msgid "Laptop E5023"
 msgstr "便携式电脑 E5023"
 
 #. module: product
+#: field:product.price_list,qty1:0
+msgid "Quantity-1"
+msgstr "数量-1"
+
+#. module: product
 #: help:product.packaging,ul_qty:0
 msgid "The number of packages by layer"
 msgstr "每层包装件数"
@@ -472,9 +477,9 @@ msgid "Quantity-3"
 msgstr "数量-3"
 
 #. module: product
-#: field:product.price_list,qty1:0
-msgid "Quantity-1"
-msgstr "数量-1"
+#: model:res.groups,name:product.group_product_variant
+msgid "Product Variant (not supported)"
+msgstr ""
 
 #. module: product
 #: field:product.price_list,qty4:0
@@ -780,6 +785,11 @@ msgstr "产品的供应商"
 #: model:product.template,name:product.product_product_28_product_template
 msgid "External Hard disk"
 msgstr "外置硬盘"
+
+#. module: product
+#: view:product.product:0
+msgid "describe the product characteristics..."
+msgstr ""
 
 #. module: product
 #: help:product.template,standard_price:0
@@ -1148,7 +1158,6 @@ msgstr "逻辑单位"
 #: field:product.category,name:0
 #: field:product.pricelist.type,name:0
 #: field:product.pricelist.version,name:0
-#: field:product.product,name_template:0
 #: field:product.template,name:0
 #: field:product.ul,name:0
 #: field:product.uom.categ,name:0
@@ -1313,6 +1322,11 @@ msgid "Specify the minimum amount of margin over the base price."
 msgstr "指定基于基准价格的最大利润"
 
 #. module: product
+#: field:product.product,name_template:0
+msgid "Template Name"
+msgstr ""
+
+#. module: product
 #: field:product.template,weight_net:0
 msgid "Net Weight"
 msgstr "净重"
@@ -1336,6 +1350,11 @@ msgid ""
 "Specify a product category if this rule only applies to products belonging "
 "to this category or its children categories. Keep empty otherwise."
 msgstr "指定一个产品分类 ，规则只被应用在与这个分类以及它的子类一致的产品上。其它情况留空"
+
+#. module: product
+#: view:product.product:0
+msgid "This note will be displayed on requests for quotation..."
+msgstr ""
 
 #. module: product
 #: view:product.product:0
@@ -1917,6 +1936,11 @@ msgid "Components"
 msgstr "部件"
 
 #. module: product
+#: view:product.product:0
+msgid "e.g. 5901234123457"
+msgstr ""
+
+#. module: product
 #: model:ir.model,name:product.model_product_pricelist_type
 #: field:product.pricelist,type:0
 msgid "Pricelist Type"
@@ -2437,7 +2461,11 @@ msgstr "供应商单位"
 
 #. module: product
 #: view:product.product:0
-#: model:res.groups,name:product.group_product_variant
+msgid "note to be displayed on quotations..."
+msgstr ""
+
+#. module: product
+#: view:product.product:0
 msgid "Product Variant"
 msgstr "产品系列"
 

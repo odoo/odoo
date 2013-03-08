@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-21 17:04+0000\n"
+"POT-Creation-Date: 2013-03-07 08:37+0000\n"
 "PO-Revision-Date: 2013-02-20 15:44+0000\n"
 "Last-Translator: krnkris <Unknown>\n"
 "Language-Team: Hungarian <hu@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-02-21 05:44+0000\n"
-"X-Generator: Launchpad (build 16491)\n"
+"X-Launchpad-Export-Date: 2013-03-08 05:46+0000\n"
+"X-Generator: Launchpad (build 16523)\n"
 
 #. module: hr_recruitment
 #: help:hr.applicant,active:0
@@ -96,6 +96,11 @@ msgstr "Munkák"
 
 #. module: hr_recruitment
 #: view:hr.applicant:0
+msgid "Extra advantages..."
+msgstr ""
+
+#. module: hr_recruitment
+#: view:hr.applicant:0
 msgid "Pending Jobs"
 msgstr "Függő állások"
 
@@ -120,7 +125,7 @@ msgid "Sources of Applicants"
 msgstr "Pályázók forrása"
 
 #. module: hr_recruitment
-#: code:addons/hr_recruitment/hr_recruitment.py:435
+#: code:addons/hr_recruitment/hr_recruitment.py:445
 #, python-format
 msgid "You must define Applied Job for this applicant."
 msgstr "Meg kell határoznia egy betöltött állást ehhez a jelentkezőhöz"
@@ -315,7 +320,7 @@ msgstr ""
 "direkt HTML formátumú ahhoz hogy beilleszthető legyen a kanban nézetekbe."
 
 #. module: hr_recruitment
-#: code:addons/hr_recruitment/hr_recruitment.py:435
+#: code:addons/hr_recruitment/hr_recruitment.py:445
 #, python-format
 msgid "Warning!"
 msgstr "Figyelem!"
@@ -384,6 +389,12 @@ msgstr "Munkaköri leírás"
 #: field:hr.applicant,source_id:0
 msgid "Source"
 msgstr "Forrás"
+
+#. module: hr_recruitment
+#: view:hr.recruitment.report:0
+#: field:hr.recruitment.report,year:0
+msgid "Year"
+msgstr "Év"
 
 #. module: hr_recruitment
 #: field:hr.applicant,message_follower_ids:0
@@ -528,7 +539,7 @@ msgid "Applicants"
 msgstr "Pályázók"
 
 #. module: hr_recruitment
-#: code:addons/hr_recruitment/hr_recruitment.py:351
+#: code:addons/hr_recruitment/hr_recruitment.py:360
 #, python-format
 msgid "No Subject"
 msgstr "Nincs tárgy"
@@ -549,7 +560,9 @@ msgid "Gives the sequence order when displaying a list of stages."
 msgstr "Sorozati rendet ad a szakaszok lista nézetében."
 
 #. module: hr_recruitment
+#: code:addons/hr_recruitment/hr_recruitment.py:347
 #: field:hr.applicant,partner_id:0
+#, python-format
 msgid "Contact"
 msgstr "Kapcsolat"
 
@@ -652,6 +665,11 @@ msgid "Category of applicant"
 msgstr "Jelentkező kategóriája"
 
 #. module: hr_recruitment
+#: view:hr.applicant:0
+msgid "e.g. Call for interview"
+msgstr ""
+
+#. module: hr_recruitment
 #: view:hr.recruitment.report:0
 #: field:hr.recruitment.report,month:0
 msgid "Month"
@@ -663,9 +681,9 @@ msgid "Answer related job question"
 msgstr "Kapcsolódó állás kérdés válasza"
 
 #. module: hr_recruitment
-#: model:hr.recruitment.stage,name:hr_recruitment.stage_job2
-msgid "First Interview"
-msgstr "Első interjú"
+#: model:ir.model,name:hr_recruitment.model_hr_recruitment_degree
+msgid "Degree of Recruitment"
+msgstr "Toborzás mértéke"
 
 #. module: hr_recruitment
 #: field:hr.applicant,write_date:0
@@ -799,7 +817,7 @@ msgid "Schedule interview with this applicant"
 msgstr "Ennek a jelentkezőnek az interjú ütemezése"
 
 #. module: hr_recruitment
-#: code:addons/hr_recruitment/hr_recruitment.py:397
+#: code:addons/hr_recruitment/hr_recruitment.py:407
 #, python-format
 msgid "Applicant <b>created</b>"
 msgstr "Jelentkező <b>létrehozva</b>"
@@ -981,10 +999,10 @@ msgid "The name of the Degree of Recruitment must be unique!"
 msgstr "A toborzási fok nevének egyedinek kell lennie!"
 
 #. module: hr_recruitment
-#: view:hr.recruitment.report:0
-#: field:hr.recruitment.report,year:0
-msgid "Year"
-msgstr "Év"
+#: code:addons/hr_recruitment/hr_recruitment.py:349
+#, python-format
+msgid "Contact Email"
+msgstr ""
 
 #. module: hr_recruitment
 #: view:hired.employee:0
@@ -1172,9 +1190,9 @@ msgid "On Average"
 msgstr "Átlagon"
 
 #. module: hr_recruitment
-#: model:ir.model,name:hr_recruitment.model_hr_recruitment_degree
-msgid "Degree of Recruitment"
-msgstr "Toborzás mértéke"
+#: model:hr.recruitment.stage,name:hr_recruitment.stage_job2
+msgid "First Interview"
+msgstr "Első interjú"
 
 #. module: hr_recruitment
 #: field:hr.recruitment.report,salary_prop_avg:0
@@ -1233,6 +1251,11 @@ msgstr "Ezek az emberek fogják megkapni az e-mailt."
 #: field:hr.job,alias_id:0
 msgid "Alias"
 msgstr "Álnév"
+
+#. module: hr_recruitment
+#: view:hr.applicant:0
+msgid "Feedback of interviews..."
+msgstr ""
 
 #. module: hr_recruitment
 #: view:hr.recruitment.report:0

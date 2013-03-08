@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-server\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-21 17:04+0000\n"
+"POT-Creation-Date: 2013-03-07 08:36+0000\n"
 "PO-Revision-Date: 2013-02-13 23:16+0000\n"
 "Last-Translator: Davor Bojkić <bole@dajmi5.com>\n"
 "Language-Team: Croatian <hr@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-02-14 05:35+0000\n"
-"X-Generator: Launchpad (build 16491)\n"
+"X-Launchpad-Export-Date: 2013-03-08 05:21+0000\n"
+"X-Generator: Launchpad (build 16523)\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_check_writing
@@ -24,6 +24,11 @@ msgid ""
 "Module for the Check Writing and Check Printing.\n"
 "================================================\n"
 "    "
+msgstr ""
+
+#. module: base
+#: view:res.partner.bank:0
+msgid "e.g. GEBABEBB"
 msgstr ""
 
 #. module: base
@@ -42,7 +47,7 @@ msgid "DateTime"
 msgstr "DateTime"
 
 #. module: base
-#: code:addons/fields.py:643
+#: code:addons/fields.py:652
 #, python-format
 msgid ""
 "The second argument of the many2many field %s must be a SQL table !You used "
@@ -196,13 +201,13 @@ msgstr ""
 #. module: base
 #: code:addons/base/ir/ir_sequence.py:104
 #: code:addons/base/ir/ir_sequence.py:130
-#: code:addons/base/res/res_users.py:467
+#: code:addons/base/res/res_users.py:473
 #, python-format
 msgid "Warning!"
 msgstr "Upozorenje!"
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:399
+#: code:addons/base/ir/ir_model.py:406
 #, python-format
 msgid ""
 "Properties of base fields cannot be altered in this manner! Please modify "
@@ -212,7 +217,7 @@ msgstr ""
 "promijeniti u Python kodu, najbolje u korisničkom modulu."
 
 #. module: base
-#: code:addons/osv.py:132
+#: code:addons/osv.py:151
 #, python-format
 msgid "Constraint Error"
 msgstr "Greška ograničenja"
@@ -223,7 +228,7 @@ msgid "ir.ui.view.custom"
 msgstr "ir.ui.view.custom"
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:368
+#: code:addons/base/ir/ir_model.py:375
 #, python-format
 msgid "Renaming sparse field \"%s\" is not allowed"
 msgstr "Preimenovanje polja \"%s\" nije dopušteno"
@@ -234,7 +239,7 @@ msgid "Swaziland"
 msgstr "Swaziland"
 
 #. module: base
-#: code:addons/orm.py:4485
+#: code:addons/orm.py:4486
 #, python-format
 msgid "created."
 msgstr "kreiran."
@@ -395,7 +400,7 @@ msgstr ""
 "izmjenite prije spremanja novog."
 
 #. module: base
-#: code:addons/orm.py:2648
+#: code:addons/orm.py:2649
 #, python-format
 msgid "Invalid group_by"
 msgstr "Neispravan group_by (grupiranje)"
@@ -465,7 +470,7 @@ msgstr ""
 "formata, prikazuju se kod uređuvanja jezičkih postavki."
 
 #. module: base
-#: code:addons/orm.py:4152
+#: code:addons/orm.py:4153
 #, python-format
 msgid ""
 "One of the records you are trying to modify has already been deleted "
@@ -519,7 +524,7 @@ msgid "Netherlands Antilles"
 msgstr "Nizozemski Antili"
 
 #. module: base
-#: code:addons/base/res/res_users.py:307
+#: code:addons/base/res/res_users.py:311
 #, python-format
 msgid ""
 "You can not remove the admin user as it is used internally for resources "
@@ -682,6 +687,11 @@ msgid "Sales & Purchases"
 msgstr "Prodaja i Nabava"
 
 #. module: base
+#: view:res.partner:0
+msgid "Put an internal note..."
+msgstr ""
+
+#. module: base
 #: view:ir.translation:0
 msgid "Untranslated"
 msgstr "Neprevedeno"
@@ -706,7 +716,7 @@ msgid "Logo Web"
 msgstr "Logotip za web"
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:339
+#: code:addons/base/ir/ir_model.py:345
 #, python-format
 msgid "Custom fields must have a name that starts with 'x_' !"
 msgstr "Imena dodatnih polja moraju počinjati s 'x_' !"
@@ -1024,6 +1034,15 @@ msgid "Module Upgrade"
 msgstr "Nadogradnja modula"
 
 #. module: base
+#: view:res.bank:0
+#: view:res.company:0
+#: view:res.partner:0
+#: view:res.partner.bank:0
+#: view:res.users:0
+msgid "ZIP"
+msgstr ""
+
+#. module: base
 #: selection:base.language.install,lang:0
 msgid "Spanish (UY) / Español (UY)"
 msgstr "Španjolski"
@@ -1174,8 +1193,8 @@ msgstr ""
 "Korisnici dodani ovoj grupi automatski se dodaju i slijedećim grupama."
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:725
-#: code:addons/base/ir/ir_model.py:728
+#: code:addons/base/ir/ir_model.py:733
+#: code:addons/base/ir/ir_model.py:736
 #, python-format
 msgid "Document model"
 msgstr "Mo0del dokumenta"
@@ -1286,7 +1305,7 @@ msgid "Delete Access Right"
 msgstr "Prava brisanja"
 
 #. module: base
-#: code:addons/base/ir/ir_mail_server.py:212
+#: code:addons/base/ir/ir_mail_server.py:214
 #, python-format
 msgid "Connection test failed!"
 msgstr "Graška pri testiranju povezivanja!"
@@ -1323,7 +1342,7 @@ msgid "Kontni načrt za gospodarske družbe"
 msgstr ""
 
 #. module: base
-#: code:addons/orm.py:4917
+#: code:addons/orm.py:4918
 #, python-format
 msgid "Record #%d of %s not found, cannot copy!"
 msgstr "Zapis #%d od %s nije pronađen, kopiranje nije moguće!"
@@ -1461,7 +1480,7 @@ msgid "Marshall Islands"
 msgstr "Maršalovi otoci"
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:423
+#: code:addons/base/ir/ir_model.py:430
 #, python-format
 msgid "Changing the model of a field is forbidden!"
 msgstr "Nije dopušteno mjenjanje modela polja."
@@ -1483,7 +1502,7 @@ msgid "Search"
 msgstr "Pronađi"
 
 #. module: base
-#: code:addons/osv.py:135
+#: code:addons/osv.py:154
 #, python-format
 msgid ""
 "The operation cannot be completed, probably due to the following:\n"
@@ -1767,7 +1786,7 @@ msgid "On Create"
 msgstr "Pri stvaranju"
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:906
+#: code:addons/base/ir/ir_model.py:914
 #, python-format
 msgid ""
 "'%s' contains too many dots. XML ids should not contain dots ! These are "
@@ -1856,7 +1875,7 @@ msgid "East Timor"
 msgstr "Istočni timor"
 
 #. module: base
-#: code:addons/base/module/module.py:415
+#: code:addons/base/module/module.py:414
 #: view:ir.module.module:0
 #, python-format
 msgid "Install"
@@ -2035,7 +2054,7 @@ msgid "Create Tasks on SO"
 msgstr "Kreiranje zadataka iz prodajnih naloga"
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:318
+#: code:addons/base/ir/ir_model.py:321
 #, python-format
 msgid "This column contains module data and cannot be removed!"
 msgstr ""
@@ -2094,7 +2113,7 @@ msgid "Formula"
 msgstr "Formula"
 
 #. module: base
-#: code:addons/base/res/res_users.py:307
+#: code:addons/base/res/res_users.py:311
 #, python-format
 msgid "Can not remove root user!"
 msgstr "Nije moguće obrisati root korisnika!"
@@ -2121,8 +2140,8 @@ msgstr ""
 #: code:addons/base/ir/ir_filters.py:36
 #: code:addons/base/res/res_partner.py:314
 #: code:addons/base/res/res_users.py:92
-#: code:addons/base/res/res_users.py:331
-#: code:addons/base/res/res_users.py:333
+#: code:addons/base/res/res_users.py:335
+#: code:addons/base/res/res_users.py:337
 #, python-format
 msgid "%s (copy)"
 msgstr "%s (kopija)"
@@ -2467,7 +2486,7 @@ msgstr ""
 "etc. (Default: tree,form)"
 
 #. module: base
-#: code:addons/orm.py:3842
+#: code:addons/orm.py:3843
 #, python-format
 msgid "A document was modified since you last viewed it (%s:%d)"
 msgstr "Dokument je u međuvremenu promjenjen (%s:%d)"
@@ -2605,7 +2624,7 @@ msgid "Madagascar"
 msgstr "Madagaskar"
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:126
+#: code:addons/base/ir/ir_model.py:127
 #, python-format
 msgid ""
 "The Object name must start with x_ and not contain any special character !"
@@ -2784,11 +2803,6 @@ msgid "Record ID"
 msgstr "ID zapisa"
 
 #. module: base
-#: view:ir.filters:0
-msgid "My Filters"
-msgstr "Moji filteri"
-
-#. module: base
 #: field:ir.actions.server,email:0
 msgid "Email Address"
 msgstr "Adresa e-pošte"
@@ -2885,7 +2899,7 @@ msgid "Manager"
 msgstr "Voditelj"
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:719
+#: code:addons/base/ir/ir_model.py:727
 #, python-format
 msgid "Sorry, you are not allowed to access this document."
 msgstr "Oprostite, nije vam dozvoljen pristup ovom dokumentu."
@@ -3066,21 +3080,21 @@ msgid "LinkedIn Integration"
 msgstr "LinkedIn Integracija"
 
 #. module: base
-#: code:addons/orm.py:2020
-#: code:addons/orm.py:2031
+#: code:addons/orm.py:2021
+#: code:addons/orm.py:2032
 #, python-format
 msgid "Invalid Object Architecture!"
 msgstr "Neispravna struktura objekta!"
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:366
-#: code:addons/base/ir/ir_model.py:368
-#: code:addons/base/ir/ir_model.py:398
-#: code:addons/base/ir/ir_model.py:412
-#: code:addons/base/ir/ir_model.py:414
-#: code:addons/base/ir/ir_model.py:416
+#: code:addons/base/ir/ir_model.py:373
+#: code:addons/base/ir/ir_model.py:375
+#: code:addons/base/ir/ir_model.py:405
+#: code:addons/base/ir/ir_model.py:419
+#: code:addons/base/ir/ir_model.py:421
 #: code:addons/base/ir/ir_model.py:423
-#: code:addons/base/ir/ir_model.py:426
+#: code:addons/base/ir/ir_model.py:430
+#: code:addons/base/ir/ir_model.py:433
 #: code:addons/base/module/wizard/base_update_translations.py:39
 #, python-format
 msgid "Error!"
@@ -3150,6 +3164,11 @@ msgid "The technical name of the model this field belongs to"
 msgstr "Tehnički naziv modela kojemu pripada ovo polje"
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_hr_expense
+msgid "Expense Management"
+msgstr "Upravljanje troškovima"
+
+#. module: base
 #: field:ir.actions.server,action_id:0
 #: selection:ir.actions.server,state:0
 #: view:ir.values:0
@@ -3176,12 +3195,17 @@ msgid ""
 msgstr ""
 
 #. module: base
+#: view:res.company:0
+msgid "e.g. Global Business Solutions"
+msgstr ""
+
+#. module: base
 #: field:res.company,rml_header1:0
 msgid "Company Tagline"
 msgstr ""
 
 #. module: base
-#: code:addons/base/res/res_users.py:668
+#: code:addons/base/res/res_users.py:674
 #: model:ir.model,name:base.model_ir_module_category
 #: field:ir.module.module,application:0
 #: field:res.groups,category_id:0
@@ -3222,7 +3246,7 @@ msgid "Params storage"
 msgstr "Spremanje parametara"
 
 #. module: base
-#: code:addons/base/module/module.py:526
+#: code:addons/base/module/module.py:525
 #, python-format
 msgid "Can not upgrade module '%s'. It is not installed."
 msgstr "Nije moguće nadograditi modul '%s'. Nije instaliran."
@@ -3233,7 +3257,7 @@ msgid "Cuba"
 msgstr "Kuba"
 
 #. module: base
-#: code:addons/report_sxw.py:441
+#: code:addons/report_sxw.py:443
 #, python-format
 msgid "Unknown report type: %s"
 msgstr "Nepoznat tip izvještaja: %s"
@@ -3311,7 +3335,7 @@ msgid ""
 msgstr ""
 
 #. module: base
-#: code:addons/orm.py:3870
+#: code:addons/orm.py:3871
 #, python-format
 msgid "Missing document(s)"
 msgstr "Nedostaje dokument(i)"
@@ -3387,7 +3411,7 @@ msgid "Signal (subflow.*)"
 msgstr "Signal (subflow.*)"
 
 #. module: base
-#: code:addons/orm.py:4684
+#: code:addons/orm.py:4685
 #, python-format
 msgid ""
 "Invalid \"order\" specified. A valid \"order\" specification is a comma-"
@@ -3423,7 +3447,7 @@ msgid "Access Controls"
 msgstr "Kontrola pristupa"
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:275
+#: code:addons/base/ir/ir_model.py:278
 #, python-format
 msgid ""
 "The Selection Options expression is not a valid Pythonic expression.Please "
@@ -3494,7 +3518,7 @@ msgid "Products Manufacturers"
 msgstr "Proizvođači"
 
 #. module: base
-#: code:addons/base/ir/ir_mail_server.py:237
+#: code:addons/base/ir/ir_mail_server.py:239
 #, python-format
 msgid "SMTP-over-SSL mode unavailable"
 msgstr "SMTP-kroz-SSL način nije dostupan"
@@ -3587,11 +3611,6 @@ msgid "Select module package to import (.zip file):"
 msgstr "Odaberite zapakirani modul za učitavanje (.zip datoteka):"
 
 #. module: base
-#: view:ir.filters:0
-msgid "Personal"
-msgstr "Osobni"
-
-#. module: base
 #: field:base.language.export,modules:0
 msgid "Modules To Export"
 msgstr "Moduli za izvoz"
@@ -3602,7 +3621,7 @@ msgid "Malta"
 msgstr "Malta"
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:725
+#: code:addons/base/ir/ir_model.py:733
 #, python-format
 msgid ""
 "Only users with the following access level are currently allowed to do that"
@@ -3806,7 +3825,7 @@ msgstr ""
 "Ako nije postavljeno, služi kao pretpostavljena vrijednost za nove resurse"
 
 #. module: base
-#: code:addons/orm.py:4245
+#: code:addons/orm.py:4246
 #, python-format
 msgid "Recursivity Detected."
 msgstr "Otkrivena je rekurzivnost"
@@ -3877,10 +3896,10 @@ msgid "Urdu / اردو"
 msgstr "Urdu / اردو"
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:732
-#: code:addons/orm.py:3566
-#: code:addons/orm.py:3859
-#: code:addons/orm.py:3901
+#: code:addons/base/ir/ir_model.py:740
+#: code:addons/orm.py:3567
+#: code:addons/orm.py:3860
+#: code:addons/orm.py:3902
 #, python-format
 msgid "Access Denied"
 msgstr "Pristup odbijen / zabranjen"
@@ -3891,7 +3910,7 @@ msgid "Company Name"
 msgstr "Naziv tvrtke"
 
 #. module: base
-#: code:addons/orm.py:2807
+#: code:addons/orm.py:2808
 #, python-format
 msgid ""
 "Invalid value for reference field \"%s.%s\" (last part must be a non-zero "
@@ -4021,7 +4040,7 @@ msgid "Paper Format"
 msgstr "Format papira"
 
 #. module: base
-#: code:addons/base/module/module.py:645
+#: code:addons/base/module/module.py:644
 #, python-format
 msgid ""
 "Can not create the module file:\n"
@@ -4086,7 +4105,7 @@ msgid "Email Gateway"
 msgstr ""
 
 #. module: base
-#: code:addons/base/ir/ir_mail_server.py:465
+#: code:addons/base/ir/ir_mail_server.py:469
 #, python-format
 msgid ""
 "Mail delivery failed via SMTP server '%s'.\n"
@@ -4208,7 +4227,7 @@ msgid "EAN13"
 msgstr "EAN13"
 
 #. module: base
-#: code:addons/orm.py:2246
+#: code:addons/orm.py:2247
 #, python-format
 msgid "Invalid Architecture!"
 msgstr "Pogrešna arhitektura!"
@@ -4672,6 +4691,7 @@ msgstr ""
 
 #. module: base
 #: field:ir.actions.server,srcmodel_id:0
+#: view:ir.filters:0
 #: field:ir.filters,model_id:0
 #: view:ir.model:0
 #: field:ir.model,model:0
@@ -4815,7 +4835,7 @@ msgid "%c - Appropriate date and time representation."
 msgstr "%c - Odgovarajući oblik datuma i vremena"
 
 #. module: base
-#: code:addons/base/res/res_config.py:387
+#: code:addons/base/res/res_config.py:388
 #, python-format
 msgid ""
 "Your database is now fully configured.\n"
@@ -5065,7 +5085,7 @@ msgid "System Configuration Done"
 msgstr "Konfiguracija sistema dovršena"
 
 #. module: base
-#: code:addons/orm.py:1539
+#: code:addons/orm.py:1540
 #, python-format
 msgid "Error occurred while validating the field(s) %s: %s"
 msgstr "Dogodila se greška pri provjeri polja %s: %s"
@@ -5198,7 +5218,7 @@ msgid "Portuguese / Português"
 msgstr ""
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:366
+#: code:addons/base/ir/ir_model.py:373
 #, python-format
 msgid "Changing the storing system for field \"%s\" is not allowed."
 msgstr ""
@@ -5419,7 +5439,7 @@ msgid "Account Owner Name"
 msgstr "Naziv vlasnika računa"
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:414
+#: code:addons/base/ir/ir_model.py:421
 #, python-format
 msgid "Cannot rename column to %s, because that column already exists!"
 msgstr "Stupac %s već postoji!"
@@ -5435,7 +5455,7 @@ msgid "Decimal Separator"
 msgstr "Decimalni separator"
 
 #. module: base
-#: code:addons/orm.py:5318
+#: code:addons/orm.py:5319
 #, python-format
 msgid "Missing required value for the field '%s'."
 msgstr "Nedostaje vrijednost za obavezno polje '%s'."
@@ -5690,9 +5710,12 @@ msgstr "Korisnički filteri"
 #: field:res.currency.rate.type,name:0
 #: field:res.groups,name:0
 #: field:res.lang,name:0
+#: view:res.partner:0
 #: field:res.partner,name:0
+#: view:res.partner.bank:0
 #: field:res.partner.bank.type,name:0
 #: field:res.request.link,name:0
+#: view:res.users:0
 #: field:workflow,name:0
 #: field:workflow.activity,name:0
 msgid "Name"
@@ -6083,6 +6106,11 @@ msgid "USA Minor Outlying Islands"
 msgstr "USA Minor Outlying Islands"
 
 #. module: base
+#: view:base.language.import:0
+msgid "e.g. English"
+msgstr ""
+
+#. module: base
 #: help:ir.cron,numbercall:0
 msgid ""
 "How many times the method is called,\n"
@@ -6167,6 +6195,13 @@ msgstr "Telefon:"
 #: field:res.partner,is_company:0
 msgid "Is a Company"
 msgstr "Je tvrtka"
+
+#. module: base
+#: view:res.company:0
+#: view:res.partner:0
+#: view:res.users:0
+msgid "e.g. www.openerp.com"
+msgstr ""
 
 #. module: base
 #: selection:ir.cron,interval_type:0
@@ -6476,7 +6511,7 @@ msgid ""
 msgstr ""
 
 #. module: base
-#: code:addons/orm.py:2246
+#: code:addons/orm.py:2247
 #, python-format
 msgid "There is no view of type '%s' defined for the structure!"
 msgstr "Pogled tipa '%s' ne postoji!"
@@ -6514,7 +6549,7 @@ msgid "Created Menus"
 msgstr "kreirani izbornici"
 
 #. module: base
-#: code:addons/base/module/module.py:503
+#: code:addons/base/module/module.py:502
 #: view:ir.module.module:0
 #, python-format
 msgid "Uninstall"
@@ -6592,6 +6627,11 @@ msgstr "Postavke email-a"
 #: model:ir.model,name:base.model_ir_cron
 msgid "ir.cron"
 msgstr "ir.cron"
+
+#. module: base
+#: model:ir.ui.menu,name:base.menu_sales_followup
+msgid "Payment Follow-up"
+msgstr ""
 
 #. module: base
 #: model:res.country,name:base.cw
@@ -6744,7 +6784,7 @@ msgid "Israel"
 msgstr "Izrael"
 
 #. module: base
-#: code:addons/base/res/res_config.py:443
+#: code:addons/base/res/res_config.py:444
 #, python-format
 msgid "Cannot duplicate configuration!"
 msgstr "Nije moguće duplicirati postavke"
@@ -6796,7 +6836,6 @@ msgstr "Xml izvješća"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_module_open_categ
-#: model:ir.actions.act_window,name:base.open_module_tree
 #: field:ir.module.category,module_ids:0
 #: view:ir.module.module:0
 #: model:ir.ui.menu,name:base.menu_management
@@ -6948,7 +6987,7 @@ msgid "ir.attachment"
 msgstr "ir.attachment"
 
 #. module: base
-#: code:addons/orm.py:4347
+#: code:addons/orm.py:4348
 #, python-format
 msgid ""
 "You cannot perform this operation. New Record Creation is not allowed for "
@@ -7392,6 +7431,11 @@ msgid "User Login"
 msgstr "Prijava korisnika"
 
 #. module: base
+#: view:ir.filters:0
+msgid "Filters created by myself"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_hn
 msgid "Honduras - Accounting"
 msgstr ""
@@ -7444,7 +7488,7 @@ msgid ""
 msgstr ""
 
 #. module: base
-#: code:addons/orm.py:2020
+#: code:addons/orm.py:2021
 #, python-format
 msgid "Insufficient fields for Calendar View!"
 msgstr "Nedovoljno polja za kalendarski pogled."
@@ -7483,6 +7527,7 @@ msgstr "Tranzicija"
 
 #. module: base
 #: field:ir.cron,active:0
+#: field:ir.mail_server,active:0
 #: field:ir.model.access,active:0
 #: field:ir.rule,active:0
 #: field:ir.sequence,active:0
@@ -7512,27 +7557,27 @@ msgstr "Kategorije kćeri"
 #: code:addons/base/ir/ir_actions.py:606
 #: code:addons/base/ir/ir_actions.py:702
 #: code:addons/base/ir/ir_actions.py:705
-#: code:addons/base/ir/ir_model.py:164
-#: code:addons/base/ir/ir_model.py:274
-#: code:addons/base/ir/ir_model.py:288
-#: code:addons/base/ir/ir_model.py:318
-#: code:addons/base/ir/ir_model.py:334
-#: code:addons/base/ir/ir_model.py:339
-#: code:addons/base/ir/ir_model.py:342
+#: code:addons/base/ir/ir_model.py:165
+#: code:addons/base/ir/ir_model.py:277
+#: code:addons/base/ir/ir_model.py:291
+#: code:addons/base/ir/ir_model.py:321
+#: code:addons/base/ir/ir_model.py:340
+#: code:addons/base/ir/ir_model.py:345
+#: code:addons/base/ir/ir_model.py:348
 #: code:addons/base/ir/ir_translation.py:341
 #: code:addons/base/module/module.py:320
 #: code:addons/base/module/module.py:362
 #: code:addons/base/module/module.py:366
 #: code:addons/base/module/module.py:372
-#: code:addons/base/module/module.py:500
-#: code:addons/base/module/module.py:526
-#: code:addons/base/module/module.py:540
-#: code:addons/base/module/module.py:645
+#: code:addons/base/module/module.py:499
+#: code:addons/base/module/module.py:525
+#: code:addons/base/module/module.py:539
+#: code:addons/base/module/module.py:644
 #: code:addons/base/res/res_currency.py:193
 #: code:addons/base/res/res_users.py:98
 #: code:addons/custom.py:555
-#: code:addons/orm.py:785
-#: code:addons/orm.py:3960
+#: code:addons/orm.py:787
+#: code:addons/orm.py:3961
 #, python-format
 msgid "Error"
 msgstr "Greška"
@@ -7607,6 +7652,12 @@ msgstr "Slijedeći broj ove sekvence"
 
 #. module: base
 #: view:res.partner:0
+#: view:res.users:0
+msgid "Tags..."
+msgstr ""
+
+#. module: base
+#: view:res.partner:0
 msgid "at"
 msgstr ""
 
@@ -7629,6 +7680,11 @@ msgstr ""
 #: field:base.language.export,format:0
 msgid "File Format"
 msgstr "Format datoteke"
+
+#. module: base
+#: view:ir.filters:0
+msgid "My filters"
+msgstr ""
 
 #. module: base
 #: field:res.lang,iso_code:0
@@ -7776,6 +7832,7 @@ msgstr "Odabir"
 #: field:res.bank,street:0
 #: field:res.company,street:0
 #: field:res.partner,street:0
+#: view:res.partner.bank:0
 #: field:res.partner.bank,street:0
 msgid "Street"
 msgstr "Ulica"
@@ -7986,7 +8043,7 @@ msgid "Company Bank Accounts"
 msgstr "Bankovni računi"
 
 #. module: base
-#: code:addons/base/res/res_users.py:467
+#: code:addons/base/res/res_users.py:473
 #, python-format
 msgid "Setting empty passwords is not allowed for security reasons!"
 msgstr "Zaporka ne može ostati prazna."
@@ -7997,13 +8054,13 @@ msgid "Optional password for SMTP authentication"
 msgstr ""
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:720
+#: code:addons/base/ir/ir_model.py:728
 #, python-format
 msgid "Sorry, you are not allowed to modify this document."
 msgstr "Oprostite, nije Vam dozvoljeno mijenjanje ovog dokumenta."
 
 #. module: base
-#: code:addons/base/res/res_config.py:349
+#: code:addons/base/res/res_config.py:350
 #, python-format
 msgid ""
 "\n"
@@ -8206,7 +8263,7 @@ msgid "Jobs, Recruitment, Applications, Job Interviews"
 msgstr "Poslovi, Regrutacija, Molbe, Razgovori za posao"
 
 #. module: base
-#: code:addons/base/module/module.py:540
+#: code:addons/base/module/module.py:539
 #, python-format
 msgid ""
 "You try to upgrade a module that depends on the module: %s.\n"
@@ -8344,6 +8401,12 @@ msgid "Payment Follow-up Management"
 msgstr ""
 
 #. module: base
+#: code:addons/orm.py:5334
+#, python-format
+msgid "The value for the field '%s' already exists."
+msgstr ""
+
+#. module: base
 #: field:workflow.workitem,inst_id:0
 msgid "Instance"
 msgstr "Instanca"
@@ -8379,7 +8442,7 @@ msgid "Nigeria"
 msgstr "Nigerija"
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:334
+#: code:addons/base/ir/ir_model.py:340
 #, python-format
 msgid "For selection fields, the Selection Options must be given!"
 msgstr "Za polja iz odabira, ocije odabira moraju biti zadane!"
@@ -8722,7 +8785,7 @@ msgstr ""
 "kliknuti na 'Odustani' u  Korisničkim postavkama)"
 
 #. module: base
-#: code:addons/orm.py:2817
+#: code:addons/orm.py:2818
 #, python-format
 msgid "The value \"%s\" for the field \"%s.%s\" is not in the selection"
 msgstr ""
@@ -8787,7 +8850,7 @@ msgid "Mexico"
 msgstr "Meksiko"
 
 #. module: base
-#: code:addons/orm.py:3902
+#: code:addons/orm.py:3903
 #, python-format
 msgid ""
 "For this kind of document, you may only access records you created "
@@ -8809,7 +8872,7 @@ msgid ""
 msgstr ""
 
 #. module: base
-#: code:addons/base/ir/ir_mail_server.py:440
+#: code:addons/base/ir/ir_mail_server.py:444
 #, python-format
 msgid "Missing SMTP Server"
 msgstr "Nedostaje SMTP server"
@@ -8841,7 +8904,7 @@ msgid "%b - Abbreviated month name."
 msgstr "%b - Skraćeni naziv mjeseca."
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:722
+#: code:addons/base/ir/ir_model.py:730
 #, python-format
 msgid "Sorry, you are not allowed to delete this document."
 msgstr "Oprostite, nije Vam dozvoljeno brisanje ovog dokumenta."
@@ -8930,7 +8993,7 @@ msgid "Selectable"
 msgstr "Može se odabrati"
 
 #. module: base
-#: code:addons/base/ir/ir_mail_server.py:219
+#: code:addons/base/ir/ir_mail_server.py:221
 #, python-format
 msgid "Everything seems properly set up!"
 msgstr "Izgleda da je sve ispravno podešeno!"
@@ -8958,8 +9021,8 @@ msgid "Iteration"
 msgstr "Iteracija"
 
 #. module: base
-#: code:addons/orm.py:4245
-#: code:addons/orm.py:4346
+#: code:addons/orm.py:4246
+#: code:addons/orm.py:4347
 #, python-format
 msgid "UserError"
 msgstr "Korisnička Greška"
@@ -8983,7 +9046,7 @@ msgid ""
 msgstr ""
 
 #. module: base
-#: code:addons/orm.py:3960
+#: code:addons/orm.py:3961
 #, python-format
 msgid ""
 "Unable to delete this document because it is used as a default property"
@@ -9131,7 +9194,7 @@ msgid "Reunion (French)"
 msgstr "Reunion (French)"
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:416
+#: code:addons/base/ir/ir_model.py:423
 #, python-format
 msgid ""
 "New column name must still start with x_ , because it is a custom field!"
@@ -9170,8 +9233,8 @@ msgid "Solomon Islands"
 msgstr "Solomonski otoci"
 
 #. module: base
-#: code:addons/orm.py:4151
-#: code:addons/orm.py:4684
+#: code:addons/orm.py:4152
+#: code:addons/orm.py:4685
 #, python-format
 msgid "AccessError"
 msgstr "AccessError"
@@ -9245,7 +9308,7 @@ msgid "Prof."
 msgstr "Prof."
 
 #. module: base
-#: code:addons/base/ir/ir_mail_server.py:238
+#: code:addons/base/ir/ir_mail_server.py:240
 #, python-format
 msgid ""
 "Your OpenERP Server does not support SMTP-over-SSL. You could use STARTTLS "
@@ -9387,9 +9450,11 @@ msgid "Partner Ref."
 msgstr "Partner Ref."
 
 #. module: base
-#: model:ir.module.module,shortdesc:base.module_hr_expense
-msgid "Expense Management"
-msgstr "Upravljanje troškovima"
+#. openerp-web
+#: code:addons/base/static/src/js/apps.js:103
+#, python-format
+msgid "OpenERP Apps Unreachable"
+msgstr ""
 
 #. module: base
 #: field:ir.attachment,create_date:0
@@ -9465,13 +9530,13 @@ msgid "Models"
 msgstr "Modeli"
 
 #. module: base
-#: code:addons/base/module/module.py:500
+#: code:addons/base/module/module.py:499
 #, python-format
 msgid "The `base` module cannot be uninstalled"
 msgstr "Modul 'base' nije moguće ukloniti"
 
 #. module: base
-#: code:addons/base/ir/ir_cron.py:247
+#: code:addons/base/ir/ir_cron.py:254
 #, python-format
 msgid "Record cannot be modified right now"
 msgstr "Zapis se trnutno nemože mijenjati"
@@ -9492,7 +9557,7 @@ msgid "osv_memory.autovacuum"
 msgstr "osv_memory.autovacuum"
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:721
+#: code:addons/base/ir/ir_model.py:729
 #, python-format
 msgid "Sorry, you are not allowed to create this kind of document."
 msgstr "Oprostite, nije Vam dozvoljeno stvaranje ove vrste dokumenta."
@@ -9540,7 +9605,7 @@ msgid "On Delete"
 msgstr "Priliko brisanja"
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:342
+#: code:addons/base/ir/ir_model.py:348
 #, python-format
 msgid "Model %s does not exist!"
 msgstr "Model %s ne postoji!"
@@ -9595,7 +9660,7 @@ msgid "Cancel"
 msgstr "Odustani"
 
 #. module: base
-#: code:addons/orm.py:1506
+#: code:addons/orm.py:1507
 #, python-format
 msgid "Unknown database identifier '%s'"
 msgstr ""
@@ -9823,7 +9888,7 @@ msgid "Products Expiry Date"
 msgstr "Datum isteka proizvoda"
 
 #. module: base
-#: code:addons/base/res/res_config.py:386
+#: code:addons/base/res/res_config.py:387
 #, python-format
 msgid "Click 'Continue' to configure the next addon..."
 msgstr "Odaberite 'Nastavi' za postavke sljedećeg dodatka..."
@@ -9886,8 +9951,17 @@ msgid "Contracts Management: hr_expense link"
 msgstr ""
 
 #. module: base
+#: code:addons/base/module/module.py:670
+#, python-format
+msgid ""
+"The `%s` module appears to be unavailable at the moment, please try again "
+"later."
+msgstr ""
+
+#. module: base
 #: view:ir.attachment:0
 #: view:ir.cron:0
+#: view:ir.filters:0
 #: view:ir.model.access:0
 #: view:ir.model.data:0
 #: view:ir.model.fields:0
@@ -10147,7 +10221,7 @@ msgid "Kind"
 msgstr "Vrsta"
 
 #. module: base
-#: code:addons/orm.py:4646
+#: code:addons/orm.py:4647
 #, python-format
 msgid "This method does not exist anymore"
 msgstr "Ova metoda više ne postoji"
@@ -10262,6 +10336,14 @@ msgid ""
 "The group that a user must have to be authorized to validate this transition."
 msgstr ""
 "Grupa kojoj korisnik mora pripadati kako bi mogao odobriti ovu tranziciju."
+
+#. module: base
+#: view:res.bank:0
+#: view:res.company:0
+#: view:res.partner:0
+#: view:res.users:0
+msgid "Street..."
+msgstr ""
 
 #. module: base
 #: constraint:res.users:0
@@ -10472,10 +10554,15 @@ msgid "%m - Month number [01,12]."
 msgstr "%m - Mjesec [01,12]."
 
 #. module: base
+#: view:res.bank:0
 #: field:res.bank,city:0
+#: view:res.company:0
 #: field:res.company,city:0
+#: view:res.partner:0
 #: field:res.partner,city:0
+#: view:res.partner.bank:0
 #: field:res.partner.bank,city:0
+#: view:res.users:0
 msgid "City"
 msgstr "Grad"
 
@@ -10525,7 +10612,7 @@ msgid "GPL-3 or later version"
 msgstr "GPL-3 ili novija verzija"
 
 #. module: base
-#: code:addons/orm.py:2032
+#: code:addons/orm.py:2033
 #, python-format
 msgid ""
 "Insufficient fields to generate a Calendar View for %s, missing a date_stop "
@@ -10614,7 +10701,7 @@ msgid ""
 msgstr ""
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:728
+#: code:addons/base/ir/ir_model.py:736
 #, python-format
 msgid ""
 "Please contact your system administrator if you think this is an error."
@@ -10622,7 +10709,7 @@ msgstr ""
 "Molimo, kontaktirajte svog administratora ukoliko mislite da je ovo greška.b"
 
 #. module: base
-#: code:addons/base/module/module.py:546
+#: code:addons/base/module/module.py:545
 #: view:base.module.upgrade:0
 #: model:ir.actions.act_window,name:base.action_view_base_module_upgrade
 #, python-format
@@ -10661,7 +10748,7 @@ msgid "OpenID Authentification"
 msgstr ""
 
 #. module: base
-#: code:addons/orm.py:3871
+#: code:addons/orm.py:3872
 #, python-format
 msgid ""
 "One of the documents you are trying to access has been deleted, please try "
@@ -10916,9 +11003,9 @@ msgstr ""
 "Brisanje aktivnih jezika nije moguće. Deaktivirajte jezik ako je potrebno."
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:502
-#: code:addons/base/ir/ir_model.py:563
-#: code:addons/base/ir/ir_model.py:1024
+#: code:addons/base/ir/ir_model.py:510
+#: code:addons/base/ir/ir_model.py:571
+#: code:addons/base/ir/ir_model.py:1032
 #, python-format
 msgid "Permission Denied"
 msgstr "Pristup odbijen"
@@ -10936,8 +11023,8 @@ msgid "Problem in configuration `Record Id` in Server Action!"
 msgstr "Problem u konfiguraciji 'Zapis id' u akciji poslužitelja!"
 
 #. module: base
-#: code:addons/orm.py:2806
-#: code:addons/orm.py:2816
+#: code:addons/orm.py:2807
+#: code:addons/orm.py:2817
 #, python-format
 msgid "ValidateError"
 msgstr "ValidateError"
@@ -11282,6 +11369,7 @@ msgstr ""
 #: field:change.password.user,user_id:0
 #: view:ir.cron:0
 #: field:ir.cron,user_id:0
+#: view:ir.filters:0
 #: field:ir.filters,user_id:0
 #: field:ir.ui.view.custom,user_id:0
 #: field:ir.values,user_id:0
@@ -11365,8 +11453,8 @@ msgid "Related Partner"
 msgstr "Povezani partner"
 
 #. module: base
-#: code:addons/osv.py:153
-#: code:addons/osv.py:155
+#: code:addons/osv.py:172
+#: code:addons/osv.py:174
 #, python-format
 msgid "Integrity Error"
 msgstr "Greška integriteta"
@@ -11386,7 +11474,7 @@ msgid ""
 msgstr ""
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:293
+#: code:addons/base/ir/ir_model.py:296
 #, python-format
 msgid "Size of the field can never be less than 1 !"
 msgstr "Veličina polja nikada ne može biti manja od 1!"
@@ -11564,6 +11652,12 @@ msgid "Customer"
 msgstr "Kupac"
 
 #. module: base
+#: view:res.partner:0
+#: view:res.users:0
+msgid "e.g. +32.81.81.37.00"
+msgstr ""
+
+#. module: base
 #: selection:base.language.install,lang:0
 msgid "Spanish (NI) / Español (NI)"
 msgstr "Spanish (NI) / Español (NI)"
@@ -11612,6 +11706,12 @@ msgstr "Datum slanja"
 #: view:ir.sequence:0
 msgid "Month: %(month)s"
 msgstr "Mjesec: %(month)s"
+
+#. module: base
+#: model:ir.actions.client,name:base.modules_updates_act_cl
+#: model:ir.ui.menu,name:base.menu_module_updates
+msgid "Updates"
+msgstr ""
 
 #. module: base
 #: field:ir.actions.act_window.view,sequence:0
@@ -11791,7 +11891,7 @@ msgid ""
 msgstr ""
 
 #. module: base
-#: code:addons/base/ir/ir_mail_server.py:469
+#: code:addons/base/ir/ir_mail_server.py:473
 #, python-format
 msgid "Mail delivery failed"
 msgstr ""
@@ -11818,7 +11918,7 @@ msgid "Object"
 msgstr "Objekt"
 
 #. module: base
-#: code:addons/osv.py:150
+#: code:addons/osv.py:169
 #, python-format
 msgid ""
 "\n"
@@ -11907,7 +12007,7 @@ msgid "Mrs."
 msgstr "Gđa."
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:426
+#: code:addons/base/ir/ir_model.py:433
 #, python-format
 msgid ""
 "Changing the type of a column is not yet supported. Please drop it and "
@@ -11972,7 +12072,7 @@ msgid "Partner"
 msgstr "Partner"
 
 #. module: base
-#: code:addons/base/ir/ir_mail_server.py:477
+#: code:addons/base/ir/ir_mail_server.py:481
 #, python-format
 msgid ""
 "Your server does not seem to support SSL, you may want to try STARTTLS "
@@ -12008,8 +12108,13 @@ msgid "Report Type"
 msgstr "Tip izvještaja"
 
 #. module: base
+#: view:res.bank:0
+#: view:res.company:0
 #: view:res.country.state:0
+#: view:res.partner:0
 #: field:res.partner,state_id:0
+#: view:res.partner.bank:0
+#: view:res.users:0
 msgid "State"
 msgstr "Županija"
 
@@ -12054,7 +12159,7 @@ msgid "XSL"
 msgstr "XSL"
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:84
+#: code:addons/base/ir/ir_model.py:85
 #, python-format
 msgid "Invalid search criterions"
 msgstr "Neispravan izraz pretraživanja"
@@ -12471,7 +12576,7 @@ msgid "Occitan (FR, post 1500) / Occitan"
 msgstr "Occitan (FR, post 1500) / Occitan"
 
 #. module: base
-#: code:addons/base/ir/ir_mail_server.py:212
+#: code:addons/base/ir/ir_mail_server.py:214
 #, python-format
 msgid ""
 "Here is what we got instead:\n"
@@ -12484,6 +12589,13 @@ msgstr ""
 #: model:ir.ui.menu,name:base.ir_model_data_menu
 msgid "External Identifiers"
 msgstr "Vanjski identifikatori"
+
+#. module: base
+#. openerp-web
+#: code:addons/base/static/src/js/apps.js:103
+#, python-format
+msgid "Showing locally available modules"
+msgstr ""
 
 #. module: base
 #: selection:base.language.install,lang:0
@@ -12673,7 +12785,7 @@ msgid "Body"
 msgstr "Tijelo"
 
 #. module: base
-#: code:addons/base/ir/ir_mail_server.py:219
+#: code:addons/base/ir/ir_mail_server.py:221
 #, python-format
 msgid "Connection test succeeded!"
 msgstr ""
@@ -12721,7 +12833,7 @@ msgid "choose"
 msgstr "odaberite"
 
 #. module: base
-#: code:addons/base/ir/ir_mail_server.py:441
+#: code:addons/base/ir/ir_mail_server.py:445
 #, python-format
 msgid ""
 "Please define at least one SMTP server, or provide the SMTP parameters "
@@ -12807,6 +12919,7 @@ msgid "Greenland"
 msgstr "Grenland"
 
 #. module: base
+#: view:res.partner.bank:0
 #: field:res.partner.bank,acc_number:0
 msgid "Account Number"
 msgstr "Broj računa"
@@ -12942,7 +13055,7 @@ msgid "Kanban"
 msgstr "Kanban"
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:289
+#: code:addons/base/ir/ir_model.py:292
 #, python-format
 msgid ""
 "The Selection Options expression is must be in the [('key','Label'), ...] "
@@ -13347,8 +13460,8 @@ msgid "Update Module List"
 msgstr "Ažuriraj listu modula"
 
 #. module: base
-#: code:addons/base/res/res_users.py:679
-#: code:addons/base/res/res_users.py:819
+#: code:addons/base/res/res_users.py:685
+#: code:addons/base/res/res_users.py:825
 #: selection:res.partner,type:0
 #: view:res.users:0
 #, python-format
@@ -13409,7 +13522,7 @@ msgid ""
 msgstr ""
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:84
+#: code:addons/base/ir/ir_model.py:85
 #, python-format
 msgid "The osv_memory field can only be compared with = and != operator."
 msgstr "Polje osv_memory može se upoređivati samo sa = ili =! operatorima."
@@ -13538,7 +13651,7 @@ msgid "Delivery Costs"
 msgstr "Troškovi dostave"
 
 #. module: base
-#: code:addons/base/ir/ir_cron.py:248
+#: code:addons/base/ir/ir_cron.py:255
 #, python-format
 msgid ""
 "This cron task is currently being executed and may not be modified, please "
@@ -13793,7 +13906,7 @@ msgid "Serbian (Cyrillic) / српски"
 msgstr "Serbian (Cyrillic) / српски"
 
 #. module: base
-#: code:addons/orm.py:2649
+#: code:addons/orm.py:2650
 #, python-format
 msgid ""
 "Invalid group_by specification: \"%s\".\n"
@@ -14284,6 +14397,11 @@ msgid "View Auto-Load"
 msgstr "Automatsko učitavanje"
 
 #. module: base
+#: view:res.country:0
+msgid "Address format..."
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,description:base.module_l10n_et
 msgid ""
 "\n"
@@ -14362,9 +14480,9 @@ msgid "Unmet dependency !"
 msgstr ""
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:502
-#: code:addons/base/ir/ir_model.py:563
-#: code:addons/base/ir/ir_model.py:1024
+#: code:addons/base/ir/ir_model.py:510
+#: code:addons/base/ir/ir_model.py:571
+#: code:addons/base/ir/ir_model.py:1032
 #, python-format
 msgid "Administrator access is required to uninstall a module"
 msgstr ""
@@ -14404,8 +14522,8 @@ msgid ""
 msgstr ""
 
 #. module: base
-#: code:addons/orm.py:3567
-#: code:addons/orm.py:3860
+#: code:addons/orm.py:3568
+#: code:addons/orm.py:3861
 #, python-format
 msgid ""
 "The requested operation cannot be completed due to security restrictions. "
@@ -14435,7 +14553,8 @@ msgid ""
 msgstr ""
 
 #. module: base
-#: code:addons/orm.py:5321
+#: code:addons/orm.py:5322
+#: code:addons/orm.py:5337
 #, python-format
 msgid ""
 "%s This might be '%s' in the current model, or a field of the same name in "
@@ -14646,7 +14765,7 @@ msgid "Officer"
 msgstr ""
 
 #. module: base
-#: code:addons/orm.py:785
+#: code:addons/orm.py:787
 #, python-format
 msgid "Serialization field `%s` not found for sparse field `%s`!"
 msgstr ""
@@ -14690,7 +14809,7 @@ msgid ""
 msgstr ""
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:164
+#: code:addons/base/ir/ir_model.py:165
 #, python-format
 msgid "Model '%s' contains module data and cannot be removed!"
 msgstr ""
@@ -14701,7 +14820,7 @@ msgid "Azerbaijan"
 msgstr "Azerbajdžan"
 
 #. module: base
-#: code:addons/base/ir/ir_mail_server.py:476
+#: code:addons/base/ir/ir_mail_server.py:480
 #: code:addons/base/res/res_partner.py:439
 #, python-format
 msgid "Warning"
@@ -14727,6 +14846,11 @@ msgstr "Djevičansko otočje"
 #: model:ir.ui.menu,name:base.menu_ir_property
 msgid "Parameters"
 msgstr "Parametri"
+
+#. module: base
+#: view:res.partner:0
+msgid "e.g. Sales Director"
+msgstr ""
 
 #. module: base
 #: selection:base.language.install,lang:0
@@ -14811,13 +14935,18 @@ msgstr "Edukacije, konferencije, sastanci, izložbe, registracije"
 
 #. module: base
 #: model:ir.model,name:base.model_res_country
+#: view:res.bank:0
 #: field:res.bank,country:0
+#: view:res.company:0
 #: field:res.company,country_id:0
 #: view:res.country:0
 #: field:res.country.state,country_id:0
+#: view:res.partner:0
 #: field:res.partner,country:0
 #: field:res.partner,country_id:0
+#: view:res.partner.bank:0
 #: field:res.partner.bank,country_id:0
+#: view:res.users:0
 msgid "Country"
 msgstr "Država"
 
@@ -14906,6 +15035,11 @@ msgid "Automatic Installation"
 msgstr "Automatska instalacija"
 
 #. module: base
+#: view:base.language.import:0
+msgid "e.g. en_US"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,description:base.module_l10n_hn
 msgid ""
 "\n"
@@ -14925,7 +15059,7 @@ msgid "Japan"
 msgstr "Japan"
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:412
+#: code:addons/base/ir/ir_model.py:419
 #, python-format
 msgid "Can only rename one column at a time!"
 msgstr ""
@@ -15081,9 +15215,9 @@ msgid "Condition"
 msgstr "Uvjet"
 
 #. module: base
-#: model:ir.actions.client,name:base.modules_updates_act_cl
-#: model:ir.ui.menu,name:base.menu_module_updates
-msgid "Updates"
+#: code:addons/base/module/module.py:669
+#, python-format
+msgid "Module not found"
 msgstr ""
 
 #. module: base
@@ -15294,6 +15428,7 @@ msgid ""
 msgstr ""
 
 #. module: base
+#: model:ir.actions.act_window,name:base.open_module_tree
 #: model:ir.ui.menu,name:base.menu_module_tree
 msgid "Installed Modules"
 msgstr "Instalirani moduli"
@@ -15388,7 +15523,7 @@ msgid "Workflow Instances"
 msgstr "Instance radnog tijeka"
 
 #. module: base
-#: code:addons/base/res/res_partner.py:532
+#: code:addons/base/res/res_partner.py:531
 #, python-format
 msgid "Partners: "
 msgstr "Partneri: "
@@ -15504,3 +15639,9 @@ msgstr "Ruski / русский язык"
 #: model:ir.module.module,shortdesc:base.module_auth_signup
 msgid "Signup"
 msgstr "Prijava"
+
+#~ msgid "My Filters"
+#~ msgstr "Moji filteri"
+
+#~ msgid "Personal"
+#~ msgstr "Osobni"
