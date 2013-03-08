@@ -2353,8 +2353,9 @@
                             <field name="last_closing_balance" readonly="1" string="Last Closing Balance" widget="monetary" options="{'currency_field': 'currency_id'}"/>
                             <field name="total_entry_encoding" widget="monetary" options="{'currency_field': 'currency_id'}"/>
                         </group>
-                        <group string="Closing Balance">
+                        <group string="Closing Balance" attrs="{'invisible' : [('state', '=', 'draft')]}">
                             <field name="balance_end" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                            <field name="difference"/>
                         </group>
                     </group>
                 </sheet>
