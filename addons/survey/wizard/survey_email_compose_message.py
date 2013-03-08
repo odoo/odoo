@@ -115,7 +115,7 @@ class survey_mail_compose_message(osv.TransientModel):
                 })
 
             #set url
-            url = wizard.public == 'email' and re.sub(r'params=[^&]+', 'params=%s' % token, wizard.public_url) or wizard.public_url
+            url = wizard.public == 'email' and re.sub(r'token=[^&]+', 'token=%s' % token, wizard.public_url) or wizard.public_url
 
             # post the message
             values = {

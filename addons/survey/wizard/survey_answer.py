@@ -283,7 +283,7 @@ class survey_question_wiz(osv.osv_memory):
             res['state'] = response.state
 
         # errors
-        if not res['response_id'] and not context.get('edit') and (survey_browse.state != 'open' or survey_browse.token != survey_token):
+        if not res['response_id'] and not context.get('edit') and (survey_browse.state != 'open' or str(survey_browse.token) != str(survey_token)):
 
             response_ids = sur_response_obj.search(cr, SUPERUSER_ID, [('survey_id', '=', survey_id), ("token", "=", context.get("survey_token", None))], context=context, limit=1)
             if not response_ids:
@@ -1225,7 +1225,7 @@ class survey_question_wiz(osv.osv_memory):
         """
         context.update({
             'survey_id': context['active_id'],
-            'survey_token': context['params'],
+            'survey_token': context['token'],
             'ir_actions_act_window_target': 'inline'})
 
         # check if the user must be authenticate
@@ -1240,7 +1240,7 @@ class survey_question_wiz(osv.osv_memory):
                 'context': context,
             }
 
-        self.get_response_info_from_token(cr, uid, context['survey_id'], context['survey_token'], context)
+        self.get_response_info_from_token(cr, uid, context['survey_id'], context['survey_token'], context=context)
         return {
             'view_type': 'form',
             "view_mode": 'form',
