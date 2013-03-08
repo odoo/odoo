@@ -90,7 +90,7 @@ class survey(osv.osv):
         'date_close': fields.datetime('Survey Close Date', readonly=1),
         'max_response_limit': fields.integer('Maximum Answer Limit', help="Set to one if survey is answerable only once"),
         'state': fields.selection([('draft', 'Draft'), ('open', 'Open'), ('close', 'Close'), ('cancel', 'Cancelled')], 'Status', required=1),
-        'authenticate': fields.boolean('User must be authentified'),
+        'authenticate': fields.boolean('User must be authentified', help="If the user must be authenticate, when the user click on the link, it's redirected to the login page if not authenticated. In otherwise, it may complete the survey directly."),
         'tot_start_survey': fields.function(_get_tot_start_survey, string="Total Started Survey", type="integer"),
         'tot_comp_survey': fields.function(_get_tot_comp_survey, string="Total Completed Survey", type="integer"),
         'note': fields.text('Description', size=128, translate=True),
@@ -102,7 +102,7 @@ class survey(osv.osv):
     }
     _defaults = {
         'state': "draft",
-        'authenticate': False,
+        'authenticate': True,
         'date_open': fields.datetime.now,
         'token': lambda s, cr, uid, c: uuid.uuid4(),
     }

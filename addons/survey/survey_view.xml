@@ -22,10 +22,9 @@
             <field name="arch" type="xml">
                 <form string="Survey" version="7.0">
                 <header>
-                    <button name="edit_survey" states="draft,open,close,cancel" string="Edit Survey" type="object" class="oe_highlight"/>
                     <button name="survey_draft" string="Draft" states="cancel,close" type="object"/>
                     <button name="survey_open" class="oe_highlight" string="Open" states="draft,close" type="object"/>
-                    <button name="survey_close" string="Close" states="open" type="object" class="oe_highlight"/>
+                    <button name="survey_close" string="Close" states="open" type="object"/>
                     <button name="survey_cancel" string="Cancel" states="draft" type="object"/>
                     <field name="state" widget="statusbar" nolabel="1" attrs="{'invisible':[('state','=','cancel')]}" statusbar_visible="draft,open,close"/>
                 </header>
@@ -43,9 +42,13 @@
                     <group>
                         <group colspan="4">
                             <field name="type" attrs="{'readonly':[('state','in',['close','cancel'])]}" class="oe_inline"/>
-                            <field name="authenticate"/>
                             <field name="max_response_limit" attrs="{'readonly':[('state','=','close')]}"/>
                             <field name="public_url" widget="url"/>
+                            <div name="authenticate" colspan="4">
+                                <small>
+                                    The Public Portal is not activated; your audience must be authenticated to answer the survey. If you want to make the survey available to everyone, please activate the Public Portal : Settings > General Settings > Activate the public portal
+                                </small>
+                            </div>
                         </group>
                     </group>
                     <field name="page_ids" colspan="4" mode="tree" attrs="{'readonly':[('state','=','close')]}" context="{'default_survey_id': active_id}">
@@ -123,7 +126,7 @@
                                 <div class="oe_dropdown_toggle oe_dropdown_kanban">
                                     <span class="oe_e">i</span>
                                     <ul class="oe_dropdown_menu">
-                                        <t t-if="widget.view.is_action_enabled('edit')"><li><a type="edit">Edit...</a></li></t>
+                                        <t t-if="widget.view.is_action_enabled('edit')"><li><a type="edit">Survey Settings...</a></li></t>
                                         <t t-if="widget.view.is_action_enabled('delete')"><li><a type="delete">Delete</a></li></t>
                                         <li><ul class="oe_kanban_colorpicker" data-field="color"/></li>
                                     </ul>
@@ -144,8 +147,8 @@
                                     <ul>
                                         <li t-if="widget.view.is_action_enabled('edit')"><a name="edit_survey" type="object">Edit Survey</a></li>
                                         <li t-if="widget.view.is_action_enabled('edit')"><a name="action_print_survey" type="object">Print Survey</a></li>
-                                        <li t-if="record.state.raw_value === 'open' and widget.view.is_action_enabled('edit')"><a name="action_survey_sent" type="object">Collect responses</a></li>
-                                        <li><a t-if="record.state.raw_value === 'open'" name="fill_survey" type="object">Fill in survey</a></li>
+                                        <li t-if="record.state.raw_value === 'open' and widget.view.is_action_enabled('edit')"><a name="action_survey_sent" type="object">Collect Answers</a></li>
+                                        <li><a t-if="record.state.raw_value === 'open'" name="fill_survey" type="object">Fill in Survey</a></li>
                                         <li t-if="record.tot_comp_survey.raw_value and widget.view.is_action_enabled('edit')"><a name="print_statistics" type="object">Print Statistics</a></li>
                                     </ul>
                                 </div>
@@ -631,7 +634,7 @@
         </record>
 
         <record model="ir.actions.act_window" id="action_survey_response">
-            <field name="name">Survey Type</field>
+            <field name="name">Survey Response</field>
             <field name="res_model">survey.response</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>

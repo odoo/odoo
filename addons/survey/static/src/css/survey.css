@@ -58,15 +58,25 @@
 }
 
 .openerp .oe_survey_button {
-    background-color: #c02c2c;
-    color: #fff !important;
-    padding: 3px 4px 4px 4px;
-    background-image: -webkit-linear-gradient(top, #df3f3f, #a21a1a);
     border-radius: 4px;
+    padding: 3px 8px 4px 8px;
     border: 1px solid #000;
     border-width: 1px 1px 0 0;
     text-shadow: none;
     text-decoration: none !important;
+}
+.openerp .oe_survey_button, .openerp .oe_form .oe_survey button.oe_highlight {
+    color: #fff !important;
+    background-color: #c02c2c;
+    background-image: -webkit-gradient(linear, left top, left bottom, from(#df3f3f), to(#a21a1a));
+    background-image: -webkit-linear-gradient(top, #df3f3f, #a21a1a);
+    background-image: -moz-linear-gradient(top, #df3f3f, #a21a1a);
+    background-image: -ms-linear-gradient(top, #df3f3f, #a21a1a);
+    background-image: -o-linear-gradient(top, #df3f3f, #a21a1a);
+    background-image: linear-gradient(to bottom, #df3f3f, #a21a1a);
+    -moz-box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1), 0 1px 1px rgba(155, 155, 155, 0.4) inset;
+    -webkit-box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1), 0 1px 1px rgba(155, 155, 155, 0.4) inset;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1), 0 1px 1px rgba(155, 155, 155, 0.4) inset;
 }
 
 .openerp .oe_form .oe_survey_answer .oe_form_sheet label {
