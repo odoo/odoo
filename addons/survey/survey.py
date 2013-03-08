@@ -26,6 +26,7 @@ from datetime import datetime
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
 import uuid
+from openerp import SUPERUSER_ID
 
 
 class survey_type(osv.osv):
@@ -55,7 +56,7 @@ class survey(osv.osv):
         res = dict((id, 0) for id in ids)
         sur_res_obj = self.pool.get('survey.response')
         for id in ids:
-            res[id] = sur_res_obj.search(cr, uid, [('survey_id', '=', id), ('state', '=', 'skip')], context=context, count=True)
+            res[id] = sur_res_obj.search(cr, SUPERUSER_ID, [('survey_id', '=', id), ('state', '=', 'skip')], context=context, count=True)
         return res
 
     def _get_tot_comp_survey(self, cr, uid, ids, name, arg, context=None):
@@ -63,7 +64,7 @@ class survey(osv.osv):
         res = dict((id, 0) for id in ids)
         sur_res_obj = self.pool.get('survey.response')
         for id in ids:
-            res[id] = sur_res_obj.search(cr, uid, [('survey_id', '=', id), ('state', '=', 'done')], context=context, count=True)
+            res[id] = sur_res_obj.search(cr, SUPERUSER_ID, [('survey_id', '=', id), ('state', '=', 'done')], context=context, count=True)
         return res
 
     def _get_public_url(self, cr, uid, ids, name, arg, context=None):
@@ -190,9 +191,9 @@ class survey(osv.osv):
         }
 
     def _check_valid(self, cr, uid, ids, context=None):
-        sur_browse = self.browse(cr, uid, ids[0], context=context)
-        if not sur_browse.page_ids:
-            raise osv.except_osv(_('Warning!'), _('This survey has no question defined or has no pages defined. Please define the questions and answers first.'))
+        for survey in self.browse(cr, SUPERUSER_ID, ids, context=context):
+            if not survey.page_ids or not [page.question_ids for page in survey.page_ids if page.question_ids]:
+                raise osv.except_osv(_('Warning!'), _('This survey has no question defined or has no pages defined.'))
 
     def fill_survey(self, cr, uid, ids, context=None):
         self._check_valid(cr, uid, ids, context=context)
@@ -335,7 +336,7 @@ class survey_question(osv.osv):
         return val
 
     _columns = {
-        'page_id': fields.many2one('survey.page', 'Survey Page', ondelete='cascade', required=1),
+        'page_id': fields.many2one('survey.page', 'Survey Page', ondelete='cascade'),
         'question': fields.char('Question', required=1, translate=True),
         'answer_choice_ids': fields.one2many('survey.answer', 'question_id', 'Answer'),
         'is_require_answer': fields.boolean('Require Answer to Question'),
