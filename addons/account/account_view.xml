@@ -2335,7 +2335,7 @@
                                             <tree string="Closing Cashbox Lines" editable="bottom">
                                                 <field name="pieces" readonly="1" />
                                                 <field name="number_closing" string="Closing Unit Numbers" on_change="on_change_sub_closing(pieces, number_closing, parent.balance_end)"/>
-                                                <field name="subtotal_closing" string="Closing Subtotal"/>
+                                                <field name="subtotal_closing" string="Closing Subtotal" sum="Total"/>
                                             </tree>
                                         </field>
                                     </group>
