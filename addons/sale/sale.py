@@ -717,7 +717,7 @@ class sale_order_line(osv.osv):
         'salesman_id':fields.related('order_id', 'user_id', type='many2one', relation='res.users', store=True, string='Salesperson'),
         'company_id': fields.related('order_id', 'company_id', type='many2one', relation='res.company', string='Company', store=True, readonly=True),
     }
-    _order = 'order_id desc, sequence'
+    _order = 'order_id desc, sequence, id'
     _defaults = {
         'product_uom' : _get_uom_id,
         'discount': 0.0,
