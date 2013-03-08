@@ -28,8 +28,8 @@ class res_partner(osv.osv):
     _inherit = 'res.partner'
 
     _columns = {
-        'opt_out': fields.boolean('Opt-Out', help="If checked, this partner will not receive any automated email " \
-                                                  "notifications, such as the availability of invoices."),
+        'opt_out': fields.boolean('Opt-Out',
+            help="If opt-out is checked, this contact has refused to receive emails for mass mailing and marketing campaign."),
     }
 
     _defaults = {
