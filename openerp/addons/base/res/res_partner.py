@@ -34,8 +34,8 @@ from openerp.tools.translate import _
 class format_address(object):
     @api.model
     def fields_view_get_address(self, arch):
-        user = self.scope.user.with_scope(user=SUPERUSER_ID)
-        fmt = user.company_id.country_id.address_format or ''
+        with self.scope.SUDO():
+            fmt = self.scope.user.company_id.country_id.address_format or ''
         layouts = {
             '%(city)s %(state_code)s\n%(zip)s': """
                 <div class="address_format">

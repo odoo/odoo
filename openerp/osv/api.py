@@ -176,8 +176,7 @@ class Scope(object):
 
     def model(self, model_name):
         """ return a given model with scope """
-        model = self.registry[model_name]
-        return model._make_instance(scope=self)
+        return self.registry[model_name]
 
     def ref(self, xml_id):
         """ return the record corresponding to the given `xml_id` """
@@ -187,9 +186,7 @@ class Scope(object):
     @property
     def user(self):
         """ return the current user (as a record) """
-        if not hasattr(self, '_user'):
-            self._user = self.model('res.users').browse(self.uid)
-        return self._user
+        return self.model('res.users').browse(self.uid)
 
     @property
     def lang(self):
@@ -201,14 +198,11 @@ class Scope(object):
     @property
     def language(self):
         """ return the current language (as a record) """
-        if not hasattr(self, '_language'):
-            try:
-                languages = self.model('res.lang').search([('code', '=', self.lang)])
-                self._language = languages.record
-            except Exception:
-                context = self.context      # for translating the message below
-                raise Exception(_('Language with code "%s" is not defined in your system !\nDefine it through the Administration menu.') % (self.lang,))
-        return self._language
+        try:
+            languages = self.model('res.lang').search([('code', '=', self.lang)])
+            return languages.record
+        except Exception:
+            raise Exception(_('Language with code "%s" is not defined in your system !\nDefine it through the Administration menu.') % (self.lang,))
 
 
 #
@@ -341,8 +335,7 @@ def _make_wrapper(method, old_api, new_api):
     """
     @wraps(method)
     def wrapper(self, *args, **kwargs):
-        cr = kwargs.get('cr') or kwargs.get('cursor') or (args and args[0])
-        if isinstance(cr, Cursor):
+        if isinstance(args and args[0], Cursor):
             return old_api(self, *args, **kwargs)
         else:
             return new_api(self, *args, **kwargs)
@@ -402,8 +395,8 @@ def model(method):
 
     def old_api(self, cr, uid, *args, **kwargs):
         context, args, kwargs = _split_context_args(nargs, args, kwargs)
-        obj = self.browse(cr, uid, [], context)
-        return method(obj, *args, **kwargs)
+        with Scope(cr, uid, context):
+            return method(self, *args, **kwargs)
 
     return _make_wrapper(method, _returns_old(method, old_api), method)
 
@@ -435,8 +428,8 @@ def record(method):
 
     def old_api(self, cr, uid, ids, *args, **kwargs):
         context, args, kwargs = _split_context_args(nargs, args, kwargs)
-        obj = self.browse(cr, uid, ids, context)
-        return new_api(obj, *args, **kwargs)
+        with Scope(cr, uid, context):
+            return new_api(self.browse(ids), *args, **kwargs)
 
     def new_api(self, *args, **kwargs):
         if self.is_record():
@@ -469,8 +462,8 @@ def recordset(method):
 
     def old_api(self, cr, uid, ids, *args, **kwargs):
         context, args, kwargs = _split_context_args(nargs, args, kwargs)
-        obj = self.browse(cr, uid, ids, context)
-        return new_api(obj, *args, **kwargs)
+        with Scope(cr, uid, context):
+            return new_api(self.browse(ids), *args, **kwargs)
 
     def new_api(self, *args, **kwargs):
         if self.is_record():
@@ -495,34 +488,46 @@ def cr(method):
     """
     method._api = cr
 
+    def old_api(self, cr, *args, **kwargs):
+        with Scope(cr, SUPERUSER_ID, None):
+            return method(self, cr, *args, **kwargs)
+
     def new_api(self, *args, **kwargs):
         cr, uid, context = self.scope
         return method(self, cr, *args, **kwargs)
 
-    return _make_wrapper(method, method, _returns_new(method, new_api))
+    return _make_wrapper(method, old_api, _returns_new(method, new_api))
 
 
 def cr_context(method):
     """ Decorate a traditional-style method that takes `cr`, `context` as parameters. """
     method._api = cr_context
 
+    def old_api(self, cr, *args, **kwargs):
+        with Scope(cr, SUPERUSER_ID, kwargs.get('context')):
+            return method(self, cr, *args, **kwargs)
+
     def new_api(self, *args, **kwargs):
         cr, uid, context = self.scope
         kwargs = _kwargs_context(kwargs, context)
         return method(self, cr, *args, **kwargs)
 
-    return _make_wrapper(method, method, _returns_new(method, new_api))
+    return _make_wrapper(method, old_api, _returns_new(method, new_api))
 
 
 def cr_uid(method):
     """ Decorate a traditional-style method that takes `cr`, `uid` as parameters. """
     method._api = cr_uid
 
+    def old_api(self, cr, uid, *args, **kwargs):
+        with Scope(cr, uid, None):
+            return method(self, cr, uid, *args, **kwargs)
+
     def new_api(self, *args, **kwargs):
         cr, uid, context = self.scope
         return method(self, cr, uid, *args, **kwargs)
 
-    return _make_wrapper(method, method, _returns_new(method, new_api))
+    return _make_wrapper(method, old_api, _returns_new(method, new_api))
 
 
 def cr_uid_context(method):
@@ -535,12 +540,16 @@ def cr_uid_context(method):
     """
     method._api = cr_uid_context
 
+    def old_api(self, cr, uid, *args, **kwargs):
+        with Scope(cr, uid, kwargs.get('context')):
+            return method(self, cr, uid, *args, **kwargs)
+
     def new_api(self, *args, **kwargs):
         cr, uid, context = self.scope
         kwargs = _kwargs_context(kwargs, context)
         return method(self, cr, uid, *args, **kwargs)
 
-    return _make_wrapper(method, method, _returns_new(method, new_api))
+    return _make_wrapper(method, old_api, _returns_new(method, new_api))
 
 
 def cr_uid_id(method):
@@ -550,6 +559,10 @@ def cr_uid_id(method):
     """
     method._api = cr_uid_id
 
+    def old_api(self, cr, uid, id, *args, **kwargs):
+        with Scope(cr, uid, None):
+            return method(self, cr, uid, id, *args, **kwargs)
+
     def new_api(self, *args, **kwargs):
         cr, uid, context = self.scope
         if self.is_record():
@@ -557,7 +570,7 @@ def cr_uid_id(method):
         else:
             return dict((x.id, method(self, cr, uid, x.id, *args, **kwargs)) for x in self)
 
-    return _make_wrapper(method, method, _returns_new(method, new_api))
+    return _make_wrapper(method, old_api, _returns_new(method, new_api))
 
 
 def cr_uid_id_context(method):
@@ -583,6 +596,10 @@ def cr_uid_id_context(method):
     """
     method._api = cr_uid_id_context
 
+    def old_api(self, cr, uid, id, *args, **kwargs):
+        with Scope(cr, uid, kwargs.get('context')):
+            return method(self, cr, uid, id, *args, **kwargs)
+
     def new_api(self, *args, **kwargs):
         cr, uid, context = self.scope
         kwargs = _kwargs_context(kwargs, context)
@@ -591,7 +608,7 @@ def cr_uid_id_context(method):
         else:
             return dict((x.id, method(self, cr, uid, x.id, *args, **kwargs)) for x in self)
 
-    return _make_wrapper(method, method, _returns_new(method, new_api))
+    return _make_wrapper(method, old_api, _returns_new(method, new_api))
 
 
 def cr_uid_ids(method):
@@ -601,6 +618,10 @@ def cr_uid_ids(method):
     """
     method._api = cr_uid_ids
 
+    def old_api(self, cr, uid, ids, *args, **kwargs):
+        with Scope(cr, uid, None):
+            return method(self, cr, uid, ids, *args, **kwargs)
+
     def new_api(self, *args, **kwargs):
         cr, uid, context = self.scope
         if self.is_record():
@@ -608,7 +629,7 @@ def cr_uid_ids(method):
         else:
             return method(self, cr, uid, map(int, self), *args, **kwargs)
 
-    return _make_wrapper(method, method, _returns_new(method, new_api))
+    return _make_wrapper(method, old_api, _returns_new(method, new_api))
 
 
 def cr_uid_ids_context(method):
@@ -632,6 +653,10 @@ def cr_uid_ids_context(method):
     """
     method._api = cr_uid_ids_context
 
+    def old_api(self, cr, uid, ids, *args, **kwargs):
+        with Scope(cr, uid, kwargs.get('context')):
+            return method(self, cr, uid, ids, *args, **kwargs)
+
     def new_api(self, *args, **kwargs):
         cr, uid, context = self.scope
         kwargs = _kwargs_context(kwargs, context)
@@ -640,7 +665,7 @@ def cr_uid_ids_context(method):
         else:
             return method(self, cr, uid, map(int, self), *args, **kwargs)
 
-    return _make_wrapper(method, method, _returns_new(method, new_api))
+    return _make_wrapper(method, old_api, _returns_new(method, new_api))
 
 
 def noguess(method):

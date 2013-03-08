@@ -9,6 +9,7 @@ import unittest2
 import xmlrpclib
 
 import openerp
+from openerp.osv.api import Scope
 
 # The openerp library is supposed already configured.
 ADDONS_PATH = openerp.tools.config['addons_path']
@@ -91,10 +92,12 @@ class TransactionCase(BaseCase):
     def setUp(self):
         # Store cr and uid in class variables, to allow ref() and browse_ref to be BaseCase @classmethods
         # and still access them
-        TransactionCase.cr = self.cursor()
-        TransactionCase.uid = openerp.SUPERUSER_ID
+        TransactionCase.cr = cr = self.cursor()
+        TransactionCase.uid = uid = openerp.SUPERUSER_ID
+        Scope(cr, uid, None).__enter__()
 
     def tearDown(self):
+        Scope.current().__exit__(None, None, None)
         self.cr.rollback()
         self.cr.close()
 
@@ -109,9 +112,11 @@ class SingleTransactionCase(BaseCase):
     def setUpClass(cls):
         cls.cr = cls.cursor()
         cls.uid = openerp.SUPERUSER_ID
+        Scope(cls.cr, cls.uid, None).__enter__()
 
     @classmethod
     def tearDownClass(cls):
+        Scope.current().__exit__(None, None, None)
         cls.cr.rollback()
         cls.cr.close()
 

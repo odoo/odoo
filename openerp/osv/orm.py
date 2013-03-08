@@ -469,8 +469,7 @@ class BaseModel(object):
     _description = None
     _needaction = False
 
-    # scope, for records and recordsets
-    scope = None
+    _scope = None
 
     # dict of {field:method}, with method returning the (name_get of records, {id: fold})
     # to include in the _read_group, if grouped on this field
@@ -4321,19 +4320,19 @@ class BaseModel(object):
         """
         if cache is None:
             cache = _RecordCache()
+
         # need to accepts ints and longs because ids coming from a method
         # launched by button in the interface have a type long...
-        if self.scope == (cr, uid, context):
-            model = self
-        else:
-            model = self._make_instance(scope=api.Scope(cr, uid, context))
-
         if isinstance(select, (int, long)) and select:
-            return model._make_record(select, cache)
+            res = self._make_record(select, cache)
         elif isinstance(select, list):
-            return model._make_recordset(select, cache)
+            res = self._make_recordset(select, cache)
         else:
-            return model._make_null()
+            res = self._make_null()
+
+        # capture the current scope
+        res._scope = api.Scope(cr, uid, context)
+        return res
 
     def _store_get_values(self, cr, uid, ids, fields, context):
         """Returns an ordered list of fields.functions to call due to
@@ -5123,34 +5122,15 @@ class BaseModel(object):
         '_record_cache',
     ]
 
-    def with_scope(self, user=None, context=None, **kwargs):
-        """ return an instance similar to `self` (record or recordset, with
-            scope) with modified scope
-
-            :param user: user (id or record) to use (if not ``None``)
-            :param context: context dictionary to use (if not ``None``)
-            :param kwargs: named arguments to update the context
-        """
-        cr, uid, ctx = self.scope
-
-        if user is not None:
-            uid = int(user) if isinstance(user, Record) else user
-        if context is not None:
-            ctx = context
-        if kwargs:
-            ctx.update(kwargs)
-
-        # rebrowse record, recordset and null instances
-        if self.is_record_or_null() or self.is_recordset():
-            return self.browse(cr, uid, self.unbrowse(), context=ctx)
-
-        return self._make_instance(scope=api.Scope(cr, uid, ctx))
+    @property
+    def scope(self):
+        return api.Scope.current()
 
     @api.model
     def _make_null(self):
         """ make a null instance """
         # a null instance is represented as a record with id=False
-        return self._make_instance(scope=self.scope, _record_id=False, _record_cache=None)
+        return self._make_instance(_record_id=False, _record_cache=None)
 
     def is_null(self):
         """ test whether self is a null instance """
@@ -5169,7 +5149,7 @@ class BaseModel(object):
         model_cache = cache[self._name]
         if id not in model_cache:
             model_cache[id] = {'id': id}
-        return self._make_instance(scope=self.scope, _record_id=id, _record_cache=cache)
+        return self._make_instance(_record_id=id, _record_cache=cache)
 
     def is_record(self):
         """ test whether `self` is a record instance """
@@ -5187,7 +5167,7 @@ class BaseModel(object):
         for id in ids:
             if id not in model_cache:
                 model_cache[id] = {'id': id}
-        return self._make_instance(scope=self.scope, _record_ids=list(ids), _record_cache=cache)
+        return self._make_instance(_record_ids=list(ids), _record_cache=cache)
 
     def is_recordset(self):
         """ test whether `self` is a recordset instance """
@@ -5232,7 +5212,7 @@ class BaseModel(object):
         """ Return an iterator over `self` (must be a recordset). """
         assert self.is_recordset(), "Expected recordset: %s" % self
         for id in self._record_ids:
-            yield self._make_record(id, self._record_cache)
+            yield self.browse(id, cache=self._record_cache)
 
     def __len__(self):
         """ Return the size of `self` (must be a recordset). """
@@ -5282,52 +5262,52 @@ class BaseModel(object):
         if name == 'id':
             return self._record_id
 
-        # fetch the definition of the field which was asked for
-        column = self._all_columns[name].column
-        browse_function = _browse_functions.get(column._type, _browse_default)
+        with self._scope:
+            # fetch the definition of the field which was asked for
+            column = self._all_columns[name].column
+            browse_function = _browse_functions.get(column._type, _browse_default)
 
-        if self.is_null():
-            # return False, null or recordset, depending on the field's type
-            return browse_function(self, column, False)
+            if self.is_null():
+                # return False, null or recordset, depending on the field's type
+                return browse_function(self, column, False)
 
-        model_cache = self._record_cache[self._name]
+            model_cache = self._record_cache[self._name]
 
-        if name not in model_cache[self._record_id]:
-            # determine which fields to fetch
-            if column._prefetch:
-                # the field is a classic one or a many2one, fetch all classic and many2one fields
-                fields_to_fetch = [
-                    (key, cinfo.column)
-                    for key, cinfo in self._all_columns.iteritems()
-                    if cinfo.column._classic_write
-                ]
-            else:
-                # otherwise fetch only that field
-                fields_to_fetch = [(name, column)]
+            if name not in model_cache[self._record_id]:
+                # determine which fields to fetch
+                if column._prefetch:
+                    # the field is a classic one or a many2one, fetch all classic and many2one fields
+                    fields_to_fetch = [
+                        (key, cinfo.column)
+                        for key, cinfo in self._all_columns.iteritems()
+                        if cinfo.column._classic_write
+                    ]
+                else:
+                    # otherwise fetch only that field
+                    fields_to_fetch = [(name, column)]
 
-            # read the records in the same model that don't have the field yet
-            cr, uid, context = self.scope
-            ids = [id for id, values in model_cache.iteritems() if name not in values]
-            field_names = [key for key, col in fields_to_fetch]
-            result = self.read(cr, uid, ids, field_names, context=context, load="_classic_write")
+                # read the records in the same model that don't have the field yet
+                ids = [id for id, values in model_cache.iteritems() if name not in values]
+                field_names = [key for key, col in fields_to_fetch]
+                result = self.browse(ids).read(field_names, load="_classic_write")
 
-            # update the cache with the results
-            for data in result:
-                values = {}
-                for fname, fcolumn in fields_to_fetch:
-                    value = data[fname]
-                    if fcolumn._type == 'many2one' and isinstance(value, (tuple, list)):
-                        value = value[0]
-                    values[fname] = value
-                model_cache[data['id']].update(values)
+                # update the cache with the results
+                for data in result:
+                    values = {}
+                    for fname, fcolumn in fields_to_fetch:
+                        value = data[fname]
+                        if fcolumn._type == 'many2one' and isinstance(value, (tuple, list)):
+                            value = value[0]
+                        values[fname] = value
+                    model_cache[data['id']].update(values)
 
-        if not name in model_cache[self._record_id]:
-            # How did this happen? Could be a missing model due to custom fields used too soon.
-            _logger.error("Fields to fetch: %s, Field values: %s", field_names, result)
-            _logger.error("Cached: %s, Table: %s", model_cache[self._record_id], self._name)
-            raise KeyError(_('Unknown field %s in %s ') % (name, self))
+            if not name in model_cache[self._record_id]:
+                # How did this happen? Could be a missing model due to custom fields used too soon.
+                _logger.error("Fields to fetch: %s, Field values: %s", field_names, result)
+                _logger.error("Cached: %s, Table: %s", model_cache[self._record_id], self._name)
+                raise KeyError(_('Unknown field %s in %s ') % (name, self))
 
-        return browse_function(self, column, model_cache[self._record_id][name])
+            return browse_function(self, column, model_cache[self._record_id][name])
 
     def __getitem__(self, key):
         """ If `self` is a record, return the value of the field named `key`.

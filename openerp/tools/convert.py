@@ -30,6 +30,7 @@ import sys
 # for eval context:
 import time
 import openerp.release as release
+from openerp.osv.api import Scope
 
 import assertion_report
 
@@ -844,7 +845,8 @@ form: module.record_id""" % (xml_id,)
             for rec in n:
                 if rec.tag in self._tags:
                     try:
-                        self._tags[rec.tag](self.cr, rec, n)
+                        with Scope(self.cr, self.uid, None):
+                            self._tags[rec.tag](self.cr, rec, n)
                     except Exception, e:
                         self.cr.rollback()
                         exc_info = sys.exc_info()

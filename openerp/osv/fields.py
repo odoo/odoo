@@ -1097,7 +1097,8 @@ class function(_column):
         if not self._fnct_search:
             #CHECKME: should raise an exception
             return []
-        return self._fnct_search(obj, cr, uid, obj, name, args, context=context)
+        with Scope(cr, uid, context):
+            return self._fnct_search(obj, cr, uid, obj, name, args, context=context)
 
     def postprocess(self, cr, uid, obj, field, value=None, context=None):
         if context is None:
@@ -1128,7 +1129,8 @@ class function(_column):
         return result
 
     def get(self, cr, obj, ids, name, uid=False, context=None, values=None):
-        result = self._fnct(obj, cr, uid, ids, name, self._arg, context)
+        with Scope(cr, uid, context):
+            result = self._fnct(obj, cr, uid, ids, name, self._arg, context)
         for id in ids:
             if self._multi and id in result:
                 for field, value in result[id].iteritems():
@@ -1142,7 +1144,8 @@ class function(_column):
         if not context:
             context = {}
         if self._fnct_inv:
-            self._fnct_inv(obj, cr, user, id, name, value, self._fnct_inv_arg, context)
+            with Scope(cr, user, context):
+                self._fnct_inv(obj, cr, user, id, name, value, self._fnct_inv_arg, context)
 
     @classmethod
     def _as_display_name(cls, field, cr, uid, obj, value, context=None):
@@ -1571,5 +1574,7 @@ class column_info(object):
             self.__class__.__name__, self.name, self.column,
             self.parent_model, self.parent_column, self.original_parent)
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 
+from openerp.osv.api import Scope
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -10,9 +10,8 @@ class TestAPI(common.TransactionCase):
 
     def setUp(self):
         super(TestAPI, self).setUp()
-        self.scope = Scope(self.cr, self.uid, None)
-        self.Partner = self.scope.model('res.partner')
-        self.Users = self.scope.model('res.users')
+        self.Partner = self.registry('res.partner')
+        self.Users = self.registry('res.users')
 
     def assertIsKind(self, value, kind, model):
         """ check for isinstance(value, kind) and value._name == model """
@@ -214,7 +213,6 @@ class TestAPI(common.TransactionCase):
 
         with Scope(self.cr, self.uid, None) as scope1:
             self.assertEqual(Scope.current(), scope1)
-            self.assertNotEqual(scope1, scope0)
             self.assertEqual(scope1.uid, self.uid)
 
             try:
@@ -266,17 +264,10 @@ class TestAPI(common.TransactionCase):
         demo = self.Users.search([('login', '=', 'demo')])[0]
         self.assertNotEqual(demo.id, self.uid)
 
-        # remake recordset with demo user, and check scope
-        partners = partners.with_scope(user=demo)
-        self.assertEqual(partners.scope.user, demo)
-        partner = partners[0]
-        self.assertEqual(partner.scope.user, demo)
-        company = partner.company_id
-        self.assertEqual(company.scope.user, demo)
-
         # demo user cannot modify the company
         with self.assertRaises(except_orm):
-            company.write({'name': 'Pricks'})
+            with Scope.set(demo):
+                company.write({'name': 'Pricks'})
 
     @mute_logger('openerp.osv.orm')
     def test_50_record_recordset(self):
