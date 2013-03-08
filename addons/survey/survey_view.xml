@@ -123,7 +123,7 @@
                     <field name="public_url"/>
                     <templates>
                         <t t-name="kanban-box">
-                            <div t-attf-class="oe_kanban_color_#{kanban_getcolor(record.color.raw_value)} oe_kanban_card oe_kanban_survey">
+                            <div t-attf-class="oe_kanban_color_#{kanban_getcolor(record.color.raw_value)} oe_kanban_card oe_kanban_survey oe_kanban_global_click">
                                 <div class="oe_dropdown_toggle oe_dropdown_kanban">
                                     <span class="oe_e">i</span>
                                     <ul class="oe_dropdown_menu">
@@ -146,11 +146,11 @@
                                         <t t-if="record.max_response_limit.raw_value > 0"> / <field name="max_response_limit"/></t>
                                     </div>
                                     <br/>
-                                    <ul>
+                                    <ul class="oe_kanban_survey_list">
                                         <li t-if="(!record.tot_comp_survey.raw_value or record.state.raw_value === 'draft') and widget.view.is_action_enabled('edit')"><a name="edit_survey" type="object">Edit Survey</a></li>
                                         <li t-if="widget.view.is_action_enabled('edit')"><a name="action_print_survey" type="object">Print Survey</a></li>
                                         <li t-if="record.state.raw_value === 'open' and widget.view.is_action_enabled('edit')"><a name="action_survey_sent" type="object">Collect Answers</a></li>
-                                        <li><a t-if="record.state.raw_value === 'open'" name="fill_survey" type="object">Fill in Survey</a></li>
+                                        <li><a t-if="record.state.raw_value === 'open'" name="fill_survey" type="object" class="oe_survey_fill">Fill in Survey</a></li>
                                         <li t-if="record.tot_comp_survey.raw_value and widget.view.is_action_enabled('edit')"><a name="print_statistics" type="object">Print Statistics</a></li>
                                     </ul>
                                 </div>
