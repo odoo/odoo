@@ -481,9 +481,12 @@ instance.web.DataSet =  instance.web.Class.extend(instance.web.PropertiesMixin, 
      * Creates a new record in db
      *
      * @param {Object} data field values to set on the new record
+     * @param {Object} options Dictionary that can contain the following keys:
+     *   - readonly_fields: Values from readonly fields that were updated by
+     *     on_changes. Only used by the BufferedDataSet to make the o2m work correctly.
      * @returns {$.Deferred}
      */
-    create: function(data) {
+    create: function(data, options) {
         return this._model.call('create', [data], {context: this.get_context()});
     },
     /**
@@ -491,8 +494,10 @@ instance.web.DataSet =  instance.web.Class.extend(instance.web.PropertiesMixin, 
      *
      * @param {Number|String} id identifier for the record to alter
      * @param {Object} data field values to write into the record
-     * @param {Function} callback function called with operation result
-     * @param {Function} error_callback function called in case of write error
+     * @param {Object} options Dictionary that can contain the following keys:
+     *   - context: The context to use in the server-side call.
+     *   - readonly_fields: Values from readonly fields that were updated by
+     *     on_changes. Only used by the BufferedDataSet to make the o2m work correctly.
      * @returns {$.Deferred}
      */
     write: function (id, data, options) {
@@ -732,10 +737,13 @@ instance.web.BufferedDataSet = instance.web.DataSetStatic.extend({
             self.last_default_get = res;
         });
     },
-    create: function(data) {
-        var cached = {id:_.uniqueId(this.virtual_id_prefix), values: data,
-            defaults: this.last_default_get};
-        this.to_create.push(_.extend(_.clone(cached), {values: _.clone(cached.values)}));
+    create: function(data, options) {
+        var cached = {
+            id:_.uniqueId(this.virtual_id_prefix),
+            values: _.extend({}, data, (options || {}).readonly_fields || {}),
+            defaults: this.last_default_get
+        };
+        this.to_create.push(_.extend(_.clone(cached), {values: _.clone(data)}));
         this.cache.push(cached);
         return $.Deferred().resolve(cached.id).promise();
     },
@@ -762,7 +770,7 @@ instance.web.BufferedDataSet = instance.web.DataSetStatic.extend({
             cached = {id: id, values: {}};
             this.cache.push(cached);
         }
-        $.extend(cached.values, record.values);
+        $.extend(cached.values, _.extend({}, record.values, (options || {}).readonly_fields || {}));
         if (dirty)
             this.trigger("dataset_changed", id, data, options);
         return $.Deferred().resolve(true).promise();
@@ -918,9 +926,9 @@ instance.web.ProxyDataSet = instance.web.DataSetSearch.extend({
             return this._super.apply(this, arguments);
         }
     },
-    create: function(data) {
+    create: function(data, options) {
         if (this.create_function) {
-            return this.create_function(data, this._super);
+            return this.create_function(data, options, this._super);
         } else {
             return this._super.apply(this, arguments);
         }
