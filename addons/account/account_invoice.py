@@ -53,9 +53,12 @@ class account_invoice(osv.osv):
         company_id = context.get('company_id', user.company_id.id)
         type2journal = {'out_invoice': 'sale', 'in_invoice': 'purchase', 'out_refund': 'sale_refund', 'in_refund': 'purchase_refund'}
         journal_obj = self.pool.get('account.journal')
-        res = journal_obj.search(cr, uid, [('type', '=', type2journal.get(type_inv, 'sale')),
-                                            ('company_id', '=', company_id)],
-                                                limit=1)
+        domain = [('company_id', '=', company_id)]
+        if isinstance(type_inv, list):
+            domain.append(('type', 'in', [type2journal.get(type) for type in type_inv if type2journal.get(type)]))
+        else:
+            domain.append(('type', '=', type2journal.get(type_inv, 'sale')))
+        res = journal_obj.search(cr, uid, domain, limit=1)
         return res and res[0] or False
 
     def _get_currency(self, cr, uid, context=None):
