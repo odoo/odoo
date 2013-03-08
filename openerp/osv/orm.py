@@ -869,6 +869,9 @@ class BaseModel(object):
         else:
             self._rec_name = 'name'
 
+        # prepare ormcache, which must be shared by all instances of the model
+        self._ormcache = {}
+
     # model attributes set on pool instance by method __init__
     INIT_MODEL_ATTRIBUTES = [
         '_all_columns',
@@ -876,6 +879,7 @@ class BaseModel(object):
         '_description',
         '_inherit_fields',
         '_log_access',
+        '_ormcache',
         '_rec_name',
         '_sequence',
         '_table',

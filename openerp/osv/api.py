@@ -347,8 +347,10 @@ def _make_wrapper(method, old_api, new_api):
         else:
             return new_api(self, *args, **kwargs)
 
-    wrapper._api = method._api
-    wrapper._returns = _get_returns(method)
+    # propagate some openerp attributes to the wrapper
+    for attr in ('_api', '_returns', 'clear_cache'):
+        if hasattr(method, attr):
+            setattr(wrapper, attr, getattr(method, attr))
     wrapper._orig = method
     return wrapper
 
