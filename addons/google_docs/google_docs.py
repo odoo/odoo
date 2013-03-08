@@ -86,30 +86,30 @@ class google_docs_ir_attachment(osv.osv):
         _logger.info('Logged into google docs as %s', user_config['user'])
         return client
 
-    def create_empty_google_doc(self, cr, uid, res_model, res_id, context=None):
-        '''Create a new google document, empty and with a default type (txt)
-           :param res_model: the object for which the google doc is created
-           :param res_id: the Id of the object for which the google doc is created
-           :return: the ID of the google document object created
-        '''
-        #login with the base account google module
-        client = self._auth(cr, uid, context=context)
-        # create the document in google docs
-        title = "%s %s" % (context.get("name","Untitled Document."), datetime.today().strftime(DEFAULT_SERVER_DATETIME_FORMAT))
-        local_resource = gdata.docs.data.Resource(gdata.docs.data.SPREADSHEET_LABEL,title=title)
-        #create a new doc in Google Docs 
-        gdocs_resource = client.post(entry=local_resource, uri='https://docs.google.com/feeds/default/private/full/')
-        # create an ir.attachment into the db
-        self.create(cr, uid, {
-            'res_model': res_model,
-            'res_id': res_id,
-            'type': 'url',
-            'name': title,
-            'url': gdocs_resource.get_alternate_link().href,
-        }, context=context)
-        return {'resource_id': gdocs_resource.resource_id.text,
-                'title': title,
-                'url': gdocs_resource.get_alternate_link().href}
+#    def create_empty_google_doc(self, cr, uid, res_model, res_id, context=None):
+#        '''Create a new google document, empty and with a default type (txt)
+#           :param res_model: the object for which the google doc is created
+#           :param res_id: the Id of the object for which the google doc is created
+#           :return: the ID of the google document object created
+#        '''
+#        #login with the base account google module
+#        client = self._auth(cr, uid, context=context)
+#        # create the document in google docs
+#        title = "%s %s" % (context.get("name","Untitled Document."), datetime.today().strftime(DEFAULT_SERVER_DATETIME_FORMAT))
+#        local_resource = gdata.docs.data.Resource(gdata.docs.data.SPREADSHEET_LABEL,title=title)
+#        #create a new doc in Google Docs 
+#        gdocs_resource = client.post(entry=local_resource, uri='https://docs.google.com/feeds/default/private/full/')
+#        # create an ir.attachment into the db
+#        self.create(cr, uid, {
+#            'res_model': res_model,
+#            'res_id': res_id,
+#            'type': 'url',
+#            'name': title,
+#            'url': gdocs_resource.get_alternate_link().href,
+#        }, context=context)
+#        return {'resource_id': gdocs_resource.resource_id.text,
+#                'title': title,
+#                'url': gdocs_resource.get_alternate_link().href}
 
     def copy_gdoc(self, cr, uid, res_model, res_id, name_gdocs, gdoc_template_id, context=None):
         '''
@@ -154,24 +154,50 @@ class google_docs_ir_attachment(osv.osv):
         if len(ids) != 1:
             raise osv.except_osv(_('Google Drive Error!'), _("Creating google drive may only be done by one at a time."))
         res_id = ids[0]
-        pool_ir_attachment = self.pool.get('ir.attachment')
         pool_gdoc_config = self.pool.get('google.docs.config')
-        name_gdocs = ''
-        model_fields_dic = self.pool.get(res_model).read(cr, uid, res_id, [], context=context)
 
-        # check if a model is configured with a template
-        google_docs_config = pool_gdoc_config.search(cr, uid, [('model_id', '=', res_model)], context=context)
-        if google_docs_config:
-            name_gdocs = pool_gdoc_config.browse(cr, uid, google_docs_config, context=context)[0].name_template
-            try:
-                name_gdocs = name_gdocs % model_fields_dic
-            except:
-                raise osv.except_osv(_('Key Error!'), _("Your Google Drive Name Pattern's key does not found in object."))
-            google_template_id = pool_gdoc_config.browse(cr, uid, google_docs_config[0], context=context).gdocs_resource_id
-            google_document = pool_ir_attachment.copy_gdoc(cr, uid, res_model, res_id, name_gdocs, google_template_id, context=context)
-        else:
-            google_document = pool_ir_attachment.create_empty_google_doc(cr, uid, res_model, res_id, context=context)
-        return google_document
+        config_ids = pool_gdoc_config.search(cr, uid, [('model_id', '=', res_model)], context=context)
+        config = []
+        for config_id in config_ids:
+            action = pool_gdoc_config.browse(cr, uid, config_id, context=context)
+            if action.filter_id:
+                google_doc_configs = self._filt(cr, uid, action, action.filter_id, res_id, context=context)
+                print google_doc_configs,'rrrrrrrrrrr',res_id
+                if google_doc_configs: 
+                    config.append(action.name_template)
+            else:
+                config.append(action.name_template)
+        return config
+    
+    def _filt(self, cr, uid, action, action_filter, record_ids, context=None):
+        """ filter the list record_ids that satisfy the action filter """
+        records = {}
+        if record_ids and action_filter:
+            assert action.model_id.model == action_filter.model_id, "Filter model different from action rule model"
+            print 'aaction_filter',action_filter.model_id
+            model = self.pool.get(action_filter.model_id)
+            domain = [('id', 'in', [record_ids])] + eval(action_filter.domain)
+            ctx = dict(context or {})
+            ctx.update(eval(action_filter.context))
+            print 'domain---------',domain 
+            record_ids = model.search(cr, uid, domain, context=ctx)
+        return record_ids
+    
+    def get_attachment(self, cr, uid, res_model, rec_name, ids, context=None):
+        res_id = ids[0]
+        pool_gdoc_config = self.pool.get('google.docs.config')
+        action_dom = [('model_id', '=', res_model)]
+        config_ids = pool_gdoc_config.search(cr, uid, action_dom, context=context)[0]
+        action = pool_gdoc_config.browse(cr, uid, config_ids, context=context)
+        attachment = {}
+        attach_ids = self.search(cr, uid, [('res_model','=',res_model),('name','=',action.name_template),('res_id','=',res_id)])
+        if not attach_ids: 
+            google_template_id = action.gdocs_resource_id
+            self.copy_gdoc(cr, uid, action.model_id.model, ids[0], action.name_template, google_template_id, context=context)
+            attach_ids = self.search(cr, uid, [('res_model','=',res_model),('name','=',action.name_template)])
+        attachments =  self.browse(cr, uid, attach_ids, context)[0]
+        attachment['url'] = attachments.url
+        return attachment
 
 class config(osv.osv):
     _name = 'google.docs.config'
@@ -200,138 +226,148 @@ class config(osv.osv):
         'name_template': fields.char('Google Drive Name Pattern', size=64, help='Choose how the new google drive will be named, on google side. Eg. gdoc_%(field_name)s', required=True),
     }
 
-    def onchange_model_id(self, cr, uid, ids, model_id):
+    def onchange_model_id(self, cr, uid, ids, model_id,name_template):
         res = {'domain':{'filter_id':[]}}
         if model_id:
-            model_name = self.pool.get('ir.model').read(cr, uid, model_id, ['model'])
-            if model_name:
-                mod_name = model_name['model']
-                res['domain'] = {'filter_id': [('model_id', '=', mod_name)]}
-        else:
-            res['value'] = {'filter_id': False}
+            model_name = self.pool.get('ir.model').read(cr, uid, model_id, ['model','name'])
+            mod_model = model_name['model']
+            mod_name = model_name['name']
+            res['domain'] = {'filter_id': [('model_id', '=', mod_model)]}
+            mod_name = model_name['name']
+            name = name_template.replace('model', mod_name)
+            res['value'] = {'filter_id': False,'name_template': name or False}
         return res
+    
+    def onchange_filter_id(self, cr, uid, ids,model_id,filter_id,name_template):
+        res = {}
+        if filter_id:
+            filter_name = self.pool.get('ir.filters').browse(cr, uid, filter_id)
+            name = name_template.replace('filter',filter_name.name)
+        res['value'] = {'name_template': name or False}
+        return res
+    
 
     _defaults = {
         'name_template': '%(name)s_model_filter_gdoc',
     }
 
-    def _wrap_create(self, old_create, model):
-        """ Return a wrapper around `old_create` calling both `old_create` and
-            `_process`, in that order.
-        """
-        def wrapper(cr, uid, vals, context=None):
-            # avoid loops or cascading actions
-            
-            if context and context.get('action'):
-                return old_create(cr, uid, vals, context=context)
-            
-            context = dict(context or {}, action=True)
-            new_id = old_create(cr, uid, vals, context=context)
-            
-            # as it is a new record, we do not consider the actions that have a prefilter
-            action_dom = [('model_id', '=', model)]
-            config_ids = self.search(cr, uid, action_dom, context=context)
+#    def _wrap_create(self, old_create, model):
+#        """ Return a wrapper around `old_create` calling both `old_create` and
+#            `_process`, in that order.
+#        """
+#        def wrapper(cr, uid, vals, context=None):
+#            # avoid loops or cascading actions
+#            
+#            if context and context.get('action'):
+#                return old_create(cr, uid, vals, context=context)
+#            
+#            context = dict(context or {}, action=True)
+#            new_id = old_create(cr, uid, vals, context=context)
+#            
+#            # as it is a new record, we do not consider the actions that have a prefilter
+#            action_dom = [('model_id', '=', model)]
+#            config_ids = self.search(cr, uid, action_dom, context=context)
+##            # check postconditions, and execute actions on the records that satisfy them
+#            for action in self.browse(cr, uid, config_ids, context=context):
+#                if self._filter(cr, uid, action, action.filter_id, [new_id], context=context):
+#                    self._process(cr, uid, action, [new_id], context=context)
+#            return new_id
+#
+#        return wrapper
+#    
+#    def _filter(self, cr, uid, action, action_filter, record_ids, context=None):
+#        """ filter the list record_ids that satisfy the action filter """
+#        if record_ids and action_filter:
+#            assert action.model_id.model == action_filter.model_id, "Filter model different from action rule model"
+#            model = self.pool.get(action_filter.model_id)
+#            domain = [('id', 'in', record_ids)] + eval(action_filter.domain)
+#            ctx = dict(context or {})
+#            ctx.update(eval(action_filter.context)) 
+#            record_ids = model.search(cr, uid, domain, context=ctx)
+#        return record_ids
+#    
+#    def _process(self, cr, uid, action, record_ids, context=None):
+#        """ process the given action on the records """
+#        # execute server actions
+#        model = self.pool.get(action.model_id.model)
+#        template_url = action.gdocs_template_url
+#        attach_obj = self.pool.get('ir.attachment')
+#        for record_id in record_ids:
+#            record_id = int(record_id)
+#            model_fields_dic = self.pool.get(action.model_id.model).read(cr, uid, record_id, [], context=context)
+#            name_gdocs = action.name_template
+#            name_gdocs = name_gdocs.replace('model',action.model_id.name)
+#            if action.filter_id:
+#                name_gdocs = name_gdocs.replace('filter',action.filter_id.name)
+#            try:
+#                name_gdocs = name_gdocs % model_fields_dic
+#            except:
+#                raise osv.except_osv(_('Key Error!'), _("Your Google Drive Name Pattern's key does not found in object."))
+#            attachments = attach_obj.search(cr, uid, [('res_id','=',record_id),('name','=',name_gdocs)])
+#            if not attachments:
+#                google_template_id = action.gdocs_resource_id
+#                attach_obj.copy_gdoc(cr, uid, action.model_id.model, record_id, name_gdocs, google_template_id, context=context)
+#        return True
+#
+#    def _wrap_write(self, old_write, model):
+#        """ Return a wrapper around `old_write` calling both `old_write` and
+#            `_process`, in that order.
+#        """
+#        def wrapper(cr, uid, ids, vals, context=None):
+#            # avoid loops or cascading actions
+#            if context and context.get('action'):
+#                return old_write(cr, uid, ids, vals, context=context)
+#
+#            context = dict(context or {}, action=True)
+#            ids = [ids] if isinstance(ids, (int, long, str)) else ids
+#
+#            # retrieve the action rules to possibly execute
+#            action_dom = [('model_id', '=', model)]
+#            config_ids = self.search(cr, uid, action_dom, context=context)
+#            gconfigs = self.browse(cr, uid, config_ids, context=context)
+#
+#            # check preconditions
+#            pre_ids = {}
+#            for gconfig in gconfigs:
+#                pre_ids[gconfig] = self._filter(cr, uid, gconfig, gconfig.filter_id, ids, context=context)
+#
+#            # execute write
+#            old_write(cr, uid, ids, vals, context=context)
+#
 #            # check postconditions, and execute actions on the records that satisfy them
-            for action in self.browse(cr, uid, config_ids, context=context):
-                if self._filter(cr, uid, action, action.filter_id, [new_id], context=context):
-                    self._process(cr, uid, action, [new_id], context=context)
-            return new_id
-
-        return wrapper
-    
-    def _filter(self, cr, uid, action, action_filter, record_ids, context=None):
-        """ filter the list record_ids that satisfy the action filter """
-        if record_ids and action_filter:
-            assert action.model_id.model == action_filter.model_id, "Filter model different from action rule model"
-            model = self.pool.get(action_filter.model_id)
-            domain = [('id', 'in', record_ids)] + eval(action_filter.domain)
-            ctx = dict(context or {})
-            ctx.update(eval(action_filter.context)) 
-            record_ids = model.search(cr, uid, domain, context=ctx)
-        return record_ids
-    
-    def _process(self, cr, uid, action, record_ids, context=None):
-        """ process the given action on the records """
-        # execute server actions
-        model = self.pool.get(action.model_id.model)
-        template_url = action.gdocs_template_url
-        attach_obj = self.pool.get('ir.attachment')
-        for record_id in record_ids:
-            record_id = int(record_id)
-            model_fields_dic = self.pool.get(action.model_id.model).read(cr, uid, record_id, [], context=context)
-            name_gdocs = action.name_template
-            name_gdocs = name_gdocs.replace('model',action.model_id.name)
-            if action.filter_id:
-                name_gdocs = name_gdocs.replace('filter',action.filter_id.name)
-            try:
-                name_gdocs = name_gdocs % model_fields_dic
-            except:
-                raise osv.except_osv(_('Key Error!'), _("Your Google Drive Name Pattern's key does not found in object."))
-            attachments = attach_obj.search(cr, uid, [('res_id','=',record_id),('name','=',name_gdocs)])
-            if not attachments:
-                google_template_id = action.gdocs_resource_id
-                attach_obj.copy_gdoc(cr, uid, action.model_id.model, record_id, name_gdocs, google_template_id, context=context)
-        return True
-
-    def _wrap_write(self, old_write, model):
-        """ Return a wrapper around `old_write` calling both `old_write` and
-            `_process`, in that order.
-        """
-        def wrapper(cr, uid, ids, vals, context=None):
-            # avoid loops or cascading actions
-            if context and context.get('action'):
-                return old_write(cr, uid, ids, vals, context=context)
-
-            context = dict(context or {}, action=True)
-            ids = [ids] if isinstance(ids, (int, long, str)) else ids
-
-            # retrieve the action rules to possibly execute
-            action_dom = [('model_id', '=', model)]
-            config_ids = self.search(cr, uid, action_dom, context=context)
-            gconfigs = self.browse(cr, uid, config_ids, context=context)
-
-            # check preconditions
-            pre_ids = {}
-            for gconfig in gconfigs:
-                pre_ids[gconfig] = self._filter(cr, uid, gconfig, gconfig.filter_id, ids, context=context)
-
-            # execute write
-            old_write(cr, uid, ids, vals, context=context)
-
-            # check postconditions, and execute actions on the records that satisfy them
-            for gconfig in gconfigs:
-                post_ids = self._filter(cr, uid, gconfig, gconfig.filter_id, pre_ids[gconfig], context=context)
-                print 'post_idsss',post_ids
-                if post_ids:
-                    print 'post_idsss',post_ids
-                    self._process(cr, uid, gconfig, post_ids, context=context)
-            return True
-
-        return wrapper
-
-    def _register_hook(self, cr, ids=None):
-        """ Wrap the methods `create` and `write` of the models specified by
-            the rules given by `ids` (or all existing rules if `ids` is `None`.)
-        """
-        if ids is None:
-            ids = self.search(cr, SUPERUSER_ID, [])
-        for config in self.browse(cr, SUPERUSER_ID, ids):
-            model = config.model_id.model
-            model_obj = self.pool.get(model)
-            model_obj.create = self._wrap_create(model_obj.create, model)
-            model_obj.write = self._wrap_write(model_obj.write, model)
-        return True
-
-    def create(self, cr, uid, vals, context=None):
-        res_id = super(config, self).create(cr, uid, vals, context=context)
-        self._register_hook(cr, [res_id])
-        return res_id
-
-    def write(self, cr, uid, ids, vals, context=None):
-        if isinstance(ids, (int, long)):
-            ids = [ids]
-        super(config, self).write(cr, uid, ids, vals, context=context)
-        self._register_hook(cr, ids)
-        return True
+#            for gconfig in gconfigs:
+#                post_ids = self._filter(cr, uid, gconfig, gconfig.filter_id, pre_ids[gconfig], context=context)
+#                print 'post_idsss',post_ids
+#                if post_ids:
+#                    print 'post_idsss',post_ids
+#                    self._process(cr, uid, gconfig, post_ids, context=context)
+#            return True
+#
+#        return wrapper
+#
+#    def _register_hook(self, cr, ids=None):
+#        """ Wrap the methods `create` and `write` of the models specified by
+#            the rules given by `ids` (or all existing rules if `ids` is `None`.)
+#        """
+#        if ids is None:
+#            ids = self.search(cr, SUPERUSER_ID, [])
+#        for config in self.browse(cr, SUPERUSER_ID, ids):
+#            model = config.model_id.model
+#            model_obj = self.pool.get(model)
+#            model_obj.create = self._wrap_create(model_obj.create, model)
+#            model_obj.write = self._wrap_write(model_obj.write, model)
+#        return True
+#
+#    def create(self, cr, uid, vals, context=None):
+#        res_id = super(config, self).create(cr, uid, vals, context=context)
+#        self._register_hook(cr, [res_id])
+#        return res_id
+#
+#    def write(self, cr, uid, ids, vals, context=None):
+#        if isinstance(ids, (int, long)):
+#            ids = [ids]
+#        super(config, self).write(cr, uid, ids, vals, context=context)
+#        self._register_hook(cr, ids)
+#        return True
 
 config()
