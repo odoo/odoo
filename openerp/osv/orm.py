@@ -4331,8 +4331,7 @@ class BaseModel(object):
         if isinstance(select, (int, long)) and select:
             return model._make_record(select, cache)
         elif isinstance(select, list):
-            records = (model._make_record(id, cache) for id in select)
-            return model._make_recordset(records)
+            return model._make_recordset(select, cache)
         else:
             return model._make_null()
 
@@ -5120,8 +5119,8 @@ class BaseModel(object):
     # specific attributes used by record, recordset and null instances
     INSTANCE_ATTRIBUTES = [
         '_record_id',
+        '_record_ids',
         '_record_cache',
-        '_records',
     ]
 
     def with_scope(self, user=None, context=None, **kwargs):
@@ -5181,13 +5180,18 @@ class BaseModel(object):
         return hasattr(self, '_record_id')
 
     @api.model
-    def _make_recordset(self, records):
-        """ make a recordset instance from a collection of records """
-        return self._make_instance(scope=self.scope, _records=list(records))
+    def _make_recordset(self, ids, cache):
+        """ make a recordset instance from record ids """
+        # insert entries in the cache if necessary
+        model_cache = cache[self._name]
+        for id in ids:
+            if id not in model_cache:
+                model_cache[id] = {'id': id}
+        return self._make_instance(scope=self.scope, _record_ids=list(ids), _record_cache=cache)
 
     def is_recordset(self):
         """ test whether `self` is a recordset instance """
-        return hasattr(self, '_records')
+        return hasattr(self, '_record_ids')
 
     @property
     def record(self):
@@ -5205,9 +5209,9 @@ class BaseModel(object):
             instance, and all records for a model instance.
         """
         if self.is_null():
-            return self._make_recordset([])
+            return self._make_recordset([], self._record_cache)
         elif self.is_record():
-            return self._make_recordset([self])
+            return self._make_recordset([self._record_id], self._record_cache)
         elif self.is_recordset():
             return self
         return self.search([])
@@ -5215,24 +5219,25 @@ class BaseModel(object):
     def unbrowse(self):
         """ Return the `id`/`ids` corresponding to a record/recordset/null instance. """
         if self.is_record_or_null():
-            return self.id
-        return map(int, self)
+            return self._record_id
+        return self._record_ids
 
     def __nonzero__(self):
         """ Test whether `self` is nonempty and not null. """
         if self.is_recordset():
-            return bool(self._records)
+            return bool(self._record_ids)
         return not self.is_null()
 
     def __iter__(self):
         """ Return an iterator over `self` (must be a recordset). """
         assert self.is_recordset(), "Expected recordset: %s" % self
-        return iter(self._records)
+        for id in self._record_ids:
+            yield self._make_record(id, self._record_cache)
 
     def __len__(self):
         """ Return the size of `self` (must be a recordset). """
         assert self.is_recordset(), "Expected recordset: %s" % self
-        return len(self._records)
+        return len(self._record_ids)
 
     def __contains__(self, item):
         """ If `self` is a record, test whether `item` is a field name.
@@ -5243,12 +5248,12 @@ class BaseModel(object):
         assert self.is_recordset(), "Expected record or recordset: %s" % self
         if not isinstance(item, Record):
             _logger.warning("Unexpected: %s in %s" % (item, self))
-        return item in self._records
+        return item.id in self._record_ids
 
     def __add__(self, other):
         """ Return the concatenation of two recordsets as a recordset. """
         assert self._name == other._name, "Mixing apples and oranges: %s, %s" % (self, other)
-        return self._make_recordset(list(self) + list(other))
+        return self._make_recordset(self._record_ids + map(int, other), self._record_cache)
 
     def __eq__(self, other):
         """ Test equality between two records, two recordsets or two models. """
@@ -5263,7 +5268,7 @@ class BaseModel(object):
         elif self.is_recordset():
             # compare two recordsets
             assert other.is_recordset(), "Comparing recordset to non-recordset: %s, %s" % (self, other)
-            return self._name == other._name and list(self) == list(other)
+            return (self._name, self._record_ids) == (other._name, other._record_ids)
         else:
             # compare two models
             return self._name == other._name
@@ -5343,11 +5348,7 @@ class BaseModel(object):
             return self._get_record_field(key)
 
         assert self.is_recordset(), "Expected record or recordset: %s" % self
-        if isinstance(key, slice):
-            # make a recordset with the sublist of records
-            return self._make_recordset(self._records[key])
-        else:
-            return self._records[key]
+        return self.browse(self._record_ids[key])
 
     def __getattr__(self, name):
         if name.startswith('signal_'):
@@ -5371,7 +5372,7 @@ class BaseModel(object):
         if self.is_record():
             return "Record(%s, %d)" % (self._name, self._record_id)
         elif self.is_recordset():
-            return "Recordset(%s, %s)" % (self._name, map(int, self))
+            return "Recordset(%s, %s)" % (self._name, self._record_ids)
         elif self.is_null():
             return "Null(%s)" % self._name
         else:
@@ -5386,7 +5387,7 @@ class BaseModel(object):
         if self.is_record_or_null():
             return hash((self._name, self._record_id))
         elif self.is_recordset():
-            return hash((self._name, tuple(map(int, self))))
+            return hash((self._name, tuple(self._record_ids)))
         else:
             return hash(self._name)
 
