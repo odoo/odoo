@@ -1798,6 +1798,7 @@ openerp.mail = function (session) {
             this.$(".oe_write_full").click(function (event) {
                 event.stopPropagation();
                 var action = {
+                    name: 'Compose Email',
                     type: 'ir.actions.act_window',
                     res_model: 'mail.compose.message',
                     view_mode: 'form',
@@ -1805,7 +1806,7 @@ openerp.mail = function (session) {
                     action_from: 'mail.ThreadComposeMessage',
                     views: [[false, 'form']],
                     target: 'new',
-                    context: {
+                    context: {default_model: 'mail.compose.message'
                     },
                 };
                 session.client.action_manager.do_action(action);
