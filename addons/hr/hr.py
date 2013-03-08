@@ -264,7 +264,6 @@ class hr_employee(osv.osv):
         image_path = addons.get_module_resource('hr', 'static/src/img', 'default_image.png')
         return tools.image_resize_image_big(open(image_path, 'rb').read().encode('base64'))
 
-
     def action_follow(self, cr, uid, ids, context=None):
         """ Wrapper because message_subscribe_users take a user_ids=None
             that receive the context without the wrapper. """
@@ -275,25 +274,33 @@ class hr_employee(osv.osv):
             that receive the context without the wrapper. """
         return self.message_unsubscribe_users(cr, uid, ids, context=context)
 
+    def message_post(self, cr, uid, thread_id, context=None, **kwargs):
+        """Overwrite the message_post method when using the send to my
+        followers screen
 
-    def message_post_user_api(self, cr, uid, thread_id, context=None, **kwargs):
-        """Overwrite the message_post method when using the send to my followers screen
+        When a message is sent to a hr.employee using the action
+        action_mail_inbox_feeds, the context is extended with res_users_id
+        containing the user id of the user linked to the employee and
+        default_res_id contains 0 (to avoid misused of the function called from
+        the inbox page).
+        In these conditions, the thread_id used to send the message is the id
+        of the employee instead of the res_users (or partner_id).
+        If several employee are linked to the same user_id, the message is
+        duplicated and sent to every user.
 
-        The context should be extended with sent_from_action_mail_inbox_feeds 
-        and default_res_id contains the id of the user linked to the employee 
-        that will be linked the message (done from the action_mail_inbox_feeds
-        view)"""
-
-        print("message_post_user_api", uid, thread_id, context)
-        if 'sent_from_action_mail_inbox_feeds' in context and 'default_res_id' in context:
-            employee_ids = self.search(cr, uid, [('user_id','=',context['default_res_id'])], context=context)
+        :return: the result of message_post from mail_thread, last call if
+        several messages are sent.
+        """
+        
+        if 'res_users_id' in context and context['default_res_id'] == 0:
+            employee_ids = self.search(cr, uid, [('user_id', '=', context['res_users_id'])], context=context)
             if len(employee_ids) > 0:
                 for employee_id in employee_ids:
-                    res = super(hr_employee, self).message_post_user_api(cr, uid, employee_id, context=context, **kwargs)
+                    res = super(hr_employee, self).message_post(cr, uid, employee_id, context=context, **kwargs)
                 return res
 
         # if no overwrite or no linked employee, send message as usual
-        return super(hr_employee, self).message_post_user_api(cr, uid, thread_id, context=context, **kwargs)
+        return super(hr_employee, self).message_post(cr, uid, thread_id, context=context, **kwargs)
 
     _defaults = {
         'active': 1,
