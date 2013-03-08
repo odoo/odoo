@@ -141,7 +141,7 @@ class mail_compose_message(osv.TransientModel):
         # legacy template behavior: void values do not erase existing values and the
         # related key is removed from the values dict
         if partner_ids:
-            values['partner_ids'] = [(6, 0, list(partner_ids))]
+            values['partner_ids'] = list(partner_ids)
 
         return values
 
