@@ -119,6 +119,7 @@
                     <field name="max_response_limit"/>
                     <field name="color"/>
                     <field name="state"/>
+                    <field name="authenticate"/>
                     <field name="public_url"/>
                     <templates>
                         <t t-name="kanban-box">
@@ -136,7 +137,8 @@
                                     <div>
                                         <span class="oe_kanban_right">
                                             <a t-if="record.state.raw_value === 'draft'" title="Draft" class="oe_kanban_status"> </a>
-                                            <a t-if="record.state.raw_value === 'open'" title="Open freely" class="oe_kanban_status_green"> </a>
+                                            <a t-if="record.state.raw_value === 'open' and record.authenticate.raw_value" title="Open for authentified people" class="oe_kanban_status_green"> </a>
+                                            <a t-if="record.state.raw_value === 'open' and !record.authenticate.raw_value" title="Open to everyone" class="oe_kanban_status_green"> </a>
                                             <a t-if="record.state.raw_value === 'close'" title="Close" class="oe_kanban_status_red"> </a>
                                             <a t-if="record.state.raw_value === 'cancel'" title="Cancelled" class="oe_kanban_status_red"> </a>
                                         </span>

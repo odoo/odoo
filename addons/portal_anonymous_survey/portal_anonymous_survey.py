@@ -19,6 +19,9 @@
 #
 ##############################################################################
 
+from openerp.osv import fields, osv
+
+
 class portal_anonymous_survey(osv.osv):
     _inherit = "survey"
     _defaults = {
