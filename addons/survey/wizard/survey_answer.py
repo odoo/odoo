@@ -239,8 +239,7 @@ class survey_question_wiz(osv.osv_memory):
         survey_browse = survey_obj.browse(cr, SUPERUSER_ID, survey_id, context=context)
         user_browse = self.pool.get('res.users').browse(cr, SUPERUSER_ID, uid, context=context)
         pid = user_browse.partner_id.id
-        model_id = self.pool.get('ir.model.data').search(cr, uid, [('module', '=', 'portal'), ('name', '=', 'group_anonymous')], context=context)
-        anonymous = model_id and model_id[0] in [x.id for x in user_browse.groups_id]
+        anonymous = self.check_anonymous(cr, uid, [uid], context=context)
 
         # to do: check if context.get('edit') is allow
         if context.get('edit'):
@@ -1220,6 +1219,14 @@ class survey_question_wiz(osv.osv_memory):
             'view_id': view_id,
         }
 
+    def check_anonymous(self, cr, uid, ids, context=None):
+        user_browse = self.pool.get('res.users').browse(cr, SUPERUSER_ID, uid, context=context)
+        try:
+            model, anonymous_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'portal', 'group_anonymous')
+        except ValueError:
+            return False
+        return anonymous_id in [x.id for x in user_browse.groups_id]
+
     def _action_filling(self, cr, uid, ids, context=None):
         """ Check if the user have access to the survey and open survey
         """
@@ -1230,9 +1237,7 @@ class survey_question_wiz(osv.osv_memory):
 
         # check if the user must be authenticate
         survey_browse = self.pool.get('survey').browse(cr, SUPERUSER_ID, context['survey_id'], context=context)
-        user_browse = self.pool.get('res.users').browse(cr, SUPERUSER_ID, uid, context=context)
-        model_id = self.pool.get('ir.model.data').search(cr, uid, [('module', '=', 'portal'), ('name', '=', 'group_anonymous')], context=context)
-        anonymous = model_id and model_id[0] in [x.id for x in user_browse.groups_id]
+        anonymous = self.check_anonymous(cr, uid, [uid], context=context)
         if anonymous and survey_browse.state == "open" and survey_browse.authenticate:
             return {
                 'type': 'ir.actions.client',
