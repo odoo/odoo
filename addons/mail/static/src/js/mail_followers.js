@@ -31,6 +31,7 @@ openerp_mail_followers = function(session, mail) {
             this.ds_model = new session.web.DataSetSearch(this, this.view.model);
             this.ds_follow = new session.web.DataSetSearch(this, this.field.relation);
             this.ds_users = new session.web.DataSetSearch(this, 'res.users');
+            this.check_access = false;
 
             this.value = [];
             this.followers = [];
@@ -149,7 +150,20 @@ openerp_mail_followers = function(session, mail) {
             return this.ds_follow.call('read', [this.value, ['name', 'user_ids']])
                 .then(this.proxy('display_followers'), this.proxy('fetch_generic'))
                 .then(this.proxy('display_buttons'))
-                .then(this.proxy('fetch_subtypes'));
+                .then(this.proxy('fetch_subtypes'))
+                .then(this.proxy('check_group_tech_feature'));
+        },
+
+        check_group_tech_feature: function(){
+            var self = this;
+            var edit_subtypes = new session.web.Model("res.groups");
+            edit_subtypes.query(["name","users"])
+                .filter([["name","=","Technical Features"], ["users","in",self.session.uid]]).first()
+                .then(function(res) {
+                if (res) {
+                    self.check_access = true;
+                    }
+                });
         },
 
         /** Read on res.partner failed: fall back on a generic case
