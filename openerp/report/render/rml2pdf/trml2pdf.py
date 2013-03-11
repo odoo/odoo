@@ -49,6 +49,19 @@ _logger = logging.getLogger(__name__)
 
 encoding = 'utf-8'
 
+def select_fontname(fontname, default_fontname):
+    if fontname not in pdfmetrics.getRegisteredFontNames()\
+         or fontname not in pdfmetrics.standardFonts:
+        # let reportlab attempt to find it
+        try:
+            pdfmetrics.getFont(fontname)
+        except Exception:
+            _logger.warning('Could not locate font %s, substituting default: %s',
+                fontname, default_fontname)
+            fontname = default_fontname
+    return fontname
+
+
 def _open_image(filename, path=None):
     """Attempt to open a binary file and return the descriptor
     """
@@ -159,7 +172,12 @@ class _rml_styles(object,):
         for attr in ['textColor', 'backColor', 'bulletColor', 'borderColor']:
             if node.get(attr):
                 data[attr] = color.get(node.get(attr))
-        for attr in ['fontName', 'bulletFontName', 'bulletText']:
+        for attr in ['bulletFontName', 'fontName']:
+            if node.get(attr):
+                fontname= select_fontname(node.get(attr), None)
+                if fontname is not None:
+                    data['fontName'] = fontname
+        for attr in ['bulletText']:
             if node.get(attr):
                 data[attr] = node.get(attr)
         for attr in ['fontSize', 'leftIndent', 'rightIndent', 'spaceBefore', 'spaceAfter',
@@ -537,17 +555,7 @@ class _rml_canvas(object):
         self.canvas.drawPath(self.path, **utils.attr_get(node, [], {'fill':'bool','stroke':'bool'}))
 
     def setFont(self, node):
-        fontname = node.get('name')
-        if fontname not in pdfmetrics.getRegisteredFontNames()\
-             or fontname not in pdfmetrics.standardFonts:
-                # let reportlab attempt to find it
-                try:
-                    pdfmetrics.getFont(fontname)
-                except Exception:
-                    _logger.debug('Could not locate font %s, substituting default: %s',
-                                 fontname,
-                                 self.canvas._fontname)
-                    fontname = self.canvas._fontname
+        fontname = select_fontname(node.get('name'), self.canvas._fontname)
         return self.canvas.setFont(fontname, utils.unit_get(node.get('size')))
 
     def render(self, node):
