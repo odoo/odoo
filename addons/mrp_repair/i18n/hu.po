@@ -7,20 +7,20 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-21 17:05+0000\n"
-"PO-Revision-Date: 2012-12-21 23:00+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2013-03-07 08:38+0000\n"
+"PO-Revision-Date: 2013-03-10 20:32+0000\n"
+"Last-Translator: krnkris <Unknown>\n"
 "Language-Team: Hungarian <hu@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-01-18 06:55+0000\n"
-"X-Generator: Launchpad (build 16430)\n"
+"X-Launchpad-Export-Date: 2013-03-11 05:42+0000\n"
+"X-Generator: Launchpad (build 16523)\n"
 
 #. module: mrp_repair
 #: field:mrp.repair.line,move_id:0
 msgid "Inventory Move"
-msgstr ""
+msgstr "Raktárkészlet mozgás"
 
 #. module: mrp_repair
 #: view:mrp.repair:0
@@ -36,13 +36,13 @@ msgstr "Számla újrakészítése"
 #: code:addons/mrp_repair/mrp_repair.py:371
 #, python-format
 msgid "You have to select a Partner Invoice Address in the repair form !"
-msgstr ""
+msgstr "Ki kell választani a partner számlázási címét a javítási űrlapon!"
 
 #. module: mrp_repair
 #: model:ir.actions.act_window,name:mrp_repair.action_cancel_repair
 #: view:mrp.repair.cancel:0
 msgid "Cancel Repair Order"
-msgstr ""
+msgstr "Javítási rendelés visszavonás"
 
 #. module: mrp_repair
 #: field:mrp.repair.fee,to_invoice:0
@@ -53,7 +53,7 @@ msgstr "Számlázandó"
 #. module: mrp_repair
 #: view:mrp.repair:0
 msgid "Unit of Measure"
-msgstr ""
+msgstr "Mértékegység"
 
 #. module: mrp_repair
 #: report:repair.order:0
@@ -63,24 +63,24 @@ msgstr "Nyomtatás dátuma"
 #. module: mrp_repair
 #: field:mrp.repair.make_invoice,group:0
 msgid "Group by partner invoice address"
-msgstr ""
+msgstr "Az ügyfél számla címiek csoportjai"
 
 #. module: mrp_repair
 #: field:mrp.repair,message_unread:0
 msgid "Unread Messages"
-msgstr ""
+msgstr "Olvasatlan üzenetek"
 
 #. module: mrp_repair
 #: code:addons/mrp_repair/mrp_repair.py:435
 #, python-format
 msgid "No product defined on Fees!"
-msgstr ""
+msgstr "Nincs termék meghatározva a díjakon!"
 
 #. module: mrp_repair
 #: view:mrp.repair:0
 #: field:mrp.repair,company_id:0
 msgid "Company"
-msgstr ""
+msgstr "Vállalat"
 
 #. module: mrp_repair
 #: view:mrp.repair:0
@@ -95,7 +95,7 @@ msgstr "Számlázási kivétel"
 #. module: mrp_repair
 #: view:mrp.repair:0
 msgid "Serial Number"
-msgstr ""
+msgstr "Szériaszám"
 
 #. module: mrp_repair
 #: field:mrp.repair,address_id:0
@@ -122,11 +122,13 @@ msgstr "Számlázási cím :"
 #: help:mrp.repair,partner_id:0
 msgid "Choose partner for whom the order will be invoiced and delivered."
 msgstr ""
+"Vállaszon ki ügyfelet aki részére a megrendelés ki lesz számlázva és ki lesz "
+"szállítva."
 
 #. module: mrp_repair
 #: view:mrp.repair:0
 msgid "Guarantee limit"
-msgstr ""
+msgstr "Garancia korlát"
 
 #. module: mrp_repair
 #: view:mrp.repair:0
@@ -136,7 +138,7 @@ msgstr "Megjegyzések"
 #. module: mrp_repair
 #: field:mrp.repair,message_ids:0
 msgid "Messages"
-msgstr ""
+msgstr "Üzenetek"
 
 #. module: mrp_repair
 #: field:mrp.repair,amount_tax:0
@@ -151,7 +153,7 @@ msgstr "Adók"
 #: code:addons/mrp_repair/mrp_repair.py:442
 #, python-format
 msgid "Error!"
-msgstr ""
+msgstr "Hiba!"
 
 #. module: mrp_repair
 #: report:repair.order:0
@@ -162,12 +164,12 @@ msgstr "Nettó érték:"
 #: selection:mrp.repair,state:0
 #: selection:mrp.repair.line,state:0
 msgid "Cancelled"
-msgstr ""
+msgstr "Visszavont"
 
 #. module: mrp_repair
 #: help:mrp.repair,message_unread:0
 msgid "If checked new messages require your attention."
-msgstr ""
+msgstr "Ha be van jelölve, akkor figyelje az új üzeneteket."
 
 #. module: mrp_repair
 #: view:mrp.repair:0
@@ -194,6 +196,22 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Kattintson javítási rendelés feladásához. \n"
+"              </p><p>\n"
+"                A javítási rendelésen, Részletezni tudja az eltávolított, "
+"hozzáadott,\n"
+"                kicserélt alakatrészeket, és rögzíteni tudja a különböző "
+"műveletekkel\n"
+"                eltöltött időket.\n"
+"              </p><p>\n"
+"                A javítási megrendelés a széri szám szerint garancia időt "
+"használja\n"
+"                ahhoz, hogy megtudja, hogy a javítást ki kell számlázni az "
+"ügyfélnek\n"
+"               vagy sem.\n"
+"              </p>\n"
+"            "
 
 #. module: mrp_repair
 #: help:mrp.repair.line,state:0
@@ -206,6 +224,14 @@ msgid ""
 "                   \n"
 "* The 'Cancelled' status is set automatically when user cancel repair order."
 msgstr ""
+" * A 'Terv' állapot lesz automatikusan beállítva, ha a javítási megrendelés "
+"tervezet állapotú.                         \n"
+"* A 'Jóváhagyott' állapot lesz automatikusan beállítva, mint jíváhagyott, ha "
+"a javítási megrendelés jóváhagyásra került.                         \n"
+"* Az 'Elvégzett' állapot lesz automatikusan beállítva, ha a javítási "
+"megrendelés el lett végezve.                        \n"
+"* A 'Visszavont' állapot lesz automatikusan beállítva, ha egy felhasználó "
+"visszavonta a javítást."
 
 #. module: mrp_repair
 #: field:mrp.repair,move_id:0
@@ -215,7 +241,7 @@ msgstr "Mozgatás"
 #. module: mrp_repair
 #: report:repair.order:0
 msgid "Tax"
-msgstr ""
+msgstr "ÁFA"
 
 #. module: mrp_repair
 #: model:ir.actions.act_window,name:mrp_repair.action_repair_order_tree
@@ -234,6 +260,8 @@ msgid ""
 "Holds the Chatter summary (number of messages, ...). This summary is "
 "directly in html format in order to be inserted in kanban views."
 msgstr ""
+"A chettelés összegzést megállítja (üzenetek száma,...). Ez az összegzés "
+"direkt HTML formátumú ahhoz hogy beilleszthető legyen a kanban nézetekbe."
 
 #. module: mrp_repair
 #: view:mrp.repair:0
@@ -252,7 +280,7 @@ msgstr "Vigyázat!"
 #. module: mrp_repair
 #: view:mrp.repair:0
 msgid "(update)"
-msgstr ""
+msgstr "(Frissítés)"
 
 #. module: mrp_repair
 #: view:mrp.repair:0
@@ -287,17 +315,29 @@ msgid ""
 "* The 'Done' status is set when repairing is completed.            \n"
 "* The 'Cancelled' status is used when user cancel repair order."
 msgstr ""
+" * A 'Terv' állapotot akkor használja, ha egy felhasználó bevitt egy még nem "
+"megerősített és új javítási megrendelést.             \n"
+"* A 'Visszaigazol' állapotot akkor használja, ha egy felhasználó "
+"visszaigazolja a javítási megrendelést.             \n"
+"* A 'Javításra kész' állapotot a javítás elindítására használja, csak akkor "
+"ha a javítás már vissza lett igazolva.             \n"
+"* A 'Számlázható' állapotot a számla generálására használja mielőtt a "
+"javítás kész vagy a javítás után.             \n"
+"* Az 'Elvégezve' állapot van beállítva, ha a javítást befejezték.            "
+"\n"
+"* A 'Visszavonva' állapot van beállítva, ha egy felhasználó visszavonta a "
+"javítást."
 
 #. module: mrp_repair
 #: view:mrp.repair:0
 msgid "Repairs order"
-msgstr ""
+msgstr "Javítási mgrendelések"
 
 #. module: mrp_repair
 #: code:addons/mrp_repair/mrp_repair.py:336
 #, python-format
 msgid "Serial number is required for operation line with product '%s'"
-msgstr ""
+msgstr "Szériaszám szükséges a terméken végzett művelet sorhoz '%s'"
 
 #. module: mrp_repair
 #: report:repair.order:0
@@ -314,12 +354,12 @@ msgstr "Tételszám"
 #. module: mrp_repair
 #: field:mrp.repair,message_follower_ids:0
 msgid "Followers"
-msgstr ""
+msgstr "Követők"
 
 #. module: mrp_repair
 #: field:mrp.repair,fees_lines:0
 msgid "Fees Lines"
-msgstr ""
+msgstr "Díjak sorai"
 
 #. module: mrp_repair
 #: field:mrp.repair.line,type:0
@@ -329,7 +369,7 @@ msgstr "Típus"
 #. module: mrp_repair
 #: report:repair.order:0
 msgid "Fees Line(s)"
-msgstr ""
+msgstr "Díj sor(ok)"
 
 #. module: mrp_repair
 #: selection:mrp.repair,state:0
@@ -352,6 +392,8 @@ msgid ""
 "This operation will cancel the Repair process, but will not cancel it's "
 "Invoice. Do you want to continue?"
 msgstr ""
+"A művelet visszavonja a javítás folyamatot, de nem vonja vissza a számláját. "
+"Folytatni szeretné?"
 
 #. module: mrp_repair
 #: field:mrp.repair,pricelist_id:0
@@ -368,12 +410,12 @@ msgstr "Árajánlat megjegyzések"
 #: field:mrp.repair,state:0
 #: field:mrp.repair.line,state:0
 msgid "Status"
-msgstr ""
+msgstr "Állapot"
 
 #. module: mrp_repair
 #: view:mrp.repair:0
 msgid "Search Reair Orders"
-msgstr ""
+msgstr "Javítási megrendelések keresése"
 
 #. module: mrp_repair
 #: report:repair.order:0
@@ -384,7 +426,7 @@ msgstr "(Hozzáadás)"
 #: model:ir.model,name:mrp_repair.model_mrp_repair_line
 #: view:mrp.repair:0
 msgid "Repair Line"
-msgstr ""
+msgstr "Javítási sor"
 
 #. module: mrp_repair
 #: report:repair.order:0
@@ -400,7 +442,12 @@ msgstr "Számlázási módszer"
 #: field:mrp.repair,repaired:0
 #: selection:mrp.repair,state:0
 msgid "Repaired"
-msgstr ""
+msgstr "Javítvott"
+
+#. module: mrp_repair
+#: view:mrp.repair:0
+msgid "Add internal notes..."
+msgstr "Belső megjegyzések hozzáadása..."
 
 #. module: mrp_repair
 #: field:mrp.repair.fee,invoice_line_id:0
@@ -411,12 +458,12 @@ msgstr "Számlasor"
 #. module: mrp_repair
 #: selection:mrp.repair,invoice_method:0
 msgid "Before Repair"
-msgstr ""
+msgstr "Javítás előtt"
 
 #. module: mrp_repair
 #: field:mrp.repair,location_id:0
 msgid "Current Location"
-msgstr ""
+msgstr "Szállítás innen"
 
 #. module: mrp_repair
 #: view:mrp.repair.cancel:0
@@ -427,7 +474,7 @@ msgstr "Igen"
 #: view:mrp.repair.cancel:0
 #: view:mrp.repair.make_invoice:0
 msgid "or"
-msgstr ""
+msgstr "vagy"
 
 #. module: mrp_repair
 #: view:mrp.repair:0
@@ -441,7 +488,7 @@ msgstr "Számlázott"
 #: field:mrp.repair.fee,product_uom:0
 #: field:mrp.repair.line,product_uom:0
 msgid "Product Unit of Measure"
-msgstr ""
+msgstr "Termék mértékegysége"
 
 #. module: mrp_repair
 #: view:mrp.repair.make_invoice:0
@@ -451,7 +498,7 @@ msgstr "Számlák készítése"
 #. module: mrp_repair
 #: report:repair.order:0
 msgid "(Remove)"
-msgstr ""
+msgstr "(Eltávolít)"
 
 #. module: mrp_repair
 #: selection:mrp.repair.line,type:0
@@ -466,7 +513,7 @@ msgstr "Tervezet"
 #. module: mrp_repair
 #: field:mrp.repair,name:0
 msgid "Repair Reference"
-msgstr ""
+msgstr "Hivatkozás javításra"
 
 #. module: mrp_repair
 #: model:ir.model,name:mrp_repair.model_mrp_repair
@@ -477,12 +524,12 @@ msgstr "Javítás/Szervíz rendelés"
 #. module: mrp_repair
 #: selection:mrp.repair,state:0
 msgid "Under Repair"
-msgstr ""
+msgstr "Javítás alatt"
 
 #. module: mrp_repair
 #: view:mrp.repair:0
 msgid "Ready To Repair"
-msgstr ""
+msgstr "Javításra előkészítve"
 
 #. module: mrp_repair
 #: field:mrp.repair,amount_untaxed:0
@@ -496,21 +543,24 @@ msgid ""
 "invoice before or after the repair is done respectively. 'No invoice' means "
 "you don't want to generate invoice for this repair order."
 msgstr ""
+"A 'Javítás előtt' vagy 'Javítás után' kiválasztásával leetősége van számlát "
+"készíteni javítás előtt vagy után annak megfelelően. 'Nincs számla' azt "
+"jelenti, hogy ehhez a javításhoz nem szeretne számlát készíteni."
 
 #. module: mrp_repair
 #: field:mrp.repair,guarantee_limit:0
 msgid "Warranty Expiration"
-msgstr ""
+msgstr "Garancia lejárta"
 
 #. module: mrp_repair
 #: help:mrp.repair,pricelist_id:0
 msgid "Pricelist of the selected partner."
-msgstr ""
+msgstr "A kiválasztott ügyfélhez tartozó árlista."
 
 #. module: mrp_repair
 #: report:repair.order:0
 msgid "Guarantee Limit"
-msgstr ""
+msgstr "Garancia korlátai"
 
 #. module: mrp_repair
 #: field:mrp.repair,default_address_id:0
@@ -521,23 +571,23 @@ msgstr "Ismeretlen"
 #: field:mrp.repair,product_id:0
 #: report:repair.order:0
 msgid "Product to Repair"
-msgstr ""
+msgstr "Javítandő termék"
 
 #. module: mrp_repair
 #: selection:mrp.repair,invoice_method:0
 msgid "After Repair"
-msgstr ""
+msgstr "Javítás után"
 
 #. module: mrp_repair
 #: code:addons/mrp_repair/wizard/cancel_repair.py:41
 #, python-format
 msgid "Active ID not Found"
-msgstr ""
+msgstr "Az aktív azonosító ID nem található"
 
 #. module: mrp_repair
 #: field:mrp.repair,message_is_follower:0
 msgid "Is a Follower"
-msgstr ""
+msgstr "Ez egy követő"
 
 #. module: mrp_repair
 #: view:mrp.repair:0
@@ -547,7 +597,7 @@ msgstr "Dátum"
 #. module: mrp_repair
 #: model:ir.model,name:mrp_repair.model_mrp_repair_fee
 msgid "Repair Fees Line"
-msgstr ""
+msgstr "Javitási díjak sorai"
 
 #. module: mrp_repair
 #: selection:mrp.repair,state:0
@@ -557,22 +607,22 @@ msgstr "Árajánlat"
 #. module: mrp_repair
 #: view:mrp.repair:0
 msgid "Confirm Repair"
-msgstr ""
+msgstr "Javítás megerősítése"
 
 #. module: mrp_repair
 #: report:repair.order:0
 msgid "Repair Quotation"
-msgstr ""
+msgstr "Javítási árajánlat"
 
 #. module: mrp_repair
 #: field:mrp.repair,message_summary:0
 msgid "Summary"
-msgstr ""
+msgstr "Összegzés"
 
 #. module: mrp_repair
 #: view:mrp.repair:0
 msgid "End Repair"
-msgstr ""
+msgstr "Javítás vége"
 
 #. module: mrp_repair
 #: code:addons/mrp_repair/mrp_repair.py:413
@@ -597,7 +647,7 @@ msgstr "Mennyiség"
 #. module: mrp_repair
 #: view:mrp.repair:0
 msgid "Product Information"
-msgstr ""
+msgstr "Termék információ"
 
 #. module: mrp_repair
 #: model:ir.actions.act_window,name:mrp_repair.act_mrp_repair_invoice
@@ -609,7 +659,7 @@ msgstr "Számla készítése"
 #. module: mrp_repair
 #: view:mrp.repair:0
 msgid "Start Repair"
-msgstr ""
+msgstr "Javítás kezdete"
 
 #. module: mrp_repair
 #: field:mrp.repair.fee,price_unit:0
@@ -631,13 +681,18 @@ msgstr "Számla"
 #. module: mrp_repair
 #: view:mrp.repair:0
 msgid "Fees"
-msgstr ""
+msgstr "Díjak"
 
 #. module: mrp_repair
 #: view:mrp.repair.cancel:0
 #: view:mrp.repair.make_invoice:0
 msgid "Cancel"
 msgstr "Mégsem"
+
+#. module: mrp_repair
+#: view:mrp.repair:0
+msgid "Add quotation notes..."
+msgstr "Árajánlat megjegyzések hozzáadása..."
 
 #. module: mrp_repair
 #: field:mrp.repair.line,location_dest_id:0
@@ -647,12 +702,12 @@ msgstr "Célállomás helye"
 #. module: mrp_repair
 #: report:repair.order:0
 msgid "Operation Line(s)"
-msgstr ""
+msgstr "Műveleti sor(ok)"
 
 #. module: mrp_repair
 #: field:mrp.repair,location_dest_id:0
 msgid "Delivery Location"
-msgstr ""
+msgstr "Kiszállítás helye"
 
 #. module: mrp_repair
 #: help:mrp.repair,deliver_bool:0
@@ -661,6 +716,10 @@ msgid ""
 "repaired and create a picking with selected product. Note that you can "
 "select the locations in the Info tab, if you have the extended view."
 msgstr ""
+"Jelölje be ezt a négyzetet, ha a kiszállítást is szeretné megszervezni a "
+"javítás után, és el szeretné készíteni a kiválogatási listát a termékre "
+"vonatkozóan. A kiszállítás helyét az információs fülön tudja kiválasztani, "
+"ha be van kapcsolva a kiterjesztett nézet."
 
 #. module: mrp_repair
 #: help:mrp.repair,guarantee_limit:0
@@ -670,6 +729,10 @@ msgid ""
 "expiration limit, each operation and fee you will add will be set as 'not to "
 "invoiced' by default. Note that you can change manually afterwards."
 msgstr ""
+"A garancia lejárati idő a követkeő képpen számított:utolsó mozgás dátuma + a "
+"kiválaszottt termékre meghatározozz garancia idő. Ha a jelenlegi dátum "
+"kisebb mint a garancia lejárta, akkor 'nem számlázandó' lesz hozzáadva alap "
+"esetben minden művelethez és díjra. Ezt kézzel átálíthatja később."
 
 #. module: mrp_repair
 #: view:mrp.repair.make_invoice:0
@@ -679,7 +742,7 @@ msgstr "Számla készítése"
 #. module: mrp_repair
 #: view:mrp.repair:0
 msgid "Reair Orders"
-msgstr ""
+msgstr "Javítási megrendelés"
 
 #. module: mrp_repair
 #: field:mrp.repair.fee,name:0
@@ -691,7 +754,7 @@ msgstr "Leírás"
 #. module: mrp_repair
 #: field:mrp.repair,operations:0
 msgid "Operation Lines"
-msgstr ""
+msgstr "Műveleti sorok"
 
 #. module: mrp_repair
 #: view:mrp.repair:0
@@ -734,7 +797,7 @@ msgstr "Valóban el akarja készíteni a számlá(ka)t?"
 #: code:addons/mrp_repair/mrp_repair.py:349
 #, python-format
 msgid "Repair order is already invoiced."
-msgstr ""
+msgstr "A jevitási megrendelés már számlázva."
 
 #. module: mrp_repair
 #: field:mrp.repair,picking_id:0
@@ -766,7 +829,7 @@ msgstr "Összesen"
 #. module: mrp_repair
 #: selection:mrp.repair.line,type:0
 msgid "Remove"
-msgstr ""
+msgstr "Eltávolítás"
 
 #. module: mrp_repair
 #: field:mrp.repair,partner_invoice_id:0
@@ -776,7 +839,7 @@ msgstr "Számlázási cím"
 #. module: mrp_repair
 #: help:mrp.repair,message_ids:0
 msgid "Messages and communication history"
-msgstr ""
+msgstr "Üzenetek és kommunikációs történet"
 
 #. module: mrp_repair
 #: view:mrp.repair:0
@@ -792,7 +855,7 @@ msgstr "Forráshely"
 #: model:ir.model,name:mrp_repair.model_mrp_repair_cancel
 #: view:mrp.repair:0
 msgid "Cancel Repair"
-msgstr ""
+msgstr "Javítás visszavonása"
 
 #. module: mrp_repair
 #: selection:mrp.repair,invoice_method:0
@@ -807,7 +870,7 @@ msgstr "Összesen"
 #. module: mrp_repair
 #: selection:mrp.repair,state:0
 msgid "Ready to Repair"
-msgstr ""
+msgstr "Javításra kész"
 
 #. module: mrp_repair
 #: code:addons/mrp_repair/mrp_repair.py:371

@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-21 17:04+0000\n"
-"PO-Revision-Date: 2013-03-03 15:33+0000\n"
+"POT-Creation-Date: 2013-03-07 08:37+0000\n"
+"PO-Revision-Date: 2013-03-09 20:53+0000\n"
 "Last-Translator: Ayhan KIZILTAN <Unknown>\n"
 "Language-Team: Turkish <tr@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-03-04 05:59+0000\n"
-"X-Generator: Launchpad (build 16514)\n"
+"X-Launchpad-Export-Date: 2013-03-10 05:15+0000\n"
+"X-Generator: Launchpad (build 16523)\n"
 
 #. module: purchase
 #: model:res.groups,name:purchase.group_analytic_accounting
@@ -70,6 +70,11 @@ msgstr ""
 #: field:purchase.report,day:0
 msgid "Day"
 msgstr "Gün"
+
+#. module: purchase
+#: view:purchase.order:0
+msgid "Cancel Order"
+msgstr "Sipariş İptal et"
 
 #. module: purchase
 #: view:purchase.report:0
@@ -815,6 +820,11 @@ msgid "RFQ"
 msgstr "Tİ"
 
 #. module: purchase
+#: view:purchase.order:0
+msgid "Send by Email"
+msgstr "Epostayla Gönder"
+
+#. module: purchase
 #: report:purchase.order:0
 #: view:purchase.order:0
 #: field:purchase.order,date_order:0
@@ -960,7 +970,7 @@ msgstr "işi taşere etmek için oluşturulacaktır"
 #: model:ir.ui.menu,name:purchase.menu_purchase_config
 #: view:res.partner:0
 msgid "Purchases"
-msgstr "Satınalmalar"
+msgstr "Satınalma"
 
 #. module: purchase
 #: view:purchase.report:0
@@ -983,7 +993,6 @@ msgstr "Mik"
 #: model:process.transition.action,name:purchase.process_transition_action_approvingcancelpurchaseorder0
 #: model:process.transition.action,name:purchase.process_transition_action_cancelpurchaseorder0
 #: view:purchase.config.settings:0
-#: view:purchase.order:0
 #: view:purchase.order.group:0
 #: view:purchase.order.line_invoice:0
 msgid "Cancel"
@@ -1280,6 +1289,11 @@ msgid "Products"
 msgstr "Ürünler"
 
 #. module: purchase
+#: view:purchase.order:0
+msgid "Terms and conditions..."
+msgstr "Hükümler ve şartlar..."
+
+#. module: purchase
 #: model:ir.model,name:purchase.model_stock_move
 msgid "Stock Move"
 msgstr "Stok Hareketi"
@@ -1498,9 +1512,9 @@ msgid "PO: %s"
 msgstr "SS: %s"
 
 #. module: purchase
-#: view:purchase.order:0
-msgid "Send by EMail"
-msgstr "Epostayla Gönder"
+#: model:process.node,note:purchase.process_node_packinginvoice0
+msgid "Outgoing products to invoice"
+msgstr "Faturalandırılacak giden ürünler"
 
 #. module: purchase
 #: code:addons/purchase/purchase.py:515
@@ -2069,11 +2083,6 @@ msgid "Reference Unit of Measure"
 msgstr "Referans Ölçü Birimi"
 
 #. module: purchase
-#: model:process.node,note:purchase.process_node_packinginvoice0
-msgid "Outgoing products to invoice"
-msgstr "Faturalandırılacak giden ürünler"
-
-#. module: purchase
 #: report:purchase.order:0
 #: field:purchase.report,validator:0
 msgid "Validated By"
@@ -2391,3 +2400,6 @@ msgstr ""
 #: view:purchase.report:0
 msgid "Orders"
 msgstr "Siparişler"
+
+#~ msgid "Send by EMail"
+#~ msgstr "Epostayla Gönder"

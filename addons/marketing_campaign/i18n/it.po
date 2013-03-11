@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-21 17:05+0000\n"
+"POT-Creation-Date: 2013-03-07 08:38+0000\n"
 "PO-Revision-Date: 2013-01-11 21:58+0000\n"
 "Last-Translator: Sergio Corato <Unknown>\n"
 "Language-Team: Italian <it@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-01-18 06:53+0000\n"
-"X-Generator: Launchpad (build 16430)\n"
+"X-Launchpad-Export-Date: 2013-03-08 05:48+0000\n"
+"X-Generator: Launchpad (build 16523)\n"
 
 #. module: marketing_campaign
 #: view:marketing.campaign:0
@@ -153,7 +153,7 @@ msgstr ""
 #. module: marketing_campaign
 #: help:marketing.campaign.activity,email_template_id:0
 msgid "The email to send when this activity is activated"
-msgstr ""
+msgstr "Email da spedire quando questa attività viene attivata"
 
 #. module: marketing_campaign
 #: view:marketing.campaign.segment:0
@@ -198,6 +198,11 @@ msgid "Year(s)"
 msgstr "Anno(i)"
 
 #. module: marketing_campaign
+#: help:marketing.campaign.segment,date_run:0
+msgid "Initial start date of this segment."
+msgstr "Data partenza iniziale di questo segmento"
+
+#. module: marketing_campaign
 #: help:marketing.campaign.segment,sync_last_date:0
 msgid ""
 "Date on which this segment was synchronized last time (automatically or "
@@ -233,9 +238,9 @@ msgid ""
 msgstr ""
 
 #. module: marketing_campaign
-#: help:marketing.campaign.segment,date_run:0
-msgid "Initial start date of this segment."
-msgstr "Data partenza iniziale di questo segmento"
+#: view:marketing.campaign.segment:0
+msgid "Cancel Segment"
+msgstr ""
 
 #. module: marketing_campaign
 #: view:res.partner:0
@@ -257,7 +262,7 @@ msgstr "Campagna"
 #. module: marketing_campaign
 #: model:email.template,body_html:marketing_campaign.email_template_1
 msgid "Hello, you will receive your welcome pack via email shortly."
-msgstr ""
+msgstr "Buongiorno, riceverete il pacco benvenuto via email a breve."
 
 #. module: marketing_campaign
 #: view:campaign.analysis:0
@@ -272,7 +277,7 @@ msgstr "Segmento"
 #: code:addons/marketing_campaign/marketing_campaign.py:214
 #, python-format
 msgid "You cannot duplicate a campaign, Not supported yet."
-msgstr ""
+msgstr "Non è possibile duplicare una campagna, non ancora supportato."
 
 #. module: marketing_campaign
 #: help:marketing.campaign.activity,type:0
@@ -373,7 +378,7 @@ msgstr "Attività precedente"
 #. module: marketing_campaign
 #: model:email.template,subject:marketing_campaign.email_template_2
 msgid "Congratulations! You are now a Silver Partner!"
-msgstr ""
+msgstr "Congratulazioni! Ora siete diventato un Silver Partner!"
 
 #. module: marketing_campaign
 #: help:marketing.campaign.segment,date_done:0
@@ -474,6 +479,11 @@ msgstr "Costo fisso"
 #: view:marketing.campaign.segment:0
 msgid "Newly Modified"
 msgstr "Modificato Recentement"
+
+#. module: marketing_campaign
+#: view:marketing.campaign.workitem:0
+msgid "Cancel Workitem"
+msgstr ""
 
 #. module: marketing_campaign
 #: model:ir.actions.act_window,help:marketing_campaign.action_marketing_campaign_form
@@ -791,6 +801,11 @@ msgid "No preview"
 msgstr "Nessuna anteprima"
 
 #. module: marketing_campaign
+#: view:marketing.campaign:0
+msgid "Cancel Campaign"
+msgstr ""
+
+#. module: marketing_campaign
 #: view:marketing.campaign.workitem:0
 msgid "Process"
 msgstr "Processo"
@@ -824,8 +839,6 @@ msgid "Operation not supported"
 msgstr "Operazione non supportata"
 
 #. module: marketing_campaign
-#: view:marketing.campaign:0
-#: view:marketing.campaign.segment:0
 #: view:marketing.campaign.workitem:0
 msgid "Cancel"
 msgstr "Annulla"

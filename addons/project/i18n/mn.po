@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-21 17:04+0000\n"
+"POT-Creation-Date: 2013-03-07 08:37+0000\n"
 "PO-Revision-Date: 2013-03-05 00:59+0000\n"
 "Last-Translator: gobi <Unknown>\n"
 "Language-Team: Mongolian <mn@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-03-06 06:22+0000\n"
-"X-Generator: Launchpad (build 16514)\n"
+"X-Launchpad-Export-Date: 2013-03-08 05:56+0000\n"
+"X-Generator: Launchpad (build 16523)\n"
 
 #. module: project
 #: view:project.project:0
@@ -138,7 +138,7 @@ msgstr ""
 
 #. module: project
 #: code:addons/project/project.py:432
-#: code:addons/project/project.py:1305
+#: code:addons/project/project.py:1318
 #, python-format
 msgid "Warning!"
 msgstr "Анхааруулга!"
@@ -212,6 +212,20 @@ msgstr "Төлөвлөсөн хугацаа"
 #: selection:project.project,privacy_visibility:0
 msgid "Public"
 msgstr "Нийтийн"
+
+#. module: project
+#: view:project.task:0
+#: selection:project.task,state:0
+#: selection:project.task.delegate,state:0
+#: selection:project.task.history,state:0
+#: selection:project.task.history.cumulative,state:0
+#: model:project.task.type,name:project.project_tt_deployment
+#: selection:project.task.type,state:0
+#: view:report.project.task.user:0
+#: selection:report.project.task.user,state:0
+#: view:res.partner:0
+msgid "Done"
+msgstr "Дууссан"
 
 #. module: project
 #: model:project.category,name:project.project_category_01
@@ -335,6 +349,11 @@ msgid "June"
 msgstr "6 сар"
 
 #. module: project
+#: view:project.task:0
+msgid "Gantt View"
+msgstr ""
+
+#. module: project
 #: selection:report.project.task.user,month:0
 msgid "October"
 msgstr "10 сар"
@@ -367,6 +386,11 @@ msgstr "Даалгавар дууссан үед дууссан төлөвтэй
 #: field:project.task,message_summary:0
 msgid "Summary"
 msgstr "Хураангуй"
+
+#. module: project
+#: view:project.task:0
+msgid "Task summary..."
+msgstr ""
 
 #. module: project
 #: view:project.project:0
@@ -478,6 +502,11 @@ msgstr "Ацаглах"
 #: field:project.task,create_date:0
 msgid "Create Date"
 msgstr "Үүсэх огноо"
+
+#. module: project
+#: view:project.task:0
+msgid "Add a Description..."
+msgstr ""
 
 #. module: project
 #: view:res.partner:0
@@ -866,9 +895,11 @@ msgid "Is a Follower"
 msgstr "Дагагч эсэх"
 
 #. module: project
-#: field:project.task,work_ids:0
-msgid "Work done"
-msgstr "Ажил дууссан"
+#: field:project.task.history,date:0
+#: field:project.task.history.cumulative,date:0
+#: field:project.task.work,date:0
+msgid "Date"
+msgstr "Огноо"
 
 #. module: project
 #: view:report.project.task.user:0
@@ -879,6 +910,11 @@ msgstr "Өргөтгөсөн хайлт..."
 #: model:ir.ui.menu,name:project.menu_tasks_config
 msgid "GTD"
 msgstr "АА"
+
+#. module: project
+#: view:project.project:0
+msgid "Project Stages"
+msgstr ""
 
 #. module: project
 #: help:project.task,state:0
@@ -905,11 +941,9 @@ msgid "Folded by Default"
 msgstr "Анхныхаараа эвхэгдсэн байна"
 
 #. module: project
-#: field:project.task.history,date:0
-#: field:project.task.history.cumulative,date:0
-#: field:project.task.work,date:0
-msgid "Date"
-msgstr "Огноо"
+#: field:project.task,work_ids:0
+msgid "Work done"
+msgstr "Ажил дууссан"
 
 #. module: project
 #: help:project.config.settings,module_project_issue:0
@@ -941,6 +975,11 @@ msgid "10"
 msgstr "10"
 
 #. module: project
+#: view:project.project:0
+msgid "Cancel Project"
+msgstr ""
+
+#. module: project
 #: help:project.project,analytic_account_id:0
 msgid ""
 "Link this project to an analytic account if you need financial management on "
@@ -955,7 +994,6 @@ msgstr ""
 #: model:process.transition.action,name:project.process_transition_action_draftcanceltask0
 #: model:process.transition.action,name:project.process_transition_action_opencanceltask0
 #: view:project.config.settings:0
-#: view:project.project:0
 #: view:project.task.delegate:0
 #: view:project.task.reevaluate:0
 msgid "Cancel"
@@ -1012,9 +1050,18 @@ msgid "Manager"
 msgstr "Менежер"
 
 #. module: project
-#: selection:project.task,priority:0
-msgid "Important"
-msgstr "Чухал"
+#: model:ir.actions.act_window,help:project.project_category_action
+msgid ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Click to add a new tag.\n"
+"              </p>\n"
+"            "
+msgstr ""
+
+#. module: project
+#: model:ir.ui.menu,name:project.menu_task_types_view
+msgid "Task Stages"
+msgstr "Даалгаврын үеүүд"
 
 #. module: project
 #: field:project.category,name:0
@@ -1297,6 +1344,11 @@ msgid "Delay Hours"
 msgstr "Саатлын цаг"
 
 #. module: project
+#: view:project.task.type:0
+msgid "Add a description..."
+msgstr ""
+
+#. module: project
 #: view:project.project:0
 msgid "Team"
 msgstr "Баг"
@@ -1392,6 +1444,9 @@ msgid "Pending"
 msgstr "Шийд хүлээсэн"
 
 #. module: project
+#: model:ir.actions.act_window,name:project.project_category_action
+#: model:ir.ui.menu,name:project.menu_project_category_act
+#: view:project.category:0
 #: field:project.task,categ_ids:0
 msgid "Tags"
 msgstr "Пайзууд"
@@ -1471,18 +1526,9 @@ msgid "Attachments"
 msgstr "Хавсралт"
 
 #. module: project
-#: view:project.task:0
-#: selection:project.task,state:0
-#: selection:project.task.delegate,state:0
-#: selection:project.task.history,state:0
-#: selection:project.task.history.cumulative,state:0
-#: model:project.task.type,name:project.project_tt_deployment
-#: selection:project.task.type,state:0
-#: view:report.project.task.user:0
-#: selection:report.project.task.user,state:0
-#: view:res.partner:0
-msgid "Done"
-msgstr "Дууссан"
+#: view:project.category:0
+msgid "Issue Version"
+msgstr ""
 
 #. module: project
 #: code:addons/project/project.py:182
@@ -1719,9 +1765,9 @@ msgid "Generate tasks from sale orders"
 msgstr "Борлуулалтын захиалгаас даалгавар үүсгэх"
 
 #. module: project
-#: model:ir.ui.menu,name:project.menu_task_types_view
-msgid "Task Stages"
-msgstr "Даалгаврын үеүүд"
+#: selection:project.task,priority:0
+msgid "Important"
+msgstr "Чухал"
 
 #. module: project
 #: model:process.node,note:project.process_node_drafttask0
@@ -1768,6 +1814,7 @@ msgid "Cancelled"
 msgstr "Цуцалсан"
 
 #. module: project
+#: model:ir.actions.act_window,help:project.act_project_project_2_project_task_all
 #: model:ir.actions.act_window,help:project.action_view_task
 msgid ""
 "<p class=\"oe_view_nocontent_create\">\n"
@@ -2074,7 +2121,7 @@ msgid "Reevaluation Task"
 msgstr "Даалгаврыг дахин үнэлэх"
 
 #. module: project
-#: code:addons/project/project.py:1305
+#: code:addons/project/project.py:1318
 #, python-format
 msgid "Please delete the project linked with this account first."
 msgstr "Энэ данстай холбогдсон төслийг эхлээд устгана уу."
@@ -2223,7 +2270,6 @@ msgid "Year"
 msgstr "Он"
 
 #. module: project
-#: view:project.project:0
 #: field:project.project,type_ids:0
 #: view:project.task.type:0
 msgid "Tasks Stages"

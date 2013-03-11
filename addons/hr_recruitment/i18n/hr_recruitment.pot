@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 7.0alpha\n"
+"Project-Id-Version: OpenERP Server 7.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-12-21 17:04+0000\n"
-"PO-Revision-Date: 2012-12-21 17:04+0000\n"
+"POT-Creation-Date: 2013-03-07 08:37+0000\n"
+"PO-Revision-Date: 2013-03-07 08:37+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -86,6 +86,11 @@ msgstr ""
 
 #. module: hr_recruitment
 #: view:hr.applicant:0
+msgid "Extra advantages..."
+msgstr ""
+
+#. module: hr_recruitment
+#: view:hr.applicant:0
 msgid "Pending Jobs"
 msgstr ""
 
@@ -110,7 +115,7 @@ msgid "Sources of Applicants"
 msgstr ""
 
 #. module: hr_recruitment
-#: code:addons/hr_recruitment/hr_recruitment.py:435
+#: code:addons/hr_recruitment/hr_recruitment.py:445
 #, python-format
 msgid "You must define Applied Job for this applicant."
 msgstr ""
@@ -270,7 +275,7 @@ msgid "Holds the Chatter summary (number of messages, ...). This summary is dire
 msgstr ""
 
 #. module: hr_recruitment
-#: code:addons/hr_recruitment/hr_recruitment.py:435
+#: code:addons/hr_recruitment/hr_recruitment.py:445
 #, python-format
 msgid "Warning!"
 msgstr ""
@@ -338,6 +343,12 @@ msgstr ""
 #: view:hr.applicant:0
 #: field:hr.applicant,source_id:0
 msgid "Source"
+msgstr ""
+
+#. module: hr_recruitment
+#: view:hr.recruitment.report:0
+#: field:hr.recruitment.report,year:0
+msgid "Year"
 msgstr ""
 
 #. module: hr_recruitment
@@ -469,7 +480,7 @@ msgid "Applicants"
 msgstr ""
 
 #. module: hr_recruitment
-#: code:addons/hr_recruitment/hr_recruitment.py:351
+#: code:addons/hr_recruitment/hr_recruitment.py:360
 #, python-format
 msgid "No Subject"
 msgstr ""
@@ -490,7 +501,9 @@ msgid "Gives the sequence order when displaying a list of stages."
 msgstr ""
 
 #. module: hr_recruitment
+#: code:addons/hr_recruitment/hr_recruitment.py:347
 #: field:hr.applicant,partner_id:0
+#, python-format
 msgid "Contact"
 msgstr ""
 
@@ -583,6 +596,11 @@ msgid "Category of applicant"
 msgstr ""
 
 #. module: hr_recruitment
+#: view:hr.applicant:0
+msgid "e.g. Call for interview"
+msgstr ""
+
+#. module: hr_recruitment
 #: view:hr.recruitment.report:0
 #: field:hr.recruitment.report,month:0
 msgid "Month"
@@ -594,8 +612,8 @@ msgid "Answer related job question"
 msgstr ""
 
 #. module: hr_recruitment
-#: model:hr.recruitment.stage,name:hr_recruitment.stage_job2
-msgid "First Interview"
+#: model:ir.model,name:hr_recruitment.model_hr_recruitment_degree
+msgid "Degree of Recruitment"
 msgstr ""
 
 #. module: hr_recruitment
@@ -724,7 +742,7 @@ msgid "Schedule interview with this applicant"
 msgstr ""
 
 #. module: hr_recruitment
-#: code:addons/hr_recruitment/hr_recruitment.py:397
+#: code:addons/hr_recruitment/hr_recruitment.py:407
 #, python-format
 msgid "Applicant <b>created</b>"
 msgstr ""
@@ -890,9 +908,9 @@ msgid "The name of the Degree of Recruitment must be unique!"
 msgstr ""
 
 #. module: hr_recruitment
-#: view:hr.recruitment.report:0
-#: field:hr.recruitment.report,year:0
-msgid "Year"
+#: code:addons/hr_recruitment/hr_recruitment.py:349
+#, python-format
+msgid "Contact Email"
 msgstr ""
 
 #. module: hr_recruitment
@@ -1067,8 +1085,8 @@ msgid "On Average"
 msgstr ""
 
 #. module: hr_recruitment
-#: model:ir.model,name:hr_recruitment.model_hr_recruitment_degree
-msgid "Degree of Recruitment"
+#: model:hr.recruitment.stage,name:hr_recruitment.stage_job2
+msgid "First Interview"
 msgstr ""
 
 #. module: hr_recruitment
@@ -1127,6 +1145,11 @@ msgstr ""
 #. module: hr_recruitment
 #: field:hr.job,alias_id:0
 msgid "Alias"
+msgstr ""
+
+#. module: hr_recruitment
+#: view:hr.applicant:0
+msgid "Feedback of interviews..."
 msgstr ""
 
 #. module: hr_recruitment

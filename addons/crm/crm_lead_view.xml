@@ -163,7 +163,9 @@
                             <field name="priority"/>
                             <field name="categ_ids"
                                 widget="many2many_tags"
-                                domain="[('object_id.model','=','crm.lead')]"/>
+                                domain="[('object_id.model','=','crm.lead')]"
+                                context="{'object_name': 'crm.lead'}"
+                            />
                         </group>
                     </group>
                     <notebook colspan="4">
@@ -350,7 +352,7 @@
                         <filter string="Referrer" domain="[]" context="{'group_by':'referred'}"/>
                         <filter string="Campaign" domain="[]" context="{'group_by':'type_id'}"/>
                         <filter string="Channel" domain="[]" context="{'group_by':'channel_id'}"/>
-                        <filter string="Creation" domain="[]" context="{'group_by':'create_date'}" groups="base.group_no_one"/>
+                        <filter string="Creation" domain="[]" context="{'group_by':'create_date'}"/>
                     </group>
                     <group string="Display">
                         <filter string="Show Countries" context="{'invisible_country': False}" help="Show Countries"/>
@@ -566,7 +568,7 @@
                         <filter string="Referrer" domain="[]" context="{'group_by':'referred'}"/>
                         <filter string="Campaign" domain="[]" context="{'group_by':'type_id'}"/>
                         <filter string="Channel" domain="[]" context="{'group_by':'channel_id'}"/>
-                        <filter string="Creation" domain="[]" context="{'group_by':'create_date'}" groups="base.group_no_one"/>
+                        <filter string="Creation" domain="[]" context="{'group_by':'create_date'}"/>
                     </group>
                     <group string="Display">
                         <filter string="Show Sales Team" context="{'invisible_section': False}" domain="[]" help="Show Sales Team"/>
