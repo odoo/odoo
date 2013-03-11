@@ -21,6 +21,7 @@
             <field name="arch" type="xml">
                 <form string="Google Drive Configuration" version="7.0">
                 <group>
+                	<field name="name"/>
                     <field name="model_id" on_change="onchange_model_id(model_id,name_template)"/>
                     <label for='filter_id'/>
                     <div>
@@ -55,6 +56,14 @@
             <field name='type'>ir.actions.act_window</field>
             <field name='view_type'>form</field>
             <field name='view_id' ref='view_google_docs_config_tree'/>
+            <field name="help" type="html">
+              <p>
+               "Link your first Google document to openERP documents
+                You use to control the quality of your product in a spreadheet ?
+                You review the delivery checklist for each delivery order in a  foreign country ? ...
+                Link your own templates on any documents of OpenERP
+              </p>
+            </field>
         </record>
 
         <record id="inherited_google_view_general_configuration" model="ir.ui.view">
