@@ -108,10 +108,10 @@ class gamification_badge(osv.Model):
                 ('everyone', 'Everyone'),
                 ('users', 'A selected list of users'),
                 ('having', 'People having some badges'),
-                ('computed', 'Nobody'),
+                ('nobody', 'Nobody'),
             ],
-            string="Authorization Rule",
-            help="Who can give this badge",
+            string="User Authorization Rule",
+            help="Who can grant this badge",
             required=True),
         'rule_auth_user_ids': fields.many2many('res.users', 'rel_badge_auth_users',
             string='Authorized Users',
@@ -124,14 +124,14 @@ class gamification_badge(osv.Model):
             help="This badge can not be send indefinitely"),
         'rule_max_number': fields.integer('Limitation Number',
             help="The maximum number of time this badge can be sent per month."),
-        
-        'auto_rule': fields.selection([
-                ('manual', 'Given by User Only'),
+
+        'rule_automatic': fields.selection([
+                ('manual', 'Given by Users Only'),
                 ('goals', 'List of Goals'),
                 ('python', 'Python Code'),
             ],
-            string="Authorization Rule",
-            help="Who can give this badge",
+            string="Automatic Rule",
+            help="Can this badge be automatically rewarded",
             required=True),
 
         'compute_code': fields.text('Compute Code',
@@ -164,6 +164,7 @@ class gamification_badge(osv.Model):
         'stat_count': 0,
         'stat_count_distinct': 0,
         'stat_this_month': 0,
+        'rule_automatic': 'manual',
     }
 
     def send_badge(self, cr, uid, badge_id, badge_user_ids, user_from=None, context=None):
@@ -205,21 +206,37 @@ class gamification_badge(osv.Model):
         :return: list of res.users ids that should receive the badge"""
 
         context = context or {}
-
         badge = self.browse(cr, uid, badge_id, context=context)
-        if badge.rule_auth != 'computed':
-            return []
 
-        code_obj = compile(badge.compute_code, '<string>', 'exec')
-        code_globals = {}
-        code_locals = {'cr': cr, 'uid': uid, 'context': context, 'result': []}
-        exec code_obj in code_globals, code_locals
-        if 'result' in code_locals and type(code_locals['result']) == list:
-            user_badge_ids = self.pool.get('gamification.badge.user').search(
-                cr, uid, [('user_id', 'in', code_locals['result'])], context=context)
-            self.send_badge(cr, uid, badge.id, user_badge_ids, context=context)
+        if badge.rule_automatic == 'python':
+            code_obj = compile(badge.compute_code, '<string>', 'exec')
+            code_globals = {}
+            code_locals = {'cr': cr, 'uid': uid, 'context': context, 'result': []}
+            exec code_obj in code_globals, code_locals
+            if 'result' in code_locals and type(code_locals['result']) == list:
+                return self.pool.get('gamification.badge.user').search(
+                    cr, uid, [('user_id', 'in', code_locals['result'])], context=context)
+                # self.send_badge(cr, uid, badge.id, user_badge_ids, context=context)
 
-        return True
+        elif badge.rule_automatic == 'goals':
+            common_users = None
+            for goal_type in badge.goal_type_ids:
+                res = self.pool.get('gamification.goal').read_group(cr, uid, [
+                    ('type_id', '=', goal_type.id),
+                    ('state', '=', 'reached'),
+                ], ['user_id', 'state', 'type_id'], ['user_id'], context=context)
+                users = [goal.user_id.id for goal in res]
+                if common_users is None:
+                    # first type, include all
+                    common_users = users
+                else:
+                    merged_list = [user_id for user_id in users if user_id in common_users]
+                    common_users = merged_list
+            return common_users
+
+        # else  badge.rule_automatic == 'manual':
+
+        return []
 
     def can_grant_badge(self, cr, uid, user_from_id, badge_id, context=None):
         """Check if a user can grant a badge to another user
@@ -230,7 +247,7 @@ class gamification_badge(osv.Model):
         context = context or {}
         badge = self.browse(cr, uid, badge_id, context=context)
 
-        if badge.rule_auth == 'computed':
+        if badge.rule_auth == 'nobody':
             return False
         elif badge.rule_auth == 'list':
             if user_from_id not in [user.id for user in badge.rule_auth_user_ids]:
