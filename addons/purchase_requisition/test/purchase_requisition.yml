@@ -45,6 +45,7 @@
     partner_id: base.res_partner_12
 - 
   !python {model: purchase.requisition.partner}: |
+    context.update({"mail_create_nolog" : True })
     self.create_order(cr, uid, [ref("requisition_partner_0")], context=context)
 -
   I check that the RFQ details which created for supplier.
@@ -69,10 +70,8 @@
   I confirmed RFQ which has best price.
 -
   !python {model: purchase.order}: |
-    from openerp import netsvc
-    wf_service = netsvc.LocalService("workflow")
     purchase = self.browse(cr, uid, ref('rfq2'), context=context)
-    wf_service.trg_validate(uid, 'purchase.order', purchase.id, 'purchase_confirm', cr)
+    self.signal_purchase_confirm(cr, uid, [purchase.id])
 
 -
   I check status of requisition after confirmed best RFQ.

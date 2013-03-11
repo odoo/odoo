@@ -281,7 +281,7 @@
             <field name="name">project.project.gantt</field>
             <field name="model">project.project</field>
             <field name="arch" type="xml">
-                <gantt date_delay="planned_hours" date_start="date_start" string="Projects">
+                <gantt date_delay="planned_hours" date_start="date_start" progress="progress_rate" string="Projects">
                 </gantt>
             </field>
         </record>
@@ -372,7 +372,11 @@
                     </header>
                     <sheet string="Task">
                     <h1>
-                        <field name="name" placeholder="Task summary..."/>
+                        <field name="name" placeholder="Task summary..." class="oe_inline"/>
+                        <field name="kanban_state" invisible='1'/>
+                        <button name="set_kanban_state_done" help="In Progress" attrs="{'invisible': [('kanban_state', 'in', ['done','blocked'])]}" type="object" icon="gtk-normal" class="oe_link oe_right"/>
+                        <button name="set_kanban_state_blocked" help="Ready for Next Stage" attrs="{'invisible': [('kanban_state', 'in', ['normal','blocked'])]}" type="object" icon="gtk-yes" class="oe_link oe_right"/>
+                        <button name="set_kanban_state_normal" help="Blocked" attrs="{'invisible': [('kanban_state', 'in', ['done','normal'])]}" type="object" icon="gtk-no" class="oe_link oe_right"/>
                     </h1>
                     <group>
                         <group>
@@ -577,7 +581,7 @@
             <field name="model">project.task</field>
             <field eval="2" name="priority"/>
             <field name="arch" type="xml">
-                <gantt date_start="date_start" date_stop="date_end" string="Tasks" default_group_by="project_id">
+                <gantt date_start="date_start" date_stop="date_end" progress="progress" string="Tasks" default_group_by="project_id">
                 </gantt>
             </field>
         </record>

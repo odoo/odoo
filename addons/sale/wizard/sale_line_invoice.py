@@ -80,7 +80,6 @@ class sale_order_line_make_invoice(osv.osv_memory):
 
         sales_order_line_obj = self.pool.get('sale.order.line')
         sales_order_obj = self.pool.get('sale.order')
-        wf_service = netsvc.LocalService('workflow')
         for line in sales_order_line_obj.browse(cr, uid, context.get('active_ids', []), context=context):
             if (not line.invoiced) and (line.state not in ('draft', 'cancel')):
                 if not line.order_id.id in invoices:
@@ -98,12 +97,13 @@ class sale_order_line_make_invoice(osv.osv_memory):
 
             flag = True
             data_sale = sales_order_obj.browse(cr, uid, line.order_id.id, context=context)
+            sales_order_obj.message_post(cr, uid, [order.id], body=_("Invoice created"), context=context)
             for line in data_sale.order_line:
                 if not line.invoiced:
                     flag = False
                     break
             if flag:
-                wf_service.trg_validate(uid, 'sale.order', line.order_id.id, 'manual_invoice', cr)
+                sales_order_obj.signal_manual_invoice(cr, uid, [line.order_id.id])
                 sales_order_obj.write(cr, uid, [line.order_id.id], {'state': 'progress'})
 
         if not invoices:

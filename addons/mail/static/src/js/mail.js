@@ -104,8 +104,8 @@ openerp.mail = function (session) {
         // returns the file type of a file based on its extension 
         // As it only looks at the extension it is quite approximative. 
         filetype: function(url){
-            url = url.filename || url;
-            var tokens = (url+'').split('.');
+            var url = url && url.filename || url;
+            var tokens = typeof url == 'string' ? url.split('.') : [];
             if(tokens.length <= 1){
                 return 'unknown';
             }
@@ -518,7 +518,7 @@ openerp.mail = function (session) {
                     'default_composition_mode': default_composition_mode,
                     'default_parent_id': self.id,
                     'default_body': mail.ChatterUtils.get_text2html(self.$el ? (self.$el.find('textarea:not(.oe_compact)').val() || '') : ''),
-                    'default_attachment_ids': self.attachment_ids,
+                    'default_attachment_ids': _.map(self.attachment_ids, function (file) {return file.id;}),
                     'default_partner_ids': partner_ids,
                 };
                 if (default_composition_mode != 'reply' && self.context.default_model && self.context.default_res_id) {
