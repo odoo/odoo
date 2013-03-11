@@ -28,7 +28,7 @@ from openerp import tools
 from openerp.tools.translate import _
 from openerp.tools import html2plaintext
 
-from base.res.res_partner import format_address
+from openerp.addons.base.res.res_partner import format_address
 
 CRM_LEAD_FIELDS_TO_MERGE = ['name',
     'partner_id',
@@ -567,7 +567,8 @@ class crm_lead(base_stage, format_address, osv.osv):
         for opportunity in opportunities:
             subject.append(opportunity.name)
             title = "%s : %s" % (opportunity.type == 'opportunity' and _('Merged opportunity') or _('Merged lead'), opportunity.name)
-            details.append(self._mail_body(cr, uid, opportunity, CRM_LEAD_FIELDS_TO_MERGE, title=title, context=context))
+            fields = list(CRM_LEAD_FIELDS_TO_MERGE)
+            details.append(self._mail_body(cr, uid, opportunity, fields, title=title, context=context))
 
         # Chatter message's subject
         subject = subject[0] + ": " + ", ".join(subject[1:])
@@ -586,27 +587,25 @@ class crm_lead(base_stage, format_address, osv.osv):
         return True
 
     def _merge_opportunity_attachments(self, cr, uid, opportunity_id, opportunities, context=None):
-        attachment = self.pool.get('ir.attachment')
+        attach_obj = self.pool.get('ir.attachment')
 
         # return attachments of opportunity
         def _get_attachments(opportunity_id):
-            attachment_ids = attachment.search(cr, uid, [('res_model', '=', self._name), ('res_id', '=', opportunity_id)], context=context)
-            return attachment.browse(cr, uid, attachment_ids, context=context)
+            attachment_ids = attach_obj.search(cr, uid, [('res_model', '=', self._name), ('res_id', '=', opportunity_id)], context=context)
+            return attach_obj.browse(cr, uid, attachment_ids, context=context)
 
-        count = 1
         first_attachments = _get_attachments(opportunity_id)
+        #counter of all attachments to move. Used to make sure the name is different for all attachments
+        count = 1
         for opportunity in opportunities:
             attachments = _get_attachments(opportunity.id)
-            for first in first_attachments:
-                for attachment in attachments:
-                    if attachment.name == first.name:
-                        values = dict(
-                            name = "%s (%s)" % (attachment.name, count,),
-                            res_id = opportunity_id,
-                        )
-                        attachment.write(values)
-                        count+=1
-
+            for attachment in attachments:
+                values = {'res_id': opportunity_id,}
+                for attachment_in_first in first_attachments:
+                    if attachment.name == attachment_in_first.name:
+                        name = "%s (%s)" % (attachment.name, count,),
+                count+=1
+                attachment.write(values)
         return True
 
     def merge_opportunity(self, cr, uid, ids, context=None):
@@ -627,7 +626,10 @@ class crm_lead(base_stage, format_address, osv.osv):
         opportunities = self.browse(cr, uid, ids, context=context)
         sequenced_opps = []
         for opportunity in opportunities:
-            sequenced_opps.append((opportunity.stage_id and opportunity.stage_id.state != 'cancel' and opportunity.stage_id.sequence or 0, opportunity))
+            if opportunity.stage_id and opportunity.stage_id.state != 'cancel':
+                sequenced_opps.append((opportunity.stage_id.sequence, opportunity))
+            else:
+                sequenced_opps.append((-1, opportunity))
         sequenced_opps.sort(key=lambda tup: tup[0], reverse=True)
         opportunities = [opportunity for sequence, opportunity in sequenced_opps]
         ids = [opportunity.id for opportunity in opportunities]
@@ -636,7 +638,8 @@ class crm_lead(base_stage, format_address, osv.osv):
 
         tail_opportunities = opportunities_rest
 
-        merged_data = self._merge_data(cr, uid, ids, highest, CRM_LEAD_FIELDS_TO_MERGE, context=context)
+        fields = list(CRM_LEAD_FIELDS_TO_MERGE)
+        merged_data = self._merge_data(cr, uid, ids, highest, fields, context=context)
 
         # Merge messages and attachements into the first opportunity
         self._merge_opportunity_history(cr, uid, highest.id, tail_opportunities, context=context)
@@ -651,7 +654,7 @@ class crm_lead(base_stage, format_address, osv.osv):
             section_stages = self.pool.get('crm.case.section').read(cr, uid, merged_data['section_id'], ['stage_ids'], context=context)
             if merged_data.get('stage_id') not in section_stages['stage_ids']:
                 stages_sequences = self.pool.get('crm.case.stage').search(cr, uid, [('id','in',section_stages['stage_ids'])], order='sequence', limit=1, context=context)
-                merged_data['stage_id'] = stages_sequences[0]
+                merged_data['stage_id'] = stages_sequences and stages_sequences[0] or False
         # Write merged data into first opportunity
         self.write(cr, uid, [highest.id], merged_data, context=context)
         # Delete tail opportunities

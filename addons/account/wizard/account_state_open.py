@@ -35,8 +35,7 @@ class account_state_open(osv.osv_memory):
             data_inv = obj_invoice.browse(cr, uid, context['active_ids'][0], context=context)
             if data_inv.reconciled:
                 raise osv.except_osv(_('Warning!'), _('Invoice is already reconciled.'))
-            wf_service = netsvc.LocalService("workflow")
-            wf_service.trg_validate(uid, 'account.invoice', context['active_ids'][0], 'open_test', cr)
+            obj_invoice.signal_open_test(cr, uid, context['active_ids'][0])
         return {'type': 'ir.actions.act_window_close'}
 
 account_state_open()

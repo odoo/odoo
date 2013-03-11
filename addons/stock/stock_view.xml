@@ -632,6 +632,16 @@
                 </tree>
             </field>
         </record>
+        <record model="ir.actions.act_window" id="action_product_location_tree">
+            <field name="context">{'product_id': active_id}</field>
+            <field name="name">Stock by Location</field>
+            <field name="res_model">stock.location</field>
+        </record>
+        <record id="act_product_stock_move_open" model="ir.actions.act_window">
+            <field name="context">{'search_default_done': 1,'search_default_product_id': active_id, 'default_product_id': active_id}</field>
+            <field name="name">Moves</field>
+            <field name="res_model">stock.move</field>
+        </record>
         <record id="action_location_tree" model="ir.actions.act_window">
             <field name="name">Location Structure</field>
             <field name="res_model">stock.location</field>
@@ -1561,21 +1571,6 @@
             name="Products"
             res_model="product.product"
             src_model="stock.location"/>
-
-        <act_window
-            context="{'search_default_done': 1,'search_default_product_id': [active_id], 'default_product_id': active_id}"
-            id="act_product_stock_move_open"
-            name="Inventory Move"
-            res_model="stock.move"
-            src_model="product.product"/>
-
-        <act_window
-            context="{'search_default_future': 1,'search_default_product_id': [active_id], 'default_product_id': active_id}"
-            domain="[('state','in',('waiting','confirmed','assigned'))]"
-            id="act_product_stock_move_futur_open"
-            name="Future Stock Moves"
-            res_model="stock.move"
-            src_model="product.product"/>
 
         <record id="ir_act_product_location_open" model="ir.values">
             <field name="key2">tree_but_open</field>

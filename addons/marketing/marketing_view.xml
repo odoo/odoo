@@ -7,6 +7,7 @@
             id="base.marketing_menu"
             groups="marketing.group_marketing_user,marketing.group_marketing_manager"
             sequence="85"/>
+
          <record id="view_crm_lead_form" model="ir.ui.view">
             <field name="name">crm.lead.inherit.form</field>
             <field name="model">crm.lead</field>
@@ -14,6 +15,7 @@
             <field name="arch" type="xml">
                 <xpath expr="//group[@name='categorization']" position="attributes">
                     <attribute name="string">Marketing</attribute>
+                    <attribute name="groups"></attribute>
                 </xpath>
                 <xpath expr="//field[@name='company_id']" position="after">
                     <field name="type_id"/>
@@ -21,6 +23,7 @@
                 </xpath>
             </field>
         </record>
+
         <record id="view_crm_opportunity_form" model="ir.ui.view">
             <field name="name">crm.lead.inherit.form</field>
             <field name="model">crm.lead</field>

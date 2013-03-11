@@ -759,10 +759,9 @@ class stock_picking(osv.osv):
         """ Changes state of picking to available if all moves are confirmed.
         @return: True
         """
-        wf_service = netsvc.LocalService("workflow")
         for pick in self.browse(cr, uid, ids):
             if pick.state == 'draft':
-                wf_service.trg_validate(uid, 'stock.picking', pick.id, 'button_confirm', cr)
+                self.signal_button_confirm(cr, uid, [pick.id])
             move_ids = [x.id for x in pick.move_lines if x.state == 'confirmed']
             if not move_ids:
                 raise osv.except_osv(_('Warning!'),_('Not enough stock, unable to reserve the products.'))
@@ -784,12 +783,10 @@ class stock_picking(osv.osv):
         """ Confirms picking directly from draft state.
         @return: True
         """
-        wf_service = netsvc.LocalService("workflow")
         for pick in self.browse(cr, uid, ids):
             if not pick.move_lines:
                 raise osv.except_osv(_('Error!'),_('You cannot process picking without stock moves.'))
-            wf_service.trg_validate(uid, 'stock.picking', pick.id,
-                'button_confirm', cr)
+            self.signal_button_confirm(cr, uid, [pick.id])
         return True
 
     def draft_validate(self, cr, uid, ids, context=None):
@@ -1345,18 +1342,18 @@ class stock_picking(osv.osv):
 
             # At first we confirm the new picking (if necessary)
             if new_picking:
-                wf_service.trg_validate(uid, 'stock.picking', new_picking, 'button_confirm', cr)
+                self.signal_button_confirm(cr, uid, [new_picking])
                 # Then we finish the good picking
                 self.write(cr, uid, [pick.id], {'backorder_id': new_picking})
                 self.action_move(cr, uid, [new_picking], context=context)
-                wf_service.trg_validate(uid, 'stock.picking', new_picking, 'button_done', cr)
+                self.signal_button_done(cr, uid, [new_picking])
                 wf_service.trg_write(uid, 'stock.picking', pick.id, cr)
                 delivered_pack_id = new_picking
                 back_order_name = self.browse(cr, uid, delivered_pack_id, context=context).name
                 self.message_post(cr, uid, ids, body=_("Back order <em>%s</em> has been <b>created</b>.") % (back_order_name), context=context)
             else:
                 self.action_move(cr, uid, [pick.id], context=context)
-                wf_service.trg_validate(uid, 'stock.picking', pick.id, 'button_done', cr)
+                self.signal_button_done(cr, uid, [pick.id])
                 delivered_pack_id = pick.id
 
             delivered_pack = self.browse(cr, uid, delivered_pack_id, context=context)
@@ -2037,7 +2034,6 @@ class stock_move(osv.osv):
         res_obj = self.pool.get('res.company')
         location_obj = self.pool.get('stock.location')
         move_obj = self.pool.get('stock.move')
-        wf_service = netsvc.LocalService("workflow")
         new_moves = []
         if context is None:
             context = {}
@@ -2073,7 +2069,7 @@ class stock_move(osv.osv):
                 })
                 new_moves.append(self.browse(cr, uid, [new_id])[0])
             if pickid:
-                wf_service.trg_validate(uid, 'stock.picking', pickid, 'button_confirm', cr)
+                self.signal_button_confirm(cr, uid, [pickid])
         if new_moves:
             new_moves += self.create_chained_picking(cr, uid, new_moves, context)
         return new_moves
@@ -2195,6 +2191,7 @@ class stock_move(osv.osv):
             return True
         if context is None:
             context = {}
+        wf_service = netsvc.LocalService("workflow")
         pickings = set()
         for move in self.browse(cr, uid, ids, context=context):
             if move.state in ('confirmed', 'waiting', 'assigned', 'draft'):
@@ -2203,7 +2200,6 @@ class stock_move(osv.osv):
             if move.move_dest_id and move.move_dest_id.state == 'waiting':
                 self.write(cr, uid, [move.move_dest_id.id], {'state': 'assigned'})
                 if context.get('call_unlink',False) and move.move_dest_id.picking_id:
-                    wf_service = netsvc.LocalService("workflow")
                     wf_service.trg_write(uid, 'stock.picking', move.move_dest_id.picking_id.id, cr)
         self.write(cr, uid, ids, {'state': 'cancel', 'move_dest_id': False})
         if not context.get('call_unlink',False):
@@ -2211,7 +2207,6 @@ class stock_move(osv.osv):
                 if all(move.state == 'cancel' for move in pick.move_lines):
                     self.pool.get('stock.picking').write(cr, uid, [pick.id], {'state': 'cancel'})
 
-        wf_service = netsvc.LocalService("workflow")
         for id in ids:
             wf_service.trg_trigger(uid, 'stock.move', id, cr)
         return True
@@ -2633,7 +2628,6 @@ class stock_move(osv.osv):
         product_obj = self.pool.get('product.product')
         currency_obj = self.pool.get('res.currency')
         uom_obj = self.pool.get('product.uom')
-        wf_service = netsvc.LocalService("workflow")
 
         if context is None:
             context = {}
@@ -2734,7 +2728,7 @@ class stock_move(osv.osv):
                 res = cr.fetchall()
                 if len(res) == len(move.picking_id.move_lines):
                     picking_obj.action_move(cr, uid, [move.picking_id.id])
-                    wf_service.trg_validate(uid, 'stock.picking', move.picking_id.id, 'button_done', cr)
+                    picking_obj.signal_button_done(cr, uid, [move.picking_id.id])
 
         return [move.id for move in complete]
 
@@ -2953,15 +2947,25 @@ class stock_picking_in(osv.osv):
         #override in order to redirect the check of acces rules on the stock.picking object
         return self.pool.get('stock.picking').check_access_rule(cr, uid, ids, operation, context=context)
 
-    def _workflow_trigger(self, cr, uid, ids, trigger, context=None):
-        #override in order to trigger the workflow of stock.picking at the end of create, write and unlink operation
-        #instead of it's own workflow (which is not existing)
-        return self.pool.get('stock.picking')._workflow_trigger(cr, uid, ids, trigger, context=context)
+    def create_workflow(self, cr, uid, ids, context=None):
+        # overridden in order to trigger the workflow of stock.picking at the end of create,
+        # write and unlink operation instead of its own workflow (which is not existing)
+        return self.pool.get('stock.picking').create_workflow(cr, uid, ids, context=context)
 
-    def _workflow_signal(self, cr, uid, ids, signal, context=None):
-        #override in order to fire the workflow signal on given stock.picking workflow instance
-        #instead of it's own workflow (which is not existing)
-        return self.pool.get('stock.picking')._workflow_signal(cr, uid, ids, signal, context=context)
+    def delete_workflow(self, cr, uid, ids, context=None):
+        # overridden in order to trigger the workflow of stock.picking at the end of create,
+        # write and unlink operation instead of its own workflow (which is not existing)
+        return self.pool.get('stock.picking').delete_workflow(cr, uid, ids, context=context)
+
+    def step_workflow(self, cr, uid, ids, context=None):
+        # overridden in order to trigger the workflow of stock.picking at the end of create,
+        # write and unlink operation instead of its own workflow (which is not existing)
+        return self.pool.get('stock.picking').step_workflow(cr, uid, ids, context=context)
+
+    def signal_workflow(self, cr, uid, ids, signal, context=None):
+        # overridden in order to fire the workflow signal on given stock.picking workflow instance
+        # instead of its own workflow (which is not existing)
+        return self.pool.get('stock.picking').signal_workflow(cr, uid, ids, signal, context=context)
 
     _columns = {
         'backorder_id': fields.many2one('stock.picking.in', 'Back Order of', states={'done':[('readonly', True)], 'cancel':[('readonly',True)]}, help="If this shipment was split, then this field links to the shipment which contains the already processed part.", select=True),
@@ -2998,15 +3002,25 @@ class stock_picking_out(osv.osv):
         #override in order to redirect the check of acces rules on the stock.picking object
         return self.pool.get('stock.picking').check_access_rule(cr, uid, ids, operation, context=context)
 
-    def _workflow_trigger(self, cr, uid, ids, trigger, context=None):
-        #override in order to trigger the workflow of stock.picking at the end of create, write and unlink operation
-        #instead of it's own workflow (which is not existing)
-        return self.pool.get('stock.picking')._workflow_trigger(cr, uid, ids, trigger, context=context)
+    def create_workflow(self, cr, uid, ids, context=None):
+        # overridden in order to trigger the workflow of stock.picking at the end of create,
+        # write and unlink operation instead of its own workflow (which is not existing)
+        return self.pool.get('stock.picking').create_workflow(cr, uid, ids, context=context)
 
-    def _workflow_signal(self, cr, uid, ids, signal, context=None):
-        #override in order to fire the workflow signal on given stock.picking workflow instance
-        #instead of it's own workflow (which is not existing)
-        return self.pool.get('stock.picking')._workflow_signal(cr, uid, ids, signal, context=context)
+    def delete_workflow(self, cr, uid, ids, context=None):
+        # overridden in order to trigger the workflow of stock.picking at the end of create,
+        # write and unlink operation instead of its own workflow (which is not existing)
+        return self.pool.get('stock.picking').delete_workflow(cr, uid, ids, context=context)
+
+    def step_workflow(self, cr, uid, ids, context=None):
+        # overridden in order to trigger the workflow of stock.picking at the end of create,
+        # write and unlink operation instead of its own workflow (which is not existing)
+        return self.pool.get('stock.picking').step_workflow(cr, uid, ids, context=context)
+
+    def signal_workflow(self, cr, uid, ids, signal, context=None):
+        # overridden in order to fire the workflow signal on given stock.picking workflow instance
+        # instead of its own workflow (which is not existing)
+        return self.pool.get('stock.picking').signal_workflow(cr, uid, ids, signal, context=context)
 
     _columns = {
         'backorder_id': fields.many2one('stock.picking.out', 'Back Order of', states={'done':[('readonly', True)], 'cancel':[('readonly',True)]}, help="If this shipment was split, then this field links to the shipment which contains the already processed part.", select=True),

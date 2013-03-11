@@ -157,7 +157,7 @@ class mail_mail(osv.Model):
             :param browse_record partner: specific recipient partner
         """
         if force or (not mail.subject and mail.model and mail.res_id):
-            return '%s posted on %s' % (mail.author_id.name, mail.record_name)
+            return 'Re: %s' % (mail.record_name)
         return mail.subject
 
     def send_get_mail_body(self, cr, uid, mail, partner=None, context=None):
