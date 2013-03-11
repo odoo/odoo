@@ -70,7 +70,6 @@ class mail_compose_message(osv.TransientModel):
         elif template_id:
             # FIXME odo: change the mail generation to avoid attachment duplication
             values = self.generate_email_for_composer(cr, uid, template_id, res_id, context=context)
-            print values.get('partner_ids')
             # transform attachments into attachment_ids
             values['attachment_ids'] = []
             ir_attach_obj = self.pool.get('ir.attachment')
