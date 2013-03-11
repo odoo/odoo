@@ -1,6 +1,6 @@
 
 from openerp.tools import mute_logger
-from openerp.osv.api import Scope
+from openerp.osv.api import scope
 from openerp.osv.orm import Record, Recordset, Null, except_orm
 import common
 
@@ -209,25 +209,33 @@ class TestAPI(common.TransactionCase):
         user = self.Users.search([('id', '!=', self.uid)])[0]
         self.assertNotEqual(user.id, self.uid)
 
-        scope0 = Scope.current()
+        scope0 = scope.current
+        self.assertEqual(scope.cr, self.cr)
+        self.assertEqual(scope.uid, self.uid)
 
-        with Scope(self.cr, self.uid, None) as scope1:
-            self.assertEqual(Scope.current(), scope1)
-            self.assertEqual(scope1.uid, self.uid)
+        with scope(self.cr, self.uid, {}) as scope1:
+            self.assertEqual(scope.current, scope1)
+            self.assertEqual(scope.cr, self.cr)
+            self.assertEqual(scope.uid, self.uid)
 
             try:
-                with Scope.set(user, lang=user.lang) as scope2:
-                    self.assertEqual(scope2.cr, self.cr)
-                    self.assertEqual(scope2.user, user)
-                    self.assertEqual(scope2.context, {'lang': user.lang})
+                with scope(user, lang=user.lang) as scope2:
+                    self.assertNotEqual(scope.current, scope1)
+                    self.assertEqual(scope.cr, self.cr)
+                    self.assertEqual(scope.user, user)
+                    self.assertEqual(scope.context, {'lang': user.lang})
 
-                    with Scope.SUDO():
-                        self.assertEqual(Scope.current().uid, 1)
+                    with scope.SUDO():
+                        self.assertEqual(scope.uid, 1)
 
-                    self.assertEqual(Scope.current(), scope2)
+                    self.assertEqual(scope.current, scope2)
+                    self.assertEqual(scope.user, user)
 
-                    with Scope.SUDO():
-                        self.assertEqual(Scope.current().uid, 1)
+                    # root scope should be with superuser
+                    self.assertEqual(scope.root.uid, 1)
+
+                    with scope.SUDO():
+                        self.assertEqual(scope.uid, 1)
                         raise Exception()       # exit scope with an exception
 
                     self.assertTrue(False, "Unreachable statement")
@@ -235,9 +243,9 @@ class TestAPI(common.TransactionCase):
             except Exception:
                 pass
 
-            self.assertEqual(Scope.current(), scope1)
+            self.assertEqual(scope.current, scope1)
 
-        self.assertEqual(Scope.current(), scope0)
+        self.assertEqual(scope.current, scope0)
 
     @mute_logger('openerp.osv.orm')
     def test_55_scope(self):
@@ -266,7 +274,7 @@ class TestAPI(common.TransactionCase):
 
         # demo user cannot modify the company
         with self.assertRaises(except_orm):
-            with Scope.set(demo):
+            with scope(demo):
                 company.write({'name': 'Pricks'})
 
     @mute_logger('openerp.osv.orm')

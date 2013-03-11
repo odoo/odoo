@@ -259,12 +259,12 @@ class except_orm(Exception):
 #
 
 def _browse_one(record, column, value):
-    model = record.scope.model(column._obj)
+    model = record.pool[column._obj]
     return model.browse(value, cache=record._record_cache)
 
 
 def _browse_many(record, column, value):
-    model = record.scope.model(column._obj)
+    model = record.pool[column._obj]
     return model.browse(value or [], cache=record._record_cache)
 
 
@@ -273,7 +273,7 @@ def _browse_reference(record, column, value):
         ref_obj, ref_id = value.split(',')
         ref_id = long(ref_id)
         if ref_id:
-            model = record.scope.model(ref_obj)
+            model = record.pool[ref_obj]
             return model.browse(ref_id, cache=record._record_cache)
     return False
 
@@ -425,11 +425,7 @@ class BaseModel(object):
     instance is built from the Python classes that create and inherit from the
     corresponding model.
 
-    Other instances encapsulate a scope (cursor, user id, context) together with
-    model functionalities. There are four kinds of them:
-
-    *   `model`: represents a model, usually given by
-        :meth:`openerp.osv.api.Scope.model`;
+    Other model instances are:
 
     *   `record`: represents a record of the given model, typically returned by
         :meth:`~.browse` or another record/recordset. One can read the fields of
@@ -5124,7 +5120,7 @@ class BaseModel(object):
 
     @property
     def scope(self):
-        return api.Scope.current()
+        return api.scope.current
 
     @api.model
     def _make_null(self):

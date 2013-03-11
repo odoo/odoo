@@ -94,10 +94,10 @@ class TransactionCase(BaseCase):
         # and still access them
         TransactionCase.cr = cr = self.cursor()
         TransactionCase.uid = uid = openerp.SUPERUSER_ID
-        Scope(cr, uid, None).__enter__()
+        TransactionCase.scope = Scope(cr, uid, None).__enter__()
 
     def tearDown(self):
-        Scope.current().__exit__(None, None, None)
+        self.scope.__exit__(None, None, None)
         self.cr.rollback()
         self.cr.close()
 
@@ -112,11 +112,11 @@ class SingleTransactionCase(BaseCase):
     def setUpClass(cls):
         cls.cr = cls.cursor()
         cls.uid = openerp.SUPERUSER_ID
-        Scope(cls.cr, cls.uid, None).__enter__()
+        cls.scope = Scope(cls.cr, cls.uid, None).__enter__()
 
     @classmethod
     def tearDownClass(cls):
-        Scope.current().__exit__(None, None, None)
+        cls.scope.__exit__(None, None, None)
         cls.cr.rollback()
         cls.cr.close()
 

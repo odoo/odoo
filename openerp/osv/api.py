@@ -37,8 +37,8 @@
 
     may also be written as::
 
-        with Scope(cr, uid, context) as scope:
-            model = scope.model(MODEL)
+        with Scope(cr, uid, context):
+            model = scope.model(MODEL)          # scope is a proxy to the current scope
             records = model.search(DOMAIN)
             records.write(VALUES)
 
@@ -72,7 +72,7 @@
 """
 
 __all__ = [
-    'Scope', 'Meta', 'guess', 'noguess',
+    'Scope', 'scope', 'Meta', 'guess', 'noguess',
     'model', 'record', 'recordset',
     'cr', 'cr_context', 'cr_uid', 'cr_uid_context',
     'cr_uid_id', 'cr_uid_id_context', 'cr_uid_ids', 'cr_uid_ids_context',
@@ -85,8 +85,31 @@ import threading
 
 _logger = logging.getLogger(__name__)
 
-_scope = threading.local()
-_scope.current = None
+
+class ScopeProxy(object):
+    """ This a proxy object to the current scope. """
+    def __init__(self):
+        self._local = threading.local()
+
+    def _getcurrent(self):
+        """ the current scope """
+        return getattr(self._local, 'current', None)
+
+    def _setcurrent(self, value):
+        self._local.current = value
+
+    current = property(_getcurrent, _setcurrent)
+
+    def __getattr__(self, name):
+        return getattr(self.current, name)
+
+    def __iter__(self):
+        return iter(self.current)
+
+    def __call__(self, *args, **kwargs):
+        return self.current(*args, **kwargs)
+
+scope = ScopeProxy()
 
 
 class Scope(object):
@@ -124,38 +147,32 @@ class Scope(object):
         return not self == other
 
     def __enter__(self):
-        if self != _scope.current:
-            self.parent = _scope.current
-            _scope.current = self
-        return _scope.current
+        if self != scope.current:
+            self.parent = scope.current
+            scope.current = self
+        return scope.current
 
     def __exit__(self, exc_type, exc_value, traceback):
-        if self is _scope.current:
-            _scope.current = self.parent
+        if self is scope.current:
+            scope.current = self.parent
 
-    @classmethod
-    def current(cls):
-        """ return the current scope """
-        return _scope.current
-
-    @classmethod
-    def root(cls):
+    @property
+    def root(self):
         """ return the outermost scope """
-        scope = cls.current()
-        while scope.parent:
-            scope = scope.parent
-        return scope
+        cur = self
+        while cur.parent:
+            cur = cur.parent
+        return cur
 
-    @classmethod
-    def set(cls, *args, **kwargs):
-        """ Return a scope based on the current scope with modified parameters.
+    def __call__(self, *args, **kwargs):
+        """ Return a scope based on `self` with modified parameters.
 
             :param args: contains a database cursor to change the current
                 cursor, a user id or record to change the current user, a
                 context dictionary to change the current context
             :param kwargs: a set of key-value pairs to update the context
         """
-        cr, uid, context = cls.current()
+        cr, uid, context = self
         for arg in args:
             if isinstance(arg, dict):
                 context = arg
@@ -164,15 +181,13 @@ class Scope(object):
             elif isinstance(arg, Cursor):
                 cr = arg
             else:
-                raise Exception("Unexpected argument: %s", arg)
-        context = dict(context)
-        context.update(**kwargs)
+                raise Exception("Unexpected argument: %r", arg)
+        context = dict(context, **kwargs)
         return Scope(cr, uid, context)
 
-    @classmethod
-    def SUDO(cls):
-        """ Return a scope based on the current scope, with the superuser. """
-        return cls.set(SUPERUSER_ID)
+    def SUDO(self):
+        """ Return a scope based on `self`, with the superuser. """
+        return self(SUPERUSER_ID)
 
     def model(self, model_name):
         """ return a given model with scope """
@@ -317,7 +332,7 @@ def _returns_new(method, func):
         return wrapper
     elif model:
         def wrapper(self, *args, **kwargs):
-            mod = self.scope.model(model)
+            mod = scope.model(model)
             res = func(self, *args, **kwargs)
             if isinstance(res, dict):
                 return dict((k, mod.browse(v)) for k, v in res.iteritems())
@@ -493,7 +508,7 @@ def cr(method):
             return method(self, cr, *args, **kwargs)
 
     def new_api(self, *args, **kwargs):
-        cr, uid, context = self.scope
+        cr, uid, context = scope
         return method(self, cr, *args, **kwargs)
 
     return _make_wrapper(method, old_api, _returns_new(method, new_api))
@@ -508,7 +523,7 @@ def cr_context(method):
             return method(self, cr, *args, **kwargs)
 
     def new_api(self, *args, **kwargs):
-        cr, uid, context = self.scope
+        cr, uid, context = scope
         kwargs = _kwargs_context(kwargs, context)
         return method(self, cr, *args, **kwargs)
 
@@ -524,7 +539,7 @@ def cr_uid(method):
             return method(self, cr, uid, *args, **kwargs)
 
     def new_api(self, *args, **kwargs):
-        cr, uid, context = self.scope
+        cr, uid, context = scope
         return method(self, cr, uid, *args, **kwargs)
 
     return _make_wrapper(method, old_api, _returns_new(method, new_api))
@@ -545,7 +560,7 @@ def cr_uid_context(method):
             return method(self, cr, uid, *args, **kwargs)
 
     def new_api(self, *args, **kwargs):
-        cr, uid, context = self.scope
+        cr, uid, context = scope
         kwargs = _kwargs_context(kwargs, context)
         return method(self, cr, uid, *args, **kwargs)
 
@@ -564,7 +579,7 @@ def cr_uid_id(method):
             return method(self, cr, uid, id, *args, **kwargs)
 
     def new_api(self, *args, **kwargs):
-        cr, uid, context = self.scope
+        cr, uid, context = scope
         if self.is_record():
             return method(self, cr, uid, self.id, *args, **kwargs)
         else:
@@ -601,7 +616,7 @@ def cr_uid_id_context(method):
             return method(self, cr, uid, id, *args, **kwargs)
 
     def new_api(self, *args, **kwargs):
-        cr, uid, context = self.scope
+        cr, uid, context = scope
         kwargs = _kwargs_context(kwargs, context)
         if self.is_record():
             return method(self, cr, uid, self.id, *args, **kwargs)
@@ -623,7 +638,7 @@ def cr_uid_ids(method):
             return method(self, cr, uid, ids, *args, **kwargs)
 
     def new_api(self, *args, **kwargs):
-        cr, uid, context = self.scope
+        cr, uid, context = scope
         if self.is_record():
             return _map_record(self.id, method(self, cr, uid, [self.id], *args, **kwargs))
         else:
@@ -658,7 +673,7 @@ def cr_uid_ids_context(method):
             return method(self, cr, uid, ids, *args, **kwargs)
 
     def new_api(self, *args, **kwargs):
-        cr, uid, context = self.scope
+        cr, uid, context = scope
         kwargs = _kwargs_context(kwargs, context)
         if self.is_record():
             return _map_record(self.id, method(self, cr, uid, [self.id], *args, **kwargs))
