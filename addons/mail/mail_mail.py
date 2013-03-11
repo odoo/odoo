@@ -21,6 +21,7 @@
 
 import base64
 import logging
+import re
 from urllib import urlencode
 from urlparse import urljoin
 
@@ -198,13 +199,27 @@ class mail_mail(osv.Model):
             :param browse_record mail: mail.mail browse_record
             :param browse_record partner: specific recipient partner
         """
+        # TDE FIXME BEFORE MERGE: not sure the late change is interesting
         if mail.reply_to:
             return mail.reply_to
-        if not mail.model or not mail.res_id:
-            return False
-        if not hasattr(self.pool.get(mail.model), 'message_get_reply_to'):
-            return False
-        return self.pool.get(mail.model).message_get_reply_to(cr, uid, [mail.res_id], context=context)[0]
+        document_name = ''
+        email_reply_to = False
+        if mail.model and mail.res_id and hasattr(self.pool.get(mail.model), 'message_get_reply_to'):
+            email_reply_to = self.pool.get(mail.model).message_get_reply_to(cr, uid, [mail.res_id], context=context)[0]
+
+        if not email_reply_to:
+            if mail.email_from:
+                match = re.search(r'([^\s,<@]+@[^>\s,]+)', mail.email_from)  # TDE TODO: simplify multiple same regex
+                if match:
+                    email_reply_to = match.group(1)
+
+        if email_reply_to:
+            if mail.model and mail.res_id:
+                document_name = self.pool.get(mail.model).name_get(cr, SUPERUSER_ID, [mail.res_id], context=context)[0]
+            if document_name:
+                return 'Followers of %s <%s>' % (document_name[1], email_reply_to)
+            else:
+                return email_reply_to
 
     def send_get_email_dict(self, cr, uid, mail, partner=None, context=None):
         """ Return a dictionary for specific email values, depending on a
