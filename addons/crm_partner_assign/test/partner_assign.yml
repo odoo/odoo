@@ -10,8 +10,8 @@
 -
   !python {model: res.partner}: |
     partner = self.browse(cr, uid, ref('base.res_partner_2'))
-    assert 50 < partner.partner_latitude < 51 , "Latitude is wrong"
-    assert 3 < partner.partner_longitude < 5 , "Longitude is wrong"
+    assert 50 < partner.partner_latitude < 51, "Latitude is wrong: 50 < %s < 51" % partner.partner_latitude
+    assert 3 < partner.partner_longitude < 5, "Longitude is wrong: 3 < %s < 5" % partner.partner_longitude
 -
   I assign nearest partner to opportunity.
 -
@@ -23,8 +23,8 @@
   !python {model: crm.lead}: |
     lead = self.browse(cr, uid, ref('crm.crm_case_19'))
     assert lead.partner_assigned_id.id == ref('base.res_partner_15') , "Opportuniy is not assigned nearest partner"
-    assert 50 < lead.partner_latitude < 55, "Latitude is wrong"
-    assert -2 < lead.partner_longitude < 2, "Longitude is wrong"
+    assert 50 < lead.partner_latitude < 55, "Latitude is wrong: 50 < %s < 55" % partner.partner_latitude
+    assert -2 < lead.partner_longitude < 2, "Longitude is wrong: -2 < %s < 2" % partner.partner_longitude 
 -
   I forward this opportunity to its nearest partner.
 -
