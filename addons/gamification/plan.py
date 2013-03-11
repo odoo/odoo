@@ -48,9 +48,9 @@ def start_end_date_for_period(period):
         start_date = today.replace(month=1, day=1)
         end_date = today.replace(month=12, day=31)
     else: # period == 'once':
-        start_date = False # for manual goal, start each time
+        start_date = False  # for manual goal, start each time
         end_date = False
-    
+
     return (start_date, end_date)
 
 
@@ -61,8 +61,8 @@ class gamification_goal_plan(osv.Model):
     quickly apply several goals manually to a group of users
 
     If 'user_ids' is defined and 'period' is different than 'one', the set will
-    be assigned to the users for each period (eg: every 1st of each month if 
-        'monthly' is selected)
+    be assigned to the users for each period (eg: every 1st of each month if
+    'monthly' is selected)
     """
 
     _name = 'gamification.goal.plan'
@@ -84,7 +84,7 @@ class gamification_goal_plan(osv.Model):
                 next = last.replace(day=month_range[1]) + timedelta(days=1)
             elif plan.report_message_frequency == 'yearly':
                 next = last.replace(year=last.year + 1)
-            else: # frequency == 'once':
+            else:  # frequency == 'once':
                 next = False
             res[plan.id] = next.isoformat()
         return res

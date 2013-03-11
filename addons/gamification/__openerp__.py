@@ -23,11 +23,12 @@
     'version': '1.0',
     'author': 'OpenERP SA',
     'category': 'Human Resources',
-    'depends': ['mail', 'report_webkit'],
+    'depends': ['mail', 'report_webkit', 'hr'],
     'description': """Gamification of goals""",
 
     'data': [
         'plan_view.xml',
+        'badge_view.xml',
         'goal_view.xml',
         'cron.xml',
         ],

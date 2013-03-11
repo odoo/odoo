@@ -26,6 +26,7 @@ from templates import TemplateHelper
 
 from datetime import date, datetime, timedelta
 
+
 class gamification_goal_type(osv.Model):
     """Goal type definition
 

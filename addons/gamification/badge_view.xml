@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data>
+
+        <!-- Goal views -->
+        <record id="badge_list_action" model="ir.actions.act_window">
+            <field name="name">Badges</field>
+            <field name="res_model">gamification.badge</field>
+            <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    Click to create a badge. 
+                </p>
+                <p>
+                    A badge is a symbolic token granted to a user as a sign of reward.
+                    It can be deserved automatically when some conditions are met or manually by users.
+                </p>
+            </field>
+        </record>
+
+        <record id="badge_list_view" model="ir.ui.view">
+            <field name="name">Badge List</field>
+            <field name="model">gamification.badge</field>
+            <field name="arch" type="xml">
+                <tree string="Badge List"> 
+                    <field name="name"/>
+                    <field name="stat_count"/>
+                    <field name="rule_auth"/>
+                </tree>
+            </field>
+        </record>
+		
+		<record id="badge_form_view" model="ir.ui.view">
+            <field name="name">Badge Form</field>
+            <field name="model">gamification.badge</field>
+            <field name="arch" type="xml">
+                <form string="Badge" version="7.0">
+                    <sheet>
+                        <div class="oe_right oe_button_box">
+                            <button string="Send Badge" type="object" name="action_send" class="oe_highlight"/>
+                        </div>
+                        <field name="image" widget='image' class="oe_left oe_avatar"/>
+                        <div class="oe_title">
+                            <label for="name" class="oe_edit_only"/>
+                            <h1>
+                                <field name="name"/>
+                            </h1>
+                        </div>
+                        <field name="description" />
+                        <group string="Rules">
+                            <field name="rule_auth"/>
+                            <field name="rule_auth_user_ids"/>
+                            <field name="rule_auth_badge_ids"/>
+                            <field name="rule_max"/>
+                            <field name="rule_max_number"/>
+                            <field name="compute_code"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+    </data>
+</openerp>
