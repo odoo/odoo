@@ -33,9 +33,8 @@ class gamification_badge_user(osv.Model):
     _description = 'Gamification user badge'
 
     _columns = {
-        'employee_id': fields.many2one("hr.employee", string='Employee', required=True),
-        'user_id': fields.related('employee_id', 'user_id', string="User"),
-        'badge_id': fields.many2one('gamification.badge', string='Badge'),  # or many2one ??
+        'user_id': fields.many2one('res.users', string="User", required=True),
+        'badge_id': fields.many2one('gamification.badge', string='Badge'),
     }
 
 
@@ -65,8 +64,8 @@ class gamification_badge(osv.Model):
         for obj in self.browse(cr, uid, ids, context=context):
             res = self.pool.get('gamification.badge.user').read_group(
                                    cr, uid, domain=[('badge_id', '=', obj.id)],
-                                   fields=['badge_id', 'employee_id'],
-                                   groupby=['employee_id'], context=context)
+                                   fields=['badge_id', 'user_id'],
+                                   groupby=['user_id'], context=context)
             result[obj.id] = len(res)
         return result
 
@@ -109,7 +108,7 @@ class gamification_badge(osv.Model):
                 ('everyone', 'Everyone'),
                 ('users', 'A selected list of users'),
                 ('having', 'People having some badges'),
-                ('computed', 'Nobody, Computed'),
+                ('computed', 'Nobody'),
             ],
             string="Authorization Rule",
             help="Who can give this badge",
@@ -125,6 +124,16 @@ class gamification_badge(osv.Model):
             help="This badge can not be send indefinitely"),
         'rule_max_number': fields.integer('Limitation Number',
             help="The maximum number of time this badge can be sent per month."),
+        
+        'auto_rule': fields.selection([
+                ('manual', 'Given by User Only'),
+                ('goals', 'List of Goals'),
+                ('python', 'Python Code'),
+            ],
+            string="Authorization Rule",
+            help="Who can give this badge",
+            required=True),
+
         'compute_code': fields.text('Compute Code',
             help="The python code that will be executed to verify if a user can receive this badge."),
         'goal_type_ids': fields.many2many('gamification.goal.type',
@@ -133,15 +142,14 @@ class gamification_badge(osv.Model):
 
         'public': fields.boolean('Public',
             help="A message will be posted on the user profile or just sent to him"),
-        'owner_ids': fields.many2many('gamification.badge.user', 'rel_badge_users',
-            string='Owners',
-            help='The list of users having receive this badge'),
+        'owner_ids': fields.one2many('gamification.badge.user', 'badge_id',
+            string='Owners', help='The list of instances of this badge granted to users'),
 
         'stat_count': fields.function(_get_global_count, string='Total',
             help="The number of time this badge has been received."),
         'stat_count_distinct': fields.function(_get_unique_global_count,
             string='Unique Count',
-            help="The number of time this badge has been received by individual employees."),
+            help="The number of time this badge has been received by individual users."),
         'stat_this_month': fields.function(_get_month_count,
             string='Monthly Count',
             help="The number of time this badge has been received this month."),
@@ -158,38 +166,33 @@ class gamification_badge(osv.Model):
         'stat_this_month': 0,
     }
 
-    def send_badge(self, cr, uid, badge_id, user_ids, employee_from=None, context=None):
-        """Send a badge to a user
+    def send_badge(self, cr, uid, badge_id, badge_user_ids, user_from=None, context=None):
+        """Send a notification to a user for receiving a badge
 
+        Does NOT verify constrains on badge granting.
         The users are added to the owner_ids (create badge_user if needed)
         The stats counters are incremented
         :param badge_id: id of the badge to deserve
-        :param user_ids: list(int) of res.users that will receive the badge
+        :param badge_user_ids: list(int) of badge users that will receive the badge
+        :param user_from: res.users object that has sent the badge
         """
-        bade_user_obj = self.pool.get('gamification.badge.user')
-        res_users_obj = self.pool.get('res.users')
         badge = self.browse(cr, uid, badge_id, context=context)
         template_env = TemplateHelper()
 
         res = None
-        for user_id in user_ids:
-            badge_users = bade_user_obj.search(cr, uid, [('user_id', '=', user_id)], context=context)
-            if len(badge_users) == 0:
-                user = res_users_obj.browse(cr, uid, user_id, context=context)
-                badge_user = bade_user_obj.create(cr, uid,
-                    {'user_id': user_id, 'badge_ids': [(4, badge.id)]}, context=context)
-                badge_users = [badge_user.id]
-
+        for badge_user in self.pool.get('gamification.badge.user').browse(cr, uid, badge_user_ids, context=context):
             values = {
                 'badge': badge,
                 'badgeb64': badge.image.encode('base64'),
             }
-            if employee_from:
-                values['employee_from'] = employee_from
+
+            if user_from:
+                values['user_from'] = user_from
             else:
-                values['employee_from'] = False
+                values['user_from'] = False
             body_html = template_env.get_template('badge_received.mako').render(values)
-            res = self.pool.get('hr.employee').message_post(cr, uid, badge_users[0].employee_id,
+            # TODO change for classic email
+            res = self.pool.get('res.users').message_post(cr, uid, badge_user.user_id.id,
                                                             body=body_html,
                                                             context=context)
         return res
@@ -218,11 +221,10 @@ class gamification_badge(osv.Model):
 
         return True
 
-    def grant_badge(self, cr, uid, user_from_id, user_to_id, badge_id, context=None):
-        """A user wants to grant a badge to another user
+    def can_grant_badge(self, cr, uid, user_from_id, badge_id, context=None):
+        """Check if a user can grant a badge to another user
 
         :param user_from_id: the id of the res.users trying to send the badge
-        :param user_to_id: the id of the res.users that should recieve it
         :param badge_id: the granted badge id
         :return: boolean, True if succeeded to send, False otherwise"""
         context = context or {}
@@ -256,10 +258,36 @@ class gamification_badge(osv.Model):
             # sent the maximum number of time this month
             return False
 
-        user_from = self.pool.get('res.users').browse(cr, uid, user_from_id, context=context)
-        if len(user_from.employee_ids) > 0:
-            self.send_badge(cr, uid, badge_id, [user_to_id], employee_from=user_from.employee_ids[0], context=context)
-        else:
-            self.send_badge(cr, uid, badge_id, [user_to_id], context=context)
-
         return True
+
+
+class grant_badge_wizard(osv.TransientModel):
+    _name = 'gamification.badge.user.wizard'
+    _columns = {
+        'user_id': fields.many2one("res.users", string='User', required=True),
+        'badge_id': fields.many2one("gamification.badge", string='Badge'),
+    }
+
+    def action_grant_badge(self, cr, uid, ids, context=None):
+        if context is None:
+            context = {}
+
+        badge_obj = self.pool.get('gamification.badge')
+        badge_user_obj = self.pool.get('gamification.badge.user')
+
+        for wiz in self.browse(cr, uid, ids, context=context):
+            if badge_obj.can_grant_badge(cr, uid,
+                                         user_from_id=uid,
+                                         badge_id=wiz.badge_id.id,
+                                         context=context):
+
+                badge_user = badge_user_obj.create(cr, uid,
+                        {'user_id': wiz.user_id.id, 'badge_id': wiz.badge_id.id}, context=context)
+                #badge_obj.write(cr, uid, [badge.id], {'owner_ids': [(1, badge_user.id)]}, context=context)
+
+                user_from = self.pool.get('res.users').browse(cr, uid, uid, context=context)
+
+                badge_obj.send_badge(cr, uid, wiz.badge_id.id, [badge_user], user_from=user_from, context=context)
+                
+        return {}
+grant_badge_wizard()

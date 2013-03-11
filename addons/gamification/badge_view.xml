@@ -18,6 +18,32 @@
             </field>
         </record>
 
+
+        <record id="view_badge_wizard_grant" model="ir.ui.view">
+            <field name="name">Grant Badge User Form</field>
+            <field name="model">gamification.badge.user.wizard</field>
+            <field name="arch" type="xml">
+                <form string="Grant Badge To" version="7.0">
+                    Select the user that will receive this badge
+                    <group>
+                        <field name="user_id" />
+                        <field name="badge_id" invisible="1"/>
+                    </group>
+                    <footer>
+                        <button string="Grant Badge" type="object" name="action_grant_badge" class="oe_highlight" /> or
+                        <button string="Cancel" special="cancel" class="oe_link"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <act_window domain="[]" id="action_grant_wizard"
+            name="Grant Badge"
+            target="new"
+            res_model="gamification.badge.user.wizard"
+            context="{'default_badge_id': active_id, 'badge_id': active_id}"
+            view_type="form" view_mode="form"/>
+
         <record id="badge_list_view" model="ir.ui.view">
             <field name="name">Badge List</field>
             <field name="model">gamification.badge</field>
@@ -38,7 +64,7 @@
                 <form string="Badge" version="7.0">
                     <sheet>
                         <div class="oe_right oe_button_box">
-                            <button string="Send Badge" type="object" name="action_send" class="oe_highlight"/>
+                            <button string="Send this Badge" type="action" name="%(action_grant_wizard)d" class="oe_highlight"/>
                         </div>
                         <field name="image" widget='image' class="oe_left oe_avatar"/>
                         <div class="oe_title">
@@ -50,8 +76,8 @@
                         <field name="description" />
                         <group string="Rules">
                             <field name="rule_auth"/>
-                            <field name="rule_auth_user_ids" attrs="{'invisible': [('rule_auth','!=','users')]}"/>
-                            <field name="rule_auth_badge_ids" attrs="{'invisible': [('rule_auth','!=','having')]}"/>
+                            <field name="rule_auth_user_ids" attrs="{'invisible': [('rule_auth','!=','users')]}" widget="many2many_tags" />
+                            <field name="rule_auth_badge_ids" attrs="{'invisible': [('rule_auth','!=','having')]}" widget="many2many_tags" />
                             <field name="compute_code" attrs="{'invisible': [('rule_auth','!=','computed')]}"/>
                             <field name="rule_max"/>
                             <field name="rule_max_number" attrs="{'invisible': [('rule_max','=',False)]}"/>

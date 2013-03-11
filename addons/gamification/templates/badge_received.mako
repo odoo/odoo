@@ -5,8 +5,8 @@
   </head>
   <body>
     <p>Congratulation, you have received the badge <strong>${badge.name}</strong> !
-        % if employee_from
-            This badge was granted by <strong>${employee_from.name}</strong>.
+        % if user_from
+            This badge was granted by <strong>${user_from.name}</strong>.
         % endif
     </p>
 
