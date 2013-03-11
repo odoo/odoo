@@ -8,13 +8,13 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2013-03-07 08:37+0000\n"
-"PO-Revision-Date: 2013-02-11 08:20+0000\n"
+"PO-Revision-Date: 2013-03-10 07:29+0000\n"
 "Last-Translator: Ayhan KIZILTAN <Unknown>\n"
 "Language-Team: OpenERP Türkiye Yerelleştirmesi\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-03-08 05:31+0000\n"
+"X-Launchpad-Export-Date: 2013-03-11 05:42+0000\n"
 "X-Generator: Launchpad (build 16523)\n"
 "Language: tr\n"
 
@@ -31,7 +31,7 @@ msgstr "Grupla..."
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
 msgid "Template"
-msgstr ""
+msgstr "Şablon"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
@@ -51,7 +51,7 @@ msgstr "Reel Kâr Oranı (%)"
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
 msgid "End date passed or prepaid unit consumed"
-msgstr ""
+msgstr "Son tarih geçmiş veya önödemeli birim tüketilmiş"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,last_worked_date:0
@@ -107,7 +107,7 @@ msgstr "Bu hesap için toplam müşteriye faturalanmış tutar."
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
 msgid "Cancelled"
-msgstr ""
+msgstr "İptal edildi"
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,timesheet_ca_invoiced:0
@@ -118,7 +118,7 @@ msgstr ""
 #. module: account_analytic_analysis
 #: model:email.template,subject:account_analytic_analysis.account_analytic_cron_email_template
 msgid "Contract expiration reminder ${user.company_id.name}"
-msgstr ""
+msgstr "Sözleşme sonu anımsatıcı ${user.company_id.name}"
 
 #. module: account_analytic_analysis
 #: code:addons/account_analytic_analysis/account_analytic_analysis.py:466
@@ -129,7 +129,7 @@ msgstr "Satış Siparişi Kalemlerinin %s"
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
 msgid "End date is in the next month"
-msgstr ""
+msgstr "Bitiş tarihi gelecek ay içindedir"
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,revenue_per_hour:0
@@ -208,7 +208,7 @@ msgstr "Beklenen"
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
 msgid "Closed contracts"
-msgstr ""
+msgstr "Kapalı sözleşmeler"
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,theorical_margin:0
@@ -240,7 +240,7 @@ msgstr ""
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
 msgid "Pricelist"
-msgstr ""
+msgstr "Fiyat Listesi"
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,remaining_hours:0
@@ -289,7 +289,7 @@ msgstr "Gerçek Kar"
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
 msgid "Contracts assigned to a customer."
-msgstr ""
+msgstr "Bir müşteriye atanmış sözleşmeler."
 
 #. module: account_analytic_analysis
 #: model:ir.model,name:account_analytic_analysis.model_account_analytic_analysis_summary_month
@@ -299,7 +299,7 @@ msgstr "Aya göre saatlik özet"
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
 msgid "Pending contracts"
-msgstr ""
+msgstr "Bekleyen sözleşmeler"
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,real_margin_rate:0
@@ -325,7 +325,7 @@ msgstr "Ana"
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
 msgid "Units Consumed"
-msgstr ""
+msgstr "Tüektilen Birimler"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,month_ids:0
@@ -347,7 +347,7 @@ msgstr "Başlangıç Tarihi"
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
 msgid "Expiring soon"
-msgstr ""
+msgstr "Yakında bitiyor"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
@@ -423,6 +423,72 @@ msgid ""
 "\n"
 "            "
 msgstr ""
+"\n"
+"Sayın ${object.name},\n"
+"\n"
+"% macro account_table(values):\n"
+"<table cellspacing=\"1\" border=\"1\" cellpadding=\"4\">\n"
+"    <tr>\n"
+"        <th>Müşteri</th>\n"
+"        <th>Sözleşme</th>\n"
+"        <th>Tarihler</th>\n"
+"        <th>Önödemeli Birimler</th>\n"
+"        <th>Yetkili</th>\n"
+"    </tr>\n"
+"    % for partner, accounts in values:\n"
+"        % for account in accounts:\n"
+"        <tr>\n"
+"            <td>${partner.name}</td>\n"
+"            <td><a "
+"href=\"${ctx[\"base_url\"]}/#action=${ctx[\"action_id\"]}&id=${account.id}&vi"
+"ew_type=form\">${account.name}</a></td>\n"
+"            <td>${account.date_start} to ${account.date and account.date or "
+"'???'}</td>\n"
+"            <td>\n"
+"            % if account.quantity_max != 0.0:\n"
+"                ${account.remaining_hours}/${account.quantity_max} units\n"
+"            % endif\n"
+"            </td>\n"
+"            <td>${account.partner_id.phone or ''}, "
+"${account.partner_id.email or ''}</td>\n"
+"        </tr>\n"
+"        % endfor\n"
+"    % endfor\n"
+"</table>\n"
+"% endmacro \n"
+"\n"
+"% if \"new\" in ctx[\"data\"]:\n"
+"    <h2>Aşağıdaki sözleşmelerin süresi yeni dolmuştur: </h2>\n"
+"    ${account_table(ctx[\"data\"][\"new\"].iteritems())}\n"
+"% endif\n"
+"\n"
+"% if \"old\" in ctx[\"data\"]:\n"
+"    <h2>Aşağıdaki süresi dolan sözleşmeler halen yürütülmemektedir: </h2>\n"
+"    ${account_table(ctx[\"data\"][\"old\"].iteritems())}\n"
+"% endif\n"
+"\n"
+"% if \"future\" in ctx[\"data\"]:\n"
+"    <h2>Aşağıdaki sözleşmeler bir aydan kısa bir sürede sonlanacaktır: "
+"</h2>\n"
+"    ${account_table(ctx[\"data\"][\"future\"].iteritems())}\n"
+"% endif\n"
+"\n"
+"<p>\n"
+"    Bu menüyü kullanarak yenilenecek sözleşmeleri denetleyebilirsiniz:\n"
+"</p>\n"
+"<ul>\n"
+"    <li>Satış / Faturalama / Yenilenecek Sözleşmeler</li>\n"
+"</ul>\n"
+"<p>\n"
+"    Teşekkürler,\n"
+"</p>\n"
+"\n"
+"<pre>\n"
+"-- \n"
+"OpenERP Otomatik Eposta\n"
+"</pre>\n"
+"\n"
+"            "
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
@@ -432,7 +498,7 @@ msgstr "Zaman Çizelgeleri"
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
 msgid "Closed"
-msgstr ""
+msgstr "Kapalı"
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,hours_qtt_non_invoiced:0
@@ -501,7 +567,7 @@ msgstr "Kullanıcı"
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
 msgid "Cancelled contracts"
-msgstr ""
+msgstr "İptal edilen sözleşmeler"
 
 #. module: account_analytic_analysis
 #: model:ir.actions.act_window,help:account_analytic_analysis.template_of_contract_action
@@ -561,7 +627,7 @@ msgstr "Saat başına Gelir (gerçek)"
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
 msgid "Expired or consumed"
-msgstr ""
+msgstr "Bitmiş veya tüketilmiş"
 
 #. module: account_analytic_analysis
 #: model:ir.actions.act_window,help:account_analytic_analysis.action_account_analytic_overdue_all
@@ -614,7 +680,7 @@ msgstr "Faturalanmış Toplam"
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
 msgid "In Progress"
-msgstr ""
+msgstr "Sürüyor"
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,remaining_ca:0
@@ -625,7 +691,7 @@ msgstr ""
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
 msgid "Contracts in progress (open, draft)"
-msgstr ""
+msgstr "Süren sözleşmeler (açık, taslak)"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,last_invoice_date:0

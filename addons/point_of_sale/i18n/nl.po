@@ -8,13 +8,13 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2013-03-07 08:37+0000\n"
-"PO-Revision-Date: 2013-02-15 07:20+0000\n"
+"PO-Revision-Date: 2013-03-10 09:55+0000\n"
 "Last-Translator: Erwin van der Ploeg (Endian Solutions) <Unknown>\n"
 "Language-Team: Dutch <nl@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-03-08 05:52+0000\n"
+"X-Launchpad-Export-Date: 2013-03-11 05:42+0000\n"
 "X-Generator: Launchpad (build 16523)\n"
 
 #. module: point_of_sale
@@ -283,7 +283,7 @@ msgstr "Boekhoudinformatie"
 #: code:addons/point_of_sale/static/src/xml/pos.xml:427
 #, python-format
 msgid "0.00€"
-msgstr ""
+msgstr "€ 0.00"
 
 #. module: point_of_sale
 #: field:pos.session.opening,show_config:0
@@ -650,15 +650,15 @@ msgstr ""
 "<p class=\"oe_view_nocontent_create\">\n"
 "                Klik voor het starten van een nieuwe sessie.\n"
 "              </p><p>\n"
-"                 Een sessie is een periode, meestal een dag, waarin u "
+"                Een sessie is een periode, meestal een dag, waarin u "
 "verkopen\n"
-"                 doet met de kassa. De gebruiker controleert het aanwezige "
+"                doet met de kassa. De gebruiker controleert het aanwezige "
 "geld\n"
-"                 in uw kassa's aan het begin en het einde van elke sessie.\n"
-"               </ p>\n"
-"                 Opmerking: Het is beter om het menu te <i>Uw sessie </ i> "
+"                in uw kassa's aan het begin en het einde van elke sessie.\n"
+"              </ p>\n"
+"                Opmerking: Het is beter om het menu te <i>Uw sessie </ i> "
 "te\n"
-"                 gebruiken om snel een nieuwe sessie te openen.\n"
+"                gebruiken om snel een nieuwe sessie te openen.\n"
 "              </p>\n"
 "            "
 
@@ -1053,6 +1053,7 @@ msgstr "Gebruikers producten"
 #, python-format
 msgid "The POS order must have lines when calling this method"
 msgstr ""
+"de Kassa order moet regels hebben wanneer deze methode wordt aangeroepen."
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/point_of_sale.py:1143
@@ -2281,14 +2282,14 @@ msgstr ""
 "                Klik voor het toevoegen van een nieuw product.\n"
 "              </p><p>\n"
 "                U dient een product aan te maken voor alles wat u \n"
-"                verkoopt via de kassa.\n"
-"               </ p>\n"
-"                Vergeet niet om de prijs en de categorie in te stellen\n"
-"                waarin het product moeten verschijnen op de kassa. Als een "
+"                verkoopt via de kassa.\n"
+"              </ p>\n"
+"                Vergeet niet om de prijs en de categorie in te stellen\n"
+"                waarin het product moeten verschijnen op de kassa. Als een "
 "product\n"
-"                geen categorie heeft, kunt u deze niet verkopen via de "
+"                geen categorie heeft, kunt u deze niet verkopen via de "
 "kassa.\n"
-"               </ p>\n"
+"              </ p>\n"
 "            "
 
 #. module: point_of_sale
@@ -2871,7 +2872,7 @@ msgstr "Dr. Oetker Ristorante Pollo"
 #: constraint:pos.session:0
 msgid ""
 "You cannot create two active sessions related to the same point of sale!"
-msgstr "U kunt geen twee actiEve sessie activeren, voor dezelfde kassa!"
+msgstr "U kunt geen twee actieve sessies maken voor dezelfde kassa!"
 
 #. module: point_of_sale
 #: field:pos.category,image_small:0
@@ -3608,13 +3609,13 @@ msgid ""
 "            "
 msgstr ""
 "<p class=\"oe_view_nocontent_create\">\n"
-"                Klik vor het aanmaken van een nieuwe order.\n"
+"                Klik voor het aanmaken van een nieuwe order.\n"
 "              </p><p>\n"
 "                Gebruik dit menu om door uw voorgaande orders te bladeren. "
 "Om nieuwe orders aan te \n"
-"                maken, kunt u beter gebruik maken van het menu <i>Uw "
+"                maken, kunt u beter gebruik maken van het menu <i>Uw "
 "sessie</i> voor\n"
-"                de touchscreen kassa.\n"
+"                de touchscreen kassa.\n"
 "              </p>\n"
 "            "
 
@@ -3909,6 +3910,11 @@ msgid ""
 "maximum is reached, the user will have an error message at the closing of "
 "his session saying that he needs to contact his manager."
 msgstr ""
+"Dit veld geeft het maximale verschil aan tussen het eind saldo en de "
+"theoretische hoeveelheid contant geld bij het sluiten van een sessie, voor "
+"niet-kassa managers. Als dit maximum wordt bereikt, zal de gebruiker een "
+"foutmelding krijgen bij het afsluiten van zijn sessie, welke aangeeft dat "
+"hij contact moet opnemen met zijn manager."
 
 #. module: point_of_sale
 #: report:pos.invoice:0

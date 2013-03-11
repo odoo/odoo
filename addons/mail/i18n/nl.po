@@ -8,13 +8,13 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2013-03-07 08:37+0000\n"
-"PO-Revision-Date: 2013-02-27 12:55+0000\n"
-"Last-Translator: Stefan Rijnhart (Therp) <Unknown>\n"
+"PO-Revision-Date: 2013-03-09 09:55+0000\n"
+"Last-Translator: Erwin van der Ploeg (Endian Solutions) <Unknown>\n"
 "Language-Team: Dutch <nl@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-03-08 05:48+0000\n"
+"X-Launchpad-Export-Date: 2013-03-10 05:14+0000\n"
 "X-Generator: Launchpad (build 16523)\n"
 
 #. module: mail
@@ -160,7 +160,7 @@ msgstr "Ongelezen berichten"
 #: code:addons/mail/static/src/xml/mail.xml:267
 #, python-format
 msgid "to"
-msgstr ""
+msgstr "aan"
 
 #. module: mail
 #. openerp-web
@@ -205,6 +205,9 @@ msgid ""
 " %s won't be notified of any email or discussion on this document. Do you "
 "really want to remove him from the followers ?"
 msgstr ""
+"Waarschuwing! \n"
+"%s wordt niet geïnformeerd over e-mails en discussies over dit document. "
+"Weet u zeker dat u hem wilt verwijderen van de volgers?"
 
 #. module: mail
 #. openerp-web
@@ -267,7 +270,7 @@ msgstr "Ontvangen"
 #: code:addons/mail/static/src/xml/mail.xml:73
 #, python-format
 msgid "Attach a File"
-msgstr ""
+msgstr "Bijlage toevoegen"
 
 #. module: mail
 #: view:mail.mail:0
@@ -372,7 +375,7 @@ msgstr "<div>U bent uitgenodigd om %s te volgen.</div>"
 #: code:addons/mail/static/src/xml/mail.xml:54
 #, python-format
 msgid "Send a message"
-msgstr ""
+msgstr "Bericht versturen"
 
 #. module: mail
 #: help:mail.group,message_unread:0
@@ -407,7 +410,7 @@ msgstr "Auto-verwijder"
 #: code:addons/mail/static/src/xml/mail.xml:264
 #, python-format
 msgid "logged a note"
-msgstr ""
+msgstr "gemaakte notitie"
 
 #. module: mail
 #. openerp-web
@@ -474,7 +477,7 @@ msgstr ""
 #. module: mail
 #: view:base.config.settings:0
 msgid "mycompany.my.openerp.com"
-msgstr ""
+msgstr "mycompany.my.openerp.com"
 
 #. module: mail
 #: field:mail.message.subtype,relation_field:0
@@ -572,7 +575,7 @@ msgstr "Mislukt"
 #: code:addons/mail/static/src/xml/mail.xml:154
 #, python-format
 msgid "Attach a note that will not be send to the followers"
-msgstr ""
+msgstr "Voeg een notitie toe die niet wordt verstuurt aan mijn volgers"
 
 #. module: mail
 #. openerp-web
@@ -596,7 +599,7 @@ msgstr "Archieven"
 #. module: mail
 #: view:mail.compose.message:0
 msgid "Subject..."
-msgstr ""
+msgstr "Onderwerp..."
 
 #. module: mail
 #. openerp-web
@@ -610,7 +613,7 @@ msgstr "Verwijder deze bijlage"
 #: code:addons/mail/mail_thread.py:112
 #, python-format
 msgid "New"
-msgstr ""
+msgstr "Nieuw"
 
 #. module: mail
 #. openerp-web
@@ -722,6 +725,9 @@ msgid ""
 "You won't be notified of any email or discussion on this document. Do you "
 "really want to unfollow this document ?"
 msgstr ""
+"Waarschuwing! \n"
+"U wordt niet geïnformeerd over e-mails en discussies over dit document. Weet "
+"u zeker dat u dit document niet meer wilt volgen?"
 
 #. module: mail
 #: model:ir.actions.client,help:mail.action_mail_to_me_feeds
@@ -827,7 +833,7 @@ msgid ""
 "                                    discussions on this group."
 msgstr ""
 "Alleen de uitgenodigde volgers kunnen de discussies\n"
-"                                     van deze groep lezen."
+"                                    van deze groep lezen."
 
 #. module: mail
 #: model:ir.model,name:mail.model_ir_ui_menu
@@ -872,7 +878,7 @@ msgstr "Bericht subtypen"
 #: code:addons/mail/static/src/xml/mail.xml:57
 #, python-format
 msgid "Log a note"
-msgstr ""
+msgstr "Maak een notitie"
 
 #. module: mail
 #: selection:mail.compose.message,type:0
@@ -898,9 +904,9 @@ msgstr ""
 "<p>\n"
 "                    <b>Goed gedaan!</b> Uw postvak in is leeg.\n"
 "                </p><p>\n"
-"                   Uw postvak in bevat privé berichten of e-mails naar u "
+"                    Uw postvak in bevat privé berichten of e-mails naar u "
 "toegestuurd\n"
-"                     alsmede informatie over documenten of mensen die u\n"
+"                    alsmede informatie over documenten of mensen die u\n"
 "                    volgt.\n"
 "                </p>\n"
 "            "
@@ -995,7 +1001,7 @@ msgstr "Eigenaar"
 #: code:addons/mail/res_partner.py:49
 #, python-format
 msgid "Partner Profile"
-msgstr ""
+msgstr "Relatie profiel"
 
 #. module: mail
 #: model:ir.model,name:mail.model_mail_message
@@ -1073,6 +1079,7 @@ msgstr "Vul de volledige relatie informatie in"
 #, python-format
 msgid "<p>Access this document <a href=\"%s\">directly in OpenERP</a></p>"
 msgstr ""
+"<p>Benader dit document <a href=\"%s\">rechtstreeks in OpenERP</a></p>"
 
 #. module: mail
 #: view:mail.compose.message:0
@@ -1102,11 +1109,12 @@ msgid ""
 "            "
 msgstr ""
 "<p>\n"
-"                   Geen berichten gevonden en nog geen berichten verzonden.\n"
+"                    Geen berichten gevonden en nog geen berichten "
+"verzonden.\n"
 "                </p><p>\n"
-"                   Klik op de bovenste-rechter pictogram om een ​​bericht op "
-"te stellen. Dit\n"
-"                   bericht wordt verzonden per e-mail als het een interne "
+"                    Klik op de bovenste-rechter pictogram om een ​​bericht "
+"op te stellen. Dit\n"
+"                    bericht wordt verzonden per e-mail als het een interne "
 "relatie is.\n"
 "                </p>\n"
 "            "
@@ -1132,7 +1140,7 @@ msgstr "Alle berichten"
 #: code:addons/mail/mail_thread.py:111
 #, python-format
 msgid "You have one unread message"
-msgstr ""
+msgstr "U heeft een ongelezen bericht"
 
 #. module: mail
 #: help:mail.compose.message,record_name:0
@@ -1235,7 +1243,7 @@ msgstr "Uitgebreide filters..."
 #: code:addons/mail/static/src/xml/mail.xml:278
 #, python-format
 msgid "more"
-msgstr ""
+msgstr "meer"
 
 #. module: mail
 #. openerp-web
@@ -1297,7 +1305,7 @@ msgstr ""
 #: view:mail.compose.message:0
 #: view:mail.wizard.invite:0
 msgid "Add contacts to notify..."
-msgstr ""
+msgstr "Voeg personen toe om te berichten..."
 
 #. module: mail
 #: view:mail.group:0
@@ -1355,7 +1363,7 @@ msgstr "En"
 #: code:addons/mail/mail_thread.py:111
 #, python-format
 msgid "You have %d unread messages"
-msgstr ""
+msgstr "U heeft %d ongelezen berichten"
 
 #. module: mail
 #: field:mail.compose.message,message_id:0
@@ -1398,7 +1406,7 @@ msgstr "Berichten met ster welke gaan naar het taken postvak"
 #. module: mail
 #: view:mail.mail:0
 msgid "Cancel Email"
-msgstr ""
+msgstr "E-mail annuleren"
 
 #. module: mail
 #. openerp-web
@@ -1637,7 +1645,7 @@ msgstr "Zet terug naar taken"
 #. module: mail
 #: view:mail.group:0
 msgid "Send a message to the group"
-msgstr ""
+msgstr "Stuur een bericht naar de groep"
 
 #. module: mail
 #: field:mail.group,name:0
@@ -1647,7 +1655,7 @@ msgstr "Naam"
 #. module: mail
 #: view:mail.group:0
 msgid "Topics discussed in this group..."
-msgstr ""
+msgstr "Onderwerpen welke worden besproken in deze groep..."
 
 #. module: mail
 #: field:res.partner,notification_email_send:0
