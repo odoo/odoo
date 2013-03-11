@@ -364,8 +364,8 @@ class survey_analysis(report_rml):
                         </tr>
                         <tr>
                             <td><para style="Standard1"></para></td>
-                            <td><para style="Standard1">Skipped Question</para></td>
-                            <td><para style="Standard1">""" + tools.ustr(survey.tot_start_survey - que.tot_resp) + """</para></td>
+                            <td><para style="Standard1">Skipped Questions</para></td>
+                            <td><para style="Standard1">""" + tools.ustr(que.tot_resp - survey.tot_start_survey) + """</para></td>
                         </tr>
                         </blockTable>"""
             rml += """</story>"""
