@@ -85,11 +85,12 @@
                                 </group>
                             </page>
                         </notebook>
-                        <div class="oe_chatter">
-                            <field name="message_follower_ids" widget="mail_followers"/>
-                            <field name="message_ids" widget="mail_thread"/>
-                        </div>
+                        
                     </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" widget="mail_followers"/>
+                        <field name="message_ids" widget="mail_thread"/>
+                    </div>
                 </form>
             </field>
         </record>
@@ -159,9 +160,12 @@
                                     <li t-if="record.work_location.raw_value"><field name="work_location"/></li>
                                     <li t-if="record.work_email.raw_value"><a t-attf-href="mailto:#{record.work_email.value}"><field name="work_email"/></a></li>
                                 </ul>
-                                <div class="oe_group_button">
-                                    <button t-if="record.message_is_follower.raw_value" name="action_unfollow" type="object" class="oe_group_join">Unfollow</button>
-                                    <button t-if="! record.message_is_follower.raw_value" name="action_follow" type="object">Follow</button>
+                                <div class="oe_followers">
+                                    <button t-if="record.message_is_follower.raw_value" name="action_unfollow" type="object" class="oe_follower oe_following">
+                                        <span class="oe_unfollow">Unfollow</span>
+                                        <span class="oe_following">Following</span>
+                                    </button>
+                                    <button t-if="! record.message_is_follower.raw_value" name="action_follow" type="object" class="oe_follower oe_notfollow">Follow</button>
                                 </div>
                             </div>
                         </div>

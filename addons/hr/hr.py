@@ -291,7 +291,7 @@ class hr_employee(osv.osv):
         :return: the result of message_post from mail_thread, last call if
         several messages are sent.
         """
-        
+
         if 'res_users_id' in context and context['default_res_id'] == 0:
             employee_ids = self.search(cr, uid, [('user_id', '=', context['res_users_id'])], context=context)
             if len(employee_ids) > 0:
