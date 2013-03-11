@@ -138,21 +138,8 @@
     <images/>
   </stylesheet>
   <story>
-  <pto>
     <para style="terp_default_8">[[ repeatIn(objects,'o') ]]</para>
     <para style="terp_default_8">[[ setLang(o.partner_id.lang) ]]</para>
-    <pto_header><!-- Must be after setLang() -->
-    <blockTable colWidths="202.0,87.0,71.0,57.0,42.0,71.0" style="Table7">
-    <tr>
-        <td> <para style="terp_tblheader_Details">Description</para> </td>
-        <td> <para style="terp_tblheader_Details_Centre">Taxes</para> </td>
-        <td> <para style="terp_tblheader_Details_Centre">Quantity</para> </td>
-        <td> <para style="terp_tblheader_Details_Right">Unit Price </para> </td>
-        <td> <para style="terp_tblheader_Details_Right">Disc.(%)</para> </td>
-        <td> <para style="terp_tblheader_Details_Right">Price</para> </td>
-    </tr>
-    </blockTable>
-    </pto_header>
     <blockTable colWidths="297.0,233.0" style="Table_Partner_Address">
       <tr>
         <td>
@@ -217,6 +204,19 @@
     <para style="terp_default_8">
       <font color="white"> </font>
     </para>
+    <pto>
+    <pto_header>
+        <blockTable colWidths="185.0,70.0,80.0,60.0,50.0,85.0" style="Table7">
+        <tr>
+            <td> <para style="terp_tblheader_Details">Description</para> </td>
+            <td> <para style="terp_tblheader_Details_Centre">Taxes</para> </td>
+            <td> <para style="terp_tblheader_Details_Centre">Quantity</para> </td>
+            <td> <para style="terp_tblheader_Details_Right">Unit Price </para> </td>
+            <td> <para style="terp_tblheader_Details_Right">Disc.(%)</para> </td>
+            <td> <para style="terp_tblheader_Details_Right">Price</para> </td>
+        </tr>
+        </blockTable>
+    </pto_header>
     <blockTable colWidths="185.0,70.0,80.0,60.0,50.0,85.0" style="Table7">
       <tr>
         <td>
@@ -264,6 +264,7 @@
         </tr>
       </blockTable>
     </section>
+    </pto>
     <blockTable colWidths="385.0,60.0,85.0" style="Table10">
       <tr>
         <td>
@@ -371,6 +372,5 @@
     <para style="terp_default_2">
       <font color="white"> </font>
     </para>
-  </pto>
   </story>
 </document>

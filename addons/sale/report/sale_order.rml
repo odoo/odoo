@@ -126,33 +126,8 @@
     <images/>
   </stylesheet>
   <story>
-  <pto>
   <para style="terp_default_8">[[repeatIn(objects,'o')]]</para>
   <para style="terp_default_8">[[ setLang(o.partner_id.lang) ]]</para>
-  <pto_header>
-    <blockTable colWidths="181.0,70.0,80.0,70.0,50.0,85.0" repeatRows="1" style="Table4">
-      <tr>
-        <td>
-          <para style="terp_tblheader_Details">Description</para>
-        </td>
-        <td>
-          <para style="terp_tblheader_Details_Centre">Tax</para>
-        </td>
-        <td>
-          <para style="terp_tblheader_Details_Right">Quantity</para>
-        </td>
-        <td>
-          <para style="terp_tblheader_Details_Right">Unit Price</para>
-        </td>
-        <td>
-          <para style="terp_tblheader_Details_Centre">Disc.(%)</para>
-        </td>
-        <td>
-          <para style="terp_tblheader_Details_Right">Price</para>
-        </td>
-      </tr>
-    </blockTable>
-  </pto_header>
     <para style="terp_default_8">
       <font color="white"> </font>
     </para>
@@ -236,6 +211,31 @@
     <para style="terp_default_8">
       <font color="white"> </font>
     </para>
+    <pto>
+    <pto_header>
+      <blockTable colWidths="181.0,70.0,80.0,70.0,50.0,85.0" repeatRows="1" style="Table4">
+        <tr>
+          <td>
+            <para style="terp_tblheader_Details">Description</para>
+         </td>
+         <td>
+            <para style="terp_tblheader_Details_Centre">VAT</para>
+         </td>
+         <td>
+           <para style="terp_tblheader_Details_Right">Quantity</para>
+         </td>
+         <td>
+           <para style="terp_tblheader_Details_Right">Unit Price</para>
+         </td>
+         <td>
+           <para style="terp_tblheader_Details_Centre">Disc.(%)</para>
+         </td>
+         <td>
+           <para style="terp_tblheader_Details_Right">Price</para>
+         </td>
+        </tr>
+      </blockTable>
+    </pto_header>
     <blockTable colWidths="181.0,70.0,80.0,70.0,50.0,85.0" repeatRows="1" style="Table4">
       <tr>
         <td>
@@ -283,6 +283,7 @@
         </tr>
       </blockTable>
     </section>
+    </pto>
     <blockTable colWidths="381.0,60.0,93.0" style="Table6">
       <tr>
         <td>
@@ -338,6 +339,5 @@
     <para style="terp_default_8">
       <font color="white"> </font>
     </para>
-  </pto>
   </story>
 </document>
