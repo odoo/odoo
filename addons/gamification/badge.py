@@ -23,6 +23,7 @@ from openerp.osv import fields, osv
 from openerp import tools
 
 from templates import TemplateHelper
+from datetime import date
 
 
 class gamification_badge_user(osv.Model):
@@ -34,7 +35,7 @@ class gamification_badge_user(osv.Model):
     _columns = {
         'employee_id': fields.many2one("hr.employee", string='Employee', required=True),
         'user_id': fields.related('employee_id', 'user_id', string="User"),
-        'badge_ids': fields.many2many('gamification.badge', 'rel_badge_users', string='Badge'),  # or many2one ??
+        'badge_id': fields.many2one('gamification.badge', string='Badge'),  # or many2one ??
     }
 
 
@@ -50,15 +51,63 @@ class gamification_badge(osv.Model):
             result[obj.id] = tools.image_get_resized_images(obj.image)
         return result
 
+    def _get_global_count(self, cr, uid, ids, name, args, context=None):
+        """Return the number of time this badge has been granted"""
+        result = dict.fromkeys(ids, False)
+        for obj in self.browse(cr, uid, ids, context=context):
+            result[obj.id] = len(self.pool.get('gamification.badge.user').search(
+                cr, uid, [('badge_id', '=', obj.id)], context=context))
+        return result
+
+    def _get_unique_global_count(self, cr, uid, ids, name, args, context=None):
+        """Return the number of time this badge has been granted to individual users"""
+        result = dict.fromkeys(ids, False)
+        for obj in self.browse(cr, uid, ids, context=context):
+            res = self.pool.get('gamification.badge.user').read_group(
+                                   cr, uid, domain=[('badge_id', '=', obj.id)],
+                                   fields=['badge_id', 'employee_id'],
+                                   groupby=['employee_id'], context=context)
+            result[obj.id] = len(res)
+        return result
+
+    def _get_month_count(self, cr, uid, ids, name, args, context=None):
+        """Return the number of time this badge has been granted this month"""
+        result = dict.fromkeys(ids, False)
+        first_month_day = date.today().replace(day=1).isoformat()
+        for obj in self.browse(cr, uid, ids, context=context):
+            result[obj.id] = len(self.pool.get('gamification.badge.user').search(
+                cr, uid, [('badge_id', '=', obj.id),
+                          ('create_date', '>=', first_month_day)], context=context))
+        return result
+
+    def _get_global_my_count(self, cr, uid, ids, name, args, context=None):
+        """Return the number of time this badge has been granted to the current user"""
+        result = dict.fromkeys(ids, False)
+        for obj in self.browse(cr, uid, ids, context=context):
+            result[obj.id] = len(self.pool.get('gamification.badge.user').search(
+                    cr, uid, [('badge_id', '=', obj.id), ('user_id', '=', uid)],
+                    context=context))
+        return result
+
+    def _get_month_my_count(self, cr, uid, ids, name, args, context=None):
+        """Return the number of time this badge has been granted to the current user this month"""
+        result = dict.fromkeys(ids, False)
+        first_month_day = date.today().replace(day=1).isoformat()
+        for obj in self.browse(cr, uid, ids, context=context):
+            result[obj.id] = len(self.pool.get('gamification.badge.user').search(
+                cr, uid, [('badge_id', '=', obj.id), ('user_id', '=', uid)
+                          ('create_date', '>=', first_month_day)], context=context))
+        return result
+
     _columns = {
         'name': fields.char('Badge', required=True, translate=True),
         'description': fields.text('Description'),
-        'image' : fields.binary("Image",
+        'image': fields.binary("Image",
             help="This field holds the image used for the badge, limited to 256x256"),
         # image_select: selection with a on_change to fill image with predefined picts
         'rule_auth': fields.selection([
                 ('everyone', 'Everyone'),
-                ('list', 'A selected list of users'),
+                ('users', 'A selected list of users'),
                 ('having', 'People having some badges'),
                 ('computed', 'Nobody, Computed'),
             ],
@@ -76,24 +125,31 @@ class gamification_badge(osv.Model):
             help="This badge can not be send indefinitely"),
         'rule_max_number': fields.integer('Limitation Number',
             help="The maximum number of time this badge can be sent per month."),
+        'compute_code': fields.text('Compute Code',
+            help="The python code that will be executed to verify if a user can receive this badge."),
         'goal_type_ids': fields.many2many('gamification.goal.type',
             string='Goals Linked',
             help="The users that have succeeded theses goals will receive automatically the badge."),
+
         'public': fields.boolean('Public',
             help="A message will be posted on the user profile or just sent to him"),
         'owner_ids': fields.many2many('gamification.badge.user', 'rel_badge_users',
             string='Owners',
             help='The list of users having receive this badge'),
-        'stat_count': fields.integer('Total Count',
+
+        'stat_count': fields.function(_get_global_count, string='Total',
             help="The number of time this badge has been received."),
-        'stat_count_distinct': fields.integer('Uniaue Count',
-            help="The number of time this badge has been received by individual users."),
-        'stat_this_month': fields.integer('Monthly Count',
+        'stat_count_distinct': fields.function(_get_unique_global_count,
+            string='Unique Count',
+            help="The number of time this badge has been received by individual employees."),
+        'stat_this_month': fields.function(_get_month_count,
+            string='Monthly Count',
             help="The number of time this badge has been received this month."),
-        # stat_my
-        # stat_my_this_month
-        'compute_code': fields.text('Compute Code',
-            help="The python code that will be executed to verify if a user can receive this badge.")
+        'stat_my': fields.function(_get_global_my_count, string='My Total',
+            help="The number of time the current user has received this badge."),
+        'stat_my_this_month': fields.function(_get_month_my_count,
+            string='My Monthly Total',
+            help="The number of time the current user has received this badge this month."),
     }
 
     _default = {

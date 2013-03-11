@@ -25,6 +25,7 @@
                 <tree string="Badge List"> 
                     <field name="name"/>
                     <field name="stat_count"/>
+                    <field name="stat_my"/>
                     <field name="rule_auth"/>
                 </tree>
             </field>
@@ -49,11 +50,11 @@
                         <field name="description" />
                         <group string="Rules">
                             <field name="rule_auth"/>
-                            <field name="rule_auth_user_ids"/>
-                            <field name="rule_auth_badge_ids"/>
+                            <field name="rule_auth_user_ids" attrs="{'invisible': [('rule_auth','!=','users')]}"/>
+                            <field name="rule_auth_badge_ids" attrs="{'invisible': [('rule_auth','!=','having')]}"/>
+                            <field name="compute_code" attrs="{'invisible': [('rule_auth','!=','computed')]}"/>
                             <field name="rule_max"/>
-                            <field name="rule_max_number"/>
-                            <field name="compute_code"/>
+                            <field name="rule_max_number" attrs="{'invisible': [('rule_max','=',False)]}"/>
                         </group>
                     </sheet>
                 </form>

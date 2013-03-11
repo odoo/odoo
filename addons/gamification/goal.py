@@ -40,11 +40,12 @@ class gamification_goal_type(osv.Model):
     _columns = {
         'name': fields.char('Type Name', required=True, translate=True),
         'description': fields.text('Description'),
-        'unit': fields.char('Unit', help="The unit of the target and current values", translate=True),
+        'unit': fields.char('Unit',
+            help="The unit of the target and current values", translate=True),
         'computation_mode': fields.selection([
-                ('sum','Sum'),
-                ('count','Count'),
-                ('manually','Manually')
+                ('sum', 'Sum'),
+                ('count', 'Count'),
+                ('manually', 'Manually')
             ],
             string="Mode of Computation",
             help="""How is computed the goal value :\n
@@ -54,24 +55,24 @@ class gamification_goal_type(osv.Model):
             required=True),
         'model_id': fields.many2one('ir.model',
             string='Model',
-            help='The model object for the field to evaluate' ),
+            help='The model object for the field to evaluate'),
         'field_id': fields.many2one('ir.model.fields',
             string='Evaluated Field',
-            help='The field containing the value to evaluate' ),
+            help='The field containing the value to evaluate'),
         'field_date_id': fields.many2one('ir.model.fields',
             string='Evaluated Date Field',
             help='The date to use for the time period evaluated'),
         'domain': fields.char("Domain",
             help="Technical filters rules to apply",
             required=True), # how to apply it ?
-        'condition' : fields.selection([
-                ('lower','<='),
-                ('higher','>=')
+        'condition': fields.selection([
+                ('lower', '<='),
+                ('higher', '>=')
             ],
             string='Validation Condition',
             help='A goal is considered as completed when the current value is compared to the value to reach',
             required=True),
-        'sequence' : fields.integer('Sequence',
+        'sequence': fields.integer('Sequence',
             help='Sequence number for ordering',
             required=True),
     }
@@ -144,7 +145,7 @@ class gamification_goal(osv.Model):
             ],
             string='State',
             required=True,
-            track_visibility = 'always'),
+            track_visibility='always'),
 
         'computation_mode': fields.related('type_id','computation_mode',
             type='char', 
@@ -153,7 +154,7 @@ class gamification_goal(osv.Model):
             help="The number of days after which the user assigned to a manual goal will be reminded. Never reminded if no value is specified."),
         'last_update' : fields.date('Last Update',
             help="In case of manual goal, reminders are sent if the goal as not been updated for a while (defined in goal plan). Ignored in case of non-manual goal or goal not linked to a plan."),
-        
+
         'type_description': fields.related('type_id','description',
             type='char',
             string='Type Description'),
@@ -207,12 +208,12 @@ class gamification_goal(osv.Model):
                             partner_ids=[goal.user_id.partner_id.id],
                             context=context,
                             subtype='mail.mt_comment')
-                        
-            else: # count or sum
+
+            else:  # count or sum
                 obj = self.pool.get(goal.type_id.model_id.model)
                 field_date_name = goal.type_id.field_date_id.name
-                
-                domain = safe_eval(goal.type_id.domain, 
+
+                domain = safe_eval(goal.type_id.domain,
                     {'user_id': goal.user_id.id})
                 if goal.start_date:
                     domain.append((field_date_name, '>=', goal.start_date))
@@ -224,11 +225,11 @@ class gamification_goal(osv.Model):
                     res = obj.read_group(cr, uid, domain, [field_name],
                         [''], context=context)
                     towrite = {'current': res[0][field_name]}
-                
-                else: # computation mode = count
+
+                else:  # computation mode = count
                     res = obj.search(cr, uid, domain, context=context)
                     towrite = {'current': len(res)}
-                
+
             # check goal target reached
             if (goal.type_id.condition == 'higher' \
                 and towrite['current'] >= goal.target_goal) \

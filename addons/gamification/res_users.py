@@ -1,5 +1,6 @@
 from openerp.osv import osv
 
+
 class res_users_gamification_group(osv.Model):
     """ Update of res.users class
         - if adding groups to an user, check gamification.goal.plan linked to 
