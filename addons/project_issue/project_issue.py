@@ -549,6 +549,9 @@ class project_issue(base_stage, osv.osv):
         """ Overrides mail_thread message_post so that we can set the date of last action field when
             a new message is posted on the issue.
         """
+        if context is None:
+            context = {}
+        
         if thread_id:
             model = context.get('thread_model', self._name)
             if model != self._name:
