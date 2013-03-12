@@ -2634,7 +2634,7 @@ action = pool.get('res.config').next(cr, uid, [], context)
                     </group>
 
                     <notebook colspan="4">
-                        <page string="Cash Transactions" attrs="{'invisible': [('state','=','draft')]}">
+                        <page string="Cash Transactions" name="statement_lines" attrs="{'invisible': [('state','=','draft')]}">
                             <field colspan="4" name="line_ids" nolabel="1" context="{'date':date}">
                                 <tree editable="bottom" string="Statement lines">
                                     <field name="sequence" invisible="1"/>
