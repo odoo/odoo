@@ -2792,14 +2792,14 @@ class account_tax_template(osv.osv):
         'child_depend':fields.boolean('Tax on Children', help="Set if the tax computation is based on the computation of child taxes rather than on the total amount."),
         'python_compute':fields.text('Python Code'),
         'python_compute_inv':fields.text('Python Code (reverse)'),
-        'python_applicable':fields.text('Python Code'),
+        'python_applicable':fields.text('Applicable Code'),
 
         #
         # Fields used for the Tax declaration
         #
         'base_code_id': fields.many2one('account.tax.code.template', 'Base Code', help="Use this code for the tax declaration."),
         'tax_code_id': fields.many2one('account.tax.code.template', 'Tax Code', help="Use this code for the tax declaration."),
-        'base_sign': fields.float('Base Code Sign', help="Usually 1 or -1."),
+        'base_sign': fields.float('Base Sign Code', help="Usually 1 or -1."),
         'tax_sign': fields.float('Tax Code Sign', help="Usually 1 or -1."),
 
         # Same fields for refund invoices
@@ -2807,7 +2807,7 @@ class account_tax_template(osv.osv):
         'ref_base_code_id': fields.many2one('account.tax.code.template', 'Refund Base Code', help="Use this code for the tax declaration."),
         'ref_tax_code_id': fields.many2one('account.tax.code.template', 'Refund Tax Code', help="Use this code for the tax declaration."),
         'ref_base_sign': fields.float('Base Code Sign', help="Usually 1 or -1."),
-        'ref_tax_sign': fields.float('Tax Code Sign', help="Usually 1 or -1."),
+        'ref_tax_sign': fields.float('Tax Sign Code', help="Usually 1 or -1."),
         'include_base_amount': fields.boolean('Include in Base Amount', help="Set if the amount of tax must be included in the base amount before computing the next taxes."),
         'description': fields.char('Internal Name'),
         'type_tax_use': fields.selection([('sale','Sale'),('purchase','Purchase'),('all','All')], 'Tax Use In', required=True,),
