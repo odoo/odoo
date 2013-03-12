@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-21 17:05+0000\n"
-"PO-Revision-Date: 2013-02-24 16:06+0000\n"
+"POT-Creation-Date: 2013-03-07 08:38+0000\n"
+"PO-Revision-Date: 2013-03-10 14:59+0000\n"
 "Last-Translator: Ayhan KIZILTAN <Unknown>\n"
 "Language-Team: Turkish <tr@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-02-25 05:40+0000\n"
-"X-Generator: Launchpad (build 16506)\n"
+"X-Launchpad-Export-Date: 2013-03-11 05:42+0000\n"
+"X-Generator: Launchpad (build 16523)\n"
 
 #. module: document
 #: field:document.directory,parent_id:0
@@ -23,7 +23,7 @@ msgid "Parent Directory"
 msgstr "Ana Dizin"
 
 #. module: document
-#: code:addons/document/document.py:336
+#: code:addons/document/document.py:350
 #, python-format
 msgid "Directory name contains special characters!"
 msgstr "Klasör adında özel karakterler var!"
@@ -115,16 +115,16 @@ msgid "The name of the field."
 msgstr "Alanın adı."
 
 #. module: document
-#: code:addons/document/document.py:326
-#: code:addons/document/document.py:331
+#: code:addons/document/document.py:340
+#: code:addons/document/document.py:345
 #, python-format
 msgid "Directory name must be unique!"
-msgstr "Klasör adı eşsiz olmalı !"
+msgstr "Dizin adı eşsiz olmalı !"
 
 #. module: document
 #: view:ir.attachment:0
 msgid "Filter on my documents"
-msgstr "Dökümanlarımdaki filtreler"
+msgstr "Belgelerimdeki süzgeçler"
 
 #. module: document
 #: view:ir.attachment:0
@@ -182,7 +182,7 @@ msgstr "Bilgi Birikimi Uygulama Ayarları"
 #: view:ir.attachment:0
 #: field:ir.attachment,partner_id:0
 msgid "Partner"
-msgstr "Paydaş"
+msgstr "İş Ortağı"
 
 #. module: document
 #: model:ir.actions.act_window,name:document.act_res_partner_document
@@ -211,9 +211,9 @@ msgstr ""
 "        "
 
 #. module: document
-#: code:addons/document/document.py:326
-#: code:addons/document/document.py:331
-#: code:addons/document/document.py:336
+#: code:addons/document/document.py:340
+#: code:addons/document/document.py:345
+#: code:addons/document/document.py:350
 #, python-format
 msgid "ValidateError"
 msgstr "DoğrulamaHatası"
@@ -251,7 +251,7 @@ msgstr "İçerik Türü"
 #: view:document.directory:0
 #: field:document.directory,type:0
 msgid "Type"
-msgstr "Tür"
+msgstr "Tip"
 
 #. module: document
 #: sql_constraint:ir.attachment:0
@@ -260,7 +260,7 @@ msgstr "Bir dizindeki dosya adı eşsiz olmalı !"
 
 #. module: document
 #: code:addons/document/document.py:110
-#: code:addons/document/document.py:296
+#: code:addons/document/document.py:310
 #, python-format
 msgid "%s (copy)"
 msgstr "%s (kopya)"
@@ -295,7 +295,7 @@ msgstr "Ad alanı"
 #. module: document
 #: field:document.directory,dctx_ids:0
 msgid "Context fields"
-msgstr "Bağlam Alanları"
+msgstr "İçerik Alanları"
 
 #. module: document
 #: view:document.directory:0
@@ -324,7 +324,7 @@ msgid "Virtual Files"
 msgstr "Sanal Dosyalar"
 
 #. module: document
-#: code:addons/document/document.py:562
+#: code:addons/document/document.py:576
 #, python-format
 msgid "Error at doc write!"
 msgstr "Belge yazımında hata !"
@@ -340,8 +340,8 @@ msgid ""
 "When executing this wizard, it will configure your directories automatically "
 "according to modules installed."
 msgstr ""
-"Bu sihirbazı yürütürken, dizinlerinizi otomatikmen kurulu bulunan modüllere "
-"göre yapılandıracaktır."
+"Bu sihirbazı yürütürken, dizinlerinizi kendiliğinden kurulu bulunan "
+"modüllere göre yapılandıracaktır."
 
 #. module: document
 #: field:document.directory.content,directory_id:0
@@ -427,7 +427,7 @@ msgstr "Bütün alt dizinler ve dosyalar için içerik kelimelerini tanımla"
 #. module: document
 #: view:document.directory:0
 msgid "Static"
-msgstr "Durağan"
+msgstr "Statik"
 
 #. module: document
 #: field:report.document.user,user:0
@@ -467,13 +467,13 @@ msgid ""
 "If set, the directory will have to be a resource one."
 msgstr ""
 "Dosya adının kayıt adını içermesini istiyorsanız bu alanı işaretleyin.\n"
-"Eğer ayarlandıysa, dizin kaynak olandan olmalı."
+"Eğer ayarlıysa, dizin kaynak olandan olmalı."
 
 #. module: document
 #: view:document.configuration:0
 #: model:ir.actions.act_window,name:document.action_config_auto_directory
 msgid "Configure Directories"
-msgstr "Klasörleri Ayarla"
+msgstr "Dizinleri Yapılandır"
 
 #. module: document
 #: field:document.directory.content,include_name:0
@@ -585,7 +585,7 @@ msgstr "Ocak"
 #. module: document
 #: view:document.directory:0
 msgid "Document Directory"
-msgstr "Dökümanlar Klasörü"
+msgstr "Belgeler Dizini"
 
 #. module: document
 #: sql_constraint:document.directory:0
@@ -612,7 +612,7 @@ msgid ""
 msgstr ""
 "OpenERP Belge Yönetim Sistemi sanal klasörlerin belgelerle "
 "eşleştirilmelerini destekler. Bir belgenin sanal klasörü belgelere ekli "
-"dosyaların yönetilmesi  ya da herhangi bir raporu yazdırmak ve indirmek için "
+"dosyaların yönetilmesi  veya herhangi bir raporu yazdırmak ve indirmek için "
 "kullanılır. Bu araç, kurulu bulunan modüllere göre dizinleri otomatikmen "
 "oluşturacaktır."
 
@@ -688,7 +688,7 @@ msgstr "Kullanıcı Dosyası"
 #. module: document
 #: model:ir.model,name:document.model_document_configuration
 msgid "Directory Configuration"
-msgstr "Klasör Ayarları"
+msgstr "Dizin Yapılandırması"
 
 #. module: document
 #: help:document.directory,type:0
@@ -733,7 +733,7 @@ msgstr "Dosya Sayısı"
 #. module: document
 #: model:ir.model,name:document.model_document_directory_content_type
 msgid "Directory Content Type"
-msgstr "Klasör İçerik Tipi"
+msgstr "Dizin İçerik Tipi"
 
 #. module: document
 #: view:document.directory:0

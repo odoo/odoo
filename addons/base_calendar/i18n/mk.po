@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-21 17:05+0000\n"
+"POT-Creation-Date: 2013-03-07 08:37+0000\n"
 "PO-Revision-Date: 2013-03-02 10:02+0000\n"
 "Last-Translator: Ivica Dimitrijev <palifra@gmail.com>\n"
 "Language-Team: Macedonian <mk@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-03-03 05:22+0000\n"
-"X-Generator: Launchpad (build 16514)\n"
+"X-Launchpad-Export-Date: 2013-03-08 05:36+0000\n"
+"X-Generator: Launchpad (build 16523)\n"
 
 #. module: base_calendar
 #: selection:calendar.alarm,trigger_related:0
@@ -100,11 +100,6 @@ msgid "Fourth"
 msgstr "Четврто"
 
 #. module: base_calendar
-#: model:ir.model,name:base_calendar.model_res_users
-msgid "Users"
-msgstr "Корисници"
-
-#. module: base_calendar
 #: field:calendar.event,day:0
 #: selection:calendar.event,select1:0
 #: field:calendar.todo,day:0
@@ -171,7 +166,6 @@ msgstr "Временска зона"
 #: selection:calendar.event,show_as:0
 #: selection:calendar.todo,show_as:0
 #: selection:crm.meeting,show_as:0
-#: selection:res.users,availability:0
 msgid "Free"
 msgstr "Бесплатно"
 
@@ -249,7 +243,7 @@ msgid "To"
 msgstr "До"
 
 #. module: base_calendar
-#: code:addons/base_calendar/base_calendar.py:1255
+#: code:addons/base_calendar/base_calendar.py:1260
 #, python-format
 msgid "Error!"
 msgstr "Грешка!"
@@ -363,10 +357,10 @@ msgstr ""
 
 #. module: base_calendar
 #: code:addons/base_calendar/base_calendar.py:399
-#: code:addons/base_calendar/base_calendar.py:444
-#: code:addons/base_calendar/base_calendar.py:1008
-#: code:addons/base_calendar/base_calendar.py:1010
-#: code:addons/base_calendar/base_calendar.py:1455
+#: code:addons/base_calendar/base_calendar.py:441
+#: code:addons/base_calendar/base_calendar.py:1013
+#: code:addons/base_calendar/base_calendar.py:1015
+#: code:addons/base_calendar/base_calendar.py:1460
 #, python-format
 msgid "Warning!"
 msgstr "Внимание!"
@@ -525,7 +519,7 @@ msgid "Event alarm information"
 msgstr ""
 
 #. module: base_calendar
-#: code:addons/base_calendar/base_calendar.py:1010
+#: code:addons/base_calendar/base_calendar.py:1015
 #, python-format
 msgid "Count cannot be negative or 0."
 msgstr "Бројот не може да биде негативен или 0."
@@ -639,6 +633,11 @@ msgid "hours"
 msgstr "часови"
 
 #. module: base_calendar
+#: view:calendar.event:0
+msgid "Cancel Event"
+msgstr ""
+
+#. module: base_calendar
 #: field:calendar.attendee,partner_id:0
 msgid "Contact"
 msgstr "Контакт"
@@ -744,7 +743,7 @@ msgid "Declined"
 msgstr "Одбиено"
 
 #. module: base_calendar
-#: code:addons/base_calendar/base_calendar.py:1455
+#: code:addons/base_calendar/base_calendar.py:1460
 #, python-format
 msgid "Group by date is not supported, use the calendar view instead."
 msgstr ""
@@ -1165,11 +1164,6 @@ msgid "All Day?"
 msgstr "Цел ден?"
 
 #. module: base_calendar
-#: view:calendar.event:0
-msgid "Cancel"
-msgstr "Откажи"
-
-#. module: base_calendar
 #: model:ir.actions.act_window,help:base_calendar.action_crm_meeting
 msgid ""
 "<p class=\"oe_view_nocontent_create\">\n"
@@ -1210,12 +1204,11 @@ msgid "Select Weekdays"
 msgstr "Избери работни денови"
 
 #. module: base_calendar
-#: code:addons/base_calendar/base_calendar.py:1514
+#: code:addons/base_calendar/base_calendar.py:1519
 #: selection:calendar.attendee,availability:0
 #: selection:calendar.event,show_as:0
 #: selection:calendar.todo,show_as:0
 #: selection:crm.meeting,show_as:0
-#: selection:res.users,availability:0
 #, python-format
 msgid "Busy"
 msgstr "Зафатен"
@@ -1471,7 +1464,7 @@ msgid "Weekday"
 msgstr ""
 
 #. module: base_calendar
-#: code:addons/base_calendar/base_calendar.py:1008
+#: code:addons/base_calendar/base_calendar.py:1013
 #, python-format
 msgid "Interval cannot be negative."
 msgstr "Интервалот не може да биде негативен"
@@ -1484,7 +1477,7 @@ msgid "By day"
 msgstr "По ден"
 
 #. module: base_calendar
-#: code:addons/base_calendar/base_calendar.py:444
+#: code:addons/base_calendar/base_calendar.py:441
 #, python-format
 msgid "First you have to specify the date of the invitation."
 msgstr "Прво треба да го означите датумот на поканата."
@@ -1581,7 +1574,6 @@ msgstr "Секунда"
 
 #. module: base_calendar
 #: field:calendar.attendee,availability:0
-#: field:res.users,availability:0
 msgid "Free/Busy"
 msgstr "Слободен/зафатен"
 
@@ -1619,3 +1611,9 @@ msgstr ""
 #: selection:crm.meeting,byday:0
 msgid "Fifth"
 msgstr "Петто"
+
+#~ msgid "Users"
+#~ msgstr "Корисници"
+
+#~ msgid "Cancel"
+#~ msgstr "Откажи"

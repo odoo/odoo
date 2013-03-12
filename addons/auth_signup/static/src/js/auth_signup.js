@@ -57,7 +57,11 @@ openerp.auth_signup = function(instance) {
                     self.rpc("/auth_signup/get_config", {dbname: dbname}).done(function(result) {
                         self.signup_enabled = result.signup;
                         self.reset_password_enabled = result.reset_password;
-                        self.set('login_mode', 'default');
+                        if (self.$("form input[name=login]").val()){
+                            self.set('login_mode', 'default');
+                        } else {
+                            self.set('login_mode', 'signup');
+                        }
                     });
                 } else {
                     // TODO: support multiple database mode

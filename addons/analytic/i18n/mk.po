@@ -9,15 +9,15 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: OpenERP Macedonian <openerp-i18n-"
 "macedonian@lists.launchpad.net>\n"
-"POT-Creation-Date: 2012-12-21 17:05+0000\n"
+"POT-Creation-Date: 2013-03-07 08:37+0000\n"
 "PO-Revision-Date: 2013-03-04 14:38+0000\n"
 "Last-Translator: Aleksandar Panov <server986@gmail.com>\n"
 "Language-Team: ESKON Inzenering\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-03-05 05:38+0000\n"
-"X-Generator: Launchpad (build 16514)\n"
+"X-Launchpad-Export-Date: 2013-03-08 05:34+0000\n"
+"X-Generator: Launchpad (build 16523)\n"
 "Language: mk\n"
 
 #. module: analytic
@@ -35,6 +35,11 @@ msgstr "Во тек"
 #, python-format
 msgid "Contract: "
 msgstr "Договор: "
+
+#. module: analytic
+#: model:mail.message.subtype,description:analytic.mt_account_pending
+msgid "Contract pending"
+msgstr ""
 
 #. module: analytic
 #: selection:account.analytic.account,state:0
@@ -55,27 +60,6 @@ msgstr "Го специфицира износот на количината з�
 #: field:account.analytic.account,debit:0
 msgid "Debit"
 msgstr "Задолжување"
-
-#. module: analytic
-#: help:account.analytic.account,type:0
-msgid ""
-"If you select the View Type, it means you won't allow to create journal "
-"entries using that account.\n"
-"The type 'Analytic account' stands for usual accounts that you only want to "
-"use in accounting.\n"
-"If you select Contract or Project, it offers you the possibility to manage "
-"the validity and the invoicing options for this account.\n"
-"The special type 'Template of Contract' allows you to define a template with "
-"default data that you can reuse easily."
-msgstr ""
-"Доколку изберете тип за Преглед, тоа значи дека нема да биде дозволено "
-"внесување на записи во записникот користејки ја таа сметка.\n"
-"Типот 'Аналитичка сметка' значи обични корисници што ќе се користат во "
-"сметководството.\n"
-"Доколку одберете Договор или Проект, тоа ви ја нуди можноста за менаџирање "
-"на валидноста и опциите за фактурирање за оваа сметка.\n"
-"Специјалниот тип 'Шаблон на договор' ви овозможува да дефинирате шаблон со "
-"стандардни податоци кои може лесно да ги менувате."
 
 #. module: analytic
 #: view:account.analytic.account:0
@@ -144,7 +128,7 @@ msgid "Status"
 msgstr "Статус"
 
 #. module: analytic
-#: code:addons/analytic/analytic.py:268
+#: code:addons/analytic/analytic.py:271
 #, python-format
 msgid "%s (copy)"
 msgstr "%s (копија)"
@@ -159,6 +143,12 @@ msgstr "Аналитичка ставка"
 #: field:account.analytic.line,name:0
 msgid "Description"
 msgstr "Опис"
+
+#. module: analytic
+#: code:addons/analytic/analytic.py:262
+#, python-format
+msgid "Quick account creation disallowed."
+msgstr ""
 
 #. module: analytic
 #: field:account.analytic.account,message_unread:0
@@ -182,14 +172,18 @@ msgid "Renewal"
 msgstr "Обновување"
 
 #. module: analytic
-#: help:account.analytic.account,message_ids:0
-msgid "Messages and communication history"
-msgstr "Пораки и историја на комуникација"
+#: help:account.analytic.account,message_summary:0
+msgid ""
+"Holds the Chatter summary (number of messages, ...). This summary is "
+"directly in html format in order to be inserted in kanban views."
+msgstr ""
+"Го содржи прегледот за комуникацијата (број на пораки и сл.). Овој преглед е "
+"во html формат."
 
 #. module: analytic
-#: model:mail.message.subtype,description:analytic.mt_account_opened
-msgid "Stage <b>opened</b>"
-msgstr "Фаза <b>отворено</b>"
+#: help:account.analytic.account,message_unread:0
+msgid "If checked new messages require your attention."
+msgstr "Доколку е штиклирано, новите пораки го бараат вашето вниманите."
 
 #. module: analytic
 #: help:account.analytic.account,quantity_max:0
@@ -230,9 +224,9 @@ msgid "User"
 msgstr "Корисник"
 
 #. module: analytic
-#: model:mail.message.subtype,description:analytic.mt_account_pending
-msgid "Contract <b>pending</b>"
-msgstr "Договор <b>во исчекување</b>"
+#: field:account.analytic.account,parent_id:0
+msgid "Parent Analytic Account"
+msgstr "Аналитичка сметка (родител)"
 
 #. module: analytic
 #: field:account.analytic.line,date:0
@@ -274,9 +268,14 @@ msgid "Messages"
 msgstr "Пораки"
 
 #. module: analytic
-#: field:account.analytic.account,parent_id:0
-msgid "Parent Analytic Account"
-msgstr "Аналитичка сметка (родител)"
+#: help:account.analytic.account,message_ids:0
+msgid "Messages and communication history"
+msgstr "Пораки и историја на комуникација"
+
+#. module: analytic
+#: constraint:account.analytic.line:0
+msgid "You cannot create analytic line on view account."
+msgstr "Неможе да креирате аналитичка линија на сметка за преглед."
 
 #. module: analytic
 #: view:account.analytic.account:0
@@ -310,9 +309,25 @@ msgid "Contract Opened"
 msgstr "Договорот е отворен"
 
 #. module: analytic
-#: model:mail.message.subtype,description:analytic.mt_account_closed
-msgid "Contract <b>closed</b>"
-msgstr "Договорот е <b>затворен</b>"
+#: help:account.analytic.account,type:0
+msgid ""
+"If you select the View Type, it means you won't allow to create journal "
+"entries using that account.\n"
+"The type 'Analytic account' stands for usual accounts that you only want to "
+"use in accounting.\n"
+"If you select Contract or Project, it offers you the possibility to manage "
+"the validity and the invoicing options for this account.\n"
+"The special type 'Template of Contract' allows you to define a template with "
+"default data that you can reuse easily."
+msgstr ""
+"Доколку изберете тип за Преглед, тоа значи дека нема да биде дозволено "
+"внесување на записи во записникот користејки ја таа сметка.\n"
+"Типот 'Аналитичка сметка' значи обични корисници што ќе се користат во "
+"сметководството.\n"
+"Доколку одберете Договор или Проект, тоа ви ја нуди можноста за менаџирање "
+"на валидноста и опциите за фактурирање за оваа сметка.\n"
+"Специјалниот тип 'Шаблон на договор' ви овозможува да дефинирате шаблон со "
+"стандардни податоци кои може лесно да ги менувате."
 
 #. module: analytic
 #: selection:account.analytic.account,state:0
@@ -330,9 +345,9 @@ msgid "Balance"
 msgstr "Биланс"
 
 #. module: analytic
-#: help:account.analytic.account,message_unread:0
-msgid "If checked new messages require your attention."
-msgstr "Доколку е штиклирано, новите пораки го бараат вашето вниманите."
+#: field:account.analytic.account,complete_name:0
+msgid "Full Name"
+msgstr ""
 
 #. module: analytic
 #: selection:account.analytic.account,state:0
@@ -362,6 +377,11 @@ msgid "Error!"
 msgstr "Грешка!"
 
 #. module: analytic
+#: model:mail.message.subtype,description:analytic.mt_account_closed
+msgid "Contract closed"
+msgstr ""
+
+#. module: analytic
 #: model:res.groups,name:analytic.group_analytic_accounting
 msgid "Analytic Accounting"
 msgstr "Аналитично сметководство"
@@ -370,11 +390,6 @@ msgstr "Аналитично сметководство"
 #: field:account.analytic.line,amount:0
 msgid "Amount"
 msgstr "Износ"
-
-#. module: analytic
-#: field:account.analytic.account,complete_name:0
-msgid "Full Account Name"
-msgstr "Цело име на сметка"
 
 #. module: analytic
 #: view:account.analytic.account:0
@@ -390,13 +405,15 @@ msgid "Currency"
 msgstr "Валута"
 
 #. module: analytic
-#: help:account.analytic.account,message_summary:0
-msgid ""
-"Holds the Chatter summary (number of messages, ...). This summary is "
-"directly in html format in order to be inserted in kanban views."
+#: model:mail.message.subtype,description:analytic.mt_account_opened
+msgid "Contract opened"
 msgstr ""
-"Го содржи прегледот за комуникацијата (број на пораки и сл.). Овој преглед е "
-"во html формат."
+
+#. module: analytic
+#: code:addons/analytic/analytic.py:262
+#, python-format
+msgid "Warning"
+msgstr ""
 
 #. module: analytic
 #: field:account.analytic.account,type:0
@@ -409,11 +426,18 @@ msgid "Start Date"
 msgstr "Почетен датум"
 
 #. module: analytic
-#: constraint:account.analytic.line:0
-msgid "You cannot create analytic line on view account."
-msgstr "Неможе да креирате аналитичка линија на сметка за преглед."
-
-#. module: analytic
 #: field:account.analytic.account,line_ids:0
 msgid "Analytic Entries"
 msgstr "Аналитички записи"
+
+#~ msgid "Stage <b>opened</b>"
+#~ msgstr "Фаза <b>отворено</b>"
+
+#~ msgid "Contract <b>pending</b>"
+#~ msgstr "Договор <b>во исчекување</b>"
+
+#~ msgid "Contract <b>closed</b>"
+#~ msgstr "Договорот е <b>затворен</b>"
+
+#~ msgid "Full Account Name"
+#~ msgstr "Цело име на сметка"

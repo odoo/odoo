@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-21 17:04+0000\n"
+"POT-Creation-Date: 2013-03-07 08:37+0000\n"
 "PO-Revision-Date: 2013-03-02 10:13+0000\n"
 "Last-Translator: Ivica Dimitrijev <palifra@gmail.com>\n"
 "Language-Team: Macedonian <mk@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-03-03 05:22+0000\n"
-"X-Generator: Launchpad (build 16514)\n"
+"X-Launchpad-Export-Date: 2013-03-08 05:34+0000\n"
+"X-Generator: Launchpad (build 16523)\n"
 "Language: mk\n"
 
 #. module: account_voucher
@@ -29,7 +29,7 @@ msgid "account.config.settings"
 msgstr "account.config.settings"
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:357
+#: code:addons/account_voucher/account_voucher.py:369
 #, python-format
 msgid "Write-Off"
 msgstr "Отпис"
@@ -133,7 +133,7 @@ msgid "Voucher Statistics"
 msgstr "Статистика за ваучери"
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:1533
+#: code:addons/account_voucher/account_voucher.py:1547
 #, python-format
 msgid ""
 "You can not change the journal as you already reconciled some statement "
@@ -141,6 +141,11 @@ msgid ""
 msgstr ""
 "Неможете да извршите промена на записот како што веќе порамнивте некоја од "
 "состојбите!"
+
+#. module: account_voucher
+#: model:mail.message.subtype,description:account_voucher.mt_voucher_state_change
+msgid "Status changed"
+msgstr ""
 
 #. module: account_voucher
 #: view:account.voucher:0
@@ -234,8 +239,8 @@ msgid "Journal Item"
 msgstr "Ставка од запис"
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:496
-#: code:addons/account_voucher/account_voucher.py:967
+#: code:addons/account_voucher/account_voucher.py:508
+#: code:addons/account_voucher/account_voucher.py:981
 #, python-format
 msgid "Error!"
 msgstr "Грешка!"
@@ -252,6 +257,11 @@ msgstr "Опции за плаќање"
 
 #. module: account_voucher
 #: view:account.voucher:0
+msgid "e.g. 003/10"
+msgstr ""
+
+#. module: account_voucher
+#: view:account.voucher:0
 msgid "Other Information"
 msgstr "Други Информации"
 
@@ -262,7 +272,7 @@ msgid "Cancelled"
 msgstr "Откажано"
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:1139
+#: code:addons/account_voucher/account_voucher.py:1153
 #, python-format
 msgid ""
 "You have to configure account base code and account tax code on the '%s' tax!"
@@ -307,12 +317,13 @@ msgid "Day"
 msgstr "Ден"
 
 #. module: account_voucher
+#: view:account.voucher:0
 #: field:account.voucher,tax_id:0
 msgid "Tax"
 msgstr "Данок"
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:867
+#: code:addons/account_voucher/account_voucher.py:879
 #, python-format
 msgid "Invalid Action!"
 msgstr "Невалидна Постапка!"
@@ -365,7 +376,12 @@ msgid "Import Invoices"
 msgstr "Импортирај фактури"
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:1098
+#: view:account.voucher:0
+msgid "e.g. Invoice SAJ/0042"
+msgstr ""
+
+#. module: account_voucher
+#: code:addons/account_voucher/account_voucher.py:1112
 #, python-format
 msgid "Wrong voucher line"
 msgstr "Погрешна линија на ваучер"
@@ -384,7 +400,7 @@ msgid "Receipt"
 msgstr "Потврда"
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:1004
+#: code:addons/account_voucher/account_voucher.py:1018
 #, python-format
 msgid ""
 "You should configure the 'Gain Exchange Rate Account' in the accounting "
@@ -402,13 +418,18 @@ msgstr "Линии за продажба"
 
 #. module: account_voucher
 #: view:account.voucher:0
+msgid "Cancel Voucher"
+msgstr ""
+
+#. module: account_voucher
+#: view:account.voucher:0
 #: field:account.voucher,period_id:0
 msgid "Period"
 msgstr "Период"
 
 #. module: account_voucher
 #: view:account.voucher:0
-#: code:addons/account_voucher/account_voucher.py:199
+#: code:addons/account_voucher/account_voucher.py:211
 #, python-format
 msgid "Supplier"
 msgstr "Добавувач"
@@ -429,7 +450,7 @@ msgid "Debit"
 msgstr "Задолжување"
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:1533
+#: code:addons/account_voucher/account_voucher.py:1547
 #, python-format
 msgid "Unable to change journal !"
 msgstr "Неможе да се промени записникот !"
@@ -492,9 +513,20 @@ msgid "Memo"
 msgstr "Мемо"
 
 #. module: account_voucher
+#: code:addons/account_voucher/invoice.py:34
+#, python-format
+msgid "Pay Invoice"
+msgstr "Плати фактура"
+
+#. module: account_voucher
 #: view:account.voucher:0
 msgid "Are you sure to unreconcile and cancel this record ?"
 msgstr "Сигурно ли сакате да го откажете порамнувањето и записот?"
+
+#. module: account_voucher
+#: view:account.voucher:0
+msgid "Sales Receipt"
+msgstr ""
 
 #. module: account_voucher
 #: field:account.voucher,is_multi_currency:0
@@ -544,13 +576,12 @@ msgid "Avg. Due Delay"
 msgstr "Просечно задоцнување"
 
 #. module: account_voucher
-#: code:addons/account_voucher/invoice.py:34
-#, python-format
-msgid "Pay Invoice"
-msgstr "Плати фактура"
+#: view:account.voucher:0
+msgid "Are you sure you want to unreconcile this record?"
+msgstr ""
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:1139
+#: code:addons/account_voucher/account_voucher.py:1153
 #, python-format
 msgid "No Account Base Code and Account Tax Code!"
 msgstr "Нема основен код и даночен код на сметката!"
@@ -614,15 +645,15 @@ msgid "To Review"
 msgstr "За прегледување"
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:1011
 #: code:addons/account_voucher/account_voucher.py:1025
-#: code:addons/account_voucher/account_voucher.py:1180
+#: code:addons/account_voucher/account_voucher.py:1039
+#: code:addons/account_voucher/account_voucher.py:1194
 #, python-format
 msgid "change"
 msgstr "промени"
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:1000
+#: code:addons/account_voucher/account_voucher.py:1014
 #, python-format
 msgid ""
 "You should configure the 'Loss Exchange Rate Account' in the accounting "
@@ -637,11 +668,6 @@ msgstr ""
 #: view:account.voucher:0
 msgid "Expense Lines"
 msgstr "Линија за трошоци"
-
-#. module: account_voucher
-#: view:account.voucher:0
-msgid "Sale voucher"
-msgstr "Ваучер за продажба"
 
 #. module: account_voucher
 #: help:account.voucher,is_multi_currency:0
@@ -701,11 +727,6 @@ msgid "Voucher Status"
 msgstr "Статус на ваучер"
 
 #. module: account_voucher
-#: view:account.voucher:0
-msgid "Are you sure to unreconcile this record?"
-msgstr "Сигурно ли сакате да го откажете записот за порамнување?"
-
-#. module: account_voucher
 #: field:account.voucher,company_id:0
 #: field:account.voucher.line,company_id:0
 #: view:sale.receipt.report:0
@@ -724,7 +745,12 @@ msgid "Reconcile Payment Balance"
 msgstr "Порамнување на платниот биланс"
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:963
+#: view:account.voucher:0
+msgid "Cancel Receipt"
+msgstr ""
+
+#. module: account_voucher
+#: code:addons/account_voucher/account_voucher.py:975
 #, python-format
 msgid "Configuration Error !"
 msgstr "Грешка во конфигурацијата !"
@@ -789,7 +815,7 @@ msgid "October"
 msgstr "Октомври"
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:964
+#: code:addons/account_voucher/account_voucher.py:976
 #, python-format
 msgid "Please activate the sequence of selected journal !"
 msgstr "Ве молиме активирајте го редоследот на одбраниот запис !"
@@ -810,7 +836,6 @@ msgid "Paid"
 msgstr "Платено"
 
 #. module: account_voucher
-#: view:account.voucher:0
 #: model:ir.actions.act_window,name:account_voucher.action_sale_receipt
 #: model:ir.ui.menu,name:account_voucher.menu_action_sale_receipt
 msgid "Sales Receipts"
@@ -870,7 +895,7 @@ msgid "Previous Payments ?"
 msgstr "Претходни плаќања ?"
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:1098
+#: code:addons/account_voucher/account_voucher.py:1112
 #, python-format
 msgid "The invoice you are willing to pay is not valid anymore."
 msgstr "Фактурата што сакате да ја платите не е веќе валидна."
@@ -902,7 +927,7 @@ msgid "Active"
 msgstr "Активен"
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:968
+#: code:addons/account_voucher/account_voucher.py:982
 #, python-format
 msgid "Please define a sequence on the journal."
 msgstr "Ве молиме дефинирајте го редоследот на записите"
@@ -1030,7 +1055,7 @@ msgid "Journal Items"
 msgstr "Ставки во картица"
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:496
+#: code:addons/account_voucher/account_voucher.py:508
 #, python-format
 msgid "Please define default credit/debit accounts on the journal \"%s\"."
 msgstr ""
@@ -1112,11 +1137,6 @@ msgstr "Опис"
 #: selection:sale.receipt.report,month:0
 msgid "May"
 msgstr "Мај"
-
-#. module: account_voucher
-#: view:account.voucher:0
-msgid "Sale Receipt"
-msgstr "Потврда за продажба"
 
 #. module: account_voucher
 #: view:account.voucher:0
@@ -1255,7 +1275,7 @@ msgid ""
 msgstr "Сумата на ваучерот мора да биде иста со сумата во изјавата."
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:867
+#: code:addons/account_voucher/account_voucher.py:879
 #, python-format
 msgid "Cannot delete voucher(s) which are already opened or paid."
 msgstr "Неможете да избришете ваучер(и) кои се веќе отворени или платени."
@@ -1313,13 +1333,8 @@ msgid "Open Balance"
 msgstr "Отворено биланс"
 
 #. module: account_voucher
-#: model:mail.message.subtype,description:account_voucher.mt_voucher_state_change
-msgid "Status <b>changed</b>"
-msgstr "Статусот е <b>променет</b>"
-
-#. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:1000
-#: code:addons/account_voucher/account_voucher.py:1004
+#: code:addons/account_voucher/account_voucher.py:1014
+#: code:addons/account_voucher/account_voucher.py:1018
 #, python-format
 msgid "Insufficient Configuration!"
 msgstr "Недоволна конфигурација!"
@@ -1334,3 +1349,15 @@ msgstr ""
 "Стандардно, Ваучерите за порамнување правени по нацрт банкарски извештаи се "
 "неактивни, со што се дозволува криење на клиент/добавувач плаќањето додека "
 "не се потврди изјавата на банката."
+
+#~ msgid "Sale voucher"
+#~ msgstr "Ваучер за продажба"
+
+#~ msgid "Are you sure to unreconcile this record?"
+#~ msgstr "Сигурно ли сакате да го откажете записот за порамнување?"
+
+#~ msgid "Sale Receipt"
+#~ msgstr "Потврда за продажба"
+
+#~ msgid "Status <b>changed</b>"
+#~ msgstr "Статусот е <b>променет</b>"

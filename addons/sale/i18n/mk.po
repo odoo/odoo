@@ -8,16 +8,16 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: OpenERP Macedonian <openerp-i18n-"
 "macedonian@lists.launchpad.net >\n"
-"POT-Creation-Date: 2012-12-21 17:04+0000\n"
-"PO-Revision-Date: 2013-03-04 14:54+0000\n"
-"Last-Translator: Aleksandar Panov <server986@gmail.com>\n"
+"POT-Creation-Date: 2013-03-07 08:37+0000\n"
+"PO-Revision-Date: 2013-03-11 23:00+0000\n"
+"Last-Translator: Ivica Dimitrijev <palifra@gmail.com>\n"
 "Language-Team: OpenERP Macedonia <openerp-i18n-"
 "macedonian@lists.launchpad.net>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-03-05 05:38+0000\n"
-"X-Generator: Launchpad (build 16514)\n"
+"X-Launchpad-Export-Date: 2013-03-12 05:19+0000\n"
+"X-Generator: Launchpad (build 16524)\n"
 "Language: mk\n"
 
 #. module: sale
@@ -126,7 +126,7 @@ msgid "March"
 msgstr "Март"
 
 #. module: sale
-#: code:addons/sale/sale.py:559
+#: code:addons/sale/sale.py:567
 #, python-format
 msgid "First cancel all invoices attached to this sales order."
 msgstr "Прво откажи ги сите фактури прикачени на овој налог за продажба."
@@ -197,7 +197,7 @@ msgstr "Аналитичко конто"
 #. module: sale
 #: field:sale.config.settings,module_sale_journal:0
 msgid "Allow batch invoicing of delivery orders through journals"
-msgstr "Дозволува групно фактурирање на налози за испорака преку картици"
+msgstr "Дозволи групно фактурирање на испратници преку дневниците"
 
 #. module: sale
 #: field:sale.order.line,price_subtotal:0
@@ -212,6 +212,7 @@ msgstr "Ден"
 
 #. module: sale
 #: model:process.transition.action,name:sale.process_transition_action_cancelorder0
+#: view:sale.order:0
 msgid "Cancel Order"
 msgstr "Откажи нарачка"
 
@@ -242,10 +243,9 @@ msgid "Incorrect Data"
 msgstr "Неточни податоци"
 
 #. module: sale
-#: code:addons/sale/wizard/sale_make_invoice_advance.py:102
-#, python-format
-msgid "The value of Advance Amount must be positive."
-msgstr "Вредноста на авансен изност мора да биде позитивна."
+#: view:sale.order.line:0
+msgid "Cancel Line"
+msgstr ""
 
 #. module: sale
 #: help:sale.config.settings,group_discount_per_so_line:0
@@ -289,11 +289,12 @@ msgid "Project"
 msgstr "Проект"
 
 #. module: sale
-#: code:addons/sale/sale.py:360
-#: code:addons/sale/sale.py:501
-#: code:addons/sale/sale.py:592
-#: code:addons/sale/sale.py:755
-#: code:addons/sale/sale.py:772
+#: code:addons/sale/sale.py:185
+#: code:addons/sale/sale.py:368
+#: code:addons/sale/sale.py:509
+#: code:addons/sale/sale.py:600
+#: code:addons/sale/sale.py:763
+#: code:addons/sale/sale.py:780
 #, python-format
 msgid "Error!"
 msgstr "Грешка!"
@@ -398,6 +399,11 @@ msgid "False"
 msgstr "Неточно"
 
 #. module: sale
+#: view:sale.order:0
+msgid "Terms and conditions..."
+msgstr ""
+
+#. module: sale
 #: help:sale.advance.payment.inv,advance_payment_method:0
 msgid ""
 "Use All to create the final invoice.\n"
@@ -423,9 +429,9 @@ msgid "Tax"
 msgstr "Данок"
 
 #. module: sale
-#: code:addons/sale/sale.py:270
-#: code:addons/sale/sale.py:812
-#: code:addons/sale/sale.py:976
+#: code:addons/sale/sale.py:278
+#: code:addons/sale/sale.py:820
+#: code:addons/sale/sale.py:983
 #, python-format
 msgid "Invalid Action!"
 msgstr "Невалидна операција!"
@@ -485,7 +491,7 @@ msgid "Fax :"
 msgstr "Факс :"
 
 #. module: sale
-#: code:addons/sale/sale.py:270
+#: code:addons/sale/sale.py:278
 #, python-format
 msgid ""
 "In order to delete a confirmed sales order, you must cancel it before !"
@@ -510,8 +516,8 @@ msgid "Contract Features"
 msgstr "Карактеристики на договорот"
 
 #. module: sale
-#: code:addons/sale/sale.py:280
-#: code:addons/sale/sale.py:578
+#: code:addons/sale/sale.py:288
+#: code:addons/sale/sale.py:586
 #: model:ir.model,name:sale.model_sale_order
 #: model:process.node,name:sale.process_node_order0
 #: model:process.node,name:sale.process_node_saleorder0
@@ -579,7 +585,7 @@ msgid "Prepare invoices based on timesheets"
 msgstr "Подготви фактури врз основа на распореди"
 
 #. module: sale
-#: code:addons/sale/sale.py:812
+#: code:addons/sale/sale.py:820
 #, python-format
 msgid "You cannot cancel a sales order line that has already been invoiced."
 msgstr ""
@@ -640,7 +646,7 @@ msgid "Disc.(%)"
 msgstr "Попуст(%)"
 
 #. module: sale
-#: code:addons/sale/sale.py:756
+#: code:addons/sale/sale.py:764
 #, python-format
 msgid "Please define income account for this product: \"%s\" (id:%d)."
 msgstr "Дефинирајте приходно конто за овој производ: \"%s\" (id:%d)."
@@ -686,7 +692,7 @@ msgid "Make Invoices"
 msgstr "Направи фактури"
 
 #. module: sale
-#: code:addons/sale/res_config.py:89
+#: code:addons/sale/res_config.py:97
 #, python-format
 msgid "Hour"
 msgstr "Час"
@@ -800,12 +806,21 @@ msgstr ""
 "корисникот го откажува поврзаниот налог за продажба."
 
 #. module: sale
+#: code:addons/sale/sale.py:510
+#, python-format
+msgid ""
+"You cannot group sales having different currencies for the same partner."
+msgstr ""
+"Не можете да ги групирате продажбите доколку имате различни валути за ист "
+"партнер."
+
+#. module: sale
 #: view:sale.config.settings:0
 msgid "Default Options"
 msgstr "Стандардни опции"
 
 #. module: sale
-#: code:addons/sale/sale.py:953
+#: code:addons/sale/sale.py:960
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:91
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:95
 #, python-format
@@ -867,10 +882,12 @@ msgid "Sales Order done"
 msgstr "Налогот за продажба е завршен"
 
 #. module: sale
-#: code:addons/sale/sale.py:361
-#, python-format
-msgid "Please define sales journal for this company: \"%s\" (id:%d)."
-msgstr "Дефинирајте картица за продажби за оваа компанија: \"%s\" (id:%d)."
+#: model:process.transition.action,name:sale.process_transition_action_cancel0
+#: view:sale.advance.payment.inv:0
+#: view:sale.make.invoice:0
+#: view:sale.order.line.make.invoice:0
+msgid "Cancel"
+msgstr "Откажи"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.act_res_partner_2_sale_order
@@ -922,7 +939,7 @@ msgid "Sales Make Invoice"
 msgstr "Фактура за направена продажба"
 
 #. module: sale
-#: code:addons/sale/sale.py:300
+#: code:addons/sale/sale.py:308
 #, python-format
 msgid "Pricelist Warning!"
 msgstr "Преупредување за ценовник!"
@@ -1001,7 +1018,7 @@ msgid "Category of Product"
 msgstr "Категорија на производ"
 
 #. module: sale
-#: code:addons/sale/sale.py:558
+#: code:addons/sale/sale.py:566
 #, python-format
 msgid "Cannot cancel this sales order!"
 msgstr "Не може да го откажете овој налог за продажба!"
@@ -1058,7 +1075,7 @@ msgid "Open Sale Menu"
 msgstr "Отвори мени Продажба"
 
 #. module: sale
-#: code:addons/sale/sale.py:592
+#: code:addons/sale/sale.py:600
 #, python-format
 msgid "You cannot confirm a sales order which has no line."
 msgstr "Не може да потврдите налог за продажба кој нема ставка."
@@ -1069,7 +1086,7 @@ msgid "In Progress"
 msgstr "Во тек"
 
 #. module: sale
-#: code:addons/sale/sale.py:857
+#: code:addons/sale/sale.py:865
 #, python-format
 msgid "No Customer Defined !"
 msgstr "Нема дефинирано купувач !"
@@ -1077,7 +1094,7 @@ msgstr "Нема дефинирано купувач !"
 #. module: sale
 #: field:sale.config.settings,module_sale_stock:0
 msgid "Trigger delivery orders automatically from sales orders"
-msgstr "Активирај налози за испорака автоматски од налозите за продажба"
+msgstr "Активирај испратници автоматски од налозите за продажба"
 
 #. module: sale
 #: view:sale.make.invoice:0
@@ -1389,7 +1406,7 @@ msgstr ""
 "'Во тек' или 'Рачно во тек'."
 
 #. module: sale
-#: code:addons/sale/sale.py:935
+#: code:addons/sale/sale.py:942
 #, python-format
 msgid ""
 "You have to select a pricelist or a customer in the sales form !\n"
@@ -1405,7 +1422,7 @@ msgstr ""
 "Референца на документот кој го генерираше ова барање за налог за продажба."
 
 #. module: sale
-#: code:addons/sale/sale.py:948
+#: code:addons/sale/sale.py:955
 #, python-format
 msgid "No valid pricelist line found ! :"
 msgstr "Нема пронајдено валидна ставка од ценовникот ! :"
@@ -1415,7 +1432,7 @@ msgstr "Нема пронајдено валидна ставка од цено�
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:115
 #, python-format
 msgid "Advance of %s %s"
-msgstr ""
+msgstr "Аванс на %s %s"
 
 #. module: sale
 #: view:sale.report:0
@@ -1490,7 +1507,7 @@ msgid "TVA :"
 msgstr ""
 
 #. module: sale
-#: code:addons/sale/sale.py:441
+#: code:addons/sale/sale.py:449
 #, python-format
 msgid "Customer Invoices"
 msgstr "Фактури на клиентот"
@@ -1516,7 +1533,7 @@ msgid "Sales"
 msgstr "Продажби"
 
 #. module: sale
-#: code:addons/sale/sale.py:301
+#: code:addons/sale/sale.py:309
 #, python-format
 msgid ""
 "If you change the pricelist of this order (and eventually the currency), "
@@ -1574,14 +1591,9 @@ msgid "My Sales Order Lines"
 msgstr "Ставки на мојот налог за продажба"
 
 #. module: sale
-#: model:process.transition.action,name:sale.process_transition_action_cancel0
-#: view:sale.advance.payment.inv:0
-#: view:sale.make.invoice:0
 #: view:sale.order:0
-#: view:sale.order.line:0
-#: view:sale.order.line.make.invoice:0
-msgid "Cancel"
-msgstr "Откажи"
+msgid "Cancel Quotation"
+msgstr ""
 
 #. module: sale
 #: field:sale.order,message_follower_ids:0
@@ -1589,7 +1601,7 @@ msgid "Followers"
 msgstr "Следбеници"
 
 #. module: sale
-#: code:addons/sale/sale.py:937
+#: code:addons/sale/sale.py:944
 #, python-format
 msgid "No Pricelist ! : "
 msgstr "Нема ценовник ! : "
@@ -1636,26 +1648,24 @@ msgid ""
 msgstr ""
 "<p>\n"
 "                Ова е листа на секоја ставка од налогот за предажба која "
-"треба да биде фактурирана. Може да ги фактурирате налозите за продажба "
-"парцијално, по ставки од налогот за продажба. Оваа листа не ви е потребна "
-"доколку фактурирате од налозите за испорака или ја фактурирате продажбата во "
-"целост.\n"
+"треба да биде фактурирана. \n"
+"                Може да ги фактурирате налозите за продажба парцијално, по "
+"ставки од налогот за продажба. \n"
+"                Оваа листа не ви е потребна доколку фактурирате од "
+"испратниците или ја фактурирате продажбата во целост.\n"
 "              </p>\n"
 "            "
 
 #. module: sale
 #: report:sale.order:0
 msgid "Shipping address :"
-msgstr "Адреса за испорака :"
+msgstr "Адреса на испорака :"
 
 #. module: sale
-#: code:addons/sale/sale.py:502
+#: code:addons/sale/sale.py:369
 #, python-format
-msgid ""
-"You cannot group sales having different currencies for the same partner."
-msgstr ""
-"Не можете да ги групирате продажбите доколку имате различни валути за ист "
-"партнер."
+msgid "Please define sales journal for this company: \"%s\" (id:%d)."
+msgstr "Дефинирајте картица за продажби за оваа компанија: \"%s\" (id:%d)."
 
 #. module: sale
 #: view:sale.advance.payment.inv:0
@@ -1678,7 +1688,7 @@ msgid "Use contracts management"
 msgstr "Користи менаџирање на договори"
 
 #. module: sale
-#: code:addons/sale/sale.py:945
+#: code:addons/sale/sale.py:952
 #, python-format
 msgid ""
 "Cannot find a pricelist line matching this product and quantity.\n"
@@ -1686,6 +1696,12 @@ msgid ""
 msgstr ""
 "Не може да пронајде ставка од ценовникот која одговара на овој производ и "
 "количина. Треба да да го промените производот, количината или ценовникот."
+
+#. module: sale
+#: code:addons/sale/sale.py:185
+#, python-format
+msgid "There is no default shop for the current user's company!"
+msgstr ""
 
 #. module: sale
 #: model:ir.model,name:sale.model_sale_advance_payment_inv
@@ -1866,6 +1882,12 @@ msgid "Price"
 msgstr "Цена"
 
 #. module: sale
+#: code:addons/sale/wizard/sale_make_invoice_advance.py:102
+#, python-format
+msgid "The value of Advance Amount must be positive."
+msgstr "Вредноста на авансен изност мора да биде позитивна."
+
+#. module: sale
 #: help:sale.order,order_policy:0
 msgid ""
 "On demand: A draft invoice can be created from the sales order when needed. "
@@ -1876,10 +1898,11 @@ msgid ""
 "paid before the products can be delivered."
 msgstr ""
 "На барање: Нацрт фактурата може да биде креирана од налогот за продажба кога "
-"е потребно. По налог за испорака: Нацрт фактурата може да биде креирана од "
-"налогот за испорака кога производите се испорачани. Пред испорака: Нацрт "
-"фактурата е креирана од налогот за продажба и мора да биде платена пред "
-"производите да бидат испорачани."
+"е потребно. \n"
+"По испратница: Нацрт фактурата може да биде креирана од испратницата кога "
+"производите се испорачани. \n"
+"Пред испорака: Нацрт фактурата е креирана од налогот за продажба и мора да "
+"биде платена пред производите да бидат испорачани."
 
 #. module: sale
 #: model:ir.actions.act_window,help:sale.action_order_report_all
@@ -1951,7 +1974,7 @@ msgid "sale.group_delivery_invoice_address"
 msgstr "sale.group_delivery_invoice_address"
 
 #. module: sale
-#: code:addons/sale/sale.py:773
+#: code:addons/sale/sale.py:781
 #, python-format
 msgid ""
 "There is no Fiscal Position defined or Income category account defined for "
@@ -2178,8 +2201,8 @@ msgid ""
 msgstr ""
 "Во зависност од контролата на фактурирање на налогот за продажба, фактурата "
 "може да биде заснована на испорачани или нарачани количини. Затоа, налогот "
-"за продажба може да генерира фактура или налог за испорака веднаш штом е "
-"потврден од страна на продавачот."
+"за продажба може да генерира фактура или испратница веднаш штом е потврден "
+"од страна на продавачот."
 
 #. module: sale
 #: view:sale.order:0
@@ -2192,7 +2215,7 @@ msgid "Some order lines"
 msgstr "Некои ставки од налогот"
 
 #. module: sale
-#: code:addons/sale/sale.py:976
+#: code:addons/sale/sale.py:983
 #, python-format
 msgid "Cannot delete a sales order line which is in state '%s'."
 msgstr ""
@@ -2266,7 +2289,7 @@ msgstr ""
 "Ова го инсталира модулот sale_margin."
 
 #. module: sale
-#: code:addons/sale/sale.py:857
+#: code:addons/sale/sale.py:865
 #, python-format
 msgid ""
 "Before choosing a product,\n"

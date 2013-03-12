@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-21 17:06+0000\n"
-"PO-Revision-Date: 2013-02-10 17:59+0000\n"
+"POT-Creation-Date: 2013-03-07 08:38+0000\n"
+"PO-Revision-Date: 2013-03-12 00:01+0000\n"
 "Last-Translator: Davor Bojkić <bole@dajmi5.com>\n"
 "Language-Team: Croatian <hr@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-02-11 05:35+0000\n"
-"X-Generator: Launchpad (build 16482)\n"
+"X-Launchpad-Export-Date: 2013-03-12 05:19+0000\n"
+"X-Generator: Launchpad (build 16524)\n"
 
 #. module: product
 #: field:product.packaging,rows:0
@@ -229,6 +229,8 @@ msgid ""
 "Error! You cannot define a rounding factor for the company's main currency "
 "that is smaller than the decimal precision of 'Account'."
 msgstr ""
+"Greška! Nije oguće definirati faktor zaokruživaja za glavnu valutu "
+"organizacije koja je manja od decimalne preciznosti 'Konta'"
 
 #. module: product
 #: help:product.product,outgoing_qty:0
@@ -285,6 +287,11 @@ msgstr "Kategorija"
 #: model:product.template,name:product.product_product_25_product_template
 msgid "Laptop E5023"
 msgstr ""
+
+#. module: product
+#: field:product.price_list,qty1:0
+msgid "Quantity-1"
+msgstr "Količina-1"
 
 #. module: product
 #: help:product.packaging,ul_qty:0
@@ -482,9 +489,9 @@ msgid "Quantity-3"
 msgstr "Količina-3"
 
 #. module: product
-#: field:product.price_list,qty1:0
-msgid "Quantity-1"
-msgstr "Količina-1"
+#: model:res.groups,name:product.group_product_variant
+msgid "Product Variant (not supported)"
+msgstr ""
 
 #. module: product
 #: field:product.price_list,qty4:0
@@ -795,6 +802,11 @@ msgid "External Hard disk"
 msgstr ""
 
 #. module: product
+#: view:product.product:0
+msgid "describe the product characteristics..."
+msgstr ""
+
+#. module: product
 #: help:product.template,standard_price:0
 msgid ""
 "Cost price of the product used for standard stock valuation in accounting "
@@ -839,7 +851,7 @@ msgstr "Cjenici"
 #. module: product
 #: field:product.product,partner_ref:0
 msgid "Customer ref"
-msgstr "Kupčeva šivra"
+msgstr "Šifra kupca"
 
 #. module: product
 #: field:product.pricelist.type,key:0
@@ -1147,7 +1159,6 @@ msgstr "Logističke jedinice"
 #: field:product.category,name:0
 #: field:product.pricelist.type,name:0
 #: field:product.pricelist.version,name:0
-#: field:product.product,name_template:0
 #: field:product.template,name:0
 #: field:product.ul,name:0
 #: field:product.uom.categ,name:0
@@ -1307,6 +1318,11 @@ msgid "Specify the minimum amount of margin over the base price."
 msgstr ""
 
 #. module: product
+#: field:product.product,name_template:0
+msgid "Template Name"
+msgstr ""
+
+#. module: product
 #: field:product.template,weight_net:0
 msgid "Net Weight"
 msgstr "Neto težina"
@@ -1329,6 +1345,11 @@ msgstr ""
 msgid ""
 "Specify a product category if this rule only applies to products belonging "
 "to this category or its children categories. Keep empty otherwise."
+msgstr ""
+
+#. module: product
+#: view:product.product:0
+msgid "This note will be displayed on requests for quotation..."
 msgstr ""
 
 #. module: product
@@ -1897,6 +1918,11 @@ msgid "Components"
 msgstr ""
 
 #. module: product
+#: view:product.product:0
+msgid "e.g. 5901234123457"
+msgstr ""
+
+#. module: product
 #: model:ir.model,name:product.model_product_pricelist_type
 #: field:product.pricelist,type:0
 msgid "Pricelist Type"
@@ -2392,7 +2418,11 @@ msgstr ""
 
 #. module: product
 #: view:product.product:0
-#: model:res.groups,name:product.group_product_variant
+msgid "note to be displayed on quotations..."
+msgstr ""
+
+#. module: product
+#: view:product.product:0
 msgid "Product Variant"
 msgstr "Varijanta proizvoda"
 

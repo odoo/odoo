@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-21 17:05+0000\n"
-"PO-Revision-Date: 2013-03-06 12:57+0000\n"
-"Last-Translator: Софче Димитријева <Unknown>\n"
+"POT-Creation-Date: 2013-03-07 08:37+0000\n"
+"PO-Revision-Date: 2013-03-11 13:02+0000\n"
+"Last-Translator: Aleksandar Panov <server986@gmail.com>\n"
 "Language-Team: Macedonian <mk@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-03-07 05:44+0000\n"
-"X-Generator: Launchpad (build 16514)\n"
+"X-Launchpad-Export-Date: 2013-03-12 05:18+0000\n"
+"X-Generator: Launchpad (build 16524)\n"
 
 #. module: anonymization
 #: model:ir.model,name:anonymization.model_ir_model_fields_anonymize_wizard
@@ -25,7 +25,7 @@ msgstr "ir.model.fields.anonymize.wizard"
 #. module: anonymization
 #: field:ir.model.fields.anonymization,model_id:0
 msgid "Object"
-msgstr ""
+msgstr "Објект"
 
 #. module: anonymization
 #: model:ir.model,name:anonymization.model_ir_model_fields_anonymization_migration_fix
@@ -35,7 +35,7 @@ msgstr "ir.model.fields.anonymization.migration.fix"
 #. module: anonymization
 #: field:ir.model.fields.anonymization.migration.fix,target_version:0
 msgid "Target Version"
-msgstr ""
+msgstr "Целна верзија"
 
 #. module: anonymization
 #: selection:ir.model.fields.anonymization.migration.fix,query_type:0
@@ -50,6 +50,9 @@ msgid ""
 "are anonymized, while some fields are not anonymized. You should try to "
 "solve this problem before trying to create, write or delete fields."
 msgstr ""
+"Анонимизацијата на базата на податоци е во нестабилна состојба. Некои полиња "
+"се анонимизирани додека некои не се. Пробајте да го решите овој проблем пред "
+"да креирате, запишувате или бришете полиња."
 
 #. module: anonymization
 #: field:ir.model.fields.anonymization,field_name:0
@@ -84,6 +87,8 @@ msgid ""
 "Before executing the anonymization process, you should make a backup of your "
 "database."
 msgstr ""
+"Пред извршување на процесот на анонимизација, треба да направите резервна "
+"копија на вашата база на податоци."
 
 #. module: anonymization
 #: field:ir.model.fields.anonymization.history,state:0
@@ -101,23 +106,23 @@ msgstr "Насока"
 #: view:ir.model.fields.anonymization:0
 #: model:ir.ui.menu,name:anonymization.menu_administration_anonymization_fields
 msgid "Anonymized Fields"
-msgstr ""
+msgstr "Анонимизирани полиња"
 
 #. module: anonymization
 #: model:ir.ui.menu,name:anonymization.menu_administration_anonymization
 msgid "Database anonymization"
-msgstr ""
+msgstr "Анонимизација на база на податоци"
 
 #. module: anonymization
 #: selection:ir.model.fields.anonymization.history,direction:0
 msgid "clear -> anonymized"
-msgstr ""
+msgstr "исчисти -> анонимизирано"
 
 #. module: anonymization
 #: selection:ir.model.fields.anonymization,state:0
 #: selection:ir.model.fields.anonymize.wizard,state:0
 msgid "Anonymized"
-msgstr ""
+msgstr "Анонимизирано"
 
 #. module: anonymization
 #: field:ir.model.fields.anonymization,state:0
@@ -128,7 +133,7 @@ msgstr "непознато"
 #: code:addons/anonymization/anonymization.py:448
 #, python-format
 msgid "Anonymized value is None. This cannot happens."
-msgstr ""
+msgstr "Анонимизираната вредност е празна. Ова не смее да се случи."
 
 #. module: anonymization
 #: field:ir.model.fields.anonymization.history,filepath:0
@@ -141,6 +146,8 @@ msgid ""
 "This is the file created by the anonymization process. It should have the "
 "'.pickle' extention."
 msgstr ""
+"Ова е фајлот креиран при процесот на анонимизација.  Треба да ја има "
+"екстензијата '.pickle'."
 
 #. module: anonymization
 #: field:ir.model.fields.anonymization.history,date:0
@@ -164,16 +171,18 @@ msgid ""
 "Cannot anonymize fields of these types: binary, many2many, many2one, "
 "one2many, reference."
 msgstr ""
+"Неможат да се анонимизираат полиња од овој тип: binary, many2many, many2one, "
+"one2many, reference."
 
 #. module: anonymization
 #: view:ir.model.fields.anonymize.wizard:0
 msgid "Database Anonymization"
-msgstr ""
+msgstr "Анонимизација на база на податоци"
 
 #. module: anonymization
 #: model:ir.ui.menu,name:anonymization.menu_administration_anonymization_wizard
 msgid "Anonymize database"
-msgstr ""
+msgstr "Анонимизирај база на податоци"
 
 #. module: anonymization
 #: selection:ir.model.fields.anonymization.migration.fix,query_type:0
@@ -208,7 +217,7 @@ msgstr "Резиме"
 #. module: anonymization
 #: view:ir.model.fields.anonymization:0
 msgid "Anonymized Field"
-msgstr ""
+msgstr "Анонимизирано поле"
 
 #. module: anonymization
 #: code:addons/anonymization/anonymization.py:391
@@ -219,16 +228,19 @@ msgid ""
 "are anonymized, while some fields are not anonymized. You should try to "
 "solve this problem before trying to do anything."
 msgstr ""
+"Анонимизацијата на базата на податоци моментално е во нестабилна состојба. "
+"Некои полиња се анонимизирани, некои не се. Пробајте да го решите овој "
+"проблем пред да се обидете да направите билошто."
 
 #. module: anonymization
 #: selection:ir.model.fields.anonymize.wizard,state:0
 msgid "Unstable"
-msgstr ""
+msgstr "Нестабилно"
 
 #. module: anonymization
 #: selection:ir.model.fields.anonymization.history,state:0
 msgid "Exception occured"
-msgstr ""
+msgstr "Настана исклучок"
 
 #. module: anonymization
 #: selection:ir.model.fields.anonymization,state:0
@@ -245,7 +257,7 @@ msgstr "Име на објект"
 #: view:ir.model.fields.anonymization.history:0
 #: model:ir.ui.menu,name:anonymization.menu_administration_anonymization_history
 msgid "Anonymization History"
-msgstr ""
+msgstr "Историја на анонимизација"
 
 #. module: anonymization
 #: field:ir.model.fields.anonymization.migration.fix,model_name:0
@@ -265,6 +277,9 @@ msgid ""
 "are anonymized, while some fields are not anonymized. You should try to "
 "solve this problem before trying to do anything else."
 msgstr ""
+"Анонимизацијата на базата на податоци моментално е во нестабилна состојба. "
+"Некои полиња се анонимизирани, некои не се. Пробајте да го решите овој "
+"проблем пред да направите билошто друго."
 
 #. module: anonymization
 #: code:addons/anonymization/anonymization.py:389
@@ -277,7 +292,7 @@ msgstr "Грешка !"
 #: model:ir.actions.act_window,name:anonymization.action_ir_model_fields_anonymize_wizard
 #: view:ir.model.fields.anonymize.wizard:0
 msgid "Anonymize Database"
-msgstr ""
+msgstr "Анонимизирај база на податоци"
 
 #. module: anonymization
 #: field:ir.model.fields.anonymize.wizard,name:0
@@ -292,7 +307,7 @@ msgstr "Секвенца"
 #. module: anonymization
 #: selection:ir.model.fields.anonymization.history,direction:0
 msgid "anonymized -> clear"
-msgstr ""
+msgstr "анонимизирано -> чисто"
 
 #. module: anonymization
 #: selection:ir.model.fields.anonymization.history,state:0
@@ -304,6 +319,7 @@ msgstr "Започнато"
 #, python-format
 msgid "The database is currently anonymized, you cannot anonymize it again."
 msgstr ""
+"Базата на податоци е анонимизирана, неможете да ја анонимизирате повторно."
 
 #. module: anonymization
 #: selection:ir.model.fields.anonymization.history,state:0

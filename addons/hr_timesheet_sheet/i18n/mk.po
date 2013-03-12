@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-21 17:04+0000\n"
-"PO-Revision-Date: 2013-03-04 12:49+0000\n"
+"POT-Creation-Date: 2013-03-07 08:37+0000\n"
+"PO-Revision-Date: 2013-03-11 14:06+0000\n"
 "Last-Translator: Софче Димитријева <Unknown>\n"
 "Language-Team: Macedonian <mk@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-03-05 05:38+0000\n"
-"X-Generator: Launchpad (build 16514)\n"
+"X-Launchpad-Export-Date: 2013-03-12 05:19+0000\n"
+"X-Generator: Launchpad (build 16524)\n"
 
 #. module: hr_timesheet_sheet
 #: field:hr.analytic.timesheet,sheet_id:0
@@ -43,6 +43,10 @@ msgid ""
 "                computation for one sheet. Set this to 0 if you do not want "
 "any control."
 msgstr ""
+"Дозволена разлика во часови помеѓу најава/одјава и пресметката на "
+"распоредот\n"
+"                за еден лист. Подесете го на 0 доколку не сакате било каква "
+"контрола."
 
 #. module: hr_timesheet_sheet
 #: view:hr.timesheet.report:0
@@ -77,6 +81,8 @@ msgid ""
 "In order to create a timesheet for this employee, you must assign an "
 "analytic journal to the employee, like 'Timesheet Journal'."
 msgstr ""
+"Со цел да креирате распоред за овој вработен, мора да доделите аналитички "
+"дневник на вработениот, како 'Дневник Распоред'"
 
 #. module: hr_timesheet_sheet
 #: selection:hr.timesheet.report,month:0
@@ -129,12 +135,12 @@ msgstr "Период на распоред"
 #: field:hr_timesheet_sheet.sheet,date_to:0
 #: field:timesheet.report,date_to:0
 msgid "Date to"
-msgstr ""
+msgstr "Датум до"
 
 #. module: hr_timesheet_sheet
 #: view:hr_timesheet_sheet.sheet:0
 msgid "to"
-msgstr ""
+msgstr "до"
 
 #. module: hr_timesheet_sheet
 #: model:process.node,note:hr_timesheet_sheet.process_node_invoiceonwork0
@@ -246,6 +252,12 @@ msgid ""
 "* The 'Done' status is used when users timesheet is accepted by his/her "
 "senior."
 msgstr ""
+" *Статусот 'Нацрт' се користи кога корисникот го кодира новиот и непотврден "
+"распоред.                 \n"
+"* Статусот 'Потврдено' се користи за да се потврди распоредот од страна на "
+"корисникот.                 \n"
+"* Статусот 'Завршено' се користи кога распоредот на корисникот е прифатен од "
+"неговиот претпоставен."
 
 #. module: hr_timesheet_sheet
 #: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:64
@@ -280,7 +292,7 @@ msgstr "Потврдете дека вкупната вредност на ли�
 #: model:ir.actions.act_window,name:hr_timesheet_sheet.action_timesheet_report_stat_all
 #: model:ir.ui.menu,name:hr_timesheet_sheet.menu_timesheet_report_all
 msgid "Timesheet Sheet Analysis"
-msgstr ""
+msgstr "Анализи на лист од распоред"
 
 #. module: hr_timesheet_sheet
 #: field:hr_timesheet_sheet.sheet.account,name:0
@@ -340,7 +352,7 @@ msgstr ""
 #. module: hr_timesheet_sheet
 #: field:timesheet.report,nbr:0
 msgid "#Nbr"
-msgstr ""
+msgstr "#Nbr"
 
 #. module: hr_timesheet_sheet
 #: field:hr_timesheet_sheet.sheet,date_from:0
@@ -495,7 +507,7 @@ msgstr "Најава"
 #: view:timesheet.report:0
 #: field:timesheet.report,total_timesheet:0
 msgid "#Total Timesheet"
-msgstr ""
+msgstr "# Вкупен распоред"
 
 #. module: hr_timesheet_sheet
 #: model:ir.model,name:hr_timesheet_sheet.model_hr_timesheet_current_open
@@ -543,7 +555,7 @@ msgstr "Месец"
 #: view:timesheet.report:0
 #: field:timesheet.report,total_diff:0
 msgid "#Total Diff"
-msgstr ""
+msgstr "#Вкупна разл."
 
 #. module: hr_timesheet_sheet
 #: view:hr_timesheet_sheet.sheet:0
@@ -584,7 +596,7 @@ msgstr "или"
 #. module: hr_timesheet_sheet
 #: model:process.transition,name:hr_timesheet_sheet.process_transition_invoiceontimesheet0
 msgid "Billing"
-msgstr ""
+msgstr "Фактурирање"
 
 #. module: hr_timesheet_sheet
 #: model:process.transition,note:hr_timesheet_sheet.process_transition_timesheetdraft0
@@ -644,6 +656,19 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Нов распоред за одобрување.\n"
+"              </p><p>\n"
+"               Мора да ги снимате распоредите секој ден и да ги потврдите на "
+"крајот\n"
+"               на неделата. Откако распоредот е потврден, треба да биде \n"
+"               валидиран од страна на менаџерот.\n"
+"              </p><p>\n"
+"                Timesheets can also be invoiced to customers, depending on "
+"the\n"
+"                configuration of each project's related contract.\n"
+"              </p>\n"
+"            "
 
 #. module: hr_timesheet_sheet
 #: model:ir.model,name:hr_timesheet_sheet.model_account_analytic_line
@@ -827,6 +852,9 @@ msgid ""
 "Allowed difference in hours between the sign in/out and the timesheet "
 "computation for one sheet. Set this to 0 if you do not want any control."
 msgstr ""
+"Дозволена разлика во часови помеѓу најавата/одјавата и пресметката на "
+"распоредот за еден лист. Подесете го на 0 доколку не сакате било каква "
+"контрола."
 
 #. module: hr_timesheet_sheet
 #: view:hr_timesheet_sheet.sheet:0
@@ -885,7 +913,7 @@ msgstr "Валидирано"
 #. module: hr_timesheet_sheet
 #: model:process.node,name:hr_timesheet_sheet.process_node_invoiceonwork0
 msgid "Invoice on Work"
-msgstr ""
+msgstr "Фактура за работа"
 
 #. module: hr_timesheet_sheet
 #: view:hr_timesheet_sheet.sheet.account:0
@@ -994,12 +1022,12 @@ msgstr "Го дефинира работното резиме на задача�
 #. module: hr_timesheet_sheet
 #: view:hr_timesheet_sheet.sheet:0
 msgid "Sign Out"
-msgstr ""
+msgstr "Одјава"
 
 #. module: hr_timesheet_sheet
 #: model:process.transition,note:hr_timesheet_sheet.process_transition_tasktimesheet0
 msgid "Moves task entry into the timesheet line"
-msgstr ""
+msgstr "Го преместува записот за задачата во ставка од распоредот."
 
 #. module: hr_timesheet_sheet
 #: view:hr_timesheet_sheet.sheet.day:0
@@ -1048,6 +1076,16 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p>\n"
+"               Овој извештај врши анализи на распоредите креирани од вашите\n"
+"                човечки ресурси во системот. Ви овозможува да имате целосен "
+"преглед \n"
+"                на записите направени од вашите вработени. Може да ги "
+"групирате по\n"
+"                специфични критериуми за селекција благодарение на алатката "
+"за пребарување.\n"
+"              </p>\n"
+"            "
 
 #. module: hr_timesheet_sheet
 #: view:hr_timesheet_sheet.sheet:0

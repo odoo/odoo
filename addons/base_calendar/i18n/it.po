@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-21 17:05+0000\n"
+"POT-Creation-Date: 2013-03-07 08:37+0000\n"
 "PO-Revision-Date: 2012-12-22 13:24+0000\n"
 "Last-Translator: Davide Corio - agilebg.com <davide.corio@agilebg.com>\n"
 "Language-Team: Italian <it@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-01-18 06:36+0000\n"
-"X-Generator: Launchpad (build 16430)\n"
+"X-Launchpad-Export-Date: 2013-03-08 05:36+0000\n"
+"X-Generator: Launchpad (build 16523)\n"
 
 #. module: base_calendar
 #: selection:calendar.alarm,trigger_related:0
@@ -102,11 +102,6 @@ msgid "Fourth"
 msgstr "Quarto"
 
 #. module: base_calendar
-#: model:ir.model,name:base_calendar.model_res_users
-msgid "Users"
-msgstr "Utenti"
-
-#. module: base_calendar
 #: field:calendar.event,day:0
 #: selection:calendar.event,select1:0
 #: field:calendar.todo,day:0
@@ -173,7 +168,6 @@ msgstr "Fuso orario"
 #: selection:calendar.event,show_as:0
 #: selection:calendar.todo,show_as:0
 #: selection:crm.meeting,show_as:0
-#: selection:res.users,availability:0
 msgid "Free"
 msgstr "Libero"
 
@@ -251,7 +245,7 @@ msgid "To"
 msgstr "A"
 
 #. module: base_calendar
-#: code:addons/base_calendar/base_calendar.py:1255
+#: code:addons/base_calendar/base_calendar.py:1260
 #, python-format
 msgid "Error!"
 msgstr "Errore!"
@@ -365,10 +359,10 @@ msgstr ""
 
 #. module: base_calendar
 #: code:addons/base_calendar/base_calendar.py:399
-#: code:addons/base_calendar/base_calendar.py:444
-#: code:addons/base_calendar/base_calendar.py:1008
-#: code:addons/base_calendar/base_calendar.py:1010
-#: code:addons/base_calendar/base_calendar.py:1455
+#: code:addons/base_calendar/base_calendar.py:441
+#: code:addons/base_calendar/base_calendar.py:1013
+#: code:addons/base_calendar/base_calendar.py:1015
+#: code:addons/base_calendar/base_calendar.py:1460
 #, python-format
 msgid "Warning!"
 msgstr "Attenzione!"
@@ -529,7 +523,7 @@ msgid "Event alarm information"
 msgstr "Informazioni avviso evento"
 
 #. module: base_calendar
-#: code:addons/base_calendar/base_calendar.py:1010
+#: code:addons/base_calendar/base_calendar.py:1015
 #, python-format
 msgid "Count cannot be negative or 0."
 msgstr "Il conteggio non può essere negativo o zero."
@@ -643,6 +637,11 @@ msgid "hours"
 msgstr "ore"
 
 #. module: base_calendar
+#: view:calendar.event:0
+msgid "Cancel Event"
+msgstr ""
+
+#. module: base_calendar
 #: field:calendar.attendee,partner_id:0
 msgid "Contact"
 msgstr "Contatto"
@@ -749,7 +748,7 @@ msgid "Declined"
 msgstr "Rifiutato"
 
 #. module: base_calendar
-#: code:addons/base_calendar/base_calendar.py:1455
+#: code:addons/base_calendar/base_calendar.py:1460
 #, python-format
 msgid "Group by date is not supported, use the calendar view instead."
 msgstr "Raggruppo per data non supportato, usa la vista calendario."
@@ -1176,11 +1175,6 @@ msgid "All Day?"
 msgstr "Tutto il giorno?"
 
 #. module: base_calendar
-#: view:calendar.event:0
-msgid "Cancel"
-msgstr "Annulla"
-
-#. module: base_calendar
 #: model:ir.actions.act_window,help:base_calendar.action_crm_meeting
 msgid ""
 "<p class=\"oe_view_nocontent_create\">\n"
@@ -1225,12 +1219,11 @@ msgid "Select Weekdays"
 msgstr "Giorni selezionati"
 
 #. module: base_calendar
-#: code:addons/base_calendar/base_calendar.py:1514
+#: code:addons/base_calendar/base_calendar.py:1519
 #: selection:calendar.attendee,availability:0
 #: selection:calendar.event,show_as:0
 #: selection:calendar.todo,show_as:0
 #: selection:crm.meeting,show_as:0
-#: selection:res.users,availability:0
 #, python-format
 msgid "Busy"
 msgstr "Occupato"
@@ -1493,7 +1486,7 @@ msgid "Weekday"
 msgstr "Giorno della settimana"
 
 #. module: base_calendar
-#: code:addons/base_calendar/base_calendar.py:1008
+#: code:addons/base_calendar/base_calendar.py:1013
 #, python-format
 msgid "Interval cannot be negative."
 msgstr "L'intervallo non può essere negativo"
@@ -1506,7 +1499,7 @@ msgid "By day"
 msgstr "Per giorno"
 
 #. module: base_calendar
-#: code:addons/base_calendar/base_calendar.py:444
+#: code:addons/base_calendar/base_calendar.py:441
 #, python-format
 msgid "First you have to specify the date of the invitation."
 msgstr "E' necessario prima specificare la data dell'invito"
@@ -1603,7 +1596,6 @@ msgstr "Secondo"
 
 #. module: base_calendar
 #: field:calendar.attendee,availability:0
-#: field:res.users,availability:0
 msgid "Free/Busy"
 msgstr "Libero/Occupato"
 
@@ -1645,3 +1637,9 @@ msgstr ""
 #: selection:crm.meeting,byday:0
 msgid "Fifth"
 msgstr "Quinto"
+
+#~ msgid "Users"
+#~ msgstr "Utenti"
+
+#~ msgid "Cancel"
+#~ msgstr "Annulla"

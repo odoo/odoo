@@ -922,7 +922,7 @@
                             </group>
                             <group string="Invoices">
                                   <field name="account_collected_id" domain="[('type','&lt;&gt;','view'),('type','&lt;&gt;','consolidation')]"/>
-                                  <field name="account_analytic_collected_id" domain="[('type','&lt;&gt;','view'), ('company_id', '=', company_id), ('parent_id', '&lt;&gt;', False)]" groups="analytic.group_analytic_accounting"/>
+                                  <field name="account_analytic_collected_id" domain="[('type','&lt;&gt;','view'), ('company_id', '=', company_id)]" groups="analytic.group_analytic_accounting"/>
 
                                   <field name="base_code_id"/>
                                   <field name="base_sign"/>
@@ -932,7 +932,7 @@
                             </group>
                             <group string="Refunds">
                                   <field name="account_paid_id" domain="[('type','&lt;&gt;','view'),('type','&lt;&gt;','consolidation')]"/>
-                                  <field name="account_analytic_paid_id" domain="[('type','&lt;&gt;','view'), ('company_id', '=', company_id), ('parent_id', '&lt;&gt;', False)]" groups="analytic.group_analytic_accounting"/>
+                                  <field name="account_analytic_paid_id" domain="[('type','&lt;&gt;','view'), ('company_id', '=', company_id)]" groups="analytic.group_analytic_accounting"/>
 
                                   <field name="ref_base_code_id"/>
                                   <field name="ref_base_sign"/>
@@ -1039,7 +1039,7 @@
                                         <field name="blocked"/>
                                     </group>
                                     <group groups="analytic.group_analytic_accounting" string="Analytic">
-                                        <field name="analytic_account_id" domain="[('parent_id','!=',False)]"/>
+                                        <field name="analytic_account_id" domain="[('type','in',('normal','contract'))]"/>
                                     </group>
                                 </group>
                                 <field name="narration" colspan="4" nolabel="1" placeholder="Add an internal note..."/>
@@ -1084,7 +1084,7 @@
                                 <field name="blocked"/>
                                 <newline/>
                                 <field name="account_tax_id" domain="[('parent_id','=',False)]"/>
-                                <field name="analytic_account_id" domain="[('parent_id','!=',False)]" groups="analytic.group_analytic_accounting"/>
+                                <field name="analytic_account_id" groups="analytic.group_analytic_accounting"/>
                                 <separator colspan="4" string="Status"/>
                                 <newline/>
                                 <field name="reconcile_id"/>
@@ -1338,7 +1338,7 @@
                                                 </group>
 
                                                 <group groups="analytic.group_analytic_accounting" string="Analytic">
-                                                    <field name="analytic_account_id" domain="[('parent_id','!=',False)]"/>
+                                                    <field name="analytic_account_id"/>
                                                 </group>
                                             </group>
                                             <separator string="Internal Note"/>
@@ -1357,7 +1357,7 @@
                                     <field name="date_maturity"/>
                                     <field name="debit" sum="Total Debit"/>
                                     <field name="credit" sum="Total Credit"/>
-                                    <field name="analytic_account_id" domain="[('parent_id','!=',False)]" groups="analytic.group_analytic_accounting"/>
+                                    <field name="analytic_account_id" groups="analytic.group_analytic_accounting"/>
                                     <field name="amount_currency"/>
                                     <field name="currency_id" groups="base.group_multi_currency"/>
                                     <field name="tax_code_id"/>
