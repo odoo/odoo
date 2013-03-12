@@ -2646,6 +2646,7 @@ action = pool.get('res.config').next(cr, uid, [], context)
                                     <field domain="[('journal_id','=',parent.journal_id), ('company_id', '=', parent.company_id)]" name="account_id"/>
                                     <field name="analytic_account_id" domain="[('company_id', '=', parent.company_id), ('type', '&lt;&gt;', 'view')]" groups="analytic.group_analytic_accounting" />
                                     <field name="amount"/>
+                                    <field name="state" invisible="1"/>
                                 </tree>
                                 <form string="Statement lines">
                                     <field name="date"/>
@@ -2659,6 +2660,7 @@ action = pool.get('res.config').next(cr, uid, [], context)
                                     <field name="sequence"/>
                                     <separator colspan="4" string="Notes"/>
                                     <field colspan="4" name="note" nolabel="1"/>
+                                    <field name="state" invisible="1"/>
                                 </form>
                             </field>
                         </page>
