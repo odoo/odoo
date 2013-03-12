@@ -393,7 +393,7 @@ class project_issue(base_stage, osv.osv):
 
     def write(self, cr, uid, ids, vals, context=None):
         #Update last action date every time the user change the stage, the state or send a new email
-        logged_fields = ['stage_id', 'state', 'message_ids']
+        logged_fields = ['stage_id', 'state']
         if any([field in vals for field in logged_fields]):
             vals['date_action_last'] = time.strftime('%Y-%m-%d %H:%M:%S')
 
@@ -545,6 +545,14 @@ class project_issue(base_stage, osv.osv):
 
         return super(project_issue, self).message_update(cr, uid, ids, msg, update_vals=update_vals, context=context)
 
+    def message_post(self, cr, uid, thread_id, body='', subject=None, type='notification', subtype=None, parent_id=False, attachments=None, context=None, content_subtype='html', **kwargs):
+        """ Overrides mail_thread message_post so that we can set the date of last action field when
+            a new message is posted on the issue.
+        """
+        if thread_id:
+            self.write(cr, uid, thread_id, {'date_action_last': time.strftime('%Y-%m-%d %H:%M:%S')}, context=context)    
+        
+        return super(project_issue, self).message_post(cr, uid, thread_id, body=body, subject=subject, type=type, subtype=subtype, parent_id=parent_id, attachments=attachments, context=context, content_subtype=content_subtype, **kwargs)  
 
 class project(osv.osv):
     _inherit = "project.project"
