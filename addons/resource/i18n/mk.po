@@ -1,0 +1,373 @@
+# Macedonian translation for openobject-addons
+# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
+# This file is distributed under the same license as the openobject-addons package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
+# Sofce Dimitrijeva <sofce@eskon.com.mk>, 2013.
+msgid ""
+msgstr ""
+"Project-Id-Version: openobject-addons\n"
+"Report-Msgid-Bugs-To: OpenERP Macedonian <openerp-i18n-"
+"macedonian@lists.launchpad.net >\n"
+"POT-Creation-Date: 2013-03-07 08:38+0000\n"
+"PO-Revision-Date: 2013-02-28 20:38+0000\n"
+"Last-Translator: Софче Димитријева <Unknown>\n"
+"Language-Team: OpenERP Macedonia <openerp-i18n-"
+"macedonian@lists.launchpad.net>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Launchpad-Export-Date: 2013-03-08 06:00+0000\n"
+"X-Generator: Launchpad (build 16523)\n"
+"Language: mk\n"
+
+#. module: resource
+#: help:resource.calendar.leaves,resource_id:0
+msgid ""
+"If empty, this is a generic holiday for the company. If a resource is set, "
+"the holiday/leave is only for this resource"
+msgstr ""
+"Доколку е празно, ова е заеднички одмор за компанијата. Доколку ресурсот е "
+"подесен, одморот/отсуството е само за овој ресурс"
+
+#. module: resource
+#: selection:resource.resource,resource_type:0
+msgid "Material"
+msgstr "Материјал"
+
+#. module: resource
+#: field:resource.resource,resource_type:0
+msgid "Resource Type"
+msgstr "Тип на ресурс"
+
+#. module: resource
+#: model:ir.model,name:resource.model_resource_calendar_leaves
+#: view:resource.calendar.leaves:0
+msgid "Leave Detail"
+msgstr "Детали за отсуство"
+
+#. module: resource
+#: model:ir.actions.act_window,name:resource.resource_calendar_resources_leaves
+msgid "Resources Leaves"
+msgstr "Отстства на ресурси"
+
+#. module: resource
+#: field:resource.calendar.attendance,dayofweek:0
+msgid "Day of Week"
+msgstr "Ден од неделата"
+
+#. module: resource
+#: selection:resource.calendar.attendance,dayofweek:0
+msgid "Thursday"
+msgstr "Четврток"
+
+#. module: resource
+#: view:resource.calendar.leaves:0
+#: view:resource.resource:0
+msgid "Group By..."
+msgstr "Групирај по..."
+
+#. module: resource
+#: selection:resource.calendar.attendance,dayofweek:0
+msgid "Sunday"
+msgstr "Недела"
+
+#. module: resource
+#: field:resource.resource,time_efficiency:0
+msgid "Efficiency Factor"
+msgstr "Фактор на ефикасност"
+
+#. module: resource
+#: view:resource.resource:0
+msgid "Search Resource"
+msgstr "Барај ресурс"
+
+#. module: resource
+#: view:resource.resource:0
+msgid "Type"
+msgstr "Тип"
+
+#. module: resource
+#: model:ir.actions.act_window,name:resource.action_resource_resource_tree
+#: view:resource.resource:0
+msgid "Resources"
+msgstr "Ресурси"
+
+#. module: resource
+#: code:addons/resource/resource.py:389
+#, python-format
+msgid "Make sure the Working time has been configured with proper week days!"
+msgstr ""
+"Осигурете се дека работното време е конфигурирано со соодветните денови во "
+"неделата!"
+
+#. module: resource
+#: code:addons/resource/resource.py:307
+#, python-format
+msgid "%s (copy)"
+msgstr "%s (копија)"
+
+#. module: resource
+#: view:resource.calendar:0
+msgid "Search Working Time"
+msgstr "Барај работно време"
+
+#. module: resource
+#: constraint:resource.calendar.leaves:0
+msgid "Error! leave start-date must be lower then leave end-date."
+msgstr ""
+"Грешка! почетниот датум на отсуството мора да биде помал од крајниот датум "
+"на отсуството."
+
+#. module: resource
+#: model:ir.model,name:resource.model_resource_calendar
+msgid "Resource Calendar"
+msgstr "Календар на ресурси"
+
+#. module: resource
+#: field:resource.calendar,company_id:0
+#: view:resource.calendar.leaves:0
+#: field:resource.calendar.leaves,company_id:0
+#: view:resource.resource:0
+#: field:resource.resource,company_id:0
+msgid "Company"
+msgstr "Компанија"
+
+#. module: resource
+#: selection:resource.calendar.attendance,dayofweek:0
+msgid "Friday"
+msgstr "Петок"
+
+#. module: resource
+#: view:resource.calendar.attendance:0
+msgid "Hours"
+msgstr "Часови"
+
+#. module: resource
+#: view:resource.calendar.leaves:0
+msgid "Reason"
+msgstr "Причина"
+
+#. module: resource
+#: view:resource.resource:0
+#: field:resource.resource,user_id:0
+msgid "User"
+msgstr "Корисник"
+
+#. module: resource
+#: view:resource.calendar.leaves:0
+msgid "Date"
+msgstr "Датум"
+
+#. module: resource
+#: view:resource.calendar.leaves:0
+msgid "Search Working Period Leaves"
+msgstr "Барај отсуства во работни периоди"
+
+#. module: resource
+#: field:resource.calendar.attendance,date_from:0
+msgid "Starting Date"
+msgstr "Датум на започнување"
+
+#. module: resource
+#: field:resource.calendar,manager:0
+msgid "Workgroup Manager"
+msgstr "Менаџер на работна група"
+
+#. module: resource
+#: field:resource.calendar.leaves,date_to:0
+msgid "End Date"
+msgstr "Краен датум"
+
+#. module: resource
+#: model:ir.actions.act_window,name:resource.resource_calendar_closing_days
+msgid "Closing Days"
+msgstr "Завршни денови"
+
+#. module: resource
+#: model:ir.ui.menu,name:resource.menu_resource_config
+#: view:resource.calendar.leaves:0
+#: field:resource.calendar.leaves,resource_id:0
+#: view:resource.resource:0
+msgid "Resource"
+msgstr "Ресурс"
+
+#. module: resource
+#: field:resource.calendar,name:0
+#: field:resource.calendar.attendance,name:0
+#: field:resource.calendar.leaves,name:0
+#: field:resource.resource,name:0
+msgid "Name"
+msgstr "Име"
+
+#. module: resource
+#: model:ir.actions.act_window,name:resource.action_resource_calendar_form
+#: view:resource.calendar:0
+#: field:resource.calendar,attendance_ids:0
+#: view:resource.calendar.attendance:0
+#: field:resource.calendar.leaves,calendar_id:0
+#: field:resource.resource,calendar_id:0
+msgid "Working Time"
+msgstr "Работно време"
+
+#. module: resource
+#: help:resource.calendar.attendance,hour_from:0
+msgid "Start and End time of working."
+msgstr "Време на започнување и завршување со работа."
+
+#. module: resource
+#: view:resource.calendar.leaves:0
+#: view:resource.resource:0
+msgid "Working Period"
+msgstr "Работен период"
+
+#. module: resource
+#: selection:resource.calendar.attendance,dayofweek:0
+msgid "Wednesday"
+msgstr "Среда"
+
+#. module: resource
+#: model:ir.model,name:resource.model_resource_resource
+msgid "Resource Detail"
+msgstr "Детали за ресурси"
+
+#. module: resource
+#: field:resource.resource,active:0
+msgid "Active"
+msgstr "Активен"
+
+#. module: resource
+#: help:resource.resource,active:0
+msgid ""
+"If the active field is set to False, it will allow you to hide the resource "
+"record without removing it."
+msgstr ""
+"Доколку активното поле е подесено на Грешка, ќе можете да го сокриете "
+"записот на ресурсот без да го отстраните."
+
+#. module: resource
+#: field:resource.calendar.attendance,calendar_id:0
+msgid "Resource's Calendar"
+msgstr "Календар на ресурси"
+
+#. module: resource
+#: field:resource.calendar.attendance,hour_from:0
+msgid "Work from"
+msgstr "Работа од"
+
+#. module: resource
+#: model:ir.actions.act_window,help:resource.action_resource_calendar_form
+msgid ""
+"Define working hours and time table that could be scheduled to your project "
+"members"
+msgstr ""
+"Дефинирај работни часови и временска табела што можат да бидат доделени на "
+"членовите на проектот"
+
+#. module: resource
+#: help:resource.resource,user_id:0
+msgid "Related user name for the resource to manage its access."
+msgstr ""
+"Поврзано корисничко име за ресурсот за менаџирање на неговиот пристап."
+
+#. module: resource
+#: help:resource.resource,calendar_id:0
+msgid "Define the schedule of resource"
+msgstr "Дефинирај распоред на ресурси"
+
+#. module: resource
+#: view:resource.calendar.leaves:0
+msgid "Starting Date of Leave"
+msgstr "Почетен датум на отсуство"
+
+#. module: resource
+#: field:resource.resource,code:0
+msgid "Code"
+msgstr "Код"
+
+#. module: resource
+#: selection:resource.calendar.attendance,dayofweek:0
+msgid "Monday"
+msgstr "Понеделник"
+
+#. module: resource
+#: field:resource.calendar.attendance,hour_to:0
+msgid "Work to"
+msgstr "Работа на"
+
+#. module: resource
+#: model:ir.model,name:resource.model_resource_calendar_attendance
+msgid "Work Detail"
+msgstr "Детали за работата"
+
+#. module: resource
+#: selection:resource.calendar.attendance,dayofweek:0
+msgid "Tuesday"
+msgstr "Вторник"
+
+#. module: resource
+#: help:resource.resource,time_efficiency:0
+msgid ""
+"This field depict the efficiency of the resource to complete tasks. e.g  "
+"resource put alone on a phase of 5 days with 5 tasks assigned to him, will "
+"show a load of 100% for this phase by default, but if we put a efficiency of "
+"200%, then his load will only be 50%."
+msgstr ""
+"Ова поле ја одразува ефикасноста на ресурсот во извршување на задачите. на "
+"пр. ресурсот кој е поставен сам на фаза од 5 дена со 5 задачи кои му се "
+"доделени, стандардно ќе покаже оптоварување од 100% за оваа фаза, но доколку "
+"поставиме ефикасност од 200%, тогаш ова оптоварување ќе биде само 50%."
+
+#. module: resource
+#: model:ir.actions.act_window,name:resource.action_resource_calendar_leave_tree
+#: model:ir.ui.menu,name:resource.menu_view_resource_calendar_leaves_search
+msgid "Resource Leaves"
+msgstr "Отсуства на ресурсот"
+
+#. module: resource
+#: model:ir.actions.act_window,help:resource.action_resource_resource_tree
+msgid ""
+"Resources allow you to create and manage resources that should be involved "
+"in a specific project phase. You can also set their efficiency level and "
+"workload based on their weekly working hours."
+msgstr ""
+"Ресурсите ви дозволуваат да креирате и менаџирате ресурси кои треба да бидат "
+"вклучени во специфична проектна фаза. Исто така можете да го подесите "
+"нивното ниов на ефикасност и обемот на работа врз основа на нивните неделни "
+"работни часови."
+
+#. module: resource
+#: view:resource.resource:0
+msgid "Inactive"
+msgstr "Неактивен"
+
+#. module: resource
+#: code:addons/resource/faces/resource.py:340
+#, python-format
+msgid "(vacation)"
+msgstr "(одмор)"
+
+#. module: resource
+#: code:addons/resource/resource.py:389
+#, python-format
+msgid "Configuration Error!"
+msgstr "Грешка конфигурација!"
+
+#. module: resource
+#: selection:resource.resource,resource_type:0
+msgid "Human"
+msgstr "Човек"
+
+#. module: resource
+#: view:resource.calendar.leaves:0
+msgid "Duration"
+msgstr "Времетраење"
+
+#. module: resource
+#: field:resource.calendar.leaves,date_from:0
+msgid "Start Date"
+msgstr "Почетен датум"
+
+#. module: resource
+#: selection:resource.calendar.attendance,dayofweek:0
+msgid "Saturday"
+msgstr "Сабота"

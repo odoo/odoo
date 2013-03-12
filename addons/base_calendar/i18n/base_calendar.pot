@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 7.0alpha\n"
+"Project-Id-Version: OpenERP Server 7.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-12-21 17:05+0000\n"
-"PO-Revision-Date: 2012-12-21 17:05+0000\n"
+"POT-Creation-Date: 2013-03-07 08:37+0000\n"
+"PO-Revision-Date: 2013-03-07 08:37+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -96,11 +96,6 @@ msgid "Fourth"
 msgstr ""
 
 #. module: base_calendar
-#: model:ir.model,name:base_calendar.model_res_users
-msgid "Users"
-msgstr ""
-
-#. module: base_calendar
 #: field:calendar.event,day:0
 #: selection:calendar.event,select1:0
 #: field:calendar.todo,day:0
@@ -167,7 +162,6 @@ msgstr ""
 #: selection:calendar.event,show_as:0
 #: selection:calendar.todo,show_as:0
 #: selection:crm.meeting,show_as:0
-#: selection:res.users,availability:0
 msgid "Free"
 msgstr ""
 
@@ -245,7 +239,7 @@ msgid "To"
 msgstr ""
 
 #. module: base_calendar
-#: code:addons/base_calendar/base_calendar.py:1255
+#: code:addons/base_calendar/base_calendar.py:1260
 #, python-format
 msgid "Error!"
 msgstr ""
@@ -355,10 +349,10 @@ msgstr ""
 
 #. module: base_calendar
 #: code:addons/base_calendar/base_calendar.py:399
-#: code:addons/base_calendar/base_calendar.py:444
-#: code:addons/base_calendar/base_calendar.py:1008
-#: code:addons/base_calendar/base_calendar.py:1010
-#: code:addons/base_calendar/base_calendar.py:1455
+#: code:addons/base_calendar/base_calendar.py:441
+#: code:addons/base_calendar/base_calendar.py:1013
+#: code:addons/base_calendar/base_calendar.py:1015
+#: code:addons/base_calendar/base_calendar.py:1460
 #, python-format
 msgid "Warning!"
 msgstr ""
@@ -515,7 +509,7 @@ msgid "Event alarm information"
 msgstr ""
 
 #. module: base_calendar
-#: code:addons/base_calendar/base_calendar.py:1010
+#: code:addons/base_calendar/base_calendar.py:1015
 #, python-format
 msgid "Count cannot be negative or 0."
 msgstr ""
@@ -629,6 +623,11 @@ msgid "hours"
 msgstr ""
 
 #. module: base_calendar
+#: view:calendar.event:0
+msgid "Cancel Event"
+msgstr ""
+
+#. module: base_calendar
 #: field:calendar.attendee,partner_id:0
 msgid "Contact"
 msgstr ""
@@ -734,7 +733,7 @@ msgid "Declined"
 msgstr ""
 
 #. module: base_calendar
-#: code:addons/base_calendar/base_calendar.py:1455
+#: code:addons/base_calendar/base_calendar.py:1460
 #, python-format
 msgid "Group by date is not supported, use the calendar view instead."
 msgstr ""
@@ -1149,11 +1148,6 @@ msgid "All Day?"
 msgstr ""
 
 #. module: base_calendar
-#: view:calendar.event:0
-msgid "Cancel"
-msgstr ""
-
-#. module: base_calendar
 #: model:ir.actions.act_window,help:base_calendar.action_crm_meeting
 msgid "<p class=\"oe_view_nocontent_create\">\n"
 "            Click to schedule a new meeting.\n"
@@ -1181,12 +1175,11 @@ msgid "Select Weekdays"
 msgstr ""
 
 #. module: base_calendar
-#: code:addons/base_calendar/base_calendar.py:1514
+#: code:addons/base_calendar/base_calendar.py:1519
 #: selection:calendar.attendee,availability:0
 #: selection:calendar.event,show_as:0
 #: selection:calendar.todo,show_as:0
 #: selection:crm.meeting,show_as:0
-#: selection:res.users,availability:0
 #, python-format
 msgid "Busy"
 msgstr ""
@@ -1428,7 +1421,7 @@ msgid "Weekday"
 msgstr ""
 
 #. module: base_calendar
-#: code:addons/base_calendar/base_calendar.py:1008
+#: code:addons/base_calendar/base_calendar.py:1013
 #, python-format
 msgid "Interval cannot be negative."
 msgstr ""
@@ -1441,7 +1434,7 @@ msgid "By day"
 msgstr ""
 
 #. module: base_calendar
-#: code:addons/base_calendar/base_calendar.py:444
+#: code:addons/base_calendar/base_calendar.py:441
 #, python-format
 msgid "First you have to specify the date of the invitation."
 msgstr ""
@@ -1538,7 +1531,6 @@ msgstr ""
 
 #. module: base_calendar
 #: field:calendar.attendee,availability:0
-#: field:res.users,availability:0
 msgid "Free/Busy"
 msgstr ""
 

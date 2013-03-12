@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-21 17:04+0000\n"
-"PO-Revision-Date: 2013-02-17 14:13+0000\n"
+"POT-Creation-Date: 2013-03-07 08:37+0000\n"
+"PO-Revision-Date: 2013-02-26 09:40+0000\n"
 "Last-Translator: gobi <Unknown>\n"
 "Language-Team: Mongolian <mn@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-02-18 05:26+0000\n"
-"X-Generator: Launchpad (build 16491)\n"
+"X-Launchpad-Export-Date: 2013-03-08 06:01+0000\n"
+"X-Generator: Launchpad (build 16523)\n"
 
 #. module: sale
 #: model:res.groups,name:sale.group_analytic_accounting
@@ -127,7 +127,7 @@ msgid "March"
 msgstr "3 сар"
 
 #. module: sale
-#: code:addons/sale/sale.py:559
+#: code:addons/sale/sale.py:567
 #, python-format
 msgid "First cancel all invoices attached to this sales order."
 msgstr ""
@@ -216,6 +216,7 @@ msgstr "Өдөр"
 
 #. module: sale
 #: model:process.transition.action,name:sale.process_transition_action_cancelorder0
+#: view:sale.order:0
 msgid "Cancel Order"
 msgstr "Захиалга цуцлах"
 
@@ -246,10 +247,9 @@ msgid "Incorrect Data"
 msgstr "Буруу өгөгдөл"
 
 #. module: sale
-#: code:addons/sale/wizard/sale_make_invoice_advance.py:102
-#, python-format
-msgid "The value of Advance Amount must be positive."
-msgstr "Урьдчилгааны дүн нь эерэг утгатай байх ёстой."
+#: view:sale.order.line:0
+msgid "Cancel Line"
+msgstr ""
 
 #. module: sale
 #: help:sale.config.settings,group_discount_per_so_line:0
@@ -294,11 +294,12 @@ msgid "Project"
 msgstr "Төсөл"
 
 #. module: sale
-#: code:addons/sale/sale.py:360
-#: code:addons/sale/sale.py:501
-#: code:addons/sale/sale.py:592
-#: code:addons/sale/sale.py:755
-#: code:addons/sale/sale.py:772
+#: code:addons/sale/sale.py:185
+#: code:addons/sale/sale.py:368
+#: code:addons/sale/sale.py:509
+#: code:addons/sale/sale.py:600
+#: code:addons/sale/sale.py:763
+#: code:addons/sale/sale.py:780
 #, python-format
 msgid "Error!"
 msgstr "Алдаа!"
@@ -407,6 +408,11 @@ msgid "False"
 msgstr "Худал"
 
 #. module: sale
+#: view:sale.order:0
+msgid "Terms and conditions..."
+msgstr ""
+
+#. module: sale
 #: help:sale.advance.payment.inv,advance_payment_method:0
 msgid ""
 "Use All to create the final invoice.\n"
@@ -434,9 +440,9 @@ msgid "Tax"
 msgstr "Татвар"
 
 #. module: sale
-#: code:addons/sale/sale.py:270
-#: code:addons/sale/sale.py:812
-#: code:addons/sale/sale.py:976
+#: code:addons/sale/sale.py:278
+#: code:addons/sale/sale.py:820
+#: code:addons/sale/sale.py:983
 #, python-format
 msgid "Invalid Action!"
 msgstr "Буруу Үйлдэл!"
@@ -496,7 +502,7 @@ msgid "Fax :"
 msgstr "Факс:"
 
 #. module: sale
-#: code:addons/sale/sale.py:270
+#: code:addons/sale/sale.py:278
 #, python-format
 msgid ""
 "In order to delete a confirmed sales order, you must cancel it before !"
@@ -520,8 +526,8 @@ msgid "Contract Features"
 msgstr "Гэрээний боломжууд"
 
 #. module: sale
-#: code:addons/sale/sale.py:280
-#: code:addons/sale/sale.py:578
+#: code:addons/sale/sale.py:288
+#: code:addons/sale/sale.py:586
 #: model:ir.model,name:sale.model_sale_order
 #: model:process.node,name:sale.process_node_order0
 #: model:process.node,name:sale.process_node_saleorder0
@@ -589,7 +595,7 @@ msgid "Prepare invoices based on timesheets"
 msgstr "Цагийн хуудас дээр суурилсан нэхэмжлэл бэлдэх"
 
 #. module: sale
-#: code:addons/sale/sale.py:812
+#: code:addons/sale/sale.py:820
 #, python-format
 msgid "You cannot cancel a sales order line that has already been invoiced."
 msgstr ""
@@ -650,7 +656,7 @@ msgid "Disc.(%)"
 msgstr "Хөнг.(%)"
 
 #. module: sale
-#: code:addons/sale/sale.py:756
+#: code:addons/sale/sale.py:764
 #, python-format
 msgid "Please define income account for this product: \"%s\" (id:%d)."
 msgstr "Энэ бараанд орлогын данс тодорхойлно уу: \"%s\" (id:%d)."
@@ -696,7 +702,7 @@ msgid "Make Invoices"
 msgstr "Нэхэмжлэл үүсгэх"
 
 #. module: sale
-#: code:addons/sale/res_config.py:89
+#: code:addons/sale/res_config.py:97
 #, python-format
 msgid "Hour"
 msgstr "Цаг"
@@ -814,12 +820,19 @@ msgstr ""
 "* Холбогдох борлуулалтын захиалгыг цуцласан үед төлөв нь 'Цуцлагдсан' болно."
 
 #. module: sale
+#: code:addons/sale/sale.py:510
+#, python-format
+msgid ""
+"You cannot group sales having different currencies for the same partner."
+msgstr "Ижил харилцагчийн бүлэг борлуулалт ялгаатай валюттай байж болохгүй."
+
+#. module: sale
 #: view:sale.config.settings:0
 msgid "Default Options"
 msgstr "Үндсэн Тохиргоо"
 
 #. module: sale
-#: code:addons/sale/sale.py:953
+#: code:addons/sale/sale.py:960
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:91
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:95
 #, python-format
@@ -881,10 +894,12 @@ msgid "Sales Order done"
 msgstr "Борлуулалтын Захиалга хийгдэж дууслаа"
 
 #. module: sale
-#: code:addons/sale/sale.py:361
-#, python-format
-msgid "Please define sales journal for this company: \"%s\" (id:%d)."
-msgstr "Энэ компанид борлуулалтын журнал тодорхойно уу: \"%s\" (id:%d)."
+#: model:process.transition.action,name:sale.process_transition_action_cancel0
+#: view:sale.advance.payment.inv:0
+#: view:sale.make.invoice:0
+#: view:sale.order.line.make.invoice:0
+msgid "Cancel"
+msgstr "Цуцлах"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.act_res_partner_2_sale_order
@@ -934,7 +949,7 @@ msgid "Sales Make Invoice"
 msgstr "Борлуулалтаас Нэхэмжлэх"
 
 #. module: sale
-#: code:addons/sale/sale.py:300
+#: code:addons/sale/sale.py:308
 #, python-format
 msgid "Pricelist Warning!"
 msgstr "Үнийн жагсаалтын Сануулга!"
@@ -1013,7 +1028,7 @@ msgid "Category of Product"
 msgstr "Барааны ангилал"
 
 #. module: sale
-#: code:addons/sale/sale.py:558
+#: code:addons/sale/sale.py:566
 #, python-format
 msgid "Cannot cancel this sales order!"
 msgstr "Энэ борлуулалтын захиалга цуцлах боломжгүй!"
@@ -1070,7 +1085,7 @@ msgid "Open Sale Menu"
 msgstr "Борлуулалт Менюг нээх"
 
 #. module: sale
-#: code:addons/sale/sale.py:592
+#: code:addons/sale/sale.py:600
 #, python-format
 msgid "You cannot confirm a sales order which has no line."
 msgstr "Та мөргүй борлуулалтын захиалга батлаж болохгүй"
@@ -1081,7 +1096,7 @@ msgid "In Progress"
 msgstr "Хийгдэж байна"
 
 #. module: sale
-#: code:addons/sale/sale.py:857
+#: code:addons/sale/sale.py:865
 #, python-format
 msgid "No Customer Defined !"
 msgstr "Захиалагч тодорхойлогдоогүй байна !"
@@ -1353,6 +1368,10 @@ msgid ""
 "                    or a fixed price (for advances) directly from the sales "
 "order form if you prefer."
 msgstr ""
+"Эдгээр захиалгын мөрүүдэд байгаа бүх зүйлс нэхэмжлэгдэнэ. Түүнчлэн "
+"борлуулалтын \n"
+"                    захиалгын маягтаас хувиар юмуу тогтмол дүнгээр "
+"урьдчилгаа нэхэмжлэл үүсгэх мөн боломжтой."
 
 #. module: sale
 #: help:sale.config.settings,module_warning:0
@@ -1362,11 +1381,18 @@ msgid ""
 "Example: Product: this product is deprecated, do not purchase more than 5.\n"
 "                Supplier: don't forget to ask for an express delivery."
 msgstr ""
+"Бараанд анхааруулга нэмэх боломжийг олгодог бөгөөд ингэснээр тухайн барааг "
+"зарах энэ анхааруулга гарна. Эсвэл өгөгдсөн нэг захиалагчид зориулан "
+"анхааруулж болно.\n"
+"Жишээлбэл: Бараа: Энэ бараа хэрэгцээнээс хасагдаж байгаа 5-с олныг битгий "
+"худалдаж ав.\n"
+"                Нийлүүлэгч: яаралтай хүргэлт байгаа эсэхийг асуухаа мартаж "
+"болохгүй."
 
 #. module: sale
 #: field:sale.order,paypal_url:0
 msgid "Paypal Url"
-msgstr ""
+msgstr "Paypal Url"
 
 #. module: sale
 #: help:sale.order,project_id:0
@@ -1381,12 +1407,12 @@ msgstr "Нэхэмжлэл Харах"
 #. module: sale
 #: field:sale.advance.payment.inv,advance_payment_method:0
 msgid "What do you want to invoice?"
-msgstr ""
+msgstr "Юуг нэхэмжилмээр байна?"
 
 #. module: sale
 #: field:sale.config.settings,group_sale_pricelist:0
 msgid "Use pricelists to adapt your price per customers"
-msgstr ""
+msgstr "Үнийн хүснэгтийг ашиглан захиалгчидаар үнийг тохируулж болно"
 
 #. module: sale
 #: model:process.transition,note:sale.process_transition_confirmquotation0
@@ -1398,7 +1424,7 @@ msgstr ""
 "'Хийгдэж байна' эсвэл 'Гараар хийгдэж байна' төлөвтэй болдог."
 
 #. module: sale
-#: code:addons/sale/sale.py:935
+#: code:addons/sale/sale.py:942
 #, python-format
 msgid ""
 "You have to select a pricelist or a customer in the sales form !\n"
@@ -1413,7 +1439,7 @@ msgid "Reference of the document that generated this sales order request."
 msgstr "Энэ борлуулалтын захиалгыг үүсгэсэн сурвалж баримт."
 
 #. module: sale
-#: code:addons/sale/sale.py:948
+#: code:addons/sale/sale.py:955
 #, python-format
 msgid "No valid pricelist line found ! :"
 msgstr "Тохирох үнийн жагсаалт олдсонгүй !"
@@ -1423,7 +1449,7 @@ msgstr "Тохирох үнийн жагсаалт олдсонгүй !"
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:115
 #, python-format
 msgid "Advance of %s %s"
-msgstr ""
+msgstr "%s %s-н урьдчилгаа"
 
 #. module: sale
 #: view:sale.report:0
@@ -1442,7 +1468,7 @@ msgstr "Үнийн санал"
 #. module: sale
 #: help:account.config.settings,module_sale_analytic_plans:0
 msgid "This allows install module sale_analytic_plans."
-msgstr ""
+msgstr "Энэ нь sale_analytic_plans модулийг суулгана."
 
 #. module: sale
 #: view:sale.order:0
@@ -1457,7 +1483,7 @@ msgstr "Идэвхтэй борлуулалтын захиалгын хүргэ�
 #. module: sale
 #: field:sale.config.settings,module_sale_margin:0
 msgid "Display margins on sales orders"
-msgstr ""
+msgstr "Борлуулалтын захиалга дээр зөрүүг харуулна"
 
 #. module: sale
 #: help:sale.order,invoice_ids:0
@@ -1478,7 +1504,7 @@ msgstr "Таны дугаар"
 #. module: sale
 #: view:sale.advance.payment.inv:0
 msgid "Show Lines to Invoice"
-msgstr ""
+msgstr "Нэхэмжлэх мөрүүдийг харуулах"
 
 #. module: sale
 #: field:sale.report,date:0
@@ -1498,7 +1524,7 @@ msgid "TVA :"
 msgstr "НӨАТ :"
 
 #. module: sale
-#: code:addons/sale/sale.py:441
+#: code:addons/sale/sale.py:449
 #, python-format
 msgid "Customer Invoices"
 msgstr "Захиалагчийн нэхэмжлэл"
@@ -1524,7 +1550,7 @@ msgid "Sales"
 msgstr "Борлуулалт"
 
 #. module: sale
-#: code:addons/sale/sale.py:301
+#: code:addons/sale/sale.py:309
 #, python-format
 msgid ""
 "If you change the pricelist of this order (and eventually the currency), "
@@ -1582,14 +1608,9 @@ msgid "My Sales Order Lines"
 msgstr "Миний Борлуулалтын Захиалгын Мөрүүд"
 
 #. module: sale
-#: model:process.transition.action,name:sale.process_transition_action_cancel0
-#: view:sale.advance.payment.inv:0
-#: view:sale.make.invoice:0
 #: view:sale.order:0
-#: view:sale.order.line:0
-#: view:sale.order.line.make.invoice:0
-msgid "Cancel"
-msgstr "Цуцлах"
+msgid "Cancel Quotation"
+msgstr ""
 
 #. module: sale
 #: field:sale.order,message_follower_ids:0
@@ -1597,7 +1618,7 @@ msgid "Followers"
 msgstr "Дагагчид"
 
 #. module: sale
-#: code:addons/sale/sale.py:937
+#: code:addons/sale/sale.py:944
 #, python-format
 msgid "No Pricelist ! : "
 msgstr "Үнийн жагсаалт алга ! : "
@@ -1611,7 +1632,7 @@ msgstr "Борлуулалтын Захиалга "
 #: model:mail.message.subtype,description:sale.mt_order_sent
 #: model:mail.message.subtype,name:sale.mt_order_sent
 msgid "Quotation send"
-msgstr ""
+msgstr "Үнийн санал илгээгдсэн"
 
 #. module: sale
 #: view:sale.order.line:0
@@ -1642,6 +1663,13 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p>\n"
+"                Энд нэхэмжлэгдэх мөрүүд байна. Та борлуулалтын захиалгыг \n"
+"                хэсэгчлэн мөрүүдээс сонгож нэхэмжлэх боломжтой. Хэрэв \n"
+"                хүргэлтээс нэхэмжлэх бол энэ нь хэрэггүй мөн борлуулалтын \n"
+"                бүхлээр нь нэхэмжлэх бол мөн хэрэггүй. \n"
+"              </p>\n"
+"            "
 
 #. module: sale
 #: report:sale.order:0
@@ -1649,16 +1677,15 @@ msgid "Shipping address :"
 msgstr "Хүргэх хаяг :"
 
 #. module: sale
-#: code:addons/sale/sale.py:502
+#: code:addons/sale/sale.py:369
 #, python-format
-msgid ""
-"You cannot group sales having different currencies for the same partner."
-msgstr "Ижил харилцагчийн бүлэг борлуулалт ялгаатай валюттай байж болохгүй."
+msgid "Please define sales journal for this company: \"%s\" (id:%d)."
+msgstr "Энэ компанид борлуулалтын журнал тодорхойно уу: \"%s\" (id:%d)."
 
 #. module: sale
 #: view:sale.advance.payment.inv:0
 msgid "Invoice Sales Order"
-msgstr ""
+msgstr "Борлуулалтын захиалгыг нэхэмжлэх"
 
 #. module: sale
 #: help:sale.order,invoice_quantity:0
@@ -1667,18 +1694,28 @@ msgid ""
 "invoice).                                              You have to choose  "
 "if you want your invoice based on ordered "
 msgstr ""
+"Борлуулалтын захиалга нь автоматаар ноорог нэхэмжлэлийг үүсгэх болно. Хэрэв "
+"захиалга дээр нэхэмжлэх суурилах бол сонгох ёстой. "
 
 #. module: sale
 #: field:sale.config.settings,module_account_analytic_analysis:0
 msgid "Use contracts management"
-msgstr ""
+msgstr "Гэрээний менежментийг хэрэглэх"
 
 #. module: sale
-#: code:addons/sale/sale.py:945
+#: code:addons/sale/sale.py:952
 #, python-format
 msgid ""
 "Cannot find a pricelist line matching this product and quantity.\n"
 "You have to change either the product, the quantity or the pricelist."
+msgstr ""
+"Энэ бараа болон тоо хэмжээнд тохирох үнийн хүснэгт олдохгүй байна.\n"
+"Бараа, тоо хэмжээ, үнийн хүснэгтийн аль нэгийг өөрчлөх хэрэгтэй."
+
+#. module: sale
+#: code:addons/sale/sale.py:185
+#, python-format
+msgid "There is no default shop for the current user's company!"
 msgstr ""
 
 #. module: sale
@@ -1815,6 +1852,91 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
+"\n"
+"<div style=\"font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-"
+"serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; \">\n"
+"\n"
+"    <p>Hello ${object.partner_id.name},</p>\n"
+"    \n"
+"    <p>Манай ${object.company_id.name}-с таны ${object.state in ('draft', "
+"'sent') and 'quotation' or 'order confirmation'} : </p>\n"
+"\n"
+"    <p style=\"border-left: 1px solid #8e0000; margin-left: 30px;\">\n"
+"       &nbsp;&nbsp;<strong>REFERENCES</strong><br />\n"
+"       &nbsp;&nbsp;Order number: <strong>${object.name}</strong><br />\n"
+"       &nbsp;&nbsp;Order total: <strong>${object.amount_total} "
+"${object.pricelist_id.currency_id.name}</strong><br />\n"
+"       &nbsp;&nbsp;Order date: ${object.date_order}<br />\n"
+"       % if object.origin:\n"
+"       &nbsp;&nbsp;Order reference: ${object.origin}<br />\n"
+"       % endif\n"
+"       % if object.client_order_ref:\n"
+"       &nbsp;&nbsp;Your reference: ${object.client_order_ref}<br />\n"
+"       % endif\n"
+"       % if object.user_id:\n"
+"       &nbsp;&nbsp;Таны холбогдох хаяг: <a "
+"href=\"mailto:${object.user_id.email or "
+"''}?subject=Order%20${object.name}\">${object.user_id.name}</a>\n"
+"       % endif\n"
+"    </p>\n"
+"\n"
+"    % if object.paypal_url:\n"
+"    <br/>\n"
+"    <p>Мөн та шууд Paypal-р төлж болно:</p>\n"
+"        <a style=\"margin-left: 120px;\" href=\"${object.paypal_url}\">\n"
+"            <img class=\"oe_edi_paypal_button\" "
+"src=\"https://www.paypal.com/en_US/i/btn/btn_paynowCC_LG.gif\"/>\n"
+"        </a>\n"
+"    % endif\n"
+"\n"
+"    <br/>\n"
+"    <p>Хэрэв асуулт байвал бидэнтэй эргэлзэлгүй холбогдоорой.</p>\n"
+"    <p>${object.company_id.name or 'Биднийг'} сонгосонд баярлалаа!</p>\n"
+"    <br/>\n"
+"    <br/>\n"
+"    <div style=\"width: 375px; margin: 0px; padding: 0px; background-color: "
+"#8E0000; border-top-left-radius: 5px 5px; border-top-right-radius: 5px 5px; "
+"background-repeat: repeat no-repeat;\">\n"
+"        <h3 style=\"margin: 0px; padding: 2px 14px; font-size: 12px; color: "
+"#DDD;\">\n"
+"            <strong style=\"text-"
+"transform:uppercase;\">${object.company_id.name}</strong></h3>\n"
+"    </div>\n"
+"    <div style=\"width: 347px; margin: 0px; padding: 5px 14px; line-height: "
+"16px; background-color: #F2F2F2;\">\n"
+"        <span style=\"color: #222; margin-bottom: 5px; display: block; \">\n"
+"        % if object.company_id.street:\n"
+"            ${object.company_id.street}<br/>\n"
+"        % endif\n"
+"        % if object.company_id.street2:\n"
+"            ${object.company_id.street2}<br/>\n"
+"        % endif\n"
+"        % if object.company_id.city or object.company_id.zip:\n"
+"            ${object.company_id.zip} ${object.company_id.city}<br/>\n"
+"        % endif\n"
+"        % if object.company_id.country_id:\n"
+"            ${object.company_id.state_id and ('%s, ' % "
+"object.company_id.state_id.name) or ''} ${object.company_id.country_id.name "
+"or ''}<br/>\n"
+"        % endif\n"
+"        </span>\n"
+"        % if object.company_id.phone:\n"
+"            <div style=\"margin-top: 0px; margin-right: 0px; margin-bottom: "
+"0px; margin-left: 0px; padding-top: 0px; padding-right: 0px; padding-bottom: "
+"0px; padding-left: 0px; \">\n"
+"                Phone:&nbsp; ${object.company_id.phone}\n"
+"            </div>\n"
+"        % endif\n"
+"        % if object.company_id.website:\n"
+"            <div>\n"
+"                Web :&nbsp;<a "
+"href=\"${object.company_id.website}\">${object.company_id.website}</a>\n"
+"            </div>\n"
+"        %endif\n"
+"        <p></p>\n"
+"    </div>\n"
+"</div>\n"
+"            "
 
 #. module: sale
 #: view:sale.order.line:0
@@ -1832,7 +1954,7 @@ msgstr "Бүх дүн."
 #. module: sale
 #: view:sale.order:0
 msgid "Confirm Sale"
-msgstr ""
+msgstr "Борлуулалт Батлах"
 
 #. module: sale
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:96
@@ -1851,11 +1973,19 @@ msgid ""
 "${object.company_id.name} ${object.state in ('draft', 'sent') and "
 "'Quotation' or 'Order'} (Ref ${object.name or 'n/a' })"
 msgstr ""
+"${object.company_id.name} ${object.state in ('draft', 'sent') and "
+"'Quotation' or 'Order'} (Ref ${object.name or 'n/a' })"
 
 #. module: sale
 #: report:sale.order:0
 msgid "Price"
 msgstr "Үнэ"
+
+#. module: sale
+#: code:addons/sale/wizard/sale_make_invoice_advance.py:102
+#, python-format
+msgid "The value of Advance Amount must be positive."
+msgstr "Урьдчилгааны дүн нь эерэг утгатай байх ёстой."
 
 #. module: sale
 #: help:sale.order,order_policy:0
@@ -1867,6 +1997,12 @@ msgid ""
 "Before delivery: A draft invoice is created from the sales order and must be "
 "paid before the products can be delivered."
 msgstr ""
+"Шаардлагаар: Ноорог нэхэмжлэл нь борлуулалтын захиалгаас шаардлагатай үед "
+"үүсгэгдэнэ.\n"
+"Хүргэлтийн захиалгаар: Бараанууд хүргэгдэхэд хүргэлтийн захиалгаас ноорог "
+"нэхэмжлэл үүснэ. \n"
+"Хүргэлтийн өмнө: Ноорог нэхэмжлэл нь борлуулалтын захиалгаас үүсгэгдэх "
+"бөгөөд бараа хүргэгдэхээс өмнө төлөгдсөн байх ёстой."
 
 #. module: sale
 #: model:ir.actions.act_window,help:sale.action_order_report_all
@@ -1918,6 +2054,20 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Шинэ борлуулалтын эхний алхам болох үнийн санал \n"
+"                үүсгэхдээ дарна.\n"
+"              </p><p>\n"
+"                OpenERP нь борлуулалтын бүтэн ажлын урсгалыг оновчтой \n"
+"                удирдахад тусладаг:\n"
+"                үнийн саналаас борлуулалтын захиалга, хүргэлт, нэхэмжлэл, \n"
+"                төлбөр цуглуулах ажлуудыг гүйцэтгэнэ.\n"
+"              </p><p>\n"
+"                Нийгмийн сүлжээний боломж нь борлуулалтын захиалга бүр \n"
+"                дээр хэлэлцүүлэг явуулах боломжоор тусладаг, захиалагч нь \n"
+"                борлуулалтын захиалгын явцыг хянах боломжтой болно.\n"
+"              </p>\n"
+"            "
 
 #. module: sale
 #: view:res.partner:0
@@ -1925,12 +2075,14 @@ msgid "sale.group_delivery_invoice_address"
 msgstr "sale.group_delivery_invoice_address"
 
 #. module: sale
-#: code:addons/sale/sale.py:773
+#: code:addons/sale/sale.py:781
 #, python-format
 msgid ""
 "There is no Fiscal Position defined or Income category account defined for "
 "default properties of Product categories."
 msgstr ""
+"Санхүүгийн харгалзаа тодорхойлогдоогүй байна эсвэл Барааны ангилалын үндсэн "
+"үзүүлэлтэд Орлогын ангилал тодорхойлогдоогүй байна."
 
 #. module: sale
 #: model:process.node,note:sale.process_node_invoice0
@@ -1940,7 +2092,7 @@ msgstr "Нягтлан бодогчоор хянагдана."
 #. module: sale
 #: model:res.groups,name:sale.group_mrp_properties
 msgid "Properties on lines"
-msgstr ""
+msgstr "Мөрүүд дээрх үзүүлэлтүүд"
 
 #. module: sale
 #: selection:sale.order,state:0
@@ -1950,7 +2102,7 @@ msgstr "Нэхэмжлэх борлуулалт"
 #. module: sale
 #: view:sale.order:0
 msgid "Order Number"
-msgstr ""
+msgstr "Захиалгын Дугаар"
 
 #. module: sale
 #: view:sale.order:0
@@ -1983,6 +2135,18 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Үнийн санал үүсгэхдээ дарна. Дараа нь Борлуулалтын захиалга "
+"руу \n"
+"                хөрвүүлэх боломжтой.\n"
+"              </p><p>\n"
+"                OpenERP нь борлуулалтын бүх урсгалын оновчтой удирдахад "
+"тусладаг, \n"
+"                үүнд: \n"
+"                үнийн санал, борлуулалтын захиалга, хүргэлт, нэхэмжлэл болон "
+"төлбөр.\n"
+"              </p>\n"
+"            "
 
 #. module: sale
 #: field:sale.order,invoice_quantity:0
@@ -1992,7 +2156,7 @@ msgstr "Нэхэмжлэл нь"
 #. module: sale
 #: selection:sale.advance.payment.inv,advance_payment_method:0
 msgid "Fixed price (deposit)"
-msgstr ""
+msgstr "Тогтмол үнэ (урьдчилгаа)"
 
 #. module: sale
 #: model:ir.model,name:sale.model_sale_config_settings
@@ -2012,7 +2176,7 @@ msgstr "Захиалсан огноо"
 #. module: sale
 #: selection:sale.order,order_policy:0
 msgid "Before Delivery"
-msgstr ""
+msgstr "Хүргэхийн өмнө"
 
 #. module: sale
 #: field:sale.order.line,product_uos:0
@@ -2071,6 +2235,20 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Энэ захиалагчид үнийн санал эсвэл борлуулалтын захиалга \n"
+"                үүсгэхдээ дарна.\n"
+"              </p><p>\n"
+"                OpenERP нь борлуулалтын бүтэн ажлын урсгалыг оновчтой \n"
+"                удирдахад тусладаг:\n"
+"                үнийн саналаас борлуулалтын захиалга, хүргэлт, нэхэмжлэл, \n"
+"                төлбөр цуглуулах ажлуудыг гүйцэтгэнэ.\n"
+"              </p><p>\n"
+"                Нийгмийн сүлжээний боломж нь борлуулалтын захиалга бүр \n"
+"                дээр хэлэлцүүлэг явуулах боломжоор тусладаг, захиалагч нь \n"
+"                борлуулалтын захиалгын явцыг хянах боломжтой болно.\n"
+"              </p>\n"
+"            "
 
 #. module: sale
 #: field:sale.order,message_summary:0
@@ -2102,6 +2280,9 @@ msgid ""
 "with\n"
 "                        your customer."
 msgstr ""
+"Өөрийн үйлчилгээг менежмент хийх боломжтой байхын тулд гэрээг ашиглана.\n"
+"                        Түүнчэн нэг гэрээний захиалагчийн олон нэхэмжлэхийг "
+"ашиглана."
 
 #. module: sale
 #: view:sale.report:0
@@ -2117,6 +2298,7 @@ msgstr "Борлуулалтын захиалгаас"
 #: view:sale.order.line:0
 msgid "Confirmed sales order lines, not yet delivered"
 msgstr ""
+"Батлагдсан бөгөөд хараахан хүргэгдээгүй борлуулалтын захиалгын мөрүүд"
 
 #. module: sale
 #: model:process.transition,note:sale.process_transition_saleinvoice0
@@ -2138,13 +2320,13 @@ msgstr "Б.Н"
 #. module: sale
 #: selection:sale.advance.payment.inv,advance_payment_method:0
 msgid "Some order lines"
-msgstr ""
+msgstr "Захиалгын зарим мөрүүд"
 
 #. module: sale
-#: code:addons/sale/sale.py:976
+#: code:addons/sale/sale.py:983
 #, python-format
 msgid "Cannot delete a sales order line which is in state '%s'."
-msgstr ""
+msgstr "'%s' төлөвтэй борлуулалтын захиалгын мөрийг устгах боломжгүй."
 
 #. module: sale
 #: report:sale.order:0
@@ -2160,7 +2342,7 @@ msgstr "Нэхэмжлэхэд бэлэн Борлуулалтын Захиал�
 #. module: sale
 #: field:sale.config.settings,group_invoice_so_lines:0
 msgid "Generate invoices based on the sales order lines"
-msgstr ""
+msgstr "Борлуулалтын захиалгын мөрүүдэд суурилсан нэхэмжлэлийг үүсгэх"
 
 #. module: sale
 #: view:sale.advance.payment.inv:0
@@ -2189,7 +2371,7 @@ msgstr "Үнийн санал №"
 #. module: sale
 #: model:res.groups,name:sale.group_discount_per_so_line
 msgid "Discount on lines"
-msgstr ""
+msgstr "Мөрүүд дахь хөнгөлөлт"
 
 #. module: sale
 #: field:sale.order,client_order_ref:0
@@ -2209,14 +2391,20 @@ msgid ""
 "between the Unit Price and Cost Price.\n"
 "                This installs the module sale_margin."
 msgstr ""
+"Энэ нь борлуулалтын захиалга дээр 'Зөрүү'-г нэмдэг.\n"
+"                Энэ нь Зарах үнэ болон Өртөг үнийн зөрүүг тооцоолж бохир "
+"ашгийг харуулдаг.\n"
+"                Энэ нь sale_margin модулийн суулгадаг."
 
 #. module: sale
-#: code:addons/sale/sale.py:857
+#: code:addons/sale/sale.py:865
 #, python-format
 msgid ""
 "Before choosing a product,\n"
 " select a customer in the sales form."
 msgstr ""
+"Бараа сонгохын өмнө,\n"
+" борлуулалтын маягтанд барааг сонгоно."
 
 #. module: sale
 #: view:sale.order:0
@@ -2226,7 +2414,7 @@ msgstr "Татвартай нийлбэр"
 #. module: sale
 #: view:sale.order:0
 msgid "New Copy of Quotation"
-msgstr ""
+msgstr "Үнийн саналын шинэ хуулбар"
 
 #. module: sale
 #: view:sale.advance.payment.inv:0
@@ -2235,6 +2423,8 @@ msgid ""
 "                        will create a draft invoice that can be modified\n"
 "                        before validation."
 msgstr ""
+"Энэ захиалгыг яаж нэхэмжлэхийг сонгоно. Энэ нь цохохын өмнө \n"
+"                        засварлах боломжтой ноорог нэхэмжлэлийг үүсгэнэ."
 
 #. module: sale
 #: view:sale.report:0

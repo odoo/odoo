@@ -2,7 +2,6 @@
 <openerp>
     <data>
 
-
         <!--
             CRM CASE STAGE
         -->
@@ -98,7 +97,7 @@
                             states="draft,open,pending" help="Convert to Opportunity" class="oe_highlight"/>
                     <button name="case_reset" string="Reset" type="object"
                             states="cancel"/>
-                    <button name="case_cancel" string="Cancel" type="object"
+                    <button name="case_cancel" string="Cancel Case" type="object"
                             states="draft,open,pending"/>
                     <field name="stage_id" widget="statusbar" clickable="True"
                             on_change="onchange_stage_id(stage_id)"/>
@@ -110,7 +109,7 @@
                             string="Phone Calls"/>
                     </div>
                     <div class="oe_title">
-                        <label for="name" class="oe_edit_only" string="Lead Description"/>
+                        <label for="name" class="oe_edit_only"/>
                         <h1><field name="name" placeholder="Describe the lead..."/></h1>
                     </div>
                     <group>
@@ -164,7 +163,9 @@
                             <field name="priority"/>
                             <field name="categ_ids"
                                 widget="many2many_tags"
-                                domain="[('object_id.model','=','crm.lead')]"/>
+                                domain="[('object_id.model','=','crm.lead')]"
+                                context="{'object_name': 'crm.lead'}"
+                            />
                         </group>
                     </group>
                     <notebook colspan="4">
@@ -351,7 +352,7 @@
                         <filter string="Referrer" domain="[]" context="{'group_by':'referred'}"/>
                         <filter string="Campaign" domain="[]" context="{'group_by':'type_id'}"/>
                         <filter string="Channel" domain="[]" context="{'group_by':'channel_id'}"/>
-                        <filter string="Creation" domain="[]" context="{'group_by':'create_date'}" groups="base.group_no_one"/>
+                        <filter string="Creation" domain="[]" context="{'group_by':'create_date'}"/>
                     </group>
                     <group string="Display">
                         <filter string="Show Countries" context="{'invisible_country': False}" help="Show Countries"/>
@@ -378,7 +379,6 @@
                                 states="draft,open,pending" class="oe_highlight"/>
                         <button name="case_mark_lost" string="Mark Lost" type="object"
                                 states="draft,open" class="oe_highlight"/>
-                        <button name="new_mail_send" string="Send Mail" type="object" states="draft,open,pending"/>
                         <field name="stage_id" widget="statusbar" clickable="True"/>
                     </header>
                     <sheet>
@@ -389,8 +389,7 @@
                             <button string="Meeting"
                                 name="action_makeMeeting"
                                 type="object"
-                                context="{'search_default_attendee_id': active_id, 'default_attendee_id' : active_id}"
-                               />
+                                context="{'search_default_attendee_id': active_id, 'default_attendee_id' : active_id}"/>
                         </div>
                         <div class="oe_title">
                             <label for="name" class="oe_edit_only"/>
@@ -569,7 +568,7 @@
                         <filter string="Referrer" domain="[]" context="{'group_by':'referred'}"/>
                         <filter string="Campaign" domain="[]" context="{'group_by':'type_id'}"/>
                         <filter string="Channel" domain="[]" context="{'group_by':'channel_id'}"/>
-                        <filter string="Creation" domain="[]" context="{'group_by':'create_date'}" groups="base.group_no_one"/>
+                        <filter string="Creation" domain="[]" context="{'group_by':'create_date'}"/>
                     </group>
                     <group string="Display">
                         <filter string="Show Sales Team" context="{'invisible_section': False}" domain="[]" help="Show Sales Team"/>

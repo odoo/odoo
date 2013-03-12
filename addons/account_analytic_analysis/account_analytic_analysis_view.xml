@@ -5,6 +5,15 @@
             <field name="name">Sales Orders</field>
             <field name="res_model">sale.order</field>
             <field name="src_model">account.analytic.account</field>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to create a quotation that can be converted into a sales
+                order.
+              </p><p>
+                Use sale orders to track everything that should be invoiced
+                at a fix price on a contract.
+              </p>
+            </field>
         </record>
 
         <!-- Inherited Analytic Account form for contracts -->
@@ -26,6 +35,9 @@
                         </div>
                     </div>
                 </xpath>
+                <field name="partner_id" position="attributes">
+                    <attribute name="attrs">{'required': [('type','=','contract'),'|',('fix_price_invoices','=',True), ('invoice_on_timesheets', '=', True)]}</attribute>
+                </field>
                 <xpath expr='//group[@name="invoice_on_timesheets"]' position="replace">
                 </xpath>
                 <xpath expr='//separator[@name="description"]' position='before'>
@@ -62,20 +74,20 @@
                                     or view
                                 </span>
 
-                                <span attrs="{'invisible': ['|',('fix_price_to_invoice','&lt;&gt;',0.0 ),('partner_id','=',False)]}" class="oe_grey">
+                                <span attrs="{'invisible': [('fix_price_to_invoice','&lt;&gt;',0.0 )]}" class="oe_grey">
                                     No order to invoice, create
                                 </span>
-                                <button name="%(action_sales_order)d" string="Sale Orders"
+                                <button name="%(action_sales_order)d" string="Sales Orders"
                                     type="action"
                                     class="oe_link"
-                                    context="{'default_partner_id': [partner_id], 'search_default_partner_id': [partner_id],'search_default_project_id': [active_id],'default_project_id': [active_id]}"
+                                    context="{'default_partner_id': [partner_id], 'search_default_project_id': [active_id],'default_project_id': [active_id]}"
                                     />
                             </td>
                         </tr><tr>
                             <td class="oe_timesheet_grey">
                                 <label for="invoice_on_timesheets"/>
                             </td><td class="oe_timesheet_grey">
-                                <field name="invoice_on_timesheets"/>
+                                <field name="invoice_on_timesheets" on_change="onchange_invoice_on_timesheets(invoice_on_timesheets)"/>
                             </td><td>
                                 <field class="oe_inline" name="hours_qtt_est" attrs="{'invisible': [('invoice_on_timesheets','=',False)]}"/>
                             </td><td>
@@ -84,7 +96,7 @@
                                 <field class="oe_inline" name="remaining_hours_to_invoice" attrs="{'invisible': [('invoice_on_timesheets','=',False)]}"/>
                             </td><td>
                                 <field class="oe_inline" name="ca_to_invoice" attrs="{'invisible': [('invoice_on_timesheets','=',False)]}"/>
-                            </td><td class="oe_timesheet_action" attrs="{'invisible': [('invoice_on_timesheets','=',False)]}">
+                            </td><td class="oe_timesheet_action" attrs="{'invisible': ['|',('invoice_on_timesheets','=',False),('type','=','template')]}">
                                 <span attrs="{'invisible': [('ca_to_invoice','=',0.0)]}" class="oe_grey">
                                     <button name="%(hr_timesheet_invoice.action_hr_timesheet_invoice_create_final)d"
                                         type="action"
@@ -157,10 +169,11 @@
             <field name="model">account.analytic.account</field>
             <field name="inherit_id" ref="account.view_account_analytic_account_list"/>
             <field name="arch" type="xml">
-                <field name="date" position="before">
+                <field name="date_start" position="before">
                     <field name="last_invoice_date"/>
                     <field name="toinvoice_total"/>
                     <field name="remaining_hours"/>
+                    <field name="pricelist_id" invisible="1"/>
                 </field>
             </field>
         </record>
@@ -178,7 +191,7 @@
                     <field name="parent_id"/>
                     <filter name="open" string="In Progress" domain="[('state','in',('open','draft'))]" help="Contracts in progress (open, draft)"/>
                     <filter name="pending" string="To Renew" domain="[('state','=','pending')]" help="Pending contracts"/>
-                    <filter name="closed" string="Closed" domain="[('state','=','pending')]" help="Closed contracts"/>
+                    <filter name="closed" string="Closed" domain="[('state','=','close')]" help="Closed contracts"/>
                     <filter name="cancelled" string="Cancelled" domain="[('state','=','cancel')]" help="Cancelled contracts"/>
                     <separator/>
                     <filter
@@ -201,6 +214,7 @@
                         <filter string="Template" domain="[]" context="{'group_by':'template_id'}"/>
                         <filter string="Start Date" domain="[]" context="{'group_by' : 'date_start'}" />
                         <filter string="End Date" domain="[]" context="{'group_by' : 'date'}" />
+                        <filter string="Pricelist" domain="[]" context="{'group_by' : 'pricelist_id'}" />
                     </group>
                 </search>
             </field>

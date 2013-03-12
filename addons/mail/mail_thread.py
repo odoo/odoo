@@ -35,6 +35,7 @@ from openerp import SUPERUSER_ID
 from openerp.addons.mail.mail_message import decode
 from openerp.osv import fields, osv
 from openerp.tools.safe_eval import safe_eval as eval
+from openerp.tools.translate import _
 
 _logger = logging.getLogger(__name__)
 
@@ -92,7 +93,7 @@ class mail_thread(osv.AbstractModel):
         """ Computes:
             - message_unread: has uid unread message for the document
             - message_summary: html snippet summarizing the Chatter for kanban views """
-        res = dict((id, dict(message_unread=False, message_summary='')) for id in ids)
+        res = dict((id, dict(message_unread=False, message_unread_count=0, message_summary=' ')) for id in ids)
         user_pid = self.pool.get('res.users').read(cr, uid, uid, ['partner_id'], context=context)['partner_id'][0]
 
         # search for unread messages, directly in SQL to improve performances
@@ -101,14 +102,14 @@ class mail_thread(osv.AbstractModel):
                         ON (n.message_id = m.id AND n.partner_id = %s AND (n.read = False or n.read IS NULL))
                         WHERE m.model = %s AND m.res_id in %s""",
                     (user_pid, self._name, tuple(ids),))
-        msg_ids = [result[0] for result in cr.fetchall()]
-        for msg_id in msg_ids:
-            res[msg_id]['message_unread'] = True
+        for result in cr.fetchall():
+            res[result[0]]['message_unread'] = True
+            res[result[0]]['message_unread_count'] += 1
 
-        for thread in self.browse(cr, uid, ids, context=context):
-            cls = res[thread.id]['message_unread'] and ' class="oe_kanban_mail_new"' or ''
-            res[thread.id]['message_summary'] = "<span%s><span class='oe_e'>9</span> %d</span> <span><span class='oe_e'>+</span> %d</span>" % (cls, len(thread.message_ids), len(thread.message_follower_ids))
-
+        for id in ids:
+            if res[id]['message_unread_count']:
+                title = res[id]['message_unread_count'] > 1 and _("You have %d unread messages") % res[id]['message_unread_count'] or _("You have one unread message")
+                res[id]['message_summary'] = "<span class='oe_kanban_mail_new' title='%s'><span class='oe_e'>9</span> %d %s</span>" % (title, res[id].pop('message_unread_count'), _("New"))
         return res
 
     def _get_subscription_data(self, cr, uid, ids, name, args, context=None):
@@ -606,15 +607,12 @@ class mail_thread(osv.AbstractModel):
                 if thread_id and hasattr(model_pool, 'message_update'):
                     model_pool.message_update(cr, user_id, [thread_id], msg, context=nosub_ctx)
                 else:
+                    nosub_ctx = dict(nosub_ctx, mail_create_nolog=True)
                     thread_id = model_pool.message_new(cr, user_id, msg, custom_values, context=nosub_ctx)
             else:
                 assert thread_id == 0, "Posting a message without model should be with a null res_id, to create a private message."
                 model_pool = self.pool.get('mail.thread')
-            new_msg_id = model_pool.message_post_user_api(cr, uid, [thread_id], context=context, content_subtype='html', **msg)
-
-            # when posting an incoming email to a document: subscribe the author, if a partner, as follower
-            if model and thread_id and msg.get('author_id'):
-                model_pool.message_subscribe(cr, uid, [thread_id], [msg.get('author_id')], context=context)
+            new_msg_id = model_pool.message_post(cr, uid, [thread_id], context=context, subtype='mail.mt_comment', **msg)
 
             if partner_ids:
                 # postponed after message_post, because this is an external message and we don't want to create
@@ -759,7 +757,7 @@ class mail_thread(osv.AbstractModel):
             _logger.debug('Parsing Message without message-id, generating a random one: %s', message_id)
         msg_dict['message_id'] = message_id
 
-        if 'Subject' in message:
+        if message.get('Subject'):
             msg_dict['subject'] = decode(message.get('Subject'))
 
         # Envelope fields not stored in mail.message but made available for message_new()
@@ -767,16 +765,15 @@ class mail_thread(osv.AbstractModel):
         msg_dict['to'] = decode(message.get('to'))
         msg_dict['cc'] = decode(message.get('cc'))
 
-        if 'From' in message:
+        if message.get('From'):
             author_ids = self._message_find_partners(cr, uid, message, ['From'], context=context)
             if author_ids:
                 msg_dict['author_id'] = author_ids[0]
-            else:
-                msg_dict['email_from'] = decode(message.get('from'))
+            msg_dict['email_from'] = decode(message.get('from'))
         partner_ids = self._message_find_partners(cr, uid, message, ['To', 'Cc'], context=context)
         msg_dict['partner_ids'] = [(4, partner_id) for partner_id in partner_ids]
 
-        if 'Date' in message:
+        if message.get('Date'):
             try:
                 date_hdr = decode(message.get('Date'))
                 parsed_date = dateutil.parser.parse(date_hdr, fuzzy=True)
@@ -794,12 +791,12 @@ class mail_thread(osv.AbstractModel):
                 stored_date = datetime.datetime.now()
             msg_dict['date'] = stored_date.strftime(tools.DEFAULT_SERVER_DATETIME_FORMAT)
 
-        if 'In-Reply-To' in message:
+        if message.get('In-Reply-To'):
             parent_ids = self.pool.get('mail.message').search(cr, uid, [('message_id', '=', decode(message['In-Reply-To']))])
             if parent_ids:
                 msg_dict['parent_id'] = parent_ids[0]
 
-        if 'References' in message and 'parent_id' not in msg_dict:
+        if message.get('References') and 'parent_id' not in msg_dict:
             parent_ids = self.pool.get('mail.message').search(cr, uid, [('message_id', 'in',
                                                                          [x.strip() for x in decode(message['References']).split()])])
             if parent_ids:
@@ -820,77 +817,151 @@ class mail_thread(osv.AbstractModel):
                         "now deprecated res.log.")
         self.message_post(cr, uid, [id], message, context=context)
 
-    def message_create_partners_from_emails(self, cr, uid, emails, context=None):
+    def _message_add_suggested_recipient(self, cr, uid, result, obj, partner=None, email=None, reason='', context=None):
+        """ Called by message_get_suggested_recipients, to add a suggested
+            recipient in the result dictionary. The form is :
+                partner_id, partner_name<partner_email> or partner_name, reason """
+        if email and not partner:
+            partner_info = self.message_get_partner_info_from_emails(cr, uid, [email], context=context)[0]
+            if partner_info.get('partner_id'):
+                partner = self.pool.get('res.partner').browse(cr, SUPERUSER_ID, [partner_info.get('partner_id')], context=context)[0]
+        if email and email in [val[1] for val in result[obj.id]]:  # already existing email -> skip
+            return result
+        if partner and partner in obj.message_follower_ids:  # recipient already in the followers -> skip
+            return result
+        if partner and partner in [val[0] for val in result[obj.id]]:  # already existing partner ID -> skip
+            return result
+        if partner and partner.email:  # complete profile: id, name <email>
+            result[obj.id].append((partner.id, '%s<%s>' % (partner.name, partner.email), reason))
+        elif partner:  # incomplete profile: id, name
+            result[obj.id].append((partner.id, '%s' % (partner.name), reason))
+        else:  # unknown partner, we are probably managing an email address
+            result[obj.id].append((False, email, reason))
+        return result
+
+    def message_get_suggested_recipients(self, cr, uid, ids, context=None):
+        """ Returns suggested recipients for ids. Those are a list of
+            tuple (partner_id, partner_name, reason), to be managed by Chatter. """
+        result = dict.fromkeys(ids, list())
+        if self._all_columns.get('user_id'):
+            for obj in self.browse(cr, SUPERUSER_ID, ids, context=context):  # SUPERUSER because of a read on res.users that would crash otherwise
+                if not obj.user_id or not obj.user_id.partner_id:
+                    continue
+                self._message_add_suggested_recipient(cr, uid, result, obj, partner=obj.user_id.partner_id, reason=self._all_columns['user_id'].column.string, context=context)
+        return result
+
+    def message_get_partner_info_from_emails(self, cr, uid, emails, link_mail=False, context=None):
         """ Convert a list of emails into a list partner_ids and a list
             new_partner_ids. The return value is non conventional because
             it is meant to be used by the mail widget.
 
             :return dict: partner_ids and new_partner_ids
         """
-        partner_obj = self.pool.get('res.partner')
         mail_message_obj = self.pool.get('mail.message')
-
-        partner_ids = []
-        new_partner_ids = []
+        partner_obj = self.pool.get('res.partner')
+        result = list()
         for email in emails:
+            partner_info = {'full_name': email, 'partner_id': False}
             m = re.search(r"((.+?)\s*<)?([^<>]+@[^<>]+)>?", email, re.IGNORECASE | re.DOTALL)
-            name = m.group(2) or m.group(0)
-            email = m.group(3)
-            ids = partner_obj.search(cr, SUPERUSER_ID, [('email', '=', email)], context=context)
+            if not m:
+                continue
+            email_address = m.group(3)
+            ids = partner_obj.search(cr, SUPERUSER_ID, [('email', '=', email_address)], context=context)
             if ids:
-                partner_ids.append(ids[0])
-                partner_id = ids[0]
-            else:
-                partner_id = partner_obj.create(cr, uid, {
-                        'name': name or email,
-                        'email': email,
-                    }, context=context)
-                new_partner_ids.append(partner_id)
+                partner_info['partner_id'] = ids[0]
+            result.append(partner_info)
 
             # link mail with this from mail to the new partner id
-            message_ids = mail_message_obj.search(cr, SUPERUSER_ID, ['|', ('email_from', '=', email), ('email_from', 'ilike', '<%s>' % email), ('author_id', '=', False)], context=context)
-            if message_ids:
-                mail_message_obj.write(cr, SUPERUSER_ID, message_ids, {'email_from': None, 'author_id': partner_id}, context=context)
-        return {
-            'partner_ids': partner_ids,
-            'new_partner_ids': new_partner_ids,
-        }
+            if link_mail and ids:
+                message_ids = mail_message_obj.search(cr, SUPERUSER_ID, [
+                                    '|',
+                                    ('email_from', '=', email),
+                                    ('email_from', 'ilike', '<%s>' % email),
+                                    ('author_id', '=', False)
+                                ], context=context)
+                if message_ids:
+                    mail_message_obj.write(cr, SUPERUSER_ID, message_ids, {'author_id': ids[0]}, context=context)
+        return result
 
     def message_post(self, cr, uid, thread_id, body='', subject=None, type='notification',
-                        subtype=None, parent_id=False, attachments=None, context=None, **kwargs):
+                        subtype=None, parent_id=False, attachments=None, context=None,
+                        content_subtype='html', **kwargs):
         """ Post a new message in an existing thread, returning the new
-            mail.message ID. Extra keyword arguments will be used as default
-            column values for the new mail.message record.
-            Auto link messages for same id and object
+            mail.message ID.
+
             :param int thread_id: thread ID to post into, or list with one ID;
                 if False/0, mail.message model will also be set as False
             :param str body: body of the message, usually raw HTML that will
                 be sanitized
-            :param str subject: optional subject
-            :param str type: mail_message.type
-            :param int parent_id: optional ID of parent message in this thread
+            :param str type: see mail_message.type field
+            :param str content_subtype:: if plaintext: convert body into html
+            :param int parent_id: handle reply to a previous message by adding the
+                parent partners to the message in case of private discussion
             :param tuple(str,str) attachments or list id: list of attachment tuples in the form
                 ``(name,content)``, where content is NOT base64 encoded
-            :return: ID of newly created mail.message
+
+            Extra keyword arguments will be used as default column values for the
+            new mail.message record. Special cases:
+                - attachment_ids: supposed not attached to any document; attach them
+                    to the related document. Should only be set by Chatter.
+            :return int: ID of newly created mail.message
         """
         if context is None:
             context = {}
         if attachments is None:
             attachments = {}
-
-        assert (not thread_id) or isinstance(thread_id, (int, long)) or \
-            (isinstance(thread_id, (list, tuple)) and len(thread_id) == 1), "Invalid thread_id; should be 0, False, an ID or a list with one ID"
-        if isinstance(thread_id, (list, tuple)):
-            thread_id = thread_id and thread_id[0]
         mail_message = self.pool.get('mail.message')
+        ir_attachment = self.pool.get('ir.attachment')
+
+        assert (not thread_id) or \
+                isinstance(thread_id, (int, long)) or \
+                (isinstance(thread_id, (list, tuple)) and len(thread_id) == 1), \
+                "Invalid thread_id; should be 0, False, an ID or a list with one ID"
+        if isinstance(thread_id, (list, tuple)):
+            thread_id = thread_id[0]
 
         # if we're processing a message directly coming from the gateway, the destination model was
-        # set in the context. 
+        # set in the context.
         model = False
         if thread_id:
             model = context.get('thread_model', self._name) if self._name == 'mail.thread' else self._name
 
-        attachment_ids = kwargs.pop('attachment_ids', [])
+        # 1: Handle content subtype: if plaintext, converto into HTML
+        if content_subtype == 'plaintext':
+            body = tools.plaintext2html(body)
+
+        # 2: Private message: add recipients (recipients and author of parent message)
+        #   + legacy-code management (! we manage only 4 and 6 commands)
+        partner_ids = set()
+        kwargs_partner_ids = kwargs.pop('partner_ids', [])
+        for partner_id in kwargs_partner_ids:
+            if isinstance(partner_id, (list, tuple)) and partner_id[0] == 4 and len(partner_id) == 2:
+                partner_ids.add(partner_id[1])
+            if isinstance(partner_id, (list, tuple)) and partner_id[0] == 6 and len(partner_id) == 3:
+                partner_ids |= set(partner_id[2])
+            elif isinstance(partner_id, (int, long)):
+                partner_ids.add(partner_id)
+            else:
+                pass  # we do not manage anything else
+        if parent_id and model == 'mail.thread':
+            parent_message = mail_message.browse(cr, uid, parent_id, context=context)
+            partner_ids |= set([partner.id for partner in parent_message.partner_ids])
+            if parent_message.author_id:
+                partner_ids.add(parent_message.author_id.id)
+
+        # 3. Attachments
+        #   - HACK TDE FIXME: Chatter: attachments linked to the document (not done JS-side), load the message
+        attachment_ids = kwargs.pop('attachment_ids', []) or []  # because we could receive None (some old code sends None)
+        if attachment_ids:
+            filtered_attachment_ids = ir_attachment.search(cr, SUPERUSER_ID, [
+                ('res_model', '=', 'mail.compose.message'),
+                ('res_id', '=', 0),
+                ('create_uid', '=', uid),
+                ('id', 'in', attachment_ids)], context=context)
+            if filtered_attachment_ids:
+                ir_attachment.write(cr, SUPERUSER_ID, filtered_attachment_ids, {'res_model': model, 'res_id': thread_id}, context=context)
+        attachment_ids = [(4, id) for id in attachment_ids]
+        # Handle attachments parameter, that is a dictionary of attachments
         for name, content in attachments:
             if isinstance(content, unicode):
                 content = content.encode('utf-8')
@@ -899,20 +970,25 @@ class mail_thread(osv.AbstractModel):
                 'datas': base64.b64encode(str(content)),
                 'datas_fname': name,
                 'description': name,
-                'res_model': context.get('thread_model') or self._name,
+                'res_model': model,
                 'res_id': thread_id,
             }
             attachment_ids.append((0, 0, data_attach))
 
-        # fetch subtype
+        # 4: mail.message.subtype
+        subtype_id = False
         if subtype:
-            s_data = subtype.split('.')
-            if len(s_data) == 1:
-                s_data = ('mail', s_data[0])
-            ref = self.pool.get('ir.model.data').get_object_reference(cr, uid, s_data[0], s_data[1])
+            if '.' not in subtype:
+                subtype = 'mail.%s' % subtype
+            ref = self.pool.get('ir.model.data').get_object_reference(cr, uid, *subtype.split('.'))
             subtype_id = ref and ref[1] or False
-        else:
-            subtype_id = False
+
+        # automatically subscribe recipients if asked to
+        if context.get('mail_post_autofollow') and thread_id and partner_ids:
+            partner_to_subscribe = partner_ids
+            if context.get('mail_post_autofollow_partner_ids'):
+                partner_to_subscribe = filter(lambda item: item in context.get('mail_post_autofollow_partner_ids'), partner_ids)
+            self.message_subscribe(cr, uid, [thread_id], list(partner_to_subscribe), context=context)
 
         # _mail_flat_thread: automatically set free messages to the first posted message
         if self._mail_flat_thread and not parent_id and thread_id:
@@ -940,86 +1016,34 @@ class mail_thread(osv.AbstractModel):
             'parent_id': parent_id,
             'attachment_ids': attachment_ids,
             'subtype_id': subtype_id,
+            'partner_ids': [(4, pid) for pid in partner_ids],
         })
 
         # Avoid warnings about non-existing fields
         for x in ('from', 'to', 'cc'):
             values.pop(x, None)
 
-        return mail_message.create(cr, uid, values, context=context)
+        # Create and auto subscribe the author
+        msg_id = mail_message.create(cr, uid, values, context=context)
+        message = mail_message.browse(cr, uid, msg_id, context=context)
+        if message.author_id and thread_id and type != 'notification':
+            self.message_subscribe(cr, uid, [thread_id], [message.author_id.id], context=context)
+        return msg_id
+
+    #------------------------------------------------------
+    # Compatibility methods: do not use
+    # TDE TODO: remove me in 8.0
+    #------------------------------------------------------
+
+    def message_create_partners_from_emails(self, cr, uid, emails, context=None):
+        return {'partner_ids': [], 'new_partner_ids': []}
 
     def message_post_user_api(self, cr, uid, thread_id, body='', parent_id=False,
                                 attachment_ids=None, content_subtype='plaintext',
                                 context=None, **kwargs):
-        """ Wrapper on message_post, used for user input :
-            - mail gateway
-            - quick reply in Chatter (refer to mail.js), not
-                the mail.compose.message wizard
-            The purpose is to perform some pre- and post-processing:
-            - if body is plaintext: convert it into html
-            - if parent_id: handle reply to a previous message by adding the
-                parent partners to the message
-            - type and subtype: comment and mail.mt_comment by default
-            - attachment_ids: supposed not attached to any document; attach them
-                to the related document. Should only be set by Chatter.
-        """
-        mail_message_obj = self.pool.get('mail.message')
-        ir_attachment = self.pool.get('ir.attachment')
-
-        # 1.A.1: add recipients of parent message (# TDE FIXME HACK: mail.thread -> private message)
-        partner_ids = set([])
-        if parent_id and self._name == 'mail.thread':
-            parent_message = mail_message_obj.browse(cr, uid, parent_id, context=context)
-            partner_ids |= set([(4, partner.id) for partner in parent_message.partner_ids])
-            if parent_message.author_id.id:
-                partner_ids.add((4, parent_message.author_id.id))
-
-        # 1.A.2: add specified recipients
-        param_partner_ids = set()
-        for item in kwargs.pop('partner_ids', []):
-            if isinstance(item, (list)):
-                param_partner_ids.add((item[0], item[1]))
-            elif isinstance(item, (int, long)):
-                param_partner_ids.add((4, item))
-            else:
-                param_partner_ids.add(item)
-        partner_ids |= param_partner_ids
-
-        # 1.A.3: add parameters recipients as follower
-        # TDE FIXME in 7.1: should check whether this comes from email_list or partner_ids
-        if param_partner_ids and self._name != 'mail.thread':
-            self.message_subscribe(cr, uid, [thread_id], [pid[1] for pid in param_partner_ids], context=context)
-
-        # 1.B: handle body, message_type and message_subtype
-        if content_subtype == 'plaintext':
-            body = tools.plaintext2html(body)
-        msg_type = kwargs.pop('type', 'comment')
-        msg_subtype = kwargs.pop('subtype', 'mail.mt_comment')
-
-        # 2. Pre-processing: attachments
-        # HACK TDE FIXME: Chatter: attachments linked to the document (not done JS-side), load the message
-        if attachment_ids:
-            # TDE FIXME (?): when posting a private message, we use mail.thread as a model
-            # However, attaching doc to mail.thread is not possible, mail.thread does not have any table
-            model = self._name
-            if model == 'mail.thread':
-                model = False
-            filtered_attachment_ids = ir_attachment.search(cr, SUPERUSER_ID, [
-                ('res_model', '=', 'mail.compose.message'),
-                ('res_id', '=', 0),
-                ('create_uid', '=', uid),
-                ('id', 'in', attachment_ids)], context=context)
-            if filtered_attachment_ids:
-                if thread_id and model:
-                    ir_attachment.write(cr, SUPERUSER_ID, attachment_ids, {'res_model': model, 'res_id': thread_id}, context=context)
-        else:
-            attachment_ids = []
-        attachment_ids = [(4, id) for id in attachment_ids]
-
-        # 3. Post message
-        return self.message_post(cr, uid, thread_id=thread_id, body=body,
-                            type=msg_type, subtype=msg_subtype, parent_id=parent_id,
-                            attachment_ids=attachment_ids, partner_ids=list(partner_ids), context=context, **kwargs)
+        return self.message_post(cr, uid, thread_id, body=body, parent_id=parent_id,
+                                    attachment_ids=attachment_ids, content_subtype=content_subtype,
+                                    context=context, **kwargs)
 
     #------------------------------------------------------
     # Followers API
@@ -1141,12 +1165,25 @@ class mail_thread(osv.AbstractModel):
 
             # add followers coming from res.users relational fields that are tracked
             user_ids = [getattr(record, name).id for name in user_field_lst if getattr(record, name)]
-            for partner_id in [user.partner_id.id for user in self.pool.get('res.users').browse(cr, SUPERUSER_ID, user_ids, context=context)]:
+            user_id_partner_ids = [user.partner_id.id for user in self.pool.get('res.users').browse(cr, SUPERUSER_ID, user_ids, context=context)]
+            for partner_id in user_id_partner_ids:
                 new_followers.setdefault(partner_id, None)
 
             for pid, subtypes in new_followers.items():
                 subtypes = list(subtypes) if subtypes is not None else None
                 self.message_subscribe(cr, uid, [record.id], [pid], subtypes, context=context)
+
+            # find first email message, set it as unread for auto_subscribe fields for them to have a notification
+            if user_id_partner_ids:
+                msg_ids = self.pool.get('mail.message').search(cr, uid, [
+                                ('model', '=', self._name),
+                                ('res_id', '=', record.id),
+                                ('type', '=', 'email')], limit=1, context=context)
+                if not msg_ids and record.message_ids:
+                    msg_ids = [record.message_ids[-1].id]
+                if msg_ids:
+                    self.pool.get('mail.notification')._notify(cr, uid, msg_ids[0], partners_to_notify=user_id_partner_ids, context=context)
+
         return True
 
     #------------------------------------------------------

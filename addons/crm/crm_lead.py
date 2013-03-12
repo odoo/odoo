@@ -587,27 +587,25 @@ class crm_lead(base_stage, format_address, osv.osv):
         return True
 
     def _merge_opportunity_attachments(self, cr, uid, opportunity_id, opportunities, context=None):
-        attachment = self.pool.get('ir.attachment')
+        attach_obj = self.pool.get('ir.attachment')
 
         # return attachments of opportunity
         def _get_attachments(opportunity_id):
-            attachment_ids = attachment.search(cr, uid, [('res_model', '=', self._name), ('res_id', '=', opportunity_id)], context=context)
-            return attachment.browse(cr, uid, attachment_ids, context=context)
+            attachment_ids = attach_obj.search(cr, uid, [('res_model', '=', self._name), ('res_id', '=', opportunity_id)], context=context)
+            return attach_obj.browse(cr, uid, attachment_ids, context=context)
 
-        count = 1
         first_attachments = _get_attachments(opportunity_id)
+        #counter of all attachments to move. Used to make sure the name is different for all attachments
+        count = 1
         for opportunity in opportunities:
             attachments = _get_attachments(opportunity.id)
-            for first in first_attachments:
-                for attachment in attachments:
-                    if attachment.name == first.name:
-                        values = dict(
-                            name = "%s (%s)" % (attachment.name, count,),
-                            res_id = opportunity_id,
-                        )
-                        attachment.write(values)
-                        count+=1
-
+            for attachment in attachments:
+                values = {'res_id': opportunity_id,}
+                for attachment_in_first in first_attachments:
+                    if attachment.name == attachment_in_first.name:
+                        name = "%s (%s)" % (attachment.name, count,),
+                count+=1
+                attachment.write(values)
         return True
 
     def merge_opportunity(self, cr, uid, ids, context=None):
@@ -713,7 +711,7 @@ class crm_lead(base_stage, format_address, osv.osv):
             'parent_id': parent_id,
             'phone': lead.phone,
             'mobile': lead.mobile,
-            'email': lead.email_from and tools.email_split(lead.email_from)[0],
+            'email': tools.email_split(lead.email_from) and tools.email_split(lead.email_from)[0] or False,
             'fax': lead.fax,
             'title': lead.title and lead.title.id or False,
             'function': lead.function,
@@ -932,7 +930,7 @@ class crm_lead(base_stage, format_address, osv.osv):
         try:
             compose_form_id = ir_model_data.get_object_reference(cr, uid, 'mail', 'email_compose_message_wizard_form')[1]
         except ValueError:
-            compose_form_id = False 
+            compose_form_id = False
         if context is None:
             context = {}
         ctx = context.copy()
@@ -962,6 +960,15 @@ class crm_lead(base_stage, format_address, osv.osv):
         """ Override to get the reply_to of the parent project. """
         return [lead.section_id.message_get_reply_to()[0] if lead.section_id else False
                     for lead in self.browse(cr, uid, ids, context=context)]
+
+    def message_get_suggested_recipients(self, cr, uid, ids, context=None):
+        recipients = super(crm_lead, self).message_get_suggested_recipients(cr, uid, ids, context=context)
+        for lead in self.browse(cr, uid, ids, context=context):
+            if lead.partner_id:
+                self._message_add_suggested_recipient(cr, uid, recipients, lead, partner=lead.partner_id, reason=_('Customer'))
+            elif lead.email_from:
+                self._message_add_suggested_recipient(cr, uid, recipients, lead, email=lead.email_from, reason=_('Customer Email'))
+        return recipients
 
     def message_new(self, cr, uid, msg, custom_values=None, context=None):
         """ Overrides mail_thread message_new that is called by the mailgateway
@@ -1017,9 +1024,12 @@ class crm_lead(base_stage, format_address, osv.osv):
 
     def schedule_phonecall_send_note(self, cr, uid, ids, phonecall_id, action, context=None):
         phonecall = self.pool.get('crm.phonecall').browse(cr, uid, [phonecall_id], context=context)[0]
-        if action == 'log': prefix = 'Logged'
-        else: prefix = 'Scheduled'
-        message = _("<b>%s a call</b> for the <em>%s</em>.") % (prefix, phonecall.date)
+        if action == 'log':
+            prefix = 'Logged'
+        else:
+            prefix = 'Scheduled'
+        suffix = ' %s' % phonecall.description
+        message = _("%s a call for %s.%s") % (prefix, phonecall.date, suffix)
         return self.message_post(cr, uid, ids, body=message, context=context)
 
     def onchange_state(self, cr, uid, ids, state_id, context=None):

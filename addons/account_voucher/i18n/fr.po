@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-21 17:04+0000\n"
+"POT-Creation-Date: 2013-03-07 08:37+0000\n"
 "PO-Revision-Date: 2013-01-10 10:19+0000\n"
 "Last-Translator: WANTELLET Sylvain <Swantellet@tetra-info.com>\n"
 "Language-Team: French <fr@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-01-18 06:34+0000\n"
-"X-Generator: Launchpad (build 16430)\n"
+"X-Launchpad-Export-Date: 2013-03-08 05:34+0000\n"
+"X-Generator: Launchpad (build 16523)\n"
 
 #. module: account_voucher
 #: field:account.bank.statement.line,voucher_id:0
@@ -28,7 +28,7 @@ msgid "account.config.settings"
 msgstr "account.config.settings"
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:357
+#: code:addons/account_voucher/account_voucher.py:369
 #, python-format
 msgid "Write-Off"
 msgstr "Ajustement"
@@ -132,13 +132,18 @@ msgid "Voucher Statistics"
 msgstr "Statistiques des justificatifs comptables"
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:1533
+#: code:addons/account_voucher/account_voucher.py:1547
 #, python-format
 msgid ""
 "You can not change the journal as you already reconciled some statement "
 "lines!"
 msgstr ""
 "Vous ne pouvez pas changer le journal car certaines lignes sont léttrées."
+
+#. module: account_voucher
+#: model:mail.message.subtype,description:account_voucher.mt_voucher_state_change
+msgid "Status changed"
+msgstr ""
 
 #. module: account_voucher
 #: view:account.voucher:0
@@ -233,8 +238,8 @@ msgid "Journal Item"
 msgstr "Écriture comptable"
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:496
-#: code:addons/account_voucher/account_voucher.py:967
+#: code:addons/account_voucher/account_voucher.py:508
+#: code:addons/account_voucher/account_voucher.py:981
 #, python-format
 msgid "Error!"
 msgstr "Erreur !"
@@ -251,6 +256,11 @@ msgstr "Options de paiement"
 
 #. module: account_voucher
 #: view:account.voucher:0
+msgid "e.g. 003/10"
+msgstr ""
+
+#. module: account_voucher
+#: view:account.voucher:0
 msgid "Other Information"
 msgstr "Autres informations"
 
@@ -261,7 +271,7 @@ msgid "Cancelled"
 msgstr "Annulé"
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:1139
+#: code:addons/account_voucher/account_voucher.py:1153
 #, python-format
 msgid ""
 "You have to configure account base code and account tax code on the '%s' tax!"
@@ -307,12 +317,13 @@ msgid "Day"
 msgstr "Jour"
 
 #. module: account_voucher
+#: view:account.voucher:0
 #: field:account.voucher,tax_id:0
 msgid "Tax"
 msgstr "Taxe"
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:867
+#: code:addons/account_voucher/account_voucher.py:879
 #, python-format
 msgid "Invalid Action!"
 msgstr "Action invalide !"
@@ -365,7 +376,12 @@ msgid "Import Invoices"
 msgstr "Importer les factures"
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:1098
+#: view:account.voucher:0
+msgid "e.g. Invoice SAJ/0042"
+msgstr ""
+
+#. module: account_voucher
+#: code:addons/account_voucher/account_voucher.py:1112
 #, python-format
 msgid "Wrong voucher line"
 msgstr "Ligne de justificatif incorrecte"
@@ -384,7 +400,7 @@ msgid "Receipt"
 msgstr "Reçu"
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:1004
+#: code:addons/account_voucher/account_voucher.py:1018
 #, python-format
 msgid ""
 "You should configure the 'Gain Exchange Rate Account' in the accounting "
@@ -402,13 +418,18 @@ msgstr "Lignes de ventes"
 
 #. module: account_voucher
 #: view:account.voucher:0
+msgid "Cancel Voucher"
+msgstr ""
+
+#. module: account_voucher
+#: view:account.voucher:0
 #: field:account.voucher,period_id:0
 msgid "Period"
 msgstr "Période"
 
 #. module: account_voucher
 #: view:account.voucher:0
-#: code:addons/account_voucher/account_voucher.py:199
+#: code:addons/account_voucher/account_voucher.py:211
 #, python-format
 msgid "Supplier"
 msgstr "Fournisseur"
@@ -429,7 +450,7 @@ msgid "Debit"
 msgstr "Débit"
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:1533
+#: code:addons/account_voucher/account_voucher.py:1547
 #, python-format
 msgid "Unable to change journal !"
 msgstr "Impossible de changer de journal !"
@@ -485,9 +506,20 @@ msgid "Memo"
 msgstr "Mémo"
 
 #. module: account_voucher
+#: code:addons/account_voucher/invoice.py:34
+#, python-format
+msgid "Pay Invoice"
+msgstr "Payer la facture"
+
+#. module: account_voucher
 #: view:account.voucher:0
 msgid "Are you sure to unreconcile and cancel this record ?"
 msgstr "Êtes-vous sûr de vouloir délettrer et annuler cette entrée?"
+
+#. module: account_voucher
+#: view:account.voucher:0
+msgid "Sales Receipt"
+msgstr "Reçu de ventes"
 
 #. module: account_voucher
 #: field:account.voucher,is_multi_currency:0
@@ -529,13 +561,12 @@ msgid "Avg. Due Delay"
 msgstr "Délai moyen de règlement"
 
 #. module: account_voucher
-#: code:addons/account_voucher/invoice.py:34
-#, python-format
-msgid "Pay Invoice"
-msgstr "Payer la facture"
+#: view:account.voucher:0
+msgid "Are you sure you want to unreconcile this record?"
+msgstr ""
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:1139
+#: code:addons/account_voucher/account_voucher.py:1153
 #, python-format
 msgid "No Account Base Code and Account Tax Code!"
 msgstr "Aucun code comptable de base et aucun code comptable de taxe !"
@@ -589,15 +620,15 @@ msgid "To Review"
 msgstr "À vérifier"
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:1011
 #: code:addons/account_voucher/account_voucher.py:1025
-#: code:addons/account_voucher/account_voucher.py:1180
+#: code:addons/account_voucher/account_voucher.py:1039
+#: code:addons/account_voucher/account_voucher.py:1194
 #, python-format
 msgid "change"
 msgstr "modifier"
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:1000
+#: code:addons/account_voucher/account_voucher.py:1014
 #, python-format
 msgid ""
 "You should configure the 'Loss Exchange Rate Account' in the accounting "
@@ -612,11 +643,6 @@ msgstr ""
 #: view:account.voucher:0
 msgid "Expense Lines"
 msgstr "Lignes de frais"
-
-#. module: account_voucher
-#: view:account.voucher:0
-msgid "Sale voucher"
-msgstr "Règlement client"
 
 #. module: account_voucher
 #: help:account.voucher,is_multi_currency:0
@@ -676,11 +702,6 @@ msgid "Voucher Status"
 msgstr "Statut de règlement"
 
 #. module: account_voucher
-#: view:account.voucher:0
-msgid "Are you sure to unreconcile this record?"
-msgstr "Voulez vous délettrer ces écritrures ?"
-
-#. module: account_voucher
 #: field:account.voucher,company_id:0
 #: field:account.voucher.line,company_id:0
 #: view:sale.receipt.report:0
@@ -699,7 +720,12 @@ msgid "Reconcile Payment Balance"
 msgstr "Lettrer la balance de paiement"
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:963
+#: view:account.voucher:0
+msgid "Cancel Receipt"
+msgstr ""
+
+#. module: account_voucher
+#: code:addons/account_voucher/account_voucher.py:975
 #, python-format
 msgid "Configuration Error !"
 msgstr "Erreur de configuration !"
@@ -764,7 +790,7 @@ msgid "October"
 msgstr "Octobre"
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:964
+#: code:addons/account_voucher/account_voucher.py:976
 #, python-format
 msgid "Please activate the sequence of selected journal !"
 msgstr "Veuillez activer la sequence du journal sélectionné"
@@ -785,7 +811,6 @@ msgid "Paid"
 msgstr "Réglé"
 
 #. module: account_voucher
-#: view:account.voucher:0
 #: model:ir.actions.act_window,name:account_voucher.action_sale_receipt
 #: model:ir.ui.menu,name:account_voucher.menu_action_sale_receipt
 msgid "Sales Receipts"
@@ -845,7 +870,7 @@ msgid "Previous Payments ?"
 msgstr "Règlements précédents ?"
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:1098
+#: code:addons/account_voucher/account_voucher.py:1112
 #, python-format
 msgid "The invoice you are willing to pay is not valid anymore."
 msgstr "La facture que vous voulez payer n'est plus valide."
@@ -877,7 +902,7 @@ msgid "Active"
 msgstr "Actif"
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:968
+#: code:addons/account_voucher/account_voucher.py:982
 #, python-format
 msgid "Please define a sequence on the journal."
 msgstr "Veuillez définir une séquence sur ce journal"
@@ -1005,7 +1030,7 @@ msgid "Journal Items"
 msgstr "Ècritures comptable"
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:496
+#: code:addons/account_voucher/account_voucher.py:508
 #, python-format
 msgid "Please define default credit/debit accounts on the journal \"%s\"."
 msgstr ""
@@ -1079,11 +1104,6 @@ msgstr "Description"
 #: selection:sale.receipt.report,month:0
 msgid "May"
 msgstr "Mai"
-
-#. module: account_voucher
-#: view:account.voucher:0
-msgid "Sale Receipt"
-msgstr "Règlement Client"
 
 #. module: account_voucher
 #: view:account.voucher:0
@@ -1224,7 +1244,7 @@ msgstr ""
 "Le montant du règlement doit être le même que sur la ligne du relevé bancaire"
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:867
+#: code:addons/account_voucher/account_voucher.py:879
 #, python-format
 msgid "Cannot delete voucher(s) which are already opened or paid."
 msgstr "Impossible de supprimer des règlements à l'état ouvert ou payé"
@@ -1282,13 +1302,8 @@ msgid "Open Balance"
 msgstr "Restant dû"
 
 #. module: account_voucher
-#: model:mail.message.subtype,description:account_voucher.mt_voucher_state_change
-msgid "Status <b>changed</b>"
-msgstr "Statut <b>changé</b>"
-
-#. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:1000
-#: code:addons/account_voucher/account_voucher.py:1004
+#: code:addons/account_voucher/account_voucher.py:1014
+#: code:addons/account_voucher/account_voucher.py:1018
 #, python-format
 msgid "Insufficient Configuration!"
 msgstr "Configuration insuffisante !"
@@ -1303,3 +1318,15 @@ msgstr ""
 "Par défaut, les léttrages effectués depuis un relevé bancaire à l'état "
 "'brouillon' sont inactifs, ce qui permet de masquer les règlements tant que "
 "le relevé n'est pas confirmé."
+
+#~ msgid "Are you sure to unreconcile this record?"
+#~ msgstr "Voulez vous délettrer ces écritrures ?"
+
+#~ msgid "Sale voucher"
+#~ msgstr "Règlement client"
+
+#~ msgid "Sale Receipt"
+#~ msgstr "Règlement Client"
+
+#~ msgid "Status <b>changed</b>"
+#~ msgstr "Statut <b>changé</b>"

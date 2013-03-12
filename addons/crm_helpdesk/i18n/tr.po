@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-21 17:05+0000\n"
-"PO-Revision-Date: 2013-02-12 01:03+0000\n"
-"Last-Translator: Ediz Duman <neps1192@gmail.com>\n"
+"POT-Creation-Date: 2013-03-07 08:38+0000\n"
+"PO-Revision-Date: 2013-03-10 19:28+0000\n"
+"Last-Translator: Ayhan KIZILTAN <Unknown>\n"
 "Language-Team: Turkish <tr@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-02-13 05:21+0000\n"
-"X-Generator: Launchpad (build 16491)\n"
+"X-Launchpad-Export-Date: 2013-03-11 05:42+0000\n"
+"X-Generator: Launchpad (build 16523)\n"
 
 #. module: crm_helpdesk
 #: field:crm.helpdesk.report,delay_close:0
@@ -36,7 +36,7 @@ msgstr "Grupla İle..."
 #. module: crm_helpdesk
 #: help:crm.helpdesk,email_from:0
 msgid "Destination email for email gateway"
-msgstr ""
+msgstr "Eposta ağgeçidi için hedef eposta"
 
 #. module: crm_helpdesk
 #: selection:crm.helpdesk.report,month:0
@@ -106,7 +106,7 @@ msgstr "İptal Edildi"
 #. module: crm_helpdesk
 #: help:crm.helpdesk,message_unread:0
 msgid "If checked new messages require your attention."
-msgstr ""
+msgstr "Eğer işaretliyse yeni iletiler ilginizi gerektirir."
 
 #. module: crm_helpdesk
 #: model:ir.actions.act_window,name:crm_helpdesk.action_report_crm_helpdesk
@@ -136,6 +136,8 @@ msgid ""
 "Holds the Chatter summary (number of messages, ...). This summary is "
 "directly in html format in order to be inserted in kanban views."
 msgstr ""
+"Sohbetçi özetini tutar (mesajların sayısı, ...). Bu özet kanban ekranlarına "
+"eklenebilmesi için html biçimindedir."
 
 #. module: crm_helpdesk
 #: view:crm.helpdesk:0
@@ -274,10 +276,17 @@ msgstr "Konu Yok"
 
 #. module: crm_helpdesk
 #: view:crm.helpdesk:0
+msgid "Cancel Case"
+msgstr "Davayı İptal et"
+
+#. module: crm_helpdesk
+#: view:crm.helpdesk:0
 msgid ""
 "Helpdesk requests that are assigned to me or to one of the sale teams I "
 "manage"
 msgstr ""
+"Bana ya da yönettiğim satış takımlarından birine atanmış Yardım Masası "
+"istekleri"
 
 #. module: crm_helpdesk
 #: view:crm.helpdesk.report:0
@@ -288,6 +297,11 @@ msgstr "# DanışmaMasası"
 #: view:crm.helpdesk:0
 msgid "All pending Helpdesk Request"
 msgstr "Bekleyen bütün destek talepleri"
+
+#. module: crm_helpdesk
+#: view:crm.helpdesk:0
+msgid "Close Case"
+msgstr "Dava Kapat"
 
 #. module: crm_helpdesk
 #: view:crm.helpdesk.report:0
@@ -444,6 +458,19 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Yeni bir istek oluşturmak için tıklayın. \n"
+"              </p><p>\n"
+"                Yardım masası ve Destek müdahaleleri izlemenizi sağlar.\n"
+"              </p><p>\n"
+"                Destek Etkinliklerinizi yönetmek için OpenERP Sorun "
+"sistemini \n"
+"                kullanın. Sorunlar eposta ağgeçidine bağlı olabilir: yeni\n"
+"                epostalar sorunları oluşturabilir, her biri müşteri ile "
+"yapılan görüşmelerin\n"
+"                geçmişini kendiliğinden alır.\n"
+"              </p>\n"
+"            "
 
 #. module: crm_helpdesk
 #: field:crm.helpdesk,planned_revenue:0
@@ -486,6 +513,8 @@ msgid ""
 "Responsible sales team. Define Responsible user and Email account for mail "
 "gateway."
 msgstr ""
+"Sorumlu satış takımı. Posta ağgeçidi için Sorumlu kullanıcı ve Eposta hesabı "
+"tanımla."
 
 #. module: crm_helpdesk
 #: selection:crm.helpdesk.report,month:0
@@ -532,16 +561,6 @@ msgstr "Referanslar"
 #: view:crm.helpdesk:0
 msgid "Communication"
 msgstr "İletişim"
-
-#. module: crm_helpdesk
-#: view:crm.helpdesk:0
-msgid "Cancel"
-msgstr "İptal"
-
-#. module: crm_helpdesk
-#: view:crm.helpdesk:0
-msgid "Close"
-msgstr "Kapat"
 
 #. module: crm_helpdesk
 #: view:crm.helpdesk:0
@@ -638,7 +657,7 @@ msgstr "Yıl"
 #. module: crm_helpdesk
 #: model:ir.ui.menu,name:crm_helpdesk.menu_help_support_main
 msgid "Helpdesk and Support"
-msgstr "DanışmaMasası ve Destek"
+msgstr "Yardım Masası ve Destek"
 
 #. module: crm_helpdesk
 #: selection:crm.helpdesk.report,month:0
@@ -661,11 +680,18 @@ msgid ""
 "        \n"
 "If the case needs to be reviewed then the status is set to 'Pending'."
 msgstr ""
+"Bir olay oluşturulduğunda durumu 'Taslak' olarak ayarlanır.                  "
+"                \n"
+"Eğer olay sürmekteyse durumu 'Açık' olarak ayarlanır.                        "
+"          \n"
+"olay bittiyse durumu 'Yapıldı' olarak ayarlanır.                             "
+"     \n"
+"Olayın incelenmesi gerekiyorsa durumu 'Bekliyor' olarak ayarlanır."
 
 #. module: crm_helpdesk
 #: help:crm.helpdesk,message_ids:0
 msgid "Messages and communication history"
-msgstr ""
+msgstr "Mesaj ve iletişim geçmişi"
 
 #. module: crm_helpdesk
 #: model:ir.actions.act_window,help:crm_helpdesk.crm_helpdesk_categ_action
@@ -707,9 +733,15 @@ msgstr "Son İşlem"
 #. module: crm_helpdesk
 #: view:crm.helpdesk:0
 msgid "Assigned to Me or My Sales Team(s)"
-msgstr ""
+msgstr "Bana ya da Satış Takım(lar)ıma atanmış"
 
 #. module: crm_helpdesk
 #: field:crm.helpdesk,duration:0
 msgid "Duration"
 msgstr "Süre"
+
+#~ msgid "Cancel"
+#~ msgstr "İptal"
+
+#~ msgid "Close"
+#~ msgstr "Kapat"

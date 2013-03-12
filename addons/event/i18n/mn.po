@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-21 17:05+0000\n"
-"PO-Revision-Date: 2013-02-18 09:00+0000\n"
-"Last-Translator: Dulguun <baigal_dulguun@yahoo.com>\n"
+"POT-Creation-Date: 2013-03-07 08:38+0000\n"
+"PO-Revision-Date: 2013-02-20 07:54+0000\n"
+"Last-Translator: gobi <Unknown>\n"
 "Language-Team: Mongolian <mn@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-02-19 05:32+0000\n"
-"X-Generator: Launchpad (build 16491)\n"
+"X-Launchpad-Export-Date: 2013-03-08 05:41+0000\n"
+"X-Generator: Launchpad (build 16523)\n"
 
 #. module: event
 #: view:event.event:0
@@ -107,7 +107,7 @@ msgstr "Үйл явдлын батламжлах Имэйл"
 #. module: event
 #: field:event.type,default_registration_max:0
 msgid "Default Maximum Registration"
-msgstr ""
+msgstr "Хамгийн Их Бүртгэлийн анхны утга"
 
 #. module: event
 #: view:report.event.registration:0
@@ -117,7 +117,7 @@ msgstr ""
 #. module: event
 #: field:event.event,register_avail:0
 msgid "Available Registrations"
-msgstr ""
+msgstr "Боломжит Бүргэлүүд"
 
 #. module: event
 #: view:event.registration:0
@@ -144,6 +144,11 @@ msgstr "Үйл ажиллагааны бүртгэл"
 #: view:event.event:0
 msgid "Confirmed events"
 msgstr "Батлагдсан үйл ажиллагаа"
+
+#. module: event
+#: view:event.event:0
+msgid "ZIP"
+msgstr ""
 
 #. module: event
 #: view:report.event.registration:0
@@ -237,6 +242,11 @@ msgstr ""
 #. module: event
 #: view:event.event:0
 msgid "tickets"
+msgstr ""
+
+#. module: event
+#: view:event.event:0
+msgid "Street..."
 msgstr ""
 
 #. module: event
@@ -489,6 +499,7 @@ msgid "Logs"
 msgstr "Логууд"
 
 #. module: event
+#: view:event.event:0
 #: field:event.event,state_id:0
 msgid "State"
 msgstr "Төлөв"
@@ -599,9 +610,10 @@ msgid ""
 msgstr ""
 
 #. module: event
-#: field:event.event,user_id:0
-msgid "Responsible User"
-msgstr "Хариуцагч хэрэглэгч"
+#: code:addons/event/event.py:106
+#, python-format
+msgid "Only %d Seats are Available!"
+msgstr ""
 
 #. module: event
 #: code:addons/event/event.py:100
@@ -847,6 +859,11 @@ msgid "You must wait for the starting day of the event to do this action."
 msgstr ""
 
 #. module: event
+#: field:event.event,user_id:0
+msgid "Responsible User"
+msgstr "Хариуцагч хэрэглэгч"
+
+#. module: event
 #: selection:event.event,state:0
 #: selection:report.event.registration,event_state:0
 msgid "Done"
@@ -868,9 +885,8 @@ msgid "Reply-to Email"
 msgstr ""
 
 #. module: event
-#: code:addons/event/event.py:106
-#, python-format
-msgid "Only %d Seats are Available!"
+#: view:event.event:0
+msgid "City"
 msgstr ""
 
 #. module: event
@@ -995,6 +1011,7 @@ msgid "Name"
 msgstr "Нэр"
 
 #. module: event
+#: view:event.event:0
 #: field:event.event,country_id:0
 msgid "Country"
 msgstr "Улс"

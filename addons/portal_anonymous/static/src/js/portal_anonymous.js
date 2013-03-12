@@ -44,9 +44,8 @@ openerp.portal_anonymous = function(instance) {
         start: function() {
             var self = this;
             return $.when(this._super()).then(function() {
-                var params = $.deparam($.param.querystring());
                 var dblist = self.db_list || [];
-                if (!self.session.session_is_valid() && dblist.length === 1 && (!params.token || !params.login)) {
+                if (!self.session.session_is_valid() && dblist.length === 1 && !(self.params.token || self.params.login)) {
                     self.remember_credentials = false;
                     // XXX get login/pass from server (via a rpc call) ?
                     return self.do_login(dblist[0], 'anonymous', 'anonymous');
