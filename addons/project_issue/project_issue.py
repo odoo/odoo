@@ -392,10 +392,10 @@ class project_issue(base_stage, osv.osv):
                 context=context)
 
     def write(self, cr, uid, ids, vals, context=None):
-        #Update last action date every time the user change the stage, the state or send a new email
+        #Update last action date every time the user change the stage or the state
         logged_fields = ['stage_id', 'state']
         if any([field in vals for field in logged_fields]):
-            vals['date_action_last'] = time.strftime('%Y-%m-%d %H:%M:%S')
+            vals['date_action_last'] = time.strftime(tools.DEFAULT_SERVER_DATETIME_FORMAT)
 
         return super(project_issue, self).write(cr, uid, ids, vals, context)
 
@@ -550,7 +550,12 @@ class project_issue(base_stage, osv.osv):
             a new message is posted on the issue.
         """
         if thread_id:
-            self.write(cr, uid, thread_id, {'date_action_last': time.strftime('%Y-%m-%d %H:%M:%S')}, context=context)    
+            model = context.get('thread_model', self._name)
+            if model != self._name:
+                ctx = context.copy()
+                del ctx['thread_model']
+                return self.pool.get(model).message_post(cr, uid, thread_id, body=body, subject=subject, type=type, subtype=subtype, parent_id=parent_id, attachments=attachments, context=ctx, content_subtype=content_subtype, **kwargs)
+            self.write(cr, uid, thread_id, {'date_action_last': time.strftime(tools.DEFAULT_SERVER_DATETIME_FORMAT)}, context=context)    
         
         return super(project_issue, self).message_post(cr, uid, thread_id, body=body, subject=subject, type=type, subtype=subtype, parent_id=parent_id, attachments=attachments, context=context, content_subtype=content_subtype, **kwargs)  
 
