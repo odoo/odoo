@@ -15,6 +15,7 @@ import simplejson
 import time
 import urllib
 import urllib2
+import urlparse
 import xmlrpclib
 import zlib
 from xml.etree import ElementTree
@@ -92,16 +93,50 @@ def db_list(req):
     dbs = [i for i in dbs if re.match(r, i)]
     return dbs
 
-def db_monodb(req):
-    # if only one db exists, return it else return False
+def db_monodb_redirect(req):
+    db = False
+    redirect = False
+
+    # 1 try the db in the url
+    db_url = req.params.get('db')
+    if db_url:
+        return (db_url, False)
+
     try:
         dbs = db_list(req)
-        if len(dbs) == 1:
-            return dbs[0]
     except xmlrpclib.Fault:
         # ignore access denied
-        pass
-    return False
+        dbs = []
+
+    # 2 use the database from the cookie if it's listable and still listed
+    cookie_db = req.httprequest.cookies.get('last_used_database')
+    if cookie_db in dbs:
+        db = cookie_db
+
+    # 3 use the first db
+    if dbs and not db:
+        db = dbs[0]
+
+    # redirect to the chosen db if multiple are available
+    if db and len(dbs) > 1:
+        query = dict(urlparse.parse_qsl(req.httprequest.query_string, keep_blank_values=True))
+        query.update({ 'db': db })
+        redirect = req.httprequest.path + '?' + urllib.urlencode(query)
+    return (db, redirect)
+
+def db_monodb(req):
+    # if only one db exists, return it else return False
+    return db_monodb_redirect(req)[0]
+
+def redirect_with_hash(req, url, code=303):
+    if req.httprequest.user_agent.browser == 'msie':
+        try:
+            version = float(req.httprequest.user_agent.version)
+            if version < 10:
+                return "<html><head><script>window.location = '%s#' + location.hash;</script></head></html>" % url
+        except Exception:
+            pass
+    return werkzeug.utils.redirect(url, code)
 
 def module_topological_sort(modules):
     """ Return a list of module names sorted so that their dependencies of the
@@ -292,6 +327,10 @@ def manifest_glob(req, extension, addons=None, db=None):
     return r
 
 def manifest_list(req, extension, mods=None, db=None):
+    """ list ressources to load specifying either:
+    mods: a comma separated string listing modules
+    db: a database name (return all installed modules in that database)
+    """
     if not req.debug:
         path = '/web/webclient/' + extension
         if mods is not None:
@@ -530,6 +569,10 @@ class Home(openerpweb.Controller):
 
     @openerpweb.httprequest
     def index(self, req, s_action=None, db=None, **kw):
+        db, redir = db_monodb_redirect(req)
+        if redir:
+            return redirect_with_hash(req, redir)
+
         js = "\n        ".join('<script type="text/javascript" src="%s"></script>' % i for i in manifest_list(req, 'js', db=db))
         css = "\n        ".join('<link rel="stylesheet" href="%s">' % i for i in manifest_list(req, 'css', db=db))
 
