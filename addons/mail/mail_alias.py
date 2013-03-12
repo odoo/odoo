@@ -63,7 +63,7 @@ class mail_alias(osv.Model):
         return dict.fromkeys(ids, domain or "")
 
     _columns = {
-        'alias_name': fields.char('Alias', required=True,
+        'alias_name': fields.char('Alias Name', required=True,
                             help="The name of the email alias, e.g. 'jobs' "
                                  "if you want to catch emails for <jobs@example.my.openerp.com>",),
         'alias_model_id': fields.many2one('ir.model', 'Aliased Model', required=True, ondelete="cascade",
