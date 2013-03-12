@@ -47,7 +47,7 @@ class crm_lead_forward_to_partner(osv.TransientModel):
     }
 
     _defaults = {
-        'history_mode': 'whole',
+        'history_mode': 'info',
     }
 
     def default_get(self, cr, uid, fields, context=None):

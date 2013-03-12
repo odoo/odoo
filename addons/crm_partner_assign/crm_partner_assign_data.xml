@@ -12,10 +12,10 @@
             <field name="body_html"><![CDATA[
 Hello ${object.partner_assigned_id.name},
 <p>
-Here is a lead that might interrest you.
+Here is a lead that might interest you.
 </p>
 <p>
-Please keep me informed about your actions about it so that i can keep an
+Please keep me informed about your actions about it so that I can keep an
 accurate follow-up of it and help you in the sale cycle.
 </p>
 <p>
@@ -25,7 +25,7 @@ ${object.user_id.email}
 </p>
 
 <p>
-${ctx["mail_body"] | safe}
+${ctx["mail_body"].replace('\n','<br>') | safe}
 </p>
 
 % if ctx["history_mode"] in ('whole'):
