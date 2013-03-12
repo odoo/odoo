@@ -36,7 +36,7 @@
                     </div>
                 </xpath>
                 <field name="partner_id" position="attributes">
-                    <attribute name="attrs">{'required': [('type','=','contract'),'|',('fix_price_invoices','=',True), ('invoice_on_timesheets', '=', True)]}</attribute>
+                    <attribute name="attrs">{'required': [('type','=','contract'),'|','|',('fix_price_invoices','=',True), ('invoice_on_timesheets', '=', True), ('recurring_invoices', '=', True)]}</attribute>
                 </field>
                 <xpath expr='//group[@name="invoice_on_timesheets"]' position="replace">
                 </xpath>
@@ -129,8 +129,8 @@
                             </td>
                         </tr>
                     </table>
-                    <group name='invoice_on_timesheets' attrs="{'invisible': [('invoice_on_timesheets','=',False)]}">
-                        <p class="oe_grey oe_edit_only" colspan="2">
+                    <group name='invoice_on_timesheets'>
+                        <p class="oe_grey oe_edit_only" colspan="2" attrs="{'invisible': [('invoice_on_timesheets','=',False)]}">
                             When invoicing on timesheet, OpenERP uses the
                             pricelist of the contract which uses the price
                             defined on the product related to each employee to
@@ -143,9 +143,36 @@
                             <field name="to_invoice"
                                 class="oe_inline"
                                 widget="selection"
-                                attrs="{'required': [('invoice_on_timesheets', '=', True)]}"/>
+                                attrs="{'required': [('invoice_on_timesheets', '=', True)], 'invisible': [('invoice_on_timesheets','=',False)]}"/>
                         </group>
                     </group>
+                    <separator string="Recurring Invoices" attrs="{'invisible': [('recurring_invoices','!=',True)]}"/>
+                    <div>
+                        <field name="recurring_invoices" on_change="onchange_recurring_invoices(recurring_invoices, date_start)" class="oe_inline"/>
+                        <label for="recurring_invoices" />
+                        <button class="oe_link" name="recurring_create_invoice" attrs="{'invisible': [('recurring_invoices','!=',True)]}" string="⇒ create invoices" type="object" groups="base.group_no_one"/>
+                    </div>
+                    <group attrs="{'invisible': [('recurring_invoices','!=',True)]}">
+                        <label for="recurring_interval"/>
+                        <div>
+                            <field name="recurring_interval" class="oe_inline" attrs="{'required': [('recurring_invoices', '=', True)]}"/>
+                            <field name="recurring_rule_type" class="oe_inline" attrs="{'required': [('recurring_invoices', '=', True)]}"/>
+                        </div>
+                        <field name="recurring_next_date"/>
+                    </group>
+                    <label for="recurring_invoice_line_ids" attrs="{'invisible': [('recurring_invoices','=',False)]}"/>
+                    <div attrs="{'invisible': [('recurring_invoices','=',False)]}">
+                        <field name="recurring_invoice_line_ids">
+                            <tree string="Account Analytic Lines" editable="bottom">
+                                <field name="product_id" on_change="product_id_change(product_id, uom_id, quantity, name, parent.partner_id, price_unit, parent.pricelist_id, parent.company_id)"/>
+                                <field name="name"/>
+                                <field name="quantity"/>
+                                <field name="uom_id"/>
+                                <field name="price_unit"/>
+                                <field name="price_subtotal"/>
+                            </tree>
+                        </field>
+                    </div>
                  </xpath>
             </field>
         </record>
