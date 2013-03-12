@@ -204,45 +204,60 @@ class gamification_badge(osv.Model):
             print(res)
         return res
 
-    def check_condition(self, cr, uid, badge_id, context=None):
-        """Check if the badge should be deserved to users
+    def check_automatic(self, cr, uid, context=None, badge_ids=None,):
+        """Check if the badges should be deserved to users
 
-        Only badges with the rule_auth == 'computed' can be automatically
-        granted and other type of badge will always return an empty list
-        :return: list of res.users ids that should receive the badge"""
+        Only badges with an automatic rule specified are checked to be
+        granted, other type of badge will be skipped. Send alert messages to
+        the one validating the condition.
+        :param badge_ids: the list of ids of the badges to check"""
 
         context = context or {}
-        badge = self.browse(cr, uid, badge_id, context=context)
+        if badge_ids is None:
+            badge_ids = self.search(cr, uid, [('rule_automatic', '!=', 'manual')], context=context)
+        badge_user_obj = self.pool.get('gamification.badge.user')
 
-        if badge.rule_automatic == 'python':
-            code_obj = compile(badge.compute_code, '<string>', 'exec')
-            code_globals = {}
-            code_locals = {'cr': cr, 'uid': uid, 'context': context, 'result': []}
-            exec code_obj in code_globals, code_locals
-            if 'result' in code_locals and type(code_locals['result']) == list:
-                return self.pool.get('gamification.badge.user').search(
-                    cr, uid, [('user_id', 'in', code_locals['result'])], context=context)
-                # self.send_badge(cr, uid, badge.id, user_badge_ids, context=context)
+        for badge in self.browse(cr, uid, badge_ids, context=context):
 
-        elif badge.rule_automatic == 'goals':
-            common_users = None
-            for goal_type in badge.goal_type_ids:
-                res = self.pool.get('gamification.goal').read_group(cr, uid, [
-                    ('type_id', '=', goal_type.id),
-                    ('state', '=', 'reached'),
-                ], ['user_id', 'state', 'type_id'], ['user_id'], context=context)
-                users = [goal.user_id.id for goal in res]
-                if common_users is None:
-                    # first type, include all
-                    common_users = users
-                else:
-                    merged_list = [user_id for user_id in users if user_id in common_users]
-                    common_users = merged_list
-            return common_users
+            if badge.rule_automatic == 'python':
+                code_obj = compile(badge.compute_code, '<string>', 'exec')
+                code_globals = {}
+                code_locals = {'cr': cr, 'uid': uid, 'context': context, 'result': []}
+                exec code_obj in code_globals, code_locals
+                if 'result' in code_locals and type(code_locals['result']) == list:
+                    # user_badge_ids = self.pool.get('gamification.badge.user').search(
+                    #     cr, uid, [('user_id', 'in', code_locals['result'])], context=context)
+                    # create badge users for user_id as result of the code
+                    user_badge_ids = [
+                        badge_user_obj.create(cr, uid, {'user_id': user_id, 'badge_id': badge.id}, context=context)
+                        for user_id in code_locals['result']
+                    ]
+                    self.send_badge(cr, uid, badge.id, user_badge_ids, context=context)
 
-        # else  badge.rule_automatic == 'manual':
+            elif badge.rule_automatic == 'goals':
+                common_users = None
+                for goal_type in badge.goal_type_ids:
+                    res = self.pool.get('gamification.goal').read_group(cr, uid, [
+                        ('type_id', '=', goal_type.id),
+                        ('state', '=', 'reached'),
+                    ], ['user_id', 'state', 'type_id'], ['user_id'], context=context)
+                    users = [goal.user_id.id for goal in res]
+                    if common_users is None:
+                        # first type, include all
+                        common_users = users
+                    else:
+                        merged_list = [user_id for user_id in users if user_id in common_users]
+                        common_users = merged_list
+                # create badge users for common users
+                user_badge_ids = [
+                    badge_user_obj.create(cr, uid, {'user_id': user_id, 'badge_id': badge.id}, context=context)
+                    for user_id in common_users
+                ]
+                self.send_badge(cr, uid, badge.id, user_badge_ids, context=context)
 
-        return []
+            # else  badge.rule_automatic == 'manual':
+
+        return True
 
     def can_grant_badge(self, cr, uid, user_from_id, badge_id, context=None):
         """Check if a user can grant a badge to another user
