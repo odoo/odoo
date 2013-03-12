@@ -350,7 +350,8 @@ def _make_wrapper(method, old_api, new_api):
     """
     @wraps(method)
     def wrapper(self, *args, **kwargs):
-        if isinstance(args and args[0], Cursor):
+        cr = kwargs.get('cr', args and args[0])
+        if isinstance(cr, Cursor):
             return old_api(self, *args, **kwargs)
         else:
             return new_api(self, *args, **kwargs)
