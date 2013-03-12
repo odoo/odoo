@@ -86,7 +86,6 @@ class gamification_goal_type(osv.Model):
     }
 
 
-
 class gamification_goal(osv.Model):
     """Goal instance for a user
 
@@ -127,6 +126,7 @@ class gamification_goal(osv.Model):
         'plan_id': fields.related('planline_id', 'plan_id',
             string="Plan",
             type='many2one',
+            relation='gamification.goal.plan',
             store=True),
         'start_date': fields.date('Start Date'),
         'end_date': fields.date('End Date'), # no start and end = always active
