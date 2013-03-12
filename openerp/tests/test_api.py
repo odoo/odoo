@@ -272,9 +272,17 @@ class TestAPI(common.TransactionCase):
         demo = self.Users.search([('login', '=', 'demo')])[0]
         self.assertNotEqual(demo.id, self.uid)
 
-        # demo user cannot modify the company
-        with self.assertRaises(except_orm):
-            with scope(demo):
+        # iteration over partners propagates scope
+        for p in partners:
+            self.assertEqual(p.scope.uid, self.uid)
+
+        with scope(demo):
+            self.assertEqual(partners.scope.uid, self.uid)
+            for p in partners:
+                self.assertEqual(p.scope.uid, self.uid)
+
+            # demo user cannot modify the company
+            with self.assertRaises(except_orm):
                 company.write({'name': 'Pricks'})
 
     @mute_logger('openerp.osv.orm')

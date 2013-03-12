@@ -5120,7 +5120,7 @@ class BaseModel(object):
 
     @property
     def scope(self):
-        return api.scope.current
+        return self._scope or api.scope.current
 
     @api.model
     def _make_null(self):
@@ -5207,8 +5207,9 @@ class BaseModel(object):
     def __iter__(self):
         """ Return an iterator over `self` (must be a recordset). """
         assert self.is_recordset(), "Expected recordset: %s" % self
+        cr, uid, context = self.scope
         for id in self._record_ids:
-            yield self.browse(id, cache=self._record_cache)
+            yield self.browse(cr, uid, id, context=context, cache=self._record_cache)
 
     def __len__(self):
         """ Return the size of `self` (must be a recordset). """
