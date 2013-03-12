@@ -1046,6 +1046,103 @@ openerp.testing.section('search.filters', {
             });
     });
 });
+openerp.testing.section('search.groupby', {
+    dependencies: ['web.search'],
+    rpc: 'mock',
+    templates: true,
+}, function (test) {
+    test('basic', {
+        asserts: 7,
+        setup: function (instance, $s, mock) {
+            mock('dummy.model:fields_view_get', function () {
+                return {
+                    type: 'search',
+                    fields: {},
+                    arch: [
+                        '<search>',
+                            '<filter string="Foo" context="{\'group_by\': \'foo\'}"/>',
+                            '<filter string="Bar" context="{\'group_by\': \'bar\'}"/>',
+                            '<filter string="Baz" context="{\'group_by\': \'baz\'}"/>',
+                        '</search>'
+                    ].join(''),
+                }
+            });
+        }
+    }, function (instance, $fix) {
+        var view = makeSearchView(instance);
+        return view.appendTo($fix)
+        .done(function () {
+            // 3 filters, 1 filtergroup group, 1 custom filter, 1 advanced, 1 Filters
+            equal(view.inputs.length, 7,
+                  'should have 7 inputs total');
+            var group = _.find(view.inputs, function (f) {
+                return f instanceof instance.web.search.GroupbyGroup
+            });
+            ok(group, "should have a GroupbyGroup input");
+            strictEqual(group.getParent(), view,
+                        "group's parent should be view");
+
+            group.toggle(group.filters[0]);
+            group.toggle(group.filters[2]);
+
+            var results = view.build_search_data();
+            deepEqual(results.errors, [], "should have no errors");
+            deepEqual(results.domains, [], "should have no domain");
+            deepEqual(results.contexts, [
+                new instance.web.CompoundContext(
+                    "{'group_by': 'foo'}", "{'group_by': 'baz'}")
+            ], "should have compound contexts");
+            deepEqual(results.groupbys, [
+                "{'group_by': 'foo'}",
+                "{'group_by': 'baz'}"
+            ], "should have sequence of contexts")
+        });
+    });
+    test('unified multiple groupby groups', {
+        asserts: 4,
+        setup: function (instance, $s, mock) {
+            mock('dummy.model:fields_view_get', function () {
+                return {
+                    type: 'search',
+                    fields: {},
+                    arch: [
+                        '<search>',
+                            '<filter string="Foo" context="{\'group_by\': \'foo\'}"/>',
+                            '<separator/>',
+                            '<filter string="Bar" context="{\'group_by\': \'bar\'}"/>',
+                            '<separator/>',
+                            '<filter string="Baz" context="{\'group_by\': \'baz\'}"/>',
+                        '</search>'
+                    ].join(''),
+                }
+            });
+        }
+    }, function (instance, $fix) {
+        var view = makeSearchView(instance);
+        return view.appendTo($fix)
+        .done(function () {
+            // 3 filters, 3 filtergroups, 1 custom filter, 1 advanced, 1 Filters
+            equal(view.inputs.length, 9, "should have 9 inputs total");
+
+            var groups = _.filter(view.inputs, function (f) {
+                return f instanceof instance.web.search.GroupbyGroup
+            });
+            equal(groups.length, 3, "should have 3 GroupbyGroups");
+
+            groups[0].toggle(groups[0].filters[0]);
+            groups[2].toggle(groups[2].filters[0]);
+            equal(view.query.length, 1,
+                  "should have unified groupby groups in single facet");
+            deepEqual(view.build_search_data(), {
+                errors: [],
+                domains: [],
+                contexts: [new instance.web.CompoundContext(
+                    "{'group_by': 'foo'}", "{'group_by': 'baz'}")],
+                groupbys: [ "{'group_by': 'foo'}", "{'group_by': 'baz'}" ],
+            }, "should only have contexts & groupbys in search data");
+        });
+    });
+});
 openerp.testing.section('search.filters.saved', {
     dependencies: ['web.search'],
     rpc: 'mock',
