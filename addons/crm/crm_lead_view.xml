@@ -582,7 +582,7 @@
         <!--
             MASS MAILING
         -->
-        <act_window name="Mass Mailing"
+        <act_window name="Lead/Opportunity Mass Mail"
                 res_model="mail.compose.message"
                 src_model="crm.lead"
                 view_mode="form"
@@ -593,7 +593,15 @@
                 context="{
                             'default_composition_mode': 'mass_mail',
                             'default_email_to':'{$object.email or \'\'}',
+                            'default_use_template': True,
+                            'default_template_id': ref('crm.lead_template'),
                         }"/>
+
+        <!--Definition of an email template with an empty body that will be used in opportunity mailing. Used to give a
+            basis for email recipients, name and to ease the definition of a further elaborated template. -->
+        <record id="lead_template" model="email.template">
+            <field name="ref_ir_act_window" ref="crm.action_lead_mass_mail"/>
+        </record>
 
     </data>
 </openerp>
