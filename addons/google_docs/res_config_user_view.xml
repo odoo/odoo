@@ -22,10 +22,10 @@
                 <form string="Google Drive Configuration" version="7.0">
                 <group>
                 	<field name="name"/>
-                    <field name="model_id" on_change="onchange_model_id(model_id,name_template)"/>
+                    <field name="model_id" on_change="onchange_model_id(model_id)"/>
                     <label for='filter_id'/>
                     <div>
-                        <field name='filter_id' on_change="onchange_filter_id(model_id,filter_id,name_template)"/>
+                        <field name='filter_id'/>
                         <p class="oe_grey">
 					To Create a new filter, go to the list of documents you want to attach a google document to and 
 					save the filter.Then come back ti this view.The saved filter will be available in the filed above.

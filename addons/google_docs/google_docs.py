@@ -162,7 +162,6 @@ class google_docs_ir_attachment(osv.osv):
             action = pool_gdoc_config.browse(cr, uid, config_id, context=context)
             if action.filter_id:
                 google_doc_configs = self._filt(cr, uid, action, action.filter_id, res_id, context=context)
-                print google_doc_configs,'rrrrrrrrrrr',res_id
                 if google_doc_configs: 
                     config.append(action.name)
             else:
@@ -174,27 +173,38 @@ class google_docs_ir_attachment(osv.osv):
         records = {}
         if record_ids and action_filter:
             assert action.model_id.model == action_filter.model_id, "Filter model different from action rule model"
-            print 'aaction_filter',action_filter.model_id
             model = self.pool.get(action_filter.model_id)
             domain = [('id', 'in', [record_ids])] + eval(action_filter.domain)
             ctx = dict(context or {})
             ctx.update(eval(action_filter.context))
-            print 'domain---------',domain 
             record_ids = model.search(cr, uid, domain, context=ctx)
         return record_ids
     
     def get_attachment(self, cr, uid, res_model, rec_name, ids, context=None):
         res_id = ids[0]
         pool_gdoc_config = self.pool.get('google.docs.config')
-        action_dom = [('model_id', '=', res_model)]
-        config_ids = pool_gdoc_config.search(cr, uid, action_dom, context=context)[0]
+        config_ids = pool_gdoc_config.search(cr, uid, [('model_id', '=', res_model)], context=context)[0]
         action = pool_gdoc_config.browse(cr, uid, config_ids, context=context)
         attachment = {}
+        model_fields_dic = self.pool.get(res_model).read(cr, uid, res_id, [], context=context)
+        # check if a model is configured with a template
+        if config_ids:
+            name_gdocs = action.name_template
+            print 'name_gdocss',name_gdocs
+            try:
+                if name_gdocs.find('model')!=-1:
+                    name_gdocs = name_gdocs.replace('model',action.model_id.name)
+                if name_gdocs.find('filter')!=-1:
+                    name_gdocs = name_gdocs.replace('filter',action.filter_id.name)
+                name_gdocs = name_gdocs % model_fields_dic
+            except:
+                raise osv.except_osv(_('Key Error!'), _("Your Google Doc Name Pattern's key does not found in object."))
+        
         attach_ids = self.search(cr, uid, [('res_model','=',res_model),('name','=',action.name),('res_id','=',res_id)])
         if not attach_ids: 
             google_template_id = action.gdocs_resource_id
-            self.copy_gdoc(cr, uid, action.model_id.model, ids[0], action.name_template, action.name, google_template_id, context=context)
-            attach_ids = self.search(cr, uid, [('res_model','=',res_model),('name','=',action.name)])
+            self.copy_gdoc(cr, uid, action.model_id.model, res_id, name_gdocs, action.name, google_template_id, context=context)
+            attach_ids = self.search(cr, uid, [('res_model','=',res_model),('name','=',action.name),('res_id','=',res_id)])
         attachments =  self.browse(cr, uid, attach_ids, context)[0]
         attachment['url'] = attachments.url
         return attachment
@@ -227,26 +237,16 @@ class config(osv.osv):
         'name_template': fields.char('Google Drive Name Pattern', size=64, help='Choose how the new google drive will be named, on google side. Eg. gdoc_%(field_name)s', required=True),
     }
 
-    def onchange_model_id(self, cr, uid, ids, model_id,name_template):
-        res = {'domain':{'filter_id':[]}}
-        if model_id:
-            model_name = self.pool.get('ir.model').read(cr, uid, model_id, ['model','name'])
-            mod_model = model_name['model']
-            mod_name = model_name['name']
-            res['domain'] = {'filter_id': [('model_id', '=', mod_model)]}
-            mod_name = model_name['name']
-            name = name_template.replace('model', mod_name)
-            res['value'] = {'filter_id': False,'name_template': name or False}
-        return res
-    
-    def onchange_filter_id(self, cr, uid, ids,model_id,filter_id,name_template):
-        res = {}
-        if filter_id:
-            filter_name = self.pool.get('ir.filters').browse(cr, uid, filter_id)
-            name = name_template.replace('filter',filter_name.name)
-        res['value'] = {'name_template': name or False}
-        return res
-    
+    def onchange_model_id(self, cr, uid, ids, model_id):
+         res = {'domain':{'filter_id':[]}}
+         if model_id:
+             model_name = self.pool.get('ir.model').read(cr, uid, model_id, ['model'])
+             if model_name:
+                 mod_name = model_name['model']
+                 res['domain'] = {'filter_id': [('model_id', '=', mod_name)]}
+         else:
+             res['value'] = {'filter_id': False}
+         return res
 
     _defaults = {
         'name_template': '%(name)s_model_filter_gdoc',
