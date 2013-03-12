@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data>
+
+        <record id="gamification.view_badge_wizard_grant" model="ir.ui.view">
+            <field name="name">Grant Badge Employee Form</field>
+            <field name="model">gamification.badge.user.wizard</field>
+            <field name="arch" type="xml">
+                <form string="Grant Badge To" version="7.0">
+                    Select the employee that will receive this badge
+                    <group>
+                        <field name="employee_id" />
+                        <field name="badge_id" invisible="1"/>
+                    </group>
+                    <footer>
+                        <button string="Grant Badge" type="object" name="action_grant_badge" class="oe_highlight" /> or
+                        <button string="Cancel" special="cancel" class="oe_link"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+    </data>
+</openerp>
