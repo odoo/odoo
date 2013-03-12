@@ -1,12 +1,23 @@
 -
+  I Update project and create the new task with project manager
+-
+  !context
+    uid: 'res_users_project_manager'
+-
+  Change partner for The Jackson Group's Project
+-
   !record {model: project.project, id: project_project_1, view: False}:
     partner_id: base.res_partner_2
 -
-  !record {model: project.task, id: project_task_1, view: False}:
+  I create task for The Jackson Group's Project project user can create task. 
+-
+  !context
+    uid: 'res_users_project_user'
+-
+  !record {model: project.task, id: project_task_for_project1}:
+    name: Worked on new specification
+    user_id: res_users_project_user
     remaining_hours: 10.00
--
-  !record {model: project.task, id: project_task_1, view: False}:
     planned_hours: 10.00
--
-  !record {model: project.task, id: project_task_1, view: False}:
     project_id: project_project_1
+    stage_id: project_tt_specification

@@ -1,0 +1,20 @@
+-
+  Create a user as 'Project manager'
+-
+  !record {model: res.users, id: res_users_project_manager}:
+    company_id: base.main_company
+    name: Project Manager
+    login: prm
+    password: prm
+    groups_id:
+      - project.group_project_manager
+-
+  Create a user as 'Project user'
+-
+  !record {model: res.users, id: res_users_project_user}:
+    company_id: base.main_company
+    name: Project User
+    login: pru
+    password: pru
+    groups_id:
+      - project.group_project_user

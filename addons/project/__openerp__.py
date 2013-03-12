@@ -79,6 +79,7 @@ Dashboard / Reports for Project Management will include:
     ],
     'demo': ['project_demo.xml'],
     'test': [
+        'test/project_users.yml',
         'test/project_demo.yml',
         'test/project_process.yml',
         'test/task_process.yml',
