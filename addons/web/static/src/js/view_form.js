@@ -4037,6 +4037,7 @@ instance.web.form.FieldMany2ManyTags = instance.web.form.AbstractField.extend(in
         if (this.get("effective_readonly"))
             return;
         var self = this;
+        var ignore_blur = false;
         self.$text = this.$("textarea");
         self.$text.textext({
             plugins : 'tags arrow autocomplete',
@@ -4055,6 +4056,7 @@ instance.web.form.FieldMany2ManyTags = instance.web.form.AbstractField.extend(in
                         if (data.id) {
                             self.add_id(data.id);
                         } else {
+                            ignore_blur = true;
                             data.action();
                         }
                     },
@@ -4105,10 +4107,13 @@ instance.web.form.FieldMany2ManyTags = instance.web.form.AbstractField.extend(in
         self.$text
             .focusin(function () {
                 self.trigger('focused');
+                ignore_blur = false;
             })
             .focusout(function() {
                 self.$text.trigger("setInputData", "");
-                self.trigger('blurred');
+                if (!ignore_blur) {
+                    self.trigger('blurred');
+                }
             }).keydown(function(e) {
                 if (e.which === $.ui.keyCode.TAB && self._drop_shown) {
                     self.$text.textext()[0].autocomplete().selectFromDropdown();
