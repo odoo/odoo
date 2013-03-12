@@ -184,10 +184,9 @@ class gamification_badge(osv.Model):
 
         res = None
         for badge_user in self.pool.get('gamification.badge.user').browse(cr, uid, badge_user_ids, context=context):
-            values = {
-                'badge': badge,
-                'badgeb64': badge.image.encode('base64'),
-            }
+            values = {'badge': badge}
+            if badge.image:
+                values['badgeb64'] = badge.image.encode('base64'),
 
             if user_from:
                 values['user_from'] = user_from
@@ -201,23 +200,26 @@ class gamification_badge(osv.Model):
                                     type='comment',
                                     subtype='mt_comment',
                                     context=context)
-            print(res)
+
         return res
 
-    def check_automatic(self, cr, uid, context=None, badge_ids=None,):
+    def _cron_check(self, cr, uid, context):
+        """Run cron on all automatic goals"""
+        ids = self.search(cr, uid, [('rule_automatic', '!=', 'manual')], context=context)
+        self.check_automatic(cr, uid, ids, context=context)
+
+    def check_automatic(self, cr, uid, ids, context=None):
         """Check if the badges should be deserved to users
 
         Only badges with an automatic rule specified are checked to be
         granted, other type of badge will be skipped. Send alert messages to
         the one validating the condition.
-        :param badge_ids: the list of ids of the badges to check"""
+        :param ids: the list of id of the badges to check"""
 
         context = context or {}
-        if badge_ids is None:
-            badge_ids = self.search(cr, uid, [('rule_automatic', '!=', 'manual')], context=context)
         badge_user_obj = self.pool.get('gamification.badge.user')
 
-        for badge in self.browse(cr, uid, badge_ids, context=context):
+        for badge in self.browse(cr, uid, ids, context=context):
 
             if badge.rule_automatic == 'python':
                 code_obj = compile(badge.compute_code, '<string>', 'exec')
@@ -241,7 +243,8 @@ class gamification_badge(osv.Model):
                         ('type_id', '=', goal_type.id),
                         ('state', '=', 'reached'),
                     ], ['user_id', 'state', 'type_id'], ['user_id'], context=context)
-                    users = [goal.user_id.id for goal in res]
+
+                    users = [goal['user_id'][0] for goal in res]
                     if common_users is None:
                         # first type, include all
                         common_users = users
