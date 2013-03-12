@@ -160,10 +160,11 @@ class gamification_badge(osv.Model):
             help="The number of time the current user has received this badge this month."),
     }
 
-    _default = {
+    _defaults = {
         'stat_count': 0,
         'stat_count_distinct': 0,
         'stat_this_month': 0,
+        'rule_auth': 'everyone',
         'rule_automatic': 'manual',
     }
 
