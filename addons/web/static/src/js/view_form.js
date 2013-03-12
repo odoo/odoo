@@ -1930,7 +1930,7 @@ instance.web.form.WidgetButton = instance.web.form.FormWidget.extend({
                                     $(self2).dialog("close");
                                 });
                             }
-                        },
+                        }
                     ],
                     beforeClose: function() {
                         def.resolve();
