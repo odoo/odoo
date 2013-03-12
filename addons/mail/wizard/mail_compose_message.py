@@ -127,6 +127,7 @@ class mail_compose_message(osv.TransientModel):
 
     _defaults = {
         'composition_mode': 'comment',
+        'email_from': lambda self, cr, uid, ctx={}: self.pool.get('mail.mail')._get_default_from(cr, uid, context=ctx),
         'body': lambda self, cr, uid, ctx={}: '',
         'subject': lambda self, cr, uid, ctx={}: False,
         'partner_ids': lambda self, cr, uid, ctx={}: [],

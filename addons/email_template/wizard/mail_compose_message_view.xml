@@ -8,9 +8,12 @@
             <field name="inherit_id" ref="mail.email_compose_message_wizard_form"/>
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='subject']" position="after">
-                    <field name="partner_to" groups="base.group_no_one"/>
-                    <field name="email_to" groups="base.group_no_one"/>
-                    <field name="email_cc" groups="base.group_no_one"/>
+                    <field name="partner_to" groups="base.group_no_one"
+                        attrs="{'invisible':[('composition_mode', '!=', 'mass_mail')]}"/>/>
+                    <field name="email_to" groups="base.group_no_one"
+                        attrs="{'invisible':[('composition_mode', '!=', 'mass_mail')]}"/>/>
+                    <field name="email_cc" groups="base.group_no_one"
+                        attrs="{'invisible':[('composition_mode', '!=', 'mass_mail')]}"/>/>
                 </xpath>
                 <xpath expr="//footer" position="inside">
                     <group class="oe_right" col="1">
