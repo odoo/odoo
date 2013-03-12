@@ -74,7 +74,10 @@
                                 <field name="name"/>
                             </h1>
                         </div>
-                        <field name="description" />
+                        <group>
+                            <field name="description" />
+                            <field name="public" />
+                        </group>
                         <group string="User Rules">
                             <field name="rule_auth" string="Allowed to Grant" />
                             <field name="rule_auth_user_ids" attrs="{'invisible': [('rule_auth','!=','users')]}" widget="many2many_tags" />

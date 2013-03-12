@@ -22,7 +22,7 @@
 from openerp.osv import fields, osv
 
 
-class gamification_badge_user(osv.Model):
+class hr_gamification_badge_user(osv.Model):
     """User having received a badge"""
 
     _name = 'gamification.badge.user'
@@ -44,7 +44,23 @@ class gamification_badge_user(osv.Model):
     ]
 
 
-class grant_badge_wizard(osv.TransientModel):
+class hr_gamification_badge(osv.Model):
+    _name = 'gamification.badge'
+    _inherit = ['gamification.badge', 'mail.thread']
+
+    def message_post(self, cr, uid, thread_id, context=None, **kwargs):
+        """Overwrite the message_post method to send the badge to the employee"""
+        # badge_user included in the send_badge method and 'badge_id' in the wizard view
+        if 'badge_user' in context and 'badge_id' in context:
+            badge = self.browse(cr, uid, context['badge_id'], context=context)
+            badge_user = context['badge_user']
+            if badge.public and badge_user.employee_id:
+                return self.pool.get('hr.employee').message_post(cr, uid,
+                    badge_user.employee_id.id, context=context, **kwargs)
+        return super(hr_gamification_badge, self).message_post(cr, uid, thread_id, context=context, **kwargs)
+
+
+class hr_grant_badge_wizard(osv.TransientModel):
     _name = 'gamification.badge.user.wizard'
     _inherit = ['gamification.badge.user.wizard']
 
@@ -82,4 +98,4 @@ class grant_badge_wizard(osv.TransientModel):
                 badge_obj.send_badge(cr, uid, wiz.badge_id.id, [badge_user], user_from=user_from, context=context)
 
         return {}
-grant_badge_wizard()
+hr_grant_badge_wizard()

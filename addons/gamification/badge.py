@@ -193,6 +193,7 @@ class gamification_badge(osv.Model):
             else:
                 values['user_from'] = False
             body_html = template_env.get_template('badge_received.mako').render(values)
+            context['badge_user'] = badge_user
 
             res = self.message_post(cr, uid, 0,
                                     body=body_html,
