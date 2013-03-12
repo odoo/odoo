@@ -247,19 +247,17 @@ instance.web.CrashManager = instance.web.Class.extend({
         if (!this.active) {
             return;
         }
-        // yes, exception handling is shitty
-        if (error.code === 300 && error.data && error.data.type == "client_exception" && error.data.debug.match("SessionExpiredException")) {
-            this.show_warning({type: "Session Expired", data: { fault_code: "Your OpenERP session expired. Please refresh the current web page." }});
+        var handler = instance.web.crash_manager_registry.get_object(error.data.name, true);
+        if (handler) {
+            new (handler)(this, error).display();
+            return;
+        };
+        if (error.data.name === "openerp.addons.web.session SessionExpiredException") {
+            this.show_warning({type: "Session Expired", data: { message: "Your OpenERP session expired. Please refresh the current web page." }});
             return;
         }
-        if (error.data.fault_code) {
-            var split = ("" + error.data.fault_code).split('\n')[0].split(' -- ');
-            if (split.length > 1) {
-                error.type = split.shift();
-                error.data.fault_code = error.data.fault_code.substr(error.type.length + 4);
-            }
-        }
-        if (error.code === 200 && error.type) {
+        if (error.data.exception_type === "except_osv" || error.data.exception_type === "warning"
+                || error.data.exception_type === "access_error") {
             this.show_warning(error);
         } else {
             this.show_error(error);
@@ -269,8 +267,11 @@ instance.web.CrashManager = instance.web.Class.extend({
         if (!this.active) {
             return;
         }
+        if (error.data.exception_type === "except_osv") {
+            error = _.extend({}, error, {data: _.extend({}, error.data, {message: error.data.arguments[0] + "\n\n" + error.data.arguments[1]})});
+        }
         instance.web.dialog($('<div>' + QWeb.render('CrashManager.warning', {error: error}) + '</div>'), {
-            title: "OpenERP " + _.str.capitalize(error.type),
+            title: "OpenERP " + (_.str.capitalize(error.type) || "Warning"),
             buttons: [
                 {text: _t("Ok"), click: function() { $(this).dialog("close"); }}
             ]
@@ -302,6 +303,57 @@ instance.web.CrashManager = instance.web.Class.extend({
         });
     },
 });
+
+/**
+    An interface to implement to handle exceptions. Register implementation in instance.web.crash_manager_registry.
+*/
+instance.web.ExceptionHandler = {
+    /**
+        @param parent The parent.
+        @param error The error object as returned by the JSON-RPC implementation.
+    */
+    init: function(parent, error) {},
+    /**
+        Called to inform to display the widget, if necessary. A typical way would be to implement
+        this interface in a class extending instance.web.Dialog and simply display the dialog in this
+        method.
+    */
+    display: function() {},
+};
+
+/**
+    The registry to handle exceptions. It associate a fully qualified python exception name with a class implementing
+    instance.web.ExceptionHandler.
+*/
+instance.web.crash_manager_registry = new instance.web.Registry();
+
+/**
+ * Handle redirection warnings, which behave more or less like a regular
+ * warning, with an additional redirection button.
+ */
+instance.web.RedirectWarningHandler = instance.web.Dialog.extend(instance.web.ExceptionHandler, {
+    init: function(parent, error) {
+        this._super(parent);
+        this.error = error;
+    },
+    display: function() {
+        error = this.error;
+        error.data.message = error.data.arguments[0];
+
+        instance.web.dialog($('<div>' + QWeb.render('CrashManager.warning', {error: error}) + '</div>'), {
+            title: "OpenERP " + (_.str.capitalize(error.type) || "Warning"),
+            buttons: [
+                {text: _t("Ok"), click: function() { $(this).dialog("close"); }},
+                {text: error.data.arguments[2], click: function() {
+                    window.location.href='#action='+error.data.arguments[1];
+                    $(this).dialog("close");
+                }}
+            ]
+        });
+        this.destroy();
+    }
+});
+instance.web.crash_manager_registry.add('openerp.exceptions.RedirectWarning', 'instance.web.RedirectWarningHandler');
 
 instance.web.Loading = instance.web.Widget.extend({
     template: _t("Loading"),
@@ -650,7 +702,7 @@ instance.web.Login =  instance.web.Widget.extend({
         }
     },
     on_db_failed: function (error, event) {
-        if (error.data.fault_code === 'AccessDenied') {
+        if (error.data.name === 'openerp.exceptions.AccessDenied') {
             event.preventDefault();
         }
     },
@@ -1032,7 +1084,7 @@ instance.web.UserMenu =  instance.web.Widget.extend({
             if (!self.session.uid)
                 return;
             var func = new instance.web.Model("res.users").get_func("read");
-            return func(self.session.uid, ["name", "company_id"]).then(function(res) {
+            return self.alive(func(self.session.uid, ["name", "company_id"])).then(function(res) {
                 var topbar_name = res.name;
                 if(instance.session.debug)
                     topbar_name = _.str.sprintf("%s (%s)", topbar_name, instance.session.db);
@@ -1047,6 +1099,9 @@ instance.web.UserMenu =  instance.web.Widget.extend({
             });
         };
         this.update_promise = this.update_promise.then(fct, fct);
+    },
+    on_menu_help: function() {
+        window.open('http://help.openerp.com', '_blank');
     },
     on_menu_logout: function() {
         this.trigger('user_logout');
@@ -1161,6 +1216,7 @@ instance.web.WebClient = instance.web.Client.extend({
         return $.when(this._super()).then(function() {
             if (jQuery.param !== undefined && jQuery.deparam(jQuery.param.querystring()).kitten !== undefined) {
                 $("body").addClass("kitten-mode-activated");
+                $("body").css("background-image", "url(" + instance.session.origin + "/web/static/src/img/back-enable.jpg" + ")");
                 if ($.blockUI) {
                     $.blockUI.defaults.message = '<img src="http://www.amigrave.com/kitten.gif">';
                 }
@@ -1247,7 +1303,7 @@ instance.web.WebClient = instance.web.Client.extend({
     },
     logo_edit: function(ev) {
         var self = this;
-        new instance.web.Model("res.users").get_func("read")(this.session.uid, ["company_id"]).then(function(res) {
+        new self.alive(instance.web.Model("res.users").get_func("read")(this.session.uid, ["company_id"])).then(function(res) {
             self.rpc("/web/action/load", { action_id: "base.action_res_company_form" }).done(function(result) {
                 result.res_id = res['company_id'][0];
                 result.target = "new";
@@ -1268,7 +1324,7 @@ instance.web.WebClient = instance.web.Client.extend({
     },
     check_timezone: function() {
         var self = this;
-        return new instance.web.Model('res.users').call('read', [[this.session.uid], ['tz_offset']]).then(function(result) {
+        return self.alive(new instance.web.Model('res.users').call('read', [[this.session.uid], ['tz_offset']])).then(function(result) {
             var user_offset = result[0]['tz_offset'];
             var offset = -(new Date().getTimezoneOffset());
             // _.str.sprintf()'s zero front padding is buggy with signed decimals, so doing it manually
@@ -1344,8 +1400,9 @@ instance.web.WebClient = instance.web.Client.extend({
     },
     on_hashchange: function(event) {
         var self = this;
-        var state = event.getState(true);
-        if (!_.isEqual(this._current_state, state)) {
+        var stringstate = event.getState(false);
+        if (!_.isEqual(this._current_state, stringstate)) {
+            var state = event.getState(true);
             if(!state.action && state.menu_id) {
                 self.menu.has_been_loaded.done(function() {
                     self.menu.do_reload().done(function() {
@@ -1357,13 +1414,13 @@ instance.web.WebClient = instance.web.Client.extend({
                 this.action_manager.do_load_state(state, !!this._current_state);
             }
         }
-        this._current_state = state;
+        this._current_state = stringstate;
     },
     do_push_state: function(state) {
         this.set_title(state.title);
         delete state.title;
         var url = '#' + $.param(state);
-        this._current_state = _.clone(state);
+        this._current_state = $.deparam($.param(state), false);     // stringify all values
         $.bbq.pushState(url);
         this.trigger('state_pushed', state);
     },
@@ -1373,9 +1430,10 @@ instance.web.WebClient = instance.web.Client.extend({
             .then(function (result) {
                 return self.action_mutex.exec(function() {
                     if (options.needaction) {
-                        result.context = new instance.web.CompoundContext(
-                            result.context,
-                            {search_default_message_unread: true});
+                        result.context = new instance.web.CompoundContext(result.context, {
+                            search_default_message_unread: true,
+                            search_disable_custom_filters: true,
+                        });
                     }
                     var completed = $.Deferred();
                     $.when(self.action_manager.do_action(result, {

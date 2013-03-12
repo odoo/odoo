@@ -13,8 +13,8 @@ import os
 import re
 import simplejson
 import time
+import urllib
 import urllib2
-import xmlrpclib
 import zlib
 from xml.etree import ElementTree
 from cStringIO import StringIO
@@ -97,7 +97,7 @@ def db_monodb(req):
         dbs = db_list(req)
         if len(dbs) == 1:
             return dbs[0]
-    except xmlrpclib.Fault:
+    except Exception:
         # ignore access denied
         pass
     return False
@@ -294,9 +294,9 @@ def manifest_list(req, extension, mods=None, db=None):
     if not req.debug:
         path = '/web/webclient/' + extension
         if mods is not None:
-            path += '?mods=' + mods
+            path += '?' + urllib.urlencode({'mods': mods})
         elif db:
-            path += '?db=' + db
+            path += '?' + urllib.urlencode({'db': db})
         return [path]
     files = manifest_glob(req, extension, addons=mods, db=db)
     i_am_diabetic = req.httprequest.environ["QUERY_STRING"].count("no_sugar") >= 1 or \
@@ -684,7 +684,7 @@ class WebClient(openerpweb.Controller):
 
     @openerpweb.jsonrequest
     def version_info(self, req):
-        return openerp.service.web_services.RPC_VERSION_1
+        return openerp.service.common.exp_version()
 
 class Proxy(openerpweb.Controller):
     _cp_path = '/web/proxy'
@@ -749,10 +749,10 @@ class Database(openerpweb.Controller):
 
         try:
             return req.session.proxy("db").drop(password, db)
-        except xmlrpclib.Fault, e:
-            if e.faultCode and e.faultCode.split(':')[0] == 'AccessDenied':
-                return {'error': e.faultCode, 'title': 'Drop Database'}
-        return {'error': _('Could not drop database !'), 'title': _('Drop Database')}
+        except openerp.exceptions.AccessDenied:
+            return {'error': 'AccessDenied', 'title': 'Drop Database'}
+        except Exception:
+            return {'error': _('Could not drop database !'), 'title': _('Drop Database')}
 
     @openerpweb.httprequest
     def backup(self, req, backup_db, backup_pwd, token):
@@ -769,8 +769,8 @@ class Database(openerpweb.Controller):
                ('Content-Disposition', content_disposition(filename, req))],
                {'fileToken': int(token)}
             )
-        except xmlrpclib.Fault, e:
-            return simplejson.dumps([[],[{'error': e.faultCode, 'title': _('Backup Database')}]])
+        except Exception, e:
+            return simplejson.dumps([[],[{'error': openerp.tools.ustr(e), 'title': _('Backup Database')}]])
 
     @openerpweb.httprequest
     def restore(self, req, db_file, restore_pwd, new_db):
@@ -778,9 +778,8 @@ class Database(openerpweb.Controller):
             data = base64.b64encode(db_file.read())
             req.session.proxy("db").restore(restore_pwd, new_db, data)
             return ''
-        except xmlrpclib.Fault, e:
-            if e.faultCode and e.faultCode.split(':')[0] == 'AccessDenied':
-                raise Exception("AccessDenied")
+        except openerp.exceptions.AccessDenied, e:
+            raise Exception("AccessDenied")
 
     @openerpweb.jsonrequest
     def change_password(self, req, fields):
@@ -789,10 +788,10 @@ class Database(openerpweb.Controller):
                 dict(map(operator.itemgetter('name', 'value'), fields)))
         try:
             return req.session.proxy("db").change_admin_password(old_password, new_password)
-        except xmlrpclib.Fault, e:
-            if e.faultCode and e.faultCode.split(':')[0] == 'AccessDenied':
-                return {'error': e.faultCode, 'title': _('Change Password')}
-        return {'error': _('Error, password not changed !'), 'title': _('Change Password')}
+        except openerp.exceptions.AccessDenied:
+            return {'error': 'AccessDenied', 'title': _('Change Password')}
+        except Exception:
+            return {'error': _('Error, password not changed !'), 'title': _('Change Password')}
 
 class Session(openerpweb.Controller):
     _cp_path = "/web/session"
@@ -1194,7 +1193,7 @@ class Binary(openerpweb.Controller):
 
             image_data = base64.b64decode(image_base64)
 
-        except (TypeError, xmlrpclib.Fault):
+        except Exception:
             image_data = self.placeholder(req)
         headers.append(('ETag', retag))
         headers.append(('Content-Length', len(image_data)))
@@ -1311,8 +1310,8 @@ class Binary(openerpweb.Controller):
                 'filename': ufile.filename,
                 'id':  attachment_id
             }
-        except xmlrpclib.Fault, e:
-            args = {'error':e.faultCode }
+        except Exception:
+            args = {'error': "Something horrible happened"}
         return out % (simplejson.dumps(callback), simplejson.dumps(args))
 
     @openerpweb.httprequest

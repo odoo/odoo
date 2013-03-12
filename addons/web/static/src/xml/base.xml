@@ -40,7 +40,7 @@
         <td>
             <p>
                 <t t-js="d">
-                    var message = d.message ? d.message : d.error.data.fault_code;
+                    var message = d.message ? d.message : d.error.data.message;
                     d.html_error = context.engine.tools.html_escape(message)
                         .replace(/\n/g, '<br/>');
                 </t>
@@ -106,33 +106,44 @@
                     <div class="oe_view_manager_header" style="padding: 8px;">
                         <div class="oe_header_row">
                             <h2 class="oe_view_title">
-                                <span class="oe_view_title_text oe_breadcrumb_title">Create Database</span>
+                                <span class="oe_view_title_text oe_breadcrumb_title">Create a New Database</span>
                             </h2>
-                            <button type="submit" class="oe_button oe_highlight db_create">Create</button>
                         </div>
                     </div>
                 </div>
-                <table align="center" class="db_option_table">
+                <p class="oe_grey" style="margin: 10px">
+                    Fill in this form to create an OpenERP database. You can
+                    create databases for different companies or for different
+                    goals (testing, production). Once the database is created,
+                    you will be able to install your first application.
+                </p>
+                <p class="oe_grey" style="margin: 10px">
+                    By default, the master password is 'admin' if you did not changed it.
+                </p>
+                <table class="db_option_table" style="margin: 10px">
                     <tr>
                         <td><label for="super_admin_pwd">Master password:</label></td>
-                        <td><input type="password" name="super_admin_pwd" class="required" value="admin" /></td>
+                        <td>
+                            <input type="text" name="super_admin_pwd" class="required" value="admin"/>
+                        </td>
                     </tr>
                     <tr>
-                        <td><label for="db_name">New database name:</label></td>
-                        <td><input type="text" name="db_name" class="required" matches="^[a-zA-Z][a-zA-Z0-9_-]+$" autofocus="true"/></td>
+                        <td><label for="db_name">Select a database name:</label></td>
+                        <td><input type="text" name="db_name" class="required" matches="^[a-zA-Z0-9][a-zA-Z0-9_-]+$" autofocus="true" placeholder="e.g. mycompany"/></td>
                     </tr>
                     <tr>
-                        <td><label for="demo_data">Load Demonstration data:</label></td>
+                        <td><label for="demo_data">Load demonstration data:</label></td>
                         <td class="oe_form_group_cell">
-                            <span class="oe_form_field oe_form_field_boolean">
+                            <span class="oe_form_field oe_form_field_boolean oe_grey" >
                                 <input type="checkbox" name="demo_data" />
+                                Check this box to evaluate OpenERP.
                             </span>
                         </td>
                     </tr>
                     <tr>
                         <td><label for="db_lang">Default language:</label></td>
-                        <td class="oe_form_field oe_form_field_selection ">
-                            <select name="db_lang" t-if="widget.lang_list">
+                        <td class="oe_form_field oe_form_field_selection">
+                            <select name="db_lang" t-if="widget.lang_list" class="oe_inline">
                                 <t t-foreach="widget.lang_list" t-as="lang">
                                     <option t-att-value="lang[0]" t-att-selected="lang[0] === 'en_US' ? 'selected' : undefined">
                                         <t t-esc="lang[1]" />
@@ -142,12 +153,16 @@
                         </td>
                     </tr>
                     <tr>
-                        <td><label for="create_admin_pwd">Admin password:</label></td>
+                        <td><label for="create_admin_pwd">Choose a password:</label></td>
                         <td><input type="password" name="create_admin_pwd" class="required" /></td>
                     </tr>
                     <tr>
                         <td><label for="create_confirm_pwd">Confirm password:</label></td>
                         <td><input type="password" name="create_confirm_pwd" class="required" equalTo="input[name=create_admin_pwd]"/></td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td><button type="submit" class="oe_button oe_highlight db_create">Create Database</button></td>
                     </tr>
                 </table>
             </form>
@@ -403,8 +418,9 @@
         <img class="oe_topbar_avatar" t-att-data-default-src="_s + '/web/static/src/img/user_menu_avatar.png'"/>
         <span class="oe_topbar_name"/>
         <ul class="oe_dropdown_menu">
-            <li><a href="#" data-menu="about">About OpenERP</a></li>
             <li><a href="#" data-menu="settings">Preferences</a></li>
+            <li><a href="#" data-menu="about">About OpenERP</a></li>
+            <li><a href="#" data-menu="help">Help</a></li>
             <li><a href="#" data-menu="logout">Log out</a></li>
         </ul>
     </span>
@@ -1265,8 +1281,9 @@
 </t>
 <t t-name="FieldBinaryFileUploader.files">
     <div class="oe_attachments">
-        <t t-if="widget.get('value')">
-            <t t-if="!widget.get('effective_readonly')" t-foreach="widget.get('value')" t-as="file">
+        <t t-if="!widget.get('effective_readonly')">
+            <t t-foreach="widget.get('value')" t-as="id">
+                <t t-set="file" t-value="widget.data[id]"/>
                 <div class="oe_attachment">
                     <span t-if="(file.upload or file.percent_loaded&lt;100)" t-attf-title="{(file.name || file.filename) + (file.date?' \n('+file.date+')':'' )}" t-attf-name="{file.name || file.filename}">
                         <span class="oe_fileuploader_in_process">...Upload in progress...</span>
@@ -1280,7 +1297,10 @@
                     </t>
                 </div>
             </t>
-            <t t-if="widget.get('effective_readonly')" t-foreach="widget.get('value')" t-as="file">
+        </t>
+        <t t-if="widget.get('effective_readonly')">
+            <t t-foreach="widget.get('value')" t-as="id">
+                <t t-set="file" t-value="widget.data[id]"/>
                 <div>
                     <a t-att-href="file.url" t-attf-title="{(file.name || file.filename) + (file.date?' \n('+file.date+')':'' )}">
                         <t t-raw="file.name || file.filename"/>
@@ -1299,7 +1319,7 @@
             <span class='oe_attach_label'>File</span>
             <t t-call="HiddenInputFile">
                 <t t-set="fileupload_id" t-value="widget.fileupload_id"/>
-                <t t-set="fileupload_action">/web/binary/upload_attachment</t>
+                <t t-set="fileupload_action" t-translation="off">/web/binary/upload_attachment</t>
                 <input type="hidden" name="model" t-att-value="widget.view.model"/>
                 <input type="hidden" name="id" value="0"/>
                 <input type="hidden" name="session_id" t-att-value="widget.session.session_id"/>
