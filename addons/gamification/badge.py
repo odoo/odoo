@@ -43,6 +43,7 @@ class gamification_badge(osv.Model):
 
     _name = 'gamification.badge'
     _description = 'Gamification badge'
+    _inherit = ['mail.thread']
 
     def _get_image(self, cr, uid, ids, name, args, context=None):
         result = dict.fromkeys(ids, False)
@@ -193,10 +194,14 @@ class gamification_badge(osv.Model):
             else:
                 values['user_from'] = False
             body_html = template_env.get_template('badge_received.mako').render(values)
-            # TODO change for classic email
-            res = self.pool.get('res.users').message_post(cr, uid, badge_user.user_id.id,
-                                                            body=body_html,
-                                                            context=context)
+
+            res = self.message_post(cr, uid, 0,
+                                    body=body_html,
+                                    partner_ids=[(4, badge_user.user_id.partner_id.id)],
+                                    type='comment',
+                                    subtype='mt_comment',
+                                    context=context)
+            print(res)
         return res
 
     def check_condition(self, cr, uid, badge_id, context=None):
@@ -250,6 +255,7 @@ class gamification_badge(osv.Model):
 
         if badge.rule_auth == 'nobody':
             return False
+
         elif badge.rule_auth == 'list':
             if user_from_id not in [user.id for user in badge.rule_auth_user_ids]:
                 return False
@@ -306,6 +312,6 @@ class grant_badge_wizard(osv.TransientModel):
                 user_from = self.pool.get('res.users').browse(cr, uid, uid, context=context)
 
                 badge_obj.send_badge(cr, uid, wiz.badge_id.id, [badge_user], user_from=user_from, context=context)
-                
+
         return {}
 grant_badge_wizard()
