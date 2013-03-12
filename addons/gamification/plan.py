@@ -206,7 +206,9 @@ class gamification_goal_plan(osv.Model):
         if not context: context = {}
 
         # start planned plans
-        planned_plan_ids = self.search(cr, uid, [('state', '=', 'draft'),('start_date','=',fields.date.today())])
+        planned_plan_ids = self.search(cr, uid, [
+            ('state', '=', 'draft'),
+            ('start_date', '=', fields.date.today())])
         self.action_start(cr, uid, planned_plan_ids, context=context)
 
         if not ids:
@@ -217,21 +219,20 @@ class gamification_goal_plan(osv.Model):
         yesterday = date.today() - timedelta(days=1)
         # TOCHECK conflict with date rule in goal update() function
         goal_ids = goal_obj.search(cr, uid, [
-                '&',
-                    ('state', 'not in', ('draft','canceled')),
-                    '|',
-                        ('end_date', '>=', yesterday.isoformat()),
-                        ('end_date', '=', False)
-                ], context=context)
+            '&',
+                ('state', 'not in', ('draft', 'canceled')),
+                '|',
+                    ('end_date', '>=', yesterday.isoformat()),
+                    ('end_date', '=', False)
+        ], context=context)
         goal_obj.update(cr, uid, goal_ids, context=context)
 
         return self._update_all(cr, uid, ids, context=context)
 
-
     def _update_all(self, cr, uid, ids, context=None):
         """Update the plans and related goals
 
-        :param list(int) ids: the ids of the plans to update, if False will 
+        :param list(int) ids: the ids of the plans to update, if False will
         update only plans in progress."""
         if not context: context = {}
         goal_obj = self.pool.get('gamification.goal')
@@ -240,22 +241,20 @@ class gamification_goal_plan(osv.Model):
 
         for plan in self.browse(cr, uid, ids, context=context):
             # goals closed but still opened at the last report date
-            closed_goals_to_report = []
-            for planline in plan.planline_ids:
-                closed_goals_to_report.extend(goal_obj.search(cr, uid, [
-                    ('planline_id','=',planline.id),
-                    ('start_date', '>=', plan.last_report_date),
-                    ('end_date', '<=', plan.last_report_date)
-                    ]))
+            closed_goals_to_report = goal_obj.search(cr, uid, [
+                ('plan_id', '=', plan.id),
+                ('start_date', '>=', plan.last_report_date),
+                ('end_date', '<=', plan.last_report_date)
+            ])
 
             if len(closed_goals_to_report) > 0:
                 # some goals need a final report
                 self.report_progress(cr, uid, plan, subset_goal_ids=closed_goals_to_report, context=context)
-                self.write(cr, uid, plan.id, {'last_report_date':fields.date.today}, context=context)
+                self.write(cr, uid, plan.id, {'last_report_date': fields.date.today}, context=context)
 
             if fields.date.today() == plan.next_report_date:
                 self.report_progress(cr, uid, plan, context=context)
-                self.write(cr, uid, plan.id, {'last_report_date':fields.date.today}, context=context)
+                self.write(cr, uid, plan.id, {'last_report_date': fields.date.today}, context=context)
 
 
     def action_start(self, cr, uid, ids, context=None):
@@ -298,12 +297,8 @@ class gamification_goal_plan(osv.Model):
         Change the state of the plan to draft
         Cancel the related goals"""
         self.write(cr, uid, ids, {'state': 'draft'}, context=context)
-        for plan in self.browse(cr, uid, ids, context):
-            for planline in plan.planline_ids:
-                goal_obj = self.pool.get('gamification.goal')
-
-                goal_ids = goal_obj.search(cr, uid, [('planline_id', '=', planline.id)], context=context)
-                goal_obj.write(cr, uid, goal_ids, {'state': 'canceled'}, context=context)
+        goal_ids = self.pool.get('gamification.goal').search(cr, uid, [('plan_id', 'in', ids)], context=context)
+        self.pool.get('gamification.goal').write(cr, uid, goal_ids, {'state': 'canceled'}, context=context)
 
         return True
 
@@ -314,6 +309,7 @@ class gamification_goal_plan(osv.Model):
         # get ids of related goals 
         goal_obj = self.pool.get('gamification.goal')
         related_goal_ids = []
+        goal_ids = goal_obj.search(cr, uid, [('plan_id', 'in', ids)], context=context)
         for plan in self.browse(cr, uid, ids, context=context):
             for planline in plan.planline_ids:
                 goal_ids = goal_obj.search(cr, uid, [('planline_id', '=', planline.id)], context=context)
@@ -339,23 +335,22 @@ class gamification_goal_plan(osv.Model):
     def generate_goals_from_plan(self, cr, uid, ids, context=None):
         """Generate the list of goals linked to a plan.
 
-        If goals already exist for this planline, the planline is skipped. This 
+        If goals already exist for this planline, the planline is skipped. This
         can be called after each change in the user or planline list.
         :param list(int) ids: the list of plan concerned"""
 
         for plan in self.browse(cr, uid, ids, context):
             (start_date, end_date) = start_end_date_for_period(plan.period)
-            
+
             for planline in plan.planline_ids:
                 for user in plan.user_ids:
-                    
+
                     goal_obj = self.pool.get('gamification.goal')
-                    domain = [('planline_id', '=', planline.id),
-                            ('user_id', '=', user.id)]
+                    domain = [('planline_id', '=', planline.id), ('user_id', '=', user.id)]
                     if start_date:
                         domain.append(('start_date', '=', start_date))
-                    
-                    # goal existing for this planline ?
+
+                    # goal already existing for this planline ?
                     if len(goal_obj.search(cr, uid, domain, context=context)) > 0:
 
                         # resume canceled goals
@@ -363,18 +358,18 @@ class gamification_goal_plan(osv.Model):
                         canceled_goal_ids = goal_obj.search(cr, uid, domain, context=context)
                         goal_obj.write(cr, uid, canceled_goal_ids, {'state': 'inprogress'}, context=context)
                         goal_obj.update(cr, uid, canceled_goal_ids, context=context)
-                        
+
                         # skip to next user
                         continue
 
                     values = {
-                        'type_id':planline.type_id.id,
-                        'planline_id':planline.id,
-                        'user_id':user.id,
-                        'target_goal':planline.target_goal,
-                        'state':'inprogress',
+                        'type_id': planline.type_id.id,
+                        'planline_id': planline.id,
+                        'user_id': user.id,
+                        'target_goal': planline.target_goal,
+                        'state': 'inprogress',
                     }
-            
+
                     if start_date:
                         values['start_date'] = start_date.isoformat()
                     if end_date:
@@ -384,11 +379,10 @@ class gamification_goal_plan(osv.Model):
                         values['remind_update_delay'] = planline.plan_id.remind_update_delay
 
                     new_goal_id = goal_obj.create(cr, uid, values, context)
-                    
+
                     goal_obj.update(cr, uid, [new_goal_id], context=context)
 
         return True
-
 
     def plan_subscribe_users(self, cr, uid, ids, new_user_ids, context=None):
         """ Add the following users to plans
@@ -396,7 +390,7 @@ class gamification_goal_plan(osv.Model):
         :param ids: ids of plans to which the users will be added
         :param new_user_ids: ids of the users to add"""
 
-        for plan in self.browse(cr,uid, ids, context):
+        for plan in self.browse(cr, uid, ids, context):
             subscription = [user.id for user in plan.user_ids]
             subscription.extend(new_user_ids)
             # remove duplicates
@@ -405,20 +399,21 @@ class gamification_goal_plan(osv.Model):
             self.write(cr, uid, ids, {'user_ids': [(4, user) for user in unified_subscription]}, context=context)
         return True
 
-
     def report_progress(self, cr, uid, plan, context=None, users=False, subset_goal_ids=False):
         """Post report about the progress of the goals
 
         :param plan: the plan object that need to be reported
-        :param list(res.users) users: the list of users that are concerned by
+        :param users: the list(res.users) of users that are concerned by
           the report. If False, will send the report to every user concerned
           (goal users and group that receive a copy). Only used for plan with
           a visibility mode set to 'personal'.
-        :param list(int) goal_ids: the list of goal ids linked to the plan for 
-          the report. If not specified, use the goals for the current plan 
+        :param goal_ids: the list(int) of goal ids linked to the plan for
+          the report. If not specified, use the goals for the current plan
           period. This parameter can be used to produce report for previous plan
-          periods."""
-        
+          periods.
+        :param subset_goal_ids: a list(int) of goal ids to restrict the report
+        """
+
         context = context or {}
         goal_obj = self.pool.get('gamification.goal')
         template_env = TemplateHelper()
@@ -430,16 +425,16 @@ class gamification_goal_plan(osv.Model):
             planlines_boards = []
 
             for planline in plan.planline_ids:
-                
+
                 domain = [
                     ('planline_id', '=', planline.id),
                     ('state', 'in', ('inprogress', 'inprogress_update',
-                        'reached', 'failed')),
+                                     'reached', 'failed')),
                 ]
-                
+
                 if subset_goal_ids:
                     goal_ids = goal_obj.search(cr, uid, domain, context=context)
-                    common_goal_ids = [goal.id for goal in goal_ids if goal in subset_goal_ids]
+                    common_goal_ids = [goal for goal in goal_ids if goal in subset_goal_ids]
                 else:
                     # if no subset goals, use the dates for restriction
                     if start_date:
@@ -447,7 +442,7 @@ class gamification_goal_plan(osv.Model):
                     if end_date:
                         domain.append(('end_date', '=', end_date.isoformat()))
                     common_goal_ids = goal_obj.search(cr, uid, domain, context=context)
-                
+
                 board_goals = []
                 for goal in goal_obj.browse(cr, uid, common_goal_ids, context=context):
                     board_goals.append({
@@ -459,10 +454,10 @@ class gamification_goal_plan(osv.Model):
 
                 # most complete first, current if same percentage (eg: if several 100%)
                 sorted_board = enumerate(sorted(board_goals, key=lambda k: (k['completeness'], k['current']), reverse=True))
-                planlines_boards.append({'goal_type':planline.type_id.name, 'board_goals':sorted_board})
+                planlines_boards.append({'goal_type': planline.type_id.name, 'board_goals': sorted_board})
 
-            body_html = template_env.get_template('group_progress.mako').render({'object':plan, 'planlines_boards':planlines_boards})
-            
+            body_html = template_env.get_template('group_progress.mako').render({'object': plan, 'planlines_boards': planlines_boards})
+
             self.message_post(cr, uid, plan.id,
                 body=body_html,
                 partner_ids=[(6, 0, [user.partner_id.id for user in plan.user_ids])],
@@ -473,52 +468,48 @@ class gamification_goal_plan(osv.Model):
                     body=body_html,
                     context=context,
                     subtype='mail.mt_comment')
-            
+
         else:
             # generate individual reports
             for user in users or plan.user_ids:
-                related_goal_ids = []
-                for planline in plan.planline_ids:
-                    domain = [
-                        ('planline_id', '=', planline.id),
-                        ('user_id', '=', user.id),
-                        ('state', 'in', ('inprogress', 'inprogress_update',
-                            'reached', 'failed')),
-                    ]
-                    
-                    if subset_goal_ids:
-                        goal_ids = goal_obj.search(cr, uid, domain, context=context)
-                        related_goal_ids.extend( [goal.id for goal in goal_ids if goal in subset_goal_ids] )
-
-                    else:
-                        # if no subset goals, use the dates for restriction
-                        if start_date:
-                            domain.append(('start_date', '=', start_date.isoformat()))
-                        if end_date:
-                            domain.append(('end_date', '=', end_date.isoformat()))
-
-                        related_goal_ids.extend( goal_obj.search(cr, uid, domain, context=context) )
+                domain = [
+                    ('plan_id', '=', plan.id),
+                    ('user_id', '=', user.id),
+                    ('state', 'in', ('inprogress', 'inprogress_update',
+                                     'reached', 'failed')),
+                ]
+                if subset_goal_ids:
+                    # use the domain for safety, don't want irrelevant report if wrong argument
+                    goal_ids = goal_obj.search(cr, uid, domain, context=context)
+                    related_goal_ids = [goal for goal in goal_ids if goal in subset_goal_ids]
+                else:
+                    # if no subset goals, use the dates for restriction
+                    if start_date:
+                        domain.append(('start_date', '=', start_date.isoformat()))
+                    if end_date:
+                        domain.append(('end_date', '=', end_date.isoformat()))
+                related_goal_ids = goal_obj.search(cr, uid, domain, context=context)
 
                 if len(related_goal_ids) == 0:
                     continue
 
                 variables = {
-                    'object':plan,
-                    'user':user,
-                    'goals':goal_obj.browse(cr, uid, related_goal_ids, context=context)
+                    'object': plan,
+                    'user': user,
+                    'goals': goal_obj.browse(cr, uid, related_goal_ids, context=context)
                 }
                 body_html = template_env.get_template('personal_progress.mako').render(variables)
-                
+
                 self.message_post(cr, uid, plan.id,
-                    body=body_html,
-                    partner_ids=[(6, 0, [user.partner_id.id])],
-                    context=context,
-                    subtype='mail.mt_comment')
+                                  body=body_html,
+                                  partner_ids=[(4, user.partner_id.id)],
+                                  context=context,
+                                  subtype='mail.mt_comment')
                 if plan.report_message_group_id:
                     self.pool.get('mail.group').message_post(cr, uid, plan.report_message_group_id.id,
-                        body=body_html,
-                        context=context,
-                        subtype='mail.mt_comment')
+                                                             body=body_html,
+                                                             context=context,
+                                                             subtype='mail.mt_comment')
         return True
 
 
@@ -534,7 +525,6 @@ class gamification_goal_planline(osv.Model):
     _description = 'Gamification generic goal for plan'
     _order = "sequence_type"
 
-
     def _get_planline_types(self, cr, uid, ids, context=None):
         """Return the ids of planline items related to the gamification.goal.type
         objects in 'ids (used to update the value of 'sequence_type')'"""
@@ -548,16 +538,16 @@ class gamification_goal_planline(osv.Model):
         return result.keys()
 
     _columns = {
-        'plan_id' : fields.many2one('gamification.goal.plan',
+        'plan_id': fields.many2one('gamification.goal.plan',
             string='Plan',
             ondelete="cascade"),
-        'type_id' : fields.many2one('gamification.goal.type',
+        'type_id': fields.many2one('gamification.goal.type',
             string='Goal Type',
             required=True,
             ondelete="cascade"),
-        'target_goal' : fields.float('Target Value to Reach',
+        'target_goal': fields.float('Target Value to Reach',
             required=True),
-        'sequence_type' : fields.related('type_id','sequence',
+        'sequence_type': fields.related('type_id', 'sequence',
             type='integer',
             string='Sequence',
             readonly=True,

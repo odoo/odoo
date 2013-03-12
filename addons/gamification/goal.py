@@ -116,20 +116,24 @@ class gamification_goal(osv.Model):
         return ret
 
     _columns = {
-        'type_id' : fields.many2one('gamification.goal.type', 
+        'type_id': fields.many2one('gamification.goal.type', 
             string='Goal Type',
             required=True,
             ondelete="cascade"),
-        'user_id' : fields.many2one('res.users', string='User', required=True),
+        'user_id': fields.many2one('res.users', string='User', required=True),
         'planline_id' : fields.many2one('gamification.goal.planline',
             string='Goal Planline',
             ondelete="cascade"),
-        'start_date' : fields.date('Start Date'),
-        'end_date' : fields.date('End Date'), # no start and end = always active
-        'target_goal' : fields.float('To Reach',
+        'plan_id': fields.related('planline_id', 'plan_id',
+            string="Plan",
+            type='many2one',
+            store=True),
+        'start_date': fields.date('Start Date'),
+        'end_date': fields.date('End Date'), # no start and end = always active
+        'target_goal': fields.float('To Reach',
             required=True,
             track_visibility = 'always'), # no goal = global index
-        'current' : fields.float('Current',
+        'current': fields.float('Current',
             required=True,
             track_visibility = 'always'),
         'completeness': fields.function(_get_completeness,
@@ -150,7 +154,7 @@ class gamification_goal(osv.Model):
         'computation_mode': fields.related('type_id','computation_mode',
             type='char', 
             string="Type computation mode"),
-        'remind_update_delay' : fields.integer('Remind delay',
+        'remind_update_delay': fields.integer('Remind delay',
             help="The number of days after which the user assigned to a manual goal will be reminded. Never reminded if no value is specified."),
         'last_update' : fields.date('Last Update',
             help="In case of manual goal, reminders are sent if the goal as not been updated for a while (defined in goal plan). Ignored in case of non-manual goal or goal not linked to a plan."),
@@ -173,7 +177,6 @@ class gamification_goal(osv.Model):
     }
     _order = 'last_update desc, end_date, type_id'
 
-
     def update(self, cr, uid, ids, context=None):
         """Update the goals to recomputes values and change of states
 
@@ -182,9 +185,9 @@ class gamification_goal(osv.Model):
         If a goal reaches the target value, the status is set to reached
         If the end date is passed (at least +1 day, time not considered) without
         the target value being reached, the goal is set as failed."""
-        
+
         for goal in self.browse(cr, uid, ids, context=context or {}):
-            if goal.state in ('draft','canceled'):
+            if goal.state in ('draft', 'canceled'):
                 # skip if goal draft or canceled
                 continue
             if goal.last_update and goal.end_date and goal.last_update > goal.end_date:
@@ -192,11 +195,11 @@ class gamification_goal(osv.Model):
                 continue
 
             if goal.type_id.computation_mode == 'manually':
-                towrite = {'current':goal.current}
+                towrite = {'current': goal.current}
                 # check for remind to update
                 if goal.remind_update_delay and goal.last_update:
                     delta_max = timedelta(days=goal.remind_update_delay)
-                    last_update = datetime.strptime(goal.last_update,'%Y-%m-%d').date()
+                    last_update = datetime.strptime(goal.last_update, '%Y-%m-%d').date()
                     if date.today() - last_update > delta_max and goal.state == 'inprogress':
                         towrite['state'] = 'inprogress_update'
 
@@ -214,7 +217,7 @@ class gamification_goal(osv.Model):
                 field_date_name = goal.type_id.field_date_id.name
 
                 domain = safe_eval(goal.type_id.domain,
-                    {'user_id': goal.user_id.id})
+                                   {'user_id': goal.user_id.id})
                 if goal.start_date:
                     domain.append((field_date_name, '>=', goal.start_date))
                 if goal.end_date:
@@ -223,8 +226,12 @@ class gamification_goal(osv.Model):
                 if goal.type_id.computation_mode == 'sum':
                     field_name = goal.type_id.field_id.name
                     res = obj.read_group(cr, uid, domain, [field_name],
-                        [''], context=context)
-                    towrite = {'current': res[0][field_name]}
+                                         [''], context=context)
+                    if res[0][field_name]:
+                        towrite = {'current': res[0][field_name]}
+                    else:
+                        # avoid false when no result
+                        towrite = {'current': 0}
 
                 else:  # computation mode = count
                     res = obj.search(cr, uid, domain, context=context)
@@ -240,7 +247,7 @@ class gamification_goal(osv.Model):
             # check goal failure
             elif goal.end_date and fields.date.today() > goal.end_date:
                 towrite['state'] = 'failed'
-            
+
             self.write(cr, uid, [goal.id], towrite, context=context)
         return True
 
@@ -268,7 +275,7 @@ class gamification_goal(osv.Model):
         """Reset the completion after setting a goal as reached or failed.
 
         This is only the current state, if the date and/or target criterias
-        match the conditions for a change of state, this will be applied at the 
+        match the conditions for a change of state, this will be applied at the
         next goal update."""
         return self.write(cr, uid, ids, {'state': 'inprogress'}, context=context)
 
@@ -277,22 +284,22 @@ class gamification_goal(osv.Model):
         context = context or {}
         context['just_created'] = True
         return super(gamification_goal, self).create(cr, uid, vals, context=context)
-        
+
     def write(self, cr, uid, ids, vals, context=None):
         """Overwrite the write method to update the last_update field to today
 
-        If the current value is changed and the report frequency is set to On 
+        If the current value is changed and the report frequency is set to On
         change, q report is generated"""
-        for goal in self.browse(cr, uid, ids, vals):
-            vals['last_update'] = fields.date.today()
+
+        vals['last_update'] = fields.date.today()
+        for goal in self.browse(cr, uid, ids, context=context):
 
             if 'current' in vals:
                 if 'just_created' in context:
                     # new goals should not be reported
                     continue
 
-                if goal.planline_id and goal.planline_id.plan_id.report_message_frequency == 'onchange':
+                if goal.plan_id and goal.plan_id.report_message_frequency == 'onchange':
                     plan_obj = self.pool.get('gamification.goal.plan')
-                    plan_obj.report_progress(cr, uid, goal.planline_id.plan_id, users=[goal.user_id], context=context)
+                    plan_obj.report_progress(cr, uid, goal.plan_id, users=[goal.user_id], context=context)
         return super(gamification_goal, self).write(cr, uid, ids, vals, context=context)
-        
