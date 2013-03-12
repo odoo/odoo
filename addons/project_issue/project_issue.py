@@ -392,10 +392,18 @@ class project_issue(base_stage, osv.osv):
                 context=context)
 
     def write(self, cr, uid, ids, vals, context=None):
-        #Update last action date every time the user change the stage or the state
-        logged_fields = ['stage_id', 'state']
-        if any([field in vals for field in logged_fields]):
+    
+        #Update last action date every time the user changes the stage
+        if 'stage_id' in vals:
             vals['date_action_last'] = time.strftime(tools.DEFAULT_SERVER_DATETIME_FORMAT)
+            state = self.pool.get('project.task.type').read(cr, uid, vals['stage_id'], ['state'], context=context)['state']
+            for issue in self.browse(cr, uid, ids, context=context):
+                # Change from draft to not draft EXCEPT cancelled: The issue has been opened -> set the opening date
+                if issue.state == 'draft' and state not in ('draft', 'cancelled'):
+                    vals['date_open'] = time.strftime(tools.DEFAULT_SERVER_DATETIME_FORMAT)
+                # Change from not done to done: The issue has been closed -> set the closing date
+                if issue.state != 'done' and state == 'done':
+                    vals['date_closed'] = time.strftime(tools.DEFAULT_SERVER_DATETIME_FORMAT)
 
         return super(project_issue, self).write(cr, uid, ids, vals, context)
 
