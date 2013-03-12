@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding='UTF-8'?>
+<openerp>
+    <data>
+        <record id="crm_partner_assign_email_template" model="email.template">
+            <field name="name">Lead forward</field>
+            <field name="email_from"></field>
+            <field name="subject">Fwd: Lead: ${object.name}</field>
+            <field name="email_to"></field>
+            <field name="lang"></field>
+            <field name="model_id" ref="crm.model_crm_lead"/>
+            <field name="auto_delete" eval="True"/>
+            <field name="body_html"><![CDATA[
+Hello ${object.partner_assigned_id.name},
+<p>
+Here is a lead that might interrest you.
+</p>
+<p>
+Please keep me informed about your actions about it so that i can keep an
+accurate follow-up of it and help you in the sale cycle.
+</p>
+<p>
+Your account manager,<br/>
+${object.user_id.name},<br/>
+${object.user_id.email}
+</p>
+
+<p>
+${ctx["mail_body"] | safe}
+</p>
+
+% if ctx["history_mode"] in ('whole'):
+    % for message in object.message_ids:
+        ---- Original Message (${message.date or ''}) ----<br/>
+        ${message.body | safe}
+    % endfor
+% endif
+% if ctx['history_mode'] == 'latest':
+    ---- Original Message (${object.message_ids[0].date or ''}) ----<br/>
+    ${object.message_ids[0].body | safe}
+% endif
+            ]]></field>
+        </record>
+    </data>
+</openerp>

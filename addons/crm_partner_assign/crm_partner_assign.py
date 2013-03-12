@@ -71,7 +71,6 @@ class res_partner_grade(osv.osv):
     _defaults = {
         'active': lambda *args: 1
     }
-res_partner_grade()
 
 class res_partner_activation(osv.osv):
     _name = 'res.partner.activation'
@@ -82,7 +81,6 @@ class res_partner_activation(osv.osv):
         'name' : fields.char('Name', size=32, required=True),
     }
 
-res_partner_activation()
 
 class res_partner(osv.osv):
     _inherit = "res.partner"
@@ -120,7 +118,6 @@ class res_partner(osv.osv):
                     'date_localization': fields.date.context_today(self,cr,uid,context=context)
                 }, context=context)
         return True
-res_partner()
 
 class crm_lead(osv.osv):
     _inherit = "crm.lead"
@@ -261,7 +258,7 @@ class crm_lead(osv.osv):
                         res_partner_ids[lead.id] = partner_id
                         break
         return res_partner_ids
-crm_lead()
 
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
+
