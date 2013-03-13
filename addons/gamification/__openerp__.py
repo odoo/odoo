@@ -33,6 +33,7 @@
         'cron.xml',
         'security/gamification_security.xml',
         'security/ir.model.access.csv',
+        'goal_base_data.xml',
     ],
     'demo': [
         'badge_demo.xml',
