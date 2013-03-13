@@ -103,6 +103,9 @@ class mail_notification(osv.Model):
         return notify_pids
 
     def get_signature_footer(self, cr, uid, user_id=None, res_model=None, res_id=None, context=None):
+        """ Return the footer with signature
+            On bottom of the message, add the user's company link or the user name and a link to oepenerp
+        """
         footer = ""
         company = None
         user = None
