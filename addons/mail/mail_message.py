@@ -472,6 +472,7 @@ class mail_message(osv.Model):
 
         return True
 
+    @api.cr_uid_context
     def message_read(self, cr, uid, ids=None, domain=None, message_unload_ids=None,
                         thread_level=0, context=None, parent_id=False, limit=None):
         """ Read messages from mail.message, and get back a list of structured

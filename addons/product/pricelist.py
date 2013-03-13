@@ -126,10 +126,9 @@ class product_pricelist(osv.osv):
         "currency_id": _get_currency
     }
 
-    @api.cr_uid_ids_context
-    def price_get_multi(self, cr, uid, pricelist_ids, products_by_qty_by_partner, context=None):
+    def price_get_multi(self, cr, uid, ids, products_by_qty_by_partner, context=None):
         """multi products 'price_get'.
-           @param pricelist_ids:
+           @param ids:
            @param products_by_qty:
            @param partner:
            @param context: {
@@ -163,11 +162,11 @@ class product_pricelist(osv.osv):
         price_type_obj = self.pool.get('product.price.type')
 
         # product.pricelist.version:
-        if not pricelist_ids:
-            pricelist_ids = self.pool.get('product.pricelist').search(cr, uid, [], context=context)
+        if not ids:
+            ids = self.pool.get('product.pricelist').search(cr, uid, [], context=context)
 
         pricelist_version_ids = self.pool.get('product.pricelist.version').search(cr, uid, [
-                                                        ('pricelist_id', 'in', pricelist_ids),
+                                                        ('pricelist_id', 'in', ids),
                                                         '|',
                                                         ('date_start', '=', False),
                                                         ('date_start', '<=', date),
@@ -175,7 +174,7 @@ class product_pricelist(osv.osv):
                                                         ('date_end', '=', False),
                                                         ('date_end', '>=', date),
                                                     ])
-        if len(pricelist_ids) != len(pricelist_version_ids):
+        if len(ids) != len(pricelist_version_ids):
             raise osv.except_osv(_('Warning!'), _("At least one pricelist has no active version !\nPlease create or activate one."))
 
         # product.product:
@@ -191,7 +190,7 @@ class product_pricelist(osv.osv):
 
         results = {}
         for product_id, qty, partner in products_by_qty_by_partner:
-            for pricelist_id in pricelist_ids:
+            for pricelist_id in ids:
                 price = False
 
                 tmpl_id = products_dict[product_id].product_tmpl_id and products_dict[product_id].product_tmpl_id.id or False
@@ -300,7 +299,7 @@ class product_pricelist(osv.osv):
         return results
 
     def price_get(self, cr, uid, ids, prod_id, qty, partner=None, context=None):
-        res_multi = self.price_get_multi(cr, uid, pricelist_ids=ids, products_by_qty_by_partner=[(prod_id, qty, partner)], context=context)
+        res_multi = self.price_get_multi(cr, uid, ids, products_by_qty_by_partner=[(prod_id, qty, partner)], context=context)
         res = res_multi[prod_id]
         res.update({'item_id': {ids[-1]: res_multi.get('item_id', ids[-1])}})
         return res
