@@ -60,7 +60,7 @@
                             <field name="crossovered_budget_line" widget="one2many_list" mode="tree">
                                 <tree string="Budget Lines"  editable="top">
                                     <field name="crossovered_budget_id"/>
-                                    <field name="analytic_account_id" groups="analytic.group_analytic_accounting" domain="[('parent_id','!=',False)]"/>
+                                    <field name="analytic_account_id" groups="analytic.group_analytic_accounting"/>
                                     <field name="date_from"/>
                                     <field name="date_to"/>
                                     <field name="paid_date"/>
@@ -72,7 +72,7 @@
                                 <form string="Budget Lines" version="7.0">
                                     <group col="4">
                                         <field name="crossovered_budget_id"/>
-                                        <field name="analytic_account_id" groups="analytic.group_analytic_accounting" domain="[('parent_id','!=',False)]" />
+                                        <field name="analytic_account_id" groups="analytic.group_analytic_accounting"/>
                                         <field name="date_from"/>
                                         <field name="date_to"/>
                                         <field name="paid_date"/>

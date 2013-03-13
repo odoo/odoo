@@ -7,7 +7,7 @@
             <field name="arch" type="xml">
                 <tree string="Analytic Defaults">
                     <field name="sequence"/>
-                    <field name="analytic_id" required="0" domain="[('parent_id','!=',False)]" groups="analytic.group_analytic_accounting"/>
+                    <field name="analytic_id" required="0" groups="analytic.group_analytic_accounting"/>
                     <field name="product_id"/>
                     <field name="partner_id"/>
                     <field name="user_id"/>
@@ -24,7 +24,7 @@
             <field name="arch" type="xml">
                 <form string="Analytic Defaults" version="7.0">
                     <group col="4">
-                        <field name="analytic_id" required="1" domain="[('parent_id','!=',False)]" groups="analytic.group_analytic_accounting"/>
+                        <field name="analytic_id" required="1" groups="analytic.group_analytic_accounting"/>
                         <field name="sequence"/>
                         <separator string="Conditions" colspan="4"/>
                         <field name="product_id"/>
