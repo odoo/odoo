@@ -261,7 +261,7 @@ class crm_lead(base_stage, format_address, osv.osv):
         'partner_name': fields.char("Customer Name", size=64,help='The name of the future partner company that will be created while converting the lead into opportunity', select=1),
         'opt_out': fields.boolean('Opt-Out', oldname='optout',
             help="If opt-out is checked, this contact has refused to receive emails for mass mailing and marketing campaign. "
-                    "Filter 'Available for Mass Mailing' allows users to filter the partners when performing mass mailing."),
+                    "Filter 'Available for Mass Mailing' allows users to filter the leads when performing mass mailing."),
         'type':fields.selection([ ('lead','Lead'), ('opportunity','Opportunity'), ],'Type', help="Type is used to separate Leads and Opportunities"),
         'priority': fields.selection(crm.AVAILABLE_PRIORITIES, 'Priority', select=True),
         'date_closed': fields.datetime('Closed', readonly=True),
