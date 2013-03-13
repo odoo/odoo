@@ -35,6 +35,7 @@ from openerp import SUPERUSER_ID
 from openerp.addons.mail.mail_message import decode
 from openerp.osv import fields, osv
 from openerp.tools.safe_eval import safe_eval as eval
+from openerp.tools.translate import _
 
 _logger = logging.getLogger(__name__)
 
@@ -247,7 +248,7 @@ class mail_thread(osv.AbstractModel):
 
         # automatic logging unless asked not to (mainly for various testing purpose)
         if not context.get('mail_create_nolog'):
-            self.message_post(cr, uid, thread_id, body='Document created', context=context)
+            self.message_post(cr, uid, thread_id, body=_('%s created') % (self._description), context=context)
         return thread_id
 
     def write(self, cr, uid, ids, values, context=None):
@@ -592,7 +593,7 @@ class mail_thread(osv.AbstractModel):
 
         thread_id = False
         for model, thread_id, custom_values, user_id in routes:
-            if self._name != model:
+            if self._name == 'mail.thread':
                 context.update({'thread_model': model})
             if model:
                 model_pool = self.pool.get(model)
@@ -772,7 +773,7 @@ class mail_thread(osv.AbstractModel):
             if author_ids:
                 msg_dict['author_id'] = author_ids[0]
             else:
-                msg_dict['email_from'] = message.get('from')
+                msg_dict['email_from'] = decode(message.get('from'))
         partner_ids = self._message_find_partners(cr, uid, message, ['To', 'Cc'], context=context)
         msg_dict['partner_ids'] = [(4, partner_id) for partner_id in partner_ids]
 
@@ -883,7 +884,12 @@ class mail_thread(osv.AbstractModel):
         if isinstance(thread_id, (list, tuple)):
             thread_id = thread_id and thread_id[0]
         mail_message = self.pool.get('mail.message')
-        model = context.get('thread_model', self._name) if thread_id else False
+
+        # if we're processing a message directly coming from the gateway, the destination model was
+        # set in the context. 
+        model = False
+        if thread_id:
+            model = context.get('thread_model', self._name) if self._name == 'mail.thread' else self._name
 
         attachment_ids = kwargs.pop('attachment_ids', [])
         for name, content in attachments:
@@ -961,13 +967,12 @@ class mail_thread(osv.AbstractModel):
         mail_message_obj = self.pool.get('mail.message')
         ir_attachment = self.pool.get('ir.attachment')
 
-        # 1.A.1: add recipients of parent message
+        # 1.A.1: add recipients of parent message (# TDE FIXME HACK: mail.thread -> private message)
         partner_ids = set([])
-        if parent_id:
+        if parent_id and self._name == 'mail.thread':
             parent_message = mail_message_obj.browse(cr, uid, parent_id, context=context)
             partner_ids |= set([(4, partner.id) for partner in parent_message.partner_ids])
-            # TDE FIXME HACK: mail.thread -> private message
-            if self._name == 'mail.thread' and parent_message.author_id.id:
+            if parent_message.author_id.id:
                 partner_ids.add((4, parent_message.author_id.id))
 
         # 1.A.2: add specified recipients

@@ -69,6 +69,7 @@
                     <field name="date"/>
                     <field name="order_line_ids"/>
                     <filter name='is_mine' string="My Orders" domain="[('user_id','=',uid)]"/>
+                    <filter name='by_users' string="Users" context="{'group_by':'user_id'}"/>
                 </search>
             </field>
         </record>
@@ -304,6 +305,7 @@
             <field name="arch" type="xml">
                 <tree string="Orders Tree">
                     <field name="date"/>
+                    <field name='user_id'/>
                     <field name="order_line_ids"/>
                     <field name="state" />
                     <field name="total" sum="Total"/>

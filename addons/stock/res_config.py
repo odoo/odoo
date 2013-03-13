@@ -69,9 +69,6 @@ This installs the module product_expiry."""),
             implied_group='stock.group_locations',
             help="""This allows to configure and use multiple stock locations and warehouses,
                 instead of having a single default one."""),
-        'group_product_variant': fields.boolean("Support multiple variants per products  ",
-            implied_group='product.group_product_variant',
-            help="""Allow to manage several variants per product. As an example, if you  sell T-Shirts, for the same "Linux T-Shirt", you may have variants on  sizes or colors; S, M, L, XL, XXL."""),
         'decimal_precision': fields.integer('Decimal precision on weight', help="As an example, a decimal precision of 2 will allow weights like: 9.99 kg, whereas a decimal precision of 4 will allow weights like:  0.0231 kg."),
     }
 

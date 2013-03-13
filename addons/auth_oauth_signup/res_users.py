@@ -41,7 +41,7 @@ class res_users(osv.Model):
             state = simplejson.loads(params['state'])
             token = state.get('t')
             oauth_uid = validation['user_id']
-            email = validation.get('email', 'provider_%d_user_%d' % (provider, oauth_uid))
+            email = validation.get('email', 'provider_%s_user_%s' % (provider, oauth_uid))
             name = validation.get('name', email)
             values = {
                 'name': name,

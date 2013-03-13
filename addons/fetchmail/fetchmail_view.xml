@@ -49,7 +49,7 @@
                                 </group>
                                 <group string="Actions to Perform on Incoming Mails">
                                     <field name="object_id" on_change="onchange_server_type(type, is_ssl, object_id)"/>
-                                    <field name="action_id"/>
+                                    <field name="action_id" groups="base.group_no_one"/>
                                 </group>
                                 <group attrs="{'invisible' : [('type', '!=', 'local')]}" string="Configuration">
                                     <field name="configuration" colspan="4"/>
