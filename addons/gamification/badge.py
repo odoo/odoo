@@ -169,6 +169,12 @@ class gamification_badge(osv.Model):
         'stat_this_month': 0,
         'rule_auth': 'everyone',
         'rule_automatic': 'manual',
+        'compute_code': """# Example of python code to execute
+# Use the variable 'result' to store the list of ids that will receive the badge
+from openerp import pooler
+pool = pooler.get_pool(cr.dbname)
+# return the list of ALL users
+result = pool.get('res.users').search(cr, uid, domain=[], context=context)""",
     }
 
     def send_badge(self, cr, uid, badge_id, badge_user_ids, user_from=None, context=None):
