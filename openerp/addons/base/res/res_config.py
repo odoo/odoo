@@ -20,11 +20,14 @@
 ##############################################################################
 import logging
 from operator import attrgetter
+import re
 
-from openerp import pooler
+import openerp
+from openerp import pooler, SUPERUSER_ID
 from openerp.osv import osv, fields
 from openerp.tools import ustr
 from openerp.tools.translate import _
+from openerp import exceptions
 
 _logger = logging.getLogger(__name__)
 
@@ -358,7 +361,8 @@ class res_config_installer(osv.osv_memory):
             cr, uid,
             modules.search(cr, uid, [('name','in',to_install)]),
             'to install', ['uninstalled'], context=context)
-        cr.commit() #TOFIX: after remove this statement, installation wizard is fail
+        cr.commit()
+        openerp.modules.registry.RegistryManager.signal_registry_change(cr.dbname)
         new_db, self.pool = pooler.restart_pool(cr.dbname, update_module=True)
 
 res_config_installer()
@@ -570,17 +574,17 @@ class res_config_settings(osv.osv_memory):
         if action_ids:
             return act_window.read(cr, uid, action_ids[0], [], context=context)
         return {}
-    
+
     def name_get(self, cr, uid, ids, context=None):
         """ Override name_get method to return an appropriate configuration wizard
         name, and not the generated name."""
-        
+
         if not ids:
             return []
         # name_get may receive int id instead of an id list
         if isinstance(ids, (int, long)):
             ids = [ids]
-            
+
         act_window = self.pool.get('ir.actions.act_window')
         action_ids = act_window.search(cr, uid, [('res_model', '=', self._name)], context=context)
         name = self._name
@@ -588,4 +592,83 @@ class res_config_settings(osv.osv_memory):
             name = act_window.read(cr, uid, action_ids[0], ['name'], context=context)['name']
         return [(record.id, name) for record in self.browse(cr, uid , ids, context=context)]
 
+    def get_option_path(self, cr, uid, menu_xml_id, context=None):
+        """
+        Fetch the path to a specified configuration view and the action id to access it.
+
+        :param string menu_xml_id: the xml id of the menuitem where the view is located,
+            structured as follows: module_name.menuitem_xml_id (e.g.: "base.menu_sale_config")
+        :return tuple:
+            - t[0]: string: full path to the menuitem (e.g.: "Settings/Configuration/Sales")
+            - t[1]: long: id of the menuitem's action
+        """
+        module_name, menu_xml_id = menu_xml_id.split('.')
+        dummy, menu_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, module_name, menu_xml_id)
+        ir_ui_menu = self.pool.get('ir.ui.menu').browse(cr, uid, menu_id, context=context)
+
+        return (ir_ui_menu.complete_name, ir_ui_menu.action.id)
+
+    def get_option_name(self, cr, uid, full_field_name, context=None):
+        """
+        Fetch the human readable name of a specified configuration option.
+
+        :param string full_field_name: the full name of the field, structured as follows:
+            model_name.field_name (e.g.: "sale.config.settings.fetchmail_lead")
+        :return string: human readable name of the field (e.g.: "Create leads from incoming mails")
+        """
+        model_name, field_name = full_field_name.rsplit('.', 1)
+
+        return self.pool.get(model_name).fields_get(cr, uid, allfields=[field_name], context=context)[field_name]['string']
+
+    def get_config_warning(self, cr, msg, context=None):
+        """
+        Helper: return a Warning exception with the given message where the %(field:xxx)s
+        and/or %(menu:yyy)s are replaced by the human readable field's name and/or menuitem's
+        full path.
+
+        Usage:
+        ------
+        Just include in your error message %(field:model_name.field_name)s to obtain the human
+        readable field's name, and/or %(menu:module_name.menuitem_xml_id)s to obtain the menuitem's
+        full path.
+
+        Example of use:
+        ---------------
+        from openerp.addons.base.res.res_config import get_warning_config
+        raise get_warning_config(cr, _("Error: this action is prohibited. You should check the field %(field:sale.config.settings.fetchmail_lead)s in %(menu:base.menu_sale_config)s."), context=context)
+
+        This will return an exception containing the following message:
+            Error: this action is prohibited. You should check the field Create leads from incoming mails in Settings/Configuration/Sales.
+
+        What if there is another substitution in the message already?
+        -------------------------------------------------------------
+        You could have a situation where the error message you want to upgrade already contains a substitution. Example:
+            Cannot find any account journal of %s type for this company.\n\nYou can create one in the menu: \nConfiguration\Journals\Journals.
+        What you want to do here is simply to replace the path by %menu:account.menu_account_config)s, and leave the rest alone.
+        In order to do that, you can use the double percent (%%) to escape your new substitution, like so:
+            Cannot find any account journal of %s type for this company.\n\nYou can create one in the %%(menu:account.menu_account_config)s.
+        """
+
+        res_config_obj = pooler.get_pool(cr.dbname).get('res.config.settings')
+        regex_path = r'%\(((?:menu|field):[a-z_\.]*)\)s'
+
+        # Process the message
+        # 1/ find the menu and/or field references, put them in a list
+        references = re.findall(regex_path, msg, flags=re.I)
+
+        # 2/ fetch the menu and/or field replacement values (full path and
+        #    human readable field's name) and the action_id if any
+        values = {}
+        action_id = None
+        for item in references:
+            ref_type, ref = item.split(':')
+            if ref_type == 'menu':
+                values[item], action_id = res_config_obj.get_option_path(cr, SUPERUSER_ID, ref, context=context)
+            elif ref_type == 'field':
+                values[item] = res_config_obj.get_option_name(cr, SUPERUSER_ID, ref, context=context)
+
+        # 3/ substitute and return the result
+        if (action_id):
+            return exceptions.RedirectWarning(msg % values, action_id, _('Go to the configuration panel'))
+        return exceptions.Warning(msg % values)
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

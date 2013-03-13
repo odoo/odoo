@@ -5,7 +5,7 @@
     1. Try a few common expressions to verify they work with safe_eval
 -
     !python {model: ir.model}: |
-        from tools.safe_eval import safe_eval
+        from openerp.tools.safe_eval import safe_eval
         expected = (1, {"a": 9 * 2}, (True, False, None))
         actual = safe_eval('(1, {"a": 9 * 2}, (True, False, None))')
         assert actual == expected, "Simple python expressions are not working with safe_eval"
@@ -41,8 +41,8 @@
     5. Try forbidden expressions in safe_eval to verify they are not allowed (open)
 -
     !python {model: ir.model}: |
-        from tools.safe_eval import safe_eval
-        from tools.misc import mute_logger
+        from openerp.tools.safe_eval import safe_eval
+        from openerp.tools.misc import mute_logger
         try:
             with mute_logger('openerp.tools.safe_eval'):
                 safe_eval('open("/etc/passwd","r")')
@@ -146,7 +146,7 @@
     "Float precision tests: verify that float rounding methods are working correctly via res.currency"
 -
     !python {model: res.currency}: |
-        from tools import float_repr
+        from openerp.tools import float_repr
         from math import log10
         currency = self.browse(cr, uid, ref('base.EUR'))
         def try_round(amount, expected, self=self, cr=cr, currency=currency, float_repr=float_repr,
@@ -197,7 +197,7 @@
     "Float precision tests: verify that float rounding methods are working correctly via tools"
 -
     !python {model: res.currency}: |
-        from tools import float_compare, float_is_zero, float_round, float_repr
+        from openerp.tools import float_compare, float_is_zero, float_round, float_repr
         def try_round(amount, expected, precision_digits=3, float_round=float_round, float_repr=float_repr):
             result = float_repr(float_round(amount, precision_digits=precision_digits),
                                 precision_digits=precision_digits)
@@ -271,7 +271,7 @@
     !python {model: res.currency}: |
         currency = self.browse(cr, uid, ref('base.EUR'))
         res_currency_rate = self.pool.get('res.currency.rate')
-        from tools import float_compare, float_is_zero, float_round, float_repr
+        from openerp.tools import float_compare, float_is_zero, float_round, float_repr
         def try_roundtrip(value, expected, self=self, cr=cr, currency=currency,
                           res_currency_rate=res_currency_rate):
             rate_id = res_currency_rate.create(cr, 1, {'name':'2000-01-01',
@@ -289,7 +289,7 @@
     "Float precision tests: verify that invalid parameters are forbidden"
 -
     !python {model: res.currency}: |
-        from tools import float_compare, float_is_zero, float_round
+        from openerp.tools import float_compare, float_is_zero, float_round
         try:
             float_is_zero(0.01, precision_digits=3, precision_rounding=0.01)
         except AssertionError:
