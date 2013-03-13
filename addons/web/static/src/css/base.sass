@@ -370,6 +370,10 @@ $sheet-padding: 16px
     .oe_right
         float: right
         margin-left: 8px
+    .oe_text_center
+        text-align: center
+    .oe_text_left
+        text-align: left
     .oe_text_right
         text-align: right
     .oe_clear
@@ -1760,7 +1764,13 @@ $sheet-padding: 16px
                 padding: 2px 11px 2px 0px !important
             label.oe_form_label_help
                 font-weight: normal
-
+        .oe_form_box_info
+            background: #fe9
+            border-bottom: 1px solid #cb6
+            padding: 4px
+            > p
+                width: 50%
+                margin: auto
     // }}}
     // FormView.group {{{
     .oe_form
