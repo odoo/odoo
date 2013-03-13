@@ -19,7 +19,7 @@
 #
 ##############################################################################
 
-from openerp.osv import fields,osv
+from openerp.osv import fields, osv
 
 class res_partner(osv.osv):
     """Inherit res.partner to add a generic opt-out field that can be used
@@ -29,7 +29,8 @@ class res_partner(osv.osv):
 
     _columns = {
         'opt_out': fields.boolean('Opt-Out',
-            help="If opt-out is checked, this contact has refused to receive emails for mass mailing and marketing campaign."),
+            help="If opt-out is checked, this contact has refused to receive emails for mass mailing and marketing campaign. "
+                    "Filter 'Available for Mass Mailing' allows users to filter the partners when performing mass mailing."),
     }
 
     _defaults = {
