@@ -193,6 +193,12 @@ class gamification_goal_plan(osv.Model):
             new_group = self.pool.get('res.groups').browse(cr, uid, vals['autojoin_group_id'], context=context)
             if new_group:
                 self.plan_subscribe_users(cr, uid, ids, [user.id for user in new_group.users], context=context)
+
+        # add the selected manager to the goal_manager group
+        if 'manager_id' in vals:
+            group_ref = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'gamification', 'group_goal_manager')
+            self.pool.get('res.users').write(cr, uid, [vals['manager_id']], {'groups_id': [(4, group_ref[1])]}, context=context)
+
         return write_res
 
 

@@ -289,7 +289,7 @@ class gamification_goal(osv.Model):
         """Overwrite the write method to update the last_update field to today
 
         If the current value is changed and the report frequency is set to On
-        change, q report is generated"""
+        change, a report is generated"""
 
         vals['last_update'] = fields.date.today()
         for goal in self.browse(cr, uid, ids, context=context):
