@@ -219,7 +219,7 @@ class TestAPI(common.TransactionCase):
             self.assertEqual(scope.cr, self.cr)
             self.assertEqual(scope.uid, self.uid)
 
-            try:
+            with self.assertRaises(Exception):
                 with scope(user, lang=user.lang) as scope2:
                     self.assertNotEqual(scope.current, scope1)
                     self.assertEqual(scope.cr, self.cr)
@@ -239,10 +239,7 @@ class TestAPI(common.TransactionCase):
                         self.assertEqual(scope.uid, SUPERUSER_ID)
                         raise Exception()       # exit scope with an exception
 
-                    self.assertTrue(False, "Unreachable statement")
-
-            except Exception:
-                pass
+                    self.fail("Unreachable statement")
 
             self.assertEqual(scope.current, scope1)
 

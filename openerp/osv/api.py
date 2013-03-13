@@ -81,24 +81,41 @@ __all__ = [
 
 from functools import wraps
 import logging
-import threading
+from werkzeug.local import Local, release_local
 
 _logger = logging.getLogger(__name__)
+
+# werkzeug "context" variable to store the stack of scopes
+_local = Local()
 
 
 class ScopeProxy(object):
     """ This a proxy object to the current scope. """
-    def __init__(self):
-        self._local = threading.local()
+    @property
+    def stack(self):
+        res = getattr(_local, 'scope_stack', None)
+        if res is None:
+            _local.scope_stack = res = []
+        return res
 
-    def _getcurrent(self):
-        """ the current scope """
-        return getattr(self._local, 'current', None)
+    @property
+    def root(self):
+        stack = getattr(_local, 'scope_stack', None)
+        return stack[0] if stack else None
 
-    def _setcurrent(self, value):
-        self._local.current = value
+    @property
+    def current(self):
+        stack = getattr(_local, 'scope_stack', None)
+        return stack[-1] if stack else None
 
-    current = property(_getcurrent, _setcurrent)
+    def push(self, value):
+        self.stack.append(value)
+
+    def pop(self):
+        res = _local.scope_stack.pop()
+        if not _local.scope_stack:
+            release_local(_local)
+        return res
 
     def __getattr__(self, name):
         return getattr(self.current, name)
@@ -147,22 +164,11 @@ class Scope(object):
         return not self == other
 
     def __enter__(self):
-        if self != scope.current:
-            self.parent = scope.current
-            scope.current = self
-        return scope.current
+        scope.push(self)
+        return self
 
     def __exit__(self, exc_type, exc_value, traceback):
-        if self is scope.current:
-            scope.current = self.parent
-
-    @property
-    def root(self):
-        """ return the outermost scope """
-        cur = self
-        while cur.parent:
-            cur = cur.parent
-        return cur
+        scope.pop()
 
     def __call__(self, *args, **kwargs):
         """ Return a scope based on `self` with modified parameters.
