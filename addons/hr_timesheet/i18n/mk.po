@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-21 17:04+0000\n"
-"PO-Revision-Date: 2012-12-21 23:00+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2013-03-07 08:37+0000\n"
+"PO-Revision-Date: 2013-03-11 14:52+0000\n"
+"Last-Translator: Софче Димитријева <Unknown>\n"
 "Language-Team: Macedonian <mk@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-01-18 06:47+0000\n"
-"X-Generator: Launchpad (build 16430)\n"
+"X-Launchpad-Export-Date: 2013-03-12 05:18+0000\n"
+"X-Generator: Launchpad (build 16524)\n"
 
 #. module: hr_timesheet
 #: model:ir.actions.act_window,help:hr_timesheet.act_analytic_cost_revenue
@@ -42,6 +42,29 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p>\n"
+"                Се уште нема активност за овој договор.\n"
+"              </p><p>\n"
+"                Во OpenERP, договорите и проектите се имплементираат со "
+"користење на\n"
+"                аналитичка сметка. Така, можете да ги следите трошоците и "
+"приходите за да ги анализирате\n"
+"                вашите маржи полесно.\n"
+"              </p><p>\n"
+"                Трошоците автоматски ќе се креираат кога ќе ги регистрирате "
+"влезните фактури, \n"
+"                трошоците или распоредите.\n"
+"              </p><p>\n"
+"                Приходите ќе бидат креирани автоматски кога ќе ги креирате "
+"излезните фактури.\n"
+"                Излезните фактури може да се креираат врз основа на налозите "
+"за продажба\n"
+"                (фактури со фиксна цена), на распоредите (врз основа на "
+"завршена работа) или\n"
+"                на трошоците (на пр. повторно фактурирање на патни "
+"трошоци).\n"
+"              </p>\n"
+"            "
 
 #. module: hr_timesheet
 #: code:addons/hr_timesheet/report/user_timesheet.py:44
@@ -53,7 +76,7 @@ msgstr "Сре"
 #. module: hr_timesheet
 #: view:hr.sign.out.project:0
 msgid "(Keep empty for current_time)"
-msgstr ""
+msgstr "(Оставете празно за тековно_време)"
 
 #. module: hr_timesheet
 #: view:hr.analytic.timesheet:0
@@ -68,11 +91,15 @@ msgid ""
 "analytic account. This feature allows to record at the same time the "
 "attendance and the timesheet."
 msgstr ""
+"Вработените може да го кодираат времето поминато на различни проекти. "
+"Проектот е аналитичка сметка и времето поминато на проектот генерира трошоци "
+"на аналитичката сметка. Оваа карактеристика овозможува снимање во исто време "
+"и на присуството и на распоредот."
 
 #. module: hr_timesheet
 #: field:hr.employee,uom_id:0
 msgid "Unit of Measure"
-msgstr ""
+msgstr "Единица мерка"
 
 #. module: hr_timesheet
 #: field:hr.employee,journal_id:0
@@ -82,25 +109,25 @@ msgstr "Аналитичка картица"
 #. module: hr_timesheet
 #: view:hr.sign.out.project:0
 msgid "Stop Working"
-msgstr ""
+msgstr "Престани со работење"
 
 #. module: hr_timesheet
 #: model:ir.actions.act_window,name:hr_timesheet.action_hr_timesheet_employee
 #: model:ir.ui.menu,name:hr_timesheet.menu_hr_timesheet_employee
 msgid "Employee Timesheet"
-msgstr ""
+msgstr "Распоред на вработен"
 
 #. module: hr_timesheet
 #: view:hr.analytic.timesheet:0
 #: model:ir.ui.menu,name:hr_timesheet.menu_hr_timesheet_reports
 msgid "Timesheet"
-msgstr ""
+msgstr "Распоред"
 
 #. module: hr_timesheet
 #: code:addons/hr_timesheet/wizard/hr_timesheet_print_employee.py:43
 #, python-format
 msgid "Please define employee for this user!"
-msgstr ""
+msgstr "Дефинирајте вработен за овој корисник!"
 
 #. module: hr_timesheet
 #: code:addons/hr_timesheet/report/user_timesheet.py:44
@@ -126,22 +153,22 @@ msgstr "Пет"
 #: model:ir.actions.act_window,name:hr_timesheet.act_hr_timesheet_line_evry1_all_form
 #: model:ir.ui.menu,name:hr_timesheet.menu_hr_working_hours
 msgid "Timesheet Activities"
-msgstr ""
+msgstr "Активности по распоред"
 
 #. module: hr_timesheet
 #: field:hr.sign.out.project,analytic_amount:0
 msgid "Minimum Analytic Amount"
-msgstr ""
+msgstr "Минимална аналитичка сума"
 
 #. module: hr_timesheet
 #: view:hr.analytical.timesheet.employee:0
 msgid "Monthly Employee Timesheet"
-msgstr ""
+msgstr "Месечен распоред на вработен"
 
 #. module: hr_timesheet
 #: view:hr.sign.out.project:0
 msgid "Work done in the last period"
-msgstr ""
+msgstr "Завршена работа во последниот период"
 
 #. module: hr_timesheet
 #: field:hr.sign.in.project,name:0
@@ -152,23 +179,23 @@ msgstr "Име на Вработениот"
 #. module: hr_timesheet
 #: field:hr.sign.out.project,account_id:0
 msgid "Project / Analytic Account"
-msgstr ""
+msgstr "Проект / Аналитичка сметка"
 
 #. module: hr_timesheet
 #: model:ir.model,name:hr_timesheet.model_hr_analytical_timesheet_users
 msgid "Print Employees Timesheet"
-msgstr ""
+msgstr "Печати распоред на вработени"
 
 #. module: hr_timesheet
 #: code:addons/hr_timesheet/wizard/hr_timesheet_sign_in_out.py:132
 #, python-format
 msgid "Please define employee for your user."
-msgstr ""
+msgstr "Дефинирајте вработен за корисникот"
 
 #. module: hr_timesheet
 #: model:ir.actions.act_window,name:hr_timesheet.act_analytic_cost_revenue
 msgid "Costs & Revenues"
-msgstr ""
+msgstr "Трошоци & Приходи"
 
 #. module: hr_timesheet
 #: code:addons/hr_timesheet/report/user_timesheet.py:44
@@ -180,12 +207,12 @@ msgstr "Вто"
 #. module: hr_timesheet
 #: model:ir.model,name:hr_timesheet.model_account_analytic_account
 msgid "Analytic Account"
-msgstr ""
+msgstr "Аналитичка сметка"
 
 #. module: hr_timesheet
 #: view:account.analytic.account:0
 msgid "Costs and Revenues"
-msgstr ""
+msgstr "Трошоци и Приходи"
 
 #. module: hr_timesheet
 #: code:addons/hr_timesheet/hr_timesheet.py:144
@@ -195,7 +222,7 @@ msgstr ""
 #: code:addons/hr_timesheet/wizard/hr_timesheet_print_employee.py:43
 #, python-format
 msgid "Warning!"
-msgstr ""
+msgstr "Внимание!"
 
 #. module: hr_timesheet
 #: field:hr.analytic.timesheet,partner_id:0
@@ -241,6 +268,17 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Кликнете за да ги снимите активностите.\n"
+"              </p><p>\n"
+"                Можете да ги регистрирате и следите вашите работни часови по "
+"проект секој ден.\n"
+"                Секое врема поминато на проект ќе стане трошок во \n"
+"                аналитичкот сметководство/договорот и може да биде повторно "
+"фактурирано на\n"
+"                клиентите доколку е потребно.\n"
+"              </p>\n"
+"            "
 
 #. module: hr_timesheet
 #: view:hr.analytical.timesheet.employee:0
@@ -251,12 +289,12 @@ msgstr "Печати"
 #. module: hr_timesheet
 #: help:account.analytic.account,use_timesheets:0
 msgid "Check this field if this project manages timesheets"
-msgstr ""
+msgstr "Означете го ова поле доколку овој проект менаџира распореди"
 
 #. module: hr_timesheet
 #: view:hr.analytical.timesheet.users:0
 msgid "Monthly Employees Timesheet"
-msgstr ""
+msgstr "Месечен распоред на вработен"
 
 #. module: hr_timesheet
 #: code:addons/hr_timesheet/report/user_timesheet.py:41
@@ -277,7 +315,7 @@ msgstr "Почетен датум"
 #: code:addons/hr_timesheet/wizard/hr_timesheet_sign_in_out.py:77
 #, python-format
 msgid "Please define cost unit for this employee."
-msgstr ""
+msgstr "Дефинирајте единица на трошок за овој вработен."
 
 #. module: hr_timesheet
 #: help:hr.employee,product_id:0
@@ -291,11 +329,13 @@ msgid ""
 "No analytic account is defined on the project.\n"
 "Please set one or we cannot automatically fill the timesheet."
 msgstr ""
+"Нема дефинирано аналитичка сметка за проектот.\n"
+"Подесете ја или нема да можеме автоматски да го пополниме распоредот."
 
 #. module: hr_timesheet
 #: view:hr.analytic.timesheet:0
 msgid "Total cost"
-msgstr ""
+msgstr "Вкупен трошок"
 
 #. module: hr_timesheet
 #: code:addons/hr_timesheet/hr_timesheet.py:180
@@ -304,6 +344,8 @@ msgid ""
 "No 'Analytic Journal' is defined for employee %s \n"
 "Define an employee for the selected user and assign an 'Analytic Journal'!"
 msgstr ""
+"Нема дефинирано 'Аналитички дневник' за вработениот %s \n"
+"Дефинирај вработен за селектиран корисник и додели 'Аналитички дневник'!"
 
 #. module: hr_timesheet
 #: code:addons/hr_timesheet/report/user_timesheet.py:41
@@ -326,7 +368,7 @@ msgstr "Декември"
 #. module: hr_timesheet
 #: field:hr.analytical.timesheet.users,employee_ids:0
 msgid "employees"
-msgstr ""
+msgstr "вработени"
 
 #. module: hr_timesheet
 #: field:hr.analytical.timesheet.employee,month:0
@@ -337,7 +379,7 @@ msgstr "Месец"
 #. module: hr_timesheet
 #: field:hr.sign.out.project,info:0
 msgid "Work Description"
-msgstr ""
+msgstr "Опис на работата"
 
 #. module: hr_timesheet
 #: view:hr.analytical.timesheet.employee:0
@@ -345,28 +387,28 @@ msgstr ""
 #: view:hr.sign.in.project:0
 #: view:hr.sign.out.project:0
 msgid "or"
-msgstr ""
+msgstr "или"
 
 #. module: hr_timesheet
 #: xsl:hr.analytical.timesheet:0
 msgid "Timesheet by Employee"
-msgstr ""
+msgstr "Распоред по вработен"
 
 #. module: hr_timesheet
 #: model:ir.actions.report.xml,name:hr_timesheet.report_user_timesheet
 msgid "Employee timesheet"
-msgstr ""
+msgstr "Распоред на вработен"
 
 #. module: hr_timesheet
 #: model:ir.actions.act_window,name:hr_timesheet.action_hr_timesheet_sign_in
 #: model:ir.actions.act_window,name:hr_timesheet.action_hr_timesheet_sign_out
 msgid "Sign in / Sign out by project"
-msgstr ""
+msgstr "Најава/Одјава по проект"
 
 #. module: hr_timesheet
 #: model:ir.actions.act_window,name:hr_timesheet.action_define_analytic_structure
 msgid "Define your Analytic Structure"
-msgstr ""
+msgstr "Дефинирајте ја вашата Аналитичка структура"
 
 #. module: hr_timesheet
 #: code:addons/hr_timesheet/wizard/hr_timesheet_sign_in_out.py:146
@@ -378,13 +420,13 @@ msgstr "Најава / Одјава"
 #. module: hr_timesheet
 #: view:hr.sign.in.project:0
 msgid "(Keep empty for current time)"
-msgstr ""
+msgstr "(Оставете празно за тековно време)"
 
 #. module: hr_timesheet
 #: field:account.analytic.account,use_timesheets:0
 #: view:hr.employee:0
 msgid "Timesheets"
-msgstr ""
+msgstr "Распореди"
 
 #. module: hr_timesheet
 #: model:ir.actions.act_window,help:hr_timesheet.action_define_analytic_structure
@@ -393,11 +435,14 @@ msgid ""
 "analyse costs and revenues. In OpenERP, analytic accounts are also used to "
 "track customer contracts."
 msgstr ""
+"Треба да креирате структура на аналитичка сметка во зависност од вашите "
+"потреби да ги анализирате трошоците и приходите. Во OpenERP, аналитичките "
+"сметки се користат и за следење на договорите на клиентите."
 
 #. module: hr_timesheet
 #: field:hr.analytic.timesheet,line_id:0
 msgid "Analytic Line"
-msgstr ""
+msgstr "Аналитичка ставка"
 
 #. module: hr_timesheet
 #: code:addons/hr_timesheet/report/user_timesheet.py:41
@@ -415,6 +460,8 @@ msgid ""
 "No analytic journal defined for '%s'.\n"
 "You should assign an analytic journal on the employee form."
 msgstr ""
+"Нема дефинирано аналитички дневник за '%s'.\n"
+"Треба да доделите аналитички дневник на формуларот на вработениот."
 
 #. module: hr_timesheet
 #: code:addons/hr_timesheet/report/user_timesheet.py:41
@@ -429,7 +476,7 @@ msgstr "Јуни"
 #: field:hr.sign.in.project,state:0
 #: field:hr.sign.out.project,state:0
 msgid "Current Status"
-msgstr ""
+msgstr "Тековен статус"
 
 #. module: hr_timesheet
 #: view:hr.analytic.timesheet:0
@@ -448,7 +495,7 @@ msgstr "Ноември"
 #. module: hr_timesheet
 #: field:hr.sign.out.project,date:0
 msgid "Closing Date"
-msgstr ""
+msgstr "Датум на затварање"
 
 #. module: hr_timesheet
 #: code:addons/hr_timesheet/report/user_timesheet.py:41
@@ -479,12 +526,12 @@ msgstr "Чет"
 #: view:hr.sign.in.project:0
 #: view:hr.sign.out.project:0
 msgid "Sign In/Out by Project"
-msgstr ""
+msgstr "Најава/Одјава по Проект"
 
 #. module: hr_timesheet
 #: model:ir.model,name:hr_timesheet.model_hr_analytical_timesheet_employee
 msgid "Print Employee Timesheet & Print My Timesheet"
-msgstr ""
+msgstr "Испечати распоред на вработен & Испечати Мој распоред"
 
 #. module: hr_timesheet
 #: field:hr.sign.in.project,emp_id:0
@@ -495,7 +542,7 @@ msgstr "Идентификационен Број на Вработениот"
 #. module: hr_timesheet
 #: view:hr.analytical.timesheet.users:0
 msgid "Period"
-msgstr ""
+msgstr "Период"
 
 #. module: hr_timesheet
 #: view:hr.sign.out.project:0
@@ -516,7 +563,7 @@ msgstr "Откажи"
 #: model:ir.actions.report.xml,name:hr_timesheet.report_users_timesheet
 #: model:ir.ui.menu,name:hr_timesheet.menu_hr_timesheet_users
 msgid "Employees Timesheet"
-msgstr ""
+msgstr "Распоред на вработен"
 
 #. module: hr_timesheet
 #: view:hr.analytic.timesheet:0
@@ -537,6 +584,10 @@ msgid ""
 "project generates costs on the analytic account. This feature allows to "
 "record at the same time the attendance and the timesheet."
 msgstr ""
+"Вработените може да го кодираат времето поминато на различни проекти на кои "
+"се назначени. Проектот е аналитичка сметка и времето поминато на проектот "
+"генерира трошоци на аналитичката сметка. Оваа карактеристика овозможува "
+"снимање во исто време и на присуството и на распоредот."
 
 #. module: hr_timesheet
 #: field:hr.sign.in.project,server_date:0
@@ -547,7 +598,7 @@ msgstr "Тековен датум"
 #. module: hr_timesheet
 #: model:ir.model,name:hr_timesheet.model_hr_analytic_timesheet
 msgid "Timesheet Line"
-msgstr ""
+msgstr "Ставка на распоред"
 
 #. module: hr_timesheet
 #: view:hr.analytic.timesheet:0
@@ -577,12 +628,12 @@ msgstr "Вкупно време"
 #. module: hr_timesheet
 #: view:hr.sign.in.project:0
 msgid "(local time on the server side)"
-msgstr ""
+msgstr "(локално време на страната на серверот)"
 
 #. module: hr_timesheet
 #: model:ir.model,name:hr_timesheet.model_hr_sign_in_project
 msgid "Sign In By Project"
-msgstr ""
+msgstr "Најава по проект"
 
 #. module: hr_timesheet
 #: code:addons/hr_timesheet/report/user_timesheet.py:41
@@ -596,7 +647,7 @@ msgstr "Февруари"
 #. module: hr_timesheet
 #: model:ir.model,name:hr_timesheet.model_hr_sign_out_project
 msgid "Sign Out By Project"
-msgstr ""
+msgstr "Одјава по проект"
 
 #. module: hr_timesheet
 #: code:addons/hr_timesheet/hr_timesheet.py:144
@@ -605,6 +656,8 @@ msgid ""
 "Please create an employee for this user, using the menu: Human Resources > "
 "Employees."
 msgstr ""
+"Креирајте вработен за овој корисник, сос користење на менито: Човечки "
+"ресурси > Вработени."
 
 #. module: hr_timesheet
 #: view:hr.analytical.timesheet.users:0
@@ -634,12 +687,12 @@ msgstr "Април"
 #: code:addons/hr_timesheet/wizard/hr_timesheet_sign_in_out.py:132
 #, python-format
 msgid "User Error!"
-msgstr ""
+msgstr "Корисничка грешка!"
 
 #. module: hr_timesheet
 #: view:hr.sign.in.project:0
 msgid "Start Working"
-msgstr ""
+msgstr "Започни со работа"
 
 #. module: hr_timesheet
 #: field:hr.analytical.timesheet.employee,year:0
@@ -650,7 +703,7 @@ msgstr "Година"
 #. module: hr_timesheet
 #: view:hr.analytic.timesheet:0
 msgid "Duration"
-msgstr ""
+msgstr "Времетраење"
 
 #. module: hr_timesheet
 #: view:hr.analytic.timesheet:0
@@ -666,4 +719,4 @@ msgstr "Вкупно"
 #. module: hr_timesheet
 #: view:hr.sign.out.project:0
 msgid "Change Work"
-msgstr ""
+msgstr "Промени работа"

@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-21 17:04+0000\n"
-"PO-Revision-Date: 2013-02-24 17:47+0000\n"
+"POT-Creation-Date: 2013-03-07 08:37+0000\n"
+"PO-Revision-Date: 2013-03-09 10:03+0000\n"
 "Last-Translator: Erwin van der Ploeg (Endian Solutions) <Unknown>\n"
 "Language-Team: Dutch <nl@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-02-25 05:40+0000\n"
-"X-Generator: Launchpad (build 16506)\n"
+"X-Launchpad-Export-Date: 2013-03-10 05:15+0000\n"
+"X-Generator: Launchpad (build 16523)\n"
 
 #. module: purchase
 #: model:res.groups,name:purchase.group_analytic_accounting
@@ -70,6 +70,11 @@ msgstr ""
 #: field:purchase.report,day:0
 msgid "Day"
 msgstr "Dag"
+
+#. module: purchase
+#: view:purchase.order:0
+msgid "Cancel Order"
+msgstr "Annuleer order"
 
 #. module: purchase
 #: view:purchase.report:0
@@ -432,11 +437,11 @@ msgstr ""
 "                </p><p>\n"
 "                    Inkoopfacturen kunnen vooraf gegenereerd worden op basis "
 "van inkoop\n"
-"                    orders of inkomende leveringen. Dit stelt u in staat de "
+"                    orders of inkomende leveringen. Dit stelt u in staat de "
 "facturen\n"
-"                    die u ontvangt van uw leverancier te controleren op "
+"                    die u ontvangt van uw leverancier te controleren op "
 "basis van de \n"
-"                    concept documenten in OpenERP.\n"
+"                    concept documenten in OpenERP.\n"
 "                </p>\n"
 "            "
 
@@ -827,6 +832,11 @@ msgid "RFQ"
 msgstr "Offerteaanvraag"
 
 #. module: purchase
+#: view:purchase.order:0
+msgid "Send by Email"
+msgstr "Verzenden via e-mail"
+
+#. module: purchase
 #: report:purchase.order:0
 #: view:purchase.order:0
 #: field:purchase.order,date_order:0
@@ -995,7 +1005,6 @@ msgstr "Hvhd"
 #: model:process.transition.action,name:purchase.process_transition_action_approvingcancelpurchaseorder0
 #: model:process.transition.action,name:purchase.process_transition_action_cancelpurchaseorder0
 #: view:purchase.config.settings:0
-#: view:purchase.order:0
 #: view:purchase.order.group:0
 #: view:purchase.order.line_invoice:0
 msgid "Cancel"
@@ -1374,6 +1383,11 @@ msgid "Products"
 msgstr "Producten"
 
 #. module: purchase
+#: view:purchase.order:0
+msgid "Terms and conditions..."
+msgstr "Algemene inkoopvoorwaarden..."
+
+#. module: purchase
 #: model:ir.model,name:purchase.model_stock_move
 msgid "Stock Move"
 msgstr "Voorraadmutatie"
@@ -1595,9 +1609,9 @@ msgid "PO: %s"
 msgstr "IO: %s"
 
 #. module: purchase
-#: view:purchase.order:0
-msgid "Send by EMail"
-msgstr "Stuur per -mail"
+#: model:process.node,note:purchase.process_node_packinginvoice0
+msgid "Outgoing products to invoice"
+msgstr "Te factureren uitgaande producten"
 
 #. module: purchase
 #: code:addons/purchase/purchase.py:515
@@ -2098,8 +2112,8 @@ msgid ""
 msgstr ""
 "Offerteaanvragen worden gebruikt wanneer u offertes wilt ontvangen van "
 "verschillende leveranciers voor een bepaalde categorie producten.\n"
-"             U kunt per product instellen als u een offerteaanvraag \n"
-"             doet bij een leverancier of als u een offerteaanvraag wilt doen "
+"            U kunt per product instellen als u een offerteaanvraag \n"
+"            doet bij een leverancier of als u een offerteaanvraag wilt doen "
 "om te onderhandelen met meerdere leveranciers."
 
 #. module: purchase
@@ -2166,11 +2180,6 @@ msgstr "EDI Prijslijst (%s)"
 #: field:purchase.report,product_uom:0
 msgid "Reference Unit of Measure"
 msgstr "Maateenheid referentie"
-
-#. module: purchase
-#: model:process.node,note:purchase.process_node_packinginvoice0
-msgid "Outgoing products to invoice"
-msgstr "Te factureren uitgaande producten"
 
 #. module: purchase
 #: report:purchase.order:0
@@ -2490,3 +2499,6 @@ msgstr ""
 #: view:purchase.report:0
 msgid "Orders"
 msgstr "Orders"
+
+#~ msgid "Send by EMail"
+#~ msgstr "Stuur per -mail"

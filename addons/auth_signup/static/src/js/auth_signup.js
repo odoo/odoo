@@ -31,8 +31,7 @@ openerp.auth_signup = function(instance) {
                     return false;
                 });
 
-                var dblist = self.db_list || [];
-                var dbname = self.params.db || (dblist.length === 1 ? dblist[0] : null);
+                var dbname = self.selected_db;
 
                 // if there is an error message in params, show it then forget it
                 if (self.params.error_message) {
@@ -57,7 +56,11 @@ openerp.auth_signup = function(instance) {
                     self.rpc("/auth_signup/get_config", {dbname: dbname}).done(function(result) {
                         self.signup_enabled = result.signup;
                         self.reset_password_enabled = result.reset_password;
-                        self.set('login_mode', 'default');
+                        if (self.$("form input[name=login]").val()){
+                            self.set('login_mode', 'default');
+                        } else {
+                            self.set('login_mode', 'signup');
+                        }
                     });
                 } else {
                     // TODO: support multiple database mode

@@ -49,10 +49,8 @@
             </t>
             <t t-if="!widget.options.view_mailbox">
                 <div class="field_text oe_compact oe_compact_record">
-                    <a class="oe_compose_post">
-                        <t t-if="widget.options.compose_placeholder" t-raw="widget.options.compose_placeholder"/>
-                        <t t-if="!widget.options.compose_placeholder and !widget.options.view_mailbox">Send a message</t>
-                    </a>
+                    <a class="oe_compose_post" t-if="widget.options.compose_placeholder"><t t-raw="widget.options.compose_placeholder"/></a>
+                    <a class="oe_compose_post" t-if="!widget.options.compose_placeholder and !widget.options.view_mailbox">Send a message</a>
                     <span class="oe_grey oe_sep_word">or</span>
                     <a class="oe_compose_log">Log a note</a>
                 </div>
@@ -151,7 +149,7 @@
             </t>
         </div>
         <div t-if="widget.is_log">
-            <span>Attach a note that will not be send to the followers</span>
+            <span>Attach a note that will not be sent to the followers</span>
         </div>
     </t>
 

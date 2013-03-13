@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-21 17:04+0000\n"
-"PO-Revision-Date: 2013-03-03 20:12+0000\n"
+"POT-Creation-Date: 2013-03-07 08:37+0000\n"
+"PO-Revision-Date: 2013-03-08 20:51+0000\n"
 "Last-Translator: Ayhan KIZILTAN <Unknown>\n"
 "Language-Team: Turkish <tr@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-03-04 05:59+0000\n"
-"X-Generator: Launchpad (build 16514)\n"
+"X-Launchpad-Export-Date: 2013-03-09 05:38+0000\n"
+"X-Generator: Launchpad (build 16523)\n"
 
 #. module: sale
 #: model:res.groups,name:sale.group_analytic_accounting
@@ -128,7 +128,7 @@ msgid "March"
 msgstr "Mart"
 
 #. module: sale
-#: code:addons/sale/sale.py:559
+#: code:addons/sale/sale.py:567
 #, python-format
 msgid "First cancel all invoices attached to this sales order."
 msgstr "Öncelikle bu satış siparişine bağlı tüm faturaları iptal et."
@@ -214,6 +214,7 @@ msgstr "Gün"
 
 #. module: sale
 #: model:process.transition.action,name:sale.process_transition_action_cancelorder0
+#: view:sale.order:0
 msgid "Cancel Order"
 msgstr "Sipariş İptal et"
 
@@ -244,10 +245,9 @@ msgid "Incorrect Data"
 msgstr "Hatalı Veri"
 
 #. module: sale
-#: code:addons/sale/wizard/sale_make_invoice_advance.py:102
-#, python-format
-msgid "The value of Advance Amount must be positive."
-msgstr "Avans Tutarı artı değer olmak zorundadır."
+#: view:sale.order.line:0
+msgid "Cancel Line"
+msgstr "Satırı İptal et"
 
 #. module: sale
 #: help:sale.config.settings,group_discount_per_so_line:0
@@ -291,11 +291,12 @@ msgid "Project"
 msgstr "Proje"
 
 #. module: sale
-#: code:addons/sale/sale.py:360
-#: code:addons/sale/sale.py:501
-#: code:addons/sale/sale.py:592
-#: code:addons/sale/sale.py:755
-#: code:addons/sale/sale.py:772
+#: code:addons/sale/sale.py:185
+#: code:addons/sale/sale.py:368
+#: code:addons/sale/sale.py:509
+#: code:addons/sale/sale.py:600
+#: code:addons/sale/sale.py:763
+#: code:addons/sale/sale.py:780
 #, python-format
 msgid "Error!"
 msgstr "Hata!"
@@ -400,6 +401,11 @@ msgid "False"
 msgstr "Yanlış"
 
 #. module: sale
+#: view:sale.order:0
+msgid "Terms and conditions..."
+msgstr "Hükümler ve şartlar..."
+
+#. module: sale
 #: help:sale.advance.payment.inv,advance_payment_method:0
 msgid ""
 "Use All to create the final invoice.\n"
@@ -428,9 +434,9 @@ msgid "Tax"
 msgstr "Vergi"
 
 #. module: sale
-#: code:addons/sale/sale.py:270
-#: code:addons/sale/sale.py:812
-#: code:addons/sale/sale.py:976
+#: code:addons/sale/sale.py:278
+#: code:addons/sale/sale.py:820
+#: code:addons/sale/sale.py:983
 #, python-format
 msgid "Invalid Action!"
 msgstr "Geçersiz Eylem!"
@@ -489,7 +495,7 @@ msgid "Fax :"
 msgstr "Faks:"
 
 #. module: sale
-#: code:addons/sale/sale.py:270
+#: code:addons/sale/sale.py:278
 #, python-format
 msgid ""
 "In order to delete a confirmed sales order, you must cancel it before !"
@@ -513,8 +519,8 @@ msgid "Contract Features"
 msgstr "Sözleşme Özellikleri"
 
 #. module: sale
-#: code:addons/sale/sale.py:280
-#: code:addons/sale/sale.py:578
+#: code:addons/sale/sale.py:288
+#: code:addons/sale/sale.py:586
 #: model:ir.model,name:sale.model_sale_order
 #: model:process.node,name:sale.process_node_order0
 #: model:process.node,name:sale.process_node_saleorder0
@@ -581,7 +587,7 @@ msgid "Prepare invoices based on timesheets"
 msgstr "Zaman çizelgelerine göre fatura hazırla"
 
 #. module: sale
-#: code:addons/sale/sale.py:812
+#: code:addons/sale/sale.py:820
 #, python-format
 msgid "You cannot cancel a sales order line that has already been invoiced."
 msgstr ""
@@ -642,7 +648,7 @@ msgid "Disc.(%)"
 msgstr "İnd.(%)"
 
 #. module: sale
-#: code:addons/sale/sale.py:756
+#: code:addons/sale/sale.py:764
 #, python-format
 msgid "Please define income account for this product: \"%s\" (id:%d)."
 msgstr "Lütfen bu ürün için gelir hesabı belirtin: \"%s\" (id:%d)."
@@ -688,7 +694,7 @@ msgid "Make Invoices"
 msgstr "Faturaları Oluştur"
 
 #. module: sale
-#: code:addons/sale/res_config.py:89
+#: code:addons/sale/res_config.py:97
 #, python-format
 msgid "Hour"
 msgstr "Saat"
@@ -807,12 +813,20 @@ msgstr ""
 "ayarlanır."
 
 #. module: sale
+#: code:addons/sale/sale.py:510
+#, python-format
+msgid ""
+"You cannot group sales having different currencies for the same partner."
+msgstr ""
+"Aynı iş ortağı için farklı para birimlerindeki satışları gruplandıramazsınız."
+
+#. module: sale
 #: view:sale.config.settings:0
 msgid "Default Options"
 msgstr "Varsayılan Seçenekler"
 
 #. module: sale
-#: code:addons/sale/sale.py:953
+#: code:addons/sale/sale.py:960
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:91
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:95
 #, python-format
@@ -874,10 +888,12 @@ msgid "Sales Order done"
 msgstr "Satış Siparişi yapıldı"
 
 #. module: sale
-#: code:addons/sale/sale.py:361
-#, python-format
-msgid "Please define sales journal for this company: \"%s\" (id:%d)."
-msgstr "Bu şirket için lütfen satış günlüğü oluşturun: \"%s\" (id:%d)."
+#: model:process.transition.action,name:sale.process_transition_action_cancel0
+#: view:sale.advance.payment.inv:0
+#: view:sale.make.invoice:0
+#: view:sale.order.line.make.invoice:0
+msgid "Cancel"
+msgstr "İptal"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.act_res_partner_2_sale_order
@@ -927,7 +943,7 @@ msgid "Sales Make Invoice"
 msgstr "Satışlar Fatura Oluşturur"
 
 #. module: sale
-#: code:addons/sale/sale.py:300
+#: code:addons/sale/sale.py:308
 #, python-format
 msgid "Pricelist Warning!"
 msgstr "FiyatListesi Uyarısı!"
@@ -1006,7 +1022,7 @@ msgid "Category of Product"
 msgstr "Ürün Kategorisi"
 
 #. module: sale
-#: code:addons/sale/sale.py:558
+#: code:addons/sale/sale.py:566
 #, python-format
 msgid "Cannot cancel this sales order!"
 msgstr "Bu satış siparişi iptal edilemiyor!"
@@ -1063,7 +1079,7 @@ msgid "Open Sale Menu"
 msgstr "Satış Menüsünü Aç"
 
 #. module: sale
-#: code:addons/sale/sale.py:592
+#: code:addons/sale/sale.py:600
 #, python-format
 msgid "You cannot confirm a sales order which has no line."
 msgstr "Hiçbir kalem içermeyen satış siparişini onaylayamazsınız."
@@ -1074,7 +1090,7 @@ msgid "In Progress"
 msgstr "Sürüyor"
 
 #. module: sale
-#: code:addons/sale/sale.py:857
+#: code:addons/sale/sale.py:865
 #, python-format
 msgid "No Customer Defined !"
 msgstr "Tanımlı Müşteri Yok!"
@@ -1399,7 +1415,7 @@ msgstr ""
 "da \"Elle işlem sürüyor\" olur."
 
 #. module: sale
-#: code:addons/sale/sale.py:935
+#: code:addons/sale/sale.py:942
 #, python-format
 msgid ""
 "You have to select a pricelist or a customer in the sales form !\n"
@@ -1414,7 +1430,7 @@ msgid "Reference of the document that generated this sales order request."
 msgstr "Bu satış siparişi isteğini oluşturan belgenin referans numarası"
 
 #. module: sale
-#: code:addons/sale/sale.py:948
+#: code:addons/sale/sale.py:955
 #, python-format
 msgid "No valid pricelist line found ! :"
 msgstr "Geçerli fiyat listesi kalemi bulunamadı!:"
@@ -1498,7 +1514,7 @@ msgid "TVA :"
 msgstr "TVA :"
 
 #. module: sale
-#: code:addons/sale/sale.py:441
+#: code:addons/sale/sale.py:449
 #, python-format
 msgid "Customer Invoices"
 msgstr "Müşteri Faturaları"
@@ -1524,7 +1540,7 @@ msgid "Sales"
 msgstr "Satış"
 
 #. module: sale
-#: code:addons/sale/sale.py:301
+#: code:addons/sale/sale.py:309
 #, python-format
 msgid ""
 "If you change the pricelist of this order (and eventually the currency), "
@@ -1582,14 +1598,9 @@ msgid "My Sales Order Lines"
 msgstr "Satış Siparişi Kalemlerim"
 
 #. module: sale
-#: model:process.transition.action,name:sale.process_transition_action_cancel0
-#: view:sale.advance.payment.inv:0
-#: view:sale.make.invoice:0
 #: view:sale.order:0
-#: view:sale.order.line:0
-#: view:sale.order.line.make.invoice:0
-msgid "Cancel"
-msgstr "İptal"
+msgid "Cancel Quotation"
+msgstr "Teklif İptal et"
 
 #. module: sale
 #: field:sale.order,message_follower_ids:0
@@ -1597,7 +1608,7 @@ msgid "Followers"
 msgstr "Takipçiler"
 
 #. module: sale
-#: code:addons/sale/sale.py:937
+#: code:addons/sale/sale.py:944
 #, python-format
 msgid "No Pricelist ! : "
 msgstr "Fiyat Listesi yok ! : "
@@ -1659,12 +1670,10 @@ msgid "Shipping address :"
 msgstr "Sevk adresi :"
 
 #. module: sale
-#: code:addons/sale/sale.py:502
+#: code:addons/sale/sale.py:369
 #, python-format
-msgid ""
-"You cannot group sales having different currencies for the same partner."
-msgstr ""
-"Aynı iş ortağı için farklı para birimlerindeki satışları gruplandıramazsınız."
+msgid "Please define sales journal for this company: \"%s\" (id:%d)."
+msgstr "Bu şirket için lütfen satış günlüğü oluşturun: \"%s\" (id:%d)."
 
 #. module: sale
 #: view:sale.advance.payment.inv:0
@@ -1687,7 +1696,7 @@ msgid "Use contracts management"
 msgstr "Sözleşme yönetimini kullanın"
 
 #. module: sale
-#: code:addons/sale/sale.py:945
+#: code:addons/sale/sale.py:952
 #, python-format
 msgid ""
 "Cannot find a pricelist line matching this product and quantity.\n"
@@ -1695,6 +1704,12 @@ msgid ""
 msgstr ""
 "Bu ürün ve miktarla eşleşen fiyat listesi kalemi bulunamıyor.\n"
 "Hem ürünü hem de miktarı ya da fiyat listesini değiştirmelisiniz."
+
+#. module: sale
+#: code:addons/sale/sale.py:185
+#, python-format
+msgid "There is no default shop for the current user's company!"
+msgstr "Geçerli kullanıcının şirketine ait varsayılan mağaza yok!"
 
 #. module: sale
 #: model:ir.model,name:sale.model_sale_advance_payment_inv
@@ -1961,6 +1976,12 @@ msgid "Price"
 msgstr "Fiyat"
 
 #. module: sale
+#: code:addons/sale/wizard/sale_make_invoice_advance.py:102
+#, python-format
+msgid "The value of Advance Amount must be positive."
+msgstr "Avans Tutarı artı değer olmak zorundadır."
+
+#. module: sale
 #: help:sale.order,order_policy:0
 msgid ""
 "On demand: A draft invoice can be created from the sales order when needed. "
@@ -2050,7 +2071,7 @@ msgid "sale.group_delivery_invoice_address"
 msgstr "sale.group_delivery_invoice_address"
 
 #. module: sale
-#: code:addons/sale/sale.py:773
+#: code:addons/sale/sale.py:781
 #, python-format
 msgid ""
 "There is no Fiscal Position defined or Income category account defined for "
@@ -2297,7 +2318,7 @@ msgid "Some order lines"
 msgstr "Bazı sipariş kalemleri"
 
 #. module: sale
-#: code:addons/sale/sale.py:976
+#: code:addons/sale/sale.py:983
 #, python-format
 msgid "Cannot delete a sales order line which is in state '%s'."
 msgstr "'%s' durumundaki bir satış sipariş kalemini silemezsiniz."
@@ -2371,7 +2392,7 @@ msgstr ""
 "                Bu,module sale_margin modülünü kurar."
 
 #. module: sale
-#: code:addons/sale/sale.py:857
+#: code:addons/sale/sale.py:865
 #, python-format
 msgid ""
 "Before choosing a product,\n"

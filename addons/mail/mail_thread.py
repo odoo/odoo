@@ -883,9 +883,9 @@ class mail_thread(osv.AbstractModel):
                     mail_message_obj.write(cr, SUPERUSER_ID, message_ids, {'author_id': ids[0]}, context=context)
         return result
 
-    def message_post(self, cr, uid, thread_id, body='', subject=None,
-                        content_subtype='html', type='notification', subtype=None,
-                        parent_id=False, attachments=None, context=None, **kwargs):
+    def message_post(self, cr, uid, thread_id, body='', subject=None, type='notification',
+                        subtype=None, parent_id=False, attachments=None, context=None,
+                        content_subtype='html', **kwargs):
         """ Post a new message in an existing thread, returning the new
             mail.message ID.
 
@@ -931,7 +931,18 @@ class mail_thread(osv.AbstractModel):
             body = tools.plaintext2html(body)
 
         # 2: Private message: add recipients (recipients and author of parent message)
-        partner_ids = set(kwargs.pop('partner_ids', []))
+        #   + legacy-code management (! we manage only 4 and 6 commands)
+        partner_ids = set()
+        kwargs_partner_ids = kwargs.pop('partner_ids', [])
+        for partner_id in kwargs_partner_ids:
+            if isinstance(partner_id, (list, tuple)) and partner_id[0] == 4 and len(partner_id) == 2:
+                partner_ids.add(partner_id[1])
+            if isinstance(partner_id, (list, tuple)) and partner_id[0] == 6 and len(partner_id) == 3:
+                partner_ids |= set(partner_id[2])
+            elif isinstance(partner_id, (int, long)):
+                partner_ids.add(partner_id)
+            else:
+                pass  # we do not manage anything else
         if parent_id and model == 'mail.thread':
             parent_message = mail_message.browse(cr, uid, parent_id, context=context)
             partner_ids |= set([partner.id for partner in parent_message.partner_ids])
@@ -1018,6 +1029,21 @@ class mail_thread(osv.AbstractModel):
         if message.author_id and thread_id and type != 'notification':
             self.message_subscribe(cr, uid, [thread_id], [message.author_id.id], context=context)
         return msg_id
+
+    #------------------------------------------------------
+    # Compatibility methods: do not use
+    # TDE TODO: remove me in 8.0
+    #------------------------------------------------------
+
+    def message_create_partners_from_emails(self, cr, uid, emails, context=None):
+        return {'partner_ids': [], 'new_partner_ids': []}
+
+    def message_post_user_api(self, cr, uid, thread_id, body='', parent_id=False,
+                                attachment_ids=None, content_subtype='plaintext',
+                                context=None, **kwargs):
+        return self.message_post(cr, uid, thread_id, body=body, parent_id=parent_id,
+                                    attachment_ids=attachment_ids, content_subtype=content_subtype,
+                                    context=context, **kwargs)
 
     #------------------------------------------------------
     # Followers API

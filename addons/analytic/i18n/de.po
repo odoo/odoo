@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-21 17:05+0000\n"
+"POT-Creation-Date: 2013-03-07 08:37+0000\n"
 "PO-Revision-Date: 2013-01-06 20:45+0000\n"
 "Last-Translator: Thorsten Vocks (OpenBig.org) <thorsten.vocks@big-"
 "consulting.net>\n"
@@ -15,8 +15,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-01-18 06:34+0000\n"
-"X-Generator: Launchpad (build 16430)\n"
+"X-Launchpad-Export-Date: 2013-03-08 05:34+0000\n"
+"X-Generator: Launchpad (build 16523)\n"
 
 #. module: analytic
 #: field:account.analytic.account,child_ids:0
@@ -33,6 +33,11 @@ msgstr "In Arbeit"
 #, python-format
 msgid "Contract: "
 msgstr "Vertrag: "
+
+#. module: analytic
+#: model:mail.message.subtype,description:analytic.mt_account_pending
+msgid "Contract pending"
+msgstr ""
 
 #. module: analytic
 #: selection:account.analytic.account,state:0
@@ -53,27 +58,6 @@ msgstr "Definiert die zu zählende Menge"
 #: field:account.analytic.account,debit:0
 msgid "Debit"
 msgstr "Soll"
-
-#. module: analytic
-#: help:account.analytic.account,type:0
-msgid ""
-"If you select the View Type, it means you won't allow to create journal "
-"entries using that account.\n"
-"The type 'Analytic account' stands for usual accounts that you only want to "
-"use in accounting.\n"
-"If you select Contract or Project, it offers you the possibility to manage "
-"the validity and the invoicing options for this account.\n"
-"The special type 'Template of Contract' allows you to define a template with "
-"default data that you can reuse easily."
-msgstr ""
-"Wenn Sie 'Ansicht' als Typ einer Kostenstelle auswählen, darf auf dieser "
-"Kostenstelle nicht gebucht werden.\n"
-"Der Typ 'Kostenstelle' steht für die normalen internen Kostenstellen, die "
-"nur in der Buchhaltung verwendet werden.\n"
-"Wenn Sie 'Vertrag oder Projekt' auswählen, können Sie die Einstellungen zur "
-"Vertragsdauer und zur Abrechnung \n"
-"verwalten. In einer 'Vertrag Vorlage' hinterlegen Sie Standard-Daten, die "
-"Sie immer wieder verwenden können."
 
 #. module: analytic
 #: view:account.analytic.account:0
@@ -139,7 +123,7 @@ msgid "Status"
 msgstr "Status"
 
 #. module: analytic
-#: code:addons/analytic/analytic.py:268
+#: code:addons/analytic/analytic.py:271
 #, python-format
 msgid "%s (copy)"
 msgstr "%s (Kopie)"
@@ -154,6 +138,12 @@ msgstr "Kostenstellen Buchung"
 #: field:account.analytic.line,name:0
 msgid "Description"
 msgstr "Buchungstext"
+
+#. module: analytic
+#: code:addons/analytic/analytic.py:262
+#, python-format
+msgid "Quick account creation disallowed."
+msgstr ""
 
 #. module: analytic
 #: field:account.analytic.account,message_unread:0
@@ -177,14 +167,19 @@ msgid "Renewal"
 msgstr "Erneuerung"
 
 #. module: analytic
-#: help:account.analytic.account,message_ids:0
-msgid "Messages and communication history"
-msgstr "Nachrichten und Kommunikation"
+#: help:account.analytic.account,message_summary:0
+msgid ""
+"Holds the Chatter summary (number of messages, ...). This summary is "
+"directly in html format in order to be inserted in kanban views."
+msgstr ""
+"Beinhaltet die Chatter Zusammenfassung (Anzahl der Nachrichten, ...). Diese "
+"Zusammenfassung ist im HTML-Format, um in Kanban Karten Ansichten eingefügt "
+"zu werden."
 
 #. module: analytic
-#: model:mail.message.subtype,description:analytic.mt_account_opened
-msgid "Stage <b>opened</b>"
-msgstr "Status <b>eröffnet</b>"
+#: help:account.analytic.account,message_unread:0
+msgid "If checked new messages require your attention."
+msgstr "Benachrichtigung erfordert handeln"
 
 #. module: analytic
 #: help:account.analytic.account,quantity_max:0
@@ -222,9 +217,9 @@ msgid "User"
 msgstr "Benutzer"
 
 #. module: analytic
-#: model:mail.message.subtype,description:analytic.mt_account_pending
-msgid "Contract <b>pending</b>"
-msgstr "Vertrag <b>wieder vorlegen</b>"
+#: field:account.analytic.account,parent_id:0
+msgid "Parent Analytic Account"
+msgstr "Übergeordnete Kostenstelle"
 
 #. module: analytic
 #: field:account.analytic.line,date:0
@@ -267,9 +262,15 @@ msgid "Messages"
 msgstr "Mitteilungen"
 
 #. module: analytic
-#: field:account.analytic.account,parent_id:0
-msgid "Parent Analytic Account"
-msgstr "Übergeordnete Kostenstelle"
+#: help:account.analytic.account,message_ids:0
+msgid "Messages and communication history"
+msgstr "Nachrichten und Kommunikation"
+
+#. module: analytic
+#: constraint:account.analytic.line:0
+msgid "You cannot create analytic line on view account."
+msgstr ""
+"Sie können keine Kostenstellen buchen, die als Ansicht definiert wurde"
 
 #. module: analytic
 #: view:account.analytic.account:0
@@ -303,9 +304,25 @@ msgid "Contract Opened"
 msgstr "Vertrag eröffnet"
 
 #. module: analytic
-#: model:mail.message.subtype,description:analytic.mt_account_closed
-msgid "Contract <b>closed</b>"
-msgstr "Vertrag <b>beendet</b>"
+#: help:account.analytic.account,type:0
+msgid ""
+"If you select the View Type, it means you won't allow to create journal "
+"entries using that account.\n"
+"The type 'Analytic account' stands for usual accounts that you only want to "
+"use in accounting.\n"
+"If you select Contract or Project, it offers you the possibility to manage "
+"the validity and the invoicing options for this account.\n"
+"The special type 'Template of Contract' allows you to define a template with "
+"default data that you can reuse easily."
+msgstr ""
+"Wenn Sie 'Ansicht' als Typ einer Kostenstelle auswählen, darf auf dieser "
+"Kostenstelle nicht gebucht werden.\n"
+"Der Typ 'Kostenstelle' steht für die normalen internen Kostenstellen, die "
+"nur in der Buchhaltung verwendet werden.\n"
+"Wenn Sie 'Vertrag oder Projekt' auswählen, können Sie die Einstellungen zur "
+"Vertragsdauer und zur Abrechnung \n"
+"verwalten. In einer 'Vertrag Vorlage' hinterlegen Sie Standard-Daten, die "
+"Sie immer wieder verwenden können."
 
 #. module: analytic
 #: selection:account.analytic.account,state:0
@@ -323,9 +340,9 @@ msgid "Balance"
 msgstr "Saldo"
 
 #. module: analytic
-#: help:account.analytic.account,message_unread:0
-msgid "If checked new messages require your attention."
-msgstr "Benachrichtigung erfordert handeln"
+#: field:account.analytic.account,complete_name:0
+msgid "Full Name"
+msgstr ""
 
 #. module: analytic
 #: selection:account.analytic.account,state:0
@@ -355,6 +372,11 @@ msgid "Error!"
 msgstr "Fehler !"
 
 #. module: analytic
+#: model:mail.message.subtype,description:analytic.mt_account_closed
+msgid "Contract closed"
+msgstr ""
+
+#. module: analytic
 #: model:res.groups,name:analytic.group_analytic_accounting
 msgid "Analytic Accounting"
 msgstr "Kostenstellenrechnung"
@@ -363,11 +385,6 @@ msgstr "Kostenstellenrechnung"
 #: field:account.analytic.line,amount:0
 msgid "Amount"
 msgstr "Betrag"
-
-#. module: analytic
-#: field:account.analytic.account,complete_name:0
-msgid "Full Account Name"
-msgstr "Bezeichnung der Kostenstelle"
 
 #. module: analytic
 #: view:account.analytic.account:0
@@ -383,14 +400,15 @@ msgid "Currency"
 msgstr "Währung"
 
 #. module: analytic
-#: help:account.analytic.account,message_summary:0
-msgid ""
-"Holds the Chatter summary (number of messages, ...). This summary is "
-"directly in html format in order to be inserted in kanban views."
+#: model:mail.message.subtype,description:analytic.mt_account_opened
+msgid "Contract opened"
 msgstr ""
-"Beinhaltet die Chatter Zusammenfassung (Anzahl der Nachrichten, ...). Diese "
-"Zusammenfassung ist im HTML-Format, um in Kanban Karten Ansichten eingefügt "
-"zu werden."
+
+#. module: analytic
+#: code:addons/analytic/analytic.py:262
+#, python-format
+msgid "Warning"
+msgstr ""
 
 #. module: analytic
 #: field:account.analytic.account,type:0
@@ -403,12 +421,18 @@ msgid "Start Date"
 msgstr "Start Datum"
 
 #. module: analytic
-#: constraint:account.analytic.line:0
-msgid "You cannot create analytic line on view account."
-msgstr ""
-"Sie können keine Kostenstellen buchen, die als Ansicht definiert wurde"
-
-#. module: analytic
 #: field:account.analytic.account,line_ids:0
 msgid "Analytic Entries"
 msgstr "Kostenstellen Buchungen"
+
+#~ msgid "Full Account Name"
+#~ msgstr "Bezeichnung der Kostenstelle"
+
+#~ msgid "Contract <b>pending</b>"
+#~ msgstr "Vertrag <b>wieder vorlegen</b>"
+
+#~ msgid "Contract <b>closed</b>"
+#~ msgstr "Vertrag <b>beendet</b>"
+
+#~ msgid "Stage <b>opened</b>"
+#~ msgstr "Status <b>eröffnet</b>"
