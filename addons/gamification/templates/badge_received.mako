@@ -11,7 +11,7 @@
     </p>
 
     % if badge.image
-        <p><img src="cid:badge-img" alt="Badge ${badge.name}" /></p>
+        <p><img src="cid:badge-img.png" alt="Badge ${badge.name}" /></p>
     % endif
     % if badge.description
         <p><em>${badge.description}</em></p>

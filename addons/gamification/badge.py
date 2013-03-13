@@ -206,7 +206,7 @@ result = pool.get('res.users').search(cr, uid, domain=[], context=context)""",
                                     partner_ids=[(4, badge_user.user_id.partner_id.id)],
                                     type='comment',
                                     subtype='mt_comment',
-                                    attachments=[('badge-img', base64.decodestring(badge.image))],
+                                    attachments=[('badge-img.png', base64.decodestring(badge.image))],
                                     context=context)
 
         return res
