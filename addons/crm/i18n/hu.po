@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2013-03-07 08:36+0000\n"
-"PO-Revision-Date: 2012-12-21 23:00+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"PO-Revision-Date: 2013-03-12 18:01+0000\n"
+"Last-Translator: krnkris <Unknown>\n"
 "Language-Team: Hungarian <hu@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-03-08 05:38+0000\n"
-"X-Generator: Launchpad (build 16523)\n"
+"X-Launchpad-Export-Date: 2013-03-13 04:58+0000\n"
+"X-Generator: Launchpad (build 16532)\n"
 
 #. module: crm
 #: view:crm.lead.report:0
@@ -28,6 +28,8 @@ msgid ""
 "Allows you to configure your incoming mail server, and create leads from "
 "incoming emails."
 msgstr ""
+"Lehetővé teszi a bejövő email szerver beállítását, és érdeklődés "
+"létrehozását a bejövő levelekből."
 
 #. module: crm
 #: code:addons/crm/crm_lead.py:881
@@ -55,6 +57,11 @@ msgid ""
 "Description: [[object.description]]\n"
 "            "
 msgstr ""
+"Figyelem a feldolgozatlan bejövő érdeklődés több mint 5 napos.\n"
+"Név: [[object.name ]]\n"
+"ID azonosító: [[object.id ]]\n"
+"Leírás: [[object.description]]\n"
+"            "
 
 #. module: crm
 #: field:crm.opportunity2phonecall,action:0
@@ -65,7 +72,7 @@ msgstr "Művelet"
 #. module: crm
 #: model:ir.actions.server,name:crm.action_set_team_sales_department
 msgid "Set team to Sales Department"
-msgstr ""
+msgstr "Csoport beállítása az értékesítési osztályhoz"
 
 #. module: crm
 #: view:crm.lead2opportunity.partner.mass:0
@@ -82,7 +89,7 @@ msgstr ""
 #: view:crm.lead.report:0
 #: field:crm.phonecall.report,delay_close:0
 msgid "Delay to close"
-msgstr ""
+msgstr "Késleltetés a zárásig"
 
 #. module: crm
 #: view:crm.case.stage:0
@@ -101,7 +108,7 @@ msgstr ""
 #. module: crm
 #: model:ir.model,name:crm.model_crm_lead_report
 msgid "CRM Lead Analysis"
-msgstr ""
+msgstr "CRM érdeklődés elemzés"
 
 #. module: crm
 #: view:crm.lead.report:0
@@ -339,6 +346,8 @@ msgstr "Kapcsolat"
 msgid ""
 "When escalating to this team override the salesman with the team leader."
 msgstr ""
+"Ha kiterjeszti erre a csoportra akkor felülírja az értékesítőt a csoport "
+"vezetővel."
 
 #. module: crm
 #: model:process.transition,name:crm.process_transition_opportunitymeeting0
@@ -359,7 +368,7 @@ msgstr "Ha egy valódi projektet/lehetőséget érzékel"
 #. module: crm
 #: field:res.partner,opportunity_ids:0
 msgid "Leads and Opportunities"
-msgstr "Érdeklődők és Lehetőségek"
+msgstr "Érdeklődések és Lehetőségek"
 
 #. module: crm
 #: model:ir.actions.act_window,help:crm.relate_partner_opportunities
@@ -415,7 +424,7 @@ msgstr "Frissítés dátuma"
 #. module: crm
 #: field:crm.case.section,user_id:0
 msgid "Team Leader"
-msgstr ""
+msgstr "Csoportvezető"
 
 #. module: crm
 #: code:addons/crm/crm_lead.py:1032
@@ -451,6 +460,8 @@ msgstr "Lehetőségek száma"
 msgid ""
 "Please select more than one element (lead or opportunity) from the list view."
 msgstr ""
+"Kérem válaszon ki több mint egy elemet (érdeklődés vagy lehetőség) a lista "
+"nézetből."
 
 #. module: crm
 #: field:crm.lead,partner_address_email:0
@@ -587,6 +598,8 @@ msgid ""
 "Reminder on Lead: [[object.id ]] [[object.partner_id and 'of ' "
 "+object.partner_id.name or '']]"
 msgstr ""
+"Emlékeztető az érdeklődésre: [[object.id ]] [[object.partner_id and 'of ' "
+"+object.partner_id.name or '']]"
 
 #. module: crm
 #: code:addons/crm/crm_lead.py:745
@@ -699,7 +712,7 @@ msgstr ""
 #. module: crm
 #: model:ir.filters,name:crm.filter_usa_lead
 msgid "Leads from USA"
-msgstr ""
+msgstr "Érdeklődés USA-ból"
 
 #. module: crm
 #: sql_constraint:crm.lead:0
@@ -709,7 +722,7 @@ msgstr ""
 #. module: crm
 #: view:crm.lead:0
 msgid "Leads Generation"
-msgstr ""
+msgstr "Érdeklődés generálása"
 
 #. module: crm
 #: view:board.board:0
@@ -765,6 +778,8 @@ msgstr "Telefonszámok közötti keresés"
 msgid ""
 "Leads/Opportunities that are assigned to one of the sale teams I manage"
 msgstr ""
+"Érdeklődés/Lehetőség ami az általam vezetett értékesítési osztályhoz lett "
+"rendelve"
 
 #. module: crm
 #: field:crm.segmentation.line,expr_value:0
@@ -871,7 +886,7 @@ msgstr "Kimenő"
 #. module: crm
 #: view:crm.lead:0
 msgid "Leads that are assigned to me"
-msgstr ""
+msgstr "Érdeklődés ami hozzám lett rendelve"
 
 #. module: crm
 #: view:crm.lead:0
@@ -891,7 +906,7 @@ msgstr ""
 #. module: crm
 #: model:ir.filters,name:crm.filter_draft_lead
 msgid "Draft Leads"
-msgstr ""
+msgstr "Érdeklődés tervezet"
 
 #. module: crm
 #: selection:crm.lead.report,creation_month:0
@@ -1048,7 +1063,7 @@ msgstr "Létrehozás dátuma"
 #: code:addons/crm/crm_lead.py:698
 #, python-format
 msgid "Lead <b>converted into an Opportunity</b>"
-msgstr ""
+msgstr "Tervezet <b>lehetőséggé átalakítva lehetőséggé</b>"
 
 #. module: crm
 #: selection:crm.segmentation.line,expr_name:0
@@ -1063,7 +1078,7 @@ msgstr ""
 #. module: crm
 #: view:crm.lead:0
 msgid "Open Leads"
-msgstr ""
+msgstr "Nyitott érdeklődések"
 
 #. module: crm
 #: view:crm.case.stage:0
