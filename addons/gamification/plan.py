@@ -47,7 +47,7 @@ def start_end_date_for_period(period):
     elif period == 'yearly':
         start_date = today.replace(month=1, day=1)
         end_date = today.replace(month=12, day=31)
-    else: # period == 'once':
+    else:  # period == 'once':
         start_date = False  # for manual goal, start each time
         end_date = False
 

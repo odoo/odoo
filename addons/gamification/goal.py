@@ -218,9 +218,9 @@ class gamification_goal(osv.Model):
 
                 domain = safe_eval(goal.type_id.domain,
                                    {'user_id': goal.user_id.id})
-                if goal.start_date:
+                if goal.start_date and field_date_name:
                     domain.append((field_date_name, '>=', goal.start_date))
-                if goal.end_date:
+                if goal.end_date and field_date_name:
                     domain.append((field_date_name, '<=', goal.end_date))
 
                 if goal.type_id.computation_mode == 'sum':
@@ -234,6 +234,7 @@ class gamification_goal(osv.Model):
                         towrite = {'current': 0}
 
                 else:  # computation mode = count
+                    print(uid, domain, type(obj))
                     res = obj.search(cr, uid, domain, context=context)
                     towrite = {'current': len(res)}
 
