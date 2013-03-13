@@ -298,8 +298,10 @@ class hr_employee(osv.osv):
                 for employee_id in employee_ids:
                     res = super(hr_employee, self).message_post(cr, uid, employee_id, context=context, **kwargs)
                 return res
+            else:
+                raise osv.except_osv('Warning!', 'You need to be an employee to send messages to your followers.')
 
-        # if no overwrite or no linked employee, send message as usual
+        # if no overwrite, send message as usual
         return super(hr_employee, self).message_post(cr, uid, thread_id, context=context, **kwargs)
 
     _defaults = {
