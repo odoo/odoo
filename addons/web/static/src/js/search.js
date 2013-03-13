@@ -1197,7 +1197,7 @@ instance.web.search.GroupbyGroup = instance.web.search.FilterGroup.extend({
             category: _t("GroupBy"),
             icon: this.icon,
             values: values,
-            field: this.getParent()._s_groupby
+            field: this.view._s_groupby
         };
     }
 });

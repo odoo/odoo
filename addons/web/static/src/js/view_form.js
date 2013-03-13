@@ -1892,10 +1892,11 @@ instance.web.form.WidgetButton = instance.web.form.FormWidget.extend({
         if (this.node.attrs.icon && (! /\//.test(this.node.attrs.icon))) {
             this.node.attrs.icon = '/web/static/src/img/icons/' + this.node.attrs.icon + '.png';
         }
-        this.view.on('view_content_has_changed', this, this.check_disable);
     },
     start: function() {
         this._super.apply(this, arguments);
+        this.view.on('view_content_has_changed', this, this.check_disable);
+        this.check_disable();
         this.$el.click(this.on_click);
         if (this.node.attrs.help || instance.session.debug) {
             this.do_attach_tooltip();
@@ -1930,7 +1931,7 @@ instance.web.form.WidgetButton = instance.web.form.FormWidget.extend({
                                     $(self2).dialog("close");
                                 });
                             }
-                        },
+                        }
                     ],
                     beforeClose: function() {
                         def.resolve();
@@ -3306,7 +3307,7 @@ instance.web.form.FieldMany2One = instance.web.form.AbstractField.extend(instanc
     },
     focus: function () {
         if (!this.get('effective_readonly')) {
-            this.$input[0].focus();
+            this.$input && this.$input[0].focus();
         }
     },
     _quick_create: function() {
@@ -3785,8 +3786,12 @@ instance.web.form.One2ManyListView = instance.web.ListView.extend({
         this.o2m.trigger_on_change();
     },
     is_valid: function () {
-        var form = this.editor.form;
-
+        var editor = this.editor;
+        var form = editor.form;
+        // If no edition is pending, the listview can not be invalid (?)
+        if (!editor.record) {
+            return true
+        }
         // If the form has not been modified, the view can only be valid
         // NB: is_dirty will also be set on defaults/onchanges/whatever?
         // oe_form_dirty seems to only be set on actual user actions
@@ -4033,6 +4038,7 @@ instance.web.form.FieldMany2ManyTags = instance.web.form.AbstractField.extend(in
         if (this.get("effective_readonly"))
             return;
         var self = this;
+        var ignore_blur = false;
         self.$text = this.$("textarea");
         self.$text.textext({
             plugins : 'tags arrow autocomplete',
@@ -4051,6 +4057,7 @@ instance.web.form.FieldMany2ManyTags = instance.web.form.AbstractField.extend(in
                         if (data.id) {
                             self.add_id(data.id);
                         } else {
+                            ignore_blur = true;
                             data.action();
                         }
                     },
@@ -4101,10 +4108,13 @@ instance.web.form.FieldMany2ManyTags = instance.web.form.AbstractField.extend(in
         self.$text
             .focusin(function () {
                 self.trigger('focused');
+                ignore_blur = false;
             })
             .focusout(function() {
                 self.$text.trigger("setInputData", "");
-                self.trigger('blurred');
+                if (!ignore_blur) {
+                    self.trigger('blurred');
+                }
             }).keydown(function(e) {
                 if (e.which === $.ui.keyCode.TAB && self._drop_shown) {
                     self.$text.textext()[0].autocomplete().selectFromDropdown();
