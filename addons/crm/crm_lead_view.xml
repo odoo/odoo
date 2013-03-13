@@ -341,7 +341,11 @@
                     <filter string="Assigned to My Team(s)"
                             domain="[('section_id.member_ids', 'in', [uid])]" context="{'invisible_section': False}"
                             help="Leads that are assigned to any sales teams I am member of"/>
-                    <separator/>
+                    <separator />
+                    <filter string="Available for mass mailing"
+                            name='not_opt_out' domain="[('opt_out', '=', False)]"
+                            help="Leads that did not ask not to be included in mass mailing campaigns"/>
+                    <separator />
                     <group expand="0" string="Group By...">
                         <filter string="Salesperson" domain="[]" context="{'group_by':'user_id'}"/>
                         <filter string="Team" domain="[]" context="{'group_by':'section_id'}"/>
