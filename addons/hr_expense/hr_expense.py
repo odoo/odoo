@@ -227,9 +227,10 @@ class hr_expense_expense(osv.osv):
 
 
     def action_move_create(self, cr, uid, ids, context=None):
+        '''
+        main function that is called when trying to create the accounting entries related to an expense
+        '''
         move_obj = self.pool.get('account.move')
-        if context is None:
-            context = {}
         for exp in self.browse(cr, uid, ids, context=context):
             if not exp.employee_id.address_home_id:
                 raise osv.except_osv(_('Error!'), _('The employee must have a home address.'))
@@ -238,17 +239,14 @@ class hr_expense_expense(osv.osv):
             
             #create the move that will contain the accounting entries
             move_id = move_obj.create(cr, uid, self.account_move_get(cr, uid, exp.id, context=context), context=context)
-            #iml = self._get_analytic_lines
+        
+            #one account.move.line per expense line (+taxes..)
+            eml = self.move_line_get(cr, uid, exp.id, context=context)
             
-            # within: iml = self.pool.get('account.invoice.line').move_line_get
-            iml = self.move_line_get(cr, uid, exp.id, context=context)
-            
-            # create one move line for the total
-            total, total_currency, iml = self.compute_expense_totals(cr, uid, exp, company_currency, exp.name, iml, context=context)
-            
-            #counterline with the total on payable account for the employee
+            #create one more move line, a counterline for the total on payable account
+            total, total_currency, eml = self.compute_expense_totals(cr, uid, exp, company_currency, exp.name, eml, context=context)
             acc = exp.employee_id.address_home_id.property_account_payable.id
-            iml.append({
+            eml.append({
                     'type': 'dest',
                     'name': '/',
                     'price': total, 
@@ -258,8 +256,9 @@ class hr_expense_expense(osv.osv):
                     'currency_id': diff_currency_p and exp.currency_id.id or False, 
                     'ref': exp.name
                     })
-            
-            lines = map(lambda x:(0,0,self.line_get_convert(cr, uid, x, exp.employee_id.address_home_id, exp.date_confirm, context=context)),iml)
+
+            #convert eml into an osv-valid format
+            lines = map(lambda x:(0,0,self.line_get_convert(cr, uid, x, exp.employee_id.address_home_id, exp.date_confirm, context=context)), eml)
             move_obj.write(cr, uid, [move_id], {'line_id': lines}, context=context)
             self.write(cr, uid, ids, {'account_move_id': move_id, 'state': 'done'}, context=context)
         return True
