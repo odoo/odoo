@@ -30,16 +30,16 @@ class res_partner_mail(osv.Model):
 
     _columns = {
         'notification_email_send': fields.selection([
-            ('all', 'All Messages (discussions, emails, followed system notifications)'),
-            ('comment', 'Incoming Emails and Discussions'),
+            ('none', 'Never'),
             ('email', 'Incoming Emails only'),
-            ('none', 'Never')
+            ('comment', 'Incoming Emails and Discussions'),
+            ('all', 'All Messages (discussions, emails, followed system notifications)'),
             ], 'Receive Messages by Email', required=True,
-            help="Policy to receive emails for new notifications pushed to your Inbox. "\
-                    "'Never' prevents OpenERP from sending emails for notifications. "\
-                    "'Incoming Emails only' send an email when you receive an incoming email, such as customer replies. "\
-                    "'Incoming Emails and Discussions' sends emails for incoming emails along with user input. "\
-                    "'All Messages' also sends emails for notifications received for followed subtype, like stage changes, in addition to Incoming Emails and Discussions."),
+            help="Policy to receive emails for new messages pushed to your personal Inbox:\n "
+                    "- Never: no emails are sent"
+                    "- Incoming Emails only: for messages received by the system via email"
+                    "- Incoming Emails and Discussions: for incoming emails along with internal discussions"
+                    "- All Messages: for every notification you receive in your Inbox"),
     }
 
     _defaults = {
