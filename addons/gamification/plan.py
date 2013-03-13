@@ -74,37 +74,37 @@ class gamification_goal_plan(osv.Model):
         period. Return a string in isoformat."""
         res = {}
         for plan in self.browse(cr, uid, ids, context):
-            last = datetime.strptime(plan.last_report_date,'%Y-%m-%d').date()
+            last = datetime.strptime(plan.last_report_date, '%Y-%m-%d').date()
             if plan.report_message_frequency == 'daily':
-                next = last + timedelta(days=1)
+                res[plan.id] = last + timedelta(days=1).isoformat()
             elif plan.report_message_frequency == 'weekly':
-                next = last + timedelta(days=7)
+                res[plan.id] = last + timedelta(days=7).isoformat()
             elif plan.report_message_frequency == 'monthly':
                 month_range = calendar.monthrange(last.year, last.month)
-                next = last.replace(day=month_range[1]) + timedelta(days=1)
+                res[plan.id] = last.replace(day=month_range[1]) + timedelta(days=1).isoformat()
             elif plan.report_message_frequency == 'yearly':
-                next = last.replace(year=last.year + 1)
+                res[plan.id] = last.replace(year=last.year + 1).isoformat()
             else:  # frequency == 'once':
-                next = False
-            res[plan.id] = next.isoformat()
+                res[plan.id] = False
+
         return res
 
     _columns = {
-        'name' : fields.char('Plan Name', required=True, translate=True),
-        'user_ids' : fields.many2many('res.users',
+        'name': fields.char('Plan Name', required=True, translate=True),
+        'user_ids': fields.many2many('res.users',
             string='Users',
             help="List of users to which the goal will be set"),
-        'manager_id' : fields.many2one('res.users', required=True,
+        'manager_id': fields.many2one('res.users', required=True,
             string='Manager', help="The user that will be able to access the user goals and modify the plan."),
-        'planline_ids' : fields.one2many('gamification.goal.planline',
+        'planline_ids': fields.one2many('gamification.goal.planline',
             'plan_id',
             string='Planline',
             help="list of goals that will be set",
             required=True),
-        'autojoin_group_id' : fields.many2one('res.groups',
+        'autojoin_group_id': fields.many2one('res.groups',
             string='Auto-join Group',
             help='Group of users whose members will automatically be added to the users'),
-        'period' : fields.selection([
+        'period': fields.selection([
                 ('once', 'No Periodicity'),
                 ('daily', 'Daily'),
                 ('weekly', 'Weekly'),
@@ -114,7 +114,7 @@ class gamification_goal_plan(osv.Model):
             string='Periodicity',
             help='Period of automatic goal assigment. If none is selected, should be launched manually.',
             required=True),
-        'start_date' : fields.date('Starting Date', help="The day a new plan will be automatically started. The start and end dates for goals are still defined by the periodicity (eg: weekly goals run from Monday to Sunday)."),
+        'start_date': fields.date('Starting Date', help="The day a new plan will be automatically started. The start and end dates for goals are still defined by the periodicity (eg: weekly goals run from Monday to Sunday)."),
         'state': fields.selection([
                 ('draft', 'Draft'),
                 ('inprogress', 'In progress'),
@@ -122,14 +122,14 @@ class gamification_goal_plan(osv.Model):
             ],
             string='State',
             required=True),
-        'visibility_mode':fields.selection([
+        'visibility_mode': fields.selection([
                 ('board','Leader board'),
                 ('progressbar','Personal progressbar')
             ],
             string="Visibility",
             help='How are displayed the results, shared or in a single progressbar',
             required=True),
-        'report_message_frequency':fields.selection([
+        'report_message_frequency': fields.selection([
                 ('never','Never'),
                 ('onchange','On change'),
                 ('daily','Daily'),
@@ -139,11 +139,11 @@ class gamification_goal_plan(osv.Model):
             ],
             string="Report Frequency",
             required=True),
-        'report_message_group_id' : fields.many2one('mail.group',
+        'report_message_group_id': fields.many2one('mail.group',
             string='Send a copy to',
             help='Group that will receive a copy of the report in addition to the user'),
-        'report_header' : fields.text('Report Header'),
-        'remind_update_delay' : fields.integer('Remind delay',
+        'report_header': fields.text('Report Header'),
+        'remind_update_delay': fields.integer('Remind delay',
             help="The number of days after which the user assigned to a manual goal will be reminded. Never reminded if no value or zero is specified."),
         'last_report_date': fields.date('Last Report Date'),
         'next_report_date': fields.function(_get_next_report_date,

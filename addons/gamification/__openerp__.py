@@ -23,7 +23,7 @@
     'version': '1.0',
     'author': 'OpenERP SA',
     'category': 'Human Resources',
-    'depends': ['mail', 'hr'],
+    'depends': ['mail'],
     'description': """Gamification of goals""",
 
     'data': [
