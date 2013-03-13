@@ -693,7 +693,7 @@
                                     </field>
                                 </group>
                                 <group string="Consumed Products">
-                                    <field name="move_lines2" nolabel="1">
+                                    <field name="move_lines2" nolabel="1" options="{'reload_on_button': true}">
                                        <tree colors="red:scrapped==True;blue:state == 'draft';black:state in('picking_except','confirmed','ready','in_production');gray:state == 'cancel' " string="Consumed Products" editable="bottom">
                                            <field name="product_id" readonly="1"/>
                                            <field name="product_qty" readonly="1"/>
@@ -714,7 +714,7 @@
                         <page string="Finished Products">
                             <group>
                                 <group string="Products to Produce">
-                                    <field name="move_created_ids" nolabel="1">
+                                    <field name="move_created_ids" nolabel="1" options="{'reload_on_button': true}">
                                         <tree string="Products to Finish">
                                             <field name="product_id"/>
                                             <field name="product_qty"/>
@@ -732,7 +732,7 @@
                                     </field>
                                 </group>
                                 <group string="Produced Products">
-                                    <field name="move_created_ids2" nolabel="1">
+                                    <field name="move_created_ids2" nolabel="1" options="{'reload_on_button': true}">
                                         <tree colors="red:scrapped==True;blue:state == 'draft';black:state in('picking_except','confirmed','ready','in_production');gray:state in('cancel','done') " string="Finished Products">
                                             <field name="product_id" readonly="1"/>
                                             <field name="product_qty" readonly="1"/>
