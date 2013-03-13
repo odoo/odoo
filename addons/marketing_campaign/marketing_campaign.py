@@ -297,7 +297,7 @@ class marketing_campaign_segment(osv.osv):
         self.process_segment(cr, uid, ids)
         return True
 
-    @api.cr_uid_ids
+    @api.cr_uid_ids_context
     def process_segment(self, cr, uid, segment_ids=None, context=None):
         Workitems = self.pool.get('marketing.campaign.workitem')
         Campaigns = self.pool.get('marketing.campaign')
@@ -634,14 +634,14 @@ class marketing_campaign_workitem(osv.osv):
         'date': False,
     }
 
-    @api.cr_uid_ids
+    @api.cr_uid_ids_context
     def button_draft(self, cr, uid, workitem_ids, context=None):
         for wi in self.browse(cr, uid, workitem_ids, context=context):
             if wi.state in ('exception', 'cancelled'):
                 self.write(cr, uid, [wi.id], {'state':'todo'}, context=context)
         return True
 
-    @api.cr_uid_ids
+    @api.cr_uid_ids_context
     def button_cancel(self, cr, uid, workitem_ids, context=None):
         for wi in self.browse(cr, uid, workitem_ids, context=context):
             if wi.state in ('todo','exception'):
@@ -734,7 +734,7 @@ class marketing_campaign_workitem(osv.osv):
             tb = "".join(format_exception(*exc_info()))
             workitem.write({'state': 'exception', 'error_msg': tb})
 
-    @api.cr_uid_ids
+    @api.cr_uid_ids_context
     def process(self, cr, uid, workitem_ids, context=None):
         for wi in self.browse(cr, uid, workitem_ids, context=context):
             self._process_one(cr, uid, wi, context=context)

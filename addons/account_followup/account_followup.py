@@ -155,7 +155,7 @@ class res_partner(osv.osv):
                                'latest_followup_level_id_without_lit': latest_level_without_lit}
         return res
 
-    @api.cr_uid_ids
+    @api.cr_uid_ids_context
     def do_partner_manual_action(self, cr, uid, partner_ids, context=None): 
         #partner_ids -> res.partner
         for partner in self.browse(cr, uid, partner_ids, context=context):
@@ -197,7 +197,7 @@ class res_partner(osv.osv):
             'datas': datas,
             }
 
-    @api.cr_uid_ids
+    @api.cr_uid_ids_context
     def do_partner_mail(self, cr, uid, partner_ids, context=None):
         if context is None:
             context = {}

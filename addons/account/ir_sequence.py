@@ -47,7 +47,7 @@ class ir_sequence(osv.osv):
             'sequence_main_id', 'Sequences')
     }
 
-    @api.cr_uid_ids
+    @api.cr_uid_ids_context
     def _next(self, cr, uid, seq_ids, context=None):
         if context is None:
             context = {}

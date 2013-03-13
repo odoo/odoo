@@ -85,7 +85,7 @@ class hr_payroll_structure(osv.osv):
             company_id=self.pool.get('res.users').browse(cr, uid, uid, context=context).company_id.id)
         return super(hr_payroll_structure, self).copy(cr, uid, id, default, context=context)
 
-    @api.cr_uid_ids
+    @api.cr_uid_ids_context
     def get_all_rules(self, cr, uid, structure_ids, context=None):
         """
         @param structure_ids: list of structure
@@ -97,7 +97,7 @@ class hr_payroll_structure(osv.osv):
             all_rules += self.pool.get('hr.salary.rule')._recursive_search_of_rules(cr, uid, struct.rule_ids, context=context)
         return all_rules
 
-    @api.cr_uid_ids
+    @api.cr_uid_ids_context
     def _get_parent_structure(self, cr, uid, struct_ids, context=None):
         if not struct_ids:
             return []
@@ -136,7 +136,7 @@ class hr_contract(osv.osv):
         'schedule_pay': 'monthly',
     }
 
-    @api.cr_uid_ids
+    @api.cr_uid_ids_context
     def get_all_structures(self, cr, uid, contract_ids, context=None):
         """
         @param contract_ids: list of contracts
@@ -840,7 +840,7 @@ result = rules.NET > categories.NET * 0.10''',
         'quantity': '1.0',
      }
 
-    @api.cr_uid_ids
+    @api.cr_uid_ids_context
     def _recursive_search_of_rules(self, cr, uid, rule_ids, context=None):
         """
         @param rule_ids: list of browse record

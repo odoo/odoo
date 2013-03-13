@@ -126,7 +126,7 @@ class product_pricelist(osv.osv):
         "currency_id": _get_currency
     }
 
-    @api.cr_uid_ids
+    @api.cr_uid_ids_context
     def price_get_multi(self, cr, uid, pricelist_ids, products_by_qty_by_partner, context=None):
         """multi products 'price_get'.
            @param pricelist_ids:

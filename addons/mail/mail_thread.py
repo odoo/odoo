@@ -856,7 +856,7 @@ class mail_thread(osv.AbstractModel):
             'new_partner_ids': new_partner_ids,
         }
 
-    @api.cr_uid_ids
+    @api.cr_uid_ids_context
     def message_post(self, cr, uid, thread_id, body='', subject=None, type='notification',
                         subtype=None, parent_id=False, attachments=None, context=None, **kwargs):
         """ Post a new message in an existing thread, returning the new
@@ -949,7 +949,7 @@ class mail_thread(osv.AbstractModel):
 
         return mail_message.create(cr, uid, values, context=context)
 
-    @api.cr_uid_ids
+    @api.cr_uid_ids_context
     def message_post_user_api(self, cr, uid, thread_id, body='', parent_id=False,
                                 attachment_ids=None, content_subtype='plaintext',
                                 context=None, **kwargs):

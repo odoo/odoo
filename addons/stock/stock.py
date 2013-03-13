@@ -26,7 +26,7 @@ import time
 from operator import itemgetter
 from itertools import groupby
 
-from openerp.osv import fields, osv
+from openerp.osv import fields, osv, api
 from openerp.tools.translate import _
 from openerp import netsvc
 from openerp import tools
@@ -731,9 +731,10 @@ class stock_picking(osv.osv):
     def onchange_partner_in(self, cr, uid, ids, partner_id=None, context=None):
         return {}
 
-    def action_explode(self, cr, uid, moves, context=None):
+    @api.cr_uid_context
+    def action_explode(self, cr, uid, move_ids, context=None):
         """Hook to allow other modules to split the moves of a picking."""
-        return moves
+        return move_ids
 
     def action_confirm(self, cr, uid, ids, context=None):
         """ Confirms picking.

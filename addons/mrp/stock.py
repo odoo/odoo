@@ -153,13 +153,13 @@ class StockPicking(osv.osv):
     #
     # Explode picking by replacing phantom BoMs
     #
-    @api.cr_uid_ids
-    def action_explode(self, cr, uid, move_ids, *args):
+    @api.cr_uid_context
+    def action_explode(self, cr, uid, move_ids, context=None):
         """Explodes moves by expanding kit components"""
         move_obj = self.pool.get('stock.move')
         todo = move_ids[:]
         for move in move_obj.browse(cr, uid, move_ids):
-            todo.extend(move_obj._action_explode(cr, uid, move))
+            todo.extend(move_obj._action_explode(cr, uid, move, context=context))
         return list(set(todo))
 
 StockPicking()
