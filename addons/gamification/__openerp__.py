@@ -34,6 +34,9 @@
         'security/gamification_security.xml',
         'security/ir.model.access.csv',
     ],
+    'demo': [
+        'badge_demo.xml',
+    ],
     'installable': True,
     'application': True,
     'css': ['static/src/css/goal.css'],
