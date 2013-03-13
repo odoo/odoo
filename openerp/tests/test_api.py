@@ -1,4 +1,5 @@
 
+from openerp import SUPERUSER_ID
 from openerp.tools import mute_logger
 from openerp.osv.api import scope
 from openerp.osv.orm import Record, Recordset, Null, except_orm
@@ -226,16 +227,16 @@ class TestAPI(common.TransactionCase):
                     self.assertEqual(scope.context, {'lang': user.lang})
 
                     with scope.SUDO():
-                        self.assertEqual(scope.uid, 1)
+                        self.assertEqual(scope.uid, SUPERUSER_ID)
 
                     self.assertEqual(scope.current, scope2)
                     self.assertEqual(scope.user, user)
 
-                    # root scope should be with superuser
-                    self.assertEqual(scope.root.uid, 1)
+                    # root scope should be with self.uid
+                    self.assertEqual(scope.root.uid, self.uid)
 
                     with scope.SUDO():
-                        self.assertEqual(scope.uid, 1)
+                        self.assertEqual(scope.uid, SUPERUSER_ID)
                         raise Exception()       # exit scope with an exception
 
                     self.assertTrue(False, "Unreachable statement")
@@ -248,6 +249,7 @@ class TestAPI(common.TransactionCase):
         self.assertEqual(scope.current, scope0)
 
     @mute_logger('openerp.osv.orm')
+    @mute_logger('openerp.addons.base.ir.ir_model')
     def test_55_scope(self):
         """ Test scope on records. """
         partners = self.Partner.search([('name', 'ilike', 'j')])
@@ -277,6 +279,7 @@ class TestAPI(common.TransactionCase):
             self.assertEqual(p.scope.uid, self.uid)
 
         with scope(demo):
+            # records and recordsets keep their scope
             self.assertEqual(partners.scope.uid, self.uid)
             for p in partners:
                 self.assertEqual(p.scope.uid, self.uid)
