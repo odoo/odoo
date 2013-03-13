@@ -40,6 +40,9 @@
                         </td>
                     </tr>
                 </xpath>
+                <xpath expr="//group[@name='invoice_on_timesheets']" position="attributes">
+                    <attribute name="attrs">{'invisible': [('invoice_on_timesheets','=',False),('charge_expenses','=',False)]}</attribute>
+                </xpath>
             </field>
         </record>
         
