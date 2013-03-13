@@ -790,9 +790,12 @@ class users_view(osv.osv):
             ir_model_data = self.pool.get('ir.model.data')
             for group_xml_id in context["default_groups_ref"]:
                 group_split = group_xml_id.split('.')
-                if  len(group_split) != 2:
-                    raise osv.except_osv(_('Invalid context value'), _('Invalid context default_groups_ref value (model.name_id) : "%s"') % group)
-                temp, group_id = ir_model_data.get_object_reference(cr, uid,  group_split[0], group_split[1]);
+                if len(group_split) != 2:
+                    raise osv.except_osv(_('Invalid context value'), _('Invalid context default_groups_ref value (model.name_id) : "%s"') % group_xml_id)
+                try:
+                    temp, group_id = ir_model_data.get_object_reference(cr, uid,  group_split[0], group_split[1])
+                except ValueError:
+                    group_id = False
                 groups += [group_id]
             values['groups_id'] = groups
         return values
