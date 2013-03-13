@@ -269,16 +269,7 @@ class res_users(osv.Model):
             if mail_state and mail_state['state'] == 'exception':
                 raise osv.except_osv(_("Cannot send email: no outgoing email server configured.\nYou can configure it under Settings/General Settings."), user.name)
             else:
-                return {
-                    'type': 'ir.actions.client',
-                    'name': '_(Server Notification)',
-                    'tag': 'action_notify',
-                    'params': {
-                        'title': 'Mail Sent to: %s' % user.name,
-                        'text': 'You can reset the password by yourself using this <a href=%s>link</a>' % user.partner_id.signup_url,
-                        'sticky': True,
-                    }
-                }
+                return True
 
     def create(self, cr, uid, values, context=None):
         # overridden to automatically invite user to sign up
