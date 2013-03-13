@@ -35,10 +35,10 @@ class res_partner_mail(osv.Model):
             ('comment', 'Incoming Emails and Discussions'),
             ('all', 'All Messages (discussions, emails, followed system notifications)'),
             ], 'Receive Messages by Email', required=True,
-            help="Policy to receive emails for new messages pushed to your personal Inbox:\n "
-                    "- Never: no emails are sent"
-                    "- Incoming Emails only: for messages received by the system via email"
-                    "- Incoming Emails and Discussions: for incoming emails along with internal discussions"
+            help="Policy to receive emails for new messages pushed to your personal Inbox:\n"
+                    "- Never: no emails are sent\n"
+                    "- Incoming Emails only: for messages received by the system via email\n"
+                    "- Incoming Emails and Discussions: for incoming emails along with internal discussions\n"
                     "- All Messages: for every notification you receive in your Inbox"),
     }
 
