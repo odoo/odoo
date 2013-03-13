@@ -142,7 +142,9 @@ class email_template(osv.osv):
                                          help="If checked, the user's signature will be appended to the text version "
                                               "of the message"),
         'subject': fields.char('Subject', translate=True, help="Subject (placeholders may be used here)",),
-        'email_from': fields.char('From', help="Sender address (placeholders may be used here)"),
+        'email_from': fields.char('From',
+            help="Sender address (placeholders may be used here). If not set, the default "
+                    "value will be the author's email alias if configured, or email address."),
         'email_to': fields.char('To (Emails)', help="Comma-separated recipient addresses (placeholders may be used here)"),
         'email_recipients': fields.char('To (Partners)', help="Comma-separated ids of recipient partners (placeholders may be used here)"),
         'email_cc': fields.char('Cc', help="Carbon copy recipients (placeholders may be used here)"),
