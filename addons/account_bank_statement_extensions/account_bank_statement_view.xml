@@ -59,6 +59,24 @@
         </data>
       </field>
     </record>
+    
+     <!-- add state to bank statement line -->
+    <record id="view_bank_statement_form2_add_fields" model="ir.ui.view">
+       <field name="name">view.bank.statement.form2.add.fields</field>
+       <field name="model">account.bank.statement</field>
+       <field name="inherit_id" ref="account.view_bank_statement_form2"/>
+      <field name="type">form</field>
+      <field name="arch" type="xml">
+        <data>
+          <xpath expr="/form/notebook/page[@string='Cash Transactions']/field[@name='line_ids']/tree/field[@name='amount']" position="after">
+            <field name="state" invisible="1"/>
+          </xpath>
+          <xpath expr="/form/notebook/page[@string='Cash Transactions']/field[@name='line_ids']/form/field[@name='amount']" position="after">
+            <field name="state" invisible="1"/>
+          </xpath>
+        </data>
+      </field>
+    </record>
 
     <!-- Bank Statement Line View -->
 
