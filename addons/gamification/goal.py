@@ -151,7 +151,7 @@ class gamification_goal(osv.Model):
             required=True,
             track_visibility='always'),
 
-        'computation_mode': fields.related('type_id','computation_mode',
+        'computation_mode': fields.related('type_id', 'computation_mode',
             type='char', 
             string="Type computation mode"),
         'remind_update_delay': fields.integer('Remind delay',
