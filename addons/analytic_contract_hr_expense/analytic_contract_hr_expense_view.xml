@@ -43,6 +43,13 @@
                 <xpath expr="//group[@name='invoice_on_timesheets']" position="attributes">
                     <attribute name="attrs">{'invisible': [('invoice_on_timesheets','=',False),('charge_expenses','=',False)]}</attribute>
                 </xpath>
+                <xpath expr="//field[@name='pricelist_id']" position="attributes">
+                    <attribute name="attrs">{'required': ['|',('invoice_on_timesheets','=',True),('charge_expenses','=',True)]}</attribute>
+                </xpath>
+                <xpath expr="//field[@name='to_invoice']" position="attributes">
+                    <attribute name="attrs">{'required': ['|',('invoice_on_timesheets','=',True),('charge_expenses','=',True)]}</attribute>
+                    <attribute name="string">Expenses and Timesheet Invoicing Ratio</attribute>
+                </xpath>
             </field>
         </record>
         
