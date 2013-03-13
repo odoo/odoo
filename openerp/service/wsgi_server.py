@@ -32,8 +32,7 @@ import StringIO
 
 import errno
 import logging
-import os
-import signal
+import platform
 import socket
 import sys
 import threading
