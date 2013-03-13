@@ -417,10 +417,10 @@ class res_partner(osv.osv, format_address):
         """ Supported syntax:
             - 'Raoul <raoul@grosbedon.fr>': will find name and email address
             - otherwise: default, everything is set as the name """
-        match = re.search(r'([^\s,<@]+@[^>\s,]+)', text)
-        if match:
-            email = match.group(1)
-            name = text[:text.index(email)].replace('"','').replace('<','').strip()
+        emails = tools.email_split(text)
+        if emails:
+            email = emails[0]
+            name = text[:text.index(email)].replace('"', '').replace('<', '').strip()
         else:
             name, email = text, ''
         return name, email
