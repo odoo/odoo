@@ -234,14 +234,22 @@ class db(netsvc.ExportService):
 
     @contextlib.contextmanager
     def _set_pg_password_in_environment(self):
-        """ On Win32, pg_dump (and pg_restore) require that
-        :envvar:`PGPASSWORD` be set
+        """ On systems where pg_restore/pg_dump require an explicit
+        password (i.e. when not connecting via unix sockets, and most
+        importantly on Windows), it is necessary to pass the PG user
+        password in the environment or in a special .pgpass file.
 
         This context management method handles setting
-        :envvar:`PGPASSWORD` iif win32 and the envvar is not already
+        :envvar:`PGPASSWORD` if it is not already
         set, and removing it afterwards.
+
+        See also http://www.postgresql.org/docs/8.4/static/libpq-envars.html
+        
+        .. note:: This is not thread-safe, and should never be enabled for
+             SaaS (giving SaaS users the super-admin password is not a good idea
+             anyway)
         """
-        if os.name != 'nt' or os.environ.get('PGPASSWORD'):
+        if os.environ.get('PGPASSWORD'):
             yield
         else:
             os.environ['PGPASSWORD'] = tools.config['db_password']
