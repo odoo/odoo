@@ -1321,7 +1321,7 @@
         <div class="oe_add" t-if="!widget.get('effective_readonly')">
             <!-- uploader of file -->
             <button class="oe_attach"><span class="oe_e">'</span></button> 
-            <span class='oe_attach_label'>File</span>
+            <span class='oe_attach_label'><t t-esc="widget.string"/></span>
             <t t-call="HiddenInputFile">
                 <t t-set="fileupload_id" t-value="widget.fileupload_id"/>
                 <t t-set="fileupload_action" t-translation="off">/web/binary/upload_attachment</t>
