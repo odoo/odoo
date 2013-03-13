@@ -73,8 +73,8 @@
                                 <label for="current" />
                                 <div>
                                     <field name="current"  attrs="{'readonly':[('computation_mode','!=','manually')]}" class="oe_inline"/>
-                                    <button string="Refresh state" type="object" name="update" states="inprogress,inprogress_update,failed,reached" class="oe_highlight oe_inline"/>
-                                    <button name="write" type="object" string="The current value is up to date" help="Indicate that the current value of the manual goal is still correct and avoid reminders" attrs="{'invisible':[('computation_mode','!=', 'manually')]}"/>
+                                    <button string="Refresh state" type="object" name="update" class="oe_highlight oe_inline" attrs="{'invisible':['|',('computation_mode', '=', 'manually'),('state', '=', 'draft')]}"/>
+                                    <button name="write" type="object" string="The current value is up to date" help="Indicate that the current value of the manual goal is still correct and avoid reminders" attrs="{'invisible':['|',('computation_mode','!=', 'manually'),('state','=','draft')]}"/>
                                 </div>
                             </group>
                         </group>
