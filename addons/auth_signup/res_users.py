@@ -169,6 +169,7 @@ class res_users(osv.Model):
     _columns = {
         'state': fields.function(_get_state, string='Status', type='selection',
                     selection=[('new', 'New'), ('active', 'Active'), ('reset', 'Resetting Password')]),
+        'signup_url': fields.related('partner_id', 'signup_url', type='char', string='Reset password', readonly=True),
     }
 
     def signup(self, cr, uid, values, token=None, context=None):
