@@ -42,12 +42,12 @@ class analytic_user_funct_grid(osv.osv):
             return {}
 
         value = {}
+        if product_id:
+           prod = self.pool.get('product.product').browse(cr, uid, product_id, context=context)
         emp = emp_obj.browse(cr, uid, emp_id[0], context=context)
         if emp.product_id and not product_id:
             value['product_id'] = emp.product_id.id
             prod = emp.product_id
-        if product_id:
-            prod = self.pool.get('product.product').browse(cr, uid, product_id, context=context)
         if prod:
             value['price'] = prod.list_price
             value['uom_id'] = prod.uom_id.id
