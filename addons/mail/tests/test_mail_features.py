@@ -343,9 +343,6 @@ class test_mail(TestMailBase):
         self._init_mock_build_email()
         msg1_id = self.mail_group.message_post(cr, user_raoul.id, self.group_pigs_id, body=_body1, subject=_subject, type='comment', subtype='mt_comment')
         message1 = self.mail_message.browse(cr, uid, msg1_id)
-
-        print "####", msg1_id, "####", message1.body, "####"
-
         sent_emails = self._build_email_kwargs_list
         # Test: mail.mail notifications have been deleted
         self.assertFalse(self.mail_mail.search(cr, uid, [('mail_message_id', '=', msg1_id)]), 'mail.mail notifications should have been auto-deleted!')
