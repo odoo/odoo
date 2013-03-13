@@ -22,5 +22,18 @@
 
         <menuitem id="gamification_badge_menu_hr" parent="hr.menu_hr_main" action="gamification.badge_list_action" groups="gamification.group_goal_user" />
 
+
+        <record id="hr_hr_employee_view_form" model="ir.ui.view">
+            <field name="name">hr.hr.employee.view.form</field>
+            <field name="model">hr.employee</field>
+            <field name="inherit_id" ref="hr.view_employee_form"/>
+            <field name="arch" type="xml">
+            <xpath expr="//page[@string='Public Information']" position="before">
+                <page string="Public Profile">
+                    <field name="badge_ids" widget="many2many_kanban" />
+                </page>
+            </xpath>
+            </field>
+        </record>
     </data>
 </openerp>

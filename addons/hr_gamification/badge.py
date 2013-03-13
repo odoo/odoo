@@ -99,3 +99,20 @@ class hr_grant_badge_wizard(osv.TransientModel):
 
         return {}
 hr_grant_badge_wizard()
+
+
+class hr_employee(osv.osv):
+    _name = "hr.employee"
+    _inherit = "hr.employee"
+
+    def _get_employee_badges(self, cr, uid, ids, field_name, arg, context=None):
+        """Return the list of badges assigned to the employee"""
+        res = {}
+        for employee in self.browse(cr, uid, ids, context=context):
+            badge_users = self.pool.get('gamification.badge.user').search(cr, uid, [('employee_id', '=', employee.id)], context=context)
+            res[employee.id] = self.pool.get('gamification.badge').search(cr, uid, [('owner_ids', 'in', badge_users)], context=context)
+        return res
+
+    _columns = {
+        'badge_ids': fields.function(_get_employee_badges, type="one2many", obj='gamification.badge', string="Employee Badges")
+    }
