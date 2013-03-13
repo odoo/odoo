@@ -9,15 +9,15 @@ msgstr ""
 "Report-Msgid-Bugs-To: OpenERP Macedonian <openerp-i18n-"
 "macedonian@lists.launchpad.net >\n"
 "POT-Creation-Date: 2013-03-07 08:37+0000\n"
-"PO-Revision-Date: 2013-03-04 14:54+0000\n"
-"Last-Translator: Aleksandar Panov <server986@gmail.com>\n"
+"PO-Revision-Date: 2013-03-12 12:47+0000\n"
+"Last-Translator: Софче Димитријева <Unknown>\n"
 "Language-Team: OpenERP Macedonia <openerp-i18n-"
 "macedonian@lists.launchpad.net>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-03-08 06:01+0000\n"
-"X-Generator: Launchpad (build 16523)\n"
+"X-Launchpad-Export-Date: 2013-03-13 04:58+0000\n"
+"X-Generator: Launchpad (build 16532)\n"
 "Language: mk\n"
 
 #. module: sale
@@ -98,6 +98,8 @@ msgid ""
 "${(object.name or '').replace('/','_')}_${object.state == 'draft' and "
 "'draft' or ''}"
 msgstr ""
+"${(object.name or '').replace('/','_')}_${object.state == 'draft' and "
+"'draft' or ''}"
 
 #. module: sale
 #: view:sale.order.line:0
@@ -170,7 +172,7 @@ msgstr "Понудата е потврдена"
 #: selection:sale.order,state:0
 #: selection:sale.report,state:0
 msgid "Invoice Exception"
-msgstr ""
+msgstr "Исклучување на фактура"
 
 #. module: sale
 #: view:sale.order:0
@@ -197,7 +199,7 @@ msgstr "Аналитичко конто"
 #. module: sale
 #: field:sale.config.settings,module_sale_journal:0
 msgid "Allow batch invoicing of delivery orders through journals"
-msgstr "Дозволува групно фактурирање на налози за испорака преку картици"
+msgstr "Дозволи групно фактурирање на испратници преку дневниците"
 
 #. module: sale
 #: field:sale.order.line,price_subtotal:0
@@ -245,7 +247,7 @@ msgstr "Неточни податоци"
 #. module: sale
 #: view:sale.order.line:0
 msgid "Cancel Line"
-msgstr ""
+msgstr "Откажи ставка"
 
 #. module: sale
 #: help:sale.config.settings,group_discount_per_so_line:0
@@ -381,7 +383,7 @@ msgstr "Продавница"
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_orders_exception
 msgid "Sales in Exception"
-msgstr ""
+msgstr "Продажби во исклучување"
 
 #. module: sale
 #: field:sale.order,partner_invoice_id:0
@@ -401,7 +403,7 @@ msgstr "Неточно"
 #. module: sale
 #: view:sale.order:0
 msgid "Terms and conditions..."
-msgstr ""
+msgstr "Рокови и услови..."
 
 #. module: sale
 #: help:sale.advance.payment.inv,advance_payment_method:0
@@ -1094,7 +1096,7 @@ msgstr "Нема дефинирано купувач !"
 #. module: sale
 #: field:sale.config.settings,module_sale_stock:0
 msgid "Trigger delivery orders automatically from sales orders"
-msgstr "Активирај налози за испорака автоматски од налозите за продажба"
+msgstr "Активирај испратници автоматски од налозите за продажба"
 
 #. module: sale
 #: view:sale.make.invoice:0
@@ -1374,7 +1376,7 @@ msgstr ""
 #. module: sale
 #: field:sale.order,paypal_url:0
 msgid "Paypal Url"
-msgstr ""
+msgstr "Пејпал Url"
 
 #. module: sale
 #: help:sale.order,project_id:0
@@ -1432,7 +1434,7 @@ msgstr "Нема пронајдено валидна ставка од цено�
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:115
 #, python-format
 msgid "Advance of %s %s"
-msgstr ""
+msgstr "Аванс на %s %s"
 
 #. module: sale
 #: view:sale.report:0
@@ -1504,7 +1506,7 @@ msgstr "Ценовник"
 #. module: sale
 #: report:sale.order:0
 msgid "TVA :"
-msgstr ""
+msgstr "TVA :"
 
 #. module: sale
 #: code:addons/sale/sale.py:449
@@ -1593,7 +1595,7 @@ msgstr "Ставки на мојот налог за продажба"
 #. module: sale
 #: view:sale.order:0
 msgid "Cancel Quotation"
-msgstr ""
+msgstr "Откажи понуда"
 
 #. module: sale
 #: field:sale.order,message_follower_ids:0
@@ -1648,17 +1650,18 @@ msgid ""
 msgstr ""
 "<p>\n"
 "                Ова е листа на секоја ставка од налогот за предажба која "
-"треба да биде фактурирана. Може да ги фактурирате налозите за продажба "
-"парцијално, по ставки од налогот за продажба. Оваа листа не ви е потребна "
-"доколку фактурирате од налозите за испорака или ја фактурирате продажбата во "
-"целост.\n"
+"треба да биде фактурирана. \n"
+"                Може да ги фактурирате налозите за продажба парцијално, по "
+"ставки од налогот за продажба. \n"
+"                Оваа листа не ви е потребна доколку фактурирате од "
+"испратниците или ја фактурирате продажбата во целост.\n"
 "              </p>\n"
 "            "
 
 #. module: sale
 #: report:sale.order:0
 msgid "Shipping address :"
-msgstr "Адреса за испорака :"
+msgstr "Адреса на испорака :"
 
 #. module: sale
 #: code:addons/sale/sale.py:369
@@ -1700,7 +1703,7 @@ msgstr ""
 #: code:addons/sale/sale.py:185
 #, python-format
 msgid "There is no default shop for the current user's company!"
-msgstr ""
+msgstr "Нема стандардна продавница за компанијата на тековниот корисник!"
 
 #. module: sale
 #: model:ir.model,name:sale.model_sale_advance_payment_inv
@@ -1836,6 +1839,91 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
+"\n"
+"<div style=\"font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-"
+"serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; \">\n"
+"\n"
+"    <p>Почитувани${object.partner_id.name},</p>\n"
+"    \n"
+"    <p>Еве ја вашата ${object.state in ('draft', 'sent') and 'quotation' or "
+"'order confirmation'} од ${object.company_id.name}: </p>\n"
+"\n"
+"    <p style=\"border-left: 1px solid #8e0000; margin-left: 30px;\">\n"
+"       &nbsp;&nbsp;<strong>РЕФЕРЕНЦИ</strong><br />\n"
+"       &nbsp;&nbsp;Број на налогот: <strong>${object.name}</strong><br />\n"
+"       &nbsp;&nbsp;Вкупно налог: <strong>${object.amount_total} "
+"${object.pricelist_id.currency_id.name}</strong><br />\n"
+"       &nbsp;&nbsp;Датум на налогот: ${object.date_order}<br />\n"
+"       % if object.origin:\n"
+"       &nbsp;&nbsp;Референца на налогот: ${object.origin}<br />\n"
+"       % endif\n"
+"       % if object.client_order_ref:\n"
+"       &nbsp;&nbsp;Ваша референца: ${object.client_order_ref}<br />\n"
+"       % endif\n"
+"       % if object.user_id:\n"
+"       &nbsp;&nbsp;Ваш контакт: <a href=\"mailto:${object.user_id.email or "
+"''}?subject=Order%20${object.name}\">${object.user_id.name}</a>\n"
+"       % endif\n"
+"    </p>\n"
+"\n"
+"    % if object.paypal_url:\n"
+"    <br/>\n"
+"    <p>Исто така е можно и директно плаќање преку Paypal:</p>\n"
+"        <a style=\"margin-left: 120px;\" href=\"${object.paypal_url}\">\n"
+"            <img class=\"oe_edi_paypal_button\" "
+"src=\"https://www.paypal.com/en_US/i/btn/btn_paynowCC_LG.gif\"/>\n"
+"        </a>\n"
+"    % endif\n"
+"\n"
+"    <br/>\n"
+"    <p>Доколку имате некои прашања, слободно контактирајте не.</p>\n"
+"    <p>Ви благодариме што ја избравте ${object.company_id.name or "
+"'us'}!</p>\n"
+"    <br/>\n"
+"    <br/>\n"
+"    <div style=\"width: 375px; margin: 0px; padding: 0px; background-color: "
+"#8E0000; border-top-left-radius: 5px 5px; border-top-right-radius: 5px 5px; "
+"background-repeat: repeat no-repeat;\">\n"
+"        <h3 style=\"margin: 0px; padding: 2px 14px; font-size: 12px; color: "
+"#DDD;\">\n"
+"            <strong style=\"text-"
+"transform:uppercase;\">${object.company_id.name}</strong></h3>\n"
+"    </div>\n"
+"    <div style=\"width: 347px; margin: 0px; padding: 5px 14px; line-height: "
+"16px; background-color: #F2F2F2;\">\n"
+"        <span style=\"color: #222; margin-bottom: 5px; display: block; \">\n"
+"        % if object.company_id.street:\n"
+"            ${object.company_id.street}<br/>\n"
+"        % endif\n"
+"        % if object.company_id.street2:\n"
+"            ${object.company_id.street2}<br/>\n"
+"        % endif\n"
+"        % if object.company_id.city or object.company_id.zip:\n"
+"            ${object.company_id.zip} ${object.company_id.city}<br/>\n"
+"        % endif\n"
+"        % if object.company_id.country_id:\n"
+"            ${object.company_id.state_id and ('%s, ' % "
+"object.company_id.state_id.name) or ''} ${object.company_id.country_id.name "
+"or ''}<br/>\n"
+"        % endif\n"
+"        </span>\n"
+"        % if object.company_id.phone:\n"
+"            <div style=\"margin-top: 0px; margin-right: 0px; margin-bottom: "
+"0px; margin-left: 0px; padding-top: 0px; padding-right: 0px; padding-bottom: "
+"0px; padding-left: 0px; \">\n"
+"                Телефон:&nbsp; ${object.company_id.phone}\n"
+"            </div>\n"
+"        % endif\n"
+"        % if object.company_id.website:\n"
+"            <div>\n"
+"                Веб страна:&nbsp;<a "
+"href=\"${object.company_id.website}\">${object.company_id.website}</a>\n"
+"            </div>\n"
+"        %endif\n"
+"        <p></p>\n"
+"    </div>\n"
+"</div>\n"
+"            "
 
 #. module: sale
 #: view:sale.order.line:0
@@ -1897,10 +1985,11 @@ msgid ""
 "paid before the products can be delivered."
 msgstr ""
 "На барање: Нацрт фактурата може да биде креирана од налогот за продажба кога "
-"е потребно. По налог за испорака: Нацрт фактурата може да биде креирана од "
-"налогот за испорака кога производите се испорачани. Пред испорака: Нацрт "
-"фактурата е креирана од налогот за продажба и мора да биде платена пред "
-"производите да бидат испорачани."
+"е потребно. \n"
+"По испратница: Нацрт фактурата може да биде креирана од испратницата кога "
+"производите се испорачани. \n"
+"Пред испорака: Нацрт фактурата е креирана од налогот за продажба и мора да "
+"биде платена пред производите да бидат испорачани."
 
 #. module: sale
 #: model:ir.actions.act_window,help:sale.action_order_report_all
@@ -2199,8 +2288,8 @@ msgid ""
 msgstr ""
 "Во зависност од контролата на фактурирање на налогот за продажба, фактурата "
 "може да биде заснована на испорачани или нарачани количини. Затоа, налогот "
-"за продажба може да генерира фактура или налог за испорака веднаш штом е "
-"потврден од страна на продавачот."
+"за продажба може да генерира фактура или испратница веднаш штом е потврден "
+"од страна на продавачот."
 
 #. module: sale
 #: view:sale.order:0

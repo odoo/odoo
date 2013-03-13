@@ -395,7 +395,7 @@
                             <group>
                                 <field name="taxes_id" widget="many2many_tags" domain="[('parent_id','=',False),('type_tax_use','!=','sale')]"/>
                                 <field name="date_planned" widget="date"/>
-                                <field name="account_analytic_id" colspan="2" groups="purchase.group_analytic_accounting" domain="[('parent_id','!=',False)]" />
+                                <field name="account_analytic_id" colspan="2" groups="purchase.group_analytic_accounting"/>
                                 <field name="company_id" groups="base.group_multi_company" widget="selection"/>
                             </group>
                         </group>
@@ -461,7 +461,7 @@
                                     domain="[('parent_id','=',False),('type_tax_use','!=','sale')]"/>
                                 <field name="date_planned" widget="date" readonly="1"/>
                                 <field name="company_id" groups="base.group_multi_company" widget="selection"/>
-                                <field name="account_analytic_id" colspan="4" groups="purchase.group_analytic_accounting" domain="[('parent_id','!=',False)]"/>
+                                <field name="account_analytic_id" colspan="4" groups="purchase.group_analytic_accounting"/>
                                 <field name="invoiced"/>
                             </group>
                         </group>

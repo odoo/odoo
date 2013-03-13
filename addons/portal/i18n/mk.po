@@ -9,15 +9,15 @@ msgstr ""
 "Report-Msgid-Bugs-To: OpenERP Macedonian <openerp-i18n-"
 "macedonian@lists.launchpad.net >\n"
 "POT-Creation-Date: 2013-03-07 08:38+0000\n"
-"PO-Revision-Date: 2013-03-04 14:36+0000\n"
-"Last-Translator: Olivier Dony (OpenERP) <Unknown>\n"
+"PO-Revision-Date: 2013-03-11 09:36+0000\n"
+"Last-Translator: Aleksandar Panov <server986@gmail.com>\n"
 "Language-Team: OpenERP Macedonia <openerp-i18n-"
 "macedonian@lists.launchpad.net>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-03-08 05:53+0000\n"
-"X-Generator: Launchpad (build 16523)\n"
+"X-Launchpad-Export-Date: 2013-03-12 05:19+0000\n"
+"X-Generator: Launchpad (build 16524)\n"
 "Language: mk\n"
 
 #. module: portal
@@ -65,6 +65,7 @@ msgstr "Контакти"
 #: view:portal.wizard:0
 msgid "This text is included in the email sent to new portal users."
 msgstr ""
+"Овој текст е вклучен во имејлот пратен до новите корисници на порталот."
 
 #. module: portal
 #: view:share.wizard:0
@@ -81,7 +82,7 @@ msgstr "Групи на порталот"
 #: code:addons/portal/mail_mail.py:52
 #, python-format
 msgid "<p>Access this document <a href=\"%s\">directly in OpenERP</a></p>"
-msgstr ""
+msgstr "<p>Пристап до документот <a href=\"%s\">директно во OpenERP</a></p>"
 
 #. module: portal
 #: field:portal.wizard,welcome_message:0
@@ -110,7 +111,7 @@ msgstr "Селектирајте барем една група за да спо
 #: model:ir.actions.client,name:portal.action_mail_archives_feeds_portal
 #: model:ir.ui.menu,name:portal.portal_mail_archivesfeeds
 msgid "Archives"
-msgstr ""
+msgstr "Архиви"
 
 #. module: portal
 #: model:ir.ui.menu,name:portal.portal_orders
@@ -247,6 +248,14 @@ msgid ""
 "                </p>\n"
 "            "
 msgstr ""
+"<p>\n"
+"                    Нема пронајдено пораки и нема пратено пораки.\n"
+"                </p><p>\n"
+"                    За креирање на порака кликни на иконата горе-десно. Оваа "
+"                    порака ќе биде пратена како e-mail доколку се работи за "
+"внатрешен контакт.\n"
+"                </p>\n"
+"            "
 
 #. module: portal
 #: model:ir.ui.menu,name:portal.portal_menu
@@ -260,7 +269,7 @@ msgstr "Портал"
 #: code:addons/portal/wizard/portal_wizard.py:34
 #, python-format
 msgid "Your OpenERP account at %(company)s"
-msgstr ""
+msgstr "Вашата OpenERP сметка кај %(company)s"
 
 #. module: portal
 #: model:res.groups,name:portal.group_anonymous
@@ -343,6 +352,8 @@ msgid ""
 "quote(): a method to quote special string character to make them suitable "
 "for inclusion in a URL"
 msgstr ""
+"quote(): начин на ставање во наводници специјален карактер за да биде "
+"погоден за вметнување во URL"
 
 #. module: portal
 #: code:addons/portal/mail_mail.py:44
@@ -351,6 +362,8 @@ msgid ""
 "<p>Access your messages and personal documents through <a href=\"%s\">our "
 "Customer Portal</a></p>"
 msgstr ""
+"<p>Пристап до пораки и лични документи преку <a href=\"%s\">нашиот "
+"Кориснички портал</a></p>"
 
 #. module: portal
 #: field:portal.payment.acquirer,form_template:0
@@ -488,6 +501,22 @@ msgid ""
 "OpenERP - Open Source Business Applications\n"
 "http://www.openerp.com\n"
 msgstr ""
+"Почитуван %(name)s,\n"
+"\n"
+"Даден ви е пристап до %(portal)s.\n"
+"\n"
+"Вашите податоци за најавување се:\n"
+"База на податоци: %(db)s\n"
+"Корисничко име: %(login)s\n"
+"\n"
+"За да го завршите процесот на запишување, кликнете на следната адреса:\n"
+"%(url)s\n"
+"\n"
+"%(welcome_message)s\n"
+"\n"
+"--\n"
+"OpenERP - Open Source Business Applications\n"
+"http://www.openerp.com\n"
 
 #. module: portal
 #: view:portal.payment.acquirer:0
@@ -548,6 +577,8 @@ msgid ""
 "If the template renders to an empty result in a certain context it will be "
 "ignored, as if it was inactive."
 msgstr ""
+"Ако образецот дава празни резултати во одреден контекстќе биде игнориран, "
+"како да е неактивен."
 
 #. module: portal
 #: field:portal.payment.acquirer,visible:0
@@ -573,7 +604,7 @@ msgstr "Примени"
 #. module: portal
 #: view:portal.payment.acquirer:0
 msgid "ctx: the current context dictionary"
-msgstr ""
+msgstr "ctx: моменталниот контекстен речник"
 
 #. module: portal
 #: view:portal.payment.acquirer:0
@@ -581,6 +612,8 @@ msgid ""
 "This is an HTML form template to submit a payment through this acquirer.\n"
 "                                The template will be rendered with"
 msgstr ""
+"Ова е HTML образец за испраќање на плаќање преку превземачот.\n"
+"                                Овој образец ќе се даде со"
 
 #. module: portal
 #: model:ir.actions.client,help:portal.action_mail_star_feeds_portal
@@ -595,6 +628,15 @@ msgid ""
 "                </p>\n"
 "            "
 msgstr ""
+"<p>\n"
+"                    <b>Нема ДаСеНаправи.</b>\n"
+"                </p><p>\n"
+"                    При процесирање на пораките во влезното сандаче, некои "
+"може да ги означите \n"
+"                    како <i>ДаСеНаправи</i>. Од ова мени може да ги "
+"обработите сите ДаСеНаправи задачи.\n"
+"                </p>\n"
+"            "
 
 #. module: portal
 #: view:portal.payment.acquirer:0
