@@ -1,4 +1,4 @@
-openerp.testing.section('query', {
+openerp.testing.section('search.query', {
     dependencies: ['web.search']
 }, function (test) {
     test('Adding a facet to the query creates a facet and a value', function (instance) {
@@ -180,7 +180,7 @@ var makeSearchView = function (instance, dummy_widget_attributes, defaults) {
     });
     return view;
 };
-openerp.testing.section('defaults', {
+openerp.testing.section('search.defaults', {
     dependencies: ['web.search'],
     rpc: 'mock',
     templates: true,
@@ -362,7 +362,7 @@ openerp.testing.section('defaults', {
                "should not accept multiple default values");
     })
 });
-openerp.testing.section('completions', {
+openerp.testing.section('search.completions', {
     dependencies: ['web.search'],
     rpc: 'mock',
     templates: true
@@ -615,7 +615,7 @@ openerp.testing.section('completions', {
         return f.complete("bob");
     });
 });
-openerp.testing.section('search-serialization', {
+openerp.testing.section('search.serialization', {
     dependencies: ['web.search'],
     rpc: 'mock',
     templates: true
@@ -855,11 +855,11 @@ openerp.testing.section('search-serialization', {
     test('FilterGroup', {asserts: 6}, function (instance) {
         var view = {inputs: [], query: {on: function () {}}};
         var filter_a = new instance.web.search.Filter(
-            {attrs: {name: 'a', context: 'c1', domain: 'd1'}}, view);
+            {attrs: {name: 'a', context: '{"c1": True}', domain: 'd1'}}, view);
         var filter_b = new instance.web.search.Filter(
-            {attrs: {name: 'b', context: 'c2', domain: 'd2'}}, view);
+            {attrs: {name: 'b', context: '{"c2": True}', domain: 'd2'}}, view);
         var filter_c = new instance.web.search.Filter(
-            {attrs: {name: 'c', context: 'c3', domain: 'd3'}}, view);
+            {attrs: {name: 'c', context: '{"c3": True}', domain: 'd3'}}, view);
         var group = new instance.web.search.FilterGroup(
             [filter_a, filter_b, filter_c], view);
         return group.facet_for_defaults({a: true, c: true})
@@ -880,7 +880,7 @@ openerp.testing.section('search-serialization', {
                 equal(context.__ref, 'compound_context',
                     "context should be compound");
                 deepEqual(context.__contexts, [
-                    'c1', 'c3'
+                    '{"c1": True}', '{"c3": True}'
                 ], "context should merge all filter contexts");
                 ok(!context.get_eval_context(), "context should have no evaluation context");
             });
@@ -922,7 +922,7 @@ openerp.testing.section('search-serialization', {
         return $.when(t1, t2);
     });
 });
-openerp.testing.section('removal', {
+openerp.testing.section('search.removal', {
     dependencies: ['web.search'],
     rpc: 'mock',
     templates: true
@@ -945,7 +945,7 @@ openerp.testing.section('removal', {
             });
     });
 });
-openerp.testing.section('drawer', {
+openerp.testing.section('search.drawer', {
     dependencies: ['web.search'],
     rpc: 'mock',
     templates: true
@@ -961,7 +961,7 @@ openerp.testing.section('drawer', {
             });
     });
 });
-openerp.testing.section('filters', {
+openerp.testing.section('search.filters', {
     dependencies: ['web.search'],
     rpc: 'mock',
     templates: true,
@@ -1046,7 +1046,104 @@ openerp.testing.section('filters', {
             });
     });
 });
-openerp.testing.section('saved_filters', {
+openerp.testing.section('search.groupby', {
+    dependencies: ['web.search'],
+    rpc: 'mock',
+    templates: true,
+}, function (test) {
+    test('basic', {
+        asserts: 7,
+        setup: function (instance, $s, mock) {
+            mock('dummy.model:fields_view_get', function () {
+                return {
+                    type: 'search',
+                    fields: {},
+                    arch: [
+                        '<search>',
+                            '<filter string="Foo" context="{\'group_by\': \'foo\'}"/>',
+                            '<filter string="Bar" context="{\'group_by\': \'bar\'}"/>',
+                            '<filter string="Baz" context="{\'group_by\': \'baz\'}"/>',
+                        '</search>'
+                    ].join(''),
+                }
+            });
+        }
+    }, function (instance, $fix) {
+        var view = makeSearchView(instance);
+        return view.appendTo($fix)
+        .done(function () {
+            // 3 filters, 1 filtergroup group, 1 custom filter, 1 advanced, 1 Filters
+            equal(view.inputs.length, 7,
+                  'should have 7 inputs total');
+            var group = _.find(view.inputs, function (f) {
+                return f instanceof instance.web.search.GroupbyGroup
+            });
+            ok(group, "should have a GroupbyGroup input");
+            strictEqual(group.getParent(), view,
+                        "group's parent should be view");
+
+            group.toggle(group.filters[0]);
+            group.toggle(group.filters[2]);
+
+            var results = view.build_search_data();
+            deepEqual(results.errors, [], "should have no errors");
+            deepEqual(results.domains, [], "should have no domain");
+            deepEqual(results.contexts, [
+                new instance.web.CompoundContext(
+                    "{'group_by': 'foo'}", "{'group_by': 'baz'}")
+            ], "should have compound contexts");
+            deepEqual(results.groupbys, [
+                "{'group_by': 'foo'}",
+                "{'group_by': 'baz'}"
+            ], "should have sequence of contexts")
+        });
+    });
+    test('unified multiple groupby groups', {
+        asserts: 4,
+        setup: function (instance, $s, mock) {
+            mock('dummy.model:fields_view_get', function () {
+                return {
+                    type: 'search',
+                    fields: {},
+                    arch: [
+                        '<search>',
+                            '<filter string="Foo" context="{\'group_by\': \'foo\'}"/>',
+                            '<separator/>',
+                            '<filter string="Bar" context="{\'group_by\': \'bar\'}"/>',
+                            '<separator/>',
+                            '<filter string="Baz" context="{\'group_by\': \'baz\'}"/>',
+                        '</search>'
+                    ].join(''),
+                }
+            });
+        }
+    }, function (instance, $fix) {
+        var view = makeSearchView(instance);
+        return view.appendTo($fix)
+        .done(function () {
+            // 3 filters, 3 filtergroups, 1 custom filter, 1 advanced, 1 Filters
+            equal(view.inputs.length, 9, "should have 9 inputs total");
+
+            var groups = _.filter(view.inputs, function (f) {
+                return f instanceof instance.web.search.GroupbyGroup
+            });
+            equal(groups.length, 3, "should have 3 GroupbyGroups");
+
+            groups[0].toggle(groups[0].filters[0]);
+            groups[2].toggle(groups[2].filters[0]);
+            equal(view.query.length, 1,
+                  "should have unified groupby groups in single facet");
+            deepEqual(view.build_search_data(), {
+                errors: [],
+                domains: [],
+                contexts: [new instance.web.CompoundContext(
+                    "{'group_by': 'foo'}", "{'group_by': 'baz'}")],
+                groupbys: [ "{'group_by': 'foo'}", "{'group_by': 'baz'}" ],
+            }, "should only have contexts & groupbys in search data");
+        });
+    });
+});
+openerp.testing.section('search.filters.saved', {
     dependencies: ['web.search'],
     rpc: 'mock',
     templates: true
@@ -1127,8 +1224,30 @@ openerp.testing.section('saved_filters', {
                     "should have selected second filter");
             });
     });
+    test('creation', {asserts: 2}, function (instance, $fix, mock) {
+        // force a user context
+        instance.session.user_context = {foo: 'bar'};
+
+        var view = makeSearchView(instance);
+        var done = $.Deferred();
+        mock('ir.filters:get_filters', function () { return []; });
+        mock('ir.filters:create_or_replace', function (args) {
+            var filter = args[0];
+            deepEqual(filter.context, {}, "should have empty context");
+            deepEqual(filter.domain, [], "should have empty domain");
+            done.resolve();
+        });
+        return view.appendTo($fix)
+        .then(function () {
+            $fix.find('.oe_searchview_custom input#oe_searchview_custom_input')
+                    .text("filter name")
+                .end()
+                .find('.oe_searchview_custom button').click();
+            return done.promise();
+        });
+    });
 });
-openerp.testing.section('advanced', {
+openerp.testing.section('search.advanced', {
     dependencies: ['web.search'],
     rpc: 'mock',
     templates: true
@@ -1208,4 +1327,160 @@ openerp.testing.section('advanced', {
             });
     });
     // TODO: UI tests?
+});
+openerp.testing.section('search.invisible', {
+    dependencies: ['web.search'],
+    rpc: 'mock',
+    templates: true,
+}, function (test) {
+    var registerTestField = function (instance, methods) {
+        instance.web.search.fields.add('test', 'instance.testing.TestWidget');
+        instance.testing = {
+            TestWidget: instance.web.search.Field.extend(methods),
+        };
+    };
+    var makeView = function (instance, mock, fields, arch, defaults) {
+        mock('ir.filters:get_filters', function () { return []; });
+        mock('test.model:fields_get', function () { return fields; });
+        mock('test.model:fields_view_get', function () {
+            return { type: 'search', fields: fields, arch: arch };
+        });
+        var ds = new instance.web.DataSet(null, 'test.model');
+        return new instance.web.SearchView(null, ds, false, defaults);
+    };
+    // Invisible fields should not auto-complete
+    test('invisible-field-no-autocomplete', {asserts: 1}, function (instance, $fix, mock) {
+        registerTestField(instance, {
+            complete: function () {
+                return $.when([{label: this.attrs.string}]);
+            },
+        });
+        var view = makeView(instance, mock, {
+            field0: {type: 'test', string: 'Field 0'},
+            field1: {type: 'test', string: 'Field 1'},
+        }, ['<search>',
+                '<field name="field0"/>',
+                '<field name="field1" modifiers="{&quot;invisible&quot;: true}"/>',
+            '</search>'].join());
+        return view.appendTo($fix)
+        .then(function () {
+            var done = $.Deferred();
+            view.complete_global_search({term: 'test'}, function (comps) {
+                done.resolve(comps);
+            });
+            return done;
+        }).then(function (completions) {
+            deepEqual(completions, [{label: 'Field 0'}],
+                      "should only complete the visible field");
+        });
+    });
+    // Invisible filters should not appear in the drawer
+    test('invisible-filter-no-drawer', {asserts: 4}, function (instance, $fix, mock) {
+        var view = makeView(instance, mock, {}, [
+            '<search>',
+                '<filter string="filter 0"/>',
+                '<filter string="filter 1" modifiers="{&quot;invisible&quot;: true}"/>',
+            '</search>'].join());
+        return view.appendTo($fix)
+        .then(function () {
+            var $fs = $fix.find('.oe_searchview_filters ul');
+            strictEqual($fs.children().length,
+                        1,
+                        "should only display one filter");
+            strictEqual(_.str.trim($fs.children().text()),
+                        "filter 0",
+                        "should only display filter 0");
+            var done = $.Deferred();
+            view.complete_global_search({term: 'filter'}, function (comps) {
+                done.resolve();
+                strictEqual(comps.length, 1, "should only complete visible filter");
+                strictEqual(comps[0].label, "Filter on: filter 0",
+                            "should complete filter 0");
+            });
+            return done;
+        });
+    });
+    // Invisible filter groups should not appear in the drawer
+    // Group invisibility should be inherited by children
+    test('group-invisibility', {asserts: 6}, function (instance, $fix, mock) {
+        registerTestField(instance, {
+            complete: function () {
+                return $.when([{label: this.attrs.string}]);
+            },
+        });
+        var view = makeView(instance, mock, {
+            field0: {type: 'test', string: 'Field 0'},
+            field1: {type: 'test', string: 'Field 1'},
+        }, [
+            '<search>',
+                '<group string="Visibles">',
+                    '<field name="field0"/>',
+                    '<filter string="Filter 0"/>',
+                '</group>',
+                '<group string="Invisibles" modifiers="{&quot;invisible&quot;: true}">',
+                    '<field name="field1"/>',
+                    '<filter string="Filter 1"/>',
+                '</group>',
+            '</search>'
+        ].join(''));
+        return view.appendTo($fix)
+        .then(function () {
+            strictEqual($fix.find('.oe_searchview_filters h3').length,
+                        1,
+                        "should only display one group");
+            strictEqual($fix.find('.oe_searchview_filters h3').text(),
+                        'w Visibles',
+                        "should only display the Visibles group (and its icon char)");
+
+            var $fs = $fix.find('.oe_searchview_filters ul');
+            strictEqual($fs.children().length, 1,
+                        "should only have one filter in the drawer");
+            strictEqual(_.str.trim($fs.text()), "Filter 0",
+                        "should have filter 0 as sole filter");
+
+            var done = $.Deferred();
+            view.complete_global_search({term: 'filter'}, function (compls) {
+                done.resolve();
+                strictEqual(compls.length, 2,
+                            "should have 2 completions");
+                deepEqual(_.pluck(compls, 'label'),
+                          ['Field 0', 'Filter on: Filter 0'],
+                          "should complete on field 0 and filter 0");
+            });
+            return done;
+        });
+    });
+    // Default on invisible fields should still work, for fields and filters both
+    test('invisible-defaults', {asserts: 1}, function (instance, $fix, mock) {
+        var view = makeView(instance, mock, {
+            field: {type: 'char', string: "Field"},
+            field2: {type: 'char', string: "Field 2"},
+        }, [
+            '<search>',
+                '<field name="field2"/>',
+                '<filter name="filter2" string="Filter"',
+                       ' domain="[[\'qwa\', \'=\', 42]]"/>',
+                '<group string="Invisibles" modifiers="{&quot;invisible&quot;: true}">',
+                    '<field name="field"/>',
+                    '<filter name="filter" string="Filter"',
+                           ' domain="[[\'whee\', \'=\', \'42\']]"/>',
+                '</group>',
+            '</search>'
+        ].join(''), {field: "foo", filter: true});
+
+        return view.appendTo($fix)
+        .then(function () {
+            deepEqual(view.build_search_data(), {
+                errors: [],
+                groupbys: [],
+                contexts: [],
+                domains: [
+                    // Generated from field
+                    [['field', 'ilike', 'foo']],
+                    // generated from filter
+                    "[['whee', '=', '42']]"
+                ],
+            }, "should yield invisible fields selected by defaults");
+        });
+    });
 });
