@@ -396,7 +396,7 @@ class project_issue(base_stage, osv.osv):
         #Update last action date every time the user changes the stage
         if 'stage_id' in vals:
             vals['date_action_last'] = time.strftime(tools.DEFAULT_SERVER_DATETIME_FORMAT)
-            state = self.pool.get('project.task.type').read(cr, uid, vals['stage_id'], ['state'], context=context)['state']
+            state = self.pool.get('project.task.type').browse(cr, uid, vals['stage_id'], context=context).state
             for issue in self.browse(cr, uid, ids, context=context):
                 # Change from draft to not draft EXCEPT cancelled: The issue has been opened -> set the opening date
                 if issue.state == 'draft' and state not in ('draft', 'cancelled'):
@@ -560,15 +560,14 @@ class project_issue(base_stage, osv.osv):
         if context is None:
             context = {}
         
+        res = super(project_issue, self).message_post(cr, uid, thread_id, body=body, subject=subject, type=type, subtype=subtype, parent_id=parent_id, attachments=attachments, context=context, content_subtype=content_subtype, **kwargs)
+        
         if thread_id:
             model = context.get('thread_model', self._name)
-            if model != self._name:
-                ctx = context.copy()
-                del ctx['thread_model']
-                return self.pool.get(model).message_post(cr, uid, thread_id, body=body, subject=subject, type=type, subtype=subtype, parent_id=parent_id, attachments=attachments, context=ctx, content_subtype=content_subtype, **kwargs)
-            self.write(cr, uid, thread_id, {'date_action_last': time.strftime(tools.DEFAULT_SERVER_DATETIME_FORMAT)}, context=context)    
+            if model == self._name:
+                self.write(cr, uid, thread_id, {'date_action_last': time.strftime(tools.DEFAULT_SERVER_DATETIME_FORMAT)}, context=context)    
         
-        return super(project_issue, self).message_post(cr, uid, thread_id, body=body, subject=subject, type=type, subtype=subtype, parent_id=parent_id, attachments=attachments, context=context, content_subtype=content_subtype, **kwargs)  
+        return res   
 
 class project(osv.osv):
     _inherit = "project.project"
