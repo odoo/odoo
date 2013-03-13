@@ -25,6 +25,8 @@ from openerp import tools
 from templates import TemplateHelper
 from datetime import date
 
+import base64
+
 
 class gamification_badge_user(osv.Model):
     """User having received a badge"""
@@ -185,8 +187,6 @@ class gamification_badge(osv.Model):
         res = None
         for badge_user in self.pool.get('gamification.badge.user').browse(cr, uid, badge_user_ids, context=context):
             values = {'badge': badge}
-            if badge.image:
-                values['badgeb64'] = badge.image.encode('base64'),
 
             if user_from:
                 values['user_from'] = user_from
@@ -200,6 +200,7 @@ class gamification_badge(osv.Model):
                                     partner_ids=[(4, badge_user.user_id.partner_id.id)],
                                     type='comment',
                                     subtype='mt_comment',
+                                    attachments=[('badge-img', base64.decodestring(badge.image))],
                                     context=context)
 
         return res

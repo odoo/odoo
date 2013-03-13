@@ -10,9 +10,11 @@
         % endif
     </p>
 
-	  <p><img src="data:image/png;base64,${badgeb64}" alt="badge ${badge.name}" /></p>
-
-    <p><em>${description}</em></p>
-    
+    % if badge.image
+        <p><img src="cid:badge-img" alt="Badge ${badge.name}" /></p>
+    % endif
+    % if badge.description
+        <p><em>${badge.description}</em></p>
+    % endif
   </body>
 </html>

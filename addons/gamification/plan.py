@@ -265,7 +265,6 @@ class gamification_goal_plan(osv.Model):
                 self.report_progress(cr, uid, plan, context=context)
                 self.write(cr, uid, plan.id, {'last_report_date': fields.date.today}, context=context)
 
-
     def action_start(self, cr, uid, ids, context=None):
         """Start a draft goal plan
 
@@ -284,7 +283,6 @@ class gamification_goal_plan(osv.Model):
         Create goals that haven't been created yet (eg: if added users of planlines)
         Recompute the current value for each goal related"""
         return self._update_all(cr, uid, ids=ids, context=context)
-
 
     def action_close(self, cr, uid, ids, context=None):
         """Close a plan in progress
