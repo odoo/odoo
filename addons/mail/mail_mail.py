@@ -209,17 +209,15 @@ class mail_mail(osv.Model):
             email_reply_to = self.pool.get(mail.model).message_get_reply_to(cr, uid, [mail.res_id], context=context)[0]
         # no alias reply_to -> reply_to will be the email_from, only the email part
         if not email_reply_to and mail.email_from:
-            match = re.search(r'([^\s,<@]+@[^>\s,]+)', mail.email_from)  # TDE TODO: simplify multiple same regex
-            if match:
-                email_reply_to = match.group(1)
+            emails = tools.email_split(mail.email_from)
+            if emails:
+                email_reply_to = emails[0]
 
         # format 'Document name <email_address>'
-        if email_reply_to:
-            document_name = ''
-            if mail.model and mail.res_id:
-                document_name = self.pool.get(mail.model).name_get(cr, SUPERUSER_ID, [mail.res_id], context=context)[0]
+        if email_reply_to and mail.model and mail.res_id:
+            document_name = self.pool.get(mail.model).name_get(cr, SUPERUSER_ID, [mail.res_id], context=context)[0]
             if document_name:
-                email_reply_to = 'Followers of %s <%s>' % (document_name[1], email_reply_to)
+                email_reply_to = _('Followers of %s <%s>') % (document_name[1], email_reply_to)
 
         return email_reply_to
 
