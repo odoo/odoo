@@ -76,12 +76,15 @@ class gamification_goal_plan(osv.Model):
         for plan in self.browse(cr, uid, ids, context):
             last = datetime.strptime(plan.last_report_date, '%Y-%m-%d').date()
             if plan.report_message_frequency == 'daily':
-                res[plan.id] = last + timedelta(days=1).isoformat()
+                next = last + timedelta(days=1)
+                res[plan.id] = next.isoformat()
             elif plan.report_message_frequency == 'weekly':
-                res[plan.id] = last + timedelta(days=7).isoformat()
+                next = last + timedelta(days=7)
+                res[plan.id] = next.isoformat()
             elif plan.report_message_frequency == 'monthly':
                 month_range = calendar.monthrange(last.year, last.month)
-                res[plan.id] = last.replace(day=month_range[1]) + timedelta(days=1).isoformat()
+                next = last.replace(day=month_range[1]) + timedelta(days=1)
+                res[plan.id] = next.isoformat()
             elif plan.report_message_frequency == 'yearly':
                 res[plan.id] = last.replace(year=last.year + 1).isoformat()
             else:  # frequency == 'once':
