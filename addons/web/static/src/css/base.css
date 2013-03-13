@@ -1806,7 +1806,7 @@
 }
 .openerp .oe_searchview .oe_searchview_drawer {
   position: absolute;
-  z-index: 100;
+  z-index: 2;
   margin-top: 4px;
   top: 100%;
   right: -1px;
@@ -2306,6 +2306,13 @@
   background: #cccccc url(/web/static/lib/jquery.ui/css/smoothness/images/ui-bg_highlight-soft_75_cccccc_1x100.png) 50% 50% repeat-x;
 }
 .openerp .oe_form .oe_form_field_text {
+  width: 100%;
+}
+.openerp .oe_form .oe_form_field_text .oe_form_text_content {
+  text-overflow: ellipsis;
+  display: inline-block;
+  white-space: pre-wrap;
+  overflow-x: hidden;
   width: 100%;
 }
 .openerp .oe_form .oe_form_field_char input,
@@ -3169,6 +3176,10 @@ div.ui-widget-overlay {
   padding-bottom: 10px !important;
 }
 
+.openerp_ie .placeholder {
+  color: #afafb6 !important;
+  font-style: italic !important;
+}
 .openerp_ie .oe_form_field_boolean input {
   background: white;
 }
@@ -3186,6 +3197,9 @@ div.ui-widget-overlay {
 .openerp_ie .oe_header_row button.oe_highlight {
   padding-top: 0;
   padding-bottom: 0;
+}
+.openerp_ie .oe_view_manager_view_kanban {
+  display: table-cell;
 }
 .openerp_ie .oe_view_manager_buttons button.oe_write_full {
   padding-top: 0;
@@ -3335,7 +3349,6 @@ div.ui-widget-overlay {
     overflow: hidden !important;
   }
 }
-
 .blockUI.blockOverlay {
   background-color: black;
   opacity: 0.6;
