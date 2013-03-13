@@ -1019,7 +1019,7 @@ class mail_thread(osv.AbstractModel):
         attachment_ids = [(4, id) for id in attachment_ids]
 
         # 3. Post message
-        return self.message_post(cr, uid, thread_id=thread_id, body=body,
+        return self.message_post(cr, uid, thread_id, body=body,
                             type=msg_type, subtype=msg_subtype, parent_id=parent_id,
                             attachment_ids=attachment_ids, partner_ids=list(partner_ids), context=context, **kwargs)
 
