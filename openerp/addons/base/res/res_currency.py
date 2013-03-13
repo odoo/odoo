@@ -21,11 +21,14 @@
 
 import re
 import time
+import logging
 
 from openerp import tools
 from openerp.osv import fields, osv
 from openerp.tools import float_round, float_is_zero, float_compare
 from openerp.tools.translate import _
+
+_logger = logging.getLogger(__name__)
 
 CURRENCY_DISPLAY_PATTERN = re.compile(r'(\w+)\s*(?:\((.*)\))?')
 
@@ -49,7 +52,9 @@ class res_currency(osv.osv):
                 id, rate = cr.fetchall()[0]
                 res[id] = rate
             else:
-                res[id] = 0
+                #to prevent division by zero in case no rate exist for the defined period, we put the rate to one
+                _logger.warning(("No currency rate associated for currency_id %d" % (id)))
+                res[id] = 1
         return res
     _name = "res.currency"
     _description = "Currency"
