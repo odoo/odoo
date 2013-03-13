@@ -93,6 +93,10 @@ class hr_job(osv.osv):
     _inherit = ['mail.thread']
     _columns = {
         'name': fields.char('Job Name', size=128, required=True, select=True),
+        # TO CLEAN: when doing a cleaning, we should change like this:
+        #   no_of_recruitment: a function field
+        #   expected_employees: float
+        # This would allow a clean update when creating new employees.
         'expected_employees': fields.function(_no_of_employee, string='Total Forecasted Employees',
             help='Expected number of employees for this job position after new recruitment.',
             store = {
@@ -146,6 +150,7 @@ class hr_employee(osv.osv):
     _name = "hr.employee"
     _description = "Employee"
     _inherits = {'resource.resource': "resource_id"}
+    _inherit = ['mail.thread']
 
     def _get_image(self, cr, uid, ids, name, args, context=None):
         result = dict.fromkeys(ids, False)

@@ -37,7 +37,7 @@
   I will create and post an account voucher of amount 450.0 for the partner Seagate.
 -
   !python {model: account.voucher}: |
-    import netsvc
+    from openerp import netsvc
     vals = {}
     journal_id = self.default_get(cr, uid, ['journal_id']).get('journal_id',None)
     res = self.onchange_partner_id(cr, uid, [], ref("base.res_partner_19"), journal_id, 0.0, 1, ttype='receipt', date=False)
@@ -61,8 +61,7 @@
     id = self.create(cr, uid, vals)
     voucher_id = self.browse(cr, uid, id)
     assert (voucher_id.state=='draft'), "Voucher is not in draft state"
-    wf_service = netsvc.LocalService("workflow")
-    wf_service.trg_validate(uid, 'account.voucher', voucher_id.id, 'proforma_voucher', cr)
+    self.signal_proforma_voucher(cr, uid, [voucher_id.id])
 
 -
   Finally i will Confirm the state of the invoice is paid
