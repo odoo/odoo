@@ -289,16 +289,16 @@ class TestAPI(common.TransactionCase):
     def test_50_record_recordset(self):
         """ Check properties record and recordset. """
         ps = self.Partner.search([('name', 'ilike', 'a')], limit=1)
-        self.assertEqual(ps.recordset, ps)
-        p = ps.record
+        self.assertEqual(ps.recordset(), ps)
+        p = ps.record()
         self.assertEqual(p, ps[0])
-        self.assertEqual(p.recordset, ps)
+        self.assertEqual(p.recordset(), ps)
 
     @mute_logger('openerp.osv.orm')
     def test_60_contains(self):
         """ Test membership on recordset. """
         ps = self.Partner.search([('name', 'ilike', 'a')], limit=1)
-        p = ps.record
+        p = ps.record()
         ps = self.Partner.search([('name', 'ilike', 'a')])
         self.assertTrue(p in ps)
 

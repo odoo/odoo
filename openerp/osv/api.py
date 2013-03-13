@@ -196,7 +196,7 @@ class Scope(object):
         return self(SUPERUSER_ID)
 
     def model(self, model_name):
-        """ return a given model with scope """
+        """ return a given model """
         return self.registry[model_name]
 
     def ref(self, xml_id):
@@ -207,7 +207,8 @@ class Scope(object):
     @property
     def user(self):
         """ return the current user (as a record) """
-        return self.model('res.users').browse(self.uid)
+        with scope.SUDO():
+            return self.model('res.users').browse(self.uid)
 
     @property
     def lang(self):
@@ -220,8 +221,9 @@ class Scope(object):
     def language(self):
         """ return the current language (as a record) """
         try:
-            languages = self.model('res.lang').search([('code', '=', self.lang)])
-            return languages.record
+            with scope.SUDO():
+                languages = self.model('res.lang').search([('code', '=', self.lang)])
+                return languages.record()
         except Exception:
             raise Exception(_('Language with code "%s" is not defined in your system !\nDefine it through the Administration menu.') % (self.lang,))
 
@@ -489,7 +491,7 @@ def recordset(method):
 
     def new_api(self, *args, **kwargs):
         if self.is_record():
-            return _map_record(self.id, method(self.recordset, *args, **kwargs))
+            return _map_record(self.id, method(self.recordset(), *args, **kwargs))
         else:
             return method(self, *args, **kwargs)
 

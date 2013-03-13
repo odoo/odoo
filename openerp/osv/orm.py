@@ -41,7 +41,7 @@
 
 import babel.dates
 import calendar
-import collections
+from collections import defaultdict
 import copy
 import datetime
 import itertools
@@ -391,7 +391,8 @@ class MetaModel(api.Meta):
 
 
 def _RecordCache():
-    return collections.defaultdict(dict)
+    # {model: {id: {field: value, ...}, ...}, ...}
+    return defaultdict(lambda: defaultdict(dict))
 
 
 # Definition of log access columns, automatically added to models if
@@ -4314,21 +4315,17 @@ class BaseModel(object):
             :param context: context arguments, like lang, time zone
             :rtype: record, recordset or null requested
         """
-        if cache is None:
-            cache = _RecordCache()
+        # capture current scope
+        scope = api.scope.current
 
         # need to accepts ints and longs because ids coming from a method
         # launched by button in the interface have a type long...
         if isinstance(select, (int, long)) and select:
-            res = self._make_record(select, cache)
+            return self.record(select, cache=cache, scope=scope)
         elif isinstance(select, list):
-            res = self._make_recordset(select, cache)
+            return self.recordset(select, cache=cache, scope=scope)
         else:
-            res = self._make_null()
-
-        # capture the current scope
-        res._scope = api.Scope(cr, uid, context)
-        return res
+            return self.null()
 
     def _store_get_values(self, cr, uid, ids, fields, context):
         """Returns an ordered list of fields.functions to call due to
@@ -5122,8 +5119,7 @@ class BaseModel(object):
     def scope(self):
         return self._scope or api.scope.current
 
-    @api.model
-    def _make_null(self):
+    def null(self):
         """ make a null instance """
         # a null instance is represented as a record with id=False
         return self._make_instance(_record_id=False, _record_cache=None)
@@ -5132,20 +5128,30 @@ class BaseModel(object):
         """ test whether self is a null instance """
         return getattr(self, '_record_id', None) is False
 
-    @api.model
-    def _make_record(self, id, cache):
+    def record(self, id=None, cache=None, scope=None):
         """ make a record instance
-            :param id: the record's id
+
+            :param id: the record's id (or convert `self` if ``None``)
             :param cache: a dictionary used as ``cache[model_name][id][field_name]``,
                 storing record data shared across records, thus reducing the SQL
                 reads.  It can speed up things a lot, but also be disastrous if
                 not discarded after update/delete operations.
+            :param scope: the optional scope to attach to the record
         """
-        # insert an entry in the cache if necessary
-        model_cache = cache[self._name]
-        if id not in model_cache:
-            model_cache[id] = {'id': id}
-        return self._make_instance(_record_id=id, _record_cache=cache)
+        if id is None:
+            if self.is_record():
+                id = self._record_id
+            elif self.is_recordset():
+                assert len(self._record_ids) == 1, "Expected singleton: %s" % self
+                id = self._record_ids[0]
+            else:
+                raise except_orm("ValueError", "Expected singleton: %s" % self)
+
+        if cache is None:
+            cache = _RecordCache()
+        cache[self._name][id]['id'] = id
+
+        return self._make_instance(_record_id=id, _record_cache=cache, _scope=scope)
 
     def is_record(self):
         """ test whether `self` is a record instance """
@@ -5155,42 +5161,38 @@ class BaseModel(object):
         """ test whether `self` is a record or null instance """
         return hasattr(self, '_record_id')
 
-    @api.model
-    def _make_recordset(self, ids, cache):
-        """ make a recordset instance from record ids """
-        # insert entries in the cache if necessary
-        model_cache = cache[self._name]
+    def recordset(self, ids=None, cache=None, scope=None):
+        """ make a recordset instance
+
+            :param ids: the record ids (or convert `self` if ``None``)
+            :param cache: a dictionary used as ``cache[model_name][id][field_name]``,
+                storing record data shared across records, thus reducing the SQL
+                reads.  It can speed up things a lot, but also be disastrous if
+                not discarded after update/delete operations.
+            :param scope: the optional scope to attach to the recordset
+        """
+        if ids is None:
+            if self.is_null():
+                ids = []
+            elif self.is_record():
+                ids = [self._record_id]
+            elif self.is_recordset():
+                ids = self._record_ids
+            else:
+                ids = self.search([])
+        else:
+            ids = map(int, ids)
+
+        if cache is None:
+            cache = _RecordCache()
         for id in ids:
-            if id not in model_cache:
-                model_cache[id] = {'id': id}
-        return self._make_instance(_record_ids=list(ids), _record_cache=cache)
+            cache[self._name][id]['id'] = id
+
+        return self._make_instance(_record_ids=ids, _record_cache=cache, _scope=scope)
 
     def is_recordset(self):
         """ test whether `self` is a recordset instance """
         return hasattr(self, '_record_ids')
-
-    @property
-    def record(self):
-        """ check that `self` is a recordset that contains exactly one record,
-            and return that record
-        """
-        assert self.is_recordset(), "Expected recordset: %s" % self
-        assert len(self) == 1, "Expected singleton: %s" % self
-        return self[0]
-
-    @property
-    def recordset(self):
-        """ Return a recordset corresponding to `self`: a singleton for a record
-            instance, itself for a recordset instance, an empty one for a null
-            instance, and all records for a model instance.
-        """
-        if self.is_null():
-            return self._make_recordset([], self._record_cache)
-        elif self.is_record():
-            return self._make_recordset([self._record_id], self._record_cache)
-        elif self.is_recordset():
-            return self
-        return self.search([])
 
     def unbrowse(self):
         """ Return the `id`/`ids` corresponding to a record/recordset/null instance. """
@@ -5207,9 +5209,8 @@ class BaseModel(object):
     def __iter__(self):
         """ Return an iterator over `self` (must be a recordset). """
         assert self.is_recordset(), "Expected recordset: %s" % self
-        cr, uid, context = self.scope
         for id in self._record_ids:
-            yield self.browse(cr, uid, id, context=context, cache=self._record_cache)
+            yield self.record(id, cache=self._record_cache, scope=self._scope)
 
     def __len__(self):
         """ Return the size of `self` (must be a recordset). """
@@ -5230,7 +5231,8 @@ class BaseModel(object):
     def __add__(self, other):
         """ Return the concatenation of two recordsets as a recordset. """
         assert self._name == other._name, "Mixing apples and oranges: %s, %s" % (self, other)
-        return self._make_recordset(self._record_ids + map(int, other), self._record_cache)
+        ids = self.recordset()._record_ids + other.recordset()._record_ids
+        return self.recordset(ids, cache=self._record_cache, scope=self._scope)
 
     def __eq__(self, other):
         """ Test equality between two records, two recordsets or two models. """
@@ -5259,7 +5261,7 @@ class BaseModel(object):
         if name == 'id':
             return self._record_id
 
-        with self._scope:
+        with self.scope:
             # fetch the definition of the field which was asked for
             column = self._all_columns[name].column
             browse_function = _browse_functions.get(column._type, _browse_default)
@@ -5372,17 +5374,10 @@ class BaseModel(object):
         """ Clear the records cache used by `self` by emptying the cache completely,
             preserving only the record identifiers (for prefetching optimizations).
         """
-        assert self.is_record_or_null() or self.is_recordset(), \
-            "Expected record, recordset or null: %s" % self
-
-        # make sure to clear all the caches accessible through a recordset
-        caches = []
-        for record in self.recordset:
-            if record._record_cache not in caches:
-                caches.append(record._record_cache)
-                for model_cache in record._record_cache.itervalues():
-                    for id in model_cache.keys():
-                        model_cache[id] = {'id': id}
+        if self.is_record() or self.is_recordset():
+            for model_cache in self._record_cache.itervalues():
+                for id in model_cache.keys():
+                    model_cache[id] = {'id': id}
 
 
 # for instance checking
@@ -5507,7 +5502,7 @@ def convert_pgerror_23505(model, fields, info, e):
         'field': field_name,
     }
 
-PGERROR_TO_OE = collections.defaultdict(
+PGERROR_TO_OE = defaultdict(
     # shape of mapped converters
     lambda: (lambda model, fvg, info, pgerror: {'message': unicode(pgerror)}), {
     # not_null_violation

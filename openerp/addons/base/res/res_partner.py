@@ -21,47 +21,47 @@
 
 import datetime
 from lxml import etree
-import math
 import pytz
 import re
 
 import openerp
-from openerp import SUPERUSER_ID
-from openerp import pooler, tools
-from openerp.osv import api, osv, fields
+from openerp import tools
+from openerp.osv import osv, fields
+from openerp.osv.api import scope, model, record, recordset, returns
 from openerp.tools.translate import _
 
+ADDRESS_FORMAT_LAYOUTS = {
+    '%(city)s %(state_code)s\n%(zip)s': """
+        <div class="address_format">
+            <field name="city" placeholder="City" style="width: 50%%"/>
+            <field name="state_id" class="oe_no_button" placeholder="State" style="width: 47%%" options='{"no_open": true}'/>
+            <br/>
+            <field name="zip" placeholder="ZIP"/>
+        </div>
+    """,
+    '%(zip)s %(city)s': """
+        <div class="address_format">
+            <field name="zip" placeholder="ZIP" style="width: 40%%"/>
+            <field name="city" placeholder="City" style="width: 57%%"/>
+            <br/>
+            <field name="state_id" class="oe_no_button" placeholder="State" options='{"no_open": true}'/>
+        </div>
+    """,
+    '%(city)s\n%(state_name)s\n%(zip)s': """
+        <div class="address_format">
+            <field name="city" placeholder="City"/>
+            <field name="state_id" class="oe_no_button" placeholder="State" options='{"no_open": true}'/>
+            <field name="zip" placeholder="ZIP"/>
+        </div>
+    """
+}
+
+
 class format_address(object):
-    @api.model
+    @model
     def fields_view_get_address(self, arch):
-        with self.scope.SUDO():
-            fmt = self.scope.user.company_id.country_id.address_format or ''
-        layouts = {
-            '%(city)s %(state_code)s\n%(zip)s': """
-                <div class="address_format">
-                    <field name="city" placeholder="City" style="width: 50%%"/>
-                    <field name="state_id" class="oe_no_button" placeholder="State" style="width: 47%%" options='{"no_open": true}'/>
-                    <br/>
-                    <field name="zip" placeholder="ZIP"/>
-                </div>
-            """,
-            '%(zip)s %(city)s': """
-                <div class="address_format">
-                    <field name="zip" placeholder="ZIP" style="width: 40%%"/>
-                    <field name="city" placeholder="City" style="width: 57%%"/>
-                    <br/>
-                    <field name="state_id" class="oe_no_button" placeholder="State" options='{"no_open": true}'/>
-                </div>
-            """,
-            '%(city)s\n%(state_name)s\n%(zip)s': """
-                <div class="address_format">
-                    <field name="city" placeholder="City"/>
-                    <field name="state_id" class="oe_no_button" placeholder="State" options='{"no_open": true}'/>
-                    <field name="zip" placeholder="ZIP"/>
-                </div>
-            """
-        }
-        for k, v in layouts.items():
+        fmt = scope.user.company_id.country_id.address_format or ''
+        for k, v in ADDRESS_FORMAT_LAYOUTS.items():
             if k in fmt:
                 doc = etree.fromstring(arch)
                 for node in doc.xpath("//div[@class='address_format']"):
@@ -74,7 +74,7 @@ class format_address(object):
 
 class res_partner_category(osv.Model):
 
-    @api.recordset
+    @recordset
     def name_get(self):
         """ Return the categories' display name, including their direct
             parent by default.
@@ -83,7 +83,7 @@ class res_partner_category(osv.Model):
             version of the category name (without the direct parent) is used.
             The default is the long version.
         """
-        if self.scope.context.get('partner_category_display') == 'short':
+        if scope.context.get('partner_category_display') == 'short':
             return super(res_partner_category, self).name_get()
 
         res = []
@@ -96,7 +96,7 @@ class res_partner_category(osv.Model):
             res.append((id, ' / '.join(reversed(names))))
         return res
 
-    @api.model
+    @model
     def name_search(self, name, args=None, operator='ilike', limit=100):
         args = args or []
         if name:
@@ -105,7 +105,7 @@ class res_partner_category(osv.Model):
         categories = self.search(args, limit=limit)
         return categories.name_get()
 
-    @api.recordset
+    @recordset
     def _name_get_fnc(self, field_name, arg):
         return dict(self.name_get())
 
@@ -145,13 +145,13 @@ class res_partner_title(osv.osv):
     }
 
 
-@api.model
+@model
 def _lang_get(self):
-    languages = self.scope.model('res.lang').search([])
+    languages = scope.model('res.lang').search([])
     return [(language.code, language.name) for language in languages]
 
 
-@api.model
+@model
 def _tz_get(self):
     return [(x, x) for x in pytz.all_timezones]
 
@@ -163,25 +163,25 @@ class res_partner(osv.Model, format_address):
     _description = 'Partner'
     _name = "res.partner"
 
-    @api.record
+    @record
     def _address_display(self, name, arg):
         return self._display_address()
 
-    @api.record
+    @record
     def _get_tz_offset(self, name, args):
         return datetime.datetime.now(pytz.timezone(self.tz or 'GMT')).strftime('%z')
 
-    @api.record
+    @record
     def _get_image(self, name, args):
         return tools.image_get_resized_images(self.image)
 
-    @api.record
+    @record
     def _set_image(self, name, value, args):
         return self.write({'image': tools.image_resize_image_big(value)})
 
-    @api.record
+    @record
     def _has_image(self, name, args):
-        return self.image != False
+        return bool(self.image)
 
     _order = "name"
     _columns = {
@@ -256,15 +256,15 @@ class res_partner(osv.Model, format_address):
         'contact_address': fields.function(_address_display,  type='char', string='Complete Address'),
     }
 
-    @api.model
+    @model
     def _default_category(self):
-        category_id = self.scope.context.get('category_id', False)
+        category_id = scope.context.get('category_id', False)
         return [category_id] if category_id else False
 
-    @api.model
+    @model
     def _get_default_image(self, is_company, colorize=False):
-        img_path = openerp.modules.get_module_resource('base', 'static/src/img',
-                                                       ('company_image.png' if is_company else 'avatar.png'))
+        img_path = openerp.modules.get_module_resource(
+            'base', 'static/src/img', 'company_image.png' if is_company else 'avatar.png')
         with open(img_path, 'rb') as f:
             image = f.read()
 
@@ -274,23 +274,23 @@ class res_partner(osv.Model, format_address):
 
         return tools.image_resize_image_big(image.encode('base64'))
 
-    @api.model
+    @model
     def fields_view_get(self, view_id=None, view_type='form', toolbar=False, submenu=False):
-        if (not view_id) and (view_type == 'form') and self.scope.context.get('force_email'):
-            view_id = self.scope.model('ir.model.data').get_object_reference('base', 'view_partner_simple_form')[1]
+        if (not view_id) and (view_type == 'form') and scope.context.get('force_email'):
+            view_id = scope.model('ir.model.data').get_object_reference('base', 'view_partner_simple_form')[1]
         res = super(res_partner, self).fields_view_get(view_id, view_type, toolbar=toolbar, submenu=submenu)
         if view_type == 'form':
             res['arch'] = self.fields_view_get_address(res['arch'])
         return res
 
-    @api.model
+    @model
     def _default_company(self):
-        return self.scope.model('res.company')._company_default_get('res.partner')
+        return scope.model('res.company')._company_default_get('res.partner')
 
     _defaults = {
         'active': True,
-        'lang': api.model(lambda self: self.scope.lang),
-        'tz': api.model(lambda self: self.scope.context.get('tz', False)),
+        'lang': model(lambda self: scope.lang),
+        'tz': model(lambda self: scope.context.get('tz', False)),
         'customer': True,
         'category_id': _default_category,
         'company_id': _default_company,
@@ -301,13 +301,12 @@ class res_partner(osv.Model, format_address):
         'image': False,
     }
 
-    @api.record
+    @record
     def copy(self, default=None):
-        default = default if default is not None else {}
-        default['name'] = _('%s (copy)') % self.name
+        default = dict(default or {}, name=_('%s (copy)') % self.name)
         return super(res_partner, self).copy(default)
 
-    @api.recordset
+    @recordset
     def onchange_type(self, is_company):
         value = {}
         value['title'] = False
@@ -318,7 +317,7 @@ class res_partner(osv.Model, format_address):
             domain = {'title': [('domain', '=', 'contact')]}
         return {'value': value, 'domain': domain}
 
-    @api.recordset
+    @recordset
     def onchange_address(self, use_parent_address, parent_id):
         def value_or_id(val):
             """ return val or val.id if val is a browse record """
@@ -329,14 +328,14 @@ class res_partner(osv.Model, format_address):
             return {'value': dict((key, value_or_id(parent[key])) for key in ADDRESS_FIELDS)}
         return {}
 
-    @api.recordset
+    @recordset
     def onchange_state(self, state_id):
         if state_id:
-            state = self.scope.model('res.country.state').browse(state_id)
+            state = scope.model('res.country.state').browse(state_id)
             return {'value': {'country_id': state.country_id.id}}
         return {}
 
-    @api.recordset
+    @recordset
     def _check_ean_key(self):
         for partner in self:
             value = partner.ean13
@@ -371,32 +370,33 @@ class res_partner(osv.Model, format_address):
             self.update_address(cr, uid, update_ids, vals, context)
         return super(res_partner, self).write(cr, uid, ids, vals, context=context)
 
-    @api.model
+    @model
     def create(self, vals):
         if vals.get('parent_id') and vals.get('use_parent_address'):
             # Update parent and siblings records
             parent = self.browse(vals['parent_id'])
             siblings = self.search([('parent_id', '=', parent.id), ('use_parent_address', '=', True)])
-            (parent.recordset + siblings).update_address(vals)
+            (parent + siblings).update_address(vals)
         return super(res_partner, self).create(vals)
 
-    @api.recordset
+    @recordset
     def update_address(self, vals):
         addr_vals = dict((key, vals[key]) for key in POSTAL_ADDRESS_FIELDS if vals.get(key))
         if addr_vals:
             return super(res_partner, self).write(addr_vals)
 
-    @api.recordset
+    @recordset
     def name_get(self):
         res = []
         for record in self:
             name = record.name
+            # import pudb; pudb.set_trace()
             if record.parent_id:
                 name = "%s (%s)" % (name, record.parent_id.name)
-            if self.scope.context.get('show_address'):
+            if scope.context.get('show_address'):
                 name = name + "\n" + record._display_address(without_company=True)
                 name = "\n".join(filter(bool, name.splitlines()))
-            if self.scope.context.get('show_email') and record.email:
+            if scope.context.get('show_email') and record.email:
                 name = "%s <%s>" % (name, record.email)
             res.append((record.id, name))
         return res
@@ -414,7 +414,7 @@ class res_partner(osv.Model, format_address):
             name, email = text, ''
         return name, email
 
-    @api.model
+    @model
     def name_create(self, name):
         """ Override of orm's name_create method for partners. The purpose is
             to handle some basic formats to create partners using the
@@ -424,16 +424,16 @@ class res_partner(osv.Model, format_address):
             If 'force_email' key in context: must find the email address.
         """
         name, email = self._parse_partner_name(name)
-        if self.scope.context.get('force_email') and not email:
+        if scope.context.get('force_email') and not email:
             raise osv.except_osv(_('Warning'), _("Couldn't create contact without email address !"))
         if not name and email:
             name = email
         partner = self.create({self._rec_name: name or email, 'email': email or False})
-        return partner.recordset.name_get()[0]
+        return partner.recordset().name_get()[0]
 
-    @api.model
+    @model
     def name_search(self, name, args=None, operator='ilike', limit=100):
-        cr, uid, context = self.scope
+        cr, uid, context = scope
         if not args:
             args = []
         if name and operator in ('=', 'ilike', '=ilike', 'like', '=like'):
@@ -463,8 +463,8 @@ class res_partner(osv.Model, format_address):
 
         return super(res_partner, self).name_search(name, args, operator=operator, limit=limit)
 
-    @api.model
-    @api.returns('self')
+    @model
+    @returns('self')
     def find_or_create(self, email):
         """ Find a partner with the given ``email`` or use :py:method:`~.name_create`
             to create one
@@ -481,21 +481,21 @@ class res_partner(osv.Model, format_address):
             return partners[0]
         return self.browse(self.name_create(email)[0])
 
-    @api.recordset
+    @recordset
     def _email_send(self, email_from, subject, body, on_error=None):
         for partner in self:
             if partner.email:
                 tools.email_send(email_from, [partner.email], subject, body, on_error)
         return True
 
-    @api.recordset
+    @recordset
     def email_send(self, email_from, subject, body, on_error=''):
-        Cron = self.scope.model('ir.cron')
+        Cron = scope.model('ir.cron')
         ids = map(int, self)
         while len(ids):
             Cron.create({
                 'name': 'Send Partner Emails',
-                'user_id': self.scope.uid,
+                'user_id': scope.uid,
                 'model': 'res.partner',
                 'function': '_email_send',
                 'args': repr([ids[:16], email_from, subject, body, on_error])
@@ -503,7 +503,7 @@ class res_partner(osv.Model, format_address):
             ids = ids[16:]
         return True
 
-    @api.recordset
+    @recordset
     def address_get(self, adr_pref=None):
         if adr_pref is None:
             adr_pref = ['default']
@@ -522,22 +522,22 @@ class res_partner(osv.Model, format_address):
             res[addr_type] = address_id.get(addr_type, default_id)
         return res
 
-    @api.model
+    @model
     def view_header_get(self, view_id, view_type):
         res = super(res_partner, self).view_header_get(view_id, view_type)
         if res:
             return res
-        category_id = self.scope.context.get('category_id', False)
-        category = self.scope.model('res.partner.category').browse(category_id)
+        category_id = scope.context.get('category_id', False)
+        category = scope.model('res.partner.category').browse(category_id)
         return _('Partners: ') + category.name if category else False
 
-    @api.model
-    @api.returns('self')
+    @model
+    @returns('self')
     def main_partner(self):
         ''' Return the main partner '''
-        return self.scope.ref('base.main_partner')
+        return scope.ref('base.main_partner')
 
-    @api.record
+    @record
     def _display_address(self, without_company=False):
         '''
         The purpose of this function is to build and return an address formatted accordingly to the
