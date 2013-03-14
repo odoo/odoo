@@ -131,10 +131,10 @@
                     </table>
                     <group name='invoice_on_timesheets' attrs="{'invisible': [('invoice_on_timesheets','=',False)]}">
                         <p class="oe_grey oe_edit_only" colspan="2">
-                            When invoicing on timesheet, OpenERP uses the
+                            When reinvoicing costs, OpenERP uses the
                             pricelist of the contract which uses the price
-                            defined on the product related to each employee to
-                            define the customer invoice price rate.
+                            defined on the product related (e.g timesheet 
+                            products are defined on each employee). 
                         </p>
                         <group>
                             <field name="pricelist_id"
