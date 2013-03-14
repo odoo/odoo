@@ -14,6 +14,16 @@ instance.web.Login = instance.web.Login.extend({
             self.$openid_selected_input = $();
             self.$openid_selected_provider = null;
     
+
+            // Hook auth_signup events. noop if module is not installed.
+            self.on('change:login_mode', self, function() {
+                var mode = self.get('login_mode') || 'default';
+                if (mode !== 'default') {
+                    return;
+                }
+                self.do_openid_select(self.$openid_selected_button, self.$openid_selected_provider, true);
+            });
+
     
             var openIdProvider = null;
             if (self.has_local_storage && self.remember_credentials) {
@@ -21,12 +31,10 @@ instance.web.Login = instance.web.Login.extend({
             }
     
             if (openIdProvider) {
-                $openid_selected_provider = openIdProvider;
+                self.$openid_selected_provider = openIdProvider;
                 self.do_openid_select('a[href="#' + openIdProvider + '"]', openIdProvider, true);
     
-                if (self.has_local_storage && self.remember_credentials) {
-                    self.$openid_selected_input.find('input').val(localStorage.getItem('openid-login'));
-                }
+                self.$openid_selected_input.find('input').val(localStorage.getItem('openid-login') || '');
             }
             else {
                 self.do_openid_select('a[data-url=""]', 'login,password', true);
@@ -49,11 +57,12 @@ instance.web.Login = instance.web.Login.extend({
     do_openid_select: function (button, provider, noautosubmit) {
         var self = this;
 
+            self.$('li[data-provider]').hide();
             self.$openid_selected_button.add(self.$openid_selected_input).removeClass('selected');
             self.$openid_selected_button = self.$el.find(button).addClass('selected');
 
             var input = _(provider.split(',')).map(function(p) { return 'li[data-provider="'+p+'"]'; }).join(',');
-            self.$openid_selected_input = self.$el.find(input).addClass('selected');
+            self.$openid_selected_input = self.$el.find(input).show().addClass('selected');
 
             self.$openid_selected_input.find('input:first').focus();
             self.$openid_selected_provider = (self.$openid_selected_button.attr('href') || '').substr(1);
@@ -62,7 +71,7 @@ instance.web.Login = instance.web.Login.extend({
                 localStorage.setItem('openid-provider', self.$openid_selected_provider);
             }
 
-            if (!noautosubmit && self.$openid_selected_input.length == 0) {
+            if (!noautosubmit && self.$openid_selected_input.length === 0) {
                 self.$el.find('form').submit();
             }
 
