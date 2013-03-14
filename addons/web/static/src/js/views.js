@@ -149,6 +149,9 @@ instance.web.ActionManager = instance.web.Widget.extend({
         for (var i = 0; i < this.breadcrumbs.length; i += 1) {
             var item = this.breadcrumbs[i];
             var tit = item.get_title();
+            if (item.hide_breadcrumb) {
+                continue;
+            }
             if (!_.isArray(tit)) {
                 tit = [tit];
             }
@@ -282,6 +285,7 @@ instance.web.ActionManager = instance.web.Widget.extend({
      * @param {Object} [options]
      * @param {Boolean} [options.clear_breadcrumbs=false] Clear the breadcrumbs history list
      * @param {Function} [options.on_reverse_breadcrumb] Callback to be executed whenever an anterior breadcrumb item is clicked on.
+     * @param {Function} [options.hide_breadcrumb] Do not display this widget's title in the breadcrumb
      * @param {Function} [options.on_close] Callback to be executed when the dialog is closed (only relevant for target=new actions)
      * @param {Function} [options.action_menu_id] Manually set the menu id on the fly.
      * @param {Object} [options.additional_context] Additional context to be merged with the action's context.
@@ -291,6 +295,7 @@ instance.web.ActionManager = instance.web.Widget.extend({
         options = _.defaults(options || {}, {
             clear_breadcrumbs: false,
             on_reverse_breadcrumb: function() {},
+            hide_breadcrumb: false,
             on_close: function() {},
             action_menu_id: null,
             additional_context: {},
@@ -403,7 +408,12 @@ instance.web.ActionManager = instance.web.Widget.extend({
             widget: function () { return new instance.web.ViewManagerAction(self, action); },
             action: action,
             klass: 'oe_act_window',
-            post_process: function (widget) { widget.add_breadcrumb(options.on_reverse_breadcrumb); }
+            post_process: function (widget) {
+                widget.add_breadcrumb({
+                    on_reverse_breadcrumb: options.on_reverse_breadcrumb,
+                    hide_breadcrumb: options.hide_breadcrumb,
+                });
+            },
         }, options);
     },
     ir_actions_client: function (action, options) {
@@ -427,6 +437,7 @@ instance.web.ActionManager = instance.web.Widget.extend({
                     widget: widget,
                     title: action.name,
                     on_reverse_breadcrumb: options.on_reverse_breadcrumb,
+                    hide_breadcrumb: options.hide_breadcrumb,
                 });
                 if (action.tag !== 'reload') {
                     self.do_push_state({});
@@ -649,7 +660,15 @@ instance.web.ViewManager =  instance.web.Widget.extend({
     set_title: function(title) {
         this.$el.find('.oe_view_title_text:first').text(title);
     },
-    add_breadcrumb: function(on_reverse_breadcrumb) {
+    add_breadcrumb: function(options) {
+        var options = options || {};
+        // 7.0 backward compatibility
+        if (typeof options == 'function') {
+            options = {
+                on_reverse_breadcrumb: options
+            };
+        }
+        // end of 7.0 backward compatibility
         var self = this;
         var views = [this.active_view || this.views_src[0].view_type];
         this.on('switch_mode', self, function(mode) {
@@ -661,7 +680,7 @@ instance.web.ViewManager =  instance.web.Widget.extend({
                 views.push(mode);
             }
         });
-        this.getParent().push_breadcrumb({
+        var item = _.extend({
             widget: this,
             action: this.action,
             show: function(index) {
@@ -695,9 +714,9 @@ instance.web.ViewManager =  instance.web.Widget.extend({
                     titles.pop();
                 }
                 return titles;
-            },
-            on_reverse_breadcrumb: on_reverse_breadcrumb,
-        });
+            }
+        }, options);
+        this.getParent().push_breadcrumb(item);
     },
     /**
      * Returns to the view preceding the caller view in this manager's
