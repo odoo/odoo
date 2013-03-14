@@ -1243,13 +1243,14 @@ class survey_question_wiz(osv.osv_memory):
         """ Check if the user have access to the survey and open survey
         """
         context.update({
-            'survey_id': context['active_id'],
-            'survey_token': context['token'],
+            'survey_id': context.get('active_id'),
+            'survey_token': context.get('params', True),
             'ir_actions_act_window_target': 'inline'})
 
         # check if the user must be authenticate
         survey_browse = self.pool.get('survey').browse(cr, SUPERUSER_ID, context['survey_id'], context=context)
         anonymous = self.check_anonymous(cr, uid, [uid], context=context)
+
         if anonymous and survey_browse.state == "open" and survey_browse.authenticate:
             return {
                 'type': 'ir.actions.client',

@@ -79,7 +79,7 @@ class survey(osv.osv):
             fragment = {
                 'active_id': survey_browse.id,
                 'action': 'survey.action_filling',
-                'token': survey_browse.token,
+                'params': survey_browse.token,
             }
             res[survey_browse.id] = urljoin(base_url, "?%s#%s" % (urlencode(query), urlencode(fragment)))
         return res
