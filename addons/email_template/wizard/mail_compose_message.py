@@ -61,11 +61,11 @@ class mail_compose_message(osv.TransientModel):
     _columns = {
         # incredible hack of the day: size=-1 means we want an int db column instead of an str one
         'template_id': fields.selection(_get_templates, 'Template', size=-1),
-        'partner_to': fields.char('To (Partner IDs)', readonly=True,
+        'partner_to': fields.char('To (Partner IDs)',
             help="Comma-separated list of recipient partners ids (placeholders may be used here)"),
-        'email_to': fields.char('To (Emails)', readonly=True,
+        'email_to': fields.char('To (Emails)',
             help="Comma-separated recipient addresses (placeholders may be used here)",),
-        'email_cc': fields.char('Cc (Emails)', readonly=True,
+        'email_cc': fields.char('Cc (Emails)',
             help="Carbon copy recipients (placeholders may be used here)"),
     }
 
@@ -79,8 +79,9 @@ class mail_compose_message(osv.TransientModel):
         """ - mass_mailing: we cannot render, so return the template values
             - normal mode: return rendered values """
         if template_id and composition_mode == 'mass_mail':
-            values = self.pool.get('email.template').read(cr, uid, template_id, ['subject', 'body_html', 'email_from', 'email_to', 'email_cc', 'partner_to', 'reply_to'], context)
-            values.pop('id')
+            fields = ['subject', 'body_html', 'email_from', 'email_to', 'partner_to', 'email_cc',  'reply_to']
+            template_values = self.pool.get('email.template').read(cr, uid, template_id, fields, context)
+            values = dict((field, template_values[field]) for field in fields if template_values.get(field))
         elif template_id:
             # FIXME odo: change the mail generation to avoid attachment duplication
             values = self.generate_email_for_composer(cr, uid, template_id, res_id, context=context)
@@ -165,11 +166,10 @@ class mail_compose_message(osv.TransientModel):
             values = {}
         # get values to return
         email_dict = super(mail_compose_message, self).render_message(cr, uid, wizard, res_id, context)
-        email_dict['email_to'] = self.render_template(cr, uid, wizard.email_to, wizard.model, res_id, context)
-        email_dict['email_cc'] = self.render_template(cr, uid, wizard.email_cc, wizard.model, res_id, context)
-        email_dict['partner_to'] = self.render_template(cr, uid, wizard.partner_to, wizard.model, res_id, context)
-        # transform email_to, email_cc into partner_ids
-        email_dict['partner_ids'] = self._get_or_create_partners_from_values(cr, uid, email_dict, context=context)
+        # those values are not managed; they are readonly
+        email_dict.pop('email_to', None)
+        email_dict.pop('email_cc', None)
+        email_dict.pop('partner_to', None)
         # update template values by wizard values
         values.update(email_dict)
         return values
