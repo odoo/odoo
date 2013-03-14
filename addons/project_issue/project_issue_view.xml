@@ -156,7 +156,7 @@
             <field name="model">project.issue</field>
             <field name="arch" type="xml">
                 <search string="Issue Tracker Search">
-                    <field name="name" string="Issue/Contact" filter_domain="['|', '|',('partner_id','ilike',self),('email_from','ilike',self),('name','ilike',self)]"/>
+                    <field name="name" string="Issue" filter_domain="['|', '|',('description','ilike',self),('email_from','ilike',self),('name','ilike',self)]"/>
                     <field name="id"/>
                     <filter icon="terp-mail-message-new" string="Unread Messages" name="message_unread" domain="[('message_unread','=',True)]"/>
                     <separator/>
@@ -164,6 +164,7 @@
                     <filter string="To Do" domain="[('state','=','open')]" help="To Do Issues" icon="terp-check"/>
                     <separator/>
                     <filter string="Unassigned Issues" domain="[('user_id','=',False)]"  help="Unassigned Issues" icon="terp-personal-"/>
+                    <field name="partner_id"/>
                     <field name="user_id"/>
                     <field name="project_id"/>
                     <field name="categ_ids"/>
@@ -373,7 +374,7 @@
             <field name="arch" type="xml">
                 <xpath expr="//div[@name='buttons']" position="inside">
                     <button type="action" string="Issues" attrs="{'invisible': [('customer', '=', False)]}"
-                        name="%(act_project_project_2_project_issue_all)d" context="{'search_default_partner_id': active_id, 'default_partner_id': active_id}"/>
+                        name="%(act_project_project_2_project_issue_all)d" context="{'search_default_partner_id': active_id, 'default_partner_id': active_id}" groups="project.group_project_user"/>
                 </xpath>
             </field>
         </record>
