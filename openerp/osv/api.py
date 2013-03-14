@@ -189,7 +189,9 @@ class Scope(object):
         for arg in args:
             if isinstance(arg, dict):
                 context = arg
-            elif isinstance(arg, (BaseModel, int, long)):
+            elif isinstance(arg, (int, long)):
+                uid = arg
+            elif isinstance(arg, Record) and arg._name == 'res.users':
                 uid = int(arg)
             elif isinstance(arg, Cursor):
                 cr = arg
@@ -754,7 +756,7 @@ def guess(method):
 
 # keep those imports here in order to handle cyclic dependencies correctly
 from openerp import SUPERUSER_ID
-from openerp.osv.orm import BaseModel
+from openerp.osv.orm import Record
 from openerp.sql_db import Cursor
 from openerp.tools.translate import _
 from openerp.modules.registry import RegistryManager
