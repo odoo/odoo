@@ -35,7 +35,7 @@
                                 type="object" name="action_reset_password"
                                 attrs="{'invisible': [('state', '!=', 'active')]}"/>
                         <button string="Send an invitation email"
-                                type="object" name="action_reset_password"
+                                type="object" name="action_reset_password" context="{'create_user': 1}"
                                 attrs="{'invisible': [('state', '!=', 'new')]}"/>
                     </div>
                 </xpath>
