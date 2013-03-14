@@ -237,6 +237,7 @@
                 <field name="title_action"/>
                 <field name="department_id"/>
                 <field name="categ_ids"/>
+                <field name="message_summary"/>
                 <templates>
                     <t t-name="kanban-tooltip">
                         <ul class="oe_kanban_tooltip">
@@ -261,11 +262,15 @@
                                     <t t-if="record.partner_name.raw_value"><b><field name="partner_name"/></b><br/></t>
                                     <i><field name="name"/></i><br/>
                                     <field name="job_id"/><br/>
-                                    <field name="date_action"/>
-                                    <t t-if="record.title_action.raw_value"><field name="title_action"/><br/></t>
-                                    <field name="categ_ids"/><br/>
                                     <t t-if="record.partner_mobile.raw_value">Mobile: <field name="partner_mobile"/><br/></t>
                                 </div>
+                                <div style="padding-left: 0.5em">
+                                    <t t-if="record.date_action.raw_value and record.date_action.raw_value lt (new Date())" t-set="red">oe_kanban_text_red</t>
+                                    <span t-attf-class="#{red || ''}"><field name="date_action"/></span>
+                                        <t t-if="record.date_action.raw_value"> : </t>
+                                        <field name="title_action"/>
+                                </div>
+                                <div style="width:240px"><field name="categ_ids"/></div>
                                 <div class="oe_kanban_right">
                                     <t t-set="priority" t-value="record.priority.raw_value || 5"/>
                                     <a type="object" name="set_priority" args="['3']" t-if="priority gt 3">
@@ -284,7 +289,7 @@
 
                                 </div>
                                 <div class="oe_kanban_footer_left" style="margin-top:5px;">
-                                    <field name="categ_ids"/>
+                                    <t t-raw="record.message_summary.raw_value"/>
                                 </div>
                                 
                             </div>
