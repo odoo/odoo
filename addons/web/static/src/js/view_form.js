@@ -2602,7 +2602,7 @@ instance.web.form.FieldText = instance.web.form.AbstractField.extend(instance.we
                 this.$textarea.trigger("autosize");
             }
         } else {
-            var txt = this.get("value");
+            var txt = this.get("value") || '';
             this.$(".oe_form_text_content").text(txt);
         }
     },
