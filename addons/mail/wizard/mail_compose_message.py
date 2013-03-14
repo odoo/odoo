@@ -234,6 +234,10 @@ class mail_compose_message(osv.TransientModel):
                 # automatically subscribe recipients if asked to
                 if context.get('mail_post_autofollow') and wizard.model and post_values.get('partner_ids'):
                     active_model_pool.message_subscribe(cr, uid, [res_id], [item[1] for item in post_values.get('partner_ids')], context=context)
+                # clean the context (hint: mass mailing sets some default values that
+                # could be wrongly interpreted by mail_mail)
+                context.pop('default_email_to', None)
+                context.pop('default_partner_ids', None)
                 # post the message
                 if mass_mail_mode and not wizard.post:
                     post_values['recipient_ids'] = post_values.pop('partner_ids')
