@@ -106,9 +106,12 @@ openerp_mail_followers = function(session, mail) {
 
         on_remove_follower: function (event) {
             var partner_id = $(event.target).data('id');
-            var context = new session.web.CompoundContext(this.build_context(), {});
-            return this.ds_model.call('message_unsubscribe', [[this.view.datarecord.id], [partner_id], context])
-                .then(this.proxy('read_value'));
+            var name = $(event.target).parent().find("a").html();
+            if (confirm(_.str.sprintf(_t("Warning! \n %s won't be notified of any email or discussion on this document. Do you really want to remove him from the followers ?"), name))) {
+                var context = new session.web.CompoundContext(this.build_context(), {});
+                return this.ds_model.call('message_unsubscribe', [[this.view.datarecord.id], [partner_id], context])
+                    .then(this.proxy('read_value'));
+            }
         },
 
         read_value: function () {
@@ -248,12 +251,15 @@ openerp_mail_followers = function(session, mail) {
         },
         
         do_unfollow: function () {
-            _(this.$('.oe_msg_subtype_check')).each(function (record) {
-                $(record).attr('checked',false);
-            });
-            var context = new session.web.CompoundContext(this.build_context(), {});
-            return this.ds_model.call('message_unsubscribe_users', [[this.view.datarecord.id], [this.session.uid], context])
-                .then(this.proxy('read_value'));
+            if (confirm(_t("Warning! \nYou won't be notified of any email or discussion on this document. Do you really want to unfollow this document ?"))) {
+                _(this.$('.oe_msg_subtype_check')).each(function (record) {
+                    $(record).attr('checked',false);
+                });
+                var context = new session.web.CompoundContext(this.build_context(), {});
+                return this.ds_model.call('message_unsubscribe_users', [[this.view.datarecord.id], [this.session.uid], context])
+                    .then(this.proxy('read_value'));
+            }
+            return false;
         },
 
         do_update_subscription: function (event) {
@@ -267,7 +273,9 @@ openerp_mail_followers = function(session, mail) {
             });
 
             if (!checklist.length) {
-                this.do_unfollow();
+                if (!this.do_unfollow()) {
+                    $(event.target).attr("checked", "checked");
+                }
             } else {
                 var context = new session.web.CompoundContext(this.build_context(), {});
                 return this.ds_model.call('message_subscribe_users', [[this.view.datarecord.id], [this.session.uid], checklist, context])

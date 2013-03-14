@@ -292,8 +292,7 @@ class res_partner(osv.osv):
                                       type = 'comment',
                                       subtype = "mail.mt_comment", context = context,
                                       model = 'res.partner', res_id = part.id, 
-                                      notified_partner_ids = [(6, 0, [responsible_partner_id])],
-                                      partner_ids = [(6, 0, [responsible_partner_id])])
+                                      partner_ids = [responsible_partner_id])
         return super(res_partner, self).write(cr, uid, ids, vals, context=context)
 
     def action_done(self, cr, uid, ids, context=None):
