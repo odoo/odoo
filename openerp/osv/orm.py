@@ -255,6 +255,54 @@ class except_orm(Exception):
 
 
 #
+# Records cache
+#
+class ModelCache(defaultdict):
+    """ Cache for records in a given model. The cache is a dictionary that
+        associates `field` names to `id-value` dictionaries.
+
+        It also  refers to a set of record ids (attribute :attr:`ids`), which is
+        used for prefetching.
+    """
+    def __init__(self):
+        super(ModelCache, self).__init__(dict)
+        self.ids = set()
+
+    def update(self, field, values):
+        """ update the cache for the given field
+
+            :param values: a dictionary associating record ids to values
+        """
+        self.ids.update(values.iterkeys())
+        self[field].update(values)
+
+    def invalidate_field(self, field=None):
+        """ invalidate for the given field (``None`` for all fields) """
+        fields = self if field is None else (field,)
+        for field in fields:
+            self[field].clear()
+
+    def invalidate(self, ids=None):
+        """ invalidate for the given record ids (``None`` for all records) """
+        if ids is None:
+            self.ids.clear()
+            self.clear()
+        else:
+            self.ids -= set(ids)
+            for field_cache in self.itervalues():
+                for id in ids:
+                    field_cache.pop(id, None)
+
+
+class RecordCache(defaultdict):
+    """ Cache for records of any model. The cache is a dictionary that
+        associates model names to :class:`ModelCache` instances.
+    """
+    def __init__(self):
+        super(RecordCache, self).__init__(ModelCache)
+
+
+#
 # Helper functions for browsing record values
 #
 
@@ -388,11 +436,6 @@ class MetaModel(api.Meta):
         # Remember which models to instanciate for this module.
         if not self._custom:
             self.module_to_models.setdefault(self._module, []).append(self)
-
-
-def _RecordCache():
-    # {model: {id: {field: value, ...}, ...}, ...}
-    return defaultdict(lambda: defaultdict(dict))
 
 
 # Definition of log access columns, automatically added to models if
@@ -5148,8 +5191,7 @@ class BaseModel(object):
                 raise except_orm("ValueError", "Expected singleton: %s" % self)
 
         if cache is None:
-            cache = _RecordCache()
-        cache[self._name][id]['id'] = id
+            cache = RecordCache()
 
         return self._make_instance(_record_id=id, _record_cache=cache, _scope=scope)
 
@@ -5184,9 +5226,8 @@ class BaseModel(object):
             ids = map(int, ids)
 
         if cache is None:
-            cache = _RecordCache()
-        for id in ids:
-            cache[self._name][id]['id'] = id
+            cache = RecordCache()
+        cache[self._name].ids.update(ids)
 
         return self._make_instance(_record_ids=ids, _record_cache=cache, _scope=scope)
 
@@ -5270,9 +5311,10 @@ class BaseModel(object):
                 # return False, null or recordset, depending on the field's type
                 return browse_function(self, column, False)
 
-            model_cache = self._record_cache[self._name]
+            cache = self._record_cache
+            model_cache = cache[self._name]
 
-            if name not in model_cache[self._record_id]:
+            if self._record_id not in model_cache[name]:
                 # determine which fields to fetch
                 if column._prefetch:
                     # the field is a classic one or a many2one, fetch all classic and many2one fields
@@ -5285,28 +5327,40 @@ class BaseModel(object):
                     # otherwise fetch only that field
                     fields_to_fetch = [(name, column)]
 
+                # determine which records to fetch; make sure to include self
+                model_cache.ids.add(self._record_id)
+
                 # read the records in the same model that don't have the field yet
-                ids = [id for id, values in model_cache.iteritems() if name not in values]
+                ids = list(model_cache.ids - set(model_cache[name]))
                 field_names = [key for key, col in fields_to_fetch]
                 result = self.browse(ids).read(field_names, load="_classic_write")
 
-                # update the cache with the results
-                for data in result:
+                # process the result field by field
+                for fname, fcolumn in fields_to_fetch:
                     values = {}
-                    for fname, fcolumn in fields_to_fetch:
-                        value = data[fname]
-                        if fcolumn._type == 'many2one' and isinstance(value, (tuple, list)):
-                            value = value[0]
-                        values[fname] = value
-                    model_cache[data['id']].update(values)
+                    for data in result:
+                        values[data['id']] = data[fname]
 
-            if not name in model_cache[self._record_id]:
+                    # feed cache for prefetching relation fields
+                    if fcolumn._type == 'many2one':
+                        values = dict(
+                            (i, v[0] if isinstance(v, (tuple, list)) else v)
+                            for i, v in values.iteritems())
+                        ids = filter(None, values.itervalues())
+                        cache[fcolumn._obj].ids.update(ids)
+
+                    elif fcolumn._type in ('one2many', 'many2many'):
+                        ids = itertools.chain(*values.values())
+                        cache[fcolumn._obj].ids.update(ids)
+
+                    # update the cache
+                    model_cache[fname].update(values)
+
+            if self._record_id not in model_cache[name]:
                 # How did this happen? Could be a missing model due to custom fields used too soon.
-                _logger.error("Fields to fetch: %s, Field values: %s", field_names, result)
-                _logger.error("Cached: %s, Table: %s", model_cache[self._record_id], self._name)
                 raise KeyError(_('Unknown field %s in %s ') % (name, self))
 
-            return browse_function(self, column, model_cache[self._record_id][name])
+            return browse_function(self, column, model_cache[name][self._record_id])
 
     def __getitem__(self, key):
         """ If `self` is a record, return the value of the field named `key`.
@@ -5376,8 +5430,7 @@ class BaseModel(object):
         """
         if self.is_record() or self.is_recordset():
             for model_cache in self._record_cache.itervalues():
-                for id in model_cache.keys():
-                    model_cache[id] = {'id': id}
+                model_cache.invalidate_field()
 
 
 # for instance checking
