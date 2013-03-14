@@ -119,9 +119,7 @@ class mail_notification(osv.Model):
             return True
         # browse as SUPERUSER_ID because of access to res_partner not necessarily allowed
         msg = self.pool.get('mail.message').browse(cr, SUPERUSER_ID, msg_id, context=context)
-        print 'before partner_to_notify', partners_to_notify
         partners_to_notify = self.get_partners_to_notify(cr, uid, msg, partners_to_notify=partners_to_notify, context=context)
-        print 'partner_to_notify', partners_to_notify
         if not partners_to_notify:
             return True
 
