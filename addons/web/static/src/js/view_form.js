@@ -2357,7 +2357,8 @@ instance.web.form.FieldUrl = instance.web.form.FieldChar.extend({
             if (!s) {
                 tmp = "http://" + this.get('value');
             }
-            this.$el.find('a').attr('href', tmp).text(this.get('value') ? tmp : '');
+            var text = this.get('value') ? this.node.attrs.text || tmp : '';
+            this.$el.find('a').attr('href', tmp).text(text);
         }
     },
     on_button_clicked: function() {
