@@ -5335,7 +5335,12 @@ instance.web.form.FieldStatus = instance.web.form.AbstractField.extend({
     },
     calc_domain: function() {
         var d = instance.web.pyeval.eval('domain', this.build_domain());
-        domain = ['|', ['id', '=', this.get('value')]].concat(d);
+        var domain = []; //if there is no domain defined, fetch all the records
+        
+        if (d.length) {
+            domain = ['|',['id', '=', this.get('value')]].concat(d);
+        }
+        
         if (! _.isEqual(domain, this.get("evaluated_selection_domain"))) {
             this.set("evaluated_selection_domain", domain);
         }
