@@ -597,8 +597,8 @@
                             'default_template_id': ref('crm.lead_template'),
                         }"/>
 
-        <!--Definition of an email template with an empty body that will be used in opportunity mailing. Used to give a
-            basis for email recipients, name and to ease the definition of a further elaborated template. -->
+        <!--Update of email_template defined in crm_lead_data, to add ref_ir_act_window
+            allowing to have a well formed email template (context action considered as set). -->
         <record id="lead_template" model="email.template">
             <field name="ref_ir_act_window" ref="crm.action_lead_mass_mail"/>
         </record>
