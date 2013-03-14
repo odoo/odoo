@@ -161,7 +161,7 @@ class res_users(osv.Model):
     def _get_state(self, cr, uid, ids, name, arg, context=None):
         res = {}
         for user in self.browse(cr, uid, ids, context):
-            res[user.id] = ('reset' if user.signup_valid else
+            res[user.id] = ('reset' if user.signup_valid and user.login_date else
                             'active' if user.login_date else
                             'new')
         return res
@@ -169,7 +169,6 @@ class res_users(osv.Model):
     _columns = {
         'state': fields.function(_get_state, string='Status', type='selection',
                     selection=[('new', 'New'), ('active', 'Active'), ('reset', 'Resetting Password')]),
-        'signup_url': fields.related('partner_id', 'signup_url', type='char', string='Reset password', readonly=True),
     }
 
     def signup(self, cr, uid, values, token=None, context=None):
