@@ -313,7 +313,7 @@ class gamification_goal_plan(osv.Model):
         """ This opens goal view with a restriction to the list of goals from this plan only
             @return: the goal view
         """
-        # get ids of related goals 
+        # get ids of related goals
         goal_obj = self.pool.get('gamification.goal')
         related_goal_ids = []
         goal_ids = goal_obj.search(cr, uid, [('plan_id', 'in', ids)], context=context)

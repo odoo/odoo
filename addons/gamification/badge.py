@@ -21,6 +21,7 @@
 
 from openerp.osv import fields, osv
 from openerp import tools
+from openerp.tools.translate import _
 
 from templates import TemplateHelper
 from datetime import date
@@ -200,7 +201,6 @@ result = pool.get('res.users').search(cr, uid, domain=[], context=context)""",
                 values['user_from'] = False
             body_html = template_env.get_template('badge_received.mako').render(values)
             context['badge_user'] = badge_user
-
             res = self.message_post(cr, uid, 0,
                                     body=body_html,
                                     partner_ids=[(4, badge_user.user_id.partner_id.id)],
@@ -311,11 +311,11 @@ result = pool.get('res.users').search(cr, uid, domain=[], context=context)""",
         badge = self.browse(cr, uid, badge_id, context=context)
 
         if badge.rule_auth == 'nobody':
-            return False
+            raise osv.except_osv(_('Warning!'), _('This badge can not be sent by users.'))
 
         elif badge.rule_auth == 'list':
             if user_from_id not in [user.id for user in badge.rule_auth_user_ids]:
-                return False
+                raise osv.except_osv(_('Warning!'), _('You are not in the user allowed list.'))
 
         elif badge.rule_auth == 'having':
             badge_users = self.pool.get('gamification.badge.user').search(
@@ -323,7 +323,7 @@ result = pool.get('res.users').search(cr, uid, domain=[], context=context)""",
 
             if len(badge_users) == 0:
                 # the user_from has no badges
-                return False
+                raise osv.except_osv(_('Warning!'), _('You do not have the required badges.'))
 
             owners = [owner.id for owner in badge.owner_ids]
             granted = False
@@ -331,13 +331,13 @@ result = pool.get('res.users').search(cr, uid, domain=[], context=context)""",
                 if badge_user.id in owners:
                     granted = True
             if not granted:
-                return False
+                raise osv.except_osv(_('Warning!'), _('You do not have the required badges.'))
 
         # else badge.rule_auth == 'everyone' -> no check
 
         if badge.rule_max and badge.stat_this_month >= badge.rule_max_number:
             # sent the maximum number of time this month
-            return False
+            raise osv.except_osv(_('Warning!'), _('This badge has been already sent too many time this month.'))
 
         return True
 
