@@ -92,13 +92,6 @@ _local = Local()
 class ScopeProxy(object):
     """ This a proxy object to the current scope. """
     @property
-    def stack(self):
-        res = getattr(_local, 'scope_stack', None)
-        if res is None:
-            _local.scope_stack = res = []
-        return res
-
-    @property
     def root(self):
         stack = getattr(_local, 'scope_stack', None)
         return stack[0] if stack else None
@@ -109,7 +102,10 @@ class ScopeProxy(object):
         return stack[-1] if stack else None
 
     def push(self, value):
-        self.stack.append(value)
+        stack = getattr(_local, 'scope_stack', None)
+        if stack is None:
+            _local.scope_stack = stack = []
+        stack.append(value)
 
     def pop(self):
         res = _local.scope_stack.pop()
@@ -146,11 +142,22 @@ class Scope(object):
 
             cr, uid, context = scope
     """
-    def __init__(self, cr, uid, context):
-        self.cr = cr
-        self.uid = int(uid)
-        self.context = context if context is not None else {}
-        self.registry = RegistryManager.get(cr.dbname)
+    def __new__(cls, cr, uid, context):
+        args = (cr, int(uid), context if context is not None else {})
+        # get the list of all scopes in the current context
+        scope_list = getattr(_local, 'scope_list', None)
+        if scope_list is None:
+            _local.scope_list = scope_list = []
+        # if scope already exists, return it
+        for obj in scope_list:
+            if obj == args:
+                return obj
+        # otherwise create scope, and add it in the list
+        obj = object.__new__(cls)
+        obj.cr, obj.uid, obj.context = args
+        obj.registry = RegistryManager.get(cr.dbname)
+        scope_list.append(obj)
+        return obj
 
     def __iter__(self):
         yield self.cr
