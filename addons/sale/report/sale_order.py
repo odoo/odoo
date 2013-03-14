@@ -28,7 +28,8 @@ class order(report_sxw.rml_parse):
         super(order, self).__init__(cr, uid, name, context=context)
         self.localcontext.update({
             'time': time, 
-            'show_discount':self._show_discount, 
+            'show_discount':self._show_discount,
+            'showDiscount':self._show_discount,
         })
 
     def _show_discount(self, uid, context=None):
