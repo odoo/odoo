@@ -1462,8 +1462,9 @@ instance.web.EmbeddedClient = instance.web.Client.extend({
         });
     },
 
-    do_action: function(action) {
-        return this.action_manager.do_action(action);
+    do_action: function(/*...*/) {
+        var am = this.action_manager;
+        return am.do_action.apply(am, arguments);
     },
 
     authenticate: function() {
