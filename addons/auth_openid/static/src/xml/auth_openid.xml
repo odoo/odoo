@@ -5,11 +5,11 @@
     <t t-extend="Login">
         <t t-jquery=".oe_login .oe_login_logo" t-operation="after">
             <ul class="openid_providers oe_semantic_html_override" data-modes="default openid">
-                <li><a href="#login,password" title="Password" data-url="" id="btn_password">Password</a></li>
-                <li><a href="#google" title="Google" data-url="https://www.google.com/accounts/o8/id">Google</a></li>
-                <li><a href="#googleapps" title="Google Apps" data-url="https://www.google.com/accounts/o8/site-xrds?hd={id}">Google</a></li>
-                <li><a href="#launchpad" title="Launchpad" data-url="https://launchpad.net/~{id}">Launchpad</a></li>
-                <li><a href="#openid_url" title="OpenID" data-url="{id}">OpenID</a></li>
+                <li><a href="#login,password" data-provider='Password' title="Password" data-url="" id="btn_password">Password</a></li>
+                <li><a href="#google" data-provider='Google' title="Google" data-url="https://www.google.com/accounts/o8/id">Google</a></li>
+                <li><a href="#googleapps" data-provider='Google Apps' title="Google Apps" data-url="https://www.google.com/accounts/o8/site-xrds?hd={id}">Google</a></li>
+                <li><a href="#launchpad" data-provider='Launchpad' title="Launchpad" data-url="https://launchpad.net/~{id}">Launchpad</a></li>
+                <li><a href="#openid_url" data-provider='OpenID' title="OpenID" data-url="{id}">OpenID</a></li>
             </ul>
         </t>
     </t>
