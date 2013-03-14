@@ -42,6 +42,7 @@ You can define the different phases of interviews and easily rate the applicant 
         'base_status',
         'decimal_precision',
         'hr',
+        'document',
         'survey',
         'base_calendar',
         'fetchmail',
