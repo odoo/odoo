@@ -80,22 +80,72 @@ openerp_mail_followers = function(session, mail) {
             this.$el.on('click', '.oe_show_more', self.on_show_more_followers)
         },
 
-        on_edit_subtype: function() {
+        on_edit_subtype: function(event) {
             var self = this;
+            var records = [];
+            var partner_id = $(event.target).data('id');
+            var id = this.view.datarecord.id;
+            var res_model = this.view.dataset.model;
+            console.log('thissssssssssssssss>>', this, id, partner_id);
+            var $dialog = session.web.dialog($('<div>'), {
+                            modal: true,
+                            title: partner_id,
+                            buttons: [
+                                    {text: _t("Apply"), click: function() { 
+                                  //     self.apply_subtype(id, partner_id);
+                                       $(this).dialog("close");
+                                        }
+                                    },
+                                    {text: _t("Cancel"), click: function() { $(this).dialog("close"); }}
+                                ],
+                    });
+            this.ds_model.call('edit_followers_subtype', [[id], [partner_id], new session.web.CompoundContext(this.build_context(), {})])
+                .then(function (data) {
+              //      console.log('then>>>>>', data, id, partner_id);
+                    if (data[id]) {
+                        records = data[id].message_subtype_data;
+                //        console.log('records........', records);
+                        }
+                        _(records).each(function (record, record_name) {
+                            record.name = record_name;
+                            record.followed = record.followed || undefined;
+                           console.log('record??????????????', record);
+                           $(session.web.qweb.render("mail.followers.subtype", {'record': record})).appendTo($dialog);
+                        });
+                });
+
+    /*        var partner_id = $(event.target).data('id');
+            var context = new session.web.CompoundContext(this.build_context(), {});
+
             var action = {
                 type: 'ir.actions.act_window',
-                res_model: 'mail.message.subtype',
+                res_model: 'mail.message.subtype', //'subtype.edit.wizard', 
                 domain: [['res_model','=', self.view.model]],
                 view_mode: 'list',
                 view_type: 'list',
                 views: [[false, 'list']],
                 target: 'new',
+                context: {
+                    'res_model': this.view.dataset.model,
+                    'res_id': this.view.datarecord.id,
+                    'partner_id': partner_id,
+                },
             }
+            
             this.do_action(action, {
                 on_close: function() {
                     self.read_value();
                 },
-            });
+            });*/
+
+        },
+        
+        apply_subtype: function(id, partner_id) {
+            console.log('id>>>partner_id>>> ', id, partner_id);
+            this.ds_model.call('apply_subtype', [[id], [partner_id], new session.web.CompoundContext(this.build_context(), {})])
+                .then(function (data) {
+                            console.log('dataaaaaaaaaaaaa', data);
+                });
         },
 
         on_invite_follower: function (event) {
@@ -154,7 +204,7 @@ openerp_mail_followers = function(session, mail) {
                 .then(this.proxy('check_group_tech_feature'));
         },
 
-        check_group_tech_feature: function(){
+        check_group_tech_feature: function() {
             var self = this;
             var edit_subtypes = new session.web.Model("res.groups");
             edit_subtypes.query(["name","users"])
@@ -276,6 +326,7 @@ openerp_mail_followers = function(session, mail) {
                 .then(this.proxy('read_value'));
 
             _.each(this.$('.oe_subtype_list input'), function (record) {
+                console.log('do follow>', record);
                 $(record).attr('checked', 'checked');
             });
         },
