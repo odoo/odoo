@@ -84,12 +84,12 @@ openerp_mail_followers = function(session, mail) {
             var self = this;
             var records = [];
             var partner_id = $(event.target).data('id');
+            var partner_name = $(event.target).siblings('a').text(); 
             var id = this.view.datarecord.id;
             var res_model = this.view.dataset.model;
-            console.log('thissssssssssssssss>>', this, id, partner_id);
             var $dialog = session.web.dialog($('<div>'), {
                             modal: true,
-                            title: partner_id,
+                            title: _t('Edit Subtypes of ') + '"' + partner_name + '"',
                             buttons: [
                                     {text: _t("Apply"), click: function() { 
                                   //     self.apply_subtype(id, partner_id);
@@ -109,8 +109,7 @@ openerp_mail_followers = function(session, mail) {
                         _(records).each(function (record, record_name) {
                             record.name = record_name;
                             record.followed = record.followed || undefined;
-                           console.log('record??????????????', record);
-                           $(session.web.qweb.render("mail.followers.subtype", {'record': record})).appendTo($dialog);
+                           $(session.web.qweb.render("mail.followers.edit.subtype", {'record': record})).appendTo($dialog);
                         });
                 });
 
