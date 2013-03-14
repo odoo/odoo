@@ -222,7 +222,26 @@ result = pool.get('res.users').search(cr, uid, domain=[], context=context)""",
         Only badges with an automatic rule specified are checked to be
         granted, other type of badge will be skipped. Send alert messages to
         the one validating the condition.
-        :param ids: the list of id of the badges to check"""
+        :param ids: the list of id of the badges to check
+
+        In case of python code to execute, the code has access to the local
+        variables cr (database cursor), uid (current user id) and context.
+        To access other objects of the database, use a code like :
+            from openerp import pooler
+            pool = pooler.get_pool(cr.dbname)
+            pool.get('object.class.reference').action(...)
+
+        The result should be a list of res.users ids (int) and stored in the
+        local variable 'result' (read after the code execution). A badge_user
+        linked to this badge will be created for each of these users and a
+        notification will be send.
+        Beware that the case of user already having this badge is NOT checked
+        and is the responsability of the python code.
+
+        In case of list of goals to check, the case of a user already having
+        this badge is checked and the user will not receive badge at each run
+        of this method.
+        """
 
         context = context or {}
         badge_user_obj = self.pool.get('gamification.badge.user')
@@ -234,10 +253,8 @@ result = pool.get('res.users').search(cr, uid, domain=[], context=context)""",
                 code_globals = {}
                 code_locals = {'cr': cr, 'uid': uid, 'context': context, 'result': []}
                 exec code_obj in code_globals, code_locals
+
                 if 'result' in code_locals and type(code_locals['result']) == list:
-                    # user_badge_ids = self.pool.get('gamification.badge.user').search(
-                    #     cr, uid, [('user_id', 'in', code_locals['result'])], context=context)
-                    # create badge users for user_id as result of the code
                     user_badge_ids = [
                         badge_user_obj.create(cr, uid, {'user_id': user_id, 'badge_id': badge.id}, context=context)
                         for user_id in code_locals['result']
@@ -259,10 +276,24 @@ result = pool.get('res.users').search(cr, uid, domain=[], context=context)""",
                     else:
                         merged_list = [user_id for user_id in users if user_id in common_users]
                         common_users = merged_list
-                # create badge users for common users
+
+                if common_users is None:
+                    # nobody succeeded the goals
+                    continue
+
+                # remove users having already this badge
+                badge_user_not_having = []
+                for user_id in common_users:
+                    badge_user_having = badge_user_obj.search(cr, uid, [
+                        ('user_id', '=', user_id),
+                        ('badge_id', '=', badge.id)], context=context)
+                    if len(badge_user_having) == 0:
+                        badge_user_not_having.append(user_id)
+
+                # create badge users for users deserving the badge
                 user_badge_ids = [
                     badge_user_obj.create(cr, uid, {'user_id': user_id, 'badge_id': badge.id}, context=context)
-                    for user_id in common_users
+                    for user_id in badge_user_not_having
                 ]
                 self.send_badge(cr, uid, badge.id, user_badge_ids, context=context)
 
