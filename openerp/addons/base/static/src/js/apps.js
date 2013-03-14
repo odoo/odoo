@@ -96,7 +96,7 @@ openerp.base = function(instance) {
                     client.replace(self.$el).
                         done(function() {
                             client.$el.removeClass('openerp');
-                            client.do_action(self.remote_action_id);
+                            client.do_action(self.remote_action_id, {hide_breadcrumb: true});
                         });
                 }).
                 fail(function(client) {
