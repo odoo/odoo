@@ -4432,7 +4432,6 @@ class BaseModel(object):
             upd1 += ",%s,(now() at time zone 'UTC'),%s,(now() at time zone 'UTC')"
             upd2.extend((user, user))
         cr.execute('insert into "'+self._table+'" (id'+upd0+") values ("+str(id_new)+upd1+')', tuple(upd2))
-        self.check_access_rule(cr, user, [id_new], 'create', context=context)
         upd_todo.sort(lambda x, y: self._columns[x].priority-self._columns[y].priority)
 
         if self._parent_store and not context.get('defer_parent_store_computation'):
@@ -4485,6 +4484,7 @@ class BaseModel(object):
                 self.name_get(cr, user, [id_new], context=context)[0][1] + \
                 "' " + _("created.")
             self.log(cr, user, id_new, message, True, context=context)
+        self.check_access_rule(cr, user, [id_new], 'create', context=context)
         self._workflow_trigger(cr, user, [id_new], 'trg_create', context=context)
         return id_new
 
