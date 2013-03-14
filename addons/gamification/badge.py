@@ -60,6 +60,7 @@ class gamification_badge(osv.Model):
         for obj in self.browse(cr, uid, ids, context=context):
             result[obj.id] = len(self.pool.get('gamification.badge.user').search(
                 cr, uid, [('badge_id', '=', obj.id)], context=context))
+            result[obj.id] = len(obj.owner_ids)
         return result
 
     def _get_unique_global_count(self, cr, uid, ids, name, args, context=None):
@@ -154,6 +155,7 @@ class gamification_badge(osv.Model):
         'stat_count_distinct': fields.function(_get_unique_global_count,
             string='Unique Count',
             help="The number of time this badge has been received by individual users."),
+        # TODO store result for working domain stat_this_month >= rule_max_number
         'stat_this_month': fields.function(_get_month_count,
             string='Monthly Count',
             help="The number of time this badge has been received this month."),

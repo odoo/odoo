@@ -70,7 +70,7 @@
                                     ('rule_auth', '=', 'nobody'),
                                     '&amp;',
                                         ('rule_max', '=', True),
-                                        ('stat_this_month', '&gt;', 'rule_max_number')
+                                        ('stat_this_month', '&gt;=', 'rule_max_number')
                                 ]}" />
                             <button string="Check Badge" type="object" name="check_automatic" groups="base.group_no_one" />
                         </div>
@@ -103,6 +103,7 @@
                             <field name="stat_this_month"/>
                             <field name="stat_my"/>
                             <field name="stat_my_this_month"/>
+                            <field name="owner_ids"/>
                         </group>
                     </sheet>
                 </form>
