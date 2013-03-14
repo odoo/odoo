@@ -145,17 +145,24 @@ class mail_compose_message(osv.TransientModel):
         values['body'] = values.pop('body_html', '')
 
         # transform email_to, email_cc into partner_ids
+<<<<<<< TREE
         values['partner_ids'] = []
+=======
+        partner_ids = set()
+>>>>>>> MERGE-SOURCE
         mails = tools.email_split(values.pop('email_to', '') + ' ' + values.pop('email_cc', ''))
         for mail in mails:
             partner_id = self.pool.get('res.partner').find_or_create(cr, uid, mail, context=context)
-            values['partner_ids'].append(partner_id)
+            partner_ids.add(partner_id)
         email_recipients = values.pop('email_recipients', '')
         if email_recipients:
             for partner_id in email_recipients.split(','):
-                values['partner_ids'].append(int(partner_id))
-
-        values['partner_ids'] = list(set(values['partner_ids']))
+                if partner_id:  # placeholders could generate '', 3, 2 due to some empty field values
+                    partner_ids.add(int(partner_id))
+        # legacy template behavior: void values do not erase existing values and the
+        # related key is removed from the values dict
+        if partner_ids:
+            values['partner_ids'] = list(partner_ids)
 
         return values
 

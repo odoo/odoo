@@ -30,13 +30,16 @@ class res_partner_mail(osv.Model):
 
     _columns = {
         'notification_email_send': fields.selection([
-            ('all', 'All feeds'),
-            ('comment', 'Comments and Emails'),
-            ('email', 'Emails only'),
-            ('none', 'Never')
-            ], 'Receive Feeds by Email', required=True,
-            help="Choose in which case you want to receive an email when you "\
-                  "receive new feeds."),
+            ('none', 'Never'),
+            ('email', 'Incoming Emails only'),
+            ('comment', 'Incoming Emails and Discussions'),
+            ('all', 'All Messages (discussions, emails, followed system notifications)'),
+            ], 'Receive Messages by Email', required=True,
+            help="Policy to receive emails for new messages pushed to your personal Inbox:\n"
+                    "- Never: no emails are sent\n"
+                    "- Incoming Emails only: for messages received by the system via email\n"
+                    "- Incoming Emails and Discussions: for incoming emails along with internal discussions\n"
+                    "- All Messages: for every notification you receive in your Inbox"),
     }
 
     _defaults = {

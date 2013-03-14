@@ -31,8 +31,7 @@ openerp.auth_signup = function(instance) {
                     return false;
                 });
 
-                var dblist = self.db_list || [];
-                var dbname = self.params.db || (dblist.length === 1 ? dblist[0] : null);
+                var dbname = self.selected_db;
 
                 // if there is an error message in params, show it then forget it
                 if (self.params.error_message) {

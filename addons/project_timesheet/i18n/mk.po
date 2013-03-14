@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2013-03-07 08:38+0000\n"
-"PO-Revision-Date: 2013-03-07 11:00+0000\n"
-"Last-Translator: Aleksandar Panov <server986@gmail.com>\n"
+"PO-Revision-Date: 2013-03-12 11:21+0000\n"
+"Last-Translator: Софче Димитријева <Unknown>\n"
 "Language-Team: Macedonian <mk@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-03-08 05:58+0000\n"
-"X-Generator: Launchpad (build 16523)\n"
+"X-Launchpad-Export-Date: 2013-03-13 04:58+0000\n"
+"X-Generator: Launchpad (build 16532)\n"
 
 #. module: project_timesheet
 #: view:report.timesheet.task.user:0
@@ -35,7 +35,7 @@ msgstr "Јуни"
 #. module: project_timesheet
 #: field:project.task.work,hr_analytic_timesheet_id:0
 msgid "Related Timeline Id"
-msgstr ""
+msgstr "Id на поврзана временска линија"
 
 #. module: project_timesheet
 #: code:addons/project_timesheet/project_timesheet.py:266
@@ -139,7 +139,7 @@ msgstr "Август"
 #. module: project_timesheet
 #: model:process.transition,name:project_timesheet.process_transition_taskinvoice0
 msgid "Task invoice"
-msgstr ""
+msgstr "Фактура за задача"
 
 #. module: project_timesheet
 #: model:process.node,name:project_timesheet.process_node_taskwork0
@@ -216,7 +216,7 @@ msgstr "Комплетирајте го вашиот распоред."
 #. module: project_timesheet
 #: field:report.timesheet.task.user,task_hrs:0
 msgid "Task Hours"
-msgstr ""
+msgstr "Часови на задача"
 
 #. module: project_timesheet
 #: selection:report.timesheet.task.user,month:0
@@ -234,16 +234,23 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p>\n"
+"                Овде ќе пронајдете распореди и нарачки кои сте ги направиле "
+"за договори кои може повторно да бидат     фактурирани на купувачот.\n"
+"                Доколку сакате да ги снимите новите работи за да ги "
+"фактурирате, треба да го употребите менито распоред.\n"
+"              </p>\n"
+"            "
 
 #. module: project_timesheet
 #: model:process.node,name:project_timesheet.process_node_timesheettask0
 msgid "Timesheet task"
-msgstr ""
+msgstr "Задача на распоред"
 
 #. module: project_timesheet
 #: model:process.transition,name:project_timesheet.process_transition_taskencoding0
 msgid "Task encoding"
-msgstr ""
+msgstr "Кодирање на задача"
 
 #. module: project_timesheet
 #: model:process.transition,note:project_timesheet.process_transition_filltimesheet0
@@ -288,7 +295,7 @@ msgstr "report.timesheet.task.user"
 #. module: project_timesheet
 #: model:process.transition,note:project_timesheet.process_transition_taskencoding0
 msgid "Encode how much time u spent on your task"
-msgstr ""
+msgstr "Кодирајте колку време сте поминале на задачата"
 
 #. module: project_timesheet
 #: code:addons/project_timesheet/project_timesheet.py:85
@@ -310,7 +317,7 @@ msgstr "Погрешно аналитичко конто !"
 #. module: project_timesheet
 #: view:report.timesheet.task.user:0
 msgid "Timesheet/Task hours Report Per Month"
-msgstr ""
+msgstr "Извештај за распоред/Часови на задача по месец"
 
 #. module: project_timesheet
 #: code:addons/project_timesheet/project_timesheet.py:84
@@ -347,6 +354,8 @@ msgid ""
 "<p>Timesheets on this project may be invoiced to %s, according to the terms "
 "defined in the contract.</p>"
 msgstr ""
+"<p>Распоредите на овој проект може да бидат фактурирани до %s, во согласност "
+"со условите дефинирани во договорот.</p>"
 
 #. module: project_timesheet
 #: model:process.node,note:project_timesheet.process_node_taskwork0
@@ -357,7 +366,7 @@ msgstr "Работа на задача"
 #: model:ir.actions.act_window,name:project_timesheet.action_project_timesheet_bill_task
 #: model:ir.ui.menu,name:project_timesheet.menu_project_billing_line
 msgid "Invoice Tasks"
-msgstr ""
+msgstr "Фактурирај задачи"
 
 #. module: project_timesheet
 #: model:ir.actions.act_window,name:project_timesheet.action_report_timesheet_task_user
@@ -400,6 +409,8 @@ msgid ""
 "<p class=\"oe_view_nocontent_create\">Record your timesheets for the project "
 "'%s'.</p>"
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">Зачувајте ги распоредите за проектот "
+"'%s'.</p>"
 
 #. module: project_timesheet
 #: field:report.timesheet.task.user,timesheet_hrs:0
