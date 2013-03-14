@@ -19,6 +19,7 @@
         <record model="ir.ui.view" id="survey_form">
             <field name="name">survey_form</field>
             <field name="model">survey</field>
+            <field name="priority">1</field>
             <field name="arch" type="xml">
                 <form string="Survey" version="7.0">
                 <header groups="base.group_survey_manager">
@@ -146,12 +147,20 @@
                                         <t t-if="record.max_response_limit.raw_value > 0"> / <field name="max_response_limit"/></t>
                                     </div>
                                     <br/>
-                                    <ul class="oe_kanban_survey_list">
-                                        <li t-if="(!record.tot_comp_survey.raw_value or record.state.raw_value === 'draft') and widget.view.is_action_enabled('edit')"><a name="edit_survey" type="object">Edit Survey</a></li>
-                                        <li t-if="widget.view.is_action_enabled('edit')"><a name="action_print_survey" type="object">Print Survey</a></li>
-                                        <li t-if="record.state.raw_value === 'open' and widget.view.is_action_enabled('edit')"><a name="action_survey_sent" type="object">Collect Answers</a></li>
+                                    <ul class="oe_kanban_survey_list" t-if="widget.view.is_action_enabled('edit')">
+                                        <li t-if="record.state.raw_value === 'draft'"><a name="edit_survey" type="object">Edit Survey</a></li>
+                                        <li t-if="record.state.raw_value !== 'draft'"  class="oe_inactive" title="You can only edit the survey in draft mode">Edit Survey</li>
+                                        <li><a name="action_print_survey" type="object">Print Survey</a></li>
+                                        <li t-if="record.state.raw_value === 'open'"><a name="action_survey_sent" type="object">Collect Answers</a></li>
+                                        <li t-if="record.state.raw_value !== 'open'" class="oe_inactive" title="You can only collect answers for the open survey">Collect Answers</li>
+                                        <li t-if="record.state.raw_value === 'open'"><a name="fill_survey" type="object" class="oe_survey_fill">Fill in Survey</a></li>
+                                        <li t-if="record.state.raw_value === 'draft'"><a name="test_survey" type="object" class="oe_survey_fill">Test Survey</a></li>
+                                        <li t-if="record.state.raw_value !== 'open' and record.state.raw_value !== 'draft'" title="You can only test open or draft survey" class="oe_inactive">Test Survey</li>
+                                        <li t-if="record.tot_comp_survey.raw_value"><a name="print_statistics" type="object">Print Statistics</a></li>
+                                        <li t-if="!record.tot_comp_survey.raw_value" class="oe_inactive" title="There is no answer yet">Print Statistics</li>
+                                    </ul>
+                                    <ul class="oe_kanban_survey_list" t-if="!widget.view.is_action_enabled('edit')">
                                         <li><a t-if="record.state.raw_value === 'open'" name="fill_survey" type="object" class="oe_survey_fill">Fill in Survey</a></li>
-                                        <li t-if="record.tot_comp_survey.raw_value and widget.view.is_action_enabled('edit')"><a name="print_statistics" type="object">Print Statistics</a></li>
                                     </ul>
                                 </div>
                             </div>

@@ -38,7 +38,7 @@ class survey_name_wiz(osv.osv_memory):
     _name = 'survey.name.wiz'
 
     _columns = {
-        'survey_id': fields.many2one('survey', 'Survey', required=True, ondelete='cascade', domain=[('state', '=', 'open')]),
+        'survey_id': fields.many2one('survey', 'Survey', required=True, ondelete='cascade', domain=[('state', 'in', ['draft', 'open'])]),
         'page_no': fields.integer('Page Number'),
         'note': fields.text("Description"),
         'page': fields.char('Page Position', size=12),
@@ -242,15 +242,16 @@ class survey_question_wiz(osv.osv_memory):
         anonymous = self.check_anonymous(cr, uid, [uid], context=context)
 
         # to do: check if context.get('edit') is allow
-        if context.get('edit'):
+        if context.get('edit') or context.get('survey_test'):
             try:
                 survey_obj.check_access_rights(cr, uid, 'write')
                 survey_obj.check_access_rule(cr, uid, [survey_id], 'write', context=context)
             except except_orm, e:
                 context['edit'] = False
+                context['survey_test'] = False
 
         # check open and sign in
-        if not context.get('edit') and survey_browse.state != "open":
+        if not context.get('edit') and not context.get('survey_test') and survey_browse.state != "open":
             raise osv.except_osv(_('Access Denied!'), _("You cannot answer because the survey is not open."))
         if anonymous and survey_browse.authenticate:
             raise osv.except_osv(_('Access Denied!'), _("Please Login to complete this survey."))
@@ -258,7 +259,9 @@ class survey_question_wiz(osv.osv_memory):
         # get opening response
         response_ids = None
         sur_response_obj = self.pool.get('survey.response')
-        dom = [('survey_id', '=', survey_id), ('state', 'in', ['new', 'skip']), "|", ('date_deadline', '=', None), ('date_deadline', '>', datetime.now())]
+        dom = [('survey_id', '=', survey_id),
+            "|", ('state', '=', 'test'),
+            "&", ('state', 'in', ['new', 'skip']), "|", ('date_deadline', '=', None), ('date_deadline', '>', datetime.now())]
 
         # check for private token
         if survey_token:
@@ -282,7 +285,7 @@ class survey_question_wiz(osv.osv_memory):
             res['state'] = response.state
 
         # errors
-        if not res['response_id'] and not context.get('edit') and (survey_browse.state != 'open' or str(survey_browse.token) != str(survey_token)):
+        if not res['response_id'] and not context.get('edit') and not context.get('survey_test') and (survey_browse.state != 'open' or str(survey_browse.token) != str(survey_token)):
 
             response_ids = sur_response_obj.search(cr, SUPERUSER_ID, [('survey_id', '=', survey_id), ("token", "=", context.get("survey_token", None))], context=context, limit=1)
             if not response_ids:
@@ -377,7 +380,8 @@ class survey_question_wiz(osv.osv_memory):
 
                 if sur_name_read.page == "next" or sur_name_rec.page_no == -1:
                     if total_pages > sur_name_rec.page_no + 1:
-                        if survey_browse.max_response_limit and survey_browse.max_response_limit <= survey_browse.tot_start_survey and not sur_name_rec.page_no + 1:
+                        if response_info['state'] != 'test' and survey_browse.max_response_limit and \
+                                survey_browse.max_response_limit <= survey_browse.tot_start_survey and not sur_name_rec.page_no + 1:
                             survey_obj.write(cr, SUPERUSER_ID, survey_id, {'state': 'close', 'date_close': datetime.now()}, context=context)
 
                         p_id = p_id[sur_name_rec.page_no + 1]
@@ -591,7 +595,7 @@ class survey_question_wiz(osv.osv_memory):
             user_browse = self.pool.get('res.users').browse(cr, SUPERUSER_ID, uid, context=context)
             pid = user_browse.partner_id.id
             response_id = sur_response_obj.create(cr, SUPERUSER_ID, {
-                'state': 'new',
+                'state': context.get('survey_test') and 'test' or 'new',
                 'response_type': 'manually',
                 'partner_id': pid,
                 'date_create': datetime.now(),
@@ -601,7 +605,9 @@ class survey_question_wiz(osv.osv_memory):
             surv_name_wiz.write(cr, uid, [context.get('sur_name_id', False)], {'response_id': response_id})
             sur_name_read.update({'response_id': response_id})
 
-        sur_response_obj.write(cr, SUPERUSER_ID, response_id, {'state': 'skip'})
+        response = sur_response_obj.browse(cr, SUPERUSER_ID, response_id)
+        if response.state != 'test':
+            sur_response_obj.write(cr, SUPERUSER_ID, [response_id], {'state': 'skip'})
 
         #click first time on next button then increment on total start suvey
         if not safe_eval(sur_name_read['store_ans']):
@@ -1193,7 +1199,12 @@ class survey_question_wiz(osv.osv_memory):
                 response_id = sur_name_read['response_id'][0]
 
         if response_id:
-            self.pool.get('survey.response').write(cr, SUPERUSER_ID, [response_id], {'state': 'done'})
+            sur_response_obj = self.pool.get('survey.response')
+            response = sur_response_obj.browse(cr, SUPERUSER_ID, response_id)
+            if response.state != 'test':
+                sur_response_obj.write(cr, SUPERUSER_ID, [response_id], {'state': 'done'})
+            else:
+                sur_response_obj.unlink(cr, SUPERUSER_ID, [response_id])
         else:
             return {'type': 'ir.actions.act_window_close'}
 
@@ -1212,7 +1223,8 @@ class survey_question_wiz(osv.osv_memory):
         return {
             'view_type': 'form',
             "view_mode": 'form',
-            'res_model': 'survey.question.wiz',
+            'res_model': 'survey',
+            'res_id': context['survey_id'],
             'type': 'ir.actions.act_window',
             'target': context.get('ir_actions_act_window_target', 'new'),
             'context': context,

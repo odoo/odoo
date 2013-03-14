@@ -48,8 +48,8 @@
 
         <record id="view_survey_complete_survey" model="ir.ui.view">           
             <field name="name">Complete Survey Answer</field>
-            <field name="model">survey.question.wiz</field>
-            <field name="priority">1</field>
+            <field name="model">survey</field>
+            <field name="priority">10</field>
             <field name="arch" type="xml">
                 <form string="Your Messages"  version="7.0">
                     <sheet>
@@ -65,8 +65,8 @@
 
         <record id="view_survey_complete_survey_external" model="ir.ui.view">           
             <field name="name">Complete Survey Answer</field>
-            <field name="model">survey.question.wiz</field>
-            <field name="priority">2</field>
+            <field name="model">survey</field>
+            <field name="priority">11</field>
             <field name="arch" type="xml">
                 <form string="Your Messages"  version="7.0">
                     <sheet>

@@ -196,8 +196,6 @@ class survey(osv.osv):
                 raise osv.except_osv(_('Warning!'), _('This survey has no question defined or has no pages defined.'))
 
     def fill_survey(self, cr, uid, ids, context=None):
-        self._check_valid(cr, uid, ids, context=context)
-
         id = ids[0]
         survey = self.browse(cr, uid, id, context=context)
         context.update({'edit': False, 'survey_id': id, 'survey_token': survey.token, 'ir_actions_act_window_target': 'inline'})
@@ -210,6 +208,10 @@ class survey(osv.osv):
             'name': survey.title,
             'context': context
         }
+
+    def test_survey(self, cr, uid, ids, context=None):
+        context.update({'survey_test': True})
+        return self.fill_survey(cr, uid, ids, context=context)
 
     def edit_survey(self, cr, uid, ids, context=None):
         id = ids[0]
@@ -665,7 +667,7 @@ class survey_response(osv.osv):
         'date_create': fields.datetime('Create Date', required=1),
         'response_type': fields.selection([('manually', 'Manually'), ('link', 'Link')], 'Answer Type', required=1),
         'question_ids': fields.one2many('survey.response.line', 'response_id', 'Answer'),
-        'state': fields.selection([('new', 'Not Started'), ('skip', 'Not Finished'), ('done', 'Finished'), ('cancel', 'Canceled')], 'Status', readonly=True),
+        'state': fields.selection([('new', 'Not Started'), ('skip', 'Not Finished'), ('done', 'Finished'), ('cancel', 'Canceled'), ('test', 'Test')], 'Status', readonly=True),
         'token': fields.char("Indentification token", readonly=1),
         'partner_id': fields.many2one('res.partner', 'Partner', readonly=1),
         'email': fields.char("Email", size=64, readonly=1),
