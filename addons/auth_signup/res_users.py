@@ -161,14 +161,12 @@ class res_users(osv.Model):
     def _get_state(self, cr, uid, ids, name, arg, context=None):
         res = {}
         for user in self.browse(cr, uid, ids, context):
-            res[user.id] = ('reset' if user.signup_valid and user.login_date else
-                            'active' if user.login_date else
-                            'new')
+            res[user.id] = ('active' if user.login_date else 'new')
         return res
 
     _columns = {
         'state': fields.function(_get_state, string='Status', type='selection',
-                    selection=[('new', 'Never Connected'), ('active', 'Activated'), ('reset', 'Invitation Pending')]),
+                    selection=[('new', 'Never Connected'), ('active', 'Activated')]),
     }
 
     def signup(self, cr, uid, values, token=None, context=None):
