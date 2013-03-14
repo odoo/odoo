@@ -194,7 +194,7 @@ class account_analytic_account(osv.osv):
         'user_id': fields.many2one('res.users', 'Project Manager'),
         'manager_id': fields.many2one('res.users', 'Account Manager'),
         'date_start': fields.date('Start Date'),
-        'date': fields.date('Date End', select=True),
+        'date': fields.date('End Date', select=True),
         'company_id': fields.many2one('res.company', 'Company', required=False), #not required because we want to allow different companies to use the same chart of account, except for leaf accounts.
         'state': fields.selection([('template', 'Template'),('draft','New'),('open','In Progress'),('pending','To Renew'),('close','Closed'),('cancelled', 'Cancelled')], 'Status', required=True, track_visibility='onchange'),
         'currency_id': fields.function(_currency, fnct_inv=_set_company_currency, #the currency_id field is readonly except if it's a view account and if there is no company
