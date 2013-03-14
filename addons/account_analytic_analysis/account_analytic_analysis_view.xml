@@ -249,7 +249,7 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="domain">[('invoice_id','=',False)]</field>
-            <field name="context">{'search_default_to_invoice': 1, 'search_default_sales': 1}</field>
+            <field name="context">{'search_default_to_invoice': 1}</field>
             <field name="search_view_id" ref="account.view_account_analytic_line_filter"/>
             <field name="help" type="html">
               <p>
