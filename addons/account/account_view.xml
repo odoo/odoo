@@ -2352,12 +2352,12 @@
                             <field name="total_entry_encoding" readonly="1" string="+ Transactions" widget="monetary" options="{'currency_field': 'currency_id'}"/>
                             <field name="balance_end" widget="monetary" string="= Computed Balance" options="{'currency_field': 'currency_id'}"/>
                         </group>
-                        <group>
+                        <div>
                             <group class="oe_subtotal_footer oe_right" attrs="{'invisible' : [('state', '=', 'draft')]}">
                                 <field name="balance_end_real" readonly="1" class="oe_subtotal_footer_separator" widget="monetary" options="{'currency_field': 'currency_id'}"/>
                                 <field name="difference" class="oe_subtotal_footer_separator"/>
                             </group>    
-                        </group>
+                        </div>
                     </group>
                 </sheet>
                 </form>
