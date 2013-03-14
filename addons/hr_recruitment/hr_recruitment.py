@@ -184,6 +184,16 @@ class hr_applicant(base_stage, osv.Model):
                     duration = float(ans.days)
                     res[issue.id][field] = abs(float(duration))
         return res
+    
+    def _compute_attachments(self, cr, uid, ids, fields, args, context=None):
+        res = {}
+        attachment_pool = self.pool.get('ir.attachment')
+        for issue in self.browse(cr, uid, ids, context=context):
+            res[issue.id] = 0
+            attach = attachment_pool.search(cr, uid, [('res_model','=','hr.applicant'),('res_id','=',issue.id)])
+            if attach:
+                res[issue.id] = len(attach)
+        return res
 
     _columns = {
         'name': fields.char('Subject', size=128, required=True),
@@ -235,6 +245,8 @@ class hr_applicant(base_stage, osv.Model):
                                 multi='day_close', type="float", store=True),
         'color': fields.integer('Color Index'),
         'emp_id': fields.many2one('hr.employee', 'employee'),
+        'attachments': fields.function(_compute_attachments, string='Attachments', \
+                                 type="integer"),
         'user_email': fields.related('user_id', 'email', type='char', string='User Email', readonly=True),
     }
 
