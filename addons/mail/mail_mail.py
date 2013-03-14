@@ -56,7 +56,7 @@ class mail_mail(osv.Model):
         'references': fields.text('References', help='Message references, such as identifiers of previous messages', readonly=1),
         'email_from': fields.char('From', help='Message sender, taken from user preferences.'),
         'email_to': fields.text('To', help='Message recipients (emails)'),
-        'recipient_ids': fields.many2many('res.partner', string='Message recipients (partners)'),
+        'recipient_ids': fields.many2many('res.partner', string='To (Partners)'),
         'email_cc': fields.char('Cc', help='Carbon copy message recipients'),
         'body_html': fields.text('Rich-text Contents', help="Rich-text/HTML message"),
 
