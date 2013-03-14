@@ -35,7 +35,7 @@ def start_end_date_for_period(period):
     today = date.today()
     if period == 'daily':
         start_date = today
-        end_date = start_date # ? + timedelta(days=1)
+        end_date = start_date
     elif period == 'weekly':
         delta = timedelta(days=today.weekday())
         start_date = today - delta
