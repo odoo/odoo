@@ -431,10 +431,10 @@ class hr_applicant(base_stage, osv.Model):
                 emp_id = hr_employee.create(cr,uid,{'name': applicant.partner_name or contact_name,
                                                      'job_id': applicant.job_id.id,
                                                      'address_home_id': address_id,
-                                                     'department_id': applicant.department_id.id,
-                                                     'address_id': applicant.department_id.company_id.id,
-                                                     'work_email': applicant.department_id.company_id.email,
-                                                     'work_phone': applicant.department_id.company_id.phone,
+                                                     'department_id': applicant.department_id.id or False,
+                                                     'address_id': applicant.department_id and applicant.department_id.company_id and applicant.department_id.company_id.id or False,
+                                                     'work_email': applicant.department_id and applicant.department_id.company_id and applicant.department_id.company_id.email or False,
+                                                     'work_phone': applicant.department_id and applicant.department_id.company_id and applicant.department_id.company_id.phone or False,
                                                      })
                 self.write(cr, uid, [applicant.id], {'emp_id': emp_id}, context=context)
                 self.case_close(cr, uid, [applicant.id], context)
