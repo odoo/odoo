@@ -346,10 +346,12 @@ class hr_applicant(base_stage, osv.Model):
             This override updates the document according to the email.
         """
         if custom_values is None: custom_values = {}
+        val = msg.get('from').split('<')[0]
         desc = html2plaintext(msg.get('body')) if msg.get('body') else ''
         defaults = {
             'name':  msg.get('subject') or _("No Subject"),
             'description': desc,
+            'partner_name':val,
             'email_from': msg.get('from'),
             'email_cc': msg.get('cc'),
             'user_id': False,
@@ -429,7 +431,10 @@ class hr_applicant(base_stage, osv.Model):
                 emp_id = hr_employee.create(cr,uid,{'name': applicant.partner_name or contact_name,
                                                      'job_id': applicant.job_id.id,
                                                      'address_home_id': address_id,
-                                                     'department_id': applicant.department_id.id
+                                                     'department_id': applicant.department_id.id,
+                                                     'address_id': applicant.department_id.company_id.id,
+                                                     'work_email': applicant.department_id.company_id.email,
+                                                     'work_phone': applicant.department_id.company_id.phone,
                                                      })
                 self.write(cr, uid, [applicant.id], {'emp_id': emp_id}, context=context)
                 self.case_close(cr, uid, [applicant.id], context)
