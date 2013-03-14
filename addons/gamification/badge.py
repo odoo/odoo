@@ -98,7 +98,7 @@ class gamification_badge(osv.Model):
         first_month_day = date.today().replace(day=1).isoformat()
         for obj in self.browse(cr, uid, ids, context=context):
             result[obj.id] = len(self.pool.get('gamification.badge.user').search(
-                cr, uid, [('badge_id', '=', obj.id), ('user_id', '=', uid)
+                cr, uid, [('badge_id', '=', obj.id), ('user_id', '=', uid),
                           ('create_date', '>=', first_month_day)], context=context))
         return result
 
