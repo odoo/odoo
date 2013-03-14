@@ -195,7 +195,7 @@ class survey(osv.osv):
             if not survey.page_ids or not [page.question_ids for page in survey.page_ids if page.question_ids]:
                 raise osv.except_osv(_('Warning!'), _('This survey has no question defined or has no pages defined.'))
 
-    def fill_survey(self, cr, uid, ids, context=None):
+    def action_fill_survey(self, cr, uid, ids, context=None):
         id = ids[0]
         survey = self.browse(cr, uid, id, context=context)
         context.update({'edit': False, 'survey_id': id, 'survey_token': survey.token, 'ir_actions_act_window_target': 'inline'})
@@ -209,11 +209,11 @@ class survey(osv.osv):
             'context': context
         }
 
-    def test_survey(self, cr, uid, ids, context=None):
+    def action_test_survey(self, cr, uid, ids, context=None):
         context.update({'survey_test': True})
-        return self.fill_survey(cr, uid, ids, context=context)
+        return self.action_fill_survey(cr, uid, ids, context=context)
 
-    def edit_survey(self, cr, uid, ids, context=None):
+    def action_edit_survey(self, cr, uid, ids, context=None):
         id = ids[0]
         context.update({
             'survey_id': id,
