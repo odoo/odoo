@@ -145,11 +145,7 @@ class mail_compose_message(osv.TransientModel):
         values['body'] = values.pop('body_html', '')
 
         # transform email_to, email_cc into partner_ids
-<<<<<<< TREE
-        values['partner_ids'] = []
-=======
         partner_ids = set()
->>>>>>> MERGE-SOURCE
         mails = tools.email_split(values.pop('email_to', '') + ' ' + values.pop('email_cc', ''))
         for mail in mails:
             partner_id = self.pool.get('res.partner').find_or_create(cr, uid, mail, context=context)
