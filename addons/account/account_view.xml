@@ -2348,14 +2348,14 @@
                     </notebook>
                     <group>
                         <group class="oe_subtotal_footer oe_right">
-                            <field name="balance_start" readonly="1" string="Opening Balance" class="oe_subtotal_footer_separator" widget="monetary" options="{'currency_field': 'currency_id'}"/>
-                            <field name="total_entry_encoding" readonly="1" string="+ Transactions" widget="monetary" options="{'currency_field': 'currency_id'}"/>
-                            <field name="balance_end" widget="monetary" string="= Computed Balance" options="{'currency_field': 'currency_id'}"/>
+                            <field name="balance_start" readonly="1" string="Opening Balance" class="oe_subtotal_footer_separator" widget="monetary" options="{'currency_field': 'currency'}"/>
+                            <field name="total_entry_encoding" readonly="1" string="+ Transactions" widget="monetary" options="{'currency_field': 'currency'}"/>
+                            <field name="balance_end" widget="monetary" string="= Computed Balance" options="{'currency_field': 'currency'}"/>
                         </group>
                         <div>
                             <group class="oe_subtotal_footer oe_right" attrs="{'invisible' : [('state', '=', 'draft')]}">
-                                <field name="balance_end_real" readonly="1" class="oe_subtotal_footer_separator" widget="monetary" options="{'currency_field': 'currency_id'}"/>
-                                <field name="difference" class="oe_subtotal_footer_separator"/>
+                                <field name="balance_end_real" readonly="1" class="oe_subtotal_footer_separator" widget="monetary" options="{'currency_field': 'currency'}"/>
+                                <field name="difference" class="oe_subtotal_footer_separator" widget="monetary" options="{'currency_field': 'currency'}"/>
                             </group>    
                         </div>
                     </group>
