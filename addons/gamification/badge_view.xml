@@ -51,6 +51,7 @@
                 <tree string="Badge List"> 
                     <field name="name"/>
                     <field name="stat_count"/>
+                    <field name="stat_this_month"/>
                     <field name="stat_my"/>
                     <field name="rule_auth"/>
                 </tree>
@@ -64,7 +65,13 @@
                 <form string="Badge" version="7.0">
                     <sheet>
                         <div class="oe_right oe_button_box">
-                            <button string="Send this Badge" type="action" name="%(action_grant_wizard)d" class="oe_highlight" attrs="{'invisible': [('rule_auth', '=', 'nobody')]}" />
+                            <button string="Send this Badge" type="action" name="%(action_grant_wizard)d" class="oe_highlight" attrs="{'invisible': [
+                                '|',
+                                    ('rule_auth', '=', 'nobody'),
+                                    '&amp;',
+                                        ('rule_max', '=', True),
+                                        ('stat_this_month', '&gt;', 'rule_max_number')
+                                ]}" />
                             <button string="Check Badge" type="object" name="check_automatic" groups="base.group_no_one" />
                         </div>
                         <field name="image" widget='image' class="oe_left oe_avatar"/>
@@ -89,6 +96,13 @@
                             <field name="rule_automatic"/>
                             <field name="compute_code" attrs="{'invisible': [('rule_automatic','!=','python')]}"/>
                             <field name="goal_type_ids" attrs="{'invisible': [('rule_automatic','!=','goals')]}" widget="many2many_tags"/>
+                        </group>
+                        <group string="Stats">
+                            <field name="stat_count"/>
+                            <field name="stat_count_distinct"/>
+                            <field name="stat_this_month"/>
+                            <field name="stat_my"/>
+                            <field name="stat_my_this_month"/>
                         </group>
                     </sheet>
                 </form>

@@ -18,7 +18,7 @@
         </record>
     </data>
 
-    <data noupdate="1">
+    <data noupdate="0">
         <record id="goal_user_visibility" model="ir.rule">
             <field name="name">User can only see his/her goals</field>
             <field name="model_id" ref="model_gamification_goal"/>
@@ -40,15 +40,5 @@
             <field name="groups" eval="[(4, ref('group_goal_manager'))]"/>
         </record>
 
-        <record id="badge_user_visibility" model="ir.rule">
-            <field name="name">User can only see his/her badges and publics</field>
-            <field name="model_id" ref="model_gamification_badge_user"/>
-            <field name="groups" eval="[(4, ref('group_goal_user'))]"/>
-            <field name="perm_read" eval="True"/>
-            <field name="perm_write" eval="False"/>
-            <field name="perm_create" eval="False"/>
-            <field name="perm_unlink" eval="False"/>
-            <field name="domain_force">['|',('user_id','=',user.id),('badge_id.public','=',True)]</field>
-        </record>
     </data>
 </openerp>
