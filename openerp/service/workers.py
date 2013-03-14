@@ -407,7 +407,7 @@ class WorkerCron(Worker):
             while True:
                 # acquired = openerp.addons.base.ir.ir_cron.ir_cron._acquire_job(db_name)
                 # TODO why isnt openerp.addons.base defined ?
-                import base
+                import openerp.addons.base as base
                 acquired = base.ir.ir_cron.ir_cron._acquire_job(db_name)
                 if not acquired:
                     break

@@ -171,7 +171,7 @@ class configmanager(object):
         # Logging Group
         group = optparse.OptionGroup(parser, "Logging Configuration")
         group.add_option("--logfile", dest="logfile", help="file where the server log will be stored")
-        group.add_option("--no-logrotate", dest="logrotate", action="store_false", my_default=True, help="do not rotate the logfile")
+        group.add_option("--logrotate", dest="logrotate", action="store_true", my_default=False, help="enable logfile rotation")
         group.add_option("--syslog", action="store_true", dest="syslog", my_default=False, help="Send the log to the syslog server")
         group.add_option('--log-handler', action="append", default=DEFAULT_LOG_HANDLER, my_default=DEFAULT_LOG_HANDLER, metavar="PREFIX:LEVEL", help='setup a handler at LEVEL for a given PREFIX. An empty PREFIX indicates the root logger. This option can be repeated. Example: "openerp.orm:DEBUG" or "werkzeug:CRITICAL" (default: ":INFO")')
         group.add_option('--log-request', action="append_const", dest="log_handler", const="openerp.netsvc.rpc.request:DEBUG", help='shortcut for --log-handler=openerp.netsvc.rpc.request:DEBUG')
