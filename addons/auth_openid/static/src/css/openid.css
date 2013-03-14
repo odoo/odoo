@@ -1,20 +1,15 @@
-.login .pane {
-    width: 260px;
-    height: 175px;
-}
-
-.login .pane input[name='openid_url'] {
+.oe_login .oe_login_pane input[name='openid_url'] {
     background: #fff url(../img/login-bg.gif) no-repeat 1px;
     padding-left: 20px;
 }
 
-.openid_providers {
-    padding: 0;
-    list-style: none;
-    float: right;
+.openerp .oe_login .openid_providers {
+    text-align: center;
 }
-
-.openid_providers li {
+.openerp .oe_login .openid_providers ul {
+    display: inline-block;
+}
+.openerp .oe_login .openid_providers ul li {
     display: block;
     float: left;
     margin: 0 1px 3px 2px;
@@ -24,7 +19,6 @@
     display: block;
     width: 24px;
     height: 24px;
-    border: 1px solid #ddd;
     background: #fff url(../img/openid_16.png) no-repeat 50%;
     text-indent: -9999px;
     overflow: hidden;
@@ -32,7 +26,7 @@
 }
 
 .openid_providers a.selected {
-    border-color: #9A0404;
+    background-color: #DC5F59;
 }
 
 .openid_providers a[data-provider="Password"]    { background-image: url(../img/textfield_key.png); }

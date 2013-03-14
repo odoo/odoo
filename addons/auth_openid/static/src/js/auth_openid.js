@@ -62,7 +62,7 @@ instance.web.Login = instance.web.Login.extend({
             self.$openid_selected_button = self.$el.find(button).addClass('selected');
 
             var input = _(provider.split(',')).map(function(p) { return 'li[data-provider="'+p+'"]'; }).join(',');
-            self.$openid_selected_input = self.$el.find(input).show().addClass('selected');
+            self.$openid_selected_input = self.$el.find(input).show();
 
             self.$openid_selected_input.find('input:first').focus();
             self.$openid_selected_provider = (self.$openid_selected_button.attr('href') || '').substr(1);
