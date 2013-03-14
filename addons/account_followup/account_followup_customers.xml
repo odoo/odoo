@@ -17,6 +17,7 @@
                     <field name="parent_id" invisible="1"/>
                     <field name="payment_responsible_id"/>
                     <field name="payment_earliest_due_date"/>
+                    <field name="latest_followup_level_id"/>
                     <field name="payment_amount_overdue"/>
                     <field name="payment_amount_due" />
                 </tree>
@@ -39,6 +40,7 @@
                     </group>
                     <group expand="1" string="Group By...">
                         <filter string="Follow-up Responsible" context="{'group_by':'payment_responsible_id'}"/>
+                        <filter String="Followup Level" context="{'group_by':'latest_followup_level_id'}"/>
                     </group>
                 </search>
             </field>
