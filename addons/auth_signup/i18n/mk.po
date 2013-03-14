@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2013-03-07 08:37+0000\n"
-"PO-Revision-Date: 2013-02-26 19:07+0000\n"
-"Last-Translator: Ivica Dimitrijev <palifra@gmail.com>\n"
+"PO-Revision-Date: 2013-03-13 08:11+0000\n"
+"Last-Translator: Aleksandar Panov <server986@gmail.com>\n"
 "Language-Team: ESKON-INZENERING <mk@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-03-08 05:35+0000\n"
-"X-Generator: Launchpad (build 16523)\n"
+"X-Launchpad-Export-Date: 2013-03-14 05:34+0000\n"
+"X-Generator: Launchpad (build 16532)\n"
 "Language: mk\n"
 
 #. module: auth_signup
@@ -167,6 +167,35 @@ msgid ""
 "                \n"
 "            "
 msgstr ""
+"\n"
+"                \n"
+"                    <p>\n"
+"                        ${object.name},\n"
+"                    </p>\n"
+"                    <p>\n"
+"                        Поканети сте да се поврзете на "
+"\"${object.company_id.name}\" за да добиете пристап до вашите документи во "
+"OpenERP.\n"
+"                    </p>\n"
+"                    <p>\n"
+"                        За да ја прифатите пораката, кликнете на следниот "
+"линк:\n"
+"                    </p>\n"
+"                    <ul>\n"
+"                        <li><a href=\"${object.signup_url}\">Прифати ја "
+"поканата за \"${object.company_id.name}\"</a></li>\n"
+"                    </ul>\n"
+"                    <p>\n"
+"                        Ви Благодариме,\n"
+"                    </p>\n"
+"                    <pre>\n"
+"--\n"
+"${object.company_id.name or ''}\n"
+"${object.company_id.email or ''}\n"
+"${object.company_id.phone or ''}\n"
+"                    </pre>\n"
+"                \n"
+"            "
 
 #. module: auth_signup
 #. openerp-web
@@ -195,7 +224,7 @@ msgstr ""
 #: code:addons/auth_signup/static/src/js/auth_signup.js:174
 #, python-format
 msgid "An email has been sent with credentials to reset your password"
-msgstr ""
+msgstr "Пратен е e-mail со креденции за ресетирање на вашата лозинка"
 
 #. module: auth_signup
 #. openerp-web
@@ -297,7 +326,7 @@ msgstr "Дозволи ресетирање на лозинка од стран�
 #. module: auth_signup
 #: model:email.template,subject:auth_signup.set_password_email
 msgid "${object.company_id.name} invitation to connect on OpenERP"
-msgstr ""
+msgstr "${object.company_id.name} покана за поврзување на OpenERP"
 
 #. module: auth_signup
 #. openerp-web
@@ -314,7 +343,7 @@ msgstr "Партнер"
 #. module: auth_signup
 #: view:res.users:0
 msgid "Send reset password instructions by email"
-msgstr ""
+msgstr "Инструкциите за ресетирање на лозинка испрати ги на e-mail"
 
 #. module: auth_signup
 #: field:res.partner,signup_token:0
