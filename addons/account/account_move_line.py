@@ -1070,12 +1070,12 @@ class account_move_line(osv.osv):
 
         for line in self.browse(cr, uid, ids, context=context):
             ctx = context.copy()
-            if ('journal_id' not in ctx):
+            if not ctx.get('journal_id'):
                 if line.move_id:
                    ctx['journal_id'] = line.move_id.journal_id.id
                 else:
                     ctx['journal_id'] = line.journal_id.id
-            if ('period_id' not in ctx):
+            if not ctx.get('period_id'):
                 if line.move_id:
                     ctx['period_id'] = line.move_id.period_id.id
                 else:
