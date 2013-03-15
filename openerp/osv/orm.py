@@ -276,14 +276,15 @@ class ModelCache(defaultdict):
         self.ids.update(values.iterkeys())
         self[field].update(values)
 
-    def invalidate_field(self, field=None):
-        """ invalidate for the given field (``None`` for all fields) """
-        fields = self if field is None else (field,)
+    def invalidate_fields(self, fields=None):
+        """ invalidate the given fields (``None`` for all fields) """
+        if fields is None:
+            fields = self.keys()
         for field in fields:
             self[field].clear()
 
-    def invalidate(self, ids=None):
-        """ invalidate for the given record ids (``None`` for all records) """
+    def invalidate_records(self, ids=None):
+        """ invalidate the given record ids (``None`` for all records) """
         if ids is None:
             self.ids.clear()
             self.clear()
@@ -5430,7 +5431,7 @@ class BaseModel(object):
         """
         if self.is_record() or self.is_recordset():
             for model_cache in self._record_cache.itervalues():
-                model_cache.invalidate_field()
+                model_cache.invalidate_fields()
 
 
 # for instance checking
