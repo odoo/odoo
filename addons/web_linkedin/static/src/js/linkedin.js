@@ -19,7 +19,7 @@ openerp.web_linkedin = function(instance) {
                     return self.linkedin_def.promise();
                 var tag = document.createElement('script');
                 tag.type = 'text/javascript';
-                tag.src = "http://platform.linkedin.com/in.js";
+                tag.src = "https://platform.linkedin.com/in.js";
                 tag.innerHTML = 'api_key : ' + self.api_key + '\nauthorize : true\nscope: r_network r_contactinfo';
                 document.getElementsByTagName('head')[0].appendChild(tag);
                 self.linkedin_added = true;
