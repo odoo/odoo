@@ -199,7 +199,7 @@
             <field name="parent_id" ref="vat_code_tax_rec"/>
         </record>
 
-        <record model="account.tax.code.template" id="vat_code_tax_rec_tds_92b">
+        <record model="account.tax.code.template" id="vat_code_tax_rec_tds_dir_ren">
             <field name="name">TDS on Director's Remuneration - 92B</field>
             <field name="parent_id" ref="vat_code_tax_rec"/>
         </record>
@@ -297,6 +297,11 @@
         <record model="account.tax.code.template" id="vat_code_tax_pur_base_tds">
             <field name="name">Base Expenses for TDS</field>
             <field name="parent_id" ref="vat_code_base_tax_purchase"/>
+        </record>
+
+        <record model="account.tax.code.template" id="vat_code_tax_rec_add_imp_duty">
+            <field name="name">Additional Duty (Imports) 4%</field>
+            <field name="parent_id" ref="vat_code_tax_rec"/>
         </record>
 
     </data>
