@@ -268,7 +268,8 @@ class gamification_goal_plan(osv.Model):
     def action_start(self, cr, uid, ids, context=None):
         """Start a draft goal plan
 
-        Change the state of the plan to in progress"""
+        Change the state of the plan to in progress and genereate related goals
+        """
         # subscribe users if autojoin group
         for plan in self.browse(cr, uid, ids, context=context):
             if plan.autojoin_group_id:

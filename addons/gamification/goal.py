@@ -234,7 +234,6 @@ class gamification_goal(osv.Model):
                         towrite = {'current': 0}
 
                 else:  # computation mode = count
-                    print(uid, domain, type(obj))
                     res = obj.search(cr, uid, domain, context=context)
                     towrite = {'current': len(res)}
 

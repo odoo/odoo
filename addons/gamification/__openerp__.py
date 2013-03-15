@@ -56,6 +56,9 @@ A **Badge** is a symbolic token granted to a user as a sign of reward. It can be
     'demo': [
         'badge_demo.xml',
     ],
+    'test': [
+        'test/goal_demo.yml'
+    ],
     'installable': True,
     'application': True,
     'css': ['static/src/css/goal.css'],
