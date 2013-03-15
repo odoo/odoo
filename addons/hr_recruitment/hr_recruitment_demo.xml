@@ -125,5 +125,28 @@
     <record id="hr.job_developer" model="hr.job">
         <field name="survey_id" ref="survey_job_0"/>
     </record>
+
+     <record id="message_application_demo" model="mail.message">
+            <field name="model">hr.applicant</field>
+            <field name="res_id" ref="hr_case_advertisement"/>
+            <field name="body">Please do refer to this application for sure.</field>
+            <field name="type">comment</field>
+            <field name="author_id" ref="base.res_partner_2"/>
+        </record>
+         <record id="msg_case18_aplicant" model="mail.message">
+            <field name="subject">Regarding reference</field>
+            <field name="model">hr.applicant</field>
+            <field name="res_id" ref="hr_case_advertisement"/>
+            <field name="body"><![CDATA[<p>Hello!<br />
+            I will surely refer to this application as it is by your reference and <br />
+            will try to conduct an interview within a very short time<br />
+            Thanks,</p>]]></field>
+            <field name="type">comment</field>
+            <field name="subtype_id" ref="mail.mt_comment"/>
+            <field name="author_id" ref="base.partner_demo"/>
+        </record>
+       <function model="mail.message" name="set_message_starred"
+            eval="[ ref('msg_case18_aplicant')], True, {}"
+        />
   </data>
 </openerp>
