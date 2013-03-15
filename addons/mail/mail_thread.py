@@ -141,8 +141,8 @@ class mail_thread(osv.AbstractModel):
         return res
 
     def edit_followers_subtype(self, cr, uid, ids, partner_id, context=None):
-        print "cr, uid, ids, partner_id, co",cr, uid, ids, partner_id
         res = dict((id, dict(message_subtype_data='')) for id in ids)
+
         subtype_obj = self.pool.get('mail.message.subtype')
         subtype_ids = subtype_obj.search(cr, uid, ['|', ('res_model', '=', self._name), ('res_model', '=', False)], context=context)
         subtype_dict = dict((subtype.name, dict(default=subtype.default, followed=False, id=subtype.id)) for subtype in subtype_obj.browse(cr, uid, subtype_ids, context=context))
@@ -155,38 +155,24 @@ class mail_thread(osv.AbstractModel):
             ('res_id', 'in', ids),
             ('res_model', '=', self._name),
         ], context=context)
-        print "\n\n fol _ids>>>>>>>>>>", fol_ids
         for fol in fol_obj.browse(cr, uid, fol_ids, context=context):
             thread_subtype_dict = res[fol.res_id]['message_subtype_data']
             for subtype in fol.subtype_ids:
                 thread_subtype_dict[subtype.name]['followed'] = True
             res[fol.res_id]['message_subtype_data'] = thread_subtype_dict
-        print "\n<<<<res partner>>>>",res
         return res
 
-    def apply_subtype(self, cr, uid, ids, partner_id, context=None):
-        print "\n\n uid, ids, subtype_id,",  uid, ids, partner_id
-        res=[]
+    def apply_edited_subtypes(self, cr, uid, ids, partner_id,check_list, context=None):
+        """ Apply the edited subtypes
+                  of the user."""
         fol_obj = self.pool.get('mail.followers')
         fol_ids = fol_obj.search(cr, uid, [
             ('partner_id', '=', partner_id),
             ('res_id', 'in', ids),
             ('res_model', '=', self._name),
         ], context=context)
-        print "\n\n fol _ids>>>>>>>>>>", fol_ids
-        for fol in fol_obj.browse(cr, uid, fol_ids, context=context):
-            print "\fol.subtype::::>:>:>:>:>", fol.subtype_ids
-            for subtype in fol.subtype_ids:
-                res.append(subtype.id)
-        print "\nres::::>:>:>:>:>", res
-        if partner_id==True:
-            res.append(ids[0])
-        else:
-            res.remove(ids[0])
-        fol_obj.write(cr, uid, fol_ids, {'subtype_ids': [(6,0,res)]}, context=context)
-        print "\nsubtype_id......>>>", partner_id, res
-        return partner_id
-
+        fol_obj.write(cr, uid, fol_ids, {'subtype_ids': [(6, 0, check_list)]}, context=context)
+        return True
 
     def _search_message_unread(self, cr, uid, obj=None, name=None, domain=None, context=None):
         return [('message_ids.to_read', '=', True)]

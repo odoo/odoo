@@ -87,24 +87,21 @@ openerp_mail_followers = function(session, mail) {
             var partner_name = $(event.target).siblings('a').text(); 
             var id = this.view.datarecord.id;
             var res_model = this.view.dataset.model;
-            var $dialog = session.web.dialog($('<div>'), {
+            var $dialog = session.web.dialog($('<div class = "oe_edit_actions">'), {
                             modal: true,
                             title: _t('Edit Subtypes of ') + '"' + partner_name + '"',
                             buttons: [
-                                    {text: _t("Apply"), click: function() { 
-                                  //     self.apply_subtype(id, partner_id);
-                                       $(this).dialog("close");
-                                        }
-                                    },
-                                    {text: _t("Cancel"), click: function() { $(this).dialog("close"); }}
+                                    { text: _t("Apply"), click: function() { 
+                                        self.on_apply_subtype(id, partner_id);
+                                        $(this).dialog("close");
+                                    }},
+                                    { text: _t("Cancel"), click: function() { $(this).dialog("close"); }}
                                 ],
                     });
-            this.ds_model.call('edit_followers_subtype', [[id], [partner_id], new session.web.CompoundContext(this.build_context(), {})])
+            this.ds_model.call('edit_followers_subtype', [[id], partner_id, new session.web.CompoundContext(this.build_context(), {})])
                 .then(function (data) {
-              //      console.log('then>>>>>', data, id, partner_id);
                     if (data[id]) {
                         records = data[id].message_subtype_data;
-                //        console.log('records........', records);
                         }
                         _(records).each(function (record, record_name) {
                             record.name = record_name;
@@ -112,39 +109,21 @@ openerp_mail_followers = function(session, mail) {
                            $(session.web.qweb.render("mail.followers.edit.subtype", {'record': record})).appendTo($dialog);
                         });
                 });
-
-    /*        var partner_id = $(event.target).data('id');
-            var context = new session.web.CompoundContext(this.build_context(), {});
-
-            var action = {
-                type: 'ir.actions.act_window',
-                res_model: 'mail.message.subtype', //'subtype.edit.wizard', 
-                domain: [['res_model','=', self.view.model]],
-                view_mode: 'list',
-                view_type: 'list',
-                views: [[false, 'list']],
-                target: 'new',
-                context: {
-                    'res_model': this.view.dataset.model,
-                    'res_id': this.view.datarecord.id,
-                    'partner_id': partner_id,
-                },
-            }
-            
-            this.do_action(action, {
-                on_close: function() {
-                    self.read_value();
-                },
-            });*/
-
         },
-        
-        apply_subtype: function(id, partner_id) {
-            console.log('id>>>partner_id>>> ', id, partner_id);
-            this.ds_model.call('apply_subtype', [[id], [partner_id], new session.web.CompoundContext(this.build_context(), {})])
-                .then(function (data) {
-                            console.log('dataaaaaaaaaaaaa', data);
-                });
+
+        on_apply_subtype: function(id, partner_id) {
+            var checklist = new Array();
+            _($('.oe_edit_actions input[type="checkbox"]')).each(function (record) {
+                if ($(record).is(':checked')) {
+                    checklist.push(parseInt($(record).data('id')));
+                }
+            });
+            if (!checklist.length) {
+                this.do_unfollow();
+            } else {
+                this.ds_model.call('apply_edited_subtypes', [[id], partner_id, checklist, new session.web.CompoundContext(this.build_context(), {})])
+                    .then(this.proxy('read_value'));
+            }
         },
 
         on_invite_follower: function (event) {
@@ -325,7 +304,6 @@ openerp_mail_followers = function(session, mail) {
                 .then(this.proxy('read_value'));
 
             _.each(this.$('.oe_subtype_list input'), function (record) {
-                console.log('do follow>', record);
                 $(record).attr('checked', 'checked');
             });
         },

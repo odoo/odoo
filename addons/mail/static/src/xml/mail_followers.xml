@@ -32,8 +32,7 @@
     <div t-name="mail.followers.partner" class='oe_partner'>
         <img class="oe_mail_thumbnail oe_mail_frame" t-attf-src="{record.avatar_url}"/>
         <a t-attf-href="#model=res.partner&amp;id=#{record.id}"><t t-raw="record.name"/></a>
-        <!--t t-js="ab">console.log(':::::::::::;', ab);</t-->
-        <img class="oe_edit_subtype" t-att-src='_s + "/mail/static/src/img/icon-edit.gif"' title="Edit Subtype" t-att-data-id="record.id"/>
+        <img t-if="widget.session.uid === 1" class="oe_edit_subtype" t-att-src='_s + "/mail/static/src/img/icon-edit.gif"' title="Edit Subtype" t-att-data-id="record.id"/>
         <span t-if="widget.view_is_editable" class="oe_remove_follower oe_e" title="Remove this follower" t-att-data-id="record.id">X</span>
     </div>
     
@@ -53,7 +52,7 @@
     <t t-name="mail.followers.edit.subtype">
         <table class='oe_subtype'>
             <tr>
-                <td width="10%"><input type="checkbox" t-att-checked="record.followed" t-att-id="'input_mail_followers_edit_subtype_'+record.id" t-att-data-id="record.id" t-att-name="record.name"  class="oe_msg_subtype_check"/></td>
+                <td width="10%"><input type="checkbox" t-att-checked="record.followed" t-att-id="'input_mail_followers_edit_subtype_'+record.id" t-att-data-id="record.id" t-att-name="record.name"  class="oe_msg_subtype_edit_check"/></td>
                 <td><label t-att-for="'input_mail_followers_edit_subtype_'+record.id"><t t-raw="record.name"/></label></td>
             </tr>
         </table>
