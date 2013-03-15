@@ -219,9 +219,9 @@
 	<!-- Templates DATA for  refuse and approve -->
 		 
     <record id="email_template_refuse_applicant" model="email.template">
-        <field name="name">For Refuse Application</field>
+        <field name="name">Refuse Application</field>
         <field name="email_from">${object.user.email or ''}</field>
-        <field name="subject">We refuse your Application</field>
+        <field name="subject">We refuse your application</field>
         <field name="email_to">${object.email_from}</field>
         <field name="lang">${object.lang}</field>
         <field name="model_id" ref="hr_recruitment.model_hr_applicant"/>
@@ -237,10 +237,10 @@
     </record>
 
     <record id="email_template_approve_applicant" model="email.template">
-        <field name="name">Intrested in Applicastion</field>
+        <field name="name">Interested in Application</field>
         <field name="email_from">${object.user.email or ''}</field>
         <field name="email_to">{object.email_from}</field>
-        <field name="subject">We Intrested in your Application</field>
+        <field name="subject">We are interested in your application</field>
         <field name="lang">${object.lang}</field>
         <field name="model_id" ref="hr_recruitment.model_hr_applicant"/>
         <field eval="0" name="user_signature"/>
