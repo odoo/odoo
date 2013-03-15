@@ -205,6 +205,8 @@ class mail_compose_message(osv.TransientModel):
 
         for wizard in self.browse(cr, uid, ids, context=context):
             mass_mail_mode = wizard.composition_mode == 'mass_mail'
+            if mass_mail_mode:  # mass mail: avoid any auto subscription because this could lead to people being follower of plenty of documents
+                context['mail_create_nosubscribe'] = True
             active_model_pool = self.pool.get(wizard.model if wizard.model else 'mail.thread')
 
             # wizard works in batch mode: [res_id] or active_ids
