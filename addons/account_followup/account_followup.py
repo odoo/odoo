@@ -426,6 +426,14 @@ class res_partner(osv.osv):
             return [('id','=','0')]
         return [('id','in', [x[0] for x in res])]
 
+    def _get_partners(self, cr, uid, ids, context=None):
+        #this function search for the partners linked to all account.move.line 'ids' that have been changed
+        partners = set()
+        for aml in self.browse(cr, uid, ids, context=context):
+            if aml.partner_id:
+                partners.add(aml.partner_id.id)
+        return list(partners)
+
     _inherit = "res.partner"
     _columns = {
         'payment_responsible_id':fields.many2one('res.users', ondelete='set null', string='Follow-up Responsible', 
@@ -447,12 +455,18 @@ class res_partner(osv.osv):
         'latest_followup_level_id':fields.function(_get_latest, method=True, 
             type='many2one', relation='account_followup.followup.line', string="Latest Follow-up Level", 
             help="The maximum follow-up level", 
-            store=False, 
+            store={
+                'res.partner': (lambda self, cr, uid, ids, c: ids,[],10),
+                'account.move.line': (_get_partners, ['followup_line_id'], 10),
+            }, 
             multi="latest"), 
         'latest_followup_level_id_without_lit':fields.function(_get_latest, method=True, 
             type='many2one', relation='account_followup.followup.line', string="Latest Follow-up Level without litigation", 
             help="The maximum follow-up level without taking into account the account move lines with litigation", 
-            store=False, 
+            store={
+                'res.partner': (lambda self, cr, uid, ids, c: ids,[],10),
+                'account.move.line': (_get_partners, ['followup_line_id'], 10),
+            }, 
             multi="latest"),
         'payment_amount_due':fields.function(_get_amounts_and_date, 
                                                  type='float', string="Amount Due",
