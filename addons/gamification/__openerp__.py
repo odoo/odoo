@@ -52,9 +52,7 @@ A **Badge** is a symbolic token granted to a user as a sign of reward. It can be
         'security/gamification_security.xml',
         'security/ir.model.access.csv',
         'goal_base_data.xml',
-    ],
-    'demo': [
-        'badge_demo.xml',
+        'badge_data.xml',
     ],
     'test': [
         'test/goal_demo.yml'

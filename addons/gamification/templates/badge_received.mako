@@ -13,8 +13,8 @@
     % if badge.image
         <p><img src="cid:badge-img.png" alt="Badge ${badge.name}" /></p>
     % endif
-    % if badge.description
-        <p><em>${badge.description}</em></p>
+    % if badge.comment
+        <p><em>${badge.comment}</em></p>
     % endif
   </body>
 </html>

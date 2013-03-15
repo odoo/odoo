@@ -38,6 +38,7 @@ class gamification_badge_user(osv.Model):
     _columns = {
         'user_id': fields.many2one('res.users', string="User", required=True),
         'badge_id': fields.many2one('gamification.badge', string='Badge'),
+        'comment': fields.text('Comment'),
     }
 
 
@@ -349,6 +350,7 @@ class grant_badge_wizard(osv.TransientModel):
     _columns = {
         'user_id': fields.many2one("res.users", string='User', required=True),
         'badge_id': fields.many2one("gamification.badge", string='Badge'),
+        'comment': fields.text('Comment'),
     }
 
     def action_grant_badge(self, cr, uid, ids, context=None):
@@ -365,8 +367,7 @@ class grant_badge_wizard(osv.TransientModel):
                                          context=context):
 
                 badge_user = badge_user_obj.create(cr, uid,
-                        {'user_id': wiz.user_id.id, 'badge_id': wiz.badge_id.id}, context=context)
-                #badge_obj.write(cr, uid, [badge.id], {'owner_ids': [(1, badge_user.id)]}, context=context)
+                        {'user_id': wiz.user_id.id, 'badge_id': wiz.badge_id.id, 'comment': wiz.comment}, context=context)
 
                 user_from = self.pool.get('res.users').browse(cr, uid, uid, context=context)
 
