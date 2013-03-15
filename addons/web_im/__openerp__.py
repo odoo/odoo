@@ -15,7 +15,7 @@ chat in real time. It support several chats in parallel.
         """,
     'data': [
         'security/ir.model.access.csv',
-        'security/web_im_security.xml',
+        'security/im_security.xml',
     ],
     'depends' : ['base'],
     'js': ['static/src/js/*.js'],

@@ -1,11 +1,11 @@
 <?xml version="1.0"?>
 <openerp>
     <data>
-        <menuitem id="live_support" name="Live Chat" parent="mail.mail_feeds_main" groups="group_live_support"/>
+        <menuitem id="im_livechat" name="Live Chat" parent="mail.mail_feeds_main" groups="group_im_livechat"/>
 
         <record model="ir.actions.act_window" id="action_support_channels">
             <field name="name">Live Chat Channels</field>
-            <field name="res_model">live_support.channel</field>
+            <field name="res_model">im_livechat.channel</field>
             <field name="view_mode">kanban,form</field>
             <field name="help" type="html">
               <p class="oe_view_nocontent_create">
@@ -20,12 +20,12 @@
               </p>
             </field>
         </record>
-        <menuitem name="Channels" parent="live_support" id="support_channels" action="action_support_channels" groups="group_live_support"/>
+        <menuitem name="Channels" parent="im_livechat" id="support_channels" action="action_support_channels" groups="group_im_livechat"/>
 
 
         <record model="ir.ui.view" id="support_channel_kanban">
             <field name="name">support_channel.kanban</field>
-            <field name="model">live_support.channel</field>
+            <field name="model">im_livechat.channel</field>
             <field name="arch" type="xml">
                 <kanban>
                     <field name="name"/>
@@ -35,7 +35,7 @@
                     <templates>
                         <t t-name="kanban-box">
                             <div class="oe_group_image">
-                                <a type="open"><img t-att-src="kanban_image('live_support.channel', 'image_medium', record.id.value)" class="oe_group_photo"/></a>
+                                <a type="open"><img t-att-src="kanban_image('im_livechat.channel', 'image_medium', record.id.value)" class="oe_group_photo"/></a>
                             </div>
                             <div class="oe_group_details">
                                 <h4><a type="open"><field name="name"/></a></h4>
@@ -58,7 +58,7 @@
 
         <record id="support_channel_form" model="ir.ui.view">
             <field name="name">support_channel.form</field>
-            <field name="model">live_support.channel</field>
+            <field name="model">im_livechat.channel</field>
             <field name="arch" type="xml">
                 <form string="Support Channels" version="7.0">
                 <sheet>
@@ -126,7 +126,7 @@
             <field name="view_mode">list</field>
             <field name="domain">["|", ('to_id.user', '=', None), ('from_id.user', '=', None)]</field>
         </record>
-        <menuitem name="History" parent="live_support" id="history" action="action_history" groups="group_live_support_manager"/>
+        <menuitem name="History" parent="im_livechat" id="history" action="action_history" groups="group_im_livechat_manager"/>
 
         <record id="im_message_form" model="ir.ui.view">
             <field name="name">im.message.tree</field>

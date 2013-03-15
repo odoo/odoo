@@ -20,7 +20,7 @@
 ##############################################################################
 
 import openerp
-import openerp.addons.web_im.im as im
+import openerp.addons.im.im as im
 import json
 import random
 import jinja2
@@ -28,13 +28,13 @@ from openerp.osv import osv, fields
 from openerp import tools
 
 env = jinja2.Environment(
-    loader=jinja2.PackageLoader('openerp.addons.live_support', "."),
+    loader=jinja2.PackageLoader('openerp.addons.im_livechat', "."),
     autoescape=False
 )
 env.filters["json"] = json.dumps
 
 class ImportController(openerp.addons.web.http.Controller):
-    _cp_path = '/live_support'
+    _cp_path = '/im_livechat'
 
     @openerp.addons.web.http.httprequest
     def loader(self, req, **kwargs):
@@ -46,7 +46,7 @@ class ImportController(openerp.addons.web.http.Controller):
         req.session._uid = None
         req.session._login = "anonymous"
         req.session._password = "anonymous"
-        info = req.session.model('live_support.channel').get_info_for_chat_src(channel)
+        info = req.session.model('im_livechat.channel').get_info_for_chat_src(channel)
         info["db"] = db
         info["channel"] = channel
         info["userName"] = user_name
@@ -62,8 +62,8 @@ class ImportController(openerp.addons.web.http.Controller):
         req.session._uid = None
         req.session._login = "anonymous"
         req.session._password = "anonymous"
-        script = req.session.model('live_support.channel').read(channel, ["script"])["script"]
-        info = req.session.model('live_support.channel').get_info_for_chat_src(channel)
+        script = req.session.model('im_livechat.channel').read(channel, ["script"])["script"]
+        info = req.session.model('im_livechat.channel').get_info_for_chat_src(channel)
         info["script"] = script
         return req.make_response(env.get_template("web_page.html").render(info),
              headers=[('Content-Type', "text/html")])
@@ -74,13 +74,13 @@ class ImportController(openerp.addons.web.http.Controller):
         req.session._uid = None
         req.session._login = "anonymous"
         req.session._password = "anonymous"
-        return req.session.model('live_support.channel').get_available_user(channel) > 0
+        return req.session.model('im_livechat.channel').get_available_user(channel) > 0
 
-class live_support_channel(osv.osv):
-    _name = 'live_support.channel'
+class im_livechat_channel(osv.osv):
+    _name = 'im_livechat.channel'
 
     def _get_default_image(self, cr, uid, context=None):
-        image_path = openerp.modules.get_module_resource('live_support', 'static/src/img', 'default.png')
+        image_path = openerp.modules.get_module_resource('im_livechat', 'static/src/img', 'default.png')
         return tools.image_resize_image_big(open(image_path, 'rb').read().encode('base64'))
     def _get_image(self, cr, uid, ids, name, args, context=None):
         result = dict.fromkeys(ids, False)
@@ -114,12 +114,12 @@ class live_support_channel(osv.osv):
         res = {}
         for record in self.browse(cr, uid, ids, context=context):
             res[record.id] = self.pool.get('ir.config_parameter').get_param(cr, uid, 'web.base.url') + \
-                "/live_support/web_page?p=" + json.dumps({"db":cr.dbname, "channel":record.id})
+                "/im_livechat/web_page?p=" + json.dumps({"db":cr.dbname, "channel":record.id})
         return res
 
     _columns = {
         'name': fields.char(string="Channel Name", size=200, required=True),
-        'user_ids': fields.many2many('res.users', 'live_support_channel_im_user', 'channel_id', 'user_id', string="Users"),
+        'user_ids': fields.many2many('res.users', 'im_livechat_channel_im_user', 'channel_id', 'user_id', string="Users"),
         'are_you_inside': fields.function(_are_you_inside, type='boolean', string='Are you inside the matrix?', store=False),
         'script': fields.function(_script, type='text', string='Script', store=False),
         'web_page': fields.function(_web_page, type='url', string='Web Page', store=False, size="200"),
@@ -132,7 +132,7 @@ class live_support_channel(osv.osv):
         'image_medium': fields.function(_get_image, fnct_inv=_set_image,
             string="Medium-sized photo", type="binary", multi="_get_image",
             store={
-                'live_support.channel': (lambda self, cr, uid, ids, c={}: ids, ['image'], 10),
+                'im_livechat.channel': (lambda self, cr, uid, ids, c={}: ids, ['image'], 10),
             },
             help="Medium-sized photo of the group. It is automatically "\
                  "resized as a 128x128px image, with aspect ratio preserved. "\
@@ -140,7 +140,7 @@ class live_support_channel(osv.osv):
         'image_small': fields.function(_get_image, fnct_inv=_set_image,
             string="Small-sized photo", type="binary", multi="_get_image",
             store={
-                'live_support.channel': (lambda self, cr, uid, ids, c={}: ids, ['image'], 10),
+                'im_livechat.channel': (lambda self, cr, uid, ids, c={}: ids, ['image'], 10),
             },
             help="Small-sized photo of the group. It is automatically "\
                  "resized as a 64x64px image, with aspect ratio preserved. "\

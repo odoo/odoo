@@ -15,14 +15,14 @@ chat operators.
 
         """,
     'data': [
-        "security/live_support_security.xml",
+        "security/im_livechat_security.xml",
         "security/ir.model.access.csv",
-        "live_support_view.xml",
+        "im_livechat_view.xml",
     ],
     'demo': [
-        "live_support_demo.xml",
+        "im_livechat_demo.xml",
     ],
-    'depends' : ["web_im", "mail", "portal_anonymous"],
+    'depends' : ["im", "mail", "portal_anonymous"],
     'installable': True,
     'auto_install': False,
     'application': True,

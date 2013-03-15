@@ -37,7 +37,7 @@ define(["nova", "underscore", "oeclient", "require", "jquery",
         $.when.apply($, defs).then(function() {
             console.log("starting live support customer app");
             connection = new oeclient.Connection(new oeclient.JsonpRPCConnector(server_url), db, login, password);
-            connection.connector.call("/live_support/available", {db: db, channel: channel}).then(function(activated) {
+            connection.connector.call("/im_livechat/available", {db: db, channel: channel}).then(function(activated) {
                 if (! activated & ! options.auto)
                     return;
                 var button = new livesupport.ChatButton(null, channel, options);
@@ -99,7 +99,7 @@ define(["nova", "underscore", "oeclient", "require", "jquery",
             var self = this;
             if (this.manager.conversations.length > 0)
                 return;
-            connection.getModel("live_support.channel").call("get_available_user", [this.channel]).then(function(user_id) {
+            connection.getModel("im_livechat.channel").call("get_available_user", [this.channel]).then(function(user_id) {
                 if (! user_id) {
                     notification("None of our collaborators seems to be available, please try again later.");
                     return;

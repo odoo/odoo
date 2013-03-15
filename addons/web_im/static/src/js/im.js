@@ -1,5 +1,5 @@
 
-openerp.web_im = function(instance) {
+openerp.im = function(instance) {
 
     var USERS_LIMIT = 20;
     var ERROR_DELAY = 5000;
@@ -12,9 +12,9 @@ openerp.web_im = function(instance) {
         do_update: function(){
             var self = this;
             this.update_promise.then(function() {
-                var im = new instance.web_im.InstantMessaging(self);
+                var im = new instance.im.InstantMessaging(self);
                 im.appendTo(instance.client.$el);
-                var button = new instance.web_im.ImTopButton(this);
+                var button = new instance.im.ImTopButton(this);
                 button.on("clicked", im, im.switch_display);
                 button.appendTo(instance.webclient.$el.find('.oe_systray'));
             });
@@ -22,7 +22,7 @@ openerp.web_im = function(instance) {
         },
     });
 
-    instance.web_im.ImTopButton = instance.web.Widget.extend({
+    instance.im.ImTopButton = instance.web.Widget.extend({
         template:'ImTopButton',
         events: {
             "click": "clicked",
@@ -32,7 +32,7 @@ openerp.web_im = function(instance) {
         },
     });
 
-    instance.web_im.InstantMessaging = instance.web.Widget.extend({
+    instance.im.InstantMessaging = instance.web.Widget.extend({
         template: "InstantMessaging",
         events: {
             "keydown .oe_im_searchbox": "input_change",
@@ -45,7 +45,7 @@ openerp.web_im = function(instance) {
             this.set("right_offset", 0);
             this.set("current_search", "");
             this.users = [];
-            this.c_manager = new instance.web_im.ConversationManager(this);
+            this.c_manager = new instance.im.ConversationManager(this);
             this.on("change:right_offset", this.c_manager, _.bind(function() {
                 this.c_manager.set("right_offset", this.get("right_offset"));
             }, this));
@@ -85,7 +85,7 @@ openerp.web_im = function(instance) {
                 var old_users = self.users;
                 self.users = [];
                 _.each(result, function(user) {
-                    var widget = new instance.web_im.UserWidget(self, self.c_manager.get_user(user.id));
+                    var widget = new instance.im.UserWidget(self, self.c_manager.get_user(user.id));
                     widget.appendTo(self.$(".oe_im_users"));
                     widget.on("activate_user", self, self.activate_user);
                     self.users.push(widget);
@@ -122,7 +122,7 @@ openerp.web_im = function(instance) {
         },
     });
 
-    instance.web_im.UserWidget = instance.web.Widget.extend({
+    instance.im.UserWidget = instance.web.Widget.extend({
         "template": "UserWidget",
         events: {
             "click": "activate_user",
@@ -148,10 +148,10 @@ openerp.web_im = function(instance) {
         },
     });
 
-    instance.web_im.ImUser = instance.web.Class.extend(instance.web.PropertiesMixin, {
+    instance.im.ImUser = instance.web.Class.extend(instance.web.PropertiesMixin, {
         init: function(parent, user_rec) {
             instance.web.PropertiesMixin.init.call(this, parent);
-            user_rec.image_url = instance.session.url("/web_im/static/src/img/avatar/avatar.jpeg");
+            user_rec.image_url = instance.session.url("/im/static/src/img/avatar/avatar.jpeg");
             if (user_rec.user)
                 user_rec.image_url = instance.session.url('/web/binary/image', {model:'res.users', field: 'image_small', id: user_rec.user[0]});
             this.set(user_rec);
@@ -173,7 +173,7 @@ openerp.web_im = function(instance) {
         },
     });
 
-    instance.web_im.ConversationManager = instance.web.Controller.extend({
+    instance.im.ConversationManager = instance.web.Controller.extend({
         init: function(parent) {
             this._super(parent);
             this.set("right_offset", 0);
@@ -241,7 +241,7 @@ openerp.web_im = function(instance) {
         add_to_user_cache: function(user_recs) {
             _.each(user_recs, function(user_rec) {
                 if (! this.users_cache[user_rec.id]) {
-                    var user = new instance.web_im.ImUser(this, user_rec);
+                    var user = new instance.im.ImUser(this, user_rec);
                     this.users_cache[user_rec.id] = user;
                     user.on("destroyed", this, function() {
                         delete this.users_cache[user_rec.id];
@@ -285,7 +285,7 @@ openerp.web_im = function(instance) {
         },
         create_ting: function() {
             var kitten = jQuery.param !== undefined && jQuery.deparam(jQuery.param.querystring()).kitten !== undefined;
-            this.ting = new Audio(instance.webclient.session.origin + "/web_im/static/src/audio/" + (kitten ? "purr" : "Ting") +
+            this.ting = new Audio(instance.webclient.session.origin + "/im/static/src/audio/" + (kitten ? "purr" : "Ting") +
                 (new Audio().canPlayType("audio/ogg; codecs=vorbis") ? ".ogg" : ".mp3"));
         },
         window_focus_change: function() {
@@ -302,7 +302,7 @@ openerp.web_im = function(instance) {
         activate_user: function(user, focus) {
             var conv = this.users[user.get('id')];
             if (! conv) {
-                conv = new instance.web_im.Conversation(this, user, this.me);
+                conv = new instance.im.Conversation(this, user, this.me);
                 conv.appendTo(instance.client.$el);
                 conv.on("destroyed", this, function() {
                     this.conversations = _.without(this.conversations, conv);
@@ -341,7 +341,7 @@ openerp.web_im = function(instance) {
         },
     });
 
-    instance.web_im.Conversation = instance.web.Widget.extend({
+    instance.im.Conversation = instance.web.Widget.extend({
         "template": "Conversation",
         events: {
             "keydown input": "send_message",

@@ -1,7 +1,7 @@
 
 require.config({
     context: "oelivesupport",
-    baseUrl: {{url | json}} + "/live_support/static/ext/static/js",
+    baseUrl: {{url | json}} + "/im_livechat/static/ext/static/js",
     shim: {
         underscore: {
             init: function() {
@@ -18,7 +18,7 @@ require.config({
         buttonText: {{buttonText | json}},
         inputPlaceholder: {{inputPlaceholder | json}},
         defaultMessage: {{(defaultMessage or None) | json}},
-        auto: window.oe_live_support_auto || false,
+        auto: window.oe_im_livechat_auto || false,
         userName: {{userName | json}} || undefined,
     });
 });
