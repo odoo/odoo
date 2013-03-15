@@ -93,6 +93,9 @@
                 <form string="Users" version="7.0">
                     <sheet>
                         <field name="id" invisible="1"/>
+                        <div class="oe_form_box_info oe_text_center" style="margin-bottom: 10px" attrs="{'invisible': [('id', '>', 0)]}">
+                            You are creating a new user. After saving, the user will receive an invite email containing a link to set its password.
+                        </div>
                         <field name="image" widget='image' class="oe_avatar oe_left" options='{"preview_image": "image_medium"}'/>
                         <div class="oe_title">
                             <label for="name" class="oe_edit_only"/>
@@ -101,15 +104,13 @@
                             <h2><field name="login"/></h2>
                             <label for="company_id" class="oe_edit_only" groups="base.group_multi_company"/>
                             <field name="company_id" context="{'user_preference': 0}" groups="base.group_multi_company"/>
-                            <span attrs="{'invisible': [('id', '>', 0)]}">
-                                You are creating a new user.
-                            </span>
-                        </div>
-                        <separator/>
-                        <div style="padding: 10px 0" attrs="{'invisible': [('id', '>', 0)]}">
-                            The new user will have the following access rights: <field name="groups_id" readonly="1" widget="many2many_tags" style="display: inline;"/>. You will be able to define additional access rights by editing the newly created user under the Settings / Users menu.
                         </div>
                         <group>
+                            <label for="groups_id" string="Access Rights"
+                                    attrs="{'invisible': [('id', '>', 0)]}"/>
+                            <div attrs="{'invisible': [('id', '>', 0)]}">
+                                <field name="groups_id" readonly="1" widget="many2many_tags" style="display: inline;"/> You will be able to define additional access rights by editing the newly created user under the Settings / Users menu.
+                            </div>
                             <field name="phone" placeholder="e.g. +32.81.81.37.00"/>
                             <field name="mobile"/>
                             <field name="fax"/>
