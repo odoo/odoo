@@ -30,7 +30,7 @@
             <field name="body_html"><![CDATA[
 <div style="font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; ">
 
-    <p>Hello$ ${object.partner_id.name},</p>
+    <p>Hello ${object.partner_id.name},</p>
     
     <p>Here is a ${object.state in ('draft', 'sent') and 'request for quotation' or 'purchase order confirmation'} from ${object.company_id.name}: </p>
     

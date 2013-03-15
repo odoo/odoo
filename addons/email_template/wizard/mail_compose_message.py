@@ -142,7 +142,8 @@ class mail_compose_message(osv.TransientModel):
         partner_to = rendered_values.pop('partner_to', '')
         if partner_to:
             for partner_id in partner_to.split(','):
-                partner_ids.append(int(partner_id))
+                if partner_id:  # placeholders could generate '', 3, 2 due to some empty field values
+                    partner_ids.append(int(partner_id))
         return partner_ids
 
     def generate_email_for_composer(self, cr, uid, template_id, res_id, context=None):
@@ -153,8 +154,14 @@ class mail_compose_message(osv.TransientModel):
         fields = ['subject', 'body_html', 'email_from', 'email_to', 'partner_to', 'email_cc',  'reply_to', 'attachments']
         values = dict((field, template_values[field]) for field in fields if template_values.get(field))
         values['body'] = values.pop('body_html', '')
+
         # transform email_to, email_cc into partner_ids
-        values['partner_ids'] = self._get_or_create_partners_from_values(cr, uid, values, context=context)
+        partner_ids = self._get_or_create_partners_from_values(cr, uid, values, context=context)
+        # legacy template behavior: void values do not erase existing values and the
+        # related key is removed from the values dict
+        if partner_ids:
+            values['partner_ids'] = list(partner_ids)
+
         return values
 
     def render_message(self, cr, uid, wizard, res_id, context=None):

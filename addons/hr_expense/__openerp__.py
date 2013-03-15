@@ -39,14 +39,14 @@ The whole flow is implemented as:
 * Draft expense
 * Confirmation of the sheet by the employee
 * Validation by his manager
-* Validation by the accountant and receipt creation
+* Validation by the accountant and accounting entries creation
 
 This module also uses analytic accounting and is compatible with the invoice on timesheet module so that you are able to automatically re-invoice your customers' expenses if your work by project.
     """,
     'author': 'OpenERP SA',
     'website': 'http://www.openerp.com',
     'images': ['images/hr_expenses_analysis.jpeg', 'images/hr_expenses.jpeg'],
-    'depends': ['hr', 'account_voucher'],
+    'depends': ['hr', 'account_accountant'],
     'data': [
         'security/ir.model.access.csv',
         'hr_expense_data.xml',
