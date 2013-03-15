@@ -102,37 +102,41 @@ class mail_notification(osv.Model):
             notify_pids.append(partner.id)
         return notify_pids
 
-    def get_signature_footer(self, cr, uid, user_id=None, res_model=None, res_id=None, context=None):
-        """ Return the footer with signature
-            On bottom of the message, add the user's company link or the user name and a link to oepenerp
+    def get_signature_footer(self, cr, uid, user_id, res_model=None, res_id=None, context=None):
+        """ Format a standard footer for notification emails (such as pushed messages
+            notification or invite emails).
+            Format:
+                <p>--<br />
+                    Administrator
+                </p>
+                <div>
+                    <small>Send by <a ...>Your Company</a> using <a ...>OpenERP</a>.</small> OR
+                    <small>Send by Administrator using <a ...>OpenERP</a>.</small>
+                </div>
         """
         footer = ""
-        company = None
-        user = None
+        if not user_id:
+            return footer
 
-        if user_id:
-            users = self.pool.get("res.users").browse(cr, uid, [user_id], context=context)
-            user = users and users[0] or None
+        # add user signature
+        user = self.pool.get("res.users").browse(cr, SUPERUSER_ID, [user_id], context=context)[0]
+        if user.signature:
+            signature = plaintext2html(user.signature)
+        else:
+            signature = "--<br />%s" % user.name
+        footer = tools.append_content_to_html(footer, signature, plaintext=False, container_tag='p')
 
-        if user:
-            if user.signature:
-                signature = plaintext2html(user.signature)
-            else:
-                signature = "--<br>%s" % user.name
-            footer = tools.append_content_to_html(footer, signature, plaintext=False, container_tag='p')
-
-            if user.company_id:
-                company = user.company_id.website and "<a style='color:inherit' href='%s'>%s</a>" % (user.company_id.website, user.company_id.name) or user.company_id.name
-            else:
-                company = user.name
-        
-        if company:
-            signature_company = _('Send by %(company)s using %(openerp)s.' % {
+        # add company signature
+        if user.company_id:
+            company = user.company_id.website and "<a style='color:inherit' href='%s'>%s</a>" % (user.company_id.website, user.company_id.name) or user.company_id.name
+        else:
+            company = user.name
+        signature_company = _('<small>Send by %(company)s using %(openerp)s.</small>' % {
                 'company': company,
                 'openerp': "<a style='color:inherit' href='https://www.openerp.com/'>OpenERP</a>"
             })
-            footer = tools.append_content_to_html(footer, "<small>%s</small>" % signature_company, plaintext=False, container_tag='div')
-        
+        footer = tools.append_content_to_html(footer, signature_company, plaintext=False, container_tag='div')
+
         return footer
 
     def _notify(self, cr, uid, msg_id, context=None):
@@ -155,7 +159,7 @@ class mail_notification(osv.Model):
         # add signature
         body_html = msg.body
         user_id = msg.author_id and msg.author_id.user_ids and msg.author_id.user_ids[0] and msg.author_id.user_ids[0].id or None
-        signature_company = self.get_signature_footer(cr, uid, user_id=user_id, res_model=msg.model, res_id=msg.res_id, context=context)
+        signature_company = self.get_signature_footer(cr, uid, user_id, res_model=msg.model, res_id=msg.res_id, context=context)
         body_html = tools.append_content_to_html(body_html, signature_company, plaintext=False, container_tag='div')
 
         # email_from: partner-user alias or partner email or mail.message email_from
