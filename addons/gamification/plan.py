@@ -30,7 +30,7 @@ import calendar
 def start_end_date_for_period(period):
     """Return the start and end date for a goal period based on today
 
-    :return (start_date, end_date), datetime.date objects, False if the period is
+    :return: (start_date, end_date), datetime.date objects, False if the period is
     not defined or unknown"""
     today = date.today()
     if period == 'daily':
@@ -71,7 +71,9 @@ class gamification_goal_plan(osv.Model):
 
     def _get_next_report_date(self, cr, uid, ids, field_name, arg, context=None):
         """Return the next report date based on the last report date and report
-        period. Return a string in isoformat."""
+        period.
+
+        :return: a string in isoformat representing the date"""
         res = {}
         for plan in self.browse(cr, uid, ids, context):
             last = datetime.strptime(plan.last_report_date, '%Y-%m-%d').date()
@@ -98,7 +100,7 @@ class gamification_goal_plan(osv.Model):
             string='Users',
             help="List of users to which the goal will be set"),
         'manager_id': fields.many2one('res.users', required=True,
-            string='Manager', help="The user that will be able to access the user goals and modify the plan."),
+            string='Manager', help="The user responsible for the plan."),
         'planline_ids': fields.one2many('gamification.goal.planline',
             'plan_id',
             string='Planline',
@@ -196,11 +198,6 @@ class gamification_goal_plan(osv.Model):
             new_group = self.pool.get('res.groups').browse(cr, uid, vals['autojoin_group_id'], context=context)
             if new_group:
                 self.plan_subscribe_users(cr, uid, ids, [user.id for user in new_group.users], context=context)
-
-        # add the selected manager to the goal_manager group
-        if 'manager_id' in vals:
-            group_ref = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'gamification', 'group_goal_manager')
-            self.pool.get('res.users').write(cr, uid, [vals['manager_id']], {'groups_id': [(4, group_ref[1])]}, context=context)
 
         return write_res
 
