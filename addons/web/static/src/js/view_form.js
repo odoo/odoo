@@ -2357,7 +2357,8 @@ instance.web.form.FieldUrl = instance.web.form.FieldChar.extend({
             if (!s) {
                 tmp = "http://" + this.get('value');
             }
-            this.$el.find('a').attr('href', tmp).text(this.get('value') ? tmp : '');
+            var text = this.get('value') ? this.node.attrs.text || tmp : '';
+            this.$el.find('a').attr('href', tmp).text(text);
         }
     },
     on_button_clicked: function() {
@@ -2602,7 +2603,7 @@ instance.web.form.FieldText = instance.web.form.AbstractField.extend(instance.we
                 this.$textarea.trigger("autosize");
             }
         } else {
-            var txt = this.get("value");
+            var txt = this.get("value") || '';
             this.$(".oe_form_text_content").text(txt);
         }
     },
@@ -2663,7 +2664,7 @@ instance.web.form.FieldTextHtml = instance.web.form.AbstractField.extend(instanc
                             "| removeformat | bullets numbering | outdent " +
                             "indent | link unlink | source",
                 bodyStyle:  // style to assign to document body contained within the editor
-                            "margin:4px; color:#4c4c4c; font-size:13px; font-family:\"Lucida Grande\",Helvetica,Verdana,Arial,sans-serif; cursor:text"
+                            "margin:4px; color:#4c4c4c; font-size:13px; font-family:'Lucida Grande',Helvetica,Verdana,Arial,sans-serif; cursor:text"
             });
             this.$cleditor = this.$textarea.cleditor()[0];
             this.$cleditor.change(function() {
@@ -5301,7 +5302,12 @@ instance.web.form.FieldStatus = instance.web.form.AbstractField.extend({
     },
     calc_domain: function() {
         var d = instance.web.pyeval.eval('domain', this.build_domain());
-        domain = ['|', ['id', '=', this.get('value')]].concat(d);
+        var domain = []; //if there is no domain defined, fetch all the records
+        
+        if (d.length) {
+            domain = ['|',['id', '=', this.get('value')]].concat(d);
+        }
+        
         if (! _.isEqual(domain, this.get("evaluated_selection_domain"))) {
             this.set("evaluated_selection_domain", domain);
         }
