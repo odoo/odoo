@@ -53,7 +53,7 @@ class res_groups_employee_group(osv.Model):
             for user_id in user_ids:
                 if len(emp_obj.search(cr, uid, [('user_id', '=', user_id)], context=context)) == 0:
                     # no employee already linked to this user, create it
-                    user = self.pool.get('res.users').browse(cr, uid, [user_id], context=context)
+                    user = self.pool.get('res.users').browse(cr, uid, user_id, context=context)
                     emp_obj.create(cr, uid, {
                         'user_id': user.id,
                         'name': user.name,
