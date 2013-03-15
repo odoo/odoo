@@ -922,7 +922,7 @@
                             </group>
                             <group string="Invoices">
                                   <field name="account_collected_id" domain="[('type','&lt;&gt;','view'),('type','&lt;&gt;','consolidation')]"/>
-                                  <field name="account_analytic_collected_id" domain="[('type','&lt;&gt;','view'), ('company_id', '=', company_id), ('parent_id', '&lt;&gt;', False)]" groups="analytic.group_analytic_accounting"/>
+                                  <field name="account_analytic_collected_id" domain="[('type','&lt;&gt;','view'), ('company_id', '=', company_id)]" groups="analytic.group_analytic_accounting"/>
 
                                   <field name="base_code_id"/>
                                   <field name="base_sign"/>
@@ -932,7 +932,7 @@
                             </group>
                             <group string="Refunds">
                                   <field name="account_paid_id" domain="[('type','&lt;&gt;','view'),('type','&lt;&gt;','consolidation')]"/>
-                                  <field name="account_analytic_paid_id" domain="[('type','&lt;&gt;','view'), ('company_id', '=', company_id), ('parent_id', '&lt;&gt;', False)]" groups="analytic.group_analytic_accounting"/>
+                                  <field name="account_analytic_paid_id" domain="[('type','&lt;&gt;','view'), ('company_id', '=', company_id)]" groups="analytic.group_analytic_accounting"/>
 
                                   <field name="ref_base_code_id"/>
                                   <field name="ref_base_sign"/>
@@ -1039,7 +1039,7 @@
                                         <field name="blocked"/>
                                     </group>
                                     <group groups="analytic.group_analytic_accounting" string="Analytic">
-                                        <field name="analytic_account_id" domain="[('parent_id','!=',False)]"/>
+                                        <field name="analytic_account_id" domain="[('type','in',('normal','contract'))]"/>
                                     </group>
                                 </group>
                                 <field name="narration" colspan="4" nolabel="1" placeholder="Add an internal note..."/>
@@ -1084,7 +1084,7 @@
                                 <field name="blocked"/>
                                 <newline/>
                                 <field name="account_tax_id" domain="[('parent_id','=',False)]"/>
-                                <field name="analytic_account_id" domain="[('parent_id','!=',False)]" groups="analytic.group_analytic_accounting"/>
+                                <field name="analytic_account_id" groups="analytic.group_analytic_accounting"/>
                                 <separator colspan="4" string="Status"/>
                                 <newline/>
                                 <field name="reconcile_id"/>
@@ -1336,7 +1336,7 @@
                                                 </group>
 
                                                 <group groups="analytic.group_analytic_accounting" string="Analytic">
-                                                    <field name="analytic_account_id" domain="[('parent_id','!=',False)]"/>
+                                                    <field name="analytic_account_id"/>
                                                 </group>
                                             </group>
                                             <separator string="Internal Note"/>
@@ -1355,7 +1355,7 @@
                                     <field name="date_maturity"/>
                                     <field name="debit" sum="Total Debit"/>
                                     <field name="credit" sum="Total Credit"/>
-                                    <field name="analytic_account_id" domain="[('parent_id','!=',False)]" groups="analytic.group_analytic_accounting"/>
+                                    <field name="analytic_account_id" groups="analytic.group_analytic_accounting"/>
                                     <field name="amount_currency"/>
                                     <field name="currency_id" groups="base.group_multi_currency"/>
                                     <field name="tax_code_id"/>
@@ -2315,7 +2315,7 @@
                                     <field name="opening_details_ids" colspan="2" nolabel="1">
                                         <tree string="Opening Cashbox Lines" editable="bottom">
                                             <field name="pieces"/>
-                                            <field name="number_opening" string="Opening Unit Numbers" on_change="on_change_sub_opening(pieces, number_opening, parent.balance_end)"/>
+                                            <field name="number_opening" on_change="on_change_sub_opening(pieces, number_opening, parent.balance_end)"/>
                                             <field name="subtotal_opening" string="Opening Subtotal" sum="Total"/>
                                         </tree>
                                     </field>    
@@ -2325,7 +2325,7 @@
                                         <field name="details_ids" colspan="2" nolabel="1" attrs="{'readonly' : [('state', '!=', 'draft')]}">
                                             <tree string="Opening Cashbox Lines" editable="bottom">
                                                 <field name="pieces"/>
-                                                <field name="number_opening" string="Opening Unit Numbers" on_change="on_change_sub_opening(pieces, number_opening, parent.balance_end)"/>
+                                                <field name="number_opening" on_change="on_change_sub_opening(pieces, number_opening, parent.balance_end)"/>
                                                 <field name="subtotal_opening" string="Opening Subtotal" sum="Total"/>
                                             </tree>
                                         </field>
@@ -2334,7 +2334,7 @@
                                         <field name="closing_details_ids" colspan="2" nolabel="1">
                                             <tree string="Closing Cashbox Lines" editable="bottom">
                                                 <field name="pieces" readonly="1" />
-                                                <field name="number_closing" string="Closing Unit Numbers" on_change="on_change_sub_closing(pieces, number_closing, parent.balance_end)"/>
+                                                <field name="number_closing" on_change="on_change_sub_closing(pieces, number_closing, parent.balance_end)"/>
                                                 <field name="subtotal_closing" string="Closing Subtotal" sum="Total"/>
                                             </tree>
                                         </field>
@@ -2348,16 +2348,19 @@
                     </notebook>
                     <group>
                         <group class="oe_subtotal_footer oe_right">
-                            <field name="balance_start" readonly="1" string="Opening Balance" class="oe_subtotal_footer_separator" widget="monetary" options="{'currency_field': 'currency_id'}"/>
-                            <field name="total_entry_encoding" readonly="1" string="+ Transactions" widget="monetary" options="{'currency_field': 'currency_id'}"/>
-                            <field name="balance_end" widget="monetary" string="= Theoretical Balance" options="{'currency_field': 'currency_id'}"/>
+                            <field name="balance_start" readonly="1" string="Opening Balance" class="oe_subtotal_footer_separator" widget="monetary" options="{'currency_field': 'currency'}"/>
+                            <label for="total_entry_encoding" string="+ Transactions" class="oe_bold oe_account_opening_total"/>
+                            <field name="total_entry_encoding" nolabel="1" class="oe_bold oe_account_total" widget="monetary" options="{'currency_field': 'currency'}"/>
+                            <label for="balance_end" string="= Computed Balance" class="oe_force_bold oe_account_opening_total"/>
+                            <field name="balance_end" nolabel="1" class="oe_bold oe_account_total" widget="monetary" options="{'currency_field': 'currency'}"/>
                         </group>
-                        <group>
+                        <div>
                             <group class="oe_subtotal_footer oe_right" attrs="{'invisible' : [('state', '=', 'draft')]}">
-                                <field name="balance_end_real" readonly="1" class="oe_subtotal_footer_separator" widget="monetary" options="{'currency_field': 'currency_id'}"/>
-                                <field name="difference" class="oe_subtotal_footer_separator"/>
+                                <field name="balance_end_real" readonly="1" string="Closing Balance" class="oe_subtotal_footer_separator" widget="monetary" options="{'currency_field': 'currency'}"/>
+                                <label for="difference" class="oe_force_bold oe_account_ening_total"/>
+                                <field name="difference" nolabel="1" class="oe_bold oe_account_total"  widget="monetary" options="{'currency_field': 'currency'}"/>
                             </group>    
-                        </group>
+                        </div>
                     </group>
                 </sheet>
                 </form>
