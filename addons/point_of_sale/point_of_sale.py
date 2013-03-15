@@ -921,11 +921,12 @@ class pos_order(osv.osv):
             user_company = user_proxy.browse(cr, order.user_id.id, order.user_id.id).company_id
 
             group_tax = {}
-            account_def = property_obj.get(cr, uid, 'property_account_receivable', 'res.partner', context=context).id
+            account_def = property_obj.get(cr, uid, 'property_account_receivable', 'res.partner', context=context)
 
             order_account = order.partner_id and \
                             order.partner_id.property_account_receivable and \
-                            order.partner_id.property_account_receivable.id or account_def or current_company.account_receivable.id
+                            order.partner_id.property_account_receivable.id or \
+                            account_def and account_def.id or current_company.account_receivable.id
 
             if move_id is None:
                 # Create an entry for the sale
