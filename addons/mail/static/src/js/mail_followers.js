@@ -112,9 +112,9 @@ openerp_mail_followers = function(session, mail) {
 
         on_apply_subtype: function(id, partner_id) {
             var check_list = new Array();
-            _($('.oe_edit_actions input[type="checkbox"]')).each(function (records) {
-                 if ($(records).is(':checked')) {
-                     check_list.push(parseInt($(records).data('id')));
+            _($('.oe_edit_actions input[type="checkbox"]')).each(function (record) {
+                 if ($(record).is(':checked')) {
+                     check_list.push(parseInt($(record).data('id')));
                  }
             });
 

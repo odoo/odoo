@@ -163,7 +163,6 @@ class mail_thread(osv.AbstractModel):
         return res
 
     def apply_edited_subtypes(self, cr, uid, ids, partner_id, check_list, context=None):
-        print "\n\n uid, ids, partner_id, check_list,,>", uid, ids, partner_id, check_list,
         """ Apply the edited subtypes
                   of the user."""
         fol_obj = self.pool.get('mail.followers')
@@ -172,7 +171,6 @@ class mail_thread(osv.AbstractModel):
             ('res_id', 'in', ids),
             ('res_model', '=', self._name),
         ], context=context)
-        print "\n fol _ids>", fol_ids, check_list
         fol_obj.write(cr, uid, fol_ids, {'subtype_ids': [(6,0, check_list)]}, context=context)
         return True
 
