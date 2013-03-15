@@ -162,7 +162,8 @@ class mail_thread(osv.AbstractModel):
             res[fol.res_id]['message_subtype_data'] = thread_subtype_dict
         return res
 
-    def apply_edited_subtypes(self, cr, uid, ids, partner_id,check_list, context=None):
+    def apply_edited_subtypes(self, cr, uid, ids, partner_id, check_list, context=None):
+        print "\n\n uid, ids, partner_id, check_list,,>", uid, ids, partner_id, check_list,
         """ Apply the edited subtypes
                   of the user."""
         fol_obj = self.pool.get('mail.followers')
@@ -171,7 +172,8 @@ class mail_thread(osv.AbstractModel):
             ('res_id', 'in', ids),
             ('res_model', '=', self._name),
         ], context=context)
-        fol_obj.write(cr, uid, fol_ids, {'subtype_ids': [(6, 0, check_list)]}, context=context)
+        print "\n fol _ids>", fol_ids, check_list
+        fol_obj.write(cr, uid, fol_ids, {'subtype_ids': [(6,0, check_list)]}, context=context)
         return True
 
     def _search_message_unread(self, cr, uid, obj=None, name=None, domain=None, context=None):

@@ -31,7 +31,6 @@ openerp_mail_followers = function(session, mail) {
             this.ds_model = new session.web.DataSetSearch(this, this.view.model);
             this.ds_follow = new session.web.DataSetSearch(this, this.field.relation);
             this.ds_users = new session.web.DataSetSearch(this, 'res.users');
-            this.check_access = false;
 
             this.value = [];
             this.followers = [];
@@ -87,15 +86,15 @@ openerp_mail_followers = function(session, mail) {
             var partner_name = $(event.target).siblings('a').text(); 
             var id = this.view.datarecord.id;
             var res_model = this.view.dataset.model;
-            var $dialog = session.web.dialog($('<div class = "oe_edit_actions">'), {
+            var $dialog = new session.web.dialog($('<div class = "oe_edit_actions">'), {
                             modal: true,
                             title: _t('Edit Subtypes of ') + '"' + partner_name + '"',
                             buttons: [
                                     { text: _t("Apply"), click: function() { 
                                         self.on_apply_subtype(id, partner_id);
-                                        $(this).dialog("close");
+                                        $dialog.remove();
                                     }},
-                                    { text: _t("Cancel"), click: function() { $(this).dialog("close"); }}
+                                    { text: _t("Cancel"), click: function() { $dialog.remove(); }}
                                 ],
                     });
             this.ds_model.call('edit_followers_subtype', [[id], partner_id, new session.web.CompoundContext(this.build_context(), {})])
@@ -112,16 +111,17 @@ openerp_mail_followers = function(session, mail) {
         },
 
         on_apply_subtype: function(id, partner_id) {
-            var checklist = new Array();
-            _($('.oe_edit_actions input[type="checkbox"]')).each(function (record) {
-                if ($(record).is(':checked')) {
-                    checklist.push(parseInt($(record).data('id')));
-                }
+            var check_list = new Array();
+            _($('.oe_edit_actions input[type="checkbox"]')).each(function (records) {
+                 if ($(records).is(':checked')) {
+                     check_list.push(parseInt($(records).data('id')));
+                 }
             });
-            if (!checklist.length) {
+
+            if (!check_list.length) {
                 this.do_unfollow();
             } else {
-                this.ds_model.call('apply_edited_subtypes', [[id], partner_id, checklist, new session.web.CompoundContext(this.build_context(), {})])
+                return this.ds_model.call('apply_edited_subtypes', [[id], partner_id, check_list, new session.web.CompoundContext(this.build_context(), {})])
                     .then(this.proxy('read_value'));
             }
         },
@@ -178,20 +178,7 @@ openerp_mail_followers = function(session, mail) {
             return this.ds_follow.call('read', [this.value, ['name', 'user_ids']])
                 .then(this.proxy('display_followers'), this.proxy('fetch_generic'))
                 .then(this.proxy('display_buttons'))
-                .then(this.proxy('fetch_subtypes'))
-                .then(this.proxy('check_group_tech_feature'));
-        },
-
-        check_group_tech_feature: function() {
-            var self = this;
-            var edit_subtypes = new session.web.Model("res.groups");
-            edit_subtypes.query(["name","users"])
-                .filter([["name","=","Technical Features"], ["users","in",self.session.uid]]).first()
-                .then(function(res) {
-                if (res) {
-                    self.check_access = true;
-                    }
-                });
+                .then(this.proxy('fetch_subtypes'));
         },
 
         /** Read on res.partner failed: fall back on a generic case

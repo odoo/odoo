@@ -22,6 +22,7 @@
 from openerp.osv import osv
 from openerp.osv import fields
 
+
 class mail_message_subtype(osv.osv):
     """ Class holding subtype definition for messages. Subtypes allow to tune
         the follower subscription, allowing only some subtypes to be pushed
