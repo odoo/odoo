@@ -19,6 +19,7 @@
 #
 ##############################################################################
 
+from urllib import urlencode
 import lxml
 from lxml import etree
 
@@ -255,7 +256,7 @@ class survey_question_wiz(osv.osv_memory):
             raise osv.except_osv(_('Access Denied!'), _("You cannot answer because the survey is not open."))
         if anonymous and survey_browse.authenticate:
             raise osv.except_osv(_('Access Denied!'), _("Please Login to complete this survey."))
-
+        print anonymous , survey_browse.authenticate
         # get opening response
         response_ids = None
         sur_response_obj = self.pool.get('survey.response')
@@ -324,12 +325,15 @@ class survey_question_wiz(osv.osv_memory):
 
         if view_type in ['form']:
             wiz_id = 0
+            survey_id = None
             sur_name_rec = None
             if 'sur_name_id' in context:
                 sur_name_rec = surv_name_wiz.browse(cr, uid, context['sur_name_id'], context=context)
-            elif 'survey_id' in context:
+                survey_id = sur_name_rec.survey_id.id
+            elif context.get('survey_id'):
+                survey_id = context.get('survey_id')
                 res_data = {
-                    'survey_id': context.get('survey_id', False),
+                    'survey_id': survey_id,
                     'page_no': -1,
                     'page': 'next',
                     'transfer': 1,
@@ -339,23 +343,17 @@ class survey_question_wiz(osv.osv_memory):
                 sur_name_rec = surv_name_wiz.browse(cr, uid, wiz_id, context=context)
                 context.update({'sur_name_id': wiz_id})
 
+            print context.get('sur_name_id'), context.get('active_id')
+
             if context.get('active_id'):
                 context.pop('active_id')
 
-            survey_id = context.get('survey_id', False)
             if not survey_id:
-                # Try one more time to find it
-                if sur_name_rec and sur_name_rec.survey_id:
-                    survey_id = sur_name_rec.survey_id.id
-                else:
-                    # raise osv.except_osv(_('Error!'), _("Cannot locate survey for the question wizard!"))
-                    # If this function is called without a survey_id in
-                    # its context, it makes no sense to return any view.
-                    # Just return the default, empty view for this object,
-                    # in order to please random calls to this fn().
-                    return super(survey_question_wiz, self).\
-                                fields_view_get(cr, uid, view_id=view_id, view_type=view_type, context=context,
-                                        toolbar=toolbar, submenu=submenu)
+                return result
+
+            # get if the token of the partner or anonymous user is valid
+            response_info = self.get_response_info_from_token(cr, uid, survey_id, context.get("survey_token"), context)
+
             survey_browse = survey_obj.browse(cr, SUPERUSER_ID, survey_id, context=context)
             p_id = [page.id for page in survey_browse.page_ids]
             total_pages = len(p_id)
@@ -371,9 +369,6 @@ class survey_question_wiz(osv.osv_memory):
                 surv_name_wiz.write(cr, uid, [context['sur_name_id']], {'transfer': False})
                 flag = False
                 fields = {}
-
-                # get if the token of the partner or anonymous user is valid
-                response_info = self.get_response_info_from_token(cr, uid, survey_id, context.get("survey_token"), context)
 
                 # have acces to this survey
                 edit_mode = context.get('edit', False)
@@ -1208,6 +1203,8 @@ class survey_question_wiz(osv.osv_memory):
         else:
             return {'type': 'ir.actions.act_window_close'}
 
+        self._survey_complete(cr, uid, context['survey_id'], context)
+
         ir_model_data = self.pool.get('ir.model.data')
         user_browse = self.pool.get('res.users').browse(cr, SUPERUSER_ID, uid, context=context)
         model_id = ir_model_data.get_object_reference(cr, uid, 'base', 'group_user')
@@ -1218,16 +1215,12 @@ class survey_question_wiz(osv.osv_memory):
         else:
             model, view_id = ir_model_data.get_object_reference(cr, uid, 'survey', 'view_survey_complete_survey_external')
 
-        self._survey_complete(cr, uid, context['survey_id'], context)
-
         return {
             'view_type': 'form',
             "view_mode": 'form',
-            'res_model': 'survey',
-            'res_id': context['survey_id'],
+            'res_model': 'survey.name.wiz',
             'type': 'ir.actions.act_window',
             'target': context.get('ir_actions_act_window_target', 'new'),
-            'context': context,
             'view_id': view_id,
         }
 
@@ -1256,7 +1249,16 @@ class survey_question_wiz(osv.osv_memory):
                 'type': 'ir.actions.client',
                 'tag': 'login',
                 'context': context,
+                'params': {
+                    'login_successful': '#%s' % urlencode({
+                        'active_id': context['survey_id'],
+                        'action': 'survey.action_filling',
+                        'params': context['survey_token'],
+                    })
+                },
             }
+
+        # TODO : Add "force_login" in context act_window
 
         self.get_response_info_from_token(cr, uid, context['survey_id'], context['survey_token'], context=context)
         return {

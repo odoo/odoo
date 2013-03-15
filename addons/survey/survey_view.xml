@@ -150,15 +150,15 @@
                                     <br/>
                                     <ul class="oe_kanban_survey_list" t-if="widget.view.is_action_enabled('edit')">
                                         <li t-if="record.state.raw_value === 'draft'"><a name="action_edit_survey" type="object">Edit Survey</a></li>
-                                        <li t-if="record.state.raw_value !== 'draft'"  class="oe_inactive" title="You can only edit the survey in draft mode">Edit Survey</li>
+                                        <li t-if="record.state.raw_value !== 'draft'"><span class="oe_inactive" title="You can only edit the survey in draft mode">Edit Survey</span></li>
                                         <li><a name="action_print_survey" type="object">Print Survey</a></li>
                                         <li t-if="record.state.raw_value === 'open'"><a name="action_survey_sent" type="object">Collect Answers</a></li>
-                                        <li t-if="record.state.raw_value !== 'open'" class="oe_inactive" title="You can only collect answers for the open survey">Collect Answers</li>
+                                        <li t-if="record.state.raw_value !== 'open'"><span class="oe_inactive" title="You can only collect answers for the open survey">Collect Answers</span></li>
                                         <li t-if="record.state.raw_value === 'open'"><a name="action_fill_survey" type="object" class="oe_survey_fill">Fill in Survey</a></li>
                                         <li t-if="record.state.raw_value === 'draft'"><a name="action_test_survey" type="object" class="oe_survey_fill">Test Survey</a></li>
-                                        <li t-if="record.state.raw_value !== 'open' and record.state.raw_value !== 'draft'" title="You can only test open or draft survey" class="oe_inactive">Test Survey</li>
+                                        <li t-if="record.state.raw_value !== 'open' and record.state.raw_value !== 'draft'"><span title="You can only test open or draft survey" class="oe_inactive">Test Survey</span></li>
                                         <li t-if="record.tot_comp_survey.raw_value"><a name="print_statistics" type="object">Print Statistics</a></li>
-                                        <li t-if="!record.tot_comp_survey.raw_value" class="oe_inactive" title="There is no answer yet">Print Statistics</li>
+                                        <li t-if="!record.tot_comp_survey.raw_value"><span class="oe_inactive" title="There is no answer yet">Print Statistics</span></li>
                                     </ul>
                                     <ul class="oe_kanban_survey_list" t-if="!widget.view.is_action_enabled('edit')">
                                         <li><a t-if="record.state.raw_value === 'open'" name="action_fill_survey" type="object" class="oe_survey_fill">Fill in Survey</a></li>
