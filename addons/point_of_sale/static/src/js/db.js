@@ -178,7 +178,7 @@ function openerp_pos_db(instance, module){
 
                 var ancestors = this.get_category_ancestors_ids(categ_id) || [];
 
-                for(var j = 0; j < ancestors.length; j++){
+                for(var j = 0, jlen = ancestors.length; j < jlen; j++){
                     var ancestor = ancestors[j];
                     if(! stored_categories[ancestor]){
                         stored_categories[ancestor] = [];

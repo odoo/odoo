@@ -54,6 +54,9 @@
     min-height: 42px;
     border: solid 1px rgba(0,0,0,0.03);
 }
+.openerp .oe_mail .oe_msg.oe_msg_nobody{
+    background: #F8F8F8;
+}
 .openerp .oe_mail .oe_msg .oe_msg_left{
     position: absolute;
     left:0; top: 0; bottom: 0; width: 40px;
@@ -224,20 +227,30 @@
     height: 24px;
     width: 100%;
 }
+.openerp .oe_mail .oe_msg.oe_msg_composer_compact .oe_sep_word{
+    margin-right: 8px;
+    margin-left: 8px;
+}
 .openerp .oe_mail .oe_msg.oe_msg_composer_compact .oe_compact{
     height: 24px;
     width: 100%;
     padding: 2px 4px;
+    color: #AAA;
+    cursor: text;
+}
+.openerp .oe_mail .oe_msg.oe_msg_composer_compact .oe_compact_record {
+    font-size: 13px;
+    font-style: bold;
+    text-align: center;
+}
+.openerp .oe_mail .oe_msg.oe_msg_composer_compact .oe_compact_inbox {
     border: 1px solid #CCC;
     -moz-border-radius: 3px;
     -webkit-border-radius: 3px;
     border-radius: 3px;
     background: white;
     font-size: 14px;
-    color: #AAA;
     font-style: italic;
-    word-spacing: 3px;
-    cursor: text;
 }
 
 /* d) I.E. tweaks for Message action icons */
@@ -269,20 +282,20 @@
     margin-top: 4px;
     margin-bottom: 4px;
 }
-.openerp .oe_mail .oe_msg_composer .oe_msg_attachment_list{
+.openerp .oe_mail .oe_msg_composer .oe_msg_attachment_list {
     display: block;
 }
-.openerp .oe_mail .oe_msg_composer .oe_emails_from{
+.openerp .oe_mail .oe_msg_composer .oe_recipients {
     font-size: 12px;
     margin-left: 20px;
     margin-bottom: 2px;
 }
-.openerp .oe_mail .oe_msg_composer .oe_emails_from label{
+.openerp .oe_mail .oe_msg_composer .oe_recipients label{
     vertical-align: middle;
     display: block;
     line-height: 14px;
 }
-.openerp .oe_mail .oe_msg_composer .oe_emails_from input{
+.openerp .oe_mail .oe_msg_composer .oe_recipients input{
     vertical-align: middle;
 }
 .openerp .oe_mail .oe_attachment{
@@ -439,7 +452,8 @@
     line-height: 12px;
     vertical-align: middle;
 }
-.openerp .oe_mail .oe_msg_footer button.oe_post{
+.openerp .oe_mail .oe_msg_footer button.oe_post,
+.openerp .oe_mail .oe_msg_footer button.oe_log{
     position: relative;
     z-index: 2;
 }
@@ -458,18 +472,20 @@
 .openerp .oe_mail .oe_hidden_input_file, .openerp .oe_mail .oe_hidden_input_file form{
     display:inline;
 }
-.openerp .oe_mail .oe_msg_footer button.oe_full{
-    width:24px;
-    overflow:hidden;
+.openerp .oe_mail .oe_msg_center button.oe_full{
+    width: 24px;
+    height: 22px;
+    overflow: hidden;
     float: right;
-    filter:none;
+    filter: none;
 }
-.openerp .oe_mail .oe_msg_footer button.oe_full .oe_e{
+.openerp .oe_mail .oe_msg_center button.oe_full .oe_e{
     position: relative;
-    top: -4px;
-    margin-left: -9px;
-    vertical-align: middle;
-    filter:none;
+    top: -9px;
+    margin-left: -5px;
+    vertical-align: top;
+    filter: none;
+    height: 14px;
 }
 .openerp .oe_mail button.oe_attach, .openerp .oe_mail button.oe_full{
     background: transparent; 

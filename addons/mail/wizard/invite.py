@@ -77,6 +77,7 @@ class invite_wizard(osv.osv_memory):
             # send an email if option checked and if a message exists (do not send void emails)
             if wizard.send_mail and wizard.message:
                 # add signature
+                # FIXME 8.0: use notification_email_send, send a wall message and let mail handle email notification + message box
                 signature_company = self.pool.get('mail.notification').get_signature_footer(cr, uid, user_id=uid, res_model=wizard.res_model, res_id=wizard.res_id, context=context)
                 wizard.message = tools.append_content_to_html(wizard.message, signature_company, plaintext=False, container_tag='div')
 
