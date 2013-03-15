@@ -33,16 +33,18 @@ class invite_wizard(osv.osv_memory):
     def default_get(self, cr, uid, fields, context=None):
         result = super(invite_wizard, self).default_get(cr, uid, fields, context=context)
         user_name = self.pool.get('res.users').name_get(cr, uid, [uid], context=context)[0][1]
-        if 'message' in fields and result.get('res_model') and result.get('res_id'):
+        model = result.get('res_model')
+        res_id = result.get('res_id')
+        if 'message' in fields and model and res_id:
             ir_model = self.pool.get('ir.model')
-            model_ids = ir_model.search(cr, uid, [('model', '=', self.pool.get(result.get('res_model'))._name)], context=context)
+            model_ids = ir_model.search(cr, uid, [('model', '=', self.pool.get(model)._name)], context=context)
             model_name = ir_model.name_get(cr, uid, model_ids, context=context)[0][1]
 
-            document_name = self.pool.get(result.get('res_model')).name_get(cr, uid, [result.get('res_id')], context=context)[0][1]
-            message = _('<div>%s invited you to follow %s document: %s.</div>' % (user_name, model_name, document_name))
+            document_name = self.pool.get(model).name_get(cr, uid, [res_id], context=context)[0][1]
+            message = _('<div><p>Hello,</p><p>%s invited you to follow %s document: %s.<p></div>') % (user_name, model_name, document_name)
             result['message'] = message
         elif 'message' in fields:
-            result['message'] = _('<div>%s invited you to follow a new document.</div>' % user_name)
+            result['message'] = _('<div><p>Hello,</p><p>%s invited you to follow a new document.</p></div>') % user_name
         return result
 
     _columns = {
@@ -51,9 +53,12 @@ class invite_wizard(osv.osv_memory):
                         help='Model of the followed resource'),
         'res_id': fields.integer('Related Document ID', select=1,
                         help='Id of the followed resource'),
-        'partner_ids': fields.many2many('res.partner', string='Partners'),
+        'partner_ids': fields.many2many('res.partner', string='Recipients',
+            help="List of partners that will be added as follower of the current document."),
         'message': fields.html('Message'),
-        'send_mail': fields.boolean('Send an email'),
+        'send_mail': fields.boolean('Send Email',
+            help="If checked, the partners will receive an email warning they have been "
+                    "added in the document's followers."),
     }
 
     def add_followers(self, cr, uid, ids, context=None):
@@ -68,8 +73,8 @@ class invite_wizard(osv.osv_memory):
             ir_model = self.pool.get('ir.model')
             model_ids = ir_model.search(cr, uid, [('model', '=', model_obj._name)], context=context)
             model_name = ir_model.name_get(cr, uid, model_ids, context=context)[0][1]
-            
-            # send an email
+
+            # send an email if option checked and if a message exists (do not send void emails)
             if wizard.send_mail and wizard.message:
                 # add signature
                 signature_company = self.pool.get('mail.notification').get_signature_footer(cr, uid, user_id=uid, res_model=wizard.res_model, res_id=wizard.res_id, context=context)
@@ -82,7 +87,7 @@ class invite_wizard(osv.osv_memory):
                     mail_id = mail_mail.create(cr, uid, {
                         'model': wizard.res_model,
                         'res_id': wizard.res_id,
-                        'subject': 'Invitation to follow %s document' % model_name,
+                        'subject': _('Invitation to follow %s: %s') % (model_name, document.name_get()[0][1]),
                         'body_html': '%s' % wizard.message,
                         'auto_delete': True,
                         }, context=context)
