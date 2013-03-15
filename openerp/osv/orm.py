@@ -5278,7 +5278,10 @@ class BaseModel(object):
             assert signal_name
             return (lambda *args, **kwargs:
                     self.signal_workflow(*args, signal=signal_name, **kwargs))
-        return super(BaseModel, self).__getattr__(name)
+        get = getattr(super(BaseModel, self), '__getattr__', None)
+        if get is not None: return get(name)
+        raise AttributeError(
+            "'%s' object has no attribute '%s'" % (type(self).__name__, name))
 
 # keep this import here, at top it will cause dependency cycle errors
 import expression
