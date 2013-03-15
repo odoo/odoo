@@ -339,8 +339,8 @@ class hr_applicant(base_stage, osv.Model):
         applicant_ids = []
         if applicant.partner_id:
             applicant_ids.append(applicant.partner_id.id)
-        if applicant.department_id and applicant.department_id.manager_id and applicant.department_id.manager_id.address_id:
-            applicant_ids.append(applicant.department_id.manager_id.address_id.id)
+        if applicant.department_id and applicant.department_id.manager_id and applicant.department_id.manager_id.user_id and applicant.department_id.manager_id.user_id.partner_id:
+            applicant_ids.append(applicant.department_id.manager_id.user_id.partner_id.id)
         category = self.pool.get('ir.model.data').get_object(cr, uid, 'hr_recruitment', 'categ_meet_interview', context)
         res = self.pool.get('ir.actions.act_window').for_xml_id(cr, uid, 'base_calendar', 'action_crm_meeting', context)
         res['context'] = {
