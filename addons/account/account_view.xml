@@ -2356,7 +2356,7 @@
                         </group>
                         <div>
                             <group class="oe_subtotal_footer oe_right" attrs="{'invisible' : [('state', '=', 'draft')]}">
-                                <field name="balance_end_real" readonly="1" class="oe_subtotal_footer_separator" widget="monetary" options="{'currency_field': 'currency'}"/>
+                                <field name="balance_end_real" readonly="1" string="Closing Balance" class="oe_subtotal_footer_separator" widget="monetary" options="{'currency_field': 'currency'}"/>
                                 <label for="difference" class="oe_force_bold oe_account_ening_total"/>
                                 <field name="difference" nolabel="1" class="oe_bold oe_account_total"  widget="monetary" options="{'currency_field': 'currency'}"/>
                             </group>    
