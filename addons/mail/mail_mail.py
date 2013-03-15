@@ -160,15 +160,12 @@ class mail_mail(osv.Model):
             return 'Re: %s' % (mail.record_name)
         return mail.subject
 
-    def send_get_mail_body(self, cr, uid, mail, partner=None, context=None):
-        """ Return a specific ir_email body. The main purpose of this method
-            is to be inherited by Portal, to add a link for signing in, in
+    def send_get_mail_body_footer(self, cr, uid, mail, partner=None, context=None):
+        """ Return a specific footer for the ir_email body.  The main purpose of this method
+            is to be inherited by Portal, to add modify the link for signing in, in
             each notification email a partner receives.
-
-            :param browse_record mail: mail.mail browse_record
-            :param browse_record partner: specific recipient partner
         """
-        body = mail.body_html
+        body_footer = ""
         # partner is a user, link to a related document (incentive to install portal)
         if partner and partner.user_ids and mail.model and mail.res_id \
                 and self.check_access_rights(cr, partner.user_ids[0].id, 'read', raise_exception=False):
@@ -184,10 +181,23 @@ class mail_mail(osv.Model):
                     'id': mail.res_id,
                 }
                 url = urljoin(base_url, "?%s#%s" % (urlencode(query), urlencode(fragment)))
-                text = _("""<small>Access this document <a href="%s">directly in OpenERP</a></small>""") % url
-                body = tools.append_content_to_html(body, ("<div><p>%s</p></div>" % text), plaintext=False, container_tag='div')
+                body_footer = _("""<small>Access this document <a style='color:inherit' href="%s">directly in OpenERP</a></small>""") % url
             except except_orm, e:
                 pass
+        return body_footer
+
+    def send_get_mail_body(self, cr, uid, mail, partner=None, context=None):
+        """ Return a specific ir_email body. The main purpose of this method
+            is to be inherited to add custom content depending on some module.
+
+            :param browse_record mail: mail.mail browse_record
+            :param browse_record partner: specific recipient partner
+        """
+        body = mail.body_html
+
+        # add footer
+        body_footer = self.send_get_mail_body_footer(cr, uid, mail, partner=partner, context=context)
+        body = tools.append_content_to_html(body, body_footer, plaintext=False, container_tag='div')
         return body
 
     def send_get_mail_reply_to(self, cr, uid, mail, partner=None, context=None):
