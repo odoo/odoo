@@ -6,7 +6,7 @@
             <field name="tag">mail.wall</field>
             <field name="res_model">mail.message</field>
             <field name="context">{
-              'default_model': 'res.users', 
+              'default_model': 'res.users',
               'default_res_id': uid,
             }</field>
             <field name="params" eval="&quot;{
@@ -35,8 +35,8 @@
             <field name="tag">mail.wall</field>
             <field name="res_model">mail.message</field>
             <field name="context">{
-              'default_model': 'res.users', 
-              'default_res_id': uid, 
+              'default_model': 'res.users',
+              'default_res_id': uid,
               'search_default_message_unread': True
             }</field>
             <field name="params" eval="&quot;{
@@ -45,7 +45,8 @@
                 ],
                 'view_mailbox': True,
                 'read_action': 'read',
-                'show_compose_message': False }&quot;"/>
+                'show_compose_message': False
+            }&quot;"/>
             <field name="help" type="html">
                 <p>
                     <b>No private message.</b>
@@ -60,8 +61,8 @@
             <field name="tag">mail.wall</field>
             <field name="res_model">mail.message</field>
             <field name="context">{
-              'default_model': 'res.users', 
-              'default_res_id': uid, 
+              'default_model': 'res.users',
+              'default_res_id': uid,
               'search_default_message_unread': True
             }</field>
             <field name="params" eval="&quot;{
@@ -70,7 +71,8 @@
                 ],
                 'view_mailbox': True,
                 'read_action': 'read',
-                'compose_as_todo': True }&quot;"/>
+                'compose_as_todo': True
+            }&quot;"/>
             <field name="help" type="html">
                 <p>
                     <b>No todo.</b>
@@ -85,7 +87,7 @@
             <field name="name">Archives</field>
             <field name="tag">mail.wall</field>
             <field name="context">{
-              'default_model': 'res.users', 
+              'default_model': 'res.users',
               'default_res_id': uid
             }</field>
             <field name="params" eval="&quot;{
@@ -95,7 +97,8 @@
                     ('author_id.user_ids', 'in', [uid]),
                 ],
                 'view_mailbox': True,
-                'show_compose_message': False }&quot;"/>
+                'show_compose_message': False
+            }&quot;"/>
             <field name="help" type="html">
                 <p>
                     No message found and no message sent yet.
