@@ -772,7 +772,7 @@
                         <group>
                         <field name="name"/>
                         <field name="shop_id" widget="selection" groups="stock.group_locations" />
-                        <field name="currency_id"/>
+                        <field name="currency_id" invisible="1"/>
                         <field name="journal_id" widget="selection" />
                         <field name="sequence_id" readonly="1" groups="base.group_no_one" />
                         <field name="group_by" groups="account.group_account_user"  />
@@ -895,7 +895,7 @@
                             <field name="cash_control" invisible="1" />
                             <group>
                                 <field name="user_id"/>
-                                <field name="currency_id"/>
+                                <field name="currency_id" invisible="1"/>
                                 <field name="config_id"/>
                             </group>
                             <group>

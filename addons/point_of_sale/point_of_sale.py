@@ -205,6 +205,7 @@ class pos_session(osv.osv):
                                     readonly=True,
                                     states={'opening_control' : [('readonly', False)]}
                                    ),
+        'currency_id' : fields.related('config_id', 'currency_id', type="many2one", relation='res.currency', string="Currnecy"),
         'start_at' : fields.datetime('Opening Date', readonly=True), 
         'stop_at' : fields.datetime('Closing Date', readonly=True),
 
@@ -212,7 +213,6 @@ class pos_session(osv.osv):
                 required=True, readonly=True,
                 select=1),
         
-        'currency_id' : fields.related('config_id', 'currency_id', type="many2one", relation='res.currency', string="Currnecy"),
         'cash_control' : fields.function(_compute_cash_all,
                                          multi='cash',
                                          type='boolean', string='Has Cash Control'),
