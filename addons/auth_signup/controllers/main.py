@@ -19,9 +19,6 @@
 #
 ##############################################################################
 import logging
-import urllib
-
-import werkzeug
 
 import openerp
 from openerp.modules.registry import RegistryManager
@@ -54,9 +51,8 @@ class Controller(openerp.addons.web.http.Controller):
         return user_info
 
     @openerp.addons.web.http.jsonrequest
-    def signup(self, req, dbname, token, name, login, password):
+    def signup(self, req, dbname, token, **values):
         """ sign up a user (new or existing)"""
-        values = {'name': name, 'login': login, 'password': password}
         try:
             self._signup_with_values(req, dbname, token, values)
         except SignupError, e:
@@ -69,7 +65,7 @@ class Controller(openerp.addons.web.http.Controller):
             res_users = registry.get('res.users')
             res_users.signup(cr, openerp.SUPERUSER_ID, values, token)
 
-    @openerp.addons.web.http.httprequest
+    @openerp.addons.web.http.jsonrequest
     def reset_password(self, req, dbname, login):
         """ retrieve user, and perform reset password """
         registry = RegistryManager.get(dbname)
@@ -78,12 +74,10 @@ class Controller(openerp.addons.web.http.Controller):
                 res_users = registry.get('res.users')
                 res_users.reset_password(cr, openerp.SUPERUSER_ID, login)
                 cr.commit()
-                message = 'An email has been sent with credentials to reset your password'
             except Exception as e:
                 # signup error
                 _logger.exception('error when resetting password')
-                message = e.message
-        params = [('action', 'login'), ('error_message', message)]
-        return werkzeug.utils.redirect("/#" + urllib.urlencode(params))
+                raise(e)
+        return True
 
 # vim:expandtab:tabstop=4:softtabstop=4:shiftwidth=4:
