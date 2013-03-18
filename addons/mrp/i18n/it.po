@@ -13,8 +13,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-12-22 05:17+0000\n"
-"X-Generator: Launchpad (build 16378)\n"
+"X-Launchpad-Export-Date: 2013-03-16 05:01+0000\n"
+"X-Generator: Launchpad (build 16532)\n"
 
 #. module: mrp
 #: help:mrp.config.settings,module_mrp_repair:0
@@ -211,7 +211,7 @@ msgstr "Per materiali acquistati"
 #. module: mrp
 #: model:ir.ui.menu,name:mrp.menu_mrp_production_order_action
 msgid "Order Planning"
-msgstr ""
+msgstr "Pianificazione ordini"
 
 #. module: mrp
 #: field:mrp.config.settings,module_mrp_operations:0
@@ -272,7 +272,7 @@ msgstr ""
 "produzione che\n"
 "                dovranno essere seguite dai centri di lavoro. Sono collegati "
 "alle distinte\n"
-"                base dei materiali che definiscono la materia prima.\n"
+"                base dei materiali che definiscono i semi-lavorati.\n"
 "              </p>\n"
 "            "
 
@@ -303,6 +303,8 @@ msgid ""
 "The selection of the right Bill of Material to use will depend on the "
 "properties specified on the sales order and the Bill of Material."
 msgstr ""
+"La scelta della giusta distinta base da usare dipende dalle proprietà "
+"specificate dall'ordine di vendita e dalla distinta base."
 
 #. module: mrp
 #: view:mrp.bom:0
@@ -311,6 +313,10 @@ msgid ""
 "                                will contain the raw materials, instead of "
 "the finished product."
 msgstr ""
+"Quando si processa un ordine di vendita per questo prodotto, l'ordine di "
+"consegna\n"
+"                                Conterrà le righe dei materiali, invece del "
+"prodotto finito."
 
 #. module: mrp
 #: report:mrp.production.order:0
@@ -672,7 +678,7 @@ msgid ""
 "assembly operation.\n"
 "                This installs the module stock_no_autopicking."
 msgstr ""
-"Questo modulo consente prelievi intermedi per fornire materia prima agli "
+"Questo modulo consente prelievi intermedi per fornire il materiale agli "
 "ordini di produzione.\n"
 "Per esempio per gestire produzioni fatte dai fornitori (esternalizzazione).\n"
 "Per raggiungere questo, impostare i prodotti assemblati da terzisti come "
@@ -1011,7 +1017,7 @@ msgstr "Cicli totali"
 #. module: mrp
 #: selection:mrp.production,state:0
 msgid "Ready to Produce"
-msgstr "Pronto per Entrare in Produzione"
+msgstr "Pronto per la produzione"
 
 #. module: mrp
 #: field:mrp.bom,message_is_follower:0
@@ -1158,7 +1164,6 @@ msgstr "Inattivo"
 #: view:mrp.config.settings:0
 #: view:mrp.product.produce:0
 #: view:mrp.product_price:0
-#: view:mrp.production:0
 #: view:mrp.workcenter.load:0
 msgid "Cancel"
 msgstr "Annulla"
@@ -1199,7 +1204,7 @@ msgstr "Ordini di produzione"
 #. module: mrp
 #: selection:mrp.production,state:0
 msgid "Awaiting Raw Materials"
-msgstr "In attesa della materia prima"
+msgstr "Attesa materiale"
 
 #. module: mrp
 #: field:mrp.bom,position:0

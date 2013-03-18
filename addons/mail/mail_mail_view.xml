@@ -75,7 +75,7 @@
                     <field name="type" invisible="1"/>
                     <button name="send" string="Send Now" type="object" icon="gtk-media-play" states='outgoing'/>
                     <button name="mark_outgoing" string="Retry" type="object" icon="gtk-redo" states='exception,cancel'/>
-                    <button name="cancel" string="Cancel" type="object" icon="terp-gtk-stop" states='outgoing'/>
+                    <button name="cancel" string="Cancel Email" type="object" icon="terp-gtk-stop" states='outgoing'/>
                 </tree>
             </field>
         </record>
@@ -102,11 +102,10 @@
                         <field name="res_id"/>
                     </group>
                     <group expand="0" string="Group By...">
-                        <filter string="Status" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'state'}"/>
-                        <filter string="Partner" icon="terp-partner" domain="[]" context="{'group_by':'partner_id'}"/>
-                        <filter string="User" name="User" icon="terp-personal" context="{'group_by':'user_id'}"/>
-                        <filter string="Thread" icon="terp-mail-" domain="[]" context="{'group_by':'message_id'}"/>
-                        <filter string="Month" help="Creation Month" icon="terp-go-month" domain="[]" context="{'group_by':'date'}"/>
+                        <filter string="Status" name="status" domain="[]" context="{'group_by':'state'}"/>
+                        <filter string="Author" name="author" context="{'group_by':'author_id'}"/>
+                        <filter string="Thread" name="thread" domain="[]" context="{'group_by':'message_id'}"/>
+                        <filter string="Month" name="month" help="Creation Month" domain="[]" context="{'group_by':'date'}"/>
                     </group>
                 </search>
             </field>

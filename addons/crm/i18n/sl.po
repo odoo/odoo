@@ -13,13 +13,13 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-12-22 05:25+0000\n"
-"X-Generator: Launchpad (build 16378)\n"
+"X-Launchpad-Export-Date: 2013-03-16 05:09+0000\n"
+"X-Generator: Launchpad (build 16532)\n"
 
 #. module: crm
 #: view:crm.lead.report:0
 msgid "# Leads"
-msgstr ""
+msgstr "#Potencialne priložnosti"
 
 #. module: crm
 #: help:sale.config.settings,fetchmail_lead:0
@@ -27,9 +27,11 @@ msgid ""
 "Allows you to configure your incoming mail server, and create leads from "
 "incoming emails."
 msgstr ""
+"Omogoča konfiguracijo poštnega strežnika in kreiranje potencialnih "
+"priložnosti iz prejetih e-mailov"
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:880
+#: code:addons/crm/crm_lead.py:881
 #: selection:crm.case.stage,type:0
 #: view:crm.lead:0
 #: selection:crm.lead,type:0
@@ -37,12 +39,13 @@ msgstr ""
 #: selection:crm.lead.report,type:0
 #, python-format
 msgid "Lead"
-msgstr ""
+msgstr "Potencialna priložnost"
 
 #. module: crm
+#: view:crm.lead:0
 #: field:crm.lead,title:0
 msgid "Title"
-msgstr ""
+msgstr "Naziv"
 
 #. module: crm
 #: model:ir.actions.server,message:crm.action_email_reminder_lead
@@ -53,6 +56,11 @@ msgid ""
 "Description: [[object.description]]\n"
 "            "
 msgstr ""
+"Opozorilo , prejete priložnosti so stare več kot 5 dni.\n"
+"Ime: [[object.name ]]\n"
+"ID: [[object.id ]]\n"
+"Opis: [[object.description]]\n"
+"            "
 
 #. module: crm
 #: field:crm.opportunity2phonecall,action:0
@@ -68,7 +76,7 @@ msgstr ""
 #. module: crm
 #: view:crm.lead2opportunity.partner.mass:0
 msgid "Select Opportunities"
-msgstr ""
+msgstr "Izberi priložnosti"
 
 #. module: crm
 #: model:res.groups,name:crm.group_fund_raising
@@ -86,7 +94,7 @@ msgstr ""
 #: view:crm.case.stage:0
 #: field:crm.case.stage,name:0
 msgid "Stage Name"
-msgstr ""
+msgstr "Ime faze"
 
 #. module: crm
 #: view:crm.lead:0
@@ -94,35 +102,35 @@ msgstr ""
 #: view:crm.lead.report:0
 #: view:crm.phonecall.report:0
 msgid "Salesperson"
-msgstr ""
+msgstr "Prodajalec"
 
 #. module: crm
 #: model:ir.model,name:crm.model_crm_lead_report
 msgid "CRM Lead Analysis"
-msgstr ""
+msgstr "Analiza potencialnih priložnosti"
 
 #. module: crm
 #: view:crm.lead.report:0
 #: view:crm.phonecall.report:0
 #: field:crm.phonecall.report,day:0
 msgid "Day"
-msgstr ""
+msgstr "Dan"
 
 #. module: crm
 #: view:crm.lead:0
 msgid "Company Name"
-msgstr ""
+msgstr "Ime podjetja"
 
 #. module: crm
 #: model:crm.case.categ,name:crm.categ_oppor6
 msgid "Training"
-msgstr ""
+msgstr "Šolanje"
 
 #. module: crm
 #: model:ir.actions.act_window,name:crm.crm_lead_categ_action
 #: model:ir.ui.menu,name:crm.menu_crm_lead_categ
 msgid "Sales Tags"
-msgstr ""
+msgstr "Ključne besede"
 
 #. module: crm
 #: view:crm.lead.report:0
@@ -134,7 +142,7 @@ msgstr ""
 #: help:crm.lead,message_unread:0
 #: help:crm.phonecall,message_unread:0
 msgid "If checked new messages require your attention."
-msgstr ""
+msgstr "Če je izbrano, zahtevajo nova sporočila vašo pozornost."
 
 #. module: crm
 #: help:crm.lead.report,creation_day:0
@@ -150,7 +158,7 @@ msgstr "Ime pravila"
 #: code:addons/crm/crm_phonecall.py:280
 #, python-format
 msgid "It's only possible to convert one phonecall at a time."
-msgstr ""
+msgstr "Spremenite lahko le en klic naenkrat"
 
 #. module: crm
 #: view:crm.case.resource.type:0
@@ -160,17 +168,17 @@ msgstr ""
 #: field:crm.lead.report,type_id:0
 #: model:ir.model,name:crm.model_crm_case_resource_type
 msgid "Campaign"
-msgstr ""
+msgstr "Kampanija"
 
 #. module: crm
 #: view:crm.lead:0
 msgid "Search Opportunities"
-msgstr ""
+msgstr "Iskanje priložnosti"
 
 #. module: crm
 #: help:crm.lead.report,deadline_month:0
 msgid "Expected closing month"
-msgstr ""
+msgstr "Pričakovan datum zaključka"
 
 #. module: crm
 #: help:crm.case.section,message_summary:0
@@ -179,14 +187,15 @@ msgstr ""
 msgid ""
 "Holds the Chatter summary (number of messages, ...). This summary is "
 "directly in html format in order to be inserted in kanban views."
-msgstr ""
+msgstr "Povzetek (število sporočil,..)"
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:632
+#: code:addons/crm/crm_lead.py:624
+#: code:addons/crm/crm_lead.py:744
 #: code:addons/crm/crm_phonecall.py:280
 #, python-format
 msgid "Warning!"
-msgstr ""
+msgstr "Opozorilo!"
 
 #. module: crm
 #: view:crm.lead:0
@@ -207,14 +216,14 @@ msgstr "Partner"
 #: view:crm.phonecall:0
 #: model:ir.actions.act_window,name:crm.phonecall_to_phonecall_act
 msgid "Schedule Other Call"
-msgstr ""
+msgstr "Planiranje drugega klica"
 
 #. module: crm
 #: code:addons/crm/crm_phonecall.py:209
 #: view:crm.phonecall:0
 #, python-format
 msgid "Phone Call"
-msgstr ""
+msgstr "Telefonski klic"
 
 #. module: crm
 #: field:crm.lead,opt_out:0
@@ -222,14 +231,15 @@ msgid "Opt-Out"
 msgstr ""
 
 #. module: crm
+#: view:crm.lead:0
 #: field:crm.lead,state_id:0
 msgid "State"
-msgstr ""
+msgstr "Regija"
 
 #. module: crm
 #: field:res.partner,meeting_count:0
 msgid "# Meetings"
-msgstr ""
+msgstr "# Sestanki"
 
 #. module: crm
 #: model:ir.actions.server,name:crm.action_email_reminder_lead
@@ -249,26 +259,26 @@ msgstr ""
 #. module: crm
 #: model:ir.model,name:crm.model_crm_merge_opportunity
 msgid "Merge opportunities"
-msgstr ""
+msgstr "Združevanje priložnosti"
 
 #. module: crm
 #: view:crm.lead.report:0
 #: model:ir.actions.act_window,name:crm.action_report_crm_lead
 #: model:ir.ui.menu,name:crm.menu_report_crm_leads_tree
 msgid "Leads Analysis"
-msgstr ""
+msgstr "Analiza potencialnih priložnosti"
 
 #. module: crm
 #: code:addons/crm/crm_lead.py:1010
 #, python-format
 msgid "<b>%s a call</b> for the <em>%s</em>."
-msgstr ""
+msgstr "<b>%s klic</b> za <em>%s</em>."
 
 #. module: crm
 #: model:ir.actions.act_window,name:crm.crm_case_resource_type_act
 #: model:ir.ui.menu,name:crm.menu_crm_case_resource_type_act
 msgid "Campaigns"
-msgstr ""
+msgstr "Kampanje"
 
 #. module: crm
 #: view:crm.lead:0
@@ -287,18 +297,18 @@ msgstr ""
 #. module: crm
 #: model:process.transition,name:crm.process_transition_leadpartner0
 msgid "Prospect Partner"
-msgstr ""
+msgstr "Možni partner"
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:967
+#: code:addons/crm/crm_lead.py:982
 #, python-format
 msgid "No Subject"
-msgstr ""
+msgstr "Ni zadeve"
 
 #. module: crm
 #: field:crm.lead,contact_name:0
 msgid "Contact Name"
-msgstr ""
+msgstr "Ime stika"
 
 #. module: crm
 #: help:crm.segmentation,categ_id:0
@@ -326,7 +336,7 @@ msgstr ""
 #: field:crm.phonecall,partner_id:0
 #: field:crm.phonecall2phonecall,contact_name:0
 msgid "Contact"
-msgstr ""
+msgstr "Stik"
 
 #. module: crm
 #: help:crm.case.section,change_responsible:0
@@ -343,7 +353,7 @@ msgstr ""
 #: help:crm.lead.report,delay_close:0
 #: help:crm.phonecall.report,delay_close:0
 msgid "Number of Days to close the case"
-msgstr ""
+msgstr "Število dni za končanje zadeve"
 
 #. module: crm
 #: model:process.node,note:crm.process_node_opportunities0
@@ -353,7 +363,7 @@ msgstr ""
 #. module: crm
 #: field:res.partner,opportunity_ids:0
 msgid "Leads and Opportunities"
-msgstr ""
+msgstr "Potencialne priložnosti in priložnosti"
 
 #. module: crm
 #: model:ir.actions.act_window,help:crm.relate_partner_opportunities
@@ -375,8 +385,9 @@ msgstr ""
 
 #. module: crm
 #: model:crm.case.stage,name:crm.stage_lead7
+#: view:crm.lead:0
 msgid "Dead"
-msgstr ""
+msgstr "Mrtvo"
 
 #. module: crm
 #: field:crm.case.section,message_unread:0
@@ -384,7 +395,7 @@ msgstr ""
 #: field:crm.lead,message_unread:0
 #: field:crm.phonecall,message_unread:0
 msgid "Unread Messages"
-msgstr ""
+msgstr "Neprebrana sporočila"
 
 #. module: crm
 #: view:crm.segmentation:0
@@ -398,17 +409,17 @@ msgstr "Razčlenjenost"
 #: selection:crm.lead2opportunity.partner.mass,action:0
 #: selection:crm.partner.binding,action:0
 msgid "Link to an existing customer"
-msgstr ""
+msgstr "Povezava na obstoječega kupca"
 
 #. module: crm
 #: field:crm.lead,write_date:0
 msgid "Update Date"
-msgstr ""
+msgstr "Datum posodobitve"
 
 #. module: crm
 #: field:crm.case.section,user_id:0
 msgid "Team Leader"
-msgstr ""
+msgstr "Vodja ekipe"
 
 #. module: crm
 #: help:crm.case.stage,probability:0
@@ -430,10 +441,10 @@ msgstr "Kategorija"
 #. module: crm
 #: view:crm.lead.report:0
 msgid "#Opportunities"
-msgstr ""
+msgstr "#Priložnosti"
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:632
+#: code:addons/crm/crm_lead.py:624
 #, python-format
 msgid ""
 "Please select more than one element (lead or opportunity) from the list view."
@@ -447,7 +458,7 @@ msgstr ""
 #. module: crm
 #: field:crm.lead,partner_address_email:0
 msgid "Partner Contact Email"
-msgstr ""
+msgstr "Partnerjev e-mail"
 
 #. module: crm
 #: model:ir.actions.act_window,help:crm.crm_case_section_act
@@ -479,12 +490,12 @@ msgstr "Stanje"
 #. module: crm
 #: view:crm.lead2opportunity.partner:0
 msgid "Create Opportunity"
-msgstr ""
+msgstr "Nova priložnost"
 
 #. module: crm
 #: view:sale.config.settings:0
 msgid "Configure"
-msgstr ""
+msgstr "Nastavitve"
 
 #. module: crm
 #: view:crm.lead:0
@@ -499,19 +510,19 @@ msgstr ""
 #. module: crm
 #: model:mail.message.subtype,description:crm.mt_lead_stage
 msgid "Stage changed"
-msgstr ""
+msgstr "Faza spremenjena"
 
 #. module: crm
 #: selection:crm.lead.report,creation_month:0
 #: selection:crm.lead.report,deadline_month:0
 #: selection:crm.phonecall.report,month:0
 msgid "June"
-msgstr ""
+msgstr "Junij"
 
 #. module: crm
 #: selection:crm.segmentation,state:0
 msgid "Not Running"
-msgstr ""
+msgstr "Ni v teku"
 
 #. module: crm
 #: field:crm.lead.report,planned_revenue:0
@@ -521,14 +532,14 @@ msgstr "Načrtovani prihodki"
 #. module: crm
 #: field:crm.lead,planned_revenue:0
 msgid "Expected Revenue"
-msgstr ""
+msgstr "Pričakovan prihodek"
 
 #. module: crm
 #: selection:crm.lead.report,creation_month:0
 #: selection:crm.lead.report,deadline_month:0
 #: selection:crm.phonecall.report,month:0
 msgid "October"
-msgstr ""
+msgstr "Oktober"
 
 #. module: crm
 #: view:crm.segmentation:0
@@ -550,12 +561,12 @@ msgstr ""
 #: field:crm.lead,message_summary:0
 #: field:crm.phonecall,message_summary:0
 msgid "Summary"
-msgstr ""
+msgstr "Povzetek"
 
 #. module: crm
 #: view:crm.merge.opportunity:0
 msgid "Merge"
-msgstr ""
+msgstr "Združi"
 
 #. module: crm
 #: model:email.template,subject:crm.email_template_opportunity_mail
@@ -565,12 +576,12 @@ msgstr ""
 #. module: crm
 #: view:crm.case.categ:0
 msgid "Case Category"
-msgstr ""
+msgstr "Skupina zadeve"
 
 #. module: crm
 #: field:crm.lead,partner_address_name:0
 msgid "Partner Contact Name"
-msgstr ""
+msgstr "Ime stika partnerja"
 
 #. module: crm
 #: model:ir.actions.server,subject:crm.action_email_reminder_lead
@@ -587,24 +598,24 @@ msgstr ""
 #. module: crm
 #: view:crm.phonecall.report:0
 msgid "#Phone calls"
-msgstr ""
+msgstr "#Telefonski klici"
 
 #. module: crm
 #: sql_constraint:crm.case.section:0
 msgid "The code of the sales team must be unique !"
-msgstr ""
+msgstr "Koda prodajne ekipe mora biti edinstvena !"
 
 #. module: crm
 #: help:crm.lead,email_from:0
 msgid "Email address of the contact"
-msgstr ""
+msgstr "E-Mail stika"
 
 #. module: crm
 #: selection:crm.case.stage,state:0
 #: view:crm.lead:0
 #: selection:crm.lead,state:0
 msgid "In Progress"
-msgstr ""
+msgstr "V teku"
 
 #. module: crm
 #: model:ir.actions.act_window,help:crm.crm_phonecall_categ_action
@@ -629,13 +640,13 @@ msgstr ""
 #. module: crm
 #: field:crm.lead.report,creation_month:0
 msgid "Creation Month"
-msgstr ""
+msgstr "Mesec kreiranja"
 
 #. module: crm
 #: field:crm.case.section,resource_calendar_id:0
 #: model:ir.ui.menu,name:crm.menu_action_resource_calendar_form
 msgid "Working Time"
-msgstr ""
+msgstr "Delovni čas"
 
 #. module: crm
 #: view:crm.segmentation.line:0
@@ -646,12 +657,12 @@ msgstr ""
 #: model:ir.actions.act_window,name:crm.action_report_crm_phonecall
 #: model:ir.ui.menu,name:crm.menu_report_crm_phonecalls_tree
 msgid "Phone Calls Analysis"
-msgstr ""
+msgstr "Analiza telefonskih klicev"
 
 #. module: crm
 #: view:crm.lead:0
 msgid "Leads Form"
-msgstr ""
+msgstr "Obrazec potencialne priložnosti"
 
 #. module: crm
 #: view:crm.segmentation:0
@@ -662,12 +673,12 @@ msgstr ""
 #. module: crm
 #: field:crm.lead,company_currency:0
 msgid "Currency"
-msgstr ""
+msgstr "Valuta"
 
 #. module: crm
 #: field:crm.lead.report,probable_revenue:0
 msgid "Probable Revenue"
-msgstr ""
+msgstr "Verjetni prihodek"
 
 #. module: crm
 #: help:crm.lead.report,creation_month:0
@@ -682,7 +693,7 @@ msgstr ""
 #. module: crm
 #: field:crm.case.stage,probability:0
 msgid "Probability (%)"
-msgstr ""
+msgstr "Verjetnost (%)"
 
 #. module: crm
 #: sql_constraint:crm.lead:0
@@ -697,10 +708,10 @@ msgstr ""
 #. module: crm
 #: view:board.board:0
 msgid "Statistics Dashboard"
-msgstr ""
+msgstr "Statistična nadzorna plošča"
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:860
+#: code:addons/crm/crm_lead.py:861
 #: model:crm.case.stage,name:crm.stage_lead2
 #: selection:crm.case.stage,type:0
 #: view:crm.lead:0
@@ -711,37 +722,37 @@ msgstr ""
 #: field:res.partner,opportunity_count:0
 #, python-format
 msgid "Opportunity"
-msgstr ""
+msgstr "Priložnost"
 
 #. module: crm
 #: model:crm.case.resource.type,name:crm.type_lead7
 msgid "Television"
-msgstr ""
+msgstr "Televizija"
 
 #. module: crm
 #: model:ir.actions.act_window,name:crm.action_crm_send_mass_convert
 msgid "Convert to opportunities"
-msgstr ""
+msgstr "Spremeni v priložnosti"
 
 #. module: crm
 #: model:ir.model,name:crm.model_sale_config_settings
 msgid "sale.config.settings"
-msgstr ""
+msgstr "sale.config.settings"
 
 #. module: crm
 #: view:crm.segmentation:0
 msgid "Stop Process"
-msgstr ""
+msgstr "Ustavi proces"
 
 #. module: crm
 #: field:crm.case.section,alias_id:0
 msgid "Alias"
-msgstr ""
+msgstr "Vzdevek"
 
 #. module: crm
 #: view:crm.phonecall:0
 msgid "Search Phonecalls"
-msgstr ""
+msgstr "Iskanje klicev"
 
 #. module: crm
 #: view:crm.lead.report:0
@@ -752,7 +763,7 @@ msgstr ""
 #. module: crm
 #: field:calendar.attendee,categ_id:0
 msgid "Event Type"
-msgstr ""
+msgstr "Vrsta dogodka"
 
 #. module: crm
 #: field:crm.segmentation,exclusif:0
@@ -760,15 +771,15 @@ msgid "Exclusive"
 msgstr "Ekskluzivno"
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:591
+#: code:addons/crm/crm_lead.py:584
 #, python-format
 msgid "From %s : %s"
-msgstr ""
+msgstr "Od %s : %s"
 
 #. module: crm
 #: view:crm.lead2opportunity.partner.mass:0
 msgid "Convert to Opportunities"
-msgstr ""
+msgstr "Pretvorba v priložnost"
 
 #. module: crm
 #: view:crm.lead2opportunity.partner:0
@@ -777,13 +788,13 @@ msgstr ""
 #: view:crm.opportunity2phonecall:0
 #: view:crm.phonecall2phonecall:0
 msgid "or"
-msgstr ""
+msgstr "ali"
 
 #. module: crm
 #: field:crm.lead.report,create_date:0
 #: field:crm.phonecall.report,create_date:0
 msgid "Create Date"
-msgstr ""
+msgstr "Datum nastanka"
 
 #. module: crm
 #: field:crm.lead,ref2:0
@@ -801,12 +812,12 @@ msgstr ""
 #: view:crm.case.stage:0
 #: field:crm.case.stage,requirements:0
 msgid "Requirements"
-msgstr ""
+msgstr "Zahteve"
 
 #. module: crm
 #: field:crm.lead,zip:0
 msgid "Zip"
-msgstr ""
+msgstr "Pošta"
 
 #. module: crm
 #: view:crm.phonecall:0
@@ -815,6 +826,7 @@ msgstr ""
 
 #. module: crm
 #: view:crm.lead:0
+#: view:crm.lead2opportunity.partner:0
 #: field:crm.lead2opportunity.partner,opportunity_ids:0
 #: field:crm.lead2opportunity.partner.mass,opportunity_ids:0
 #: model:ir.actions.act_window,name:crm.crm_case_category_act_oppor11
@@ -823,12 +835,12 @@ msgstr ""
 #: model:process.node,name:crm.process_node_opportunities0
 #: view:res.partner:0
 msgid "Opportunities"
-msgstr ""
+msgstr "Priložnosti"
 
 #. module: crm
 #: field:crm.segmentation,categ_id:0
 msgid "Partner Category"
-msgstr ""
+msgstr "Kategorija partnerja"
 
 #. module: crm
 #: field:crm.lead,probability:0
@@ -843,7 +855,7 @@ msgstr ""
 #. module: crm
 #: model:crm.case.categ,name:crm.categ_phone2
 msgid "Outbound"
-msgstr ""
+msgstr "Izhodno"
 
 #. module: crm
 #: view:crm.lead:0
@@ -853,7 +865,7 @@ msgstr ""
 #. module: crm
 #: model:ir.filters,name:crm.filter_usa_lead
 msgid "Leads from USA"
-msgstr ""
+msgstr "Potencialne priložnosti v ZDA"
 
 #. module: crm
 #: view:crm.lead:0
@@ -863,22 +875,22 @@ msgstr ""
 #. module: crm
 #: model:ir.filters,name:crm.filter_draft_lead
 msgid "Draft Leads"
-msgstr ""
+msgstr "Potencialne priložnosti (Osnutki)"
 
 #. module: crm
 #: selection:crm.lead.report,creation_month:0
 #: selection:crm.lead.report,deadline_month:0
 #: selection:crm.phonecall.report,month:0
 msgid "March"
-msgstr ""
+msgstr "Marec"
 
 #. module: crm
 #: view:crm.lead:0
 msgid "Send Email"
-msgstr ""
+msgstr "Pošlji e-pošto"
 
 #. module: crm
-#: code:addons/crm/wizard/crm_lead_to_opportunity.py:97
+#: code:addons/crm/wizard/crm_lead_to_opportunity.py:89
 #, python-format
 msgid "Warning !"
 msgstr "Opozorilo!"
@@ -892,7 +904,7 @@ msgstr ""
 #: field:crm.lead,mobile:0
 #: field:crm.phonecall,partner_mobile:0
 msgid "Mobile"
-msgstr ""
+msgstr "Mobilni telefon"
 
 #. module: crm
 #: field:crm.lead,ref:0
@@ -917,17 +929,17 @@ msgstr ""
 #: view:res.partner:0
 #: field:res.partner,meeting_ids:0
 msgid "Meetings"
-msgstr ""
+msgstr "Sestanki"
 
 #. module: crm
 #: field:crm.lead,date_action_next:0
 #: field:crm.lead,title_action:0
 #: field:crm.phonecall,date_action_next:0
 msgid "Next Action"
-msgstr ""
+msgstr "Naslednje dejanje"
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:762
+#: code:addons/crm/crm_lead.py:763
 #, python-format
 msgid "<b>Partner</b> set to <em>%s</em>."
 msgstr ""
@@ -952,12 +964,12 @@ msgstr ""
 #. module: crm
 #: field:crm.lead,name:0
 msgid "Subject"
-msgstr ""
+msgstr "Zadeva"
 
 #. module: crm
 #: view:crm.lead:0
 msgid "New Leads"
-msgstr ""
+msgstr "Nove potencialne priložnosti"
 
 #. module: crm
 #: view:crm.lead:0
@@ -973,6 +985,7 @@ msgstr ""
 
 #. module: crm
 #: model:crm.case.stage,name:crm.stage_lead6
+#: view:crm.lead:0
 msgid "Won"
 msgstr ""
 
@@ -984,7 +997,7 @@ msgstr ""
 #. module: crm
 #: model:crm.case.section,name:crm.section_sales_department
 msgid "Sales Department"
-msgstr ""
+msgstr "Prodajni oddelek"
 
 #. module: crm
 #: field:crm.case.stage,type:0
@@ -992,7 +1005,7 @@ msgstr ""
 #: field:crm.lead.report,type:0
 #: view:crm.opportunity2phonecall:0
 msgid "Type"
-msgstr ""
+msgstr "Vrsta"
 
 #. module: crm
 #: view:crm.segmentation:0
@@ -1016,7 +1029,7 @@ msgid "Creation Date"
 msgstr "Ustvarjeno dne"
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:703
+#: code:addons/crm/crm_lead.py:698
 #, python-format
 msgid "Lead <b>converted into an Opportunity</b>"
 msgstr ""
@@ -1029,7 +1042,7 @@ msgstr "Unesek nakupa"
 #. module: crm
 #: view:crm.phonecall.report:0
 msgid "Year of call"
-msgstr ""
+msgstr "Leto klica"
 
 #. module: crm
 #: view:crm.case.stage:0
@@ -1038,7 +1051,7 @@ msgstr ""
 #: view:crm.lead.report:0
 #: field:crm.lead.report,stage_id:0
 msgid "Stage"
-msgstr ""
+msgstr "Stopnja"
 
 #. module: crm
 #: view:crm.phonecall.report:0
@@ -1048,7 +1061,7 @@ msgstr ""
 #. module: crm
 #: field:crm.lead,user_login:0
 msgid "User Login"
-msgstr ""
+msgstr "Prijava uporabnika"
 
 #. module: crm
 #: view:crm.phonecall.report:0
@@ -1063,7 +1076,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:crm.crm_lead_stage_act
 #: model:ir.ui.menu,name:crm.menu_crm_lead_stage_act
 msgid "Stages"
-msgstr ""
+msgstr "Faze"
 
 #. module: crm
 #: help:sale.config.settings,module_crm_helpdesk:0
@@ -1075,7 +1088,7 @@ msgstr ""
 #. module: crm
 #: view:crm.lead:0
 msgid "Delete"
-msgstr ""
+msgstr "Izbriši"
 
 #. module: crm
 #: model:mail.message.subtype,description:crm.mt_lead_create
@@ -1085,14 +1098,14 @@ msgstr ""
 #. module: crm
 #: view:crm.lead:0
 msgid "í"
-msgstr ""
+msgstr "í"
 
 #. module: crm
 #: selection:crm.lead.report,creation_month:0
 #: selection:crm.lead.report,deadline_month:0
 #: selection:crm.phonecall.report,month:0
 msgid "September"
-msgstr ""
+msgstr "September"
 
 #. module: crm
 #: model:ir.actions.act_window,help:crm.crm_case_category_act_oppor11
@@ -1125,33 +1138,33 @@ msgstr ""
 #. module: crm
 #: view:crm.lead:0
 msgid "oe_kanban_text_red"
-msgstr ""
+msgstr "oe_kanban_text_red"
 
 #. module: crm
 #: model:ir.ui.menu,name:crm.menu_crm_payment_mode_act
 msgid "Payment Modes"
-msgstr ""
+msgstr "Načini plačila"
 
 #. module: crm
 #: field:crm.lead.report,opening_date:0
 #: field:crm.phonecall.report,opening_date:0
 msgid "Opening Date"
-msgstr ""
+msgstr "Datum odprtja"
 
 #. module: crm
 #: help:crm.phonecall,duration:0
 msgid "Duration in Minutes"
-msgstr ""
+msgstr "Trajanje v minutah"
 
 #. module: crm
 #: field:crm.case.channel,name:0
 msgid "Channel Name"
-msgstr ""
+msgstr "Ime kanala"
 
 #. module: crm
 #: help:crm.lead.report,deadline_day:0
 msgid "Expected closing day"
-msgstr ""
+msgstr "Pričakovan datum zaključka"
 
 #. module: crm
 #: help:crm.case.section,active:0
@@ -1205,14 +1218,14 @@ msgstr ""
 #. module: crm
 #: field:crm.case.section,complete_name:0
 msgid "unknown"
-msgstr ""
+msgstr "neznano"
 
 #. module: crm
 #: field:crm.case.section,message_is_follower:0
 #: field:crm.lead,message_is_follower:0
 #: field:crm.phonecall,message_is_follower:0
 msgid "Is a Follower"
-msgstr ""
+msgstr "Je sledilec"
 
 #. module: crm
 #: field:crm.opportunity2phonecall,date:0
@@ -1231,7 +1244,7 @@ msgstr ""
 #: view:crm.lead.report:0
 #: view:crm.phonecall.report:0
 msgid "Extended Filters..."
-msgstr ""
+msgstr "Razširjeni filtri..."
 
 #. module: crm
 #: view:crm.phonecall.report:0
@@ -1241,7 +1254,7 @@ msgstr ""
 #. module: crm
 #: view:crm.phonecall.report:0
 msgid "Search"
-msgstr ""
+msgstr "Iskanje"
 
 #. module: crm
 #: help:crm.lead,state:0
@@ -1260,7 +1273,7 @@ msgstr ""
 #. module: crm
 #: view:crm.phonecall.report:0
 msgid "Date of call"
-msgstr ""
+msgstr "Datum klica"
 
 #. module: crm
 #: help:crm.lead,section_id:0
@@ -1283,10 +1296,10 @@ msgstr ""
 #. module: crm
 #: view:crm.lead:0
 msgid "Lead Description"
-msgstr ""
+msgstr "Opis"
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:573
+#: code:addons/crm/crm_lead.py:565
 #, python-format
 msgid "Merged opportunities"
 msgstr ""
@@ -1299,12 +1312,12 @@ msgstr ""
 #. module: crm
 #: field:crm.case.section,code:0
 msgid "Code"
-msgstr ""
+msgstr "Oznaka"
 
 #. module: crm
 #: view:sale.config.settings:0
 msgid "Features"
-msgstr ""
+msgstr "Možnosti"
 
 #. module: crm
 #: field:crm.case.section,child_ids:0
@@ -1319,7 +1332,7 @@ msgstr ""
 #. module: crm
 #: field:crm.lead2opportunity.partner.mass,user_ids:0
 msgid "Salesmen"
-msgstr ""
+msgstr "Prodajalec"
 
 #. module: crm
 #: view:crm.lead:0
@@ -1327,7 +1340,6 @@ msgid "References"
 msgstr "Sklici"
 
 #. module: crm
-#: view:crm.lead:0
 #: view:crm.lead2opportunity.partner:0
 #: view:crm.lead2opportunity.partner.mass:0
 #: view:crm.merge.opportunity:0
@@ -1345,7 +1357,7 @@ msgstr ""
 #. module: crm
 #: model:crm.case.categ,name:crm.categ_oppor4
 msgid "Information"
-msgstr ""
+msgstr "Informacije"
 
 #. module: crm
 #: view:crm.lead.report:0
@@ -1355,7 +1367,7 @@ msgstr ""
 #. module: crm
 #: view:crm.phonecall:0
 msgid "To Do"
-msgstr ""
+msgstr "Opravila"
 
 #. module: crm
 #: model:mail.message.subtype,description:crm.mt_lead_lost
@@ -1372,13 +1384,13 @@ msgstr ""
 #. module: crm
 #: model:crm.case.categ,name:crm.categ_oppor8
 msgid "Other"
-msgstr ""
+msgstr "Ostalo"
 
 #. module: crm
 #: field:crm.phonecall,opportunity_id:0
 #: model:ir.model,name:crm.model_crm_lead
 msgid "Lead/Opportunity"
-msgstr ""
+msgstr "Potencialna priložnost/Priložnost"
 
 #. module: crm
 #: model:ir.actions.act_window,name:crm.action_merge_opportunities
@@ -1394,7 +1406,7 @@ msgstr ""
 #. module: crm
 #: model:ir.actions.act_window,name:crm.crm_phonecall_categ_action
 msgid "Phonecall Categories"
-msgstr ""
+msgstr "Skupine telefonskih klicev"
 
 #. module: crm
 #: view:crm.lead.report:0
@@ -1404,12 +1416,12 @@ msgstr ""
 #. module: crm
 #: model:ir.model,name:crm.model_res_users
 msgid "Users"
-msgstr ""
+msgstr "Uporabniki"
 
 #. module: crm
 #: model:mail.message.subtype,name:crm.mt_lead_stage
 msgid "Stage Changed"
-msgstr ""
+msgstr "Faza spremenjena"
 
 #. module: crm
 #: field:crm.case.stage,section_ids:0
@@ -1436,7 +1448,7 @@ msgstr ""
 #: view:crm.phonecall.report:0
 #: model:ir.actions.act_window,name:crm.act_crm_opportunity_crm_phonecall_new
 msgid "Phone calls"
-msgstr ""
+msgstr "Telefonski klici"
 
 #. module: crm
 #: model:ir.actions.act_window,help:crm.action_report_crm_opportunity
@@ -1476,7 +1488,7 @@ msgstr ""
 #: help:crm.lead,message_ids:0
 #: help:crm.phonecall,message_ids:0
 msgid "Messages and communication history"
-msgstr ""
+msgstr "Sporočila in zgodovina sporočil"
 
 #. module: crm
 #: view:crm.lead:0
@@ -1523,7 +1535,7 @@ msgstr ""
 #: view:crm.phonecall:0
 #: view:crm.phonecall.report:0
 msgid "Group By..."
-msgstr ""
+msgstr "Združeno po..."
 
 #. module: crm
 #: view:crm.merge.opportunity:0
@@ -1568,7 +1580,7 @@ msgstr ""
 #. module: crm
 #: view:crm.phonecall.report:0
 msgid "Month of call"
-msgstr ""
+msgstr "Mesec klica"
 
 #. module: crm
 #: code:addons/crm/crm_phonecall.py:290
@@ -1592,7 +1604,7 @@ msgstr ""
 #. module: crm
 #: model:crm.case.categ,name:crm.categ_oppor3
 msgid "Services"
-msgstr ""
+msgstr "Storitve"
 
 #. module: crm
 #: selection:crm.lead,priority:0
@@ -1609,10 +1621,9 @@ msgstr ""
 
 #. module: crm
 #: view:crm.case.section:0
-#: view:crm.lead:0
 #: field:crm.lead,description:0
 msgid "Notes"
-msgstr ""
+msgstr "Zapiski"
 
 #. module: crm
 #: field:crm.segmentation.line,expr_value:0
@@ -1632,12 +1643,12 @@ msgstr "Odgovori-na:"
 #. module: crm
 #: view:crm.lead:0
 msgid "Display"
-msgstr ""
+msgstr "Prikaz"
 
 #. module: crm
 #: view:board.board:0
 msgid "Opportunities by Stage"
-msgstr ""
+msgstr "Priložnosti po fazah"
 
 #. module: crm
 #: model:process.transition,note:crm.process_transition_leadpartner0
@@ -1650,7 +1661,7 @@ msgstr ""
 #: model:ir.model,name:crm.model_crm_case_channel
 #: model:ir.ui.menu,name:crm.menu_crm_case_channel
 msgid "Channels"
-msgstr ""
+msgstr "Kanali"
 
 #. module: crm
 #: view:crm.phonecall:0
@@ -1658,7 +1669,7 @@ msgstr ""
 #: view:crm.phonecall.report:0
 #: selection:crm.phonecall.report,state:0
 msgid "Held"
-msgstr ""
+msgstr "Zadržano"
 
 #. module: crm
 #: view:crm.lead:0
@@ -1668,12 +1679,12 @@ msgstr "Dodatne informacije"
 #. module: crm
 #: view:crm.lead:0
 msgid "Fund Raising"
-msgstr ""
+msgstr "Zbiranje sredstev"
 
 #. module: crm
 #: view:crm.lead:0
 msgid "Edit..."
-msgstr ""
+msgstr "Urejanje ..."
 
 #. module: crm
 #: model:crm.case.resource.type,name:crm.type_lead5
@@ -1711,7 +1722,7 @@ msgstr ""
 #: view:crm.payment.mode:0
 #: model:ir.actions.act_window,name:crm.action_crm_payment_mode
 msgid "Payment Mode"
-msgstr ""
+msgstr "Način plačila"
 
 #. module: crm
 #: model:ir.model,name:crm.model_crm_lead2opportunity_partner_mass
@@ -1727,7 +1738,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:crm.open_board_statistical_dash
 #: model:ir.ui.menu,name:crm.menu_board_statistics_dash
 msgid "CRM"
-msgstr ""
+msgstr "CRM"
 
 #. module: crm
 #: model:ir.actions.act_window,name:crm.crm_segmentation_tree-act
@@ -1748,7 +1759,7 @@ msgstr ""
 #. module: crm
 #: view:crm.lead:0
 msgid "Leads Assigned to Me or My Team(s)"
-msgstr ""
+msgstr "Potencialne priložnosti dodeljene meni ali moji ekipi"
 
 #. module: crm
 #: model:ir.model,name:crm.model_crm_segmentation_line
@@ -1759,17 +1770,17 @@ msgstr ""
 #: view:crm.opportunity2phonecall:0
 #: view:crm.phonecall2phonecall:0
 msgid "Planned Date"
-msgstr ""
+msgstr "Načrtovani datum"
 
 #. module: crm
 #: view:crm.lead:0
 msgid "Expected Revenues"
-msgstr ""
+msgstr "Pričakovani prihodki"
 
 #. module: crm
 #: view:crm.lead:0
 msgid "Referrer"
-msgstr ""
+msgstr "Napotitelj"
 
 #. module: crm
 #: help:crm.lead,type:0
@@ -1782,12 +1793,12 @@ msgstr ""
 #: selection:crm.lead.report,deadline_month:0
 #: selection:crm.phonecall.report,month:0
 msgid "July"
-msgstr ""
+msgstr "Julij"
 
 #. module: crm
 #: view:crm.lead:0
 msgid "Lead / Customer"
-msgstr ""
+msgstr "Potencialna priložnost/Kupec"
 
 #. module: crm
 #: model:crm.case.section,name:crm.crm_case_section_2
@@ -1804,7 +1815,7 @@ msgstr ""
 #: model:ir.model,name:crm.model_crm_case_section
 #: model:ir.ui.menu,name:crm.menu_crm_case_section_act
 msgid "Sales Teams"
-msgstr ""
+msgstr "Prodajne ekipe"
 
 #. module: crm
 #: field:crm.case.stage,case_default:0
@@ -1814,7 +1825,7 @@ msgstr ""
 #. module: crm
 #: view:crm.lead:0
 msgid "Team"
-msgstr ""
+msgstr "Ekipa"
 
 #. module: crm
 #: view:crm.lead.report:0
@@ -1830,14 +1841,14 @@ msgstr ""
 #. module: crm
 #: field:crm.lead.report,probability:0
 msgid "Probability"
-msgstr ""
+msgstr "Verjetnost"
 
 #. module: crm
 #: view:crm.lead.report:0
 #: view:crm.phonecall.report:0
 #: field:crm.phonecall.report,month:0
 msgid "Month"
-msgstr ""
+msgstr "Mesec"
 
 #. module: crm
 #: view:crm.lead:0
@@ -1845,10 +1856,10 @@ msgstr ""
 #: model:ir.ui.menu,name:crm.menu_crm_leads
 #: model:process.node,name:crm.process_node_leads0
 msgid "Leads"
-msgstr ""
+msgstr "Potencialne priložnosti"
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:571
+#: code:addons/crm/crm_lead.py:563
 #, python-format
 msgid "Merged leads"
 msgstr ""
@@ -1856,7 +1867,7 @@ msgstr ""
 #. module: crm
 #: model:crm.case.categ,name:crm.categ_oppor5
 msgid "Design"
-msgstr ""
+msgstr "Oblikovanje"
 
 #. module: crm
 #: selection:crm.lead2opportunity.partner,name:0
@@ -1868,7 +1879,7 @@ msgstr ""
 #: view:crm.phonecall.report:0
 #: selection:crm.phonecall.report,state:0
 msgid "Todo"
-msgstr ""
+msgstr "Opravila"
 
 #. module: crm
 #: model:mail.message.subtype,name:crm.mt_lead_convert_to_opportunity
@@ -1948,7 +1959,7 @@ msgstr ""
 #: model:ir.ui.menu,name:crm.menu_crm_case_phone
 #: model:ir.ui.menu,name:crm.menu_crm_config_phonecall
 msgid "Phone Calls"
-msgstr ""
+msgstr "Telefonski klici"
 
 #. module: crm
 #: view:crm.case.stage:0
@@ -1968,7 +1979,7 @@ msgstr ""
 #: field:crm.phonecall,partner_phone:0
 #: field:crm.phonecall2phonecall,phone:0
 msgid "Phone"
-msgstr ""
+msgstr "Telefon"
 
 #. module: crm
 #: field:crm.case.channel,active:0
@@ -2003,7 +2014,7 @@ msgstr ""
 #. module: crm
 #: model:crm.case.categ,name:crm.categ_oppor2
 msgid "Software"
-msgstr ""
+msgstr "Programska oprema"
 
 #. module: crm
 #: field:crm.case.section,change_responsible:0
@@ -2020,23 +2031,25 @@ msgstr ""
 #. module: crm
 #: view:crm.lead:0
 msgid "Misc"
-msgstr ""
+msgstr "Razno"
 
 #. module: crm
+#: view:crm.lead:0
 #: view:crm.lead.report:0
 #: selection:crm.lead.report,state:0
 msgid "Open"
 msgstr "Odpri"
 
 #. module: crm
+#: view:crm.lead:0
 #: field:crm.lead,city:0
 msgid "City"
-msgstr ""
+msgstr "Kraj"
 
 #. module: crm
 #: selection:crm.case.stage,type:0
 msgid "Both"
-msgstr ""
+msgstr "Oboje"
 
 #. module: crm
 #: view:crm.phonecall:0
@@ -2057,7 +2070,7 @@ msgstr ""
 #. module: crm
 #: model:crm.case.categ,name:crm.categ_oppor1
 msgid "Product"
-msgstr ""
+msgstr "Izdelek"
 
 #. module: crm
 #: field:crm.lead.report,creation_year:0
@@ -2079,7 +2092,7 @@ msgstr ""
 #. module: crm
 #: view:crm.lead:0
 msgid "Address"
-msgstr ""
+msgstr "Naslov"
 
 #. module: crm
 #: help:crm.case.section,alias_id:0
@@ -2096,7 +2109,7 @@ msgstr ""
 #. module: crm
 #: view:crm.lead:0
 msgid "Search Leads"
-msgstr ""
+msgstr "Išči potencialne priložnosti"
 
 #. module: crm
 #: view:crm.lead.report:0
@@ -2161,7 +2174,7 @@ msgstr ""
 #: field:crm.phonecall,duration:0
 #: field:crm.phonecall.report,duration:0
 msgid "Duration"
-msgstr ""
+msgstr "Trajanje"
 
 #. module: crm
 #: model:ir.actions.act_window,help:crm.crm_case_categ_phone_outgoing0
@@ -2190,7 +2203,7 @@ msgstr ""
 #: field:crm.lead.report,nbr:0
 #: field:crm.phonecall.report,nbr:0
 msgid "# of Cases"
-msgstr ""
+msgstr "# primerov"
 
 #. module: crm
 #: help:crm.phonecall,section_id:0
@@ -2205,12 +2218,12 @@ msgstr ""
 #. module: crm
 #: field:crm.merge.opportunity,opportunity_ids:0
 msgid "Leads/Opportunities"
-msgstr ""
+msgstr "Potencialne priložnosti/Priložnosti"
 
 #. module: crm
 #: field:crm.lead,fax:0
 msgid "Fax"
-msgstr ""
+msgstr "Faks"
 
 #. module: crm
 #: field:crm.lead,company_id:0
@@ -2220,7 +2233,7 @@ msgstr ""
 #: view:crm.phonecall.report:0
 #: field:crm.phonecall.report,company_id:0
 msgid "Company"
-msgstr ""
+msgstr "Podjetje"
 
 #. module: crm
 #: selection:crm.segmentation,state:0
@@ -2245,7 +2258,7 @@ msgstr ""
 #. module: crm
 #: field:crm.case.categ,object_id:0
 msgid "Object Name"
-msgstr ""
+msgstr "Ime predmeta"
 
 #. module: crm
 #: view:crm.phonecall:0
@@ -2255,19 +2268,19 @@ msgstr ""
 #. module: crm
 #: view:crm.lead:0
 msgid "Reset"
-msgstr ""
+msgstr "Ponastavi"
 
 #. module: crm
 #: view:sale.config.settings:0
 msgid "After-Sale Services"
-msgstr ""
+msgstr "Storitve po prodaji"
 
 #. module: crm
 #: field:crm.case.section,message_ids:0
 #: field:crm.lead,message_ids:0
 #: field:crm.phonecall,message_ids:0
 msgid "Messages"
-msgstr ""
+msgstr "Sporočila"
 
 #. module: crm
 #: help:crm.lead,channel_id:0
@@ -2287,12 +2300,12 @@ msgstr ""
 #: selection:crm.phonecall,state:0
 #: selection:crm.phonecall.report,state:0
 msgid "Cancelled"
-msgstr ""
+msgstr "Preklicano"
 
 #. module: crm
 #: field:crm.lead,color:0
 msgid "Color Index"
-msgstr ""
+msgstr "Barvvni index"
 
 #. module: crm
 #: model:ir.actions.act_window,help:crm.action_report_crm_phonecall
@@ -2337,7 +2350,7 @@ msgstr ""
 #. module: crm
 #: selection:crm.phonecall,state:0
 msgid "Confirmed"
-msgstr ""
+msgstr "Potrjeno"
 
 #. module: crm
 #: model:ir.model,name:crm.model_crm_partner_binding
@@ -2352,12 +2365,12 @@ msgstr ""
 #. module: crm
 #: view:crm.phonecall:0
 msgid "Confirm"
-msgstr ""
+msgstr "Potrditev"
 
 #. module: crm
 #: view:crm.lead:0
 msgid "Unread messages"
-msgstr ""
+msgstr "Neprebrana sporočila"
 
 #. module: crm
 #: field:crm.phonecall.report,section_id:0
@@ -2374,7 +2387,7 @@ msgstr ""
 #: field:crm.lead,message_follower_ids:0
 #: field:crm.phonecall,message_follower_ids:0
 msgid "Followers"
-msgstr ""
+msgstr "Sledilci"
 
 #. module: crm
 #: model:ir.actions.act_window,help:crm.crm_case_category_act_leads_all
@@ -2472,7 +2485,7 @@ msgstr ""
 #. module: crm
 #: view:res.partner:0
 msgid "Calls"
-msgstr ""
+msgstr "Klici"
 
 #. module: crm
 #: field:crm.case.stage,on_change:0
@@ -2487,7 +2500,7 @@ msgstr ""
 #. module: crm
 #: model:crm.case.stage,name:crm.stage_lead3
 msgid "Qualification"
-msgstr ""
+msgstr "Usposobljenost"
 
 #. module: crm
 #: field:crm.lead2opportunity.partner,name:0
@@ -2515,7 +2528,7 @@ msgstr ""
 #: selection:crm.lead.report,deadline_month:0
 #: selection:crm.phonecall.report,month:0
 msgid "August"
-msgstr ""
+msgstr "Avgust"
 
 #. module: crm
 #: model:mail.message.subtype,name:crm.mt_lead_lost
@@ -2533,7 +2546,7 @@ msgstr ""
 #: selection:crm.lead.report,deadline_month:0
 #: selection:crm.phonecall.report,month:0
 msgid "December"
-msgstr ""
+msgstr "December"
 
 #. module: crm
 #: view:crm.phonecall:0
@@ -2569,13 +2582,13 @@ msgstr ""
 #. module: crm
 #: model:ir.actions.client,name:crm.action_client_crm_menu
 msgid "Open Sale Menu"
-msgstr ""
+msgstr "Odpri meni prodaje"
 
 #. module: crm
 #: field:crm.lead,date_open:0
 #: field:crm.phonecall,date_open:0
 msgid "Opened"
-msgstr ""
+msgstr "Odprto"
 
 #. module: crm
 #: view:crm.case.section:0
@@ -2630,7 +2643,7 @@ msgstr ""
 #: model:ir.model,name:crm.model_crm_meeting
 #: model:process.node,name:crm.process_node_meeting0
 msgid "Meeting"
-msgstr ""
+msgstr "Sestanek"
 
 #. module: crm
 #: model:ir.model,name:crm.model_crm_case_categ
@@ -2653,7 +2666,7 @@ msgstr "Navadno"
 #. module: crm
 #: field:crm.lead,street2:0
 msgid "Street2"
-msgstr ""
+msgstr "Ulica 2"
 
 #. module: crm
 #: field:sale.config.settings,module_crm_helpdesk:0
@@ -2669,14 +2682,14 @@ msgstr ""
 #: field:crm.lead.report,user_id:0
 #: field:crm.phonecall.report,user_id:0
 msgid "User"
-msgstr ""
+msgstr "Uporabnik"
 
 #. module: crm
 #: selection:crm.lead.report,creation_month:0
 #: selection:crm.lead.report,deadline_month:0
 #: selection:crm.phonecall.report,month:0
 msgid "November"
-msgstr ""
+msgstr "November"
 
 #. module: crm
 #: view:crm.lead.report:0
@@ -2689,12 +2702,12 @@ msgstr ""
 #: selection:crm.lead.report,deadline_month:0
 #: selection:crm.phonecall.report,month:0
 msgid "January"
-msgstr ""
+msgstr "Januar"
 
 #. module: crm
 #: model:process.process,name:crm.process_process_contractprocess0
 msgid "Contract"
-msgstr ""
+msgstr "Pogodba"
 
 #. module: crm
 #: model:crm.case.resource.type,name:crm.type_lead4
@@ -2766,7 +2779,7 @@ msgstr ""
 #. module: crm
 #: view:crm.lead:0
 msgid "at"
-msgstr ""
+msgstr "na"
 
 #. module: crm
 #: model:crm.case.stage,name:crm.stage_lead1
@@ -2775,12 +2788,12 @@ msgstr ""
 #: selection:crm.lead,state:0
 #: view:crm.lead.report:0
 msgid "New"
-msgstr ""
+msgstr "Novo"
 
 #. module: crm
 #: field:crm.lead,function:0
 msgid "Function"
-msgstr ""
+msgstr "Funkcija"
 
 #. module: crm
 #: field:crm.case.section,note:0
@@ -2794,7 +2807,6 @@ msgstr "Opis"
 #: field:crm.case.resource.type,section_id:0
 #: view:crm.case.section:0
 #: field:crm.case.section,name:0
-#: view:crm.lead:0
 #: field:crm.lead,section_id:0
 #: view:crm.lead.report:0
 #: field:crm.lead.report,section_id:0
@@ -2807,14 +2819,14 @@ msgstr "Opis"
 #: field:crm.phonecall2phonecall,section_id:0
 #: field:res.partner,section_id:0
 msgid "Sales Team"
-msgstr ""
+msgstr "Prodajna ekipa"
 
 #. module: crm
 #: selection:crm.lead.report,creation_month:0
 #: selection:crm.lead.report,deadline_month:0
 #: selection:crm.phonecall.report,month:0
 msgid "May"
-msgstr ""
+msgstr "Maj"
 
 #. module: crm
 #: model:ir.actions.act_window,help:crm.crm_case_channel_action
@@ -2836,7 +2848,7 @@ msgstr ""
 #. module: crm
 #: view:crm.lead:0
 msgid "Internal Notes"
-msgstr ""
+msgstr "Interni zaznamki"
 
 #. module: crm
 #: view:crm.lead:0
@@ -2851,7 +2863,7 @@ msgstr ""
 #. module: crm
 #: field:crm.lead,street:0
 msgid "Street"
-msgstr ""
+msgstr "Ulica"
 
 #. module: crm
 #: field:crm.lead,referred:0
@@ -2866,22 +2878,24 @@ msgstr ""
 #. module: crm
 #: field:crm.case.section,working_hours:0
 msgid "Working Hours"
-msgstr ""
+msgstr "Delovne ure"
 
 #. module: crm
+#: code:addons/crm/crm_lead.py:968
 #: view:crm.lead:0
 #: field:crm.lead2opportunity.partner,partner_id:0
 #: field:crm.lead2opportunity.partner.mass,partner_id:0
 #: field:crm.partner.binding,partner_id:0
+#, python-format
 msgid "Customer"
-msgstr ""
+msgstr "Kupec"
 
 #. module: crm
 #: selection:crm.lead.report,creation_month:0
 #: selection:crm.lead.report,deadline_month:0
 #: selection:crm.phonecall.report,month:0
 msgid "February"
-msgstr ""
+msgstr "Februar"
 
 #. module: crm
 #: view:crm.phonecall:0
@@ -2890,21 +2904,23 @@ msgstr ""
 
 #. module: crm
 #: model:crm.case.stage,name:crm.stage_lead8
+#: view:crm.lead:0
 msgid "Lost"
 msgstr ""
 
 #. module: crm
-#: code:addons/crm/wizard/crm_lead_to_opportunity.py:97
+#: code:addons/crm/wizard/crm_lead_to_opportunity.py:89
 #, python-format
 msgid "Closed/Cancelled leads cannot be converted into opportunities."
 msgstr ""
 
 #. module: crm
+#: view:crm.lead:0
 #: field:crm.lead,country_id:0
 #: view:crm.lead.report:0
 #: field:crm.lead.report,country_id:0
 msgid "Country"
-msgstr ""
+msgstr "Država"
 
 #. module: crm
 #: view:crm.lead:0
@@ -2912,7 +2928,7 @@ msgstr ""
 #: view:crm.lead2opportunity.partner.mass:0
 #: view:crm.phonecall:0
 msgid "Convert to Opportunity"
-msgstr ""
+msgstr "Spremeni v priložnost"
 
 #. module: crm
 #: help:crm.phonecall,email_from:0
@@ -2924,7 +2940,7 @@ msgstr ""
 #: selection:crm.lead.report,deadline_month:0
 #: selection:crm.phonecall.report,month:0
 msgid "April"
-msgstr ""
+msgstr "April"
 
 #. module: crm
 #: field:crm.case.resource.type,name:0
@@ -2934,7 +2950,7 @@ msgstr ""
 #. module: crm
 #: view:crm.segmentation:0
 msgid "Profiling"
-msgstr ""
+msgstr "Profiliranje"
 
 #. module: crm
 #: model:ir.model,name:crm.model_crm_phonecall_report
@@ -2944,7 +2960,7 @@ msgstr ""
 #. module: crm
 #: model:crm.case.stage,name:crm.stage_lead5
 msgid "Negotiation"
-msgstr ""
+msgstr "Pogajanja"
 
 #. module: crm
 #: model:ir.model,name:crm.model_crm_phonecall2phonecall
@@ -2977,7 +2993,7 @@ msgstr ""
 #: view:crm.phonecall.report:0
 #: field:crm.phonecall.report,name:0
 msgid "Year"
-msgstr ""
+msgstr "Leto"
 
 #. module: crm
 #: model:crm.case.resource.type,name:crm.type_lead8
