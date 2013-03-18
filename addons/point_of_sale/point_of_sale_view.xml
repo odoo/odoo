@@ -772,6 +772,7 @@
                         <group>
                         <field name="name"/>
                         <field name="shop_id" widget="selection" groups="stock.group_locations" />
+                        <field name="currency_id"/>
                         <field name="journal_id" widget="selection" />
                         <field name="sequence_id" readonly="1" groups="base.group_no_one" />
                         <field name="group_by" groups="account.group_account_user"  />
@@ -894,6 +895,7 @@
                             <field name="cash_control" invisible="1" />
                             <group>
                                 <field name="user_id"/>
+                                <field name="currency_id"/>
                                 <field name="config_id"/>
                             </group>
                             <group>
@@ -922,9 +924,9 @@
 
                             <div attrs="{'invisible' : [('cash_control', '=', False)]}">
                                 <group class="oe_subtotal_footer oe_right">
-                                    <field name="cash_register_balance_start" readonly="1" string="Opening Balance" class="oe_subtotal_footer_separator"/>
-                                    <field name="cash_register_total_entry_encoding"  attrs="{'invisible' : [('state', '=', 'opening_control')]}" string="+ Transactions"/>
-                                    <field name="cash_register_balance_end" attrs="{'invisible' : [('state', '=', 'opening_control')]}" string="= Computed Balance"/>
+                                    <field name="cash_register_balance_start" readonly="1" string="Opening Balance" class="oe_subtotal_footer_separator" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                                    <field name="cash_register_total_entry_encoding"  attrs="{'invisible' : [('state', '=', 'opening_control')]}" string="+ Transactions" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                                    <field name="cash_register_balance_end" attrs="{'invisible' : [('state', '=', 'opening_control')]}" string="= Computed Balance" widget="monetary" options="{'currency_field': 'currency_id'}"/>
                                 </group>
                                 <div class="oe_clear"/>
                                 <div attrs="{'invisible' : ['|', ('cash_journal_id', '=', False), ('state', '!=', 'opening_control')]}" class="oe_view_nocontent" groups="point_of_sale.group_pos_manager">
@@ -938,8 +940,8 @@
 
 
                             <group class="oe_subtotal_footer oe_right" attrs="{'invisible': ['|', ('cash_control', '=', False), ('state', '=', 'opening_control')]}">
-                                <field name="cash_register_balance_end_real" string="Closing Balance" class="oe_subtotal_footer_separator"/>
-                                <field name="cash_register_difference"  class="oe_subtotal_footer_separator"/>
+                                <field name="cash_register_balance_end_real" string="Closing Balance" class="oe_subtotal_footer_separator" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                                <field name="cash_register_difference"  class="oe_subtotal_footer_separator" widget="monetary" options="{'currency_field': 'currency_id'}"/>
                             </group>
                         </group>
 
