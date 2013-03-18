@@ -901,7 +901,7 @@
         </record>
 
         <record model="account.account.template" id="p121102009">
-            <field name="name">Output Vat @4%</field>
+            <field name="name">Output Vat 4%</field>
             <field name="code">121102009</field>
             <field name="type">other</field>
             <field name="user_type" ref="account.data_account_type_liability"/>
@@ -909,7 +909,7 @@
         </record>
 
         <record model="account.account.template" id="p121102008">
-            <field name="name">Output Adi. Vat @1%</field>
+            <field name="name">Output Adi. Vat 1%</field>
             <field name="code">121102008</field>
             <field name="type">other</field>
             <field name="user_type" ref="account.data_account_type_liability"/>
@@ -951,6 +951,30 @@
         <record model="account.account.template" id="p121102011">
             <field name="name">Cst 2% on Purchase - New</field>
             <field name="code">121102011</field>
+            <field name="type">other</field>
+            <field name="user_type" ref="account.data_account_type_liability"/>
+            <field name="parent_id" ref=""/>
+        </record>
+
+        <record model="account.account.template" id="p121102017">
+            <field name="name">CST 2% on Sales - CT3 Against Form C</field>
+            <field name="code">121102017</field>
+            <field name="type">other</field>
+            <field name="user_type" ref="account.data_account_type_liability"/>
+            <field name="parent_id" ref=""/>
+        </record>
+
+        <record model="account.account.template" id="p121102018">
+            <field name="name">Output Vat 4% on Sales - CT3</field>
+            <field name="code">121102018</field>
+            <field name="type">other</field>
+            <field name="user_type" ref="account.data_account_type_liability"/>
+            <field name="parent_id" ref=""/>
+        </record>
+
+        <record model="account.account.template" id="p121102019">
+            <field name="name">Output Adi. Vat 1% Sales CT3</field>
+            <field name="code">121102019</field>
             <field name="type">other</field>
             <field name="user_type" ref="account.data_account_type_liability"/>
             <field name="parent_id" ref=""/>
