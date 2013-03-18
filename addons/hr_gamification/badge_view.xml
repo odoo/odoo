@@ -29,7 +29,7 @@
             <field name="inherit_id" ref="hr.view_employee_form"/>
             <field name="arch" type="xml">
             <xpath expr="//page[@string='Public Information']" position="before">
-                <page string="Public Profile">
+                <page string="Badges">
                     <field name="badge_ids" widget="many2many_kanban" />
                 </page>
             </xpath>

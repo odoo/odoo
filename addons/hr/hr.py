@@ -299,7 +299,7 @@ class hr_employee(osv.osv):
                     res = super(hr_employee, self).message_post(cr, uid, employee_id, context=context, **kwargs)
                 return res
             else:
-                raise osv.except_osv('Warning!', 'You need to be an employee to send messages to your followers.')
+                raise osv.except_osv('Warning!', 'Your user is not linked to an employee form, which is required to send messages to your followers.')
 
         # if no overwrite, send message as usual
         return super(hr_employee, self).message_post(cr, uid, thread_id, context=context, **kwargs)

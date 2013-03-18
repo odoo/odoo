@@ -63,17 +63,17 @@
             <field name="model">gamification.badge</field>
             <field name="arch" type="xml">
                 <form string="Badge" version="7.0">
+                    <header>
+                        <button string="Send this Badge" type="action" name="%(action_grant_wizard)d" class="oe_highlight" attrs="{'invisible': [
+                            '|',
+                                ('rule_auth', '=', 'nobody'),
+                                '&amp;',
+                                    ('rule_max', '=', True),
+                                    ('stat_this_month', '&gt;=', 'rule_max_number')
+                            ]}" />
+                        <button string="Check Badge" type="object" name="check_automatic" groups="base.group_no_one" />
+                    </header>
                     <sheet>
-                        <div class="oe_right oe_button_box">
-                            <button string="Send this Badge" type="action" name="%(action_grant_wizard)d" class="oe_highlight" attrs="{'invisible': [
-                                '|',
-                                    ('rule_auth', '=', 'nobody'),
-                                    '&amp;',
-                                        ('rule_max', '=', True),
-                                        ('stat_this_month', '&gt;=', 'rule_max_number')
-                                ]}" />
-                            <button string="Check Badge" type="object" name="check_automatic" groups="base.group_no_one" />
-                        </div>
                         <field name="image" widget='image' class="oe_left oe_avatar"/>
                         <div class="oe_title">
                             <label for="name" class="oe_edit_only"/>
@@ -119,6 +119,8 @@
                     <field name="description"/>
                     <field name="image"/>
                     <field name="stat_my"/>
+                    <field name="stat_count"/>
+                    <field name="stat_count_distinct"/>
                     <templates>
                         <t t-name="kanban-box">
                             <div tclass="oe_kanban_card oe_kanban_global_click oe_kanban_goal oe_kanban_color_white">
@@ -126,10 +128,22 @@
                                     <div class="oe_kanban_left">
                                         <a type="open"><img t-att-src="kanban_image('gamification.badge', 'image', record.image.raw_value)" t-att-title="record.name.value" width="24" height="24" /></a>
                                     </div>
-                                    <h4><a type="open"><field name="name"/></a></h4>
+                                    <h4>
+                                        <a type="open"><field name="name"/></a>
+                                        <t t-if="record.stat_my.value"><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABmJLR0QA/wD/AP+gvaeTAAAACXBI
+WXMAAAsTAAALEwEAmpwYAAAAB3RJTUUH3QMSCREbCamR5gAAAXhJREFUOMuV0z9rlEEQBvDf7htF
+FIwQBCvRQuFAJSJooY29VrH0E1hcCqNign8SYzAxRfTA0nyAg3wBK1GCKSwTK8G7j6AgiHl3LbLm
+wOQu8Wl2mZ15Zp6ZnWC/GMcrjBvBdTRkX4P/QdNZrGKkWN7sn+CuE5IvsqOyKFnRMhb3DJwsZ2VV
+5ZgoCt5qGdsyD8ITzGJSW3BVkAUdlZsu++0T/SU8xxQeuyj7LKEWJKcs6Px16y9harv0NVEQBZWm
+BR33e26Dm/hMW3BLLUvW/XJBlM31XIZMlNsi7pWa5jGjIbiBXBLd8UL+N0e0WIInvMNp8+Wltqx2
+SBJk06Z98HRnkUHTOZWPomEVojOiUZV26foP2XkHdD3aSRBxXDIsSRKyddmyGklQa5vRtbl7mypr
+vrnisOBa0TuEgyBhziXwfneCrTG+9kDSkgQJSbaJ2ix42H9QYXvTakdEG4KThfanoKHS9XIvgt7K
+jspW8F2wIbhtSRr0Vf4AD6Nod0TaN4kAAAAASUVORK5CYII=" alt="got-it" /></t>
+                                    </h4>
                                     <t t-if="record.description.value">
                                         <em><field name="description"/></em>
                                     </t>
+                                    <p>Granted <t t-esc="record.stat_count.raw_value" />x (<t t-esc="record.stat_count_distinct.raw_value"/> pers.)</p>
                                 </div>
                             </div>
                         </t>
