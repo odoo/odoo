@@ -502,12 +502,15 @@ openerp.web.pyeval = function (instance) {
         return py.PY_call(py.PY_getAttr(d, 'strftime'), [args.format]);
     });
 
+    var args = _.map(('year month day hour minute second microsecond '
+                    + 'years months weeks days hours minutes secondes microseconds '
+                    + 'weekday leakdays yearday nlyearday').split(' '), function (arg) {
+        return [arg, null]
+    });
+    args.unshift('*');
     var relativedelta = py.type('relativedelta', null, {
         __init__: function () {
-            this.ops = py.PY_parseArgs(arguments,
-                '* year month day hour minute second microsecond '
-                + 'years months weeks days hours minutes secondes microseconds '
-                + 'weekday leakdays yearday nlyearday');
+            this.ops = py.PY_parseArgs(arguments, args);
         },
         __add__: function (other) {
             if (!py.PY_isInstance(other, datetime.date)) {
