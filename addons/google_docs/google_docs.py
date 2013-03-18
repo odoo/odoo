@@ -111,7 +111,7 @@ class google_docs_ir_attachment(osv.osv):
 #                'title': title,
 #                'url': gdocs_resource.get_alternate_link().href}
 
-    def copy_gdoc(self, cr, uid, res_model, res_id, name_gdocs,name, gdoc_template_id, context=None):
+    def copy_gdoc(self, cr, uid, res_model, res_id, name_gdocs, gdoc_template_id, context=None):
         '''
         copy an existing document in google docs
            :param res_model: the object for which the google doc is created
@@ -134,7 +134,7 @@ class google_docs_ir_attachment(osv.osv):
             'res_model': res_model,
             'res_id': res_id,
             'type': 'url',
-            'name': name,
+            'name': name_gdocs,
             'url': copy_resource.get_alternate_link().href
         }, context=context)
         return copy_resource.resource_id.text
@@ -190,21 +190,23 @@ class google_docs_ir_attachment(osv.osv):
         # check if a model is configured with a template
         if config_ids:
             name_gdocs = action.name_template
-            print 'name_gdocss',name_gdocs
             try:
+                name_gdocs = name_gdocs % model_fields_dic
                 if name_gdocs.find('model')!=-1:
                     name_gdocs = name_gdocs.replace('model',action.model_id.name)
                 if name_gdocs.find('filter')!=-1:
-                    name_gdocs = name_gdocs.replace('filter',action.filter_id.name)
-                name_gdocs = name_gdocs % model_fields_dic
+                    if action.filter_id:
+                        name_gdocs = name_gdocs.replace('filter',action.filter_id.name)
+                    else:
+                        name_gdocs = name_gdocs.replace('_filter',"")
             except:
                 raise osv.except_osv(_('Key Error!'), _("Your Google Doc Name Pattern's key does not found in object."))
         
-        attach_ids = self.search(cr, uid, [('res_model','=',res_model),('name','=',action.name),('res_id','=',res_id)])
+        attach_ids = self.search(cr, uid, [('res_model','=',res_model),('name','=',name_gdocs),('res_id','=',res_id)])
         if not attach_ids: 
             google_template_id = action.gdocs_resource_id
-            self.copy_gdoc(cr, uid, action.model_id.model, res_id, name_gdocs, action.name, google_template_id, context=context)
-            attach_ids = self.search(cr, uid, [('res_model','=',res_model),('name','=',action.name),('res_id','=',res_id)])
+            self.copy_gdoc(cr, uid, action.model_id.model, res_id, name_gdocs, google_template_id, context=context)
+            attach_ids = self.search(cr, uid, [('res_model','=',res_model),('name','=',name_gdocs),('res_id','=',res_id)])
         attachments =  self.browse(cr, uid, attach_ids, context)[0]
         attachment['url'] = attachments.url
         return attachment
