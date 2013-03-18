@@ -37,8 +37,12 @@ class gamification_badge_user(osv.Model):
 
     _columns = {
         'user_id': fields.many2one('res.users', string="User", required=True),
-        'badge_id': fields.many2one('gamification.badge', string='Badge'),
+        'badge_id': fields.many2one('gamification.badge', string='Badge', required=True),
         'comment': fields.text('Comment'),
+
+        'badge_name': fields.related('badge_id', 'name', type="char", string="Badge Name"),
+        'create_date': fields.datetime('Created', readonly=True),
+        'create_uid':  fields.many2one('res.users', 'Creator', readonly=True),
     }
 
 
@@ -196,14 +200,13 @@ result = pool.get('res.users').search(cr, uid, domain=[], context=context)""",
 
         res = None
         for badge_user in self.pool.get('gamification.badge.user').browse(cr, uid, badge_user_ids, context=context):
-            values = {'badge': badge}
+            values = {'badge_user': badge_user}
 
             if user_from:
                 values['user_from'] = user_from
             else:
                 values['user_from'] = False
             body_html = template_env.get_template('badge_received.mako').render(values)
-            context['badge_user'] = badge_user
             res = self.message_post(cr, uid, 0,
                                     body=body_html,
                                     partner_ids=[(4, badge_user.user_id.partner_id.id)],
