@@ -321,9 +321,9 @@ instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListVi
                             .appendTo($this.empty())
                             .click(function (e) {e.stopPropagation();})
                             .append('<option value="80">80</option>' +
-                                    '<option value="100">100</option>' +
                                     '<option value="200">200</option>' +
                                     '<option value="500">500</option>' +
+                                    '<option value="2000">2000</option>' +
                                     '<option value="NaN">' + _t("Unlimited") + '</option>')
                             .change(function () {
                                 var val = parseInt($select.val(), 10);

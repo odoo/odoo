@@ -107,6 +107,12 @@ formatted differently). If an input *may* fetch multiple completion
 items, it *should* prefix those with a section title using its own
 name. This has no technical consequence but is clearer for users.
 
+.. note::
+
+    If a field is :js:func:`invisible
+    <openerp.web.search.Input.visible>`, its completion function will
+    *not* be called.
+
 Providing drawer/supplementary UI
 +++++++++++++++++++++++++++++++++
 
@@ -144,6 +150,11 @@ started only once (per view).
 .. todo:: handle filters and filter groups via a "driver" input which
           dynamically collects, lays out and renders filters? =>
           exercises drawer thingies
+
+.. note::
+
+    An :js:func:`invisible <openerp.web.search.Input.visible>` input
+    will not be inserted into the drawer.
 
 Converting from facet objects
 +++++++++++++++++++++++++++++
