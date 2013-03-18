@@ -75,6 +75,7 @@ class hr_grant_badge_wizard(osv.TransientModel):
     }
 
     def action_grant_badge(self, cr, uid, ids, context=None):
+        """Wizard action for sending a badge to a chosen employee"""
         if context is None:
             context = {}
 
@@ -84,6 +85,9 @@ class hr_grant_badge_wizard(osv.TransientModel):
         for wiz in self.browse(cr, uid, ids, context=context):
             if not wiz.user_id:
                 raise osv.except_osv(_('Warning!'), _('You can send badges only to employees linked to a user.'))
+
+            if uid == wiz.user_id.id:
+                raise osv.except_osv(_('Warning!'), _('You can not send a badge to yourself'))
 
             if badge_obj.can_grant_badge(cr, uid,
                                          user_from_id=uid,

@@ -2,6 +2,8 @@
 <openerp>
     <data>
 
+        <!-- Wizard -->
+
         <record id="gamification.view_badge_wizard_grant" model="ir.ui.view">
             <field name="name">Grant Badge Employee Form</field>
             <field name="model">gamification.badge.user.wizard</field>
@@ -24,16 +26,49 @@
         <menuitem id="gamification_badge_menu_hr" parent="hr.menu_hr_main" action="gamification.badge_list_action" groups="gamification.group_goal_user" />
 
 
+        <record id="gamification.view_badge_wizard_reward" model="ir.ui.view">
+            <field name="name">Reward Employee Badge Form</field>
+            <field name="model">gamification.badge.user.wizard</field>
+            <field name="arch" type="xml">
+                <form string="Reward Employee with" version="7.0">
+                    Select the badge that the employee will receive
+                    <group>
+                        <field name="employee_id" invisible="1" />
+                        <field name="badge_id" />
+                        <field name="comment" />
+                    </group>
+                    <footer>
+                        <button string="Reward Employee" type="object" name="action_grant_badge" class="oe_highlight" /> or
+                        <button string="Cancel" special="cancel" class="oe_link"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <act_window domain="[]" id="action_reward_wizard"
+            name="Reward Employee"
+            target="new"
+            res_model="gamification.badge.user.wizard"
+            context="{'default_employee_id': active_id, 'employee_id': active_id}"
+            view_type="form" view_mode="form"/>
+
+
+
+        <!-- HR Employee -->
+
         <record id="hr_hr_employee_view_form" model="ir.ui.view">
             <field name="name">hr.hr.employee.view.form</field>
             <field name="model">hr.employee</field>
             <field name="inherit_id" ref="hr.view_employee_form"/>
             <field name="arch" type="xml">
-            <xpath expr="//page[@string='Public Information']" position="before">
-                <page string="Received Badges">
-                    <field name="badge_ids" widget="many2many_kanban" />
-                </page>
-            </xpath>
+                <xpath expr="//div[@name='button_box']" position="inside">
+                    <button string="Send Reward" type="action" name="%(action_reward_wizard)d" />
+                </xpath>
+                <xpath expr="//page[@string='Public Information']" position="before">
+                    <page string="Received Badges">
+                        <field name="badge_ids" widget="many2many_kanban" />
+                    </page>
+                </xpath>
             </field>
         </record>
     </data>

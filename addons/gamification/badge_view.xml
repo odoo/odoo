@@ -177,9 +177,9 @@ jspW8F2wIbhtSRr0Vf4AD6Nod0TaN4kAAAAASUVORK5CYII=" alt="got-it" /></t>
                                         <a type="open"><t t-esc="record.badge_name.raw_value" /></a>
                                     </h4>
                                     <t t-if="record.comment.raw_value">
-                                        <em><field name="comment"/></em>
+                                        <p><em><field name="comment"/></em></p>
                                     </t>
-                                    Sent by <a type="open"><field name="create_uid" /> the <t t-esc="record.create_date.raw_value.toString(Date.CultureInfo.formatPatterns.shortDate)" /></a>
+                                    <p>Sent by <a type="open"><field name="create_uid" /></a> the <t t-esc="record.create_date.raw_value.toString(Date.CultureInfo.formatPatterns.shortDate)" /></p>
                                 </div>
                             </div>
                         </t>
