@@ -1,12 +1,15 @@
 # -*- coding: utf-8 -*-
 
+import base64
 import contextlib
 import logging
+import os
 import threading
 import traceback
 
 from openerp import SUPERUSER_ID
 import openerp.pooler
+import openerp.release
 import openerp.sql_db
 import openerp.tools
 
@@ -342,7 +345,7 @@ def exp_server_version():
     """ Return the version of the server
         Used by the client to verify the compatibility with its own version
     """
-    return release.version
+    return openerp.release.version
 
 def exp_migrate_databases(databases):
     for db in databases:
