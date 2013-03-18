@@ -77,7 +77,7 @@ class fleet_vehicle_cost(osv.Model):
         'name': fields.function(_cost_name_get_fnc, type="char", string='Name', store=True),
         'vehicle_id': fields.many2one('fleet.vehicle', 'Vehicle', required=True, help='Vehicle concerned by this log'),
         'cost_subtype_id': fields.many2one('fleet.service.type', 'Type', help='Cost type purchased with this cost'),
-        'amount': fields.float('Total Price'),
+        'amount': fields.float('Total Price', help="Cost that is paid only once at the creation of the contract"),
         'cost_type': fields.selection([('contract', 'Contract'), ('services','Services'), ('fuel','Fuel'), ('other','Other')], 'Category of the cost', help='For internal purpose only', required=True),
         'parent_id': fields.many2one('fleet.vehicle.cost', 'Parent', help='Parent cost to this current cost'),
         'cost_ids': fields.one2many('fleet.vehicle.cost', 'parent_id', 'Included Services'),
@@ -394,7 +394,7 @@ class fleet_vehicle(osv.Model):
     def create(self, cr, uid, data, context=None):
         vehicle_id = super(fleet_vehicle, self).create(cr, uid, data, context=context)
         vehicle = self.browse(cr, uid, vehicle_id, context=context)
-        self.message_post(cr, uid, [vehicle_id], body=_('Vehicle %s has been added to the fleet!') % (vehicle.license_plate), context=context)
+        self.message_post(cr, uid, [vehicle_id], body=_('%s %s has been added to the fleet!') % (vehicle.model_id.name,vehicle.license_plate), context=context)
         return vehicle_id
 
     def write(self, cr, uid, ids, vals, context=None):
