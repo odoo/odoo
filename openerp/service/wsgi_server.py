@@ -42,7 +42,6 @@ import werkzeug.serving
 import werkzeug.contrib.fixers
 
 import openerp
-import openerp.modules
 import openerp.tools.config as config
 import websrv_lib
 
