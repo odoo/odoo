@@ -1282,6 +1282,7 @@ instance.web.View = instance.web.Widget.extend({
                 "view_id": this.view_id,
                 "view_type": this.view_type,
                 "toolbar": !!this.options.$sidebar,
+                "context": this.dataset.get_context(),
             });
         }
         return view_loaded_def.then(function(r) {
@@ -1496,7 +1497,7 @@ instance.web.fields_view_get = function(args) {
     if (typeof model === 'string') {
         model = new instance.web.Model(args.model, args.context);
     }
-    return args.model.call('fields_view_get', [args.view_id, args.view_type, model.context(), args.toolbar]).then(function(fvg) {
+    return args.model.call('fields_view_get', [args.view_id, args.view_type, args.context, args.toolbar]).then(function(fvg) {
         return postprocess(fvg);
     });
 };
