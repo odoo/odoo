@@ -78,7 +78,7 @@ class fetchmail_server(osv.osv):
         'priority': fields.integer('Server Priority', readonly=True, states={'draft':[('readonly', False)]}, help="Defines the order of processing, "
                                                                                                                   "lower values mean higher priority"),
         'message_ids': fields.one2many('mail.mail', 'fetchmail_server_id', 'Messages', readonly=True),
-        'configuration' : fields.text('Configuration'),
+        'configuration' : fields.text('Configuration', readonly=True),
         'script' : fields.char('Script', readonly=True, size=64),
     }
     _defaults = {
@@ -113,7 +113,16 @@ class fetchmail_server(osv.osv):
             conf['model']=r[0]['model']
         values['configuration'] = """Use the below script with the following command line options with your Mail Transport Agent (MTA)
 
-openerp_mailgate.py -u %(uid)d -p PASSWORD -o %(model)s -d %(dbname)s --host=HOSTNAME --port=PORT 
+openerp_mailgate.py --host=HOSTNAME --port=PORT -u %(uid)d -p PASSWORD -d %(dbname)s
+
+Example configuration for the postfix mta running locally:
+
+/etc/postfix/virtual_aliases:
+@youdomain openerp_mailgate@localhost
+
+/etc/aliases:
+openerp_mailgate: "|/path/to/openerp-mailgate.py --host=localhost -u %(uid)d -p PASSWORD -d %(dbname)s"
+
 """ % conf
 
         return {'value':values}

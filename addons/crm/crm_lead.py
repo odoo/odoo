@@ -259,7 +259,9 @@ class crm_lead(base_stage, format_address, osv.osv):
         'channel_id': fields.many2one('crm.case.channel', 'Channel', help="Communication channel (mail, direct, phone, ...)"),
         'contact_name': fields.char('Contact Name', size=64),
         'partner_name': fields.char("Customer Name", size=64,help='The name of the future partner company that will be created while converting the lead into opportunity', select=1),
-        'opt_out': fields.boolean('Opt-Out', oldname='optout', help="If opt-out is checked, this contact has refused to receive emails or unsubscribed to a campaign."),
+        'opt_out': fields.boolean('Opt-Out', oldname='optout',
+            help="If opt-out is checked, this contact has refused to receive emails for mass mailing and marketing campaign. "
+                    "Filter 'Available for Mass Mailing' allows users to filter the leads when performing mass mailing."),
         'type':fields.selection([ ('lead','Lead'), ('opportunity','Opportunity'), ],'Type', help="Type is used to separate Leads and Opportunities"),
         'priority': fields.selection(crm.AVAILABLE_PRIORITIES, 'Priority', select=True),
         'date_closed': fields.datetime('Closed', readonly=True),
@@ -711,7 +713,7 @@ class crm_lead(base_stage, format_address, osv.osv):
             'parent_id': parent_id,
             'phone': lead.phone,
             'mobile': lead.mobile,
-            'email': lead.email_from and tools.email_split(lead.email_from)[0],
+            'email': tools.email_split(lead.email_from) and tools.email_split(lead.email_from)[0] or False,
             'fax': lead.fax,
             'title': lead.title and lead.title.id or False,
             'function': lead.function,
@@ -930,7 +932,7 @@ class crm_lead(base_stage, format_address, osv.osv):
         try:
             compose_form_id = ir_model_data.get_object_reference(cr, uid, 'mail', 'email_compose_message_wizard_form')[1]
         except ValueError:
-            compose_form_id = False 
+            compose_form_id = False
         if context is None:
             context = {}
         ctx = context.copy()
@@ -961,13 +963,22 @@ class crm_lead(base_stage, format_address, osv.osv):
         return [lead.section_id.message_get_reply_to()[0] if lead.section_id else False
                     for lead in self.browse(cr, uid, ids, context=context)]
 
+    def message_get_suggested_recipients(self, cr, uid, ids, context=None):
+        recipients = super(crm_lead, self).message_get_suggested_recipients(cr, uid, ids, context=context)
+        for lead in self.browse(cr, uid, ids, context=context):
+            if lead.partner_id:
+                self._message_add_suggested_recipient(cr, uid, recipients, lead, partner=lead.partner_id, reason=_('Customer'))
+            elif lead.email_from:
+                self._message_add_suggested_recipient(cr, uid, recipients, lead, email=lead.email_from, reason=_('Customer Email'))
+        return recipients
+
     def message_new(self, cr, uid, msg, custom_values=None, context=None):
         """ Overrides mail_thread message_new that is called by the mailgateway
             through message_process.
             This override updates the document according to the email.
         """
-        if custom_values is None: custom_values = {}
-
+        if custom_values is None:
+            custom_values = {}
         desc = html2plaintext(msg.get('body')) if msg.get('body') else ''
         defaults = {
             'name':  msg.get('subject') or _("No Subject"),
@@ -1015,9 +1026,12 @@ class crm_lead(base_stage, format_address, osv.osv):
 
     def schedule_phonecall_send_note(self, cr, uid, ids, phonecall_id, action, context=None):
         phonecall = self.pool.get('crm.phonecall').browse(cr, uid, [phonecall_id], context=context)[0]
-        if action == 'log': prefix = 'Logged'
-        else: prefix = 'Scheduled'
-        message = _("<b>%s a call</b> for the <em>%s</em>.") % (prefix, phonecall.date)
+        if action == 'log':
+            prefix = 'Logged'
+        else:
+            prefix = 'Scheduled'
+        suffix = ' %s' % phonecall.description
+        message = _("%s a call for %s.%s") % (prefix, phonecall.date, suffix)
         return self.message_post(cr, uid, ids, body=message, context=context)
 
     def onchange_state(self, cr, uid, ids, state_id, context=None):
