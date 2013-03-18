@@ -311,8 +311,8 @@ class test_mail_access_rights(TestMailBase):
         user_bert_id, user_raoul_id = self.user_bert_id, self.user_raoul_id
 
         # Prepare groups: Pigs (employee), Jobs (public)
-        pigs_msg_id = self.mail_group.message_post(cr, uid, self.group_pigs_id, body='Message', partner_ids=[(4, self.partner_admin_id)])
-        jobs_msg_id = self.mail_group.message_post(cr, uid, self.group_jobs_id, body='Message', partner_ids=[(4, self.partner_admin_id)])
+        pigs_msg_id = self.mail_group.message_post(cr, uid, self.group_pigs_id, body='Message', partner_ids=[self.partner_admin_id])
+        jobs_msg_id = self.mail_group.message_post(cr, uid, self.group_jobs_id, body='Message', partner_ids=[self.partner_admin_id])
 
         # ----------------------------------------
         # CASE1: Bert, without groups

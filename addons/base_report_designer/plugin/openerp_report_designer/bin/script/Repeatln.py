@@ -166,33 +166,33 @@ class RepeatIn( unohelper.Base, XJobExecutor ):
                     self.sValue= "objects"
                 else:
                     sItem=""
-		    for anObject in self.aObjectList:
-			if anObject[:anObject.find("(")] == sObject:
-			    sItem = anObject
-			    self.insVariable.setText( sItem )
+                    for anObject in self.aObjectList:
+                        if anObject[:anObject.find("(")] == sObject:
+                            sItem = anObject
+                            self.insVariable.setText( sItem )
 
-		    genTree(
-			sItem[sItem.find("(")+1:sItem.find(")")],
-			self.aListRepeatIn,
-			self.insField,
-			self.sMyHost,
-			2,
-			ending=['one2many','many2many'],
-			recur=['one2many','many2many']
-		    )
+                    genTree(
+                        sItem[sItem.find("(")+1:sItem.find(")")],
+                        self.aListRepeatIn,
+                        self.insField,
+                        self.sMyHost,
+                        2,
+                        ending=['one2many','many2many'],
+                        recur=['one2many','many2many']
+                    )
 
                     self.sValue= self.win.getListBoxItem("lstFields",self.aListRepeatIn.index(sFields))
 
             for var in self.aVariableList:
 
-		if var[:8] <> 'List of ':
-		    self.model_ids = self.sock.execute(database, uid, self.password, 'ir.model' ,  'search', [('model','=',var[var.find("(")+1:var.find(")")])])
+                if var[:8] <> 'List of ':
+                    self.model_ids = self.sock.execute(database, uid, self.password, 'ir.model' ,  'search', [('model','=',var[var.find("(")+1:var.find(")")])])
                 else:
-		    self.model_ids = self.sock.execute(database, uid, self.password, 'ir.model' ,  'search', [('model','=',var[8:])])
+                    self.model_ids = self.sock.execute(database, uid, self.password, 'ir.model' ,  'search', [('model','=',var[8:])])
                 fields=['name','model']
                 self.model_res = self.sock.execute(database, uid, self.password, 'ir.model', 'read', self.model_ids,fields)
                 if self.model_res <> []:
-		    if var[:8]<>'List of ':
+                    if var[:8]<>'List of ':
                         self.insVariable.addItem(var[:var.find("(")+1] + self.model_res[0]['name'] + ")" ,self.insVariable.getItemCount())
                     else:
                         self.insVariable.addItem('List of ' + self.model_res[0]['name'] ,self.insVariable.getItemCount())
@@ -212,8 +212,8 @@ class RepeatIn( unohelper.Base, XJobExecutor ):
             self.win.setEditText("txtName", self.sGVariable)
             self.win.setEditText("txtUName",self.sGDisplayName)
         else:
-	    self.win.setEditText("txtName",sMain[sMain.rfind("/")+1:])
-	    self.win.setEditText("txtUName","|-."+sItem[sItem.rfind("/")+1:]+".-|")
+            self.win.setEditText("txtName",sMain[sMain.rfind("/")+1:])
+            self.win.setEditText("txtUName","|-."+sItem[sItem.rfind("/")+1:]+".-|")
 
     def cmbVariable_selected(self, oItemEvent):
 
@@ -225,15 +225,15 @@ class RepeatIn( unohelper.Base, XJobExecutor ):
             self.win.removeListBoxItems("lstFields", 0, self.win.getListBoxItemCount("lstFields"))
             sItem=self.win.getComboBoxText("cmbVariable")
             for var in self.aVariableList:
-		if var[:8]=='List of ':
-		    if var[:8]==sItem[:8]:
+                if var[:8]=='List of ':
+                    if var[:8]==sItem[:8]:
                         sItem = var
-		elif var[:var.find("(")+1] == sItem[:sItem.find("(")+1]:
+                elif var[:var.find("(")+1] == sItem[:sItem.find("(")+1]:
                     sItem = var
             self.aListRepeatIn=[]
 
-	    data = ( sItem[sItem.rfind(" ") + 1:] == docinfo.getUserFieldValue(3) ) and docinfo.getUserFieldValue(3) or sItem[sItem.find("(")+1:sItem.find(")")]
-	    genTree( data, self.aListRepeatIn, self.insField, self.sMyHost, 2, ending=['one2many','many2many'], recur=['one2many','many2many'] )
+            data = ( sItem[sItem.rfind(" ") + 1:] == docinfo.getUserFieldValue(3) ) and docinfo.getUserFieldValue(3) or sItem[sItem.find("(")+1:sItem.find(")")]
+            genTree( data, self.aListRepeatIn, self.insField, self.sMyHost, 2, ending=['one2many','many2many'], recur=['one2many','many2many'] )
 
             self.win.selectListBoxItemPos("lstFields", 0, True )
 
