@@ -13,8 +13,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-01-11 04:36+0000\n"
-"X-Generator: Launchpad (build 16412)\n"
+"X-Launchpad-Export-Date: 2013-03-16 04:58+0000\n"
+"X-Generator: Launchpad (build 16532)\n"
 
 #. module: stock
 #: field:stock.inventory.line.split,line_exist_ids:0
@@ -371,9 +371,9 @@ msgstr ""
 #: code:addons/stock/wizard/stock_partial_picking.py:174
 #: code:addons/stock/wizard/stock_partial_picking.py:181
 #: code:addons/stock/wizard/stock_partial_picking.py:192
-#: code:addons/stock/wizard/stock_return_picking.py:99
-#: code:addons/stock/wizard/stock_return_picking.py:106
-#: code:addons/stock/wizard/stock_return_picking.py:205
+#: code:addons/stock/wizard/stock_return_picking.py:102
+#: code:addons/stock/wizard/stock_return_picking.py:109
+#: code:addons/stock/wizard/stock_return_picking.py:208
 #, python-format
 msgid "Warning!"
 msgstr "Vigyázat!"
@@ -1208,7 +1208,7 @@ msgstr ""
 "egybe legyenek csoportosítva."
 
 #. module: stock
-#: code:addons/stock/wizard/stock_return_picking.py:106
+#: code:addons/stock/wizard/stock_return_picking.py:109
 #, python-format
 msgid ""
 "No products to return (only lines in Done state and not fully returned yet "
@@ -1661,7 +1661,7 @@ msgid "Incoming Shipments already processed"
 msgstr "Beérkező szállítmányok már feldolgozva"
 
 #. module: stock
-#: code:addons/stock/wizard/stock_return_picking.py:99
+#: code:addons/stock/wizard/stock_return_picking.py:102
 #, python-format
 msgid "You may only return pickings that are Confirmed, Available or Done!"
 msgstr ""
@@ -1997,7 +1997,7 @@ msgstr "Termék kategóriák"
 #. module: stock
 #: view:stock.move:0
 msgid "Cancel Availability"
-msgstr "Hozzáférés megszakítása"
+msgstr "Elérhetőség törlése"
 
 #. module: stock
 #: code:addons/stock/wizard/stock_location_product.py:49
@@ -3082,7 +3082,7 @@ msgid "Stock Journal"
 msgstr "Készletnapló"
 
 #. module: stock
-#: code:addons/stock/wizard/stock_return_picking.py:171
+#: code:addons/stock/wizard/stock_return_picking.py:174
 #, python-format
 msgid "%s-%s-return"
 msgstr "%s-%s-vissza"
@@ -3610,7 +3610,7 @@ msgid "Stock"
 msgstr "Készlet"
 
 #. module: stock
-#: code:addons/stock/wizard/stock_return_picking.py:219
+#: code:addons/stock/wizard/stock_return_picking.py:222
 #, python-format
 msgid "Returned Picking"
 msgstr "Visszavételezett kiválogatás"
@@ -4074,6 +4074,7 @@ msgstr "Leltártétel"
 #: field:stock.production.lot,name:0
 #: field:stock.production.lot.revision,lot_id:0
 #: field:stock.report.prodlots,prodlot_id:0
+#: field:stock.return.picking.memory,prodlot_id:0
 msgid "Serial Number"
 msgstr "Szériaszám"
 
@@ -4738,7 +4739,7 @@ msgstr ""
 "                Ez a claim_from_delivery modult telepíti.."
 
 #. module: stock
-#: code:addons/stock/wizard/stock_return_picking.py:205
+#: code:addons/stock/wizard/stock_return_picking.py:208
 #, python-format
 msgid "Please specify at least one non-zero quantity."
 msgstr "Kérem adjon meg legalább egy nem nulla mennyiséget."
