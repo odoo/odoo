@@ -190,7 +190,7 @@ class mail_notification(osv.Model):
             'mail_message_id': msg.id,
             'auto_delete': True,
             'body_html': body_html,
-            'recipient_ids': [(4, id) for id in partners_to_notify]
+            'recipient_ids': [(4, id) for id in notify_partner_ids]
         }
         if msg.email_from:
             mail_values['email_from'] = msg.email_from

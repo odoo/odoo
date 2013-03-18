@@ -20,7 +20,7 @@
 ##############################################################################
 
 from openerp.addons.mail.tests.test_mail_base import TestMailBase
-from openerp.tools.mail import html_sanitize, append_content_to_html
+from openerp.tools.mail import html_sanitize
 
 MAIL_TEMPLATE = """Return-Path: <whatever-2a840@postmaster.twitter.com>
 To: {to}
@@ -312,7 +312,7 @@ class test_mail(TestMailBase):
         self.res_users.write(cr, uid, [uid], {'signature': 'Admin', 'email': 'a@a'})
         # 1 - Bert Tartopoils, with email, should receive emails for comments and emails
         p_b_id = self.res_partner.create(cr, uid, {'name': 'Bert Tartopoils', 'email': 'b@b'})
-        # 2 - Carine Poilvache, with email, should never receive emails
+        # 2 - Carine Poilvache, with email, should receive emails for emails
         p_c_id = self.res_partner.create(cr, uid, {'name': 'Carine Poilvache', 'email': 'c@c', 'notification_email_send': 'email'})
         # 3 - Dédé Grosbedon, without email, to test email verification; should receive emails for every message
         p_d_id = self.res_partner.create(cr, uid, {'name': 'Dédé Grosbedon', 'notification_email_send': 'all'})
@@ -456,7 +456,7 @@ class test_mail(TestMailBase):
         # 2 - Carine Poilvache, with email, should never receive emails
         p_c_id = self.res_partner.create(cr, uid, {'name': 'Carine Poilvache', 'email': 'c@c', 'notification_email_send': 'email'})
         # 3 - Dédé Grosbedon, without email, to test email verification; should receive emails for every message
-        p_d_id = self.res_partner.create(cr, uid, {'name': 'Dédé Grosbedon', 'notification_email_send': 'all'})
+        p_d_id = self.res_partner.create(cr, uid, {'name': 'Dédé Grosbedon', 'email': 'd@d', 'notification_email_send': 'all'})
 
         # Subscribe #1
         group_pigs.message_subscribe([p_b_id])
