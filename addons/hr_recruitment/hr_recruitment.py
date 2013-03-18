@@ -442,6 +442,11 @@ class hr_applicant(base_stage, osv.Model):
 
     def case_close(self, cr, uid, ids, context=None):
         res = super(hr_applicant, self).case_close(cr, uid, ids, context)
+        try:
+            template = self.pool.get('ir.model.data').get_object(cr, uid, 'hr_recruitment', 'email_template_approve_applicant')
+        except ValueError:
+            pass
+        self._get_mail_template(cr, uid, ids, template, context)
         return res
 
     def case_close_with_emp(self, cr, uid, ids, context=None):
@@ -483,8 +488,24 @@ class hr_applicant(base_stage, osv.Model):
         """
         res = super(hr_applicant, self).case_cancel(cr, uid, ids, context)
         self.write(cr, uid, ids, {'probability': 0.0})
+        template = False
+        try:
+            template = self.pool.get('ir.model.data').get_object(cr, uid, 'hr_recruitment', 'email_template_refuse_applicant')
+        except ValueError:
+            pass
+        self._get_mail_template(cr, uid, ids, template, context)
         return res
-
+    
+    def _get_mail_template(self, cr, uid, ids, template, context):
+        mail_obj = self.pool.get('mail.mail')
+        assert template._name == 'email.template'
+        for applications in self.browse(cr, uid, ids, context):
+            if applications.email_from:
+                mail_id = self.pool.get('email.template').send_mail(cr, uid, template.id, applications.id, True, context=context)
+                mail_state = mail_obj.read(cr, uid, mail_id, ['state'], context=context)
+                if mail_state and mail_state['state'] == 'exception':
+                    raise self.pool.get('res.config.settings').get_config_warning(cr, _("Cannot send email: no outgoing email server configured.\nYou can configure it under %(menu:base_setup.menu_general_configuration)s."), context)
+    
     def case_pending(self, cr, uid, ids, context=None):
         """Marks case as pending"""
         res = super(hr_applicant, self).case_pending(cr, uid, ids, context)
