@@ -23,6 +23,8 @@ from openerp import addons
 import logging
 from openerp.osv import fields, osv
 from openerp import tools
+from openerp.tools.translate import _
+
 _logger = logging.getLogger(__name__)
 
 class hr_employee_category(osv.osv):
@@ -216,6 +218,26 @@ class hr_employee(osv.osv):
     _order='name_related'
 
     def create(self, cr, uid, data, context=None):
+        # verify do not have two employee with the same email
+        if 'work_email' in data:
+            user_ids = self.pool.get('res.users').search(cr, uid, [('email', '=', data['work_email'])], context=context)
+            if len(user_ids) > 0:
+                if 'user_id' not in data:
+                    raise osv.except_osv(_('Warning!'), _('You are trying to create an employee with an email already linked to an user. Please linked the employee to it or change the email.'))
+                elif data['user_id'] not in user_ids:
+                    raise osv.except_osv(_('Warning!'), _('You are trying to create an employee with an email different than the one of the linked user.'))
+                # else user and email match
+            else:
+                # employee has an email but not the user
+                # TOCHECK update user ?
+                pass
+        elif 'user_id' in data:
+            user = self.pool.get('res.users').browse(cr, uid, data['user_id'], context=context)
+            if user.email:
+                # employee has no email but the user does
+                # TOCHECK raise error ?
+                pass
+
         employee_id = super(hr_employee, self).create(cr, uid, data, context=context)
         try:
             (model, mail_group_id) = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'mail', 'group_all_employees')
@@ -224,7 +246,8 @@ class hr_employee(osv.osv):
                 body='Welcome to %s! Please help them take the first steps with OpenERP!' % (employee.name),
                 subtype='mail.mt_comment', context=context)
         except:
-            pass # group deleted: do not push a message
+            pass  # group deleted: do not push a message
+
         return employee_id
 
     def unlink(self, cr, uid, ids, context=None):
