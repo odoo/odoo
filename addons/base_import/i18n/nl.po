@@ -14,22 +14,22 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-12-22 06:07+0000\n"
-"X-Generator: Launchpad (build 16378)\n"
+"X-Launchpad-Export-Date: 2013-03-16 05:52+0000\n"
+"X-Generator: Launchpad (build 16532)\n"
 
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/js/import.js:420
+#: code:addons/base_import/static/src/js/import.js:451
 #, python-format
 msgid "Get all possible values"
-msgstr ""
+msgstr "Alle positieve waardes ophalen"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/xml/import.xml:71
 #, python-format
 msgid "Need to import data from an other application?"
-msgstr ""
+msgstr "Wilt u gegevens uit een ander programma importeren?"
 
 #. module: base_import
 #. openerp-web
@@ -47,6 +47,15 @@ msgid ""
 "give \n"
 "                        you an example for Products and their Categories."
 msgstr ""
+"Wanneer u externe Id's gebruikt, kunt CSV bestanden importeren\n"
+"                        met de External ID\" kolom om de externe referentie "
+"\n"
+"                        te definiëren van ieder record da u importeert.\n"
+"                        Vervolgens kunt u referenties maken naar dit record\n"
+"                        zoals bijvoorbeeld \"Field/External ID\". De "
+"navolgende \n"
+"                        twee CSV bestanden geven u een voorbeeld voor \n"
+"                        producten en hun categorieën."
 
 #. module: base_import
 #. openerp-web
@@ -56,13 +65,15 @@ msgid ""
 "How to export/import different tables from an SQL \n"
 "                        application to OpenERP?"
 msgstr ""
+"Hoe exporteer/importeer ik verschillende tabellen van een SQL \n"
+"                        applicatie naar OpenERP?"
 
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/js/import.js:310
+#: code:addons/base_import/static/src/js/import.js:331
 #, python-format
 msgid "Relation Fields"
-msgstr ""
+msgstr "Relatie velden"
 
 #. module: base_import
 #. openerp-web
@@ -72,6 +83,8 @@ msgid ""
 "Country/Database ID: the unique OpenERP ID for a \n"
 "                        record, defined by the ID postgresql column"
 msgstr ""
+"Land/Database ID: de unieke OpenERP ID voor een \n"
+"                        record, gedefinieerd door de postgresql kolom id"
 
 #. module: base_import
 #. openerp-web
@@ -87,6 +100,15 @@ msgid ""
 "\n"
 "                        have a unique Database ID)"
 msgstr ""
+"Gebruik\n"
+"                        Country/Database ID: U dient deze notatie zo min \n"
+"                        mogelijk te gebruiken. Het wordt vaak gebruikt door "
+"programmeurs\n"
+"                        omdat het als voordeel heeft dat je geen conflicten "
+"hebt (je kan \n"
+"                        meerdere records met dezelfde naam hebben, maar ze "
+"hebben altijd\n"
+"                        een unieke database ID)"
 
 #. module: base_import
 #. openerp-web
@@ -96,18 +118,21 @@ msgid ""
 "For the country \n"
 "                        Belgium, you can use one of these 3 ways to import:"
 msgstr ""
+"Voor het land\n"
+"                        België, kunt u deze drie manieren van importeren "
+"gebruiken:"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/xml/import.xml:303
 #, python-format
 msgid "company_1,Bigees,True"
-msgstr ""
+msgstr "company_1,Bigees,True"
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_tests_models_m2o
 msgid "base_import.tests.models.m2o"
-msgstr ""
+msgstr "base_import.tests.models.m2o"
 
 #. module: base_import
 #. openerp-web
@@ -121,13 +146,19 @@ msgid ""
 "companies) TO \n"
 "                        '/tmp/company.csv' with CSV HEADER;"
 msgstr ""
+"kopie\n"
+"                        (select 'company_'||id as \"External "
+"ID\",company_name \n"
+"                        as \"Name\",'True' as \"Is a Company\" from "
+"companies) TO \n"
+"                        '/tmp/company.csv' with CSV HEADER;"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/xml/import.xml:206
 #, python-format
 msgid "CSV file for Manufacturer, Retailer"
-msgstr ""
+msgstr "CSV bestand voor fabrikant, groothandel"
 
 #. module: base_import
 #. openerp-web
@@ -139,20 +170,24 @@ msgid ""
 "\n"
 "                        data from a third party application."
 msgstr ""
+"Gebruik\n"
+"                        Land/Externe ID: Gebruik externe ID wanneer u data "
+"importeert\n"
+"                        vanuit een andere applicatie."
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/xml/import.xml:316
 #, python-format
 msgid "person_1,Fabien,False,company_1"
-msgstr ""
+msgstr "person_1,Fabien,False,company_1"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/xml/import.xml:80
 #, python-format
 msgid "XXX/External ID"
-msgstr ""
+msgstr "XXX/Externe ID"
 
 #. module: base_import
 #. openerp-web
@@ -166,7 +201,7 @@ msgstr "Niet importeren"
 #: code:addons/base_import/static/src/xml/import.xml:24
 #, python-format
 msgid "Select the"
-msgstr "Selecteer de"
+msgstr "Selecteer het"
 
 #. module: base_import
 #. openerp-web
@@ -181,13 +216,18 @@ msgid ""
 "\n"
 "                        See the following question."
 msgstr ""
+"Merk op dat indien uw CSV bestand \n"
+"                        een tab heeft als scheidingsteken, OpenERP de\n"
+"                        scheidingsteken niet kan waarnemen. U dient het \n"
+"                        bestandsformaat aan te passen in uw spreadsheet. \n"
+"                        programma. Zie ook de volgende vraag."
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/xml/import.xml:141
 #, python-format
 msgid "Country: the name or code of the country"
-msgstr ""
+msgstr "Land: de naam of code van het land"
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_tests_models_o2m_child
@@ -199,7 +239,7 @@ msgstr "base_import.tests.models.o2m.child"
 #: code:addons/base_import/static/src/xml/import.xml:239
 #, python-format
 msgid "Can I import several times the same record?"
-msgstr ""
+msgstr "Kan ik meerdere maken hetzelfde record importeren."
 
 #. module: base_import
 #. openerp-web
@@ -213,7 +253,7 @@ msgstr "Bevestigen"
 #: code:addons/base_import/static/src/xml/import.xml:55
 #, python-format
 msgid "Map your data to OpenERP"
-msgstr ""
+msgstr "Koppel uw gegevens aan OpenERP"
 
 #. module: base_import
 #. openerp-web
@@ -224,6 +264,10 @@ msgid ""
 "                        the easiest way when your data come from CSV files \n"
 "                        that have been created manually."
 msgstr ""
+"Gebruik land: Dit is\n"
+"                       de makkelijkste weg wanneer uw gegevens komen vanuit "
+"een CSV bestand \n"
+"                       welke handmatig is aangemaakt."
 
 #. module: base_import
 #. openerp-web
@@ -233,6 +277,8 @@ msgid ""
 "What's the difference between Database ID and \n"
 "                        External ID?"
 msgstr ""
+"Wat is het verschil tussen de database ID en\n"
+"                        de externe ID?"
 
 #. module: base_import
 #. openerp-web
@@ -244,25 +290,29 @@ msgid ""
 "\n"
 "                        you 3 different fields to import:"
 msgstr ""
+"Bijvoorbeeld, om\n"
+"                        te refereren naar het land van een relatie, stelt "
+"OpenERP\n"
+"                        drie verschillende velden voor om te importeren:"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/xml/import.xml:175
 #, python-format
 msgid "What can I do if I have multiple matches for a field?"
-msgstr ""
+msgstr "Wat moet ik doen als ik verschillende matches heb voor een veld?"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/xml/import.xml:302
 #, python-format
 msgid "External ID,Name,Is a Company"
-msgstr ""
+msgstr "Externe ID,Naam,Is een bedrijf"
 
 #. module: base_import
 #: field:base_import.tests.models.preview,somevalue:0
 msgid "Some Value"
-msgstr ""
+msgstr "Zelfde waarde"
 
 #. module: base_import
 #. openerp-web
@@ -272,6 +322,8 @@ msgid ""
 "The following CSV file shows how to import \n"
 "                        suppliers and their respective contacts"
 msgstr ""
+"Het navolgende CSV bestand toont hoe leveranciers \n"
+"                        en de contactpersonen te importeren"
 
 #. module: base_import
 #. openerp-web
@@ -281,6 +333,9 @@ msgid ""
 "How can I change the CSV file format options when \n"
 "                        saving in my spreadsheet application?"
 msgstr ""
+"Hoe kan ik de CSV bestandsformaat opties wijzigen \n"
+"                        bij het opslaan van het bestand in mijn spreadsheet "
+"programma?"
 
 #. module: base_import
 #. openerp-web
@@ -301,6 +356,21 @@ msgid ""
 "orignial \n"
 "                        database)."
 msgstr ""
+"Zoals u in dit bestand kunt zien, werken Fabien en Laurence\n"
+"                        voor grote bedrijven (company_1) en Eric werkt\n"
+"                        voor het nedrijf Organi. De relatie tussen de "
+"personen \n"
+"                        en de bedrijven wordt egmaakt door gebruik te maken "
+"van de \n"
+"                        External ID van de bedrijven. We hebben een prefix "
+"gemaakt voor de \n"
+"                        \"External ID\" met de naam van de tabel om een "
+"conflict te voorkomen \n"
+"                        tussen de ID van de personen en de bedrijven "
+"(person_1 \n"
+"                        en company_1 welke dezelfde ID delen in de originele "
+" \n"
+"                        database)."
 
 #. module: base_import
 #. openerp-web
@@ -315,18 +385,25 @@ msgid ""
 "\n"
 "                        '/tmp/person.csv' with CSV"
 msgstr ""
+"copy (select \n"
+"                        'person_'||id as \"External ID\",person_name as \n"
+"                        \"Name\",'False' as \"Is a "
+"Company\",'company_'||company_id\n"
+"                         as \"Related Company/External ID\" from persons) TO "
+"\n"
+"                        '/tmp/person.csv' with CSV"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/xml/import.xml:148
 #, python-format
 msgid "Country: Belgium"
-msgstr ""
+msgstr "Land: België"
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_tests_models_char_stillreadonly
 msgid "base_import.tests.models.char.stillreadonly"
-msgstr ""
+msgstr "base_import.tests.models.char.stillreadonly"
 
 #. module: base_import
 #. openerp-web
@@ -336,13 +413,15 @@ msgid ""
 "External ID,Name,Is a \n"
 "                        Company,Related Company/External ID"
 msgstr ""
+"Externe ID,Naam,Is een \n"
+"                        bedrijf,Gerelateerd bedrijf/Externe ID"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/xml/import.xml:233
 #, python-format
 msgid "Suppliers and their respective contacts"
-msgstr ""
+msgstr "Leveranciers en de bijbehorende contactpersonen"
 
 #. module: base_import
 #. openerp-web
@@ -364,6 +443,20 @@ msgid ""
 "category \n"
 "                        hierarchy."
 msgstr ""
+"Als u bijvoorbeeld twee productcategorieën heeft\n"
+"                        met het onderliggende categorie met de naam "
+"\"Verkoopbaar\" (bijv. \"Div.\n"
+"                        Producten / Verkoopbaar\" & \"Overige producten / "
+"Verkoopbaar\"),\n"
+"                        zal de import validate stoppen, maar u kunt nog "
+"steeds uw data importeren.\n"
+"                        Toch raden wij u niet aan de data te importeren "
+"omdat deze allemaal worden\n"
+"                        gekoppeld aan de eerste categorie \"Verkoopbaar\" in "
+"de product categorie lijst\n"
+"                        (\"Div. Producten / Verkoopbaar\"). Wij raden u aan "
+"om een van de dubbele waarden\n"
+"                        van uw productcategorie hiërarchie aan te passen."
 
 #. module: base_import
 #. openerp-web
@@ -375,6 +468,10 @@ msgid ""
 "\n"
 "                        PSQL:"
 msgstr ""
+"Om een CSV bestand van personen te  maken, welke gekoppeld\n"
+"                        zijn aan bedrijven, gebruiken we het volgende SQL "
+"commando in \n"
+"                        PSQL:"
 
 #. module: base_import
 #. openerp-web
@@ -386,6 +483,12 @@ msgid ""
 "                        (in 'Save As' dialog box > click 'Tools' dropdown \n"
 "                        list > Encoding tab)."
 msgstr ""
+"Microsoft Excel geeft u \n"
+"                        de mogelijkheid alleen de codering te wijzigen bij "
+"het opslaan\n"
+"                        (in 'Opslaan als' dialoogvenster> klik op 'Extra' "
+"dropdown\n"
+"                        lijst> Codering tab)."
 
 #. module: base_import
 #: field:base_import.tests.models.preview,othervalue:0
@@ -402,6 +505,12 @@ msgid ""
 "                        later, it's thus good practice to specify it\n"
 "                        whenever possible"
 msgstr ""
+"zal ook worden gebruikt om de originele import\n"
+"                        bij te werken, indien u later gewijzigde gegevens "
+"moet \n"
+"                        her-importeren. Het is du een goede gewoonte om dit, "
+"\n"
+"                        indien mogelijk, te specificeren"
 
 #. module: base_import
 #. openerp-web
@@ -411,6 +520,8 @@ msgid ""
 "file to import. If you need a sample importable file, you\n"
 "            can use the export tool to generate one."
 msgstr ""
+"bestand om te importeren. Indien u een testbestand nodig heeft,\n"
+"             kunt u met de exportmogelijkheden, er een aanmaken."
 
 #. module: base_import
 #. openerp-web
@@ -420,23 +531,25 @@ msgid ""
 "Country/Database \n"
 "                        ID: 21"
 msgstr ""
+"Land/Database \n"
+"                        ID: 21"
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_tests_models_char
 msgid "base_import.tests.models.char"
-msgstr ""
+msgstr "base_import.tests.models.char"
 
 #. module: base_import
 #: help:base_import.import,file:0
 msgid "File to check and/or import, raw binary (not base64)"
-msgstr ""
+msgstr "Te controleren en/of te importeren bestand, raw binair (niet base64)"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/xml/import.xml:230
 #, python-format
 msgid "Purchase orders with their respective purchase order lines"
-msgstr ""
+msgstr "Inkoopporders met de bijbehorende inkooporderregels"
 
 #. module: base_import
 #. openerp-web
@@ -448,6 +561,10 @@ msgid ""
 "                field corresponding to the column. This makes imports\n"
 "                simpler especially when the file has many columns."
 msgstr ""
+"als het bestand de kolom\n"
+"                namen bevat, kan OpenERP proberen de bijbehorende velden\n"
+"                te detecteren voor de kolommen. Dit maakt het importeren\n"
+"                eenvoudiger, vooral wanneer het bestand veel kolommen heeft."
 
 #. module: base_import
 #. openerp-web
@@ -464,16 +581,18 @@ msgid ""
 ". The issue is\n"
 "            usually an incorrect file encoding."
 msgstr ""
+". Het probleem is \n"
+"            vaak een niet correcte bestand codering."
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_tests_models_m2o_required
 msgid "base_import.tests.models.m2o.required"
-msgstr ""
+msgstr "base_import.tests.models.m2o.required"
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_tests_models_char_noreadonly
 msgid "base_import.tests.models.char.noreadonly"
-msgstr ""
+msgstr "base_import.tests.models.char.noreadonly"
 
 #. module: base_import
 #. openerp-web
@@ -490,23 +609,33 @@ msgid ""
 "filter \n"
 "                        settings' > Save)."
 msgstr ""
+"Als u een CSV bestand bewerkt en opslaat in een spreadsheet \n"
+"                        worden uw regionale instellingen van uw computer\n"
+"                        gebruikt voor het scheidingsteken. U kunt het beste\n"
+"                        OpenOffice of Libreoffice calc gebruiken, omdat "
+"deze\n"
+"                        programma's u de mogelijkheid geven om deze "
+"instellingen\n"
+"                        aan te passen (in 'Opslaan als' scherm > Aanvinken "
+"'Filter instellingen\n"
+"                        bewerken > Opslaan'."
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/xml/import.xml:30
 #, python-format
 msgid "CSV File:"
-msgstr ""
+msgstr "CSV bestand:"
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_tests_models_preview
 msgid "base_import.tests.models.preview"
-msgstr ""
+msgstr "base_import.tests.models.preview"
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_tests_models_char_required
 msgid "base_import.tests.models.char.required"
-msgstr ""
+msgstr "base_import.tests.models.char.required"
 
 #. module: base_import
 #: code:addons/base_import/models.py:112
@@ -519,14 +648,14 @@ msgstr "Database ID"
 #: code:addons/base_import/static/src/xml/import.xml:313
 #, python-format
 msgid "It will produce the following CSV file:"
-msgstr ""
+msgstr "Het zal het volgende CSV bestand produceren"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/xml/import.xml:362
 #, python-format
 msgid "Here is the start of the file we could not import:"
-msgstr ""
+msgstr "Hier is de start van het bestand welke we niet konden improteren:"
 
 #. module: base_import
 #: field:base_import.import,file_type:0
@@ -548,7 +677,7 @@ msgstr "base_import.tests.models.o2m"
 #: code:addons/base_import/static/src/xml/import.xml:360
 #, python-format
 msgid "Import preview failed due to:"
-msgstr ""
+msgstr "Import voorbeeld mislukt omdat:"
 
 #. module: base_import
 #. openerp-web
@@ -560,18 +689,22 @@ msgid ""
 "\n"
 "                        that imported it)"
 msgstr ""
+"Land/Externe ID: De ID van dit record\n"
+"                        waaraan gerefereerd wordt in de andere applicatie "
+"(of het .XML bestand\n"
+"                        dat het heeft geïmporteerd)"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/xml/import.xml:35
 #, python-format
 msgid "Reload data to check changes."
-msgstr ""
+msgstr "Gegevens herladen om  te controleren op wijzigingen"
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_tests_models_char_readonly
 msgid "base_import.tests.models.char.readonly"
-msgstr ""
+msgstr "base_import.tests.models.char.readonly"
 
 #. module: base_import
 #. openerp-web
@@ -588,6 +721,17 @@ msgid ""
 "\n"
 "                        per field you want to import."
 msgstr ""
+"Sommige velden geven een relatie met een ander\n"
+"                        object aan. Bijvoorbeeld, het land van een contact "
+"is een koppeling \n"
+"                        naar een record van het 'Land' object. Wanneer u\n"
+"                        zo'n veld wilt importeren, zal OpenERP de koppeling "
+"tussen deze\n"
+"                        velden moeten maken. Om u te helpen zulke velden te "
+"importeren, \n"
+"                        geeft OpenERP u drie mechanismen. U dient een "
+"mechanisme te kiezen\n"
+"                        en alleen dit mechanisme per veld gebruiken."
 
 #. module: base_import
 #. openerp-web
@@ -601,19 +745,27 @@ msgid ""
 "                        then you will encode it as follow \"Manufacturer,\n"
 "                        Retailer\" in the same column of your CSV file."
 msgstr ""
+"De labels moeten worden gescheiden door een komma, zonder spaties \n"
+"                        Bijvoorbeeld, indien u, uw klant wilt koppelen aan "
+"de labels\n"
+"                        \"Producent\" en \"Retailer\" dan dient u dit als "
+"volgt\n"
+"                        te coderen. \"Producent,Retailer\" in dezelfde kolom "
+"van\n"
+"                        uw CSV bestand."
 
 #. module: base_import
 #: code:addons/base_import/models.py:264
 #, python-format
 msgid "You must configure at least one field to import"
-msgstr ""
+msgstr "U dient minstens een veld te confituren om te importeren"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/xml/import.xml:304
 #, python-format
 msgid "company_2,Organi,True"
-msgstr ""
+msgstr "company_2,Organi,True"
 
 #. module: base_import
 #. openerp-web
@@ -623,37 +775,39 @@ msgid ""
 "The first row of the\n"
 "                file contains the label of the column"
 msgstr ""
+"De eerste regel van het\n"
+"                bestand bevat het label van de kolom"
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_tests_models_char_states
 msgid "base_import.tests.models.char.states"
-msgstr ""
+msgstr "base_import.tests.models.char.states"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/xml/import.xml:7
 #, python-format
 msgid "Import a CSV File"
-msgstr ""
+msgstr "Importeer CSV bestand"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/js/import.js:74
 #, python-format
 msgid "Quoting:"
-msgstr ""
+msgstr "Citeren:"
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_tests_models_m2o_required_related
 msgid "base_import.tests.models.m2o.required.related"
-msgstr ""
+msgstr "base_import.tests.models.m2o.required.related"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/xml/import.xml:293
 #, python-format
 msgid ")."
-msgstr ""
+msgstr ")."
 
 #. module: base_import
 #. openerp-web
@@ -661,44 +815,46 @@ msgstr ""
 #: code:addons/base_import/static/src/xml/import.xml:396
 #, python-format
 msgid "Import"
-msgstr ""
+msgstr "Importeren"
 
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/js/import.js:407
+#: code:addons/base_import/static/src/js/import.js:438
 #, python-format
 msgid "Here are the possible values:"
-msgstr ""
+msgstr "Hier de mogelijke waarden."
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/xml/import.xml:82
 #, python-format
 msgid "The"
-msgstr ""
+msgstr "De"
 
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/js/import.js:227
+#: code:addons/base_import/static/src/js/import.js:248
 #, python-format
 msgid ""
 "A single column was found in the file, this often means the file separator "
 "is incorrect"
 msgstr ""
+"In het bestand is een enkele kolom gevonden. Dit betekend meestal dat het "
+"scheidingsteken niet juist is."
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/xml/import.xml:293
 #, python-format
 msgid "dump of such a PostgreSQL database"
-msgstr ""
+msgstr "dump van zo'n PostgreSQL database"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/xml/import.xml:301
 #, python-format
 msgid "This SQL command will create the following CSV file:"
-msgstr ""
+msgstr "Dit SQL.commando zal het volgende CSV bestand aanmaken"
 
 #. module: base_import
 #. openerp-web
@@ -708,6 +864,8 @@ msgid ""
 "The following CSV file shows how to import purchase \n"
 "                        orders with their respective purchase order lines:"
 msgstr ""
+"Het volgende CSV bestand laat zien hoe een inkooporder te importeren \n"
+"                        met de bijbehorende inkooporderregels:"
 
 #. module: base_import
 #. openerp-web
@@ -717,6 +875,8 @@ msgid ""
 "What can I do when the Import preview table isn't \n"
 "                        displayed correctly?"
 msgstr ""
+"Wat kan ik doen wanneer als de voorbeeld tabel\n"
+"                        niet correct wordt weergegeven?"
 
 #. module: base_import
 #: field:base_import.tests.models.char,value:0
@@ -733,21 +893,21 @@ msgstr ""
 #: field:base_import.tests.models.o2m.child,parent_id:0
 #: field:base_import.tests.models.o2m.child,value:0
 msgid "unknown"
-msgstr ""
+msgstr "onbekend"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/xml/import.xml:317
 #, python-format
 msgid "person_2,Laurence,False,company_1"
-msgstr ""
+msgstr "person_2,Laurence,False,company_1"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/xml/import.xml:149
 #, python-format
 msgid "Country/External ID: base.be"
-msgstr ""
+msgstr "Land/Externe ID: base.be"
 
 #. module: base_import
 #. openerp-web
@@ -762,27 +922,37 @@ msgid ""
 "                        the company he work for. (If you want to test this \n"
 "                        example, here is a"
 msgstr ""
+"Een voorbeeld. Stel u heeft een SQL database \n"
+"                        met twee tabellen, die u wilt importeren: bedrijven "
+"\n"
+"                        en personen. Ieder persoon behoort toe aan één "
+"bedrijf. \n"
+"                        U dient dus een koppeling te maken tussen de persoon "
+"en \n"
+"                        het bedrijf, waar hij voor werkt. (Als u dit "
+"voorbeeld wilt testen \n"
+"                        heeft u hier een"
 
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/js/import.js:396
+#: code:addons/base_import/static/src/js/import.js:427
 #, python-format
 msgid "(%d more)"
-msgstr ""
+msgstr "(%d meer)"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/xml/import.xml:227
 #, python-format
 msgid "File for some Quotations"
-msgstr ""
+msgstr "Bestand voor enkele offertes"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/js/import.js:72
 #, python-format
 msgid "Encoding:"
-msgstr ""
+msgstr "Codering:"
 
 #. module: base_import
 #. openerp-web
@@ -802,6 +972,19 @@ msgid ""
 "\n"
 "                        table. (like 'company_1', 'person_1' instead of '1')"
 msgstr ""
+"Om relaties tussen tabellen te beheren, \n"
+"                        kunt u gebruik maken van de \"Externe ID\" van "
+"OpenERP. \n"
+"                        Deze \"externe ID\" van een record is de unieke "
+"identiefier van \n"
+"                        dit record in de andere applicatie. Deze \"Externe "
+"ID\" moet\n"
+"                        uniek zijn bij alle records en alle objecten. Het is "
+"daarom verstandig\n"
+"                        om de externe ID te voorzien van een prefix, met de "
+"naam van de applicatie\n"
+"                        of de tabel (zoals 'bedrijf_1', 'persoon_1' in "
+"plaats van alleen '1')"
 
 #. module: base_import
 #. openerp-web
@@ -812,6 +995,9 @@ msgid ""
 "                        \"External ID\". In PSQL, write the following "
 "command:"
 msgstr ""
+"We zullen  eerst alle bedrijven met de  \n"
+"                        \"External ID\" exproteren. In PSQL, schrijf het "
+"volgende commando:"
 
 #. module: base_import
 #. openerp-web
@@ -821,13 +1007,15 @@ msgid ""
 "How can I import a one2many relationship (e.g. several \n"
 "                        Order Lines of a Sales Order)?"
 msgstr ""
+"Hoe kan ik een one2many relatie veld importeren (bijv. verschillende\n"
+"                        orderregels van een verkooporder)?"
 
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/js/import.js:373
+#: code:addons/base_import/static/src/js/import.js:404
 #, python-format
 msgid "Everything seems valid."
-msgstr ""
+msgstr "Alle velden lijken geldig."
 
 #. module: base_import
 #. openerp-web
@@ -840,13 +1028,18 @@ msgid ""
 "                        use make use of the external ID for this field \n"
 "                        'Category'."
 msgstr ""
+"Maar als u de configuratie van de \n"
+"                        productcategorieën niet wilt wijzigen, raden wij u "
+"aan\n"
+"                        gebruik maken van de externe ID voor dit veld\n"
+"                        'Categorie'."
 
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/js/import.js:390
+#: code:addons/base_import/static/src/js/import.js:421
 #, python-format
 msgid "at row %d"
-msgstr ""
+msgstr "op regel %d"
 
 #. module: base_import
 #. openerp-web
@@ -856,13 +1049,15 @@ msgid ""
 "How can I import a many2many relationship field \n"
 "                        (e.g. a customer that has multiple tags)?"
 msgstr ""
+"Hoe kan ik een many2many relatieveld importeren \n"
+"                        (bijv. een klant met meerdere labels)?"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/xml/import.xml:80
 #, python-format
 msgid "XXX/ID"
-msgstr ""
+msgstr "XXX/ID"
 
 #. module: base_import
 #. openerp-web
@@ -878,6 +1073,14 @@ msgid ""
 "                        link between each person and the company they work \n"
 "                        for)."
 msgstr ""
+"Als u gegevens moet importeren van verschillende tabellen, \n"
+"                        dient u de relaties tussen de records van de "
+"verschillende\n"
+"                        tabellen aan te maken. (bijv. als u bedrijven en "
+"personen importeert\n"
+"                        dient u de koppeling tussen ieder persoon en het "
+"bedrijf\n"
+"                        waar hij voor werkt te maken."
 
 #. module: base_import
 #. openerp-web
@@ -890,13 +1093,19 @@ msgid ""
 "                        Here is when you should use one or the other, \n"
 "                        according to your need:"
 msgstr ""
+"Afhankelijk van uw behoefte, kunt u gebruik \n"
+"                        maken van één van de drie mogelijkheden om een "
+"referentie\n"
+"                        te maken. Hier kunt u lezen wanneer u de ene of de "
+"andere\n"
+"                        methode moet gebruiken."
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/xml/import.xml:319
 #, python-format
 msgid "person_4,Ramsy,False,company_3"
-msgstr ""
+msgstr "person_4,Ramsy,False,company_3"
 
 #. module: base_import
 #. openerp-web
@@ -912,13 +1121,21 @@ msgid ""
 "                        will set the EMPTY value in the field, instead of \n"
 "                        assigning the default value."
 msgstr ""
+"Als u niet al uw velden instelt van uw CSV bestand, \n"
+"                        dat zal OpenERP standaard waarden toekennen aan "
+"iedere \n"
+"                        niet gedefinieerd veld. Indien u velden een lege "
+"waarde\n"
+"                        geeft, zal OpenERP deze lege waarden instellen in "
+"plaats \n"
+"                        van het toewijzen van standaard waarden."
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/xml/import.xml:20
 #, python-format
 msgid "Cancel"
-msgstr ""
+msgstr "Annuleren"
 
 #. module: base_import
 #. openerp-web
@@ -928,20 +1145,22 @@ msgid ""
 "What happens if I do not provide a value for a \n"
 "                        specific field?"
 msgstr ""
+"Wat gebeurt er als ik geen waarde specificeer\n"
+"                        voor een specifiek veld?"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/xml/import.xml:68
 #, python-format
 msgid "Frequently Asked Questions"
-msgstr ""
+msgstr "Vaak gestelde vragen (FAQ)"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/xml/import.xml:305
 #, python-format
 msgid "company_3,Boum,True"
-msgstr ""
+msgstr "company_3,Boum,True"
 
 #. module: base_import
 #. openerp-web
@@ -955,6 +1174,12 @@ msgid ""
 "spreadsheet \n"
 "                        application."
 msgstr ""
+"Deze optie\n"
+"                        geeft u de mogelijkheid om de importeer en exporteer "
+"functie \n"
+"                        van OpenERP te gebruiken voor het bewerken van een "
+"hele reeks\n"
+"                        records in uw favoriete spreadsheet."
 
 #. module: base_import
 #. openerp-web
@@ -965,6 +1190,10 @@ msgid ""
 "                        import an other record that links to the first\n"
 "                        one, use"
 msgstr ""
+"kolom in OpenERP. Waneer u\n"
+"                        een ander record importeerd, welke verwijst naar de "
+"eerste\n"
+"                        gebruik,"
 
 #. module: base_import
 #. openerp-web
@@ -985,20 +1214,33 @@ msgid ""
 "                        take care of creating or modifying each record \n"
 "                        depending if it's new or not."
 msgstr ""
+"Als u een bestand importeert welke kolommen bevat \n"
+"                        met \"Externe ID\" of \"Database ID\", dan zullen "
+"records\n"
+"                        welke al eerder zijn geïmporteerd, worden "
+"bijgewerkt, in \n"
+"                        plaats van opnieuw aangemaakt. Dit is erg handig en "
+"geeft u de\n"
+"                        mogelijkheid om een CSV bestand meerdere malen te "
+"importeren\n"
+"                        terwijl u tussentijds wijzigingen maakt in het "
+"bestand. OpenERP zal\n"
+"                        zorg dragen voor het aanmaken of bijwerken van "
+"iedere record."
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/xml/import.xml:169
 #, python-format
 msgid "CSV file for categories"
-msgstr ""
+msgstr "CSV bestand voor categorieën"
 
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/js/import.js:309
+#: code:addons/base_import/static/src/js/import.js:330
 #, python-format
 msgid "Normal Fields"
-msgstr ""
+msgstr "Normale velden"
 
 #. module: base_import
 #. openerp-web
@@ -1010,13 +1252,18 @@ msgid ""
 "                        identifier from the original application and\n"
 "                        map it to the"
 msgstr ""
+"Om het mogelijk te maken om relaties, tussen verschillende records,\n"
+"                        opnieuw aan te maken, dient u unieke identifiers, "
+"van de\n"
+"                        originele applicatie te gebruiken en deze koppelen "
+"aan de"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/xml/import.xml:170
 #, python-format
 msgid "CSV file for Products"
-msgstr ""
+msgstr "CSV bestand voor producten"
 
 #. module: base_import
 #. openerp-web
@@ -1036,35 +1283,47 @@ msgid ""
 "\n"
 "                        the fields relative to the order."
 msgstr ""
+"Indien u verkooporders wilt importeren met verschillende \n"
+"                        orderregels, dien u voor iedere orderregel in het\n"
+"                        CSV bestande een specifieke regel te reserveren.\n"
+"                        De eerste orderregel wordt geïmporteerd op de "
+"eerste\n"
+"                        regel welke ook de kop informatie van de order "
+"bevat.\n"
+"                        Iedere volgende regel hebben een eigen regel welke "
+"niet\n"
+"                        meer de kopgegevens van de order bevatten, maar "
+"alleen de\n"
+"                        regelinformatie."
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_tests_models_m2o_related
 msgid "base_import.tests.models.m2o.related"
-msgstr ""
+msgstr "base_import.tests.models.m2o.related"
 
 #. module: base_import
 #: field:base_import.tests.models.preview,name:0
 msgid "Name"
-msgstr ""
+msgstr "Naam"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/xml/import.xml:80
 #, python-format
 msgid "to the original unique identifier."
-msgstr ""
+msgstr "naar de originele unieke identifier."
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/xml/import.xml:318
 #, python-format
 msgid "person_3,Eric,False,company_2"
-msgstr ""
+msgstr "person_3,Eric,False,company_2"
 
 #. module: base_import
 #: field:base_import.import,res_model:0
 msgid "Model"
-msgstr ""
+msgstr "Model"
 
 #. module: base_import
 #. openerp-web
@@ -1072,7 +1331,7 @@ msgstr ""
 #: code:addons/base_import/static/src/xml/import.xml:82
 #, python-format
 msgid "ID"
-msgstr ""
+msgstr "ID"
 
 #. module: base_import
 #. openerp-web
@@ -1088,6 +1347,15 @@ msgid ""
 "                        to the first company). You must first import the \n"
 "                        companies and then the persons."
 msgstr ""
+"De twee aangemaakte bestanden zijn gereed om te worden geïmporteerd\n"
+"                        in OpenERP, zonder enige aanpassing. Na het "
+"importeren van deze\n"
+"                        twee CSV bestanden heeft u 4 contactpersonen en 3 "
+"bedrijven.\n"
+"                        (De eerste 2 contactpersonen zijn gekoppeld aan het "
+"eerste bedrijf).\n"
+"                        U dient eerst de bedrijven en personen  te "
+"importeren."
 
 #. module: base_import
 #. openerp-web
@@ -1101,18 +1369,25 @@ msgid ""
 "                        (displayed under the Browse CSV file bar after you \n"
 "                        select your file)."
 msgstr ""
+"Standaard wordt het scheidingsteken van het import voorbeeld \n"
+"                        ingesteld op een komma en voor de tekst "
+"aanhalingstekens.\n"
+"                        Als uw CSV bestand niet deze instellingen heeft, "
+"kunt u deze\n"
+"                        instellingen aanpassen, direct onder de knop "
+"\"Bestand kiezen\"."
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/js/import.js:73
 #, python-format
 msgid "Separator:"
-msgstr ""
+msgstr "Scheidingsteken:"
 
 #. module: base_import
 #: field:base_import.import,file_name:0
 msgid "File Name"
-msgstr ""
+msgstr "Bestandsnaam"
 
 #. module: base_import
 #. openerp-web
@@ -1122,28 +1397,28 @@ msgstr ""
 #: code:addons/base_import/static/src/xml/import.xml:82
 #, python-format
 msgid "External ID"
-msgstr ""
+msgstr "Externe ID"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/xml/import.xml:39
 #, python-format
 msgid "File Format Options…"
-msgstr ""
+msgstr "Bestand formaat opties..."
 
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/js/import.js:392
+#: code:addons/base_import/static/src/js/import.js:423
 #, python-format
 msgid "between rows %d and %d"
-msgstr ""
+msgstr "Tussen regel %d en %d"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/xml/import.xml:19
 #, python-format
 msgid "or"
-msgstr ""
+msgstr "of"
 
 #. module: base_import
 #. openerp-web
@@ -1157,8 +1432,13 @@ msgid ""
 "demo \n"
 "                        data."
 msgstr ""
+"Als een voorbeeld vind u hier het bestand:\n"
+"                        purchase.order_functional_error_line_cant_adpat.CSV\n"
+"                        Het bestand bevat enkele offertes, welke u kunt "
+"importeren.\n"
+"                        Het bestand is gebaseerd op de demo data."
 
 #. module: base_import
 #: field:base_import.import,file:0
 msgid "File"
-msgstr ""
+msgstr "Bestand"

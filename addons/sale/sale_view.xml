@@ -140,9 +140,9 @@
                         <button name="%(action_view_sale_advance_payment_inv)d" string="Create Invoice"
                             type="action" states="manual" class="oe_highlight" groups="base.group_user"/>
                         <button name="copy_quotation" states="cancel" string="New Copy of Quotation" type="object"/>
-                        <button name="cancel" states="draft,sent" string="Cancel" groups="base.group_user"/>
-                        <button name="action_cancel" states="manual,progress" string="Cancel" type="object" groups="base.group_user"/>
-                        <button name="invoice_cancel" states="invoice_except" string="Cancel" groups="base.group_user"/>
+                        <button name="cancel" states="draft,sent" string="Cancel Quotation" groups="base.group_user"/>
+                        <button name="action_cancel" states="manual,progress" string="Cancel Order" type="object" groups="base.group_user"/>
+                        <button name="invoice_cancel" states="invoice_except" string="Cancel Order" groups="base.group_user"/>
                         <field name="state" widget="statusbar" statusbar_visible="draft,sent,invoiced,done" statusbar_colors='{"invoice_except":"red","waiting_date":"blue"}'/>
                 </header>
                 <sheet>
@@ -274,7 +274,7 @@
                 </sheet>
                 <div class="oe_chatter">
                     <field name="message_follower_ids" widget="mail_followers" groups="base.group_user"/>
-                    <field name="message_ids" widget="mail_thread" placeholder="Share a message..."/>
+                    <field name="message_ids" widget="mail_thread"/>
                 </div>
                 </form>
             </field>
@@ -430,7 +430,7 @@
                 <form string="Sales Order Lines" version="7.0">
                     <header>
                         <button name="%(action_view_sale_order_line_make_invoice)d" string="Create Invoice" type="action" attrs="{'invisible': ['|',('invoiced', '=', 1), ('state', 'not in', ('confirmed', 'draft'))]}" class="oe_highlight" groups="base.group_user"/>
-                        <button name="button_cancel" string="Cancel" type="object" states="confirmed,exception" groups="base.group_user"/>
+                        <button name="button_cancel" string="Cancel Line" type="object" states="confirmed,exception" groups="base.group_user"/>
                         <button name="button_done" string="Done" type="object"  attrs="{'invisible': ['|',('invoiced', '=', 0), ('state', 'not in', ('confirmed', 'exception'))]}" class="oe_highlight" groups="base.group_user"/>
                         <field name="state" widget="statusbar" statusbar_visible="draft,confirmed,done" statusbar_colors='{"exception":"red","cancel":"red"}'/>
                     </header>

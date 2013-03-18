@@ -301,8 +301,8 @@ class mail_message(osv.Model):
         for key, message in message_tree.iteritems():
             if message.author_id:
                 partner_ids |= set([message.author_id.id])
-            if message.partner_ids:
-                partner_ids |= set([partner.id for partner in message.partner_ids])
+            if message.notified_partner_ids:
+                partner_ids |= set([partner.id for partner in message.notified_partner_ids])
             if message.attachment_ids:
                 attachment_ids |= set([attachment.id for attachment in message.attachment_ids])
         # Read partners as SUPERUSER -> display the names like classic m2o even if no access
@@ -322,7 +322,7 @@ class mail_message(osv.Model):
             else:
                 author = (0, message.email_from)
             partner_ids = []
-            for partner in message.partner_ids:
+            for partner in message.notified_partner_ids:
                 if partner.id in partner_tree:
                     partner_ids.append(partner_tree[partner.id])
             attachment_ids = []
@@ -861,7 +861,7 @@ class mail_message(osv.Model):
         # message has no subtype_id: pure log message -> no partners, no one notified
         if not message.subtype_id:
             return True
-            
+
         # all followers of the mail.message document have to be added as partners and notified
         if message.model and message.res_id:
             fol_obj = self.pool.get("mail.followers")
@@ -884,8 +884,7 @@ class mail_message(osv.Model):
 
         # notify
         if partners_to_notify:
-            self.write(cr, SUPERUSER_ID, [newid], {'notified_partner_ids': [(4, p.id) for p in partners_to_notify]}, context=context)
-        notification_obj._notify(cr, uid, newid, context=context)
+            notification_obj._notify(cr, uid, newid, partners_to_notify=[p.id for p in partners_to_notify], context=context)
         message.refresh()
 
         # An error appear when a user receive a notification without notifying
