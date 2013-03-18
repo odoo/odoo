@@ -37,7 +37,7 @@
         assert procurement.product_uom.id == order_line.product_uom.id, "UOM is not correspond."
         assert procurement.procure_method == order_line.type, "Procurement method is not correspond."
 -
-  Only Stock User can change data related warehouse therfore test with that user which have stcok user rights,
+  Only Stock User can change data related warehouse therefore test with that user which have stcok user rights,
 -
   !context
     uid: 'res_stock_user'
@@ -47,7 +47,7 @@
   !python {model: procurement.order}: |
     self.run_scheduler(cr, uid)
 -
-  Salesman can also check order therfore test with that user which have salesman rights,
+  Salesman can also check order therefore test with that user which have salesman rights,
 -
   !context
     uid: 'res_sale_stock_salesman'
@@ -142,7 +142,7 @@
         assert inv_line.quantity == (so_line.product_uos and so_line.product_uos_qty) or so_line.product_uom_qty , "Product qty is not correspond."
         assert inv_line.price_subtotal == so_line.price_subtotal, "Price sub total is not correspond."
 -
-  Only Stock manager can open the Invoice therfore test with that user which have stock manager rights,
+  Only Stock manager can open the Invoice therefore test with that user which have stock manager rights,
 -
   !context
     uid: 'res_stock_manager'
