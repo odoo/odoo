@@ -36,9 +36,13 @@
     'demo': [
         'google_docs_demo.xml'
     ],
-    'depends': ['google_base_account','crm'],
+    'depends': ['google_base_account','crm','document'],
     'description': """
-Module to attach a google document to any model.
-================================================
+Integrate Google document with OpenERP.
+=======================================
+
+This module is used to integrate google document to OpenERP record.
+
+You can configure google accounts from Settings > Users > Users.
 """
 }
