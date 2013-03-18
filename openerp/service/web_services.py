@@ -249,7 +249,7 @@ class db(netsvc.ExportService):
              SaaS (giving SaaS users the super-admin password is not a good idea
              anyway)
         """
-        if os.environ.get('PGPASSWORD'):
+        if os.environ.get('PGPASSWORD') or not tools.config['db_password']:
             yield
         else:
             os.environ['PGPASSWORD'] = tools.config['db_password']
