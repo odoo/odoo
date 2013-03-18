@@ -240,7 +240,7 @@ class mail_compose_message(osv.TransientModel):
                 context.pop('default_partner_ids', None)
                 # post the message
                 if mass_mail_mode and not wizard.post:
-                    post_values['recipient_ids'] = post_values.pop('partner_ids')
+                    post_values['recipient_ids'] = [(4, id) for id in post_values.pop('partner_ids', [])]
                     self.pool.get('mail.mail').create(cr, uid, post_values, context=context)
                 else:
                     subtype = 'mail.mt_comment'
@@ -249,7 +249,7 @@ class mail_compose_message(osv.TransientModel):
                     msg_id = active_model_pool.message_post(cr, uid, [res_id], type='comment', subtype=subtype, context=context, **post_values)
                     # mass_mailing, post without notify: notify specific partners
                     if mass_mail_mode and not wizard.notify and post_values['partner_ids']:
-                        self.pool.get('mail.notification')._notify(cr, uid, msg_id, [item[1] for item in post_values['partner_ids']], context=context)
+                        self.pool.get('mail.notification')._notify(cr, uid, msg_id, post_values['partner_ids'], context=context)
 
         return {'type': 'ir.actions.act_window_close'}
 
