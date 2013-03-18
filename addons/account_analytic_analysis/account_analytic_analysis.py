@@ -714,17 +714,6 @@ class account_analytic_account(osv.osv):
             self.write(cr, uid, [contract.id], {'recurring_next_date': new_date.strftime('%Y-%m-%d')}, context=context)
         return True
 
-    def onchange_invoice_on_timesheets(self, cr, uid, ids, invoice_on_timesheets, context=None):
-        if not invoice_on_timesheets:
-            return {}
-        result = {'value': {'use_timesheets': True}}
-        try:
-            to_invoice = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'hr_timesheet_invoice', 'timesheet_invoice_factor1')
-            result['value']['to_invoice'] = to_invoice[1]
-        except ValueError:
-            pass
-        return result
-
 class account_analytic_account_summary_user(osv.osv):
     _name = "account_analytic_analysis.summary.user"
     _description = "Hours Summary by User"
