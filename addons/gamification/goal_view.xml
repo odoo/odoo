@@ -116,8 +116,8 @@
                     <field name="user_id"/>
                     <field name="type_id"/>
                     <group expand="0" string="Group By...">
-                        <filter string="User" domain="[]" context="{'group_by':'user_id'}"/>
-                        <filter string="Goal Type" domain="[]" context="{'group_by':'type_id'}"/>
+                        <filter name="group_by_user" string="User" domain="[]" context="{'group_by':'user_id'}"/>
+                        <filter name="group_by_type" string="Goal Type" domain="[]" context="{'group_by':'type_id'}"/>
                         <filter string="State" domain="[]" context="{'group_by':'state'}"/>
                         <filter string="End Date" domain="[]" context="{'group_by':'end_date'}"/>
                     </group>

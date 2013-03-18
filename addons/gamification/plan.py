@@ -326,7 +326,7 @@ class gamification_goal_plan(osv.Model):
         res = self.pool.get('ir.actions.act_window').for_xml_id(cr, uid ,'gamification','goals_from_plan_act', context=context)
         res['context'] = context
         res['context'].update({
-            'default_id': related_goal_ids
+            'default_id': related_goal_ids,
         })
         res['domain'] = [('id','in', related_goal_ids)]
         return res
