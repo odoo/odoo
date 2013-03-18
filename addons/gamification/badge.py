@@ -22,6 +22,7 @@
 from openerp.osv import fields, osv
 from openerp import tools
 from openerp.tools.translate import _
+from openerp.tools.safe_eval import safe_eval
 
 from templates import TemplateHelper
 from datetime import date
@@ -146,8 +147,8 @@ class gamification_badge(osv.Model):
             help="Can this badge be automatically rewarded",
             required=True),
 
-        'compute_code': fields.text('Compute Code',
-            help="The python code that will be executed to verify if a user can receive this badge."),
+        'compute_code': fields.char('Compute Code',
+            help="The name of the python method that will be executed to verify if a user can receive this badge."),
         'goal_type_ids': fields.many2many('gamification.goal.type',
             string='Goals Linked',
             help="The users that have succeeded theses goals will receive automatically the badge."),
@@ -179,12 +180,7 @@ class gamification_badge(osv.Model):
         'stat_this_month': 0,
         'rule_auth': 'everyone',
         'rule_automatic': 'manual',
-        'compute_code': """# Example of python code to execute
-# Use the variable 'result' to store the list of ids that will receive the badge
-from openerp import pooler
-pool = pooler.get_pool(cr.dbname)
-# return the list of ALL users
-result = pool.get('res.users').search(cr, uid, domain=[], context=context)""",
+        'compute_code': "self.nobody(cr, uid, context)",
     }
 
     def send_badge(self, cr, uid, badge_id, badge_user_ids, user_from=None, context=None):
@@ -232,15 +228,14 @@ result = pool.get('res.users').search(cr, uid, domain=[], context=context)""",
         the one validating the condition.
         :param ids: the list of id of the badges to check
 
-        In case of python code to execute, the code has access to the local
-        variables cr (database cursor), uid (current user id) and context.
-        To access other objects of the database, use a code like :
-            from openerp import pooler
-            pool = pooler.get_pool(cr.dbname)
-            pool.get('object.class.reference').action(...)
+        In case of python code to execute, the user should input the name of
+        the function that will be excuted through safe_eval. The globals
+        variables available are cr (database cursor), uid (current user id)
+        and context.
 
-        The result should be a list of res.users ids (int) and stored in the
-        local variable 'result' (read after the code execution). A badge_user
+        To create new functions in different modules, create a class extending
+        the 'gamification.badge.execute' class and implementing this method. The result
+        of the function should be a list of res.users ids (int). A badge_user
         linked to this badge will be created for each of these users and a
         notification will be send.
         Beware that the case of user already having this badge is NOT checked
@@ -257,17 +252,22 @@ result = pool.get('res.users').search(cr, uid, domain=[], context=context)""",
         for badge in self.browse(cr, uid, ids, context=context):
 
             if badge.rule_automatic == 'python':
-                code_obj = compile(badge.compute_code, '<string>', 'exec')
-                code_globals = {}
-                code_locals = {'cr': cr, 'uid': uid, 'context': context, 'result': []}
-                exec code_obj in code_globals, code_locals
+                values = {'cr': cr, 'uid': uid, 'context': context, 'self': self.pool.get('gamification.badge.execute')}
+                result = safe_eval(badge.compute_code, values, {})
 
-                if 'result' in code_locals and type(code_locals['result']) == list:
+                # code_obj = compile(badge.compute_code, '<string>', 'exec')
+                # code_globals = {}
+                # code_locals = {'cr': cr, 'uid': uid, 'context': context, 'result': []}
+                # exec code_obj in code_globals, code_locals
+                print(result)
+                if type(result) == list:
                     user_badge_ids = [
                         badge_user_obj.create(cr, uid, {'user_id': user_id, 'badge_id': badge.id}, context=context)
-                        for user_id in code_locals['result']
+                        for user_id in result
                     ]
                     self.send_badge(cr, uid, badge.id, user_badge_ids, context=context)
+                else:
+                    raise osv.except_osv(_('Error!'), _('Unvalid return content from the evaluation of %s' % str(badge.compute_code)))
 
             elif badge.rule_automatic == 'goals':
                 common_users = None
