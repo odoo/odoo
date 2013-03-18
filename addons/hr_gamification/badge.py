@@ -20,6 +20,7 @@
 ##############################################################################
 
 from openerp.osv import fields, osv
+from openerp.tools.translate import _
 
 
 class hr_gamification_badge_user(osv.Model):
@@ -70,6 +71,7 @@ class hr_grant_badge_wizard(osv.TransientModel):
                                   type="many2one", relation="res.users",
                                   store=True, string='User'),
         'badge_id': fields.many2one("gamification.badge", string='Badge'),
+        'comment': fields.text('Comment'),
     }
 
     def action_grant_badge(self, cr, uid, ids, context=None):
@@ -80,6 +82,9 @@ class hr_grant_badge_wizard(osv.TransientModel):
         badge_user_obj = self.pool.get('gamification.badge.user')
 
         for wiz in self.browse(cr, uid, ids, context=context):
+            if not wiz.user_id:
+                raise osv.except_osv(_('Warning!'), _('You can send badges only to employees linked to a user.'))
+
             if badge_obj.can_grant_badge(cr, uid,
                                          user_from_id=uid,
                                          badge_id=wiz.badge_id.id,
@@ -89,9 +94,9 @@ class hr_grant_badge_wizard(osv.TransientModel):
                     'user_id': wiz.user_id.id,
                     'badge_id': wiz.badge_id.id,
                     'employee_id': wiz.employee_id.id,
+                    'comment': wiz.comment,
                 }
                 badge_user = badge_user_obj.create(cr, uid, values, context=context)
-                #badge_obj.write(cr, uid, [badge.id], {'owner_ids': [(1, badge_user.id)]}, context=context)
 
                 user_from = self.pool.get('res.users').browse(cr, uid, uid, context=context)
 
@@ -106,13 +111,12 @@ class hr_employee(osv.osv):
     _inherit = "hr.employee"
 
     def _get_employee_badges(self, cr, uid, ids, field_name, arg, context=None):
-        """Return the list of badges assigned to the employee"""
+        """Return the list of badge_users assigned to the employee"""
         res = {}
         for employee in self.browse(cr, uid, ids, context=context):
-            badge_users = self.pool.get('gamification.badge.user').search(cr, uid, [('employee_id', '=', employee.id)], context=context)
-            res[employee.id] = self.pool.get('gamification.badge').search(cr, uid, [('owner_ids', 'in', badge_users)], context=context)
+            res[employee.id] = self.pool.get('gamification.badge.user').search(cr, uid, [('employee_id', '=', employee.id)], context=context)
         return res
 
     _columns = {
-        'badge_ids': fields.function(_get_employee_badges, type="one2many", obj='gamification.badge', string="Employee Badges")
+        'badge_ids': fields.function(_get_employee_badges, type="one2many", obj='gamification.badge.user', string="Employee Badges")
     }

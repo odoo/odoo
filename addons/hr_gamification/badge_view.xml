@@ -11,6 +11,7 @@
                     <group>
                         <field name="employee_id" />
                         <field name="badge_id" invisible="1"/>
+                        <field name="comment" />
                     </group>
                     <footer>
                         <button string="Grant Badge" type="object" name="action_grant_badge" class="oe_highlight" /> or
@@ -29,7 +30,7 @@
             <field name="inherit_id" ref="hr.view_employee_form"/>
             <field name="arch" type="xml">
             <xpath expr="//page[@string='Public Information']" position="before">
-                <page string="Badges">
+                <page string="Received Badges">
                     <field name="badge_ids" widget="many2many_kanban" />
                 </page>
             </xpath>
