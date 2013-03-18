@@ -9,16 +9,17 @@
             <form string="Create Invoice" version="7.0">
                 <notebook>
                     <page string="Billing Data">
-                       <group>
-                       <group string="Do you want to show details of work in invoice?">
-                           <field name="date"/>
-                           <field name="time"/>
-                           <field name="name"/>
-                           <field name="price"/>
-                       </group>
-                       <group  string="Force to use a specific product">
-                           <field name="product"/>
-                       </group>
+                       <group cols="2">
+                           <group string="Do you want to show details of work in invoice?" colspan="1" cols="2">
+                               <field name="date"/>
+                               <field name="time"/>
+                               <field name="name"/>
+                               <field name="price"/>
+                           </group>
+                           <group  string="Force to use a specific product" colspan="1" cols="2">
+                               <field name="product"/>
+                               <p class="oe_grey" colspan="2">Beware that even if you don&#39;t force a product, the price on the expense is replaced by the sale price of the corresponding product if its sale price is not 0. </p>
+                           </group>
                        </group>
                     </page>
                 </notebook>
