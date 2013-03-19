@@ -16,9 +16,9 @@
                         <field name="email_from"
                             attrs="{'invisible':[('composition_mode', '!=', 'mass_mail')]}"/>
                         <field name="subject" placeholder="Subject..." required="True"/>
-                        <field name="post"  groups="base.group_no_one"
+                        <field name="post"
                             attrs="{'invisible':[('composition_mode', '!=', 'mass_mail')]}"/>
-                        <field name="notify"  groups="base.group_no_one"
+                        <field name="notify"
                             attrs="{'invisible':['|', ('post', '!=', True), ('composition_mode', '!=', 'mass_mail')]}"/>
                         <field name="same_thread"
                             attrs="{'invisible':[('composition_mode', '!=', 'mass_mail')]}"/>
