@@ -603,7 +603,7 @@ openerp.web.pyeval = function (instance) {
     });
 
     var eval_contexts = function (contexts, evaluation_context) {
-        evaluation_context = evaluation_context || {};
+        evaluation_context = _.extend(instance.web.pyeval.context(), evaluation_context || {});
         return _(contexts).reduce(function (result_context, ctx) {
             // __eval_context evaluations can lead to some of `contexts`'s
             // values being null, skip them as well as empty contexts
@@ -628,9 +628,10 @@ openerp.web.pyeval = function (instance) {
             // siblings
             _.extend(evaluation_context, evaluated);
             return _.extend(result_context, evaluated);
-        }, _.extend({}, instance.session.user_context));
+        }, {});
     };
     var eval_domains = function (domains, evaluation_context) {
+        evaluation_context = _.extend(instance.web.pyeval.context(), evaluation_context || {});
         var result_domain = [];
         _(domains).each(function (domain) {
             if (_.isString(domain)) {
@@ -657,6 +658,7 @@ openerp.web.pyeval = function (instance) {
         return result_domain;
     };
     var eval_groupbys = function (contexts, evaluation_context) {
+        evaluation_context = _.extend(instance.web.pyeval.context(), evaluation_context || {});
         var result_group = [];
         _(contexts).each(function (ctx) {
             if (_.isString(ctx)) {
@@ -707,14 +709,15 @@ openerp.web.pyeval = function (instance) {
      * @param {Array} object domains or contexts to evaluate
      * @param {Object} [context] evaluation context
      */
-    instance.web.pyeval.eval = function (type, object, context) {
+    instance.web.pyeval.eval = function (type, object, context, options) {
+        options = options || {};
         context = _.extend(instance.web.pyeval.context(), context || {});
         context['context'] = py.dict.fromJSON(context);
 
         //noinspection FallthroughInSwitchStatementJS
         switch(type) {
         case 'context': object = [object];
-        case 'contexts': return eval_contexts(object, context);
+        case 'contexts': return eval_contexts((options.no_user_context ? [] : [instance.session.user_context]).concat(object), context);
         case 'domain': object = [object];
         case 'domains': return eval_domains(object, context);
         case 'groupbys': return eval_groupbys(object, context);
