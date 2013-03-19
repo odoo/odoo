@@ -781,10 +781,8 @@
             <field name="model">fleet.vehicle.log.services</field>
             <field name="arch" type="xml">
                 <search string="Services Logs" >
-                    <group expand="1" string="Group By...">
-                        <filter name="groupby_vehicle" context="{'group_by' : 'vehicle_id'}" string="Vehicle"/>
-                        <filter name="groupby_service_type" context="{'group_by' : 'cost_subtype_id'}" string="Service Type"/>
-                    </group>
+                    <field name="vehicle_id"/>
+                    <field name="cost_subtype_id"/>
                 </search>
             </field>
         </record>
