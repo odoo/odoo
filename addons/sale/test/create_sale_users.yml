@@ -1,20 +1,22 @@
 -
    Create a user as 'Salesmanager'
 -
+  !context
+    default_groups_ref: ['base.group_sale_manager']
+-
   !record {model: res.users, id: res_users_salesmanager}:
     company_id: base.main_company
     name: Sales manager
     login: sm
     password: sm
-    groups_id:
-      - base.group_sale_manager
 -
    Create a user as 'Salesman'
+-
+  !context
+    default_groups_ref: ['base.group_sale_salesman_all_leads']
 -
   !record {model: res.users, id: res_users_salesman}:
     company_id: base.main_company
     name: Salesman
     login: su
     password: su
-    groups_id:
-      - base.group_sale_salesman_all_leads
