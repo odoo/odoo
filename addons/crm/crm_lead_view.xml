@@ -104,9 +104,9 @@
                 </header>
                 <sheet>
                     <div class="oe_right oe_button_box" name="buttons">
-                        <button type="action"
-                            name="%(act_crm_opportunity_crm_phonecall_new)d"
-                            string="Phone Calls"/>
+                        <button string="Schedule/Log Call" 
+                                name="%(opportunity2phonecall_act)d"
+                                type="action"/>
                     </div>
                     <div class="oe_title">
                         <label for="name" class="oe_edit_only"/>
@@ -151,7 +151,8 @@
                             -->
                         </group>
                         <group>
-                            <field name="user_id"/>
+                            <field name="user_id"
+                                context="{'default_groups_ref': ['base.group_user', 'base.group_sale_salesman_all_leads']}"/>
                             <label for="section_id"/>
                             <div>
                                 <field name="section_id"/>
@@ -426,7 +427,7 @@
                             </group>
 
                             <group>
-                                <field name="user_id"/>
+                                <field name="user_id" context="{'default_groups_ref': ['base.group_user', 'base.group_sale_salesman_all_leads']}"/>
                                 <label for="section_id"/>
                                 <div>
                                     <field name="section_id" widget="selection"/>
@@ -436,7 +437,7 @@
                             <group>
                                 <field name="categ_ids"
                                     string="Categories" widget="many2many_tags"
-                                    context = "{'object_name': 'crm.lead'}"
+                                    context="{'object_name': 'crm.lead'}"
                                     domain="[('object_id.model', '=', 'crm.lead')]"/>
 
                             </group>
