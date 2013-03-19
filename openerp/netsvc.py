@@ -134,7 +134,8 @@ def init_logger():
 
     logconfig = tools.config['log_handler']
 
-    for logconfig_item in DEFAULT_LOG_CONFIGURATION + pseudo_config + logconfig:
+    logging_configurations = DEFAULT_LOG_CONFIGURATION + pseudo_config + logconfig
+    for logconfig_item in logging_configurations:
         loggername, level = logconfig_item.split(':')
         level = getattr(logging, level, logging.INFO)
         logger = logging.getLogger(loggername)
@@ -144,7 +145,7 @@ def init_logger():
         if loggername != '':
             logger.propagate = False
 
-    for logconfig_item in DEFAULT_LOG_CONFIGURATION + pseudo_config + logconfig:
+    for logconfig_item in logging_configurations:
         _logger.debug('logger level set: "%s"', logconfig_item)
 
 DEFAULT_LOG_CONFIGURATION = [
