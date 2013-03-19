@@ -10,7 +10,7 @@
             <field name="model">survey.question.wiz</field>
             <field name="arch" type="xml">
                 <form string="Your Survey"  version="7.0">
-                    <field name="name" nolabel="1" colspan="4" invisible="1"/>
+                    <field name="survey_id" nolabel="1" colspan="4" invisible="1"/>
                     <sheet>
                         <div>
                             <br/><br/>
@@ -30,16 +30,6 @@
                         </div>
                     </sheet>
                 </form>
-            </field>
-        </record>
-
-        <record id="view_survey_question_message1" model="ir.ui.view">
-            <field name="name">Survey Search</field>
-            <field name="model">survey.question.wiz</field>
-            <field name="arch" type="xml">
-                <search string="Your survey">
-                    <field name="name"/>
-                </search>
             </field>
         </record>
 
