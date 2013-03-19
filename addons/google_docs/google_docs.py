@@ -234,7 +234,7 @@ class config(osv.osv):
         'name' : fields.char('Name', required=True, size=1024),
         'model_id': fields.many2one('ir.model', 'Model', required=True),
         'filter_id' : fields.many2one('ir.filters', 'Filter'),
-        'gdocs_template_url': fields.char('Template Url', required=True, size=1024),
+        'gdocs_template_url': fields.char('Template URL', required=True, size=1024),
         'gdocs_resource_id' : fields.function(_resource_get,type="char" ,string='Resource Id',store=True),
         'name_template': fields.char('Google Drive Name Pattern', size=64, help='Choose how the new google drive will be named, on google side. Eg. gdoc_%(field_name)s', required=True),
     }
