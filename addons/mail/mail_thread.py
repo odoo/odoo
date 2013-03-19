@@ -927,7 +927,7 @@ class mail_thread(osv.AbstractModel):
             model = context.get('thread_model', self._name) if self._name == 'mail.thread' else self._name
             if model != self._name:
                 del context['thread_model']
-                return self.pool.get(model).message_post(cr, uid, thread_id, body=body, subject=subject, type=type, subtype=subtype, parent_id=parent_id, attachments=attachments, context=ctx, content_subtype=content_subtype, **kwargs)
+                return self.pool.get(model).message_post(cr, uid, thread_id, body=body, subject=subject, type=type, subtype=subtype, parent_id=parent_id, attachments=attachments, context=context, content_subtype=content_subtype, **kwargs)
 
         # 1: Handle content subtype: if plaintext, converto into HTML
         if content_subtype == 'plaintext':
