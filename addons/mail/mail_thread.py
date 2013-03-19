@@ -140,40 +140,6 @@ class mail_thread(osv.AbstractModel):
             res[fol.res_id]['message_subtype_data'] = thread_subtype_dict
         return res
 
-    def edit_followers_subtype(self, cr, uid, ids, partner_id, context=None):
-        res = dict((id, dict(message_subtype_data='')) for id in ids)
-
-        subtype_obj = self.pool.get('mail.message.subtype')
-        subtype_ids = subtype_obj.search(cr, uid, ['|', ('res_model', '=', self._name), ('res_model', '=', False)], context=context)
-        subtype_dict = dict((subtype.name, dict(default=subtype.default, followed=False, id=subtype.id)) for subtype in subtype_obj.browse(cr, uid, subtype_ids, context=context))
-        for id in ids:
-            res[id]['message_subtype_data'] = subtype_dict.copy()
-
-        fol_obj = self.pool.get('mail.followers')
-        fol_ids = fol_obj.search(cr, uid, [
-            ('partner_id', '=', partner_id),
-            ('res_id', 'in', ids),
-            ('res_model', '=', self._name),
-        ], context=context)
-        for fol in fol_obj.browse(cr, uid, fol_ids, context=context):
-            thread_subtype_dict = res[fol.res_id]['message_subtype_data']
-            for subtype in fol.subtype_ids:
-                thread_subtype_dict[subtype.name]['followed'] = True
-            res[fol.res_id]['message_subtype_data'] = thread_subtype_dict
-        return res
-
-    def apply_edited_subtypes(self, cr, uid, ids, partner_id, check_list, context=None):
-        """ Apply the edited subtypes
-                  of the user."""
-        fol_obj = self.pool.get('mail.followers')
-        fol_ids = fol_obj.search(cr, uid, [
-            ('partner_id', '=', partner_id),
-            ('res_id', 'in', ids),
-            ('res_model', '=', self._name),
-        ], context=context)
-        fol_obj.write(cr, uid, fol_ids, {'subtype_ids': [(6,0, check_list)]}, context=context)
-        return True
-
     def _search_message_unread(self, cr, uid, obj=None, name=None, domain=None, context=None):
         return [('message_ids.to_read', '=', True)]
 
@@ -322,6 +288,43 @@ class mail_thread(osv.AbstractModel):
         default['message_ids'] = []
         default['message_follower_ids'] = []
         return super(mail_thread, self).copy(cr, uid, id, default=default, context=context)
+
+    #------------------------------------------------------
+    # Edit and apply followers subtypes.
+    #------------------------------------------------------
+    def edit_followers_subtype(self, cr, uid, ids, partner_id, context=None):
+        res = dict((id, dict(message_subtype_data='')) for id in ids)
+
+        subtype_obj = self.pool.get('mail.message.subtype')
+        subtype_ids = subtype_obj.search(cr, uid, ['|', ('res_model', '=', self._name), ('res_model', '=', False)], context=context)
+        subtype_dict = dict((subtype.name, dict(default=subtype.default, followed=False, id=subtype.id)) for subtype in subtype_obj.browse(cr, uid, subtype_ids, context=context))
+        for id in ids:
+            res[id]['message_subtype_data'] = subtype_dict.copy()
+
+        fol_obj = self.pool.get('mail.followers')
+        fol_ids = fol_obj.search(cr, uid, [
+            ('partner_id', '=', partner_id),
+            ('res_id', 'in', ids),
+            ('res_model', '=', self._name),
+        ], context=context)
+        for fol in fol_obj.browse(cr, uid, fol_ids, context=context):
+            thread_subtype_dict = res[fol.res_id]['message_subtype_data']
+            for subtype in fol.subtype_ids:
+                thread_subtype_dict[subtype.name]['followed'] = True
+            res[fol.res_id]['message_subtype_data'] = thread_subtype_dict
+        return res
+
+    def apply_edited_subtypes(self, cr, uid, ids, partner_id, check_list, context=None):
+        """ Apply the edited subtypes
+                  of the user."""
+        fol_obj = self.pool.get('mail.followers')
+        fol_ids = fol_obj.search(cr, uid, [
+            ('partner_id', '=', partner_id),
+            ('res_id', 'in', ids),
+            ('res_model', '=', self._name),
+        ], context=context)
+        fol_obj.write(cr, uid, fol_ids, {'subtype_ids': [(6,0, check_list)]}, context=context)
+        return True
 
     #------------------------------------------------------
     # Automatically log tracked fields

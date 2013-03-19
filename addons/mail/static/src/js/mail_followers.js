@@ -92,9 +92,9 @@ openerp_mail_followers = function(session, mail) {
                             buttons: [
                                     { text: _t("Apply"), click: function() { 
                                         self.on_apply_subtype(id, partner_id);
-                                        $dialog.remove();
+                                        $(this).remove();
                                     }},
-                                    { text: _t("Cancel"), click: function() { $dialog.remove(); }}
+                                    { text: _t("Cancel"), click: function() { $(this).remove(); }}
                                 ],
                     });
             this.ds_model.call('edit_followers_subtype', [[id], partner_id, new session.web.CompoundContext(this.build_context(), {})])
