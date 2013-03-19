@@ -286,9 +286,6 @@ class resource_calendar(osv.osv):
         interval_start = utc_to_local_zone(dt_from)
         interval_end = utc_to_local_zone(dt_to)
         hours_timedelta = timedelta()
-
-        print "from %s to %s" % (interval_start, interval_end)
-        print "===================="
     
         # Get leaves for requested resource
         dt_leaves = set([])
@@ -314,12 +311,9 @@ class resource_calendar(osv.osv):
                 daytime_start = max(daytime_start, interval_start)
                 daytime_end = min(daytime_end, interval_end)
                 
-                print "current: %s to %s " % (daytime_start, daytime_end)
-                
                 # case 2+, 4+, 3
                 hours_timedelta += (daytime_end - daytime_start)
-                print "hours_timedelta: %s" % hours_timedelta
-                print "-------------------------"
+                
         # return timedelta converted to hours
         return (hours_timedelta.days * 24.0 + hours_timedelta.seconds / 3600.0)
 
