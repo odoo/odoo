@@ -709,6 +709,17 @@ class task(base_stage, osv.osv):
                 new_name = _("%s (copy)") % (default.get('name', ''))
                 default.update({'name':new_name})
         return super(task, self).copy_data(cr, uid, id, default, context)
+    
+    def copy(self, cr, uid, id, default=None, context=None):
+        if context is None:
+            context = {}
+        if default is None:
+            default = {}
+        stage = self._get_default_stage_id(cr, uid, context=context)
+        if stage :
+            default['stage_id'] = stage
+        res = super(task, self).copy(cr, uid, id, default, context)
+        return res
 
     def _is_template(self, cr, uid, ids, field_name, arg, context=None):
         res = {}
