@@ -42,14 +42,14 @@ openerp.portal_anonymous = function(instance) {
 
     instance.web.Login.include({
         start: function() {
-            var self = this;
-            return $.when(this._super()).then(function() {
-                if (!self.session.session_is_valid() && !(self.params.token || self.params.login)) {
-                    self.remember_credentials = false;
-                    // XXX get login/pass from server (via a rpc call) ?
-                    return self.do_login(self.selected_db, 'anonymous', 'anonymous');
-                }
-            });
+            if (!this.session.session_is_valid() && !(this.params.token || this.params.login)) {
+                this.$el.hide();
+                this.remember_credentials = false;
+                // XXX get login/pass from server (via a rpc call) ?
+                return this.do_login(this.selected_db, 'anonymous', 'anonymous');
+            } else {
+                return this._super.apply(this, arguments);
+            }
         },
     });
 
