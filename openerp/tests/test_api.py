@@ -286,7 +286,32 @@ class TestAPI(common.TransactionCase):
                 company.write({'name': 'Pricks'})
 
     @mute_logger('openerp.osv.orm')
-    def test_50_record_recordset(self):
+    def test_60_cache(self):
+        """ Check the record cache behavior """
+        partners = self.Partner.search([('child_ids', '!=', False)])
+        partner1, partner2 = partners[0], partners[1]
+        children1, children2 = partner1.child_ids, partner2.child_ids
+        self.assertTrue(children1)
+        self.assertTrue(children2)
+
+        # take a child contact
+        child = children1[0]
+        self.assertEqual(child.parent_id, partner1)
+        self.assertIn(child, partner1.child_ids)
+        self.assertNotIn(child, partner2.child_ids)
+
+        # change its parent
+        child.write({'parent_id': partner2.id})
+        self.assertEqual(child.parent_id, partner2)
+        self.assertNotIn(child, partner1.child_ids)
+        self.assertIn(child, partner2.child_ids)
+
+        # check recordsets
+        self.assertEqual(set(partner1.child_ids + child), set(children1))
+        self.assertEqual(set(partner2.child_ids), set(children2 + child))
+
+    @mute_logger('openerp.osv.orm')
+    def test_70_record_recordset(self):
         """ Check properties record and recordset. """
         ps = self.Partner.search([('name', 'ilike', 'a')], limit=1)
         self.assertEqual(ps.recordset(), ps)
@@ -295,7 +320,7 @@ class TestAPI(common.TransactionCase):
         self.assertEqual(p.recordset(), ps)
 
     @mute_logger('openerp.osv.orm')
-    def test_60_contains(self):
+    def test_80_contains(self):
         """ Test membership on recordset. """
         ps = self.Partner.search([('name', 'ilike', 'a')], limit=1)
         p = ps.record()
@@ -303,7 +328,7 @@ class TestAPI(common.TransactionCase):
         self.assertTrue(p in ps)
 
     @mute_logger('openerp.osv.orm')
-    def test_60_concat(self):
+    def test_80_concat(self):
         """ Check concatenation of recordsets. """
         pa = self.Partner.search([('name', 'ilike', 'a')])
         pb = self.Partner.search([('name', 'ilike', 'b')])

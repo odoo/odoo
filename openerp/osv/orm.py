@@ -314,12 +314,12 @@ def _clean_one(value):
 
 def _browse_one(record, column, value):
     model = record.pool[column._obj]
-    return model.browse(value, cache=record._record_cache)
+    return model.browse(value)
 
 
 def _browse_many(record, column, value):
     model = record.pool[column._obj]
-    return model.browse(value or [], cache=record._record_cache)
+    return model.browse(value or [])
 
 
 def _browse_reference(record, column, value):
@@ -328,7 +328,7 @@ def _browse_reference(record, column, value):
         ref_id = long(ref_id)
         if ref_id:
             model = record.pool[ref_obj]
-            return model.browse(ref_id, cache=record._record_cache)
+            return model.browse(ref_id)
     return False
 
 
@@ -3863,6 +3863,9 @@ class BaseModel(object):
                 if rids:
                     obj._store_set_values(cr, uid, rids, fields, context)
 
+        # invalidate all the caches
+        api.scope.invalidate_cache()
+
         return True
 
     #
@@ -4134,6 +4137,9 @@ class BaseModel(object):
                     todo.append(id)
             self.pool.get(object)._store_set_values(cr, user, todo, fields_to_recompute, context)
 
+        # invalidate all the caches
+        api.scope.invalidate_cache()
+
         self.step_workflow(cr, user, ids, context=context)
         return True
 
@@ -4345,16 +4351,20 @@ class BaseModel(object):
                     self.pool.get(object)._store_set_values(cr, user, ids, fields2, context)
                     done.append((object, ids, fields2))
 
+        # invalidate all the caches
+        api.scope.invalidate_cache()
+
         if self._log_create and not (context and context.get('no_store_function', False)):
             message = self._description + \
                 " '" + \
                 self.name_get(cr, user, [id_new], context=context)[0][1] + \
                 "' " + _("created.")
             self.log(cr, user, id_new, message, True, context=context)
+
         self.create_workflow(cr, user, [id_new], context=context)
         return id_new
 
-    def browse(self, cr, uid, select, context=None, cache=None):
+    def browse(self, cr, uid, select, context=None):
         """ return a record, recordset or null instance corresponding to the
             value of parameter `select` (id, list of ids or ``False``).
 
@@ -4370,9 +4380,9 @@ class BaseModel(object):
         # need to accepts ints and longs because ids coming from a method
         # launched by button in the interface have a type long...
         if isinstance(select, (int, long)) and select:
-            return self.record(select, cache=cache, scope=scope)
+            return self.record(select, scope=scope)
         elif isinstance(select, list):
-            return self.recordset(select, cache=cache, scope=scope)
+            return self.recordset(select, scope=scope)
         else:
             return self.null()
 
@@ -5161,7 +5171,6 @@ class BaseModel(object):
     INSTANCE_ATTRIBUTES = [
         '_record_id',
         '_record_ids',
-        '_record_cache',
     ]
 
     @property
@@ -5171,20 +5180,16 @@ class BaseModel(object):
     def null(self):
         """ make a null instance """
         # a null instance is represented as a record with id=False
-        return self._make_instance(_record_id=False, _record_cache=None)
+        return self._make_instance(_record_id=False)
 
     def is_null(self):
         """ test whether self is a null instance """
         return getattr(self, '_record_id', None) is False
 
-    def record(self, id=None, cache=None, scope=None):
+    def record(self, id=None, scope=None):
         """ make a record instance
 
             :param id: the record's id (or convert `self` if ``None``)
-            :param cache: a dictionary used as ``cache[model_name][id][field_name]``,
-                storing record data shared across records, thus reducing the SQL
-                reads.  It can speed up things a lot, but also be disastrous if
-                not discarded after update/delete operations.
             :param scope: the optional scope to attach to the record
         """
         if id is None:
@@ -5196,10 +5201,7 @@ class BaseModel(object):
             else:
                 raise except_orm("ValueError", "Expected singleton: %s" % self)
 
-        if cache is None:
-            cache = RecordCache()
-
-        return self._make_instance(_record_id=id, _record_cache=cache, _scope=scope)
+        return self._make_instance(_record_id=id, _scope=scope)
 
     def is_record(self):
         """ test whether `self` is a record instance """
@@ -5209,14 +5211,10 @@ class BaseModel(object):
         """ test whether `self` is a record or null instance """
         return hasattr(self, '_record_id')
 
-    def recordset(self, ids=None, cache=None, scope=None):
+    def recordset(self, ids=None, scope=None):
         """ make a recordset instance
 
             :param ids: the record ids (or convert `self` if ``None``)
-            :param cache: a dictionary used as ``cache[model_name][id][field_name]``,
-                storing record data shared across records, thus reducing the SQL
-                reads.  It can speed up things a lot, but also be disastrous if
-                not discarded after update/delete operations.
             :param scope: the optional scope to attach to the recordset
         """
         if ids is None:
@@ -5231,11 +5229,7 @@ class BaseModel(object):
         else:
             ids = map(int, ids)
 
-        if cache is None:
-            cache = RecordCache()
-        cache[self._name].ids.update(ids)
-
-        return self._make_instance(_record_ids=ids, _record_cache=cache, _scope=scope)
+        return self._make_instance(_record_ids=ids, _scope=scope)
 
     def is_recordset(self):
         """ test whether `self` is a recordset instance """
@@ -5256,8 +5250,13 @@ class BaseModel(object):
     def __iter__(self):
         """ Return an iterator over `self` (must be a recordset). """
         assert self.is_recordset(), "Expected recordset: %s" % self
+
+        # iterating over records usually implies reading them
+        # -> add the ids in the cache to prefetch all records at once
+        self.scope.cache[self._name].ids.update(self._record_ids)
+
         for id in self._record_ids:
-            yield self.record(id, cache=self._record_cache, scope=self._scope)
+            yield self.record(id, scope=self._scope)
 
     def __len__(self):
         """ Return the size of `self` (must be a recordset). """
@@ -5279,7 +5278,7 @@ class BaseModel(object):
         """ Return the concatenation of two recordsets as a recordset. """
         assert self._name == other._name, "Mixing apples and oranges: %s, %s" % (self, other)
         ids = self.recordset()._record_ids + other.recordset()._record_ids
-        return self.recordset(ids, cache=self._record_cache, scope=self._scope)
+        return self.recordset(ids, scope=self._scope)
 
     def __eq__(self, other):
         """ Test equality between two records, two recordsets or two models. """
@@ -5317,7 +5316,7 @@ class BaseModel(object):
                 # return False, null or recordset, depending on the field's type
                 return browse_function(self, column, False)
 
-            model_cache = self._record_cache[self._name]
+            model_cache = self.scope.cache[self._name]
 
             if self._record_id not in model_cache[field_name]:
                 # determine which fields to fetch
@@ -5353,7 +5352,7 @@ class BaseModel(object):
 
     def _fetch_record_fields(self, field_names, ids):
         """ read the given fields in the record cache """
-        cache = self._record_cache
+        cache = self.scope.cache
 
         # read the fields
         result = self.browse(ids).read(field_names, load="_classic_write")
@@ -5445,9 +5444,7 @@ class BaseModel(object):
         """ Clear the records cache used by `self` by emptying the cache completely,
             preserving only the record identifiers (for prefetching optimizations).
         """
-        if self.is_record() or self.is_recordset():
-            for model_cache in self._record_cache.itervalues():
-                model_cache.invalidate_fields()
+        api.scope.invalidate_cache()
 
 
 # for instance checking

@@ -156,6 +156,7 @@ class Scope(object):
         obj = object.__new__(cls)
         obj.cr, obj.uid, obj.context = args
         obj.registry = RegistryManager.get(cr.dbname)
+        obj.cache = RecordCache()
         scope_list.append(obj)
         return obj
 
@@ -235,6 +236,17 @@ class Scope(object):
                 return languages.record()
         except Exception:
             raise Exception(_('Language with code "%s" is not defined in your system !\nDefine it through the Administration menu.') % (self.lang,))
+
+    def invalidate_cache(self, model_field_list=None):
+        """ invalidate the record cache in all scopes """
+        if model_field_list is None:
+            for s in _local.scope_list:
+                for model in s.cache:
+                    s.cache[model].invalidate_fields()
+        else:
+            for s in _local.scope_list:
+                for model, field in model_field_list:
+                    s.cache[model].invalidate_fields([field])
 
 
 #
@@ -756,7 +768,7 @@ def guess(method):
 
 # keep those imports here in order to handle cyclic dependencies correctly
 from openerp import SUPERUSER_ID
-from openerp.osv.orm import Record
+from openerp.osv.orm import Record, RecordCache
 from openerp.sql_db import Cursor
 from openerp.tools.translate import _
 from openerp.modules.registry import RegistryManager
