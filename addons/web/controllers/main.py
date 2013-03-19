@@ -638,6 +638,18 @@ class WebClient(openerpweb.Controller):
 
         content, checksum = concat_files((f[0] for f in files), reader)
 
+        # move up all @import and @charset rules to the top
+        matches = []
+        def push(matchobj):
+            matches.append(matchobj.group(0))
+            return ''
+
+        content = re.sub(re.compile("(@charset.+;$)", re.M), push, content)
+        content = re.sub(re.compile("(@import.+;$)", re.M), push, content)
+
+        matches.append(content)
+        content = '\n'.join(matches)
+
         return make_conditional(
             req, req.make_response(content, [('Content-Type', 'text/css')]),
             last_modified, checksum)
