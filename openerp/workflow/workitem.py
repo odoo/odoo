@@ -40,30 +40,26 @@ def create(cr, act_datas, inst_id, ident, stack):
         process(cr, res, ident, stack=stack)
 
 def process(cr, workitem, ident, signal=None, force_running=False, stack=None):
-    if stack is None:
-        raise 'Error !!!'
-    result = True
+    assert stack is not None
     cr.execute('select * from wkf_activity where id=%s', (workitem['act_id'],))
     activity = cr.dictfetchone()
 
+    if workitem['state'] == 'running':
+        return True
+
     triggers = False
-    if workitem['state']=='active':
+    if workitem['state'] == 'active':
         triggers = True
-        result = _execute(cr, workitem, activity, ident, stack)
-        if not result:
+        if not _execute(cr, workitem, activity, ident, stack):
             return False
 
-    if workitem['state']=='running':
-        pass
-
-    if workitem['state']=='complete' or force_running:
+    if force_running or workitem['state'] == 'complete':
         ok = _split_test(cr, workitem, activity['split_mode'], ident, signal, stack)
         triggers = triggers and not ok
 
     if triggers:
         cr.execute('select * from wkf_transition where act_from=%s', (workitem['act_id'],))
-        alltrans = cr.dictfetchall()
-        for trans in alltrans:
+        for trans in cr.dictfetchall():
             if trans['trigger_model']:
                 ids = wkf_expr._eval_expr(cr,ident,workitem,trans['trigger_expr_id'])
                 for res_id in ids:
@@ -71,7 +67,7 @@ def process(cr, workitem, ident, signal=None, force_running=False, stack=None):
                     id =cr.fetchone()[0]
                     cr.execute('insert into wkf_triggers (model,res_id,instance_id,workitem_id,id) values (%s,%s,%s,%s,%s)', (trans['trigger_model'],res_id,workitem['inst_id'], workitem['id'], id))
 
-    return result
+    return True
 
 
 # ---------------------- PRIVATE FUNCS --------------------------------
@@ -146,8 +142,6 @@ def _execute(cr, workitem, activity, ident, stack):
     return result
 
 def _split_test(cr, workitem, split_mode, ident, signal=None, stack=None):
-    if stack is None:
-        raise 'Error !!!'
     cr.execute('select * from wkf_transition where act_from=%s', (workitem['act_id'],))
     test = False
     transitions = []
