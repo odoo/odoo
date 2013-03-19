@@ -82,7 +82,7 @@ class payment_order_create(osv.osv_memory):
                 date_to_pay = payment.date_scheduled
             payment_obj.create(cr, uid,{
                     'move_line_id': line.id,
-                    'amount_currency': line.amount_to_pay,
+                    'amount_currency': line.amount_residual_currency,
                     'bank_id': line2bank.get(line.id),
                     'order_id': payment.id,
                     'partner_id': line.partner_id and line.partner_id.id or False,
@@ -102,7 +102,7 @@ class payment_order_create(osv.osv_memory):
 #        payment = self.pool.get('payment.order').browse(cr, uid, context['active_id'], context=context)
 
         # Search for move line to pay:
-        domain = [('reconcile_id', '=', False), ('account_id.type', '=', 'payable'), ('amount_to_pay', '>', 0)]
+        domain = [('reconcile_id', '=', False), ('account_id.type', '=', 'payable'), ('amount_residual', '>', 0)]
         domain = domain + ['|', ('date_maturity', '<=', search_due_date), ('date_maturity', '=', False)]
         line_ids = line_obj.search(cr, uid, domain, context=context)
         context.update({'line_ids': line_ids})
