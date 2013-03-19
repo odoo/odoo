@@ -307,6 +307,11 @@ class RecordCache(defaultdict):
 # Helper functions for browsing record values
 #
 
+def _clean_one(value):
+    """ clean many2one value: return an id or False """
+    return value[0] if isinstance(value, (tuple, list)) else value
+
+
 def _browse_one(record, column, value):
     model = record.pool[column._obj]
     return model.browse(value, cache=record._record_cache)
@@ -5297,71 +5302,82 @@ class BaseModel(object):
     def __ne__(self, other):
         return not self == other
 
-    def _get_record_field(self, name):
-        """ read the field `name` on a record instance """
+    def _get_record_field(self, field_name):
+        """ read the field `field_name` on a record instance """
         assert self.is_record_or_null(), "Expected record instance: %s" % self
-        if name == 'id':
+        if field_name == 'id':
             return self._record_id
 
         with self.scope:
             # fetch the definition of the field which was asked for
-            column = self._all_columns[name].column
+            column = self._all_columns[field_name].column
             browse_function = _browse_functions.get(column._type, _browse_default)
 
             if self.is_null():
                 # return False, null or recordset, depending on the field's type
                 return browse_function(self, column, False)
 
-            cache = self._record_cache
-            model_cache = cache[self._name]
+            model_cache = self._record_cache[self._name]
 
-            if self._record_id not in model_cache[name]:
+            if self._record_id not in model_cache[field_name]:
                 # determine which fields to fetch
                 if column._prefetch:
-                    # the field is a classic one or a many2one, fetch all classic and many2one fields
-                    fields_to_fetch = [
-                        (key, cinfo.column)
-                        for key, cinfo in self._all_columns.iteritems()
+                    # fetch all classic and many2one fields
+                    field_names = [
+                        fname for fname, cinfo in self._all_columns.iteritems()
                         if cinfo.column._classic_write
                     ]
+
+                elif isinstance(column, fields.function) and not column.store:
+                    # simply evaluate the function field for that record
+                    value = self.read([field_name], load="_classic_write")[0][field_name]
+                    if column._type == 'many2one':
+                        value = _clean_one(value)
+                    return browse_function(self, column, value)
+
                 else:
                     # otherwise fetch only that field
-                    fields_to_fetch = [(name, column)]
+                    field_names = [field_name]
 
-                # determine which records to fetch; make sure to include self
+                # fetch the records in the same model that don't have the field yet
                 model_cache.ids.add(self._record_id)
+                ids = list(model_cache.ids - set(model_cache[field_name]))
 
-                # read the records in the same model that don't have the field yet
-                ids = list(model_cache.ids - set(model_cache[name]))
-                field_names = [key for key, col in fields_to_fetch]
-                result = self.browse(ids).read(field_names, load="_classic_write")
+                self._fetch_record_fields(field_names, ids)
 
-                # process the result field by field
-                for fname, fcolumn in fields_to_fetch:
-                    values = {}
-                    for data in result:
-                        values[data['id']] = data[fname]
-
-                    # feed cache for prefetching relation fields
-                    if fcolumn._type == 'many2one':
-                        values = dict(
-                            (i, v[0] if isinstance(v, (tuple, list)) else v)
-                            for i, v in values.iteritems())
-                        ids = filter(None, values.itervalues())
-                        cache[fcolumn._obj].ids.update(ids)
-
-                    elif fcolumn._type in ('one2many', 'many2many'):
-                        ids = itertools.chain(*values.values())
-                        cache[fcolumn._obj].ids.update(ids)
-
-                    # update the cache
-                    model_cache[fname].update(values)
-
-            if self._record_id not in model_cache[name]:
+            if self._record_id not in model_cache[field_name]:
                 # How did this happen? Could be a missing model due to custom fields used too soon.
-                raise KeyError(_('Unknown field %s in %s ') % (name, self))
+                raise KeyError(_('Unknown field %s in %s ') % (field_name, self))
 
-            return browse_function(self, column, model_cache[name][self._record_id])
+            return browse_function(self, column, model_cache[field_name][self._record_id])
+
+    def _fetch_record_fields(self, field_names, ids):
+        """ read the given fields in the record cache """
+        cache = self._record_cache
+
+        # read the fields
+        result = self.browse(ids).read(field_names, load="_classic_write")
+
+        # process result field by field
+        for field_name in field_names:
+            # build dictionary {id: value, ...} for field
+            values = {}
+            for data in result:
+                values[data['id']] = data[field_name]
+
+            # feed cache for prefetching relation fields
+            column = self._all_columns[field_name].column
+            if column._type == 'many2one':
+                values = dict((i, _clean_one(v)) for i, v in values.iteritems())
+                value_ids = filter(None, values.itervalues())
+                cache[column._obj].ids.update(value_ids)
+
+            elif column._type in ('one2many', 'many2many'):
+                value_ids = itertools.chain(*values.values())
+                cache[column._obj].ids.update(value_ids)
+
+            # update the cache
+            cache[self._name][field_name].update(values)
 
     def __getitem__(self, key):
         """ If `self` is a record, return the value of the field named `key`.
