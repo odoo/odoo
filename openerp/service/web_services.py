@@ -371,7 +371,7 @@ class db(netsvc.ExportService):
                     cr.execute("select datname from pg_database where datdba=(select usesysid from pg_user where usename=%s) and datname not in %s order by datname", (db_user, templates_list))
                 else:
                     cr.execute("select datname from pg_database where datname not in %s order by datname", (templates_list,))
-                res = [str(name) for (name,) in cr.fetchall()]
+                res = [tools.ustr(name) for (name,) in cr.fetchall()]
             except Exception:
                 res = []
         finally:
