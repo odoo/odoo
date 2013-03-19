@@ -19,7 +19,6 @@
 #
 ##############################################################################
 
-from lxml import etree
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
 import time
@@ -704,29 +703,29 @@ class stock_picking(osv.osv):
             default = {}
         default = default.copy()
         picking_obj = self.browse(cr, uid, id, context=context)
-        move_obj=self.pool.get('stock.move')
-        if ('name' not in default) or (picking_obj.name=='/'):
-            seq_obj_name =  'stock.picking.' + picking_obj.type
+        move_obj = self.pool.get('stock.move')
+        if ('name' not in default) or (picking_obj.name == '/'):
+            seq_obj_name = 'stock.picking.' + picking_obj.type
             default['name'] = self.pool.get('ir.sequence').get(cr, uid, seq_obj_name)
             default['origin'] = ''
             default['backorder_id'] = False
         if 'invoice_state' not in default and picking_obj.invoice_state == 'invoiced':
             default['invoice_state'] = '2binvoiced'
-        res=super(stock_picking, self).copy(cr, uid, id, default, context)
+        res = super(stock_picking, self).copy(cr, uid, id, default, context)
         if res:
             picking_obj = self.browse(cr, uid, res, context=context)
             for move in picking_obj.move_lines:
-                move_obj.write(cr, uid, [move.id], {'tracking_id': False,'prodlot_id':False, 'move_history_ids2': [(6, 0, [])], 'move_history_ids': [(6, 0, [])]})
+                move_obj.write(cr, uid, [move.id], {'tracking_id': False, 'prodlot_id': False, 'move_history_ids2': [(6, 0, [])], 'move_history_ids': [(6, 0, [])]})
         return res
-    
+
     def fields_view_get(self, cr, uid, view_id=None, view_type=False, context=None, toolbar=False, submenu=False):
         if view_type == 'form' and not view_id:
             mod_obj = self.pool.get('ir.model.data')
             if self._name == "stock.picking.in":
-                model,view_id = mod_obj.get_object_reference(cr, uid, 'stock', 'view_picking_in_form')
+                model, view_id = mod_obj.get_object_reference(cr, uid, 'stock', 'view_picking_in_form')
             if self._name == "stock.picking.out":
-                model,view_id = mod_obj.get_object_reference(cr, uid, 'stock', 'view_picking_out_form')
-        return super(stock_picking,self).fields_view_get(cr, uid, view_id=view_id, view_type=view_type, context=context, toolbar=toolbar, submenu=submenu)
+                model, view_id = mod_obj.get_object_reference(cr, uid, 'stock', 'view_picking_out_form')
+        return super(stock_picking, self).fields_view_get(cr, uid, view_id=view_id, view_type=view_type, context=context, toolbar=toolbar, submenu=submenu)
 
     def onchange_partner_in(self, cr, uid, ids, partner_id=None, context=None):
         return {}
@@ -2445,9 +2444,8 @@ class stock_move(osv.osv):
             context = {}
         ctx = context.copy()
         for move in self.browse(cr, uid, ids, context=context):
-            if move.state != 'draft' and not ctx.get('call_unlink',False):
-                raise osv.except_osv(_('User Error!'),
-                        _('You can only delete draft moves.'))
+            if move.state != 'draft' and not ctx.get('call_unlink', False):
+                raise osv.except_osv(_('User Error!'), _('You can only delete draft moves.'))
         return super(stock_move, self).unlink(
             cr, uid, ids, context=ctx)
 
