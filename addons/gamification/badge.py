@@ -111,6 +111,16 @@ class gamification_badge(osv.Model):
                           ('create_date', '>=', first_month_day)], context=context))
         return result
 
+    def _get_month_my_sent(self, cr, uid, ids, name, args, context=None):
+        """Return the number of time this badge has been granted to the current user this month"""
+        result = dict.fromkeys(ids, False)
+        first_month_day = date.today().replace(day=1).isoformat()
+        for obj in self.browse(cr, uid, ids, context=context):
+            result[obj.id] = len(self.pool.get('gamification.badge.user').search(
+                cr, uid, [('badge_id', '=', obj.id), ('create_uid', '=', uid),
+                          ('create_date', '>=', first_month_day)], context=context))
+        return result
+
     _columns = {
         'name': fields.char('Badge', required=True, translate=True),
         'description': fields.text('Description'),
@@ -133,10 +143,14 @@ class gamification_badge(osv.Model):
             'rel_badge_badge', 'badge1_id', 'badge2_id',
             string='Required Badges',
             help="Only the people having these badges can give this badge"),
-        'rule_max': fields.boolean('Limited',
-            help="This badge can not be send indefinitely"),
+
+        'rule_max': fields.boolean('Limited Sending',
+            help="Check to set a monthly limit per person of sending this badge"),
         'rule_max_number': fields.integer('Limitation Number',
-            help="The maximum number of time this badge can be sent per month."),
+            help="The maximum number of time this badge can be sent per month per person."),
+        'stat_my_monthly_sending': fields.function(_get_month_my_sent,
+            string='My Monthly Sending Total',
+            help="The number of time the current user has sent this badge this month."),
 
         'rule_automatic': fields.selection([
                 ('manual', 'Given by Users Only'),
@@ -163,7 +177,6 @@ class gamification_badge(osv.Model):
         'stat_count_distinct': fields.function(_get_unique_global_count,
             string='Unique Count',
             help="The number of time this badge has been received by individual users."),
-        # TODO store result for working domain stat_this_month >= rule_max_number
         'stat_this_month': fields.function(_get_month_count,
             string='Monthly Count',
             help="The number of time this badge has been received this month."),
@@ -314,7 +327,8 @@ class gamification_badge(osv.Model):
 
         :param user_from_id: the id of the res.users trying to send the badge
         :param badge_id: the granted badge id
-        :return: boolean, True if succeeded to send, False otherwise"""
+        :return: boolean, True if succeeded to send, False otherwise
+        """
         context = context or {}
         badge = self.browse(cr, uid, badge_id, context=context)
 
@@ -343,9 +357,9 @@ class gamification_badge(osv.Model):
 
         # else badge.rule_auth == 'everyone' -> no check
 
-        if badge.rule_max and badge.stat_this_month >= badge.rule_max_number:
+        if badge.rule_max and badge.stat_my_monthly_sending >= badge.rule_max_number:
             # sent the maximum number of time this month
-            raise osv.except_osv(_('Warning!'), _('This badge has been already sent too many time this month.'))
+            raise osv.except_osv(_('Warning!'), _('You have already sent this badge too many time this month.'))
 
         return True
 
