@@ -2475,13 +2475,20 @@ class stock_move(osv.osv):
             raise osv.except_osv(_('Warning!'), _('Please provide a positive quantity to scrap.'))
         res = []
         for move in self.browse(cr, uid, ids, context=context):
+            source_location = move.location_id
+            if move.state == 'done':
+                source_location = move.location_dest_id
+            if source_location.usage != 'internal':
+                #restrict to scrap from a virtual location because it's meaningless and it may introduce errors in stock ('creating' new products from nowhere)
+                raise osv.except_osv(_('Error!'), _('Forbidden operation: it is not allowed to scrap products from a virtual location.'))
             move_qty = move.product_qty
             uos_qty = quantity / move_qty * move.product_uos_qty
             default_val = {
+                'location_id': source_location.id,
                 'product_qty': quantity,
                 'product_uos_qty': uos_qty,
                 'state': move.state,
-                'scrapped' : True,
+                'scrapped': True,
                 'location_dest_id': location_id,
                 'tracking_id': move.tracking_id.id,
                 'prodlot_id': move.prodlot_id.id,
