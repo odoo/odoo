@@ -597,12 +597,12 @@
                             'default_composition_mode': 'mass_mail',
                             'default_email_to':'{$object.email or \'\'}',
                             'default_use_template': True,
-                            'default_template_id': ref('crm.lead_template'),
+                            'default_template_id': ref('crm.email_template_opportunity_mail'),
                         }"/>
 
         <!--Update of email_template defined in crm_lead_data, to add ref_ir_act_window
             allowing to have a well formed email template (context action considered as set). -->
-        <record id="lead_template" model="email.template">
+        <record id="email_template_opportunity_mail" model="email.template">
             <field name="ref_ir_act_window" ref="crm.action_lead_mass_mail"/>
         </record>
 

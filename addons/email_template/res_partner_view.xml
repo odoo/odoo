@@ -26,9 +26,9 @@
             </field>
         </record>
 
-        <!--Definition of an email template with an empty body that will be used in opportunity mailing. Used to give a
+        <!--Definition of an email template with an empty body that will be used in partner mailing. Used to give a
             basis for email recipients, name and to ease the definition of a further elaborated template. -->
-        <record id="partner_template" model="email.template">
+        <record id="email_template_partner" model="email.template">
             <field name="name">Partner Mass Mail</field>
             <field name="model_id" ref="base.model_res_partner"/>
             <field name="auto_delete" eval="True"/>
@@ -48,10 +48,10 @@
                             'default_composition_mode': 'mass_mail',
                             'default_partner_to': '${object.id or \'\'}',
                             'default_use_template': True,
-                            'default_template_id': ref('partner_template'),
+                            'default_template_id': ref('email_template_partner'),
                         }"/>
 
-        <record id="partner_template" model="email.template">
+        <record id="email_template_partner" model="email.template">
             <field name="ref_ir_act_window" ref="base.action_partner_mass_mail"/>
         </record>
 

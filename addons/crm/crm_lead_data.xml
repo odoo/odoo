@@ -224,7 +224,7 @@
         <!--Definition of an email template with an empty body that will be used in opportunity mailing.
             Used to give a basis for email recipients, name and to ease the definition of a further
             elaborated template.  -->
-        <record id="lead_template" model="email.template">
+        <record id="email_template_opportunity_mail" model="email.template">
             <field name="name">Lead/Opportunity Mass Mail</field>
             <field name="model_id" ref="crm.model_crm_lead"/>
             <field name="auto_delete" eval="True"/>

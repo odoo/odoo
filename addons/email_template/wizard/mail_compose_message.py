@@ -22,7 +22,6 @@
 from openerp import tools
 from openerp.osv import osv, fields
 
-
 def _reopen(self, res_id, model):
     return {'type': 'ir.actions.act_window',
             'view_mode': 'form',
@@ -36,7 +35,6 @@ def _reopen(self, res_id, model):
                 'default_model': model,
             },
     }
-
 
 class mail_compose_message(osv.TransientModel):
     _inherit = 'mail.compose.message'
@@ -67,12 +65,6 @@ class mail_compose_message(osv.TransientModel):
             help="Comma-separated recipient addresses (placeholders may be used here)",),
         'email_cc': fields.char('Cc (Emails)',
             help="Carbon copy recipients (placeholders may be used here)"),
-    }
-
-    _defaults = {
-        'partner_to': lambda self, cr, uid, ctx={}: '',
-        'email_to': lambda self, cr, uid, ctx={}: '',
-        'email_cc': lambda self, cr, uid, ctx={}: '',
     }
 
     def onchange_template_id(self, cr, uid, ids, template_id, composition_mode, model, res_id, context=None):
