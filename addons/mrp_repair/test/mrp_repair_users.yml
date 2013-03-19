@@ -1,20 +1,22 @@
 -
    Create a user as 'MRP Repair Manager'
 -
+  !context
+    default_groups_ref: [mrp.group_mrp_manager]
+-
   !record {model: res.users, id: res_mrp_repair_manager}:
     company_id: base.main_company
     name: MRP Manager
     login: marm
     password: marm
-    groups_id:
-      - mrp.group_mrp_manager
 -
    Create a user as 'MRP Repair User'
+-
+  !context
+    default_groups_ref: [mrp.group_mrp_user]
 -
   !record {model: res.users, id: res_mrp_repair_user}:
     company_id: base.main_company
     name: MRP User
     login: maru
     password: maru
-    groups_id:
-      - mrp.group_mrp_user
