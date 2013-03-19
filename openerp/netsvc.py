@@ -131,6 +131,7 @@ def init_logger():
 
     # Configure handlers
     default_config = [
+        'openerp.workflow.workitem:WARNING',
         'openerp.netsvc.rpc.request:INFO',
         'openerp.netsvc.rpc.response:INFO',
         'openerp.addons.web.http:INFO',

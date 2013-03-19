@@ -23,11 +23,13 @@
 # TODO:
 # cr.execute('delete from wkf_triggers where model=%s and res_id=%s', (res_type,res_id))
 #
+import logging
 
 import instance
 
 import wkf_expr
-import wkf_logs
+
+logger = logging.getLogger(__name__)
 
 def create(cr, act_datas, inst_id, ident, stack):
     for act in act_datas:
@@ -36,7 +38,8 @@ def create(cr, act_datas, inst_id, ident, stack):
         cr.execute("insert into wkf_workitem (id,act_id,inst_id,state) values (%s,%s,%s,'active')", (id_new, act['id'], inst_id))
         cr.execute('select * from wkf_workitem where id=%s',(id_new,))
         res = cr.dictfetchone()
-        wkf_logs.log(cr,ident,act['id'],'active')
+        logger.info('Created workflow item in activity %s',
+                    act['id'], extra={'ident': ident})
         process(cr, res, ident, stack=stack)
 
 def process(cr, workitem, ident, signal=None, force_running=False, stack=None):
@@ -75,7 +78,8 @@ def process(cr, workitem, ident, signal=None, force_running=False, stack=None):
 def _state_set(cr, workitem, activity, state, ident):
     cr.execute('update wkf_workitem set state=%s where id=%s', (state,workitem['id']))
     workitem['state'] = state
-    wkf_logs.log(cr,ident,activity['id'],state)
+    logger.info("Changed state of work item %s to \"%s\" in activity %s",
+                workitem['id'], state, activity['id'], extra={'ident': ident})
 
 def _execute(cr, workitem, activity, ident, stack):
     result = True
