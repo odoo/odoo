@@ -259,6 +259,12 @@ openerp.testing.section('eval.types', {
             py.eval('a + a', ctx);
         }, /^Error: TypeError:/);
     });
+    test('relastivedelta', function (instance) {
+        strictEqual(
+            py.eval("(datetime.date(2012, 2, 15) + relativedelta(days=-1)).strftime('%Y-%m-%d 23:59:59')",
+                    instance.web.pyeval.context()),
+            "2012-02-14 23:59:59");
+    })
 });
 openerp.testing.section('eval.edc', {
     dependencies: ['web.data'],

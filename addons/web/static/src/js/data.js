@@ -969,7 +969,10 @@ instance.web.CompoundContext = instance.web.Class.extend({
     },
     get_eval_context: function () {
         return this.__eval_context;
-    }
+    },
+    eval: function() {
+        return instance.web.pyeval.eval('context', this, undefined, {no_user_context: true});
+    },
 });
 
 instance.web.CompoundDomain = instance.web.Class.extend({
@@ -992,7 +995,10 @@ instance.web.CompoundDomain = instance.web.Class.extend({
     },
     get_eval_context: function() {
         return this.__eval_context;
-    }
+    },
+    eval: function() {
+        return instance.web.pyeval.eval('domain', this);
+    },
 });
 
 instance.web.DropMisordered = instance.web.Class.extend({

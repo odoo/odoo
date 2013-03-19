@@ -3277,7 +3277,8 @@ instance.web.form.FieldMany2One = instance.web.form.AbstractField.extend(instanc
                         res_model: self.field.relation,
                         res_id: self.get("value"),
                         views: [[false, 'form']],
-                        target: 'current'
+                        target: 'current',
+                        context: self.build_context().eval(),
                     });
                     return false;
                  });
