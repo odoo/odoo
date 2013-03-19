@@ -130,39 +130,11 @@ def init_logger():
     handler.setFormatter(formatter)
 
     # Configure handlers
-    default_config = [
-        'openerp.workflow.workitem:WARNING',
-        'openerp.netsvc.rpc.request:INFO',
-        'openerp.netsvc.rpc.response:INFO',
-        'openerp.addons.web.http:INFO',
-        'openerp.sql_db:INFO',
-        ':INFO',
-    ]
-
-    if tools.config['log_level'] == 'info':
-        pseudo_config = []
-    elif tools.config['log_level'] == 'debug_rpc':
-        pseudo_config = ['openerp:DEBUG','openerp.netsvc.rpc.request:DEBUG']
-    elif tools.config['log_level'] == 'debug_rpc_answer':
-        pseudo_config = ['openerp:DEBUG','openerp.netsvc.rpc.request:DEBUG', 'openerp.netsvc.rpc.response:DEBUG']
-    elif tools.config['log_level'] == 'debug':
-        pseudo_config = ['openerp:DEBUG']
-    elif tools.config['log_level'] == 'test':
-        pseudo_config = ['openerp:TEST']
-    elif tools.config['log_level'] == 'warn':
-        pseudo_config = ['openerp:WARNING']
-    elif tools.config['log_level'] == 'error':
-        pseudo_config = ['openerp:ERROR']
-    elif tools.config['log_level'] == 'critical':
-        pseudo_config = ['openerp:CRITICAL']
-    elif tools.config['log_level'] == 'debug_sql':
-        pseudo_config = ['openerp.sql_db:DEBUG']
-    else:
-        pseudo_config = []
+    pseudo_config = PSEUDOCONFIG_MAPPER.get(tools.config['log_level'], [])
 
     logconfig = tools.config['log_handler']
 
-    for logconfig_item in default_config + pseudo_config + logconfig:
+    for logconfig_item in DEFAULT_LOG_CONFIGURATION + pseudo_config + logconfig:
         loggername, level = logconfig_item.split(':')
         level = getattr(logging, level, logging.INFO)
         logger = logging.getLogger(loggername)
@@ -172,8 +144,28 @@ def init_logger():
         if loggername != '':
             logger.propagate = False
 
-    for logconfig_item in default_config + pseudo_config + logconfig:
+    for logconfig_item in DEFAULT_LOG_CONFIGURATION + pseudo_config + logconfig:
         _logger.debug('logger level set: "%s"', logconfig_item)
+
+DEFAULT_LOG_CONFIGURATION = [
+    'openerp.workflow.workitem:WARNING',
+    'openerp.netsvc.rpc.request:INFO',
+    'openerp.netsvc.rpc.response:INFO',
+    'openerp.addons.web.http:INFO',
+    'openerp.sql_db:INFO',
+    ':INFO',
+]
+PSEUDOCONFIG_MAPPER = {
+    'debug_rpc_answer': ['openerp:DEBUG','openerp.netsvc.rpc.request:DEBUG', 'openerp.netsvc.rpc.response:DEBUG'],
+    'debug_rpc': ['openerp:DEBUG','openerp.netsvc.rpc.request:DEBUG'],
+    'debug': ['openerp:DEBUG'],
+    'debug_sql': ['openerp.sql_db:DEBUG'],
+    'test': ['openerp:TEST'],
+    'info': [],
+    'warn': ['openerp:WARNING'],
+    'error': ['openerp:ERROR'],
+    'critical': ['openerp:CRITICAL'],
+}
 
 # A alternative logging scheme for automated runs of the
 # server intended to test it.
