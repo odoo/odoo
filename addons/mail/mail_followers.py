@@ -161,11 +161,16 @@ class mail_notification(osv.Model):
         else:
             email_from = msg.email_from
 
+        references = False
+        if msg.parent_id:
+            references = msg.parent_id.message_id
+
         mail_values = {
             'mail_message_id': msg.id,
             'auto_delete': True,
             'body_html': body_html,
             'email_from': email_from,
+            'references': references,
         }
         email_notif_id = mail_mail.create(cr, uid, mail_values, context=context)
         try:
