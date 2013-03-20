@@ -215,6 +215,8 @@ class account_analytic_account(osv.osv):
                     GROUP BY account_analytic_line.account_id", (child_ids,))
             for account_id, sum in cr.fetchall():
                 res[account_id] = round(sum,2)
+        for acc in self.browse(cr, uid, res.keys(), context=context):
+            res[acc.id] = res[acc.id] - (acc.timesheet_ca_invoiced or 0.0)
         res_final = res
         return res_final
 
@@ -295,7 +297,7 @@ class account_analytic_account(osv.osv):
         res = {}
         for account in self.browse(cr, uid, ids, context=context):
             res[account.id] = 0.0
-            sale_ids = sale_obj.search(cr, uid, [('project_id','=', account.id), ('partner_id', '=', account.partner_id.id)], context=context)
+            sale_ids = sale_obj.search(cr, uid, [('project_id','=', account.id), ('state', '=', 'manual')], context=context)
             for sale in sale_obj.browse(cr, uid, sale_ids, context=context):
                 if not sale.invoiced:
                     res[account.id] += sale.amount_untaxed
@@ -527,9 +529,20 @@ class account_analytic_account(osv.osv):
         for user_id, data in remind.items():
             context["data"] = data
             _logger.debug("Sending reminder to uid %s", user_id)
-            self.pool.get('email.template').send_mail(cr, uid, template_id, user_id, context=context)
+            self.pool.get('email.template').send_mail(cr, uid, template_id, user_id, force_send=True, context=context)
 
         return True
+
+    def onchange_invoice_on_timesheets(self, cr, uid, ids, invoice_on_timesheets, context=None):
+        if not invoice_on_timesheets:
+            return {}
+        result = {'value': {'use_timesheets': True}}
+        try:
+            to_invoice = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'hr_timesheet_invoice', 'timesheet_invoice_factor1')
+            result['value']['to_invoice'] = to_invoice[1]
+        except ValueError:
+            pass
+        return result
 
 class account_analytic_account_summary_user(osv.osv):
     _name = "account_analytic_analysis.summary.user"

@@ -75,20 +75,28 @@ class mail_notification(osv.Model):
         if not cr.fetchone():
             cr.execute('CREATE INDEX mail_notification_partner_id_read_starred_message_id ON mail_notification (partner_id, read, starred, message_id)')
 
-    def get_partners_to_notify(self, cr, uid, message, context=None):
+    def get_partners_to_notify(self, cr, uid, message, partners_to_notify=None, context=None):
         """ Return the list of partners to notify, based on their preferences.
 
             :param browse_record message: mail.message to notify
+            :param list partners_to_notify: optional list of partner ids restricting
+                the notifications to process
         """
         notify_pids = []
         for notification in message.notification_ids:
             if notification.read:
                 continue
             partner = notification.partner_id
+            # If partners_to_notify specified: restrict to them
+            if partners_to_notify and partner.id not in partners_to_notify:
+                continue
             # Do not send to partners without email address defined
             if not partner.email:
                 continue
-            # Partner does not want to receive any emails
+            # Do not send to partners having same email address than the author (can cause loops or bounce effect due to messy database)
+            if message.author_id and message.author_id.email == partner.email:
+                continue
+            # Partner does not want to receive any emails or is opt-out
             if partner.notification_email_send == 'none':
                 continue
             # Partner wants to receive only emails and comments
@@ -100,16 +108,35 @@ class mail_notification(osv.Model):
             notify_pids.append(partner.id)
         return notify_pids
 
-    def _notify(self, cr, uid, msg_id, context=None):
-        """ Send by email the notification depending on the user preferences """
+    def _notify(self, cr, uid, msg_id, partners_to_notify=None, context=None):
+        """ Send by email the notification depending on the user preferences
+
+            :param list partners_to_notify: optional list of partner ids restricting
+                the notifications to process
+        """
         if context is None:
             context = {}
+        mail_message_obj = self.pool.get('mail.message')
+
+        # optional list of partners to notify: subscribe them if not already done or update the notification
+        if partners_to_notify:
+            notifications_to_update = []
+            notified_partners = []
+            notif_ids = self.search(cr, SUPERUSER_ID, [('message_id', '=', msg_id), ('partner_id', 'in', partners_to_notify)], context=context)
+            for notification in self.browse(cr, SUPERUSER_ID, notif_ids, context=context):
+                notified_partners.append(notification.partner_id.id)
+                notifications_to_update.append(notification.id)
+            partners_to_notify = filter(lambda item: item not in notified_partners, partners_to_notify)
+            if notifications_to_update:
+                self.write(cr, SUPERUSER_ID, notifications_to_update, {'read': False}, context=context)
+            mail_message_obj.write(cr, uid, msg_id, {'notified_partner_ids': [(4, id) for id in partners_to_notify]}, context=context)
+
         # mail_notify_noemail (do not send email) or no partner_ids: do not send, return
         if context.get('mail_notify_noemail'):
             return True
         # browse as SUPERUSER_ID because of access to res_partner not necessarily allowed
         msg = self.pool.get('mail.message').browse(cr, SUPERUSER_ID, msg_id, context=context)
-        notify_partner_ids = self.get_partners_to_notify(cr, uid, msg, context=context)
+        notify_partner_ids = self.get_partners_to_notify(cr, uid, msg, partners_to_notify=partners_to_notify, context=context)
         if not notify_partner_ids:
             return True
 
@@ -136,16 +163,12 @@ class mail_notification(osv.Model):
 
         mail_values = {
             'mail_message_id': msg.id,
-            'email_to': [],
             'auto_delete': True,
             'body_html': body_html,
             'email_from': email_from,
-            'state': 'outgoing',
         }
-        mail_values['email_to'] = ', '.join(mail_values['email_to'])
         email_notif_id = mail_mail.create(cr, uid, mail_values, context=context)
         try:
             return mail_mail.send(cr, uid, [email_notif_id], recipient_ids=notify_partner_ids, context=context)
         except Exception:
             return False
-

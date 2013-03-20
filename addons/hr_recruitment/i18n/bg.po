@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-21 17:04+0000\n"
+"POT-Creation-Date: 2013-03-07 08:37+0000\n"
 "PO-Revision-Date: 2012-12-21 23:00+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Bulgarian <bg@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-01-18 06:46+0000\n"
-"X-Generator: Launchpad (build 16430)\n"
+"X-Launchpad-Export-Date: 2013-03-08 05:45+0000\n"
+"X-Generator: Launchpad (build 16523)\n"
 
 #. module: hr_recruitment
 #: help:hr.applicant,active:0
@@ -92,6 +92,11 @@ msgstr "Работни Места"
 
 #. module: hr_recruitment
 #: view:hr.applicant:0
+msgid "Extra advantages..."
+msgstr ""
+
+#. module: hr_recruitment
+#: view:hr.applicant:0
 msgid "Pending Jobs"
 msgstr ""
 
@@ -116,7 +121,7 @@ msgid "Sources of Applicants"
 msgstr ""
 
 #. module: hr_recruitment
-#: code:addons/hr_recruitment/hr_recruitment.py:435
+#: code:addons/hr_recruitment/hr_recruitment.py:445
 #, python-format
 msgid "You must define Applied Job for this applicant."
 msgstr ""
@@ -287,7 +292,7 @@ msgid ""
 msgstr ""
 
 #. module: hr_recruitment
-#: code:addons/hr_recruitment/hr_recruitment.py:435
+#: code:addons/hr_recruitment/hr_recruitment.py:445
 #, python-format
 msgid "Warning!"
 msgstr ""
@@ -356,6 +361,12 @@ msgstr "Описание на работата"
 #: field:hr.applicant,source_id:0
 msgid "Source"
 msgstr ""
+
+#. module: hr_recruitment
+#: view:hr.recruitment.report:0
+#: field:hr.recruitment.report,year:0
+msgid "Year"
+msgstr "Година"
 
 #. module: hr_recruitment
 #: field:hr.applicant,message_follower_ids:0
@@ -490,7 +501,7 @@ msgid "Applicants"
 msgstr ""
 
 #. module: hr_recruitment
-#: code:addons/hr_recruitment/hr_recruitment.py:351
+#: code:addons/hr_recruitment/hr_recruitment.py:360
 #, python-format
 msgid "No Subject"
 msgstr ""
@@ -511,7 +522,9 @@ msgid "Gives the sequence order when displaying a list of stages."
 msgstr ""
 
 #. module: hr_recruitment
+#: code:addons/hr_recruitment/hr_recruitment.py:347
 #: field:hr.applicant,partner_id:0
+#, python-format
 msgid "Contact"
 msgstr "За контакт"
 
@@ -609,6 +622,11 @@ msgid "Category of applicant"
 msgstr ""
 
 #. module: hr_recruitment
+#: view:hr.applicant:0
+msgid "e.g. Call for interview"
+msgstr ""
+
+#. module: hr_recruitment
 #: view:hr.recruitment.report:0
 #: field:hr.recruitment.report,month:0
 msgid "Month"
@@ -620,9 +638,9 @@ msgid "Answer related job question"
 msgstr ""
 
 #. module: hr_recruitment
-#: model:hr.recruitment.stage,name:hr_recruitment.stage_job2
-msgid "First Interview"
-msgstr "Първо интервю"
+#: model:ir.model,name:hr_recruitment.model_hr_recruitment_degree
+msgid "Degree of Recruitment"
+msgstr ""
 
 #. module: hr_recruitment
 #: field:hr.applicant,write_date:0
@@ -753,7 +771,7 @@ msgid "Schedule interview with this applicant"
 msgstr ""
 
 #. module: hr_recruitment
-#: code:addons/hr_recruitment/hr_recruitment.py:397
+#: code:addons/hr_recruitment/hr_recruitment.py:407
 #, python-format
 msgid "Applicant <b>created</b>"
 msgstr ""
@@ -924,10 +942,10 @@ msgid "The name of the Degree of Recruitment must be unique!"
 msgstr ""
 
 #. module: hr_recruitment
-#: view:hr.recruitment.report:0
-#: field:hr.recruitment.report,year:0
-msgid "Year"
-msgstr "Година"
+#: code:addons/hr_recruitment/hr_recruitment.py:349
+#, python-format
+msgid "Contact Email"
+msgstr ""
 
 #. module: hr_recruitment
 #: view:hired.employee:0
@@ -1106,9 +1124,9 @@ msgid "On Average"
 msgstr ""
 
 #. module: hr_recruitment
-#: model:ir.model,name:hr_recruitment.model_hr_recruitment_degree
-msgid "Degree of Recruitment"
-msgstr ""
+#: model:hr.recruitment.stage,name:hr_recruitment.stage_job2
+msgid "First Interview"
+msgstr "Първо интервю"
 
 #. module: hr_recruitment
 #: field:hr.recruitment.report,salary_prop_avg:0
@@ -1166,6 +1184,11 @@ msgstr "Тези хора ще получат имейл."
 #. module: hr_recruitment
 #: field:hr.job,alias_id:0
 msgid "Alias"
+msgstr ""
+
+#. module: hr_recruitment
+#: view:hr.applicant:0
+msgid "Feedback of interviews..."
 msgstr ""
 
 #. module: hr_recruitment

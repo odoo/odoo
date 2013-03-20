@@ -4,44 +4,53 @@
 
     <t t-extend="Login">
         <t t-jquery=".oe_login .oe_login_logo" t-operation="after">
-            <ul class="openid_providers oe_semantic_html_override">
-                <li><a href="#login,password" title="Password" data-url="" id="btn_password">Password</a></li>
-                <li><a href="#google" title="Google" data-url="https://www.google.com/accounts/o8/id">Google</a></li>
-                <li><a href="#googleapps" title="Google Apps" data-url="https://www.google.com/accounts/o8/site-xrds?hd={id}">Google</a></li>
-                <li><a href="#launchpad" title="Launchpad" data-url="https://launchpad.net/~{id}">Launchpad</a></li>
-                <li><a href="#openid_url" title="OpenID" data-url="{id}">OpenID</a></li>
-            </ul>
+            <div class="openid_providers" data-modes="default openid"><ul>
+                <li><a href="#login,password" data-provider='Password' title="Password" data-url="" id="btn_password">Password</a></li>
+                <li><a href="#google" data-provider='Google' title="Google" data-url="https://www.google.com/accounts/o8/id">Google</a></li>
+                <li><a href="#googleapps" data-provider='Google Apps' title="Google Apps" data-url="https://www.google.com/accounts/o8/site-xrds?hd={id}">Google</a></li>
+                <li><a href="#launchpad" data-provider='Launchpad' title="Launchpad" data-url="https://launchpad.net/~{id}">Launchpad</a></li>
+                <li><a href="#openid_url" data-provider='OpenID' title="OpenID" data-url="{id}">OpenID</a></li>
+            </ul></div>
         </t>
     </t>
     <t t-extend="Login">
-        <t t-jquery=".oe_login .oe_login_pane form ul li:nth-child(4)" t-operation="after">
-            <li>
+        <t t-jquery=".oe_login .oe_login_pane form ul li:last-child()" t-operation="before">
+            <li data-modes="openid" data-provider='googleapps'>
                 Google Apps Domain
             </li>
-            <li>
+            <li data-modes="openid" data-provider='googleapps'>
                 <input type="text" name="googleapps" />
             </li>
-            <li>
+            <li data-modes="openid" data-provider='launchpad'>
                 Username
             </li>
-            <li>
+            <li data-modes="openid" data-provider='launchpad'>
                 <input type="text" name="launchpad" />
             </li>
-            <li>
+            <li data-modes="openid" data-provider='openid_url'>
                 OpenID URL
             </li>
-            <li>
+            <li data-modes="openid" data-provider='openid_url'>
                 <input type="text" name="openid_url" />
             </li>
         </t>
     </t>
 
     <t t-extend="Login">
-        <t t-jquery=".oe_login .oe_login_pane form ul li:has(input)">
+        <t t-jquery=".oe_login .oe_login_pane form ul li:has(input[name=password])">
+            this.each(function() {
+                var $i = $(this);
+                $i.add($i.prev()).attr('data-provider', 'password');
+            });
+        </t>
+        <t t-jquery=".oe_login .oe_login_pane form ul li:has(input[name=login])">
             this.each(function() {
                 var $i = $(this),
-                    dp = $i.find('input').attr('name');
-                $i.add($i.prev()).attr('class', 'auth_choice').attr('data-provider', dp);
+                    dp = $i.find('input').attr('name'),
+                    $p = $i.prev();
+                // $p may not be the correct label when auth_signup is installed.
+                while(($p.attr('data-modes') || 'default') !== 'default') { $p = $p.prev(); }
+                $i.add($p).attr('data-provider', dp);
             });
         </t>
     </t>

@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-21 17:06+0000\n"
+"POT-Creation-Date: 2013-03-07 08:39+0000\n"
 "PO-Revision-Date: 2013-01-15 17:45+0000\n"
 "Last-Translator: Goran Kliska <gkliska@gmail.com>\n"
 "Language-Team: Croatian <hr@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-01-18 07:10+0000\n"
-"X-Generator: Launchpad (build 16430)\n"
+"X-Launchpad-Export-Date: 2013-03-08 06:05+0000\n"
+"X-Generator: Launchpad (build 16523)\n"
 
 #. module: survey
 #: view:survey.response.line:0
@@ -73,9 +73,9 @@ msgid "Surveys"
 msgstr "Upitnici"
 
 #. module: survey
-#: field:survey.question,in_visible_answer_type:0
-msgid "Is Answer Type Invisible?"
-msgstr "Da li je vrsta odgovora nevidljiva?"
+#: view:survey.request:0
+msgid "Cancel Request"
+msgstr ""
 
 #. module: survey
 #: view:survey:0
@@ -486,6 +486,11 @@ msgid "From"
 msgstr "Od"
 
 #. module: survey
+#: view:survey:0
+msgid "Cancel Survey"
+msgstr ""
+
+#. module: survey
 #: selection:survey.question,comment_valid_type:0
 #: selection:survey.question,validation_type:0
 msgid "Don't Validate Comment Text."
@@ -570,6 +575,13 @@ msgstr "Vrsta"
 #: field:survey.request,email:0
 msgid "Email"
 msgstr "E-mail"
+
+#. module: survey
+#: view:survey:0
+#: view:survey.page:0
+#: view:survey.question:0
+msgid "Required Answer"
+msgstr "Zahtjevani odgovor"
 
 #. module: survey
 #: code:addons/survey/survey.py:96
@@ -714,6 +726,11 @@ msgstr ""
 "Maximum Required Answer you                                     entered for "
 "your maximum is greater than the number of answer.                           "
 "          Please use a number that is smaller than %d."
+
+#. module: survey
+#: view:survey:0
+msgid "Survey description..."
+msgstr ""
 
 #. module: survey
 #: view:survey:0
@@ -1079,11 +1096,9 @@ msgid "Multiple Textboxes With Different Type"
 msgstr "Višestruki tekstovi sa različitim vrstama"
 
 #. module: survey
-#: view:survey:0
-#: view:survey.page:0
-#: view:survey.question:0
-msgid "Required Answer"
-msgstr "Zahtjevani odgovor"
+#: view:survey.name.wiz:0
+msgid "Add Description"
+msgstr ""
 
 #. module: survey
 #: model:survey.type,name:survey.survey_type2
@@ -1121,9 +1136,15 @@ msgid "Date"
 msgstr "Datum"
 
 #. module: survey
-#: selection:survey.answer,type:0
-msgid "Integer"
-msgstr "Cijeli broj"
+#: view:survey:0
+msgid "All New Survey"
+msgstr ""
+
+#. module: survey
+#: view:survey:0
+#: view:survey.page:0
+msgid "Description on the survey page..."
+msgstr ""
 
 #. module: survey
 #: model:ir.model,name:survey.model_survey_send_invitation
@@ -1211,9 +1232,9 @@ msgid "Is Rating Scale Invisible?"
 msgstr "Is Rating Scale Invisible?"
 
 #. module: survey
-#: view:survey:0
-msgid "All New Survey"
-msgstr ""
+#: selection:survey.answer,type:0
+msgid "Integer"
+msgstr "Cijeli broj"
 
 #. module: survey
 #: selection:survey.question,type:0
@@ -1303,13 +1324,11 @@ msgid "Allow Only One Answer per Column (Forced Ranking)"
 msgstr "Samo jedan odgovor po stupcu (Forsirano rangiranje)"
 
 #. module: survey
-#: view:survey:0
 #: view:survey.browse.answer:0
 #: view:survey.name.wiz:0
 #: view:survey.print:0
 #: view:survey.print.answer:0
 #: view:survey.print.statistics:0
-#: view:survey.request:0
 #: view:survey.send.invitation:0
 msgid "Cancel"
 msgstr "Odustani"
@@ -1757,6 +1776,11 @@ msgstr "Stranice Upitnika"
 #: field:survey.question,type:0
 msgid "Question Type"
 msgstr "Question Type"
+
+#. module: survey
+#: field:survey.question,in_visible_answer_type:0
+msgid "Is Answer Type Invisible?"
+msgstr "Da li je vrsta odgovora nevidljiva?"
 
 #. module: survey
 #: selection:survey.question,type:0

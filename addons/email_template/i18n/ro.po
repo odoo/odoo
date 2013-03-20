@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-21 17:05+0000\n"
-"PO-Revision-Date: 2013-01-23 21:20+0000\n"
+"POT-Creation-Date: 2013-03-07 08:38+0000\n"
+"PO-Revision-Date: 2013-03-13 18:52+0000\n"
 "Last-Translator: Fekete Mihai <mihai@erpsystems.ro>\n"
 "Language-Team: Romanian <ro@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-01-24 05:35+0000\n"
-"X-Generator: Launchpad (build 16445)\n"
+"X-Launchpad-Export-Date: 2013-03-14 05:34+0000\n"
+"X-Generator: Launchpad (build 16532)\n"
 
 #. module: email_template
 #: field:email.template,email_from:0
@@ -38,6 +38,11 @@ msgstr "Buton bara laterala pentru a deschide actiunea barei laterale"
 #: field:res.partner,opt_out:0
 msgid "Opt-Out"
 msgstr "Nu participati"
+
+#. module: email_template
+#: view:email.template:0
+msgid "Email contents (in raw HTML format)"
+msgstr "Cuprinsul email-ului (in format HTML brut)"
 
 #. module: email_template
 #: field:email.template,email_to:0
@@ -187,7 +192,7 @@ msgstr ""
 "trimiteti un e-mail. Daca nu este setata, va fi folosita versiunea in limba "
 "engleza. Aceasta ar trebui de obicei sa fie o expresie inlocuitoare care "
 "furnizeaza codul limbii corespunzatoare, de exemplu "
-"${obiect.partener_id.cod.limba}."
+"${object.partner_id.lang.code}."
 
 #. module: email_template
 #: field:email_template.preview,res_id:0
@@ -416,7 +421,7 @@ msgstr "Stergerea inregistrarii actiunii a esuat."
 #: field:email.template,email_cc:0
 #: field:email_template.preview,email_cc:0
 msgid "Cc"
-msgstr "Cc (copie carbon)"
+msgstr "Cc"
 
 #. module: email_template
 #: field:email.template,model_id:0

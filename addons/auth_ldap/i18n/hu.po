@@ -7,20 +7,20 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-21 17:05+0000\n"
-"PO-Revision-Date: 2012-12-21 23:00+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2013-03-07 08:37+0000\n"
+"PO-Revision-Date: 2013-03-19 18:28+0000\n"
+"Last-Translator: krnkris <Unknown>\n"
 "Language-Team: Hungarian <hu@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-01-18 06:35+0000\n"
-"X-Generator: Launchpad (build 16430)\n"
+"X-Launchpad-Export-Date: 2013-03-20 05:03+0000\n"
+"X-Generator: Launchpad (build 16532)\n"
 
 #. module: auth_ldap
 #: field:res.company.ldap,user:0
 msgid "Template User"
-msgstr ""
+msgstr "Sablon felhasználó"
 
 #. module: auth_ldap
 #: help:res.company.ldap,ldap_tls:0
@@ -29,6 +29,9 @@ msgid ""
 "option requires a server with STARTTLS enabled, otherwise all authentication "
 "attempts will fail."
 msgstr ""
+"Biztonságos TLS/SSL kódolás igénylése az LDAP szerverhez való "
+"kapcsolódáshoz. Ez a lehetőség megkívánja szerveren a STARTTLS "
+"bekapcsolását, egyéb esetben az összes hitelesítés sikertelen lesz."
 
 #. module: auth_ldap
 #: view:res.company:0
@@ -39,7 +42,7 @@ msgstr "LDAP konfiguráció"
 #. module: auth_ldap
 #: field:res.company.ldap,ldap_binddn:0
 msgid "LDAP binddn"
-msgstr ""
+msgstr "LDAP binddn"
 
 #. module: auth_ldap
 #: field:res.company.ldap,company:0
@@ -62,6 +65,8 @@ msgid ""
 "Automatically create local user accounts for new users authenticating via "
 "LDAP"
 msgstr ""
+"Automatikusan létrehozott helyi felhasználói fiók az LDAP által azonosított "
+"új felhasználókhoz"
 
 #. module: auth_ldap
 #: field:res.company.ldap,ldap_base:0
@@ -71,7 +76,7 @@ msgstr "LDAP alap"
 #. module: auth_ldap
 #: view:res.company.ldap:0
 msgid "User Information"
-msgstr ""
+msgstr "Felhasználói információk"
 
 #. module: auth_ldap
 #: field:res.company.ldap,ldap_password:0
@@ -86,7 +91,7 @@ msgstr "Vállalatok"
 #. module: auth_ldap
 #: view:res.company.ldap:0
 msgid "Process Parameter"
-msgstr ""
+msgstr "Feldolgozási paraméter"
 
 #. module: auth_ldap
 #: model:ir.model,name:auth_ldap.model_res_company_ldap
@@ -96,12 +101,12 @@ msgstr "res.company.ldap"
 #. module: auth_ldap
 #: help:res.company.ldap,user:0
 msgid "User to copy when creating new users"
-msgstr ""
+msgstr "Új felhassználók létrehozásakor másolható felhasználó"
 
 #. module: auth_ldap
 #: field:res.company.ldap,ldap_tls:0
 msgid "Use TLS"
-msgstr ""
+msgstr "TLS (titkosítás) használata"
 
 #. module: auth_ldap
 #: field:res.company.ldap,sequence:0
@@ -111,17 +116,17 @@ msgstr "Sorszám"
 #. module: auth_ldap
 #: view:res.company.ldap:0
 msgid "Login Information"
-msgstr ""
+msgstr "Bejelentkezési adatok"
 
 #. module: auth_ldap
 #: view:res.company.ldap:0
 msgid "Server Information"
-msgstr ""
+msgstr "Szerver információk"
 
 #. module: auth_ldap
 #: model:ir.actions.act_window,name:auth_ldap.action_ldap_installer
 msgid "Setup your LDAP Server"
-msgstr ""
+msgstr "LDAP Szerver beállítása"
 
 #. module: auth_ldap
 #: view:res.company:0
@@ -135,6 +140,7 @@ msgid ""
 "The password of the user account on the LDAP server that is used to query "
 "the directory."
 msgstr ""
+"Az LDAP szerveren lévő felhasználói fiók jelszava mellyel eléri a könyvtárát."
 
 #. module: auth_ldap
 #: help:res.company.ldap,ldap_binddn:0
@@ -142,11 +148,13 @@ msgid ""
 "The user account on the LDAP server that is used to query the directory. "
 "Leave empty to connect anonymously."
 msgstr ""
+"Az LDAP szerveren lévő felhasználói fiók mellyel eléri a könyvtárát. Hagyja "
+"üresen névtelken bejelentkezéshez."
 
 #. module: auth_ldap
 #: model:ir.model,name:auth_ldap.model_res_users
 msgid "Users"
-msgstr ""
+msgstr "Felhasználók"
 
 #. module: auth_ldap
 #: field:res.company.ldap,ldap_filter:0

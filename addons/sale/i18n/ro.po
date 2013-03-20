@@ -7,15 +7,189 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-21 17:04+0000\n"
-"PO-Revision-Date: 2013-02-25 16:59+0000\n"
+"POT-Creation-Date: 2013-03-07 08:37+0000\n"
+"PO-Revision-Date: 2013-03-12 17:48+0000\n"
 "Last-Translator: Fekete Mihai <mihai@erpsystems.ro>\n"
 "Language-Team: Romanian <ro@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-02-26 05:34+0000\n"
-"X-Generator: Launchpad (build 16506)\n"
+"X-Launchpad-Export-Date: 2013-03-13 04:58+0000\n"
+"X-Generator: Launchpad (build 16532)\n"
+
+#. module: sale
+#: model:email.template,body_html:sale.email_template_edi_sale
+msgid ""
+"\n"
+"<div style=\"font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-"
+"serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; \">\n"
+"\n"
+"    <p>Hello ${object.partner_id.name},</p>\n"
+"    \n"
+"    <p>Here is your ${object.state in ('draft', 'sent') and 'quotation' or "
+"'order confirmation'} from ${object.company_id.name}: </p>\n"
+"\n"
+"    <p style=\"border-left: 1px solid #8e0000; margin-left: 30px;\">\n"
+"       &nbsp;&nbsp;<strong>REFERENCES</strong><br />\n"
+"       &nbsp;&nbsp;Order number: <strong>${object.name}</strong><br />\n"
+"       &nbsp;&nbsp;Order total: <strong>${object.amount_total} "
+"${object.pricelist_id.currency_id.name}</strong><br />\n"
+"       &nbsp;&nbsp;Order date: ${object.date_order}<br />\n"
+"       % if object.origin:\n"
+"       &nbsp;&nbsp;Order reference: ${object.origin}<br />\n"
+"       % endif\n"
+"       % if object.client_order_ref:\n"
+"       &nbsp;&nbsp;Your reference: ${object.client_order_ref}<br />\n"
+"       % endif\n"
+"       % if object.user_id:\n"
+"       &nbsp;&nbsp;Your contact: <a href=\"mailto:${object.user_id.email or "
+"''}?subject=Order%20${object.name}\">${object.user_id.name}</a>\n"
+"       % endif\n"
+"    </p>\n"
+"\n"
+"    % if object.paypal_url:\n"
+"    <br/>\n"
+"    <p>It is also possible to directly pay with Paypal:</p>\n"
+"        <a style=\"margin-left: 120px;\" href=\"${object.paypal_url}\">\n"
+"            <img class=\"oe_edi_paypal_button\" "
+"src=\"https://www.paypal.com/en_US/i/btn/btn_paynowCC_LG.gif\"/>\n"
+"        </a>\n"
+"    % endif\n"
+"\n"
+"    <br/>\n"
+"    <p>If you have any question, do not hesitate to contact us.</p>\n"
+"    <p>Thank you for choosing ${object.company_id.name or 'us'}!</p>\n"
+"    <br/>\n"
+"    <br/>\n"
+"    <div style=\"width: 375px; margin: 0px; padding: 0px; background-color: "
+"#8E0000; border-top-left-radius: 5px 5px; border-top-right-radius: 5px 5px; "
+"background-repeat: repeat no-repeat;\">\n"
+"        <h3 style=\"margin: 0px; padding: 2px 14px; font-size: 12px; color: "
+"#DDD;\">\n"
+"            <strong style=\"text-"
+"transform:uppercase;\">${object.company_id.name}</strong></h3>\n"
+"    </div>\n"
+"    <div style=\"width: 347px; margin: 0px; padding: 5px 14px; line-height: "
+"16px; background-color: #F2F2F2;\">\n"
+"        <span style=\"color: #222; margin-bottom: 5px; display: block; \">\n"
+"        % if object.company_id.street:\n"
+"            ${object.company_id.street}<br/>\n"
+"        % endif\n"
+"        % if object.company_id.street2:\n"
+"            ${object.company_id.street2}<br/>\n"
+"        % endif\n"
+"        % if object.company_id.city or object.company_id.zip:\n"
+"            ${object.company_id.zip} ${object.company_id.city}<br/>\n"
+"        % endif\n"
+"        % if object.company_id.country_id:\n"
+"            ${object.company_id.state_id and ('%s, ' % "
+"object.company_id.state_id.name) or ''} ${object.company_id.country_id.name "
+"or ''}<br/>\n"
+"        % endif\n"
+"        </span>\n"
+"        % if object.company_id.phone:\n"
+"            <div style=\"margin-top: 0px; margin-right: 0px; margin-bottom: "
+"0px; margin-left: 0px; padding-top: 0px; padding-right: 0px; padding-bottom: "
+"0px; padding-left: 0px; \">\n"
+"                Phone:&nbsp; ${object.company_id.phone}\n"
+"            </div>\n"
+"        % endif\n"
+"        % if object.company_id.website:\n"
+"            <div>\n"
+"                Web :&nbsp;<a "
+"href=\"${object.company_id.website}\">${object.company_id.website}</a>\n"
+"            </div>\n"
+"        %endif\n"
+"        <p></p>\n"
+"    </div>\n"
+"</div>\n"
+"            "
+msgstr ""
+"\n"
+"<div style=\"font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-"
+"serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; \">\n"
+"\n"
+"    <p>Buna ziua ${object.partner_id.name},</p>\n"
+"    \n"
+"    <p>Aici este ${object.state in ('draft', 'sent') and 'quotation' or "
+"'order confirmation'} pentru ${object.company_id.name}: </p>\n"
+"\n"
+"    <p style=\"border-left: 1px solid #8e0000; margin-left: 30px;\">\n"
+"       &nbsp;&nbsp;<strong>REFERINTE</strong><br />\n"
+"       &nbsp;&nbsp;Numar comanda: <strong>${object.name}</strong><br />\n"
+"       &nbsp;&nbsp;Total comanda: <strong>${object.amount_total} "
+"${object.pricelist_id.currency_id.name}</strong><br />\n"
+"       &nbsp;&nbsp;Data comenzii: ${object.date_order}<br />\n"
+"       % if object.origin:\n"
+"       &nbsp;&nbsp;Referinta comanda: ${object.origin}<br />\n"
+"       % endif\n"
+"       % if object.client_order_ref:\n"
+"       &nbsp;&nbsp;Your reference: ${object.client_order_ref}<br />\n"
+"       % endif\n"
+"       % if object.user_id:\n"
+"       &nbsp;&nbsp;Contactul dumneavoastra: <a "
+"href=\"mailto:${object.user_id.email or "
+"''}?subject=Order%20${object.name}\">${object.user_id.name}</a>\n"
+"       % endif\n"
+"    </p>\n"
+"\n"
+"    % if object.paypal_url:\n"
+"    <br/>\n"
+"    <p>De asemenea, puteti plati direct cu Paypal:</p>\n"
+"        <a style=\"margin-left: 120px;\" href=\"${object.paypal_url}\">\n"
+"            <img class=\"oe_edi_paypal_button\" "
+"src=\"https://www.paypal.com/en_US/i/btn/btn_paynowCC_LG.gif\"/>\n"
+"        </a>\n"
+"    % endif\n"
+"\n"
+"    <br/>\n"
+"    <p>Daca aveti intrebari, nu ezitati sa ne contactati.</p>\n"
+"    <p>Va multumim ca ati ales ${object.company_id.name or 'us'}!</p>\n"
+"    <br/>\n"
+"    <br/>\n"
+"    <div style=\"width: 375px; margin: 0px; padding: 0px; background-color: "
+"#8E0000; border-top-left-radius: 5px 5px; border-top-right-radius: 5px 5px; "
+"background-repeat: repeat no-repeat;\">\n"
+"        <h3 style=\"margin: 0px; padding: 2px 14px; font-size: 12px; color: "
+"#DDD;\">\n"
+"            <strong style=\"text-"
+"transform:uppercase;\">${object.company_id.name}</strong></h3>\n"
+"    </div>\n"
+"    <div style=\"width: 347px; margin: 0px; padding: 5px 14px; line-height: "
+"16px; background-color: #F2F2F2;\">\n"
+"        <span style=\"color: #222; margin-bottom: 5px; display: block; \">\n"
+"        % if object.company_id.street:\n"
+"            ${object.company_id.street}<br/>\n"
+"        % endif\n"
+"        % if object.company_id.street2:\n"
+"            ${object.company_id.street2}<br/>\n"
+"        % endif\n"
+"        % if object.company_id.city or object.company_id.zip:\n"
+"            ${object.company_id.zip} ${object.company_id.city}<br/>\n"
+"        % endif\n"
+"        % if object.company_id.country_id:\n"
+"            ${object.company_id.state_id and ('%s, ' % "
+"object.company_id.state_id.name) or ''} ${object.company_id.country_id.name "
+"or ''}<br/>\n"
+"        % endif\n"
+"        </span>\n"
+"        % if object.company_id.phone:\n"
+"            <div style=\"margin-top: 0px; margin-right: 0px; margin-bottom: "
+"0px; margin-left: 0px; padding-top: 0px; padding-right: 0px; padding-bottom: "
+"0px; padding-left: 0px; \">\n"
+"                Telefon:&nbsp; ${object.company_id.phone}\n"
+"            </div>\n"
+"        % endif\n"
+"        % if object.company_id.website:\n"
+"            <div>\n"
+"                Web :&nbsp;<a "
+"href=\"${object.company_id.website}\">${object.company_id.website}</a>\n"
+"            </div>\n"
+"        %endif\n"
+"        <p></p>\n"
+"    </div>\n"
+"</div>\n"
+"            "
 
 #. module: sale
 #: model:res.groups,name:sale.group_analytic_accounting
@@ -128,7 +302,7 @@ msgid "March"
 msgstr "Martie"
 
 #. module: sale
-#: code:addons/sale/sale.py:559
+#: code:addons/sale/sale.py:567
 #, python-format
 msgid "First cancel all invoices attached to this sales order."
 msgstr "Mai intai anulati toate facturile atasate acetei comenzi de vanzari."
@@ -214,6 +388,7 @@ msgstr "Zi"
 
 #. module: sale
 #: model:process.transition.action,name:sale.process_transition_action_cancelorder0
+#: view:sale.order:0
 msgid "Cancel Order"
 msgstr "Anuleaza Comanda"
 
@@ -244,10 +419,9 @@ msgid "Incorrect Data"
 msgstr "Date Incorecte"
 
 #. module: sale
-#: code:addons/sale/wizard/sale_make_invoice_advance.py:102
-#, python-format
-msgid "The value of Advance Amount must be positive."
-msgstr "Valoarea Sumei in Avans trebuie sa fie pozitiva."
+#: view:sale.order.line:0
+msgid "Cancel Line"
+msgstr "Anulati Linia"
 
 #. module: sale
 #: help:sale.config.settings,group_discount_per_so_line:0
@@ -291,11 +465,12 @@ msgid "Project"
 msgstr "Proiect"
 
 #. module: sale
-#: code:addons/sale/sale.py:360
-#: code:addons/sale/sale.py:501
-#: code:addons/sale/sale.py:592
-#: code:addons/sale/sale.py:755
-#: code:addons/sale/sale.py:772
+#: code:addons/sale/sale.py:185
+#: code:addons/sale/sale.py:368
+#: code:addons/sale/sale.py:509
+#: code:addons/sale/sale.py:600
+#: code:addons/sale/sale.py:763
+#: code:addons/sale/sale.py:780
 #, python-format
 msgid "Error!"
 msgstr "Eroare!"
@@ -403,6 +578,11 @@ msgid "False"
 msgstr "Fals"
 
 #. module: sale
+#: view:sale.order:0
+msgid "Terms and conditions..."
+msgstr "Termeni si conditii..."
+
+#. module: sale
 #: help:sale.advance.payment.inv,advance_payment_method:0
 msgid ""
 "Use All to create the final invoice.\n"
@@ -430,9 +610,9 @@ msgid "Tax"
 msgstr "Taxa"
 
 #. module: sale
-#: code:addons/sale/sale.py:270
-#: code:addons/sale/sale.py:812
-#: code:addons/sale/sale.py:976
+#: code:addons/sale/sale.py:278
+#: code:addons/sale/sale.py:820
+#: code:addons/sale/sale.py:983
 #, python-format
 msgid "Invalid Action!"
 msgstr "Actiune Nevalida!"
@@ -489,7 +669,7 @@ msgid "Fax :"
 msgstr "Fax :"
 
 #. module: sale
-#: code:addons/sale/sale.py:270
+#: code:addons/sale/sale.py:278
 #, python-format
 msgid ""
 "In order to delete a confirmed sales order, you must cancel it before !"
@@ -515,8 +695,8 @@ msgid "Contract Features"
 msgstr "Caracteristici Contract"
 
 #. module: sale
-#: code:addons/sale/sale.py:280
-#: code:addons/sale/sale.py:578
+#: code:addons/sale/sale.py:288
+#: code:addons/sale/sale.py:586
 #: model:ir.model,name:sale.model_sale_order
 #: model:process.node,name:sale.process_node_order0
 #: model:process.node,name:sale.process_node_saleorder0
@@ -585,7 +765,7 @@ msgid "Prepare invoices based on timesheets"
 msgstr "Pregatiti facturile pe baza fiselor de pontaj"
 
 #. module: sale
-#: code:addons/sale/sale.py:812
+#: code:addons/sale/sale.py:820
 #, python-format
 msgid "You cannot cancel a sales order line that has already been invoiced."
 msgstr ""
@@ -646,7 +826,7 @@ msgid "Disc.(%)"
 msgstr "Discount (%)"
 
 #. module: sale
-#: code:addons/sale/sale.py:756
+#: code:addons/sale/sale.py:764
 #, python-format
 msgid "Please define income account for this product: \"%s\" (id:%d)."
 msgstr ""
@@ -693,7 +873,7 @@ msgid "Make Invoices"
 msgstr "Creeaza Facturi"
 
 #. module: sale
-#: code:addons/sale/res_config.py:89
+#: code:addons/sale/res_config.py:97
 #, python-format
 msgid "Hour"
 msgstr "Ora"
@@ -812,12 +992,20 @@ msgstr ""
 "vanzare respectiva."
 
 #. module: sale
+#: code:addons/sale/sale.py:510
+#, python-format
+msgid ""
+"You cannot group sales having different currencies for the same partner."
+msgstr ""
+"Nu puteti grupa vanzarile care au valute diferite pentru acelasi partener."
+
+#. module: sale
 #: view:sale.config.settings:0
 msgid "Default Options"
 msgstr "Optiuni Implicite"
 
 #. module: sale
-#: code:addons/sale/sale.py:953
+#: code:addons/sale/sale.py:960
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:91
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:95
 #, python-format
@@ -879,12 +1067,12 @@ msgid "Sales Order done"
 msgstr "Comanda de Vanzare efectuata"
 
 #. module: sale
-#: code:addons/sale/sale.py:361
-#, python-format
-msgid "Please define sales journal for this company: \"%s\" (id:%d)."
-msgstr ""
-"Va rugam sa definiti registrul de vanzari pentru aceasta companie: \"%s\" "
-"(id:%d)."
+#: model:process.transition.action,name:sale.process_transition_action_cancel0
+#: view:sale.advance.payment.inv:0
+#: view:sale.make.invoice:0
+#: view:sale.order.line.make.invoice:0
+msgid "Cancel"
+msgstr "Anuleaza"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.act_res_partner_2_sale_order
@@ -936,7 +1124,7 @@ msgid "Sales Make Invoice"
 msgstr "Vanzarile genereaza factura"
 
 #. module: sale
-#: code:addons/sale/sale.py:300
+#: code:addons/sale/sale.py:308
 #, python-format
 msgid "Pricelist Warning!"
 msgstr "Avertizare Lista de preturi!"
@@ -1015,7 +1203,7 @@ msgid "Category of Product"
 msgstr "Categoria Produsului"
 
 #. module: sale
-#: code:addons/sale/sale.py:558
+#: code:addons/sale/sale.py:566
 #, python-format
 msgid "Cannot cancel this sales order!"
 msgstr "Imposibil de anulat aceasta comanda de vanzare!"
@@ -1072,7 +1260,7 @@ msgid "Open Sale Menu"
 msgstr "Deschide Meniul Vanzari"
 
 #. module: sale
-#: code:addons/sale/sale.py:592
+#: code:addons/sale/sale.py:600
 #, python-format
 msgid "You cannot confirm a sales order which has no line."
 msgstr "Nu puteti confirma o comanda de vanzare care nu are nicio linie."
@@ -1083,7 +1271,7 @@ msgid "In Progress"
 msgstr "In desfasurare"
 
 #. module: sale
-#: code:addons/sale/sale.py:857
+#: code:addons/sale/sale.py:865
 #, python-format
 msgid "No Customer Defined !"
 msgstr "Niciun client definit !"
@@ -1408,7 +1596,7 @@ msgstr ""
 "curs' sau 'Manual în desfasurare'."
 
 #. module: sale
-#: code:addons/sale/sale.py:935
+#: code:addons/sale/sale.py:942
 #, python-format
 msgid ""
 "You have to select a pricelist or a customer in the sales form !\n"
@@ -1425,7 +1613,7 @@ msgstr ""
 "Referinta documentului care a generat aceasta cerere a comenzii de vanzare."
 
 #. module: sale
-#: code:addons/sale/sale.py:948
+#: code:addons/sale/sale.py:955
 #, python-format
 msgid "No valid pricelist line found ! :"
 msgstr "Nu a fost gasita nicio linie valida a listei de preturi !:"
@@ -1510,7 +1698,7 @@ msgid "TVA :"
 msgstr "TVA :"
 
 #. module: sale
-#: code:addons/sale/sale.py:441
+#: code:addons/sale/sale.py:449
 #, python-format
 msgid "Customer Invoices"
 msgstr "Facturi client"
@@ -1536,7 +1724,7 @@ msgid "Sales"
 msgstr "Vanzari"
 
 #. module: sale
-#: code:addons/sale/sale.py:301
+#: code:addons/sale/sale.py:309
 #, python-format
 msgid ""
 "If you change the pricelist of this order (and eventually the currency), "
@@ -1594,14 +1782,9 @@ msgid "My Sales Order Lines"
 msgstr "Liniile Comenzii mele de vanzare"
 
 #. module: sale
-#: model:process.transition.action,name:sale.process_transition_action_cancel0
-#: view:sale.advance.payment.inv:0
-#: view:sale.make.invoice:0
 #: view:sale.order:0
-#: view:sale.order.line:0
-#: view:sale.order.line.make.invoice:0
-msgid "Cancel"
-msgstr "Anuleaza"
+msgid "Cancel Quotation"
+msgstr "Anulati Oferta"
 
 #. module: sale
 #: field:sale.order,message_follower_ids:0
@@ -1609,7 +1792,7 @@ msgid "Followers"
 msgstr "Urmari"
 
 #. module: sale
-#: code:addons/sale/sale.py:937
+#: code:addons/sale/sale.py:944
 #, python-format
 msgid "No Pricelist ! : "
 msgstr "Nicio Lista de preturi ! : "
@@ -1671,12 +1854,12 @@ msgid "Shipping address :"
 msgstr "Adresa de expediere:"
 
 #. module: sale
-#: code:addons/sale/sale.py:502
+#: code:addons/sale/sale.py:369
 #, python-format
-msgid ""
-"You cannot group sales having different currencies for the same partner."
+msgid "Please define sales journal for this company: \"%s\" (id:%d)."
 msgstr ""
-"Nu puteti grupa vanzarile care au valute diferite pentru acelasi partener."
+"Va rugam sa definiti registrul de vanzari pentru aceasta companie: \"%s\" "
+"(id:%d)."
 
 #. module: sale
 #: view:sale.advance.payment.inv:0
@@ -1699,7 +1882,7 @@ msgid "Use contracts management"
 msgstr "Folositi managementul contractelor"
 
 #. module: sale
-#: code:addons/sale/sale.py:945
+#: code:addons/sale/sale.py:952
 #, python-format
 msgid ""
 "Cannot find a pricelist line matching this product and quantity.\n"
@@ -1708,6 +1891,14 @@ msgstr ""
 "Imposibil de gasit o linie a listei de preturi care sa se potriveasca cu "
 "acest produs si cu aceasta cantitate.\n"
 "Trebuie sa modificati fie produsul, fie cantitatea sau lista de preturi."
+
+#. module: sale
+#: code:addons/sale/sale.py:185
+#, python-format
+msgid "There is no default shop for the current user's company!"
+msgstr ""
+"Nu exista nici un magazin implicit definit pentru compania utilizatorului "
+"actual!"
 
 #. module: sale
 #: model:ir.model,name:sale.model_sale_advance_payment_inv
@@ -1756,184 +1947,6 @@ msgid "Other Information"
 msgstr "Alte informatii"
 
 #. module: sale
-#: model:email.template,body_html:sale.email_template_edi_sale
-msgid ""
-"\n"
-"<div style=\"font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-"
-"serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; \">\n"
-"\n"
-"    <p>Hello ${object.partner_id.name},</p>\n"
-"    \n"
-"    <p>Here is your ${object.state in ('draft', 'sent') and 'quotation' or "
-"'order confirmation'} from ${object.company_id.name}: </p>\n"
-"\n"
-"    <p style=\"border-left: 1px solid #8e0000; margin-left: 30px;\">\n"
-"       &nbsp;&nbsp;<strong>REFERENCES</strong><br />\n"
-"       &nbsp;&nbsp;Order number: <strong>${object.name}</strong><br />\n"
-"       &nbsp;&nbsp;Order total: <strong>${object.amount_total} "
-"${object.pricelist_id.currency_id.name}</strong><br />\n"
-"       &nbsp;&nbsp;Order date: ${object.date_order}<br />\n"
-"       % if object.origin:\n"
-"       &nbsp;&nbsp;Order reference: ${object.origin}<br />\n"
-"       % endif\n"
-"       % if object.client_order_ref:\n"
-"       &nbsp;&nbsp;Your reference: ${object.client_order_ref}<br />\n"
-"       % endif\n"
-"       % if object.user_id:\n"
-"       &nbsp;&nbsp;Your contact: <a href=\"mailto:${object.user_id.email or "
-"''}?subject=Order%20${object.name}\">${object.user_id.name}</a>\n"
-"       % endif\n"
-"    </p>\n"
-"\n"
-"    % if object.paypal_url:\n"
-"    <br/>\n"
-"    <p>It is also possible to directly pay with Paypal:</p>\n"
-"        <a style=\"margin-left: 120px;\" href=\"${object.paypal_url}\">\n"
-"            <img class=\"oe_edi_paypal_button\" "
-"src=\"https://www.paypal.com/en_US/i/btn/btn_paynowCC_LG.gif\"/>\n"
-"        </a>\n"
-"    % endif\n"
-"\n"
-"    <br/>\n"
-"    <p>If you have any question, do not hesitate to contact us.</p>\n"
-"    <p>Thank you for choosing ${object.company_id.name or 'us'}!</p>\n"
-"    <br/>\n"
-"    <br/>\n"
-"    <div style=\"width: 375px; margin: 0px; padding: 0px; background-color: "
-"#8E0000; border-top-left-radius: 5px 5px; border-top-right-radius: 5px 5px; "
-"background-repeat: repeat no-repeat;\">\n"
-"        <h3 style=\"margin: 0px; padding: 2px 14px; font-size: 12px; color: "
-"#DDD;\">\n"
-"            <strong style=\"text-"
-"transform:uppercase;\">${object.company_id.name}</strong></h3>\n"
-"    </div>\n"
-"    <div style=\"width: 347px; margin: 0px; padding: 5px 14px; line-height: "
-"16px; background-color: #F2F2F2;\">\n"
-"        <span style=\"color: #222; margin-bottom: 5px; display: block; \">\n"
-"        % if object.company_id.street:\n"
-"            ${object.company_id.street}<br/>\n"
-"        % endif\n"
-"        % if object.company_id.street2:\n"
-"            ${object.company_id.street2}<br/>\n"
-"        % endif\n"
-"        % if object.company_id.city or object.company_id.zip:\n"
-"            ${object.company_id.zip} ${object.company_id.city}<br/>\n"
-"        % endif\n"
-"        % if object.company_id.country_id:\n"
-"            ${object.company_id.state_id and ('%s, ' % "
-"object.company_id.state_id.name) or ''} ${object.company_id.country_id.name "
-"or ''}<br/>\n"
-"        % endif\n"
-"        </span>\n"
-"        % if object.company_id.phone:\n"
-"            <div style=\"margin-top: 0px; margin-right: 0px; margin-bottom: "
-"0px; margin-left: 0px; padding-top: 0px; padding-right: 0px; padding-bottom: "
-"0px; padding-left: 0px; \">\n"
-"                Phone:&nbsp; ${object.company_id.phone}\n"
-"            </div>\n"
-"        % endif\n"
-"        % if object.company_id.website:\n"
-"            <div>\n"
-"                Web :&nbsp;<a "
-"href=\"${object.company_id.website}\">${object.company_id.website}</a>\n"
-"            </div>\n"
-"        %endif\n"
-"        <p></p>\n"
-"    </div>\n"
-"</div>\n"
-"            "
-msgstr ""
-"\n"
-"<stil div=\"font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-"
-"serif; dimensiune-font: 12px; culoare: rgb(34, 34, 34); culoare-fundal: "
-"#FFF; \">\n"
-"\n"
-"    <p>Buna ziua ${obiect.partener_id.nume},</p>\n"
-"    \n"
-"    <p>Iata ${obiect.stare in ('ciorna', 'trimis') si 'oferta' sau "
-"'confirmarea comenzii'} de la ${obiect.companie_id.nume}: </p>\n"
-"\n"
-"    <stil p=\"margine-stanga: 1px solid #8e0000; margine-dreapta: 30px;\">\n"
-"       &nbsp;&nbsp;<strong>REFERINTE</strong><br />\n"
-"       &nbsp;&nbsp;Numar comanda: <strong>${obiect.nume}</strong><br />\n"
-"       &nbsp;&nbsp;Total comanda: <strong>${obiect.suma_totala} "
-"${obiect.lista_de_preturi_id.moneda_id.nume}</strong><br />\n"
-"       &nbsp;&nbsp;Data comenzii: ${obiect.data_comenzii}<br />\n"
-"       % if obiect.origine:\n"
-"       &nbsp;&nbsp;Referinta comanda: ${obiect.origine}<br />\n"
-"       % endif\n"
-"       % if obiect.client_comanda_ref:\n"
-"       &nbsp;&nbsp;Referinta dumneavoastra: ${obiect.client_comanda_ref}<br "
-"/>\n"
-"       % endif\n"
-"       % if obiect.utilizator_id:\n"
-"       &nbsp;&nbsp;Contactul dumneavoastra: <a "
-"href=\"destinatar:${obiect.utilizator_id.email sau "
-"''}?subiect=Comanda%20${obiect.nume}\">${obiect.utilizator_id.nume}</a>\n"
-"       % endif\n"
-"    </p>\n"
-"\n"
-"    % if obiect.paypal_url:\n"
-"    <br/>\n"
-"    <p>De asemenea, puteti plati direct cu Paypal:</p>\n"
-"        <stil a=\"margine-stanga: 120px;\" href=\"${obiect.paypal_url}\">\n"
-"            <clasa img=\"oe_edi_paypal_buton\" "
-"src=\"https://www.paypal.com/en_US/i/btn/btn_paynowCC_LG.gif\"/>\n"
-"        </a>\n"
-"    % endif\n"
-"\n"
-"    <br/>\n"
-"    <p>Daca aveti intrebari, nu ezitati sa ne contactati.</p>\n"
-"    <p>Va multumim ca ati ales ${obiect.companie_id.nume sau 'noi'}!</p>\n"
-"    <br/>\n"
-"    <br/>\n"
-"    <stil div=\"latime: 375px; margine: 0px; umplutura: 0px; culoare-fundal: "
-"#8E0000; margine-sus-raza-stanga: 5px 5px; margine-sus-raza-dreapta: 5px "
-"5px; repetare-fundal: repeta fara-repetare;\">\n"
-"        <stil h3=\"margine: 0px; umplutura: 2px 14px; dimensiune-font: 12px; "
-"culoare: #DDD;\">\n"
-"            <stil strong=\"transformare-"
-"text:majuscule;\">${obiect.companie_id.nume}</strong></h3>\n"
-"    </div>\n"
-"    <stil div=\"latime: 347px; margine: 0px; umplutura: 5px 14px; inaltime-"
-"linie: 16px; culoare-fundal: #F2F2F2;\">\n"
-"        <stil span=\"culoare: #222; margine-jos: 5px; afisare: block; \">\n"
-"        % if obiect.companie_id.strada:\n"
-"            ${obiect.companie_id.strada}<br/>\n"
-"        % endif\n"
-"        % if obiect.companie_id.strada2:\n"
-"            ${obiect.companie_id.strada2}<br/>\n"
-"        % endif\n"
-"        % if obiect.companie_id.oras sau obiect.companie_id.cod_postal:\n"
-"            ${obiect.companie_id.cod_postal} "
-"${obiect.companie_id.oras}<br/>\n"
-"        % endif\n"
-"        % if obiect.companie_id.tara_id:\n"
-"            ${obiect.companie_id.stare_id si ('%s, ' % "
-"obiect.companie_id.stare_id.nume) sau ''} ${obiect.companie_id.tara_id.nume "
-"sau ''}<br/>\n"
-"        % endif\n"
-"        </span>\n"
-"        % if obiect.companie_id.telefon:\n"
-"            <stil div=\"margine-sus: 0px; margine-dreapta: 0px; margine-jos: "
-"0px; margine-stanga: 0px; umplutura-sus: 0px; umplutura-dreapta: 0px; "
-"umplutura-jos: 0px; umplutura-stanga: 0px; \">\n"
-"                Telefon:&nbsp; ${obiect.companie_id.telefon}\n"
-"            </div>\n"
-"        % endif\n"
-"        % if obiect.companie_id.pagina_de_internet:\n"
-"            <div>\n"
-"                Internet :&nbsp;<a "
-"href=\"${obiect.companie_id.pagina_de_internet}\">${obiect.companie_id.pagina"
-"_de_internet}</a>\n"
-"            </div>\n"
-"        %endif\n"
-"        <p></p>\n"
-"    </div>\n"
-"</div>\n"
-"            "
-
-#. module: sale
 #: view:sale.order.line:0
 #: field:sale.order.line,product_id:0
 #: view:sale.report:0
@@ -1977,6 +1990,12 @@ msgstr ""
 #: report:sale.order:0
 msgid "Price"
 msgstr "Pret"
+
+#. module: sale
+#: code:addons/sale/wizard/sale_make_invoice_advance.py:102
+#, python-format
+msgid "The value of Advance Amount must be positive."
+msgstr "Valoarea Sumei in Avans trebuie sa fie pozitiva."
 
 #. module: sale
 #: help:sale.order,order_policy:0
@@ -2070,7 +2089,7 @@ msgstr ""
 "sale.group_delivery_invoice_address (vanzare.adresa_factura_livrare_grup)"
 
 #. module: sale
-#: code:addons/sale/sale.py:773
+#: code:addons/sale/sale.py:781
 #, python-format
 msgid ""
 "There is no Fiscal Position defined or Income category account defined for "
@@ -2318,7 +2337,7 @@ msgid "Some order lines"
 msgstr "Niste linii ale comenzii"
 
 #. module: sale
-#: code:addons/sale/sale.py:976
+#: code:addons/sale/sale.py:983
 #, python-format
 msgid "Cannot delete a sales order line which is in state '%s'."
 msgstr ""
@@ -2394,7 +2413,7 @@ msgstr ""
 "                Instaleaza modulul sale_margin."
 
 #. module: sale
-#: code:addons/sale/sale.py:857
+#: code:addons/sale/sale.py:865
 #, python-format
 msgid ""
 "Before choosing a product,\n"

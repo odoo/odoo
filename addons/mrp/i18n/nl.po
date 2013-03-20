@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-21 17:04+0000\n"
-"PO-Revision-Date: 2013-02-23 09:27+0000\n"
+"POT-Creation-Date: 2013-03-07 08:37+0000\n"
+"PO-Revision-Date: 2013-03-15 16:04+0000\n"
 "Last-Translator: Erwin van der Ploeg (Endian Solutions) <Unknown>\n"
 "Language-Team: Dutch <nl@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-02-24 05:12+0000\n"
-"X-Generator: Launchpad (build 16506)\n"
+"X-Launchpad-Export-Date: 2013-03-16 06:35+0000\n"
+"X-Generator: Launchpad (build 16532)\n"
 
 #. module: mrp
 #: help:mrp.config.settings,module_mrp_repair:0
@@ -30,14 +30,14 @@ msgid ""
 "                This installs the module mrp_repair."
 msgstr ""
 "Maakt het mogelijk om alle product-reparaties te beheren\n"
-"                     * Toevoegen/verwijderen van producten in reparatie\n"
-"                     * Impact op de voorraad\n"
-"                     * Facturatie (producten en/of diensten)\n"
-"                     * Garantie\n"
-"                     * Reparatie offerte rapport\n"
-"                     * Aanwijzingen voor de technicus en voor de "
+"                    * Toevoegen/verwijderen van producten in reparatie\n"
+"                    * Impact op de voorraad\n"
+"                    * Facturatie (producten en/of diensten)\n"
+"                    * Garantie\n"
+"                    * Reparatie offerte rapport\n"
+"                    * Aanwijzingen voor de technicus en voor de "
 "uiteindelijke klant.\n"
-"                 Dit installeert de module mrp_repair."
+"                    Dit installeert de module mrp_repair."
 
 #. module: mrp
 #: report:mrp.production.order:0
@@ -707,13 +707,13 @@ msgid ""
 msgstr ""
 "Deze module maakt het mogelijk een tussentijdse verzamelproces uit te voeren "
 "om grondstoffen te verstrekken aan productieorders.\n"
-"                 Bijvoorbeeld om de productie die door uw leveranciers "
+"                Bijvoorbeeld om de productie die door uw leveranciers "
 "(onderaanneming) te beheren.\n"
-"                 Om dit te bereiken, stelt u het geassembleerde product dat "
+"                Om dit te bereiken, stelt u het geassembleerde product dat "
 "uitbesteed is in op \"Niet automatisch verzamelen\"\n"
-"                 en zet de locatie van de leverancier in de routing van de "
+"                en zet de locatie van de leverancier in de routing van de "
 "assemblage.\n"
-"                 Dit installeert de module stock_no_autopicking."
+"                Dit installeert de module stock_no_autopicking."
 
 #. module: mrp
 #: selection:mrp.production,state:0
@@ -1192,7 +1192,6 @@ msgstr "Inactief"
 #: view:mrp.config.settings:0
 #: view:mrp.product.produce:0
 #: view:mrp.product_price:0
-#: view:mrp.production:0
 #: view:mrp.workcenter.load:0
 msgid "Cancel"
 msgstr "Annuleren"
@@ -1776,19 +1775,19 @@ msgstr ""
 "              </p><p>\n"
 "                 Definieer specifieke eigenschap groepen die kunnen worden "
 "toegewezen aan uw\n"
-"                 materiaallijst en verkooporders. Eigenschappen geeft "
-"OpenERP te mogelijkheid\n"
-"                 om automatisch de juiste materiaallijst te selecteren "
+"                materiaallijst en verkooporders. Eigenschappen geeft OpenERP "
+"te mogelijkheid\n"
+"                om automatisch de juiste materiaallijst te selecteren "
 "volgens de \n"
-"                 eigenschappen geselecteerd in de verkooporder door de "
+"                eigenschappen geselecteerd in de verkooporder door de "
 "verkoper.\n"
-"               </ p>\n"
-"                 Bijvoorbeeld, in het groep \"Garantie\", heeft u twee\n"
-"                 eigenschappen: 1 jaar garantie, 3 jaar garantie. "
+"              </ p>\n"
+"                Bijvoorbeeld, in het groep \"Garantie\", heeft u twee\n"
+"                eigenschappen: 1 jaar garantie, 3 jaar garantie. "
 "Afhankelijk\n"
-"                 van de eigenschappen geselecteerd in de verkooporder, zal "
+"                van de eigenschappen geselecteerd in de verkooporder, zal "
 "OpenERP \n"
-"                 een productieorder plannen met de bijbehorende "
+"                een productieorder plannen met de bijbehorende "
 "materiaallijst.\n"
 "              </p>\n"
 "            "
@@ -1977,7 +1976,7 @@ msgstr "Geannuleerd"
 #. module: mrp
 #: view:mrp.production:0
 msgid "(Update)"
-msgstr "(Update)"
+msgstr "(bijwerken)"
 
 #. module: mrp
 #: help:mrp.config.settings,module_mrp_operations:0
@@ -2029,6 +2028,11 @@ msgstr "Standaard maateenheid"
 #: field:mrp.workcenter,time_cycle:0
 msgid "Time for 1 cycle (hour)"
 msgstr "Tijd voor 1 cyclus (uur)"
+
+#. module: mrp
+#: view:mrp.production:0
+msgid "Cancel Production"
+msgstr "Productie annuleren"
 
 #. module: mrp
 #: model:ir.actions.report.xml,name:mrp.report_mrp_production_report
@@ -2448,8 +2452,8 @@ msgid ""
 "Product UOS (Unit of Sale) is the unit of measurement for the invoicing and "
 "promotion of stock."
 msgstr ""
-"De product verkoopmaateenheid is de maateenheid voor facturering en "
-"prromotie van de voorraad."
+"De product verkoopmaateenheid is de maateenheid voor facturatie en promotie "
+"van de voorraad."
 
 #. module: mrp
 #: view:mrp.production:0

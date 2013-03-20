@@ -19,29 +19,36 @@
 #
 ##############################################################################
 
+import urllib
+import random
+
+try:
+    import simplejson as json
+except ImportError:
+    import json     # noqa
+
 from openerp.osv import osv
 from openerp.osv import fields
-import urllib,re
-import random, time
 from openerp.tools.translate import _
 from openerp import tools
 
 def geo_find(addr):
-    addr = addr.encode('utf8')
-    regex = '<coordinates>([+-]?[0-9\.]+),([+-]?[0-9\.]+),([+-]?[0-9\.]+)</coordinates>'
-    url = 'http://maps.google.com/maps/geo?q=' + urllib.quote(addr) + '&output=xml&oe=utf8&sensor=false'
+    url = 'https://maps.googleapis.com/maps/api/geocode/json?sensor=false&address='
+    url += urllib.quote(addr.encode('utf8'))
+
     try:
-        xml = urllib.urlopen(url).read()
+        result = json.load(urllib.urlopen(url))
     except Exception, e:
         raise osv.except_osv(_('Network error'),
                              _('Cannot contact geolocation servers. Please make sure that your internet connection is up and running (%s).') % e)
+    if result['status'] != 'OK':
+        return None
 
-    if '<error>' in xml:
+    try:
+        geo = result['results'][0]['geometry']['location']
+        return float(geo['lat']), float(geo['lng'])
+    except (KeyError, ValueError):
         return None
-    result = re.search(regex, xml, re.M|re.I)
-    if not result:
-        return None
-    return float(result.group(2)),float(result.group(1))
 
 def geo_query_address(street=None, zip=None, city=None, state=None, country=None):
     if country and ',' in country and (country.endswith(' of') or country.endswith(' of the')):
@@ -64,7 +71,6 @@ class res_partner_grade(osv.osv):
     _defaults = {
         'active': lambda *args: 1
     }
-res_partner_grade()
 
 class res_partner_activation(osv.osv):
     _name = 'res.partner.activation'
@@ -75,7 +81,6 @@ class res_partner_activation(osv.osv):
         'name' : fields.char('Name', size=32, required=True),
     }
 
-res_partner_activation()
 
 class res_partner(osv.osv):
     _inherit = "res.partner"
@@ -113,7 +118,6 @@ class res_partner(osv.osv):
                     'date_localization': fields.date.context_today(self,cr,uid,context=context)
                 }, context=context)
         return True
-res_partner()
 
 class crm_lead(osv.osv):
     _inherit = "crm.lead"
@@ -157,8 +161,9 @@ class crm_lead(osv.osv):
             self.assign_geo_localize(cr, uid, [lead.id], lead.partner_latitude, lead.partner_longitude, context=context)
             partner = res_partner.browse(cr, uid, partner_id, context=context)
             if partner.user_id:
+                salesteam_id = partner.section_id and partner.section_id.id or False
                 for lead_id in ids:
-                    self.allocate_salesman(cr, uid, [lead_id], [partner.user_id.id], context=context)
+                    self.allocate_salesman(cr, uid, [lead_id], [partner.user_id.id], team_id=salesteam_id, context=context)
             self.write(cr, uid, [lead.id], {'date_assign': fields.date.context_today(self,cr,uid,context=context), 'partner_assigned_id': partner_id}, context=context)
         return res
 
@@ -253,7 +258,7 @@ class crm_lead(osv.osv):
                         res_partner_ids[lead.id] = partner_id
                         break
         return res_partner_ids
-crm_lead()
 
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
+

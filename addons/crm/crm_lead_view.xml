@@ -97,16 +97,16 @@
                             states="draft,open,pending" help="Convert to Opportunity" class="oe_highlight"/>
                     <button name="case_reset" string="Reset" type="object"
                             states="cancel"/>
-                    <button name="case_cancel" string="Cancel" type="object"
+                    <button name="case_cancel" string="Cancel Case" type="object"
                             states="draft,open,pending"/>
                     <field name="stage_id" widget="statusbar" clickable="True"
                             on_change="onchange_stage_id(stage_id)"/>
                 </header>
                 <sheet>
                     <div class="oe_right oe_button_box" name="buttons">
-                        <button type="action"
-                            name="%(act_crm_opportunity_crm_phonecall_new)d"
-                            string="Phone Calls"/>
+                        <button string="Schedule/Log Call" 
+                                name="%(opportunity2phonecall_act)d"
+                                type="action"/>
                     </div>
                     <div class="oe_title">
                         <label for="name" class="oe_edit_only"/>
@@ -163,7 +163,9 @@
                             <field name="priority"/>
                             <field name="categ_ids"
                                 widget="many2many_tags"
-                                domain="[('object_id.model','=','crm.lead')]"/>
+                                domain="[('object_id.model','=','crm.lead')]"
+                                context="{'object_name': 'crm.lead'}"
+                            />
                         </group>
                     </group>
                     <notebook colspan="4">
@@ -339,18 +341,21 @@
                     <filter string="Assigned to My Team(s)"
                             domain="[('section_id.member_ids', 'in', [uid])]" context="{'invisible_section': False}"
                             help="Leads that are assigned to any sales teams I am member of"/>
-                    <separator/>
+                    <separator />
+                    <filter string="Available for mass mailing"
+                            name='not_opt_out' domain="[('opt_out', '=', False)]"
+                            help="Leads that did not ask not to be included in mass mailing campaigns"/>
+                    <separator />
                     <group expand="0" string="Group By...">
                         <filter string="Salesperson" domain="[]" context="{'group_by':'user_id'}"/>
                         <filter string="Team" domain="[]" context="{'group_by':'section_id'}"/>
                         <filter string="Stage" domain="[]" context="{'group_by':'stage_id'}"/>
                         <filter string="Customer" help="Partner" domain="[]" context="{'group_by':'partner_id'}"/>
                         <filter string="Country" domain="[]" context="{'group_by':'country_id'}"/>
-                        <filter string="Stage" domain="[]" context="{'group_by':'stage_id'}"/>
                         <filter string="Referrer" domain="[]" context="{'group_by':'referred'}"/>
                         <filter string="Campaign" domain="[]" context="{'group_by':'type_id'}"/>
                         <filter string="Channel" domain="[]" context="{'group_by':'channel_id'}"/>
-                        <filter string="Creation" domain="[]" context="{'group_by':'create_date'}" groups="base.group_no_one"/>
+                        <filter string="Creation" domain="[]" context="{'group_by':'create_date'}"/>
                     </group>
                     <group string="Display">
                         <filter string="Show Countries" context="{'invisible_country': False}" help="Show Countries"/>
@@ -377,7 +382,6 @@
                                 states="draft,open,pending" class="oe_highlight"/>
                         <button name="case_mark_lost" string="Mark Lost" type="object"
                                 states="draft,open" class="oe_highlight"/>
-                        <button name="new_mail_send" string="Send Mail" type="object" states="draft,open,pending"/>
                         <field name="stage_id" widget="statusbar" clickable="True"/>
                     </header>
                     <sheet>
@@ -567,7 +571,7 @@
                         <filter string="Referrer" domain="[]" context="{'group_by':'referred'}"/>
                         <filter string="Campaign" domain="[]" context="{'group_by':'type_id'}"/>
                         <filter string="Channel" domain="[]" context="{'group_by':'channel_id'}"/>
-                        <filter string="Creation" domain="[]" context="{'group_by':'create_date'}" groups="base.group_no_one"/>
+                        <filter string="Creation" domain="[]" context="{'group_by':'create_date'}"/>
                     </group>
                     <group string="Display">
                         <filter string="Show Sales Team" context="{'invisible_section': False}" domain="[]" help="Show Sales Team"/>

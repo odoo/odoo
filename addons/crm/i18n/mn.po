@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-21 17:04+0000\n"
-"PO-Revision-Date: 2013-02-20 07:52+0000\n"
+"POT-Creation-Date: 2013-03-07 08:36+0000\n"
+"PO-Revision-Date: 2013-03-04 23:22+0000\n"
 "Last-Translator: gobi <Unknown>\n"
 "Language-Team: Mongolian <mn@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-02-21 05:44+0000\n"
-"X-Generator: Launchpad (build 16491)\n"
+"X-Launchpad-Export-Date: 2013-03-08 05:38+0000\n"
+"X-Generator: Launchpad (build 16523)\n"
 
 #. module: crm
 #: view:crm.lead.report:0
@@ -28,9 +28,11 @@ msgid ""
 "Allows you to configure your incoming mail server, and create leads from "
 "incoming emails."
 msgstr ""
+"Ирж буй имэйлийн серверийг тохируулж ирж буй имэйлээс сэжим үүсгэх боломжийг "
+"олгодог."
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:880
+#: code:addons/crm/crm_lead.py:881
 #: selection:crm.case.stage,type:0
 #: view:crm.lead:0
 #: selection:crm.lead,type:0
@@ -41,6 +43,7 @@ msgid "Lead"
 msgstr "Удирдах"
 
 #. module: crm
+#: view:crm.lead:0
 #: field:crm.lead,title:0
 msgid "Title"
 msgstr "Гарчиг"
@@ -54,6 +57,11 @@ msgid ""
 "Description: [[object.description]]\n"
 "            "
 msgstr ""
+"Анхаараарай. Боловсруулагдалгүй 5-с олон хоносон сэжим байна.\n"
+"Нэр: [[object.name ]]\n"
+"ID: [[object.id ]]\n"
+"Тодорхойлолт: [[object.description]]\n"
+"            "
 
 #. module: crm
 #: field:crm.opportunity2phonecall,action:0
@@ -123,7 +131,7 @@ msgstr "Сургалт"
 #: model:ir.actions.act_window,name:crm.crm_lead_categ_action
 #: model:ir.ui.menu,name:crm.menu_crm_lead_categ
 msgid "Sales Tags"
-msgstr "Худалдааны шошго"
+msgstr "Борлуулалтын Пайзууд"
 
 #. module: crm
 #: view:crm.lead.report:0
@@ -131,11 +139,9 @@ msgid "Exp. Closing"
 msgstr "Хуг.Хэт. Хааж байна"
 
 #. module: crm
-#: help:crm.case.section,message_unread:0
-#: help:crm.lead,message_unread:0
-#: help:crm.phonecall,message_unread:0
-msgid "If checked new messages require your attention."
-msgstr "Хэрэв тэмдэглэгдсэн бол шинэ зурвас нь анхаарал татахыг шаардана."
+#: view:crm.phonecall:0
+msgid "Cancel Call"
+msgstr ""
 
 #. module: crm
 #: help:crm.lead.report,creation_day:0
@@ -185,7 +191,8 @@ msgstr ""
 "html форматтай бөгөөд канбан харагдацад шууд орж харагдах боломжтой."
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:632
+#: code:addons/crm/crm_lead.py:624
+#: code:addons/crm/crm_lead.py:744
 #: code:addons/crm/crm_phonecall.py:280
 #, python-format
 msgid "Warning!"
@@ -225,9 +232,9 @@ msgid "Opt-Out"
 msgstr "Хүлээж авахгүй"
 
 #. module: crm
-#: field:crm.lead,state_id:0
-msgid "State"
-msgstr "Төлөв"
+#: view:crm.lead:0
+msgid "Opportunities that are assigned to me"
+msgstr ""
 
 #. module: crm
 #: field:res.partner,meeting_count:0
@@ -243,6 +250,11 @@ msgstr "Хэрэглэгчид сануулах"
 #: field:crm.segmentation,segmentation_line:0
 msgid "Criteria"
 msgstr "Шалгуур"
+
+#. module: crm
+#: view:crm.lead:0
+msgid "Assigned to My Team(s)"
+msgstr ""
 
 #. module: crm
 #: view:crm.segmentation:0
@@ -262,16 +274,16 @@ msgid "Leads Analysis"
 msgstr "Сэжимийн Шинжилгээ"
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:1010
-#, python-format
-msgid "<b>%s a call</b> for the <em>%s</em>."
-msgstr ""
-
-#. module: crm
 #: model:ir.actions.act_window,name:crm.crm_case_resource_type_act
 #: model:ir.ui.menu,name:crm.menu_crm_case_resource_type_act
 msgid "Campaigns"
 msgstr "Компанит ажил"
+
+#. module: crm
+#: view:crm.lead:0
+#: field:crm.lead,state_id:0
+msgid "State"
+msgstr "Төлөв"
 
 #. module: crm
 #: view:crm.lead:0
@@ -295,7 +307,7 @@ msgid "Prospect Partner"
 msgstr "Хэтийн түнш"
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:967
+#: code:addons/crm/crm_lead.py:982
 #, python-format
 msgid "No Subject"
 msgstr "Гарчиг үгүй"
@@ -326,6 +338,14 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Захиалагчийн шинэ сегментийг үүсгэхдээ дарна.\n"
+"              </p><p>\n"
+"                Холбогчидод тэдэнтэй харилцах менежментийг сайжруулах "
+"үүднээс тусгайлсан ангилалыг үүсгэнэ. Сегментчилэлийн багаж нь таны "
+"тохируулсан үзүүлэлтийн дагууд ангилалыг оноох чадвартай.\n"
+"              </p>\n"
+"            "
 
 #. module: crm
 #: field:crm.opportunity2phonecall,contact_name:0
@@ -339,6 +359,8 @@ msgstr "Харьцах хүн"
 msgid ""
 "When escalating to this team override the salesman with the team leader."
 msgstr ""
+"Энэ баг руу дэвшүүлэн шилжүүлэхдээ борлуулалтын ажилтан багийн ахлагчаар "
+"солих"
 
 #. module: crm
 #: model:process.transition,name:crm.process_transition_opportunitymeeting0
@@ -378,9 +400,22 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Энэ захиалагчид холбогдох боломжийг үүсгэхдээ дарна.\n"
+"              </p><p>\n"
+"                Борлуулалтыг борлуулалтын сувагаа сайн хөтлөхөд ашиглах "
+"бөгөөд улмаар сайхан боломжийг мөшгөх, орлогын урьдчилан сайн таамаглахад "
+"мөн хэрэглэнэ.\n"
+"              </p><p>\n"
+"                Боломжоос уулзалт, утасны дуудлагыг төлөвлөх боломжтйо "
+"бөгөөд тэдгээрийг үнийн санал болгон хөрвүүлэх, хэрэгтэй материалыг "
+"хавсаргах, бүх харилцааг хөтлөх, гэх мэт болон хэлбэрээр хэрэглэж болно. \n"
+"              </p>\n"
+"            "
 
 #. module: crm
 #: model:crm.case.stage,name:crm.stage_lead7
+#: view:crm.lead:0
 msgid "Dead"
 msgstr "Сураггүй"
 
@@ -417,6 +452,12 @@ msgid "Team Leader"
 msgstr "Багийн Ахлагч"
 
 #. module: crm
+#: code:addons/crm/crm_lead.py:1032
+#, python-format
+msgid "%s a call for %s.%s"
+msgstr ""
+
+#. module: crm
 #: help:crm.case.stage,probability:0
 msgid ""
 "This percentage depicts the default/average probability of the Case for this "
@@ -441,16 +482,11 @@ msgid "#Opportunities"
 msgstr "#Боломжууд"
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:632
+#: code:addons/crm/crm_lead.py:624
 #, python-format
 msgid ""
 "Please select more than one element (lead or opportunity) from the list view."
 msgstr "Нээлттэй жагсаалтнаас нэгээс илүү елемент сонгоно уу."
-
-#. module: crm
-#: view:crm.lead:0
-msgid "Leads that are assigned to one of the sale teams I manage, or to me"
-msgstr ""
 
 #. module: crm
 #: field:crm.lead,partner_address_email:0
@@ -469,6 +505,14 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Шинэ борлуулалтын багийг үүсгэх.\n"
+"              </p><p>\n"
+"                Борлуулалтын багийг борлуулалтын ажилтнуудаа хэд хэдэн "
+"багуудад хуваахад хэрэглэнэ.  Баг бүр өөрийн боломжуудын жагсаалт дээр "
+"ажиллана.\n"
+"              </p>\n"
+"            "
 
 #. module: crm
 #: model:process.transition,note:crm.process_transition_opportunitymeeting0
@@ -527,6 +571,12 @@ msgid "Planned Revenue"
 msgstr "Төлөвлөсөн орлого"
 
 #. module: crm
+#: code:addons/crm/crm_lead.py:970
+#, python-format
+msgid "Customer Email"
+msgstr ""
+
+#. module: crm
 #: field:crm.lead,planned_revenue:0
 msgid "Expected Revenue"
 msgstr "Төлөвлөсөн орлого"
@@ -552,6 +602,11 @@ msgid ""
 "                       If the call needs to be done then the status is set "
 "to 'Not Held'."
 msgstr ""
+"Хэрэг үүсгэгдмэгцээ 'Хийх' гэсэн төлөвтэй байна.                             "
+"   Хэрэв хэрэг боловсруулагдаж байгаа бол төлөв нь 'Нээлттэй' байна.         "
+"                       Дуудлага хийгдсэн бол 'Ярьсан' төлөвтэй болно.        "
+"                        Хэрэв дуудлагыг хийх шаардлагатай бол 'Яриагүй' "
+"төлөвтэй байна."
 
 #. module: crm
 #: field:crm.case.section,message_summary:0
@@ -564,11 +619,6 @@ msgstr "Дүгнэлт"
 #: view:crm.merge.opportunity:0
 msgid "Merge"
 msgstr "Нэгтгэх"
-
-#. module: crm
-#: model:email.template,subject:crm.email_template_opportunity_mail
-msgid "Opportunity ${object.name | h})"
-msgstr ""
 
 #. module: crm
 #: view:crm.case.categ:0
@@ -585,6 +635,16 @@ msgstr "Харилцагчийн холбоо барих нэр"
 msgid ""
 "Reminder on Lead: [[object.id ]] [[object.partner_id and 'of ' "
 "+object.partner_id.name or '']]"
+msgstr ""
+"Сэжим дээрх сануулга: [[object.id ]] [[object.partner_id and 'of ' "
+"+object.partner_id.name or '']]"
+
+#. module: crm
+#: code:addons/crm/crm_lead.py:745
+#, python-format
+msgid ""
+"No customer name defined. Please fill one of the following fields: Company "
+"Name, Contact Name or Email (\"Name <email@address>\")"
 msgstr ""
 
 #. module: crm
@@ -626,6 +686,13 @@ msgid ""
 "          </p>\n"
 "        "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"            Шинэ ангилал нэмэхдээ дарна.\n"
+"          </p><p>\n"
+"            Утасны дуудлагын шинэ ангилалыг тодорхойлж системд дуудлагын "
+"илүү сайнаар хөтлөх бололцоог бүрдүүлнэ.\n"
+"          </p>\n"
+"        "
 
 #. module: crm
 #: help:crm.case.section,reply_to:0
@@ -688,14 +755,14 @@ msgid "The name of the segmentation."
 msgstr "Сегментийн нэр"
 
 #. module: crm
-#: field:crm.case.stage,probability:0
-msgid "Probability (%)"
-msgstr "Боломж (%)"
+#: model:ir.filters,name:crm.filter_usa_lead
+msgid "Leads from USA"
+msgstr "USA-н сэжимүүд"
 
 #. module: crm
 #: sql_constraint:crm.lead:0
 msgid "The probability of closing the deal should be between 0% and 100%!"
-msgstr ""
+msgstr "Хэлэлцээг хаах магадлал нь  0% ба 100%-н хооронд байх ёстой!"
 
 #. module: crm
 #: view:crm.lead:0
@@ -708,7 +775,7 @@ msgid "Statistics Dashboard"
 msgstr "Статистик хянах самбар"
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:860
+#: code:addons/crm/crm_lead.py:861
 #: model:crm.case.stage,name:crm.stage_lead2
 #: selection:crm.case.stage,type:0
 #: view:crm.lead:0
@@ -729,7 +796,7 @@ msgstr "Телевиз"
 #. module: crm
 #: model:ir.actions.act_window,name:crm.action_crm_send_mass_convert
 msgid "Convert to opportunities"
-msgstr ""
+msgstr "Боломжуудруу хөрвүүлэх"
 
 #. module: crm
 #: model:ir.model,name:crm.model_sale_config_settings
@@ -756,6 +823,12 @@ msgstr "Утасны дуудлага хайх"
 msgid ""
 "Leads/Opportunities that are assigned to one of the sale teams I manage"
 msgstr ""
+"Миний менежмент хийж буй борлуулалтын багуудад оноогдсон Сэжим/Боломжууд"
+
+#. module: crm
+#: field:crm.segmentation.line,expr_value:0
+msgid "Value"
+msgstr "Утга"
 
 #. module: crm
 #: field:calendar.attendee,categ_id:0
@@ -768,7 +841,7 @@ msgid "Exclusive"
 msgstr "Дээд зиндаанд зориулсан"
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:591
+#: code:addons/crm/crm_lead.py:584
 #, python-format
 msgid "From %s : %s"
 msgstr "%s -ээс: %s"
@@ -776,7 +849,7 @@ msgstr "%s -ээс: %s"
 #. module: crm
 #: view:crm.lead2opportunity.partner.mass:0
 msgid "Convert to Opportunities"
-msgstr ""
+msgstr "Боломжуудруу хөрвүүлэх"
 
 #. module: crm
 #: view:crm.lead2opportunity.partner:0
@@ -804,6 +877,8 @@ msgid ""
 "Link between stages and sales teams. When set, this limitate the current "
 "stage to the selected sales teams."
 msgstr ""
+"Үе болон борлуулалтын багийн хоорондын холбоо. Тохируулсан бол энэ үе нь "
+"зөвхөн сонгогдсон багуудаар хязгаарлагдана."
 
 #. module: crm
 #: view:crm.case.stage:0
@@ -823,6 +898,7 @@ msgstr "Эзэнгүй утасны дуудлага"
 
 #. module: crm
 #: view:crm.lead:0
+#: view:crm.lead2opportunity.partner:0
 #: field:crm.lead2opportunity.partner,opportunity_ids:0
 #: field:crm.lead2opportunity.partner.mass,opportunity_ids:0
 #: model:ir.actions.act_window,name:crm.crm_case_category_act_oppor11
@@ -855,13 +931,18 @@ msgstr "Гарсан"
 
 #. module: crm
 #: view:crm.lead:0
+msgid "Leads that are assigned to me"
+msgstr ""
+
+#. module: crm
+#: view:crm.lead:0
 msgid "Mark Won"
 msgstr "Ялснаар Тэмдэглэх"
 
 #. module: crm
-#: model:ir.filters,name:crm.filter_usa_lead
-msgid "Leads from USA"
-msgstr ""
+#: field:crm.case.stage,probability:0
+msgid "Probability (%)"
+msgstr "Боломж (%)"
 
 #. module: crm
 #: view:crm.lead:0
@@ -871,7 +952,7 @@ msgstr "Ялагдсанаар Тэмдэглэх"
 #. module: crm
 #: model:ir.filters,name:crm.filter_draft_lead
 msgid "Draft Leads"
-msgstr ""
+msgstr "Ноорог сэжимүүд"
 
 #. module: crm
 #: selection:crm.lead.report,creation_month:0
@@ -886,15 +967,27 @@ msgid "Send Email"
 msgstr "Э-мэйл илгээх"
 
 #. module: crm
-#: code:addons/crm/wizard/crm_lead_to_opportunity.py:97
+#: code:addons/crm/wizard/crm_lead_to_opportunity.py:89
 #, python-format
 msgid "Warning !"
 msgstr "Сануулга !"
 
 #. module: crm
+#: help:crm.case.section,message_unread:0
+#: help:crm.lead,message_unread:0
+#: help:crm.phonecall,message_unread:0
+msgid "If checked new messages require your attention."
+msgstr "Хэрэв тэмдэглэгдсэн бол шинэ зурвас нь анхаарал татахыг шаардана."
+
+#. module: crm
 #: field:crm.lead,day_open:0
 msgid "Days to Open"
-msgstr "Нээх өдөр"
+msgstr "Нээх хүртэлх өдөр"
+
+#. module: crm
+#: view:crm.lead:0
+msgid "ZIP"
+msgstr ""
 
 #. module: crm
 #: field:crm.lead,mobile:0
@@ -906,13 +999,6 @@ msgstr "Гар утас"
 #: field:crm.lead,ref:0
 msgid "Reference"
 msgstr "Дугаар"
-
-#. module: crm
-#: view:crm.lead:0
-msgid ""
-"Opportunities that are assigned to either me or one of the sale teams I "
-"manage"
-msgstr ""
 
 #. module: crm
 #: help:crm.case.section,resource_calendar_id:0
@@ -935,10 +1021,10 @@ msgid "Next Action"
 msgstr "Дараагийн үйл ажиллагаа"
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:762
+#: code:addons/crm/crm_lead.py:763
 #, python-format
 msgid "<b>Partner</b> set to <em>%s</em>."
-msgstr ""
+msgstr "<b>Харилцаг</b> нь <em>%s</em> гэж тохируулагдлаа."
 
 #. module: crm
 #: selection:crm.lead.report,state:0
@@ -964,11 +1050,6 @@ msgstr "Агуулга"
 
 #. module: crm
 #: view:crm.lead:0
-msgid "New Leads"
-msgstr "Шинэ Сэжим"
-
-#. module: crm
-#: view:crm.lead:0
 msgid "Show Sales Team"
 msgstr "Борлуулалтын Багийг Харуулах"
 
@@ -978,9 +1059,12 @@ msgid ""
 "Allows you to track your customers/suppliers claims and grievances.\n"
 "                    This installs the module crm_claim."
 msgstr ""
+"Захиалагч/нийлүүлэгчийн гомдолыг хөтлөх боломжийг олгодог.\n"
+"                    Энэ нь crm_claim модулийг суулгадаг."
 
 #. module: crm
 #: model:crm.case.stage,name:crm.stage_lead6
+#: view:crm.lead:0
 msgid "Won"
 msgstr "Ялсан"
 
@@ -1024,10 +1108,10 @@ msgid "Creation Date"
 msgstr "Үүсгэх огноо"
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:703
+#: code:addons/crm/crm_lead.py:698
 #, python-format
 msgid "Lead <b>converted into an Opportunity</b>"
-msgstr ""
+msgstr "Сэжим нь <b>Боломж бол хөрвүүлэгдлээ</b>"
 
 #. module: crm
 #: selection:crm.segmentation.line,expr_name:0
@@ -1038,6 +1122,11 @@ msgstr "Худалдан авалтын хэмжээ"
 #: view:crm.phonecall.report:0
 msgid "Year of call"
 msgstr "Дуудлагын он"
+
+#. module: crm
+#: view:crm.lead:0
+msgid "Open Leads"
+msgstr ""
 
 #. module: crm
 #: view:crm.case.stage:0
@@ -1051,12 +1140,17 @@ msgstr "Үе"
 #. module: crm
 #: view:crm.phonecall.report:0
 msgid "Phone Calls that are assigned to me"
-msgstr ""
+msgstr "Надад оноогдсон утасны дуудлага"
 
 #. module: crm
 #: field:crm.lead,user_login:0
 msgid "User Login"
 msgstr "Хэрэглэхч Нэвтрэх"
+
+#. module: crm
+#: view:crm.lead:0
+msgid "No salesperson"
+msgstr ""
 
 #. module: crm
 #: view:crm.phonecall.report:0
@@ -1079,6 +1173,8 @@ msgid ""
 "Allows you to communicate with Customer,  process Customer query, and "
 "provide better help and support. This installs the module crm_helpdesk."
 msgstr ""
+"Захиалагчтай харилцах, Захиалагчийн асуултыг боловсруулах, илүү сайн дэмжлэг "
+"тусламж үзүүлэх боломжийг олгодог. Энэ нь crm_helpdesk модулийг суулгадаг."
 
 #. module: crm
 #: view:crm.lead:0
@@ -1088,12 +1184,17 @@ msgstr "Устга"
 #. module: crm
 #: model:mail.message.subtype,description:crm.mt_lead_create
 msgid "Opportunity created"
-msgstr ""
+msgstr "Боломж үүсгэгдсэн"
 
 #. module: crm
 #: view:crm.lead:0
 msgid "í"
 msgstr "í"
+
+#. module: crm
+#: view:crm.phonecall:0
+msgid "Description..."
+msgstr ""
 
 #. module: crm
 #: selection:crm.lead.report,creation_month:0
@@ -1117,6 +1218,17 @@ msgid ""
 "          </p>\n"
 "        "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"          Шинэ боломж үүсгэхдээ дарна.\n"
+"          </p><p>\n"
+"          OpenERP нь борлуулалтын сувагийг сайн хөтөлснөөр сайн борлуулалтыг "
+"гүйцэдэ дагах болон ирээдүйн орлогоо сайн таамаглахад тусладаг.\n"
+"          </p><p>\n"
+"          Боломжуудын уулзалт утасны дуудлага төлөвлөх, үнийн санал руу "
+"боломжийг хөрвүүлэх, холбоотой баримтыг хавсаргах, бүх харилцааг хөтлөх, гэх "
+"мэт өргөн боломжийг олгодог.\n"
+"          </p>\n"
+"        "
 
 #. module: crm
 #: field:crm.segmentation,partner_id:0
@@ -1138,13 +1250,13 @@ msgstr "oe_kanban_text_red"
 #. module: crm
 #: model:ir.ui.menu,name:crm.menu_crm_payment_mode_act
 msgid "Payment Modes"
-msgstr ""
+msgstr "Төлбөрийн Горимууд"
 
 #. module: crm
 #: field:crm.lead.report,opening_date:0
 #: field:crm.phonecall.report,opening_date:0
 msgid "Opening Date"
-msgstr "Нээх өдөр"
+msgstr "Нээх огноо"
 
 #. module: crm
 #: help:crm.phonecall,duration:0
@@ -1185,12 +1297,14 @@ msgid ""
 "This field is used to distinguish stages related to Leads from stages "
 "related to Opportunities, or to specify stages available for both types."
 msgstr ""
+"Энэ талбар нь сэжимд холбогдох үеүүдийг боломжид холбогдох үеүүдээс ялгадаг. "
+"Мөн хоёуланд нь хэрэглэгдэх үеийг зааж өгдөг."
 
 #. module: crm
 #: model:mail.message.subtype,name:crm.mt_lead_create
 #: model:mail.message.subtype,name:crm.mt_salesteam_lead
 msgid "Lead Created"
-msgstr ""
+msgstr "Сэжим үүссэн."
 
 #. module: crm
 #: help:crm.segmentation,sales_purchase_active:0
@@ -1239,7 +1353,7 @@ msgstr "Огноо"
 #. module: crm
 #: model:crm.case.section,name:crm.crm_case_section_4
 msgid "Online Support"
-msgstr ""
+msgstr "Онлайн Дэмжлэг"
 
 #. module: crm
 #: view:crm.lead.report:0
@@ -1265,6 +1379,10 @@ msgid ""
 "set to 'Done'. If the case needs to be reviewed then the Status is  set to "
 "'Pending'."
 msgstr ""
+"Хэрэг үүсгэгдмэгцээ төлөв нь 'Ноорог' байна. Хэрэв хэрэг боловсруулагдаж "
+"байгаа бол төлөв нь 'Нээлттэй' байна. Хэрэг дууссан бол төлөв нь 'Хийгдсэн' "
+"болно. Хэрэв хэрэгийг шалгах шаардлагатай бол 'Хүлээж буй' төлөвтэй болсон "
+"байна."
 
 #. module: crm
 #: model:crm.case.section,name:crm.crm_case_section_1
@@ -1272,9 +1390,10 @@ msgid "Sales Marketing Department"
 msgstr "Борлуулалтын Алба"
 
 #. module: crm
-#: view:crm.phonecall.report:0
-msgid "Date of call"
-msgstr "Дуудлагын огноо"
+#: code:addons/crm/crm_lead.py:569
+#, python-format
+msgid "Merged lead"
+msgstr ""
 
 #. module: crm
 #: help:crm.lead,section_id:0
@@ -1288,6 +1407,8 @@ msgid ""
 "Phone Calls Assigned to the current user or with a team having the current "
 "user as team leader"
 msgstr ""
+"Идэвхтэй хэрэглэгч юмуу идэвхтэй хэрэглэгчийн удирдаж байгаа багт холбогдсон "
+"утасны дуудлагууд"
 
 #. module: crm
 #: view:crm.segmentation:0
@@ -1295,12 +1416,7 @@ msgid "Segmentation Description"
 msgstr "Сегментчлэлийн Тодорхойлолт"
 
 #. module: crm
-#: view:crm.lead:0
-msgid "Lead Description"
-msgstr ""
-
-#. module: crm
-#: code:addons/crm/crm_lead.py:573
+#: code:addons/crm/crm_lead.py:565
 #, python-format
 msgid "Merged opportunities"
 msgstr "Нийлүүлсэн боломж"
@@ -1308,7 +1424,7 @@ msgstr "Нийлүүлсэн боломж"
 #. module: crm
 #: model:crm.case.categ,name:crm.categ_oppor7
 msgid "Consulting"
-msgstr ""
+msgstr "Зөвлөх"
 
 #. module: crm
 #: field:crm.case.section,code:0
@@ -1341,7 +1457,6 @@ msgid "References"
 msgstr "Дугаар"
 
 #. module: crm
-#: view:crm.lead:0
 #: view:crm.lead2opportunity.partner:0
 #: view:crm.lead2opportunity.partner.mass:0
 #: view:crm.merge.opportunity:0
@@ -1350,11 +1465,6 @@ msgstr "Дугаар"
 #: view:crm.phonecall2phonecall:0
 msgid "Cancel"
 msgstr "Цуцлах"
-
-#. module: crm
-#: view:crm.lead:0
-msgid "Opportunities Assigned to Me or My Team(s)"
-msgstr ""
 
 #. module: crm
 #: model:crm.case.categ,name:crm.categ_oppor4
@@ -1374,14 +1484,14 @@ msgstr "Ажил"
 #. module: crm
 #: model:mail.message.subtype,description:crm.mt_lead_lost
 msgid "Opportunity lost"
-msgstr ""
+msgstr "Боломж ялагдсан"
 
 #. module: crm
 #: field:crm.lead2opportunity.partner,action:0
 #: field:crm.lead2opportunity.partner.mass,action:0
 #: field:crm.partner.binding,action:0
 msgid "Related Customer"
-msgstr ""
+msgstr "Холбогдох захиалагч"
 
 #. module: crm
 #: model:crm.case.categ,name:crm.categ_oppor8
@@ -1398,12 +1508,12 @@ msgstr "Сэжим/Боломж"
 #: model:ir.actions.act_window,name:crm.action_merge_opportunities
 #: model:ir.actions.act_window,name:crm.merge_opportunity_act
 msgid "Merge leads/opportunities"
-msgstr ""
+msgstr "Сэжим/Боломжуудыг нэгтгэх"
 
 #. module: crm
 #: help:crm.case.stage,sequence:0
 msgid "Used to order stages. Lower is better."
-msgstr ""
+msgstr "Үеүүдийг эрэмбэлэхэд хэрэглэгдэн. Бага нь сайн."
 
 #. module: crm
 #: model:ir.actions.act_window,name:crm.crm_phonecall_categ_action
@@ -1416,9 +1526,9 @@ msgid "Leads/Opportunities which are in open state"
 msgstr "Нээлттэй Сэжим/Боломж"
 
 #. module: crm
-#: model:ir.model,name:crm.model_res_users
-msgid "Users"
-msgstr "Хэрэглэгчид"
+#: view:crm.lead:0
+msgid "Opportunities that are assigned to any sales teams I am member of"
+msgstr ""
 
 #. module: crm
 #: model:mail.message.subtype,name:crm.mt_lead_stage
@@ -1476,13 +1586,7 @@ msgstr "Нэр"
 #. module: crm
 #: view:crm.lead.report:0
 msgid "Leads/Opportunities that are assigned to me"
-msgstr ""
-
-#. module: crm
-#: field:crm.lead.report,date_closed:0
-#: field:crm.phonecall.report,date_closed:0
-msgid "Close Date"
-msgstr "Хаах огноо"
+msgstr "Надад оноогдсон Сэжимүүд/Боломжууд"
 
 #. module: crm
 #: view:crm.lead.report:0
@@ -1499,7 +1603,12 @@ msgstr "Зурвас болон харилцсан түүх"
 #. module: crm
 #: view:crm.lead:0
 msgid "Show Countries"
-msgstr ""
+msgstr "Улсуудыг харуулах"
+
+#. module: crm
+#: view:crm.phonecall.report:0
+msgid "Date of call"
+msgstr "Дуудлагын огноо"
 
 #. module: crm
 #: view:crm.lead:0
@@ -1523,7 +1632,7 @@ msgstr "Бизнесийн харилцагчийн хэтийн төлөв рү
 #. module: crm
 #: model:ir.model,name:crm.model_crm_payment_mode
 msgid "CRM Payment Mode"
-msgstr ""
+msgstr "CRM Төлбөрийн Горим"
 
 #. module: crm
 #: view:crm.lead.report:0
@@ -1544,9 +1653,14 @@ msgid "Group By..."
 msgstr "Бүлэглэх..."
 
 #. module: crm
+#: model:email.template,subject:crm.email_template_opportunity_mail
+msgid "${object.name}"
+msgstr ""
+
+#. module: crm
 #: view:crm.merge.opportunity:0
 msgid "Merge Leads/Opportunities"
-msgstr ""
+msgstr "Сэжимүүд/Боломжуудыг нэгтгэх"
 
 #. module: crm
 #: field:crm.case.section,parent_id:0
@@ -1558,7 +1672,7 @@ msgstr "Эцэг баг"
 #: selection:crm.lead2opportunity.partner.mass,action:0
 #: selection:crm.partner.binding,action:0
 msgid "Do not link to a customer"
-msgstr ""
+msgstr "Захиалагчтай битгий холбо"
 
 #. module: crm
 #: field:crm.lead,date_action:0
@@ -1572,11 +1686,14 @@ msgid ""
 "stage. For example, if a stage is related to the status 'Close', when your "
 "document reaches this stage, it is automatically closed."
 msgstr ""
+"Таны баримтын төрөл холбогдох үеүүдээс хамааран автоматаар сонгогдох болно. "
+"Жишээлбэл, хэрэв үе нь 'Дууссан' төлөвтэй холбогдсон бол таны баримт энэ үед "
+"хүрэхэд автоматаар хаагдана."
 
 #. module: crm
 #: view:crm.lead2opportunity.partner.mass:0
 msgid "Assign opportunities to"
-msgstr ""
+msgstr "Боломжийг оноох"
 
 #. module: crm
 #: model:crm.case.categ,name:crm.categ_phone1
@@ -1589,15 +1706,20 @@ msgid "Month of call"
 msgstr "Дуудлагын сар"
 
 #. module: crm
+#: view:crm.lead:0
+msgid "Describe the lead..."
+msgstr ""
+
+#. module: crm
 #: code:addons/crm/crm_phonecall.py:290
 #, python-format
 msgid "Partner has been <b>created</b>."
-msgstr ""
+msgstr "Харилцагч <b>үүсгэгдлээ</b>."
 
 #. module: crm
 #: field:sale.config.settings,module_crm_claim:0
 msgid "Manage Customer Claims"
-msgstr ""
+msgstr "Захиалагчийн Гомдлын Менежмент"
 
 #. module: crm
 #: model:ir.actions.act_window,help:crm.action_report_crm_lead
@@ -1606,6 +1728,9 @@ msgid ""
 "the treatment delays or number of leads per state. You can sort out your "
 "leads analysis by different groups to get accurate grained analysis."
 msgstr ""
+"Сэжимийн шинжилгээ нь CRM-тай холбоотой холбоотой хүлээлгэлт, төлөв бүрээрх "
+"сэжим гэх мэт мэдээллийг шалгах боломжийг олгодог. Сэжимийн шинжилгээг төрөл "
+"бүрээр бүлэглэн илүү нарийвчилсан шинжилгээг хийх боломжтой."
 
 #. module: crm
 #: model:crm.case.categ,name:crm.categ_oppor3
@@ -1627,15 +1752,14 @@ msgstr "Үүсгэсэн он"
 
 #. module: crm
 #: view:crm.case.section:0
-#: view:crm.lead:0
 #: field:crm.lead,description:0
 msgid "Notes"
 msgstr "Тэмдэглэл"
 
 #. module: crm
-#: field:crm.segmentation.line,expr_value:0
-msgid "Value"
-msgstr "Утга"
+#: view:crm.opportunity2phonecall:0
+msgid "Call Description"
+msgstr ""
 
 #. module: crm
 #: field:crm.lead,partner_name:0
@@ -1676,7 +1800,7 @@ msgstr "Сувгууд"
 #: view:crm.phonecall.report:0
 #: selection:crm.phonecall.report,state:0
 msgid "Held"
-msgstr "Нөлөө"
+msgstr "Ярьсан"
 
 #. module: crm
 #: view:crm.lead:0
@@ -1723,6 +1847,8 @@ msgstr "Сэжим Харилцагчийн Боломжруу"
 #: help:crm.lead,partner_id:0
 msgid "Linked partner (optional). Usually created when converting the lead."
 msgstr ""
+"Холбогдсон захиалагч (заавал биш). Ихэвчлэн сэжимийг хөрвүүлэхэд "
+"хэрэглэгддэг."
 
 #. module: crm
 #: field:crm.lead,payment_mode:0
@@ -1739,7 +1865,7 @@ msgstr "Бөөн Сэжим Харилцагчийн Сэжим рүү"
 #. module: crm
 #: view:sale.config.settings:0
 msgid "On Mail Server"
-msgstr ""
+msgstr "Мэйл Сервер дээр"
 
 #. module: crm
 #: model:ir.actions.act_window,name:crm.open_board_statistical_dash
@@ -1751,7 +1877,7 @@ msgstr "CRM"
 #: model:ir.actions.act_window,name:crm.crm_segmentation_tree-act
 #: model:ir.ui.menu,name:crm.menu_crm_segmentation-act
 msgid "Contacts Segmentation"
-msgstr ""
+msgstr "Холбогчийн Сегментчлэл"
 
 #. module: crm
 #: model:process.node,note:crm.process_node_meeting0
@@ -1762,11 +1888,6 @@ msgstr "энгийн болон утасны уулзалтыг товлох"
 #: model:crm.case.resource.type,name:crm.type_lead1
 msgid "Telesales"
 msgstr "Теле-борлуулалт"
-
-#. module: crm
-#: view:crm.lead:0
-msgid "Leads Assigned to Me or My Team(s)"
-msgstr ""
 
 #. module: crm
 #: model:ir.model,name:crm.model_crm_segmentation_line
@@ -1810,7 +1931,7 @@ msgstr "Сэжим / Захиалагч"
 #. module: crm
 #: model:crm.case.section,name:crm.crm_case_section_2
 msgid "Support Department"
-msgstr ""
+msgstr "Дэмжлэгийн Хэлтэс"
 
 #. module: crm
 #: view:crm.lead.report:0
@@ -1827,7 +1948,7 @@ msgstr "Борлуулалтын баг"
 #. module: crm
 #: field:crm.case.stage,case_default:0
 msgid "Default to New Sales Team"
-msgstr ""
+msgstr "Шинэ борлуулалтын багт анхны утга нь"
 
 #. module: crm
 #: view:crm.lead:0
@@ -1843,7 +1964,7 @@ msgstr "Шинэ төлөвтэй Сэжим/Боломж"
 #: selection:crm.phonecall,state:0
 #: view:crm.phonecall.report:0
 msgid "Not Held"
-msgstr "Нөлөөгүй"
+msgstr "Яриагүй"
 
 #. module: crm
 #: field:crm.lead.report,probability:0
@@ -1866,10 +1987,10 @@ msgid "Leads"
 msgstr "Сэжим"
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:571
+#: code:addons/crm/crm_lead.py:563
 #, python-format
 msgid "Merged leads"
-msgstr ""
+msgstr "Нэгтгэгдсэн сэжимүүд"
 
 #. module: crm
 #: model:crm.case.categ,name:crm.categ_oppor5
@@ -1880,7 +2001,7 @@ msgstr "Зохиомж"
 #: selection:crm.lead2opportunity.partner,name:0
 #: selection:crm.lead2opportunity.partner.mass,name:0
 msgid "Merge with existing opportunities"
-msgstr ""
+msgstr "Байгаа боломжтой нэгтгэх"
 
 #. module: crm
 #: view:crm.phonecall.report:0
@@ -1892,7 +2013,7 @@ msgstr "Хийх"
 #: model:mail.message.subtype,name:crm.mt_lead_convert_to_opportunity
 #: model:mail.message.subtype,name:crm.mt_salesteam_lead_opportunity
 msgid "Lead to Opportunity"
-msgstr ""
+msgstr "Сэжим Боломж руу"
 
 #. module: crm
 #: field:crm.lead,user_email:0
@@ -1905,6 +2026,8 @@ msgid ""
 "The name of the future partner company that will be created while converting "
 "the lead into opportunity"
 msgstr ""
+"Сэжимийг боломж болгож хөрвүүлэгдэхэд үүсгэгдэх ирээдүйн харилцагч компанийн "
+"нэр"
 
 #. module: crm
 #: field:crm.opportunity2phonecall,note:0
@@ -1938,7 +2061,7 @@ msgstr "Нээлттэй Боломж"
 #. module: crm
 #: model:crm.case.resource.type,name:crm.type_lead2
 msgid "Email Campaign - Services"
-msgstr ""
+msgstr "Имэйл компанит ажил - Үйлчилгээнүүд"
 
 #. module: crm
 #: selection:crm.case.stage,state:0
@@ -1948,6 +2071,11 @@ msgstr ""
 #: selection:crm.phonecall.report,state:0
 msgid "Pending"
 msgstr "Шийд хүлээсэн"
+
+#. module: crm
+#: view:crm.lead:0
+msgid "Assigned to Me"
+msgstr ""
 
 #. module: crm
 #: model:process.transition,name:crm.process_transition_leadopportunity0
@@ -1977,7 +2105,7 @@ msgstr "Шатын Хайлт"
 #: help:crm.lead.report,delay_open:0
 #: help:crm.phonecall.report,delay_open:0
 msgid "Number of Days to open the case"
-msgstr "Хэрэгийг нээх өдрийн тоо"
+msgstr "Хэрэгийг нээх хүртэлх өдрийн тоо"
 
 #. module: crm
 #: field:crm.lead,phone:0
@@ -2002,16 +2130,11 @@ msgid "Mandatory Expression"
 msgstr "Шаардлагатай Илэрхийлэл"
 
 #. module: crm
-#: view:crm.lead:0
-msgid "Send Mail"
-msgstr "Мэйл илгээх"
-
-#. module: crm
 #: selection:crm.lead2opportunity.partner,action:0
 #: selection:crm.lead2opportunity.partner.mass,action:0
 #: selection:crm.partner.binding,action:0
 msgid "Create a new customer"
-msgstr ""
+msgstr "Шинэ захиалагч үүсгэх"
 
 #. module: crm
 #: field:crm.lead.report,deadline_day:0
@@ -2041,12 +2164,14 @@ msgid "Misc"
 msgstr "Бусад"
 
 #. module: crm
+#: view:crm.lead:0
 #: view:crm.lead.report:0
 #: selection:crm.lead.report,state:0
 msgid "Open"
 msgstr "Нээлттэй"
 
 #. module: crm
+#: view:crm.lead:0
 #: field:crm.lead,city:0
 msgid "City"
 msgstr "Сум/Дүүрэг"
@@ -2054,12 +2179,12 @@ msgstr "Сум/Дүүрэг"
 #. module: crm
 #: selection:crm.case.stage,type:0
 msgid "Both"
-msgstr ""
+msgstr "Хоёул"
 
 #. module: crm
 #: view:crm.phonecall:0
 msgid "Call Done"
-msgstr ""
+msgstr "Дуудлага хийгдсэн"
 
 #. module: crm
 #: view:crm.phonecall:0
@@ -2070,7 +2195,7 @@ msgstr "Хариуцагч"
 #. module: crm
 #: model:crm.case.section,name:crm.crm_case_section_3
 msgid "Direct Marketing"
-msgstr ""
+msgstr "Шууд Маркетинг"
 
 #. module: crm
 #: model:crm.case.categ,name:crm.categ_oppor1
@@ -2085,7 +2210,7 @@ msgstr "Үүсгэсэн Он"
 #. module: crm
 #: view:crm.lead2opportunity.partner.mass:0
 msgid "Conversion Options"
-msgstr ""
+msgstr "Хөрвүүлэлтийн Сонголтууд"
 
 #. module: crm
 #: view:crm.case.section:0
@@ -2093,6 +2218,8 @@ msgid ""
 "Follow this salesteam to automatically track the events associated to users "
 "of this team."
 msgstr ""
+"Энэ борлуулалтын багийн хэрэглэгчидтэй холбоотой аливаа үзэгдлийг автомат "
+"хөтлөхийн тулд энэ борлуулалтын багийг дагах"
 
 #. module: crm
 #: view:crm.lead:0
@@ -2100,16 +2227,18 @@ msgid "Address"
 msgstr "Хаяг"
 
 #. module: crm
+#: view:crm.lead:0
+msgid "Leads that are assigned to any sales teams I am member of"
+msgstr ""
+
+#. module: crm
 #: help:crm.case.section,alias_id:0
 msgid ""
 "The email address associated with this team. New emails received will "
 "automatically create new leads assigned to the team."
 msgstr ""
-
-#. module: crm
-#: view:crm.lead:0
-msgid "Unassigned Opportunities"
-msgstr "Эзэнгүй боломжууд"
+"Энэ борлуулалтын багтай холбогдох имэйл хаяг. Шинэ хүлээн авсан имэйл нь "
+"автоматаар энэ багт оноогдсон сэжимийг үүсгэнэ."
 
 #. module: crm
 #: view:crm.lead:0
@@ -2121,7 +2250,7 @@ msgstr "Сэжимийн Хайлт"
 #: view:crm.phonecall.report:0
 #: field:crm.phonecall.report,delay_open:0
 msgid "Delay to open"
-msgstr "Нээхээ азнах"
+msgstr "Нээх хүртэлх хүлээлт"
 
 #. module: crm
 #: model:ir.actions.act_window,name:crm.crm_case_categ_phone_outgoing0
@@ -2163,7 +2292,7 @@ msgstr "Үргэлжлүүлэх"
 #: selection:crm.lead2opportunity.partner.mass,name:0
 #: model:ir.actions.act_window,name:crm.action_crm_lead2opportunity_partner
 msgid "Convert to opportunity"
-msgstr ""
+msgstr "Боломж руу хөрвүүлэх"
 
 #. module: crm
 #: field:crm.opportunity2phonecall,user_id:0
@@ -2198,6 +2327,16 @@ msgid ""
 "          </p>\n"
 "        "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"            Дуудлагыг товлохдоо дарна \n"
+"          </p><p>\n"
+"            OpenERP нь таны багийн хийх шаардлагатай дуудлагыг хялбараар "
+"тодорхойлж хураангуй дээр суурилан мөшгөх боломжийг олгоно.\n"
+"          </p><p>  \n"
+"            Импортлох боломжийг ашиглан бөөн тооны магадлах шаардлагатай "
+"шаансуудыг оруулж ирж болно.\n"
+"          </p>\n"
+"        "
 
 #. module: crm
 #: help:crm.case.stage,fold:0
@@ -2222,12 +2361,12 @@ msgstr "Хэрэг харъяалагдах Борлуулалтын баг"
 #. module: crm
 #: model:crm.case.resource.type,name:crm.type_lead6
 msgid "Banner Ads"
-msgstr ""
+msgstr "Баннер Сурталчилгаа"
 
 #. module: crm
 #: field:crm.merge.opportunity,opportunity_ids:0
 msgid "Leads/Opportunities"
-msgstr ""
+msgstr "Сэжим/Боломж"
 
 #. module: crm
 #: field:crm.lead,fax:0
@@ -2252,17 +2391,12 @@ msgstr "Ажиллаж байна"
 #. module: crm
 #: model:mail.message.subtype,description:crm.mt_lead_convert_to_opportunity
 msgid "Lead converted into an opportunity"
-msgstr ""
-
-#. module: crm
-#: view:crm.lead:0
-msgid "Unassigned Leads"
-msgstr "Эзэнгүй сэжим"
+msgstr "Сэжим боломж болж хөрвүүлэгдлээ"
 
 #. module: crm
 #: model:mail.message.subtype,description:crm.mt_lead_won
 msgid "Opportunity won"
-msgstr ""
+msgstr "Боломж ялсан"
 
 #. module: crm
 #: field:crm.case.categ,object_id:0
@@ -2272,7 +2406,7 @@ msgstr "Обьектийн нэр"
 #. module: crm
 #: view:crm.phonecall:0
 msgid "Phone Calls Assigned to Me or My Team(s)"
-msgstr ""
+msgstr "Надад болон миний багт оноогдсон утасны дуудлагууд"
 
 #. module: crm
 #: view:crm.lead:0
@@ -2312,9 +2446,15 @@ msgid "Cancelled"
 msgstr "Цуцлагдсан"
 
 #. module: crm
-#: field:crm.lead,color:0
-msgid "Color Index"
-msgstr "Өнгөний Индекс"
+#: view:crm.lead:0
+msgid "Street..."
+msgstr ""
+
+#. module: crm
+#: field:crm.lead.report,date_closed:0
+#: field:crm.phonecall.report,date_closed:0
+msgid "Close Date"
+msgstr "Хаах огноо"
 
 #. module: crm
 #: model:ir.actions.act_window,help:crm.action_report_crm_phonecall
@@ -2332,7 +2472,7 @@ msgstr ""
 #. module: crm
 #: field:crm.case.stage,fold:0
 msgid "Fold by Default"
-msgstr ""
+msgstr "Анхныхаар эвхэгдсэн байна"
 
 #. module: crm
 #: field:crm.case.stage,state:0
@@ -2343,6 +2483,11 @@ msgstr "Холбогдох төлөв"
 #: field:crm.phonecall,name:0
 msgid "Call Summary"
 msgstr "Дуудлагын товч утга"
+
+#. module: crm
+#: field:crm.lead,color:0
+msgid "Color Index"
+msgstr "Өнгөний Индекс"
 
 #. module: crm
 #: field:crm.segmentation.line,expr_operator:0
@@ -2358,7 +2503,7 @@ msgstr "Тов/Дуудлагын Хөтөлгөө"
 #. module: crm
 #: view:crm.merge.opportunity:0
 msgid "Select Leads/Opportunities"
-msgstr ""
+msgstr "Сэжимүүд/Боломжуудыг Сонгох"
 
 #. module: crm
 #: selection:crm.phonecall,state:0
@@ -2368,7 +2513,7 @@ msgstr "Баталсан"
 #. module: crm
 #: model:ir.model,name:crm.model_crm_partner_binding
 msgid "Handle partner binding or generation in CRM wizards."
-msgstr ""
+msgstr "Харилцагчийг тогтоох юмуу үүсгэхийг CRM харилцах цонхонд удирдах."
 
 #. module: crm
 #: model:ir.actions.act_window,name:crm.act_oppor_stage_user
@@ -2383,7 +2528,7 @@ msgstr "Батлах"
 #. module: crm
 #: view:crm.lead:0
 msgid "Unread messages"
-msgstr ""
+msgstr "Уншаагүй зурвасууд"
 
 #. module: crm
 #: field:crm.phonecall.report,section_id:0
@@ -2419,11 +2564,23 @@ msgid ""
 "          </p>\n"
 "        "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"            Магадлагдаагүй сэжимийг үүсгэхдээ дарна.\n"
+"          </p><p>\n"
+"            Захиалагч эсвэл боломжийг үүсгэхийн өмнө магадлах шаардлагатай "
+"алхамуудыг хийхдээ сэжимийг ашиглана. Энэ нь таны хүлээн авсан нэрийн "
+"хуудас, веб дээр бөглөсөн хүсэлт, импорт хийсэн магадлагдаагүй олон тооны "
+"сэжүүр зэрэг байж болно.\n"
+"          </p><p>\n"
+"            Нэгэнт магадлагдсан бол сэжим нь бизнес боломж болон "
+"хөрвүүлэгдэж таны хаягийн дэвтэрт шинэ захиалагч үүснэ.\n"
+"          </p>\n"
+"        "
 
 #. module: crm
 #: field:sale.config.settings,fetchmail_lead:0
 msgid "Create leads from incoming mails"
-msgstr ""
+msgstr "Ирж буй имэйлээс сэжим үүсгэх"
 
 #. module: crm
 #: view:crm.lead:0
@@ -2445,7 +2602,7 @@ msgstr "Суваг"
 #: view:crm.opportunity2phonecall:0
 #: view:crm.phonecall2phonecall:0
 msgid "Schedule Call"
-msgstr ""
+msgstr "Дуудлага товлох"
 
 #. module: crm
 #: view:crm.lead.report:0
@@ -2474,7 +2631,7 @@ msgstr "Сэжимээс Бизнес боломж үүсгэх"
 #. module: crm
 #: model:crm.case.resource.type,name:crm.type_lead3
 msgid "Email Campaign - Products"
-msgstr ""
+msgstr "Имэйл компанит ажил - Бараанууд"
 
 #. module: crm
 #: model:ir.actions.act_window,help:crm.crm_case_categ_phone_incoming0
@@ -2493,6 +2650,17 @@ msgid ""
 "          </p>\n"
 "        "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"            Утасны дуудлагын хураангуйг үүсгэхдээ дарна. \n"
+"          </p><p>\n"
+"            OpenERP нь ирсэн дуудлагын хураангуйг хөтлөх боломжийг олгох "
+"бөгөөд ингэснээр ярианы агуулгыг багийн бусад гишүүдтэйгээ хуваалцахад "
+"тусладаг.\n"
+"          </p><p>\n"
+"            Утасны дуудлагын мөрөөр мөшгөхийн тулд өөр утасны дуудлага эсвэл "
+"уулзалтыг товлох хүсэлтийг үүсгэж болно.\n"
+"          </p>\n"
+"        "
 
 #. module: crm
 #: model:process.node,note:crm.process_node_leads0
@@ -2502,6 +2670,11 @@ msgstr "Шинэ ирээдүйн хамгийн эхний холбоо"
 #. module: crm
 #: view:res.partner:0
 msgid "Calls"
+msgstr "Дуудлагууд"
+
+#. module: crm
+#: view:crm.lead:0
+msgid "Cancel Case"
 msgstr ""
 
 #. module: crm
@@ -2512,7 +2685,7 @@ msgstr "Магадлалыг Автомат Өөрчлөх"
 #. module: crm
 #: view:crm.phonecall.report:0
 msgid "My Phone Calls"
-msgstr ""
+msgstr "Миний утасны дуудлагууд"
 
 #. module: crm
 #: model:crm.case.stage,name:crm.stage_lead3
@@ -2523,7 +2696,7 @@ msgstr "Магадлагдах"
 #: field:crm.lead2opportunity.partner,name:0
 #: field:crm.lead2opportunity.partner.mass,name:0
 msgid "Conversion Action"
-msgstr ""
+msgstr "Хөрвүүлэх Үйлдэл"
 
 #. module: crm
 #: model:ir.actions.act_window,help:crm.crm_lead_categ_action
@@ -2539,6 +2712,14 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Шинэ борлуулалтын пайз үүсгэхдээ дарна.\n"
+"              </p><p>\n"
+"                Сэжим боломж зэрэгийг илүү сайн ангилж шинжлэхийн тулд "
+"компанийн үйл ажиллагаандаа нийцсэн шинэ пайзуудыг үүсгэнэ. Энэ ангилалт нь "
+"бүтээгдэхүүний бүтэц, борлуулалтын төрөл зэрэгтэй уялдаж болох юм.\n"
+"              </p>\n"
+"            "
 
 #. module: crm
 #: selection:crm.lead.report,creation_month:0
@@ -2551,7 +2732,7 @@ msgstr "8 сар"
 #: model:mail.message.subtype,name:crm.mt_lead_lost
 #: model:mail.message.subtype,name:crm.mt_salesteam_lead_lost
 msgid "Opportunity Lost"
-msgstr ""
+msgstr "Боломж ялагдсан"
 
 #. module: crm
 #: field:crm.lead.report,deadline_month:0
@@ -2617,17 +2798,17 @@ msgstr "Багийн гишүүнчлэл"
 #: view:crm.opportunity2phonecall:0
 #: view:crm.phonecall2phonecall:0
 msgid "Schedule/Log a Call"
-msgstr ""
+msgstr "Дуудлага Товлох/Хөтлөх"
 
 #. module: crm
 #: field:crm.lead,planned_cost:0
 msgid "Planned Costs"
-msgstr ""
+msgstr "Төлөвлөсөн Өртөгүүд"
 
 #. module: crm
 #: help:crm.lead,date_deadline:0
 msgid "Estimate of the date on which the opportunity will be won."
-msgstr ""
+msgstr "Боломж ялах байх гэж таамаглаж байгаа огноо"
 
 #. module: crm
 #: help:crm.lead,email_cc:0
@@ -2649,7 +2830,7 @@ msgstr "Хөтлөгдсөн Дуудлага"
 #: model:mail.message.subtype,name:crm.mt_lead_won
 #: model:mail.message.subtype,name:crm.mt_salesteam_lead_won
 msgid "Opportunity Won"
-msgstr ""
+msgstr "Боломж Ялсан"
 
 #. module: crm
 #: model:ir.actions.act_window,name:crm.crm_case_section_act_tree
@@ -2690,12 +2871,12 @@ msgstr "Гудамж2"
 #. module: crm
 #: field:sale.config.settings,module_crm_helpdesk:0
 msgid "Manage Helpdesk and Support"
-msgstr ""
+msgstr "Тусламжийн төв болон Дэмжлэгийн менежмент"
 
 #. module: crm
 #: field:crm.lead.report,delay_open:0
 msgid "Delay to Open"
-msgstr "Нээхийг Азнах"
+msgstr "Нээх хүртэлх хүлээлт"
 
 #. module: crm
 #: field:crm.lead.report,user_id:0
@@ -2744,19 +2925,30 @@ msgid "Planned Revenues"
 msgstr "Төлөвлөсөн орлого"
 
 #. module: crm
-#: view:crm.lead:0
-msgid "Exp.Closing"
-msgstr "Таамаг.Хаах"
-
-#. module: crm
 #: help:crm.lead.report,deadline_year:0
 msgid "Expected closing year"
 msgstr "Таамаглагдсан хаах он"
 
 #. module: crm
+#: view:crm.lead:0
+msgid "e.g. Call for proposal"
+msgstr ""
+
+#. module: crm
 #: model:ir.model,name:crm.model_crm_case_stage
 msgid "Stage of case"
 msgstr "Хэрэгийн Шат"
+
+#. module: crm
+#: code:addons/crm/crm_lead.py:569
+#, python-format
+msgid "Merged opportunity"
+msgstr ""
+
+#. module: crm
+#: view:crm.lead:0
+msgid "Unassigned"
+msgstr ""
 
 #. module: crm
 #: selection:crm.opportunity2phonecall,action:0
@@ -2778,6 +2970,7 @@ msgstr "Дуудлага хөтлөх"
 #: help:sale.config.settings,group_fund_raising:0
 msgid "Allows you to trace and manage your activities for fund raising."
 msgstr ""
+"Сан бүрдүүлэх таны үйл ажиллагааг хөтлөх, менежмент хийх боломжийг олгодог."
 
 #. module: crm
 #: field:crm.meeting,phonecall_id:0
@@ -2788,12 +2981,7 @@ msgstr "Утасны дуудлага"
 #. module: crm
 #: view:crm.phonecall.report:0
 msgid "Phone calls that are assigned to one of the sale teams I manage"
-msgstr ""
-
-#. module: crm
-#: view:crm.lead:0
-msgid "Create date"
-msgstr "Үүсгэсэн огноо"
+msgstr "Миний удирдаж байгаа багуудад оноогдсон утасны дуудлагууд"
 
 #. module: crm
 #: view:crm.lead:0
@@ -2826,7 +3014,6 @@ msgstr "Тайлбар"
 #: field:crm.case.resource.type,section_id:0
 #: view:crm.case.section:0
 #: field:crm.case.section,name:0
-#: view:crm.lead:0
 #: field:crm.lead,section_id:0
 #: view:crm.lead.report:0
 #: field:crm.lead.report,section_id:0
@@ -2864,6 +3051,17 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Шинэ суваг үүсгэхдээ даран.\n"
+"              </p><p>\n"
+"                Сэжим боломжийн эх үүсвэрийг хөтлөхдөө сувагийг хэрэглэнэ. "
+"Маркетингийн өгөөжийг шинжлэхэд ихэвчлэн сувагуудын тайлагнал нь "
+"хэрэглэгддэг.\n"
+"              </p><p>\n"
+"                Сувагуудын байж болох жишээнүүд: компанийн веб хуудас, "
+"утасны дуудлага, компанит ажил, гэрээт борлуулалгч, гм.\n"
+"              </p>\n"
+"            "
 
 #. module: crm
 #: view:crm.lead:0
@@ -2901,10 +3099,12 @@ msgid "Working Hours"
 msgstr "Ажлын цаг"
 
 #. module: crm
+#: code:addons/crm/crm_lead.py:968
 #: view:crm.lead:0
 #: field:crm.lead2opportunity.partner,partner_id:0
 #: field:crm.lead2opportunity.partner.mass,partner_id:0
 #: field:crm.partner.binding,partner_id:0
+#, python-format
 msgid "Customer"
 msgstr "Захиалагч"
 
@@ -2922,16 +3122,18 @@ msgstr "Уулзалтын хуваарь"
 
 #. module: crm
 #: model:crm.case.stage,name:crm.stage_lead8
+#: view:crm.lead:0
 msgid "Lost"
 msgstr "Ялагдсан"
 
 #. module: crm
-#: code:addons/crm/wizard/crm_lead_to_opportunity.py:97
+#: code:addons/crm/wizard/crm_lead_to_opportunity.py:89
 #, python-format
 msgid "Closed/Cancelled leads cannot be converted into opportunities."
-msgstr ""
+msgstr "Хаагдсан/Цуцлагдсан сэжимүүд нь боломж руу хөрвүүлэх боломжгүй"
 
 #. module: crm
+#: view:crm.lead:0
 #: field:crm.lead,country_id:0
 #: view:crm.lead.report:0
 #: field:crm.lead.report,country_id:0
@@ -3019,7 +3221,7 @@ msgstr "Сонин"
 #. module: crm
 #: model:mail.message.subtype,name:crm.mt_salesteam_lead_stage
 msgid "Opportunity Stage Changed"
-msgstr ""
+msgstr "Боломжийн Үе өөрчлөгдлөө"
 
 #. module: crm
 #: model:ir.actions.act_window,help:crm.crm_lead_stage_act
@@ -3033,3 +3235,58 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Сэжим/боломжид зориулсан шинэ үеийг үүсгэхдээ дарна.\n"
+"              </p><p>\n"
+"                Үе нь сэжим юмуу боломж нь борлуулалтын үйл ажиллагааны ямар "
+"шатанд байгааг менежмент хийхэд борлуулалтын ажилтанд тусладаг.\n"
+"              </p>\n"
+"            "
+
+#~ msgid "Send Mail"
+#~ msgstr "Мэйл илгээх"
+
+#~ msgid "New Leads"
+#~ msgstr "Шинэ Сэжим"
+
+#~ msgid "Unassigned Leads"
+#~ msgstr "Эзэнгүй сэжим"
+
+#~ msgid "Unassigned Opportunities"
+#~ msgstr "Эзэнгүй боломжууд"
+
+#~ msgid "Create date"
+#~ msgstr "Үүсгэсэн огноо"
+
+#~ msgid "Exp.Closing"
+#~ msgstr "Таамаг.Хаах"
+
+#~ msgid "Users"
+#~ msgstr "Хэрэглэгчид"
+
+#~ msgid "Leads that are assigned to one of the sale teams I manage, or to me"
+#~ msgstr ""
+#~ "Миний менежмент хийж буй борлуулалтын баг эсвэл надад оногдсон сэжимүүд"
+
+#, python-format
+#~ msgid "<b>%s a call</b> for the <em>%s</em>."
+#~ msgstr "<b>%s дуудлага</b> <em>%s</em>-д."
+
+#~ msgid "Opportunity ${object.name | h})"
+#~ msgstr "Боломж ${object.name | h})"
+
+#~ msgid ""
+#~ "Opportunities that are assigned to either me or one of the sale teams I "
+#~ "manage"
+#~ msgstr ""
+#~ "Надад болон миний менежмент хийж буй борлуулалтын багуудад оноогдсон "
+#~ "боломжууд"
+
+#~ msgid "Lead Description"
+#~ msgstr "Сэжимийн тодорхойлолт"
+
+#~ msgid "Opportunities Assigned to Me or My Team(s)"
+#~ msgstr "Надад болон миний багт оноогдсон Боломжууд"
+
+#~ msgid "Leads Assigned to Me or My Team(s)"
+#~ msgstr "Надад болон Миний багт оноогдсон Сэжимүүд"

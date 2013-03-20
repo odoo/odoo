@@ -26,24 +26,35 @@
             </div>
             <div class="oe_msg_center">
                 <div class="oe_msg_content">
+                    <button class="oe_full" title="Open the full mail composer"><span class='oe_e'>&amp;ograve</span></button>
                     <t t-call="mail.thread.list_recipients"/>
                     <textarea class="field_text"></textarea>
                 </div>
                 <div class="oe_msg_footer">
                     <div class="oe_msg_attachment_list"></div>
-                    <button class="oe_post">Post</button>
+                    <button class="oe_post">
+                        <t t-if="!widget.is_log">Send</t>
+                        <t t-if="widget.is_log">Log a note</t>
+                    </button>
                     <t t-call="mail.compose_message.add_attachment"/>
-                    <!--<a class="oe_cancel oe_e">X</a>-->
-                    <button class="oe_full" title="Open the full mail composer"><span class='oe_e'>&amp;ograve</span></button>
                 </div>
             </div>
         </div>
         <div t-if="widget.show_compact_message and !widget.show_composer and !widget.options.readonly" t-attf-class="oe_msg oe_msg_composer_compact #{widget.thread_level and widget.options.display_indented_thread > -1 ? 'oe_msg_indented' : ''}">
-            <div class="field_text oe_compact">
-                <t t-if="widget.options.compose_placeholder" t-raw="widget.options.compose_placeholder"/>
-                <t t-if="!widget.options.compose_placeholder and !widget.options.view_mailbox">Write to the followers of this document...</t>
-                <t t-if="!widget.options.compose_placeholder and widget.options.view_mailbox">Share with my followers...</t>
-            </div>
+            <t t-if="widget.options.view_mailbox">
+                <div class="field_text oe_compact oe_compact_inbox">
+                    <t t-if="widget.options.compose_placeholder" t-raw="widget.options.compose_placeholder"/>
+                    <t t-if="!widget.options.compose_placeholder and widget.options.view_mailbox">Share with my followers...</t>
+                </div>
+            </t>
+            <t t-if="!widget.options.view_mailbox">
+                <div class="field_text oe_compact oe_compact_record">
+                    <a class="oe_compose_post" t-if="widget.options.compose_placeholder"><t t-raw="widget.options.compose_placeholder"/></a>
+                    <a class="oe_compose_post" t-if="!widget.options.compose_placeholder and !widget.options.view_mailbox">Send a message</a>
+                    <span class="oe_grey oe_sep_word">or</span>
+                    <a class="oe_compose_log">Log a note</a>
+                </div>
+            </t>
         </div>
         <span t-if="!(widget.show_compact_message and !widget.show_composer) and !widget.show_composer" class="oe_placeholder_compose"></span>
     </t>
@@ -57,7 +68,7 @@
             <span class="oe_add">
                 <!-- uploader of file -->
                 <button class="oe_attach"><span class="oe_e">'</span></button> 
-                <span class='oe_attach_label'>File</span>
+                <span class='oe_attach_label'>Attach a File</span>
                 <t t-call="HiddenInputFile">
                     <t t-set="fileupload_id" t-value="widget.fileupload_id"/>
                     <t t-set="fileupload_action" t-translation="off">/web/binary/upload_attachment</t>
@@ -106,7 +117,7 @@
         template to the recipients list
         -->
     <t t-name="mail.thread.list_recipients">
-        <div class="oe_mail_list_recipients">
+        <div class="oe_mail_list_recipients" t-if="!widget.is_log">
             To:
             <t t-if="!widget.is_private">
                 <span class="oe_all_follower">
@@ -129,13 +140,16 @@
                 <a class="oe_more_hidden">&lt;&lt;&lt;</a>
             </t>
         </div>
-        <div class="oe_emails_from">
-            <t t-foreach='widget.emails_from' t-as='email_from'>
-                <label title="Add them into recipients and followers">
-                    <input type="checkbox" t-att-checked="email_from[1] ? 'checked' : undefind" t-att-data="email_from[0][4]"/>
-                    <t t-raw="email_from[0][2]"/>
+        <div class="oe_recipients" t-if="!widget.is_log">
+            <t t-foreach='widget.recipients' t-as='recipient'>
+                <label t-attf-title="Add as recipient and follower (reason: #{recipient.reason})">
+                    <input type="checkbox" t-att-checked="recipient.checked ? 'checked' : undefined" t-att-data="recipient.email_address"/>
+                    <t t-raw="recipient.name"/> (<t t-raw="recipient.email_address"/>)
                 </label>
             </t>
+        </div>
+        <div t-if="widget.is_log">
+            <span>Attach a note that will not be sent to the followers</span>
         </div>
     </t>
 
@@ -212,7 +226,7 @@
 
     <!-- default layout -->
     <t t-name="mail.thread.message">
-        <div t-attf-class="oe_msg #{widget.thread_level and widget.options.display_indented_thread > -1 ? 'oe_msg_indented' : ''} oe_msg_#{widget.type}">
+        <div t-attf-class="oe_msg #{widget.thread_level and widget.options.display_indented_thread > -1 ? 'oe_msg_indented' : ''} #{widget.partner_ids.length == 0 ? 'oe_msg_nobody' : ''} oe_msg_#{widget.type}">
 
             <div class='oe_msg_left'>
                 <a t-if="widget.options.show_link" t-attf-href="#model=res.partner&amp;id=#{widget.author_id[0]}" t-att-title="widget.author_id[1]">
@@ -245,6 +259,22 @@
                     </t>
                     <a t-if="widget.author_id and widget.options.show_link and widget.author_id[0]" t-attf-href="#model=res.partner&amp;id=#{widget.author_id[0]}"><t t-raw="widget.author_id[2]"/></a>
                     <span t-if="widget.author_id and (!widget.options.show_link or !widget.author_id[0])"><t t-raw="widget.author_id[2]"/></span>
+                    <t t-if="widget.partner_ids.length == 0">
+                        logged a note
+                    </t>
+                    <t t-if="widget.partner_ids.length > 0">
+                        to
+                    </t>
+                    <t t-foreach="widget.partner_ids.slice(0, 3)" t-as="partner">
+                        <span t-attf-class="oe_partner_follower">
+                        <a t-if="widget.options.show_link" t-attf-href="#model=res.partner&amp;id=#{partner[0]}"><t t-raw="partner[1]"/></a>
+                        <t t-if="!widget.options.show_link" t-raw="partner[1]"/>
+                        </span>
+                        <t t-if="!partner_last">,</t>
+                    </t>
+                    <t t-if="widget.partner_ids.length > 3">
+                        <span t-att-title="widget.extra_partners_str">and <t t-raw="widget.extra_partners_nbr"/> more</span>
+                    </t>
                     <span class='oe_subtle'>•</span>
                     <span t-att-title="widget.date"><t t-if="widget.timerelative" t-raw="widget.timerelative"/><t t-if="!widget.timerelative" t-raw="widget.date"/></span>
                     <span t-if="!widget.options.readonly" class='oe_subtle'>•</span>
