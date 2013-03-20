@@ -12,6 +12,9 @@
             <li data-modes="default">Username</li>
             <li data-modes="signup reset">Username (Email)</li>
         </t>
+        <t t-jquery="form ul:first li:has(input[name=login], input[name=password]), form ul:first li:contains('Password')">
+            this.attr('data-modes', 'default signup reset');
+        </t>
         <t t-jquery="form ul:first li:has(input[name=password])" t-operation="after">
             <li data-modes="signup reset">Confirm Password</li>
             <li data-modes="signup reset"><input name="confirm_password" type="password"/></li>
