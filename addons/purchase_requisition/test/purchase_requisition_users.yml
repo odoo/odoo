@@ -6,9 +6,10 @@
 -
   !record {model: res.users, id: res_users_purchase_requisition_manager}:
     company_id: base.main_company
-    name: Purchase Reqisition Manager
+    name: Purchase requisition Manager
     login: prm
     password: prm
+    email: requisition_manager@yourcompany.com
 -
   Create a user as 'Purchase Reqisition User'
 -
@@ -17,6 +18,7 @@
 -
   !record {model: res.users, id: res_users_purchase_requisition_user}:
     company_id: base.main_company
-    name: Purchase Reqisition User
+    name: Purchase requisition User
     login: pru
     password: pru
+    email: requisition_user@yourcompany.com
