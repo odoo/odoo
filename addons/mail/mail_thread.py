@@ -468,6 +468,7 @@ class mail_thread(osv.AbstractModel):
         # 1. Verify if this is a reply to an existing thread
         thread_references = references or in_reply_to
         ref_match = thread_references and tools.reference_re.search(thread_references)
+
         if ref_match:
             thread_id = int(ref_match.group(1))
             model = ref_match.group(2) or model
@@ -480,7 +481,10 @@ class mail_thread(osv.AbstractModel):
 
         # Verify whether this is a reply to a private message
         if in_reply_to:
-            message_ids = self.pool.get('mail.message').search(cr, uid, [('message_id', '=', in_reply_to)], limit=1, context=context)
+            message_ids = self.pool.get('mail.message').search(cr, uid, [
+                                ('message_id', '=', in_reply_to),
+                                '!', ('message_id', 'ilike', 'reply_to')
+                            ], limit=1, context=context)
             if message_ids:
                 message = self.pool.get('mail.message').browse(cr, uid, message_ids[0], context=context)
                 _logger.debug('Routing mail with Message-Id %s: direct reply to a private message: %s, custom_values: %s, uid: %s',
@@ -1026,7 +1030,7 @@ class mail_thread(osv.AbstractModel):
         # Create and auto subscribe the author
         msg_id = mail_message.create(cr, uid, values, context=context)
         message = mail_message.browse(cr, uid, msg_id, context=context)
-        if message.author_id and thread_id and type != 'notification':
+        if message.author_id and thread_id and type != 'notification' and not context.get('mail_create_nosubscribe'):
             self.message_subscribe(cr, uid, [thread_id], [message.author_id.id], context=context)
         return msg_id
 
