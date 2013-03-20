@@ -13,6 +13,7 @@ This module provides the core of the OpenERP Web Client.
     'auto_install': True,
     'post_load': 'wsgi_postload',
     'js' : [
+        "static/src/fixbind.js",
         "static/lib/datejs/globalization/en-US.js",
         "static/lib/datejs/core.js",
         "static/lib/datejs/parser.js",
