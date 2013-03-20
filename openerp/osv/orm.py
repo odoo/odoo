@@ -3357,7 +3357,7 @@ class BaseModel(object):
         for k, cinfo in result.iteritems():
             if cinfo.original_parent:
                 # make equivalents and inverses identical for equivalent fields
-                parent_cinfo = self.pool[original_parent]._all_columns[k]
+                parent_cinfo = self.pool[cinfo.original_parent]._all_columns[k]
                 cinfo.equivalents = parent_cinfo.equivalents
                 cinfo.inverses = parent_cinfo.inverses
             # make the field equivalent to itself at least
