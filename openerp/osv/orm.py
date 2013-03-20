@@ -302,6 +302,34 @@ class RecordCache(defaultdict):
     def __init__(self):
         super(RecordCache, self).__init__(ModelCache)
 
+    def check(self):
+        """ self-check for validating the cache """
+        scope = api.scope.current
+        cr, uid, context = scope
+        invalids = []
+
+        for model_name, model_cache in self.items():
+            # read the fields that are present in the cache
+            model = scope.model(model_name)
+            ids = list(model_cache.ids)
+            field_names = model_cache.keys()
+            result = model.read(cr, uid, ids, field_names, context=context, load="_classic_write")
+
+            # compare the result with the content of the cache
+            for field in field_names:
+                field_cache = model_cache[field]
+                clean = lambda v: v
+                if model._all_columns[field].column._type == 'many2one':
+                    clean = _clean_one
+                for data in result:
+                    id = data['id']
+                    if id in field_cache and field_cache[id] != clean(data[field]):
+                        invalids.append((model_name, field))
+                        break
+
+        if invalids:
+            raise Exception('Invalid cache for %s' % invalids)
+
 
 #
 # Helper functions for browsing record values

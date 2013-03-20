@@ -300,15 +300,22 @@ class TestAPI(common.TransactionCase):
         self.assertIn(child, partner1.child_ids)
         self.assertNotIn(child, partner2.child_ids)
 
+        # fetch data in the cache
+        for p in partners:
+            p.name, p.company_id.name, p.user_id.name, p.contact_address
+        scope.cache.check()
+
         # change its parent
         child.write({'parent_id': partner2.id})
+        scope.cache.check()
+
+        # check recordsets
         self.assertEqual(child.parent_id, partner2)
         self.assertNotIn(child, partner1.child_ids)
         self.assertIn(child, partner2.child_ids)
-
-        # check recordsets
         self.assertEqual(set(partner1.child_ids + child), set(children1))
         self.assertEqual(set(partner2.child_ids), set(children2 + child))
+        scope.cache.check()
 
     @mute_logger('openerp.osv.orm')
     def test_70_record_recordset(self):
