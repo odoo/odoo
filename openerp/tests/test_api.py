@@ -326,6 +326,11 @@ class TestAPI(common.TransactionCase):
         self.assertEqual(p, ps[0])
         self.assertEqual(p.recordset(), ps)
 
+        ps = self.Partner.recordset()
+        self.assertEqual(ps.recordset(), ps)
+        for p in ps:
+            self.assertIsInstance(p.id, (int, long))
+
     @mute_logger('openerp.osv.orm')
     def test_80_contains(self):
         """ Test membership on recordset. """

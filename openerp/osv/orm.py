@@ -5307,7 +5307,8 @@ class BaseModel(object):
             elif self.is_recordset():
                 ids = self._record_ids
             else:
-                ids = self.search([])
+                cr, uid, context = scope or api.scope
+                ids = self.search(cr, uid, [], context=context)
         else:
             ids = map(int, ids)
 
