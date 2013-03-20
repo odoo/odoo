@@ -24,6 +24,25 @@ from openerp.tools.mail import html_sanitize
 
 
 class test_mail(TestMailBase):
+    
+    def test_000_alias_setup(self):
+        """ Test basic mail.alias setup works, before trying to use them for routing """
+        cr, uid = self.cr, self.uid
+        self.user_valentin_id = self.res_users.create(cr, uid,
+            {'name': 'Valentin Cognito', 'email': 'valentin.cognito@gmail.com', 'login': 'valentin.cognito'})
+        self.user_valentin = self.res_users.browse(cr, uid, self.user_valentin_id)
+        self.assertEquals(self.user_valentin.alias_name, self.user_valentin.login, "Login should be used as alias")
+
+        self.user_pagan_id = self.res_users.create(cr, uid,
+            {'name': 'Pagan Le Marchant', 'email': 'plmarchant@gmail.com', 'login': 'plmarchant@gmail.com'})
+        self.user_pagan = self.res_users.browse(cr, uid, self.user_pagan_id)
+        self.assertEquals(self.user_pagan.alias_name, 'plmarchant', "If login is an email, the alias should keep only the local part")
+
+        self.user_barty_id = self.res_users.create(cr, uid,
+            {'name': 'Bartholomew Ironside', 'email': 'barty@gmail.com', 'login': 'b4r+_#_R3wl$$'})
+        self.user_barty = self.res_users.browse(cr, uid, self.user_barty_id)
+        self.assertEquals(self.user_barty.alias_name, 'b4r+_-_r3wl-', 'Disallowed chars should be replaced by hyphens')
+
 
     def test_00_followers_function_field(self):
         """ Tests designed for the many2many function field 'follower_ids'.
