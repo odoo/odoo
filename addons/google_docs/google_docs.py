@@ -243,17 +243,19 @@ class config(osv.osv):
         'name_template': fields.char('Google Drive Name Pattern', size=64, help='Choose how the new google drive will be named, on google side. Eg. gdoc_%(field_name)s', required=True),
     }
 
-    def onchange_model_id(self, cr, uid, ids, model_id,filter_id):
-         print 'fffffffff',filter_id
+    def onchange_model_id(self, cr, uid, ids, model_id, filter_id, context=None):
          res = {'domain':{'filter_id':[]}}
          if model_id:
              model_name = self.pool.get('ir.model').read(cr, uid, model_id, ['model'])
+             if filter_id:
+                 filter = self.pool.get('ir.filters').read(cr, uid, filter_id, ['model_id'])
+                 if not model_name['model'] == filter['model_id']:
+                     raise osv.except_osv(_('Warning!'), _('Filter does not match with selected Model!'))
              if model_name:
                  mod_name = model_name['model']
                  res['domain'] = {'filter_id': [('model_id', '=', mod_name)]}
          else:
              res['value'] = {'filter_id': False}
-         print 'rrrrrrr',res
          return res
 
     _defaults = {
