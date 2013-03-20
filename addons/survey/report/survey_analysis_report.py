@@ -299,10 +299,10 @@ class survey_analysis(report_rml):
                             rating_weight_sum = 0
                             for mat_col in range(1, len(matrix_ans)):
                                 cr.execute("select count(sra.answer_id) from survey_response_line sr, survey_response_answer sra\
-                                     where sr.id = sra.response_id and  sra.answer_id = %s and sra.column_id ='%s'", (ans.id,matrix_ans[mat_col][0]))
+                                     where sr.id = sra.response_line_id and  sra.answer_id = %s and sra.column_id ='%s'", (ans.id,matrix_ans[mat_col][0]))
                                 tot_res = cr.fetchone()[0]
                                 cr.execute("select count(sra.answer_id),sqc.rating_weight from survey_response_line sr, survey_response_answer sra ,\
-                                        survey_question_column_heading sqc where sr.id = sra.response_id and \
+                                        survey_question_column_heading sqc where sr.id = sra.response_line_id and \
                                         sqc.question_id = sr.question_id  and sra.answer_id = %s and sqc.title ='%s'\
                                         group by sra.answer_id,sqc.rating_weight", (ans.id,matrix_ans[mat_col][1]))
                                 col_weight =  cr.fetchone()
