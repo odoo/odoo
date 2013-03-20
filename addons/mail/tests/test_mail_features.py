@@ -168,8 +168,7 @@ class test_mail(TestMailBase):
         p_c_id = self.res_partner.create(cr, uid, {'name': 'Carine Poilvache', 'email': 'c@c', 'notification_email_send': 'email'})
         # 3 - Dédé Grosbedon, without email, to test email verification; should receive emails for every message
         p_d_id = self.res_partner.create(cr, uid, {'name': 'Dédé Grosbedon', 'email': 'd@d', 'notification_email_send': 'all'})
-
-        # Attachments
+        # 4 - Attachments
         attach1_id = self.ir_attachment.create(cr, user_raoul.id, {
             'name': 'Attach1', 'datas_fname': 'Attach1',
             'datas': 'bWlncmF0aW9uIHRlc3Q=',
@@ -182,8 +181,7 @@ class test_mail(TestMailBase):
             'name': 'Attach3', 'datas_fname': 'Attach3',
             'datas': 'bWlncmF0aW9uIHRlc3Q=',
             'res_model': 'mail.compose.message', 'res_id': 0})
-
-        # Mail data
+        # 5 - Mail data
         _subject = 'Pigs'
         _mail_subject = 'Re: %s' % (group_pigs.name)
         _body1 = '<p>Pigs rules</p>'
@@ -377,118 +375,168 @@ class test_mail(TestMailBase):
 
     def test_25_message_compose_wizard(self):
         """ Tests designed for the mail.compose.message wizard. """
-        cr, uid, user_admin, group_pigs = self.cr, self.uid, self.user_admin, self.group_pigs
+        cr, uid, user_raoul, group_pigs = self.cr, self.uid, self.user_raoul, self.group_pigs
         mail_compose = self.registry('mail.compose.message')
-        self.res_users.write(cr, uid, [uid], {'signature': 'Admin', 'email': 'a@a'})
-        group_bird_id = self.mail_group.create(cr, uid, {'name': 'Bird', 'description': 'Bird resistance'}, {'mail_create_nolog': True})
-        group_bird = self.mail_group.browse(cr, uid, group_bird_id)
 
-        # Mail data
+        # --------------------------------------------------
+        # Data creation
+        # --------------------------------------------------
+        # 0 - Update existing users-partners
+        self.res_users.write(cr, uid, [uid], {'email': 'a@a'})
+        self.res_users.write(cr, uid, [self.user_raoul_id], {'email': 'r@r'})
+        # 1 - Bert Tartopoils, with email, should receive emails for comments and emails
+        p_b_id = self.res_partner.create(cr, uid, {'name': 'Bert Tartopoils', 'email': 'b@b'})
+        # 2 - Carine Poilvache, with email, should receive emails for emails
+        p_c_id = self.res_partner.create(cr, uid, {'name': 'Carine Poilvache', 'email': 'c@c', 'notification_email_send': 'email'})
+        # 3 - Dédé Grosbedon, without email, to test email verification; should receive emails for every message
+        p_d_id = self.res_partner.create(cr, uid, {'name': 'Dédé Grosbedon', 'email': 'd@d', 'notification_email_send': 'all'})
+        # 4 - Create a Bird mail.group, that will be used to test mass mailing
+        group_bird_id = self.mail_group.create(cr, uid,
+            {
+                'name': 'Bird',
+                'description': 'Bird resistance',
+            }, context={'mail_create_nolog': True})
+        group_bird = self.mail_group.browse(cr, uid, group_bird_id)
+        # 5 - Mail data
         _subject = 'Pigs'
         _body = 'Pigs <b>rule</b>'
-        _reply_subject = 'Re: Pigs'
+        _reply_subject = 'Re: %s' % _subject
         _attachments = [
             {'name': 'First', 'datas_fname': 'first.txt', 'datas': 'My first attachment'.encode('base64')},
             {'name': 'Second', 'datas_fname': 'second.txt', 'datas': 'My second attachment'.encode('base64')}
             ]
         _attachments_test = [('first.txt', 'My first attachment'), ('second.txt', 'My second attachment')]
-
-        # 1 - Bert Tartopoils, with email, should receive emails for comments and emails
-        p_b_id = self.res_partner.create(cr, uid, {'name': 'Bert Tartopoils', 'email': 'b@b'})
-        # 2 - Carine Poilvache, with email, should never receive emails
-        p_c_id = self.res_partner.create(cr, uid, {'name': 'Carine Poilvache', 'email': 'c@c', 'notification_email_send': 'email'})
-        # 3 - Dédé Grosbedon, without email, to test email verification; should receive emails for every message
-        p_d_id = self.res_partner.create(cr, uid, {'name': 'Dédé Grosbedon', 'notification_email_send': 'all'})
-
-        # Subscribe #1
+        # 6 - Subscribe Bert to Pigs
         group_pigs.message_subscribe([p_b_id])
 
-        # ----------------------------------------
-        # CASE1: comment on group_pigs
-        # ----------------------------------------
+        # --------------------------------------------------
+        # CASE1: wizard + partners + context keys
+        # --------------------------------------------------
 
-        # 1. Comment group_pigs with body_text and subject
-        compose_id = mail_compose.create(cr, uid,
-            {'subject': _subject, 'body': _body, 'partner_ids': [(4, p_c_id), (4, p_d_id)]},
-            {'default_composition_mode': 'comment', 'default_model': 'mail.group', 'default_res_id': self.group_pigs_id,
-             'default_content_subtype': 'plaintext'})
+        # Do: Raoul wizard-composes on Pigs with auto-follow for partners, not for author
+        compose_id = mail_compose.create(cr, user_raoul.id,
+            {
+                'subject': _subject,
+                'body': _body,
+                'partner_ids': [(4, p_c_id), (4, p_d_id)],
+            }, context={
+                'default_composition_mode': 'comment',
+                'default_model': 'mail.group',
+                'default_res_id': self.group_pigs_id,
+            })
         compose = mail_compose.browse(cr, uid, compose_id)
-        # Test: mail.compose.message: composition_mode, model, res_id
-        self.assertEqual(compose.composition_mode,  'comment', 'mail.compose.message incorrect composition_mode')
-        self.assertEqual(compose.model,  'mail.group', 'mail.compose.message incorrect model')
-        self.assertEqual(compose.res_id, self.group_pigs_id, 'mail.compose.message incorrect res_id')
 
-        # 2. Post the comment, get created message
-        mail_compose.send_mail(cr, uid, [compose_id], {'mail_post_autofollow': True})
+        # Test: mail.compose.message: composition_mode, model, res_id
+        self.assertEqual(compose.composition_mode,  'comment', 'compose wizard: mail.compose.message incorrect composition_mode')
+        self.assertEqual(compose.model,  'mail.group', 'compose wizard: mail.compose.message incorrect model')
+        self.assertEqual(compose.res_id, self.group_pigs_id, 'compose wizard: mail.compose.message incorrect res_id')
+
+        # Do: Post the comment
+        mail_compose.send_mail(cr, user_raoul.id, [compose_id], {'mail_post_autofollow': True, 'mail_create_nosubscribe': True})
         group_pigs.refresh()
         message = group_pigs.message_ids[0]
-        # Test: mail.message: subject, body inside pre
-        self.assertEqual(message.subject,  _subject, 'mail.message incorrect subject')
-        self.assertEqual(message.body, '<p>%s</p>' % _body, 'mail.message incorrect body')
-        # Test: mail.message: notified_partner_ids = entries in mail.notification: group_pigs fans (a, b) + mail.compose.message partner_ids (c, d)
+
+        # Test: mail.group: followers (c and d added by auto follow key; raoul not added by nosubscribe key)
+        pigs_pids = [p.id for p in group_pigs.message_follower_ids]
+        test_pids = [self.partner_admin_id, p_b_id, p_c_id, p_d_id]
+        self.assertEqual(set(pigs_pids), set(test_pids),
+                        'compose wizard: mail_post_autofollow and mail_create_nosubscribe context keys not correctly taken into account')
+
+        # Test: mail.message: subject, body inside p
+        self.assertEqual(message.subject, _subject, 'compose wizard: mail.message incorrect subject')
+        self.assertEqual(message.body, '<p>%s</p>' % _body, 'compose wizard: mail.message incorrect body')
+        # Test: mail.message: notified_partner_ids = admin + bert (followers) + c + d (recipients)
         msg_pids = [partner.id for partner in message.notified_partner_ids]
-        test_pids = [p_b_id, p_c_id, p_d_id]
-        notif_ids = self.mail_notification.search(cr, uid, [('message_id', '=', message.id)])
-        self.assertEqual(len(notif_ids), 3, 'mail.message: too much notifications created')
-        self.assertEqual(set(msg_pids), set(test_pids), 'mail.message notified_partner_ids incorrect')
+        test_pids = [self.partner_admin_id, p_b_id, p_c_id, p_d_id]
+        self.assertEqual(set(msg_pids), set(test_pids),
+                        'compose wizard: mail.message notified_partner_ids incorrect')
 
-        # ----------------------------------------
-        # CASE2: reply to last comment with attachments
-        # ----------------------------------------
+        # --------------------------------------------------
+        # CASE2: reply + attachments
+        # --------------------------------------------------
 
-        # 1. Update last comment subject, reply with attachments
-        message.write({'subject': _subject})
-        compose_id = mail_compose.create(cr, uid,
-            {'attachment_ids': [(0, 0, _attachments[0]), (0, 0, _attachments[1])]},
-            {'default_composition_mode': 'reply', 'default_model': 'mail.thread', 'default_res_id': self.group_pigs_id, 'default_parent_id': message.id})
+        # Do: Reply with attachments
+        compose_id = mail_compose.create(cr, user_raoul.id,
+            {
+                'attachment_ids': [(0, 0, _attachments[0]), (0, 0, _attachments[1])]
+            }, context={
+                'default_composition_mode': 'reply',
+                'default_model': 'mail.thread',
+                'default_res_id': self.group_pigs_id,
+                'default_parent_id': message.id
+            })
         compose = mail_compose.browse(cr, uid, compose_id)
-        # Test: model, res_id, parent_id
-        self.assertEqual(compose.model,  'mail.group', 'mail.compose.message incorrect model')
-        self.assertEqual(compose.res_id, self.group_pigs_id, 'mail.compose.message incorrect res_id')
-        self.assertEqual(compose.parent_id.id, message.id, 'mail.compose.message incorrect parent_id')
-        # Test: mail.message: subject as Re:.., body in html, parent_id
-        self.assertEqual(compose.subject, _reply_subject, 'mail.message incorrect subject')
-        # self.assertIn('Administrator wrote:<blockquote><pre>Pigs rules</pre></blockquote>', compose.body, 'mail.message body is incorrect')
-        self.assertEqual(compose.parent_id and compose.parent_id.id, message.id, 'mail.message parent_id incorrect')
-        # Test: mail.message: attachments
+
+        # Test: mail.compose.message: model, res_id, parent_id
+        self.assertEqual(compose.model, 'mail.group', 'compose wizard: mail.compose.message incorrect model')
+        self.assertEqual(compose.res_id, self.group_pigs_id, 'compose wizard: mail.compose.message incorrect res_id')
+        self.assertEqual(compose.parent_id.id, message.id, 'compose wizard: mail.compose.message incorrect parent_id')
+
+        # Test: mail.compose.message: subject as Re:.., body, parent_id
+        self.assertEqual(compose.subject, _reply_subject, 'compose wizard: mail.compose.message incorrect subject')
+        self.assertFalse(compose.body, 'compose wizard: mail.compose.message body should not contain parent message body')
+        self.assertEqual(compose.parent_id and compose.parent_id.id, message.id, 'compose wizard: mail.compose.message parent_id incorrect')
+        # Test: mail.compose.message: attachments
         for attach in compose.attachment_ids:
-            self.assertIn((attach.datas_fname, attach.datas.decode('base64')), _attachments_test, 'mail.message attachment name / data incorrect')
+            self.assertIn((attach.datas_fname, attach.datas.decode('base64')), _attachments_test,
+                            'compose wizard: mail.message attachment name / data incorrect')
 
-        # ----------------------------------------
+        # --------------------------------------------------
         # CASE3: mass_mail on Pigs and Bird
-        # ----------------------------------------
+        # --------------------------------------------------
 
-        # 1. mass_mail on pigs and bird
-        compose_id = mail_compose.create(cr, uid,
-            {'subject': _subject, 'body': '${object.description}', 'partner_ids': [(4, p_c_id), (4, p_d_id)]},
-            {'default_composition_mode': 'mass_mail', 'default_model': 'mail.group', 'default_res_id': False,
-                'active_ids': [self.group_pigs_id, group_bird_id]})
+        # Do: Compose in mass_mail_mode on pigs and bird
+        compose_id = mail_compose.create(cr, user_raoul.id,
+            {
+                'subject': _subject,
+                'body': '${object.description}',
+                'partner_ids': [(4, p_c_id), (4, p_d_id)],
+            }, context={
+                'default_composition_mode': 'mass_mail',
+                'default_model': 'mail.group',
+                'default_res_id': False,
+                'active_ids': [self.group_pigs_id, group_bird_id],
+            })
         compose = mail_compose.browse(cr, uid, compose_id)
 
-        # 2. Post the comment, get created message for each group
-        mail_compose.send_mail(cr, uid, [compose_id],
-            context={'default_res_id': -1, 'active_ids': [self.group_pigs_id, group_bird_id]})
+        # D: Post the comment, get created message for each group
+        mail_compose.send_mail(cr, user_raoul.id, [compose_id], context={
+                        'default_res_id': -1,
+                        'active_ids': [self.group_pigs_id, group_bird_id]
+                    })
         group_pigs.refresh()
         group_bird.refresh()
         message1 = group_pigs.message_ids[0]
         message2 = group_bird.message_ids[0]
+
         # Test: Pigs and Bird did receive their message
         test_msg_ids = self.mail_message.search(cr, uid, [], limit=2)
-        self.assertIn(message1.id, test_msg_ids, 'Pigs did not receive its mass mailing message')
-        self.assertIn(message2.id, test_msg_ids, 'Bird did not receive its mass mailing message')
+        self.assertIn(message1.id, test_msg_ids, 'compose wizard: Pigs did not receive its mass mailing message')
+        self.assertIn(message2.id, test_msg_ids, 'compose wizard: Bird did not receive its mass mailing message')
+
         # Test: mail.message: subject, body, subtype, notified partners (nobody + specific recipients)
         self.assertEqual(message1.subject, _subject,
-                        'message_post: mail.message in mass mail subject incorrect')
+                        'compose wizard: message_post: mail.message in mass mail subject incorrect')
         self.assertEqual(message1.body, '<p>%s</p>' % group_pigs.description,
-                        'message_post: mail.message in mass mail body incorrect')
+                        'compose wizard: message_post: mail.message in mass mail body incorrect')
         self.assertEqual(set([p.id for p in message1.notified_partner_ids]), set([p_c_id, p_d_id]),
-                        'message_post: mail.message in mass mail incorrect notified partners')
+                        'compose wizard: message_post: mail.message in mass mail incorrect notified partners')
         self.assertEqual(message2.subject, _subject,
-                        'message_post: mail.message in mass mail subject incorrect')
+                        'compose wizard: message_post: mail.message in mass mail subject incorrect')
         self.assertEqual(message2.body, '<p>%s</p>' % group_bird.description,
-                        'message_post: mail.message in mass mail body incorrect')
+                        'compose wizard: message_post: mail.message in mass mail body incorrect')
         self.assertEqual(set([p.id for p in message2.notified_partner_ids]), set([p_c_id, p_d_id]),
-                        'message_post: mail.message in mass mail incorrect notified partners')
+                        'compose wizard: message_post: mail.message in mass mail incorrect notified partners')
+
+        # Test: mail.group followers: author not added as follower in mass mail mode
+        pigs_pids = [p.id for p in group_pigs.message_follower_ids]
+        test_pids = [self.partner_admin_id, p_b_id, p_c_id, p_d_id]
+        self.assertEqual(set(pigs_pids), set(test_pids),
+                        'compose wizard: mail_post_autofollow and mail_create_nosubscribe context keys not correctly taken into account')
+        bird_pids = [p.id for p in group_bird.message_follower_ids]
+        test_pids = [self.partner_admin_id]
+        self.assertEqual(set(bird_pids), set(test_pids),
+                        'compose wizard: mail_post_autofollow and mail_create_nosubscribe context keys not correctly taken into account')
 
     def test_30_needaction(self):
         """ Tests for mail.message needaction. """
