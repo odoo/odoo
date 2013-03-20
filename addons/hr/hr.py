@@ -23,6 +23,8 @@ from openerp import addons
 import logging
 from openerp.osv import fields, osv
 from openerp import tools
+from openerp.tools.translate import _
+
 _logger = logging.getLogger(__name__)
 
 class hr_employee_category(osv.osv):
@@ -263,6 +265,45 @@ class hr_employee(osv.osv):
     def _get_default_image(self, cr, uid, context=None):
         image_path = addons.get_module_resource('hr', 'static/src/img', 'default_image.png')
         return tools.image_resize_image_big(open(image_path, 'rb').read().encode('base64'))
+
+    def action_follow(self, cr, uid, ids, context=None):
+        """ Wrapper because message_subscribe_users take a user_ids=None
+            that receive the context without the wrapper. """
+        return self.message_subscribe_users(cr, uid, ids, context=context)
+
+    def action_unfollow(self, cr, uid, ids, context=None):
+        """ Wrapper because message_unsubscribe_users take a user_ids=None
+            that receive the context without the wrapper. """
+        return self.message_unsubscribe_users(cr, uid, ids, context=context)
+
+    def message_post(self, cr, uid, thread_id, context=None, **kwargs):
+        """Overwrite the message_post method when using the send to my
+        followers screen
+
+        When a message is sent to a hr.employee using the action
+        action_mail_inbox_feeds, the context is extended with res_users_id
+        containing the user id of the user linked to the employee and
+        default_res_id contains 0 (to avoid misused of the function called from
+        the inbox page).
+        In these conditions, the thread_id used to send the message is the id
+        of the employee instead of the res_users (or partner_id).
+        If several employee are linked to the same user_id, the message is
+        duplicated and sent to every user.
+
+        :return: the result of message_post from mail_thread, last call if
+        several messages are sent.
+        """
+        if 'res_users_id' in context:  # and context['default_res_id'] == 0:
+            employee_ids = self.search(cr, uid, [('user_id', '=', context['res_users_id'])], context=context)
+            if len(employee_ids) > 0:
+                for employee_id in employee_ids:
+                    res = super(hr_employee, self).message_post(cr, uid, employee_id, context=context, **kwargs)
+                return res
+            else:
+                raise osv.except_osv(_('Warning!'), _('Your user is not linked to an employee form, which is required to send messages to your followers.'))
+
+        # if no overwrite, send message as usual
+        return super(hr_employee, self).message_post(cr, uid, thread_id, context=context, **kwargs)
 
     _defaults = {
         'active': 1,
