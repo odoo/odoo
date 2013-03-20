@@ -172,7 +172,8 @@ class google_docs_ir_attachment(osv.osv):
         """ filter the list record_ids that satisfy the action filter """
         records = {}
         if record_ids and action_filter:
-            assert action.model_id.model == action_filter.model_id, "Filter model different from action rule model"
+            if not action.model_id.model == action_filter.model_id:
+                raise osv.except_osv(_('Warning!'), _("Something went wrong with the configuration of attachments with google drive.Please contact your Administrator to fix the problem."))
             model = self.pool.get(action_filter.model_id)
             domain = [('id', 'in', [record_ids])] + eval(action_filter.domain)
             ctx = dict(context or {})
@@ -183,7 +184,7 @@ class google_docs_ir_attachment(osv.osv):
     def get_attachment(self, cr, uid, res_model, rec_name, ids, context=None):
         res_id = ids[0]
         pool_gdoc_config = self.pool.get('google.docs.config')
-        config_ids = pool_gdoc_config.search(cr, uid, [('model_id', '=', res_model)], context=context)[0]
+        config_ids = pool_gdoc_config.search(cr, uid, [('model_id', '=', res_model),('name','=',rec_name['label'])], context=context)[0]
         action = pool_gdoc_config.browse(cr, uid, config_ids, context=context)
         attachment = {}
         model_fields_dic = self.pool.get(res_model).read(cr, uid, res_id, [], context=context)
@@ -219,15 +220,18 @@ class config(osv.osv):
         result = {}
         for data in self.browse(cr, uid, ids, context):
             template_url = data.gdocs_template_url
-            url = urlparse(template_url)
-            res = url.path.split('/')
-            resource = res[1]
-            if res[1]== "spreadsheet":
-                key = url.query.split('=')[1]
-            else:
-                key = res[3]
-            res_id = resource + ":" + key
-            result[data.id] = str(res_id)
+            try:
+                url = urlparse(template_url)
+                res = url.path.split('/')
+                resource = res[1]
+                if res[1]== "spreadsheet":
+                    key = url.query.split('=')[1]
+                else:
+                    key = res[3]
+                res_id = resource + ":" + key
+                result[data.id] = str(res_id)
+            except:
+                raise osv.except_osv(_('Incorrect URL!'), _("Please enter a valid URL."))
         return result
 
     _columns = {
@@ -239,7 +243,8 @@ class config(osv.osv):
         'name_template': fields.char('Google Drive Name Pattern', size=64, help='Choose how the new google drive will be named, on google side. Eg. gdoc_%(field_name)s', required=True),
     }
 
-    def onchange_model_id(self, cr, uid, ids, model_id):
+    def onchange_model_id(self, cr, uid, ids, model_id,filter_id):
+         print 'fffffffff',filter_id
          res = {'domain':{'filter_id':[]}}
          if model_id:
              model_name = self.pool.get('ir.model').read(cr, uid, model_id, ['model'])
@@ -248,6 +253,7 @@ class config(osv.osv):
                  res['domain'] = {'filter_id': [('model_id', '=', mod_name)]}
          else:
              res['value'] = {'filter_id': False}
+         print 'rrrrrrr',res
          return res
 
     _defaults = {
