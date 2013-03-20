@@ -1029,7 +1029,7 @@ class mail_thread(osv.AbstractModel):
         # Create and auto subscribe the author
         msg_id = mail_message.create(cr, uid, values, context=context)
         message = mail_message.browse(cr, uid, msg_id, context=context)
-        if message.author_id and thread_id and type != 'notification':
+        if message.author_id and thread_id and type != 'notification' and not context.get('mail_create_nosubscribe'):
             self.message_subscribe(cr, uid, [thread_id], [message.author_id.id], context=context)
         return msg_id
 
