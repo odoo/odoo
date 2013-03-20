@@ -5523,10 +5523,12 @@ class BaseModel(object):
             return hash(self._name)
 
     def refresh(self):
-        """ Clear the records cache used by `self` by emptying the cache completely,
-            preserving only the record identifiers (for prefetching optimizations).
+        """ Clear the records cache.
+
+            .. deprecated:: 8.0
+                The record cache is automatically invalidated.
         """
-        api.scope.invalidate_cache()
+        pass
 
     def invalidate_cache(self, fields=None, ids=None):
         """ Invalidate the record caches after some records have been modified.
