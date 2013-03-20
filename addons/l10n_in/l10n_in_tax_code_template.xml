@@ -38,15 +38,13 @@
         </record>
 
         <record model="account.tax.code.template" id="vat_code_tax_pur_CSTP5">
-            <field name="name">Cst 5% on Purchase</field>
+            <field name="name">CST 5% on Purchase</field>
             <field name="parent_id" ref="vat_code_payable"/>
-            <field name="code">CSTP5</field>
         </record>
 
         <record model="account.tax.code.template" id="vat_code_tax_pur_PCST5">
             <field name="name">Purchase CST 5%</field>
             <field name="parent_id" ref="vat_code_base_tax_purchase"/>
-            <field name="code">PCST5</field>
         </record>
 
         <record model="account.tax.code.template" id="vat_code_tax_rec_cess2">
@@ -69,8 +67,8 @@
             <field name="parent_id" ref="vat_code_payable"/>
         </record>
 
-        <record model="account.tax.code.template" id="vat_code_tax_pay_modvat">
-            <field name="name">Input Credit on Capital Goods - Modvate</field>
+        <record model="account.tax.code.template" id="vat_code_tax_pay_cap_goods">
+            <field name="name">Input Excise Duty 12% - Capital Goods</field>
             <field name="parent_id" ref="vat_code_payable"/>
         </record>
 
@@ -99,9 +97,9 @@
             <field name="parent_id" ref="vat_code_payable"/>
         </record>
 
-        <record model="account.tax.code.template" id="vat_code_tax_pay_sec_hig_cess">
+        <record model="account.tax.code.template" id="vat_code_tax_rec_sec_hig_cess">
             <field name="name">Seco. &amp; Higher Edu. Cess 1% - Sales</field>
-            <field name="parent_id" ref="vat_code_payable"/>
+            <field name="parent_id" ref="vat_code_tax_rec"/>
         </record>
 
         <record model="account.tax.code.template" id="vat_code_tax_rec_cst2">
@@ -115,7 +113,7 @@
         </record>
 
         <record model="account.tax.code.template" id="vat_code_tax_pay_add_vat1">
-            <field name="name">Input Additional Vat 1%</field>
+            <field name="name">Input Additional VAT 1%</field>
             <field name="parent_id" ref="vat_code_payable"/>
         </record>
 
@@ -130,7 +128,7 @@
         </record>
 
         <record model="account.tax.code.template" id="vat_code_tax_pay_vat15">
-            <field name="name">Input Vat 15%</field>
+            <field name="name">Input VAT 15%</field>
             <field name="parent_id" ref="vat_code_payable"/>
         </record>
 
@@ -140,17 +138,17 @@
         </record>
 
         <record model="account.tax.code.template" id="vat_code_tax_rec_add_vat1">
-            <field name="name">Output Adi. Vat @1%</field>
+            <field name="name">Output Adi. VAT 1%</field>
             <field name="parent_id" ref="vat_code_tax_rec"/>
         </record>
 
         <record model="account.tax.code.template" id="vat_code_tax_rec_vat4">
-            <field name="name">Output Vat @4%</field>
+            <field name="name">Output VAT 4%</field>
             <field name="parent_id" ref="vat_code_tax_rec"/>
         </record>
 
         <record model="account.tax.code.template" id="vat_code_tax_pay_cst2">
-            <field name="name">Cst 2% on Purchase</field>
+            <field name="name">CST 2% on Purchase</field>
             <field name="parent_id" ref="vat_code_payable"/>
         </record>
 
@@ -180,7 +178,7 @@
         </record>
 
         <record model="account.tax.code.template" id="vat_code_tax_pay_tds_audit_fee">
-            <field name="name">Tds on Audit Fees - 94J</field>
+            <field name="name">TDS on Audit Fees - 94J</field>
             <field name="parent_id" ref="vat_code_payable"/>
         </record>
 
@@ -230,7 +228,7 @@
         </record>
 
         <record model="account.tax.code.template" id="vat_code_tax_pur_vat">
-            <field name="name">Purchase Vat 4% / Vat12.5% / Vat15% / Cst2% / Cst5%</field>
+            <field name="name">Purchase VAT 4% / VAT 12.5% / VAT 15% / CST 2% / CST 5%</field>
             <field name="parent_id" ref="vat_code_base_tax_purchase"/>
         </record>
 
@@ -245,47 +243,47 @@
         </record>
 
         <record model="account.tax.code.template" id="vat_code_tax_pur_sales_vat">
-            <field name="name">Sales Vat 4% / Sales CST2% / Sales CST5%</field>
-            <field name="parent_id" ref="vat_code_base_tax_purchase"/>
+            <field name="name">Sales VAT 4% / Sales CST 2% / Sales CST 5%</field>
+            <field name="parent_id" ref="vat_code_base_tax_sale"/>
         </record>
 
         <record model="account.tax.code.template" id="vat_code_tax_sale_cst12">
-            <field name="name">Sales CST2%</field>
+            <field name="name">Sales CST 2%</field>
             <field name="parent_id" ref="vat_code_base_tax_sale"/>
         </record>
 
         <record model="account.tax.code.template" id="vat_code_tax_sale_cst15">
-            <field name="name">Sales CST5%</field>
+            <field name="name">Sales CST 5%</field>
             <field name="parent_id" ref="vat_code_base_tax_sale"/>
         </record>
 
         <record model="account.tax.code.template" id="vat_code_tax_pur_vat4">
-            <field name="name">Purchase Vat 4%</field>
+            <field name="name">Purchase VAT 4%</field>
             <field name="parent_id" ref="vat_code_base_tax_purchase"/>
         </record>
 
         <record model="account.tax.code.template" id="vat_code_tax_pur_vat12_vat15">
-            <field name="name">Purchase Vat12.5% / Vat15%</field>
+            <field name="name">Purchase VAT 12.5% / VAT 15%</field>
             <field name="parent_id" ref="vat_code_base_tax_purchase"/>
         </record>
 
         <record model="account.tax.code.template" id="vat_code_tax_pur_vat12">
-            <field name="name">Purchase Vat12.5%</field>
+            <field name="name">Purchase VAT 12.5%</field>
             <field name="parent_id" ref="vat_code_base_tax_purchase"/>
         </record>
 
         <record model="account.tax.code.template" id="vat_code_tax_pur_vat15">
-            <field name="name">Purchase Vat15%</field>
+            <field name="name">Purchase VAT 15%</field>
             <field name="parent_id" ref="vat_code_base_tax_purchase"/>
         </record>
 
         <record model="account.tax.code.template" id="vat_code_tax_sal_vat4">
-            <field name="name">Sales Vat 4%</field>
+            <field name="name">Sales VAT 4%</field>
             <field name="parent_id" ref="vat_code_base_tax_sale"/>
         </record>
 
         <record model="account.tax.code.template" id="vat_code_tax_pur_cst2">
-            <field name="name">Purchase Cst2%</field>
+            <field name="name">Purchase CST 2%</field>
             <field name="parent_id" ref="vat_code_base_tax_purchase"/>
         </record>
 
@@ -325,7 +323,7 @@
         </record>
 
         <record model="account.tax.code.template" id="vat_code_tax_rec_out_add1_sale_cst3">
-            <field name="name">Output Adi. Vat 1% on Sales CT3</field>
+            <field name="name">Output Adi. VAT 1% on Sales CT3</field>
             <field name="parent_id" ref="vat_code_tax_rec"/>
         </record>
 
@@ -387,11 +385,6 @@
         <record model="account.tax.code.template" id="vat_code_tax_rec_no_proj">
             <field name="name">No Tax Projects</field>
             <field name="parent_id" ref="vat_code_tax_rec"/>
-        </record>
-
-        <record model="account.tax.code.template" id="vat_code_tax_base_service">
-            <field name="name">Base for Input Service</field>
-            <field name="parent_id" ref="vat_code_base_net"/>
         </record>
 
     </data>
