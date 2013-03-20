@@ -5480,7 +5480,11 @@ class BaseModel(object):
             return self._get_record_field(key)
 
         assert self.is_recordset(), "Expected record or recordset: %s" % self
-        return self.browse(self._record_ids[key])
+        select = self._record_ids[key]
+        if isinstance(select, list):
+            return self.recordset(select, scope=self._scope)
+        else:
+            return self.record(select, scope=self._scope)
 
     def __getattr__(self, name):
         if name.startswith('signal_'):

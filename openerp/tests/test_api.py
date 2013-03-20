@@ -278,8 +278,17 @@ class TestAPI(common.TransactionCase):
         with scope(demo):
             # records and recordsets keep their scope
             self.assertEqual(partners.scope.uid, self.uid)
+
+            # iteration propagates scope
             for p in partners:
                 self.assertEqual(p.scope.uid, self.uid)
+
+            # indexing propagates scope
+            p = partners[0]
+            self.assertEqual(p.scope.uid, self.uid)
+
+            # field access propagates scope
+            self.assertEqual(p.user_ids.scope.uid, self.uid)
 
             # demo user cannot modify the company
             with self.assertRaises(except_orm):
