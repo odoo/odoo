@@ -51,7 +51,7 @@ class sale_make_invoice(osv.osv_memory):
         if context is None:
             context = {}
         data = self.read(cr, uid, ids)[0]
-        order_obj.action_invoice_create(cr, uid, context.get(('active_ids'), []), data['grouped'], date_inv = data['invoice_date'])
+        order_obj.action_invoice_create(cr, uid, context.get(('active_ids'), []), data['grouped'], date_invoice = data['invoice_date'])
         wf_service = netsvc.LocalService("workflow")
         for id in context.get(('active_ids'), []):
             wf_service.trg_validate(uid, 'sale.order', id, 'manual_invoice', cr)

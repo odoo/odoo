@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-21 17:05+0000\n"
+"POT-Creation-Date: 2013-03-07 08:38+0000\n"
 "PO-Revision-Date: 2012-12-21 23:00+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Chinese (Simplified) <zh_CN@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-01-18 06:42+0000\n"
-"X-Generator: Launchpad (build 16430)\n"
+"X-Launchpad-Export-Date: 2013-03-08 05:42+0000\n"
+"X-Generator: Launchpad (build 16523)\n"
 
 #. module: event
 #: view:event.event:0
@@ -146,6 +146,11 @@ msgid "Confirmed events"
 msgstr "已确认的活动"
 
 #. module: event
+#: view:event.event:0
+msgid "ZIP"
+msgstr ""
+
+#. module: event
 #: view:report.event.registration:0
 msgid "Event Beginning Date"
 msgstr "活动开始日期"
@@ -238,6 +243,11 @@ msgstr "等级状态"
 #: view:event.event:0
 msgid "tickets"
 msgstr "门票"
+
+#. module: event
+#: view:event.event:0
+msgid "Street..."
+msgstr ""
 
 #. module: event
 #: view:res.partner:0
@@ -487,6 +497,7 @@ msgid "Logs"
 msgstr "日志"
 
 #. module: event
+#: view:event.event:0
 #: field:event.event,state_id:0
 msgid "State"
 msgstr "状态"
@@ -603,9 +614,10 @@ msgid ""
 msgstr "你能为每个活动定义最大的登记水平。如果你有太多的登记，你不能确认你的活动。（输入0忽略这个规则）"
 
 #. module: event
-#: field:event.event,user_id:0
-msgid "Responsible User"
-msgstr "责任用户"
+#: code:addons/event/event.py:106
+#, python-format
+msgid "Only %d Seats are Available!"
+msgstr "只有 %d 个座位可用！"
 
 #. module: event
 #: code:addons/event/event.py:100
@@ -849,6 +861,11 @@ msgid "You must wait for the starting day of the event to do this action."
 msgstr "你必须等待活动开始才能做这些动作"
 
 #. module: event
+#: field:event.event,user_id:0
+msgid "Responsible User"
+msgstr "责任用户"
+
+#. module: event
 #: selection:event.event,state:0
 #: selection:report.event.registration,event_state:0
 msgid "Done"
@@ -870,10 +887,9 @@ msgid "Reply-to Email"
 msgstr "回复email"
 
 #. module: event
-#: code:addons/event/event.py:106
-#, python-format
-msgid "Only %d Seats are Available!"
-msgstr "只有 %d 个座位可用！"
+#: view:event.event:0
+msgid "City"
+msgstr ""
 
 #. module: event
 #: model:email.template,subject:event.confirmation_event
@@ -997,6 +1013,7 @@ msgid "Name"
 msgstr "名称"
 
 #. module: event
+#: view:event.event:0
 #: field:event.event,country_id:0
 msgid "Country"
 msgstr "国家"

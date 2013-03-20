@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-21 17:04+0000\n"
-"PO-Revision-Date: 2013-02-09 09:50+0000\n"
-"Last-Translator: Amar Zayasaikhan <chup.mono@gmail.com>\n"
+"POT-Creation-Date: 2013-03-07 08:37+0000\n"
+"PO-Revision-Date: 2013-02-19 23:57+0000\n"
+"Last-Translator: gobi <Unknown>\n"
 "Language-Team: Mongolian <mn@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-02-10 05:24+0000\n"
-"X-Generator: Launchpad (build 16482)\n"
+"X-Launchpad-Export-Date: 2013-03-08 05:46+0000\n"
+"X-Generator: Launchpad (build 16523)\n"
 
 #. module: hr_timesheet
 #: model:ir.actions.act_window,help:hr_timesheet.act_analytic_cost_revenue
@@ -42,6 +42,27 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p>\n"
+"                Энэ гэрээнд одоогоор үйл ажиллагаа алга байна.\n"
+"              </p><p>\n"
+"                OpenERP-д гэрээ болон төсөл нь шинжилгээний дансыг ашиглаж \n"
+"                хэрэгждэг. Иймд өртөг болон орлогыг хөтлөж зөрүүг шинжлэх \n"
+"                боломжтой.\n"
+"              </p><p>\n"
+"                Өртөг нь нийлүүлэгчийн нэхэмжлэл, зардал, цагийн хуудсыг "
+"бөглөхөд автоматаар хөтлөгдөнө.\n"
+"              </p><p>\n"
+"                Орлого нь захиалагчийн нэхэмжлэл үүсгэхэд автоматаар "
+"хөтлөгдөнө. \n"
+"                Захиалагчийн нэхэмжлэл нь борлуулалтын захиалгаас үүсч болно "
+"\n"
+"                (нэхэмжлэлийн тодорхой үнэ), цагийн хуудсын хийсэн ажлаас "
+"үүсч \n"
+"                болно (хийсэн ажил дээр суурилж), зардлаас үүсч болно (замын "
+"\n"
+"                зардлыг нэхэмжлэх гм).\n"
+"              </p>\n"
+"            "
 
 #. module: hr_timesheet
 #: code:addons/hr_timesheet/report/user_timesheet.py:44
@@ -103,7 +124,7 @@ msgstr "Цагийн хуудас"
 #: code:addons/hr_timesheet/wizard/hr_timesheet_print_employee.py:43
 #, python-format
 msgid "Please define employee for this user!"
-msgstr ""
+msgstr "Энэ хэрэглэгчид ажилчинг тодорхойлно уу!"
 
 #. module: hr_timesheet
 #: code:addons/hr_timesheet/report/user_timesheet.py:44
@@ -129,7 +150,7 @@ msgstr "Баа"
 #: model:ir.actions.act_window,name:hr_timesheet.act_hr_timesheet_line_evry1_all_form
 #: model:ir.ui.menu,name:hr_timesheet.menu_hr_working_hours
 msgid "Timesheet Activities"
-msgstr "Үйл ажиллагаануудын цагийн хуудас"
+msgstr "Цагийн хуудсын үйл ажиллагаанууд"
 
 #. module: hr_timesheet
 #: field:hr.sign.out.project,analytic_amount:0
@@ -166,7 +187,7 @@ msgstr "Ажилтны цагийн хуудасыг хэвлэх"
 #: code:addons/hr_timesheet/wizard/hr_timesheet_sign_in_out.py:132
 #, python-format
 msgid "Please define employee for your user."
-msgstr ""
+msgstr "Хэрэглэгчдээ ажилчныг тодорхойлно уу."
 
 #. module: hr_timesheet
 #: model:ir.actions.act_window,name:hr_timesheet.act_analytic_cost_revenue
@@ -244,6 +265,16 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Үйл ажиллагааг хөтлөхдөө дарна.\n"
+"              </p><p>\n"
+"                Төсөл бүрээр өдөр тутам ажилласан цагаа бүртгэж ажиллана. \n"
+"                Төсөл дээр зарцуулсан цаг бүр нь шинжилгээний санхүү/гэрээнд "
+"\n"
+"                өртөг болж бүртгэгдэх бөгөөд шаардлагатай бол захиалагчаас \n"
+"                нэхэмжлэх боломжтой.\n"
+"              </p>\n"
+"            "
 
 #. module: hr_timesheet
 #: view:hr.analytical.timesheet.employee:0
@@ -294,6 +325,8 @@ msgid ""
 "No analytic account is defined on the project.\n"
 "Please set one or we cannot automatically fill the timesheet."
 msgstr ""
+"Энэ төсөл дээр шинжилгээний данс тодорхойлогдоогүй байна.\n"
+"Тодорхойлохгүй бол цагийн хуудсыг автоматаар бөглөх боломжгүй."
 
 #. module: hr_timesheet
 #: view:hr.analytic.timesheet:0
@@ -307,6 +340,8 @@ msgid ""
 "No 'Analytic Journal' is defined for employee %s \n"
 "Define an employee for the selected user and assign an 'Analytic Journal'!"
 msgstr ""
+"%s ажилчинд 'Шинжилгээний Журнал' тодорхойлогдоогүй байна \n"
+"Сонгосон хэрэглэгчид ажилчин тодорхойлж 'Шинжилгээний Журнал'-г онооно!"
 
 #. module: hr_timesheet
 #: code:addons/hr_timesheet/report/user_timesheet.py:41
@@ -421,6 +456,8 @@ msgid ""
 "No analytic journal defined for '%s'.\n"
 "You should assign an analytic journal on the employee form."
 msgstr ""
+"'%s'-д шинжилгээний журнал алга байна.\n"
+"Ажичлны маягт дээр шинжилгээний журналыг оноох нь зүйтэй."
 
 #. module: hr_timesheet
 #: code:addons/hr_timesheet/report/user_timesheet.py:41
@@ -615,6 +652,8 @@ msgid ""
 "Please create an employee for this user, using the menu: Human Resources > "
 "Employees."
 msgstr ""
+"Энэ хэрэглэгчид ажилчин үүсгэнэ үү, дараах менюг ашиглана: Хүний нөөц > "
+"Ажилчид"
 
 #. module: hr_timesheet
 #: view:hr.analytical.timesheet.users:0

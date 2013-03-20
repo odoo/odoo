@@ -1,0 +1,89 @@
+# Macedonian translation for openobject-addons
+# Copyright (c) 2013 Rosetta Contributors and Canonical Ltd 2013
+# This file is distributed under the same license as the openobject-addons package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2013.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: openobject-addons\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2013-03-07 08:37+0000\n"
+"PO-Revision-Date: 2013-03-13 08:00+0000\n"
+"Last-Translator: Aleksandar Panov <server986@gmail.com>\n"
+"Language-Team: Macedonian <mk@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Launchpad-Export-Date: 2013-03-14 05:34+0000\n"
+"X-Generator: Launchpad (build 16532)\n"
+
+#. module: base_iban
+#: constraint:res.partner.bank:0
+msgid ""
+"\n"
+"Please define BIC/Swift code on bank for bank type IBAN Account to make "
+"valid payments"
+msgstr ""
+"\n"
+"Ве молиме дефинирајте BIC/Swift код за банка за IBAN тип на сметка за "
+"извршување на плаќања."
+
+#. module: base_iban
+#: code:addons/base_iban/base_iban.py:141
+#, python-format
+msgid "This IBAN does not pass the validation check, please verify it"
+msgstr "IBAN-от не ја поминува проверката за валидност. Проверете го."
+
+#. module: base_iban
+#: model:res.partner.bank.type,format_layout:base_iban.bank_iban
+msgid "%(bank_name)s: IBAN %(acc_number)s - BIC %(bank_bic)s"
+msgstr "%(bank_name)s: IBAN %(acc_number)s - BIC %(bank_bic)s"
+
+#. module: base_iban
+#: model:res.partner.bank.type.field,name:base_iban.bank_swift_field
+msgid "bank_bic"
+msgstr "bank_bic"
+
+#. module: base_iban
+#: model:res.partner.bank.type.field,name:base_iban.bank_zip_field
+msgid "zip"
+msgstr "zip"
+
+#. module: base_iban
+#: help:res.partner.bank,iban:0
+msgid "International Bank Account Number"
+msgstr "Интернационален број на банкарска сметка"
+
+#. module: base_iban
+#: model:ir.model,name:base_iban.model_res_partner_bank
+msgid "Bank Accounts"
+msgstr "Банкарски сметки"
+
+#. module: base_iban
+#: model:res.partner.bank.type.field,name:base_iban.bank_country_field
+msgid "country_id"
+msgstr "country_id"
+
+#. module: base_iban
+#: code:addons/base_iban/base_iban.py:138
+#, python-format
+msgid ""
+"The IBAN does not seem to be correct. You should have entered something like "
+"this %s"
+msgstr "IBAN бројот не е точен. Бројот треба да изгледа вака %s"
+
+#. module: base_iban
+#: field:res.partner.bank,iban:0
+msgid "IBAN"
+msgstr "IBAN"
+
+#. module: base_iban
+#: code:addons/base_iban/base_iban.py:142
+#, python-format
+msgid "The IBAN is invalid, it should begin with the country code"
+msgstr "IBAN-от е невалиде, треба да започнува со кодот на државата"
+
+#. module: base_iban
+#: model:res.partner.bank.type,name:base_iban.bank_iban
+msgid "IBAN Account"
+msgstr "IBAN Сметка"

@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-21 17:06+0000\n"
+"POT-Creation-Date: 2013-03-07 08:38+0000\n"
 "PO-Revision-Date: 2012-12-22 14:43+0000\n"
 "Last-Translator: Davide Corio - agilebg.com <davide.corio@agilebg.com>\n"
 "Language-Team: Italian <it@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-01-18 06:59+0000\n"
-"X-Generator: Launchpad (build 16430)\n"
+"X-Launchpad-Export-Date: 2013-03-08 05:55+0000\n"
+"X-Generator: Launchpad (build 16523)\n"
 
 #. module: product
 #: field:product.packaging,rows:0
@@ -301,6 +301,11 @@ msgid "Laptop E5023"
 msgstr "Portatile E5023"
 
 #. module: product
+#: field:product.price_list,qty1:0
+msgid "Quantity-1"
+msgstr "Quantità - 1"
+
+#. module: product
 #: help:product.packaging,ul_qty:0
 msgid "The number of packages by layer"
 msgstr "Numero di imballaggi per strato"
@@ -482,9 +487,9 @@ msgid "Quantity-3"
 msgstr "Quantità - 3"
 
 #. module: product
-#: field:product.price_list,qty1:0
-msgid "Quantity-1"
-msgstr "Quantità - 1"
+#: model:res.groups,name:product.group_product_variant
+msgid "Product Variant (not supported)"
+msgstr ""
 
 #. module: product
 #: field:product.price_list,qty4:0
@@ -794,6 +799,11 @@ msgstr "Fornitore del prodotto"
 #: model:product.template,name:product.product_product_28_product_template
 msgid "External Hard disk"
 msgstr "Hard disk esterno"
+
+#. module: product
+#: view:product.product:0
+msgid "describe the product characteristics..."
+msgstr ""
 
 #. module: product
 #: help:product.template,standard_price:0
@@ -1165,7 +1175,6 @@ msgstr "Unità logistica"
 #: field:product.category,name:0
 #: field:product.pricelist.type,name:0
 #: field:product.pricelist.version,name:0
-#: field:product.product,name_template:0
 #: field:product.template,name:0
 #: field:product.ul,name:0
 #: field:product.uom.categ,name:0
@@ -1328,6 +1337,11 @@ msgid "Specify the minimum amount of margin over the base price."
 msgstr "Specifica l'importo minimo per il margine sul prezzo base."
 
 #. module: product
+#: field:product.product,name_template:0
+msgid "Template Name"
+msgstr ""
+
+#. module: product
 #: field:product.template,weight_net:0
 msgid "Net Weight"
 msgstr "Peso Netto"
@@ -1356,6 +1370,11 @@ msgstr ""
 "Specificare una categoria prodotto se questa regola si applica solo a "
 "prodotti appartenenti a questa categoria o alle categorie figlie. Altrimenti "
 "lasciare vuoto."
+
+#. module: product
+#: view:product.product:0
+msgid "This note will be displayed on requests for quotation..."
+msgstr ""
 
 #. module: product
 #: view:product.product:0
@@ -1959,6 +1978,11 @@ msgid "Components"
 msgstr "Componenti"
 
 #. module: product
+#: view:product.product:0
+msgid "e.g. 5901234123457"
+msgstr ""
+
+#. module: product
 #: model:ir.model,name:product.model_product_pricelist_type
 #: field:product.pricelist,type:0
 msgid "Pricelist Type"
@@ -2472,7 +2496,11 @@ msgstr "Unità di misura fornitore"
 
 #. module: product
 #: view:product.product:0
-#: model:res.groups,name:product.group_product_variant
+msgid "note to be displayed on quotations..."
+msgstr ""
+
+#. module: product
+#: view:product.product:0
 msgid "Product Variant"
 msgstr "Variante Prodotto"
 

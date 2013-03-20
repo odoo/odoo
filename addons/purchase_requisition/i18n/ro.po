@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-21 17:06+0000\n"
-"PO-Revision-Date: 2012-12-21 23:00+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2013-03-07 08:38+0000\n"
+"PO-Revision-Date: 2013-03-07 19:07+0000\n"
+"Last-Translator: Fekete Mihai <mihai@erpsystems.ro>\n"
 "Language-Team: Romanian <ro@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-01-18 07:04+0000\n"
-"X-Generator: Launchpad (build 16430)\n"
+"X-Launchpad-Export-Date: 2013-03-08 05:59+0000\n"
+"X-Generator: Launchpad (build 16523)\n"
 
 #. module: purchase_requisition
 #: view:purchase.requisition:0
@@ -30,7 +30,7 @@ msgstr "Cereri Multiple"
 #. module: purchase_requisition
 #: field:purchase.requisition.line,product_uom_id:0
 msgid "Product Unit of Measure"
-msgstr ""
+msgstr "Unitatea de Masura a Produsului"
 
 #. module: purchase_requisition
 #: model:ir.actions.act_window,help:purchase_requisition.action_purchase_requisition
@@ -49,6 +49,20 @@ msgid ""
 "          </p>\n"
 "        "
 msgstr ""
+"<clasa p=\"oe_vizualizare_niciuncontinut_creeaza\">\n"
+"            Clic pentru a incepe un proces nou de cerere pentru achizitii. \n"
+"          </p><p>\n"
+"            O cerere de achizitii este pasul dinaintea unei cereri de "
+"cotatie.\n"
+"            Intr-o cerere de achizitie (sau oferta la licitatie de "
+"achizitii), puteti sa inregistrati\n"
+"            produsele pe care trebuie sa le cumparati si sa declansati "
+"crearea unei CdO catre\n"
+"            furnizori. Dupa negociere, odata ce ati verificat toate\n"
+"            ofertele furnizorului, le puteti valida pe unele si anula pe "
+"altele.\n"
+"          </p>\n"
+"        "
 
 #. module: purchase_requisition
 #: view:purchase.requisition:0
@@ -58,14 +72,19 @@ msgstr "Responsabil"
 
 #. module: purchase_requisition
 #: view:purchase.requisition:0
+msgid "Cancel Requisition"
+msgstr "Anulati Cererea"
+
+#. module: purchase_requisition
+#: view:purchase.requisition:0
 #: field:purchase.requisition,state:0
 msgid "Status"
-msgstr ""
+msgstr "Status"
 
 #. module: purchase_requisition
 #: view:purchase.requisition:0
 msgid "Send to Suppliers"
-msgstr ""
+msgstr "Trimite Furnizorilor"
 
 #. module: purchase_requisition
 #: view:purchase.requisition:0
@@ -76,12 +95,12 @@ msgstr "Grupeaza dupa..."
 #: view:purchase.requisition:0
 #: selection:purchase.requisition,state:0
 msgid "Purchase Done"
-msgstr ""
+msgstr "Achizitie Efectuata"
 
 #. module: purchase_requisition
 #: field:purchase.requisition,message_follower_ids:0
 msgid "Followers"
-msgstr ""
+msgstr "Persoane interesate"
 
 #. module: purchase_requisition
 #: view:purchase.requisition:0
@@ -152,7 +171,7 @@ msgstr "Cotatii (oferte)"
 #. module: purchase_requisition
 #: view:purchase.requisition:0
 msgid "Terms and Conditions"
-msgstr ""
+msgstr "Termeni si Conditii"
 
 #. module: purchase_requisition
 #: report:purchase.requisition:0
@@ -163,7 +182,7 @@ msgstr "Descriere"
 #. module: purchase_requisition
 #: field:purchase.requisition,message_unread:0
 msgid "Unread Messages"
-msgstr ""
+msgstr "Mesaje Necitite"
 
 #. module: purchase_requisition
 #: field:purchase.requisition,company_id:0
@@ -177,9 +196,14 @@ msgid "Create Quotation"
 msgstr "Creeaza cotatia"
 
 #. module: purchase_requisition
+#: view:purchase.requisition:0
+msgid "e.g. PO0025"
+msgstr "de exemplu PO0025"
+
+#. module: purchase_requisition
 #: help:purchase.requisition,message_ids:0
 msgid "Messages and communication history"
-msgstr ""
+msgstr "Istoric mesaje si conversatii"
 
 #. module: purchase_requisition
 #: view:purchase.requisition:0
@@ -189,7 +213,7 @@ msgstr "Aprobat de catre furnizor"
 #. module: purchase_requisition
 #: view:purchase.requisition.partner:0
 msgid "or"
-msgstr ""
+msgstr "sau"
 
 #. module: purchase_requisition
 #: view:purchase.requisition:0
@@ -214,7 +238,7 @@ msgstr "Referinta comanda"
 #. module: purchase_requisition
 #: field:purchase.requisition,message_is_follower:0
 msgid "Is a Follower"
-msgstr ""
+msgstr "Este o persoana interesata"
 
 #. module: purchase_requisition
 #: field:purchase.requisition.line,product_qty:0
@@ -267,7 +291,7 @@ msgstr "Produse de cumparat"
 #: view:purchase.requisition:0
 #: selection:purchase.requisition,state:0
 msgid "Sent to Suppliers"
-msgstr ""
+msgstr "Trimis Furnizorilor"
 
 #. module: purchase_requisition
 #: view:purchase.requisition:0
@@ -278,7 +302,7 @@ msgstr "Cauta solicitarea de achizitie"
 #: code:addons/purchase_requisition/wizard/purchase_requisition_partner.py:41
 #, python-format
 msgid "No Product in Tender."
-msgstr ""
+msgstr "Nici un Produs in Oferta."
 
 #. module: purchase_requisition
 #: report:purchase.requisition:0
@@ -288,7 +312,7 @@ msgstr "Data comenzii"
 #. module: purchase_requisition
 #: field:purchase.requisition,message_ids:0
 msgid "Messages"
-msgstr ""
+msgstr "Mesaje"
 
 #. module: purchase_requisition
 #: help:purchase.requisition,exclusive:0
@@ -319,7 +343,7 @@ msgstr "Comanda de achizitie"
 #. module: purchase_requisition
 #: field:purchase.requisition,origin:0
 msgid "Source Document"
-msgstr ""
+msgstr "Document Sursa"
 
 #. module: purchase_requisition
 #: code:addons/purchase_requisition/wizard/purchase_requisition_partner.py:41
@@ -360,7 +384,7 @@ msgstr "Partener Cerere de achizitie"
 #. module: purchase_requisition
 #: help:purchase.requisition,message_unread:0
 msgid "If checked new messages require your attention."
-msgstr ""
+msgstr "Daca este selectat, mesajele noi necesita atentia dumneavoastra."
 
 #. module: purchase_requisition
 #: report:purchase.requisition:0
@@ -380,7 +404,7 @@ msgstr "Scadenta solicitare"
 #. module: purchase_requisition
 #: field:purchase.requisition,message_summary:0
 msgid "Summary"
-msgstr ""
+msgstr "Continut"
 
 #. module: purchase_requisition
 #: view:purchase.requisition:0
@@ -396,7 +420,7 @@ msgstr "Aprovizionare"
 #: report:purchase.requisition:0
 #: view:purchase.requisition:0
 msgid "Source"
-msgstr ""
+msgstr "Sursa"
 
 #. module: purchase_requisition
 #: field:purchase.requisition,warehouse_id:0
@@ -424,6 +448,8 @@ msgid ""
 "Holds the Chatter summary (number of messages, ...). This summary is "
 "directly in html format in order to be inserted in kanban views."
 msgstr ""
+"Contine rezumatul Chatter (numar de mesaje, ...). Acest rezumat este direct "
+"in format HTML, cu scopul de a se introduce in vizualizari kanban."
 
 #. module: purchase_requisition
 #: report:purchase.requisition:0
@@ -434,7 +460,7 @@ msgstr "UdeM (Unitate de masura) produs"
 #: code:addons/purchase_requisition/purchase_requisition.py:134
 #, python-format
 msgid "Warning!"
-msgstr ""
+msgstr "Avertisment!"
 
 #. module: purchase_requisition
 #: view:purchase.requisition:0
@@ -442,7 +468,6 @@ msgid "Confirm Purchase Order"
 msgstr "Confirma comanda de achizitie"
 
 #. module: purchase_requisition
-#: view:purchase.requisition:0
 #: view:purchase.requisition.partner:0
 msgid "Cancel"
 msgstr "Anuleaza"
@@ -474,6 +499,8 @@ msgid ""
 "Check this box to generates purchase requisition instead of generating "
 "requests for quotation from procurement."
 msgstr ""
+"Selectati aceasta casua pentru a genera cererea de achizitii in loc sa "
+"generati cereri pentru cotatii din aprovizionari."
 
 #. module: purchase_requisition
 #: field:purchase.requisition,purchase_ids:0

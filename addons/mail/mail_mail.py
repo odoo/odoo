@@ -157,7 +157,7 @@ class mail_mail(osv.Model):
             :param browse_record partner: specific recipient partner
         """
         if force or (not mail.subject and mail.model and mail.res_id):
-            return '%s posted on %s' % (mail.author_id.name, mail.record_name)
+            return 'Re: %s' % (mail.record_name)
         return mail.subject
 
     def send_get_mail_body(self, cr, uid, mail, partner=None, context=None):
@@ -191,20 +191,31 @@ class mail_mail(osv.Model):
         return body
 
     def send_get_mail_reply_to(self, cr, uid, mail, partner=None, context=None):
-        """ Return a specific ir_email body. The main purpose of this method
-            is to be inherited by Portal, to add a link for signing in, in
-            each notification email a partner receives.
+        """ Return a specific ir_email reply_to.
 
             :param browse_record mail: mail.mail browse_record
             :param browse_record partner: specific recipient partner
         """
         if mail.reply_to:
             return mail.reply_to
-        if not mail.model or not mail.res_id:
-            return False
-        if not hasattr(self.pool.get(mail.model), 'message_get_reply_to'):
-            return False
-        return self.pool.get(mail.model).message_get_reply_to(cr, uid, [mail.res_id], context=context)[0]
+        email_reply_to = False
+
+        # if model and res_id: try to use ``message_get_reply_to`` that returns the document alias
+        if mail.model and mail.res_id and hasattr(self.pool.get(mail.model), 'message_get_reply_to'):
+            email_reply_to = self.pool.get(mail.model).message_get_reply_to(cr, uid, [mail.res_id], context=context)[0]
+        # no alias reply_to -> reply_to will be the email_from, only the email part
+        if not email_reply_to and mail.email_from:
+            emails = tools.email_split(mail.email_from)
+            if emails:
+                email_reply_to = emails[0]
+
+        # format 'Document name <email_address>'
+        if email_reply_to and mail.model and mail.res_id:
+            document_name = self.pool.get(mail.model).name_get(cr, SUPERUSER_ID, [mail.res_id], context=context)[0]
+            if document_name:
+                email_reply_to = _('Followers of %s <%s>') % (document_name[1], email_reply_to)
+
+        return email_reply_to
 
     def send_get_email_dict(self, cr, uid, mail, partner=None, context=None):
         """ Return a dictionary for specific email values, depending on a
@@ -217,7 +228,7 @@ class mail_mail(osv.Model):
         subject = self.send_get_mail_subject(cr, uid, mail, partner=partner, context=context)
         reply_to = self.send_get_mail_reply_to(cr, uid, mail, partner=partner, context=context)
         body_alternative = tools.html2plaintext(body)
-        email_to = [partner.email] if partner else tools.email_split(mail.email_to)
+        email_to = ['%s <%s>' % (partner.name, partner.email)] if partner else tools.email_split(mail.email_to)
         return {
             'body': body,
             'body_alternative': body_alternative,

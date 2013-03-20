@@ -1,17 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
-
-        <!--
-        Analytic Account form
-        -->
-
         <record model="ir.actions.act_window" id="action_sales_order">
             <field name="name">Sales Orders</field>
             <field name="res_model">sale.order</field>
             <field name="src_model">account.analytic.account</field>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to create a quotation that can be converted into a sales
+                order.
+              </p><p>
+                Use sale orders to track everything that should be invoiced
+                at a fix price on a contract.
+              </p>
+            </field>
         </record>
 
+        <!-- Inherited Analytic Account form for contracts -->
         <record id="account_analytic_account_form_form" model="ir.ui.view">
             <field name="name">account.analytic.account.invoice.form.inherit</field>
             <field name="model">account.analytic.account</field>
@@ -30,6 +35,9 @@
                         </div>
                     </div>
                 </xpath>
+                <field name="partner_id" position="attributes">
+                    <attribute name="attrs">{'required': [('type','=','contract'),'|',('fix_price_invoices','=',True), ('invoice_on_timesheets', '=', True)]}</attribute>
+                </field>
                 <xpath expr='//group[@name="invoice_on_timesheets"]' position="replace">
                 </xpath>
                 <xpath expr='//separator[@name="description"]' position='before'>
@@ -66,20 +74,20 @@
                                     or view
                                 </span>
 
-                                <span attrs="{'invisible': ['|',('fix_price_to_invoice','&lt;&gt;',0.0 ),('partner_id','=',False)]}" class="oe_grey">
+                                <span attrs="{'invisible': [('fix_price_to_invoice','&lt;&gt;',0.0 )]}" class="oe_grey">
                                     No order to invoice, create
                                 </span>
-                                <button name="%(action_sales_order)d" string="Sale Orders"
+                                <button name="%(action_sales_order)d" string="Sales Orders"
                                     type="action"
                                     class="oe_link"
-                                    context="{'default_partner_id': [partner_id], 'search_default_partner_id': [partner_id],'search_default_project_id': [active_id],'default_project_id': [active_id]}"
+                                    context="{'default_partner_id': [partner_id], 'search_default_project_id': [active_id],'default_project_id': [active_id]}"
                                     />
                             </td>
                         </tr><tr>
                             <td class="oe_timesheet_grey">
                                 <label for="invoice_on_timesheets"/>
                             </td><td class="oe_timesheet_grey">
-                                <field name="invoice_on_timesheets"/>
+                                <field name="invoice_on_timesheets" on_change="onchange_invoice_on_timesheets(invoice_on_timesheets)"/>
                             </td><td>
                                 <field class="oe_inline" name="hours_qtt_est" attrs="{'invisible': [('invoice_on_timesheets','=',False)]}"/>
                             </td><td>
@@ -88,7 +96,7 @@
                                 <field class="oe_inline" name="remaining_hours_to_invoice" attrs="{'invisible': [('invoice_on_timesheets','=',False)]}"/>
                             </td><td>
                                 <field class="oe_inline" name="ca_to_invoice" attrs="{'invisible': [('invoice_on_timesheets','=',False)]}"/>
-                            </td><td class="oe_timesheet_action" attrs="{'invisible': [('invoice_on_timesheets','=',False)]}">
+                            </td><td class="oe_timesheet_action" attrs="{'invisible': ['|',('invoice_on_timesheets','=',False),('type','=','template')]}">
                                 <span attrs="{'invisible': [('ca_to_invoice','=',0.0)]}" class="oe_grey">
                                     <button name="%(hr_timesheet_invoice.action_hr_timesheet_invoice_create_final)d"
                                         type="action"
@@ -123,10 +131,10 @@
                     </table>
                     <group name='invoice_on_timesheets' attrs="{'invisible': [('invoice_on_timesheets','=',False)]}">
                         <p class="oe_grey oe_edit_only" colspan="2">
-                            When invoicing on timesheet, OpenERP uses the
+                            When reinvoicing costs, OpenERP uses the
                             pricelist of the contract which uses the price
-                            defined on the product related to each employee to
-                            define the customer invoice price rate.
+                            defined on the product related (e.g timesheet 
+                            products are defined on each employee). 
                         </p>
                         <group>
                             <field name="pricelist_id"
@@ -142,19 +150,7 @@
             </field>
         </record>
 
-        <record id="view_account_analytic_account_tree_c2c_3" model="ir.ui.view">
-            <field name="name">account.analytic.account.tree</field>
-            <field name="model">account.analytic.account</field>
-            <field name="inherit_id" ref="account.view_account_analytic_account_list"/>
-            <field name="arch" type="xml">
-                <field name="date" position="before">
-                    <field name="last_invoice_date"/>
-                    <field name="toinvoice_total"/>
-                    <field name="remaining_hours"/>
-                </field>
-            </field>
-        </record>
-
+        <!-- Inherited Analytic Account form for template required -->
         <record id="view_account_analytic_account_template_required" model="ir.ui.view">
             <field name="name">account.analytic.account.form.template.required</field>
             <field name="model">account.analytic.account</field>
@@ -167,6 +163,132 @@
             </field>
         </record>
 
+        <!-- Inherited Analytic Account list for contracts -->
+        <record id="view_account_analytic_account_tree_c2c_3" model="ir.ui.view">
+            <field name="name">account.analytic.account.list.contract</field>
+            <field name="model">account.analytic.account</field>
+            <field name="inherit_id" ref="account.view_account_analytic_account_list"/>
+            <field name="arch" type="xml">
+                <field name="date_start" position="before">
+                    <field name="last_invoice_date"/>
+                    <field name="toinvoice_total"/>
+                    <field name="remaining_hours"/>
+                    <field name="pricelist_id" invisible="1"/>
+                </field>
+            </field>
+        </record>
+
+        <!-- Analytic Account search view for contract -->
+        <record id="view_account_analytic_account_overdue_search" model="ir.ui.view">
+            <field name="name">account.analytic.account.search</field>
+            <field name="model">account.analytic.account</field>
+            <field name="arch" type="xml">
+                <search string="Contracts">
+                    <field name="name" filter_domain="['|', ('name','ilike',self),('code','ilike',self)]" string="Contract"/>
+                    <field name="date"/>
+                    <field name="partner_id"/>
+                    <field name="manager_id"/>
+                    <field name="parent_id"/>
+                    <filter name="open" string="In Progress" domain="[('state','in',('open','draft'))]" help="Contracts in progress (open, draft)"/>
+                    <filter name="pending" string="To Renew" domain="[('state','=','pending')]" help="Pending contracts"/>
+                    <filter name="closed" string="Closed" domain="[('state','=','close')]" help="Closed contracts"/>
+                    <filter name="cancelled" string="Cancelled" domain="[('state','=','cancel')]" help="Cancelled contracts"/>
+                    <separator/>
+                    <filter
+                        string="Expired or consumed"
+                        domain="[('state','in',('open','draft','pending')), '|', '&amp;', ('date', '!=', False), ('date', '&lt;=', time.strftime('%%Y-%%m-%%d')), ('is_overdue_quantity', '=', True)]"
+                        help="End date passed or prepaid unit consumed" />
+                    <filter
+                        string="Expiring soon"
+                        domain="[('date', '!=', False), ('date', '&lt;=', (context_today() + datetime.timedelta(30)).strftime('%%Y-%%m-%%d') )]"
+                        help="End date is in the next month" />
+                    <separator/>
+                    <filter string="Customer Contracts" help="Contracts assigned to a customer." name="has_partner" domain="[('partner_id', '!=', False)]"/>
+                    <filter string="Contracts not assigned" help="Contracts that are not assigned to an account manager." domain="[('manager_id', '=', False)]"/>
+                    <separator/>
+                    <group expand="0" string="Group By...">
+                        <filter string="Status" domain="[]" context="{'group_by':'state'}"/>
+                        <filter string="Account Manager" domain="[]" context="{'group_by':'manager_id'}"/>
+                        <filter string="Partner" domain="[]" context="{'group_by':'partner_id'}"/>
+                        <filter string="Parent" domain="[]" context="{'group_by':'parent_id'}"/>
+                        <filter string="Template" domain="[]" context="{'group_by':'template_id'}"/>
+                        <filter string="Start Date" domain="[]" context="{'group_by' : 'date_start'}" />
+                        <filter string="End Date" domain="[]" context="{'group_by' : 'date'}" />
+                        <filter string="Pricelist" domain="[]" context="{'group_by' : 'pricelist_id'}" />
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <!-- Action Sales/Sales/Contracts -->
+        <record id="action_account_analytic_overdue_all" model="ir.actions.act_window">
+            <field name="name">Contracts</field>
+            <field name="res_model">account.analytic.account</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="context">{'default_type':'contract', 'search_default_open':1, 'search_default_pending':1, 'default_manager_id':uid}</field>
+            <field name="domain">[('type','=','contract')]</field>
+            <field name="search_view_id" ref="view_account_analytic_account_overdue_search"/>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    Click to create a new contract.
+                </p><p>
+                    Use contracts to follow tasks, issues, timesheets or invoicing based on
+                    work done, expenses and/or sales orders. OpenERP will automatically manage
+                    the alerts for the renewal of the contracts to the right salesperson.
+                </p>
+            </field>
+        </record>
+        <menuitem id="base.menu_sales" name="Sales" parent="base.menu_base_partner" sequence="1"/>
+        <menuitem action="action_account_analytic_overdue_all" id="menu_action_account_analytic_overdue_all" sequence="7" parent="base.menu_sales"/>
+
+        <!-- Action Sales/Invoicing/Time and Material to Invoice -->
+        <record id="action_hr_tree_invoiced_all" model="ir.actions.act_window">
+            <field name="name">Time &amp; Materials to Invoice</field>
+            <field name="res_model">account.analytic.line</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[('invoice_id','=',False)]</field>
+            <field name="context">{'search_default_to_invoice': 1}</field>
+            <field name="search_view_id" ref="account.view_account_analytic_line_filter"/>
+            <field name="help" type="html">
+              <p>
+                You will find here timesheets and purchases you did for
+                contracts that can be reinvoiced to the customer.  If you want
+                to record new activities to invoice, you should use the timesheet
+                menu instead.
+              </p>
+            </field>
+        </record>
+        <menuitem id="base.menu_invoiced" name="Invoicing" parent="base.menu_base_partner" sequence="5"/>
+        <menuitem action="action_hr_tree_invoiced_all" id="menu_action_hr_tree_invoiced_all" parent="base.menu_invoiced" sequence="5"/>
+
+        <!-- Action Sales/Invoicing/Contract to renew -->
+        <record id="action_account_analytic_overdue" model="ir.actions.act_window">
+            <field name="name">Contracts to Renew</field>
+            <field name="res_model">account.analytic.account</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="context">{'search_default_manager_id':uid, 'search_default_pending':1, 'search_default_renew':1}</field>
+            <field name="domain">[('type','=','contract')]</field>
+            <field name="search_view_id" ref="view_account_analytic_account_overdue_search"/>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to define a new contract.
+              </p><p>
+                You will find here the contracts to be renewed because the
+                end date is passed or the working effort is higher than the
+                maximum authorized one.
+              </p><p>
+                OpenERP automatically sets contracts to be renewed in a pending
+                state. After the negociation, the salesman should close or renew
+                pending contracts.
+              </p>
+            </field>
+        </record>
+        <menuitem action="action_account_analytic_overdue" id="menu_action_account_analytic_overdue" sequence="50" parent="base.menu_invoiced"/>
+
+        <!-- Action Sales/Configuration/Contract template -->
         <record id="template_of_contract_action" model="ir.actions.act_window">
             <field name="name">Contract Template</field>
             <field name="type">ir.actions.act_window</field>
@@ -184,8 +306,8 @@
                     terms and conditions of the contract.
                 </p>
             </field>
-             
         </record>
         <menuitem action="template_of_contract_action" id="menu_template_of_contract_action" parent="base.menu_base_config"/>
+
     </data>
 </openerp>

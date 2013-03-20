@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-21 17:04+0000\n"
+"POT-Creation-Date: 2013-03-07 08:37+0000\n"
 "PO-Revision-Date: 2012-12-21 23:00+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Catalan <ca@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-01-18 07:00+0000\n"
-"X-Generator: Launchpad (build 16430)\n"
+"X-Launchpad-Export-Date: 2013-03-08 05:56+0000\n"
+"X-Generator: Launchpad (build 16523)\n"
 
 #. module: project
 #: view:project.project:0
@@ -134,7 +134,7 @@ msgstr ""
 
 #. module: project
 #: code:addons/project/project.py:432
-#: code:addons/project/project.py:1305
+#: code:addons/project/project.py:1318
 #, python-format
 msgid "Warning!"
 msgstr ""
@@ -210,6 +210,20 @@ msgstr "Temps estimat"
 #: selection:project.project,privacy_visibility:0
 msgid "Public"
 msgstr ""
+
+#. module: project
+#: view:project.task:0
+#: selection:project.task,state:0
+#: selection:project.task.delegate,state:0
+#: selection:project.task.history,state:0
+#: selection:project.task.history.cumulative,state:0
+#: model:project.task.type,name:project.project_tt_deployment
+#: selection:project.task.type,state:0
+#: view:report.project.task.user:0
+#: selection:report.project.task.user,state:0
+#: view:res.partner:0
+msgid "Done"
+msgstr "Realitzat"
 
 #. module: project
 #: model:project.category,name:project.project_category_01
@@ -334,6 +348,11 @@ msgid "June"
 msgstr "Juny"
 
 #. module: project
+#: view:project.task:0
+msgid "Gantt View"
+msgstr ""
+
+#. module: project
 #: selection:report.project.task.user,month:0
 msgid "October"
 msgstr "Octubre"
@@ -364,6 +383,11 @@ msgstr "Quan es completa una tasca, canvia a l'estat Realitzada."
 #: field:project.project,message_summary:0
 #: field:project.task,message_summary:0
 msgid "Summary"
+msgstr ""
+
+#. module: project
+#: view:project.task:0
+msgid "Task summary..."
 msgstr ""
 
 #. module: project
@@ -477,6 +501,11 @@ msgstr ""
 #: field:project.task,create_date:0
 msgid "Create Date"
 msgstr "Data de creació"
+
+#. module: project
+#: view:project.task:0
+msgid "Add a Description..."
+msgstr ""
 
 #. module: project
 #: view:res.partner:0
@@ -848,9 +877,11 @@ msgid "Is a Follower"
 msgstr ""
 
 #. module: project
-#: field:project.task,work_ids:0
-msgid "Work done"
-msgstr "Treball realitzat"
+#: field:project.task.history,date:0
+#: field:project.task.history.cumulative,date:0
+#: field:project.task.work,date:0
+msgid "Date"
+msgstr "Data"
 
 #. module: project
 #: view:report.project.task.user:0
@@ -860,6 +891,11 @@ msgstr "Filtres estesos..."
 #. module: project
 #: model:ir.ui.menu,name:project.menu_tasks_config
 msgid "GTD"
+msgstr ""
+
+#. module: project
+#: view:project.project:0
+msgid "Project Stages"
 msgstr ""
 
 #. module: project
@@ -883,11 +919,9 @@ msgid "Folded by Default"
 msgstr ""
 
 #. module: project
-#: field:project.task.history,date:0
-#: field:project.task.history.cumulative,date:0
-#: field:project.task.work,date:0
-msgid "Date"
-msgstr "Data"
+#: field:project.task,work_ids:0
+msgid "Work done"
+msgstr "Treball realitzat"
 
 #. module: project
 #: help:project.config.settings,module_project_issue:0
@@ -912,6 +946,11 @@ msgid "10"
 msgstr ""
 
 #. module: project
+#: view:project.project:0
+msgid "Cancel Project"
+msgstr ""
+
+#. module: project
 #: help:project.project,analytic_account_id:0
 msgid ""
 "Link this project to an analytic account if you need financial management on "
@@ -927,7 +966,6 @@ msgstr ""
 #: model:process.transition.action,name:project.process_transition_action_draftcanceltask0
 #: model:process.transition.action,name:project.process_transition_action_opencanceltask0
 #: view:project.config.settings:0
-#: view:project.project:0
 #: view:project.task.delegate:0
 #: view:project.task.reevaluate:0
 msgid "Cancel"
@@ -982,8 +1020,17 @@ msgid "Manager"
 msgstr "Director"
 
 #. module: project
-#: selection:project.task,priority:0
-msgid "Important"
+#: model:ir.actions.act_window,help:project.project_category_action
+msgid ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Click to add a new tag.\n"
+"              </p>\n"
+"            "
+msgstr ""
+
+#. module: project
+#: model:ir.ui.menu,name:project.menu_task_types_view
+msgid "Task Stages"
 msgstr ""
 
 #. module: project
@@ -1251,6 +1298,11 @@ msgid "Delay Hours"
 msgstr "Retard hores"
 
 #. module: project
+#: view:project.task.type:0
+msgid "Add a description..."
+msgstr ""
+
+#. module: project
 #: view:project.project:0
 msgid "Team"
 msgstr ""
@@ -1343,6 +1395,9 @@ msgid "Pending"
 msgstr "Pendent"
 
 #. module: project
+#: model:ir.actions.act_window,name:project.project_category_action
+#: model:ir.ui.menu,name:project.menu_project_category_act
+#: view:project.category:0
 #: field:project.task,categ_ids:0
 msgid "Tags"
 msgstr ""
@@ -1423,18 +1478,9 @@ msgid "Attachments"
 msgstr ""
 
 #. module: project
-#: view:project.task:0
-#: selection:project.task,state:0
-#: selection:project.task.delegate,state:0
-#: selection:project.task.history,state:0
-#: selection:project.task.history.cumulative,state:0
-#: model:project.task.type,name:project.project_tt_deployment
-#: selection:project.task.type,state:0
-#: view:report.project.task.user:0
-#: selection:report.project.task.user,state:0
-#: view:res.partner:0
-msgid "Done"
-msgstr "Realitzat"
+#: view:project.category:0
+msgid "Issue Version"
+msgstr ""
 
 #. module: project
 #: code:addons/project/project.py:182
@@ -1657,8 +1703,8 @@ msgid "Generate tasks from sale orders"
 msgstr ""
 
 #. module: project
-#: model:ir.ui.menu,name:project.menu_task_types_view
-msgid "Task Stages"
+#: selection:project.task,priority:0
+msgid "Important"
 msgstr ""
 
 #. module: project
@@ -1706,6 +1752,7 @@ msgid "Cancelled"
 msgstr "Cancel·lat"
 
 #. module: project
+#: model:ir.actions.act_window,help:project.act_project_project_2_project_task_all
 #: model:ir.actions.act_window,help:project.action_view_task
 msgid ""
 "<p class=\"oe_view_nocontent_create\">\n"
@@ -1995,7 +2042,7 @@ msgid "Reevaluation Task"
 msgstr "Re-avaluació de la tasca"
 
 #. module: project
-#: code:addons/project/project.py:1305
+#: code:addons/project/project.py:1318
 #, python-format
 msgid "Please delete the project linked with this account first."
 msgstr ""
@@ -2139,7 +2186,6 @@ msgid "Year"
 msgstr "Any"
 
 #. module: project
-#: view:project.project:0
 #: field:project.project,type_ids:0
 #: view:project.task.type:0
 msgid "Tasks Stages"

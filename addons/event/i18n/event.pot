@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 7.0alpha\n"
+"Project-Id-Version: OpenERP Server 7.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-12-21 17:05+0000\n"
-"PO-Revision-Date: 2012-12-21 17:05+0000\n"
+"POT-Creation-Date: 2013-03-07 08:38+0000\n"
+"PO-Revision-Date: 2013-03-07 08:38+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -141,6 +141,11 @@ msgid "Confirmed events"
 msgstr ""
 
 #. module: event
+#: view:event.event:0
+msgid "ZIP"
+msgstr ""
+
+#. module: event
 #: view:report.event.registration:0
 msgid "Event Beginning Date"
 msgstr ""
@@ -232,6 +237,11 @@ msgstr ""
 #. module: event
 #: view:event.event:0
 msgid "tickets"
+msgstr ""
+
+#. module: event
+#: view:event.event:0
+msgid "Street..."
 msgstr ""
 
 #. module: event
@@ -478,6 +488,7 @@ msgid "Logs"
 msgstr ""
 
 #. module: event
+#: view:event.event:0
 #: field:event.event,state_id:0
 msgid "State"
 msgstr ""
@@ -578,8 +589,9 @@ msgid "You can for each event define a maximum registration level. If you have t
 msgstr ""
 
 #. module: event
-#: field:event.event,user_id:0
-msgid "Responsible User"
+#: code:addons/event/event.py:106
+#, python-format
+msgid "Only %d Seats are Available!"
 msgstr ""
 
 #. module: event
@@ -806,6 +818,11 @@ msgid "You must wait for the starting day of the event to do this action."
 msgstr ""
 
 #. module: event
+#: field:event.event,user_id:0
+msgid "Responsible User"
+msgstr ""
+
+#. module: event
 #: selection:event.event,state:0
 #: selection:report.event.registration,event_state:0
 msgid "Done"
@@ -827,9 +844,8 @@ msgid "Reply-to Email"
 msgstr ""
 
 #. module: event
-#: code:addons/event/event.py:106
-#, python-format
-msgid "Only %d Seats are Available!"
+#: view:event.event:0
+msgid "City"
 msgstr ""
 
 #. module: event
@@ -954,6 +970,7 @@ msgid "Name"
 msgstr ""
 
 #. module: event
+#: view:event.event:0
 #: field:event.event,country_id:0
 msgid "Country"
 msgstr ""

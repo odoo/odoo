@@ -7,15 +7,16 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-21 17:04+0000\n"
-"PO-Revision-Date: 2012-12-21 23:00+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2013-03-07 08:37+0000\n"
+"PO-Revision-Date: 2013-03-16 06:33+0000\n"
+"Last-Translator: Fábio Martinelli - http://zupy.com.br "
+"<webmaster@guaru.net>\n"
 "Language-Team: Brazilian Portuguese <pt_BR@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-01-18 06:47+0000\n"
-"X-Generator: Launchpad (build 16430)\n"
+"X-Launchpad-Export-Date: 2013-03-17 05:30+0000\n"
+"X-Generator: Launchpad (build 16532)\n"
 
 #. module: hr_recruitment
 #: help:hr.applicant,active:0
@@ -96,6 +97,11 @@ msgstr "Trabalhos"
 
 #. module: hr_recruitment
 #: view:hr.applicant:0
+msgid "Extra advantages..."
+msgstr "Vantagens extras..."
+
+#. module: hr_recruitment
+#: view:hr.applicant:0
 msgid "Pending Jobs"
 msgstr "Trabalhos Pendentes"
 
@@ -120,7 +126,7 @@ msgid "Sources of Applicants"
 msgstr "Fontes de Candidatos"
 
 #. module: hr_recruitment
-#: code:addons/hr_recruitment/hr_recruitment.py:435
+#: code:addons/hr_recruitment/hr_recruitment.py:445
 #, python-format
 msgid "You must define Applied Job for this applicant."
 msgstr "Você deve definir o trabalho aplicado para este candidato."
@@ -314,7 +320,7 @@ msgstr ""
 "kanban."
 
 #. module: hr_recruitment
-#: code:addons/hr_recruitment/hr_recruitment.py:435
+#: code:addons/hr_recruitment/hr_recruitment.py:445
 #, python-format
 msgid "Warning!"
 msgstr "Atenção!"
@@ -383,6 +389,12 @@ msgstr "Descritivo da Função"
 #: field:hr.applicant,source_id:0
 msgid "Source"
 msgstr "Origem"
+
+#. module: hr_recruitment
+#: view:hr.recruitment.report:0
+#: field:hr.recruitment.report,year:0
+msgid "Year"
+msgstr "Ano"
 
 #. module: hr_recruitment
 #: field:hr.applicant,message_follower_ids:0
@@ -528,7 +540,7 @@ msgid "Applicants"
 msgstr "Candidatos"
 
 #. module: hr_recruitment
-#: code:addons/hr_recruitment/hr_recruitment.py:351
+#: code:addons/hr_recruitment/hr_recruitment.py:360
 #, python-format
 msgid "No Subject"
 msgstr "Sem Assunto"
@@ -549,7 +561,9 @@ msgid "Gives the sequence order when displaying a list of stages."
 msgstr "Informe a ordem sequencial ao exibir uma lista de estágios."
 
 #. module: hr_recruitment
+#: code:addons/hr_recruitment/hr_recruitment.py:347
 #: field:hr.applicant,partner_id:0
+#, python-format
 msgid "Contact"
 msgstr "Contato"
 
@@ -651,6 +665,11 @@ msgid "Category of applicant"
 msgstr "Categoria de candidato"
 
 #. module: hr_recruitment
+#: view:hr.applicant:0
+msgid "e.g. Call for interview"
+msgstr "ex: Ligar para entrevista"
+
+#. module: hr_recruitment
 #: view:hr.recruitment.report:0
 #: field:hr.recruitment.report,month:0
 msgid "Month"
@@ -662,9 +681,9 @@ msgid "Answer related job question"
 msgstr "Responda a pergunta relacionada com o trabalho"
 
 #. module: hr_recruitment
-#: model:hr.recruitment.stage,name:hr_recruitment.stage_job2
-msgid "First Interview"
-msgstr "Primeira entrevista"
+#: model:ir.model,name:hr_recruitment.model_hr_recruitment_degree
+msgid "Degree of Recruitment"
+msgstr "Grau de Recrutamento"
 
 #. module: hr_recruitment
 #: field:hr.applicant,write_date:0
@@ -798,7 +817,7 @@ msgid "Schedule interview with this applicant"
 msgstr "Agendar entrevista com este candidato"
 
 #. module: hr_recruitment
-#: code:addons/hr_recruitment/hr_recruitment.py:397
+#: code:addons/hr_recruitment/hr_recruitment.py:407
 #, python-format
 msgid "Applicant <b>created</b>"
 msgstr "Candidato <b>criado</b>"
@@ -980,10 +999,10 @@ msgid "The name of the Degree of Recruitment must be unique!"
 msgstr "O nome do grau de recrutamento deve ser único!"
 
 #. module: hr_recruitment
-#: view:hr.recruitment.report:0
-#: field:hr.recruitment.report,year:0
-msgid "Year"
-msgstr "Ano"
+#: code:addons/hr_recruitment/hr_recruitment.py:349
+#, python-format
+msgid "Contact Email"
+msgstr "Email de Contato"
 
 #. module: hr_recruitment
 #: view:hired.employee:0
@@ -1172,9 +1191,9 @@ msgid "On Average"
 msgstr "Na Média"
 
 #. module: hr_recruitment
-#: model:ir.model,name:hr_recruitment.model_hr_recruitment_degree
-msgid "Degree of Recruitment"
-msgstr "Grau de Recrutamento"
+#: model:hr.recruitment.stage,name:hr_recruitment.stage_job2
+msgid "First Interview"
+msgstr "Primeira entrevista"
 
 #. module: hr_recruitment
 #: field:hr.recruitment.report,salary_prop_avg:0
@@ -1233,6 +1252,11 @@ msgstr "Essas pessoas receberão e-mail."
 #: field:hr.job,alias_id:0
 msgid "Alias"
 msgstr "Apelido"
+
+#. module: hr_recruitment
+#: view:hr.applicant:0
+msgid "Feedback of interviews..."
+msgstr "Retorno das entrevistas..."
 
 #. module: hr_recruitment
 #: view:hr.recruitment.report:0

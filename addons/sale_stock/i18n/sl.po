@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-21 17:06+0000\n"
-"PO-Revision-Date: 2012-12-21 23:00+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2013-03-07 08:39+0000\n"
+"PO-Revision-Date: 2013-02-16 10:49+0000\n"
+"Last-Translator: Dušan Laznik (Mentis) <laznik@mentis.si>\n"
 "Language-Team: Slovenian <sl@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-01-18 07:07+0000\n"
-"X-Generator: Launchpad (build 16430)\n"
+"X-Launchpad-Export-Date: 2013-03-08 06:02+0000\n"
+"X-Generator: Launchpad (build 16523)\n"
 
 #. module: sale_stock
 #: help:sale.config.settings,group_invoice_deli_orders:0
@@ -33,7 +33,7 @@ msgstr "Nalog za dostavo"
 #: model:ir.actions.act_window,name:sale_stock.outgoing_picking_list_to_invoice
 #: model:ir.ui.menu,name:sale_stock.menu_action_picking_list_to_invoice
 msgid "Deliveries to Invoice"
-msgstr ""
+msgstr "Dostave za fakturiranje."
 
 #. module: sale_stock
 #: code:addons/sale_stock/sale_stock.py:544
@@ -64,12 +64,17 @@ msgstr "Dokument pemika za izhod ali za stranko"
 #. module: sale_stock
 #: field:sale.config.settings,group_multiple_shops:0
 msgid "Manage multiple shops"
-msgstr ""
+msgstr "Več prodajaln"
 
 #. module: sale_stock
 #: model:process.transition.action,name:sale_stock.process_transition_action_validate0
 msgid "Validate"
 msgstr "Potrdi"
+
+#. module: sale_stock
+#: view:sale.order:0
+msgid "Cancel Order"
+msgstr ""
 
 #. module: sale_stock
 #: code:addons/sale_stock/sale_stock.py:207
@@ -99,7 +104,7 @@ msgstr "Pri vsaki prodaju ustvariti naročilo za dobavo prodajnih artiklov"
 #: code:addons/sale_stock/sale_stock.py:615
 #, python-format
 msgid "Error!"
-msgstr ""
+msgstr "Napaka!"
 
 #. module: sale_stock
 #: field:sale.order,picking_policy:0
@@ -133,24 +138,24 @@ msgstr "Prenos zaloge"
 #: code:addons/sale_stock/sale_stock.py:161
 #, python-format
 msgid "Invalid Action!"
-msgstr ""
+msgstr "Napačno dejanje!"
 
 #. module: sale_stock
 #: field:sale.config.settings,module_project_timesheet:0
 msgid "Project Timesheet"
-msgstr ""
+msgstr "Časovnica projekta"
 
 #. module: sale_stock
 #: field:sale.config.settings,group_sale_delivery_address:0
 msgid "Allow a different address for delivery and invoicing "
-msgstr ""
+msgstr "Omogoča različen naslova za dostavo in račun "
 
 #. module: sale_stock
 #: code:addons/sale_stock/sale_stock.py:546
 #: code:addons/sale_stock/sale_stock.py:597
 #, python-format
 msgid "Configuration Error!"
-msgstr ""
+msgstr "Napaka v nastavitvah"
 
 #. module: sale_stock
 #: model:process.node,name:sale_stock.process_node_saleprocurement0
@@ -158,20 +163,25 @@ msgid "Procurement Order"
 msgstr "Javna naročila"
 
 #. module: sale_stock
+#: model:ir.actions.act_window,name:sale_stock.res_partner_rule_children
+msgid "Contact Details"
+msgstr ""
+
+#. module: sale_stock
 #: selection:sale.config.settings,default_order_policy:0
 msgid "Invoice based on deliveries"
-msgstr ""
+msgstr "Računi na osnovi dobav"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_sale_order
 #: field:stock.picking,sale_id:0
 msgid "Sales Order"
-msgstr ""
+msgstr "Prodajni nalog"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_stock_picking_out
 msgid "Delivery Orders"
-msgstr ""
+msgstr "Dostavni nalogi"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_sale_order_line
@@ -197,7 +207,7 @@ msgstr "Gre za dodajo dnevov, ki jih obljubim stranki zaradi varnosti"
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_stock_picking
 msgid "Picking List"
-msgstr ""
+msgstr "Dobavnica"
 
 #. module: sale_stock
 #: field:sale.shop,warehouse_id:0
@@ -237,7 +247,7 @@ msgstr "Premiki inventarja"
 #. module: sale_stock
 #: view:sale.config.settings:0
 msgid "Default Options"
-msgstr ""
+msgstr "Privzete možnosti"
 
 #. module: sale_stock
 #: field:sale.config.settings,module_project_mrp:0
@@ -299,7 +309,7 @@ msgstr ""
 #. module: sale_stock
 #: view:sale.order:0
 msgid "days"
-msgstr ""
+msgstr "dni"
 
 #. module: sale_stock
 #: field:sale.order.line,product_packaging:0
@@ -421,13 +431,13 @@ msgstr "Eno Nabavno naročilo za vsako naročilnico in za vsak sestavni del"
 #. module: sale_stock
 #: model:process.transition.action,name:sale_stock.process_transition_action_assign0
 msgid "Assign"
-msgstr ""
+msgstr "Dodeli"
 
 #. module: sale_stock
 #: code:addons/sale_stock/sale_stock.py:592
 #, python-format
 msgid "Not enough stock ! : "
-msgstr ""
+msgstr "Ni dovolj zaloge !: "
 
 #. module: sale_stock
 #: help:sale.order.line,delay:0
@@ -457,7 +467,6 @@ msgstr "Račun"
 #. module: sale_stock
 #: model:process.transition.action,name:sale_stock.process_transition_action_cancel1
 #: model:process.transition.action,name:sale_stock.process_transition_action_cancel2
-#: view:sale.order:0
 msgid "Cancel"
 msgstr "Prekliči"
 
@@ -540,7 +549,7 @@ msgstr "Povezano Izbiranje"
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_sale_config_settings
 msgid "sale.config.settings"
-msgstr ""
+msgstr "sale.config.settings"
 
 #. module: sale_stock
 #: help:sale.order,picking_ids:0
@@ -582,7 +591,7 @@ msgstr ""
 #. module: sale_stock
 #: help:sale.config.settings,group_multiple_shops:0
 msgid "This allows to configure and use multiple shops."
-msgstr ""
+msgstr "Omogoča uporabo več prodajaln."
 
 #. module: sale_stock
 #: field:sale.order,picked_rate:0

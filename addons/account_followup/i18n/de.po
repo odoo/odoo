@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-21 17:05+0000\n"
-"PO-Revision-Date: 2013-02-01 21:09+0000\n"
-"Last-Translator: Felix Schubert <Unknown>\n"
+"POT-Creation-Date: 2013-03-07 08:37+0000\n"
+"PO-Revision-Date: 2013-02-17 22:23+0000\n"
+"Last-Translator: Rudolf Schnapka <rs@techno-flex.de>\n"
 "Language-Team: German <de@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-02-02 05:59+0000\n"
-"X-Generator: Launchpad (build 16462)\n"
+"X-Launchpad-Export-Date: 2013-03-08 05:32+0000\n"
+"X-Generator: Launchpad (build 16523)\n"
 
 #. module: account_followup
 #: model:email.template,subject:account_followup.email_template_account_followup_default
@@ -63,11 +63,6 @@ msgid "Needs Printing"
 msgstr "Ausdruck ist erforderlich"
 
 #. module: account_followup
-#: view:res.partner:0
-msgid "⇾ Mark as Done"
-msgstr "-> Als erledigt markieren"
-
-#. module: account_followup
 #: field:account_followup.followup.line,manual_action_note:0
 msgid "Action To Do"
 msgstr "Folgeaktion"
@@ -82,6 +77,8 @@ msgstr "Unternehmen"
 
 #. module: account_followup
 #: report:account_followup.followup.print:0
+#: code:addons/account_followup/account_followup.py:259
+#, python-format
 msgid "Invoice Date"
 msgstr "Rechnungsdatum"
 
@@ -106,9 +103,10 @@ msgid "Follow-up Steps"
 msgstr "Mahnstufen"
 
 #. module: account_followup
-#: field:account_followup.print,email_body:0
-msgid "Email Body"
-msgstr "Text der E-Mail"
+#: code:addons/account_followup/account_followup.py:262
+#, python-format
+msgid "Due Date"
+msgstr ""
 
 #. module: account_followup
 #: model:ir.actions.act_window,name:account_followup.action_account_followup_print
@@ -116,7 +114,17 @@ msgid "Send Follow-Ups"
 msgstr "Sende Mahnungen"
 
 #. module: account_followup
+#: code:addons/account_followup/account_followup.py:313
+#: code:addons/account_followup/account_followup.py:319
+#: code:addons/account_followup/report/account_followup_print.py:86
+#, python-format
+msgid "Error!"
+msgstr ""
+
+#. module: account_followup
 #: report:account_followup.followup.print:0
+#: code:addons/account_followup/account_followup.py:263
+#, python-format
 msgid "Amount"
 msgstr "Betrag"
 
@@ -245,6 +253,12 @@ msgstr ""
 "            "
 
 #. module: account_followup
+#: code:addons/account_followup/account_followup.py:261
+#, python-format
+msgid "Reference"
+msgstr ""
+
+#. module: account_followup
 #: view:account_followup.stat.by.partner:0
 msgid "Balance > 0"
 msgstr "Saldo > 0"
@@ -288,6 +302,11 @@ msgstr "USt."
 #: model:ir.model,name:account_followup.model_res_partner
 msgid "Partner"
 msgstr "Partner"
+
+#. module: account_followup
+#: field:account_followup.print,email_body:0
+msgid "Email Body"
+msgstr "Text der E-Mail"
 
 #. module: account_followup
 #: view:account_followup.followup:0
@@ -352,7 +371,7 @@ msgstr "Spätestes Fälligkeitsdatum"
 #. module: account_followup
 #: view:account_followup.stat:0
 msgid "Not Litigation"
-msgstr "Kein Verzug"
+msgstr "Ohne Rechtsstreit"
 
 #. module: account_followup
 #: view:account_followup.print:0
@@ -497,6 +516,14 @@ msgid "Payment Follow-ups"
 msgstr "Mahnwesen"
 
 #. module: account_followup
+#: code:addons/account_followup/report/account_followup_print.py:86
+#, python-format
+msgid ""
+"The followup plan defined for the current company does not have any followup "
+"action."
+msgstr ""
+
+#. module: account_followup
 #: field:account_followup.followup.line,delay:0
 msgid "Due Days"
 msgstr "Zahlungsverzug"
@@ -513,7 +540,6 @@ msgid "Latest followup"
 msgstr "Letzte Erinnerung"
 
 #. module: account_followup
-#: model:ir.actions.act_window,name:account_followup.action_account_manual_reconcile_receivable
 #: model:ir.ui.menu,name:account_followup.menu_manual_reconcile_followup
 msgid "Reconcile Invoices & Payments"
 msgstr "Ausgleich Rechnungen & Zahlungen"
@@ -565,6 +591,11 @@ msgid "Printed Message"
 msgstr "gedruckte Mitteilung"
 
 #. module: account_followup
+#: view:res.partner:0
+msgid "Responsible of credit collection"
+msgstr ""
+
+#. module: account_followup
 #: code:addons/account_followup/wizard/account_followup_print.py:155
 #, python-format
 msgid "Anybody"
@@ -612,6 +643,11 @@ msgstr ""
 "verantwortlich ist."
 
 #. module: account_followup
+#: view:res.partner:0
+msgid "Partners with Overdue Credits"
+msgstr "Kunden mit überfälligen Gutschriften"
+
+#. module: account_followup
 #: model:ir.model,name:account_followup.model_account_followup_sending_results
 msgid "Results from the sending of the different letters and emails"
 msgstr "Ergebnis der Versendung von Anschreiben und EMails"
@@ -648,6 +684,13 @@ msgstr "Suche Mahnungen"
 
 #. module: account_followup
 #: view:res.partner:0
+msgid ""
+"He said the problem was temporary and promised to pay 50% before 15th of "
+"May, balance before 1st of July."
+msgstr ""
+
+#. module: account_followup
+#: view:res.partner:0
 msgid "Account Move line"
 msgstr "Buchungszeile"
 
@@ -663,14 +706,9 @@ msgid "or"
 msgstr "oder"
 
 #. module: account_followup
-#: view:res.partner:0
-msgid ""
-"If not specified by the latest follow-up level, it will send from the "
-"default email template"
-msgstr ""
-"Solange es keine besondere Spezifikation durch die höchste Mahnstufe gibt, "
-"wird für den E-Mail Versand der\r\n"
-"Zahlungserinnerungen die Standard Vorlage verwendet."
+#: field:account_followup.stat,blocked:0
+msgid "Blocked"
+msgstr "Abgewiesen"
 
 #. module: account_followup
 #: sql_constraint:account_followup.followup.line:0
@@ -686,6 +724,11 @@ msgstr "Klicken Sie um Aktion abzuschließen"
 #: model:ir.ui.menu,name:account_followup.menu_action_followup_stat_follow
 msgid "Follow-Ups Analysis"
 msgstr "Statistik Mahnungen"
+
+#. module: account_followup
+#: view:res.partner:0
+msgid "Action to be taken e.g. Give a phonecall, Check if it's paid, ..."
+msgstr ""
 
 #. module: account_followup
 #: help:res.partner,payment_next_action_date:0
@@ -720,6 +763,7 @@ msgid "Follow-up Sending Date"
 msgstr "Datum für Versand der Mahnung(en)"
 
 #. module: account_followup
+#: view:res.partner:0
 #: field:res.partner,payment_responsible_id:0
 msgid "Follow-up Responsible"
 msgstr "Verantwortlich für Mahnung"
@@ -861,10 +905,17 @@ msgid "unknown"
 msgstr "unbekannt"
 
 #. module: account_followup
-#: code:addons/account_followup/account_followup.py:283
+#: code:addons/account_followup/account_followup.py:314
 #, python-format
 msgid "Printed overdue payments report"
 msgstr "Druck überfällige Zahlungen"
+
+#. module: account_followup
+#: code:addons/account_followup/account_followup.py:291
+#, python-format
+msgid ""
+"You became responsible to do the next action for the payment follow-up of"
+msgstr ""
 
 #. module: account_followup
 #: help:account_followup.followup.line,manual_action:0
@@ -895,16 +946,15 @@ msgid " email(s) should have been sent, but "
 msgstr " EMail(s) sollten ausgetauscht werden, aber "
 
 #. module: account_followup
-#: help:account_followup.print,test_print:0
-msgid ""
-"Check if you want to print follow-ups without changing follow-ups level."
-msgstr ""
-"Möchten Sie Ausdrucke von Mahnungen ohne Wechsel der Stufe generieren."
-
-#. module: account_followup
 #: model:ir.model,name:account_followup.model_account_move_line
 msgid "Journal Items"
 msgstr "Buchungen"
+
+#. module: account_followup
+#: code:addons/account_followup/account_followup.py:281
+#, python-format
+msgid "Amount due"
+msgstr ""
 
 #. module: account_followup
 #: report:account_followup.followup.print:0
@@ -936,6 +986,12 @@ msgstr "Punkte"
 #: field:res.partner,payment_amount_overdue:0
 msgid "Amount Overdue"
 msgstr "Überfälliger Betrag"
+
+#. module: account_followup
+#: code:addons/account_followup/account_followup.py:264
+#, python-format
+msgid "Lit."
+msgstr ""
 
 #. module: account_followup
 #: help:res.partner,latest_followup_level_id_without_lit:0
@@ -1122,9 +1178,10 @@ msgid " had unknown email address(es)"
 msgstr " es ergab()en sich unbekannte Emailanschrift(en)"
 
 #. module: account_followup
-#: view:res.partner:0
-msgid "Responsible"
-msgstr "Verantwortlicher"
+#: help:account_followup.print,test_print:0
+msgid ""
+"Check if you want to print follow-ups without changing follow-up level."
+msgstr ""
 
 #. module: account_followup
 #: model:ir.ui.menu,name:account_followup.menu_finance_followup
@@ -1162,6 +1219,8 @@ msgstr "Beinhaltet Buchungen aus lfd. Rechtsstreitigkeiten"
 #. module: account_followup
 #: report:account_followup.followup.print:0
 #: field:account_followup.sending.results,description:0
+#: code:addons/account_followup/account_followup.py:260
+#, python-format
 msgid "Description"
 msgstr "Beschreibung"
 
@@ -1191,23 +1250,19 @@ msgid "Latest Follow-up Level without litigation"
 msgstr "Letzte Mahnstufe vor Mahnverfahren"
 
 #. module: account_followup
-#: model:ir.actions.act_window,help:account_followup.action_account_manual_reconcile_receivable
-msgid ""
-"<p>\n"
-"                    No journal items found.\n"
-"                </p>\n"
-"            "
-msgstr ""
-"<p>\n"
-"                    Es wurden keine Buchungsbelege in diesem Journal "
-"gefunden.\n"
-"                </p>\n"
-"            "
+#: view:res.partner:0
+msgid "⇾ Mark as Done"
+msgstr "-> Als erledigt markieren"
 
 #. module: account_followup
 #: view:account.move.line:0
 msgid "Partner entries"
 msgstr "Partnereinträge"
+
+#. module: account_followup
+#: view:account_followup.followup.line:0
+msgid "e.g. Call the customer, check if it's paid, ..."
+msgstr ""
 
 #. module: account_followup
 #: view:account_followup.stat:0
@@ -1299,7 +1354,7 @@ msgstr "Letzte Mahnstufe"
 #: field:account_followup.stat,date_move:0
 #: field:account_followup.stat.by.partner,date_move:0
 msgid "First move"
-msgstr "Erste Zahlung:"
+msgstr "Erste Buchung"
 
 #. module: account_followup
 #: model:ir.model,name:account_followup.model_account_followup_stat_by_partner
@@ -1313,9 +1368,10 @@ msgid " letter(s) in report"
 msgstr " Geschäftsformulare Ansicht"
 
 #. module: account_followup
-#: view:res.partner:0
-msgid "Partners with Overdue Credits"
-msgstr "Kunden mit überfälligen Gutschriften"
+#: model:ir.actions.act_window,name:account_followup.action_customer_my_followup
+#: model:ir.ui.menu,name:account_followup.menu_sale_followup
+msgid "My Follow-Ups"
+msgstr ""
 
 #. module: account_followup
 #: view:res.partner:0
@@ -1370,6 +1426,14 @@ msgid "Total credit"
 msgstr "Forderungssumme"
 
 #. module: account_followup
+#: code:addons/account_followup/account_followup.py:313
+#, python-format
+msgid ""
+"The partner does not have any accounting entries to print in the overdue "
+"report for the current company."
+msgstr ""
+
+#. module: account_followup
 #: field:account_followup.followup.line,sequence:0
 msgid "Sequence"
 msgstr "Folge"
@@ -1421,11 +1485,42 @@ msgid "Accounting"
 msgstr "Finanzbuchhaltung"
 
 #. module: account_followup
-#: field:account_followup.stat,blocked:0
-msgid "Blocked"
-msgstr "Abgewiesen"
+#: view:res.partner:0
+msgid ""
+"If not specified by the latest follow-up level, it will send from the "
+"default email template"
+msgstr ""
+"Solange es keine besondere Spezifikation durch die höchste Mahnstufe gibt, "
+"wird für den E-Mail Versand der\r\n"
+"Zahlungserinnerungen die Standard Vorlage verwendet."
+
+#. module: account_followup
+#: code:addons/account_followup/account_followup.py:319
+#, python-format
+msgid "There is no followup plan defined for the current company."
+msgstr ""
 
 #. module: account_followup
 #: field:res.partner,payment_note:0
 msgid "Customer Payment Promise"
 msgstr "Kundenzahlung Versprechen"
+
+#~ msgid "Responsible"
+#~ msgstr "Verantwortlicher"
+
+#~ msgid ""
+#~ "<p>\n"
+#~ "                    No journal items found.\n"
+#~ "                </p>\n"
+#~ "            "
+#~ msgstr ""
+#~ "<p>\n"
+#~ "                    Es wurden keine Buchungsbelege in diesem Journal "
+#~ "gefunden.\n"
+#~ "                </p>\n"
+#~ "            "
+
+#~ msgid ""
+#~ "Check if you want to print follow-ups without changing follow-ups level."
+#~ msgstr ""
+#~ "Möchten Sie Ausdrucke von Mahnungen ohne Wechsel der Stufe generieren."

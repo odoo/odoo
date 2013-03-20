@@ -7,16 +7,16 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-21 17:04+0000\n"
-"PO-Revision-Date: 2013-01-06 23:46+0000\n"
+"POT-Creation-Date: 2013-03-07 08:37+0000\n"
+"PO-Revision-Date: 2013-02-17 22:28+0000\n"
 "Last-Translator: Thorsten Vocks (OpenBig.org) <thorsten.vocks@big-"
 "consulting.net>\n"
 "Language-Team: German <de@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-01-18 07:03+0000\n"
-"X-Generator: Launchpad (build 16430)\n"
+"X-Launchpad-Export-Date: 2013-03-08 05:58+0000\n"
+"X-Generator: Launchpad (build 16523)\n"
 
 #. module: purchase
 #: model:res.groups,name:purchase.group_analytic_accounting
@@ -74,6 +74,11 @@ msgstr ""
 #: field:purchase.report,day:0
 msgid "Day"
 msgstr "Tag"
+
+#. module: purchase
+#: view:purchase.order:0
+msgid "Cancel Order"
+msgstr ""
 
 #. module: purchase
 #: view:purchase.report:0
@@ -833,6 +838,11 @@ msgid "RFQ"
 msgstr "Angebotsanfrage"
 
 #. module: purchase
+#: view:purchase.order:0
+msgid "Send by Email"
+msgstr ""
+
+#. module: purchase
 #: report:purchase.order:0
 #: view:purchase.order:0
 #: field:purchase.order,date_order:0
@@ -1001,7 +1011,6 @@ msgstr "Anzahl"
 #: model:process.transition.action,name:purchase.process_transition_action_approvingcancelpurchaseorder0
 #: model:process.transition.action,name:purchase.process_transition_action_cancelpurchaseorder0
 #: view:purchase.config.settings:0
-#: view:purchase.order:0
 #: view:purchase.order.group:0
 #: view:purchase.order.line_invoice:0
 msgid "Cancel"
@@ -1380,6 +1389,11 @@ msgid "Products"
 msgstr "Produkte"
 
 #. module: purchase
+#: view:purchase.order:0
+msgid "Terms and conditions..."
+msgstr ""
+
+#. module: purchase
 #: model:ir.model,name:purchase.model_stock_move
 msgid "Stock Move"
 msgstr "Lagerbuchung"
@@ -1603,9 +1617,9 @@ msgid "PO: %s"
 msgstr "PO: %s"
 
 #. module: purchase
-#: view:purchase.order:0
-msgid "Send by EMail"
-msgstr "Per E-Mail senden"
+#: model:process.node,note:purchase.process_node_packinginvoice0
+msgid "Outgoing products to invoice"
+msgstr "Rechnungserstellung für Auslieferungen"
 
 #. module: purchase
 #: code:addons/purchase/purchase.py:515
@@ -1634,7 +1648,7 @@ msgstr "Konfiguriere Bestellung"
 #. module: purchase
 #: view:purchase.order:0
 msgid "Untaxed"
-msgstr "Nicht versteuert"
+msgstr "Nettobetrag"
 
 #. module: purchase
 #: model:process.transition,name:purchase.process_transition_createpackinglist0
@@ -2181,11 +2195,6 @@ msgid "Reference Unit of Measure"
 msgstr "Referenz Mengeneinheit"
 
 #. module: purchase
-#: model:process.node,note:purchase.process_node_packinginvoice0
-msgid "Outgoing products to invoice"
-msgstr "Rechnungserstellung für Auslieferungen"
-
-#. module: purchase
 #: report:purchase.order:0
 #: field:purchase.report,validator:0
 msgid "Validated By"
@@ -2502,3 +2511,6 @@ msgstr ""
 #: view:purchase.report:0
 msgid "Orders"
 msgstr "Bestellungen"
+
+#~ msgid "Send by EMail"
+#~ msgstr "Per E-Mail senden"

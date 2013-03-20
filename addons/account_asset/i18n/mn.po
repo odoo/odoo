@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-21 17:04+0000\n"
-"PO-Revision-Date: 2013-02-09 10:55+0000\n"
-"Last-Translator: gobi <Unknown>\n"
+"POT-Creation-Date: 2013-03-07 08:37+0000\n"
+"PO-Revision-Date: 2013-03-13 10:05+0000\n"
+"Last-Translator: wsubuntu <Unknown>\n"
 "Language-Team: Mongolian <mn@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-02-10 05:23+0000\n"
-"X-Generator: Launchpad (build 16482)\n"
+"X-Launchpad-Export-Date: 2013-03-14 05:34+0000\n"
+"X-Generator: Launchpad (build 16532)\n"
 
 #. module: account_asset
 #: view:account.asset.asset:0
@@ -195,6 +195,12 @@ msgstr "Тэмдэглэл"
 #: field:account.asset.depreciation.line,move_id:0
 msgid "Depreciation Entry"
 msgstr "Элэгдлийн Бичилт"
+
+#. module: account_asset
+#: code:addons/account_asset/account_asset.py:82
+#, python-format
+msgid "Error!"
+msgstr "Алдаа!"
 
 #. module: account_asset
 #: view:asset.asset.report:0
@@ -599,6 +605,12 @@ msgid "Current"
 msgstr "Одоогийн"
 
 #. module: account_asset
+#: code:addons/account_asset/account_asset.py:82
+#, python-format
+msgid "You cannot delete an asset that contains posted depreciation lines."
+msgstr "Элэгдэл бодогдсон хөрөнгүүдийг устгах боломжгүй."
+
+#. module: account_asset
 #: view:account.asset.category:0
 msgid "Depreciation Method"
 msgstr "Элэгдлийн арга"
@@ -683,7 +695,7 @@ msgstr ""
 #. module: account_asset
 #: field:account.asset.asset,purchase_value:0
 msgid "Gross Value"
-msgstr ""
+msgstr "Нийт Үнэ"
 
 #. module: account_asset
 #: field:account.asset.category,name:0
@@ -727,6 +739,11 @@ msgstr "Элэгдлийн мөрүүдийн дүн"
 #, python-format
 msgid "Created Asset Moves"
 msgstr "Үүсгэгдсэн Хөрөнгийн Хөдөлгөөнүүд"
+
+#. module: account_asset
+#: view:account.asset.asset:0
+msgid "Add an internal note here..."
+msgstr "Дотоод тэмдэглэлийг энд бичиж болдог."
 
 #. module: account_asset
 #: field:account.asset.depreciation.line,sequence:0

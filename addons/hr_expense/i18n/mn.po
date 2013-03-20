@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-21 17:04+0000\n"
-"PO-Revision-Date: 2012-12-21 23:00+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2013-03-07 08:37+0000\n"
+"PO-Revision-Date: 2013-03-02 10:21+0000\n"
+"Last-Translator: gobi <Unknown>\n"
 "Language-Team: Mongolian <mn@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-01-18 06:44+0000\n"
-"X-Generator: Launchpad (build 16430)\n"
+"X-Launchpad-Export-Date: 2013-03-08 05:44+0000\n"
+"X-Generator: Launchpad (build 16523)\n"
 
 #. module: hr_expense
 #: view:hr.expense.expense:0
@@ -36,7 +36,7 @@ msgstr "Зардлуудыг нөхөн төлөх данс"
 #. module: hr_expense
 #: model:mail.message.subtype,description:hr_expense.mt_expense_approved
 msgid "Expense approved"
-msgstr ""
+msgstr "Зардал батлагдсан"
 
 #. module: hr_expense
 #: field:hr.expense.expense,date_confirm:0
@@ -77,7 +77,7 @@ msgstr "Шинэ зардал"
 #: field:hr.expense.line,uom_id:0
 #: view:product.product:0
 msgid "Unit of Measure"
-msgstr ""
+msgstr "Хэмжих нэгж"
 
 #. module: hr_expense
 #: selection:hr.expense.report,month:0
@@ -87,7 +87,7 @@ msgstr "3 сар"
 #. module: hr_expense
 #: field:hr.expense.expense,message_unread:0
 msgid "Unread Messages"
-msgstr ""
+msgstr "Уншаагүй зурвасууд"
 
 #. module: hr_expense
 #: field:hr.expense.expense,company_id:0
@@ -113,6 +113,8 @@ msgid ""
 "No expense journal found. Please make sure you have a journal with type "
 "'purchase' configured."
 msgstr ""
+"Зардлын журнал олдсонгүй. 'Худалдан авалт' төрлийн журнал тохируулсан эсэхээ "
+"шалгана."
 
 #. module: hr_expense
 #: model:ir.model,name:hr_expense.model_hr_expense_report
@@ -122,7 +124,7 @@ msgstr "Зардлын шинжилгээ"
 #. module: hr_expense
 #: view:hr.expense.expense:0
 msgid "Open Receipt"
-msgstr ""
+msgstr "Нээлттэй Талон"
 
 #. module: hr_expense
 #: view:hr.expense.report:0
@@ -147,7 +149,7 @@ msgstr "Тэмдэглэл"
 #. module: hr_expense
 #: field:hr.expense.expense,message_ids:0
 msgid "Messages"
-msgstr ""
+msgstr "Зурвасууд"
 
 #. module: hr_expense
 #: code:addons/hr_expense/hr_expense.py:172
@@ -155,12 +157,12 @@ msgstr ""
 #: code:addons/hr_expense/hr_expense.py:197
 #, python-format
 msgid "Error!"
-msgstr ""
+msgstr "Алдаа!"
 
 #. module: hr_expense
 #: model:mail.message.subtype,description:hr_expense.mt_expense_refused
 msgid "Expense refused"
-msgstr ""
+msgstr "Зардал хүлээн зөвшөөрөгдөөгүй"
 
 #. module: hr_expense
 #: model:ir.actions.act_window,name:hr_expense.hr_expense_product
@@ -189,6 +191,7 @@ msgstr ""
 #: help:hr.expense.expense,message_unread:0
 msgid "If checked new messages require your attention."
 msgstr ""
+"Хэрэв тэмдэглэгдсэн бол таныг шинэ зурвасуудад анхаарал хандуулахыг шаардана."
 
 #. module: hr_expense
 #: selection:hr.expense.report,state:0
@@ -219,6 +222,11 @@ msgid ""
 "If the admin accepts it, the status is 'Accepted'.\n"
 " If a receipt is made for the expense request, the status is 'Done'."
 msgstr ""
+"Зардлын хүсэлтийг үүсгэсэн дараа төлөв нь 'Ноорог' байна.\n"
+" Хэрэглэгч батлахад хүсэлт нь удирдагчид илгээгдэнэ, төлөв нь 'Батлахыг "
+"хүлээж буй' болно.            \n"
+"Хэрэв удирдагч зөвшөөрвөл төлөв нь 'Зөвшөөрсөн' болно.\n"
+" Хэрэв зардлыг хүлээн авсан бол төлөв 'Хийгдсэн' болно."
 
 #. module: hr_expense
 #: help:hr.expense.expense,date_confirm:0
@@ -241,12 +249,14 @@ msgid ""
 "Holds the Chatter summary (number of messages, ...). This summary is "
 "directly in html format in order to be inserted in kanban views."
 msgstr ""
+"Чаатлагчийн хураангуйг агуулна (зурвасын тоо,...). Энэ хураангуй нь шууд "
+"html форматтай бөгөөд канбан харагдацад шууд орж харагдах боломжтой."
 
 #. module: hr_expense
-#: code:addons/hr_expense/hr_expense.py:302
+#: code:addons/hr_expense/hr_expense.py:301
 #, python-format
 msgid "Warning"
-msgstr ""
+msgstr "Анхааруулга"
 
 #. module: hr_expense
 #: report:hr.expense:0
@@ -294,14 +304,14 @@ msgstr "Зардлын мөрүүдийг харахдаа тэдгээрт да
 #: view:hr.expense.report:0
 #: field:hr.expense.report,state:0
 msgid "Status"
-msgstr ""
+msgstr "Төлөв"
 
 #. module: hr_expense
 #: field:hr.expense.line,analytic_account:0
 #: view:hr.expense.report:0
 #: field:hr.expense.report,analytic_account:0
 msgid "Analytic account"
-msgstr "Аналитик данс"
+msgstr "Шинжилгээний данс"
 
 #. module: hr_expense
 #: field:hr.expense.report,date:0
@@ -316,7 +326,7 @@ msgstr "Хүлээгдэж байгаа"
 #. module: hr_expense
 #: field:hr.expense.expense,message_follower_ids:0
 msgid "Followers"
-msgstr ""
+msgstr "Дагагчид"
 
 #. module: hr_expense
 #: report:hr.expense:0
@@ -342,7 +352,7 @@ msgstr "Тоо хэмжээ"
 #: view:hr.expense.report:0
 #: field:hr.expense.report,price_total:0
 msgid "Total Price"
-msgstr "Нийт үнэ"
+msgstr "Нийт Үнэ"
 
 #. module: hr_expense
 #: model:process.node,note:hr_expense.process_node_reinvoicing0
@@ -353,14 +363,14 @@ msgstr "Зарим үнүүдийг харилцагч дахин нэхэмжи
 #: code:addons/hr_expense/hr_expense.py:197
 #, python-format
 msgid "The employee must have a home address."
-msgstr ""
+msgstr "Ажилтны оршин суугаа гэрийн хаягтай байх ёстой"
 
 #. module: hr_expense
 #: view:board.board:0
 #: view:hr.expense.expense:0
 #: model:ir.actions.act_window,name:hr_expense.action_my_expense
 msgid "My Expenses"
-msgstr "Миний өөрийн зардлууд"
+msgstr "Миний Зардлууд"
 
 #. module: hr_expense
 #: view:hr.expense.report:0
@@ -408,7 +418,7 @@ msgstr "Нэхэмжилэлийг үүсгэсэн дараа зардлыг н
 #: code:addons/hr_expense/hr_expense.py:116
 #, python-format
 msgid "Warning!"
-msgstr ""
+msgstr "Анхааруулга!"
 
 #. module: hr_expense
 #: model:process.node,name:hr_expense.process_node_reimbursement0
@@ -422,10 +432,10 @@ msgid "Validation Date"
 msgstr "Батламжилсан огноо"
 
 #. module: hr_expense
-#: code:addons/hr_expense/hr_expense.py:227
+#: code:addons/hr_expense/hr_expense.py:226
 #, python-format
 msgid "Expense Receipt"
-msgstr ""
+msgstr "Зардлын талон"
 
 #. module: hr_expense
 #: view:hr.expense.report:0
@@ -480,7 +490,7 @@ msgstr "Валют"
 #. module: hr_expense
 #: field:hr.expense.expense,voucher_id:0
 msgid "Employee's Receipt"
-msgstr ""
+msgstr "Ажилтны талон"
 
 #. module: hr_expense
 #: selection:hr.expense.expense,state:0
@@ -493,17 +503,23 @@ msgid "Employee encode all his expenses"
 msgstr "Ажилчдын бүх зардлыг бүртгэх"
 
 #. module: hr_expense
-#: code:addons/hr_expense/hr_expense.py:302
+#: view:hr.expense.expense:0
+msgid "Free Notes"
+msgstr ""
+
+#. module: hr_expense
+#: code:addons/hr_expense/hr_expense.py:301
 #, python-format
 msgid ""
 "Selected Unit of Measure does not belong to the same category as the product "
 "Unit of Measure"
 msgstr ""
+"Сонгосон хэмжих нэгж нь барааны хэмжих нэгжтэй ижил биш ангилалд байна."
 
 #. module: hr_expense
 #: help:hr.expense.expense,journal_id:0
 msgid "The journal used when the expense is done."
-msgstr ""
+msgstr "Зардал хийгдэхэд хэрэглэгдэх журнал"
 
 #. module: hr_expense
 #: field:hr.expense.expense,note:0
@@ -527,6 +543,8 @@ msgid ""
 "Please configure Default Expense account for Product purchase: "
 "`property_account_expense_categ`."
 msgstr ""
+"Барааны худалдан авалтын Зардлын Үндсэн дансыг тохируулна уу: "
+"`property_account_expense_categ`."
 
 #. module: hr_expense
 #: model:process.transition,note:hr_expense.process_transition_approveexpense0
@@ -561,7 +579,7 @@ msgstr "Ноорог зардлууд"
 #. module: hr_expense
 #: field:hr.expense.expense,message_is_follower:0
 msgid "Is a Follower"
-msgstr ""
+msgstr "Дагагч эсэх"
 
 #. module: hr_expense
 #: model:ir.actions.act_window,name:hr_expense.product_normal_form_view_installer
@@ -593,7 +611,7 @@ msgstr "Хэрэглэгч"
 #. module: hr_expense
 #: model:ir.ui.menu,name:hr_expense.menu_hr_product
 msgid "Expense Categories"
-msgstr ""
+msgstr "Зардлын ангилал"
 
 #. module: hr_expense
 #: selection:hr.expense.report,month:0
@@ -615,11 +633,19 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Шинэ зардал бүртгэхдээ дарна. \n"
+"              </p><p>\n"
+"                OpenERP бусад дагалдах бүх боловсруулалтыг нягтлана; "
+"менежерийн зардлын хуудсыг цохох, ажилтанд зардлыг олгох, зарим зардлыг "
+"захиалагчаас нэхэмжлэх\n"
+"              </p>\n"
+"            "
 
 #. module: hr_expense
 #: view:hr.expense.expense:0
 msgid "Generate Accounting Entries"
-msgstr ""
+msgstr "Санхүүгийн бичилтийг үүсгэх"
 
 #. module: hr_expense
 #: selection:hr.expense.report,month:0
@@ -634,7 +660,7 @@ msgstr "Хүний нөөцийн зардалууд"
 #. module: hr_expense
 #: field:hr.expense.expense,message_summary:0
 msgid "Summary"
-msgstr ""
+msgstr "Хураангуй"
 
 #. module: hr_expense
 #: model:product.template,name:hr_expense.car_travel_product_template
@@ -649,7 +675,7 @@ msgstr "Менежерт Илгээх"
 #. module: hr_expense
 #: view:hr.expense.report:0
 msgid "Done Expenses"
-msgstr ""
+msgstr "Хийгдсэн зардлууд"
 
 #. module: hr_expense
 #: model:process.node,note:hr_expense.process_node_confirmedexpenses0
@@ -675,7 +701,7 @@ msgstr "Зардлын хуудас"
 #. module: hr_expense
 #: field:hr.expense.report,voucher_id:0
 msgid "Receipt"
-msgstr ""
+msgstr "Талон"
 
 #. module: hr_expense
 #: view:hr.expense.report:0
@@ -693,7 +719,7 @@ msgstr "Нэгжийн үнэ"
 #: view:hr.expense.report:0
 #: selection:hr.expense.report,state:0
 msgid "Done"
-msgstr ""
+msgstr "Хийсэн"
 
 #. module: hr_expense
 #: model:process.transition.action,name:hr_expense.process_transition_action_supplierinvoice0
@@ -714,12 +740,12 @@ msgstr "Дахин нэхэмжлэх"
 #. module: hr_expense
 #: view:hr.expense.expense:0
 msgid "Expense Date"
-msgstr ""
+msgstr "Зардлын огноо"
 
 #. module: hr_expense
 #: field:hr.expense.expense,user_valid:0
 msgid "Validation By"
-msgstr ""
+msgstr "Цохогч"
 
 #. module: hr_expense
 #: view:hr.expense.expense:0
@@ -828,7 +854,7 @@ msgstr "Зарлага болгох"
 #. module: hr_expense
 #: model:mail.message.subtype,description:hr_expense.mt_expense_confirmed
 msgid "Expense confirmed, waiting confirmation"
-msgstr ""
+msgstr "Зардал батлагдлаа, баталгаажилтыг хүлээж байна"
 
 #. module: hr_expense
 #: report:hr.expense:0
@@ -865,7 +891,7 @@ msgstr "Нэр"
 #: code:addons/hr_expense/hr_expense.py:116
 #, python-format
 msgid "You can only delete draft expenses!"
-msgstr ""
+msgstr "Та зөвхөн ноорон зардлуудыг устгаж болно!"
 
 #. module: hr_expense
 #: field:hr.expense.expense,account_move_id:0
@@ -900,7 +926,7 @@ msgstr "Зөвшөөрсөн"
 #. module: hr_expense
 #: help:hr.expense.expense,message_ids:0
 msgid "Messages and communication history"
-msgstr ""
+msgstr "Зурвас болон харилцсан түүх"
 
 #. module: hr_expense
 #: field:hr.expense.line,sequence:0
@@ -925,11 +951,12 @@ msgstr "Зардлууд"
 #: help:product.product,hr_expense_ok:0
 msgid "Specify if the product can be selected in an HR expense line."
 msgstr ""
+"Хэрэв бараа Хүний Нөөцийн зардлын мөрд харагдаж сонгогдох бол зааж өгнө"
 
 #. module: hr_expense
 #: view:hr.expense.expense:0
 msgid "Accounting"
-msgstr ""
+msgstr "Санхүү"
 
 #. module: hr_expense
 #: view:hr.expense.expense:0
