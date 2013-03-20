@@ -89,6 +89,10 @@ instance.web.Session = instance.web.JsonRPC.extend( /** @lends instance.web.Sess
         });
     },
     session_is_valid: function() {
+        var db = $.deparam.querystring().db;
+        if (db && this.db !== db) {
+            return false;
+        }
         return !!this.uid;
     },
     /**

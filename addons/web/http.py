@@ -92,6 +92,14 @@ class WebRequest(object):
         if not self.session:
             self.session = session.OpenERPSession()
             self.httpsession[self.session_id] = self.session
+
+        # set db/uid trackers - they're cleaned up at the WSGI
+        # dispatching phase in openerp.service.wsgi_server.application
+        if self.session._db:
+            threading.current_thread().dbname = self.session._db
+        if self.session._uid:
+            threading.current_thread().uid = self.session._uid
+
         self.context = self.params.pop('context', {})
         self.debug = self.params.pop('debug', False) is not False
         # Determine self.lang
@@ -286,7 +294,8 @@ class HttpRequest(WebRequest):
         _logger.debug("%s --> %s.%s %r", self.httprequest.method, method.im_class.__name__, method.__name__, akw)
         try:
             r = method(self, **self.params)
-        except Exception:
+        except Exception, e:
+            _logger.exception("An exception occured during an http request")
             se = serialize_exception(e)
             error = {
                 'code': 200,
