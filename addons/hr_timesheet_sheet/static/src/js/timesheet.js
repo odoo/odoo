@@ -175,8 +175,13 @@ openerp.hr_timesheet_sheet = function(instance) {
                                 $(this).val(self.sum_box(account, day_count));
                             } else {
                                 account.days[day_count].lines[0].unit_amount += num - self.sum_box(account, day_count);
-                                self.display_totals();
-                                self.sync();
+                                var product = (account.days[day_count].lines[0].product_id instanceof Array) ? account.days[day_count].lines[0].product_id[0] : account.days[day_count].lines[0].product_id
+                                var journal = (account.days[day_count].lines[0].journal_id instanceof Array) ? account.days[day_count].lines[0].journal_id[0] : account.days[day_count].lines[0].journal_id
+                                new instance.web.Model("hr.analytic.timesheet").call("on_change_unit_amount", [[], product, account.days[day_count].lines[0].unit_amount, false, false, journal]).then(function(res) {
+                                    account.days[day_count].lines[0]['amount'] = res.value.amount || 0;
+                                    self.display_totals();
+                                    self.sync();
+                                });
                             }
                         });
                     } else {
@@ -282,10 +287,10 @@ openerp.hr_timesheet_sheet = function(instance) {
         generate_o2m_value: function() {
             var self = this;
             var ops = [];
-
+            
             _.each(self.accounts, function(account) {
                 var auth_keys = _.extend(_.clone(account.account_defaults), {
-                    name: true, unit_amount: true, date: true, account_id:true,
+                    name: true, amount:true, unit_amount: true, date: true, account_id:true,
                 });
                 _.each(account.days, function(day) {
                     _.each(day.lines, function(line) {
