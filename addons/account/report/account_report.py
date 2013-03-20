@@ -94,7 +94,7 @@ class report_aged_receivable(osv.osv):
         """
         if context is None:context = {}
         if not self.called:
-            self.init(cr, user)
+            self._init(cr, user)
         self.called = True # To make sure that init doesn't get called multiple times
 
         res = super(report_aged_receivable, self).fields_view_get(cr, user, view_id, view_type, context, toolbar=toolbar, submenu=submenu)
@@ -119,7 +119,10 @@ class report_aged_receivable(osv.osv):
         'balance': fields.function(_calc_bal, string='Balance', readonly=True),
     }
 
-    def init(self, cr, uid=1):
+    def init(self, cr):
+        return self._init(cr, 1)
+
+    def _init(self, cr, uid):
         """ This view will be used in dashboard
         The reason writing this code here is, we need to check date range from today to first date of fiscal year.
         """
