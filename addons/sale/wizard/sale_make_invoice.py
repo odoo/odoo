@@ -50,7 +50,7 @@ class sale_make_invoice(osv.osv_memory):
         if context is None:
             context = {}
         data = self.read(cr, uid, ids)[0]
-        for sale_order in context.get(('active_ids'), []):
+        for sale_order in order_obj.browse(cr, uid, context.get(('active_ids'), []), context=context):
             if sale_order.state != 'manual':
                 raise osv.except_osv(_('Warning!'), "You shouldn't manually invoice the following sale order %s" % (sale_order.name))
 
