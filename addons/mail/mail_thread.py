@@ -942,13 +942,14 @@ class mail_thread(osv.AbstractModel):
 
         # 0: Parse email-from, try to find a better author_id based on document's followers
         email_from = kwargs.get('email_from')
-        author_ids = None
         if email_from and thread_id:
             email_list = tools.email_split(email_from)
             doc = self.browse(cr, uid, thread_id, context=context)
             if email_list and doc:
-                doc_fol_ids = [follower.id for follower in doc.message_follower_ids]
-                author_ids = self.pool.get('res.partner').search(cr, uid, [('email', 'ilike', email_list[0]), ('id', 'in', doc_fol_ids)], limit=1, context=context)
+                author_ids = self.pool.get('res.partner').search(cr, uid, [
+                                        ('email', 'ilike', email_list[0]),
+                                        ('id', 'in', [f.id for f in doc.message_follower_ids])
+                                    ], limit=1, context=context)
                 if author_ids:
                     kwargs['author_id'] = author_ids[0]
 
