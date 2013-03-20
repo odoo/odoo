@@ -106,7 +106,7 @@ class mail_thread(osv.AbstractModel):
                         email = "%s@%s" % (alias.alias_name, alias.alias_domain)
                         return "%s %s" % (_("<p class='oe_view_nocontent_create'>Click here to add a new %s or send an email, for example, to: <a href='mailto:%s'>%s</a></p>") % (context.get('dynamic_help_documents', _("documents")), email, email), help or "")
 
-        if context.get('dynamic_help_documents', None) and not help or help.find("oe_view_nocontent_create") == -1:
+        if context.get('dynamic_help_documents', None) and ("%s" % help).find("oe_view_nocontent_create") == -1:
             return "%s %s" % (_("<p class='oe_view_nocontent_create'>Click here to add a new %s</p>") % context.get('dynamic_help_documents', _("documents")), help or "")
 
         return help
