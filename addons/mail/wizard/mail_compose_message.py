@@ -218,9 +218,12 @@ class mail_compose_message(osv.TransientModel):
                     post_values.update(email_dict)
                 # post the message
                 subtype = 'mail.mt_comment'
-                if is_log:
+                if is_log or mass_mail_mode:
                     subtype = False
-                active_model_pool.message_post(cr, uid, [res_id], type='comment', subtype=subtype, context=context, **post_values)
+                msg_id = active_model_pool.message_post(cr, uid, [res_id], type='comment', subtype=subtype, context=context, **post_values)
+                # mass_mailing: notify specific partners, because subtype was False, and no-one was notified
+                if mass_mail_mode and post_values['partner_ids']:
+                    self.pool.get('mail.notification')._notify(cr, uid, msg_id, post_values['partner_ids'], context=context)
 
         return {'type': 'ir.actions.act_window_close'}
 

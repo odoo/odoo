@@ -524,7 +524,7 @@ class test_mail(TestMailBase):
 
         # 1. mass_mail on pigs and bird
         compose_id = mail_compose.create(cr, uid,
-            {'subject': _subject, 'body': '${object.description}'},
+            {'subject': _subject, 'body': '${object.description}', 'partner_ids': [(4, p_c_id), (4, p_d_id)]},
             {'default_composition_mode': 'mass_mail', 'default_model': 'mail.group', 'default_res_id': False,
                 'active_ids': [self.group_pigs_id, group_bird_id]})
         compose = mail_compose.browse(cr, uid, compose_id)
@@ -540,11 +540,19 @@ class test_mail(TestMailBase):
         test_msg_ids = self.mail_message.search(cr, uid, [], limit=2)
         self.assertIn(message1.id, test_msg_ids, 'Pigs did not receive its mass mailing message')
         self.assertIn(message2.id, test_msg_ids, 'Bird did not receive its mass mailing message')
-        # Test: mail.message: subject, body
-        self.assertEqual(message1.subject, _subject, 'mail.message subject incorrect')
-        self.assertEqual(message1.body, '<p>%s</p>' % group_pigs.description, 'mail.message body incorrect')
-        self.assertEqual(message2.subject, _subject, 'mail.message subject incorrect')
-        self.assertEqual(message2.body, '<p>%s</p>' % group_bird.description, 'mail.message body incorrect')
+        # Test: mail.message: subject, body, subtype, notified partners (nobody + specific recipients)
+        self.assertEqual(message1.subject, _subject,
+                        'message_post: mail.message in mass mail subject incorrect')
+        self.assertEqual(message1.body, '<p>%s</p>' % group_pigs.description,
+                        'message_post: mail.message in mass mail body incorrect')
+        self.assertEqual(set([p.id for p in message1.notified_partner_ids]), set([p_c_id, p_d_id]),
+                        'message_post: mail.message in mass mail incorrect notified partners')
+        self.assertEqual(message2.subject, _subject,
+                        'message_post: mail.message in mass mail subject incorrect')
+        self.assertEqual(message2.body, '<p>%s</p>' % group_bird.description,
+                        'message_post: mail.message in mass mail body incorrect')
+        self.assertEqual(set([p.id for p in message2.notified_partner_ids]), set([p_c_id, p_d_id]),
+                        'message_post: mail.message in mass mail incorrect notified partners')
 
     def test_30_needaction(self):
         """ Tests for mail.message needaction. """
