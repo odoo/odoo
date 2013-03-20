@@ -960,7 +960,6 @@ class survey_question_wiz(osv.osv_memory):
         if anonymous and survey_browse.state == "open" and survey_browse.authenticate:
             context.update({'force_login': True})
 
-        self.get_response_info_from_token(cr, uid, context['survey_id'], context['survey_token'], context=context)
         return {
             'view_type': 'form',
             "view_mode": 'form',
