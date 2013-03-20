@@ -133,19 +133,17 @@ class mail_compose_message(osv.TransientModel):
                 - model, no res_id, I create a message in mass mail mode
             - then: fall back on mail.message acces rules
         """
-        if uid == SUPERUSER_ID:
-            return
         if isinstance(ids, (int, long)):
             ids = [ids]
 
         # Author condition (CREATE (mass_mail))
-        if operation == 'create':
-            # Read mail_compose_message.ids to have their values
+        if operation == 'create' and uid != SUPERUSER_ID:
+            # read mail_compose_message.ids to have their values
             message_values = {}
             cr.execute('SELECT DISTINCT id, model, res_id FROM "%s" WHERE id = ANY (%%s) AND res_id = 0' % self._table, (ids,))
             for id, rmod, rid in cr.fetchall():
                 message_values[id] = {'model': rmod, 'res_id': rid}
-
+            # remove from the set to check the ids that mail_compose_message accepts
             author_ids = [mid for mid, message in message_values.iteritems()
                 if message.get('model') and not message.get('res_id')]
             ids = list(set(ids) - set(author_ids))
@@ -248,7 +246,7 @@ class mail_compose_message(osv.TransientModel):
                     subtype = False
                 elif mass_mail_mode:  # mass mail: is a log pushed to recipients, author not added
                     subtype = False
-                    context['mail_create_nosubscribe'] = True
+                    context = dict(context, mail_create_nosubscribe=True)  # add context key to avoid subscribing the author
                 msg_id = active_model_pool.message_post(cr, uid, [res_id], type='comment', subtype=subtype, context=context, **post_values)
                 # mass_mailing: notify specific partners, because subtype was False, and no-one was notified
                 if mass_mail_mode and post_values['partner_ids']:
