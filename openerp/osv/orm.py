@@ -3330,12 +3330,23 @@ class BaseModel(object):
            inherited field via _inherits) to a ``column_info`` struct
            giving detailed columns """
         result = {}
+        # do not inverse for loops, since local fields may hide inherited ones!
         for k, (parent, m2o, col, original_parent) in self._inherit_fields.iteritems():
             result[k] = fields.column_info(k, col, parent, m2o, original_parent)
         for k, col in self._columns.iteritems():
             result[k] = fields.column_info(k, col)
-        return result
 
+        # process cinfo equivalences
+        for k, cinfo in result.iteritems():
+            if cinfo.original_parent:
+                # make equivalents and inverses identical for equivalent fields
+                parent_cinfo = self.pool[original_parent]._all_columns[k]
+                cinfo.equivalents = parent_cinfo.equivalents
+                cinfo.inverses = parent_cinfo.inverses
+            # make the field equivalent to itself at least
+            cinfo.equivalents.add((self._name, k))
+
+        return result
 
     def _inherits_check(self):
         for table, field_name in self._inherits.items():
@@ -3347,6 +3358,28 @@ class BaseModel(object):
                 _logger.warning('Field definition for _inherits reference "%s" in "%s" must be marked as "required" with ondelete="cascade" or "restrict", forcing it to required + cascade.', field_name, self._name)
                 self._columns[field_name].required = True
                 self._columns[field_name].ondelete = "cascade"
+
+    def after_create_instance(self):
+        """ method called on all models after their creation """
+        # populate the set inverses in self._all_columns
+        for field, cinfo in self._all_columns.iteritems():
+            column = cinfo.column
+
+            if isinstance(column, fields.one2many):
+                # take the corresponding many2one, and mark them inverse of each other
+                other = self.pool[column._obj]
+                cinfo2 = other._all_columns[column._fields_id]
+                cinfo.inverses.update(cinfo2.equivalents)
+                cinfo2.inverses.update(cinfo.equivalents)
+
+            elif isinstance(column, fields.many2many):
+                # find the inverse many2many in the other model, and mark it as inverse
+                other = self.pool[column._obj]
+                for field2, cinfo2 in other._all_columns.iteritems():
+                    column2 = cinfo2.column
+                    if isinstance(column2, fields.many2many) and column2._rel == column._rel:
+                        cinfo.inverses.update(cinfo2.equivalents)
+                        break
 
     def fields_get(self, cr, user, allfields=None, context=None, write_access=True):
         """ Return the definition of each field.
@@ -3883,6 +3916,9 @@ class BaseModel(object):
             if ir_value_ids:
                 ir_values_obj.unlink(cr, uid, ir_value_ids, context=context)
 
+        # invalidate the cache
+        self.invalidate_cache()
+
         for order, object, store_ids, fields in result_store:
             if object != self._name:
                 obj = self.pool.get(object)
@@ -3890,9 +3926,6 @@ class BaseModel(object):
                 rids = map(lambda x: x[0], cr.fetchall())
                 if rids:
                     obj._store_set_values(cr, uid, rids, fields, context)
-
-        # invalidate all the caches
-        api.scope.invalidate_cache()
 
         return True
 
@@ -4153,9 +4186,12 @@ class BaseModel(object):
         result += self._store_get_values(cr, user, ids, vals.keys(), context)
         result.sort()
 
+        # invalidate the cache for the modified fields
+        self.invalidate_cache(vals.keys())
+
         done = {}
-        for order, object, ids_to_update, fields_to_recompute in result:
-            key = (object, tuple(fields_to_recompute))
+        for order, model_name, ids_to_update, fields_to_recompute in result:
+            key = (model_name, tuple(fields_to_recompute))
             done.setdefault(key, {})
             # avoid to do several times the same computation
             todo = []
@@ -4163,10 +4199,7 @@ class BaseModel(object):
                 if id not in done[key]:
                     done[key][id] = True
                     todo.append(id)
-            self.pool.get(object)._store_set_values(cr, user, todo, fields_to_recompute, context)
-
-        # invalidate all the caches
-        api.scope.invalidate_cache()
+            self.pool.get(model_name)._store_set_values(cr, user, todo, fields_to_recompute, context)
 
         self.step_workflow(cr, user, ids, context=context)
         return True
@@ -4365,6 +4398,9 @@ class BaseModel(object):
             if c[0].startswith('default_'):
                 del rel_context[c[0]]
 
+        # invalidate the cache for the modified fields
+        self.invalidate_cache(vals.keys())
+
         result = []
         for field in upd_todo:
             result += self._columns[field].set(cr, self, id_new, field, vals[field], user, rel_context) or []
@@ -4374,13 +4410,10 @@ class BaseModel(object):
             result += self._store_get_values(cr, user, [id_new], vals.keys(), context)
             result.sort()
             done = []
-            for order, object, ids, fields2 in result:
-                if not (object, ids, fields2) in done:
-                    self.pool.get(object)._store_set_values(cr, user, ids, fields2, context)
-                    done.append((object, ids, fields2))
-
-        # invalidate all the caches
-        api.scope.invalidate_cache()
+            for order, model_name, ids, fields2 in result:
+                if not (model_name, ids, fields2) in done:
+                    self.pool.get(model_name)._store_set_values(cr, user, ids, fields2, context)
+                    done.append((model_name, ids, fields2))
 
         if self._log_create and not (context and context.get('no_store_function', False)):
             message = self._description + \
@@ -4543,6 +4576,10 @@ class BaseModel(object):
                                 pass
                         cr.execute('update "' + self._table + '" set ' + \
                             '"'+f+'"='+self._columns[f]._symbol_set[0] + ' where id = %s', (self._columns[f]._symbol_set[1](value), id))
+
+        # invalidate the cache for the modified fields
+        self.invalidate_cache(fields)
+
         return True
 
     #
@@ -5473,6 +5510,18 @@ class BaseModel(object):
             preserving only the record identifiers (for prefetching optimizations).
         """
         api.scope.invalidate_cache()
+
+    def invalidate_cache(self, fields=None):
+        """ invalidate the cache after the given fields have been modified """
+        if fields is None:
+            api.scope.invalidate_cache()
+        else:
+            model_field_pairs = []
+            for field in fields:
+                cinfo = self._all_columns[field]
+                model_field_pairs += list(cinfo.equivalents)
+                model_field_pairs += list(cinfo.inverses)
+            api.scope.invalidate_cache(model_field_pairs)
 
 
 # for instance checking
