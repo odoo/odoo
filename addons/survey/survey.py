@@ -603,7 +603,7 @@ class survey_answer(osv.osv):
         for rec in self.browse(cr, uid, ids, context=context):
             cr.execute("select count(question_id), (select count(answer_id) \
                 from survey_response_answer sra, survey_response_line sa \
-                where sra.response_id = sa.id and sra.answer_id = %d \
+                where sra.response_line_id = sa.id and sra.answer_id = %d \
                 and sa.state='done') as tot_ans from survey_response_line \
                 where question_id = %d and state = 'done'"\
                      % (rec.id, rec.question_id.id))
