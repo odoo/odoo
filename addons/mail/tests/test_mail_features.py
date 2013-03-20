@@ -171,13 +171,16 @@ class test_mail(TestMailBase):
 
         # Attachments
         attach1_id = self.ir_attachment.create(cr, user_raoul.id, {
-            'name': 'Attach1', 'datas': 'bWlncmF0aW9uIHRlc3Q=', 'datas_fname': 'Attach1',
+            'name': 'Attach1', 'datas_fname': 'Attach1',
+            'datas': 'bWlncmF0aW9uIHRlc3Q=',
             'res_model': 'mail.compose.message', 'res_id': 0})
         attach2_id = self.ir_attachment.create(cr, user_raoul.id, {
-            'name': 'Attach2', 'datas': 'bWlncmF0aW9uIHRlc3Q=', 'datas_fname': 'Attach2',
+            'name': 'Attach2', 'datas_fname': 'Attach2',
+            'datas': 'bWlncmF0aW9uIHRlc3Q=',
             'res_model': 'mail.compose.message', 'res_id': 0})
         attach3_id = self.ir_attachment.create(cr, user_raoul.id, {
-            'name': 'Attach3', 'datas': 'bWlncmF0aW9uIHRlc3Q=', 'datas_fname': 'Attach3',
+            'name': 'Attach3', 'datas_fname': 'Attach3',
+            'datas': 'bWlncmF0aW9uIHRlc3Q=',
             'res_model': 'mail.compose.message', 'res_id': 0})
 
         # Mail data
@@ -185,7 +188,10 @@ class test_mail(TestMailBase):
         _mail_subject = 'Re: %s' % (group_pigs.name)
         _body1 = '<p>Pigs rules</p>'
         _body2 = '<html>Pigs rocks</html>'
-        _attachments = [('AttachList1', 'My first attachment'), ('AttachList2', 'My second attachment')]
+        _attachments = [
+            ('List1', 'My first attachment'),
+            ('List2', 'My second attachment')
+        ]
 
         # --------------------------------------------------
         # CASE1: post comment + partners + attachments
@@ -210,33 +216,38 @@ class test_mail(TestMailBase):
                             attachment_ids=[attach1_id, attach2_id], attachments=_attachments,
                             type='comment', subtype='mt_comment')
         msg = self.mail_message.browse(cr, uid, msg1_id)
-        msg_message_id = msg.message_id  # TDE TODO: check msg_id and references
+        msg_message_id = msg.message_id
         msg_pids = [partner.id for partner in msg.notified_partner_ids]
         msg_aids = [attach.id for attach in msg.attachment_ids]
         sent_emails = self._build_email_kwargs_list
 
         # Test: mail_message: subject and body not modified
-        self.assertEqual(_subject, msg.subject,
-                        'message_post: mail.message subject incorrect')
-        self.assertEqual(_body1, msg.body,
-                        'message_post: mail.message body incorrect')
+        self.assertEqual(_subject, msg.subject, 'message_post: mail.message subject incorrect')
+        self.assertEqual(_body1, msg.body, 'message_post: mail.message body incorrect')
         # Test: mail_message: notified_partner_ids = group followers + partner_ids - author
         test_pids = set([self.partner_admin_id, p_b_id, p_c_id])
-        self.assertEqual(test_pids, set(msg_pids), 'mail.message notified partners incorrect')
+        self.assertEqual(test_pids, set(msg_pids), 'message_post: mail.message notified partners incorrect')
         # Test: mail_message: attachments (4, attachment_ids + attachments)
         test_aids = set([attach1_id, attach2_id])
+        msg_attach_names = set([attach.name for attach in msg.attachment_ids])
+        test_attach_names = set(['Attach1', 'Attach2', 'List1', 'List2'])
         self.assertEqual(len(msg_aids), 4,
                         'message_post: mail.message wrong number of attachments')
-        self.assertTrue(test_aids.issubset(set(msg_aids)), '')
-        msg_attach_names = set([attach.name for attach in msg.attachment_ids])
-        test_attach_names = set(['Attach1', 'Attach2', 'AttachList1', 'AttachList2'])
+        self.assertEqual(msg_attach_names, test_attach_names,
+                        'message_post: mail.message attachments incorrectly added')
+        self.assertTrue(test_aids.issubset(set(msg_aids)),
+                        'message_post: mail.message attachments duplicated')
         for attach in msg.attachment_ids:
             self.assertEqual(attach.res_model, 'mail.group',
-                        'message_post: mail.message  attachments were not linked to the document')
+                            'message_post: mail.message attachments were not linked to the document')
             self.assertEqual(attach.res_id, group_pigs.id,
-                        'message_post: mail.message  attachments were not linked to the document')
-        self.assertEqual(msg_attach_names, test_attach_names,
-                        'message_post: mail.message  attachments incorrectly added')
+                            'message_post: mail.message attachments were not linked to the document')
+            if 'List' in attach.name:
+                self.assertIn((attach.name, attach.datas.decode('base64')), _attachments,
+                                'message_post: mail.message attachment name / data incorrect')
+                dl_attach = self.mail_message.download_attachment(cr, user_raoul.id, id_message=msg.id, attachment_id=attach.id)
+                self.assertIn((dl_attach['filename'], dl_attach['base64'].decode('base64')), _attachments,
+                                'message_post: mail.message download_attachment is incorrect')
 
         # Test: followers: same as before (author was already subscribed)
         group_pigs.refresh()
@@ -252,34 +263,38 @@ class test_mail(TestMailBase):
         # Test: notifications emails: to a and b, c is email only, r is author
         test_emailto = ['Administrator <a@a>', 'Bert Tartopoils <b@b>']
         self.assertEqual(len(sent_emails), 2,
-                            'message_post: notification email wrong number of send emails')
+                        'message_post: notification emails wrong number of send emails')
+        self.assertEqual(set([m['email_to'][0] for m in sent_emails]), set(test_emailto),
+                        'message_post: notification emails wrong recipients (email_to)')
         for sent_email in sent_emails:
             self.assertEqual(sent_email['email_from'], 'Raoul Grosbedon <raoul@schlouby.fr>',
-                                'message_post: notification email wrong email_from: should use alias of sender')
+                            'message_post: notification email wrong email_from: should use alias of sender')
             self.assertEqual(len(sent_email['email_to']), 1,
-                                'message_post: notification email sent to more than one email address instead of a precise partner')
-            # self.assertIn(sent_email['email_to'][0], test_emailto,  # TODO: FIX IT
-                                # 'message_post: notification email email_to incorrect')
+                            'message_post: notification email sent to more than one email address instead of a precise partner')
+            self.assertIn(sent_email['email_to'][0], test_emailto,
+                            'message_post: notification email email_to incorrect')
             self.assertEqual(sent_email['reply_to'], 'Followers of Pigs <group+pigs@schlouby.fr>',
-                                'message_post: notification email reply_to incorrect')
+                            'message_post: notification email reply_to incorrect')
             self.assertEqual(_subject, sent_email['subject'],
-                                'message_post: notification email subject incorrect')
+                            'message_post: notification email subject incorrect')
             self.assertIn(_body1, sent_email['body'],
-                                'message_post: notification email body incorrect')
+                            'message_post: notification email body incorrect')
             self.assertIn(user_raoul.signature, sent_email['body'],
-                                'message_post: notification email body should contain the sender signature')
+                            'message_post: notification email body should contain the sender signature')
             self.assertIn('Pigs rules', sent_email['body_alternative'],
-                                'message_post: notification email body alternative should contain the body')
+                            'message_post: notification email body alternative should contain the body')
             self.assertNotIn('<p>', sent_email['body_alternative'],
-                                'message_post: notification email body alternative still contains html')
+                            'message_post: notification email body alternative still contains html')
             self.assertIn(user_raoul.signature, sent_email['body_alternative'],
-                                'message_post: notification email body alternative should contain the sender signature')
+                            'message_post: notification email body alternative should contain the sender signature')
             self.assertFalse(sent_email['references'],
-                                'message_post: references should be False when sending a message that is not a reply')
+                            'message_post: references should be False when sending a message that is not a reply')
+
         # Test: notification linked to this message = group followers = notified_partner_ids
         notif_ids = self.mail_notification.search(cr, uid, [('message_id', '=', msg1_id)])
         notif_pids = set([notif.partner_id.id for notif in self.mail_notification.browse(cr, uid, notif_ids)])
-        self.assertEqual(notif_pids, test_pids, 'message_post: mail.message notification partners incorrect')
+        self.assertEqual(notif_pids, test_pids,
+                        'message_post: mail.message created mail.notification incorrect')
 
         # --------------------------------------------------
         # CASE2: reply + parent_id + parent notification
@@ -311,8 +326,8 @@ class test_mail(TestMailBase):
         notif_ids = self.mail_notification.search(cr, uid, [('message_id', '=', msg2_id)])
         notif_pids = [notif.partner_id.id for notif in self.mail_notification.browse(cr, uid, notif_ids)]
         self.assertEqual(set(test_pids), set(notif_pids), 'message_post: mail.message notification partners incorrect')
-        # Test: mail_mail: notifications deleted
 
+        # Test: mail_mail: notifications deleted
         self.assertFalse(self.mail_mail.search(cr, uid, [('mail_message_id', '=', msg2_id)]), 'mail.mail notifications should have been auto-deleted!')
 
         # Test: emails send by server (to a, b, c, d)
@@ -320,43 +335,33 @@ class test_mail(TestMailBase):
         # self.assertEqual(len(sent_emails), 3, 'sent_email number of sent emails incorrect')
         for sent_email in sent_emails:
             self.assertEqual(sent_email['email_from'], 'Raoul Grosbedon <r@r>',
-                                'message_post: notification email wrong email_from: should use email of sender')
+                            'message_post: notification email wrong email_from: should use email of sender when no alias domain set')
             self.assertEqual(len(sent_email['email_to']), 1,
-                                'message_post: notification email sent to more than one email address instead of a precise partner')
-            # self.assertIn(sent_email['email_to'][0], test_emailto,  # TDE TODO: FIX IT
-                                # 'message_post: notification email email_to incorrect')
-            # TDE TODO/ TEST REPLY TO
+                            'message_post: notification email sent to more than one email address instead of a precise partner')
+            self.assertIn(sent_email['email_to'][0], test_emailto,
+                            'message_post: notification email email_to incorrect')
+            self.assertEqual(sent_email['reply_to'], 'Followers of Pigs <r@r>',
+                            'message_post: notification email reply_to incorrect: should name Followers of Pigs, and have raoul email')
             self.assertEqual(_mail_subject, sent_email['subject'],
-                                'message_post: notification email subject incorrect')
+                            'message_post: notification email subject incorrect')
             self.assertIn(html_sanitize(_body2), sent_email['body'],
-                                'message_post: notification email does not contain the body')
+                            'message_post: notification email does not contain the body')
             self.assertIn(user_raoul.signature, sent_email['body'],
-                                'message_post: notification email body should contain the sender signature')
+                            'message_post: notification email body should contain the sender signature')
             self.assertIn('Pigs rocks', sent_email['body_alternative'],
-                                'message_post: notification email body alternative should contain the body')
+                            'message_post: notification email body alternative should contain the body')
             self.assertNotIn('<p>', sent_email['body_alternative'],
-                                'message_post: notification email body alternative still contains html')
+                            'message_post: notification email body alternative still contains html')
             self.assertIn(user_raoul.signature, sent_email['body_alternative'],
-                                'message_post: notification email body alternative should contain the sender signature')
+                            'message_post: notification email body alternative should contain the sender signature')
+            self.assertIn(msg_message_id, sent_email['references'],
+                            'message_post: notification email references lacks parent message message_id')
         # Test: attachments + download
         for attach in msg.attachment_ids:
-            self.assertEqual(attach.res_model, 'mail.group', 'message_post: mail.message attachment res_model incorrect')
-            self.assertEqual(attach.res_id, self.group_pigs_id, 'message_post: mail.message attachment res_id incorrect')
-            # todo: decode content
-            if 'Attach' in attach.name:
-                continue
-            # self.assertIn(_mail_body2, sent_email['body'], 'sent_email body incorrect')
-            # self.assertIn(_mail_signature2, sent_email['body'], 'sent_email body incorrect (no signature)')
-            # self.assertIn("OpenERP", sent_email['body'], 'sent_email body incorrect (no OpenERP company)')
-            # body_alternative
-            # self.assertIn(_mail_bodyalt2, sent_email['body_alternative'], 'sent_email body_alternative is incorrect')
-            # self.assertIn(_mail_signaturealt2, sent_email['body_alternative'], 'sent_email body_alternative is incorrect (no signature)')
-            # self.assertIn("OpenERP", sent_email['body'], 'sent_email body incorrect (no OpenERP company)')
-        # Test: mail_message: notified_partner_ids = group followers
-            self.assertIn((attach.name, attach.datas.decode('base64')), _attachments,
-                            'message_post: mail.message attachment name / data incorrect')
-            dl_attach = self.mail_message.download_attachment(cr, user_raoul.id, id_message=msg.id, attachment_id=attach.id)
-            self.assertIn((dl_attach['filename'], dl_attach['base64'].decode('base64')), _attachments, 'mail.message download_attachment is incorrect')
+            self.assertEqual(attach.res_model, 'mail.group',
+                            'message_post: mail.message attachment res_model incorrect')
+            self.assertEqual(attach.res_id, self.group_pigs_id,
+                            'message_post: mail.message attachment res_id incorrect')
 
         # Test: Dédé has been notified -> should also have been notified of the parent message
         msg = self.mail_message.browse(cr, uid, msg1_id)
