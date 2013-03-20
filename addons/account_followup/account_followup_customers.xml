@@ -17,11 +17,23 @@
                     <field name="parent_id" invisible="1"/>
                     <field name="payment_responsible_id"/>
                     <field name="payment_earliest_due_date"/>
+                    <field name="latest_followup_level_id"/>
                     <field name="payment_amount_overdue"/>
                     <field name="payment_amount_due" />
                 </tree>
             </field>
         </record>
+
+        <record id="view_partner_inherit_customer_followup_tree" model="ir.ui.view">
+            <field name="name">res.partner.followup.inherit.tree</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="base.view_partner_tree"/>
+            <field name="arch" type="xml">
+                 <field name="name" position="after">
+                     <field name="payment_responsible_id" invisible="1"/>
+                 </field>
+             </field>
+         </record>
 
         <record id="customer_followup_search_view" model="ir.ui.view">
             <field name="name">Search</field>
@@ -39,6 +51,7 @@
                     </group>
                     <group expand="1" string="Group By...">
                         <filter string="Follow-up Responsible" context="{'group_by':'payment_responsible_id'}"/>
+                        <filter string="Followup Level" context="{'group_by':'latest_followup_level_id'}"/>
                     </group>
                 </search>
             </field>

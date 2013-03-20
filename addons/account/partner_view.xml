@@ -95,6 +95,7 @@
                     </group>
                     <field name="bank_ids" context="{'default_partner_id': active_id, 'form_view_ref': 'base.view_partner_bank_form'}">
                         <tree string="Bank Details">
+                            <field name="state" invisible="1"/>
                             <field name="sequence" invisible="1"/>
                             <field name="acc_number"/>
                             <field name="bank_name"/>

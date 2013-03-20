@@ -112,43 +112,43 @@ class AddLang(unohelper.Base, XJobExecutor ):
             text=cursor.getText()
             tcur=text.createTextCursorByRange(cursor)
 
-	    self.aVariableList.extend( filter( lambda obj: obj[:obj.find("(")] == "Objects", self.aObjectList ) )
+            self.aVariableList.extend( filter( lambda obj: obj[:obj.find("(")] == "Objects", self.aObjectList ) )
 
             for i in range(len(self.aItemList)):
-		anItem = self.aItemList[i][1]
-		component = self.aComponentAdd[i]
+                anItem = self.aItemList[i][1]
+                component = self.aComponentAdd[i]
 
                 if component == "Document":
-		    sLVal = anItem[anItem.find(",'") + 2:anItem.find("')")]
-		    self.aVariableList.extend( filter( lambda obj: obj[:obj.find("(")] == sLVal, self.aObjectList ) )
+                    sLVal = anItem[anItem.find(",'") + 2:anItem.find("')")]
+                    self.aVariableList.extend( filter( lambda obj: obj[:obj.find("(")] == sLVal, self.aObjectList ) )
 
                 if tcur.TextSection:
                     getRecersiveSection(tcur.TextSection,self.aSectionList)
                     if component in self.aSectionList:
-			sLVal = anItem[anItem.find(",'") + 2:anItem.find("')")]
-			self.aVariableList.extend( filter( lambda obj: obj[:obj.find("(")] == sLVal, self.aObjectList ) )
+                        sLVal = anItem[anItem.find(",'") + 2:anItem.find("')")]
+                        self.aVariableList.extend( filter( lambda obj: obj[:obj.find("(")] == sLVal, self.aObjectList ) )
 
                 if tcur.TextTable:
-		    if not component == "Document" and component[component.rfind(".") + 1:] == tcur.TextTable.Name:
+                    if not component == "Document" and component[component.rfind(".") + 1:] == tcur.TextTable.Name:
                         VariableScope(tcur,self.insVariable,self.aObjectList,self.aComponentAdd,self.aItemList,component)
 
             self.bModify=bFromModify
             if self.bModify==True:
                 sItem=""
-		for anObject in self.aObjectList:
-		    if anObject[:anObject.find("(")] == sVariable:
-			sItem = anObject
-			self.insVariable.setText( sItem )
-		genTree(sItem[sItem.find("(")+1:sItem.find(")")],self.aListFields, self.insField,self.sMyHost,2,ending_excl=['one2many','many2one','many2many','reference'], recur=['many2one'])
+                for anObject in self.aObjectList:
+                    if anObject[:anObject.find("(")] == sVariable:
+                        sItem = anObject
+                        self.insVariable.setText( sItem )
+                genTree(sItem[sItem.find("(")+1:sItem.find(")")],self.aListFields, self.insField,self.sMyHost,2,ending_excl=['one2many','many2one','many2many','reference'], recur=['many2one'])
                 self.sValue= self.win.getListBoxItem("lstFields",self.aListFields.index(sFields))
 
             for var in self.aVariableList:
 
-		    self.model_ids = self.sock.execute(database, uid, self.password, 'ir.model' ,  'search', [('model','=',var[var.find("(")+1:var.find(")")])])
+                    self.model_ids = self.sock.execute(database, uid, self.password, 'ir.model' ,  'search', [('model','=',var[var.find("(")+1:var.find(")")])])
                     fields=['name','model']
                     self.model_res = self.sock.execute(database, uid, self.password, 'ir.model', 'read', self.model_ids,fields)
                     if self.model_res <> []:
-			self.insVariable.addItem(var[:var.find("(")+1] + self.model_res[0]['name'] + ")" ,self.insVariable.getItemCount())
+                        self.insVariable.addItem(var[:var.find("(")+1] + self.model_res[0]['name'] + ")" ,self.insVariable.getItemCount())
                     else:
                         self.insVariable.addItem(var ,self.insVariable.getItemCount())
 
@@ -165,15 +165,15 @@ class AddLang(unohelper.Base, XJobExecutor ):
             docinfo=doc.getDocumentInfo()
             sItem= self.win.getComboBoxText("cmbVariable")
             for var in self.aVariableList:
-		if var[:var.find("(")+1]==sItem[:sItem.find("(")+1]:
+                if var[:var.find("(")+1]==sItem[:sItem.find("(")+1]:
                     sItem = var
             sMain=self.aListFields[self.win.getListBoxSelectedItemPos("lstFields")]
             t=sMain.rfind('/lang')
             if t!=-1:
-		sObject=self.getRes(self.sock,sItem[sItem.find("(")+1:-1],sMain[1:])
+                sObject=self.getRes(self.sock,sItem[sItem.find("(")+1:-1],sMain[1:])
                 ids = self.sock.execute(database, uid, self.password, sObject ,  'search', [])
                 res = self.sock.execute(database, uid, self.password, sObject , 'read',[ids[0]])
-		self.win.setEditText("txtUName",res[0][sMain[sMain.rfind("/")+1:]])
+                self.win.setEditText("txtUName",res[0][sMain[sMain.rfind("/")+1:]])
             else:
                  ErrorDialog("Please select a language.")
 
@@ -192,13 +192,13 @@ class AddLang(unohelper.Base, XJobExecutor ):
         key.sort()
         myval=None
         if not sVar.find("/")==-1:
-	    myval=sVar[:sVar.find("/")]
+            myval=sVar[:sVar.find("/")]
         else:
             myval=sVar
         if myval in key:
             if (res[myval]['type'] in ['many2one']):
                 sObject = res[myval]['relation']
-		return self.getRes(sock,res[myval]['relation'], sVar[sVar.find("/")+1:])
+                return self.getRes(sock,res[myval]['relation'], sVar[sVar.find("/")+1:])
             else:
                 return sObject
 
@@ -213,18 +213,18 @@ class AddLang(unohelper.Base, XJobExecutor ):
                 self.aListFields=[]
                 tempItem = self.win.getComboBoxText("cmbVariable")
                 for var in self.aVariableList:
-		    if var[:var.find("(")] == tempItem[:tempItem.find("(")]:
+                    if var[:var.find("(")] == tempItem[:tempItem.find("(")]:
                         sItem=var
 
-		genTree(
-		    sItem[ sItem.find("(") + 1:sItem.find(")")],
-		    self.aListFields,
-		    self.insField,
-		    self.sMyHost,
-		    2,
-		    ending_excl=['one2many','many2one','many2many','reference'],
-		    recur=['many2one']
-		)
+                genTree(
+                    sItem[ sItem.find("(") + 1:sItem.find(")")],
+                    self.aListFields,
+                    self.insField,
+                    self.sMyHost,
+                    2,
+                    ending_excl=['one2many','many2one','many2many','reference'],
+                    recur=['many2one']
+                )
 
             except:
                 import traceback;traceback.print_exc()

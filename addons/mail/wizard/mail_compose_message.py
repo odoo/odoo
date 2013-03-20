@@ -113,6 +113,12 @@ class mail_compose_message(osv.TransientModel):
         'partner_ids': fields.many2many('res.partner',
             'mail_compose_message_res_partner_rel',
             'wizard_id', 'partner_id', 'Additional contacts'),
+        'post': fields.boolean('Post a copy in the document',
+            help='Post a copy of the message on the document communication history.'),
+        'notify': fields.boolean('Notify followers',
+            help='Notify followers of the document'),
+        'same_thread': fields.boolean('Replies in the document',
+            help='Replies to the messages will go into the selected document.'),
         'attachment_ids': fields.many2many('ir.attachment',
             'mail_compose_message_ir_attachments_rel',
             'wizard_id', 'attachment_id', 'Attachments'),
@@ -121,9 +127,13 @@ class mail_compose_message(osv.TransientModel):
 
     _defaults = {
         'composition_mode': 'comment',
+        'email_from': lambda self, cr, uid, ctx={}: self.pool.get('mail.mail')._get_default_from(cr, uid, context=ctx),
         'body': lambda self, cr, uid, ctx={}: '',
         'subject': lambda self, cr, uid, ctx={}: False,
         'partner_ids': lambda self, cr, uid, ctx={}: [],
+        'notify': lambda self, cr, uid, ctx={}: False,
+        'post': lambda self, cr, uid, ctx={}: True,
+        'same_thread': lambda self, cr, uid, ctx={}: True,
     }
 
     def _notify(self, cr, uid, newid, context=None):
@@ -191,9 +201,12 @@ class mail_compose_message(osv.TransientModel):
         if context is None:
             context = {}
         active_ids = context.get('active_ids')
+        is_log = context.get('mail_compose_log', False)
 
         for wizard in self.browse(cr, uid, ids, context=context):
             mass_mail_mode = wizard.composition_mode == 'mass_mail'
+            if mass_mail_mode:  # mass mail: avoid any auto subscription because this could lead to people being follower of plenty of documents
+                context['mail_create_nosubscribe'] = True
             active_model_pool = self.pool.get(wizard.model if wizard.model else 'mail.thread')
 
             # wizard works in batch mode: [res_id] or active_ids
@@ -204,26 +217,39 @@ class mail_compose_message(osv.TransientModel):
                     'subject': wizard.subject,
                     'body': wizard.body,
                     'parent_id': wizard.parent_id and wizard.parent_id.id,
-                    'partner_ids': [(4, partner.id) for partner in wizard.partner_ids],
+                    'partner_ids': [partner.id for partner in wizard.partner_ids],
                     'attachments': [(attach.datas_fname or attach.name, base64.b64decode(attach.datas)) for attach in wizard.attachment_ids],
                 }
                 # mass mailing: render and override default values
                 if mass_mail_mode and wizard.model:
                     email_dict = self.render_message(cr, uid, wizard, res_id, context=context)
                     new_partner_ids = email_dict.pop('partner_ids', [])
-                    post_values['partner_ids'] += [(4, partner_id) for partner_id in new_partner_ids]
+                    post_values['partner_ids'] += new_partner_ids
                     new_attachments = email_dict.pop('attachments', [])
                     post_values['attachments'] += new_attachments
                     post_values.update(email_dict)
-                # automatically subscribe recipients if asked to
-                if context.get('mail_post_autofollow') and wizard.model and post_values.get('partner_ids'):
-                    active_model_pool.message_subscribe(cr, uid, [res_id], [item[1] for item in post_values.get('partner_ids')], context=context)
+                    # email_from: mass mailing only can specify another email_from
+                    if email_dict.get('email_from'):
+                        post_values['email_from'] = email_dict.pop('email_from')
+                    # replies redirection: mass mailing only
+                    if not wizard.same_thread:
+                        post_values['reply_to'] = email_dict.pop('reply_to')
+                # clean the context (hint: mass mailing sets some default values that
+                # could be wrongly interpreted by mail_mail)
+                context.pop('default_email_to', None)
+                context.pop('default_partner_ids', None)
                 # post the message
-                active_model_pool.message_post(cr, uid, [res_id], type='comment', subtype='mt_comment', context=context, **post_values)
-
-            # post process: update attachments, because id is not necessarily known when adding attachments in Chatter
-            # self.pool.get('ir.attachment').write(cr, uid, [attach.id for attach in wizard.attachment_ids], {
-            #     'res_id': wizard.id, 'res_model': wizard.model or False}, context=context)
+                if mass_mail_mode and not wizard.post:
+                    post_values['recipient_ids'] = [(4, id) for id in post_values.pop('partner_ids', [])]
+                    self.pool.get('mail.mail').create(cr, uid, post_values, context=context)
+                else:
+                    subtype = 'mail.mt_comment'
+                    if is_log or (mass_mail_mode and not wizard.notify):
+                        subtype = False
+                    msg_id = active_model_pool.message_post(cr, uid, [res_id], type='comment', subtype=subtype, context=context, **post_values)
+                    # mass_mailing, post without notify: notify specific partners
+                    if mass_mail_mode and not wizard.notify and post_values['partner_ids']:
+                        self.pool.get('mail.notification')._notify(cr, uid, msg_id, post_values['partner_ids'], context=context)
 
         return {'type': 'ir.actions.act_window_close'}
 
@@ -234,6 +260,8 @@ class mail_compose_message(osv.TransientModel):
         return {
             'subject': self.render_template(cr, uid, wizard.subject, wizard.model, res_id, context),
             'body': self.render_template(cr, uid, wizard.body, wizard.model, res_id, context),
+            'email_from': self.render_template(cr, uid, wizard.email_from, wizard.model, res_id, context),
+            'reply_to': self.render_template(cr, uid, wizard.reply_to, wizard.model, res_id, context),
         }
 
     def render_template(self, cr, uid, template, model, res_id, context=None):
@@ -258,7 +286,7 @@ class mail_compose_message(osv.TransientModel):
             result = eval(exp, {
                 'user': self.pool.get('res.users').browse(cr, uid, uid, context=context),
                 'object': self.pool.get(model).browse(cr, uid, res_id, context=context),
-                'context': dict(context), # copy context to prevent side-effects of eval
+                'context': dict(context),  # copy context to prevent side-effects of eval
                 })
             return result and tools.ustr(result) or ''
         return template and EXPRESSION_PATTERN.sub(merge, template)
