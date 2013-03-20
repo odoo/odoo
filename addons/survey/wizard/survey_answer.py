@@ -342,9 +342,6 @@ class survey_question_wiz(osv.osv_memory):
             total_pages = len(p_id)
             pre_button = False
 
-            if not sur_name_rec.page_no + 1:
-                self.write(cr, uid, [wiz_id], {'store_ans': {}})
-
             sur_name_read = self.browse(cr, uid, context['wizard_id'], context=context)
             page_number = int(sur_name_rec.page_no)
 
@@ -522,18 +519,16 @@ class survey_question_wiz(osv.osv_memory):
             if context.get('edit', False):
                 return value
 
-            sur_name_read = self.read(cr, uid, context.get('wizard_id', False), context=context)
-
-            for key, val in safe_eval(sur_name_read.get('store_ans', "{}")).items():
-                for field in fields_list:
-                    if field in list(val):
-                        value[field] = val[field]
         return value
 
     def create(self, cr, uid, vals, context=None):
         """
         Create the Answer of survey and store in survey.response object, and if set validation of question then check the value of question if value is wrong then raise the exception.
         """
+
+        if 'page_no' in vals:
+            return super(survey_question_wiz, self).create(cr, uid, vals, context=context)
+
         context = context or {}
         response_info = self.get_response_info_from_token(cr, uid, context['survey_id'], context.get("survey_token"), context)
         vals['survey_id'] = context['survey_id']
@@ -578,9 +573,8 @@ class survey_question_wiz(osv.osv_memory):
                 continue
             que_li.append(que_id)
 
-            if not vals.get('page_no'):
-                ids = resp_obj.search(cr, SUPERUSER_ID, [('response_id', '=', response_id), ('question_id', '=', que_id)], context=context)
-                resp_obj.unlink(cr, SUPERUSER_ID, ids, context=context)
+            ids = resp_obj.search(cr, SUPERUSER_ID, [('response_id', '=', response_id), ('question_id', '=', que_id)], context=context)
+            resp_obj.unlink(cr, SUPERUSER_ID, ids, context=context)
 
             que_rec = que_obj.read(cr, SUPERUSER_ID, [que_id], context=context)[0]
             res_data = {
@@ -964,22 +958,8 @@ class survey_question_wiz(osv.osv_memory):
         # check if the user must be authenticate
         survey_browse = self.pool.get('survey').browse(cr, SUPERUSER_ID, context['survey_id'], context=context)
         anonymous = self.check_anonymous(cr, uid, [uid], context=context)
-
         if anonymous and survey_browse.state == "open" and survey_browse.authenticate:
-            return {
-                'type': 'ir.actions.client',
-                'tag': 'login',
-                'context': context,
-                'params': {
-                    'login_successful': '#%s' % urlencode({
-                        'active_id': context['survey_id'],
-                        'action': 'survey.action_filling',
-                        'params': context['survey_token'],
-                    })
-                },
-            }
-
-        # TODO : Add "force_login" in context act_window
+            context.update({'force_login': True})
 
         self.get_response_info_from_token(cr, uid, context['survey_id'], context['survey_token'], context=context)
         return {
