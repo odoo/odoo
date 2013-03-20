@@ -13,8 +13,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-12-22 05:50+0000\n"
-"X-Generator: Launchpad (build 16378)\n"
+"X-Launchpad-Export-Date: 2013-03-16 05:33+0000\n"
+"X-Generator: Launchpad (build 16532)\n"
 
 #. module: account_voucher
 #: field:account.bank.statement.line,voucher_id:0
@@ -27,7 +27,7 @@ msgid "account.config.settings"
 msgstr "account.config.settings"
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:357
+#: code:addons/account_voucher/account_voucher.py:369
 #, python-format
 msgid "Write-Off"
 msgstr "Boek af"
@@ -45,7 +45,7 @@ msgstr "Totaalbedrag"
 #. module: account_voucher
 #: view:account.voucher:0
 msgid "Open Customer Journal Entries"
-msgstr "Open klant journaalposten"
+msgstr "Open klantboekingen"
 
 #. module: account_voucher
 #: view:account.voucher:0
@@ -59,13 +59,13 @@ msgid ""
 "Computed as the difference between the amount stated in the voucher and the "
 "sum of allocation on the voucher lines."
 msgstr ""
-"Berekend als het verschil tussen het bedrag genoemd op de bon en de som van "
-"de toewijzingen op de bonregels."
+"Berekend als het verschil tussen het bedrag genoemd op het betaalbewijs en "
+"de som van de toewijzingen op de regels."
 
 #. module: account_voucher
 #: view:account.voucher:0
 msgid "(Update)"
-msgstr "(Update)"
+msgstr "(bijwerken)"
 
 #. module: account_voucher
 #: view:account.voucher:0
@@ -82,7 +82,7 @@ msgstr "Importeer invoerregels"
 #. module: account_voucher
 #: view:account.voucher:0
 msgid "Voucher Entry"
-msgstr "Boeken bonnen"
+msgstr "Betaalbewijs ingeven"
 
 #. module: account_voucher
 #: selection:sale.receipt.report,month:0
@@ -102,7 +102,7 @@ msgstr "Betaal rekening"
 #. module: account_voucher
 #: view:account.voucher:0
 msgid "Are you sure you want to cancel this receipt?"
-msgstr ""
+msgstr "Weet u zeker dat u deze bon wilt annuleren?"
 
 #. module: account_voucher
 #: view:account.voucher:0
@@ -128,15 +128,17 @@ msgstr "Verkoper"
 #. module: account_voucher
 #: view:account.voucher:0
 msgid "Voucher Statistics"
-msgstr "Bon analyses"
+msgstr "Betaalbewijs analyses"
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:1533
+#: code:addons/account_voucher/account_voucher.py:1547
 #, python-format
 msgid ""
 "You can not change the journal as you already reconciled some statement "
 "lines!"
 msgstr ""
+"Het is niet mogelijk het dagboek te wijzigen, omdat u al afschriftregels "
+"heeft afgeletterd!"
 
 #. module: account_voucher
 #: view:account.voucher:0
@@ -147,7 +149,7 @@ msgstr "Valideren"
 #: model:ir.actions.act_window,name:account_voucher.action_vendor_payment
 #: model:ir.ui.menu,name:account_voucher.menu_action_vendor_payment
 msgid "Supplier Payments"
-msgstr ""
+msgstr "Leverancierbetalingen"
 
 #. module: account_voucher
 #: model:ir.actions.act_window,help:account_voucher.action_purchase_receipt
@@ -160,11 +162,18 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Klik om een aankoopbewijs te registreren. \n"
+"              </p><p>\n"
+"                Wanneer een inkoopbon is bevestigd, kunt u de \n"
+"                betaling aan uw leverancier vastleggen.\n"
+"              </p>\n"
+"            "
 
 #. module: account_voucher
 #: view:account.voucher:0
 msgid "Search Vouchers"
-msgstr "Zoek bonnen"
+msgstr "Zoek betaalbewijzen"
 
 #. module: account_voucher
 #: field:account.voucher,writeoff_acc_id:0
@@ -215,7 +224,7 @@ msgstr "Berichten"
 #: model:ir.actions.act_window,name:account_voucher.action_purchase_receipt
 #: model:ir.ui.menu,name:account_voucher.menu_action_purchase_receipt
 msgid "Purchase Receipts"
-msgstr ""
+msgstr "Aankoopbewijs"
 
 #. module: account_voucher
 #: field:account.voucher.line,move_line_id:0
@@ -223,8 +232,8 @@ msgid "Journal Item"
 msgstr "Journaal item"
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:496
-#: code:addons/account_voucher/account_voucher.py:967
+#: code:addons/account_voucher/account_voucher.py:508
+#: code:addons/account_voucher/account_voucher.py:981
 #, python-format
 msgid "Error!"
 msgstr "Fout!"
@@ -237,7 +246,7 @@ msgstr "Bedrag"
 #. module: account_voucher
 #: view:account.voucher:0
 msgid "Payment Options"
-msgstr "Betaal mogelijkheden"
+msgstr "Betaal opties"
 
 #. module: account_voucher
 #: view:account.voucher:0
@@ -251,7 +260,7 @@ msgid "Cancelled"
 msgstr "Geannuleerd"
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:1139
+#: code:addons/account_voucher/account_voucher.py:1153
 #, python-format
 msgid ""
 "You have to configure account base code and account tax code on the '%s' tax!"
@@ -271,6 +280,13 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Klik om een betaalbewijs aan te maken.\n"
+"              </p><p>\n"
+"                Wanneer een betaalbewijs is bevestigd, kunt u de \n"
+"                betaling van uw klant vastleggen.\n"
+"              </p>\n"
+"            "
 
 #. module: account_voucher
 #: help:account.voucher,message_unread:0
@@ -289,12 +305,13 @@ msgid "Day"
 msgstr "Dag"
 
 #. module: account_voucher
+#: view:account.voucher:0
 #: field:account.voucher,tax_id:0
 msgid "Tax"
 msgstr "Belasting"
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:867
+#: code:addons/account_voucher/account_voucher.py:879
 #, python-format
 msgid "Invalid Action!"
 msgstr "Ongeldige actie!"
@@ -332,7 +349,7 @@ msgstr "Betalingsinformatie"
 #. module: account_voucher
 #: view:account.voucher:0
 msgid "(update)"
-msgstr "(update)"
+msgstr "(bijwerken)"
 
 #. module: account_voucher
 #: view:account.voucher:0
@@ -348,10 +365,10 @@ msgid "Import Invoices"
 msgstr "Importeer facturen"
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:1098
+#: code:addons/account_voucher/account_voucher.py:1112
 #, python-format
 msgid "Wrong voucher line"
-msgstr ""
+msgstr "Verkeerde regel van het betaalbewijs"
 
 #. module: account_voucher
 #: selection:account.voucher,pay_now:0
@@ -364,16 +381,19 @@ msgstr "Betaal later"
 #: selection:account.voucher,type:0
 #: selection:sale.receipt.report,type:0
 msgid "Receipt"
-msgstr "Ontvangstbewijs"
+msgstr "Betaalbewijs"
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:1004
+#: code:addons/account_voucher/account_voucher.py:1018
 #, python-format
 msgid ""
 "You should configure the 'Gain Exchange Rate Account' in the accounting "
 "settings, to manage automatically the booking of accounting entries related "
 "to differences between exchange rates."
 msgstr ""
+"U dient de 'wisselkoers winst rekening' in te stellen in de financiële "
+"instellingen, om automatisch de boekingen te kunnen maken tussen twee "
+"verschillende valuta's."
 
 #. module: account_voucher
 #: view:account.voucher:0
@@ -388,7 +408,7 @@ msgstr "Periode"
 
 #. module: account_voucher
 #: view:account.voucher:0
-#: code:addons/account_voucher/account_voucher.py:199
+#: code:addons/account_voucher/account_voucher.py:211
 #, python-format
 msgid "Supplier"
 msgstr "Leverancier"
@@ -396,7 +416,7 @@ msgstr "Leverancier"
 #. module: account_voucher
 #: view:account.voucher:0
 msgid "Supplier Voucher"
-msgstr "Leveranciersbon"
+msgstr "Betaalbewijs"
 
 #. module: account_voucher
 #: field:account.voucher,message_follower_ids:0
@@ -409,16 +429,16 @@ msgid "Debit"
 msgstr "Debet"
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:1533
+#: code:addons/account_voucher/account_voucher.py:1547
 #, python-format
 msgid "Unable to change journal !"
-msgstr ""
+msgstr "Niet mogelijk om het dagboek te wijzigen!"
 
 #. module: account_voucher
 #: view:sale.receipt.report:0
 #: field:sale.receipt.report,nbr:0
 msgid "# of Voucher Lines"
-msgstr "# bonregels"
+msgstr "# betaalbewijs regels"
 
 #. module: account_voucher
 #: view:sale.receipt.report:0
@@ -429,13 +449,13 @@ msgstr "Soort"
 #. module: account_voucher
 #: view:sale.receipt.report:0
 msgid "Pro-forma Vouchers"
-msgstr "Pro-forma bonnen"
+msgstr "Pro-forma betaalbewijzen"
 
 #. module: account_voucher
 #: view:account.voucher:0
 #: model:ir.actions.act_window,name:account_voucher.act_journal_voucher_open
 msgid "Voucher Entries"
-msgstr "Boekingen bonnen"
+msgstr "Betaalbewijs regels"
 
 #. module: account_voucher
 #: model:ir.actions.act_window,help:account_voucher.action_vendor_payment
@@ -448,16 +468,23 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Klik hier om een leveranciersbetaling aan te maken.\n"
+"              </p><p>\n"
+"                OpenERP helpt u bij het maken van betalingen aan uw "
+"leverancier.\n"
+"              </p>\n"
+"            "
 
 #. module: account_voucher
 #: view:account.voucher:0
 msgid "Open Supplier Journal Entries"
-msgstr "Open leveranciers journaalposten"
+msgstr "Open leveranciersboekingen"
 
 #. module: account_voucher
 #: model:ir.actions.act_window,name:account_voucher.action_review_voucher_list
 msgid "Vouchers Entries"
-msgstr "Boekingen bonnen"
+msgstr "Betaalbewijs regels"
 
 #. module: account_voucher
 #: field:account.voucher,name:0
@@ -472,7 +499,7 @@ msgstr "Weet u zeker dat u het afletteren van deze regel wilt afbreken?"
 #. module: account_voucher
 #: field:account.voucher,is_multi_currency:0
 msgid "Multi Currency Voucher"
-msgstr "Multi valuta bon"
+msgstr "Betaalbewijs met meerdere valuta"
 
 #. module: account_voucher
 #: view:account.voucher:0
@@ -496,6 +523,15 @@ msgid ""
 "\n"
 "* The 'Cancelled' status is used when user cancel voucher."
 msgstr ""
+" * De status 'Concept' wordt gebruikt wanneer een gebruiker een nieuwe en "
+"onbevestigde betaalbewijs ingeeft.\n"
+"* De status 'Pro-forma' wordt gebruikt het betaalbewijs in Pro-forma-status "
+"is. Het betaalbewijs heeft geen nummer.\n"
+"* De status 'Geboekt' wordt gebruikt wanneer de gebruiker het betaalbewijs "
+"aanmaakt, het nummer wordt gegenereerd en de betaalbewijs regel worden "
+"gemaakt in de boekhouding\n"
+"* De status 'Geannuleerd' wordt gebruikt wanneer de gebruiker het "
+"betaalbewijs annuleerd."
 
 #. module: account_voucher
 #: field:account.voucher,writeoff_amount:0
@@ -515,7 +551,7 @@ msgid "Pay Invoice"
 msgstr "Betaling factuur"
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:1139
+#: code:addons/account_voucher/account_voucher.py:1153
 #, python-format
 msgid "No Account Base Code and Account Tax Code!"
 msgstr "Geen financiële rekening en fiscale rekening gedefinieerd!"
@@ -528,7 +564,7 @@ msgstr "Belastingbedrag"
 #. module: account_voucher
 #: view:sale.receipt.report:0
 msgid "Validated Vouchers"
-msgstr "Gevalideerde bonnen"
+msgstr "Gevalideerde betaalbewijzen"
 
 #. module: account_voucher
 #: model:ir.actions.act_window,help:account_voucher.action_vendor_receipt
@@ -545,12 +581,22 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Klik om een nieuwe betaling te registreren. \n"
+"              </p><p>\n"
+"                Geef de klant en de betaalwijze in en maak dan, of \n"
+"                handmatig een betaalregel aan of laat OpenERP voorstellen \n"
+"                om automatisch de betaling af te letteren tegen de "
+"openstaande\n"
+"                facturen of betaalbewijzen.\n"
+"              </p>\n"
+"            "
 
 #. module: account_voucher
 #: field:account.config.settings,expense_currency_exchange_account_id:0
 #: field:res.company,expense_currency_exchange_account_id:0
 msgid "Loss Exchange Rate Account"
-msgstr ""
+msgstr "Wisselkoers verlies rekening"
 
 #. module: account_voucher
 #: view:account.voucher:0
@@ -569,21 +615,24 @@ msgid "To Review"
 msgstr "Na te kijken"
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:1011
 #: code:addons/account_voucher/account_voucher.py:1025
-#: code:addons/account_voucher/account_voucher.py:1180
+#: code:addons/account_voucher/account_voucher.py:1039
+#: code:addons/account_voucher/account_voucher.py:1194
 #, python-format
 msgid "change"
 msgstr "wijziging"
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:1000
+#: code:addons/account_voucher/account_voucher.py:1014
 #, python-format
 msgid ""
 "You should configure the 'Loss Exchange Rate Account' in the accounting "
 "settings, to manage automatically the booking of accounting entries related "
 "to differences between exchange rates."
 msgstr ""
+"U dient de 'wisselkoers verlies rekening' in te stellen in de financiële "
+"instellingen, om automatisch de boekingen te kunnen maken tussen twee "
+"verschillende valuta's."
 
 #. module: account_voucher
 #: view:account.voucher:0
@@ -593,7 +642,7 @@ msgstr "Declaratieregels"
 #. module: account_voucher
 #: view:account.voucher:0
 msgid "Sale voucher"
-msgstr ""
+msgstr "Betaalbewijs"
 
 #. module: account_voucher
 #: help:account.voucher,is_multi_currency:0
@@ -601,13 +650,13 @@ msgid ""
 "Fields with internal purpose only that depicts if the voucher is a multi "
 "currency one or not"
 msgstr ""
-"Velden voor intern gebruik die alleen aangeven of de bon meerdere valuta "
-"heeft"
+"Velden voor intern gebruik die alleen aangeven of een betaalbewijs meerdere "
+"valuta heeft"
 
 #. module: account_voucher
 #: view:account.invoice:0
 msgid "Register Payment"
-msgstr ""
+msgstr "Betaling registreren"
 
 #. module: account_voucher
 #: field:account.statement.from.invoice.lines,line_ids:0
@@ -645,17 +694,18 @@ msgstr "Schulden en vorderingen"
 #. module: account_voucher
 #: view:account.voucher:0
 msgid "Voucher Payment"
-msgstr ""
+msgstr "Betaalbewijs betaling"
 
 #. module: account_voucher
 #: field:sale.receipt.report,state:0
 msgid "Voucher Status"
-msgstr ""
+msgstr "Betaalbewijs status"
 
 #. module: account_voucher
 #: view:account.voucher:0
 msgid "Are you sure to unreconcile this record?"
 msgstr ""
+"Weet u zeker dat u van deze regel de aflettering ongedaan wilt maken?"
 
 #. module: account_voucher
 #: field:account.voucher,company_id:0
@@ -668,7 +718,7 @@ msgstr "Bedrijf"
 #. module: account_voucher
 #: help:account.voucher,paid:0
 msgid "The Voucher has been totally paid."
-msgstr "De bon is geheel betaald"
+msgstr "Het betaalbewijs geheel betaald"
 
 #. module: account_voucher
 #: selection:account.voucher,payment_option:0
@@ -676,16 +726,16 @@ msgid "Reconcile Payment Balance"
 msgstr "Afletteren betalingsbalans"
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:963
+#: code:addons/account_voucher/account_voucher.py:975
 #, python-format
 msgid "Configuration Error !"
-msgstr ""
+msgstr "Configuratiefout !"
 
 #. module: account_voucher
 #: view:account.voucher:0
 #: view:sale.receipt.report:0
 msgid "Draft Vouchers"
-msgstr "Concept bonnen"
+msgstr "Concept betaalbewijzen"
 
 #. module: account_voucher
 #: view:sale.receipt.report:0
@@ -696,7 +746,7 @@ msgstr "Totaal incl. belastingen"
 #. module: account_voucher
 #: view:account.voucher:0
 msgid "Purchase Voucher"
-msgstr ""
+msgstr "Aankoopbewijs"
 
 #. module: account_voucher
 #: view:account.voucher:0
@@ -724,7 +774,7 @@ msgstr "augustus"
 #. module: account_voucher
 #: view:account.voucher:0
 msgid "Validate Payment"
-msgstr ""
+msgstr "Bevestig betaling"
 
 #. module: account_voucher
 #: help:account.voucher,audit:0
@@ -732,8 +782,8 @@ msgid ""
 "Check this box if you are unsure of that journal entry and if you want to "
 "note it as 'to be reviewed' by an accounting expert."
 msgstr ""
-"Vink dit aan indien u onzeker bent over de journaalpost  en of u wilt dat "
-"deze wordt aangemerkt als 'ter controle' door een boekhoudkundig expert."
+"Vink deze optie aan indien u onzeker bent over de boekingen   en of u wilt "
+"dat deze wordt aangemerkt als 'ter controle' door een boekhoudkundig expert."
 
 #. module: account_voucher
 #: selection:sale.receipt.report,month:0
@@ -741,10 +791,10 @@ msgid "October"
 msgstr "oktober"
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:964
+#: code:addons/account_voucher/account_voucher.py:976
 #, python-format
 msgid "Please activate the sequence of selected journal !"
-msgstr ""
+msgstr "Activeer de reeks van het geselecteerde dagboek!"
 
 #. module: account_voucher
 #: selection:sale.receipt.report,month:0
@@ -762,11 +812,10 @@ msgid "Paid"
 msgstr "Betaald"
 
 #. module: account_voucher
-#: view:account.voucher:0
 #: model:ir.actions.act_window,name:account_voucher.action_sale_receipt
 #: model:ir.ui.menu,name:account_voucher.menu_action_sale_receipt
 msgid "Sales Receipts"
-msgstr ""
+msgstr "Betaalbewijs"
 
 #. module: account_voucher
 #: field:account.voucher,message_is_follower:0
@@ -822,10 +871,10 @@ msgid "Previous Payments ?"
 msgstr "Vorige betalingen?"
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:1098
+#: code:addons/account_voucher/account_voucher.py:1112
 #, python-format
 msgid "The invoice you are willing to pay is not valid anymore."
-msgstr ""
+msgstr "De factuur die u wilt betalen is niet meer geldig."
 
 #. module: account_voucher
 #: selection:sale.receipt.report,month:0
@@ -836,7 +885,7 @@ msgstr "januari"
 #: model:ir.actions.act_window,name:account_voucher.action_voucher_list
 #: model:ir.ui.menu,name:account_voucher.menu_encode_entries_by_voucher
 msgid "Journal Vouchers"
-msgstr "Verkoopbon journaalposten"
+msgstr "Betaalbewijs dagboek"
 
 #. module: account_voucher
 #: model:ir.model,name:account_voucher.model_res_company
@@ -854,24 +903,24 @@ msgid "Active"
 msgstr "Actief"
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:968
+#: code:addons/account_voucher/account_voucher.py:982
 #, python-format
 msgid "Please define a sequence on the journal."
-msgstr ""
+msgstr "Definieer een reeks voor dit dagboek."
 
 #. module: account_voucher
 #: model:ir.actions.act_window,name:account_voucher.act_pay_voucher
 #: model:ir.actions.act_window,name:account_voucher.action_vendor_receipt
 #: model:ir.ui.menu,name:account_voucher.menu_action_vendor_receipt
 msgid "Customer Payments"
-msgstr ""
+msgstr "Klantbetalingen"
 
 #. module: account_voucher
 #: model:ir.actions.act_window,name:account_voucher.action_sale_receipt_report_all
 #: model:ir.ui.menu,name:account_voucher.menu_action_sale_receipt_report_all
 #: view:sale.receipt.report:0
 msgid "Sales Receipts Analysis"
-msgstr ""
+msgstr "Betaalbewijs analyse"
 
 #. module: account_voucher
 #: view:sale.receipt.report:0
@@ -908,7 +957,7 @@ msgstr "Maak afletteren ongedaan"
 #: view:account.voucher:0
 #: model:ir.model,name:account_voucher.model_account_voucher
 msgid "Accounting Voucher"
-msgstr "Journaalbon"
+msgstr "Boekhouding betaalbewijzen"
 
 #. module: account_voucher
 #: field:account.voucher,number:0
@@ -928,7 +977,7 @@ msgstr "Bankafschrift"
 #. module: account_voucher
 #: view:account.bank.statement:0
 msgid "onchange_amount(amount)"
-msgstr ""
+msgstr "onchange_amount(amount)"
 
 #. module: account_voucher
 #: selection:sale.receipt.report,month:0
@@ -945,7 +994,7 @@ msgstr "Verkoop informatie"
 #: field:account.voucher.line,voucher_id:0
 #: model:res.request.link,name:account_voucher.req_link_voucher
 msgid "Voucher"
-msgstr "Bon"
+msgstr "Betaalbewijs"
 
 #. module: account_voucher
 #: model:ir.model,name:account_voucher.model_account_invoice
@@ -955,7 +1004,7 @@ msgstr "Factuur"
 #. module: account_voucher
 #: view:account.voucher:0
 msgid "Voucher Items"
-msgstr "Bon boekingen"
+msgstr "Betaalbewijs regels"
 
 #. module: account_voucher
 #: view:account.statement.from.invoice.lines:0
@@ -966,7 +1015,7 @@ msgstr "Annuleren"
 #. module: account_voucher
 #: model:ir.actions.client,name:account_voucher.action_client_invoice_menu
 msgid "Open Invoicing Menu"
-msgstr ""
+msgstr "Open factureer menu"
 
 #. module: account_voucher
 #: selection:account.voucher,state:0
@@ -979,13 +1028,13 @@ msgstr "Pro-forma"
 #: view:account.voucher:0
 #: field:account.voucher,move_ids:0
 msgid "Journal Items"
-msgstr "Journaalpostregels"
+msgstr "Boekingen"
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:496
+#: code:addons/account_voucher/account_voucher.py:508
 #, python-format
 msgid "Please define default credit/debit accounts on the journal \"%s\"."
-msgstr ""
+msgstr "Definieer standaard credit/debit rekeningen voor dit dagboek \"%s\"."
 
 #. module: account_voucher
 #: selection:account.voucher,type:0
@@ -1029,11 +1078,21 @@ msgid ""
 "          </p>\n"
 "        "
 msgstr ""
+"<p>\n"
+"            Met behulp van dit rapport heeft u een overzicht van het "
+"gefactureerde bedrag\n"
+"            aan uw klant, alsmede de betalingscondities. Met de zoekfunctie "
+"kunt u\n"
+"            het rapport verder personaliseren om zo het aan te passen aan "
+"uw\n"
+"            wensen.\n"
+"          </p>\n"
+"        "
 
 #. module: account_voucher
 #: view:account.voucher:0
 msgid "Posted Vouchers"
-msgstr "Geboekte bonnen"
+msgstr "Geboekte betaalbewijzen"
 
 #. module: account_voucher
 #: field:account.voucher,payment_rate:0
@@ -1058,7 +1117,7 @@ msgstr "mei"
 #. module: account_voucher
 #: view:account.voucher:0
 msgid "Sale Receipt"
-msgstr ""
+msgstr "Betaalbewijs"
 
 #. module: account_voucher
 #: view:account.voucher:0
@@ -1087,14 +1146,14 @@ msgstr "Oorspronkelijk bedrag"
 #. module: account_voucher
 #: view:account.voucher:0
 msgid "Purchase Receipt"
-msgstr "Ontvangstbon"
+msgstr "Aankoopbewijs"
 
 #. module: account_voucher
 #: help:account.voucher,payment_rate:0
 msgid ""
 "The specific rate that will be used, in this voucher, between the selected "
 "currency (in 'Payment Rate Currency' field)  and the voucher currency."
-msgstr "Een speciale wisselkoers voor deze bon."
+msgstr "Een speciale wisselkoers voor dit betaalbewijs."
 
 #. module: account_voucher
 #: view:account.voucher:0
@@ -1143,7 +1202,7 @@ msgstr "jaar"
 #: field:account.config.settings,income_currency_exchange_account_id:0
 #: field:res.company,income_currency_exchange_account_id:0
 msgid "Gain Exchange Rate Account"
-msgstr ""
+msgstr "Wisselkoers winst rekening"
 
 #. module: account_voucher
 #: selection:account.voucher,type:0
@@ -1169,7 +1228,7 @@ msgstr "Standaard soort"
 #. module: account_voucher
 #: help:account.voucher,message_ids:0
 msgid "Messages and communication history"
-msgstr ""
+msgstr "Berichten en communicatie historie"
 
 #. module: account_voucher
 #: model:ir.model,name:account_voucher.model_account_statement_from_invoice_lines
@@ -1185,7 +1244,7 @@ msgstr "Totaal"
 #. module: account_voucher
 #: field:account.voucher,move_id:0
 msgid "Account Entry"
-msgstr "Journaalpost"
+msgstr "Boeking"
 
 #. module: account_voucher
 #: constraint:account.bank.statement.line:0
@@ -1193,12 +1252,16 @@ msgid ""
 "The amount of the voucher must be the same amount as the one on the "
 "statement line."
 msgstr ""
+"Het bedrag van het betaalbewijs moet hetzelfde zijn als het bedrag op de "
+"afschriftregel."
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:867
+#: code:addons/account_voucher/account_voucher.py:879
 #, python-format
 msgid "Cannot delete voucher(s) which are already opened or paid."
 msgstr ""
+"Het is niet mogelijk om betaalbewijzen te verwijderen welke al geopend of "
+"betaald zijn."
 
 #. module: account_voucher
 #: help:account.voucher,date:0
@@ -1220,13 +1283,13 @@ msgstr "Open houden"
 #: view:account.voucher.line:0
 #: model:ir.model,name:account_voucher.model_account_voucher_line
 msgid "Voucher Lines"
-msgstr "Bonregels"
+msgstr "Betaalbewijs regels"
 
 #. module: account_voucher
 #: view:sale.receipt.report:0
 #: field:sale.receipt.report,delay_to_pay:0
 msgid "Avg. Delay To Pay"
-msgstr "Gem. betaaltermijn"
+msgstr "Gem. vertraging om te betalen"
 
 #. module: account_voucher
 #: field:account.voucher.line,untax_amount:0
@@ -1236,7 +1299,7 @@ msgstr "Bedrag excl. belastingen"
 #. module: account_voucher
 #: model:ir.model,name:account_voucher.model_sale_receipt_report
 msgid "Sales Receipt Statistics"
-msgstr "Verkoopbon analyses"
+msgstr "Betaalbewijs analyses"
 
 #. module: account_voucher
 #: view:account.voucher:0
@@ -1255,14 +1318,14 @@ msgstr "Open balans"
 #. module: account_voucher
 #: model:mail.message.subtype,description:account_voucher.mt_voucher_state_change
 msgid "Status <b>changed</b>"
-msgstr ""
+msgstr "Status <b>veranderd</b>"
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:1000
-#: code:addons/account_voucher/account_voucher.py:1004
+#: code:addons/account_voucher/account_voucher.py:1014
+#: code:addons/account_voucher/account_voucher.py:1018
 #, python-format
 msgid "Insufficient Configuration!"
-msgstr ""
+msgstr "Onvoldoende instellingen!"
 
 #. module: account_voucher
 #: help:account.voucher,active:0
@@ -1271,6 +1334,9 @@ msgid ""
 "inactive, which allow to hide the customer/supplier payment while the bank "
 "statement isn't confirmed."
 msgstr ""
+"Standaard worden de concept afletteringen van bankafschriften ingesteld als "
+"inactief. Dit geeft de mogelijkheid om de klant / leverancier-betaling te "
+"verbergen zolang de bankafschrift niet is bevestigd."
 
 #~ msgid "Other Info"
 #~ msgstr "Overige informatie"

@@ -65,7 +65,7 @@ class report_account_common(report_sxw.rml_parse, common_report_header):
                 vals['debit'] = report.debit
                 vals['credit'] = report.credit
             if data['form']['enable_filter']:
-                vals['balance_cmp'] = self.pool.get('account.financial.report').browse(self.cr, self.uid, report.id, context=data['form']['comparison_context']).balance
+                vals['balance_cmp'] = self.pool.get('account.financial.report').browse(self.cr, self.uid, report.id, context=data['form']['comparison_context']).balance * report.sign or 0.0
             lines.append(vals)
             account_ids = []
             if report.display_detail == 'no_detail':
@@ -97,7 +97,7 @@ class report_account_common(report_sxw.rml_parse, common_report_header):
                     if not currency_obj.is_zero(self.cr, self.uid, account.company_id.currency_id, vals['balance']):
                         flag = True
                     if data['form']['enable_filter']:
-                        vals['balance_cmp'] = account_obj.browse(self.cr, self.uid, account.id, context=data['form']['comparison_context']).balance
+                        vals['balance_cmp'] = account_obj.browse(self.cr, self.uid, account.id, context=data['form']['comparison_context']).balance * report.sign or 0.0
                         if not currency_obj.is_zero(self.cr, self.uid, account.company_id.currency_id, vals['balance_cmp']):
                             flag = True
                     if flag:

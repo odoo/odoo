@@ -43,7 +43,7 @@
                            attrs="{'invisible': ['|','|','|',('picking_ids','=',False),('picking_ids','=',[]), ('state', 'not in', ('progress','manual')),('shipped','=',True)]}" groups="base.group_user"/>
                    </xpath>
                     <xpath expr="//button[@name='action_cancel']" position="after">
-                        <button name="ship_cancel" states="shipping_except" string="Cancel"/>
+                        <button name="ship_cancel" states="shipping_except" string="Cancel Order"/>
                     </xpath>
                     <field name="state" position="replace">
                         <field name="state" widget="statusbar" statusbar_visible="draft,sent,progress,invoiced,done" statusbar_colors='{"shipping_except":"red","invoice_except":"red","waiting_date":"blue"}'/>
@@ -104,6 +104,32 @@
                 </data>
            </field>
         </record>
+
+        <record id="view_res_partner_tree_type" model="ir.ui.view">
+            <field name="name">res.partner.tree.inherit.type</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="base.view_partner_tree"/>
+            <field name="arch" type="xml">
+                <field name="parent_id" position="after">
+                    <field name="type" invisible="context.get('hide_type', 1)"/>
+                </field>
+            </field>
+        </record>
+
+        <!-- On the customer/supplier form if "Allow a different address for
+        delivery and invoicing" is set add "Contact Details" in the more menu
+        showing the list of contact with their types -->
+        <act_window
+            id="res_partner_rule_children"
+            name="Contact Details"
+            context="{'default_parent_id': active_id, 'hide_type': 0}"
+            domain="[('parent_id','=',active_id)]"
+            res_model="res.partner"
+            src_model="res.partner"
+            view_mode="tree,form,kanban"
+            view_type="form"
+            groups="sale.group_delivery_invoice_address"
+            />
 
     </data>
 </openerp>

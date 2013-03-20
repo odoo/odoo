@@ -92,9 +92,9 @@ class ExportToRML( unohelper.Base, XJobExecutor ):
         if docinfo.getUserFieldValue(2) == "":
             ErrorDialog("Please Save this file on server","Use Send To Server Option in OpenERP Report Menu","Error")
             exit(1)
-    	filename = self.GetAFileName()
-    	if not filename:
-    	    exit(1)
+        filename = self.GetAFileName()
+        if not filename:
+            exit(1)
         global passwd
         self.password = passwd
         try:
@@ -118,7 +118,7 @@ class ExportToRML( unohelper.Base, XJobExecutor ):
         initPath = tempfile.gettempdir()
         oUcb = createUnoService("com.sun.star.ucb.SimpleFileAccess")
         if oUcb.exists(initPath):
-	    oFileDialog.setDisplayDirectory('file://' + ( os.name == 'nt' and '/' or '' ) + initPath )
+            oFileDialog.setDisplayDirectory('file://' + ( os.name == 'nt' and '/' or '' ) + initPath )
 
         oFileDialog.setDefaultName(f_path )
 

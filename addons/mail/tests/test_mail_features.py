@@ -20,7 +20,7 @@
 ##############################################################################
 
 from openerp.addons.mail.tests.test_mail_base import TestMailBase
-from openerp.tools.mail import html_sanitize, append_content_to_html
+from openerp.tools.mail import html_sanitize
 
 MAIL_TEMPLATE = """Return-Path: <whatever-2a840@postmaster.twitter.com>
 To: {to}
@@ -84,23 +84,6 @@ Sylvie
 
 class test_mail(TestMailBase):
 
-    def _mock_send_get_mail_body(self, *args, **kwargs):
-        # def _send_get_mail_body(self, cr, uid, mail, partner=None, context=None)
-        body = append_content_to_html(args[2].body_html, kwargs.get('partner').name if kwargs.get('partner') else 'No specific partner', plaintext=False)
-        return body
-
-    def setUp(self):
-        super(test_mail, self).setUp()
-
-        # Mock send_get_mail_body to test its functionality without other addons override
-        self._send_get_mail_body = self.registry('mail.mail').send_get_mail_body
-        self.registry('mail.mail').send_get_mail_body = self._mock_send_get_mail_body
-
-    def tearDown(self):
-        # Remove mocks
-        self.registry('mail.mail').send_get_mail_body = self._send_get_mail_body
-        super(test_mail, self).tearDown()
-
     def test_00_message_process(self):
         """ Testing incoming emails processing. """
         cr, uid, user_raoul = self.cr, self.uid, self.user_raoul
@@ -119,18 +102,18 @@ class test_mail(TestMailBase):
         # Previously-created group can be emailed now - it should have an implicit alias group+frogs@...
         frog_group = self.mail_group.browse(cr, uid, frog_groups[0])
         group_messages = frog_group.message_ids
-        self.assertTrue(len(group_messages) == 2, 'New group should only have the original message + creation log')
+        self.assertTrue(len(group_messages) == 1, 'New group should only have the original message')
         mail_frog_news = MAIL_TEMPLATE.format(to='Friendly Frogs <group+frogs@example.com>', subject='news', extra='')
         self.mail_thread.message_process(cr, uid, None, mail_frog_news)
         frog_group.refresh()
-        self.assertTrue(len(frog_group.message_ids) == 3, 'Group should contain 3 messages now')
+        self.assertTrue(len(frog_group.message_ids) == 2, 'Group should contain 2 messages now')
 
         # Even with a wrong destination, a reply should end up in the correct thread
         mail_reply = MAIL_TEMPLATE.format(to='erroneous@example.com>', subject='Re: news',
                                           extra='In-Reply-To: <12321321-openerp-%d-mail.group@example.com>\n' % frog_group.id)
         self.mail_thread.message_process(cr, uid, None, mail_reply)
         frog_group.refresh()
-        self.assertTrue(len(frog_group.message_ids) == 4, 'Group should contain 4 messages now')
+        self.assertTrue(len(frog_group.message_ids) == 3, 'Group should contain 3 messages now')
 
         # No model passed and no matching alias must raise
         mail_spam = MAIL_TEMPLATE.format(to='noone@example.com', subject='spam', extra='')
@@ -154,7 +137,7 @@ class test_mail(TestMailBase):
         new_mail = self.mail_message.browse(cr, uid, self.mail_message.search(cr, uid, [('message_id', '=', test_msg_id)])[0])
         # Test: author_id set, not email_from
         self.assertEqual(new_mail.author_id, user_raoul.partner_id, 'message process wrong author found')
-        self.assertFalse(new_mail.email_from, 'message process should not set the email_from when an author is found')
+        self.assertEqual(new_mail.email_from, user_raoul.email, 'message process wrong email_from')
 
         # Do: post a new message, with a unknown partner
         test_msg_id = '<deadcafe.1337-3@smtp.agrolait.com>'
@@ -329,7 +312,7 @@ class test_mail(TestMailBase):
         self.res_users.write(cr, uid, [uid], {'signature': 'Admin', 'email': 'a@a'})
         # 1 - Bert Tartopoils, with email, should receive emails for comments and emails
         p_b_id = self.res_partner.create(cr, uid, {'name': 'Bert Tartopoils', 'email': 'b@b'})
-        # 2 - Carine Poilvache, with email, should never receive emails
+        # 2 - Carine Poilvache, with email, should receive emails for emails
         p_c_id = self.res_partner.create(cr, uid, {'name': 'Carine Poilvache', 'email': 'c@c', 'notification_email_send': 'email'})
         # 3 - Dédé Grosbedon, without email, to test email verification; should receive emails for every message
         p_d_id = self.res_partner.create(cr, uid, {'name': 'Dédé Grosbedon', 'notification_email_send': 'all'})
@@ -341,11 +324,15 @@ class test_mail(TestMailBase):
         _subject = 'Pigs'
         _mail_subject = 'Re: %s' % (group_pigs.name)
         _body1 = '<p>Pigs rules</p>'
-        _mail_body1 = '<p>Pigs rules</p>\n<div><p>Raoul</p></div>\n'
-        _mail_bodyalt1 = 'Pigs rules\nRaoul\n'
+        _mail_body1 = '<p>Pigs rules</p>'
+        _mail_signature1 = '<p>Raoul</p>'
+        _mail_bodyalt1 = 'Pigs rules\n'
+        _mail_signaturealt1 = '\nRaoul\n'
         _body2 = '<html>Pigs rules</html>'
-        _mail_body2 = '<div><p>Pigs rules</p></div>\n<div><p>Raoul</p></div>'
-        _mail_bodyalt2 = 'Pigs rules\nRaoul'
+        _mail_body2 = '<div><p>Pigs rules</p></div>'
+        _mail_signature2 = '<p>Raoul</p>'
+        _mail_bodyalt2 = 'Pigs rules\n'
+        _mail_signaturealt2 = '\nRaoul\n'
         _attachments = [('First', 'My first attachment'), ('Second', 'My second attachment')]
 
         # ----------------------------------------
@@ -366,12 +353,14 @@ class test_mail(TestMailBase):
         self.assertEqual(len(sent_emails), 2, 'sent_email number of sent emails incorrect')
         for sent_email in sent_emails:
             self.assertEqual(sent_email['subject'], _subject, 'sent_email subject incorrect')
-            self.assertTrue(sent_email['body'] in [_mail_body1 + '\nBert Tartopoils\n', _mail_body1 + '\nAdministrator\n'],
-                'sent_email body incorrect')
+            self.assertIn(_mail_body1, sent_email['body'], 'sent_email body incorrect')
+            self.assertIn(_mail_signature1, sent_email['body'], 'sent_email body incorrect (no signature)')
+            self.assertIn("OpenERP", sent_email['body'], 'sent_email body incorrect (no OpenERP company)')
             # the html2plaintext uses etree or beautiful soup, so the result may be slighly different
             # depending if you have installed beautiful soup.
-            self.assertTrue(sent_email['body_alternative'] in [_mail_bodyalt1 + '\nBert Tartopoils\n', _mail_bodyalt1 + '\nAdministrator\n'],
-                'sent_email body_alternative is incorrect')
+            self.assertIn(_mail_bodyalt1, sent_email['body_alternative'], 'sent_email body_alternative is incorrect')
+            self.assertIn(_mail_signaturealt1, sent_email['body_alternative'], 'sent_email body_alternative is incorrect (no signature)')
+            self.assertIn("OpenERP", sent_email['body_alternative'], 'sent_email body incorrect (no OpenERP company)')
         # Test: mail_message: notified_partner_ids = group followers
         message_pids = set([partner.id for partner in message1.notified_partner_ids])
         test_pids = set([self.partner_admin_id, p_b_id, p_c_id])
@@ -391,7 +380,8 @@ class test_mail(TestMailBase):
         # 1. Post a new email comment on Pigs
         self._init_mock_build_email()
         msg2_id = self.mail_group.message_post(cr, user_raoul.id, self.group_pigs_id, body=_body2, type='email', subtype='mt_comment',
-            partner_ids=[(6, 0, [p_d_id])], parent_id=msg1_id, attachments=_attachments)
+            partner_ids=[p_d_id], parent_id=msg1_id, attachments=_attachments,
+            context={'mail_post_autofollow': True})
         message2 = self.mail_message.browse(cr, uid, msg2_id)
         sent_emails = self._build_email_kwargs_list
         self.assertFalse(self.mail_mail.search(cr, uid, [('mail_message_id', '=', msg2_id)]), 'mail.mail notifications should have been auto-deleted!')
@@ -404,7 +394,12 @@ class test_mail(TestMailBase):
         for sent_email in sent_emails:
             self.assertEqual(sent_email['subject'], _mail_subject, 'sent_email subject incorrect')
             self.assertIn(_mail_body2, sent_email['body'], 'sent_email body incorrect')
-            self.assertIn(_mail_bodyalt2, sent_email['body_alternative'], 'sent_email body_alternative incorrect')
+            self.assertIn(_mail_signature2, sent_email['body'], 'sent_email body incorrect (no signature)')
+            self.assertIn("OpenERP", sent_email['body'], 'sent_email body incorrect (no OpenERP company)')
+            # body_alternative
+            self.assertIn(_mail_bodyalt2, sent_email['body_alternative'], 'sent_email body_alternative is incorrect')
+            self.assertIn(_mail_signaturealt2, sent_email['body_alternative'], 'sent_email body_alternative is incorrect (no signature)')
+            self.assertIn("OpenERP", sent_email['body'], 'sent_email body incorrect (no OpenERP company)')
         # Test: mail_message: notified_partner_ids = group followers
         message_pids = set([partner.id for partner in message2.notified_partner_ids])
         test_pids = set([self.partner_admin_id, p_b_id, p_c_id, p_d_id])
@@ -461,7 +456,7 @@ class test_mail(TestMailBase):
         # 2 - Carine Poilvache, with email, should never receive emails
         p_c_id = self.res_partner.create(cr, uid, {'name': 'Carine Poilvache', 'email': 'c@c', 'notification_email_send': 'email'})
         # 3 - Dédé Grosbedon, without email, to test email verification; should receive emails for every message
-        p_d_id = self.res_partner.create(cr, uid, {'name': 'Dédé Grosbedon', 'notification_email_send': 'all'})
+        p_d_id = self.res_partner.create(cr, uid, {'name': 'Dédé Grosbedon', 'email': 'd@d', 'notification_email_send': 'all'})
 
         # Subscribe #1
         group_pigs.message_subscribe([p_b_id])
@@ -482,7 +477,7 @@ class test_mail(TestMailBase):
         self.assertEqual(compose.res_id, self.group_pigs_id, 'mail.compose.message incorrect res_id')
 
         # 2. Post the comment, get created message
-        mail_compose.send_mail(cr, uid, [compose_id])
+        mail_compose.send_mail(cr, uid, [compose_id], {'mail_post_autofollow': True})
         group_pigs.refresh()
         message = group_pigs.message_ids[0]
         # Test: mail.message: subject, body inside pre
@@ -524,7 +519,7 @@ class test_mail(TestMailBase):
         # 1. mass_mail on pigs and bird
         compose_id = mail_compose.create(cr, uid,
             {'subject': _subject, 'body': '${object.description}'},
-            {'default_composition_mode': 'mass_mail', 'default_model': 'mail.group', 'default_res_id': False,
+            {'default_composition_mode': 'mass_mail', 'default_model': 'mail.group', 'default_res_id': False, 'default_notify': True,
                 'active_ids': [self.group_pigs_id, group_bird_id]})
         compose = mail_compose.browse(cr, uid, compose_id)
 
