@@ -69,10 +69,10 @@ class sale_report(osv.osv):
                 from
                     sale_order s
                     join sale_order_line l on (s.id=l.order_id)
-                        join product_product p on (l.product_id=p.id)
-                            join product_template t on (p.product_tmpl_id=t.id)
-                    join product_uom u on (u.id=l.product_uom)
-                    join product_uom u2 on (u2.id=t.uom_id)
+                         left join product_product p on (l.product_id=p.id)
+                            left join product_template t on (p.product_tmpl_id=t.id)
+                    left join product_uom u on (u.id=l.product_uom)
+                    left join product_uom u2 on (u2.id=t.uom_id)
                 group by
                     l.product_id,
                     l.product_uom_qty,
