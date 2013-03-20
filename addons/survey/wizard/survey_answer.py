@@ -21,6 +21,7 @@
 
 import lxml
 from lxml import etree
+import openerp
 from openerp import tools
 from openerp.tools import to_xml
 from datetime import datetime
@@ -239,9 +240,9 @@ class survey_question_wiz(osv.osv_memory):
 
         # check open and sign in
         if not context.get('edit') and not context.get('survey_test') and survey_browse.state != "open":
-            raise osv.except_osv(_('Access Denied!'), _("You cannot answer because the survey is not open."))
+            raise openerp.exceptions.AccessError(_("You cannot answer because the survey is not open."))
         if anonymous and survey_browse.authenticate:
-            raise osv.except_osv(_('Access Denied!'), _("Please Login to complete this survey."))
+            raise openerp.exceptions.AccessError(_("Please Login to complete this survey."))
 
         # get opening response
         response_ids = None
@@ -279,19 +280,19 @@ class survey_question_wiz(osv.osv_memory):
                 response_ids = sur_response_obj.search(cr, SUPERUSER_ID, [('survey_id', '=', survey_id), ('partner_id', '=', pid)], context=context, limit=1)
 
             if not response_ids:
-                raise osv.except_osv(_('Access Denied!'), _("You do not have access to this survey."))
+                raise openerp.exceptions.AccessError(_("You do not have access to this survey."))
             else:
                 response = sur_response_obj.browse(cr, SUPERUSER_ID, response_ids[0], context=context)
                 if response.state == 'cancel':
-                    raise osv.except_osv(_('Access Denied!'), _("You do not have access to this survey because, your survey access is canceled."))
+                    raise openerp.exceptions.AccessError(_("You do not have access to this survey because, your survey access is canceled."))
                 elif response.state == 'done':
                     res['response_id'] = context.get('response_id') and int(context['response_id'][0])
                     res['state'] = 'done'
                     res['readonly'] = True
                 elif response.date_deadline and datetime.strptime(response.date_deadline, DATETIME_FORMAT) < datetime.now():
-                    raise osv.except_osv(_('Access Denied!'), _("The deadline for responding to this survey is exceeded since %s") % response.date_deadline)
+                    raise openerp.exceptions.AccessError(_("The deadline for responding to this survey is exceeded since %s") % response.date_deadline)
                 else:
-                    raise osv.except_osv(_('Access Denied!'), _("You do not have access to this survey."))
+                    raise openerp.exceptions.AccessError(_("You do not have access to this survey."))
 
         return res
 
@@ -645,7 +646,7 @@ class survey_question_wiz(osv.osv_memory):
                             if not re.match("^[a-zA-Z0-9._%- + ] + @[a-zA-Z0-9._%-] + .[a-zA-Z]{2, 6}$", val1):
                                     error = True
                         if error:
-                            raise osv.except_osv(_('Warning!'), "'" + que_rec['question'] + "'  \n" + tools.ustr(que_rec['comment_valid_err_msg']))
+                            raise openerp.exceptions.Warning("'" + que_rec['question'] + "'  \n" + tools.ustr(que_rec['comment_valid_err_msg']))
 
                         resp_obj.write(cr, SUPERUSER_ID, resp_id, {'comment': val1})
 
@@ -680,7 +681,7 @@ class survey_question_wiz(osv.osv_memory):
                         if not re.match("^[a-zA-Z0-9._%- + ] + @[a-zA-Z0-9._%-] + .[a-zA-Z]{2, 6}$", val1):
                                 error = True
                     if error:
-                        raise osv.except_osv(_('Warning!'), "'" + que_rec['question'] + "'  \n" + tools.ustr(que_rec['validation_valid_err_msg']))
+                        raise openerp.exceptions.Warning("'" + que_rec['question'] + "'  \n" + tools.ustr(que_rec['validation_valid_err_msg']))
 
                     if _type == "single":
                         resp_obj.write(cr, SUPERUSER_ID, resp_id, {'single_text': val1})
@@ -696,7 +697,7 @@ class survey_question_wiz(osv.osv_memory):
                             ans_create_id = res_ans_obj.create(cr, SUPERUSER_ID, {'response_line_id': resp_id, 'answer_id': _type, 'answer': val1})
                             select_count += 1
                         except:
-                            raise osv.except_osv(_('Warning!'), "'" + que_rec['question'] + "' \n" + _("Please enter an integer value."))
+                            raise openerp.exceptions.Warning("'" + que_rec['question'] + "' \n" + _("Please enter an integer value."))
 
                 elif len(key1.split('_')) == 3:
                     if val1:
@@ -719,16 +720,16 @@ class survey_question_wiz(osv.osv_memory):
                             res_ans_obj.write(cr, SUPERUSER_ID, [res_id.split('_')[0]], {'comment_field': val})
 
             if comment_field and comment_value:
-                raise osv.except_osv(_('Warning!'), "'" + que_rec['question'] + "' " + tools.ustr(que_rec['make_comment_field_err_msg']))
+                raise openerp.exceptions.Warning("'" + que_rec['question'] + "' " + tools.ustr(que_rec['make_comment_field_err_msg']))
 
             if que_rec['type'] == "rating_scale" and que_rec['rating_allow_one_column_require'] and len(selected_value) > len(list(set(selected_value))):
-                raise osv.except_osv(_('Warning!'), "'" + que_rec['question'] + "'\n" + _("You cannot select the same answer more than one time."))
+                raise openerp.exceptions.Warning("'" + que_rec['question'] + "'\n" + _("You cannot select the same answer more than one time."))
 
             if not select_count:
                 resp_obj.write(cr, SUPERUSER_ID, resp_id, {'state': 'skip'})
 
             if que_rec['numeric_required_sum'] and numeric_sum > que_rec['numeric_required_sum']:
-                raise osv.except_osv(_('Warning!'), "'" + que_rec['question'] + "' " + tools.ustr(que_rec['numeric_required_sum_err_msg']))
+                raise openerp.exceptions.Warning("'" + que_rec['question'] + "' " + tools.ustr(que_rec['numeric_required_sum_err_msg']))
 
             if que_rec['type'] in ['multiple_textboxes_diff_type', 'multiple_choice_multiple_ans', 'matrix_of_choices_only_one_ans', 'matrix_of_choices_only_multi_ans', 'rating_scale', 'multiple_textboxes', 'numerical_textboxes', 'date', 'date_and_time'] and que_rec['is_require_answer']:
                 if (que_rec['required_type'] == 'all' and select_count < len(que_rec['answer_choice_ids'])) or \
@@ -736,10 +737,10 @@ class survey_question_wiz(osv.osv_memory):
                     (que_rec['required_type'] == 'at most' and select_count > que_rec['req_ans']) or \
                     (que_rec['required_type'] == 'exactly' and select_count != que_rec['req_ans']) or \
                     (que_rec['required_type'] == 'a range' and (select_count < que_rec['minimum_req_ans'] or select_count > que_rec['maximum_req_ans'])):
-                    raise osv.except_osv(_('Warning!'), "'" + que_rec['question'] + "' " + tools.ustr(que_rec['req_error_msg']))
+                    raise openerp.exceptions.Warning("'" + que_rec['question'] + "' " + tools.ustr(que_rec['req_error_msg']))
 
             if que_rec['type'] in ['multiple_choice_only_one_ans', 'single_textbox', 'comment'] and que_rec['is_require_answer'] and select_count <= 0:
-                raise osv.except_osv(_('Warning!'), "'" + que_rec['question'] + "' " + tools.ustr(que_rec['req_error_msg']))
+                raise openerp.exceptions.Warning("'" + que_rec['question'] + "' " + tools.ustr(que_rec['req_error_msg']))
 
         return super(survey_question_wiz, self).create(cr, uid, vals, context=context)
 
