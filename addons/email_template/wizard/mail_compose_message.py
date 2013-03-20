@@ -59,14 +59,21 @@ class mail_compose_message(osv.TransientModel):
     _columns = {
         # incredible hack of the day: size=-1 means we want an int db column instead of an str one
         'template_id': fields.selection(_get_templates, 'Template', size=-1),
+        'partner_to': fields.char('To (Partner IDs)',
+            help="Comma-separated list of recipient partners ids (placeholders may be used here)"),
+        'email_to': fields.char('To (Emails)',
+            help="Comma-separated recipient addresses (placeholders may be used here)",),
+        'email_cc': fields.char('Cc (Emails)',
+            help="Carbon copy recipients (placeholders may be used here)"),
     }
 
     def onchange_template_id(self, cr, uid, ids, template_id, composition_mode, model, res_id, context=None):
         """ - mass_mailing: we cannot render, so return the template values
             - normal mode: return rendered values """
         if template_id and composition_mode == 'mass_mail':
-            values = self.pool.get('email.template').read(cr, uid, template_id, ['subject', 'body_html'], context)
-            values.pop('id')
+            fields = ['subject', 'body_html', 'email_from', 'email_to', 'partner_to', 'email_cc',  'reply_to']
+            template_values = self.pool.get('email.template').read(cr, uid, template_id, fields, context)
+            values = dict((field, template_values[field]) for field in fields if template_values.get(field))
         elif template_id:
             # FIXME odo: change the mail generation to avoid attachment duplication
             values = self.generate_email_for_composer(cr, uid, template_id, res_id, context=context)
@@ -80,11 +87,11 @@ class mail_compose_message(osv.TransientModel):
                     'datas_fname': attach_fname,
                     'res_model': model,
                     'res_id': res_id,
-                    'type': 'binary', # override default_type from context, possibly meant for another model!
+                    'type': 'binary',  # override default_type from context, possibly meant for another model!
                 }
                 values['attachment_ids'].append(ir_attach_obj.create(cr, uid, data_attach, context=context))
         else:
-            values = self.default_get(cr, uid, ['body', 'subject', 'partner_ids', 'attachment_ids'], context=context)
+            values = self.default_get(cr, uid, ['subject', 'body', 'email_from', 'email_to', 'email_cc', 'partner_to', 'reply_to', 'attachment_ids'], context=context)
 
         if values.get('body_html'):
             values['body'] = values.pop('body_html')
@@ -117,27 +124,35 @@ class mail_compose_message(osv.TransientModel):
     # Wizard validation and send
     #------------------------------------------------------
 
+    def _get_or_create_partners_from_values(self, cr, uid, rendered_values, context=None):
+        """ Check for email_to, email_cc, partner_to """
+        partner_ids = []
+        mails = tools.email_split(rendered_values.pop('email_to', '') + ' ' + rendered_values.pop('email_cc', ''))
+        for mail in mails:
+            partner_id = self.pool.get('res.partner').find_or_create(cr, uid, mail, context=context)
+            partner_ids.append(partner_id)
+        partner_to = rendered_values.pop('partner_to', '')
+        if partner_to:
+            for partner_id in partner_to.split(','):
+                if partner_id:  # placeholders could generate '', 3, 2 due to some empty field values
+                    partner_ids.append(int(partner_id))
+        return partner_ids
+
     def generate_email_for_composer(self, cr, uid, template_id, res_id, context=None):
         """ Call email_template.generate_email(), get fields relevant for
             mail.compose.message, transform email_cc and email_to into partner_ids """
         template_values = self.pool.get('email.template').generate_email(cr, uid, template_id, res_id, context=context)
         # filter template values
-        fields = ['body_html', 'subject', 'email_to', 'email_recipients', 'email_cc', 'attachments']
+        fields = ['subject', 'body_html', 'email_from', 'email_to', 'partner_to', 'email_cc',  'reply_to', 'attachments']
         values = dict((field, template_values[field]) for field in fields if template_values.get(field))
         values['body'] = values.pop('body_html', '')
+
         # transform email_to, email_cc into partner_ids
-        values['partner_ids'] = []
-
-        mails = tools.email_split(values.pop('email_to', '') + ' ' + values.pop('email_cc', ''))
-        for mail in mails:
-            partner_id = self.pool.get('res.partner').find_or_create(cr, uid, mail, context=context)
-            values['partner_ids'].append(partner_id)
-        email_recipients = values.pop('email_recipients', '')
-        if email_recipients:
-            for partner_id in email_recipients.split(','):
-                values['partner_ids'].append(int(partner_id))
-
-        values['partner_ids'] = list(set(values['partner_ids']))
+        partner_ids = self._get_or_create_partners_from_values(cr, uid, values, context=context)
+        # legacy template behavior: void values do not erase existing values and the
+        # related key is removed from the values dict
+        if partner_ids:
+            values['partner_ids'] = list(partner_ids)
 
         return values
 
@@ -150,6 +165,11 @@ class mail_compose_message(osv.TransientModel):
             values = {}
         # get values to return
         email_dict = super(mail_compose_message, self).render_message(cr, uid, wizard, res_id, context)
+        # those values are not managed; they are readonly
+        email_dict.pop('email_to', None)
+        email_dict.pop('email_cc', None)
+        email_dict.pop('partner_to', None)
+        # update template values by wizard values
         values.update(email_dict)
         return values
 

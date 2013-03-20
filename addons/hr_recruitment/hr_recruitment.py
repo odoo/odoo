@@ -340,6 +340,15 @@ class hr_applicant(base_stage, osv.Model):
         value = self.pool.get("survey").action_print_survey(cr, uid, ids, context=context)
         return value
 
+    def message_get_suggested_recipients(self, cr, uid, ids, context=None):
+        recipients = super(hr_applicant, self).message_get_suggested_recipients(cr, uid, ids, context=context)
+        for applicant in self.browse(cr, uid, ids, context=context):
+            if applicant.partner_id:
+                self._message_add_suggested_recipient(cr, uid, recipients, applicant, partner=applicant.partner_id, reason=_('Contact'))
+            elif applicant.email_from:
+                self._message_add_suggested_recipient(cr, uid, recipients, applicant, email=applicant.email_from, reason=_('Contact Email'))
+        return recipients
+
     def message_new(self, cr, uid, msg, custom_values=None, context=None):
         """ Overrides mail_thread message_new that is called by the mailgateway
             through message_process.
