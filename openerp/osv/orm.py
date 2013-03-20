@@ -276,21 +276,21 @@ class ModelCache(defaultdict):
         self.ids.update(values.iterkeys())
         self[field].update(values)
 
-    def invalidate_fields(self, fields=None):
-        """ invalidate the given fields (``None`` for all fields) """
-        if fields is None:
-            fields = self.keys()
-        for field in fields:
-            self[field].clear()
+    def invalidate(self, fields=None, ids=None):
+        """ invalidate the given fields for the given ids
 
-    def invalidate_records(self, ids=None):
-        """ invalidate the given record ids (``None`` for all records) """
-        if ids is None:
-            self.ids.clear()
-            self.clear()
-        else:
-            self.ids -= set(ids)
+            :param fields: the list of fields to invalidate, ``None`` for all
+            :param ids: the list of record ids to invalidate, ``None`` for all
+        """
+        if fields is None:
             for field_cache in self.itervalues():
+                field_cache.clear()
+        elif ids is None:
+            for field in fields:
+                self[field].clear()
+        else:
+            for field in fields:
+                field_cache = self[field]
                 for id in ids:
                     field_cache.pop(id, None)
 
@@ -301,6 +301,23 @@ class RecordCache(defaultdict):
     """
     def __init__(self):
         super(RecordCache, self).__init__(ModelCache)
+
+    def invalidate(self, spec=None):
+        """ Invalidate the record cache.
+
+            :param spec: describes what to invalidate;
+                either ``None`` (invalidate everything), or
+                a list of triples (`model`, `fields`, `ids`), where
+                `model` is a model name,
+                `fields` is a list of field names or ``None`` for all fields,
+                and `ids` is a list of record ids or ``None`` for all records.
+        """
+        if spec is None:
+            for model_cache in self.itervalues():
+                model_cache.invalidate()
+        else:
+            for model, fields, ids in spec:
+                self[model].invalidate(fields, ids)
 
     def check(self):
         """ self-check for validating the cache """
@@ -4187,7 +4204,7 @@ class BaseModel(object):
         result.sort()
 
         # invalidate the cache for the modified fields
-        self.invalidate_cache(vals.keys())
+        self.invalidate_cache(vals.keys(), ids)
 
         done = {}
         for order, model_name, ids_to_update, fields_to_recompute in result:
@@ -4399,7 +4416,7 @@ class BaseModel(object):
                 del rel_context[c[0]]
 
         # invalidate the cache for the modified fields
-        self.invalidate_cache(vals.keys())
+        self.invalidate_cache(vals.keys(), [id_new])
 
         result = []
         for field in upd_todo:
@@ -4578,7 +4595,7 @@ class BaseModel(object):
                             '"'+f+'"='+self._columns[f]._symbol_set[0] + ' where id = %s', (self._columns[f]._symbol_set[1](value), id))
 
         # invalidate the cache for the modified fields
-        self.invalidate_cache(fields)
+        self.invalidate_cache(fields, ids)
 
         return True
 
@@ -5511,17 +5528,37 @@ class BaseModel(object):
         """
         api.scope.invalidate_cache()
 
-    def invalidate_cache(self, fields=None):
-        """ invalidate the cache after the given fields have been modified """
+    def invalidate_cache(self, fields=None, ids=None):
+        """ Invalidate the record caches after some records have been modified.
+
+            :param fields: the list of modified fields, or ``None`` for all fields
+            :param fields: the list of modified record ids, or ``None`` for all
+        """
         if fields is None:
             api.scope.invalidate_cache()
+            return
+
+        if ids is not None:
+            spec = [(self._name, fields, ids)]
         else:
-            model_field_pairs = []
-            for field in fields:
-                cinfo = self._all_columns[field]
-                model_field_pairs += list(cinfo.equivalents)
-                model_field_pairs += list(cinfo.inverses)
-            api.scope.invalidate_cache(model_field_pairs)
+            spec = []
+
+        # group fields by model
+        model_fields = defaultdict(list)
+        for field in fields:
+            cinfo = self._all_columns[field]
+            equivalents = cinfo.equivalents
+            if spec:
+                # (self._name, field) already in spec
+                equivalents = equivalents - set([(self._name, field)])
+            for m, f in itertools.chain(equivalents, cinfo.inverses):
+                model_fields[m].append(f)
+
+        # add them all in spec
+        for m in model_fields:
+            spec.append((m, model_fields[m], None))
+
+        api.scope.invalidate_cache(spec)
 
 
 # for instance checking

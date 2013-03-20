@@ -122,6 +122,13 @@ class ScopeProxy(object):
     def __call__(self, *args, **kwargs):
         return self.current(*args, **kwargs)
 
+    def invalidate_cache(self, spec=None):
+        """ Invalidate the record cache in all scopes.
+            See :meth:`openerp.osv.orm.RecordCache.invalidate` for the parameter `spec`.
+        """
+        for s in _local.scope_list:
+            s.cache.invalidate(spec)
+
 scope = ScopeProxy()
 
 
@@ -236,17 +243,6 @@ class Scope(object):
                 return languages.record()
         except Exception:
             raise Exception(_('Language with code "%s" is not defined in your system !\nDefine it through the Administration menu.') % (self.lang,))
-
-    def invalidate_cache(self, model_field_list=None):
-        """ invalidate the record cache in all scopes """
-        if model_field_list is None:
-            for s in _local.scope_list:
-                for model in s.cache:
-                    s.cache[model].invalidate_fields()
-        else:
-            for s in _local.scope_list:
-                for model, field in model_field_list:
-                    s.cache[model].invalidate_fields([field])
 
 
 #
