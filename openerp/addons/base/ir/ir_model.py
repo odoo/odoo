@@ -1060,6 +1060,14 @@ class ir_model_data(osv.osv):
                 if set(external_ids)-ids_set:
                     # if other modules have defined this record, we must not delete it
                     continue
+                if model == 'ir.model.fields':
+                    # Don't remove the LOG_ACCESS_COLUMNS unless _log_access
+                    # has been turned off on the model.
+                    field = self.pool.get(model).browse(cr, uid, [res_id], context=context)[0]
+                    if field.name in openerp.osv.orm.LOG_ACCESS_COLUMNS and self.pool[field.model]._log_access:
+                        continue
+                    if field.name == 'id':
+                        continue
                 _logger.info('Deleting %s@%s', res_id, model)
                 try:
                     cr.execute('SAVEPOINT record_unlink_save')

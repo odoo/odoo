@@ -3511,8 +3511,6 @@ class BaseModel(object):
 
         """
 
-        if not context:
-            context = {}
         self.check_access_rights(cr, user, 'read')
         fields = self.check_field_access_rights(cr, user, 'read', fields)
         if isinstance(ids, (int, long)):
@@ -3522,12 +3520,7 @@ class BaseModel(object):
         select = map(lambda x: isinstance(x, dict) and x['id'] or x, select)
         result = self._read_flat(cr, user, select, fields, context, load)
 
-        for r in result:
-            for key, v in r.items():
-                if v is None:
-                    r[key] = False
-
-        if isinstance(ids, (int, long, dict)):
+        if isinstance(ids, (int, long)):
             return result and result[0] or False
         return result
 
@@ -3661,34 +3654,37 @@ class BaseModel(object):
                 if field in self._columns:
                     fobj = self._columns[field]
 
-                if not fobj:
-                    continue
-                groups = fobj.read
-                if groups:
-                    edit = False
-                    for group in groups:
-                        module = group.split(".")[0]
-                        grp = group.split(".")[1]
-                        cr.execute("select count(*) from res_groups_users_rel where gid IN (select res_id from ir_model_data where name=%s and module=%s and model=%s) and uid=%s",  \
-                                   (grp, module, 'res.groups', user))
-                        readonly = cr.fetchall()
-                        if readonly[0][0] >= 1:
-                            edit = True
-                            break
-                        elif readonly[0][0] == 0:
-                            edit = False
-                        else:
-                            edit = False
+                if fobj:
+                    groups = fobj.read
+                    if groups:
+                        edit = False
+                        for group in groups:
+                            module = group.split(".")[0]
+                            grp = group.split(".")[1]
+                            cr.execute("select count(*) from res_groups_users_rel where gid IN (select res_id from ir_model_data where name=%s and module=%s and model=%s) and uid=%s",  \
+                                       (grp, module, 'res.groups', user))
+                            readonly = cr.fetchall()
+                            if readonly[0][0] >= 1:
+                                edit = True
+                                break
+                            elif readonly[0][0] == 0:
+                                edit = False
+                            else:
+                                edit = False
 
-                    if not edit:
-                        if type(vals[field]) == type([]):
-                            vals[field] = []
-                        elif type(vals[field]) == type(0.0):
-                            vals[field] = 0
-                        elif type(vals[field]) == type(''):
-                            vals[field] = '=No Permission='
-                        else:
-                            vals[field] = False
+                        if not edit:
+                            if type(vals[field]) == type([]):
+                                vals[field] = []
+                            elif type(vals[field]) == type(0.0):
+                                vals[field] = 0
+                            elif type(vals[field]) == type(''):
+                                vals[field] = '=No Permission='
+                            else:
+                                vals[field] = False
+
+                if vals[field] is None:
+                    vals[field] = False
+
         return res
 
     # TODO check READ access
@@ -5498,7 +5494,10 @@ class BaseModel(object):
             # get the value of the field with the given name
             return self._get_record_field(name)
 
-        raise AttributeError(name)
+        get = getattr(super(BaseModel, self), '__getattr__', None)
+        if get is not None: return get(name)
+        raise AttributeError(
+            "'%s' object has no attribute '%s'" % (type(self).__name__, name))
 
     def __int__(self):
         assert self.is_record_or_null(), "Expected record instance: %s" % self
