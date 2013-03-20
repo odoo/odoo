@@ -688,6 +688,10 @@ openerp.mail = function (session) {
 
         on_message_post: function (event) {
             var self = this;
+            if (self.flag_post) {
+                return;
+            }
+            self.flag_post = true;
             if (this.do_check_attachment_upload() && (this.attachment_ids.length || this.$('textarea').val().match(/\S+/))) {
                 if (this.is_log) {
                     this.do_send_message_post([], this.is_log);
@@ -735,6 +739,7 @@ openerp.mail = function (session) {
                     thread.insert_message( message, root ? undefined : self.$el, root );
                 });
                 self.on_cancel();
+                self.flag_post = false;
             });
         },
 
