@@ -89,14 +89,14 @@ class mail_thread(osv.AbstractModel):
     #   :param function lambda: returns whether the tracking should record using this subtype
     _track = {}
 
-    def dynamic_help(self, cr, uid, help, context=None):
-        if not context.get('dynamic_help_model', None):
-            if context.get('dynamic_help_id', None):
-                object_id = self.pool.get(context.get('dynamic_help_model')).browse(cr, uid, context.get('dynamic_help_id'), context=context)
+    def get_empty_list_help(self, cr, uid, help, context=None):
+        if not context.get('empty_list_help_model', None):
+            if context.get('empty_list_help_id', None):
+                object_id = self.pool.get(context.get('empty_list_help_model')).browse(cr, uid, context.get('empty_list_help_id'), context=context)
                 alias = object_id.alias_id and object_id.alias_id.name_get() or False
                 if alias and alias[0] and alias[0][1]:
                     email = alias[0][1]
-                    return "%s %s" % (_("<p class='oe_view_nocontent_create'>Click here to add a new %s or send an email to: <a href='mailto:%s'>%s</a></p>") % (context.get('dynamic_help_documents', _("documents")), email, email), help or "")
+                    return "%s %s" % (_("<p class='oe_view_nocontent_create'>Click here to add a new %s or send an email to: <a href='mailto:%s'>%s</a></p>") % (context.get('empty_list_help_document_name', _("documents")), email, email), help or "")
             else:
                 model_id = self.pool.get('ir.model').search(cr, uid, [("model", "=", self._name)], context=context)[0]
                 alias_obj = self.pool.get('mail.alias')
@@ -104,10 +104,10 @@ class mail_thread(osv.AbstractModel):
                 if alias_ids:
                     for alias in alias_obj.browse(cr, uid, alias_ids, context=context):
                         email = "%s@%s" % (alias.alias_name, alias.alias_domain)
-                        return "%s %s" % (_("<p class='oe_view_nocontent_create'>Click here to add a new %s or send an email, for example, to: <a href='mailto:%s'>%s</a></p>") % (context.get('dynamic_help_documents', _("documents")), email, email), help or "")
+                        return "%s %s" % (_("<p class='oe_view_nocontent_create'>Click here to add a new %s or send an email, for example, to: <a href='mailto:%s'>%s</a></p>") % (context.get('empty_list_help_document_name', _("documents")), email, email), help or "")
 
-        if context.get('dynamic_help_documents', None) and ("%s" % help).find("oe_view_nocontent_create") == -1:
-            return "%s %s" % (_("<p class='oe_view_nocontent_create'>Click here to add a new %s</p>") % context.get('dynamic_help_documents', _("documents")), help or "")
+        if context.get('empty_list_help_document_name', None) and ("%s" % help).find("oe_view_nocontent_create") == -1:
+            return "%s %s" % (_("<p class='oe_view_nocontent_create'>Click here to add a new %s</p>") % context.get('empty_list_help_document_name', _("documents")), help or "")
 
         return help
 

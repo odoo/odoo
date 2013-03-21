@@ -412,11 +412,11 @@ class project_issue(base_stage, osv.osv):
         self.write(cr, uid, ids, {'date_open': False, 'date_closed': False})
         return res
 
-    def dynamic_help(self, cr, uid, help, context=None):
-        context['dynamic_help_model'] = 'project.project'
-        context['dynamic_help_id'] = context.get('default_project_id', None)
-        context['dynamic_help_documents'] = _("issues")
-        return super(project_issue, self).dynamic_help(cr, uid, help, context=context)
+    def get_empty_list_help(self, cr, uid, help, context=None):
+        context['empty_list_help_model'] = 'project.project'
+        context['empty_list_help_id'] = context.get('default_project_id', None)
+        context['empty_list_help_document_name'] = _("issues")
+        return super(project_issue, self).get_empty_list_help(cr, uid, help, context=context)
 
     # -------------------------------------------------------
     # Stage management

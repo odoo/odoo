@@ -84,12 +84,12 @@ class crm_lead(base_stage, format_address, osv.osv):
         },
     }
 
-    def dynamic_help(self, cr, uid, help, context=None):
+    def get_empty_list_help(self, cr, uid, help, context=None):
         if context.get('default_type', None) == 'lead':
-            context['dynamic_help_model'] = 'crm.case.section'
-            context['dynamic_help_id'] = context.get('default_section_id', None)
-            context['dynamic_help_documents'] = _("leads")
-        return super(crm_lead, self).dynamic_help(cr, uid, help, context=context)
+            context['empty_list_help_model'] = 'crm.case.section'
+            context['empty_list_help_id'] = context.get('default_section_id', None)
+            context['empty_list_help_document_name'] = _("leads")
+        return super(crm_lead, self).get_empty_list_help(cr, uid, help, context=context)
 
     def onchange_user_id(self, cr, uid, ids, section_id, user_id, context=None):
         if user_id:

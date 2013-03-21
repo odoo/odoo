@@ -889,11 +889,11 @@ class task(base_stage, osv.osv):
         return res
 
 
-    def dynamic_help(self, cr, uid, help, context=None):
-        context['dynamic_help_model'] = 'project.project'
-        context['dynamic_help_id'] = context.get('default_project_id', None)
-        context['dynamic_help_documents'] = _("tasks")
-        return super(task, self).dynamic_help(cr, uid, help, context=context)
+    def get_empty_list_help(self, cr, uid, help, context=None):
+        context['empty_list_help_model'] = 'project.project'
+        context['empty_list_help_id'] = context.get('default_project_id', None)
+        context['empty_list_help_document_name'] = _("tasks")
+        return super(task, self).get_empty_list_help(cr, uid, help, context=context)
 
     # ----------------------------------------
     # Case management
