@@ -109,6 +109,19 @@ class crm_case_section(osv.osv):
     def get_full_name(self, cr, uid, ids, field_name, arg, context=None):
         return  dict(self.name_get(cr, uid, ids, context=context))
 
+    def get_number_items(self, cr, uid, ids, model, domain, context=None):
+        res = dict.fromkeys(ids, 0)
+        obj = self.pool.get(model)
+        for section_id in ids:
+            res[section_id] = obj.search(cr, uid, [("section_id", "=", section_id)] + domain, count=True, context=context)
+        return res
+
+    def _get_number_leads(self, cr, uid, ids, field_name, arg, context=None):
+        return self.get_number_items(cr, uid, ids, 'crm.lead', ['|', '|', ("type", "=", "lead"), ("type", "=", "both"), ("type", "=", False), ('state', 'not in', ['done', 'cancel'])], context=context)
+
+    def _get_number_opportunities(self, cr, uid, ids, field_name, arg, context=None):
+        return self.get_number_items(cr, uid, ids, 'crm.lead', ['|', ("type", "=", "opportunity"), ("type", "=", "both"), ('state', 'not in',  ['done', 'cancel'])], context=context)
+
     _columns = {
         'name': fields.char('Sales Team', size=64, required=True, translate=True),
         'complete_name': fields.function(get_full_name, type='char', size=256, readonly=True, store=True),
@@ -128,6 +141,9 @@ class crm_case_section(osv.osv):
         'alias_id': fields.many2one('mail.alias', 'Alias', ondelete="cascade", required=True,
                                     help="The email address associated with this team. New emails received will automatically "
                                          "create new leads assigned to the team."),
+        'number_lead': fields.function(_get_number_leads, type='integer', readonly=True),
+        'number_opportunity': fields.function(_get_number_opportunities, type='integer',  readonly=True),
+        'color': fields.integer('Color Index'),
     }
 
     def _get_stage_common(self, cr, uid, context):
@@ -137,7 +153,6 @@ class crm_case_section(osv.osv):
     _defaults = {
         'active': 1,
         'stage_ids': _get_stage_common,
-        'alias_domain': False, # always hide alias during creation
     }
 
     _sql_constraints = [

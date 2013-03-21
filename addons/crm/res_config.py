@@ -26,9 +26,6 @@ class crm_configuration(osv.osv_memory):
     _inherit = ['sale.config.settings', 'fetchmail.config.settings']
 
     _columns = {
-        'fetchmail_lead': fields.boolean("Create leads from incoming mails",
-            fetchmail_model='crm.lead', fetchmail_name='Incoming Leads',
-            help="""Allows you to configure your incoming mail server, and create leads from incoming emails."""),
         'group_fund_raising': fields.boolean("Manage Fund Raising",
             implied_group='crm.group_fund_raising',
             help="""Allows you to trace and manage your activities for fund raising."""),
