@@ -2791,72 +2791,23 @@ instance.web.form.FieldRadio = instance.web.form.AbstractField.extend(instance.w
         this.no_radiolabel = +node.attrs.no_radiolabel;
         this.display_readonly = +node.attrs.display_readonly;
     },
-    _action_click: function ($tag, value) {
+    initialize_content: function () {
         var self = this;
-        $tag.on('click', $tag, function (event) {
-            if (!self.get("effective_readonly")) {
-                if (!self.field.required && value[0] == self.get_value()) {
-                    self.set_value(undefined);
+        this.$el.on('click', '.oe_radio_input,.oe_radio_header', function (event) {
+            var id = $(event.target).data("id");
+            id = isNaN(+id) ? id : +id;
+            if (id && !self.get("effective_readonly")) {
+                if (!self.field.required && id == self.get_value()) {
+                    self.set_value(false);
                 } else {
-                    self.set_value(value[0]);
+                    self.set_value(id);
                 }
             }
         });
     },
-    _render_input: function (value) {
-        var check = value[0] == this.get_value();
-        var $input = $('<span class="oe_radio_input ' + (check ? 'oe_radio_input_on' : '') + '">&nbsp;</span>');
-        this._action_click($input, value);
-        return $input;
-    },
-    _render_label: function (value, width) {
-        $label = $('<th class="oe_radio_label" ' + (width ? 'style="width:' + width + '%"' : '') + '>' + value[1] + '</th>');
-        this._action_click($label, value);
-        return $label;
-    },
     render_value: function () {
-        var self = this;
-        this.$el.empty();
-        if (self.get("effective_readonly") && !self.display_readonly) {
-            var value = _.find(this.field.selection, function (val) { return val[0] == self.get_value() });
-            this.$el.append(value ? value[1] : "");
-        }
-        else if (this.horizontal) {
-            this.$table = $('<table width="100%"/>');
-            this.$el.append(this.$table);
-            var width = Math.floor(100 / this.field.selection.length);
-            if (!this.no_radiolabel) {
-                var $tr = $('<tr class="oe_radio_header"/>');
-                _.each(this.field.selection, function (value) {
-                    $tr.append(self._render_label(value, width));
-                });
-                this.$table.append($tr);
-            }
-
-            var $tr = $('<tr/>');
-            _.each(this.field.selection, function (value) {
-                var $td = $('<td/>');
-                $td.append(self._render_input(value));
-                $tr.append($td);
-            });
-            this.$table.append($tr);
-        }
-        else {
-            this.$table = $('<table width="100%"/>');
-            this.$el.append(this.$table);
-            _.each(this.field.selection, function (value) {
-                var $tr = $('<tr/>');
-                var $td = $('<td width="20"/>');
-                $td.append(self._render_input(value));
-                $tr.append($td);
-                if (!self.no_radiolabel) {
-                    var $td = $('<td/>');
-                    $td.append(self._render_label(value));
-                    $tr.append($td);
-                }
-                self.$table.append($tr);
-            });
-        }
+        this.$(".oe_radio_input_on").removeClass("oe_radio_input_on");
+        this.$(".oe_radio_input[data-id='" + this.get_value() + "'], .oe_radio_header[data-id='" + this.get_value() + "'] .oe_radio_input").addClass("oe_radio_input_on");
     }
 });
 
