@@ -915,9 +915,6 @@ openerp.mail = function (session) {
 
             // read messages
             self.parent_thread.message_fetch(this.domain, this.context, false, function (arg, data) {
-                // if (self.options.root_thread == self.parent_thread) {
-                //     data.reverse();
-                // }
                 self.id = false;
                 // insert the message on dom after this message
                 self.parent_thread.switch_new_message( data, self.$el );
