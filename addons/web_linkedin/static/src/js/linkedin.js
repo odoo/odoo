@@ -88,7 +88,7 @@ openerp.web_linkedin = function(instance) {
                 $("body").append(self.$linkedin);
                 var tag = document.createElement('script');
                 tag.type = 'text/javascript';
-                tag.src = "http://platform.linkedin.com/in.js";
+                tag.src = "https://platform.linkedin.com/in.js";
                 tag.innerHTML = 'api_key : ' + self.api_key + '\nauthorize : true\nscope: r_network r_basicprofile'; // r_contactinfo r_fullprofile r_emailaddress';
                 
                 document.getElementsByTagName('head')[0].appendChild(tag);

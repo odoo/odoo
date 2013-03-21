@@ -31,18 +31,18 @@ class test_invite(TestMailBase):
         # Do: create a mail_wizard_invite, validate it
         self._init_mock_build_email()
         context = {'default_res_model': 'mail.group', 'default_res_id': self.group_pigs_id}
-        mail_invite_id = mail_invite.create(cr, self.user_raoul_id, {'partner_ids': [(4, self.partner_bert_id)]}, context)
+        mail_invite_id = mail_invite.create(cr, self.user_raoul_id, {'partner_ids': [(4, self.partner_bert_id)], 'send_mail': True}, context)
         mail_invite.add_followers(cr, self.user_raoul_id, [mail_invite_id], {'default_model': 'mail.group', 'default_res_id': 0})
 
         # Test: Pigs followers should contain Admin, Bert
         self.group_pigs.refresh()
         follower_ids = [follower.id for follower in self.group_pigs.message_follower_ids]
-        self.assertEqual(set(follower_ids), set([self.partner_admin_id, self.partner_bert_id]), 'Pigs followers after invite is incorrect')
+        self.assertEqual(set(follower_ids), set([self.partner_admin_id, self.partner_bert_id]), 'invite: Pigs followers after invite is incorrect')
 
         # Test: (pretend to) send email and check subject, body
         self.assertEqual(len(self._build_email_kwargs_list), 1, 'sent email number incorrect, should be only for Bert')
         for sent_email in self._build_email_kwargs_list:
-            self.assertEqual(sent_email.get('subject'), 'Invitation to follow Pigs',
-                            'subject of invitation email is incorrect')
-            self.assertTrue('You have been invited to follow Pigs' in sent_email.get('body'),
-                            'body of invitation email is incorrect')
+            self.assertEqual(sent_email.get('subject'), 'Invitation to follow Discussion group: Pigs',
+                            'invite: subject of invitation email is incorrect')
+            self.assertIn('Raoul Grosbedon invited you to follow Discussion group document: Pigs', sent_email.get('body'),
+                            'invite: body of invitation email is incorrect')
