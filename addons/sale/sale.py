@@ -532,6 +532,9 @@ class sale_order(osv.osv):
                     invoice_ref += o.name + '|'
                     self.write(cr, uid, [o.id], {'state': 'progress'})
                     cr.execute('insert into sale_order_invoice_rel (order_id,invoice_id) values (%s,%s)', (o.id, res))
+                #remove last '|' in invoice_ref
+                if len(invoice_ref) >= 1: 
+                    invoice_ref = invoice_ref[:-1]
                 invoice.write(cr, uid, [res], {'origin': invoice_ref, 'name': invoice_ref})
             else:
                 for order, il in val:
