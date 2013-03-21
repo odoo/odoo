@@ -20,7 +20,7 @@
 -
   !python {model: gamification.goal}: |
     goal_ids = self.search(cr, uid, [('plan_id', '=', ref('plan_base_discover'))], context=context)
-    assert len(goal_ids) >= 2, "Not enough goals have been generated"
+    assert len(goal_ids) >= 4, "Not enough goals have been generated"
     for goal in self.browse(cr, uid, goal_ids, context=context):
       assert goal.state != 'draft', "Draft goal have been generated"
       assert goal.planline_id.plan_id.id == ref('plan_base_discover'), "Linked planline incorrect"

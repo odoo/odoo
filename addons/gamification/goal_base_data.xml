@@ -12,10 +12,26 @@
             <field name="domain">[('id','=',user_id),('partner_id.tz', '!=', False)]</field>
         </record>
 
+        <record model="gamification.goal.type" id="type_base_avatar">
+            <field name="name">Change of avatar</field>
+            <field name="description">In your user perference</field>
+            <field name="computation_mode">manual</field>
+            <!-- probelm : default avatar != False
+            <field name="computation_mode">count</field>
+            <field name="model_id" eval="ref('base.model_res_users')" />
+            <field name="field_id" eval="ref('base.field_res_partner_image')" />
+            <field name="domain">[('id','=',user_id),('partner_id.image', '!=', False)]</field>
+            -->
+        </record>
+
 
         <!-- planlines -->
         <record model="gamification.goal.planline" id="planline_base_discover1">
             <field name="type_id" eval="ref('type_base_timezone')" />
+            <field name="target_goal">1</field>
+        </record>
+        <record model="gamification.goal.planline" id="planline_base_discover2">
+            <field name="type_id" eval="ref('type_base_avatar')" />
             <field name="target_goal">1</field>
         </record>
 
@@ -26,12 +42,15 @@
             <field name="period">once</field>
             <field name="visibility_mode">progressbar</field>
             <field name="report_message_frequency">never</field>
-            <field name="planline_ids" eval="[(4, ref('planline_base_discover1'))]"/>
+            <field name="planline_ids" eval="[(4, ref('planline_base_discover1')),(4, ref('planline_base_discover2'))]"/>
         </record>
 
 
         <!-- link planline -> plan -->
         <record model="gamification.goal.planline" id="planline_base_discover1">
+            <field name="plan_id" eval="ref('plan_base_discover')" />
+        </record>
+        <record model="gamification.goal.planline" id="planline_base_discover2">
             <field name="plan_id" eval="ref('plan_base_discover')" />
         </record>
 
