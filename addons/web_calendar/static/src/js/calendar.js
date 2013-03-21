@@ -339,7 +339,7 @@ instance.web_calendar.CalendarView = instance.web.View.extend({
     },
     get_event_data: function(event_obj) {
         var data = {
-            name: event_obj.text
+            name: event_obj.text || scheduler.locale.labels.new_event
         };
         data[this.date_start] = instance.web.datetime_to_str(event_obj.start_date);
         if (this.date_stop) {
