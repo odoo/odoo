@@ -2296,7 +2296,8 @@ instance.web.form.FieldChar = instance.web.form.AbstractField.extend(instance.we
         return this.get('value') === '' || this._super();
     },
     focus: function() {
-        this.$('input:first')[0].focus();
+        var input = this.$('input:first')[0];
+        return input ? input.focus() : false;
     },
     set_dimensions: function (height, width) {
         this._super(height, width);
@@ -2393,7 +2394,8 @@ instance.web.form.FieldFloat = instance.web.form.FieldChar.extend({
         this._super.apply(this, [value_]);
     },
     focus: function () {
-        this.$('input:first').select();
+        var $input = this.$('input:first');
+        return $input.length ? $input.select() : false;
     }
 });
 
@@ -2575,9 +2577,8 @@ instance.web.form.FieldDatetime = instance.web.form.AbstractField.extend(instanc
         return this.get('value') === '' || this._super();
     },
     focus: function() {
-        if (this.datewidget && this.datewidget.$input) {
-            this.datewidget.$input[0].focus();
-        }
+        var input = this.datewidget && this.datewidget.$input[0];
+        return input ? input.focus() : false;
     },
     set_dimensions: function (height, width) {
         this._super(height, width);
@@ -2658,9 +2659,8 @@ instance.web.form.FieldText = instance.web.form.AbstractField.extend(instance.we
         return this.get('value') === '' || this._super();
     },
     focus: function($el) {
-        if (!this.get("effective_readonly") && this.$textarea) {
-            this.$textarea[0].focus();
-        }
+        var input = !this.get("effective_readonly") && this.$textarea && this.$textarea[0];
+        return input ? input.focus() : false;
     },
     set_dimensions: function (height, width) {
         this._super(height, width);
@@ -2743,7 +2743,8 @@ instance.web.form.FieldBoolean = instance.web.form.AbstractField.extend({
         this.$checkbox[0].checked = this.get('value');
     },
     focus: function() {
-        this.$checkbox[0].focus();
+        var input = this.$checkbox && this.$checkbox[0];
+        return input ? input.focus() : false;
     }
 });
 
@@ -2829,7 +2830,8 @@ instance.web.form.FieldSelection = instance.web.form.AbstractField.extend(instan
         }
     },
     focus: function() {
-        this.$('select:first')[0].focus();
+        var input = this.$('select:first')[0];
+        return input ? input.focus() : false;
     },
     set_dimensions: function (height, width) {
         this._super(height, width);
@@ -3344,9 +3346,8 @@ instance.web.form.FieldMany2One = instance.web.form.AbstractField.extend(instanc
         return ! this.get("value");
     },
     focus: function () {
-        if (!this.get('effective_readonly')) {
-            this.$input && this.$input[0].focus();
-        }
+        var input = !this.get('effective_readonly') && this.$input && this.$input[0];
+        return input ? input.focus() : false;
     },
     _quick_create: function() {
         this.no_ed = true;
@@ -4206,7 +4207,8 @@ instance.web.form.FieldMany2ManyTags = instance.web.form.AbstractField.extend(in
         this.set({'value': _.uniq(this.get('value').concat([id]))});
     },
     focus: function () {
-        this.$text[0].focus();
+        var input = this.$text && this.$text[0];
+        return input ? input.focus() : false;
     },
 });
 
