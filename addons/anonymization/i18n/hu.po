@@ -1,0 +1,350 @@
+# Hungarian translation for openobject-addons
+# Copyright (c) 2013 Rosetta Contributors and Canonical Ltd 2013
+# This file is distributed under the same license as the openobject-addons package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2013.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: openobject-addons\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2013-03-07 08:37+0000\n"
+"PO-Revision-Date: 2013-03-20 14:34+0000\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: Hungarian <hu@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Launchpad-Export-Date: 2013-03-21 05:03+0000\n"
+"X-Generator: Launchpad (build 16532)\n"
+
+#. module: anonymization
+#: model:ir.model,name:anonymization.model_ir_model_fields_anonymize_wizard
+msgid "ir.model.fields.anonymize.wizard"
+msgstr "ir.model.fields.anonymize.wizard"
+
+#. module: anonymization
+#: field:ir.model.fields.anonymization,model_id:0
+msgid "Object"
+msgstr "Objektum"
+
+#. module: anonymization
+#: model:ir.model,name:anonymization.model_ir_model_fields_anonymization_migration_fix
+msgid "ir.model.fields.anonymization.migration.fix"
+msgstr "ir.model.fields.anonymization.migration.fix"
+
+#. module: anonymization
+#: field:ir.model.fields.anonymization.migration.fix,target_version:0
+msgid "Target Version"
+msgstr "Cél verziója"
+
+#. module: anonymization
+#: selection:ir.model.fields.anonymization.migration.fix,query_type:0
+msgid "sql"
+msgstr "sql"
+
+#. module: anonymization
+#: code:addons/anonymization/anonymization.py:91
+#, python-format
+msgid ""
+"The database anonymization is currently in an unstable state. Some fields "
+"are anonymized, while some fields are not anonymized. You should try to "
+"solve this problem before trying to create, write or delete fields."
+msgstr ""
+"Az adatbázis névtelenítő/titkosító bizonytalan állapotban van. Egyes mezők "
+"névtelenítettek/titkosítottak lesznek, de egyesek nem. Ezt a problémát meg "
+"kell oldania, mielőtt mezőket hozna létre, írna vagy törölne."
+
+#. module: anonymization
+#: field:ir.model.fields.anonymization,field_name:0
+msgid "Field Name"
+msgstr "Mezőnév"
+
+#. module: anonymization
+#: field:ir.model.fields.anonymization,field_id:0
+#: field:ir.model.fields.anonymization.migration.fix,field_name:0
+msgid "Field"
+msgstr "Mező"
+
+#. module: anonymization
+#: selection:ir.model.fields.anonymization,state:0
+msgid "New"
+msgstr "Új"
+
+#. module: anonymization
+#: field:ir.model.fields.anonymize.wizard,file_import:0
+msgid "Import"
+msgstr "Importálás"
+
+#. module: anonymization
+#: model:ir.model,name:anonymization.model_ir_model_fields_anonymization
+msgid "ir.model.fields.anonymization"
+msgstr "ir.model.fields.anonymization"
+
+#. module: anonymization
+#: code:addons/anonymization/anonymization.py:300
+#, python-format
+msgid ""
+"Before executing the anonymization process, you should make a backup of your "
+"database."
+msgstr ""
+"Mielőtt kiadna egy névtelenítő/titkosító folyamatot, készítsen mentést az "
+"adatbázisról."
+
+#. module: anonymization
+#: field:ir.model.fields.anonymization.history,state:0
+#: field:ir.model.fields.anonymize.wizard,state:0
+msgid "Status"
+msgstr "Állapot"
+
+#. module: anonymization
+#: field:ir.model.fields.anonymization.history,direction:0
+msgid "Direction"
+msgstr "Irány"
+
+#. module: anonymization
+#: model:ir.actions.act_window,name:anonymization.action_ir_model_fields_anonymization_tree
+#: view:ir.model.fields.anonymization:0
+#: model:ir.ui.menu,name:anonymization.menu_administration_anonymization_fields
+msgid "Anonymized Fields"
+msgstr "névtelenített/titkosított mezők"
+
+#. module: anonymization
+#: model:ir.ui.menu,name:anonymization.menu_administration_anonymization
+msgid "Database anonymization"
+msgstr "Adatbázis névtelenítés/titkosítás"
+
+#. module: anonymization
+#: selection:ir.model.fields.anonymization.history,direction:0
+msgid "clear -> anonymized"
+msgstr "törlés -> titkosított"
+
+#. module: anonymization
+#: selection:ir.model.fields.anonymization,state:0
+#: selection:ir.model.fields.anonymize.wizard,state:0
+msgid "Anonymized"
+msgstr "Névtelenített/titkosított"
+
+#. module: anonymization
+#: field:ir.model.fields.anonymization,state:0
+msgid "unknown"
+msgstr "ismeretlen"
+
+#. module: anonymization
+#: code:addons/anonymization/anonymization.py:448
+#, python-format
+msgid "Anonymized value is None. This cannot happens."
+msgstr "Nincs névtelenítés/titkosítás. Ilyen nincs."
+
+#. module: anonymization
+#: field:ir.model.fields.anonymization.history,filepath:0
+msgid "File path"
+msgstr "Fájl elérési útvonal"
+
+#. module: anonymization
+#: help:ir.model.fields.anonymize.wizard,file_import:0
+msgid ""
+"This is the file created by the anonymization process. It should have the "
+"'.pickle' extention."
+msgstr ""
+"Ez a névtelenítési/titkosítási folyamat által létrehozott fájl. Ennek "
+"'.pickle' kiterjesztésűnek kell lennie."
+
+#. module: anonymization
+#: field:ir.model.fields.anonymization.history,date:0
+msgid "Date"
+msgstr "Dátum"
+
+#. module: anonymization
+#: field:ir.model.fields.anonymize.wizard,file_export:0
+msgid "Export"
+msgstr "Exportálás"
+
+#. module: anonymization
+#: view:ir.model.fields.anonymize.wizard:0
+msgid "Reverse the Database Anonymization"
+msgstr "Állítsa vissza az adatbázis névtelenítését/titkosítását"
+
+#. module: anonymization
+#: code:addons/anonymization/anonymization.py:444
+#, python-format
+msgid ""
+"Cannot anonymize fields of these types: binary, many2many, many2one, "
+"one2many, reference."
+msgstr ""
+"ilyen típusú mezőket nem tud névteleníteni/titkosítani: bináris, many2many, "
+"many2one, one2many, referencia, hivatkozás."
+
+#. module: anonymization
+#: view:ir.model.fields.anonymize.wizard:0
+msgid "Database Anonymization"
+msgstr "Adatbázis  névtelenítése/titkosítása"
+
+#. module: anonymization
+#: model:ir.ui.menu,name:anonymization.menu_administration_anonymization_wizard
+msgid "Anonymize database"
+msgstr "Adatbázis névtelenítés/titkosítás"
+
+#. module: anonymization
+#: selection:ir.model.fields.anonymization.migration.fix,query_type:0
+msgid "python"
+msgstr "python"
+
+#. module: anonymization
+#: view:ir.model.fields.anonymization.history:0
+#: field:ir.model.fields.anonymization.history,field_ids:0
+msgid "Fields"
+msgstr "Mezők"
+
+#. module: anonymization
+#: selection:ir.model.fields.anonymization,state:0
+#: selection:ir.model.fields.anonymize.wizard,state:0
+msgid "Clear"
+msgstr "Tiszta"
+
+#. module: anonymization
+#: code:addons/anonymization/anonymization.py:533
+#, python-format
+msgid ""
+"It is not possible to reverse the anonymization process without supplying "
+"the anonymization export file."
+msgstr ""
+"Nem lehetséges a névtelenítés/titkosítás visszaállítási folyamat az "
+"névtelenítési/titkosítási export fájl megléte nélkül."
+
+#. module: anonymization
+#: field:ir.model.fields.anonymize.wizard,summary:0
+msgid "Summary"
+msgstr "Összegzés"
+
+#. module: anonymization
+#: view:ir.model.fields.anonymization:0
+msgid "Anonymized Field"
+msgstr "Névtelenített/titkosított mező"
+
+#. module: anonymization
+#: code:addons/anonymization/anonymization.py:391
+#: code:addons/anonymization/anonymization.py:526
+#, python-format
+msgid ""
+"The database anonymization is currently in an unstable state. Some fields "
+"are anonymized, while some fields are not anonymized. You should try to "
+"solve this problem before trying to do anything."
+msgstr ""
+"Az adatbázis névtelenítő/titkosító bizonytalan állapotban van. Egyes mezők "
+"névtelenítettek/titkosítottak lesznek, de egyesek nem. Ezt a problémát meg "
+"kell oldania, mielőtt tenne valamit."
+
+#. module: anonymization
+#: selection:ir.model.fields.anonymize.wizard,state:0
+msgid "Unstable"
+msgstr "Bizonytalan"
+
+#. module: anonymization
+#: selection:ir.model.fields.anonymization.history,state:0
+msgid "Exception occured"
+msgstr "Kivétel keletkezett"
+
+#. module: anonymization
+#: selection:ir.model.fields.anonymization,state:0
+msgid "Not Existing"
+msgstr "Nem létező"
+
+#. module: anonymization
+#: field:ir.model.fields.anonymization,model_name:0
+msgid "Object Name"
+msgstr "Tárgy neve"
+
+#. module: anonymization
+#: model:ir.actions.act_window,name:anonymization.action_ir_model_fields_anonymization_history_tree
+#: view:ir.model.fields.anonymization.history:0
+#: model:ir.ui.menu,name:anonymization.menu_administration_anonymization_history
+msgid "Anonymization History"
+msgstr "Névtelenítési/titkosítási történet"
+
+#. module: anonymization
+#: field:ir.model.fields.anonymization.migration.fix,model_name:0
+msgid "Model"
+msgstr "Modell"
+
+#. module: anonymization
+#: model:ir.model,name:anonymization.model_ir_model_fields_anonymization_history
+msgid "ir.model.fields.anonymization.history"
+msgstr "ir.model.fields.anonymization.history"
+
+#. module: anonymization
+#: code:addons/anonymization/anonymization.py:358
+#, python-format
+msgid ""
+"The database anonymization is currently in an unstable state. Some fields "
+"are anonymized, while some fields are not anonymized. You should try to "
+"solve this problem before trying to do anything else."
+msgstr ""
+"Az adatbázis névtelenítő/titkosító bizonytalan állapotban van. Egyes mezők "
+"névtelenítettek/titkosítottak lesznek, de egyesek nem. Ezt a problémát meg "
+"kell oldania, mielőtt tenne valami mást."
+
+#. module: anonymization
+#: code:addons/anonymization/anonymization.py:389
+#: code:addons/anonymization/anonymization.py:448
+#, python-format
+msgid "Error !"
+msgstr "Hiba!"
+
+#. module: anonymization
+#: model:ir.actions.act_window,name:anonymization.action_ir_model_fields_anonymize_wizard
+#: view:ir.model.fields.anonymize.wizard:0
+msgid "Anonymize Database"
+msgstr "Adatbázis névtelenítés/titkosítás"
+
+#. module: anonymization
+#: field:ir.model.fields.anonymize.wizard,name:0
+msgid "File Name"
+msgstr "Fájl neve"
+
+#. module: anonymization
+#: field:ir.model.fields.anonymization.migration.fix,sequence:0
+msgid "Sequence"
+msgstr "Sorrend/szekvencia"
+
+#. module: anonymization
+#: selection:ir.model.fields.anonymization.history,direction:0
+msgid "anonymized -> clear"
+msgstr "névtelenített/titkosított -> üres"
+
+#. module: anonymization
+#: selection:ir.model.fields.anonymization.history,state:0
+msgid "Started"
+msgstr "Elkezdve"
+
+#. module: anonymization
+#: code:addons/anonymization/anonymization.py:389
+#, python-format
+msgid "The database is currently anonymized, you cannot anonymize it again."
+msgstr ""
+"Az adatbázis jelenleg névtelenítettek/titkosítot, nem tudja még egyszer "
+"névteleníteteni/titkosítani."
+
+#. module: anonymization
+#: selection:ir.model.fields.anonymization.history,state:0
+msgid "Done"
+msgstr "Elvégezve"
+
+#. module: anonymization
+#: field:ir.model.fields.anonymization.migration.fix,query:0
+#: field:ir.model.fields.anonymization.migration.fix,query_type:0
+msgid "Query"
+msgstr "Kérdés"
+
+#. module: anonymization
+#: view:ir.model.fields.anonymization.history:0
+#: field:ir.model.fields.anonymization.history,msg:0
+#: field:ir.model.fields.anonymize.wizard,msg:0
+msgid "Message"
+msgstr "Üzenet"
+
+#. module: anonymization
+#: code:addons/anonymization/anonymization.py:65
+#: sql_constraint:ir.model.fields.anonymization:0
+#, python-format
+msgid "You cannot have two fields with the same name on the same object!"
+msgstr "Nem lehet ugyanazon a tárgyon lévő két mezőnek ugyanaz a neve!"
