@@ -940,9 +940,9 @@ class mail_thread(osv.AbstractModel):
                 del context['thread_model']
                 return self.pool.get(model).message_post(cr, uid, thread_id, body=body, subject=subject, type=type, subtype=subtype, parent_id=parent_id, attachments=attachments, context=context, content_subtype=content_subtype, **kwargs)
 
-        # 0: Parse email-from, try to find a better author_id based on document's followers
+        # 0: Parse email-from, try to find a better author_id based on document's followers for incoming emails
         email_from = kwargs.get('email_from')
-        if email_from and thread_id:
+        if email_from and thread_id and type == 'email':
             email_list = tools.email_split(email_from)
             doc = self.browse(cr, uid, thread_id, context=context)
             if email_list and doc:
