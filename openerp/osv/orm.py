@@ -5351,6 +5351,7 @@ class BaseModel(object):
         assert self.is_recordset(), "Expected record or recordset: %s" % self
         if not isinstance(item, Record):
             _logger.warning("Unexpected: %s in %s" % (item, self))
+            return False
         return item.id in self._record_ids
 
     def __add__(self, other):
