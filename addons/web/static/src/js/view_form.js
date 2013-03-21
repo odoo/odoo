@@ -5263,8 +5263,8 @@ instance.web.form.FieldStatus = instance.web.form.AbstractField.extend({
         this.options.clickable = this.options.clickable || (this.node.attrs || {}).clickable || false;
         this.options.visible = this.options.visible || (this.node.attrs || {}).statusbar_visible || false;
         this.set({value: false});
-        this.selection = [];
-        this.set("selection", []);
+        this.selection = {'unfolded': [], 'folded': []};
+        this.set("selection", {'unfolded': [], 'folded': []});
         this.selection_dm = new instance.web.DropMisordered();
     },
     start: function() {
@@ -5278,7 +5278,7 @@ instance.web.form.FieldStatus = instance.web.form.AbstractField.extend({
         });
         this.get_selection();
         if (this.options.clickable) {
-            this.$el.on('click','li',this.on_click_stage);
+            this.$el.on('click','li:not(.oe_folded)',this.on_click_stage);
         }
         if (this.$el.parent().is('header')) {
             this.$el.after('<div class="oe_clear"/>');
@@ -5293,7 +5293,10 @@ instance.web.form.FieldStatus = instance.web.form.AbstractField.extend({
     },
     render_value: function() {
         var self = this;
-        var content = QWeb.render("FieldStatus.content", {widget: self});
+        var content = QWeb.render("FieldStatus.content", {
+            'widget': self, 
+            'value_folded': _.find(self.selection.folded, function(i){return i[0] === self.get('value')})
+        });
         self.$el.html(content);
         var colors = JSON.parse((self.node.attrs || {}).statusbar_colors || "{}");
         var color = colors[self.get('value')];
@@ -5303,15 +5306,8 @@ instance.web.form.FieldStatus = instance.web.form.AbstractField.extend({
     },
     calc_domain: function() {
         var d = instance.web.pyeval.eval('domain', this.build_domain());
-        var domain = []; //if there is no domain defined, fetch all the records
-        
-        if (d.length) {
-            domain = ['|',['id', '=', this.get('value')]].concat(d);
-        }
-        
-        if (! _.isEqual(domain, this.get("evaluated_selection_domain"))) {
-            this.set("evaluated_selection_domain", domain);
-        }
+        this.set("evaluated_selection_domain", ['&', ['fold', '=', false], '|', ['id', '=', this.get('value')]].concat(d));
+        this.set("evaluated_selection_domain_folded", ['&', ['fold', '!=', false], '|', ['id', '=', this.get('value')]].concat(d));
     },
     /** Get the selection and render it
      *  selection: [[identifier, value_to_display], ...]
@@ -5320,18 +5316,24 @@ instance.web.form.FieldStatus = instance.web.form.AbstractField.extend({
      */
     get_selection: function() {
         var self = this;
-        var selection = [];
+        var selection_unfolded = [];
+        var selection_folded = [];
 
         var calculation = _.bind(function() {
             if (this.field.type == "many2one") {
-                var domain = [];
-                var ds = new instance.web.DataSetSearch(this, this.field.relation,
-                    self.build_context(), this.get("evaluated_selection_domain"));
-                return ds.read_slice(['name'], {}).then(function (records) {
-                    for(var i = 0; i < records.length; i++) {
-                        selection.push([records[i].id, records[i].name]);
-                    }
-                });
+                var ds_unfold = new instance.web.DataSetSearch(self, self.field.relation, self.build_context(), this.get("evaluated_selection_domain"))
+                    .read_slice(['name'], {}).then(function (records) {
+                        _.each(records, function (record) {
+                            selection_unfolded.push([record.id, record.name]);
+                        });
+                    });
+                var ds_fold = new instance.web.DataSetSearch(self, self.field.relation, self.build_context(), this.get("evaluated_selection_domain_folded"))
+                    .read_slice(['name'], {}).then(function (records) {
+                        _.each(records, function (record) {
+                            selection_folded.push([record.id, record.name]);
+                        });
+                    });
+                return $.when(ds_unfold, ds_fold);
             } else {
                 // For field type selection filter values according to
                 // statusbar_visible attribute of the field. For example:
@@ -5347,6 +5349,7 @@ instance.web.form.FieldStatus = instance.web.form.AbstractField.extend({
             }
         }, this);
         this.selection_dm.add(calculation()).then(function () {
+            var selection = {'unfolded': selection_unfolded, 'folded': selection_folded};
             if (! _.isEqual(selection, self.get("selection"))) {
                 self.set("selection", selection);
             }
