@@ -33,7 +33,7 @@
   I check the goal for demo user is successful
 -
   !python {model: gamification.goal}: |
-    goal_ids = self.search(cr, uid, [('user_id', '=', ref('base.user_demo'))])
+    goal_ids = self.search(cr, uid, [('user_id', '=', ref('base.user_demo')),('type_id','=',ref('type_base_timezone'))])
     self.update(cr, uid, goal_ids, context=context)
     for goal in self.browse(cr, uid, goal_ids, context=context):
       assert goal.state == "reached", "Goal not successful %s" % goal.state
