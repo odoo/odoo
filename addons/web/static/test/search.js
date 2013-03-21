@@ -1361,7 +1361,7 @@ openerp.testing.section('search.invisible', {
         }, ['<search>',
                 '<field name="field0"/>',
                 '<field name="field1" modifiers="{&quot;invisible&quot;: true}"/>',
-            '</search>'].join());
+            '</search>'].join(''));
         return view.appendTo($fix)
         .then(function () {
             var done = $.Deferred();
@@ -1380,7 +1380,7 @@ openerp.testing.section('search.invisible', {
             '<search>',
                 '<filter string="filter 0"/>',
                 '<filter string="filter 1" modifiers="{&quot;invisible&quot;: true}"/>',
-            '</search>'].join());
+            '</search>'].join(''));
         return view.appendTo($fix)
         .then(function () {
             var $fs = $fix.find('.oe_searchview_filters ul');
