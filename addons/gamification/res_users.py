@@ -3,7 +3,7 @@ from openerp.osv import osv
 
 class res_users_gamification_group(osv.Model):
     """ Update of res.users class
-        - if adding groups to an user, check gamification.goal.plan linked to 
+        - if adding groups to an user, check gamification.goal.plan linked to
         this group, and the user. This is done by overriding the write method.
     """
     _name = 'res.users'
@@ -22,9 +22,33 @@ class res_users_gamification_group(osv.Model):
             goal_plan_obj.plan_subscribe_users(cr, uid, plan_ids, ids, context=context)
         return write_res
 
+    def get_goals_todo_info(self, cr, uid, context=None):
+        """Return the list of goals assigned to the user, grouped by plan"""
+        goals_info = []
+        goal_obj = self.pool.get('gamification.goal')
+        plan_obj = self.pool.get('gamification.goal.plan')
+        plan_ids = plan_obj.search(cr, uid, [('user_ids', 'in', uid)], context=context)
+        for plan in plan_obj.browse(cr, uid, plan_ids, context=context):
+            vals = {'name': plan.name, 'goals': []}
+
+            goal_ids = goal_obj.search(cr, uid, [('user_id', '=', uid), ('plan_id', '=', plan.id)], context=context)
+            for goal in goal_obj.browse(cr, uid, goal_ids, context=context):
+                vals['goals'].append({
+                    'id': goal.id,
+                    'type_name': goal.type_id.name,
+                    'type_description': goal.type_description,
+                    'state': goal.state,
+                    'completeness': goal.completeness,
+                    'computation_mode': goal.computation_mode,
+                })
+
+            goals_info.append(vals)
+        return goals_info
+
+
 class res_groups_gamification_group(osv.Model):
     """ Update of res.groups class
-        - if adding users from a group, check gamification.goal.plan linked to 
+        - if adding users from a group, check gamification.goal.plan linked to
         this group, and the user. This is done by overriding the write method.
     """
     _name = 'res.groups'
