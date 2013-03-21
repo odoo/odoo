@@ -81,37 +81,27 @@ openerp_mail_followers = function(session, mail) {
 
         on_edit_subtype: function(event) {
             var self = this;
-            var records = [];
             var partner_id = $(event.target).data('id');
-            var partner_name = $(event.target).siblings('a').text(); 
-            var id = this.view.datarecord.id;
-            var res_model = this.view.dataset.model;
-            var $dialog = new session.web.dialog($('<div class = "oe_edit_actions">'), {
+            var context = new session.web.CompoundContext(this.build_context(), {'partner_id': partner_id});
+            self.$dialog = new session.web.dialog($('<div class = "oe_edit_actions">'), {
                             modal: true,
-                            title: _t('Edit Subtypes of ') + '"' + partner_name + '"',
+                            width: 'auto',
+                            height: 'auto',
+                            title: _t('Edit Subscriptions of ') + $(event.target).siblings('a').text(),
                             buttons: [
                                     { text: _t("Apply"), click: function() { 
-                                        self.on_apply_subtype(id, partner_id);
+                                        self.on_apply_subtype(partner_id);
                                         $(this).remove();
                                     }},
                                     { text: _t("Cancel"), click: function() { $(this).remove(); }}
                                 ],
                     });
-            this.ds_model.call('edit_followers_subtype', [[id], partner_id, new session.web.CompoundContext(this.build_context(), {})])
-                .then(function (data) {
-                    if (data[id]) {
-                        records = data[id].message_subtype_data;
-                        }
-                        _(records).each(function (record, record_name) {
-                            record.name = record_name;
-                            record.followed = record.followed || undefined;
-                           $(session.web.qweb.render("mail.followers.edit.subtype", {'record': record})).appendTo($dialog);
-                        });
-                });
+             return self.fetch_subtypes(context);
         },
 
-        on_apply_subtype: function(id, partner_id) {
+        on_apply_subtype: function(partner_id) {
             var check_list = new Array();
+            var id = this.view.datarecord.id;
             _($('.oe_edit_actions input[type="checkbox"]')).each(function (record) {
                  if ($(record).is(':checked')) {
                      check_list.push(parseInt($(record).data('id')));
@@ -256,25 +246,34 @@ openerp_mail_followers = function(session, mail) {
         },
 
         /** Fetch subtypes, only if current user is follower */
-        fetch_subtypes: function () {
+        fetch_subtypes: function (context) {
             var self = this;
-            var subtype_list_ul = this.$('.oe_subtype_list').empty();
-            if (! this.message_is_follower) return;
+            var mode = "";
+            if (context && context.eval('partner_id')) {
+                mode = "edit_follower";
+            } else {
+                var subtype_list_ul = this.$('.oe_subtype_list').empty();
+                if (! this.message_is_follower) return;
+            }
             var id = this.view.datarecord.id;
-            this.ds_model.call('message_get_subscription_data', [[id], new session.web.CompoundContext(this.build_context(), {})])
-                .then(function (data) {self.display_subtypes(data, id);});
+            this.ds_model.call('message_get_subscription_data', [[id],context])
+                .then(function (data) {self.display_subtypes(data, id, mode);});
         },
 
         /** Display subtypes: {'name': default, followed} */
-        display_subtypes:function (data, id) {
+        display_subtypes:function (data, id, mode) {
             var self = this;
             var $list = this.$('.oe_subtype_list');
-            $list.empty().hide();
+            if (mode.length == 0){ $list.empty().hide();}
             var records = data[this.view.datarecord.id || this.view.dataset.ids[0]].message_subtype_data;
             _(records).each(function (record, record_name) {
                 record.name = record_name;
                 record.followed = record.followed || undefined;
-                $(session.web.qweb.render('mail.followers.subtype', {'record': record})).appendTo( self.$('.oe_subtype_list') );
+                if (mode.length == 0) {
+                    $(session.web.qweb.render('mail.followers.subtype', {'record': record,'mode': mode})).appendTo( self.$('.oe_subtype_list') );
+                } else {
+                    $(session.web.qweb.render('mail.followers.subtype', {'record': record,'mode': mode})).appendTo(self.$dialog);
+                }
             });
             if (_.size(records) > 1) {
                 $list.show();
