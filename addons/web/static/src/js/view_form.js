@@ -5306,8 +5306,7 @@ instance.web.form.FieldStatus = instance.web.form.AbstractField.extend({
     },
     calc_domain: function() {
         var d = instance.web.pyeval.eval('domain', this.build_domain());
-        this.set("evaluated_selection_domain", ['&', ['fold', '=', false], '|', ['id', '=', this.get('value')]].concat(d));
-        this.set("evaluated_selection_domain_folded", ['&', ['fold', '!=', false], '|', ['id', '=', this.get('value')]].concat(d));
+        this.set("evaluated_selection_domain", ['|', ['id', '=', this.get('value')]].concat(d));
     },
     /** Get the selection and render it
      *  selection: [[identifier, value_to_display], ...]
@@ -5321,19 +5320,16 @@ instance.web.form.FieldStatus = instance.web.form.AbstractField.extend({
 
         var calculation = _.bind(function() {
             if (this.field.type == "many2one") {
-                var ds_unfold = new instance.web.DataSetSearch(self, self.field.relation, self.build_context(), this.get("evaluated_selection_domain"))
-                    .read_slice(['name'], {}).then(function (records) {
+                return new instance.web.DataSetSearch(self, self.field.relation, self.build_context(), this.get("evaluated_selection_domain"))
+                    .read_slice(['name', 'fold'], {}).then(function (records) {
                         _.each(records, function (record) {
-                            selection_unfolded.push([record.id, record.name]);
+                            if (record.fold) {
+                                selection_folded.push([record.id, record.name]);
+                            } else {
+                                selection_unfolded.push([record.id, record.name]);
+                            }
                         });
                     });
-                var ds_fold = new instance.web.DataSetSearch(self, self.field.relation, self.build_context(), this.get("evaluated_selection_domain_folded"))
-                    .read_slice(['name'], {}).then(function (records) {
-                        _.each(records, function (record) {
-                            selection_folded.push([record.id, record.name]);
-                        });
-                    });
-                return $.when(ds_unfold, ds_fold);
             } else {
                 // For field type selection filter values according to
                 // statusbar_visible attribute of the field. For example:
