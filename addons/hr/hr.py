@@ -218,26 +218,6 @@ class hr_employee(osv.osv):
     _order='name_related'
 
     def create(self, cr, uid, data, context=None):
-        # verify do not have two employee with the same email
-        if 'work_email' in data:
-            user_ids = self.pool.get('res.users').search(cr, uid, [('email', '=', data['work_email'])], context=context)
-            if len(user_ids) > 0:
-                if 'user_id' not in data:
-                    raise osv.except_osv(_('Warning!'), _('You are trying to create an employee with an email already linked to an user. Please linked the employee to it or change the email.'))
-                elif data['user_id'] not in user_ids:
-                    raise osv.except_osv(_('Warning!'), _('You are trying to create an employee with an email different than the one of the linked user.'))
-                # else user and email match
-            else:
-                # employee has an email but not the user
-                # TOCHECK update user ?
-                pass
-        elif 'user_id' in data:
-            user = self.pool.get('res.users').browse(cr, uid, data['user_id'], context=context)
-            if user.email:
-                # employee has no email but the user does
-                # TOCHECK raise error ?
-                pass
-
         employee_id = super(hr_employee, self).create(cr, uid, data, context=context)
         try:
             (model, mail_group_id) = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'mail', 'group_all_employees')
@@ -246,8 +226,7 @@ class hr_employee(osv.osv):
                 body='Welcome to %s! Please help them take the first steps with OpenERP!' % (employee.name),
                 subtype='mail.mt_comment', context=context)
         except:
-            pass  # group deleted: do not push a message
-
+            pass # group deleted: do not push a message
         return employee_id
 
     def unlink(self, cr, uid, ids, context=None):
@@ -286,46 +265,6 @@ class hr_employee(osv.osv):
     def _get_default_image(self, cr, uid, context=None):
         image_path = addons.get_module_resource('hr', 'static/src/img', 'default_image.png')
         return tools.image_resize_image_big(open(image_path, 'rb').read().encode('base64'))
-
-    def action_follow(self, cr, uid, ids, context=None):
-        """ Wrapper because message_subscribe_users take a user_ids=None
-            that receive the context without the wrapper. """
-        return self.message_subscribe_users(cr, uid, ids, context=context)
-
-    def action_unfollow(self, cr, uid, ids, context=None):
-        """ Wrapper because message_unsubscribe_users take a user_ids=None
-            that receive the context without the wrapper. """
-        return self.message_unsubscribe_users(cr, uid, ids, context=context)
-
-    def message_post(self, cr, uid, thread_id, context=None, **kwargs):
-        """Overwrite the message_post method when using the send to my
-        followers screen
-
-        When a message is sent to a hr.employee using the action
-        action_mail_inbox_feeds, the context is extended with res_users_id
-        containing the user id of the user linked to the employee and
-        default_res_id contains 0 (to avoid misused of the function called from
-        the inbox page).
-        In these conditions, the thread_id used to send the message is the id
-        of the employee instead of the res_users (or partner_id).
-        If several employee are linked to the same user_id, the message is
-        duplicated and sent to every user.
-
-        :return: the result of message_post from mail_thread, last call if
-        several messages are sent.
-        """
-
-        if 'res_users_id' in context and context['default_res_id'] == 0:
-            employee_ids = self.search(cr, uid, [('user_id', '=', context['res_users_id'])], context=context)
-            if len(employee_ids) > 0:
-                for employee_id in employee_ids:
-                    res = super(hr_employee, self).message_post(cr, uid, employee_id, context=context, **kwargs)
-                return res
-            else:
-                raise osv.except_osv('Warning!', 'Your user is not linked to an employee form, which is required to send messages to your followers.')
-
-        # if no overwrite, send message as usual
-        return super(hr_employee, self).message_post(cr, uid, thread_id, context=context, **kwargs)
 
     _defaults = {
         'active': 1,
