@@ -1400,6 +1400,26 @@ openerp.testing.section('search.invisible', {
             return done;
         });
     });
+    test('invisible-previous-sibling', {asserts: 3}, function (instance, $fix, mock) {
+        var view = makeView(instance, mock, {}, [
+            '<search>',
+                '<filter string="filter 0" context="{&quot;test&quot;: 0}"/>',
+                '<filter string="filter 1" modifiers="{&quot;invisible&quot;: true}" context="{&quot;test&quot;: 1}"/>',
+                '<filter string="filter 2" modifiers="{&quot;invisible&quot;: true}" context="{&quot;test&quot;: 2}"/>',
+                '<filter string="filter 3" context="{&quot;test&quot;: 3}"/>',
+            '</search>'].join(''));
+        return view.appendTo($fix)
+        .done(function () {
+            // Select filter 3
+            $fix.find('.oe_searchview_filters ul li:contains("filter 3")').click();
+            equal(view.query.length, 1, "should have selected a filter");
+            var facet = view.query.at(0);
+            strictEqual(facet.values.at(0).get('label'), "filter 3",
+                        "should have correctly labelled the facet");
+            deepEqual(view.build_search_data().contexts, [{test: 3}],
+                      "should have built correct context");
+        });
+    });
     // Invisible filter groups should not appear in the drawer
     // Group invisibility should be inherited by children
     test('group-invisibility', {asserts: 6}, function (instance, $fix, mock) {

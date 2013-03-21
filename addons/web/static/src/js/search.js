@@ -1136,7 +1136,7 @@ instance.web.search.FilterGroup = instance.web.search.Input.extend(/** @lends in
         });
     },
     toggle_filter: function (e) {
-        this.toggle(this.filters[$(e.target).index()]);
+        this.toggle(this.filters[Number($(e.target).data('index'))]);
     },
     toggle: function (filter) {
         this.view.query.toggle(this.make_facet([this.make_value(filter)]));
