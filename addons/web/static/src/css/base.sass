@@ -1607,6 +1607,9 @@ $sheet-padding: 16px
 
 
     // }}}
+    .oe_kanban_grouped
+        position: relative
+        z-index: 1
     // Views Common {{{
     .oe_view_nocontent
         padding: 15px
@@ -1666,6 +1669,8 @@ $sheet-padding: 16px
         display: none !important
     .oe_form_readonly
         .oe_edit_only, .oe_form_field:empty
+            display: none !important
+        .oe_read_only
             display: none !important
         .oe_form .oe_form_field_date
             width: auto
@@ -1884,6 +1889,7 @@ $sheet-padding: 16px
             background: white
             min-width: 60px
             color: #1f1f1f
+            font-family: "Lucida Grande", Helvetica, Verdana, Arial, sans-serif
         input[readonly], select[readonly], textarea[readonly], input[disabled], select[disabled]
             background: #E5E5E5 !important
             color: #666
@@ -1892,6 +1898,7 @@ $sheet-padding: 16px
             padding-left: 8px
             @include box-shadow(none)
             @include radius(0px)
+            color: #4C4C4C
         textarea.oe_inline[disabled]
             border-left: 8px solid #eee
         .oe_form_field_url button img
