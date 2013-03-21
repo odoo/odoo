@@ -41,7 +41,7 @@
     ids = self.search(cr, uid, [('ref', '=', 'My Test Model')])
     self.button_validate(cr, uid, ids, {})
     moves = self.browse(cr, uid, ids)[0]
-    assert(moves.state == 'posted'), _('Journal Entries are not in posted state')
+    assert(moves.state == 'posted'), 'Journal Entries are not in posted state'
 -
   Then I create Recurring Lines
 -
@@ -57,7 +57,7 @@
     self.compute(cr, uid, [ref('test_recurring_lines')], {'lang': u'en_US', 'active_model': 'ir.ui.menu',
       'active_ids': [ref('menu_action_subscription_form')], 'tz': False, 'active_id': ref('menu_action_subscription_form')})
     subscription_lines = subscription_line_obj.search(cr, uid, [('subscription_id', '=', ref('test_recurring_lines'))])
-    assert subscription_lines, _('Subscription lines has not been created')
+    assert subscription_lines, 'Subscription lines has not been created'
 -
   I provide date in 'Generate Entries' wizard
 -
@@ -69,5 +69,5 @@
   !python {model: account.subscription.generate}: |
     res = self.action_generate(cr, uid, [ref('account_subscription_generate')], {'lang': u'en_US', 'active_model': 'ir.ui.menu',
       'active_ids': [ref('menu_generate_subscription')], 'tz': False, 'active_id': ref('menu_generate_subscription')})
-    assert res, _('Move for subscription lines has not been created')
+    assert res, 'Move for subscription lines has not been created'
 
