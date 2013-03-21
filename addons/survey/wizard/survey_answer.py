@@ -161,7 +161,7 @@ class survey_question_wiz(osv.osv_memory):
             name_select = tools.ustr(que.id) + "_selection_" + tools.ustr(row.id)
             etree.SubElement(xml_group, 'newline')
             etree.SubElement(xml_group, 'label', {'for': name_select, 'string': tools.ustr(row.answer)})
-            etree.SubElement(xml_group, 'field', {'widget': 'radio', 'horizontal': '1', 'no_radiolabel': not first and '1' or '0', 'modifiers': readonly, 'name': name_select, 'nolabel': "1"})
+            etree.SubElement(xml_group, 'field', {'widget': 'radio', 'options': "{'horizontal': 1, 'no_radiolabel': %s}" % (not first and '1' or '0'), 'modifiers': readonly, 'name': name_select, 'nolabel': "1"})
             selection = []
             for col in que_rec.column_heading_ids:
                 selection.append((str(col.id), col.title))
