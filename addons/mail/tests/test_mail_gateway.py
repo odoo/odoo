@@ -162,7 +162,7 @@ class TestMailgateway(TestMailBase):
                             'message_process: message on created group should have Sylvie as author_id')
         self.assertIn('Sylvie Lelitre <test.sylvie.lelitre@agrolait.com>', msg.email_from,
                             'message_process: message on created group should have have an email_from')
-        # Test: author (not recipient and and not raoul (as alias owner)) added as follower
+        # Test: author (not recipient and not raoul (as alias owner)) added as follower
         frog_follower_ids = set([p.id for p in frog_group.message_follower_ids])
         self.assertEqual(frog_follower_ids, set([p1id]),
                             'message_process: newly created group should have 1 follower (author, not creator, not recipients)')
@@ -212,7 +212,55 @@ class TestMailgateway(TestMailBase):
                             'message_process: after reply, group should have 2 followers')
 
         # --------------------------------------------------
-        # Test3: misc gateway features
+        # Test3: email_from and partner finding
+        # --------------------------------------------------
+
+        # Data: extra partner with Raoul's email -> test the 'better author finding'
+        extra_partner_id = self.res_partner.create(cr, uid, {'name': 'A-Raoul', 'email': 'test_raoul@email.com'})
+        # extra_user_id = self.res_users.create(cr, uid, {'name': 'B-Raoul', 'email': self.user_raoul.email})
+        # extra_user_pid = self.res_users.browse(cr, uid, extra_user_id).partner_id.id
+
+        # Do: post a new message, with a known partner -> duplicate emails -> partner
+        format_and_process(MAIL_TEMPLATE, email_from='Lombrik Lubrik <test_raoul@email.com>',
+                                            to='erroneous@example.com>', subject='Re: news (2)',
+                                            extra='In-Reply-To: <12321321-openerp-%d-mail.group@example.com>\n' % frog_group.id)
+        frog_groups = self.mail_group.search(cr, uid, [('name', '=', 'Frogs')])
+        frog_group = self.mail_group.browse(cr, uid, frog_groups[0])
+        # Test: author is A-Raoul (only existing)
+        self.assertEqual(frog_group.message_ids[0].author_id.id, extra_partner_id,
+                            'message_process: email_from -> author_id wrong')
+
+        # Do: post a new message, with a known partner -> duplicate emails -> user
+        frog_group.message_unsubscribe([extra_partner_id])
+        raoul_email = self.user_raoul.email
+        self.res_users.write(cr, uid, self.user_raoul_id, {'email': 'test_raoul@email.com'})
+        format_and_process(MAIL_TEMPLATE, email_from='Lombrik Lubrik <test_raoul@email.com>',
+                                            to='erroneous@example.com>', subject='Re: news (3)',
+                                            extra='In-Reply-To: <12321321-openerp-%d-mail.group@example.com>\n' % frog_group.id)
+        frog_groups = self.mail_group.search(cr, uid, [('name', '=', 'Frogs')])
+        frog_group = self.mail_group.browse(cr, uid, frog_groups[0])
+        # Test: author is Raoul (user), not A-Raoul
+        self.assertEqual(frog_group.message_ids[0].author_id.id, self.partner_raoul_id,
+                            'message_process: email_from -> author_id wrong')
+
+        # Do: post a new message, with a known partner -> duplicate emails -> partner because is follower
+        frog_group.message_unsubscribe([self.partner_raoul_id])
+        frog_group.message_subscribe([extra_partner_id])
+        raoul_email = self.user_raoul.email
+        self.res_users.write(cr, uid, self.user_raoul_id, {'email': 'test_raoul@email.com'})
+        format_and_process(MAIL_TEMPLATE, email_from='Lombrik Lubrik <test_raoul@email.com>',
+                                            to='erroneous@example.com>', subject='Re: news (3)',
+                                            extra='In-Reply-To: <12321321-openerp-%d-mail.group@example.com>\n' % frog_group.id)
+        frog_groups = self.mail_group.search(cr, uid, [('name', '=', 'Frogs')])
+        frog_group = self.mail_group.browse(cr, uid, frog_groups[0])
+        # Test: author is Raoul (user), not A-Raoul
+        self.assertEqual(frog_group.message_ids[0].author_id.id, extra_partner_id,
+                            'message_process: email_from -> author_id wrong')
+
+        self.res_users.write(cr, uid, self.user_raoul_id, {'email': raoul_email})
+
+        # --------------------------------------------------
+        # Test4: misc gateway features
         # --------------------------------------------------
 
         # Do: incoming email with model that does not accepts incoming emails must raise
