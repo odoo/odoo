@@ -420,7 +420,7 @@ class account_invoice(osv.osv):
             'mark_invoice_as_sent': True,
             })
         return {
-            'name': 'Compose Email',
+            'name': _('Compose Email'),
             'type': 'ir.actions.act_window',
             'view_type': 'form',
             'view_mode': 'form',
