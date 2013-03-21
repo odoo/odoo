@@ -1520,7 +1520,7 @@
     <t t-esc="attrs.string"/>
 </button>
 <ul t-name="SearchView.filters">
-    <li t-foreach="widget.filters" t-as="filter" t-if="filter.visible()"
+    <li t-foreach="widget.filters" t-as="filter" t-if="!filter.visible || filter.visible()"
             t-att-title="filter.attrs.string ? filter.attrs.help : undefined">
         <t t-esc="filter.attrs.string or filter.attrs.help or filter.attrs.name or 'Ω'"/>
     </li>
