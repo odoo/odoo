@@ -242,7 +242,7 @@ class mail_mail(osv.Model):
         body = self.send_get_mail_body(cr, uid, mail, partner=partner, context=context)
         subject = self.send_get_mail_subject(cr, uid, mail, partner=partner, context=context)
         body_alternative = tools.html2plaintext(body)
-        email_to = [partner.email] if partner else tools.email_split(mail.email_to)
+        email_to = ['%s <%s>' % (partner.name, partner.email)] if partner else tools.email_split(mail.email_to)
         return {
             'body': body,
             'body_alternative': body_alternative,
