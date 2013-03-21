@@ -23,6 +23,7 @@ from datetime import datetime
 from dateutil.relativedelta import relativedelta
 from openerp import netsvc
 from openerp import pooler
+from openerp.osv import api
 from openerp.osv import osv
 from openerp.osv import fields
 from openerp.tools.translate import _
@@ -40,6 +41,7 @@ class procurement_order(osv.osv):
         self._procure_orderpoint_confirm(cr, uid, automatic=automatic,\
                 use_new_cursor=use_new_cursor, context=context)
 
+    @api.noguess
     def _procure_confirm(self, cr, uid, ids=None, use_new_cursor=False, context=None):
         '''
         Call the scheduler to check the procurement order
