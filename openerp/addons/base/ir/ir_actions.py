@@ -284,7 +284,7 @@ class act_window(osv.osv):
                     except Exception:
                         continue
                     custom_context = dict(context, **eval_context)
-                    res['help'] = self.pool.get(res.get('res_model')).dynamic_help(cr, uid, res.get('help', ""), context=custom_context)
+                    res['help'] = self.pool.get(res.get('res_model')).get_empty_list_help(cr, uid, res.get('help', ""), context=custom_context)
         
         if u:
             return results[0]

@@ -3604,7 +3604,7 @@ class BaseModel(object):
             return result and result[0] or False
         return result
 
-    def dynamic_help(self, cr, user, help, context=None):
+    def get_empty_list_help(self, cr, user, help, context=None):
         return help
 
     def _read_flat(self, cr, user, ids, fields_to_read, context=None, load='_classic_read'):
