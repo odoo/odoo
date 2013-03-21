@@ -1093,7 +1093,7 @@
             <t t-set="width" t-value="Math.floor(100 / widget.field.selection.length)"/>
             <t t-if="!widget.no_radiolabel">
                 <t t-foreach="widget.field.selection" t-as="selection">
-                    <div class="oe_radio_header" t-att-style="'width: ' + width + '%;'"><t t-raw="selection[1]"/></div>
+                    <div class="oe_radio_header" t-att-style="'width: ' + width + '%;'"><t t-esc="selection[1]"/></div>
                 </t>
                 <br/>
             </t>
@@ -1104,7 +1104,7 @@
         <t t-if="!widget.horizontal">
             <t t-foreach="widget.field.selection" t-as="selection">
                 <div class="oe_radio_header" t-att-style="'width: ' + width + '%;'" t-att-data-id="selection[0]">
-                    <div class="oe_radio_input">&amp;nbsp;</div><t t-if="!widget.no_radiolabel" t-raw="selection[1]"/>
+                    <div class="oe_radio_input">&amp;nbsp;</div><t t-if="!widget.no_radiolabel" t-esc="selection[1]"/>
                 </div>
             </t>
         </t>
