@@ -5342,7 +5342,7 @@ instance.web.form.FieldStatus = instance.web.form.AbstractField.extend({
                 for(var i=0; i < select.length; i++) {
                     var key = select[i][0];
                     if(key == this.get('value') || !this.options.visible || this.options.visible.indexOf(key) != -1) {
-                        selection.push(select[i]);
+                        selection_unfolded.push(select[i]);
                     }
                 }
                 return $.when();
