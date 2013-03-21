@@ -8,13 +8,13 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2013-03-07 08:37+0000\n"
-"PO-Revision-Date: 2013-03-13 16:20+0000\n"
+"PO-Revision-Date: 2013-03-21 01:39+0000\n"
 "Last-Translator: Numérigraphe <Unknown>\n"
 "Language-Team: French <fr@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-03-14 05:33+0000\n"
+"X-Launchpad-Export-Date: 2013-03-21 05:03+0000\n"
 "X-Generator: Launchpad (build 16532)\n"
 
 #. module: account
@@ -889,7 +889,7 @@ msgstr "Écritures analytiques par ligne"
 #. module: account
 #: field:account.invoice.refund,filter_refund:0
 msgid "Refund Method"
-msgstr "Méthode de remboursement"
+msgstr "Méthode d'avoir"
 
 #. module: account
 #: model:ir.ui.menu,name:account.menu_account_report
@@ -2753,7 +2753,7 @@ msgstr "Propriétés du compte"
 #. module: account
 #: selection:account.invoice.refund,filter_refund:0
 msgid "Create a draft refund"
-msgstr ""
+msgstr "Créer un avoir en brouillon"
 
 #. module: account
 #: view:account.partner.reconcile.process:0
@@ -6023,7 +6023,7 @@ msgstr "Journal des opérations de fin d'année"
 #. module: account
 #: view:account.invoice:0
 msgid "Draft Refund "
-msgstr ""
+msgstr "Avoir brouillon "
 
 #. module: account
 #: view:cash.box.in:0
@@ -6201,7 +6201,7 @@ msgstr "Modèles des positions fiscales"
 #. module: account
 #: view:account.invoice:0
 msgid "Draft Refund"
-msgstr ""
+msgstr "Avoir brouillon"
 
 #. module: account
 #: view:account.analytic.chart:0
@@ -7395,7 +7395,7 @@ msgstr "Manuel"
 #. module: account
 #: selection:account.invoice.refund,filter_refund:0
 msgid "Cancel: create refund and reconcile"
-msgstr ""
+msgstr "Annuler : créer l'avoir et lettrer"
 
 #. module: account
 #: code:addons/account/wizard/account_report_aged_partner_balance.py:58
@@ -8348,6 +8348,8 @@ msgid ""
 "Refund base on this type. You can not Modify and Cancel if the invoice is "
 "already reconciled"
 msgstr ""
+"Crée l'avoir selon ce type. Il n'est pas possible de \"Modifier\" ni "
+"d'\"annuler\" une facture déjà lettrée."
 
 #. module: account
 #: field:account.bank.statement.line,sequence:0
@@ -8461,6 +8463,8 @@ msgid ""
 "You cannot delete an invoice which is not draft or cancelled. You should "
 "refund it instead."
 msgstr ""
+"Impossible de supprimer une facture qui n'est ni en brouillon ni annulée. "
+"Vous pouvez par contre créer un avoir."
 
 #. module: account
 #: model:ir.ui.menu,name:account.menu_finance_legal_statement
@@ -9608,7 +9612,7 @@ msgstr "Fermer des exercices et des périodes"
 #. module: account
 #: field:account.config.settings,purchase_refund_journal_id:0
 msgid "Purchase refund journal"
-msgstr ""
+msgstr "Journal d'avoir d'achat"
 
 #. module: account
 #: view:account.analytic.line:0
@@ -9759,7 +9763,7 @@ msgstr "Sociétés qui font réference au partenaire"
 #. module: account
 #: view:account.invoice:0
 msgid "Ask Refund"
-msgstr ""
+msgstr "Demander un avoir"
 
 #. module: account
 #: view:account.move.line:0
@@ -9973,6 +9977,8 @@ msgid ""
 "Set the account that will be set by default on invoice tax lines for "
 "refunds. Leave empty to use the expense account."
 msgstr ""
+"Indiquez le compte qui sera indiqué par défaut sur les lignes de facturation "
+"des taxes pour les avoirs. Laissez vide pour utiliser le compte de dépense."
 
 #. module: account
 #: help:account.addtmpl.wizard,cparent_id:0
@@ -10703,7 +10709,7 @@ msgstr "Impossible de %s une facture brouillon/proforma/annulée"
 #. module: account
 #: field:account.tax,account_analytic_paid_id:0
 msgid "Refund Tax Analytic Account"
-msgstr ""
+msgstr "Compte analytique des taxes d'avoirs"
 
 #. module: account
 #: view:account.move.bank.reconcile:0

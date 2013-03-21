@@ -21,6 +21,7 @@
 
 import base64
 import logging
+import re
 from urllib import urlencode
 from urlparse import urljoin
 
@@ -82,7 +83,7 @@ class mail_mail(osv.Model):
         # protection for `default_type` values leaking from menu action context (e.g. for invoices)
         # To remove when automatic context propagation is removed in web client
         if context and context.get('default_type') and context.get('default_type') not in self._all_columns['type'].column.selection:
-            context = dict(context, default_type = None)
+            context = dict(context, default_type=None)
         return super(mail_mail, self).default_get(cr, uid, fields, context=context)
 
     def create(self, cr, uid, values, context=None):
@@ -213,7 +214,10 @@ class mail_mail(osv.Model):
         if email_reply_to and mail.model and mail.res_id:
             document_name = self.pool.get(mail.model).name_get(cr, SUPERUSER_ID, [mail.res_id], context=context)[0]
             if document_name:
-                email_reply_to = _('Followers of %s <%s>') % (document_name[1], email_reply_to)
+                # sanitize document name
+                sanitized_doc_name = re.sub(r'[^\w+.]+', '-', document_name[1])
+                # generate reply to
+                email_reply_to = _('"Followers of %s" <%s>') % (sanitized_doc_name, email_reply_to)
 
         return email_reply_to
 

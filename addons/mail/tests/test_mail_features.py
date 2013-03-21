@@ -24,6 +24,25 @@ from openerp.tools.mail import html_sanitize
 
 
 class test_mail(TestMailBase):
+    
+    def test_000_alias_setup(self):
+        """ Test basic mail.alias setup works, before trying to use them for routing """
+        cr, uid = self.cr, self.uid
+        self.user_valentin_id = self.res_users.create(cr, uid,
+            {'name': 'Valentin Cognito', 'email': 'valentin.cognito@gmail.com', 'login': 'valentin.cognito'})
+        self.user_valentin = self.res_users.browse(cr, uid, self.user_valentin_id)
+        self.assertEquals(self.user_valentin.alias_name, self.user_valentin.login, "Login should be used as alias")
+
+        self.user_pagan_id = self.res_users.create(cr, uid,
+            {'name': 'Pagan Le Marchant', 'email': 'plmarchant@gmail.com', 'login': 'plmarchant@gmail.com'})
+        self.user_pagan = self.res_users.browse(cr, uid, self.user_pagan_id)
+        self.assertEquals(self.user_pagan.alias_name, 'plmarchant', "If login is an email, the alias should keep only the local part")
+
+        self.user_barty_id = self.res_users.create(cr, uid,
+            {'name': 'Bartholomew Ironside', 'email': 'barty@gmail.com', 'login': 'b4r+_#_R3wl$$'})
+        self.user_barty = self.res_users.browse(cr, uid, self.user_barty_id)
+        self.assertEquals(self.user_barty.alias_name, 'b4r+_-_r3wl-', 'Disallowed chars should be replaced by hyphens')
+
 
     def test_00_followers_function_field(self):
         """ Tests designed for the many2many function field 'follower_ids'.
@@ -197,6 +216,8 @@ class test_mail(TestMailBase):
 
         # Data: set alias_domain to see emails with alias
         self.registry('ir.config_parameter').set_param(self.cr, self.uid, 'mail.catchall.domain', 'schlouby.fr')
+        # Data: change Pigs name to test reply_to
+        self.mail_group.write(cr, uid, [self.group_pigs_id], {'name': '"Pigs" !ù $%-'})
 
         # Do: subscribe Raoul
         new_follower_ids = [self.partner_raoul_id]
@@ -271,7 +292,7 @@ class test_mail(TestMailBase):
                             'message_post: notification email sent to more than one email address instead of a precise partner')
             self.assertIn(sent_email['email_to'][0], test_emailto,
                             'message_post: notification email email_to incorrect')
-            self.assertEqual(sent_email['reply_to'], 'Followers of Pigs <group+pigs@schlouby.fr>',
+            self.assertEqual(sent_email['reply_to'], '"Followers of -Pigs-" <group+pigs@schlouby.fr>',
                             'message_post: notification email reply_to incorrect')
             self.assertEqual(_subject, sent_email['subject'],
                             'message_post: notification email subject incorrect')
@@ -293,6 +314,9 @@ class test_mail(TestMailBase):
         notif_pids = set([notif.partner_id.id for notif in self.mail_notification.browse(cr, uid, notif_ids)])
         self.assertEqual(notif_pids, test_pids,
                         'message_post: mail.message created mail.notification incorrect')
+
+        # Data: Pigs name back to normal
+        self.mail_group.write(cr, uid, [self.group_pigs_id], {'name': 'Pigs'})
 
         # --------------------------------------------------
         # CASE2: reply + parent_id + parent notification
@@ -338,7 +362,7 @@ class test_mail(TestMailBase):
                             'message_post: notification email sent to more than one email address instead of a precise partner')
             self.assertIn(sent_email['email_to'][0], test_emailto,
                             'message_post: notification email email_to incorrect')
-            self.assertEqual(sent_email['reply_to'], 'Followers of Pigs <r@r>',
+            self.assertEqual(sent_email['reply_to'], '"Followers of Pigs" <r@r>',
                             'message_post: notification email reply_to incorrect: should name Followers of Pigs, and have raoul email')
             self.assertEqual(_mail_subject, sent_email['subject'],
                             'message_post: notification email subject incorrect')
