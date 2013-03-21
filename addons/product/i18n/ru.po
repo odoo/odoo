@@ -13,8 +13,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-12-29 05:01+0000\n"
-"X-Generator: Launchpad (build 16378)\n"
+"X-Launchpad-Export-Date: 2013-03-16 05:24+0000\n"
+"X-Generator: Launchpad (build 16532)\n"
 
 #. module: product
 #: field:product.packaging,rows:0
@@ -185,13 +185,13 @@ msgstr "Каталог продаж"
 #: view:product.template:0
 #: field:product.template,type:0
 msgid "Product Type"
-msgstr "Тип продукции"
+msgstr "Тип продукта"
 
 #. module: product
 #: code:addons/product/product.py:412
 #, python-format
 msgid "Products: "
-msgstr "ТМЦ: "
+msgstr "Продукты "
 
 #. module: product
 #: constraint:decimal.precision:0
@@ -213,12 +213,12 @@ msgstr ""
 #. module: product
 #: model:product.category,name:product.product_category_all
 msgid "All products"
-msgstr "Все ТМЦ"
+msgstr "Все продукты"
 
 #. module: product
 #: model:process.node,note:product.process_node_supplier0
 msgid "Supplier name, price, product code, ..."
-msgstr "Название поставщика, каталог, код ТМЦ, ..."
+msgstr "Название поставщика, цена, код продукта, ..."
 
 #. module: product
 #: constraint:res.currency:0
@@ -312,7 +312,7 @@ msgstr "Статус"
 #. module: product
 #: help:product.template,categ_id:0
 msgid "Select category for the current product"
-msgstr "Выберите категорию для ТМЦ"
+msgstr "Выберите категорию для продукта"
 
 #. module: product
 #: field:product.product,outgoing_qty:0
@@ -358,12 +358,12 @@ msgstr "17” LCD Monitor"
 #. module: product
 #: field:product.supplierinfo,product_name:0
 msgid "Supplier Product Name"
-msgstr "Название ТМЦ поставщика"
+msgstr "Название продукта у поставщика"
 
 #. module: product
 #: view:product.pricelist:0
 msgid "Products Price Search"
-msgstr "Искать цену ТМЦ"
+msgstr "Поиск цены продуктов"
 
 #. module: product
 #: view:product.template:0
@@ -599,7 +599,7 @@ msgstr "Вид"
 #. module: product
 #: model:ir.actions.act_window,name:product.product_template_action_tree
 msgid "Product Templates"
-msgstr "Шаблоны ТМЦ"
+msgstr "Шаблоны продукта"
 
 #. module: product
 #: field:product.category,parent_left:0
@@ -770,7 +770,7 @@ msgstr "Дополнительные"
 #. module: product
 #: model:process.transition,name:product.process_transition_supplierofproduct0
 msgid "Supplier of the product"
-msgstr "Поставщик ТМЦ"
+msgstr "Поставщик продукта"
 
 #. module: product
 #: model:product.template,name:product.product_product_28_product_template
@@ -860,8 +860,8 @@ msgid ""
 "1 or several supplier(s) can be linked to a product. All information stands "
 "in the product form."
 msgstr ""
-"Один или несколько поставщиков могут быть связаны с ТМЦ. Вся информация в "
-"форме ТМЦ."
+"Один или несколько поставщиков могут быть связаны с продуктом. Вся "
+"информация находится в форме продукта."
 
 #. module: product
 #: field:product.pricelist.item,price_round:0
@@ -909,7 +909,7 @@ msgstr ""
 #: model:ir.ui.menu,name:product.menu_product_category_action_form
 #: view:product.category:0
 msgid "Product Categories"
-msgstr "Категории ТМЦ"
+msgstr "Категории продуктов"
 
 #. module: product
 #: view:product.template:0
@@ -991,7 +991,7 @@ msgid ""
 "reception of the products in your warehouse. Used by the scheduler for "
 "automatic computation of the purchase order planning."
 msgstr ""
-"Запас по времени между подтверждением заказа закупки и приходом ТМЦ на "
+"Запас по времени между подтверждением заказа закупки и приходом продуктов на "
 "склад. Используется планировщиком для автоматического планирования заказа на "
 "закупку."
 
@@ -1051,6 +1051,21 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Нажмите для добавления нового продукта.\n"
+"              </p><p>\n"
+"                Вы должны определить продукт для всего что вы продаете, будь "
+"то\n"
+"                материальный продукт, потребляемый или услуга которую вы "
+"оказываете\n"
+"                клиентам.\n"
+"              </p><p>\n"
+"                Форма продукта содержит информацию для упрощения процесса\n"
+"                продажи: цена, описание для заявок, бухгалтерская "
+"информация,\n"
+"                методы снабжения, и т.д.\n"
+"              </p>\n"
+"            "
 
 #. module: product
 #: view:product.price_list:0
@@ -1137,7 +1152,6 @@ msgstr "Логистические единицы"
 #: field:product.category,name:0
 #: field:product.pricelist.type,name:0
 #: field:product.pricelist.version,name:0
-#: field:product.product,name_template:0
 #: field:product.template,name:0
 #: field:product.ul,name:0
 #: field:product.uom.categ,name:0
@@ -1178,7 +1192,8 @@ msgstr "Стоимость"
 #: help:product.category,sequence:0
 msgid ""
 "Gives the sequence order when displaying a list of product categories."
-msgstr "Дает порядок последовательности при выводе списка категорий ТМЦ."
+msgstr ""
+"Дает порядок последовательности при выводе списка категорий продуктов."
 
 #. module: product
 #: model:product.uom,name:product.product_uom_dozen
@@ -1278,7 +1293,7 @@ msgstr ""
 #: model:ir.ui.menu,name:product.prod_config_main
 #: view:product.product:0
 msgid "Products"
-msgstr "ТМЦ"
+msgstr "Продукты"
 
 #. module: product
 #: model:product.template,description:product.product_product_32_product_template
@@ -1432,7 +1447,7 @@ msgstr "Вес"
 #. module: product
 #: view:product.product:0
 msgid "Description for Quotations"
-msgstr "Описание предложения"
+msgstr "Описание для заявок"
 
 #. module: product
 #: help:pricelist.partnerinfo,price:0
@@ -1628,7 +1643,7 @@ msgstr "Типы цен"
 #: help:product.template,uom_id:0
 msgid "Default Unit of Measure used for all stock operation."
 msgstr ""
-"Единица измерения по умолчанию, используемая для всех операций с ТМЦ."
+"Единица измерения по умолчанию, используемая для всех складских операций."
 
 #. module: product
 #: view:product.product:0
@@ -1670,7 +1685,7 @@ msgstr "Открытый каталог"
 #. module: product
 #: field:product.supplierinfo,product_code:0
 msgid "Supplier Product Code"
-msgstr "Код ТМЦ поставщика"
+msgstr "Код продукта у поставщика"
 
 #. module: product
 #: help:product.pricelist,active:0
@@ -1699,7 +1714,7 @@ msgstr "Упаковка по слоям"
 #: field:product.supplierinfo,product_id:0
 #: model:res.request.link,name:product.req_link_product
 msgid "Product"
-msgstr "ТМЦ"
+msgstr "Продукт"
 
 #. module: product
 #: view:product.product:0
@@ -1715,7 +1730,8 @@ msgstr "Вес брутто"
 #: help:product.packaging,qty:0
 msgid "The total number of products you can put by pallet or box."
 msgstr ""
-"Общее количество ТМЦ, которое вы модете разместить на поддоне или в коробке."
+"Общее количество продуктов, которое вы можете разместить на поддоне или в "
+"коробке."
 
 #. module: product
 #: field:product.product,variants:0
@@ -1726,7 +1742,7 @@ msgstr "Варианты"
 #: model:ir.actions.act_window,name:product.product_category_action
 #: model:ir.ui.menu,name:product.menu_products_category
 msgid "Products by Category"
-msgstr "ТМЦ по категориям"
+msgstr "Продукты по категориям"
 
 #. module: product
 #: model:product.template,name:product.product_product_16_product_template
@@ -1741,7 +1757,7 @@ msgstr ""
 #. module: product
 #: help:product.supplierinfo,sequence:0
 msgid "Assigns the priority to the list of product supplier."
-msgstr "Назначает приоритет в списке поставщиков ТМЦ."
+msgstr "Назначает приоритет в списке поставщиков продукта."
 
 #. module: product
 #: constraint:product.pricelist.item:0
@@ -1851,7 +1867,7 @@ msgstr "Единица измерения по умолчанию"
 #: code:addons/product/pricelist.py:377
 #, python-format
 msgid "Partner section of the product form"
-msgstr "Раздел партнера в форме ввода ТМЦ"
+msgstr "Раздел партнера в форме продукта"
 
 #. module: product
 #: help:product.price.type,name:0
@@ -1861,7 +1877,7 @@ msgstr "Наименование типа цены"
 #. module: product
 #: model:product.category,name:product.product_category_3
 msgid "Other Products"
-msgstr "Другие ТМЦ"
+msgstr "Другие продукты"
 
 #. module: product
 #: model:product.template,description:product.product_product_9_product_template
@@ -1876,7 +1892,7 @@ msgstr "Сообщения"
 #. module: product
 #: model:product.uom,name:product.product_uom_unit
 msgid "Unit(s)"
-msgstr "Штук"
+msgstr "шт."
 
 #. module: product
 #: code:addons/product/product.py:176
@@ -1976,6 +1992,20 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Нажмите для добавления нового продукта.\n"
+"              </p><p>\n"
+"                Вы должны определить продукт для всего что вы покупаете, "
+"будь то\n"
+"                материальный продукт, потребляемый или услуга которую вы "
+"покупаете у подрядчиков.\n"
+"              </p><p>\n"
+"                Форма продукта содержит подробную информацию для улучшения\n"
+"                процесса закупки: цены, логистика снабжения, бухгалтерская "
+"информация,\n"
+"                доступные поставщики, и т.д.\n"
+"              </p>\n"
+"            "
 
 #. module: product
 #: model:product.template,description_sale:product.product_product_44_product_template
@@ -2108,6 +2138,14 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Нажмите для добавления нового продукта.\n"
+"              </p><p>\n"
+"                Вы должны определить продукт для всего что вы покупаете или "
+"продаете,\n"
+"                будь то материальный продукт, потребляемый или услуга.\n"
+"              </p>\n"
+"            "
 
 #. module: product
 #: view:product.product:0
@@ -2346,7 +2384,7 @@ msgstr "Тип категории"
 #. module: product
 #: model:process.node,note:product.process_node_product0
 msgid "Creation of the product"
-msgstr "Создание ТМЦ"
+msgstr "Создание продукта"
 
 #. module: product
 #: field:pricelist.partnerinfo,name:0
@@ -2398,9 +2436,8 @@ msgstr "Единица измерения поставщика"
 
 #. module: product
 #: view:product.product:0
-#: model:res.groups,name:product.group_product_variant
 msgid "Product Variant"
-msgstr "Вариант ТМЦ"
+msgstr "Вариант продукта"
 
 #. module: product
 #: model:product.template,name:product.product_product_6_product_template
@@ -2455,7 +2492,7 @@ msgstr ""
 #: field:product.product,product_tmpl_id:0
 #: view:product.template:0
 msgid "Product Template"
-msgstr "Шаблон ТМЦ"
+msgstr "Шаблон продукта"
 
 #. module: product
 #: field:product.template,cost_method:0
@@ -2467,7 +2504,7 @@ msgstr "Метод ценообразования"
 #: model:ir.model,name:product.model_product_category
 #: field:product.pricelist.item,categ_id:0
 msgid "Product Category"
-msgstr "Категория ТМЦ"
+msgstr "Категория продукта"
 
 #. module: product
 #: model:product.template,description:product.product_product_19_product_template

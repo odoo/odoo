@@ -65,6 +65,7 @@ class email_template(osv.osv):
     "Templates for sending email"
     _name = "email.template"
     _description = 'Email Templates'
+    _order = 'name'
 
     def render_template(self, cr, uid, template, model, res_id, context=None):
         """Render the given template text, replace mako expressions ``${expr}``
@@ -141,9 +142,13 @@ class email_template(osv.osv):
                                          help="If checked, the user's signature will be appended to the text version "
                                               "of the message"),
         'subject': fields.char('Subject', translate=True, help="Subject (placeholders may be used here)",),
-        'email_from': fields.char('From', help="Sender address (placeholders may be used here)"),
+        'email_from': fields.char('From',
+            help="Sender address (placeholders may be used here). If not set, the default "
+                    "value will be the author's email alias if configured, or email address."),
         'email_to': fields.char('To (Emails)', help="Comma-separated recipient addresses (placeholders may be used here)"),
-        'email_recipients': fields.char('To (Partners)', help="Comma-separated ids of recipient partners (placeholders may be used here)"),
+        'partner_to': fields.char('To (Partners)',
+            help="Comma-separated ids of recipient partners (placeholders may be used here)",
+            oldname='email_recipients'),
         'email_cc': fields.char('Cc', help="Carbon copy recipients (placeholders may be used here)"),
         'reply_to': fields.char('Reply-To', help="Preferred response address (placeholders may be used here)"),
         'mail_server_id': fields.many2one('ir.mail_server', 'Outgoing Mail Server', readonly=False,
@@ -311,7 +316,7 @@ class email_template(osv.osv):
         template = self.get_email_template(cr, uid, template_id, res_id, context)
         values = {}
         for field in ['subject', 'body_html', 'email_from',
-                      'email_to', 'email_recipients', 'email_cc', 'reply_to']:
+                      'email_to', 'partner_to', 'email_cc', 'reply_to']:
             values[field] = self.render_template(cr, uid, getattr(template, field),
                                                  template.model, res_id, context=context) \
                                                  or False
@@ -371,7 +376,7 @@ class email_template(osv.osv):
         values = self.generate_email(cr, uid, template_id, res_id, context=context)
         assert 'email_from' in values, 'email_from is missing or empty after template rendering, send_mail() cannot proceed'
         attachments = values.pop('attachments') or {}
-        del values['email_recipients'] # TODO Properly use them.
+        del values['partner_to'] # TODO Properly use them.
         msg_id = mail_mail.create(cr, uid, values, context=context)
         # link attachments
         attachment_ids = []

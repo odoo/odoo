@@ -22,6 +22,8 @@ from openerp.osv import fields, osv
 from openerp.osv.orm import intersect
 from openerp.tools.translate import _
 
+from openerp.addons.decimal_precision import decimal_precision as dp
+
 class account_analytic_account(osv.osv):
     _name = "account.analytic.account"
     _inherit = "account.analytic.account"
@@ -91,6 +93,11 @@ class account_analytic_account(osv.osv):
                 res[account.id] += line.invoice_id.amount_untaxed
         return res
 
+    def _ca_invoiced_calc(self, cr, uid, ids, name, arg, context=None):
+        result = super(account_analytic_account, self)._ca_invoiced_calc(cr, uid, ids, name, arg, context=context)
+        for acc in self.browse(cr, uid, result.keys(), context=context):
+            result[acc.id] = result[acc.id] - (acc.expense_invoiced or 0.0)
+        return result
 
     _columns = {
         'charge_expenses' : fields.boolean('Charge Expenses'),
@@ -98,6 +105,9 @@ class account_analytic_account(osv.osv):
         'expense_to_invoice' : fields.function(_expense_to_invoice_calc, type='float'),
         'remaining_expense' : fields.function(_remaining_expnse_calc, type="float"), 
         'est_expenses': fields.float('Estimation of Expenses to Invoice'),
+        'ca_invoiced': fields.function(_ca_invoiced_calc, type='float', string='Invoiced Amount',
+            help="Total customer invoiced amount for this account.",
+            digits_compute=dp.get_precision('Account')),
     }
 
     def on_change_template(self, cr, uid, id, template_id, context=None):

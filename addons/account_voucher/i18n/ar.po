@@ -13,13 +13,13 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-12-22 05:50+0000\n"
-"X-Generator: Launchpad (build 16378)\n"
+"X-Launchpad-Export-Date: 2013-03-16 05:33+0000\n"
+"X-Generator: Launchpad (build 16532)\n"
 
 #. module: account_voucher
 #: field:account.bank.statement.line,voucher_id:0
 msgid "Reconciliation"
-msgstr ""
+msgstr "التسوية"
 
 #. module: account_voucher
 #: model:ir.model,name:account_voucher.model_account_config_settings
@@ -27,7 +27,7 @@ msgid "account.config.settings"
 msgstr ""
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:357
+#: code:addons/account_voucher/account_voucher.py:369
 #, python-format
 msgid "Write-Off"
 msgstr "إلغاء"
@@ -45,7 +45,7 @@ msgstr "إجمالي المبلغ"
 #. module: account_voucher
 #: view:account.voucher:0
 msgid "Open Customer Journal Entries"
-msgstr "tj"
+msgstr "فتح قيود يومية العميل"
 
 #. module: account_voucher
 #: view:account.voucher:0
@@ -63,7 +63,7 @@ msgstr ""
 #. module: account_voucher
 #: view:account.voucher:0
 msgid "(Update)"
-msgstr ""
+msgstr "(تحديث)"
 
 #. module: account_voucher
 #: view:account.voucher:0
@@ -90,7 +90,7 @@ msgstr "مارس"
 #. module: account_voucher
 #: field:account.voucher,message_unread:0
 msgid "Unread Messages"
-msgstr ""
+msgstr "رسائل غير مقروءة"
 
 #. module: account_voucher
 #: view:account.voucher:0
@@ -100,7 +100,7 @@ msgstr "دفع الفاتورة"
 #. module: account_voucher
 #: view:account.voucher:0
 msgid "Are you sure you want to cancel this receipt?"
-msgstr ""
+msgstr "هل أنت متأكد من إلغاء هذا الايصال؟"
 
 #. module: account_voucher
 #: view:account.voucher:0
@@ -115,13 +115,13 @@ msgstr "رقم مرجع المعاملة."
 #. module: account_voucher
 #: view:sale.receipt.report:0
 msgid "Group by year of Invoice Date"
-msgstr ""
+msgstr "تجميع حسب سنة تاريخ الفاتورة"
 
 #. module: account_voucher
 #: view:sale.receipt.report:0
 #: field:sale.receipt.report,user_id:0
 msgid "Salesperson"
-msgstr ""
+msgstr "موظف مبيعات"
 
 #. module: account_voucher
 #: view:account.voucher:0
@@ -129,7 +129,7 @@ msgid "Voucher Statistics"
 msgstr "احصائيات القسيمة"
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:1533
+#: code:addons/account_voucher/account_voucher.py:1547
 #, python-format
 msgid ""
 "You can not change the journal as you already reconciled some statement "
@@ -207,7 +207,7 @@ msgstr "ملاحظات"
 #. module: account_voucher
 #: field:account.voucher,message_ids:0
 msgid "Messages"
-msgstr ""
+msgstr "الرسائل"
 
 #. module: account_voucher
 #: model:ir.actions.act_window,name:account_voucher.action_purchase_receipt
@@ -221,11 +221,11 @@ msgid "Journal Item"
 msgstr "عنصر يومية"
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:496
-#: code:addons/account_voucher/account_voucher.py:967
+#: code:addons/account_voucher/account_voucher.py:508
+#: code:addons/account_voucher/account_voucher.py:981
 #, python-format
 msgid "Error!"
-msgstr ""
+msgstr "خطأ!"
 
 #. module: account_voucher
 #: field:account.voucher.line,amount:0
@@ -249,7 +249,7 @@ msgid "Cancelled"
 msgstr "ملغي"
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:1139
+#: code:addons/account_voucher/account_voucher.py:1153
 #, python-format
 msgid ""
 "You have to configure account base code and account tax code on the '%s' tax!"
@@ -285,12 +285,13 @@ msgid "Day"
 msgstr "يوم"
 
 #. module: account_voucher
+#: view:account.voucher:0
 #: field:account.voucher,tax_id:0
 msgid "Tax"
 msgstr "ضريبة"
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:867
+#: code:addons/account_voucher/account_voucher.py:879
 #, python-format
 msgid "Invalid Action!"
 msgstr ""
@@ -325,7 +326,7 @@ msgstr "معلومات الدفع"
 #. module: account_voucher
 #: view:account.voucher:0
 msgid "(update)"
-msgstr ""
+msgstr "(تحديث)"
 
 #. module: account_voucher
 #: view:account.voucher:0
@@ -341,7 +342,7 @@ msgid "Import Invoices"
 msgstr "إستيراد فواتير"
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:1098
+#: code:addons/account_voucher/account_voucher.py:1112
 #, python-format
 msgid "Wrong voucher line"
 msgstr ""
@@ -360,7 +361,7 @@ msgid "Receipt"
 msgstr "استلام"
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:1004
+#: code:addons/account_voucher/account_voucher.py:1018
 #, python-format
 msgid ""
 "You should configure the 'Gain Exchange Rate Account' in the accounting "
@@ -381,7 +382,7 @@ msgstr "فترة"
 
 #. module: account_voucher
 #: view:account.voucher:0
-#: code:addons/account_voucher/account_voucher.py:199
+#: code:addons/account_voucher/account_voucher.py:211
 #, python-format
 msgid "Supplier"
 msgstr "مورد"
@@ -394,7 +395,7 @@ msgstr "إيصال المورد"
 #. module: account_voucher
 #: field:account.voucher,message_follower_ids:0
 msgid "Followers"
-msgstr ""
+msgstr "المتابعون"
 
 #. module: account_voucher
 #: selection:account.voucher.line,type:0
@@ -402,7 +403,7 @@ msgid "Debit"
 msgstr "مدين"
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:1533
+#: code:addons/account_voucher/account_voucher.py:1547
 #, python-format
 msgid "Unable to change journal !"
 msgstr ""
@@ -460,7 +461,7 @@ msgstr "مذكرة"
 #. module: account_voucher
 #: view:account.voucher:0
 msgid "Are you sure to unreconcile and cancel this record ?"
-msgstr ""
+msgstr "هل أنت متأكد من إلغاء تسوية و إلغاء هذا المدخل؟"
 
 #. module: account_voucher
 #: field:account.voucher,is_multi_currency:0
@@ -508,7 +509,7 @@ msgid "Pay Invoice"
 msgstr "دفع الفاتورة"
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:1139
+#: code:addons/account_voucher/account_voucher.py:1153
 #, python-format
 msgid "No Account Base Code and Account Tax Code!"
 msgstr "لا يوجد قانون قاعدة الحساب و قانون ضريبة الحساب!"
@@ -562,15 +563,15 @@ msgid "To Review"
 msgstr "للمراجعة"
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:1011
 #: code:addons/account_voucher/account_voucher.py:1025
-#: code:addons/account_voucher/account_voucher.py:1180
+#: code:addons/account_voucher/account_voucher.py:1039
+#: code:addons/account_voucher/account_voucher.py:1194
 #, python-format
 msgid "change"
 msgstr "تغيير"
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:1000
+#: code:addons/account_voucher/account_voucher.py:1014
 #, python-format
 msgid ""
 "You should configure the 'Loss Exchange Rate Account' in the accounting "
@@ -598,7 +599,7 @@ msgstr ""
 #. module: account_voucher
 #: view:account.invoice:0
 msgid "Register Payment"
-msgstr ""
+msgstr "سجل الدفعة"
 
 #. module: account_voucher
 #: field:account.statement.from.invoice.lines,line_ids:0
@@ -646,7 +647,7 @@ msgstr ""
 #. module: account_voucher
 #: view:account.voucher:0
 msgid "Are you sure to unreconcile this record?"
-msgstr ""
+msgstr "هل أنت متأكد من الغاء تسوية هذا السجل؟"
 
 #. module: account_voucher
 #: field:account.voucher,company_id:0
@@ -667,10 +668,10 @@ msgid "Reconcile Payment Balance"
 msgstr ""
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:963
+#: code:addons/account_voucher/account_voucher.py:975
 #, python-format
 msgid "Configuration Error !"
-msgstr ""
+msgstr "خطأ في الإعدادات!"
 
 #. module: account_voucher
 #: view:account.voucher:0
@@ -694,7 +695,7 @@ msgstr ""
 #: field:account.voucher,state:0
 #: view:sale.receipt.report:0
 msgid "Status"
-msgstr ""
+msgstr "الحالة"
 
 #. module: account_voucher
 #: view:account.voucher:0
@@ -705,7 +706,7 @@ msgstr ""
 #: view:account.statement.from.invoice.lines:0
 #: view:account.voucher:0
 msgid "or"
-msgstr ""
+msgstr "أو"
 
 #. module: account_voucher
 #: selection:sale.receipt.report,month:0
@@ -732,7 +733,7 @@ msgid "October"
 msgstr "أكتوبر"
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:964
+#: code:addons/account_voucher/account_voucher.py:976
 #, python-format
 msgid "Please activate the sequence of selected journal !"
 msgstr ""
@@ -753,7 +754,6 @@ msgid "Paid"
 msgstr "مدفوع"
 
 #. module: account_voucher
-#: view:account.voucher:0
 #: model:ir.actions.act_window,name:account_voucher.action_sale_receipt
 #: model:ir.ui.menu,name:account_voucher.menu_action_sale_receipt
 msgid "Sales Receipts"
@@ -762,7 +762,7 @@ msgstr ""
 #. module: account_voucher
 #: field:account.voucher,message_is_follower:0
 msgid "Is a Follower"
-msgstr ""
+msgstr "متابع"
 
 #. module: account_voucher
 #: field:account.voucher,analytic_id:0
@@ -789,7 +789,7 @@ msgstr "مرشحات مفصلة..."
 #. module: account_voucher
 #: field:account.voucher,paid_amount_in_company_currency:0
 msgid "Paid Amount in Company Currency"
-msgstr ""
+msgstr "المبلغ المدفوع بعملة الشركة"
 
 #. module: account_voucher
 #: field:account.bank.statement.line,amount_reconciled:0
@@ -813,7 +813,7 @@ msgid "Previous Payments ?"
 msgstr "المدفوعات السابقة؟"
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:1098
+#: code:addons/account_voucher/account_voucher.py:1112
 #, python-format
 msgid "The invoice you are willing to pay is not valid anymore."
 msgstr ""
@@ -837,18 +837,18 @@ msgstr "الشركات"
 #. module: account_voucher
 #: field:account.voucher,message_summary:0
 msgid "Summary"
-msgstr ""
+msgstr "ملخص"
 
 #. module: account_voucher
 #: field:account.voucher,active:0
 msgid "Active"
-msgstr ""
+msgstr "نشط"
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:968
+#: code:addons/account_voucher/account_voucher.py:982
 #, python-format
 msgid "Please define a sequence on the journal."
-msgstr ""
+msgstr "الرجاء تعريف تسلسل لليومية"
 
 #. module: account_voucher
 #: model:ir.actions.act_window,name:account_voucher.act_pay_voucher
@@ -867,7 +867,7 @@ msgstr ""
 #. module: account_voucher
 #: view:sale.receipt.report:0
 msgid "Group by Invoice Date"
-msgstr ""
+msgstr "رتب حسب تاريخ الفاتورة"
 
 #. module: account_voucher
 #: view:account.voucher:0
@@ -957,7 +957,7 @@ msgstr "إلغاء"
 #. module: account_voucher
 #: model:ir.actions.client,name:account_voucher.action_client_invoice_menu
 msgid "Open Invoicing Menu"
-msgstr ""
+msgstr "فتح قائمة الفوترة"
 
 #. module: account_voucher
 #: selection:account.voucher,state:0
@@ -973,7 +973,7 @@ msgid "Journal Items"
 msgstr "عناصر اليومية"
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:496
+#: code:addons/account_voucher/account_voucher.py:508
 #, python-format
 msgid "Please define default credit/debit accounts on the journal \"%s\"."
 msgstr ""
@@ -993,7 +993,7 @@ msgstr "ادفع"
 #. module: account_voucher
 #: view:account.voucher:0
 msgid "Currency Options"
-msgstr ""
+msgstr "خيارات العملة"
 
 #. module: account_voucher
 #: help:account.voucher,payment_option:0
@@ -1025,7 +1025,7 @@ msgstr ""
 #. module: account_voucher
 #: field:account.voucher,payment_rate:0
 msgid "Exchange Rate"
-msgstr ""
+msgstr "سعر الصرف"
 
 #. module: account_voucher
 #: view:account.voucher:0
@@ -1045,7 +1045,7 @@ msgstr "مايو"
 #. module: account_voucher
 #: view:account.voucher:0
 msgid "Sale Receipt"
-msgstr ""
+msgstr "ايصال البيع"
 
 #. module: account_voucher
 #: view:account.voucher:0
@@ -1074,7 +1074,7 @@ msgstr "المبلغ الأصلي"
 #. module: account_voucher
 #: view:account.voucher:0
 msgid "Purchase Receipt"
-msgstr ""
+msgstr "ايصال الشراء"
 
 #. module: account_voucher
 #: help:account.voucher,payment_rate:0
@@ -1156,7 +1156,7 @@ msgstr "النوع الإفتراضي"
 #. module: account_voucher
 #: help:account.voucher,message_ids:0
 msgid "Messages and communication history"
-msgstr ""
+msgstr "الرسائل وسجل التواصل"
 
 #. module: account_voucher
 #: model:ir.model,name:account_voucher.model_account_statement_from_invoice_lines
@@ -1182,7 +1182,7 @@ msgid ""
 msgstr ""
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:867
+#: code:addons/account_voucher/account_voucher.py:879
 #, python-format
 msgid "Cannot delete voucher(s) which are already opened or paid."
 msgstr ""
@@ -1195,7 +1195,7 @@ msgstr "تاريخ فعال للمدخلات المحاسبية"
 #. module: account_voucher
 #: model:mail.message.subtype,name:account_voucher.mt_voucher_state_change
 msgid "Status Change"
-msgstr ""
+msgstr "تغيير الحالة"
 
 #. module: account_voucher
 #: selection:account.voucher,payment_option:0
@@ -1245,11 +1245,11 @@ msgid "Status <b>changed</b>"
 msgstr ""
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:1000
-#: code:addons/account_voucher/account_voucher.py:1004
+#: code:addons/account_voucher/account_voucher.py:1014
+#: code:addons/account_voucher/account_voucher.py:1018
 #, python-format
 msgid "Insufficient Configuration!"
-msgstr ""
+msgstr "اعدادات غير كافية"
 
 #. module: account_voucher
 #: help:account.voucher,active:0

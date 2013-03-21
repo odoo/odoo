@@ -7,6 +7,22 @@
             <field name="model">mail.compose.message</field>
             <field name="inherit_id" ref="mail.email_compose_message_wizard_form"/>
             <field name="arch" type="xml">
+                <xpath expr="//field[@name='subject']" position="after">
+                    <label string="Template Recipients" for="partner_to"
+                            groups="base.group_no_one"
+                            attrs="{'invisible':[('composition_mode', '!=', 'mass_mail')]}"/>
+                    <div groups="base.group_no_one"
+                            attrs="{'invisible':[('composition_mode', '!=', 'mass_mail')]}">
+                        <group class="oe_grey">
+                            <!-- <label string="Partners" for="partner_to"/> -->
+                            <field name="partner_to" readonly="1"/>
+                            <!-- <label string="Email To" for="email_to"/> -->
+                            <field name="email_to" readonly="1"/>
+                            <!-- <label string="Email CC" for="email_cc"/> -->
+                            <field name="email_cc" readonly="1"/>
+                        </group>
+                    </div>
+                </xpath>
                 <xpath expr="//footer" position="inside">
                     <group class="oe_right" col="1">
                         <div>Use template
