@@ -21,6 +21,7 @@
 
 from openerp.addons.mail.tests.test_mail_base import TestMailBase
 from openerp.tools.mail import html_sanitize
+from openerp.osv.api import scope
 
 MAIL_TEMPLATE = """Return-Path: <whatever-2a840@postmaster.twitter.com>
 To: {to}
@@ -282,7 +283,7 @@ class test_mail(TestMailBase):
         # CASE2: test mail_thread fields
         # ----------------------------------------
 
-        subtype_data = group_pigs._get_subscription_data(None, None)[group_pigs.id]['message_subtype_data']
+        subtype_data = group_pigs._get_subscription_data(None, None)['message_subtype_data']
         self.assertEqual(set(subtype_data.keys()), set(['Discussions', 'mt_mg_def', 'mt_all_def', 'mt_mg_nodef', 'mt_all_nodef']), 'mail.group available subtypes incorrect')
         self.assertFalse(subtype_data['Discussions']['followed'], 'Admin should not follow Discussions in pigs')
         self.assertTrue(subtype_data['mt_mg_nodef']['followed'], 'Admin should follow mt_mg_nodef in pigs')
@@ -543,7 +544,6 @@ class test_mail(TestMailBase):
     def test_30_needaction(self):
         """ Tests for mail.message needaction. """
         cr, uid, user_admin, user_raoul, group_pigs = self.cr, self.uid, self.user_admin, self.user_raoul, self.group_pigs
-        group_pigs_demo = self.mail_group.browse(cr, self.user_raoul_id, self.group_pigs_id)
         na_admin_base = self.mail_message._needaction_count(cr, uid, domain=[])
         na_demo_base = self.mail_message._needaction_count(cr, user_raoul.id, domain=[])
 
@@ -559,7 +559,8 @@ class test_mail(TestMailBase):
         for dummy in range(2):
             group_pigs.message_post(body='My Body', subtype='mt_comment')
         for dummy in range(3):
-            group_pigs_demo.message_post(body='My Demo Body', subtype='mt_comment')
+            with scope(user_raoul):
+                group_pigs.message_post(body='My Demo Body', subtype='mt_comment')
 
         # Test: admin has 3 new notifications (from demo), and 3 new needaction
         notif_ids = self.mail_notification.search(cr, uid, [
