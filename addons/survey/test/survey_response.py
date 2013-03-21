@@ -34,7 +34,6 @@ class test_survey_answer():
         self.obj_survey = self.registry('survey')
         self.obj_survey_response = self.registry('survey.response')
         self.obj_survey_question_wiz = self.registry('survey.question.wiz')
-        self.obj_survey_name_wiz = self.registry('survey.name.wiz')
         self.obj_survey_print = self.registry('survey.print')
 
         self.survey_id = self.obj_survey.create(cr, uid, {

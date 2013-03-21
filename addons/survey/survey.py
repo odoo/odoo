@@ -292,8 +292,8 @@ class survey_page(osv.osv):
     def survey_save(self, cr, uid, ids, context=None):
         if context is None:
             context = {}
-        surv_name_wiz = self.pool.get('survey.name.wiz')
-        surv_name_wiz.write(cr, uid, [context.get('sur_name_id', False)], {'transfer': True, 'page_no': context.get('page_number', 0)})
+        surv_name_wiz = self.pool.get('survey.question.wiz')
+        surv_name_wiz.write(cr, uid, [context.get('wizard_id', False)], {'transfer': True, 'page_no': context.get('page_number', 0)})
         return {
             'view_type': 'form',
             'view_mode': 'form',
@@ -545,8 +545,8 @@ class survey_question(osv.osv):
     def survey_save(self, cr, uid, ids, context=None):
         if context is None:
             context = {}
-        surv_name_wiz = self.pool.get('survey.name.wiz')
-        surv_name_wiz.write(cr, uid, [context.get('sur_name_id', False)], {'transfer': True, 'page_no': context.get('page_number', False)})
+        surv_name_wiz = self.pool.get('survey.question.wiz')
+        surv_name_wiz.write(cr, uid, [context.get('wizard_id', False)], {'transfer': True, 'page_no': context.get('page_number', False)})
         return {
             'view_type': 'form',
             'view_mode': 'form',

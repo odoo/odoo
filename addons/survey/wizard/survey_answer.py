@@ -914,7 +914,7 @@ class survey_question_wiz(osv.osv_memory):
             response_id = response_info['response_id']
         else:
             # public access
-            sur_name_read = self.pool.get('survey.name.wiz').read(cr, uid, context.get('wizard_id', False), context=context)
+            sur_name_read = self.read(cr, uid, context.get('wizard_id', False), context=context)
             if sur_name_read['response_id'] and sur_name_read['response_id'][0]:
                 response_id = sur_name_read['response_id'][0]
 
