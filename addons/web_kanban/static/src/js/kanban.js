@@ -459,11 +459,11 @@ instance.web_kanban.KanbanView = instance.web.View.extend({
         var self = this;
         if (this.groups.group_by
             || !this.options.action
-            || (!this.options.action.help && !this.options.action.dynamic_help)) {
+            || (!this.options.action.help && !this.options.action.get_empty_list_help)) {
             return;
         }
         this.$el.find('table:first').css("position", "absolute");
-        $(QWeb.render('KanbanView.nocontent', { content : this.options.action.dynamic_help || this.options.action.help})).insertAfter(this.$('table:first'));
+        $(QWeb.render('KanbanView.nocontent', { content : this.options.action.get_empty_list_help || this.options.action.help})).insertAfter(this.$('table:first'));
         this.$el.find('.oe_view_nocontent').click(function() {
             self.$buttons.openerpBounce();
         });
