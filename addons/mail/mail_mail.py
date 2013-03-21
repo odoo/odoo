@@ -21,6 +21,7 @@
 
 import base64
 import logging
+import re
 from urllib import urlencode
 from urlparse import urljoin
 
@@ -119,7 +120,10 @@ class mail_mail(osv.Model):
         if email_reply_to and model and res_id:
             document_name = self.pool.get(model).name_get(cr, SUPERUSER_ID, [res_id], context=context)[0]
             if document_name:
-                email_reply_to = _('Followers of %s <%s>') % (document_name[1], email_reply_to)
+                # sanitize document name
+                sanitized_doc_name = re.sub(r'[^\w+.]+', '-', document_name[1])
+                # generate reply to
+                email_reply_to = _('"Followers of %s" <%s>') % (sanitized_doc_name, email_reply_to)
 
         return email_reply_to
 
