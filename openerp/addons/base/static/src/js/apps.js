@@ -56,7 +56,8 @@ openerp.base = function(instance) {
                     });
 
                 };
-                i.src = _.str.sprintf('%s/web/static/src/img/sep-a.gif', client.origin);
+                var ts = new Date().getTime();
+                i.src = _.str.sprintf('%s/web/static/src/img/sep-a.gif?%s', client.origin, ts);
                 return d.promise();
             };
             if (instance.base.apps_client) {
