@@ -270,8 +270,9 @@ class mail_compose_message(osv.TransientModel):
                     subtype = 'mail.mt_comment'
                     if is_log:  # log a note: subtype is False
                         subtype = False
-                    elif mass_mail_mode:  # mass mail: is a log pushed to recipients, author not added
-                        subtype = False
+                    elif mass_mail_mode:  # mass mail: is a log pushed to recipients unless specified, author not added
+                        if not wizard.notify:
+                            subtype = False
                         context = dict(context, mail_create_nosubscribe=True)  # add context key to avoid subscribing the author
                     msg_id = active_model_pool.message_post(cr, uid, [res_id], type='comment', subtype=subtype, context=context, **post_values)
                     # mass_mailing, post without notify: notify specific partners

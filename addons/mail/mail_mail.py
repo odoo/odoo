@@ -96,9 +96,19 @@ class mail_mail(osv.Model):
             return values.get('reply_to')
         email_reply_to = False
 
+        # model, res_id: comes from values OR related message
+        model = values.get('model')
+        res_id = values.get('res_id')
+        if values.get('mail_message_id') and (not model or not res_id):
+            message = self.pool.get('mail.message').browse(cr, uid, values.get('mail_message_id'), context=context)
+            if not model:
+                model = message.model
+            if not res_id:
+                res_id = message.res_id
+
         # if model and res_id: try to use ``message_get_reply_to`` that returns the document alias
-        if values.get('model') and values.get('res_id') and hasattr(self.pool.get(values.get('model')), 'message_get_reply_to'):
-            email_reply_to = self.pool.get(values.get('model')).message_get_reply_to(cr, uid, [values.get('res_id')], context=context)[0]
+        if model and res_id and hasattr(self.pool.get(model), 'message_get_reply_to'):
+            email_reply_to = self.pool.get(model).message_get_reply_to(cr, uid, [res_id], context=context)[0]
         # no alias reply_to -> reply_to will be the email_from, only the email part
         if not email_reply_to and values.get('email_from'):
             emails = tools.email_split(values.get('email_from'))
@@ -106,8 +116,8 @@ class mail_mail(osv.Model):
                 email_reply_to = emails[0]
 
         # format 'Document name <email_address>'
-        if email_reply_to and values.get('model') and values.get('res_id'):
-            document_name = self.pool.get(values.get('model')).name_get(cr, SUPERUSER_ID, [values.get('res_id')], context=context)[0]
+        if email_reply_to and model and res_id:
+            document_name = self.pool.get(model).name_get(cr, SUPERUSER_ID, [res_id], context=context)[0]
             if document_name:
                 email_reply_to = _('Followers of %s <%s>') % (document_name[1], email_reply_to)
 
