@@ -116,6 +116,8 @@ class mail_thread(osv.AbstractModel):
         """ Computes:
             - message_subtype_data: data about document subtypes: which are
                 available, which are followed if any """
+        if context is None:
+            context = {}
         res = dict((id, dict(message_subtype_data='')) for id in ids)
         user_pid = self.pool.get('res.users').read(cr, uid, uid, ['partner_id'], context=context)['partner_id'][0]
 
@@ -126,7 +128,7 @@ class mail_thread(osv.AbstractModel):
         for id in ids:
             res[id]['message_subtype_data'] = subtype_dict.copy()
 
-        if context and 'partner_id' in context:
+        if 'partner_id' in context:
             user_pid = context.get('partner_id')
         # find the document followers, update the data
         fol_obj = self.pool.get('mail.followers')
