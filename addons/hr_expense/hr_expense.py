@@ -40,7 +40,7 @@ class hr_expense_expense(osv.osv):
         if context is None:
             context = {}
         if not default: default = {}
-        default.update({'voucher_id': False, 'date_confirm': False, 'date_valid': False, 'user_valid': False})
+        default.update({'date_confirm': False, 'date_valid': False, 'user_valid': False})
         return super(hr_expense_expense, self).copy(cr, uid, id, default, context=context)
 
     def _amount(self, cr, uid, ids, field_name, arg, context=None):
@@ -85,7 +85,6 @@ class hr_expense_expense(osv.osv):
         'line_ids': fields.one2many('hr.expense.line', 'expense_id', 'Expense Lines', readonly=True, states={'draft':[('readonly',False)]} ),
         'note': fields.text('Note'),
         'amount': fields.function(_amount, string='Total Amount', digits_compute=dp.get_precision('Account')),
-        'voucher_id': fields.many2one('account.voucher', "Employee's Receipt"),
         'currency_id': fields.many2one('res.currency', 'Currency', required=True, readonly=True, states={'draft':[('readonly',False)], 'confirm':[('readonly',False)]}),
         'department_id':fields.many2one('hr.department','Department', readonly=True, states={'draft':[('readonly',False)], 'confirm':[('readonly',False)]}),
         'company_id': fields.many2one('res.company', 'Company', required=True),
@@ -148,7 +147,7 @@ class hr_expense_expense(osv.osv):
         '''
         This method prepare the creation of the account move related to the given expense.
 
-        :param expense_id: Id of voucher for which we are creating account_move.
+        :param expense_id: Id of expense for which we are creating account_move.
         :return: mapping between fieldname and value of account move to create
         :rtype: dict
         '''
