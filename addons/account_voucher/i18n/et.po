@@ -13,8 +13,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-12-22 05:50+0000\n"
-"X-Generator: Launchpad (build 16378)\n"
+"X-Launchpad-Export-Date: 2013-03-16 05:33+0000\n"
+"X-Generator: Launchpad (build 16532)\n"
 
 #~ msgid "Bank Receipt Voucher"
 #~ msgstr "Panga sissetulekuorder"
@@ -42,7 +42,7 @@ msgid "account.config.settings"
 msgstr ""
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:357
+#: code:addons/account_voucher/account_voucher.py:369
 #, python-format
 msgid "Write-Off"
 msgstr "Mahakandmine"
@@ -144,7 +144,7 @@ msgid "Voucher Statistics"
 msgstr ""
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:1533
+#: code:addons/account_voucher/account_voucher.py:1547
 #, python-format
 msgid ""
 "You can not change the journal as you already reconciled some statement "
@@ -236,8 +236,8 @@ msgid "Journal Item"
 msgstr ""
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:496
-#: code:addons/account_voucher/account_voucher.py:967
+#: code:addons/account_voucher/account_voucher.py:508
+#: code:addons/account_voucher/account_voucher.py:981
 #, python-format
 msgid "Error!"
 msgstr ""
@@ -264,7 +264,7 @@ msgid "Cancelled"
 msgstr ""
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:1139
+#: code:addons/account_voucher/account_voucher.py:1153
 #, python-format
 msgid ""
 "You have to configure account base code and account tax code on the '%s' tax!"
@@ -300,12 +300,13 @@ msgid "Day"
 msgstr ""
 
 #. module: account_voucher
+#: view:account.voucher:0
 #: field:account.voucher,tax_id:0
 msgid "Tax"
 msgstr ""
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:867
+#: code:addons/account_voucher/account_voucher.py:879
 #, python-format
 msgid "Invalid Action!"
 msgstr ""
@@ -356,7 +357,7 @@ msgid "Import Invoices"
 msgstr ""
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:1098
+#: code:addons/account_voucher/account_voucher.py:1112
 #, python-format
 msgid "Wrong voucher line"
 msgstr ""
@@ -375,7 +376,7 @@ msgid "Receipt"
 msgstr ""
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:1004
+#: code:addons/account_voucher/account_voucher.py:1018
 #, python-format
 msgid ""
 "You should configure the 'Gain Exchange Rate Account' in the accounting "
@@ -396,7 +397,7 @@ msgstr "Periood"
 
 #. module: account_voucher
 #: view:account.voucher:0
-#: code:addons/account_voucher/account_voucher.py:199
+#: code:addons/account_voucher/account_voucher.py:211
 #, python-format
 msgid "Supplier"
 msgstr ""
@@ -417,7 +418,7 @@ msgid "Debit"
 msgstr "Deebet"
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:1533
+#: code:addons/account_voucher/account_voucher.py:1547
 #, python-format
 msgid "Unable to change journal !"
 msgstr ""
@@ -523,7 +524,7 @@ msgid "Pay Invoice"
 msgstr ""
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:1139
+#: code:addons/account_voucher/account_voucher.py:1153
 #, python-format
 msgid "No Account Base Code and Account Tax Code!"
 msgstr ""
@@ -577,15 +578,15 @@ msgid "To Review"
 msgstr ""
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:1011
 #: code:addons/account_voucher/account_voucher.py:1025
-#: code:addons/account_voucher/account_voucher.py:1180
+#: code:addons/account_voucher/account_voucher.py:1039
+#: code:addons/account_voucher/account_voucher.py:1194
 #, python-format
 msgid "change"
 msgstr ""
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:1000
+#: code:addons/account_voucher/account_voucher.py:1014
 #, python-format
 msgid ""
 "You should configure the 'Loss Exchange Rate Account' in the accounting "
@@ -682,7 +683,7 @@ msgid "Reconcile Payment Balance"
 msgstr ""
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:963
+#: code:addons/account_voucher/account_voucher.py:975
 #, python-format
 msgid "Configuration Error !"
 msgstr ""
@@ -745,7 +746,7 @@ msgid "October"
 msgstr ""
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:964
+#: code:addons/account_voucher/account_voucher.py:976
 #, python-format
 msgid "Please activate the sequence of selected journal !"
 msgstr ""
@@ -766,7 +767,6 @@ msgid "Paid"
 msgstr ""
 
 #. module: account_voucher
-#: view:account.voucher:0
 #: model:ir.actions.act_window,name:account_voucher.action_sale_receipt
 #: model:ir.ui.menu,name:account_voucher.menu_action_sale_receipt
 msgid "Sales Receipts"
@@ -826,7 +826,7 @@ msgid "Previous Payments ?"
 msgstr ""
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:1098
+#: code:addons/account_voucher/account_voucher.py:1112
 #, python-format
 msgid "The invoice you are willing to pay is not valid anymore."
 msgstr ""
@@ -858,7 +858,7 @@ msgid "Active"
 msgstr ""
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:968
+#: code:addons/account_voucher/account_voucher.py:982
 #, python-format
 msgid "Please define a sequence on the journal."
 msgstr ""
@@ -986,7 +986,7 @@ msgid "Journal Items"
 msgstr ""
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:496
+#: code:addons/account_voucher/account_voucher.py:508
 #, python-format
 msgid "Please define default credit/debit accounts on the journal \"%s\"."
 msgstr ""
@@ -1195,7 +1195,7 @@ msgid ""
 msgstr ""
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:867
+#: code:addons/account_voucher/account_voucher.py:879
 #, python-format
 msgid "Cannot delete voucher(s) which are already opened or paid."
 msgstr ""
@@ -1258,8 +1258,8 @@ msgid "Status <b>changed</b>"
 msgstr ""
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:1000
-#: code:addons/account_voucher/account_voucher.py:1004
+#: code:addons/account_voucher/account_voucher.py:1014
+#: code:addons/account_voucher/account_voucher.py:1018
 #, python-format
 msgid "Insufficient Configuration!"
 msgstr ""

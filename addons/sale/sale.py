@@ -729,7 +729,7 @@ class sale_order_line(osv.osv):
         'salesman_id':fields.related('order_id', 'user_id', type='many2one', relation='res.users', store=True, string='Salesperson'),
         'company_id': fields.related('order_id', 'company_id', type='many2one', relation='res.company', string='Company', store=True, readonly=True),
     }
-    _order = 'order_id desc, sequence'
+    _order = 'order_id desc, sequence, id'
     _defaults = {
         'product_uom' : _get_uom_id,
         'discount': 0.0,
@@ -1020,7 +1020,8 @@ class account_invoice(osv.Model):
         sale_order_obj = self.pool.get('sale.order')
         res = super(account_invoice, self).confirm_paid(cr, uid, ids, context=context)
         so_ids = sale_order_obj.search(cr, uid, [('invoice_ids', 'in', ids)], context=context)
-        sale_order_obj.message_post(cr, uid, so_ids, body=_("Invoice paid"), context=context)
+        if so_ids:
+            sale_order_obj.message_post(cr, uid, so_ids, body=_("Invoice paid"), context=context)
         return res
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

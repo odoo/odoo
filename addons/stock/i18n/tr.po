@@ -13,8 +13,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-02-07 04:53+0000\n"
-"X-Generator: Launchpad (build 16477)\n"
+"X-Launchpad-Export-Date: 2013-03-16 04:59+0000\n"
+"X-Generator: Launchpad (build 16532)\n"
 
 #. module: stock
 #: field:stock.inventory.line.split,line_exist_ids:0
@@ -196,7 +196,7 @@ msgstr "Gün"
 #: model:ir.actions.act_window,name:stock.action_inventory_form
 #: model:ir.ui.menu,name:stock.menu_action_inventory_form
 msgid "Physical Inventories"
-msgstr "Fiziksel Stoklar"
+msgstr "Fiziksel Envanterler"
 
 #. module: stock
 #: selection:stock.location.product,type:0
@@ -349,6 +349,8 @@ msgid ""
 "Holds the Chatter summary (number of messages, ...). This summary is "
 "directly in html format in order to be inserted in kanban views."
 msgstr ""
+"Sohbetçi özetini tutar (mesajların sayısı, ...). Bu özet kanban ekranlarına "
+"eklenebilmesi için html biçimindedir."
 
 #. module: stock
 #: code:addons/stock/stock.py:768
@@ -364,9 +366,9 @@ msgstr ""
 #: code:addons/stock/wizard/stock_partial_picking.py:174
 #: code:addons/stock/wizard/stock_partial_picking.py:181
 #: code:addons/stock/wizard/stock_partial_picking.py:192
-#: code:addons/stock/wizard/stock_return_picking.py:99
-#: code:addons/stock/wizard/stock_return_picking.py:106
-#: code:addons/stock/wizard/stock_return_picking.py:205
+#: code:addons/stock/wizard/stock_return_picking.py:102
+#: code:addons/stock/wizard/stock_return_picking.py:109
+#: code:addons/stock/wizard/stock_return_picking.py:208
 #, python-format
 msgid "Warning!"
 msgstr "Uyarı!"
@@ -399,7 +401,7 @@ msgstr "Partner"
 #. module: stock
 #: field:stock.config.settings,module_claim_from_delivery:0
 msgid "Allow claim on deliveries"
-msgstr ""
+msgstr "Teslimatlarda şikayete izin ver"
 
 #. module: stock
 #: selection:stock.return.picking,invoice_state:0
@@ -451,7 +453,7 @@ msgstr "Dahili lokasyon"
 #. module: stock
 #: view:stock.move:0
 msgid "Split in Serial Number"
-msgstr ""
+msgstr "Deri Numaralarına ayır"
 
 #. module: stock
 #: view:stock.location:0
@@ -509,7 +511,7 @@ msgstr "Gelen Miktar"
 #. module: stock
 #: model:ir.actions.client,name:stock.action_client_warehouse_menu
 msgid "Open Warehouse Menu"
-msgstr ""
+msgstr "Depo Menüsünü Aç"
 
 #. module: stock
 #: field:stock.warehouse,lot_output_id:0
@@ -549,7 +551,7 @@ msgstr ""
 #. module: stock
 #: field:stock.config.settings,group_stock_tracking_lot:0
 msgid "Track serial number on logistic units (pallets)"
-msgstr ""
+msgstr "Lojistik birimlerinde (paletler) seri numaralarını izle"
 
 #. module: stock
 #: help:product.template,sale_delay:0
@@ -628,11 +630,12 @@ msgstr "Hareket İstatistikleri"
 msgid ""
 "Allows you to select and maintain different units of measure for products."
 msgstr ""
+"Ürünler için farklı ölçü birimleri seçmenizi ve değiştirmenizi sağlar."
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_report_tracklots
 msgid "Stock report by logistic serial number"
-msgstr ""
+msgstr "Lojistik seri numarasına göre stok raporu"
 
 #. module: stock
 #: help:product.product,track_outgoing:0
@@ -1149,7 +1152,7 @@ msgstr "Ters Tranferler"
 #. module: stock
 #: field:stock.config.settings,group_uos:0
 msgid "Invoice products in a different unit of measure than the sales order"
-msgstr ""
+msgstr "Ürünleri satış siparişindekinden farklı ölçü biriminde faturalandır"
 
 #. module: stock
 #: help:stock.location,active:0
@@ -1168,7 +1171,7 @@ msgstr ""
 "seçin."
 
 #. module: stock
-#: code:addons/stock/wizard/stock_return_picking.py:106
+#: code:addons/stock/wizard/stock_return_picking.py:109
 #, python-format
 msgid ""
 "No products to return (only lines in Done state and not fully returned yet "
@@ -1210,7 +1213,7 @@ msgstr "Uygula"
 #. module: stock
 #: field:product.template,loc_row:0
 msgid "Row"
-msgstr ""
+msgstr "Sıra"
 
 #. module: stock
 #: field:product.template,property_stock_production:0
@@ -1588,7 +1591,7 @@ msgid "Incoming Shipments already processed"
 msgstr "Halihazırda işlenmiş Gelen sevkiyatlar"
 
 #. module: stock
-#: code:addons/stock/wizard/stock_return_picking.py:99
+#: code:addons/stock/wizard/stock_return_picking.py:102
 #, python-format
 msgid "You may only return pickings that are Confirmed, Available or Done!"
 msgstr ""
@@ -2903,7 +2906,7 @@ msgid "Stock Journal"
 msgstr "Stok Yevmiye"
 
 #. module: stock
-#: code:addons/stock/wizard/stock_return_picking.py:171
+#: code:addons/stock/wizard/stock_return_picking.py:174
 #, python-format
 msgid "%s-%s-return"
 msgstr "%s-%s-dönen"
@@ -3377,7 +3380,7 @@ msgid "Stock"
 msgstr "Stok"
 
 #. module: stock
-#: code:addons/stock/wizard/stock_return_picking.py:219
+#: code:addons/stock/wizard/stock_return_picking.py:222
 #, python-format
 msgid "Returned Picking"
 msgstr "Dönen SeçimListeleri"
@@ -3785,6 +3788,7 @@ msgstr "Lot Envanteri"
 #: field:stock.production.lot,name:0
 #: field:stock.production.lot.revision,lot_id:0
 #: field:stock.report.prodlots,prodlot_id:0
+#: field:stock.return.picking.memory,prodlot_id:0
 msgid "Serial Number"
 msgstr "Seri Numara"
 
@@ -4414,7 +4418,7 @@ msgid ""
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/wizard/stock_return_picking.py:205
+#: code:addons/stock/wizard/stock_return_picking.py:208
 #, python-format
 msgid "Please specify at least one non-zero quantity."
 msgstr ""

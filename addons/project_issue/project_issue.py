@@ -20,6 +20,7 @@
 ##############################################################################
 
 from openerp.addons.base_status.base_stage import base_stage
+from openerp.addons.project.project import _TASK_STATE
 from openerp.addons.crm import crm
 from datetime import datetime
 from openerp.osv import fields,osv
@@ -40,9 +41,6 @@ class project_issue_version(osv.osv):
         'active': 1,
     }
 project_issue_version()
-
-_ISSUE_STATE = [('draft', 'New'), ('open', 'In Progress'), ('cancel', 'Cancelled'), ('done', 'Done'), ('pending', 'Pending')]
-
 
 class project_issue(base_stage, osv.osv):
     _name = "project.issue"
@@ -252,7 +250,7 @@ class project_issue(base_stage, osv.osv):
         'company_id': fields.many2one('res.company', 'Company'),
         'description': fields.text('Private Note'),
         'state': fields.related('stage_id', 'state', type="selection", store=True,
-                selection=_ISSUE_STATE, string="Status", readonly=True,
+                selection=_TASK_STATE, string="Status", readonly=True,
                 help='The status is set to \'Draft\', when a case is created.\
                       If the case is in progress the status is set to \'Open\'.\
                       When the case is over, the status is set to \'Done\'.\
@@ -485,6 +483,15 @@ class project_issue(base_stage, osv.osv):
         return [issue.project_id.message_get_reply_to()[0] if issue.project_id else False
                     for issue in self.browse(cr, uid, ids, context=context)]
 
+    def message_get_suggested_recipients(self, cr, uid, ids, context=None):
+        recipients = super(project_issue, self).message_get_suggested_recipients(cr, uid, ids, context=context)
+        for issue in self.browse(cr, uid, ids, context=context):
+            if issue.partner_id:
+                self._message_add_suggested_recipient(cr, uid, recipients, issue, partner=issue.partner_id, reason=_('Customer'))
+            elif issue.email_from:
+                self._message_add_suggested_recipient(cr, uid, recipients, issue, email=issue.email_from, reason=_('Customer Email'))
+        return recipients
+
     def message_new(self, cr, uid, msg, custom_values=None, context=None):
         """ Overrides mail_thread message_new that is called by the mailgateway
             through message_process.
@@ -549,12 +556,13 @@ class project(osv.osv):
         res = dict.fromkeys(ids, 0)
         issue_ids = self.pool.get('project.issue').search(cr, uid, [('project_id', 'in', ids)])
         for issue in self.pool.get('project.issue').browse(cr, uid, issue_ids, context):
-            res[issue.project_id.id] += 1
+            if issue.state not in ('done', 'cancelled'):
+                res[issue.project_id.id] += 1
         return res
 
     _columns = {
         'project_escalation_id' : fields.many2one('project.project','Project Escalation', help='If any issue is escalated from the current Project, it will be listed under the project selected here.', states={'close':[('readonly',True)], 'cancelled':[('readonly',True)]}),
-        'issue_count': fields.function(_issue_count, type='integer'),
+        'issue_count': fields.function(_issue_count, type='integer', string="Unclosed Issues"),
     }
 
     def _check_escalation(self, cr, uid, ids, context=None):
