@@ -216,6 +216,8 @@ class test_mail(TestMailBase):
 
         # Data: set alias_domain to see emails with alias
         self.registry('ir.config_parameter').set_param(self.cr, self.uid, 'mail.catchall.domain', 'schlouby.fr')
+        # Data: change Pigs name to test reply_to
+        self.mail_group.write(cr, uid, [self.group_pigs_id], {'name': '"Pigs" !ù $%-'})
 
         # Do: subscribe Raoul
         new_follower_ids = [self.partner_raoul_id]
@@ -290,7 +292,7 @@ class test_mail(TestMailBase):
                             'message_post: notification email sent to more than one email address instead of a precise partner')
             self.assertIn(sent_email['email_to'][0], test_emailto,
                             'message_post: notification email email_to incorrect')
-            self.assertEqual(sent_email['reply_to'], 'Followers of Pigs <group+pigs@schlouby.fr>',
+            self.assertEqual(sent_email['reply_to'], '"Followers of -Pigs-" <group+pigs@schlouby.fr>',
                             'message_post: notification email reply_to incorrect')
             self.assertEqual(_subject, sent_email['subject'],
                             'message_post: notification email subject incorrect')
@@ -312,6 +314,9 @@ class test_mail(TestMailBase):
         notif_pids = set([notif.partner_id.id for notif in self.mail_notification.browse(cr, uid, notif_ids)])
         self.assertEqual(notif_pids, test_pids,
                         'message_post: mail.message created mail.notification incorrect')
+
+        # Data: Pigs name back to normal
+        self.mail_group.write(cr, uid, [self.group_pigs_id], {'name': 'Pigs'})
 
         # --------------------------------------------------
         # CASE2: reply + parent_id + parent notification
@@ -357,7 +362,7 @@ class test_mail(TestMailBase):
                             'message_post: notification email sent to more than one email address instead of a precise partner')
             self.assertIn(sent_email['email_to'][0], test_emailto,
                             'message_post: notification email email_to incorrect')
-            self.assertEqual(sent_email['reply_to'], 'Followers of Pigs <r@r>',
+            self.assertEqual(sent_email['reply_to'], '"Followers of Pigs" <r@r>',
                             'message_post: notification email reply_to incorrect: should name Followers of Pigs, and have raoul email')
             self.assertEqual(_mail_subject, sent_email['subject'],
                             'message_post: notification email subject incorrect')
