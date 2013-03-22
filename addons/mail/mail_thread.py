@@ -553,9 +553,26 @@ class mail_thread(osv.AbstractModel):
             mail_alias = self.pool.get('mail.alias')
             alias_ids = mail_alias.search(cr, uid, [('alias_name', 'in', local_parts)])
             if alias_ids:
+                # TDE note: at this stage, message parsing is not done yet - parse the from of the message
+                author_ids = self._message_find_partners(cr, uid, message, ['From'], context=context)
                 routes = []
                 for alias in mail_alias.browse(cr, uid, alias_ids, context=context):
                     user_id = alias.alias_user_id.id
+
+                    if alias.alias_contact == 'partners' and not author_ids:
+                        # TDE TODO: bounce
+                        _logger.info('Routing mail with Message-Id %s: alias %s does not accept unknown emails, skipping', message_id, alias.alias_name)
+                        mail_id = self.pool.get('mail.mail').create(cr, uid, {
+                                            'body_html': '<p>Hello,</p>'
+                                                '<p>The following email sent to %s cannot be accepted because this address'
+                                                'is private. Only known contacts are allowed to contact this address.</p>'
+                                                '<div>%s</div>' % (message.get('to'), message.get('body')),
+                                            'subject': message.get('subject'),
+                                            'email_to': message.get('from'),
+                                            'auto_delete': True,
+                                        }, context=context)
+                        self.pool.get('mail.mail').send(cr, uid, [mail_id], context=context)
+                        continue
                     if not user_id:
                         # TDE note: this could cause crashes, because no clue that the user
                         # that send the email has the right to create or modify a new document

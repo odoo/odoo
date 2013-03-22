@@ -87,13 +87,21 @@ class mail_alias(osv.Model):
                                            "messages will be attached, even if they did not reply to it. "
                                            "If set, this will disable the creation of new records completely."),
         'alias_domain': fields.function(_get_alias_domain, string="Alias domain", type='char', size=None),
+        'alias_contact': fields.selection([
+                ('everyone', 'Everyone'),
+                ('partners', 'Authenticated Partners'),
+            ], string='Contact policy', required=True,
+            help="Allows to restrict the access to the alias. If set to partners, only emails coming "
+                    "from a partner are accepted. Unknown emails are bounced. If set to everyone, every "
+                    "incoming email is accepted for this alias."),
     }
 
     _defaults = {
         'alias_defaults': '{}',
-        'alias_user_id': lambda self,cr,uid,context: uid,
+        'alias_user_id': lambda self, cr, uid, context: uid,
         # looks better when creating new aliases - even if the field is informative only
-        'alias_domain': lambda self,cr,uid,context: self._get_alias_domain(cr, SUPERUSER_ID,[1],None,None)[1]
+        'alias_domain': lambda self, cr, uid, context: self._get_alias_domain(cr, SUPERUSER_ID, [1], None, None)[1],
+        'alias_contact': 'everyone',
     }
 
     _sql_constraints = [

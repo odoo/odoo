@@ -105,7 +105,8 @@ class TestMailgateway(TestMailBase):
         alias_id = self.mail_alias.create(cr, uid, {
             'alias_name': 'groups',
             'alias_user_id': False,
-            'alias_model_id': self.mail_group_model_id})
+            'alias_model_id': self.mail_group_model_id,
+            'alias_contact': 'everyone'})
 
         # --------------------------------------------------
         # Test1: new record creation
@@ -145,6 +146,21 @@ class TestMailgateway(TestMailBase):
                             'message_process: should create emails without any follower added')
         # Data: unlink group
         frog_group.unlink()
+
+        # Do: incoming email from an unknown partner on a restricted alias
+        self._init_mock_build_email()
+        self.mail_alias.write(cr, uid, [alias_id], {'alias_contact': 'partners'})
+        frog_groups = format_and_process(MAIL_TEMPLATE, to='groups@example.com, other@gmail.com')
+        # Test: no group created
+        self.assertTrue(len(frog_groups) == 0)
+        # Test: email bounced
+        sent_emails = self._build_email_kwargs_list
+        self.assertEqual(len(sent_emails), 1,
+                            'message_process: incoming email on private alias should send a bounce email')
+        self.assertIn('Frogs', sent_emails[0].get('subject'),
+                            'message_process: bounce email on private alias should contain the original subject')
+        self.assertIn('test.sylvie.lelitre@agrolait.com', sent_emails[0].get('email_to'),
+                            'message_process: bounce email on private alias should have original email sender as recipient')
 
         # Do: incoming email from a known partner on an alias with known recipients, alias is owned by user that can create a group
         self.mail_alias.write(cr, uid, [alias_id], {'alias_user_id': self.user_raoul_id})
