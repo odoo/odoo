@@ -32,7 +32,15 @@ class res_users_gamification_group(osv.Model):
             vals = {'name': plan.name, 'goals': []}
 
             goal_ids = goal_obj.search(cr, uid, [('user_id', '=', uid), ('plan_id', '=', plan.id)], context=context)
+            all_done = True
             for goal in goal_obj.browse(cr, uid, goal_ids, context=context):
+                if goal.last_update and goal.end_date and goal.last_update > goal.end_date:
+                    # do not include goals of previous plan run
+                    continue
+
+                if goal.state == 'inprogress' or goal.state == 'inprogress_update':
+                    all_done = False
+
                 vals['goals'].append({
                     'id': goal.id,
                     'type_name': goal.type_id.name,
@@ -41,8 +49,9 @@ class res_users_gamification_group(osv.Model):
                     'completeness': goal.completeness,
                     'computation_mode': goal.computation_mode,
                 })
-
-            goals_info.append(vals)
+            # skip plans where all goal are done or failed
+            if not all_done:
+                goals_info.append(vals)
         return goals_info
 
 
