@@ -85,6 +85,17 @@ class subscription_subscription(osv.osv):
         'state': lambda *a: 'draft'
     }
 
+    def _auto_end(self, cr, context=None):    
+        super(subscription_subscription, self)._auto_end(cr, context=context)
+        # drop the FK from subscription to ir.cron, as it would cause deadlocks
+        # during cron job execution. When model_copy() tries to write() on the subscription,
+        # it has to wait for an ExclusiveLock on the cron job record, but the latter 
+        # is locked by the cron system for the duration of the job!
+        # FIXME: the subscription module should be reviewed to simplify the scheduling process
+        #        and to use a unique cron job for all subscriptions, so that it never needs to
+        #        be updated during its execution. 
+        cr.execute("ALTER TABLE %s DROP CONSTRAINT %s" % (self._table, '%s_cron_id_fkey' % self._table))
+
     def set_process(self, cr, uid, ids, context=None):
         for row in self.read(cr, uid, ids, context=context):
             mapping = {'name':'name','interval_number':'interval_number','interval_type':'interval_type','exec_init':'numbercall','date_init':'nextcall'}

@@ -2,7 +2,7 @@
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
+#    Copyright (C) 2010-Today OpenERP S.A. (<http://www.openerp.com>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -19,27 +19,24 @@
 #
 ##############################################################################
 
-import time
 
-from openerp.report import report_sxw
-
-class order(report_sxw.rml_parse):
-    def __init__(self, cr, uid, name, context=None):
-        super(order, self).__init__(cr, uid, name, context=context)
-        self.localcontext.update({
-            'time': time, 
-            'show_discount':self._show_discount,
-        })
-
-    def _show_discount(self, uid, context=None):
-        cr = self.cr
-        try: 
-            group_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'sale', 'group_discount_per_so_line')[1]
-        except:
-            return False
-        return group_id in [x.id for x in self.pool.get('res.users').browse(cr, uid, uid, context=context).groups_id]
-
-report_sxw.report_sxw('report.sale.order', 'sale.order', 'addons/sale/report/sale_order.rml', parser=order, header="external")
-
+{
+    'name': 'Portal Project Long Term',
+    'version': '1.0',
+    'category': 'Tools',
+    'complexity': 'easy',
+    'description': """
+This module adds necessary security rules and access rights for project long term and portal.
+=============================================================================================
+    """,
+    'author': 'OpenERP SA',
+    'depends': ['project_long_term', 'portal'],
+    'data': [
+        'security/portal_security.xml',
+        'security/ir.model.access.csv',
+    ],
+    'installable': True,
+    'auto_install': True,
+    'category': 'Hidden',
+}
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-
