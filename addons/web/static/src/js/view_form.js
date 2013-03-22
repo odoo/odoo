@@ -1021,7 +1021,7 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
             return value;
         }
         var fields = _.chain(this.fields)
-            .map(function (field, name) {
+            .map(function (field) {
                 var value = field.get_value();
                 // ignore fields which are empty, invisible, readonly, o2m
                 // or m2m
@@ -1036,7 +1036,7 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
                 }
 
                 return {
-                    name: name,
+                    name: field.name,
                     string: field.string,
                     value: value,
                     displayed: display(field, value),
@@ -1047,10 +1047,10 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
             .value();
         var conditions = _.chain(self.fields)
             .filter(function (field) { return field.field.change_default; })
-            .map(function (field, name) {
+            .map(function (field) {
                 var value = field.get_value();
                 return {
-                    name: name,
+                    name: field.name,
                     string: field.string,
                     value: value,
                     displayed: display(field, value),
