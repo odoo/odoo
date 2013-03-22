@@ -29,43 +29,22 @@
 #
 ##############################################################################
 
-from openerp.osv import fields, osv
-import openerp.report.interface
-from openerp.report.report_sxw import rml_parse
+from openerp.osv import fields, orm
 
-from webkit_report import WebKitParser
-
-def register_report(name, model, tmpl_path, parser=rml_parse):
-    """Register the report into the services"""
-    name = 'report.%s' % name
-    if name in openerp.report.interface.report_int._reports:
-        service = openerp.report.interface.report_int._reports[name]
-        if isinstance(service, WebKitParser):
-            #already instantiated properly, skip it
-            return
-        if hasattr(service, 'parser'):
-            parser = service.parser
-        del openerp.report.interface.report_int._reports[name]
-    WebKitParser(name, model, tmpl_path, parser=parser)
-
-
-class ReportXML(osv.osv):
+class ir_actions_report_xml(orm.Model):
     _inherit = 'ir.actions.report.xml'
     _columns = {
-        'webkit_header':  fields.property(
-                                            'ir.header_webkit',
-                                            type='many2one',
-                                            relation='ir.header_webkit',
-                                            string='Webkit Header',
-                                            help="The header linked to the report",
-                                            view_load=True,
-                                            required=True
-                                        ),
-        'webkit_debug' : fields.boolean('Webkit debug', help="Enable the webkit engine debugger"),
-        'report_webkit_data': fields.text('Webkit Template', help="This template will be used if the main report file is not found"),
-        'precise_mode':fields.boolean('Precise Mode', help='This mode allow more precise element \
-                                                            position as each object is printed on a separate HTML.\
-                                                            but memory and disk usage is wider')
+        'webkit_header': fields.property('ir.header_webkit',
+            type='many2one', relation='ir.header_webkit',
+            string='Webkit Header', help="The header linked to the report",
+            view_load=True, required=True),
+        'webkit_debug': fields.boolean('Webkit debug',
+            help="Enable the webkit engine debugger"),
+        'report_webkit_data': fields.text('Webkit Template',
+            help="This template will be used if the main report file is not found"),
+        'precise_mode': fields.boolean('Precise Mode',
+            help="This mode allow more precise element position as each object"
+            " is printed on a separate HTML but memory and disk usage are wider.")
     }
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
