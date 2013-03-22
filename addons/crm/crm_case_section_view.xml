@@ -80,8 +80,8 @@
                     <field name="note"/>
                     <field name="alias_id"/>
                     <field name="color"/>
-                    <field name="number_lead"/>
-                    <field name="number_opportunity"/>
+                    <field name="open_lead_ids"/>
+                    <field name="open_opportunity_ids"/>
                     <templates>
                         <t t-name="kanban-box">
                             <div t-attf-class="oe_kanban_color_#{kanban_getcolor(record.color.raw_value)} oe_kanban_card oe_kanban_project oe_kanban_global_click oe_kanban_crm_salesteams" style="width:220px;">
@@ -100,11 +100,11 @@
                                     </div>
                                     <div class="oe_kanban_crm_salesteams_list">
                                         <a name="%(crm_case_form_view_salesteams_lead)d" type="action" style="margin-right: 10px">
-                                            <t t-raw="record.number_lead.raw_value"/>
-                                            <t t-if="record.number_lead.raw_value &gt;= 1">Leads</t><t t-if="record.number_lead.raw_value &lt; 1">Lead</t></a>
+                                            <t t-raw="record.open_lead_ids.raw_value.length"/>
+                                            <t t-if="record.open_lead_ids.raw_value.length &gt;= 1">Leads</t><t t-if="record.open_lead_ids.raw_value.length &lt; 1">Lead</t></a>
                                         <a name="%(crm_case_form_view_salesteams_opportunity)d" type="action" style="margin-right: 10px">
-                                            <t t-raw="record.number_opportunity.raw_value"/>
-                                            <t t-if="record.number_opportunity.raw_value &gt;= 1">Opportunities</t><t t-if="record.number_opportunity.raw_value &lt; 1">Opportunity</t></a>
+                                            <t t-raw="record.open_opportunity_ids.raw_value.length"/>
+                                            <t t-if="record.open_opportunity_ids.raw_value.length &gt;= 1">Opportunities</t><t t-if="record.open_opportunity_ids.raw_value.length &lt; 1">Opportunity</t></a>
                                     </div>
                                     <div class="oe_kanban_crm_salesteams_avatars">
                                         <img t-if="record.user_id.raw_value" t-att-src="kanban_image('res.users', 'image_small', record.user_id.raw_value)" t-att-data-member_id="record.user_id.raw_value"/>

@@ -33,13 +33,25 @@ class crm_case_section(osv.osv):
     _inherit = 'crm.case.section'
 
     def _get_number_saleorder(self, cr, uid, ids, field_name, arg, context=None):
-        return self.get_number_items(cr, uid, ids, 'sale.order', [('state','not in',('draft','sent','cancel'))], context=context)
+        res = dict.fromkeys(ids, 0)
+        obj = self.pool.get('sale.order')
+        for section_id in ids:
+            res[section_id] = obj.search(cr, uid, [("section_id", "=", section_id),('state','not in',['draft','sent','cancel'])], count=True, context=context)
+        return res
 
     def _get_number_quotation(self, cr, uid, ids, field_name, arg, context=None):
-        return self.get_number_items(cr, uid, ids, 'sale.order', [('state','in',('draft','sent','cancel'))], context=context)
+        res = dict.fromkeys(ids, 0)
+        obj = self.pool.get('sale.order')
+        for section_id in ids:
+            res[section_id] = obj.search(cr, uid, [("section_id", "=", section_id),('state','in',['draft','sent','cancel'])], count=True, context=context)
+        return res
 
     def _get_number_invoice(self, cr, uid, ids, field_name, arg, context=None):
-        return self.get_number_items(cr, uid, ids, 'account.invoice', [('state','not in',('draft','cancel'))], context=context)
+        res = dict.fromkeys(ids, 0)
+        obj = self.pool.get('account.invoice')
+        for section_id in ids:
+            res[section_id] = obj.search(cr, uid, [("section_id", "=", section_id),('state','not in',['draft','cancel'])], count=True, context=context)
+        return res
 
     _columns = {
         'number_saleorder': fields.function(_get_number_saleorder, type='integer',  readonly=True),

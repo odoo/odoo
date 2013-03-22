@@ -22,7 +22,6 @@
 import logging
 import re
 import unicodedata
-import ast
 
 from openerp.osv import fields, osv
 from openerp.tools import ustr
