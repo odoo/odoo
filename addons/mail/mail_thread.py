@@ -416,9 +416,15 @@ class mail_thread(osv.AbstractModel):
 
     def _message_find_partners(self, cr, uid, message, header_fields=['From'], context=None):
         """ Find partners related to some header fields of the message. """
+        partner_obj = self.pool.get('res.partner')
+        partner_ids = []
         s = ', '.join([decode(message.get(h)) for h in header_fields if message.get(h)])
-        return [partner_id for email in tools.email_split(s)
-                for partner_id in self.pool.get('res.partner').search(cr, uid, [('email', 'ilike', email)], limit=1, context=context)]
+        for email_address in tools.email_split(s):
+            related_partners = partner_obj.search(cr, uid, [('email', 'ilike', email_address), ('user_ids', '!=', False)], limit=1, context=context)
+            if not related_partners:
+                related_partners = partner_obj.search(cr, uid, [('email', 'ilike', email_address)], limit=1, context=context)
+            partner_ids += related_partners
+        return partner_ids
 
     def _message_find_user_id(self, cr, uid, message, context=None):
         from_local_part = tools.email_split(decode(message.get('From')))[0]
@@ -468,6 +474,7 @@ class mail_thread(osv.AbstractModel):
         # 1. Verify if this is a reply to an existing thread
         thread_references = references or in_reply_to
         ref_match = thread_references and tools.reference_re.search(thread_references)
+
         if ref_match:
             thread_id = int(ref_match.group(1))
             model = ref_match.group(2) or model
@@ -480,7 +487,10 @@ class mail_thread(osv.AbstractModel):
 
         # Verify whether this is a reply to a private message
         if in_reply_to:
-            message_ids = self.pool.get('mail.message').search(cr, uid, [('message_id', '=', in_reply_to)], limit=1, context=context)
+            message_ids = self.pool.get('mail.message').search(cr, uid, [
+                                ('message_id', '=', in_reply_to),
+                                '!', ('message_id', 'ilike', 'reply_to')
+                            ], limit=1, context=context)
             if message_ids:
                 message = self.pool.get('mail.message').browse(cr, uid, message_ids[0], context=context)
                 _logger.debug('Routing mail with Message-Id %s: direct reply to a private message: %s, custom_values: %s, uid: %s',
@@ -523,6 +533,11 @@ class mail_thread(osv.AbstractModel):
             # Legacy: fallback to matching [ID] in the Subject
             match = tools.res_re.search(decode_header(message, 'Subject'))
             thread_id = match and match.group(1)
+            # Convert into int (bug spotted in 7.0 because of str)
+            try:
+                thread_id = int(thread_id)
+            except:
+                thread_id = False
         assert thread_id and hasattr(model_pool, 'message_update') or hasattr(model_pool, 'message_new'), \
             "No possible route found for incoming message with Message-Id %s. " \
             "Create an appropriate mail.alias or force the destination model." % message_id
@@ -925,6 +940,22 @@ class mail_thread(osv.AbstractModel):
         model = False
         if thread_id:
             model = context.get('thread_model', self._name) if self._name == 'mail.thread' else self._name
+            if model != self._name:
+                del context['thread_model']
+                return self.pool.get(model).message_post(cr, uid, thread_id, body=body, subject=subject, type=type, subtype=subtype, parent_id=parent_id, attachments=attachments, context=context, content_subtype=content_subtype, **kwargs)
+
+        # 0: Parse email-from, try to find a better author_id based on document's followers for incoming emails
+        email_from = kwargs.get('email_from')
+        if email_from and thread_id and type == 'email' and kwargs.get('author_id'):
+            email_list = tools.email_split(email_from)
+            doc = self.browse(cr, uid, thread_id, context=context)
+            if email_list and doc:
+                author_ids = self.pool.get('res.partner').search(cr, uid, [
+                                        ('email', 'ilike', email_list[0]),
+                                        ('id', 'in', [f.id for f in doc.message_follower_ids])
+                                    ], limit=1, context=context)
+                if author_ids:
+                    kwargs['author_id'] = author_ids[0]
 
         # 1: Handle content subtype: if plaintext, converto into HTML
         if content_subtype == 'plaintext':
@@ -1026,7 +1057,7 @@ class mail_thread(osv.AbstractModel):
         # Create and auto subscribe the author
         msg_id = mail_message.create(cr, uid, values, context=context)
         message = mail_message.browse(cr, uid, msg_id, context=context)
-        if message.author_id and thread_id and type != 'notification':
+        if message.author_id and thread_id and type != 'notification' and not context.get('mail_create_nosubscribe'):
             self.message_subscribe(cr, uid, [thread_id], [message.author_id.id], context=context)
         return msg_id
 

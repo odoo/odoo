@@ -1,25 +1,15 @@
-.login .pane {
-    width: 260px;
-    height: 175px;
-}
-
-.login .pane input[name='openid_url'] {
+.oe_login .oe_login_pane input[name='openid_url'] {
     background: #fff url(../img/login-bg.gif) no-repeat 1px;
     padding-left: 20px;
 }
 
-.auth_choice {
-    position: static;
-    display: none;
+.openerp .oe_login .openid_providers {
+    text-align: center;
 }
-
-.openid_providers {
-    padding: 0;
-    list-style: none;
-    float: right;
+.openerp .oe_login .openid_providers ul {
+    display: inline-block;
 }
-
-.openid_providers li {
+.openerp .oe_login .openid_providers ul li {
     display: block;
     float: left;
     margin: 0 1px 3px 2px;
@@ -29,7 +19,6 @@
     display: block;
     width: 24px;
     height: 24px;
-    border: 1px solid #ddd;
     background: #fff url(../img/openid_16.png) no-repeat 50%;
     text-indent: -9999px;
     overflow: hidden;
@@ -37,20 +26,16 @@
 }
 
 .openid_providers a.selected {
-    border-color: #9A0404;
+    background-color: #DC5F59;
 }
 
-.openid_providers a[title="Password"]    { background-image: url(../img/textfield_key.png); }
-.openid_providers a[title="AOL"]         { background-image: url(../img/aol.png); }
-.openid_providers a[title="ClaimID"]     { background-image: url(../img/claimid.png); }
-.openid_providers a[title="Google"]      { background-image: url(../img/googlefav.png); }
-.openid_providers a[title="Google Apps"] { background-image: url(../img/marketplace.gif); }
-.openid_providers a[title="MyOpenID"]    { background-image: url(../img/myopenid.png); }
-.openid_providers a[title="VeriSign"]    { background-image: url(../img/verisign.png); }
-.openid_providers a[title="Yahoo!"]      { background-image: url(../img/yahoo.png); }
-.openid_providers a[title="Launchpad"]   { background-image: url(../img/launchpad.png); }
+.openid_providers a[data-provider="Password"]    { background-image: url(../img/textfield_key.png); }
+.openid_providers a[data-provider="AOL"]         { background-image: url(../img/aol.png); }
+.openid_providers a[data-provider="ClaimID"]     { background-image: url(../img/claimid.png); }
+.openid_providers a[data-provider="Google"]      { background-image: url(../img/googlefav.png); }
+.openid_providers a[data-provider="Google Apps"] { background-image: url(../img/marketplace.gif); }
+.openid_providers a[data-provider="MyOpenID"]    { background-image: url(../img/myopenid.png); }
+.openid_providers a[data-provider="VeriSign"]    { background-image: url(../img/verisign.png); }
+.openid_providers a[data-provider="Yahoo!"]      { background-image: url(../img/yahoo.png); }
+.openid_providers a[data-provider="Launchpad"]   { background-image: url(../img/launchpad.png); }
 
-
-li.auth_choice.selected {
-    display: table-row;
-}
