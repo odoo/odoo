@@ -392,6 +392,9 @@ class fleet_vehicle(osv.Model):
         }
 
     def create(self, cr, uid, data, context=None):
+        if not context:
+            context = {}
+        context.update({'mail_create_nolog': True})
         vehicle_id = super(fleet_vehicle, self).create(cr, uid, data, context=context)
         vehicle = self.browse(cr, uid, vehicle_id, context=context)
         self.message_post(cr, uid, [vehicle_id], body=_('%s %s has been added to the fleet!') % (vehicle.model_id.name,vehicle.license_plate), context=context)

@@ -450,7 +450,7 @@
                                 </group>
                                 <div class="oe_right"><group><field name="sum_cost" string="Indicative Costs Total"/></group></div>
                             </page>
-                            <page string="Generated Costs">
+                            <page string="Generated Recurring Costs">
                                 <group>
                                     <field name="generated_cost_ids" context="{'vehicle_id': vehicle_id}" nolabel="1" sum="amount">
                                         <tree version="7.0" editable="bottom" >
@@ -713,7 +713,7 @@
                             <group string="Services Details">
                                 <field name="vehicle_id" on_change="on_change_vehicle(vehicle_id)"/>
                                 <field name="cost_subtype_id" string="Service Type" domain="['|',('category','=','service'),('category','=','both')]" required="1"/>
-                                <field name="amount" string="Price"/>
+                                <field name="amount"/>
                             </group>
                             <group string="Odometer Details">
                                 <label for="odometer"/>
@@ -735,7 +735,7 @@
                             <field name="cost_ids" nolabel="1">
                                 <tree string="Included Services" version="7.0" editable="bottom">
                                     <field name="cost_subtype_id" string="Service" domain="[('category','=','service')]"/>
-                                    <field name="amount" sum="Price" string="Cost"/>
+                                    <field name="amount" sum="Price" string="Indicative Cost"/>
                                 </tree>
                             </field>
                         </group>
