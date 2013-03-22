@@ -235,7 +235,7 @@ class config(osv.osv):
         return result
 
     _columns = {
-        'name' : fields.char('Name', required=True, size=1024),
+        'name' : fields.char('Template Name', required=True, size=1024),
         'model_id': fields.many2one('ir.model', 'Model', required=True),
         'filter_id' : fields.many2one('ir.filters', 'Filter'),
         'gdocs_template_url': fields.char('Template URL', required=True, size=1024),
@@ -243,14 +243,10 @@ class config(osv.osv):
         'name_template': fields.char('Google Drive Name Pattern', size=64, help='Choose how the new google drive will be named, on google side. Eg. gdoc_%(field_name)s', required=True),
     }
 
-    def onchange_model_id(self, cr, uid, ids, model_id, filter_id, context=None):
+    def onchange_model_id(self, cr, uid, ids, model_id, context=None):
          res = {'domain':{'filter_id':[]}}
          if model_id:
              model_name = self.pool.get('ir.model').read(cr, uid, model_id, ['model'])
-             if filter_id:
-                 filter = self.pool.get('ir.filters').read(cr, uid, filter_id, ['model_id'])
-                 if not model_name['model'] == filter['model_id']:
-                     raise osv.except_osv(_('Warning!'), _('Filter does not match with selected Model!'))
              if model_name:
                  mod_name = model_name['model']
                  res['domain'] = {'filter_id': [('model_id', '=', mod_name)]}
@@ -261,5 +257,21 @@ class config(osv.osv):
     _defaults = {
         'name_template': '%(name)s_model_filter_gdoc',
     }
+
+    def _check_model_id(self, cr, uid, ids, context=None):
+        pool_id = self.browse(cr, uid, ids[0], context=context)
+        model_id = pool_id.model_id.id
+        filter_id = pool_id.filter_id.id
+        if model_id:
+             model_name = self.pool.get('ir.model').read(cr, uid, model_id, ['model'])
+             if filter_id:
+                 filter = self.pool.get('ir.filters').read(cr, uid, filter_id, ['model_id'])
+                 if model_name['model'] != filter['model_id']:
+                    return False
+        return True
+
+    _constraints = [
+        (_check_model_id, 'The model or filter chosen have not matched.', ['model_id','filter_id']),
+    ]
 
 config()

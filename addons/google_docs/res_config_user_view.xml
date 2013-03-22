@@ -11,7 +11,6 @@
                 <tree string="Google Drive Configuration">
                 	<field name="name"/>
                     <field name="model_id"/>
-                    <field name="name_template"/>
                 </tree>
             </field>
         </record>
@@ -23,7 +22,7 @@
                 <form string="Google Drive Configuration" version="7.0">
                 <group>
                 	<field name="name"/>
-                    <field name="model_id" on_change="onchange_model_id(model_id,filter_id)"/>
+                    <field name="model_id" on_change="onchange_model_id(model_id)"/>
                     <label for='filter_id'/>
                     <div>
                         <field name='filter_id'/>
@@ -52,13 +51,15 @@
         </record>
 
         <record model='ir.actions.act_window' id='action_google_docs_users_config'>
-            <field name='name'>Models configuration</field>
+            <field name='name'>Google Drive Templates</field>
             <field name='res_model'>google.docs.config</field>
             <field name='type'>ir.actions.act_window</field>
             <field name='view_type'>form</field>
             <field name='view_id' ref='view_google_docs_config_tree'/>
             <field name="help" type="html">
-              <p>
+              <p class="oe_view_nocontent_create">
+               Click to add a new template.
+              </p><p>
                 Link your first Google document to OpenERP documents.
                 You can use it to control the quality of your product in a spreadsheet or
                 review the delivery checklist for each delivery order in a foreign country
@@ -83,6 +84,6 @@
     </record>
 
         <menuitem name='Google Drive configuration' id='menu_gdocs_config' parent='base.menu_administration'/>
-        <menuitem name='Template Configuration' id='menu_gdocs_model_config' parent='menu_gdocs_config' action='action_google_docs_users_config'/>
+        <menuitem id='menu_gdocs_model_config' parent='menu_gdocs_config' action='action_google_docs_users_config'/>
     </data>
 </openerp>
