@@ -94,7 +94,7 @@ class crm_lead(base_stage, format_address, osv.osv):
     def onchange_user_id(self, cr, uid, ids, section_id, user_id, context=None):
         if user_id:
             section_ids = self.pool.get('crm.case.section').search(cr, uid, ['|', ('user_id', '=', user_id), ('member_ids', '=', user_id)], context=context)
-            if section_id not in section_ids:
+            if section_id and section_id not in section_ids:
                 section_id = section_ids[0]
         return {'value': {'section_id': section_id}}
 
