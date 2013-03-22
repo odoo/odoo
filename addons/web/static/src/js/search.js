@@ -1046,7 +1046,9 @@ instance.web.search.FilterGroup = instance.web.search.Input.extend(/** @lends in
         facet.values.each(function (v) {
             var i = _(self.filters).indexOf(v.get('value'));
             if (i === -1) { return; }
-            $filters.eq(i).addClass('oe_selected');
+            $filters.filter(function () {
+                return Number($(this).data('index')) === i;
+            }).addClass('oe_selected');
         });
     },
     /**
