@@ -14,8 +14,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-12-22 05:58+0000\n"
-"X-Generator: Launchpad (build 16378)\n"
+"X-Launchpad-Export-Date: 2013-03-16 05:42+0000\n"
+"X-Generator: Launchpad (build 16532)\n"
 
 #. module: hr_recruitment
 #: help:hr.applicant,active:0
@@ -35,12 +35,12 @@ msgstr "Vereisten"
 #. module: hr_recruitment
 #: view:hr.applicant:0
 msgid "Application Summary"
-msgstr ""
+msgstr "Programma samenvatting"
 
 #. module: hr_recruitment
 #: view:hr.applicant:0
 msgid "Start Interview"
-msgstr ""
+msgstr "Start Interview"
 
 #. module: hr_recruitment
 #: view:hr.applicant:0
@@ -53,6 +53,8 @@ msgid ""
 "This stage is not visible, for example in status bar or kanban view, when "
 "there are no records in that stage to display."
 msgstr ""
+"Deze fase is niet zichtbaar, in bijvoorbeeld de statusbalk of kanban "
+"weergave, wanneer er geen records in deze fase zijn om weer te geven."
 
 #. module: hr_recruitment
 #: model:hr.recruitment.degree,name:hr_recruitment.degree_graduate
@@ -118,7 +120,7 @@ msgid "Sources of Applicants"
 msgstr "Bron van aanvragers"
 
 #. module: hr_recruitment
-#: code:addons/hr_recruitment/hr_recruitment.py:435
+#: code:addons/hr_recruitment/hr_recruitment.py:445
 #, python-format
 msgid "You must define Applied Job for this applicant."
 msgstr "U moet 'Gesolliciteerd op vacature' definiëren voor deze sollicitant"
@@ -154,6 +156,23 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Klik om een ??nieuwe sollicitant toe te voegen.\n"
+"              </p><p>\n"
+"                OpenERP helpt u kandidaten te volgen in het wervingsproces\n"
+"                en alle bijbehorende acties op te volgen, zoals: afspraken, "
+"sollicitatiegesprekken, etc.\n"
+"              </ p>\n"
+"                Als u de e-mail gateway instelt, worden sollicitanten en de "
+"bijgevoegde\n"
+"                CV's automatisch aangemaakt wanneer een e-mail wordt "
+"verstuurd naar\n"
+"                vacature@uwbedrijf.nl. Als u de document management\n"
+"                modules installeert, worden alle cv's automatisch "
+"geïndexeerd, zodat u\n"
+"                eenvoudig kunt zoeken in de inhoud ervan.\n"
+"              </ p>\n"
+"            "
 
 #. module: hr_recruitment
 #: model:ir.actions.act_window,name:hr_recruitment.crm_case_categ0_act_job
@@ -174,7 +193,7 @@ msgstr "medewerker"
 #. module: hr_recruitment
 #: field:hr.config.settings,fetchmail_applicants:0
 msgid "Create applicants from an incoming email account"
-msgstr ""
+msgstr "Maak sollicitaties aan van inkomende e-mails"
 
 #. module: hr_recruitment
 #: view:hr.recruitment.report:0
@@ -237,6 +256,8 @@ msgid ""
 "Stages of the recruitment process may be different per department. If this "
 "stage is common to all departments, keep this field empty."
 msgstr ""
+"Fases van het wervingsproces kunnen verschillend zijn per afdeling, Indien "
+"deze fase gelijk is voor alle afdelingen, houd dit veld dan leeg."
 
 #. module: hr_recruitment
 #: help:hr.applicant,message_unread:0
@@ -267,7 +288,7 @@ msgstr "Mijn werving"
 #. module: hr_recruitment
 #: field:hr.job,survey_id:0
 msgid "Interview Form"
-msgstr "Interview Formulier"
+msgstr "Interview formulier"
 
 #. module: hr_recruitment
 #: help:hr.job,survey_id:0
@@ -295,7 +316,7 @@ msgstr ""
 "ingevoegd."
 
 #. module: hr_recruitment
-#: code:addons/hr_recruitment/hr_recruitment.py:435
+#: code:addons/hr_recruitment/hr_recruitment.py:445
 #, python-format
 msgid "Warning!"
 msgstr "Waarschuwing!"
@@ -347,7 +368,7 @@ msgstr "Werving statistieken"
 #. module: hr_recruitment
 #: view:hr.applicant:0
 msgid "Print interview report"
-msgstr ""
+msgstr "Interview rapport afdrukken"
 
 #. module: hr_recruitment
 #: view:hr.recruitment.report:0
@@ -378,7 +399,7 @@ msgstr "Monster"
 #. module: hr_recruitment
 #: model:mail.message.subtype,name:hr_recruitment.mt_applicant_hired
 msgid "Applicant Hired"
-msgstr ""
+msgstr "Solicitant aangenomen"
 
 #. module: hr_recruitment
 #: field:hr.applicant,email_from:0
@@ -398,6 +419,16 @@ msgid ""
 "          </p>\n"
 "        "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"            Klik voor het aanmaken van een nieuwe fase in het "
+"verwervingsproces.\n"
+"          </p><p>\n"
+"            \tDefinieer hier de fases in het wervingsproces, bijvoorbeeld: \n"
+"                kwalificatie, eerste interview, tweede interview, "
+"afgewezen,\n"
+"                aangenomen.\n"
+"          </p>\n"
+"        "
 
 #. module: hr_recruitment
 #: view:hr.recruitment.report:0
@@ -415,6 +446,8 @@ msgid ""
 "Email alias for this job position. New emails will automatically create new "
 "applicants for this job position."
 msgstr ""
+"E-mail alias voor deze vacature. Nieuwe e-mails maken automatisch "
+"sollicitanten aan voor deze vacature."
 
 #. module: hr_recruitment
 #: selection:hr.applicant,priority:0
@@ -498,7 +531,7 @@ msgid "Applicants"
 msgstr "Kandidaten"
 
 #. module: hr_recruitment
-#: code:addons/hr_recruitment/hr_recruitment.py:351
+#: code:addons/hr_recruitment/hr_recruitment.py:360
 #, python-format
 msgid "No Subject"
 msgstr "Geen onderwerp"
@@ -519,7 +552,9 @@ msgid "Gives the sequence order when displaying a list of stages."
 msgstr "Bepaalt de volgorde bij afbeelden faselijst."
 
 #. module: hr_recruitment
+#: code:addons/hr_recruitment/hr_recruitment.py:347
 #: field:hr.applicant,partner_id:0
+#, python-format
 msgid "Contact"
 msgstr "Contact"
 
@@ -537,6 +572,10 @@ msgid ""
 "the case needs to be reviewed then the status is                       set "
 "to 'Pending'."
 msgstr ""
+"De status is ingesteld op 'Concept' wanneer de klacht wordt aangemaakt. Als "
+"de klacht in behandeling is, is de status ingesteld op 'Open'. wanneer de "
+"klacht is afgewerkt, wordt de status ingesteld op 'Gereed'. Indien de klacht "
+"moet worden gecontroleerd, wordt de status op ingesteld op 'In afwachting'."
 
 #. module: hr_recruitment
 #: selection:hr.recruitment.report,month:0
@@ -568,12 +607,12 @@ msgstr "In behandeling"
 #. module: hr_recruitment
 #: view:hr.applicant:0
 msgid "Hire & Create Employee"
-msgstr ""
+msgstr "Huur & maak werknemer"
 
 #. module: hr_recruitment
 #: model:mail.message.subtype,description:hr_recruitment.mt_applicant_hired
 msgid "Applicant hired"
-msgstr ""
+msgstr "Sollicitant aangenomen"
 
 #. module: hr_recruitment
 #: view:hr.applicant:0
@@ -604,7 +643,7 @@ msgstr "December"
 #: code:addons/hr_recruitment/wizard/hr_recruitment_create_partner_job.py:39
 #, python-format
 msgid "A contact is already defined on this job request."
-msgstr ""
+msgstr "Er is reeds een contract gedefinieerd voor deze vacature"
 
 #. module: hr_recruitment
 #: field:hr.applicant,categ_ids:0
@@ -614,7 +653,7 @@ msgstr "Labels"
 #. module: hr_recruitment
 #: model:ir.model,name:hr_recruitment.model_hr_applicant_category
 msgid "Category of applicant"
-msgstr ""
+msgstr "Sollicitant categorie"
 
 #. module: hr_recruitment
 #: view:hr.recruitment.report:0
@@ -625,7 +664,7 @@ msgstr "Maand"
 #. module: hr_recruitment
 #: view:hr.applicant:0
 msgid "Answer related job question"
-msgstr ""
+msgstr "Antwoord op functie vraag"
 
 #. module: hr_recruitment
 #: model:hr.recruitment.stage,name:hr_recruitment.stage_job2
@@ -657,7 +696,7 @@ msgstr "of"
 #. module: hr_recruitment
 #: model:mail.message.subtype,name:hr_recruitment.mt_applicant_refused
 msgid "Applicant Refused"
-msgstr ""
+msgstr "Sollicitant afgewezen"
 
 #. module: hr_recruitment
 #: view:hr.applicant:0
@@ -761,13 +800,13 @@ msgstr "Status"
 #. module: hr_recruitment
 #: view:hr.applicant:0
 msgid "Schedule interview with this applicant"
-msgstr ""
+msgstr "Plan een afspraak met deze sollicitant"
 
 #. module: hr_recruitment
-#: code:addons/hr_recruitment/hr_recruitment.py:397
+#: code:addons/hr_recruitment/hr_recruitment.py:407
 #, python-format
 msgid "Applicant <b>created</b>"
-msgstr ""
+msgstr "Sollicitant <b>aangemaakt</b>"
 
 #. module: hr_recruitment
 #: view:hr.applicant:0
@@ -819,7 +858,7 @@ msgstr "Actief"
 #: view:hr.recruitment.report:0
 #: field:hr.recruitment.report,nbr:0
 msgid "# of Applications"
-msgstr ""
+msgstr "# sollicitanten"
 
 #. module: hr_recruitment
 #: model:ir.actions.act_window,help:hr_recruitment.hr_recruitment_stage_act
@@ -833,6 +872,15 @@ msgid ""
 "          </p>\n"
 "        "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"            Klik voor het aanmaken van een nieuwe fase in het "
+"verwervingsproces.\n"
+"          </p><p>\n"
+"            Vergeet niet de afdeling te specificeren, indien het "
+"wervingsproces\n"
+"            afwijkt voor de functie\n"
+"          </p>\n"
+"        "
 
 #. module: hr_recruitment
 #: field:hr.applicant,response:0
@@ -847,7 +895,7 @@ msgstr "Oktober"
 #. module: hr_recruitment
 #: field:hr.config.settings,module_document_ftp:0
 msgid "Allow the automatic indexation of resumes"
-msgstr ""
+msgstr "Sta het automatisch indexeren van CV's toe."
 
 #. module: hr_recruitment
 #: field:hr.applicant,salary_proposed_extra:0
@@ -863,7 +911,7 @@ msgstr "Januari"
 #: code:addons/hr_recruitment/wizard/hr_recruitment_create_partner_job.py:56
 #, python-format
 msgid "A contact is already existing with the same name."
-msgstr ""
+msgstr "Er bestaat reeds een contract met deze naam."
 
 #. module: hr_recruitment
 #: model:ir.actions.act_window,name:hr_recruitment.hr_recruitment_stage_form_installer
@@ -899,7 +947,7 @@ msgstr "Wilt u een werknemer aanmaken?"
 #. module: hr_recruitment
 #: view:hr.applicant:0
 msgid "Degree:"
-msgstr ""
+msgstr "Diploma:"
 
 #. module: hr_recruitment
 #: view:hr.recruitment.report:0
@@ -952,6 +1000,7 @@ msgstr "Annuleren"
 #: view:hr.recruitment.partner.create:0
 msgid "Are you sure you want to create a contact based on this job request ?"
 msgstr ""
+"Weet u zeker dat u een contract wilt maken op basis van deze vacature?"
 
 #. module: hr_recruitment
 #: help:hr.config.settings,fetchmail_applicants:0
@@ -960,6 +1009,10 @@ msgid ""
 "(jobs@mycompany.com),\n"
 "                and create automatically application documents in the system."
 msgstr ""
+"Sta sollicitanten toe om hun sollicitatie te sturen naar een e-mail adres "
+"(vacature@mijnbedrijf.nl),\n"
+"                en maak automatisch de sollicitatie documenten aan in het "
+"systeem."
 
 #. module: hr_recruitment
 #: view:hr.applicant:0
@@ -981,7 +1034,7 @@ msgstr "Bepaalt de volgorde bij het afbeelden van de lijst van diploma's"
 #. module: hr_recruitment
 #: model:mail.message.subtype,description:hr_recruitment.mt_stage_changed
 msgid "Stage changed"
-msgstr ""
+msgstr "Fase veranderd"
 
 #. module: hr_recruitment
 #: view:hr.applicant:0
@@ -1010,7 +1063,7 @@ msgstr "LinkedIn"
 #. module: hr_recruitment
 #: model:mail.message.subtype,name:hr_recruitment.mt_job_new_applicant
 msgid "New Applicant"
-msgstr ""
+msgstr "Nieuwe sollicitant"
 
 #. module: hr_recruitment
 #: model:ir.model,name:hr_recruitment.model_hr_recruitment_stage
@@ -1055,7 +1108,7 @@ msgstr "Omschrijving"
 #. module: hr_recruitment
 #: model:mail.message.subtype,name:hr_recruitment.mt_stage_changed
 msgid "Stage Changed"
-msgstr ""
+msgstr "Fase veranderd"
 
 #. module: hr_recruitment
 #: selection:hr.recruitment.report,month:0
@@ -1075,7 +1128,7 @@ msgstr "Mond tot mond"
 #. module: hr_recruitment
 #: field:hr.recruitment.stage,fold:0
 msgid "Hide in views if empty"
-msgstr ""
+msgstr "Verberg in weergave indien leeg"
 
 #. module: hr_recruitment
 #: help:hr.config.settings,module_document_ftp:0
@@ -1085,6 +1138,10 @@ msgid ""
 "knowledge management  module in order to allow you to search using specific "
 "keywords through  the content of all documents (PDF, .DOCx...)"
 msgstr ""
+"Beheer uw CV's en sollicitatiebrieven van alle sollicitanten.\n"
+"                Dit installeert de module module document_ftp. Dit zal de "
+"kennismanagement module installeren waarmee u kunt zoeken op specifieke "
+"woorden in de inhoud van alle documenten (PDF, .DOCx...)."
 
 #. module: hr_recruitment
 #: selection:hr.applicant,state:0
@@ -1110,7 +1167,7 @@ msgstr "Doorverwezen door"
 #. module: hr_recruitment
 #: view:hr.applicant:0
 msgid "Departement:"
-msgstr ""
+msgstr "Afdeling:"
 
 #. module: hr_recruitment
 #: selection:hr.applicant,priority:0
@@ -1126,7 +1183,7 @@ msgstr "Mate van werving"
 #. module: hr_recruitment
 #: field:hr.recruitment.report,salary_prop_avg:0
 msgid "Avg. Proposed Salary"
-msgstr ""
+msgstr "Gem. voorgesteld salaris"
 
 #. module: hr_recruitment
 #: view:hr.applicant:0
@@ -1159,12 +1216,12 @@ msgstr "November"
 #. module: hr_recruitment
 #: field:hr.recruitment.report,salary_exp_avg:0
 msgid "Avg. Expected Salary"
-msgstr ""
+msgstr "Gem. Verwacht salaris"
 
 #. module: hr_recruitment
 #: view:hr.recruitment.report:0
 msgid "Avg Expected Salary"
-msgstr ""
+msgstr "Gem. Verwacht salaris"
 
 #. module: hr_recruitment
 #: model:ir.model,name:hr_recruitment.model_hr_recruitment_partner_create
@@ -1204,7 +1261,7 @@ msgstr "Berichten en communicatie historie"
 #. module: hr_recruitment
 #: model:mail.message.subtype,description:hr_recruitment.mt_applicant_refused
 msgid "Applicant refused"
-msgstr ""
+msgstr "Sollicitant afgewezen"
 
 #. module: hr_recruitment
 #: field:hr.recruitment.stage,department_id:0
@@ -1245,6 +1302,10 @@ msgid ""
 "related to the status 'Close', when your document reach this stage, it will "
 "be automatically closed."
 msgstr ""
+"De gerelateerde status voor de fase. De status van uw document zal "
+"automatisch wijzigen op basis van de geselecteerde fase. Bijvoorbeeld: De "
+"fase is gerelateerd aan de status 'Gesloten'. Wanneer uw document deze fase "
+"bereikt, wordt de status automatisch op gesloten gezet."
 
 #. module: hr_recruitment
 #: help:hr.applicant,salary_proposed_extra:0
@@ -1264,12 +1325,12 @@ msgstr "Geopend"
 #. module: hr_recruitment
 #: view:board.board:0
 msgid "Applications to be Processed"
-msgstr ""
+msgstr "Sollicitaties welke worden verwerkt"
 
 #. module: hr_recruitment
 #: view:hr.applicant:0
 msgid "Schedule Interview"
-msgstr ""
+msgstr "Sollicitatiegesprek plannen"
 
 #~ msgid "# of Cases"
 #~ msgstr "# kandidaten"

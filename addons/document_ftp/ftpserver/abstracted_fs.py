@@ -14,7 +14,7 @@ import openerp.service
 from openerp.service import security
 from openerp.osv import osv
 
-from document.document import get_node_context
+from openerp.addons.document.document import get_node_context
 
 def _get_month_name(month):
     month=int(month)

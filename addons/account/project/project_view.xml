@@ -11,13 +11,14 @@
                     <field name="complete_name"/>
                     <field name="partner_id"/>
                     <field name="code"/>
-                    <field name="date"/>
                     <field name="date_start"/>
+                    <field name="date"/>
                     <field name="user_id" invisible="1"/>
                     <field name="manager_id"/>
                     <field name="parent_id" invisible="1"/>
                     <field name="state" invisible="1"/>
                     <field name="type" invisible="1"/>
+                    <field name="template_id" invisible="1"/>
                     <field name="company_id" groups="base.group_multi_company"/>
                 </tree>
             </field>
@@ -130,6 +131,7 @@
                             <field name="name"/>
                             <field name="account_id"/>
                             <field name="journal_id"/>
+                            <field name="user_id"/>
                         </group>
                         <group>
                             <field name="date"/>
@@ -168,6 +170,7 @@
                     <field name="date"/>
                     <field name="ref" invisible="context.get('to_invoice', False)"/>
                     <field name="name"/>
+                    <field name="user_id"/>
                     <field name="journal_id" invisible="context.get('to_invoice', False)"/>
                     <field name="amount" sum="Total" invisible="context.get('to_invoice', False)"/>
                     <field name="product_id" on_change="on_change_unit_amount(product_id, unit_amount, company_id, product_uom_id, journal_id)" invisible="not context.get('to_invoice', False)"/>
@@ -175,7 +178,6 @@
                     <field name="product_uom_id" on_change="on_change_unit_amount(product_id, unit_amount, company_id, product_uom_id)" invisible="not context.get('to_invoice', False)"/>
                     <field domain="[('type','=','normal')]" name="account_id"/>
                     <field name="general_account_id" invisible="context.get('to_invoice', False)"/>
-                    <field name="user_id" invisible="1" />
                     <field name="company_id" groups="base.group_multi_company"/>
                 </tree>
             </field>

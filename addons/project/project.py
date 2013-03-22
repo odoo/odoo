@@ -267,7 +267,7 @@ class project(osv.osv):
                                          "with Tasks (or optionally Issues if the Issue Tracker module is installed)."),
         'alias_model': fields.selection(_alias_models, "Alias Model", select=True, required=True,
                                         help="The kind of document created when an email is received on this project's email alias"),
-        'privacy_visibility': fields.selection([('public','Public'), ('followers','Followers Only')], 'Privacy / Visibility', required=True),
+        'privacy_visibility': fields.selection([('public','All Users'), ('followers','Followers Only')], 'Privacy / Visibility', required=True),
         'state': fields.selection([('template', 'Template'),('draft','New'),('open','In Progress'), ('cancelled', 'Cancelled'),('pending','Pending'),('close','Closed')], 'Status', required=True,),
         'doc_count':fields.function(_get_attached_docs, string="Number of documents attached", type='int')
      }
@@ -1302,13 +1302,13 @@ class account_analytic_account(osv.osv):
         return analytic_account_id
 
     def write(self, cr, uid, ids, vals, context=None):
-        name = vals.get('name')
+        vals_for_project = vals.copy()
         for account in self.browse(cr, uid, ids, context=context):
-            if not name:
-                vals['name'] = account.name
+            if not vals.get('name'):
+                vals_for_project['name'] = account.name
             if not vals.get('type'):
-                vals['type'] = account.type
-            self.project_create(cr, uid, account.id, vals, context=context)
+                vals_for_project['type'] = account.type
+            self.project_create(cr, uid, account.id, vals_for_project, context=context)
         return super(account_analytic_account, self).write(cr, uid, ids, vals, context=context)
 
     def unlink(self, cr, uid, ids, *args, **kwargs):
@@ -1425,3 +1425,4 @@ class project_category(osv.osv):
     _columns = {
         'name': fields.char('Name', size=64, required=True, translate=True),
     }
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

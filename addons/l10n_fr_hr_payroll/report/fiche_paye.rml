@@ -348,10 +348,10 @@
             <para style="terp_default_7">[[ p.total or '' ]]</para>
           </td>
           <td>
-            <para style="terp_default_7">[[ get_employer_line(o, p).rate or '']] </para>
+            <para style="terp_default_7">[[ get_employer_line(o, p) and get_employer_line(o, p).rate or '']] </para>
           </td>
           <td>
-            <para style="terp_default_7">[[ get_employer_line(o,p).total or '' ]]</para>
+            <para style="terp_default_7">[[ get_employer_line(o,p) and get_employer_line(o,p).total or '' ]]</para>
           </td>
         </tr>
       </blockTable>

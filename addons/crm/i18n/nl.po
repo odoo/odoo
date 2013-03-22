@@ -13,8 +13,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-12-22 05:24+0000\n"
-"X-Generator: Launchpad (build 16378)\n"
+"X-Launchpad-Export-Date: 2013-03-16 05:07+0000\n"
+"X-Generator: Launchpad (build 16532)\n"
 
 #. module: crm
 #: view:crm.lead.report:0
@@ -31,7 +31,7 @@ msgstr ""
 "maken van inkomende e-mails."
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:880
+#: code:addons/crm/crm_lead.py:881
 #: selection:crm.case.stage,type:0
 #: view:crm.lead:0
 #: selection:crm.lead,type:0
@@ -42,6 +42,7 @@ msgid "Lead"
 msgstr "Lead"
 
 #. module: crm
+#: view:crm.lead:0
 #: field:crm.lead,title:0
 msgid "Title"
 msgstr "Titel"
@@ -55,6 +56,11 @@ msgid ""
 "Description: [[object.description]]\n"
 "            "
 msgstr ""
+"Waarschuwing onbehandelde ingekomen lead is meer dan 5 dagen oud.\n"
+"Naam: [[object.name ]]\n"
+"ID: [[object.id ]]\n"
+"Omschrijving: [[object.description]]\n"
+"            "
 
 #. module: crm
 #: field:crm.opportunity2phonecall,action:0
@@ -65,7 +71,7 @@ msgstr "Actie"
 #. module: crm
 #: model:ir.actions.server,name:crm.action_set_team_sales_department
 msgid "Set team to Sales Department"
-msgstr ""
+msgstr "Stel team in op verkoopafdeling"
 
 #. module: crm
 #: view:crm.lead2opportunity.partner.mass:0
@@ -152,7 +158,7 @@ msgstr "Naam regel"
 #: code:addons/crm/crm_phonecall.py:280
 #, python-format
 msgid "It's only possible to convert one phonecall at a time."
-msgstr ""
+msgstr "U kunt maar een telefoongesprek tegelijk converteren"
 
 #. module: crm
 #: view:crm.case.resource.type:0
@@ -187,7 +193,8 @@ msgstr ""
 "ingevoegd."
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:632
+#: code:addons/crm/crm_lead.py:624
+#: code:addons/crm/crm_lead.py:744
 #: code:addons/crm/crm_phonecall.py:280
 #, python-format
 msgid "Warning!"
@@ -227,6 +234,7 @@ msgid "Opt-Out"
 msgstr "Uitschrijven"
 
 #. module: crm
+#: view:crm.lead:0
 #: field:crm.lead,state_id:0
 msgid "State"
 msgstr "Status"
@@ -234,7 +242,7 @@ msgstr "Status"
 #. module: crm
 #: field:res.partner,meeting_count:0
 msgid "# Meetings"
-msgstr ""
+msgstr "# afspraken"
 
 #. module: crm
 #: model:ir.actions.server,name:crm.action_email_reminder_lead
@@ -254,7 +262,7 @@ msgstr "Uitgesloten antwoorden:"
 #. module: crm
 #: model:ir.model,name:crm.model_crm_merge_opportunity
 msgid "Merge opportunities"
-msgstr ""
+msgstr "Prospects samenvoegen"
 
 #. module: crm
 #: view:crm.lead.report:0
@@ -297,7 +305,7 @@ msgid "Prospect Partner"
 msgstr "Prospect naar relatie"
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:967
+#: code:addons/crm/crm_lead.py:982
 #, python-format
 msgid "No Subject"
 msgstr "Geen onderwerp"
@@ -333,8 +341,8 @@ msgstr ""
 "                Klik hier om relaties te segmenteren.\n"
 "              </p><p>\n"
 "                Maakt specifieke categorieën aan, welke u aan uw contacten\n"
-"                kunt toewijzen om interacties met hen beter te beheersen.    "
-"            \n"
+"                kunt toewijzen om interacties met hen beter te beheren.      "
+"          \n"
 "                Het segmentatie programma maakt het mogelijk om categorieën "
 "toe te\n"
 "                wijzen aan contacten, volgens de door u ingestelde  "
@@ -395,11 +403,11 @@ msgid ""
 "            "
 msgstr ""
 "<p class=\"oe_view_nocontent_create\">\n"
-"                Klik hier om een prospect, gekoppeld aan deze klant aan et "
+"                Klik hier om een prospect, gekoppeld aan deze klant aan te "
 "maken\n"
 "              </p><p>\n"
 "                Gebruik prospects om uw verkoop pijplijn en uw potentiële\n"
-"                verkopen te beheersen, alsmede uw toekomstige opbrengsten te "
+"                verkopen te beheren, alsmede uw toekomstige opbrengsten te "
 "plannen\n"
 "              </p><p>\n"
 "                 U heeft de mogelijkheid om afspraken en telefoongesprekken\n"
@@ -412,6 +420,7 @@ msgstr ""
 
 #. module: crm
 #: model:crm.case.stage,name:crm.stage_lead7
+#: view:crm.lead:0
 msgid "Dead"
 msgstr "Dood"
 
@@ -472,11 +481,13 @@ msgid "#Opportunities"
 msgstr "#Prospects"
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:632
+#: code:addons/crm/crm_lead.py:624
 #, python-format
 msgid ""
 "Please select more than one element (lead or opportunity) from the list view."
 msgstr ""
+"Selecteer aub meer dan één element (lead of verkoopkans) uit de lijst "
+"weergave."
 
 #. module: crm
 #: view:crm.lead:0
@@ -549,7 +560,7 @@ msgstr "Mailings"
 #. module: crm
 #: model:mail.message.subtype,description:crm.mt_lead_stage
 msgid "Stage changed"
-msgstr ""
+msgstr "Fase veranderd"
 
 #. module: crm
 #: selection:crm.lead.report,creation_month:0
@@ -615,7 +626,7 @@ msgstr "Samenvoegen"
 #. module: crm
 #: model:email.template,subject:crm.email_template_opportunity_mail
 msgid "Opportunity ${object.name | h})"
-msgstr ""
+msgstr "Prospect ${object.name | h})"
 
 #. module: crm
 #: view:crm.case.categ:0
@@ -768,7 +779,7 @@ msgid "Statistics Dashboard"
 msgstr "Statistisch dashboard"
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:860
+#: code:addons/crm/crm_lead.py:861
 #: model:crm.case.stage,name:crm.stage_lead2
 #: selection:crm.case.stage,type:0
 #: view:crm.lead:0
@@ -830,7 +841,7 @@ msgid "Exclusive"
 msgstr "Exclusief"
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:591
+#: code:addons/crm/crm_lead.py:584
 #, python-format
 msgid "From %s : %s"
 msgstr "Van %s : %s"
@@ -887,6 +898,7 @@ msgstr "Niet toegewezen telefoongesprekken"
 
 #. module: crm
 #: view:crm.lead:0
+#: view:crm.lead2opportunity.partner:0
 #: field:crm.lead2opportunity.partner,opportunity_ids:0
 #: field:crm.lead2opportunity.partner.mass,opportunity_ids:0
 #: model:ir.actions.act_window,name:crm.crm_case_category_act_oppor11
@@ -950,7 +962,7 @@ msgid "Send Email"
 msgstr "E-mail verzenden"
 
 #. module: crm
-#: code:addons/crm/wizard/crm_lead_to_opportunity.py:97
+#: code:addons/crm/wizard/crm_lead_to_opportunity.py:89
 #, python-format
 msgid "Warning !"
 msgstr "Waarschuwing!"
@@ -1001,10 +1013,10 @@ msgid "Next Action"
 msgstr "Volgende actie"
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:762
+#: code:addons/crm/crm_lead.py:763
 #, python-format
 msgid "<b>Partner</b> set to <em>%s</em>."
-msgstr ""
+msgstr "<b>Relatie</b> ingesteld op <em>%s</em>."
 
 #. module: crm
 #: selection:crm.lead.report,state:0
@@ -1043,10 +1055,11 @@ msgstr "Toon verkoper"
 msgid ""
 "Allows you to track your customers/suppliers claims and grievances.\n"
 "                    This installs the module crm_claim."
-msgstr "Geeft u de mogelijkheid om klant/leverancier klachten te beheersen."
+msgstr "Geeft u de mogelijkheid om klant/leverancier klachten te beheren."
 
 #. module: crm
 #: model:crm.case.stage,name:crm.stage_lead6
+#: view:crm.lead:0
 msgid "Won"
 msgstr "Gewonnen"
 
@@ -1090,10 +1103,10 @@ msgid "Creation Date"
 msgstr "Aanmaakdatum"
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:703
+#: code:addons/crm/crm_lead.py:698
 #, python-format
 msgid "Lead <b>converted into an Opportunity</b>"
-msgstr ""
+msgstr "Lead <b>geconverteerd in prospect</b>"
 
 #. module: crm
 #: selection:crm.segmentation.line,expr_name:0
@@ -1156,7 +1169,7 @@ msgstr "Verwijderen"
 #. module: crm
 #: model:mail.message.subtype,description:crm.mt_lead_create
 msgid "Opportunity created"
-msgstr ""
+msgstr "Prospect aangemaakt"
 
 #. module: crm
 #: view:crm.lead:0
@@ -1185,6 +1198,19 @@ msgid ""
 "          </p>\n"
 "        "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"          Klik om een prospect te maken.\n"
+"          </p><p>\n"
+"          OpenERP helpt u de verkoop pijplijn te volgen door potentiële "
+"verkopen te volgen\n"
+"          en toekomstige verkopen beter te begroten.\n"
+"          </p><p>\n"
+"          U kunt vergaderingen en telefoongesprekken plannen vanuit "
+"prospects,\n"
+"          ze omzetten in offertes, bijbehorende documenten bijvoegen en nog "
+"veel meer.\n"
+"          </p>\n"
+"        "
 
 #. module: crm
 #: field:crm.segmentation,partner_id:0
@@ -1264,7 +1290,7 @@ msgstr ""
 #: model:mail.message.subtype,name:crm.mt_lead_create
 #: model:mail.message.subtype,name:crm.mt_salesteam_lead
 msgid "Lead Created"
-msgstr ""
+msgstr "Lead aangemaakt"
 
 #. module: crm
 #: help:crm.segmentation,sales_purchase_active:0
@@ -1369,6 +1395,8 @@ msgid ""
 "Phone Calls Assigned to the current user or with a team having the current "
 "user as team leader"
 msgstr ""
+"Telefoongesprekken toegewezen aan de huidige gebruiker of aan een team, met "
+"de huidige gebruiker als teamleider."
 
 #. module: crm
 #: view:crm.segmentation:0
@@ -1381,7 +1409,7 @@ msgid "Lead Description"
 msgstr "Lead omschrijving"
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:573
+#: code:addons/crm/crm_lead.py:565
 #, python-format
 msgid "Merged opportunities"
 msgstr "Samengevoegde prospects"
@@ -1422,7 +1450,6 @@ msgid "References"
 msgstr "Referenties"
 
 #. module: crm
-#: view:crm.lead:0
 #: view:crm.lead2opportunity.partner:0
 #: view:crm.lead2opportunity.partner.mass:0
 #: view:crm.merge.opportunity:0
@@ -1455,7 +1482,7 @@ msgstr "Te doen"
 #. module: crm
 #: model:mail.message.subtype,description:crm.mt_lead_lost
 msgid "Opportunity lost"
-msgstr ""
+msgstr "Prospect verloren"
 
 #. module: crm
 #: field:crm.lead2opportunity.partner,action:0
@@ -1504,7 +1531,7 @@ msgstr "Gebruikers"
 #. module: crm
 #: model:mail.message.subtype,name:crm.mt_lead_stage
 msgid "Stage Changed"
-msgstr ""
+msgstr "Fase veranderd"
 
 #. module: crm
 #: field:crm.case.stage,section_ids:0
@@ -1610,7 +1637,7 @@ msgstr "Relatiebeheer betaal modus"
 #. module: crm
 #: view:crm.lead.report:0
 msgid "Leads/Opportunities which are in done state"
-msgstr "Leads/Prospects welke zich in de 'Gereed' status bevinden"
+msgstr "Leads/Prospects welke zich in de 'Vewerkt' status bevinden"
 
 #. module: crm
 #: field:crm.lead.report,delay_close:0
@@ -1678,12 +1705,12 @@ msgstr "Maand van het telefoongesprek"
 #: code:addons/crm/crm_phonecall.py:290
 #, python-format
 msgid "Partner has been <b>created</b>."
-msgstr "relatie is <b>aangemaakt</b>."
+msgstr "Relatie is <b>aangemaakt</b>."
 
 #. module: crm
 #: field:sale.config.settings,module_crm_claim:0
 msgid "Manage Customer Claims"
-msgstr "beheers klant klachten"
+msgstr "Klachten van klanten beheren"
 
 #. module: crm
 #: model:ir.actions.act_window,help:crm.action_report_crm_lead
@@ -1717,7 +1744,6 @@ msgstr "Aanmaak jaar"
 
 #. module: crm
 #: view:crm.case.section:0
-#: view:crm.lead:0
 #: field:crm.lead,description:0
 msgid "Notes"
 msgstr "Notities"
@@ -1919,7 +1945,7 @@ msgstr "Verkoopteams"
 #. module: crm
 #: field:crm.case.stage,case_default:0
 msgid "Default to New Sales Team"
-msgstr ""
+msgstr "Standaard op nieuw verkoopteam"
 
 #. module: crm
 #: view:crm.lead:0
@@ -1958,10 +1984,10 @@ msgid "Leads"
 msgstr "Leads"
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:571
+#: code:addons/crm/crm_lead.py:563
 #, python-format
 msgid "Merged leads"
-msgstr ""
+msgstr "Leads samengevoegd"
 
 #. module: crm
 #: model:crm.case.categ,name:crm.categ_oppor5
@@ -1984,7 +2010,7 @@ msgstr "Te doen"
 #: model:mail.message.subtype,name:crm.mt_lead_convert_to_opportunity
 #: model:mail.message.subtype,name:crm.mt_salesteam_lead_opportunity
 msgid "Lead to Opportunity"
-msgstr ""
+msgstr "Lead naar prospect"
 
 #. module: crm
 #: field:crm.lead,user_email:0
@@ -2135,12 +2161,14 @@ msgid "Misc"
 msgstr "Overig"
 
 #. module: crm
+#: view:crm.lead:0
 #: view:crm.lead.report:0
 #: selection:crm.lead.report,state:0
 msgid "Open"
 msgstr "Open"
 
 #. module: crm
+#: view:crm.lead:0
 #: field:crm.lead,city:0
 msgid "City"
 msgstr "Woonplaats"
@@ -2187,6 +2215,8 @@ msgid ""
 "Follow this salesteam to automatically track the events associated to users "
 "of this team."
 msgstr ""
+"Volg dit verkoopteam om automatisch de afspraken verbonden aan gebruikers "
+"van dit team de volgen."
 
 #. module: crm
 #: view:crm.lead:0
@@ -2359,7 +2389,7 @@ msgstr "Lopend"
 #. module: crm
 #: model:mail.message.subtype,description:crm.mt_lead_convert_to_opportunity
 msgid "Lead converted into an opportunity"
-msgstr ""
+msgstr "Lead geconverteerd in prospect"
 
 #. module: crm
 #: view:crm.lead:0
@@ -2369,7 +2399,7 @@ msgstr "Niet toegewezen leads"
 #. module: crm
 #: model:mail.message.subtype,description:crm.mt_lead_won
 msgid "Opportunity won"
-msgstr ""
+msgstr "Prospect gewonnen"
 
 #. module: crm
 #: field:crm.case.categ,object_id:0
@@ -2439,7 +2469,7 @@ msgstr ""
 #. module: crm
 #: field:crm.case.stage,fold:0
 msgid "Fold by Default"
-msgstr ""
+msgstr "Standaard ingevouwen"
 
 #. module: crm
 #: field:crm.case.stage,state:0
@@ -2475,7 +2505,7 @@ msgstr "Bevestigd"
 #. module: crm
 #: model:ir.model,name:crm.model_crm_partner_binding
 msgid "Handle partner binding or generation in CRM wizards."
-msgstr ""
+msgstr "Beheer relatie- koppelingen of generatie in CRM wizards."
 
 #. module: crm
 #: model:ir.actions.act_window,name:crm.act_oppor_stage_user
@@ -2526,6 +2556,23 @@ msgid ""
 "          </p>\n"
 "        "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"            Klik om een ongekwalificeerde lead aan te maken.\n"
+"          </p><p>\n"
+"            gebruik leads als u een kwalificatie stap wilt toevoegen voordat "
+"u\n"
+"            een prospect of klant aanmaakt. Het kan bijvoorbeeld een "
+"visitekaartje\n"
+"            zijn welke u heeft gehad, of een contact formulier van  uw "
+"website. Maar het\n"
+"            kan ook een lijst met ongekwalificeerde prospects zijn, welke u "
+"importeert.\n"
+"          </p><p>\n"
+"            Wanneer gekwalificeerd, kan de lead worden omgezet in een "
+"prospect en/of\n"
+"            een nieuwe klant in uw adresboek.\n"
+"          </p>\n"
+"        "
 
 #. module: crm
 #: field:sale.config.settings,fetchmail_lead:0
@@ -2686,7 +2733,7 @@ msgstr "Augustus"
 #: model:mail.message.subtype,name:crm.mt_lead_lost
 #: model:mail.message.subtype,name:crm.mt_salesteam_lead_lost
 msgid "Opportunity Lost"
-msgstr ""
+msgstr "Prospect verloren"
 
 #. module: crm
 #: field:crm.lead.report,deadline_month:0
@@ -2785,7 +2832,7 @@ msgstr "Ontvangen telefoongesprekken"
 #: model:mail.message.subtype,name:crm.mt_lead_won
 #: model:mail.message.subtype,name:crm.mt_salesteam_lead_won
 msgid "Opportunity Won"
-msgstr ""
+msgstr "Prospect gewonnen"
 
 #. module: crm
 #: model:ir.actions.act_window,name:crm.crm_case_section_act_tree
@@ -2937,7 +2984,7 @@ msgstr "Aanmaakdatum"
 #. module: crm
 #: view:crm.lead:0
 msgid "at"
-msgstr "om"
+msgstr "kans"
 
 #. module: crm
 #: model:crm.case.stage,name:crm.stage_lead1
@@ -2965,7 +3012,6 @@ msgstr "Omschrijving"
 #: field:crm.case.resource.type,section_id:0
 #: view:crm.case.section:0
 #: field:crm.case.section,name:0
-#: view:crm.lead:0
 #: field:crm.lead,section_id:0
 #: view:crm.lead.report:0
 #: field:crm.lead.report,section_id:0
@@ -3055,10 +3101,12 @@ msgid "Working Hours"
 msgstr "Werkuren"
 
 #. module: crm
+#: code:addons/crm/crm_lead.py:968
 #: view:crm.lead:0
 #: field:crm.lead2opportunity.partner,partner_id:0
 #: field:crm.lead2opportunity.partner.mass,partner_id:0
 #: field:crm.partner.binding,partner_id:0
+#, python-format
 msgid "Customer"
 msgstr "Klant"
 
@@ -3076,11 +3124,12 @@ msgstr "Plan een afspraak"
 
 #. module: crm
 #: model:crm.case.stage,name:crm.stage_lead8
+#: view:crm.lead:0
 msgid "Lost"
 msgstr "Verloren"
 
 #. module: crm
-#: code:addons/crm/wizard/crm_lead_to_opportunity.py:97
+#: code:addons/crm/wizard/crm_lead_to_opportunity.py:89
 #, python-format
 msgid "Closed/Cancelled leads cannot be converted into opportunities."
 msgstr ""
@@ -3088,6 +3137,7 @@ msgstr ""
 "prospects."
 
 #. module: crm
+#: view:crm.lead:0
 #: field:crm.lead,country_id:0
 #: view:crm.lead.report:0
 #: field:crm.lead.report,country_id:0
@@ -3175,7 +3225,7 @@ msgstr "Nieuwsbrief"
 #. module: crm
 #: model:mail.message.subtype,name:crm.mt_salesteam_lead_stage
 msgid "Opportunity Stage Changed"
-msgstr ""
+msgstr "Prospect fase veranderd"
 
 #. module: crm
 #: model:ir.actions.act_window,help:crm.crm_lead_stage_act
@@ -3984,9 +4034,6 @@ msgstr ""
 
 #~ msgid "To"
 #~ msgstr "Aan"
-
-#~ msgid "Done"
-#~ msgstr "Klaar"
 
 #~ msgid "Helpdesk"
 #~ msgstr "Helpdesk"
@@ -5375,24 +5422,6 @@ msgstr ""
 #~ msgstr "Prospects in afwachting"
 
 #~ msgid ""
-#~ "The state is set to 'Draft', when a case is created.                         "
-#~ "         \n"
-#~ "If the case is in progress the state is set to 'Open'.                       "
-#~ "           \n"
-#~ "When the case is over, the state is set to 'Done'.                           "
-#~ "       \n"
-#~ "If the case needs to be reviewed then the state is set to 'Pending'."
-#~ msgstr ""
-#~ "De status wordt op 'Nieuw' gezet als het dossier wordt gemaakt.              "
-#~ "                \n"
-#~ "Als het dossier in behandeling is, wordt de status op 'Open' gezet.          "
-#~ "                        \n"
-#~ "Als het dossier klaar is, gaat de status naar 'Gereed'.                      "
-#~ "            \n"
-#~ "Als het dossier moet worden nagekeken, wordt de status op 'In afwachting' "
-#~ "gezet."
-
-#~ msgid ""
 #~ "Leads allow you to manage and keep track of all initial contacts with a "
 #~ "prospect or partner showing interest in your products or services. A lead is "
 #~ "usually the first step in your sales cycle. Once qualified, a lead may be "
@@ -5412,3 +5441,24 @@ msgstr ""
 #~ "integreren met de OpenERP leads. Leads kunnen worden gekoppeld met de email "
 #~ "gateway: nieuwe emails kunnen leads maken; elk van hen krijgen automatisch "
 #~ "de conversatiegeschiedenis met de prospect."
+
+#~ msgid ""
+#~ "The state is set to 'Draft', when a case is created.                         "
+#~ "         \n"
+#~ "If the case is in progress the state is set to 'Open'.                       "
+#~ "           \n"
+#~ "When the case is over, the state is set to 'Done'.                           "
+#~ "       \n"
+#~ "If the case needs to be reviewed then the state is set to 'Pending'."
+#~ msgstr ""
+#~ "De status wordt op 'Nieuw' gezet als het dossier wordt gemaakt.              "
+#~ "                \n"
+#~ "Als het dossier in behandeling is, wordt de status op 'Open' gezet.          "
+#~ "                        \n"
+#~ "Als het dossier klaar is, gaat de status naar 'Verwerkt'.                    "
+#~ "              \n"
+#~ "Als het dossier moet worden nagekeken, wordt de status op 'In afwachting' "
+#~ "gezet."
+
+#~ msgid "Done"
+#~ msgstr "Verwerkt"

@@ -1150,6 +1150,29 @@ class account_move(osv.osv):
     _description = "Account Entry"
     _order = 'id desc'
 
+    def account_move_prepare(self, cr, uid, journal_id, date=False, ref='', company_id=False, context=None):
+        '''
+        Prepares and returns a dictionary of values, ready to be passed to create() based on the parameters received.
+        '''
+        if not date:
+            date = fields.date.today()
+        period_obj = self.pool.get('account.period')
+        if not company_id:
+            user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
+            company_id = user.company_id.id
+        if context is None:
+            context = {}
+        #put the company in context to find the good period
+        ctx = context.copy()
+        ctx.update({'company_id': company_id})
+        return {
+            'journal_id': journal_id,
+            'date': date,
+            'period_id': period_obj.find(cr, uid, date, context=ctx)[0],
+            'ref': ref,
+            'company_id': company_id,
+        }
+
     def name_search(self, cr, user, name, args=None, operator='ilike', context=None, limit=80):
         """
         Returns a list of tupples containing id, name, as internally it is called {def name_get}
@@ -1850,6 +1873,13 @@ class account_tax(osv.osv):
             return result in the context
             Ex: result=round(price_unit*0.21,4)
     """
+    def copy_data(self, cr, uid, id, default=None, context=None):
+        if default is None:
+            default = {}
+        name = self.read(cr, uid, id, ['name'], context=context)['name']
+        default = default.copy()
+        default.update({'name': name + _(' (Copy)')})
+        return super(account_tax, self).copy_data(cr, uid, id, default=default, context=context)
 
     def get_precision_tax():
         def change_digit_tax(cr):

@@ -14,13 +14,13 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-12-22 06:07+0000\n"
-"X-Generator: Launchpad (build 16378)\n"
+"X-Launchpad-Export-Date: 2013-03-16 05:52+0000\n"
+"X-Generator: Launchpad (build 16532)\n"
 
 #. module: auth_signup
 #: field:res.partner,signup_type:0
 msgid "Signup Token Type"
-msgstr ""
+msgstr "Aanmeld token soort"
 
 #. module: auth_signup
 #: field:base.config.settings,auth_signup_uninvited:0
@@ -37,7 +37,7 @@ msgstr "Bevestig wachtwoord"
 #. module: auth_signup
 #: help:base.config.settings,auth_signup_uninvited:0
 msgid "If unchecked, only invited users may sign up."
-msgstr ""
+msgstr "Indien uitgevinkt kunnen  alleen uitgenodigde gebruikers aanmelden"
 
 #. module: auth_signup
 #: model:ir.model,name:auth_signup.model_base_config_settings
@@ -45,14 +45,15 @@ msgid "base.config.settings"
 msgstr "base.config.settings"
 
 #. module: auth_signup
-#: code:addons/auth_signup/res_users.py:252
+#: code:addons/auth_signup/res_users.py:265
 #, python-format
 msgid "Cannot send email: user has no email address."
-msgstr ""
+msgstr "Kan e-mail niet versturen: gebruiker heeft geen e-mail adres."
 
 #. module: auth_signup
 #. openerp-web
-#: code:addons/auth_signup/static/src/xml/auth_signup.xml:25
+#: code:addons/auth_signup/static/src/xml/auth_signup.xml:24
+#: code:addons/auth_signup/static/src/xml/auth_signup.xml:28
 #, python-format
 msgid "Reset password"
 msgstr "Reset wachtwoord"
@@ -61,6 +62,7 @@ msgstr "Reset wachtwoord"
 #: field:base.config.settings,auth_signup_template_user_id:0
 msgid "Template user for new users created through signup"
 msgstr ""
+"Sjabloon gebruiker voor het aanmaken van nieuwe gebruikers, bij aanmelden"
 
 #. module: auth_signup
 #: model:email.template,subject:auth_signup.reset_password_email
@@ -69,19 +71,22 @@ msgstr "Reset wachtwoord"
 
 #. module: auth_signup
 #. openerp-web
-#: code:addons/auth_signup/static/src/js/auth_signup.js:125
+#: code:addons/auth_signup/static/src/js/auth_signup.js:117
 #, python-format
 msgid "Please enter a password and confirm it."
-msgstr ""
+msgstr "Geef een wachtwoord in en bevestig deze."
 
 #. module: auth_signup
 #: view:res.users:0
 msgid "Send an email to the user to (re)set their password."
 msgstr ""
+"Stuur een e-mail naar de gebruiker om het wachtwoord in te stellen of te "
+"resetten."
 
 #. module: auth_signup
 #. openerp-web
 #: code:addons/auth_signup/static/src/xml/auth_signup.xml:23
+#: code:addons/auth_signup/static/src/xml/auth_signup.xml:26
 #, python-format
 msgid "Sign Up"
 msgstr "Aanmelden"
@@ -95,7 +100,7 @@ msgstr "Nieuw"
 #: code:addons/auth_signup/res_users.py:258
 #, python-format
 msgid "Mail sent to:"
-msgstr ""
+msgstr "E-mail verzonden naar:"
 
 #. module: auth_signup
 #: field:res.users,state:0
@@ -114,13 +119,22 @@ msgid ""
 "\n"
 "<p>Note: If you do not expect this, you can safely ignore this email.</p>"
 msgstr ""
+"\n"
+"<p>Er is een verzoek aan OpenERP gedaan om het wachtwoord te resetten, "
+"gekoppeld aan dit e-mail adres.</p>\n"
+"\n"
+"<p>U kunt u wachtwoord resetten door te klikken <a "
+"href=\"${object.signup_url}\">op deze link</a>.</p>\n"
+"\n"
+"<p>Opmerking: Indien u dit niet verwacht, kunt u veilig deze e-mail "
+"negeren.</p>"
 
 #. module: auth_signup
 #. openerp-web
-#: code:addons/auth_signup/static/src/js/auth_signup.js:119
+#: code:addons/auth_signup/static/src/js/auth_signup.js:111
 #, python-format
 msgid "Please enter a name."
-msgstr ""
+msgstr "Vul een naam in."
 
 #. module: auth_signup
 #: model:ir.model,name:auth_signup.model_res_users
@@ -134,10 +148,10 @@ msgstr "URL voor aanmelden"
 
 #. module: auth_signup
 #. openerp-web
-#: code:addons/auth_signup/static/src/js/auth_signup.js:122
+#: code:addons/auth_signup/static/src/js/auth_signup.js:114
 #, python-format
 msgid "Please enter a username."
-msgstr ""
+msgstr "Voer een gebruikersnaam in."
 
 #. module: auth_signup
 #: selection:res.users,state:0
@@ -145,12 +159,15 @@ msgid "Active"
 msgstr "Actief"
 
 #. module: auth_signup
-#: code:addons/auth_signup/res_users.py:256
+#: code:addons/auth_signup/res_users.py:269
 #, python-format
 msgid ""
 "Cannot send email: no outgoing email server configured.\n"
 "You can configure it under Settings/General Settings."
 msgstr ""
+"Het is niet mogelijk om een e-mail te versturen: geen uitgaande e-mail "
+"server ingesteld,\n"
+"Het is mogelijk deze in te stellen bij: Instellingen > Algemene"
 
 #. module: auth_signup
 #. openerp-web
@@ -168,36 +185,38 @@ msgstr "Naam"
 
 #. module: auth_signup
 #. openerp-web
-#: code:addons/auth_signup/static/src/js/auth_signup.js:165
+#: code:addons/auth_signup/static/src/js/auth_signup.js:170
 #, python-format
 msgid "Please enter a username or email address."
-msgstr ""
+msgstr "Geef gebruikersnaam of e-mail adres in."
 
 #. module: auth_signup
 #: selection:res.users,state:0
 msgid "Resetting Password"
-msgstr ""
+msgstr "Wachtwoord resetten"
 
 #. module: auth_signup
 #. openerp-web
 #: code:addons/auth_signup/static/src/xml/auth_signup.xml:13
 #, python-format
 msgid "Username (Email)"
-msgstr ""
+msgstr "Gebruikersnaam (e-mail)"
 
 #. module: auth_signup
 #: field:res.partner,signup_expiration:0
 msgid "Signup Expiration"
-msgstr ""
+msgstr "Aanmeld vervallen"
 
 #. module: auth_signup
 #: help:base.config.settings,auth_signup_reset_password:0
 msgid "This allows users to trigger a password reset from the Login page."
 msgstr ""
+"Dit geeft gebruikers de mogelijkheid om het wachtwoord te resetten vanaf de "
+"login pagina."
 
 #. module: auth_signup
 #. openerp-web
-#: code:addons/auth_signup/static/src/xml/auth_signup.xml:21
+#: code:addons/auth_signup/static/src/xml/auth_signup.xml:22
 #, python-format
 msgid "Log in"
 msgstr "Login"
@@ -205,42 +224,42 @@ msgstr "Login"
 #. module: auth_signup
 #: field:res.partner,signup_valid:0
 msgid "Signup Token is Valid"
-msgstr ""
+msgstr "Aanmeld token is geldig"
 
 #. module: auth_signup
 #. openerp-web
-#: code:addons/auth_signup/static/src/js/auth_signup.js:116
-#: code:addons/auth_signup/static/src/js/auth_signup.js:119
-#: code:addons/auth_signup/static/src/js/auth_signup.js:122
-#: code:addons/auth_signup/static/src/js/auth_signup.js:125
-#: code:addons/auth_signup/static/src/js/auth_signup.js:128
-#: code:addons/auth_signup/static/src/js/auth_signup.js:162
-#: code:addons/auth_signup/static/src/js/auth_signup.js:165
+#: code:addons/auth_signup/static/src/js/auth_signup.js:108
+#: code:addons/auth_signup/static/src/js/auth_signup.js:111
+#: code:addons/auth_signup/static/src/js/auth_signup.js:114
+#: code:addons/auth_signup/static/src/js/auth_signup.js:117
+#: code:addons/auth_signup/static/src/js/auth_signup.js:120
+#: code:addons/auth_signup/static/src/js/auth_signup.js:167
+#: code:addons/auth_signup/static/src/js/auth_signup.js:170
 #, python-format
 msgid "Login"
-msgstr ""
+msgstr "Login"
 
 #. module: auth_signup
 #. openerp-web
-#: code:addons/auth_signup/static/src/js/auth_signup.js:99
+#: code:addons/auth_signup/static/src/js/auth_signup.js:94
 #, python-format
 msgid "Invalid signup token"
-msgstr ""
+msgstr "Aanmeld toekenning ongeldig"
 
 #. module: auth_signup
 #. openerp-web
-#: code:addons/auth_signup/static/src/js/auth_signup.js:128
+#: code:addons/auth_signup/static/src/js/auth_signup.js:120
 #, python-format
 msgid "Passwords do not match; please retype them."
-msgstr ""
+msgstr "Wachtwoorden komen niet overeen. Geef de wachtwoorden opnieuw in."
 
 #. module: auth_signup
 #. openerp-web
-#: code:addons/auth_signup/static/src/js/auth_signup.js:116
-#: code:addons/auth_signup/static/src/js/auth_signup.js:162
+#: code:addons/auth_signup/static/src/js/auth_signup.js:108
+#: code:addons/auth_signup/static/src/js/auth_signup.js:167
 #, python-format
 msgid "No database selected !"
-msgstr ""
+msgstr "Geen database geselecteerd!"
 
 #. module: auth_signup
 #: view:res.users:0
@@ -250,11 +269,11 @@ msgstr "Stel wachtwoord opnieuw in"
 #. module: auth_signup
 #: field:base.config.settings,auth_signup_reset_password:0
 msgid "Enable password reset from Login page"
-msgstr ""
+msgstr "Wachtwoord reset vanaf login pagina toestaan"
 
 #. module: auth_signup
 #. openerp-web
-#: code:addons/auth_signup/static/src/xml/auth_signup.xml:24
+#: code:addons/auth_signup/static/src/xml/auth_signup.xml:27
 #, python-format
 msgid "Back to Login"
 msgstr "Terug naar login"
@@ -264,7 +283,7 @@ msgstr "Terug naar login"
 #: code:addons/auth_signup/static/src/xml/auth_signup.xml:22
 #, python-format
 msgid "Sign up"
-msgstr ""
+msgstr "Aanmelden"
 
 #. module: auth_signup
 #: model:ir.model,name:auth_signup.model_res_partner
@@ -274,4 +293,4 @@ msgstr "Relatie"
 #. module: auth_signup
 #: field:res.partner,signup_token:0
 msgid "Signup Token"
-msgstr ""
+msgstr "Aanmeld token"

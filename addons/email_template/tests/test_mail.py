@@ -45,8 +45,8 @@ class test_message_compose(TestMailBase):
         # Mail data
         _subject1 = 'Pigs'
         _subject2 = 'Bird'
-        _body_html1 = '<div><p>Fans of Pigs, unite !\n</p><p>Admin</p></div>'
-        _body_html2 = '<div><p>I am angry !\n</p><p>Admin</p></div>'
+        _body_html1 = 'Fans of Pigs, unite !'
+        _body_html2 = 'I am angry !'
         _attachments = [
             {'name': 'First', 'datas_fname': 'first.txt', 'datas': base64.b64encode('My first attachment')},
             {'name': 'Second', 'datas_fname': 'second.txt', 'datas': base64.b64encode('My second attachment')}
@@ -113,7 +113,7 @@ class test_message_compose(TestMailBase):
         partner_ids = self.res_partner.search(cr, uid, [('email', 'in', ['b@b.b', 'c@c.c', 'd@d.d'])])
         # Test: mail.compose.message: subject, body, partner_ids
         self.assertEqual(compose.subject, _subject1, 'mail.compose.message subject incorrect')
-        self.assertEqual(compose.body, _body_html1, 'mail.compose.message body incorrect')
+        self.assertIn(_body_html1, compose.body, 'mail.compose.message body incorrect')
         self.assertEqual(set(message_pids), set(partner_ids), 'mail.compose.message partner_ids incorrect')
         # Test: mail.compose.message: attachments
         # Test: mail.message: attachments
@@ -130,6 +130,7 @@ class test_message_compose(TestMailBase):
         # 1. Mass_mail on pigs and bird, with a default_partner_ids set to check he is correctly added
         context = {
             'default_composition_mode': 'mass_mail',
+            'default_notify': True,
             'default_model': 'mail.group',
             'default_res_id': self.group_pigs_id,
             'default_template_id': email_template_id,
@@ -159,8 +160,8 @@ class test_message_compose(TestMailBase):
         # Test: subject, body
         self.assertEqual(message_pigs.subject, _subject1, 'mail.message subject on Pigs incorrect')
         self.assertEqual(message_bird.subject, _subject2, 'mail.message subject on Bird incorrect')
-        self.assertEqual(message_pigs.body, _body_html1, 'mail.message body on Pigs incorrect')
-        self.assertEqual(message_bird.body, _body_html2, 'mail.message body on Bird incorrect')
+        self.assertIn(_body_html1, message_pigs.body, 'mail.message body on Pigs incorrect')
+        self.assertIn(_body_html2, message_bird.body, 'mail.message body on Bird incorrect')
         # Test: partner_ids: p_a_id (default) + 3 newly created partners
         message_pigs_pids = [partner.id for partner in message_pigs.notified_partner_ids]
         message_bird_pids = [partner.id for partner in message_bird.notified_partner_ids]
@@ -170,20 +171,20 @@ class test_message_compose(TestMailBase):
         self.assertEqual(set(message_bird_pids), set(partner_ids), 'mail.message on bird notified_partner_ids incorrect')
 
         # ----------------------------------------
-        # CASE4: test newly introduced email_recipients field
+        # CASE4: test newly introduced partner_to field
         # ----------------------------------------
 
         # get already-created partners back
         p_b_id = self.res_partner.search(cr, uid, [('email', '=', 'b@b.b')])[0]
         p_c_id = self.res_partner.search(cr, uid, [('email', '=', 'c@c.c')])[0]
         p_d_id = self.res_partner.search(cr, uid, [('email', '=', 'd@d.d')])[0]
-        # modify template: use email_recipients, use template and email address in email_to to test all features together
+        # modify template: use partner_to, use template and email address in email_to to test all features together
         user_model_id = self.registry('ir.model').search(cr, uid, [('model', '=', 'res.users')])[0]
         email_template.write(cr, uid, [email_template_id], {
             'model_id': user_model_id,
             'body_html': '${object.login}',
             'email_to': '${object.email} c@c',
-            'email_recipients': '%i,%i' % (p_b_id, p_c_id),
+            'partner_to': '%i,%i' % (p_b_id, p_c_id),
             'email_cc': 'd@d',
             })
         # patner by email + partner by id (no double)
