@@ -37,6 +37,8 @@ import logging
 
 from .misc import ustr
 
+import openerp
+
 __all__ = ['test_expr', 'safe_eval', 'const_eval']
 
 # The time module is usually already provided in the safe_eval environment
@@ -242,9 +244,19 @@ def safe_eval(expr, globals_dict=None, locals_dict=None, mode="eval", nocopy=Fal
     c = test_expr(expr, _SAFE_OPCODES, mode=mode)
     try:
         return eval(c, globals_dict, locals_dict)
+    except openerp.osv.orm.except_orm:
+        raise
+    except openerp.exceptions.Warning:
+        raise
+    except openerp.exceptions.RedirectWarning:
+        raise
+    except openerp.exceptions.AccessDenied:
+        raise
+    except openerp.exceptions.AccessError:
+        raise
     except Exception, e:
         import sys
         exc_info = sys.exc_info()
-        raise exc_info[0], '"%s" while evaluating\n%r' % (ustr(e), expr), exc_info[2]
+        raise ValueError, '"%s" while evaluating\n%r' % (ustr(e), expr), exc_info[2]
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
