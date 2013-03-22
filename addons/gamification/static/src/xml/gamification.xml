@@ -1,14 +1,8 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<templates id="template" xml:space="preserve">
-    <t t-extend="mail.Root">
-        <t t-jquery="div" t-operation="after">
-            <div class="oe_user_sidebar" />
-        </t>
-    </t>
-    <t t-name="user_wall">
+<templates>
+    <t t-name="gamification.user_wall_sidebar" class="oe_gamification_user_wall_sidebar">
         <div class="oe_gamification_goal"><em>Your goal list is empty</em></div>
     </t>
-    <t t-name="goal_list_to_do">
+    <t t-name="gamification.goal_list_to_do">
         <div t-foreach="widget.goals_info.info" t-as="plan">
             <h3><t t-esc="plan.name"/></h3>
             <ul class="oe_goals_list">
