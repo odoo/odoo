@@ -20,6 +20,8 @@
 ##############################################################################
 
 from openerp.osv import osv, fields
+from datetime import datetime
+from openerp import tools
 
 class sale_order(osv.osv):
     _inherit = 'sale.order'
@@ -53,10 +55,21 @@ class crm_case_section(osv.osv):
             res[section_id] = obj.search(cr, uid, [("section_id", "=", section_id),('state','not in',['draft','cancel'])], count=True, context=context)
         return res
 
+    def _get_sum_month_invoice(self, cr, uid, ids, field_name, arg, context=None):
+        res = dict.fromkeys(ids, 0)
+        obj = self.pool.get('account.invoice.report')
+        when = datetime.today()
+        for section_id in ids:
+            invoice_ids = obj.search(cr, uid, [("section_id", "=", section_id), ('state', 'not in', ['draft', 'cancel']), ('year', '=', when.year), ('month', '=', when.month > 9 and when.month or "0%s" % when.month)], context=context)
+            for invoice in obj.browse(cr, uid, invoice_ids, context=context):
+                res[section_id] += invoice.price_total
+        return res
+
     _columns = {
         'number_saleorder': fields.function(_get_number_saleorder, type='integer',  readonly=True),
         'number_quotation': fields.function(_get_number_quotation, type='integer',  readonly=True),
         'number_invoice': fields.function(_get_number_invoice, type='integer',  readonly=True),
+        'sum_month_invoice': fields.function(_get_sum_month_invoice, type='integer',  readonly=True),
     }
 
 class res_users(osv.Model):

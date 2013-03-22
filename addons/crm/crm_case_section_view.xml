@@ -84,7 +84,7 @@
                     <field name="open_opportunity_ids"/>
                     <templates>
                         <t t-name="kanban-box">
-                            <div t-attf-class="oe_kanban_color_#{kanban_getcolor(record.color.raw_value)} oe_kanban_card oe_kanban_project oe_kanban_global_click oe_kanban_crm_salesteams" style="width:220px;">
+                            <div t-attf-class="oe_kanban_color_#{kanban_getcolor(record.color.raw_value)} oe_kanban_card oe_kanban_project oe_kanban_global_click oe_kanban_crm_salesteams">
                                 <div class="oe_dropdown_toggle oe_dropdown_kanban" groups="base.group_user">
                                     <span class="oe_e">í</span>
                                     <ul class="oe_dropdown_menu">
@@ -95,18 +95,18 @@
                                 </div>
                                 <div class="oe_kanban_content">
                                     <h4><field name="name"/></h4>
-                                    <div class="oe_kanban_crm_salesteams_alias" t-if="record.alias_id.value">
+                                    <div class="oe_alias" t-if="record.alias_id.value">
                                         <span class="oe_e">%%</span><small><field name="alias_id"/></small>
                                     </div>
-                                    <div class="oe_kanban_crm_salesteams_list">
-                                        <a name="%(crm_case_form_view_salesteams_lead)d" type="action" style="margin-right: 10px">
+                                    <div class="oe_items_list">
+                                        <a name="%(crm_case_form_view_salesteams_lead)d" type="action">
                                             <t t-raw="record.open_lead_ids.raw_value.length"/>
                                             <t t-if="record.open_lead_ids.raw_value.length &gt;= 1">Leads</t><t t-if="record.open_lead_ids.raw_value.length &lt; 1">Lead</t></a>
-                                        <a name="%(crm_case_form_view_salesteams_opportunity)d" type="action" style="margin-right: 10px">
+                                        <a name="%(crm_case_form_view_salesteams_opportunity)d" type="action">
                                             <t t-raw="record.open_opportunity_ids.raw_value.length"/>
                                             <t t-if="record.open_opportunity_ids.raw_value.length &gt;= 1">Opportunities</t><t t-if="record.open_opportunity_ids.raw_value.length &lt; 1">Opportunity</t></a>
                                     </div>
-                                    <div class="oe_kanban_crm_salesteams_avatars">
+                                    <div class="oe_avatars">
                                         <img t-if="record.user_id.raw_value" t-att-src="kanban_image('res.users', 'image_small', record.user_id.raw_value)" t-att-data-member_id="record.user_id.raw_value"/>
                                         <t t-foreach="record.member_ids.raw_value.slice(0,11)" t-as="member">
                                             <img t-att-src="kanban_image('res.users', 'image_small', member)" t-att-data-member_id="member"/>
