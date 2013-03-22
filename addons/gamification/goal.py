@@ -115,7 +115,7 @@ class gamification_goal(osv.Model):
         return ret
 
     _columns = {
-        'type_id': fields.many2one('gamification.goal.type', 
+        'type_id': fields.many2one('gamification.goal.type',
             string='Goal Type',
             required=True,
             ondelete="cascade"),

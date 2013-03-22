@@ -9,9 +9,10 @@
                 <li t-foreach="plan.goals" t-as="goal">
                     <strong t-attf-class="#{goal.state == 'reached' ? 'oe_goal_reached' : goal.state == 'failed' ? 'oe_goal_failed' : ''}">
                         <t t-esc="goal.type_name" />
+                        <a class="oe_">?</a>
                     </strong>
                     <t t-if="goal.type_description">
-                        <p><t t-esc="goal.type_description" /></p>
+                        <p class="oe_type_description"><t t-esc="goal.type_description" /></p>
                     </t>
                     <p>
                         <t t-if="goal.type_condition == 'higher'">
