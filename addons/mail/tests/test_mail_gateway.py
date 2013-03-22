@@ -116,7 +116,7 @@ class TestMailgateway(TestMailBase):
         frog_groups = format_and_process(MAIL_TEMPLATE, to='groups@example.com, other@gmail.com')
         sent_emails = self._build_email_kwargs_list
         # Test: one group created by mailgateway administrator
-        self.assertTrue(len(frog_groups) == 1)
+        self.assertEqual(len(frog_groups), 1, 'message_process: a new mail.group should have been created')
         frog_group = self.mail_group.browse(cr, uid, frog_groups[0])
         res = self.mail_group.perm_read(cr, uid, [frog_group.id], details=False)
         self.assertEqual(res[0].get('create_uid'), uid,
@@ -154,7 +154,7 @@ class TestMailgateway(TestMailBase):
         frog_groups = format_and_process(MAIL_TEMPLATE, to='groups@example.com, other@gmail.com')
         sent_emails = self._build_email_kwargs_list
         # Test: one group created by Raoul
-        self.assertTrue(len(frog_groups) == 1)
+        self.assertEqual(len(frog_groups), 1, 'message_process: a new mail.group should have been created')
         frog_group = self.mail_group.browse(cr, uid, frog_groups[0])
         res = self.mail_group.perm_read(cr, uid, [frog_group.id], details=False)
         self.assertEqual(res[0].get('create_uid'), self.user_raoul_id,
@@ -181,8 +181,8 @@ class TestMailgateway(TestMailBase):
         # Do: incoming email from a known partner that is also an user that can create a mail.group
         self.res_users.create(cr, uid, {'partner_id': p1id, 'login': 'sylvie', 'groups_id': [(6, 0, [self.group_employee_id])]})
         frog_groups = format_and_process(MAIL_TEMPLATE, to='groups@example.com, other@gmail.com')
-        # Test: one group created by Sylvie
-        self.assertTrue(len(frog_groups) == 1)
+        # Test: one group created by Raoul (or Sylvie maybe, if we implement it)
+        self.assertEqual(len(frog_groups), 1, 'message_process: a new mail.group should have been created')
         frog_group = self.mail_group.browse(cr, uid, frog_groups[0])
         # Test: one message that is the incoming email
         self.assertEqual(len(frog_group.message_ids), 1,
@@ -318,7 +318,7 @@ class TestMailgateway(TestMailBase):
                                             to='groups@example.com', subject='Frogs Return', extra='',
                                             msg_id='<deadcafe.1337@smtp.agrolait.com>')
         # Test: one group created with one message
-        self.assertTrue(len(frog_groups) == 1)
+        self.assertEqual(len(frog_groups), 1, 'message_process: a new mail.group should have been created')
         frog_group = self.mail_group.browse(cr, uid, frog_groups[0])
         msg = frog_group.message_ids[0]
         # Test: plain text content should be wrapped and stored as html
