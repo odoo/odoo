@@ -50,7 +50,6 @@ def register_report(name, model, tmpl_path, parser=rml_parse):
 
 
 class ReportXML(osv.osv):
-    _name = 'ir.actions.report.xml'
     _inherit = 'ir.actions.report.xml'
     _columns = {
         'webkit_header':  fields.property(
@@ -68,7 +67,5 @@ class ReportXML(osv.osv):
                                                             position as each object is printed on a separate HTML.\
                                                             but memory and disk usage is wider')
     }
-
-ReportXML()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
