@@ -450,11 +450,7 @@ property or property parameter."),
             event.add('location').value = event_obj.location
         if event_obj.rrule:
             event.add('rrule').value = event_obj.rrule
-        if event_obj.organizer:
-            event_org = event.add('organizer')
-            event_org.params['CN'] = [event_obj.organizer]
-            event_org.value = 'MAILTO:' + (event_obj.organizer)
-        elif event_obj.user_id or event_obj.organizer_id:
+        if event_obj.user_id or event_obj.organizer_id:
             event_org = event.add('organizer')
             organizer = event_obj.organizer_id
             if not organizer:
@@ -1073,7 +1069,6 @@ rule or repeating pattern of time to exclude from the recurring rule."),
         'recurrent_id_date': fields.datetime('Recurrent ID date'),
         'vtimezone': fields.selection(_tz_get, size=64, string='Timezone'),
         'user_id': fields.many2one('res.users', 'Responsible', states={'done': [('readonly', True)]}),
-        'organizer': fields.char("Organizer's Email", size=256, states={'done': [('readonly', True)]}), # Map with organizer attribute of VEvent.
         'organizer_id': fields.many2one('res.users', 'Organizer', states={'done': [('readonly', True)]}),
         'end_type' : fields.selection([('count', 'Number of repetitions'), ('end_date','End date')], 'Recurrence Termination'),
         'interval': fields.integer('Repeat Every', help="Repeat every (Days/Week/Month/Year)"),
@@ -1145,14 +1140,6 @@ rule or repeating pattern of time to exclude from the recurring rule."),
                     email_from = current_user.email, context=context)
         return True
 
-    def default_organizer(self, cr, uid, context=None):
-        user_pool = self.pool.get('res.users')
-        user = user_pool.browse(cr, uid, uid, context=context)
-        res = user.name
-        if user.email:
-            res += " <%s>" %(user.email)
-        return res
-
     _defaults = {
             'end_type': 'count',
             'count': 1,
@@ -1164,7 +1151,6 @@ rule or repeating pattern of time to exclude from the recurring rule."),
             'interval': 1,
             'active': 1,
             'user_id': lambda self, cr, uid, ctx: uid,
-            'organizer': default_organizer,
     }
 
     def _check_closing_date(self, cr, uid, ids, context=None):
