@@ -149,23 +149,20 @@ class account_cash_statement(osv.osv):
 
     def onchange_journal_id(self, cr, uid, ids, journal_id, context=None):
         result = super(account_cash_statement, self).onchange_journal_id(cr, uid, ids, journal_id)
-
         if not journal_id:
             return result
-
+        result['value']['opening_details_ids'] = self._get_cash_open_box_lines(cr, uid, journal_id, context)
         statement_ids = self.search(cr, uid,
                 [('journal_id', '=', journal_id),('state', '=', 'confirm')],
                 order='create_date desc',
                 limit=1,
                 context=context
         )
-
         if not statement_ids:
             return result
 
         st = self.browse(cr, uid, statement_ids[0], context=context)
         result.setdefault('value', {}).update({'last_closing_balance' : st.balance_end_real})
-
         return result
 
     _columns = {
@@ -188,15 +185,11 @@ class account_cash_statement(osv.osv):
         'user_id': lambda self, cr, uid, context=None: uid,
     }
 
-    def create(self, cr, uid, vals, context=None):
-        journal = False
-        if vals.get('journal_id'):
-            journal = self.pool.get('account.journal').browse(cr, uid, vals['journal_id'], context=context)
-        if journal and (journal.type == 'cash') and not vals.get('details_ids'):
-            vals['details_ids'] = []
-
+    def _get_cash_open_box_lines(self, cr, uid, journa_id, context):
+        details_ids = []
+        journal = self.pool.get('account.journal').browse(cr, uid, journa_id, context=context)
+        if journal and (journal.type == 'cash'):
             last_pieces = None
-
             if journal.with_last_closing_balance == True:
                 domain = [('journal_id', '=', journal.id),
                           ('state', '=', 'confirm')]
@@ -207,16 +200,17 @@ class account_cash_statement(osv.osv):
                     last_pieces = dict(
                         (line.pieces, line.number_closing) for line in last_bank_statement.details_ids
                     )
-
             for value in journal.cashbox_line_ids:
                 nested_values = {
                     'number_closing' : 0,
                     'number_opening' : last_pieces.get(value.pieces, 0) if isinstance(last_pieces, dict) else 0,
                     'pieces' : value.pieces
                 }
+                details_ids.append([0, False, nested_values])
+                
+        return details_ids
 
-                vals['details_ids'].append([0, False, nested_values])
-
+    def create(self, cr, uid, vals, context=None):
         res_id = super(account_cash_statement, self).create(cr, uid, vals, context=context)
         self._update_balances(cr, uid, [res_id], context)
         return res_id
