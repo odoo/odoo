@@ -142,17 +142,6 @@ class configmanager(object):
                          help="specify the private key file for the SSL connection")
         parser.add_option_group(group)
 
-        # NET-RPC
-        group = optparse.OptionGroup(parser, "NET-RPC Configuration")
-        group.add_option("--netrpc-interface", dest="netrpc_interface", my_default='',
-                         help="specify the TCP IP address for the NETRPC protocol")
-        group.add_option("--netrpc-port", dest="netrpc_port", my_default=8070,
-                         help="specify the TCP port for the NETRPC protocol", type="int")
-        # Needed a few day for runbot and saas
-        group.add_option("--no-netrpc", dest="netrpc", action="store_false", my_default=False, help="disable the NETRPC protocol")
-        group.add_option("--netrpc", dest="netrpc", action="store_true", my_default=False, help="enable the NETRPC protocol")
-        parser.add_option_group(group)
-
         # WEB
         # TODO move to web addons after MetaOption merge
         group = optparse.OptionGroup(parser, "Web interface Configuration")
@@ -182,7 +171,7 @@ class configmanager(object):
         # Logging Group
         group = optparse.OptionGroup(parser, "Logging Configuration")
         group.add_option("--logfile", dest="logfile", help="file where the server log will be stored")
-        group.add_option("--no-logrotate", dest="logrotate", action="store_false", my_default=True, help="do not rotate the logfile")
+        group.add_option("--logrotate", dest="logrotate", action="store_true", my_default=False, help="enable logfile rotation")
         group.add_option("--syslog", action="store_true", dest="syslog", my_default=False, help="Send the log to the syslog server")
         group.add_option('--log-handler', action="append", default=DEFAULT_LOG_HANDLER, my_default=DEFAULT_LOG_HANDLER, metavar="PREFIX:LEVEL", help='setup a handler at LEVEL for a given PREFIX. An empty PREFIX indicates the root logger. This option can be repeated. Example: "openerp.orm:DEBUG" or "werkzeug:CRITICAL" (default: ":INFO")')
         group.add_option('--log-request', action="append_const", dest="log_handler", const="openerp.netsvc.rpc.request:DEBUG", help='shortcut for --log-handler=openerp.netsvc.rpc.request:DEBUG')
@@ -383,8 +372,8 @@ class configmanager(object):
                 'db_name', 'db_user', 'db_password', 'db_host',
                 'db_port', 'db_template', 'logfile', 'pidfile', 'smtp_port',
                 'email_from', 'smtp_server', 'smtp_user', 'smtp_password',
-                'netrpc_interface', 'netrpc_port', 'db_maxconn', 'import_partial', 'addons_path',
-                'netrpc', 'xmlrpc', 'syslog', 'without_demo', 'timezone',
+                'db_maxconn', 'import_partial', 'addons_path',
+                'xmlrpc', 'syslog', 'without_demo', 'timezone',
                 'xmlrpcs_interface', 'xmlrpcs_port', 'xmlrpcs',
                 'static_http_enable', 'static_http_document_root', 'static_http_url_prefix',
                 'secure_cert_file', 'secure_pkey_file', 'dbfilter', 'log_handler', 'log_level'
@@ -407,7 +396,7 @@ class configmanager(object):
         keys = [
             'language', 'translate_out', 'translate_in', 'overwrite_existing_translations',
             'debug_mode', 'smtp_ssl', 'load_language',
-            'stop_after_init', 'logrotate', 'without_demo', 'netrpc', 'xmlrpc', 'syslog',
+            'stop_after_init', 'logrotate', 'without_demo', 'xmlrpc', 'syslog',
             'list_db', 'xmlrpcs', 'proxy_mode',
             'test_file', 'test_enable', 'test_commit', 'test_report_directory',
             'osv_memory_count_limit', 'osv_memory_age_limit', 'max_cron_threads', 'unaccent',

@@ -32,8 +32,7 @@ import StringIO
 
 import errno
 import logging
-import os
-import signal
+import platform
 import socket
 import sys
 import threading
@@ -43,7 +42,6 @@ import werkzeug.serving
 import werkzeug.contrib.fixers
 
 import openerp
-import openerp.modules
 import openerp.tools.config as config
 import websrv_lib
 
