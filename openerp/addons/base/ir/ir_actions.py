@@ -85,27 +85,6 @@ class report_xml(osv.osv):
                 res[report.id] = False
         return res
 
-    def register_all(self, cr):
-        """Report registration handler that may be overridden by subclasses to
-           add their own kinds of report services.
-           Loads all reports with no manual loaders (auto==True) and
-           registers the appropriate services to implement them.
-        """
-        opj = os.path.join
-        cr.execute("SELECT * FROM ir_act_report_xml WHERE auto=%s ORDER BY id", (True,))
-        result = cr.dictfetchall()
-        reports = openerp.report.interface.report_int._reports
-        for r in result:
-            if reports.has_key('report.'+r['report_name']):
-                continue
-            if r['report_rml'] or r['report_rml_content_data']:
-                report_sxw('report.'+r['report_name'], r['model'],
-                        opj('addons',r['report_rml'] or '/'), header=r['header'])
-            if r['report_xsl']:
-                report_rml('report.'+r['report_name'], r['model'],
-                        opj('addons',r['report_xml']),
-                        r['report_xsl'] and opj('addons',r['report_xsl']))
-
     def render_report(self, cr, uid, ids, name, data, context=None):
         """
         Look up a report definition and render the report for the provided IDs.
@@ -117,6 +96,7 @@ class report_xml(osv.osv):
 
         # First lookup in the deprecated place, because if the report definition
         # has not been updated, it is more likely the correct definition is there.
+        # Only reports with custom parser sepcified in Python are still there.
         if 'report.' + name in openerp.report.interface.report_int._reports:
             new_report = openerp.report.interface.report_int._reports['report.' + name]
         else:
