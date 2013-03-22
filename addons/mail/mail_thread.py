@@ -592,12 +592,22 @@ class mail_thread(osv.AbstractModel):
         if isinstance(message, unicode):
             message = message.encode('utf-8')
         msg_txt = email.message_from_string(message)
-        routes = self.message_route(cr, uid, msg_txt, model,
-                                    thread_id, custom_values,
-                                    context=context)
+
+        # parse the message, verify we are not in a loop by checking message_id is not duplicated
         msg = self.message_parse(cr, uid, msg_txt, save_original=save_original, context=context)
         if strip_attachments:
             msg.pop('attachments', None)
+        if msg.get('message_id'):   # should always be True as message_parse generate one if missing
+            existing_msg_ids = self.pool.get('mail.message').search(cr, SUPERUSER_ID, [
+                                                                ('message_id', '=', msg.get('message_id')),
+                                                                ], context=context)
+            if existing_msg_ids:
+                return False
+
+        # find possible routes for the message
+        routes = self.message_route(cr, uid, msg_txt, model,
+                                    thread_id, custom_values,
+                                    context=context)
 
         # postpone setting msg.partner_ids after message_post, to avoid double notifications
         partner_ids = msg.pop('partner_ids', [])
