@@ -211,6 +211,11 @@
             <field name="context">{"default_hr_expense_ok":1}</field>
             <field name="domain">[('hr_expense_ok','=',True)]</field>
             <field name="search_view_id" ref="product.product_search_form_view"/>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to create a new expenses category for expenses. 
+             </p>
+            </field>
         </record>
 
         <menuitem id="menu_hr_product" name="Expense Categories" parent="hr.menu_hr_configuration" action="hr_expense_product"/>

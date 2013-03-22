@@ -87,7 +87,11 @@
             <field name="view_mode">tree,form</field>
             <field name="view_id" ref="view_wiki_tree"/>
             <field name="search_view_id" ref="view_wiki_filter"/>
-            <field name="help">Create web pages</field>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Create web pages
+              </p>
+            </field>
         </record>
         <menuitem id="menu_page" parent="menu_wiki" name="Pages" action="action_page" sequence="10"/>
         <record id="action_category" model="ir.actions.act_window">

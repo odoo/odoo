@@ -159,7 +159,7 @@
             <field name="context">{'search_default_perm_exceptions':1}</field>
             <field name="search_view_id" ref="view_procurement_filter"/>
             <field name="help" type="html">
-                <p>
+                <p class="oe_view_nocontent_create">
                 Procurement Orders represent the need for a certain quantity of products, at a given time, in a given location. Sales Orders are one typical source of Procurement Orders (but these are distinct documents). Depending on the procurement parameters and the product configuration, the procurement engine will attempt to satisfy the need by reserving products from stock, ordering products from a supplier, or passing a manufacturing order, etc. A Procurement Exception occurs when the system cannot find a way to fulfill a procurement. Some exceptions will resolve themselves automatically, but others require manual intervention (those are identified by a specific error message).
                 </p>
             </field>
@@ -253,7 +253,11 @@
             <field name="view_type">form</field>
             <field name="view_id" ref="view_warehouse_orderpoint_tree"/>
             <field name="search_view_id" ref="warehouse_orderpoint_search" />
-            <field name="help">You can define your minimum stock rules, so that OpenERP will automatically create draft manufacturing orders or purchase quotations according to the stock level. Once the virtual stock of a product (= stock on hand minus all confirmed orders and reservations) is below the minimum quantity, OpenERP will generate a procurement request to increase the stock up to the maximum quantity.</field>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+              You can define your minimum stock rules, so that OpenERP will automatically create draft manufacturing orders or purchase quotations according to the stock level.Once the virtual stock of a product (= stock on hand minus all confirmed orders and reservations) is below the minimum quantity, OpenERP will generate a procurement request to increase the stock up to the maximum quantity.
+              </p>
+            </field>
         </record>
 
         <act_window
