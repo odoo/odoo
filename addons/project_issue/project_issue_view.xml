@@ -321,7 +321,7 @@
                 <xpath expr='//page[@name="project_stages"]' position="attributes">
                     <attribute name="attrs">{'invisible': [('use_tasks', '=', False),('use_issues','=',False)]}</attribute>
                 </xpath>
-                <field name="priority" position="before">
+                <field name="sequence" position="before">
                     <field name="project_escalation_id"/>
                 </field>
                 <field name="alias_domain" position="after">
