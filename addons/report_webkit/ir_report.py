@@ -51,9 +51,6 @@ def register_report(name, model, tmpl_path, parser=rml_parse):
 
 class ReportXML(osv.osv):
 
-    def __init__(self, pool, cr):
-        super(ReportXML, self).__init__(pool, cr)
-
     def register_all(self,cursor):
         value = super(ReportXML, self).register_all(cursor)
         cursor.execute("SELECT * FROM ir_act_report_xml WHERE report_type = 'webkit'")
