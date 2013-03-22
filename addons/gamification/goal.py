@@ -185,8 +185,9 @@ class gamification_goal(osv.Model):
         If a goal reaches the target value, the status is set to reached
         If the end date is passed (at least +1 day, time not considered) without
         the target value being reached, the goal is set as failed."""
+        if context is None: context = {}
 
-        for goal in self.browse(cr, uid, ids, context=context or {}):
+        for goal in self.browse(cr, uid, ids, context=context):
             if goal.state in ('draft', 'canceled'):
                 # skip if goal draft or canceled
                 continue

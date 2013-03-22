@@ -19,10 +19,17 @@
                     <t t-if="goal.type_description">
                         <p><t t-esc="goal.type_description" /></p>
                     </t>
-                    <p><progress t-att-value="goal.completeness" max="100"/></p>
-                    <t t-if="goal.computation_mode == 'manually'">
-                        <a href="#">done!</a>
-                    </t>
+                    <p>
+                        <t t-if="goal.type_condition == 'higher'">
+                            <progress t-att-value="goal.completeness" max="100"/>
+                        </t>
+                        <t t-if="goal.type_condition == 'lower'">
+                            <t t-esc="goal.current" /> (less than <t t-esc="goal.target_goal"/>)
+                        </t>
+                        <a class="oe_update_goal" rol="button" t-attf-id="{goal.id}">
+                            <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAAMCAYAAABWdVznAAAABmJLR0QA/wD/AP+gvaeTAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAB3RJTUUH3QMWCRMG1/sI6gAAAR1JREFUKM910T9L1nEUBfCPP39S4pAuba0FDoEhbc6CLkEUvQMb7hKFDU29gCYPNFUoiH9WRwedhBB8CS1Bg7WEKKH12PJ94GnoTJfDOece7h3TkGQCk+hxVVVnjZ/Gz6q6TqJLMvTcxRG+4l0T38MXPE0yVlW6qhoa5jCLG/jQuEXM4BOWk+hb0n2sYQVdVX1uhvc4xRbe4rBPMo4n+I7NqroYqXmFXTzEC9zpcbOt3m8CIzVhkGSvGR50GMdtDPwfZzjHoGvCUyygH9YZqQW3MIXjHr9wgFU8axdRVZJMocNjHONbV1W/sYMf+Ig3SSZb8kts4xFeV9VF19JO8GpEdNnmFSxhv6oO8M+n1zGP51X1J8lsS1/FRpIe/gIpymSOkJCtuQAAAABJRU5ErkJggg==" alt="update" />
+                        </a>
+                    </p>
                 </li>
             </ul>
         </div>

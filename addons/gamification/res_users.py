@@ -44,10 +44,13 @@ class res_users_gamification_group(osv.Model):
                 vals['goals'].append({
                     'id': goal.id,
                     'type_name': goal.type_id.name,
+                    'type_condition': goal.type_id.condition,
                     'type_description': goal.type_description,
                     'state': goal.state,
                     'completeness': goal.completeness,
                     'computation_mode': goal.computation_mode,
+                    'current': goal.current,
+                    'target_goal': goal.target_goal,
                 })
             # skip plans where all goal are done or failed
             if not all_done:
