@@ -19,7 +19,11 @@ openerp.gamification = function(instance) {
                 $.when(goal_updated).done(function() {
                     self.get_goal_todo_info();
                 });
-            }
+            },
+            'click a.oe_show_description': function(event) {
+                var goal_id = parseInt(event.currentTarget.id);
+                this.$el.find('.oe_type_description_'+goal_id).toggle(10);
+            },
         },
         renderElement: function() {
             var self = this;
@@ -43,13 +47,8 @@ openerp.gamification = function(instance) {
                 console.log(self.goals_info.info);
                 if(self.goals_info.info.length > 0){
                     self.render_template_replace(self.$el.filter(".oe_gamification_goal"),'gamification.goal_list_to_do');
+                    self.$el.find('.oe_type_description').hide();
                 }
-            });
-        },
-        update_goal: function() {
-            var goal_update = new instance.web.Model('gamification.goal').call('update', [[parseInt(this.id)]]);
-            $.when(goal_update).done(function() {
-                $(".oe_user_sidebar").find(".oe_gamification_goal").html(QWeb.render('gamification.goal_list_to_do'));
             });
         },
     });
