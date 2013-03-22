@@ -85,7 +85,7 @@ class report_xml(osv.osv):
                 res[report.id] = False
         return res
 
-    def render_report(self, cr, uid, ids, name, data, context=None):
+    def render_report(self, cr, uid, res_ids, name, data, context=None):
         """
         Look up a report definition and render the report for the provided IDs.
         """
@@ -119,7 +119,7 @@ class report_xml(osv.osv):
             else:
                 raise Exception, "Required report does not exist: %s" % r
 
-        return new_report.create(cr, uid, ids, data, context)
+        return new_report.create(cr, uid, res_ids, data, context)
 
     _name = 'ir.actions.report.xml'
     _inherit = 'ir.actions.actions'
