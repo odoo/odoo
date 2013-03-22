@@ -44,6 +44,7 @@ You can also use the geolocalization without using the GPS coordinates.
         'res_partner_view.xml',
         'wizard/crm_forward_to_partner_view.xml',
         'crm_lead_view.xml',
+        'crm_partner_assign_data.xml',
         'report/crm_lead_report_view.xml',
         'report/crm_partner_report_view.xml',
     ],
