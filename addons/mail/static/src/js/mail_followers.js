@@ -218,8 +218,8 @@ openerp_mail_followers = function(session, mail) {
             // truncate number of displayed followers
             var truncated = this.followers.slice(0, this.displayed_nb);
             _(truncated).each(function (record) {
-                self.ds_model.call('check_access_right', [self.session.uid]).then(function(r){
-                    self.check_access = r;
+                self.ds_model.call('check_access_right', [self.session.uid]).then(function(result){
+                    self.check_access = result;
                     record.avatar_url = mail.ChatterUtils.get_image(self.session, 'res.partner', 'image_small', record.id);
                     $(session.web.qweb.render('mail.followers.partner', {'record': record, 'widget': self})).appendTo(node_user_list);
                 })
