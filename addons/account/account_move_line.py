@@ -742,7 +742,7 @@ class account_move_line(osv.osv):
     def list_partners_to_reconcile(self, cr, uid, context=None):
         cr.execute(
              """SELECT partner_id FROM (
-                SELECT l.partner_id, p.last_reconciliation_date, SUM(l.debit) AS debit, SUM(l.credit) AS credit, MAX(l.date) AS max_reconcil_date
+                SELECT l.partner_id, p.last_reconciliation_date, SUM(l.debit) AS debit, SUM(l.credit) AS credit, MAX(l.create_date) AS max_reconcil_date
                 FROM account_move_line l
                 RIGHT JOIN account_account a ON (a.id = l.account_id)
                 RIGHT JOIN res_partner p ON (l.partner_id = p.id)
