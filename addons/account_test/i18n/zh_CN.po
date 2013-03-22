@@ -1,17 +1,16 @@
-# French translation for openobject-addons
-# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
+# Chinese (Simplified) translation for openobject-addons
+# Copyright (c) 2013 Rosetta Contributors and Canonical Ltd 2013
 # This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2013.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2013-03-07 08:37+0000\n"
-"PO-Revision-Date: 2013-03-21 01:46+0000\n"
-"Last-Translator: Maxime Chambreuil (http://www.savoirfairelinux.com) "
-"<maxime.chambreuil@savoirfairelinux.com>\n"
-"Language-Team: French <fr@li.org>\n"
+"PO-Revision-Date: 2013-03-21 19:22+0000\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: Chinese (Simplified) <zh_CN@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -48,37 +47,11 @@ msgid ""
 "    cr.execute(sql)\n"
 "    result = cr.dictfetchall()"
 msgstr ""
-"Le code devrait définir une variable nommée 'result' avec pour valeur le "
-"résultat de votre test, et de type liste ou\n"
-"dictionnaire. Si 'result' est une liste vide, alors le test fut réussi. "
-"Autrement il essaiera\n"
-"de traduire et d'imprimer le contenu de 'result'.\n"
-"\n"
-"Si le 'result' de votre test est un dictionnaire, vous pouvez définir une "
-"variable nommée 'column_order' pour indiquer\n"
-"dans quel ordre vous voulez imprimer le contenu de 'result'.\n"
-"\n"
-"En cas de besoin, vous pouvez aussi utiliser les variables suivantes dans "
-"votre code:\n"
-"    * cr: curseur de base de données\n"
-"    * uid: ID de l'utilisateur actuel\n"
-"\n"
-"Dans tous les cas, le code doit être des déclarations python correctes avec "
-"une indentation correcte (si besoin).\n"
-"\n"
-"Exemple: \n"
-"    sql = '''SELECT id, name, ref, date\n"
-"             FROM account_move_line \n"
-"             WHERE account_id IN (SELECT id FROM account_account WHERE type "
-"= 'view')\n"
-"          '''\n"
-"    cr.execute(sql)\n"
-"    result = cr.dictfetchall()"
 
 #. module: account_test
 #: model:accounting.assert.test,name:account_test.account_test_02
 msgid "Test 2: Opening a fiscal year"
-msgstr "Test 2: Ouverture d'un exercice"
+msgstr "测试2: 打开一个会计年度"
 
 #. module: account_test
 #: model:accounting.assert.test,desc:account_test.account_test_05
@@ -96,17 +69,17 @@ msgstr ""
 #. module: account_test
 #: field:accounting.assert.test,name:0
 msgid "Test Name"
-msgstr "Nom du test"
+msgstr ""
 
 #. module: account_test
 #: report:account.test.assert.print:0
 msgid "Accouting tests on"
-msgstr "Comptabilité - Tests en cours"
+msgstr ""
 
 #. module: account_test
 #: model:accounting.assert.test,name:account_test.account_test_01
 msgid "Test 1: General balance"
-msgstr "Test 1: Solde global"
+msgstr ""
 
 #. module: account_test
 #: model:accounting.assert.test,desc:account_test.account_test_06
@@ -123,12 +96,12 @@ msgstr ""
 #. module: account_test
 #: view:accounting.assert.test:0
 msgid "Tests"
-msgstr "Tests"
+msgstr ""
 
 #. module: account_test
 #: field:accounting.assert.test,desc:0
 msgid "Test Description"
-msgstr "Description du test"
+msgstr ""
 
 #. module: account_test
 #: view:accounting.assert.test:0
@@ -150,13 +123,13 @@ msgstr ""
 #: model:ir.actions.report.xml,name:account_test.account_assert_test_report
 #: model:ir.ui.menu,name:account_test.menu_action_license
 msgid "Accounting Tests"
-msgstr "Tests (Comptabilité)"
+msgstr ""
 
 #. module: account_test
 #: code:addons/account_test/report/account_test_report.py:74
 #, python-format
 msgid "The test was passed successfully"
-msgstr "Le test a été effectué avec succès."
+msgstr ""
 
 #. module: account_test
 #: field:accounting.assert.test,active:0
@@ -182,7 +155,7 @@ msgstr ""
 #. module: account_test
 #: field:accounting.assert.test,code_exec:0
 msgid "Python code"
-msgstr "Source python"
+msgstr ""
 
 #. module: account_test
 #: model:accounting.assert.test,desc:account_test.account_test_07
@@ -232,8 +205,6 @@ msgid ""
 "Check if the balance of the new opened fiscal year matches with last year's "
 "balance"
 msgstr ""
-"Vérifier si le solde du dernier exercice comptable ouvert correspond au "
-"solde de l'exercice précédent"
 
 #. module: account_test
 #: view:accounting.assert.test:0
@@ -248,15 +219,11 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
-"<p class=\"oe_view_no_content_create\">\n"
-"                Cliquer pour créer un test (Comptabilité).\n"
-"              </p>\n"
-"            "
 
 #. module: account_test
 #: model:accounting.assert.test,desc:account_test.account_test_01
 msgid "Check the balance: Debit sum = Credit sum"
-msgstr "Vérifier le solde : Débit total = Crédit total"
+msgstr ""
 
 #. module: account_test
 #: model:accounting.assert.test,desc:account_test.account_test_08
