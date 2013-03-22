@@ -29,7 +29,10 @@
 #
 ##############################################################################
 
+import openerp
 from openerp.osv import fields, orm
+
+from webkit_report import WebKitParser
 
 class ir_actions_report_xml(orm.Model):
     _inherit = 'ir.actions.report.xml'
@@ -46,5 +49,41 @@ class ir_actions_report_xml(orm.Model):
             help="This mode allow more precise element position as each object"
             " is printed on a separate HTML but memory and disk usage are wider.")
     }
+
+    def render_report(self, cr, uid, res_ids, name, data, context=None):
+        """
+        Look up a report definition and render the report for the provided IDs.
+        """
+        import operator
+        import os
+        opj = os.path.join
+
+        # First lookup in the deprecated place, because if the report definition
+        # has not been updated, it is more likely the correct definition is there.
+        # Only reports with custom parser sepcified in Python are still there.
+        if 'report.' + name in openerp.report.interface.report_int._reports:
+            new_report = openerp.report.interface.report_int._reports['report.' + name]
+            if not isinstance(new_report, WebKitParser):
+                new_report = None
+        else:
+            cr.execute("SELECT * FROM ir_act_report_xml WHERE report_name=%s and report_type=%s", (name, 'webkit'))
+            r = cr.dictfetchone()
+            if r:
+                if r['parser']:
+                    parser = operator.attrgetter(r['parser'])(openerp.addons)
+                    kwargs = { 'parser': parser }
+                else:
+                    kwargs = {}
+
+                new_report = WebKitParser('report.'+r['report_name'],
+                    r['model'], opj('addons',r['report_rml'] or '/'),
+                    header=r['header'], register=False, **kwargs)
+            else:
+                new_report = None
+
+        if new_report:
+            return new_report
+        else:
+            super(ir_actions_report_xml, self).render_report(cr, uid, res_ids, name, data, context)
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
