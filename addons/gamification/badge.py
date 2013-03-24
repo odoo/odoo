@@ -228,7 +228,7 @@ class gamification_badge(osv.Model):
 
         return res
 
-    def _cron_check(self, cr, uid, context):
+    def _cron_check(self, cr, uid, context=None):
         """Run cron on all automatic goals"""
         ids = self.search(cr, uid, [('rule_automatic', '!=', 'manual')], context=context)
         self.check_automatic(cr, uid, ids, context=context)
