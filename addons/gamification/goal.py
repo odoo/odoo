@@ -304,3 +304,37 @@ class gamification_goal(osv.Model):
                     plan_obj = self.pool.get('gamification.goal.plan')
                     plan_obj.report_progress(cr, uid, goal.plan_id, users=[goal.user_id], context=context)
         return super(gamification_goal, self).write(cr, uid, ids, vals, context=context)
+
+    def get_action(self, cr, uid, goal_id, context=None):
+        """Get the ir.action related to update the goal
+
+        In case of a manual goal, should return a wizard to update the value
+        :return: dict like
+        {
+            'name':'Action name',
+            'id': goal_id,
+            'type': 'ir.actions.act_window',
+            'res_model': goal.type_id.model_id,
+            'view': 'form',
+        }
+        """
+        goal = self.browse(cr, uid, goal_id, context=context)
+        action = {
+            'name': "Update %s" % goal.type_id.name,
+            'id': goal_id,
+            'type': 'ir.actions.act_window',
+        }
+        if goal.computation_mode == 'manually':
+            action['res_model'] = 'gamification.goal.wizard'
+        else:
+            action['res_model'] = goal.type_id.model_id  # TOCHECK
+        return action
+
+
+class goal_manual_wizard(osv.TransientModel):
+    """Wizard type to update a manual goal"""
+    _name = 'gamification.goal.wizard'
+    _columns = {
+        'goal_id': fields.many2one("gamification.goal", string='Goal'),
+        'current': fields.text('Current'),
+    }
