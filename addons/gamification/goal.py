@@ -309,25 +309,22 @@ class gamification_goal(osv.Model):
         """Get the ir.action related to update the goal
 
         In case of a manual goal, should return a wizard to update the value
-        :return: dict like
-        {
-            'name':'Action name',
-            'id': goal_id,
-            'type': 'ir.actions.act_window',
-            'res_model': goal.type_id.model_id,
-            'view': 'form',
-        }
+        :return: action description in a dictionnary
         """
         goal = self.browse(cr, uid, goal_id, context=context)
         action = {
             'name': "Update %s" % goal.type_id.name,
             'id': goal_id,
             'type': 'ir.actions.act_window',
+            'target': 'new',
         }
         if goal.computation_mode == 'manually':
             action['res_model'] = 'gamification.goal.wizard'
+            action['views'] = [[False, 'form']]
+            action['context'] = {'default_goal_id': goal_id, 'default_current': goal.current},
         else:
-            action['res_model'] = goal.type_id.model_id  # TOCHECK
+            action['res_model'] = goal.type_id.model_id.model
+            action['views'] = [[False, 'tree']]
         return action
 
 
@@ -336,5 +333,22 @@ class goal_manual_wizard(osv.TransientModel):
     _name = 'gamification.goal.wizard'
     _columns = {
         'goal_id': fields.many2one("gamification.goal", string='Goal'),
-        'current': fields.text('Current'),
+        'current': fields.float('Current'),
     }
+
+    def action_update_current(self, cr, uid, ids, context=None):
+        """Wizard action for updating the current value"""
+        if context is None:
+            context = {}
+
+        goal_obj = self.pool.get('gamification.goal')
+
+        for wiz in self.browse(cr, uid, ids, context=context):
+            towrite = {
+                'current': wiz.current,
+                'goal_id': wiz.goal_id.id,
+            }
+            print(towrite)
+            goal_obj.write(cr, uid, [wiz.goal_id.id], towrite, context=context)
+            goal_obj.update(cr, uid, [wiz.goal_id.id], context=context)
+        return {}

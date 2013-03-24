@@ -27,29 +27,16 @@ openerp.gamification = function(instance) {
             'click a.oe_goal_action': function(event) {
                 var self = this;
                 var goal_id = parseInt(event.currentTarget.id);
-                var goal_action = new instance.web.Model('gamification.goal').call('get_action', [goal_id]);
+                var goal_action = new instance.web.Model('gamification.goal').call('get_action', [goal_id]).then(function(res) {
+                    goal_action['action'] = res;
+                });
+                $.when(goal_action).done(function() {
+                    console.log(goal_action);
+                    var action_manager = new instance.web.ActionManager(this);
+                    action_manager.do_action(goal_action.action);
 
-                console.log(goal_action);
-                // var action = {
-                //     name : 'Complete Profile',
-                //     type: 'ir.actions.act_window',
-                //     res_model: 'res.users',
-                //     views: [[false, 'form']],
-                //     res_id : event.data.uid,
-                //     target: 'new',
-                //     flags : { action_buttons: true },
-                // };
-                // var action_manager = new instance.web.ActionManager(this);
-                // action_manager.do_action(action);
-                // var form = action_manager.dialog_widget.views.form.controller;
-                // form.on('load_record', self, function(){
-                //     form.fields[$(self).attr('id')].$el.find("input").focus()
-                // })
-                // form.on("on_button_cancel", action_manager.dialog, action_manager.dialog.close);
-                // form.on('save', self, function() {
-                //     action_manager.dialog.close();
-                //     location.reload();
-                // });
+                    //var form = action_manager.dialog_widget.views.form.controller;
+                });
 
             }
         },
