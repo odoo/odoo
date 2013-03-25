@@ -266,11 +266,25 @@
             </field>
         </record>
 
+        <record id="view_general_configuration" model="ir.ui.view">
+            <field name="name">base.config.settings.crm</field>
+            <field name="model">base.config.settings</field>
+            <field name="inherit_id" ref="base_setup.view_general_configuration"/>
+            <field name="arch" type="xml">
+                <xpath expr='//div[@name="multi_company"]' position="after">
+                    <div name="multi_salesteams">
+                        <field name="group_multi_salesteams" class="oe_inline"/>
+                        <label for="group_multi_salesteams"/>
+                    </div>
+                </xpath>
+            </field>
+        </record>
+
         <menuitem
             action="crm_case_section_salesteams_act"
             id="crm.menu_crm_case_section_act"
             sequence="1"
             parent="base.menu_sales"
-            groups="base.group_sale_manager,base.group_sale_salesman"/>
+            groups="crm.group_multi_salesteams"/>
   </data>
 </openerp>
