@@ -149,6 +149,18 @@ class module(osv.osv):
                           'module %s', name, exc_info=True)
         return info
 
+    def _get_desc_from_file(self, cr, uid, ids, field_name=None, arg=None, context=None):
+        res = dict.fromkeys(ids, '')
+        for module in self.browse(cr, uid, ids, context=context):
+            path = addons.get_module_resource(module.name, 'description.html')
+            if path:
+                desc_file = tools.file_open(path, 'rb')
+                try:
+                    res[module.id] = desc_file.read()
+                finally:
+                    desc_file.close()
+        return res
+
     def _get_desc(self, cr, uid, ids, field_name=None, arg=None, context=None):
         res = dict.fromkeys(ids, '')
         for module in self.browse(cr, uid, ids, context=context):
@@ -247,7 +259,7 @@ class module(osv.osv):
         'shortdesc': fields.char('Module Name', size=64, readonly=True, translate=True),
         'summary': fields.char('Summary', size=64, readonly=True, translate=True),
         'description': fields.text("Description", readonly=True, translate=True),
-        'description_html': fields.function(_get_desc, string='Description HTML', type='html', method=True, readonly=True),
+        'description_html': fields.function(_get_desc_from_file, string='Description HTML', type='html', method=True, readonly=True),
         'author': fields.char("Author", size=128, readonly=True),
         'maintainer': fields.char('Maintainer', size=128, readonly=True),
         'contributors': fields.text('Contributors', readonly=True),
