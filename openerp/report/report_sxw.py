@@ -388,6 +388,17 @@ class rml_parse(object):
             self.setCompany(objects[0].company_id)
 
 class report_sxw(report_rml, preprocess.report):
+    """
+    The register=True kwarg has been added to help remove the
+    openerp.netsvc.LocalService() indirection and the related
+    openerp.report.interface.report_int._reports dictionary:
+    report_sxw registered in XML with auto=False are also registered in Python.
+    In that case, they are registered in the above dictionary. Since
+    registration is automatically done upon instanciation, and that
+    instanciation is needed before rendering, a way was needed to
+    instanciate-without-register a report. In the future, no report
+    should be registered in the above dictionary and it will be dropped.
+    """
     def __init__(self, name, table, rml=False, parser=rml_parse, header='external', store=False, register=True):
         report_rml.__init__(self, name, table, rml, '', register=register)
         self.name = name

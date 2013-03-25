@@ -52,7 +52,8 @@ def LocalService(name):
     openerp.report.render_report() should be used (methods on the Model should
     be provided too in the future).
     """
-    _logger.warning("LocalService('%s') is deprecated." % name)
+    assert openerp.conf.deprecation.allow_local_service
+    _logger.warning("LocalService() is deprecated since march 2013 (it was called with '%s')." % name)
 
     if name == 'workflow':
         return openerp.workflow
