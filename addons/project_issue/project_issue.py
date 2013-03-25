@@ -421,8 +421,9 @@ class project_issue(base_stage, osv.osv):
         return res
 
     def get_empty_list_help(self, cr, uid, help, context=None):
-        context['empty_list_help_model'] = 'project.project'
-        context['empty_list_help_id'] = context.get('default_project_id', None)
+        if context.get('active_id') and self.pool.get('project.project').browse(cr, uid, context['active_id'], context=context).alias_model == 'project.issue':
+            context['empty_list_help_model'] = 'project.project'
+            context['empty_list_help_id'] = context.get('default_project_id', None)
         context['empty_list_help_document_name'] = _("issues")
         return super(project_issue, self).get_empty_list_help(cr, uid, help, context=context)
 
