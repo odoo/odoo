@@ -43,8 +43,13 @@ open_openerp_namespace = False
 # Among the related code:
 # - The openerp.netsvc.LocalService() function.
 # - The openerp.report.interface.report_int._reports dictionary.
-# - The register attribute in openerp.report.report_sxw (and in its inheriting
-#   classes).
+# - The register attribute in openerp.report.interface.report_int (and in its
+# inheriting classes).
 allow_local_service = True
+
+# Applies for the register attribute in openerp.report.interface.report_int.
+# See comments for allow_local_service above.
+# Introduced around 2013.03.
+allow_report_int_registration = True
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -45,6 +45,8 @@ class report_int(object):
     
     def __init__(self, name, register=True):
         if register:
+            import openerp
+            assert openerp.conf.deprecation.allow_report_int_registration
             assert name.startswith('report.'), 'Report names should start with "report.".'
             assert name not in self._reports, 'The report "%s" already exists.' % name
             self._reports[name] = self
