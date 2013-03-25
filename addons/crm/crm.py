@@ -241,7 +241,7 @@ class base_config_settings(osv.osv_memory):
     _inherit = 'base.config.settings'
     _columns = {
         'group_multi_salesteams': fields.boolean("Use mutli sales teams",
-            implied_group='crm.group_multi_salesteams',
+            implied_group='base.group_multi_salesteams',
             help=""" """),
     }
 

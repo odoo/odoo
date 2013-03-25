@@ -22,7 +22,7 @@
             <field name="inherit_id" ref="sale.view_order_form"/>
             <field name="arch" type="xml">
                 <field name="user_id" position="after">
-                    <field name="section_id" widget="selection"/>
+                    <field name="section_id" widget="selection" groups="base.group_multi_salesteams"/>
                     <field name="categ_ids" widget="many2many_tags"/>
                 </field>
             </field>
@@ -41,7 +41,7 @@
                         help="My Sales Team(s)"/>
                 </xpath>
                 <xpath expr="//field[@name='user_id']" position="after">
-                    <field name="section_id" string="Sales Team"/>
+                    <field name="section_id" string="Sales Team" groups="base.group_multi_salesteams"/>
                 </xpath>
             </field>
         </record>
@@ -54,7 +54,7 @@
             <field name="arch" type="xml">
                 <data>
                     <xpath expr="//field[@name='date_invoice']" position="after">
-                        <field name="section_id" invisible="1"/>
+                        <field name="section_id" invisible="1" groups="base.group_multi_salesteams"/>
                     </xpath>
                 </data>
             </field>
@@ -79,7 +79,7 @@
             <field name="arch" type="xml">
                 <data>
                     <xpath expr="//field[@name='user_id']" position="after">
-                        <field name="section_id"/>
+                        <field name="section_id" groups="base.group_multi_salesteams"/>
                     </xpath>
                 </data>
             </field>

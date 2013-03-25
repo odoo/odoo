@@ -130,7 +130,7 @@
                 <form string="Case Category" version="7.0">
                     <group>
                         <field name="name"/>
-                        <field name="section_id"/>
+                        <field name="section_id" groups="base.group_multi_salesteams"/>
                         <field name="object_id" invisible="1"/>
                     </group>
                 </form>
@@ -145,7 +145,7 @@
             <field name="arch" type="xml">
                 <tree string="Case Category">
                     <field name="name"/>
-                    <field name="section_id"/>
+                    <field name="section_id" groups="base.group_multi_salesteams"/>
                 </tree>
             </field>
         </record>
@@ -158,7 +158,7 @@
             <field name="arch" type="xml">
                 <tree string="Campaign">
                     <field name="name"/>
-                    <field name="section_id"/>
+                    <field name="section_id" groups="base.group_multi_salesteams"/>
                 </tree>
             </field>
         </record>
@@ -172,7 +172,7 @@
                 <form string="Campaign" version="7.0">
                     <group>
                         <field name="name"/>
-                        <field name="section_id"/>
+                        <field name="section_id" groups="base.group_multi_salesteams"/>
                     </group>
                 </form>
             </field>
@@ -324,7 +324,7 @@
             <field name="arch" type="xml">
                 <tree string="Payment Mode">
                     <field name="name"/>
-                    <field name="section_id"/>
+                    <field name="section_id" groups="base.group_multi_salesteams"/>
                 </tree>
             </field>
         </record>
@@ -338,7 +338,7 @@
                 <form string="Payment Mode" version="7.0">
                     <group>
                         <field name="name"/>
-                        <field name="section_id"/>
+                        <field name="section_id" groups="base.group_multi_salesteams"/>
                     </group>
                 </form>
             </field>
