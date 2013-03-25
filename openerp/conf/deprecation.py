@@ -44,6 +44,7 @@ open_openerp_namespace = False
 # - The openerp.netsvc.LocalService() function.
 # - The openerp.report.interface.report_int._reports dictionary.
 # - The register attribute in openerp.report.interface.report_int (and in its
+# - auto column in ir.actions.report.xml.
 # inheriting classes).
 allow_local_service = True
 
