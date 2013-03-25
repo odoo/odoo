@@ -29,7 +29,7 @@ from openerp import pooler
 from openerp.tools.translate import _
 import openerp.addons.decimal_precision as dp
 from openerp.osv.orm import browse_record, browse_null
-from openerp.tools import DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT, DATETIME_FORMATS_MAP
+from openerp.tools import DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT, DATETIME_FORMATS_MAP,  DEFAULT_SERVER_TIME_FORMAT
 
 class purchase_order(osv.osv):
 
@@ -226,7 +226,7 @@ class purchase_order(osv.osv):
         'journal_id': fields.many2one('account.journal', 'Journal'),
     }
     _defaults = {
-        'date_order': fields.date.context_today,
+        'date_order': lambda *args: datetime.now().strftime(DEFAULT_SERVER_DATE_FORMAT),
         'state': 'draft',
         'name': lambda obj, cr, uid, context: '/',
         'shipped': 0,
@@ -593,11 +593,15 @@ class purchase_order(osv.osv):
             wf_service.trg_validate(uid, 'purchase.order', id, 'purchase_cancel', cr)
         return True
 
+    def _get_gmtdatetime(self, cr, uid, utcdate, context=None):
+        nowutctime = datetime.utcnow().strftime(DEFAULT_SERVER_TIME_FORMAT)
+        return "%s %s"%(utcdate, nowutctime)
+
     def _prepare_order_picking(self, cr, uid, order, context=None):
         return {
             'name': self.pool.get('ir.sequence').get(cr, uid, 'stock.picking.in'),
             'origin': order.name + ((order.origin and (':' + order.origin)) or ''),
-            'date': order.date_order,
+            'date': self._get_gmtdatetime(cr, uid, order.date_order, context),
             'partner_id': order.dest_address_id.id or order.partner_id.id,
             'invoice_state': '2binvoiced' if order.invoice_method == 'picking' else 'none',
             'type': 'in',
@@ -615,8 +619,8 @@ class purchase_order(osv.osv):
             'product_uos_qty': order_line.product_qty,
             'product_uom': order_line.product_uom.id,
             'product_uos': order_line.product_uom.id,
-            'date': order_line.date_planned,
-            'date_expected': order_line.date_planned,
+            'date': self._get_gmtdatetime(cr, uid, order.date_order, context),
+            'date_expected': self._get_gmtdatetime(cr, uid, order.date_order, context),
             'location_id': order.partner_id.property_stock_supplier.id,
             'location_dest_id': order.location_id.id,
             'picking_id': picking_id,
