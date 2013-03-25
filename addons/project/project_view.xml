@@ -329,7 +329,7 @@
                         <field colspan="4" name="name"/>
                         <field name="hours" widget="float_time"/>
                         <field name="date"/>
-                        <field name="user_id" options='{"no_open": True}'/>
+                        <field name="user_id" options='{"no_open": True}' context="{'default_groups_ref': ['base.group_user', 'project.group_project_user']}"/>
                         <field name="company_id" groups="base.group_multi_company" widget="selection"/>
                     </group>
                 </form>
@@ -344,7 +344,7 @@
                     <field name="date"/>
                     <field name="name"/>
                     <field name="hours" widget="float_time"/>
-                    <field name="user_id"/>
+                    <field name="user_id" context="{'default_groups_ref': ['base.group_user', 'project.group_project_user']}"/>
                 </tree>
             </field>
         </record>
@@ -406,7 +406,7 @@
                                     <field name="name"/>
                                     <field name="hours" widget="float_time" sum="Spent Hours"/>
                                     <field name="date"/>
-                                    <field name="user_id"/>
+                                    <field name="user_id" context="{'default_groups_ref': ['base.group_user', 'project.group_project_user']}"/>
                                 </tree>
                             </field>
                             <group>
