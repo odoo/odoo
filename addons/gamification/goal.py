@@ -319,9 +319,9 @@ class gamification_goal(osv.Model):
             'target': 'new',
         }
         if goal.computation_mode == 'manually':
+            action['context'] = {'default_goal_id': goal_id, 'default_current': goal.current}
             action['res_model'] = 'gamification.goal.wizard'
             action['views'] = [[False, 'form']]
-            action['context'] = {'default_goal_id': goal_id, 'default_current': goal.current},
         else:
             action['res_model'] = goal.type_id.model_id.model
             action['views'] = [[False, 'tree']]
@@ -348,7 +348,6 @@ class goal_manual_wizard(osv.TransientModel):
                 'current': wiz.current,
                 'goal_id': wiz.goal_id.id,
             }
-            print(towrite)
             goal_obj.write(cr, uid, [wiz.goal_id.id], towrite, context=context)
             goal_obj.update(cr, uid, [wiz.goal_id.id], context=context)
         return {}
