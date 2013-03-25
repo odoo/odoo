@@ -5,17 +5,17 @@
     <t t-name="gamification.goal_list_to_do">
         <div t-foreach="widget.goals_info.info" t-as="plan">
             <em><a class="oe_update_plan" rol="button" t-attf-id="{plan.id}">refresh</a></em>
-            <h3><t t-esc="plan.name"/></h3>
+            <h3><t t-esc="plan.name" /></h3>
             <t t-if="plan.visibility_mode == 'progressbar'">
                 <ul class="oe_goals_list">
                 <li t-foreach="plan.goals" t-as="goal">
-                    <a class="oe_goal_action" t-att-id="goal.id">
+                    <a class="oe_goal_action" t-att-id="goal.id" t-att-title="goal.type_description">
                         <strong t-attf-class="#{goal.state == 'reached' ? 'oe_goal_reached' : goal.state == 'failed' ? 'oe_goal_failed' : ''}"><t t-esc="goal.type_name" /></strong>
                     </a>
-                    <t t-if="goal.type_description">
+                    <!-- <t t-if="goal.type_description">
                         <a class="oe_show_description" t-att-id="goal.id">?</a>
                         <p t-att-class="'oe_type_description oe_type_description_' + goal.id"><t t-esc="goal.type_description" /></p>
-                    </t>
+                    </t> -->
                     <p>
                         <t t-if="goal.type_condition == 'higher'">
                             <progress t-att-value="goal.completeness" max="100"/>
@@ -33,7 +33,8 @@
             <t t-if="plan.visibility_mode == 'board'">
                 <table width="100%" border="1" t-foreach="plan.planlines" t-as="planline">
                     <tr>
-                        <th colspan="4"><t t-esc="planline.goal_type"/></th>
+                    <th colspan="4" t-attf-title="#{planline.type_description ? planline.type_description : ''}"><t t-esc="planline.type_name"/>
+                        </th>
                     </tr>
                     <tr>
                         <th>#</th>

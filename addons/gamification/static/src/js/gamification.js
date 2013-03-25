@@ -27,10 +27,10 @@ openerp.gamification = function(instance) {
                     self.get_goal_todo_info();
                 });
             },
-            'click a.oe_show_description': function(event) {
-                var goal_id = parseInt(event.currentTarget.id);
-                this.$el.find('.oe_type_description_'+goal_id).toggle(10);
-            },
+            // 'click a.oe_show_description': function(event) {
+            //     var goal_id = parseInt(event.currentTarget.id);
+            //     this.$el.find('.oe_type_description_'+goal_id).toggle(10);
+            // },
             'click a.oe_goal_action': function(event) {
                 var self = this;
                 var goal_id = parseInt(event.currentTarget.id);
