@@ -262,6 +262,14 @@ class gamification_goal_plan(osv.Model):
                 self.report_progress(cr, uid, plan, context=context)
                 self.write(cr, uid, plan.id, {'last_report_date': fields.date.today}, context=context)
 
+    def quick_update(self, cr, uid, plan_id, context=None):
+        """Update all the goals of a plan, no generation of new goals"""
+        if not context: context = {}
+        plan = self.browse(cr, uid, plan_id, context=context)
+        goal_ids = self.pool.get('gamification.goal').search(cr, uid, [('plan_id', '=', plan_id)], context=context)
+        self.pool.get('gamification.goal').update(cr, uid, goal_ids, context=context)
+        return True
+
     def action_start(self, cr, uid, ids, context=None):
         """Start a draft goal plan
 
