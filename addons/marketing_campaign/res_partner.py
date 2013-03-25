@@ -25,9 +25,9 @@ class res_partner(osv.osv):
     _inherit = 'res.partner'
 
     _columns = {
-        'workitem_ids': fields.one2many('marketing.campaign.workitem',
-                                        'partner_id', 'Workitems',
-                                        readonly=True),
+    #    'workitem_ids': fields.one2many('marketing.campaign.workitem',
+#                                        'partner_id', 'Workitems',
+#                                        readonly=True),
     }
     
     def copy(self, cr, uid, id, default={}, context=None):
