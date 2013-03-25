@@ -1206,6 +1206,7 @@ class mail_thread(osv.AbstractModel):
                 message_id IN (SELECT id from mail_message where res_id=any(%s) and model=%s limit 1) and
                 partner_id = %s
         ''', (ids, self._name, partner_id))
+        self.pool.get('mail.notification').invalidate_cache(['read'])
         return True
 
     def message_mark_as_read(self, cr, uid, ids, context=None):
@@ -1218,6 +1219,7 @@ class mail_thread(osv.AbstractModel):
                 message_id IN (SELECT id FROM mail_message WHERE res_id=ANY(%s) AND model=%s) AND
                 partner_id = %s
         ''', (ids, self._name, partner_id))
+        self.pool.get('mail.notification').invalidate_cache(['read'])
         return True
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

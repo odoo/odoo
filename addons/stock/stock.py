@@ -2153,6 +2153,7 @@ class stock_move(osv.osv):
                     r = res.pop(0)
                     product_uos_qty = self.pool.get('stock.move').onchange_quantity(cr, uid, ids, move.product_id.id, r[0], move.product_id.uom_id.id, move.product_id.uos_id.id)['value']['product_uos_qty']
                     cr.execute('update stock_move set location_id=%s, product_qty=%s, product_uos_qty=%s where id=%s', (r[1], r[0],product_uos_qty, move.id))
+                    self.invalidate_cache(['location_id', 'product_qty', 'product_uos_qty'], [move.id])
 
                     while res:
                         r = res.pop(0)

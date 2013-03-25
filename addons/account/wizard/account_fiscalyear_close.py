@@ -62,6 +62,7 @@ class account_fiscalyear_close(osv.osv_memory):
                 raise osv.except_osv(_('Warning!'), _('The entries to reconcile should belong to the same company.'))
             r_id = self.pool.get('account.move.reconcile').create(cr, uid, {'type': 'auto', 'opening_reconciliation': True})
             cr.execute('update account_move_line set reconcile_id = %s where id in %s',(r_id, tuple(ids),))
+            self.pool.get('account.move.line').invalidate_cache(['reconcile_id'], ids)
             return r_id
 
         obj_acc_period = self.pool.get('account.period')
@@ -175,6 +176,7 @@ class account_fiscalyear_close(osv.osv_memory):
                        AND b.reconcile_id IN (SELECT DISTINCT(reconcile_id)
                                           FROM account_move_line a
                                           WHERE a.period_id IN ('''+fy2_period_set+''')))''', (new_journal.id, period.id, period.date_start, move_id, tuple(account_ids),))
+            obj_acc_move_line.invalidate_cache()
 
         #2. report of the accounts with defferal method == 'detail'
         cr.execute('''
@@ -203,7 +205,7 @@ class account_fiscalyear_close(osv.osv_memory):
                    WHERE account_id IN %s
                      AND ''' + query_line + ''')
                      ''', (new_journal.id, period.id, period.date_start, move_id, tuple(account_ids),))
-
+            obj_acc_move_line.invalidate_cache()
 
         #3. report of the accounts with defferal method == 'balance'
         cr.execute('''
@@ -251,6 +253,7 @@ class account_fiscalyear_close(osv.osv_memory):
                        'draft')
         if query_2nd_part:
             cr.execute(query_1st_part + query_2nd_part, tuple(query_2nd_part_args))
+            obj_acc_move_line.invalidate_cache()
 
         #validate and centralize the opening move
         obj_acc_move.validate(cr, uid, [move_id], context=context)
@@ -275,6 +278,7 @@ class account_fiscalyear_close(osv.osv_memory):
         cr.execute('UPDATE account_fiscalyear ' \
                     'SET end_journal_period_id = %s ' \
                     'WHERE id = %s', (ids[0], old_fyear.id))
+        obj_acc_fiscalyear.invalidate_cache(['end_journal_period_id'], [old_fyear.id])
 
         return {'type': 'ir.actions.act_window_close'}
 

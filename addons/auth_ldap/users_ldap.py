@@ -258,6 +258,7 @@ class users(osv.osv):
                                     SET login_date=now() AT TIME ZONE 'UTC'
                                     WHERE login=%s""",
                                (tools.ustr(login),))
+                    self.invalidate_cache(['login_date'])
                     cr.commit()
                     break
         cr.close()

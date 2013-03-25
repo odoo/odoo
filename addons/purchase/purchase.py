@@ -57,6 +57,7 @@ class purchase_order(osv.osv):
         if not value: return False
         if type(ids)!=type([]):
             ids=[ids]
+        po_line_obj = self.pool.get('purchase.order.line')
         for po in self.browse(cr, uid, ids, context=context):
             if po.order_line:
                 cr.execute("""update purchase_order_line set
@@ -64,8 +65,10 @@ class purchase_order(osv.osv):
                     where
                         order_id=%s and
                         (date_planned=%s or date_planned<%s)""", (value,po.id,po.minimum_planned_date,value))
+                po_line_obj.invalidate_cache(['date_planned'])
             cr.execute("""update purchase_order set
                     minimum_planned_date=%s where id=%s""", (value, po.id))
+            self.invalidate_cache(['minimum_planned_date'], [po.id])
         return True
 
     def _minimum_planned_date(self, cr, uid, ids, field_name, arg, context=None):
@@ -1015,6 +1018,7 @@ class procurement_order(osv.osv):
                 message = _('No supplier defined for this product !')
                 self.message_post(cr, uid, [procurement.id], body=message)
                 cr.execute('update procurement_order set message=%s where id=%s', (message, procurement.id))
+                self.invalidate_cache(['message'], [procurement.id])
                 return False
             partner = procurement.product_id.seller_id #Taken Main Supplier of Product of Procurement.
 
@@ -1022,6 +1026,7 @@ class procurement_order(osv.osv):
                 message = _('No default supplier defined for this product')
                 self.message_post(cr, uid, [procurement.id], body=message)
                 cr.execute('update procurement_order set message=%s where id=%s', (message, procurement.id))
+                self.invalidate_cache(['message'], [procurement.id])
                 return False
             if user.company_id and user.company_id.partner_id:
                 if partner.id == user.company_id.partner_id.id:
@@ -1032,6 +1037,7 @@ class procurement_order(osv.osv):
                 message = _('No address defined for the supplier')
                 self.message_post(cr, uid, [procurement.id], body=message)
                 cr.execute('update procurement_order set message=%s where id=%s', (message, procurement.id))
+                self.invalidate_cache(['message'], [procurement.id])
                 return False
         return True
 

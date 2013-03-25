@@ -121,6 +121,7 @@ class res_users(osv.osv):
         if value:
             encrypted = md5crypt(value, gen_salt())
             cr.execute('update res_users set password_crypt=%s where id=%s', (encrypted, int(id)))
+            self.invalidate_cache(['password_crypt'], [int(id)])
         del value
 
     def get_pw( self, cr, uid, ids, name, args, context ):
@@ -147,6 +148,7 @@ class res_users(osv.osv):
                 salt = gen_salt()
                 stored_password_crypt = md5crypt(stored_password, salt)
                 cr.execute("UPDATE res_users SET password='', password_crypt=%s WHERE id=%s", (stored_password_crypt, uid))
+                self.invalidate_cache(['password', 'password_crypt'], [uid])
         try:
             return super(res_users, self).check_credentials(cr, uid, password)
         except openerp.exceptions.AccessDenied:

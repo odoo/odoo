@@ -610,6 +610,8 @@ class mrp_production(osv.osv):
         for production in self.browse(cr, uid, ids):
             cr.execute('delete from mrp_production_product_line where production_id=%s', (production.id,))
             cr.execute('delete from mrp_production_workcenter_line where production_id=%s', (production.id,))
+            prod_line_obj.invalidate_cache()
+            workcenter_line_obj.invalidate_cache()
             bom_point = production.bom_id
             bom_id = production.bom_id.id
             if not bom_point:

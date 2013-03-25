@@ -71,6 +71,7 @@ class res_users(osv.osv):
                                 WHERE login=%s AND openid_key=%s AND active=%s RETURNING id""",
                            (tools.ustr(login), tools.ustr(password), True))
                 res = cr.fetchone()
+                self.invalidate_cache(['login_date'])
                 cr.commit()
                 return res[0] if res else False
 

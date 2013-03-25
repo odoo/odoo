@@ -282,6 +282,7 @@ class account_analytic_line(osv.osv):
                         curr_line['name'] += "\n" + ("\n".join(map(lambda x: unicode(x) or '',note)))
                     invoice_line_obj.create(cr, uid, curr_line, context=context)
                     cr.execute("update account_analytic_line set invoice_id=%s WHERE account_id = %s and id IN %s", (last_invoice, account.id, tuple(ids)))
+                    self.invalidate_cache(['invoice_id'], ids)
 
                 invoice_obj.button_reset_taxes(cr, uid, [last_invoice], context)
         return invoices

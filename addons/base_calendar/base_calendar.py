@@ -713,6 +713,7 @@ true, it will allow you to hide the event alarm information without removing it.
                             ' SET base_calendar_alarm_id=%s, alarm_id=%s ' \
                             ' WHERE id=%s',
                             (cal_alarm.id, new_res_alarm, data.id))
+                model_obj.invalidate_cache(['base_calendar_alarm_id', 'alarm_id'], [data.id])
 
             self.do_alarm_unlink(cr, uid, [data.id], model)
             if basic_alarm:
@@ -738,6 +739,7 @@ true, it will allow you to hide the event alarm information without removing it.
                             ' SET base_calendar_alarm_id=%s, alarm_id=%s '
                             ' WHERE id=%s', \
                             ( alarm_id, basic_alarm.id, data.id) )
+                model_obj.invalidate_cache(['base_calendar_alarm_id', 'alarm_id'], [data.id])
         return True
 
     def do_alarm_unlink(self, cr, uid, ids, model, context=None):

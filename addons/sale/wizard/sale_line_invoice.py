@@ -94,6 +94,7 @@ class sale_order_line_make_invoice(osv.osv_memory):
             res = make_invoice(order, il)
             cr.execute('INSERT INTO sale_order_invoice_rel \
                     (order_id,invoice_id) values (%s,%s)', (order.id, res))
+            sales_order_obj.invalidate_cache(['invoice_ids'], [order.id])
 
             flag = True
             data_sale = sales_order_obj.browse(cr, uid, line.order_id.id, context=context)
