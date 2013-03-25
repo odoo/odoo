@@ -160,7 +160,9 @@ class account_cash_statement(osv.osv):
             if statement_ids:
                 st = self.browse(cr, uid, statement_ids[0], context=context)
                 result.setdefault('value', {}).update({'last_closing_balance' : st.balance_end_real})
-            result['value']['opening_details_ids'] = self._get_cash_open_box_lines(cr, uid, ids, journal_id, context)
+        opening_details_ids = self._get_cash_open_box_lines(cr, uid, ids, journal_id, context)
+        if opening_details_ids:
+            result['value']['opening_details_ids'] = opening_details_ids
         return result
 
     _columns = {
