@@ -316,12 +316,12 @@ class gamification_goal(osv.Model):
             'name': "Update %s" % goal.type_id.name,
             'id': goal_id,
             'type': 'ir.actions.act_window',
-            'target': 'new',
         }
         if goal.computation_mode == 'manually':
             action['context'] = {'default_goal_id': goal_id, 'default_current': goal.current}
             action['res_model'] = 'gamification.goal.wizard'
             action['views'] = [[False, 'form']]
+            action['target'] = 'new'
         else:
             action['res_model'] = goal.type_id.model_id.model
             action['views'] = [[False, 'tree']]

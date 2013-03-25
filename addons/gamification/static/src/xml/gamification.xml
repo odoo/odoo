@@ -5,7 +5,8 @@
     <t t-name="gamification.goal_list_to_do">
         <div t-foreach="widget.goals_info.info" t-as="plan">
             <h3><t t-esc="plan.name"/></h3>
-            <ul class="oe_goals_list">
+            <t t-if="plan.visibility_mode == 'progressbar'">
+                <ul class="oe_goals_list">
                 <li t-foreach="plan.goals" t-as="goal">
                     <a class="oe_goal_action" t-att-id="goal.id">
                         <strong t-attf-class="#{goal.state == 'reached' ? 'oe_goal_reached' : goal.state == 'failed' ? 'oe_goal_failed' : ''}"><t t-esc="goal.type_name" /></strong>
@@ -26,7 +27,27 @@
                         </a>
                     </p>
                 </li>
-            </ul>
+                </ul>
+            </t>
+            <t t-if="plan.visibility_mode == 'board'">
+                <table width="100%" border="1" t-foreach="plan.planlines" t-as="planline">
+                    <tr>
+                        <th colspan="4"><t t-esc="planline.goal_type"/></th>
+                    </tr>
+                    <tr>
+                        <th>#</th>
+                        <th>Pers.</th>
+                        <th>compl.</th>
+                        <th>Current</th>
+                    </tr>
+                    <tr t-foreach="planline.goals" t-as="goal" t-attf-class="#{goal.completness >= 100 ? 'oe_bold' : ''}">
+                        <td><t t-esc="goal.rank" /></td>
+                        <td><t t-esc="goal.user_name" /></td>
+                        <td><progress t-att-value="goal.completeness" max="100" /></td>
+                        <td><t t-esc="goal.current" />/<t t-esc="goal.target_goal" /></td>
+                    </tr>
+                </table>
+            </t>
         </div>
     </t>
 

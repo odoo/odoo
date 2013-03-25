@@ -1,5 +1,4 @@
 openerp.gamification = function(instance) {
-    console.log("Debug statement: file loaded");
     var QWeb = instance.web.qweb;
 
     instance.gamification.Sidebar = instance.web.Widget.extend({
@@ -31,7 +30,6 @@ openerp.gamification = function(instance) {
                     goal_action['action'] = res;
                 });
                 $.when(goal_action).done(function() {
-                    console.log(goal_action);
                     var action_manager = new instance.web.ActionManager(this);
                     action_manager.do_action(goal_action.action);
 

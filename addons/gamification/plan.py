@@ -404,6 +404,88 @@ class gamification_goal_plan(osv.Model):
             self.write(cr, uid, ids, {'user_ids': [(4, user) for user in unified_subscription]}, context=context)
         return True
 
+    def get_board_goal_info(self, cr, uid, plan, subset_goal_ids=False, context=None):
+        """Get the list of latest goals for a plan, sorted by user ranking for each planline"""
+
+        goal_obj = self.pool.get('gamification.goal')
+        planlines_boards = []
+        (start_date, end_date) = start_end_date_for_period(plan.period)
+
+        for planline in plan.planline_ids:
+
+            domain = [
+                ('planline_id', '=', planline.id),
+                ('state', 'in', ('inprogress', 'inprogress_update',
+                                 'reached', 'failed')),
+            ]
+
+            if subset_goal_ids:
+                goal_ids = goal_obj.search(cr, uid, domain, context=context)
+                common_goal_ids = [goal for goal in goal_ids if goal in subset_goal_ids]
+            else:
+                # if no subset goals, use the dates for restriction
+                if start_date:
+                    domain.append(('start_date', '=', start_date.isoformat()))
+                if end_date:
+                    domain.append(('end_date', '=', end_date.isoformat()))
+                common_goal_ids = goal_obj.search(cr, uid, domain, context=context)
+
+            board_goals = [goal for goal in goal_obj.browse(cr, uid, common_goal_ids, context=context)]
+
+            # most complete first, current if same percentage (eg: if several 100%)
+            sorted_board = enumerate(sorted(board_goals, key=lambda k: (k.completeness, k.current), reverse=True))
+            planlines_boards.append({'goal_type': planline.type_id, 'board_goals': sorted_board})
+        return planlines_boards
+
+    def get_indivual_goal_info(self, cr, uid, user_id, plan, subset_goal_ids=False, context=None):
+        """Get the list of latest goals of a user for a plan"""
+        domain = [
+            ('plan_id', '=', plan.id),
+            ('user_id', '=', user_id),
+            ('state', 'in', ('inprogress', 'inprogress_update',
+                             'reached', 'failed')),
+        ]
+        goal_obj = self.pool.get('gamification.goal')
+        (start_date, end_date) = start_end_date_for_period(plan.period)
+
+        if subset_goal_ids:
+            # use the domain for safety, don't want irrelevant report if wrong argument
+            goal_ids = goal_obj.search(cr, uid, domain, context=context)
+            related_goal_ids = [goal for goal in goal_ids if goal in subset_goal_ids]
+        else:
+            # if no subset goals, use the dates for restriction
+            if start_date:
+                domain.append(('start_date', '=', start_date.isoformat()))
+            if end_date:
+                domain.append(('end_date', '=', end_date.isoformat()))
+            related_goal_ids = goal_obj.search(cr, uid, domain, context=context)
+
+        if len(related_goal_ids) == 0:
+            print("no related_goal_ids")
+            return False
+
+        values = {'goals': []}
+        all_done = True
+        for goal in goal_obj.browse(cr, uid, related_goal_ids, context=context):
+            if goal.end_date:
+                if goal.end_date < fields.date.today():
+                    # do not include goals of previous plan run
+                    continue
+                else:
+                    all_done = False
+            else:
+                if goal.state == 'inprogress' or goal.state == 'inprogress_update':
+                    all_done = False
+
+            values['goals'].append(goal)
+
+        if all_done:
+            # skip plans where all goal are done or failed
+            print("all_done")
+            return False
+        else:
+            return values
+
     def report_progress(self, cr, uid, plan, context=None, users=False, subset_goal_ids=False):
         """Post report about the progress of the goals
 
@@ -423,43 +505,8 @@ class gamification_goal_plan(osv.Model):
         goal_obj = self.pool.get('gamification.goal')
         template_env = TemplateHelper()
 
-        (start_date, end_date) = start_end_date_for_period(plan.period)
-
         if plan.visibility_mode == 'board':
-            # generate a shared report
-            planlines_boards = []
-
-            for planline in plan.planline_ids:
-
-                domain = [
-                    ('planline_id', '=', planline.id),
-                    ('state', 'in', ('inprogress', 'inprogress_update',
-                                     'reached', 'failed')),
-                ]
-
-                if subset_goal_ids:
-                    goal_ids = goal_obj.search(cr, uid, domain, context=context)
-                    common_goal_ids = [goal for goal in goal_ids if goal in subset_goal_ids]
-                else:
-                    # if no subset goals, use the dates for restriction
-                    if start_date:
-                        domain.append(('start_date', '=', start_date.isoformat()))
-                    if end_date:
-                        domain.append(('end_date', '=', end_date.isoformat()))
-                    common_goal_ids = goal_obj.search(cr, uid, domain, context=context)
-
-                board_goals = []
-                for goal in goal_obj.browse(cr, uid, common_goal_ids, context=context):
-                    board_goals.append({
-                        'user': goal.user_id,
-                        'current':goal.current,
-                        'target_goal':goal.target_goal,
-                        'completeness':goal.completeness,
-                    })
-
-                # most complete first, current if same percentage (eg: if several 100%)
-                sorted_board = enumerate(sorted(board_goals, key=lambda k: (k['completeness'], k['current']), reverse=True))
-                planlines_boards.append({'goal_type': planline.type_id.name, 'board_goals': sorted_board})
+            planlines_boards = self.get_board_goal_info(cr, uid, plan, subset_goal_ids, context)
 
             body_html = template_env.get_template('group_progress.mako').render({'object': plan, 'planlines_boards': planlines_boards})
 
@@ -477,33 +524,14 @@ class gamification_goal_plan(osv.Model):
         else:
             # generate individual reports
             for user in users or plan.user_ids:
-                domain = [
-                    ('plan_id', '=', plan.id),
-                    ('user_id', '=', user.id),
-                    ('state', 'in', ('inprogress', 'inprogress_update',
-                                     'reached', 'failed')),
-                ]
-                if subset_goal_ids:
-                    # use the domain for safety, don't want irrelevant report if wrong argument
-                    goal_ids = goal_obj.search(cr, uid, domain, context=context)
-                    related_goal_ids = [goal for goal in goal_ids if goal in subset_goal_ids]
-                else:
-                    # if no subset goals, use the dates for restriction
-                    if start_date:
-                        domain.append(('start_date', '=', start_date.isoformat()))
-                    if end_date:
-                        domain.append(('end_date', '=', end_date.isoformat()))
-                related_goal_ids = goal_obj.search(cr, uid, domain, context=context)
-
-                if len(related_goal_ids) == 0:
+                values = self.get_indivual_goal_info(cr, uid, user.id, plan, subset_goal_ids, context=context)
+                if not values:
                     continue
 
-                variables = {
-                    'object': plan,
-                    'user': user,
-                    'goals': goal_obj.browse(cr, uid, related_goal_ids, context=context)
-                }
-                body_html = template_env.get_template('personal_progress.mako').render(variables)
+                values['object'] = plan
+                values['user'] = user,
+
+                body_html = template_env.get_template('personal_progress.mako').render(values)
 
                 self.message_post(cr, uid, plan.id,
                                   body=body_html,

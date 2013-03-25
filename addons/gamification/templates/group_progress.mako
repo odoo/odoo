@@ -8,7 +8,7 @@
         	</tr>
         	<tr>
 	            <th>#</th>
-	            <th>User</th>
+	            <th>Person</th>
 	            <th>Completeness</th>
 	            <th>Current</th>
 	        </tr>
