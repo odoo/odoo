@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2013-03-07 08:37+0000\n"
-"PO-Revision-Date: 2013-02-15 09:44+0000\n"
-"Last-Translator: Numérigraphe <Unknown>\n"
+"PO-Revision-Date: 2013-03-21 16:32+0000\n"
+"Last-Translator: WANTELLET Sylvain <Swantellet@tetra-info.com>\n"
 "Language-Team: French <fr@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-03-08 06:00+0000\n"
-"X-Generator: Launchpad (build 16523)\n"
+"X-Launchpad-Export-Date: 2013-03-22 05:35+0000\n"
+"X-Generator: Launchpad (build 16532)\n"
 
 #. module: sale
 #: model:res.groups,name:sale.group_analytic_accounting
@@ -36,7 +36,7 @@ msgstr "Tableaux de bord des ventes"
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:92
 #, python-format
 msgid "There is no income account defined as global property."
-msgstr ""
+msgstr "Il n'ya pas de compte de revenu défini par défaut."
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_order_line_tree2
@@ -83,6 +83,13 @@ msgid ""
 "invoice automatically.\n"
 "            It installs the account_analytic_analysis module."
 msgstr ""
+"Permet de définir les contrats clients: facturation\n"
+"            méthode (prix fixe, avances, feuille de temps), prix exact\n"
+"            (650 € / jour pour un développeur), la durée (un contrat de "
+"support an).\n"
+"            Vous serez en mesure de suivre l'état d'avancement du contrat et "
+"la facturation automatiquement.\n"
+"            Il installe le module account_analytic_analysis."
 
 #. module: sale
 #: model:email.template,report_name:sale.email_template_edi_sale
@@ -123,7 +130,7 @@ msgstr "Mars"
 #: code:addons/sale/sale.py:567
 #, python-format
 msgid "First cancel all invoices attached to this sales order."
-msgstr ""
+msgstr "D'abord annuler toutes les factures liées à cette commande client."
 
 #. module: sale
 #: view:sale.order:0
@@ -239,17 +246,18 @@ msgstr "Données Incorrectes"
 #. module: sale
 #: view:sale.order.line:0
 msgid "Cancel Line"
-msgstr ""
+msgstr "Annuler la ligne"
 
 #. module: sale
 #: help:sale.config.settings,group_discount_per_so_line:0
 msgid "Allows you to apply some discount per sales order line."
 msgstr ""
+"Permet d'appliquer une réduction par sur les lignes de bon de commande."
 
 #. module: sale
 #: view:sale.order.line:0
 msgid "Sales Order Lines that are in 'done' state"
-msgstr ""
+msgstr "Lignes de commande terminées"
 
 #. module: sale
 #: selection:sale.order.line,type:0
@@ -320,13 +328,21 @@ msgid ""
 "available.\n"
 "                This installs the module analytic_user_function."
 msgstr ""
+"Vous permet de définir quelle est la fonction par défaut d'un utilisateur "
+"spécifique sur un compte donné.\n"
+"            Cela est principalement utilisé lorsque l'utilisateur gère sa "
+"feuille de temps. \n"
+"            Les valeurs sont récupérées et les champs sont remplis "
+"automatiquement.\n"
+"            Il est toujours possible de modifier ces valeurs.\n"
+"            Cela installe le module de analytic_user_function."
 
 #. module: sale
 #: selection:sale.order,state:0
 #: selection:sale.order.line,state:0
 #: selection:sale.report,state:0
 msgid "Cancelled"
-msgstr "Annuler"
+msgstr "Annulée"
 
 #. module: sale
 #: view:sale.order.line:0
@@ -454,6 +470,8 @@ msgstr ""
 #: help:sale.order.line,sequence:0
 msgid "Gives the sequence order when displaying a list of sales order lines."
 msgstr ""
+"Donne l'ordre de la séquence lors de l'affichage d'une liste des lignes de "
+"commande de ventes."
 
 #. module: sale
 #: view:sale.report:0
@@ -472,6 +490,7 @@ msgstr "Fax :"
 msgid ""
 "In order to delete a confirmed sales order, you must cancel it before !"
 msgstr ""
+"Pour supprimer une commande de vente confirmée, vous devez l'annuler avant!"
 
 #. module: sale
 #: view:sale.order:0
@@ -488,7 +507,7 @@ msgstr "Partenaire"
 #. module: sale
 #: view:sale.config.settings:0
 msgid "Contract Features"
-msgstr ""
+msgstr "Caractéristiques du contrat"
 
 #. module: sale
 #: code:addons/sale/sale.py:288
@@ -502,12 +521,12 @@ msgstr ""
 #: selection:sale.order,state:0
 #, python-format
 msgid "Sales Order"
-msgstr "Commande de ventes"
+msgstr "Bon de commande"
 
 #. module: sale
 #: model:res.groups,name:sale.group_invoice_so_lines
 msgid "Enable Invoicing Sales order lines"
-msgstr ""
+msgstr "Activer la facturation par ligne de commande"
 
 #. module: sale
 #: model:ir.model,name:sale.model_sale_order_line
@@ -522,7 +541,7 @@ msgstr "Montant anticipé"
 #. module: sale
 #: help:sale.order,invoice_exists:0
 msgid "It indicates that sales order has at least one invoice."
-msgstr ""
+msgstr "indique que la commande a au moins une facture."
 
 #. module: sale
 #: help:sale.config.settings,group_sale_pricelist:0
@@ -541,7 +560,7 @@ msgstr "Un employé peut avoir différents rôles par contrat"
 #. module: sale
 #: selection:sale.advance.payment.inv,advance_payment_method:0
 msgid "Invoice the whole sales order"
-msgstr ""
+msgstr "Facturer toute la commande"
 
 #. module: sale
 #: field:sale.shop,payment_default_id:0
@@ -556,13 +575,15 @@ msgstr "Confirmer"
 #. module: sale
 #: field:sale.config.settings,timesheet:0
 msgid "Prepare invoices based on timesheets"
-msgstr ""
+msgstr "Préparer les factures basées sur les feuilles de temps"
 
 #. module: sale
 #: code:addons/sale/sale.py:820
 #, python-format
 msgid "You cannot cancel a sales order line that has already been invoiced."
 msgstr ""
+"Vous ne pouvez pas annuler une ligne de commande client qui a déjà été "
+"facturée."
 
 #. module: sale
 #: view:account.invoice.report:0
@@ -590,7 +611,7 @@ msgstr "Permet d'utiliser plusieurs unités de mesure"
 #. module: sale
 #: model:mail.message.subtype,name:sale.mt_order_confirmed
 msgid "Sales Order Confirmed"
-msgstr ""
+msgstr "Commande confirmée"
 
 #. module: sale
 #: view:sale.order:0
@@ -640,6 +661,7 @@ msgstr "Prix total"
 #: help:account.config.settings,group_analytic_account_for_sales:0
 msgid "Allows you to specify an analytic account on sales orders."
 msgstr ""
+"Vous permet de spécifier un compte analytique sur les commandes de vente."
 
 #. module: sale
 #: help:sale.config.settings,module_sale_journal:0
@@ -807,6 +829,9 @@ msgid ""
 "After clicking 'Show Lines to Invoice', select lines to invoice and create "
 "the invoice from the 'More' dropdown menu."
 msgstr ""
+"Après avoir cliqué sur \"Afficher les lignes à facturer\", sélectionnez des "
+"lignes à facturer et créez la facture à partir du menu déroulant \"Autres "
+"options\"."
 
 #. module: sale
 #: view:sale.order:0
@@ -999,7 +1024,7 @@ msgstr "Nom du Magasin"
 #. module: sale
 #: view:sale.order:0
 msgid "My Sales Orders"
-msgstr ""
+msgstr "Mes commandes clients"
 
 #. module: sale
 #: report:sale.order:0
@@ -1394,7 +1419,7 @@ msgstr "Devis"
 #. module: sale
 #: help:account.config.settings,module_sale_analytic_plans:0
 msgid "This allows install module sale_analytic_plans."
-msgstr ""
+msgstr "Cela installe le module sale_analytic_plans."
 
 #. module: sale
 #: view:sale.order:0
@@ -1536,7 +1561,7 @@ msgstr "Mes lignes de bons de commande"
 #. module: sale
 #: view:sale.order:0
 msgid "Cancel Quotation"
-msgstr ""
+msgstr "Annuler le devis"
 
 #. module: sale
 #: field:sale.order,message_follower_ids:0
@@ -1592,9 +1617,9 @@ msgstr ""
 "<p>\n"
 "                Ici la liste des lignes à facturer. Vous pouvez aussi\n"
 "                facturer les commandes partiellement, par lignes. Vous \n"
-"                n'avez pas besoin de cette liste si vous facturer sur "
+"                n'avez pas besoin de cette liste si vous facturez sur "
 "livraison,\n"
-"                vous si vous facturer les commande totalement.\n"
+"                ou si vous facturez les commandes totalement.\n"
 "              </p>\n"
 "            "
 
@@ -1622,6 +1647,9 @@ msgid ""
 "invoice).                                              You have to choose  "
 "if you want your invoice based on ordered "
 msgstr ""
+"La commande de vente va générer automatiquement une proposition de facture "
+"(facture brouillon). Vous devez choisir si vous voulez que vos factures soit "
+"basées sur les commandes "
 
 #. module: sale
 #: field:sale.config.settings,module_account_analytic_analysis:0
@@ -1910,6 +1938,8 @@ msgid ""
 "There is no Fiscal Position defined or Income category account defined for "
 "default properties of Product categories."
 msgstr ""
+"Aucun régime fiscal ou aucun compte de revenu de catégorie n'a été défini "
+"comme propriété par défaut des catégories d'articles."
 
 #. module: sale
 #: model:process.node,note:sale.process_node_invoice0

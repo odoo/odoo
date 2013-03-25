@@ -131,10 +131,10 @@
                     </table>
                     <group name='invoice_on_timesheets' attrs="{'invisible': [('invoice_on_timesheets','=',False)]}">
                         <p class="oe_grey oe_edit_only" colspan="2">
-                            When invoicing on timesheet, OpenERP uses the
+                            When reinvoicing costs, OpenERP uses the
                             pricelist of the contract which uses the price
-                            defined on the product related to each employee to
-                            define the customer invoice price rate.
+                            defined on the product related (e.g timesheet 
+                            products are defined on each employee). 
                         </p>
                         <group>
                             <field name="pricelist_id"
@@ -249,7 +249,7 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="domain">[('invoice_id','=',False)]</field>
-            <field name="context">{'search_default_to_invoice': 1, 'search_default_sales': 1}</field>
+            <field name="context">{'search_default_to_invoice': 1}</field>
             <field name="search_view_id" ref="account.view_account_analytic_line_filter"/>
             <field name="help" type="html">
               <p>

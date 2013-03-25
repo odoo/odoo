@@ -43,26 +43,11 @@ class Invoice(osv.osv):
                 raise osv.except_osv(_('Error!'), _("You cannot cancel an invoice which has already been imported in a payment order. Remove it from the following payment order : %s."%(payment_order_name)))
         return super(Invoice, self).action_cancel(cr, uid, ids, context=context)
 
-    def _amount_to_pay(self, cursor, user, ids, name, args, context=None):
-        '''Return the amount still to pay regarding all the payment orders'''
-        if not ids:
-            return {}
-        res = {}
-        for invoice in self.browse(cursor, user, ids, context=context):
-            res[invoice.id] = 0.0
-            if invoice.move_id:
-                for line in invoice.move_id.line_id:
-                    if not line.date_maturity or \
-                            datetime.strptime(line.date_maturity, '%Y-%m-%d') \
-                            < datetime.today():
-                        res[invoice.id] += line.amount_to_pay
-        return res
 
     _columns = {
-        'amount_to_pay': fields.function(_amount_to_pay,
+        'amount_to_pay': fields.related('residual',
             type='float', string='Amount to be paid',
-            help='The amount which should be paid at the current date\n' \
-                    'minus the amount which is already in payment order'),
+            help='The amount which should be paid at the current date. '),
     }
 
 Invoice()

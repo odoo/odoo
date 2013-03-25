@@ -8,15 +8,15 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2013-03-07 08:37+0000\n"
-"PO-Revision-Date: 2013-01-07 23:46+0000\n"
+"PO-Revision-Date: 2013-03-20 23:09+0000\n"
 "Last-Translator: Thorsten Vocks (OpenBig.org) <thorsten.vocks@big-"
 "consulting.net>\n"
 "Language-Team: German <de@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-03-08 05:25+0000\n"
-"X-Generator: Launchpad (build 16523)\n"
+"X-Launchpad-Export-Date: 2013-03-22 05:34+0000\n"
+"X-Generator: Launchpad (build 16532)\n"
 
 #. module: account
 #: model:process.transition,name:account.process_transition_supplierreconcilepaid0
@@ -863,7 +863,7 @@ msgstr ""
 #. module: account
 #: view:account.account:0
 msgid "Account code"
-msgstr ""
+msgstr "Kontonummer"
 
 #. module: account
 #: selection:account.financial.report,display_detail:0
@@ -1634,7 +1634,7 @@ msgstr "Status Rechnung"
 #: model:ir.actions.act_window,name:account.action_account_open_closed_fiscalyear
 #: model:ir.ui.menu,name:account.menu_wizard_account_open_closed_fiscalyear
 msgid "Cancel Closing Entries"
-msgstr ""
+msgstr "Abbrechen Abschlussbuchungen"
 
 #. module: account
 #: view:account.bank.statement:0
@@ -2947,7 +2947,7 @@ msgstr "Bankkonto Details"
 #. module: account
 #: view:account.bank.statement:0
 msgid "Cancel CashBox"
-msgstr ""
+msgstr "Abbrechen Barkasse"
 
 #. module: account
 #: help:account.invoice,payment_term:0
@@ -5152,7 +5152,7 @@ msgstr ""
 #: view:account.move:0
 #: view:account.move.line:0
 msgid "Add an internal note..."
-msgstr ""
+msgstr "Interne Anmerkung hinzufügen ..."
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_wizard_multi_chart
@@ -5373,7 +5373,7 @@ msgstr "Abgebrochen"
 #: code:addons/account/account.py:1858
 #, python-format
 msgid " (Copy)"
-msgstr ""
+msgstr " (Kopieren)"
 
 #. module: account
 #: help:account.config.settings,group_proforma_invoices:0
@@ -5448,7 +5448,7 @@ msgstr "Umsatzsteuer"
 #. module: account
 #: view:account.move:0
 msgid "Cancel Entry"
-msgstr ""
+msgstr "Abbrechen Buchung"
 
 #. module: account
 #: field:account.tax,ref_tax_code_id:0
@@ -5649,7 +5649,7 @@ msgstr "Berechne"
 #. module: account
 #: view:account.invoice:0
 msgid "Additional notes..."
-msgstr ""
+msgstr "Weitere Anmerkungen..."
 
 #. module: account
 #: field:account.tax,type_tax_use:0
@@ -5760,7 +5760,7 @@ msgstr "Umsatzsteuererklärung (-voranmeldung)"
 #. module: account
 #: view:account.bank.statement:0
 msgid "Cancel Statement"
-msgstr ""
+msgstr "Abbrechen Bankauszug"
 
 #. module: account
 #: help:account.config.settings,module_account_accountant:0
@@ -6454,6 +6454,10 @@ msgid ""
 "number).  You can set it back to \"Draft\" state and modify its content, "
 "then re-confirm it."
 msgstr ""
+"Sie können keine Rechnung abbrechen, nach dem sie gebucht wurde (und eine "
+"Nummer vergeben wurde). Sie können die\r\n"
+"Rechnung in den Entwurf zurücksetzen und den Inhalt abändern, bevor Sie "
+"erneut korrigiert gebucht wird."
 
 #. module: account
 #: help:account.automatic.reconcile,power:0
@@ -7239,7 +7243,7 @@ msgstr "Kann keinen nicht verwendeten Journal Code erzeugen."
 #. module: account
 #: view:account.invoice:0
 msgid "force period"
-msgstr ""
+msgstr "Erzwinge Periode"
 
 #. module: account
 #: view:project.account.analytic.line:0
@@ -7662,7 +7666,7 @@ msgstr "Erzeuge Buchung"
 #. module: account
 #: view:account.open.closed.fiscalyear:0
 msgid "Cancel Fiscal Year Closing Entries"
-msgstr ""
+msgstr "Abbrechen Peridodenabschluss"
 
 #. module: account
 #: selection:account.account.type,report_type:0
@@ -7981,7 +7985,7 @@ msgstr "Steuern für Verkäufe"
 #. module: account
 #: view:account.period:0
 msgid "Re-Open Period"
-msgstr ""
+msgstr "Wiedereröffnung Periode"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_invoice_tree1
@@ -8060,7 +8064,7 @@ msgstr "Es gibt kein Aufwandskonto für dieses Produkt: \"%s (id:%d)."
 #. module: account
 #: view:account.account.template:0
 msgid "Internal notes..."
-msgstr ""
+msgstr "Interne Anmerkungen"
 
 #. module: account
 #: constraint:account.account:0
@@ -8834,6 +8838,9 @@ msgid ""
 "You cannot delete an invoice which is not draft or cancelled. You should "
 "refund it instead."
 msgstr ""
+"Sie können keine Rechnung löschen, die im Entwurf Status ist oder "
+"abgebrochen wurde. Anstatt dessen sollten Sie\r\n"
+"eine Gutschrift erzeugen."
 
 #. module: account
 #: model:ir.ui.menu,name:account.menu_finance_legal_statement
@@ -9562,7 +9569,7 @@ msgstr "zugelassene Kontoarten (leer = alle)"
 #. module: account
 #: view:account.payment.term:0
 msgid "Payment term explanation for the customer..."
-msgstr ""
+msgstr "Beschreibung der Zahlungsbedingungen für den Kunden..."
 
 #. module: account
 #: help:account.move.line,amount_residual:0
@@ -10317,7 +10324,7 @@ msgstr "Kreditoren"
 #. module: account
 #: view:account.account:0
 msgid "Account name"
-msgstr ""
+msgstr "Kontobezeichnung"
 
 #. module: account
 #: view:board.board:0
@@ -10652,6 +10659,7 @@ msgstr ""
 #, python-format
 msgid "Journal Item '%s' (id: %s), Move '%s' is already reconciled!"
 msgstr ""
+"Der Journaleintrag '%s' (id: %s), Buchungssatz '%s' wurde bereits abgestimmt!"
 
 #. module: account
 #: view:account.invoice:0
@@ -10937,7 +10945,7 @@ msgstr "Wechselkurs"
 #. module: account
 #: view:account.config.settings:0
 msgid "e.g. sales@openerp.com"
-msgstr ""
+msgstr "z.B. sales@openerp.com"
 
 #. module: account
 #: field:account.account,tax_ids:0

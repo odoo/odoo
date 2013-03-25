@@ -93,6 +93,9 @@ class mail_notification(osv.Model):
             # Do not send to partners without email address defined
             if not partner.email:
                 continue
+            # Do not send to partners having same email address than the author (can cause loops or bounce effect due to messy database)
+            if message.author_id and message.author_id.email == partner.email:
+                continue
             # Partner does not want to receive any emails or is opt-out
             if partner.notification_email_send == 'none':
                 continue
@@ -158,11 +161,16 @@ class mail_notification(osv.Model):
         else:
             email_from = msg.email_from
 
+        references = False
+        if msg.parent_id:
+            references = msg.parent_id.message_id
+
         mail_values = {
             'mail_message_id': msg.id,
             'auto_delete': True,
             'body_html': body_html,
             'email_from': email_from,
+            'references': references,
         }
         email_notif_id = mail_mail.create(cr, uid, mail_values, context=context)
         try:

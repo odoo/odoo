@@ -100,13 +100,14 @@
                     <button name="case_cancel" string="Cancel Case" type="object"
                             states="draft,open,pending"/>
                     <field name="stage_id" widget="statusbar" clickable="True"
+                            domain="['&amp;', '|', ('case_default', '=', True), ('section_ids', '=', section_id), '|', ('type', '=', type), ('type', '=', 'both')]"
                             on_change="onchange_stage_id(stage_id)"/>
                 </header>
                 <sheet>
                     <div class="oe_right oe_button_box" name="buttons">
-                        <button type="action"
-                            name="%(act_crm_opportunity_crm_phonecall_new)d"
-                            string="Phone Calls"/>
+                        <button string="Schedule/Log Call" 
+                                name="%(opportunity2phonecall_act)d"
+                                type="action"/>
                     </div>
                     <div class="oe_title">
                         <label for="name" class="oe_edit_only"/>

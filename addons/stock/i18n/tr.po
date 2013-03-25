@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2013-03-07 08:37+0000\n"
-"PO-Revision-Date: 2013-02-16 19:59+0000\n"
-"Last-Translator: Ayhan KIZILTAN <Unknown>\n"
+"PO-Revision-Date: 2013-03-21 15:53+0000\n"
+"Last-Translator: Ediz Duman <neps1192@gmail.com>\n"
 "Language-Team: Turkish <tr@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-03-08 06:04+0000\n"
-"X-Generator: Launchpad (build 16523)\n"
+"X-Launchpad-Export-Date: 2013-03-22 05:35+0000\n"
+"X-Generator: Launchpad (build 16532)\n"
 
 #. module: stock
 #: field:stock.inventory.line.split,line_exist_ids:0
@@ -33,6 +33,9 @@ msgid ""
 "Shirts, for the same \"Linux T-Shirt\", you may have variants on  sizes or "
 "colors; S, M, L, XL, XXL."
 msgstr ""
+"Her üründe birçok değişkenin yönetilmesini sağlar, T-Shirt satıyorsanız, "
+"aynı \"Linux T-Shirt\"leri için ölçü ve renklerde değişkeleriniz olabilir: "
+"S, M, L, XL, XXL."
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_move_split_lines
@@ -166,7 +169,7 @@ msgstr "Seçim listesi"
 #. module: stock
 #: view:stock.inventory:0
 msgid "e.g. Annual inventory"
-msgstr ""
+msgstr "Yıllık Sayım"
 
 #. module: stock
 #: report:lot.stock.overview:0
@@ -261,7 +264,7 @@ msgstr "Atanmış Teslimat Sipariş"
 #: code:addons/stock/wizard/stock_change_standard_price.py:107
 #, python-format
 msgid "Active ID is not set in Context."
-msgstr ""
+msgstr "Etkin ID İçerikte yoktur."
 
 #. module: stock
 #: selection:stock.picking,invoice_state:0
@@ -566,6 +569,8 @@ msgid ""
 "the delivery of the finished products. It's the time you promise to your "
 "customers."
 msgstr ""
+"Müşteri siparişinin onaylanmasıyla biten ürünün teslimat arasında geçen gün "
+"sayısı. Bu müşterilerine söz verdiğiniz süredir."
 
 #. module: stock
 #: code:addons/stock/product.py:196
@@ -591,6 +596,8 @@ msgid ""
 "Quantities, Units of Measure, Products and Locations cannot be modified on "
 "stock moves that have already been processed (except by the Administrator)."
 msgstr ""
+"Miktarları, Ölçü Birimleri, Ürünler ve Konumlar önceden işlenmiş stoku "
+"hareketlerinde değiştirilemez (Yönetici hariç)"
 
 #. module: stock
 #: help:report.stock.move,type:0
@@ -614,6 +621,14 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Bir içi hareket isteği oluşturmak için tıklayın. \n"
+"              </p><p>\n"
+"                Çoğu işlemler öntanımlı lojistik kurallarınıza göre\n"
+"                OpenERP tarafından kendiliğinden hazırlanır, ancak\n"
+"                elle stok hareketi kayıtları da oluşturabilirsiniz.\n"
+"              </p>\n"
+"            "
 
 #. module: stock
 #: model:ir.actions.report.xml,name:stock.report_move_labels
@@ -624,7 +639,7 @@ msgstr "Öğe Etiketleri"
 #: code:addons/stock/stock.py:1356
 #, python-format
 msgid "Back order <em>%s</em> has been <b>created</b>."
-msgstr ""
+msgstr "Sipariş bakiyesi <em>%s</em>  <b>oluşturulmuştur</b>."
 
 #. module: stock
 #: model:ir.model,name:stock.model_report_stock_move
@@ -649,6 +664,8 @@ msgid ""
 "Forces to specify a Serial Number for all moves containing this product and "
 "going to a Customer Location"
 msgstr ""
+"Bu ürünü içeren ve Müşteri Konumuna giden tüm hareketler için bir Seri "
+"Numarası belirlenmesine zorlar"
 
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_stock_products_moves
@@ -696,6 +713,7 @@ msgstr "Kabul Makbuzu"
 msgid ""
 "Serial number quantity %d of %s is larger than available quantity (%d)!"
 msgstr ""
+"Seri numarası miktarı %d (%s deki)  miktarı mevcut miktardan fazladır (%d)!"
 
 #. module: stock
 #: report:stock.picking.list:0
@@ -833,6 +851,8 @@ msgid ""
 "Forces to specify a Serial Number for all moves containing this product and "
 "coming from a Supplier Location"
 msgstr ""
+"Bu ürünü içeren ve Müşteri Konumundan gelentüm hareketler için bir Seri "
+"Numarası belirlenmesine zorlar"
 
 #. module: stock
 #: help:stock.config.settings,group_uos:0
@@ -842,6 +862,10 @@ msgid ""
 "                For instance, you can sell pieces of meat that you invoice "
 "based on their weight."
 msgstr ""
+"Bir ürünün birimiyle satış yapmanıza izin verir, ancak fatura farklı bir "
+"ölçü birimine göredir.\n"
+"                Örneğin, parça olarak et satabilirsiniz ama faturaları "
+"ağırlıklarına göre kesersiniz."
 
 #. module: stock
 #: field:product.template,property_stock_procurement:0
@@ -851,7 +875,7 @@ msgstr "Tedarik Lokasyonu"
 #. module: stock
 #: view:stock.picking:0
 msgid "e.g. PO0032"
-msgstr ""
+msgstr "e.g. PO0032"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_location_tree
@@ -1311,7 +1335,7 @@ msgstr "Dahili Sevkiyat :"
 #. module: stock
 #: view:stock.inventory.line:0
 msgid "Split Inventory Line"
-msgstr ""
+msgstr "Envanter Satırını Böl"
 
 #. module: stock
 #: selection:stock.location,chained_auto_packing:0
@@ -1427,7 +1451,7 @@ msgstr "Toplam miktar"
 #: field:stock.picking.in,min_date:0
 #: field:stock.picking.out,min_date:0
 msgid "Scheduled Time"
-msgstr "Zamanlama zaman"
+msgstr "Planlanmış Zaman"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.move_consume
@@ -1551,7 +1575,7 @@ msgstr ""
 #. module: stock
 #: view:stock.inventory:0
 msgid "Split in serial numbers"
-msgstr ""
+msgstr "Seri numaralarını böl"
 
 #. module: stock
 #: view:stock.move:0
@@ -1583,7 +1607,7 @@ msgstr "Ek Bilgisi"
 #: code:addons/stock/stock.py:2648
 #, python-format
 msgid "Missing partial picking data for move #%s."
-msgstr ""
+msgstr "Hareket #%s için kısmi toplama verisi eksik."
 
 #. module: stock
 #: field:stock.location.product,from_date:0
@@ -1742,6 +1766,17 @@ msgid ""
 "Thank you in advance for your cooperation.\n"
 "Best Regards,"
 msgstr ""
+"Sayın Yetkili,\n"
+"\n"
+"Kayıtlarımıza göre hesabınızda halen yapılmamış ödemeler bulunmaktadır. "
+"Lütfen aşağıdaki ayrıntıları inceleyin.\n"
+"Eğer ödeme yaptıysanız, lütfen bu yazımızı dikkate almayın. Aksi durumda, "
+"lütfen aşağıda belirtilen tutarı tarafımıza ödeyin.\n"
+"Hesabınızla ilgili herhangi bir sorunuz olursa, lütfen bize danışın.\n"
+"\n"
+"İşbirliğiniz için şimdiden teşekkür ederiz.\n"
+"\n"
+"Saygılarımızla,"
 
 #. module: stock
 #: help:stock.incoterms,active:0
@@ -1800,12 +1835,12 @@ msgstr "Sevkiyatta Stok Faturalandırma"
 #: code:addons/stock/stock.py:2475
 #, python-format
 msgid "Please provide a positive quantity to scrap."
-msgstr ""
+msgstr "hurda için lütfen artı bir miktar belirtin."
 
 #. module: stock
 #: model:stock.location,name:stock.stock_location_shop1
 msgid "Your Company, Birmingham shop"
-msgstr ""
+msgstr "Şirketiniz, Birmingham mağazası"
 
 #. module: stock
 #: view:product.product:0
@@ -1873,7 +1908,7 @@ msgstr "Stok Değerleme Hesabı (Çıkan)"
 #. module: stock
 #: view:stock.return.picking.memory:0
 msgid "Return Picking Memory"
-msgstr ""
+msgstr "Toplama Belleğini Geri Getir"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_move_form2

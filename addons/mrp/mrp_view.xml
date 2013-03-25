@@ -701,11 +701,6 @@
                                            <field name="prodlot_id" context="{'product_id': product_id}" groups="stock.group_production_lot"/>
                                            <field name="state" invisible="1"/>
                                            <field name="scrapped" invisible="1"/>
-                                           <button
-                                               name="%(stock.move_scrap)d"
-                                               string="Scrap Products" type="action"
-                                               icon="terp-gtk-jump-to-ltr"
-                                               states="done,cancel"/>
                                        </tree>
                                     </field>
                                 </group>
@@ -724,10 +719,6 @@
                                                 string="Partial"
                                                 type="action" states="confirmed,assigned"
                                                 icon="gtk-justify-fill"/>
-                                            <button name="%(stock.move_scrap)d"
-                                                string="Scrap Products" type="action"
-                                                icon="terp-gtk-jump-to-ltr" context="{'scrap': True}"
-                                                states="draft,waiting,confirmed,assigned"/>
                                         </tree>
                                     </field>
                                 </group>
