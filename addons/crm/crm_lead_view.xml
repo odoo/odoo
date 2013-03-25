@@ -334,7 +334,7 @@
                     <separator/>
                     <filter string="Open" name="open" domain="[('state','!=','cancel')]" help="Open Leads"/>
                     <filter string="Dead" name="dead" domain="[('state','=','cancel')]"/>
-                    <filter string="Unassigned" domain="[('user_id','=', False)]" help="No salesperson"/>
+                    <filter string="Unassigned" name="unassigned" domain="[('user_id','=', False)]" help="No salesperson"/>
                     <filter string="Unread Messages" name="message_unread" domain="[('message_unread','=',True)]" help="Unread messages"/>
                     <filter string="Assigned to Me"
                             domain="[('user_id','=',uid)]" context="{'invisible_section': False}"
@@ -552,7 +552,7 @@
                     <filter string="In Progress" name="open" domain="[('state','=','open')]" help="Open Opportunities"/>
                     <filter string="Won" name="won" domain="[('state','=','done')]"/>
                     <filter string="Lost" name="lost" domain="[('state','=','cancel')]"/>
-                    <filter string="Unassigned" domain="[('user_id','=', False)]" help="No salesperson"/>
+                    <filter string="Unassigned" name="unassigned" domain="[('user_id','=', False)]" help="No salesperson"/>
                     <filter string="Unread Messages" name="message_unread" domain="[('message_unread','=',True)]" help="Unread messages"/>
                     <filter string="Assigned to Me"
                             domain="[('user_id','=',uid)]" context="{'invisible_section': False}"
