@@ -523,6 +523,17 @@ class pos_order(osv.osv):
             wf_service.trg_validate(uid, 'pos.order', order_id, 'paid', cr)
         return order_ids
 
+    def write(self, cr, uid, ids, vals, context=None):
+        #If you change the partner of the PoS order, change also the partner of the associated bank statements
+        res = super(pos_order, self).write(cr, uid, ids, vals, context=context)
+        bsl_obj = self.pool.get("account.bank.statement.line")
+        if 'partner_id' in vals:
+            for posorder in self.browse(cr, uid, ids, context=context):
+                bsl_ids = [x.id for x in posorder.statement_ids]
+                part_id = self.pool.get('res.partner')._find_accounting_partner(posorder.partner_id).id
+                bsl_obj.write(cr, uid, bsl_ids, {'partner_id': part_id}, context=context)
+        return res
+
     def unlink(self, cr, uid, ids, context=None):
         for rec in self.browse(cr, uid, ids, context=context):
             if rec.state not in ('draft','cancel'):
