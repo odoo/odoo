@@ -647,6 +647,7 @@ class module(osv.osv):
             terp = self.get_module_info(mod.name)
             self.write(cr, uid, mod.id, self.get_values_from_terp(terp))
             cr.execute('DELETE FROM ir_module_module_dependency WHERE module_id = %s', (mod.id,))
+            self.invalidate_cache(['dependencies_id'], [mod.id])
             self._update_dependencies(cr, uid, mod, terp.get('depends', []))
             self._update_category(cr, uid, mod, terp.get('category', 'Uncategorized'))
             # Import module
@@ -739,6 +740,7 @@ class module(osv.osv):
             cr.execute('INSERT INTO ir_module_module_dependency (module_id, name) values (%s, %s)', (mod_browse.id, dep))
         for dep in (existing - needed):
             cr.execute('DELETE FROM ir_module_module_dependency WHERE module_id = %s and name = %s', (mod_browse.id, dep))
+        self.invalidate_cache(['dependencies_id'], [mod_browse.id])
 
     def _update_category(self, cr, uid, mod_browse, category='Uncategorized'):
         current_category = mod_browse.category_id

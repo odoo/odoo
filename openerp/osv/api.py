@@ -126,7 +126,7 @@ class ScopeProxy(object):
         """ Invalidate the record cache in all scopes.
             See :meth:`openerp.osv.orm.RecordCache.invalidate` for the parameter `spec`.
         """
-        for s in _local.scope_list:
+        for s in getattr(_local, 'scope_list', ()):
             s.cache.invalidate(spec)
 
 scope = ScopeProxy()

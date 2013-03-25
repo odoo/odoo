@@ -33,8 +33,9 @@ class res_request(osv.osv):
     _name = 'res.request'
 
     def request_send(self, cr, uid, ids, *args):
+        cr.execute('update res_request set state=%s,date_sent=%s where id in %s', ('waiting', time.strftime('%Y-%m-%d %H:%M:%S'), tuple(ids)))
+        self.invalidate_cache(['state', 'date_sent'], ids)
         for id in ids:
-            cr.execute('update res_request set state=%s,date_sent=%s where id=%s', ('waiting', time.strftime('%Y-%m-%d %H:%M:%S'), id))
             cr.execute('select act_from,act_to,body,date_sent from res_request where id=%s', (id,))
             values = cr.dictfetchone()
             if values['body'] and (len(values['body']) > 128):
@@ -46,8 +47,8 @@ class res_request(osv.osv):
         return True
 
     def request_reply(self, cr, uid, ids, *args):
-        for id in ids:
-            cr.execute("update res_request set state='active', act_from=%s, act_to=act_from, trigger_date=NULL, body='' where id=%s", (uid,id))
+        cr.execute("update res_request set state='active', act_from=%s, act_to=act_from, trigger_date=NULL, body='' where id in %s", (uid, tuple(ids)))
+        self.invalidate_cache(['state', 'act_from', 'act_to', 'trigger_date', 'body'], ids)
         return True
 
     def request_close(self, cr, uid, ids, *args):

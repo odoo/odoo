@@ -170,6 +170,7 @@ class ir_cron(osv.osv):
                 addsql = ', active=False'
             cron_cr.execute("UPDATE ir_cron SET nextcall=%s, numbercall=%s"+addsql+" WHERE id=%s",
                        (nextcall.strftime(DEFAULT_SERVER_DATETIME_FORMAT), numbercall, job['id']))
+            self.invalidate_cache(['nextcall', 'numbercall', 'active'], [job['id']])
 
         finally:
             cr.commit()

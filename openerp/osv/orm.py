@@ -715,6 +715,7 @@ class BaseModel(object):
                                 vals['select_level'], bool(vals['readonly']), bool(vals['required']), bool(vals['selectable']), vals['relation_field'], bool(vals['translate']), vals['serialization_field_id'], vals['model'], vals['name']
                             ))
                         break
+        self.invalidate_cache()
         cr.commit()
 
     #
@@ -2685,6 +2686,7 @@ class BaseModel(object):
         cr.execute(query)
         for (root,) in cr.fetchall():
             pos = browse_rec(root, pos)
+        self.invalidate_cache(['parent_left', 'parent_right'])
         return True
 
     def _update_store(self, cr, f, k):
@@ -2790,6 +2792,7 @@ class BaseModel(object):
                     (SELECT id FROM ir_module_module WHERE name=%s),
                     (SELECT id FROM ir_model WHERE model=%s))""",
                        (relation_table, self._module, self._name))
+            api.scope.invalidate_cache()
 
     # checked version: for direct m2o starting from `self`
     def _m2o_add_foreign_key_checked(self, source_field, dest_model, ondelete):
@@ -3832,6 +3835,7 @@ class BaseModel(object):
         from openerp import workflow
         for res_id in ids:
             workflow.trg_create(uid, self._name, res_id, cr)
+        # self.invalidate_cache() ?
         return True
 
     def delete_workflow(self, cr, uid, ids, context=None):
@@ -3839,6 +3843,7 @@ class BaseModel(object):
         from openerp import workflow
         for res_id in ids:
             workflow.trg_delete(uid, self._name, res_id, cr)
+        self.invalidate_cache()
         return True
 
     def step_workflow(self, cr, uid, ids, context=None):
@@ -3846,6 +3851,7 @@ class BaseModel(object):
         from openerp import workflow
         for res_id in ids:
             workflow.trg_write(uid, self._name, res_id, cr)
+        # self.invalidate_cache() ?
         return True
 
     def signal_workflow(self, cr, uid, ids, signal, context=None):
@@ -3854,6 +3860,7 @@ class BaseModel(object):
         result = {}
         for res_id in ids:
             result[res_id] = workflow.trg_validate(uid, self._name, res_id, signal, cr)
+        # self.invalidate_cache() ?
         return result
 
     def redirect_workflow(self, cr, uid, old_new_ids, context=None):
@@ -3863,6 +3870,7 @@ class BaseModel(object):
         from openerp import workflow
         for old_id, new_id in old_new_ids:
             workflow.trg_redirect(uid, self._name, old_id, new_id, cr)
+        self.invalidate_cache()
         return True
 
     def unlink(self, cr, uid, ids, context=None):
@@ -3930,7 +3938,7 @@ class BaseModel(object):
                 ir_values_obj.unlink(cr, uid, ir_value_ids, context=context)
 
         # invalidate the cache
-        self.invalidate_cache()
+        self.invalidate_cache(None, ids)
 
         for order, object, store_ids, fields in result_store:
             if object != self._name:
@@ -4105,6 +4113,7 @@ class BaseModel(object):
                             self.write(cr, user, ids, {f: vals[f]})
                         self.pool.get('ir.translation')._set_ids(cr, user, self._name+','+f, 'model', context['lang'], ids, vals[f], src_trans)
 
+        self.invalidate_cache(direct, ids)
 
         # call the 'set' method of fields which are not classic_write
         upd_todo.sort(lambda x, y: self._columns[x].priority-self._columns[y].priority)
@@ -4118,6 +4127,8 @@ class BaseModel(object):
         for field in upd_todo:
             for id in ids:
                 result += self._columns[field].set(cr, self, id, field, vals[field], user, context=rel_context) or []
+
+        self.invalidate_cache(upd_todo, ids)
 
         unknown_fields = updend[:]
         for table in self._inherits:
@@ -4135,6 +4146,8 @@ class BaseModel(object):
                     unknown_fields.remove(val)
             if v:
                 self.pool.get(table).write(cr, user, nids, v, context)
+
+        self.invalidate_cache(vals.keys(), ids)
 
         if unknown_fields:
             _logger.warning(
@@ -4195,12 +4208,10 @@ class BaseModel(object):
                         cr.execute('update '+self._table+' set parent_left=parent_left+%s where parent_left>=%s', (distance, position))
                         cr.execute('update '+self._table+' set parent_right=parent_right+%s where parent_right>=%s', (distance, position))
                         cr.execute('update '+self._table+' set parent_left=parent_left-%s, parent_right=parent_right-%s where parent_left>=%s and parent_left<%s', (pleft-position+distance, pleft-position+distance, pleft+distance, pright+distance))
+                    self.invalidate_cache(['parent_left', 'parent_right'])
 
         result += self._store_get_values(cr, user, ids, vals.keys(), context)
         result.sort()
-
-        # invalidate the cache for the modified fields
-        self.invalidate_cache(vals.keys(), ids)
 
         done = {}
         for order, model_name, ids_to_update, fields_to_recompute in result:
@@ -4381,6 +4392,8 @@ class BaseModel(object):
         self.check_access_rule(cr, user, [id_new], 'create', context=context)
         upd_todo.sort(lambda x, y: self._columns[x].priority-self._columns[y].priority)
 
+        self.invalidate_cache(vals.keys(), [id_new])
+
         if self._parent_store and not context.get('defer_parent_store_computation'):
             if self.pool._init:
                 self.pool._init_parent[self._name] = True
@@ -4404,15 +4417,13 @@ class BaseModel(object):
                 cr.execute('update '+self._table+' set parent_left=parent_left+2 where parent_left>%s', (pleft,))
                 cr.execute('update '+self._table+' set parent_right=parent_right+2 where parent_right>%s', (pleft,))
                 cr.execute('update '+self._table+' set parent_left=%s,parent_right=%s where id=%s', (pleft+1, pleft+2, id_new))
+                self.invalidate_cache(['parent_left', 'parent_right'])
 
         # default element in context must be remove when call a one2many or many2many
         rel_context = context.copy()
         for c in context.items():
             if c[0].startswith('default_'):
                 del rel_context[c[0]]
-
-        # invalidate the cache for the modified fields
-        self.invalidate_cache(vals.keys(), [id_new])
 
         result = []
         for field in upd_todo:
@@ -5545,23 +5556,16 @@ class BaseModel(object):
             api.scope.invalidate_cache()
             return
 
-        if ids is not None:
-            spec = [(self._name, fields, ids)]
-        else:
-            spec = []
-
         # group fields by model
-        model_fields = defaultdict(list)
+        model_fields = defaultdict(set)
         for field in fields:
             cinfo = self._all_columns[field]
-            equivalents = cinfo.equivalents
-            if spec:
-                # (self._name, field) already in spec
-                equivalents = equivalents - set([(self._name, field)])
+            equivalents = cinfo.equivalents - set([(self._name, field)])
             for m, f in itertools.chain(equivalents, cinfo.inverses):
-                model_fields[m].append(f)
+                model_fields[m].add(f)
 
         # add them all in spec
+        spec = [(self._name, fields, ids)]
         for m in model_fields:
             spec.append((m, model_fields[m], None))
 

@@ -1000,11 +1000,12 @@ class ir_model_data(osv.osv):
 
         cr.execute('select * from ir_values where model=%s and key=%s and name=%s'+where,(model, key, name))
         res = cr.fetchone()
+        ir_values_obj = pooler.get_pool(cr.dbname).get('ir.values')
         if not res:
-            ir_values_obj = pooler.get_pool(cr.dbname).get('ir.values')
             ir_values_obj.set(cr, uid, key, key2, name, models, value, replace, isobject, meta)
         elif xml_id:
             cr.execute('UPDATE ir_values set value=%s WHERE model=%s and key=%s and name=%s'+where,(value, model, key, name))
+            ir_values_obj.invalidate_cache(['value'])
         return True
 
     def _module_data_uninstall(self, cr, uid, modules_to_remove, context=None):
@@ -1046,6 +1047,7 @@ class ir_model_data(osv.osv):
                 cr.execute('select res_type,res_id from wkf_instance where id IN (select inst_id from wkf_workitem where act_id=%s)', (res_id,))
                 wkf_todo.extend(cr.fetchall())
                 cr.execute("update wkf_transition set condition='True', group_id=NULL, signal=NULL,act_to=act_from,act_from=%s where act_to=%s", (res_id,res_id))
+                self.pool.get('workflow.transition').invalidate_cache()
 
         wf_service = netsvc.LocalService("workflow")
         for model,res_id in wkf_todo:

@@ -186,6 +186,7 @@ def load_module_graph(cr, graph, status=None, perform_checks=True, skip_modules=
                 load_demo_xml(module_name, idref, mode)
                 load_demo(module_name, idref, mode)
                 cr.execute('update ir_module_module set demo=%s where id=%s', (True, module_id))
+                modobj.invalidate_cache(['demo'], [module_id])
 
                 # launch tests only in demo mode, as most tests will depend
                 # on demo data. Other tests can be added into the regular
@@ -319,6 +320,7 @@ def load_modules(db, force_demo=False, status=None, update_module=False):
                     modobj.button_upgrade(cr, SUPERUSER_ID, ids)
 
             cr.execute("update ir_module_module set state=%s where name=%s", ('installed', 'base'))
+            modobj.invalidate_cache(['state'])
 
 
         # STEP 3: Load marked modules (skipping base which was done in STEP 1)
