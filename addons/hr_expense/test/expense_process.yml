@@ -36,9 +36,7 @@
   I print a report of the expenses.
 - 
   !python {model: hr.expense.expense}: |
-    import os
-    import openerp.report
-    from openerp import tools
-    data, format = openerp.report.render_report(cr, uid, [ref('hr_expense.sep_expenses')], 'hr.expense', {}, {})
-    if tools.config['test_report_directory']:
-        file(os.path.join(tools.config['test_report_directory'], 'hr_expense-report.'+format), 'wb+').write(data)
+    data, format = self.print_report(cr, uid, [ref('hr_expense.sep_expenses')], 'hr.expense', {}, {})
+    if openerp.tools.config['test_report_directory']:
+        import os
+        file(os.path.join(openerp.tools.config['test_report_directory'], 'hr_expense-report.'+format), 'wb+').write(data)
