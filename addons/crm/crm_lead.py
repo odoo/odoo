@@ -88,7 +88,7 @@ class crm_lead(base_stage, format_address, osv.osv):
         if context.get('default_type', None) == 'lead':
             context['empty_list_help_model'] = 'crm.case.section'
             context['empty_list_help_id'] = context.get('default_section_id', None)
-            context['empty_list_help_document_name'] = _("leads")
+        context['empty_list_help_document_name'] = _("leads")
         return super(crm_lead, self).get_empty_list_help(cr, uid, help, context=context)
 
     def onchange_user_id(self, cr, uid, ids, section_id, user_id, context=None):

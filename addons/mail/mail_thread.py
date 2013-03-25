@@ -90,8 +90,8 @@ class mail_thread(osv.AbstractModel):
     _track = {}
 
     def get_empty_list_help(self, cr, uid, help, context=None):
-        if not context.get('empty_list_help_model', None):
-            if context.get('empty_list_help_id', None):
+        if context.get('empty_list_help_model'):
+            if context.get('empty_list_help_id'):
                 object_id = self.pool.get(context.get('empty_list_help_model')).browse(cr, uid, context.get('empty_list_help_id'), context=context)
                 alias = object_id.alias_id and object_id.alias_id.name_get() or False
                 if alias and alias[0] and alias[0][1]:
