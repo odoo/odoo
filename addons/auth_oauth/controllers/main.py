@@ -64,8 +64,13 @@ class OAuthController(oeweb.Controller):
                 u = registry.get('res.users')
                 credentials = u.auth_oauth(cr, SUPERUSER_ID, provider, kw, context=context)
                 cr.commit()
-                action = state.get('a', None)
-                url = '/#action=' + action if action else '/'
+                action = state.get('a')
+                menu = state.get('m')
+                url = '/'
+                if action:
+                    url = '/#action=%s' % action
+                elif menu:
+                    url = '/#menu_id=%s' % menu
                 return login_and_redirect(req, *credentials, redirect_url=url)
             except AttributeError:
                 # auth_signup is not installed

@@ -89,7 +89,7 @@ class pos_config(osv.osv):
             'sequence_id' : False,
         }
         d.update(default)
-        return super(pos_order, self).copy(cr, uid, id, d, context=context)
+        return super(pos_config, self).copy(cr, uid, id, d, context=context)
 
 
     def name_get(self, cr, uid, ids, context=None):
