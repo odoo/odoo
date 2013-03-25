@@ -95,16 +95,15 @@ class sale_order_line_make_invoice(osv.osv_memory):
             res = make_invoice(order, il)
             cr.execute('INSERT INTO sale_order_invoice_rel \
                     (order_id,invoice_id) values (%s,%s)', (order.id, res))
-
             flag = True
-            data_sale = sales_order_obj.browse(cr, uid, line.order_id.id, context=context)
+            data_sale = sales_order_obj.browse(cr, uid, order.id, context=context)
             for line in data_sale.order_line:
                 if not line.invoiced:
                     flag = False
                     break
             if flag:
-                wf_service.trg_validate(uid, 'sale.order', line.order_id.id, 'manual_invoice', cr)
-                sales_order_obj.write(cr, uid, [line.order_id.id], {'state': 'progress'})
+                wf_service.trg_validate(uid, 'sale.order', order.id, 'manual_invoice', cr)
+                sales_order_obj.write(cr, uid, [order.id], {'state': 'done'})
 
         if not invoices:
             raise osv.except_osv(_('Warning!'), _('Invoice cannot be created for this Sales Order Line due to one of the following reasons:\n1.The state of this sales order line is either "draft" or "cancel"!\n2.The Sales Order Line is Invoiced!'))
