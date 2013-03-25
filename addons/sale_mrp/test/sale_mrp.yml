@@ -92,11 +92,10 @@
   I verify that a procurement has been generated for sale order
 -
   !python {model: procurement.order}: |
-    from openerp.tools.translate import _
     sale_order_obj = self.pool.get('sale.order')
     so = sale_order_obj.browse(cr, uid, ref("sale_order_so0"))
     proc_ids = self.search(cr, uid, [('origin','=',so.name)])
-    assert proc_ids, _('No Procurements!')
+    assert proc_ids, 'No Procurements!'
 -
   Then I click on the "Run Procurement" button
 -
@@ -112,7 +111,7 @@
     sale_order_obj = self.pool.get('sale.order')
     so = sale_order_obj.browse(cr, uid, ref("sale_order_so0"))
     proc_ids = self.search(cr, uid, [('origin','=',so.name) and ('state','=','running')])
-    assert proc_ids, _('Procurement is not in the running state!')
+    assert proc_ids, 'Procurement is not in the running state!'
 -
   I verify that a manufacturing order has been generated, and that its name and reference are correct
 -
@@ -120,7 +119,7 @@
     mnf_obj = self.pool.get('mrp.production')
     so = self.browse(cr, uid, ref("sale_order_so0"))
     mnf_id = mnf_obj.search(cr, uid, [('origin','=',so.name)])
-    assert mnf_id, _('Manufacturing order has not been generated')
+    assert mnf_id, 'Manufacturing order has not been generated'
     mo = mnf_obj.browse(cr, uid, mnf_id)[0]
     assert mo.sale_name == so.name, 'Wrong Name for the Manufacturing Order. Expected %s, Got %s' % (so.name, mo.name)
     assert mo.sale_ref == so.client_order_ref, 'Wrong Sale Reference for the Manufacturing Order'

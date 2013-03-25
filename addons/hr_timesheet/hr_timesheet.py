@@ -74,8 +74,9 @@ class hr_analytic_timesheet(osv.osv):
         toremove = {}
         for obj in self.browse(cr, uid, ids, context=context):
             toremove[obj.line_id.id] = True
+        super(hr_analytic_timesheet, self).unlink(cr, uid, ids, context=context)
         self.pool.get('account.analytic.line').unlink(cr, uid, toremove.keys(), context=context)
-        return super(hr_analytic_timesheet, self).unlink(cr, uid, ids, context=context)
+        return True
 
 
     def on_change_unit_amount(self, cr, uid, id, prod_id, unit_amount, company_id, unit=False, journal_id=False, context=None):
