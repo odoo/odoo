@@ -65,6 +65,10 @@ class project_issue(base_stage, osv.osv):
     def create(self, cr, uid, vals, context=None):
         if context is None:
             context = {}
+        if vals.get('use_issues') and not vals.get('use_tasks'):
+            vals['alias_model'] = 'project.issue'
+        elif not vals.get('use_issues') and vals.get('use_tasks'):
+            vals['alias_model'] = 'project.task'
         if not vals.get('stage_id'):
             ctx = context.copy()
             if vals.get('project_id'):
