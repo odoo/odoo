@@ -43,8 +43,12 @@ openerp.portal_anonymous = function(instance) {
     instance.web.Login.include({
         start: function() {
             var self = this;
+            var anonymous_mode = (!self.session.session_is_valid() && !(self.params.token || self.params.login));
+            if (anonymous_mode) {
+                self.$el.hide();
+            }
             return $.when(this._super()).then(function() {
-                if (!self.session.session_is_valid() && !(self.params.token || self.params.login)) {
+                if (anonymous_mode) {
                     self.remember_credentials = false;
                     // XXX get login/pass from server (via a rpc call) ?
                     return self.do_login(self.selected_db, 'anonymous', 'anonymous');

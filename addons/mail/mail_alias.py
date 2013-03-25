@@ -186,10 +186,13 @@ class mail_alias(osv.Model):
     def create_unique_alias(self, cr, uid, vals, model_name=None, context=None):
         """Creates an email.alias record according to the values provided in ``vals``,
         with 2 alterations: the ``alias_name`` value may be suffixed in order to
-        make it unique, and the ``alias_model_id`` value will set to the
-        model ID of the ``model_name`` value, if provided, 
+        make it unique (and certain unsafe characters replaced), and 
+        he ``alias_model_id`` value will set to the model ID of the ``model_name``
+        value, if provided, 
         """
-        alias_name = re.sub(r'[^\w+]', '-', remove_accents(vals['alias_name'])).lower()
+        # when an alias name appears to already be an email, we keep the local part only
+        alias_name = remove_accents(vals['alias_name']).lower().split('@')[0]
+        alias_name = re.sub(r'[^\w+.]+', '-', alias_name)
         alias_name = self._find_unique(cr, uid, alias_name, context=context)
         vals['alias_name'] = alias_name
         if model_name:

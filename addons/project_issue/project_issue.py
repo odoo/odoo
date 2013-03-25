@@ -392,10 +392,18 @@ class project_issue(base_stage, osv.osv):
                 context=context)
 
     def write(self, cr, uid, ids, vals, context=None):
-        #Update last action date every time the user change the stage, the state or send a new email
-        logged_fields = ['stage_id', 'state', 'message_ids']
-        if any([field in vals for field in logged_fields]):
-            vals['date_action_last'] = time.strftime('%Y-%m-%d %H:%M:%S')
+    
+        #Update last action date every time the user changes the stage
+        if 'stage_id' in vals:
+            vals['date_action_last'] = time.strftime(tools.DEFAULT_SERVER_DATETIME_FORMAT)
+            state = self.pool.get('project.task.type').browse(cr, uid, vals['stage_id'], context=context).state
+            for issue in self.browse(cr, uid, ids, context=context):
+                # Change from draft to not draft EXCEPT cancelled: The issue has been opened -> set the opening date
+                if issue.state == 'draft' and state not in ('draft', 'cancelled'):
+                    vals['date_open'] = time.strftime(tools.DEFAULT_SERVER_DATETIME_FORMAT)
+                # Change from not done to done: The issue has been closed -> set the closing date
+                if issue.state != 'done' and state == 'done':
+                    vals['date_closed'] = time.strftime(tools.DEFAULT_SERVER_DATETIME_FORMAT)
 
         return super(project_issue, self).write(cr, uid, ids, vals, context)
 
@@ -545,6 +553,19 @@ class project_issue(base_stage, osv.osv):
 
         return super(project_issue, self).message_update(cr, uid, ids, msg, update_vals=update_vals, context=context)
 
+    def message_post(self, cr, uid, thread_id, body='', subject=None, type='notification', subtype=None, parent_id=False, attachments=None, context=None, content_subtype='html', **kwargs):
+        """ Overrides mail_thread message_post so that we can set the date of last action field when
+            a new message is posted on the issue.
+        """
+        if context is None:
+            context = {}
+        
+        res = super(project_issue, self).message_post(cr, uid, thread_id, body=body, subject=subject, type=type, subtype=subtype, parent_id=parent_id, attachments=attachments, context=context, content_subtype=content_subtype, **kwargs)
+        
+        if thread_id:
+            self.write(cr, uid, thread_id, {'date_action_last': time.strftime(tools.DEFAULT_SERVER_DATETIME_FORMAT)}, context=context)    
+        
+        return res   
 
 class project(osv.osv):
     _inherit = "project.project"
