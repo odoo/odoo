@@ -252,7 +252,7 @@ class sale_order(osv.osv):
         'company_id': fields.related('shop_id','company_id',type='many2one',relation='res.company',string='Company',store=True,readonly=True)
     }
     _defaults = {
-        'date_order': fields.date.context_today,
+        'date_order': lambda *args: datetime.now().strftime(DEFAULT_SERVER_DATE_FORMAT),
         'order_policy': 'manual',
         'state': 'draft',
         'user_id': lambda obj, cr, uid, context: uid,

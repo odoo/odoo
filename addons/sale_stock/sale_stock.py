@@ -20,7 +20,7 @@
 #
 ##############################################################################
 from datetime import datetime, timedelta
-from openerp.tools import DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT, DATETIME_FORMATS_MAP, float_compare
+from openerp.tools import DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT, DATETIME_FORMATS_MAP, float_compare, DEFAULT_SERVER_TIME_FORMAT
 from dateutil.relativedelta import relativedelta
 from openerp.osv import fields, osv
 from openerp import netsvc
@@ -232,6 +232,10 @@ class sale_order(osv.osv):
                     res.append(line.procurement_id.id)
         return res
 
+    def _get_gmtdatetime(self, cr, uid, utcdate, context=None):
+        nowutctime = datetime.utcnow().strftime(DEFAULT_SERVER_TIME_FORMAT)
+        return "%s %s"%(utcdate, nowutctime)
+
     # if mode == 'finished':
     #   returns True if all lines are done, False otherwise
     # if mode == 'canceled':
@@ -314,7 +318,7 @@ class sale_order(osv.osv):
         return {
             'name': pick_name,
             'origin': order.name,
-            'date': order.date_order,
+            'date': self._get_gmtdatetime(cr, uid, order.date_order, context),
             'type': 'out',
             'state': 'auto',
             'move_type': order.picking_policy,
@@ -348,7 +352,8 @@ class sale_order(osv.osv):
         return True
 
     def _get_date_planned(self, cr, uid, order, line, start_date, context=None):
-        date_planned = datetime.strptime(start_date, DEFAULT_SERVER_DATE_FORMAT) + relativedelta(days=line.delay or 0.0)
+        start_date = self._get_gmtdatetime(cr, uid, start_date, context)
+        date_planned = datetime.strptime(start_date, DEFAULT_SERVER_DATETIME_FORMAT) + relativedelta(days=line.delay or 0.0)
         date_planned = (date_planned - timedelta(days=order.company_id.security_lead)).strftime(DEFAULT_SERVER_DATETIME_FORMAT)
         return date_planned
 
