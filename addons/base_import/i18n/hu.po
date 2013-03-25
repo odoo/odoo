@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2013-03-07 08:37+0000\n"
-"PO-Revision-Date: 2013-03-21 11:13+0000\n"
+"PO-Revision-Date: 2013-03-22 15:04+0000\n"
 "Last-Translator: krnkris <Unknown>\n"
 "Language-Team: Hungarian <hu@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-03-22 05:34+0000\n"
-"X-Generator: Launchpad (build 16532)\n"
+"X-Launchpad-Export-Date: 2013-03-23 11:56+0000\n"
+"X-Generator: Launchpad (build 16540)\n"
 
 #. module: base_import
 #. openerp-web
@@ -537,6 +537,7 @@ msgstr "base_import.tests.models.char"
 #: help:base_import.import,file:0
 msgid "File to check and/or import, raw binary (not base64)"
 msgstr ""
+"Az importálandó és/vagy ellenőrizni kívánt fájl, nyers bináris (nem base64)"
 
 #. module: base_import
 #. openerp-web
@@ -544,6 +545,7 @@ msgstr ""
 #, python-format
 msgid "Purchase orders with their respective purchase order lines"
 msgstr ""
+"Beszerzési megrendelések a hozzájuk tartozó beszerzési megrendelés sorokkal"
 
 #. module: base_import
 #. openerp-web
@@ -555,13 +557,18 @@ msgid ""
 "                field corresponding to the column. This makes imports\n"
 "                simpler especially when the file has many columns."
 msgstr ""
+"Ha a fájl tartalmazza\n"
+"                az oszlop neveket, OpenERP megpróbálhatja automatikusan "
+"észlelni\n"
+"                oszlophoz tartozó mezőt. Ez az importálásokat egyszerűbbé\n"
+"                teszi, főként, ha a fájl tele van oszlopokkal."
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/xml/import.xml:26
 #, python-format
 msgid ".CSV"
-msgstr ""
+msgstr ".CSV"
 
 #. module: base_import
 #. openerp-web
@@ -571,16 +578,18 @@ msgid ""
 ". The issue is\n"
 "            usually an incorrect file encoding."
 msgstr ""
+". A probléma\n"
+"            általában a téves fájl kódolás."
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_tests_models_m2o_required
 msgid "base_import.tests.models.m2o.required"
-msgstr ""
+msgstr "base_import.tests.models.m2o.required"
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_tests_models_char_noreadonly
 msgid "base_import.tests.models.char.noreadonly"
-msgstr ""
+msgstr "base_import.tests.models.char.noreadonly"
 
 #. module: base_import
 #. openerp-web
@@ -597,65 +606,75 @@ msgid ""
 "filter \n"
 "                        settings' > Save)."
 msgstr ""
+"Ha szerkeszti és menti a CSV fájlt a táblázat kezelő \n"
+"                        alkalmazásokban, a számítógépének területi "
+"beállítása lesz \n"
+"                        az elválasztáshoz és a határolójelekhez használva. \n"
+"                        Ajánljuk az OpenOffice vagy LibreOffice Calc \n"
+"                        használatát, mivel ezek lehetővé teszik mindhárom "
+"lehetőség\n"
+"                        módosítását (a 'Mentés másként' beszédpanelen > a\n"
+"                        'Szerkesztési szűrő beállítás' négyzetnek\n"
+"                        a bejelölésével > Mentés)."
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/xml/import.xml:30
 #, python-format
 msgid "CSV File:"
-msgstr ""
+msgstr "CSV Fájl:"
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_tests_models_preview
 msgid "base_import.tests.models.preview"
-msgstr ""
+msgstr "base_import.tests.models.preview"
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_tests_models_char_required
 msgid "base_import.tests.models.char.required"
-msgstr ""
+msgstr "base_import.tests.models.char.required"
 
 #. module: base_import
 #: code:addons/base_import/models.py:112
 #, python-format
 msgid "Database ID"
-msgstr ""
+msgstr "Adatbázis ID azonosító"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/xml/import.xml:313
 #, python-format
 msgid "It will produce the following CSV file:"
-msgstr ""
+msgstr "Ez a következő CSV fájlt fogja létrehozni:"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/xml/import.xml:362
 #, python-format
 msgid "Here is the start of the file we could not import:"
-msgstr ""
+msgstr "Itt van a fájlnak az eleje, melyiket nem tudtuk importálni:"
 
 #. module: base_import
 #: field:base_import.import,file_type:0
 msgid "File Type"
-msgstr ""
+msgstr "Fájl típus"
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_import
 msgid "base_import.import"
-msgstr ""
+msgstr "base_import.import"
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_tests_models_o2m
 msgid "base_import.tests.models.o2m"
-msgstr ""
+msgstr "base_import.tests.models.o2m"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/xml/import.xml:360
 #, python-format
 msgid "Import preview failed due to:"
-msgstr ""
+msgstr "Import előnézet ezért nem sikerült:"
 
 #. module: base_import
 #. openerp-web
@@ -667,18 +686,22 @@ msgid ""
 "\n"
 "                        that imported it)"
 msgstr ""
+"Ország/Külső ID azonosító: ennek a rekordnak az ID azonosítója\n"
+"                        másik alkalmazásban egy hivatkozás (vagy az .XML "
+"fájl \n"
+"                        ami importálta azt)"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/xml/import.xml:35
 #, python-format
 msgid "Reload data to check changes."
-msgstr ""
+msgstr "Adatok újratöltése a változások ellenőrzéséhez."
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_tests_models_char_readonly
 msgid "base_import.tests.models.char.readonly"
-msgstr ""
+msgstr "base_import.tests.models.char.readonly"
 
 #. module: base_import
 #. openerp-web
@@ -695,6 +718,18 @@ msgid ""
 "\n"
 "                        per field you want to import."
 msgstr ""
+"Egyes mezők hivatkozásokat határoznak meg más \n"
+"                        objektummal. Például, egy kapcsolat országa \n"
+"                        csatolva van egy 'Ország' tárgyú rekorddal. Ha ilyen "
+"\n"
+"                        mezőket szeretne importálni, OpenERP újra létre "
+"kell\n"
+"                        hozza a kapcsolatokat a különböző rekordokhoz. \n"
+"                        Ilyen mezők importálásának segítésére, OpenERP három "
+"\n"
+"                        módot biztosít. Kizárólag egy módszert használhat az "
+"\n"
+"                        importálni kívánt mezőnként."
 
 #. module: base_import
 #. openerp-web
@@ -708,19 +743,26 @@ msgid ""
 "                        then you will encode it as follow \"Manufacturer,\n"
 "                        Retailer\" in the same column of your CSV file."
 msgstr ""
+"A címkéket vesszővel kell elválasztani egyéb szóköz használata \n"
+"                        nélkül. Például, ha a vevőjét két címkéhez szeretné "
+"\n"
+"                        társítani, mint 'Gyártó' és 'Kiskereskedő' \n"
+"                        akkor azt a következő képpen kell bevinnie "
+"\"Gyártó,\n"
+"                        Kiskereskedő\" a CVS fájl ugyanazon oszlopába."
 
 #. module: base_import
 #: code:addons/base_import/models.py:264
 #, python-format
 msgid "You must configure at least one field to import"
-msgstr ""
+msgstr "Legalább egy mezőt be kell állítania az importáláshoz"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/xml/import.xml:304
 #, python-format
 msgid "company_2,Organi,True"
-msgstr ""
+msgstr "vállalat_2,Organi,Igaz"
 
 #. module: base_import
 #. openerp-web
@@ -730,18 +772,20 @@ msgid ""
 "The first row of the\n"
 "                file contains the label of the column"
 msgstr ""
+"A fájl első oszlopa\n"
+"                tartalmazza az oszlop elnevezését"
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_tests_models_char_states
 msgid "base_import.tests.models.char.states"
-msgstr ""
+msgstr "base_import.tests.models.char.states"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/xml/import.xml:7
 #, python-format
 msgid "Import a CSV File"
-msgstr ""
+msgstr "Egy CVS fájl importálása"
 
 #. module: base_import
 #. openerp-web
@@ -753,7 +797,7 @@ msgstr ""
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_tests_models_m2o_required_related
 msgid "base_import.tests.models.m2o.required.related"
-msgstr ""
+msgstr "base_import.tests.models.m2o.required.related"
 
 #. module: base_import
 #. openerp-web
@@ -768,21 +812,21 @@ msgstr ""
 #: code:addons/base_import/static/src/xml/import.xml:396
 #, python-format
 msgid "Import"
-msgstr ""
+msgstr "Importálás"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/js/import.js:438
 #, python-format
 msgid "Here are the possible values:"
-msgstr ""
+msgstr "Ezek a lehetséges értékek:"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/xml/import.xml:82
 #, python-format
 msgid "The"
-msgstr ""
+msgstr "A"
 
 #. module: base_import
 #. openerp-web
@@ -792,20 +836,22 @@ msgid ""
 "A single column was found in the file, this often means the file separator "
 "is incorrect"
 msgstr ""
+"Egy oszlop található a fájlban, Ez sokszor azt jelenti, hogy a fájl "
+"elválasztó hibás"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/xml/import.xml:293
 #, python-format
 msgid "dump of such a PostgreSQL database"
-msgstr ""
+msgstr "ilyen jellegű PostgreSQL adatbázis eldobása"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/xml/import.xml:301
 #, python-format
 msgid "This SQL command will create the following CSV file:"
-msgstr ""
+msgstr "Ez az SQL parancs ezt a CSV fájlt fogja létre hozni:"
 
 #. module: base_import
 #. openerp-web
@@ -815,6 +861,9 @@ msgid ""
 "The following CSV file shows how to import purchase \n"
 "                        orders with their respective purchase order lines:"
 msgstr ""
+"A következő CSV fájl megmutatja hogyan importálja a beszerzési \n"
+"                        megrendeléseket a hozzá tartozó beszerzési "
+"megrendelés sorokkal:"
 
 #. module: base_import
 #. openerp-web
@@ -824,6 +873,8 @@ msgid ""
 "What can I do when the Import preview table isn't \n"
 "                        displayed correctly?"
 msgstr ""
+"Mit tehetek, ha a kijelzőn lévő import tábla\n"
+"                        előnézete hibás?"
 
 #. module: base_import
 #: field:base_import.tests.models.char,value:0
@@ -840,21 +891,21 @@ msgstr ""
 #: field:base_import.tests.models.o2m.child,parent_id:0
 #: field:base_import.tests.models.o2m.child,value:0
 msgid "unknown"
-msgstr ""
+msgstr "ismeretlen"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/xml/import.xml:317
 #, python-format
 msgid "person_2,Laurence,False,company_1"
-msgstr ""
+msgstr "személy_2,Laurence,Hamis,vállalat_1"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/xml/import.xml:149
 #, python-format
 msgid "Country/External ID: base.be"
-msgstr ""
+msgstr "Ország/Külső ID azonosító: base.be"
 
 #. module: base_import
 #. openerp-web
@@ -869,27 +920,35 @@ msgid ""
 "                        the company he work for. (If you want to test this \n"
 "                        example, here is a"
 msgstr ""
+"Példának, feltételezzük, hogy van egy SQL adatbázis \n"
+"                        két importálandó táblázattal: vállalatok és \n"
+"                        személyek. Mindegyik személy egy vállalathoz "
+"tartozik, így \n"
+"                        létre kell hozni a kapcsolatot a személyek és a "
+"munkahelyi \n"
+"                        vállalatuk közt. (Ha tesztelni szeretné \n"
+"                        ezt a példát, itt van a"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/js/import.js:427
 #, python-format
 msgid "(%d more)"
-msgstr ""
+msgstr "(%d több)"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/xml/import.xml:227
 #, python-format
 msgid "File for some Quotations"
-msgstr ""
+msgstr "Fájl egy pár kérdésnek"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/js/import.js:72
 #, python-format
 msgid "Encoding:"
-msgstr ""
+msgstr "Kódolás:"
 
 #. module: base_import
 #. openerp-web
@@ -909,6 +968,20 @@ msgid ""
 "\n"
 "                        table. (like 'company_1', 'person_1' instead of '1')"
 msgstr ""
+"Táblák közti relációk összefésülésének kezelése, \n"
+"                        használhatja a \"Külső ID azonosító\" OpenERP "
+"lehetőséget. \n"
+"                        A rekordhoz tartozó \"Külső ID azonosító\" a rekord "
+"egy másik \n"
+"                        alkalmazáson belüli egyedi azonosítója. Ez a \"Külső "
+"ID\n"
+"                        azonosító\" egyedi kell legyen minden rekordban és "
+"az összes \n"
+"                        objektumon, ezért jó gyakorlat  ennek a \"Külső ID "
+"azonosítónak\"\n"
+"                        az alkalmazás vagy tábla előtaggal való "
+"kiegészítése. \n"
+"                        (mint 'vállalat_1', 'személy_1' az '1' helyett)"
 
 #. module: base_import
 #. openerp-web
@@ -919,6 +992,9 @@ msgid ""
 "                        \"External ID\". In PSQL, write the following "
 "command:"
 msgstr ""
+"Először az összes vállalatot és a hozzá tartozó \"Külső ID azonosító\" lesz "
+"\n"
+"                        exportálva. A PSQL-ben, írja a következő parancsot:"
 
 #. module: base_import
 #. openerp-web
@@ -928,13 +1004,15 @@ msgid ""
 "How can I import a one2many relationship (e.g. several \n"
 "                        Order Lines of a Sales Order)?"
 msgstr ""
+"Hogyan tudom importálni a one2many kapcsolatot (pl. egyes \n"
+"                        megrendelés sorokat egy megrendelésből)?"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/js/import.js:404
 #, python-format
 msgid "Everything seems valid."
-msgstr ""
+msgstr "Úgy néz ki mindegyik érvényes."
 
 #. module: base_import
 #. openerp-web
@@ -947,13 +1025,18 @@ msgid ""
 "                        use make use of the external ID for this field \n"
 "                        'Category'."
 msgstr ""
+"Azonban, ha nem szeretné a termék kategóriákat\n"
+"                        beállításait megváltoztatni, azt ajánljuk, hogy "
+"használja \n"
+"                        a külső ID azonosító használatát erre a 'Kategória'\n"
+"                        mezőre."
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/js/import.js:421
 #, python-format
 msgid "at row %d"
-msgstr ""
+msgstr "Ebben a sorban %d"
 
 #. module: base_import
 #. openerp-web
@@ -963,13 +1046,15 @@ msgid ""
 "How can I import a many2many relationship field \n"
 "                        (e.g. a customer that has multiple tags)?"
 msgstr ""
+"Hogyan tudom importálni egy many2many kapcsolati mezőt \n"
+"                        (pl. egy vevő akinek több címkéje van)?"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/xml/import.xml:80
 #, python-format
 msgid "XXX/ID"
-msgstr ""
+msgstr "XXX/ID"
 
 #. module: base_import
 #. openerp-web
@@ -1003,7 +1088,7 @@ msgstr ""
 #: code:addons/base_import/static/src/xml/import.xml:319
 #, python-format
 msgid "person_4,Ramsy,False,company_3"
-msgstr ""
+msgstr "személy_4,Ramsy,Hamis,vállalat_3"
 
 #. module: base_import
 #. openerp-web
@@ -1025,7 +1110,7 @@ msgstr ""
 #: code:addons/base_import/static/src/xml/import.xml:20
 #, python-format
 msgid "Cancel"
-msgstr ""
+msgstr "Megszakítás"
 
 #. module: base_import
 #. openerp-web
@@ -1035,27 +1120,29 @@ msgid ""
 "What happens if I do not provide a value for a \n"
 "                        specific field?"
 msgstr ""
+"Mi történik, ha nem adok meg értéket egy \n"
+"                        bizonyos mezőhöz?"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/xml/import.xml:68
 #, python-format
 msgid "Frequently Asked Questions"
-msgstr ""
+msgstr "Leggyakoribb kérdések"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/xml/import.xml:305
 #, python-format
 msgid "company_3,Boum,True"
-msgstr ""
+msgstr "vállalat_3,Boum,Igaz"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/js/import.js:176
 #, python-format
 msgid "Space"
-msgstr ""
+msgstr "Szóköz"
 
 #. module: base_import
 #. openerp-web
@@ -1079,6 +1166,9 @@ msgid ""
 "                        import an other record that links to the first\n"
 "                        one, use"
 msgstr ""
+"oszlop az OpenERP-ben. Ha\n"
+"                        másik rekordot importál amelyik az elsőre\n"
+"                        hivatkozik, hasznája"
 
 #. module: base_import
 #. openerp-web
@@ -1112,7 +1202,7 @@ msgstr ""
 #: code:addons/base_import/static/src/js/import.js:330
 #, python-format
 msgid "Normal Fields"
-msgstr ""
+msgstr "Normál mezők"
 
 #. module: base_import
 #. openerp-web
