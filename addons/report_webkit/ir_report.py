@@ -50,9 +50,9 @@ class ir_actions_report_xml(orm.Model):
             " is printed on a separate HTML but memory and disk usage are wider.")
     }
 
-    def render_report(self, cr, uid, res_ids, name, data, context=None):
+    def _lookup_report(self, cr, name):
         """
-        Look up a report definition and render the report for the provided IDs.
+        Look up a report definition.
         """
         import operator
         import os
@@ -60,7 +60,7 @@ class ir_actions_report_xml(orm.Model):
 
         # First lookup in the deprecated place, because if the report definition
         # has not been updated, it is more likely the correct definition is there.
-        # Only reports with custom parser sepcified in Python are still there.
+        # Only reports with custom parser specified in Python are still there.
         if 'report.' + name in openerp.report.interface.report_int._reports:
             new_report = openerp.report.interface.report_int._reports['report.' + name]
             if not isinstance(new_report, WebKitParser):
@@ -84,6 +84,6 @@ class ir_actions_report_xml(orm.Model):
         if new_report:
             return new_report
         else:
-            super(ir_actions_report_xml, self).render_report(cr, uid, res_ids, name, data, context)
+            return super(ir_actions_report_xml, self)._lookup_report(cr, name)
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
