@@ -74,6 +74,7 @@
             <field name="model">crm.case.section</field>
             <field name="arch" type="xml">
                 <kanban version="7.0" class="oe_background_grey">
+                    <field name="use_leads"/>
                     <field name="name"/>
                     <field name="user_id"/>
                     <field name="member_ids"/>
@@ -95,11 +96,11 @@
                                 </div>
                                 <div class="oe_kanban_content">
                                     <h4><field name="name"/></h4>
-                                    <div class="oe_alias" t-if="record.alias_id.value">
+                                    <div class="oe_alias" t-if="record.use_leads.raw_value and record.alias_id.value">
                                         <span class="oe_e">%%</span><small><field name="alias_id"/></small>
                                     </div>
                                     <div class="oe_items_list">
-                                        <a name="%(crm_case_form_view_salesteams_lead)d" type="action">
+                                        <a t-if="record.use_leads.raw_value" name="%(crm_case_form_view_salesteams_lead)d" type="action">
                                             <t t-raw="record.open_lead_ids.raw_value.length"/>
                                             <t t-if="record.open_lead_ids.raw_value.length &gt;= 1">Leads</t><t t-if="record.open_lead_ids.raw_value.length &lt; 1">Lead</t></a>
                                         <a name="%(crm_case_form_view_salesteams_opportunity)d" type="action">
@@ -147,23 +148,31 @@
             <field name="arch" type="xml">
                 <form string="Sales Team" version="7.0">
                     <sheet>
+                        <div class="oe_title">
+                            <label for="name" class="oe_edit_only" string="Project Name"/>
+                            <h1>
+                                <field name="name" string="Project Name"/>
+                            </h1>
+                            <div name="options_active">
+                                <field name="use_leads" class="oe_inline"/><label for="use_leads"/>
+                            </div>
+                        </div>
                         <group>
                             <group>
-                                <field name="name" colspan="2"/>
                                 <field name="parent_id"/>
-                                <field name="code"/>
-                            </group>
-                            <group>
-                                <field name="user_id"/>
                                 <field name="resource_calendar_id"/>
                                 <field name="active"/>
                             </group>
-                            <group colspan="4">
+                            <group>
+                                <field name="user_id"/>
+                                <field name="code"/>
+                            </group>
+                            <group colspan="4" attrs="{'invisible': [('use_leads', '=', True)]}">
                                 <label for="alias_id"/>
                                 <div class="oe_inline">
                                     <field name="alias_id" class="oe_inline oe_read_only" required="0" nolabel="1"/>
                                     <span class="oe_edit_only" name="edit_alias">
-                                        <field name="alias_name" class="oe_inline" attrs="{'required': [('alias_id', '!=', False)]}"/>@<field class="oe_inline" name="alias_domain"/>
+                                        <field name="alias_name" class="oe_inline" attrs="{'required': [('use_leads', '=', True), ('alias_id', '!=', False)]}"/>@<field class="oe_inline" name="alias_domain" readonly="1"/>
                                     </span>
                                  </div>
                             </group>
