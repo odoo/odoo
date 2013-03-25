@@ -933,13 +933,6 @@ class ir_model_data(osv.osv):
         elif res_id:
             model_obj.write(cr, uid, [res_id], values, context=context)
             if xml_id:
-                self.create(cr, uid, {
-                    'name': xml_id,
-                    'model': model,
-                    'module':module,
-                    'res_id':res_id,
-                    'noupdate': noupdate,
-                    },context=context)
                 if model_obj._inherits:
                     for table in model_obj._inherits:
                         inherit_id = model_obj.browse(cr, uid,
@@ -951,17 +944,17 @@ class ir_model_data(osv.osv):
                             'res_id': inherit_id.id,
                             'noupdate': noupdate,
                             },context=context)
+                self.create(cr, uid, {
+                    'name': xml_id,
+                    'model': model,
+                    'module':module,
+                    'res_id':res_id,
+                    'noupdate': noupdate,
+                    },context=context)
         else:
             if mode=='init' or (mode=='update' and xml_id):
                 res_id = model_obj.create(cr, uid, values, context=context)
                 if xml_id:
-                    self.create(cr, uid, {
-                        'name': xml_id,
-                        'model': model,
-                        'module': module,
-                        'res_id': res_id,
-                        'noupdate': noupdate
-                        },context=context)
                     if model_obj._inherits:
                         for table in model_obj._inherits:
                             inherit_id = model_obj.browse(cr, uid,
@@ -973,6 +966,13 @@ class ir_model_data(osv.osv):
                                 'res_id': inherit_id.id,
                                 'noupdate': noupdate,
                                 },context=context)
+                    self.create(cr, uid, {
+                        'name': xml_id,
+                        'model': model,
+                        'module': module,
+                        'res_id': res_id,
+                        'noupdate': noupdate
+                        },context=context)
         if xml_id and res_id:
             self.loads[(module, xml_id)] = (model, res_id)
             for table, inherit_field in model_obj._inherits.iteritems():
