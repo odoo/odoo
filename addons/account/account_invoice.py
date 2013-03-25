@@ -794,9 +794,11 @@ class account_invoice(osv.osv):
 
     def action_date_assign(self, cr, uid, ids, *args):
         for inv in self.browse(cr, uid, ids):
-            res = self.onchange_payment_term_date_invoice(cr, uid, inv.id, inv.payment_term.id, inv.date_invoice)
-            if res and res['value']:
-                self.write(cr, uid, [inv.id], res['value'])
+            if not inv.date_due:
+                res = self.onchange_payment_term_date_invoice(cr, uid, inv.id,
+                                                              inv.payment_term.id, inv.date_invoice)
+                if res and res['value']:
+                    self.write(cr, uid, [inv.id], res['value'])
         return True
 
     def finalize_invoice_move_lines(self, cr, uid, invoice_browse, move_lines):
