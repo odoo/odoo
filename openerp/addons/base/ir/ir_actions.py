@@ -85,9 +85,9 @@ class report_xml(osv.osv):
                 res[report.id] = False
         return res
 
-    def render_report(self, cr, uid, res_ids, name, data, context=None):
+    def _lookup_report(self, cr, name):
         """
-        Look up a report definition and render the report for the provided IDs.
+        Look up a report definition.
         """
         import openerp
         import operator
@@ -119,6 +119,13 @@ class report_xml(osv.osv):
             else:
                 raise Exception, "Required report does not exist: %s" % r
 
+        return new_report
+
+    def render_report(self, cr, uid, res_ids, name, data, context=None):
+        """
+        Look up a report definition and render the report for the provided IDs.
+        """
+        new_report = self._lookup_report(cr, name)
         return new_report.create(cr, uid, res_ids, data, context)
 
     _name = 'ir.actions.report.xml'

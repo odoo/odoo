@@ -44,13 +44,29 @@ import openerp
 _logger = logging.getLogger(__name__)
 
 def LocalService(name):
+    """
+    The openerp.netsvc.LocalService() fucntion is deprecated. It still works
+    in two cases: workflows and reports. For workflows, instead of using
+    LocalService('workflow'), openerp.workflow should be used (better yet,
+    methods on openerp.osv.orm.Model should be used). For reports,
+    openerp.report.render_report() should be used (methods on the Model should
+    be provided too in the future).
+    """
     _logger.warning("LocalService('%s') is deprecated." % name)
 
     if name == 'workflow':
         return openerp.workflow
 
     if name.startswith('report.'):
-        return openerp.report.interface.report_int._reports[name]
+        report = openerp.report.interface.report_int._reports.get(name)
+        if report:
+            return report
+        else:
+            dbname = getattr(threading.currentThread(), 'dbname', None)
+            if dbname:
+                registry = openerp.modules.registry.RegistryManager.get(dbname)
+                with registry.cursor() as cr:
+                    return registry['ir.actions.report.xml']._lookup_report(cr, name[len('report.'):])
 
 BLACK, RED, GREEN, YELLOW, BLUE, MAGENTA, CYAN, WHITE, _NOTHING, DEFAULT = range(10)
 #The background is set with 40 plus the number of the color, and the foreground with 30
