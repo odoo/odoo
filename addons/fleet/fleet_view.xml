@@ -244,7 +244,7 @@
                                 <field name="fuel_type" />
                                 <label for="co2"/>
                                 <div>
-                                    <field name="co2" class="oe_inline"/> Unit
+                                    <field name="co2" class="oe_inline"/> g/km
                                 </div>
                                 <field name="horsepower" />
                                 <field name="horsepower_tax" />
@@ -410,7 +410,7 @@
                             <group string="Contract details">
                                 <field name="vehicle_id" on_change="on_change_vehicle(vehicle_id)"/>
                                 <field name="cost_subtype_id" required="1" domain="['|',('category','=','contract'),('category','=','both')]"/>
-                                <field name="amount" string="Activation Cost"/>
+                                <field name="amount" string="Activation Cost" help="Cost that is paid only once at the creation of the contract"/>
                                 <label for="cost_generated"/>
                                 <div>
                                     <field name="cost_generated" class="oe_inline" attrs="{'invisible': [('cost_frequency','=','no')]}" />
