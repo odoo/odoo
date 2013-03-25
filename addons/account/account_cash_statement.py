@@ -148,21 +148,19 @@ class account_cash_statement(osv.osv):
         return result
 
     def onchange_journal_id(self, cr, uid, ids, journal_id, context=None):
-        result = super(account_cash_statement, self).onchange_journal_id(cr, uid, ids, journal_id)
-        if not journal_id:
-            return result
-        result['value']['opening_details_ids'] = self._get_cash_open_box_lines(cr, uid, journal_id, context)
-        statement_ids = self.search(cr, uid,
-                [('journal_id', '=', journal_id),('state', '=', 'confirm')],
-                order='create_date desc',
-                limit=1,
-                context=context
-        )
-        if not statement_ids:
-            return result
-
-        st = self.browse(cr, uid, statement_ids[0], context=context)
-        result.setdefault('value', {}).update({'last_closing_balance' : st.balance_end_real})
+        result = {}
+        if journal_id:
+            result = super(account_cash_statement, self).onchange_journal_id(cr, uid, ids, journal_id)
+            statement_ids = self.search(cr, uid,
+                    [('journal_id', '=', journal_id),('state', '=', 'confirm')],
+                    order='create_date desc',
+                    limit=1,
+                    context=context
+            )
+            if statement_ids:
+                st = self.browse(cr, uid, statement_ids[0], context=context)
+                result.setdefault('value', {}).update({'last_closing_balance' : st.balance_end_real})
+            result['value']['opening_details_ids'] = self._get_cash_open_box_lines(cr, uid, ids, journal_id, context)
         return result
 
     _columns = {
@@ -185,7 +183,7 @@ class account_cash_statement(osv.osv):
         'user_id': lambda self, cr, uid, context=None: uid,
     }
 
-    def _get_cash_open_box_lines(self, cr, uid, journa_id, context):
+    def _get_cash_open_box_lines(self, cr, uid, ids, journa_id, context):
         details_ids = []
         journal = self.pool.get('account.journal').browse(cr, uid, journa_id, context=context)
         if journal and (journal.type == 'cash'):
@@ -228,7 +226,10 @@ class account_cash_statement(osv.osv):
 
         @return: True on success, False otherwise
         """
-
+        cashbox_pool = self.pool.get('account.cashbox.line')
+        if vals.get('journal_id', False):
+            cashbox_ids = cashbox_pool.search(cr, uid, [('bank_statement_id', 'in', ids)], context=context)
+            cashbox_pool.unlink(cr, uid, cashbox_ids, context)            
         res = super(account_cash_statement, self).write(cr, uid, ids, vals, context=context)
         self._update_balances(cr, uid, ids, context)
         return res
