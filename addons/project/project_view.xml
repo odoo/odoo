@@ -112,11 +112,11 @@
                             </p>
                         </group>
                     </group>
-                    <group colspan="4">
+                    <group colspan="4" name="group_alias">
                         <label for="alias_id"/>
                         <div class="oe_inline">
                             <field name="alias_id" class="oe_inline oe_read_only" required="0" nolabel="1"/>
-                            <span class="oe_edit_only" name="edit_alias">
+                            <span class="oe_edit_only oe_edit_alias" name="edit_alias">
                                 <field name="alias_name" class="oe_inline" attrs="{'required': [('alias_id', '!=', False)]}"/>@<field class="oe_inline" name="alias_domain"/>
                             </span>
                          </div>
