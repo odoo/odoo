@@ -44,7 +44,7 @@ instance.web_gantt.GanttView = instance.web.View.extend({
             n_group_bys = group_bys;
         }
         // gather the fields to get
-        var fields = _.compact(_.map(["date_start", "date_delay", "date_stop"], function(key) {
+        var fields = _.compact(_.map(["date_start", "date_delay", "date_stop", "progress"], function(key) {
             return self.fields_view.arch.attrs[key] || '';
         }));
         fields = _.uniq(fields.concat(n_group_bys));
@@ -75,7 +75,7 @@ instance.web_gantt.GanttView = instance.web.View.extend({
     on_data_loaded_2: function(tasks, group_bys) {
         var self = this;
         $(".oe_gantt", this.$el).html("");
-        
+
         //prevent more that 1 group by
         if (group_bys.length > 0) {
             group_bys = [group_bys[0]];
@@ -114,6 +114,11 @@ instance.web_gantt.GanttView = instance.web.View.extend({
         var task_ids = {};
         // creation of the chart
         var generate_task_info = function(task, plevel) {
+            if (_.isNumber(task[self.fields_view.arch.attrs.progress])) {
+                var percent = task[self.fields_view.arch.attrs.progress] || 0;
+            } else {
+                var percent = 100;
+            }
             var level = plevel || 0;
             if (task.__is_group) {
                 var task_infos = _.compact(_.map(task.tasks, function(sub_task) {
@@ -128,7 +133,7 @@ instance.web_gantt.GanttView = instance.web.View.extend({
                     return memo === undefined || date > memo ? date : memo;
                 }, undefined);
                 var duration = (task_stop.getTime() - task_start.getTime()) / (1000 * 60 * 60);
-                var group_name = instance.web.format_value(task.name, self.fields[group_bys[level]]);
+                var group_name = task.name ? instance.web.format_value(task.name, self.fields[group_bys[level]]) : "-";
                 if (level == 0) {
                     var group = new GanttProjectInfo(_.uniqueId("gantt_project_"), group_name, task_start);
                     _.each(task_infos, function(el) {
@@ -136,7 +141,7 @@ instance.web_gantt.GanttView = instance.web.View.extend({
                     });
                     return group;
                 } else {
-                    var group = new GanttTaskInfo(_.uniqueId("gantt_project_task_"), group_name, task_start, duration || 1, 100);
+                    var group = new GanttTaskInfo(_.uniqueId("gantt_project_task_"), group_name, task_start, duration || 1, percent);
                     _.each(task_infos, function(el) {
                         group.addChildTask(el.task_info);
                     });
@@ -151,7 +156,7 @@ instance.web_gantt.GanttView = instance.web.View.extend({
                 if (self.fields_view.arch.attrs.date_stop) {
                     task_stop = instance.web.auto_str_to_date(task[self.fields_view.arch.attrs.date_stop]);
                     if (!task_stop)
-                        return;
+                        task_stop = task_start;
                 } else { // we assume date_duration is defined
                     var tmp = instance.web.format_value(task[self.fields_view.arch.attrs.date_delay],
                         self.fields[self.fields_view.arch.attrs.date_delay]);
@@ -161,7 +166,7 @@ instance.web_gantt.GanttView = instance.web.View.extend({
                 }
                 var duration = (task_stop.getTime() - task_start.getTime()) / (1000 * 60 * 60);
                 var id = _.uniqueId("gantt_task_");
-                var task_info = new GanttTaskInfo(id, task_name, task_start, ((duration / 24) * 8) || 1, 100);
+                var task_info = new GanttTaskInfo(id, task_name, task_start, ((duration / 24) * 8) || 1, percent);
                 task_info.internal_task = task;
                 task_ids[id] = task_info;
                 return {task_info: task_info, task_start: task_start, task_stop: task_stop};

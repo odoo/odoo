@@ -386,6 +386,7 @@ function GanttChart()
 
     this.hourInPixelsWork = this.dayInPixels / this.hoursInDay;
     this.hourInPixels = this.dayInPixels / 24;
+    this.minWidthResize = this.hourInPixels;
     this.countDays = 0;
     this.startDate = null;
     this.initialPos = 0;
@@ -4812,7 +4813,7 @@ GanttTask.prototype.getResizeInfo = function()
         childParentPosX = posChildTaskItem;
     }
 
-    this.minWidthResize = this.Chart.dayInPixels;
+    this.minWidthResize = this.Chart.minWidthResize;
 
     if (this.childTask.length > 0)
     {

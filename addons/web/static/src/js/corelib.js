@@ -232,13 +232,17 @@ instance.web.ParentedMixin = {
         Utility method to only execute asynchronous actions if the current
         object has not been destroyed.
 
-        @param {Promise} promise The promise representing the asynchronous action.
-        @param {bool} reject Defaults to false. If true, the returned promise will be
-            rejected with no arguments if the current object is destroyed. If false,
-            the returned promise will never be resolved nor rejected.
-        @returns {Promise} A promise that will mirror the given promise if everything goes
-            fine but will either be rejected with no arguments or never resolved if the
-            current object is destroyed.
+        @param {$.Deferred} promise The promise representing the asynchronous
+                                    action.
+        @param {bool} [reject=false] If true, the returned promise will be
+                                     rejected with no arguments if the current
+                                     object is destroyed. If false, the
+                                     returned promise will never be resolved
+                                     or rejected.
+        @returns {$.Deferred} A promise that will mirror the given promise if
+                              everything goes fine but will either be rejected
+                              with no arguments or never resolved if the
+                              current object is destroyed.
     */
     alive: function(promise, reject) {
         var def = $.Deferred();
@@ -697,10 +701,10 @@ instance.web.Widget = instance.web.Controller.extend({
      * Method called after rendering. Mostly used to bind actions, perform asynchronous
      * calls, etc...
      *
-     * By convention, the method should return a promise to inform the caller when
-     * this widget has been initialized.
+     * By convention, this method should return an object that can be passed to $.when() 
+     * to inform the caller when this widget has been initialized.
      *
-     * @returns {jQuery.Deferred}
+     * @returns {jQuery.Deferred or any}
      */
     start: function() {
         return $.when();

@@ -149,6 +149,9 @@ instance.web.ActionManager = instance.web.Widget.extend({
         for (var i = 0; i < this.breadcrumbs.length; i += 1) {
             var item = this.breadcrumbs[i];
             var tit = item.get_title();
+            if (item.hide_breadcrumb) {
+                continue;
+            }
             if (!_.isArray(tit)) {
                 tit = [tit];
             }
@@ -282,6 +285,7 @@ instance.web.ActionManager = instance.web.Widget.extend({
      * @param {Object} [options]
      * @param {Boolean} [options.clear_breadcrumbs=false] Clear the breadcrumbs history list
      * @param {Function} [options.on_reverse_breadcrumb] Callback to be executed whenever an anterior breadcrumb item is clicked on.
+     * @param {Function} [options.hide_breadcrumb] Do not display this widget's title in the breadcrumb
      * @param {Function} [options.on_close] Callback to be executed when the dialog is closed (only relevant for target=new actions)
      * @param {Function} [options.action_menu_id] Manually set the menu id on the fly.
      * @param {Object} [options.additional_context] Additional context to be merged with the action's context.
@@ -291,6 +295,7 @@ instance.web.ActionManager = instance.web.Widget.extend({
         options = _.defaults(options || {}, {
             clear_breadcrumbs: false,
             on_reverse_breadcrumb: function() {},
+            hide_breadcrumb: false,
             on_close: function() {},
             action_menu_id: null,
             additional_context: {},
@@ -403,7 +408,12 @@ instance.web.ActionManager = instance.web.Widget.extend({
             widget: function () { return new instance.web.ViewManagerAction(self, action); },
             action: action,
             klass: 'oe_act_window',
-            post_process: function (widget) { widget.add_breadcrumb(options.on_reverse_breadcrumb); }
+            post_process: function (widget) {
+                widget.add_breadcrumb({
+                    on_reverse_breadcrumb: options.on_reverse_breadcrumb,
+                    hide_breadcrumb: options.hide_breadcrumb,
+                });
+            },
         }, options);
     },
     ir_actions_client: function (action, options) {
@@ -427,6 +437,7 @@ instance.web.ActionManager = instance.web.Widget.extend({
                     widget: widget,
                     title: action.name,
                     on_reverse_breadcrumb: options.on_reverse_breadcrumb,
+                    hide_breadcrumb: options.hide_breadcrumb,
                 });
                 if (action.tag !== 'reload') {
                     self.do_push_state({});
@@ -649,7 +660,15 @@ instance.web.ViewManager =  instance.web.Widget.extend({
     set_title: function(title) {
         this.$el.find('.oe_view_title_text:first').text(title);
     },
-    add_breadcrumb: function(on_reverse_breadcrumb) {
+    add_breadcrumb: function(options) {
+        var options = options || {};
+        // 7.0 backward compatibility
+        if (typeof options == 'function') {
+            options = {
+                on_reverse_breadcrumb: options
+            };
+        }
+        // end of 7.0 backward compatibility
         var self = this;
         var views = [this.active_view || this.views_src[0].view_type];
         this.on('switch_mode', self, function(mode) {
@@ -661,7 +680,7 @@ instance.web.ViewManager =  instance.web.Widget.extend({
                 views.push(mode);
             }
         });
-        this.getParent().push_breadcrumb({
+        var item = _.extend({
             widget: this,
             action: this.action,
             show: function(index) {
@@ -695,9 +714,9 @@ instance.web.ViewManager =  instance.web.Widget.extend({
                     titles.pop();
                 }
                 return titles;
-            },
-            on_reverse_breadcrumb: on_reverse_breadcrumb,
-        });
+            }
+        }, options);
+        this.getParent().push_breadcrumb(item);
     },
     /**
      * Returns to the view preceding the caller view in this manager's
@@ -1263,6 +1282,7 @@ instance.web.View = instance.web.Widget.extend({
                 "view_id": this.view_id,
                 "view_type": this.view_type,
                 "toolbar": !!this.options.$sidebar,
+                "context": this.dataset.get_context(),
             });
         }
         return view_loaded_def.then(function(r) {
@@ -1446,11 +1466,11 @@ instance.web.View = instance.web.Widget.extend({
  * Performs a fields_view_get and apply postprocessing.
  * return a {$.Deferred} resolved with the fvg
  *
- * @param {Object} [args]
+ * @param {Object} args
  * @param {String|Object} args.model instance.web.Model instance or string repr of the model
- * @param {null|Object} args.context context if args.model is a string
- * @param {null|Number} args.view_id id of the view to be loaded, default view if null
- * @param {null|String} args.view_type type of view to be loaded if view_id is null
+ * @param {Object} [args.context] context if args.model is a string
+ * @param {Number} [args.view_id] id of the view to be loaded, default view if null
+ * @param {String} [args.view_type] type of view to be loaded if view_id is null
  * @param {Boolean} [args.toolbar=false] get the toolbar definition
  */
 instance.web.fields_view_get = function(args) {
@@ -1477,7 +1497,7 @@ instance.web.fields_view_get = function(args) {
     if (typeof model === 'string') {
         model = new instance.web.Model(args.model, args.context);
     }
-    return args.model.call('fields_view_get', [args.view_id, args.view_type, model.context(), args.toolbar]).then(function(fvg) {
+    return args.model.call('fields_view_get', [args.view_id, args.view_type, args.context, args.toolbar]).then(function(fvg) {
         return postprocess(fvg);
     });
 };
@@ -1555,12 +1575,17 @@ instance.web.xml_to_str = function(node) {
     } else {
         throw new Error(_t("Could not serialize XML"));
     }
-    // Browsers won't deal with self closing tags except br, hr, input, ...
-    // http://stackoverflow.com/questions/97522/what-are-all-the-valid-self-closing-elements-in-xhtml-as-implemented-by-the-maj
-    //
+    // Browsers won't deal with self closing tags except void elements:
+    // http://www.w3.org/TR/html-markup/syntax.html
+    var void_elements = 'area base br col command embed hr img input keygen link meta param source track wbr'.split(' ');
+
     // The following regex is a bit naive but it's ok for the xmlserializer output
     str = str.replace(/<([a-z]+)([^<>]*)\s*\/\s*>/g, function(match, tag, attrs) {
-        return "<" + tag + attrs + "></" + tag + ">";
+        if (void_elements.indexOf(tag) < 0) {
+            return "<" + tag + attrs + "></" + tag + ">";
+        } else {
+            return match;
+        }
     });
     return str;
 };
