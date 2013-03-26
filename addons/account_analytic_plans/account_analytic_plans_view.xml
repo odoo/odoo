@@ -10,7 +10,7 @@
         <field name="inherit_id" ref="account.view_account_journal_form"/>
         <field name="arch" type="xml">
             <field name="centralisation" position="before">
-                <field name="plan_id" />
+                <field name="plan_id" groups="analytic.group_analytic_accounting"/>
             </field>
         </field>
     </record>
