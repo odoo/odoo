@@ -482,7 +482,7 @@ class browse_record(object):
         except KeyError, e:
             import sys
             exc_info = sys.exc_info()
-            raise AttributeError, "Got %r while trying to get attribute `%s`." % (e, name), exc_info[2]
+            raise AttributeError, "Got %r while trying to get attribute %s on a %s record." % (e, name, self._table._name), exc_info[2]
 
     def __contains__(self, name):
         return (name in self._table._columns) or (name in self._table._inherit_fields) or hasattr(self._table, name)

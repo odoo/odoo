@@ -120,6 +120,7 @@ setuptools.setup(
           'psutil', # windows binary code.google.com/p/psutil/downloads/list
           'psycopg2',
           'pydot',
+          'pyparsing < 2',
           'python-dateutil < 2',
           'python-ldap', # optional
           'python-openid',

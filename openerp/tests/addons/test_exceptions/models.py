@@ -35,4 +35,34 @@ class m(openerp.osv.osv.Model):
     def generate_undefined(self, cr, uid, ids, context=None):
         self.surely_undefined_symbol
 
+
+    def generate_except_osv_safe_eval(self, cr, uid, ids, context=None):
+        self.generate_safe_eval(cr, uid, ids, self.generate_except_osv, context)
+
+    def generate_except_orm_safe_eval(self, cr, uid, ids, context=None):
+        self.generate_safe_eval(cr, uid, ids, self.generate_except_orm, context)
+
+    def generate_warning_safe_eval(self, cr, uid, ids, context=None):
+        self.generate_safe_eval(cr, uid, ids, self.generate_warning, context)
+
+    def generate_redirect_warning_safe_eval(self, cr, uid, ids, context=None):
+        self.generate_safe_eval(cr, uid, ids, self.generate_redirect_warning, context)
+
+    def generate_access_denied_safe_eval(self, cr, uid, ids, context=None):
+        self.generate_safe_eval(cr, uid, ids, self.generate_access_denied, context)
+
+    def generate_access_error_safe_eval(self, cr, uid, ids, context=None):
+        self.generate_safe_eval(cr, uid, ids, self.generate_access_error, context)
+
+    def generate_exc_access_denied_safe_eval(self, cr, uid, ids, context=None):
+        self.generate_safe_eval(cr, uid, ids, self.generate_exc_access_denied, context)
+
+    def generate_undefined_safe_eval(self, cr, uid, ids, context=None):
+        self.generate_safe_eval(cr, uid, ids, self.generate_undefined, context)
+
+
+    def generate_safe_eval(self, cr, uid, ids, f, context):
+        globals_dict = { 'generate': lambda *args: f(cr, uid, ids, context) }
+        openerp.tools.safe_eval.safe_eval("generate()", mode='exec', globals_dict=globals_dict)
+
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
