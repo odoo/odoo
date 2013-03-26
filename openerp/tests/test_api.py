@@ -326,6 +326,15 @@ class TestAPI(common.TransactionCase):
         self.assertEqual(set(partner2.child_ids), set(children2 + child))
         scope.cache.check()
 
+        # delete it
+        child.unlink()
+        scope.cache.check()
+
+        # check recordsets
+        self.assertEqual(set(partner1.child_ids), set(children1) - set([child]))
+        self.assertEqual(set(partner2.child_ids), set(children2))
+        scope.cache.check()
+
     @mute_logger('openerp.osv.orm')
     def test_70_record_recordset(self):
         """ Check properties record and recordset. """

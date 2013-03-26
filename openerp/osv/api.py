@@ -33,14 +33,18 @@
 
         model = self.pool.get(MODEL)
         ids = model.search(cr, uid, DOMAIN, context=context)
+        for rec in model.browse(cr, uid, ids, context=context):
+            print rec.name
         model.write(cr, uid, ids, VALUES, context=context)
 
     may also be written as::
 
-        with Scope(cr, uid, context):
-            model = scope.model(MODEL)          # scope is a proxy to the current scope
-            records = model.search(DOMAIN)
-            records.write(VALUES)
+        with Scope(cr, uid, context):       # cr, uid, context introduced once
+            model = scope.model(MODEL)      # scope proxies the current scope
+            recs = model.search(DOMAIN)     # search returns a recordset
+            for rec in recs:                # iterate over the records
+                print rec.name
+            recs.write(VALUES)              # update all records in recs
 
     Methods written in the "traditional" style are automatically decorated,
     following some heuristics based on parameter names.
@@ -72,13 +76,15 @@
 """
 
 __all__ = [
-    'Scope', 'scope', 'Meta', 'guess', 'noguess',
+    'Scope', 'scope', 'RecordCache',
+    'Meta', 'guess', 'noguess',
     'model', 'record', 'recordset',
     'cr', 'cr_context', 'cr_uid', 'cr_uid_context',
     'cr_uid_id', 'cr_uid_id_context', 'cr_uid_ids', 'cr_uid_ids_context',
     'returns',
 ]
 
+from collections import defaultdict
 from functools import wraps
 import logging
 from werkzeug.local import Local, release_local
@@ -144,10 +150,13 @@ class Scope(object):
             with Scope(cr, uid, context):
                 # statements execute in given scope
 
-        Iterating over a scope returns the three attributes above, in that
-        order. This is useful to retrieve data in a destructuring assignment::
+                # iterating over a scope returns cr, uid, context
+                cr, uid, context = scope
 
-            cr, uid, context = scope
+        The scope provides extra attributes:
+
+         - :attr:`registry`, the model registry of the current database,
+         - :attr:`cache`, a records cache (see :class:`RecordCache`).
     """
     def __new__(cls, cr, uid, context):
         args = (cr, int(uid), context if context is not None else {})
@@ -234,15 +243,109 @@ class Scope(object):
             self._lang = self.context.get('lang') or 'en_US'
         return self._lang
 
-    @property
-    def language(self):
-        """ return the current language (as a record) """
-        try:
-            with scope.SUDO():
-                languages = self.model('res.lang').search([('code', '=', self.lang)])
-                return languages.record()
-        except Exception:
-            raise Exception(_('Language with code "%s" is not defined in your system !\nDefine it through the Administration menu.') % (self.lang,))
+
+#
+# Records cache
+#
+class ModelCache(defaultdict):
+    """ Cache for records in a given model. The cache is a dictionary that
+        associates `field` names to `id-value` dictionaries.
+
+        It also  refers to a set of record ids (attribute :attr:`ids`), which is
+        used for prefetching.
+    """
+    def __init__(self):
+        super(ModelCache, self).__init__(dict)
+        self.ids = set()
+
+    def update(self, field, values):
+        """ update the cache for the given field
+
+            :param values: a dictionary associating record ids to values
+        """
+        self.ids.update(values.iterkeys())
+        self[field].update(values)
+
+    def invalidate(self, fields=None, ids=None):
+        """ invalidate the given fields for the given ids
+
+            :param fields: the list of fields to invalidate, ``None`` for all
+            :param ids: the list of record ids to invalidate, ``None`` for all
+        """
+        if fields is None:
+            for field_cache in self.itervalues():
+                field_cache.clear()
+        elif ids is None:
+            for field in fields:
+                self[field].clear()
+        else:
+            for field in fields:
+                field_cache = self[field]
+                for id in ids:
+                    field_cache.pop(id, None)
+
+
+class RecordCache(defaultdict):
+    """ Cache for records of any model. The cache is organized as a set of
+        nested dictionaries, where the keys are: the model name, the field name,
+        and the record id, respectively. The cache of a model is updated field
+        by field, and provides a set of record ids that is for prefetching::
+
+            # access the value of a field of a record in a model
+            value = cache[model_name][field_name][record_id]
+
+            # update the values of a field for multiple records
+            cache[model_name].update(field_name, {record_id: value, ...})
+
+            # access/modify the set of record ids used for prefetching
+            cache[model_name].ids
+    """
+    def __init__(self):
+        super(RecordCache, self).__init__(ModelCache)
+
+    def invalidate(self, spec=None):
+        """ Invalidate the record cache.
+
+            :param spec: describes what to invalidate;
+                either ``None`` (invalidate everything), or
+                a list of triples (`model`, `fields`, `ids`), where
+                `model` is a model name,
+                `fields` is a list of field names or ``None`` for all fields,
+                and `ids` is a list of record ids or ``None`` for all records.
+        """
+        if spec is None:
+            for model_cache in self.itervalues():
+                model_cache.invalidate()
+        else:
+            for model, fields, ids in spec:
+                self[model].invalidate(fields, ids)
+
+    def check(self):
+        """ self-check for validating the cache """
+        cr, uid, context = scope
+        invalids = []
+
+        for model_name, model_cache in self.items():
+            # read the fields that are present in the cache
+            model = scope.model(model_name)
+            ids = list(model_cache.ids)
+            field_names = model_cache.keys()
+            result = model.read(cr, uid, ids, field_names, context=context, load="_classic_write")
+
+            # compare the result with the content of the cache
+            for field in field_names:
+                field_cache = model_cache[field]
+                clean = lambda v: v
+                if model._all_columns[field].column._type == 'many2one':
+                    clean = lambda v: v[0] if isinstance(v, (tuple, list)) else v
+                for data in result:
+                    id = data['id']
+                    if id in field_cache and field_cache[id] != clean(data[field]):
+                        invalids.append((model_name, field))
+                        break
+
+        if invalids:
+            raise Exception('Invalid cache for %s' % invalids)
 
 
 #
@@ -764,7 +867,7 @@ def guess(method):
 
 # keep those imports here in order to handle cyclic dependencies correctly
 from openerp import SUPERUSER_ID
-from openerp.osv.orm import Record, RecordCache
+from openerp.osv.orm import Record
 from openerp.sql_db import Cursor
 from openerp.tools.translate import _
 from openerp.modules.registry import RegistryManager
