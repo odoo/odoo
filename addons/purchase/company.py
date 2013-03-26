@@ -25,7 +25,9 @@ class company(osv.osv):
     _inherit = 'res.company'
     _columns = {
         'po_lead': fields.float('Purchase Lead Time', required=True,
-            help="This is the leads/security time for each purchase order."),
+            help="This is the leads/security time for each purchase order."\
+                 "This number of days will be removed from what suppliers has promise to you"\
+                 "for company security purpose."),
     }
     _defaults = {
         'po_lead': lambda *a: 1.0,
