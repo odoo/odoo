@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
 #
-#    OpenERP, Open Source Business Applications
-#    Copyright (c) 2012-TODAY OpenERP S.A. <http://openerp.com>
+#    OpenERP, Open Source Management Solution
+#    Copyright (C) 2010-Today OpenERP S.A. (<http://www.openerp.com>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -18,15 +18,3 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-
-from . import test_mail_message, test_mail_features, test_mail_gateway, test_message_read, test_invite
-
-checks = [
-    test_mail_message,
-    test_mail_features,
-    test_mail_gateway,
-    test_message_read,
-    test_invite,
-]
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
