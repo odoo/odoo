@@ -38,8 +38,6 @@ try:
 except ImportError:
     psutil = None
 
-# TODO modules that import netsvc only for things from loglevels must be changed to use loglevels.
-from loglevels import *
 import tools
 import openerp
 
