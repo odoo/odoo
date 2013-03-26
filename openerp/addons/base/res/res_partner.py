@@ -193,6 +193,12 @@ class res_partner(osv.osv, format_address):
             result[obj.id] = obj.image != False
         return result
 
+    def _has_user_ids(self, cr, uid, ids, name, args, context=None):
+        result = {}
+        for obj in self.browse(cr, uid, ids, context=context):
+            result[obj.id] = bool(obj.user_ids)
+        return result
+
     _order = "name"
     _columns = {
         'name': fields.char('Name', size=128, required=True, select=True),
@@ -263,6 +269,7 @@ class res_partner(osv.osv, format_address):
         'company_id': fields.many2one('res.company', 'Company', select=1),
         'color': fields.integer('Color Index'),
         'user_ids': fields.one2many('res.users', 'partner_id', 'Users'),
+        'has_user_ids': fields.function(_has_user_ids,  type='boolean', string='Is a user'),
         'contact_address': fields.function(_address_display,  type='char', string='Complete Address'),
     }
 
@@ -359,10 +366,14 @@ class res_partner(osv.osv, format_address):
 #   _constraints = [(_check_ean_key, 'Error: Invalid ean code', ['ean13'])]
 
     def write(self, cr, uid, ids, vals, context=None):
+        if context is None:
+            context={}
         # Update parent and siblings or children records
         if isinstance(ids, (int, long)):
             ids = [ids]
+        user_ids = []
         for partner in self.browse(cr, uid, ids, context=context):
+            user_ids += [user.id for user in partner.user_ids]
             update_ids = []
             if partner.is_company:
                 domain_children = [('parent_id', 'child_of', partner.id), ('use_parent_address', '=', True)]
@@ -371,6 +382,9 @@ class res_partner(osv.osv, format_address):
                 domain_siblings = [('parent_id', '=', partner.parent_id.id), ('use_parent_address', '=', True)]
                 update_ids = [partner.parent_id.id] + self.search(cr, uid, domain_siblings, context=context)
             self.update_address(cr, uid, update_ids, vals, context)
+        if vals.get('email') and user_ids and not context.get('change_email_and_login'):
+            context.update({'change_email_and_login': True})
+            self.pool.get('res.users').write(cr, uid, user_ids, {'login': vals.get('email')}, context=context)
         return super(res_partner,self).write(cr, uid, ids, vals, context=context)
 
     def create(self, cr, uid, vals, context=None):

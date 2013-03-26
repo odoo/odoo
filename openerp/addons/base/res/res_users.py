@@ -278,6 +278,10 @@ class res_users(osv.osv):
     def write(self, cr, uid, ids, values, context=None):
         if not hasattr(ids, '__iter__'):
             ids = [ids]
+        if values.get('email'):
+            values['login'] = values.get('email')
+        if values.get('login'):
+            values['email'] = values.get('login')
         if ids == [uid]:
             for key in values.keys():
                 if not (key in self.SELF_WRITEABLE_FIELDS or key.startswith('context_')):

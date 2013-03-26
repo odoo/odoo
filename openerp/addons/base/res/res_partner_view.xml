@@ -111,7 +111,8 @@
                         <group>
                             <field name="category_id" widget="many2many_tags" placeholder="Tags..."/>
                             <field name="function" placeholder="e.g. Sales Director"/>
-                            <field name="email" required="context.get('force_email', False)"/>
+                            <field name="has_user_ids" invisible="1"/>
+                            <field name="email" widget="email" required="context.get('force_email', False)" attrs="{'required': [('has_user_ids','!=', False)]}"/>
                             <field name="phone"/>
                             <field name="mobile"/>
                         </group>
@@ -175,7 +176,8 @@
                             <field name="phone" placeholder="e.g. +32.81.81.37.00"/>
                             <field name="mobile"/>
                             <field name="fax"/>
-                            <field name="email" widget="email"/>
+                            <field name="has_user_ids" invisible="1"/>
+                            <field name="email" widget="email" attrs="{'required': [('has_user_ids','!=', False)]}"/>
                             <field name="title" domain="[('domain', '=', 'contact')]"
                                 options='{"no_open": True}' attrs="{'invisible': [('is_company','=', True)]}" />
                         </group>
@@ -420,7 +422,7 @@
             <field name="view_id" ref="view_partner_tree"/>
             <field name="act_window_id" ref="action_partner_form"/>
         </record>
-        <menuitem id="menu_partner_form" parent="base.menu_sales" action="action_partner_form" sequence="1"/>
+        <menuitem id="menu_partner_form" parent="base.menu_sales" action="action_partner_form" sequence="2"/>
 
         <record id="action_partner_customer_form" model="ir.actions.act_window">
             <field name="name">Customers</field>
