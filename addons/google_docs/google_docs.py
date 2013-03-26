@@ -188,18 +188,13 @@ class google_docs_ir_attachment(osv.osv):
         action = pool_gdoc_config.browse(cr, uid, config_ids, context=context)
         attachment = {}
         model_fields_dic = self.pool.get(res_model).read(cr, uid, res_id, [], context=context)
+        if model_fields_dic['name']:
+            model_fields_dic['name'] = model_fields_dic['name'].replace(' ','-')
         # check if a model is configured with a template
         if config_ids:
             name_gdocs = action.name_template
             try:
                 name_gdocs = name_gdocs % model_fields_dic
-                if name_gdocs.find('model')!=-1:
-                    name_gdocs = name_gdocs.replace('model',action.model_id.name)
-                if name_gdocs.find('filter')!=-1:
-                    if action.filter_id:
-                        name_gdocs = name_gdocs.replace('filter',action.filter_id.name)
-                    else:
-                        name_gdocs = name_gdocs.replace('_filter',"")
             except:
                 raise osv.except_osv(_('Key Error!'), _("Your Google Doc Name Pattern's key does not found in object."))
         
@@ -234,14 +229,37 @@ class config(osv.osv):
                 raise osv.except_osv(_('Incorrect URL!'), _("Please enter a valid URL."))
         return result
 
+    def _name_google_template_get(self, cr, uid, ids, name, arg, context=None):
+        res = {}
+        res_id = ids[0]
+        doc_pool = self.browse(cr, uid, ids[0], context)
+        label = doc_pool.name
+        res_model = doc_pool.model_id
+        res_fields_dic = self.pool.get(res_model.model).read(cr, uid, res_id, [], context=context)
+        doc_ids = self.search(cr, uid, [('model_id', '=', res_model.model),('name','=',label)], context=context)[0]
+        act = self.browse(cr, uid, doc_ids, context=context)
+        if doc_ids:
+            name_temp = act.name_template
+            if name_temp.find('model')!=-1:
+                name_temp = name_temp.replace('model',act.model_id.name)
+                res[doc_pool.id] = name_temp
+            if name_temp.find('filter')!=-1:
+                if act.filter_id:
+                    name_temp = name_temp.replace('filter',act.filter_id.name)
+                    res[doc_pool.id] = name_temp
+                else:
+                    name_temp = name_temp.replace('_filter',"")
+                    res[doc_pool.id] = name_temp
+        return res
+
     _columns = {
         'name' : fields.char('Template Name', required=True, size=1024),
         'model_id': fields.many2one('ir.model', 'Model', required=True),
         'filter_id' : fields.many2one('ir.filters', 'Filter'),
         'gdocs_template_url': fields.char('Template URL', required=True, size=1024),
         'gdocs_resource_id' : fields.function(_resource_get,type="char" ,string='Resource Id',store=True),
-        'name_template': fields.char('Google Drive Name Pattern', size=64, help='Choose how the new google drive will be named, on google side. Eg. gdoc_%(field_name)s', required=True),
-    }
+        'name_template': fields.function(_name_google_template_get,type="char", string='Google Drive Name Pattern', help='Choose how the new google drive will be named, on google side. Eg. gdoc_%(field_name)s',store=True),
+            }
 
     def onchange_model_id(self, cr, uid, ids, model_id, context=None):
          res = {'domain':{'filter_id':[]}}
