@@ -160,7 +160,7 @@ def _lang_get(self, cr, uid, context=None):
     return [(r['code'], r['name']) for r in res]
 
 POSTAL_ADDRESS_FIELDS = ('street', 'street2', 'zip', 'city', 'state_id', 'country_id')
-ADDRESS_FIELDS = POSTAL_ADDRESS_FIELDS + ('email', 'phone', 'fax', 'mobile', 'website', 'ref', 'lang')
+ADDRESS_FIELDS = POSTAL_ADDRESS_FIELDS + ('phone', 'fax', 'mobile', 'website', 'ref', 'lang')
 
 class res_partner(osv.osv, format_address):
     _description = 'Partner'
