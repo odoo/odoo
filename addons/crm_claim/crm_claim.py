@@ -227,11 +227,11 @@ class crm_claim(base_stage, osv.osv):
                 update_vals[key] = res.group(2).lower()
 
         return  super(crm_claim,self).message_update(cr, uid, ids, msg, update_vals=update_vals, context=context)
-#
-#class res_partner(osv.osv):
-#    _inherit = 'res.partner'
-#    _columns = {
-#        'claims_ids': fields.one2many('crm.claim', 'partner_id', 'Claims'),
-#    }
+
+class res_partner(osv.osv):
+    _inherit = 'res.partner'
+    _columns = {
+        'claims_ids': fields.one2many('crm.claim', 'partner_id', 'Claims'),
+    }
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
