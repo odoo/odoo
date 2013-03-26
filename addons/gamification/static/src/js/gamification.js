@@ -64,13 +64,31 @@ openerp.gamification = function(instance) {
                 self.goals_info['info'] = res
             });
             $.when(goals_info).done(function() {
-                console.log(self.goals_info.info);
                 if(self.goals_info.info.length > 0){
                     self.render_template_replace(self.$el.filter(".oe_gamification_goal"),'gamification.goal_list_to_do');
                     self.$el.find('.oe_type_description').hide();
+                    self.render_money_fields(self.goals_info.info[0].currency);
                 }
             });
         },
+        render_money_fields: function(currency_id) {
+            var self = this;
+
+            self.dfm = new instance.web.form.DefaultFieldManager(self);
+            self.$el.find(".oe_goal_field_monetary").each(function() {
+                money_field = new instance.web.form.FieldMonetary(self.dfm, {
+                    attrs: {
+                        modifiers: '{"readonly": true}'
+                    }
+                });
+                money_field.set('currency', currency_id);
+                money_field.get_currency_info();
+                money_field.set('value', parseInt($(this).text()));
+                console.log(money_field.get('value'));
+                money_field.replace($(this));
+                console.log(money_field.$el.html());
+            });
+        }
     });
 
     instance.mail.Widget.include({

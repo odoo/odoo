@@ -40,6 +40,7 @@ class gamification_goal_type(osv.Model):
     _columns = {
         'name': fields.char('Type Name', required=True, translate=True),
         'description': fields.text('Description'),
+        'monetary': fields.boolean('Use Currency', help="The target and current value used is monetary"),
         'unit': fields.char('Unit',
             help="The unit of the target and current values", translate=True),
         'computation_mode': fields.selection([
@@ -76,13 +77,14 @@ class gamification_goal_type(osv.Model):
             help='Sequence number for ordering',
             required=True),
     }
-    
+
     _order = 'sequence'
     _defaults = {
         'sequence': 1,
         'condition': 'higher',
-        'computation_mode':'manually',
-        'domain':"[]",
+        'computation_mode': 'manually',
+        'domain': "[]",
+        'monetary': False,
     }
 
 

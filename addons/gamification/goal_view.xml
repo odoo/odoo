@@ -214,6 +214,8 @@
                             <group string="General">
                                 <field name="description"/>
                                 <field name="condition"/>
+                                <field name="monetary" />
+                                <field name="unit" attrs="{'invisible': [('monetary', '=', True)]}"/>
                             </group>
                             <group string="Computation">
                                 <field name="computation_mode"/>

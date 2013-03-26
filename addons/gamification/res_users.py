@@ -32,8 +32,10 @@ class res_users_gamification_group(osv.Model):
             # serialize goals info to be able to use it in javascript
             serialized_goals_info = {
                 'name': plan.name,
-                'visibility_mode': plan.visibility_mode
+                'visibility_mode': plan.visibility_mode,
             }
+            user = self.browse(cr, uid, uid, context=context)
+            serialized_goals_info['currency'] = user.company_id.currency_id.id
 
             if plan.visibility_mode == 'board':
                 # board report should be grouped by planline for all users
@@ -49,6 +51,9 @@ class res_users_gamification_group(osv.Model):
                     vals = {'type_name': planline_board['goal_type'].name,
                             'type_description': planline_board['goal_type'].description,
                             'type_condition': planline_board['goal_type'].condition,
+                            'type_computation_mode': planline_board['goal_type'].computation_mode,
+                            'type_monetary': planline_board['goal_type'].monetary,
+                            'type_unit': planline_board['goal_type'].unit,
                             'goals': []}
                     for goal in planline_board['board_goals']:
                         vals['goals'].append({
@@ -76,8 +81,10 @@ class res_users_gamification_group(osv.Model):
                     serialized_goals_info['goals'].append({
                         'id': goal.id,
                         'type_name': goal.type_id.name,
-                        'type_condition': goal.type_id.condition,
                         'type_description': goal.type_description,
+                        'type_condition': goal.type_id.condition,
+                        'type_monetary': goal.type_id.monetary,
+                        'type_unit': goal.type_id.unit,
                         'state': goal.state,
                         'completeness': goal.completeness,
                         'computation_mode': goal.computation_mode,
