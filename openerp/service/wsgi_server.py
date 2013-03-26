@@ -32,8 +32,7 @@ import StringIO
 
 import errno
 import logging
-import os
-import signal
+import platform
 import socket
 import sys
 import threading
@@ -43,7 +42,6 @@ import werkzeug.serving
 import werkzeug.contrib.fixers
 
 import openerp
-import openerp.modules
 import openerp.tools.config as config
 import websrv_lib
 
@@ -426,7 +424,11 @@ def serve(interface, port, threaded):
     """
 
     global httpd
-    httpd = werkzeug.serving.make_server(interface, port, application, threaded=threaded)
+    if not openerp.evented:
+        httpd = werkzeug.serving.make_server(interface, port, application, threaded=threaded)
+    else:
+        from gevent.wsgi import WSGIServer
+        httpd = WSGIServer((interface, port), application)
     httpd.serve_forever()
 
 def start_service():
@@ -446,8 +448,13 @@ def stop_service():
     The server is supposed to have been started by start_server() above.
     """
     if httpd:
-        httpd.shutdown()
-        close_socket(httpd.socket)
+        if not openerp.evented:
+            httpd.shutdown()
+            close_socket(httpd.socket)
+        else:
+            import gevent
+            httpd.stop()
+            gevent.shutdown()
 
 def close_socket(sock):
     """ Closes a socket instance cleanly

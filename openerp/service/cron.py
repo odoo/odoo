@@ -44,11 +44,7 @@ def cron_runner(number):
         _logger.debug('cron%d polling for jobs', number)
         for db_name, registry in registries.items():
             while True and registry.ready:
-                # acquired = openerp.addons.base.ir.ir_cron.ir_cron._acquire_job(db_name)
-                # TODO why isnt openerp.addons.base defined ?
-                import sys
-                base = sys.modules['addons.base']
-                acquired = base.ir.ir_cron.ir_cron._acquire_job(db_name)
+                acquired = openerp.addons.base.ir.ir_cron.ir_cron._acquire_job(db_name)
                 if not acquired:
                     break
 

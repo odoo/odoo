@@ -59,7 +59,6 @@ from lxml import etree
 
 import fields
 import openerp
-import openerp.netsvc as netsvc
 import openerp.tools as tools
 from openerp.tools.config import config
 from openerp.tools.misc import CountingStream
@@ -481,7 +480,9 @@ class browse_record(object):
         try:
             return self[name]
         except KeyError, e:
-            raise AttributeError(e)
+            import sys
+            exc_info = sys.exc_info()
+            raise AttributeError, "Got %r while trying to get attribute %s on a %s record." % (e, name, self._table._name), exc_info[2]
 
     def __contains__(self, name):
         return (name in self._table._columns) or (name in self._table._inherit_fields) or hasattr(self._table, name)
@@ -3590,8 +3591,6 @@ class BaseModel(object):
 
         """
 
-        if not context:
-            context = {}
         self.check_access_rights(cr, user, 'read')
         fields = self.check_field_access_rights(cr, user, 'read', fields)
         if isinstance(ids, (int, long)):
@@ -3601,12 +3600,7 @@ class BaseModel(object):
         select = map(lambda x: isinstance(x, dict) and x['id'] or x, select)
         result = self._read_flat(cr, user, select, fields, context, load)
 
-        for r in result:
-            for key, v in r.items():
-                if v is None:
-                    r[key] = False
-
-        if isinstance(ids, (int, long, dict)):
+        if isinstance(ids, (int, long)):
             return result and result[0] or False
         return result
 
@@ -3740,34 +3734,37 @@ class BaseModel(object):
                 if field in self._columns:
                     fobj = self._columns[field]
 
-                if not fobj:
-                    continue
-                groups = fobj.read
-                if groups:
-                    edit = False
-                    for group in groups:
-                        module = group.split(".")[0]
-                        grp = group.split(".")[1]
-                        cr.execute("select count(*) from res_groups_users_rel where gid IN (select res_id from ir_model_data where name=%s and module=%s and model=%s) and uid=%s",  \
-                                   (grp, module, 'res.groups', user))
-                        readonly = cr.fetchall()
-                        if readonly[0][0] >= 1:
-                            edit = True
-                            break
-                        elif readonly[0][0] == 0:
-                            edit = False
-                        else:
-                            edit = False
+                if fobj:
+                    groups = fobj.read
+                    if groups:
+                        edit = False
+                        for group in groups:
+                            module = group.split(".")[0]
+                            grp = group.split(".")[1]
+                            cr.execute("select count(*) from res_groups_users_rel where gid IN (select res_id from ir_model_data where name=%s and module=%s and model=%s) and uid=%s",  \
+                                       (grp, module, 'res.groups', user))
+                            readonly = cr.fetchall()
+                            if readonly[0][0] >= 1:
+                                edit = True
+                                break
+                            elif readonly[0][0] == 0:
+                                edit = False
+                            else:
+                                edit = False
 
-                    if not edit:
-                        if type(vals[field]) == type([]):
-                            vals[field] = []
-                        elif type(vals[field]) == type(0.0):
-                            vals[field] = 0
-                        elif type(vals[field]) == type(''):
-                            vals[field] = '=No Permission='
-                        else:
-                            vals[field] = False
+                        if not edit:
+                            if type(vals[field]) == type([]):
+                                vals[field] = []
+                            elif type(vals[field]) == type(0.0):
+                                vals[field] = 0
+                            elif type(vals[field]) == type(''):
+                                vals[field] = '=No Permission='
+                            else:
+                                vals[field] = False
+
+                if vals[field] is None:
+                    vals[field] = False
+
         return res
 
     # TODO check READ access
@@ -4870,12 +4867,16 @@ class BaseModel(object):
         limit_str = limit and ' limit %d' % limit or ''
         offset_str = offset and ' offset %d' % offset or ''
         where_str = where_clause and (" WHERE %s" % where_clause) or ''
+        query_str = 'SELECT "%s".id FROM ' % self._table + from_clause + where_str + order_by + limit_str + offset_str
 
         if count:
-            cr.execute('SELECT count("%s".id) FROM ' % self._table + from_clause + where_str + limit_str + offset_str, where_clause_params)
-            res = cr.fetchall()
-            return res[0][0]
-        cr.execute('SELECT "%s".id FROM ' % self._table + from_clause + where_str + order_by + limit_str + offset_str, where_clause_params)
+            # /!\ the main query must be executed as a subquery, otherwise
+            # offset and limit apply to the result of count()!
+            cr.execute('SELECT count(*) FROM (%s) AS count' % query_str, where_clause_params)
+            res = cr.fetchone()
+            return res[0]
+
+        cr.execute(query_str, where_clause_params)
         res = cr.fetchall()
 
         # TDE note: with auto_join, we could have several lines about the same result
@@ -5277,7 +5278,10 @@ class BaseModel(object):
             assert signal_name
             return (lambda *args, **kwargs:
                     self.signal_workflow(*args, signal=signal_name, **kwargs))
-        return super(BaseModel, self).__getattr__(name)
+        get = getattr(super(BaseModel, self), '__getattr__', None)
+        if get is not None: return get(name)
+        raise AttributeError(
+            "'%s' object has no attribute '%s'" % (type(self).__name__, name))
 
 # keep this import here, at top it will cause dependency cycle errors
 import expression
@@ -5349,8 +5353,7 @@ def convert_pgerror_23502(model, fields, info, e):
     message = _(u"Missing required value for the field '%s'.") % field_name
     field = fields.get(field_name)
     if field:
-        message = _(u"%s This might be '%s' in the current model, or a field "
-                    u"of the same name in an o2m.") % (message, field['string'])
+        message = _(u"Missing required value for the field '%s' (%s)") % (field['string'], field_name)
     return {
         'message': message,
         'field': field_name,
