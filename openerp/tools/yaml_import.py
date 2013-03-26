@@ -7,6 +7,7 @@ import logging
 
 import openerp.pooler as pooler
 import openerp.sql_db as sql_db
+import openerp.workflow
 import misc
 from config import config
 import yaml_tag
@@ -584,9 +585,7 @@ class YamlInterpreter(object):
         signals=[x['signal'] for x in self.cr.dictfetchall()]
         if workflow.action not in signals:
             raise YamlImportException('Incorrect action %s. No such action defined' % workflow.action)
-        import openerp.netsvc as netsvc
-        wf_service = netsvc.LocalService("workflow")
-        wf_service.trg_validate(uid, workflow.model, id, workflow.action, self.cr)
+        openerp.workflow.trg_validate(uid, workflow.model, id, workflow.action, self.cr)
 
     def _eval_params(self, model, params):
         args = []

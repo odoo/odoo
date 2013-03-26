@@ -26,13 +26,14 @@ from socket import gethostname
 import time
 
 from openerp import SUPERUSER_ID
-from openerp import netsvc, tools
+from openerp import tools
 from openerp.osv import fields, osv
 import openerp.report.interface
 from openerp.report.report_sxw import report_sxw, report_rml
 from openerp.tools.config import config
 from openerp.tools.safe_eval import safe_eval as eval
 from openerp.tools.translate import _
+import openerp.workflow
 
 _logger = logging.getLogger(__name__)
 
@@ -645,12 +646,11 @@ class actions_server(osv.osv):
                     _logger.warning('Failed to send email to: %s', addresses)
 
             if action.state == 'trigger':
-                wf_service = netsvc.LocalService("workflow")
                 model = action.wkf_model_id.model
                 m2o_field_name = action.trigger_obj_id.name
                 target_id = obj_pool.read(cr, uid, context.get('active_id'), [m2o_field_name])[m2o_field_name]
                 target_id = target_id[0] if isinstance(target_id,tuple) else target_id
-                wf_service.trg_validate(uid, model, int(target_id), action.trigger_name, cr)
+                openerp.workflow.trg_validate(uid, model, int(target_id), action.trigger_name, cr)
 
             if action.state == 'sms':
                 #TODO: set the user and password from the system

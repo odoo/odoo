@@ -26,7 +26,7 @@ import types
 
 import openerp
 from openerp import SUPERUSER_ID
-from openerp import netsvc, pooler, tools
+from openerp import pooler, tools
 from openerp.osv import fields,osv
 from openerp.osv.orm import Model
 from openerp.tools.safe_eval import safe_eval as eval
@@ -1047,10 +1047,9 @@ class ir_model_data(osv.osv):
                 wkf_todo.extend(cr.fetchall())
                 cr.execute("update wkf_transition set condition='True', group_id=NULL, signal=NULL,act_to=act_from,act_from=%s where act_to=%s", (res_id,res_id))
 
-        wf_service = netsvc.LocalService("workflow")
         for model,res_id in wkf_todo:
             try:
-                wf_service.trg_write(uid, model, res_id, cr)
+                openerp.workflow.trg_write(uid, model, res_id, cr)
             except Exception:
                 _logger.info('Unable to force processing of workflow for item %s@%s in order to leave activity to be deleted', res_id, model, exc_info=True)
 

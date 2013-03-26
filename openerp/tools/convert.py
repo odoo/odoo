@@ -29,7 +29,9 @@ import sys
 
 # for eval context:
 import time
-import openerp.release as release
+
+import openerp.release
+import openerp.workflow
 
 import assertion_report
 
@@ -85,7 +87,7 @@ def _get_idref(self, cr, uid, model_str, context, idref):
                   time=time,
                   DateTime=datetime,
                   timedelta=timedelta,
-                  version=release.major_version,
+                  version=openerp.release.major_version,
                   ref=_ref(self, cr),
                   pytz=pytz)
     if len(model_str):
@@ -526,9 +528,7 @@ form: module.record_id""" % (xml_id,)
             id = _eval_xml(self, rec[0], self.pool, cr, self.uid, self.idref)
 
         uid = self.get_uid(cr, self.uid, data_node, rec)
-        import openerp.netsvc as netsvc
-        wf_service = netsvc.LocalService("workflow")
-        wf_service.trg_validate(uid, model,
+        openerp.workflow.trg_validate(uid, model,
             id,
             str(rec.get('action','')), cr)
 
