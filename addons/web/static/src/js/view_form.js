@@ -1021,7 +1021,7 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
             return value;
         }
         var fields = _.chain(this.fields)
-            .map(function (field, name) {
+            .map(function (field) {
                 var value = field.get_value();
                 // ignore fields which are empty, invisible, readonly, o2m
                 // or m2m
@@ -1036,7 +1036,7 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
                 }
 
                 return {
-                    name: name,
+                    name: field.name,
                     string: field.string,
                     value: value,
                     displayed: display(field, value),
@@ -1047,10 +1047,10 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
             .value();
         var conditions = _.chain(self.fields)
             .filter(function (field) { return field.field.change_default; })
-            .map(function (field, name) {
+            .map(function (field) {
                 var value = field.get_value();
                 return {
-                    name: name,
+                    name: field.name,
                     string: field.string,
                     value: value,
                     displayed: display(field, value),
@@ -2296,7 +2296,8 @@ instance.web.form.FieldChar = instance.web.form.AbstractField.extend(instance.we
         return this.get('value') === '' || this._super();
     },
     focus: function() {
-        this.$('input:first')[0].focus();
+        var input = this.$('input:first')[0];
+        return input ? input.focus() : false;
     },
     set_dimensions: function (height, width) {
         this._super(height, width);
@@ -2393,7 +2394,8 @@ instance.web.form.FieldFloat = instance.web.form.FieldChar.extend({
         this._super.apply(this, [value_]);
     },
     focus: function () {
-        this.$('input:first').select();
+        var $input = this.$('input:first');
+        return $input.length ? $input.select() : false;
     }
 });
 
@@ -2412,6 +2414,42 @@ instance.web.DateTimeWidget = instance.web.Widget.extend({
         var self = this;
         this.$input = this.$el.find('input.oe_datepicker_master');
         this.$input_picker = this.$el.find('input.oe_datepicker_container');
+
+        $.datepicker.setDefaults({
+            clearText: _t('Clear'),
+            clearStatus: _t('Erase the current date'),
+            closeText: _t('Done'),
+            closeStatus: _t('Close without change'),
+            prevText: _t('<Prev'),
+            prevStatus: _t('Show the previous month'),
+            nextText: _t('Next>'),
+            nextStatus: _t('Show the next month'),
+            currentText: _t('Today'),
+            currentStatus: _t('Show the current month'),
+            monthNames: Date.CultureInfo.monthNames,
+            monthNamesShort: Date.CultureInfo.abbreviatedMonthNames,
+            monthStatus: _t('Show a different month'),
+            yearStatus: _t('Show a different year'),
+            weekHeader: _t('Wk'),
+            weekStatus: _t('Week of the year'),
+            dayNames: Date.CultureInfo.dayNames,
+            dayNamesShort: Date.CultureInfo.abbreviatedDayNames,
+            dayNamesMin: Date.CultureInfo.shortestDayNames,
+            dayStatus: _t('Set DD as first week day'),
+            dateStatus: _t('Select D, M d'),
+            firstDay: Date.CultureInfo.firstDayOfWeek,
+            initStatus: _t('Select a date'),
+            isRTL: false
+        });
+        $.timepicker.setDefaults({
+            timeOnlyTitle: _t('Choose Time'),
+            timeText: _t('Time'),
+            hourText: _t('Hour'),
+            minuteText: _t('Minute'),
+            secondText: _t('Second'),
+            currentText: _t('Now'),
+            closeText: _t('Done')
+        });
 
         this.picker({
             onClose: this.on_picker_select,
@@ -2539,9 +2577,8 @@ instance.web.form.FieldDatetime = instance.web.form.AbstractField.extend(instanc
         return this.get('value') === '' || this._super();
     },
     focus: function() {
-        if (this.datewidget && this.datewidget.$input) {
-            this.datewidget.$input[0].focus();
-        }
+        var input = this.datewidget && this.datewidget.$input[0];
+        return input ? input.focus() : false;
     },
     set_dimensions: function (height, width) {
         this._super(height, width);
@@ -2622,9 +2659,8 @@ instance.web.form.FieldText = instance.web.form.AbstractField.extend(instance.we
         return this.get('value') === '' || this._super();
     },
     focus: function($el) {
-        if (!this.get("effective_readonly") && this.$textarea) {
-            this.$textarea[0].focus();
-        }
+        var input = !this.get("effective_readonly") && this.$textarea && this.$textarea[0];
+        return input ? input.focus() : false;
     },
     set_dimensions: function (height, width) {
         this._super(height, width);
@@ -2707,7 +2743,8 @@ instance.web.form.FieldBoolean = instance.web.form.AbstractField.extend({
         this.$checkbox[0].checked = this.get('value');
     },
     focus: function() {
-        this.$checkbox[0].focus();
+        var input = this.$checkbox && this.$checkbox[0];
+        return input ? input.focus() : false;
     }
 });
 
@@ -2793,7 +2830,8 @@ instance.web.form.FieldSelection = instance.web.form.AbstractField.extend(instan
         }
     },
     focus: function() {
-        this.$('select:first')[0].focus();
+        var input = this.$('select:first')[0];
+        return input ? input.focus() : false;
     },
     set_dimensions: function (height, width) {
         this._super(height, width);
@@ -3308,9 +3346,8 @@ instance.web.form.FieldMany2One = instance.web.form.AbstractField.extend(instanc
         return ! this.get("value");
     },
     focus: function () {
-        if (!this.get('effective_readonly')) {
-            this.$input && this.$input[0].focus();
-        }
+        var input = !this.get('effective_readonly') && this.$input && this.$input[0];
+        return input ? input.focus() : false;
     },
     _quick_create: function() {
         this.no_ed = true;
@@ -4170,7 +4207,8 @@ instance.web.form.FieldMany2ManyTags = instance.web.form.AbstractField.extend(in
         this.set({'value': _.uniq(this.get('value').concat([id]))});
     },
     focus: function () {
-        this.$text[0].focus();
+        var input = this.$text && this.$text[0];
+        return input ? input.focus() : false;
     },
 });
 

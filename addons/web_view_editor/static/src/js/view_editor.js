@@ -637,12 +637,12 @@ instance.web_view_editor.ViewEditor =   instance.web.Widget.extend({
             var children = _.filter(xml_arch.childNodes[0].childNodes, function (child) {
                 return child.nodeType == 1;
             });
-            arch.arch = _.detect(children, function(xml_child) {
+            var inherited_view = _.detect(children, function(xml_child) {
                 var temp_obj = self.create_View_Node(xml_child),
                     insert = _.intersection(_.flatten(temp_obj.att_list),_.uniq(check_list));
                 if (insert.length == _.uniq(check_list).length ) {return xml_child;}
             });
-            xml_arch = QWeb.load_xml(arch.arch);
+            xml_arch = QWeb.load_xml(instance.web.xml_to_str(inherited_view));
         }
         return self.do_save_xml(xml_arch.documentElement, obj[0].child_id[0],obj[0].child_id, move_direct, update_values,arch);
     },
