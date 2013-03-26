@@ -922,7 +922,7 @@ class YamlInterpreter(object):
 def yaml_import(cr, module, yamlfile, kind, idref=None, mode='init', noupdate=False, report=None):
     if idref is None:
         idref = {}
-    loglevel = logging.TEST if kind == 'test' else logging.DEBUG
+    loglevel = logging.INFO if kind == 'test' else logging.DEBUG
     yaml_string = yamlfile.read()
     yaml_interpreter = YamlInterpreter(cr, module, idref, mode, filename=yamlfile.name, report=report, noupdate=noupdate, loglevel=loglevel)
     yaml_interpreter.process(yaml_string)

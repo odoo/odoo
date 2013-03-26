@@ -20,18 +20,13 @@
 ##############################################################################
 
 import sys
-import logging
 
 LOG_NOTSET = 'notset'
 LOG_DEBUG = 'debug'
-LOG_TEST = 'test'
 LOG_INFO = 'info'
 LOG_WARNING = 'warn'
 LOG_ERROR = 'error'
 LOG_CRITICAL = 'critical'
-
-logging.TEST = logging.INFO - 5
-logging.addLevelName(logging.TEST, 'TEST')
 
 # TODO get_encodings, ustr and exception_to_unicode were originally from tools.misc.
 # There are here until we refactor tools so that this module doesn't depends on tools.
