@@ -31,7 +31,7 @@
                         <group>
                             <field name="name"/>
                             <field name="user_id" on_change="on_change_user_id(user_id)" required="1"
-                                context="{'default_groups_ref': [base.group_user']}"/>
+                                context="{'default_groups_ref': ['base.group_user']}"/>
                         </group>
                         <group>
                             <field name="date" on_change="on_change_date(date)"/>
