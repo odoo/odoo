@@ -20,11 +20,14 @@
 #
 ##############################################################################
 from datetime import datetime, timedelta
-from openerp.tools import DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT, DATETIME_FORMATS_MAP, float_compare, DEFAULT_SERVER_TIME_FORMAT
+from openerp.tools import DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT, DATETIME_FORMATS_MAP, float_compare
 from dateutil.relativedelta import relativedelta
 from openerp.osv import fields, osv
 from openerp import netsvc
 from openerp.tools.translate import _
+import pytz
+import time
+from openerp import SUPERUSER_ID
 
 class sale_shop(osv.osv):
     _inherit = "sale.shop"
@@ -232,9 +235,28 @@ class sale_order(osv.osv):
                     res.append(line.procurement_id.id)
         return res
 
-    def _get_gmtdatetime(self, cr, uid, utcdate, context=None):
-        nowutctime = datetime.utcnow().strftime(DEFAULT_SERVER_TIME_FORMAT)
-        return "%s %s"%(utcdate, nowutctime)
+    def date_to_datetime(self, cr, uid, userdate, context=None):
+        """
+        Function accepts date string assumed in client TZ and result is produced
+        in UTC timezone with 12:00 is assumed time to be sure, that system will
+        avoid tz date converstion issues.
+            e.g. Date 2013-03-26 in user tz will get 12:00 Hours and will then 
+                get converted to UTC to avoid tz converstion.
+        userdate: date string in in user time zone.
+        return  : the utc datetime string.
+        """
+        user_datetime = datetime.strptime(userdate, DEFAULT_SERVER_DATE_FORMAT) + relativedelta(hours=12.0)
+        if context and context.get('tz'):
+            tz_name = context['tz']  
+        else:
+            tz_name = self.pool.get('res.users').read(cr, SUPERUSER_ID, uid, ['tz'])['tz']
+        if not tz_name:
+            tz_name = time.tzname[time.daylight]
+        utc = pytz.timezone('UTC')
+        context_tz = pytz.timezone(tz_name)
+        local_timestamp = context_tz.localize(user_datetime, is_dst=False)
+        user_datetime = local_timestamp.astimezone(utc)
+        return user_datetime.strftime(DEFAULT_SERVER_DATETIME_FORMAT)
 
     # if mode == 'finished':
     #   returns True if all lines are done, False otherwise
@@ -318,7 +340,7 @@ class sale_order(osv.osv):
         return {
             'name': pick_name,
             'origin': order.name,
-            'date': self._get_gmtdatetime(cr, uid, order.date_order, context),
+            'date': self.date_to_datetime(cr, uid, order.date_order, context),
             'type': 'out',
             'state': 'auto',
             'move_type': order.picking_policy,
@@ -352,7 +374,7 @@ class sale_order(osv.osv):
         return True
 
     def _get_date_planned(self, cr, uid, order, line, start_date, context=None):
-        start_date = self._get_gmtdatetime(cr, uid, start_date, context)
+        start_date = self.date_to_datetime(cr, uid, start_date, context)
         date_planned = datetime.strptime(start_date, DEFAULT_SERVER_DATETIME_FORMAT) + relativedelta(days=line.delay or 0.0)
         date_planned = (date_planned - timedelta(days=order.company_id.security_lead)).strftime(DEFAULT_SERVER_DATETIME_FORMAT)
         return date_planned

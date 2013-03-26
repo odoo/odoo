@@ -20,6 +20,8 @@
 ##############################################################################
 
 import time
+import pytz
+from openerp import SUPERUSER_ID
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
 
@@ -29,7 +31,7 @@ from openerp import pooler
 from openerp.tools.translate import _
 import openerp.addons.decimal_precision as dp
 from openerp.osv.orm import browse_record, browse_null
-from openerp.tools import DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT, DATETIME_FORMATS_MAP,  DEFAULT_SERVER_TIME_FORMAT
+from openerp.tools import DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT, DATETIME_FORMATS_MAP
 
 class purchase_order(osv.osv):
 
@@ -226,7 +228,7 @@ class purchase_order(osv.osv):
         'journal_id': fields.many2one('account.journal', 'Journal'),
     }
     _defaults = {
-        'date_order': lambda *args: datetime.now().strftime(DEFAULT_SERVER_DATE_FORMAT),
+        'date_order': fields.date.context_today,
         'state': 'draft',
         'name': lambda obj, cr, uid, context: '/',
         'shipped': 0,
@@ -593,15 +595,34 @@ class purchase_order(osv.osv):
             wf_service.trg_validate(uid, 'purchase.order', id, 'purchase_cancel', cr)
         return True
 
-    def _get_gmtdatetime(self, cr, uid, utcdate, context=None):
-        nowutctime = datetime.utcnow().strftime(DEFAULT_SERVER_TIME_FORMAT)
-        return "%s %s"%(utcdate, nowutctime)
+    def date_to_datetime(self, cr, uid, userdate, context=None):
+        """
+        Function accepts date string assumed in client TZ and result is produced
+        in UTC timezone with 12:00 is assumed time to be sure, that system will
+        avoid tz date converstion issues.
+            e.g. Date 2013-03-26 in user tz will get 12:00 Hours and will then 
+                get converted to UTC to avoid tz converstion.
+        userdate: date string in in user time zone.
+        return  : the utc datetime string.
+        """
+        user_datetime = datetime.strptime(userdate, DEFAULT_SERVER_DATE_FORMAT) + relativedelta(hours=12.0)
+        if context and context.get('tz'):
+            tz_name = context['tz']  
+        else:
+            tz_name = self.pool.get('res.users').read(cr, SUPERUSER_ID, uid, ['tz'])['tz']
+        if not tz_name:
+            tz_name = time.tzname[time.daylight]
+        utc = pytz.timezone('UTC')
+        context_tz = pytz.timezone(tz_name)
+        local_timestamp = context_tz.localize(user_datetime, is_dst=False)
+        user_datetime = local_timestamp.astimezone(utc)
+        return user_datetime.strftime(DEFAULT_SERVER_DATETIME_FORMAT)
 
     def _prepare_order_picking(self, cr, uid, order, context=None):
         return {
             'name': self.pool.get('ir.sequence').get(cr, uid, 'stock.picking.in'),
             'origin': order.name + ((order.origin and (':' + order.origin)) or ''),
-            'date': self._get_gmtdatetime(cr, uid, order.date_order, context),
+            'date': self.date_to_datetime(cr, uid, order.date_order, context),
             'partner_id': order.dest_address_id.id or order.partner_id.id,
             'invoice_state': '2binvoiced' if order.invoice_method == 'picking' else 'none',
             'type': 'in',
@@ -619,8 +640,8 @@ class purchase_order(osv.osv):
             'product_uos_qty': order_line.product_qty,
             'product_uom': order_line.product_uom.id,
             'product_uos': order_line.product_uom.id,
-            'date': self._get_gmtdatetime(cr, uid, order.date_order, context),
-            'date_expected': self._get_gmtdatetime(cr, uid, order.date_order, context),
+            'date': self.date_to_datetime(cr, uid, order.date_order, context),
+            'date_expected': self.date_to_datetime(cr, uid, order.date_order, context),
             'location_id': order.partner_id.property_stock_supplier.id,
             'location_dest_id': order.location_id.id,
             'picking_id': picking_id,
