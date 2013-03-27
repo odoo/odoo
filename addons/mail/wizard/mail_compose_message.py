@@ -165,16 +165,17 @@ class mail_compose_message(osv.TransientModel):
             :param int res_id: id of the document record this mail is related to
         """
         doc_name_get = self.pool.get(model).name_get(cr, uid, [res_id], context=context)
+        record_name = False
         if doc_name_get:
             record_name = doc_name_get[0][1]
-        else:
-            record_name = False
-        return {
+        values = {
             'model': model,
             'res_id': res_id,
             'record_name': record_name,
-            'subject': 'Re: %s' % record_name,
         }
+        if record_name:
+            values['subject'] = 'Re: %s' % record_name
+        return values
 
     def get_message_data(self, cr, uid, message_id, context=None):
         """ Returns a defaults-like dict with initial values for the composition
@@ -192,6 +193,8 @@ class mail_compose_message(osv.TransientModel):
 
         # create subject
         re_prefix = _('Re:')
+        if message_data.subject:
+            
         reply_subject = tools.ustr(message_data.subject or tools.ustr(message_data.record_name or '') or '')
         if not (reply_subject.startswith('Re:') or reply_subject.startswith(re_prefix)) and message_data.subject:
             reply_subject = "%s %s" % (re_prefix, reply_subject)
