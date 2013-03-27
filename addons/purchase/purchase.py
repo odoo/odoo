@@ -25,7 +25,6 @@ from dateutil.relativedelta import relativedelta
 from operator import attrgetter
 
 from openerp.osv import fields, osv
-from openerp import pooler
 from openerp.tools.translate import _
 import openerp.addons.decimal_precision as dp
 from openerp.osv.orm import browse_record, browse_null
