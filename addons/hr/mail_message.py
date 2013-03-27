@@ -32,7 +32,7 @@ class mail_message(osv.Model):
         """If the user posting the message to an employee  is an employee, only
         the read access are checked"""
 
-        employee_ids = model_obj.search(cr, uid, [('user_id', '=', uid)], context=context)
+        employee_ids = model_obj.search(cr, uid, [('user_id', '=', int(uid))], context=context)
         if len(employee_ids) > 0:
             model_obj.check_access_rights(cr, uid, 'read')
             model_obj.check_access_rule(cr, uid, mids, 'read', context=context)
