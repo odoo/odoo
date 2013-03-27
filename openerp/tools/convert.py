@@ -915,10 +915,10 @@ def convert_csv_import(cr, module, fname, csvcontent, idref=None, mode='init',
     uid = 1
     datas = []
     for line in reader:
-        if (not line) or not reduce(lambda x,y: x or y, line) :
+        if not (line and any(line)):
             continue
         try:
-            datas.append(map(lambda x: misc.ustr(x), line))
+            datas.append(map(misc.ustr, line))
         except:
             _logger.error("Cannot import the line: %s", line)
     result, rows, warning_msg, dummy = pool.get(model).import_data(cr, uid, fields, datas,mode, module, noupdate, filename=fname_partial)
