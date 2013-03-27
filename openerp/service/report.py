@@ -5,8 +5,8 @@ import logging
 import sys
 import threading
 
+import openerp
 import openerp.netsvc
-import openerp.pooler
 from openerp import tools
 
 import security
@@ -49,7 +49,7 @@ def exp_render_report(db, uid, object, ids, datas=None, context=None):
 
     self_reports[id] = {'uid': uid, 'result': False, 'state': False, 'exception': None}
 
-    cr = openerp.pooler.get_db(db).cursor()
+    cr = openerp.registry(db).db.cursor()
     try:
         obj = openerp.netsvc.LocalService('report.'+object)
         (result, format) = obj.create(cr, uid, ids, datas, context)
@@ -88,7 +88,7 @@ def exp_report(db, uid, object, ids, datas=None, context=None):
     self_reports[id] = {'uid': uid, 'result': False, 'state': False, 'exception': None}
 
     def go(id, uid, ids, datas, context):
-        cr = openerp.pooler.get_db(db).cursor()
+        cr = openerp.registry(db).db.cursor()
         try:
             obj = openerp.netsvc.LocalService('report.'+object)
             (result, format) = obj.create(cr, uid, ids, datas, context)

@@ -4,7 +4,6 @@ import logging
 import threading
 
 import openerp.osv.orm # TODO use openerp.exceptions
-import openerp.pooler
 import openerp.release
 import openerp.tools
 
@@ -43,7 +42,7 @@ def exp_login(db, login, password):
     return res or False
 
 def exp_authenticate(db, login, password, user_agent_env):
-    res_users = openerp.pooler.get_pool(db).get('res.users')
+    res_users = openerp.registry(db)['res.users']
     return res_users.authenticate(db, login, password, user_agent_env)
 
 def exp_version():

@@ -23,7 +23,8 @@ import os
 import re
 
 from lxml import etree
-import openerp.pooler as pooler
+
+import openerp
 
 import openerp.tools as tools
 import openerp.modules
@@ -90,8 +91,8 @@ class report_rml(report_int):
         if report_type == 'raw':
             return xml, report_type
         rml = self.create_rml(cr, xml, uid, context)
-        pool = pooler.get_pool(cr.dbname)
-        ir_actions_report_xml_obj = pool.get('ir.actions.report.xml')
+        registry = openerp.registry(cr.dbname)
+        ir_actions_report_xml_obj = registry['ir.actions.report.xml']
         report_xml_ids = ir_actions_report_xml_obj.search(cr, uid, [('report_name', '=', self.name[7:])], context=context)
         self.title = report_xml_ids and ir_actions_report_xml_obj.browse(cr,uid,report_xml_ids)[0].name or 'OpenERP Report'
         create_doc = self.generators[report_type]
@@ -140,8 +141,8 @@ class report_rml(report_int):
             self.internal_header=True
         if not context:
             context={}
-        pool = pooler.get_pool(cr.dbname)
-        ir_translation_obj = pool.get('ir.translation')
+        registry = openerp.registry(cr.dbname)
+        ir_translation_obj = registry['ir.translation']
 
         # In some case we might not use xsl ...
         if not self.xsl:
