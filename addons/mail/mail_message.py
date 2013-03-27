@@ -265,19 +265,25 @@ class mail_message(osv.Model):
         domain = [('partner_id', '=', user_pid), ('message_id', 'in', msg_ids)]
         if not create_missing:
             domain += [('starred', '=', not starred)]
+        values = {
+            'starred': starred
+        }
+        if starred:
+            values['read'] = False
+ 
         notif_ids = notification_obj.search(cr, uid, domain, context=context)
 
         # all message have notifications: already set them as (un)starred
         if len(notif_ids) == len(msg_ids) or not create_missing:
-            notification_obj.write(cr, uid, notif_ids, {'starred': starred}, context=context)
+            notification_obj.write(cr, uid, notif_ids, values, context=context)
             return starred
 
         # some messages do not have notifications: find which one, create notification, update starred status
         notified_msg_ids = [notification.message_id.id for notification in notification_obj.browse(cr, uid, notif_ids, context=context)]
         to_create_msg_ids = list(set(msg_ids) - set(notified_msg_ids))
         for msg_id in to_create_msg_ids:
-            notification_obj.create(cr, uid, {'partner_id': user_pid, 'starred': starred, 'message_id': msg_id}, context=context)
-        notification_obj.write(cr, uid, notif_ids, {'starred': starred}, context=context)
+            notification_obj.create(cr, uid, dict(values, partner_id=user_pid, message_id=msg_id), context=context)
+        notification_obj.write(cr, uid, notif_ids, values, context=context)
         return starred
 
     #------------------------------------------------------
