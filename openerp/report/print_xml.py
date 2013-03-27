@@ -264,7 +264,7 @@ class document(object):
     def parse_tree(self, ids, model, context=None):
         if not context:
             context={}
-        browser = self.pool.get(model).browse(self.cr, self.uid, ids, context)
+        browser = self.pool[model].browse(self.cr, self.uid, ids, context)
         self.parse_node(self.dom, self.doc, browser)
 
     def parse_string(self, xml, ids, model, context=None):

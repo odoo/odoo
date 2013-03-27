@@ -294,7 +294,8 @@ form: module.record_id""" % (xml_id,)
             res[dest] = rec.get(f,'').encode('utf8')
             assert res[dest], "Attribute %s of report is empty !" % (f,)
         for field,dest in (('rml','report_rml'),('file','report_rml'),('xml','report_xml'),('xsl','report_xsl'),
-                           ('attachment','attachment'),('attachment_use','attachment_use'), ('usage','usage')):
+                           ('attachment','attachment'),('attachment_use','attachment_use'), ('usage','usage'),
+                           ('report_type', 'report_type'), ('parser', 'parser')):
             if rec.get(field):
                 res[dest] = rec.get(field).encode('utf8')
         if rec.get('auto'):
@@ -304,8 +305,6 @@ form: module.record_id""" % (xml_id,)
             res['report_sxw_content'] = sxw_content
         if rec.get('header'):
             res['header'] = eval(rec.get('header','False'))
-        if rec.get('report_type'):
-            res['report_type'] = rec.get('report_type')
 
         res['multi'] = rec.get('multi') and eval(rec.get('multi','False'))
 

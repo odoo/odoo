@@ -5,6 +5,7 @@ import time # used to eval time.strftime expressions
 from datetime import datetime, timedelta
 import logging
 
+import openerp
 import openerp.pooler as pooler
 import openerp.sql_db as sql_db
 import misc
@@ -281,7 +282,6 @@ class YamlInterpreter(object):
         return record_dict
 
     def process_record(self, node):
-        import openerp.osv as osv
         record, fields = node.items()[0]
         model = self.get_model(record.model)
 
@@ -543,7 +543,14 @@ class YamlInterpreter(object):
         python, statements = node.items()[0]
         model = self.get_model(python.model)
         statements = statements.replace("\r\n", "\n")
-        code_context = { 'model': model, 'cr': self.cr, 'uid': self.uid, 'log': self._log, 'context': self.context }
+        code_context = {
+            'model': model,
+            'cr': self.cr,
+            'uid': self.uid,
+            'log': self._log,
+            'context': self.context,
+            'openerp': openerp,
+        }
         code_context.update({'self': model}) # remove me when no !python block test uses 'self' anymore
         try:
             code_obj = compile(statements, self.filename, 'exec')
