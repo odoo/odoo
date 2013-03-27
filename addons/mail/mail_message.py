@@ -710,15 +710,12 @@ class mail_message(osv.Model):
         other_ids = other_ids.difference(set(notified_ids))
         model_record_ids = _generate_model_record_ids(message_values, other_ids)
         document_related_ids = []
+        
         for model, doc_dict in model_record_ids.items():
             model_obj = self.pool.get(model)
             mids = model_obj.exists(cr, uid, doc_dict.keys())
-            if operation in ['create', 'write', 'unlink']:
-                model_obj.check_access_rights(cr, uid, 'write')
-                model_obj.check_access_rule(cr, uid, mids, 'write', context=context)
-            else:
-                model_obj.check_access_rights(cr, uid, operation)
-                model_obj.check_access_rule(cr, uid, mids, operation, context=context)
+            self.check_related_document(cr, uid, model_obj, mids, operation, context)
+
             document_related_ids += [mid for mid, message in message_values.iteritems()
                 if message.get('model') == model and message.get('res_id') in mids]
 
@@ -729,6 +726,16 @@ class mail_message(osv.Model):
         raise orm.except_orm(_('Access Denied'),
                             _('The requested operation cannot be completed due to security restrictions. Please contact your system administrator.\n\n(Document type: %s, Operation: %s)') % \
                             (self._description, operation))
+
+    def check_related_document(self, cr, uid, model_obj, mids, operation, context=None):
+        """Concrete check permission rules for related document"""
+        print(operation, mids, model_obj)
+        if operation in ['create', 'write', 'unlink']:
+            model_obj.check_access_rights(cr, uid, 'write')
+            model_obj.check_access_rule(cr, uid, mids, 'write', context=context)
+        else:
+            model_obj.check_access_rights(cr, uid, operation)
+            model_obj.check_access_rule(cr, uid, mids, operation, context=context)
 
     def create(self, cr, uid, values, context=None):
         if context is None:
