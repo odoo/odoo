@@ -227,6 +227,11 @@ class hr_employee(osv.osv):
                 subtype='mail.mt_comment', context=context)
         except:
             pass # group deleted: do not push a message
+
+        # the user linked to the employee follow the employee
+        if 'user_id' in data:
+            user = self.pool.get('res.users').browse(cr, uid, data['user_id'], context=context)
+            self.message_subscribe(cr, uid, [employee_id], [user.partner_id.id], context=context)
         return employee_id
 
     def unlink(self, cr, uid, ids, context=None):
@@ -293,7 +298,7 @@ class hr_employee(osv.osv):
         :return: the result of message_post from mail_thread, last call if
         several messages are sent.
         """
-        if 'res_users_id' in context:  # and context['default_res_id'] == 0:
+        if 'res_users_id' in context:
             employee_ids = self.search(cr, uid, [('user_id', '=', context['res_users_id'])], context=context)
             if len(employee_ids) > 0:
                 for employee_id in employee_ids:
