@@ -27,13 +27,13 @@ import re
 
 import openerp
 from openerp import SUPERUSER_ID
-from openerp import pooler, tools
+from openerp import tools
 from openerp.osv import osv, fields
 from openerp.tools.translate import _
 
 class format_address(object):
     def fields_view_get_address(self, cr, uid, arch, context={}):
-        user_obj = self.pool.get('res.users')
+        user_obj = self.pool['res.users']
         fmt = user_obj.browse(cr, SUPERUSER_ID, uid, context).company_id.country_id
         fmt = fmt and fmt.address_format
         layouts = {
@@ -154,7 +154,7 @@ class res_partner_title(osv.osv):
     }
 
 def _lang_get(self, cr, uid, context=None):
-    lang_pool = self.pool.get('res.lang')
+    lang_pool = self.pool['res.lang']
     ids = lang_pool.search(cr, uid, [], context=context)
     res = lang_pool.read(cr, uid, ids, ['code', 'name'], context)
     return [(r['code'], r['name']) for r in res]
@@ -287,7 +287,7 @@ class res_partner(osv.osv, format_address):
 
     def fields_view_get(self, cr, user, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
         if (not view_id) and (view_type=='form') and context and context.get('force_email', False):
-            view_id = self.pool.get('ir.model.data').get_object_reference(cr, user, 'base', 'view_partner_simple_form')[1]
+            view_id = self.pool['ir.model.data'].get_object_reference(cr, user, 'base', 'view_partner_simple_form')[1]
         res = super(res_partner,self).fields_view_get(cr, user, view_id, view_type, context, toolbar=toolbar, submenu=submenu)
         if view_type == 'form':
             res['arch'] = self.fields_view_get_address(cr, user, res['arch'], context=context)
@@ -299,7 +299,7 @@ class res_partner(osv.osv, format_address):
         'tz': lambda self, cr, uid, ctx: ctx.get('tz', False),
         'customer': True,
         'category_id': _default_category,
-        'company_id': lambda self, cr, uid, ctx: self.pool.get('res.company')._company_default_get(cr, uid, 'res.partner', context=ctx),
+        'company_id': lambda self, cr, uid, ctx: self.pool['res.company']._company_default_get(cr, uid, 'res.partner', context=ctx),
         'color': 0,
         'is_company': False,
         'type': 'default',
@@ -336,12 +336,12 @@ class res_partner(osv.osv, format_address):
 
     def onchange_state(self, cr, uid, ids, state_id, context=None):
         if state_id:
-            country_id = self.pool.get('res.country.state').browse(cr, uid, state_id, context).country_id.id
+            country_id = self.pool['res.country.state'].browse(cr, uid, state_id, context).country_id.id
             return {'value':{'country_id':country_id}}
         return {}
 
     def _check_ean_key(self, cr, uid, ids, context=None):
-        for partner_o in pooler.get_pool(cr.dbname).get('res.partner').read(cr, uid, ids, ['ean13',]):
+        for partner_o in self.pool['res.partner'].read(cr, uid, ids, ['ean13',]):
             thisean=partner_o['ean13']
             if thisean and thisean!='':
                 if len(thisean)!=13:
@@ -487,7 +487,7 @@ class res_partner(osv.osv, format_address):
 
     def email_send(self, cr, uid, ids, email_from, subject, body, on_error=''):
         while len(ids):
-            self.pool.get('ir.cron').create(cr, uid, {
+            self.pool['ir.cron'].create(cr, uid, {
                 'name': 'Send Partner Emails',
                 'user_id': uid,
                 'model': 'res.partner',
@@ -523,12 +523,12 @@ class res_partner(osv.osv, format_address):
         if res: return res
         if not context.get('category_id', False):
             return False
-        return _('Partners: ')+self.pool.get('res.partner.category').browse(cr, uid, context['category_id'], context).name
+        return _('Partners: ')+self.pool['res.partner.category'].browse(cr, uid, context['category_id'], context).name
 
     def main_partner(self, cr, uid):
         ''' Return the id of the main partner
         '''
-        model_data = self.pool.get('ir.model.data')
+        model_data = self.pool['ir.model.data']
         return model_data.browse(cr, uid,
                             model_data.search(cr, uid, [('module','=','base'),
                                                 ('name','=','main_partner')])[0],
