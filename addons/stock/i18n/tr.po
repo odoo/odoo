@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2013-03-07 08:37+0000\n"
-"PO-Revision-Date: 2013-03-21 15:53+0000\n"
-"Last-Translator: Ediz Duman <neps1192@gmail.com>\n"
+"PO-Revision-Date: 2013-03-26 22:07+0000\n"
+"Last-Translator: Ayhan KIZILTAN <Unknown>\n"
 "Language-Team: Turkish <tr@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-03-22 05:35+0000\n"
-"X-Generator: Launchpad (build 16532)\n"
+"X-Launchpad-Export-Date: 2013-03-27 05:41+0000\n"
+"X-Generator: Launchpad (build 16540)\n"
 
 #. module: stock
 #: field:stock.inventory.line.split,line_exist_ids:0
@@ -994,6 +994,8 @@ msgid ""
 "This field is for internal purpose. It is used to decide if the column "
 "production lot has to be shown on the moves or not."
 msgstr ""
+"Bu alan iç amaçlıdır. Üretim partisi sütununun hareketlerde görünüp "
+"görünmeyeceğine karar vermek için kullanılır."
 
 #. module: stock
 #: selection:product.product,valuation:0
@@ -1028,6 +1030,8 @@ msgid ""
 "You cannot cancel the picking as some moves have been done. You should "
 "cancel the picking lines."
 msgstr ""
+"Bazı hareketler yapılmış olduğu için toplamayı iptal edemezsiniz. Toplama "
+"kalemlerini iptal edebilirsiniz."
 
 #. module: stock
 #: field:stock.config.settings,decimal_precision:0
@@ -1206,6 +1210,8 @@ msgid ""
 "No products to return (only lines in Done state and not fully returned yet "
 "can be returned)!"
 msgstr ""
+"İade edilecek ürün yok (yalnızca Yapıldı durumundaki ve henüz tam olarak "
+"iade edilmemiş kalemler iade edilebilir)!"
 
 #. module: stock
 #: view:stock.picking:0
@@ -1326,6 +1332,7 @@ msgstr "Yazar"
 msgid ""
 "You are moving %.2f %s but only %.2f %s available for this serial number."
 msgstr ""
+"Taşıdığınız %.2f %s ama bu seri numarası için yalnızca %.2f %s mevcuttur."
 
 #. module: stock
 #: report:stock.picking.list:0
@@ -1382,6 +1389,8 @@ msgid ""
 "Allows you to create and manage your packaging dimensions and types you want "
 "to be maintained in your system."
 msgstr ""
+"Sistemde muhafaza etmek istediğiniz ambalaj boyutları ve türleri "
+"oluşturmanızı ve yönetmenizi sağlar."
 
 #. module: stock
 #: selection:report.stock.inventory,month:0
@@ -1429,6 +1438,14 @@ msgid ""
 "* Available: When products are reserved, it is set to 'Available'.\n"
 "* Done: When the shipment is processed, the state is 'Done'."
 msgstr ""
+"* Yeni: Stok hareketi oluşturulmuş ancak henüz onaylanmamış.\n"
+"* Başka bir hareket bekliyor: Bu durum bir hareketin başka bir hareketi "
+"beklediğinde görülür, örneğin bir zincirli akışta.\n"
+"* Uygunluk Bekliyor: Bu duruma, tedarik çözümünün doğru olmadığı zaman "
+"erişilir. Planlayıcının çalıştırılması, bir parçanın üretilmesi "
+"gerekebilir...\n"
+"* Uygun: Ürünler ayrıldığında, 'Uygun'a ayarlanır.\n"
+"* Yapıldı: Sevkiyat yapıldığında durum 'Yapıldı' olur."
 
 #. module: stock
 #: model:stock.location,name:stock.stock_location_locations_partner
@@ -1486,6 +1503,24 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Yeni bir günlük oluşturmak için tıklayın. \n"
+"              </p><p>\n"
+"                Stok günlük sistemi her stok hareketini, yürütülecek \n"
+"                işlemin ya da bu işlemi yürütecek işçi/takım türüne \n"
+"                göre belirli bir günlüğe atar. Stok günlüğü örnekleri \n"
+"                şunlar olabilir: kalite kontrol, toplama listeleri,\n"
+"                paketleme, vb..\n"
+"\n"
+"                The stock journal system allows you to assign each stock\n"
+"                operation to a specific journal according to the type of\n"
+"                operation to perform or the worker/team that should perform "
+"the\n"
+"                operation. Examples of stock journals may be: quality "
+"control,\n"
+"                pick lists, packing, etc.\n"
+"              </p>\n"
+"            "
 
 #. module: stock
 #: help:stock.location,chained_auto_packing:0
@@ -1526,7 +1561,7 @@ msgstr "Başka bir Hareket Bekliyor"
 #: help:stock.change.product.qty,new_quantity:0
 msgid ""
 "This quantity is expressed in the Default Unit of Measure of the product."
-msgstr ""
+msgstr "Bu miktar, ürünün Varsayılan Ölçü Biriminde tanımlanır."
 
 #. module: stock
 #: help:stock.move,price_unit:0
@@ -1570,7 +1605,7 @@ msgstr "Sadece taslak hareketlerini silebilirsiniz."
 #: code:addons/stock/stock.py:1665
 #, python-format
 msgid "You cannot move product %s to a location of type view %s."
-msgstr ""
+msgstr "Bu %s ürününü %s görünüm türlü bir konuma taşıyamazsınız."
 
 #. module: stock
 #: view:stock.inventory:0
@@ -1926,6 +1961,8 @@ msgid ""
 "Check this option to select existing serial numbers in the list below, "
 "otherwise you should enter new ones line by line."
 msgstr ""
+"Bu seçeneği, aşağıdaki listede mevcut seri numaralarını seçmek için "
+"işaretleyin, aksi durumda satır satır yenilerini girmek zorunda kalırsınız."
 
 #. module: stock
 #: selection:report.stock.move,type:0
@@ -1959,6 +1996,8 @@ msgid ""
 "This stock location will be used, instead of the default one, as the source "
 "location for stock moves generated by manufacturing orders."
 msgstr ""
+"Bu stok konumu varsayılanın yerine üretim emriyle oluşturulan stok "
+"hareketlerinin kaynak konumu olarak kullanılacaktır."
 
 #. module: stock
 #: help:stock.move,date_expected:0
@@ -2021,6 +2060,8 @@ msgid ""
 "This stock location will be used, instead of the default one, as the source "
 "location for stock moves generated when you do an inventory."
 msgstr ""
+"Bu stok konumu varsayılanın yerine envanter işlemi yaparken oluşturulan stok "
+"hareketlerinin kaynak konumu olarak kullanılacaktır."
 
 #. module: stock
 #: help:product.template,property_stock_account_output:0
@@ -2244,7 +2285,7 @@ msgstr ""
 #: sql_constraint:stock.production.lot:0
 msgid ""
 "The combination of Serial Number and internal reference must be unique !"
-msgstr ""
+msgstr "Seri Numarası ve iç referans kombinasyonu eşsiz olmalıdır !"
 
 #. module: stock
 #: field:stock.warehouse,partner_id:0
@@ -2265,7 +2306,7 @@ msgstr ""
 #. module: stock
 #: constraint:stock.move:0
 msgid "You try to assign a lot which is not from the same product."
-msgstr ""
+msgstr "Aynı üründen olmayan bir partiyi atamaya çalışıyorsunuz."
 
 #. module: stock
 #: field:report.stock.move,day_diff1:0
@@ -2280,7 +2321,7 @@ msgstr "Fiyat"
 #. module: stock
 #: field:stock.config.settings,module_stock_invoice_directly:0
 msgid "Create and open the invoice when the user finish a delivery order"
-msgstr ""
+msgstr "Kullanıcı bir teslimat emrini tamamladığında fatura oluştur ve aç"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_return_picking_memory
@@ -2318,6 +2359,8 @@ msgid ""
 "Forces to specify a Serial Number for all moves containing this product and "
 "generated by a Manufacturing Order"
 msgstr ""
+"Bu ürünü ve bir Üretim Emriyle oluşturulan tüm hareketler için Seri Numarası "
+"belirlemeye zorlar"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_fill_inventory
@@ -2501,6 +2544,14 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Bir stok hareketi oluşturmak için tıklayın.\n"
+"              </p><p>\n"
+"                Bu menü, belirli bir ürünün tam izlenebilirliğini ve\n"
+"                envanter işlemlerini verir. Üründe süzgeçleme yaparak\n"
+"                ürünün tüm geçmiş ve gelecek hareketlerini görebilirisiniz.\n"
+"              </p>\n"
+"            "
 
 #. module: stock
 #: view:stock.location:0
@@ -2546,7 +2597,7 @@ msgstr "Okunmamış Mesajlar"
 msgid ""
 "Current quantity of products with this Serial Number available in company "
 "warehouses"
-msgstr ""
+msgstr "Şirket deposundaki bu seri numaralı mevcut ürünün geçerli miktarı"
 
 #. module: stock
 #: view:stock.inventory:0
@@ -2665,6 +2716,8 @@ msgid ""
 "Cannot create Journal Entry, Output Account of this product and Valuation "
 "account on category of this product are same."
 msgstr ""
+"Günlük Kaydı oluşturulamıyor, Bu ürünün Çıkış Hesabı ve bu ürünün "
+"kategorisindeki Değerleme hesabı aynıdır."
 
 #. module: stock
 #: selection:stock.location,chained_location_type:0
@@ -2729,7 +2782,7 @@ msgstr "Kâr&Zarar Miktarı"
 #. module: stock
 #: model:ir.model,name:stock.model_stock_config_settings
 msgid "stock.config.settings"
-msgstr ""
+msgstr "stock.config.settings"
 
 #. module: stock
 #: view:stock.production.lot:0
@@ -2786,7 +2839,7 @@ msgstr "Oluştur"
 #. module: stock
 #: field:stock.change.product.qty,new_quantity:0
 msgid "New Quantity on Hand"
-msgstr ""
+msgstr "Eldeki Yeni Miktar"
 
 #. module: stock
 #: field:stock.move,priority:0
@@ -2836,7 +2889,7 @@ msgstr "Envanter İptali"
 #. module: stock
 #: view:stock.move:0
 msgid "Cancel Move"
-msgstr ""
+msgstr "Hareketi İptal et"
 
 #. module: stock
 #: code:addons/stock/stock.py:2246
@@ -2845,6 +2898,8 @@ msgid ""
 "Cannot create Journal Entry, Input Account of this product and Valuation "
 "account on category of this product are same."
 msgstr ""
+"Günlük Kaydı oluşturulamıyor, Bu ürünün Giriş Hesabı ve bu ürünün "
+"kategorisindeki Değerleme hesabı aynıdır."
 
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_stock_unit_measure_stock
@@ -2869,6 +2924,8 @@ msgid ""
 "By changing the quantity here, you accept the new quantity as complete: "
 "OpenERP will not automatically generate a Back Order."
 msgstr ""
+"Burada miktarı değiştirerek, yeni miktarı tam olarak kabul ediyorsunuz: "
+"OpenERP kendiliğinden bir Sipariş Bakiyesi oluşturmayacaktır."
 
 #. module: stock
 #: report:stock.inventory.move:0
@@ -2888,7 +2945,7 @@ msgstr "Seri numarası ile Stok raporu"
 #. module: stock
 #: view:stock.picking:0
 msgid "Cancel Transfer"
-msgstr ""
+msgstr "Aktarmayı iptal et"
 
 #. module: stock
 #: selection:report.stock.inventory,month:0
@@ -2931,6 +2988,13 @@ msgid ""
 "    - alert date.\n"
 "This installs the module product_expiry."
 msgstr ""
+"Ürünlerde ve seri numaralarında farklı tarihleri izleyin.\n"
+"Aşağıdaki tarihler izlenebilir:\n"
+"    - kullanım süresi sonu\n"
+"    - son kullanım tarihi\n"
+"    - kaldırılma tarihi\n"
+"    - uyarı tarihi.\n"
+"Bu, product_expiry modülünü kurar."
 
 #. module: stock
 #: code:addons/stock/wizard/stock_partial_picking.py:174
@@ -3034,7 +3098,7 @@ msgstr "Tamamlama Tarihi"
 #: code:addons/stock/stock.py:1663
 #, python-format
 msgid "You cannot move product %s from a location of type view %s."
-msgstr ""
+msgstr "Bu %s ürününü %s görünüm türündeki konumdan taşıyamazsınız."
 
 #. module: stock
 #: model:stock.location,name:stock.stock_location_company
@@ -3509,7 +3573,7 @@ msgstr "Stok hareketleri olmadan seçim listesi işleyemiyor."
 #. module: stock
 #: field:stock.production.lot,move_ids:0
 msgid "Moves for this serial number"
-msgstr ""
+msgstr "Bu seri numarasındaki hareketler"
 
 #. module: stock
 #: field:stock.move,product_uos:0
@@ -3930,6 +3994,10 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Yeni bir depo tanımlamak için tıklayın.\n"
+"              </p>\n"
+"            "
 
 #. module: stock
 #: selection:report.stock.inventory,state:0
@@ -3971,7 +4039,7 @@ msgstr ""
 #. module: stock
 #: model:stock.location,name:stock.stock_location_shop0
 msgid "Your Company, Chicago shop"
-msgstr ""
+msgstr "Firmanızi Chicago mağazası"
 
 #. module: stock
 #: selection:report.stock.move,type:0
@@ -4014,6 +4082,8 @@ msgid ""
 "By changing this quantity here, you accept the new quantity as complete: "
 "OpenERP will not automatically generate a back order."
 msgstr ""
+"Burada miktarı değiştirerek, yeni miktarı tam olarak kebul ediyorsunuz: "
+"OpenERP kendiliğinden bir Sipariş Bakiyesi oluşturmayacaktır."
 
 #. module: stock
 #: view:stock.production.lot.revision:0
@@ -4085,7 +4155,7 @@ msgstr "Takipçiler"
 #: code:addons/stock/stock.py:2585
 #, python-format
 msgid "Cannot consume a move with negative or zero quantity."
-msgstr ""
+msgstr "Eksi ya da sıfır miktarlı bir hareket kullanılamıyor."
 
 #. module: stock
 #: help:stock.config.settings,decimal_precision:0
@@ -4174,6 +4244,10 @@ msgid ""
 "                to be invoiced when you send or deliver goods.\n"
 "                This installs the module stock_invoice_directly."
 msgstr ""
+"Malları gönderirken ya da teslim ettiğinizde faturalanması gerekirse, "
+"fatura\n"
+"                sihirbazı kendiliğinden çalıştırır.\n"
+"                Bu stock_invoice_directly modülünü kurar."
 
 #. module: stock
 #: field:stock.location,chained_journal_id:0
@@ -4291,13 +4365,13 @@ msgstr ""
 #. module: stock
 #: help:stock.production.lot,name:0
 msgid "Unique Serial Number, will be displayed as: PREFIX/SERIAL [INT_REF]"
-msgstr ""
+msgstr "Eşsiz Seri Numarası böyle gösterilecektir: ÖNEK/SERİ [INT_REF]"
 
 #. module: stock
 #: code:addons/stock/product.py:142
 #, python-format
 msgid "Please define stock input account for this product: \"%s\" (id: %d)."
-msgstr ""
+msgstr "Bu ürün için lütfen stok giriş hesabı tanımlayın: \"%s\" (id: %d)."
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_reception_picking_move
@@ -4347,7 +4421,7 @@ msgstr "Bilgisi"
 #: code:addons/stock/stock.py:1199
 #, python-format
 msgid "You cannot remove the picking which is in %s state!"
-msgstr ""
+msgstr "Bu %s durumundaki toplamayı kaldıramazsınız!"
 
 #. module: stock
 #: help:res.partner,property_stock_customer:0
@@ -4471,12 +4545,14 @@ msgid ""
 "Adds a Claim link to the delivery order.\n"
 "                This installs the module claim_from_delivery."
 msgstr ""
+"Teslimat emrine bir Şikayet ekler.\n"
+"                Bu, claim_from_delivery modülünü kurar."
 
 #. module: stock
 #: code:addons/stock/wizard/stock_return_picking.py:208
 #, python-format
 msgid "Please specify at least one non-zero quantity."
-msgstr ""
+msgstr "Lütfencsıfır olmayan  enaz bir miktar girin."
 
 #. module: stock
 #: field:stock.fill.inventory,set_stock_zero:0
