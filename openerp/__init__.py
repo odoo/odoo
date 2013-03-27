@@ -60,12 +60,5 @@ def registry(database_name):
     """
     return modules.registry.RegistryManager.get(database_name)
 
-def new_registry(database_name):
-    """
-    Return the model registry for the given database. If the registry already
-    existed, it is deleted and created again.
-    """
-    return modules.registry.RegistryManager.new(database_name)
-
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

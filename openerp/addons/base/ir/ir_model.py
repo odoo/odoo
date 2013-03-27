@@ -168,7 +168,7 @@ class ir_model(osv.osv):
         if not context.get(MODULE_UNINSTALL_FLAG):
             # only reload pool for normal unlink. For module uninstall the
             # reload is done independently in openerp.modules.loading
-            openerp.new_registry(cr.dbname)
+            openerp.modules.registry.RegistryManager.new(cr.dbname)
 
         return res
 
@@ -194,7 +194,6 @@ class ir_model(osv.osv):
                 field_state='manual',
                 select=vals.get('select_level', '0'))
             self.pool[vals['model']]._auto_init(cr, ctx)
-            # openerp.new_registry(cr.dbname)
         return res
 
     def instanciate(self, cr, user, model, context=None):
