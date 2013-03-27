@@ -21,7 +21,6 @@
 
 import time
 
-from openerp import pooler
 from openerp.report import report_sxw
 
 #

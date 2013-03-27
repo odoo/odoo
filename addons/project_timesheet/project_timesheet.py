@@ -22,7 +22,6 @@ import time
 import datetime
 
 from openerp.osv import fields, osv
-from openerp import pooler
 from openerp import tools
 from openerp.tools.translate import _
 
