@@ -193,9 +193,7 @@ class mail_compose_message(osv.TransientModel):
 
         # create subject
         re_prefix = _('Re:')
-        if message_data.subject:
-            
-        reply_subject = tools.ustr(message_data.subject or tools.ustr(message_data.record_name or '') or '')
+        reply_subject = tools.ustr(message_data.subject or message_data.record_name or '')
         if not (reply_subject.startswith('Re:') or reply_subject.startswith(re_prefix)) and message_data.subject:
             reply_subject = "%s %s" % (re_prefix, reply_subject)
         # get partner_ids from original message
