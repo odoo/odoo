@@ -879,6 +879,8 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
                 instance.web.unblockUI();
                 self.$('.loader').animate({opacity:0},1500,'swing',function(){self.$('.loader').hide();});
 
+                self.pos.flush();
+
             }).fail(function(){   // error when loading models data from the backend
                 instance.web.unblockUI();
                 return new instance.web.Model("ir.model.data").get_func("search_read")([['name', '=', 'action_pos_session_opening']], ['res_id'])
