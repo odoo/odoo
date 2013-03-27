@@ -35,4 +35,9 @@ by the user to check if her code is future proof.
 # Change to False around 2013.02.
 open_openerp_namespace = False
 
+# If True, the functions in openerp.pooler can be used.
+# Introduced around 2013.03 (actually they are deprecated since much longer
+# but no warning was dispayed in the logs).
+openerp_pooler = True
+
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
