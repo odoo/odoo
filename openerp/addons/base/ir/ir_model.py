@@ -263,7 +263,6 @@ class ir_model_fields(osv.osv):
         'state': lambda self,cr,uid,ctx=None: (ctx and ctx.get('manual',False)) and 'manual' or 'base',
         'on_delete': 'set null',
         'select_level': '0',
-        'size': 64,
         'field_description': '',
         'selectable': 1,
     }
@@ -293,10 +292,10 @@ class ir_model_fields(osv.osv):
         return True
 
     def _size_gt_zero_msg(self, cr, user, ids, context=None):
-        return _('Size of the field can never be less than 1 !')
+        return _('Size of the field can never be less than 0 !')
 
     _sql_constraints = [
-        ('size_gt_zero', 'CHECK (size>0)',_size_gt_zero_msg ),
+        ('size_gt_zero', 'CHECK (size>=0)',_size_gt_zero_msg ),
     ]
 
     def _drop_column(self, cr, uid, ids, context=None):

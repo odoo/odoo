@@ -1029,7 +1029,7 @@ class BaseModel(object):
                 'required': bool(field['required']),
                 'readonly': bool(field['readonly']),
                 'domain': eval(field['domain']) if field['domain'] else None,
-                'size': field['size'],
+                'size': field['size'] or None,
                 'ondelete': field['on_delete'],
                 'translate': (field['translate']),
                 'manual': True,
