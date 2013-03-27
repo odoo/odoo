@@ -100,8 +100,9 @@
                         <div class="oe_title">
                             <label for="name" class="oe_edit_only"/>
                             <h1><field name="name"/></h1>
-                            <label for="login" class="oe_edit_only"/>
-                            <h2><field name="login"/></h2>
+                            <field name="email" invisible="1"/>
+                            <label for="login" class="oe_edit_only" on_change="on_change_login(login)"/>
+                            <h2><field name="login" string="Login (Email)"/></h2>
                             <label for="company_id" class="oe_edit_only" groups="base.group_multi_company"/>
                             <field name="company_id" context="{'user_preference': 0}" groups="base.group_multi_company"/>
                         </div>
@@ -114,7 +115,6 @@
                             <field name="phone" placeholder="e.g. +32.81.81.37.00"/>
                             <field name="mobile"/>
                             <field name="fax"/>
-                            <field name="email" widget="email" required="True"/>
                         </group>
                     </sheet>
                 </form>
@@ -135,8 +135,9 @@
                         <div class="oe_title">
                             <label for="name" class="oe_edit_only"/>
                             <h1><field name="name"/></h1>
-                            <label for="login" class="oe_edit_only" string="Email (= login)"/>
-                            <h2><field name="login"/></h2>
+                            <field name="email" invisible="1"/>
+                            <label for="login" class="oe_edit_only" string="Login (Email)"/>
+                            <h2><field name="login" on_change="on_change_login(login)"/></h2>
                             <label for="company_id" class="oe_edit_only" groups="base.group_multi_company"/>
                             <field name="company_id" context="{'user_preference': 0}" groups="base.group_multi_company"/>
                         </div>
