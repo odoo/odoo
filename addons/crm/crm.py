@@ -129,10 +129,11 @@ class crm_case_section(osv.osv):
                                     help="The email address associated with this team. New emails received will automatically "
                                          "create new leads assigned to the team."),
         'open_lead_ids': fields.one2many('crm.lead', 'section_id', 'Leads', readonly=True,
-            domain=[('type', '!=', 'opportunity'), ('state', 'not in', ['done', 'cancel'])]),
+            domain=['&', ('type', '!=', 'opportunity'), ('state', 'not in', ['done', 'cancel'])]),
         'open_opportunity_ids': fields.one2many('crm.lead', 'section_id', 'Opportunities', readonly=True,
-            domain=['&', ('type', '=', 'opportunity'), ('type', '=', 'both'), ('state', 'not in', ['done', 'cancel'])]),
+            domain=['&', '|', ('type', '=', 'opportunity'), ('type', '=', 'both'), ('state', 'not in', ['done', 'cancel'])]),
         'color': fields.integer('Color Index'),
+        'use_leads': fields.boolean('Leads', help="If checked, this sales teams will be available in the sales teams menu and you will be able to manage leads"),
     }
 
     def _get_stage_common(self, cr, uid, context):
@@ -142,6 +143,7 @@ class crm_case_section(osv.osv):
     _defaults = {
         'active': 1,
         'stage_ids': _get_stage_common,
+        'use_leads': True,
     }
 
     _sql_constraints = [
@@ -232,6 +234,15 @@ class crm_payment_mode(osv.osv):
     _columns = {
         'name': fields.char('Name', size=64, required=True),
         'section_id': fields.many2one('crm.case.section', 'Sales Team'),
+    }
+
+
+class base_config_settings(osv.osv_memory):
+    _inherit = 'base.config.settings'
+    _columns = {
+        'group_multi_salesteams': fields.boolean("Use mutli sales teams",
+            implied_group='base.group_multi_salesteams',
+            help=""" """),
     }
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
