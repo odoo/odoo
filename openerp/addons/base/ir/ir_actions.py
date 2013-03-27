@@ -20,11 +20,13 @@
 ##############################################################################
 
 import logging
+import operator
 import os
 import re
 from socket import gethostname
 import time
 
+import openerp
 from openerp import SUPERUSER_ID
 from openerp import netsvc, tools
 from openerp.osv import fields, osv
@@ -89,9 +91,6 @@ class report_xml(osv.osv):
         """
         Look up a report definition.
         """
-        import openerp
-        import operator
-        import os
         opj = os.path.join
 
         # First lookup in the deprecated place, because if the report definition
