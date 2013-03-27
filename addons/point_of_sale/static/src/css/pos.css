@@ -307,6 +307,17 @@
     border-top: 1px solid #efefef;
     font-size: 14px;
 }
+.point-of-sale #paypad button, .point-of-sale #numpad button, .point-of-sale .popup button{
+    position: relative;
+    top: 0;
+    -webkit-transition: top 150ms linear;
+       -moz-transition: top 150ms linear;
+        -ms-transition: top 150ms linear;
+            transition: top 150ms linear;
+}
+.point-of-sale #paypad button:active, .point-of-sale #numpad button:active, .point-of-sale .popup button:active{
+    top:3px;
+}
 .point-of-sale #paypad button:hover, .point-of-sale #numpad button:hover, .point-of-sale #numpad .selected-mode, .point-of-sale .popup button:hover {
     border: none;
     color: white;
