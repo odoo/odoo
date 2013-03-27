@@ -211,12 +211,10 @@ class account_analytic_account(osv.osv):
                     JOIN account_analytic_journal \
                         ON account_analytic_line.journal_id = account_analytic_journal.id  \
                     WHERE account_analytic_line.account_id IN %s \
-                        AND account_analytic_journal.type = 'sale' \
-                    GROUP BY account_analytic_line.account_id", (child_ids,))
+                    AND account_analytic_journal.type = 'sale' \
+                    GROUP BY account_analytic_line.account_id", (child_ids,)) 
             for account_id, sum in cr.fetchall():
                 res[account_id] = round(sum,2)
-        for acc in self.browse(cr, uid, res.keys(), context=context):
-            res[acc.id] = res[acc.id] - (acc.timesheet_ca_invoiced or 0.0)
         res_final = res
         return res_final
 
@@ -542,6 +540,23 @@ class account_analytic_account(osv.osv):
         except ValueError:
             pass
         return result
+
+
+    def hr_to_invoice_timesheets(self, cr, uid, ids, context=None):
+        domain = [('invoice_id','=',False),('to_invoice','!=',False), ('journal_id.type', '=', 'general'), ('account_id', 'in', ids)]
+        names = [record.name for record in self.browse(cr, uid, ids, context=context)]
+        name = _('Timesheets to Invoice of %s') % ','.join(names)
+        return {
+            'type': 'ir.actions.act_window',
+            'name': name,
+            'view_type': 'form',
+            'view_mode': 'tree,form',
+            'domain' : domain,
+            'res_model': 'account.analytic.line',
+            'nodestroy': True,
+        }
+
+
 
 class account_analytic_account_summary_user(osv.osv):
     _name = "account_analytic_analysis.summary.user"

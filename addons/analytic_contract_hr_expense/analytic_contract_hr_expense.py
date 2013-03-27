@@ -100,8 +100,6 @@ class account_analytic_account(osv.osv):
 
     def _ca_invoiced_calc(self, cr, uid, ids, name, arg, context=None):
         result = super(account_analytic_account, self)._ca_invoiced_calc(cr, uid, ids, name, arg, context=context)
-        for acc in self.browse(cr, uid, result.keys(), context=context):
-            result[acc.id] = result[acc.id] - (acc.expense_invoiced or 0.0)
         return result
 
     _columns = {
