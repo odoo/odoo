@@ -23,6 +23,7 @@ from datetime import datetime, timedelta
 from dateutil.relativedelta import relativedelta
 import time
 
+import openerp
 from openerp.report import report_sxw
 from openerp.report.interface import report_rml
 from openerp.report.interface import toxml
