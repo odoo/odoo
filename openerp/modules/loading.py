@@ -44,6 +44,7 @@ from openerp.modules.module import initialize_sys_path, \
     load_openerp_module, init_module_models, adapt_version
 
 _logger = logging.getLogger(__name__)
+_test_logger = logging.getLogger('openerp.tests')
 
 
 def load_module_graph(cr, graph, status=None, perform_checks=True, skip_modules=None, report=None):
@@ -75,7 +76,7 @@ def load_module_graph(cr, graph, status=None, perform_checks=True, skip_modules=
             _load_data(cr, module_name, idref, mode, 'test')
             return True
         except Exception:
-            _logger.exception(
+            _test_logger.exception(
                 'module %s: an exception occurred in a test', module_name)
             return False
         finally:
@@ -96,7 +97,7 @@ def load_module_graph(cr, graph, status=None, perform_checks=True, skip_modules=
         """
         for filename in package.data[kind]:
             if kind == 'test':
-                _logger.info("module %s: loading test %s", module_name, filename)
+                _test_logger.info("module %s: loading %s", module_name, filename)
             else:
                 _logger.info("module %s: loading %s", module_name, filename)
             _, ext = os.path.splitext(filename)

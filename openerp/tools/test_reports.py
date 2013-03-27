@@ -35,6 +35,8 @@ import os
 import tempfile
 
 _logger = logging.getLogger(__name__)
+_test_logger = logging.getLogger('openerp.tests')
+
 
 def try_report(cr, uid, rname, ids, data=None, context=None, our_module=None):
     """ Try to render a report <rname> with contents of ids
@@ -49,7 +51,7 @@ def try_report(cr, uid, rname, ids, data=None, context=None, our_module=None):
         rname_s = rname[7:]
     else:
         rname_s = rname
-    _logger.info("  - Trying %s.create(%r)", rname, ids)
+    _test_logger.info("  - Trying %s.create(%r)", rname, ids)
     res = netsvc.LocalService(rname).create(cr, uid, ids, data, context)
     if not isinstance(res, tuple):
         raise RuntimeError("Result of %s.create() should be a (data,format) tuple, now it is a %s" % \
@@ -92,7 +94,7 @@ def try_report(cr, uid, rname, ids, data=None, context=None, our_module=None):
         _logger.warning("Report %s produced a \"%s\" chunk, cannot examine it", rname, res_format)
         return False
 
-    _logger.info("  + Report %s produced correctly.", rname)
+    _test_logger.info("  + Report %s produced correctly.", rname)
     return True
 
 def try_report_action(cr, uid, action_id, active_model=None, active_ids=None,
@@ -126,7 +128,7 @@ def try_report_action(cr, uid, action_id, active_model=None, active_ids=None,
     pool = pooler.get_pool(cr.dbname)
 
     def log_test(msg, *args):
-        _logger.info("  - " + msg, *args)
+        _test_logger.info("  - " + msg, *args)
 
     datas = {}
     if active_model:

@@ -43,6 +43,7 @@ from cStringIO import StringIO
 import logging
 
 _logger = logging.getLogger(__name__)
+_test_logger = logging.getLogger('openerp.tests')
 
 _ad = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'addons') # default addons path (base)
 ad_paths = []
@@ -503,7 +504,7 @@ def run_unit_tests(module_name):
     for m in ms:
         suite.addTests(unittest2.TestLoader().loadTestsFromModule(m))
     if ms:
-        _logger.info('module %s: executing %s `fast_suite` and/or `checks` sub-modules', module_name, len(ms))
+        _test_logger.info('module %s: executing %s `fast_suite` and/or `checks` sub-modules', module_name, len(ms))
         # Use a custom stream object to log the test executions.
         class MyStream(object):
             def __init__(self):
@@ -518,7 +519,7 @@ def run_unit_tests(module_name):
                     if not first:
                         c = '` ' + c
                     first = False
-                    _logger.info(c)
+                    _test_logger.info(c)
         result = unittest2.TextTestRunner(verbosity=2, stream=MyStream()).run(suite)
         if result.wasSuccessful():
             return True
