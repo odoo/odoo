@@ -230,8 +230,7 @@ class hr_employee(osv.osv):
 
         # the user linked to the employee follow the employee
         if 'user_id' in data:
-            user = self.pool.get('res.users').browse(cr, uid, data['user_id'], context=context)
-            self.message_subscribe(cr, uid, [employee_id], [user.partner_id.id], context=context)
+            self.message_subscribe_users(cr, uid, [employee_id], [data['user_id']], context=context)
         return employee_id
 
     def unlink(self, cr, uid, ids, context=None):
