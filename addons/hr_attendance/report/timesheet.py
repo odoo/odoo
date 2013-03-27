@@ -24,7 +24,8 @@ from datetime import datetime
 from dateutil.relativedelta import relativedelta
 import time
 
-from openerp import pooler, tools
+import openerp
+from openerp import tools
 from openerp.report import report_sxw
 from openerp.report.interface import report_rml, toxml
 from openerp.tools.translate import _
@@ -38,7 +39,8 @@ def to_hour(h):
 class report_custom(report_rml):
 
     def create_xml(self, cr, uid, ids, datas, context=None):
-        obj_emp = pooler.get_pool(cr.dbname).get('hr.employee')
+        registry = openerp.registry(cr.dbname)
+        obj_emp = registry['hr.employee']
 
         emp_ids = datas['active_ids']
         start_date = datetime.strptime(datas['form']['init_date'], '%Y-%m-%d')
@@ -49,14 +51,14 @@ class report_custom(report_rml):
         if last_monday < first_monday:
             first_monday, last_monday = last_monday, first_monday
 
-        rpt_obj = pooler.get_pool(cr.dbname).get('hr.employee')
+        rpt_obj = obj_emp
         rml_obj=report_sxw.rml_parse(cr, uid, rpt_obj._name,context)
         header_xml = '''
         <header>
         <date>%s</date>
         <company>%s</company>
         </header>
-        ''' % (str(rml_obj.formatLang(time.strftime("%Y-%m-%d"),date=True))+' ' + str(time.strftime("%H:%M")),pooler.get_pool(cr.dbname).get('res.users').browse(cr,uid,uid).company_id.name)
+        ''' % (str(rml_obj.formatLang(time.strftime("%Y-%m-%d"),date=True))+' ' + str(time.strftime("%H:%M")),registry['res.users'].browse(cr,uid,uid).company_id.name)
         user_xml = []
         for employee_id in emp_ids:
             emp = obj_emp.read(cr, uid, [employee_id], ['id', 'name'])[0]
