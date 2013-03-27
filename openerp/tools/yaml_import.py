@@ -5,6 +5,7 @@ import time # used to eval time.strftime expressions
 from datetime import datetime, timedelta
 import logging
 
+import openerp
 import openerp.pooler as pooler
 import openerp.sql_db as sql_db
 import misc
@@ -281,7 +282,6 @@ class YamlInterpreter(object):
         return record_dict
 
     def process_record(self, node):
-        import openerp.osv as osv
         record, fields = node.items()[0]
         model = self.get_model(record.model)
 
@@ -540,7 +540,6 @@ class YamlInterpreter(object):
             self.noupdate = node.noupdate
 
     def process_python(self, node):
-        import openerp
         python, statements = node.items()[0]
         model = self.get_model(python.model)
         statements = statements.replace("\r\n", "\n")
