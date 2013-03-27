@@ -7,6 +7,7 @@ import logging
 
 import openerp
 import openerp.sql_db as sql_db
+import openerp.workflow
 import misc
 from config import config
 import yaml_tag
@@ -588,9 +589,7 @@ class YamlInterpreter(object):
         signals=[x['signal'] for x in self.cr.dictfetchall()]
         if workflow.action not in signals:
             raise YamlImportException('Incorrect action %s. No such action defined' % workflow.action)
-        import openerp.netsvc as netsvc
-        wf_service = netsvc.LocalService("workflow")
-        wf_service.trg_validate(uid, workflow.model, id, workflow.action, self.cr)
+        openerp.workflow.trg_validate(uid, workflow.model, id, workflow.action, self.cr)
 
     def _eval_params(self, model, params):
         args = []
@@ -926,7 +925,7 @@ class YamlInterpreter(object):
 def yaml_import(cr, module, yamlfile, kind, idref=None, mode='init', noupdate=False, report=None):
     if idref is None:
         idref = {}
-    loglevel = logging.TEST if kind == 'test' else logging.DEBUG
+    loglevel = logging.INFO if kind == 'test' else logging.DEBUG
     yaml_string = yamlfile.read()
     yaml_interpreter = YamlInterpreter(cr, module, idref, mode, filename=yamlfile.name, report=report, noupdate=noupdate, loglevel=loglevel)
     yaml_interpreter.process(yaml_string)

@@ -36,8 +36,6 @@ try:
 except ImportError:
     psutil = None
 
-# TODO modules that import netsvc only for things from loglevels must be changed to use loglevels.
-from loglevels import *
 import tools
 import openerp
 
@@ -79,7 +77,6 @@ COLOR_PATTERN = "%s%s%%s%s" % (COLOR_SEQ, COLOR_SEQ, RESET_SEQ)
 LEVEL_COLOR_MAPPING = {
     logging.DEBUG: (BLUE, DEFAULT),
     logging.INFO: (GREEN, DEFAULT),
-    logging.TEST: (WHITE, BLUE),
     logging.WARNING: (YELLOW, DEFAULT),
     logging.ERROR: (RED, DEFAULT),
     logging.CRITICAL: (WHITE, RED),
@@ -177,7 +174,6 @@ PSEUDOCONFIG_MAPPER = {
     'debug_rpc': ['openerp:DEBUG','openerp.netsvc.rpc.request:DEBUG'],
     'debug': ['openerp:DEBUG'],
     'debug_sql': ['openerp.sql_db:DEBUG'],
-    'test': ['openerp:TEST'],
     'info': [],
     'warn': ['openerp:WARNING'],
     'error': ['openerp:ERROR'],
