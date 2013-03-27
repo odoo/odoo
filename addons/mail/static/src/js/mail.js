@@ -734,7 +734,7 @@ openerp.mail = function (session) {
                 }
                 // create object and attach to the thread object
                 thread.message_fetch([["id", "=", message_id]], false, [message_id], function (arg, data) {
-                    var message = thread.create_message_object( data[0] );
+                    var message = thread.create_message_object( data.slice(-1)[0] );
                     // insert the message on dom
                     thread.insert_message( message, root ? undefined : self.$el, root );
                 });
