@@ -45,7 +45,7 @@ _logger = logging.getLogger(__name__)
 
 def LocalService(name):
     """
-    The openerp.netsvc.LocalService() fucntion is deprecated. It still works
+    The openerp.netsvc.LocalService() function is deprecated. It still works
     in two cases: workflows and reports. For workflows, instead of using
     LocalService('workflow'), openerp.workflow should be used (better yet,
     methods on openerp.osv.orm.Model should be used). For reports,
