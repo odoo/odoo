@@ -828,7 +828,7 @@ class mail_thread(osv.AbstractModel):
             if parent_ids:
                 msg_dict['parent_id'] = parent_ids[0]
 
-        msg_dict['body'], msg_dict['attachments'] = self._message_extract_payload(message)
+        msg_dict['body'], msg_dict['attachments'] = self._message_extract_payload(message, save_original=save_original)
         return msg_dict
 
     #------------------------------------------------------
