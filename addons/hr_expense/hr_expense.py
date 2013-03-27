@@ -231,6 +231,8 @@ class hr_expense_expense(osv.osv):
         for exp in self.browse(cr, uid, ids, context=context):
             if not exp.employee_id.address_home_id:
                 raise osv.except_osv(_('Error!'), _('The employee must have a home address.'))
+            if not exp.employee_id.address_home_id.property_account_payable.id:
+                raise osv.except_osv(_('Error!'), _('The employee must have a payable account set on his home address.'))
             company_currency = exp.company_id.currency_id.id
             diff_currency_p = exp.currency_id.id <> company_currency
             
@@ -336,6 +338,8 @@ class hr_expense_expense(osv.osv):
             acc = line.product_id.property_account_expense
             if not acc:
                 acc = line.product_id.categ_id.property_account_expense_categ
+            if not acc:
+                raise osv.except_osv(_('Error!'), _('No purchase account found for the product %s (or for his category), please configure one.') % (line.product_id.name))
         else:
             acc = property_obj.get(cr, uid, 'property_account_expense_categ', 'product.category', context={'force_company': company.id})
             if not acc:
