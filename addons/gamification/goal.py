@@ -25,6 +25,9 @@ from openerp.tools.safe_eval import safe_eval
 from templates import TemplateHelper
 
 from datetime import date, datetime, timedelta
+import logging
+
+_logger = logging.getLogger(__name__)
 
 
 class gamification_goal_type(osv.Model):
@@ -76,6 +79,8 @@ class gamification_goal_type(osv.Model):
         'sequence': fields.integer('Sequence',
             help='Sequence number for ordering',
             required=True),
+        'action_id': fields.char("Action",
+            help="The action xml id that will be called to update the goal value.")
     }
 
     _order = 'sequence'
@@ -318,16 +323,25 @@ class gamification_goal(osv.Model):
             'name': "Update %s" % goal.type_id.name,
             'id': goal_id,
             'type': 'ir.actions.act_window',
+            'views': [[False, 'form']],
+            'target': 'new',
         }
+        if goal.type_id.action_id:
+            try:
+                model, xml_id = goal.type_id.action_id.split('.', 1)
+                action = self.pool.get('ir.actions.act_window').for_xml_id(cr, uid, model, xml_id, context=context)
+                action['res_id'] = uid
+                action['context'] = context
+                return action
+            except ValueError:
+                _logger.warning("Invalid XML ID '%s' for goal action.", goal.type_id.action_id)
+
         if goal.computation_mode == 'manually':
             action['context'] = {'default_goal_id': goal_id, 'default_current': goal.current}
             action['res_model'] = 'gamification.goal.wizard'
-            action['views'] = [[False, 'form']]
-            action['target'] = 'new'
-        else:
-            action['res_model'] = goal.type_id.model_id.model
-            action['views'] = [[False, 'tree']]
-        return action
+            return action
+
+        return False
 
 
 class goal_manual_wizard(osv.TransientModel):

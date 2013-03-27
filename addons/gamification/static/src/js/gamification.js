@@ -75,6 +75,7 @@ openerp.gamification = function(instance) {
             var self = this;
 
             self.dfm = new instance.web.form.DefaultFieldManager(self);
+            // Generate a FieldMonetary for each .oe_goal_field_monetary
             self.$el.find(".oe_goal_field_monetary").each(function() {
                 money_field = new instance.web.form.FieldMonetary(self.dfm, {
                     attrs: {
@@ -84,9 +85,7 @@ openerp.gamification = function(instance) {
                 money_field.set('currency', currency_id);
                 money_field.get_currency_info();
                 money_field.set('value', parseInt($(this).text()));
-                console.log(money_field.get('value'));
                 money_field.replace($(this));
-                console.log(money_field.$el.html());
             });
         }
     });

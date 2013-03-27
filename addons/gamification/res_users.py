@@ -39,11 +39,9 @@ class res_users_gamification_group(osv.Model):
 
             if plan.visibility_mode == 'board':
                 # board report should be grouped by planline for all users
-                print("board plan")
                 goals_info = plan_obj.get_board_goal_info(cr, uid, plan, subset_goal_ids=False, context=context)
 
                 if not goals_info:
-                    print("skipping")
                     continue
 
                 serialized_goals_info['planlines'] = []
@@ -54,6 +52,7 @@ class res_users_gamification_group(osv.Model):
                             'type_computation_mode': planline_board['goal_type'].computation_mode,
                             'type_monetary': planline_board['goal_type'].monetary,
                             'type_unit': planline_board['goal_type'].unit,
+                            'type_action': planline_board['goal_type'].action_id,
                             'goals': []}
                     for goal in planline_board['board_goals']:
                         vals['goals'].append({
@@ -69,11 +68,9 @@ class res_users_gamification_group(osv.Model):
 
             else:
                 # individual report are simply a list of goal
-                print("individual plan")
                 goals_info = plan_obj.get_indivual_goal_info(cr, uid, uid, plan, subset_goal_ids=False, context=context)
 
                 if not goals_info:
-                    print("skipping")
                     continue
 
                 serialized_goals_info['goals'] = []
@@ -85,6 +82,7 @@ class res_users_gamification_group(osv.Model):
                         'type_condition': goal.type_id.condition,
                         'type_monetary': goal.type_id.monetary,
                         'type_unit': goal.type_id.unit,
+                        'type_action': goal.type_id.action_id,
                         'state': goal.state,
                         'completeness': goal.completeness,
                         'computation_mode': goal.computation_mode,

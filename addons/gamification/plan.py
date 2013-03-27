@@ -327,7 +327,7 @@ class gamification_goal_plan(osv.Model):
             for planline in plan.planline_ids:
                 goal_ids = goal_obj.search(cr, uid, [('planline_id', '=', planline.id)], context=context)
                 related_goal_ids.extend(goal_ids)
-        
+
         # process the new view
         if context is None:
             context = {}
@@ -469,7 +469,6 @@ class gamification_goal_plan(osv.Model):
             related_goal_ids = goal_obj.search(cr, uid, domain, context=context)
 
         if len(related_goal_ids) == 0:
-            print("no related_goal_ids")
             return False
 
         values = {'goals': []}
@@ -489,7 +488,6 @@ class gamification_goal_plan(osv.Model):
 
         if all_done:
             # skip plans where all goal are done or failed
-            print("all_done")
             return False
         else:
             return values
