@@ -31,6 +31,7 @@ class res_users_gamification_group(osv.Model):
         for plan in plan_obj.browse(cr, uid, plan_ids, context=context):
             # serialize goals info to be able to use it in javascript
             serialized_goals_info = {
+                'id': plan.id,
                 'name': plan.name,
                 'visibility_mode': plan.visibility_mode,
             }
@@ -64,6 +65,8 @@ class res_users_gamification_group(osv.Model):
                             'current': goal[1].current,
                             'target_goal': goal[1].target_goal,
                         })
+                        if uid == goal[1].user_id.id:
+                            vals['own_goal_id'] = goal[1].id
                     serialized_goals_info['planlines'].append(vals)
 
             else:
