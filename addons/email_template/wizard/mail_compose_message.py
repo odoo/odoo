@@ -40,7 +40,7 @@ class mail_compose_message(osv.TransientModel):
     _inherit = 'mail.compose.message'
 
     _columns = {
-        'template_id': fields.many2one('email.template', 'Use template',select=True),
+        'template_id': fields.many2one('email.template', 'Use template', select=True),
         'partner_to': fields.char('To (Partner IDs)',
             help="Comma-separated list of recipient partners ids (placeholders may be used here)"),
         'email_to': fields.char('To (Emails)',
@@ -96,10 +96,14 @@ class mail_compose_message(osv.TransientModel):
                 'subject': record.subject or False,
                 'body_html': record.body or False,
                 'model_id': model_id or False,
-                'attachment_ids': [(6, 0, [att.id for att in record.attachment_ids])]
+                'attachment_ids': [(6, 0, [att.id for att in record.attachment_ids])],
+                'partner_to': ','.join([str(partner.id) for partner in record.partner_ids]),
             }
             template_id = email_template.create(cr, uid, values, context=context)
-            record.write(record.onchange_template_id(template_id, record.composition_mode, record.model, record.res_id)['value'])
+            # generate the saved template
+            template_values = record.onchange_template_id(template_id, record.composition_mode, record.model, record.res_id)['value']
+            template_values['template_id'] = template_id
+            record.write(template_values)
             return _reopen(self, record.id, record.model)
 
     #------------------------------------------------------
