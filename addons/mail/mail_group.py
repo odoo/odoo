@@ -133,7 +133,7 @@ class mail_group(osv.Model):
         menu_id = mobj.create(cr, SUPERUSER_ID, {'name': vals['name'], 'parent_id': menu_parent}, context=context)
         vals['menu_id'] = menu_id
 
-        # Create group and alias
+        # Create group and alias, without creation note
         mail_group_id = super(mail_group, self).create(cr, uid, vals, context=context)
         mail_alias.write(cr, uid, [vals['alias_id']], {"alias_force_thread_id": mail_group_id}, context)
         group = self.browse(cr, uid, mail_group_id, context=context)
@@ -144,11 +144,19 @@ class mail_group(osv.Model):
             search_ref = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'mail', 'view_message_search')
             params = {
                 'search_view_id': search_ref and search_ref[1] or False,
-                'domain': [('model', '=', 'mail.group'), ('res_id', '=', mail_group_id)],
-                'context': {'default_model': 'mail.group', 'default_res_id': mail_group_id, 'search_default_message_unread': True},
+                'domain': [
+                    ('model', '=', 'mail.group'),
+                    ('res_id', '=', mail_group_id),
+                ],
+                'context': {
+                    'default_model': 'mail.group',
+                    'default_res_id': mail_group_id,
+                },
                 'res_model': 'mail.message',
                 'thread_level': 1,
-                'header_description': self._generate_header_description(cr, uid, group, context=context)
+                'header_description': self._generate_header_description(cr, uid, group, context=context),
+                'view_mailbox': True,
+                'compose_placeholder': 'Send a message to the group',
             }
             cobj = self.pool.get('ir.actions.client')
             newref = cobj.copy(cr, SUPERUSER_ID, ref[1], default={'params': str(params), 'name': vals['name']}, context=context)
