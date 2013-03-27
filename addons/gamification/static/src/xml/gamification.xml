@@ -58,9 +58,9 @@
                     <tbody>
                     <tr t-foreach="planline.goals" t-as="goal" t-attf-class="#{goal.id == planline.own_goal_id ? 'oe_bold' : ''}">
                         <th><t t-esc="goal.rank" /></th>
-                        <td><t t-esc="goal.user_name" /></td>
-                        <td><progress t-att-value="goal.completeness" max="100" /></td>
-                        <td>
+                        <td class="col1"><t t-esc="goal.user_name" /></td>
+                        <td class="col2"><progress t-att-value="goal.completeness" max="100" /></td>
+                        <td class="col3">
                             <t t-esc="goal.current" />/<span t-attf-class="#{planline.type_monetary ? 'oe_goal_field_monetary' : ''}"><t t-esc="goal.target_goal"/></span>
                             <t t-if="planline.type_unit"><t t-esc="planline.type_unit"/></t>
                         </td>
