@@ -688,6 +688,10 @@ openerp.mail = function (session) {
 
         on_message_post: function (event) {
             var self = this;
+            if (self.flag_post) {
+                return;
+            }
+            self.flag_post = true;
             if (this.do_check_attachment_upload() && (this.attachment_ids.length || this.$('textarea').val().match(/\S+/))) {
                 if (this.is_log) {
                     this.do_send_message_post([], this.is_log);
@@ -735,6 +739,7 @@ openerp.mail = function (session) {
                     thread.insert_message( message, root ? undefined : self.$el, root );
                 });
                 self.on_cancel();
+                self.flag_post = false;
             });
         },
 
@@ -910,9 +915,6 @@ openerp.mail = function (session) {
 
             // read messages
             self.parent_thread.message_fetch(this.domain, this.context, false, function (arg, data) {
-                if (self.options.root_thread == self.parent_thread) {
-                    data.reverse();
-                }
                 self.id = false;
                 // insert the message on dom after this message
                 self.parent_thread.switch_new_message( data, self.$el );
@@ -1212,7 +1214,7 @@ openerp.mail = function (session) {
             this.partner_ids = datasets.partner_ids;
             this.messages = [];
 
-            this.options.flat_mode = !!(this.options.display_indented_thread > this.thread_level ? this.options.display_indented_thread - this.thread_level : 0);
+            this.options.flat_mode = (this.options.display_indented_thread - this.thread_level > 0);
 
             // object compose message
             this.compose_message = false;
@@ -1434,8 +1436,8 @@ openerp.mail = function (session) {
         create_message_object: function (data) {
             var self = this;
 
-            var data = _.extend(data, {'thread_level': data.thread_level ? data.thread_level : self.thread_level});
-            data.options = _.extend(self.options, data.options);
+            data.thread_level = self.thread_level || 0;
+            data.options = _.extend(data.options || {}, self.options);
 
             if (data.type=='expandable') {
                 var message = new mail.ThreadExpandable(self, data, {'context':{
@@ -1480,8 +1482,7 @@ openerp.mail = function (session) {
             }
 
             this.$('.oe_view_nocontent').remove();
-
-            if (dom_insert_after) {
+            if (dom_insert_after && dom_insert_after.parent()[0] == self.$el[0]) {
                 message.insertAfter(dom_insert_after);
             } else if (prepend) {
                 message.prependTo(self.$el);
@@ -1500,6 +1501,7 @@ openerp.mail = function (session) {
          */
         switch_new_message: function (records, dom_insert_after) {
             var self=this;
+            var dom_insert_after = typeof dom_insert_after == 'object' ? dom_insert_after : false;
             _(records).each(function (record) {
                 var thread = self.browse_thread({
                     'id': record.parent_id, 
@@ -1508,7 +1510,7 @@ openerp.mail = function (session) {
                 // create object and attach to the thread object
                 var message = thread.create_message_object( record );
                 // insert the message on dom
-                thread.insert_message( message, typeof dom_insert_after == 'object' ? dom_insert_after : false);
+                thread.insert_message( message, dom_insert_after);
             });
             if (!records.length && this.options.root_thread == this) {
                 this.no_message();

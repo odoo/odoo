@@ -27,8 +27,8 @@
                             <page string="Conditions">
                                 <group>
                                     <group name="filter" string="Filter Condition">
-                                        <field name="filter_pre_id" domain="[('model_id','=',model), ('user_id', '=', False)]" context="{'default_model_id': model}"/>
-                                        <field name="filter_id" domain="[('model_id','=',model), ('user_id', '=', False)]" context="{'default_model_id': model}"/>
+                                        <field name="filter_pre_id" domain="[('model_id','=',model)]" context="{'default_model_id': model}"/>
+                                        <field name="filter_id" domain="[('model_id','=',model)]" context="{'default_model_id': model}"/>
                                     </group>
                                     <group name="timing" string="Timer">
                                         <field name="trg_date_id"/>
