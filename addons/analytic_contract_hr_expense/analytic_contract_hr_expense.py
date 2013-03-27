@@ -76,11 +76,11 @@ class account_analytic_account(osv.osv):
                 GROUP BY product_id, user_id, to_invoice, product_uom_id, line.name""", (account.id,))
 
             res[account.id] = 0.0
-            for product_id, price, user_id, factor_id, qty, uom, line_name in cr.fetchall():
+            for product_id, total_amount, user_id, factor_id, qty, uom, line_name in cr.fetchall():
                 #the amount to reinvoice is the real cost. We don't use the pricelist
-                price = -price
+                total_amount = -total_amount
                 factor = self.pool.get('hr_timesheet_invoice.factor').browse(cr, uid, factor_id, context=context)
-                res[account.id] += price * qty * (100 - factor.factor or 0.0) / 100.0
+                res[account.id] += total_amount * (100 - factor.factor or 0.0) / 100.0
         return res
 
     def _expense_invoiced_calc(self, cr, uid, ids, name, arg, context=None):
@@ -89,8 +89,13 @@ class account_analytic_account(osv.osv):
         for account in self.browse(cr, uid, ids, context=context):
             res[account.id] = 0.0
             line_ids = lines_obj.search(cr, uid, [('account_id','=', account.id), ('invoice_id','!=',False), ('to_invoice','!=', False), ('journal_id.type', '=', 'purchase')], context=context)
+            #Put invoices in separate array in order not to calculate them double
+            invoices = []
             for line in lines_obj.browse(cr, uid, line_ids, context=context):
-                res[account.id] += line.invoice_id.amount_untaxed
+                if line.invoice_id not in invoices:
+                    invoices.append(line.invoice_id)
+            for invoice in invoices:
+                res[account.id] += invoice.amount_untaxed
         return res
 
     def _ca_invoiced_calc(self, cr, uid, ids, name, arg, context=None):
