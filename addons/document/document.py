@@ -31,7 +31,6 @@ from StringIO import StringIO
 import psycopg2
 
 import openerp
-from openerp import pooler
 from openerp import tools
 from openerp.osv import fields, osv
 from openerp.osv.orm import except_orm
@@ -620,7 +619,7 @@ class node_context(object):
         if context is None:
             context = {}
         context['uid'] = uid
-        self._dirobj = pooler.get_pool(cr.dbname).get('document.directory')
+        self._dirobj = openerp.registry(cr.dbname).get('document.directory')
         self.node_file_class = node_file
         self.extra_ctx = {} # Extra keys for context, that do _not_ trigger inequality
         assert self._dirobj
@@ -1999,7 +1998,7 @@ class nodefd_content(StringIO, node_descriptor):
 
         par = self._get_parent()
         uid = par.context.uid
-        cr = pooler.get_db(par.context.dbname).cursor()
+        cr = openerp.registry(par.context.dbname).db.cursor()
         try:
             if self.mode in ('w', 'w+', 'r+'):
                 data = self.getvalue()
@@ -2052,7 +2051,7 @@ class nodefd_static(StringIO, node_descriptor):
 
         par = self._get_parent()
         # uid = par.context.uid
-        cr = pooler.get_db(par.context.dbname).cursor()
+        cr = openerp.registry(par.context.dbname).db.cursor()
         try:
             if self.mode in ('w', 'w+', 'r+'):
                 data = self.getvalue()
