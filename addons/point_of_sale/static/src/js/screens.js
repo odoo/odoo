@@ -886,6 +886,15 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
                     },
                 });
 
+            this.invoice_button = this.add_action_button({
+                    label: 'Invoice',
+                    name: 'invoice',
+                    icon: '/point_of_sale/static/src/img/icons/png48/invoice.png',
+                    click: function(){
+                        self.validateCurrentOrder({invoice: true});
+                    },
+                });
+
             this.updatePaymentSummary();
             this.line_refocus();
         },
@@ -897,11 +906,15 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
         back: function() {
             this.pos_widget.screen_selector.set_current_screen(self.back_screen);
         },
-        validateCurrentOrder: function() {
+        validateCurrentOrder: function(options) {
+            options = options || {};
+
             var currentOrder = this.pos.get('selectedOrder');
 
             this.pos.push_order(currentOrder.exportAsJSON()) 
-            if(this.pos.iface_print_via_proxy){
+            if(options.invoice){
+                console.log('send invoice');
+            }else if(this.pos.iface_print_via_proxy){
                 this.pos.proxy.print_receipt(currentOrder.export_for_printing());
                 this.pos.get('selectedOrder').destroy();    //finish order and go back to scan screen
             }else{
@@ -984,6 +997,7 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
                 
             if(this.pos_widget.action_bar){
                 this.pos_widget.action_bar.set_button_disabled('validation', remaining > 0);
+                this.pos_widget.action_bar.set_button_disabled('invoice', remaining > 0);
             }
         },
         set_numpad_state: function(numpadState) {
