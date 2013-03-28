@@ -70,6 +70,10 @@ instance, a sale order begins as a quotation, then we send it, then it becomes
 a full sale order, and finally it is done.)  Exceptions or states depending on
 particular flow are only visible if it is the current one.
 
+.. image:: /form-view-guidelines/status1.png
+
+.. image:: /form-view-guidelines/status2.png
+
 The states are shown following the order used in the field (the list in a
 selection field, etc).  States that are always visible are indicated by the
 attribute statusbar_visible.  One can also show some states in a specific color
@@ -161,7 +165,7 @@ A column of fields is now produced with a <group> element, with an optional
 title.  The title has the same effect as placing an explicit <separator>
 element inside the group.
 
-<image>.png
+.. image:: /form-view-guidelines/screenshot-03.png
 
 ::
 
@@ -247,7 +251,7 @@ Tags
 Many2many fields, like categories, are better rendered as a list of tags.  Use
 the widget “many2many_tags”:
 
-<image>.png
+.. image:: /form-view-guidelines/screenshot-04.png
 
 ::
 
