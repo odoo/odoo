@@ -237,12 +237,4 @@ class crm_payment_mode(osv.osv):
     }
 
 
-class base_config_settings(osv.osv_memory):
-    _inherit = 'sale.config.settings'
-    _columns = {
-        'group_multi_salesteams': fields.boolean("Use mutli sales teams",
-            implied_group='base.group_multi_salesteams',
-            help=""" """),
-    }
-
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -2,7 +2,7 @@
 ##############################################################################
 #
 #    OpenERP, Open Source Business Applications
-#    Copyright (C) 2004-2012 OpenERP S.A. (<http://openerp.com>).
+#    Copyright (C) 2004-TODAY OpenERP S.A. (<http://openerp.com>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -21,7 +21,8 @@
 
 from openerp.osv import fields, osv
 
-class crm_configuration(osv.osv_memory):
+
+class crm_configuration(osv.TransientModel):
     _name = 'sale.config.settings'
     _inherit = ['sale.config.settings', 'fetchmail.config.settings']
 
@@ -29,13 +30,14 @@ class crm_configuration(osv.osv_memory):
         'group_fund_raising': fields.boolean("Manage Fund Raising",
             implied_group='crm.group_fund_raising',
             help="""Allows you to trace and manage your activities for fund raising."""),
-        'module_crm_claim':fields.boolean("Manage Customer Claims",
+        'module_crm_claim': fields.boolean("Manage Customer Claims",
             help="""Allows you to track your customers/suppliers claims and grievances.
                     This installs the module crm_claim."""),
-        'module_crm_helpdesk':fields.boolean("Manage Helpdesk and Support",
+        'module_crm_helpdesk': fields.boolean("Manage Helpdesk and Support",
             help="""Allows you to communicate with Customer,  process Customer query, and provide better help and support. This installs the module crm_helpdesk."""),
-        
-        
+        'group_multi_salesteams': fields.boolean("Manage Sales Teams",
+            implied_group='base.group_multi_salesteams',
+            help="""Allows you to use Sales Teams to manage your leads and opportunities."""),
     }
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
