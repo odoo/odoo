@@ -1063,6 +1063,7 @@ class pos_order(osv.osv):
                         'debit': 0.0,
                         'tax_code_id': tax_code_id,
                         'tax_amount': tax_amount,
+                        'partner_id': order.partner_id and self.pool.get("res.partner")._find_accounting_partner(order.partner_id).id or False
                     })
 
             # Create a move for each tax group
@@ -1079,6 +1080,7 @@ class pos_order(osv.osv):
                     'debit': ((tax_amount<0) and -tax_amount) or 0.0,
                     'tax_code_id': key[tax_code_pos],
                     'tax_amount': tax_amount,
+                    'partner_id': order.partner_id and self.pool.get("res.partner")._find_accounting_partner(order.partner_id).id or False
                 })
 
             # counterpart
