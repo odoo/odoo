@@ -20,7 +20,6 @@
 ##############################################################################
 
 import os, time
-from openerp import netsvc
 
 import random
 import StringIO

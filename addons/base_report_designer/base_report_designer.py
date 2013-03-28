@@ -55,11 +55,6 @@ class report_xml(osv.osv):
             'report_rml_content': str(sxw2rml(sxwval, xsl=fp.read())), 
         })
 
-        # FIXME: this should be moved to an override of the ir.actions.report_xml.create() method
-        cr.commit()
-        self.pool['ir.actions.report.xml'].register_all(cr)
-        openerp.modules.registry.RegistryManager.signal_registry_change(cr.dbname)
-
         return True
 
     def report_get(self, cr, uid, report_id, context=None):
