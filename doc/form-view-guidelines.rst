@@ -17,7 +17,7 @@ Business Views
 Business views are targeted at regular users, not advanced users.  Examples
 are: Opportunities, Products, Partners, Tasks, Projects, etc.
 
-oppreadonly.png
+.. image:: /form-view-guidelines/oppreadonly.png
 
 In general, a business view is composed of
 
@@ -39,7 +39,7 @@ The Status Bar
 The purpose of the status bar is to show the status of the record and the
 action buttons, which were formerly at the bottom of form views.
 
-status.png
+.. image:: /form-view-guidelines/status.png
 
 The Buttons
 ...........
@@ -86,7 +86,7 @@ The Sheet
 
 All business views should look like a printed sheet:
 
-sheet.png
+.. image:: /form-view-guidelines/sheet.png
 
 Technically, the layout of forms version 7.0 is different than former versions.
 There is no longer a default “grid” layout; instead the layout is more based on
@@ -110,11 +110,11 @@ Sheet Headers
 Some sheets have headers with one or more fields, and the labels of those
 fields are only shown in edit mode.
 
-+------------+-------------+
-| View mode  |  Edit mode  |
-+------------+-------------+
-| header.png | header2.png |
-+------------+-------------+
++---------------------------------------------+----------------------------------------------+
+|            View mode                        |                  Edit mode                   |
++---------------------------------------------+----------------------------------------------+
+| .. image:: /form-view-guidelines/header.png | .. image:: /form-view-guidelines/header2.png |
++---------------------------------------------+----------------------------------------------+
 
 Use HTML text, <div>, <h1>, <h2>… to produce nice headers, and <label> with the
 CSS class “oe_edit_only” to produce the field’s label in edit mode.  Use the
@@ -142,7 +142,7 @@ Meeting” take an important place in the use of the CRM.  Instead of placing
 them in the “More” menu of the sidebar, put them directly in the sheet as
 buttons (on the top right).
 
-header3.png
+.. image:: /form-view-guidelines/header3.png
 
 Technically, the buttons are placed inside a <div> to group them as a block on
 the right-hand side of the sheet.
@@ -181,7 +181,7 @@ Special Case: Subtotals
 
 Some CSS classes are defined to render subtotals like in invoice forms:
 
-screenshot-00.png
+.. image:: /form-view-guidelines/screenshot-00.png
 
 ::
 
@@ -207,11 +207,11 @@ place of a field (without its label).
 The following example, taken from the Leads form, shows both placeholders and
 inline fields (zip and city).
 
-+-----------------+-------------------+
-|    Edit mode    |     View mode     |
-+-----------------+-------------------+
-| placeholder.png | screenshot-01.png |
-+-----------------+-------------------+
++--------------------------------------------------+----------------------------------------------------+
+|                 Edit mode                        |                    View mode                       |
++--------------------------------------------------+----------------------------------------------------+
+| .. image:: /form-view-guidelines/placeholder.png | .. image:: /form-view-guidelines/screenshot-01.png |
++--------------------------------------------------+----------------------------------------------------+
 
 ::
 
@@ -235,7 +235,7 @@ Images
 Images, like avatars, should be displayed on the right of the sheet.  The
 product form looks like:
 
-screenshot-02.png
+.. image:: /form-view-guidelines/screenshot-02.png
 
 The form above contains a <sheet> element that starts with::
 
@@ -263,7 +263,7 @@ Configuration Forms
 Examples of configuration forms: Stages, Leave Type, etc.  This concerns all
 menu items under Configuration of each application (like Sales/Configuration).
 
-nosheet.png
+.. image:: /form-view-guidelines/nosheet.png
 
 For those views, the guidelines are:
 
@@ -275,7 +275,7 @@ Regular Wizards (Popup)
 
 Example: “Schedule a Call” from an opportunity.
 
-wizard-popup.png
+.. image:: /form-view-guidelines/wizard-popup.png
 
 The guidelines are:
 
