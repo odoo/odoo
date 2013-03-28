@@ -33,6 +33,7 @@ question may have multiple answers. Different users may give different answers o
 question and according to that survey is done. Partners are also sent mails with
 user name and password for the invitation of the survey.
     """,
+    'summary': 'Create survey, collect answers and print statistics',
     'author': 'OpenERP SA',
     'website': 'http://www.openerp.com',
     'depends': ['email_template', 'mail'],
@@ -56,6 +57,7 @@ user name and password for the invitation of the survey.
     'installable': True,
     'auto_install': False,
     'application': True,
+    'sequence': 10,
     'images': ['images/survey_answers.jpeg', 'images/survey_pages.jpeg', 'images/surveys.jpeg'],
     'css': ['static/src/css/survey.css'],
     'js': ['static/src/js/survey.js'],
