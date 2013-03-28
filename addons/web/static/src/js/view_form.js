@@ -5323,7 +5323,7 @@ instance.web.form.FieldStatus = instance.web.form.AbstractField.extend({
                 return new instance.web.DataSetSearch(self, self.field.relation, self.build_context(), this.get("evaluated_selection_domain"))
                     .read_slice(['name', 'fold'], {}).then(function (records) {
                         _.each(records, function (record) {
-                            if (record.fold) {
+                            if (record.fold && record.id != self.get('value')) {
                                 selection_folded.push([record.id, record.name]);
                             } else {
                                 selection_unfolded.push([record.id, record.name]);
