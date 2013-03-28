@@ -25,8 +25,9 @@ from dateutil.relativedelta import relativedelta
 from operator import itemgetter
 import time
 
+import openerp
 from openerp import SUPERUSER_ID
-from openerp import pooler, tools
+from openerp import tools
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
 from openerp.tools.float_utils import float_round
@@ -1883,7 +1884,7 @@ class account_tax(osv.osv):
 
     def get_precision_tax():
         def change_digit_tax(cr):
-            res = pooler.get_pool(cr.dbname).get('decimal.precision').precision_get(cr, SUPERUSER_ID, 'Account')
+            res = openerp.registry(cr.dbname)['decimal.precision'].precision_get(cr, SUPERUSER_ID, 'Account')
             return (16, res+2)
         return change_digit_tax
 
