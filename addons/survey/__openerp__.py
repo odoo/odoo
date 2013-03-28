@@ -34,6 +34,7 @@ question and according to that survey is done. Partners are also sent mails with
 user name and password for the invitation of the survey.
     """,
     'author': 'OpenERP SA',
+    'website': 'http://www.openerp.com',
     'depends': ['email_template', 'mail'],
     'data': [
         'survey_report.xml',
@@ -54,6 +55,7 @@ user name and password for the invitation of the survey.
     ],
     'installable': True,
     'auto_install': False,
+    'application': True,
     'images': ['images/survey_answers.jpeg', 'images/survey_pages.jpeg', 'images/surveys.jpeg'],
     'css': ['static/src/css/survey.css'],
     'js': ['static/src/js/survey.js'],
