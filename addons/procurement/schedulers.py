@@ -21,8 +21,8 @@
 
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
-from openerp import netsvc
-from openerp import pooler
+
+import openerp
 from openerp.osv import osv
 from openerp.osv import fields
 from openerp.tools.translate import _
@@ -56,7 +56,7 @@ class procurement_order(osv.osv):
             context = {}
         try:
             if use_new_cursor:
-                cr = pooler.get_db(use_new_cursor).cursor()
+                cr = openerp.registry(use_new_cursor).db.cursor()
 
             procurement_obj = self.pool.get('procurement.order')
             if not ids:
@@ -218,7 +218,7 @@ class procurement_order(osv.osv):
         if context is None:
             context = {}
         if use_new_cursor:
-            cr = pooler.get_db(use_new_cursor).cursor()
+            cr = openerp.registry(use_new_cursor).db.cursor()
         orderpoint_obj = self.pool.get('stock.warehouse.orderpoint')
         
         procurement_obj = self.pool.get('procurement.order')

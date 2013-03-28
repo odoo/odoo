@@ -19,10 +19,10 @@
 #
 ##############################################################################
 
+import openerp
 from openerp.osv import fields, osv
 import openerp.service.model
 from openerp.tools.translate import _
-from openerp import pooler
 import time
 from openerp import tools
 from openerp import SUPERUSER_ID
@@ -113,7 +113,6 @@ class audittrail_rule(osv.osv):
                 value = "ir.actions.act_window" + ',' + str(w_id[0])
             val_id = ir_values_obj.search(cr, uid, [('model', '=', thisrule.object_id.model), ('value', '=', value)])
             if val_id:
-                ir_values_obj = pooler.get_pool(cr.dbname).get('ir.values')
                 res = ir_values_obj.unlink(cr, uid, [val_id[0]])
             self.write(cr, uid, [thisrule.id], {"state": "draft"})
         #End Loop
@@ -212,7 +211,7 @@ def create_log_line(cr, uid, log_id, model, lines=None):
     """
     if lines is None:
         lines = []
-    pool = pooler.get_pool(cr.dbname)
+    pool = openerp.registry(cr.dbname)
     obj_pool = pool.get(model.model)
     model_pool = pool.get('ir.model')
     field_pool = pool.get('ir.model.fields')
@@ -251,7 +250,7 @@ def log_fct(cr, uid_orig, model, method, fct_src, *args, **kw):
 
     @return: Returns result as per method of Object proxy
     """
-    pool = pooler.get_pool(cr.dbname)
+    pool = openerp.registry(cr.dbname)
     resource_pool = pool.get(model)
     model_pool = pool.get('ir.model')
     model_ids = model_pool.search(cr, SUPERUSER_ID, [('model', '=', model)])
@@ -492,7 +491,7 @@ def check_rules(cr, uid, model, method):
     @param method: method to log: create, read, unlink,write,actions,workflow actions
     @return: True or False
     """
-    pool = pooler.get_pool(cr.dbname)
+    pool = openerp.registry(cr.dbname)
     if 'audittrail.rule' in pool.models:
         model_ids = pool.get('ir.model').search(cr, SUPERUSER_ID, [('model', '=', model)])
         model_id = model_ids and model_ids[0] or False
