@@ -47,7 +47,7 @@ def run(args):
     config = openerp.tools.config
 
     if args.tests:
-        config['log_handler'] = [':TEST']
+        config['log_handler'] = [':INFO']
         config['test_enable'] = True
         config['without_demo'] = False
     else:

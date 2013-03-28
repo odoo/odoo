@@ -5163,6 +5163,15 @@ class BaseModel(object):
     get_xml_id = get_external_id
     _get_xml_ids = _get_external_ids
 
+    def print_report(self, cr, uid, ids, name, data, context=None):
+        """
+        Render the report `name` for the given IDs. The report must be defined
+        for this model, not another.
+        """
+        report = self.pool['ir.actions.report.xml']._lookup_report(cr, name)
+        assert self._name == report.table
+        return report.create(cr, uid, ids, data, context)
+
     # Transience
     def is_transient(self):
         """ Return whether the model is transient.

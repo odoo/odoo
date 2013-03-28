@@ -23,7 +23,7 @@ from operator import attrgetter
 import re
 
 import openerp
-from openerp import pooler, SUPERUSER_ID
+from openerp import SUPERUSER_ID
 from openerp.osv import osv, fields
 from openerp.tools import ustr
 from openerp.tools.translate import _
@@ -72,7 +72,7 @@ class res_config_configurable(osv.osv_memory):
             res['nodestroy'] = False
             return res
         # reload the client; open the first available root menu
-        menu_obj = self.pool.get('ir.ui.menu')
+        menu_obj = self.pool['ir.ui.menu']
         menu_ids = menu_obj.search(cr, uid, [('parent_id', '=', False)], context=context)
         return {
             'type': 'ir.actions.client',
@@ -271,7 +271,7 @@ class res_config_installer(osv.osv_memory):
         :returns: a list of all installed modules in this installer
         :rtype: [browse_record]
         """
-        modules = self.pool.get('ir.module.module')
+        modules = self.pool['ir.module.module']
 
         selectable = [field for field in self._columns
                       if type(self._columns[field]) is fields.boolean]
@@ -353,7 +353,7 @@ class res_config_installer(osv.osv_memory):
         return fields
 
     def execute(self, cr, uid, ids, context=None):
-        modules = self.pool.get('ir.module.module')
+        modules = self.pool['ir.module.module']
         to_install = list(self.modules_to_install(
             cr, uid, ids, context=context))
         _logger.info('Selecting addons %s to install', to_install)
@@ -363,7 +363,7 @@ class res_config_installer(osv.osv_memory):
             'to install', ['uninstalled'], context=context)
         cr.commit()
         openerp.modules.registry.RegistryManager.signal_registry_change(cr.dbname)
-        new_db, self.pool = pooler.restart_pool(cr.dbname, update_module=True)
+        openerp.modules.registry.RegistryManager.new(cr.dbname, update_module=True)
 
 res_config_installer()
 
@@ -455,8 +455,8 @@ class res_config_settings(osv.osv_memory):
                     'other':   ['other_field', ...],
                 }
         """
-        ir_model_data = self.pool.get('ir.model.data')
-        ir_module = self.pool.get('ir.module.module')
+        ir_model_data = self.pool['ir.model.data']
+        ir_module = self.pool['ir.module.module']
         def ref(xml_id):
             mod, xml = xml_id.split('.', 1)
             return ir_model_data.get_object(cr, uid, mod, xml, context)
@@ -478,7 +478,7 @@ class res_config_settings(osv.osv_memory):
         return {'default': defaults, 'group': groups, 'module': modules, 'other': others}
 
     def default_get(self, cr, uid, fields, context=None):
-        ir_values = self.pool.get('ir.values')
+        ir_values = self.pool['ir.values']
         classified = self._get_classified_fields(cr, uid, context)
 
         res = super(res_config_settings, self).default_get(cr, uid, fields, context)
@@ -505,8 +505,8 @@ class res_config_settings(osv.osv_memory):
         return res
 
     def execute(self, cr, uid, ids, context=None):
-        ir_values = self.pool.get('ir.values')
-        ir_module = self.pool.get('ir.module.module')
+        ir_values = self.pool['ir.values']
+        ir_module = self.pool['ir.module.module']
         classified = self._get_classified_fields(cr, uid, context)
 
         config = self.browse(cr, uid, ids[0], context)
@@ -572,7 +572,7 @@ class res_config_settings(osv.osv_memory):
 
     def cancel(self, cr, uid, ids, context=None):
         # ignore the current record, and send the action to reopen the view
-        act_window = self.pool.get('ir.actions.act_window')
+        act_window = self.pool['ir.actions.act_window']
         action_ids = act_window.search(cr, uid, [('res_model', '=', self._name)])
         if action_ids:
             return act_window.read(cr, uid, action_ids[0], [], context=context)
@@ -588,7 +588,7 @@ class res_config_settings(osv.osv_memory):
         if isinstance(ids, (int, long)):
             ids = [ids]
 
-        act_window = self.pool.get('ir.actions.act_window')
+        act_window = self.pool['ir.actions.act_window']
         action_ids = act_window.search(cr, uid, [('res_model', '=', self._name)], context=context)
         name = self._name
         if action_ids:
@@ -606,8 +606,8 @@ class res_config_settings(osv.osv_memory):
             - t[1]: long: id of the menuitem's action
         """
         module_name, menu_xml_id = menu_xml_id.split('.')
-        dummy, menu_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, module_name, menu_xml_id)
-        ir_ui_menu = self.pool.get('ir.ui.menu').browse(cr, uid, menu_id, context=context)
+        dummy, menu_id = self.pool['ir.model.data'].get_object_reference(cr, uid, module_name, menu_xml_id)
+        ir_ui_menu = self.pool['ir.ui.menu'].browse(cr, uid, menu_id, context=context)
 
         return (ir_ui_menu.complete_name, ir_ui_menu.action.id)
 
@@ -621,7 +621,7 @@ class res_config_settings(osv.osv_memory):
         """
         model_name, field_name = full_field_name.rsplit('.', 1)
 
-        return self.pool.get(model_name).fields_get(cr, uid, allfields=[field_name], context=context)[field_name]['string']
+        return self.pool[model_name].fields_get(cr, uid, allfields=[field_name], context=context)[field_name]['string']
 
     def get_config_warning(self, cr, msg, context=None):
         """
@@ -652,7 +652,7 @@ class res_config_settings(osv.osv_memory):
             Cannot find any account journal of %s type for this company.\n\nYou can create one in the %%(menu:account.menu_account_config)s.
         """
 
-        res_config_obj = pooler.get_pool(cr.dbname).get('res.config.settings')
+        res_config_obj = openerp.registry(cr.dbname)['res.config.settings']
         regex_path = r'%\(((?:menu|field):[a-z_\.]*)\)s'
 
         # Process the message

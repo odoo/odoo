@@ -123,7 +123,7 @@ class ir_cron(osv.osv):
         try:
             args = str2tuple(args)
             openerp.modules.registry.RegistryManager.check_registry_signaling(cr.dbname)
-            registry = openerp.pooler.get_pool(cr.dbname)
+            registry = openerp.registry(cr.dbname)
             model = registry.get(model_name)
             if model and hasattr(model, method_name):
                 method = getattr(model, method_name)
@@ -223,7 +223,7 @@ class ir_cron(osv.osv):
                 _logger.debug('Starting job `%s`.', job['name'])
                 job_cr = db.cursor()
                 try:
-                    registry = openerp.pooler.get_pool(db_name)
+                    registry = openerp.registry(db_name)
                     registry[cls._name]._process_job(job_cr, job, lock_cr)
                 except Exception:
                     _logger.exception('Unexpected exception while processing cron job %r', job)
