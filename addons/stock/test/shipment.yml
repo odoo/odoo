@@ -193,7 +193,7 @@
   !python {model: stock.location}: |
     ctx = {'product_id': ref('product_product_6')}
     monitor_location = self.pool.get('stock.location').browse(cr, uid, ref('location_monitor'), context=ctx)
-    assert monitor_location.stock_real == 136.0, 'stock does not correspond in stock location shop0.'
+    assert monitor_location.stock_real == 132.0, 'stock does not correspond in stock location shop0.'
     scrapped_location = self.browse(cr, uid, ref('stock_location_scrapped'), context=ctx)
     assert scrapped_location.stock_real == 1*4, 'scraped stock does not correspond in scrap location.'
     
@@ -202,8 +202,8 @@
 -
   !python {model: product.product}: |
     product = self.browse(cr, uid, ref('product_product_6'), context=context)
-    assert product.qty_available == 136.0, "Stock does not correspond."
-    assert round(product.virtual_available, 2) == -4.00, "Vitual stock does not correspond."
+    assert product.qty_available == 132.0, "Stock does not correspond."
+    assert round(product.virtual_available, 2) == -8.00, "Vitual stock does not correspond."
 -
   I trace all incoming lots.
 -
@@ -277,5 +277,5 @@
 -
   !python {model: product.product}: |
     product = self.browse(cr, uid, ref('product_product_6'), context=context)
-    assert round(product.qty_available, 2) == 6, "Stock does not correspond."
-    assert round(product.virtual_available, 2) == -4.00, "Vitual stock does not correspond."
+    assert round(product.qty_available, 2) == 2, "Stock does not correspond."
+    assert round(product.virtual_available, 2) == -8.00, "Vitual stock does not correspond."
