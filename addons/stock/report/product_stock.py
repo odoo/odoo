@@ -22,13 +22,13 @@
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
 
+import openerp
 from openerp import osv
 import time
 from openerp.report.interface import report_int
 from openerp.report.render import render
 
 import stock_graph
-from openerp import pooler
 import StringIO
 
 class external_pdf(render):
@@ -45,24 +45,25 @@ class report_stock(report_int):
     def create(self, cr, uid, ids, datas, context=None):
         if context is None:
             context = {}
+        registry = openerp.registry(cr.dbname)
         product_ids = ids
         if 'location_id' in context:
             location_id = context['location_id']
         else:
-            warehouse_id = pooler.get_pool(cr.dbname).get('stock.warehouse').search(cr, uid, [])[0]
-            location_id = pooler.get_pool(cr.dbname).get('stock.warehouse').browse(cr, uid, warehouse_id).lot_stock_id.id
+            warehouse_id = registry['stock.warehouse'].search(cr, uid, [])[0]
+            location_id = registry['stock.warehouse'].browse(cr, uid, warehouse_id).lot_stock_id.id
 
-        loc_ids = pooler.get_pool(cr.dbname).get('stock.location').search(cr, uid, [('location_id','child_of',[location_id])])
+        loc_ids = registry['stock.location'].search(cr, uid, [('location_id','child_of',[location_id])])
 
         now = time.strftime('%Y-%m-%d')
         dt_from = now
         dt_to = now
 
-        names = dict(pooler.get_pool(cr.dbname).get('product.product').name_get(cr, uid, product_ids))
+        names = dict(registry['product.product'].name_get(cr, uid, product_ids))
         for name in names:
             names[name] = names[name].encode('utf8')
         products = {}
-        prods = pooler.get_pool(cr.dbname).get('stock.location')._product_all_get(cr, uid, location_id, product_ids)
+        prods = registry['stock.location']._product_all_get(cr, uid, location_id, product_ids)
 
         for p in prods:
             products[p] = [(now,prods[p])]
