@@ -449,7 +449,7 @@ class survey_question_wiz(osv.osv_memory):
 
                     etree.SubElement(xml_footer, 'field', {'name': 'wizard_id_%s' % wiz_id, 'modifiers': '{"invisible": 1}'})
                     fields['wizard_id_%s' % wiz_id] = {'type': 'char'}
-                    if not response_info['response_id'] and not edit_mode and not response_info['readonly']:
+                    if not response_info['response_id'] and not edit_mode:
                         etree.SubElement(xml_footer, 'field', {'name': 'token', 'modifiers': '{"invisible": 1}'})
                         fields['token'] = {'type': 'char'}
 
@@ -542,7 +542,6 @@ class survey_question_wiz(osv.osv_memory):
                 return value
             if context.get('edit', False):
                 return value
-        print value
         return value
 
     def create(self, cr, uid, vals, context=None):
@@ -907,7 +906,7 @@ class survey_question_wiz(osv.osv_memory):
         if context is None:
             context = {}
         if not context.get('edit'):
-            context['survey_token'] = self.read(cr, uid, context['wizard_id'], ['token'], context=context)['token']
+            context['survey_token'] = self.read(cr, uid, context['wizard_id'], ['token'], context=context)['token'] or context['survey_token']
         self.write(cr, uid, [context.get('wizard_id', False)], {'transfer': True, 'page': next and 'next' or 'previous'})
         return {
             'view_type': 'form',
