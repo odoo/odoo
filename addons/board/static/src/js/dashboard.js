@@ -343,8 +343,9 @@ instance.board.AddToDashboard = instance.web.search.Input.extend({
         return this.load_data().done(this.proxy("render_data"));
     },
     load_data:function(){
+        var context = new instance.web.CompoundContext(this.getParent().dataset.get_context() || []);
         var board = new instance.web.Model('board.board');
-        return board.call('list');
+        return board.call('list', [context]);
     },
     _x:function() {
         if (!instance.webclient) { return $.Deferred().reject(); }
