@@ -802,6 +802,8 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
             if (save_obj.error)
                 return $.Deferred().reject();
             return $.when.apply($, save_obj.ret);
+        }).done(function() {
+            self.$el.removeClass('oe_form_dirty');
         });
     },
     _process_save: function(save_obj) {
@@ -2126,7 +2128,7 @@ instance.web.form.AbstractField = instance.web.form.FormWidget.extend(instance.w
         value without triggering a re-rendering.
     */
     internal_set_value: function(value_) {
-        var tmp = this.no_render;
+        var tmp = this.no_rerender;
         this.no_rerender = true;
         this.set({'value': value_});
         this.no_rerender = tmp;
