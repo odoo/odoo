@@ -5,7 +5,7 @@
 
 
         <!-- Top menu item -->
-        <menuitem name="Survey" id="survey.survey_main" groups="base.group_survey_user"/>
+        <menuitem name="Survey" id="survey.survey_main" groups="base.group_survey_user" sequence="120"/>
         <menuitem name="Survey" id="menu_surveys" parent="survey.survey_main"/>
         <menuitem name="Configuration" id="menu_surveys_configuration" parent="menu_surveys" sequence="10" groups="base.group_survey_manager"/>
         
@@ -263,8 +263,8 @@
                                                 <t t-if="record.state.raw_value !== 'draft'"><span class="oe_inactive" title="You can only edit the survey in draft mode">Edit Survey</span></t>
                                             </td>
                                             <td>
-                                                <t t-if="record.state.raw_value === 'open'"><a name="action_survey_sent" type="object">Collect Answers</a></t>
-                                                <t t-if="record.state.raw_value !== 'open'"><span class="oe_inactive" title="You can only collect answers for the open survey">Collect Answers</span></t>
+                                                <t t-if="record.state.raw_value === 'open'"><a name="action_survey_sent" type="object">Invite Poeple</a></t>
+                                                <t t-if="record.state.raw_value !== 'open'"><span class="oe_inactive" title="You can only collect answers for the open survey">Invite Poeple</span></t>
                                             </td>
                                         </tr>
                                         <tr>
