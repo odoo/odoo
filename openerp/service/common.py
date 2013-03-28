@@ -20,7 +20,6 @@ RPC_VERSION_1 = {
 
 def dispatch(method, params):
     if method in ['login', 'about', 'timezone_get',
-                  'login_message',
                   'version', 'authenticate']:
         pass
     elif method in ['set_loglevel']:
@@ -63,9 +62,6 @@ def exp_about(extended=False):
 
 def exp_timezone_get(db, login, password):
     return openerp.tools.misc.get_server_timezone()
-
-def exp_login_message():
-    return openerp.tools.config.get('login_message', False)
 
 def exp_set_loglevel(loglevel, logger=None):
     # TODO Previously, the level was set on the now deprecated
