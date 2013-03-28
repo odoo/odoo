@@ -19,11 +19,11 @@ RPC_VERSION_1 = {
 }
 
 def dispatch(method, params):
-    if method in ['login', 'about', 'timezone_get', 'get_server_environment',
-                  'login_message','get_stats', 'check_connectivity',
-                  'list_http_services', 'version', 'authenticate']:
+    if method in ['login', 'about', 'timezone_get',
+                  'login_message',
+                  'version', 'authenticate']:
         pass
-    elif method in ['get_available_updates', 'get_migration_scripts', 'set_loglevel', 'get_os_time', 'get_sqlcount']:
+    elif method in ['set_loglevel']:
         passwd = params[0]
         params = params[1:]
         security.check_super(passwd)
