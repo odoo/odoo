@@ -321,6 +321,50 @@
             </xpath>
         </field>
     </record>
+    
+     <record id="view_hr_job_kanban" model="ir.ui.view">
+            <field name="name">hr.job.kanban</field>
+            <field name="model">hr.job</field>
+            <field name="arch" type="xml">
+                <kanban>
+                    <field name="name"/>
+                    <field name="department_id"/>
+                    <field name="no_of_recruitment"/>
+                    <field name="color"/>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div t-attf-class="oe_kanban_color_#{kanban_getcolor(record.color.raw_value)} oe_kanban_card oe_semantic_html_override oe_kanban_survey">
+                                <div class="oe_dropdown_toggle oe_dropdown_kanban">
+                                    <span class="oe_e">i</span>
+                                    <ul class="oe_dropdown_menu">
+                                        <t t-if="widget.view.is_action_enabled('edit')"><li><a type="edit">Edit...</a></li></t>
+                                        <t t-if="widget.view.is_action_enabled('delete')"><li><a type="delete">Delete</a></li></t>
+                                        <li><ul class="oe_kanban_colorpicker" data-field="color"/></li>
+                                    </ul>
+                                </div>
+                                <div class="oe_kanban_content">
+                                    <h3 class="oe_kanban_ellipsis"><field name="name"/></h3>
+                                    <div>
+                                        <field name="department_id"/>
+                                    </div>
+                                    <br/>
+                                    <a><span t-if="record.no_of_recruitment.raw_value gt 0"><field name="no_of_recruitment"/>Employees</span></a>
+                                </div>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+    </record>
+
+ 
+        <!-- hr related job position menu action -->
+         <record model="ir.actions.act_window" id="hr.action_hr_job">
+            <field name="name">Job Positions</field>
+            <field name="res_model">hr.job</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">kanban,tree,form</field>
+        </record>
 
     <!-- Stage Tree View -->
     <record model="ir.ui.view" id="hr_recruitment_stage_tree">
