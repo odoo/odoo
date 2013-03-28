@@ -1094,9 +1094,12 @@ class pos_order(osv.osv):
 
             order.write({'state':'done', 'account_move': move_id})
 
+        all_lines = []
         for group_key, group_data in grouped_data.iteritems():
             for value in group_data:
-                account_move_line_obj.create(cr, uid, value, context=context)
+                all_lines.append((0, 0, value),)
+        if move_id: #In case no order was changed
+            self.pool.get("account.move").write(cr, uid, [move_id], {'line_id':all_lines}, context=context)
 
         return True
 
