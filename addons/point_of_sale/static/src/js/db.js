@@ -267,11 +267,12 @@ function openerp_pos_db(instance, module){
             return results;
         },
         add_order: function(order){
-            var last_id = this.load('last_order_id',0);
+            var order_id = this.load('last_order_id',0) + 1;
             var orders  = this.load('orders',[]);
-            orders.push({id: last_id + 1, data: order});
-            this.save('last_order_id',last_id+1);
+            orders.push({id: order_id, data: order});
+            this.save('last_order_id', order_id);
             this.save('orders',orders);
+            return order_id;
         },
         remove_order: function(order_id){
             var orders = this.load('orders',[]);
@@ -282,6 +283,15 @@ function openerp_pos_db(instance, module){
         },
         get_orders: function(){
             return this.load('orders',[]);
+        },
+        get_order: function(order_id){
+            var orders = this.get_orders();
+            for(var i = 0, len = orders.length; i < len; i++){
+                if(orders[i].id === order_id){
+                    return orders[i];
+                }
+            }
+            return undefined;
         },
     });
 }

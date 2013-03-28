@@ -120,7 +120,6 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
 
                     return self.fetch('res.currency',['symbol','position','rounding','accuracy'],[['id','=',self.get('company').currency_id[0]]]);
                 }).then(function(currencies){
-                    console.log('Currency:',currencies[0]);
                     self.set('currency',currencies[0]);
 
                     return self.fetch('product.uom', null, null);
@@ -256,12 +255,6 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
             }
         },
 
-        // saves the order locally and try to send it to the backend. 'record' is a bizzarely defined JSON version of the Order
-        push_order: function(record) {
-            this.db.add_order(record);
-            this.flush();
-        },
-
         //creates a new empty order and sets it as the current order
         add_new_order: function(){
             var order = new module.Order({pos:this});
@@ -269,45 +262,111 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
             this.set('selectedOrder', order);
         },
 
+        // saves the order locally and try to send it to the backend. 'record' is a bizzarely defined JSON version of the Order
+        // it returns a deferred that succeeds or fail when the pushed order is successfully posted on the server, previously failed orders
+        // will try to be re-sent but don't make this method return false if they fail. ( So that in the unlikely case of an order making
+        // the server crash, the other orders can still be sent )
+        // payment process ) 
+        push_order: function(record) {
+            var self = this;
+            var order_id = this.db.add_order(record);
+            var pushed = new $.Deferred();
+
+            this.set('nbr_pending_operations',self.db.get_orders().length);
+
+            this.flush_mutex.exec(function(){
+
+                //first we try to push all orders (the one we added and the one that were not sent)
+                var tried_all = self._flush_all_orders();
+                var done = new $.Deferred();
+
+                tried_all.always(function(){
+                    // then we verify that the one we just added has been sent successfuly.
+                    self._flush_order(order_id)
+                        .done(   function(){ pushed.resolve();})
+                        .fail(   function(){ pushed.reject(); })
+                        .always( function(){ done.resolve();  });
+                });
+
+                return done;
+            });
+
+            return pushed;
+        },
+
+
         // attemps to send all pending orders ( stored in the pos_db ) to the server,
         // and remove the successfully sent ones from the db once
         // it has been confirmed that they have been sent correctly.
         flush: function() {
-            //TODO make the mutex work 
-            //this makes sure only one _int_flush is called at the same time
-            /*
-            return this.flush_mutex.exec(_.bind(function() {
-                return this._flush(0);
-            }, this));
-            */
-            this._flush(0);
+            var self = this;
+            var flushed = new $.Deferred();
+
+            this.flush_mutex.exec(function(){
+                var done = new $.Deferred();
+
+                self._flush_all_orders()
+                    .done(  function(){ flushed.resolve();})
+                    .fail(  function(){ flushed.reject(); })
+                    .always(function(){ done.resolve();   });
+
+                return done;
+            });
+
+            return flushed;
         },
-        // attempts to send an order of index 'index' in the list of order to send. The index
-        // is used to skip orders that failed. do not call this method outside the mutex provided
-        // by flush() 
-        _flush: function(index){
+
+        // attempts to send the locally stored order of id 'order_id'
+        // the sending is asynchronous and can take a long time to decide if it is successful or not (60s)
+        // it is therefore important to only call this method from inside a mutex
+        // this method returns a deferred indicating wether the sending was successful or not
+        _flush_order: function(order_id){
+            var self   = this;
+            var order  = this.db.get_order(order_id);
+
+            if(!order){
+                // flushing a non existing order always succeeds
+                return (new $.Deferred()).resolve();
+            }
+
+            //we try to send the order. shadow prevents a spinner if it takes too long.
+            var rpc = (new instance.web.Model('pos.order')).call('create_from_ui',[[order]],undefined,{shadow: true, timeout: 2000});
+            
+            rpc.fail(function(unused,event){
+                //prevent an error popup creation by the rpc failure
+                event.preventDefault();
+                console.error('Failed to send order:',order);
+            });
+
+            rpc.done(function(){
+                self.db.remove_order(order_id);
+                self.set('nbr_pending_operations',self.db.get_orders().length);
+            });
+
+            return rpc;
+        },
+        
+        // attempts to send all the locally stored orders. As with _flush_order, it should only be
+        // called from within a mutex. 
+        // this method returns a deferred that always succeeds when all orders have been tried to be sent,
+        // even if none of them could actually be sent. 
+        _flush_all_orders: function(){
             var self = this;
             var orders = this.db.get_orders();
-            self.set('nbr_pending_operations',orders.length);
+            var tried_all = new $.Deferred();
 
-            var order  = orders[index];
-            if(!order){
-                return;
+            function rec_flush(index){
+                if(index < orders.length){
+                    self._flush_order(orders[index].id).always(function(){ 
+                        rec_flush(index+1); 
+                    })
+                }else{
+                    tried_all.resolve();
+                }
             }
-            //try to push an order to the server
-            // shadow : true is to prevent a spinner to appear in case of timeout
-            (new instance.web.Model('pos.order')).call('create_from_ui',[[order]],undefined,{ shadow:true })
-                .fail(function(unused, event){
-                    //don't show error popup if it fails 
-                    event.preventDefault();
-                    console.error('Failed to send order:',order);
-                    self._flush(index+1);
-                })
-                .done(function(){
-                    //remove from db if success
-                    self.db.remove_order(order.id);
-                    self._flush(index);
-                });
+            rec_flush(0);
+
+            return tried_all;
         },
 
         scan_product: function(parsed_ean){
