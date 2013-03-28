@@ -39,7 +39,7 @@ except ImportError:
     from StringIO import StringIO   # NOQA
 
 import openerp
-from openerp import modules, pooler, tools, addons
+from openerp import modules, tools, addons
 from openerp.modules.db import create_categories
 from openerp.tools.parse_version import parse_version
 from openerp.tools.translate import _
@@ -473,14 +473,14 @@ class module(osv.osv):
         function(cr, uid, ids, context=context)
 
         cr.commit()
-        _, pool = pooler.restart_pool(cr.dbname, update_module=True)
+        registry = openerp.modules.registry.RegistryManager.new(cr.dbname, update_module=True)
 
-        config = pool.get('res.config').next(cr, uid, [], context=context) or {}
+        config = registry['res.config'].next(cr, uid, [], context=context) or {}
         if config.get('type') not in ('ir.actions.act_window_close',):
             return config
 
         # reload the client; open the first available root menu
-        menu_obj = self.pool.get('ir.ui.menu')
+        menu_obj = registry['ir.ui.menu']
         menu_ids = menu_obj.search(cr, uid, [('parent_id', '=', False)], context=context)
         return {
             'type': 'ir.actions.client',

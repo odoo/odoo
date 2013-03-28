@@ -53,5 +53,12 @@ multi_process = False
 # Is the server running with gevent.
 evented = False
 
+def registry(database_name):
+    """
+    Return the model registry for the given database. If the registry does not
+    exist yet, it is created on the fly.
+    """
+    return modules.registry.RegistryManager.get(database_name)
+
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

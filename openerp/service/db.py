@@ -7,8 +7,8 @@ import os
 import threading
 import traceback
 
+import openerp
 from openerp import SUPERUSER_ID
-import openerp.pooler
 import openerp.release
 import openerp.sql_db
 import openerp.tools
@@ -28,7 +28,7 @@ def _initialize_db(id, db_name, demo, lang, user_password):
         try:
             self_actions[id]['progress'] = 0
             cr = openerp.sql_db.db_connect(db_name).cursor()
-            openerp.modules.db.initialize(cr) # TODO this should be removed as it is done by pooler.restart_pool.
+            openerp.modules.db.initialize(cr) # TODO this should be removed as it is done by RegistryManager.new().
             openerp.tools.config['lang'] = lang
             cr.commit()
         finally:
@@ -36,20 +36,20 @@ def _initialize_db(id, db_name, demo, lang, user_password):
                 cr.close()
                 cr = None
 
-        pool = openerp.pooler.restart_pool(db_name, demo, self_actions[id],
-                                   update_module=True)[1]
+        registry = openerp.modules.registry.RegistryManager.new(
+            db_name, demo, self_actions[id], update_module=True)[1]
 
         try:
             cr = openerp.sql_db.db_connect(db_name).cursor()
 
             if lang:
-                modobj = pool.get('ir.module.module')
+                modobj = registry['ir.module.module']
                 mids = modobj.search(cr, SUPERUSER_ID, [('state', '=', 'installed')])
                 modobj.update_translations(cr, SUPERUSER_ID, mids, lang)
 
             # update admin's password and lang
             values = {'password': user_password, 'lang': lang}
-            pool.get('res.users').write(cr, SUPERUSER_ID, [SUPERUSER_ID], values)
+            registry['res.users'].write(cr, SUPERUSER_ID, [SUPERUSER_ID], values)
 
             cr.execute('SELECT login, password FROM res_users ORDER BY login')
             self_actions[id].update(users=cr.dictfetchall(), clean=True)
@@ -351,7 +351,7 @@ def exp_migrate_databases(databases):
     for db in databases:
         _logger.info('migrate database %s', db)
         openerp.tools.config['update']['base'] = True
-        openerp.pooler.restart_pool(db, force_demo=False, update_module=True)
+        openerp.modules.registry.RegistryManager.new(db, force_demo=False, update_module=True)
     return True
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

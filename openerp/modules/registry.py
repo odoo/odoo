@@ -231,7 +231,6 @@ class RegistryManager(object):
             try:
                 Registry.setup_multi_process_signaling(cr)
                 registry.do_parent_store(cr)
-                registry.get('ir.actions.report.xml').register_all(cr)
                 cr.commit()
             finally:
                 cr.close()
