@@ -1011,6 +1011,9 @@ instance.web.JsonRPC = instance.web.Class.extend(instance.web.PropertiesMixin, {
         var deferred = $.Deferred();
         if (! options.shadow)
             this.trigger('request', url, payload);
+        
+        if (options.timeout)
+            url.timeout = options.timeout;
 
         this.rpc_function(url, payload).then(
             function (response, textStatus, jqXHR) {
