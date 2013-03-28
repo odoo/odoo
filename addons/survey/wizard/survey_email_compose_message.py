@@ -168,7 +168,7 @@ class survey_mail_compose_message(osv.TransientModel):
 
                 # remove public anonymous access
                 partner_list = []
-                for partner in partner_obj.browse(cr, uid, wizard.partner_ids, context=context):
+                for partner in wizard.partner_ids:
                     if not anonymous_id or not partner.user_ids or anonymous_id not in [x.id for x in partner.user_ids[0].groups_id]:
                         partner_list.append({'id': partner.id, 'email': partner.email})
 
