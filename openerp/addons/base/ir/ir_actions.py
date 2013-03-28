@@ -296,20 +296,21 @@ class act_window(osv.osv):
         if not fields or 'help' in fields:
             context = dict(context or {})
             eval_dict = {
-                'active_model' : context.get('active_model'),
-                'active_id' : context.get('active_id'),
-                'active_ids' : context.get('active_ids'),
-                'uid' : uid,
+                'active_model': context.get('active_model'),
+                'active_id': context.get('active_id'),
+                'active_ids': context.get('active_ids'),
+                'uid': uid,
             }
             for res in results:
-                if res.get('res_model'):
+                model = res.get('res_model')
+                if model and self.pool.get('model'):
                     try:
                         with tools.mute_logger("openerp.tools.safe_eval"):
                             eval_context = eval(res['context'] or "{}", eval_dict) or {}
                     except Exception:
                         continue
                     custom_context = dict(context, **eval_context)
-                    res['help'] = self.pool.get(res.get('res_model')).get_empty_list_help(cr, uid, res.get('help', ""), context=custom_context)
+                    res['help'] = self.pool.get(model).get_empty_list_help(cr, uid, res.get('help', ""), context=custom_context)
         if ids_int:
             return results[0]
         return results
