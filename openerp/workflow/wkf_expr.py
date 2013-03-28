@@ -19,7 +19,7 @@
 #
 ##############################################################################
 
-import openerp.pooler as pooler
+import openerp
 from openerp.tools.safe_eval import safe_eval as eval
 
 class Env(dict):
@@ -28,7 +28,7 @@ class Env(dict):
         self.uid = uid
         self.model = model
         self.ids = ids
-        self.obj = pooler.get_pool(cr.dbname).get(model)
+        self.obj = openerp.registry(cr.dbname)[model]
         self.columns = self.obj._columns.keys() + self.obj._inherit_fields.keys()
 
     def __getitem__(self, key):
@@ -58,7 +58,7 @@ def _eval_expr(cr, ident, workitem, action):
     return ret
 
 def execute_action(cr, ident, workitem, activity):
-    obj = pooler.get_pool(cr.dbname).get('ir.actions.server')
+    obj = openerp.registry(cr.dbname)['ir.actions.server']
     ctx = {'active_model':ident[1], 'active_id':ident[2], 'active_ids':[ident[2]]}
     result = obj.run(cr, ident[0], [activity['action_id']], ctx)
     return result
@@ -72,8 +72,8 @@ def check(cr, workitem, ident, transition, signal):
 
     uid = ident[0]
     if transition['group_id'] and uid != 1:
-        pool = pooler.get_pool(cr.dbname)
-        user_groups = pool.get('res.users').read(cr, uid, [uid], ['groups_id'])[0]['groups_id']
+        registry = openerp.registry(cr.dbname)
+        user_groups = registry['res.users'].read(cr, uid, [uid], ['groups_id'])[0]['groups_id']
         if not transition['group_id'] in user_groups:
             return False
 

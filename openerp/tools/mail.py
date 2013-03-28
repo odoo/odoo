@@ -24,13 +24,13 @@ import cgi
 import logging
 import lxml.html
 import lxml.html.clean as clean
-import openerp.pooler as pooler
 import random
 import re
 import socket
 import threading
 import time
 
+import openerp
 from openerp.loglevels import ustr
 
 _logger = logging.getLogger(__name__)
@@ -325,13 +325,13 @@ def email_send(email_from, email_to, subject, body, email_cc=None, email_bcc=Non
     if not cr:
         db_name = getattr(threading.currentThread(), 'dbname', None)
         if db_name:
-            local_cr = cr = pooler.get_db(db_name).cursor()
+            local_cr = cr = openerp.registry(db_name).db.cursor()
         else:
             raise Exception("No database cursor found, please pass one explicitly")
 
     # Send Email
     try:
-        mail_server_pool = pooler.get_pool(cr.dbname).get('ir.mail_server')
+        mail_server_pool = openerp.registry(cr.dbname)['ir.mail_server']
         res = False
         # Pack Message into MIME Object
         email_msg = mail_server_pool.build_email(email_from, email_to, subject, body, email_cc, email_bcc, reply_to,

@@ -25,16 +25,18 @@
     through the code of yaml tests.
 """
 
-import openerp.netsvc as netsvc
+import openerp
+import openerp.report
 import openerp.tools as tools
 import logging
-import openerp.pooler as pooler
 from openerp.tools.safe_eval import safe_eval
 from subprocess import Popen, PIPE
 import os
 import tempfile
 
 _logger = logging.getLogger(__name__)
+_test_logger = logging.getLogger('openerp.tests')
+
 
 def try_report(cr, uid, rname, ids, data=None, context=None, our_module=None):
     """ Try to render a report <rname> with contents of ids
@@ -49,8 +51,8 @@ def try_report(cr, uid, rname, ids, data=None, context=None, our_module=None):
         rname_s = rname[7:]
     else:
         rname_s = rname
-    _logger.log(netsvc.logging.TEST, "  - Trying %s.create(%r)", rname, ids)
-    res = netsvc.LocalService(rname).create(cr, uid, ids, data, context)
+    _test_logger.info("  - Trying %s.create(%r)", rname, ids)
+    res = openerp.report.render_report(cr, uid, ids, rname_s, data, context)
     if not isinstance(res, tuple):
         raise RuntimeError("Result of %s.create() should be a (data,format) tuple, now it is a %s" % \
                                 (rname, type(res)))
@@ -92,7 +94,7 @@ def try_report(cr, uid, rname, ids, data=None, context=None, our_module=None):
         _logger.warning("Report %s produced a \"%s\" chunk, cannot examine it", rname, res_format)
         return False
 
-    _logger.log(netsvc.logging.TEST, "  + Report %s produced correctly.", rname)
+    _test_logger.info("  + Report %s produced correctly.", rname)
     return True
 
 def try_report_action(cr, uid, action_id, active_model=None, active_ids=None,
@@ -123,10 +125,10 @@ def try_report_action(cr, uid, action_id, active_model=None, active_ids=None,
         context = context.copy() # keep it local
     # TODO context fill-up
 
-    pool = pooler.get_pool(cr.dbname)
+    registry = openerp.registry(cr.dbname)
 
     def log_test(msg, *args):
-        _logger.log(netsvc.logging.TEST, "  - " + msg, *args)
+        _test_logger.info("  - " + msg, *args)
 
     datas = {}
     if active_model:
@@ -145,7 +147,7 @@ def try_report_action(cr, uid, action_id, active_model=None, active_ids=None,
                 raise ValueError('You cannot only specify action_id "%s" without a module name' % action_id)
             act_module = our_module
             act_xmlid = action_id
-        act_model, act_id = pool.get('ir.model.data').get_object_reference(cr, uid, act_module, act_xmlid)
+        act_model, act_id = registry['ir.model.data'].get_object_reference(cr, uid, act_module, act_xmlid)
     else:
         assert isinstance(action_id, (long, int))
         act_model = 'ir.action.act_window'     # assume that
@@ -181,11 +183,11 @@ def try_report_action(cr, uid, action_id, active_model=None, active_ids=None,
             log_test("will emulate a %s view: %s#%s",
                         action['view_type'], datas['res_model'], view_id or '?')
 
-            view_res = pool.get(datas['res_model']).fields_view_get(cr, uid, view_id, action['view_type'], context)
+            view_res = registry[datas['res_model']].fields_view_get(cr, uid, view_id, action['view_type'], context)
             assert view_res and view_res.get('arch'), "Did not return any arch for the view"
             view_data = {}
             if view_res.get('fields',{}).keys():
-                view_data = pool.get(datas['res_model']).default_get(cr, uid, view_res['fields'].keys(), context)
+                view_data = registry[datas['res_model']].default_get(cr, uid, view_res['fields'].keys(), context)
             if datas.get('form'):
                 view_data.update(datas.get('form'))
             if wiz_data:
@@ -238,7 +240,7 @@ def try_report_action(cr, uid, action_id, active_model=None, active_ids=None,
             if not datas['res_id']:
                 # it is probably an orm_memory object, we need to create
                 # an instance
-                datas['res_id'] = pool.get(datas['res_model']).create(cr, uid, view_data, context)
+                datas['res_id'] = registry[datas['res_model']].create(cr, uid, view_data, context)
 
             if not buttons:
                 raise AssertionError("view form doesn't have any buttons to press!")
@@ -255,7 +257,7 @@ def try_report_action(cr, uid, action_id, active_model=None, active_ids=None,
                     continue
                 if b['type'] == 'object':
                     #there we are! press the button!
-                    fn =  getattr(pool.get(datas['res_model']), b['name'])
+                    fn =  getattr(registry[datas['res_model']], b['name'])
                     if not fn:
                         _logger.error("The %s model doesn't have a %s attribute!", datas['res_model'], b['name'])
                         continue
@@ -281,7 +283,7 @@ def try_report_action(cr, uid, action_id, active_model=None, active_ids=None,
             raise Exception("Cannot handle action of type %s" % act_model)
 
     log_test("will be using %s action %s #%d", act_model, act_xmlid, act_id)
-    action = pool.get(act_model).read(cr, uid, act_id, context=context)
+    action = registry[act_model].read(cr, uid, act_id, context=context)
     assert action, "Could not read action %s[%s]" %(act_model, act_id)
     loop = 0
     while action:
