@@ -294,7 +294,6 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
             return pushed;
         },
 
-
         // attemps to send all pending orders ( stored in the pos_db ) to the server,
         // and remove the successfully sent ones from the db once
         // it has been confirmed that they have been sent correctly.
