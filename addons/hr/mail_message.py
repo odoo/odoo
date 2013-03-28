@@ -39,4 +39,4 @@ class mail_message(osv.Model):
                 model_obj.check_access_rule(cr, uid, mids, 'read', context=context)
                 return
 
-        super(mail_message, self).check_related_document(cr, uid, uid, model_obj, mids, operation, context)
+        super(mail_message, self).check_related_document(cr, uid, model_obj, mids, operation, context)
