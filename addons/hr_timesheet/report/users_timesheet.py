@@ -20,10 +20,11 @@
 ##############################################################################
 
 import datetime
+import time
+
+import openerp
 from openerp.report.interface import report_rml
 from openerp.report.interface import toxml
-import time
-from openerp import pooler
 from openerp.tools.translate import _
 from openerp.report import report_sxw
 from openerp.tools import ustr
@@ -78,6 +79,7 @@ class report_custom(report_rml):
         return _weekdays[weekday]
 
     def create_xml(self, cr, uid, ids, data, context):
+        registry = openerp.registry(cr.dbname)
 
         # Computing the dates (start of month: som, and end of month: eom)
         som = datetime.date(data['form']['year'], data['form']['month'], 1)
@@ -88,7 +90,7 @@ class report_custom(report_rml):
         date_xml.append('<cols>2.5cm%s,2cm</cols>\n' % (',0.7cm' * lengthmonth(som.year, som.month)))
 
         emp_xml=''
-        emp_obj = pooler.get_pool(cr.dbname).get('hr.employee')        
+        emp_obj = registry['hr.employee']
         for id in data['form']['employee_ids']:
             user = emp_obj.browse(cr, uid, id).user_id.id
             empl_name = emp_obj.browse(cr, uid, id).name
@@ -97,14 +99,14 @@ class report_custom(report_rml):
         # Computing the xml
         #Without this, report don't show non-ascii characters (TO CHECK)
         date_xml = '\n'.join(date_xml)
-        rpt_obj = pooler.get_pool(cr.dbname).get('hr.employee')
+        rpt_obj = emp_obj
         rml_obj=report_sxw.rml_parse(cr, uid, rpt_obj._name,context)
         header_xml = '''
         <header>
         <date>%s</date>
         <company>%s</company>
         </header>
-        '''  % (str(rml_obj.formatLang(time.strftime("%Y-%m-%d"),date=True))+' ' + str(time.strftime("%H:%M")),pooler.get_pool(cr.dbname).get('res.users').browse(cr,uid,uid).company_id.name)
+        '''  % (str(rml_obj.formatLang(time.strftime("%Y-%m-%d"),date=True))+' ' + str(time.strftime("%H:%M")),registry['res.users'].browse(cr,uid,uid).company_id.name)
 
         xml='''<?xml version="1.0" encoding="UTF-8" ?>
         <report>

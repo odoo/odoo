@@ -26,7 +26,7 @@ from operator import itemgetter
 from os.path import join as opj
 import time
 
-from openerp import netsvc, tools
+from openerp import tools
 from openerp.tools.translate import _
 from openerp.osv import fields, osv
 

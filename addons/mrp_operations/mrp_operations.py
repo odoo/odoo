@@ -21,7 +21,6 @@
 
 from openerp.osv import fields
 from openerp.osv import osv
-from openerp import netsvc
 import time
 from datetime import datetime
 from openerp.tools.translate import _

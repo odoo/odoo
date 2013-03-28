@@ -19,7 +19,6 @@
 #
 ##############################################################################
 
-from openerp import pooler
 import time
 from openerp.report import report_sxw
 

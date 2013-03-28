@@ -21,7 +21,6 @@
 
 from openerp.osv import osv, fields
 from openerp.tools.translate import _
-from openerp import netsvc
 
 class sale_order_line_make_invoice(osv.osv_memory):
     _name = "sale.order.line.make.invoice"
