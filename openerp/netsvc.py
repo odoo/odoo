@@ -21,11 +21,9 @@
 ##############################################################################
 
 
-import errno
 import logging
 import logging.handlers
 import os
-import platform
 import release
 import sys
 import threading
@@ -38,20 +36,36 @@ try:
 except ImportError:
     psutil = None
 
-# TODO modules that import netsvc only for things from loglevels must be changed to use loglevels.
-from loglevels import *
 import tools
 import openerp
 
 _logger = logging.getLogger(__name__)
 
 def LocalService(name):
-    # Special case for addons support, will be removed in a few days when addons
-    # are updated to directly use openerp.osv.osv.service.
+    """
+    The openerp.netsvc.LocalService() function is deprecated. It still works
+    in two cases: workflows and reports. For workflows, instead of using
+    LocalService('workflow'), openerp.workflow should be used (better yet,
+    methods on openerp.osv.orm.Model should be used). For reports,
+    openerp.report.render_report() should be used (methods on the Model should
+    be provided too in the future).
+    """
+    assert openerp.conf.deprecation.allow_local_service
+    _logger.warning("LocalService() is deprecated since march 2013 (it was called with '%s')." % name)
+
     if name == 'workflow':
         return openerp.workflow
 
-    return openerp.report.interface.report_int._reports[name]
+    if name.startswith('report.'):
+        report = openerp.report.interface.report_int._reports.get(name)
+        if report:
+            return report
+        else:
+            dbname = getattr(threading.currentThread(), 'dbname', None)
+            if dbname:
+                registry = openerp.modules.registry.RegistryManager.get(dbname)
+                with registry.cursor() as cr:
+                    return registry['ir.actions.report.xml']._lookup_report(cr, name[len('report.'):])
 
 BLACK, RED, GREEN, YELLOW, BLUE, MAGENTA, CYAN, WHITE, _NOTHING, DEFAULT = range(10)
 #The background is set with 40 plus the number of the color, and the foreground with 30
@@ -63,7 +77,6 @@ COLOR_PATTERN = "%s%s%%s%s" % (COLOR_SEQ, COLOR_SEQ, RESET_SEQ)
 LEVEL_COLOR_MAPPING = {
     logging.DEBUG: (BLUE, DEFAULT),
     logging.INFO: (GREEN, DEFAULT),
-    logging.TEST: (WHITE, BLUE),
     logging.WARNING: (YELLOW, DEFAULT),
     logging.ERROR: (RED, DEFAULT),
     logging.CRITICAL: (WHITE, RED),
@@ -161,7 +174,6 @@ PSEUDOCONFIG_MAPPER = {
     'debug_rpc': ['openerp:DEBUG','openerp.netsvc.rpc.request:DEBUG'],
     'debug': ['openerp:DEBUG'],
     'debug_sql': ['openerp.sql_db:DEBUG'],
-    'test': ['openerp:TEST'],
     'info': [],
     'warn': ['openerp:WARNING'],
     'error': ['openerp:ERROR'],

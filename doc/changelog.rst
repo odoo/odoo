@@ -6,6 +6,9 @@ Changelog
 `trunk`
 -------
 
+- Almost removed ``LocalService()``. For reports,
+  ``openerp.osv.orm.Model.print_report()`` can be used. For workflows, see
+  :ref:`orm-workflows`.
 - Removed support for the ``NET-RPC`` protocol.
 - Added the :ref:`Long polling <longpolling-worker>` worker type.
 - Added :ref:`orm-workflows` to the ORM.

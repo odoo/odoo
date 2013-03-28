@@ -19,7 +19,7 @@
 #
 ##############################################################################
 
-from openerp import pooler
+import openerp
 from openerp.osv import osv, fields
 from openerp.tools.translate import _
 
@@ -87,7 +87,7 @@ class base_module_upgrade(osv.osv_memory):
             ir_module.download(cr, uid, ids, context=context)
             cr.commit() # save before re-creating cursor below
 
-        pooler.restart_pool(cr.dbname, update_module=True)
+        openerp.modules.registry.RegistryManager.new(cr.dbname, update_module=True)
 
         ir_model_data = self.pool.get('ir.model.data')
         __, res_id = ir_model_data.get_object_reference(cr, uid, 'base', 'view_base_module_upgrade_install')

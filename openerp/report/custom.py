@@ -22,6 +22,7 @@
 import os
 import time
 
+import openerp
 import openerp.tools as tools
 from openerp.tools.safe_eval import safe_eval as eval
 import print_xml
@@ -31,7 +32,6 @@ import common
 from openerp.osv.osv import except_osv
 from openerp.osv.orm import browse_null
 from openerp.osv.orm import browse_record_list
-import openerp.pooler as pooler
 from pychart import *
 import misc
 import cStringIO
@@ -127,22 +127,22 @@ class report_custom(report_int):
     def create(self, cr, uid, ids, datas, context=None):
         if not context:
             context={}
-        self.pool = pooler.get_pool(cr.dbname)
-        report = self.pool.get('ir.report.custom').browse(cr, uid, [datas['report_id']])[0]
+        self.pool = openerp.registry(cr.dbname)
+        report = self.pool['ir.report.custom'].browse(cr, uid, [datas['report_id']])[0]
         datas['model'] = report.model_id.model
         if report.menu_id:
-            ids = self.pool.get(report.model_id.model).search(cr, uid, [])
+            ids = self.pool[report.model_id.model].search(cr, uid, [])
             datas['ids'] = ids
 
         report_id = datas['report_id']
-        report = self.pool.get('ir.report.custom').read(cr, uid, [report_id], context=context)[0]
-        fields = self.pool.get('ir.report.custom.fields').read(cr, uid, report['fields_child0'], context=context)
+        report = self.pool['ir.report.custom'].read(cr, uid, [report_id], context=context)[0]
+        fields = self.pool['ir.report.custom.fields'].read(cr, uid, report['fields_child0'], context=context)
 
         fields.sort(lambda x,y : x['sequence'] - y['sequence'])
 
         if report['field_parent']:
-            parent_field = self.pool.get('ir.model.fields').read(cr, uid, [report['field_parent'][0]], ['model'])
-        model_name = self.pool.get('ir.model').read(cr, uid, [report['model_id'][0]], ['model'], context=context)[0]['model']
+            parent_field = self.pool['ir.model.fields'].read(cr, uid, [report['field_parent'][0]], ['model'])
+        model_name = self.pool['ir.model'].read(cr, uid, [report['model_id'][0]], ['model'], context=context)[0]['model']
 
         fct = {
             'id': lambda x: x,
@@ -158,7 +158,7 @@ class report_custom(report_int):
                 field_child = f['field_child'+str(i)]
                 if field_child:
                     row.append(
-                        self.pool.get('ir.model.fields').read(cr, uid, [field_child[0]], ['name'], context=context)[0]['name']
+                        self.pool['ir.model.fields'].read(cr, uid, [field_child[0]], ['name'], context=context)[0]['name']
                     )
                     if f['fc'+str(i)+'_operande']:
                         fct_name = 'id'
@@ -171,7 +171,7 @@ class report_custom(report_int):
                         cond.append(None)
             new_fields.append(row)
             new_cond.append(cond)
-        objs = self.pool.get(model_name).browse(cr, uid, ids)
+        objs = self.pool[model_name].browse(cr, uid, ids)
 
         # Group by
         groupby = None
@@ -340,7 +340,7 @@ class report_custom(report_int):
 
 
     def _create_lines(self, cr, uid, ids, report, fields, results, context):
-        pool = pooler.get_pool(cr.dbname)
+        pool = openerp.registry(cr.dbname)
         pdf_string = cStringIO.StringIO()
         can = canvas.init(fname=pdf_string, format='pdf')
         
@@ -371,7 +371,7 @@ class report_custom(report_int):
         for f in fields:
             field_id = (f['field_child3'] and f['field_child3'][0]) or (f['field_child2'] and f['field_child2'][0]) or (f['field_child1'] and f['field_child1'][0]) or (f['field_child0'] and f['field_child0'][0])
             if field_id:
-                type = pool.get('ir.model.fields').read(cr, uid, [field_id],['ttype'])
+                type = pool['ir.model.fields'].read(cr, uid, [field_id],['ttype'])
                 if type[0]['ttype'] == 'date':
                     date_idx = idx
                     fct[idx] = process_date[report['frequency']] 
@@ -444,7 +444,7 @@ class report_custom(report_int):
 
 
     def _create_bars(self, cr, uid, ids, report, fields, results, context):
-        pool = pooler.get_pool(cr.dbname)
+        pool = openerp.registry(cr.dbname)
         pdf_string = cStringIO.StringIO()
         can = canvas.init(fname=pdf_string, format='pdf')
         
@@ -472,7 +472,7 @@ class report_custom(report_int):
         for f in fields:
             field_id = (f['field_child3'] and f['field_child3'][0]) or (f['field_child2'] and f['field_child2'][0]) or (f['field_child1'] and f['field_child1'][0]) or (f['field_child0'] and f['field_child0'][0])
             if field_id:
-                type = pool.get('ir.model.fields').read(cr, uid, [field_id],['ttype'])
+                type = pool['ir.model.fields'].read(cr, uid, [field_id],['ttype'])
                 if type[0]['ttype'] == 'date':
                     date_idx = idx
                     fct[idx] = process_date[report['frequency']] 

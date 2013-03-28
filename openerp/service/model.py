@@ -61,7 +61,7 @@ def check(f):
                 # callable. We need to find the right parameters to call
                 # the  orm._sql_message(self, cr, uid, ids, context) function,
                 # or we skip..
-                # our signature is f(osv_pool, dbname [,uid, obj, method, args])
+                # our signature is f(registry, dbname [,uid, obj, method, args])
                 try:
                     if args and len(args) > 1:
                         # TODO self doesn't exist, but was already wrong before (it was not a registry but just the object_service.
@@ -95,14 +95,14 @@ def check(f):
             return tr(src, 'code')
 
         try:
-            if openerp.pooler.get_pool(dbname)._init:
+            if openerp.registry(dbname)._init:
                 raise openerp.exceptions.Warning('Currently, this database is not fully loaded and can not be used.')
             return f(dbname, *args, **kwargs)
         except IntegrityError, inst:
-            osv_pool = openerp.pooler.get_pool(dbname)
-            for key in osv_pool._sql_error.keys():
+            registry = openerp.registry(dbname)
+            for key in registry._sql_error.keys():
                 if key in inst[0]:
-                    raise openerp.osv.orm.except_orm(_('Constraint Error'), tr(osv_pool._sql_error[key], 'sql_constraint') or inst[0])
+                    raise openerp.osv.orm.except_orm(_('Constraint Error'), tr(registry._sql_error[key], 'sql_constraint') or inst[0])
             if inst.pgcode in (errorcodes.NOT_NULL_VIOLATION, errorcodes.FOREIGN_KEY_VIOLATION, errorcodes.RESTRICT_VIOLATION):
                 msg = _('The operation cannot be completed, probably due to the following:\n- deletion: you may be trying to delete a record while other records still reference it\n- creation/update: a mandatory field is not correctly set')
                 _logger.debug("IntegrityError", exc_info=True)
@@ -116,7 +116,7 @@ def check(f):
                         last_quote_begin = errortxt.rfind('"', 0, last_quote_end)
                         model_name = table = errortxt[last_quote_begin+1:last_quote_end].strip()
                     model = table.replace("_",".")
-                    model_obj = osv_pool.get(model)
+                    model_obj = registry.get(model)
                     if model_obj:
                         model_name = model_obj._description or model_obj._name
                     msg += _('\n\n[object with reference: %s - %s]') % (model_name, model)
@@ -129,7 +129,7 @@ def check(f):
     return wrapper
 
 def execute_cr(cr, uid, obj, method, *args, **kw):
-    object = openerp.pooler.get_pool(cr.dbname).get(obj)
+    object = openerp.registry(cr.dbname).get(obj)
     if not object:
         raise except_orm('Object Error', 'Object %s doesn\'t exist' % str(obj))
     return getattr(object, method)(cr, uid, *args, **kw)
@@ -140,7 +140,7 @@ def execute_kw(db, uid, obj, method, args, kw=None):
 @check
 def execute(db, uid, obj, method, *args, **kw):
     threading.currentThread().dbname = db
-    cr = openerp.pooler.get_db(db).cursor()
+    cr = openerp.registry(db).db.cursor()
     try:
         try:
             if method.startswith('_'):
@@ -157,7 +157,7 @@ def execute(db, uid, obj, method, *args, **kw):
     return res
 
 def exec_workflow_cr(cr, uid, obj, signal, *args):
-    object = openerp.pooler.get_pool(cr.dbname).get(obj)
+    object = openerp.registry(cr.dbname).get(obj)
     if not object:
         raise except_orm('Object Error', 'Object %s doesn\'t exist' % str(obj))
     res_id = args[0]
@@ -165,7 +165,7 @@ def exec_workflow_cr(cr, uid, obj, signal, *args):
 
 @check
 def exec_workflow(db, uid, obj, signal, *args):
-    cr = openerp.pooler.get_db(db).cursor()
+    cr = openerp.registry(db).db.cursor()
     try:
         try:
             res = exec_workflow_cr(cr, uid, obj, signal, *args)
