@@ -34,7 +34,7 @@
                     <group col="2" invisible="context.get('survey_resent_token')">
                         <field name="public" widget="radio"/>
                     </group>
-                    <group col="1" invisible="context.get('survey_resent_token')" attrs="{'invisible':[('public','in',['email', 'email_public_link'])]}" class="oe_survey_email_public">
+                    <group col="1" invisible="context.get('survey_resent_token')" attrs="{'invisible':[('public','in',['email_private', 'email_public_link'])]}" class="oe_survey_email_public">
                         <div>
                             You can share your survey web public link and/or send private invitations to your audience.<br/>
                             People can response once per invitation, and whenever they want with the public web link.
@@ -66,7 +66,7 @@
                             </div>
                         </group>
                     </group>
-                    <footer attrs="{'invisible':[('public','in',['email', 'email_public_link'])]}">
+                    <footer attrs="{'invisible':[('public','in',['email_private', 'email_public_link'])]}">
                         <button string="Close" class="oe_link" special="cancel" />
                     </footer>
                     <footer attrs="{'invisible':['|',('public','=',False),('public','in',['public_link'])]}">

@@ -44,7 +44,12 @@ class survey(osv.osv):
     _inherit = ['mail.thread', 'ir.needaction_mixin']
 
     def _needaction_domain_get(self, cr, uid, context=None):
-        return ['&', ('response_ids.state', 'in', ['new', 'skip']), ('response_ids.partner_id.user_id', '=', uid)]
+        user_browse = self.pool.get('res.users').browse(cr, SUPERUSER_ID, uid, context=context)
+        model, group_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'base', 'group_survey_manager')
+        if group_id in [x.id for x in user_browse.groups_id]:
+            return ['&', ('response_ids.state', 'in', ['new', 'skip']), ('response_ids.partner_id.user_id', '=', uid)]
+        else:
+            return []
 
     def default_get(self, cr, uid, fields, context=None):
         data = super(survey, self).default_get(cr, uid, fields, context)

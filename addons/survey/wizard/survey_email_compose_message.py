@@ -53,7 +53,7 @@ class survey_mail_compose_message(osv.TransientModel):
     _columns = {
         'public': fields.selection([('public_link', 'Share the public web link to your audience.'), \
                 ('email_public_link', 'Send by email the public web link to your audience.'),\
-                ('email', 'Send private invitation to your audience (only one response per recipient and per invitation).')],
+                ('email_private', 'Send private invitation to your audience (only one response per recipient and per invitation).')],
             string='Share options', required=True),
         'public_url': fields.function(_get_public_url, string="Public url", type="char"),
         'public_url_html': fields.function(_get_public_url_html, string="Public HTML web link", type="char"),
@@ -67,7 +67,7 @@ class survey_mail_compose_message(osv.TransientModel):
         'date_deadline': fields.date(string="Deadline to which the invitation to respond is valid", help="Deadline to which the invitation to respond for this survey is valid. If the field is empty, the invitation is still valid."),
     }
     _defaults = {
-        'public': 'email',
+        'public': 'email_private',
     }
 
     def onchange_multi_email(self, cr, uid, ids, multi_email, context=None):
@@ -106,21 +106,8 @@ class survey_mail_compose_message(osv.TransientModel):
         def create_response_and_send_mail(wizard, token, partner_id, email):
             """ Create one mail by recipients and replace __URL__ by link with identification token
             """
-            # create response with token
-            survey_response_obj.create(cr, uid, {
-                    'date_deadline': wizard.date_deadline,
-                    'survey_id': wizard.res_id,
-                    'date_create': datetime.now(),
-                    'response_type': 'link',
-                    'state': 'new',
-                    'token': token,
-                    'partner_id': partner_id,
-                    'email': email,
-                })
-
             #set url
-            url = wizard.public == 'email' and re.sub(r'params=[^&]+', 'params=%s' % token, wizard.public_url) or wizard.public_url
-
+            url = token and re.sub(r'params=[^&]+', 'params=%s' % token, wizard.public_url) or wizard.public_url
             # post the message
             values = {
                 'model': None,
@@ -144,7 +131,22 @@ class survey_mail_compose_message(osv.TransientModel):
                 response_ids = survey_response_obj.search(cr, uid, [('survey_id', '=', wizard.res_id), ('state', 'in', ['new', 'skip']), '|', ('partner_id', '=', partner_id), ('email', '=', email)], context=context)
                 if response_ids:
                     return survey_response_obj.read(cr, uid, response_ids, ['token'], context=context)[0]['token']
-            return not wizard.public and uuid.uuid4() or False
+            if wizard.public != 'email_private':
+                return None
+            else:
+                token = uuid.uuid4()
+                # create response with token
+                survey_response_obj.create(cr, uid, {
+                        'date_deadline': wizard.date_deadline,
+                        'survey_id': wizard.res_id,
+                        'date_create': datetime.now(),
+                        'response_type': 'link',
+                        'state': 'new',
+                        'token': token,
+                        'partner_id': partner_id,
+                        'email': email,
+                    })
+                return token
 
         for wizard in self.browse(cr, uid, ids, context=context):
             if wizard.model == 'survey':

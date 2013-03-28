@@ -250,7 +250,7 @@ class survey_question_wiz(osv.osv_memory):
         sur_response_obj = self.pool.get('survey.response')
         dom = [('survey_id', '=', survey_id),
             "|", ('state', '=', 'test'),
-            "&", ('state', 'in', ['new', 'skip']), "|", ('date_deadline', '=', None), ('date_deadline', '>', datetime.now())]
+            "&", ('state', 'in', ['new', 'skip', 'done']), "|", ('date_deadline', '=', None), ('date_deadline', '>', datetime.now())]
 
         # check for private token
         if survey_token:
@@ -265,18 +265,20 @@ class survey_question_wiz(osv.osv_memory):
                 response_ids = None
         # check sign in user
         if not response_ids and not anonymous:
-            response_ids = sur_response_obj.search(cr, SUPERUSER_ID, dom + [('partner_id', '=', pid)], context=context, limit=1, order="date_deadline DESC")
+            response_ids = sur_response_obj.search(cr, SUPERUSER_ID, dom + [('state', '!=', 'done'), ('partner_id', '=', pid)], context=context, limit=1, order="date_deadline DESC")
 
         # user have a specific token or a specific partner access (for state open or restricted)
         if response_ids:
             response = sur_response_obj.browse(cr, SUPERUSER_ID, response_ids[0], context=context)
             res['response_id'] = response_ids[0]
             res['state'] = response.state
+            if response.state == 'done':
+                res['readonly'] = True
 
         # errors
         if not res['response_id'] and not context.get('edit') and not context.get('survey_test') and (survey_browse.state != 'open' or str(survey_browse.token) != str(survey_token)):
 
-            response_ids = sur_response_obj.search(cr, SUPERUSER_ID, [('survey_id', '=', survey_id), ("token", "=", context.get("survey_token", None))], context=context, limit=1)
+            response_ids = sur_response_obj.search(cr, SUPERUSER_ID, [('survey_id', '=', survey_id), ("token", "=", survey_token)], context=context, limit=1)
             if not response_ids:
                 response_ids = sur_response_obj.search(cr, SUPERUSER_ID, [('survey_id', '=', survey_id), ('partner_id', '=', pid)], context=context, limit=1)
 
@@ -490,7 +492,7 @@ class survey_question_wiz(osv.osv_memory):
             })
 
         response_ans = False
-        if not context.get('edit') and response_info.get('response_id'):
+        if not context.get('edit') and response_info['response_id']:
             response_ans = sur_response_obj.browse(cr, SUPERUSER_ID, response_info['response_id'], context=context)
 
         if response_ans:
@@ -540,7 +542,7 @@ class survey_question_wiz(osv.osv_memory):
                 return value
             if context.get('edit', False):
                 return value
-
+        print value
         return value
 
     def create(self, cr, uid, vals, context=None):
