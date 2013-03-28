@@ -277,19 +277,13 @@ class config(osv.osv):
     }
 
     def _check_model_id(self, cr, uid, ids, context=None):
-        pool_id = self.browse(cr, uid, ids[0], context=context)
-        model_id = pool_id.model_id.id
-        filter_id = pool_id.filter_id.id
-        if model_id:
-             model_name = self.pool.get('ir.model').read(cr, uid, model_id, ['model'])
-             if filter_id:
-                 filter = self.pool.get('ir.filters').read(cr, uid, filter_id, ['model_id'])
-                 if model_name['model'] != filter['model_id']:
-                    return False
+        config_id = self.browse(cr, uid, ids[0], context=context)
+        if config_id.filter_id.id and config_id.model_id.model != config_id.filter_id.model_id:
+            return False
         return True
 
     _constraints = [
-        (_check_model_id, 'The model or filter chosen have not matched.', ['model_id','filter_id']),
+        (_check_model_id, 'Model of selected filter is not matching with model of current template.', ['model_id','filter_id']),
     ]
 
 config()
