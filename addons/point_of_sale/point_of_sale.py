@@ -526,11 +526,16 @@ class pos_order(osv.osv):
     def write(self, cr, uid, ids, vals, context=None):
         #If you change the partner of the PoS order, change also the partner of the associated bank statements
         res = super(pos_order, self).write(cr, uid, ids, vals, context=context)
+        partner_obj = self.pool.get('res.partner')
         bsl_obj = self.pool.get("account.bank.statement.line")
         if 'partner_id' in vals:
             for posorder in self.browse(cr, uid, ids, context=context):
                 bsl_ids = [x.id for x in posorder.statement_ids]
-                part_id = self.pool.get('res.partner')._find_accounting_partner(posorder.partner_id).id
+                if vals['partner_id']:
+                    p_id = partner_obj.browse(cr, uid, vals['partner_id'], context=context)
+                    part_id = partner_obj._find_accounting_partner(p_id).id
+                else:
+                    part_id = False
                 bsl_obj.write(cr, uid, bsl_ids, {'partner_id': part_id}, context=context)
         return res
 
@@ -962,9 +967,9 @@ class pos_order(osv.osv):
                 })
 
                 if data_type == 'product':
-                    key = ('product', values['product_id'],)
+                    key = ('product', values['partner_id'], values['product_id'])
                 elif data_type == 'tax':
-                    key = ('tax', values['tax_code_id'],)
+                    key = ('tax', values['partner_id'], values['tax_code_id'],)
                 elif data_type == 'counter_part':
                     key = ('counter_part', values['partner_id'], values['account_id'])
                 else:
@@ -1040,7 +1045,7 @@ class pos_order(osv.osv):
                     'debit': ((amount<0) and -amount) or 0.0,
                     'tax_code_id': tax_code_id,
                     'tax_amount': tax_amount,
-                    'partner_id': order.partner_id and order.partner_id.id or False
+                    'partner_id': order.partner_id and self.pool.get("res.partner")._find_accounting_partner(order.partner_id).id or False
                 })
 
                 # For each remaining tax with a code, whe create a move line
@@ -1082,7 +1087,7 @@ class pos_order(osv.osv):
                 'account_id': order_account,
                 'credit': ((order.amount_total < 0) and -order.amount_total) or 0.0,
                 'debit': ((order.amount_total > 0) and order.amount_total) or 0.0,
-                'partner_id': order.partner_id and order.partner_id.id or False
+                'partner_id': order.partner_id and self.pool.get("res.partner")._find_accounting_partner(order.partner_id).id or False
             })
 
             order.write({'state':'done', 'account_move': move_id})
