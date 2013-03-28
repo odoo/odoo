@@ -12,18 +12,23 @@
             <field name="view_id" ref="crm_case_tree_view_leads"/>
             <field name="search_view_id" ref="crm.view_crm_case_leads_filter"/>
             <field name="context">{
-                'search_default_section_id': [active_id], 'default_section_id': active_id, 'default_type':'lead', 'stage_type':'lead'
-            }</field>
+                    'search_default_section_id': [active_id],
+                    'search_default_open': 1,
+                    'default_section_id': active_id,
+                    'default_type': 'lead',
+                    'stage_type': 'lead',
+                }
+            </field>
             <field name="help" type="html">
-              <p>
-                Use leads if you need a qualification step before creating an
-                opportunity or a customer. It can be a business card you received,
-                a contact form filled in your website, or a file of unqualified
-                prospects you import, etc.
-              </p><p>
-                Once qualified, the lead can be converted into a business
-                opportunity and/or a new customer in your address book.
-              </p>
+                <p>
+                    Use leads if you need a qualification step before creating an
+                    opportunity or a customer. It can be a business card you received,
+                    a contact form filled in your website, or a file of unqualified
+                    prospects you import, etc.
+                </p><p>
+                    Once qualified, the lead can be converted into a business
+                    opportunity and/or a new customer in your address book.
+                </p>
             </field>
         </record>
 
@@ -37,19 +42,26 @@
             <field name="view_id" ref="crm.crm_case_kanban_view_leads"/>
             <field name="search_view_id" ref="crm.view_crm_case_opportunities_filter"/>
             <field name="context">{
-                'search_default_section_id': [active_id], 'default_section_id': active_id, 'stage_type': 'opportunity', 'default_type': 'opportunity', 'default_user_id': uid
-            }</field>
+                    'search_default_section_id': [active_id],
+                    'search_default_new': 1,
+                    'search_default_open': 1,
+                    'default_section_id': active_id,
+                    'stage_type': 'opportunity',
+                    'default_type': 'opportunity',
+                    'default_user_id': uid,
+                }
+            </field>
             <field name="help" type="html">
-              <p class="oe_view_nocontent_create">
-              Click to create a new opportunity.
-              </p><p>
-              OpenERP helps you keep track of your sales pipeline to follow
-              up potential sales and better forecast your future revenues.
-              </p><p>
-              You will be able to plan meetings and phone calls from
-              opportunities, convert them into quotations, attach related
-              documents, track all discussions, and much more.
-              </p>
+                <p class="oe_view_nocontent_create">
+                    Click to create a new opportunity.
+                </p><p>
+                    OpenERP helps you keep track of your sales pipeline to follow
+                    up potential sales and better forecast your future revenues.
+                </p><p>
+                    You will be able to plan meetings and phone calls from
+                    opportunities, convert them into quotations, attach related
+                    documents, track all discussions, and much more.
+                </p>
             </field>
         </record>
 
@@ -116,13 +128,13 @@
             <field name="view_mode">kanban,tree,form</field>
             <field name="view_id" ref="crm_case_section_salesteams_view_kanban"/>
             <field name="help" type="html">
-              <p class="oe_view_nocontent_create">
-                Click here to define a new sales team.
-              </p><p>
-                Use sales team to organize your different salespersons or
-                departments into separate teams. Each team will work in
-                its own list of opportunities.
-              </p>
+                <p class="oe_view_nocontent_create">
+                    Click here to define a new sales team.
+                </p><p>
+                    Use sales team to organize your different salespersons or
+                    departments into separate teams. Each team will work in
+                    its own list of opportunities.
+                </p>
             </field>
         </record>
 
@@ -256,31 +268,13 @@
             <field name="view_type">form</field>
             <field name="view_id" ref="crm_case_section_view_tree"/>
             <field name="help" type="html">
-              <p class="oe_view_nocontent_create">
-                Click here to define a new sales team.
-              </p><p>
-                Use sales team to organize your different salespersons or
-                departments into separate teams. Each team will work in
-                its own list of opportunities.
-              </p>
-            </field>
-        </record>
-
-        <record id="view_salesteams_settings" model="ir.ui.view">
-            <field name="name">crm salesteams settings</field>
-            <field name="model">sale.config.settings</field>
-            <field name="inherit_id" ref="base_setup.view_sale_config_settings"/>
-            <field name="arch" type="xml">
-                <div name="config_sale" position="before">
-                    <separator string="Multi Sales Teams"/>
-                    <group>
-                        <label for="id" string="Sales Teams"/>
-                        <div>
-                            <field name="group_multi_salesteams" class="oe_inline"/>
-                            <label for="group_multi_salesteams"/>
-                        </div>
-                    </group>
-                </div>
+                <p class="oe_view_nocontent_create">
+                    Click here to define a new sales team.
+                </p><p>
+                    Use sales team to organize your different salespersons or
+                    departments into separate teams. Each team will work in
+                    its own list of opportunities.
+                </p>
             </field>
         </record>
 
