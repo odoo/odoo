@@ -1348,9 +1348,9 @@ instance.web.search.CharField = instance.web.search.Field.extend( /** @lends ins
 instance.web.search.NumberField = instance.web.search.Field.extend(/** @lends instance.web.search.NumberField# */{
     complete: function (value) {
         var val = this.parse(value);
-        if (!val || isNaN(val)) { return $.when(); }
-        var label = _.str.sprintf(_.str.escapeHTML(
-            _t("Search %(field)s for: %(value)s")), {
+        if (isNaN(val)) { return $.when(); }
+        var label = _.str.sprintf(
+            _t("Search %(field)s for: %(value)s"), {
                 field: '<em>' + this.attrs.string + '</em>',
                 value: '<strong>' + _.str.escapeHTML(value) + '</strong>'});
         return $.when([{
