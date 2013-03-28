@@ -2,7 +2,6 @@
 
 import logging
 
-import openerp.osv.orm # TODO use openerp.exceptions
 import openerp.pooler
 import openerp.release
 import openerp.tools
