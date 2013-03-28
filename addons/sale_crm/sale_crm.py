@@ -21,7 +21,7 @@
 
 from openerp.osv import osv, fields
 from datetime import datetime
-from openerp import tools
+
 
 class sale_order(osv.osv):
     _inherit = 'sale.order'
@@ -31,29 +31,9 @@ class sale_order(osv.osv):
             domain="['|',('section_id','=',section_id),('section_id','=',False), ('object_id.model', '=', 'crm.lead')]")
     }
 
+
 class crm_case_section(osv.osv):
     _inherit = 'crm.case.section'
-
-    def _get_number_saleorder(self, cr, uid, ids, field_name, arg, context=None):
-        res = dict.fromkeys(ids, 0)
-        obj = self.pool.get('sale.order')
-        for section_id in ids:
-            res[section_id] = obj.search(cr, uid, [("section_id", "=", section_id),('state','not in',['draft','sent','cancel'])], count=True, context=context)
-        return res
-
-    def _get_number_quotation(self, cr, uid, ids, field_name, arg, context=None):
-        res = dict.fromkeys(ids, 0)
-        obj = self.pool.get('sale.order')
-        for section_id in ids:
-            res[section_id] = obj.search(cr, uid, [("section_id", "=", section_id),('state','in',['draft','sent','cancel'])], count=True, context=context)
-        return res
-
-    def _get_number_invoice(self, cr, uid, ids, field_name, arg, context=None):
-        res = dict.fromkeys(ids, 0)
-        obj = self.pool.get('account.invoice')
-        for section_id in ids:
-            res[section_id] = obj.search(cr, uid, [("section_id", "=", section_id),('state','not in',['draft','cancel'])], count=True, context=context)
-        return res
 
     def _get_sum_month_invoice(self, cr, uid, ids, field_name, arg, context=None):
         res = dict.fromkeys(ids, 0)
@@ -66,11 +46,17 @@ class crm_case_section(osv.osv):
         return res
 
     _columns = {
-        'number_saleorder': fields.function(_get_number_saleorder, type='integer',  readonly=True),
-        'number_quotation': fields.function(_get_number_quotation, type='integer',  readonly=True),
-        'number_invoice': fields.function(_get_number_invoice, type='integer',  readonly=True),
-        'sum_month_invoice': fields.function(_get_sum_month_invoice, type='integer',  readonly=True),
+        'quotation_ids': fields.one2many('sale.order', 'section_id', 'Quotations', readonly=True,
+            domain=[('state', 'in', ['draft', 'sent', 'cancel'])]),
+        'sale_order_ids': fields.one2many('sale.order', 'section_id', 'Sale Orders', readonly=True,
+            domain=[('state', 'not in', ['draft', 'sent', 'cancel'])]),
+        'invoice_ids': fields.one2many('account.invoice', 'section_id', 'Invoices', readonly=True,
+            domain=[('state', 'not in', ['draft', 'cancel'])]),
+        'sum_month_invoice': fields.function(_get_sum_month_invoice,
+            string='Total invoiced this month',
+            type='integer', readonly=True),
     }
+
 
 class res_users(osv.Model):
     _inherit = 'res.users'
@@ -78,13 +64,14 @@ class res_users(osv.Model):
         'default_section_id': fields.many2one('crm.case.section', 'Default Sales Team'),
     }
 
+
 class account_invoice(osv.osv):
     _inherit = 'account.invoice'
     _columns = {
         'section_id': fields.many2one('crm.case.section', 'Sales Team'),
     }
     _defaults = {
-        'section_id': lambda self,cr,uid,c: self.pool.get('res.users').browse(cr, uid, uid, c).default_section_id.id or False,
+        'section_id': lambda self, cr, uid, c=None: self.pool.get('res.users').browse(cr, uid, uid, c).default_section_id.id or False,
     }
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

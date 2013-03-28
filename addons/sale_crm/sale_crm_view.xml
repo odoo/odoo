@@ -184,20 +184,26 @@
             <field name="arch" type="xml">
             <data>
                 <xpath expr="//field[@name='open_opportunity_ids']" position="after">
-                    <field name="number_quotation"/>
-                    <field name="number_saleorder"/>
-                    <field name="number_invoice"/>
+                    <field name="quotation_ids"/>
+                    <field name="sale_order_ids"/>
+                    <field name="invoice_ids"/>
                 </xpath>
                 <xpath expr="//div[@class='oe_items_list']" position="inside">
                     <a name="%(action_quotations_salesteams)d" type="action">
-                        <t t-raw="record.number_quotation.raw_value"/>
-                        <t t-if="record.number_quotation.raw_value &gt;= 1">Quotation</t><t t-if="record.number_quotation.raw_value &lt; 1">Quotations</t></a>
+                        <t t-raw="record.quotation_ids.raw_value.length"/>
+                        <t t-if="record.quotation_ids.raw_value.length &gt;= 1">Quotation</t>
+                        <t t-if="record.quotation_ids.raw_value.length &lt; 1">Quotations</t>
+                    </a>
                     <a name="%(action_orders_salesteams)d" type="action">
-                        <t t-raw="record.number_saleorder.raw_value"/>
-                        <t t-if="record.number_saleorder.raw_value &gt;= 1">Sales Order</t><t t-if="record.number_saleorder.raw_value &lt; 1">Sales Orders</t></a>
+                        <t t-raw="record.sale_order_ids.raw_value.length"/>
+                        <t t-if="record.sale_order_ids.raw_value.length &gt;= 1">Sales Order</t>
+                        <t t-if="record.sale_order_ids.raw_value.length &lt; 1">Sales Orders</t>
+                    </a>
                     <a name="%(action_invoice_salesteams)d" type="action" groups="account.group_account_invoice">
-                        <t t-raw="record.number_invoice.raw_value"/>
-                        <t t-if="record.number_invoice.raw_value &gt;= 1">Invoice</t><t t-if="record.number_invoice.raw_value &lt; 1">Invoices</t></a>
+                        <t t-raw="record.invoice_ids.raw_value.length"/>
+                        <t t-if="record.invoice_ids.raw_value.length &gt;= 1">Invoice</t>
+                        <t t-if="record.invoice_ids.raw_value.length &lt; 1">Invoices</t>
+                    </a>
                 </xpath>
                 <xpath expr="//div[@class='oe_items_list']" position="after">
                     <div class="oe_center">
