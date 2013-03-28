@@ -649,15 +649,15 @@ class BaseModel(object):
 
         parent_names = getattr(cls, '_inherit', None)
         if parent_names:
-            if isinstance(parent_names, (str, unicode)):
-                name = cls._name or parent_names
-                parent_names = [parent_names]
-            else:
+            parent_names = parent_names if isinstance(parent_names, list) else [parent_names]
+            if len(parent_names) == 1:
+                name = cls._name or parent_names[0]
+            elif cls._name:
                 name = cls._name
-            if not name:
-                raise TypeError('_name is mandatory in case of multiple inheritance')
+            else:
+                name = cls._name = cls.__name__
 
-            for parent_name in ((type(parent_names)==list) and parent_names or [parent_names]):
+            for parent_name in parent_names:
                 parent_model = pool.get(parent_name)
                 if not parent_model:
                     raise TypeError('The model "%s" specifies an unexisting parent class "%s"\n'
@@ -702,11 +702,15 @@ class BaseModel(object):
                     nattr[s] = new
 
                 # Keep links to non-inherited constraints, e.g. useful when exporting translations
+                nattr['_register'] = False
                 nattr['_local_constraints'] = cls.__dict__.get('_constraints', [])
                 nattr['_local_sql_constraints'] = cls.__dict__.get('_sql_constraints', [])
 
-                cls = type(name, (cls, parent_class), dict(nattr, _register=False))
+                cls = type(name, (cls, parent_class), nattr)
         else:
+            if not cls._name:
+                cls._name = cls.__name__
+
             # introduce a extra class inheritance to enable monkey-patching with
             # _patch_method() on all instances of the model in this pool only
             nattr = {
@@ -757,7 +761,7 @@ class BaseModel(object):
             raise except_orm('ValueError', msg)
 
         if not self._description:
-            self._description = self._name
+            self._description = self.__doc__ or self._name
         if not self._table:
             self._table = self._name.replace('.', '_')
 
