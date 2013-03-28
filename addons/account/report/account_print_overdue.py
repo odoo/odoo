@@ -22,7 +22,6 @@
 import time
 
 from openerp.report import report_sxw
-from openerp import pooler
 
 class Overdue(report_sxw.rml_parse):
     def __init__(self, cr, uid, name, context):
@@ -38,7 +37,7 @@ class Overdue(report_sxw.rml_parse):
     def _tel_get(self,partner):
         if not partner:
             return False
-        res_partner = pooler.get_pool(self.cr.dbname).get('res.partner')
+        res_partner = self.pool['res.partner']
         addresses = res_partner.address_get(self.cr, self.uid, [partner.id], ['invoice'])
         adr_id = addresses and addresses['invoice'] or False
         if adr_id:
@@ -49,7 +48,7 @@ class Overdue(report_sxw.rml_parse):
         return False
 
     def _lines_get(self, partner):
-        moveline_obj = pooler.get_pool(self.cr.dbname).get('account.move.line')
+        moveline_obj = self.pool['account.move.line']
         movelines = moveline_obj.search(self.cr, self.uid,
                 [('partner_id', '=', partner.id),
                     ('account_id.type', 'in', ['receivable', 'payable']),
@@ -58,7 +57,7 @@ class Overdue(report_sxw.rml_parse):
         return movelines
 
     def _message(self, obj, company):
-        company_pool = pooler.get_pool(self.cr.dbname).get('res.company')
+        company_pool = self.pool['res.company']
         message = company_pool.browse(self.cr, self.uid, company.id, {'lang':obj.lang}).overdue_msg
         return message.split('\n')
 

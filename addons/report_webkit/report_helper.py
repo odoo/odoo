@@ -29,7 +29,7 @@
 #
 ##############################################################################
 
-from openerp import pooler
+import openerp
 
 class WebKitHelper(object):
     """Set of usefull report helper"""
@@ -37,7 +37,7 @@ class WebKitHelper(object):
         "constructor"
         self.cursor = cursor
         self.uid = uid
-        self.pool = pooler.get_pool(self.cursor.dbname)
+        self.pool = openerp.registry(self.cursor.dbname)
         self.report_id = report_id
         self.context = context
         

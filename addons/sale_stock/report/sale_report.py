@@ -68,8 +68,8 @@ class sale_report(osv.osv):
                     s.project_id as analytic_account_id
                 from
                     sale_order s
-                    left join sale_order_line l on (s.id=l.order_id)
-                        left join product_product p on (l.product_id=p.id)
+                    join sale_order_line l on (s.id=l.order_id)
+                         left join product_product p on (l.product_id=p.id)
                             left join product_template t on (p.product_tmpl_id=t.id)
                     left join product_uom u on (u.id=l.product_uom)
                     left join product_uom u2 on (u2.id=t.uom_id)

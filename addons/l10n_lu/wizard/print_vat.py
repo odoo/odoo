@@ -5,8 +5,9 @@
 #Tranquil IT Systems
 
 from __future__ import with_statement
+
+import openerp
 from openerp.osv import fields, osv
-from openerp import pooler
 from openerp import tools
 from openerp.tools.translate import _
 from openerp.report.render import render
@@ -30,8 +31,8 @@ class report_custom(report_int):
 
     def create(self, cr, uid, ids, datas, context=None):
 
-        pool = pooler.get_pool(cr.dbname)
-        taxobj = pool.get('account.tax.code')
+        registry = openerp.registry(cr.dbname)
+        taxobj = registry['account.tax.code']
 
         if context is None:
             context = {}
@@ -40,7 +41,7 @@ class report_custom(report_int):
         for t in taxobj.browse(cr, uid, code_ids, {'period_id': datas['form']['period_id']}):
             if str(t.code):
                 result['case_'+str(t.code)] = '%.2f' % (t.sum_period or 0.0, )
-        user = pool.get('res.users').browse(cr, uid, uid, context)
+        user = registry['res.users'].browse(cr, uid, uid, context)
 
         # Not Clean, to be changed
         partner = user.company_id.partner_id
