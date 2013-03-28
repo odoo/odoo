@@ -664,8 +664,71 @@
 .openerp .oe_mail_wall .oe_mail{
     margin: 16px;
     width: 600px;
+    display: inline-block;
 }
 
 .openerp .oe_mail .oe_view_nocontent > p {
     padding-left: 15px;
+}
+
+
+/* ------------- WALL SIDEBAR ------------- */
+
+.openerp .oe_mail_wall .oe_mail_wall_aside {
+    margin-left: 20px;
+    margin-top: 20px;
+    position: relative;
+    display: inline-block;
+    vertical-align: top;
+    width: 300px;
+}
+
+.openerp .oe_mail_wall_aside > div {
+    background-color: #EDEDF6;
+    border-radius: 2px;
+    padding: 10px;
+}
+.openerp .oe_mail_wall_aside .oe_user_display {
+    font-size: 14px;
+    font-weight: bold;
+    margin-left: 10px;
+    color: #7C7BAD;
+}
+.openerp .oe_mail_wall_aside .oe_suggested_groups {
+    border-radius: 2px;
+    width: 100%;
+    margin-left: 10px;
+    height: 90px;
+}
+.openerp .oe_mail_wall_aside .oe_group_images {
+    width: 20%;
+    float: left;
+    padding-right: 20px;
+}
+.openerp .oe_mail_wall_aside .oe_group_image_content {
+    border-radius: 2px;
+    border: solid 1px rgba(0,0,0,0.03);
+}
+.openerp .oe_mail_wall_aside .oe_join_group {
+    margin-top: 10px;
+}
+.openerp .oe_mail_wall_aside .oe_follow_people {
+    margin-top: 10px;
+}
+.openerp .oe_mail_wall_aside .oe_remove_suggested_group {
+    visibility:hidden;
+    width:3%;
+    float:right;
+    margin-right:20px;
+}
+.openerp .oe_mail_wall_aside .oe_suggested_groups:hover .oe_remove_suggested_group > span {
+    visibility: visible;
+}
+.openerp .oe_mail_wall_aside .oe_suggest_groups .oe_group {
+    width: 80%;
+}
+.openerp .oe_mail_wall_aside .oe_suggest_groups .oe_group .oe_group_name {
+    text-overflow: ellipsis;
+    overflow: hidden;
+    width: 90%;
 }

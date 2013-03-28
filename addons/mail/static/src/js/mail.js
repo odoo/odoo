@@ -6,6 +6,7 @@ openerp.mail = function (session) {
 
     openerp_mail_followers(session, mail);        // import mail_followers.js
     openerp_FieldMany2ManyTagsEmail(session);      // import manyy2many_tags_email.js
+    
 
     /**
      * ------------------------------------------------------------
@@ -1991,4 +1992,6 @@ openerp.mail = function (session) {
             });
         },
     });
+
+    openerp.mail.suggestions(session, mail);
 };

@@ -3,7 +3,7 @@ openerp_mail_followers = function(session, mail) {
        _lt = session.web._lt;
 
     var mail_followers = session.mail_followers = {};
-
+    
     /** 
      * ------------------------------------------------------------
      * mail_followers Widget
