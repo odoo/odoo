@@ -22,12 +22,10 @@
             <field name="inherit_id" ref="base.view_users_form_simple_modif"/>
             <field name="arch" type="xml">
                 <xpath expr="//group[@name='preferences']" position="after">
-                    <page string="Google Account">
                         <group string="Google Account" colspan="4">
                             <field name="gmail_user"/>
                             <field name="gmail_password" password="True"/>
                         </group>
-                    </page>
                 </xpath>
             </field>
         </record>
