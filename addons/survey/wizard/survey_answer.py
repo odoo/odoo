@@ -43,6 +43,7 @@ class survey_question_wiz(osv.osv_memory):
         'page_no': fields.integer('Page Number'),
         'page': fields.char('Page Position'),
         'transfer': fields.boolean('Page Transfer'),
+        'token': fields.char('Response token'),
     }
     _defaults = {
         'page_no': -1,
@@ -310,12 +311,13 @@ class survey_question_wiz(osv.osv_memory):
         que_obj = self.pool.get('survey.question')
 
         if view_type in ['form']:
-            wiz_id = 0
+            wiz_id = context.get('wizard_id', 0)
             survey_id = None
             sur_name_rec = None
-            if 'wizard_id' in context:
-                sur_name_rec = self.browse(cr, uid, context['wizard_id'], context=context)
+            if wiz_id:
+                sur_name_rec = self.browse(cr, uid, wiz_id, context=context)
                 survey_id = sur_name_rec.survey_id.id
+                context["survey_token"] = sur_name_rec.token or context.get("survey_token")
             elif context.get('survey_id'):
                 survey_id = context.get('survey_id')
                 res_data = {
@@ -443,6 +445,12 @@ class survey_question_wiz(osv.osv_memory):
                         etree.SubElement(xml_footer, 'button', {'special': "cancel", 'string': _("Exit"), 'class': "oe_link"})
                     etree.SubElement(xml_footer, 'label', {'string': tools.ustr(page_number + 1) + "/" + tools.ustr(total_pages), 'class': "oe_survey_title_page oe_right"})
 
+                    etree.SubElement(xml_footer, 'field', {'name': 'wizard_id_%s' % wiz_id, 'modifiers': '{"invisible": 1}'})
+                    fields['wizard_id_%s' % wiz_id] = {'type': 'char'}
+                    if not response_info['response_id'] and not edit_mode and not response_info['readonly']:
+                        etree.SubElement(xml_footer, 'field', {'name': 'token', 'modifiers': '{"invisible": 1}'})
+                        fields['token'] = {'type': 'char'}
+
                     root = xml_form.getroottree()
                     result['arch'] = etree.tostring(root)
                     result['fields'] = fields
@@ -458,16 +466,30 @@ class survey_question_wiz(osv.osv_memory):
         if context is None:
             context = {}
 
+        sur_response_obj = self.pool.get('survey.response')
+        user_obj = self.pool.get('res.users')
+        survey_obj = self.pool.get('survey')
+
         for field in fields_list:
             if field.split('_')[0] == 'progress':
-                tot_page_id = self.pool.get('survey').browse(cr, SUPERUSER_ID, context.get('survey_id', False), context=context)
+                tot_page_id = survey_obj.browse(cr, SUPERUSER_ID, context.get('survey_id', False), context=context)
                 tot_per = (float(100) * (int(field.split('_')[2]) + 1) / len(tot_page_id.page_ids))
                 value[field] = tot_per
 
         response_info = self.get_response_info_from_token(cr, uid, context.get('survey_id'), context.get("survey_token"), context)
 
+        if not response_info['response_id'] and len(fields_list) > 1 and 'token' in fields_list:
+            context['survey_token'] = value['token'] = str(uuid.uuid4())
+            context['response_id'] = sur_response_obj.create(cr, SUPERUSER_ID, {
+                'state': context.get('survey_test') and 'test' or 'new',
+                'response_type': 'manually',
+                'partner_id': user_obj.browse(cr, SUPERUSER_ID, uid, context=context).partner_id.id,
+                'date_create': datetime.now(),
+                'survey_id': context['survey_id'],
+                'token': context['survey_token'],
+            })
+
         response_ans = False
-        sur_response_obj = self.pool.get('survey.response')
         if not context.get('edit') and response_info.get('response_id'):
             response_ans = sur_response_obj.browse(cr, SUPERUSER_ID, response_info['response_id'], context=context)
 
@@ -525,13 +547,21 @@ class survey_question_wiz(osv.osv_memory):
         """
         Create the Answer of survey and store in survey.response object, and if set validation of question then check the value of question if value is wrong then raise the exception.
         """
-
         if 'page_no' in vals:
             return super(survey_question_wiz, self).create(cr, uid, vals, context=context)
 
         context = context or {}
-        response_info = self.get_response_info_from_token(cr, uid, context['survey_id'], context.get("survey_token"), context)
-        vals['survey_id'] = context['survey_id']
+        vals['token'] = context['survey_token'] = vals.get("token") or context.get("survey_token")
+        vals['survey_id'] = context.get("survey_id")
+        response_info = self.get_response_info_from_token(cr, uid, context['survey_id'], vals['token'], context)
+        self_columns = [temp[0] for temp in self._columns.items()]
+
+        if not response_info['response_id']:
+            dict((key, val) for key, val in vals.items() if key in self_columns and key != 'token')
+            return super(survey_question_wiz, self).create(cr, uid, vals, context=context)
+
+        if context.get('edit', False) or response_info['readonly']:
+            return super(survey_question_wiz, self).create(cr, uid, vals, context=context)
 
         sur_response_obj = self.pool.get('survey.response')
         surv_tbl_column_obj = self.pool.get('survey.tbl.column.heading')
@@ -539,27 +569,16 @@ class survey_question_wiz(osv.osv_memory):
         res_ans_obj = self.pool.get('survey.response.answer')
         que_obj = self.pool.get('survey.question')
 
-        if context.get('edit', False) or response_info['readonly']:
-            return super(survey_question_wiz, self).create(cr, uid, vals, context=context)
+        for key in vals:
+            if key.find('wizard_id_') == 0:
+                wiz_id = int(key.replace('wizard_id_', ''))
+                vals.pop(key)
+                self.write(cr, uid, wiz_id, {'token': vals['token']})
+                break
 
-        # set response_id
-        if response_info['response_id']:
-            response_id = response_info['response_id']
-        else:
-            user_browse = self.pool.get('res.users').browse(cr, SUPERUSER_ID, uid, context=context)
-            pid = user_browse.partner_id.id
-            response_id = sur_response_obj.create(cr, SUPERUSER_ID, {
-                'state': context.get('survey_test') and 'test' or 'new',
-                'response_type': 'manually',
-                'partner_id': pid,
-                'date_create': datetime.now(),
-                'survey_id': context['survey_id'],
-                'token': uuid.uuid4(),
-            })
+        response_id = response_info['response_id']
         if sur_response_obj.browse(cr, SUPERUSER_ID, response_id).state != 'test':
             sur_response_obj.write(cr, SUPERUSER_ID, [response_id], {'state': 'skip'})
-
-        self_columns = [temp[0] for temp in self._columns.items()]
 
         que_li = []
         resp_id_list = []
@@ -885,6 +904,8 @@ class survey_question_wiz(osv.osv_memory):
         """
         if context is None:
             context = {}
+        if not context.get('edit'):
+            context['survey_token'] = self.read(cr, uid, context['wizard_id'], ['token'], context=context)['token']
         self.write(cr, uid, [context.get('wizard_id', False)], {'transfer': True, 'page': next and 'next' or 'previous'})
         return {
             'view_type': 'form',
@@ -909,16 +930,10 @@ class survey_question_wiz(osv.osv_memory):
         """ Goes to previous page.
         """
         response_id = None
-        response_info = self.get_response_info_from_token(cr, uid, context['survey_id'], context.get("survey_token"), context)
+        token = context.get('wizard_id') and self.browse(cr, uid, context.get('wizard_id'), context=context).token or context.get("survey_token")
+        response_info = self.get_response_info_from_token(cr, uid, context['survey_id'], token, context)
         if response_info['response_id']:
             response_id = response_info['response_id']
-        else:
-            # public access
-            sur_name_read = self.read(cr, uid, context.get('wizard_id', False), context=context)
-            if sur_name_read['response_id'] and sur_name_read['response_id'][0]:
-                response_id = sur_name_read['response_id'][0]
-
-        if response_id:
             sur_response_obj = self.pool.get('survey.response')
             response = sur_response_obj.browse(cr, SUPERUSER_ID, response_id)
             if response.state != 'test':
