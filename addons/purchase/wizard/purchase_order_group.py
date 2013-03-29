@@ -21,7 +21,6 @@
 import time
 
 from openerp.osv import fields, osv
-from openerp.osv.orm import browse_record, browse_null
 from openerp.tools.translate import _
 
 class purchase_order_group(osv.osv_memory):

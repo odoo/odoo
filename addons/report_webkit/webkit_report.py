@@ -38,8 +38,8 @@ import tempfile
 import time
 import logging
 
-from openerp import netsvc
 from report_helper import WebKitHelper
+import openerp
 from openerp.report.report_sxw import *
 from openerp import addons
 from openerp import tools
@@ -116,12 +116,12 @@ class WebKitParser(report_sxw):
     """Custom class that use webkit to render HTML reports
        Code partially taken from report openoffice. Thanks guys :)
     """
-    def __init__(self, name, table, rml=False, parser=False,
-        header=True, store=False):
+    def __init__(self, name, table, rml=False, parser=rml_parse,
+        header=True, store=False, register=True):
         self.parser_instance = False
         self.localcontext = {}
         report_sxw.__init__(self, name, table, rml, parser,
-            header, store)
+            header, store, register=register)
 
     def get_lib(self, cursor, uid):
         """Return the lib wkhtml path"""
