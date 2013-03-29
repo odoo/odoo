@@ -19,8 +19,9 @@
 ##############################################################################
 
 import datetime
+
+import openerp
 from openerp.osv import fields, osv
-from openerp import pooler
 
 class stock_production_lot(osv.osv):
     _inherit = 'stock.production.lot'
@@ -34,7 +35,7 @@ class stock_production_lot(osv.osv):
             if not context.get('product_id', False):
                 date = False
             else:
-                product = pooler.get_pool(cr.dbname).get('product.product').browse(
+                product = openerp.registry(cr.dbname)['product.product'].browse(
                     cr, uid, context['product_id'])
                 duration = getattr(product, dtype)
                 # set date to False when no expiry time specified on the product
