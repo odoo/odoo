@@ -68,6 +68,7 @@ openerp.gamification = function(instance) {
                     self.render_template_replace(self.$el.filter(".oe_gamification_goal"),'gamification.goal_list_to_do');
                     self.$el.find('.oe_type_description').hide();
                     self.render_money_fields(self.goals_info.info[0].currency);
+                    self.render_progress_bars();
                 }
             });
         },
@@ -86,6 +87,21 @@ openerp.gamification = function(instance) {
                 money_field.get_currency_info();
                 money_field.set('value', parseInt($(this).text()));
                 money_field.replace($(this));
+            });
+        },
+        render_progress_bars: function() {
+            var self = this;
+
+            dfm = new instance.web.form.DefaultFieldManager(self);
+            // Generate a FieldMonetary for each .oe_goal_field_monetary
+            self.$el.find(".oe_goal_progress").each(function() {
+                progress_field = new instance.web.form.FieldProgressBar(dfm, {
+                    attrs: {
+                        modifiers: '{"readonly": true}'
+                    }
+                });
+                progress_field.set('value', $(this).attr('value'));
+                progress_field.replace($(this));
             });
         }
     });
