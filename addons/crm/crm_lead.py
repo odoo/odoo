@@ -632,8 +632,8 @@ class crm_lead(base_stage, format_address, osv.osv):
             sequence = -1
             if opportunity.stage_id and opportunity.stage_id.state != 'cancel':
                 sequence = opportunity.stage_id.sequence
-
-            sequenced_opps.append(((int(opportunity.type == 'opportunity'), sequence), opportunity))
+            create_time_reverse = - time.mktime(datetime.strptime(opportunity.create_date, tools.DEFAULT_SERVER_DATETIME_FORMAT).timetuple())
+            sequenced_opps.append(((int(opportunity.type == 'opportunity'), sequence, create_time_reverse), opportunity))
 
         sequenced_opps.sort(reverse=True)
         opportunities = map(itemgetter(1), sequenced_opps)
