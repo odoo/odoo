@@ -25,6 +25,8 @@ from templates import TemplateHelper
 
 from datetime import date, datetime, timedelta
 import calendar
+import logging
+_logger = logging.getLogger(__name__)
 
 
 def start_end_date_for_period(period):
@@ -208,7 +210,8 @@ class gamification_goal_plan(osv.Model):
         Start planned plans (in draft and with start_date = today)
         Create the goals for planlines not linked to goals (eg: modified the 
             plan to add planlines)
-        Update every goal running"""
+        Update every goal running
+        """
         if not context: context = {}
 
         # start planned plans
@@ -280,7 +283,10 @@ class gamification_goal_plan(osv.Model):
             if plan.autojoin_group_id:
                 self.plan_subscribe_users(cr, uid, ids, [user.id for user in plan.autojoin_group_id.users], context=context)
 
-        self.write(cr, uid, ids, {'state': 'inprogress'}, context=context)
+            if len(plan.user_ids) > 0:
+                self.write(cr, uid, plan.id, {'state': 'inprogress'}, context=context)
+            else:
+                _logger.warning("Can not start planned plan, no subscribed users")
         return self.generate_goals_from_plan(cr, uid, ids, context=context)
 
     def action_check(self, cr, uid, ids, context=None):

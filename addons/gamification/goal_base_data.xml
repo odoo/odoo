@@ -11,8 +11,6 @@
             <field name="field_id" eval="ref('base.field_res_partner_tz')" />
             <field name="domain">[('id','=',user_id),('partner_id.tz', '!=', False)]</field>
             <field name="action_id">base.action_res_users_my</field>
-            <field name="state">inprogress</field>
-            <field name="autojoin_group_id" eval="ref('base.group_user')" />
         </record>
 
         <record model="gamification.goal.type" id="type_base_avatar">
@@ -47,6 +45,8 @@
             <field name="visibility_mode">progressbar</field>
             <field name="report_message_frequency">never</field>
             <field name="planline_ids" eval="[(4, ref('planline_base_discover1')),(4, ref('planline_base_discover2'))]"/>
+            <field name="autojoin_group_id" eval="ref('base.group_user')" />
+            <field name="state">inprogress</field>
         </record>
 
 
