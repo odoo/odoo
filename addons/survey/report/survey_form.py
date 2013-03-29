@@ -20,7 +20,8 @@
 #
 ##############################################################################
 
-from openerp import pooler, tools
+import openerp
+from openerp import tools
 from openerp.report.interface import report_rml
 from openerp.tools import to_xml
 
@@ -146,7 +147,7 @@ class survey_form(report_rml):
             <paraStyle name="terp_default_9" fontName="Helvetica" fontSize="9.0" leading="11" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
         </stylesheet>
         <story>"""
-        surv_obj = pooler.get_pool(cr.dbname).get('survey')
+        surv_obj = openerp.registry(cr.dbname)['survey']
         for survey in surv_obj.browse(cr,uid,ids):
             rml += """
             <blockTable colWidths='"""+_tbl_widths+"""' style="title_tbl">

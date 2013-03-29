@@ -162,8 +162,9 @@
 -
   !python {model: sale.order}: |
     import os
-    from openerp import netsvc, tools
-    (data, format) = netsvc.LocalService('report.sale.order').create(cr, uid, [ref('sale.sale_order_6')], {}, {})
+    import openerp.report
+    from openerp import tools
+    data, format = openerp.report.render_report(cr, uid, [ref('sale.sale_order_6')], 'sale.order', {}, {})
     if tools.config['test_report_directory']:
         file(os.path.join(tools.config['test_report_directory'], 'sale-sale_order.'+format), 'wb+').write(data)
 

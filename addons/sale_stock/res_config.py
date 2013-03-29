@@ -20,7 +20,6 @@
 ##############################################################################
 
 from openerp.osv import fields, osv
-from openerp import pooler
 from openerp.tools.translate import _
 
 class sale_configuration(osv.osv_memory):

@@ -22,7 +22,6 @@
 import logging
 
 from openerp.osv import fields, osv
-from openerp import pooler
 from openerp.tools.translate import _
 
 _logger = logging.getLogger(__name__)
