@@ -10,9 +10,6 @@
         % endif
     </p>
 
-    % if badge_user.badge_id.image
-        <p><img src="cid:badge-img.png" alt="Badge ${badge_user.badge_id.name}" /></p>
-    % endif
     % if badge_user.comment
         <p><em>${badge_user.comment}</em></p>
     % endif
