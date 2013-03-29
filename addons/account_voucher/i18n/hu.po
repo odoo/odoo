@@ -14,8 +14,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-03-08 05:34+0000\n"
-"X-Generator: Launchpad (build 16523)\n"
+"X-Launchpad-Export-Date: 2013-03-28 05:31+0000\n"
+"X-Generator: Launchpad (build 16546)\n"
 
 #. module: account_voucher
 #: field:account.bank.statement.line,voucher_id:0
@@ -25,7 +25,7 @@ msgstr ""
 #. module: account_voucher
 #: model:ir.model,name:account_voucher.model_account_config_settings
 msgid "account.config.settings"
-msgstr ""
+msgstr "account.config.settings"
 
 #. module: account_voucher
 #: code:addons/account_voucher/account_voucher.py:369
@@ -60,11 +60,13 @@ msgid ""
 "Computed as the difference between the amount stated in the voucher and the "
 "sum of allocation on the voucher lines."
 msgstr ""
+"Különbség ami a nyugtán lévő végösszeg és a nyugta soraiban lévő rész "
+"összegek különbsége."
 
 #. module: account_voucher
 #: view:account.voucher:0
 msgid "(Update)"
-msgstr ""
+msgstr "(Frissítés)"
 
 #. module: account_voucher
 #: view:account.voucher:0
@@ -91,7 +93,7 @@ msgstr "Március"
 #. module: account_voucher
 #: field:account.voucher,message_unread:0
 msgid "Unread Messages"
-msgstr ""
+msgstr "Olvasatlan üzenetek"
 
 #. module: account_voucher
 #: view:account.voucher:0
@@ -116,13 +118,13 @@ msgstr "Tranzakció hivatkozási száma"
 #. module: account_voucher
 #: view:sale.receipt.report:0
 msgid "Group by year of Invoice Date"
-msgstr ""
+msgstr "Számla kibocsátási éve szerinti csoportosítás"
 
 #. module: account_voucher
 #: view:sale.receipt.report:0
 #: field:sale.receipt.report,user_id:0
 msgid "Salesperson"
-msgstr ""
+msgstr "Értékesítő"
 
 #. module: account_voucher
 #: view:account.voucher:0
@@ -151,7 +153,7 @@ msgstr "Jóváhagyás"
 #: model:ir.actions.act_window,name:account_voucher.action_vendor_payment
 #: model:ir.ui.menu,name:account_voucher.menu_action_vendor_payment
 msgid "Supplier Payments"
-msgstr ""
+msgstr "Beszállítói átutalások, fizetések"
 
 #. module: account_voucher
 #: model:ir.actions.act_window,help:account_voucher.action_purchase_receipt
@@ -185,7 +187,7 @@ msgstr "Főkönyvi számla"
 #. module: account_voucher
 #: field:account.voucher,line_dr_ids:0
 msgid "Debits"
-msgstr "Tartozik"
+msgstr "Tartozások"
 
 #. module: account_voucher
 #: view:account.statement.from.invoice.lines:0
@@ -213,7 +215,7 @@ msgstr "Megjegyzések"
 #. module: account_voucher
 #: field:account.voucher,message_ids:0
 msgid "Messages"
-msgstr ""
+msgstr "Üzenetek"
 
 #. module: account_voucher
 #: model:ir.actions.act_window,name:account_voucher.action_purchase_receipt
@@ -231,7 +233,7 @@ msgstr "Könyvelési tételsor"
 #: code:addons/account_voucher/account_voucher.py:981
 #, python-format
 msgid "Error!"
-msgstr ""
+msgstr "Hiba!"
 
 #. module: account_voucher
 #: field:account.voucher.line,amount:0
@@ -363,7 +365,7 @@ msgstr ""
 #: code:addons/account_voucher/account_voucher.py:1112
 #, python-format
 msgid "Wrong voucher line"
-msgstr ""
+msgstr "Nem megfelelő nyugta sorok"
 
 #. module: account_voucher
 #: selection:account.voucher,pay_now:0
@@ -446,7 +448,7 @@ msgstr "Típus"
 #. module: account_voucher
 #: view:sale.receipt.report:0
 msgid "Pro-forma Vouchers"
-msgstr ""
+msgstr "Pro-forma nyugták"
 
 #. module: account_voucher
 #: view:account.voucher:0
@@ -500,7 +502,7 @@ msgstr "Nyugta"
 #. module: account_voucher
 #: field:account.voucher,is_multi_currency:0
 msgid "Multi Currency Voucher"
-msgstr ""
+msgstr "Több pénznemű nyugták"
 
 #. module: account_voucher
 #: view:account.voucher:0
@@ -555,7 +557,7 @@ msgstr "ÁFA összege"
 #. module: account_voucher
 #: view:sale.receipt.report:0
 msgid "Validated Vouchers"
-msgstr ""
+msgstr "Jóváhagyott nyugták"
 
 #. module: account_voucher
 #: model:ir.actions.act_window,help:account_voucher.action_vendor_receipt
@@ -665,12 +667,12 @@ msgstr "Vevők és szállítók"
 #. module: account_voucher
 #: view:account.voucher:0
 msgid "Voucher Payment"
-msgstr ""
+msgstr "Nyugta kiegyenlítés"
 
 #. module: account_voucher
 #: field:sale.receipt.report,state:0
 msgid "Voucher Status"
-msgstr ""
+msgstr "Nyugta állapota"
 
 #. module: account_voucher
 #: field:account.voucher,company_id:0
@@ -683,7 +685,7 @@ msgstr "Vállalat"
 #. module: account_voucher
 #: help:account.voucher,paid:0
 msgid "The Voucher has been totally paid."
-msgstr ""
+msgstr "A nyugta ki lett egyenlítve"
 
 #. module: account_voucher
 #: selection:account.voucher,payment_option:0
@@ -705,7 +707,7 @@ msgstr ""
 #: view:account.voucher:0
 #: view:sale.receipt.report:0
 msgid "Draft Vouchers"
-msgstr ""
+msgstr "Nyugta tervezetek"
 
 #. module: account_voucher
 #: view:sale.receipt.report:0
@@ -716,7 +718,7 @@ msgstr "Bruttó érték"
 #. module: account_voucher
 #: view:account.voucher:0
 msgid "Purchase Voucher"
-msgstr ""
+msgstr "Beszerzési nyugta"
 
 #. module: account_voucher
 #: view:account.voucher:0
@@ -1274,3 +1276,6 @@ msgid ""
 "inactive, which allow to hide the customer/supplier payment while the bank "
 "statement isn't confirmed."
 msgstr ""
+
+#~ msgid "Sale voucher"
+#~ msgstr "Értékesítési nyugta"

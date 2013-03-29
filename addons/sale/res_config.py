@@ -141,6 +141,8 @@ class account_config_settings(osv.osv_memory):
 
     def onchange_sale_analytic_plans(self, cr, uid, ids, module_sale_analytic_plans, context=None):
         """ change group_analytic_account_for_sales following module_sale_analytic_plans """
+        if not module_sale_analytic_plans:
+            return {}
         return {'value': {'group_analytic_account_for_sales': module_sale_analytic_plans}}
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

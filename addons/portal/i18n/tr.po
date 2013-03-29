@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2013-03-07 08:38+0000\n"
-"PO-Revision-Date: 2013-03-14 20:37+0000\n"
+"PO-Revision-Date: 2013-03-21 18:11+0000\n"
 "Last-Translator: Ayhan KIZILTAN <Unknown>\n"
 "Language-Team: Turkish <tr@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-03-15 06:44+0000\n"
-"X-Generator: Launchpad (build 16532)\n"
+"X-Launchpad-Export-Date: 2013-03-28 05:53+0000\n"
+"X-Generator: Launchpad (build 16546)\n"
 
 #. module: portal
 #: view:portal.payment.acquirer:0
@@ -61,7 +61,7 @@ msgstr "Kişiler"
 #. module: portal
 #: view:portal.wizard:0
 msgid "This text is included in the email sent to new portal users."
-msgstr ""
+msgstr "Bu metin yeni portal kullanıcılarına gönderilen epostada içerilir."
 
 #. module: portal
 #: view:share.wizard:0
@@ -360,6 +360,8 @@ msgid ""
 "<p>Access your messages and personal documents through <a href=\"%s\">our "
 "Customer Portal</a></p>"
 msgstr ""
+"<p>Mesajlarınıza ve kişisel belgelerinize <a href=\"%s\">Müşteri "
+"Portalımız</a>dan erişin</p>"
 
 #. module: portal
 #: field:portal.payment.acquirer,form_template:0
@@ -543,6 +545,23 @@ msgid ""
 "% endif\n"
 "            "
 msgstr ""
+"\n"
+"% if object.company_id.paypal_account:\n"
+"<form action=\"https://www.paypal.com/cgi-bin/webscr\" method=\"post\" "
+"target=\"_blank\">\n"
+"  <input type=\"hidden\" name=\"cmd\" value=\"_xclick\"/>\n"
+"  <input type=\"hidden\" name=\"business\" "
+"value=\"${object.company_id.paypal_account}\"/>\n"
+"  <input type=\"hidden\" name=\"item_name\" "
+"value=\"${object.company_id.name} ${kind.title()} ${reference}\"/>\n"
+"  <input type=\"hidden\" name=\"amount\" value=\"${amount}\"/>\n"
+"  <input type=\"hidden\" name=\"currency_code\" "
+"value=\"${currency.name}\"/>\n"
+"  <input type=\"image\" name=\"submit\" "
+"src=\"https://www.paypal.com/en_US/i/btn/btn_paynowCC_LG.gif\"/>\n"
+"</form>\n"
+"% endif\n"
+"            "
 
 #. module: portal
 #: model:ir.model,name:portal.model_portal_wizard_user

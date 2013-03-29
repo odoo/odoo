@@ -47,7 +47,7 @@ class StockMove(osv.osv):
         product_obj = self.pool.get('product.product')
         wf_service = netsvc.LocalService("workflow")
         processed_ids = [move.id]
-        if move.product_id.supply_method == 'produce' and move.product_id.procure_method == 'make_to_order':
+        if move.product_id.supply_method == 'produce':
             bis = bom_obj.search(cr, uid, [
                 ('product_id','=',move.product_id.id),
                 ('bom_id','=',False),

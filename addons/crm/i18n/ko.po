@@ -8,26 +8,26 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2013-03-07 08:36+0000\n"
-"PO-Revision-Date: 2012-12-21 23:00+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"PO-Revision-Date: 2013-03-29 04:04+0000\n"
+"Last-Translator: Josh Kim <joshkkim@gmail.com>\n"
 "Language-Team: Korean <ko@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-03-08 05:38+0000\n"
-"X-Generator: Launchpad (build 16523)\n"
+"X-Launchpad-Export-Date: 2013-03-29 05:08+0000\n"
+"X-Generator: Launchpad (build 16546)\n"
 
 #. module: crm
 #: view:crm.lead.report:0
 msgid "# Leads"
-msgstr ""
+msgstr "# 리드"
 
 #. module: crm
 #: help:sale.config.settings,fetchmail_lead:0
 msgid ""
 "Allows you to configure your incoming mail server, and create leads from "
 "incoming emails."
-msgstr ""
+msgstr "수신메일서버를 설정하고 수신 이메일로부터 리드를 생성할 수 있게 함."
 
 #. module: crm
 #: code:addons/crm/crm_lead.py:881
@@ -38,13 +38,13 @@ msgstr ""
 #: selection:crm.lead.report,type:0
 #, python-format
 msgid "Lead"
-msgstr ""
+msgstr "리드"
 
 #. module: crm
 #: view:crm.lead:0
 #: field:crm.lead,title:0
 msgid "Title"
-msgstr ""
+msgstr "직함"
 
 #. module: crm
 #: model:ir.actions.server,message:crm.action_email_reminder_lead
@@ -55,40 +55,45 @@ msgid ""
 "Description: [[object.description]]\n"
 "            "
 msgstr ""
+"경고 미처리된 수신 리드가 5일 이상 경과되었습니다.\n"
+"명칭: [[object.name ]]\n"
+"ID: [[object.id ]]\n"
+"설명: [[object.description]]\n"
+"            "
 
 #. module: crm
 #: field:crm.opportunity2phonecall,action:0
 #: field:crm.phonecall2phonecall,action:0
 msgid "Action"
-msgstr "액션"
+msgstr "조치"
 
 #. module: crm
 #: model:ir.actions.server,name:crm.action_set_team_sales_department
 msgid "Set team to Sales Department"
-msgstr ""
+msgstr "팀을 영업팀으로 설정"
 
 #. module: crm
 #: view:crm.lead2opportunity.partner.mass:0
 msgid "Select Opportunities"
-msgstr ""
+msgstr "기회를 선택"
 
 #. module: crm
 #: model:res.groups,name:crm.group_fund_raising
 #: field:sale.config.settings,group_fund_raising:0
 msgid "Manage Fund Raising"
-msgstr ""
+msgstr "기금 모금 관리"
 
 #. module: crm
 #: view:crm.lead.report:0
 #: field:crm.phonecall.report,delay_close:0
 msgid "Delay to close"
-msgstr ""
+msgstr "마감까지 지연"
 
 #. module: crm
 #: view:crm.case.stage:0
 #: field:crm.case.stage,name:0
 msgid "Stage Name"
-msgstr ""
+msgstr "단계명"
 
 #. module: crm
 #: view:crm.lead:0
@@ -96,50 +101,50 @@ msgstr ""
 #: view:crm.lead.report:0
 #: view:crm.phonecall.report:0
 msgid "Salesperson"
-msgstr ""
+msgstr "영업사원"
 
 #. module: crm
 #: model:ir.model,name:crm.model_crm_lead_report
 msgid "CRM Lead Analysis"
-msgstr ""
+msgstr "CRM 리드 분석"
 
 #. module: crm
 #: view:crm.lead.report:0
 #: view:crm.phonecall.report:0
 #: field:crm.phonecall.report,day:0
 msgid "Day"
-msgstr ""
+msgstr "일"
 
 #. module: crm
 #: view:crm.lead:0
 msgid "Company Name"
-msgstr ""
+msgstr "업체명"
 
 #. module: crm
 #: model:crm.case.categ,name:crm.categ_oppor6
 msgid "Training"
-msgstr ""
+msgstr "훈련"
 
 #. module: crm
 #: model:ir.actions.act_window,name:crm.crm_lead_categ_action
 #: model:ir.ui.menu,name:crm.menu_crm_lead_categ
 msgid "Sales Tags"
-msgstr ""
+msgstr "영업 태그"
 
 #. module: crm
 #: view:crm.lead.report:0
 msgid "Exp. Closing"
-msgstr ""
+msgstr "예상 마감"
 
 #. module: crm
 #: view:crm.phonecall:0
 msgid "Cancel Call"
-msgstr ""
+msgstr "통화 취소"
 
 #. module: crm
 #: help:crm.lead.report,creation_day:0
 msgid "Creation day"
-msgstr ""
+msgstr "생성일"
 
 #. module: crm
 #: field:crm.segmentation.line,name:0
@@ -150,7 +155,7 @@ msgstr "규칙 이름"
 #: code:addons/crm/crm_phonecall.py:280
 #, python-format
 msgid "It's only possible to convert one phonecall at a time."
-msgstr ""
+msgstr "통화는 하나씩만 전환할 수 있습니다."
 
 #. module: crm
 #: view:crm.case.resource.type:0
@@ -160,17 +165,17 @@ msgstr ""
 #: field:crm.lead.report,type_id:0
 #: model:ir.model,name:crm.model_crm_case_resource_type
 msgid "Campaign"
-msgstr ""
+msgstr "캠페인"
 
 #. module: crm
 #: view:crm.lead:0
 msgid "Search Opportunities"
-msgstr ""
+msgstr "기회 검색"
 
 #. module: crm
 #: help:crm.lead.report,deadline_month:0
 msgid "Expected closing month"
-msgstr ""
+msgstr "예상 마감월"
 
 #. module: crm
 #: help:crm.case.section,message_summary:0
@@ -179,7 +184,7 @@ msgstr ""
 msgid ""
 "Holds the Chatter summary (number of messages, ...). This summary is "
 "directly in html format in order to be inserted in kanban views."
-msgstr ""
+msgstr "대화 요약 (메시지 개수, ...)을 내포함. 이 요약은 간판 화면에 삽입할 수 있도록 html 형식으로 직접 작성됩니다."
 
 #. module: crm
 #: code:addons/crm/crm_lead.py:624
@@ -187,7 +192,7 @@ msgstr ""
 #: code:addons/crm/crm_phonecall.py:280
 #, python-format
 msgid "Warning!"
-msgstr ""
+msgstr "경고!"
 
 #. module: crm
 #: view:crm.lead:0
@@ -202,40 +207,40 @@ msgstr ""
 #: model:ir.model,name:crm.model_res_partner
 #: model:process.node,name:crm.process_node_partner0
 msgid "Partner"
-msgstr ""
+msgstr "협력업체"
 
 #. module: crm
 #: view:crm.phonecall:0
 #: model:ir.actions.act_window,name:crm.phonecall_to_phonecall_act
 msgid "Schedule Other Call"
-msgstr ""
+msgstr "기타 통화의 일정을 생성"
 
 #. module: crm
 #: code:addons/crm/crm_phonecall.py:209
 #: view:crm.phonecall:0
 #, python-format
 msgid "Phone Call"
-msgstr ""
+msgstr "통화"
 
 #. module: crm
 #: field:crm.lead,opt_out:0
 msgid "Opt-Out"
-msgstr ""
+msgstr "탈퇴"
 
 #. module: crm
 #: view:crm.lead:0
 msgid "Opportunities that are assigned to me"
-msgstr ""
+msgstr "내게 할당된 기회"
 
 #. module: crm
 #: field:res.partner,meeting_count:0
 msgid "# Meetings"
-msgstr ""
+msgstr "미팅 #"
 
 #. module: crm
 #: model:ir.actions.server,name:crm.action_email_reminder_lead
 msgid "Reminder to User"
-msgstr ""
+msgstr "사용자에 대한 알림"
 
 #. module: crm
 #: field:crm.segmentation,segmentation_line:0
@@ -245,7 +250,7 @@ msgstr "범주"
 #. module: crm
 #: view:crm.lead:0
 msgid "Assigned to My Team(s)"
-msgstr ""
+msgstr "내 팀에게 할당됨"
 
 #. module: crm
 #: view:crm.segmentation:0
@@ -255,26 +260,26 @@ msgstr "재외된 답변들:"
 #. module: crm
 #: model:ir.model,name:crm.model_crm_merge_opportunity
 msgid "Merge opportunities"
-msgstr ""
+msgstr "기회를 병합"
 
 #. module: crm
 #: view:crm.lead.report:0
 #: model:ir.actions.act_window,name:crm.action_report_crm_lead
 #: model:ir.ui.menu,name:crm.menu_report_crm_leads_tree
 msgid "Leads Analysis"
-msgstr ""
+msgstr "리드 분석"
 
 #. module: crm
 #: model:ir.actions.act_window,name:crm.crm_case_resource_type_act
 #: model:ir.ui.menu,name:crm.menu_crm_case_resource_type_act
 msgid "Campaigns"
-msgstr ""
+msgstr "캠페인"
 
 #. module: crm
 #: view:crm.lead:0
 #: field:crm.lead,state_id:0
 msgid "State"
-msgstr ""
+msgstr "상태"
 
 #. module: crm
 #: view:crm.lead:0
@@ -288,23 +293,23 @@ msgstr "카테고리"
 msgid ""
 "If opt-out is checked, this contact has refused to receive emails or "
 "unsubscribed to a campaign."
-msgstr ""
+msgstr "탈퇴가 체크되었을 경우, 이 연락처는 이메일 수신을 거부하였거나 캠페인 구독을 취소하였습니다."
 
 #. module: crm
 #: model:process.transition,name:crm.process_transition_leadpartner0
 msgid "Prospect Partner"
-msgstr ""
+msgstr "잠재 협력업체"
 
 #. module: crm
 #: code:addons/crm/crm_lead.py:982
 #, python-format
 msgid "No Subject"
-msgstr ""
+msgstr "제목 없음"
 
 #. module: crm
 #: field:crm.lead,contact_name:0
 msgid "Contact Name"
-msgstr ""
+msgstr "연락처 이름"
 
 #. module: crm
 #: help:crm.segmentation,categ_id:0
@@ -326,40 +331,49 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                고객 분할을 정의하기 위해 클릭하십시오.\n"
+"              </p><p>\n"
+"                연락처에 할당할 수 있는 특정 분류를 생성하여\n"
+"                연락처와의 대화를 더욱 효율적으로 관리하십시오.\n"
+"                분할 도구는 설정한 기준에 따라 연락처에 분류를\n"
+"                할당할 수 있습니다.\n"
+"              </p>\n"
+"            "
 
 #. module: crm
 #: field:crm.opportunity2phonecall,contact_name:0
 #: field:crm.phonecall,partner_id:0
 #: field:crm.phonecall2phonecall,contact_name:0
 msgid "Contact"
-msgstr ""
+msgstr "연락처"
 
 #. module: crm
 #: help:crm.case.section,change_responsible:0
 msgid ""
 "When escalating to this team override the salesman with the team leader."
-msgstr ""
+msgstr "이 팀으로 상승할 때 팀 리더를 영업사원으로 우선합니다."
 
 #. module: crm
 #: model:process.transition,name:crm.process_transition_opportunitymeeting0
 msgid "Opportunity Meeting"
-msgstr ""
+msgstr "기회 미팅"
 
 #. module: crm
 #: help:crm.lead.report,delay_close:0
 #: help:crm.phonecall.report,delay_close:0
 msgid "Number of Days to close the case"
-msgstr ""
+msgstr "사례를 마감하기까지 잔여일"
 
 #. module: crm
 #: model:process.node,note:crm.process_node_opportunities0
 msgid "When a real project/opportunity is detected"
-msgstr ""
+msgstr "실제 프로젝트/기회가 탐지될 때"
 
 #. module: crm
 #: field:res.partner,opportunity_ids:0
 msgid "Leads and Opportunities"
-msgstr ""
+msgstr "리드 및 기회"
 
 #. module: crm
 #: model:ir.actions.act_window,help:crm.relate_partner_opportunities
@@ -378,12 +392,23 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                이 고객과 관련된 기회를 생성하기 위해 클릭하십시오.\n"
+"              </p><p>\n"
+"                기회를 사용하여 영업 진행상황을 추적하고 잠재적인 판매에 대한\n"
+"                후속 조치를 실시하며, 향후 수익을 더욱 정확히 예측하십시오.\n"
+"              </p><p>\n"
+"                You will be able to plan meetings and phone calls from\n"
+"                opportunities, convert them into quotations, attach related\n"
+"                documents, track all discussions, and much more.\n"
+"              </p>\n"
+"            "
 
 #. module: crm
 #: model:crm.case.stage,name:crm.stage_lead7
 #: view:crm.lead:0
 msgid "Dead"
-msgstr ""
+msgstr "사용 불가"
 
 #. module: crm
 #: field:crm.case.section,message_unread:0
@@ -391,7 +416,7 @@ msgstr ""
 #: field:crm.lead,message_unread:0
 #: field:crm.phonecall,message_unread:0
 msgid "Unread Messages"
-msgstr ""
+msgstr "읽지 않은 메시지"
 
 #. module: crm
 #: view:crm.segmentation:0
@@ -405,17 +430,17 @@ msgstr "세그먼테이션"
 #: selection:crm.lead2opportunity.partner.mass,action:0
 #: selection:crm.partner.binding,action:0
 msgid "Link to an existing customer"
-msgstr ""
+msgstr "기존 고객에게 연결"
 
 #. module: crm
 #: field:crm.lead,write_date:0
 msgid "Update Date"
-msgstr ""
+msgstr "날짜 업데이트"
 
 #. module: crm
 #: field:crm.case.section,user_id:0
 msgid "Team Leader"
-msgstr ""
+msgstr "팀 리더"
 
 #. module: crm
 #: code:addons/crm/crm_lead.py:1032
@@ -428,7 +453,7 @@ msgstr ""
 msgid ""
 "This percentage depicts the default/average probability of the Case for this "
 "stage to be a success"
-msgstr ""
+msgstr "이 백분율은 이 단계의 사례가 성공하는 기본/평균 확률을 묘사합니다"
 
 #. module: crm
 #: view:crm.lead:0
@@ -443,19 +468,19 @@ msgstr "카테고리"
 #. module: crm
 #: view:crm.lead.report:0
 msgid "#Opportunities"
-msgstr ""
+msgstr "기회#"
 
 #. module: crm
 #: code:addons/crm/crm_lead.py:624
 #, python-format
 msgid ""
 "Please select more than one element (lead or opportunity) from the list view."
-msgstr ""
+msgstr "목록 화면에서 하나 이상의 요소(리드 또는 기회)를 선택하십시오."
 
 #. module: crm
 #: field:crm.lead,partner_address_email:0
 msgid "Partner Contact Email"
-msgstr ""
+msgstr "협력업체 연락처 이메일"
 
 #. module: crm
 #: model:ir.actions.act_window,help:crm.crm_case_section_act
@@ -469,11 +494,19 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                새로운 영업팀을 정의하기 위해 클릭하십시오.\n"
+"              </p><p>\n"
+"                영업팀을 사용하여 다른 영업사원 또는 부서를 다른 팀으로\n"
+"                정리하십시오. 각 팀은 자체 기회 목록에 따라\n"
+"                업무를 진행합니다.\n"
+"              </p>\n"
+"            "
 
 #. module: crm
 #: model:process.transition,note:crm.process_transition_opportunitymeeting0
 msgid "Normal or phone meeting for opportunity"
-msgstr ""
+msgstr "기회에 대한 일반 및 전화 미팅"
 
 #. module: crm
 #: field:crm.lead,state:0
@@ -487,62 +520,62 @@ msgstr "상태"
 #. module: crm
 #: view:crm.lead2opportunity.partner:0
 msgid "Create Opportunity"
-msgstr ""
+msgstr "기회 생성"
 
 #. module: crm
 #: view:sale.config.settings:0
 msgid "Configure"
-msgstr ""
+msgstr "구성"
 
 #. module: crm
 #: view:crm.lead:0
 msgid "Escalate"
-msgstr ""
+msgstr "승급"
 
 #. module: crm
 #: view:crm.lead:0
 msgid "Mailings"
-msgstr ""
+msgstr "메일 발송"
 
 #. module: crm
 #: model:mail.message.subtype,description:crm.mt_lead_stage
 msgid "Stage changed"
-msgstr ""
+msgstr "단계가 변경됨"
 
 #. module: crm
 #: selection:crm.lead.report,creation_month:0
 #: selection:crm.lead.report,deadline_month:0
 #: selection:crm.phonecall.report,month:0
 msgid "June"
-msgstr ""
+msgstr "6월"
 
 #. module: crm
 #: selection:crm.segmentation,state:0
 msgid "Not Running"
-msgstr "진행 중이 아님"
+msgstr "실행 중이 아님"
 
 #. module: crm
 #: field:crm.lead.report,planned_revenue:0
 msgid "Planned Revenue"
-msgstr "계획된 수입"
+msgstr "계획된 수익"
 
 #. module: crm
 #: code:addons/crm/crm_lead.py:970
 #, python-format
 msgid "Customer Email"
-msgstr ""
+msgstr "고객 이메일"
 
 #. module: crm
 #: field:crm.lead,planned_revenue:0
 msgid "Expected Revenue"
-msgstr ""
+msgstr "예상 수익"
 
 #. module: crm
 #: selection:crm.lead.report,creation_month:0
 #: selection:crm.lead.report,deadline_month:0
 #: selection:crm.phonecall.report,month:0
 msgid "October"
-msgstr ""
+msgstr "10월"
 
 #. module: crm
 #: view:crm.segmentation:0
@@ -558,28 +591,30 @@ msgid ""
 "                       If the call needs to be done then the status is set "
 "to 'Not Held'."
 msgstr ""
+"사례가 생성될 때 상태는 '조치 예정'으로 설정됩니다. 사례가 진행 중일 경우 상태는 '개시됨'으로 설정됩니다. 통화가 완료된 후에 "
+"상태가 '연기됨'으로 설정됩니다. 통화를 해야할 경우 상태는 '연기되지 않음'으로 설정됩니다."
 
 #. module: crm
 #: field:crm.case.section,message_summary:0
 #: field:crm.lead,message_summary:0
 #: field:crm.phonecall,message_summary:0
 msgid "Summary"
-msgstr ""
+msgstr "요약"
 
 #. module: crm
 #: view:crm.merge.opportunity:0
 msgid "Merge"
-msgstr ""
+msgstr "병합"
 
 #. module: crm
 #: view:crm.case.categ:0
 msgid "Case Category"
-msgstr "케이스 카테고리"
+msgstr "사례 분류"
 
 #. module: crm
 #: field:crm.lead,partner_address_name:0
 msgid "Partner Contact Name"
-msgstr ""
+msgstr "협력업체 연락처 이름"
 
 #. module: crm
 #: model:ir.actions.server,subject:crm.action_email_reminder_lead
@@ -587,6 +622,8 @@ msgid ""
 "Reminder on Lead: [[object.id ]] [[object.partner_id and 'of ' "
 "+object.partner_id.name or '']]"
 msgstr ""
+"리드에 대한 알림: [[object.id ]] [[object.partner_id and 'of ' "
+"+object.partner_id.name or '']]"
 
 #. module: crm
 #: code:addons/crm/crm_lead.py:745
@@ -595,6 +632,7 @@ msgid ""
 "No customer name defined. Please fill one of the following fields: Company "
 "Name, Contact Name or Email (\"Name <email@address>\")"
 msgstr ""
+"고객명이 정의되지 않았습니다. 다음 필드 중 하나를 채우시기 바랍니다: 회사명, 연락처명 또는 이메일 (\"이름 <이메일@주소>\")"
 
 #. module: crm
 #: view:crm.segmentation:0
@@ -604,24 +642,24 @@ msgstr "프로파일링 옵션"
 #. module: crm
 #: view:crm.phonecall.report:0
 msgid "#Phone calls"
-msgstr ""
+msgstr "통화 횟수"
 
 #. module: crm
 #: sql_constraint:crm.case.section:0
 msgid "The code of the sales team must be unique !"
-msgstr ""
+msgstr "영업팀의 코드는 유일해야 합니다 !"
 
 #. module: crm
 #: help:crm.lead,email_from:0
 msgid "Email address of the contact"
-msgstr ""
+msgstr "연락처의 이메일 주소"
 
 #. module: crm
 #: selection:crm.case.stage,state:0
 #: view:crm.lead:0
 #: selection:crm.lead,state:0
 msgid "In Progress"
-msgstr ""
+msgstr "진행 중"
 
 #. module: crm
 #: model:ir.actions.act_window,help:crm.crm_phonecall_categ_action
@@ -635,24 +673,31 @@ msgid ""
 "          </p>\n"
 "        "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"            새로운 분류를 추가하기 위해 클릭하십시오.\n"
+"          </p><p>\n"
+"            특정 통화 분류를 생성하여 시스템에서 추적하는 통화를\n"
+"            더욱 잘 정의하십시오.\n"
+"          </p>\n"
+"        "
 
 #. module: crm
 #: help:crm.case.section,reply_to:0
 msgid ""
 "The email address put in the 'Reply-To' of all emails sent by OpenERP about "
 "cases in this sales team"
-msgstr ""
+msgstr "이 영업팀의 사례에 대해 OpenERP이 보낸 모든 이메일의 '회신 주소'에 입력된 주소"
 
 #. module: crm
 #: field:crm.lead.report,creation_month:0
 msgid "Creation Month"
-msgstr ""
+msgstr "생성월"
 
 #. module: crm
 #: field:crm.case.section,resource_calendar_id:0
 #: model:ir.ui.menu,name:crm.menu_action_resource_calendar_form
 msgid "Working Time"
-msgstr ""
+msgstr "근무시간"
 
 #. module: crm
 #: view:crm.segmentation.line:0
@@ -663,12 +708,12 @@ msgstr "파트너 세그먼테이션 라인"
 #: model:ir.actions.act_window,name:crm.action_report_crm_phonecall
 #: model:ir.ui.menu,name:crm.menu_report_crm_phonecalls_tree
 msgid "Phone Calls Analysis"
-msgstr ""
+msgstr "통화 분석"
 
 #. module: crm
 #: view:crm.lead:0
 msgid "Leads Form"
-msgstr ""
+msgstr "리드 양식"
 
 #. module: crm
 #: view:crm.segmentation:0
@@ -679,42 +724,42 @@ msgstr "파트너 세그먼테이션"
 #. module: crm
 #: field:crm.lead,company_currency:0
 msgid "Currency"
-msgstr ""
+msgstr "통화"
 
 #. module: crm
 #: field:crm.lead.report,probable_revenue:0
 msgid "Probable Revenue"
-msgstr ""
+msgstr "예상수익"
 
 #. module: crm
 #: help:crm.lead.report,creation_month:0
 msgid "Creation month"
-msgstr ""
+msgstr "생성월"
 
 #. module: crm
 #: help:crm.segmentation,name:0
 msgid "The name of the segmentation."
-msgstr "세그먼테이션 이름"
+msgstr "분할의 이름"
 
 #. module: crm
 #: model:ir.filters,name:crm.filter_usa_lead
 msgid "Leads from USA"
-msgstr ""
+msgstr "미국의 리드"
 
 #. module: crm
 #: sql_constraint:crm.lead:0
 msgid "The probability of closing the deal should be between 0% and 100%!"
-msgstr ""
+msgstr "수주 성공에 대한 확률은 0%에서 100% 사이여야 합니다!"
 
 #. module: crm
 #: view:crm.lead:0
 msgid "Leads Generation"
-msgstr ""
+msgstr "리드 생성"
 
 #. module: crm
 #: view:board.board:0
 msgid "Statistics Dashboard"
-msgstr ""
+msgstr "통계 대시보드"
 
 #. module: crm
 #: code:addons/crm/crm_lead.py:861
@@ -728,22 +773,22 @@ msgstr ""
 #: field:res.partner,opportunity_count:0
 #, python-format
 msgid "Opportunity"
-msgstr ""
+msgstr "기회"
 
 #. module: crm
 #: model:crm.case.resource.type,name:crm.type_lead7
 msgid "Television"
-msgstr ""
+msgstr "텔레비전"
 
 #. module: crm
 #: model:ir.actions.act_window,name:crm.action_crm_send_mass_convert
 msgid "Convert to opportunities"
-msgstr ""
+msgstr "기회로 전환"
 
 #. module: crm
 #: model:ir.model,name:crm.model_sale_config_settings
 msgid "sale.config.settings"
-msgstr ""
+msgstr "sale.config.settings"
 
 #. module: crm
 #: view:crm.segmentation:0
@@ -753,18 +798,18 @@ msgstr "프로세스 중지"
 #. module: crm
 #: field:crm.case.section,alias_id:0
 msgid "Alias"
-msgstr ""
+msgstr "별명"
 
 #. module: crm
 #: view:crm.phonecall:0
 msgid "Search Phonecalls"
-msgstr ""
+msgstr "통화 검색"
 
 #. module: crm
 #: view:crm.lead.report:0
 msgid ""
 "Leads/Opportunities that are assigned to one of the sale teams I manage"
-msgstr ""
+msgstr "내가 관리하는 영업팀에게 할당된 리드/기회"
 
 #. module: crm
 #: field:crm.segmentation.line,expr_value:0
@@ -774,7 +819,7 @@ msgstr "값"
 #. module: crm
 #: field:calendar.attendee,categ_id:0
 msgid "Event Type"
-msgstr ""
+msgstr "행사 유형"
 
 #. module: crm
 #: field:crm.segmentation,exclusif:0
@@ -785,12 +830,12 @@ msgstr "배타적"
 #: code:addons/crm/crm_lead.py:584
 #, python-format
 msgid "From %s : %s"
-msgstr ""
+msgstr "%s이(가) 보냄 : %s"
 
 #. module: crm
 #: view:crm.lead2opportunity.partner.mass:0
 msgid "Convert to Opportunities"
-msgstr ""
+msgstr "기회로 전환"
 
 #. module: crm
 #: view:crm.lead2opportunity.partner:0
@@ -799,41 +844,41 @@ msgstr ""
 #: view:crm.opportunity2phonecall:0
 #: view:crm.phonecall2phonecall:0
 msgid "or"
-msgstr ""
+msgstr "또는"
 
 #. module: crm
 #: field:crm.lead.report,create_date:0
 #: field:crm.phonecall.report,create_date:0
 msgid "Create Date"
-msgstr ""
+msgstr "날짜 생성"
 
 #. module: crm
 #: field:crm.lead,ref2:0
 msgid "Reference 2"
-msgstr "레퍼런스 2"
+msgstr "참조 2"
 
 #. module: crm
 #: help:crm.case.stage,section_ids:0
 msgid ""
 "Link between stages and sales teams. When set, this limitate the current "
 "stage to the selected sales teams."
-msgstr ""
+msgstr "단계와 영업팀 간의 연결. 설정 시 현재 단계를 선택된 영업팀으로 한계를 정합니다."
 
 #. module: crm
 #: view:crm.case.stage:0
 #: field:crm.case.stage,requirements:0
 msgid "Requirements"
-msgstr ""
+msgstr "필요조건"
 
 #. module: crm
 #: field:crm.lead,zip:0
 msgid "Zip"
-msgstr ""
+msgstr "우편번호"
 
 #. module: crm
 #: view:crm.phonecall:0
 msgid "Unassigned Phonecalls"
-msgstr ""
+msgstr "할당되지 않은 통화"
 
 #. module: crm
 #: view:crm.lead:0
@@ -846,37 +891,37 @@ msgstr ""
 #: model:process.node,name:crm.process_node_opportunities0
 #: view:res.partner:0
 msgid "Opportunities"
-msgstr ""
+msgstr "기회"
 
 #. module: crm
 #: field:crm.segmentation,categ_id:0
 msgid "Partner Category"
-msgstr "파트너 카테고리"
+msgstr "협력업체 분류"
 
 #. module: crm
 #: field:crm.lead,probability:0
 msgid "Success Rate (%)"
-msgstr ""
+msgstr "성공률 (%)"
 
 #. module: crm
 #: field:crm.segmentation,sales_purchase_active:0
 msgid "Use The Sales Purchase Rules"
-msgstr "판매 구매 규칙 사용"
+msgstr "판매 구매 규칙을 사용"
 
 #. module: crm
 #: model:crm.case.categ,name:crm.categ_phone2
 msgid "Outbound"
-msgstr ""
+msgstr "송신"
 
 #. module: crm
 #: view:crm.lead:0
 msgid "Leads that are assigned to me"
-msgstr ""
+msgstr "내게 할당된 리드"
 
 #. module: crm
 #: view:crm.lead:0
 msgid "Mark Won"
-msgstr ""
+msgstr "수주 성공으로 표시"
 
 #. module: crm
 #: field:crm.case.stage,probability:0
@@ -886,24 +931,24 @@ msgstr "가능성 (%)"
 #. module: crm
 #: view:crm.lead:0
 msgid "Mark Lost"
-msgstr ""
+msgstr "수주 실패로 표시"
 
 #. module: crm
 #: model:ir.filters,name:crm.filter_draft_lead
 msgid "Draft Leads"
-msgstr ""
+msgstr "리드 초안"
 
 #. module: crm
 #: selection:crm.lead.report,creation_month:0
 #: selection:crm.lead.report,deadline_month:0
 #: selection:crm.phonecall.report,month:0
 msgid "March"
-msgstr ""
+msgstr "3월"
 
 #. module: crm
 #: view:crm.lead:0
 msgid "Send Email"
-msgstr ""
+msgstr "이메일 보내기"
 
 #. module: crm
 #: code:addons/crm/wizard/crm_lead_to_opportunity.py:89
@@ -916,23 +961,23 @@ msgstr "경고 !"
 #: help:crm.lead,message_unread:0
 #: help:crm.phonecall,message_unread:0
 msgid "If checked new messages require your attention."
-msgstr ""
+msgstr "체크할 경우, 새로운 메시지를 주목할 필요가 있습니다."
 
 #. module: crm
 #: field:crm.lead,day_open:0
 msgid "Days to Open"
-msgstr ""
+msgstr "개시까지 소요일"
 
 #. module: crm
 #: view:crm.lead:0
 msgid "ZIP"
-msgstr ""
+msgstr "우편번호"
 
 #. module: crm
 #: field:crm.lead,mobile:0
 #: field:crm.phonecall,partner_mobile:0
 msgid "Mobile"
-msgstr ""
+msgstr "휴대전화"
 
 #. module: crm
 #: field:crm.lead,ref:0
@@ -942,7 +987,7 @@ msgstr "참조"
 #. module: crm
 #: help:crm.case.section,resource_calendar_id:0
 msgid "Used to compute open days"
-msgstr ""
+msgstr "개시일수를 계산하기 위해 사용됨."
 
 #. module: crm
 #: model:ir.actions.act_window,name:crm.act_crm_opportunity_crm_meeting_new
@@ -950,20 +995,20 @@ msgstr ""
 #: view:res.partner:0
 #: field:res.partner,meeting_ids:0
 msgid "Meetings"
-msgstr ""
+msgstr "미팅"
 
 #. module: crm
 #: field:crm.lead,date_action_next:0
 #: field:crm.lead,title_action:0
 #: field:crm.phonecall,date_action_next:0
 msgid "Next Action"
-msgstr "다음 액션"
+msgstr "다음 조치"
 
 #. module: crm
 #: code:addons/crm/crm_lead.py:763
 #, python-format
 msgid "<b>Partner</b> set to <em>%s</em>."
-msgstr ""
+msgstr "<em>%s</em>(으)로 설정된 <b>협력업체</b> ."
 
 #. module: crm
 #: selection:crm.lead.report,state:0
@@ -975,22 +1020,22 @@ msgstr "초안"
 #. module: crm
 #: view:crm.segmentation:0
 msgid "Partner Segmentations"
-msgstr "파트너 세그먼테이션"
+msgstr "협력업체 분할"
 
 #. module: crm
 #: view:crm.lead.report:0
 msgid "Show only opportunity"
-msgstr ""
+msgstr "기회만 보기"
 
 #. module: crm
 #: field:crm.lead,name:0
 msgid "Subject"
-msgstr ""
+msgstr "제목"
 
 #. module: crm
 #: view:crm.lead:0
 msgid "Show Sales Team"
-msgstr ""
+msgstr "영업팀 보기"
 
 #. module: crm
 #: help:sale.config.settings,module_crm_claim:0
@@ -998,22 +1043,24 @@ msgid ""
 "Allows you to track your customers/suppliers claims and grievances.\n"
 "                    This installs the module crm_claim."
 msgstr ""
+"고객/공급업체의 클레임과 고충을 추적할 수 있도록 함.\n"
+"                    이것은 crm_claim 모듈을 설치합니다."
 
 #. module: crm
 #: model:crm.case.stage,name:crm.stage_lead6
 #: view:crm.lead:0
 msgid "Won"
-msgstr ""
+msgstr "수주 성공"
 
 #. module: crm
 #: field:crm.lead.report,delay_expected:0
 msgid "Overpassed Deadline"
-msgstr ""
+msgstr "과거 만기일"
 
 #. module: crm
 #: model:crm.case.section,name:crm.section_sales_department
 msgid "Sales Department"
-msgstr ""
+msgstr "영업부"
 
 #. module: crm
 #: field:crm.case.stage,type:0
@@ -1021,12 +1068,12 @@ msgstr ""
 #: field:crm.lead.report,type:0
 #: view:crm.opportunity2phonecall:0
 msgid "Type"
-msgstr ""
+msgstr "유형"
 
 #. module: crm
 #: view:crm.segmentation:0
 msgid "Compute Segmentation"
-msgstr "세그먼테이션 계산"
+msgstr "분할 계산"
 
 #. module: crm
 #: selection:crm.lead,priority:0
@@ -1034,7 +1081,7 @@ msgstr "세그먼테이션 계산"
 #: selection:crm.phonecall,priority:0
 #: selection:crm.phonecall.report,priority:0
 msgid "Lowest"
-msgstr "최저"
+msgstr "가장 낮음"
 
 #. module: crm
 #: field:crm.lead,create_date:0
@@ -1042,28 +1089,28 @@ msgstr "최저"
 #: field:crm.phonecall,create_date:0
 #: field:crm.phonecall.report,creation_date:0
 msgid "Creation Date"
-msgstr "생성 날짜:"
+msgstr "생성일"
 
 #. module: crm
 #: code:addons/crm/crm_lead.py:698
 #, python-format
 msgid "Lead <b>converted into an Opportunity</b>"
-msgstr ""
+msgstr "기회로 전환된<b>리드</b>"
 
 #. module: crm
 #: selection:crm.segmentation.line,expr_name:0
 msgid "Purchase Amount"
-msgstr "구매 금액"
+msgstr "구매금액"
 
 #. module: crm
 #: view:crm.phonecall.report:0
 msgid "Year of call"
-msgstr ""
+msgstr "통화년도"
 
 #. module: crm
 #: view:crm.lead:0
 msgid "Open Leads"
-msgstr ""
+msgstr "리드 시작하기"
 
 #. module: crm
 #: view:crm.case.stage:0
@@ -1072,27 +1119,27 @@ msgstr ""
 #: view:crm.lead.report:0
 #: field:crm.lead.report,stage_id:0
 msgid "Stage"
-msgstr ""
+msgstr "단계"
 
 #. module: crm
 #: view:crm.phonecall.report:0
 msgid "Phone Calls that are assigned to me"
-msgstr ""
+msgstr "내게 할당된 통화"
 
 #. module: crm
 #: field:crm.lead,user_login:0
 msgid "User Login"
-msgstr ""
+msgstr "사용자 로그인"
 
 #. module: crm
 #: view:crm.lead:0
 msgid "No salesperson"
-msgstr ""
+msgstr "영업사원 없음"
 
 #. module: crm
 #: view:crm.phonecall.report:0
 msgid "Phone calls which are in pending state"
-msgstr ""
+msgstr "보류 상태의 통화"
 
 #. module: crm
 #: view:crm.case.section:0
@@ -1102,7 +1149,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:crm.crm_lead_stage_act
 #: model:ir.ui.menu,name:crm.menu_crm_lead_stage_act
 msgid "Stages"
-msgstr ""
+msgstr "단계"
 
 #. module: crm
 #: help:sale.config.settings,module_crm_helpdesk:0
@@ -1110,33 +1157,35 @@ msgid ""
 "Allows you to communicate with Customer,  process Customer query, and "
 "provide better help and support. This installs the module crm_helpdesk."
 msgstr ""
+"고객과 의사소통을 하고, 고객 질의를 처리하고, 더 나은 도움 및 지원 제공할 수 있도록 함. 이것은 crm_helpdesk 모듈을 "
+"설치합니다."
 
 #. module: crm
 #: view:crm.lead:0
 msgid "Delete"
-msgstr ""
+msgstr "삭제"
 
 #. module: crm
 #: model:mail.message.subtype,description:crm.mt_lead_create
 msgid "Opportunity created"
-msgstr ""
+msgstr "기회가 생성됨"
 
 #. module: crm
 #: view:crm.lead:0
 msgid "í"
-msgstr ""
+msgstr "í"
 
 #. module: crm
 #: view:crm.phonecall:0
 msgid "Description..."
-msgstr ""
+msgstr "설명..."
 
 #. module: crm
 #: selection:crm.lead.report,creation_month:0
 #: selection:crm.lead.report,deadline_month:0
 #: selection:crm.phonecall.report,month:0
 msgid "September"
-msgstr ""
+msgstr "9월"
 
 #. module: crm
 #: model:ir.actions.act_window,help:crm.crm_case_category_act_oppor11
@@ -1153,76 +1202,87 @@ msgid ""
 "          </p>\n"
 "        "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"          새로운 기회를 생성하기 위해 클릭하십시오.\n"
+"          </p><p>\n"
+"          OpenERP는 영업과정을 추적하여 잠재적인 판매로 이어나가고\n"
+"          향후 수익을 더욱 정확히 예측할 수 있도록 도와줍니다.\n"
+"          </p><p>\n"
+"          사용자는 기회로부터 미팅과 통화을 계획하고,\n"
+"          이를 견적으로 전환하고, 관련 문서를 첨부하고,\n"
+"          그 외 많은 작업들을 할 수 있습니다..\n"
+"          </p>\n"
+"        "
 
 #. module: crm
 #: field:crm.segmentation,partner_id:0
 msgid "Max Partner ID processed"
-msgstr "처리할 최대 파트너 ID"
+msgstr "처리된 최대 협력업체 ID"
 
 #. module: crm
 #: help:crm.case.stage,on_change:0
 msgid ""
 "Setting this stage will change the probability automatically on the "
 "opportunity."
-msgstr ""
+msgstr "이 단계를 설정하면 기회에 대한 확률을 자동으로 변경합니다."
 
 #. module: crm
 #: view:crm.lead:0
 msgid "oe_kanban_text_red"
-msgstr ""
+msgstr "oe_kanban_text_red"
 
 #. module: crm
 #: model:ir.ui.menu,name:crm.menu_crm_payment_mode_act
 msgid "Payment Modes"
-msgstr ""
+msgstr "지불 모드"
 
 #. module: crm
 #: field:crm.lead.report,opening_date:0
 #: field:crm.phonecall.report,opening_date:0
 msgid "Opening Date"
-msgstr ""
+msgstr "개시일"
 
 #. module: crm
 #: help:crm.phonecall,duration:0
 msgid "Duration in Minutes"
-msgstr ""
+msgstr "기간 (분)"
 
 #. module: crm
 #: field:crm.case.channel,name:0
 msgid "Channel Name"
-msgstr ""
+msgstr "채널 이름"
 
 #. module: crm
 #: help:crm.lead.report,deadline_day:0
 msgid "Expected closing day"
-msgstr ""
+msgstr "예상 마감일"
 
 #. module: crm
 #: help:crm.case.section,active:0
 msgid ""
 "If the active field is set to true, it will allow you to hide the sales team "
 "without removing it."
-msgstr ""
+msgstr "활성 필드를 true로 설정할 경우, 영업팀을 제거하지 않고도 숨길 수 있도록 합니다."
 
 #. module: crm
 #: help:crm.case.stage,case_default:0
 msgid ""
 "If you check this field, this stage will be proposed by default on each "
 "sales team. It will not assign this stage to existing teams."
-msgstr ""
+msgstr "이 필드를 체크하면, 이 단계는 각 영업팀에 기본으로 제안됩니다. 기존 팀에게는 이 단계를 할당하지 않습니다."
 
 #. module: crm
 #: help:crm.case.stage,type:0
 msgid ""
 "This field is used to distinguish stages related to Leads from stages "
 "related to Opportunities, or to specify stages available for both types."
-msgstr ""
+msgstr "이 필드는 리드와 관련된 단계와 기회와 관련된 단계를 구분하거나 두 유형에 사용 가능한 단계를 지정하기 위해 사용됩니다."
 
 #. module: crm
 #: model:mail.message.subtype,name:crm.mt_lead_create
 #: model:mail.message.subtype,name:crm.mt_salesteam_lead
 msgid "Lead Created"
-msgstr ""
+msgstr "리드가 생성됨"
 
 #. module: crm
 #: help:crm.segmentation,sales_purchase_active:0
@@ -1230,8 +1290,8 @@ msgid ""
 "Check if you want to use this tab as part of the segmentation rule. If not "
 "checked, the criteria beneath will be ignored"
 msgstr ""
-"이 탭을 세그먼테이션 규칙의 일부로 이용하려면 체크하십시오.\r\n"
-"체크되지 않으면, 기저의 범주가 무시됩니다."
+"이 탭을 분할 규칙의 일부로 이용하려면 체크하십시오.\r\n"
+"체크되지 않으면, 아래의 범주가 무시됩니다."
 
 #. module: crm
 #: field:crm.segmentation,state:0
@@ -1241,24 +1301,24 @@ msgstr "실행 상태"
 #. module: crm
 #: view:crm.opportunity2phonecall:0
 msgid "Log call"
-msgstr ""
+msgstr "통화 기록"
 
 #. module: crm
 #: field:crm.lead,day_close:0
 msgid "Days to Close"
-msgstr ""
+msgstr "마감 잔여일"
 
 #. module: crm
 #: field:crm.case.section,complete_name:0
 msgid "unknown"
-msgstr ""
+msgstr "알 수 없음"
 
 #. module: crm
 #: field:crm.case.section,message_is_follower:0
 #: field:crm.lead,message_is_follower:0
 #: field:crm.phonecall,message_is_follower:0
 msgid "Is a Follower"
-msgstr ""
+msgstr "은(는) 팔로어임"
 
 #. module: crm
 #: field:crm.opportunity2phonecall,date:0
@@ -1271,23 +1331,23 @@ msgstr "날짜"
 #. module: crm
 #: model:crm.case.section,name:crm.crm_case_section_4
 msgid "Online Support"
-msgstr ""
+msgstr "온라인 지원"
 
 #. module: crm
 #: view:crm.lead.report:0
 #: view:crm.phonecall.report:0
 msgid "Extended Filters..."
-msgstr ""
+msgstr "확장 필터..."
 
 #. module: crm
 #: view:crm.phonecall.report:0
 msgid "Phone calls which are in closed state"
-msgstr ""
+msgstr "마감 상태의 통화"
 
 #. module: crm
 #: view:crm.phonecall.report:0
 msgid "Search"
-msgstr ""
+msgstr "검색"
 
 #. module: crm
 #: help:crm.lead,state:0
@@ -1297,71 +1357,73 @@ msgid ""
 "set to 'Done'. If the case needs to be reviewed then the Status is  set to "
 "'Pending'."
 msgstr ""
+"사례가 생성되었을 때 상태는 '초안'으로 설정됩니다. 사례가 진행 중일 경우, 상태는 '개시됨'으로 설정됩니다. 사례가 종료되었을 때 "
+"상태는 '종료됨'으로 설정됩니다. 사례를 검토할 필요가 있을 경우, 상태는 '보류 중'으로 설정됩니다."
 
 #. module: crm
 #: model:crm.case.section,name:crm.crm_case_section_1
 msgid "Sales Marketing Department"
-msgstr ""
+msgstr "영업홍보부"
 
 #. module: crm
 #: code:addons/crm/crm_lead.py:569
 #, python-format
 msgid "Merged lead"
-msgstr ""
+msgstr "병합된 리드"
 
 #. module: crm
 #: help:crm.lead,section_id:0
 msgid ""
 "When sending mails, the default email address is taken from the sales team."
-msgstr ""
+msgstr "메일을 보낼 때, 기본 이메일 주소는 영업팀에서 가져옵니다."
 
 #. module: crm
 #: view:crm.phonecall:0
 msgid ""
 "Phone Calls Assigned to the current user or with a team having the current "
 "user as team leader"
-msgstr ""
+msgstr "현재 사용자가 팀 리더일 때 현재 사용자 또는 팀에게 할당된 통화"
 
 #. module: crm
 #: view:crm.segmentation:0
 msgid "Segmentation Description"
-msgstr "세그먼테이션 설명"
+msgstr "분할 설명"
 
 #. module: crm
 #: code:addons/crm/crm_lead.py:565
 #, python-format
 msgid "Merged opportunities"
-msgstr ""
+msgstr "병합된 기회"
 
 #. module: crm
 #: model:crm.case.categ,name:crm.categ_oppor7
 msgid "Consulting"
-msgstr ""
+msgstr "상담"
 
 #. module: crm
 #: field:crm.case.section,code:0
 msgid "Code"
-msgstr ""
+msgstr "코드"
 
 #. module: crm
 #: view:sale.config.settings:0
 msgid "Features"
-msgstr ""
+msgstr "특징"
 
 #. module: crm
 #: field:crm.case.section,child_ids:0
 msgid "Child Teams"
-msgstr ""
+msgstr "하위 팀"
 
 #. module: crm
 #: view:crm.phonecall.report:0
 msgid "Phone calls which are in draft and open state"
-msgstr ""
+msgstr "초안 및 개시 상태의 통화"
 
 #. module: crm
 #: field:crm.lead2opportunity.partner.mass,user_ids:0
 msgid "Salesmen"
-msgstr ""
+msgstr "영업사원"
 
 #. module: crm
 #: view:crm.lead:0
@@ -1381,98 +1443,98 @@ msgstr "취소"
 #. module: crm
 #: model:crm.case.categ,name:crm.categ_oppor4
 msgid "Information"
-msgstr ""
+msgstr "정보"
 
 #. module: crm
 #: view:crm.lead.report:0
 msgid "Leads/Opportunities which are in pending state"
-msgstr ""
+msgstr "보류 상태의 리드/기회"
 
 #. module: crm
 #: view:crm.phonecall:0
 msgid "To Do"
-msgstr ""
+msgstr "과제"
 
 #. module: crm
 #: model:mail.message.subtype,description:crm.mt_lead_lost
 msgid "Opportunity lost"
-msgstr ""
+msgstr "기회를 상실함"
 
 #. module: crm
 #: field:crm.lead2opportunity.partner,action:0
 #: field:crm.lead2opportunity.partner.mass,action:0
 #: field:crm.partner.binding,action:0
 msgid "Related Customer"
-msgstr ""
+msgstr "관련 고객"
 
 #. module: crm
 #: model:crm.case.categ,name:crm.categ_oppor8
 msgid "Other"
-msgstr ""
+msgstr "기타"
 
 #. module: crm
 #: field:crm.phonecall,opportunity_id:0
 #: model:ir.model,name:crm.model_crm_lead
 msgid "Lead/Opportunity"
-msgstr ""
+msgstr "리드/기회"
 
 #. module: crm
 #: model:ir.actions.act_window,name:crm.action_merge_opportunities
 #: model:ir.actions.act_window,name:crm.merge_opportunity_act
 msgid "Merge leads/opportunities"
-msgstr ""
+msgstr "리드/기회 병합"
 
 #. module: crm
 #: help:crm.case.stage,sequence:0
 msgid "Used to order stages. Lower is better."
-msgstr ""
+msgstr "단계를 나열하기 위해 사용됨. 낮을 수록 좋음."
 
 #. module: crm
 #: model:ir.actions.act_window,name:crm.crm_phonecall_categ_action
 msgid "Phonecall Categories"
-msgstr ""
+msgstr "통화 분류"
 
 #. module: crm
 #: view:crm.lead.report:0
 msgid "Leads/Opportunities which are in open state"
-msgstr ""
+msgstr "개시 상태의 리드/기회"
 
 #. module: crm
 #: view:crm.lead:0
 msgid "Opportunities that are assigned to any sales teams I am member of"
-msgstr ""
+msgstr "내가 속한 영업팀에게 할당된 기회"
 
 #. module: crm
 #: model:mail.message.subtype,name:crm.mt_lead_stage
 msgid "Stage Changed"
-msgstr ""
+msgstr "단계가 변경됨"
 
 #. module: crm
 #: field:crm.case.stage,section_ids:0
 msgid "Sections"
-msgstr "섹션"
+msgstr "부서"
 
 #. module: crm
 #: constraint:crm.case.section:0
 msgid "Error ! You cannot create recursive Sales team."
-msgstr ""
+msgstr "오류 ! 재귀적인 영업팀을 생성할 수 없습니다."
 
 #. module: crm
 #: selection:crm.opportunity2phonecall,action:0
 #: selection:crm.phonecall2phonecall,action:0
 msgid "Log a call"
-msgstr ""
+msgstr "통화를 기록"
 
 #. module: crm
 #: selection:crm.segmentation.line,expr_name:0
 msgid "Sale Amount"
-msgstr "판매 금액"
+msgstr "판매금액"
 
 #. module: crm
 #: view:crm.phonecall.report:0
 #: model:ir.actions.act_window,name:crm.act_crm_opportunity_crm_phonecall_new
 msgid "Phone calls"
-msgstr ""
+msgstr "통화"
 
 #. module: crm
 #: model:ir.actions.act_window,help:crm.action_report_crm_opportunity
@@ -1482,7 +1544,7 @@ msgid ""
 "deadlines or the number of interactions per opportunity. This report is "
 "mainly used by the sales manager in order to do the periodic review with the "
 "teams of the sales pipeline."
-msgstr ""
+msgstr "기회 분석은 기대수익, 계획비용, 맞추지 못한 기한 또는 기회 당 대화 횟수 등의 기회에 즉시 접근할 수 있도록 합니다."
 
 #. module: crm
 #: field:crm.case.categ,name:0
@@ -1494,35 +1556,35 @@ msgstr "이름"
 #. module: crm
 #: view:crm.lead.report:0
 msgid "Leads/Opportunities that are assigned to me"
-msgstr ""
+msgstr "내게 할당된 리드/기회"
 
 #. module: crm
 #: view:crm.lead.report:0
 msgid "My Case(s)"
-msgstr ""
+msgstr "내 사례"
 
 #. module: crm
 #: help:crm.case.section,message_ids:0
 #: help:crm.lead,message_ids:0
 #: help:crm.phonecall,message_ids:0
 msgid "Messages and communication history"
-msgstr ""
+msgstr "메시지 및 의사소통 기록"
 
 #. module: crm
 #: view:crm.lead:0
 msgid "Show Countries"
-msgstr ""
+msgstr "국가 보기"
 
 #. module: crm
 #: view:crm.phonecall.report:0
 msgid "Date of call"
-msgstr ""
+msgstr "통화일"
 
 #. module: crm
 #: view:crm.lead:0
 #: view:crm.phonecall:0
 msgid "Creation"
-msgstr ""
+msgstr "생성일"
 
 #. module: crm
 #: selection:crm.lead,priority:0
@@ -1535,22 +1597,22 @@ msgstr "높음"
 #. module: crm
 #: model:process.node,note:crm.process_node_partner0
 msgid "Convert to prospect to business partner"
-msgstr ""
+msgstr "잠재고객을 사업 협력업체로 전환"
 
 #. module: crm
 #: model:ir.model,name:crm.model_crm_payment_mode
 msgid "CRM Payment Mode"
-msgstr ""
+msgstr "CRM 지불 모드"
 
 #. module: crm
 #: view:crm.lead.report:0
 msgid "Leads/Opportunities which are in done state"
-msgstr ""
+msgstr "종료 상태의 리드/기회"
 
 #. module: crm
 #: field:crm.lead.report,delay_close:0
 msgid "Delay to Close"
-msgstr ""
+msgstr "마감까지의 지연"
 
 #. module: crm
 #: view:crm.lead:0
@@ -1558,34 +1620,34 @@ msgstr ""
 #: view:crm.phonecall:0
 #: view:crm.phonecall.report:0
 msgid "Group By..."
-msgstr ""
+msgstr "분류 기준..."
 
 #. module: crm
 #: model:email.template,subject:crm.email_template_opportunity_mail
 msgid "${object.name}"
-msgstr ""
+msgstr "${object.name}"
 
 #. module: crm
 #: view:crm.merge.opportunity:0
 msgid "Merge Leads/Opportunities"
-msgstr ""
+msgstr "리드/기회를 병합"
 
 #. module: crm
 #: field:crm.case.section,parent_id:0
 msgid "Parent Team"
-msgstr ""
+msgstr "상위 팀"
 
 #. module: crm
 #: selection:crm.lead2opportunity.partner,action:0
 #: selection:crm.lead2opportunity.partner.mass,action:0
 #: selection:crm.partner.binding,action:0
 msgid "Do not link to a customer"
-msgstr ""
+msgstr "고객을 연결하지 않음"
 
 #. module: crm
 #: field:crm.lead,date_action:0
 msgid "Next Action Date"
-msgstr ""
+msgstr "다음 조치일"
 
 #. module: crm
 #: help:crm.case.stage,state:0
@@ -1594,37 +1656,39 @@ msgid ""
 "stage. For example, if a stage is related to the status 'Close', when your "
 "document reaches this stage, it is automatically closed."
 msgstr ""
+"문서의 상태는 선택된 단계에 따라 자동으로 변경됩니다. 예를 들어, 단계가 '마감' 상태와 관련이 있을 경우 문서가 이 단계에 도달할 때 "
+"문서는 자동으로 마감됩니다."
 
 #. module: crm
 #: view:crm.lead2opportunity.partner.mass:0
 msgid "Assign opportunities to"
-msgstr ""
+msgstr "기회를 할당할 대상"
 
 #. module: crm
 #: model:crm.case.categ,name:crm.categ_phone1
 msgid "Inbound"
-msgstr ""
+msgstr "수신"
 
 #. module: crm
 #: view:crm.phonecall.report:0
 msgid "Month of call"
-msgstr ""
+msgstr "통화월"
 
 #. module: crm
 #: view:crm.lead:0
 msgid "Describe the lead..."
-msgstr ""
+msgstr "리드를 설명하십시오..."
 
 #. module: crm
 #: code:addons/crm/crm_phonecall.py:290
 #, python-format
 msgid "Partner has been <b>created</b>."
-msgstr ""
+msgstr "협력업체가 <b>생성</b>되었습니다."
 
 #. module: crm
 #: field:sale.config.settings,module_crm_claim:0
 msgid "Manage Customer Claims"
-msgstr ""
+msgstr "고객 클레임 관리"
 
 #. module: crm
 #: model:ir.actions.act_window,help:crm.action_report_crm_lead
@@ -1633,11 +1697,13 @@ msgid ""
 "the treatment delays or number of leads per state. You can sort out your "
 "leads analysis by different groups to get accurate grained analysis."
 msgstr ""
+"리드 분석은 처리 지연 또는 시도별 리드와 같은 다른 CRM 관련 정보를 확인할 수 있도록 합니다. 정확한 상세 분석을 얻기 위해 리드 "
+"분석을 다른 그룹으로 정렬할 수 있습니다."
 
 #. module: crm
 #: model:crm.case.categ,name:crm.categ_oppor3
 msgid "Services"
-msgstr ""
+msgstr "서비스"
 
 #. module: crm
 #: selection:crm.lead,priority:0
@@ -1645,48 +1711,48 @@ msgstr ""
 #: selection:crm.phonecall,priority:0
 #: selection:crm.phonecall.report,priority:0
 msgid "Highest"
-msgstr "최고"
+msgstr "가장 높음"
 
 #. module: crm
 #: help:crm.lead.report,creation_year:0
 msgid "Creation year"
-msgstr ""
+msgstr "생성년도"
 
 #. module: crm
 #: view:crm.case.section:0
 #: field:crm.lead,description:0
 msgid "Notes"
-msgstr ""
+msgstr "메모"
 
 #. module: crm
 #: view:crm.opportunity2phonecall:0
 msgid "Call Description"
-msgstr ""
+msgstr "통화 설명"
 
 #. module: crm
 #: field:crm.lead,partner_name:0
 msgid "Customer Name"
-msgstr ""
+msgstr "고객명"
 
 #. module: crm
 #: field:crm.case.section,reply_to:0
 msgid "Reply-To"
-msgstr "회신"
+msgstr "회신 주소"
 
 #. module: crm
 #: view:crm.lead:0
 msgid "Display"
-msgstr ""
+msgstr "표시"
 
 #. module: crm
 #: view:board.board:0
 msgid "Opportunities by Stage"
-msgstr ""
+msgstr "단계별 기회"
 
 #. module: crm
 #: model:process.transition,note:crm.process_transition_leadpartner0
 msgid "Prospect is converting to business partner"
-msgstr ""
+msgstr "잠재 고객이 사업 협력업체로 전환 중입니다"
 
 #. module: crm
 #: view:crm.case.channel:0
@@ -1694,7 +1760,7 @@ msgstr ""
 #: model:ir.model,name:crm.model_crm_case_channel
 #: model:ir.ui.menu,name:crm.menu_crm_case_channel
 msgid "Channels"
-msgstr ""
+msgstr "채널"
 
 #. module: crm
 #: view:crm.phonecall:0
@@ -1702,32 +1768,32 @@ msgstr ""
 #: view:crm.phonecall.report:0
 #: selection:crm.phonecall.report,state:0
 msgid "Held"
-msgstr ""
+msgstr "보류됨"
 
 #. module: crm
 #: view:crm.lead:0
 msgid "Extra Info"
-msgstr "기타 정보"
+msgstr "추가 정보"
 
 #. module: crm
 #: view:crm.lead:0
 msgid "Fund Raising"
-msgstr ""
+msgstr "자금 모금"
 
 #. module: crm
 #: view:crm.lead:0
 msgid "Edit..."
-msgstr ""
+msgstr "편집..."
 
 #. module: crm
 #: model:crm.case.resource.type,name:crm.type_lead5
 msgid "Google Adwords"
-msgstr ""
+msgstr "구글 애드워드"
 
 #. module: crm
 #: view:crm.case.section:0
 msgid "Select Stages for this Sales Team"
-msgstr ""
+msgstr "이 영업팀의 단계를 선택"
 
 #. module: crm
 #: view:crm.lead:0
@@ -1743,140 +1809,140 @@ msgstr "우선순위"
 #. module: crm
 #: model:ir.model,name:crm.model_crm_lead2opportunity_partner
 msgid "Lead To Opportunity Partner"
-msgstr ""
+msgstr "리드에서 기회로 전환된 협력업체"
 
 #. module: crm
 #: help:crm.lead,partner_id:0
 msgid "Linked partner (optional). Usually created when converting the lead."
-msgstr ""
+msgstr "연결된 협력업체 (선택적). 보통 리드를 전환할 때 생성됨."
 
 #. module: crm
 #: field:crm.lead,payment_mode:0
 #: view:crm.payment.mode:0
 #: model:ir.actions.act_window,name:crm.action_crm_payment_mode
 msgid "Payment Mode"
-msgstr ""
+msgstr "결제 모드"
 
 #. module: crm
 #: model:ir.model,name:crm.model_crm_lead2opportunity_partner_mass
 msgid "Mass Lead To Opportunity Partner"
-msgstr ""
+msgstr "리드에서 기회로 전환된 협력업체 - 대량"
 
 #. module: crm
 #: view:sale.config.settings:0
 msgid "On Mail Server"
-msgstr ""
+msgstr "메일 서버에 존재함"
 
 #. module: crm
 #: model:ir.actions.act_window,name:crm.open_board_statistical_dash
 #: model:ir.ui.menu,name:crm.menu_board_statistics_dash
 msgid "CRM"
-msgstr ""
+msgstr "CRM"
 
 #. module: crm
 #: model:ir.actions.act_window,name:crm.crm_segmentation_tree-act
 #: model:ir.ui.menu,name:crm.menu_crm_segmentation-act
 msgid "Contacts Segmentation"
-msgstr ""
+msgstr "연락처 분할"
 
 #. module: crm
 #: model:process.node,note:crm.process_node_meeting0
 msgid "Schedule a normal or phone meeting"
-msgstr ""
+msgstr "일반 또는 전화 미팅 일정 생성"
 
 #. module: crm
 #: model:crm.case.resource.type,name:crm.type_lead1
 msgid "Telesales"
-msgstr ""
+msgstr "통신 판매"
 
 #. module: crm
 #: model:ir.model,name:crm.model_crm_segmentation_line
 msgid "Segmentation line"
-msgstr "세그먼테이션 라인"
+msgstr "분할 입력줄"
 
 #. module: crm
 #: view:crm.opportunity2phonecall:0
 #: view:crm.phonecall2phonecall:0
 msgid "Planned Date"
-msgstr ""
+msgstr "계획일"
 
 #. module: crm
 #: view:crm.lead:0
 msgid "Expected Revenues"
-msgstr ""
+msgstr "예상수익"
 
 #. module: crm
 #: view:crm.lead:0
 msgid "Referrer"
-msgstr ""
+msgstr "조회자"
 
 #. module: crm
 #: help:crm.lead,type:0
 #: help:crm.lead.report,type:0
 msgid "Type is used to separate Leads and Opportunities"
-msgstr ""
+msgstr "유형은 리드와 기회를 구분하기 위해 사용됩니다"
 
 #. module: crm
 #: selection:crm.lead.report,creation_month:0
 #: selection:crm.lead.report,deadline_month:0
 #: selection:crm.phonecall.report,month:0
 msgid "July"
-msgstr ""
+msgstr "7월"
 
 #. module: crm
 #: view:crm.lead:0
 msgid "Lead / Customer"
-msgstr ""
+msgstr "리드 / 고객"
 
 #. module: crm
 #: model:crm.case.section,name:crm.crm_case_section_2
 msgid "Support Department"
-msgstr ""
+msgstr "지원부"
 
 #. module: crm
 #: view:crm.lead.report:0
 msgid "Show only lead"
-msgstr ""
+msgstr "리드만 보기"
 
 #. module: crm
 #: model:ir.actions.act_window,name:crm.crm_case_section_act
 #: model:ir.model,name:crm.model_crm_case_section
 #: model:ir.ui.menu,name:crm.menu_crm_case_section_act
 msgid "Sales Teams"
-msgstr ""
+msgstr "영업팀"
 
 #. module: crm
 #: field:crm.case.stage,case_default:0
 msgid "Default to New Sales Team"
-msgstr ""
+msgstr "새로운 영업팀으로 기본 설정"
 
 #. module: crm
 #: view:crm.lead:0
 msgid "Team"
-msgstr ""
+msgstr "팀"
 
 #. module: crm
 #: view:crm.lead.report:0
 msgid "Leads/Opportunities which are in New state"
-msgstr ""
+msgstr "신규 단계의 리드/기회"
 
 #. module: crm
 #: selection:crm.phonecall,state:0
 #: view:crm.phonecall.report:0
 msgid "Not Held"
-msgstr ""
+msgstr "보류되지 않았음"
 
 #. module: crm
 #: field:crm.lead.report,probability:0
 msgid "Probability"
-msgstr ""
+msgstr "확률"
 
 #. module: crm
 #: view:crm.lead.report:0
 #: view:crm.phonecall.report:0
 #: field:crm.phonecall.report,month:0
 msgid "Month"
-msgstr ""
+msgstr "월"
 
 #. module: crm
 #: view:crm.lead:0
@@ -1884,54 +1950,54 @@ msgstr ""
 #: model:ir.ui.menu,name:crm.menu_crm_leads
 #: model:process.node,name:crm.process_node_leads0
 msgid "Leads"
-msgstr ""
+msgstr "리드"
 
 #. module: crm
 #: code:addons/crm/crm_lead.py:563
 #, python-format
 msgid "Merged leads"
-msgstr ""
+msgstr "병합된 리드"
 
 #. module: crm
 #: model:crm.case.categ,name:crm.categ_oppor5
 msgid "Design"
-msgstr ""
+msgstr "디자인"
 
 #. module: crm
 #: selection:crm.lead2opportunity.partner,name:0
 #: selection:crm.lead2opportunity.partner.mass,name:0
 msgid "Merge with existing opportunities"
-msgstr ""
+msgstr "기존의 기회와 병합"
 
 #. module: crm
 #: view:crm.phonecall.report:0
 #: selection:crm.phonecall.report,state:0
 msgid "Todo"
-msgstr ""
+msgstr "과제"
 
 #. module: crm
 #: model:mail.message.subtype,name:crm.mt_lead_convert_to_opportunity
 #: model:mail.message.subtype,name:crm.mt_salesteam_lead_opportunity
 msgid "Lead to Opportunity"
-msgstr ""
+msgstr "리드에서 기회로 전환"
 
 #. module: crm
 #: field:crm.lead,user_email:0
 msgid "User Email"
-msgstr ""
+msgstr "사용자 이메일"
 
 #. module: crm
 #: help:crm.lead,partner_name:0
 msgid ""
 "The name of the future partner company that will be created while converting "
 "the lead into opportunity"
-msgstr ""
+msgstr "리드를 기회로 전환할 때 생성될 향후 협력업체의 이름"
 
 #. module: crm
 #: field:crm.opportunity2phonecall,note:0
 #: field:crm.phonecall2phonecall,note:0
 msgid "Note"
-msgstr "노트"
+msgstr "메모"
 
 #. module: crm
 #: selection:crm.lead,priority:0
@@ -1954,12 +2020,12 @@ msgstr "마감됨"
 #. module: crm
 #: view:crm.lead:0
 msgid "Open Opportunities"
-msgstr ""
+msgstr "기회 열기"
 
 #. module: crm
 #: model:crm.case.resource.type,name:crm.type_lead2
 msgid "Email Campaign - Services"
-msgstr ""
+msgstr "이메일 캠페인 - 서비스"
 
 #. module: crm
 #: selection:crm.case.stage,state:0
@@ -1968,22 +2034,22 @@ msgstr ""
 #: selection:crm.lead.report,state:0
 #: selection:crm.phonecall.report,state:0
 msgid "Pending"
-msgstr "보류"
+msgstr "보류 중"
 
 #. module: crm
 #: view:crm.lead:0
 msgid "Assigned to Me"
-msgstr ""
+msgstr "내게 할당됨"
 
 #. module: crm
 #: model:process.transition,name:crm.process_transition_leadopportunity0
 msgid "Prospect Opportunity"
-msgstr ""
+msgstr "잠재기회"
 
 #. module: crm
 #: field:crm.lead,email_cc:0
 msgid "Global CC"
-msgstr ""
+msgstr "전체 참조"
 
 #. module: crm
 #: view:crm.lead:0
@@ -1992,18 +2058,18 @@ msgstr ""
 #: model:ir.ui.menu,name:crm.menu_crm_case_phone
 #: model:ir.ui.menu,name:crm.menu_crm_config_phonecall
 msgid "Phone Calls"
-msgstr ""
+msgstr "통화"
 
 #. module: crm
 #: view:crm.case.stage:0
 msgid "Stage Search"
-msgstr ""
+msgstr "단계 검색"
 
 #. module: crm
 #: help:crm.lead.report,delay_open:0
 #: help:crm.phonecall.report,delay_open:0
 msgid "Number of Days to open the case"
-msgstr ""
+msgstr "사례 개시까지의 소요일수"
 
 #. module: crm
 #: field:crm.lead,phone:0
@@ -2012,7 +2078,7 @@ msgstr ""
 #: field:crm.phonecall,partner_phone:0
 #: field:crm.phonecall2phonecall,phone:0
 msgid "Phone"
-msgstr ""
+msgstr "전화"
 
 #. module: crm
 #: field:crm.case.channel,active:0
@@ -2020,46 +2086,46 @@ msgstr ""
 #: field:crm.lead,active:0
 #: field:crm.phonecall,active:0
 msgid "Active"
-msgstr "활성"
+msgstr "실행 중"
 
 #. module: crm
 #: selection:crm.segmentation.line,operator:0
 msgid "Mandatory Expression"
-msgstr "필수 표현"
+msgstr "필수 표현식"
 
 #. module: crm
 #: selection:crm.lead2opportunity.partner,action:0
 #: selection:crm.lead2opportunity.partner.mass,action:0
 #: selection:crm.partner.binding,action:0
 msgid "Create a new customer"
-msgstr ""
+msgstr "새로운 고객을 생성"
 
 #. module: crm
 #: field:crm.lead.report,deadline_day:0
 msgid "Exp. Closing Day"
-msgstr ""
+msgstr "예상 마감일"
 
 #. module: crm
 #: model:crm.case.categ,name:crm.categ_oppor2
 msgid "Software"
-msgstr ""
+msgstr "소프트웨어"
 
 #. module: crm
 #: field:crm.case.section,change_responsible:0
 msgid "Reassign Escalated"
-msgstr ""
+msgstr "승급을 재할당"
 
 #. module: crm
 #: view:crm.lead.report:0
 #: model:ir.actions.act_window,name:crm.action_report_crm_opportunity
 #: model:ir.ui.menu,name:crm.menu_report_crm_opportunities_tree
 msgid "Opportunities Analysis"
-msgstr ""
+msgstr "기회 분석"
 
 #. module: crm
 #: view:crm.lead:0
 msgid "Misc"
-msgstr ""
+msgstr "기타"
 
 #. module: crm
 #: view:crm.lead:0
@@ -2072,85 +2138,85 @@ msgstr "열기"
 #: view:crm.lead:0
 #: field:crm.lead,city:0
 msgid "City"
-msgstr ""
+msgstr "시구군"
 
 #. module: crm
 #: selection:crm.case.stage,type:0
 msgid "Both"
-msgstr ""
+msgstr "모두"
 
 #. module: crm
 #: view:crm.phonecall:0
 msgid "Call Done"
-msgstr ""
+msgstr "통화 완료"
 
 #. module: crm
 #: view:crm.phonecall:0
 #: field:crm.phonecall,user_id:0
 msgid "Responsible"
-msgstr "책임"
+msgstr "담당"
 
 #. module: crm
 #: model:crm.case.section,name:crm.crm_case_section_3
 msgid "Direct Marketing"
-msgstr ""
+msgstr "직거래"
 
 #. module: crm
 #: model:crm.case.categ,name:crm.categ_oppor1
 msgid "Product"
-msgstr ""
+msgstr "상품"
 
 #. module: crm
 #: field:crm.lead.report,creation_year:0
 msgid "Creation Year"
-msgstr ""
+msgstr "생성년도"
 
 #. module: crm
 #: view:crm.lead2opportunity.partner.mass:0
 msgid "Conversion Options"
-msgstr ""
+msgstr "전환 옵션"
 
 #. module: crm
 #: view:crm.case.section:0
 msgid ""
 "Follow this salesteam to automatically track the events associated to users "
 "of this team."
-msgstr ""
+msgstr "이 팀의 사용자와 관련된 행사를 자동으로 추적하기 위해 이 영업사원을 팔로우함."
 
 #. module: crm
 #: view:crm.lead:0
 msgid "Address"
-msgstr ""
+msgstr "주소"
 
 #. module: crm
 #: view:crm.lead:0
 msgid "Leads that are assigned to any sales teams I am member of"
-msgstr ""
+msgstr "내가 속한 영업팀에 할당된 리드"
 
 #. module: crm
 #: help:crm.case.section,alias_id:0
 msgid ""
 "The email address associated with this team. New emails received will "
 "automatically create new leads assigned to the team."
-msgstr ""
+msgstr "이 팀과 관련된 이메일 주소. 새로 받은 이메일은 팀에 할당된 새로운 리드를 자동으로 생성합니다."
 
 #. module: crm
 #: view:crm.lead:0
 msgid "Search Leads"
-msgstr ""
+msgstr "리드 검색"
 
 #. module: crm
 #: view:crm.lead.report:0
 #: view:crm.phonecall.report:0
 #: field:crm.phonecall.report,delay_open:0
 msgid "Delay to open"
-msgstr ""
+msgstr "개시까지의 지연"
 
 #. module: crm
 #: model:ir.actions.act_window,name:crm.crm_case_categ_phone_outgoing0
 #: model:ir.ui.menu,name:crm.menu_crm_case_phone_outbound
 msgid "Scheduled Calls"
-msgstr ""
+msgstr "예정된 통화"
 
 #. module: crm
 #: field:crm.lead,id:0
@@ -2162,12 +2228,12 @@ msgstr "ID"
 msgid ""
 "From which campaign (seminar, marketing campaign, mass mailing, ...) did "
 "this contact come from?"
-msgstr ""
+msgstr "이 연락처는 어떤 캠페인(세미나, 홍보, 캠페인, 단체 이메일, ...)으로 인해 생성되었습니까?"
 
 #. module: crm
 #: model:ir.model,name:crm.model_calendar_attendee
 msgid "Attendee information"
-msgstr ""
+msgstr "참석자 정보"
 
 #. module: crm
 #: view:crm.segmentation:0
@@ -2177,32 +2243,32 @@ msgstr "세그먼테이션 테스트"
 #. module: crm
 #: view:crm.segmentation:0
 msgid "Continue Process"
-msgstr "프로세스 계속"
+msgstr "과정 계속하기"
 
 #. module: crm
 #: selection:crm.lead2opportunity.partner,name:0
 #: selection:crm.lead2opportunity.partner.mass,name:0
 #: model:ir.actions.act_window,name:crm.action_crm_lead2opportunity_partner
 msgid "Convert to opportunity"
-msgstr ""
+msgstr "기회로 전환"
 
 #. module: crm
 #: field:crm.opportunity2phonecall,user_id:0
 #: field:crm.phonecall2phonecall,user_id:0
 msgid "Assign To"
-msgstr ""
+msgstr "할당 대상"
 
 #. module: crm
 #: field:crm.lead,date_action_last:0
 #: field:crm.phonecall,date_action_last:0
 msgid "Last Action"
-msgstr "최종 액션"
+msgstr "최종 조치"
 
 #. module: crm
 #: field:crm.phonecall,duration:0
 #: field:crm.phonecall.report,duration:0
 msgid "Duration"
-msgstr ""
+msgstr "시간"
 
 #. module: crm
 #: model:ir.actions.act_window,help:crm.crm_case_categ_phone_outgoing0
@@ -2219,39 +2285,49 @@ msgid ""
 "          </p>\n"
 "        "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"            통화 일정을 생성하기 위해 클릭하십시오 \n"
+"          </p><p>\n"
+"            OpenERP는 영업팀이 통화할 대상을 손쉽게 정의하고\n"
+"            통화 요약을 기준으로 사후관리를 할 수 있도록 합니다.\n"
+"          </p><p>  \n"
+"            가져오기 기능을 사용하여 자격을 부여할 잠재고객의 새로운 목록을\n"
+"            대량으로 가져올 수 있습니다.\n"
+"          </p>\n"
+"        "
 
 #. module: crm
 #: help:crm.case.stage,fold:0
 msgid ""
 "This stage is not visible, for example in status bar or kanban view, when "
 "there are no records in that stage to display."
-msgstr ""
+msgstr "이 단계는 이 단계에 표시될 기록이 없을 때 상태 표시줄 또는 간판 화면에 나타나지 않습니다."
 
 #. module: crm
 #: field:crm.lead.report,nbr:0
 #: field:crm.phonecall.report,nbr:0
 msgid "# of Cases"
-msgstr ""
+msgstr "사례 #"
 
 #. module: crm
 #: help:crm.phonecall,section_id:0
 msgid "Sales team to which Case belongs to."
-msgstr ""
+msgstr "이 사례가 속한 영업팀"
 
 #. module: crm
 #: model:crm.case.resource.type,name:crm.type_lead6
 msgid "Banner Ads"
-msgstr ""
+msgstr "배너 광고"
 
 #. module: crm
 #: field:crm.merge.opportunity,opportunity_ids:0
 msgid "Leads/Opportunities"
-msgstr ""
+msgstr "리드/기회"
 
 #. module: crm
 #: field:crm.lead,fax:0
 msgid "Fax"
-msgstr ""
+msgstr "팩스"
 
 #. module: crm
 #: field:crm.lead,company_id:0
@@ -2261,60 +2337,60 @@ msgstr ""
 #: view:crm.phonecall.report:0
 #: field:crm.phonecall.report,company_id:0
 msgid "Company"
-msgstr ""
+msgstr "업체"
 
 #. module: crm
 #: selection:crm.segmentation,state:0
 msgid "Running"
-msgstr "진행 중"
+msgstr "실행 중"
 
 #. module: crm
 #: model:mail.message.subtype,description:crm.mt_lead_convert_to_opportunity
 msgid "Lead converted into an opportunity"
-msgstr ""
+msgstr "기회로 전환된 리드"
 
 #. module: crm
 #: model:mail.message.subtype,description:crm.mt_lead_won
 msgid "Opportunity won"
-msgstr ""
+msgstr "수주에 성공한 기회"
 
 #. module: crm
 #: field:crm.case.categ,object_id:0
 msgid "Object Name"
-msgstr ""
+msgstr "객체명"
 
 #. module: crm
 #: view:crm.phonecall:0
 msgid "Phone Calls Assigned to Me or My Team(s)"
-msgstr ""
+msgstr "나 또는 내 팀에 할당된 통화"
 
 #. module: crm
 #: view:crm.lead:0
 msgid "Reset"
-msgstr ""
+msgstr "재설정"
 
 #. module: crm
 #: view:sale.config.settings:0
 msgid "After-Sale Services"
-msgstr ""
+msgstr "사후 서비스"
 
 #. module: crm
 #: field:crm.case.section,message_ids:0
 #: field:crm.lead,message_ids:0
 #: field:crm.phonecall,message_ids:0
 msgid "Messages"
-msgstr ""
+msgstr "메시지"
 
 #. module: crm
 #: help:crm.lead,channel_id:0
 msgid "Communication channel (mail, direct, phone, ...)"
-msgstr ""
+msgstr "의사소통 수단 (메일, 대면, 전화, ...)"
 
 #. module: crm
 #: field:crm.opportunity2phonecall,name:0
 #: field:crm.phonecall2phonecall,name:0
 msgid "Call summary"
-msgstr ""
+msgstr "통화 요약"
 
 #. module: crm
 #: selection:crm.case.stage,state:0
@@ -2323,18 +2399,18 @@ msgstr ""
 #: selection:crm.phonecall,state:0
 #: selection:crm.phonecall.report,state:0
 msgid "Cancelled"
-msgstr ""
+msgstr "취소됨"
 
 #. module: crm
 #: view:crm.lead:0
 msgid "Street..."
-msgstr ""
+msgstr "도로명..."
 
 #. module: crm
 #: field:crm.lead.report,date_closed:0
 #: field:crm.phonecall.report,date_closed:0
 msgid "Close Date"
-msgstr ""
+msgstr "마감일"
 
 #. module: crm
 #: model:ir.actions.act_window,help:crm.action_report_crm_phonecall
@@ -2344,84 +2420,86 @@ msgid ""
 "several criteria and drill down the information, by adding more groups in "
 "the report."
 msgstr ""
+"이 보고서에서는 통화에 근거한 영업팀의 성과를 분석할 수 있습니다. 여러 범주에 따라 정보를 그룹화하거나 필터를 적용하고, 보고서 내에 "
+"더 많은 그룹을 추가하여 정보를 상세하게 검색할 수 있습니다."
 
 #. module: crm
 #: field:crm.case.stage,fold:0
 msgid "Fold by Default"
-msgstr ""
+msgstr "기본으로 접기"
 
 #. module: crm
 #: field:crm.case.stage,state:0
 msgid "Related Status"
-msgstr ""
+msgstr "관련된 상태"
 
 #. module: crm
 #: field:crm.phonecall,name:0
 msgid "Call Summary"
-msgstr ""
+msgstr "통화 요약"
 
 #. module: crm
 #: field:crm.lead,color:0
 msgid "Color Index"
-msgstr ""
+msgstr "컬러 색인"
 
 #. module: crm
 #: field:crm.segmentation.line,expr_operator:0
 msgid "Operator"
-msgstr "오퍼레이터"
+msgstr "운영자"
 
 #. module: crm
 #: view:crm.lead:0
 #: model:ir.actions.act_window,name:crm.opportunity2phonecall_act
 msgid "Schedule/Log Call"
-msgstr ""
+msgstr "통화 일정 생성/기록"
 
 #. module: crm
 #: view:crm.merge.opportunity:0
 msgid "Select Leads/Opportunities"
-msgstr ""
+msgstr "리드/기회를 선택"
 
 #. module: crm
 #: selection:crm.phonecall,state:0
 msgid "Confirmed"
-msgstr ""
+msgstr "확인됨"
 
 #. module: crm
 #: model:ir.model,name:crm.model_crm_partner_binding
 msgid "Handle partner binding or generation in CRM wizards."
-msgstr ""
+msgstr "CRM 마법사에서 협력업체 결합 또는 생성을 처리함."
 
 #. module: crm
 #: model:ir.actions.act_window,name:crm.act_oppor_stage_user
 msgid "Planned Revenue By User and Stage"
-msgstr ""
+msgstr "사용자 및 단계별 예상수익"
 
 #. module: crm
 #: view:crm.phonecall:0
 msgid "Confirm"
-msgstr ""
+msgstr "확인"
 
 #. module: crm
 #: view:crm.lead:0
 msgid "Unread messages"
-msgstr ""
+msgstr "읽지 않은 메시지"
 
 #. module: crm
 #: field:crm.phonecall.report,section_id:0
 msgid "Section"
-msgstr "섹션"
+msgstr "부서"
 
 #. module: crm
 #: selection:crm.segmentation.line,operator:0
 msgid "Optional Expression"
-msgstr "선택적 표현"
+msgstr "선택적 표현식"
 
 #. module: crm
 #: field:crm.case.section,message_follower_ids:0
 #: field:crm.lead,message_follower_ids:0
 #: field:crm.phonecall,message_follower_ids:0
 msgid "Followers"
-msgstr ""
+msgstr "팔로워"
 
 #. module: crm
 #: model:ir.actions.act_window,help:crm.crm_case_category_act_leads_all
@@ -2440,11 +2518,23 @@ msgid ""
 "          </p>\n"
 "        "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"            부적합한 리드를 생성하기 위해 클릭하십시오.\n"
+"          </p><p>\n"
+"            기회 또는 고객을 생성하기 전에 자격심사 단계가\n"
+"            필요할 경우 리드를 사용하십시오. 이것은 획득한 명함, 웹 사이트에서\n"
+"            작성된 연락처 양식, 또는 가져오는 부적합한 잠재고객의 파일 등이\n"
+"            될 수 있습니다.\n"
+"          </p><p>\n"
+"            일단 적합성이 확인되면, 리드는 주소록에 사업 기회\n"
+"            또는 신규 고객으로 전환될 수 있습니다.\n"
+"          </p>\n"
+"        "
 
 #. module: crm
 #: field:sale.config.settings,fetchmail_lead:0
 msgid "Create leads from incoming mails"
-msgstr ""
+msgstr "수신 메일로부터 리드를 생성"
 
 #. module: crm
 #: view:crm.lead:0
@@ -2460,19 +2550,19 @@ msgstr "이메일"
 #: view:crm.lead.report:0
 #: field:crm.lead.report,channel_id:0
 msgid "Channel"
-msgstr "채널"
+msgstr "수단"
 
 #. module: crm
 #: view:crm.opportunity2phonecall:0
 #: view:crm.phonecall2phonecall:0
 msgid "Schedule Call"
-msgstr ""
+msgstr "통화 일정 생성"
 
 #. module: crm
 #: view:crm.lead.report:0
 #: view:crm.phonecall.report:0
 msgid "My Sales Team(s)"
-msgstr ""
+msgstr "내 영업팀"
 
 #. module: crm
 #: help:crm.segmentation,exclusif:0
@@ -2482,16 +2572,18 @@ msgid ""
 "If checked, remove the category from partners that doesn't match "
 "segmentation criterions"
 msgstr ""
+"분류가 분할 기준과 일치하는 협력업체로 제한될 경우 체크하십시오.                        \n"
+"체크했을 경우, 기준과 일치하지 않는 협력업체로부터 분류를 제거하십시오."
 
 #. module: crm
 #: model:process.transition,note:crm.process_transition_leadopportunity0
 msgid "Creating business opportunities from Leads"
-msgstr ""
+msgstr "리드로부터 사업 기회를 생성하는 중"
 
 #. module: crm
 #: model:crm.case.resource.type,name:crm.type_lead3
 msgid "Email Campaign - Products"
-msgstr ""
+msgstr "캠페인 이메일 전송 - 상품"
 
 #. module: crm
 #: model:ir.actions.act_window,help:crm.crm_case_categ_phone_incoming0
@@ -2510,42 +2602,53 @@ msgid ""
 "          </p>\n"
 "        "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"            통화의 요약을 기록하기 위해 클릭하십시오. \n"
+"          </p><p>\n"
+"            OpenERP는 수신전화를 그 때마다 기록하여 고객과의\n"
+"            의사소통 기록을 추적하고 다른 팀 구성원에게\n"
+"            알릴 수 있도록 합니다. \n"
+"          </p><p>\n"
+"            통화에 대한 사후관리를 위해 다른 통화 요청, 미팅 또는\n"
+"            기회를 촉발할 수 있습니다.\n"
+"          </p>\n"
+"        "
 
 #. module: crm
 #: model:process.node,note:crm.process_node_leads0
 msgid "Very first contact with new prospect"
-msgstr ""
+msgstr "새로운 잠재고객과의 최초 연락"
 
 #. module: crm
 #: view:res.partner:0
 msgid "Calls"
-msgstr ""
+msgstr "통화"
 
 #. module: crm
 #: view:crm.lead:0
 msgid "Cancel Case"
-msgstr ""
+msgstr "사례 취소"
 
 #. module: crm
 #: field:crm.case.stage,on_change:0
 msgid "Change Probability Automatically"
-msgstr ""
+msgstr "확률을 자동으로 변경"
 
 #. module: crm
 #: view:crm.phonecall.report:0
 msgid "My Phone Calls"
-msgstr ""
+msgstr "내 통화"
 
 #. module: crm
 #: model:crm.case.stage,name:crm.stage_lead3
 msgid "Qualification"
-msgstr ""
+msgstr "자격"
 
 #. module: crm
 #: field:crm.lead2opportunity.partner,name:0
 #: field:crm.lead2opportunity.partner.mass,name:0
 msgid "Conversion Action"
-msgstr ""
+msgstr "전환 조치"
 
 #. module: crm
 #: model:ir.actions.act_window,help:crm.crm_lead_categ_action
@@ -2561,47 +2664,56 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                새로운 판매 태그를 정의하기 위해 클릭하십시오.\n"
+"              </p><p>\n"
+"                리드와 기회를 더욱 효율적으로 분류하고 분석하기 위해\n"
+"                자사의 활동에 걸맞는 특정한 태그를 생성하여십시오.\n"
+"                이러한 분류는 예를 들어 상품 구조 또는 실행 중인\n"
+"                다른 유형의 판매를 반영할 수도 있습니다.\n"
+"              </p>\n"
+"            "
 
 #. module: crm
 #: selection:crm.lead.report,creation_month:0
 #: selection:crm.lead.report,deadline_month:0
 #: selection:crm.phonecall.report,month:0
 msgid "August"
-msgstr ""
+msgstr "8월"
 
 #. module: crm
 #: model:mail.message.subtype,name:crm.mt_lead_lost
 #: model:mail.message.subtype,name:crm.mt_salesteam_lead_lost
 msgid "Opportunity Lost"
-msgstr ""
+msgstr "기회를 상실함"
 
 #. module: crm
 #: field:crm.lead.report,deadline_month:0
 msgid "Exp. Closing Month"
-msgstr ""
+msgstr "예상 마감월"
 
 #. module: crm
 #: selection:crm.lead.report,creation_month:0
 #: selection:crm.lead.report,deadline_month:0
 #: selection:crm.phonecall.report,month:0
 msgid "December"
-msgstr ""
+msgstr "12월"
 
 #. module: crm
 #: view:crm.phonecall:0
 msgid "Date of Call"
-msgstr ""
+msgstr "통화월"
 
 #. module: crm
 #: view:crm.lead:0
 #: field:crm.lead,date_deadline:0
 msgid "Expected Closing"
-msgstr ""
+msgstr "예상 마감일"
 
 #. module: crm
 #: model:ir.model,name:crm.model_crm_opportunity2phonecall
 msgid "Opportunity to Phonecall"
-msgstr ""
+msgstr "통화 예정인 기회"
 
 #. module: crm
 #: view:crm.segmentation:0
@@ -2611,35 +2723,35 @@ msgstr "판매 구매"
 #. module: crm
 #: view:crm.lead:0
 msgid "Schedule Meeting"
-msgstr ""
+msgstr "미팅 일정 생성"
 
 #. module: crm
 #: field:crm.lead.report,deadline_year:0
 msgid "Ex. Closing Year"
-msgstr ""
+msgstr "예상 마감년도"
 
 #. module: crm
 #: model:ir.actions.client,name:crm.action_client_crm_menu
 msgid "Open Sale Menu"
-msgstr ""
+msgstr "판매 메뉴 열기"
 
 #. module: crm
 #: field:crm.lead,date_open:0
 #: field:crm.phonecall,date_open:0
 msgid "Opened"
-msgstr ""
+msgstr "열림"
 
 #. module: crm
 #: view:crm.case.section:0
 #: field:crm.case.section,member_ids:0
 msgid "Team Members"
-msgstr ""
+msgstr "팀 구성원"
 
 #. module: crm
 #: view:crm.opportunity2phonecall:0
 #: view:crm.phonecall2phonecall:0
 msgid "Schedule/Log a Call"
-msgstr ""
+msgstr "통화 일정 생성/기록"
 
 #. module: crm
 #: field:crm.lead,planned_cost:0
@@ -2649,7 +2761,7 @@ msgstr "계획된 비용"
 #. module: crm
 #: help:crm.lead,date_deadline:0
 msgid "Estimate of the date on which the opportunity will be won."
-msgstr ""
+msgstr "기회를 얻기까지의 예상일"
 
 #. module: crm
 #: help:crm.lead,email_cc:0
@@ -2658,23 +2770,25 @@ msgid ""
 "outbound emails for this record before being sent. Separate multiple email "
 "addresses with a comma"
 msgstr ""
+"이 이메일 주소들은 이 기록에 대한 모든 수신 및 발신 이메일이 발송되기 전에 참조 필드에 추가됩니다. 다수의 이메일 주소를 쉼표로 "
+"분리하십시오"
 
 #. module: crm
 #: model:ir.actions.act_window,name:crm.crm_case_categ_phone_incoming0
 #: model:ir.ui.menu,name:crm.menu_crm_case_phone_inbound
 msgid "Logged Calls"
-msgstr ""
+msgstr "기록된 통화"
 
 #. module: crm
 #: model:mail.message.subtype,name:crm.mt_lead_won
 #: model:mail.message.subtype,name:crm.mt_salesteam_lead_won
 msgid "Opportunity Won"
-msgstr ""
+msgstr "기회를 얻음"
 
 #. module: crm
 #: model:ir.actions.act_window,name:crm.crm_case_section_act_tree
 msgid "Cases by Sales Team"
-msgstr ""
+msgstr "영업팀의 사례"
 
 #. module: crm
 #: view:crm.lead:0
@@ -2682,17 +2796,17 @@ msgstr ""
 #: model:ir.model,name:crm.model_crm_meeting
 #: model:process.node,name:crm.process_node_meeting0
 msgid "Meeting"
-msgstr ""
+msgstr "미팅"
 
 #. module: crm
 #: model:ir.model,name:crm.model_crm_case_categ
 msgid "Category of Case"
-msgstr ""
+msgstr "사례의 분류"
 
 #. module: crm
 #: view:board.board:0
 msgid "Planned Revenue by Stage and User"
-msgstr ""
+msgstr "단계 및 사용자별 예상수익"
 
 #. module: crm
 #: selection:crm.lead,priority:0
@@ -2705,121 +2819,121 @@ msgstr "보통"
 #. module: crm
 #: field:crm.lead,street2:0
 msgid "Street2"
-msgstr ""
+msgstr "건물번호"
 
 #. module: crm
 #: field:sale.config.settings,module_crm_helpdesk:0
 msgid "Manage Helpdesk and Support"
-msgstr ""
+msgstr "헬프데스크 및 지원 관리"
 
 #. module: crm
 #: field:crm.lead.report,delay_open:0
 msgid "Delay to Open"
-msgstr ""
+msgstr "개시까지의 지연일"
 
 #. module: crm
 #: field:crm.lead.report,user_id:0
 #: field:crm.phonecall.report,user_id:0
 msgid "User"
-msgstr ""
+msgstr "사용자"
 
 #. module: crm
 #: selection:crm.lead.report,creation_month:0
 #: selection:crm.lead.report,deadline_month:0
 #: selection:crm.phonecall.report,month:0
 msgid "November"
-msgstr ""
+msgstr "11월"
 
 #. module: crm
 #: view:crm.lead.report:0
 #: model:ir.actions.act_window,name:crm.act_opportunity_stage
 msgid "Opportunities By Stage"
-msgstr ""
+msgstr "단계별 기회"
 
 #. module: crm
 #: selection:crm.lead.report,creation_month:0
 #: selection:crm.lead.report,deadline_month:0
 #: selection:crm.phonecall.report,month:0
 msgid "January"
-msgstr ""
+msgstr "1월"
 
 #. module: crm
 #: model:process.process,name:crm.process_process_contractprocess0
 msgid "Contract"
-msgstr ""
+msgstr "계약"
 
 #. module: crm
 #: model:crm.case.resource.type,name:crm.type_lead4
 msgid "Twitter Ads"
-msgstr ""
+msgstr "트위터 광고"
 
 #. module: crm
 #: field:crm.lead.report,creation_day:0
 msgid "Creation Day"
-msgstr ""
+msgstr "생성일"
 
 #. module: crm
 #: view:crm.lead.report:0
 msgid "Planned Revenues"
-msgstr ""
+msgstr "예상수익"
 
 #. module: crm
 #: help:crm.lead.report,deadline_year:0
 msgid "Expected closing year"
-msgstr ""
+msgstr "예상 마감년도"
 
 #. module: crm
 #: view:crm.lead:0
 msgid "e.g. Call for proposal"
-msgstr ""
+msgstr "예시: 제안을 위한 통화"
 
 #. module: crm
 #: model:ir.model,name:crm.model_crm_case_stage
 msgid "Stage of case"
-msgstr ""
+msgstr "사례의 단계"
 
 #. module: crm
 #: code:addons/crm/crm_lead.py:569
 #, python-format
 msgid "Merged opportunity"
-msgstr ""
+msgstr "병합된 기회"
 
 #. module: crm
 #: view:crm.lead:0
 msgid "Unassigned"
-msgstr ""
+msgstr "할당되지 않음"
 
 #. module: crm
 #: selection:crm.opportunity2phonecall,action:0
 #: selection:crm.phonecall2phonecall,action:0
 msgid "Schedule a call"
-msgstr ""
+msgstr "통화 일정을 생성"
 
 #. module: crm
 #: view:crm.lead:0
 msgid "Categorization"
-msgstr ""
+msgstr "분류화"
 
 #. module: crm
 #: view:crm.phonecall2phonecall:0
 msgid "Log Call"
-msgstr ""
+msgstr "통화 기록"
 
 #. module: crm
 #: help:sale.config.settings,group_fund_raising:0
 msgid "Allows you to trace and manage your activities for fund raising."
-msgstr ""
+msgstr "자금 모금을 위한 활동을 추적 및 관리할 수 있도록 함."
 
 #. module: crm
 #: field:crm.meeting,phonecall_id:0
 #: model:ir.model,name:crm.model_crm_phonecall
 msgid "Phonecall"
-msgstr ""
+msgstr "통화"
 
 #. module: crm
 #: view:crm.phonecall.report:0
 msgid "Phone calls that are assigned to one of the sale teams I manage"
-msgstr ""
+msgstr "내가 관리하는 영업팀에게 할당된 통화"
 
 #. module: crm
 #: view:crm.lead:0
@@ -2833,12 +2947,12 @@ msgstr ""
 #: selection:crm.lead,state:0
 #: view:crm.lead.report:0
 msgid "New"
-msgstr ""
+msgstr "새로 만들기"
 
 #. module: crm
 #: field:crm.lead,function:0
 msgid "Function"
-msgstr ""
+msgstr "함수"
 
 #. module: crm
 #: field:crm.case.section,note:0
@@ -2864,14 +2978,14 @@ msgstr "설명"
 #: field:crm.phonecall2phonecall,section_id:0
 #: field:res.partner,section_id:0
 msgid "Sales Team"
-msgstr ""
+msgstr "영업팀"
 
 #. module: crm
 #: selection:crm.lead.report,creation_month:0
 #: selection:crm.lead.report,deadline_month:0
 #: selection:crm.phonecall.report,month:0
 msgid "May"
-msgstr ""
+msgstr "5월"
 
 #. module: crm
 #: model:ir.actions.act_window,help:crm.crm_case_channel_action
@@ -2889,16 +3003,27 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                새로운 수단을 정의하기 위해 클릭하십시오.\n"
+"              </p><p>\n"
+"                수단을 사용하여 리드와 기회의 근원을 추적하십시오. 수단은\n"
+"                보고서 작성 시 홍보의 노력에 대한 영업성과를\n"
+"                분석하기 위해 대부분 사용됩니다.\n"
+"              </p><p>\n"
+"                수단의 몇 가지 예: 웹 사이트, 통화\n"
+"                캠페인, 소매업체 등.\n"
+"              </p>\n"
+"            "
 
 #. module: crm
 #: view:crm.lead:0
 msgid "Internal Notes"
-msgstr ""
+msgstr "내부 메모"
 
 #. module: crm
 #: view:crm.lead:0
 msgid "New Opportunities"
-msgstr ""
+msgstr "새로운 기회"
 
 #. module: crm
 #: field:crm.segmentation.line,operator:0
@@ -2908,22 +3033,22 @@ msgstr "필수 / 선택"
 #. module: crm
 #: field:crm.lead,street:0
 msgid "Street"
-msgstr ""
+msgstr "도로명"
 
 #. module: crm
 #: field:crm.lead,referred:0
 msgid "Referred By"
-msgstr ""
+msgstr "소개자"
 
 #. module: crm
 #: view:crm.phonecall:0
 msgid "Reset to Todo"
-msgstr ""
+msgstr "과제를 재설정"
 
 #. module: crm
 #: field:crm.case.section,working_hours:0
 msgid "Working Hours"
-msgstr ""
+msgstr "근무시간"
 
 #. module: crm
 #: code:addons/crm/crm_lead.py:968
@@ -2933,31 +3058,31 @@ msgstr ""
 #: field:crm.partner.binding,partner_id:0
 #, python-format
 msgid "Customer"
-msgstr ""
+msgstr "고객"
 
 #. module: crm
 #: selection:crm.lead.report,creation_month:0
 #: selection:crm.lead.report,deadline_month:0
 #: selection:crm.phonecall.report,month:0
 msgid "February"
-msgstr ""
+msgstr "2월"
 
 #. module: crm
 #: view:crm.phonecall:0
 msgid "Schedule a Meeting"
-msgstr ""
+msgstr "미팅 일정 생성"
 
 #. module: crm
 #: model:crm.case.stage,name:crm.stage_lead8
 #: view:crm.lead:0
 msgid "Lost"
-msgstr ""
+msgstr "상실함"
 
 #. module: crm
 #: code:addons/crm/wizard/crm_lead_to_opportunity.py:89
 #, python-format
 msgid "Closed/Cancelled leads cannot be converted into opportunities."
-msgstr ""
+msgstr "마감/취소된 리드는 기회로 전환될 수 없습니다."
 
 #. module: crm
 #: view:crm.lead:0
@@ -2965,7 +3090,7 @@ msgstr ""
 #: view:crm.lead.report:0
 #: field:crm.lead.report,country_id:0
 msgid "Country"
-msgstr ""
+msgstr "국가"
 
 #. module: crm
 #: view:crm.lead:0
@@ -2973,49 +3098,49 @@ msgstr ""
 #: view:crm.lead2opportunity.partner.mass:0
 #: view:crm.phonecall:0
 msgid "Convert to Opportunity"
-msgstr ""
+msgstr "기회로 전환"
 
 #. module: crm
 #: help:crm.phonecall,email_from:0
 msgid "These people will receive email."
-msgstr ""
+msgstr "이 사람들은 이메일을 받을 것입니다."
 
 #. module: crm
 #: selection:crm.lead.report,creation_month:0
 #: selection:crm.lead.report,deadline_month:0
 #: selection:crm.phonecall.report,month:0
 msgid "April"
-msgstr ""
+msgstr "4월"
 
 #. module: crm
 #: field:crm.case.resource.type,name:0
 msgid "Campaign Name"
-msgstr ""
+msgstr "캠페인명"
 
 #. module: crm
 #: view:crm.segmentation:0
 msgid "Profiling"
-msgstr "프로파일링"
+msgstr "정보 수집"
 
 #. module: crm
 #: model:ir.model,name:crm.model_crm_phonecall_report
 msgid "Phone calls by user and section"
-msgstr ""
+msgstr "사용자 및 부서별 통화"
 
 #. module: crm
 #: model:crm.case.stage,name:crm.stage_lead5
 msgid "Negotiation"
-msgstr ""
+msgstr "협상"
 
 #. module: crm
 #: model:ir.model,name:crm.model_crm_phonecall2phonecall
 msgid "Phonecall To Phonecall"
-msgstr ""
+msgstr "통화해야 할 통화"
 
 #. module: crm
 #: field:crm.case.stage,sequence:0
 msgid "Sequence"
-msgstr "시퀀스"
+msgstr "순서"
 
 #. module: crm
 #: field:crm.segmentation.line,expr_name:0
@@ -3025,30 +3150,30 @@ msgstr "변수 컨트롤"
 #. module: crm
 #: model:crm.case.stage,name:crm.stage_lead4
 msgid "Proposition"
-msgstr ""
+msgstr "제안"
 
 #. module: crm
 #: view:crm.phonecall:0
 #: field:res.partner,phonecall_ids:0
 msgid "Phonecalls"
-msgstr ""
+msgstr "통화"
 
 #. module: crm
 #: view:crm.lead.report:0
 #: view:crm.phonecall.report:0
 #: field:crm.phonecall.report,name:0
 msgid "Year"
-msgstr ""
+msgstr "년도"
 
 #. module: crm
 #: model:crm.case.resource.type,name:crm.type_lead8
 msgid "Newsletter"
-msgstr ""
+msgstr "뉴스레터"
 
 #. module: crm
 #: model:mail.message.subtype,name:crm.mt_salesteam_lead_stage
 msgid "Opportunity Stage Changed"
-msgstr ""
+msgstr "기회 단계가 변경됨"
 
 #. module: crm
 #: model:ir.actions.act_window,help:crm.crm_lead_stage_act
@@ -3062,3 +3187,10 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                 리드/기회 진행과정에서 새로운 단계를 설정하기 위해 클릭하십시오.\n"
+"              </p><p>\n"
+"                단계는 영업사원이 특정 리드/기회에 대한 판매 주기 상의\n"
+"                위치를 손쉽게 추적할 수 있도록 합니다.\n"
+"              </p>\n"
+"            "

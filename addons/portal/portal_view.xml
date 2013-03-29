@@ -3,7 +3,7 @@
     <data>
 
         <!-- Top menu item -->
-        <menuitem name="Portal"
+        <menuitem name="Billing and Support"
             id="portal_menu"
             groups="portal.group_portal,portal.group_anonymous"
             sequence="15"/>
@@ -21,7 +21,6 @@
             <field name="params" eval="&quot;{
                 'domain': [
                   ('to_read', '=', True),
-                  ('starred', '=', False),
                 ],
                 'show_compose_message': False,
                 'show_link': False,
@@ -40,6 +39,7 @@
             </field>
         </record>
 
+        <!-- TODO: remove me in 8.0 -->
         <record id="action_mail_star_feeds_portal" model="ir.actions.client">
             <field name="name">To-do</field>
             <field name="tag">mail.wall</field>
@@ -67,6 +67,9 @@
                 </p>
             </field>
         </record>
+        <menuitem name="To-do" id="portal_mail_starfeeds" parent="portal_messages"
+            action="action_mail_star_feeds_portal" sequence="20" groups="base.group_no_one"/>
+        <!-- end -->
 
         <record id="action_mail_archives_feeds_portal" model="ir.actions.client">
             <field name="name">Archives</field>
@@ -84,7 +87,6 @@
                 'show_compose_message': False,
                 'show_link': False,
                 'view_mailbox': True,
-                'read_action': 'read'
             }&quot;"/>
             <field name="help" type="html">
                 <p>
@@ -98,8 +100,6 @@
 
         <menuitem name="Inbox" id="portal_inbox" parent="portal_messages"
             action="action_mail_inbox_feeds_portal" sequence="10" groups="portal.group_portal"/>
-        <menuitem name="To-do" id="portal_mail_starfeeds" parent="portal_messages"
-            action="action_mail_star_feeds_portal" sequence="20" groups="portal.group_portal"/>
         <menuitem name="Archives" id="portal_mail_archivesfeeds" parent="portal_messages"
             action="action_mail_archives_feeds_portal" sequence="30" groups="portal.group_portal"/>
 
@@ -107,7 +107,7 @@
             Create menu items that we'll leave empty for now - they'll be
             filled up by other portal modules.
         -->
-        <menuitem name="Quotations and Sales Orders" id="portal_orders" parent="portal_menu" sequence="20"/>
+        <menuitem name="Billing" id="portal_orders" parent="portal_menu" sequence="20"/>
         <menuitem name="After Sale Services" id="portal_after_sales" parent="portal_menu" sequence="30"/>
         <menuitem name="Projects" id="portal_projects" parent="portal_menu" sequence="40"/>
 

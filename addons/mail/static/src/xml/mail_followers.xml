@@ -31,7 +31,7 @@
         -->
     <div t-name="mail.followers.partner" class='oe_partner'>
         <img class="oe_mail_thumbnail oe_mail_frame" t-attf-src="{record.avatar_url}"/>
-        <a t-attf-href="#model=res.partner&amp;id=#{record.id}"><t t-raw="record.name"/></a>
+        <a t-attf-href="#model=res.partner&amp;id=#{record.id}" t-att-title="record.name"><t t-esc="record.name"/></a>
         <span t-if="widget.view_is_editable" class="oe_remove_follower oe_e" title="Remove this follower" t-att-data-id="record.id">X</span>
     </div>
     

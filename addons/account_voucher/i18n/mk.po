@@ -2,20 +2,20 @@
 # Copyright (c) 2013 Rosetta Contributors and Canonical Ltd 2013
 # This file is distributed under the same license as the openobject-addons package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2013.
-#
+# Sofce Dimitrijeva <sofce@eskon.com.mk>, 2013.
 msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2013-03-07 08:37+0000\n"
-"PO-Revision-Date: 2013-03-13 11:54+0000\n"
-"Last-Translator: Aleksandar Panov <server986@gmail.com>\n"
-"Language-Team: Macedonian <mk@li.org>\n"
+"PO-Revision-Date: 2013-03-28 21:41+0000\n"
+"Last-Translator: Софче Димитријева <Unknown>\n"
+"Language-Team: ESKON-INZENERING\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-03-14 05:34+0000\n"
-"X-Generator: Launchpad (build 16532)\n"
+"X-Launchpad-Export-Date: 2013-03-29 05:07+0000\n"
+"X-Generator: Launchpad (build 16546)\n"
 "Language: mk\n"
 
 #. module: account_voucher
@@ -42,12 +42,12 @@ msgstr "Референтно плаќање"
 #. module: account_voucher
 #: view:account.voucher:0
 msgid "Total Amount"
-msgstr "Целосна Сума"
+msgstr "Вкупен износ"
 
 #. module: account_voucher
 #: view:account.voucher:0
 msgid "Open Customer Journal Entries"
-msgstr "Отвори го внесот на записи на клиенти"
+msgstr "Отвори внесови на Дневникот Купувач"
 
 #. module: account_voucher
 #: view:account.voucher:0
@@ -62,12 +62,12 @@ msgid ""
 "sum of allocation on the voucher lines."
 msgstr ""
 "Пресметано како разлика помеѓу сумата на ваучерот и сумата распределена на "
-"линиите на ваучерот."
+"ставките на ваучерот."
 
 #. module: account_voucher
 #: view:account.voucher:0
 msgid "(Update)"
-msgstr "(Update)"
+msgstr "(Ажурирај)"
 
 #. module: account_voucher
 #: view:account.voucher:0
@@ -79,7 +79,7 @@ msgstr "Плаќање Сметка"
 #: view:account.statement.from.invoice.lines:0
 #: model:ir.actions.act_window,name:account_voucher.action_view_account_statement_from_invoice_lines
 msgid "Import Entries"
-msgstr "Импортирај книжење"
+msgstr "Импортирај внесови"
 
 #. module: account_voucher
 #: view:account.voucher:0
@@ -139,8 +139,8 @@ msgid ""
 "You can not change the journal as you already reconciled some statement "
 "lines!"
 msgstr ""
-"Неможете да извршите промена на записот како што веќе порамнивте некоја од "
-"состојбите!"
+"Не можете да извршите промена на дневникот бидејќи веќе сте порамниле некои "
+"од ставките на изводот!"
 
 #. module: account_voucher
 #: model:mail.message.subtype,description:account_voucher.mt_voucher_state_change
@@ -173,7 +173,7 @@ msgstr ""
 "                Кликни за регистрирање на сметкопотврда. \n"
 "              </p><p>\n"
 "                Со потврдување на сметкопотврдата, може да се прибележи\n"
-"                плаќањето на досатавувачот врз база на сметката.\n"
+"                плаќањето на доставувачот врз база на сметката.\n"
 "              </p>\n"
 "            "
 
@@ -236,7 +236,7 @@ msgstr "Сметкопотврди"
 #. module: account_voucher
 #: field:account.voucher.line,move_line_id:0
 msgid "Journal Item"
-msgstr "Ставка од запис"
+msgstr "Ставка од дневник"
 
 #. module: account_voucher
 #: code:addons/account_voucher/account_voucher.py:508
@@ -336,7 +336,7 @@ msgstr "Коментар за копијата"
 #. module: account_voucher
 #: field:account.voucher.line,account_analytic_id:0
 msgid "Analytic Account"
-msgstr "Аналитичко конто"
+msgstr "Аналитичка сметка"
 
 #. module: account_voucher
 #: help:account.voucher,message_summary:0
@@ -360,7 +360,7 @@ msgstr "Информација за плаќањето"
 #. module: account_voucher
 #: view:account.voucher:0
 msgid "(update)"
-msgstr "(update)"
+msgstr "(ажурирај)"
 
 #. module: account_voucher
 #: view:account.voucher:0
@@ -373,7 +373,7 @@ msgstr "Нацрт"
 #. module: account_voucher
 #: view:account.bank.statement:0
 msgid "Import Invoices"
-msgstr "Импортирај фактури"
+msgstr "Увези фактури"
 
 #. module: account_voucher
 #: view:account.voucher:0
@@ -384,7 +384,7 @@ msgstr "на пр. Фактура SAJ/0042"
 #: code:addons/account_voucher/account_voucher.py:1112
 #, python-format
 msgid "Wrong voucher line"
-msgstr "Погрешна линија на ваучер"
+msgstr "Погрешна ставка на ваучер"
 
 #. module: account_voucher
 #: selection:account.voucher,pay_now:0
@@ -408,13 +408,13 @@ msgid ""
 "to differences between exchange rates."
 msgstr ""
 "Треба да ја конфигурирате сметката за добивка во девизен курс, за автоматско "
-"менаџирање на записите на сметката поврзани со разликите помеѓу девизните "
+"управување со записите на сметката поврзани со разликите помеѓу девизните "
 "курсеви."
 
 #. module: account_voucher
 #: view:account.voucher:0
 msgid "Sales Lines"
-msgstr "Линии за продажба"
+msgstr "Ставки за продажба"
 
 #. module: account_voucher
 #: view:account.voucher:0
@@ -442,7 +442,7 @@ msgstr "Ваучер на добавувачот"
 #. module: account_voucher
 #: field:account.voucher,message_follower_ids:0
 msgid "Followers"
-msgstr "Следбеници"
+msgstr "Пратители"
 
 #. module: account_voucher
 #: selection:account.voucher.line,type:0
@@ -453,7 +453,7 @@ msgstr "Задолжување"
 #: code:addons/account_voucher/account_voucher.py:1547
 #, python-format
 msgid "Unable to change journal !"
-msgstr "Неможе да се промени записникот !"
+msgstr "Не може да се промени дневникот !"
 
 #. module: account_voucher
 #: view:sale.receipt.report:0
@@ -470,13 +470,13 @@ msgstr "Тип"
 #. module: account_voucher
 #: view:sale.receipt.report:0
 msgid "Pro-forma Vouchers"
-msgstr "Про-Факрура Ваучери"
+msgstr "Про-Фактура Ваучери"
 
 #. module: account_voucher
 #: view:account.voucher:0
 #: model:ir.actions.act_window,name:account_voucher.act_journal_voucher_open
 msgid "Voucher Entries"
-msgstr "Внес на ваучери"
+msgstr "Внесови на ваучер"
 
 #. module: account_voucher
 #: model:ir.actions.act_window,help:account_voucher.action_vendor_payment
@@ -500,12 +500,12 @@ msgstr ""
 #. module: account_voucher
 #: view:account.voucher:0
 msgid "Open Supplier Journal Entries"
-msgstr "Отвори го внесот на записи на добавувачи"
+msgstr "Отвори ги внесовите на дневникот на добавувачот"
 
 #. module: account_voucher
 #: model:ir.actions.act_window,name:account_voucher.action_review_voucher_list
 msgid "Vouchers Entries"
-msgstr "Внес на ваучери"
+msgstr "Внесови на ваучери"
 
 #. module: account_voucher
 #: field:account.voucher,name:0
@@ -521,12 +521,13 @@ msgstr "Плати фактура"
 #. module: account_voucher
 #: view:account.voucher:0
 msgid "Are you sure to unreconcile and cancel this record ?"
-msgstr "Сигурно ли сакате да го откажете порамнувањето и записот?"
+msgstr ""
+"Сигурно ли сакате да извршите отпорамнување и да го откажете записот?"
 
 #. module: account_voucher
 #: view:account.voucher:0
 msgid "Sales Receipt"
-msgstr ""
+msgstr "Потврда за продажба"
 
 #. module: account_voucher
 #: field:account.voucher,is_multi_currency:0
@@ -578,7 +579,7 @@ msgstr "Просечно задоцнување"
 #. module: account_voucher
 #: view:account.voucher:0
 msgid "Are you sure you want to unreconcile this record?"
-msgstr ""
+msgstr "Дали сте сигурни дека сакате да од отпорамните овој запис?"
 
 #. module: account_voucher
 #: code:addons/account_voucher/account_voucher.py:1153
@@ -612,12 +613,12 @@ msgid ""
 "            "
 msgstr ""
 "<p class=\"oe_view_nocontent_create\">\n"
-"                Клик за регистрирање на ново плаќање. \n"
+"                Кликнете за регистрирање на ново плаќање. \n"
 "              </p><p>\n"
-"                Внесете го клиентот и начинот на плаќање и тогаш или\n"
+"                Внесете го купувачот и начинот на плаќање и потоа или\n"
 "                рачно внесете го записот за плаќање или OpenERP ќе ви даде "
 "предлог\n"
-"                автоматско порамнување на плаќањето со   \n"
+"                за автоматско порамнување на плаќањето со   \n"
 "                отворената сметка или фактура\n"
 "              </p>\n"
 "            "
@@ -631,7 +632,7 @@ msgstr "Сметка за загуба во девизен курс"
 #. module: account_voucher
 #: view:account.voucher:0
 msgid "Paid Amount"
-msgstr "Платена сума"
+msgstr "Платен износ"
 
 #. module: account_voucher
 #: field:account.voucher,payment_option:0
@@ -661,13 +662,13 @@ msgid ""
 "to differences between exchange rates."
 msgstr ""
 "Треба да ја конфигурирате сметката за загуба во девизен курс, за автоматско "
-"менаџирање на записите на сметката поврзани со разликите помеѓу девизните "
-"курсеви."
+"менаџирање на сметководствените внесови поврзани со разликите помеѓу "
+"девизните курсеви."
 
 #. module: account_voucher
 #: view:account.voucher:0
 msgid "Expense Lines"
-msgstr "Линија за трошоци"
+msgstr "Ставки за трошоци"
 
 #. module: account_voucher
 #: help:account.voucher,is_multi_currency:0
@@ -737,7 +738,7 @@ msgstr "Компанија"
 #. module: account_voucher
 #: help:account.voucher,paid:0
 msgid "The Voucher has been totally paid."
-msgstr "Ваучерот е целосно исплатен."
+msgstr "Ваучерот е целосно платен."
 
 #. module: account_voucher
 #: selection:account.voucher,payment_option:0
@@ -770,7 +771,7 @@ msgstr "Вкупно со данок"
 #. module: account_voucher
 #: view:account.voucher:0
 msgid "Purchase Voucher"
-msgstr "Ваучер за купување"
+msgstr "Ваучер за набавка"
 
 #. module: account_voucher
 #: view:account.voucher:0
@@ -806,7 +807,7 @@ msgid ""
 "Check this box if you are unsure of that journal entry and if you want to "
 "note it as 'to be reviewed' by an accounting expert."
 msgstr ""
-"Штиклирајте доколку не сте сигурни за внесот во записникот и сакате да го "
+"Штиклирајте доколку не сте сигурни за внесот во дневникот и сакате да го "
 "означите како 'да се прегледа' од страна на сметководствен експерт."
 
 #. module: account_voucher
@@ -818,7 +819,7 @@ msgstr "Октомври"
 #: code:addons/account_voucher/account_voucher.py:976
 #, python-format
 msgid "Please activate the sequence of selected journal !"
-msgstr "Ве молиме активирајте го редоследот на одбраниот запис !"
+msgstr "Ве молиме активирајте ја секвенцата на одбраниот дневник !"
 
 #. module: account_voucher
 #: selection:sale.receipt.report,month:0
@@ -844,7 +845,7 @@ msgstr "Потврди за продажба"
 #. module: account_voucher
 #: field:account.voucher,message_is_follower:0
 msgid "Is a Follower"
-msgstr "е следбеник"
+msgstr "Пратител"
 
 #. module: account_voucher
 #: field:account.voucher,analytic_id:0
@@ -909,7 +910,7 @@ msgstr "Јануари"
 #: model:ir.actions.act_window,name:account_voucher.action_voucher_list
 #: model:ir.ui.menu,name:account_voucher.menu_encode_entries_by_voucher
 msgid "Journal Vouchers"
-msgstr "Ваучери за записи"
+msgstr "Ваучери за дневник"
 
 #. module: account_voucher
 #: model:ir.model,name:account_voucher.model_res_company
@@ -930,14 +931,14 @@ msgstr "Активен"
 #: code:addons/account_voucher/account_voucher.py:982
 #, python-format
 msgid "Please define a sequence on the journal."
-msgstr "Ве молиме дефинирајте го редоследот на записите"
+msgstr "Ве молиме дефинирајте ја секвенцата на дневникот."
 
 #. module: account_voucher
 #: model:ir.actions.act_window,name:account_voucher.act_pay_voucher
 #: model:ir.actions.act_window,name:account_voucher.action_vendor_receipt
 #: model:ir.ui.menu,name:account_voucher.menu_action_vendor_receipt
 msgid "Customer Payments"
-msgstr "Плаќања на клиентите"
+msgstr "Плаќања на купувач"
 
 #. module: account_voucher
 #: model:ir.actions.act_window,name:account_voucher.action_sale_receipt_report_all
@@ -949,12 +950,12 @@ msgstr "Анализа на потврдите од продажбите"
 #. module: account_voucher
 #: view:sale.receipt.report:0
 msgid "Group by Invoice Date"
-msgstr "Групирај по дата на фактура"
+msgstr "Групирај по датум на фактура"
 
 #. module: account_voucher
 #: view:account.voucher:0
 msgid "Post"
-msgstr "Испрати"
+msgstr "Објави"
 
 #. module: account_voucher
 #: view:account.voucher:0
@@ -965,12 +966,12 @@ msgstr "Фактури и неподмирени трансакции"
 #: view:sale.receipt.report:0
 #: field:sale.receipt.report,price_total:0
 msgid "Total Without Tax"
-msgstr "Вкупно без данок"
+msgstr "Даночна основа"
 
 #. module: account_voucher
 #: view:account.voucher:0
 msgid "Bill Date"
-msgstr "Дата на сметка"
+msgstr "Датум на сметка"
 
 #. module: account_voucher
 #: view:account.voucher:0
@@ -991,7 +992,7 @@ msgstr "Број"
 #. module: account_voucher
 #: selection:account.voucher.line,type:0
 msgid "Credit"
-msgstr "Кредит"
+msgstr "Побарување"
 
 #. module: account_voucher
 #: model:ir.model,name:account_voucher.model_account_bank_statement
@@ -1028,7 +1029,7 @@ msgstr "Фактура"
 #. module: account_voucher
 #: view:account.voucher:0
 msgid "Voucher Items"
-msgstr "Елементи за ваучерот"
+msgstr "Ставки на ваучерот"
 
 #. module: account_voucher
 #: view:account.statement.from.invoice.lines:0
@@ -1039,7 +1040,7 @@ msgstr "Откажи"
 #. module: account_voucher
 #: model:ir.actions.client,name:account_voucher.action_client_invoice_menu
 msgid "Open Invoicing Menu"
-msgstr "Отвори го менито за фактури"
+msgstr "Отвори го менито Фактурирање"
 
 #. module: account_voucher
 #: selection:account.voucher,state:0
@@ -1052,20 +1053,20 @@ msgstr "Про-фактура"
 #: view:account.voucher:0
 #: field:account.voucher,move_ids:0
 msgid "Journal Items"
-msgstr "Ставки во картица"
+msgstr "Ставки во дневник"
 
 #. module: account_voucher
 #: code:addons/account_voucher/account_voucher.py:508
 #, python-format
 msgid "Please define default credit/debit accounts on the journal \"%s\"."
 msgstr ""
-"Ве молиме дефинирајте стандардна кредитна/дебитна сметка за записот \"%s\"."
+"Ве молиме дефинирајте стандардни сметки побарува/задолжува за записот \"%s\"."
 
 #. module: account_voucher
 #: selection:account.voucher,type:0
 #: selection:sale.receipt.report,type:0
 msgid "Purchase"
-msgstr "Купување"
+msgstr "Набавка"
 
 #. module: account_voucher
 #: view:account.invoice:0
@@ -1116,7 +1117,7 @@ msgstr ""
 #. module: account_voucher
 #: view:account.voucher:0
 msgid "Posted Vouchers"
-msgstr "Испратени ваучери"
+msgstr "Објавени ваучери"
 
 #. module: account_voucher
 #: field:account.voucher,payment_rate:0
@@ -1144,23 +1145,23 @@ msgstr "Мај"
 #: view:sale.receipt.report:0
 #: field:sale.receipt.report,journal_id:0
 msgid "Journal"
-msgstr "Запис"
+msgstr "Дневник"
 
 #. module: account_voucher
 #: view:account.voucher:0
 msgid "Internal Notes"
-msgstr "Внатрешни забелешки"
+msgstr "Внатрешни белешки"
 
 #. module: account_voucher
 #: view:account.voucher:0
 #: field:account.voucher,line_cr_ids:0
 msgid "Credits"
-msgstr "Кредити"
+msgstr "Побарувања"
 
 #. module: account_voucher
 #: field:account.voucher.line,amount_original:0
 msgid "Original Amount"
-msgstr "Оригинална сума"
+msgstr "Оригинален износ"
 
 #. module: account_voucher
 #: view:account.voucher:0
@@ -1191,12 +1192,12 @@ msgstr "Плаќање"
 #: view:sale.receipt.report:0
 #: selection:sale.receipt.report,state:0
 msgid "Posted"
-msgstr "Пратено"
+msgstr "Објавено"
 
 #. module: account_voucher
 #: view:account.voucher:0
 msgid "Customer"
-msgstr "Клиент"
+msgstr "Купувач"
 
 #. module: account_voucher
 #: selection:sale.receipt.report,month:0
@@ -1249,12 +1250,12 @@ msgstr "Стандарден тип"
 #. module: account_voucher
 #: help:account.voucher,message_ids:0
 msgid "Messages and communication history"
-msgstr "Пораки и историја на комуникација"
+msgstr "Историја на пораки и комуникацијата"
 
 #. module: account_voucher
 #: model:ir.model,name:account_voucher.model_account_statement_from_invoice_lines
 msgid "Entries by Statement from Invoices"
-msgstr "Записи по изјава од фактури"
+msgstr "Внесови пд извод од фактури"
 
 #. module: account_voucher
 #: view:account.voucher:0
@@ -1265,25 +1266,25 @@ msgstr "Вкупно"
 #. module: account_voucher
 #: field:account.voucher,move_id:0
 msgid "Account Entry"
-msgstr "Запис на сметка"
+msgstr "Внес на сметка"
 
 #. module: account_voucher
 #: constraint:account.bank.statement.line:0
 msgid ""
 "The amount of the voucher must be the same amount as the one on the "
 "statement line."
-msgstr "Сумата на ваучерот мора да биде иста со сумата во изјавата."
+msgstr "Сумата на ваучерот мора да биде иста со сумата во изводот."
 
 #. module: account_voucher
 #: code:addons/account_voucher/account_voucher.py:879
 #, python-format
 msgid "Cannot delete voucher(s) which are already opened or paid."
-msgstr "Неможете да избришете ваучер(и) кои се веќе отворени или платени."
+msgstr "Не можете да избришете ваучер(и) кои се веќе отворени или платени."
 
 #. module: account_voucher
 #: help:account.voucher,date:0
 msgid "Effective date for accounting entries"
-msgstr "Дата на стапување во сила на сметководствените записи"
+msgstr "Дата на доспевање на сметководствените внесови"
 
 #. module: account_voucher
 #: model:mail.message.subtype,name:account_voucher.mt_voucher_state_change
@@ -1293,14 +1294,14 @@ msgstr "Промена на статус"
 #. module: account_voucher
 #: selection:account.voucher,payment_option:0
 msgid "Keep Open"
-msgstr "Држи отворено"
+msgstr "Остави отворено"
 
 #. module: account_voucher
 #: field:account.voucher,line_ids:0
 #: view:account.voucher.line:0
 #: model:ir.model,name:account_voucher.model_account_voucher_line
 msgid "Voucher Lines"
-msgstr "Линии на ваучер"
+msgstr "Ставки на ваучер"
 
 #. module: account_voucher
 #: view:sale.receipt.report:0
@@ -1311,7 +1312,7 @@ msgstr "Просечно доцнење на наплата"
 #. module: account_voucher
 #: field:account.voucher.line,untax_amount:0
 msgid "Untax Amount"
-msgstr "Обезданочување на сумата"
+msgstr "Неданочен износ"
 
 #. module: account_voucher
 #: model:ir.model,name:account_voucher.model_sale_receipt_report
@@ -1330,7 +1331,7 @@ msgstr "Партнер"
 #. module: account_voucher
 #: field:account.voucher.line,amount_unreconciled:0
 msgid "Open Balance"
-msgstr "Отворено биланс"
+msgstr "Отвори салдо"
 
 #. module: account_voucher
 #: code:addons/account_voucher/account_voucher.py:1014
@@ -1346,9 +1347,9 @@ msgid ""
 "inactive, which allow to hide the customer/supplier payment while the bank "
 "statement isn't confirmed."
 msgstr ""
-"Стандардно, Ваучерите за порамнување правени по нацрт банкарски извештаи се "
-"неактивни, со што се дозволува криење на клиент/добавувач плаќањето додека "
-"не се потврди изјавата на банката."
+"Стандардно, Ваучерите за порамнување направени по нацрт банкарски изводи се "
+"неактивни, со што се дозволува да се сокрие плаќањето на "
+"купувачот/добавувачот додека не се потврди изводот на банката."
 
 #~ msgid "Sale voucher"
 #~ msgstr "Ваучер за продажба"
