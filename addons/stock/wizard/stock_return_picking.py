@@ -19,7 +19,6 @@
 #
 ##############################################################################
 
-from openerp import netsvc
 import time
 
 from openerp.osv import osv,fields

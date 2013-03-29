@@ -25,7 +25,7 @@ from dateutil.relativedelta import relativedelta
 from time import strftime
 import os
 
-from openerp import netsvc, tools
+from openerp import tools
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
 

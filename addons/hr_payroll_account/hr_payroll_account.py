@@ -20,7 +20,6 @@
 #
 ##############################################################################
 import time
-from openerp import netsvc
 from datetime import date, datetime, timedelta
 
 from openerp.osv import fields, osv

@@ -32,7 +32,6 @@ import re
 from openerp.addons.decimal_precision import decimal_precision as dp
 
 from openerp.osv import fields, osv
-from openerp import netsvc
 from openerp.tools.translate import _
 
 _intervalTypes = {
