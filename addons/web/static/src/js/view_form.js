@@ -2812,7 +2812,6 @@ instance.web.form.FieldRadio = instance.web.form.AbstractField.extend(instance.w
         * - "no_radiolabel" don't display text values
         * - "display_readonly" to display radio button (not clickable) in read only mode
         */
-        var self = this;
         this._super(field_manager, node);
         this.horizontal = +this.options.horizontal || false;
         this.no_radiolabel = +this.options.no_radiolabel || false;
@@ -2852,13 +2851,13 @@ instance.web.form.FieldRadio = instance.web.form.AbstractField.extend(instance.w
             if (! _.isEqual(self.domain, domain) || ! _.isEqual(self.context, context)) {
                 self.domain = domain;
                 self.context = context;
-                new instance.web.DataSetSearch(self, self.field.relation, self.context, self.domain)
-                    .read_slice(['name'], {})
+                var ds = new instance.web.DataSet(self, self.field.relation, self.context);
+                ds.call('search', [self.domain])
                     .then(function (records) {
-                        for(var i = 0; i < records.length; i++) {
-                            selection.push([records[i].id, records[i].name]);
-                        }
-                        def.resolve();
+                        ds.name_get(records).then(function (records) {
+                            selection = records;
+                            def.resolve();
+                        });
                     });
             }
         }
