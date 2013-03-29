@@ -330,7 +330,7 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
 
             //we try to send the order. shadow prevents a spinner if it takes too long.
             var rpc = (new instance.web.Model('pos.order')).call('create_from_ui',[[order]],undefined,{shadow: true, timeout: 2000});
-            
+
             rpc.fail(function(unused,event){
                 //prevent an error popup creation by the rpc failure
                 event.preventDefault();
@@ -863,7 +863,7 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
                 lines: orderLines,
                 statement_ids: paymentLines,
                 pos_session_id: this.pos.get('pos_session').id,
-                partner_id: this.pos.get('client') ? this.pos.get('client').id : undefined,
+                partner_id: this.get_client() ? this.get_client().id : false,
                 user_id: this.pos.get('cashier') ? this.pos.get('cashier').id : this.pos.get('user').id,
             };
         },
