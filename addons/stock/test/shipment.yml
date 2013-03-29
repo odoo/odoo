@@ -1,4 +1,9 @@
 -
+  Only stock manager can confirm shipment and picking, so let's check data with giving the access rights of manager
+-
+  !context
+    uid: 'res_users_stock_manager'
+-
   I confirm outgoing shipment of 130 unit 15” LCD Monitor.
 -
   !workflow {model: stock.picking, action: button_confirm, ref: outgoing_shipment}
@@ -91,7 +96,7 @@
   !python {model: stock.picking}: |
     # the cancel is not on the return, but on the incomming shipment (which now has a quantity of 10, thanks to the 
     # backorder). This situation is a little weird as we returned a move that we finally cancelled... As result, only
-    # 30Kg from the original 50Kg will be counted in the stock (50 - 10 (cancelled quantity) - 10 (returned quantity))
+    # 30Unit from the original 50Unit will be counted in the stock (50 - 10 (cancelled quantity) - 10 (returned quantity))
     self.action_cancel(cr, uid, [ref("incomming_shipment")], context=context)
 -
   I make invoice of backorder of incomming shipment.
@@ -119,41 +124,6 @@
     assert product.qty_available == 140, "Stock does not correspond."
     assert product.virtual_available == 0, "Vitual stock does not correspond."
 -
-  I split incomming shipment into lots. each lot contain 10 unit 15” LCD Monitor.
--
-  !python {model: stock.picking}: |
-    shipment = self.browse(cr, uid, ref("incomming_shipment"))
-    move_ids = [x.id for x in shipment.backorder_id.move_lines]
-    context.update({'active_model': 'stock.move', 'active_id': move_ids[0], 'active_ids': move_ids})
--
-  !record {model: stock.move.split, id: split_lot_incomming}:
-    line_ids:
-        - name: incoming_lot0
-          quantity: 10
-        - name: incoming_lot1
-          quantity: 10
-        - name: incoming_lot2
-          quantity: 10
-        - name: incoming_lot3
-          quantity: 10
-        
--
- !python {model: stock.move.split }: |
-    self.split_lot(cr, uid, [ref('split_lot_incomming')], context=context)
--
-  I check move lines after spliting
--
-  !python {model: stock.move}: |
-    lot = self.pool.get('stock.move.split').browse(cr, uid, ref('split_lot_incomming'), context=context)
-    lot_ids = self.pool.get('stock.production.lot').search(cr, uid, [('name','in',[x.name for x in lot.line_ids])])
-    assert len(lot_ids) == 4, 'lots of incomming shipment are not correspond.'
-    move_ids = self.search(cr, uid, [('location_dest_id','=',ref('location_monitor')),('prodlot_id','in',lot_ids)])
-    assert len(move_ids) == 4, 'move lines are not correspond per prodcution lot after splited.'
-    for move in self.browse(cr, uid, move_ids, context=context):
-        assert move.prodlot_id.name in ['incoming_lot0', 'incoming_lot1', 'incoming_lot2', 'incoming_lot3'], "lot does not correspond." 
-        assert move.product_qty == 10, "qty does not correspond per production lot."
-    context.update({'active_model':'stock.move', 'active_id':move_ids[0],'active_ids': move_ids})
--
   I check the stock valuation account entries.
 -
   !python {model: account.move}: |
@@ -170,47 +140,6 @@
             else:
                 assert account_move_line.credit == 0.0, "Credit amount does not correspond."
                 assert account_move_line.debit == 10000.0, "Debit amount does not correspond."
--
-  I consume 1 unit 15” LCD Monitor from each incoming lots into internal production.
--
-  !record {model: stock.move.consume, id: consume_lot_incomming}:
-    product_qty: 1
-    location_id: location_monitor
--
-  !python {model: stock.move.consume}: |
-    self.do_move_consume(cr, uid, [ref('consume_lot_incomming')], context=context)
--
-  I scrap 1 unit 15” LCD Monitor from each incoming lots into scrap location.
--
-  !record {model: stock.move.scrap, id: scrap_lot_incomming}:
-    product_qty: 1
--
-  !python {model: stock.move.scrap}: |
-    self.move_scrap(cr, uid, [ref('scrap_lot_incomming')], context=context)
--
-  I check stock in scrap location and stock location shop0.
--
-  !python {model: stock.location}: |
-    ctx = {'product_id': ref('product_product_6')}
-    monitor_location = self.pool.get('stock.location').browse(cr, uid, ref('location_monitor'), context=ctx)
-    assert monitor_location.stock_real == 132.0, 'stock does not correspond in stock location shop0.'
-    scrapped_location = self.browse(cr, uid, ref('stock_location_scrapped'), context=ctx)
-    assert scrapped_location.stock_real == 1*4, 'scraped stock does not correspond in scrap location.'
-    
--
-  I check availabile stock after consumed and scraped.
--
-  !python {model: product.product}: |
-    product = self.browse(cr, uid, ref('product_product_6'), context=context)
-    assert product.qty_available == 132.0, "Stock does not correspond."
-    assert round(product.virtual_available, 2) == -8.00, "Vitual stock does not correspond."
--
-  I trace all incoming lots.
--
-  !python {model: stock.production.lot }: |
-    lot = self.pool.get('stock.move.split').browse(cr, uid, ref('split_lot_incomming'), context=context)
-    lot_ids = self.search(cr, uid, [('name', 'in', [x.name for x in lot.line_ids])])
-    self.action_traceability(cr, uid, lot_ids, context=context)
 -
   I check outgoing shipment after stock availablity in Chicago shop.
 -
@@ -277,5 +206,5 @@
 -
   !python {model: product.product}: |
     product = self.browse(cr, uid, ref('product_product_6'), context=context)
-    assert round(product.qty_available, 2) == 2, "Stock does not correspond."
-    assert round(product.virtual_available, 2) == -8.00, "Vitual stock does not correspond."
+    assert round(product.qty_available, 2) == 10, "Stock does not correspond."
+   
