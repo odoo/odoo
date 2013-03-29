@@ -185,6 +185,8 @@ def html2plaintext(html, body_id=None, encoding='utf-8'):
             url_index.append(url)
 
     html = ustr(etree.tostring(tree, encoding=encoding))
+    # \r char is converted into &#13;, must remove it
+    html = html.replace('&#13;', '')
 
     html = html.replace('<strong>', '*').replace('</strong>', '*')
     html = html.replace('<b>', '*').replace('</b>', '*')
