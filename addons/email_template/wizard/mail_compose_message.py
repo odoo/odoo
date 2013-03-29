@@ -39,26 +39,8 @@ def _reopen(self, res_id, model):
 class mail_compose_message(osv.TransientModel):
     _inherit = 'mail.compose.message'
 
-    def _get_templates(self, cr, uid, context=None):
-        if context is None:
-            context = {}
-        model = False
-        email_template_obj = self.pool.get('email.template')
-        message_id = context.get('default_parent_id', context.get('message_id', context.get('active_id')))
-
-        if context.get('default_composition_mode') == 'reply' and message_id:
-            message_data = self.pool.get('mail.message').browse(cr, uid, message_id, context=context)
-            if message_data:
-                model = message_data.model
-        else:
-            model = context.get('default_model', context.get('active_model'))
-
-        record_ids = email_template_obj.search(cr, uid, [('model', '=', model)], context=context)
-        return email_template_obj.name_get(cr, uid, record_ids, context) + [(False, '')]
-
     _columns = {
-        # incredible hack of the day: size=-1 means we want an int db column instead of an str one
-        'template_id': fields.selection(_get_templates, 'Template', size=-1),
+        'template_id': fields.many2one('email.template', 'Use template', select=True),
         'partner_to': fields.char('To (Partner IDs)',
             help="Comma-separated list of recipient partners ids (placeholders may be used here)"),
         'email_to': fields.char('To (Emails)',
@@ -114,10 +96,13 @@ class mail_compose_message(osv.TransientModel):
                 'subject': record.subject or False,
                 'body_html': record.body or False,
                 'model_id': model_id or False,
-                'attachment_ids': [(6, 0, [att.id for att in record.attachment_ids])]
+                'attachment_ids': [(6, 0, [att.id for att in record.attachment_ids])],
             }
             template_id = email_template.create(cr, uid, values, context=context)
-            record.write(record.onchange_template_id(template_id, record.composition_mode, record.model, record.res_id)['value'])
+            # generate the saved template
+            template_values = record.onchange_template_id(template_id, record.composition_mode, record.model, record.res_id)['value']
+            template_values['template_id'] = template_id
+            record.write(template_values)
             return _reopen(self, record.id, record.model)
 
     #------------------------------------------------------
