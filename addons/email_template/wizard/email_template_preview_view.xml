@@ -11,6 +11,7 @@
                     <h2 style="color: #7c7bad;">Preview of <field name="name" readonly="1" nolabel="1" class="oe_inline"/></h2>
                     Using sample document  <field name="res_id" on_change="on_change_res_id(res_id, context)" class="oe_inline"/>
                     <group>
+                        <field name="subject" readonly="1"/>
                         <field name="email_from" readonly="1"
                                 attrs="{'invisible':[('email_from','=',False)]}"/>
                         <field name="email_to" readonly="1"/>
@@ -19,9 +20,9 @@
                                 attrs="{'invisible':[('email_cc','=',False)]}"/>
                         <field name="reply_to" readonly="1"
                                 attrs="{'invisible':[('reply_to','=',False)]}"/>
-                        <field name="subject" readonly="1"/>
-                        <field name="body_html" widget="html" readonly="1" options='{"safe": True}'/>
                     </group>
+                    <field name="body_html" widget="html" readonly="1"
+                            nolabel="1" options='{"safe": True}'/>
                 </form>
             </field>
         </record>
