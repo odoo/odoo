@@ -19,11 +19,10 @@
 #
 ##############################################################################
 
-from . import test_mail_message, test_mail_features, test_mail_gateway, test_message_read, test_invite, test_mail_alias
+from . import test_mail_message, test_mail_features, test_mail_gateway, test_message_read, test_invite
 
 checks = [
     test_mail_message,
-    test_mail_alias,
     test_mail_features,
     test_mail_gateway,
     test_message_read,
