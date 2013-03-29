@@ -2819,6 +2819,7 @@ instance.web.form.FieldRadio = instance.web.form.AbstractField.extend(instance.w
         this.display_readonly = +this.options.display_readonly || false;
         this.selection = this.field.selection || [];
         this.domain = false;
+        this.context = false;
     },
     initialize_content: function () {
         var self = this;
@@ -2847,9 +2848,11 @@ instance.web.form.FieldRadio = instance.web.form.AbstractField.extend(instance.w
         var def = $.Deferred();
         if (self.field.type == "many2one") {
             var domain = instance.web.pyeval.eval('domain', this.build_domain()) || [];
-            if (! _.isEqual(self.domain, domain)) {
+            var context = instance.web.pyeval.eval('context', this.build_context()) || [];
+            if (! _.isEqual(self.domain, domain) || ! _.isEqual(self.context, context)) {
                 self.domain = domain;
-                new instance.web.DataSetSearch(self, self.field.relation, self.build_context(), self.domain)
+                self.context = context;
+                new instance.web.DataSetSearch(self, self.field.relation, self.context, self.domain)
                     .read_slice(['name'], {})
                     .then(function (records) {
                         for(var i = 0; i < records.length; i++) {
