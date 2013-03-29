@@ -402,9 +402,10 @@ class survey_question_wiz(osv.osv_memory):
                     sur_response_obj.write(cr, uid, [sur_name_read.response], {'state' : 'done'})
 
                     # mark the survey request as done; call 'survey_req_done' on its actual model
-                    survey_req_obj = self.pool.get(context.get('active_model'))
-                    if survey_req_obj and hasattr(survey_req_obj, 'survey_req_done'): 
-                        survey_req_obj.survey_req_done(cr, uid, context.get('active_ids', []), context=context)
+                    if context.get('active_model') in self.pool:
+                        survey_req_obj = self.pool[context.get('active_model')]
+                        if hasattr(survey_req_obj, 'survey_req_done'): 
+                            survey_req_obj.survey_req_done(cr, uid, context.get('active_ids', []), context=context)
 
                     if sur_rec.send_response:
                         survey_data = survey_obj.browse(cr, uid, survey_id)
@@ -609,10 +610,10 @@ class survey_question_wiz(osv.osv_memory):
             survey_obj.write(cr, uid, survey_id,  {'tot_start_survey' : sur_rec['tot_start_survey'] + 1})
             if context.has_key('cur_id'):
                 if context.has_key('request') and context.get('request',False):
-                    self.pool.get(context.get('object',False)).write(cr, uid, [int(context.get('cur_id',False))], {'response' : response_id})
-                    self.pool.get(context.get('object',False)).survey_req_done(cr, uid, [int(context.get('cur_id'))], context)
+                    self.pool[context.get('object')].write(cr, uid, [int(context.get('cur_id',False))], {'response' : response_id})
+                    self.pool[context.get('object')].survey_req_done(cr, uid, [int(context.get('cur_id'))], context)
                 else:
-                    self.pool.get(context.get('object',False)).write(cr, uid, [int(context.get('cur_id',False))], {'response' : response_id})        
+                    self.pool[context.get('object')].write(cr, uid, [int(context.get('cur_id',False))], {'response' : response_id})        
         if sur_name_read['store_ans'] and type(safe_eval(sur_name_read['store_ans'])) == dict:
             sur_name_read['store_ans'] = safe_eval(sur_name_read['store_ans'])
             for key,val in sur_name_read['store_ans'].items():

@@ -115,7 +115,7 @@ class subscription_subscription(osv.osv):
             try:
                 (model_name, id) = row['doc_source'].split(',')
                 id = int(id)
-                model = self.pool.get(model_name)
+                model = self.pool[model_name]
             except:
                 raise osv.except_osv(_('Wrong Source Document !'), _('Please provide another source document.\nThis one does not exist !'))
 
@@ -136,7 +136,7 @@ class subscription_subscription(osv.osv):
             # the subscription is over and we mark it as being done
             if remaining == 1:
                 state = 'done'
-            id = self.pool.get(model_name).copy(cr, uid, id, default, context)
+            id = self.pool[model_name].copy(cr, uid, id, default, context)
             self.pool.get('subscription.subscription.history').create(cr, uid, {'subscription_id': row['id'], 'date':time.strftime('%Y-%m-%d %H:%M:%S'), 'document_id': model_name+','+str(id)})
             self.write(cr, uid, [row['id']], {'state':state})
         return True

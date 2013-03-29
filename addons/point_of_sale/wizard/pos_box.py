@@ -16,7 +16,7 @@ class PosBox(CashBox):
         active_ids = context.get('active_ids', []) or []
 
         if active_model == 'pos.session':
-            records = self.pool.get(active_model).browse(cr, uid, active_ids, context=context)
+            records = self.pool[active_model].browse(cr, uid, active_ids, context=context)
             bank_statements = [record.cash_register_id for record in records if record.cash_register_id]
 
             if not bank_statements:
@@ -41,7 +41,7 @@ class PosBoxIn(PosBox):
         active_ids = context.get('active_ids', []) or []
 
         if active_model == 'pos.session':
-            session = self.pool.get(active_model).browse(cr, uid, active_ids, context=context)[0]
+            session = self.pool[active_model].browse(cr, uid, active_ids, context=context)[0]
             values['ref'] = session.name
 
         return values
@@ -57,7 +57,7 @@ class PosBoxOut(PosBox):
         active_ids = context.get('active_ids', []) or []
 
         if active_model == 'pos.session':
-            session = self.pool.get(active_model).browse(cr, uid, active_ids, context=context)[0]
+            session = self.pool[active_model].browse(cr, uid, active_ids, context=context)[0]
             values['ref'] = session.name
 
         return values

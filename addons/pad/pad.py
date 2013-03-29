@@ -42,7 +42,7 @@ class pad_common(osv.osv_memory):
             myPad.createPad(path)
 
             #get attr on the field model
-            model = self.pool.get(context["model"])
+            model = self.pool[context["model"]]
             field = model._all_columns[context['field_name']]
             real_field = field.column.pad_content_field
 

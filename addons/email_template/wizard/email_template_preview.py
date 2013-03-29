@@ -40,7 +40,7 @@ class email_template_preview(osv.osv_memory):
         email_template = self.pool.get('email.template')
         template = email_template.browse(cr, uid, int(template_id), context=context)
         template_object = template.model_id
-        model =  self.pool.get(template_object.model)
+        model =  self.pool[template_object.model]
         record_ids = model.search(cr, uid, [], 0, 10, 'id', context=context)
         default_id = context.get('default_res_id')
 
