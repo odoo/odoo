@@ -25,8 +25,9 @@ from lxml import etree
 import os
 from time import strftime
 
-from openerp import addons, netsvc, tools
+from openerp import addons, tools
 from openerp.osv import fields, osv
+import openerp.report
 from openerp.tools import to_xml
 from openerp.tools.translate import _
 from openerp.tools.safe_eval import safe_eval
@@ -463,8 +464,7 @@ class survey_question_wiz(osv.osv_memory):
             return (False, Exception('Report name and Resources ids are required !!!'))
         try:
             uid = 1
-            service = netsvc.LocalService(report_name);
-            (result, format) = service.create(cr, uid, res_ids, {}, context)
+            result, format = openerp.report.render_report(cr, uid, res_ids, report_name[len('report.'):], {}, context)
             ret_file_name = addons.get_module_resource('survey', 'report') + file_name + '.pdf'
             fp = open(ret_file_name, 'wb+');
             fp.write(result);

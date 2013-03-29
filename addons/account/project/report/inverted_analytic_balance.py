@@ -21,7 +21,6 @@
 
 import time
 
-from openerp import pooler
 from openerp.report import report_sxw
 
 class account_inverted_analytic_balance(report_sxw.rml_parse):

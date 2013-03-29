@@ -36,8 +36,7 @@
   I print a report of the expenses.
 - 
   !python {model: hr.expense.expense}: |
-    import os
-    from openerp import netsvc, tools
-    (data, format) = netsvc.LocalService('report.hr.expense').create(cr, uid, [ref('hr_expense.sep_expenses')], {}, {})
-    if tools.config['test_report_directory']:
-        file(os.path.join(tools.config['test_report_directory'], 'hr_expense-report.'+format), 'wb+').write(data)
+    data, format = self.print_report(cr, uid, [ref('hr_expense.sep_expenses')], 'hr.expense', {}, {})
+    if openerp.tools.config['test_report_directory']:
+        import os
+        file(os.path.join(openerp.tools.config['test_report_directory'], 'hr_expense-report.'+format), 'wb+').write(data)
