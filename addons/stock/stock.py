@@ -1426,7 +1426,7 @@ class stock_production_lot(osv.osv):
             ids = [ids]
 
         res = {}.fromkeys(ids, 0.0)
-        if locations:
+        if locations and ids:
             cr.execute('''select
                     prodlot_id,
                     sum(qty)
