@@ -201,7 +201,7 @@ class document(object):
                         args = []
                     # get the object
                     if 'model' in attrs:
-                        obj = self.pool.get(attrs['model'])
+                        obj = self.pool[attrs['model']]
                     else:
                         if isinstance(browser, list):
                             obj = browser[0]._table

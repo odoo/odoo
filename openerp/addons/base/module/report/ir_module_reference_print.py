@@ -34,7 +34,7 @@ class ir_module_reference_print(report_sxw.rml_parse):
             'findflds': self._fields_find,
         })
     def _object_doc(self, obj):
-        modobj = self.pool.get(obj)
+        modobj = self.pool[obj]
         strdocs= modobj.__doc__
         if not strdocs:
             return None
@@ -48,7 +48,7 @@ class ir_module_reference_print(report_sxw.rml_parse):
         return res
 
     def _object_doc2(self, obj):
-        modobj = self.pool.get(obj)
+        modobj = self.pool[obj]
         strdocs= modobj.__doc__
         if not strdocs:
             return None
@@ -72,7 +72,7 @@ class ir_module_reference_print(report_sxw.rml_parse):
         return modobj.browse(self.cr, self.uid, ids)
 
     def _fields_find(self, obj):
-        modobj = self.pool.get(obj)
+        modobj = self.pool[obj]
         res = modobj.fields_get(self.cr, self.uid).items()
         res.sort()
         return res
