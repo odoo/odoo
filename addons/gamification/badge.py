@@ -368,7 +368,7 @@ class grant_badge_wizard(osv.TransientModel):
     _name = 'gamification.badge.user.wizard'
     _columns = {
         'user_id': fields.many2one("res.users", string='User', required=True),
-        'badge_id': fields.many2one("gamification.badge", string='Badge'),
+        'badge_id': fields.many2one("gamification.badge", string='Badge',  required=True),
         'comment': fields.text('Comment'),
     }
 

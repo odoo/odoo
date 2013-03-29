@@ -43,7 +43,8 @@
             target="new"
             res_model="gamification.badge.user.wizard"
             context="{'default_badge_id': active_id, 'badge_id': active_id}"
-            view_type="form" view_mode="form"/>
+            view_type="form" view_mode="form"
+            view_id="gamification.view_badge_wizard_grant" />
 
         <record id="badge_list_view" model="ir.ui.view">
             <field name="name">Badge List</field>
@@ -65,7 +66,7 @@
             <field name="arch" type="xml">
                 <form string="Badge" version="7.0">
                     <header>
-                        <button string="Send this Badge" type="action" name="%(action_grant_wizard)d" class="oe_highlight" attrs="{'invisible': [
+                        <button string="Grant this Badge" type="action" name="%(action_grant_wizard)d" class="oe_highlight" attrs="{'invisible': [
                             '|',
                                 ('rule_auth', '=', 'nobody'),
                                 '&amp;',
