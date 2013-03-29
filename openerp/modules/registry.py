@@ -94,12 +94,20 @@ class Registry(object):
         self.models[model_name] = model
 
     def get(self, model_name):
-        """ Return a model for a given name or None if it doesn't exist."""
+        """ Return the model with the given name or None if it doesn't exist."""
         return self.models.get(model_name)
 
     def __getitem__(self, model_name):
-        """ Return a model for a given name or raise KeyError if it doesn't exist."""
+        """ Return the model with the given name or raise KeyError if it doesn't exist."""
         return self.models[model_name]
+
+    def __contains__(self, model_name):
+        """ Test whether the model with the given name exists. """
+        return model_name in self.models
+
+    def __iter__(self):
+        """ Return an iterator over all model names. """
+        return iter(self.models)
 
     def load(self, cr, module):
         """ Load a given module in the registry.
