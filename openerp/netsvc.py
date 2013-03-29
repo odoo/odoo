@@ -21,37 +21,47 @@
 ##############################################################################
 
 
-import errno
 import logging
 import logging.handlers
 import os
-import platform
 import release
 import sys
 import threading
 import time
 import types
 from pprint import pformat
+import psutil
 
-try:
-    import psutil
-except ImportError:
-    psutil = None
-
-# TODO modules that import netsvc only for things from loglevels must be changed to use loglevels.
-from loglevels import *
 import tools
 import openerp
 
 _logger = logging.getLogger(__name__)
 
 def LocalService(name):
-    # Special case for addons support, will be removed in a few days when addons
-    # are updated to directly use openerp.osv.osv.service.
+    """
+    The openerp.netsvc.LocalService() function is deprecated. It still works
+    in two cases: workflows and reports. For workflows, instead of using
+    LocalService('workflow'), openerp.workflow should be used (better yet,
+    methods on openerp.osv.orm.Model should be used). For reports,
+    openerp.report.render_report() should be used (methods on the Model should
+    be provided too in the future).
+    """
+    assert openerp.conf.deprecation.allow_local_service
+    _logger.warning("LocalService() is deprecated since march 2013 (it was called with '%s')." % name)
+
     if name == 'workflow':
         return openerp.workflow
 
-    return openerp.report.interface.report_int._reports[name]
+    if name.startswith('report.'):
+        report = openerp.report.interface.report_int._reports.get(name)
+        if report:
+            return report
+        else:
+            dbname = getattr(threading.currentThread(), 'dbname', None)
+            if dbname:
+                registry = openerp.modules.registry.RegistryManager.get(dbname)
+                with registry.cursor() as cr:
+                    return registry['ir.actions.report.xml']._lookup_report(cr, name[len('report.'):])
 
 BLACK, RED, GREEN, YELLOW, BLUE, MAGENTA, CYAN, WHITE, _NOTHING, DEFAULT = range(10)
 #The background is set with 40 plus the number of the color, and the foreground with 30
@@ -63,7 +73,6 @@ COLOR_PATTERN = "%s%s%%s%s" % (COLOR_SEQ, COLOR_SEQ, RESET_SEQ)
 LEVEL_COLOR_MAPPING = {
     logging.DEBUG: (BLUE, DEFAULT),
     logging.INFO: (GREEN, DEFAULT),
-    logging.TEST: (WHITE, BLUE),
     logging.WARNING: (YELLOW, DEFAULT),
     logging.ERROR: (RED, DEFAULT),
     logging.CRITICAL: (WHITE, RED),
@@ -130,38 +139,12 @@ def init_logger():
     handler.setFormatter(formatter)
 
     # Configure handlers
-    default_config = [
-        'openerp.netsvc.rpc.request:INFO',
-        'openerp.netsvc.rpc.response:INFO',
-        'openerp.addons.web.http:INFO',
-        'openerp.sql_db:INFO',
-        ':INFO',
-    ]
-
-    if tools.config['log_level'] == 'info':
-        pseudo_config = []
-    elif tools.config['log_level'] == 'debug_rpc':
-        pseudo_config = ['openerp:DEBUG','openerp.netsvc.rpc.request:DEBUG']
-    elif tools.config['log_level'] == 'debug_rpc_answer':
-        pseudo_config = ['openerp:DEBUG','openerp.netsvc.rpc.request:DEBUG', 'openerp.netsvc.rpc.response:DEBUG']
-    elif tools.config['log_level'] == 'debug':
-        pseudo_config = ['openerp:DEBUG']
-    elif tools.config['log_level'] == 'test':
-        pseudo_config = ['openerp:TEST']
-    elif tools.config['log_level'] == 'warn':
-        pseudo_config = ['openerp:WARNING']
-    elif tools.config['log_level'] == 'error':
-        pseudo_config = ['openerp:ERROR']
-    elif tools.config['log_level'] == 'critical':
-        pseudo_config = ['openerp:CRITICAL']
-    elif tools.config['log_level'] == 'debug_sql':
-        pseudo_config = ['openerp.sql_db:DEBUG']
-    else:
-        pseudo_config = []
+    pseudo_config = PSEUDOCONFIG_MAPPER.get(tools.config['log_level'], [])
 
     logconfig = tools.config['log_handler']
 
-    for logconfig_item in default_config + pseudo_config + logconfig:
+    logging_configurations = DEFAULT_LOG_CONFIGURATION + pseudo_config + logconfig
+    for logconfig_item in logging_configurations:
         loggername, level = logconfig_item.split(':')
         level = getattr(logging, level, logging.INFO)
         logger = logging.getLogger(loggername)
@@ -171,8 +154,27 @@ def init_logger():
         if loggername != '':
             logger.propagate = False
 
-    for logconfig_item in default_config + pseudo_config + logconfig:
+    for logconfig_item in logging_configurations:
         _logger.debug('logger level set: "%s"', logconfig_item)
+
+DEFAULT_LOG_CONFIGURATION = [
+    'openerp.workflow.workitem:WARNING',
+    'openerp.netsvc.rpc.request:INFO',
+    'openerp.netsvc.rpc.response:INFO',
+    'openerp.addons.web.http:INFO',
+    'openerp.sql_db:INFO',
+    ':INFO',
+]
+PSEUDOCONFIG_MAPPER = {
+    'debug_rpc_answer': ['openerp:DEBUG','openerp.netsvc.rpc.request:DEBUG', 'openerp.netsvc.rpc.response:DEBUG'],
+    'debug_rpc': ['openerp:DEBUG','openerp.netsvc.rpc.request:DEBUG'],
+    'debug': ['openerp:DEBUG'],
+    'debug_sql': ['openerp.sql_db:DEBUG'],
+    'info': [],
+    'warn': ['openerp:WARNING'],
+    'error': ['openerp:ERROR'],
+    'critical': ['openerp:CRITICAL'],
+}
 
 # A alternative logging scheme for automated runs of the
 # server intended to test it.
@@ -216,8 +218,7 @@ def dispatch_rpc(service_name, method, params):
         if rpc_request_flag or rpc_response_flag:
             start_time = time.time()
             start_rss, start_vms = 0, 0
-            if psutil:
-                start_rss, start_vms = psutil.Process(os.getpid()).get_memory_info()
+            start_rss, start_vms = psutil.Process(os.getpid()).get_memory_info()
             if rpc_request and rpc_response_flag:
                 log(rpc_request,logging.DEBUG,'%s.%s'%(service_name,method), replace_request_password(params))
 
@@ -238,8 +239,7 @@ def dispatch_rpc(service_name, method, params):
         if rpc_request_flag or rpc_response_flag:
             end_time = time.time()
             end_rss, end_vms = 0, 0
-            if psutil:
-                end_rss, end_vms = psutil.Process(os.getpid()).get_memory_info()
+            end_rss, end_vms = psutil.Process(os.getpid()).get_memory_info()
             logline = '%s.%s time:%.3fs mem: %sk -> %sk (diff: %sk)' % (service_name, method, end_time - start_time, start_vms / 1024, end_vms / 1024, (end_vms - start_vms)/1024)
             if rpc_response_flag:
                 log(rpc_response,logging.DEBUG, logline, result)
