@@ -95,6 +95,7 @@ class survey(osv.osv):
         'date_close': fields.datetime('Survey Close Date', readonly=1),
         'max_response_limit': fields.integer('Maximum Answer Limit', help="Set to one if survey is answerable only once"),
         'state': fields.selection([('draft', 'Draft'), ('open', 'Open'), ('close', 'Close'), ('cancel', 'Cancelled')], 'Status', required=1),
+        'visible_to_user': fields.boolean('Visible in the survey menu', help="If checked, survey users can see this survey in the kanban view."),
         'authenticate': fields.boolean('A login is required', help="If checked, users who click on the public web link will be redirected to a login page where they must provide a login name and password. If unchecked, they may complete the survey directly."),
         'tot_start_survey': fields.function(_get_tot_start_survey, string="Total Started Survey", type="integer"),
         'tot_comp_survey': fields.function(_get_tot_comp_survey, string="Total Completed Survey", type="integer"),
@@ -107,6 +108,7 @@ class survey(osv.osv):
     }
     _defaults = {
         'state': "draft",
+        'visible_to_user': True,
         'authenticate': True,
         'date_open': fields.datetime.now,
         'token': lambda s, cr, uid, c: uuid.uuid4(),

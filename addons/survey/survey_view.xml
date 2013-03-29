@@ -153,6 +153,7 @@
                         <group colspan="4">
                             <field name="type" attrs="{'readonly':[('state','in',['close','cancel'])]}" class="oe_inline"/>
                             <field name="max_response_limit" attrs="{'readonly':[('state','=','close')]}"/>
+                            <field name="visible_to_user"/>
                             <field name="public_url" widget="url"/>
                             <div name="authenticate" colspan="4">
                                 <small>
@@ -234,7 +235,7 @@
                     <templates>
                         <t t-name="kanban-box">
                             <div t-attf-class="oe_kanban_color_#{kanban_getcolor(record.color.raw_value)} oe_kanban_card oe_kanban_survey oe_kanban_global_click">
-                                <div class="oe_dropdown_toggle oe_dropdown_kanban">
+                                <div class="oe_dropdown_toggle oe_dropdown_kanban" t-if="widget.view.is_action_enabled('edit')">
                                     <span class="oe_e">i</span>
                                     <ul class="oe_dropdown_menu">
                                         <t t-if="widget.view.is_action_enabled('edit')"><li><a type="edit">Survey Settings...</a></li></t>
@@ -245,7 +246,7 @@
                                 <div class="oe_kanban_content">
                                     <h3 class="oe_kanban_ellipsis"><t t-esc="record.title.raw_value.toString()"></t></h3>
                                     <div>
-                                        <span class="oe_kanban_right">
+                                        <span class="oe_kanban_right" t-if="widget.view.is_action_enabled('edit')">
                                             <a t-if="record.state.raw_value === 'draft'" title="Draft" class="oe_kanban_status"> </a>
                                             <a t-if="record.state.raw_value === 'open' and record.authenticate.raw_value" title="Open for authentified people" class="oe_kanban_status_green"> </a>
                                             <a t-if="record.state.raw_value === 'open' and !record.authenticate.raw_value" title="Open to everyone" class="oe_kanban_status_green"> </a>
