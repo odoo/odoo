@@ -22,15 +22,17 @@
 
 import time
 
-from openerp import pooler, tools
+import openerp
+from openerp import tools
 from openerp.report import report_sxw
 from openerp.report.interface import report_rml
 from openerp.tools import to_xml
 
 class survey_analysis(report_rml):
     def create(self, cr, uid, ids, datas, context):
-        surv_obj = pooler.get_pool(cr.dbname).get('survey')
-        user_obj = pooler.get_pool(cr.dbname).get('res.users')
+        registry = openerp.registry(cr.dbname)
+        surv_obj = registry['survey']
+        user_obj = registry['res.users']
         rml_obj=report_sxw.rml_parse(cr, uid, surv_obj._name,context)
         company=user_obj.browse(cr,uid,[uid],context)[0].company_id
 

@@ -38,9 +38,8 @@ import tempfile
 import time
 import logging
 
-from openerp import netsvc
-from openerp import pooler
 from report_helper import WebKitHelper
+import openerp
 from openerp.report.report_sxw import *
 from openerp import addons
 from openerp import tools
@@ -117,16 +116,16 @@ class WebKitParser(report_sxw):
     """Custom class that use webkit to render HTML reports
        Code partially taken from report openoffice. Thanks guys :)
     """
-    def __init__(self, name, table, rml=False, parser=False,
-        header=True, store=False):
+    def __init__(self, name, table, rml=False, parser=rml_parse,
+        header=True, store=False, register=True):
         self.parser_instance = False
         self.localcontext = {}
         report_sxw.__init__(self, name, table, rml, parser,
-            header, store)
+            header, store, register=register)
 
     def get_lib(self, cursor, uid):
         """Return the lib wkhtml path"""
-        proxy = self.pool.get('ir.config_parameter')
+        proxy = self.pool['ir.config_parameter']
         webkit_path = proxy.get_param(cursor, uid, 'webkit_path')
 
         if not webkit_path:
@@ -242,7 +241,7 @@ class WebKitParser(report_sxw):
 
     def translate_call(self, src):
         """Translate String."""
-        ir_translation = self.pool.get('ir.translation')
+        ir_translation = self.pool['ir.translation']
         res = ir_translation._get_source(self.parser_instance.cr, self.parser_instance.uid,
                                          None, 'report', self.parser_instance.localcontext.get('lang', 'en_US'), src)
         if not res :
@@ -255,13 +254,12 @@ class WebKitParser(report_sxw):
 
         # just try to find an xml id for the report
         cr = cursor
-        import openerp.pooler as pooler
-        pool = pooler.get_pool(cr.dbname)
-        found_xml_ids = pool.get("ir.model.data").search(cr, uid, [["model", "=", "ir.actions.report.xml"], \
+        pool = openerp.registry(cr.dbname)
+        found_xml_ids = pool["ir.model.data"].search(cr, uid, [["model", "=", "ir.actions.report.xml"], \
             ["res_id", "=", report_xml.id]], context=context)
         xml_id = None
         if found_xml_ids:
-            xml_id = pool.get("ir.model.data").read(cr, uid, found_xml_ids[0], ["module", "name"])
+            xml_id = pool["ir.model.data"].read(cr, uid, found_xml_ids[0], ["module", "name"])
             xml_id = "%s.%s" % (xml_id["module"], xml_id["name"])
 
         if context is None:
@@ -275,7 +273,7 @@ class WebKitParser(report_sxw):
                                            self.name2,
                                            context=context)
 
-        self.pool = pooler.get_pool(cursor.dbname)
+        self.pool = pool
         objs = self.getObjects(cursor, uid, ids, context)
         self.parser_instance.set_context(objs, data, ids, report_xml.report_type)
 
@@ -367,8 +365,8 @@ class WebKitParser(report_sxw):
     def create(self, cursor, uid, ids, data, context=None):
         """We override the create function in order to handle generator
            Code taken from report openoffice. Thanks guys :) """
-        pool = pooler.get_pool(cursor.dbname)
-        ir_obj = pool.get('ir.actions.report.xml')
+        pool = openerp.registry(cursor.dbname)
+        ir_obj = pool['ir.actions.report.xml']
         report_xml_ids = ir_obj.search(cursor, uid,
                 [('report_name', '=', self.name[7:])], context=context)
         if report_xml_ids:
