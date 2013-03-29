@@ -528,7 +528,7 @@ class mail_thread(osv.AbstractModel):
                 return routes
 
         # 3. Fallback to the provided parameters, if they work
-        model_pool = self.pool[model]
+        model_pool = self.pool.get(model)
         if not thread_id:
             # Legacy: fallback to matching [ID] in the Subject
             match = tools.res_re.search(decode_header(message, 'Subject'))
