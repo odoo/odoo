@@ -2814,21 +2814,60 @@ instance.web.form.FieldRadio = instance.web.form.AbstractField.extend(instance.w
         */
         var self = this;
         this._super(field_manager, node);
-        this.horizontal = +this.options.horizontal;
-        this.no_radiolabel = +this.options.no_radiolabel;
-        this.display_readonly = +this.options.display_readonly;
+        this.horizontal = +this.options.horizontal || false;
+        this.no_radiolabel = +this.options.no_radiolabel || false;
+        this.display_readonly = +this.options.display_readonly || false;
+        this.selection = this.field.selection || [];
+        this.domain = false;
     },
     initialize_content: function () {
         var self = this;
-        this.$el.on('click', '.oe_radio_input,.oe_radio_header', function (event) {
-            var id = $(event.target).data("id");
-            id = isNaN(+id) ? id : +id;
-            if (id && !self.get("effective_readonly")) {
-                if (!self.field.required && id == self.get_value()) {
-                    self.set_value(false);
-                } else {
-                    self.set_value(id);
-                }
+        this.$el.on('click', '.oe_radio_input,.oe_radio_header', function (e) {self.on_click_change_value(e)});
+        this.field_manager.on("view_content_has_changed", this, this.get_selection);
+    },
+    on_click_change_value: function (event) {
+        var id = $(event.target).data("id") || $(event.target).parent().data("id");
+        id = isNaN(+id) ? id : +id;
+        if (id && !this.get("effective_readonly")) {
+            if (!this.field.required && id == this.get_value()) {
+                this.set_value(false);
+            } else {
+                this.set_value(id);
+            }
+        }
+    },
+    /** Get the selection and render it
+     *  selection: [[identifier, value_to_display], ...]
+     *  For selection fields: this is directly given by this.field.selection
+     *  For many2one fields:  perform a search on the relation of the many2one field
+     */
+    get_selection: function() {
+        var self = this;
+        var selection = [];
+        var def = $.Deferred();
+        if (self.field.type == "many2one") {
+            var domain = instance.web.pyeval.eval('domain', this.build_domain()) || [];
+            if (! _.isEqual(self.domain, domain)) {
+                self.domain = domain;
+                new instance.web.DataSetSearch(self, self.field.relation, self.build_context(), self.domain)
+                    .read_slice(['name'], {})
+                    .then(function (records) {
+                        for(var i = 0; i < records.length; i++) {
+                            selection.push([records[i].id, records[i].name]);
+                        }
+                        def.resolve();
+                    });
+            }
+        }
+        else if (self.field.type == "selection") {
+            selection = self.field.selection || [];
+            def.resolve();
+        }
+        def.then(function () {
+            if (! _.isEqual(selection, self.get('selection'))) {
+                self.selection = selection;
+                self.$el.html($(QWeb.render("FieldRadio", {'widget': self})).html());
+                self.set("selection", _.clone(this.selection));
             }
         });
     },
