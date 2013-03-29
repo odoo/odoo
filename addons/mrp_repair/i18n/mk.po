@@ -3,18 +3,19 @@
 # This file is distributed under the same license as the openobject-addons package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2013.
 # Ivica Dimitrijev <palifra@gmail.com>, 2013.
+# Sofce Dimitrijeva <sofce@eskon.com.mk>, 2013.
 msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2013-03-07 08:38+0000\n"
-"PO-Revision-Date: 2013-02-28 20:04+0000\n"
-"Last-Translator: Ivica Dimitrijev <palifra@gmail.com>\n"
-"Language-Team: ЕСКОН-ИНЖЕНЕРИНГ\n"
+"PO-Revision-Date: 2013-03-28 23:27+0000\n"
+"Last-Translator: Софче Димитријева <Unknown>\n"
+"Language-Team: ESKON-INZENERING\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-03-28 05:50+0000\n"
+"X-Launchpad-Export-Date: 2013-03-29 05:08+0000\n"
 "X-Generator: Launchpad (build 16546)\n"
 "Language: mk\n"
 
@@ -31,13 +32,14 @@ msgstr "Групирај по..."
 #. module: mrp_repair
 #: view:mrp.repair:0
 msgid "Recreate Invoice"
-msgstr "Рекреирај Фактура"
+msgstr "Креирај повторно Фактура"
 
 #. module: mrp_repair
 #: code:addons/mrp_repair/mrp_repair.py:371
 #, python-format
 msgid "You have to select a Partner Invoice Address in the repair form !"
 msgstr ""
+"Треба да изверете Адреса на фактура на Партнерот во формуларот за поправка !"
 
 #. module: mrp_repair
 #: model:ir.actions.act_window,name:mrp_repair.action_cancel_repair
@@ -75,7 +77,7 @@ msgstr "Непрочитани пораки"
 #: code:addons/mrp_repair/mrp_repair.py:435
 #, python-format
 msgid "No product defined on Fees!"
-msgstr "Нема дефинирано производи за трошоците!"
+msgstr "Нема дефинирано производи за надоместоците!"
 
 #. module: mrp_repair
 #: view:mrp.repair:0
@@ -91,7 +93,7 @@ msgstr "Подеси на нацрт"
 #. module: mrp_repair
 #: selection:mrp.repair,state:0
 msgid "Invoice Exception"
-msgstr ""
+msgstr "Исклучување на фактура"
 
 #. module: mrp_repair
 #: view:mrp.repair:0
@@ -168,7 +170,7 @@ msgstr "Откажано"
 #. module: mrp_repair
 #: help:mrp.repair,message_unread:0
 msgid "If checked new messages require your attention."
-msgstr ""
+msgstr "Доколку е штиклирано, новите пораки го бараат вашето внимание."
 
 #. module: mrp_repair
 #: view:mrp.repair:0
@@ -219,11 +221,19 @@ msgid ""
 "                   \n"
 "* The 'Cancelled' status is set automatically when user cancel repair order."
 msgstr ""
+" * Статусот 'Нацрт' е автоматски подесен како нацрт кога налогот за поправка "
+"е во статус нацрт.                         \n"
+"* Статусот 'Потврдено' е автоматски подесен како потврдено кога налогот за "
+"поправка е во статус потврди.                         \n"
+"* Статусот 'Завршено' е подесен автоматски кога налогот за поправка е "
+"завршен.                        \n"
+"* Статусот 'Откажано' е автоматски подесен кога корисникот го откажува "
+"налогот за поправка."
 
 #. module: mrp_repair
 #: field:mrp.repair,move_id:0
 msgid "Move"
-msgstr "Помести"
+msgstr "Премести"
 
 #. module: mrp_repair
 #: report:repair.order:0
@@ -247,6 +257,8 @@ msgid ""
 "Holds the Chatter summary (number of messages, ...). This summary is "
 "directly in html format in order to be inserted in kanban views."
 msgstr ""
+"Прикажува резиме на конверзација (број на пораки, ...). Ова резиме е "
+"директно во html формат со цел да биде вметнато во kanban преглед."
 
 #. module: mrp_repair
 #: view:mrp.repair:0
@@ -265,7 +277,7 @@ msgstr "Внимание!"
 #. module: mrp_repair
 #: view:mrp.repair:0
 msgid "(update)"
-msgstr ""
+msgstr "(ажурирај)"
 
 #. module: mrp_repair
 #: view:mrp.repair:0

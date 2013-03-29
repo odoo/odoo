@@ -3,18 +3,19 @@
 # This file is distributed under the same license as the openobject-addons package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2013.
 # Ivica Dimitrijev <palifra@gmail.com>, 2013.
+# Sofce Dimitrijeva <sofce@eskon.com.mk>, 2013.
 msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2013-03-07 08:38+0000\n"
-"PO-Revision-Date: 2013-02-27 17:56+0000\n"
-"Last-Translator: Ivica Dimitrijev <palifra@gmail.com>\n"
-"Language-Team: ЕСКОН-ИНЖЕНЕРИНГ\n"
+"PO-Revision-Date: 2013-03-28 23:27+0000\n"
+"Last-Translator: Софче Димитријева <Unknown>\n"
+"Language-Team: ESKON-INZENERING\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-03-28 05:50+0000\n"
+"X-Launchpad-Export-Date: 2013-03-29 05:08+0000\n"
 "X-Generator: Launchpad (build 16546)\n"
 "Language: mk\n"
 
@@ -40,7 +41,7 @@ msgstr "Откажи ја операцијата."
 #. module: mrp_operations
 #: model:ir.model,name:mrp_operations.model_mrp_operations_operation_code
 msgid "mrp_operations.operation.code"
-msgstr ""
+msgstr "mrp_operations.operation.code"
 
 #. module: mrp_operations
 #: view:mrp.production.workcenter.line:0
@@ -51,7 +52,7 @@ msgstr "Групирај по..."
 #. module: mrp_operations
 #: model:process.node,note:mrp_operations.process_node_workorder0
 msgid "Information from the routing definition."
-msgstr ""
+msgstr "Информација од дефиницијата за рутирање."
 
 #. module: mrp_operations
 #: field:mrp.production.workcenter.line,uom:0
@@ -78,12 +79,12 @@ msgstr "Продолжи"
 #. module: mrp_operations
 #: view:mrp.production.workcenter.line:0
 msgid "Product to Produce"
-msgstr "Производ за производство"
+msgstr "Производ за произведување"
 
 #. module: mrp_operations
 #: view:mrp_operations.operation:0
 msgid "Production Operation"
-msgstr ""
+msgstr "Операција на производство"
 
 #. module: mrp_operations
 #: view:mrp.production:0
@@ -98,12 +99,12 @@ msgstr "Слободна серијализација"
 #. module: mrp_operations
 #: model:ir.model,name:mrp_operations.model_mrp_production
 msgid "Manufacturing Order"
-msgstr "Налог за производство"
+msgstr "Налог за обработка"
 
 #. module: mrp_operations
 #: model:process.process,name:mrp_operations.process_process_mrpoperationprocess0
 msgid "Mrp Operations"
-msgstr ""
+msgstr "Mrp операции"
 
 #. module: mrp_operations
 #: view:mrp.workorder:0
@@ -114,7 +115,7 @@ msgstr "Ден"
 #. module: mrp_operations
 #: view:mrp.production:0
 msgid "Cancel Order"
-msgstr "Откажи нарачка"
+msgstr "Откажи налог"
 
 #. module: mrp_operations
 #: model:process.node,name:mrp_operations.process_node_productionorder0
@@ -124,7 +125,7 @@ msgstr "Налог за производство"
 #. module: mrp_operations
 #: selection:mrp.production.workcenter.line,production_state:0
 msgid "Picking Exception"
-msgstr ""
+msgstr "Исклучок во требувањето"
 
 #. module: mrp_operations
 #: model:process.transition,name:mrp_operations.process_transition_productionstart0
@@ -134,7 +135,7 @@ msgstr "Креирање на работен налог"
 #. module: mrp_operations
 #: model:process.transition,note:mrp_operations.process_transition_productionstart0
 msgid "The work orders are created on the basis of the production order."
-msgstr ""
+msgstr "Работните налози се креирани врз основа на налогот за произвоство."
 
 #. module: mrp_operations
 #: code:addons/mrp_operations/mrp_operations.py:134
@@ -174,7 +175,7 @@ msgstr "Движење на залиха"
 #: code:addons/mrp_operations/mrp_operations.py:481
 #, python-format
 msgid "No operation to cancel."
-msgstr ""
+msgstr "Нема операција за откажување."
 
 #. module: mrp_operations
 #: code:addons/mrp_operations/mrp_operations.py:474
@@ -182,11 +183,13 @@ msgstr ""
 msgid ""
 "In order to Finish the operation, it must be in the Start or Resume state!"
 msgstr ""
+"Со цел да се заврши операцијата, таа мора да биде во состојба Започни или "
+"Продолжи!"
 
 #. module: mrp_operations
 #: field:mrp.workorder,nbr:0
 msgid "# of Lines"
-msgstr "# од линии"
+msgstr "# од ставки"
 
 #. module: mrp_operations
 #: view:mrp.production.workcenter.line:0
@@ -199,7 +202,7 @@ msgstr "Нацрт"
 #. module: mrp_operations
 #: view:mrp.production.workcenter.line:0
 msgid "Actual Production Date"
-msgstr ""
+msgstr "Датум на моменталното производство"
 
 #. module: mrp_operations
 #: view:mrp.production.workcenter.line:0
@@ -222,7 +225,7 @@ msgstr "Во производство"
 #: model:ir.actions.act_window,name:mrp_operations.action_report_mrp_workorder
 #: model:ir.model,name:mrp_operations.model_mrp_production_workcenter_line
 msgid "Work Order"
-msgstr "Работни налози"
+msgstr "Работен налог"
 
 #. module: mrp_operations
 #: model:process.transition,note:mrp_operations.process_transition_workstartoperation0
@@ -230,6 +233,8 @@ msgid ""
 "There is 1 work order per work center. The information about the number of "
 "cycles or the cycle time."
 msgstr ""
+"Има 1 работен налог по работен центар. Информација за бројот на циклуси или "
+"време на циклусот."
 
 #. module: mrp_operations
 #: model:ir.ui.menu,name:mrp_operations.menu_report_mrp_workorders_tree
@@ -256,7 +261,7 @@ msgstr "Количина"
 #: code:addons/mrp_operations/mrp_operations.py:134
 #, python-format
 msgid "Manufacturing order cannot start in state \"%s\"!"
-msgstr "Налогот за производство не може да започне во состојба \"%s\"!"
+msgstr "Налогот за обработка не може да започне во состојба \"%s\"!"
 
 #. module: mrp_operations
 #: selection:mrp.workorder,month:0
@@ -275,7 +280,7 @@ msgstr "Име на операцијата"
 #: field:mrp.workorder,state:0
 #: field:mrp_operations.operation.code,start_stop:0
 msgid "Status"
-msgstr ""
+msgstr "Статус"
 
 #. module: mrp_operations
 #: view:mrp.workorder:0
@@ -314,15 +319,19 @@ msgid ""
 "        "
 msgstr ""
 "<p class=\"oe_view_nocontent_create\">\n"
-"           Кликни за да започенш нов работен налог. \n"
+"           Кликни за да започнеш нов работен налог. \n"
 "          </p><p>\n"
-"            Work Orders is the list of operations to be performed for each\n"
-"            manufacturing order. Once you start the first work order of a\n"
-"            manufacturing order, the manufacturing order is automatically\n"
-"            marked as started. Once you finish the latest operation of a\n"
-"            manufacturing order, the MO is automatically done and the "
-"related\n"
-"            products are produced.\n"
+"            Работниот налог е список на операции кои треба да бидат изведени "
+"за\n"
+"            секој налог за обработка. Откако ќе го започнете првиот работен "
+"налог\n"
+"            од налогот за обработка, налогот за обработка автоматски се "
+"означува\n"
+"            како започнат. Откако ќе ја завршите последната операција од "
+"налогот\n"
+"            за обработка, налогот за обработка автоматски е завршен и "
+"поврзаните\n"
+"            производи се произведени.\n"
 "          </p>\n"
 "        "
 
@@ -330,6 +339,7 @@ msgstr ""
 #: help:mrp.production.workcenter.line,delay:0
 msgid "The elapsed time between operation start and stop in this Work Center"
 msgstr ""
+"Поминато време помеѓу операциите започни и сопри во овој Работен центар"
 
 #. module: mrp_operations
 #: model:process.node,name:mrp_operations.process_node_canceloperation0
@@ -365,7 +375,7 @@ msgstr "Откажано"
 #. module: mrp_operations
 #: model:ir.model,name:mrp_operations.model_mrp_operations_operation
 msgid "mrp_operations.operation"
-msgstr ""
+msgstr "mrp_operations.operation"
 
 #. module: mrp_operations
 #: model:ir.model,name:mrp_operations.model_mrp_workorder
@@ -381,12 +391,12 @@ msgstr "Почетен датум"
 #. module: mrp_operations
 #: selection:mrp.production.workcenter.line,production_state:0
 msgid "Waiting Goods"
-msgstr ""
+msgstr "Чекам стоки"
 
 #. module: mrp_operations
 #: field:mrp.production.workcenter.line,production_state:0
 msgid "Production Status"
-msgstr "Статус на производст"
+msgstr "Статус на производството"
 
 #. module: mrp_operations
 #: selection:mrp.workorder,state:0
@@ -407,12 +417,15 @@ msgstr "Во тек"
 msgid ""
 "In order to Pause the operation, it must be in the Start or Resume state!"
 msgstr ""
+"Со цел да се паузира операцијата, таа мора да биде во состојба Започни или "
+"Продолжи!"
 
 #. module: mrp_operations
 #: code:addons/mrp_operations/mrp_operations.py:469
 #, python-format
 msgid "In order to Resume the operation, it must be in the Pause state!"
 msgstr ""
+"Со цел да се продолжи операцијата, таа мора да биде во состојба Пауза!"
 
 #. module: mrp_operations
 #: view:mrp.production:0
@@ -432,12 +445,14 @@ msgid ""
 "When the operation needs to be cancelled, you can do it in the work order "
 "form."
 msgstr ""
+"Кога операцијата треба да биде откажана, можете да го направите тоа во "
+"формуларот на работниот налог."
 
 #. module: mrp_operations
 #: view:mrp.production:0
 #: view:mrp.production.workcenter.line:0
 msgid "Set Draft"
-msgstr "Нацрт"
+msgstr "Подеси Нацрт"
 
 #. module: mrp_operations
 #: view:mrp.production:0
@@ -449,7 +464,7 @@ msgstr "Чекање"
 #. module: mrp_operations
 #: view:mrp_operations.operation.code:0
 msgid "Production Operation Code"
-msgstr ""
+msgstr "Код на Операција Производство"
 
 #. module: mrp_operations
 #: code:addons/mrp_operations/mrp_operations.py:461
@@ -458,6 +473,8 @@ msgid ""
 "Operation has already started! You can either Pause/Finish/Cancel the "
 "operation."
 msgstr ""
+"Операцијата е веќе започната. Можете да ја Паузирате/Завршите/Откажете "
+"операцијата."
 
 #. module: mrp_operations
 #: selection:mrp.workorder,month:0
@@ -472,7 +489,7 @@ msgstr "Започнато"
 #. module: mrp_operations
 #: view:mrp.production.workcenter.line:0
 msgid "Production started late"
-msgstr "Производството запчна доцна"
+msgstr "Производството започна доцна"
 
 #. module: mrp_operations
 #: view:mrp.workorder:0
@@ -534,7 +551,7 @@ msgstr "Јануари"
 #. module: mrp_operations
 #: view:mrp.production:0
 msgid "Resume Work Order"
-msgstr "Започни со работниот налог"
+msgstr "Продолжи со работниот налог"
 
 #. module: mrp_operations
 #: model:process.node,note:mrp_operations.process_node_doneoperation0
@@ -545,7 +562,7 @@ msgstr "Заврши ја операцијата."
 #: code:addons/mrp_operations/mrp_operations.py:454
 #, python-format
 msgid "Operation is not started yet !"
-msgstr "Операцијата не е сеуште започната !"
+msgstr "Операцијата сеуште не е започната !"
 
 #. module: mrp_operations
 #: model:process.node,note:mrp_operations.process_node_productionorder0
@@ -580,7 +597,7 @@ msgstr "Потврдени работни налози"
 #. module: mrp_operations
 #: model:ir.actions.act_window,name:mrp_operations.mrp_production_code_action
 msgid "Operation Codes"
-msgstr ""
+msgstr "Кодови на операцијата"
 
 #. module: mrp_operations
 #: field:mrp.production.workcenter.line,qty:0
@@ -602,7 +619,7 @@ msgstr "Завршено"
 #. module: mrp_operations
 #: model:ir.actions.report.xml,name:mrp_operations.report_code_barcode
 msgid "Start/Stop Barcode"
-msgstr ""
+msgstr "Започни/Запри Баркод"
 
 #. module: mrp_operations
 #: view:mrp.production.workcenter.line:0
@@ -621,6 +638,15 @@ msgid ""
 "* When order is completely processed that time it is set in 'Finished' "
 "status."
 msgstr ""
+"* Кога работниот налог е креиран тој е подесен на статус 'Нацрт'.\n"
+"* Кога корисникот го подесува работниот налог во режим старт тогаш времето "
+"ќе биде подесено во статус 'Во тек'.\n"
+"* Кога работниот налог е во режим работи, доколку корисникот сака да го "
+"запре или да направи промени во налогот, може да го подеси во статус 'Чекам' "
+".\n"
+"* Кога корисникот го откажува работниот налог тој ќе биде подесен во статус "
+"'Откажано'.\n"
+"* Кога налогот е комплетно обработен времето еподесено во статус 'Завршено'."
 
 #. module: mrp_operations
 #: model:process.node,name:mrp_operations.process_node_startoperation0
@@ -651,13 +677,12 @@ msgstr ""
 "<p class=\"oe_view_nocontent_create\">\n"
 "            Кликни за да започенш нов работен налог.\n"
 "          </p><p>\n"
-"            To manufacture or assemble products, and use raw materials and\n"
-"            finished products you must also handle manufacturing "
-"operations.\n"
-"            Manufacturing operations are often called Work Orders. The "
-"various\n"
-"            operations will have different impacts on the costs of\n"
-"            manufacturing and planning depending on the available workload.\n"
+"            За да обработите или склопите производи, и да употребите "
+"суровини и\n"
+"            готови производи мора да управувате со операциите на обработка.\n"
+"            Операциите на обработување често се нарекуваат Работни налози.\n"
+"            Различните операции ќе имаат различно влијание на трошоците на \n"
+"            обработка и планирање во зависност од обемот на работата.\n"
 "          </p>\n"
 "        "
 
@@ -674,7 +699,7 @@ msgstr "Доцна"
 #. module: mrp_operations
 #: field:mrp.workorder,delay:0
 msgid "Delay"
-msgstr "Доцнење"
+msgstr "Одолжување"
 
 #. module: mrp_operations
 #: view:mrp.production.workcenter.line:0
@@ -722,6 +747,8 @@ msgid ""
 "Check this to be able to move independently all production orders, without "
 "moving dependent ones."
 msgstr ""
+"Означи го ова за да можете да ги движите независно сите налози за "
+"производство, без да ги отстраните зависните."
 
 #. module: mrp_operations
 #: selection:mrp.workorder,month:0
@@ -779,7 +806,7 @@ msgstr "Операцијата е завршена"
 #. module: mrp_operations
 #: view:mrp.workorder:0
 msgid "#Line Orders"
-msgstr "#Лини на налог"
+msgstr "#Ставка на налог"
 
 #. module: mrp_operations
 #: view:mrp.production:0
@@ -792,6 +819,8 @@ msgid ""
 "When the operation is finished, the operator updates the system by finishing "
 "the work order."
 msgstr ""
+"Кога операцијата е завршена, операторот го ажурира системот преку завршување "
+"на работниот налог."
 
 #. module: mrp_operations
 #: model:process.transition,name:mrp_operations.process_transition_workstartoperation0

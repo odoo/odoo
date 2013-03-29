@@ -2,20 +2,21 @@
 # Copyright (c) 2013 Rosetta Contributors and Canonical Ltd 2013
 # This file is distributed under the same license as the openobject-addons package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2013.
-#
+# Sofce Dimitrijeva <sofce@eskon.com.mk>, 2013.
 msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2013-03-07 08:38+0000\n"
-"PO-Revision-Date: 2013-03-06 15:08+0000\n"
+"PO-Revision-Date: 2013-03-28 22:39+0000\n"
 "Last-Translator: Софче Димитријева <Unknown>\n"
-"Language-Team: Macedonian <mk@li.org>\n"
+"Language-Team: ESKON-INZENERING\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-03-28 05:37+0000\n"
+"X-Launchpad-Export-Date: 2013-03-29 05:08+0000\n"
 "X-Generator: Launchpad (build 16546)\n"
+"Language: mk\n"
 
 #. module: document
 #: field:document.directory,parent_id:0
@@ -95,7 +96,7 @@ msgstr "Мој документ(и)"
 #. module: document
 #: model:ir.ui.menu,name:document.menu_document_management_configuration
 msgid "Document Management"
-msgstr "Менаџмент на документ"
+msgstr "Управување со документи"
 
 #. module: document
 #: help:document.directory.dctx,expr:0
@@ -104,6 +105,9 @@ msgid ""
 "You can use 'dir_id' for current dir, 'res_id', 'res_model' as a reference "
 "to the current record, in dynamic folders"
 msgstr ""
+"Python израза кој се користи за да се евалуира полето.\n"
+"Можете да употребите 'dir_id' за тековен dir, 'res_id', 'res_model' како "
+"референца за тековен запис, во динамични папки"
 
 #. module: document
 #: help:document.directory.dctx,field:0
@@ -120,13 +124,13 @@ msgstr "Името на директориумот мора да биде уни
 #. module: document
 #: view:ir.attachment:0
 msgid "Filter on my documents"
-msgstr "Филтар на моите документи"
+msgstr "Филтер на моите документи"
 
 #. module: document
 #: view:ir.attachment:0
 #: field:ir.attachment,index_content:0
 msgid "Indexed Content"
-msgstr ""
+msgstr "Индексирана содржина"
 
 #. module: document
 #: help:document.directory,resource_find_all:0
@@ -198,6 +202,13 @@ msgid ""
 "          </p>\n"
 "        "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"            Кликнете за да креирате нов документ. \n"
+"          </p><p>\n"
+"            Складот за документи ви дава пристап до сите прилози, како\n"
+"            прошти, проектни документи, фактури и.т.н.\n"
+"          </p>\n"
+"        "
 
 #. module: document
 #: code:addons/document/document.py:340
@@ -205,7 +216,7 @@ msgstr ""
 #: code:addons/document/document.py:350
 #, python-format
 msgid "ValidateError"
-msgstr ""
+msgstr "ПотврдиГрешка"
 
 #. module: document
 #: model:ir.model,name:document.model_ir_actions_report_xml
@@ -282,7 +293,7 @@ msgstr "Име на поле"
 #. module: document
 #: field:document.directory,dctx_ids:0
 msgid "Context fields"
-msgstr ""
+msgstr "Полиња за контекст"
 
 #. module: document
 #: view:document.directory:0
@@ -328,7 +339,7 @@ msgid ""
 "according to modules installed."
 msgstr ""
 "Кога го користите овој волшебник, тој ќе ги конфигурира автоматски вашите "
-"директориуми според инсталраните модули."
+"директориуми според инсталираните модули."
 
 #. module: document
 #: field:document.directory.content,directory_id:0
@@ -398,7 +409,7 @@ msgstr "Декември"
 #. module: document
 #: selection:document.directory,type:0
 msgid "Static Directory"
-msgstr ""
+msgstr "Статичен директориум"
 
 #. module: document
 #: field:report.document.file,month:0
@@ -410,6 +421,7 @@ msgstr "Месец"
 #: view:document.directory:0
 msgid "Define words in the context, for all child directories and files"
 msgstr ""
+"Дефинирај зборови во контекстот, за сите директориуми и датотеки дете"
 
 #. module: document
 #: view:document.directory:0
@@ -453,6 +465,9 @@ msgid ""
 "name.\n"
 "If set, the directory will have to be a resource one."
 msgstr ""
+"Означете го ова поле доколку сакате името на датотеката да го содржи името "
+"на записот.\n"
+"Доколку е подесено, директориумот ќе треба да биде ресурс."
 
 #. module: document
 #: view:document.configuration:0
@@ -476,6 +491,8 @@ msgid ""
 "Check this if you want to use the same tree structure as the object selected "
 "in the system."
 msgstr ""
+"Означете го ова доколку сакате да употребите иста структура на дрвото како "
+"селектираниот објект во системот."
 
 #. module: document
 #: help:document.directory,ressource_id:0
@@ -499,7 +516,7 @@ msgstr "Август"
 #. module: document
 #: view:document.directory:0
 msgid "Dynamic context"
-msgstr ""
+msgstr "Динамичен контекст"
 
 #. module: document
 #: sql_constraint:document.directory:0
@@ -534,6 +551,10 @@ msgid ""
 "record, just like attachments. Don't put a parent directory if you select a "
 "parent model."
 msgstr ""
+"Доколку го ставите објектот овде, овој урнек на директориум ќе се појавува "
+"по секо од овие објекти, Таквите директориуми се \"прикачени\" на одреден "
+"модел или запис, како прилози. Не ставајте директориум родител доколку "
+"селектирате модел родител."
 
 #. module: document
 #: view:document.directory:0
@@ -588,6 +609,11 @@ msgid ""
 "attached to the document, or to print and download any report. This tool "
 "will create directories automatically according to modules installed."
 msgstr ""
+"OpenERP системот за управување на документи поддржува мапирање на виртуелни "
+"папки со документи. Виртуелната папка на документот може да се употреби за "
+"да се управуваат датотеките прикачени на документот, или да се испечати или "
+"симне некој извештај. Оваа алатка ќе креира директориуми автоматски во "
+"согласност со инсталираните модули."
 
 #. module: document
 #: model:ir.actions.act_window,name:document.action_view_files_by_month_graph
@@ -623,7 +649,7 @@ msgstr "Поле"
 #. module: document
 #: model:ir.model,name:document.model_document_directory_dctx
 msgid "Directory Dynamic Context"
-msgstr ""
+msgstr "Динамичен контекст на директориум"
 
 #. module: document
 #: field:document.directory,ressource_parent_type_id:0

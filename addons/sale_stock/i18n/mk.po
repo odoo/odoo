@@ -9,14 +9,13 @@ msgstr ""
 "Report-Msgid-Bugs-To: OpenERP Macedonian <openerp-i18n-"
 "macedonian@lists.launchpad.net >\n"
 "POT-Creation-Date: 2013-03-07 08:39+0000\n"
-"PO-Revision-Date: 2013-03-12 13:02+0000\n"
+"PO-Revision-Date: 2013-03-28 23:28+0000\n"
 "Last-Translator: Софче Димитријева <Unknown>\n"
-"Language-Team: OpenERP Macedonia <openerp-i18n-"
-"macedonian@lists.launchpad.net>\n"
+"Language-Team: ESKON-INZENERING\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-03-28 06:01+0000\n"
+"X-Launchpad-Export-Date: 2013-03-29 05:08+0000\n"
 "X-Generator: Launchpad (build 16546)\n"
 "Language: mk\n"
 
@@ -26,19 +25,19 @@ msgid ""
 "To allow your salesman to make invoices for Delivery Orders using the menu "
 "'Deliveries to Invoice'."
 msgstr ""
-"Да се дозволи продавачот да прави фактури за испорачаните нарачки користејќи "
-"го менито 'Фактури од испораките'"
+"Да се дозволи продавачот да прави фактури за испратниците користејќи го "
+"менито 'Испораки за фактурирање'"
 
 #. module: sale_stock
 #: model:process.node,name:sale_stock.process_node_deliveryorder0
 msgid "Delivery Order"
-msgstr "Испорачана нарачка"
+msgstr "Испратница"
 
 #. module: sale_stock
 #: model:ir.actions.act_window,name:sale_stock.outgoing_picking_list_to_invoice
 #: model:ir.ui.menu,name:sale_stock.menu_action_picking_list_to_invoice
 msgid "Deliveries to Invoice"
-msgstr "Фактури од испораки"
+msgstr "Испораки за фактурирање"
 
 #. module: sale_stock
 #: code:addons/sale_stock/sale_stock.py:544
@@ -68,7 +67,7 @@ msgstr ""
 #. module: sale_stock
 #: model:process.node,note:sale_stock.process_node_packinglist0
 msgid "Document of the move to the output or to the customer."
-msgstr ""
+msgstr "Документ за движењето кон излезот или кон купувачот."
 
 #. module: sale_stock
 #: field:sale.config.settings,group_multiple_shops:0
@@ -90,7 +89,8 @@ msgstr "Откажи налог"
 #, python-format
 msgid ""
 "You must first cancel all delivery order(s) attached to this sales order."
-msgstr "Морате прво да ги откажете порачките прикачани на овааа нарачка."
+msgstr ""
+"Морате прво да ги откажете испратниците прикачани на овој налог за продажба."
 
 #. module: sale_stock
 #: model:process.transition,name:sale_stock.process_transition_saleprocurement0
@@ -129,7 +129,7 @@ msgid ""
 "You cannot make an advance on a sales order                      that is "
 "defined as 'Automatic Invoice after delivery'."
 msgstr ""
-"Неможе да се промени нарачката                      тоа е дефинирано како "
+"Не може да се промени нарачката                      тоа е дефинирано како "
 "'Автоматско креирање фактура по испорака'."
 
 #. module: sale_stock
@@ -173,7 +173,7 @@ msgstr "Грешка во конфигурацијата!"
 #. module: sale_stock
 #: model:process.node,name:sale_stock.process_node_saleprocurement0
 msgid "Procurement Order"
-msgstr "Ред за набавка"
+msgstr "Налог за набавка"
 
 #. module: sale_stock
 #: model:ir.actions.act_window,name:sale_stock.res_partner_rule_children
@@ -183,7 +183,7 @@ msgstr "Детали за контакт"
 #. module: sale_stock
 #: selection:sale.config.settings,default_order_policy:0
 msgid "Invoice based on deliveries"
-msgstr "Фактура врз база на испорака"
+msgstr "Фактура врз база на испораки"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_sale_order
@@ -194,13 +194,13 @@ msgstr "Налог за продажба"
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_stock_picking_out
 msgid "Delivery Orders"
-msgstr "Испорачана нарачка"
+msgstr "Испратници"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_sale_order_line
 #: field:stock.move,sale_line_id:0
 msgid "Sales Order Line"
-msgstr "Ставка од налог за нарачка"
+msgstr "Ставка од налог за продажба"
 
 #. module: sale_stock
 #: model:process.transition,note:sale_stock.process_transition_packing0
@@ -219,7 +219,7 @@ msgstr ""
 msgid ""
 "This is the days added to what you promise to customers for security purpose"
 msgstr ""
-"Ова се денови додадени на она што сте му ватиле на купувачот заради "
+"Ова се денови додадени на она што сте му ветиле на купувачот заради "
 "безбедносна цел"
 
 #. module: sale_stock
@@ -255,7 +255,7 @@ msgstr "Документ за движењето до купувачот."
 #. module: sale_stock
 #: view:sale.order:0
 msgid "View Delivery Order"
-msgstr "Види ја испорачаната нарачка"
+msgstr "Види ја испратницата"
 
 #. module: sale_stock
 #: field:sale.order.line,move_ids:0
@@ -279,7 +279,7 @@ msgid ""
 "pick' or 'Invoice on order after delivery'."
 msgstr ""
 "Фактурата се креира автоматски доколку политиката за испорака е 'Фактура од "
-"избирање' или 'Фактурирај нарачка по достава'."
+"требување' или 'Фактурирај по налог после испорака'."
 
 #. module: sale_stock
 #: field:sale.order.line,procurement_id:0
@@ -314,12 +314,12 @@ msgstr ""
 #. module: sale_stock
 #: help:sale.config.settings,group_mrp_properties:0
 msgid "Allows you to tag sales order lines with properties."
-msgstr "Овозможува означување на нарачката со својства."
+msgstr "Овозможува означување на нарачката со својствата."
 
 #. module: sale_stock
 #: field:sale.config.settings,group_invoice_deli_orders:0
 msgid "Generate invoices after and based on delivery orders"
-msgstr "Креирај фактури по и врз база на нарачките"
+msgstr "Креирај фактури по и врз база на испратниците"
 
 #. module: sale_stock
 #: field:sale.config.settings,module_delivery:0
@@ -342,8 +342,8 @@ msgid ""
 "International Commercial Terms are a series of predefined commercial terms "
 "used in international transactions."
 msgstr ""
-"Интернационалните Економски Услови претставуваат низа от предефинирани "
-"економски услови што се користат при интернационални трансакции."
+"Интернационалните Економски Термини претставуваат низа от предефинирани "
+"комерцијални термини што се користат при интернационални трансакции."
 
 #. module: sale_stock
 #: help:sale.config.settings,module_delivery:0
@@ -353,10 +353,9 @@ msgid ""
 "prices.\n"
 "                This installs the module delivery."
 msgstr ""
-"Овозможува додавање на начини на достава во нарачките за продажба и "
-"испорака.\n"
-"                Може да дефинирате сопствен ценовник за превозник и "
-"достава.\n"
+"Овозможува додавање на начини на испорака во нарачките за продажба и "
+"испратниците.\n"
+"                Може да дефинирате сопствен ценовник за превоз и испорака.\n"
 "                Со ова се инсталира модулот delivery."
 
 #. module: sale_stock
@@ -367,12 +366,12 @@ msgstr "Испорачај одеднаш кога ќе бидат достап�
 #. module: sale_stock
 #: model:res.groups,name:sale_stock.group_invoice_deli_orders
 msgid "Enable Invoicing Delivery orders"
-msgstr "Овозможи порачки со испорака на фактура"
+msgstr "Овозможи фактурирање на испратници"
 
 #. module: sale_stock
 #: field:res.company,security_lead:0
 msgid "Security Days"
-msgstr "Денови на безбедност"
+msgstr "Сигурносни денови"
 
 #. module: sale_stock
 #: model:process.transition,name:sale_stock.process_transition_saleorderprocurement0
@@ -391,12 +390,12 @@ msgstr ""
 #: code:addons/sale_stock/sale_stock.py:206
 #, python-format
 msgid "Cannot cancel sales order!"
-msgstr "Неможе да се откаже нарачката!"
+msgstr "Не може да се откаже налогот за продажба!"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_sale_shop
 msgid "Sales Shop"
-msgstr "Продавница за продажба"
+msgstr "Продавница"
 
 #. module: sale_stock
 #: help:sale.order,shipped:0
@@ -404,8 +403,8 @@ msgid ""
 "It indicates that the sales order has been delivered. This field is updated "
 "only after the scheduler(s) have been launched."
 msgstr ""
-"Тоа означува дека нарачката е испорачана. Ова поле се ажурира само со "
-"започнувањето на планерот."
+"Тоа означува дека наогот за продажба е испорачан. Ова поле се ажурира само "
+"единствено откако распоредот е лансиран."
 
 #. module: sale_stock
 #: field:sale.order.line,property_ids:0
@@ -415,13 +414,14 @@ msgstr "Својства"
 #. module: sale_stock
 #: field:sale.config.settings,group_mrp_properties:0
 msgid "Product properties on order lines"
-msgstr "Својства на производот на нарачката"
+msgstr "Својства на производот на ставките од налогот"
 
 #. module: sale_stock
 #: help:sale.config.settings,default_order_policy:0
 msgid ""
 "You can generate invoices based on sales orders or based on shippings."
-msgstr "Може да креирате фактури врз база на нарачки или испорачки."
+msgstr ""
+"Може да креирате фактури врз база на налози за продажба или испораки."
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_sale_report
@@ -444,10 +444,11 @@ msgid ""
 "lines.\n"
 "                This installs the modules project_timesheet and project_mrp."
 msgstr ""
-"Ви овозможува префрлување на записите под задачи дефинирани за проектен "
-"менаџмент во\n"
-"                записите на налозите за датум и корисник со можност за "
-"креирање, измени и бришење и автоматско креирање на задачи од набавките \n"
+"Ви овозможува префрлување на внесовите под задачи дефинирани за проектен "
+"менаџмент во внесовите на ставките на временската таблица за одреден датум и "
+"корисник со\n"
+"                можност за креирање, измени и бришење и автоматско креирање "
+"на проектни задачи од ставките за набавка. \n"
 "                Ова го инсталира модулот project_timesheet и project_mrp."
 
 #. module: sale_stock
@@ -456,8 +457,8 @@ msgid ""
 "Allows you to specify different delivery and invoice addresses on a sales "
 "order."
 msgstr ""
-"Овозможува назначување на различна адреса за достава и фактурирање на "
-"нарачката."
+"Овозможува назначување на различна адреса за испорака и фактурирање на "
+"налогот за продажба."
 
 #. module: sale_stock
 #: model:process.node,note:sale_stock.process_node_saleprocurement0
@@ -477,7 +478,7 @@ msgstr "Додели"
 #: code:addons/sale_stock/sale_stock.py:592
 #, python-format
 msgid "Not enough stock ! : "
-msgstr "Нема доволно на залиха ! : "
+msgstr "Нема доволно залиха ! : "
 
 #. module: sale_stock
 #: help:sale.order.line,delay:0
@@ -485,8 +486,8 @@ msgid ""
 "Number of days between the order confirmation and the shipping of the "
 "products to the customer"
 msgstr ""
-"Број на денови помеѓу потврдување на нарачката и испораката на производите "
-"на клиентот"
+"Број на денови помеѓу потврдување на налогот и испораката на производите до "
+"купувачот"
 
 #. module: sale_stock
 #: help:sale.config.settings,default_picking_policy:0
@@ -495,14 +496,14 @@ msgid ""
 "instead of delivering each product when it is available. This may have an "
 "impact on the shipping price."
 msgstr ""
-"Нарачката стандардно е конфигурирана да ги испорачува сите производи наеднаш "
-"наместо секој производ кога ќе биде достапен. Ова може да влијае на цената "
-"на испорака."
+"Налогот за продажба стандардно ќе биде конфигуриран да ги испорачува сите "
+"производи наеднаш наместо секој производ кога ќе биде достапен. Ова може да "
+"влијае на цената на испорака."
 
 #. module: sale_stock
 #: selection:sale.config.settings,default_order_policy:0
 msgid "Invoice based on sales orders"
-msgstr "Фактура врз база на порачки"
+msgstr "Фактура врз база на налози за продажба"
 
 #. module: sale_stock
 #: model:process.node,name:sale_stock.process_node_invoiceafterdelivery0
@@ -522,8 +523,9 @@ msgid ""
 "In order to delete a confirmed sales order, you must cancel it.\n"
 "To do so, you must first cancel related picking for delivery orders."
 msgstr ""
-"За да избришете потврдена нарачка, мора прво да ја откажете.\n"
-"За да го направите тоа најпрво мора да го откажете подигањето за таа нарачка."
+"За да избришете потврден налог за продажба, мора прво да го откажете.\n"
+"За да го направите тоа најпрво мора да го откажете требувањето за таа "
+"испратница."
 
 #. module: sale_stock
 #: field:sale.order.line,number_packages:0
@@ -543,7 +545,7 @@ msgstr "Креирај фактура"
 #. module: sale_stock
 #: field:sale.config.settings,task_work:0
 msgid "Prepare invoices based on task's activities"
-msgstr "Подготви фактура врз база на активностите на задачата"
+msgstr "Подготви фактура врз основа на активностите на задачата"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_sale_advance_payment_inv
@@ -555,7 +557,8 @@ msgstr "Авансно плаќање по фактура за продажба"
 #, python-format
 msgid "You must first cancel stock moves attached to this sales order line."
 msgstr ""
-"Морате прво да го откажете преместувањето на залихите за оваа нарачка."
+"Морате прво да го откажете преместувањето на залихите за овој налог за "
+"продажба."
 
 #. module: sale_stock
 #: code:addons/sale_stock/sale_stock.py:535
@@ -566,13 +569,13 @@ msgstr "(n/a)"
 #. module: sale_stock
 #: field:sale.order,incoterm:0
 msgid "Incoterm"
-msgstr "Интернационални Економски Услови"
+msgstr "Incoterm"
 
 #. module: sale_stock
 #: code:addons/sale_stock/sale_stock.py:496
 #, python-format
 msgid "Cannot cancel sales order line!"
-msgstr "Неможе да се откаже нарачката!"
+msgstr "Не може да се откаже налогот за продажба!"
 
 #. module: sale_stock
 #: model:process.transition.action,name:sale_stock.process_transition_action_cancelassignation0
@@ -582,7 +585,7 @@ msgstr "Откажи доделување"
 #. module: sale_stock
 #: model:process.node,note:sale_stock.process_node_invoiceafterdelivery0
 msgid "Based on the shipped or on the ordered quantities."
-msgstr "врз база на испорачани или порачани количини."
+msgstr "Засновано на испорачани или нарачани количини."
 
 #. module: sale_stock
 #: selection:sale.order,picking_policy:0
@@ -604,17 +607,17 @@ msgstr "sale.config.settings"
 msgid ""
 "This is a list of delivery orders that has been generated for this sales "
 "order."
-msgstr "Ова е листа на порачки генерирана за оваа нарачка."
+msgstr "Ова е листа на испратници генерирана за овој налог за продажба."
 
 #. module: sale_stock
 #: model:process.node,name:sale_stock.process_node_saleorderprocurement0
 msgid "Sales Order Requisition"
-msgstr "Официјално барање за нарачка"
+msgstr "Барање за налог за продажба"
 
 #. module: sale_stock
 #: model:process.transition,name:sale_stock.process_transition_deliver0
 msgid "Create Delivery Order"
-msgstr "Креирај нарачка за испорака"
+msgstr "Креирај испратница"
 
 #. module: sale_stock
 #: view:sale.order:0
@@ -629,12 +632,12 @@ msgid ""
 "The real stock is %.2f %s. (without reservations)"
 msgstr ""
 "Сакаш да продадеш %.2f %s но на залиха имаш само %.2f %s !\n"
-"Вистинската залиха е %.2f %s. (без резерви)"
+"Вистинската залиха е %.2f %s. (без резервации)"
 
 #. module: sale_stock
 #: view:sale.order:0
 msgid "Recreate Delivery Order"
-msgstr "Повторно креирај нарачка за испорака"
+msgstr "Повторно креирај испратница"
 
 #. module: sale_stock
 #: help:sale.config.settings,group_multiple_shops:0
@@ -664,5 +667,4 @@ msgid ""
 "automatically."
 msgstr ""
 "Во зависност од конфигурацијата на излезот за локација, преносот помеѓу "
-"излезната област и клиентот се врши рачно или автоматски преку испорачаната "
-"нарачка."
+"излезната област и купувачот се врши рачно или автоматски преку Испратницата."
