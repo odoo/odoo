@@ -179,3 +179,30 @@ class TestDispatching(DispatchCleanup):
 
         body, status, headers = self.client.post('/cat')
         self.assertEqual('404 NOT FOUND', status)
+
+    def test_extend(self):
+        class CatController(http.Controller):
+            _cp_path = '/cat'
+
+            @http.httprequest
+            def index(self, req):
+                return '[%s]' % self.speak()
+
+            def speak(self):
+                return 'Yu ordered cheezburgerz,'
+
+        class DogController(CatController):
+            _cp_path = '/dog'
+
+            def speak(self):
+                return 'Woof woof woof woof'
+
+        self.app.load_addons()
+
+        body, status, headers = self.client.get('/cat')
+        self.assertEqual('200 OK', status)
+        self.assertEqual('[Yu ordered cheezburgerz,]', ''.join(body))
+
+        body, status, headers = self.client.get('/dog')
+        self.assertEqual('200 OK', status)
+        self.assertEqual('[Woof woof woof woof]', ''.join(body))
