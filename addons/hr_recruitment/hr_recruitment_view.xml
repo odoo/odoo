@@ -295,7 +295,56 @@
             </kanban>
         </field>
     </record>
+            ######################## JOB OPPORTUNITIES (menu) ###########################
+         <record model="ir.actions.act_window" id="crm_case_categ0_act_job">
+            <field name="name">Applications</field>
+            <field name="res_model">hr.applicant</field>
+            <field name="view_mode">kanban,tree,form,graph,calendar</field>
+            <field name="view_id" eval="False"/>
+            <field name="search_view_id" ref="view_crm_case_jobs_filter"/>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to add a new job applicant.
+              </p><p>
+                OpenERP helps you track applicants in the recruitment
+                process and follow up all operations: meetings, interviews, etc.
+              </p><p>
+                If you setup the email gateway, applicants and their attached
+                CV are created automatically when an email is sent to
+                jobs@yourcompany.com. If you install the document management
+                modules, all resumes are indexed automatically, so that you can
+                easily search through their content.
+              </p>
+            </field>
+        </record>
 
+        <record model="ir.actions.act_window.view" id="action_hr_sec_kanban_view_act_job">
+            <field name="sequence" eval="0"/>
+            <field name="view_mode">kanban</field>
+            <field name="view_id" ref="hr_kanban_view_applicant"/>
+            <field name="act_window_id" ref="crm_case_categ0_act_job"/>
+        </record>
+
+        <record model="ir.actions.act_window.view" id="action_hr_sec_tree_view_act_job">
+            <field name="sequence" eval="1"/>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="crm_case_tree_view_job"/>
+            <field name="act_window_id" ref="crm_case_categ0_act_job"/>
+        </record>
+
+        <record model="ir.actions.act_window.view" id="action_hr_sec_form_view_act_job">
+            <field name="sequence" eval="3"/>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="crm_case_form_view_job"/>
+            <field name="act_window_id" ref="crm_case_categ0_act_job"/>
+        </record>
+
+        <record model="ir.actions.act_window.view" id="action_hr_sec_graph_view_act_job">
+            <field name="sequence" eval="4"/>
+            <field name="view_mode">graph</field>
+            <field name="view_id" ref="crm_case_graph_view_job"/>
+            <field name="act_window_id" ref="crm_case_categ0_act_job"/>
+        </record>
     <!-- HR Job -->
     <record id="hr_job_survey" model="ir.ui.view">
         <field name="name">hr.job.form1</field>
@@ -330,6 +379,7 @@
                     <field name="name"/>
                     <field name="department_id"/>
                     <field name="no_of_recruitment"/>
+                    <field name="no_of_employee"/>
                     <templates>
                         <t t-name="kanban-box">
                             <div t-attf-class=" oe_kanban_card oe_semantic_html_override oe_kanban_survey">
@@ -343,11 +393,13 @@
                                 </div>
                                 <div class="oe_kanban_content">
                                     <h3 class="oe_kanban_ellipsis"><field name="name"/></h3>
-                                    <div>
-                                        <field name="department_id"/>
-                                    </div>
+                                    <div><field name="department_id"/></div>
                                     <br/>
-                                    <a><span t-if="record.no_of_recruitment.raw_value gt 0"><field name="no_of_recruitment"/>Employees</span></a>
+                                    <div><t t-esc="Math.round(record.no_of_recruitment.raw_value)"/> Expected in Recruitment</div>
+                                    <a t-if="record.no_of_employee.raw_value" name="%(crm_case_categ0_act_job)d" type="action" >
+                                       <span t-if="record.no_of_employee.raw_value gt 1"><t t-esc="Math.round(record.no_of_employee.raw_value)"/> Applications</span>
+                                       <span t-if="record.no_of_employee.raw_value lt 2"><t t-esc="Math.round(record.no_of_employee.raw_value)"/> Application</span>
+                                    </a>
                                 </div>
                             </div>
                         </t>
