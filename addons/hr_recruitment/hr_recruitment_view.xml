@@ -312,16 +312,15 @@
                         attrs="{'invisible':[('survey_id','=',False)]}"/>
                 </div>
             </field>
-            <xpath expr="//sheet//group" version="7.0" position="after">
-                <group colspan="4">
-                    <label for="alias_id"/>
-                    <div class="oe_inline" attrs="{'invisible': [('alias_domain', '=', False)]}">
-                        <field name="alias_id" class="oe_inline oe_read_only" required="0" nolabel="1"/>
-                        <span class="oe_edit_only" name="edit_alias">
-                            <field name="alias_name" class="oe_inline" attrs="{'required': [('alias_id', '!=', False)]}"/>@<field class="oe_inline" name="alias_domain"/>
-                        </span>
-                     </div>
-                </group>
+            <xpath expr="//div[@class='oe_title']//h1" position="after">
+                <div attrs="{'invisible': [('alias_domain', '=', False)]}">
+                    <field name="alias_id" class="oe_inline" required="0" invisible="1"/>
+                    <label for="alias_id" string='Email'
+                            attrs="{'invisible': [('alias_domain', '=', False)]}"/>
+                    <span name="edit_alias">
+                        <field name="alias_name" class="oe_inline" attrs="{'required': [('alias_id', '!=', False)]}"/>@<field class="oe_inline" name="alias_domain"/>
+                    </span>
+                </div>
             </xpath>
         </field>
     </record>
