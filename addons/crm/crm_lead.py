@@ -22,6 +22,7 @@
 from openerp.addons.base_status.base_stage import base_stage
 import crm
 from datetime import datetime
+from operator import itemgetter
 from openerp.osv import fields, osv
 import time
 from openerp import tools
@@ -628,12 +629,14 @@ class crm_lead(base_stage, format_address, osv.osv):
         opportunities = self.browse(cr, uid, ids, context=context)
         sequenced_opps = []
         for opportunity in opportunities:
+            sequence = -1
             if opportunity.stage_id and opportunity.stage_id.state != 'cancel':
-                sequenced_opps.append((opportunity.stage_id.sequence, opportunity))
-            else:
-                sequenced_opps.append((-1, opportunity))
-        sequenced_opps.sort(key=lambda tup: tup[0], reverse=True)
-        opportunities = [opportunity for sequence, opportunity in sequenced_opps]
+                sequence = opportunity.stage_id.sequence
+
+            sequenced_opps.append(((int(opportunity.type == 'opportunity'), sequence), opportunity))
+
+        sequenced_opps.sort(reverse=True)
+        opportunities = map(itemgetter(1), sequenced_opps)
         ids = [opportunity.id for opportunity in opportunities]
         highest = opportunities[0]
         opportunities_rest = opportunities[1:]
