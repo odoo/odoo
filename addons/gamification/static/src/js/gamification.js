@@ -39,7 +39,9 @@ openerp.gamification = function(instance) {
                 });
                 $.when(goal_action).done(function() {
                     var action_manager = new instance.web.ActionManager(this);
-                    action_manager.do_action(goal_action.action);
+                    action_manager.do_action(goal_action.action).done(function () {
+                        self.get_goal_todo_info();
+                    });
 
                     //var form = action_manager.dialog_widget.views.form.controller;
                 });

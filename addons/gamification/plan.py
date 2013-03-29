@@ -128,8 +128,8 @@ class gamification_goal_plan(osv.Model):
             string='State',
             required=True),
         'visibility_mode': fields.selection([
-                ('board','Leader board'),
-                ('progressbar','Personal progressbar')
+                ('board', 'Leader board'),
+                ('progressbar', 'Personal progressbar')
             ],
             string="Visibility",
             help='How are displayed the results, shared or in a single progressbar',

@@ -20,6 +20,9 @@ class res_users_gamification_group(osv.Model):
             plan_ids = goal_plan_obj.search(cr, uid, [('autojoin_group_id', 'in', user_group_ids)], context=context)
 
             goal_plan_obj.plan_subscribe_users(cr, uid, plan_ids, ids, context=context)
+
+        if vals.get('image'):
+            self.pool.get('gamification.goal').changed_users_avatar(cr, uid, ids, context)
         return write_res
 
     def get_goals_todo_info(self, cr, uid, context=None):
