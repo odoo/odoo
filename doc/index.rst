@@ -18,6 +18,7 @@ OpenERP Server
    06_misc
    deployment-gunicorn
    deployment-mod-wsgi
+   form-view-guidelines
 
 OpenERP Command
 '''''''''''''''

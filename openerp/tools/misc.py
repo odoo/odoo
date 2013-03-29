@@ -642,21 +642,6 @@ def icons(*a, **kw):
     global __icons_list
     return [(x, x) for x in __icons_list ]
 
-def extract_zip_file(zip_file, outdirectory):
-    zf = zipfile.ZipFile(zip_file, 'r')
-    out = outdirectory
-    for path in zf.namelist():
-        tgt = os.path.join(out, path)
-        tgtdir = os.path.dirname(tgt)
-        if not os.path.exists(tgtdir):
-            os.makedirs(tgtdir)
-
-        if not tgt.endswith(os.sep):
-            fp = open(tgt, 'wb')
-            fp.write(zf.read(path))
-            fp.close()
-    zf.close()
-
 def detect_ip_addr():
     """Try a very crude method to figure out a valid external
        IP or hostname for the current machine. Don't rely on this
