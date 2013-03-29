@@ -20,7 +20,6 @@
 ##############################################################################
 from openerp.osv import osv
 
-from openerp import netsvc
 from openerp.tools.translate import _
 
 class account_state_open(osv.osv_memory):

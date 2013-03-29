@@ -36,7 +36,6 @@
 
 import logging
 import openerp
-from openerp import netsvc
 from dav_fs import openerp_dav_handler
 from openerp.tools.config import config
 try:
