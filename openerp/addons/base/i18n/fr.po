@@ -13,8 +13,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-03-23 05:02+0000\n"
-"X-Generator: Launchpad (build 16540)\n"
+"X-Launchpad-Export-Date: 2013-03-31 05:19+0000\n"
+"X-Generator: Launchpad (build 16546)\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_check_writing
@@ -938,7 +938,7 @@ msgstr "Jordanie"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_hr
 msgid "Croatia - RRIF 2012 COA"
-msgstr ""
+msgstr "Croatie - charte de compte (RRIF version 2012)"
 
 #. module: base
 #: help:ir.cron,nextcall:0
@@ -3487,6 +3487,14 @@ msgid ""
 "    * ``base_stage``: stage management\n"
 "    "
 msgstr ""
+"\n"
+"Ce module gére les statuts et les étapes. Il est dérivé des modules  "
+"crm_base et crm_case.\n"
+"======================================================================\n"
+"\n"
+"    * base_state : gestion des statuts\n"
+"    * base_stage : gestion des étapes\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_web_linkedin
@@ -3606,6 +3614,22 @@ msgid ""
 "      above. Specify the interval information and partner to be invoice.\n"
 "    "
 msgstr ""
+"\n"
+"Création de documents récurrents.\n"
+"============================\n"
+"\n"
+"Ce module permet de créer de nouveaux documents et ajouter des abonnements à "
+"ces documents.\n"
+"\n"
+"Par exemple, avoir une facture générée automatiquement périodiquement:\n"
+"-----------------------------------------------------------------------------"
+"---------------------------\n"
+"\n"
+"    * définir un type de document basé sur l'objet Facture;\n"
+"    * définir un abonnement dont la source est le document définit "
+"précédemment et spécifier\n"
+"       l'intervalle d'information et le partenaire à facturer.\n"
+"    "
 
 #. module: base
 #: field:res.company,rml_header1:0
@@ -3756,6 +3780,23 @@ msgid ""
 "    - Yearly Salary by Head and Yearly Salary by Employee Report\n"
 "    "
 msgstr ""
+"\n"
+"Inde - Règle de gestion de la paie.\n"
+"===========================\n"
+"\n"
+"    * Localisation indienne du module hr_payroll.\n"
+"    * Toutes les contributions pour les règles des fiches de paie indienne "
+":\n"
+"        * nouveau rapport de fiche de paie ;\n"
+"        * contrat des employés ;\n"
+"        * permet de configurer les salaire de base, brut et net ;\n"
+"        * fiche de paie des employés ;\n"
+"        * indemnités et retenues ;\n"
+"        * intégration avec la gestion des congés ;\n"
+"        * allocations médicale, allocation de voyage, allocation enfant...\n"
+"    * Conseils et rapport.\n"
+"    * Rapport annuel par compagnie et rapport annuel par employé.\n"
+"    "
 
 #. module: base
 #: code:addons/orm.py:3871
@@ -3797,6 +3838,30 @@ msgid ""
 "customers' expenses if your work by project.\n"
 "    "
 msgstr ""
+"\n"
+"Gestion des dépenses par employés\n"
+"============================\n"
+"\n"
+"Cette application vous permet de gérer les dépenses quotidiennes de vos "
+"employés. Il vous donne accès aux notes de frais de vos employés et vous "
+"donne le droit de terminer et valider ou refuser les notes. Après "
+"validation, il créé une facture pour les employés.\n"
+"Les employés peuvent saisir leurs propres dépenses et le processus les mets "
+"automatiquement dans le système comptable après validation par les "
+"managers.\n"
+"\n"
+"Le processus est implémenté de la façon suivante :\n"
+"---------------------------------------------------------------------\n"
+"    * note de frais brouillon ;\n"
+"    * confirmation de la feuille par l'employé ;\n"
+"    * validation par son supérieur ;\n"
+"    * validation par le comptable et création du reçu.\n"
+"\n"
+"Ce module utilise aussi la comptabilité analytique et est compatible avec le "
+"module de facturation à partir des feuilles de temps; vous êtes donc capable "
+"de re-facturer automatiquement les dépenses de vos client si vous travaillez "
+"par projets.\n"
+"    "
 
 #. module: base
 #: view:base.language.export:0
@@ -10028,7 +10093,7 @@ msgstr "Réf. partenaire"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_expense
 msgid "Expense Management"
-msgstr ""
+msgstr "Gestion des dépenses"
 
 #. module: base
 #: field:ir.attachment,create_date:0
