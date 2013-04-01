@@ -25,8 +25,8 @@ class company(osv.osv):
     _inherit = 'res.company'
     _columns = {
         'security_lead': fields.float('Security Days', required=True,
-            help="This number of days will be removed from what you promise to customers"\
-             "for company security purpose to cope with any problems of procurement, final shipping, order negotiation etc."),
+            help="For company security purpose this many days will be removed from the date, what you have promised to customers,"\
+             "to cope up with any problems of procurement, final shipping, order negotiation etc."),
     }
     _defaults = {
         'security_lead': 0.0,
