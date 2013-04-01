@@ -25,7 +25,7 @@
                     <field name="model_id" on_change="onchange_model_id(model_id)"/>
                     <label for='filter_id'/>
                     <div>
-                        <field name='filter_id'/>
+                        <field name='filter_id' context="{'default_user_id': False, 'default_model_id': model_id}" domain="[('user_id','=',False)]"/>
                         <p class="oe_grey">
 					To Create a new filter, go to the list of documents you want to attach a google document to and 
 					save the filter. Then come back to this view. The saved filter will be available in the field above.
