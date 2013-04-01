@@ -246,7 +246,11 @@
                 <!-- message itself -->
                 <div class="oe_msg_content">
                     <h1 t-if="(widget.show_record_name or widget.subject) and !widget.thread_level" class="oe_msg_title">
-                        <a t-if="widget.options.show_link and widget.show_record_name" class="oe_mail_action_model" t-attf-href="#model=#{widget.model}&amp;id=#{widget.res_id}"><t t-raw="widget.record_name"/></a><span t-if="!widget.options.show_link and widget.show_record_name"><t t-raw="widget.record_name"/></span><t t-if="widget.show_record_name">: </t>
+                        <a t-if="widget.options.show_link and widget.show_record_name" class="oe_mail_action_model" t-attf-href="#model=#{widget.model}&amp;id=#{widget.res_id}">
+                            <t t-raw="widget.record_name"/>
+                        </a>
+                        <span t-if="!widget.options.show_link and widget.show_record_name"><t t-raw="widget.record_name"/></span>
+                        <t t-if="widget.subject">: </t>
                         <t t-if="widget.subject" t-raw="widget.subject"/>
                     </h1>
                     <div class="oe_msg_body">

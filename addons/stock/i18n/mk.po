@@ -4,20 +4,21 @@
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2013.
 # Ivica Dimitrijev <palifra@gmail.com>, 2013.
 # Aleksandar <server986@gmail.com>, 2013.
+# Sofce Dimitrijeva <sofce@eskon.com.mk>, 2013.
 msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: OpenERP Macedonian <openerp-i18n-"
 "macedonian@lists.launchpad.net >\n"
 "POT-Creation-Date: 2013-03-07 08:37+0000\n"
-"PO-Revision-Date: 2013-03-12 14:44+0000\n"
-"Last-Translator: Софче Димитријева <Unknown>\n"
-"Language-Team: ESKON Inzenering\n"
+"PO-Revision-Date: 2013-03-31 13:46+0000\n"
+"Last-Translator: Sofce Dimitrijeva <Unknown>\n"
+"Language-Team: ESKON-INZENERING\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-03-13 04:59+0000\n"
-"X-Generator: Launchpad (build 16532)\n"
+"X-Launchpad-Export-Date: 2013-04-01 05:32+0000\n"
+"X-Generator: Launchpad (build 16546)\n"
 "Language: mk\n"
 
 #. module: stock
@@ -88,7 +89,7 @@ msgstr "Стави во нов пакет"
 #: view:stock.tracking:0
 #, python-format
 msgid "Upstream Traceability"
-msgstr "Нагорна штедливост"
+msgstr "Нагорна следивост"
 
 #. module: stock
 #: field:stock.picking,date_done:0
@@ -106,7 +107,7 @@ msgstr "Следи ги излезните групи"
 #: model:ir.actions.act_window,name:stock.action_stock_line_date
 #: model:ir.ui.menu,name:stock.menu_report_stock_line_date
 msgid "Last Product Inventories"
-msgstr "Пописи на последен производ"
+msgstr "Последни залихи на производ"
 
 #. module: stock
 #: view:stock.move:0
@@ -158,7 +159,7 @@ msgstr ""
 #, python-format
 msgid "You cannot perform this operation on more than one Stock Inventories."
 msgstr ""
-"Не можете да ја изведете оваа операција на повеќе од еден попис на залихата."
+"Не може да ја изведете оваа операција на повеќе од еден попис на залиха."
 
 #. module: stock
 #: code:addons/stock/wizard/stock_change_product_qty.py:91
@@ -233,14 +234,15 @@ msgstr "Влезни"
 #: code:addons/stock/wizard/stock_move.py:223
 #, python-format
 msgid "Unable to assign all lots to this move!"
-msgstr "Не е можно да се доделат сите лотови на ова движење!"
+msgstr "Не може да се доделат сите лотови на ова движење!"
 
 #. module: stock
 #: help:stock.move,partner_id:0
 msgid ""
 "Optional address where goods are to be delivered, specifically used for "
 "allotment"
-msgstr "Изборна адреса за испорака на добрата, посебно за квота."
+msgstr ""
+"Изборна адреса за испорака на добрата, особено се користи за распределба"
 
 #. module: stock
 #: model:ir.actions.server,name:stock.action_partial_move_server
@@ -268,7 +270,7 @@ msgstr "Доделени налози за испорака"
 #: code:addons/stock/wizard/stock_change_standard_price.py:107
 #, python-format
 msgid "Active ID is not set in Context."
-msgstr "Активен идентификациски број не е сетиран во Контекстот."
+msgstr "Активниот идентификациски број не е подесен во Контекстот."
 
 #. module: stock
 #: selection:stock.picking,invoice_state:0
@@ -312,7 +314,7 @@ msgstr ""
 #: view:stock.tracking:0
 #, python-format
 msgid "Downstream Traceability"
-msgstr "Надолна штедливост"
+msgstr "Надолна следивост"
 
 #. module: stock
 #: view:stock.move:0
@@ -341,7 +343,7 @@ msgid ""
 "If checked, all product quantities will be set to zero to help ensure a real "
 "physical inventory is done"
 msgstr ""
-"Доколку е означено, количините на сите производи ќе бидат подесени на нуло "
+"Доколку е означено, количините на сите производи ќе бидат подесени на нула "
 "за да ви помогне да се осигурате дека е направена реална физичка залиха"
 
 #. module: stock
@@ -499,7 +501,7 @@ msgstr "Следивост на акција "
 #: selection:stock.picking.in,state:0
 #: selection:stock.picking.out,state:0
 msgid "Waiting Availability"
-msgstr "Чекање на достапност"
+msgstr "Чекам достапност"
 
 #. module: stock
 #: selection:report.stock.inventory,state:0
@@ -524,7 +526,7 @@ msgstr "Во количина"
 #. module: stock
 #: model:ir.actions.client,name:stock.action_client_warehouse_menu
 msgid "Open Warehouse Menu"
-msgstr "Мени за магацини"
+msgstr "Мени Отвори магацин"
 
 #. module: stock
 #: field:stock.warehouse,lot_output_id:0
@@ -540,7 +542,7 @@ msgstr "Подели во"
 #. module: stock
 #: field:stock.config.settings,module_product_expiry:0
 msgid "Expiry date on serial numbers"
-msgstr "Дата на истекување на сериските броеви"
+msgstr "Датум на истекување на сериските броеви"
 
 #. module: stock
 #: field:stock.move,price_currency_id:0
@@ -564,7 +566,7 @@ msgstr ""
 #. module: stock
 #: field:stock.config.settings,group_stock_tracking_lot:0
 msgid "Track serial number on logistic units (pallets)"
-msgstr "Следи ги сериските броеви на логистичките единици(палети)"
+msgstr "Следи ги сериските броеви на логистичките единици (палети)"
 
 #. module: stock
 #: help:product.template,sale_delay:0
@@ -573,8 +575,8 @@ msgid ""
 "the delivery of the finished products. It's the time you promise to your "
 "customers."
 msgstr ""
-"Просечниот број на денови на доцнење помеѓу потврдувањето на нарачката и "
-"испораката на готовите производи. Тоа е времето што им го кажувате ка "
+"Просечен број на денови на доцнење помеѓу потврдувањето на нарачката и "
+"испораката на готовите производи. Тоа е времето што им го кажувате на "
 "клиентите."
 
 #. module: stock
@@ -602,7 +604,7 @@ msgid ""
 "stock moves that have already been processed (except by the Administrator)."
 msgstr ""
 "Количини, Мерни единици, Производи и Локации за стоката што веќе се "
-"обработени неможат да се менуваат (освен од страна на Администраторот)."
+"обработени не можат да се менуваат (освен од страна на Администраторот)."
 
 #. module: stock
 #: help:report.stock.move,type:0
@@ -627,13 +629,13 @@ msgid ""
 "            "
 msgstr ""
 "<p class=\"oe_view_nocontent_create\">\n"
-"                Кликнете за да креирате барање за внатрешен потег.\n"
+"                Кликнете за да креирате барање за внатрешно движење.\n"
 "              </p><p>\n"
 "                Повеќето операции се подготвуваат автоматски од страна на "
-"OpenERP  according\n"
-"                to your preconfigured logistics rules, but you can also "
-"record\n"
-"                manual stock movements.\n"
+"OpenERP  според\n"
+"                вашите логистички правила за предконфигурација, но исто така "
+"можете да ги снимите\n"
+"                рачните движења на залихата.\n"
 "              </p>\n"
 "            "
 
@@ -646,7 +648,7 @@ msgstr "Белешки на предметите"
 #: code:addons/stock/stock.py:1356
 #, python-format
 msgid "Back order <em>%s</em> has been <b>created</b>."
-msgstr "<b>Креирана</b> е заостаната обврска  <em>%s</em>."
+msgstr "<b>Креирано</b> е враќање на налог  <em>%s</em>."
 
 #. module: stock
 #: model:ir.model,name:stock.model_report_stock_move
@@ -672,7 +674,7 @@ msgid ""
 "going to a Customer Location"
 msgstr ""
 "Принудно определување на сериски број на сите движења што го содржат овој "
-"производ и о дат на локација на клиентот."
+"производ и одат на локација на клиентот."
 
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_stock_products_moves
@@ -696,7 +698,7 @@ msgstr "Внатрешни движења"
 #. module: stock
 #: field:stock.move,location_dest_id:0
 msgid "Destination Location"
-msgstr "Локација на дестинацијата"
+msgstr "Локација на одредиште"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_partial_move_line
@@ -720,7 +722,8 @@ msgstr "Приемно ливче"
 msgid ""
 "Serial number quantity %d of %s is larger than available quantity (%d)!"
 msgstr ""
-"Серискиот број на количината %d од %s е поголем од достапната количина (%d)!"
+"Количината на серискиот број %d од %s е поголема од расположливата количина "
+"(%d) !"
 
 #. module: stock
 #: report:stock.picking.list:0
@@ -736,7 +739,7 @@ msgstr "Категории на единица мерка"
 #: report:lot.stock.overview:0
 #: report:lot.stock.overview_all:0
 msgid "Grand Total:"
-msgstr "Вкупен износ"
+msgstr "Вкупен износ:"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_stock_move_report
@@ -786,7 +789,7 @@ msgstr "Име на локација"
 #. module: stock
 #: view:stock.inventory:0
 msgid "Posted Inventory"
-msgstr "Објавена залиха"
+msgstr "Објавен попис"
 
 #. module: stock
 #: field:stock.move.split.lines,wizard_exist_id:0
@@ -820,7 +823,7 @@ msgstr "Статус"
 #. module: stock
 #: model:stock.location,name:stock.stock_location_customers
 msgid "Customers"
-msgstr "Клиенти"
+msgstr "Купувачи"
 
 #. module: stock
 #: selection:report.stock.inventory,month:0
@@ -839,7 +842,7 @@ msgstr "Пакети"
 #. module: stock
 #: selection:stock.location.product,type:0
 msgid "Analyse Current Inventory"
-msgstr "Анализа на моментална залиха"
+msgstr "Анализа на моментален попис"
 
 #. module: stock
 #: view:stock.move:0
@@ -898,7 +901,7 @@ msgstr "Содржи"
 #. module: stock
 #: model:ir.model,name:stock.model_stock_inventory_line
 msgid "Inventory Line"
-msgstr "Ставка за залиха"
+msgstr "Ставка за попис"
 
 #. module: stock
 #: help:product.category,property_stock_journal:0
@@ -964,7 +967,7 @@ msgstr "Испорачано"
 #. module: stock
 #: field:stock.move,move_dest_id:0
 msgid "Destination Move"
-msgstr "Цел на поместување"
+msgstr "Поместување на одредиште"
 
 #. module: stock
 #: field:stock.location,partner_id:0
@@ -1021,7 +1024,7 @@ msgstr "Добавувачи на IT опрема"
 #. module: stock
 #: view:stock.config.settings:0
 msgid "Location & Warehouse"
-msgstr "Локација и Складиште"
+msgstr "Локација и Магацин"
 
 #. module: stock
 #: selection:report.stock.inventory,location_type:0
@@ -1036,7 +1039,7 @@ msgid ""
 "You cannot cancel the picking as some moves have been done. You should "
 "cancel the picking lines."
 msgstr ""
-"Неможете да го откажете требувањето бидејќи направени се некои движења. "
+"Не можете да го откажете требувањето бидејќи направени се некои движења. "
 "Треба да ги откажете ставките во требувањето."
 
 #. module: stock
@@ -1058,7 +1061,7 @@ msgstr "Промени количина на производ"
 #: code:addons/stock/product.py:463
 #, python-format
 msgid "Future P&L"
-msgstr "Идно P&L"
+msgstr "Идни P&L"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_picking_tree4
@@ -1134,7 +1137,7 @@ msgstr "Валута"
 #: view:stock.picking.in:0
 #: report:stock.picking.list:0
 msgid "Journal"
-msgstr "Картица"
+msgstr "Дневник"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_stock_invoice_onshipping
@@ -1163,7 +1166,7 @@ msgstr "Подготвено за Прием"
 #. module: stock
 #: field:report.stock.move,day_diff:0
 msgid "Execution Lead Time (Days)"
-msgstr "Водечко време за извршување (денови)"
+msgstr "Потребно време за извршување (денови)"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_partial_move
@@ -1230,7 +1233,7 @@ msgstr "Заостанати обврски"
 #. module: stock
 #: field:stock.location,stock_virtual:0
 msgid "Virtual Stock"
-msgstr "Виртуелана залиха"
+msgstr "Виртуелна залиха"
 
 #. module: stock
 #: selection:report.stock.inventory,location_type:0
@@ -1268,7 +1271,7 @@ msgstr "Локација на производството"
 #, python-format
 msgid "Please define journal on the product category: \"%s\" (id: %d)."
 msgstr ""
-"Ве молиме дефинирајте запис за категоријата на производот: \"%s\" (id: %d)"
+"Ве молиме дефинирајте дневник за категоријата на производот: \"%s\" (id: %d)"
 
 #. module: stock
 #: field:report.stock.lines.date,date:0
@@ -1381,7 +1384,8 @@ msgid ""
 "In order to cancel this inventory, you must first unpost related journal "
 "entries."
 msgstr ""
-"За да се откаже оваа залиха, мора прво да се скријат поврзаните записи."
+"За да се откаже оваа залиха, мора прво да се скријат поврзаните внесови во "
+"дневникот."
 
 #. module: stock
 #: code:addons/stock/product.py:113
@@ -1493,8 +1497,7 @@ msgstr "Налог за испорака"
 #. module: stock
 #: help:stock.location,chained_delay:0
 msgid "Delay between original move and chained move in days"
-msgstr ""
-"Оддолжување помеѓу оригиналното движење и поврзаното движење во денови"
+msgstr "Доцнење помеѓу оригиналното движење и поврзаното движење во денови"
 
 #. module: stock
 #: model:ir.actions.act_window,help:stock.action_stock_journal_form
@@ -1515,15 +1518,14 @@ msgstr ""
 "<p class=\"oe_view_nocontent_create\">\n"
 "                Кликнете за да креирате нов дневник. \n"
 "              </p><p>\n"
-"                Системот дневник на залиха ви овозможува да ја доделите "
-"секоја операција\n"
-"                за залихите на одреден дневник според типот на операцијата "
-"која треба да се \n"
-"                изврши од работникот/тимот кој треба да ја изврши "
-"операцијата.\n"
-"                Примери за дневници за залиха може да бидат: контрола на "
-"квалитет,\n"
-"                листи за требување, пакување, и.т.н.\n"
+"                Системот Дневник на залиха ви овозможува да доделите "
+"посебен\n"
+"                дневник за секоја операција на залихата според типот на "
+"операцијата \n"
+"                за извршување или  работникот/тимот кој треба да ја изврши\n"
+"                операцијата. Примери за дневници за залиха може да бидат: "
+"контрола\n"
+"                на квалитет, требувања, пакување и.т.н.\n"
 "              </p>\n"
 "            "
 
@@ -1536,11 +1538,16 @@ msgid ""
 "move has to be validated by a worker. With 'Automatic No Step Added', the "
 "location is replaced in the original move."
 msgstr ""
+"Ова се користи единствено доколку изберете тип на поврзана локација.\n"
+"Вредноста на 'Автоматско движење' ќе креира движење на залихата после "
+"тековното кое ќе биде автоматски валидирано. Со 'Рачна операција' движењето "
+"на залихата треба да биде потврдено од страна на работникот. With 'Automatic "
+"No Step Added', the location is replaced in the original move."
 
 #. module: stock
 #: view:stock.split.into:0
 msgid "Quantity to Leave in the Current Pack"
-msgstr "Количина за заминување во моменталното пакување"
+msgstr "Количина за ставање во моменталното пакување"
 
 #. module: stock
 #: view:stock.tracking:0
@@ -1570,9 +1577,9 @@ msgid ""
 "Technical field used to record the product cost set by the user during a "
 "picking confirmation (when average price costing method is used)"
 msgstr ""
-"Техничко поле кое се користи за да се зачуваат трошоците за производот "
-"подесено од страна на корисникот за време на потврдувањето на требувањето "
-"(кога се користи метод на просечна цена на чинење)"
+"Техничкото поле се користи за запишување на цената на чинење на производот "
+"која е подесена од страна на корисникот во текот на потврдувањето на "
+"требувањето (кога се користи метод на средна цена на трошоци на чинење)"
 
 #. module: stock
 #: code:addons/stock/stock.py:1890
@@ -1589,7 +1596,7 @@ msgstr "Движење на залиха"
 #. module: stock
 #: view:stock.inventory.merge:0
 msgid "Merge Inventories"
-msgstr "Спојување на залихи"
+msgstr "Спој залихи"
 
 #. module: stock
 #: selection:stock.return.picking,invoice_state:0
@@ -1600,7 +1607,7 @@ msgstr "Да биде повлечено/фактурирано"
 #: code:addons/stock/stock.py:2450
 #, python-format
 msgid "You can only delete draft moves."
-msgstr "Може да избришете единствено нацрт движења"
+msgstr "Може да избришете единствено нацрт движења."
 
 #. module: stock
 #: code:addons/stock/stock.py:1665
@@ -1659,7 +1666,8 @@ msgstr "Дојдовните пратки се веќе обработени"
 #: code:addons/stock/wizard/stock_return_picking.py:102
 #, python-format
 msgid "You may only return pickings that are Confirmed, Available or Done!"
-msgstr "Може да вратите требувања што се Потврдени, Достапни или Завршени!"
+msgstr ""
+"Може да вратите единствено требувања што се Потврдени, Достапни или Завршени!"
 
 #. module: stock
 #: view:stock.location:0
@@ -1750,14 +1758,14 @@ msgstr "Идентификациски број на ставка на зали�
 #. module: stock
 #: help:stock.location,partner_id:0
 msgid "Address of  customer or supplier."
-msgstr "Адреса на клиент или добавувач."
+msgstr "Адреса на купувач или добавувач."
 
 #. module: stock
 #: selection:report.stock.inventory,location_type:0
 #: field:res.partner,property_stock_customer:0
 #: selection:stock.location,usage:0
 msgid "Customer Location"
-msgstr "Локација на клиент"
+msgstr "Локација на купувач"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_inventory_line_split_lines
@@ -1773,12 +1781,12 @@ msgstr "Преглед на локацијата на залихата"
 #. module: stock
 #: view:report.stock.inventory:0
 msgid "Analysis including future moves (similar to virtual stock)"
-msgstr "Анализи вклучувајќи идни движења (слично на виртуелна залиха)"
+msgstr "Анализи кои вклучуваат идни движења (слично на виртуелна залиха)"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action3
 msgid "Downstream traceability"
-msgstr "Надолна штедливост"
+msgstr "Надолна следивост"
 
 #. module: stock
 #: view:stock.picking.in:0
@@ -1804,7 +1812,7 @@ msgstr ""
 "\n"
 "Нашите записи покажуваат дека некои плаќања на вашата сметка се сеуште "
 "неподмирени. Ве молиме видете ги деталите подолу.\n"
-"Доколку сумата е веќе платена, ве молиме занемарете ја оваа забелешка. Во "
+"Доколку сумата е веќе платена, ве молиме занемарете го ова известување. Во "
 "спротивно, Ве молиме препратете ја целосната сума наведена подолу.\n"
 "Доколку имате некои прашања во врска со вашата сметка, Ве молиме "
 "контактирајте не.\n"
@@ -1836,7 +1844,7 @@ msgstr "Фактура: %s"
 #: view:stock.location:0
 #: field:stock.location,location_id:0
 msgid "Parent Location"
-msgstr "Локација на партнер"
+msgstr "Локација на родител"
 
 #. module: stock
 #: code:addons/stock/product.py:168
@@ -1861,7 +1869,7 @@ msgstr ""
 #. module: stock
 #: field:stock.config.settings,group_uom:0
 msgid "Manage different units of measure for products"
-msgstr "Управување на различни мерни единици за производите"
+msgstr "Управување со различни мерни единици за производите"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_invoice_onshipping
@@ -1872,7 +1880,7 @@ msgstr ""
 #: code:addons/stock/stock.py:2475
 #, python-format
 msgid "Please provide a positive quantity to scrap."
-msgstr "Ве молиме обезбедете позитивна количина отпадоци."
+msgstr "Ве молиме обезбедете позитивна количина за отпад."
 
 #. module: stock
 #: model:stock.location,name:stock.stock_location_shop1
@@ -1945,7 +1953,7 @@ msgstr "Сметка за вреднување на залихата (Излез
 #. module: stock
 #: view:stock.return.picking.memory:0
 msgid "Return Picking Memory"
-msgstr ""
+msgstr "Врати меморија за требување"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_move_form2
@@ -2026,7 +2034,7 @@ msgstr "Полица 2"
 #: code:addons/stock/stock.py:529
 #, python-format
 msgid "You cannot remove a lot line."
-msgstr "Неможе да отстраните ставка од група."
+msgstr "Не може да отстраните ставка од група."
 
 #. module: stock
 #: help:stock.location,posx:0
@@ -2140,7 +2148,7 @@ msgstr "Датум"
 #: field:stock.picking.in,message_is_follower:0
 #: field:stock.picking.out,message_is_follower:0
 msgid "Is a Follower"
-msgstr "Е следбеник"
+msgstr "Е пратител"
 
 #. module: stock
 #: view:report.stock.inventory:0
@@ -2163,7 +2171,7 @@ msgstr "_Достави"
 #: code:addons/stock/wizard/stock_inventory_merge.py:64
 #, python-format
 msgid "Merging is only allowed on draft inventories."
-msgstr "Спојување е дозволено единствено на нацрт пописи."
+msgstr "Спојувањето е дозволено единствено на нацрт пописи."
 
 #. module: stock
 #: help:stock.picking.out,state:0
@@ -2235,7 +2243,7 @@ msgid ""
 "            "
 msgstr ""
 "<p class=\"oe_view_nocontent_create\">\n"
-"                Клик за регистрирање на прием на производ.\n"
+"                Клик за регистрирање на приемница.\n"
 "              </p><p>\n"
 "                Овде може да примате индивидуални производи, без разлика од "
 "кој\n"
@@ -2350,10 +2358,10 @@ msgid ""
 "moves. Use this report when you want to analyse the different routes taken "
 "by your products and inventory management performance."
 msgstr ""
-"Анализите на движењата ви овозможуваат полесно да ги означите и анализирате "
-"движењата на залихата на вашата компанија. Употребете го овој извештај кога "
+"Анализите на движења ви овозможуваат полесно да ги проверите и анализирате "
+"движењата на залихата на вашата компанија. Користете го овој извештај кога "
 "сакате да ги анализирате различните рути кои се прават од вашите производи и "
-"изведбата на управувањето со пописот."
+"изведувањето на управувањето со залихата."
 
 #. module: stock
 #: constraint:stock.move:0
@@ -2374,8 +2382,7 @@ msgstr "Цена"
 #: field:stock.config.settings,module_stock_invoice_directly:0
 msgid "Create and open the invoice when the user finish a delivery order"
 msgstr ""
-"Креирај и отвори ја фактурата кога корисникот ќе го заврши налогот за "
-"испорака"
+"Креирај и отвори ја фактурата кога корисникот ќе ја заврши испратницата"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_return_picking_memory
@@ -2385,7 +2392,7 @@ msgstr "stock.return.picking.memory"
 #. module: stock
 #: field:stock.config.settings,group_stock_inventory_valuation:0
 msgid "Generate accounting entries per stock movement"
-msgstr "Генерирај сметковни записи за движење на залихата"
+msgstr "Генерирај сметководствени записи по движење на залихата"
 
 #. module: stock
 #: code:addons/stock/product.py:449
@@ -2557,7 +2564,7 @@ msgstr "Сметководство"
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_warehouse_config
 msgid "Warehouse Management"
-msgstr "Менаџмент на магацин"
+msgstr "Управуавње со магацини"
 
 #. module: stock
 #: selection:stock.location,chained_auto_packing:0
@@ -2570,8 +2577,8 @@ msgid ""
 "Move date: scheduled date until move is done, then date of actual move "
 "processing"
 msgstr ""
-"Датум на движење: закажан датум се додека движењето е завршено, потоа датум "
-"на процесирање на актуелно движење"
+"Датум на движење: планиран датум пред да биде направено движењето, потоа "
+"датумот на извршувањето на движењето"
 
 #. module: stock
 #: view:report.stock.inventory:0
@@ -2598,7 +2605,7 @@ msgid ""
 "            "
 msgstr ""
 "<p class=\"oe_view_nocontent_create\">\n"
-"                Кликни за да креираш движење на стоката.\n"
+"                Кликни за да креираш движење на залиха.\n"
 "              </p><p>\n"
 "                Ова мени ви овозможува целосно следење на операциите со "
 "залихата\n"
@@ -2654,7 +2661,7 @@ msgid ""
 "warehouses"
 msgstr ""
 "Моментална количина на производи со овој сериски број достапна низ "
-"складовите на компанијата."
+"магацините на компанијата."
 
 #. module: stock
 #: view:stock.inventory:0
@@ -2665,7 +2672,7 @@ msgstr "Постави во нацрт"
 #: model:ir.actions.act_window,name:stock.action_stock_journal_form
 #: model:ir.ui.menu,name:stock.menu_action_stock_journal_form
 msgid "Stock Journals"
-msgstr "Картици за залихи"
+msgstr "Дневник залиха"
 
 #. module: stock
 #: view:product.product:0
@@ -2713,7 +2720,7 @@ msgstr "Идна количина"
 #. module: stock
 #: model:res.groups,name:stock.group_production_lot
 msgid "Manage Serial Numbers"
-msgstr "Управување на сериските броеви"
+msgstr "Управување со сериските броеви"
 
 #. module: stock
 #: field:stock.move,note:0
@@ -2773,7 +2780,7 @@ msgid ""
 "Cannot create Journal Entry, Output Account of this product and Valuation "
 "account on category of this product are same."
 msgstr ""
-"Неможе да се креира запис во дневникот, Излезната сметка на овој производ и "
+"Не може да се креира внес во дневникот, Излезната сметка на овој производ и "
 "сметката за вреднување на категоријата на овој производ се исти."
 
 #. module: stock
@@ -2834,7 +2841,7 @@ msgstr "Движење"
 #: code:addons/stock/product.py:465
 #, python-format
 msgid "P&L Qty"
-msgstr "P&L Количина"
+msgstr "P&L кол."
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_config_settings
@@ -2871,7 +2878,7 @@ msgid ""
 msgstr ""
 "Анализите на залихата ви дозволуваат полесна проверка и анализа на нивоата "
 "на залихите на вашата компанија. Сортирајте и групирајте по критериум за "
-"селекција со цел подобро да ги анализирате и менаџирате активностите на "
+"селекција со цел подобро да ги анализирате и управувате со активностите на "
 "вашата компанија."
 
 #. module: stock
@@ -2882,7 +2889,7 @@ msgid ""
 "location if you subcontract the manufacturing operations."
 msgstr ""
 "Ја подесува локацијата доколку произведувате на фиксна локација. Тоа може да "
-"биде локацијата на партнерот доколку имате поддоговор за производствени "
+"биде локацијата на партнерот доколку имате под договор за производствени "
 "операции."
 
 #. module: stock
@@ -2952,7 +2959,7 @@ msgid ""
 "Cannot create Journal Entry, Input Account of this product and Valuation "
 "account on category of this product are same."
 msgstr ""
-"Неможе да се креира запис во записникот, Влезната сметка на овој производ и "
+"Не може да се креира внес во дневникот, Влезната сметка на овој производ и "
 "сметката за вреднување на категоријата на овој производ се исти."
 
 #. module: stock
@@ -3020,10 +3027,10 @@ msgid ""
 "need this report in order to ensure that the stock of each product is "
 "controlled at least once a year."
 msgstr ""
-"Прикажи ги последните пописи направени на вашите производи и сортирајте ги "
-"истите според одредени критериуми за филтрирање. Доколку правите почести и "
-"парцијални пописи, овој извештај ќе ви биде потребен за да се осигурате дека "
-"залихата на секој производ е контролирана најмалку еднаш годишно."
+"Прикажи ги последните пописи направени за вашите производи и сортирајте ги "
+"лесно со специфични критериуми за филтрирање. Доколку правите чести и "
+"делумни помиси, овој извештај ќе ви биде потребен за да се осигурате дека "
+"залихата на секој производ е контролирана барем еднаш годишно."
 
 #. module: stock
 #: code:addons/stock/wizard/stock_invoice_onshipping.py:112
@@ -3071,7 +3078,7 @@ msgstr "Предвидување за нивото на залиха"
 #: field:stock.picking.in,stock_journal_id:0
 #: field:stock.picking.out,stock_journal_id:0
 msgid "Stock Journal"
-msgstr "Картица за залихи"
+msgstr "Дневник залиха"
 
 #. module: stock
 #: code:addons/stock/wizard/stock_return_picking.py:174
@@ -3083,7 +3090,7 @@ msgstr "%s-%s врати"
 #: code:addons/stock/wizard/stock_change_product_qty.py:82
 #, python-format
 msgid "Active ID is not set in Context"
-msgstr "Активен идентификациски број не е сетиран во Контекстот."
+msgstr "Активниот идентификациски број не е подесен во Контекстот."
 
 #. module: stock
 #: view:stock.move:0
@@ -3105,7 +3112,8 @@ msgstr "Движење на отпад"
 #. module: stock
 #: help:stock.move,prodlot_id:0
 msgid "Serial number is used to put a serial number on the production"
-msgstr "Серискиот број е искористен за сериски број на призводството"
+msgstr ""
+"Серискиот број е искористен за да се стави сериски број на призводството"
 
 #. module: stock
 #: code:addons/stock/wizard/stock_partial_picking.py:100
@@ -3130,7 +3138,7 @@ msgstr "Испорка на производи"
 #. module: stock
 #: view:stock.location.product:0
 msgid "View Stock of Products"
-msgstr "Преглед на лагер на производи"
+msgstr "Преглед на залиха на производи"
 
 #. module: stock
 #: view:report.stock.inventory:0
@@ -3209,7 +3217,7 @@ msgstr ""
 "<p class=\"oe_view_nocontent_create\">\n"
 "                Кликни за додавање на локација.\n"
 "              </p><p>\n"
-"                Оваа е структурата на складовите и локациите на вашата "
+"                Оваа е структурата на магацините и локациите на вашата "
 "компанија.\n"
 "                Може да кликнете на одредена локација за да ја видите "
 "листата\n"
@@ -3259,7 +3267,7 @@ msgstr "Ставка за делумно движење на залиха"
 #. module: stock
 #: field:stock.move,product_uos_qty:0
 msgid "Quantity (UOS)"
-msgstr "Количина (UOS)"
+msgstr "Количина (ЕП)"
 
 #. module: stock
 #: view:stock.move:0
@@ -3378,7 +3386,7 @@ msgstr ""
 msgid ""
 "Allows to configure inventory valuations on products and product categories."
 msgstr ""
-"Овозможува конфигурирање на проценката на залихите на производите и "
+"Ви овозможува да конфигурирате валуацијата на пописите на производите и "
 "категориите на производи."
 
 #. module: stock
@@ -3425,7 +3433,7 @@ msgstr ""
 "                испорачате на вашите клиенти. Може да ги обработувате "
 "испораките\n"
 "                директно од оваа листа со користење на копчињата од десната "
-"страна. You can\n"
+"страна\n"
 "                на линијата. Може да ги филтрирате производите за испорака "
 "според\n"
 "                клиент, производ или налог за продажба.\n"
@@ -3445,7 +3453,7 @@ msgstr "Име на ревизија"
 #. module: stock
 #: model:res.groups,name:stock.group_tracking_lot
 msgid "Manage Logistic Serial Numbers"
-msgstr "Управување на логистички сериските броеви"
+msgstr "Управување на логистички сериски броеви"
 
 #. module: stock
 #: view:stock.inventory:0
@@ -3485,7 +3493,7 @@ msgstr "%s %s %s е <b>преместено во</b> отпад."
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_picking_tree_out
 msgid "Customers Packings"
-msgstr "Пакувања за клиентите"
+msgstr "Пакувања за купувачите"
 
 #. module: stock
 #: selection:report.stock.inventory,state:0
@@ -3594,7 +3602,7 @@ msgstr "Анализи на залихи"
 #. module: stock
 #: field:stock.invoice.onshipping,journal_id:0
 msgid "Destination Journal"
-msgstr "Одредишен дневник"
+msgstr "Дневник на одредштето"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.act_stock_tracking_lot_2_stock_report_tracklots
@@ -3653,13 +3661,12 @@ msgid ""
 "            "
 msgstr ""
 "<p class=\"oe_view_nocontent_create\">\n"
-"                Клик за започнување на залиха.\n"
+"                Кликнете за започнување на попис.\n"
 "              </p><p>\n"
-"                Периодичните залихи се користат за броење на производите "
+"                Периодичните пописи се користат за броење на производите "
 "достапни\n"
-"                на секоја локација. Може да се користат еднаш годишно при "
-"правење\n"
-"                на генерална залиха или по потреба, за прилагодување на "
+"                по локација. Може да се користат еднаш годишно при правење\n"
+"                на генерален попис или по потреба, за прилагодување на "
 "моменталната\n"
 "                залиха на одреден производ.\n"
 "              </p>\n"
@@ -3684,7 +3691,7 @@ msgstr "Доделени внатрешни белешки"
 #: code:addons/stock/stock.py:790
 #, python-format
 msgid "You cannot process picking without stock moves."
-msgstr "Не можете да извршите требување без движења на залихи."
+msgstr "Не може да извршите требување без движења на залиха."
 
 #. module: stock
 #: field:stock.production.lot,move_ids:0
@@ -3731,7 +3738,7 @@ msgstr "Овозможи дефинирање на неколку методи �
 #. module: stock
 #: model:stock.location,name:stock.stock_location_7
 msgid "European Customers"
-msgstr "Европски клиенти"
+msgstr "Европски купувачи"
 
 #. module: stock
 #: field:report.stock.inventory,value:0
@@ -3766,7 +3773,7 @@ msgstr "Волшебник"
 #. module: stock
 #: view:report.stock.move:0
 msgid "Completed Stock-Moves"
-msgstr "Завршено движење на залиха"
+msgstr "Комплетирана залиха-Движења"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_view_stock_location_product
@@ -3867,7 +3874,7 @@ msgstr "Локација на изворот"
 #. module: stock
 #: view:product.template:0
 msgid "Accounting Entries"
-msgstr "Сметководствени записи"
+msgstr "Сметководствени внесови"
 
 #. module: stock
 #: model:res.groups,name:stock.group_stock_manager
@@ -3918,7 +3925,7 @@ msgstr ""
 #. module: stock
 #: view:stock.move:0
 msgid "Destination"
-msgstr "Дестинација"
+msgstr "Одредиште"
 
 #. module: stock
 #: selection:stock.picking,move_type:0
@@ -3976,7 +3983,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:stock.action_stock_config_settings
 #: view:stock.config.settings:0
 msgid "Configure Warehouse"
-msgstr "Конфигурирање на склад"
+msgstr "Конфигурирање на магацин"
 
 #. module: stock
 #: view:stock.picking:0
@@ -3992,7 +3999,7 @@ msgstr "Врати ставки"
 #. module: stock
 #: view:stock.inventory:0
 msgid "Search Inventory"
-msgstr "Барај залиха"
+msgstr "Барај попис"
 
 #. module: stock
 #: model:ir.model,name:stock.model_report_stock_lines_date
@@ -4126,7 +4133,7 @@ msgstr "Пораки"
 #. module: stock
 #: model:stock.location,name:stock.stock_location_8
 msgid "Non European Customers"
-msgstr "Не Европски клиенти"
+msgstr "Не Европски купувачи"
 
 #. module: stock
 #: code:addons/stock/product.py:96
@@ -4164,7 +4171,7 @@ msgid ""
 "            "
 msgstr ""
 "<p class=\"oe_view_nocontent_create\">\n"
-"                Клик за дефинирање на нов склад.\n"
+"                Кликнете за дефинирање на нов магацин.\n"
 "              </p>\n"
 "            "
 
@@ -4182,7 +4189,7 @@ msgstr "Откажано"
 #. module: stock
 #: view:stock.picking:0
 msgid "Confirmed Delivery Orders"
-msgstr "Потврдени налози за испорака"
+msgstr "Потврдени испратници"
 
 #. module: stock
 #: view:stock.move:0
@@ -4236,16 +4243,16 @@ msgid ""
 "* Fixed Location: The chained location is taken from the next field: Chained "
 "Location if Fixed."
 msgstr ""
-"Определува дали оваа локација е поврзана со друга локација, на пр. влезните "
-"производи на оваа локација \n"
-"треба да одат до поврзаната локација. Поврзаната локација е определена "
-"според типот :\n"
-"* Ниедна: Нема воопшто поврзување\n"
-"* Купувач: Поврзаната локација ќе биде превземена од полето за локација на "
-"купувачот на формуларот на  Партнерот кој е назначен во листата за требување "
-"од влезните производи.\n"
-"* Фиксна локација: Поврзаната локација за превзема од наредното поле: "
-"Поврзана локација доколку е фиксно."
+"Определува дали оваа локација е поврзана со друга локација, на пр. секој "
+"влезен производ во оваа локација\n"
+"следно треба да оди во поврзаната локациоја. Поврзаната локација е "
+"определена според типот:\n"
+"*Ниедна: Нема воопшто поврзување\n"
+"*Купувач: Поврзаната локација ќе биде превземена од полето за локацијата на "
+"купувачот од формуларот за Партнерот кој е назначен на Листата за требување "
+"на влезните производи.\n"
+"*Фиксна локација: Поврзаната локација е земена од следното поле: Поврзана "
+"локација доколку е фиксна."
 
 #. module: stock
 #: code:addons/stock/stock.py:1853
@@ -4268,17 +4275,17 @@ msgstr "Ревизија на сериски броеви"
 #: model:ir.ui.menu,name:stock.menu_action_picking_tree
 #: view:stock.picking.out:0
 msgid "Delivery Orders"
-msgstr "Налози за испорака"
+msgstr "Испратници"
 
 #. module: stock
 #: view:stock.picking:0
 msgid "Delivery orders already processed"
-msgstr "Налозите за испорака се веќе обработени"
+msgstr "Испратниците се веќе обработени"
 
 #. module: stock
 #: field:product.template,loc_case:0
 msgid "Case"
-msgstr "Случај"
+msgstr "Предмет"
 
 #. module: stock
 #: selection:report.stock.inventory,state:0
@@ -4296,12 +4303,12 @@ msgstr "Потврди"
 #. module: stock
 #: help:stock.location,icon:0
 msgid "Icon show in  hierarchical tree view"
-msgstr ""
+msgstr "Икона прикажана во прегледот на хиерархиското дрво"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_view_stock_merge_inventories
 msgid "Merge inventories"
-msgstr "Спојување на залихи"
+msgstr "Спој залихи"
 
 #. module: stock
 #: view:stock.location:0
@@ -4321,7 +4328,7 @@ msgstr ""
 #: field:stock.picking.in,message_follower_ids:0
 #: field:stock.picking.out,message_follower_ids:0
 msgid "Followers"
-msgstr "Следбеници"
+msgstr "Пратители"
 
 #. module: stock
 #: code:addons/stock/stock.py:2585
@@ -4341,7 +4348,7 @@ msgstr ""
 #. module: stock
 #: view:report.stock.move:0
 msgid "Total outgoing quantity"
-msgstr "Вкупно излезна колич"
+msgstr "Вкупно излезна количина"
 
 #. module: stock
 #: field:stock.move,backorder_id:0
@@ -4379,7 +4386,7 @@ msgstr "Креирај фактура"
 #. module: stock
 #: view:stock.picking:0
 msgid "Confirmed Internal Moves"
-msgstr "Потврдени внатрешни белешки"
+msgstr "Потврдени внатрешни движења"
 
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_stock_configuration
@@ -4389,7 +4396,7 @@ msgstr "Конфигурација"
 #. module: stock
 #: model:res.groups,name:stock.group_locations
 msgid "Manage Multiple Locations and Warehouses"
-msgstr "Управување со повеќе локации и складови"
+msgstr "Управување со повеќе локации и магацини"
 
 #. module: stock
 #: help:stock.change.standard.price,new_price:0
@@ -4401,10 +4408,10 @@ msgid ""
 "stock input account will be debited."
 msgstr ""
 "Доколку цената на чинење е зголемена, сметката за варијација на залиха ќе "
-"биде задолжена и сметката за излез на залиха ќе има побарување со вредност= "
-"(разлика на износ * достапна количина).\n"
-"Доколку чената на чинење е намалена, сметката за варијација на залиха ќе има "
-"побарување а сметката за влез на залиха ќе биде задолжена."
+"биде задолжена и сметката за излез на залиха ќе има побарување со вредност = "
+"(разлика на износ * расположлива количина).\n"
+"Доколку цената на чинење е намалена, сметката за варијација на залиха ќе има "
+"побарување и сметката за влез на залиха ќе биде задолжена."
 
 #. module: stock
 #: code:addons/stock/stock.py:2811
@@ -4427,7 +4434,7 @@ msgstr ""
 #. module: stock
 #: field:stock.location,chained_journal_id:0
 msgid "Chaining Journal"
-msgstr "Поврзуван дневник"
+msgstr "Поврзување на дневник"
 
 #. module: stock
 #: code:addons/stock/stock.py:768
@@ -4451,11 +4458,11 @@ msgid ""
 "be done with care."
 msgstr ""
 "Ова е количината на производи од пописна гледна точка. За движења во "
-"состојба 'завршено', ова е количината на производи кои се преместени. За "
-"другите движења, ова е количината на производ кој се планира да биде "
-"преместен. Намалувањето на оваа количина не генерира повлекување на налогот. "
-"Менувањето на оваа количина на доделени движења влијае на резервацијата на "
-"производот, и треба да биде внимателно извршено."
+"состојба 'завршено', ова е количината ма производите кои се навистина "
+"преместени. За други движења, ова е количината на производот кој се планира "
+"да биде преместен. Намалувањето на оваа количина не генерира заостаната "
+"обврска. Промената на оваа количина на доделени движења влијае на "
+"резервацијата на производот, и треба да биде направена внимателно."
 
 #. module: stock
 #: help:stock.location,valuation_in_account_id:0
@@ -4466,6 +4473,11 @@ msgid ""
 "generic Stock Output Account set on the product. This has no effect for "
 "internal locations."
 msgstr ""
+"Се користи за вреднување на залихата во реално време. Кога е поставено на "
+"виртуелна локација (не внатрешен тип), оваа сметка ќе се користи за "
+"зачувување на вредноста на производите што се преместуваат од внатрешна "
+"локација на оваа локација, наместо во стандардната Сметка за Излез на Залиха "
+"поставена на производот. Ова нема влијание за внатрешните локации."
 
 #. module: stock
 #: code:addons/stock/product.py:457
@@ -4488,7 +4500,7 @@ msgstr "Очекуван датум"
 #. module: stock
 #: field:stock.move,auto_validate:0
 msgid "Auto Validate"
-msgstr "Автоматско потврдување"
+msgstr "Автоматско валидирање"
 
 #. module: stock
 #: code:addons/stock/stock.py:1821
@@ -4526,7 +4538,7 @@ msgstr "Враќање на производи"
 #. module: stock
 #: view:stock.inventory:0
 msgid "Validate Inventory"
-msgstr "Потврди залиха"
+msgstr "Потврди попис"
 
 #. module: stock
 #: help:stock.move,price_currency_id:0
@@ -4534,9 +4546,9 @@ msgid ""
 "Technical field used to record the currency chosen by the user during a "
 "picking confirmation (when average price costing method is used)"
 msgstr ""
-"Техничко поле кое се користи за да се зачува валутата избрана од страна на "
-"корисникот за време на потврдувањето на требувањето (кога се користи метод "
-"на средна цена на чинење)"
+"Техничкото поле се користи за запишување на валутата која е избрана од "
+"страна на корисникот во текот на потврдувањето на требувањето (кога се "
+"користи метод на средна цена на трошоци на чинење)"
 
 #. module: stock
 #: help:stock.production.lot,name:0
@@ -4634,7 +4646,7 @@ msgstr "Автоматско требување"
 #. module: stock
 #: report:stock.picking.list:0
 msgid "Customer Address :"
-msgstr "Адреса на клиент :"
+msgstr "Адреса на купувач :"
 
 #. module: stock
 #: field:stock.location,chained_auto_packing:0
@@ -4676,11 +4688,11 @@ msgid ""
 " When the picking it done the state is 'Done'.              \n"
 "The state is 'Waiting' if the move is waiting for another one."
 msgstr ""
-"Кога движењето на залихата е креирано, тоа е во состојба 'Нацрт'.\n"
-" После тоа е подесено во состојба  'Потврдено'.\n"
+"Кога се креира движење на залиха тоа е во состојба 'Нацрт'.\n"
+" После тоа е подесено во состојба 'Потврдено'.\n"
 " Доколку залихата е достапна состојбата е подесена на 'Достапно'.\n"
 " Кога требувањето е направено состојбата е 'Завршено'.              \n"
-"Состојбата е 'Чекам' доколку движењето чека некое друго движење."
+"Состојбата е 'Чекам' доколку движењето чека друго движење."
 
 #. module: stock
 #: view:stock.inventory.merge:0
@@ -4704,8 +4716,8 @@ msgid ""
 "Please define inventory valuation account on the product category: \"%s\" "
 "(id: %d)"
 msgstr ""
-"Дефинирајте сметка за проценка на залиха на категорија производ: \"%s\" (id: "
-"%d)"
+"Дефинирајте сметка за вреднување на залиха на категоријата производ: \"%s\" "
+"(id: %d)"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_production_lot_revision
@@ -4716,7 +4728,7 @@ msgstr "Ревизија на сериски број"
 #: code:addons/stock/product.py:96
 #, python-format
 msgid "Specify valuation Account for Product Category: %s."
-msgstr ""
+msgstr "Одреди сметка за вреднување за категоријата производ: %s."
 
 #. module: stock
 #: help:stock.config.settings,module_claim_from_delivery:0
@@ -4724,6 +4736,8 @@ msgid ""
 "Adds a Claim link to the delivery order.\n"
 "                This installs the module claim_from_delivery."
 msgstr ""
+"Додава линк Рекламација на испратницата.\n"
+"                Ова го инсталира модулот claim_from_delivery."
 
 #. module: stock
 #: code:addons/stock/wizard/stock_return_picking.py:208
@@ -4750,7 +4764,7 @@ msgstr "Креирај притисни/повлечи логистички пр
 #: code:addons/stock/wizard/stock_invoice_onshipping.py:98
 #, python-format
 msgid "None of these picking lists require invoicing."
-msgstr "Ниту една од овие листи за требувања немаат потреба од фактурирање."
+msgstr "Ниту една од овие листи за требување немаат потреба од фактурирање."
 
 #. module: stock
 #: selection:report.stock.inventory,month:0
@@ -4792,6 +4806,9 @@ msgid ""
 "a serial number on product moves, you can get the upstream or downstream "
 "traceability of that product."
 msgstr ""
+"Ова ви овозможува да ги управувате производите со користење на сериски "
+"броеви. Кога селектирате сериски број на движења на производ, може да "
+"добиете нагорна или надолна следивост на тој производ."
 
 #. module: stock
 #: code:addons/stock/wizard/stock_fill_inventory.py:124
@@ -4836,7 +4853,7 @@ msgstr "Лот за производство"
 #: view:stock.move:0
 #: view:stock.tracking:0
 msgid "Traceability"
-msgstr "Штедливост"
+msgstr "Следивост"
 
 #. module: stock
 #: model:ir.actions.act_window,help:stock.action_deliver_move
@@ -4853,7 +4870,7 @@ msgid ""
 "            "
 msgstr ""
 "<p class=\"oe_view_nocontent_create\">\n"
-"                Кликни за додавање на налог за испорака за овој производ.\n"
+"                Кликни за додавање на испратница за овој производ.\n"
 "              </p><p>\n"
 "                Овде ќе најдете историја за сите испораки поврзани со овој\n"
 "                производ, како и за производите што треба да се испорачат\n"
@@ -4928,7 +4945,7 @@ msgstr "Движења"
 #: field:stock.picking.in,location_dest_id:0
 #: field:stock.picking.out,location_dest_id:0
 msgid "Dest. Location"
-msgstr "Локација на дестинацијата"
+msgstr "Локација на одредиштето"
 
 #. module: stock
 #: model:ir.actions.report.xml,name:stock.report_picking_list
@@ -4951,7 +4968,7 @@ msgstr "Доцнења"
 #. module: stock
 #: report:stock.picking.list:0
 msgid "Schedule Date"
-msgstr "Планиран датум"
+msgstr "Закажи датум"
 
 #. module: stock
 #: field:stock.location.product,to_date:0
@@ -4967,7 +4984,7 @@ msgstr "Октомври"
 #. module: stock
 #: view:stock.split.into:0
 msgid "Split Move"
-msgstr ""
+msgstr "Раздели движење"
 
 #. module: stock
 #: selection:stock.move,state:0
@@ -4977,7 +4994,7 @@ msgstr "Нов"
 #. module: stock
 #: view:report.stock.move:0
 msgid "Future Stock-Moves"
-msgstr "Идни движења на залихата"
+msgstr "Движења на идна залиха"
 
 #. module: stock
 #: view:report.stock.inventory:0
@@ -5022,7 +5039,7 @@ msgstr "Увези тековен попис"
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action5
 msgid "Upstream traceability"
-msgstr "Нагорна штедливост"
+msgstr "Нагорна следивост"
 
 #. module: stock
 #: model:ir.actions.report.xml,name:stock.report_location_overview_all
@@ -5067,7 +5084,7 @@ msgstr "Производство"
 #: selection:stock.location,chained_location_type:0
 #: view:stock.picking.out:0
 msgid "Customer"
-msgstr "Клиент"
+msgstr "Купувач"
 
 #. module: stock
 #: selection:report.stock.inventory,month:0
@@ -5120,7 +5137,7 @@ msgid ""
 "This allows to configure and use multiple stock locations and warehouses,\n"
 "                instead of having a single default one."
 msgstr ""
-"Ова овозможува конфигурирање и користење на повеќе локации и складови,\n"
+"Ова овозможува конфигурирање и користење на повеќе локации и магацини,\n"
 "                наместо само еден."
 
 #. module: stock
@@ -5173,10 +5190,9 @@ msgid ""
 "            "
 msgstr ""
 "<p class=\"oe_view_nocontent_create\">\n"
-"                Кликни за креирање на налог за испорака.\n"
+"                Кликни за креирање на испратница.\n"
 "              </p><p>\n"
-"                Ов е листа на сите налози за испорака што треба да се "
-"подготват\n"
+"                Ова е листа на сите испратници што треба да се подготват\n"
 "                според различните налози за продажба и правилата на "
 "логистиката.\n"
 "              </p>\n"
@@ -5188,6 +5204,8 @@ msgid ""
 "By default, the pack reference is generated following the sscc standard. "
 "(Serial number + 1 check digit)"
 msgstr ""
+"Стандардно, референцата на пакетот е генерирана со следење на sscc "
+"стандардот. (Сериски број + 1 check digit)"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_inventory
@@ -5196,7 +5214,7 @@ msgstr ""
 #: report:stock.inventory.move:0
 #: selection:stock.location,usage:0
 msgid "Inventory"
-msgstr "Залиха"
+msgstr "Попис"
 
 #. module: stock
 #: help:stock.location,chained_picking_type:0
@@ -5214,19 +5232,19 @@ msgid ""
 "would let a quantity of \"%s %s\" to ship and only roundings of \"%s %s\" is "
 "accepted by the uom."
 msgstr ""
-"Заокружувањето на основната ЕМ не ви дозволува да испорачате \"%s %s\", како "
-"што би дозволило испорачување на количина од \"%s %s\" и единствено "
-"заокружувања од \"%s %s\" се прифатливи за оваа ЕМ."
+"Заокружувањето на првичната ЕМ не ви дозволува да испорачате \"%s %s\", како "
+"што ќе ви дозволи да испорачате количина од \"%s %s\" и единствено "
+"заокружувања од \"%s %s\" се прифатени за таа ЕМ."
 
 #. module: stock
 #: help:stock.move,move_dest_id:0
 msgid "Optional: next stock move when chaining them"
-msgstr ""
+msgstr "Опционо: следно движење на залиха кога се поврзуваат"
 
 #. module: stock
 #: view:stock.picking.out:0
 msgid "Print Delivery Slip"
-msgstr ""
+msgstr "Печати ливче за испорака"
 
 #. module: stock
 #: view:report.stock.inventory:0
@@ -5244,7 +5262,7 @@ msgstr "Физички локации"
 #. module: stock
 #: view:stock.picking.in:0
 msgid "Ready to Process"
-msgstr "Подготвено за преработка"
+msgstr "Подготвено за обработка"
 
 #. module: stock
 #: report:stock.picking.list:0

@@ -299,11 +299,10 @@ class account_analytic_account(osv.osv):
             res[account.id] = 0.0
             sale_ids = sale_obj.search(cr, uid, [('project_id','=', account.id), ('state', '=', 'manual')], context=context)
             for sale in sale_obj.browse(cr, uid, sale_ids, context=context):
-                if not sale.invoiced:
-                    res[account.id] += sale.amount_untaxed
-                    for invoice in sale.invoice_ids:
-                        if invoice.state not in ('draft', 'cancel'):
-                            res[account.id] -= invoice.amount_untaxed
+                res[account.id] += sale.amount_untaxed
+                for invoice in sale.invoice_ids:
+                    if invoice.state != 'cancel':
+                        res[account.id] -= invoice.amount_untaxed
         return res
 
     def _timesheet_ca_invoiced_calc(self, cr, uid, ids, name, arg, context=None):

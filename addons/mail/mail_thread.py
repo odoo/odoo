@@ -809,7 +809,7 @@ class mail_thread(osv.AbstractModel):
                     # as RFC2822 requires timezone offset in Date headers.
                     stored_date = parsed_date.replace(tzinfo=pytz.utc)
                 else:
-                    stored_date = parsed_date.astimezone(pytz.utc)
+                    stored_date = parsed_date.astimezone(tzinfo=pytz.utc)
             except Exception:
                 _logger.warning('Failed to parse Date header %r in incoming mail '
                                 'with message-id %r, assuming current date/time.',
@@ -828,7 +828,7 @@ class mail_thread(osv.AbstractModel):
             if parent_ids:
                 msg_dict['parent_id'] = parent_ids[0]
 
-        msg_dict['body'], msg_dict['attachments'] = self._message_extract_payload(message)
+        msg_dict['body'], msg_dict['attachments'] = self._message_extract_payload(message, save_original=save_original)
         return msg_dict
 
     #------------------------------------------------------

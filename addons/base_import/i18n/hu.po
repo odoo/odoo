@@ -14,8 +14,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-03-23 11:56+0000\n"
-"X-Generator: Launchpad (build 16540)\n"
+"X-Launchpad-Export-Date: 2013-03-28 05:33+0000\n"
+"X-Generator: Launchpad (build 16546)\n"
 
 #. module: base_import
 #. openerp-web
@@ -473,6 +473,9 @@ msgid ""
 "\n"
 "                        PSQL:"
 msgstr ""
+"Személyekhez CVS fájl létrehozása, vállalatokhoz\n"
+"                        kapcsolva, a következő SQL parancsot használva a \n"
+"                        PSQL-ben:"
 
 #. module: base_import
 #. openerp-web
@@ -484,6 +487,11 @@ msgid ""
 "                        (in 'Save As' dialog box > click 'Tools' dropdown \n"
 "                        list > Encoding tab)."
 msgstr ""
+"Microsoft Excel lehetővé teszi\n"
+"                        csak a kódolás módosítását az elmentés alatt \n"
+"                        (a 'Mentés másként' párbeszéd ablakban > kattints a "
+"'Kellékek' legördülő \n"
+"                        listán > a Kódolás fülre)."
 
 #. module: base_import
 #. openerp-web
@@ -507,6 +515,11 @@ msgid ""
 "                        later, it's thus good practice to specify it\n"
 "                        whenever possible"
 msgstr ""
+"az eredeti importálás frissítéséhez is \n"
+"                        használja, ha később is fel akarja használni az újra-"
+"importált módosított\n"
+"                        adatot, amikor csak lehet ez egy jó gyakorlás a \n"
+"                        meghatározáshoz"
 
 #. module: base_import
 #. openerp-web
@@ -516,6 +529,9 @@ msgid ""
 "file to import. If you need a sample importable file, you\n"
 "            can use the export tool to generate one."
 msgstr ""
+"fájl importáláshoz, betöltéshez. Ha szüksége van egy importálható példa "
+"fájlra, akkor\n"
+"            használhatja az export eszközt egy új generálásához."
 
 #. module: base_import
 #. openerp-web
@@ -792,7 +808,7 @@ msgstr "Egy CVS fájl importálása"
 #: code:addons/base_import/static/src/js/import.js:74
 #, python-format
 msgid "Quoting:"
-msgstr ""
+msgstr "Hivatkozni:"
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_tests_models_m2o_required_related
@@ -804,7 +820,7 @@ msgstr "base_import.tests.models.m2o.required.related"
 #: code:addons/base_import/static/src/xml/import.xml:293
 #, python-format
 msgid ")."
-msgstr ""
+msgstr "nkat)."
 
 #. module: base_import
 #. openerp-web
@@ -1070,6 +1086,14 @@ msgid ""
 "                        link between each person and the company they work \n"
 "                        for)."
 msgstr ""
+"Ha különböző táblázatokból kell adatot importálni, \n"
+"                        akkor a különböző táblázatok közötti rekordok "
+"kapcsolatait\n"
+"                        újra létre kell hozni. (pl. ha vállalatokat és "
+"személyeket \n"
+"                        importál, akkor létre kell hoznia a kapcsolatot \n"
+"                        minden személy és a vállalata közt, ahol "
+"alakalmazott)."
 
 #. module: base_import
 #. openerp-web
@@ -1082,6 +1106,12 @@ msgid ""
 "                        Here is when you should use one or the other, \n"
 "                        according to your need:"
 msgstr ""
+"Az igénye szerint, használni kell \n"
+"                        egyet a lehetésges 3 közül a a rekordokra "
+"hivatkozáshoz a kapcsolatokban. \n"
+"                        It van, ha egyiket a másik helyett kelle használni, "
+"\n"
+"                        az igénye szerint:"
 
 #. module: base_import
 #. openerp-web
@@ -1104,6 +1134,13 @@ msgid ""
 "                        will set the EMPTY value in the field, instead of \n"
 "                        assigning the default value."
 msgstr ""
+"Ha nem állítja be az összes mezőt a CSV fájlban, \n"
+"                        OpenERP az alapértelmezett értéket fogja adni minden "
+"olyan mezőnak ami \n"
+"                        nincs meghatározva. Ha a mezőnek\n"
+"                        üres értéket ad a CSV fájlban, OpenERP \n"
+"                        az ÜRES értéket fogja beállítani a mezőre, az \n"
+"                        alapértelmezett érték hozzáadása helyett."
 
 #. module: base_import
 #. openerp-web
@@ -1156,6 +1193,12 @@ msgid ""
 "spreadsheet \n"
 "                        application."
 msgstr ""
+"Ez a tulajdonság \n"
+"                        lehetővé teszi az OpenERP Import/Export eszköz "
+"használatát \n"
+"                        a rekord kötegek módosítására a kedvenc táblázat "
+"kezelőjénak \n"
+"                        alkalmazásával."
 
 #. module: base_import
 #. openerp-web
@@ -1195,7 +1238,7 @@ msgstr ""
 #: code:addons/base_import/static/src/xml/import.xml:169
 #, python-format
 msgid "CSV file for categories"
-msgstr ""
+msgstr "CSV fájl kategóriákhoz"
 
 #. module: base_import
 #. openerp-web
@@ -1214,13 +1257,18 @@ msgid ""
 "                        identifier from the original application and\n"
 "                        map it to the"
 msgstr ""
+"A különböző rekordok közötti kapcsolat újboli\n"
+"                        létrehozásához, az eredeti alkalmazás \n"
+"                        egyedi azonosítójának használata\n"
+"                        szükséges amit\n"
+"                        irányítson ehhez"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/xml/import.xml:170
 #, python-format
 msgid "CSV file for Products"
-msgstr ""
+msgstr "CSV fájl a termékekhez"
 
 #. module: base_import
 #. openerp-web
@@ -1252,31 +1300,31 @@ msgstr ""
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_tests_models_m2o_related
 msgid "base_import.tests.models.m2o.related"
-msgstr ""
+msgstr "base_import.tests.models.m2o.related"
 
 #. module: base_import
 #: field:base_import.tests.models.preview,name:0
 msgid "Name"
-msgstr ""
+msgstr "Név"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/xml/import.xml:80
 #, python-format
 msgid "to the original unique identifier."
-msgstr ""
+msgstr "az eredeti egyedi ID azonosítóhoz."
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/xml/import.xml:318
 #, python-format
 msgid "person_3,Eric,False,company_2"
-msgstr ""
+msgstr "személy_3,Eric,Hamis,vállalt_2"
 
 #. module: base_import
 #: field:base_import.import,res_model:0
 msgid "Model"
-msgstr ""
+msgstr "Modell"
 
 #. module: base_import
 #. openerp-web
@@ -1284,7 +1332,7 @@ msgstr ""
 #: code:addons/base_import/static/src/xml/import.xml:82
 #, python-format
 msgid "ID"
-msgstr ""
+msgstr "Azonosító ID"
 
 #. module: base_import
 #. openerp-web
@@ -1319,12 +1367,12 @@ msgstr ""
 #: code:addons/base_import/static/src/js/import.js:73
 #, python-format
 msgid "Separator:"
-msgstr ""
+msgstr "Elválasztó:"
 
 #. module: base_import
 #: field:base_import.import,file_name:0
 msgid "File Name"
-msgstr ""
+msgstr "Fájl neve"
 
 #. module: base_import
 #. openerp-web
@@ -1334,28 +1382,28 @@ msgstr ""
 #: code:addons/base_import/static/src/xml/import.xml:82
 #, python-format
 msgid "External ID"
-msgstr ""
+msgstr "Külső ID azonosító"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/xml/import.xml:39
 #, python-format
 msgid "File Format Options…"
-msgstr ""
+msgstr "Fájl formátum lehetőségek…"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/js/import.js:423
 #, python-format
 msgid "between rows %d and %d"
-msgstr ""
+msgstr "oszlopok közt %d és %d"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/xml/import.xml:19
 #, python-format
 msgid "or"
-msgstr ""
+msgstr "vagy"
 
 #. module: base_import
 #. openerp-web

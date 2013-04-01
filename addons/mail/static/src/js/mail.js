@@ -1208,7 +1208,7 @@ openerp.mail = function (session) {
             this.author_id = datasets.author_id || false;
             this.thread_level = (datasets.thread_level+1) || 0;
             datasets.partner_ids = datasets.partner_ids || [];
-            if (datasets.author_id && ! _.contains(datasets.partner_ids, datasets.author_id) && datasets.author_id[0]) {
+            if (datasets.author_id && !_.contains(_.flatten(datasets.partner_ids),datasets.author_id[0]) && datasets.author_id[0]) {
                 datasets.partner_ids.push(datasets.author_id);
             }
             this.partner_ids = datasets.partner_ids;
@@ -1389,7 +1389,10 @@ openerp.mail = function (session) {
             if (this.options.help) {
                 no_message.html(this.options.help);
             }
-            no_message.appendTo(this.$el);
+            if (!this.$el.find(".oe_view_nocontent").length)
+            {
+                no_message.appendTo(this.$el);
+            }
         },
 
         /**
