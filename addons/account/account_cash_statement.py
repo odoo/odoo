@@ -187,6 +187,8 @@ class account_cash_statement(osv.osv):
 
     def _get_cash_open_box_lines(self, cr, uid, ids, journa_id, context):
         details_ids = []
+        if not journa_id:
+            return details_ids
         journal = self.pool.get('account.journal').browse(cr, uid, journa_id, context=context)
         if journal and (journal.type == 'cash'):
             last_pieces = None
