@@ -242,7 +242,7 @@ class pos_session(osv.osv):
         'cash_register_difference' : fields.related('cash_register_id', 'difference',
                 type='float',
                 string='Difference',
-                help="Difference between the closing cash control and the theorical balance.",
+                help="Difference between the closing cash control and the theoretical balance.",
                 readonly=True),
 
         'journal_ids' : fields.related('config_id', 'journal_ids',
