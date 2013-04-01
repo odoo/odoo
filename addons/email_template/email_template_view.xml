@@ -9,7 +9,7 @@
                     <sheet>
                         <div class="oe_title">
                             <label for="name" class="oe_edit_only"/><h1><field name="name" required="1"/></h1>
-                            <h3><label for="model_id"/><field name="model_id" required="1" on_change="onchange_model_id(model_id)" class="oe_inline"/></h3>
+                            <label for="model_id"/><field name="model_id" required="1" on_change="onchange_model_id(model_id)" class="oe_inline"/>
                             <field name="model" invisible="1"/>
                         </div>
                         <div class="oe_right oe_button_box" name="buttons">
@@ -25,30 +25,44 @@
                                     context="{'template_id':active_id}"/>
                         </div>
                         <notebook>
-                            <page string="Email Details">
+                            <page string="Mailing Template">
                                 <group>
-                                    <group string="Addressing">
-                                      <field name="email_from"/>
-                                      <field name="email_to"/>
-                                      <field name="partner_to"/>
-                                      <field name="email_cc"/>
-                                      <field name="reply_to"/>
-                                      <field name="user_signature"/>
+                                    <group>
+                                        <field name="email_from"
+                                                placeholder="Override author's email"/>
+                                        <field name="email_to"
+                                                placeholder="Comma-separated recipient addresses"/>
+                                        <field name="partner_to"
+                                                placeholder="Comma-separated ids of recipient partners"/>
+                                        <field name="email_cc"
+                                                placeholder="Comma-separated carbon copy recipients addresses"/>
+                                        <field name="reply_to"
+                                                placeholder="Preferred reply address"/>
+                                        <field name="subject"
+                                                placeholder="Subject (placeholders may be used here)"/>
+                                        <field name="user_signature" string="Author Signature (mass mail only)"/>
                                     </group>
-                                    <group string="Dynamic Value Builder" class="oe_edit_only">
-                                            <field name="model_object_field" domain="[('model_id','=',model_id),('ttype','!=','one2many'),('ttype','!=','many2many')]" on_change="onchange_sub_model_object_value_field(model_object_field)"/>
-                                            <field name="sub_object" readonly="1"/>
-                                            <field name="sub_model_object_field" domain="[('model_id','=',sub_object),('ttype','!=','one2many'),('ttype','!=','many2many')]" attrs="{'readonly':[('sub_object','=',False)],'required':[('sub_object','!=',False)]}" on_change="onchange_sub_model_object_value_field(model_object_field,sub_model_object_field)"/>
-                                            <field name="null_value" on_change="onchange_sub_model_object_value_field(model_object_field,sub_model_object_field,null_value)"/>
-                                            <field name="copyvalue"/>
-                                    </group>
-                                    <group string="Contents" colspan="2">
-                                       <field name="subject"/>
-                                       <field name="body_html" width="250" height="450" nolabel="1" colspan="2" placeholder="Email contents (in raw HTML format)"/>
+                                    <group class="oe_edit_only">
+                                        <h3 colspan="2">Dynamic placeholder generator</h3>
+                                        <field name="model_object_field"
+                                                domain="[('model_id','=',model_id),('ttype','!=','one2many'),('ttype','!=','many2many')]"
+                                                on_change="onchange_sub_model_object_value_field(model_object_field)"/>
+                                        <field name="sub_object" readonly="1"/>
+                                        <field name="sub_model_object_field"
+                                                domain="[('model_id','=',sub_object),('ttype','!=','one2many'),('ttype','!=','many2many')]"
+                                                attrs="{'readonly':[('sub_object','=',False)],'required':[('sub_object','!=',False)]}"
+                                                on_change="onchange_sub_model_object_value_field(model_object_field,sub_model_object_field)"/>
+                                        <field name="null_value"
+                                                on_change="onchange_sub_model_object_value_field(model_object_field,sub_model_object_field,null_value)"/>
+                                        <field name="copyvalue"/>
                                     </group>
                                 </group>
+                                <h3>Body</h3>
+                                <field name="body_html" width="250" height="450"
+                                        placeholder="Rich-text/HTML content of the message (placeholders may be used here)"/>
+                                <field name="attachment_ids" nolabel="1" widget="many2many_binary"/>
                             </page>
-                            <page string="Advanced">
+                            <page string="Advanced Settings">
                                 <group>
                                     <field name="lang"/>
                                     <field name="mail_server_id"/>
@@ -56,9 +70,6 @@
                                     <field name="report_template" domain="[('model','=',model)]"/>
                                     <field name="report_name" class="oe_inline"
                                            attrs="{'invisible':[('report_template','=',False)]}"/>
-                                    <field name="attachment_ids">
-                                       <tree><field name="name"/></tree>
-                                    </field>
                                 </group>
                             </page>
                         </notebook>
