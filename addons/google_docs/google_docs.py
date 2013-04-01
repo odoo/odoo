@@ -188,7 +188,7 @@ class config(osv.osv):
     _description = "Google Drive templates config"
     
     def _list_all_models(self, cr, uid, context=None):
-        cr.execute("SELECT model, name from ir_model")
+        cr.execute("SELECT model, name from ir_model order by name")
         return cr.fetchall()
     
     def _resource_get(self, cr, uid, ids, name, arg, context=None):
