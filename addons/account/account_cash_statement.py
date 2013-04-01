@@ -160,7 +160,7 @@ class account_cash_statement(osv.osv):
             if statement_ids:
                 st = self.browse(cr, uid, statement_ids[0], context=context)
                 result.setdefault('value', {}).update({'last_closing_balance' : st.balance_end_real})
-        opening_details_ids = self._get_cash_open_box_lines(cr, uid, ids, journal_id, context)
+        opening_details_ids = self._get_cash_open_box_lines(cr, uid, journal_id, context)
         if opening_details_ids:
             result['value']['opening_details_ids'] = opening_details_ids
         return result
@@ -185,11 +185,11 @@ class account_cash_statement(osv.osv):
         'user_id': lambda self, cr, uid, context=None: uid,
     }
 
-    def _get_cash_open_box_lines(self, cr, uid, ids, journa_id, context):
+    def _get_cash_open_box_lines(self, cr, uid, journal_id, context):
         details_ids = []
-        if not journa_id:
+        if not journal_id:
             return details_ids
-        journal = self.pool.get('account.journal').browse(cr, uid, journa_id, context=context)
+        journal = self.pool.get('account.journal').browse(cr, uid, journal_id, context=context)
         if journal and (journal.type == 'cash'):
             last_pieces = None
             if journal.with_last_closing_balance == True:
@@ -213,6 +213,9 @@ class account_cash_statement(osv.osv):
         return details_ids
 
     def create(self, cr, uid, vals, context=None):
+        journal_id = vals.get('journal_id',False)
+        if journal_id:
+            vals['opening_details_ids'] = vals.get('opening_details_ids',False) or self._get_cash_open_box_lines(cr, uid, journal_id, context)
         res_id = super(account_cash_statement, self).create(cr, uid, vals, context=context)
         self._update_balances(cr, uid, [res_id], context)
         return res_id
