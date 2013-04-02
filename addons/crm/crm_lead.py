@@ -944,6 +944,7 @@ class crm_lead(base_stage, format_address, osv.osv):
             'default_composition_mode': 'comment',
         })
         return {
+            'name': _('Compose Email'),
             'type': 'ir.actions.act_window',
             'view_type': 'form',
             'view_mode': 'form',
