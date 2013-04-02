@@ -5177,8 +5177,8 @@ class BaseModel(object):
 
     # specific attributes used by record, recordset and null instances
     INSTANCE_ATTRIBUTES = [
-        '_record_id',
-        '_record_ids',
+        '_id',
+        '_ids',
     ]
 
     @property
@@ -5188,11 +5188,11 @@ class BaseModel(object):
     def null(self):
         """ make a null instance """
         # a null instance is represented as a record with id=False
-        return self._make_instance(_record_id=False)
+        return self._make_instance(_id=False)
 
     def is_null(self):
         """ test whether self is a null instance """
-        return getattr(self, '_record_id', None) is False
+        return getattr(self, '_id', None) is False
 
     def record(self, id=None, scope=None):
         """ make a record instance
@@ -5202,22 +5202,22 @@ class BaseModel(object):
         """
         if id is None:
             if self.is_record():
-                id = self._record_id
+                id = self._id
             elif self.is_recordset():
-                assert len(self._record_ids) == 1, "Expected singleton: %s" % self
-                id = self._record_ids[0]
+                assert len(self._ids) == 1, "Expected singleton: %s" % self
+                id = self._ids[0]
             else:
                 raise except_orm("ValueError", "Expected singleton: %s" % self)
 
-        return self._make_instance(_record_id=id, _scope=scope)
+        return self._make_instance(_id=id, _scope=scope)
 
     def is_record(self):
         """ test whether `self` is a record instance """
-        return bool(getattr(self, '_record_id', None))
+        return bool(getattr(self, '_id', None))
 
     def is_record_or_null(self):
         """ test whether `self` is a record or null instance """
-        return hasattr(self, '_record_id')
+        return hasattr(self, '_id')
 
     def recordset(self, ids=None, scope=None):
         """ make a recordset instance
@@ -5229,31 +5229,31 @@ class BaseModel(object):
             if self.is_null():
                 ids = []
             elif self.is_record():
-                ids = [self._record_id]
+                ids = [self._id]
             elif self.is_recordset():
-                ids = self._record_ids
+                ids = self._ids
             else:
                 cr, uid, context = scope or api.scope
                 ids = self.search(cr, uid, [], context=context)
         else:
             ids = map(int, ids)
 
-        return self._make_instance(_record_ids=ids, _scope=scope)
+        return self._make_instance(_ids=ids, _scope=scope)
 
     def is_recordset(self):
         """ test whether `self` is a recordset instance """
-        return hasattr(self, '_record_ids')
+        return hasattr(self, '_ids')
 
     def unbrowse(self):
         """ Return the `id`/`ids` corresponding to a record/recordset/null instance. """
         if self.is_record_or_null():
-            return self._record_id
-        return self._record_ids
+            return self._id
+        return self._ids
 
     def __nonzero__(self):
         """ Test whether `self` is nonempty and not null. """
         if self.is_recordset():
-            return bool(self._record_ids)
+            return bool(self._ids)
         return not self.is_null()
 
     def __iter__(self):
@@ -5262,15 +5262,15 @@ class BaseModel(object):
 
         # iterating over records usually implies reading them
         # -> add the ids in the cache to prefetch all records at once
-        self.scope.cache[self._name].ids.update(self._record_ids)
+        self.scope.cache[self._name].ids.update(self._ids)
 
-        for id in self._record_ids:
+        for id in self._ids:
             yield self.record(id, scope=self._scope)
 
     def __len__(self):
         """ Return the size of `self` (must be a recordset). """
         assert self.is_recordset(), "Expected recordset: %s" % self
-        return len(self._record_ids)
+        return len(self._ids)
 
     def __contains__(self, item):
         """ If `self` is a record, test whether `item` is a field name.
@@ -5282,12 +5282,12 @@ class BaseModel(object):
         if not isinstance(item, Record):
             _logger.warning("Unexpected: %s in %s" % (item, self))
             return False
-        return item.id in self._record_ids
+        return item.id in self._ids
 
     def __add__(self, other):
         """ Return the concatenation of two recordsets as a recordset. """
         assert self._name == other._name, "Mixing apples and oranges: %s, %s" % (self, other)
-        ids = self.recordset()._record_ids + other.recordset()._record_ids
+        ids = self.recordset()._ids + other.recordset()._ids
         return self.recordset(ids, scope=self._scope)
 
     def __eq__(self, other):
@@ -5299,11 +5299,11 @@ class BaseModel(object):
         if self.is_record_or_null():
             # compare two records
             assert other.is_record_or_null(), "Comparing record to non-record: %s, %s" % (self, other)
-            return (self._name, self._record_id) == (other._name, other._record_id)
+            return (self._name, self._id) == (other._name, other._id)
         elif self.is_recordset():
             # compare two recordsets
             assert other.is_recordset(), "Comparing recordset to non-recordset: %s, %s" % (self, other)
-            return (self._name, self._record_ids) == (other._name, other._record_ids)
+            return (self._name, self._ids) == (other._name, other._ids)
         else:
             # compare two models
             return self._name == other._name
@@ -5315,7 +5315,7 @@ class BaseModel(object):
         """ read the field `field_name` on a record instance """
         assert self.is_record_or_null(), "Expected record instance: %s" % self
         if field_name == 'id':
-            return self._record_id
+            return self._id
 
         with self.scope:
             # fetch the definition of the field which was asked for
@@ -5328,7 +5328,7 @@ class BaseModel(object):
 
             model_cache = self.scope.cache[self._name]
 
-            if self._record_id not in model_cache[field_name]:
+            if self._id not in model_cache[field_name]:
                 # determine which fields to fetch
                 if column._prefetch:
                     # fetch all classic and many2one fields
@@ -5349,16 +5349,16 @@ class BaseModel(object):
                     field_names = [field_name]
 
                 # fetch the records in the same model that don't have the field yet
-                model_cache.ids.add(self._record_id)
+                model_cache.ids.add(self._id)
                 ids = list(model_cache.ids - set(model_cache[field_name]))
 
                 self._fetch_record_fields(field_names, ids)
 
-            if self._record_id not in model_cache[field_name]:
+            if self._id not in model_cache[field_name]:
                 # How did this happen? Could be a missing model due to custom fields used too soon.
                 raise KeyError(_('Unknown field %s in %s ') % (field_name, self))
 
-            return browse_function(self, column, model_cache[field_name][self._record_id])
+            return browse_function(self, column, model_cache[field_name][self._id])
 
     def _fetch_record_fields(self, field_names, ids):
         """ read the given fields in the record cache """
@@ -5407,7 +5407,7 @@ class BaseModel(object):
             return self._get_record_field(key)
 
         assert self.is_recordset(), "Expected record or recordset: %s" % self
-        select = self._record_ids[key]
+        select = self._ids[key]
         if isinstance(select, list):
             return self.recordset(select, scope=self._scope)
         else:
@@ -5432,13 +5432,13 @@ class BaseModel(object):
 
     def __int__(self):
         assert self.is_record_or_null(), "Expected record instance: %s" % self
-        return self._record_id
+        return self._id
 
     def __str__(self):
         if self.is_record():
-            return "Record(%s, %d)" % (self._name, self._record_id)
+            return "Record(%s, %d)" % (self._name, self._id)
         elif self.is_recordset():
-            return "Recordset(%s, %s)" % (self._name, self._record_ids)
+            return "Recordset(%s, %s)" % (self._name, self._ids)
         elif self.is_null():
             return "Null(%s)" % self._name
         else:
@@ -5451,9 +5451,9 @@ class BaseModel(object):
 
     def __hash__(self):
         if self.is_record_or_null():
-            return hash((self._name, self._record_id))
+            return hash((self._name, self._id))
         elif self.is_recordset():
-            return hash((self._name, tuple(self._record_ids)))
+            return hash((self._name, tuple(self._ids)))
         else:
             return hash(self._name)
 
