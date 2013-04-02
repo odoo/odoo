@@ -254,12 +254,6 @@ class res_users(osv.osv):
     # User can read a few of his own fields
     SELF_READABLE_FIELDS = ['signature', 'company_id', 'login', 'email', 'name', 'image', 'image_medium', 'image_small', 'lang', 'tz', 'tz_offset', 'groups_id', 'partner_id', '__last_update']
 
-    def create(self, cr, uid, values, context=None):
-        user = self.read(cr, SUPERUSER_ID, uid, ['company_id', 'company_ids'], context=context)
-        values['company_id'] = user['company_id'] and user['company_id'][0] or None
-        values['company_ids'] = user['company_ids']
-        return super(res_users, self).create(cr, uid, values, context=context)
-
     def read(self, cr, uid, ids, fields=None, context=None, load='_classic_read'):
         def override_password(o):
             if 'password' in o and ('id' not in o or o['id'] != uid):
