@@ -1,5 +1,9 @@
 # -*- coding: utf-8 -*-
+import contextlib
 import json
+import logging
+import logging.handlers
+import types
 import unittest2
 
 from .. import http
@@ -20,16 +24,13 @@ class DispatchCleanup(unittest2.TestCase):
     """
     def setUp(self):
         self.classes = http.controllers_class
-        self.objects = http.controllers_object
         self.paths = http.controllers_path
 
-        http.controllers_class = []
-        http.controllers_object = {}
+        http.controllers_class = {}
         http.controllers_path = {}
 
     def tearDown(self):
         http.controllers_path = self.paths
-        http.controllers_object = self.objects
         http.controllers_class = self.classes
 
 
@@ -54,6 +55,30 @@ def jsonrpc_response(result=None):
         u'id': None,
         u'result': result,
     }
+
+
+class TestHandler(logging.handlers.BufferingHandler):
+    def __init__(self):
+        logging.handlers.BufferingHandler.__init__(self, 0)
+
+    def shouldFlush(self, record):
+        return False
+
+@contextlib.contextmanager
+def capture_logging(level=logging.DEBUG):
+    logger = logging.getLogger('openerp')
+    old_level = logger.level
+    old_handlers = logger.handlers
+
+    test_handler = TestHandler()
+    logger.handlers = [test_handler]
+    logger.setLevel(level)
+
+    try:
+        yield test_handler
+    finally:
+        logger.setLevel(old_level)
+        logger.handlers = old_handlers
 
 
 class TestDispatching(DispatchCleanup):
@@ -103,6 +128,13 @@ class TestDispatching(DispatchCleanup):
         self.assertEqual(
             jsonrpc_response('no place paws in path of da sinnerz,'),
             json.loads(''.join(body)))
+
+
+class TestSubclassing(DispatchCleanup):
+    def setUp(self):
+        super(TestSubclassing, self).setUp()
+        self.app = http.Root()
+        self.client = werkzeug.test.Client(self.app)
 
     def test_add_method(self):
         class CatController(http.Controller):
@@ -180,7 +212,38 @@ class TestDispatching(DispatchCleanup):
         body, status, headers = self.client.post('/cat')
         self.assertEqual('404 NOT FOUND', status)
 
-    def test_extend(self):
+    def test_extends(self):
+        """
+        When subclassing an existing Controller new classes are "merged" into
+        the base one
+        """
+        class A(http.Controller):
+            _cp_path = '/foo'
+            @http.httprequest
+            def index(self, req):
+                return '1'
+
+        class B(A):
+            @http.httprequest
+            def index(self, req):
+                return "%s 2" % super(B, self).index(req)
+
+        class C(A):
+            @http.httprequest
+            def index(self, req):
+                return "%s 3" % super(C, self).index(req)
+
+        self.app.load_addons()
+
+        body, status, headers = self.client.get('/foo')
+        self.assertEqual('200 OK', status)
+        self.assertEqual('1 2 3', ''.join(body))
+
+    def test_re_expose(self):
+        """
+        An existing Controller should not be extended with a new cp_path
+        (re-exposing somewhere else)
+        """
         class CatController(http.Controller):
             _cp_path = '/cat'
 
@@ -191,18 +254,94 @@ class TestDispatching(DispatchCleanup):
             def speak(self):
                 return 'Yu ordered cheezburgerz,'
 
-        class DogController(CatController):
-            _cp_path = '/dog'
+        with capture_logging() as handler:
+            class DogController(CatController):
+                _cp_path = '/dog'
 
-            def speak(self):
-                return 'Woof woof woof woof'
+                def speak(self):
+                    return 'Woof woof woof woof'
+
+            [record] = handler.buffer
+            self.assertEqual(logging.WARN, record.levelno)
+            self.assertEqual("Re-exposing CatController at /dog.\n"
+                             "\tThis usage is unsupported.",
+                             record.getMessage())
+
+    def test_fail_redefine(self):
+        """
+        An existing Controller can't be overwritten by a new one on the same
+        path (? or should this generate a warning and still work as if it was
+        an extend?)
+        """
+        class FooController(http.Controller):
+            _cp_path = '/foo'
+
+        with self.assertRaises(AssertionError):
+            class BarController(http.Controller):
+                _cp_path = '/foo'
+
+    def test_fail_no_path(self):
+        """
+        A Controller must have a path (and thus be exposed)
+        """
+        with self.assertRaises(AssertionError):
+            class FooController(http.Controller):
+                pass
+
+    def test_mixin(self):
+        """
+        Can mix "normal" python classes into a controller directly
+        """
+        class Mixin(object):
+            @http.httprequest
+            def index(self, req):
+                return 'ok'
+
+        class FooController(http.Controller, Mixin):
+            _cp_path = '/foo'
+
+        class BarContoller(Mixin, http.Controller):
+            _cp_path = '/bar'
 
         self.app.load_addons()
 
-        body, status, headers = self.client.get('/cat')
+        body, status, headers = self.client.get('/foo')
         self.assertEqual('200 OK', status)
-        self.assertEqual('[Yu ordered cheezburgerz,]', ''.join(body))
+        self.assertEqual('ok', ''.join(body))
 
-        body, status, headers = self.client.get('/dog')
+        body, status, headers = self.client.get('/bar')
         self.assertEqual('200 OK', status)
-        self.assertEqual('[Woof woof woof woof]', ''.join(body))
+        self.assertEqual('ok', ''.join(body))
+
+    def test_mixin_extend(self):
+        """
+        Can mix "normal" python class into a controller by extension
+        """
+        class FooController(http.Controller):
+            _cp_path = '/foo'
+
+        class M1(object):
+            @http.httprequest
+            def m1(self, req):
+                return 'ok 1'
+
+        class M2(object):
+            @http.httprequest
+            def m2(self, req):
+                return 'ok 2'
+
+        class AddM1(FooController, M1):
+            pass
+
+        class AddM2(M2, FooController):
+            pass
+
+        self.app.load_addons()
+
+        body, status, headers = self.client.get('/foo/m1')
+        self.assertEqual('200 OK', status)
+        self.assertEqual('ok 1', ''.join(body))
+
+        body, status, headers = self.client.get('/foo/m2')
+        self.assertEqual('200 OK', status)
+        self.assertEqual('ok 2', ''.join(body))
