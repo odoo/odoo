@@ -331,6 +331,7 @@
                     <field name="department_id"/>
                     <field name="no_of_recruitment"/>
                     <field name="color"/>
+                    <field name="priority_count"/>
                     <templates>
                         <t t-name="kanban-box">
                             <div t-attf-class="oe_kanban_color_#{kanban_getcolor(record.color.raw_value)} oe_kanban_card oe_semantic_html_override oe_kanban_survey">
@@ -344,11 +345,26 @@
                                 </div>
                                 <div class="oe_kanban_content">
                                     <h3 class="oe_kanban_ellipsis"><field name="name"/></h3>
+                                        <field name="department_id"/><br/>
+                                        <a><span t-if="record.no_of_recruitment.raw_value gt 0"><field name="no_of_recruitment"/>Employees</span></a>
+                                        
                                     <div>
-                                        <field name="department_id"/>
+                                        <a><t t-esc="widget.values.priority_count.value.priority1"/></a>
+                                        <span>
+                                        <img t-attf-src="/web/static/src/img/icons/star-on.png" width="16" height="16" />
+                                        <img t-attf-src="/web/static/src/img/icons/star-on.png" width="16" height="16" />
+                                        <img t-attf-src="/web/static/src/img/icons/star-on.png" width="16" height="16" />
+                                        </span><br />
+                                        <a><t t-esc="widget.values.priority_count.value.priority2"/></a>
+                                        <span>
+                                        <img t-attf-src="/web/static/src/img/icons/star-on.png" width="16" height="16" />
+                                        <img t-attf-src="/web/static/src/img/icons/star-on.png" width="16" height="16" />
+                                        </span><br />
+                                        <a><t t-esc="widget.values.priority_count.value.priority3"/></a>
+                                        <span>
+                                        <img t-attf-src="/web/static/src/img/icons/star-on.png" width="16" height="16" />
+                                        </span>
                                     </div>
-                                    <br/>
-                                    <a><span t-if="record.no_of_recruitment.raw_value gt 0"><field name="no_of_recruitment"/>Employees</span></a>
                                 </div>
                             </div>
                         </t>
@@ -359,7 +375,7 @@
 
  
         <!-- hr related job position menu action -->
-         <record model="ir.actions.act_window" id="hr.action_hr_job">
+         <record model="ir.actions.act_window" id="action_hr_job">
             <field name="name">Job Positions</field>
             <field name="res_model">hr.job</field>
             <field name="view_type">form</field>
