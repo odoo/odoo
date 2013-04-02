@@ -8,7 +8,6 @@
             <field name="description">Configure your profile and specify your timezone</field>
             <field name="computation_mode">count</field>
             <field name="model_id" eval="ref('base.model_res_users')" />
-            <field name="field_id" eval="ref('base.field_res_partner_tz')" />
             <field name="domain">[('id','=',user_id),('partner_id.tz', '!=', False)]</field>
             <field name="action_id">base.action_res_users_my</field>
         </record>
@@ -18,12 +17,35 @@
             <field name="description">In your user perference</field>
             <field name="computation_mode">manually</field>
             <field name="action_id">base.action_res_users_my</field>
-            <!-- problem : default avatar != False
+            <!-- problem : default avatar != False -> manually + check in write function -->
+        </record>
+
+
+        <record model="gamification.goal.type" id="type_base_company_data">
+            <field name="name">Set your company data</field>
+            <field name="description">Specify at least a website</field>
+            <field name="computation_mode">count</field>
+            <field name="model_id" eval="ref('base.model_res_company')" />
+            <field name="domain">[(user_id, 'in', 'user_ids'),('website', '!=', 'www.yourcompany.com')]</field>
+            <field name="action_id">base.action_res_company_form</field>
+        </record>
+
+        <record model="gamification.goal.type" id="type_base_company_logo">
+            <field name="name">Change your company logo</field>
+            <field name="computation_mode">manually</field>
+            <field name="computation_mode">count</field>
+            <field name="model_id" eval="ref('base.model_res_company')" />
+            <field name="domain">[(user_id, 'in', 'user_ids'),('logo', '!=', False)]</field>
+            <field name="action_id">base.action_res_company_form</field>
+        </record>
+
+        <record model="gamification.goal.type" id="type_base_invite">
+            <field name="name">Invite new users</field>
+            <field name="description">Create at least another user</field>
+            <field name="computation_mode">manually</field>
             <field name="computation_mode">count</field>
             <field name="model_id" eval="ref('base.model_res_users')" />
-            <field name="field_id" eval="ref('base.field_res_partner_image')" />
-            <field name="domain">[('id','=',user_id),('partner_id.image', '!=', False)]</field>
-            -->
+            <field name="domain">[('id', '!=', user_id)]</field>
         </record>
 
 
@@ -37,6 +59,19 @@
             <field name="target_goal">1</field>
         </record>
 
+        <record model="gamification.goal.planline" id="planline_base_admin1">
+            <field name="type_id" eval="ref('type_base_company_data')" />
+            <field name="target_goal">1</field>
+        </record>
+        <record model="gamification.goal.planline" id="planline_base_admin2">
+            <field name="type_id" eval="ref('type_base_company_logo')" />
+            <field name="target_goal">1</field>
+        </record>
+        <record model="gamification.goal.planline" id="planline_base_admin3">
+            <field name="type_id" eval="ref('type_base_invite')" />
+            <field name="target_goal">1</field>
+            <!-- goal owner not included -->
+        </record>
 
         <!-- plans -->
         <record model="gamification.goal.plan" id="plan_base_discover">
@@ -46,6 +81,18 @@
             <field name="report_message_frequency">never</field>
             <field name="planline_ids" eval="[(4, ref('planline_base_discover1')),(4, ref('planline_base_discover2'))]"/>
             <field name="autojoin_group_id" eval="ref('base.group_user')" />
+            <field name="start_date" eval="(DateTime.today() - timedelta(days=1)).strftime('%Y-%m-%d')"/>
+            <!-- setting start date to yesterday allows automatic start at database creation -->
+        </record>
+
+        <record model="gamification.goal.plan" id="plan_base_configure">
+            <field name="name">Configure OpenERP</field>
+            <field name="period">once</field>
+            <field name="visibility_mode">progressbar</field>
+            <field name="report_message_frequency">never</field>
+            <field name="planline_ids" eval="[(4, ref('planline_base_admin1')),(4, ref('planline_base_admin2')), (4, ref('planline_base_admin3'))]"/>
+            <field name="autojoin_group_id" eval="ref('base.group_erp_manager')" />
+            <field name="start_date" eval="(DateTime.today() - timedelta(days=1)).strftime('%Y-%m-%d')"/>
         </record>
 
 
@@ -55,6 +102,16 @@
         </record>
         <record model="gamification.goal.planline" id="planline_base_discover2">
             <field name="plan_id" eval="ref('plan_base_discover')" />
+        </record>
+
+        <record model="gamification.goal.planline" id="planline_base_admin1">
+            <field name="plan_id" eval="ref('plan_base_configure')" />
+        </record>
+        <record model="gamification.goal.planline" id="planline_base_admin2">
+            <field name="plan_id" eval="ref('plan_base_configure')" />
+        </record>
+        <record model="gamification.goal.planline" id="planline_base_admin3">
+            <field name="plan_id" eval="ref('plan_base_configure')" />
         </record>
 
     </data>
