@@ -1,0 +1,106 @@
+-
+  In order to test anglo_saxon Configure Different Accounts.
+-
+  !record {model: account.account, id: account_anglo_1}:
+    code: X11008
+    name: Stock Valuation Account- (test)
+    parent_id: account.cas
+    type: other
+    user_type: account.data_account_type_asset
+-
+  Configure Stock Interim account (Received)
+-
+  !record {model: account.account, id: account_anglo_2}:
+    code: X2113
+    name: Stock Interim account (Received)
+    parent_id: account.ovr
+    type: other
+    user_type: account.data_account_type_expense
+-
+  Configure Stock Interim account (Delivered)
+-
+  !record {model: account.account, id: account_anglo_3}:
+    code: X2101
+    name: Stock Interim account (Delivered)
+    parent_id: account.cog
+    type: other
+    user_type: account.data_account_type_expense
+-
+  Configure Price difference creditor Account
+-
+  !record {model: account.account, id: account_anglo_4}:
+    code: X2102
+    name: Price difference creditor Account
+    parent_id: account.cog
+    type: other
+    user_type: account.data_account_type_expense
+-
+  I have configure the product category with stock valuation account
+-
+  !record {model: product.category, id: product_product_3_1}:
+    name: PC Assemble SC234
+    parent_id: product.product_product_3
+    property_stock_valuation_account_id : account_anglo_1
+-
+  I have configure the product with required accounts
+-
+  !record {model: product.product, id: product_product_3}:
+    name: PC Assemble SC234
+    list_price: 20.00
+    standard_price: 10
+    valuation: real_time
+    property_account_income: account.o_income
+    property_account_expense: account.o_expense
+    property_account_creditor_price_difference: account_anglo_4
+    property_stock_account_input: account_anglo_2
+    property_stock_account_output: account_anglo_3
+-
+  I create a draft Purchase Order
+-
+  !record {model: purchase.order, id: purchase_order_1}:
+    partner_id: base.res_partner_3
+    location_id: stock.stock_location_3
+    pricelist_id: 1
+    order_line:
+      - product_id: product.product_product_3
+        product_qty: 1
+        date_planned: '2013-08-31'
+-
+  I confirm the purchase order
+-
+  !workflow {model: purchase.order, ref: purchase_order_1, action: purchase_confirm}
+-
+  Reception is ready for process so now done the reception.
+-
+  !python {model: stock.partial.picking}: |
+    pick_ids = self.pool.get('purchase.order').browse(cr, uid, ref("purchase_order_1")).picking_ids
+    partial_id = self.create(cr, uid, {},context={'active_model': 'stock.picking','active_ids': [pick_ids[0].id]})
+    self.do_partial(cr, uid, [partial_id])
+-
+  I check that purchase order is shipped.
+-
+  !python {model: purchase.order}: |
+     assert self.browse(cr, uid, ref("purchase_order_1")).shipped == True,"Purchase order should be delivered"
+-
+  I check the Stock Interim account (Received) credit and Stock valuation account debit
+-
+  !python {model: account.move.line}: |
+    acc = self.browse(cr, uid, ref('product.product_product_3'))
+    assert acc.id, "Account move line entries not created successfully"
+-
+  I Validate Invoice of Purchase Order.
+-
+  !python {model: purchase.order}: |
+    invoice_ids = [x.id for x in self.browse(cr, uid, ref("purchase_order_1")).invoice_ids]
+    self.pool.get('account.invoice').signal_invoice_open(cr, uid, invoice_ids)
+-
+  I check that purchase order is invoiced.
+-
+  !python {model: purchase.order}: |
+     assert self.browse(cr, uid, ref("purchase_order_1")).invoiced == True,"Purchase Order should be invoiced"
+-
+  I check the Stock Interim account (Received) and Price difference creditor Account debited and Payable acccount credited
+-
+  !python {model: account.move.line}: |
+    acc = self.browse(cr, uid, ref('product.product_product_3'))
+    assert acc.id, "Account move entries in Payable account not created successfully"
