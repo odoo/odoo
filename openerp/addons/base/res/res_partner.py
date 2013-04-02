@@ -193,12 +193,6 @@ class res_partner(osv.osv, format_address):
             result[obj.id] = obj.image != False
         return result
 
-    def _has_user_ids(self, cr, uid, ids, name, args, context=None):
-        result = {}
-        for obj in self.browse(cr, uid, ids, context=context):
-            result[obj.id] = bool(obj.user_ids)
-        return result
-
     _order = "name"
     _columns = {
         'name': fields.char('Name', size=128, required=True, select=True),
@@ -269,7 +263,6 @@ class res_partner(osv.osv, format_address):
         'company_id': fields.many2one('res.company', 'Company', select=1),
         'color': fields.integer('Color Index'),
         'user_ids': fields.one2many('res.users', 'partner_id', 'Users'),
-        'has_user_ids': fields.function(_has_user_ids,  type='boolean', string='Is a user'),
         'contact_address': fields.function(_address_display,  type='char', string='Complete Address'),
     }
 
