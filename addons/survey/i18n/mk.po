@@ -8,20 +8,20 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2013-03-07 08:39+0000\n"
-"PO-Revision-Date: 2013-03-28 23:28+0000\n"
+"PO-Revision-Date: 2013-03-29 09:07+0000\n"
 "Last-Translator: Софче Димитријева <Unknown>\n"
 "Language-Team: ESKON-INZENERING\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-03-29 05:09+0000\n"
+"X-Launchpad-Export-Date: 2013-03-30 06:09+0000\n"
 "X-Generator: Launchpad (build 16546)\n"
 "Language: mk\n"
 
 #. module: survey
 #: view:survey.response.line:0
 msgid "Single Textboxes"
-msgstr "Единечни текстуални рамки"
+msgstr "Единечни текстуални полиња"
 
 #. module: survey
 #: code:addons/survey/survey.py:471
@@ -32,7 +32,7 @@ msgid ""
 "Please use a number that is smaller than %d."
 msgstr ""
 "Минималниот потребен одговор кој го внесовте е поголем од бројот на "
-"одговорот. Употребете број кој е помал од %d."
+"одговорот.   Употребете број кој е помал од %d."
 
 #. module: survey
 #: view:survey.question.wiz:0
@@ -185,7 +185,7 @@ msgid ""
 "than the number of answer.                                     Please use a "
 "number that is smaller than %d."
 msgstr ""
-"Бараниот одговор кој го внесовте е поголем од бројот на одговорот. "
+"#Потребниот одговор кој го внесовте е поголем од бројот на одговорот.   "
 "Употребете број кој е помал од %d."
 
 #. module: survey
@@ -211,8 +211,8 @@ msgid ""
 "your maximum is greater than the number of answer.                           "
 "           Please use a number that is smaller than %d."
 msgstr ""
-"Максималниот потребен одговор кој го внесовте  за вашиот максимум е поголем "
-"од бројот на одговорот. Употребете број кој е помал од %d."
+"Максималниот потребен одговор кој го внесовте како ваш максимум е поголем од "
+"бројот на одговорот.              Употребете број кој е помал од %d."
 
 #. module: survey
 #: selection:survey.question,type:0
@@ -232,8 +232,8 @@ msgid ""
 "Maximum Required Answer you entered for your maximum is greater than the "
 "number of answer. Please use a number that is smaller than %d."
 msgstr ""
-"Максималниот потребен одговор кој го внесовте  за вашиот максимум е поголем "
-"од бројот на одговорот. Употребете број кој е помал од %d."
+"Максималниот потребен одговор кој го внесовте како ваш максимум е поголем од "
+"бројот на одговорот. Употребете број кој е помал од %d."
 
 #. module: survey
 #: model:ir.model,name:survey.model_survey_question
@@ -246,7 +246,7 @@ msgstr "Прашање од анкета"
 #. module: survey
 #: view:survey.question.column.heading:0
 msgid "Use if question type is rating_scale"
-msgstr "Употребете доколку типот на прашање е rating_scale"
+msgstr "Употребете доколку типот на прашањето е rating-scale"
 
 #. module: survey
 #: field:survey.print,page_number:0
@@ -408,7 +408,7 @@ msgstr "Мои анкети"
 #. module: survey
 #: view:survey.response.line:0
 msgid "Survey Answer Line"
-msgstr "Линија за одговор во истражување"
+msgstr "Ставка на одговор на анкета"
 
 #. module: survey
 #: code:addons/survey/wizard/survey_send_invitation.py:72
@@ -631,7 +631,8 @@ msgstr "Селектирај партнер"
 #: code:addons/survey/survey.py:527
 #, python-format
 msgid "Maximum Required Answer is greater than Minimum Required Answer."
-msgstr "Максималниот баран одговор е поголем од минималниот баран одговор."
+msgstr ""
+"Максималниот потребен одговор е поголем од Минималниот потребен одговор."
 
 #. module: survey
 #: model:ir.ui.menu,name:survey.menu_reporting
@@ -673,7 +674,7 @@ msgstr "Дали менито Избор е невидливо?"
 #. module: survey
 #: field:survey.question,minimum_req_ans:0
 msgid "Minimum Required Answer"
-msgstr "Минимален баран одговор"
+msgstr "Минимален потребен одговор"
 
 #. module: survey
 #: field:survey.question,req_error_msg:0
@@ -745,8 +746,9 @@ msgid ""
 "your maximum is greater than the number of answer.                           "
 "          Please use a number that is smaller than %d."
 msgstr ""
-"Максималниот потребен  одговор кој го внесовте за ваш максимум е поголем од "
-"бројот на одговорот. Употребете број кој е помал од %d."
+"Максималниот потребен одговор кој го внесовте како ваш максимум е поголем од "
+"бројот на одговорот.                         Употребете број кој е помал од "
+"%d."
 
 #. module: survey
 #: view:survey:0
@@ -850,7 +852,7 @@ msgstr "#Одговор"
 #: field:survey.print,without_pagebreak:0
 #: field:survey.print.answer,without_pagebreak:0
 msgid "Print Without Page Breaks"
-msgstr "Печати без прекин на страница"
+msgstr "Печати без преломи на страници"
 
 #. module: survey
 #: view:survey:0
@@ -879,7 +881,7 @@ msgstr "Постави на еден доколку се бара само ед�
 msgid ""
 "You must enter one or more column headings for question \"%s\" of page %s."
 msgstr ""
-"Мора да внесете еден или неколку наслови на колоната за прашањето \"%s\" од "
+"Мора да внесете еден или повеќе наслови на колоната за прашањето \"%s\" од "
 "страницата %s."
 
 #. module: survey
@@ -906,7 +908,7 @@ msgstr ""
 #. module: survey
 #: field:survey.question,maximum_req_ans:0
 msgid "Maximum Required Answer"
-msgstr "МАксимален баран одговор"
+msgstr "Максимален потребен одговор"
 
 #. module: survey
 #: field:survey.name.wiz,page_no:0
@@ -943,7 +945,7 @@ msgstr "Лог"
 #: view:survey.question:0
 msgid "When the choices do not add up correctly, display this error message"
 msgstr ""
-"Доколку изборите не се додадени правилно, прикажи ја оваа порака за грешка"
+"Кога изборите не се додаваат правилно, прикажи ја оваа порака за грешка"
 
 #. module: survey
 #: model:ir.actions.act_window,help:survey.action_survey_form1
@@ -1046,7 +1048,7 @@ msgstr "Одговор"
 #. module: survey
 #: field:survey,max_response_limit:0
 msgid "Maximum Answer Limit"
-msgstr "Максимална граница на одговор"
+msgstr "Граница на максимален одговор"
 
 #. module: survey
 #: model:ir.actions.act_window,name:survey.action_act_view_survey_send_invitation
@@ -1113,7 +1115,7 @@ msgstr "Печати одговор"
 #. module: survey
 #: selection:survey.question,type:0
 msgid "Multiple Textboxes"
-msgstr "Повеќе текстуални рамки"
+msgstr "Повеќекратни текстуални полиња"
 
 #. module: survey
 #: selection:survey.print,orientation:0
@@ -1134,7 +1136,7 @@ msgstr "Детали за анкетата"
 #. module: survey
 #: selection:survey.question,type:0
 msgid "Multiple Textboxes With Different Type"
-msgstr "Повеќе текстуални рамки со различен тип"
+msgstr "Повеќекратни текстуални полиња со различен тип"
 
 #. module: survey
 #: view:survey.name.wiz:0
@@ -1203,7 +1205,7 @@ msgstr "Корисник"
 #. module: survey
 #: field:survey.name.wiz,transfer:0
 msgid "Page Transfer"
-msgstr "Трансфер на страница"
+msgstr "Пренос на страница"
 
 #. module: survey
 #: selection:survey.response.line,state:0
@@ -1240,7 +1242,7 @@ msgstr "Барај одговори"
 #. module: survey
 #: model:ir.model,name:survey.model_survey_response_line
 msgid "Survey Response Line"
-msgstr "Линија за одговор на истражување"
+msgstr "Ставка на одговор на анкета"
 
 #. module: survey
 #: code:addons/survey/survey.py:169
@@ -1607,7 +1609,7 @@ msgid ""
 "than the number of answer.                                    Please use a "
 "number that is smaller than %d."
 msgstr ""
-"#Потребниот одговор кој го внесовте е поголем од бројот на одговорот. "
+"#Потребниот одговор кој го внесовте е поголем од бројот на одговорот.  "
 "Употребете број кој е помал од %d."
 
 #. module: survey
@@ -1709,7 +1711,7 @@ msgid ""
 "use a number that is smaller than %d."
 msgstr ""
 "Минималниот потребен одговор кој го внесовте е поголем од бројот на "
-"одговорот. Употребете број кој е помал од %d."
+"одговорот.  Употребете број кој е помал од %d."
 
 #. module: survey
 #: field:survey.answer,menu_choice:0
@@ -1728,7 +1730,7 @@ msgid ""
 "Maximum Required Answer is greater                                     than "
 "Minimum Required Answer"
 msgstr ""
-"Максималниот потребен одговор е поголем од Минималниот потребен одговор"
+"Максималниот потребен одговор е поголем  од Минималниот потребен одговор"
 
 #. module: survey
 #: view:survey.send.invitation.log:0
@@ -1754,7 +1756,7 @@ msgstr "Повеќекратен избор (Само еден одговор)"
 #. module: survey
 #: field:survey.answer,in_visible_answer_type:0
 msgid "Is Answer Type Invisible??"
-msgstr "Дали типот на прашање е невидлив?"
+msgstr "Дали типот на одговор е невидлив??"
 
 #. module: survey
 #: model:ir.model,name:survey.model_survey_print_answer
@@ -1823,7 +1825,7 @@ msgstr "Тип на прашање"
 #. module: survey
 #: field:survey.question,in_visible_answer_type:0
 msgid "Is Answer Type Invisible?"
-msgstr "Дали Типот Прашање е невидлив?"
+msgstr "Дали типот на одговор е невидлив?"
 
 #. module: survey
 #: selection:survey.question,type:0
@@ -1846,7 +1848,7 @@ msgstr "Минимален датум"
 #. module: survey
 #: field:survey,response_user:0
 msgid "Maximum Answer per User"
-msgstr "МАксимален одговор по корисник"
+msgstr "Максимален одговор по корисник"
 
 #. module: survey
 #: field:survey.name.wiz,page:0
