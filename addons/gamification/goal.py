@@ -326,9 +326,10 @@ class gamification_goal(osv.Model):
             try:
                 model, xml_id = goal.type_id.action_id.split('.', 1)
                 action = self.pool.get('ir.actions.act_window').for_xml_id(cr, uid, model, xml_id, context=context)
-                
+
                 if goal.type_id.res_id_field:
                     current_user = self.pool.get('res.users').browse(cr, uid, uid, context)
+                    # eg : company_id.id
                     field_names = goal.type_id.res_id_field.split('.')
                     res = current_user.__getitem__(field_names[0])
                     for field_name in field_names[1:]:
