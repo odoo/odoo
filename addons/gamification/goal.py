@@ -319,13 +319,6 @@ class gamification_goal(osv.Model):
         :return: action description in a dictionnary
         """
         goal = self.browse(cr, uid, goal_id, context=context)
-        action = {
-            'name': "Update %s" % goal.type_id.name,
-            'id': goal_id,
-            'type': 'ir.actions.act_window',
-            'views': [[False, 'form']],
-            'target': 'new',
-        }
         if goal.type_id.action_id:
             try:
                 model, xml_id = goal.type_id.action_id.split('.', 1)
@@ -337,6 +330,13 @@ class gamification_goal(osv.Model):
                 _logger.warning("Invalid XML ID '%s' for goal action.", goal.type_id.action_id)
 
         if goal.computation_mode == 'manually':
+            action = {
+                'name': "Update %s" % goal.type_id.name,
+                'id': goal_id,
+                'type': 'ir.actions.act_window',
+                'views': [[False, 'form']],
+                'target': 'new',
+            }
             action['context'] = {'default_goal_id': goal_id, 'default_current': goal.current}
             action['res_model'] = 'gamification.goal.wizard'
             return action

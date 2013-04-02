@@ -26,23 +26,21 @@
             <field name="description">Specify at least a website</field>
             <field name="computation_mode">count</field>
             <field name="model_id" eval="ref('base.model_res_company')" />
-            <field name="domain">[(user_id, 'in', 'user_ids'),('website', '!=', 'www.yourcompany.com')]</field>
-            <field name="action_id">base.action_res_company_form</field>
+            <field name="domain">[('user_ids', 'in', user_id),('website', '!=', 'www.yourcompany.com')]</field>
+            <field name="action_id">base.action_res_company_form_my</field>
         </record>
 
         <record model="gamification.goal.type" id="type_base_company_logo">
             <field name="name">Change your company logo</field>
-            <field name="computation_mode">manually</field>
             <field name="computation_mode">count</field>
             <field name="model_id" eval="ref('base.model_res_company')" />
-            <field name="domain">[(user_id, 'in', 'user_ids'),('logo', '!=', False)]</field>
-            <field name="action_id">base.action_res_company_form</field>
+            <field name="domain">[('user_ids', 'in', user_id),('logo', '!=', False)]</field>
+            <field name="action_id">base.action_res_company_form_my</field>
         </record>
 
         <record model="gamification.goal.type" id="type_base_invite">
             <field name="name">Invite new users</field>
             <field name="description">Create at least another user</field>
-            <field name="computation_mode">manually</field>
             <field name="computation_mode">count</field>
             <field name="model_id" eval="ref('base.model_res_users')" />
             <field name="domain">[('id', '!=', user_id)]</field>

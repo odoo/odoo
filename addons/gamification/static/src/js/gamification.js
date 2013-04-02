@@ -13,7 +13,7 @@ openerp.gamification = function(instance) {
         events: {
             'click a.oe_update_goal': function(event) {
                 var self = this;
-                var goal_id = parseInt(event.currentTarget.id);
+                var goal_id = parseInt(event.currentTarget.id, 10);
                 var goal_updated = new instance.web.Model('gamification.goal').call('update', [[goal_id]]);
                 $.when(goal_updated).done(function() {
                     self.get_goal_todo_info();
@@ -21,7 +21,7 @@ openerp.gamification = function(instance) {
             },
             'click a.oe_update_plan': function(event) {
                 var self = this;
-                var plan_id = parseInt(event.currentTarget.id);
+                var plan_id = parseInt(event.currentTarget.id, 10);
                 var goals_updated = new instance.web.Model('gamification.goal.plan').call('quick_update', [plan_id]);
                 $.when(goals_updated).done(function() {
                     self.get_goal_todo_info();
@@ -33,7 +33,7 @@ openerp.gamification = function(instance) {
             // },
             'click a.oe_goal_action': function(event) {
                 var self = this;
-                var goal_id = parseInt(event.currentTarget.id);
+                var goal_id = parseInt(event.currentTarget.id, 10);
                 var goal_action = new instance.web.Model('gamification.goal').call('get_action', [goal_id]).then(function(res) {
                     goal_action['action'] = res;
                 });
@@ -45,7 +45,7 @@ openerp.gamification = function(instance) {
 
                     //var form = action_manager.dialog_widget.views.form.controller;
                 });
-            },
+            }
         },
         renderElement: function() {
             var self = this;
@@ -63,7 +63,7 @@ openerp.gamification = function(instance) {
         get_goal_todo_info: function() {
             var self = this;
             var goals_info = this.res_user.call('get_goals_todo_info', {}).then(function(res) {
-                self.goals_info['info'] = res
+                self.goals_info['info'] = res;
             });
             $.when(goals_info).done(function() {
                 if(self.goals_info.info.length > 0){
@@ -87,7 +87,7 @@ openerp.gamification = function(instance) {
                 });
                 money_field.set('currency', currency_id);
                 money_field.get_currency_info();
-                money_field.set('value', parseInt($(this).text()));
+                money_field.set('value', parseInt($(this).text(), 10));
                 money_field.replace($(this));
             });
         },
