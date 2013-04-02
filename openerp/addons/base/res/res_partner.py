@@ -359,14 +359,10 @@ class res_partner(osv.osv, format_address):
 #   _constraints = [(_check_ean_key, 'Error: Invalid ean code', ['ean13'])]
 
     def write(self, cr, uid, ids, vals, context=None):
-        if context is None:
-            context={}
         # Update parent and siblings or children records
         if isinstance(ids, (int, long)):
             ids = [ids]
-        user_ids = []
         for partner in self.browse(cr, uid, ids, context=context):
-            user_ids += [user.id for user in partner.user_ids]
             update_ids = []
             if partner.is_company:
                 domain_children = [('parent_id', 'child_of', partner.id), ('use_parent_address', '=', True)]
