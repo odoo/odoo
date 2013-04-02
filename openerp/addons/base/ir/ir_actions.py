@@ -303,7 +303,7 @@ class act_window(osv.osv):
             }
             for res in results:
                 model = res.get('res_model')
-                if model and self.pool.get('model'):
+                if model and self.pool.get(model):
                     try:
                         with tools.mute_logger("openerp.tools.safe_eval"):
                             eval_context = eval(res['context'] or "{}", eval_dict) or {}
