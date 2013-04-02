@@ -79,8 +79,11 @@ class gamification_goal_type(osv.Model):
         'sequence': fields.integer('Sequence',
             help='Sequence number for ordering',
             required=True),
+
         'action_id': fields.char("Action",
-            help="The action xml id that will be called to update the goal value.")
+            help="The action xml id that will be called to update the goal value."),
+        'res_id_field': fields.char("id field",
+            help="The field name on the user profile containing the value for res_id for action")
     }
 
     _order = 'sequence'
@@ -323,8 +326,14 @@ class gamification_goal(osv.Model):
             try:
                 model, xml_id = goal.type_id.action_id.split('.', 1)
                 action = self.pool.get('ir.actions.act_window').for_xml_id(cr, uid, model, xml_id, context=context)
-                action['res_id'] = uid
-                action['context'] = context
+                
+                if goal.type_id.res_id_field:
+                    current_user = self.pool.get('res.users').browse(cr, uid, uid, context)
+                    field_names = goal.type_id.res_id_field.split('.')
+                    res = current_user.__getitem__(field_names[0])
+                    for field_name in field_names[1:]:
+                        res = res.__getitem__(field_name)
+                    action['res_id'] = res
                 return action
             except ValueError:
                 _logger.warning("Invalid XML ID '%s' for goal action.", goal.type_id.action_id)
