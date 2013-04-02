@@ -37,7 +37,7 @@ def _initialize_db(id, db_name, demo, lang, user_password):
                 cr = None
 
         registry = openerp.modules.registry.RegistryManager.new(
-            db_name, demo, self_actions[id], update_module=True)[1]
+            db_name, demo, self_actions[id], update_module=True)
 
         try:
             cr = openerp.sql_db.db_connect(db_name).cursor()
