@@ -217,7 +217,7 @@ class gamification_goal_plan(osv.Model):
         # start planned plans
         planned_plan_ids = self.search(cr, uid, [
             ('state', '=', 'draft'),
-            ('start_date', '=', fields.date.today())])
+            ('start_date', '<=', fields.date.today())])
         self.action_start(cr, uid, planned_plan_ids, context=context)
 
         if not ids:
