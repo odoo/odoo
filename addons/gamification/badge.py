@@ -27,8 +27,6 @@ from openerp.tools.safe_eval import safe_eval
 from templates import TemplateHelper
 from datetime import date
 
-import base64
-
 
 class gamification_badge_user(osv.Model):
     """User having received a badge"""
@@ -69,6 +67,17 @@ class gamification_badge(osv.Model):
             result[obj.id] = len(self.pool.get('gamification.badge.user').search(
                 cr, uid, [('badge_id', '=', obj.id)], context=context))
             result[obj.id] = len(obj.owner_ids)
+        return result
+
+    def _get_unique_global_list(self, cr, uid, ids, name, args, context=None):
+        """Return the list of unique res.users ids having received this badge"""
+        result = dict.fromkeys(ids, False)
+        for obj in self.browse(cr, uid, ids, context=context):
+            res = self.pool.get('gamification.badge.user').read_group(
+                                   cr, uid, domain=[('badge_id', '=', obj.id)],
+                                   fields=['badge_id', 'user_id'],
+                                   groupby=['user_id'], context=context)
+            result[obj.id] = [badge_user['user_id'][0] for badge_user in res]
         return result
 
     def _get_unique_global_count(self, cr, uid, ids, name, args, context=None):
@@ -171,6 +180,10 @@ class gamification_badge(osv.Model):
             help="A message will be posted on the user profile or just sent to him"),
         'owner_ids': fields.one2many('gamification.badge.user', 'badge_id',
             string='Owners', help='The list of instances of this badge granted to users'),
+        'unique_owner_ids': fields.function(_get_unique_global_list,
+            string='Unique Owners',
+            help="The list of unique users having received this badge.",
+            type="many2many", relation="res.users"),
 
         'stat_count': fields.function(_get_global_count, string='Total',
             help="The number of time this badge has been received."),
