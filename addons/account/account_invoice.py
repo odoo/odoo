@@ -1404,7 +1404,7 @@ class account_invoice_line(osv.osv):
         else:
             prop = self.pool.get('ir.property').get(cr, uid, 'property_account_expense_categ', 'product.category', context=context)
         return prop and prop.id or False
-
+    _order = 'sequence'
     _defaults = {
         'quantity': 1,
         'discount': 0.0,
