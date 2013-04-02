@@ -216,7 +216,7 @@ class rml_parse(object):
             self.lang_dict_called = True
 
         if date or date_time:
-            if not str(value):
+            if not value:
                 return ''
 
             date_format = self.lang_dict['date_format']
