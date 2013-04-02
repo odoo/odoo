@@ -1040,7 +1040,7 @@ instance.web_kanban.QuickCreate = instance.web.Widget.extend({
         });
         $(".oe_kanban_quick_create").focusout(function (e) {
         	var val = self.$el.find('input').val()
-        	if (/^\s*$/.test(val)) { self.$el.remove(); }
+        	if (/^\s*$/.test(val)) { self.trigger('close'); }
         	e.stopImmediatePropagation();
         });
         $(".oe_kanban_quick_create_add", this.$el).click(function () {
