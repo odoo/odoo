@@ -249,7 +249,7 @@ class rml_parse(object):
         return res
 
     def display_address(self, address_record):
-        return address_record._display_address()
+        return address_record.contact_address
 
     def repeatIn(self, lst, name,nodes_parent=False):
         ret_lst = []
