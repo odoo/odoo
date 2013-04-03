@@ -366,6 +366,7 @@ class mail_message(osv.Model):
 
         return {'id': message.id,
                 'type': message.type,
+                'subtype': message.subtype_id.name if message.subtype_id else False,
                 'body': body_html,
                 'model': message.model,
                 'res_id': message.res_id,

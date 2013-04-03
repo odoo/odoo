@@ -217,6 +217,7 @@ openerp.mail = function (session) {
             this.res_id = datasets.res_id || this.context.default_res_id ||  false,
             this.parent_id = datasets.parent_id ||  false,
             this.type = datasets.type ||  false,
+            this.subtype = datasets.subtype ||  false,
             this.is_author = datasets.is_author ||  false,
             this.is_private = datasets.is_private ||  false,
             this.subject = datasets.subject ||  false,
