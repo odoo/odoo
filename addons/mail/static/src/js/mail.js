@@ -1935,6 +1935,7 @@ openerp.mail = function (session) {
             this.$(".oe_write_full").click(function (event) {
                 event.stopPropagation();
                 var action = {
+                    name: _t('Compose Email'),
                     type: 'ir.actions.act_window',
                     res_model: 'mail.compose.message',
                     view_mode: 'form',

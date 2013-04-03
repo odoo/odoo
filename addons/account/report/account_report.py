@@ -23,7 +23,6 @@ import time
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
 
-from openerp import pooler
 from openerp import tools
 from openerp.osv import fields,osv
 
@@ -123,7 +122,7 @@ class report_aged_receivable(osv.osv):
         """ This view will be used in dashboard
         The reason writing this code here is, we need to check date range from today to first date of fiscal year.
         """
-        pool_obj_fy = pooler.get_pool(cr.dbname).get('account.fiscalyear')
+        pool_obj_fy = self.pool['account.fiscalyear']
         today = time.strftime('%Y-%m-%d')
         fy_id = pool_obj_fy.find(cr, uid, exception=False)
         LIST_RANGES = []
@@ -141,7 +140,7 @@ class report_aged_receivable(osv.osv):
             cr.execute('delete from temp_range')
 
             for range in LIST_RANGES:
-                pooler.get_pool(cr.dbname).get('temp.range').create(cr, uid, {'name':range})
+                self.pool['temp.range'].create(cr, uid, {'name':range})
 
         cr.execute("""
             create or replace view report_aged_receivable as (

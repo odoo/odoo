@@ -228,7 +228,7 @@
             <field name="name">Lead/Opportunity Mass Mail</field>
             <field name="model_id" ref="crm.model_crm_lead"/>
             <field name="auto_delete" eval="True"/>
-            <field name="partner_to">${object.partner_id and object.partner_id.id}</field>
+            <field name="partner_to">${object.partner_id != False and object.partner_id.id}</field>
             <field name="email_to">${not object.partner_id and object.email_from}</field>
             <field name="body_html"></field>
         </record>
