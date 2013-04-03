@@ -66,7 +66,7 @@ class TestHandler(logging.handlers.BufferingHandler):
 
 @contextlib.contextmanager
 def capture_logging(level=logging.DEBUG):
-    logger = logging.getLogger('openerp')
+    logger = logging.getLogger('openerp.addons.web')
     old_level = logger.level
     old_handlers = logger.handlers
 
