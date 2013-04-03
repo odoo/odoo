@@ -82,7 +82,7 @@ class google_docs_ir_attachment(osv.osv):
         #login gmail account
         client = google_pool.google_login(user_config['user'], user_config['password'], type='docs_client', context=context)
         if not client:
-            raise osv.except_osv(_('Google Docs Error!'), _("Check your google configuration in Users/Users/Synchronization tab."))
+            raise osv.except_osv(_('Google Drive Error!'), _("Check your google account configuration in Users/Users/Google Account."))
         _logger.info('Logged into google docs as %s', user_config['user'])
         return client
 
