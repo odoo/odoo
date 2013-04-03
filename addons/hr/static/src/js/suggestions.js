@@ -6,6 +6,7 @@ openerp.hr = function(session) {
     var removed_suggested_employee = session.removed_suggested_employee = [];
     suggestions.Employees = session.mail.Wall.include({
         events: {
+            'click .oe_remove_suggestion_employees': "remove_suggestion_employees",
             'click .oe_remove_suggested_employee': "remove_suggested_employee",
             'click .oe_follow_employee': "follow_employee",
             'click .oe_open_employee': "open_employee"
@@ -15,6 +16,7 @@ openerp.hr = function(session) {
             this._super(parent, action);
             this.deferred = $.Deferred();
             this.hr_employee = new session.web.DataSetSearch(this, 'hr.employee');
+            this.res_users = new session.web.DataSetSearch(this, 'res.users');
             this.suggestions = [];
         },
         start: function() {
@@ -77,6 +79,12 @@ openerp.hr = function(session) {
             var self = this;
             removed_suggested_employee.push($(event.currentTarget).attr('id'));
             self.get_suggested_employee();
+        },
+        remove_suggestion_employees: function(event) {
+            var self = this;
+            return this.res_users.call('stop_showing_employees_suggestions', [this.session.uid]).then(function(res) {
+                self.$(".oe_sidebar_employee").hide();
+            });
         }
     });
 

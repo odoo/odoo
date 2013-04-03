@@ -309,6 +309,16 @@ class hr_employee(osv.osv):
         # if no overwrite, send message as usual
         return super(hr_employee, self).message_post(cr, uid, thread_id, context=context, **kwargs)
 
+    def get_suggested_thread(self, cr, uid, removed_suggested_threads=None, context=None):
+        """Show the suggestion of employees if display_employees_suggestions if the
+        user perference allows it. """
+        user = self.pool.get('res.users').browse(cr, uid, uid, context)
+        if not user.display_employees_suggestions:
+            return []
+        else:
+            return super(hr_employee, self).get_suggested_thread(cr, uid, removed_suggested_threads, context)
+
+
     _defaults = {
         'active': 1,
         'image': _get_default_image,

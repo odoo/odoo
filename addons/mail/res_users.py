@@ -38,7 +38,7 @@ class res_users(osv.Model):
         'alias_id': fields.many2one('mail.alias', 'Alias', ondelete="cascade", required=True,
             help="Email address internally associated with this user. Incoming "\
                  "emails will appear in the user's notifications."),
-        'display_groups_suggestions': fields.boolean("Display Group Suggestions"),
+        'display_groups_suggestions': fields.boolean("Display Groups Suggestions"),
     }
 
     _defaults = {
@@ -159,7 +159,7 @@ class res_users(osv.Model):
     def message_create_partners_from_emails(self, cr, uid, emails, context=None):
         return self.pool.get('res.partner').message_create_partners_from_emails(cr, uid, emails, context=context)
 
-    def stop_showing_group_suggestions(self, cr, uid, user_id, context=None):
+    def stop_showing_groups_suggestions(self, cr, uid, user_id, context=None):
         """Update display_groups_suggestions value to False"""
         if context is None: context = {}
         self.write(cr, uid, user_id, {"display_groups_suggestions": False}, context)

@@ -202,8 +202,8 @@ class mail_group(osv.Model):
         return self.message_unsubscribe_users(cr, uid, ids, context=context)
 
     def get_suggested_thread(self, cr, uid, removed_suggested_threads=None, context=None):
-        """Show the suggestion of users if display_groups_suggestions if the
-        user perference allows it display_groups_suggestions"""
+        """Show the suggestion of groups if display_groups_suggestions if the
+        user perference allows it."""
         user = self.pool.get('res.users').browse(cr, uid, uid, context)
         if not user.display_groups_suggestions:
             return []

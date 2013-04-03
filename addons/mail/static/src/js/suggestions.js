@@ -16,7 +16,7 @@ openerp.mail.suggestions = function(session, mail) {
     var removed_suggested_group = session.removed_suggested_group = [];
     suggestions.Groups = session.web.Widget.extend({
         events: {
-            'click .oe_remove_suggestion_employees': "remove_employee_suggestions",
+            'click .oe_remove_suggestion_groups': "remove_suggestion_groups",
             'click .oe_remove_suggested_group': "remove_suggested_group",
             'click .oe_join_group': "join_group",
             'click .oe_open_group': "open_group"
@@ -73,9 +73,9 @@ openerp.mail.suggestions = function(session, mail) {
             removed_suggested_group.push($(event.currentTarget).attr('id'));
             self.get_suggested_group();
         },
-        remove_employee_suggestions: function(event) {
+        remove_suggestion_groups: function(event) {
             var self = this;
-            return this.res_users.call('stop_showing_group_suggestions', [this.session.uid]).then(function(res) {
+            return this.res_users.call('stop_showing_groups_suggestions', [this.session.uid]).then(function(res) {
                 self.$(".oe_sidebar_group").hide();
             });
         }
