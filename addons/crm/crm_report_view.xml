@@ -33,7 +33,8 @@
                 <field name="name"/>
                 <field name="month"/>
                 <field name="user_id"/>
-                <field name="section_id"  widget="selection" groups="base.group_multi_salesteams"/>
+                <field name="section_id" widget="selection"
+                        groups="base.group_multi_salesteams"/>
                 <field name="category2_id" />
                 <field name="stage_id"/>
                 <field name="amount_revenue"/>
@@ -53,7 +54,8 @@
             <graph string="Cases by Teams and Type" type="bar" orientation="horizontal">
                 <field name="category2_id"/>
                 <field name="amount_revenue" operator="+"/>
-                <field name="section_id" group="True" groups="base.group_multi_salesteams"/>
+                <field name="section_id" group="True"
+                        groups="base.group_multi_salesteams"/>
             </graph>
         </field>
     </record>
@@ -115,7 +117,8 @@
                 <field name="name"/>
                 <field name="month"/>
                 <field name="user_id"/>
-                <field name="section_id"  widget="selection" groups="base.group_multi_salesteams"/>
+                <field name="section_id" widget="selection"
+                        groups="base.group_multi_salesteams"/>
                 <field name="stage_id"/>
                 <field name="amount_revenue"/>
                 <field name="nbr" />

@@ -98,6 +98,7 @@ class crm_case_stage(osv.osv):
         'case_default': True,
     }
 
+
 class crm_case_section(osv.osv):
     """ Model for sales teams. """
     _name = "crm.case.section"
@@ -107,7 +108,7 @@ class crm_case_section(osv.osv):
     _order = "complete_name"
 
     def get_full_name(self, cr, uid, ids, field_name, arg, context=None):
-        return  dict(self.name_get(cr, uid, ids, context=context))
+        return dict(self.name_get(cr, uid, ids, context=context))
 
     _columns = {
         'name': fields.char('Sales Team', size=64, required=True, translate=True),
@@ -128,17 +129,19 @@ class crm_case_section(osv.osv):
         'alias_id': fields.many2one('mail.alias', 'Alias', ondelete="cascade", required=True,
                                     help="The email address associated with this team. New emails received will automatically "
                                          "create new leads assigned to the team."),
-        'open_lead_ids': fields.one2many('crm.lead', 'section_id', 'Open Leads', readonly=True,
+        'open_lead_ids': fields.one2many('crm.lead', 'section_id',
+            string='Open Leads', readonly=True,
             domain=['&', ('type', '!=', 'opportunity'), ('state', 'not in', ['done', 'cancel'])]),
-        'open_opportunity_ids': fields.one2many('crm.lead', 'section_id', 'Open Opportunities', readonly=True,
+        'open_opportunity_ids': fields.one2many('crm.lead', 'section_id',
+            string='Open Opportunities', readonly=True,
             domain=['&', '|', ('type', '=', 'opportunity'), ('type', '=', 'both'), ('state', 'not in', ['done', 'cancel'])]),
         'color': fields.integer('Color Index'),
         'use_leads': fields.boolean('Leads',
-            help="If checked, this sales team will be available in the sales teams menu and you will be able to manage leads"),
+            help="This enables the management of leads in the sales team. Otherwise the sales team manages only opportunities."),
     }
 
     def _get_stage_common(self, cr, uid, context):
-        ids = self.pool.get('crm.case.stage').search(cr, uid, [('case_default','=',1)], context=context)
+        ids = self.pool.get('crm.case.stage').search(cr, uid, [('case_default', '=', 1)], context=context)
         return ids
 
     _defaults = {

@@ -19,8 +19,8 @@
 #
 ##############################################################################
 
-from openerp.osv import osv, fields
 from datetime import datetime
+from openerp.osv import osv, fields
 
 
 class sale_order(osv.osv):
@@ -46,11 +46,14 @@ class crm_case_section(osv.osv):
         return res
 
     _columns = {
-        'quotation_ids': fields.one2many('sale.order', 'section_id', 'Quotations', readonly=True,
+        'quotation_ids': fields.one2many('sale.order', 'section_id',
+            string='Quotations', readonly=True,
             domain=[('state', 'in', ['draft', 'sent', 'cancel'])]),
-        'sale_order_ids': fields.one2many('sale.order', 'section_id', 'Sale Orders', readonly=True,
+        'sale_order_ids': fields.one2many('sale.order', 'section_id',
+            string='Sale Orders', readonly=True,
             domain=[('state', 'not in', ['draft', 'sent', 'cancel'])]),
-        'invoice_ids': fields.one2many('account.invoice', 'section_id', 'Invoices', readonly=True,
+        'invoice_ids': fields.one2many('account.invoice', 'section_id',
+            string='Invoices', readonly=True,
             domain=[('state', 'not in', ['draft', 'cancel'])]),
         'sum_month_invoice': fields.function(_get_sum_month_invoice,
             string='Total invoiced this month',

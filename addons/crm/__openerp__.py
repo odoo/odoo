@@ -116,11 +116,26 @@ Dashboard for CRM will include:
         'test/ui/duplicate_lead.yml',
         'test/ui/delete_lead.yml',
     ],
-    'css': ['static/src/css/crm.css'],
-    'js': ['static/src/js/crm.js'],
+    'css': [
+        'static/src/css/crm.css'
+    ],
+    'js': [
+        'static/src/js/crm.js'
+    ],
     'installable': True,
     'application': True,
     'auto_install': False,
-    'images': ['images/crm_dashboard.png', 'images/customers.png','images/leads.png','images/opportunities_kanban.png','images/opportunities_form.png','images/opportunities_calendar.png','images/opportunities_graph.png','images/logged_calls.png','images/scheduled_calls.png','images/stages.png'],
+    'images': [
+        'images/crm_dashboard.png',
+        'images/customers.png',
+        'images/leads.png',
+        'images/opportunities_kanban.png',
+        'images/opportunities_form.png',
+        'images/opportunities_calendar.png',
+        'images/opportunities_graph.png',
+        'images/logged_calls.png',
+        'images/scheduled_calls.png',
+        'images/stages.png',
+    ],
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
