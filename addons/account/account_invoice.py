@@ -24,7 +24,6 @@ from lxml import etree
 import openerp.addons.decimal_precision as dp
 import openerp.exceptions
 
-from openerp import pooler
 from openerp.osv import fields, osv, orm
 from openerp.tools.translate import _
 
@@ -422,6 +421,7 @@ class account_invoice(osv.osv):
             'mark_invoice_as_sent': True,
             })
         return {
+            'name': _('Compose Email'),
             'type': 'ir.actions.act_window',
             'view_type': 'form',
             'view_mode': 'form',
