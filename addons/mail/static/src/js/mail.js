@@ -1995,4 +1995,5 @@ openerp.mail = function (session) {
             });
         },
     });
+
 };

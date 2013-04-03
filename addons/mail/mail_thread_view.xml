@@ -8,6 +8,8 @@
             <field name="context">{
               'default_model': 'res.users',
               'default_res_id': uid,
+              'search_default_model': context.get('params') and context.params.get('model'),
+              'search_default_res_id': context.get('params') and context.params.get('res_id')
             }</field>
             <field name="params" eval="&quot;{
                 'domain': [

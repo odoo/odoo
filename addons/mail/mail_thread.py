@@ -1078,6 +1078,36 @@ class mail_thread(osv.AbstractModel):
             self.message_subscribe(cr, uid, [thread_id], [message.author_id.id], context=context)
         return msg_id
 
+    def get_message_action_from_link(self, cr, uid, message_id, context=None):
+        action = None
+        msg_obj = self.pool.get('mail.message')
+        msg = msg_obj.browse(cr, uid, message_id, context=context)
+        if msg.model:
+            try:
+                self.pool.get(msg.model).check_access_rights(cr, uid, 'read')
+                action = {
+                    'type': 'ir.actions.act_window',
+                    'res_model': msg.model,
+                    'view_type': 'form',
+                    'view_mode': 'form',
+                    'views': [(msg.res_id, 'form')],
+                    'target': 'current',
+                    'res_id': msg.res_id,
+                }
+            except openerp.exceptions.AccessDenied:
+                mod_obj = self.pool.get('ir.model.data')
+                act_model, act_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'mail', 'action_mail_inbox_feeds')
+                action = self.pool.get(act_model).read(cr, uid, act_id, [])
+                action.update({
+                    'context': {
+                        'default_model': 'res.users',
+                        'default_res_id': uid,
+                        'search_default_res_id': 1,
+                        'search_default_model': 1,
+                    }
+                })
+        return action
+
     #------------------------------------------------------
     # Compatibility methods: do not use
     # TDE TODO: remove me in 8.0
