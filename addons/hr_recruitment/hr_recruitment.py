@@ -533,7 +533,6 @@ class hr_job(osv.osv):
         return res
 
     _columns = {
-        'color': fields.integer('Color Index'),
         'survey_id': fields.many2one('survey', 'Interview Form', help="Choose an interview form for this job position and you will be able to print/answer this interview from all applicants who apply for this job"),
         'alias_id': fields.many2one('mail.alias', 'Alias', ondelete="cascade", required=True,
                                     help="Email alias for this job position. New emails will automatically "
