@@ -515,6 +515,17 @@ class hr_job(osv.osv):
             res[position.id] = {'priority1': priority1, 'priority2': priority2, 'priority3': priority3}
         return res
 
+    def _get_department_mgr(self, cr, uid, ids, name, args, context=None):
+        res = {}
+        for obj_job in self.browse(cr, uid,ids, context=context):
+
+            res[obj_job.id] = {}
+            if obj_job.department_id:
+                emp_ids = self.pool.get('hr.employee').search(cr, uid, [('id', '=', obj_job.department_id.manager_id.id)], context=context)
+                if emp_ids:
+                    res[obj_job.id] = emp_ids
+        return res
+
     _columns = {
         'color': fields.integer('Color Index'),
         'survey_id': fields.many2one('survey', 'Interview Form', help="Choose an interview form for this job position and you will be able to print/answer this interview from all applicants who apply for this job"),
@@ -522,6 +533,7 @@ class hr_job(osv.osv):
                                     help="Email alias for this job position. New emails will automatically "
                                          "create new applicants for this job position."),
         'priority_count': fields.function(_count_priority, string='Total Priority Employees', type="char"),
+        'user_id': fields.function(_get_department_mgr, string='Department Manager', type="char"),#manager image in kanban
     }
     _defaults = {
         'alias_domain': False, # always hide alias during creation
