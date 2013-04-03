@@ -1,4 +1,4 @@
-# Romanian translation for openobject-addons
+# Hungarian translation for openobject-addons
 # Copyright (c) 2013 Rosetta Contributors and Canonical Ltd 2013
 # This file is distributed under the same license as the openobject-addons package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2013.
@@ -8,9 +8,9 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2013-03-07 08:37+0000\n"
-"PO-Revision-Date: 2013-04-02 15:38+0000\n"
-"Last-Translator: Dorin <dhongu@gmail.com>\n"
-"Language-Team: Romanian <ro@li.org>\n"
+"PO-Revision-Date: 2013-04-02 12:44+0000\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: Hungarian <hu@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -47,37 +47,11 @@ msgid ""
 "    cr.execute(sql)\n"
 "    result = cr.dictfetchall()"
 msgstr ""
-"Codul ar trebui sa configureze o variabila numita `rezultat` cu rezultatul "
-"testului dumneavoastra, care poate fi o lista sau un dictionar. Daca "
-"`rezultat` este o lista goala, inseamna ca testul a avut succes. In caz "
-"contrar, va incerca sa traduca si sa tipareasca ceea ce se afla in "
-"`rezultat`.\n"
-"\n"
-"Daca rezultatul testului dumneavoastra este un dictionar, puteti configura o "
-"variabila numita`coloana_comanda` pentru a alege ordinea in care doriti "
-"tiparirea continutul din `rezultat`.\n"
-"\n"
-"Daca o sa aveti nevoie de ele, puteti utiliza de asemenea urmatoarele "
-"variabile in codul dumneavoastra:\n"
-"    * cr: cursorul in baza de date\n"
-"    * uid: ID-ul utilizatorului actual\n"
-"\n"
-"Oricum, codul trebuie sa fie declaratii python legale cu indentare corecta "
-"(daca este necesara).\n"
-"\n"
-"Exemplu: \n"
-"    sql = '''SELECTEAZA id, nume, ref, data\n"
-"             DIN cont_miscare_linie \n"
-"             UNDE cont_id IN (SELECTEAZA id DIN cont_cont UNDE tip = "
-"'vizualizare')\n"
-"          '''\n"
-"    cr.execute(sql)\n"
-"    rezultat = cr.dictfetchall()"
 
 #. module: account_test
 #: model:accounting.assert.test,name:account_test.account_test_02
 msgid "Test 2: Opening a fiscal year"
-msgstr "Testul 2: Deschiderea unui an fiscal"
+msgstr ""
 
 #. module: account_test
 #: model:accounting.assert.test,desc:account_test.account_test_05
@@ -85,37 +59,32 @@ msgid ""
 "Check that reconciled invoice for Sales/Purchases has reconciled entries for "
 "Payable and Receivable Accounts"
 msgstr ""
-"Verificați dacă factura reconciliată pentru Vânzări/Achiziții a reconciliat "
-"înregistrarile pentru Conturile de Plăți și de Încasări"
 
 #. module: account_test
 #: model:accounting.assert.test,desc:account_test.account_test_03
 msgid ""
 "Check if movement lines are balanced and have the same date and period"
 msgstr ""
-"Verificati daca liniile miscarii sunt echilibrate si au aceeasi data si "
-"perioada"
 
 #. module: account_test
 #: field:accounting.assert.test,name:0
 msgid "Test Name"
-msgstr "Numele Testului"
+msgstr "Teszt név"
 
 #. module: account_test
 #: report:account.test.assert.print:0
 msgid "Accouting tests on"
-msgstr "Teste contabile in"
+msgstr ""
 
 #. module: account_test
 #: model:accounting.assert.test,name:account_test.account_test_01
 msgid "Test 1: General balance"
-msgstr "Testul 1: Soldul general"
+msgstr ""
 
 #. module: account_test
 #: model:accounting.assert.test,desc:account_test.account_test_06
 msgid "Check that paid/reconciled invoices are not in 'Open' state"
 msgstr ""
-"Verificati ca facturile platite/reconciliate sa nu fie in starea 'Deschisa'"
 
 #. module: account_test
 #: model:accounting.assert.test,desc:account_test.account_test_05_2
@@ -123,75 +92,70 @@ msgid ""
 "Check that reconciled account moves, that define Payable and Receivable "
 "accounts, are belonging to reconciled invoices"
 msgstr ""
-"Verificati ca miscarile reconciliate ale contului, care definesc conturile "
-"de Plati si de Incasari, sa apartina facturilor reconciliate"
 
 #. module: account_test
 #: view:accounting.assert.test:0
 msgid "Tests"
-msgstr "Teste"
+msgstr "Tesztek"
 
 #. module: account_test
 #: field:accounting.assert.test,desc:0
 msgid "Test Description"
-msgstr "Descrierea Testului"
+msgstr ""
 
 #. module: account_test
 #: view:accounting.assert.test:0
 msgid "Description"
-msgstr "Descriere"
+msgstr ""
 
 #. module: account_test
 #: model:accounting.assert.test,desc:account_test.account_test_06_1
 msgid "Check that there's no move for any account with « View » account type"
 msgstr ""
-"Verificati sa nu existe nicio miscare pentru niciun cont de tipul "
-"« Vizualizare »"
 
 #. module: account_test
 #: model:accounting.assert.test,name:account_test.account_test_08
 msgid "Test 9 : Accounts and partners on account moves"
-msgstr "Testul 9: Conturile si partenerii din miscarile contului"
+msgstr ""
 
 #. module: account_test
 #: model:ir.actions.act_window,name:account_test.action_accounting_assert
 #: model:ir.actions.report.xml,name:account_test.account_assert_test_report
 #: model:ir.ui.menu,name:account_test.menu_action_license
 msgid "Accounting Tests"
-msgstr "Teste Contabile"
+msgstr ""
 
 #. module: account_test
 #: code:addons/account_test/report/account_test_report.py:74
 #, python-format
 msgid "The test was passed successfully"
-msgstr "Testul a fost trecut cu succes"
+msgstr ""
 
 #. module: account_test
 #: field:accounting.assert.test,active:0
 msgid "Active"
-msgstr "Activ(a)"
+msgstr ""
 
 #. module: account_test
 #: model:accounting.assert.test,name:account_test.account_test_06
 msgid "Test 6 : Invoices status"
-msgstr "Testul 6  : Starea facturilor"
+msgstr ""
 
 #. module: account_test
 #: model:ir.model,name:account_test.model_accounting_assert_test
 msgid "accounting.assert.test"
-msgstr "contabilitate.impune.test"
+msgstr ""
 
 #. module: account_test
 #: model:accounting.assert.test,name:account_test.account_test_05
 msgid ""
 "Test 5.1 : Payable and Receivable accountant lines of reconciled invoices"
 msgstr ""
-"Test 5.1 : Liniile contabile de plati si incasari ale facturilor reconciliate"
 
 #. module: account_test
 #: field:accounting.assert.test,code_exec:0
 msgid "Python code"
-msgstr "Cod python"
+msgstr ""
 
 #. module: account_test
 #: model:accounting.assert.test,desc:account_test.account_test_07
@@ -199,43 +163,41 @@ msgid ""
 "Check on bank statement that the Closing Balance = Starting Balance + sum of "
 "statement lines"
 msgstr ""
-"Verificati pe extrasele de cont ca Soldul de inchidere = Soldul de inceput + "
-"suma liniilor extrasului"
 
 #. module: account_test
 #: model:accounting.assert.test,name:account_test.account_test_07
 msgid "Test 8 : Closing balance on bank statements"
-msgstr "Test 8 : Soldul de inchidere in extrasele bancare"
+msgstr ""
 
 #. module: account_test
 #: model:accounting.assert.test,name:account_test.account_test_03
 msgid "Test 3: Movement lines"
-msgstr "Test 3: Liniile miscarii"
+msgstr ""
 
 #. module: account_test
 #: model:accounting.assert.test,name:account_test.account_test_05_2
 msgid "Test 5.2 : Reconcilied invoices and Payable/Receivable accounts"
-msgstr "Test 5.2 : Facturi reconciliate si conturi de Plati/Incasari"
+msgstr ""
 
 #. module: account_test
 #: view:accounting.assert.test:0
 msgid "Expression"
-msgstr "Expresie"
+msgstr ""
 
 #. module: account_test
 #: model:accounting.assert.test,name:account_test.account_test_04
 msgid "Test 4: Totally reconciled mouvements"
-msgstr "Test 4: Miscari reconciliate complet"
+msgstr ""
 
 #. module: account_test
 #: model:accounting.assert.test,desc:account_test.account_test_04
 msgid "Check if the totally reconciled movements are balanced"
-msgstr "Verificati daca miscarile reconciliate complet sunt echilibrate"
+msgstr ""
 
 #. module: account_test
 #: field:accounting.assert.test,sequence:0
 msgid "Sequence"
-msgstr "Secventa"
+msgstr ""
 
 #. module: account_test
 #: model:accounting.assert.test,desc:account_test.account_test_02
@@ -243,13 +205,11 @@ msgid ""
 "Check if the balance of the new opened fiscal year matches with last year's "
 "balance"
 msgstr ""
-"Verificati daca soldul noului an fiscal deschis se potriveste cu soldul "
-"ultimului an"
 
 #. module: account_test
 #: view:accounting.assert.test:0
 msgid "Python Code"
-msgstr "Cod Python"
+msgstr ""
 
 #. module: account_test
 #: model:ir.actions.act_window,help:account_test.action_accounting_assert
@@ -259,29 +219,23 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
-"<clasa p=\"oe_vizualizare_niciuncontinut_creeaza\">\n"
-"                Faceti click pentru ca crea un Test Contabil.\n"
-"              </p>\n"
-"            "
 
 #. module: account_test
 #: model:accounting.assert.test,desc:account_test.account_test_01
 msgid "Check the balance: Debit sum = Credit sum"
-msgstr "Verificati soldul: Suma debit = Suma credit"
+msgstr ""
 
 #. module: account_test
 #: model:accounting.assert.test,desc:account_test.account_test_08
 msgid "Check that general accounts and partners on account moves are active"
 msgstr ""
-"Verificati ca conturile generale si partenerii din miscarile conturilor sa "
-"fie active"
 
 #. module: account_test
 #: model:accounting.assert.test,name:account_test.account_test_06_1
 msgid "Test 7: « View  » account type"
-msgstr "Test 7: « Vizualizare  » tipul de cont"
+msgstr ""
 
 #. module: account_test
 #: view:accounting.assert.test:0
 msgid "Code Help"
-msgstr "Ajutor Cod"
+msgstr ""

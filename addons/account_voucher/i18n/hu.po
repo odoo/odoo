@@ -8,13 +8,13 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2013-03-07 08:37+0000\n"
-"PO-Revision-Date: 2013-04-01 18:20+0000\n"
-"Last-Translator: Herczeg Péter <hp@erp-cloud.hu>\n"
+"PO-Revision-Date: 2013-04-02 12:42+0000\n"
+"Last-Translator: krnkris <Unknown>\n"
 "Language-Team: Hungarian <hu@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-04-02 05:48+0000\n"
+"X-Launchpad-Export-Date: 2013-04-03 15:03+0000\n"
 "X-Generator: Launchpad (build 16546)\n"
 
 #. module: account_voucher
@@ -103,7 +103,7 @@ msgstr "Számla kifizetése"
 #. module: account_voucher
 #: view:account.voucher:0
 msgid "Are you sure you want to cancel this receipt?"
-msgstr ""
+msgstr "Biztos, hogy vissza akarja vonni ezt a nyugtát?"
 
 #. module: account_voucher
 #: view:account.voucher:0
@@ -138,11 +138,13 @@ msgid ""
 "You can not change the journal as you already reconciled some statement "
 "lines!"
 msgstr ""
+"Nem tudja a naplót megváltoztatni mivel a kivonatok egyes sorait már "
+"nyugtázta!"
 
 #. module: account_voucher
 #: model:mail.message.subtype,description:account_voucher.mt_voucher_state_change
 msgid "Status changed"
-msgstr ""
+msgstr "Állapot megváltoztatva"
 
 #. module: account_voucher
 #: view:account.voucher:0
@@ -166,6 +168,13 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Kattintson vásárlási nyugta beviteléhez. \n"
+"              </p><p>\n"
+"                Ha a vásárlási nyugta igazolva lett, rögzítheti a \n"
+"                vásárlási nyugtához kapcsolódó beszállítói kifizetést.\n"
+"              </p>\n"
+"            "
 
 #. module: account_voucher
 #: view:account.voucher:0
@@ -197,7 +206,7 @@ msgstr "Rendben"
 #. module: account_voucher
 #: field:account.voucher.line,reconcile:0
 msgid "Full Reconcile"
-msgstr ""
+msgstr "Teljes nyugtázás"
 
 #. module: account_voucher
 #: field:account.voucher,date_due:0
@@ -221,7 +230,7 @@ msgstr "Üzenetek"
 #: model:ir.actions.act_window,name:account_voucher.action_purchase_receipt
 #: model:ir.ui.menu,name:account_voucher.menu_action_purchase_receipt
 msgid "Purchase Receipts"
-msgstr ""
+msgstr "Vásárlások nyugtái"
 
 #. module: account_voucher
 #: field:account.voucher.line,move_line_id:0
@@ -248,7 +257,7 @@ msgstr "Fizetési lehetőségek"
 #. module: account_voucher
 #: view:account.voucher:0
 msgid "e.g. 003/10"
-msgstr ""
+msgstr "pl. 003/10"
 
 #. module: account_voucher
 #: view:account.voucher:0
@@ -282,11 +291,18 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Kattintson értékesítési nyugta létrehozásához.\n"
+"              </p><p>\n"
+"                Ha az értékesítési nyugta igazolva lett, rögzítheti az \n"
+"                értékesítéshez tartozó vevői befizetést.\n"
+"              </p>\n"
+"            "
 
 #. module: account_voucher
 #: help:account.voucher,message_unread:0
 msgid "If checked new messages require your attention."
-msgstr ""
+msgstr "Ha be van jelölve, akkor figyelje az új üzeneteket."
 
 #. module: account_voucher
 #: model:ir.model,name:account_voucher.model_account_bank_statement_line
@@ -327,6 +343,8 @@ msgid ""
 "Holds the Chatter summary (number of messages, ...). This summary is "
 "directly in html format in order to be inserted in kanban views."
 msgstr ""
+"A chettelés összegzést megállítja (üzenetek száma,...). Ez az összegzés "
+"direkt HTML formátumú ahhoz hogy beilleszthető legyen a kanban nézetekbe."
 
 #. module: account_voucher
 #: view:account.voucher:0
@@ -359,7 +377,7 @@ msgstr "Számlák importálása"
 #. module: account_voucher
 #: view:account.voucher:0
 msgid "e.g. Invoice SAJ/0042"
-msgstr ""
+msgstr "pl. Számla SAJ/0042"
 
 #. module: account_voucher
 #: code:addons/account_voucher/account_voucher.py:1112
@@ -431,7 +449,7 @@ msgstr "Tartozik"
 #: code:addons/account_voucher/account_voucher.py:1547
 #, python-format
 msgid "Unable to change journal !"
-msgstr ""
+msgstr "Naplót nem lehet megváltoztatni !"
 
 #. module: account_voucher
 #: view:sale.receipt.report:0
@@ -603,7 +621,7 @@ msgstr "Ellenőrizendő"
 #: code:addons/account_voucher/account_voucher.py:1194
 #, python-format
 msgid "change"
-msgstr ""
+msgstr "módosítás"
 
 #. module: account_voucher
 #: code:addons/account_voucher/account_voucher.py:1014
@@ -754,6 +772,8 @@ msgid ""
 "Check this box if you are unsure of that journal entry and if you want to "
 "note it as 'to be reviewed' by an accounting expert."
 msgstr ""
+"Jelölje be, ha bizonytalan a napló tétel kontírozásában. Ennek hatására "
+"könyvelő szekértő által 'ellenőrizendő'-ként jelölődik meg."
 
 #. module: account_voucher
 #: selection:sale.receipt.report,month:0
@@ -764,7 +784,7 @@ msgstr "Október"
 #: code:addons/account_voucher/account_voucher.py:976
 #, python-format
 msgid "Please activate the sequence of selected journal !"
-msgstr ""
+msgstr "Kérem a sorozat aktiválását a kiválasztott naplóra !"
 
 #. module: account_voucher
 #: selection:sale.receipt.report,month:0
@@ -774,7 +794,7 @@ msgstr "Június"
 #. module: account_voucher
 #: field:account.voucher,payment_rate_currency_id:0
 msgid "Payment Rate Currency"
-msgstr ""
+msgstr "Fizetési arány pénzneme"
 
 #. module: account_voucher
 #: field:account.voucher,paid:0
@@ -785,12 +805,12 @@ msgstr "Rendezett"
 #: model:ir.actions.act_window,name:account_voucher.action_sale_receipt
 #: model:ir.ui.menu,name:account_voucher.menu_action_sale_receipt
 msgid "Sales Receipts"
-msgstr ""
+msgstr "Értékesítési nyugták"
 
 #. module: account_voucher
 #: field:account.voucher,message_is_follower:0
 msgid "Is a Follower"
-msgstr ""
+msgstr "Ez egy követő"
 
 #. module: account_voucher
 #: field:account.voucher,analytic_id:0
@@ -860,12 +880,12 @@ msgstr "Nyugták"
 #. module: account_voucher
 #: model:ir.model,name:account_voucher.model_res_company
 msgid "Companies"
-msgstr ""
+msgstr "Vállalatok"
 
 #. module: account_voucher
 #: field:account.voucher,message_summary:0
 msgid "Summary"
-msgstr ""
+msgstr "Összegzés"
 
 #. module: account_voucher
 #: field:account.voucher,active:0
@@ -876,26 +896,26 @@ msgstr "Aktív"
 #: code:addons/account_voucher/account_voucher.py:982
 #, python-format
 msgid "Please define a sequence on the journal."
-msgstr ""
+msgstr "Kérem egy sorozet meghatározását a naplón."
 
 #. module: account_voucher
 #: model:ir.actions.act_window,name:account_voucher.act_pay_voucher
 #: model:ir.actions.act_window,name:account_voucher.action_vendor_receipt
 #: model:ir.ui.menu,name:account_voucher.menu_action_vendor_receipt
 msgid "Customer Payments"
-msgstr ""
+msgstr "Vevői befizetések"
 
 #. module: account_voucher
 #: model:ir.actions.act_window,name:account_voucher.action_sale_receipt_report_all
 #: model:ir.ui.menu,name:account_voucher.menu_action_sale_receipt_report_all
 #: view:sale.receipt.report:0
 msgid "Sales Receipts Analysis"
-msgstr ""
+msgstr "Értékesítési nyugták elemzései"
 
 #. module: account_voucher
 #: view:sale.receipt.report:0
 msgid "Group by Invoice Date"
-msgstr ""
+msgstr "Számla dátuma szerinti csoportosítás"
 
 #. module: account_voucher
 #: view:account.voucher:0
@@ -985,7 +1005,7 @@ msgstr "Mégsem"
 #. module: account_voucher
 #: model:ir.actions.client,name:account_voucher.action_client_invoice_menu
 msgid "Open Invoicing Menu"
-msgstr ""
+msgstr "Számlázási menü megnyitása"
 
 #. module: account_voucher
 #: selection:account.voucher,state:0
@@ -1021,7 +1041,7 @@ msgstr "Fizetés"
 #. module: account_voucher
 #: view:account.voucher:0
 msgid "Currency Options"
-msgstr ""
+msgstr "Pénznem lehetőségek"
 
 #. module: account_voucher
 #: help:account.voucher,payment_option:0
@@ -1097,7 +1117,7 @@ msgstr "Eredeti összeg"
 #. module: account_voucher
 #: view:account.voucher:0
 msgid "Purchase Receipt"
-msgstr ""
+msgstr "Vásárlási nyugták"
 
 #. module: account_voucher
 #: help:account.voucher,payment_rate:0
@@ -1169,7 +1189,7 @@ msgstr "Április"
 #. module: account_voucher
 #: help:account.voucher,tax_id:0
 msgid "Only for tax excluded from price"
-msgstr ""
+msgstr "Csak az árakból kihagyott adók"
 
 #. module: account_voucher
 #: field:account.voucher,type:0
