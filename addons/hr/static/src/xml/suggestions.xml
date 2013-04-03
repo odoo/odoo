@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <template>
 
-    <t t-name="mail.suggestions">
-        <div class="oe_suggestions_groups">No groups</div>
-        <div class="oe_suggestions_employees">No employee</div>
+    <t t-extend="mail.suggestions">
+        <t t-jquery=".oe_suggestions_groups" t-operation="after">
+            <div class="oe_suggestions_employees">No employee</div>
+        </t>
     </t>
 
     <!-- Suggested employees -->
