@@ -1428,7 +1428,7 @@ class Action(openerpweb.Controller):
         else:
             return False
 
-class Export(View):
+class Export(openerpweb.Controller):
     _cp_path = "/web/export"
 
     @openerpweb.jsonrequest
@@ -1691,7 +1691,7 @@ class ExcelExport(Export):
         fp.close()
         return data
 
-class Reports(View):
+class Reports(openerpweb.Controller):
     _cp_path = "/web/report"
     POLLING_DELAY = 0.25
     TYPES_MAPPING = {
