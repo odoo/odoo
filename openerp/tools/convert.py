@@ -30,7 +30,7 @@ import sys
 # for eval context:
 import time
 
-from openerp.osv.api import Scope
+from openerp.osv.scope import Scope
 import openerp
 import openerp.release
 import openerp.workflow

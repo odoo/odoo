@@ -15,7 +15,7 @@ import yaml
 import re
 from lxml import etree
 from openerp import SUPERUSER_ID
-from openerp.osv.api import Scope
+from openerp.osv.scope import Scope
 
 # YAML import needs both safe and unsafe eval, but let's
 # default to /safe/.

@@ -56,6 +56,7 @@ import psycopg2
 from lxml import etree
 
 import api
+from scope import proxy as scope_proxy
 import fields
 import openerp
 import openerp.tools as tools
@@ -2702,7 +2703,7 @@ class BaseModel(object):
                     (SELECT id FROM ir_module_module WHERE name=%s),
                     (SELECT id FROM ir_model WHERE model=%s))""",
                        (relation_table, self._module, self._name))
-            api.scope.invalidate_cache()
+            scope_proxy.invalidate_cache()
 
     # checked version: for direct m2o starting from `self`
     def _m2o_add_foreign_key_checked(self, source_field, dest_model, ondelete):
@@ -4369,15 +4370,12 @@ class BaseModel(object):
             :param context: context arguments, like lang, time zone
             :rtype: record, recordset or null requested
         """
-        # capture current scope
-        scope = api.scope.current
-
         # need to accepts ints and longs because ids coming from a method
         # launched by button in the interface have a type long...
         if isinstance(select, (int, long)) and select:
-            return self.record(select, scope=scope)
+            return self.record(select, scope=scope_proxy.current)
         elif isinstance(select, list):
-            return self.recordset(select, scope=scope)
+            return self.recordset(select, scope=scope_proxy.current)
         else:
             return self.null()
 
@@ -5183,7 +5181,7 @@ class BaseModel(object):
 
     @property
     def scope(self):
-        return self._scope or api.scope.current
+        return self._scope or scope_proxy.current
 
     def null(self):
         """ make a null instance """
@@ -5233,7 +5231,7 @@ class BaseModel(object):
             elif self.is_recordset():
                 ids = self._ids
             else:
-                cr, uid, context = scope or api.scope
+                cr, uid, context = scope or scope_proxy
                 ids = self.search(cr, uid, [], context=context)
         else:
             ids = map(int, ids)
@@ -5472,7 +5470,7 @@ class BaseModel(object):
             :param fields: the list of modified record ids, or ``None`` for all
         """
         if fields is None:
-            api.scope.invalidate_cache()
+            scope_proxy.invalidate_cache()
             return
 
         # group fields by model
@@ -5488,7 +5486,7 @@ class BaseModel(object):
         for m in model_fields:
             spec.append((m, model_fields[m], None))
 
-        api.scope.invalidate_cache(spec)
+        scope_proxy.invalidate_cache(spec)
 
 
 # for instance checking

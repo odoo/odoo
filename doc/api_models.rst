@@ -6,8 +6,15 @@ ORM and Models
    :members:
    :undoc-members:
 
-API Scope and Decorators
-========================
+Scope Management
+================
+
+.. automodule:: openerp.osv.scope
+   :members:
+   :undoc-members:
+
+API Decorators
+==============
 
 .. automodule:: openerp.osv.api
    :members:

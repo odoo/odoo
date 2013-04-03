@@ -27,7 +27,8 @@ import re
 import openerp
 from openerp import tools
 from openerp.osv import osv, fields
-from openerp.osv.api import scope, model, record, recordset, returns
+from openerp.osv.scope import proxy as scope
+from openerp.osv.api import model, record, recordset, returns
 from openerp.tools.translate import _
 
 ADDRESS_FORMAT_LAYOUTS = {
