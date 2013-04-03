@@ -967,12 +967,15 @@ class mail_thread(osv.AbstractModel):
                                     ], limit=1, context=context)
                 if author_ids:
                     kwargs['author_id'] = author_ids[0]
+        author_id = kwargs.get('author_id')
+        if author_id is None:  # keep False values
+            author_id = self.pool.get('mail.message')._get_default_author(cr, uid, context=context)
 
         # 1: Handle content subtype: if plaintext, converto into HTML
         if content_subtype == 'plaintext':
             body = tools.plaintext2html(body)
 
-        # 2: Private message: add recipients (recipients and author of parent message)
+        # 2: Private message: add recipients (recipients and author of parent message) - current author
         #   + legacy-code management (! we manage only 4 and 6 commands)
         partner_ids = set()
         kwargs_partner_ids = kwargs.pop('partner_ids', [])
@@ -985,12 +988,13 @@ class mail_thread(osv.AbstractModel):
                 partner_ids.add(partner_id)
             else:
                 pass  # we do not manage anything else
-
         if parent_id and not model:
             parent_message = mail_message.browse(cr, uid, parent_id, context=context)
-            partner_ids |= set([partner.id for partner in parent_message.partner_ids])
+            private_followers = set([partner.id for partner in parent_message.partner_ids])
             if parent_message.author_id:
-                partner_ids.add(parent_message.author_id.id)
+                private_followers.add(parent_message.author_id.id)
+            private_followers -= set([author_id])
+            partner_ids |= private_followers
 
         # 3. Attachments
         #   - HACK TDE FIXME: Chatter: attachments linked to the document (not done JS-side), load the message
@@ -1051,6 +1055,7 @@ class mail_thread(osv.AbstractModel):
 
         values = kwargs
         values.update({
+            'author_id': author_id,
             'model': model,
             'res_id': thread_id or False,
             'body': body,

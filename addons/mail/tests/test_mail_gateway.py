@@ -372,4 +372,55 @@ class TestMailgateway(TestMailBase):
 
     def test_20_private_discussion(self):
         """ Testing private discussion between partners. """
-        pass
+        cr, uid = self.cr, self.uid
+
+        # Do: Raoul writes to Bert and Administrator, with a thread_model in context that should not be taken into account
+        msg1_pids = [self.partner_admin_id, self.partner_bert_id]
+        msg1_id = self.mail_thread.message_post(cr, self.user_raoul_id, False,
+                        partner_ids=msg1_pids,
+                        subtype='mail.mt_comment',
+                        context={'thread_model': 'mail.group'})
+
+        # Test: message recipients
+        msg = self.mail_message.browse(cr, uid, msg1_id)
+        msg_pids = [p.id for p in msg.partner_ids]
+        msg_nids = [p.id for p in msg.notified_partner_ids]
+        test_pids = msg1_pids
+        test_nids = msg1_pids
+        self.assertEqual(set(msg_pids), set(test_pids),
+                        'message_post: private discussion: incorrect recipients')
+        self.assertEqual(set(msg_nids), set(test_nids),
+                        'message_post: private discussion: incorrect notified recipients')
+        self.assertEqual(msg.model, False,
+                        'message_post: private discussion: context key "thread_model" not correctly ignored when having no res_id')
+
+        # Do: Bert replies through mailgateway (is a customer)
+        msg2_id = self.mail_thread.message_post(cr, uid, False,
+                        author_id=self.partner_bert_id,
+                        parent_id=msg1_id, subtype='mail.mt_comment')
+
+        # Test: message recipients
+        msg = self.mail_message.browse(cr, uid, msg2_id)
+        msg_pids = [p.id for p in msg.partner_ids]
+        msg_nids = [p.id for p in msg.notified_partner_ids]
+        test_pids = [self.partner_admin_id, self.partner_raoul_id]
+        test_nids = test_pids
+        self.assertEqual(set(msg_pids), set(test_pids),
+                        'message_post: private discussion: incorrect recipients when replying')
+        self.assertEqual(set(msg_nids), set(test_nids),
+                        'message_post: private discussion: incorrect notified recipients when replying')
+
+        # Do: Administrator replies
+        msg3_id = self.mail_thread.message_post(cr, uid, False,
+                        parent_id=msg2_id, subtype='mail.mt_comment')
+
+        # Test: message recipients
+        msg = self.mail_message.browse(cr, uid, msg3_id)
+        msg_pids = [p.id for p in msg.partner_ids]
+        msg_nids = [p.id for p in msg.notified_partner_ids]
+        test_pids = [self.partner_bert_id, self.partner_raoul_id]
+        test_nids = test_pids
+        self.assertEqual(set(msg_pids), set(test_pids),
+                        'message_post: private discussion: incorrect recipients when replying')
+        self.assertEqual(set(msg_nids), set(test_nids),
+                        'message_post: private discussion: incorrect notified recipients when replying')
