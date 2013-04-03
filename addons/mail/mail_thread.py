@@ -29,6 +29,8 @@ import re
 import time
 import xmlrpclib
 from email.message import Message
+import operator
+
 
 from openerp import tools
 from openerp import SUPERUSER_ID
@@ -1245,4 +1247,20 @@ class mail_thread(osv.AbstractModel):
         ''', (ids, self._name, partner_id))
         return True
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
+    #------------------------------------------------------
+    # Thread suggestion
+    #------------------------------------------------------
+
+    def get_suggested_thread(self, cr, uid, removed_suggested_threads=None, context=None):
+        """Return a list of suggested threads, sorted by the numbers of followers"""
+        if context is None:
+            context = {}
+        threads = []
+        if removed_suggested_threads is None:
+            removed_suggested_threads = []
+        threads_ids = self.search(cr, uid, [('id', 'not in', removed_suggested_threads)], context=context)
+        for data in self.read(cr, uid, threads_ids, ['message_is_follower', 'message_ids', 'name', 'image_small'], context):
+            if not data['message_is_follower']:
+                data['popularity'] = len(data['message_ids'])
+                threads.append(data)
+        return sorted(threads, key=lambda x: x['popularity'], reverse=True)[:3]

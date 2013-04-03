@@ -24,7 +24,6 @@ import openerp.tools as tools
 from openerp.osv import osv
 from openerp.osv import fields
 from openerp import SUPERUSER_ID
-import operator
 
 
 class mail_group(osv.Model):
@@ -201,30 +200,3 @@ class mail_group(osv.Model):
         """ Wrapper because message_unsubscribe_users take a user_ids=None
             that receive the context without the wrapper. """
         return self.message_unsubscribe_users(cr, uid, ids, context=context)
-
-    #------------------------------------------------------
-    # Thread suggestion
-    #------------------------------------------------------
-
-    def get_suggested_thread(self, cr, uid, removed_suggested_threads=None, context=None):
-        if context is None:
-            context = {}
-        own_messages = context.get("own_messages", False)
-        threads = []
-        message_obj = self.pool.get('mail.message')
-        if removed_suggested_threads is None:
-            removed_suggested_threads = []
-        if own_messages:
-            user_id = self.pool.get('res.users').browse(cr, uid, uid, context)
-            removed_suggested_threads.append(user_id.partner_id.id)
-        threads_ids = self.search(cr, uid, [('id', 'not in', removed_suggested_threads)], context=context)
-        for data in self.read(cr, uid, threads_ids, ['message_is_follower', 'message_ids', 'name', 'image_small'], context):
-            if not data['message_is_follower']:
-                if own_messages:
-                    message_ids = message_obj.search(cr, uid, [('author_id', '=', data['id'])])
-                else:
-                    message_ids = data['message_ids']
-                data['tweet'] = len(message_ids)
-                threads.append(data)
-        threads.sort(key=operator.itemgetter('tweet'), reverse=True)
-        return threads[0:3]

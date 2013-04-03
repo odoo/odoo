@@ -12,15 +12,13 @@
             <t t-foreach="widget.suggestions" t-as="result">
                 <div class="oe_suggested_groups">
                     <div class="oe_group_images">
-                        <a t-attf-href="#model=mail.group&amp;id=#{result.id}">
-                            <img class="oe_group_image_content" t-attf-src="{result.image}"/>
-                        </a>
+                        <img class="oe_group_image_content oe_open_group" t-attf-src="{result.image}" t-attf-id="{result.id}"/>
                     </div>
                     <div class="oe_group">
-                        <a class="oe_group_name" t-attf-href="#model=mail.group&amp;id=#{result.id}">
+                        <a class="oe_group_name oe_open_group" t-attf-id="{result.id}">
                             <t t-esc="result.name"/>
                         </a>
-                        <a href="#" class="oe_remove_suggested_group" rol="button" t-attf-id="{result.id}">
+                        <a class="oe_remove_suggested_group" rol="button" t-attf-id="{result.id}">
                             <span class="oe_kanban_action oe_kanban_action_a">X</span>
                         </a>
                         <br/>
