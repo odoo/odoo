@@ -18,7 +18,6 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-from openerp import pooler
 import time
 from openerp.report import report_sxw
 
@@ -35,7 +34,7 @@ class lot_overview_all(report_sxw.rml_parse):
         })
 
     def process(self, location_id):
-        location_obj = pooler.get_pool(self.cr.dbname).get('stock.location')
+        location_obj = self.pool['stock.location']
         data = location_obj._product_get_all_report(self.cr,self.uid, [location_id])
         data['location_name'] = location_obj.read(self.cr, self.uid, [location_id],['complete_name'])[0]['complete_name']
         self.price_total = 0.0

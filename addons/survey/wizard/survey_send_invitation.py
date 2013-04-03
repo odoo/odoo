@@ -26,8 +26,9 @@ import os
 import datetime
 import socket
 
-from openerp import addons, netsvc, tools
+from openerp import addons, tools
 from openerp.osv import fields, osv
+import openerp.report
 from openerp.tools.translate import _
 
 
@@ -85,8 +86,7 @@ Thanks,''') % (name, self.pool.get('ir.config_parameter').get_param(cr, uid, 'we
             return (False, Exception('Report name and Resources ids are required !!!'))
         try:
             ret_file_name = addons.get_module_resource('survey', 'report') + file_name + '.pdf'
-            service = netsvc.LocalService(report_name);
-            (result, format) = service.create(cr, uid, res_ids, {}, {})
+            result, format = openerp.report.render_report(cr, uid, res_ids, report_name[len('report.'):], {}, {})
             fp = open(ret_file_name, 'wb+');
             fp.write(result);
             fp.close();
