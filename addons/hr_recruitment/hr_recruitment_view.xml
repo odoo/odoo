@@ -322,6 +322,13 @@
         </field>
     </record>
     
+    <record model="ir.actions.act_window" id="crm_case_categ0_act_job_application">
+            <field name="name">Applications</field>
+            <field name="res_model">hr.applicant</field>
+            <field name="view_mode">kanban,tree,form,graph,calendar</field>
+            <field name="context">{'search_default_job_id': [active_id], 'default_job_id': active_id}</field>
+    </record>
+
      <record id="view_hr_job_kanban" model="ir.ui.view">
             <field name="name">hr.job.kanban</field>
             <field name="model">hr.job</field>
@@ -333,11 +340,13 @@
                     <field name="color"/>
                     <field name="priority_count"/>
                     <field name="user_id"/>
+                    <field name="no_of_employee"/>
+                    <field name="message_summary"/>
                     <templates>
                         <t t-name="kanban-box">
                             <div t-attf-class="oe_kanban_color_#{kanban_getcolor(record.color.raw_value)} oe_kanban_card oe_semantic_html_override oe_kanban_survey">
                                 <div class="oe_dropdown_toggle oe_dropdown_kanban">
-                                    <span class="oe_e">i</span>
+                                    <span class="oe_e">í</span>
                                     <ul class="oe_dropdown_menu">
                                         <t t-if="widget.view.is_action_enabled('edit')"><li><a type="edit">Edit...</a></li></t>
                                         <t t-if="widget.view.is_action_enabled('delete')"><li><a type="delete">Delete</a></li></t>
@@ -367,6 +376,15 @@
                                         <img t-attf-src="/web/static/src/img/icons/star-on.png" width="16" height="16" />
                                         </span>
                                     </div>
+                                    <b><field name="name"/></b>
+                                    <div><field name="department_id"/></div>
+                                    <br/>
+                                    <div><t t-esc="Math.round(record.no_of_recruitment.raw_value)"/> Expected in Recruitment</div>
+                                    <div><a t-if="record.no_of_employee.raw_value" name="%(crm_case_categ0_act_job_application)d"  type="action" >
+                                       <span t-if="record.no_of_employee.raw_value gt 1"><t t-esc="Math.round(record.no_of_employee.raw_value)"/> Applications</span>
+                                       <span t-if="record.no_of_employee.raw_value lt 2"><t t-esc="Math.round(record.no_of_employee.raw_value)"/> Application</span>
+                                    </a>
+                                    <div class="oe_kanban_footer_left" style="margin-top:5px;"><t t-raw="record.message_summary.raw_value"/></div></div>
                                 </div>
                             </div>
                         </t>
