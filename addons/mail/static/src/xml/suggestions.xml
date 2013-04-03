@@ -6,8 +6,13 @@
     </t>
 
     <!-- Suggested groups -->
-    <div t-name="mail.suggestions.groups" class="oe_sidebar_group">
-        <p class="oe_suggestion_display">Suggested Groups</p>
+    <div t-name="mail.suggestions.groups" class="oe_sidebar_suggestion oe_sidebar_group">
+        <p class="oe_suggestion_display">
+            Suggested Groups
+            <a class="oe_remove_suggestion oe_remove_suggestion_employees" rol="button">
+                <span class="oe_kanban_action oe_kanban_action_a">X</span>
+            </a>
+        </p>
         <div class="oe_suggest_groups">
             <t t-foreach="widget.suggestions" t-as="result">
                 <div class="oe_suggested_item">

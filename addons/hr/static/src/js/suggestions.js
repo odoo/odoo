@@ -37,8 +37,6 @@ openerp.hr = function(session) {
                 self.$el.find('.oe_suggestions_employees').html( QWeb.render("hr.suggestions.employee", {'widget': self}) );
                 if (self.suggestions.length === 0) {
                     self.$(".oe_sidebar_employee").hide();
-                } else {
-                    // self.renderFollowButtons();
                 }
             });
         },

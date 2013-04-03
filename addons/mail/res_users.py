@@ -28,6 +28,7 @@ class res_users(osv.Model):
         - add a preference about sending emails about notifications
         - make a new user follow itself
         - add a welcome message
+        - add suggestion preference
     """
     _name = 'res.users'
     _inherit = ['res.users']
@@ -37,10 +38,12 @@ class res_users(osv.Model):
         'alias_id': fields.many2one('mail.alias', 'Alias', ondelete="cascade", required=True,
             help="Email address internally associated with this user. Incoming "\
                  "emails will appear in the user's notifications."),
+        'display_groups_suggestions': fields.boolean("Display Group Suggestions"),
     }
 
     _defaults = {
         'alias_domain': False,  # always hide alias during creation
+        'display_groups_suggestions': True,
     }
 
     def __init__(self, pool, cr):
@@ -51,10 +54,10 @@ class res_users(osv.Model):
         init_res = super(res_users, self).__init__(pool, cr)
         # duplicate list to avoid modifying the original reference
         self.SELF_WRITEABLE_FIELDS = list(self.SELF_WRITEABLE_FIELDS)
-        self.SELF_WRITEABLE_FIELDS.append('notification_email_send')
+        self.SELF_WRITEABLE_FIELDS.extend(['notification_email_send', 'display_groups_suggestions'])
         # duplicate list to avoid modifying the original reference
         self.SELF_READABLE_FIELDS = list(self.SELF_READABLE_FIELDS)
-        self.SELF_READABLE_FIELDS.extend(['notification_email_send', 'alias_domain', 'alias_name'])
+        self.SELF_READABLE_FIELDS.extend(['notification_email_send', 'alias_domain', 'alias_name', 'display_groups_suggestions'])
         return init_res
 
     def _auto_init(self, cr, context=None):
@@ -155,6 +158,11 @@ class res_users(osv.Model):
 
     def message_create_partners_from_emails(self, cr, uid, emails, context=None):
         return self.pool.get('res.partner').message_create_partners_from_emails(cr, uid, emails, context=context)
+
+    def stop_showing_group_suggestions(self, cr, uid, user_id, context=None):
+        """Update display_groups_suggestions value to False"""
+        if context is None: context = {}
+        self.write(cr, uid, user_id, {"display_groups_suggestions": False}, context)
 
 
 class res_users_mail_group(osv.Model):

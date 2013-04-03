@@ -683,7 +683,7 @@
     width: 300px;
 }
 
-.openerp .oe_mail_wall_aside > div {
+.openerp .oe_mail_wall_aside .oe_sidebar_suggestion {
     background-color: #EDEDF6;
     border-radius: 2px;
     padding: 10px;
@@ -710,16 +710,18 @@
 .openerp .oe_mail_wall_aside .oe_suggestion_action {
     margin-top: 10px;
 }
-.openerp .oe_mail_wall_aside .oe_remove_suggested_item {
+.openerp .oe_mail_wall_aside .oe_remove_suggested_item,
+.openerp .oe_mail_wall_aside .oe_remove_suggestion {
     visibility:hidden;
     width:3%;
     float:right;
     margin-right:20px;
 }
-.openerp .oe_mail_wall_aside .oe_suggested_item:hover .oe_remove_suggested_item > span {
+.openerp .oe_mail_wall_aside .oe_suggested_item:hover .oe_remove_suggested_item > span,
+.openerp .oe_mail_wall_aside .oe_suggestion_display:hover .oe_remove_suggestion > span {
     visibility: visible;
 }
-.openerp .oe_mail_wall_aside .oe_item {
+.openerp .oe_mail_wall_aside .oe_item,.oe_suggestion_display {
     width: 90%;
 }
 .openerp .oe_mail_wall_aside .oe_item .oe_item_name {
