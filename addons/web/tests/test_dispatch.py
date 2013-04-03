@@ -69,14 +69,17 @@ def capture_logging(level=logging.DEBUG):
     logger = logging.getLogger('openerp.addons.web')
     old_level = logger.level
     old_handlers = logger.handlers
+    old_propagate = logger.propagate
 
     test_handler = TestHandler()
     logger.handlers = [test_handler]
     logger.setLevel(level)
+    logger.propagate = False
 
     try:
         yield test_handler
     finally:
+        logger.propagate = old_propagate
         logger.setLevel(old_level)
         logger.handlers = old_handlers
 
