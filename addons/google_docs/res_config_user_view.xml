@@ -27,10 +27,10 @@
                     <div>
                         <field name='filter_id' context="{'default_user_id': False, 'default_model_id': model_id, 'hide_user_field': True}" domain="[('user_id','=',False)]"/>
                         <p class="oe_grey">
-					To Create a new filter, go to the list of documents you want to attach a google document to and 
-					save the filter. Then come back to this view. The saved filter will be available in the field above.
-					For instance, to attach a document to the sales orders of Agrolait, go to sale orders list view,
-					filter on Agrolait and save the filter.
+                            <b>To create a new filter:</b><br/>
+                            - Go to your "Related Document Model" page and set the filter parameters in the "Search" view (Example of filter based on Leads/Opportunities: Sales Team Contains Sales Department)<br/>
+                            - In this same "Search" view, select the menu "Save Current Filter", enter the name (Ex: Sales Department) and add the option "Share with all users"
+The filter must therefore be available in this page.
                         </p>
                     </div>
                     <field name='gdocs_template_url' placeholder="https://docs.google.com/document/d/1vOtpJK9scIQz6taD9tJRIETWbEw3fSiaQHArsJYcua4/edit" required="1"/>

@@ -164,12 +164,13 @@ class google_docs_ir_attachment(osv.osv):
             model_ids = pool_model.search(cr, uid, [('model','=',res_model)])
             if not model_ids:
                 return attachment
-            model = pool_model.browse(cr, uid, model_ids[0], context=context)
-            record = self.pool.get(res_model).browse(cr, uid, res_id, context=context)
+            model = pool_model.browse(cr, uid, model_ids[0], context=context).name
             filter_name = config.filter_id and config.filter_id.name or False
+            record = self.pool.get(res_model).read(cr, uid, res_id, [], context=context)
+            record.update({'model': model,'filter':filter_name})
             name_gdocs = config.name_template or "%(name)s_%(model)s_%(filter)s_gdrive"
             try:
-                name_gdocs = name_gdocs % {'name': record.name, 'model': model.name, 'filter': filter_name}
+                name_gdocs = name_gdocs % record
             except:
                 raise osv.except_osv(_('Key Error!'), _("Your Google Doc Name Pattern's key does not found in object."))
     
