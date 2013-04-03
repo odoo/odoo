@@ -29,7 +29,6 @@ import re
 import time
 import xmlrpclib
 from email.message import Message
-import operator
 
 
 from openerp import tools
@@ -1263,4 +1262,5 @@ class mail_thread(osv.AbstractModel):
             if not data['message_is_follower']:
                 data['popularity'] = len(data['message_ids'])
                 threads.append(data)
-        return sorted(threads, key=lambda x: x['popularity'], reverse=True)[:3]
+        sorted_threads = sorted(threads, key=lambda x: x['popularity'], reverse=True)[:3]
+        return sorted_threads

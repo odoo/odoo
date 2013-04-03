@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<template>
+
+    <t t-name="mail.suggestions">
+        <div class="oe_suggestions_groups">No groups</div>
+        <div class="oe_suggestions_employees">No employee</div>
+    </t>
+
+    <!-- Suggested employees -->
+    <div t-name="hr.suggestions.employee" class="oe_sidebar_employee">
+        <p class="oe_suggestion_display">Suggested Employees</p>
+        <div class="oe_suggest_employees">
+            <t t-foreach="widget.suggestions" t-as="result">
+                <div class="oe_suggested_item">
+                    <div class="oe_item_image">
+                        <img class="oe_item_image_content oe_open_employee" t-attf-src="{result.image}" t-attf-id="{result.id}"/>
+                    </div>
+                    <div class="oe_item">
+                        <a class="oe_item_name oe_open_employee" t-attf-id="{result.id}">
+                            <t t-esc="result.name"/>
+                        </a>
+                        <a class="oe_remove_suggested_item oe_remove_suggested_employee" rol="button" t-attf-id="{result.id}">
+                            <span class="oe_kanban_action oe_kanban_action_a">X</span>
+                        </a>
+                        <br/>
+                        <button class="oe_suggestion_action oe_follow_employee" t-att-id="result.id">Follow</button>
+                    </div>
+                </div>
+            </t>
+        </div>
+    </div>
+
+
+</template>

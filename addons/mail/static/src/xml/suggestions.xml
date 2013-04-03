@@ -10,19 +10,19 @@
         <p class="oe_suggestion_display">Suggested Groups</p>
         <div class="oe_suggest_groups">
             <t t-foreach="widget.suggestions" t-as="result">
-                <div class="oe_suggested_groups">
-                    <div class="oe_group_images">
-                        <img class="oe_group_image_content oe_open_group" t-attf-src="{result.image}" t-attf-id="{result.id}"/>
+                <div class="oe_suggested_item">
+                    <div class="oe_item_image">
+                        <img class="oe_item_image_content oe_open_group" t-attf-src="{result.image}" t-attf-id="{result.id}"/>
                     </div>
-                    <div class="oe_group">
-                        <a class="oe_group_name oe_open_group" t-attf-id="{result.id}">
+                    <div class="oe_item">
+                        <a class="oe_item_name oe_open_group" t-attf-id="{result.id}">
                             <t t-esc="result.name"/>
                         </a>
-                        <a class="oe_remove_suggested_group" rol="button" t-attf-id="{result.id}">
+                        <a class="oe_remove_suggested_item oe_remove_suggested_group" rol="button" t-attf-id="{result.id}">
                             <span class="oe_kanban_action oe_kanban_action_a">X</span>
                         </a>
                         <br/>
-                        <button type="button" t-att-id="result.id" class="oe_join_group">Join Group</button>
+                        <button t-att-id="result.id" class="oe_suggestion_action oe_join_group">Join Group</button>
                     </div>
                 </div>
             </t>

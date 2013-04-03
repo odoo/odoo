@@ -29,7 +29,6 @@ openerp.mail.suggestions = function(session, mail) {
         },
         start: function() {
             var self = this;
-            var args = arguments;
             var res = self.get_suggested_group();
             return $.when(res).done(function() {});
         },
