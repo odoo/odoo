@@ -494,6 +494,8 @@ class hr_job(osv.osv):
     _inherits = {'mail.alias': 'alias_id'}
 
     def _count_priority(self, cr, uid, ids, name, args, context=None):
+        """Applicant, priority count like number of star 3,2,1(star rating)  
+        """
         res = {}
         for position in self.browse(cr, uid,ids, context=context):
             res[position.id] = {}
@@ -501,8 +503,8 @@ class hr_job(osv.osv):
             priority2 = 0
             priority3 = 0
             applicant_obj = self.pool.get('hr.applicant')
-            a_ids = applicant_obj.search(cr, uid, [('job_id', '=', position.id)], context=context)
-            for applicant in self.pool.get('hr.applicant').browse(cr, uid, a_ids, context=context):
+            rate_ids = applicant_obj.search(cr, uid, [('job_id', '=', position.id)], context=context)
+            for applicant in self.pool.get('hr.applicant').browse(cr, uid, rate_ids, context=context):
                 if applicant.job_id.id == position.id:
                     if applicant.priority == '3':
                         priority1 += 1
@@ -516,14 +518,18 @@ class hr_job(osv.osv):
         return res
 
     def _get_department_mgr(self, cr, uid, ids, name, args, context=None):
+        """get manager image for specific job position.
+        """
         res = {}
+        employee_obj = self.pool.get('hr.employee')
         for obj_job in self.browse(cr, uid,ids, context=context):
 
             res[obj_job.id] = {}
             if obj_job.department_id:
-                emp_ids = self.pool.get('hr.employee').search(cr, uid, [('id', '=', obj_job.department_id.manager_id.id)], context=context)
+                emp_ids = employee_obj.search(cr, uid, [('id', '=', obj_job.department_id.manager_id.id)], context=context)
                 if emp_ids:
-                    res[obj_job.id] = emp_ids
+                    for employee in employee_obj.browse(cr, uid, emp_ids, context=context):
+                        res[obj_job.id] = {'id':employee.id, 'name': employee.name}
         return res
 
     _columns = {

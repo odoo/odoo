@@ -347,7 +347,7 @@
                                 <div class="oe_kanban_content">
                                     <h3 class="oe_kanban_ellipsis"><field name="name"/></h3>
                                         <field name="department_id"/>
-                                        <div class="oe_kanban_right"><img t-att-src="kanban_image('hr.employee', 'image_small', widget.values.user_id.value)" t-att-title="record.user_id.value" width="24" height="24" class="oe_kanban_avatar"/></div><br />
+                                        <div class="oe_kanban_right"><img t-att-src="kanban_image('hr.employee', 'image_small', widget.values.user_id.value.id)" t-att-title="record.user_id.value.name" width="24" height="24" class="oe_kanban_avatar"/></div><br />
                                         <a><span t-if="record.no_of_recruitment.raw_value gt 0"><field name="no_of_recruitment"/>Employees</span></a>
                                         
                                     <div>
