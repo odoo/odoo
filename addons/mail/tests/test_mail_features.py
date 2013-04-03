@@ -21,7 +21,7 @@
 
 from openerp.addons.mail.tests.test_mail_base import TestMailBase
 from openerp.tools.mail import html_sanitize
-from openerp.osv.api import scope
+from openerp.osv.scope import proxy as scope
 
 
 class test_mail(TestMailBase):
