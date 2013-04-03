@@ -354,37 +354,35 @@
                                     </ul>
                                 </div>
                                 <div class="oe_kanban_content">
-                                    <h3 class="oe_kanban_ellipsis"><field name="name"/></h3>
-                                        <field name="department_id"/>
-                                        <div class="oe_kanban_right"><img t-att-src="kanban_image('hr.employee', 'image_small', widget.values.user_id.value.id)" t-att-title="record.user_id.value.name" width="24" height="24" class="oe_kanban_avatar"/></div><br />
-                                        <a><span t-if="record.no_of_recruitment.raw_value gt 0"><field name="no_of_recruitment"/>Employees</span></a>
-                                        
-                                    <div>
-                                        <a><t t-esc="widget.values.priority_count.value.priority1"/></a>
-                                        <span>
-                                        <img t-attf-src="/web/static/src/img/icons/star-on.png" width="16" height="16" />
-                                        <img t-attf-src="/web/static/src/img/icons/star-on.png" width="16" height="16" />
-                                        <img t-attf-src="/web/static/src/img/icons/star-on.png" width="16" height="16" />
-                                        </span><br />
-                                        <a><t t-esc="widget.values.priority_count.value.priority2"/></a>
-                                        <span>
-                                        <img t-attf-src="/web/static/src/img/icons/star-on.png" width="16" height="16" />
-                                        <img t-attf-src="/web/static/src/img/icons/star-on.png" width="16" height="16" />
-                                        </span><br />
-                                        <a><t t-esc="widget.values.priority_count.value.priority3"/></a>
-                                        <span>
-                                        <img t-attf-src="/web/static/src/img/icons/star-on.png" width="16" height="16" />
-                                        </span>
-                                    </div>
                                     <b><field name="name"/></b>
                                     <div><field name="department_id"/></div>
                                     <br/>
+                                    <div class="oe_kanban_right"><img t-att-src="kanban_image('hr.employee', 'image_small', widget.values.user_id.value.id)" t-att-title="record.user_id.value.name" width="24" height="24" class="oe_kanban_avatar"/></div><br />
+                                    <a><span t-if="record.no_of_recruitment.raw_value gt 0"><field name="no_of_recruitment"/>Employees</span></a>
+                                    
                                     <div><t t-esc="Math.round(record.no_of_recruitment.raw_value)"/> Expected in Recruitment</div>
                                     <div><a t-if="record.no_of_employee.raw_value" name="%(crm_case_categ0_act_job_application)d"  type="action" >
                                        <span t-if="record.no_of_employee.raw_value gt 1"><t t-esc="Math.round(record.no_of_employee.raw_value)"/> Applications</span>
                                        <span t-if="record.no_of_employee.raw_value lt 2"><t t-esc="Math.round(record.no_of_employee.raw_value)"/> Application</span>
                                     </a>
                                     <div class="oe_kanban_footer_left" style="margin-top:5px;"><t t-raw="record.message_summary.raw_value"/></div></div>
+                                    <div>
+                                        <a><t t-esc="widget.values.priority_count.value.priority1"/></a>
+                                        <span title="Excellent">
+                                        <img t-attf-src="/web/static/src/img/icons/star-on.png" width="16" height="16" />
+                                        <img t-attf-src="/web/static/src/img/icons/star-on.png" width="16" height="16" />
+                                        <img t-attf-src="/web/static/src/img/icons/star-on.png" width="16" height="16" />
+                                        </span><br />
+                                        <a><t t-esc="widget.values.priority_count.value.priority2"/></a>
+                                        <span title="Very Good">
+                                        <img t-attf-src="/web/static/src/img/icons/star-on.png" width="16" height="16" />
+                                        <img t-attf-src="/web/static/src/img/icons/star-on.png" width="16" height="16" />
+                                        </span><br />
+                                        <a><t t-esc="widget.values.priority_count.value.priority3"/></a>
+                                        <span title="Good">
+                                        <img t-attf-src="/web/static/src/img/icons/star-on.png" width="16" height="16" />
+                                        </span>
+                                    </div>
                                 </div>
                             </div>
                         </t>
