@@ -65,8 +65,8 @@ class TestHandler(logging.handlers.BufferingHandler):
         return False
 
 @contextlib.contextmanager
-def capture_logging(level=logging.DEBUG):
-    logger = logging.getLogger('openerp.addons.web')
+def capture_logging(logger, level=logging.DEBUG):
+    logger = logging.getLogger(logger)
     old_level = logger.level
     old_handlers = logger.handlers
     old_propagate = logger.propagate
@@ -257,7 +257,7 @@ class TestSubclassing(DispatchCleanup):
             def speak(self):
                 return 'Yu ordered cheezburgerz,'
 
-        with capture_logging() as handler:
+        with capture_logging('openerp.addons.web.http') as handler:
             class DogController(CatController):
                 _cp_path = '/dog'
 
