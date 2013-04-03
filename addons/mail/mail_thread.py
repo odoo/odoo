@@ -985,7 +985,8 @@ class mail_thread(osv.AbstractModel):
                 partner_ids.add(partner_id)
             else:
                 pass  # we do not manage anything else
-        if parent_id and model == 'mail.thread':
+
+        if parent_id and not model:
             parent_message = mail_message.browse(cr, uid, parent_id, context=context)
             partner_ids |= set([partner.id for partner in parent_message.partner_ids])
             if parent_message.author_id:
