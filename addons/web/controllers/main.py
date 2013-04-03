@@ -1,11 +1,9 @@
 # -*- coding: utf-8 -*-
-
 import ast
 import base64
 import csv
 import glob
 import itertools
-import logging
 import operator
 import datetime
 import hashlib
@@ -30,7 +28,6 @@ except ImportError:
     xlwt = None
 
 import openerp
-import openerp.modules.registry
 from openerp.tools.translate import _
 
 from .. import http
@@ -1428,6 +1425,7 @@ class Action(openerpweb.Controller):
         else:
             return False
 
+
 class Export(openerpweb.Controller):
     _cp_path = "/web/export"
 
@@ -1569,7 +1567,13 @@ class Export(openerpweb.Controller):
             (prefix + '/' + k, prefix_string + '/' + v)
             for k, v in self.fields_info(req, model, export_fields).iteritems())
 
-    #noinspection PyPropertyDefinition
+
+class ExportFormat(object):
+    """
+    Superclass for export formats, should probably be an abc and have a way to
+    generate _cp_path from fmt but it's a pain to deal with conflicts with
+    ControllerType
+    """
     @property
     def content_type(self):
         """ Provides the format's content type """
@@ -1610,14 +1614,14 @@ class Export(openerpweb.Controller):
         else:
             columns_headers = [val['label'].strip() for val in fields]
 
-
         return req.make_response(self.from_data(columns_headers, import_data),
             headers=[('Content-Disposition',
                             content_disposition(self.filename(model), req)),
                      ('Content-Type', self.content_type)],
             cookies={'fileToken': int(token)})
 
-class CSVExport(Export):
+
+class CSVExport(ExportFormat, http.Controller):
     _cp_path = '/web/export/csv'
     fmt = {'tag': 'csv', 'label': 'CSV'}
 
@@ -1652,7 +1656,8 @@ class CSVExport(Export):
         fp.close()
         return data
 
-class ExcelExport(Export):
+
+class ExcelExport(ExportFormat, http.Controller):
     _cp_path = '/web/export/xls'
     fmt = {
         'tag': 'xls',
@@ -1690,6 +1695,7 @@ class ExcelExport(Export):
         data = fp.read()
         fp.close()
         return data
+
 
 class Reports(openerpweb.Controller):
     _cp_path = "/web/report"
