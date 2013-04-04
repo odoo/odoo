@@ -65,13 +65,6 @@
         <field name="groups" eval="[(4,ref('project.group_project_user'))]"/>
     </record>
 
-<!--    <record model="ir.rule" id="task_visibility_public_all">
-        <field name="name">Public all option makes all tasks visible</field>
-        <field name="model_id" ref="model_project_task"/>
-        <field name="domain_force">[('project_id.privacy_visibility','=','publicall')]</field>
-        <field name="groups" eval="[(4,ref('project.group_project_user'))]"/>
-</record>-->
-
     <record model="ir.rule" id="project_manager_all_project_tasks_rule">
         <field name="name">Project Managers: all tasks from all projects</field>
         <field name="model_id" ref="model_project_task"/>
