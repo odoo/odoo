@@ -192,19 +192,14 @@ openerp_mail_followers = function(session, mail) {
             var self = this;
             this.followers = records || this.followers;
             this.message_is_follower = this.set_is_follower(this.followers);
-            this.check_access = false;
-
             // clean and display title
             var node_user_list = this.$('.oe_follower_list').empty();
             this.$('.oe_follower_title').html(this._format_followers(this.followers.length));
             // truncate number of displayed followers
             var truncated = this.followers.slice(0, this.displayed_nb);
             _(truncated).each(function (record) {
-                self.ds_model.call('check_access_right', [self.session.uid]).then(function(result){
-                    self.check_access = result;
-                    record.avatar_url = mail.ChatterUtils.get_image(self.session, 'res.partner', 'image_small', record.id);
-                    $(session.web.qweb.render('mail.followers.partner', {'record': record, 'widget': self})).appendTo(node_user_list);
-                })
+                record.avatar_url = mail.ChatterUtils.get_image(self.session, 'res.partner', 'image_small', record.id);
+                $(session.web.qweb.render('mail.followers.partner', {'record': record, 'widget': self})).appendTo(node_user_list);
             });
             // FVA note: be sure it is correctly translated
             if (truncated.length < this.followers.length) {
