@@ -355,7 +355,7 @@
                                 <div class="oe_kanban_content">
                                     <h3 class="oe_kanban_ellipsis"><field name="name"/></h3>
                                     <div><field name="department_id"/>
-                                        <t t-if="record.department_id.raw_value"><div class="oe_kanban_right"><img t-att-src="kanban_image('hr.employee', 'image_small', widget.values.user_id.value.id)" t-att-title="record.user_id.value.name" width="26" height="26" class="oe_kanban_avatar"/></div></t>
+                                        <t t-if="record.department_id.raw_value"><div class="oe_kanban_right"><img t-att-src="kanban_image('hr.employee', 'image_small', widget.values.user_id.value.id)" t-att-title="record.user_id.value.name" width="30" height="30" class="oe_kanban_avatar"/></div></t>
                                     </div>
                                     <br/>
                                     <div><t t-esc="Math.round(record.no_of_recruitment.raw_value)"/> Expected in Recruitment</div>
