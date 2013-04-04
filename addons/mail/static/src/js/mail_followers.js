@@ -82,38 +82,20 @@ openerp_mail_followers = function(session, mail) {
         on_edit_subtype: function(event) {
             var self = this;
             var partner_id = $(event.target).data('id');
-            var context = new session.web.CompoundContext(this.build_context(), {'partner_id': partner_id});
-            self.$dialog = new session.web.dialog($('<div class = "oe_edit_actions">'), {
+            self.$dialog = new session.web.dialog($('<div class="oe_edit_actions">'), {
                             modal: true,
                             width: 'auto',
                             height: 'auto',
-                            title: _t('Edit Subscriptions of ') + $(event.target).siblings('a').text(),
+                            title: _t('Edit Subscription of ') + $(event.target).siblings('a').text(),
                             buttons: [
                                     { text: _t("Apply"), click: function() { 
-                                        self.on_apply_subtype(partner_id);
+                                        self.do_update_subscription(event, partner_id);
                                         $(this).remove();
                                     }},
                                     { text: _t("Cancel"), click: function() { $(this).remove(); }}
                                 ],
                     });
-             return self.fetch_subtypes(context);
-        },
-
-        on_apply_subtype: function(partner_id) {
-            var check_list = new Array();
-            var id = this.view.datarecord.id;
-            _($('.oe_edit_actions input[type="checkbox"]')).each(function (record) {
-                 if ($(record).is(':checked')) {
-                     check_list.push(parseInt($(record).data('id')));
-                 }
-            });
-
-            if (!check_list.length) {
-                this.do_unfollow();
-            } else {
-                return this.ds_model.call('apply_edited_subtypes', [[id], partner_id, check_list, new session.web.CompoundContext(this.build_context(), {})])
-                    .then(this.proxy('read_value'));
-            }
+             return self.fetch_subtypes(partner_id);
         },
 
         on_invite_follower: function (event) {
@@ -251,17 +233,17 @@ openerp_mail_followers = function(session, mail) {
         },
 
         /** Fetch subtypes, only if current user is follower */
-        fetch_subtypes: function (context) {
+        fetch_subtypes: function (partner_id) {
             var self = this;
             var mode = "";
-            if (context && context.eval('partner_id')) {
+            if (partner_id) {
                 mode = "edit_follower";
             } else {
                 var subtype_list_ul = this.$('.oe_subtype_list').empty();
                 if (! this.message_is_follower) return;
             }
             var id = this.view.datarecord.id;
-            this.ds_model.call('message_get_subscription_data', [[id],context])
+            this.ds_model.call('message_get_subscription_data', [[id], partner_id, new session.web.CompoundContext(this.build_context(), {})])
                 .then(function (data) {self.display_subtypes(data, id, mode);});
         },
 
@@ -307,23 +289,30 @@ openerp_mail_followers = function(session, mail) {
             return false;
         },
 
-        do_update_subscription: function (event) {
+        do_update_subscription: function (event, partner_id) {
             var self = this;
 
             var checklist = new Array();
-            _(this.$('.oe_actions input[type="checkbox"]')).each(function (record) {
-                if ($(record).is(':checked')) {
-                    checklist.push(parseInt($(record).data('id')));
-                }
-            });
-
+            if (partner_id) {
+                _($('.oe_edit_actions input[type="checkbox"]')).each(function (record) {
+                    if ($(record).is(':checked')) {
+                        checklist.push(parseInt($(record).data('id')));
+                    }
+                });
+            } else {
+                _(this.$('.oe_actions input[type="checkbox"]')).each(function (record) {
+                    if ($(record).is(':checked')) {
+                        checklist.push(parseInt($(record).data('id')));
+                    }
+                });
+            }
             if (!checklist.length) {
                 if (!this.do_unfollow()) {
                     $(event.target).attr("checked", "checked");
                 }
             } else {
                 var context = new session.web.CompoundContext(this.build_context(), {});
-                return this.ds_model.call('message_subscribe_users', [[this.view.datarecord.id], [this.session.uid], checklist, context])
+                return this.ds_model.call('message_subscribe_users', [[this.view.datarecord.id], [this.session.uid], partner_id, checklist, context])
                     .then(this.proxy('read_value'));
             }
         },

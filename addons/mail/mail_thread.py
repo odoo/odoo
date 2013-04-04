@@ -119,12 +119,10 @@ class mail_thread(osv.AbstractModel):
             return True
         return False
 
-    def _get_subscription_data(self, cr, uid, ids, name, args, context=None):
+    def _get_subscription_data(self, cr, uid, ids, user_id, name, args, context=None):
         """ Computes:
             - message_subtype_data: data about document subtypes: which are
                 available, which are followed if any """
-        if context is None:
-            context = {}
         res = dict((id, dict(message_subtype_data='')) for id in ids)
         user_pid = self.pool.get('res.users').read(cr, uid, uid, ['partner_id'], context=context)['partner_id'][0]
 
@@ -135,8 +133,8 @@ class mail_thread(osv.AbstractModel):
         for id in ids:
             res[id]['message_subtype_data'] = subtype_dict.copy()
 
-        if 'partner_id' in context:
-            user_pid = context.get('partner_id')
+        if user_id:
+            user_pid = user_id
         # find the document followers, update the data
         fol_obj = self.pool.get('mail.followers')
         fol_ids = fol_obj.search(cr, uid, [
@@ -300,17 +298,6 @@ class mail_thread(osv.AbstractModel):
         default['message_ids'] = []
         default['message_follower_ids'] = []
         return super(mail_thread, self).copy(cr, uid, id, default=default, context=context)
-
-    def apply_edited_subtypes(self, cr, uid, ids, partner_id, check_list, context=None):
-        """ Apply the edited subtypes of the user."""
-        fol_obj = self.pool.get('mail.followers')
-        fol_ids = fol_obj.search(cr, uid, [
-            ('partner_id', '=', partner_id),
-            ('res_id', 'in', ids),
-            ('res_model', '=', self._name),
-        ], context=context)
-        fol_obj.write(cr, uid, fol_ids, {'subtype_ids': [(6,0, check_list)]}, context=context)
-        return True
 
     #------------------------------------------------------
     # Automatically log tracked fields
@@ -1102,21 +1089,23 @@ class mail_thread(osv.AbstractModel):
     # Followers API
     #------------------------------------------------------
 
-    def message_get_subscription_data(self, cr, uid, ids, context=None):
+    def message_get_subscription_data(self, cr, uid, ids, user_id=None, context=None):
         """ Wrapper to get subtypes data. """
-        return self._get_subscription_data(cr, uid, ids, None, None, context=context)
+        return self._get_subscription_data(cr, uid, ids, user_id, None, None, context=context)
 
-    def message_subscribe_users(self, cr, uid, ids, user_ids=None, subtype_ids=None, context=None):
+    def message_subscribe_users(self, cr, uid, ids, user_ids=None, partner_id=None, subtype_ids=None, context=None):
         """ Wrapper on message_subscribe, using users. If user_ids is not
             provided, subscribe uid instead. """
         if user_ids is None:
             user_ids = [uid]
         partner_ids = [user.partner_id.id for user in self.pool.get('res.users').browse(cr, uid, user_ids, context=context)]
-        return self.message_subscribe(cr, uid, ids, partner_ids, subtype_ids=subtype_ids, context=context)
+        return self.message_subscribe(cr, uid, ids, partner_ids, partner_id, subtype_ids=subtype_ids, context=context)
 
-    def message_subscribe(self, cr, uid, ids, partner_ids, subtype_ids=None, context=None):
+    def message_subscribe(self, cr, uid, ids, partner_ids, user_id, subtype_ids=None, context=None):
         """ Add partners to the records followers. """
         user_pid = self.pool.get('res.users').read(cr, uid, uid, ['partner_id'], context=context)['partner_id'][0]
+        if user_id:
+            partner_ids = [user_id]
         if set(partner_ids) == set([user_pid]):
             self.check_access_rights(cr, uid, 'read')
         else:
