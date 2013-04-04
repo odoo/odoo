@@ -53,18 +53,22 @@
             <field name="inherit_id" ref="account.invoice_tree"/>
             <field name="arch" type="xml">
                 <data>
-                    <xpath expr="//field[@name='date_invoice']" position="after">
-                        <field name="section_id" invisible="1" groups="base.group_multi_salesteams"/>
+                    <xpath expr="//field[@name='user_id']" position="after">
+                        <field name="section_id" string="Sales Team" groups="base.group_multi_salesteams"/>
                     </xpath>
                 </data>
             </field>
         </record>
 
+        <!-- Update account invoice search view!-->
         <record id="account_invoice_groupby_inherit" model="ir.ui.view">
             <field name="name">account.invoice.groupby</field>
             <field name="model">account.invoice</field>
             <field name="inherit_id" ref="account.view_account_invoice_filter"/>
             <field name="arch" type="xml">
+                <xpath expr="//field[@name='user_id']" position="after">
+                    <field name="section_id"/>
+                </xpath>
                 <xpath expr="//group/filter[@string='Due Date']" position="after">
                     <filter string="Sales Team" domain="[]" context="{'group_by':'section_id'}"/>
                 </xpath>
@@ -124,9 +128,11 @@
             <field name="search_view_id" ref="sale.view_sales_order_filter"/>
             <field name="domain">[('state','not in',('draft','sent','cancel'))]</field>
             <field name="context">{
-                'search_default_section_id': [active_id], 'default_section_id': active_id,
-                'search_default_my_sale_orders_filter': 1
-            }</field>
+                    'search_default_section_id': [active_id],
+                    'default_section_id': active_id,
+                    'search_default_my_sale_orders_filter': 1,
+                }
+            </field>
             <field name="help" type="html">
               <p class="oe_view_nocontent_create">
                 Click to create a quotation that can be converted into a sales
@@ -146,9 +152,11 @@
             <field name="view_id" ref="sale.view_quotation_tree"/>
             <field name="view_mode">tree,form,calendar,graph</field>
             <field name="context">{
-                'search_default_section_id': [active_id], 'default_section_id': active_id, 'show_address': 1,
-                'search_default_my_sale_orders_filter': 1
-            }</field>
+                    'search_default_section_id': [active_id],
+                    'default_section_id': active_id, 'show_address': 1,
+                    'search_default_my_sale_orders_filter': 1
+                }
+            </field>
             <field name="domain">[('state','in',('draft','sent','cancel'))]</field>
             <field name="search_view_id" ref="sale.view_sales_order_filter"/>
             <field name="help" type="html">
@@ -172,9 +180,31 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form,calendar,graph</field>
             <field name="view_id" ref="account.invoice_tree"/>
-            <field name="domain">[('state','not in',['draft','cancel'])]</field>
-            <field name="context">{'search_default_section_id': [active_id], 'default_section_id': active_id}</field>
+            <field name="domain">[
+                ('state', 'not in', ['draft', 'cancel']),
+                ('type', '=', 'out_invoice')]</field>
+            <field name="context">{
+                    'search_default_section_id': [active_id],
+                    'default_section_id': active_id},
+                    'default_type':'out_invoice',
+                    'type':'out_invoice',
+                    'journal_type': 'sale',
+                }
+            </field>
             <field name="search_view_id" ref="account.view_account_invoice_filter"/>
+        </record>
+
+        <record id="action_invoice_salesteams_view_tree" model="ir.actions.act_window.view">
+            <field name="sequence">1</field>
+            <field name="view_mode">tree</field>
+            <field name="act_window_id" ref="sale_crm.action_invoice_salesteams"/>
+        </record>
+
+        <record id="action_invoice_salesteams_view_form" model="ir.actions.act_window.view">
+            <field name="sequence">2</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="account.invoice_form"/>
+            <field name="act_window_id" ref="sale_crm.action_invoice_salesteams"/>
         </record>
 
         <record id="crm_case_section_salesteams_view_kanban" model="ir.ui.view">
