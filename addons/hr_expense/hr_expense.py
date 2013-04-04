@@ -324,7 +324,7 @@ class hr_expense_expense(osv.osv):
                              'price_unit': tax['price_unit'],
                              'quantity': 1,
                              'price':  tax['amount'] * tax['base_sign'] or 0.0,
-                             'account_id': tax['account_collected_id'],
+                             'account_id': tax['account_collected_id'] or mres['account_id'],
                              'tax_code_id': tax['tax_code_id'],
                              'tax_amount': tax['amount'] * tax['base_sign'],
                              }
