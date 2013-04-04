@@ -765,7 +765,11 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
         this.has_been_loaded.done(function() {
             if (self.datarecord.id && confirm(_t("Do you really want to delete this record?"))) {
                 self.dataset.unlink([self.datarecord.id]).done(function() {
-                    self.execute_pager_action('next');
+                    if (self.dataset.size()) {
+                        self.execute_pager_action('next');
+                    } else {
+                        self.do_action('history_back');
+                    }
                     def.resolve();
                 });
             } else {

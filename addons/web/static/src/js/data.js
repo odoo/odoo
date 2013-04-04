@@ -716,7 +716,7 @@ instance.web.DataSetSearch =  instance.web.DataSet.extend({
         });
     },
     size: function () {
-        if (this._length !== undefined) {
+        if (this._length != null) {
             return this._length;
         }
         return this._super();
