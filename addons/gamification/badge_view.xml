@@ -92,7 +92,7 @@
                             <field name="rule_auth_user_ids" attrs="{'invisible': [('rule_auth','!=','users')]}" widget="many2many_tags" />
                             <field name="rule_auth_badge_ids" attrs="{'invisible': [('rule_auth','!=','having')]}" widget="many2many_tags" />
                             <field name="rule_max" attrs="{'invisible': [('rule_auth','=','nobody')]}" />
-                            <field name="rule_max_number" attrs="{'invisible': [('rule_max','=',False)]}"/>
+                            <field name="rule_max_number" attrs="{'invisible': ['!',('rule_max','=',False),('rule_auth','=','nobody')]}"/>
                         </group>
                         <group string="Automatic Rules">
                             <field name="rule_automatic"/>
@@ -132,18 +132,7 @@
                                     <div class="oe_kanban_left">
                                         <a type="open"><img t-att-src="kanban_image('gamification.badge', 'image', record.image.raw_value)" t-att-title="record.name.value" width="24" height="24" /></a>
                                     </div>
-                                    <h4>
-                                        <a type="open"><field name="name"/></a>
-                                        <!-- <t t-if="record.stat_my.raw_value > 0"><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABmJLR0QA/wD/AP+gvaeTAAAACXBI
-WXMAAAsTAAALEwEAmpwYAAAAB3RJTUUH3QMSCREbCamR5gAAAXhJREFUOMuV0z9rlEEQBvDf7htF
-FIwQBCvRQuFAJSJooY29VrH0E1hcCqNign8SYzAxRfTA0nyAg3wBK1GCKSwTK8G7j6AgiHl3LbLm
-wOQu8Wl2mZ15Zp6ZnWC/GMcrjBvBdTRkX4P/QdNZrGKkWN7sn+CuE5IvsqOyKFnRMhb3DJwsZ2VV
-5ZgoCt5qGdsyD8ITzGJSW3BVkAUdlZsu++0T/SU8xxQeuyj7LKEWJKcs6Px16y9harv0NVEQBZWm
-BR33e26Dm/hMW3BLLUvW/XJBlM31XIZMlNsi7pWa5jGjIbiBXBLd8UL+N0e0WIInvMNp8+Wltqx2
-SBJk06Z98HRnkUHTOZWPomEVojOiUZV26foP2XkHdD3aSRBxXDIsSRKyddmyGklQa5vRtbl7mypr
-vrnisOBa0TuEgyBhziXwfneCrTG+9kDSkgQJSbaJ2ix42H9QYXvTakdEG4KThfanoKHS9XIvgt7K
-jspW8F2wIbhtSRr0Vf4AD6Nod0TaN4kAAAAASUVORK5CYII=" alt="got-it" /></t> -->
-                                    </h4>
+                                    <h4><a type="open"><field name="name"/></a></h4>
                                     <t t-if="record.description.value">
                                         <em><field name="description"/></em>
                                     </t>

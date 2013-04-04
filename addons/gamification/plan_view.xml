@@ -77,7 +77,8 @@
                             <group string="Notify" colspan="4">
                                 <label for="visibility_mode"/>
                                 <div>
-                                    <field name="visibility_mode" colspan="2" />
+                                    <field name="visibility_mode" type="radio" colspan="2" />
+
 
                                     <group name="visibility_mode_help" class="oe_grey oe_edit_only" colspan="1">
                                         <p attrs="{'invisible': [('visibility_mode','!=','board')]}">
@@ -121,8 +122,8 @@
                                 <field name="autojoin_group_id" />
                             </group>
                             <group colspan="4">
-                                <field name="user_ids" widget="many2many_kanban">
-                                    <kanban quick_create="false" create="true">
+                                <field name="user_ids" widget="many2many_tag" />
+<!--                                     <kanban quick_create="false" create="true">
                                         <field name="name"/>
                                         <templates>
                                             <t t-name="kanban-box">
@@ -137,7 +138,7 @@
                                             </t>
                                         </templates>
                                     </kanban>
-                                </field>
+                                </field>  -->
                             </group>
                         </group>
                     </sheet>

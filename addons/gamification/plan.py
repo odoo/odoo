@@ -168,25 +168,6 @@ class gamification_goal_plan(osv.Model):
         'manager_id' : lambda s, cr, uid, c: uid,
     }
 
-    def _check_nonzero_planline(self, cr, uid, ids, context=None):
-        """checks that there is at least one planline set"""
-        for plan in self.browse(cr, uid, ids, context):
-            if len(plan.planline_ids) < 1:
-                return False
-        return True
-
-    def _check_nonzero_users(self, cr, uid, ids, context=None):
-        """checks that there is at least one user set"""
-        for plan in self.browse(cr, uid, ids, context):
-            if len(plan.user_ids) < 1 and plan.state != 'draft':
-                return False
-        return True
-
-    _constraints = [
-        (_check_nonzero_planline, "At least one planline is required to create a goal plan", ['planline_ids']),
-        (_check_nonzero_users, "At least one user is required to create a non-draft goal plan", ['user_ids']),
-    ]
-
     def write(self, cr, uid, ids, vals, context=None):
         """Overwrite the write method to add the user of groups"""
         context = context or {}
@@ -208,7 +189,7 @@ class gamification_goal_plan(osv.Model):
         """Daily cron check.
 
         Start planned plans (in draft and with start_date = today)
-        Create the goals for planlines not linked to goals (eg: modified the 
+        Create the goals for planlines not linked to goals (eg: modified the
             plan to add planlines)
         Update every goal running
         """
@@ -226,7 +207,6 @@ class gamification_goal_plan(osv.Model):
         goal_obj = self.pool.get('gamification.goal')
         # we use yesterday to update the goals that just ended
         yesterday = date.today() - timedelta(days=1)
-        # TOCHECK conflict with date rule in goal update() function
         goal_ids = goal_obj.search(cr, uid, [
             '&',
                 ('state', 'not in', ('draft', 'canceled')),
@@ -246,9 +226,12 @@ class gamification_goal_plan(osv.Model):
         if not context: context = {}
         goal_obj = self.pool.get('gamification.goal')
 
-        self.generate_goals_from_plan(cr, uid, ids, context=context)
-
         for plan in self.browse(cr, uid, ids, context=context):
+            if plan.autojoin_group_id:
+                print("subscribe from group", plan.autojoin_group_id, [user.id for user in plan.autojoin_group_id.users])
+                self.plan_subscribe_users(cr, uid, ids, [user.id for user in plan.autojoin_group_id.users], context=context)
+            self.generate_goals_from_plan(cr, uid, [plan.id], context=context)
+
             # goals closed but still opened at the last report date
             closed_goals_to_report = goal_obj.search(cr, uid, [
                 ('plan_id', '=', plan.id),
@@ -568,7 +551,7 @@ class gamification_goal_planline(osv.Model):
 
     _name = 'gamification.goal.planline'
     _description = 'Gamification generic goal for plan'
-    _order = "sequence_type"
+    _order = "sequence_type, id"
 
     def _get_planline_types(self, cr, uid, ids, context=None):
         """Return the ids of planline items related to the gamification.goal.type
@@ -583,8 +566,10 @@ class gamification_goal_planline(osv.Model):
         return result.keys()
 
     _columns = {
+        'name': fields.related('type_id', 'name', string="Name"),
         'plan_id': fields.many2one('gamification.goal.plan',
             string='Plan',
+            required=True,
             ondelete="cascade"),
         'type_id': fields.many2one('gamification.goal.type',
             string='Goal Type',

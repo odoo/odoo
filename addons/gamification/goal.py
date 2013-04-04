@@ -335,6 +335,9 @@ class gamification_goal(osv.Model):
                     for field_name in field_names[1:]:
                         res = res.__getitem__(field_name)
                     action['res_id'] = res
+                    action['view_mode'] = 'form'  # if one element to display, should see it in form mode
+                    action['target'] = 'new'
+                print(action)
                 return action
             except ValueError:
                 _logger.warning("Invalid XML ID '%s' for goal action.", goal.type_id.action_id)
@@ -349,8 +352,9 @@ class gamification_goal(osv.Model):
             }
             action['context'] = {'default_goal_id': goal_id, 'default_current': goal.current}
             action['res_model'] = 'gamification.goal.wizard'
+            print(action)
             return action
-
+        print(False)
         return False
 
     def changed_users_avatar(self, cr, uid, ids, context):

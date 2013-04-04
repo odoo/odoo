@@ -72,6 +72,9 @@ class res_users_gamification_group(osv.Model):
                             vals['own_goal_id'] = goal[1].id
                     serialized_goals_info['planlines'].append(vals)
 
+                if len(serialized_goals_info['planlines']) == 0:
+                    # plan with no valid planlines
+                    continue
             else:
                 # individual report are simply a list of goal
                 goals_info = plan_obj.get_indivual_goal_info(cr, uid, uid, plan, subset_goal_ids=False, context=context)
