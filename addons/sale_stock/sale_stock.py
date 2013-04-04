@@ -610,11 +610,6 @@ class sale_advance_payment_inv(osv.osv_memory):
         sale_line_obj = self.pool.get('sale.order.line')
         wizard = self.browse(cr, uid, [result], context)
         sale = sale_obj.browse(cr, uid, sale_id, context=context)
-        if sale.order_policy == 'postpaid':
-            raise osv.except_osv(
-                _('Error!'),
-                _("You cannot make an advance on a sales order \
-                     that is defined as 'Automatic Invoice after delivery'."))
 
         # If invoice on picking: add the cost on the SO
         # If not, the advance will be deduced when generating the final invoice
