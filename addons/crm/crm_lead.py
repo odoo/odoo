@@ -356,6 +356,13 @@ class crm_lead(base_stage, format_address, osv.osv):
             }
         return {'value' : values}
 
+    def on_change_user(self, cr, uid, ids, user_id, context=None):
+        if user_id:
+            user = self.pool.get('res.users').browse(cr, uid, user_id, context=context)
+            return {'value':{'section_id': user.default_section_id and user.default_section_id.id or False}}
+        else:
+            return {'value':{'section_id':False}}
+
     def _check(self, cr, uid, ids=False, context=None):
         """ Override of the base.stage method.
             Function called by the scheduler to process cases for date actions
