@@ -344,7 +344,7 @@
                     <field name="message_summary"/>
                     <templates>
                         <t t-name="kanban-box">
-                            <div t-attf-class="oe_kanban_color_#{kanban_getcolor(record.color.raw_value)} oe_kanban_card oe_semantic_html_override oe_kanban_global_click">
+                            <div t-attf-class="oe_kanban_color_#{kanban_getcolor(record.color.raw_value)} oe_kanban_job oe_kanban_card oe_semantic_html_override oe_kanban_global_click">
                                 <div class="oe_dropdown_toggle oe_dropdown_kanban">
                                     <span class="oe_e">í</span>
                                     <ul class="oe_dropdown_menu">
@@ -354,10 +354,11 @@
                                     </ul>
                                 </div>
                                 <div class="oe_kanban_content">
-                                    <b><field name="name"/></b>
-                                    <div><field name="department_id"/></div>
+                                    <h3 class="oe_kanban_ellipsis"><field name="name"/></h3>
+                                    <div><field name="department_id"/>
+                                        <t t-if="record.department_id.raw_value"><div class="oe_kanban_right"><img t-att-src="kanban_image('hr.employee', 'image_small', widget.values.user_id.value.id)" t-att-title="record.user_id.value.name" width="26" height="26" class="oe_kanban_avatar"/></div></t>
+                                    </div>
                                     <br/>
-                                    <div class="oe_kanban_right"><img t-att-src="kanban_image('hr.employee', 'image_small', widget.values.user_id.value.id)" t-att-title="record.user_id.value.name" width="24" height="24" class="oe_kanban_avatar"/></div><br />
                                     <div><t t-esc="Math.round(record.no_of_recruitment.raw_value)"/> Expected in Recruitment</div>
                                     <div><a t-if="record.no_of_employee.raw_value" name="%(crm_case_categ0_act_job_application)d"  type="action" >
                                        <span t-if="record.no_of_employee.raw_value gt 1"><t t-esc="Math.round(record.no_of_employee.raw_value)"/> Applications</span>

@@ -61,6 +61,7 @@ You can define the different phases of interviews and easily rate the applicant 
     ],
     'demo': ['hr_recruitment_demo.yml'],
     'test': ['test/recruitment_process.yml'],
+    'css':['static/src/css/job_position.css'],
     'installable': True,
     'auto_install': False,
     'application': True,
