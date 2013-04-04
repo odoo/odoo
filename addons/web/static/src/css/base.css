@@ -2312,6 +2312,28 @@
   display: inline-block;
   min-width: 70px;
 }
+.openerp .oe_form_field_radio.oe_horizontal {
+  white-space: nowrap;
+}
+.openerp .oe_form_field_radio.oe_horizontal .oe_radio_header {
+  display: inline-block;
+  text-align: center;
+}
+.openerp .oe_form_field_radio.oe_vertical .oe_radio_header {
+  cursor: pointer;
+}
+.openerp .oe_form_field_radio .oe_radio_input {
+  cursor: pointer;
+  display: inline-block;
+  width: 20px;
+  background: transparent url(/web/static/src/img/icons/input_radio-off.png) no-repeat center center;
+}
+.openerp .oe_form_field_radio .oe_radio_input_on {
+  background: transparent url(/web/static/src/img/icons/input_radio-on.png) no-repeat center center;
+}
+.openerp .oe_form_field_radio .oe_radio_label {
+  cursor: default;
+}
 .openerp .oe_form_field_progressbar.ui-progressbar {
   height: 22px;
   font-size: 10px;

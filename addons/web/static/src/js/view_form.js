@@ -2804,6 +2804,40 @@ instance.web.form.FieldSelection = instance.web.form.AbstractField.extend(instan
     }
 });
 
+instance.web.form.FieldRadio = instance.web.form.AbstractField.extend(instance.web.form.ReinitializeFieldMixin, {
+    template: 'FieldRadio',
+    init: function(field_manager, node) {
+        /* Radio button widget: Attributes options:
+        * - "horizontal" to display in column
+        * - "no_radiolabel" don't display text values
+        * - "display_readonly" to display radio button (not clickable) in read only mode
+        */
+        var self = this;
+        this._super(field_manager, node);
+        this.horizontal = +this.options.horizontal;
+        this.no_radiolabel = +this.options.no_radiolabel;
+        this.display_readonly = +this.options.display_readonly;
+    },
+    initialize_content: function () {
+        var self = this;
+        this.$el.on('click', '.oe_radio_input,.oe_radio_header', function (event) {
+            var id = $(event.target).data("id");
+            id = isNaN(+id) ? id : +id;
+            if (id && !self.get("effective_readonly")) {
+                if (!self.field.required && id == self.get_value()) {
+                    self.set_value(false);
+                } else {
+                    self.set_value(id);
+                }
+            }
+        });
+    },
+    render_value: function () {
+        this.$(".oe_radio_input_on").removeClass("oe_radio_input_on");
+        this.$(".oe_radio_input[data-id='" + this.get_value() + "'], .oe_radio_header[data-id='" + this.get_value() + "'] .oe_radio_input").addClass("oe_radio_input_on");
+    }
+});
+
 // jquery autocomplete tweak to allow html and classnames
 (function() {
     var proto = $.ui.autocomplete.prototype,
@@ -5295,11 +5329,6 @@ instance.web.form.FieldStatus = instance.web.form.AbstractField.extend({
         var self = this;
         var content = QWeb.render("FieldStatus.content", {widget: self});
         self.$el.html(content);
-        var colors = JSON.parse((self.node.attrs || {}).statusbar_colors || "{}");
-        var color = colors[self.get('value')];
-        if (color) {
-            self.$("oe_active").css("color", color);
-        }
     },
     calc_domain: function() {
         var d = instance.web.pyeval.eval('domain', this.build_domain());
@@ -5423,6 +5452,7 @@ instance.web.form.widgets = new instance.web.Registry({
     'date' : 'instance.web.form.FieldDate',
     'datetime' : 'instance.web.form.FieldDatetime',
     'selection' : 'instance.web.form.FieldSelection',
+    'radio' : 'instance.web.form.FieldRadio',
     'many2one' : 'instance.web.form.FieldMany2One',
     'many2onebutton' : 'instance.web.form.Many2OneButton',
     'many2many' : 'instance.web.form.FieldMany2Many',
