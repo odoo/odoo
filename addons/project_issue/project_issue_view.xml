@@ -335,19 +335,15 @@
                 <field name="priority" position="before">
                     <field name="project_escalation_id"/>
                 </field>
-                <xpath expr='//group[@name="group_alias"]' position='replace'>
-                    <group colspan="4" name="group_alias" attrs="{'invisible': [('use_issues', '!=', True), ('use_tasks', '!=', True)]}">
-                        <label for="alias_id"/>
-                        <div class="oe_inline">
-                            <field name="alias_id" class="oe_inline oe_read_only" required="0" nolabel="1"/>
-                            <span class="oe_edit_only" style="vertical-align: middle;line-height: 21px;" name="edit_alias">
-                                <field name="alias_name" class="oe_inline" attrs="{'required': [('alias_id', '!=', False)]}"/>@<field class="oe_inline" name="alias_domain"/>
-                                <span attrs="{'invisible': ['|', ('use_issues', '!=', True), ('use_tasks', '!=', True)]}">
-                                    creates <field name="alias_model" class="oe_inline" widget="radio"/>
-                                </span>
-                            </span>
-                         </div>
-                    </group>
+                <xpath expr='//span[@name="edit_alias"]' position='replace'>
+                    <span class="oe_edit_only" name="edit_alias">
+                        <field name="alias_name" class="oe_inline" attrs="{'required': [('alias_id', '!=', False)]}"/>
+                        @
+                        <field class="oe_inline" name="alias_domain"/>
+                        <span attrs="{'invisible': ['|', ('use_issues', '!=', True), ('use_tasks', '!=', True)]}">
+                            creates <field name="alias_model" class="oe_inline" widget="radio"/>
+                        </span>
+                    </span>
                 </xpath>
             </field>
        </record>

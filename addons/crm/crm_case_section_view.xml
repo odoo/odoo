@@ -151,6 +151,15 @@
                             <h1>
                                 <field name="name" string="Project Name"/>
                             </h1>
+                            <div name="group_alias">
+                                <label for="alias_id" string="Email Alias"/>
+                                <field name="alias_id" class="oe_inline oe_read_only" required="0" nolabel="1"/>
+                                <span class="oe_edit_only" name="edit_alias">
+                                    <field name="alias_name" class="oe_inline" attrs="{'required': [('use_leads', '=', True), ('alias_id', '!=', False)]}"/>
+                                    @
+                                    <field name="alias_domain" class="oe_inline" readonly="1"/>
+                                </span>
+                            </div>
                             <div name="options_active">
                                 <field name="use_leads" class="oe_inline"/><label for="use_leads"/>
                             </div>
@@ -166,13 +175,7 @@
                                 <field name="code"/>
                             </group>
                             <group colspan="4" attrs="{'invisible': [('use_leads', '=', False)]}">
-                                <label for="alias_id"/>
-                                <div class="oe_inline">
-                                    <field name="alias_id" class="oe_inline oe_read_only" required="0" nolabel="1"/>
-                                    <span class="oe_edit_only" name="edit_alias">
-                                        <field name="alias_name" class="oe_inline" attrs="{'required': [('use_leads', '=', True), ('alias_id', '!=', False)]}"/>@<field class="oe_inline" name="alias_domain" readonly="1"/>
-                                    </span>
-                                 </div>
+                                
                             </group>
                         </group>
                         <notebook colspan="4">
@@ -278,9 +281,8 @@
             </field>
         </record>
 
-        <menuitem
+        <menuitem id="crm.menu_crm_case_section_act"
             action="crm_case_section_salesteams_act"
-            id="crm.menu_crm_case_section_act"
             sequence="1"
             parent="base.menu_sales"
             groups="base.group_multi_salesteams"/>

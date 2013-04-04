@@ -345,7 +345,7 @@
             </field>
         </record>
 
-        <menuitem action="action_orders" id="menu_sale_order" parent="base.menu_sales" sequence="5" groups="base.group_sale_salesman,base.group_sale_manager"/>
+        <menuitem action="action_orders" id="menu_sale_order" parent="base.menu_sales" sequence="6" groups="base.group_sale_salesman,base.group_sale_manager"/>
 
         <record id="action_orders_exception" model="ir.actions.act_window">
             <field name="name">Sales in Exception</field>
@@ -395,8 +395,8 @@
         </record>
 
         <menuitem id="menu_sale_quotations"
-        action="action_quotations" parent="base.menu_sales"
-        sequence="4"/>
+                action="action_quotations" parent="base.menu_sales"
+                sequence="5"/>
 
         <record id="action_order_tree" model="ir.actions.act_window">
             <field name="name">Old Quotations</field>
