@@ -340,7 +340,6 @@
                     <field name="color"/>
                     <field name="priority_count"/>
                     <field name="user_id"/>
-                    <field name="no_of_employee"/>
                     <field name="message_summary"/>
                     <templates>
                         <t t-name="kanban-box">
@@ -360,12 +359,12 @@
                                     </div>
                                     <br/>
                                     <div><t t-esc="Math.round(record.no_of_recruitment.raw_value)"/> Expected in Recruitment</div>
-                                    <div><a t-if="record.no_of_employee.raw_value" name="%(crm_case_categ0_act_job_application)d"  type="action" >
-                                       <span t-if="record.no_of_employee.raw_value gt 1"><t t-esc="Math.round(record.no_of_employee.raw_value)"/> Applications</span>
-                                       <span t-if="record.no_of_employee.raw_value lt 2"><t t-esc="Math.round(record.no_of_employee.raw_value)"/> Application</span>
+                                    <div><a name="%(crm_case_categ0_act_job_application)d"  type="action" >
+                                       <span t-if="widget.values.priority_count.value.total_application gt 1"><t t-esc="Math.round(widget.values.priority_count.value.total_application)"/> Applications</span>
+                                       <span t-if="widget.values.priority_count.value.total_application lt 2"><t t-esc="Math.round(widget.values.priority_count.value.total_application)"/> Application</span>
                                     </a>
-                                    <div class="oe_kanban_footer_left" style="margin-top:5px;"><t t-raw="record.message_summary.raw_value"/></div></div>
-                                    <div>
+                                    <div class="oe_kanban_footer_left oe_kanban_right" style="margin-bottom:10px;"><t t-raw="record.message_summary.raw_value"/></div></div>
+                                    <div style="margin-top:5px;">
                                         <a><t t-esc="widget.values.priority_count.value.priority1"/></a>
                                         <span title="Excellent">
                                         <img t-attf-src="/web/static/src/img/icons/star-on.png" width="16" height="16" />

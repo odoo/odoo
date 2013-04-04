@@ -514,7 +514,7 @@ class hr_job(osv.osv):
                         priority3 += 1
                     else:
                         pass
-            res[position.id] = {'priority1': priority1, 'priority2': priority2, 'priority3': priority3}
+            res[position.id] = {'priority1': priority1, 'priority2': priority2, 'priority3': priority3, 'total_application':len(rate_ids)}
         return res
 
     def _get_department_mgr(self, cr, uid, ids, name, args, context=None):
