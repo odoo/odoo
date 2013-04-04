@@ -173,34 +173,6 @@ class project(osv.osv):
                 res[id]['progress_rate'] = 0.0
         return res
 
-    #We want to test this to check if it can avoid whether it has access
-    def _progress_rate2(self, cr, uid, ids, names, arg, context=None):
-        child_parent = self._get_project_and_children(cr, uid, ids, context)
-        tasks = self.pool.get("project.task").search(cr, uid, [('project_id', 'in', child_parent.keys()), ('state','!=','cancel')], context=context)
-        cr.execute("""
-            SELECT project_id, COALESCE(SUM(planned_hours), 0.0),
-                COALESCE(SUM(total_hours), 0.0), COALESCE(SUM(effective_hours), 0.0)
-            FROM project_task WHERE id IN %s AND state <> 'cancelled'
-            GROUP BY project_id
-            """, (tuple(tasks),))
-        # aggregate results into res
-        res = dict([(id, {'planned_hours':0.0,'total_hours':0.0,'effective_hours':0.0}) for id in ids])
-        for id, planned, total, effective in cr.fetchall():
-            # add the values specific to id to all parent projects of id in the result
-            while id:
-                if id in ids:
-                    res[id]['planned_hours'] += planned
-                    res[id]['total_hours'] += total
-                    res[id]['effective_hours'] += effective
-                id = child_parent[id]
-        # compute progress rates
-        for id in ids:
-            if res[id]['total_hours']:
-                res[id]['progress_rate'] = round(100.0 * res[id]['effective_hours'] / res[id]['total_hours'], 2)
-            else:
-                res[id]['progress_rate'] = 0.0
-        return res
-
 
     def unlink(self, cr, uid, ids, context=None):
         alias_ids = []
@@ -267,22 +239,22 @@ class project(osv.osv):
         'members': fields.many2many('res.users', 'project_user_rel', 'project_id', 'uid', 'Project Members',
             help="Project's members are users who can have an access to the tasks related to this project.", states={'close':[('readonly',True)], 'cancelled':[('readonly',True)]}),
         'tasks': fields.one2many('project.task', 'project_id', "Task Activities"),
-        'planned_hours': fields.function(_progress_rate2, multi="progress", string='Planned Time', help="Sum of planned hours of all tasks related to this project and its child projects.",
+        'planned_hours': fields.function(_progress_rate, multi="progress", string='Planned Time', help="Sum of planned hours of all tasks related to this project and its child projects.",
             store = {
                 'project.project': (_get_project_and_parents, ['tasks', 'parent_id', 'child_ids'], 10),
                 'project.task': (_get_projects_from_tasks, ['planned_hours', 'remaining_hours', 'work_ids', 'state'], 20),
             }),
-        'effective_hours': fields.function(_progress_rate2, multi="progress", string='Time Spent', help="Sum of spent hours of all tasks related to this project and its child projects.",
+        'effective_hours': fields.function(_progress_rate, multi="progress", string='Time Spent', help="Sum of spent hours of all tasks related to this project and its child projects.",
             store = {
                 'project.project': (_get_project_and_parents, ['tasks', 'parent_id', 'child_ids'], 10),
                 'project.task': (_get_projects_from_tasks, ['planned_hours', 'remaining_hours', 'work_ids', 'state'], 20),
             }),
-        'total_hours': fields.function(_progress_rate2, multi="progress", string='Total Time', help="Sum of total hours of all tasks related to this project and its child projects.",
+        'total_hours': fields.function(_progress_rate, multi="progress", string='Total Time', help="Sum of total hours of all tasks related to this project and its child projects.",
             store = {
                 'project.project': (_get_project_and_parents, ['tasks', 'parent_id', 'child_ids'], 10),
                 'project.task': (_get_projects_from_tasks, ['planned_hours', 'remaining_hours', 'work_ids', 'state'], 20),
             }),
-        'progress_rate': fields.function(_progress_rate2, multi="progress", string='Progress', type='float', group_operator="avg", help="Percent of tasks closed according to the total of tasks todo.",
+        'progress_rate': fields.function(_progress_rate, multi="progress", string='Progress', type='float', group_operator="avg", help="Percent of tasks closed according to the total of tasks todo.",
             store = {
                 'project.project': (_get_project_and_parents, ['tasks', 'parent_id', 'child_ids'], 10),
                 'project.task': (_get_projects_from_tasks, ['planned_hours', 'remaining_hours', 'work_ids', 'state'], 20),
@@ -296,7 +268,7 @@ class project(osv.osv):
                                          "with Tasks (or optionally Issues if the Issue Tracker module is installed)."),
         'alias_model': fields.selection(_alias_models, "Alias Model", select=True, required=True,
                                         help="The kind of document created when an email is received on this project's email alias"),
-        'privacy_visibility': fields.selection([('publicall', 'All Users All Tasks'), ('employees','All Employees'), ('public','All Users'), ('followers','Followers Only')], 'Privacy / Visibility', required=True),
+        'privacy_visibility': fields.selection([('publicall', 'All users will see all tasks'), ('public','All users'), ('employees','All employees'), ('followers','Followers Only')], 'Privacy / Visibility', required=True),
         'state': fields.selection([('template', 'Template'),('draft','New'),('open','In Progress'), ('cancelled', 'Cancelled'),('pending','Pending'),('close','Closed')], 'Status', required=True,),
         'doc_count':fields.function(_get_attached_docs, string="Number of documents attached", type='int')
      }
