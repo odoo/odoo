@@ -1371,7 +1371,7 @@ class Binary(openerpweb.Controller):
         elif dbname is None:
             dbname = db_monodb(req)
 
-        if uid is None:
+        if not uid:
             uid = openerp.SUPERUSER_ID
 
         if not dbname:
