@@ -118,6 +118,7 @@ class hr_job(osv.osv):
         'company_id': fields.many2one('res.company', 'Company'),
         'state': fields.selection([('open', 'No Recruitment'), ('recruit', 'Recruitement in Progress')], 'Status', readonly=True, required=True,
             help="By default 'In position', set it to 'In Recruitment' if recruitment process is going on for this job position."),
+        'color': fields.integer('Color Index'),
     }
     _defaults = {
         'company_id': lambda self,cr,uid,c: self.pool.get('res.company')._company_default_get(cr, uid, 'hr.job', context=c),

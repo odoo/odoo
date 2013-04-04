@@ -337,11 +337,14 @@
                     <field name="name"/>
                     <field name="department_id"/>
                     <field name="no_of_recruitment"/>
+                    <field name="color"/>
+                    <field name="priority_count"/>
+                    <field name="user_id"/>
                     <field name="no_of_employee"/>
                     <field name="message_summary"/>
                     <templates>
                         <t t-name="kanban-box">
-                            <div t-attf-class=" oe_kanban_card oe_semantic_html_override oe_kanban_survey oe_kanban_global_click">
+                            <div t-attf-class="oe_kanban_color_#{kanban_getcolor(record.color.raw_value)} oe_kanban_card oe_semantic_html_override oe_kanban_global_click">
                                 <div class="oe_dropdown_toggle oe_dropdown_kanban">
                                     <span class="oe_e">í</span>
                                     <ul class="oe_dropdown_menu">
@@ -354,12 +357,30 @@
                                     <b><field name="name"/></b>
                                     <div><field name="department_id"/></div>
                                     <br/>
+                                    <div class="oe_kanban_right"><img t-att-src="kanban_image('hr.employee', 'image_small', widget.values.user_id.value.id)" t-att-title="record.user_id.value.name" width="24" height="24" class="oe_kanban_avatar"/></div><br />
                                     <div><t t-esc="Math.round(record.no_of_recruitment.raw_value)"/> Expected in Recruitment</div>
                                     <div><a t-if="record.no_of_employee.raw_value" name="%(crm_case_categ0_act_job_application)d"  type="action" >
                                        <span t-if="record.no_of_employee.raw_value gt 1"><t t-esc="Math.round(record.no_of_employee.raw_value)"/> Applications</span>
                                        <span t-if="record.no_of_employee.raw_value lt 2"><t t-esc="Math.round(record.no_of_employee.raw_value)"/> Application</span>
                                     </a>
                                     <div class="oe_kanban_footer_left" style="margin-top:5px;"><t t-raw="record.message_summary.raw_value"/></div></div>
+                                    <div>
+                                        <a><t t-esc="widget.values.priority_count.value.priority1"/></a>
+                                        <span title="Excellent">
+                                        <img t-attf-src="/web/static/src/img/icons/star-on.png" width="16" height="16" />
+                                        <img t-attf-src="/web/static/src/img/icons/star-on.png" width="16" height="16" />
+                                        <img t-attf-src="/web/static/src/img/icons/star-on.png" width="16" height="16" />
+                                        </span><br />
+                                        <a><t t-esc="widget.values.priority_count.value.priority2"/></a>
+                                        <span title="Very Good">
+                                        <img t-attf-src="/web/static/src/img/icons/star-on.png" width="16" height="16" />
+                                        <img t-attf-src="/web/static/src/img/icons/star-on.png" width="16" height="16" />
+                                        </span><br />
+                                        <a><t t-esc="widget.values.priority_count.value.priority3"/></a>
+                                        <span title="Good">
+                                        <img t-attf-src="/web/static/src/img/icons/star-on.png" width="16" height="16" />
+                                        </span>
+                                    </div>
                                 </div>
                             </div>
                         </t>
@@ -369,7 +390,7 @@
     </record>
 
         <!-- hr related job position menu action -->
-         <record model="ir.actions.act_window" id="hr.action_hr_job">
+         <record model="ir.actions.act_window" id="action_hr_job">
             <field name="name">Job Positions</field>
             <field name="res_model">hr.job</field>
             <field name="view_type">form</field>
