@@ -33,7 +33,7 @@ env = jinja2.Environment(
 )
 env.filters["json"] = json.dumps
 
-class ImportController(openerp.addons.web.http.Controller):
+class LiveChatController(openerp.addons.web.http.Controller):
     _cp_path = '/im_livechat'
 
     @openerp.addons.web.http.httprequest

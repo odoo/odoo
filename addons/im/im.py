@@ -163,7 +163,7 @@ if openerp.evented:
                 self.waiting -= 1
 
 
-class ImportController(openerp.addons.web.http.Controller):
+class LongPollingController(openerp.addons.web.http.Controller):
     _cp_path = '/longpolling/im'
 
     @openerp.addons.web.http.jsonrequest
