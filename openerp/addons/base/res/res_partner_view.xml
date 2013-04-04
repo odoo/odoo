@@ -10,7 +10,7 @@
 
             <menuitem id="base.menu_sales" parent="base.menu_base_partner" name="Sales" sequence="1" />
             <menuitem id="menu_base_config" parent="menu_base_partner" name="Configuration" sequence="30" groups="group_system"/>
-                <menuitem id="menu_config_address_book" parent="menu_base_config" name="Address Book" sequence="40" groups="group_system"/>
+            <menuitem id="menu_config_address_book" parent="menu_base_config" name="Address Book" sequence="40" groups="group_system"/>
 
         <!-- Partner Titles -->
         <record id="view_partner_title_tree" model="ir.ui.view">
@@ -420,7 +420,7 @@
             <field name="view_id" ref="view_partner_tree"/>
             <field name="act_window_id" ref="action_partner_form"/>
         </record>
-        <menuitem id="menu_partner_form" parent="base.menu_sales" action="action_partner_form" sequence="1"/>
+        <menuitem id="menu_partner_form" parent="base.menu_sales" action="action_partner_form" sequence="2"/>
 
         <record id="action_partner_customer_form" model="ir.actions.act_window">
             <field name="name">Customers</field>
