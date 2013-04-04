@@ -25,6 +25,7 @@ import time
 import types
 
 import openerp
+import openerp.modules.registry
 from openerp import SUPERUSER_ID
 from openerp import tools
 from openerp.osv import fields,osv
@@ -168,7 +169,9 @@ class ir_model(osv.osv):
         if not context.get(MODULE_UNINSTALL_FLAG):
             # only reload pool for normal unlink. For module uninstall the
             # reload is done independently in openerp.modules.loading
+            cr.commit() # must be committed before reloading registry in new cursor
             openerp.modules.registry.RegistryManager.new(cr.dbname)
+            openerp.modules.registry.RegistryManager.signal_registry_change(cr.dbname)
 
         return res
 
@@ -194,6 +197,7 @@ class ir_model(osv.osv):
                 field_state='manual',
                 select=vals.get('select_level', '0'))
             self.pool[vals['model']]._auto_init(cr, ctx)
+            openerp.modules.registry.RegistryManager.signal_registry_change(cr.dbname)
         return res
 
     def instanciate(self, cr, user, model, context=None):
@@ -259,7 +263,6 @@ class ir_model_fields(osv.osv):
         'state': lambda self,cr,uid,ctx=None: (ctx and ctx.get('manual',False)) and 'manual' or 'base',
         'on_delete': 'set null',
         'select_level': '0',
-        'size': 64,
         'field_description': '',
         'selectable': 1,
     }
@@ -289,10 +292,10 @@ class ir_model_fields(osv.osv):
         return True
 
     def _size_gt_zero_msg(self, cr, user, ids, context=None):
-        return _('Size of the field can never be less than 1 !')
+        return _('Size of the field can never be less than 0 !')
 
     _sql_constraints = [
-        ('size_gt_zero', 'CHECK (size>0)',_size_gt_zero_msg ),
+        ('size_gt_zero', 'CHECK (size>=0)',_size_gt_zero_msg ),
     ]
 
     def _drop_column(self, cr, uid, ids, context=None):
@@ -318,6 +321,9 @@ class ir_model_fields(osv.osv):
 
         self._drop_column(cr, user, ids, context)
         res = super(ir_model_fields, self).unlink(cr, user, ids, context)
+        if not context.get(MODULE_UNINSTALL_FLAG):
+            cr.commit()
+            openerp.modules.registry.RegistryManager.signal_registry_change(cr.dbname)
         return res
 
     def create(self, cr, user, vals, context=None):
@@ -349,6 +355,7 @@ class ir_model_fields(osv.osv):
                     select=vals.get('select_level', '0'),
                     update_custom_fields=True)
                 self.pool[vals['model']]._auto_init(cr, ctx)
+                openerp.modules.registry.RegistryManager.signal_registry_change(cr.dbname)
 
         return res
 
@@ -465,6 +472,7 @@ class ir_model_fields(osv.osv):
                 for col_name, col_prop, val in patch_struct[1]:
                     setattr(obj._columns[col_name], col_prop, val)
                 obj._auto_init(cr, ctx)
+            openerp.modules.registry.RegistryManager.signal_registry_change(cr.dbname)
         return res
 
 class ir_model_constraint(Model):

@@ -3,7 +3,9 @@
 from functools import wraps
 import logging
 from psycopg2 import IntegrityError, errorcodes
+import random
 import threading
+import time
 
 import openerp
 from openerp.tools.translate import translate
@@ -13,9 +15,16 @@ import security
 
 _logger = logging.getLogger(__name__)
 
+PG_CONCURRENCY_ERRORS_TO_RETRY = (errorcodes.LOCK_NOT_AVAILABLE, errorcodes.SERIALIZATION_FAILURE, errorcodes.DEADLOCK_DETECTED)
+MAX_TRIES_ON_CONCURRENCY_FAILURE = 5
+
 def dispatch(method, params):
     (db, uid, passwd ) = params[0:3]
+
+    # set uid tracker - cleaned up at the WSGI
+    # dispatching phase in openerp.service.wsgi_server.application
     threading.current_thread().uid = uid
+
     params = params[3:]
     if method == 'obj_list':
         raise NameError("obj_list has been discontinued via RPC as of 6.0, please query ir.model directly!")
@@ -94,37 +103,50 @@ def check(f):
         def _(src):
             return tr(src, 'code')
 
-        try:
-            if openerp.registry(dbname)._init:
-                raise openerp.exceptions.Warning('Currently, this database is not fully loaded and can not be used.')
-            return f(dbname, *args, **kwargs)
-        except IntegrityError, inst:
-            registry = openerp.registry(dbname)
-            for key in registry._sql_error.keys():
-                if key in inst[0]:
-                    raise openerp.osv.orm.except_orm(_('Constraint Error'), tr(registry._sql_error[key], 'sql_constraint') or inst[0])
-            if inst.pgcode in (errorcodes.NOT_NULL_VIOLATION, errorcodes.FOREIGN_KEY_VIOLATION, errorcodes.RESTRICT_VIOLATION):
-                msg = _('The operation cannot be completed, probably due to the following:\n- deletion: you may be trying to delete a record while other records still reference it\n- creation/update: a mandatory field is not correctly set')
-                _logger.debug("IntegrityError", exc_info=True)
-                try:
-                    errortxt = inst.pgerror.replace('«','"').replace('»','"')
-                    if '"public".' in errortxt:
-                        context = errortxt.split('"public".')[1]
-                        model_name = table = context.split('"')[1]
-                    else:
-                        last_quote_end = errortxt.rfind('"')
-                        last_quote_begin = errortxt.rfind('"', 0, last_quote_end)
-                        model_name = table = errortxt[last_quote_begin+1:last_quote_end].strip()
-                    model = table.replace("_",".")
-                    model_obj = registry.get(model)
-                    if model_obj:
-                        model_name = model_obj._description or model_obj._name
-                    msg += _('\n\n[object with reference: %s - %s]') % (model_name, model)
-                except Exception:
-                    pass
-                raise openerp.osv.orm.except_orm(_('Integrity Error'), msg)
-            else:
-                raise openerp.osv.orm.except_orm(_('Integrity Error'), inst[0])
+        tries = 0
+        while True:
+            try:
+                if openerp.registry(dbname)._init:
+                    raise openerp.exceptions.Warning('Currently, this database is not fully loaded and can not be used.')
+                return f(dbname, *args, **kwargs)
+            except OperationalError, e:
+                # Automatically retry the typical transaction serialization errors
+                if e.pgcode not in PG_CONCURRENCY_ERRORS_TO_RETRY:
+                    raise
+                if tries >= MAX_TRIES_ON_CONCURRENCY_FAILURE:
+                    _logger.warning("%s, maximum number of tries reached" % errorcodes.lookup(e.pgcode))
+                    raise
+                wait_time = random.uniform(0.0, 2 ** tries)
+                tries += 1
+                _logger.info("%s, retry %d/%d in %.04f sec..." % (errorcodes.lookup(e.pgcode), tries, MAX_TRIES_ON_CONCURRENCY_FAILURE, wait_time))
+                time.sleep(wait_time)
+            except IntegrityError, inst:
+                registry = openerp.registry(dbname)
+                for key in registry._sql_error.keys():
+                    if key in inst[0]:
+                        raise openerp.osv.orm.except_orm(_('Constraint Error'), tr(registry._sql_error[key], 'sql_constraint') or inst[0])
+                if inst.pgcode in (errorcodes.NOT_NULL_VIOLATION, errorcodes.FOREIGN_KEY_VIOLATION, errorcodes.RESTRICT_VIOLATION):
+                    msg = _('The operation cannot be completed, probably due to the following:\n- deletion: you may be trying to delete a record while other records still reference it\n- creation/update: a mandatory field is not correctly set')
+                    _logger.debug("IntegrityError", exc_info=True)
+                    try:
+                        errortxt = inst.pgerror.replace('«','"').replace('»','"')
+                        if '"public".' in errortxt:
+                            context = errortxt.split('"public".')[1]
+                            model_name = table = context.split('"')[1]
+                        else:
+                            last_quote_end = errortxt.rfind('"')
+                            last_quote_begin = errortxt.rfind('"', 0, last_quote_end)
+                            model_name = table = errortxt[last_quote_begin+1:last_quote_end].strip()
+                        model = table.replace("_",".")
+                        model_obj = registry.get(model)
+                        if model_obj:
+                            model_name = model_obj._description or model_obj._name
+                        msg += _('\n\n[object with reference: %s - %s]') % (model_name, model)
+                    except Exception:
+                        pass
+                    raise openerp.osv.orm.except_orm(_('Integrity Error'), msg)
+                else:
+                    raise openerp.osv.orm.except_orm(_('Integrity Error'), inst[0])
 
     return wrapper
 

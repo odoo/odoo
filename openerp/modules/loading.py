@@ -34,6 +34,7 @@ import openerp
 import openerp.modules.db
 import openerp.modules.graph
 import openerp.modules.migration
+import openerp.modules.registry
 import openerp.osv as osv
 import openerp.tools as tools
 from openerp import SUPERUSER_ID
@@ -131,7 +132,7 @@ def load_module_graph(cr, graph, status=None, perform_checks=True, skip_modules=
     loaded_modules = []
     registry = openerp.registry(cr.dbname)
     migrations = openerp.modules.migration.MigrationManager(cr, graph)
-    _logger.debug('loading %d packages...', len(graph))
+    _logger.info('loading %d modules...', len(graph))
 
     # Query manual fields for all models at once and save them on the registry
     # so the initialization code for each model does not have to do it
@@ -149,7 +150,7 @@ def load_module_graph(cr, graph, status=None, perform_checks=True, skip_modules=
         if skip_modules and module_name in skip_modules:
             continue
 
-        _logger.info('module %s: loading objects', package.name)
+        _logger.debug('module %s: loading objects', package.name)
         migrations.migrate_module(package, 'pre')
         load_openerp_module(package.name)
 

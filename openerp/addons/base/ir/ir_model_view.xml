@@ -151,7 +151,7 @@
                                                                           'readonly': [('ttype','not in', ['many2one','one2many','many2many'])]}"/>
                             <field name="relation_field" attrs="{'required': [('ttype','=','one2many')], 'readonly': [('ttype','!=','one2many')]}"/>
                             <field name="selection" attrs="{'required': [('ttype','in',['selection','reference'])], 'readonly': [('ttype','not in',['selection','reference'])]}"/>
-                            <field name="size" attrs="{'required': [('ttype','in',['char','reference'])], 'readonly': [('ttype','not in',['char','reference'])]}"/>
+                            <field name="size" attrs="{'invisible': [('ttype','not in',['char','text','reference'])]}"/>
                             <field name="domain" attrs="{'readonly': [('relation','=','')]}"/>
                             <field name="serialization_field_id" attrs="{'readonly': [('state','=','base')]}" domain="[('ttype','=','serialized'), ('model_id', '=', model_id)]"/>
                             <field name="on_delete" attrs="{'readonly': [('ttype','!=','many2one')]}"/>
