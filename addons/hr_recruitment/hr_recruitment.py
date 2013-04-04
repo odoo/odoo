@@ -507,11 +507,11 @@ class hr_job(osv.osv):
             for applicant in self.pool.get('hr.applicant').browse(cr, uid, rate_ids, context=context):
                 if applicant.job_id.id == position.id:
                     if applicant.priority == '3':
-                        priority1 += 1
+                        priority3 += 1
                     elif applicant.priority == '2':
                         priority2 += 1
                     elif applicant.priority == '1':
-                        priority3 += 1
+                        priority1 += 1
                     else:
                         pass
             res[position.id] = {'priority1': priority1, 'priority2': priority2, 'priority3': priority3, 'total_application':len(rate_ids)}
