@@ -161,7 +161,7 @@ class google_docs_ir_attachment(osv.osv):
         pool_gdoc_config = self.pool.get('google.docs.config')
         pool_model = self.pool.get("ir.model")
         attachment = {'url': False}
-        config = pool_gdoc_config.browse(cr, SUPERUSER_ID, config_id, context=context)
+        config = pool_gdoc_config.browse(cr, uid, config_id, context=context)
         if config:
             res_model = config.model_id
             model_ids = pool_model.search(cr, uid, [('model','=',res_model)])
