@@ -236,27 +236,26 @@ class sale_order(osv.osv):
         return res
 
     def date_to_datetime(self, cr, uid, userdate, context=None):
+        """ Convert date values expressed in user's timezone to
+        server-side UTC timestamp, assuming a default arbitrary
+        time of 12:00 AM - because a time is needed.
+    
+        :param str userdate: date string in in user time zone
+        :return: UTC datetime string for server-side use
         """
-        Function accepts date string assumed in client TZ and result is produced
-        in UTC timezone with 12:00 is assumed time to be sure, that system will
-        avoid tz date converstion issues.
-            e.g. Date 2013-03-26 in user tz will get 12:00 Hours and will then 
-                get converted to UTC to avoid tz converstion.
-        userdate: date string in in user time zone.
-        return  : the utc datetime string.
-        """
+        # TODO: move to fields.datetime in server after 7.0
         user_datetime = datetime.strptime(userdate, DEFAULT_SERVER_DATE_FORMAT) + relativedelta(hours=12.0)
         if context and context.get('tz'):
-            tz_name = context['tz']  
+            tz_name = context['tz']
         else:
             tz_name = self.pool.get('res.users').read(cr, SUPERUSER_ID, uid, ['tz'])['tz']
-        if not tz_name:
-            tz_name = time.tzname[time.daylight]
-        utc = pytz.timezone('UTC')
-        context_tz = pytz.timezone(tz_name)
-        local_timestamp = context_tz.localize(user_datetime, is_dst=False)
-        user_datetime = local_timestamp.astimezone(utc)
-        return user_datetime.strftime(DEFAULT_SERVER_DATETIME_FORMAT)
+        if tz_name:
+            utc = pytz.timezone('UTC')
+            context_tz = pytz.timezone(tz_name)
+            local_timestamp = context_tz.localize(user_datetime, is_dst=False)
+            user_datetime = local_timestamp.astimezone(utc)
+            return user_datetime.strftime(DEFAULT_SERVER_DATETIME_FORMAT)
+        return userdate
 
     # if mode == 'finished':
     #   returns True if all lines are done, False otherwise
