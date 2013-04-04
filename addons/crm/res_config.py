@@ -62,7 +62,7 @@ class crm_configuration(osv.TransientModel):
                     This installs the module crm_claim."""),
         'module_crm_helpdesk': fields.boolean("Manage Helpdesk and Support",
             help="""Allows you to communicate with Customer, process Customer query, and provide better help and support. This installs the module crm_helpdesk."""),
-        'group_multi_salesteams': fields.boolean("Use Sales Teams",
+        'group_multi_salesteams': fields.boolean("Organize Sales activities into multiple Sales Teams",
             implied_group='base.group_multi_salesteams',
             help="""Allows you to use Sales Teams to manage your leads and opportunities."""),
     }
