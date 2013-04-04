@@ -1206,7 +1206,7 @@ class mail_thread(osv.AbstractModel):
 
             for pid, subtypes in new_followers.items():
                 subtypes = list(subtypes) if subtypes is not None else None
-                self.message_subscribe(cr, uid, [record.id], [pid], subtypes, context=context)
+                self.message_subscribe(cr, uid, [record.id], [pid], None, subtypes, context=context)
 
             # find first email message, set it as unread for auto_subscribe fields for them to have a notification
             if user_id_partner_ids:

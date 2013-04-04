@@ -111,7 +111,7 @@ class mail_group(osv.Model):
             partner_ids = []
             for group in mail_group.group_ids:
                 partner_ids += [user.partner_id.id for user in group.users]
-            self.message_subscribe(cr, uid, ids, partner_ids, context=context)
+            self.message_subscribe(cr, uid, ids, partner_ids, None, context=context)
 
     def create(self, cr, uid, vals, context=None):
         mail_alias = self.pool.get('mail.alias')
