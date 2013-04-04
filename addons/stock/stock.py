@@ -399,7 +399,16 @@ class stock_location(osv.osv):
         uom_rounding = self.pool.get('product.product').browse(cr, uid, product_id, context=context).uom_id.rounding
         if context.get('uom'):
             uom_rounding = uom_obj.browse(cr, uid, context.get('uom'), context=context).rounding
-        for id in self.search(cr, uid, [('location_id', 'child_of', ids)]):
+        locations_ids = self.search(cr, uid, [('location_id', 'child_of', ids)])
+        #Fetch only those locations in which this product has ever processed(in or out)
+        cr.execute("""SELECT l.id FROM stock_location l WHERE l.id in %s AND
+                    EXISTS (SELECT 1 FROM stock_move m WHERE m.product_id = %s
+                    AND ((state = 'done' AND m.location_dest_id = l.id)
+                    OR
+                    (state in ('done','assigned') AND m.location_id = l.id)))
+                   """, (tuple(locations_ids), product_id,))
+        locations_ids = [i for i in cr.fetchall()]
+        for id in locations_ids:
             if lock:
                 try:
                     # Must lock with a separate select query because FOR UPDATE can't be used with
