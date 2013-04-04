@@ -132,8 +132,11 @@ class google_docs_ir_attachment(osv.osv):
         # check if a model is configured with a template
         config_ids = pool_gdoc_config.search(cr, uid, [('model_id', '=', res_model)], context=context)
         configs = []
-        for config  in pool_gdoc_config.browse(cr, uid, config_ids, context=context):
+        for config  in pool_gdoc_config.browse(cr, SUPERUSER_ID, config_ids, context=context):
             if config.filter_id:
+                if (config.filter_id.user_id and config.filter_id.user_id.id != uid):
+                    #Private
+                    continue
                 google_doc_configs = self._filter(cr, uid, config, config.filter_id, res_id, context=context)
                 if google_doc_configs: 
                     configs.append({'id': config.id, 'name': config.name})
@@ -158,7 +161,7 @@ class google_docs_ir_attachment(osv.osv):
         pool_gdoc_config = self.pool.get('google.docs.config')
         pool_model = self.pool.get("ir.model")
         attachment = {'url': False}
-        config = pool_gdoc_config.browse(cr, uid, config_id, context=context)
+        config = pool_gdoc_config.browse(cr, SUPERUSER_ID, config_id, context=context)
         if config:
             res_model = config.model_id
             model_ids = pool_model.search(cr, uid, [('model','=',res_model)])
@@ -220,11 +223,11 @@ class config(osv.osv):
             }
 
     def onchange_model_id(self, cr, uid, ids, model_id, context=None):
-         res = {}
+         res = {'domain':{'filter_id':[]}}
          if model_id:
-            res['domain'] = {'filter_id': [('model_id', '=', model_id), ('user_id','=',False)]}
+            res['domain'] = {'filter_id': [('model_id', '=', model_id)]}
          else:
-             res['value'] = {'filter_id': [('user_id','=',False)]}
+             res['value'] = {'filter_id': False}
          return res
 
     _defaults = {
