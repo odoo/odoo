@@ -5433,14 +5433,15 @@ class BaseModel(object):
         return self._id
 
     def __str__(self):
+        model_name = self._name.replace('.', '_')
         if self.is_record():
-            return "Record(%s, %d)" % (self._name, self._id)
+            return "%s.record(%d)" % (model_name, self._id)
         elif self.is_recordset():
-            return "Recordset(%s, %s)" % (self._name, self._ids)
+            return "%s.recordset(%s)" % (model_name, self._ids)
         elif self.is_null():
-            return "Null(%s)" % self._name
+            return "%s.null()" % model_name
         else:
-            return "Model(%s)" % self._name
+            return model_name
 
     def __unicode__(self):
         return unicode(str(self))
