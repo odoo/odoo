@@ -354,15 +354,14 @@
                                 </div>
                                 <div class="oe_kanban_content">
                                     <h3 class="oe_job oe_kanban_ellipsis"><field name="name"/></h3>
-                                    <div class="oe_job"><field name="department_id"/>
-                                        <t t-if="record.department_id.raw_value"><div class="oe_kanban_right"><img t-att-src="kanban_image('hr.employee', 'image_small', widget.values.user_id.value.id)" t-att-title="record.user_id.value.name" width="30" height="30" class="oe_kanban_avatar"/></div></t>
-                                    </div>
-                                    <div style="margin-top:10px;"><t t-esc="Math.round(record.no_of_recruitment.raw_value)"/> Expected in Recruitment</div>
+                                    <span class="oe_job"><field name="department_id"/></span>
+                                    <t t-if="record.department_id.raw_value"><img t-att-src="kanban_image('hr.employee', 'image_small', widget.values.user_id.value.id)" t-att-title="record.user_id.value.name" width="30" height="30" style="float: right;margin-top: 2px;" class="oe_kanban_avatar"/></t>
+                                    <div style="margin-top:10px;margin-bottom:7px;"><t t-esc="Math.round(record.no_of_recruitment.raw_value)"/> Expected in Recruitment</div>
                                     <div><a name="%(crm_case_categ0_act_job_application)d"  type="action" >
                                        <span t-if="widget.values.priority_count.value.total_application gt 1"><t t-esc="Math.round(widget.values.priority_count.value.total_application)"/> Applications</span>
                                        <span t-if="widget.values.priority_count.value.total_application lt 2"><t t-esc="Math.round(widget.values.priority_count.value.total_application)"/> Application</span>
                                     </a>
-                                    <div class="oe_kanban_footer_left oe_kanban_right" style="margin-bottom:10px;"><t t-raw="record.message_summary.raw_value"/></div></div>
+                                    <div class="oe_kanban_footer_left oe_job_kanban" style="margin-bottom:10px;"><t t-raw="record.message_summary.raw_value"/></div></div>
                                     <div style="margin-top:5px;">
                                         <t t-esc="widget.values.priority_count.value.priority1"/>
                                         <span title="Excellent">
