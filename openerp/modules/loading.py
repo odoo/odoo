@@ -276,7 +276,7 @@ def load_modules(db, force_demo=False, status=None, update_module=False):
                 tools.config["demo"]['all'] = 1
 
         # This is a brand new registry, just created in
-        # openerp.modules.registry.RegistryManger.new().
+        # openerp.modules.registry.RegistryManager.new().
         registry = openerp.registry(cr.dbname)
 
         if 'base' in tools.config['update'] or 'all' in tools.config['update']:
@@ -409,7 +409,7 @@ def load_modules(db, force_demo=False, status=None, update_module=False):
                 # modules to remove next time
                 cr.commit()
                 _logger.info('Reloading registry once more after uninstalling modules')
-                return openerp.modules.registry.RegistryManger.new(cr.dbname, force_demo, status, update_module)
+                return openerp.modules.registry.RegistryManager.new(cr.dbname, force_demo, status, update_module)
 
         if report.failures:
             _logger.error('At least one test failed when loading the modules.')
