@@ -1681,10 +1681,11 @@ $sheet-padding: 16px
             @include box-shadow((0 1px 2px rgba(0, 0, 0, .1), 0 1px 1px rgba(255, 255, 255, .8) inset))
     .oe_form_invisible
         display: none !important
+    .oe_form_editable
+        .oe_read_only
+            display: none !important
     .oe_form_readonly
         .oe_edit_only, .oe_form_field:empty
-            display: none !important
-        .oe_read_only
             display: none !important
         .oe_form .oe_form_field_date
             width: auto

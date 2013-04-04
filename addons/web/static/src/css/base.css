@@ -544,6 +544,28 @@
   background: #7c7bad;
   color: #eeeeee;
 }
+.openerp .oe_form_field_radio.oe_horizontal {
+  white-space: nowrap;
+}
+.openerp .oe_form_field_radio.oe_horizontal .oe_radio_header {
+  display: inline-block;
+  text-align: center;
+}
+.openerp .oe_form_field_radio.oe_vertical .oe_radio_header {
+  cursor: pointer;
+}
+.openerp .oe_form_field_radio .oe_radio_input {
+  cursor: pointer;
+  display: inline-block;
+  width: 20px;
+  background: transparent url(/web/static/src/img/icons/input_radio-off.png) no-repeat center center;
+}
+.openerp .oe_form_field_radio .oe_radio_input_on {
+  background: transparent url(/web/static/src/img/icons/input_radio-on.png) no-repeat center center;
+}
+.openerp .oe_form_field_radio .oe_radio_label {
+  cursor: default;
+}
 .openerp .oe_tags {
   margin-bottom: 1px;
 }
@@ -2105,10 +2127,10 @@
 .openerp .oe_form_invisible {
   display: none !important;
 }
-.openerp .oe_form_readonly .oe_edit_only, .openerp .oe_form_readonly .oe_form_field:empty {
+.openerp .oe_form_editable .oe_read_only {
   display: none !important;
 }
-.openerp .oe_form_readonly .oe_read_only {
+.openerp .oe_form_readonly .oe_edit_only, .openerp .oe_form_readonly .oe_form_field:empty {
   display: none !important;
 }
 .openerp .oe_form_readonly .oe_form .oe_form_field_date {
@@ -2311,28 +2333,6 @@
 .openerp .oe_form_field_progressbar {
   display: inline-block;
   min-width: 70px;
-}
-.openerp .oe_form_field_radio.oe_horizontal {
-  white-space: nowrap;
-}
-.openerp .oe_form_field_radio.oe_horizontal .oe_radio_header {
-  display: inline-block;
-  text-align: center;
-}
-.openerp .oe_form_field_radio.oe_vertical .oe_radio_header {
-  cursor: pointer;
-}
-.openerp .oe_form_field_radio .oe_radio_input {
-  cursor: pointer;
-  display: inline-block;
-  width: 20px;
-  background: transparent url(/web/static/src/img/icons/input_radio-off.png) no-repeat center center;
-}
-.openerp .oe_form_field_radio .oe_radio_input_on {
-  background: transparent url(/web/static/src/img/icons/input_radio-on.png) no-repeat center center;
-}
-.openerp .oe_form_field_radio .oe_radio_label {
-  cursor: default;
 }
 .openerp .oe_form_field_progressbar.ui-progressbar {
   height: 22px;
