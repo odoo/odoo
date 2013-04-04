@@ -45,6 +45,18 @@ class pos_config(osv.osv):
         ('deprecated', 'Deprecated')
     ]
 
+    def _get_currency(self, cr, uid, ids, fieldnames, args, context=None):
+         result = {}
+         currency_id = False
+         user = self.pool.get('res.users')
+         for pos_config in self.browse(cr, uid, ids, context=context):
+             if pos_config.journal_id:
+                 currency_id = pos_config.journal_id.currency.id or pos_config.journal_id.company_id.currency_id.id
+             else:
+                 currency_id = user.browse(cr, uid, pos_config.id, context=context).company_id.currency_id.id
+             result[pos_config.id] = currency_id
+         return result
+
     _columns = {
         'name' : fields.char('Point of Sale Name', size=32, select=1,
              required=True, help="An internal identification of the point of sale"),
@@ -56,6 +68,7 @@ class pos_config(osv.osv):
         'journal_id' : fields.many2one('account.journal', 'Sale Journal',
              domain=[('type', '=', 'sale')],
              help="Accounting journal used to post sales entries."),
+        'currency_id' : fields.function(_get_currency, type="many2one", string="Currency", relation="res.currency"),
         'iface_self_checkout' : fields.boolean('Self Checkout Mode',
              help="Check this if this point of sale should open by default in a self checkout mode. If unchecked, OpenERP uses the normal cashier mode by default."),
         'iface_cashdrawer' : fields.boolean('Cashdrawer Interface'),
@@ -192,13 +205,14 @@ class pos_session(osv.osv):
                                     readonly=True,
                                     states={'opening_control' : [('readonly', False)]}
                                    ),
+        'currency_id' : fields.related('config_id', 'currency_id', type="many2one", relation='res.currency', string="Currnecy"),
         'start_at' : fields.datetime('Opening Date', readonly=True), 
         'stop_at' : fields.datetime('Closing Date', readonly=True),
 
         'state' : fields.selection(POS_SESSION_STATE, 'Status',
                 required=True, readonly=True,
                 select=1),
-
+        
         'cash_control' : fields.function(_compute_cash_all,
                                          multi='cash',
                                          type='boolean', string='Has Cash Control'),
