@@ -182,6 +182,7 @@ openerp_mailgate: "|/path/to/openerp-mailgate.py --host=localhost -u %(uid)d -p 
         """WARNING: meant for cron usage only - will commit() after each email!"""
         if context is None:
             context = {}
+        context['fetchmail_cron_running'] = True
         mail_thread = self.pool.get('mail.thread')
         action_pool = self.pool.get('ir.actions.server')
         for server in self.browse(cr, uid, ids, context=context):
@@ -241,14 +242,17 @@ openerp_mailgate: "|/path/to/openerp-mailgate.py --host=localhost -u %(uid)d -p 
         return True
 
     def cron_update(self, cr, uid, context=None):
-        # Enabled/Disable cron based on the number of 'done' server of type pop or imap
-        ids = self.search(cr, uid, [('state','=','done'),('type','in',['pop','imap'])])
-        try:
-            cron_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'fetchmail', 'ir_cron_mail_gateway_action')[1]
-            self.pool.get('ir.cron').write(cr, 1, [cron_id], {'active': bool(ids)})
-        except ValueError:
-            # Nevermind if default cron cannot be found
-            pass
+        if context is None:
+            context = {}
+        if not context.get('fetchmail_cron_running'):
+            # Enabled/Disable cron based on the number of 'done' server of type pop or imap
+            ids = self.search(cr, uid, [('state','=','done'),('type','in',['pop','imap'])])
+            try:
+                cron_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'fetchmail', 'ir_cron_mail_gateway_action')[1]
+                self.pool.get('ir.cron').write(cr, 1, [cron_id], {'active': bool(ids)})
+            except ValueError:
+                # Nevermind if default cron cannot be found
+                pass
 
     def create(self, cr, uid, values, context=None):
         res = super(fetchmail_server, self).create(cr, uid, values, context=context)
