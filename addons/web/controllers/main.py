@@ -1377,13 +1377,24 @@ class Binary(openerpweb.Controller):
         if not dbname:
             image_data = self.placeholder(req, 'logo.png')
         else:
-            registry = openerp.modules.registry.RegistryManager.get(dbname)
-            with registry.cursor() as cr:
-                user = registry.get('res.users').browse(cr, uid, uid)
-                if user.company_id.logo_web:
-                    image_data = user.company_id.logo_web.decode('base64')
-                else:
-                    image_data = self.placeholder(req, 'nologo.png')
+            try:
+                # create an empty registry
+                registry = openerp.modules.registry.Registry(dbname.lower())
+                with registry.cursor() as cr:
+                    cr.execute("""SELECT c.logo_web
+                                    FROM res_users u
+                               LEFT JOIN res_company c
+                                      ON c.id = u.company_id
+                                   WHERE u.id = %s
+                               """, (uid,))
+                    row = cr.fetchone()
+                    if row and row[0]:
+                        image_data = str(row[0]).decode('base64')
+                    else:
+                        image_data = self.placeholder(req, 'nologo.png')
+            except Exception:
+                image_data = self.placeholder(req, 'logo.png')
+
         headers = [
             ('Content-Type', 'image/png'),
             ('Content-Length', len(image_data)),
