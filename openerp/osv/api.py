@@ -196,16 +196,16 @@ def _returns_new(method, func):
         def wrapper(self, *args, **kwargs):
             res = func(self, *args, **kwargs)
             if isinstance(res, dict):
-                return dict((k, self.browse(v)) for k, v in res.iteritems())
-            return self.browse(res)
+                return dict((k, self.browse(v, scoped=False)) for k, v in res.iteritems())
+            return self.browse(res, scoped=False)
         return wrapper
     elif model:
         def wrapper(self, *args, **kwargs):
             mod = scope.model(model)
             res = func(self, *args, **kwargs)
             if isinstance(res, dict):
-                return dict((k, mod.browse(v)) for k, v in res.iteritems())
-            return mod.browse(res)
+                return dict((k, mod.browse(v, scoped=False)) for k, v in res.iteritems())
+            return mod.browse(res, scoped=False)
         return wrapper
     else:
         return func
@@ -314,7 +314,7 @@ def record(method):
     def old_api(self, cr, uid, ids, *args, **kwargs):
         context, args, kwargs = _split_context_args(nargs, args, kwargs)
         with Scope(cr, uid, context):
-            return new_api(self.browse(ids), *args, **kwargs)
+            return new_api(self.browse(ids, scoped=False), *args, **kwargs)
 
     def new_api(self, *args, **kwargs):
         if self.is_record():
@@ -348,7 +348,7 @@ def recordset(method):
     def old_api(self, cr, uid, ids, *args, **kwargs):
         context, args, kwargs = _split_context_args(nargs, args, kwargs)
         with Scope(cr, uid, context):
-            return new_api(self.browse(ids), *args, **kwargs)
+            return new_api(self.browse(ids, scoped=False), *args, **kwargs)
 
     def new_api(self, *args, **kwargs):
         if self.is_record():

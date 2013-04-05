@@ -173,8 +173,7 @@ class Scope(object):
     @property
     def user(self):
         """ return the current user (as a record) """
-        with proxy.SUDO():
-            return self.model('res.users').browse(self.uid)
+        return self.model('res.users').record(self.uid, scope=proxy.SUDO())
 
     @property
     def lang(self):

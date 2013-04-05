@@ -266,12 +266,12 @@ def _clean_one(value):
 
 def _browse_one(record, column, value):
     model = record.pool[column._obj]
-    return model.browse(value)
+    return model.record(value or False, scope=record._scope)
 
 
 def _browse_many(record, column, value):
     model = record.pool[column._obj]
-    return model.browse(value or [])
+    return model.recordset(value or [], scope=record._scope)
 
 
 def _browse_reference(record, column, value):
@@ -280,7 +280,7 @@ def _browse_reference(record, column, value):
         ref_id = long(ref_id)
         if ref_id:
             model = record.pool[ref_obj]
-            return model.browse(ref_id)
+            return model.record(ref_id, scope=record._scope)
     return False
 
 
@@ -4360,7 +4360,7 @@ class BaseModel(object):
         self.create_workflow(cr, user, [id_new], context=context)
         return id_new
 
-    def browse(self, cr, uid, select, context=None):
+    def browse(self, cr, uid, select, context=None, scoped=True):
         """ return a record, recordset or null instance corresponding to the
             value of parameter `select` (id, list of ids or ``False``).
 
@@ -4368,16 +4368,19 @@ class BaseModel(object):
             :param uid: current user id
             :param select: id, list of ids, or ``False``.
             :param context: context arguments, like lang, time zone
+            :param scoped: whether the result is attached to the current scope
             :rtype: record, recordset or null requested
         """
+        scope = scope_proxy.current if scoped else None
+
         # need to accepts ints and longs because ids coming from a method
         # launched by button in the interface have a type long...
         if isinstance(select, (int, long)) and select:
-            return self.record(select, scope=scope_proxy.current)
+            return self.record(select, scope=scope)
         elif isinstance(select, list):
-            return self.recordset(select, scope=scope_proxy.current)
+            return self.recordset(select, scope=scope)
         else:
-            return self.null()
+            return self.null(scope=scope)
 
     def _store_get_values(self, cr, uid, ids, fields, context):
         """Returns an ordered list of fields.functions to call due to
@@ -5183,10 +5186,10 @@ class BaseModel(object):
     def scope(self):
         return self._scope or scope_proxy.current
 
-    def null(self):
+    def null(self, scope=None):
         """ make a null instance """
         # a null instance is represented as a record with id=False
-        return self._make_instance(_id=False)
+        return self._make_instance(_id=False, _scope=scope)
 
     def is_null(self):
         """ test whether self is a null instance """
