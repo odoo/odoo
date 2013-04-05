@@ -102,7 +102,7 @@ class gamification_goal_plan(osv.Model):
             string='Users',
             help="List of users to which the goal will be set"),
         'manager_id': fields.many2one('res.users', required=True,
-            string='Manager', help="The user responsible for the plan."),
+            string='Responsible', help="The user responsible for the plan."),
         'planline_ids': fields.one2many('gamification.goal.planline',
             'plan_id',
             string='Planline',
