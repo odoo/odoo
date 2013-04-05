@@ -10,7 +10,7 @@
                 <search string="Leads Analysis">
                     <filter icon="terp-check" string="Current" domain="[('state','in',('draft','open'))]"/>
                     <filter icon="terp-dialog-close" string="Closed" domain="[('state','=','done')]"/>
-                    <field name="section_id" context="{'invisible_section': False}"/>
+                    <field name="section_id" context="{'invisible_section': False}" groups="base.group_multi_salesteams"/>
                     <field name="grade_id"/>
                     <field name="user_id"/>
                     <field name="partner_assigned_id"/>
@@ -69,7 +69,7 @@
                 <field name="year" invisible="1"/>
                 <field name="month" invisible="1"/>
                 <field name="date_assign" invisible="1"/>
-                <field name="section_id" invisible="1"/>
+                <field name="section_id" invisible="1" groups="base.group_multi_salesteams"/>
                 <field name="user_id" invisible="1"/>
                 <field name="grade_id" invisible="1" widget="selection"/>
                 <field name="partner_assigned_id" invisible="1"/>

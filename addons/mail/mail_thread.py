@@ -89,6 +89,46 @@ class mail_thread(osv.AbstractModel):
     #   :param function lambda: returns whether the tracking should record using this subtype
     _track = {}
 
+    def get_empty_list_help(self, cr, uid, help, context=None):
+        """ Override of BaseModel.get_empty_list_help() to generate an help message
+            that adds alias information. """
+        model = context.get('empty_list_help_model')
+        res_id = context.get('empty_list_help_id')
+        ir_config_parameter = self.pool.get("ir.config_parameter")
+        catchall_domain = ir_config_parameter.get_param(cr, uid, "mail.catchall.domain", context=context)
+        document_name = context.get('empty_list_help_document_name', _('document'))
+        alias = None
+
+        if catchall_domain and model and res_id:  # specific res_id -> find its alias (i.e. section_id specified)
+            object_id = self.pool.get(model).browse(cr, uid, res_id, context=context)
+            alias = object_id.alias_id
+        elif catchall_domain and model:  # no specific res_id given -> generic help message, take an example alias (i.e. alias of some section_id)
+            model_id = self.pool.get('ir.model').search(cr, uid, [("model", "=", self._name)], context=context)[0]
+            alias_obj = self.pool.get('mail.alias')
+            alias_ids = alias_obj.search(cr, uid, [("alias_model_id", "=", model_id)], context=context, limit=1, order='id ASC')
+            if alias_ids:
+                alias = alias_obj.browse(cr, uid, alias_ids[0], context=context)
+
+        if alias:
+            alias_email = alias.name_get()[0][1]
+            return _("""<p class='oe_view_nocontent_create'>
+                            Click here to add a new %(document)s or send an email to: <a href='mailto:%(email)s'>%(email)s</a>
+                        </p>
+                        %(static_help)s"""
+                    ) % {
+                        'document': document_name,
+                        'email': alias_email,
+                        'static_help': help or ''
+                    }
+
+        if document_name != 'document' and help and help.find("oe_view_nocontent_create") == -1:
+            return _("<p class='oe_view_nocontent_create'>Click here to add a new %(document)s</p>%(static_help)s") % {
+                        'document': document_name,
+                        'static_help': help or '',
+                    }
+
+        return help
+
     def _get_message_data(self, cr, uid, ids, name, args, context=None):
         """ Computes:
             - message_unread: has uid unread message for the document
