@@ -729,7 +729,6 @@ class mail_message(osv.Model):
 
     def check_related_document(self, cr, uid, model_obj, mids, operation, context=None):
         """Concrete check permission rules for related document"""
-        print(operation, mids, model_obj)
         if operation in ['create', 'write', 'unlink']:
             model_obj.check_access_rights(cr, uid, 'write')
             model_obj.check_access_rule(cr, uid, mids, 'write', context=context)

@@ -1254,6 +1254,21 @@ class mail_thread(osv.AbstractModel):
         """Return a list of suggested threads, sorted by the numbers of followers"""
         if context is None:
             context = {}
+
+        # TOFIX : In case of user belonging to anonymous, do not show
+        # suggestions (doesn't make any sense). This should be done in
+        # portal_anonymous module. However done here because of static copy
+        # when using '_inherit'. Changes made in portal_anonymous wouldn't
+        # affect modules like mail_group. To move once the '_inherit' problem
+        # is solved
+        try:
+            anonymous_group = self.pool.get('ir.model.data').get_object(cr, SUPERUSER_ID, 'portal', 'group_anonymous')
+            if uid in [user.id for user in anonymous_group.users]:
+                return []
+        except ValueError:
+            _logger.debug("Group portal.group_anonymous not existing, normal behavior")
+
+
         threads = []
         if removed_suggested_threads is None:
             removed_suggested_threads = []
