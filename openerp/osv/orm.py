@@ -3538,6 +3538,14 @@ class BaseModel(object):
 
         return res
 
+    def get_empty_list_help(self, cr, user, help, context=None):
+        """ Generic method giving the help message displayed when having
+            no result to display in a list or kanban view. By default it returns
+            the help given in parameter that is generally the help message
+            defined in the action.
+        """
+        return help
+
     def check_field_access_rights(self, cr, user, operation, fields, context=None):
         """
         Check the user access rights on the given fields. This raises Access
