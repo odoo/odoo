@@ -361,7 +361,7 @@
             <field name="inherit_id" ref="account.view_account_journal_form"/>
             <field name="arch" type="xml">
                 <field name="type" position="after">
-                    <field name="analytic_journal_id"/>
+                    <field name="analytic_journal_id" groups="analytic.group_analytic_accounting"/>
                 </field>
             </field>
         </record>
