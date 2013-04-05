@@ -137,6 +137,13 @@ class project_issue(base_stage, osv.osv):
 
         res = {}
         for issue in self.browse(cr, uid, ids, context=context):
+
+            # if the working hours on the project are not defined, use default ones (8 -> 12 and 13 -> 17 * 5), represented by None
+            if not issue.project_id or not issue.project_id.resource_calendar_id:
+                working_hours = None
+            else:
+                working_hours = issue.project_id.resource_calendar_id.id
+
             res[issue.id] = {}
             for field in fields:
                 duration = 0
@@ -150,20 +157,24 @@ class project_issue(base_stage, osv.osv):
                         ans = date_open - date_create
                         date_until = issue.date_open
                         #Calculating no. of working hours to open the issue
-                        if issue.project_id.resource_calendar_id:
-                            hours = cal_obj.interval_hours_get(cr, uid, issue.project_id.resource_calendar_id.id,
+                        hours = cal_obj._interval_hours_get(cr, uid, working_hours,
                                                            date_create,
-                                                           date_open)
+                                                           date_open,
+                                                           timezone_from_uid=issue.user_id.id or uid,
+                                                           exclude_leaves=False,
+                                                           context=context)
                 elif field in ['working_hours_close','day_close']:
                     if issue.date_closed:
                         date_close = datetime.strptime(issue.date_closed, "%Y-%m-%d %H:%M:%S")
                         date_until = issue.date_closed
                         ans = date_close - date_create
                         #Calculating no. of working hours to close the issue
-                        if issue.project_id.resource_calendar_id:
-                            hours = cal_obj.interval_hours_get(cr, uid, issue.project_id.resource_calendar_id.id,
-                               date_create,
-                               date_close)
+                        hours = cal_obj._interval_hours_get(cr, uid, working_hours,
+                                                           date_create,
+                                                           date_close,
+                                                           timezone_from_uid=issue.user_id.id or uid,
+                                                           exclude_leaves=False,
+                                                           context=context)
                 elif field in ['days_since_creation']:
                     if issue.create_date:
                         days_since_creation = datetime.today() - datetime.strptime(issue.create_date, "%Y-%m-%d %H:%M:%S")
@@ -182,27 +193,12 @@ class project_issue(base_stage, osv.osv):
                         resource_ids = res_obj.search(cr, uid, [('user_id','=',issue.user_id.id)])
                         if resource_ids and len(resource_ids):
                             resource_id = resource_ids[0]
-                    duration = float(ans.days)
-                    if issue.project_id and issue.project_id.resource_calendar_id:
-                        duration = float(ans.days) * 24
-
-                        new_dates = cal_obj.interval_min_get(cr, uid,
-                                                             issue.project_id.resource_calendar_id.id,
-                                                             date_create,
-                                                             duration, resource=resource_id)
-                        no_days = []
-                        date_until = datetime.strptime(date_until, '%Y-%m-%d %H:%M:%S')
-                        for in_time, out_time in new_dates:
-                            if in_time.date not in no_days:
-                                no_days.append(in_time.date)
-                            if out_time > date_until:
-                                break
-                        duration = len(no_days)
+                    duration = float(ans.days) + float(ans.seconds)/(24*3600)
 
                 if field in ['working_hours_open','working_hours_close']:
                     res[issue.id][field] = hours
-                else:
-                    res[issue.id][field] = abs(float(duration))
+                elif field in ['day_open','day_close']:
+                    res[issue.id][field] = duration
 
         return res
 
