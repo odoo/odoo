@@ -325,7 +325,7 @@ class abstracted_fs(object):
         """ Get cr, uid, pool from a node
         """
         assert node
-        db = openerp.registry.(node.context.dbname).db
+        db = openerp.registry(node.context.dbname).db
         return db.cursor(), node.context.uid
 
     def get_node_cr(self, node):
