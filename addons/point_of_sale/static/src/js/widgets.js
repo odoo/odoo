@@ -794,7 +794,7 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
         renderElement: function() {
             var self = this;
             this._super();
-            this.$('.oe_pos_synch-notification-button').click(function(){
+            this.$el.click(function(){
                 self.pos.flush();
             });
         },
@@ -878,6 +878,8 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
             
                 instance.web.unblockUI();
                 self.$('.loader').animate({opacity:0},1500,'swing',function(){self.$('.loader').hide();});
+
+                self.pos.flush();
 
             }).fail(function(){   // error when loading models data from the backend
                 instance.web.unblockUI();
