@@ -22,6 +22,7 @@
 import time
 from openerp.report import report_sxw
 from common_report_header import common_report_header
+from openerp.tools.translate import _
 
 class aged_trial_report(report_sxw.rml_parse, common_report_header):
 
@@ -367,11 +368,11 @@ class aged_trial_report(report_sxw.rml_parse, common_report_header):
 
     def _get_partners(self,data):
         if data['form']['result_selection'] == 'customer':
-            return 'Receivable Accounts'
+            return _('Receivable Accounts')
         elif data['form']['result_selection'] == 'supplier':
-            return 'Payable Accounts'
+            return _('Payable Accounts')
         elif data['form']['result_selection'] == 'customer_supplier':
-            return 'Receivable and Payable Accounts'
+            return _('Receivable and Payable Accounts')
         return ''
 
 report_sxw.report_sxw('report.account.aged_trial_balance', 'res.partner',
