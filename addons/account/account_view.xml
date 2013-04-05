@@ -2350,17 +2350,16 @@
                     </notebook>
                     <group>
                         <group class="oe_subtotal_footer oe_right">
-                            <field name="balance_start" readonly="1" string="Opening Balance" class="oe_subtotal_footer_separator" widget="monetary" options="{'currency_field': 'currency'}"/>
-                            <label for="total_entry_encoding" string="+ Transactions" class="oe_bold oe_account_opening_total"/>
+                            <field name="balance_start" readonly="1" string="Opening Balance" class="oe_subtotal_footer_separator" widget="monetary" options="{'currency_field': 'currency'}" help="Total of opening cash control lines"/>
+                            <label for="total_entry_encoding" string="+ Transactions" class="oe_force_bold oe_account_opening_total"/>
                             <field name="total_entry_encoding" nolabel="1" class="oe_bold oe_account_total" widget="monetary" options="{'currency_field': 'currency'}"/>
                             <label for="balance_end" string="= Computed Balance" class="oe_force_bold oe_account_opening_total"/>
-                            <field name="balance_end" nolabel="1" class="oe_bold oe_account_total" widget="monetary" options="{'currency_field': 'currency'}"/>
+                            <field name="balance_end" nolabel="1" class="oe_bold oe_account_total" widget="monetary" options="{'currency_field': 'currency'}" help="Sum of opening balance and transactions."/>
                         </group>
                         <div>
                             <group class="oe_subtotal_footer oe_right" attrs="{'invisible' : [('state', '=', 'draft')]}">
-                                <field name="balance_end_real" readonly="1" string="Closing Balance" class="oe_subtotal_footer_separator" widget="monetary" options="{'currency_field': 'currency'}"/>
-                                <label for="difference" class="oe_force_bold oe_account_ening_total"/>
-                                <field name="difference" nolabel="1" class="oe_bold oe_account_total"  widget="monetary" options="{'currency_field': 'currency'}"/>
+                                <field name="balance_end_real" readonly="1" string="Closing Balance" class="oe_subtotal_footer_separator" widget="monetary" options="{'currency_field': 'currency'}" help="Total of closing cash control lines."/>
+                                <field name="difference" class="oe_subtotal_footer_separator oe_account_ening_total oe_account_total oe_right"  widget="monetary" options="{'currency_field': 'currency'}"/>
                             </group>    
                         </div>
                     </group>

@@ -925,7 +925,7 @@
                             <div attrs="{'invisible' : [('cash_control', '=', False)]}">
                                 <group class="oe_subtotal_footer oe_right">
                                     <field name="cash_register_balance_start" readonly="1" string="Opening Balance" class="oe_subtotal_footer_separator" widget="monetary" options="{'currency_field': 'currency_id'}"/>
-                                    <label for="cash_register_total_entry_encoding" attrs="{'invisible' : [('state', '=', 'opening_control')]}" string="+ Transactions" class="oe_bold oe_pos_opening_total"/>
+                                    <label for="cash_register_total_entry_encoding" attrs="{'invisible' : [('state', '=', 'opening_control')]}" string="+ Transactions" class="oe_force_bold oe_pos_opening_total"/>
                                     <field name="cash_register_total_entry_encoding" nolabel="1" attrs="{'invisible' : [('state', '=', 'opening_control')]}" class="oe_bold oe_pos_total" widget="monetary" options="{'currency_field': 'currency_id'}"/>
                                     <label for="cash_register_balance_end" attrs="{'invisible' : [('state', '=', 'opening_control')]}" string="= Computed Balance" class="oe_force_bold oe_pos_opening_total"/>
                                     <field name="cash_register_balance_end" nolabel="1" attrs="{'invisible' : [('state', '=', 'opening_control')]}" class="oe_bold oe_pos_total" widget="monetary" options="{'currency_field': 'currency_id'}"/>
@@ -943,8 +943,7 @@
 
                             <group class="oe_subtotal_footer oe_right" attrs="{'invisible': ['|', ('cash_control', '=', False), ('state', '=', 'opening_control')]}">
                                 <field name="cash_register_balance_end_real" string="Closing Balance" class="oe_subtotal_footer_separator" widget="monetary" options="{'currency_field': 'currency_id'}"/>
-                                <label for="cash_register_difference" class="oe_force_bold oe_pos_ening_total"/>
-                                <field name="cash_register_difference"  nolabel="1" class="oe_bold oe_pos_total" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                                <field name="cash_register_difference" class="oe_subtotal_footer_separator oe_right oe_pos_total oe_pos_difference" widget="monetary" options="{'currency_field': 'currency_id'}"/>
                             </group>
                         </group>
 

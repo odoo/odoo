@@ -170,13 +170,14 @@ class account_cash_statement(osv.osv):
             store = {
                 'account.bank.statement': (lambda self, cr, uid, ids, context=None: ids, ['line_ids','move_line_ids'], 10),
                 'account.bank.statement.line': (_get_statement_from_line, ['amount'], 10),
-            }),
+            },
+            help="Total of cash transaction lines."),
         'closing_date': fields.datetime("Closed On"),
         'details_ids' : fields.one2many('account.cashbox.line', 'bank_statement_id', string='CashBox Lines'),
         'opening_details_ids' : fields.one2many('account.cashbox.line', 'bank_statement_id', string='Opening Cashbox Lines'),
         'closing_details_ids' : fields.one2many('account.cashbox.line', 'bank_statement_id', string='Closing Cashbox Lines'),
         'user_id': fields.many2one('res.users', 'Responsible', required=False),
-        'difference' : fields.function(_compute_difference, method=True, string="Difference", type="float", help="Difference between the counted cash control at the closing and the closing balance."),
+        'difference' : fields.function(_compute_difference, method=True, string="Difference", type="float", help="Difference between the closing balance and computed balance."),
         'last_closing_balance' : fields.function(_compute_last_closing_balance, method=True, string='Last Closing Balance', type='float'),
     }
     _defaults = {
