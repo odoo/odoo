@@ -103,7 +103,7 @@ class mail_thread(osv.AbstractModel):
         elif model:  # no specific res_id given -> generic help message, take an example alias (i.e. alias of some section_id)
             model_id = self.pool.get('ir.model').search(cr, uid, [("model", "=", self._name)], context=context)[0]
             alias_obj = self.pool.get('mail.alias')
-            alias_ids = alias_obj.search(cr, uid, [("alias_model_id", "=", model_id)], context=context, limit=1)
+            alias_ids = alias_obj.search(cr, uid, [("alias_model_id", "=", model_id)], context=context, limit=1, order='id ASC')
             if alias_ids:
                 alias = alias_obj.browse(cr, uid, alias_ids[0], context=context)
 
