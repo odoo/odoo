@@ -285,7 +285,7 @@ class account_analytic_account(osv.osv):
 
     def _trigger_project_creation(self, cr, uid, vals, context=None):
         res= super(account_analytic_account, self)._trigger_project_creation(cr, uid, vals, context=context)
-        return res or vals.get('use_phases')
+        return res
 
 account_analytic_account()
 
