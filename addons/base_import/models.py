@@ -80,6 +80,12 @@ class ir_import(orm.TransientModel):
             'string': _("External ID"),
             'required': False,
             'fields': [],
+        }, {
+            'id': '.id',
+            'name': '.id',
+            'string': _("Database ID"),
+            'required': False,
+            'fields': [],
         }]
         fields_got = self.pool[model].fields_get(cr, uid, context=context)
         for name, field in fields_got.iteritems():
