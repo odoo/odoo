@@ -66,64 +66,20 @@
                             <button name="action_show_related_goals" type="object" string="Related Goals" help="show all the generated goals for this plan" context="{'search_default_group_by_user': True}" />
                         </div>
 
-                        <group>
-                            <group colspan="4">
-                                <field name="manager_id" />
-                                <field name="start_date" attrs="{'readonly':[('state','!=','draft')]}"/>
-                                <field name="period" attrs="{'readonly':[('state','!=','draft')]}"/>
-                                <field name="remind_update_delay"/>
-                                
-                            </group>
-                            <group string="Notify" colspan="4">
-                                <label for="visibility_mode"/>
-                                <div>
-                                    <field name="visibility_mode" type="radio" colspan="2" />
-
-
-                                    <group name="visibility_mode_help" class="oe_grey oe_edit_only" colspan="1">
-                                        <p attrs="{'invisible': [('visibility_mode','!=','board')]}">
-                                           In Leaderboard mode, the reports will contain the progress of users of this plan.
-                                        </p>
-                                        <p attrs="{'invisible': [('visibility_mode','!=','progressbar')]}">
-                                           In Personal Progressbar mode, the progress of each user can only be seen by himself and the followers of this plan.
-                                        </p>
-                                    </group>
-                                </div>
-
-                                <field name="report_message_frequency" />
-                                <field name="report_header" />
-                                
-                                <label for="report_message_group_id"/>
-                                <div>
-                                    <field name="report_message_group_id" />
-                                    <group name="report_help" class="oe_grey oe_edit_only" col="2" colspan="2">
-                                       <p attrs="{'invisible': [('report_message_group_id','!=',False)]}">
-                                           Select a group that will receive a copy of the reports.
-                                       </p>
-                                       <p attrs="{'invisible': [('report_message_group_id','=',False)]}">
-                                           A copy of the report will be sent to this group.
-                                       </p>
-                                   </group>
-                               </div>
-                            </group>
+                        <group colspan="2">
+                            <field name="manager_id" />
                         </group>
-                        
-                        <group string="Planlines">
-                            <field name="planline_ids" nolabel="1">
-                                <tree string="Planline List" version="7.0" editable="bottom" >
-                                    <field name="type_id"/>
-                                    <field name="target_goal"/>
-                                </tree>
-                            </field>
+                        <group colspan="2">
+                            <field name="start_date" attrs="{'readonly':[('state','!=','draft')]}"/>
+                            <field name="period" attrs="{'readonly':[('state','!=','draft')]}"/>
                         </group>
-                        
-                        <group string="Subscription">
+                        <group string="Evaluated Users">
                             <group colspan="4">
                                 <field name="autojoin_group_id" />
                             </group>
                             <group colspan="4">
-                                <field name="user_ids" widget="many2many_tag" />
-<!--                                     <kanban quick_create="false" create="true">
+                                <field name="user_ids" widget="many2many_kanban">
+                                    <kanban quick_create="false" create="true">
                                         <field name="name"/>
                                         <templates>
                                             <t t-name="kanban-box">
@@ -138,8 +94,52 @@
                                             </t>
                                         </templates>
                                     </kanban>
-                                </field>  -->
+                                </field> 
                             </group>
+                        </group>
+
+                        <group string="Goals">
+                            <field name="planline_ids" nolabel="1" colspan="4">
+                                <tree string="Planline List" version="7.0" editable="bottom" >
+                                    <field name="type_id"/>
+                                    <field name="target_goal"/>
+                                </tree>
+                            </field>
+                            <label for="visibility_mode" colspan="1"/>
+                            <div>
+                                <field name="visibility_mode" widget="radio" colspan="1" />
+
+                                <group name="visibility_mode_help" class="oe_grey oe_edit_only" colspan="2">
+                                    <p attrs="{'invisible': [('visibility_mode','!=','board')]}">
+                                       In Leaderboard mode, the reports will contain the progress of users of this plan.
+                                    </p>
+                                    <p attrs="{'invisible': [('visibility_mode','!=','progressbar')]}">
+                                       In Personal Progressbar mode, the progress of each user can only be seen by himself and the followers of this plan.
+                                    </p>
+                                </group>
+                            </div>
+                            <label for="remind_update_delay"/>
+                            <div>
+                                <field name="remind_update_delay" class="oe_inline"/> days
+                            </div>
+                        </group>
+
+                        <group string="Notification Message" colspan="4">
+                            <field name="report_message_frequency" />
+                            <field name="report_header" attrs="{'invisible': [('report_message_frequency','=','never')]}" />
+                            
+                            <label for="report_message_group_id" attrs="{'invisible': [('report_message_frequency','=','never')]}" />
+                            <div  attrs="{'invisible': [('report_message_frequency','=','never')]}" >
+                                <field name="report_message_group_id" />
+                                <group name="report_help" class="oe_grey oe_edit_only" col="2" colspan="2">
+                                   <p attrs="{'invisible': [('report_message_group_id','!=',False)]}">
+                                       Select a group that will receive a copy of the reports.
+                                   </p>
+                                   <p attrs="{'invisible': [('report_message_group_id','=',False)]}">
+                                       A copy of the report will be sent to this group.
+                                   </p>
+                               </group>
+                           </div>
                         </group>
                     </sheet>
                     <div class="oe_chatter">

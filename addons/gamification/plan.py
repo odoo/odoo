@@ -109,7 +109,7 @@ class gamification_goal_plan(osv.Model):
             help="list of goals that will be set",
             required=True),
         'autojoin_group_id': fields.many2one('res.groups',
-            string='Auto-join Group',
+            string='Auto-subscription Group',
             help='Group of users whose members will automatically be added to the users'),
         'period': fields.selection([
                 ('once', 'No Periodicity'),
@@ -124,14 +124,14 @@ class gamification_goal_plan(osv.Model):
         'start_date': fields.date('Starting Date', help="The day a new plan will be automatically started. The start and end dates for goals are still defined by the periodicity (eg: weekly goals run from Monday to Sunday)."),
         'state': fields.selection([
                 ('draft', 'Draft'),
-                ('inprogress', 'In progress'),
+                ('inprogress', 'In Progress'),
                 ('done', 'Done'),
             ],
             string='State',
             required=True),
         'visibility_mode': fields.selection([
-                ('board', 'Leader board'),
-                ('progressbar', 'Personal progressbar')
+                ('board', 'Leader Board'),
+                ('progressbar', 'Personal Progressbar')
             ],
             string="Visibility",
             help='How are displayed the results, shared or in a single progressbar',
@@ -150,7 +150,7 @@ class gamification_goal_plan(osv.Model):
             string='Send a copy to',
             help='Group that will receive a copy of the report in addition to the user'),
         'report_header': fields.text('Report Header'),
-        'remind_update_delay': fields.integer('Remind delay',
+        'remind_update_delay': fields.integer('Remind delay for Manual Goals',
             help="The number of days after which the user assigned to a manual goal will be reminded. Never reminded if no value or zero is specified."),
         'last_report_date': fields.date('Last Report Date'),
         'next_report_date': fields.function(_get_next_report_date,
@@ -247,6 +247,7 @@ class gamification_goal_plan(osv.Model):
             if fields.date.today() == plan.next_report_date:
                 self.report_progress(cr, uid, plan, context=context)
                 self.write(cr, uid, plan.id, {'last_report_date': fields.date.today}, context=context)
+        return True
 
     def quick_update(self, cr, uid, plan_id, context=None):
         """Update all the goals of a plan, no generation of new goals"""

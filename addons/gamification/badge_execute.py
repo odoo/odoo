@@ -3,7 +3,7 @@ from openerp.tools.translate import _
 from datetime import date
 
 
-class gamification_badge_execute(osv.Model):
+class gamification_badge_execute(osv.AbstractModel):
     """Class that contains the methods to execute for badge granting"""
 
     _name = 'gamification.badge.execute'
