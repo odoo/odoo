@@ -2,7 +2,7 @@
 
 from functools import wraps
 import logging
-from psycopg2 import IntegrityError, errorcodes
+from psycopg2 import IntegrityError, OperationalError, errorcodes
 import random
 import threading
 import time
