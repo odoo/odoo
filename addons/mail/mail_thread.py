@@ -1262,5 +1262,5 @@ class mail_thread(osv.AbstractModel):
             if not data['message_is_follower']:
                 data['popularity'] = len(data['message_ids'])
                 threads.append(data)
-        sorted_threads = sorted(threads, key=lambda x: (x['popularity'], ẍ́['id']), reverse=True)[:3]
+        sorted_threads = sorted(threads, key=lambda x: (x['popularity'], x['id']), reverse=True)[:3]
         return sorted_threads
