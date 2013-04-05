@@ -374,7 +374,7 @@ class product_pricelist_item(osv.osv):
             result.append((line.id, line.name))
 
         result.append((-1, _('Other Pricelist')))
-        result.append((-2, _('Partner section of the product form')))
+        result.append((-2, _('Supplier Prices on the product form')))
         return result
 
     _name = "product.pricelist.item"
