@@ -94,7 +94,7 @@
                                 </div>
                                 <div class="oe_kanban_content">
                                     <h4><field name="name"/></h4>
-                                    <div class="oe_alias" t-if="record.use_leads.raw_value and record.alias_id.value">
+                                    <div class="oe_kanban_alias" t-if="record.use_leads.raw_value and record.alias_id.value">
                                         <span class="oe_e">%%</span><small><field name="alias_id"/></small>
                                     </div>
                                     <div class="oe_items_list">
@@ -151,11 +151,13 @@
                             <h1>
                                 <field name="name" string="Project Name"/>
                             </h1>
-                            <div name="group_alias">
+                            <div name="group_alias"
+                                    attrs="{'invisible': [('alias_domain', '=', False)]}">
                                 <label for="alias_id" string="Email Alias"/>
                                 <field name="alias_id" class="oe_inline oe_read_only" required="0" nolabel="1"/>
-                                <span class="oe_edit_only" name="edit_alias">
-                                    <field name="alias_name" class="oe_inline" attrs="{'required': [('use_leads', '=', True), ('alias_id', '!=', False)]}"/>
+                                <span name="edit_alias" class="oe_edit_only">
+                                    <field name="alias_name" class="oe_inline"
+                                            attrs="{'required': [('use_leads', '=', True), ('alias_id', '!=', False)]}"/>
                                     @
                                     <field name="alias_domain" class="oe_inline" readonly="1"/>
                                 </span>

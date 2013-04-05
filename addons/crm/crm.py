@@ -160,7 +160,7 @@ class crm_case_section(osv.osv):
 
     def name_get(self, cr, uid, ids, context=None):
         """Overrides orm name_get method"""
-        if not isinstance(ids, list) :
+        if not isinstance(ids, list):
             ids = [ids]
         res = []
         if not ids:
@@ -177,20 +177,20 @@ class crm_case_section(osv.osv):
     def create(self, cr, uid, vals, context=None):
         mail_alias = self.pool.get('mail.alias')
         if not vals.get('alias_id'):
-            vals.pop('alias_name', None) # prevent errors during copy()
+            alias_name = vals.pop('alias_name', None) or vals.get('name')  # prevent errors during copy()
             alias_id = mail_alias.create_unique_alias(cr, uid,
-                    {'alias_name': vals['name']},
+                    {'alias_name': alias_name},
                     model_name="crm.lead",
                     context=context)
             vals['alias_id'] = alias_id
         res = super(crm_case_section, self).create(cr, uid, vals, context)
-        mail_alias.write(cr, uid, [vals['alias_id']], {'alias_defaults': {'section_id': res, 'type':'lead'}}, context)
+        mail_alias.write(cr, uid, [vals['alias_id']], {'alias_defaults': {'section_id': res, 'type': 'lead'}}, context)
         return res
 
     def unlink(self, cr, uid, ids, context=None):
         # Cascade-delete mail aliases as well, as they should not exist without the sales team.
         mail_alias = self.pool.get('mail.alias')
-        alias_ids = [team.alias_id.id for team in self.browse(cr, uid, ids, context=context) if team.alias_id ]
+        alias_ids = [team.alias_id.id for team in self.browse(cr, uid, ids, context=context) if team.alias_id]
         res = super(crm_case_section, self).unlink(cr, uid, ids, context=context)
         mail_alias.unlink(cr, uid, alias_ids, context=context)
         return res

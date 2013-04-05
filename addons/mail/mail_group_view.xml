@@ -30,6 +30,7 @@
                     <field name="message_is_follower"/>
                     <field name="message_summary"/>
                     <field name="description"/>
+                    <field name="alias_id"/>
                     <templates>
                         <t t-name="kanban-description">
                             <div class="oe_group_description" t-if="record.description.raw_value">
@@ -43,6 +44,9 @@
                                 </div>
                                 <div class="oe_group_details">
                                     <h4><a type="open"><field name="name"/></a></h4>
+                                    <div class="oe_kanban_alias" t-if="record.alias_id.value">
+                                        <span class="oe_e">%%</span><small><field name="alias_id"/></small>
+                                    </div>
                                     <div class="oe_grey">
                                         <field name="description"/>
                                     </div>
@@ -75,10 +79,16 @@
                                 <label for="name" string="Group Name"/>
                             </div>
                             <h1><field name="name" readonly="0"/></h1>
-                            <div name="alias_box" colspan="4" attrs="{'invisible': [('alias_domain', '=', False)]}">
-                                <field name="alias_id" class="oe_read_only" required="0" invisible="1"/>
-                                <label for="alias_name" string="Email"/>
-                                <field name="alias_name" nolabel="1" class="oe_inline" attrs="{'required': [('alias_id', '!=', False)]}"/>@<field name="alias_domain" nolabel="1" class="oe_inline" style="padding-left:0;"/>
+                            <div name="group_alias"
+                                    attrs="{'invisible': [('alias_domain', '=', False)]}">
+                                <label for="alias_id" string="Email Alias"/>
+                                <field name="alias_id" class="oe_inline oe_read_only" required="0" nolabel="1"/>
+                                <span name="edit_alias" class="oe_edit_only">
+                                    <field name="alias_name" class="oe_inline"
+                                            attrs="{'required': [('alias_id', '!=', False)]}"/>
+                                    @
+                                    <field name="alias_domain" class="oe_inline" readonly="1"/>
+                                </span>
                             </div>
                         </div>
                         <field name="description" placeholder="Topics discussed in this group..."/>

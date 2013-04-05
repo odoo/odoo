@@ -88,15 +88,17 @@
                         <h1>
                             <field name="name" string="Project Name"/>
                         </h1>
-                        <div name="group_alias">
-                            <label for="alias_id"/>
-                            <field name="alias_id" class="oe_inline oe_read_only" required="0" nolabel="1"/>
-                            <span class="oe_edit_only" name="edit_alias">
-                                <field name="alias_name" class="oe_inline" attrs="{'required': [('alias_id', '!=', False)]}"/>
-                                @
-                                <field class="oe_inline" name="alias_domain"/>
-                            </span>
-                        </div>
+                        <div name="group_alias"
+                            attrs="{'invisible': [('alias_domain', '=', False)]}">
+                        <label for="alias_id" string="Email Alias"/>
+                        <field name="alias_id" class="oe_inline oe_read_only" required="0" nolabel="1"/>
+                        <span name="edit_alias" class="oe_edit_only">
+                            <field name="alias_name" class="oe_inline"
+                                    attrs="{'required': [('alias_id', '!=', False)]}"/>
+                            @
+                            <field name="alias_domain" class="oe_inline" readonly="1"/>
+                        </span>
+                    </div>
                         <div name="options_active">
                             <field name="use_tasks" class="oe_inline"/>
                             <label for="use_tasks"/>
@@ -248,7 +250,7 @@
                                 </div>
                                 <div class="oe_kanban_content">
                                     <h4><field name="name"/></h4>
-                                    <div class="oe_kanban_project_alias" t-if="record.alias_id.value">
+                                    <div class="oe_kanban_alias" t-if="record.alias_id.value">
                                         <span class="oe_e">%%</span><small><field name="alias_id"/></small>
                                     </div>
                                     <div class="oe_kanban_project_list">
