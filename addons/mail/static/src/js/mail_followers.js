@@ -264,7 +264,7 @@ openerp_mail_followers = function(session, mail) {
 
         do_follow: function () {
             var context = new session.web.CompoundContext(this.build_context(), {});
-            this.ds_model.call('message_subscribe_users', [[this.view.datarecord.id], [this.session.uid], undefined, context])
+            this.ds_model.call('message_subscribe_users', [[this.view.datarecord.id], [this.session.uid], undefined, undefined, context])
                 .then(this.proxy('read_value'));
 
             _.each(this.$('.oe_subtype_list input'), function (record) {
@@ -288,19 +288,15 @@ openerp_mail_followers = function(session, mail) {
             var self = this;
 
             var checklist = new Array();
-            if (partner_id) {
-                _($('.oe_edit_actions input[type="checkbox"]')).each(function (record) {
-                    if ($(record).is(':checked')) {
-                        checklist.push(parseInt($(record).data('id')));
-                    }
-                });
-            } else {
-                _(this.$('.oe_actions input[type="checkbox"]')).each(function (record) {
-                    if ($(record).is(':checked')) {
-                        checklist.push(parseInt($(record).data('id')));
-                    }
-                });
-            }
+            var subtype_checkbox = _(this.$('.oe_actions input[type="checkbox"]'))
+             if (partner_id) {
+                subtype_checkbox = _($('.oe_edit_actions input[type="checkbox"]'))
+             }
+            subtype_checkbox.each(function (record) {
+                if ($(record).is(':checked')) {
+                    checklist.push(parseInt($(record).data('id')));
+                }
+            });
             if (!checklist.length) {
                 if (!this.do_unfollow()) {
                     $(event.target).attr("checked", "checked");

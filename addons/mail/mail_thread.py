@@ -112,7 +112,7 @@ class mail_thread(osv.AbstractModel):
                 res[id]['message_summary'] = "<span class='oe_kanban_mail_new' title='%s'><span class='oe_e'>9</span> %d %s</span>" % (title, res[id].pop('message_unread_count'), _("New"))
         return res
 
-    def _get_subscription_data(self, cr, uid, ids, user_id, name, args, context=None):
+    def _get_subscription_data(self, cr, uid, ids, name, args, user_id=None, context=None):
         """ Computes:
             - message_subtype_data: data about document subtypes: which are
                 available, which are followed if any """
@@ -1105,17 +1105,17 @@ class mail_thread(osv.AbstractModel):
 
     def message_get_subscription_data(self, cr, uid, ids, user_id=None, context=None):
         """ Wrapper to get subtypes data. """
-        return self._get_subscription_data(cr, uid, ids, user_id, None, None, context=context)
+        return self._get_subscription_data(cr, uid, ids, None, None, user_id=user_id, context=context)
 
-    def message_subscribe_users(self, cr, uid, ids, user_ids=None, partner_id=None, subtype_ids=None, context=None):
+    def message_subscribe_users(self, cr, uid, ids, user_ids=None, subtype_ids=None, user_id=None, context=None):
         """ Wrapper on message_subscribe, using users. If user_ids is not
             provided, subscribe uid instead. """
         if user_ids is None:
             user_ids = [uid]
         partner_ids = [user.partner_id.id for user in self.pool.get('res.users').browse(cr, uid, user_ids, context=context)]
-        return self.message_subscribe(cr, uid, ids, partner_ids, partner_id, subtype_ids=subtype_ids, context=context)
+        return self.message_subscribe(cr, uid, ids, partner_ids, subtype_ids=subtype_ids, user_id=user_id, context=context)
 
-    def message_subscribe(self, cr, uid, ids, partner_ids, user_id, subtype_ids=None, context=None):
+    def message_subscribe(self, cr, uid, ids, partner_ids, subtype_ids=None, user_id=None, context=None):
         """ Add partners to the records followers. """
         user_pid = self.pool.get('res.users').read(cr, uid, uid, ['partner_id'], context=context)['partner_id'][0]
         if user_id:
