@@ -94,13 +94,15 @@ class mail_thread(osv.AbstractModel):
             that adds alias information. """
         model = context.get('empty_list_help_model')
         res_id = context.get('empty_list_help_id')
+        ir_config_parameter = self.pool.get("ir.config_parameter")
+        catchall_domain = ir_config_parameter.get_param(cr, uid, "mail.catchall.domain", context=context)
         document_name = context.get('empty_list_help_document_name', _('document'))
         alias = None
 
-        if model and res_id:  # specific res_id -> find its alias (i.e. section_id specified)
+        if catchall_domain and model and res_id:  # specific res_id -> find its alias (i.e. section_id specified)
             object_id = self.pool.get(model).browse(cr, uid, res_id, context=context)
             alias = object_id.alias_id
-        elif model:  # no specific res_id given -> generic help message, take an example alias (i.e. alias of some section_id)
+        elif catchall_domain and model:  # no specific res_id given -> generic help message, take an example alias (i.e. alias of some section_id)
             model_id = self.pool.get('ir.model').search(cr, uid, [("model", "=", self._name)], context=context)[0]
             alias_obj = self.pool.get('mail.alias')
             alias_ids = alias_obj.search(cr, uid, [("alias_model_id", "=", model_id)], context=context, limit=1, order='id ASC')
