@@ -90,7 +90,7 @@ class hr_job(osv.osv):
 
     _name = "hr.job"
     _description = "Job Description"
-    _inherit = ['mail.thread']
+    _inherit = ['mail.thread','ir.needaction_mixin']
     _columns = {
         'name': fields.char('Job Name', size=128, required=True, select=True),
         # TO CLEAN: when doing a cleaning, we should change like this:
