@@ -506,6 +506,8 @@ class mail_thread(osv.AbstractModel):
         """
         assert isinstance(message, Message), 'message must be an email.message.Message at this point'
         message_id = message.get('Message-Id')
+        email_from = decode_header(message, 'From')
+        email_to = decode_header(message, 'To')
         references = decode_header(message, 'References')
         in_reply_to = decode_header(message, 'In-Reply-To')
 
@@ -519,8 +521,8 @@ class mail_thread(osv.AbstractModel):
             model_pool = self.pool.get(model)
             if thread_id and model and model_pool and model_pool.exists(cr, uid, thread_id) \
                 and hasattr(model_pool, 'message_update'):
-                _logger.debug('Routing mail with Message-Id %s: direct reply to model: %s, thread_id: %s, custom_values: %s, uid: %s',
-                              message_id, model, thread_id, custom_values, uid)
+                _logger.info('Routing mail from %s to %s with Message-Id %s: direct reply to model: %s, thread_id: %s, custom_values: %s, uid: %s',
+                                email_from, email_to, message_id, model, thread_id, custom_values, uid)
                 return [(model, thread_id, custom_values, uid)]
 
         # Verify whether this is a reply to a private message
@@ -531,8 +533,8 @@ class mail_thread(osv.AbstractModel):
                             ], limit=1, context=context)
             if message_ids:
                 message = self.pool.get('mail.message').browse(cr, uid, message_ids[0], context=context)
-                _logger.debug('Routing mail with Message-Id %s: direct reply to a private message: %s, custom_values: %s, uid: %s',
-                                message_id, message.id, custom_values, uid)
+                _logger.info('Routing mail from %s to %s with Message-Id %s: direct reply to a private message: %s, custom_values: %s, uid: %s',
+                                email_from, email_to, message_id, message.id, custom_values, uid)
                 return [(message.model, message.res_id, custom_values, uid)]
 
         # 2. Look for a matching mail.alias entry
@@ -559,10 +561,11 @@ class mail_thread(osv.AbstractModel):
                         # Note: recognized partners will be added as followers anyway
                         # user_id = self._message_find_user_id(cr, uid, message, context=context)
                         user_id = uid
-                        _logger.debug('No matching user_id for the alias %s', alias.alias_name)
+                        _logger.info('No matching user_id for the alias %s', alias.alias_name)
                     routes.append((alias.alias_model_id.model, alias.alias_force_thread_id, \
                                    eval(alias.alias_defaults), user_id))
-                _logger.debug('Routing mail with Message-Id %s: direct alias match: %r', message_id, routes)
+                _logger.info('Routing mail from %s to %s with Message-Id %s: direct alias match: %r',
+                                email_from, email_to, message_id, routes)
                 return routes
 
         # 3. Fallback to the provided parameters, if they work
@@ -577,14 +580,14 @@ class mail_thread(osv.AbstractModel):
             except:
                 thread_id = False
         assert thread_id and hasattr(model_pool, 'message_update') or hasattr(model_pool, 'message_new'), \
-            "No possible route found for incoming message with Message-Id %s. " \
-            "Create an appropriate mail.alias or force the destination model." % message_id
+            "No possible route found for incoming message from %s to %s (Message-Id %s:)." \
+            "Create an appropriate mail.alias or force the destination model." % (email_from, email_to, message_id)
         if thread_id and not model_pool.exists(cr, uid, thread_id):
             _logger.warning('Received mail reply to missing document %s! Ignoring and creating new document instead for Message-Id %s',
-                            thread_id, message_id)
+                                thread_id, message_id)
             thread_id = None
-        _logger.debug('Routing mail with Message-Id %s: fallback to model:%s, thread_id:%s, custom_values:%s, uid:%s',
-                      message_id, model, thread_id, custom_values, uid)
+        _logger.info('Routing mail from %s to %s with Message-Id %s: fallback to model:%s, thread_id:%s, custom_values:%s, uid:%s',
+                        email_from, email_to, message_id, model, thread_id, custom_values, uid)
         return [(model, thread_id, custom_values, uid)]
 
     def message_process(self, cr, uid, model, message, custom_values=None,
@@ -634,12 +637,24 @@ class mail_thread(osv.AbstractModel):
         if isinstance(message, unicode):
             message = message.encode('utf-8')
         msg_txt = email.message_from_string(message)
-        routes = self.message_route(cr, uid, msg_txt, model,
-                                    thread_id, custom_values,
-                                    context=context)
+
+        # parse the message, verify we are not in a loop by checking message_id is not duplicated
         msg = self.message_parse(cr, uid, msg_txt, save_original=save_original, context=context)
         if strip_attachments:
             msg.pop('attachments', None)
+        if msg.get('message_id'):   # should always be True as message_parse generate one if missing
+            existing_msg_ids = self.pool.get('mail.message').search(cr, SUPERUSER_ID, [
+                                                                ('message_id', '=', msg.get('message_id')),
+                                                                ], context=context)
+            if existing_msg_ids:
+                _logger.info('Ignored mail from %s to %s with Message-Id %s:: found duplicated Message-Id during processing',
+                                msg.get('from'), msg.get('to'), msg.get('message_id'))
+                return False
+
+        # find possible routes for the message
+        routes = self.message_route(cr, uid, msg_txt, model,
+                                    thread_id, custom_values,
+                                    context=context)
 
         # postpone setting msg.partner_ids after message_post, to avoid double notifications
         partner_ids = msg.pop('partner_ids', [])
@@ -836,7 +851,7 @@ class mail_thread(osv.AbstractModel):
                     # as RFC2822 requires timezone offset in Date headers.
                     stored_date = parsed_date.replace(tzinfo=pytz.utc)
                 else:
-                    stored_date = parsed_date.astimezone(pytz.utc)
+                    stored_date = parsed_date.astimezone(tz=pytz.utc)
             except Exception:
                 _logger.warning('Failed to parse Date header %r in incoming mail '
                                 'with message-id %r, assuming current date/time.',
@@ -855,7 +870,7 @@ class mail_thread(osv.AbstractModel):
             if parent_ids:
                 msg_dict['parent_id'] = parent_ids[0]
 
-        msg_dict['body'], msg_dict['attachments'] = self._message_extract_payload(message)
+        msg_dict['body'], msg_dict['attachments'] = self._message_extract_payload(message, save_original=save_original)
         return msg_dict
 
     #------------------------------------------------------
@@ -994,12 +1009,15 @@ class mail_thread(osv.AbstractModel):
                                     ], limit=1, context=context)
                 if author_ids:
                     kwargs['author_id'] = author_ids[0]
+        author_id = kwargs.get('author_id')
+        if author_id is None:  # keep False values
+            author_id = self.pool.get('mail.message')._get_default_author(cr, uid, context=context)
 
         # 1: Handle content subtype: if plaintext, converto into HTML
         if content_subtype == 'plaintext':
             body = tools.plaintext2html(body)
 
-        # 2: Private message: add recipients (recipients and author of parent message)
+        # 2: Private message: add recipients (recipients and author of parent message) - current author
         #   + legacy-code management (! we manage only 4 and 6 commands)
         partner_ids = set()
         kwargs_partner_ids = kwargs.pop('partner_ids', [])
@@ -1012,11 +1030,13 @@ class mail_thread(osv.AbstractModel):
                 partner_ids.add(partner_id)
             else:
                 pass  # we do not manage anything else
-        if parent_id and model == 'mail.thread':
+        if parent_id and not model:
             parent_message = mail_message.browse(cr, uid, parent_id, context=context)
-            partner_ids |= set([partner.id for partner in parent_message.partner_ids])
+            private_followers = set([partner.id for partner in parent_message.partner_ids])
             if parent_message.author_id:
-                partner_ids.add(parent_message.author_id.id)
+                private_followers.add(parent_message.author_id.id)
+            private_followers -= set([author_id])
+            partner_ids |= private_followers
 
         # 3. Attachments
         #   - HACK TDE FIXME: Chatter: attachments linked to the document (not done JS-side), load the message
@@ -1077,6 +1097,7 @@ class mail_thread(osv.AbstractModel):
 
         values = kwargs
         values.update({
+            'author_id': author_id,
             'model': model,
             'res_id': thread_id or False,
             'body': body,
