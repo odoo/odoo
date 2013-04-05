@@ -133,7 +133,7 @@ class note_note(osv.osv):
 
                 result = [{ #notes by stage for stages user
                         '__context': {'group_by': groupby[1:]},
-                        '__domain': [('stage_ids.id', '=', current_stage_id)],
+                        '__domain': domain + [('stage_ids.id', '=', current_stage_id)],
                         'stage_id': (current_stage_id, stage_name[current_stage_id]),
                         'stage_id_count': self.search(cr,uid, domain+[('stage_ids', '=', current_stage_id)], context=context, count=True)
                     } for current_stage_id in current_stage_ids]
