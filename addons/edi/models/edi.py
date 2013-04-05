@@ -29,7 +29,6 @@ import urllib2
 
 import openerp
 import openerp.release as release
-import openerp.netsvc as netsvc
 from openerp.osv import osv, fields
 from openerp.tools.translate import _
 from openerp.tools.safe_eval import safe_eval as eval
@@ -418,9 +417,7 @@ class EDIMixin(object):
                                                               ('usage','=','default')])
         if matching_reports:
             report = ir_actions_report.browse(cr, uid, matching_reports[0])
-            report_service = 'report.' + report.report_name
-            service = netsvc.LocalService(report_service)
-            (result, format) = service.create(cr, uid, [record.id], {'model': self._name}, context=context)
+            result, format = openerp.report.render_report(cr, uid, [record.id], report.report_name, {'model': self._name}, context=context)
             eval_context = {'time': time, 'object': record}
             if not report.attachment or not eval(report.attachment, eval_context):
                 # no auto-saving of report as attachment, need to do it manually

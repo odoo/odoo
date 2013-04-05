@@ -25,8 +25,9 @@ from dateutil.relativedelta import relativedelta
 from operator import itemgetter
 import time
 
+import openerp
 from openerp import SUPERUSER_ID
-from openerp import pooler, tools
+from openerp import tools
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
 from openerp.tools.float_utils import float_round
@@ -1026,6 +1027,9 @@ class account_period(osv.osv):
 
     def action_draft(self, cr, uid, ids, *args):
         mode = 'draft'
+        for period in self.browse(cr, uid, ids):
+            if period.fiscalyear_id.state == 'done':
+                raise osv.except_osv(_('Warning !'), _('You can not re-open a period which belongs to closed fiscal year'))
         cr.execute('update account_journal_period set state=%s where period_id in %s', (mode, tuple(ids),))
         cr.execute('update account_period set state=%s where id in %s', (mode, tuple(ids),))
         return True
@@ -1883,7 +1887,7 @@ class account_tax(osv.osv):
 
     def get_precision_tax():
         def change_digit_tax(cr):
-            res = pooler.get_pool(cr.dbname).get('decimal.precision').precision_get(cr, SUPERUSER_ID, 'Account')
+            res = openerp.registry(cr.dbname)['decimal.precision'].precision_get(cr, SUPERUSER_ID, 'Account')
             return (16, res+2)
         return change_digit_tax
 

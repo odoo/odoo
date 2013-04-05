@@ -8,24 +8,24 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2012-12-21 17:05+0000\n"
-"PO-Revision-Date: 2013-01-11 17:36+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"PO-Revision-Date: 2013-03-20 13:50+0000\n"
+"Last-Translator: krnkris <Unknown>\n"
 "Language-Team: Hungarian <hu@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-03-16 05:52+0000\n"
+"X-Launchpad-Export-Date: 2013-03-21 04:38+0000\n"
 "X-Generator: Launchpad (build 16532)\n"
 
 #. module: auth_signup
 #: field:res.partner,signup_type:0
 msgid "Signup Token Type"
-msgstr ""
+msgstr "Feliratkozó Token típus"
 
 #. module: auth_signup
 #: field:base.config.settings,auth_signup_uninvited:0
 msgid "Allow external users to sign up"
-msgstr ""
+msgstr "Külső felhasználók bejelentkezésének engedéjezése"
 
 #. module: auth_signup
 #. openerp-web
@@ -37,18 +37,18 @@ msgstr "Jelszó megerõsítése"
 #. module: auth_signup
 #: help:base.config.settings,auth_signup_uninvited:0
 msgid "If unchecked, only invited users may sign up."
-msgstr ""
+msgstr "He nincs bejelölve, vsak maghívott felhasználók jelentkezhetnek be."
 
 #. module: auth_signup
 #: model:ir.model,name:auth_signup.model_base_config_settings
 msgid "base.config.settings"
-msgstr ""
+msgstr "base.config.settings"
 
 #. module: auth_signup
 #: code:addons/auth_signup/res_users.py:265
 #, python-format
 msgid "Cannot send email: user has no email address."
-msgstr ""
+msgstr "Nem küldhető e-mail: a felhasználónak nincs e-mail címe."
 
 #. module: auth_signup
 #. openerp-web
@@ -61,7 +61,7 @@ msgstr "Jelszó visszaállítása"
 #. module: auth_signup
 #: field:base.config.settings,auth_signup_template_user_id:0
 msgid "Template user for new users created through signup"
-msgstr ""
+msgstr "Sablon felhasználó amit a új felhasznlók létrehozásához használ"
 
 #. module: auth_signup
 #: model:email.template,subject:auth_signup.reset_password_email
@@ -78,7 +78,7 @@ msgstr "Kérem adjon meg egy jelszót és erősítse meg."
 #. module: auth_signup
 #: view:res.users:0
 msgid "Send an email to the user to (re)set their password."
-msgstr ""
+msgstr "Küldjön egy e-mailt a felhasználónak a jelszava visszaállításához."
 
 #. module: auth_signup
 #. openerp-web
@@ -97,12 +97,12 @@ msgstr "Új"
 #: code:addons/auth_signup/res_users.py:258
 #, python-format
 msgid "Mail sent to:"
-msgstr ""
+msgstr "Címzett:"
 
 #. module: auth_signup
 #: field:res.users,state:0
 msgid "Status"
-msgstr ""
+msgstr "Állapot"
 
 #. module: auth_signup
 #: model:email.template,body_html:auth_signup.reset_password_email
@@ -116,6 +116,15 @@ msgid ""
 "\n"
 "<p>Note: If you do not expect this, you can safely ignore this email.</p>"
 msgstr ""
+"\n"
+"<p>Egy jelszó visszaállítást indított el az e-mailhez tartozó OpenERP "
+"fiókhoz.</p>\n"
+"\n"
+"<p>Meg kell változtatnia a jelszavát a következő <a "
+"href=\"${object.signup_url}\">linken</a>.</p>\n"
+"\n"
+"<p>Megjegyzés: Ha nem várta ezt az e-mail-t, akkor biztonságosan törölje "
+"azt.</p>"
 
 #. module: auth_signup
 #. openerp-web
@@ -132,14 +141,14 @@ msgstr "Felhasználók"
 #. module: auth_signup
 #: field:res.partner,signup_url:0
 msgid "Signup URL"
-msgstr ""
+msgstr "Bejelentkezési URL elérési útvonal"
 
 #. module: auth_signup
 #. openerp-web
 #: code:addons/auth_signup/static/src/js/auth_signup.js:114
 #, python-format
 msgid "Please enter a username."
-msgstr ""
+msgstr "Kérjük, adja meg a felhasználónevet."
 
 #. module: auth_signup
 #: selection:res.users,state:0
@@ -153,6 +162,8 @@ msgid ""
 "Cannot send email: no outgoing email server configured.\n"
 "You can configure it under Settings/General Settings."
 msgstr ""
+"Nem küldhető e-mail: nincs kimenő e-mail szerver beállítva.\n"
+"Beállíthatja a Beállítások/Általános beállítások alatt."
 
 #. module: auth_signup
 #. openerp-web
@@ -173,7 +184,7 @@ msgstr "Név"
 #: code:addons/auth_signup/static/src/js/auth_signup.js:170
 #, python-format
 msgid "Please enter a username or email address."
-msgstr ""
+msgstr "Kérem adjon meg egy felhasználónevet vagy e-mail címet."
 
 #. module: auth_signup
 #: selection:res.users,state:0
@@ -190,12 +201,14 @@ msgstr "Felhasználónév (Email)"
 #. module: auth_signup
 #: field:res.partner,signup_expiration:0
 msgid "Signup Expiration"
-msgstr ""
+msgstr "Bejelentkezési határidő"
 
 #. module: auth_signup
 #: help:base.config.settings,auth_signup_reset_password:0
 msgid "This allows users to trigger a password reset from the Login page."
 msgstr ""
+"Ez lehetővé teszi a felhasználó részére a jelszó megváltoztatásának "
+"elindítását a bejelentkezési oldalról."
 
 #. module: auth_signup
 #. openerp-web
@@ -247,12 +260,12 @@ msgstr "Nincs kiválasztott adatbázis!"
 #. module: auth_signup
 #: view:res.users:0
 msgid "Reset Password"
-msgstr ""
+msgstr "Jelszó visszaállítása"
 
 #. module: auth_signup
 #: field:base.config.settings,auth_signup_reset_password:0
 msgid "Enable password reset from Login page"
-msgstr ""
+msgstr "Jelszóváltoztató engedélyezése a belépési oldalról"
 
 #. module: auth_signup
 #. openerp-web
