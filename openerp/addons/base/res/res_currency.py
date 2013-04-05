@@ -49,7 +49,7 @@ class res_currency(osv.osv):
                 id, rate = cr.fetchall()[0]
                 res[id] = rate
             else:
-                res[id] = 0
+                raise osv.except_osv(_('Error!'),_("No currency rate associated for currency %d for the given period" % (id)))
         return res
     _name = "res.currency"
     _description = "Currency"
