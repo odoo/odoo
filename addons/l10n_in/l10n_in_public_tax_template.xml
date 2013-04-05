@@ -17,19 +17,6 @@
         <field name="chart_template_id" ref="indian_chart_template_public"/>
     </record>
 
-    <record id="account_tax_in_credit_ser_tax_seco_hec" model="account.tax.template">
-        <field name="name">Input Sec. &amp; HEC - Service Tax</field>
-        <field name="description">Input Sec. &amp; HEC - Service Tax</field>
-        <field name="type_tax_use">purchase</field>
-        <field name="type">percent</field>
-        <field name="amount">0.0100</field>
-        <field name="account_collected_id" ref="p154002"/>
-        <field name="account_paid_id" ref="p154002"/>
-        <field name="base_code_id" ref="vat_code_tax_pur_exp_act"/>
-        <field name="tax_code_id" ref="vat_code_tax_pay_ic_seco_hec"/>
-        <field name="chart_template_id" ref="indian_chart_template_public"/>
-    </record>
-
     <record id="account_tax_in_cradit_urd" model="account.tax.template">
         <field name="name">Input Credit - URD</field>
         <field name="description">Input Credit - URD</field>
@@ -104,16 +91,16 @@
         <field name="type">percent</field>
         <field name="amount">0.1200</field>
         <field name="sequence">1</field>
-        <field name="account_collected_id" ref="p154007"/>
-        <field name="account_paid_id" ref="p154007"/>
+        <field name="account_collected_id" ref="p154008"/>
+        <field name="account_paid_id" ref="p154008"/>
         <field name="base_code_id" ref="vat_code_tax_pur_exp_act"/>
         <field name="tax_code_id" ref="vat_code_tax_pay_ic_st"/>
         <field name="chart_template_id" ref="indian_chart_template_public"/>
     </record>
 
     <record id="account_tax_in_edu_cess_st" model="account.tax.template">
-        <field name="name">Input Edu. Cess - Service Tax</field>
-        <field name="description">Input Edu. Cess - Service Tax</field>
+        <field name="name">Input Credit - Service Tax Edu. Cess. 2%</field>
+        <field name="description">Input Credit - Service Tax Edu. Cess. 2%</field>
         <field name="type_tax_use">purchase</field>
         <field name="type">percent</field>
         <field name="amount">0.0200</field>
@@ -121,6 +108,21 @@
         <field name="account_paid_id" ref="p154009"/>
         <field name="base_code_id" ref="vat_code_tax_pur_exp_act"/>
         <field name="tax_code_id" ref="vat_code_tax_pay_ic_edu_cess"/>
+        <field name="parent_id" ref="account_tax_ic_st"/>
+        <field name="chart_template_id" ref="indian_chart_template_public"/>
+    </record>
+
+    <record id="account_tax_in_credit_ser_tax_seco_hec" model="account.tax.template">
+        <field name="name">Input Credit - Service Tax Seco. &amp; HEC 1%</field>
+        <field name="description">Input Credit - Service Tax Seco. &amp; HEC 1%</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="type">percent</field>
+        <field name="amount">0.0100</field>
+        <field name="account_collected_id" ref="p154002"/>
+        <field name="account_paid_id" ref="p154002"/>
+        <field name="base_code_id" ref="vat_code_tax_pur_exp_act"/>
+        <field name="tax_code_id" ref="vat_code_tax_pay_ic_seco_hec"/>
+        <field name="parent_id" ref="account_tax_ic_st"/>
         <field name="chart_template_id" ref="indian_chart_template_public"/>
     </record>
 
@@ -138,8 +140,8 @@
     </record>
 
     <record id="account_tax_exic6_pur" model="account.tax.template">
-        <field name="name">Input Excise Duty 6% </field>
-        <field name="description">Input Excise Duty 6% </field>
+        <field name="name">Input Excise Duty 6%</field>
+        <field name="description">Input Excise Duty 6%</field>
         <field name="type_tax_use">purchase</field>
         <field name="type">percent</field>
         <field name="amount">0.0600</field>
@@ -151,8 +153,8 @@
     </record>
 
     <record id="account_tax_exice6_edu_cess2_pur" model="account.tax.template">
-        <field name="name">Education Cess 2% -Purchase</field>
-        <field name="description">Education Cess 2% -Purchase</field>
+        <field name="name">Education Cess 2% Purchase</field>
+        <field name="description">Education Cess 2% Purchase</field>
         <field name="type_tax_use">purchase</field>
         <field name="type">percent</field>
         <field name="amount">0.0200</field>
@@ -166,8 +168,8 @@
     </record>
 
     <record id="account_tax_exice6_seco_high_cess_pur" model="account.tax.template">
-        <field name="name">Seco. &amp; Higher Edu. Cess 1% -Purchase</field>
-        <field name="description">Seco. &amp; Higher Edu. Cess 1% -Purchase</field>
+        <field name="name">Seco. &amp; Higher Edu. Cess 1% Purchase</field>
+        <field name="description">Seco. &amp; Higher Edu. Cess 1% Purchase</field>
         <field name="type_tax_use">all</field>
         <field name="type">percent</field>
         <field name="amount">0.0100</field>
@@ -181,8 +183,8 @@
     </record>
 
     <record id="account_tax_exic5_pur" model="account.tax.template">
-        <field name="name">Input Excise Duty 5% </field>
-        <field name="description">Input Excise Duty 5% </field>
+        <field name="name">Input Excise Duty 5%</field>
+        <field name="description">Input Excise Duty 5%</field>
         <field name="type_tax_use">purchase</field>
         <field name="type">percent</field>
         <field name="amount">0.0500</field>
@@ -238,8 +240,8 @@
     </record>
 
     <record id="account_tax_exice12_sale" model="account.tax.template">
-        <field name="name">Excise Duty - 12% - Sales</field>
-        <field name="description">Excise Duty - 12% - Sales</field>
+        <field name="name">Excise Duty 12% - Sales</field>
+        <field name="description">Excise Duty 12% - Sales</field>
         <field name="type_tax_use">sale</field>
         <field name="type">percent</field>
         <field name="amount">0.1200</field>
@@ -579,8 +581,8 @@
     </record>
 
     <record id="account_tax_out_add1_sal_ct3" model="account.tax.template">
-        <field name="name">Output Adi. VAT 1% Sales CT3</field>
-        <field name="description">Output Adi. VAT 1% Sales CT3</field>
+        <field name="name">Output Adi. VAT 1% on Sales - CT3</field>
+        <field name="description">Output Adi. VAT 1% on Sales - CT3</field>
         <field name="type_tax_use">purchase</field>
         <field name="type">percent</field>
         <field name="amount">0.01</field>
