@@ -65,10 +65,6 @@ class project_issue(base_stage, osv.osv):
     def create(self, cr, uid, vals, context=None):
         if context is None:
             context = {}
-        if vals.get('use_issues') and not vals.get('use_tasks'):
-            vals['alias_model'] = 'project.issue'
-        elif not vals.get('use_issues') and vals.get('use_tasks'):
-            vals['alias_model'] = 'project.task'
         if not vals.get('stage_id'):
             ctx = context.copy()
             if vals.get('project_id'):
@@ -573,7 +569,8 @@ class project_issue(base_stage, osv.osv):
         
         return res   
 
-class project(osv.osv):
+
+class project(osv.Model):
     _inherit = "project.project"
 
     def _get_alias_models(self, cr, uid, context=None):
@@ -588,7 +585,9 @@ class project(osv.osv):
         return res
 
     _columns = {
-        'project_escalation_id' : fields.many2one('project.project','Project Escalation', help='If any issue is escalated from the current Project, it will be listed under the project selected here.', states={'close':[('readonly',True)], 'cancelled':[('readonly',True)]}),
+        'project_escalation_id': fields.many2one('project.project', 'Project Escalation',
+            help='If any issue is escalated from the current Project, it will be listed under the project selected here.',
+            states={'close': [('readonly', True)], 'cancelled': [('readonly', True)]}),
         'issue_count': fields.function(_issue_count, type='integer', string="Unclosed Issues"),
     }
 
@@ -603,14 +602,13 @@ class project(osv.osv):
         (_check_escalation, 'Error! You cannot assign escalation to the same project!', ['project_escalation_id'])
     ]
 
-project()
 
-class account_analytic_account(osv.osv):
+class account_analytic_account(osv.Model):
     _inherit = 'account.analytic.account'
     _description = 'Analytic Account'
 
     _columns = {
-        'use_issues' : fields.boolean('Issues', help="Check this field if this project manages issues"),
+        'use_issues': fields.boolean('Issues', help="Check this field if this project manages issues"),
     }
 
     def on_change_template(self, cr, uid, ids, template_id, context=None):
@@ -621,16 +619,34 @@ class account_analytic_account(osv.osv):
         return res
 
     def _trigger_project_creation(self, cr, uid, vals, context=None):
-        if context is None: context = {}
+        if context is None:
+            context = {}
         res = super(account_analytic_account, self)._trigger_project_creation(cr, uid, vals, context=context)
         return res or (vals.get('use_issues') and not 'project_creation_in_progress' in context)
 
-account_analytic_account()
 
-class project_project(osv.osv):
+class project_project(osv.Model):
     _inherit = 'project.project'
+
     _defaults = {
         'use_issues': True
     }
+
+    def _check_create_write_values(self, cr, uid, vals, context=None):
+        """ Perform some check on values given to create or write. """
+        # Handle use_tasks / use_issues: if only one is checked, alias should take the same model
+        if vals.get('use_tasks') and not vals.get('use_issues'):
+            vals['alias_model'] = 'project.task'
+        elif vals.get('use_issues') and not vals.get('use_tasks'):
+            vals['alias_model'] = 'project.issue'
+
+    def create(self, cr, uid, vals, context=None):
+        self._check_create_write_values(cr, uid, vals, context=context)
+        return super(project_project, self).create(cr, uid, vals, context=context)
+
+    def write(self, cr, uid, ids, vals, context=None):
+        self._check_create_write_values(cr, uid, vals, context=context)
+        return super(project_project, self).write(cr, uid, ids, vals, context=context)
+
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
