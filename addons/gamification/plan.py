@@ -585,4 +585,7 @@ class gamification_goal_planline(osv.Model):
             store={
                 'gamification.goal.type': (_get_planline_types, ['sequence'], 10),
                 }),
+        'type_condition': fields.related('type_id', 'condition', type="selection",
+            readonly=True, string="Condition", selection=[('lower', '<='), ('higher', '>=')]),
+        'type_unit': fields.related('type_id', 'unit', type="char", readonly=True, string="Unit"),
     }

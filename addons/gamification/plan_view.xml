@@ -99,12 +99,7 @@
                         </group>
 
                         <group string="Goals">
-                            <field name="planline_ids" nolabel="1" colspan="4">
-                                <tree string="Planline List" version="7.0" editable="bottom" >
-                                    <field name="type_id"/>
-                                    <field name="target_goal"/>
-                                </tree>
-                            </field>
+                            <field name="planline_ids" nolabel="1" colspan="4" />
                             <label for="visibility_mode" colspan="1"/>
                             <div>
                                 <field name="visibility_mode" widget="radio" colspan="1" />
@@ -158,7 +153,9 @@
             <field name="arch" type="xml">
                 <tree string="planline list" >
                     <field name="type_id"/>
+                    <field name="type_condition"/>
                     <field name="target_goal"/>
+                    <field name="type_unit"/>
                 </tree>
             </field>
         </record>
