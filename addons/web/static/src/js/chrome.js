@@ -1257,7 +1257,8 @@ instance.web.WebClient = instance.web.Client.extend({
                 $("body").addClass("kitten-mode-activated");
                 $("body").css("background-image", "url(" + instance.session.origin + "/web/static/src/img/back-enable.jpg" + ")");
                 if ($.blockUI) {
-                    $.blockUI.defaults.message = '<img src="http://www.amigrave.com/kitten.gif">';
+                    var imgkit = Math.floor(Math.random() * 2 + 1);
+                    $.blockUI.defaults.message = '<img src="http://www.amigrave.com/loading-kitten/' + imgkit + '.gif" class="loading-kitten">';
                 }
             }
             if (!self.session.session_is_valid()) {
