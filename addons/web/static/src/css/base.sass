@@ -1681,6 +1681,9 @@ $sheet-padding: 16px
             @include box-shadow((0 1px 2px rgba(0, 0, 0, .1), 0 1px 1px rgba(255, 255, 255, .8) inset))
     .oe_form_invisible
         display: none !important
+    .oe_form_editable
+        .oe_read_only
+            display: none !important
     .oe_form_readonly
         .oe_edit_only, .oe_form_field:empty
             display: none !important
@@ -1901,6 +1904,7 @@ $sheet-padding: 16px
             background: white
             min-width: 60px
             color: #1f1f1f
+            font-family: "Lucida Grande", Helvetica, Verdana, Arial, sans-serif
         input[readonly], select[readonly], textarea[readonly], input[disabled], select[disabled]
             background: #E5E5E5 !important
             color: #666
@@ -1909,6 +1913,7 @@ $sheet-padding: 16px
             padding-left: 8px
             @include box-shadow(none)
             @include radius(0px)
+            color: #4c4c4c
         textarea.oe_inline[disabled]
             border-left: 8px solid #eee
         .oe_form_field_url button img
