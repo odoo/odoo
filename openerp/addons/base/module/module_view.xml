@@ -70,13 +70,15 @@
             <field name="name">ir.module.module.form</field>
             <field name="model">ir.module.module</field>
             <field name="arch" type="xml">
-                <form create="0" edit="0" string="Module" version="7.0">
+                <form create="0" edit="0" string="Module" version="7.0" class='oe_styling_v8'>
                 <sheet>
                     <field name="icon_image" widget="image" class="oe_avatar oe_left"/>
                     <div class="oe_title">
                         <h1><field name="shortdesc"/></h1>
                         <h2 class="oe_fade"><field name="summary"/></h2>
-                        <button name="button_immediate_install" states="uninstalled" string="Install" type="object" class="oe_highlight"/>
+                    </div>
+                    <div class='oe_right oe_button_box'>
+                        <button name="button_immediate_install" states="uninstalled" string="Install" type="object" class="oe_highlight oe_big_purple"/>
                         <button name="button_immediate_upgrade" states="installed" string="Upgrade" type="object" class="oe_highlight"/>
                         <button name="button_immediate_uninstall" states="installed" string="Uninstall" type="object"
                             confirm="Do you confirm the uninstallation of this module? This will permanently erase all data currently stored by the module!"/>
@@ -84,21 +86,23 @@
                         <button name="button_upgrade_cancel" states="to upgrade" string="Cancel Upgrade" type="object"/>
                         <button name="button_install_cancel" states="to install" string="Cancel Install" type="object"/>
                     </div>
-                    <group>
-                        <group>
-                            <field name="author"/>
-                            <field name="website" widget="url" attrs="{'invisible':[('website','=',False)]}"/>
-                            <field name="category_id" widget="selection"/>
-                        </group>
-                        <group>
-                            <field name="name"/>
-                            <field name="license"/>
-                            <field name="installed_version"/>
-                        </group>
-                    </group>
                     <notebook>
                         <page string="Description">
-                            <field name="description_html"/>
+                            <field name="description_html" class='oe_app_description oe_styling_v8'/>
+                        </page>
+                        <page string="Info">
+                            <group>
+                                <group>
+                                    <field name="author"/>
+                                    <field name="website" widget="url" attrs="{'invisible':[('website','=',False)]}"/>
+                                    <field name="category_id" widget="selection"/>
+                                </group>
+                                <group>
+                                    <field name="name"/>
+                                    <field name="license"/>
+                                    <field name="installed_version"/>
+                                </group>
+                            </group>
                         </page>
                         <page string="Technical Data" groups="base.group_no_one">
                             <group col="4">
@@ -116,7 +120,7 @@
                                 </tree>
                             </field>
                         </page>
-                        <page string="Features" attrs="{'invisible':[('state','!=','installed')]}">
+                        <page string="Installed Features" attrs="{'invisible':[('state','!=','installed')]}">
                             <label for="menus_by_module" string="Created Menus"/>
                             <field name="menus_by_module"/>
                             <label for="reports_by_module" string="Defined Reports"/>

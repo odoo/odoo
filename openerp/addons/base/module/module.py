@@ -152,9 +152,17 @@ class module(osv.osv):
     def _get_desc(self, cr, uid, ids, field_name=None, arg=None, context=None):
         res = dict.fromkeys(ids, '')
         for module in self.browse(cr, uid, ids, context=context):
-            overrides = dict(embed_stylesheet=False, doctitle_xform=False, output_encoding='unicode')
-            output = publish_string(source=module.description, settings_overrides=overrides, writer=MyWriter())
-            res[module.id] = output
+            path = addons.get_module_resource(module.name, 'description.html')
+            if path:
+                desc_file = tools.file_open(path, 'rb')
+                try:
+                    res[module.id] = desc_file.read()
+                finally:
+                    desc_file.close()
+            else:
+                overrides = dict(embed_stylesheet=False, doctitle_xform=False, output_encoding='unicode')
+                output = publish_string(source=module.description, settings_overrides=overrides, writer=MyWriter())
+                res[module.id] = output
         return res
 
     def _get_latest_version(self, cr, uid, ids, field_name=None, arg=None, context=None):
