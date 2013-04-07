@@ -52,6 +52,10 @@ class res_partner(osv.osv):
             group_name = "Accounting Properties",
             help = "This invoicing type will be used, by default, to invoice the current partner."),
     }
+
+    def _commercial_fields(self, cr, uid, context=None):
+        return super(res_partner, self)._commercial_fields(cr, uid, context=context) + ['property_invoice_type']
+
 res_partner()
 
 class picking(osv.osv):
