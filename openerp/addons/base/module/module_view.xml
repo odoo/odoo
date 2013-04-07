@@ -71,11 +71,13 @@
             <field name="model">ir.module.module</field>
             <field name="arch" type="xml">
                 <form create="0" edit="0" string="Module" version="7.0" class='oe_styling_v8'>
-                <sheet>
+                    <sheet>
                     <field name="icon_image" widget="image" class="oe_avatar oe_left"/>
                     <div class="oe_title">
                         <h1><field name="shortdesc"/></h1>
-                        <h2 class="oe_fade"><field name="summary"/></h2>
+                        <h3 class="oe_fade">
+                            By <field name="author" class="oe_inline"/>
+                        </h3>
                     </div>
                     <div class='oe_right oe_button_box'>
                         <button name="button_immediate_install" states="uninstalled" string="Install" type="object" class="oe_highlight oe_big_purple"/>
@@ -86,16 +88,14 @@
                         <button name="button_upgrade_cancel" states="to upgrade" string="Cancel Upgrade" type="object"/>
                         <button name="button_install_cancel" states="to install" string="Cancel Install" type="object"/>
                     </div>
-                    <notebook>
-                        <page string="Description">
-                            <field name="description_html" class='oe_app_description oe_styling_v8'/>
-                        </page>
-                        <page string="Info">
+                    <div class="oe_clear"/>
+                    <notebook groups="base.group_no_one">
+                        <page string="Information">
                             <group>
                                 <group>
-                                    <field name="author"/>
                                     <field name="website" widget="url" attrs="{'invisible':[('website','=',False)]}"/>
                                     <field name="category_id" widget="selection"/>
+                                    <field name="summary"/>
                                 </group>
                                 <group>
                                     <field name="name"/>
@@ -104,7 +104,7 @@
                                 </group>
                             </group>
                         </page>
-                        <page string="Technical Data" groups="base.group_no_one">
+                        <page string="Technical Data">
                             <group col="4">
                                 <field name="demo"/>
                                 <field name="application"/>
@@ -128,6 +128,7 @@
                         </page>
                     </notebook>
                     </sheet>
+                    <field name="description_html" class='oe_app_description oe_styling_v8'/>
                 </form>
             </field>
         </record>
