@@ -314,10 +314,6 @@ class sale_order(osv.osv):
             return {'value': {'partner_invoice_id': False, 'partner_shipping_id': False,  'payment_term': False, 'fiscal_position': False}}
 
         part = self.pool.get('res.partner').browse(cr, uid, part, context=context)
-        #if the chosen partner is not a company and has a parent company, use the parent to choose the delivery, the 
-        #invoicing addresses and all the fields related to the partner.
-        if part.parent_id and not part.is_company:
-            part = part.parent_id
         addr = self.pool.get('res.partner').address_get(cr, uid, [part.id], ['delivery', 'invoice', 'contact'])
         pricelist = part.property_product_pricelist and part.property_product_pricelist.id or False
         payment_term = part.property_payment_term and part.property_payment_term.id or False
