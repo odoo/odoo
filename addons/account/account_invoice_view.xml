@@ -447,14 +447,14 @@
             <field name="model">account.invoice</field>
             <field name="arch" type="xml">
                 <search string="Search Invoice">
-                    <field name="number" string="Invoice" filter_domain="['|','|','|', ('number','ilike',self), ('origin','ilike',self), ('supplier_invoice_number', 'ilike', self), ('partner_id', 'ilike', self)]"/>
+                    <field name="number" string="Invoice" filter_domain="['|','|','|', ('number','ilike',self), ('origin','ilike',self), ('supplier_invoice_number', 'ilike', self), ('partner_id', 'child_of', self)]"/>
                     <filter name="draft" string="Draft" domain="[('state','=','draft')]" help="Draft Invoices"/>
                     <filter name="proforma" string="Proforma" domain="[('state','=','proforma2')]" help="Proforma Invoices" groups="account.group_proforma_invoices"/>
                     <filter name="invoices" string="Invoices" domain="[('state','not in',['draft','cancel'])]" help="Proforma/Open/Paid Invoices"/>
                     <filter name="unpaid" string="Unpaid" domain="[('state','=','open')]" help="Unpaid Invoices"/>
                     <separator/>
                     <filter domain="[('user_id','=',uid)]" help="My Invoices" icon="terp-personal"/>
-                    <field name="partner_id"/>
+                    <field name="partner_id" filter_domain="[('partner_id', 'child_of', self)]"/>
                     <field name="user_id" string="Salesperson"/>
                     <field name="period_id" string="Period"/>
                     <group expand="0" string="Group By...">
