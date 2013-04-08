@@ -2816,14 +2816,14 @@ instance.web.form.FieldRadio = instance.web.form.AbstractField.extend(instance.w
         this.horizontal = +this.options.horizontal || false;
         this.no_radiolabel = +this.options.no_radiolabel || false;
         this.display_readonly = +this.options.display_readonly || false;
-        this.selection = this.field.selection || [];
+        this.selection = _.clone(this.field.selection) || [];
         this.domain = false;
-        this.context = false;
     },
     initialize_content: function () {
         var self = this;
         this.$el.on('click', '.oe_radio_input,.oe_radio_header', function (e) {self.on_click_change_value(e)});
         this.field_manager.on("view_content_has_changed", this, this.get_selection);
+        this.get_selection();
     },
     on_click_change_value: function (event) {
         var id = $(event.target).data("id") || $(event.target).parent().data("id");
@@ -2847,11 +2847,9 @@ instance.web.form.FieldRadio = instance.web.form.AbstractField.extend(instance.w
         var def = $.Deferred();
         if (self.field.type == "many2one") {
             var domain = instance.web.pyeval.eval('domain', this.build_domain()) || [];
-            var context = instance.web.pyeval.eval('context', this.build_context()) || [];
-            if (! _.isEqual(self.domain, domain) || ! _.isEqual(self.context, context)) {
+            if (! _.isEqual(self.domain, domain)) {
                 self.domain = domain;
-                self.context = context;
-                var ds = new instance.web.DataSet(self, self.field.relation, self.context);
+                var ds = new instance.web.DataSet(self, self.field.relation);
                 ds.call('search', [self.domain])
                     .then(function (records) {
                         ds.name_get(records).then(function (records) {
@@ -2865,17 +2863,22 @@ instance.web.form.FieldRadio = instance.web.form.AbstractField.extend(instance.w
             selection = self.field.selection || [];
             def.resolve();
         }
-        def.then(function () {
-            if (! _.isEqual(selection, self.get('selection'))) {
-                self.selection = selection;
+        return def.then(function () {
+            if (! _.isEqual(selection, self.selection)) {
+                self.selection = _.clone(selection);
                 self.$el.html($(QWeb.render("FieldRadio", {'widget': self})).html());
-                self.set("selection", _.clone(this.selection));
+                self.render_value();
             }
         });
     },
+    get_value: function () {
+        var id = this.get('value');
+        return _.isNumber(id) ? id : id[0];
+    },
     render_value: function () {
-        this.$(".oe_radio_input_on").removeClass("oe_radio_input_on");
-        this.$(".oe_radio_input[data-id='" + this.get_value() + "'], .oe_radio_header[data-id='" + this.get_value() + "'] .oe_radio_input").addClass("oe_radio_input_on");
+        var self = this;
+        self.$(".oe_radio_input_on").removeClass("oe_radio_input_on");
+        self.$(".oe_radio_input[data-id='" + self.get_value() + "'], [data-id='" + self.get_value() + "'] .oe_radio_input").addClass("oe_radio_input_on");
     }
 });
 
