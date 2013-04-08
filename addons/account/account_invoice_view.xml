@@ -166,7 +166,7 @@
                             <field string="Supplier" name="partner_id"
                               on_change="onchange_partner_id(type,partner_id,date_invoice,payment_term, partner_bank_id,company_id)"
                               context="{'default_customer': 0, 'search_default_supplier': 1, 'default_supplier': 1}"
-                              domain="[('supplier', '=', True)]"/>
+                              domain="[('supplier', '=', True),'|',('parent_id','=',False),('is_company','=',True)]"/>
                             <field name="fiscal_position" widget="selection"/>
                             <field name="origin"/>
                             <field name="supplier_invoice_number"/>
@@ -320,7 +320,8 @@
                             <field string="Customer" name="partner_id"
                                 on_change="onchange_partner_id(type,partner_id,date_invoice,payment_term, partner_bank_id,company_id)"
                                 groups="base.group_user" context="{'search_default_customer':1, 'show_address': 1}"
-                                options='{"always_reload": True}'/>
+                                options='{"always_reload": True}'
+                                domain="[('customer', '=', True),'|',('parent_id','=',False),('is_company','=',True)]"/>
                             <field name="fiscal_position" widget="selection" />
                         </group>
                         <group>
