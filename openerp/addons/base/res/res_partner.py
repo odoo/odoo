@@ -30,6 +30,7 @@ from openerp import SUPERUSER_ID
 from openerp import pooler, tools
 from openerp.osv import osv, fields
 from openerp.tools.translate import _
+from openerp.tools.yaml_import import is_comment
 
 class format_address(object):
     def fields_view_get_address(self, cr, uid, arch, context={}):
@@ -159,8 +160,9 @@ def _lang_get(self, cr, uid, context=None):
     res = lang_pool.read(cr, uid, ids, ['code', 'name'], context)
     return [(r['code'], r['name']) for r in res]
 
-POSTAL_ADDRESS_FIELDS = ('street', 'street2', 'zip', 'city', 'state_id', 'country_id')
-ADDRESS_FIELDS = POSTAL_ADDRESS_FIELDS + ('email', 'phone', 'fax', 'mobile', 'website', 'ref', 'lang')
+# fields copy if 'use_parent_address' is checked
+ADDRESS_FIELDS = ('street', 'street2', 'zip', 'city', 'state_id', 'country_id', 'type')
+POSTAL_ADDRESS_FIELDS = ADDRESS_FIELDS # deprecated, to remove after 7.0
 
 class res_partner(osv.osv, format_address):
     _description = 'Partner'
@@ -191,6 +193,18 @@ class res_partner(osv.osv, format_address):
         result = {}
         for obj in self.browse(cr, uid, ids, context=context):
             result[obj.id] = obj.image != False
+        return result
+
+    def _commercial_id_compute(self, cr, uid, ids, name, args, context=None):
+        """ Returns the partner that is considered the commercial
+        entity of this partner. The commercial entity holds the master data
+        for all commercial fields (see :py:meth:`~_commercial_fields`) """
+        result = dict.fromkeys(ids, False)
+        for partner in self.browse(cr, uid, ids, context=context):
+            current_partner = partner 
+            while not current_partner.is_company and current_partner.parent_id:
+                current_partner = current_partner.parent_id
+            result[partner.id] = current_partner.id
         return result
 
     _order = "name"
@@ -264,6 +278,9 @@ class res_partner(osv.osv, format_address):
         'color': fields.integer('Color Index'),
         'user_ids': fields.one2many('res.users', 'partner_id', 'Users'),
         'contact_address': fields.function(_address_display,  type='char', string='Complete Address'),
+
+        # technical field used for managing commercial fields
+        'commercial_id': fields.function(_commercial_id_compute, type='many2one', relation='res.partner', string='Commercial Entity')
     }
 
     def _default_category(self, cr, uid, context=None):
@@ -302,8 +319,8 @@ class res_partner(osv.osv, format_address):
         'company_id': lambda self, cr, uid, ctx: self.pool.get('res.company')._company_default_get(cr, uid, 'res.partner', context=ctx),
         'color': 0,
         'is_company': False,
-        'type': 'default',
-        'use_parent_address': True,
+        'type': 'contact', # type 'default' is wildcard and thus inappropriate
+        'use_parent_address': False,
         'image': False,
     }
 
@@ -318,7 +335,6 @@ class res_partner(osv.osv, format_address):
         value = {}
         value['title'] = False
         if is_company:
-            value['parent_id'] = False
             domain = {'title': [('domain', '=', 'partner')]}
         else:
             domain = {'title': [('domain', '=', 'contact')]}
@@ -329,10 +345,11 @@ class res_partner(osv.osv, format_address):
             """ return val or val.id if val is a browse record """
             return val if isinstance(val, (bool, int, long, float, basestring)) else val.id
 
-        if use_parent_address and parent_id:
+        if parent_id:
             parent = self.browse(cr, uid, parent_id, context=context)
-            return {'value': dict((key, value_or_id(parent[key])) for key in ADDRESS_FIELDS)}
-        return {}
+            address_fields = self._address_fields(cr, uid, context=context)
+            return {'value': dict((key, value_or_id(parent[key])) for key in address_fields)}
+        return {'value': {'use_parent_address': False}}
 
     def onchange_state(self, cr, uid, ids, state_id, context=None):
         if state_id:
@@ -358,55 +375,133 @@ class res_partner(osv.osv, format_address):
 
 #   _constraints = [(_check_ean_key, 'Error: Invalid ean code', ['ean13'])]
 
-    def write(self, cr, uid, ids, vals, context=None):
-        # Update parent and siblings or children records
-        if isinstance(ids, (int, long)):
-            ids = [ids]
-        if vals.get('is_company')==False:
-            vals.update({'child_ids' : [(5,)]})
-        for partner in self.browse(cr, uid, ids, context=context):
-            update_ids = []
-            if partner.is_company:
-                domain_children = [('parent_id', '=', partner.id), ('use_parent_address', '=', True)]
-                update_ids = self.search(cr, uid, domain_children, context=context)
-            elif partner.parent_id:
-                 if vals.get('use_parent_address')==True:
-                     domain_siblings = [('parent_id', '=', partner.parent_id.id), ('use_parent_address', '=', True)]
-                     update_ids = [partner.parent_id.id] + self.search(cr, uid, domain_siblings, context=context)
-                 if 'use_parent_address' not in vals and  partner.use_parent_address:
-                    domain_siblings = [('parent_id', '=', partner.parent_id.id), ('use_parent_address', '=', True)]
-                    update_ids = [partner.parent_id.id] + self.search(cr, uid, domain_siblings, context=context)
-            self.update_address(cr, uid, update_ids, vals, context)
-        return super(res_partner,self).write(cr, uid, ids, vals, context=context)
-
-    def create(self, cr, uid, vals, context=None):
-        if context is None:
-            context = {}
-        # Update parent and siblings records
-        if vals.get('parent_id'):
-            if 'use_parent_address' in vals:
-                use_parent_address = vals['use_parent_address']
+    def _update_fields_values(self, cr, uid, partner, fields, context=None):
+        """ Returns dict of write() values for synchronizing ``fields`` """
+        values = {}
+        for field in fields:
+            column = self._all_columns[field].column
+            if column._type == 'one2many':
+                raise AssertionError('One2Many fields cannot be synchronized as part of `commercial_fields` or `address fields`')
+            if column._type == 'many2one':
+                values[field] = partner[field].id if partner[field] else False
+            elif column._type == 'many2many':
+                values[field] = [(6,0,[r.id for r in partner[field] or []])]
             else:
-                use_parent_address = self.default_get(cr, uid, ['use_parent_address'], context=context)['use_parent_address']
+                values[field] = partner[field]
+        return values
 
-            if use_parent_address:
-                domain_siblings = [('parent_id', '=', vals['parent_id']), ('use_parent_address', '=', True)]
-                update_ids = [vals['parent_id']] + self.search(cr, uid, domain_siblings, context=context)
-                self.update_address(cr, uid, update_ids, vals, context)
-
-                # add missing address keys
-                onchange_values = self.onchange_address(cr, uid, [], use_parent_address,
-                                                        vals['parent_id'], context=context).get('value') or {}
-                vals.update(dict((key, value)
-                            for key, value in onchange_values.iteritems()
-                            if key in ADDRESS_FIELDS and key not in vals))
-
-        return super(res_partner, self).create(cr, uid, vals, context=context)
+    def _address_fields(self, cr, uid, context=None):
+        """ Returns the list of address fields that are synced from the parent
+        when the `use_parent_address` flag is set. """
+        return ADDRESS_FIELDS
 
     def update_address(self, cr, uid, ids, vals, context=None):
-        addr_vals = dict((key, vals[key]) for key in POSTAL_ADDRESS_FIELDS if key in vals)
+        address_fields = self._address_fields(cr, uid, context=context)
+        addr_vals = dict((key, vals[key]) for key in address_fields if key in vals)
         if addr_vals:
             return super(res_partner, self).write(cr, uid, ids, addr_vals, context)
+
+    def _commercial_fields(self, cr, uid, context=None):
+        """ Returns the list of fields that are managed by the commercial entity
+        to which a partner belongs. These fields are meant to be hidden on
+        partners that aren't `commercial entities` themselves, and will be
+        delegated to the parent `commercial entity`. The list is meant to be
+        extended by inheriting classes. """
+        return ['vat']
+
+    def _commercial_sync_from_company(self, cr, uid, partner, context=None):
+        """ Handle sync of commercial fields when a new parent commercial entity is set,
+        as if they were related fields """
+        if partner.commercial_id != partner:
+            commercial_fields = self._commercial_fields(cr, uid, context=context)
+            sync_vals = self._update_fields_values(cr, uid, partner.commercial_id,
+                                                        commercial_fields, context=context)
+            return self.write(cr, uid, partner.id, sync_vals, context=context)
+
+    def _commercial_sync_to_children(self, cr, uid, partner, context=None):
+        """ Handle sync of commercial fields to descendants """
+        commercial_fields = self._commercial_fields(cr, uid, context=context)
+        sync_vals = self._update_fields_values(cr, uid, partner.commercial_id,
+                                                   commercial_fields, context=context)
+        sync_children = [c for c in partner.child_ids if not c.is_company]
+        for child in sync_children:
+            self._commercial_sync_to_children(cr, uid, child, context=context)
+        return self.write(cr, uid, [c.id for c in sync_children], sync_vals, context=context)
+
+    def _fields_sync(self, cr, uid, partner, update_values, context=None):
+        """ Sync commercial fields and address fields from company and to children after create/update,
+        just as if those were all modeled as fields.related to the parent """
+        # 1. From UPSTREAM: sync from parent
+        if update_values.get('parent_id') or update_values.get('use_company_address'):
+            # 1a. Commercial fields: sync if parent changed
+            if update_values.get('parent_id'):
+                self._commercial_sync_from_company(cr, uid, partner, context=context)
+            # 1b. Address fields: sync if parent or use_parent changed *and* both are now set 
+            if partner.parent_id and partner.use_parent_address:
+                onchange_vals = self.onchange_address(cr, uid, [partner.id],
+                                                      use_parent_address=partner.use_parent_address,
+                                                      parent_id=partner.parent_id.id,
+                                                      context=context).get('value', {})
+                self.update_address(cr, uid, partner.id, onchange_vals, context=context)
+
+        # 2. To DOWNSTREAM: sync children 
+        if partner.child_ids:
+            # 2a. Commercial Fields: sync if commercial entity
+            if partner.commercial_id == partner:
+                self._commercial_sync_to_children(cr, uid, partner, context=context)
+            # 2b. Address fields: sync if address changed
+            address_fields = self._address_fields(cr, uid, context=context)
+            if any(field in update_values for field in address_fields):
+                domain_children = [('parent_id', '=', partner.id), ('use_parent_address', '=', True)]
+                update_ids = self.search(cr, uid, domain_children, context=context)
+                self.update_address(cr, uid, update_ids, update_values, context=context)
+
+    def _handle_first_contact_creation(self, cr, uid, partner, context=None):
+        """ On creation of first contact for a company (or root) that has no address, assume contact address
+        was meant to be company address """
+        parent = partner.parent_id
+        address_data_fields = list(set(self._address_fields(cr, uid, context=context)).difference(['type']))
+        if parent and (parent.is_company or not parent.parent_id) and len(parent.child_ids) == 1 and \
+            any(partner[f] for f in address_data_fields) and not any(parent[f] for f in address_data_fields):
+            addr_vals = self._update_fields_values(cr, uid, partner, address_data_fields, context=context)
+            parent.update_address(addr_vals)
+            if not parent.is_company:
+                parent.write({'is_company': True})
+
+    def write(self, cr, uid, ids, vals, context=None):
+        if isinstance(ids, (int, long)):
+            ids = [ids]
+        result = super(res_partner,self).write(cr, uid, ids, vals, context=context)
+        for partner in self.browse(cr, uid, ids, context=context):
+            self._fields_sync(cr, uid, partner, vals, context)
+        return result
+
+    def create(self, cr, uid, vals, context=None):
+        new_id = super(res_partner, self).create(cr, uid, vals, context=context)
+        partner = self.browse(cr, uid, new_id, context=context)
+        self._fields_sync(cr, uid, partner, vals, context)
+        self._handle_first_contact_creation(cr, uid, partner, context)
+        return new_id
+
+    def open_commercial_entity(self, cr, uid, ids, context=None):
+        """ Utility method used to add an "Open Company" button in partner views """
+        partner = self.browse(cr, uid, ids[0], context=context)
+        return {'type': 'ir.actions.act_window',
+                'res_model': 'res.partner',
+                'view_mode': 'form',
+                'res_id': partner.commercial_id.id,
+                'target': 'new',
+                'flags': {'form': {'action_buttons': True}}}
+
+    def open_parent(self, cr, uid, ids, context=None):
+        """ Utility method used to add an "Open Parent" button in partner views """
+        partner = self.browse(cr, uid, ids[0], context=context)
+        return {'type': 'ir.actions.act_window',
+                'res_model': 'res.partner',
+                'view_mode': 'form',
+                'res_id': partner.parent_id.id,
+                'target': 'new',
+                'flags': {'form': {'action_buttons': True}}}
 
     def name_get(self, cr, uid, ids, context=None):
         if context is None:
@@ -516,25 +611,42 @@ class res_partner(osv.osv, format_address):
             ids = ids[16:]
         return True
 
-    def address_get(self, cr, uid, ids, adr_pref=None):
-        if adr_pref is None:
-            adr_pref = ['default']
+    def address_get(self, cr, uid, ids, adr_pref=None, context=None):
+        """ Find contacts/addresses of the right type(s) by doing a depth-first-search
+        through descendants within company boundaries (stop at entities flagged ``is_company``)
+        then continuing the search at the ancestors that are within the same company boundaries.
+        Defaults to partners of type ``'default'`` when the exact type is not found, or to the
+        commercial entity if no type ``'default'`` is found either. """
+        adr_pref = set(adr_pref or [])
+        if 'default' not in adr_pref:
+            adr_pref.add('default')
         result = {}
-        # retrieve addresses from the partner itself and its children
-        res = []
-        # need to fix the ids ,It get False value in list like ids[False]
-        if ids and ids[0]!=False:
-            for p in self.browse(cr, uid, ids):
-                res.append((p.type, p.id))
-                res.extend((c.type, c.id) for c in p.child_ids)
-        address_dict = dict(reversed(res))
-        # get the id of the (first) default address if there is one,
-        # otherwise get the id of the first address in the list
-        default_address = False
-        if res:
-            default_address = address_dict.get('default', res[0][1])
-        for adr in adr_pref:
-            result[adr] = address_dict.get(adr, default_address)
+        visited = set()
+        for partner in self.browse(cr, uid, filter(None, ids), context=context):
+            current_partner = partner
+            while current_partner:
+                to_scan = [current_partner]
+                # Scan descendants, DFS
+                while to_scan:
+                    record = to_scan.pop(0)
+                    visited.add(record)
+                    if record.type in adr_pref and not result.get(record.type):
+                        result[record.type] = record.id
+                    if len(result) == len(adr_pref):
+                        return result
+                    to_scan = [c for c in record.child_ids
+                                 if c not in visited
+                                 if not c.is_company] + to_scan
+
+                # Continue scanning at ancestor if current_partner is not a commercial entity
+                if current_partner.is_company or not current_partner.parent_id:
+                    break
+                current_partner = current_partner.parent_id
+
+        # default to type 'default' or the commercial_entity of the main/last partner
+        default = result.get('default', partner.commercial_id.id)
+        for adr_type in adr_pref:
+            result[adr_type] = result.get(adr_type) or default 
         return result
 
     def view_header_get(self, cr, uid, view_id, view_type, context):
