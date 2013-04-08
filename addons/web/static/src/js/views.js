@@ -241,6 +241,7 @@ instance.web.ActionManager = instance.web.Widget.extend({
                     } else if (state.active_id) {
                         add_context.active_ids = [state.active_id];
                     }
+                    add_context.params = state;
                     this.null_action();
                     action_loaded = this.do_action(state.action, { additional_context: add_context });
                     $.when(action_loaded || null).done(function() {
