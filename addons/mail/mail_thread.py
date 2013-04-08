@@ -248,7 +248,7 @@ class mail_thread(osv.AbstractModel):
 
         # automatic logging unless asked not to (mainly for various testing purpose)
         if not context.get('mail_create_nolog'):
-            self.message_post(cr, uid, thread_id, body='Document created', context=context)
+            self.message_post(cr, uid, thread_id, body=_('Document created'), context=context)
         return thread_id
 
     def write(self, cr, uid, ids, values, context=None):
@@ -368,7 +368,7 @@ class mail_thread(osv.AbstractModel):
             posted = False
             for subtype in subtypes:
                 try:
-                    subtype_rec = self.pool.get('ir.model.data').get_object(cr, uid, subtype.split('.')[0], subtype.split('.')[1])
+                    subtype_rec = self.pool.get('ir.model.data').get_object(cr, uid, subtype.split('.')[0], subtype.split('.')[1], context=context)
                 except ValueError, e:
                     _logger.debug('subtype %s not found, giving error "%s"' % (subtype, e))
                     continue
