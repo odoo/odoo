@@ -435,7 +435,7 @@ class _rml_canvas(object):
         self.canvas.circle(x_cen=utils.unit_get(node.get('x')), y_cen=utils.unit_get(node.get('y')), r=utils.unit_get(node.get('radius')), **utils.attr_get(node, [], {'fill':'bool','stroke':'bool'}))
 
     def _place(self, node):
-        flows = _rml_flowable(self.doc, self.localcontext, images=self.images, path=self.path, title=self.title).render(node)
+        flows = _rml_flowable(self.doc, self.localcontext, images=self.images, path=self.path, title=self.title, canvas=self.canvas).render(node)
         infos = utils.attr_get(node, ['x','y','width','height'])
 
         infos['y']+=infos['height']
@@ -616,7 +616,7 @@ class _rml_Illustration(platypus.flowables.Flowable):
         drw.render(self.canv, None)
 
 class _rml_flowable(object):
-    def __init__(self, doc, localcontext, images=None, path='.', title=None):
+    def __init__(self, doc, localcontext, images=None, path='.', title=None, canvas=None):
         if images is None:
             images = {}
         self.localcontext = localcontext
@@ -625,6 +625,7 @@ class _rml_flowable(object):
         self.images = images
         self.path = path
         self.title = title
+        self.canvas = canvas
 
     def _textual(self, node):
         rc1 = utils._process_text(self, node.text or '')
@@ -634,7 +635,10 @@ class _rml_flowable(object):
                 if key in ('rml_except', 'rml_loop', 'rml_tag'):
                     del txt_n.attrib[key]
             if not n.tag == 'bullet':
-                txt_n.text = utils.xml2str(self._textual(n))
+                if n.tag == 'pageNumber': 
+                    txt_n.text = self.canvas and str(self.canvas.getPageNumber()) or ''
+                else:
+                    txt_n.text = utils.xml2str(self._textual(n))
             txt_n.tail = n.tail and utils.xml2str(utils._process_text(self, n.tail.replace('\n',''))) or ''
             rc1 += etree.tostring(txt_n)
         return rc1
@@ -983,7 +987,7 @@ class _rml_template(object):
         if self.localcontext and not self.localcontext.get('internal_header',False):
             del self.localcontext['internal_header']
         fis = []
-        r = _rml_flowable(self.doc,self.localcontext, images=self.images, path=self.path, title=self.title)
+        r = _rml_flowable(self.doc,self.localcontext, images=self.images, path=self.path, title=self.title, canvas=None)
         story_cnt = 0
         for node_story in node_stories:
             if story_cnt > 0:
