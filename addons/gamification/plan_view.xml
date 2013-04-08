@@ -5,7 +5,7 @@
         <record id="goal_plan_list_action" model="ir.actions.act_window">
             <field name="name">Goal Plans</field>
             <field name="res_model">gamification.goal.plan</field>
-            <field name="view_mode">tree,form</field>
+            <field name="view_mode">kanban,tree,form</field>
             <field name="help" type="html">
                 <p class="oe_view_nocontent_create">
                     Click to create a goal plan. 
@@ -34,9 +34,15 @@
 
         <record id="goals_from_plan_act" model="ir.actions.act_window">
             <field name="res_model">gamification.goal</field>
-            <field name="view_type">form</field>
             <field name="name">Related Goals</field>
-            <field name="view_mode">kanban,tree,form</field>
+            <field name="view_mode">kanban,tree</field>
+            <field name="context">{'search_default_group_by_type': True, 'search_default_inprogress': True, 'default_plan_id': active_id}</field>
+            <field name="help" type="html">
+              <p>
+                There is no goals associated to this plan matching your search.
+                Make sure that your plan is active and associated to at least one user.
+              </p>
+            </field>
         </record>
 
         <record id="goal_plan_form_view" model="ir.ui.view">
@@ -45,7 +51,7 @@
             <field name="arch" type="xml">
                 <form string="Goal types" version="7.0">
                     <header>
-                        <button string="Manual Start" type="object" name="action_start" states="draft" class="oe_highlight"/>
+                        <button string="Start Now" type="object" name="action_start" states="draft" class="oe_highlight"/>
                         <button string="Check Plan" type="object" name="action_check" states="inprogress"/>
                         <button string="Close Plan" type="object" name="action_close" states="inprogress" class="oe_highlight"/>
                         <button string="Reset to Draft" type="object" name="action_cancel" states="inprogress"/>
@@ -54,88 +60,62 @@
                         <field name="state" widget="statusbar"/>
                     </header>
                     <sheet>
+
                         <div class="oe_title">
                             <label for="name" class="oe_edit_only"/>
                             <h1>    
-                                <field name="name" attrs="{'readonly':[('state','!=','draft')]}"/>
+                                <field name="name" placeholder="e.g. Monthly Sales Objectives"/>
                             </h1>
+                            <label for="user_ids" class="oe_edit_only" string="Apply Plan To"/>
+                            <div>
+                                <field name="user_ids" widget="many2many_tags" />
+                            </div>
                         </div>
 
                         <!-- action buttons -->
                         <div class="oe_right oe_button_box">
-                            <button name="action_show_related_goals" type="object" string="Related Goals" help="show all the generated goals for this plan" context="{'search_default_group_by_user': True}" />
+                            <button type="action" name="%(goals_from_plan_act)d" string="Related Goals" attrs="{'invisible': [('state','=','draft')]}" />
                         </div>
-
-                        <group colspan="2">
-                            <field name="manager_id" />
+                        <group>
+                            <group>
+                                <field name="period" attrs="{'readonly':[('state','!=','draft')]}"/>
+                                <field name="visibility_mode" widget="radio" colspan="1" />
+                            </group>
+                            <group>
+                                <field name="manager_id"/>
+                                <field name="start_date" attrs="{'readonly':[('state','!=','draft')]}"/>
+                            </group>
                         </group>
-                        <group colspan="2">
-                            <field name="start_date" attrs="{'readonly':[('state','!=','draft')]}"/>
-                            <field name="period" attrs="{'readonly':[('state','!=','draft')]}"/>
-                        </group>
-                        <group string="Evaluated Users">
-                            <group colspan="4">
+                        <notebook>
+                        <page string="Goals">
+                            <field name="planline_ids" nolabel="1" colspan="4">
+                                <tree string="Planline List" version="7.0" editable="bottom" >
+                                    <field name="type_id"/>
+                                    <field name="type_condition"/>
+                                    <field name="target_goal"/>
+                                    <field name="type_unit"/>
+                                </tree>
+                            </field>
+                        </page>
+                        <page string="Advanced Options">
+                            <group string="Subscribe Users Automatically">
                                 <field name="autojoin_group_id" />
                             </group>
-                            <group colspan="4">
-                                <field name="user_ids" widget="many2many_kanban">
-                                    <kanban quick_create="false" create="true">
-                                        <field name="name"/>
-                                        <templates>
-                                            <t t-name="kanban-box">
-                                                <div style="position: relative">
-                                                    <a t-if="! read_only_mode" type="delete" style="position: absolute; right: 0; padding: 4px; diplay: inline-block">X</a>
-                                                    <div class="oe_module_vignette">
-                                                        <div class="oe_module_desc">
-                                                            <field name="name"/>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </t>
-                                        </templates>
-                                    </kanban>
-                                </field> 
+                            <group string="Notification Messages">
+                                <field name="report_message_frequency" />
+                                <field name="report_header" placeholder="e.g. The following message contains the current progress of the sale team..." attrs="{'invisible': [('report_message_frequency','=','never')]}" />
+                                <field name="report_message_group_id" attrs="{'invisible': [('report_message_frequency','=','never')]}" />
                             </group>
-                        </group>
+                            <group string="Reminders for Manual Goals">
+                                <label for="remind_update_delay" />
+                                <div>
+                                    <field name="remind_update_delay" class="oe_inline"/> days
+                                </div>
+                            </group>
+                        </page>
+                        </notebook>
 
-                        <group string="Goals">
-                            <field name="planline_ids" nolabel="1" colspan="4" />
-                            <label for="visibility_mode" colspan="1"/>
-                            <div>
-                                <field name="visibility_mode" widget="radio" colspan="1" />
-
-                                <group name="visibility_mode_help" class="oe_grey oe_edit_only" colspan="2">
-                                    <p attrs="{'invisible': [('visibility_mode','!=','board')]}">
-                                       In Leaderboard mode, the reports will contain the progress of users of this plan.
-                                    </p>
-                                    <p attrs="{'invisible': [('visibility_mode','!=','progressbar')]}">
-                                       In Personal Progressbar mode, the progress of each user can only be seen by himself and the followers of this plan.
-                                    </p>
-                                </group>
-                            </div>
-                            <label for="remind_update_delay"/>
-                            <div>
-                                <field name="remind_update_delay" class="oe_inline"/> days
-                            </div>
-                        </group>
-
-                        <group string="Notification Message" colspan="4">
-                            <field name="report_message_frequency" />
-                            <field name="report_header" attrs="{'invisible': [('report_message_frequency','=','never')]}" />
-                            
-                            <label for="report_message_group_id" attrs="{'invisible': [('report_message_frequency','=','never')]}" />
-                            <div  attrs="{'invisible': [('report_message_frequency','=','never')]}" >
-                                <field name="report_message_group_id" />
-                                <group name="report_help" class="oe_grey oe_edit_only" col="2" colspan="2">
-                                   <p attrs="{'invisible': [('report_message_group_id','!=',False)]}">
-                                       Select a group that will receive a copy of the reports.
-                                   </p>
-                                   <p attrs="{'invisible': [('report_message_group_id','=',False)]}">
-                                       A copy of the report will be sent to this group.
-                                   </p>
-                               </group>
-                           </div>
-                        </group>
+                        
                     </sheet>
                     <div class="oe_chatter">
                         <field name="message_follower_ids" widget="mail_followers"/>
@@ -145,6 +125,44 @@
             </field>
         </record>
 
+        <record model="ir.ui.view" id="view_goal_plan_kanban">
+            <field name="name">Goal Plan Kanban</field>
+            <field name="model">gamification.goal.plan</field>
+            <field name="arch" type="xml">
+                <kanban version="7.0" class="oe_background_grey">
+                    <field name="planline_ids"/>
+                    <field name="planline_count"/>
+                    <field name="user_ids"/>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div t-attf-class="oe_kanban_card oe_kanban_goal oe_kanban_global_click">
+                                <div class="oe_dropdown_toggle oe_dropdown_kanban">
+                                    <span class="oe_e">í</span>
+                                    <ul class="oe_dropdown_menu">
+                                        <li><a type="edit">Configure Goal Plan</a></li>
+                                    </ul>
+                                </div>
+                                <div class="oe_kanban_content">
+
+                                    <h4><field name="name"/></h4>
+                                    <div class="oe_kanban_project_list">
+                                        <a type="action" name="%(goals_from_plan_act)d" style="margin-right: 10px"> 
+                                            <span t-if="record.planline_count.raw_value gt 1"><field name="planline_count"/> Goals</span>
+                                            <span t-if="record.planline_count.raw_value lt 2"><field name="planline_count"/> Goal</span>
+                                        </a>
+                                    </div>
+                                    <div class="oe_kanban_badge_avatars">
+                                        <t t-foreach="record.user_ids.raw_value.slice(0,11)" t-as="member">
+                                            <img t-att-src="kanban_image('res.users', 'image_small', member)" t-att-data-member_id="member"/>
+                                        </t>
+                                    </div>
+                                </div>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
 
         <!-- Planline -->
         <record id="goal_planline_list_view" model="ir.ui.view">
@@ -153,9 +171,7 @@
             <field name="arch" type="xml">
                 <tree string="planline list" >
                     <field name="type_id"/>
-                    <field name="type_condition"/>
                     <field name="target_goal"/>
-                    <field name="type_unit"/>
                 </tree>
             </field>
         </record>

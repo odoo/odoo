@@ -416,15 +416,15 @@
         <record id="goals_menu_groupby_act" model="ir.actions.act_window">
             <field name="res_model">gamification.goal</field>
             <field name="view_type">form</field>
-            <field name="name">Related Goals</field>
-            <field name="view_mode">kanban,tree,form</field>
-            <field name="context">{'search_default_group_by_type': True}</field>
+            <field name="name">Goals</field>
+            <field name="view_mode">tree,kanban,form</field>
+            <field name="context">{'search_default_group_by_user': True, 'search_default_group_by_type': True}</field>
         </record>
 
         <menuitem name="Interview Requests" parent="menu_eval_hr" id="menu_open_hr_evaluation_interview_requests"
             action="action_hr_evaluation_interview_tree"/>
         <menuitem id="gamification_plan_menu_hr" parent="menu_eval_hr" action="gamification.goal_plan_list_action" groups="gamification.group_goal_manager" />
-        <menuitem id="gamification_goal_menu_hr" parent="menu_eval_hr" action="goals_menu_groupby_act" groups="base.group_hr_manager"/>
+        <menuitem id="gamification_goal_menu_hr" parent="menu_eval_hr" action="goals_menu_groupby_act" groups="gamification.group_goal_manager"/>
 
       <!-- Email Compose message Action-->
       <act_window

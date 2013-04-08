@@ -114,6 +114,7 @@
 
                     <field name="user_id"/>
                     <field name="type_id"/>
+                    <field name="plan_id"/>
                     <group expand="0" string="Group By...">
                         <filter name="group_by_user" string="User" domain="[]" context="{'group_by':'user_id'}"/>
                         <filter name="group_by_type" string="Goal Type" domain="[]" context="{'group_by':'type_id'}"/>
@@ -203,31 +204,36 @@
             <field name="arch" type="xml">
                 <form string="Goal types" version="7.0">
                     <sheet>
-                        <label for="name" class="oe_edit_only"/>
-                        <h1>
-                            <field name="name"/>
-                        </h1>
-                        <group>
-                            <group string="General">
-                                <field name="description" string="Tooltip"/>
-                                <field name="condition"/>
-                                <field name="monetary" />
-                                <field name="unit" attrs="{'invisible': [('monetary', '=', True)]}"/>
-                            </group>
-                            <group string="Computation">
+                            <label for="name" class="oe_edit_only"/>
+                            <h1>
+                                <field name="name" class="oe_inline"/>
+                            </h1>
+                            <label for="description" class="oe_edit_only"/>
+                            <div>
+                                <field name="description" class="oe_inline"/>
+                            </div>
+                        
+                            <group string="How to compute the goal?">
+
                                 <field widget="radio" name="computation_mode"/>
 
                                 <!-- Hide the fields below if manually -->
-                                <field name="model_id" attrs="{'invisible':[('computation_mode','=','manually')], 'required':[('computation_mode','!=','manually')]}"/>
-                                <field name="field_id" attrs="{'invisible':[('computation_mode','!=','sum')], 'required':[('computation_mode','=','sum')]}" domain="[('model_id','=',model_id)]" />
-                                <field name="field_date_id" attrs="{'invisible':[('computation_mode','=','manually')]}" domain="[('ttype', 'in', ('date', 'datetime')), ('model_id','=',model_id)]"/>
-                                <field name="domain" attrs="{'invisible':[('computation_mode','=','manually')], 'required':[('computation_mode','!=','manually')]}"/>
+                                <field name="model_id" attrs="{'invisible':[('computation_mode','=','manually')], 'required':[('computation_mode','!=','manually')]}" class="oe_inline"/>
+                                <field name="field_id" attrs="{'invisible':[('computation_mode','!=','sum')], 'required':[('computation_mode','=','sum')]}" domain="[('model_id','=',model_id)]"  class="oe_inline"/>
+                                <field name="field_date_id" attrs="{'invisible':[('computation_mode','=','manually')]}" domain="[('ttype', 'in', ('date', 'datetime')), ('model_id','=',model_id)]" class="oe_inline"/>
+                                <field name="domain" attrs="{'invisible':[('computation_mode','=','manually')], 'required':[('computation_mode','!=','manually')]}" class="oe_inline"/>
+
+                                <field name="condition" widget="radio"/>
                             </group>
-                            <group string="User Action">
-                                <field name="action_id" />
-                                <field name="res_id_field" />
+                            <group string="Formating Options">
+                                <field name="unit" class="oe_inline"/>
+                                <field name="monetary"  class="oe_inline"/>
                             </group>
-                        </group>
+                            <group string="Clickable Goals">
+                                <field name="action_id"  class="oe_inline"/>
+                                <field name="res_id_field"  attrs="{'invisible': [('action_id', '=', False)]}" class="oe_inline"/>
+                            </group>
+
                     </sheet>
                 </form>
             </field>

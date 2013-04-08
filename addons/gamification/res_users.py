@@ -50,13 +50,14 @@ class res_users_gamification_group(osv.Model):
 
                 serialized_goals_info['planlines'] = []
                 for planline_board in goals_info:
+                    print("planline_board", planline_board.name)
                     vals = {'type_name': planline_board['goal_type'].name,
                             'type_description': planline_board['goal_type'].description,
                             'type_condition': planline_board['goal_type'].condition,
                             'type_computation_mode': planline_board['goal_type'].computation_mode,
                             'type_monetary': planline_board['goal_type'].monetary,
                             'type_unit': planline_board['goal_type'].unit,
-                            'type_action': planline_board['goal_type'].action_id,
+                            'type_action': True if planline_board['goal_type'].action_id else False,
                             'goals': []}
                     for goal in planline_board['board_goals']:
                         vals['goals'].append({
@@ -84,6 +85,7 @@ class res_users_gamification_group(osv.Model):
 
                 serialized_goals_info['goals'] = []
                 for goal in goals_info['goals']:
+                    print("goal", goal.type_id.name)
                     serialized_goals_info['goals'].append({
                         'id': goal.id,
                         'type_name': goal.type_id.name,
@@ -91,13 +93,14 @@ class res_users_gamification_group(osv.Model):
                         'type_condition': goal.type_id.condition,
                         'type_monetary': goal.type_id.monetary,
                         'type_unit': goal.type_id.unit,
-                        'type_action': goal.type_id.action_id,
+                        'type_action': True if goal.type_id.action_id else False,
                         'state': goal.state,
                         'completeness': goal.completeness,
                         'computation_mode': goal.computation_mode,
                         'current': goal.current,
                         'target_goal': goal.target_goal,
                     })
+                    print("goal", True if goal.type_id.action_id else False)
 
             all_goals_info.append(serialized_goals_info)
         return all_goals_info

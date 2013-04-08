@@ -41,49 +41,46 @@ class gamification_goal_type(osv.Model):
     _description = 'Gamification goal type'
 
     _columns = {
-        'name': fields.char('Type Name', required=True, translate=True),
-        'description': fields.text('Description'),
-        'monetary': fields.boolean('Use Currency', help="The target and current value used is monetary"),
-        'unit': fields.char('Unit',
+        'name': fields.char('Goal Type Name', required=True, translate=True),
+        'description': fields.text('Goal Description'),
+        'monetary': fields.boolean('Monetary Value', help="The target and current value are defined in the company currency."),
+        'unit': fields.char('Suffix',
             help="The unit of the target and current values", translate=True),
         'computation_mode': fields.selection([
-                ('sum', 'Sum'),
-                ('count', 'Count'),
-                ('manually', 'Manually')
+                ('manually', 'Recorded manually'),
+                ('count', 'Automatic: number of records'),
+                ('sum', 'Automatic: sum on a field'),
             ],
-            string="Mode of Computation",
-            help="""How is computed the goal value :\n
-- 'Sum' for the total of the values if the 'Evaluated field'\n
-- 'Count' for the number of entries\n
-- 'Manually' for user defined values""",
+            string="Computation Mode",
             required=True),
         'model_id': fields.many2one('ir.model',
             string='Model',
             help='The model object for the field to evaluate'),
         'field_id': fields.many2one('ir.model.fields',
-            string='Evaluated Field',
+            string='Field to Sum',
             help='The field containing the value to evaluate'),
         'field_date_id': fields.many2one('ir.model.fields',
-            string='Evaluated Date Field',
+            string='Date Field',
             help='The date to use for the time period evaluated'),
-        'domain': fields.char("Domain",
+        'domain': fields.char("Filter Domain",
             help="Technical filters rules to apply",
             required=True), # how to apply it ?
         'condition': fields.selection([
-                ('lower', '<='),
-                ('higher', '>=')
+                ('higher', 'The higher the better'),
+                ('lower', 'The lower the better')
             ],
-            string='Validation Condition',
+            string='Goal Performance',
             help='A goal is considered as completed when the current value is compared to the value to reach',
             required=True),
         'sequence': fields.integer('Sequence',
             help='Sequence number for ordering',
             required=True),
 
-        'action_id': fields.char("Action",
-            help="The action xml id that will be called to update the goal value."),
-        'res_id_field': fields.char("id field",
-            help="The field name on the user profile containing the value for res_id for action")
+        'action_id': fields.many2one('ir.actions.act_window',
+            string="Action",
+            help="The action that will be called to update the goal value."),
+        'res_id_field': fields.char("ID Field of user",
+            help="The field name on the user profile (res.users) containing the value for res_id for action.")
     }
 
     _order = 'sequence'
@@ -321,26 +318,34 @@ class gamification_goal(osv.Model):
         In case of a manual goal, should return a wizard to update the value
         :return: action description in a dictionnary
         """
+        print("get_action")
         goal = self.browse(cr, uid, goal_id, context=context)
         if goal.type_id.action_id:
-            try:
-                model, xml_id = goal.type_id.action_id.split('.', 1)
-                action = self.pool.get('ir.actions.act_window').for_xml_id(cr, uid, model, xml_id, context=context)
+            action_obj = goal.type_id.action_id
+            action = {
+                'name': action_obj.name,
+                'view_type': action_obj.view_type,
+                'view_mode': action_obj.view_mode,
+                'res_model': action_obj.res_model,
+                'domain': action_obj.domain,
+                'context': action_obj.context,
+                'type': 'ir.actions.act_window',
+                'search_view_id': action_obj.search_view_id.id,
+                'views': [(v.view_id.id, v.view_mode) for v in action_obj.view_ids]
+            }
 
-                if goal.type_id.res_id_field:
-                    current_user = self.pool.get('res.users').browse(cr, uid, uid, context)
-                    # eg : company_id.id
-                    field_names = goal.type_id.res_id_field.split('.')
-                    res = current_user.__getitem__(field_names[0])
-                    for field_name in field_names[1:]:
-                        res = res.__getitem__(field_name)
-                    action['res_id'] = res
-                    action['view_mode'] = 'form'  # if one element to display, should see it in form mode
-                    action['target'] = 'new'
-                print(action)
-                return action
-            except ValueError:
-                _logger.warning("Invalid XML ID '%s' for goal action.", goal.type_id.action_id)
+            if goal.type_id.res_id_field:
+                current_user = self.pool.get('res.users').browse(cr, uid, uid, context)
+                # eg : company_id.id
+                field_names = goal.type_id.res_id_field.split('.')
+                res = current_user.__getitem__(field_names[0])
+                for field_name in field_names[1:]:
+                    res = res.__getitem__(field_name)
+                action['res_id'] = res
+                action['view_mode'] = 'form'  # if one element to display, should see it in form mode
+                action['target'] = 'new'
+            print(action)
+            return action
 
         if goal.computation_mode == 'manually':
             action = {
@@ -352,9 +357,7 @@ class gamification_goal(osv.Model):
             }
             action['context'] = {'default_goal_id': goal_id, 'default_current': goal.current}
             action['res_model'] = 'gamification.goal.wizard'
-            print(action)
             return action
-        print(False)
         return False
 
     def changed_users_avatar(self, cr, uid, ids, context):

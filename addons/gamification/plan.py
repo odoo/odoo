@@ -96,23 +96,41 @@ class gamification_goal_plan(osv.Model):
 
         return res
 
+    def _planline_count(self, cr, uid, ids, field_name, arg, context=None):
+        res = dict.fromkeys(ids, 0)
+        for plan in self.browse(cr, uid, ids, context):
+            res[plan.id] = len(plan.planline_ids)
+        return res
+
     _columns = {
         'name': fields.char('Plan Name', required=True, translate=True),
+        'state': fields.selection([
+                ('draft', 'Draft'),
+                ('inprogress', 'In Progress'),
+                ('done', 'Done'),
+            ],
+            string='State',
+            required=True),
+        'manager_id': fields.many2one('res.users',
+            string='Responsible', help="The user responsible for the plan."),
+        'start_date': fields.date('Planned Start Date', help="The day a new plan will be automatically started. The start and end dates for goals are still defined by the periodicity (eg: weekly goals run from Monday to Sunday)."),
+
         'user_ids': fields.many2many('res.users',
             string='Users',
             help="List of users to which the goal will be set"),
-        'manager_id': fields.many2one('res.users', required=True,
-            string='Responsible', help="The user responsible for the plan."),
+        'autojoin_group_id': fields.many2one('res.groups',
+            string='Auto-subscription Group',
+            help='Group of users whose members will automatically be added to the users'),
+
         'planline_ids': fields.one2many('gamification.goal.planline',
             'plan_id',
             string='Planline',
             help="list of goals that will be set",
             required=True),
-        'autojoin_group_id': fields.many2one('res.groups',
-            string='Auto-subscription Group',
-            help='Group of users whose members will automatically be added to the users'),
+        'planline_count': fields.function(_planline_count, type='integer', string="Planlines"),
+
         'period': fields.selection([
-                ('once', 'No Periodicity'),
+                ('once', 'Non recurring'),
                 ('daily', 'Daily'),
                 ('weekly', 'Weekly'),
                 ('monthly', 'Monthly'),
@@ -121,20 +139,11 @@ class gamification_goal_plan(osv.Model):
             string='Periodicity',
             help='Period of automatic goal assigment. If none is selected, should be launched manually.',
             required=True),
-        'start_date': fields.date('Starting Date', help="The day a new plan will be automatically started. The start and end dates for goals are still defined by the periodicity (eg: weekly goals run from Monday to Sunday)."),
-        'state': fields.selection([
-                ('draft', 'Draft'),
-                ('inprogress', 'In Progress'),
-                ('done', 'Done'),
-            ],
-            string='State',
-            required=True),
         'visibility_mode': fields.selection([
-                ('board', 'Leader Board'),
-                ('progressbar', 'Personal Progressbar')
+                ('progressbar', 'Individual Goals'),
+                ('board', 'Leader Board (Group Ranking)'),
             ],
-            string="Visibility",
-            help='How are displayed the results, shared or in a single progressbar',
+            string="Display Mode",
             required=True),
         'report_message_frequency': fields.selection([
                 ('never','Never'),
@@ -150,8 +159,8 @@ class gamification_goal_plan(osv.Model):
             string='Send a copy to',
             help='Group that will receive a copy of the report in addition to the user'),
         'report_header': fields.text('Report Header'),
-        'remind_update_delay': fields.integer('Remind delay for Manual Goals',
-            help="The number of days after which the user assigned to a manual goal will be reminded. Never reminded if no value or zero is specified."),
+        'remind_update_delay': fields.integer('Non-updated manual goals will be reminded after',
+            help="Never reminded if no value or zero is specified."),
         'last_report_date': fields.date('Last Report Date'),
         'next_report_date': fields.function(_get_next_report_date,
             type='date',
@@ -163,9 +172,9 @@ class gamification_goal_plan(osv.Model):
         'state': 'draft',
         'visibility_mode' : 'progressbar',
         'report_message_frequency' : 'onchange',
-        'last_report_date' : fields.date.today,
-        'start_date' : fields.date.today,
-        'manager_id' : lambda s, cr, uid, c: uid,
+        'last_report_date': fields.date.today,
+        'start_date': fields.date.today,
+        'manager_id': lambda s, cr, uid, c: uid,
     }
 
     def write(self, cr, uid, ids, vals, context=None):
@@ -228,7 +237,6 @@ class gamification_goal_plan(osv.Model):
 
         for plan in self.browse(cr, uid, ids, context=context):
             if plan.autojoin_group_id:
-                print("subscribe from group", plan.autojoin_group_id, [user.id for user in plan.autojoin_group_id.users])
                 self.plan_subscribe_users(cr, uid, ids, [user.id for user in plan.autojoin_group_id.users], context=context)
             self.generate_goals_from_plan(cr, uid, [plan.id], context=context)
 
@@ -304,30 +312,6 @@ class gamification_goal_plan(osv.Model):
         self.pool.get('gamification.goal').write(cr, uid, goal_ids, {'state': 'canceled'}, context=context)
 
         return True
-
-    def action_show_related_goals(self, cr, uid, ids, context=None):
-        """ This opens goal view with a restriction to the list of goals from this plan only
-            @return: the goal view
-        """
-        # get ids of related goals
-        goal_obj = self.pool.get('gamification.goal')
-        related_goal_ids = []
-        goal_ids = goal_obj.search(cr, uid, [('plan_id', 'in', ids)], context=context)
-        for plan in self.browse(cr, uid, ids, context=context):
-            for planline in plan.planline_ids:
-                goal_ids = goal_obj.search(cr, uid, [('planline_id', '=', planline.id)], context=context)
-                related_goal_ids.extend(goal_ids)
-
-        # process the new view
-        if context is None:
-            context = {}
-        res = self.pool.get('ir.actions.act_window').for_xml_id(cr, uid ,'gamification','goals_from_plan_act', context=context)
-        res['context'] = context
-        res['context'].update({
-            'default_id': related_goal_ids,
-        })
-        res['domain'] = [('id','in', related_goal_ids)]
-        return res
 
     def action_report_progress(self, cr, uid, ids, context=None):
         """Manual report of a goal, does not influence automatic report frequency"""
@@ -588,4 +572,5 @@ class gamification_goal_planline(osv.Model):
         'type_condition': fields.related('type_id', 'condition', type="selection",
             readonly=True, string="Condition", selection=[('lower', '<='), ('higher', '>=')]),
         'type_unit': fields.related('type_id', 'unit', type="char", readonly=True, string="Unit"),
+        'type_monetary': fields.related('type_id', 'monetary', type="boolean", readonly=True, string="Monetary"),
     }

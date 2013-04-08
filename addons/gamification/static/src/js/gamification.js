@@ -27,13 +27,10 @@ openerp.gamification = function(instance) {
                     self.get_goal_todo_info();
                 });
             },
-            // 'click a.oe_show_description': function(event) {
-            //     var goal_id = parseInt(event.currentTarget.id);
-            //     this.$el.find('.oe_type_description_'+goal_id).toggle(10);
-            // },
             'click a.oe_goal_action': function(event) {
                 var self = this;
                 var goal_id = parseInt(event.currentTarget.id, 10);
+                console.log("oe_goal_action");
                 var goal_action = new instance.web.Model('gamification.goal').call('get_action', [goal_id]).then(function(res) {
                     goal_action['action'] = res;
                 });
@@ -62,13 +59,13 @@ openerp.gamification = function(instance) {
         },
         get_goal_todo_info: function() {
             var self = this;
+            console.log("get_goal_todo_info");
             var goals_info = this.res_user.call('get_goals_todo_info', {}).then(function(res) {
                 self.goals_info['info'] = res;
             });
             $.when(goals_info).done(function() {
                 if(self.goals_info.info.length > 0){
                     self.render_template_replace(self.$el.filter(".oe_gamification_goal"),'gamification.goal_list_to_do');
-                    self.$el.find('.oe_type_description').hide();
                     self.render_money_fields(self.goals_info.info[0].currency);
                     self.render_progress_bars();
                 }
@@ -116,6 +113,7 @@ openerp.gamification = function(instance) {
         start: function() {
             this._super();
             var self = this;
+            console.log("start");
             var sidebar = new instance.gamification.Sidebar(self);
             sidebar.appendTo($('.oe_mail_wall_aside'));
         }
