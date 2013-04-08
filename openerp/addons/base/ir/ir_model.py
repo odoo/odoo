@@ -27,12 +27,12 @@ import types
 import openerp
 from openerp import SUPERUSER_ID
 from openerp import tools
-from openerp.osv import fields,osv
-from openerp.osv.orm import Model
-from openerp.tools.safe_eval import safe_eval as eval
+from openerp.osv import fields, osv
+from openerp.osv.orm import Model, Record, except_orm
+from openerp.osv.scope import proxy as scope
 from openerp.tools import config
+from openerp.tools.safe_eval import safe_eval as eval
 from openerp.tools.translate import _
-from openerp.osv.orm import except_orm, Record
 
 _logger = logging.getLogger(__name__)
 
@@ -744,6 +744,7 @@ class ir_model_access(osv.osv):
             pass
 
     def call_cache_clearing_methods(self, cr):
+        scope.invalidate_cache()
         self.check.clear_cache(self)    # clear the cache of check function
         for model, method in self.__cache_clearing_methods:
             object_ = self.pool.get(model)

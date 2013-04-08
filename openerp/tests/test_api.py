@@ -310,10 +310,6 @@ class TestAPI(common.TransactionCase):
             with scope.SUDO():
                 demo.write({'groups_id': [(5,)]})
 
-            # The record caches already contain the data, so we must clear them
-            # in order to test whether one may read data!
-            scope.invalidate_cache()
-
             # demo user can no longer read partner data
             with self.assertRaises(except_orm):
                 partners[0].company_id.name
