@@ -45,12 +45,12 @@ class res_users_gamification_group(osv.Model):
                 # board report should be grouped by planline for all users
                 goals_info = plan_obj.get_board_goal_info(cr, uid, plan, subset_goal_ids=False, context=context)
 
-                if not goals_info:
+                if len(goals_info) == 0:
+                    # plan with no valid planlines
                     continue
 
                 serialized_goals_info['planlines'] = []
                 for planline_board in goals_info:
-                    print("planline_board", planline_board.name)
                     vals = {'type_name': planline_board['goal_type'].name,
                             'type_description': planline_board['goal_type'].description,
                             'type_condition': planline_board['goal_type'].condition,
@@ -73,9 +73,6 @@ class res_users_gamification_group(osv.Model):
                             vals['own_goal_id'] = goal[1].id
                     serialized_goals_info['planlines'].append(vals)
 
-                if len(serialized_goals_info['planlines']) == 0:
-                    # plan with no valid planlines
-                    continue
             else:
                 # individual report are simply a list of goal
                 goals_info = plan_obj.get_indivual_goal_info(cr, uid, uid, plan, subset_goal_ids=False, context=context)
@@ -85,7 +82,6 @@ class res_users_gamification_group(osv.Model):
 
                 serialized_goals_info['goals'] = []
                 for goal in goals_info['goals']:
-                    print("goal", goal.type_id.name)
                     serialized_goals_info['goals'].append({
                         'id': goal.id,
                         'type_name': goal.type_id.name,
@@ -100,7 +96,6 @@ class res_users_gamification_group(osv.Model):
                         'current': goal.current,
                         'target_goal': goal.target_goal,
                     })
-                    print("goal", True if goal.type_id.action_id else False)
 
             all_goals_info.append(serialized_goals_info)
         return all_goals_info

@@ -29,7 +29,7 @@
             <field name="computation_mode">count</field>
             <field name="model_id" eval="ref('base.model_res_company')" />
             <field name="domain">[('user_ids', 'in', user_id), ('name', '!=', 'Your Company')]</field>
-            <field name="action_id" eval="ref('base.action_res_company_form_my')" />
+            <field name="action_id" eval="ref('base.action_res_company_form')" />
             <field name="res_id_field">company_id.id</field>
         </record>
 
