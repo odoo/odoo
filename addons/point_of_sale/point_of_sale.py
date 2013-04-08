@@ -50,7 +50,7 @@ class pos_config(osv.osv):
              required=True, help="An internal identification of the point of sale"),
         'journal_ids' : fields.many2many('account.journal', 'pos_config_journal_rel', 
              'pos_config_id', 'journal_id', 'Available Payment Methods',
-             domain="[('journal_user', '=', True )]",),
+             domain="[('journal_user', '=', True ), ('type', 'in', ['bank', 'cash'])]",),
         'shop_id' : fields.many2one('sale.shop', 'Shop',
              required=True),
         'journal_id' : fields.many2one('account.journal', 'Sale Journal',
@@ -408,6 +408,9 @@ class pos_session(osv.osv):
                     if not self.pool.get('ir.model.access').check_groups(cr, uid, "point_of_sale.group_pos_manager"):
                         raise osv.except_osv( _('Error!'),
                             _("Your ending balance is too different from the theorical cash closing (%.2f), the maximum allowed is: %.2f. You can contact your manager to force it.") % (st.difference, st.journal_id.amount_authorized_diff))
+                if (st.journal_id.type not in ['bank', 'cash']):
+                    raise osv.except_osv(_('Error!'), 
+                        _("The type of the journal for your payment method should be bank or cash "))
                 if st.difference and st.journal_id.cash_control == True:
                     if st.difference > 0.0:
                         name= _('Point of Sale Profit')
@@ -428,7 +431,6 @@ class pos_session(osv.osv):
 
                 if st.journal_id.type == 'bank':
                     st.write({'balance_end_real' : st.balance_end})
-
                 getattr(st, 'button_confirm_%s' % st.journal_id.type)(context=context)
         self._confirm_orders(cr, uid, ids, context=context)
         self.write(cr, uid, ids, {'state' : 'closed'}, context=context)
