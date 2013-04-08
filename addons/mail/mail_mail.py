@@ -21,6 +21,7 @@
 
 import base64
 import logging
+import re
 from urllib import urlencode
 from urlparse import urljoin
 
@@ -55,22 +56,25 @@ class mail_mail(osv.Model):
             help="Permanently delete this email after sending it, to save space"),
         'references': fields.text('References', help='Message references, such as identifiers of previous messages', readonly=1),
         'email_from': fields.char('From', help='Message sender, taken from user preferences.'),
-        'email_to': fields.text('To', help='Message recipients'),
+        'email_to': fields.text('To', help='Message recipients (emails)'),
+        'recipient_ids': fields.many2many('res.partner', string='To (Partners)'),
         'email_cc': fields.char('Cc', help='Carbon copy message recipients'),
-        'reply_to': fields.char('Reply-To', help='Preferred response address for the message'),
         'body_html': fields.text('Rich-text Contents', help="Rich-text/HTML message"),
-
+        # If not set in create values, auto-detected based on create values (res_id, model, email_from)
+        'reply_to': fields.char('Reply-To',
+            help='Preferred response address for the message'),
         # Auto-detected based on create() - if 'mail_message_id' was passed then this mail is a notification
         # and during unlink() we will not cascade delete the parent and its attachments
-        'notification': fields.boolean('Is Notification')
+        'notification': fields.boolean('Is Notification',
+            help='Mail has been created to notify people of an existing mail.message')
     }
 
     def _get_default_from(self, cr, uid, context=None):
-        this = self.pool.get('res.users').browse(cr, uid, uid, context=context)
+        this = self.pool.get('res.users').browse(cr, SUPERUSER_ID, uid, context=context)
         if this.alias_domain:
-            return '%s@%s' % (this.alias_name, this.alias_domain)
+            return '%s <%s@%s>' % (this.name, this.alias_name, this.alias_domain)
         elif this.email:
-            return this.email
+            return '%s <%s>' % (this.name, this.email)
         raise osv.except_osv(_('Invalid Action!'), _("Unable to send email, please configure the sender's email address or alias."))
 
     _defaults = {
@@ -82,12 +86,54 @@ class mail_mail(osv.Model):
         # protection for `default_type` values leaking from menu action context (e.g. for invoices)
         # To remove when automatic context propagation is removed in web client
         if context and context.get('default_type') and context.get('default_type') not in self._all_columns['type'].column.selection:
-            context = dict(context, default_type = None)
+            context = dict(context, default_type=None)
         return super(mail_mail, self).default_get(cr, uid, fields, context=context)
 
+    def _get_reply_to(self, cr, uid, values, context=None):
+        """ Return a specific reply_to: alias of the document through message_get_reply_to
+            or take the email_from
+        """
+        if values.get('reply_to'):
+            return values.get('reply_to')
+        email_reply_to = False
+
+        # model, res_id: comes from values OR related message
+        model = values.get('model')
+        res_id = values.get('res_id')
+        if values.get('mail_message_id') and (not model or not res_id):
+            message = self.pool.get('mail.message').browse(cr, uid, values.get('mail_message_id'), context=context)
+            if not model:
+                model = message.model
+            if not res_id:
+                res_id = message.res_id
+
+        # if model and res_id: try to use ``message_get_reply_to`` that returns the document alias
+        if model and res_id and hasattr(self.pool.get(model), 'message_get_reply_to'):
+            email_reply_to = self.pool.get(model).message_get_reply_to(cr, uid, [res_id], context=context)[0]
+        # no alias reply_to -> reply_to will be the email_from, only the email part
+        if not email_reply_to and values.get('email_from'):
+            emails = tools.email_split(values.get('email_from'))
+            if emails:
+                email_reply_to = emails[0]
+
+        # format 'Document name <email_address>'
+        if email_reply_to and model and res_id:
+            document_name = self.pool.get(model).name_get(cr, SUPERUSER_ID, [res_id], context=context)[0]
+            if document_name:
+                # sanitize document name
+                sanitized_doc_name = re.sub(r'[^\w+.]+', '-', document_name[1])
+                # generate reply to
+                email_reply_to = _('"Followers of %s" <%s>') % (sanitized_doc_name, email_reply_to)
+
+        return email_reply_to
+
     def create(self, cr, uid, values, context=None):
+        # notification field: if not set, set if mail comes from an existing mail.message
         if 'notification' not in values and values.get('mail_message_id'):
             values['notification'] = True
+        # reply_to: if not set, set with default values that require creation values
+        if not values.get('reply_to'):
+            values['reply_to'] = self._get_reply_to(cr, uid, values, context=context)
         return super(mail_mail, self).create(cr, uid, values, context=context)
 
     def unlink(self, cr, uid, ids, context=None):
@@ -160,15 +206,12 @@ class mail_mail(osv.Model):
             return 'Re: %s' % (mail.record_name)
         return mail.subject
 
-    def send_get_mail_body(self, cr, uid, mail, partner=None, context=None):
-        """ Return a specific ir_email body. The main purpose of this method
-            is to be inherited by Portal, to add a link for signing in, in
+    def send_get_mail_body_footer(self, cr, uid, mail, partner=None, context=None):
+        """ Return a specific footer for the ir_email body.  The main purpose of this method
+            is to be inherited by Portal, to add modify the link for signing in, in
             each notification email a partner receives.
-
-            :param browse_record mail: mail.mail browse_record
-            :param browse_record partner: specific recipient partner
         """
-        body = mail.body_html
+        body_footer = ""
         # partner is a user, link to a related document (incentive to install portal)
         if partner and partner.user_ids and mail.model and mail.res_id \
                 and self.check_access_rights(cr, partner.user_ids[0].id, 'read', raise_exception=False):
@@ -184,27 +227,24 @@ class mail_mail(osv.Model):
                     'id': mail.res_id,
                 }
                 url = urljoin(base_url, "?%s#%s" % (urlencode(query), urlencode(fragment)))
-                text = _("""<p>Access this document <a href="%s">directly in OpenERP</a></p>""") % url
-                body = tools.append_content_to_html(body, ("<div><p>%s</p></div>" % text), plaintext=False)
+                body_footer = _("""<small>Access this document <a style='color:inherit' href="%s">directly in OpenERP</a></small>""") % url
             except except_orm, e:
                 pass
-        return body
+        return body_footer
 
-    def send_get_mail_reply_to(self, cr, uid, mail, partner=None, context=None):
+    def send_get_mail_body(self, cr, uid, mail, partner=None, context=None):
         """ Return a specific ir_email body. The main purpose of this method
-            is to be inherited by Portal, to add a link for signing in, in
-            each notification email a partner receives.
+            is to be inherited to add custom content depending on some module.
 
             :param browse_record mail: mail.mail browse_record
             :param browse_record partner: specific recipient partner
         """
-        if mail.reply_to:
-            return mail.reply_to
-        if not mail.model or not mail.res_id:
-            return False
-        if not hasattr(self.pool.get(mail.model), 'message_get_reply_to'):
-            return False
-        return self.pool.get(mail.model).message_get_reply_to(cr, uid, [mail.res_id], context=context)[0]
+        body = mail.body_html
+
+        # add footer
+        body_footer = self.send_get_mail_body_footer(cr, uid, mail, partner=partner, context=context)
+        body = tools.append_content_to_html(body, body_footer, plaintext=False, container_tag='div')
+        return body
 
     def send_get_email_dict(self, cr, uid, mail, partner=None, context=None):
         """ Return a dictionary for specific email values, depending on a
@@ -215,18 +255,16 @@ class mail_mail(osv.Model):
         """
         body = self.send_get_mail_body(cr, uid, mail, partner=partner, context=context)
         subject = self.send_get_mail_subject(cr, uid, mail, partner=partner, context=context)
-        reply_to = self.send_get_mail_reply_to(cr, uid, mail, partner=partner, context=context)
         body_alternative = tools.html2plaintext(body)
-        email_to = [partner.email] if partner else tools.email_split(mail.email_to)
+        email_to = ['%s <%s>' % (partner.name, partner.email)] if partner else tools.email_split(mail.email_to)
         return {
             'body': body,
             'body_alternative': body_alternative,
             'subject': subject,
             'email_to': email_to,
-            'reply_to': reply_to,
         }
 
-    def send(self, cr, uid, ids, auto_commit=False, recipient_ids=None, context=None):
+    def send(self, cr, uid, ids, auto_commit=False, context=None):
         """ Sends the selected emails immediately, ignoring their current
             state (mails that have already been sent should not be passed
             unless they should actually be re-sent).
@@ -237,14 +275,10 @@ class mail_mail(osv.Model):
             :param bool auto_commit: whether to force a commit of the mail status
                 after sending each mail (meant only for scheduler processing);
                 should never be True during normal transactions (default: False)
-            :param list recipient_ids: specific list of res.partner recipients.
-                If set, one email is sent to each partner. Its is possible to
-                tune the sent email through ``send_get_mail_body`` and ``send_get_mail_subject``.
-                If not specified, one email is sent to mail_mail.email_to.
             :return: True
         """
         ir_mail_server = self.pool.get('ir.mail_server')
-        for mail in self.browse(cr, uid, ids, context=context):
+        for mail in self.browse(cr, SUPERUSER_ID, ids, context=context):
             try:
                 # handle attachments
                 attachments = []
@@ -252,11 +286,10 @@ class mail_mail(osv.Model):
                     attachments.append((attach.datas_fname, base64.b64decode(attach.datas)))
                 # specific behavior to customize the send email for notified partners
                 email_list = []
-                if recipient_ids:
-                    for partner in self.pool.get('res.partner').browse(cr, SUPERUSER_ID, recipient_ids, context=context):
-                        email_list.append(self.send_get_email_dict(cr, uid, mail, partner=partner, context=context))
-                else:
+                if mail.email_to:
                     email_list.append(self.send_get_email_dict(cr, uid, mail, context=context))
+                for partner in mail.recipient_ids:
+                    email_list.append(self.send_get_email_dict(cr, uid, mail, partner=partner, context=context))
 
                 # build an RFC2822 email.message.Message object and send it without queuing
                 for email in email_list:
@@ -267,7 +300,7 @@ class mail_mail(osv.Model):
                         body = email.get('body'),
                         body_alternative = email.get('body_alternative'),
                         email_cc = tools.email_split(mail.email_cc),
-                        reply_to = email.get('reply_to'),
+                        reply_to = mail.reply_to,
                         attachments = attachments,
                         message_id = mail.message_id,
                         references = mail.references,

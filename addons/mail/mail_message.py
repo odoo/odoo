@@ -139,6 +139,8 @@ class mail_message(osv.Model):
                  "message, comment for other messages such as user replies"),
         'email_from': fields.char('From',
             help="Email address of the sender. This field is set when no matching partner is found for incoming emails."),
+        'reply_to': fields.char('Reply-To',
+            help='Reply email address. Setting the reply_to bypasses the automatic thread creation.'),
         'author_id': fields.many2one('res.partner', 'Author', select=1,
             ondelete='set null',
             help="Author of the message. If not set, email_from may hold an email address that did not match any partner."),
@@ -185,8 +187,9 @@ class mail_message(osv.Model):
     _defaults = {
         'type': 'email',
         'date': lambda *a: fields.datetime.now(),
-        'author_id': lambda self, cr, uid, ctx={}: self._get_default_author(cr, uid, ctx),
+        'author_id': lambda self, cr, uid, ctx=None: self._get_default_author(cr, uid, ctx),
         'body': '',
+        'email_from': lambda self, cr, uid, ctx=None: self.pool.get('mail.mail')._get_default_from(cr, uid, ctx),
     }
 
     #------------------------------------------------------
@@ -301,8 +304,8 @@ class mail_message(osv.Model):
         for key, message in message_tree.iteritems():
             if message.author_id:
                 partner_ids |= set([message.author_id.id])
-            if message.partner_ids:
-                partner_ids |= set([partner.id for partner in message.partner_ids])
+            if message.notified_partner_ids:
+                partner_ids |= set([partner.id for partner in message.notified_partner_ids])
             if message.attachment_ids:
                 attachment_ids |= set([attachment.id for attachment in message.attachment_ids])
         # Read partners as SUPERUSER -> display the names like classic m2o even if no access
@@ -322,7 +325,7 @@ class mail_message(osv.Model):
             else:
                 author = (0, message.email_from)
             partner_ids = []
-            for partner in message.partner_ids:
+            for partner in message.notified_partner_ids:
                 if partner.id in partner_tree:
                     partner_ids.append(partner_tree[partner.id])
             attachment_ids = []
@@ -731,7 +734,10 @@ class mail_message(osv.Model):
         if context is None:
             context = {}
         default_starred = context.pop('default_starred', False)
-        if not values.get('message_id') and values.get('res_id') and values.get('model'):
+        # generate message_id, to redirect answers to the right discussion thread
+        if not values.get('message_id') and values.get('reply_to'):
+            values['message_id'] = tools.generate_tracking_message_id('reply_to-%(model)s' % values)
+        elif not values.get('message_id') and values.get('res_id') and values.get('model'):
             values['message_id'] = tools.generate_tracking_message_id('%(res_id)s-%(model)s' % values)
         elif not values.get('message_id'):
             values['message_id'] = tools.generate_tracking_message_id('private')
@@ -861,7 +867,7 @@ class mail_message(osv.Model):
         # message has no subtype_id: pure log message -> no partners, no one notified
         if not message.subtype_id:
             return True
-            
+
         # all followers of the mail.message document have to be added as partners and notified
         if message.model and message.res_id:
             fol_obj = self.pool.get("mail.followers")
@@ -884,8 +890,7 @@ class mail_message(osv.Model):
 
         # notify
         if partners_to_notify:
-            self.write(cr, SUPERUSER_ID, [newid], {'notified_partner_ids': [(4, p.id) for p in partners_to_notify]}, context=context)
-        notification_obj._notify(cr, uid, newid, context=context)
+            notification_obj._notify(cr, uid, newid, partners_to_notify=[p.id for p in partners_to_notify], context=context)
         message.refresh()
 
         # An error appear when a user receive a notification without notifying

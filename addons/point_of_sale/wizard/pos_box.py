@@ -31,6 +31,10 @@ class PosBoxIn(PosBox):
     _inherit = 'cash.box.in'
 
     def _compute_values_for_statement_line(self, cr, uid, box, record, context=None):
+        
+        if context is None:
+            context = {}
+    
         values = super(PosBoxIn, self)._compute_values_for_statement_line(cr, uid, box, record, context=context)
 
         active_model = context.get('active_model', False) or False
