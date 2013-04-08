@@ -26,6 +26,11 @@
         <field eval="[(4,ref('base.group_hr_manager'))]" name="groups_id"/>
     </record>
 
+    <!-- makes HR managers Gamification managers -->
+    <record id="base.group_hr_manager" model="res.groups">
+        <field name="implied_ids" eval="[(4, ref('gamification.group_goal_manager'))]"/>
+    </record>    
+
 </data>
 <data noupdate="1">
 
