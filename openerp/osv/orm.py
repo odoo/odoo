@@ -50,6 +50,7 @@ import operator
 import pickle
 import re
 import simplejson
+import sys
 import time
 
 import psycopg2
@@ -5432,7 +5433,7 @@ class BaseModel(object):
                 # get the value of the field with the given name
                 return self._get_record_field(name)
             except KeyError as e:
-                raise AttributeError(e.message)
+                raise AttributeError, e.message, sys.exc_info()[2]
 
         get = getattr(super(BaseModel, self), '__getattr__', None)
         if get is not None:
