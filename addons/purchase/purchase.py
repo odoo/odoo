@@ -604,7 +604,8 @@ class purchase_order(osv.osv):
         :return: UTC datetime string for server-side use
         """
         # TODO: move to fields.datetime in server after 7.0
-        user_datetime = datetime.strptime(userdate, DEFAULT_SERVER_DATE_FORMAT) + relativedelta(hours=12.0)
+        user_date = datetime.strptime(userdate, DEFAULT_SERVER_DATE_FORMAT)
+        user_datetime = user_date + relativedelta(hours=12.0)
         if context and context.get('tz'):
             tz_name = context['tz']
         else:
@@ -615,7 +616,7 @@ class purchase_order(osv.osv):
             local_timestamp = context_tz.localize(user_datetime, is_dst=False)
             user_datetime = local_timestamp.astimezone(utc)
             return user_datetime.strftime(DEFAULT_SERVER_DATETIME_FORMAT)
-        return userdate
+        return user_date.strftime(DEFAULT_SERVER_DATETIME_FORMAT)
 
     def _prepare_order_picking(self, cr, uid, order, context=None):
         return {
