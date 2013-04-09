@@ -1526,7 +1526,7 @@ instance.web.form.FormRenderingEngine = instance.web.form.FormRenderingEngineInt
             if (! page.__ic)
                 return;
             page.__ic.on("change:effective_invisible", null, function() {
-                if (!page.__ic.get('effective_invisible')) {
+                if (!page.__ic.get('effective_invisible') && page.autofocus) {
                     $new_notebook.tabs('select', i);
                     return;
                 }
