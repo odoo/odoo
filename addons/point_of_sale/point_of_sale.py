@@ -1312,22 +1312,12 @@ class product_product(osv.osv):
 
     def _default_pos_categ_id(self, cr, uid, context=None):
         proxy = self.pool.get('ir.model.data')
+        category_id = False
 
         try:
             category_id = proxy.get_object_reference(cr, uid, 'point_of_sale', 'categ_others')[1]
         except ValueError:
-            values = {
-                'name' : 'Others',
-            }
-            category_id = self.pool.get('pos.category').create(cr, uid, values, context=context)
-            values = {
-                'name' : 'categ_others',
-                'model' : 'pos.category',
-                'module' : 'point_of_sale',
-                'res_id' : category_id,
-            }
-            proxy.create(cr, uid, values, context=context)
-
+            pass
         return category_id
 
     _defaults = {
