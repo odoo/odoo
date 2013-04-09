@@ -523,7 +523,6 @@ class hr_job(osv.osv):
         res = {}
         employee_obj = self.pool.get('hr.employee')
         for obj_job in self.browse(cr, uid,ids, context=context):
-
             res[obj_job.id] = {}
             if obj_job.department_id:
                 emp_ids = employee_obj.search(cr, uid, [('id', '=', obj_job.department_id.manager_id.id)], context=context)
@@ -538,7 +537,7 @@ class hr_job(osv.osv):
                                     help="Email alias for this job position. New emails will automatically "
                                          "create new applicants for this job position."),
         'priority_count': fields.function(_count_priority, string='Total Priority Employees', type="char"),
-        'user_id': fields.function(_get_department_mgr, string='Department Manager', type="char"),#manager image in kanban
+        'depart_id': fields.function(_get_department_mgr, string='Department Manager', type="char"),#manager image in kanban
     }
     _defaults = {
         'alias_domain': False, # always hide alias during creation
