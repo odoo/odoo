@@ -9,7 +9,6 @@
             <field name="arch" type="xml">
                 <form string="Alias" version="7.0">
                     <sheet>
-                        <label for="alias_name" class="oe_edit_only"/>
                         <h2><field name="alias_name" class="oe_inline"/>@<field name="alias_domain" class="oe_inline"/></h2>
                         <group>
                             <field name="alias_model_id"/>
@@ -17,6 +16,8 @@
                             <field name="alias_force_thread_id"/>
                             <field name="alias_defaults"/>
                         </group>
+                        <button name="open_document" string="Open Document" type="object"
+                                attrs="{'invisible': ['|', ('alias_model_id', '=', False), ('alias_force_thread_id', '=', False)]}"/>
                     </sheet>
                 </form>
             </field>
@@ -44,8 +45,10 @@
                 <search string="Search Alias">
                     <field name="alias_name"/>
                     <field name="alias_model_id"/>
+                    <separator/>
+                    <filter string="Active" name="active" domain="[('alias_name', '!=', False)]"/>
                     <group expand="0" string="Group By...">
-                        <filter string="User" name="User" icon="terp-personal" context="{'group_by':'alias_user_id'}"/>
+                        <filter string="User" name="User" context="{'group_by':'alias_user_id'}"/>
                         <filter string="Model" name="Model" context="{'group_by':'alias_model_id'}"/>
                     </group>
                 </search>
@@ -55,6 +58,10 @@
         <record id="action_view_mail_alias" model="ir.actions.act_window">
             <field name="name">Aliases</field>
             <field name="res_model">mail.alias</field>
+            <field name="context">{
+                    'search_default_active': True,
+                }
+            </field>
         </record>
 
         <menuitem id="mail_alias_menu"

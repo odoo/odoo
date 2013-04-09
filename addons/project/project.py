@@ -348,13 +348,11 @@ class project(osv.osv):
         default['state'] = 'open'
         default['line_ids'] = []
         default['tasks'] = []
-        default.pop('alias_name', None)
-        default.pop('alias_id', None)
         proj = self.browse(cr, uid, id, context=context)
         if not default.get('name', False):
             default.update(name=_("%s (copy)") % (proj.name))
         res = super(project, self).copy(cr, uid, id, default, context)
-        self.map_tasks(cr,uid,id,res,context)
+        self.map_tasks(cr, uid, id, res, context=context)
         return res
 
     def duplicate_template(self, cr, uid, ids, context=None):
@@ -505,7 +503,7 @@ def Project():
         for project in projects:
             project_gantt = getattr(projects_gantt, 'Project_%d' % (project.id,))
             for task in project.tasks:
-                if task.state in ('done','cancelled'):
+                if task.state in ('done', 'cancelled'):
                     continue
 
                 p = getattr(project_gantt, 'Task_%d' % (task.id,))
@@ -525,23 +523,17 @@ def Project():
     # ------------------------------------------------
 
     def create(self, cr, uid, vals, context=None):
-        if context is None: context = {}
-        # Prevent double project creation when 'use_tasks' is checked!
-        context = dict(context, project_creation_in_progress=True)
-        mail_alias = self.pool.get('mail.alias')
-        if not vals.get('alias_id') and vals.get('name', False):
-            alias_name = vals.pop('alias_name', None) # prevent errors during copy()
-            alias_id = mail_alias.create_unique_alias(cr, uid,
-                          # Using '+' allows using subaddressing for those who don't
-                          # have a catchall domain setup.
-                          {'alias_name': alias_name or "project+"+short_name(vals['name'])},
-                          model_name=vals.get('alias_model', 'project.task'),
-                          context=context)
-            vals['alias_id'] = alias_id
-        if vals.get('type', False) not in ('template','contract'):
+        if context is None:
+            context = {}
+        # Prevent double project creation when 'use_tasks' is checked + alias management
+        create_context = dict(context, project_creation_in_progress=True, alias_model_name=self._name)
+
+        if vals.get('type', False) not in ('template', 'contract'):
             vals['type'] = 'contract'
-        project_id = super(project, self).create(cr, uid, vals, context)
-        mail_alias.write(cr, uid, [vals['alias_id']], {'alias_defaults': {'project_id': project_id} }, context)
+
+        project_id = super(project, self).create(cr, uid, vals, context=create_context)
+        project_rec = self.browse(cr, uid, project_id, context=context)
+        self.pool.get('mail.alias').write(cr, uid, [project_rec.alias_id.id], {'alias_defaults': {'project_id': project_id}}, context)
         return project_id
 
     def write(self, cr, uid, ids, vals, context=None):

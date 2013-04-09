@@ -335,7 +335,11 @@
                 <field name="priority" position="before">
                     <field name="project_escalation_id"/>
                 </field>
-                <xpath expr='//span[@name="edit_alias"]' position='replace'>
+                <xpath expr='//span[@name="edit_alias"]' position='after'>
+                    <label for="alias_model" string="creates" style="vertical-align: middle;"/>
+                    <field name="alias_model" class="oe_inline"/>
+                </xpath>
+<!--                 <xpath expr='//span[@name="edit_alias"]' position='replace'>
                     <span class="oe_edit_only" name="edit_alias">
                         <field name="alias_name" class="oe_inline" attrs="{'required': [('alias_id', '!=', False)]}"/>
                         @
@@ -346,7 +350,7 @@
                             <field name="alias_model" class="oe_inline"/>
                         </span>
                     </span>
-                </xpath>
+                </xpath> -->
             </field>
        </record>
 

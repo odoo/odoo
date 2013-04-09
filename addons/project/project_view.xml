@@ -89,16 +89,16 @@
                             <field name="name" string="Project Name"/>
                         </h1>
                         <div name="group_alias"
-                            attrs="{'invisible': [('alias_domain', '=', False)]}">
-                        <label for="alias_id" string="Email Alias"/>
-                        <field name="alias_id" class="oe_inline oe_read_only" required="0" nolabel="1"/>
-                        <span name="edit_alias" class="oe_edit_only">
-                            <field name="alias_name" class="oe_inline"
-                                    attrs="{'required': [('alias_id', '!=', False)]}"/>
-                            @
-                            <field name="alias_domain" class="oe_inline" readonly="1"/>
-                        </span>
-                    </div>
+                                attrs="{'invisible': [('alias_domain', '=', False)]}">
+                            <span name="read_alias" class="oe_read_only" attrs="{'invisible': [('alias_name', '=', False)]}">
+                                <span class="oe_e oe_e_alias">%%</span>
+                                <field name="alias_id" class="oe_inline oe_read_only" required="0" nolabel="1"/>
+                            </span>
+                            <span name="edit_alias" class="oe_edit_only">
+                                <span class="oe_e oe_e_alias">%%</span>
+                                <field name="alias_name" class="oe_inline"/>@<field name="alias_domain" class="oe_inline" readonly="1"/>
+                            </span>
+                        </div>
                         <div name="options_active">
                             <field name="use_tasks" class="oe_inline"/>
                             <label for="use_tasks"/>
@@ -251,7 +251,7 @@
                                 <div class="oe_kanban_content">
                                     <h4><field name="name"/></h4>
                                     <div class="oe_kanban_alias" t-if="record.alias_id.value">
-                                        <span class="oe_e">%%</span><small><field name="alias_id"/></small>
+                                        <span class="oe_e oe_e_alias">%%</span><small><field name="alias_id"/></small>
                                     </div>
                                     <div class="oe_kanban_project_list">
                                         <a t-if="record.use_tasks.raw_value" name="%(act_project_project_2_project_task_all)d" type="action" style="margin-right: 10px"> 
