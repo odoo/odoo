@@ -178,7 +178,7 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form,kanban</field>
             <field name="context" eval="{'default_pos_categ_id': ref('point_of_sale.categ_others')}"/>
-            <field name="domain" eval="[('pos_categ_id','&lt;&gt;',False)]"/>
+            <field name="domain" eval="[('available_in_pos','&lt;&gt;',False)]"/>
             <field name="view_id" ref="product.product_product_tree_view"/>
             <field name="search_view_id" ref="product.product_search_form_view"/>
             <field name="help" type="html">

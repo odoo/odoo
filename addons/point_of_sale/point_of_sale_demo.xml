@@ -36,7 +36,7 @@
         </record>
 
         <record model="pos.config" id="pos_config_main">
-            <field name="journal_ids" eval="[(6, 0, [ref('account.cash_journal'), ref('account.bank_journal')])]" />
+            <field name="journal_ids" eval="[(6, 0, [ref('account.cash_journal'), ref('account.bank_journal'), ref('account.check_journal')])]" />
         </record>
 
         <!-- Resource: pos.category -->
