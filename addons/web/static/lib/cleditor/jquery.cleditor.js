@@ -296,6 +296,12 @@
     // Bind the window resize event when the width or height is auto or %
     if (/auto|%/.test("" + options.width + options.height))
       $(window).resize(function() {
+        //Forcefully blurred iframe contentWindow, chrome, IE, safari doesn't trigger blur on window resize and due to which text disappears
+        var $frame = editor.$frame[0];
+        if(!$.browser.mozilla && $frame.contentWindow){
+          var contentWindow = $frame.contentWindow;
+          $(contentWindow).trigger('blur');
+        }
         // CHM Note MonkeyPatch: if the DOM is not remove, refresh the cleditor
         if(editor.$main.parent().parent().size()) {
           refresh(editor);
