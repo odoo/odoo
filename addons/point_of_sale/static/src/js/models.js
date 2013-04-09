@@ -1,7 +1,7 @@
 function openerp_pos_models(instance, module){ //module is instance.point_of_sale
     var QWeb = instance.web.qweb;
 
-    var round_di = instance.web.round_digits;
+    var round_di = instance.web.round_decimals;
     var round_pr = instance.web.round_precision
     
     // The PosModel contains the Point Of Sale's representation of the backend.
