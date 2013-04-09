@@ -64,7 +64,7 @@ class ImporterCase(common.TransactionCase):
                 return '%s.%s' % (d['module'], d['name'])
             return d['name']
 
-        name = dict(record.name_get())[record.id]
+        name = record.name_get()[1]
         # fix dotted name_get results, otherwise xid lookups blow up
         name = name.replace('.', '-')
         ModelData.create(self.cr, openerp.SUPERUSER_ID, {
@@ -770,7 +770,7 @@ class test_m2m(ImporterCase):
         id4 = M2O_o.create(self.cr, openerp.SUPERUSER_ID, {'value': 9, 'str': 'record3'})
         records = M2O_o.browse(self.cr, openerp.SUPERUSER_ID, [id1, id2, id3, id4])
 
-        name = lambda record: dict(record.name_get())[record.id]
+        name = lambda record: record.name_get()[1]
 
         result = self.import_(['value'], [
             ['%s,%s' % (name(records[1]), name(records[2]))],
