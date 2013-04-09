@@ -1,24 +1,8 @@
 function openerp_pos_models(instance, module){ //module is instance.point_of_sale
     var QWeb = instance.web.qweb;
 
-    // rounds a value with a fixed number of decimals.
-    // round(3.141492,2) -> 3.14
-    function round(value,decimals){
-        var mult = Math.pow(10,decimals || 0);
-        return Math.round(value*mult)/mult;
-    }
-    window.round = round;
-
-    // rounds a value with decimal form precision
-    // round(3.141592,0.025) ->3.125
-    function round_pr(value,precision){
-        if(!precision || precision < 0){
-            throw new Error('round_pr(): needs a precision greater than zero, got '+precision+' instead');
-        }
-        return Math.round(value / precision) * precision;
-    }
-    window.round_pr = round_pr;
-
+    var round_di = instance.web.round_digits;
+    var round_pr = instance.web.round_precision
     
     // The PosModel contains the Point Of Sale's representation of the backend.
     // Since the PoS must work in standalone ( Without connection to the server ) 
@@ -391,7 +375,7 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
                 var quant = Math.max(parseFloat(quantity) || 0, 0);
                 var unit = this.get_unit();
                 if(unit){
-                    this.quantity    = Math.max(unit.rounding, Math.round(quant / unit.rounding) * unit.rounding);
+                    this.quantity    = Math.max(unit.rounding, round_pr(quant, unit.rounding));
                     this.quantityStr = this.quantity.toFixed(Math.max(0,Math.ceil(Math.log(1.0 / unit.rounding) / Math.log(10))));
                 }else{
                     this.quantity    = quant;
@@ -484,7 +468,7 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
         },
         // changes the base price of the product for this orderline
         set_unit_price: function(price){
-            this.price = round(parseFloat(price) || 0, 2);
+            this.price = round_di(parseFloat(price) || 0, 2);
             this.trigger('change');
         },
         get_unit_price: function(){
