@@ -57,18 +57,12 @@
 
     The decorators also provides support for "record-map" methods, i.e., methods
     with a specific calling convention: when called on a recordset, they return
-    a dictionary that associates record ids to values. Function fields use that
-    convention, for instance.
+    a list of results, each result corresponding to a record in the recordset.
 
-    When a method is called on a single record, the actual method is called with
-    a recordset made from that record. The result is then inspected to see
-    whether it is a record-map. If that is the case, the value is extracted from
-    the dictionary.
-
-    The following example illustrates the case::
+    The following example illustrates the convention::
 
         y = model.browse([42, 43])              # y is a recordset
-        y.method(args)                          # => {42: 'foo', 43: 'bar'}
+        y.method(args)                          # => ['foo', 'bar']
 
         x = model.browse(42)                    # x is a single record
         x.method(args)                          # => 'foo'
@@ -95,10 +89,6 @@ _logger = logging.getLogger(__name__)
 #    method._returns: set by @returns, both on original and wrapping method
 #    method._orig: original method, on wrapping method only
 #
-
-def _get_returns(method):
-    return getattr(method, '_returns', None)
-
 
 class Meta(type):
     """ Metaclass that automatically decorates traditional-style methods by
@@ -127,6 +117,10 @@ class Meta(type):
         return type.__new__(meta, name, bases, attrs)
 
 
+def _get_returns(method):
+    return getattr(method, '_returns', None)
+
+
 def returns(model):
     """ Return a decorator for methods that return instances of `model`.
 
@@ -151,7 +145,6 @@ def returns(model):
         Those decorators are automatically *inherited*: a method that overrides
         a decorated existing method will be decorated with the same
         ``@returns(model)``.
-        They also supports the :ref:`record-map-convention`.
     """
     if callable(model):
         # model is a method, check its own @returns decoration
@@ -179,8 +172,6 @@ def _returns_old(method, func):
     if _get_returns(method):
         def wrapper(self, *args, **kwargs):
             res = func(self, *args, **kwargs)
-            if isinstance(res, dict):
-                return dict((k, v.unbrowse()) for k, v in res.iteritems())
             return res.unbrowse()
         return wrapper
     else:
@@ -195,17 +186,12 @@ def _returns_new(method, func):
     if model == 'self':
         def wrapper(self, *args, **kwargs):
             res = func(self, *args, **kwargs)
-            if isinstance(res, dict):
-                return dict((k, self.browse(v, scoped=False)) for k, v in res.iteritems())
             return self.browse(res, scoped=False)
         return wrapper
     elif model:
         def wrapper(self, *args, **kwargs):
-            mod = scope.model(model)
             res = func(self, *args, **kwargs)
-            if isinstance(res, dict):
-                return dict((k, mod.browse(v, scoped=False)) for k, v in res.iteritems())
-            return mod.browse(res, scoped=False)
+            return scope.model(model).browse(res, scoped=False)
         return wrapper
     else:
         return func
@@ -253,12 +239,17 @@ def _split_context_args(nargs, args, kwargs):
         return None, args, kwargs
 
 
-def _map_record(id, value):
-    """ if `value` is a record map for the given record `id`, return the
-        corresponding value; otherwise return `value`
+def _kwargs_context(kwargs, context):
+    """ add the `context` parameter in `kwargs` """
+    return dict(kwargs, context=context) if 'context' not in kwargs else kwargs
+
+
+def _get_one(value):
+    """ if `value` is a list with one element, return that element; otherwise
+        return `value`
     """
-    if isinstance(value, dict) and value.keys() == [id]:
-        return value[id]
+    if isinstance(value, list) and len(value) == 1:
+        return value[0]
     return value
 
 
@@ -297,16 +288,11 @@ def record(method):
 
         may be called in both record and traditional styles, like::
 
-            y = model.browse([id, ...])         # y is a recordset
-            x = y[0]                            # x is a record
+            rec = model.record(id)
 
-            # call on record => x.name
-            x.method(args)
-            model.method(cr, uid, id, args, context=context)
-
-            # call on recordset => {id: ..., ...}
-            y.method(args)
-            model.method(cr, uid, [id, ...], args, context=context)
+            # the following calls are equivalent
+            rec.method(args)
+            model.method(cr, uid, rec.id, args, context=context)
     """
     method._api = record
     nargs = method.func_code.co_argcount - 1
@@ -317,10 +303,10 @@ def record(method):
             return new_api(self.browse(ids, scoped=False), *args, **kwargs)
 
     def new_api(self, *args, **kwargs):
-        if self.is_record():
+        if self.is_record_or_null():
             return method(self, *args, **kwargs)
         else:
-            return dict((x.id, method(x, *args, **kwargs)) for x in self)
+            return [method(rec, *args, **kwargs) for rec in self]
 
     return _make_wrapper(method, _returns_old(method, old_api), new_api)
 
@@ -335,9 +321,10 @@ def recordset(method):
 
         may be called in both record and traditional styles, like::
 
-            y = model.browse(ids)               # y is a recordset
+            recs = model.recordset(ids)
 
-            y.method(args)
+            # the following calls are equivalent
+            recs.method(args)
             model.method(cr, uid, ids, args, context=context)
 
         This decorator supports the :ref:`record-map-convention`.
@@ -351,17 +338,12 @@ def recordset(method):
             return new_api(self.browse(ids, scoped=False), *args, **kwargs)
 
     def new_api(self, *args, **kwargs):
-        if self.is_record():
-            return _map_record(self.id, method(self.recordset(), *args, **kwargs))
+        if self.is_record_or_null():
+            return _get_one(method(self.recordset(), *args, **kwargs))
         else:
             return method(self, *args, **kwargs)
 
     return _make_wrapper(method, _returns_old(method, old_api), new_api)
-
-
-def _kwargs_context(kwargs, context):
-    """ add the `context` parameter in `kwargs` """
-    return dict(kwargs, context=context) if 'context' not in kwargs else kwargs
 
 
 def cr(method):
@@ -450,10 +432,10 @@ def cr_uid_id(method):
 
     def new_api(self, *args, **kwargs):
         cr, uid, context = scope
-        if self.is_record():
+        if self.is_record_or_null():
             return method(self, cr, uid, self.id, *args, **kwargs)
         else:
-            return dict((x.id, method(self, cr, uid, x.id, *args, **kwargs)) for x in self)
+            return [method(self, cr, uid, rec.id, *args, **kwargs) for rec in self]
 
     return _make_wrapper(method, old_api, _returns_new(method, new_api))
 
@@ -469,15 +451,11 @@ def cr_uid_id_context(method):
 
         may be called in both record and traditional styles, like::
 
-            y = model.browse([id])              # y is a recordset
-            x = y[0]                            # x is a record
+            rec = model.record(id)
 
-            # call on record => value
-            x.method(args)
+            # the following calls are equivalent
+            rec.method(args)
             model.method(cr, uid, id, args, context=context)
-
-            # call on recordset => {id: value}
-            y.method(args)
     """
     method._api = cr_uid_id_context
 
@@ -488,10 +466,10 @@ def cr_uid_id_context(method):
     def new_api(self, *args, **kwargs):
         cr, uid, context = scope
         kwargs = _kwargs_context(kwargs, context)
-        if self.is_record():
+        if self.is_record_or_null():
             return method(self, cr, uid, self.id, *args, **kwargs)
         else:
-            return dict((x.id, method(self, cr, uid, x.id, *args, **kwargs)) for x in self)
+            return [method(self, cr, uid, rec.id, *args, **kwargs) for rec in self]
 
     return _make_wrapper(method, old_api, _returns_new(method, new_api))
 
@@ -509,8 +487,8 @@ def cr_uid_ids(method):
 
     def new_api(self, *args, **kwargs):
         cr, uid, context = scope
-        if self.is_record():
-            return _map_record(self.id, method(self, cr, uid, [self.id], *args, **kwargs))
+        if self.is_record_or_null():
+            return _get_one(method(self, cr, uid, [self.id], *args, **kwargs))
         else:
             return method(self, cr, uid, map(int, self), *args, **kwargs)
 
@@ -527,10 +505,10 @@ def cr_uid_ids_context(method):
 
         may be called in both record and traditional styles, like::
 
-            y = model.browse(ids)               # y is a recordset
+            recs = model.recordset(ids)
 
-            # call on recordset
-            y.method(args)
+            # the following calls are equivalent
+            recs.method(args)
             model.method(cr, uid, ids, args, context=context)
 
         This decorator supports the :ref:`record-map-convention`.
@@ -545,8 +523,8 @@ def cr_uid_ids_context(method):
     def new_api(self, *args, **kwargs):
         cr, uid, context = scope
         kwargs = _kwargs_context(kwargs, context)
-        if self.is_record():
-            return _map_record(self.id, method(self, cr, uid, [self.id], *args, **kwargs))
+        if self.is_record_or_null():
+            return _get_one(method(self, cr, uid, [self.id], *args, **kwargs))
         else:
             return method(self, cr, uid, map(int, self), *args, **kwargs)
 

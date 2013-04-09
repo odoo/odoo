@@ -75,8 +75,7 @@ class format_address(object):
 
 class res_partner_category(osv.Model):
 
-    @recordset
-    def name_get(self):
+    def name_get(self, cr, uid, ids, context=None):
         """ Return the categories' display name, including their direct
             parent by default.
 
@@ -84,11 +83,16 @@ class res_partner_category(osv.Model):
             version of the category name (without the direct parent) is used.
             The default is the long version.
         """
-        if scope.context.get('partner_category_display') == 'short':
-            return super(res_partner_category, self).name_get()
+        if not isinstance(ids, list):
+            ids = [ids]
+        if context is None:
+            context = {}
+
+        if context.get('partner_category_display') == 'short':
+            return super(res_partner_category, self).name_get(cr, uid, ids, context=context)
 
         res = []
-        for record in self:
+        for record in self.browse(cr, uid, ids, context):
             id = record.id
             names = []
             while record:
@@ -164,25 +168,27 @@ class res_partner(osv.Model, format_address):
     _description = 'Partner'
     _name = "res.partner"
 
-    @record
+    @recordset
     def _address_display(self, name, arg):
-        return self._display_address()
+        return dict((p.id, p._display_address()) for p in self)
 
-    @record
+    @recordset
     def _get_tz_offset(self, name, args):
-        return datetime.datetime.now(pytz.timezone(self.tz or 'GMT')).strftime('%z')
+        return dict(
+            (p.id, datetime.datetime.now(pytz.timezone(p.tz or 'GMT')).strftime('%z'))
+            for p in self)
 
-    @record
+    @recordset
     def _get_image(self, name, args):
-        return tools.image_get_resized_images(self.image)
+        return dict((p.id, tools.image_get_resized_images(p.image)) for p in self)
 
     @record
     def _set_image(self, name, value, args):
         return self.write({'image': tools.image_resize_image_big(value)})
 
-    @record
+    @recordset
     def _has_image(self, name, args):
-        return bool(self.image)
+        return dict((p.id, bool(p.image)) for p in self)
 
     _order = "name"
     _columns = {
@@ -350,20 +356,20 @@ class res_partner(osv.Model, format_address):
 
 #   _constraints = [(_check_ean_key, 'Error: Invalid ean code', ['ean13'])]
 
-    def write(self, cr, uid, ids, vals, context=None):
+    @recordset
+    def write(self, vals):
         # Update parent and siblings or children records
-        if isinstance(ids, (int, long)):
-            ids = [ids]
-        for partner in self.browse(cr, uid, ids, context=context):
-            update_ids = []
+        for partner in self:
+            others = None
             if partner.is_company:
                 domain_children = [('parent_id', 'child_of', partner.id), ('use_parent_address', '=', True)]
-                update_ids = self.search(cr, uid, domain_children, context=context)
+                others = self.search(domain_children)
             elif partner.parent_id and vals.get('use_parent_address', partner.use_parent_address):
                 domain_siblings = [('parent_id', '=', partner.parent_id.id), ('use_parent_address', '=', True)]
-                update_ids = [partner.parent_id.id] + self.search(cr, uid, domain_siblings, context=context)
-            self.update_address(cr, uid, update_ids, vals, context)
-        return super(res_partner, self).write(cr, uid, ids, vals, context=context)
+                others = partner.parent_id + self.search(domain_siblings)
+            if others:
+                others.update_address(vals)
+        return super(res_partner, self).write(vals)
 
     @model
     def create(self, vals):
@@ -380,10 +386,12 @@ class res_partner(osv.Model, format_address):
         if addr_vals:
             return super(res_partner, self).write(addr_vals)
 
-    @recordset
-    def name_get(self):
+    def name_get(self, cr, uid, ids, context=None):
+        if not isinstance(ids, list):
+            ids = [ids]
+
         res = []
-        for record in self:
+        for record in self.browse(cr, uid, ids, context):
             name = record.name
             # import pudb; pudb.set_trace()
             if record.parent_id:

@@ -5344,7 +5344,7 @@ class BaseModel(object):
 
                 elif isinstance(column, fields.function) and not column.store:
                     # simply evaluate the function field for that record
-                    value = self.read([field_name], load="_classic_write")[0][field_name]
+                    value = self.read([field_name], load="_classic_write")[field_name]
                     if column._type == 'many2one':
                         value = _clean_one(value)
                     return browse_function(self, column, value)

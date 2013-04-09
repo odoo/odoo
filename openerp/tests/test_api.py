@@ -138,51 +138,14 @@ class TestAPI(common.TransactionCase):
         self.assertTrue(partners)
         ids = map(int, partners)
 
-        # call method write on partners itself, and check its effect
-        partners.write(self.cr, self.uid, ids, {'active': False})
-        for p in partners:
-            self.assertFalse(p.active)
-
-    @mute_logger('openerp.osv.orm')
-    def test_20_old_new(self):
-        """ Call old-style methods in the new API style. """
-        partners = self.Partner.search([('name', 'ilike', 'j')])
-        self.assertTrue(partners)
-
-        # call method write on partners itself, and check its effect
-        partners.write({'active': False})
-        for p in partners:
-            self.assertFalse(p.active)
-
-    @mute_logger('openerp.osv.orm')
-    def test_25_old_new(self):
-        """ Call old-style methods on records (new API style). """
-        partners = self.Partner.search([('name', 'ilike', 'j')])
-        self.assertTrue(partners)
-
-        # call method write on partner records
-        for p in partners:
-            p.write({'active': False})
-
-        # re-browse the records to check the method's effect
-        for p in partners.browse(map(int, partners)):
-            self.assertFalse(p.active)
-
-    @mute_logger('openerp.osv.orm')
-    def test_30_new_old(self):
-        """ Call new-style methods in the old-fashioned way. """
-        partners = self.Partner.search([('name', 'ilike', 'j')])
-        self.assertTrue(partners)
-        ids = map(int, partners)
-
         # call method name_get on partners itself, and check its effect
         res = partners.name_get(self.cr, self.uid, ids)
         self.assertEqual(len(res), len(ids))
         self.assertEqual(set(val[0] for val in res), set(ids))
 
     @mute_logger('openerp.osv.orm')
-    def test_40_new_new(self):
-        """ Call new-style methods in the new API style. """
+    def test_20_old_new(self):
+        """ Call old-style methods in the new API style. """
         partners = self.Partner.search([('name', 'ilike', 'j')])
         self.assertTrue(partners)
 
@@ -192,16 +155,51 @@ class TestAPI(common.TransactionCase):
         self.assertEqual(set(val[0] for val in res), set(map(int, partners)))
 
     @mute_logger('openerp.osv.orm')
-    def test_45_new_new(self):
-        """ Call new-style methods on records (new API style). """
+    def test_25_old_new(self):
+        """ Call old-style methods on records (new API style). """
         partners = self.Partner.search([('name', 'ilike', 'j')])
         self.assertTrue(partners)
 
         # call method name_get on partner records, and check its effect
         for p in partners:
             res = p.name_get()
-            self.assertEqual(len(res), 1)
-            self.assertEqual(res[0][0], p.id)
+            self.assertIsInstance(res, tuple)
+            self.assertEqual(res[0], p.id)
+
+    @mute_logger('openerp.osv.orm')
+    def test_30_new_old(self):
+        """ Call new-style methods in the old-fashioned way. """
+        partners = self.Partner.search([('name', 'ilike', 'j')])
+        self.assertTrue(partners)
+        ids = map(int, partners)
+
+        # call method write on partners itself, and check its effect
+        partners.write(self.cr, self.uid, ids, {'active': False})
+        for p in partners:
+            self.assertFalse(p.active)
+
+    @mute_logger('openerp.osv.orm')
+    def test_40_new_new(self):
+        """ Call new-style methods in the new API style. """
+        partners = self.Partner.search([('name', 'ilike', 'j')])
+        self.assertTrue(partners)
+
+        # call method write on partners itself, and check its effect
+        partners.write({'active': False})
+        for p in partners:
+            self.assertFalse(p.active)
+
+    @mute_logger('openerp.osv.orm')
+    def test_45_new_new(self):
+        """ Call new-style methods on records (new API style). """
+        partners = self.Partner.search([('name', 'ilike', 'j')])
+        self.assertTrue(partners)
+
+        # call method write on partner records, and check its effects
+        for p in partners:
+            p.write({'active': False})
+        for p in partners:
+            self.assertFalse(p.active)
 
     @mute_logger('openerp.osv.orm')
     def test_50_scope(self):
