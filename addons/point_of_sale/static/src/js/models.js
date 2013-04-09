@@ -295,7 +295,8 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
                 return;
             }
             //try to push an order to the server
-            (new instance.web.Model('pos.order')).get_func('create_from_ui')([order])
+            // shadow : true is to prevent a spinner to appear in case of timeout
+            (new instance.web.Model('pos.order')).call('create_from_ui',[[order]],undefined,{ shadow:true })
                 .fail(function(unused, event){
                     //don't show error popup if it fails 
                     event.preventDefault();
