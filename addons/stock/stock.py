@@ -310,7 +310,7 @@ class stock_location(osv.osv):
 
                     # Compute based on pricetype
                     # Choose the right filed standard_price to read
-                    amount_unit = product.price_get('standard_price', context=context)
+                    amount_unit = product.price_get('standard_price', context=context)[product.id]
                     price = qty[product_id] * amount_unit
 
                     total_price += price
@@ -926,7 +926,7 @@ class stock_picking(osv.osv):
         if type in ('in_invoice', 'in_refund'):
             # Take the user company and pricetype
             context['currency_id'] = move_line.company_id.currency_id.id
-            amount_unit = move_line.product_id.price_get('standard_price', context=context)
+            amount_unit = move_line.product_id.price_get('standard_price', context=context)[move_line.product_id.id]
             return amount_unit
         else:
             return move_line.product_id.list_price
@@ -1270,7 +1270,7 @@ class stock_picking(osv.osv):
                             new_std_price = new_price
                         else:
                             # Get the standard price
-                            amount_unit = product.price_get('standard_price', context=context)
+                            amount_unit = product.price_get('standard_price', context=context)[product.id]
                             new_std_price = ((amount_unit * product_avail[product.id])\
                                 + (new_price * qty))/(product_avail[product.id] + qty)
                         # Write the field according to price type field
@@ -2281,7 +2281,7 @@ class stock_move(osv.osv):
             if context is None:
                 context = {}
             currency_ctx = dict(context, currency_id = move.company_id.currency_id.id)
-            amount_unit = move.product_id.price_get('standard_price', context=currency_ctx)
+            amount_unit = move.product_id.price_get('standard_price', context=currency_ctx)[move.product_id.id]
             reference_amount = amount_unit * qty
 
         return reference_amount, reference_currency_id
@@ -2675,7 +2675,7 @@ class stock_move(osv.osv):
                         new_std_price = new_price
                     else:
                         # Get the standard price
-                        amount_unit = product.price_get('standard_price', context=context)
+                        amount_unit = product.price_get('standard_price', context=context)[product.id]
                         new_std_price = ((amount_unit * product.qty_available)\
                             + (new_price * qty))/(product.qty_available + qty)
 
