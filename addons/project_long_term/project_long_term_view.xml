@@ -33,7 +33,7 @@
             <field name="arch" type="xml">
                 <form string="Project User Allocation" version="7.0">
                     <group col="4">
-                        <field name="user_id" context="{'default_groups_ref': ['base.group_user', 'project.group_project_manager']}"/>
+                        <field name="user_id" context="{'default_groups_ref': ['project.group_project_manager']}"/>
                         <field name="phase_id"/>
                         <field name="project_id"/>
                         <field name="date_start"/>
@@ -174,7 +174,7 @@
                         <page string="Team Planning">
                             <field name="user_ids">
                                  <tree editable="bottom" string="Project Users">
-                                      <field name="user_id" context="{'default_groups_ref': ['base.group_user', 'project.group_project_manager']}"/>
+                                      <field name="user_id" context="{'default_groups_ref': ['project.group_project_manager']}"/>
                                       <field name="date_start"/>
                                       <field name="date_end"/>
                                   </tree>

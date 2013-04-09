@@ -25,7 +25,7 @@
                                 <field name="unit_amount" on_change="on_change_unit_amount(product_id, unit_amount, False, product_uom_id,journal_id)" widget="float_time"/>
                                 <field name="account_id" invisible="0" domain="[('partner_id', '=', parent.partner_id)]" on_change="on_change_account_id(account_id)" groups="analytic.group_analytic_accounting"/>
                                 <field name="date"/>
-                                <field name="user_id" context="{'default_groups_ref': ['base.group_user']}"/>
+                                <field name="user_id"/>
                                 <field invisible="1" name="journal_id"/>
                                 <field invisible="1" name="product_id"/>
                                 <field invisible="1" name="product_uom_id" on_change="on_change_unit_amount(product_id, unit_amount, False, product_uom_id,journal_id)"/>

@@ -244,7 +244,7 @@
                                     <field name="payment_term_id" widget="selection"/>
                                     <field name="fiscal_position" attrs="{'readonly': [('invoiced','=', True)]}" />
                                     <!-- We do not need these fields anymore, the information is in open chatter -->
-                                    <field name="validator" groups="base.group_no_one" context="{'default_groups_ref': ['base.group_user', 'purchase.group_purchase_user', 'account.group_account_invoice']}"/>
+                                    <field name="validator" groups="base.group_no_one" context="{'default_groups_ref': ['purchase.group_purchase_user', 'account.group_account_invoice']}"/>
                                     <field name="date_approve" groups="base.group_no_one"/>
                                 </group>
                             </group>
