@@ -30,7 +30,6 @@ openerp.gamification = function(instance) {
             'click a.oe_goal_action': function(event) {
                 var self = this;
                 var goal_id = parseInt(event.currentTarget.id, 10);
-                console.log("oe_goal_action");
                 var goal_action = new instance.web.Model('gamification.goal').call('get_action', [goal_id]).then(function(res) {
                     goal_action['action'] = res;
                 });
@@ -59,7 +58,6 @@ openerp.gamification = function(instance) {
         },
         get_goal_todo_info: function() {
             var self = this;
-            console.log("get_goal_todo_info");
             var goals_info = this.res_user.call('get_goals_todo_info', {}).then(function(res) {
                 self.goals_info['info'] = res;
             });
@@ -113,9 +111,41 @@ openerp.gamification = function(instance) {
         start: function() {
             this._super();
             var self = this;
-            console.log("start");
             var sidebar = new instance.gamification.Sidebar(self);
             sidebar.appendTo($('.oe_mail_wall_aside'));
+        }
+    });
+
+    instance.web_kanban.KanbanRecord.include({
+        start: function () {
+            var rendering = this._super();
+            var self = this;
+
+            $.when(rendering).done(function() {
+                if (self.view.dataset.model === 'gamification.goal' && self.$el.find('.oe_goal_gauge').length == 1) {
+                    var unique_id = _.uniqueId("goal_gauge_");
+                    self.$el.find('.oe_goal_gauge').attr('id', unique_id);
+                    console.log(self.$el.find('.oe_goal_gauge').empty().get(0));
+                    // debugger;
+                    var g = new JustGage({
+                        id: unique_id,
+                        node: self.$el.find('.oe_goal_gauge').empty().get(0),
+                        value: self.record.current.raw_value,
+                        min: 0,
+                        max: self.record.target_goal.raw_value,
+                        title: self.record.type_id.value,
+                        relativeGaugeSize: true
+                    });
+                    console.log(g);
+                }
+            });
+        },
+        on_card_clicked: function() {
+            if (this.view.dataset.model === 'gamification.goal.plan') {
+                this.$('.oe_kanban_project_list a').first().click();
+            } else {
+                this._super.apply(this, arguments);
+            }
         }
     });
 };

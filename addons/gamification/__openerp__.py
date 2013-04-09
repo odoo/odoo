@@ -61,6 +61,9 @@ A **Badge** is a symbolic token granted to a user as a sign of reward. It can be
     'application': True,
     'auto_install': True,
     'css': ['static/src/css/goal.css'],
-    'js': ['static/src/js/gamification.js'],
+    'js': [
+        'static/src/js/gamification.js',
+        'static/src/js/justgage.js',
+    ],
     'qweb': ['static/src/xml/gamification.xml'],
 }
