@@ -125,8 +125,7 @@ openerp.gamification = function(instance) {
                 if (self.view.dataset.model === 'gamification.goal' && self.$el.find('.oe_goal_gauge').length == 1) {
                     var unique_id = _.uniqueId("goal_gauge_");
                     self.$el.find('.oe_goal_gauge').attr('id', unique_id);
-                    console.log(self.$el.find('.oe_goal_gauge').empty().get(0));
-                    // debugger;
+
                     var g = new JustGage({
                         id: unique_id,
                         node: self.$el.find('.oe_goal_gauge').empty().get(0),
@@ -134,9 +133,13 @@ openerp.gamification = function(instance) {
                         min: 0,
                         max: self.record.target_goal.raw_value,
                         title: self.record.type_id.value,
-                        relativeGaugeSize: true
+                        relativeGaugeSize: true,
+                        levelColors: [
+                            "#f9c802",
+                            "#ff0000",
+                            "#a9d70b"
+                        ]
                     });
-                    console.log(g);
                 }
             });
         },

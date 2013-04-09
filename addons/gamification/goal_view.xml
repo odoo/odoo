@@ -139,7 +139,7 @@
                     <field name="type_condition"/>
                     <templates>
                         <t t-name="kanban-box">
-                            <div t-attf-class="oe_kanban_card oe_kanban_global_click oe_kanban_goal oe_kanban_color_#{record.state.raw_value}">
+                            <div t-attf-class="oe_kanban_card oe_kanban_global_click oe_kanban_goal">
                                 <div class="oe_kanban_content">
                                     <div class="oe_kanban_left">
                                         <img t-att-src="kanban_image('res.users', 'image_small', record.user_id.raw_value)" t-att-title="record.user_id.value" width="24" height="24" />
@@ -148,19 +148,7 @@
                                     <t t-if="record.type_description.value">
                                         <em><field name="type_description"/></em>
                                     </t>
-                                    <div class="oe_goal_gauge">
-                                        <!-- <p>
-                                            <span class="oe_goal_current"><t t-esc="Math.round(record.current.raw_value)"/></span>/<span class="oe_goal_target"><t t-esc="Math.round(record.target_goal.raw_value)"/></span>
-                                            <t t-if="record.type_unit.value"><field name="type_unit"/></t>
-                                            <t t-if="record.type_condition.raw_value == 'higher'">
-                                                &#10216;<t t-esc="Math.round(record.completeness.raw_value)"/>%%&#10217;
-                                            </t>
-                                            <br/>
-                                            <span class="oe_goal_id"><t t-esc="record.id.raw_value"/></span>
-
-                                            <small>End: <field name="end_date" /></small>
-                                        </p> -->
-                                    </div>
+                                    <div class="oe_goal_gauge"></div>
                                 </div>
                             </div>
                         </t>

@@ -831,9 +831,7 @@ function humanFriendlyNumber( n, d ) {
 function getStyle(oElm, strCssRule){
   var strValue = "";
   if(document.defaultView && document.defaultView.getComputedStyle){
-    console.log(oElm);
     strValue = document.defaultView.getComputedStyle(oElm).getPropertyValue(strCssRule);
-    console.log(strValue, strCssRule);
   }
   else if(oElm.currentStyle){
     strCssRule = strCssRule.replace(/\-(\w)/g, function (strMatch, p1){
