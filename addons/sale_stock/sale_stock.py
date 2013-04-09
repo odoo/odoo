@@ -243,7 +243,7 @@ class sale_order(osv.osv):
         :return: UTC datetime string for server-side use
         """
         # TODO: move to fields.datetime in server after 7.0
-        user_datetime = datetime.strptime(userdate, DEFAULT_SERVER_DATE_FORMAT) + relativedelta(hours=12.0)
+        user_date = datetime.strptime(userdate, DEFAULT_SERVER_DATE_FORMAT)
         if context and context.get('tz'):
             tz_name = context['tz']
         else:
@@ -251,10 +251,11 @@ class sale_order(osv.osv):
         if tz_name:
             utc = pytz.timezone('UTC')
             context_tz = pytz.timezone(tz_name)
+            user_datetime = user_date + relativedelta(hours=12.0)
             local_timestamp = context_tz.localize(user_datetime, is_dst=False)
             user_datetime = local_timestamp.astimezone(utc)
             return user_datetime.strftime(DEFAULT_SERVER_DATETIME_FORMAT)
-        return userdate
+        return user_date.strftime(DEFAULT_SERVER_DATETIME_FORMAT)
 
     # if mode == 'finished':
     #   returns True if all lines are done, False otherwise
