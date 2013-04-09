@@ -453,10 +453,11 @@
                     <filter name="invoices" string="Invoices" domain="[('state','not in',['draft','cancel'])]" help="Proforma/Open/Paid Invoices"/>
                     <filter name="unpaid" string="Unpaid" domain="[('state','=','open')]" help="Unpaid Invoices"/>
                     <separator/>
-                    <filter domain="[('user_id','=',uid)]" help="My Invoices" icon="terp-personal"/>
                     <field name="partner_id"/>
                     <field name="user_id" string="Salesperson"/>
                     <field name="period_id" string="Period"/>
+                    <separator/>
+                    <filter domain="[('user_id','=',uid)]" help="My Invoices"/>
                     <group expand="0" string="Group By...">
                         <filter string="Partner" icon="terp-partner" domain="[]" context="{'group_by':'partner_id'}"/>
                         <filter string="Responsible" icon="terp-personal" domain="[]"  context="{'group_by':'user_id'}"/>
