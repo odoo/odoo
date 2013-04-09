@@ -49,7 +49,7 @@ class account_bilan_report(osv.osv_memory):
         data = {}
         data['form'] = {}
         data['ids'] = active_ids
-        data['form']['fiscalyear'] = self.browse(cr, uid, ids)[0].fiscalyear_id.id
+        data['form']['fiscalyear_id'] = self.browse(cr, uid, ids)[0].fiscalyear_id.id
         return {'type': 'ir.actions.report.xml', 'report_name': 'l10n.fr.bilan', 'datas': data}
 
 account_bilan_report()
