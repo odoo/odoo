@@ -154,7 +154,7 @@
                     <filter string="To Do" domain="[('state','=','open')]" help="To Do Issues" icon="terp-check"/>
                     <separator/>
                     <filter string="Unassigned Issues" domain="[('user_id','=',False)]"  help="Unassigned Issues" icon="terp-personal-"/>
-                    <field name="partner_id"/>
+                    <field name="partner_id" string="Partner"/>
                     <field name="user_id"/>
                     <field name="project_id"/>
                     <field name="categ_ids"/>
@@ -316,6 +316,23 @@
             </field>
         </record>
 
+        <record id="act_project_res_partner_project_issue_all" model="ir.actions.act_window">
+            <field name="res_model">project.issue</field>
+            <field name="view_type">form</field>
+            <field name="name">Issues</field>
+            <field name="view_mode">kanban,tree,form,calendar,graph</field>
+            <field name="context">{'search_default_partner_id': [active_id], 'default_partner_id': active_id}</field>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                Click to report a new issue.
+                </p><p>
+                The OpenERP issues tacker allows you to efficiently manage things
+                like internal requests, software development bugs, customer
+                complaints, project troubles, material breakdowns, etc.
+                </p>
+            </field>
+        </record> 
+
         <!-- Project -->
         <record id="view_project_form_inherited" model="ir.ui.view">
             <field name="name">project.project.form.inherited</field>
@@ -391,7 +408,7 @@
             <field name="arch" type="xml">
                 <xpath expr="//div[@name='buttons']" position="inside">
                     <button type="action" string="Issues" attrs="{'invisible': [('customer', '=', False)]}"
-                        name="%(act_project_project_2_project_issue_all)d" context="{'search_default_partner_id': active_id, 'default_partner_id': active_id}" groups="project.group_project_user"/>
+                        name="%(act_project_res_partner_project_issue_all)d" groups="project.group_project_user"/>
                 </xpath>
             </field>
         </record>
