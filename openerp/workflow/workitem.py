@@ -63,6 +63,8 @@ def process(cr, workitem, ident, signal=None, force_running=False, stack=None):
         for trans in cr.dictfetchall():
             if trans['trigger_model']:
                 ids = wkf_expr._eval_expr(cr,ident,workitem,trans['trigger_expr_id'])
+                if not isinstance(ids, list):
+                    ids = [ids]
                 for res_id in ids:
                     cr.execute('select nextval(\'wkf_triggers_id_seq\')')
                     id =cr.fetchone()[0]
