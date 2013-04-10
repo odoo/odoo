@@ -322,7 +322,7 @@
         </field>
     </record>
     
-    <record model="ir.actions.act_window" id="crm_case_categ0_act_job_application">
+    <record model="ir.actions.act_window" id="hr_job_applications">
             <field name="name">Applications</field>
             <field name="res_model">hr.applicant</field>
             <field name="view_mode">kanban,tree,form,graph,calendar</field>
@@ -333,17 +333,17 @@
             <field name="name">hr.job.kanban</field>
             <field name="model">hr.job</field>
             <field name="arch" type="xml">
-                <kanban>
+                <kanban version="7.0" class="oe_background_grey">
                     <field name="name"/>
                     <field name="department_id"/>
                     <field name="no_of_recruitment"/>
                     <field name="color"/>
                     <field name="priority_count"/>
-                    <field name="depart_id"/>
+                    <field name="manager_id"/>
                     <field name="message_summary"/>
                     <templates>
                         <t t-name="kanban-box">
-                            <div t-attf-class="oe_kanban_color_#{kanban_getcolor(record.color.raw_value)} oe_kanban_job oe_kanban_card oe_semantic_html_override oe_kanban_global_click">
+                            <div t-attf-class="oe_kanban_color_#{kanban_getcolor(record.color.raw_value)} oe_kanban_job oe_kanban_card oe_kanban_global_click">
                                 <div class="oe_dropdown_toggle oe_dropdown_kanban">
                                     <span class="oe_e">í</span>
                                     <ul class="oe_dropdown_menu">
@@ -355,28 +355,30 @@
                                 <div class="oe_kanban_content">
                                     <h3 class="oe_job oe_kanban_ellipsis"><field name="name"/></h3>
                                     <div class="oe_job oe_kanban_ellipsis"><field name="department_id"/></div>
-                                    <t t-if="record.department_id.raw_value"><img t-att-src="kanban_image('hr.employee', 'image_small', widget.values.depart_id.value.id)" t-att-title="record.depart_id.value.name" style="" class="oe_kanban_avatar"/></t>
+                                    <t t-if="record.department_id.raw_value">
+                                        <img t-att-src="kanban_image('hr.employee', 'image_small', widget.values.manager_id.value.id)" t-att-title="record.manager_id.value.name" class="oe_kanban_avatar"/>
+                                    </t>
                                     <div style="margin-top:10px;margin-bottom:7px;"><t t-esc="Math.round(record.no_of_recruitment.raw_value)"/> Expected in Recruitment</div>
-                                    <div><a class="oe_kanban_action_a" name="%(crm_case_categ0_act_job_application)d"  type="action" >
+                                    <div><a class="oe_kanban_action_a" name="%(hr_job_applications)d"  type="action" >
                                        <span t-if="widget.values.priority_count.value.total_application gt 1"><t t-esc="Math.round(widget.values.priority_count.value.total_application)"/> Applications</span>
                                        <span t-if="widget.values.priority_count.value.total_application lt 2"><t t-esc="Math.round(widget.values.priority_count.value.total_application)"/> Application</span>
                                     </a>
-                                    <div class="oe_kanban_footer_left oe_job_kanban" style="margin-bottom:10px;"><t t-raw="record.message_summary.raw_value"/></div></div>
+                                    <div class="oe_kanban_footer_left oe_job_message"><t t-raw="record.message_summary.raw_value"/></div></div>
                                     <div style="margin-top:5px;">
                                         <t t-esc="widget.values.priority_count.value.priority1"/>
                                         <span title="Excellent">
-                                        <img t-attf-src="/web/static/src/img/icons/star-on.png" width="16" height="16" />
-                                        <img t-attf-src="/web/static/src/img/icons/star-on.png" width="16" height="16" />
-                                        <img t-attf-src="/web/static/src/img/icons/star-on.png" width="16" height="16" />
+                                            <img t-attf-src="/web/static/src/img/icons/star-on.png" width="16" height="16" />
+                                            <img t-attf-src="/web/static/src/img/icons/star-on.png" width="16" height="16" />
+                                            <img t-attf-src="/web/static/src/img/icons/star-on.png" width="16" height="16" />
                                         </span><br />
                                         <t t-esc="widget.values.priority_count.value.priority2"/>
                                         <span title="Very Good">
-                                        <img t-attf-src="/web/static/src/img/icons/star-on.png" width="16" height="16" />
-                                        <img t-attf-src="/web/static/src/img/icons/star-on.png" width="16" height="16" />
+                                            <img t-attf-src="/web/static/src/img/icons/star-on.png" width="16" height="16" />
+                                            <img t-attf-src="/web/static/src/img/icons/star-on.png" width="16" height="16" />
                                         </span><br />
                                         <t t-esc="widget.values.priority_count.value.priority3"/>
                                         <span title="Good">
-                                        <img t-attf-src="/web/static/src/img/icons/star-on.png" width="16" height="16" />
+                                            <img t-attf-src="/web/static/src/img/icons/star-on.png" width="16" height="16" />
                                         </span>
                                     </div>
                                 </div>
