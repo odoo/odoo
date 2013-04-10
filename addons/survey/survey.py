@@ -352,7 +352,7 @@ class survey_question(osv.osv):
         'allow_comment': fields.boolean('Allow Comment Field'),
         'sequence': fields.integer('Sequence'),
         'tot_resp': fields.function(_calc_response, type="integer", string="Total Answer"),
-        'survey_id': fields.related('page_id', 'survey_id', type='many2one', relation='survey', string='Survey'),
+        'survey_id': fields.related('page_id', 'survey_id', type='many2one', relation='survey', string='Survey', store=True),
         'descriptive_text': fields.text('Descriptive Text', translate=True),
         'column_heading_ids': fields.one2many('survey.question.column.heading', 'question_id', ' Column heading'),
         'type': fields.selection([('multiple_choice_only_one_ans', 'Multiple Choice (Only One Answer)'),

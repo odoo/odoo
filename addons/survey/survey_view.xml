@@ -1,17 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
-        <menuitem name="Tools" id="base.menu_tools" sequence="120"/>
-
+        <!--menuitem name="Tools" id="base.menu_tools" sequence="120"/-->
 
         <!-- Top menu item -->
-        <menuitem name="Survey" id="survey.survey_main" groups="base.group_survey_user" sequence="120"/>
-        <menuitem name="Survey" id="menu_surveys" parent="survey.survey_main"/>
-        <menuitem name="Configuration" id="menu_surveys_configuration" parent="menu_surveys" sequence="10" groups="base.group_survey_manager"/>
+        <menuitem name="Survey" id="survey_main" sequence="120"/>
+        <menuitem name="Survey" id="menu_surveys" parent="survey_main" sequence="10" groups="base.group_survey_user"/>
         
-        <menuitem name="Reporting" id="menu_reporting" parent="menu_surveys" sequence="60"/>
+        <menuitem name="Statistics" id="menu_reporting" parent="survey_main" sequence="20" groups="base.group_survey_manager"/>
         <menuitem id="base.next_id_10" name="Survey" parent="base.menu_reporting" sequence="1" groups="base.group_survey_manager"/>
 
+        <menuitem name="Configuration" id="menu_surveys_configuration" parent="survey_main" sequence="30" groups="base.group_no_one"/>
 
         <!--
             Survey Response
@@ -29,7 +28,7 @@
                     <filter string="Not Finished" domain="[('state','=', 'skip')]"/>
                     <filter string="Not Started" domain="[('state','=', 'new')]"/>
                     <group expand="0" string="Group By...">
-                       <filter string="Survey" domain="[]" context="{'group_by':'survey_id'}"/>
+                       <filter name="group_by_survey" string="Survey" domain="[]" context="{'group_by':'survey_id'}"/>
                        <filter string="Email" domain="[]" context="{'group_by':'email'}"/>
                        <filter string="Partner" domain="[]" context="{'group_by':['partner_id']}"/>
                     </group>
@@ -95,6 +94,7 @@
             <field name="view_mode">tree,form</field>
             <field name="view_id" ref="survey_response_tree"></field>
             <field name="search_view_id" ref="survey_response_search"/>
+            <field name="context">{'search_default_group_by_survey': True}</field>
             <field name="help" type="html">
               <p>
                 Nobody have reply to your surveys.
@@ -117,7 +117,7 @@
         </record>
 
         <menuitem name="Surveys Responses" id="menu_survey_type_form1"
-            action="action_survey_response" parent="menu_surveys"
+            action="action_survey_response" parent="menu_reporting"
             groups="base.group_survey_manager" sequence="2"/>
 
         <!--
@@ -235,6 +235,10 @@
                     <templates>
                         <t t-name="kanban-box">
                             <div t-attf-class="oe_kanban_color_#{kanban_getcolor(record.color.raw_value)} oe_kanban_card oe_kanban_survey oe_kanban_global_click">
+                                <span class="oe_survey_fill">
+                                    <t t-if="record.state.raw_value === 'open'"><a name="action_fill_survey" type="object">Fill in Survey</a></t>
+                                    <t t-if="record.state.raw_value !== 'open'"><a name="action_test_survey" type="object">Test Survey</a></t>
+                                </span>
                                 <div class="oe_dropdown_toggle oe_dropdown_kanban" t-if="widget.view.is_action_enabled('edit')">
                                     <span class="oe_e">i</span>
                                     <ul class="oe_dropdown_menu">
@@ -244,28 +248,23 @@
                                     </ul>
                                 </div>
                                 <div class="oe_kanban_content">
+                                    <span class="oe_kanban_right" t-if="widget.view.is_action_enabled('edit')">
+                                        <a t-if="record.state.raw_value === 'draft'" title="Draft" class="oe_kanban_status"> </a>
+                                        <a t-if="record.state.raw_value === 'open' and record.authenticate.raw_value" title="Open for authentified people" class="oe_kanban_status_green"> </a>
+                                        <a t-if="record.state.raw_value === 'open' and !record.authenticate.raw_value" title="Open to everyone" class="oe_kanban_status_green"> </a>
+                                        <a t-if="record.state.raw_value === 'close'" title="Close" class="oe_kanban_status_red"> </a>
+                                        <a t-if="record.state.raw_value === 'cancel'" title="Cancelled" class="oe_kanban_status_red"> </a>
+                                    </span>
                                     <h3 class="oe_kanban_ellipsis"><t t-esc="record.title.raw_value.toString()"></t></h3>
-                                    <div>
-                                        <span class="oe_kanban_right" t-if="widget.view.is_action_enabled('edit')">
-                                            <a t-if="record.state.raw_value === 'draft'" title="Draft" class="oe_kanban_status"> </a>
-                                            <a t-if="record.state.raw_value === 'open' and record.authenticate.raw_value" title="Open for authentified people" class="oe_kanban_status_green"> </a>
-                                            <a t-if="record.state.raw_value === 'open' and !record.authenticate.raw_value" title="Open to everyone" class="oe_kanban_status_green"> </a>
-                                            <a t-if="record.state.raw_value === 'close'" title="Close" class="oe_kanban_status_red"> </a>
-                                            <a t-if="record.state.raw_value === 'cancel'" title="Cancelled" class="oe_kanban_status_red"> </a>
-                                        </span>
-                                        Answers: <field name="tot_comp_survey"/>
-                                        <t t-if="record.max_response_limit.raw_value > 0"> / <field name="max_response_limit"/></t>
-                                    </div>
-                                    <br/>
                                     <table class="oe_kanban_survey_list" t-if="widget.view.is_action_enabled('edit')">
                                         <tr>
                                             <td>
-                                                <t t-if="record.state.raw_value === 'draft'"><a name="action_edit_survey" type="object">Edit Survey</a></t>
-                                                <t t-if="record.state.raw_value !== 'draft'"><span class="oe_inactive" title="You can only edit the survey in draft mode">Edit Survey</span></t>
-                                            </td>
-                                            <td>
                                                 <t t-if="record.state.raw_value === 'open'"><a name="action_survey_sent" type="object">Invite people</a></t>
                                                 <t t-if="record.state.raw_value !== 'open'"><span class="oe_inactive" title="You can only collect answers for the open survey">Invite people</span></t>
+                                            </td>
+                                            <td>
+                                                <t t-if="record.tot_comp_survey.raw_value"><a name="%(action_selected_survey_response)d" type="action">Get responses (<field name="tot_comp_survey"/><t t-if="record.max_response_limit.raw_value > 0"> / <field name="max_response_limit"/></t>)</a></t>
+                                                <t t-if="!record.tot_comp_survey.raw_value"><span class="oe_inactive" title="There is no answer yet">Get responses (<field name="tot_comp_survey"/><t t-if="record.max_response_limit.raw_value > 0"> / <field name="max_response_limit"/></t>)</span></t>
                                             </td>
                                         </tr>
                                         <tr>
@@ -273,26 +272,8 @@
                                                 <a name="action_print_survey" type="object">Print Survey</a>
                                             </td>
                                             <td>
-                                                <t t-if="record.tot_comp_survey.raw_value"><a name="%(action_selected_survey_response)d" type="action">Get responses</a></t>
-                                                <t t-if="!record.tot_comp_survey.raw_value"><span class="oe_inactive" title="There is no answer yet">Get responses</span></t>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>
-                                                <t t-if="record.state.raw_value === 'open'"><a name="action_fill_survey" type="object" class="oe_survey_fill">Fill in Survey</a></t>
-                                                <t t-if="record.state.raw_value === 'draft'"><a name="action_test_survey" type="object" class="oe_survey_fill">Test Survey</a></t>
-                                                <t t-if="record.state.raw_value !== 'open' and record.state.raw_value !== 'draft'"><span title="You can only test open or draft survey" class="oe_inactive">Test Survey</span></t>
-                                            </td>
-                                            <td>
                                                 <t t-if="record.tot_comp_survey.raw_value"><a name="print_statistics" type="object">Print Statistics</a></t>
                                                 <t t-if="!record.tot_comp_survey.raw_value"><span class="oe_inactive" title="There is no answer yet">Print Statistics</span></t>
-                                            </td>
-                                        </tr>
-                                    </table>
-                                    <table class="oe_kanban_survey_list" t-if="!widget.view.is_action_enabled('edit')">
-                                        <tr>
-                                            <td>
-                                                <a t-if="record.state.raw_value === 'open'" name="action_fill_survey" type="object" class="oe_survey_fill">Fill in Survey</a>
                                             </td>
                                         </tr>
                                     </table>
@@ -383,7 +364,7 @@
                     <field name="title" string="Page"/>
                     <field name="survey_id"/>
                     <group expand="0" string="Group By...">
-                        <filter string="Survey" icon="terp-stock_align_left_24" domain="[]"  context="{'group_by':'survey_id'}"/>
+                        <filter name="group_by_survey" string="Survey" domain="[]"  context="{'group_by':'survey_id'}"/>
                     </group>
                 </search>
             </field>
@@ -395,6 +376,7 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="view_id" ref="survey_page_tree"></field>
+            <field name="context">{'search_default_group_by_survey': True}</field>
         </record>
 
         <menuitem name="Survey Pages" id="menu_survey_page_form1"
@@ -575,7 +557,8 @@
                     <field name="type"/>
                     <field name="page_id"/>
                     <group expand="0" string="Group By...">
-                        <filter string="Page" icon="terp-stock_align_left_24" domain="[]"  context="{'group_by':'page_id'}"/>
+                        <filter name="group_by_survey" string="Survey" domain="[]"  context="{'group_by':'survey_id'}"/>
+                        <filter name="group_by_page" string="Page" domain="[]"  context="{'group_by':'page_id'}"/>
                     </group>
                </search>
             </field>
@@ -588,6 +571,7 @@
             <field name="view_mode">tree,form</field>
             <field name="view_id" ref="survey_question_tree"></field>
              <field name="search_view_id" ref="survey_question_search"/>
+            <field name="context">{'search_default_group_by_survey': True, 'search_default_group_by_page': True}</field>
         </record>
 
         <record model="ir.ui.view" id="survey_question_wizard_test">
