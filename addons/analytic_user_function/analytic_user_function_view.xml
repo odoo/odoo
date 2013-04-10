@@ -8,7 +8,7 @@
             <field name="model">analytic.user.funct.grid</field>
             <field name="arch" type="xml">
                 <tree string="Invoicing Data" editable="bottom">
-                    <field name="user_id" on_change="onchange_user_product_id(user_id, product_id)" context="{'default_groups_ref': ['account.group_account_manager']}"/>
+                    <field name="user_id" on_change="onchange_user_product_id(user_id, product_id)"/>
                     <field name="product_id" on_change="onchange_user_product_id(user_id, product_id)" domain="[('type','=','service')]"/>
                     <field name="price"/>
                     <field name="uom_id" groups="product.group_uom"/>
@@ -22,7 +22,7 @@
             <field name="arch" type="xml">
                 <form string="Invoicing Data">
                     <group>
-                        <field name="user_id" on_change="onchange_user_product_id(user_id, product_id)" context="{'default_groups_ref': ['account.group_account_manager']}"/>
+                        <field name="user_id" on_change="onchange_user_product_id(user_id, product_id)"/>
                         <field name="product_id" domain="[('type','=','service')]" on_change="onchange_user_product_id(user_id, product_id)"/>
                         <field name="price"/>
                         <field name="uom_id" groups="product.group_uom"/>
