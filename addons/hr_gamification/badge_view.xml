@@ -65,15 +65,15 @@
 
                 <xpath expr="//page[@string='Public Information']" position="before">
                     <page string="Received Badges">
-
-                          <button string="Grant a Badge" type="action" name="%(action_reward_wizard)d"/> to reward this employee for a good action
-                          <div class="oe_view_nocontent" attrs="{'invisible': [('badge_ids','!=',[])]}">
-                              <p class="oe_view_nocontent_create">
+                        <field name="has_badges" invisible="1"/>
+                        <button string="Grant a Badge" type="action" name="%(action_reward_wizard)d"/> to reward this employee for a good action
+                        <div class="oe_view_nocontent" attrs="{'invisible': [('has_badges', '=', True)]}">
+                            <p class="oe_view_nocontent_create">
                                 Click to grant this employee his first badge
-                              </p><p class="oe_grey">
+                            </p><p class="oe_grey">
                                 Badges are rewards of good work. Give them to people you believe deserve it.
-                              </p>
-                          </div>
+                            </p>
+                        </div>
                         <field name="badge_ids" widget="many2many_kanban" />
                     </page>
                 </xpath>

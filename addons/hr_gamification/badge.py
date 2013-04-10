@@ -118,6 +118,18 @@ class hr_employee(osv.osv):
             res[employee.id] = self.pool.get('gamification.badge.user').search(cr, uid, [('employee_id', '=', employee.id)], context=context)
         return res
 
+    def _has_badges(self, cr, uid, ids, field_name, arg, context=None):
+        """Return the list of badge_users assigned to the employee"""
+        res = {}
+        for employee in self.browse(cr, uid, ids, context=context):
+            if len(self.pool.get('gamification.badge.user').search(cr, uid, [('employee_id', '=', employee.id)], context=context)) > 0:
+                res[employee.id] = True
+            else:
+                res[employee.id] = False
+        return res
+
     _columns = {
-        'badge_ids': fields.function(_get_employee_badges, type="one2many", obj='gamification.badge.user', string="Employee Badges")
+        'badge_ids': fields.function(_get_employee_badges, type="one2many",
+            obj='gamification.badge.user', string="Employee Badges"),
+        'has_badges': fields.function(_has_badges, type="boolean", string="Has Badges"),
     }
