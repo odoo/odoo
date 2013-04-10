@@ -111,6 +111,7 @@
                         <group>
                             <field name="category_id" widget="many2many_tags" placeholder="Tags..."/>
                             <field name="function" placeholder="e.g. Sales Director"/>
+                            <field name="user_ids" invisible="1"/>
                             <field name="email" widget="email" required="context.get('force_email', False)" attrs="{'required': [('user_ids','!=', [])]}"/>
                             <field name="phone"/>
                             <field name="mobile"/>
@@ -175,6 +176,7 @@
                             <field name="phone" placeholder="e.g. +32.81.81.37.00"/>
                             <field name="mobile"/>
                             <field name="fax"/>
+                            <field name="user_ids" invisible="1"/>
                             <field name="email" widget="email" attrs="{'required': [('user_ids','!=', [])]}"/>
                             <field name="title" domain="[('domain', '=', 'contact')]"
                                 options='{"no_open": True}' attrs="{'invisible': [('is_company','=', True)]}" />
