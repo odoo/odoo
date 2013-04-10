@@ -161,7 +161,7 @@ def _lang_get(self, cr, uid, context=None):
     return [(r['code'], r['name']) for r in res]
 
 # fields copy if 'use_parent_address' is checked
-ADDRESS_FIELDS = ('street', 'street2', 'zip', 'city', 'state_id', 'country_id', 'type')
+ADDRESS_FIELDS = ('street', 'street2', 'zip', 'city', 'state_id', 'country_id')
 POSTAL_ADDRESS_FIELDS = ADDRESS_FIELDS # deprecated, to remove after 7.0
 
 class res_partner(osv.osv, format_address):
@@ -460,10 +460,10 @@ class res_partner(osv.osv, format_address):
         """ On creation of first contact for a company (or root) that has no address, assume contact address
         was meant to be company address """
         parent = partner.parent_id
-        address_data_fields = list(set(self._address_fields(cr, uid, context=context)).difference(['type']))
+        address_fields = self._address_fields(cr, uid, context=context)
         if parent and (parent.is_company or not parent.parent_id) and len(parent.child_ids) == 1 and \
-            any(partner[f] for f in address_data_fields) and not any(parent[f] for f in address_data_fields):
-            addr_vals = self._update_fields_values(cr, uid, partner, address_data_fields, context=context)
+            any(partner[f] for f in address_fields) and not any(parent[f] for f in address_fields):
+            addr_vals = self._update_fields_values(cr, uid, partner, address_fields, context=context)
             parent.update_address(addr_vals)
             if not parent.is_company:
                 parent.write({'is_company': True})

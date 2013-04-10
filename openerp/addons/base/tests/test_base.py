@@ -47,8 +47,10 @@ class test_base(common.TransactionCase):
                                                                               'street': 'Main Street, 10',
                                                                               'phone': '123456789',
                                                                               'email': 'info@ghoststep.com',
-                                                                              'vat': 'BE0477472701'}))
+                                                                              'vat': 'BE0477472701',
+                                                                              'type': 'default'}))
         p1 = self.res_partner.browse(cr, uid, self.res_partner.name_create(cr, uid, 'Denis Bladesmith <denis.bladesmith@ghoststep.com>')[0])
+        self.assertEqual(p1.type, 'contact', 'Default type must be "contact"')
         p1phone = '123456789#34'
         p1.write({'phone': p1phone,
                   'parent_id': ghoststep.id,
@@ -56,6 +58,7 @@ class test_base(common.TransactionCase):
         p1.refresh()
         self.assertEqual(p1.street, ghoststep.street, 'Address fields must be synced')
         self.assertEqual(p1.phone, p1phone, 'Phone should be preserved after address sync')
+        self.assertEqual(p1.type, 'contact', 'Type should be preserved after address sync')
         self.assertEqual(p1.email, 'denis.bladesmith@ghoststep.com', 'Email should be preserved after sync')
         ghoststreet = 'South Street, 25'
         ghoststep.write({'street': ghoststreet})
@@ -78,11 +81,12 @@ class test_base(common.TransactionCase):
         self.assertFalse(ironshield.is_company, 'Partners are not companies by default')
         self.assertFalse(ironshield.use_parent_address, 'use_parent_address defaults to False')
         self.assertEqual(ironshield.type, 'contact', 'Default type must be "contact"')
+        ironshield.write({'type': 'default'}) # force default type to double-check sync 
         p1 = self.res_partner.browse(cr, uid, self.res_partner.create(cr, uid,
                                                                       {'name': 'Isen Hardearth',
                                                                        'street': 'Strongarm Avenue, 12',
                                                                        'parent_id': ironshield.id}))
-        self.assertEquals(p1.type, 'contact', 'Default type must be "contact"')
+        self.assertEquals(p1.type, 'contact', 'Default type must be "contact", not the copied parent type')
         ironshield.refresh()
         self.assertEqual(ironshield.street, p1.street, 'Address fields should be copied to company')
         self.assertTrue(ironshield.is_company, 'Company flag should be turned on after first contact creation')
