@@ -1310,14 +1310,15 @@ class product_product(osv.osv):
         'to_weight' : fields.boolean('To Weight', help="Check if the product should be weighted (mainly used with self check-out interface)."),
     }
 
-    def default_pos_categ_id(self, cr, uid, ids, available_in_pos=None ,context=None):
+    def default_pos_categ_id(self, cr, uid, ids, available_in_pos=None, context=None):
         proxy = self.pool.get('ir.model.data')
         category_id = False
-        if available_in_pos:
-            try:
+        if ids and available_in_pos:
+            for pos_id in self.browse(cr,uid,ids):
+                if pos_id.pos_categ_id.id:
+                    category_id = pos_id.pos_categ_id.id
+        elif available_in_pos :
                 category_id = proxy.get_object_reference(cr, uid, 'point_of_sale', 'categ_others')[1]
-            except ValueError:
-                pass
         return {'value': {'pos_categ_id': category_id}}
 
     _defaults = {
