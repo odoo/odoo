@@ -616,7 +616,7 @@ class res_partner(osv.osv, format_address):
         through descendants within company boundaries (stop at entities flagged ``is_company``)
         then continuing the search at the ancestors that are within the same company boundaries.
         Defaults to partners of type ``'default'`` when the exact type is not found, or to the
-        commercial entity if no type ``'default'`` is found either. """
+        provided partner itself if no type ``'default'`` is found either. """
         adr_pref = set(adr_pref or [])
         if 'default' not in adr_pref:
             adr_pref.add('default')
@@ -643,8 +643,8 @@ class res_partner(osv.osv, format_address):
                     break
                 current_partner = current_partner.parent_id
 
-        # default to type 'default' or the commercial_entity of the main/last partner
-        default = result.get('default', partner.commercial_id.id)
+        # default to type 'default' or the partner itself
+        default = result.get('default', partner.id)
         for adr_type in adr_pref:
             result[adr_type] = result.get(adr_type) or default 
         return result

@@ -90,8 +90,8 @@ class test_base(common.TransactionCase):
     def test_40_res_partner_address_getc(self):
         """ Test address_get address resolution mechanism: it should first go down through descendants,
         stopping when encountering another is_copmany entity, then go up, stopping again at the first
-        is_company entity or the root ancestor and if nothing matches, it should use the commercial entity
-        of the partner (which could be itself) """
+        is_company entity or the root ancestor and if nothing matches, it should use the provided partner
+        itself """
         cr, uid = self.cr, self.uid
         elmtree = self.res_partner.browse(cr, uid, self.res_partner.name_create(cr, uid, 'Elmtree')[0])
         branch1 = self.res_partner.browse(cr, uid, self.res_partner.create(cr, uid, {'name': 'Branch 1',
@@ -124,13 +124,13 @@ class test_base(common.TransactionCase):
                           'invoice': leaf10.id,
                           'contact': branch1.id,
                           'other': branch11.id,
-                          'default': branch1.id}, 'Invalid address resolution')
+                          'default': leaf111.id}, 'Invalid address resolution')
         self.assertEqual(self.res_partner.address_get(cr, uid, [branch11.id], ['delivery', 'invoice', 'contact', 'other', 'default']),
                          {'delivery': leaf111.id,
                           'invoice': leaf10.id,
                           'contact': branch1.id,
                           'other': branch11.id,
-                          'default': branch1.id}, 'Invalid address resolution')
+                          'default': branch11.id}, 'Invalid address resolution')
 
         # go down, stop at at all child companies
         self.assertEqual(self.res_partner.address_get(cr, uid, [elmtree.id], ['delivery', 'invoice', 'contact', 'other', 'default']),
@@ -179,7 +179,7 @@ class test_base(common.TransactionCase):
         self.assertEqual(self.res_partner.address_get(cr, uid, [elmtree.id], []),
                         {'default': elmtree.id}, 'Invalid address resolution, no default means commercial entity ancestor')
         self.assertEqual(self.res_partner.address_get(cr, uid, [leaf111.id], []),
-                        {'default': branch1.id}, 'Invalid address resolution, no default means commercial entity ancestor')
+                        {'default': leaf111.id}, 'Invalid address resolution, no default means contact itself')
         branch11.write({'type': 'default'})
         self.assertEqual(self.res_partner.address_get(cr, uid, [leaf111.id], []),
                         {'default': branch11.id}, 'Invalid address resolution, branch11 should now be default')
