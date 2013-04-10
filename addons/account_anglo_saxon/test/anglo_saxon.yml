@@ -255,11 +255,20 @@
     account_invoice_obj = self.pool.get('account.invoice')
     account_invoice_obj.signal_invoice_open(cr, uid, account_invoice)
 -
-  I check Receivable(Debtor) Account Debited sucessfully when Invoice validated
+  I pay the invoice
 -
- !python {model: account.account}: |
-    acc = self.browse(cr, uid, ref('account.a_recv'))
-    assert acc.debit, "Receivable(debtor) Account debited not successfully"
+  !python {model: account.invoice}: |
+    picking_obj = self.pool.get('stock.picking')
+    name = picking_obj.browse(cr, uid, ref('stock_picking_out0')).name
+    account_invoice= self.pool.get('account.invoice').search(cr, uid, [('origin', '=', name)])
+    import time
+    journal_ids = self.pool.get('account.journal').search(cr, uid, [('type', '=', 'cash')], limit=1)
+    pay = self.pay_and_reconcile(cr, uid, account_invoice,
+        20.0, ref('account.cash'), ref('account.period_8'),
+        journal_ids[0], ref('account.cash'),
+        ref('account.period_8'), journal_ids[0],
+        name='Payment for test customer invoice')
+    assert (pay == True), "Incorrect Payment"
 -
   I check Income Account Credited sucessfully when Invoice validated
 -
@@ -278,30 +287,22 @@
  !python {model: account.account}: |
     acc = self.browse(cr, uid, ref('account_anglo_3'))
     assert acc.credit == 9, "Stock Interim account (Delivary) not successfully credited"
--  
-  I pay the invoice
+-
+  I check Receivable(Debtor) Account for debit and credit
 -
   !python {model: account.invoice}: |
-    picking_obj = self.pool.get('stock.picking')
-    name = picking_obj.browse(cr, uid, ref('stock_picking_out0')).name
-    account_invoice= self.pool.get('account.invoice').search(cr, uid, [('origin', '=', name)])
-    import time
-    journal_ids = self.pool.get('account.journal').search(cr, uid, [('type', '=', 'cash')], limit=1)
-    pay = self.pay_and_reconcile(cr, uid, account_invoice,
-        20.0, ref('account.cash'), ref('account.period_8'),
-        journal_ids[0], ref('account.cash'),
-        ref('account.period_8'), journal_ids[0],
-        name='Payment for test customer invoice')
-    assert (pay == True), "Incorrect Payment"
--
-  I check Receivable(Debtor) Account credited sucessfully when Invoice validated
--
- !python {model: account.account}: |
-    acc = self.browse(cr, uid, ref('account.a_recv'))
-    assert acc.credit , "Receivable(debtor) Account credited not successfully"
+    move_obj = self.pool.get('account.move.line')
+    move_line = move_obj.search(cr, uid, [('partner_id','=',ref('base.res_partner_13')),('name','=', 'Payment for test customer invoice')])
+    move_lines = move_obj.browse(cr, uid, move_line)
+    debit_line = move_lines[0].debit
+    credit_line = move_lines[1].credit
+    assert debit_line == 20.00, " Receivable(debtor) Account debited not successfully"
+    assert credit_line == 20.00, "Receivable(debtor) Account credited not successfully"
 -
  I check Bank/Cash account debited sucessfully after invoice paid
 -
  !python {model: account.account}: |
-    acc = self.browse(cr, uid, ref('account.cash'))
-    assert acc.debit, "Bank/Cash account not successfully debited"
+    move_obj = self.pool.get('account.invoice')
+    move_line = move_obj.search(cr, uid, [('amount_total','=', 20.00),('type', '=', 'out_invoice')])
+    credit_line = move_obj.browse(cr, uid, move_line[0]).amount_total
+    assert credit_line == 20.00, "Bank/Cash account not debited sucessfully after invoice paid"
