@@ -131,17 +131,15 @@
             <field name="arch" type="xml">
                 <form string="Survey" version="7.0">
                 <header groups="base.group_survey_manager">
-                    <button name="survey_draft" string="Draft" states="cancel" type="object"/>
-                    <button name="survey_open" class="oe_highlight" string="Open" states="draft,close" type="object"/>
-                    <button name="survey_close" string="Close" states="open" type="object"/>
+                    <button name="action_edit_survey" states="draft" string="Edit Survey" type="object" class="oe_highlight"/>
                     <button name="survey_cancel" string="Cancel" states="draft" type="object"/>
-                    <field name="state" widget="statusbar" nolabel="1" attrs="{'invisible':[('state','=','cancel')]}" statusbar_visible="draft,open,close"/>
+                    <button name="action_survey_sent" string="Invite people" states="open" type="object" class="oe_highlight"/>
+                    <field name="state" widget="statusbar" nolabel="1" clickable="True" statusbar_visible="draft,open,close"/>
                 </header>
                 <sheet class="oe_survey">
                     <div class="oe_button_box oe_right" groups="base.group_survey_manager">
                         <button name="action_test_survey" string="Test Survey" type="object"/>
                         <button name="action_print_survey" string="Print Survey" type="object"/>
-                        <button name="action_edit_survey" states="draft" string="Edit Survey" type="object" class="oe_highlight"/>
                     </div>
                     <div class="oe_title">
                         <label for="title" class="oe_edit_only"/>
@@ -242,7 +240,7 @@
                                 <div class="oe_dropdown_toggle oe_dropdown_kanban" t-if="widget.view.is_action_enabled('edit')">
                                     <span class="oe_e">i</span>
                                     <ul class="oe_dropdown_menu">
-                                        <t t-if="widget.view.is_action_enabled('edit')"><li><a type="edit">Survey Settings...</a></li></t>
+                                        <t t-if="widget.view.is_action_enabled('edit')"><li><a type="open">Survey Settings...</a></li></t>
                                         <t t-if="widget.view.is_action_enabled('delete')"><li><a type="delete">Delete</a></li></t>
                                         <li><ul class="oe_kanban_colorpicker" data-field="color"/></li>
                                     </ul>
