@@ -1118,23 +1118,23 @@
                 <t t-set="width" t-value="Math.floor(100 / widget.selection.length)"/>
                 <t t-if="!widget.no_radiolabel">
                     <t t-foreach="widget.selection" t-as="selection">
-                        <div class="oe_radio_header" t-att-style="'width: ' + width + '%;'"><t t-esc="selection[1]"/></div>
+                        <label t-att-for="widget.uniqueId + '_' + selection[0]" t-att-style="'width: ' + width + '%;'"><t t-esc="selection[1]"/></label>
                     </t>
                     <br/>
                 </t>
                 <t t-foreach="widget.selection" t-as="selection">
-                    <div class="oe_radio_input" t-att-style="'width: ' + width + '%;'" t-att-data-id="selection[0]">&amp;nbsp;</div>
+                    <input type="radio" t-att-name="widget.uniqueId" t-att-id="widget.uniqueId + '_' + selection[0]" t-att-style="'width: ' + width + '%;'" t-att-value="selection[0]"/>
                 </t>
             </t>
             <t t-if="!widget.horizontal">
                 <t t-foreach="widget.selection" t-as="selection">
-                    <div class="oe_radio_header" t-att-data-id="selection[0]">
-                        <div class="oe_radio_input">&amp;nbsp;</div><t t-if="!widget.no_radiolabel" t-esc="selection[1]"/>
+                    <div t-att-data-id="selection[0]">
+                        <input type="radio" t-att-id="widget.uniqueId + '_' + selection[0]" t-att-name="widget.uniqueId" t-att-value="selection[0]"/>&amp;nbsp;<label t-if="!widget.no_radiolabel" t-att-for="widget.uniqueId + '_' + selection[0]"><t t-esc="selection[1]"/></label>
                     </div>
                 </t>
             </t>
         </span>
-        <span class="oe_radio_read_only"><div class="oe_radio_header"><t t-esc="widget.get('value')[1]"/></div></span>
+        <span class="oe_radio_read_only"><t t-esc="widget.get('value')[1]"/></span>
     </span>
 </t>
 <t t-name="FieldMany2One">

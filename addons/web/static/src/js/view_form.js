@@ -2806,6 +2806,9 @@ instance.web.form.FieldSelection = instance.web.form.AbstractField.extend(instan
 
 instance.web.form.FieldRadio = instance.web.form.AbstractField.extend(instance.web.form.ReinitializeFieldMixin, {
     template: 'FieldRadio',
+    events: {
+        'click input': 'click_change_value'
+    },
     init: function(field_manager, node) {
         /* Radio button widget: Attributes options:
         * - "horizontal" to display in column
@@ -2820,20 +2823,18 @@ instance.web.form.FieldRadio = instance.web.form.AbstractField.extend(instance.w
         this.domain = false;
     },
     initialize_content: function () {
-        this.$el.on('click', '.oe_radio_input,.oe_radio_header', this, this.on_click_change_value);
+        this.uniqueId = _.uniqueId("radio");
         this.on("change:effective_readonly", this, this.render_value);
         this.field_manager.on("view_content_has_changed", this, this.get_selection);
         this.get_selection();
     },
-    on_click_change_value: function (event) {
-        var id = $(event.target).data("id") || $(event.target).parent().data("id");
-        id = isNaN(+id) ? id : +id;
-        if (id && !this.get("effective_readonly")) {
-            if (!this.field.required && id == this.get_value()) {
-                this.set_value(false);
-            } else {
-                this.set_value(id);
-            }
+    click_change_value: function (event) {
+        var val = $(event.target).val();
+        val = isNaN(+val) ? val : +val;
+        if (val == this.get_value()) {
+            this.set_value(false);
+        } else {
+            this.set_value(val);
         }
     },
     /** Get the selection and render it
@@ -2887,9 +2888,11 @@ instance.web.form.FieldRadio = instance.web.form.AbstractField.extend(instance.w
     render_value: function () {
         this.$(".oe_radio_edit_only, .oe_radio_read_only").hide();
         this.$(this.get('effective_readonly') ? ".oe_radio_read_only" : ".oe_radio_edit_only").show();
-        this.$(".oe_radio_input_on").removeClass("oe_radio_input_on");
-        this.$(".oe_radio_input[data-id='" + this.get_value() + "'], [data-id='" + this.get_value() + "'] .oe_radio_input").addClass("oe_radio_input_on");
-        this.$(".oe_radio_read_only .oe_radio_header").text(this.get('value') ? this.get('value')[1] : "");
+        this.$("input[checked]").prop("checked", false);
+        if (this.get_value()) {
+            this.$("input[value='" + this.get_value() + "']").attr("checked", true);
+            this.$(".oe_radio_read_only .oe_radio_header").text(this.get('value') ? this.get('value')[1] : "");
+        }
     }
 });
 
