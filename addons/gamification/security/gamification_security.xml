@@ -1,6 +1,6 @@
 <?xml version="1.0" ?>
 <openerp>
-    <data>
+    <data noupdate="1">
         <record model="ir.module.category" id="module_goal_category">
             <field name="name">Gamification</field>
             <field name="description"></field>
@@ -11,9 +11,7 @@
             <field name="category_id" ref="module_goal_category"/>
             <field name="users" eval="[(4, ref('base.user_root'))]"/>
         </record>
-    </data>
 
-    <data noupdate="0">
         <record id="goal_user_visibility" model="ir.rule">
             <!-- TODO fix private for board -->
             <field name="name">User can only see his/her goals or goal from the same plan in board visibility</field>

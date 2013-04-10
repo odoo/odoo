@@ -93,7 +93,7 @@
                                     <field name="type_id"/>
                                     <field name="type_condition"/>
                                     <field name="target_goal"/>
-                                    <field name="type_unit"/>
+                                    <field name="type_full_suffix"/>
                                 </tree>
                             </field>
                         </page>
@@ -111,6 +111,9 @@
                                 <div>
                                     <field name="remind_update_delay" class="oe_inline"/> days
                                 </div>
+                            </group>
+                            <group string="Category" groups="base.group_no_one">
+                                <field name="category" />
                             </group>
                         </page>
                         </notebook>
@@ -184,6 +187,8 @@
                 <search string="Search Goal Plans">
                     <filter name="draft_inprogress" string="Non-closed Plans"
                         domain="[('state', 'in', ('inprogress', 'draft'))]"/>
+                    <filter name="hr_plans" string="HR Plans"
+                        domain="[('category', '=', 'hr')]"/>
                     <field name="name"/>
                     <group expand="0" string="Group By...">
                         <filter string="State" domain="[]" context="{'group_by':'state'}"/>

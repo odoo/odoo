@@ -419,11 +419,17 @@
             <field name="name">Goals History</field>
             <field name="view_mode">tree,kanban</field>
             <field name="context">{'search_default_group_by_user': True, 'search_default_group_by_type': True}</field>
+            <field name="domain">[('plan_id.category', '=', 'hr')]</field>
+        </record>
+
+
+        <record model="ir.actions.act_window" id="gamification.goal_plan_list_action">
+            <field name="domain">[('category', '=', 'hr')]</field>
         </record>
 
         <menuitem name="Interview Requests" parent="menu_eval_hr" id="menu_open_hr_evaluation_interview_requests"
             action="action_hr_evaluation_interview_tree"/>
-        <menuitem id="gamification_plan_menu_hr" parent="menu_eval_hr" action="gamification.goal_plan_list_action" groups="gamification.group_goal_manager" />
+        <menuitem id="gamification_plan_menu_hr" parent="menu_eval_hr" action="gamification.goal_plan_list_action" groups="gamification.group_goal_manager"/>
         <menuitem id="gamification_goal_menu_hr" parent="menu_eval_hr" action="goals_menu_groupby_act" groups="gamification.group_goal_manager"/>
 
       <!-- Email Compose message Action-->

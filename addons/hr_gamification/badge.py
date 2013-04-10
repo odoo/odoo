@@ -105,7 +105,6 @@ class hr_grant_badge_wizard(osv.TransientModel):
                 badge_obj.send_badge(cr, uid, wiz.badge_id.id, [badge_user], user_from=user_from, context=context)
 
         return {}
-hr_grant_badge_wizard()
 
 
 class hr_employee(osv.osv):

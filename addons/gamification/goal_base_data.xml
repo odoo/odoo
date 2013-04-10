@@ -60,6 +60,7 @@
             <field name="report_message_frequency">never</field>
             <field name="autojoin_group_id" eval="ref('base.group_user')" />
             <field name="state">inprogress</field>
+            <field name="category">other</field>
         </record>
 
         <record model="gamification.goal.plan" id="plan_base_configure">
@@ -67,8 +68,9 @@
             <field name="period">once</field>
             <field name="visibility_mode">progressbar</field>
             <field name="report_message_frequency">never</field>
-            <field name="autojoin_group_id" eval="ref('base.group_erp_manager')" />
+            <field name="user_ids" eval="[(4, ref('base.user_root'))]" />
             <field name="state">inprogress</field>
+            <field name="category">other</field>
         </record>
 
         <!-- planlines -->

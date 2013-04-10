@@ -143,8 +143,7 @@ class gamification_goal_plan(osv.Model):
                 ('progressbar', 'Individual Goals'),
                 ('board', 'Leader Board (Group Ranking)'),
             ],
-            string="Display Mode",
-            required=True),
+            string="Display Mode", required=True),
         'report_message_frequency': fields.selection([
                 ('never','Never'),
                 ('onchange','On change'),
@@ -153,8 +152,7 @@ class gamification_goal_plan(osv.Model):
                 ('monthly','Monthly'),
                 ('yearly', 'Yearly')
             ],
-            string="Report Frequency",
-            required=True),
+            string="Report Frequency", required=True),
         'report_message_group_id': fields.many2one('mail.group',
             string='Send a copy to',
             help='Group that will receive a copy of the report in addition to the user'),
@@ -165,6 +163,12 @@ class gamification_goal_plan(osv.Model):
         'next_report_date': fields.function(_get_next_report_date,
             type='date',
             string='Next Report Date'),
+
+        'category': fields.selection([
+            ('hr', 'Human Ressources'),
+            ('other', 'Other'),
+            ],
+            string="Category", help="Only HR plans can be accessed by managers", required=True)
         }
 
     _defaults = {
@@ -175,6 +179,7 @@ class gamification_goal_plan(osv.Model):
         'last_report_date': fields.date.today,
         'start_date': fields.date.today,
         'manager_id': lambda s, cr, uid, c: uid,
+        'category': 'hr',
     }
 
     def write(self, cr, uid, ids, vals, context=None):

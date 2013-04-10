@@ -10,14 +10,11 @@
             <t t-if="plan.visibility_mode == 'progressbar'">
                 <ul class="oe_goals_list">
                 <li t-foreach="plan.goals" t-as="goal">
+                    <span class="oe_goal_sparkline_piechart"></span>
                     <strong t-attf-class="#{goal.state == 'reached' ? 'oe_goal_reached' : goal.state == 'failed' ? 'oe_goal_failed' : ''}" t-att-title="goal.type_description"><t t-esc="goal.type_name" /></strong>
                     <t t-if="goal.computation_mode == 'manually' or goal.type_action">
                         <a class="oe_goal_action" t-att-id="goal.id">modify</a>
                     </t>
-                    <!-- <t t-if="goal.type_description">
-                        <a class="oe_show_description" t-att-id="goal.id">?</a>
-                        <p t-att-class="'oe_type_description oe_type_description_' + goal.id"><t t-esc="goal.type_description" /></p>
-                    </t> -->
                     <t t-if="goal.type_condition == 'higher'">
                         <p>
                             <t t-esc="goal.current" />/<span t-attf-class="#{goal.type_monetary ? 'oe_goal_field_monetary' : ''}"><t t-esc="goal.target_goal"/></span>
