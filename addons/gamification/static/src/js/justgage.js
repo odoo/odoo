@@ -615,10 +615,10 @@
     } else if(obj.config.humanFriendly) {
       obj.originalValue = humanFriendlyNumber( obj.originalValue, obj.config.humanFriendlyDecimal ) + obj.config.symbol;
     } else {
-      obj.originalValue = (obj.originalValue * 1).toFixed(obj.config.decimals);
+      obj.originalValue = (obj.originalValue * 1).toFixed(obj.config.decimals) + obj.config.symbol;
     }
 
-    obj.txtValue.attr("text", obj.originalValue + obj.config.symbol);
+    obj.txtValue.attr("text", obj.originalValue);
     setDy(obj.txtValue, obj.params.valueFontSize, obj.params.valueY);
   }
 

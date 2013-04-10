@@ -187,14 +187,13 @@ class gamification_goal(osv.Model):
             help="In case of manual goal, reminders are sent if the goal as not been updated for a while (defined in goal plan). Ignored in case of non-manual goal or goal not linked to a plan."),
 
         'type_description': fields.related('type_id','description',
-            type='char',
-            string='Type Description'),
+            type='char', string='Type Description'),
         'type_unit': fields.related('type_id', 'unit',
-            type='char',
-            string='Type Description'),
+            type='char', string='Type Description'),
         'type_condition': fields.related('type_id', 'condition',
-            type='char',
-            string='Type Condition'),
+            type='char', string='Type Condition'),
+        'type_suffix': fields.related('type_id', 'full_suffix',
+            type="char", string="Suffix"),
     }
 
     _defaults = {

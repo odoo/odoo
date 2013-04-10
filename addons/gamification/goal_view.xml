@@ -137,6 +137,9 @@
                     <field name="state"/>
                     <field name="target_goal"/>
                     <field name="type_condition"/>
+                    <field name="type_suffix"/>
+                    <field name="start_date"/>
+                    <field name="end_date"/>
                     <templates>
                         <t t-name="kanban-box">
                             <div t-attf-class="oe_kanban_card oe_kanban_global_click oe_kanban_goal">
@@ -145,10 +148,20 @@
                                         <img t-att-src="kanban_image('res.users', 'image_small', record.user_id.raw_value)" t-att-title="record.user_id.value" width="24" height="24" />
                                     </div>
                                     <h4 class="oe_goal_name"><field name="type_id"/></h4>
-                                    <t t-if="record.type_description.value">
-                                        <em><field name="type_description"/></em>
-                                    </t>
                                     <div class="oe_goal_gauge"></div>
+                                    <p>
+                                        <t t-if="record.type_description.value">
+                                            <em><field name="type_description"/></em>
+                                        </t>
+                                    </p>
+                                    <p>
+                                        <t t-if="record.start_date.value">
+                                            From <t t-esc="record.start_date.value" />
+                                        </t>
+                                        <t t-if="record.end_date.value">
+                                            To <t t-esc="record.start_date.value" />
+                                        </t>
+                                    </p>
                                 </div>
                             </div>
                         </t>

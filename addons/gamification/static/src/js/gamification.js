@@ -38,8 +38,6 @@ openerp.gamification = function(instance) {
                     action_manager.do_action(goal_action.action).done(function () {
                         self.get_goal_todo_info();
                     });
-
-                    //var form = action_manager.dialog_widget.views.form.controller;
                 });
             }
         },
@@ -132,13 +130,24 @@ openerp.gamification = function(instance) {
                         value: self.record.current.raw_value,
                         min: 0,
                         max: self.record.target_goal.raw_value,
-                        // title: self.record.type_id.value,
                         relativeGaugeSize: true,
+                        humanFriendly: true,
+                        // add space between value and symbol
+                        // textRenderer: function(value) {
+                        //     symbol = self.record.type_suffix.raw_value;
+                        //     humannbr = humanFriendlyNumber(value, 0)
+                        //     if ((humannbr + symbol).length > 6) {
+                        //         return humannbr;
+                        //     } else {
+                        //         return humannbr + " " + symbol;
+                        //     }
+                        // },
+                        label: self.record.type_suffix.raw_value,
                         levelColors: [
                             "#f9c802",
                             "#ff0000",
                             "#a9d70b"
-                        ]
+                        ],
                     });
                 }
             });
