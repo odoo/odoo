@@ -173,7 +173,6 @@ class project(osv.osv):
                 res[id]['progress_rate'] = 0.0
         return res
 
-
     def unlink(self, cr, uid, ids, context=None):
         alias_ids = []
         mail_alias = self.pool.get('mail.alias')
@@ -183,10 +182,10 @@ class project(osv.osv):
                                      _('You cannot delete a project containing tasks. You can either delete all the project\'s tasks and then delete the project or simply deactivate the project.'))
             elif proj.alias_id:
                 alias_ids.append(proj.alias_id.id)
-        res =  super(project, self).unlink(cr, uid, ids, context=context)
+        res = super(project, self).unlink(cr, uid, ids, context=context)
         mail_alias.unlink(cr, uid, alias_ids, context=context)
         return res
-    
+
     def _get_attached_docs(self, cr, uid, ids, field_name, arg, context):
         res = {}
         attachment = self.pool.get('ir.attachment')
@@ -197,7 +196,7 @@ class project(osv.osv):
             task_attachments = attachment.search(cr, uid, [('res_model', '=', 'project.task'), ('res_id', 'in', task_ids)], context=context, count=True)
             res[id] = (project_attachments or 0) + (task_attachments or 0)
         return res
-        
+
     def _task_count(self, cr, uid, ids, field_name, arg, context=None):
         res = dict.fromkeys(ids, 0)
         task_ids = self.pool.get('project.task').search(cr, uid, [('project_id', 'in', ids)])
@@ -206,16 +205,21 @@ class project(osv.osv):
         return res
 
     def _get_alias_models(self, cr, uid, context=None):
-        """Overriden in project_issue to offer more options"""
+        """ Overriden in project_issue to offer more options """
         return [('project.task', "Tasks")]
+
+    def _get_visibility_selection(self, cr, uid, context=None):
+        """ Overriden in project_issue to offer more options """
+        return [('public', 'All Users'),
+                ('employees', 'Employees Only'),
+                ('followers', 'Followers Only')]
 
     def attachment_tree_view(self, cr, uid, ids, context):
         task_ids = self.pool.get('project.task').search(cr, uid, [('project_id', 'in', ids)])
         domain = [
-             '|', 
+             '|',
              '&', ('res_model', '=', 'project.project'), ('res_id', 'in', ids),
-             '&', ('res_model', '=', 'project.task'), ('res_id', 'in', task_ids)
-		]
+             '&', ('res_model', '=', 'project.task'), ('res_id', 'in', task_ids)]
         res_id = ids and ids[0] or False
         return {
             'name': _('Attachments'),
@@ -228,8 +232,11 @@ class project(osv.osv):
             'limit': 80,
             'context': "{'default_res_model': '%s','default_res_id': %d}" % (self._name, res_id)
         }
+
     # Lambda indirection method to avoid passing a copy of the overridable method when declaring the field
     _alias_models = lambda self, *args, **kwargs: self._get_alias_models(*args, **kwargs)
+    _visibility_selection = lambda self, *args, **kwargs: self._get_visibility_selection(*args, **kwargs)
+
     _columns = {
         'complete_name': fields.function(_complete_name, string="Project Name", type='char', size=250),
         'active': fields.boolean('Active', help="If the active field is set to False, it will allow you to hide the project without removing it."),
@@ -268,7 +275,8 @@ class project(osv.osv):
                                          "with Tasks (or optionally Issues if the Issue Tracker module is installed)."),
         'alias_model': fields.selection(_alias_models, "Alias Model", select=True, required=True,
                                         help="The kind of document created when an email is received on this project's email alias"),
-        'privacy_visibility': fields.selection([('publicall', 'All users will see all tasks'), ('public','All users'), ('employees','All employees'), ('followers','Followers Only')], 'Privacy / Visibility', required=True),
+        'visibility': fields.selection(_visibility_selection, 'Privacy / Visibility',
+            select=True, required=True, oldname="privacy_visibility"),
         'state': fields.selection([('template', 'Template'),('draft','New'),('open','In Progress'), ('cancelled', 'Cancelled'),('pending','Pending'),('close','Closed')], 'Status', required=True,),
         'doc_count':fields.function(_get_attached_docs, string="Number of documents attached", type='int')
      }
@@ -286,7 +294,7 @@ class project(osv.osv):
         'sequence': 10,
         'type_ids': _get_type_common,
         'alias_model': 'project.task',
-        'privacy_visibility': 'public',
+        'visibility': 'public',
     }
 
     # TODO: Why not using a SQL contraints ?

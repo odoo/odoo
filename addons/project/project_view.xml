@@ -111,7 +111,7 @@
                     </div>
                     <group>
                         <group>
-                            <field name="privacy_visibility" widget="radio"/>
+                            <field name="visibility" widget="radio"/>
                             <field name="user_id" string="Project Manager" 
                                 attrs="{'readonly':[('state','in',['close', 'cancelled'])]}" 
                                 context="{'default_groups_ref': ['base.group_user', 'project.group_project_manager']}"/>

@@ -1,19 +1,69 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
-    <data noupdate="1">
+    <!-- <data noupdate="1"> -->
+    <data>
 
-        <record id="portal_project_rule" model="ir.rule">
-            <field name="name">Portal Projects</field>
-            <field ref="project.model_project_project" name="model_id"/>
-            <field name="domain_force">['|', ('privacy_visibility', 'in', ['public', 'publicall']), ('message_follower_ids', 'in', [user.partner_id.id])]</field>
+        <record model="ir.rule" id="project.project_user_rule">
+            <field name="name">Project: employees: public, portal, employees or following</field>
+            <field name="domain_force">['|',
+                                            ('visibility', 'in', ['public', 'portal', 'employees']),
+                                            '&amp;',
+                                                ('visibility', '=', 'followers'),
+                                                ('message_follower_ids', 'in', [user.id]),
+                                        ]</field>
+            <field name="groups" eval="[(4, ref('base.group_user'))]"/>
+        </record>
+
+        <record model="ir.rule" id="project_portal_rule">
+            <field name="name">Project: portal users: public, portal or following</field>
+            <field name="model_id" ref="project.model_project_project"/>
+            <field name="domain_force">['|',
+                                            ('visibility', 'in', ['public', 'portal']),
+                                            '&amp;',
+                                                ('visibility', '=', 'followers'),
+                                                ('message_follower_ids', 'in', [user.id]),
+                                            ]</field>
             <field name="groups" eval="[(4, ref('portal.group_portal'))]"/>
         </record>
 
-        <record id="portal_task_rule" model="ir.rule">
-            <field name="name">Portal Tasks</field>
-            <field ref="project.model_project_task" name="model_id"/>
-            <field name="domain_force">['|', ('project_id.privacy_visibility', '=', 'publicall'), ('message_follower_ids','in', [user.partner_id.id])]</field>
+        <record model="ir.rule" id="project_anonymous_rule">
+            <field name="name">Project: anonymous users: public only</field>
+            <field name="model_id" ref="project.model_project_project"/>
+            <field name="domain_force">[('visibility', '=', 'public')]</field>
+            <field name="groups" eval="[(4, ref('portal.group_anonymous'))]"/>
+        </record>
+
+        <record model="ir.rule" id="project.task_user_rule">
+            <field name="name">Project/Task: employees: public, portal, employee or following or assigned</field>
+            <field name="domain_force">['|',
+                                            '|',
+                                                ('project_id.visibility', 'in', ['public', 'portal', 'employees']),
+                                                '&amp;',
+                                                    ('project_id.visibility', '=', 'followers'),
+                                                    ('message_follower_ids', 'in', [user.id]),
+                                            ('user_id', '=', user.id),
+                                        ]</field>
+        </record>
+
+        <record model="ir.rule" id="task_portal_rule">
+            <field name="name">Project/Task: portal users: public or portal and following</field>
+            <field name="model_id" ref="project.model_project_task"/>
+            <field name="domain_force">['|',
+                                            '|',
+                                                ('project_id.visibility', '=', 'public'),
+                                                '&amp;',
+                                                    ('project_id.visibility', 'in', ['portal', 'followers']),
+                                                    ('message_follower_ids','in', [user.partner_id.id]),
+                                            ('user_id', '=', user.id),
+                                        ]</field>
             <field name="groups" eval="[(4, ref('portal.group_portal'))]"/>
+        </record>
+
+        <record model="ir.rule" id="task_anonymous_rule">
+            <field name="name">Project/Task: anonymous users: public only</field>
+            <field name="model_id" ref="project.model_project_task"/>
+            <field name="domain_force">[('project_id.visibility', '=', 'public')]</field>
+            <field name="groups" eval="[(4, ref('portal.group_anonymous'))]"/>
         </record>
 
     </data>
