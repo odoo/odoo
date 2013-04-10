@@ -139,7 +139,7 @@ class wizard_multi_charts_accounts(osv.osv_memory):
     def _process_taxes_translations(self, cr, uid, obj_multi, company_id, langs, field, context=None):
         obj_tax_template = self.pool.get('account.tax.template')
         obj_tax = self.pool.get('account.tax')
-        in_ids = sorted([x.id for x in obj_multi.chart_template_id.tax_template_ids])
+        in_ids = [x.id for x in obj_multi.chart_template_id.tax_template_ids]
         out_ids = obj_tax.search(cr, uid, [('company_id', '=', company_id)], order='id')
         return self.process_translations(cr, uid, langs, obj_tax_template, field, in_ids, obj_tax, out_ids, force_write=False, context=context)
 
