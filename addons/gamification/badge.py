@@ -207,6 +207,7 @@ class gamification_badge(osv.Model):
         'rule_auth': 'everyone',
         'rule_automatic': 'manual',
         'compute_code': "self.nobody(cr, uid, context)",
+        'public': True
     }
 
     def send_badge(self, cr, uid, badge_id, badge_user_ids, user_from=None, context=None):

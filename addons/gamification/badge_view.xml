@@ -24,11 +24,11 @@
             <field name="model">gamification.badge.user.wizard</field>
             <field name="arch" type="xml">
                 <form string="Grant Badge To" version="7.0">
-                    Select the user that will receive this badge
+                    Who would you like to reward?
                     <group>
                         <field name="user_id" />
                         <field name="badge_id" invisible="1"/>
-                        <field name="comment" />
+                        <field name="comment" placeholder="Describe what they did and why it matters" />
                     </group>
                     <footer>
                         <button string="Grant Badge" type="object" name="action_grant_badge" class="oe_highlight" /> or
