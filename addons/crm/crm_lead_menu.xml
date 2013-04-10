@@ -9,34 +9,23 @@
         <field name="domain">['|', ('type','=','lead'), ('type','=',False)]</field>
         <field name="view_id" ref="crm_case_tree_view_leads"/>
         <field name="search_view_id" ref="crm.view_crm_case_leads_filter"/>
-        <field name="context">{'default_type':'lead', 'stage_type':'lead'}</field>
-        <field name="help" type="html">
-          <p class="oe_view_nocontent_create">
-            Click to create an unqualified lead.
-          </p><p>
-            Use leads if you need a qualification step before creating an
-            opportunity or a customer. It can be a business card you received,
-            a contact form filled in your website, or a file of unqualified
-            prospects you import, etc.
-          </p><p>
-            Once qualified, the lead can be converted into a business
-            opportunity and/or a new customer in your address book.
-          </p>
+        <field name="context">{
+                'default_type':'lead',
+                'stage_type':'lead',
+                'search_default_unassigned':1,
+            }
         </field>
-    </record>
-
-    <record model="ir.actions.act_window.view" id="action_crm_tag_tree_view_leads_all">
-        <field name="sequence" eval="1"/>
-        <field name="view_mode">tree</field>
-        <field name="view_id" ref="crm_case_tree_view_leads"/>
-        <field name="act_window_id" ref="crm_case_category_act_leads_all"/>
-    </record>
-
-    <record model="ir.actions.act_window.view" id="action_crm_tag_form_view_leads_all">
-        <field name="sequence" eval="3"/>
-        <field name="view_mode">form</field>
-        <field name="view_id" ref="crm_case_form_view_leads"/>
-        <field name="act_window_id" ref="crm_case_category_act_leads_all"/>
+        <field name="help" type="html">
+            <p>
+                Use leads if you need a qualification step before creating an
+                opportunity or a customer. It can be a business card you received,
+                a contact form filled in your website, or a file of unqualified
+                prospects you import, etc.
+            </p><p>
+                Once qualified, the lead can be converted into a business
+                opportunity and/or a new customer in your address book.
+            </p>
+        </field>
     </record>
 
     <record model="ir.actions.act_window" id="crm_case_category_act_oppor11">
@@ -44,20 +33,25 @@
         <field name="res_model">crm.lead</field>
         <field name="view_mode">kanban,tree,graph,form,calendar</field>
         <field name="domain">[('type','=','opportunity')]</field>
-        <field name="context">{'stage_type': 'opportunity', 'default_type': 'opportunity', 'default_user_id': uid}</field>
+        <field name="context">{
+                'stage_type': 'opportunity', 
+                'default_type': 'opportunity', 
+                'default_user_id': uid
+            }
+        </field>
         <field name="view_id" eval="False"/>
         <field name="search_view_id" ref="crm.view_crm_case_opportunities_filter"/>
         <field name="help" type="html">
-          <p class="oe_view_nocontent_create">
-          Click to create a new opportunity.
-          </p><p>
-          OpenERP helps you keep track of your sales pipeline to follow
-          up potential sales and better forecast your future revenues.
-          </p><p>
-          You will be able to plan meetings and phone calls from
-          opportunities, convert them into quotations, attach related
-          documents, track all discussions, and much more.
-          </p>
+            <p class="oe_view_nocontent_create">
+                Click to create a new opportunity.
+            </p><p>
+                OpenERP helps you keep track of your sales pipeline to follow
+                up potential sales and better forecast your future revenues.
+            </p><p>
+                You will be able to plan meetings and phone calls from
+                opportunities, convert them into quotations, attach related
+                documents, track all discussions, and much more.
+            </p>
         </field>
     </record>
 
@@ -82,9 +76,13 @@
         <field name="act_window_id" ref="crm_case_category_act_oppor11"/>
     </record>
 
-    <menuitem name="Sales" id="base.menu_sales" parent="base.menu_base_partner" sequence="1" />
-    <menuitem name="Leads" id="menu_crm_leads" parent="base.menu_sales" action="crm_case_category_act_leads_all" sequence="2" />
-    <menuitem name="Opportunities" id="menu_crm_opportunities" parent="base.menu_sales" action="crm_case_category_act_oppor11" sequence="3" />
+    <menuitem name="Sales" id="base.menu_sales" parent="base.menu_base_partner" sequence="1"/>
+    <menuitem name="Leads" id="menu_crm_leads" parent="base.menu_sales" sequence="3"
+            action="crm_case_category_act_leads_all"
+            groups="base.group_mono_salesteams,base.group_sale_manager"/>
+    <menuitem name="Opportunities" id="menu_crm_opportunities" parent="base.menu_sales" sequence="4"
+            action="crm_case_category_act_oppor11"
+            groups="base.group_mono_salesteams,base.group_sale_manager"/>
 
 </data>
 </openerp>
