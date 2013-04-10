@@ -66,7 +66,7 @@ def last_update_for(record):
        if available, otherwise False
     """
     if record._log_access:
-        record_log = record.perm_read()[0]
+        record_log = record.perm_read()
         return record_log.get('write_date') or record_log.get('create_date') or False
     return False
 
