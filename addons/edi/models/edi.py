@@ -421,7 +421,7 @@ class EDIMixin(object):
             if not report.attachment or not eval(report.attachment, eval_context):
                 # no auto-saving of report as attachment, need to do it manually
                 result = base64.b64encode(result)
-                file_name = record.name_get()[0][1]
+                file_name = record.name_get()[1]
                 file_name = re.sub(r'[^a-zA-Z0-9_-]', '_', file_name)
                 file_name += ".pdf"
                 self.pool.get('ir.attachment').create(cr, uid,

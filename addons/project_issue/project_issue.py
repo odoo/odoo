@@ -488,7 +488,7 @@ class project_issue(base_stage, osv.osv):
 
     def message_get_reply_to(self, cr, uid, ids, context=None):
         """ Override to get the reply_to of the parent project. """
-        return [issue.project_id.message_get_reply_to()[0] if issue.project_id else False
+        return [issue.project_id.message_get_reply_to() if issue.project_id else False
                     for issue in self.browse(cr, uid, ids, context=context)]
 
     def message_get_suggested_recipients(self, cr, uid, ids, context=None):
