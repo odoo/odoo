@@ -283,9 +283,11 @@ class account_analytic_account(osv.osv):
             res['value']['use_phases'] = template.use_phases
         return res
 
+
     def _trigger_project_creation(self, cr, uid, vals, context=None):
-        res= super(account_analytic_account, self)._trigger_project_creation(cr, uid, vals, context=context)
-        return res
+        if context is None: context = {}
+        res = super(account_analytic_account, self)._trigger_project_creation(cr, uid, vals, context=context)
+        return res or (vals.get('use_phases') and not 'project_creation_in_progress' in context)
 
 account_analytic_account()
 
