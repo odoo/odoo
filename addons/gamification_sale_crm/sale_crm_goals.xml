@@ -150,11 +150,6 @@
             <field name="target_goal">20000</field>
             <field name="plan_id" eval="ref('plan_crm_sale')" />
         </record>
-        <record model="gamification.goal.planline" id="planline_crm_sale2">
-            <field name="type_id" eval="ref('type_crm_lead_delay_close')" />
-            <field name="target_goal">20</field>
-            <field name="plan_id" eval="ref('plan_crm_sale')" />
-        </record>
         <record model="gamification.goal.planline" id="planline_crm_sale3">
             <field name="type_id" eval="ref('type_crm_nbr_sale_order_created')" />
             <field name="target_goal">5</field>
