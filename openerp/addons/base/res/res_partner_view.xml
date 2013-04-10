@@ -186,7 +186,7 @@
 
                     <notebook colspan="4">
                         <page string="Contacts" attrs="{'invisible': [('is_company','=',False)]}">
-                            <field name="child_ids" context="{'default_parent_id': active_id, 'default_use_parent_address': True}" mode="kanban">
+                            <field name="child_ids" mode="kanban" context="{'default_parent_id': active_id, 'default_street': street, 'default_street2': street2, 'default_city': city, 'default_state_id': state_id, 'default_zip': zip, 'default_country_id': country_id}">
                                 <kanban>
                                     <field name="color"/>
                                     <field name="name"/>
@@ -252,20 +252,25 @@
                                     </templates>
                                 </kanban>
                                 <form string="Contact" version="7.0">
-                                    <field name="image" widget='image' class="oe_avatar oe_left" options='{"preview_image": "image_medium"}'/>
-                                    <group>
+                                    <sheet>
+                                        <field name="image" widget='image' class="oe_avatar oe_left" options='{"preview_image": "image_medium"}'/>
+                                        <div class="oe_title">
+                                            <label for="name" class="oe_edit_only"/>
+                                            <h1><field name="name" style="width: 70%%"/></h1>
+                                            <field name="category_id" widget="many2many_tags" placeholder="Tags..." style="width: 70%%"/>
+                                        </div>
                                         <group>
-                                            <field name="name"/>
-                                            <field name="category_id" widget="many2many_tags" placeholder="Tags..."/>
                                             <field name="function" placeholder="e.g. Sales Director"/>
                                             <field name="email"/>
                                             <field name="phone"/>
                                             <field name="mobile"/>
                                         </group>
+                                        <div>
+                                            <field name="use_parent_address"/><label for="use_parent_address"/>
+                                        </div>
                                         <group>
-                                            <field name="use_parent_address"/>
-                                            <label for="type" attrs="{'invisible': [('use_parent_address','=', True)]}"/>
-                                            <div attrs="{'invisible': [('use_parent_address','=', True)]}" name="div_type">
+                                            <label for="type"/>
+                                            <div name="div_type">
                                                 <field class="oe_inline" name="type"/>
                                             </div>
                                             <label for="street" string="Address" attrs="{'invisible': [('use_parent_address','=', True)]}"/>
@@ -280,7 +285,7 @@
                                                 <field name="country_id" placeholder="Country" class="oe_no_button" options='{"no_open": True}'/>
                                             </div>
                                         </group>
-                                    </group>
+                                    </sheet>
                                 </form>
                             </field>
                         </page>
