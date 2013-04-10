@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2013-03-07 08:37+0000\n"
-"PO-Revision-Date: 2012-12-26 08:51+0000\n"
-"Last-Translator: Olga <chikiro.spam@gmail.com>\n"
+"PO-Revision-Date: 2013-04-09 13:43+0000\n"
+"Last-Translator: Rinat Karimov <Unknown>\n"
 "Language-Team: Russian <ru@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-03-28 05:32+0000\n"
-"X-Generator: Launchpad (build 16546)\n"
+"X-Launchpad-Export-Date: 2013-04-10 05:54+0000\n"
+"X-Generator: Launchpad (build 16550)\n"
 
 #. module: auth_signup
 #: field:res.partner,signup_type:0
@@ -25,20 +25,20 @@ msgstr ""
 #. module: auth_signup
 #: field:base.config.settings,auth_signup_uninvited:0
 msgid "Allow external users to sign up"
-msgstr ""
+msgstr "Разрешить регистрацию внешним пользователям"
 
 #. module: auth_signup
 #. openerp-web
 #: code:addons/auth_signup/static/src/xml/auth_signup.xml:16
 #, python-format
 msgid "Confirm Password"
-msgstr ""
+msgstr "Подтвердите пароль"
 
 #. module: auth_signup
 #: help:base.config.settings,auth_signup_uninvited:0
 msgid "If unchecked, only invited users may sign up."
 msgstr ""
-"Если отмечено, только приглашенные пользователи могут зарегистрироваться"
+"Если не отмечено, только приглашенные пользователи могут зарегистрироваться"
 
 #. module: auth_signup
 #: model:ir.model,name:auth_signup.model_base_config_settings
@@ -57,17 +57,17 @@ msgstr "Невозможно отправить письмо: у пользов�
 #: code:addons/auth_signup/static/src/xml/auth_signup.xml:28
 #, python-format
 msgid "Reset password"
-msgstr ""
+msgstr "Сброс пароля"
 
 #. module: auth_signup
 #: field:base.config.settings,auth_signup_template_user_id:0
 msgid "Template user for new users created through signup"
-msgstr ""
+msgstr "Шаблон новых пользователей, созданных в процессе регистрации"
 
 #. module: auth_signup
 #: model:email.template,subject:auth_signup.reset_password_email
 msgid "Password reset"
-msgstr ""
+msgstr "Сброс пароля"
 
 #. module: auth_signup
 #. openerp-web
@@ -82,17 +82,17 @@ msgstr "Пожалуйста, введите пароль и подтверди�
 #: code:addons/auth_signup/static/src/xml/auth_signup.xml:26
 #, python-format
 msgid "Sign Up"
-msgstr ""
+msgstr "Регистрация"
 
 #. module: auth_signup
 #: selection:res.users,state:0
 msgid "New"
-msgstr ""
+msgstr "Новый"
 
 #. module: auth_signup
 #: field:res.users,state:0
 msgid "Status"
-msgstr ""
+msgstr "Статус"
 
 #. module: auth_signup
 #: model:email.template,body_html:auth_signup.reset_password_email
@@ -106,18 +106,27 @@ msgid ""
 "\n"
 "<p>Note: If you do not expect this, you can safely ignore this email.</p>"
 msgstr ""
+"\n"
+"<p>Был запрошен сброс пароля для аккаунта OpenERP  связанного с этим адресом "
+"эл.почты</p>\n"
+"\n"
+"<p>Вы можете сменить пароль, проследовав по <a "
+"href=\"${object.signup_url}\">ссылке</a>.</p>\n"
+"\n"
+"<p>Примечание: если вы не запрашивали сброс пароля, просто проигнорируйте "
+"данное письмо</p>"
 
 #. module: auth_signup
 #. openerp-web
 #: code:addons/auth_signup/static/src/js/auth_signup.js:111
 #, python-format
 msgid "Please enter a name."
-msgstr ""
+msgstr "Пожалуйста, введите имя"
 
 #. module: auth_signup
 #: model:ir.model,name:auth_signup.model_res_users
 msgid "Users"
-msgstr ""
+msgstr "Пользователи"
 
 #. module: auth_signup
 #: field:res.partner,signup_url:0
@@ -157,6 +166,33 @@ msgid ""
 "                \n"
 "            "
 msgstr ""
+"\n"
+"                \n"
+"                    <p>\n"
+"                        ${object.name},\n"
+"                    </p>\n"
+"                    <p>\n"
+"                       Вы были приглашены присоединиться к "
+"\"${object.company_id.name}\" для доступа к вашим документам в OpenERP.\n"
+"                    </p>\n"
+"                    <p>\n"
+"                        Для подтверждения приглашения пройдите по ссылке:\n"
+"                    </p>\n"
+"                    <ul>\n"
+"                        <li><a href=\"${object.signup_url}\">Принять "
+"приглашение \"${object.company_id.name}\"</a></li>\n"
+"                    </ul>\n"
+"                    <p>\n"
+"                        Спасибо,\n"
+"                    </p>\n"
+"                    <pre>\n"
+"--\n"
+"${object.company_id.name or ''}\n"
+"${object.company_id.email or ''}\n"
+"${object.company_id.phone or ''}\n"
+"                    </pre>\n"
+"                \n"
+"            "
 
 #. module: auth_signup
 #. openerp-web
@@ -168,7 +204,7 @@ msgstr "Пожалуйста, введите имя пользователя."
 #. module: auth_signup
 #: selection:res.users,state:0
 msgid "Active"
-msgstr ""
+msgstr "Активен"
 
 #. module: auth_signup
 #: code:addons/auth_signup/res_users.py:269
@@ -177,6 +213,8 @@ msgid ""
 "Cannot send email: no outgoing email server configured.\n"
 "You can configure it under Settings/General Settings."
 msgstr ""
+"Невозможно отправить email: не настроены сервера исходящей почты.\n"
+"Вы можете настроить их в меню Настройки/Общие настройки"
 
 #. module: auth_signup
 #. openerp-web
@@ -184,39 +222,40 @@ msgstr ""
 #, python-format
 msgid "An email has been sent with credentials to reset your password"
 msgstr ""
+"На указанный адрес было выслано письмо с инструкциями по сбросу пароля"
 
 #. module: auth_signup
 #. openerp-web
 #: code:addons/auth_signup/static/src/xml/auth_signup.xml:12
 #, python-format
 msgid "Username"
-msgstr ""
+msgstr "Имя пользователя"
 
 #. module: auth_signup
 #. openerp-web
 #: code:addons/auth_signup/static/src/xml/auth_signup.xml:8
 #, python-format
 msgid "Name"
-msgstr ""
+msgstr "Имя"
 
 #. module: auth_signup
 #. openerp-web
 #: code:addons/auth_signup/static/src/js/auth_signup.js:170
 #, python-format
 msgid "Please enter a username or email address."
-msgstr ""
+msgstr "Пожалуйста, введите имя пользователя или адрес эл. почты."
 
 #. module: auth_signup
 #: selection:res.users,state:0
 msgid "Resetting Password"
-msgstr ""
+msgstr "Переустановка пароля"
 
 #. module: auth_signup
 #. openerp-web
 #: code:addons/auth_signup/static/src/xml/auth_signup.xml:13
 #, python-format
 msgid "Username (Email)"
-msgstr ""
+msgstr "Имя пользователя (Email)"
 
 #. module: auth_signup
 #: field:res.partner,signup_expiration:0
@@ -227,13 +266,15 @@ msgstr ""
 #: help:base.config.settings,auth_signup_reset_password:0
 msgid "This allows users to trigger a password reset from the Login page."
 msgstr ""
+"Это позволяет пользователям запросить сброс пароля со страницы входа в "
+"систему."
 
 #. module: auth_signup
 #. openerp-web
 #: code:addons/auth_signup/static/src/xml/auth_signup.xml:22
 #, python-format
 msgid "Log in"
-msgstr ""
+msgstr "Вход"
 
 #. module: auth_signup
 #: field:res.partner,signup_valid:0
@@ -251,7 +292,7 @@ msgstr ""
 #: code:addons/auth_signup/static/src/js/auth_signup.js:170
 #, python-format
 msgid "Login"
-msgstr ""
+msgstr "Вход"
 
 #. module: auth_signup
 #. openerp-web
@@ -265,7 +306,7 @@ msgstr ""
 #: code:addons/auth_signup/static/src/js/auth_signup.js:120
 #, python-format
 msgid "Passwords do not match; please retype them."
-msgstr ""
+msgstr "Пароли не совпадают; пожалуйста, введите их заново."
 
 #. module: auth_signup
 #. openerp-web
@@ -273,12 +314,12 @@ msgstr ""
 #: code:addons/auth_signup/static/src/js/auth_signup.js:167
 #, python-format
 msgid "No database selected !"
-msgstr ""
+msgstr "Не выбрана база данных!"
 
 #. module: auth_signup
 #: field:base.config.settings,auth_signup_reset_password:0
 msgid "Enable password reset from Login page"
-msgstr ""
+msgstr "Включить сброс пароля со страницы входа"
 
 #. module: auth_signup
 #: model:email.template,subject:auth_signup.set_password_email
@@ -290,17 +331,17 @@ msgstr ""
 #: code:addons/auth_signup/static/src/xml/auth_signup.xml:27
 #, python-format
 msgid "Back to Login"
-msgstr ""
+msgstr "Вернуться к странице входа"
 
 #. module: auth_signup
 #: model:ir.model,name:auth_signup.model_res_partner
 msgid "Partner"
-msgstr ""
+msgstr "Партнер"
 
 #. module: auth_signup
 #: view:res.users:0
 msgid "Send reset password instructions by email"
-msgstr ""
+msgstr "Отправить инструкции по сбросу пароля на эл. почту"
 
 #. module: auth_signup
 #: field:res.partner,signup_token:0

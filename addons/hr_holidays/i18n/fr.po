@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2013-03-07 08:37+0000\n"
-"PO-Revision-Date: 2013-03-21 16:00+0000\n"
-"Last-Translator: WANTELLET Sylvain <Swantellet@tetra-info.com>\n"
+"PO-Revision-Date: 2013-04-10 03:12+0000\n"
+"Last-Translator: Bertrand Rétif <Unknown>\n"
 "Language-Team: French <fr@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-03-28 05:41+0000\n"
-"X-Generator: Launchpad (build 16546)\n"
+"X-Launchpad-Export-Date: 2013-04-10 05:54+0000\n"
+"X-Generator: Launchpad (build 16550)\n"
 
 #. module: hr_holidays
 #: selection:hr.holidays.status,color_name:0
@@ -39,6 +39,8 @@ msgid ""
 "You cannot modify a leave request that has been approved. Contact a human "
 "resource manager."
 msgstr ""
+"Vous ne pouvez pas modifier une demande de congé qui a déjà été approuvé. "
+"Merci de contacter un responsable des ressources humaines."
 
 #. module: hr_holidays
 #: help:hr.holidays.status,remaining_leaves:0
@@ -63,7 +65,7 @@ msgstr "Mode d'allocation"
 #. module: hr_holidays
 #: field:hr.employee,leave_date_from:0
 msgid "From Date"
-msgstr ""
+msgstr "Date de début"
 
 #. module: hr_holidays
 #: view:hr.holidays:0
@@ -75,7 +77,7 @@ msgstr "Département"
 #: model:ir.actions.act_window,name:hr_holidays.request_approve_allocation
 #: model:ir.ui.menu,name:hr_holidays.menu_request_approve_allocation
 msgid "Allocation Requests to Approve"
-msgstr ""
+msgstr "Demandes d'attribution de congés à approuver"
 
 #. module: hr_holidays
 #: help:hr.holidays,category_id:0
@@ -95,7 +97,7 @@ msgstr "Jours restants"
 #. module: hr_holidays
 #: xsl:holidays.summary:0
 msgid "of the"
-msgstr ""
+msgstr "du"
 
 #. module: hr_holidays
 #: selection:hr.holidays,holiday_type:0
@@ -108,16 +110,18 @@ msgid ""
 "The default duration interval between the start date and the end date is 8 "
 "hours.  Feel free to adapt it to your needs."
 msgstr ""
+"La durée par défaut entre la date de début et de fin est 8 heures. Vous "
+"pouvez la modifier à votre guise."
 
 #. module: hr_holidays
 #: model:mail.message.subtype,description:hr_holidays.mt_holidays_refused
 msgid "Request refused"
-msgstr ""
+msgstr "Demande refusée"
 
 #. module: hr_holidays
 #: field:hr.holidays,number_of_days_temp:0
 msgid "Allocation"
-msgstr ""
+msgstr "Attribution"
 
 #. module: hr_holidays
 #: xsl:holidays.summary:0
@@ -133,6 +137,8 @@ msgstr "Cyan clair"
 #: constraint:hr.holidays:0
 msgid "You can not have 2 leaves that overlaps on same day!"
 msgstr ""
+"Vous ne pouvez pas avoir 2 demandes de congés qui se chevauchent dans la "
+"même journée."
 
 #. module: hr_holidays
 #: selection:hr.holidays.status,color_name:0
@@ -147,7 +153,7 @@ msgstr "Type d'absence"
 #. module: hr_holidays
 #: view:hr.holidays:0
 msgid "Validate"
-msgstr ""
+msgstr "Valider"
 
 #. module: hr_holidays
 #: selection:hr.employee,current_leave_state:0
@@ -326,7 +332,7 @@ msgstr "Total"
 #: view:hr.holidays.status:0
 #: model:ir.actions.act_window,name:hr_holidays.open_view_holiday_status
 msgid "Leave Types"
-msgstr ""
+msgstr "Type de congé"
 
 #. module: hr_holidays
 #: field:hr.holidays.status,remaining_leaves:0
@@ -447,7 +453,7 @@ msgstr "En attente d'approbation"
 #. module: hr_holidays
 #: field:hr.holidays,category_id:0
 msgid "Employee Tag"
-msgstr ""
+msgstr "Étiquette d'employé"
 
 #. module: hr_holidays
 #: field:hr.holidays.summary.employee,emp:0
@@ -460,6 +466,8 @@ msgid ""
 "Filters only on allocations and requests that belong to an holiday type that "
 "is 'active' (active field is True)"
 msgstr ""
+"Filtrer uniquement les demandes et les attributions qui ont un type de "
+"congés 'actif' (champ actif est vrai)"
 
 #. module: hr_holidays
 #: model:ir.actions.act_window,help:hr_holidays.hr_holidays_leaves_assign_legal
@@ -471,6 +479,13 @@ msgid ""
 "             </p>\n"
 "           "
 msgstr ""
+"<p>\n"
+"               Vous pouvez attribuer des congés légaux restants pour chaque "
+"employé, OpenERP\n"
+"               créera et validera automatiquement ces demandes "
+"d'attribution.\n"
+"             </p>\n"
+"           "
 
 #. module: hr_holidays
 #: help:hr.holidays.status,categ_id:0
@@ -478,12 +493,15 @@ msgid ""
 "Once a leave is validated, OpenERP will create a corresponding meeting of "
 "this type in the calendar."
 msgstr ""
+"Une fois la demande validée, OpenERP créera un rendez-vous de ce type dans "
+"le calendrier."
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/wizard/hr_holidays_summary_department.py:44
 #, python-format
 msgid "You have to select at least one Department. And try again."
 msgstr ""
+"Vous devez sélectionner au moins un département et essayer de nouveau."
 
 #. module: hr_holidays
 #: field:hr.holidays,parent_id:0
@@ -503,7 +521,7 @@ msgstr "Mois"
 #. module: hr_holidays
 #: field:hr.holidays,message_unread:0
 msgid "Unread Messages"
-msgstr ""
+msgstr "Messages non lus"
 
 #. module: hr_holidays
 #: view:hr.holidays:0
@@ -530,12 +548,14 @@ msgid ""
 "There are not enough %s allocated for employee %s; please create an "
 "allocation request for this leave type."
 msgstr ""
+"Il n'y a pas assez %s d'attribué pour l'employé %s; Merci de créer une "
+"demande d'allocation pour ce type de congés."
 
 #. module: hr_holidays
 #: view:hr.holidays.summary.dept:0
 #: view:hr.holidays.summary.employee:0
 msgid "or"
-msgstr ""
+msgstr "ou"
 
 #. module: hr_holidays
 #: model:ir.actions.act_window,help:hr_holidays.open_ask_holidays
@@ -550,11 +570,22 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Cliquer pour créer une nouvelle demande de congés.\n"
+"              </p><p>\n"
+"                Une fois votre demande enregistrée, elle sera envoyée\n"
+"                à un responsable pour validation. Merci de vous assurer "
+"d'avoir bien saisi le bon\n"
+"                type de congés (récupération, maladie, ...) et le nombre "
+"exact\n"
+"                de jours ouvrés correspondant à votre demande.\n"
+"              </p>\n"
+"            "
 
 #. module: hr_holidays
 #: sql_constraint:hr.holidays:0
 msgid "The employee or employee category of this request is missing."
-msgstr ""
+msgstr "L'employé ou la catégorie d'employé de cette demande est manquant."
 
 #. module: hr_holidays
 #: view:hr.holidays:0
