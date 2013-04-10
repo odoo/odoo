@@ -570,9 +570,9 @@ class res_partner(osv.osv, format_address):
                           LEFT JOIN res_partner company ON partner.parent_id = company.id
                           WHERE partner.email ''' + operator +''' %(name)s
                              OR partner.name || ' (' || COALESCE(company.name,'') || ')'
-                          ''' + operator + ' %(name)s ' + limit_str, query_args)
+                          ''' + operator + ' %(name)s ORDER BY partner.is_company DESC, partner.name' + limit_str, query_args)
             ids = map(lambda x: x[0], cr.fetchall())
-            ids = self.search(cr, uid, [('id', 'in', ids)] + args, limit=limit, context=context)
+            ids = self.search(cr, uid, [('id', 'in', ids)] + args, limit=limit, order="is_company desc, name", context=context)
             if ids:
                 return self.name_get(cr, uid, ids, context)
         return super(res_partner,self).name_search(cr, uid, name, args, operator=operator, context=context, limit=limit)
