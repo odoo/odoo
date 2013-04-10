@@ -2820,8 +2820,8 @@ instance.web.form.FieldRadio = instance.web.form.AbstractField.extend(instance.w
         this.domain = false;
     },
     initialize_content: function () {
-        var self = this;
-        this.$el.on('click', '.oe_radio_input,.oe_radio_header', function (e) {self.on_click_change_value(e)});
+        this.$el.on('click', '.oe_radio_input,.oe_radio_header', this, this.on_click_change_value);
+        this.on("change:effective_readonly", this, this.render_value);
         this.field_manager.on("view_content_has_changed", this, this.get_selection);
         this.get_selection();
     },
@@ -2871,14 +2871,25 @@ instance.web.form.FieldRadio = instance.web.form.AbstractField.extend(instance.w
             }
         });
     },
+    set_value: function (value_) {
+        if (this.field.type == "selection") {
+            value_ = _.find(this.field.selection, function (sel) { return sel[0] == value_});
+        }
+        else if (!this.selection.length) {
+            this.selection = [value_];
+        }
+        this._super(value_);
+    },
     get_value: function () {
-        var id = this.get('value');
-        return _.isNumber(id) ? id : id[0];
+        var value = this.get('value');
+        return value instanceof Array ? value[0] : value;
     },
     render_value: function () {
-        var self = this;
-        self.$(".oe_radio_input_on").removeClass("oe_radio_input_on");
-        self.$(".oe_radio_input[data-id='" + self.get_value() + "'], [data-id='" + self.get_value() + "'] .oe_radio_input").addClass("oe_radio_input_on");
+        this.$(".oe_radio_edit_only, .oe_radio_read_only").hide();
+        this.$(this.get('effective_readonly') ? ".oe_radio_read_only" : ".oe_radio_edit_only").show();
+        this.$(".oe_radio_input_on").removeClass("oe_radio_input_on");
+        this.$(".oe_radio_input[data-id='" + this.get_value() + "'], [data-id='" + this.get_value() + "'] .oe_radio_input").addClass("oe_radio_input_on");
+        this.$(".oe_radio_read_only .oe_radio_header").text(this.get('value') ? this.get('value')[1] : "");
     }
 });
 
