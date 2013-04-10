@@ -38,7 +38,7 @@
   Configure Creditor Account Payable 
 -
   !record {model: account.account, id: account_anglo_6}:
-    code: 4400
+    code: 440001
     name: Creditor Account Payable 
     parent_id: account.a_pay  
     type: other
@@ -87,7 +87,7 @@
 -
   I create a draft Purchase Order
 -
-  !record {model: purchase.order, id: purchase_order_1}:
+  !record {model: purchase.order, id: purchase_order_001}:
     partner_id: base.res_partner_3
     location_id: stock.stock_location_3
     pricelist_id: 1
@@ -99,12 +99,12 @@
 -
   I confirm the purchase order
 -
-  !workflow {model: purchase.order, ref: purchase_order_1, action: purchase_confirm}
+  !workflow {model: purchase.order, ref: purchase_order_001, action: purchase_confirm}
 -
   Reception is ready for process so now done the reception.
 -
   !python {model: stock.partial.picking}: |
-    pick_ids = self.pool.get('purchase.order').browse(cr, uid, ref("purchase_order_1")).picking_ids
+    pick_ids = self.pool.get('purchase.order').browse(cr, uid, ref("purchase_order_001")).picking_ids
     partial_id = self.create(cr, uid, {},context={'active_model': 'stock.picking','active_ids': [pick_ids[0].id]})
     self.do_partial(cr, uid, [partial_id])
 -
@@ -123,7 +123,7 @@
   I Validate Invoice of Purchase Order.
 -
   !python {model: purchase.order}: |
-    invoice_ids = [x.id for x in self.browse(cr, uid, ref("purchase_order_1")).invoice_ids]
+    invoice_ids = [x.id for x in self.browse(cr, uid, ref("purchase_order_001")).invoice_ids]
     self.pool.get('account.invoice').signal_invoice_open(cr, uid, invoice_ids)
 -
   I check the Stock Interim account (Received) debited sucessfully when Invoice validated
@@ -147,7 +147,7 @@
  I open the Invoice.
 -
   !python {model: purchase.order}: |
-    po = self.browse(cr, uid, ref("purchase.purchase_order_1"))
+    po = self.browse(cr, uid, ref("purchase_order_001"))
     account_invoice_obj = self.pool.get('account.invoice')
     for invoice in po.invoice_ids:
       account_invoice_obj.signal_invoice_open(cr, uid, [invoice.id])
@@ -155,8 +155,8 @@
   I pay the invoice
 -
   !python {model: purchase.order}: |
-    invoice_ids = self.browse(cr, uid, ref("purchase_order_1")).invoice_ids
-    order = self.browse(cr, uid, ref("purchase.purchase_order_1"))
+    invoice_ids = self.browse(cr, uid, ref("purchase_order_001")).invoice_ids
+    order = self.browse(cr, uid, ref("purchase_order_001"))
     journal_ids = self.pool.get('account.journal').search(cr, uid, [('type', '=', 'cash'), ('company_id', '=', order.company_id.id)], limit=1)
     for invoice in invoice_ids:
       invoice.pay_and_reconcile(
@@ -179,7 +179,7 @@
 -
   I create an Outgoing Picking order
 -
-  !record {model: stock.picking, id: stock_picking_out0}:
+  !record {model: stock.picking, id: stock_picking_out001}:
     partner_id: base.res_partner_address_22
     invoice_state: 2binvoiced
     move_lines:
@@ -195,7 +195,7 @@
   I need to check the availability of the product so I make my picking order for processing later.
 -
   !python {model: stock.picking}: |
-    self.draft_force_assign(cr, uid, [ref("stock_picking_out0")], {"lang": "en_US", "search_default_available":
+    self.draft_force_assign(cr, uid, [ref("stock_picking_out001")], {"lang": "en_US", "search_default_available":
       1, "tz": False, "active_model": "ir.ui.menu", "contact_display": "partner",
       "active_ids": [ref("stock.menu_action_picking_tree")], "active_id": ref("stock.menu_action_picking_tree"),
       })
@@ -203,7 +203,7 @@
   I check the product availability. Product is available in the stock and ready to be sent.
 -
   !python {model: stock.picking}: |
-    self.action_assign(cr, uid, [ref("stock_picking_out0")], {"lang": "en_US", "search_default_available":
+    self.action_assign(cr, uid, [ref("stock_picking_out001")], {"lang": "en_US", "search_default_available":
       1, "tz": False, "active_model": "ir.ui.menu", "contact_display": "partner",
       "active_ids": [ref("stock.menu_action_picking_tree")], "active_id": ref("stock.menu_action_picking_tree"),
       })
@@ -211,7 +211,7 @@
   I process the delivery
 -
   !python {model: stock.partial.picking}: |
-    partial_id = self.create(cr, uid, {}, context={'active_model':'stock.picking','active_ids':[ref('stock_picking_out0')]})
+    partial_id = self.create(cr, uid, {}, context={'active_model':'stock.picking','active_ids':[ref('stock_picking_out001')]})
     self.do_partial(cr, uid, [partial_id])
 - 
  I check Stock Interim account (Delivary) debited successfully
@@ -230,16 +230,16 @@
 -
   !python {model: stock.invoice.onshipping}: |
     wiz_id = self.create(cr, uid, {'invoice_date': '2013-03-04', 'journal_id': ref('account.sales_journal')},
-      {'active_ids': [ref("stock_picking_out0")], "active_model": "stock.picking"})
+      {'active_ids': [ref("stock_picking_out001")], "active_model": "stock.picking"})
     self.create_invoice(cr, uid, [wiz_id], {"lang": "en_US",
       "search_default_available": 1, "tz": False, "active_model": "stock.picking",
-      "contact_display": "partner", "active_ids": [ref("stock_picking_out0")], "active_id": ref("stock_picking_out0")})
+      "contact_display": "partner", "active_ids": [ref("stock_picking_out001")], "active_id": ref("stock_picking_out001")})
 -
   I check that the customer invoice is created successfully.
 -
   !python {model: account.invoice}: |
     picking_obj = self.pool.get('stock.picking')
-    picking = picking_obj.browse(cr, uid, [ref('stock_picking_out0')])
+    picking = picking_obj.browse(cr, uid, [ref('stock_picking_out001')])
     partner = picking[0].partner_id.id
     inv_ids = self.search(cr, uid, [('type','=','out_invoice'),('partner_id','=',partner)])
     assert inv_ids, 'No Invoice is generated!'
@@ -248,7 +248,7 @@
 -
   !python {model: stock.picking}: |
     picking_obj = self.pool.get('stock.picking')
-    name = picking_obj.browse(cr, uid, ref('stock_picking_out0')).name
+    name = picking_obj.browse(cr, uid, ref('stock_picking_out001')).name
     account_invoice = self.pool.get('account.invoice').search(cr, uid, [('origin', '=', name)])
     account_invoice_obj = self.pool.get('account.invoice')
     account_invoice_obj.signal_invoice_open(cr, uid, account_invoice)
@@ -257,7 +257,7 @@
 -
   !python {model: account.invoice}: |
     picking_obj = self.pool.get('stock.picking')
-    name = picking_obj.browse(cr, uid, ref('stock_picking_out0')).name
+    name = picking_obj.browse(cr, uid, ref('stock_picking_out001')).name
     account_invoice= self.pool.get('account.invoice').search(cr, uid, [('origin', '=', name)])
     import time
     journal_ids = self.pool.get('account.journal').search(cr, uid, [('type', '=', 'cash')], limit=1)
