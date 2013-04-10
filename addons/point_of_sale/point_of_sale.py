@@ -1318,7 +1318,10 @@ class product_product(osv.osv):
                 if pos_id.pos_categ_id.id:
                     category_id = pos_id.pos_categ_id.id
         elif available_in_pos :
+            try:
                 category_id = proxy.get_object_reference(cr, uid, 'point_of_sale', 'categ_others')[1]
+            except:
+                pass
         return {'value': {'pos_categ_id': category_id}}
 
     _defaults = {
