@@ -40,12 +40,32 @@ class gamification_goal_type(osv.Model):
     _name = 'gamification.goal.type'
     _description = 'Gamification goal type'
 
+    def _get_suffix(self, cr, uid, ids, field_name, arg, context=None):
+        res = dict.fromkeys(ids, 0)
+        for goal in self.browse(cr, uid, ids, context):
+            if goal.unit and not goal.monetary:
+                res[goal.id] = goal.unit
+            elif goal.monetary:
+                # use the current user's company currency
+                user = self.pool.get('res.users').browse(cr, uid, uid, context)
+                if goal.unit:
+                    res[goal.id] = "%s %s" % (user.company_id.currency_id.symbol, goal.unit)
+                else:
+                    res[goal.id] = user.company_id.currency_id.symbol
+            else:
+                res[goal.id] = ""
+        return res
+
     _columns = {
         'name': fields.char('Goal Type Name', required=True, translate=True),
         'description': fields.text('Goal Description'),
+
         'monetary': fields.boolean('Monetary Value', help="The target and current value are defined in the company currency."),
         'unit': fields.char('Suffix',
             help="The unit of the target and current values", translate=True),
+        'full_suffix': fields.function(_get_suffix, type="char",
+            string="Full Suffix", help="The currency and suffix field"),
+
         'computation_mode': fields.selection([
                 ('manually', 'Recorded manually'),
                 ('count', 'Automatic: number of records'),
@@ -64,7 +84,7 @@ class gamification_goal_type(osv.Model):
             help='The date to use for the time period evaluated'),
         'domain': fields.char("Filter Domain",
             help="Technical filters rules to apply",
-            required=True), # how to apply it ?
+            required=True),
         'condition': fields.selection([
                 ('higher', 'The higher the better'),
                 ('lower', 'The lower the better')
