@@ -781,6 +781,6 @@ class survey_response_answer(osv.osv):
         'comment': fields.text('Notes'),
         'comment_field': fields.char('Comment', size=255),
         'value': fields.char('Value', size=255),
-    } 
+    }
 
 # vim: exp and tab: smartindent: tabstop=4: softtabstop=4: shiftwidth=4:

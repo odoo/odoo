@@ -565,7 +565,7 @@ class survey_question_wiz(osv.osv_memory):
             return super(survey_question_wiz, self).create(cr, uid, vals, context=context)
 
         sur_response_obj = self.pool.get('survey.response')
-        surv_tbl_column_obj = self.pool.get('survey.tbl.column.heading')
+        surv_tbl_column_obj = self.pool.get('survey.response.answer')
         resp_obj = self.pool.get('survey.response.line')
         res_ans_obj = self.pool.get('survey.response.answer')
         que_obj = self.pool.get('survey.question')
@@ -619,7 +619,7 @@ class survey_question_wiz(osv.osv_memory):
                 _type = _key_split[1]
 
                 if _type == "table":
-                    surv_tbl_column_obj.create(cr, SUPERUSER_ID, {'response_table_id': resp_id, 'column_id': key1.split('_')[2], 'name': key1.split('_')[3], 'value': val1})
+                    surv_tbl_column_obj.create(cr, SUPERUSER_ID, {'response_line_id': resp_id, 'answer_id': _key_split[0], 'column_id': _key_split[2], 'name': _key_split[3], 'value': val1})
                     select_count += 1
 
                 elif _type == "otherfield":
@@ -628,10 +628,10 @@ class survey_question_wiz(osv.osv_memory):
                     continue
 
                 elif _type == "selection":
-                    if len(key1.split('_')) > 2:
-                        ans_create_id = res_ans_obj.create(cr, SUPERUSER_ID, {'response_line_id': resp_id, 'answer_id': key1.split('_')[-1], 'column_id': val1})
+                    if len(_key_split) > 2:
+                        ans_create_id = res_ans_obj.create(cr, SUPERUSER_ID, {'response_line_id': resp_id, 'answer_id': _key_split[-1], 'column_id': val1})
                         selected_value.append(val1)
-                        response_list.append(str(ans_create_id) + "_" + str(key1.split('_')[-1]))
+                        response_list.append(str(ans_create_id) + "_" + str(_key_split[-1]))
                     else:
                         ans_create_id = res_ans_obj.create(cr, SUPERUSER_ID, {'response_line_id': resp_id, 'answer_id': val1})
                     select_count += 1
@@ -674,7 +674,7 @@ class survey_question_wiz(osv.osv_memory):
                     resp_obj.write(cr, SUPERUSER_ID, resp_id, {'comment': val1})
                     select_count += 1
 
-                elif (_type == "single" or (len(key1.split('_')) > 2 and key1.split('_')[2] == 'multi')):
+                elif (_type == "single" or (len(_key_split) > 2 and _key_split[2] == 'multi')):
                     error = False
                     if que_rec['is_validation_require'] and que_rec['validation_type'] == 'must_be_specific_length':
                         if (not val1 and que_rec['validation_minimum_no']) or len(val1) < que_rec['validation_minimum_no'] or len(val1) > que_rec['validation_maximum_no']:
@@ -710,7 +710,7 @@ class survey_question_wiz(osv.osv_memory):
 
                     select_count += 1
 
-                elif len(key1.split('_')) > 2 and key1.split('_')[2] == 'numeric':
+                elif len(_key_split) > 2 and _key_split[2] == 'numeric':
                     if not val1 == "0":
                         try:
                             numeric_sum += int(val1)
@@ -719,13 +719,13 @@ class survey_question_wiz(osv.osv_memory):
                         except:
                             raise openerp.exceptions.Warning("'" + que_rec['question'] + "' \n" + _("Please enter an integer value."))
 
-                elif len(key1.split('_')) == 3:
+                elif len(_key_split) == 3:
                     if val1:
-                        ans_create_id = res_ans_obj.create(cr, SUPERUSER_ID, {'response_line_id': resp_id, 'answer_id': _type, 'column_id': key1.split('_')[2], 'value_choice': isinstance(val1, basestring) and val1 or None})
+                        ans_create_id = res_ans_obj.create(cr, SUPERUSER_ID, {'response_line_id': resp_id, 'answer_id': _type, 'column_id': _key_split[2], 'value_choice': isinstance(val1, basestring) and val1 or None})
                         select_count += 1
 
-                elif len(key1.split('_')) == 2:
-                    ans_create_id = res_ans_obj.create(cr, SUPERUSER_ID, {'response_line_id': resp_id, 'answer_id': key1.split('_')[-1], 'answer': val1})
+                elif len(_key_split) == 2:
+                    ans_create_id = res_ans_obj.create(cr, SUPERUSER_ID, {'response_line_id': resp_id, 'answer_id': _key_split[-1], 'answer': val1})
                     select_count += 1
 
             for key1, val1 in vals.items():
@@ -733,11 +733,14 @@ class survey_question_wiz(osv.osv_memory):
                 if key1 in self_columns or int(_key_split[0]) != que_id:
                     continue
                 _type = _key_split[1]
-
                 if _type == "commentcolumn" and response_list:
+                    has_res_ans = False
                     for res_id in response_list:
-                        if key1.split('_')[2] in res_id.split('_')[1]:
-                            res_ans_obj.write(cr, SUPERUSER_ID, [res_id.split('_')[0]], {'comment_field': val})
+                        if _key_split[2] in res_id.split('_')[1]:
+                            res_ans_obj.write(cr, SUPERUSER_ID, [res_id.split('_')[0]], {'comment_field': val1})
+                            has_res_ans = True
+                    if val1 and not has_res_ans:
+                        raise openerp.exceptions.Warning("'" + que_rec['question'] + "'\n" + _("You cannot write a comment without select an answer."))
 
             if comment_field and comment_value:
                 raise openerp.exceptions.Warning("'" + que_rec['question'] + "' " + tools.ustr(que_rec['make_comment_field_err_msg']))
@@ -906,7 +909,8 @@ class survey_question_wiz(osv.osv_memory):
         if context is None:
             context = {}
         if not context.get('edit'):
-            context['survey_token'] = self.read(cr, uid, context['wizard_id'], ['token'], context=context)['token'] or context['survey_token']
+            survey_wiz_data = self.read(cr, uid, context['wizard_id'], ['token'], context=context)
+            context['survey_token'] = survey_wiz_data and survey_wiz_data['token'] or context.get('survey_token')
         self.write(cr, uid, [context.get('wizard_id', False)], {'transfer': True, 'page': next and 'next' or 'previous'})
         return {
             'view_type': 'form',
