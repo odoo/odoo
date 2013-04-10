@@ -97,7 +97,6 @@ class survey_mail_compose_message(osv.TransientModel):
         survey_response_obj = self.pool.get('survey.response')
         partner_obj = self.pool.get('res.partner')
         mail_mail_obj = self.pool.get('mail.mail')
-        mail_message_obj = self.pool.get('mail.message')
         try:
             model, anonymous_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'portal', 'group_anonymous')
         except ValueError:
@@ -114,6 +113,7 @@ class survey_mail_compose_message(osv.TransientModel):
                 'res_id': None,
                 'subject': wizard.subject,
                 'body': wizard.body.replace("__URL__", url),
+                'body_html': wizard.body.replace("__URL__", url),
                 'parent_id': None,
                 'partner_ids': partner_id and [(4, partner_id)] or None,
                 'notified_partner_ids': partner_id and [(4, partner_id)] or None,
@@ -121,10 +121,8 @@ class survey_mail_compose_message(osv.TransientModel):
                 'email_from': wizard.email_from or None,
                 'email_to': email,
             }
-            mail_obj = partner_id and mail_message_obj or mail_mail_obj
-            mail_id = mail_obj.create(cr, uid, values, context=context)
-            if mail_obj == mail_mail_obj:
-                mail_obj.send(cr, uid, [mail_id], context=context)
+            mail_id = mail_mail_obj.create(cr, uid, values, context=context)
+            mail_mail_obj.send(cr, uid, [mail_id], context=context)
 
         def create_token(wizard, partner_id, email):
             if context.get("survey_resent_token"):
