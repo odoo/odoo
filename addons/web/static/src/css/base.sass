@@ -486,6 +486,22 @@ $sheet-padding: 16px
             label
                 display: inline-block
                 text-align: center
+                height: 16px
+        &.oe_vertical
+            label
+                margin-left: 4px
+        &.oe_required
+            .oe_radio_input
+                border: 2px solid transparent
+                display: inline-block
+                height: 12px
+                width: 12px
+                vertical-align: bottom
+                border-radius: 10px
+                margin: 1px 0
+            &.oe_form_invalid
+                .oe_radio_input
+                    border-color: red
     .oe_tags
         &.oe_inline
             min-width: 250px

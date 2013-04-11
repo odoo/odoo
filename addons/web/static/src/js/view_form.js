@@ -2813,14 +2813,13 @@ instance.web.form.FieldRadio = instance.web.form.AbstractField.extend(instance.w
         /* Radio button widget: Attributes options:
         * - "horizontal" to display in column
         * - "no_radiolabel" don't display text values
-        * - "display_readonly" to display radio button (not clickable) in read only mode
         */
         this._super(field_manager, node);
         this.horizontal = +this.options.horizontal || false;
         this.no_radiolabel = +this.options.no_radiolabel || false;
-        this.display_readonly = +this.options.display_readonly || false;
         this.selection = _.clone(this.field.selection) || [];
         this.domain = false;
+        console.log(this);
     },
     initialize_content: function () {
         this.uniqueId = _.uniqueId("radio");
@@ -2888,7 +2887,7 @@ instance.web.form.FieldRadio = instance.web.form.AbstractField.extend(instance.w
     render_value: function () {
         this.$(".oe_radio_edit_only, .oe_radio_read_only").hide();
         this.$(this.get('effective_readonly') ? ".oe_radio_read_only" : ".oe_radio_edit_only").show();
-        this.$("input[checked]").prop("checked", false);
+        this.$("input[checked]").attr("checked", false);
         if (this.get_value()) {
             this.$("input[value='" + this.get_value() + "']").attr("checked", true);
             this.$(".oe_radio_read_only .oe_radio_header").text(this.get('value') ? this.get('value')[1] : "");
