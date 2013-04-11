@@ -483,7 +483,10 @@ class pos_order(osv.osv):
         #_logger.info("orders: %r", orders)
         order_ids = []
         for tmp_order in orders:
+            to_invoice = tmp_order['to_invoice']
             order = tmp_order['data']
+
+
             order_id = self.create(cr, uid, {
                 'name': order['name'],
                 'user_id': order['user_id'] or False,
@@ -522,6 +525,13 @@ class pos_order(osv.osv):
             order_ids.append(order_id)
             wf_service = netsvc.LocalService("workflow")
             wf_service.trg_validate(uid, 'pos.order', order_id, 'paid', cr)
+
+            if to_invoice:
+                self.action_invoice(cr, uid, [order_id], context)
+                order_obj = self.browse(cr, uid, order_id, context)
+                wf_service = netsvc.LocalService('workflow')
+                wf_service.trg_validate(uid,'account.invoice', order_obj.invoice_id.id,'invoice_open',cr)
+        
         return order_ids
 
     def unlink(self, cr, uid, ids, context=None):
@@ -859,6 +869,7 @@ class pos_order(osv.osv):
                 inv_line_ref.create(cr, uid, inv_line, context=context)
             inv_ref.button_reset_taxes(cr, uid, [inv_id], context=context)
             wf_service.trg_validate(uid, 'pos.order', order.id, 'invoice', cr)
+            wf_service.trg_validate(uid, 'account.invoice', inv_id, 'validate', cr)
 
         if not inv_ids: return {}
 

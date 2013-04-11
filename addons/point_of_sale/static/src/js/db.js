@@ -267,10 +267,19 @@ function openerp_pos_db(instance, module){
             return results;
         },
         add_order: function(order){
-            var order_id = this.load('last_order_id',0) + 1;
+            var order_id = order.uid;
             var orders  = this.load('orders',[]);
+
+            // if the order was already stored, we overwrite its data
+            for(var i = 0, len = orders.length; i < len; i++){
+                if(orders[i].id === order_id){
+                    orders[i].data = order;
+                    this.save('orders',orders);
+                    return order_id;
+                }
+            }
+
             orders.push({id: order_id, data: order});
-            this.save('last_order_id', order_id);
             this.save('orders',orders);
             return order_id;
         },
