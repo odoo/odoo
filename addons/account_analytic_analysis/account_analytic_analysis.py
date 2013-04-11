@@ -572,6 +572,8 @@ class account_analytic_account(osv.osv):
         res['value']['recurring_interval'] = template.recurring_interval
         res['value']['recurring_rule_type'] = template.recurring_rule_type
         res['value']['recurring_invoice_line_ids'] = invoice_line_ids
+        res['value']['date_start'] = template.date_start
+        res['value']['date'] = template.date
         return res
 
     def onchange_recurring_invoices(self, cr, uid, ids, recurring_invoices, date_start=False, context=None):
