@@ -19,14 +19,21 @@
     border-radius: 2px;
     -box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
 }
-.oe_goal_gauge {
+.oe_kanban_goal .oe_goal_state_block {
     width:200px;
     height:130px;
     margin: auto;
-    margin-bottom: -30px;
+    margin-bottom: -20px;
 }
-.oe_goal_gauge svg {
-    margin-top: -30px;
+.oe_kanban_goal .oe_goal_state_block p {
+    line-height: 70px;
+    font-size: 3em;
+}
+.openerp .oe_kanban_view .oe_kanban_content .oe_goal_gauge:first-child {
+    margin: auto; /* avoid margin-right: 16px; */
+}
+.oe_kanban_goal .oe_kanban_content .oe_goal_gauge svg {
+    margin-top: -20px;
 }
 
 
@@ -47,18 +54,17 @@
     border: solid 1px rgba(0,0,0,0.03);
 }
 
-.openerp .oe_mail_wall_aside .oe_gamification_goal .oe_goal_reached:before {
+.openerp .oe_gamification_goal .oe_goal_reached:before {
     content: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABmJLR0QA/wD/AP+gvaeTAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAB3RJTUUH3QMSCREbCamR5gAAAXhJREFUOMuV0z9rlEEQBvDf7htFFIwQBCvRQuFAJSJooY29VrH0E1hcCqNign8SYzAxRfTA0nyAg3wBK1GCKSwTK8G7j6AgiHl3LbLmwOQu8Wl2mZ15Zp6ZnWC/GMcrjBvBdTRkX4P/QdNZrGKkWN7sn+CuE5IvsqOyKFnRMhb3DJwsZ2VV5ZgoCt5qGdsyD8ITzGJSW3BVkAUdlZsu++0T/SU8xxQeuyj7LKEWJKcs6Px16y9harv0NVEQBZWmBR33e26Dm/hMW3BLLUvW/XJBlM31XIZMlNsi7pWa5jGjIbiBXBLd8UL+N0e0WIInvMNp8+Wltqx2SBJk06Z98HRnkUHTOZWPomEVojOiUZV26foP2XkHdD3aSRBxXDIsSRKyddmyGklQa5vRtbl7myprvrnisOBa0TuEgyBhziXwfneCrTG+9kDSkgQJSbaJ2ix42H9QYXvTakdEG4KThfanoKHS9XIvgt7KjspW8F2wIbhtSRr0Vf4AD6Nod0TaN4kAAAAASUVORK5CYII=);
-    margin-left:-40px;
+    margin-left:-20px;
 }
-.openerp .oe_mail_wall_aside .oe_gamification_goal .oe_goal_failed:before {
+.openerp .oe_gamification_goal .oe_goal_failed:before {
     content: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA4AAAAOCAYAAAAfSC3RAAAABmJLR0QA/wD/AP+gvaeTAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAB3RJTUUH3QMVECkXmaDBcAAAAUxJREFUKM+N0jFrVEEUhuFnV1KICS7ExcLCSgiCYJXCxt5C8B+ohYVgYeUfMJBCUIydkCpRLG3EThSxU0ypxMZKYQkSzd7cO3dmLJxNNhckGTgMfHPe+c6ZOZ7Sb7gauOIIq+V2wwVjFjNtYhS4dgh0L1EnvhtzKbGdyQW+8R/ofmJc8r64Ra/hYuJHEbda7nSgB1PQRsVpc2j+xfnEZjncjtz9zLHIw0SdyZH3uwx/wmDq5oaFyKeJc2QzsVOgVzXDveRBp5fAucjbTJ5E5EWYhtDvPkJiC1878rdEdUAZHHQ7FVkrpdaJ35lQXJ8EZveST5a9Zr7lZYFS5HHF2cjztF/ys11OgDP0auYjbwrURFZGzMAvjkfW077z6z/MGjGMfCxQFXnU7fsdvcjq5FsSH1RcnkAty4eM3EqiyTTW6AeuB5aOOOTLgZt/AfLdvLh74DfrAAAAAElFTkSuQmCC);
-    margin-left:-40px;
+    margin-left:-20px;
 }
 .openerp .oe_mail_wall_aside .oe_gamification_goal .oe_goal_reached,
 .openerp .oe_mail_wall_aside .oe_gamification_goal .oe_goal_failed {
     text-decoration: line-through;
-    padding-left: 20px;
 }
 
 .openerp .oe_mail_wall .oe_mail_wall_aside ul {

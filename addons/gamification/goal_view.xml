@@ -47,7 +47,7 @@
                         <button string="Goal Reached" type="object" name="action_reach" states="inprogress,inprogress_update" />
                         <button string="Goal Failed" type="object" name="action_fail" states="inprogress,inprogress_update"/>
                         <button string="Reset Completion" type="object" name="action_cancel" states="failed,reached" groups="base.group_no_one" />
-                        <field name="state" widget="statusbar" statusbar_visible="inprogress" />
+                        <field name="state" widget="statusbar" statusbar_visible="draft,inprogress,reached" />
                     </header>
                     <sheet>
                         <group>
@@ -138,17 +138,37 @@
                     <field name="target_goal"/>
                     <field name="type_condition"/>
                     <field name="type_suffix"/>
+                    <field name="type_ponctual"/>
                     <field name="start_date"/>
                     <field name="end_date"/>
                     <templates>
                         <t t-name="kanban-box">
-                            <div t-attf-class="oe_kanban_card oe_kanban_global_click oe_kanban_goal">
+                            <div t-attf-class="oe_kanban_card oe_gamification_goal oe_kanban_goal">
                                 <div class="oe_kanban_content">
                                     <div class="oe_kanban_left">
                                         <img t-att-src="kanban_image('res.users', 'image_small', record.user_id.raw_value)" t-att-title="record.user_id.value" width="24" height="24" />
                                     </div>
-                                    <h4 class="oe_goal_name"><field name="type_id"/></h4>
-                                    <div class="oe_goal_gauge"></div>
+                                    <div>
+                                        <h4 class="oe_goal_name"><field name="type_id"/></h4>
+                                    </div>
+                                    <div class="oe_goal_state_block">
+                                        <t t-if="!record.type_ponctual.value">
+                                            <div class="oe_goal_gauge"></div>
+                                        </t>
+                                        <t t-if="record.type_ponctual.value">
+                                            <p class="oe_e">
+                                                <t t-if="record.state.raw_value=='reached'">
+                                                    W
+                                                </t>
+                                                <t t-if="record.state.raw_value=='inprogress' || record.state.raw_value=='inprogress_update'">
+                                                    N
+                                                </t>
+                                                <t t-if="record.state.raw_value=='failed'">
+                                                    X
+                                                </t>
+                                            </p>
+                                        </t>
+                                    </div>
                                     <p>
                                         <t t-if="record.type_description.value">
                                             <em><field name="type_description"/></em>
@@ -227,6 +247,7 @@
                                 <field name="domain" attrs="{'invisible':[('computation_mode','=','manually')], 'required':[('computation_mode','!=','manually')]}" class="oe_inline"/>
 
                                 <field name="condition" widget="radio"/>
+                                <field name="ponctual" />
                             </group>
                             <group string="Formating Options">
                                 <field name="unit" class="oe_inline"/>

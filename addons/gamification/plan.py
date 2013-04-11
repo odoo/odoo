@@ -165,10 +165,10 @@ class gamification_goal_plan(osv.Model):
             string='Next Report Date'),
 
         'category': fields.selection([
-            ('hr', 'Human Ressources'),
+            ('hr', 'Human Ressources / Appraisals'),
             ('other', 'Other'),
             ],
-            string="Category", help="Only HR plans can be accessed by managers", required=True)
+            string="Appears in", help="Only HR plans can be accessed by managers", required=True)
         }
 
     _defaults = {

@@ -93,7 +93,7 @@
                             <field name="rule_auth_user_ids" attrs="{'invisible': [('rule_auth','!=','users')]}" widget="many2many_tags" />
                             <field name="rule_auth_badge_ids" attrs="{'invisible': [('rule_auth','!=','having')]}" widget="many2many_tags" />
                             <field name="rule_max" attrs="{'invisible': [('rule_auth','=','nobody')]}" />
-                            <field name="rule_max_number" attrs="{'invisible': ['!',('rule_max','=',False),('rule_auth','=','nobody')]}"/>
+                            <field name="rule_max_number" attrs="{'invisible': ['|',('rule_max','=',False),('rule_auth','=','nobody')]}"/>
                         </group>
                         <group string="Automatic Rules">
                             <field name="rule_automatic"/>

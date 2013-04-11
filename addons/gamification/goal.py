@@ -73,6 +73,8 @@ class gamification_goal_type(osv.Model):
             ],
             string="Computation Mode",
             required=True),
+        'ponctual': fields.boolean("Ponctual Goal",
+            help="A non-numerical goal is displayed with only two states: TODO or Done."),
         'model_id': fields.many2one('ir.model',
             string='Model',
             help='The model object for the field to evaluate'),
@@ -110,6 +112,7 @@ class gamification_goal_type(osv.Model):
         'computation_mode': 'manually',
         'domain': "[]",
         'monetary': False,
+        'ponctual': False,
     }
 
 
@@ -194,6 +197,8 @@ class gamification_goal(osv.Model):
             type='char', string='Type Condition'),
         'type_suffix': fields.related('type_id', 'full_suffix',
             type="char", string="Suffix"),
+        'type_ponctual': fields.related('type_id', 'ponctual',
+            type="boolean", string="Ponctual Goal"),
     }
 
     _defaults = {
