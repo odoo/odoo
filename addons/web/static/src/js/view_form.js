@@ -2819,7 +2819,6 @@ instance.web.form.FieldRadio = instance.web.form.AbstractField.extend(instance.w
         this.no_radiolabel = +this.options.no_radiolabel || false;
         this.selection = _.clone(this.field.selection) || [];
         this.domain = false;
-        console.log(this);
     },
     initialize_content: function () {
         this.uniqueId = _.uniqueId("radio");
