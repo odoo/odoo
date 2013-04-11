@@ -53,7 +53,7 @@ class stock_picking(osv.osv):
             We select the partner of the sales order as the partner of the customer invoice
         """
         if picking.sale_id:
-            return picking.sale_id.partner_id
+            return picking.sale_id.partner_invoice_id
         return super(stock_picking, self)._get_partner_to_invoice(cr, uid, picking, context=context)
 
     def _get_comment_invoice(self, cursor, user, picking):
