@@ -490,7 +490,13 @@ $sheet-padding: 16px
         &.oe_vertical
             label
                 margin-left: 4px
-        &.oe_required
+        &:not(.oe_readonly)
+            .oe_radio_read_only
+                display: none
+        &.oe_readonly
+            .oe_radio_read_only
+                display: none
+        &.oe_form_required
             .oe_radio_input
                 border: 2px solid transparent
                 display: inline-block

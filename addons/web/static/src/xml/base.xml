@@ -1112,7 +1112,7 @@
     </span>
 </t>
 <t t-name="FieldRadio">
-    <span t-attf-class="oe_form_field oe_form_field_radio #{widget.horizontal ? 'oe_horizontal' : 'oe_vertical'} #{widget.field.required or widget.node.attrs.required ? 'oe_required' : ''}" t-att-style="widget.node.attrs.style">
+    <span t-attf-class="oe_form_field oe_form_field_radio #{widget.horizontal ? 'oe_horizontal' : 'oe_vertical'}" t-att-style="widget.node.attrs.style">
         <span class="oe_radio_edit_only">
             <t t-if="widget.horizontal">
                 <t t-set="width" t-value="Math.floor(100 / widget.selection.length)"/>

@@ -2315,7 +2315,11 @@
 .openerp .oe_form_field_radio.oe_horizontal {
   white-space: nowrap;
 }
-.openerp .oe_form_field_radio.oe_required .oe_radio_input {
+.openerp .oe_form_field_radio:not(.oe_readonly) .oe_radio_read_only,
+.openerp .oe_form_field_radio.oe_readonly .oe_radio_edit_only {
+  display: none;
+}
+.openerp .oe_form_field_radio.oe_form_required .oe_radio_input {
   border: 1px solid transparent;
   display: inline-block;
   height: 12px;
@@ -2324,7 +2328,7 @@
   border-radius: 10px;
   margin: 1px 0;
 }
-.openerp .oe_form_field_radio.oe_required.oe_form_invalid .oe_radio_input {
+.openerp .oe_form_field_radio.oe_form_required.oe_form_invalid .oe_radio_input {
   border-color: red;
 }
 .openerp .oe_form_field_radio.oe_horizontal label,

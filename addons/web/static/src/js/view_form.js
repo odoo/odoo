@@ -2885,8 +2885,7 @@ instance.web.form.FieldRadio = instance.web.form.AbstractField.extend(instance.w
         return value instanceof Array ? value[0] : value;
     },
     render_value: function () {
-        this.$(".oe_radio_edit_only, .oe_radio_read_only").hide();
-        this.$(this.get('effective_readonly') ? ".oe_radio_read_only" : ".oe_radio_edit_only").show();
+        this.$el.toggleClass("oe_readonly", this.get('effective_readonly'));
         this.$("input[checked]").attr("checked", false);
         if (this.get_value()) {
             this.$("input[value='" + this.get_value() + "']").attr("checked", true);
