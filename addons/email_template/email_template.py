@@ -89,7 +89,7 @@ class email_template(osv.osv):
             template = tools.ustr(template)
             record = None
             if res_id:
-                record = self.pool.get(model).browse(cr, uid, res_id, context=context)
+                record = self.pool[model].browse(cr, uid, res_id, context=context)
             user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
             variables = {
                 'object': record,

@@ -174,7 +174,7 @@ class mail_compose_message(osv.TransientModel):
                 related to.
             :param int res_id: id of the document record this mail is related to
         """
-        doc_name_get = self.pool.get(model).name_get(cr, uid, [res_id], context=context)
+        doc_name_get = self.pool[model].name_get(cr, uid, [res_id], context=context)
         record_name = False
         if doc_name_get:
             record_name = doc_name_get[0][1]
@@ -237,7 +237,7 @@ class mail_compose_message(osv.TransientModel):
             mass_mail_mode = wizard.composition_mode == 'mass_mail'
             if mass_mail_mode:  # mass mail: avoid any auto subscription because this could lead to people being follower of plenty of documents
                 context['mail_create_nosubscribe'] = True
-            active_model_pool = self.pool.get(wizard.model if wizard.model else 'mail.thread')
+            active_model_pool = self.pool[wizard.model if wizard.model else 'mail.thread']
 
             # wizard works in batch mode: [res_id] or active_ids
             res_ids = active_ids if mass_mail_mode and wizard.model and active_ids else [wizard.res_id]
@@ -319,7 +319,7 @@ class mail_compose_message(osv.TransientModel):
             exp = str(match.group()[2:-1]).strip()
             result = eval(exp, {
                 'user': self.pool.get('res.users').browse(cr, uid, uid, context=context),
-                'object': self.pool.get(model).browse(cr, uid, res_id, context=context),
+                'object': self.pool[model].browse(cr, uid, res_id, context=context),
                 'context': dict(context),  # copy context to prevent side-effects of eval
                 })
             return result and tools.ustr(result) or ''

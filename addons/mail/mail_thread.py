@@ -449,7 +449,7 @@ class mail_thread(osv.AbstractModel):
         """ Used by the plugin addon, based for plugin_outlook and others. """
         ret_dict = {}
         for model_name in self.pool.obj_list():
-            model = self.pool.get(model_name)
+            model = self.pool[model_name]
             if 'mail.thread' in getattr(model, '_inherit', []):
                 ret_dict[model_name] = model._description
         return ret_dict
@@ -520,12 +520,12 @@ class mail_thread(osv.AbstractModel):
         if ref_match:
             thread_id = int(ref_match.group(1))
             model = ref_match.group(2) or model
-            model_pool = self.pool.get(model)
-            if thread_id and model and model_pool and model_pool.exists(cr, uid, thread_id) \
-                and hasattr(model_pool, 'message_update'):
-                _logger.info('Routing mail from %s to %s with Message-Id %s: direct reply to model: %s, thread_id: %s, custom_values: %s, uid: %s',
-                                email_from, email_to, message_id, model, thread_id, custom_values, uid)
-                return [(model, thread_id, custom_values, uid)]
+            if thread_id and model in self.pool:
+                model_obj = self.pool[model]
+                if model_obj.exists(cr, uid, thread_id) and hasattr(model_obj, 'message_update'):
+                    _logger.info('Routing mail from %s to %s with Message-Id %s: direct reply to model: %s, thread_id: %s, custom_values: %s, uid: %s',
+                                    email_from, email_to, message_id, model, thread_id, custom_values, uid)
+                    return [(model, thread_id, custom_values, uid)]
 
         # Verify whether this is a reply to a private message
         if in_reply_to:
@@ -666,7 +666,7 @@ class mail_thread(osv.AbstractModel):
             if self._name == 'mail.thread':
                 context.update({'thread_model': model})
             if model:
-                model_pool = self.pool.get(model)
+                model_pool = self.pool[model]
                 assert thread_id and hasattr(model_pool, 'message_update') or hasattr(model_pool, 'message_new'), \
                     "Undeliverable mail with Message-Id %s, model %s does not accept incoming emails" % \
                         (msg['message_id'], model)
@@ -720,7 +720,7 @@ class mail_thread(osv.AbstractModel):
         if isinstance(custom_values, dict):
             data = custom_values.copy()
         model = context.get('thread_model') or self._name
-        model_pool = self.pool.get(model)
+        model_pool = self.pool[model]
         fields = model_pool.fields_get(cr, uid, context=context)
         if 'name' in fields and not data.get('name'):
             data['name'] = msg_dict.get('subject', '')
@@ -997,7 +997,7 @@ class mail_thread(osv.AbstractModel):
             model = context.get('thread_model', self._name) if self._name == 'mail.thread' else self._name
             if model != self._name:
                 del context['thread_model']
-                return self.pool.get(model).message_post(cr, uid, thread_id, body=body, subject=subject, type=type, subtype=subtype, parent_id=parent_id, attachments=attachments, context=context, content_subtype=content_subtype, **kwargs)
+                return self.pool[model].message_post(cr, uid, thread_id, body=body, subject=subject, type=type, subtype=subtype, parent_id=parent_id, attachments=attachments, context=context, content_subtype=content_subtype, **kwargs)
 
         # 0: Parse email-from, try to find a better author_id based on document's followers for incoming emails
         email_from = kwargs.get('email_from')
