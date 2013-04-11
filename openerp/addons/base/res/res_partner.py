@@ -393,7 +393,7 @@ class res_partner(osv.osv, format_address):
     def _address_fields(self, cr, uid, context=None):
         """ Returns the list of address fields that are synced from the parent
         when the `use_parent_address` flag is set. """
-        return ADDRESS_FIELDS
+        return list(ADDRESS_FIELDS)
 
     def update_address(self, cr, uid, ids, vals, context=None):
         address_fields = self._address_fields(cr, uid, context=context)
