@@ -37,10 +37,10 @@ class invite_wizard(osv.osv_memory):
         res_id = result.get('res_id')
         if 'message' in fields and model and res_id:
             ir_model = self.pool.get('ir.model')
-            model_ids = ir_model.search(cr, uid, [('model', '=', self.pool.get(model)._name)], context=context)
+            model_ids = ir_model.search(cr, uid, [('model', '=', self.pool[model]._name)], context=context)
             model_name = ir_model.name_get(cr, uid, model_ids, context=context)[0][1]
 
-            document_name = self.pool.get(model).name_get(cr, uid, [res_id], context=context)[0][1]
+            document_name = self.pool[model].name_get(cr, uid, [res_id], context=context)[0][1]
             message = _('<div><p>Hello,</p><p>%s invited you to follow %s document: %s.<p></div>') % (user_name, model_name, document_name)
             result['message'] = message
         elif 'message' in fields:
@@ -63,7 +63,7 @@ class invite_wizard(osv.osv_memory):
 
     def add_followers(self, cr, uid, ids, context=None):
         for wizard in self.browse(cr, uid, ids, context=context):
-            model_obj = self.pool.get(wizard.res_model)
+            model_obj = self.pool[wizard.res_model]
             document = model_obj.browse(cr, uid, wizard.res_id, context=context)
 
             # filter partner_ids to get the new followers, to avoid sending email to already following partners

@@ -86,7 +86,7 @@ class crm_lead_forward_to_partner(osv.TransientModel):
         if context is None:
             context = {}
         if model and model == 'crm.lead' and res_id:
-            lead = self.pool.get(model).browse(cr, uid, res_id, context=context)
+            lead = self.pool[model].browse(cr, uid, res_id, context=context)
             context['history_mode'] = history_mode
             body = self.get_record_data(cr, uid, 'crm.lead', res_id, context=context)['body']
             return {'value': {'body': body}}
@@ -110,7 +110,7 @@ class crm_lead_forward_to_partner(osv.TransientModel):
         if wizard.model not in ('crm.lead'):
             return res
 
-        lead = self.pool.get(wizard.model)
+        lead = self.pool[wizard.model]
         lead_ids = wizard.res_id and [wizard.res_id] or []
 
         if wizard.composition_mode == 'mass_mail':

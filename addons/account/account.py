@@ -1027,6 +1027,9 @@ class account_period(osv.osv):
 
     def action_draft(self, cr, uid, ids, *args):
         mode = 'draft'
+        for period in self.browse(cr, uid, ids):
+            if period.fiscalyear_id.state == 'done':
+                raise osv.except_osv(_('Warning !'), _('You can not re-open a period which belongs to closed fiscal year'))
         cr.execute('update account_journal_period set state=%s where period_id in %s', (mode, tuple(ids),))
         cr.execute('update account_period set state=%s where id in %s', (mode, tuple(ids),))
         self.pool.get('account.journal.period').invalidate_cache(['state'])
@@ -3405,7 +3408,7 @@ class wizard_multi_charts_accounts(osv.osv_memory):
                 try:
                     tmp2 = obj_data.get_object_reference(cr, uid, *ref)
                     if tmp2: 
-                        self.pool.get(tmp2[0]).write(cr, uid, tmp2[1], {
+                        self.pool[tmp2[0]].write(cr, uid, tmp2[1], {
                             'currency_id': obj_wizard.currency_id.id
                         })
                 except ValueError, e:

@@ -314,7 +314,7 @@ class account_invoice(osv.osv):
             context = {}
 
         if context.get('active_model', '') in ['res.partner'] and context.get('active_ids', False) and context['active_ids']:
-            partner = self.pool.get(context['active_model']).read(cr, uid, context['active_ids'], ['supplier','customer'])[0]
+            partner = self.pool[context['active_model']].read(cr, uid, context['active_ids'], ['supplier','customer'])[0]
             if not view_type:
                 view_id = self.pool.get('ir.ui.view').search(cr, uid, [('name', '=', 'account.invoice.tree')])
                 view_type = 'tree'
@@ -422,6 +422,7 @@ class account_invoice(osv.osv):
             'mark_invoice_as_sent': True,
             })
         return {
+            'name': _('Compose Email'),
             'type': 'ir.actions.act_window',
             'view_type': 'form',
             'view_mode': 'form',

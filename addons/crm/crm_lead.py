@@ -22,6 +22,7 @@
 from openerp.addons.base_status.base_stage import base_stage
 import crm
 from datetime import datetime
+from operator import itemgetter
 from openerp.osv import fields, osv
 import time
 from openerp import tools
@@ -83,6 +84,22 @@ class crm_lead(base_stage, format_address, osv.osv):
             'crm.mt_lead_stage': lambda self, cr, uid, obj, ctx=None: obj['state'] not in ['new', 'cancel', 'done'],
         },
     }
+
+    def get_empty_list_help(self, cr, uid, help, context=None):
+        if context.get('default_type') == 'lead':
+            context['empty_list_help_model'] = 'crm.case.section'
+            context['empty_list_help_id'] = context.get('default_section_id')
+        context['empty_list_help_document_name'] = _("leads")
+        return super(crm_lead, self).get_empty_list_help(cr, uid, help, context=context)
+
+    def onchange_user_id(self, cr, uid, ids, section_id, user_id, context=None):
+        """ When changing the user, also set a section_id or restrict section id
+            to the ones user_id is member of. """
+        if user_id:
+            section_ids = self.pool.get('crm.case.section').search(cr, uid, ['|', ('user_id', '=', user_id), ('member_ids', '=', user_id)], context=context)
+            if len(section_ids) > 0 and section_id not in section_ids:
+                section_id = section_ids[0]
+        return {'value': {'section_id': section_id}}
 
     def create(self, cr, uid, vals, context=None):
         if context is None:
@@ -628,12 +645,13 @@ class crm_lead(base_stage, format_address, osv.osv):
         opportunities = self.browse(cr, uid, ids, context=context)
         sequenced_opps = []
         for opportunity in opportunities:
+            sequence = -1
             if opportunity.stage_id and opportunity.stage_id.state != 'cancel':
-                sequenced_opps.append((opportunity.stage_id.sequence, opportunity))
-            else:
-                sequenced_opps.append((-1, opportunity))
-        sequenced_opps.sort(key=lambda tup: tup[0], reverse=True)
-        opportunities = [opportunity for sequence, opportunity in sequenced_opps]
+                sequence = opportunity.stage_id.sequence
+            sequenced_opps.append(((int(sequence != -1 and opportunity.type == 'opportunity'), sequence, -opportunity.id), opportunity))
+
+        sequenced_opps.sort(reverse=True)
+        opportunities = map(itemgetter(1), sequenced_opps)
         ids = [opportunity.id for opportunity in opportunities]
         highest = opportunities[0]
         opportunities_rest = opportunities[1:]
@@ -652,11 +670,10 @@ class crm_lead(base_stage, format_address, osv.osv):
         opportunities.extend(opportunities_rest)
         self._merge_notify(cr, uid, highest, opportunities, context=context)
         # Check if the stage is in the stages of the sales team. If not, assign the stage with the lowest sequence
-        if merged_data.get('type') == 'opportunity' and merged_data.get('section_id'):
-            section_stages = self.pool.get('crm.case.section').read(cr, uid, merged_data['section_id'], ['stage_ids'], context=context)
-            if merged_data.get('stage_id') not in section_stages['stage_ids']:
-                stages_sequences = self.pool.get('crm.case.stage').search(cr, uid, [('id','in',section_stages['stage_ids'])], order='sequence', limit=1, context=context)
-                merged_data['stage_id'] = stages_sequences and stages_sequences[0] or False
+        if merged_data.get('section_id'):
+            section_stage_ids = self.pool.get('crm.case.stage').search(cr, uid, [('section_ids', 'in', merged_data['section_id']), ('type', '=', merged_data.get('type'))], order='sequence', context=context)
+            if merged_data.get('stage_id') not in section_stage_ids:
+                merged_data['stage_id'] = section_stage_ids and section_stage_ids[0] or False
         # Write merged data into first opportunity
         self.write(cr, uid, [highest.id], merged_data, context=context)
         # Delete tail opportunities
@@ -944,6 +961,7 @@ class crm_lead(base_stage, format_address, osv.osv):
             'default_composition_mode': 'comment',
         })
         return {
+            'name': _('Compose Email'),
             'type': 'ir.actions.act_window',
             'view_type': 'form',
             'view_mode': 'form',

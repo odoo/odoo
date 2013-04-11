@@ -374,7 +374,7 @@ class purchase_order(osv.osv):
             pick_ids += [picking.id for picking in po.picking_ids]
 
         action_model, action_id = tuple(mod_obj.get_object_reference(cr, uid, 'stock', 'action_picking_tree4'))
-        action = self.pool.get(action_model).read(cr, uid, action_id, context=context)
+        action = self.pool[action_model].read(cr, uid, action_id, context=context)
         ctx = eval(action['context'])
         ctx.update({
             'search_default_purchase_id': ids[0]
@@ -429,6 +429,7 @@ class purchase_order(osv.osv):
             'default_composition_mode': 'comment',
         })
         return {
+            'name': _('Compose Email'),
             'type': 'ir.actions.act_window',
             'view_type': 'form',
             'view_mode': 'form',
