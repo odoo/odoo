@@ -1450,6 +1450,9 @@ instance.web.form.FormRenderingEngine = instance.web.form.FormRenderingEngineInt
             $(this).children().each(function() {
                 var $td = $(this),
                     $child = $td.children(':first');
+                if ($child.attr('cell-class')) {
+                    $td.addClass($child.attr('cell-class'));
+                }
                 switch ($child[0].tagName.toLowerCase()) {
                     case 'separator':
                         break;
