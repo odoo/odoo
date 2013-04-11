@@ -155,7 +155,7 @@ class google_docs_ir_attachment(osv.osv):
         pool_ir_attachment = self.pool.get('ir.attachment')
         pool_gdoc_config = self.pool.get('google.docs.config')
         name_gdocs = ''
-        model_fields_dic = self.pool.get(res_model).read(cr, uid, res_id, [], context=context)
+        model_fields_dic = self.pool[res_model].read(cr, uid, res_id, [], context=context)
 
         # check if a model is configured with a template
         google_docs_config = pool_gdoc_config.search(cr, uid, [('model_id', '=', res_model)], context=context)
