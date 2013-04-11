@@ -1384,6 +1384,7 @@ class account_move(osv.osv):
                         'ref':False,
                         'balance':False,
                         'account_tax_id':False,
+                        'statement_id': False,
                     })
 
             if 'journal_id' in vals and vals.get('journal_id', False):
@@ -1420,6 +1421,7 @@ class account_move(osv.osv):
         context = {} if context is None else context.copy()
         default.update({
             'state':'draft',
+            'ref': False,
             'name':'/',
         })
         context.update({
