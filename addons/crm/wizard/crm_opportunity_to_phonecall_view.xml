@@ -23,7 +23,7 @@
                             <field name="partner_id" readonly="True"/>
                             <field name="phone"/>
                             <field name="user_id" attrs="{'invisible': [('action','=','log')]}"/>
-                            <field name="section_id" widget="selection" attrs="{'invisible': [('action','=','log')]}"/>
+                            <field name="section_id" widget="selection" attrs="{'invisible': [('action','=','log')]}" groups="base.group_multi_salesteams"/>
                         </group>
                     </group>
                     <field name="note" placeholder="Call Description" />

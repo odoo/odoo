@@ -256,7 +256,19 @@ class mail_mail(osv.Model):
         body = self.send_get_mail_body(cr, uid, mail, partner=partner, context=context)
         subject = self.send_get_mail_subject(cr, uid, mail, partner=partner, context=context)
         body_alternative = tools.html2plaintext(body)
-        email_to = ['%s <%s>' % (partner.name, partner.email)] if partner else tools.email_split(mail.email_to)
+
+        # generate email_to, heuristic:
+        # 1. if 'partner' is specified and there is a related document: Followers of 'Doc' <email>
+        # 2. if 'partner' is specified, but no related document: Partner Name <email>
+        # 3; fallback on mail.email_to that we split to have an email addresses list
+        if partner and mail.record_name:
+            sanitized_record_name = re.sub(r'[^\w+.]+', '-', mail.record_name)
+            email_to = [_('"Followers of %s" <%s>') % (sanitized_record_name, partner.email)]
+        elif partner:
+            email_to = ['%s <%s>' % (partner.name, partner.email)]
+        else:
+            email_to = tools.email_split(mail.email_to)
+
         return {
             'body': body,
             'body_alternative': body_alternative,
