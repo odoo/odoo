@@ -106,7 +106,7 @@ class edi(osv.AbstractModel):
         """
         edi_list = []
         for record in records:
-            record_model = record._model
+            record_model = self.pool[record._name]
             edi_list += record_model.edi_export(cr, uid, [record], context=context)
         return self.serialize(edi_list)
 
