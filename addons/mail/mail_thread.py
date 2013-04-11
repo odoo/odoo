@@ -389,6 +389,26 @@ class mail_thread(osv.AbstractModel):
             return [('message_unread', '=', True)]
         return []
 
+    def _garbage_collect_attachments(self, cr, uid, context=None):
+        """ Garbage collect lost mail attachments. Those are attachments
+            - linked to res_model 'mail.compose.message', the composer wizard
+            - with res_id 0, because they were created outside of an existing
+                wizard (typically user input through Chatter or reports
+                created on-the-fly by the templates)
+            - unused since at least one day (create_date and write_date)
+        """
+        limit_date = datetime.datetime.utcnow() - datetime.timedelta(days=1)
+        limit_date_str = datetime.datetime.strftime(limit_date, tools.DEFAULT_SERVER_DATETIME_FORMAT)
+        ir_attachment_obj = self.pool.get('ir.attachment')
+        attach_ids = ir_attachment_obj.search(cr, uid, [
+                            ('res_model', '=', 'mail.compose.message'),
+                            ('res_id', '=', 0),
+                            ('create_date', '<', limit_date_str),
+                            ('write_date', '<', limit_date_str),
+                            ], context=context)
+        ir_attachment_obj.unlink(cr, uid, attach_ids, context=context)
+        return True
+
     #------------------------------------------------------
     # Email specific
     #------------------------------------------------------
@@ -1026,7 +1046,6 @@ class mail_thread(osv.AbstractModel):
         if attachment_ids:
             filtered_attachment_ids = ir_attachment.search(cr, SUPERUSER_ID, [
                 ('res_model', '=', 'mail.compose.message'),
-                ('res_id', '=', 0),
                 ('create_uid', '=', uid),
                 ('id', 'in', attachment_ids)], context=context)
             if filtered_attachment_ids:

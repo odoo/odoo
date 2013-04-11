@@ -19,10 +19,8 @@
 #
 ##############################################################################
 
-import base64
 import re
 from openerp import tools
-
 from openerp import SUPERUSER_ID
 from openerp.osv import osv
 from openerp.osv import fields
@@ -220,31 +218,36 @@ class mail_compose_message(osv.TransientModel):
             email(s), rendering any template patterns on the fly if needed. """
         if context is None:
             context = {}
+        ir_attachment_obj = self.pool.get('ir.attachment')
         active_ids = context.get('active_ids')
         is_log = context.get('mail_compose_log', False)
 
         for wizard in self.browse(cr, uid, ids, context=context):
             mass_mail_mode = wizard.composition_mode == 'mass_mail'
-            active_model_pool = self.pool.get(wizard.model if wizard.model else 'mail.thread')
+            active_model_pool_name = wizard.model if wizard.model else 'mail.thread'
+            active_model_pool = self.pool.get(active_model_pool_name)
 
             # wizard works in batch mode: [res_id] or active_ids
             res_ids = active_ids if mass_mail_mode and wizard.model and active_ids else [wizard.res_id]
             for res_id in res_ids:
-                # default values, according to the wizard options
+                # mail.message values, according to the wizard options
                 post_values = {
                     'subject': wizard.subject,
                     'body': wizard.body,
                     'parent_id': wizard.parent_id and wizard.parent_id.id,
                     'partner_ids': [partner.id for partner in wizard.partner_ids],
-                    'attachments': [(attach.datas_fname or attach.name, base64.b64decode(attach.datas)) for attach in wizard.attachment_ids],
+                    'attachment_ids': [attach.id for attach in wizard.attachment_ids],
                 }
                 # mass mailing: render and override default values
                 if mass_mail_mode and wizard.model:
                     email_dict = self.render_message(cr, uid, wizard, res_id, context=context)
-                    new_partner_ids = email_dict.pop('partner_ids', [])
-                    post_values['partner_ids'] += new_partner_ids
-                    new_attachments = email_dict.pop('attachments', [])
-                    post_values['attachments'] += new_attachments
+                    post_values['partner_ids'] += email_dict.pop('partner_ids', [])
+                    post_values['attachments'] = email_dict.pop('attachments', [])
+                    attachment_ids = []
+                    for attach_id in post_values.pop('attachment_ids'):
+                        new_attach_id = ir_attachment_obj.copy(cr, uid, attach_id, {'res_model': self._name, 'res_id': wizard.id}, context=context)
+                        attachment_ids.append(new_attach_id)
+                    post_values['attachment_ids'] = attachment_ids
                     post_values.update(email_dict)
                 # post the message
                 subtype = 'mail.mt_comment'
