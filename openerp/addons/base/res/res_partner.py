@@ -688,8 +688,7 @@ class res_partner(osv.osv, format_address):
             'country_name': address.country_id and address.country_id.name or '',
             'company_name': address.parent_id and address.parent_id.name or '',
         }
-        address_field = ['title', 'street', 'street2', 'zip', 'city']
-        for field in address_field :
+        for field in self._address_fields(cr, uid, context=context):
             args[field] = getattr(address, field) or ''
         if without_company:
             args['company_name'] = ''
