@@ -54,7 +54,7 @@
                             <group string="Reference">
                                 <field name="type_id" on_change="on_change_type_id(type_id)" attrs="{'readonly':[('state','!=','draft')]}"/>
                                 <field name="user_id" attrs="{'readonly':[('state','!=','draft')]}"/>
-                                <field name="planline_id" groups="base.group_no_one"  attrs="{'readonly':[('state','!=','draft')]}"/>
+                                <field name="plan_id" attrs="{'readonly':[('state','!=','draft')]}"/>
                             </group>
                             <group string="Schedule">
                                 <field name="start_date" attrs="{'readonly':[('state','!=','draft')]}"/>
@@ -69,13 +69,16 @@
                                 <field name="last_update" groups="base.group_no_one"/>
                             </group>
                             <group string="Data" colspan="4">
-                                <field name="target_goal" attrs="{'readonly':[('state','!=','draft')]}"/>
+                                <field name="target_goal" attrs="{'readonly':[('state','!=','draft')]}" class="oe_inline"/>
                                 <label for="current" />
                                 <div>
                                     <field name="current"  attrs="{'readonly':[('computation_mode','!=','manually')]}" class="oe_inline"/>
                                     <button string="Refresh state" type="object" name="update" class="oe_highlight oe_inline" attrs="{'invisible':['|',('computation_mode', '=', 'manually'),('state', '=', 'draft')]}"/>
                                     <button name="write" type="object" string="The current value is up to date" help="Indicate that the current value of the manual goal is still correct and avoid reminders" attrs="{'invisible':['|',('computation_mode','!=', 'manually'),('state','=','draft')]}"/>
                                 </div>
+                                <field name="type_condition"/>
+                                <field name="type_suffix"/>
+                                <field name="type_ponctual"/>
                             </group>
                         </group>
                     </sheet>
@@ -166,9 +169,9 @@
                                             </t>
                                             <t t-if="record.type_condition.raw_value != 'higher'">
                                                 <div class="oe_goal_state">
-                                                    <t t-esc="record.current.raw_value" /> → <t t-esc="record.target_goal.raw_value" />
+                                                    <t t-esc="record.current.raw_value" />
                                                 </div>
-                                                <em>reached when lower than</em>
+                                                <em>reached when lower than <t t-esc="record.target_goal.raw_value" /></em>
                                             </t>
                                         </t>
                                         

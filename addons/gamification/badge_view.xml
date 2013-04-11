@@ -85,27 +85,33 @@
                             </h1>
                         </div>
                         <group>
-                            <field name="description" />
+                            <field name="description" nolabel="1" placeholder="Badge Description" />
                         </group>
                         <group string="User Rules">
-                            <field name="rule_auth" string="Allowed to Grant" />
+                            <field name="rule_auth" string="Allowed to Grant" widget="radio" />
                             <field name="rule_auth_user_ids" attrs="{'invisible': [('rule_auth','!=','users')]}" widget="many2many_tags" />
                             <field name="rule_auth_badge_ids" attrs="{'invisible': [('rule_auth','!=','having')]}" widget="many2many_tags" />
                             <field name="rule_max" attrs="{'invisible': [('rule_auth','=','nobody')]}" />
                             <field name="rule_max_number" attrs="{'invisible': ['|',('rule_max','=',False),('rule_auth','=','nobody')]}"/>
+                                                        <field name="stat_my_monthly_sending" attrs="{'invisible': [('rule_auth','=','nobody')]}"/>
+
                         </group>
                         <group string="Automatic Rules">
-                            <field name="rule_automatic"/>
+                            <field name="rule_automatic" widget="radio"/>
                             <field name="compute_code" attrs="{'invisible': [('rule_automatic','!=','python')]}"/>
                             <field name="goal_type_ids" attrs="{'invisible': [('rule_automatic','!=','goals')]}" widget="many2many_tags"/>
                         </group>
-                        <group string="Stats">
-                            <field name="stat_count"/>
-                            <field name="stat_count_distinct"/>
-                            <field name="stat_this_month"/>
-                            <field name="stat_my"/>
-                            <field name="stat_my_this_month"/>
-                            <field name="stat_my_monthly_sending"/>
+                        <group string="Statistics">
+                            <group>
+                                <field name="stat_count"/>
+                                <field name="stat_this_month"/>
+                                <field name="stat_count_distinct"/>
+                            </group>
+                            <group>
+                                <field name="stat_my"/>
+                                <field name="stat_my_this_month"/>
+
+                            </group>
                         </group>
                     </sheet>
                 </form>

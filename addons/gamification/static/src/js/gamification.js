@@ -123,7 +123,6 @@ openerp.gamification = function(instance) {
                 if (self.view.dataset.model === 'gamification.goal' && self.$el.find('.oe_goal_gauge').length == 1) {
                     var unique_id = _.uniqueId("goal_gauge_");
                     self.$el.find('.oe_goal_gauge').attr('id', unique_id);
-                    console.log(self.record);
                     var g = new JustGage({
                         id: unique_id,
                         node: self.$el.find('.oe_goal_gauge').empty().get(0),
