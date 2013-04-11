@@ -415,7 +415,9 @@ class mail_thread(osv.AbstractModel):
         return ret_dict
 
     def _message_find_partners(self, cr, uid, message, header_fields=['From'], context=None):
-        """ Find partners related to some header fields of the message. """
+        """ Find partners related to some header fields of the message.
+
+            TDE TODO: merge me with other partner finding methods in 8.0 """
         partner_obj = self.pool.get('res.partner')
         partner_ids = []
         s = ', '.join([decode(message.get(h)) for h in header_fields if message.get(h)])
@@ -427,6 +429,7 @@ class mail_thread(osv.AbstractModel):
         return partner_ids
 
     def _message_find_user_id(self, cr, uid, message, context=None):
+        """ TDE TODO: check and maybe merge me with other user finding methods in 8.0 """
         from_local_part = tools.email_split(decode(message.get('From')))[0]
         # FP Note: canonification required, the minimu: .lower()
         user_ids = self.pool.get('res.users').search(cr, uid, ['|',
@@ -848,7 +851,8 @@ class mail_thread(osv.AbstractModel):
             recipient in the result dictionary. The form is :
                 partner_id, partner_name<partner_email> or partner_name, reason """
         if email and not partner:
-            partner_info = self.message_get_partner_info_from_emails(cr, uid, [email], context=context)[0]
+            # get partner info from email
+            partner_info = self.message_get_partner_info_from_emails(cr, uid, [email], context=context, res_id=obj.id)[0]
             if partner_info.get('partner_id'):
                 partner = self.pool.get('res.partner').browse(cr, SUPERUSER_ID, [partner_info.get('partner_id')], context=context)[0]
         if email and email in [val[1] for val in result[obj.id]]:  # already existing email -> skip
@@ -876,29 +880,49 @@ class mail_thread(osv.AbstractModel):
                 self._message_add_suggested_recipient(cr, uid, result, obj, partner=obj.user_id.partner_id, reason=self._all_columns['user_id'].column.string, context=context)
         return result
 
-    def message_get_partner_info_from_emails(self, cr, uid, emails, link_mail=False, context=None):
+    def message_get_partner_info_from_emails(self, cr, uid, emails, link_mail=False, context=None, res_id=None):
+        """ Wrapper with weird order parameter because of 7.0 fix.
+
+            TDE TODO: remove me in 8.0 """
+        return self.message_find_partner_from_emails(cr, uid, res_id, emails, link_mail=link_mail, context=context)
+
+    def message_find_partner_from_emails(self, cr, uid, id, emails, link_mail=False, context=None):
         """ Convert a list of emails into a list partner_ids and a list
             new_partner_ids. The return value is non conventional because
             it is meant to be used by the mail widget.
 
             :return dict: partner_ids and new_partner_ids
-        """
+
+            TDE TODO: merge me with other partner finding methods in 8.0 """
         mail_message_obj = self.pool.get('mail.message')
         partner_obj = self.pool.get('res.partner')
         result = list()
+        if id and self._name != 'mail.thread':
+            obj = self.browse(cr, SUPERUSER_ID, id, context=context)
+        else:
+            obj = None
         for email in emails:
             partner_info = {'full_name': email, 'partner_id': False}
             m = re.search(r"((.+?)\s*<)?([^<>]+@[^<>]+)>?", email, re.IGNORECASE | re.DOTALL)
             if not m:
                 continue
             email_address = m.group(3)
-            ids = partner_obj.search(cr, SUPERUSER_ID, [('email', '=', email_address)], context=context)
-            if ids:
-                partner_info['partner_id'] = ids[0]
+            # first try: check in document's followers
+            if obj:
+                for follower in obj.message_follower_ids:
+                    if follower.email == email_address:
+                        partner_info['partner_id'] = follower.id
+            # second try: check in partners
+            if not partner_info.get('partner_id'):
+                ids = partner_obj.search(cr, SUPERUSER_ID, [('email', 'ilike', email_address), ('user_ids', '!=', False)], limit=1, context=context)
+                if not ids:
+                    ids = partner_obj.search(cr, SUPERUSER_ID, [('email', 'ilike', email_address)], limit=1, context=context)
+                if ids:
+                    partner_info['partner_id'] = ids[0]
             result.append(partner_info)
 
             # link mail with this from mail to the new partner id
-            if link_mail and ids:
+            if link_mail and partner_info['partner_id']:
                 message_ids = mail_message_obj.search(cr, SUPERUSER_ID, [
                                     '|',
                                     ('email_from', '=', email),
@@ -906,7 +930,7 @@ class mail_thread(osv.AbstractModel):
                                     ('author_id', '=', False)
                                 ], context=context)
                 if message_ids:
-                    mail_message_obj.write(cr, SUPERUSER_ID, message_ids, {'author_id': ids[0]}, context=context)
+                    mail_message_obj.write(cr, SUPERUSER_ID, message_ids, {'author_id': partner_info['partner_id']}, context=context)
         return result
 
     def message_post(self, cr, uid, thread_id, body='', subject=None, type='notification',
