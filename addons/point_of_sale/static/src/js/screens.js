@@ -843,7 +843,9 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
             //
             // But since the print dialog also blocks the other asynchronous calls, the
             // button enabling in the setTimeout() is blocked until the printing dialog is 
-            // closed. But this is not reliable ... if the timeout is too slow it doesn't work
+            // closed. But the timeout has to be big enough or else it doesn't work
+            // 2 seconds is the same as the default timeout for sending orders and so the dialog
+            // should have appeared before the timeout... so yeah that's not ultra reliable. 
 
             finish_button.set_disabled(true);   
             setTimeout(function(){
@@ -898,7 +900,7 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
 
             this.set_numpad_state(this.pos_widget.numpad.state);
             
-            this.back_button = this.add_action_button({
+            this.add_action_button({
                     label: 'Back',
                     icon: '/point_of_sale/static/src/img/icons/png48/go-previous.png',
                     click: function(){  
@@ -906,7 +908,7 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
                     },
                 });
             
-            this.validate_button = this.add_action_button({
+            this.add_action_button({
                     label: 'Validate',
                     name: 'validation',
                     icon: '/point_of_sale/static/src/img/icons/png48/validate.png',
@@ -914,15 +916,17 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
                         self.validateCurrentOrder();
                     },
                 });
-
-            this.invoice_button = this.add_action_button({
-                    label: 'Invoice',
-                    name: 'invoice',
-                    icon: '/point_of_sale/static/src/img/icons/png48/invoice.png',
-                    click: function(){
-                        self.validateCurrentOrder({invoice: true});
-                    },
-                });
+           
+            if(this.pos.iface_invoicing){
+                this.add_action_button({
+                        label: 'Invoice',
+                        name: 'invoice',
+                        icon: '/point_of_sale/static/src/img/icons/png48/invoice.png',
+                        click: function(){
+                            self.validateCurrentOrder({invoice: true});
+                        },
+                    });
+            }
 
             this.updatePaymentSummary();
             this.line_refocus();this

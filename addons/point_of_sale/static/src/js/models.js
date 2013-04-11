@@ -160,7 +160,7 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
                         ['name','journal_ids','shop_id','journal_id',
                          'iface_self_checkout', 'iface_led', 'iface_cashdrawer',
                          'iface_payment_terminal', 'iface_electronic_scale', 'iface_barscan', 'iface_vkeyboard',
-                         'iface_print_via_proxy','iface_cashdrawer','state','sequence_id','session_ids'],
+                         'iface_print_via_proxy','iface_cashdrawer','iface_invoicing','state','sequence_id','session_ids'],
                         [['id','=', self.get('pos_session').config_id[0]]]
                     );
                 }).then(function(configs){
@@ -171,6 +171,7 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
                     self.iface_vkeyboard           =  !!pos_config.iface_vkeyboard; 
                     self.iface_self_checkout       =  !!pos_config.iface_self_checkout;
                     self.iface_cashdrawer          =  !!pos_config.iface_cashdrawer;
+                    self.iface_invoicing           =  !!pos_config.iface_invoicing;
 
                     return self.fetch('sale.shop',[],[['id','=',pos_config.shop_id[0]]]);
                 }).then(function(shops){

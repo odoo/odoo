@@ -63,6 +63,7 @@ class pos_config(osv.osv):
         'iface_electronic_scale' : fields.boolean('Electronic Scale Interface'),
         'iface_vkeyboard' : fields.boolean('Virtual KeyBoard Interface'),
         'iface_print_via_proxy' : fields.boolean('Print via Proxy'),
+        'iface_invoicing': fields.boolean('Invoicing',help='Enables invoice generation from the Point of Sale'),
 
         'state' : fields.selection(POS_CONFIG_STATE, 'Status', required=True, readonly=True),
         'sequence_id' : fields.many2one('ir.sequence', 'Order IDs Sequence', readonly=True,
@@ -121,6 +122,7 @@ class pos_config(osv.osv):
         'shop_id': _default_shop,
         'journal_id': _default_sale_journal,
         'group_by' : True,
+        'iface_invoicing': True,
     }
 
     def set_active(self, cr, uid, ids, context=None):
