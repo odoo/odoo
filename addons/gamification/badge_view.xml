@@ -27,9 +27,9 @@
                 <form string="Grant Badge To" version="7.0">
                     Who would you like to reward?
                     <group>
-                        <field name="user_id" />
+                        <field name="user_id" nolabel="1" />
                         <field name="badge_id" invisible="1"/>
-                        <field name="comment" placeholder="Describe what they did and why it matters" />
+                        <field name="comment" nolabel="1" placeholder="Describe what they did and why it matters" />
                     </group>
                     <footer>
                         <button string="Grant Badge" type="object" name="action_grant_badge" class="oe_highlight" /> or

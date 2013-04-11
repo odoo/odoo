@@ -45,9 +45,9 @@ class hr_gamification_badge_user(osv.Model):
     ]
 
 
-class hr_gamification_badge(osv.Model):
+class gamification_badge(osv.Model):
     _name = 'gamification.badge'
-    _inherit = ['gamification.badge', 'mail.thread']
+    _inherit = ['gamification.badge']
 
     def message_post(self, cr, uid, thread_id, context=None, **kwargs):
         """Overwrite the message_post method to send the badge to the employee"""
@@ -58,7 +58,7 @@ class hr_gamification_badge(osv.Model):
             if badge_user.employee_id:
                 return self.pool.get('hr.employee').message_post(cr, uid,
                     badge_user.employee_id.id, context=context, **kwargs)
-        return super(hr_gamification_badge, self).message_post(cr, uid, thread_id, context=context, **kwargs)
+        return super(gamification_badge, self).message_post(cr, uid, thread_id, context=context, **kwargs)
 
 
 class hr_grant_badge_wizard(osv.TransientModel):
