@@ -21,11 +21,7 @@
 
 import re
 from openerp import tools
-<<<<<<< TREE
-=======
-
 from openerp import SUPERUSER_ID
->>>>>>> MERGE-SOURCE
 from openerp.osv import osv
 from openerp.osv import fields
 from openerp.tools.safe_eval import safe_eval as eval
