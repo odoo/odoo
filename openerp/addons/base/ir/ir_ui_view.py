@@ -83,7 +83,8 @@ class view(osv.osv):
     }
     _defaults = {
         'arch': '<?xml version="1.0"?>\n<tree string="My view">\n\t<field name="name"/>\n</tree>',
-        'priority': 16
+        'priority': 16,
+        'type': 'tree',
     }
     _order = "priority,name"
 

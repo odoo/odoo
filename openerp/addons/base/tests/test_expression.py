@@ -114,6 +114,12 @@ class test_expression(common.TransactionCase):
         # Test2: inheritance + relational fields
         user_ids = users_obj.search(cr, uid, [('child_ids.name', 'like', 'test_B')])
         self.assertEqual(set(user_ids), set([b1]), 'searching through inheritance failed')
+        
+        # Special =? operator mean "is equal if right is set, otherwise always True"
+        user_ids = users_obj.search(cr, uid, [('name', 'like', 'test'), ('parent_id', '=?', False)])
+        self.assertEqual(set(user_ids), set([a, b1, b2]), '(x =? False) failed')
+        user_ids = users_obj.search(cr, uid, [('name', 'like', 'test'), ('parent_id', '=?', b1_user.partner_id.id)])
+        self.assertEqual(set(user_ids), set([b2]), '(x =? id) failed')
 
     def test_20_auto_join(self):
         registry, cr, uid = self.registry, self.cr, self.uid

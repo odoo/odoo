@@ -240,9 +240,9 @@ class act_window(osv.osv):
         'name': fields.char('Action Name', size=64, translate=True),
         'type': fields.char('Action Type', size=32, required=True),
         'view_id': fields.many2one('ir.ui.view', 'View Ref.', ondelete='cascade'),
-        'domain': fields.char('Domain Value', size=250,
+        'domain': fields.char('Domain Value',
             help="Optional domain filtering of the destination data, as a Python expression"),
-        'context': fields.char('Context Value', size=250, required=True,
+        'context': fields.char('Context Value', required=True,
             help="Context dictionary as Python expression, empty by default (Default: {})"),
         'res_id': fields.integer('Record ID', help="Database ID of record to open in form view, when ``view_mode`` is set to 'form' only"),
         'res_model': fields.char('Destination Model', size=64, required=True,
@@ -284,6 +284,36 @@ class act_window(osv.osv):
         'auto_search':True,
         'multi': False,
     }
+
+    def read(self, cr, uid, ids, fields=None, context=None, load='_classic_read'):
+        """ call the method get_empty_list_help of the model and set the window action help message
+        """
+        ids_int = isinstance(ids, (int, long))
+        if ids_int:
+            ids = [ids]
+        results = super(act_window, self).read(cr, uid, ids, fields=fields, context=context, load=load)
+
+        if not fields or 'help' in fields:
+            context = dict(context or {})
+            eval_dict = {
+                'active_model': context.get('active_model'),
+                'active_id': context.get('active_id'),
+                'active_ids': context.get('active_ids'),
+                'uid': uid,
+            }
+            for res in results:
+                model = res.get('res_model')
+                if model and self.pool.get(model):
+                    try:
+                        with tools.mute_logger("openerp.tools.safe_eval"):
+                            eval_context = eval(res['context'] or "{}", eval_dict) or {}
+                    except Exception:
+                        continue
+                    custom_context = dict(context, **eval_context)
+                    res['help'] = self.pool.get(model).get_empty_list_help(cr, uid, res.get('help', ""), context=custom_context)
+        if ids_int:
+            return results[0]
+        return results
 
     def for_xml_id(self, cr, uid, module, xml_id, context=None):
         """ Returns the act_window object created for the provided xml_id
@@ -631,7 +661,7 @@ class actions_server(osv.osv):
                 return self.pool[action.action_id.type].read(cr, uid, action.action_id.id, context=context)
 
             if action.state=='code':
-                eval(action.code, cxt, mode="exec", nocopy=True) # nocopy allows to return 'action'
+                eval(action.code.strip(), cxt, mode="exec", nocopy=True) # nocopy allows to return 'action'
                 if 'action' in cxt:
                     return cxt['action']
 
