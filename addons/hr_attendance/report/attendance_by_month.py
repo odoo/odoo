@@ -23,7 +23,7 @@ from datetime import datetime, timedelta
 from dateutil.relativedelta import relativedelta
 import time
 
-from openerp import netsvc, pooler
+import openerp
 from openerp.report import report_sxw
 from openerp.report.interface import report_rml
 from openerp.report.interface import toxml
@@ -46,7 +46,8 @@ def lengthmonth(year, month):
 class report_custom(report_rml):
 
     def create_xml(self, cr, uid, ids, datas, context=None):
-        obj_emp = pooler.get_pool(cr.dbname).get('hr.employee')
+        registry = openerp.registry(cr.dbname)
+        obj_emp = registry['hr.employee']
         if context is None:
             context = {}
         month = datetime(datas['form']['year'], datas['form']['month'], 1)
@@ -102,14 +103,14 @@ class report_custom(report_rml):
                 days_xml.append(today_xml)
                 user_xml.append(user_repr % '\n'.join(days_xml))
 
-        rpt_obj = pooler.get_pool(cr.dbname).get('hr.employee')
+        rpt_obj = obj_emp
         rml_obj=report_sxw.rml_parse(cr, uid, rpt_obj._name,context)
         header_xml = '''
         <header>
         <date>%s</date>
         <company>%s</company>
         </header>
-        ''' % (str(rml_obj.formatLang(time.strftime("%Y-%m-%d"),date=True))+' ' + str(time.strftime("%H:%M")),to_xml(pooler.get_pool(cr.dbname).get('res.users').browse(cr,uid,uid).company_id.name))
+        ''' % (str(rml_obj.formatLang(time.strftime("%Y-%m-%d"),date=True))+' ' + str(time.strftime("%H:%M")),to_xml(registry['res.users'].browse(cr,uid,uid).company_id.name))
 
         first_date = str(month)
         som = datetime.strptime(first_date, '%Y-%m-%d %H:%M:%S')

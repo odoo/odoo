@@ -32,7 +32,6 @@ import re
 from openerp.addons.decimal_precision import decimal_precision as dp
 
 from openerp.osv import fields, osv
-from openerp import netsvc
 from openerp.tools.translate import _
 
 _intervalTypes = {
@@ -166,7 +165,7 @@ Normal - the campaign runs normally and automatically sends all emails and repor
 
     # dead code
     def signal(self, cr, uid, model, res_id, signal, run_existing=True, context=None):
-        record = self.pool.get(model).browse(cr, uid, res_id, context)
+        record = self.pool[model].browse(cr, uid, res_id, context)
         return self._signal(cr, uid, record, signal, run_existing, context)
 
     #dead code
@@ -229,7 +228,7 @@ Normal - the campaign runs normally and automatically sends all emails and repor
             if unique_value:
                 if unique_field.ttype == 'many2one':
                     unique_value = unique_value.id
-                similar_res_ids = self.pool.get(campaign_rec.object_id.model).search(cr, uid,
+                similar_res_ids = self.pool[campaign_rec.object_id.model].search(cr, uid,
                                     [(unique_field.name, '=', unique_value)], context=context)
                 if similar_res_ids:
                     duplicate_workitem_domain = [('res_id','in', similar_res_ids),
@@ -350,7 +349,7 @@ class marketing_campaign_segment(osv.osv):
             act_ids = self.pool.get('marketing.campaign.activity').search(cr,
                   uid, [('start', '=', True), ('campaign_id', '=', segment.campaign_id.id)], context=context)
 
-            model_obj = self.pool.get(segment.object_id.model)
+            model_obj = self.pool[segment.object_id.model]
             criteria = []
             if segment.sync_last_date and segment.sync_mode != 'all':
                 criteria += [(segment.sync_mode, '>', segment.sync_last_date)]
@@ -595,7 +594,7 @@ class marketing_campaign_workitem(osv.osv):
             if not wi.res_id:
                 continue
 
-            proxy = self.pool.get(wi.object_id.model)
+            proxy = self.pool[wi.object_id.model]
             if not proxy.exists(cr, uid, [wi.res_id]):
                 continue
             ng = proxy.name_get(cr, uid, [wi.res_id], context=context)
@@ -629,7 +628,7 @@ class marketing_campaign_workitem(osv.osv):
         for id, res_id, model in res:
             workitem_map.setdefault(model,{}).setdefault(res_id,set()).add(id)
         for model, id_map in workitem_map.iteritems():
-            model_pool = self.pool.get(model)
+            model_pool = self.pool[model]
             condition_name[0] = model_pool._rec_name
             condition = [('id', 'in', id_map.keys()), condition_name]
             for res_id in model_pool.search(cr, uid, condition, context=context):
@@ -677,7 +676,7 @@ class marketing_campaign_workitem(osv.osv):
             return False
 
         activity = workitem.activity_id
-        proxy = self.pool.get(workitem.object_id.model)
+        proxy = self.pool[workitem.object_id.model]
         object_id = proxy.browse(cr, uid, workitem.res_id, context=context)
 
         eval_context = {

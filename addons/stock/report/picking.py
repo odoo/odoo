@@ -22,7 +22,6 @@
 import time
 from openerp.report import report_sxw
 from openerp.osv import osv
-from openerp import pooler
 
 class picking(report_sxw.rml_parse):
     def __init__(self, cr, uid, name, context):

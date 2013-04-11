@@ -14,8 +14,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-12-22 06:07+0000\n"
-"X-Generator: Launchpad (build 16378)\n"
+"X-Launchpad-Export-Date: 2013-03-16 05:52+0000\n"
+"X-Generator: Launchpad (build 16532)\n"
 
 #. module: fleet
 #: selection:fleet.vehicle,fuel_type:0
@@ -25,7 +25,7 @@ msgstr "Hybride"
 #. module: fleet
 #: model:fleet.vehicle.tag,name:fleet.vehicle_tag_compact
 msgid "Compact"
-msgstr "Compacte"
+msgstr "Compact"
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_1
@@ -142,7 +142,7 @@ msgstr "Liter"
 #. module: fleet
 #: model:ir.actions.client,name:fleet.action_fleet_menu
 msgid "Open Fleet Menu"
-msgstr ""
+msgstr "Open Wagenpark menu"
 
 #. module: fleet
 #: view:board.board:0
@@ -170,7 +170,7 @@ msgid "Refueling Details"
 msgstr "Tankbeurt gegevens"
 
 #. module: fleet
-#: code:addons/fleet/fleet.py:659
+#: code:addons/fleet/fleet.py:669
 #, python-format
 msgid "%s contract(s) need(s) to be renewed and/or closed!"
 msgstr "%s contract(en) moet(en) vernieuwd en/of afgelosten worden!"
@@ -246,7 +246,7 @@ msgstr "Beide"
 #: field:fleet.vehicle.log.services,cost_id:0
 msgid "Automatically created field to link to parent fleet.vehicle.cost"
 msgstr ""
-"Automatisch gecreëerd veld om te verbindnen met bovenliggende "
+"Automatisch gecreëerd veld om te verbinden met bovenliggende "
 "fleet.vehicle.cost"
 
 #. module: fleet
@@ -257,7 +257,7 @@ msgstr "Beëindig contract"
 #. module: fleet
 #: help:fleet.vehicle.cost,parent_id:0
 msgid "Parent cost to this current cost"
-msgstr "Bovenliggnede kosten voor deze kosten"
+msgstr "Bovenliggende kosten voor deze kosten"
 
 #. module: fleet
 #: help:fleet.vehicle.log.contract,cost_frequency:0
@@ -300,7 +300,7 @@ msgstr "Berichten"
 #. module: fleet
 #: model:res.groups,name:fleet.group_fleet_user
 msgid "User"
-msgstr ""
+msgstr "Gebruiker"
 
 #. module: fleet
 #: help:fleet.vehicle.cost,vehicle_id:0
@@ -391,7 +391,7 @@ msgid "Transmission Used by the vehicle"
 msgstr "Transmissie van het voertuig"
 
 #. module: fleet
-#: code:addons/fleet/fleet.py:730
+#: code:addons/fleet/fleet.py:740
 #: view:fleet.vehicle.log.contract:0
 #: model:ir.actions.act_window,name:fleet.act_renew_contract
 #, python-format
@@ -479,13 +479,13 @@ msgstr "Contract kosten"
 #: model:ir.actions.act_window,name:fleet.fleet_vehicle_log_services_act
 #: model:ir.ui.menu,name:fleet.fleet_vehicle_log_services_menu
 msgid "Vehicles Services Logs"
-msgstr "Voertuig service logs"
+msgstr "Voertuig onderhoud logboek"
 
 #. module: fleet
 #: model:ir.actions.act_window,name:fleet.fleet_vehicle_log_fuel_act
 #: model:ir.ui.menu,name:fleet.fleet_vehicle_log_fuel_menu
 msgid "Vehicles Fuel Logs"
-msgstr "Voertuig brandstof logs"
+msgstr "Voertuig brandstof logboek"
 
 #. module: fleet
 #: view:fleet.vehicle.model.brand:0
@@ -532,7 +532,7 @@ msgstr "toon de brandstof log van dit voertuig"
 #. module: fleet
 #: field:fleet.vehicle.log.contract,purchaser_id:0
 msgid "Contractor"
-msgstr ""
+msgstr "Aannemer"
 
 #. module: fleet
 #: field:fleet.vehicle,license_plate:0
@@ -578,7 +578,7 @@ msgstr "Status contract"
 #. module: fleet
 #: field:fleet.vehicle,contract_renewal_total:0
 msgid "Total of contracts due or overdue minus one"
-msgstr ""
+msgstr "Totaal van de contracten verschuldigd of achterstallig minus een"
 
 #. module: fleet
 #: field:fleet.vehicle.cost,cost_subtype_id:0
@@ -598,7 +598,7 @@ msgstr "Totaalprijs"
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_27
 msgid "Heater Core Replacement"
-msgstr ""
+msgstr "Verwarmingskern vervangen"
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_14
@@ -751,7 +751,7 @@ msgstr "Wiellager vervangen"
 #. module: fleet
 #: help:fleet.vehicle.cost,cost_subtype_id:0
 msgid "Cost type purchased with this cost"
-msgstr ""
+msgstr "Kostensoort gekocht met deze kosten"
 
 #. module: fleet
 #: selection:fleet.vehicle,fuel_type:0
@@ -935,7 +935,7 @@ msgstr "Brandstof voor het voertuig"
 #. module: fleet
 #: view:fleet.vehicle.log.contract:0
 msgid "Set Contract In Progress"
-msgstr ""
+msgstr "Stel contract in op in behandeling"
 
 #. module: fleet
 #: field:fleet.vehicle.cost,odometer_unit:0
@@ -967,18 +967,18 @@ msgstr "Logo"
 #. module: fleet
 #: field:fleet.vehicle,horsepower_tax:0
 msgid "Horsepower Taxation"
-msgstr ""
+msgstr "PK inschatting"
 
 #. module: fleet
 #: field:fleet.vehicle,log_services:0
 #: view:fleet.vehicle.log.services:0
 msgid "Services Logs"
-msgstr ""
+msgstr "Service logs"
 
 #. module: fleet
 #: view:fleet.vehicle.model:0
 msgid "Brand"
-msgstr ""
+msgstr "Merk"
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_43
@@ -1007,7 +1007,7 @@ msgstr ""
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_service_11
 msgid "Management Fee"
-msgstr ""
+msgstr "Management Fee"
 
 #. module: fleet
 #: view:fleet.vehicle:0
@@ -1064,7 +1064,7 @@ msgstr "Brandstof injector vervangen"
 #: model:ir.actions.act_window,name:fleet.fleet_vehicle_state_act
 #: model:ir.ui.menu,name:fleet.fleet_vehicle_state_menu
 msgid "Vehicle Status"
-msgstr ""
+msgstr "Voertuig status"
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_50
@@ -1152,7 +1152,7 @@ msgstr "Wagenpark dashboard"
 #. module: fleet
 #: model:fleet.vehicle.tag,name:fleet.vehicle_tag_break
 msgid "Break"
-msgstr ""
+msgstr "Rem"
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_contract_omnium
@@ -1162,7 +1162,7 @@ msgstr "All-risk"
 #. module: fleet
 #: view:fleet.vehicle.log.services:0
 msgid "Services Details"
-msgstr ""
+msgstr "Service details"
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_service_15
@@ -1192,7 +1192,7 @@ msgstr "Activeringswaarde"
 #. module: fleet
 #: view:fleet.vehicle.cost:0
 msgid "Cost Type"
-msgstr ""
+msgstr "Kostensoort"
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_4
@@ -1261,7 +1261,7 @@ msgstr ""
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_service_13
 msgid "Entry into service tax"
-msgstr ""
+msgstr "Ingave in service belastingen"
 
 #. module: fleet
 #: field:fleet.vehicle.log.contract,expiration_date:0
@@ -1271,7 +1271,7 @@ msgstr "Contract vervaldatum"
 #. module: fleet
 #: view:fleet.vehicle.cost:0
 msgid "Cost Subtype"
-msgstr ""
+msgstr "Sub kostensoort"
 
 #. module: fleet
 #: model:ir.actions.act_window,help:fleet.open_board_fleet
@@ -1437,18 +1437,18 @@ msgstr "Band vervangen"
 #. module: fleet
 #: view:fleet.service.type:0
 msgid "Service types"
-msgstr ""
+msgstr "Diensttypen"
 
 #. module: fleet
 #: field:fleet.vehicle.log.fuel,purchaser_id:0
 #: field:fleet.vehicle.log.services,purchaser_id:0
 msgid "Purchaser"
-msgstr ""
+msgstr "Inkoper"
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_service_3
 msgid "Tax roll"
-msgstr ""
+msgstr "Belasting regel"
 
 #. module: fleet
 #: view:fleet.vehicle.model:0
@@ -1602,7 +1602,7 @@ msgstr "Kosten per maand"
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_service_18
 msgid "Touring Assistance"
-msgstr ""
+msgstr "Touring assistentie"
 
 #. module: fleet
 #: field:fleet.vehicle,power:0
@@ -1649,7 +1649,7 @@ msgstr "Contract details"
 #. module: fleet
 #: model:fleet.vehicle.tag,name:fleet.vehicle_tag_leasing
 msgid "Employee Car"
-msgstr ""
+msgstr "Werknemers auto"
 
 #. module: fleet
 #: field:fleet.vehicle.cost,auto_generated:0
@@ -1759,7 +1759,7 @@ msgstr "Voertuig"
 #: view:fleet.vehicle.log.contract:0
 #: view:fleet.vehicle.log.services:0
 msgid "Included Services"
-msgstr ""
+msgstr "Inclusief service"
 
 #. module: fleet
 #: model:ir.actions.act_window,help:fleet.action_fleet_vehicle_kanban
@@ -1793,7 +1793,7 @@ msgstr "Aanjager motor vervangen"
 #: model:ir.actions.act_window,name:fleet.fleet_vehicle_odometer_act
 #: model:ir.ui.menu,name:fleet.fleet_vehicle_odometer_menu
 msgid "Vehicles Odometer"
-msgstr "Voertuigen kilometerteller"
+msgstr "Voertuig kilometerstand"
 
 #. module: fleet
 #: help:fleet.vehicle.log.contract,notes:0
@@ -1819,7 +1819,7 @@ msgstr "In reparatie"
 #: model:ir.actions.act_window,name:fleet.action_fleet_reporting_costs
 #: model:ir.ui.menu,name:fleet.menu_fleet_reporting_costs
 msgid "Costs Analysis"
-msgstr "Kostenanalyse"
+msgstr "Kosten analyse"
 
 #. module: fleet
 #: field:fleet.vehicle.log.contract,ins_ref:0
@@ -1941,12 +1941,12 @@ msgstr "Ruitenwisser(s) vervangen"
 #: view:fleet.vehicle.log.contract:0
 #: field:fleet.vehicle.log.contract,generated_cost_ids:0
 msgid "Generated Costs"
-msgstr ""
+msgstr "Gegenereerde kosten"
 
 #. module: fleet
 #: field:fleet.vehicle.state,sequence:0
 msgid "Sequence"
-msgstr ""
+msgstr "Reeks"
 
 #. module: fleet
 #: field:fleet.vehicle,color:0
@@ -1993,7 +1993,7 @@ msgstr "Aantal zitplaatsen van het voertuig"
 #. module: fleet
 #: model:res.groups,name:fleet.group_fleet_manager
 msgid "Manager"
-msgstr ""
+msgstr "Manager"
 
 #. module: fleet
 #: view:fleet.vehicle.log.services:0

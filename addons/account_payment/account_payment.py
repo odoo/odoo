@@ -352,7 +352,7 @@ class payment_line(osv.osv):
 
         if move_line_id:
             line = move_line_obj.browse(cr, uid, move_line_id, context=context)
-            data['amount_currency'] = line.amount_to_pay
+            data['amount_currency'] = line.amount_residual_currency
 
             res = self.onchange_amount(cr, uid, ids, data['amount_currency'], currency,
                                        company_currency, context)

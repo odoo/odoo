@@ -19,11 +19,11 @@
 #
 ##############################################################################
 
+import base64
+import openerp.modules.registry
 from openerp.osv import osv
 from openerp_sxw2rml import sxw2rml
 from StringIO import StringIO
-import base64
-from openerp import pooler
 from openerp import addons
  
 
@@ -45,17 +45,16 @@ class report_xml(osv.osv):
         '''
         Untested function
         '''
-        pool = pooler.get_pool(cr.dbname)
         sxwval = StringIO(base64.decodestring(file_sxw))
         if file_type=='sxw':
             fp = open(addons.get_module_resource('base_report_designer','openerp_sxw2rml', 'normalized_oo2rml.xsl'),'rb')
         if file_type=='odt':
             fp = open(addons.get_module_resource('base_report_designer','openerp_sxw2rml', 'normalized_odt2rml.xsl'),'rb')
-        report = pool.get('ir.actions.report.xml').write(cr, uid, [report_id], {
+        report = self.pool['ir.actions.report.xml'].write(cr, uid, [report_id], {
             'report_sxw_content': base64.decodestring(file_sxw), 
             'report_rml_content': str(sxw2rml(sxwval, xsl=fp.read())), 
         })
-        pool.get('ir.actions.report.xml').register_all(cr)
+
         return True
 
     def report_get(self, cr, uid, report_id, context=None):

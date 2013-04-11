@@ -22,8 +22,8 @@
 import time
 from lxml import etree
 import openerp.addons.decimal_precision as dp
+import openerp.exceptions
 
-from openerp import pooler
 from openerp.osv import fields, osv, orm
 from openerp.tools.translate import _
 
@@ -96,6 +96,8 @@ class account_invoice(osv.osv):
                 for m in invoice.move_id.line_id:
                     if m.account_id.type in ('receivable','payable'):
                         result[invoice.id] += m.amount_residual_currency
+            #prevent the residual amount on the invoice to be less than 0
+            result[invoice.id] = max(result[invoice.id], 0.0)            
         return result
 
     # Give Journal Items related to the payment reconciled to this invoice
@@ -302,16 +304,7 @@ class account_invoice(osv.osv):
         ('number_uniq', 'unique(number, company_id, journal_id, type)', 'Invoice Number must be unique per Company!'),
     ]
 
-    def _find_partner(self, inv):
-        '''
-        Find the partner for which the accounting entries will be created
-        '''
-        #if the chosen partner is not a company and has a parent company, use the parent for the journal entries
-        #because you want to invoice 'Agrolait, accounting department' but the journal items are for 'Agrolait'
-        part = inv.partner_id
-        if part.parent_id and not part.is_company:
-            part = part.parent_id
-        return part
+
 
 
     def fields_view_get(self, cr, uid, view_id=None, view_type=False, context=None, toolbar=False, submenu=False):
@@ -320,7 +313,7 @@ class account_invoice(osv.osv):
             context = {}
 
         if context.get('active_model', '') in ['res.partner'] and context.get('active_ids', False) and context['active_ids']:
-            partner = self.pool.get(context['active_model']).read(cr, uid, context['active_ids'], ['supplier','customer'])[0]
+            partner = self.pool[context['active_model']].read(cr, uid, context['active_ids'], ['supplier','customer'])[0]
             if not view_type:
                 view_id = self.pool.get('ir.ui.view').search(cr, uid, [('name', '=', 'account.invoice.tree')])
                 view_type = 'tree'
@@ -428,6 +421,7 @@ class account_invoice(osv.osv):
             'mark_invoice_as_sent': True,
             })
         return {
+            'name': _('Compose Email'),
             'type': 'ir.actions.act_window',
             'view_type': 'form',
             'view_mode': 'form',
@@ -981,7 +975,7 @@ class account_invoice(osv.osv):
 
             date = inv.date_invoice or time.strftime('%Y-%m-%d')
 
-            part = self._find_partner(inv)
+            part = self.pool.get("res.partner")._find_accounting_partner(inv.partner_id)
 
             line = map(lambda x:(0,0,self.line_get_convert(cr, uid, x, part.id, date, context=ctx)),iml)
 
@@ -1753,6 +1747,16 @@ class res_partner(osv.osv):
         'invoice_ids': fields.one2many('account.invoice.line', 'partner_id', 'Invoices', readonly=True),
     }
 
+    def _find_accounting_partner(self, part):
+        '''
+        Find the partner for which the accounting entries will be created
+        '''
+        #if the chosen partner is not a company and has a parent company, use the parent for the journal entries
+        #because you want to invoice 'Agrolait, accounting department' but the journal items are for 'Agrolait'
+        if part.parent_id and not part.is_company:
+            part = part.parent_id
+        return part
+
     def copy(self, cr, uid, id, default=None, context=None):
         default = default or {}
         default.update({'invoice_ids' : []})
@@ -1767,6 +1771,7 @@ class mail_compose_message(osv.Model):
         if context.get('default_model') == 'account.invoice' and context.get('default_res_id') and context.get('mark_invoice_as_sent'):
             context = dict(context, mail_post_autofollow=True)
             self.pool.get('account.invoice').write(cr, uid, [context['default_res_id']], {'sent': True}, context=context)
+            self.pool.get('account.invoice').message_post(cr, uid, [context['default_res_id']], body=_("Invoice sent"), context=context)
         return super(mail_compose_message, self).send_mail(cr, uid, ids, context=context)
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

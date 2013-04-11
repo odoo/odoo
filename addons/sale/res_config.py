@@ -22,7 +22,6 @@
 import logging
 
 from openerp.osv import fields, osv
-from openerp import pooler
 from openerp.tools.translate import _
 
 _logger = logging.getLogger(__name__)
@@ -49,7 +48,7 @@ class sale_configuration(osv.osv_memory):
             implied_group='product.group_sale_pricelist',
             help="""Allows to manage different prices based on rules per category of customers.
 Example: 10% for retailers, promotion of 5 EUR on this product, etc."""),
-        'group_uom':fields.boolean("Allow using different units of measures",
+        'group_uom':fields.boolean("Allow using different units of measure",
             implied_group='product.group_uom',
             help="""Allows you to select and maintain different units of measure for products."""),
         'group_discount_per_so_line': fields.boolean("Allow setting a discount on the sales order lines",
@@ -144,6 +143,8 @@ class account_config_settings(osv.osv_memory):
 
     def onchange_sale_analytic_plans(self, cr, uid, ids, module_sale_analytic_plans, context=None):
         """ change group_analytic_account_for_sales following module_sale_analytic_plans """
+        if not module_sale_analytic_plans:
+            return {}
         return {'value': {'group_analytic_account_for_sales': module_sale_analytic_plans}}
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

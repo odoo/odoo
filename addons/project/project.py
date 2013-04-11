@@ -286,7 +286,6 @@ class project(osv.osv):
         'type_ids': _get_type_common,
         'alias_model': 'project.task',
         'privacy_visibility': 'public',
-        'alias_domain': False, # always hide alias during creation
     }
 
     # TODO: Why not using a SQL contraints ?
@@ -531,11 +530,11 @@ def Project():
         context = dict(context, project_creation_in_progress=True)
         mail_alias = self.pool.get('mail.alias')
         if not vals.get('alias_id') and vals.get('name', False):
-            vals.pop('alias_name', None) # prevent errors during copy()
+            alias_name = vals.pop('alias_name', None) # prevent errors during copy()
             alias_id = mail_alias.create_unique_alias(cr, uid,
                           # Using '+' allows using subaddressing for those who don't
                           # have a catchall domain setup.
-                          {'alias_name': "project+"+short_name(vals['name'])},
+                          {'alias_name': alias_name or "project+"+short_name(vals['name'])},
                           model_name=vals.get('alias_model', 'project.task'),
                           context=context)
             vals['alias_id'] = alias_id
@@ -605,8 +604,7 @@ class task(base_stage, osv.osv):
         search_domain = []
         project_id = self._resolve_project_id_from_context(cr, uid, context=context)
         if project_id:
-            search_domain += ['|', ('project_ids', '=', project_id)]
-        search_domain += [('id', 'in', ids)]
+            search_domain += [('project_ids', '=', project_id)]
         stage_ids = stage_obj._search(cr, uid, search_domain, order=order, access_rights_uid=access_rights_uid, context=context)
         result = stage_obj.name_get(cr, access_rights_uid, stage_ids, context=context)
         # restore order of the search
@@ -888,6 +886,12 @@ class task(base_stage, osv.osv):
             if 'Hours' in res['fields'][f]['string']:
                 res['fields'][f]['string'] = res['fields'][f]['string'].replace('Hours',tm)
         return res
+
+    def get_empty_list_help(self, cr, uid, help, context=None):
+        context['empty_list_help_id'] = context.get('default_project_id')
+        context['empty_list_help_model'] = 'project.project'
+        context['empty_list_help_document_name'] = _("tasks")
+        return super(task, self).get_empty_list_help(cr, uid, help, context=context)
 
     # ----------------------------------------
     # Case management
@@ -1302,13 +1306,13 @@ class account_analytic_account(osv.osv):
         return analytic_account_id
 
     def write(self, cr, uid, ids, vals, context=None):
-        name = vals.get('name')
+        vals_for_project = vals.copy()
         for account in self.browse(cr, uid, ids, context=context):
-            if not name:
-                vals['name'] = account.name
+            if not vals.get('name'):
+                vals_for_project['name'] = account.name
             if not vals.get('type'):
-                vals['type'] = account.type
-            self.project_create(cr, uid, account.id, vals, context=context)
+                vals_for_project['type'] = account.type
+            self.project_create(cr, uid, account.id, vals_for_project, context=context)
         return super(account_analytic_account, self).write(cr, uid, ids, vals, context=context)
 
     def unlink(self, cr, uid, ids, *args, **kwargs):
@@ -1425,3 +1429,4 @@ class project_category(osv.osv):
     _columns = {
         'name': fields.char('Name', size=64, required=True, translate=True),
     }
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

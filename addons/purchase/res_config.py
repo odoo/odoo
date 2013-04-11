@@ -20,7 +20,6 @@
 ##############################################################################
 
 from openerp.osv import fields, osv
-from openerp import pooler
 from openerp.tools.translate import _
 
 class purchase_config_settings(osv.osv_memory):
@@ -66,6 +65,11 @@ Example: Product: this product is deprecated, do not purchase more than 5.
         'default_invoice_method': 'manual',
     }
 
+    def onchange_purchase_analytic_plans(self, cr, uid, ids, module_purchase_analytic_plans, context=None):
+        """ change group_analytic_account_for_purchases following module_purchase_analytic_plans """
+        if not module_purchase_analytic_plans:
+            return {}
+        return {'value': {'group_analytic_account_for_purchases': module_purchase_analytic_plans}}
 
 
 
@@ -82,6 +86,8 @@ class account_config_settings(osv.osv_memory):
 
     def onchange_purchase_analytic_plans(self, cr, uid, ids, module_purchase_analytic_plans, context=None):
         """ change group_analytic_account_for_purchases following module_purchase_analytic_plans """
+        if not module_purchase_analytic_plans:
+            return {}
         return {'value': {'group_analytic_account_for_purchases': module_purchase_analytic_plans}}
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

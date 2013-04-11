@@ -22,7 +22,6 @@
 from datetime import datetime, timedelta
 from dateutil.relativedelta import relativedelta
 import time
-from openerp import pooler
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
 from openerp.tools import DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT, DATETIME_FORMATS_MAP, float_compare
@@ -51,7 +50,7 @@ class sale_order(osv.osv):
     _description = "Sales Order"
     _track = {
         'state': {
-            'sale.mt_order_confirmed': lambda self, cr, uid, obj, ctx=None: obj['state'] in ['manual', 'progress'],
+            'sale.mt_order_confirmed': lambda self, cr, uid, obj, ctx=None: obj['state'] in ['manual'],
             'sale.mt_order_sent': lambda self, cr, uid, obj, ctx=None: obj['state'] in ['sent']
         },
     }
@@ -347,9 +346,14 @@ class sale_order(osv.osv):
         return {'value': val}
 
     def create(self, cr, uid, vals, context=None):
-        if vals.get('name','/')=='/':
+        if context is None:
+            context = {}
+        if vals.get('name', '/') == '/':
             vals['name'] = self.pool.get('ir.sequence').get(cr, uid, 'sale.order') or '/'
-        return super(sale_order, self).create(cr, uid, vals, context=context)
+        context.update({'mail_create_nolog': True})
+        new_id = super(sale_order, self).create(cr, uid, vals, context=context)
+        self.message_post(cr, uid, [new_id], body=_("Quotation created"), context=context)
+        return new_id
 
     def button_dummy(self, cr, uid, ids, context=None):
         return True
@@ -540,6 +544,9 @@ class sale_order(osv.osv):
                     invoice_ref += o.name + '|'
                     self.write(cr, uid, [o.id], {'state': 'progress'})
                     cr.execute('insert into sale_order_invoice_rel (order_id,invoice_id) values (%s,%s)', (o.id, res))
+                #remove last '|' in invoice_ref
+                if len(invoice_ref) >= 1: 
+                    invoice_ref = invoice_ref[:-1]
                 invoice.write(cr, uid, [res], {'origin': invoice_ref, 'name': invoice_ref})
             else:
                 for order, il in val:
@@ -700,7 +707,9 @@ class sale_order_line(osv.osv):
         'product_id': fields.many2one('product.product', 'Product', domain=[('sale_ok', '=', True)], change_default=True),
         'invoice_lines': fields.many2many('account.invoice.line', 'sale_order_line_invoice_rel', 'order_line_id', 'invoice_id', 'Invoice Lines', readonly=True),
         'invoiced': fields.function(_fnct_line_invoiced, string='Invoiced', type='boolean',
-            store={'account.invoice': (_order_lines_from_invoice, ['state'], 10)}),
+            store={
+                'account.invoice': (_order_lines_from_invoice, ['state'], 10),
+                'sale.order.line': (lambda self,cr,uid,ids,ctx=None: ids, ['invoice_lines'], 10)}),
         'price_unit': fields.float('Unit Price', required=True, digits_compute= dp.get_precision('Product Price'), readonly=True, states={'draft': [('readonly', False)]}),
         'type': fields.selection([('make_to_stock', 'from stock'), ('make_to_order', 'on order')], 'Procurement Method', required=True, readonly=True, states={'draft': [('readonly', False)]},
          help="From stock: When needed, the product is taken from the stock or we wait for replenishment.\nOn order: When needed, the product is purchased or produced."),
@@ -723,7 +732,7 @@ class sale_order_line(osv.osv):
         'salesman_id':fields.related('order_id', 'user_id', type='many2one', relation='res.users', store=True, string='Salesperson'),
         'company_id': fields.related('order_id', 'company_id', type='many2one', relation='res.company', string='Company', store=True, readonly=True),
     }
-    _order = 'order_id desc, sequence'
+    _order = 'order_id desc, sequence, id'
     _defaults = {
         'product_uom' : _get_uom_id,
         'discount': 0.0,
@@ -811,7 +820,7 @@ class sale_order_line(osv.osv):
             vals = self._prepare_order_line_invoice_line(cr, uid, line, False, context)
             if vals:
                 inv_id = self.pool.get('account.invoice.line').create(cr, uid, vals, context=context)
-                cr.execute('insert into sale_order_line_invoice_rel (order_line_id,invoice_id) values (%s,%s)', (line.id, inv_id))
+                self.write(cr, uid, [line.id], {'invoice_lines': [(4, inv_id)]}, context=context)
                 sales.add(line.order_id.id)
                 create_ids.append(inv_id)
         # Trigger workflow events
@@ -995,6 +1004,7 @@ class res_company(osv.Model):
         'sale_note': fields.text('Default Terms and Conditions', translate=True, help="Default terms and conditions for quotations."),
     }
 
+
 class mail_compose_message(osv.Model):
     _inherit = 'mail.compose.message'
 
@@ -1004,5 +1014,17 @@ class mail_compose_message(osv.Model):
             context = dict(context, mail_post_autofollow=True)
             self.pool.get('sale.order').signal_quotation_sent(cr, uid, [context['default_res_id']])
         return super(mail_compose_message, self).send_mail(cr, uid, ids, context=context)
+
+
+class account_invoice(osv.Model):
+    _inherit = 'account.invoice'
+
+    def confirm_paid(self, cr, uid, ids, context=None):
+        sale_order_obj = self.pool.get('sale.order')
+        res = super(account_invoice, self).confirm_paid(cr, uid, ids, context=context)
+        so_ids = sale_order_obj.search(cr, uid, [('invoice_ids', 'in', ids)], context=context)
+        if so_ids:
+            sale_order_obj.message_post(cr, uid, so_ids, body=_("Invoice paid"), context=context)
+        return res
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -161,21 +161,21 @@
             <field name="arch" type="xml">
                 <form string="Purchase Order" version="7.0">
                 <header>
-                    <button name="wkf_send_rfq" states="draft" string="Send by EMail" type="object" context="{'send_rfq':True}" class="oe_highlight"/>
-                    <button name="wkf_send_rfq" states="sent" string="Send by EMail" type="object" context="{'send_rfq':True}"/>
+                    <button name="wkf_send_rfq" states="draft" string="Send by Email" type="object" context="{'send_rfq':True}" class="oe_highlight"/>
+                    <button name="wkf_send_rfq" states="sent" string="Send by Email" type="object" context="{'send_rfq':True}"/>
                     <button name="print_quotation" string="Print" type="object" states="draft" class="oe_highlight" groups="base.group_user"/>
                     <button name="print_quotation" string="Print" type="object" states="sent" groups="base.group_user"/>
                     <button name="purchase_confirm" states="draft" string="Confirm Order"/>
                     <button name="purchase_confirm" states="sent" string="Confirm Order" class="oe_highlight"/>
                     <button name="wkf_send_rfq" states="confirmed" string="Resend Purchase Order" type="object" class="oe_highlight"/>
-                    <button name="action_cancel" states="approved,except_picking,except_invoice" string="Cancel" type="object" />
+                    <button name="action_cancel" states="approved,except_picking,except_invoice" string="Cancel Order" type="object" />
                     <button name="picking_ok" states="except_picking" string="Manually Corrected"/>
                     <button name="invoice_ok" states="except_invoice" string="Manually Corrected"/>
                     <button name="purchase_approve" states="confirmed" string="Approve Order" class="oe_highlight" groups="purchase.group_purchase_manager"/>
                     <button name="view_picking" string="Receive Products" type="object" attrs="{'invisible': ['|', ('shipped','=',True), ('state','!=', 'approved')]}" class="oe_highlight"/>
                     <button name="view_invoice" string="Receive Invoice" type="object" attrs="{'invisible': ['|', ('invoice_method','=','picking'), '|', ('state','!=', 'approved'), ('invoiced','=',True) ]}" class="oe_highlight"/>
                     <button name="action_cancel_draft" states="cancel,sent,confirmed" string="Set to Draft" type="object" />
-                    <button name="purchase_cancel" states="draft,confirmed,sent" string="Cancel"/>
+                    <button name="purchase_cancel" states="draft,confirmed,sent" string="Cancel Order"/>
                     <field name="state" widget="statusbar" statusbar_visible="draft,sent,approved,done" statusbar_colors='{"except_picking":"red","except_invoice":"red","confirmed":"blue"}' readonly="1"/>
                 </header>
                 <sheet>
@@ -209,7 +209,7 @@
                                     <field name="name"/>
                                     <field name="date_planned"/>
                                     <field name="company_id" groups="base.group_multi_company" widget="selection"/>
-                                    <field name="account_analytic_id" groups="purchase.group_analytic_accounting" domain="[('parent_id','!=',False)]"/>
+                                    <field name="account_analytic_id" groups="purchase.group_analytic_accounting" domain="[('type','not in',('view','template'))]"/>
                                     <field name="product_qty" on_change="onchange_product_id(parent.pricelist_id,product_id,product_qty,product_uom,parent.partner_id,parent.date_order,parent.fiscal_position,date_planned,name,price_unit,context)"/>
                                     <field name="product_uom" groups="product.group_uom" on_change="onchange_product_uom(parent.pricelist_id,product_id,product_qty,product_uom,parent.partner_id, parent.date_order,parent.fiscal_position,date_planned,name,price_unit,context)"/>
                                     <field name="price_unit"/>
@@ -395,7 +395,7 @@
                             <group>
                                 <field name="taxes_id" widget="many2many_tags" domain="[('parent_id','=',False),('type_tax_use','!=','sale')]"/>
                                 <field name="date_planned" widget="date"/>
-                                <field name="account_analytic_id" colspan="2" groups="purchase.group_analytic_accounting" domain="[('parent_id','!=',False)]" />
+                                <field name="account_analytic_id" colspan="2" groups="purchase.group_analytic_accounting"/>
                                 <field name="company_id" groups="base.group_multi_company" widget="selection"/>
                             </group>
                         </group>
@@ -461,7 +461,7 @@
                                     domain="[('parent_id','=',False),('type_tax_use','!=','sale')]"/>
                                 <field name="date_planned" widget="date" readonly="1"/>
                                 <field name="company_id" groups="base.group_multi_company" widget="selection"/>
-                                <field name="account_analytic_id" colspan="4" groups="purchase.group_analytic_accounting" domain="[('parent_id','!=',False)]"/>
+                                <field name="account_analytic_id" colspan="4" groups="purchase.group_analytic_accounting"/>
                                 <field name="invoiced"/>
                             </group>
                         </group>

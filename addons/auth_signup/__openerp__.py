@@ -42,4 +42,5 @@ Allow users to sign up and reset their password
     ],
     'js': ['static/src/js/auth_signup.js'],
     'qweb': ['static/src/xml/auth_signup.xml'],
+    'bootstrap': True,
 }
