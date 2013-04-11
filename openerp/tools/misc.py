@@ -139,6 +139,7 @@ def file_open(name, mode="r", subdir='addons', pathinfo=False):
         # Is it below 'addons_path' or 'root_path'?
         name = os.path.normcase(os.path.normpath(name))
         for root in adps + [rtp]:
+            root = os.path.normcase(os.path.normpath(root)) + os.sep
             if name.startswith(root):
                 base = root.rstrip(os.sep)
                 name = name[len(base) + 1:]

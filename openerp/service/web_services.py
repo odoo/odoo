@@ -234,14 +234,22 @@ class db(netsvc.ExportService):
 
     @contextlib.contextmanager
     def _set_pg_password_in_environment(self):
-        """ On Win32, pg_dump (and pg_restore) require that
-        :envvar:`PGPASSWORD` be set
+        """ On systems where pg_restore/pg_dump require an explicit
+        password (i.e. when not connecting via unix sockets, and most
+        importantly on Windows), it is necessary to pass the PG user
+        password in the environment or in a special .pgpass file.
 
         This context management method handles setting
-        :envvar:`PGPASSWORD` iif win32 and the envvar is not already
+        :envvar:`PGPASSWORD` if it is not already
         set, and removing it afterwards.
+
+        See also http://www.postgresql.org/docs/8.4/static/libpq-envars.html
+        
+        .. note:: This is not thread-safe, and should never be enabled for
+             SaaS (giving SaaS users the super-admin password is not a good idea
+             anyway)
         """
-        if os.name != 'nt' or os.environ.get('PGPASSWORD'):
+        if os.environ.get('PGPASSWORD') or not tools.config['db_password']:
             yield
         else:
             os.environ['PGPASSWORD'] = tools.config['db_password']
@@ -271,7 +279,7 @@ class db(netsvc.ExportService):
             if not data or res:
                 logger.error(
                         'DUMP DB: %s failed! Please verify the configuration of the database password on the server. '
-                        'It should be provided as a -w <PASSWD> command-line option, or as `db_password` in the '
+                        'You may need to create a .pgpass file for authentication, or specify `db_password` in the '
                         'server configuration file.\n %s', db_name, data)
                 raise Exception, "Couldn't dump database"
             logger.info('DUMP DB successful: %s', db_name)
@@ -601,7 +609,11 @@ class objects_proxy(netsvc.ExportService):
 
     def dispatch(self, method, params):
         (db, uid, passwd ) = params[0:3]
+
+        # set uid tracker - cleaned up at the WSGI
+        # dispatching phase in openerp.service.wsgi_server.application
         threading.current_thread().uid = uid
+
         params = params[3:]
         if method == 'obj_list':
             raise NameError("obj_list has been discontinued via RPC as of 6.0, please query ir.model directly!")

@@ -384,6 +384,16 @@ def register_wsgi_handler(handler):
 
 def application_unproxied(environ, start_response):
     """ WSGI entry point."""
+    # cleanup db/uid trackers - they're set at HTTP dispatch in
+    # web.session.OpenERPSession.send() and at RPC dispatch in
+    # openerp.service.web_services.objects_proxy.dispatch().
+    # /!\ The cleanup cannot be done at the end of this `application`
+    # method because werkzeug still produces relevant logging afterwards 
+    if hasattr(threading.current_thread(), 'uid'):
+        del threading.current_thread().uid
+    if hasattr(threading.current_thread(), 'dbname'):
+        del threading.current_thread().dbname
+
     openerp.service.start_internal()
 
     # Try all handlers until one returns some result (i.e. not None).
@@ -394,7 +404,6 @@ def application_unproxied(environ, start_response):
         if result is None:
             continue
         return result
-
 
     # We never returned from the loop.
     response = 'No handler found.\n'

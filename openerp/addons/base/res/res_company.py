@@ -305,7 +305,7 @@ class res_company(osv.osv):
         <frame id="first" x1="1.3cm" y1="3.0cm" height="%s" width="19.0cm"/>
          <stylesheet>
             <paraStyle name="main_footer"  fontName="DejaVu Sans" fontSize="8.0" alignment="CENTER"/>
-            <paraStyle name="main_header"  fontName="DejaVu Sans" fontSize="8.0" leading="10" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>            
+            <paraStyle name="main_header"  fontName="DejaVu Sans" fontSize="8.0" leading="10" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
          </stylesheet>
         <pageGraphics>
             <!-- You Logo - Change X,Y,Width and Height -->
@@ -344,8 +344,8 @@ class res_company(osv.osv):
     </pageTemplate>
 </header>"""
 
-    _header_a4 = _header_main % ('23.0cm', '27.6cm', '27.7cm', '27.7cm', '27.8cm', '27.3cm', '25.3cm', '25.0cm', '25.0cm', '24.6cm', '24.6cm', '24.5cm', '24.5cm')
-    _header_letter = _header_main % ('21.3cm', '25.9cm', '26.0cm', '26.0cm', '26.1cm', '25.6cm', '23.6cm', '23.3cm', '23.3cm', '22.9cm', '22.9cm', '22.8cm', '22.8cm')
+    _header_a4 = _header_main % ('21.7cm', '27.7cm', '27.7cm', '27.7cm', '27.8cm', '27.3cm', '25.3cm', '25.0cm', '25.0cm', '24.6cm', '24.6cm', '24.5cm', '24.5cm')
+    _header_letter = _header_main % ('20cm', '26.0cm', '26.0cm', '26.0cm', '26.1cm', '25.6cm', '23.6cm', '23.3cm', '23.3cm', '22.9cm', '22.9cm', '22.8cm', '22.8cm')
 
     def onchange_paper_format(self, cr, uid, ids, paper_format, context=None):
         if paper_format == 'us_letter':

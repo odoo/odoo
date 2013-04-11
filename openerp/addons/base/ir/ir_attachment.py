@@ -21,11 +21,14 @@
 
 import hashlib
 import itertools
+import logging
 import os
 import re
 
 from openerp import tools
 from openerp.osv import fields,osv
+
+_logger = logging.getLogger(__name__)
 
 class ir_attachment(osv.osv):
     """Attachments are used to link binary files or url to any openerp document.
@@ -80,7 +83,7 @@ class ir_attachment(osv.osv):
             if bin_size:
                 r = os.path.getsize(full_path)
             else:
-                r = open(full_path).read().encode('base64')
+                r = open(full_path,'rb').read().encode('base64')
         except IOError:
             _logger.error("_read_file reading %s",full_path)
         return r

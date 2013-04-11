@@ -400,7 +400,7 @@ def load_openerp_module(module_name):
     initialize_sys_path()
     try:
         mod_path = get_module_path(module_name)
-        zip_mod_path = mod_path + '.zip'
+        zip_mod_path = '' if not mod_path else mod_path + '.zip'
         if not os.path.isfile(zip_mod_path):
             __import__('openerp.addons.' + module_name)
         else:

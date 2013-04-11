@@ -81,6 +81,8 @@ def image_resize_image(base64_source, size=(1024, 1024), encoding='base64', file
     if image.size <> size:
         # If you need faster thumbnails you may use use Image.NEAREST
         image = ImageOps.fit(image, size, Image.ANTIALIAS)
+    if image.mode not in ["1", "L", "P", "RGB", "RGBA"]:
+        image = image.convert("RGB")
 
     background_stream = StringIO.StringIO()
     image.save(background_stream, filetype)

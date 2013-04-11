@@ -190,6 +190,10 @@ class RegistryManager(object):
         except KeyError:
             return cls.new(db_name, force_demo, status,
                            update_module)
+        finally:
+            # set db tracker - cleaned up at the WSGI
+            # dispatching phase in openerp.service.wsgi_server.application
+            threading.current_thread().dbname = db_name
 
     @classmethod
     def new(cls, db_name, force_demo=False, status=None,
@@ -216,6 +220,11 @@ class RegistryManager(object):
                 del cls.registries[db_name]
                 raise
 
+            # load_modules() above can replace the registry by calling
+            # indirectly new() again (when modules have to be uninstalled).
+            # Yeah, crazy.
+            registry = cls.registries[db_name]
+
             cr = registry.db.cursor()
             try:
                 Registry.setup_multi_process_signaling(cr)
@@ -227,6 +236,9 @@ class RegistryManager(object):
 
         registry.ready = True
 
+        if update_module:
+            # only in case of update, otherwise we'll have an infinite reload loop!
+            cls.signal_registry_change(db_name)
         return registry
 
     @classmethod

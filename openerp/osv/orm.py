@@ -1029,7 +1029,7 @@ class BaseModel(object):
                 'required': bool(field['required']),
                 'readonly': bool(field['readonly']),
                 'domain': eval(field['domain']) if field['domain'] else None,
-                'size': field['size'],
+                'size': field['size'] or None,
                 'ondelete': field['on_delete'],
                 'translate': (field['translate']),
                 'manual': True,
@@ -1077,7 +1077,7 @@ class BaseModel(object):
 
         # Validate rec_name
         if self._rec_name is not None:
-            assert self._rec_name in self._columns.keys() + ['id'], "Invalid rec_name %s for model %s" % (self._rec_name, self._name)
+            assert self._rec_name in self._all_columns.keys() + ['id'], "Invalid rec_name %s for model %s" % (self._rec_name, self._name)
         else:
             self._rec_name = 'name'
 
@@ -1362,11 +1362,9 @@ class BaseModel(object):
                      noupdate=noupdate, res_id=id, context=context))
                 cr.execute('RELEASE SAVEPOINT model_load_save')
             except psycopg2.Warning, e:
-                _logger.exception('Failed to import record %s', record)
                 messages.append(dict(info, type='warning', message=str(e)))
                 cr.execute('ROLLBACK TO SAVEPOINT model_load_save')
             except psycopg2.Error, e:
-                _logger.exception('Failed to import record %s', record)
                 messages.append(dict(
                     info, type='error',
                     **PGERROR_TO_OE[e.pgcode](self, fg, info, e)))
@@ -4434,7 +4432,6 @@ class BaseModel(object):
             upd1 += ",%s,(now() at time zone 'UTC'),%s,(now() at time zone 'UTC')"
             upd2.extend((user, user))
         cr.execute('insert into "'+self._table+'" (id'+upd0+") values ("+str(id_new)+upd1+')', tuple(upd2))
-        self.check_access_rule(cr, user, [id_new], 'create', context=context)
         upd_todo.sort(lambda x, y: self._columns[x].priority-self._columns[y].priority)
 
         if self._parent_store and not context.get('defer_parent_store_computation'):
@@ -4487,6 +4484,7 @@ class BaseModel(object):
                 self.name_get(cr, user, [id_new], context=context)[0][1] + \
                 "' " + _("created.")
             self.log(cr, user, id_new, message, True, context=context)
+        self.check_access_rule(cr, user, [id_new], 'create', context=context)
         self._workflow_trigger(cr, user, [id_new], 'trg_create', context=context)
         return id_new
 
@@ -5327,11 +5325,28 @@ def convert_pgerror_23502(model, fields, info, e):
         'message': message,
         'field': field_name,
     }
+def convert_pgerror_23505(model, fields, info, e):
+    m = re.match(r'^duplicate key (?P<field>\w+) violates unique constraint',
+                 str(e))
+    field_name = m.group('field')
+    if not m or field_name not in fields:
+        return {'message': unicode(e)}
+    message = _(u"The value for the field '%s' already exists.") % field_name
+    field = fields.get(field_name)
+    if field:
+        message = _(u"%s This might be '%s' in the current model, or a field "
+                    u"of the same name in an o2m.") % (message, field['string'])
+    return {
+        'message': message,
+        'field': field_name,
+    }
 
 PGERROR_TO_OE = collections.defaultdict(
     # shape of mapped converters
     lambda: (lambda model, fvg, info, pgerror: {'message': unicode(pgerror)}), {
     # not_null_violation
     '23502': convert_pgerror_23502,
+    # unique constraint error
+    '23505': convert_pgerror_23505,
 })
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

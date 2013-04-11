@@ -206,7 +206,7 @@ class act_window(osv.osv):
     def _search_view(self, cr, uid, ids, name, arg, context=None):
         res = {}
         for act in self.browse(cr, uid, ids, context=context):
-            field_get = self.pool.get(act.res_model).fields_view_get(cr, uid,
+            field_get = self.pool[act.res_model].fields_view_get(cr, uid,
                 act.search_view_id and act.search_view_id.id or False,
                 'search', context=context)
             res[act.id] = str(field_get)
@@ -608,7 +608,7 @@ class actions_server(osv.osv):
                     .read(cr, uid, action.action_id.id, context=context)
 
             if action.state=='code':
-                eval(action.code, cxt, mode="exec", nocopy=True) # nocopy allows to return 'action'
+                eval(action.code.strip(), cxt, mode="exec", nocopy=True) # nocopy allows to return 'action'
                 if 'action' in cxt:
                     return cxt['action']
 
@@ -791,7 +791,7 @@ Launch Manually Once: after having been launched manually, it sets automatically
         act_type = self.pool.get('ir.actions.actions').read(cr, uid, wizard.action_id.id, ['type'], context=context)
 
         res = self.pool.get(act_type['type']).read(cr, uid, wizard.action_id.id, [], context=context)
-        if act_type<>'ir.actions.act_window':
+        if act_type['type'] != 'ir.actions.act_window':
             return res
         res.setdefault('context','{}')
         res['nodestroy'] = True

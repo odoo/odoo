@@ -18,8 +18,9 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-import time
 import logging
+import threading
+import time
 import psycopg2
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
@@ -181,6 +182,7 @@ class ir_cron(osv.osv):
         If a job was processed, returns True, otherwise returns False.
         """
         db = openerp.sql_db.db_connect(db_name)
+        threading.current_thread().dbname = db_name
         cr = db.cursor()
         jobs = []
         try:
@@ -236,6 +238,9 @@ class ir_cron(osv.osv):
             finally:
                 # we're exiting due to an exception while acquiring the lock
                 lock_cr.close()
+
+        if hasattr(threading.current_thread(), 'dbname'): # cron job could have removed it as side-effect
+            del threading.current_thread().dbname
 
     def _try_lock(self, cr, uid, ids, context=None):
         """Try to grab a dummy exclusive write-lock to the rows with the given ids,

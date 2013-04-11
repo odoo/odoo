@@ -381,16 +381,30 @@ class res_partner(osv.osv, format_address):
 
     def create(self, cr, uid, vals, context=None):
         if context is None:
-            context={}
+            context = {}
         # Update parent and siblings records
-        if vals.get('parent_id') and vals.get('use_parent_address'):
-            domain_siblings = [('parent_id', '=', vals['parent_id']), ('use_parent_address', '=', True)]
-            update_ids = [vals['parent_id']] + self.search(cr, uid, domain_siblings, context=context)
-            self.update_address(cr, uid, update_ids, vals, context)
-        return super(res_partner,self).create(cr, uid, vals, context=context)
+        if vals.get('parent_id'):
+            if 'use_parent_address' in vals:
+                use_parent_address = vals['use_parent_address']
+            else:
+                use_parent_address = self.default_get(cr, uid, ['use_parent_address'], context=context)['use_parent_address']
+
+            if use_parent_address:
+                domain_siblings = [('parent_id', '=', vals['parent_id']), ('use_parent_address', '=', True)]
+                update_ids = [vals['parent_id']] + self.search(cr, uid, domain_siblings, context=context)
+                self.update_address(cr, uid, update_ids, vals, context)
+
+                # add missing address keys
+                onchange_values = self.onchange_address(cr, uid, [], use_parent_address,
+                                                        vals['parent_id'], context=context).get('value') or {}
+                vals.update(dict((key, value)
+                            for key, value in onchange_values.iteritems()
+                            if key in ADDRESS_FIELDS and key not in vals))
+
+        return super(res_partner, self).create(cr, uid, vals, context=context)
 
     def update_address(self, cr, uid, ids, vals, context=None):
-        addr_vals = dict((key, vals[key]) for key in POSTAL_ADDRESS_FIELDS if vals.get(key))
+        addr_vals = dict((key, vals[key]) for key in POSTAL_ADDRESS_FIELDS if key in vals)
         if addr_vals:
             return super(res_partner, self).write(cr, uid, ids, addr_vals, context)
 
@@ -417,10 +431,10 @@ class res_partner(osv.osv, format_address):
         """ Supported syntax:
             - 'Raoul <raoul@grosbedon.fr>': will find name and email address
             - otherwise: default, everything is set as the name """
-        match = re.search(r'([^\s,<@]+@[^>\s,]+)', text)
-        if match:
-            email = match.group(1)
-            name = text[:text.index(email)].replace('"','').replace('<','').strip()
+        emails = tools.email_split(text)
+        if emails:
+            email = emails[0]
+            name = text[:text.index(email)].replace('"', '').replace('<', '').strip()
         else:
             name, email = text, ''
         return name, email
@@ -463,8 +477,7 @@ class res_partner(osv.osv, format_address):
                              OR partner.name || ' (' || COALESCE(company.name,'') || ')'
                           ''' + operator + ' %(name)s ' + limit_str, query_args)
             ids = map(lambda x: x[0], cr.fetchall())
-            if args:
-                ids = self.search(cr, uid, [('id', 'in', ids)] + args, limit=limit, context=context)
+            ids = self.search(cr, uid, [('id', 'in', ids)] + args, limit=limit, context=context)
             if ids:
                 return self.name_get(cr, uid, ids, context)
         return super(res_partner,self).name_search(cr, uid, name, args, operator=operator, context=context, limit=limit)
