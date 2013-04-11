@@ -229,9 +229,10 @@ class gamification_badge(osv.Model):
             else:
                 values['user_from'] = False
             body_html = template_env.get_template('badge_received.mako').render(values)
-            res = self.message_post(cr, uid, 0,
+            context['badge_user'] = badge_user
+
+            res = self.message_post(cr, uid, badge.id,
                                     body=body_html,
-                                    partner_ids=[(4, badge_user.user_id.partner_id.id)],
                                     type='comment',
                                     subtype='mt_comment',
                                     context=context)
@@ -282,7 +283,6 @@ class gamification_badge(osv.Model):
                 # code_globals = {}
                 # code_locals = {'cr': cr, 'uid': uid, 'context': context, 'result': []}
                 # exec code_obj in code_globals, code_locals
-                print(result)
                 if type(result) == list:
                     user_badge_ids = [
                         badge_user_obj.create(cr, uid, {'user_id': user_id, 'badge_id': badge.id}, context=context)
@@ -410,4 +410,3 @@ class grant_badge_wizard(osv.TransientModel):
                 badge_obj.send_badge(cr, uid, wiz.badge_id.id, [badge_user], user_from=user_from, context=context)
 
         return {}
-grant_badge_wizard()
