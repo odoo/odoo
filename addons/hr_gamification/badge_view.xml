@@ -64,7 +64,7 @@
             <field name="arch" type="xml">
 
                 <xpath expr="//page[@string='Public Information']" position="before">
-                    <page string="Received Badges">
+                    <page string="Received Badges" attrs="{'invisible': [('user_id', '=', False)]}">
                         <field name="has_badges" invisible="1"/>
                         <button string="Grant a Badge" type="action" name="%(action_reward_wizard)d"/> to reward this employee for a good action
                         <div class="oe_view_nocontent" attrs="{'invisible': [('has_badges', '=', True)]}">
