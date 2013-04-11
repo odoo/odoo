@@ -57,7 +57,7 @@ class mail_compose_message(osv.TransientModel):
         for wizard in self.browse(cr, uid, ids, context=context):
             if not wizard.attachment_ids or wizard.composition_mode == 'mass_mail' or not wizard.template_id:
                 continue
-            template = self.pool.get('email.template').browse(cr, uid, wizard.template_id, context=context)
+            template = self.pool.get('email.template').browse(cr, uid, wizard.template_id.id, context=context)
             new_attachment_ids = []
             for attachment in wizard.attachment_ids:
                 if attachment in template.attachment_ids:
@@ -163,7 +163,7 @@ class mail_compose_message(osv.TransientModel):
         """ Override to handle templates. """
         # generate the composer email
         if wizard.template_id:
-            values = self.generate_email_for_composer(cr, uid, wizard.template_id, res_id, context=context)
+            values = self.generate_email_for_composer(cr, uid, wizard.template_id.id, res_id, context=context)
         else:
             values = {}
         # remove attachments as they should not be rendered
