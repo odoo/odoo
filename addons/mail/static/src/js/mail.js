@@ -620,7 +620,6 @@ openerp.mail = function (session) {
             // have unknown names -> call message_get_partner_info_from_emails to try to find partner_id
             var find_done = $.Deferred();
             if (names_to_find.length > 0) {
-                // find_done = self.parent_thread.ds_thread._model.call('message_get_partner_info_from_emails', [names_to_find]);
                 var values = {
                     'res_id': this.context.default_res_id,
                 }
@@ -672,7 +671,7 @@ openerp.mail = function (session) {
                     if (new_names_to_find.length > 0) {
                         var values = {
                             'link_mail': true,
-                            'res_id': this.context.default_res_id,
+                            'res_id': self.context.default_res_id,
                         }
                         find_done = self.parent_thread.ds_thread._model.call('message_get_partner_info_from_emails', [new_names_to_find], values);
                     }
