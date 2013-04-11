@@ -50,7 +50,7 @@ def html_sanitize(src):
     src = ustr(src, errors='replace')
 
     # html encode email tags
-    part = re.compile(r"(<[^<>]+@[^<>]+>)", re.IGNORECASE | re.DOTALL)
+    part = re.compile(r"(<(([^a<>]|a[^<>\s])[^<>]*)@[^<>]+>)", re.IGNORECASE | re.DOTALL)
     src = part.sub(lambda m: cgi.escape(m.group(1)), src)
     
     # some corner cases make the parser crash (such as <SCRIPT/XSS SRC=\"http://ha.ckers.org/xss.js\"></SCRIPT> in test_mail)
@@ -185,6 +185,8 @@ def html2plaintext(html, body_id=None, encoding='utf-8'):
             url_index.append(url)
 
     html = ustr(etree.tostring(tree, encoding=encoding))
+    # \r char is converted into &#13;, must remove it
+    html = html.replace('&#13;', '')
 
     html = html.replace('<strong>', '*').replace('</strong>', '*')
     html = html.replace('<b>', '*').replace('</b>', '*')

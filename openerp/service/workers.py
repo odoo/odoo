@@ -388,9 +388,19 @@ class WorkerBaseWSGIServer(werkzeug.serving.BaseWSGIServer):
 
 class WorkerCron(Worker):
     """ Cron workers """
+
+    def __init__(self, multi):
+        super(WorkerCron, self).__init__(multi)
+        # process_work() below process a single database per call.
+        # The variable db_index is keeping track of the next database to
+        # process.
+        self.db_index = 0
+
     def sleep(self):
-        interval = 60 + self.pid % 10 # chorus effect
-        time.sleep(interval)
+        # Really sleep once all the databases have been processed.
+        if self.db_index == 0:
+            interval = 60 + self.pid % 10 # chorus effect
+            time.sleep(interval)
 
     def process_work(self):
         rpc_request = logging.getLogger('openerp.netsvc.rpc.request')
@@ -400,7 +410,9 @@ class WorkerCron(Worker):
             db_names = config['db_name'].split(',')
         else:
             db_names = openerp.service.db.exp_list(True)
-        for db_name in db_names:
+        if len(db_names):
+            self.db_index = (self.db_index + 1) % len(db_names)
+            db_name = db_names[self.db_index]
             if rpc_request_flag:
                 start_time = time.time()
                 start_rss, start_vms = psutil.Process(os.getpid()).get_memory_info()
@@ -419,8 +431,14 @@ class WorkerCron(Worker):
                 end_rss, end_vms = psutil.Process(os.getpid()).get_memory_info()
                 logline = '%s time:%.3fs mem: %sk -> %sk (diff: %sk)' % (db_name, end_time - start_time, start_vms / 1024, end_vms / 1024, (end_vms - start_vms)/1024)
                 _logger.debug("WorkerCron (%s) %s", self.pid, logline)
-        # TODO Each job should be considered as one request instead of each run
-        self.request_count += 1
+
+            self.request_count += 1
+            if self.request_count >= self.request_max and self.request_max < len(db_names):
+                _logger.error("There are more dabatases to process than allowed "
+                    "by the `limit_request` configuration variable: %s more.",
+                    len(db_names) - self.request_max)
+        else:
+            self.db_index = 0
 
     def start(self):
         Worker.start(self)

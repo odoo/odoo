@@ -18,8 +18,9 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-import time
 import logging
+import threading
+import time
 import psycopg2
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
@@ -124,21 +125,23 @@ class ir_cron(osv.osv):
             args = str2tuple(args)
             openerp.modules.registry.RegistryManager.check_registry_signaling(cr.dbname)
             registry = openerp.registry(cr.dbname)
-            model = registry.get(model_name)
-            if model and hasattr(model, method_name):
-                method = getattr(model, method_name)
-                log_depth = (None if _logger.isEnabledFor(logging.DEBUG) else 1)
-                netsvc.log(_logger, logging.DEBUG, 'cron.object.execute', (cr.dbname,uid,'*',model_name,method_name)+tuple(args), depth=log_depth)
-                if _logger.isEnabledFor(logging.DEBUG):
-                    start_time = time.time()
-                method(cr, uid, *args)
-                if _logger.isEnabledFor(logging.DEBUG):
-                    end_time = time.time()
-                    _logger.debug('%.3fs (%s, %s)' % (end_time - start_time, model_name, method_name))
-                openerp.modules.registry.RegistryManager.signal_caches_change(cr.dbname)
+            if model_name in registry:
+                model = registry[model_name]
+                if hasattr(model, method_name):
+                    log_depth = (None if _logger.isEnabledFor(logging.DEBUG) else 1)
+                    netsvc.log(_logger, logging.DEBUG, 'cron.object.execute', (cr.dbname,uid,'*',model_name,method_name)+tuple(args), depth=log_depth)
+                    if _logger.isEnabledFor(logging.DEBUG):
+                        start_time = time.time()
+                    getattr(model, method_name)(cr, uid, *args)
+                    if _logger.isEnabledFor(logging.DEBUG):
+                        end_time = time.time()
+                        _logger.debug('%.3fs (%s, %s)' % (end_time - start_time, model_name, method_name))
+                    openerp.modules.registry.RegistryManager.signal_caches_change(cr.dbname)
+                else:
+                    msg = "Method `%s.%s` does not exist." % (model_name, method_name)
+                    _logger.warning(msg)
             else:
-                msg = "Method `%s.%s` does not exist." % (model_name, method_name) \
-                    if model else "Model `%s` does not exist." % model_name
+                msg = "Model `%s` does not exist." % model_name
                 _logger.warning(msg)
         except Exception, e:
             self._handle_callback_exception(cr, uid, model_name, method_name, args, job_id, e)
@@ -189,6 +192,7 @@ class ir_cron(osv.osv):
         If a job was processed, returns True, otherwise returns False.
         """
         db = openerp.sql_db.db_connect(db_name)
+        threading.current_thread().dbname = db_name
         cr = db.cursor()
         jobs = []
         try:
@@ -242,6 +246,9 @@ class ir_cron(osv.osv):
             finally:
                 # we're exiting due to an exception while acquiring the lock
                 lock_cr.close()
+
+        if hasattr(threading.current_thread(), 'dbname'): # cron job could have removed it as side-effect
+            del threading.current_thread().dbname
 
     def _try_lock(self, cr, uid, ids, context=None):
         """Try to grab a dummy exclusive write-lock to the rows with the given ids,

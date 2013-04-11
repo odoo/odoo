@@ -197,7 +197,7 @@ class document(object):
                         args = []
                     # get the object
                     if 'model' in attrs:
-                        obj = self.pool.get(attrs['model'])
+                        obj = self.pool[attrs['model']]
                     else:
                         obj = browser       # the record(set) is an instance of the model
 

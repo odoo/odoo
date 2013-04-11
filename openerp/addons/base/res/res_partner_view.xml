@@ -10,7 +10,7 @@
 
             <menuitem id="base.menu_sales" parent="base.menu_base_partner" name="Sales" sequence="1" />
             <menuitem id="menu_base_config" parent="menu_base_partner" name="Configuration" sequence="30" groups="group_system"/>
-                <menuitem id="menu_config_address_book" parent="menu_base_config" name="Address Book" sequence="40" groups="group_system"/>
+            <menuitem id="menu_config_address_book" parent="menu_base_config" name="Address Book" sequence="40" groups="group_system"/>
 
         <!-- Partner Titles -->
         <record id="view_partner_title_tree" model="ir.ui.view">
@@ -305,15 +305,15 @@
                        filter_domain="['|','|',('name','ilike',self),('parent_id','ilike',self),('ref','=',self)]"/>
                    <filter help="My Partners" icon="terp-personal+" domain="[('user_id','=',uid)]"/>
                    <separator/>
-                   <filter string="Persons" name="type_person" icon="terp-personal" domain="[('is_company','=',0)]"/>
-                   <filter string="Companies" name="type_company" icon="terp-partner" domain="[('is_company','=',1)]"/>
+                   <filter string="Persons" name="type_person" domain="[('is_company','=',0)]"/>
+                   <filter string="Companies" name="type_company" domain="[('is_company','=',1)]"/>
                    <separator/>
-                   <filter string="Customers" name="customer" icon="terp-personal" domain="[('customer','=',1)]" help="Customer Partners"/>
+                   <filter string="Customers" name="customer" domain="[('customer','=',1)]" help="Customer Partners"/>
+                   <filter string="Suppliers" name="supplier" domain="[('supplier','=',1)]" help="Supplier Partners"/>
                    <separator/>
-                   <filter string="Suppliers" name="supplier" icon="terp-personal" domain="[('supplier','=',1)]" help="Supplier Partners"/>
                    <field name="category_id" string="Tag" filter_domain="[('category_id','ilike', self)]"/>
                    <field name="user_id"/>
-                   <field name="parent_id" filter_domain="[('parent_id','child_of',[self])]"/>
+                   <field name="parent_id" domain="[('is_company','=',1)]" filter_domain="[('parent_id','child_of',[self])]"/>
                    <group expand="0" string="Group By...">
                        <filter string="Salesperson" icon="terp-personal" domain="[]" context="{'group_by' : 'user_id'}" />
                        <filter string="Company" context="{'group_by': 'parent_id'}"/>
@@ -420,7 +420,7 @@
             <field name="view_id" ref="view_partner_tree"/>
             <field name="act_window_id" ref="action_partner_form"/>
         </record>
-        <menuitem id="menu_partner_form" parent="base.menu_sales" action="action_partner_form" sequence="1"/>
+        <menuitem id="menu_partner_form" parent="base.menu_sales" action="action_partner_form" sequence="2"/>
 
         <record id="action_partner_customer_form" model="ir.actions.act_window">
             <field name="name">Customers</field>
