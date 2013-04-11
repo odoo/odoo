@@ -212,8 +212,7 @@ class sale_order(osv.osv):
         'order_policy': fields.selection([
                 ('manual', 'On Demand'),
             ], 'Create Invoice', required=True, readonly=True, states={'draft': [('readonly', False)], 'sent': [('readonly', False)]},
-            help="""This field controls how invoice and delivery operations are synchronized.
-  - With 'Before Delivery', a draft invoice is created, and it must be paid before delivery."""),
+            help="""This field controls how invoice and delivery operations are synchronized."""),
         'pricelist_id': fields.many2one('product.pricelist', 'Pricelist', required=True, readonly=True, states={'draft': [('readonly', False)], 'sent': [('readonly', False)]}, help="Pricelist for current sales order."),
         'currency_id': fields.related('pricelist_id', 'currency_id', type="many2one", relation="res.currency", string="Currency", readonly=True, required=True),
         'project_id': fields.many2one('account.analytic.account', 'Contract / Analytic', readonly=True, states={'draft': [('readonly', False)], 'sent': [('readonly', False)]}, help="The analytic account related to a sales order."),
@@ -532,6 +531,9 @@ class sale_order(osv.osv):
                     invoice_ref += o.name + '|'
                     self.write(cr, uid, [o.id], {'state': 'progress'})
                     cr.execute('insert into sale_order_invoice_rel (order_id,invoice_id) values (%s,%s)', (o.id, res))
+                #remove last '|' in invoice_ref
+                if len(invoice_ref) >= 1: 
+                    invoice_ref = invoice_ref[:-1]
                 invoice.write(cr, uid, [res], {'origin': invoice_ref, 'name': invoice_ref})
             else:
                 for order, il in val:
@@ -694,7 +696,9 @@ class sale_order_line(osv.osv):
         'product_id': fields.many2one('product.product', 'Product', domain=[('sale_ok', '=', True)], change_default=True),
         'invoice_lines': fields.many2many('account.invoice.line', 'sale_order_line_invoice_rel', 'order_line_id', 'invoice_id', 'Invoice Lines', readonly=True),
         'invoiced': fields.function(_fnct_line_invoiced, string='Invoiced', type='boolean',
-            store={'account.invoice': (_order_lines_from_invoice, ['state'], 10)}),
+            store={
+                'account.invoice': (_order_lines_from_invoice, ['state'], 10),
+                'sale.order.line': (lambda self,cr,uid,ids,ctx=None: ids, ['invoice_lines'], 10)}),
         'price_unit': fields.float('Unit Price', required=True, digits_compute= dp.get_precision('Product Price'), readonly=True, states={'draft': [('readonly', False)]}),
         'type': fields.selection([('make_to_stock', 'from stock'), ('make_to_order', 'on order')], 'Procurement Method', required=True, readonly=True, states={'draft': [('readonly', False)]},
          help="From stock: When needed, the product is taken from the stock or we wait for replenishment.\nOn order: When needed, the product is purchased or produced."),
@@ -717,7 +721,7 @@ class sale_order_line(osv.osv):
         'salesman_id':fields.related('order_id', 'user_id', type='many2one', relation='res.users', store=True, string='Salesperson'),
         'company_id': fields.related('order_id', 'company_id', type='many2one', relation='res.company', string='Company', store=True, readonly=True),
     }
-    _order = 'order_id desc, sequence'
+    _order = 'order_id desc, sequence, id'
     _defaults = {
         'product_uom' : _get_uom_id,
         'discount': 0.0,
@@ -805,7 +809,7 @@ class sale_order_line(osv.osv):
             vals = self._prepare_order_line_invoice_line(cr, uid, line, False, context)
             if vals:
                 inv_id = self.pool.get('account.invoice.line').create(cr, uid, vals, context=context)
-                cr.execute('insert into sale_order_line_invoice_rel (order_line_id,invoice_id) values (%s,%s)', (line.id, inv_id))
+                self.write(cr, uid, [line.id], {'invoice_lines': [(4, inv_id)]}, context=context)
                 sales.add(line.order_id.id)
                 create_ids.append(inv_id)
         # Trigger workflow events
@@ -880,7 +884,7 @@ class sale_order_line(osv.osv):
             date_order = time.strftime(DEFAULT_SERVER_DATE_FORMAT)
 
         result = {}
-        warning_msgs = {}
+        warning_msgs = ''
         product_obj = product_obj.browse(cr, uid, product, context=context_partner)
 
         uom2 = False
@@ -926,7 +930,6 @@ class sale_order_line(osv.osv):
         elif uom: # whether uos is set or not
             default_uom = product_obj.uom_id and product_obj.uom_id.id
             q = product_uom_obj._compute_qty(cr, uid, uom, qty, default_uom)
-            result['product_uom'] = default_uom
             if product_obj.uos_id:
                 result['product_uos'] = product_obj.uos_id.id
                 result['product_uos_qty'] = qty * product_obj.uos_coeff

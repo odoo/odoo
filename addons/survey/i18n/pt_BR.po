@@ -7,15 +7,16 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-21 17:06+0000\n"
-"PO-Revision-Date: 2012-12-21 23:00+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2013-03-07 08:39+0000\n"
+"PO-Revision-Date: 2013-03-16 14:56+0000\n"
+"Last-Translator: Fábio Martinelli - http://zupy.com.br "
+"<webmaster@guaru.net>\n"
 "Language-Team: Brazilian Portuguese <pt_BR@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-01-18 07:10+0000\n"
-"X-Generator: Launchpad (build 16430)\n"
+"X-Launchpad-Export-Date: 2013-03-28 06:04+0000\n"
+"X-Generator: Launchpad (build 16546)\n"
 
 #. module: survey
 #: view:survey.response.line:0
@@ -30,6 +31,8 @@ msgid ""
 "greater than the number of answer.                                      "
 "Please use a number that is smaller than %d."
 msgstr ""
+"Número Máximo Permitido que você usou é maior que o número de respostas. Por "
+"favor use um número menor que %d"
 
 #. module: survey
 #: view:survey.question.wiz:0
@@ -71,9 +74,9 @@ msgid "Surveys"
 msgstr "Pesquisas"
 
 #. module: survey
-#: field:survey.question,in_visible_answer_type:0
-msgid "Is Answer Type Invisible?"
-msgstr "A Escrita da Resposta é Invisível?"
+#: view:survey.request:0
+msgid "Cancel Request"
+msgstr "Cancelar Requisição"
 
 #. module: survey
 #: view:survey:0
@@ -182,6 +185,8 @@ msgid ""
 "than the number of answer.                                     Please use a "
 "number that is smaller than %d."
 msgstr ""
+"#Respostas requeridas que você usou é maior que o número de respostas. Por "
+"favor use um número que é menor que %d"
 
 #. module: survey
 #: field:survey.question,tot_resp:0
@@ -206,6 +211,8 @@ msgid ""
 "your maximum is greater than the number of answer.                           "
 "           Please use a number that is smaller than %d."
 msgstr ""
+"Número Máximo Permitido que você usou para o Máximo é maior que o número de "
+"respostas. Por favor use um número menor que %d"
 
 #. module: survey
 #: selection:survey.question,type:0
@@ -225,6 +232,8 @@ msgid ""
 "Maximum Required Answer you entered for your maximum is greater than the "
 "number of answer. Please use a number that is smaller than %d."
 msgstr ""
+"Número Máximo Permitido que você usou para o Máximo é maior que o número de "
+"respostas. Por favor use um número menor que %d"
 
 #. module: survey
 #: model:ir.model,name:survey.model_survey_question
@@ -237,7 +246,7 @@ msgstr "Questão da Pesquisa"
 #. module: survey
 #: view:survey.question.column.heading:0
 msgid "Use if question type is rating_scale"
-msgstr ""
+msgstr "Use se o tipo de questão é rating_scale"
 
 #. module: survey
 #: field:survey.print,page_number:0
@@ -288,7 +297,7 @@ msgstr " Título de coluna"
 #: code:addons/survey/wizard/survey_send_invitation.py:71
 #, python-format
 msgid "The following surveys are not in open state: %s"
-msgstr ""
+msgstr "As seguintes pesquisas não estão abertas: %s"
 
 #. module: survey
 #: field:survey,tot_comp_survey:0
@@ -298,7 +307,7 @@ msgstr "Total Completado da Pesquisa"
 #. module: survey
 #: view:survey.response.answer:0
 msgid "(Use Only Question Type is matrix_of_drop_down_menus)"
-msgstr ""
+msgstr "(Usar apenas o tipo de questão como matrix_of_drop_down_menus)"
 
 #. module: survey
 #: model:ir.actions.report.xml,name:survey.survey_analysis
@@ -314,7 +323,7 @@ msgstr "Cancelada"
 #. module: survey
 #: selection:survey.question,type:0
 msgid "Rating Scale"
-msgstr ""
+msgstr "Escala de Classificação"
 
 #. module: survey
 #: code:addons/survey/survey.py:152
@@ -324,6 +333,8 @@ msgid ""
 "This survey has no question defined. Please define the questions and answers "
 "first."
 msgstr ""
+"Esta pesquisa não tem nenhuma pergunta. Por favor defina as perguntas e "
+"responda primeiro."
 
 #. module: survey
 #: field:survey.question,comment_field_type:0
@@ -344,7 +355,7 @@ msgstr "Data de Abertura da Pesquisa"
 #: code:addons/survey/wizard/survey_answer.py:800
 #, python-format
 msgid "You cannot select the same answer more than one time."
-msgstr ""
+msgstr "Você não pode selecionar a mesma resposta mais de uma vez."
 
 #. module: survey
 #: field:survey,color:0
@@ -379,7 +390,7 @@ msgstr "Menu de Escolha"
 msgid ""
 "You must enter one or more menu choices                                 in "
 "column heading."
-msgstr ""
+msgstr "Você deve digitar uma ou mais opções de menu no cabeçalho da coluna."
 
 #. module: survey
 #: selection:survey.question,required_type:0
@@ -419,6 +430,23 @@ msgid ""
 "\n"
 "Thanks,"
 msgstr ""
+"\n"
+"Olá %%(name)s, \n"
+"\n"
+"\n"
+"Você poderia por favor responder em nossa pesquisa:\n"
+"%s\n"
+"\n"
+"Você pode acessar esta pesquisa com os seguintes parâmetros:\n"
+"URL: %s\n"
+"Seu Login ID: %%(login)s\n"
+"\n"
+"Sua senha: %%(passwd)s\n"
+"\n"
+"\n"
+"\n"
+"\n"
+"Obrigado,"
 
 #. module: survey
 #: field:survey.response.line,single_text:0
@@ -476,16 +504,21 @@ msgid "From"
 msgstr "A partir de"
 
 #. module: survey
+#: view:survey:0
+msgid "Cancel Survey"
+msgstr "Cancelar Pesquisa"
+
+#. module: survey
 #: selection:survey.question,comment_valid_type:0
 #: selection:survey.question,validation_type:0
 msgid "Don't Validate Comment Text."
-msgstr ""
+msgstr "Não Validar texto de comentário."
 
 #. module: survey
 #: code:addons/survey/survey.py:532
 #, python-format
 msgid "You must enter one or more menu choices in column heading."
-msgstr ""
+msgstr "Você deve digitar uma ou mais opções de menu no cabeçalho da coluna."
 
 #. module: survey
 #: selection:survey.question,comment_valid_type:0
@@ -523,7 +556,7 @@ msgstr "Fase do Plano de Avaliação"
 #: code:addons/survey/wizard/survey_send_invitation.py:199
 #, python-format
 msgid "Unknown"
-msgstr ""
+msgstr "Desconhecido"
 
 #. module: survey
 #: view:survey:0
@@ -547,7 +580,7 @@ msgstr "Novo"
 #. module: survey
 #: field:survey.question,make_comment_field:0
 msgid "Make Comment Field an Answer Choice"
-msgstr ""
+msgstr "Faça do campo comentário uma opção de resposta"
 
 #. module: survey
 #: view:survey:0
@@ -560,6 +593,13 @@ msgstr "Tipo"
 #: field:survey.request,email:0
 msgid "Email"
 msgstr "Email"
+
+#. module: survey
+#: view:survey:0
+#: view:survey.page:0
+#: view:survey.question:0
+msgid "Required Answer"
+msgstr "Resposta Requerida"
 
 #. module: survey
 #: code:addons/survey/survey.py:96
@@ -587,7 +627,7 @@ msgstr "Selecione o Parceiro"
 #: code:addons/survey/survey.py:527
 #, python-format
 msgid "Maximum Required Answer is greater than Minimum Required Answer."
-msgstr ""
+msgstr "Resposta Obrigatória Máxima for superior a Resposta Mínima Exigida."
 
 #. module: survey
 #: model:ir.ui.menu,name:survey.menu_reporting
@@ -640,7 +680,7 @@ msgstr "Mensagem de Erro"
 #: code:addons/survey/wizard/survey_answer.py:124
 #, python-format
 msgid "You cannot answer this survey more than %s times."
-msgstr ""
+msgstr "Você não pode responder a esta pesquisa mais do que %s vezes."
 
 #. module: survey
 #: field:survey.request,date_deadline:0
@@ -701,6 +741,13 @@ msgid ""
 "your maximum is greater than the number of answer.                           "
 "          Please use a number that is smaller than %d."
 msgstr ""
+"A Resposta Obrigatória Máxima que você entrou para o seu máximo é maior que "
+"o número de resposta. Por favor, utilize um número que seja menor do que %d."
+
+#. module: survey
+#: view:survey:0
+msgid "Survey description..."
+msgstr "Descrição da pesquisa"
 
 #. module: survey
 #: view:survey:0
@@ -721,6 +768,7 @@ msgstr "Opções"
 #, python-format
 msgid "You must enter one or more Answers for question \"%s\" of page %s."
 msgstr ""
+"Você deve digitar uma ou mais respostas para a pergunta \"%s\" de página %s."
 
 #. module: survey
 #: view:survey:0
@@ -798,7 +846,7 @@ msgstr "#Resposta"
 #: field:survey.print,without_pagebreak:0
 #: field:survey.print.answer,without_pagebreak:0
 msgid "Print Without Page Breaks"
-msgstr ""
+msgstr "Imprimir sem quebras de página"
 
 #. module: survey
 #: view:survey:0
@@ -828,6 +876,8 @@ msgstr "Informe 1 caso somente uma resposta por usuário sejá requerida"
 msgid ""
 "You must enter one or more column headings for question \"%s\" of page %s."
 msgstr ""
+"Você deve digitar uma ou mais títulos de coluna para a pergunta \"%s\" da "
+"página %s."
 
 #. module: survey
 #: model:ir.model,name:survey.model_res_users
@@ -847,11 +897,13 @@ msgid ""
 "You must enter one or more menu                                 choices in "
 "column heading (white spaces not allowed)."
 msgstr ""
+"Você deve digitar uma ou mais opções de menu no título da coluna (espaços em "
+"branco não permitido)."
 
 #. module: survey
 #: field:survey.question,maximum_req_ans:0
 msgid "Maximum Required Answer"
-msgstr ""
+msgstr "Resposta Máxima Obrigatória"
 
 #. module: survey
 #: field:survey.name.wiz,page_no:0
@@ -888,6 +940,7 @@ msgstr "Log"
 #: view:survey.question:0
 msgid "When the choices do not add up correctly, display this error message"
 msgstr ""
+"Quando as escolhas não aparecerem corretamente, exiba esta mensagem de erro"
 
 #. module: survey
 #: model:ir.actions.act_window,help:survey.action_survey_form1
@@ -904,6 +957,18 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Clique para criar uma nova pesquisa. \n"
+"              </p><p>\n"
+"                Você pode criar pesquisas para diferentes propósitos: "
+"recrutamento\n"
+"                entrevistas, avaliação periódica de funcionários, campanha "
+"de marketing, etc.\n"
+"              </p><p>\n"
+"                Uma pesquisa é feita de páginas contendo perguntas\n"
+"                de diversos tipos: texto, múltipla escolha, etc.\n"
+"              </p>\n"
+"            "
 
 #. module: survey
 #: field:survey,date_close:0
@@ -913,7 +978,7 @@ msgstr "Data de Encerramento da Pesquisa"
 #. module: survey
 #: field:survey.question.column.heading,in_visible_rating_weight:0
 msgid "Is Rating Scale Invisible ??"
-msgstr ""
+msgstr "A Escala é invisível??"
 
 #. module: survey
 #: field:survey.question,is_validation_require:0
@@ -951,7 +1016,7 @@ msgstr "Fechado"
 #. module: survey
 #: selection:survey.question,type:0
 msgid "Matrix of Drop-down Menus"
-msgstr ""
+msgstr "Matriz de Menus drop-down"
 
 #. module: survey
 #: view:survey:0
@@ -978,7 +1043,7 @@ msgstr "Resposta"
 #. module: survey
 #: field:survey,max_response_limit:0
 msgid "Maximum Answer Limit"
-msgstr ""
+msgstr "Limite máximo de resposta"
 
 #. module: survey
 #: model:ir.actions.act_window,name:survey.action_act_view_survey_send_invitation
@@ -997,6 +1062,8 @@ msgid ""
 "You cannot give more responses. Please contact the author of this survey for "
 "further assistance."
 msgstr ""
+"Você não pode dar mais respostas. Por favor, entre em contato com o autor "
+"desta pesquisa para obter mais assistência."
 
 #. module: survey
 #: selection:survey.question,type:0
@@ -1021,7 +1088,7 @@ msgstr "Imprimir Pesquisa"
 #. module: survey
 #: field:survey.response.answer,value_choice:0
 msgid "Value Choice"
-msgstr ""
+msgstr "Escolha um Valor"
 
 #. module: survey
 #: field:survey.response,response_type:0
@@ -1067,16 +1134,14 @@ msgid "Multiple Textboxes With Different Type"
 msgstr "Múltiplas Caixas de Texto Com Diferentes Tipos"
 
 #. module: survey
-#: view:survey:0
-#: view:survey.page:0
-#: view:survey.question:0
-msgid "Required Answer"
-msgstr "Resposta Requerida"
+#: view:survey.name.wiz:0
+msgid "Add Description"
+msgstr "Adicionar Descrição"
 
 #. module: survey
 #: model:survey.type,name:survey.survey_type2
 msgid "Customer Feeback"
-msgstr ""
+msgstr "Feedback do Cliente"
 
 #. module: survey
 #: view:survey:0
@@ -1109,9 +1174,15 @@ msgid "Date"
 msgstr "Data"
 
 #. module: survey
-#: selection:survey.answer,type:0
-msgid "Integer"
-msgstr "Inteiro"
+#: view:survey:0
+msgid "All New Survey"
+msgstr "Todas as Novas Pesquisas"
+
+#. module: survey
+#: view:survey:0
+#: view:survey.page:0
+msgid "Description on the survey page..."
+msgstr "Descrição na página da pesquisa..."
 
 #. module: survey
 #: model:ir.model,name:survey.model_survey_send_invitation
@@ -1134,7 +1205,7 @@ msgstr "Transferência de Página"
 #. module: survey
 #: selection:survey.response.line,state:0
 msgid "Skiped"
-msgstr ""
+msgstr "Ignorado"
 
 #. module: survey
 #: code:addons/survey/survey.py:534
@@ -1143,6 +1214,8 @@ msgid ""
 "You must enter one or more menu choices in column heading (white spaces not "
 "allowed)."
 msgstr ""
+"Você deve digitar uma ou mais opções de menu do título de coluna (espaços em "
+"branco não permitido)."
 
 #. module: survey
 #: field:survey.print,paper_size:0
@@ -1171,6 +1244,8 @@ msgstr "Linha de Resposta da Pesquisa"
 #, python-format
 msgid "This survey has no pages defined. Please define pages first."
 msgstr ""
+"Esta pesquisa não tem páginas definidas. Por favor, defina as páginas "
+"primeiro."
 
 #. module: survey
 #: model:ir.actions.report.xml,name:survey.report_survey_form
@@ -1196,12 +1271,12 @@ msgstr "Pesquisa"
 #. module: survey
 #: field:survey.question,in_visible_rating_weight:0
 msgid "Is Rating Scale Invisible?"
-msgstr ""
+msgstr "A Escala é invisível?"
 
 #. module: survey
-#: view:survey:0
-msgid "All New Survey"
-msgstr ""
+#: selection:survey.answer,type:0
+msgid "Integer"
+msgstr "Inteiro"
 
 #. module: survey
 #: selection:survey.question,type:0
@@ -1288,16 +1363,14 @@ msgstr "Testar Pesquisa"
 #. module: survey
 #: field:survey.question,rating_allow_one_column_require:0
 msgid "Allow Only One Answer per Column (Forced Ranking)"
-msgstr ""
+msgstr "Permitir apenas uma resposta por coluna (Ranking Forçado)"
 
 #. module: survey
-#: view:survey:0
 #: view:survey.browse.answer:0
 #: view:survey.name.wiz:0
 #: view:survey.print:0
 #: view:survey.print.answer:0
 #: view:survey.print.statistics:0
-#: view:survey.request:0
 #: view:survey.send.invitation:0
 msgid "Cancel"
 msgstr "Cancelar"
@@ -1324,11 +1397,12 @@ msgstr "Abrir"
 #, python-format
 msgid "You must enter one or more answers for question \"%s\" of page %s ."
 msgstr ""
+"Você deve digitar uma ou mais respostas para a pergunta \"%s\" da página %s."
 
 #. module: survey
 #: field:survey,tot_start_survey:0
 msgid "Total Started Survey"
-msgstr ""
+msgstr "Total de Pesquisas Iniciadas"
 
 #. module: survey
 #: code:addons/survey/survey.py:517
@@ -1337,11 +1411,13 @@ msgid ""
 "#Required Answer you entered is greater than the number of answer. Please "
 "use a number that is smaller than %d."
 msgstr ""
+"# Resposta Necessária que você inseriu é maior do que o número de resposta. "
+"Por favor, utilize um número que é menor do que %d."
 
 #. module: survey
 #: help:survey,max_response_limit:0
 msgid "Set to one if survey is answerable only once"
-msgstr ""
+msgstr "Definir como um se a pesquisa for feita apenas uma vez"
 
 #. module: survey
 #: selection:survey.response,state:0
@@ -1356,12 +1432,12 @@ msgstr "Cabeçalho de Coluna da Questão da Pesquisa"
 #. module: survey
 #: field:survey.answer,average:0
 msgid "#Avg"
-msgstr ""
+msgstr "#Média"
 
 #. module: survey
 #: selection:survey.question,type:0
 msgid "Matrix of Choices (Multiple Answers Per Row)"
-msgstr ""
+msgstr "Matriz de Escolhas (Múltiplas Respostas por Linha)"
 
 #. module: survey
 #: model:ir.actions.act_window,name:survey.action_view_survey_name
@@ -1384,7 +1460,7 @@ msgstr "Respondida"
 #. module: survey
 #: field:survey,send_response:0
 msgid "Email Notification on Answer"
-msgstr ""
+msgstr "Notificações por Email nas Repostas"
 
 #. module: survey
 #: code:addons/survey/wizard/survey_answer.py:445
@@ -1395,7 +1471,7 @@ msgstr "Resposta Completa da Pesquisa"
 #. module: survey
 #: selection:survey.question,type:0
 msgid "Comment/Essay Box"
-msgstr ""
+msgstr "Caixa de Comentário"
 
 #. module: survey
 #: field:survey.answer,type:0
@@ -1405,7 +1481,7 @@ msgstr "Tipo de Resposta"
 #. module: survey
 #: field:survey.question,required_type:0
 msgid "Respondent must answer"
-msgstr ""
+msgstr "Entrevistado precisa responder"
 
 #. module: survey
 #: model:ir.actions.act_window,name:survey.action_view_survey_send_invitation
@@ -1417,7 +1493,7 @@ msgstr "Enviar Convite"
 #: code:addons/survey/wizard/survey_selection.py:80
 #, python-format
 msgid "You cannot give response for this survey more than %s times."
-msgstr ""
+msgstr "Você não pode responder a esta pesquisa mais de %s vezes."
 
 #. module: survey
 #: view:survey.question:0
@@ -1465,7 +1541,7 @@ msgstr "Retrato (Vertical)"
 #: code:addons/survey/wizard/survey_send_invitation.py:68
 #, python-format
 msgid "Invitation for %s"
-msgstr ""
+msgstr "Convite para %s"
 
 #. module: survey
 #: selection:survey.question,comment_valid_type:0
@@ -1476,13 +1552,13 @@ msgstr "Deve Ter Tamanho Específico"
 #. module: survey
 #: model:survey.type,name:survey.survey_type3
 msgid "Supplier Selection"
-msgstr ""
+msgstr "Seleção de Fornecedor"
 
 #. module: survey
 #: code:addons/survey/wizard/survey_answer.py:992
 #, python-format
 msgid "You cannot select same answer more than one time.'"
-msgstr ""
+msgstr "Você não pode escolher a mesma resposta mais de uma vez.'"
 
 #. module: survey
 #: code:addons/survey/survey.py:685
@@ -1497,11 +1573,13 @@ msgid ""
 "Minimum Required Answer you entered is greater than the number of answer. "
 "Please use a number that is smaller than %d."
 msgstr ""
+"A Resposta mínima exigida é maior que o número de resposta. Por favor, "
+"utilize um número que seja menor do que %d."
 
 #. module: survey
 #: view:survey:0
 msgid "All Open Survey"
-msgstr ""
+msgstr "Todas as Perguntas Abertas"
 
 #. module: survey
 #: model:ir.actions.report.xml,name:survey.survey_browse_response
@@ -1527,6 +1605,8 @@ msgid ""
 "than the number of answer.                                    Please use a "
 "number that is smaller than %d."
 msgstr ""
+"#Resposta Necessária que você inseriu é maior do que o número de resposta. "
+"Por favor, utilize um número que seja menor do que %d."
 
 #. module: survey
 #: selection:survey.print,paper_size:0
@@ -1552,7 +1632,7 @@ msgstr "Soma de todas as escolhas"
 #. module: survey
 #: view:survey.request:0
 msgid "Request"
-msgstr ""
+msgstr "Solicitação"
 
 #. module: survey
 #: model:ir.model,name:survey.model_survey_response
@@ -1616,7 +1696,7 @@ msgstr "Mensagem de erro"
 #: code:addons/survey/wizard/survey_send_invitation.py:71
 #, python-format
 msgid "Warning!"
-msgstr ""
+msgstr "Aviso!"
 
 #. module: survey
 #: code:addons/survey/survey.py:465
@@ -1626,6 +1706,8 @@ msgid ""
 "greater than the number of answer.                                    Please "
 "use a number that is smaller than %d."
 msgstr ""
+"Resposta mínima exigida digitada é maior que o número de resposta. Por "
+"favor, utilize um número que seja menor do que %d."
 
 #. module: survey
 #: field:survey.answer,menu_choice:0
@@ -1635,7 +1717,7 @@ msgstr "Opções de Menu"
 #. module: survey
 #: field:survey,id:0
 msgid "ID"
-msgstr ""
+msgstr "ID"
 
 #. module: survey
 #: code:addons/survey/survey.py:487
@@ -1643,12 +1725,12 @@ msgstr ""
 msgid ""
 "Maximum Required Answer is greater                                     than "
 "Minimum Required Answer"
-msgstr ""
+msgstr "A Resposta Obrigatório Máxima é superior a Resposta Mínima Requerida"
 
 #. module: survey
 #: view:survey.send.invitation.log:0
 msgid "User creation"
-msgstr ""
+msgstr "Criação de usuário"
 
 #. module: survey
 #: selection:survey.question,required_type:0
@@ -1694,7 +1776,7 @@ msgstr "Ponto Flutuante"
 #: view:survey.print.statistics:0
 #: view:survey.send.invitation:0
 msgid "or"
-msgstr ""
+msgstr "ou"
 
 #. module: survey
 #: field:survey,title:0
@@ -1736,6 +1818,11 @@ msgid "Question Type"
 msgstr "Tipo de Questão"
 
 #. module: survey
+#: field:survey.question,in_visible_answer_type:0
+msgid "Is Answer Type Invisible?"
+msgstr "A Escrita da Resposta é Invisível?"
+
+#. module: survey
 #: selection:survey.question,type:0
 #: view:survey.response.line:0
 msgid "Table"
@@ -1745,7 +1832,7 @@ msgstr "Tabela"
 #: code:addons/survey/wizard/survey_answer.py:117
 #, python-format
 msgid "You cannot answer because the survey is not open."
-msgstr ""
+msgstr "Você não pode responder a esta pesquisa pois não está aberta."
 
 #. module: survey
 #: field:survey.question,comment_minimum_date:0
@@ -1756,9 +1843,9 @@ msgstr "Data mínima"
 #. module: survey
 #: field:survey,response_user:0
 msgid "Maximum Answer per User"
-msgstr ""
+msgstr "Resposta Máxima por usuário"
 
 #. module: survey
 #: field:survey.name.wiz,page:0
 msgid "Page Position"
-msgstr ""
+msgstr "Posição de Página"

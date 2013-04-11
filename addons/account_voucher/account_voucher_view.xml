@@ -43,8 +43,8 @@
                 <form string="Accounting Voucher" version="7.0">
                   <header>
                       <button name="proforma_voucher" string="Post" states="draft" class="oe_highlight"/>
-                      <button name="cancel_voucher" string="Cancel" type="object" states="posted" confirm="Are you sure to unreconcile this record?"/>
-                      <button name="cancel_voucher" string="Cancel" states="draft,proforma" />
+                      <button name="cancel_voucher" string="Cancel Voucher" type="object" states="posted" confirm="Are you sure you want to unreconcile this record?"/>
+                      <button name="cancel_voucher" string="Cancel Voucher" states="draft,proforma" />
                       <button name="action_cancel_draft" type="object" states="cancel" string="Set to Draft"/>
                       <field name="state" widget="statusbar" statusbar_visible="draft,posted" statusbar_colors='{"proforma":"blue"}'/>
                   </header>

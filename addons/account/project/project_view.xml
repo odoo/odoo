@@ -11,13 +11,14 @@
                     <field name="complete_name"/>
                     <field name="partner_id"/>
                     <field name="code"/>
-                    <field name="date"/>
                     <field name="date_start"/>
+                    <field name="date"/>
                     <field name="user_id" invisible="1"/>
-                    <field name="manager_id" invisible="1"/>
+                    <field name="manager_id"/>
                     <field name="parent_id" invisible="1"/>
                     <field name="state" invisible="1"/>
                     <field name="type" invisible="1"/>
+                    <field name="template_id" invisible="1"/>
                     <field name="company_id" groups="base.group_multi_company"/>
                 </tree>
             </field>
@@ -30,15 +31,18 @@
                 <search string="Analytic Account">
                     <field name="name" filter_domain="['|', ('name','ilike',self), ('code','ilike',self)]" string="Analytic Account"/>
                     <field name="date"/>
-                    <filter icon="terp-gtk-media-pause" string="Pending" domain="[('state','=','pending')]" help="Pending Accounts"/>
-                    <filter icon="terp-camera_test" string="Current" domain="[('state','=','open')]" help="Current Accounts"/>
                     <field name="partner_id"/>
                     <field name="manager_id"/>
+                    <field name="parent_id"/>
                     <field name="user_id"/>
+                    <filter string="Open" domain="[('state','=','open')]" help="Current Accounts"/>
+                    <filter string="Pending" domain="[('state','=','pending')]" help="Pending Accounts"/>
                     <group expand="0" string="Group By...">
-                        <filter string="Associated Partner" icon="terp-partner" domain="[]" context="{'group_by':'partner_id'}"/>
-                        <filter string="Parent Account" icon="terp-folder-green" domain="[]" context="{'group_by':'parent_id'}"/>
-                        <filter string="Status" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'state'}" groups="base.group_no_one"/>
+                        <filter string="Associated Partner" domain="[]" context="{'group_by':'partner_id'}"/>
+                        <filter string="Type" domain="[]" context="{'group_by':'type'}"/>
+                        <filter string="Template" domain="[]" context="{'group_by':'template_id'}"/>
+                        <filter string="Parent Account" domain="[]" context="{'group_by':'parent_id'}"/>
+                        <filter string="Status" domain="[]" context="{'group_by':'state'}" groups="base.group_no_one"/>
                     </group>
                 </search>
             </field>
@@ -127,6 +131,7 @@
                             <field name="name"/>
                             <field name="account_id"/>
                             <field name="journal_id"/>
+                            <field name="user_id"/>
                         </group>
                         <group>
                             <field name="date"/>
@@ -165,6 +170,7 @@
                     <field name="date"/>
                     <field name="ref" invisible="context.get('to_invoice', False)"/>
                     <field name="name"/>
+                    <field name="user_id"/>
                     <field name="journal_id" invisible="context.get('to_invoice', False)"/>
                     <field name="amount" sum="Total" invisible="context.get('to_invoice', False)"/>
                     <field name="product_id" on_change="on_change_unit_amount(product_id, unit_amount, company_id, product_uom_id, journal_id)" invisible="not context.get('to_invoice', False)"/>
@@ -172,7 +178,6 @@
                     <field name="product_uom_id" on_change="on_change_unit_amount(product_id, unit_amount, company_id, product_uom_id)" invisible="not context.get('to_invoice', False)"/>
                     <field domain="[('type','=','normal')]" name="account_id"/>
                     <field name="general_account_id" invisible="context.get('to_invoice', False)"/>
-                    <field name="user_id" invisible="1" />
                     <field name="company_id" groups="base.group_multi_company"/>
                 </tree>
             </field>

@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-21 17:05+0000\n"
-"PO-Revision-Date: 2012-12-21 23:00+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2013-03-07 08:38+0000\n"
+"PO-Revision-Date: 2013-03-07 19:34+0000\n"
+"Last-Translator: Fekete Mihai <mihai@erpsystems.ro>\n"
 "Language-Team: Romanian <ro@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-01-18 06:55+0000\n"
-"X-Generator: Launchpad (build 16430)\n"
+"X-Launchpad-Export-Date: 2013-03-28 05:50+0000\n"
+"X-Generator: Launchpad (build 16546)\n"
 
 #. module: mrp_repair
 #: field:mrp.repair.line,move_id:0
@@ -55,7 +55,7 @@ msgstr "De facturat"
 #. module: mrp_repair
 #: view:mrp.repair:0
 msgid "Unit of Measure"
-msgstr ""
+msgstr "Unitatea de Masura"
 
 #. module: mrp_repair
 #: report:repair.order:0
@@ -70,7 +70,7 @@ msgstr "Grupeaza dupa adresa de facturare a partenerului"
 #. module: mrp_repair
 #: field:mrp.repair,message_unread:0
 msgid "Unread Messages"
-msgstr ""
+msgstr "Mesaje Necitite"
 
 #. module: mrp_repair
 #: code:addons/mrp_repair/mrp_repair.py:435
@@ -97,7 +97,7 @@ msgstr "Exceptie Factura"
 #. module: mrp_repair
 #: view:mrp.repair:0
 msgid "Serial Number"
-msgstr ""
+msgstr "Numar de Serie"
 
 #. module: mrp_repair
 #: field:mrp.repair,address_id:0
@@ -123,7 +123,7 @@ msgstr "Adresa de facturare:"
 #. module: mrp_repair
 #: help:mrp.repair,partner_id:0
 msgid "Choose partner for whom the order will be invoiced and delivered."
-msgstr ""
+msgstr "Selectati partenerul pentru care comanda va fi facturata si livrata."
 
 #. module: mrp_repair
 #: view:mrp.repair:0
@@ -138,7 +138,7 @@ msgstr "Note"
 #. module: mrp_repair
 #: field:mrp.repair,message_ids:0
 msgid "Messages"
-msgstr ""
+msgstr "Mesaje"
 
 #. module: mrp_repair
 #: field:mrp.repair,amount_tax:0
@@ -153,7 +153,7 @@ msgstr "Taxe"
 #: code:addons/mrp_repair/mrp_repair.py:442
 #, python-format
 msgid "Error!"
-msgstr ""
+msgstr "Eroare!"
 
 #. module: mrp_repair
 #: report:repair.order:0
@@ -164,12 +164,12 @@ msgstr "Total Net:"
 #: selection:mrp.repair,state:0
 #: selection:mrp.repair.line,state:0
 msgid "Cancelled"
-msgstr ""
+msgstr "Anulat(a)"
 
 #. module: mrp_repair
 #: help:mrp.repair,message_unread:0
 msgid "If checked new messages require your attention."
-msgstr ""
+msgstr "Daca este selectat, mesajele noi necesita atentia dumneavoastra."
 
 #. module: mrp_repair
 #: view:mrp.repair:0
@@ -196,6 +196,21 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<clasa p=\"oe_vizualizare_niciuncontinut_creeaza\">\n"
+"                Dati clic pentru a crea un ordin de reparatii. \n"
+"              </p><p>\n"
+"                Intr-un ordin de reparatii, puteti sa detaliati componentele "
+"pe care le inlaturati,\n"
+"                sa adaugati sau sa inlocuiti si sa inregistrati timpul "
+"petrecut cu diferite\n"
+"                operatiuni.\n"
+"              </p><p>\n"
+"                Ordinul de reparatii foloseste data garantiei din Numarul de "
+"Serie pentru\n"
+"                a sti daca reparatia ar trebui sa fie facturata \n"
+"                sau nu clientului.\n"
+"              </p>\n"
+"            "
 
 #. module: mrp_repair
 #: help:mrp.repair.line,state:0
@@ -208,6 +223,14 @@ msgid ""
 "                   \n"
 "* The 'Cancelled' status is set automatically when user cancel repair order."
 msgstr ""
+" * Starea 'Ciorna' este setata automat ca ciorna atunci cand ordinul de "
+"reparatii se afla in starea ciorna.                         \n"
+"* Starea 'Confirmat' este setata automat pe confirmata atunci cand ordinul "
+"de reparatii se afla in starea confirmata.                         \n"
+"* Starea 'Efectuat' este setat automat atunci cand ordinul de reparatii este "
+"finalizat.                         \n"
+"* Starea 'Anulat' este setata automat atunci cand utilizatorul anuleaza "
+"ordinul de reparatii."
 
 #. module: mrp_repair
 #: field:mrp.repair,move_id:0
@@ -217,7 +240,7 @@ msgstr "Miscare"
 #. module: mrp_repair
 #: report:repair.order:0
 msgid "Tax"
-msgstr ""
+msgstr "Taxa"
 
 #. module: mrp_repair
 #: model:ir.actions.act_window,name:mrp_repair.action_repair_order_tree
@@ -236,6 +259,8 @@ msgid ""
 "Holds the Chatter summary (number of messages, ...). This summary is "
 "directly in html format in order to be inserted in kanban views."
 msgstr ""
+"Contine rezumatul Chatter (numar de mesaje, ...). Acest rezumat este direct "
+"in format HTML, cu scopul de a se introduce in vizualizari kanban."
 
 #. module: mrp_repair
 #: view:mrp.repair:0
@@ -254,7 +279,7 @@ msgstr "Avertizare!"
 #. module: mrp_repair
 #: view:mrp.repair:0
 msgid "(update)"
-msgstr ""
+msgstr "(actualizare)"
 
 #. module: mrp_repair
 #: view:mrp.repair:0
@@ -289,6 +314,19 @@ msgid ""
 "* The 'Done' status is set when repairing is completed.            \n"
 "* The 'Cancelled' status is used when user cancel repair order."
 msgstr ""
+" * Starea 'Ciorna' este utilizata atunci cand un utilizator inregistreaza un "
+"ordin de reparatii nou si neconfirmat.             \n"
+"* Starea 'Confirmat' este utilizata atunci cnad un utilizator confirma "
+"ordinul de reparatii.             \n"
+"* Starea 'Gata de Reparat' este utilizata pentru a incepe reparatia, "
+"utilizatorul poate incepe reparatia numai dupa ce ordinul de repratii este "
+"confirmat.             \n"
+"* Starea 'Va fi Facturat' este utilizata pentru a genera factura inainte de "
+"sau dupa efectuarea reparatiei.             \n"
+"* Starea 'Efectuat' este setata atunci cand reparatia este finalizata.       "
+"      \n"
+"* Starea 'Anulat' este utilizata atunci cand utilizatorul anuleaza ordinul "
+"de reparatii."
 
 #. module: mrp_repair
 #: view:mrp.repair:0
@@ -300,6 +338,7 @@ msgstr "Comanda reparatii"
 #, python-format
 msgid "Serial number is required for operation line with product '%s'"
 msgstr ""
+"Numarul de serie este necesar pentru linia operatiei cu produsul '%s'"
 
 #. module: mrp_repair
 #: report:repair.order:0
@@ -316,7 +355,7 @@ msgstr "Numar Lot"
 #. module: mrp_repair
 #: field:mrp.repair,message_follower_ids:0
 msgid "Followers"
-msgstr ""
+msgstr "Persoane interesate"
 
 #. module: mrp_repair
 #: field:mrp.repair,fees_lines:0
@@ -372,7 +411,7 @@ msgstr "Note cotatie"
 #: field:mrp.repair,state:0
 #: field:mrp.repair.line,state:0
 msgid "Status"
-msgstr ""
+msgstr "Status"
 
 #. module: mrp_repair
 #: view:mrp.repair:0
@@ -407,6 +446,11 @@ msgid "Repaired"
 msgstr "Reparat"
 
 #. module: mrp_repair
+#: view:mrp.repair:0
+msgid "Add internal notes..."
+msgstr "Adaugati note interne..."
+
+#. module: mrp_repair
 #: field:mrp.repair.fee,invoice_line_id:0
 #: field:mrp.repair.line,invoice_line_id:0
 msgid "Invoice Line"
@@ -431,7 +475,7 @@ msgstr "Da"
 #: view:mrp.repair.cancel:0
 #: view:mrp.repair.make_invoice:0
 msgid "or"
-msgstr ""
+msgstr "sau"
 
 #. module: mrp_repair
 #: view:mrp.repair:0
@@ -445,7 +489,7 @@ msgstr "Facturat"
 #: field:mrp.repair.fee,product_uom:0
 #: field:mrp.repair.line,product_uom:0
 msgid "Product Unit of Measure"
-msgstr ""
+msgstr "Unitatea de Masura a Produsului"
 
 #. module: mrp_repair
 #: view:mrp.repair.make_invoice:0
@@ -500,16 +544,19 @@ msgid ""
 "invoice before or after the repair is done respectively. 'No invoice' means "
 "you don't want to generate invoice for this repair order."
 msgstr ""
+"Selectand 'Inainte de Reparatie' sau 'Dupa Reparatie' va va permite sa "
+"generati factura inainte de sau dupa reparatie. 'Fara Factura' inseamna ca "
+"nu doriti sa generati nici o factura pentru acest ordin de reparatii."
 
 #. module: mrp_repair
 #: field:mrp.repair,guarantee_limit:0
 msgid "Warranty Expiration"
-msgstr ""
+msgstr "Expirarea Garantiei"
 
 #. module: mrp_repair
 #: help:mrp.repair,pricelist_id:0
 msgid "Pricelist of the selected partner."
-msgstr ""
+msgstr "Lista de preturi a partenerului selectat."
 
 #. module: mrp_repair
 #: report:repair.order:0
@@ -536,12 +583,12 @@ msgstr "Dupa Reparatie"
 #: code:addons/mrp_repair/wizard/cancel_repair.py:41
 #, python-format
 msgid "Active ID not Found"
-msgstr ""
+msgstr "Nu a fost gasit ID-ul Activ"
 
 #. module: mrp_repair
 #: field:mrp.repair,message_is_follower:0
 msgid "Is a Follower"
-msgstr ""
+msgstr "Este o persoana interesata"
 
 #. module: mrp_repair
 #: view:mrp.repair:0
@@ -571,7 +618,7 @@ msgstr "Cotatie Reparatie"
 #. module: mrp_repair
 #: field:mrp.repair,message_summary:0
 msgid "Summary"
-msgstr ""
+msgstr "Continut"
 
 #. module: mrp_repair
 #: view:mrp.repair:0
@@ -601,7 +648,7 @@ msgstr "Cantitate"
 #. module: mrp_repair
 #: view:mrp.repair:0
 msgid "Product Information"
-msgstr ""
+msgstr "Informatii Produs"
 
 #. module: mrp_repair
 #: model:ir.actions.act_window,name:mrp_repair.act_mrp_repair_invoice
@@ -644,6 +691,11 @@ msgid "Cancel"
 msgstr "Anuleaza"
 
 #. module: mrp_repair
+#: view:mrp.repair:0
+msgid "Add quotation notes..."
+msgstr "Adaugati note referitoare la oferta..."
+
+#. module: mrp_repair
 #: field:mrp.repair.line,location_dest_id:0
 msgid "Dest. Location"
 msgstr "Locatia Destinatie"
@@ -665,6 +717,10 @@ msgid ""
 "repaired and create a picking with selected product. Note that you can "
 "select the locations in the Info tab, if you have the extended view."
 msgstr ""
+"Selectati aceasta casuta daca doriti sa gestionati livrarea de indata ce "
+"produsul este reparat si sa creati o ridicare pentru produsul selectat. "
+"Observati ca puteti sa selectati locatiile in tabul Informatii, daca aveti "
+"vizualizarea extinsa."
 
 #. module: mrp_repair
 #: help:mrp.repair,guarantee_limit:0
@@ -674,6 +730,11 @@ msgid ""
 "expiration limit, each operation and fee you will add will be set as 'not to "
 "invoiced' by default. Note that you can change manually afterwards."
 msgstr ""
+"Limita de expirare a garantiei este calculata dupa cum urmeaza: data ultimei "
+"miscari + garantia definita pentru produsul selectat. Daca data curenta este "
+"sub limita de expirare a garantiei, fiecare operatiune si taxa pe care o "
+"veti adauga va fi setata implicit 'nu va fi facturata'. Observati ca aveti "
+"posibilitatea de a modifica manual dupa aceea."
 
 #. module: mrp_repair
 #: view:mrp.repair.make_invoice:0
@@ -683,7 +744,7 @@ msgstr "Creeaza Factura"
 #. module: mrp_repair
 #: view:mrp.repair:0
 msgid "Reair Orders"
-msgstr ""
+msgstr "Ordine de Reparatii"
 
 #. module: mrp_repair
 #: field:mrp.repair.fee,name:0
@@ -738,7 +799,7 @@ msgstr "Chiar doriti să creaţi factura(ile)?"
 #: code:addons/mrp_repair/mrp_repair.py:349
 #, python-format
 msgid "Repair order is already invoiced."
-msgstr ""
+msgstr "Ordinul de reparatii este deja facturat."
 
 #. module: mrp_repair
 #: field:mrp.repair,picking_id:0
@@ -780,7 +841,7 @@ msgstr "Adresa de facturare"
 #. module: mrp_repair
 #: help:mrp.repair,message_ids:0
 msgid "Messages and communication history"
-msgstr ""
+msgstr "Istoric mesaje si conversatii"
 
 #. module: mrp_repair
 #: view:mrp.repair:0

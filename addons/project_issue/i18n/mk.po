@@ -1,0 +1,1042 @@
+# Macedonian translation for openobject-addons
+# Copyright (c) 2013 Rosetta Contributors and Canonical Ltd 2013
+# This file is distributed under the same license as the openobject-addons package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2013.
+# Sofce Dimitrijeva <sofce@eskon.com.mk>, 2013.
+msgid ""
+msgstr ""
+"Project-Id-Version: openobject-addons\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2013-03-07 08:37+0000\n"
+"PO-Revision-Date: 2013-03-28 23:28+0000\n"
+"Last-Translator: Aleksandar Panov <server986@gmail.com>\n"
+"Language-Team: ESKON-INZENERING\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Launchpad-Export-Date: 2013-03-30 06:09+0000\n"
+"X-Generator: Launchpad (build 16546)\n"
+"Language: mk\n"
+
+#. module: project_issue
+#: model:project.category,name:project_issue.project_issue_category_03
+msgid "Deadly bug"
+msgstr "Смртоносен баг"
+
+#. module: project_issue
+#: help:project.config.settings,fetchmail_issue:0
+msgid ""
+"Allows you to configure your incoming mail server, and create issues from "
+"incoming emails."
+msgstr ""
+"Овозможува конфигурација на влезен mail сервер и креирање на проблеми од "
+"влезни мејлови."
+
+#. module: project_issue
+#: field:project.issue.report,delay_open:0
+msgid "Avg. Delay to Open"
+msgstr "Просечно време на доцнење до отварање"
+
+#. module: project_issue
+#: view:project.issue:0
+#: view:project.issue.report:0
+msgid "Group By..."
+msgstr "Групирај по..."
+
+#. module: project_issue
+#: field:project.issue,working_hours_open:0
+msgid "Working Hours to Open the Issue"
+msgstr "Работни часови за отварање на проблемот"
+
+#. module: project_issue
+#: model:mail.message.subtype,description:project_issue.mt_issue_started
+msgid "Issue started"
+msgstr "Проблемот е започнат"
+
+#. module: project_issue
+#: field:project.issue,date_open:0
+msgid "Opened"
+msgstr "Отворено"
+
+#. module: project_issue
+#: field:project.issue.report,opening_date:0
+msgid "Date of Opening"
+msgstr "Датум на отварање"
+
+#. module: project_issue
+#: selection:project.issue.report,month:0
+msgid "March"
+msgstr "Март"
+
+#. module: project_issue
+#: field:project.issue,progress:0
+msgid "Progress (%)"
+msgstr "Напредок (%)"
+
+#. module: project_issue
+#: view:project.issue:0
+#: field:project.issue,message_unread:0
+msgid "Unread Messages"
+msgstr "Непрочитани Пораки"
+
+#. module: project_issue
+#: field:project.issue,company_id:0
+#: view:project.issue.report:0
+#: field:project.issue.report,company_id:0
+msgid "Company"
+msgstr "Компанија"
+
+#. module: project_issue
+#: field:project.issue,email_cc:0
+msgid "Watchers Emails"
+msgstr "Мејлови на набљудувачите"
+
+#. module: project_issue
+#: help:project.issue,kanban_state:0
+msgid ""
+"A Issue's kanban state indicates special situations affecting it:\n"
+" * Normal is the default situation\n"
+" * Blocked indicates something is preventing the progress of this issue\n"
+" * Ready for next stage indicates the issue is ready to be pulled to the "
+"next stage"
+msgstr ""
+
+#. module: project_issue
+#: help:project.issue,message_unread:0
+msgid "If checked new messages require your attention."
+msgstr "Доколку е штиклирано, новите пораки го бараат вашето вниманите."
+
+#. module: project_issue
+#: help:account.analytic.account,use_issues:0
+msgid "Check this field if this project manages issues"
+msgstr "Означи го ова поле доколку проектот управува со проблемите"
+
+#. module: project_issue
+#: field:project.issue,day_open:0
+msgid "Days to Open"
+msgstr "Денови до отварање"
+
+#. module: project_issue
+#: code:addons/project_issue/project_issue.py:473
+#, python-format
+msgid ""
+"You cannot escalate this issue.\n"
+"The relevant Project has not configured the Escalation Project!"
+msgstr ""
+
+#. module: project_issue
+#: constraint:project.project:0
+msgid "Error! You cannot assign escalation to the same project!"
+msgstr "Грешка!  Не можете да назначите ескалација на истиот проект!"
+
+#. module: project_issue
+#: selection:project.issue,priority:0
+#: selection:project.issue.report,priority:0
+msgid "Highest"
+msgstr "Највисоко"
+
+#. module: project_issue
+#: help:project.issue,inactivity_days:0
+msgid "Difference in days between last action and current date"
+msgstr "Разлика во денови помеѓу последната акција и сегашниот датум"
+
+#. module: project_issue
+#: view:project.issue.report:0
+#: field:project.issue.report,day:0
+msgid "Day"
+msgstr "Ден"
+
+#. module: project_issue
+#: field:project.issue,days_since_creation:0
+msgid "Days since creation date"
+msgstr "Денови од датумот на креирање"
+
+#. module: project_issue
+#: field:project.issue,task_id:0
+#: view:project.issue.report:0
+#: field:project.issue.report,task_id:0
+msgid "Task"
+msgstr "Задача"
+
+#. module: project_issue
+#: model:mail.message.subtype,name:project_issue.mt_project_issue_stage
+msgid "Issue Stage Changed"
+msgstr "Фазата на проблемот е променета"
+
+#. module: project_issue
+#: field:project.issue,message_ids:0
+msgid "Messages"
+msgstr "Пораки"
+
+#. module: project_issue
+#: field:project.issue,inactivity_days:0
+msgid "Days since last action"
+msgstr "Денови од последната акција"
+
+#. module: project_issue
+#: model:ir.model,name:project_issue.model_project_project
+#: view:project.issue:0
+#: field:project.issue,project_id:0
+#: view:project.issue.report:0
+#: field:project.issue.report,project_id:0
+msgid "Project"
+msgstr "Проект"
+
+#. module: project_issue
+#: model:ir.actions.act_window,help:project_issue.project_issue_categ_act0
+msgid ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"            Click to report a new issue.\n"
+"          </p><p>\n"
+"            The OpenERP issues tacker allows you to efficiantly manage "
+"things\n"
+"            like internal requests, software development bugs, customer\n"
+"            complaints, project troubles, material breakdowns, etc.\n"
+"          </p>\n"
+"        "
+msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"            Кликни за соопштување на нов проблем.\n"
+"          </p><p>\n"
+"            OpenERP тракерот за проблеми ви овозможува ефикасно менаџирање "
+"на работи\n"
+"            како внатрешни барања, софтверски и развојни багови, жалби од "
+"клиенти,\n"
+"            проблеми со проектот, материјални дефекти, итн.\n"
+"          </p>\n"
+"        "
+
+#. module: project_issue
+#: selection:project.issue,state:0
+#: selection:project.issue.report,state:0
+msgid "Cancelled"
+msgstr "Откажано"
+
+#. module: project_issue
+#: field:project.issue,description:0
+msgid "Private Note"
+msgstr "Приватна белешка"
+
+#. module: project_issue
+#: field:project.issue.report,date_closed:0
+msgid "Date of Closing"
+msgstr "Датум на затварање"
+
+#. module: project_issue
+#: view:project.issue:0
+msgid "Issue Tracker Search"
+msgstr "Пребарување на тракерот за проблеми"
+
+#. module: project_issue
+#: field:project.issue,color:0
+msgid "Color Index"
+msgstr "Индекс на боја"
+
+#. module: project_issue
+#: field:project.issue.report,working_hours_open:0
+msgid "Avg. Working Hours to Open"
+msgstr "Просечни работни часови за отварање"
+
+#. module: project_issue
+#: model:ir.model,name:project_issue.model_account_analytic_account
+msgid "Analytic Account"
+msgstr "Аналитичка сметка"
+
+#. module: project_issue
+#: help:project.issue,message_summary:0
+msgid ""
+"Holds the Chatter summary (number of messages, ...). This summary is "
+"directly in html format in order to be inserted in kanban views."
+msgstr ""
+"Прикажува резиме на конверзација (број на пораки, ...). Ова резиме е "
+"директно во html формат со цел да биде вметнато во kanban преглед."
+
+#. module: project_issue
+#: help:project.project,project_escalation_id:0
+msgid ""
+"If any issue is escalated from the current Project, it will be listed under "
+"the project selected here."
+msgstr ""
+"Доколку некој проблем е ескалиран од моменталниот проект, тој ќе биде "
+"прикажан под проектот означен овде."
+
+#. module: project_issue
+#: view:project.issue:0
+msgid "Extra Info"
+msgstr "Додатни информации"
+
+#. module: project_issue
+#: code:addons/project_issue/project_issue.py:473
+#, python-format
+msgid "Warning!"
+msgstr "Предупредување!"
+
+#. module: project_issue
+#: view:project.issue:0
+msgid "Edit..."
+msgstr "Уреди..."
+
+#. module: project_issue
+#: view:project.issue:0
+msgid "Responsible"
+msgstr "Одговорен"
+
+#. module: project_issue
+#: model:mail.message.subtype,name:project_issue.mt_issue_blocked
+#: model:mail.message.subtype,name:project_issue.mt_project_issue_blocked
+msgid "Issue Blocked"
+msgstr "Проблемот е блокиран"
+
+#. module: project_issue
+#: view:project.issue:0
+msgid "Statistics"
+msgstr "Статистики"
+
+#. module: project_issue
+#: field:project.issue,kanban_state:0
+msgid "Kanban State"
+msgstr "Kanban состојба"
+
+#. module: project_issue
+#: code:addons/project_issue/project_issue.py:368
+#, python-format
+msgid "Project issue <b>converted</b> to task."
+msgstr "Проблемот со проектот е  <b>конвертиран </b>во задача."
+
+#. module: project_issue
+#: view:project.issue:0
+#: field:project.issue,priority:0
+#: view:project.issue.report:0
+#: field:project.issue.report,priority:0
+msgid "Priority"
+msgstr "Приоритет"
+
+#. module: project_issue
+#: view:project.issue:0
+#: field:project.issue,version_id:0
+#: view:project.issue.report:0
+#: field:project.issue.report,version_id:0
+msgid "Version"
+msgstr "Верзија"
+
+#. module: project_issue
+#: field:project.issue,message_follower_ids:0
+msgid "Followers"
+msgstr "Пратители"
+
+#. module: project_issue
+#: view:project.issue:0
+#: selection:project.issue,state:0
+#: view:project.issue.report:0
+msgid "New"
+msgstr "Ново"
+
+#. module: project_issue
+#: view:project.project:0
+msgid "{'invisible': [('use_tasks', '=', False),('use_issues','=',False)]}"
+msgstr "{'invisible': [('use_tasks', '=', False),('use_issues','=',False)]}"
+
+#. module: project_issue
+#: field:project.issue,email_from:0
+msgid "Email"
+msgstr "Е-пошта"
+
+#. module: project_issue
+#: field:project.issue,channel_id:0
+#: field:project.issue.report,channel_id:0
+msgid "Channel"
+msgstr "Канал"
+
+#. module: project_issue
+#: selection:project.issue,priority:0
+#: selection:project.issue.report,priority:0
+msgid "Lowest"
+msgstr "Најниско"
+
+#. module: project_issue
+#: code:addons/project_issue/project_issue.py:390
+#, python-format
+msgid "%s (copy)"
+msgstr "%s (копија)"
+
+#. module: project_issue
+#: view:project.issue:0
+msgid "Unassigned Issues"
+msgstr "Недоделени проблеми"
+
+#. module: project_issue
+#: field:project.issue,create_date:0
+#: view:project.issue.report:0
+#: field:project.issue.report,creation_date:0
+msgid "Creation Date"
+msgstr "Датум на креирање"
+
+#. module: project_issue
+#: model:ir.actions.act_window,name:project_issue.project_issue_version_action
+#: model:ir.ui.menu,name:project_issue.menu_project_issue_version_act
+msgid "Versions"
+msgstr "Верзии"
+
+#. module: project_issue
+#: view:project.issue:0
+msgid "To Do Issues"
+msgstr ""
+
+#. module: project_issue
+#: model:ir.model,name:project_issue.model_project_issue_version
+msgid "project.issue.version"
+msgstr "project.issue.version"
+
+#. module: project_issue
+#: field:project.config.settings,fetchmail_issue:0
+msgid "Create issues from an incoming email account "
+msgstr "Креирај проблеми од сметка на влезна е-пошта "
+
+#. module: project_issue
+#: view:project.issue:0
+#: selection:project.issue,state:0
+#: view:project.issue.report:0
+msgid "Done"
+msgstr "Завршено"
+
+#. module: project_issue
+#: selection:project.issue.report,month:0
+msgid "July"
+msgstr "Јули"
+
+#. module: project_issue
+#: model:ir.actions.act_window,help:project_issue.action_project_issue_report
+msgid ""
+"This report on the project issues allows you to analyse the quality of your "
+"support or after-sales services. You can track the issues per age. You can "
+"analyse the time required to open or close an issue, the number of email to "
+"exchange and the time spent on average by issues."
+msgstr ""
+"Овој извештај за проблемите на проектот ви овозможува да го анализирате "
+"квалитетот на вашата поддршка или услугите после продажбата. Може да ги "
+"следите проглемите по старост. Може да го анализирате потребното време за да "
+"се отвори или затвори проблемот, бројот на разменети е-пошти и просечното "
+"време потрошено по проблем."
+
+#. module: project_issue
+#: view:project.issue:0
+#: field:project.issue,stage_id:0
+#: view:project.issue.report:0
+#: field:project.issue.report,stage_id:0
+msgid "Stage"
+msgstr "Етапа"
+
+#. module: project_issue
+#: model:ir.actions.act_window,name:project_issue.action_project_issue_report
+#: model:ir.ui.menu,name:project_issue.menu_project_issue_report_tree
+#: view:project.issue.report:0
+msgid "Issues Analysis"
+msgstr "Анализи на проблеми"
+
+#. module: project_issue
+#: code:addons/project_issue/project_issue.py:507
+#, python-format
+msgid "No Subject"
+msgstr "Без тема"
+
+#. module: project_issue
+#: model:ir.actions.act_window,name:project_issue.action_view_my_project_issue_tree
+msgid "My Project Issues"
+msgstr "Проблеми со мојот проект"
+
+#. module: project_issue
+#: view:project.issue:0
+#: field:project.issue,partner_id:0
+#: view:project.issue.report:0
+#: field:project.issue.report,partner_id:0
+msgid "Contact"
+msgstr "Контакт"
+
+#. module: project_issue
+#: view:project.issue:0
+msgid "Delete"
+msgstr "Избриши"
+
+#. module: project_issue
+#: code:addons/project_issue/project_issue.py:373
+#, python-format
+msgid "Tasks"
+msgstr "Задачи"
+
+#. module: project_issue
+#: field:project.issue.report,nbr:0
+msgid "# of Issues"
+msgstr "# на проблеми"
+
+#. module: project_issue
+#: selection:project.issue.report,month:0
+msgid "September"
+msgstr "Септември"
+
+#. module: project_issue
+#: selection:project.issue.report,month:0
+msgid "December"
+msgstr "Декември"
+
+#. module: project_issue
+#: field:project.issue,categ_ids:0
+msgid "Tags"
+msgstr "Ознаки"
+
+#. module: project_issue
+#: view:project.issue:0
+msgid "Issue Tracker Tree"
+msgstr "Дрво на тракерот на проблеми"
+
+#. module: project_issue
+#: model:project.category,name:project_issue.project_issue_category_01
+msgid "Little problem"
+msgstr "Мал проблем"
+
+#. module: project_issue
+#: view:project.project:0
+msgid "creates"
+msgstr "креира"
+
+#. module: project_issue
+#: field:project.issue,write_date:0
+msgid "Update Date"
+msgstr "Ажурирај датум"
+
+#. module: project_issue
+#: view:project.issue:0
+msgid "Project:"
+msgstr "Проект:"
+
+#. module: project_issue
+#: view:project.issue:0
+msgid "Open Features"
+msgstr "Отвори карактеристики"
+
+#. module: project_issue
+#: field:project.issue,date_action_next:0
+msgid "Next Action"
+msgstr "Следна операција"
+
+#. module: project_issue
+#: view:project.issue:0
+#: selection:project.issue,kanban_state:0
+msgid "Blocked"
+msgstr "Блокирано"
+
+#. module: project_issue
+#: field:project.issue,user_email:0
+msgid "User Email"
+msgstr "Е-пошта на корисник"
+
+#. module: project_issue
+#: view:project.issue.report:0
+msgid "#Number of Project Issues"
+msgstr "#Број на проблеми на проектот"
+
+#. module: project_issue
+#: help:project.issue,channel_id:0
+msgid "Communication channel."
+msgstr "Комуникационен канал"
+
+#. module: project_issue
+#: help:project.issue,email_cc:0
+msgid ""
+"These email addresses will be added to the CC field of all inbound and "
+"outbound emails for this record before being sent. Separate multiple email "
+"addresses with a comma"
+msgstr ""
+"Овие емаил адреси ќе бидат додадени во полето CC на сите влезни и излезни е-"
+"пошти за овој запис пред да биде испратен. Одделете ги емаил адресите со "
+"запирка."
+
+#. module: project_issue
+#: selection:project.issue.report,state:0
+msgid "Draft"
+msgstr "Нацрт"
+
+#. module: project_issue
+#: selection:project.issue,priority:0
+#: selection:project.issue.report,priority:0
+msgid "Low"
+msgstr "Ниско"
+
+#. module: project_issue
+#: field:project.issue,date_closed:0
+#: selection:project.issue.report,state:0
+msgid "Closed"
+msgstr "Затворено"
+
+#. module: project_issue
+#: field:project.issue.report,delay_close:0
+msgid "Avg. Delay to Close"
+msgstr "Просечно време на доцнење до затварање"
+
+#. module: project_issue
+#: selection:project.issue,state:0
+#: view:project.issue.report:0
+#: selection:project.issue.report,state:0
+msgid "Pending"
+msgstr "Чекање"
+
+#. module: project_issue
+#: view:project.issue:0
+#: field:project.issue,state:0
+#: field:project.issue.report,state:0
+msgid "Status"
+msgstr "Статус"
+
+#. module: project_issue
+#: view:project.issue.report:0
+msgid "#Project Issues"
+msgstr "#Проблеми на проект"
+
+#. module: project_issue
+#: selection:project.issue.report,month:0
+msgid "August"
+msgstr "Август"
+
+#. module: project_issue
+#: selection:project.issue,kanban_state:0
+#: selection:project.issue,priority:0
+#: selection:project.issue.report,priority:0
+msgid "Normal"
+msgstr "Нормално"
+
+#. module: project_issue
+#: view:project.issue:0
+msgid "Category:"
+msgstr "Категорија:"
+
+#. module: project_issue
+#: selection:project.issue.report,month:0
+msgid "June"
+msgstr "Јуни"
+
+#. module: project_issue
+#: help:project.issue,message_ids:0
+msgid "Messages and communication history"
+msgstr "Историја на пораки и комуникација"
+
+#. module: project_issue
+#: view:project.issue:0
+msgid "New Issues"
+msgstr "Нови проблеми"
+
+#. module: project_issue
+#: field:project.issue,day_close:0
+msgid "Days to Close"
+msgstr "Денови до затварање"
+
+#. module: project_issue
+#: field:project.issue,message_is_follower:0
+msgid "Is a Follower"
+msgstr "Е пратител"
+
+#. module: project_issue
+#: help:project.issue,state:0
+msgid ""
+"The status is set to 'Draft', when a case is created.                      "
+"If the case is in progress the status is set to 'Open'.                      "
+"When the case is over, the status is set to 'Done'.                      If "
+"the case needs to be reviewed then the status is                       set "
+"to 'Pending'."
+msgstr ""
+"Статусот е подесен на 'Нацрт' при креирање на случај.                      "
+"Доколку случајот е во тек, статусот се подесува на 'Отворено'.               "
+"       По завршувањето на случајот, статусот се подесува на 'Завршено'.      "
+"                Доколку е потребно да се изврши проверка на случајот тогаш "
+"статусот се                       подесува на 'Во исчекување'."
+
+#. module: project_issue
+#: field:project.issue,active:0
+#: field:project.issue.version,active:0
+msgid "Active"
+msgstr "Активен"
+
+#. module: project_issue
+#: selection:project.issue.report,month:0
+msgid "November"
+msgstr "Ноември"
+
+#. module: project_issue
+#: code:addons/project_issue/project_issue.py:492
+#, python-format
+msgid "Customer Email"
+msgstr "Е-пошта на купувач"
+
+#. module: project_issue
+#: view:project.issue.report:0
+msgid "Search"
+msgstr "Пребарувај"
+
+#. module: project_issue
+#: view:project.issue:0
+msgid "Creation Month"
+msgstr "Месец на креирање"
+
+#. module: project_issue
+#: help:project.issue,days_since_creation:0
+msgid "Difference in days between creation date and current date"
+msgstr "Разлика во денови помеѓу датум на креирање и сегашен датум"
+
+#. module: project_issue
+#: selection:project.issue.report,month:0
+msgid "January"
+msgstr "Јануари"
+
+#. module: project_issue
+#: view:project.issue:0
+msgid "Feature Tracker Tree"
+msgstr "Дрво на тракерот на карактеристики"
+
+#. module: project_issue
+#: help:project.issue,email_from:0
+msgid "These people will receive email."
+msgstr "Овие лица ќе добијат е-пошта."
+
+#. module: project_issue
+#: field:project.issue,message_summary:0
+msgid "Summary"
+msgstr "Резиме"
+
+#. module: project_issue
+#: field:project.issue,date:0
+msgid "Date"
+msgstr "Датум"
+
+#. module: project_issue
+#: field:project.issue,user_id:0
+#: view:project.issue.report:0
+#: field:project.issue.report,user_id:0
+msgid "Assigned to"
+msgstr "Доделено на"
+
+#. module: project_issue
+#: view:project.config.settings:0
+msgid "Configure"
+msgstr "Конфигурирај"
+
+#. module: project_issue
+#: model:mail.message.subtype,description:project_issue.mt_issue_closed
+msgid "Issue closed"
+msgstr "Проблемот е затворен"
+
+#. module: project_issue
+#: view:project.issue:0
+msgid "Current Features"
+msgstr "Сегашни карактеристики"
+
+#. module: project_issue
+#: view:project.issue.version:0
+msgid "Issue Version"
+msgstr "Верзија на проблемот"
+
+#. module: project_issue
+#: field:project.issue.version,name:0
+msgid "Version Number"
+msgstr "Број на верзија"
+
+#. module: project_issue
+#: selection:project.issue.report,state:0
+msgid "Open"
+msgstr "Отвори"
+
+#. module: project_issue
+#: field:account.analytic.account,use_issues:0
+#: model:ir.actions.act_window,name:project_issue.act_project_project_2_project_issue_all
+#: model:ir.actions.act_window,name:project_issue.project_issue_categ_act0
+#: model:ir.ui.menu,name:project_issue.menu_project_confi
+#: model:ir.ui.menu,name:project_issue.menu_project_issue_track
+#: view:project.issue:0
+#: view:project.project:0
+msgid "Issues"
+msgstr "Проблеми"
+
+#. module: project_issue
+#: view:project.issue:0
+#: selection:project.issue,state:0
+msgid "In Progress"
+msgstr "Во тек"
+
+#. module: project_issue
+#: view:project.issue:0
+#: view:project.issue.report:0
+msgid "To Do"
+msgstr "Да се направи"
+
+#. module: project_issue
+#: model:ir.model,name:project_issue.model_project_issue
+#: view:project.issue.report:0
+msgid "Project Issue"
+msgstr "Проблем на проект"
+
+#. module: project_issue
+#: view:project.issue:0
+msgid "Add an internal note..."
+msgstr "Додади внатрешна белешка..."
+
+#. module: project_issue
+#: view:project.issue:0
+msgid "Cancel Issue"
+msgstr "Откажи проблем"
+
+#. module: project_issue
+#: help:project.issue,progress:0
+msgid "Computed as: Time Spent / Total Time."
+msgstr "Пресметано како: Потрошено време / Целосно време"
+
+#. module: project_issue
+#: field:project.project,issue_count:0
+msgid "Unclosed Issues"
+msgstr "Незатворен проблем"
+
+#. module: project_issue
+#: view:project.issue:0
+#: selection:project.issue,kanban_state:0
+msgid "Ready for next stage"
+msgstr "Подготвено за следно ниво"
+
+#. module: project_issue
+#: selection:project.issue.report,month:0
+msgid "October"
+msgstr "Октомври"
+
+#. module: project_issue
+#: view:project.issue.report:0
+#: field:project.issue.report,section_id:0
+msgid "Sale Team"
+msgstr "Продажбен тим"
+
+#. module: project_issue
+#: view:project.issue:0
+#: view:project.issue.report:0
+#: field:project.issue.report,month:0
+msgid "Month"
+msgstr "Месец"
+
+#. module: project_issue
+#: view:project.issue:0
+#: field:project.issue,name:0
+#: view:project.project:0
+msgid "Issue"
+msgstr "Проблем"
+
+#. module: project_issue
+#: model:project.category,name:project_issue.project_issue_category_02
+msgid "PBCK"
+msgstr ""
+
+#. module: project_issue
+#: view:project.issue:0
+msgid "Feature Tracker Search"
+msgstr "Пребарај тракер на карактеристики"
+
+#. module: project_issue
+#: view:project.issue:0
+msgid "Description"
+msgstr "Опис"
+
+#. module: project_issue
+#: field:project.issue,section_id:0
+msgid "Sales Team"
+msgstr "Продажен тим"
+
+#. module: project_issue
+#: selection:project.issue.report,month:0
+msgid "May"
+msgstr "Мај"
+
+#. module: project_issue
+#: model:ir.model,name:project_issue.model_project_config_settings
+msgid "project.config.settings"
+msgstr "project.config.settings"
+
+#. module: project_issue
+#: model:mail.message.subtype,name:project_issue.mt_issue_closed
+#: model:mail.message.subtype,name:project_issue.mt_project_issue_closed
+msgid "Issue Closed"
+msgstr "Проблемот е затворен"
+
+#. module: project_issue
+#: view:project.issue.report:0
+#: field:project.issue.report,email:0
+msgid "# Emails"
+msgstr "# Е-пошти"
+
+#. module: project_issue
+#: model:mail.message.subtype,name:project_issue.mt_issue_new
+#: model:mail.message.subtype,name:project_issue.mt_project_issue_new
+msgid "Issue Created"
+msgstr "Проблемот е креиран"
+
+#. module: project_issue
+#: code:addons/project_issue/project_issue.py:490
+#, python-format
+msgid "Customer"
+msgstr "Купувач"
+
+#. module: project_issue
+#: selection:project.issue.report,month:0
+msgid "February"
+msgstr "Февруари"
+
+#. module: project_issue
+#: model:mail.message.subtype,description:project_issue.mt_issue_stage
+#: model:mail.message.subtype,description:project_issue.mt_project_issue_stage
+msgid "Stage changed"
+msgstr "Променета етапа"
+
+#. module: project_issue
+#: view:project.issue:0
+msgid "Feature description"
+msgstr "Опис на карактеристика"
+
+#. module: project_issue
+#: field:project.project,project_escalation_id:0
+msgid "Project Escalation"
+msgstr "Ескалирање на проект"
+
+#. module: project_issue
+#: model:ir.actions.act_window,help:project_issue.project_issue_version_action
+msgid ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Click to add a new version.\n"
+"              </p><p>\n"
+"                Define here the different versions of your products on "
+"which\n"
+"                you can work on issues.\n"
+"              </p>\n"
+"            "
+msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Кликни за додавање на нова верзија.\n"
+"              </p><p>\n"
+"                Овде дефинирајте ги различинте верзии на производите на чии "
+"проблеми\n"
+"                ќе работите.\n"
+"              </p>\n"
+"            "
+
+#. module: project_issue
+#: help:project.issue,section_id:0
+msgid ""
+"Sales team to which Case belongs to.                             Define "
+"Responsible user and Email account for mail gateway."
+msgstr ""
+"Продажен тим на кого му припаѓа предметот.                             "
+"Дефинирајте Одговорен корисник и сметка за е-пошта за портата за пошта."
+
+#. module: project_issue
+#: view:board.board:0
+msgid "My Issues"
+msgstr "Мои проблеми"
+
+#. module: project_issue
+#: help:project.issue.report,delay_open:0
+msgid "Number of Days to open the project issue."
+msgstr "Број на денови до отварањето на проблемот на проектот."
+
+#. module: project_issue
+#: selection:project.issue.report,month:0
+msgid "April"
+msgstr "Април"
+
+#. module: project_issue
+#: view:project.issue:0
+msgid "⇒ Escalate"
+msgstr "⇒ Ескалирај"
+
+#. module: project_issue
+#: model:mail.message.subtype,description:project_issue.mt_issue_new
+msgid "Issue created"
+msgstr "Проблемот е креиран"
+
+#. module: project_issue
+#: field:project.issue,working_hours_close:0
+msgid "Working Hours to Close the Issue"
+msgstr "Работни часови до затварање на проблемот"
+
+#. module: project_issue
+#: field:project.issue,id:0
+msgid "ID"
+msgstr "ID"
+
+#. module: project_issue
+#: model:mail.message.subtype,description:project_issue.mt_issue_blocked
+msgid "Issue blocked"
+msgstr "Проблемот е блокиран"
+
+#. module: project_issue
+#: model:ir.model,name:project_issue.model_project_issue_report
+msgid "project.issue.report"
+msgstr "project.issue.report"
+
+#. module: project_issue
+#: help:project.issue.report,delay_close:0
+msgid "Number of Days to close the project issue"
+msgstr "Број на денови до затварање на проблемот на проектот"
+
+#. module: project_issue
+#: field:project.issue.report,working_hours_close:0
+msgid "Avg. Working Hours to Close"
+msgstr "Просечен број на работни часови за затварање"
+
+#. module: project_issue
+#: model:mail.message.subtype,name:project_issue.mt_issue_stage
+msgid "Stage Changed"
+msgstr "Етапата е променета"
+
+#. module: project_issue
+#: selection:project.issue,priority:0
+#: selection:project.issue.report,priority:0
+msgid "High"
+msgstr "Високо"
+
+#. module: project_issue
+#: field:project.issue,date_deadline:0
+msgid "Deadline"
+msgstr "Краен рок"
+
+#. module: project_issue
+#: field:project.issue,date_action_last:0
+msgid "Last Action"
+msgstr "Последна активност"
+
+#. module: project_issue
+#: view:project.issue.report:0
+#: field:project.issue.report,name:0
+msgid "Year"
+msgstr "Година"
+
+#. module: project_issue
+#: field:project.issue,duration:0
+msgid "Duration"
+msgstr "Времетраење"
+
+#. module: project_issue
+#: model:mail.message.subtype,name:project_issue.mt_issue_started
+#: model:mail.message.subtype,name:project_issue.mt_project_issue_started
+msgid "Issue Started"
+msgstr "Проблемот е започнат"
+
+#~ msgid "Issue Categories"
+#~ msgstr "Категорија на проблеми"
+
+#~ msgid "Categories"
+#~ msgstr "Категории"
+
+#~ msgid "Feature Requests"
+#~ msgstr "Идни барања"
+
+#~ msgid "Maintenance"
+#~ msgstr "Одржување"
+
+#~ msgid "unknown"
+#~ msgstr "непознато"
+
+#~ msgid "Cancel"
+#~ msgstr "Откажи"
+
+#~ msgid "References"
+#~ msgstr "Референци"

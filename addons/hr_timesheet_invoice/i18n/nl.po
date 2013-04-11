@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-21 17:05+0000\n"
-"PO-Revision-Date: 2013-01-02 20:26+0000\n"
+"POT-Creation-Date: 2013-03-07 08:38+0000\n"
+"PO-Revision-Date: 2013-04-02 14:05+0000\n"
 "Last-Translator: Erwin van der Ploeg (Endian Solutions) <Unknown>\n"
 "Language-Team: Dutch <nl@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-01-18 06:47+0000\n"
-"X-Generator: Launchpad (build 16430)\n"
+"X-Launchpad-Export-Date: 2013-04-03 15:03+0000\n"
+"X-Generator: Launchpad (build 16546)\n"
 
 #. module: hr_timesheet_invoice
 #: view:report.timesheet.line:0
@@ -39,6 +39,9 @@ msgid ""
 "The product to invoice is defined on the employee form, the price will be "
 "deducted by this pricelist on the product."
 msgstr ""
+"Het product wat wordt gefactureerd sis gedefinieerd bij de werknemers "
+"instellingen. De prijs wordt bepaald aan de hand van de geselecteerde "
+"prijslijst."
 
 #. module: hr_timesheet_invoice
 #: code:addons/hr_timesheet_invoice/wizard/hr_timesheet_analytic_profit.py:58
@@ -130,6 +133,8 @@ msgid ""
 "Fill this field only if you want to force to use a specific product. Keep "
 "empty to use the real product that comes from the cost."
 msgstr ""
+"Vul dit veld alleen in als u het gebruik van een speciaal product wilt "
+"forceren. Laat leeg om het standaard product te gebruiken."
 
 #. module: hr_timesheet_invoice
 #: model:ir.actions.act_window,help:hr_timesheet_invoice.action_hr_timesheet_invoice_factor_form
@@ -147,6 +152,21 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Klik voor het toevoegen van een nieuwe manier van "
+"facturatie.\n"
+"              </p><p>\n"
+"                OpenERP maakt het mogelijk om standaard facturatie methode "
+"te maken. \n"
+"                Wellicht dient u regelmatig kortingen toe te kennen door een "
+"specifieke\n"
+"                contract of overeenkomst met een klant. Vanuit dit menu kunt "
+"u\n"
+"                extra methodes van facturering toevoegen om zo uw snelheid "
+"van\n"
+"                facturatie te verhogen.\n"
+"              </p>\n"
+"            "
 
 #. module: hr_timesheet_invoice
 #: view:report.timesheet.line:0
@@ -177,7 +197,7 @@ msgstr "Project"
 #. module: hr_timesheet_invoice
 #: view:account.analytic.account:0
 msgid "Invoice on Timesheets Options"
-msgstr ""
+msgstr "Facturatie van urenstaten opties"
 
 #. module: hr_timesheet_invoice
 #: field:report.account.analytic.line.to.invoice,amount:0
@@ -217,6 +237,11 @@ msgid ""
 "20% advance invoice (fixed price, based on a sales order), you should "
 "invoice the rest on timesheet with a 80% ratio."
 msgstr ""
+"Meestal wordt 100% van de urenstaat gefactureerd. Maar als je een vaste "
+"prijs en facturatie op uren combineert, kunt u gebruik maken van een andere "
+"verhouding. Bijvoorbeeld, als u een voorschot van 20% factureert (vaste "
+"prijs, op basis van een verkooporder), dient u de resterende uren te "
+"factureren op een ratio van 80%."
 
 #. module: hr_timesheet_invoice
 #: view:hr.timesheet.invoice.create:0
@@ -283,7 +308,7 @@ msgstr "Nog te ontvangen facturen"
 #: code:addons/hr_timesheet_invoice/hr_timesheet_invoice.py:246
 #, python-format
 msgid "Please define income account for product '%s'."
-msgstr ""
+msgstr "Definieer een inkomstenrekening voor product '%s'"
 
 #. module: hr_timesheet_invoice
 #: field:report.account.analytic.line.to.invoice,account_id:0
@@ -338,7 +363,7 @@ msgstr "Winst urenstaat"
 #. module: hr_timesheet_invoice
 #: field:hr.timesheet.invoice.create,product:0
 msgid "Force Product"
-msgstr "Forceer roduct"
+msgstr "Forceer product"
 
 #. module: hr_timesheet_invoice
 #: view:account.analytic.account:0
@@ -369,7 +394,7 @@ msgstr "Waarschuwing!"
 #: model:ir.actions.act_window,name:hr_timesheet_invoice.action_hr_timesheet_invoice_factor_form
 #: model:ir.ui.menu,name:hr_timesheet_invoice.hr_timesheet_invoice_factor_view
 msgid "Types of Invoicing"
-msgstr "Factureertarief"
+msgstr "Facturatietarief"
 
 #. module: hr_timesheet_invoice
 #: report:account.analytic.profit:0
@@ -538,7 +563,7 @@ msgstr "Urenstaat per kostenplaats"
 #. module: hr_timesheet_invoice
 #: model:ir.model,name:hr_timesheet_invoice.model_account_move_line
 msgid "Journal Items"
-msgstr "Journaalpostregels"
+msgstr "Boekingen"
 
 #. module: hr_timesheet_invoice
 #: selection:report.account.analytic.line.to.invoice,month:0
@@ -652,6 +677,9 @@ msgid ""
 "It allows to set the discount while making invoice, keep empty if the "
 "activities should not be invoiced."
 msgstr ""
+"Geeft u de mogelijkheid voor het instellen van een korting, bij het maken "
+"van de factuur. Laat leeg indien de activiteiten niet moeten worden "
+"gefactureerd."
 
 #. module: hr_timesheet_invoice
 #: field:account.analytic.account,amount_max:0
@@ -661,7 +689,7 @@ msgstr "Max. factuurprijs"
 #. module: hr_timesheet_invoice
 #: field:account.analytic.account,to_invoice:0
 msgid "Timesheet Invoicing Ratio"
-msgstr ""
+msgstr "Urenstaat facturatie ratio"
 
 #. module: hr_timesheet_invoice
 #: selection:report.account.analytic.line.to.invoice,month:0
@@ -713,6 +741,8 @@ msgstr "T/m"
 #: view:hr.timesheet.invoice.create:0
 msgid "Do you want to show details of work in invoice?"
 msgstr ""
+"Weet u zeker dat u de details van de werkzaamheden wilt vermelden op de "
+"factuur?"
 
 #. module: hr_timesheet_invoice
 #: view:hr.timesheet.invoice.create:0
@@ -748,7 +778,7 @@ msgstr "Urenstaten voor facturatie"
 #, python-format
 msgid ""
 "Contract incomplete. Please fill in the Customer and Pricelist fields."
-msgstr ""
+msgstr "Het contract is niet compleet. Vul de klant en de prijslijst in."
 
 #. module: hr_timesheet_invoice
 #: model:ir.actions.act_window,name:hr_timesheet_invoice.action_timesheet_account_date_stat_all
@@ -807,6 +837,8 @@ msgstr "Laat leeg indien dt contract niet is gelimiteerd op een vaste prijs."
 #: view:hr.timesheet.invoice.create.final:0
 msgid "Do you want to show details of each activity to your customer?"
 msgstr ""
+"Weet u zeker dat u de details van iedere activiteit wilt laten zien aan uw "
+"klant?"
 
 #. module: hr_timesheet_invoice
 #: view:report_timesheet.invoice:0
@@ -868,6 +900,8 @@ msgid ""
 "There is no product defined. Please select one or force the product through "
 "the wizard."
 msgstr ""
+"Er is geen product gedefinieerd. Definieer een product of forceer het "
+"gebruik van een special product in de wizard."
 
 #. module: hr_timesheet_invoice
 #: help:hr_timesheet_invoice.factor,factor:0
@@ -896,19 +930,19 @@ msgstr "Eenheden"
 #: code:addons/hr_timesheet_invoice/hr_timesheet_invoice.py:233
 #, python-format
 msgid "Error!"
-msgstr ""
+msgstr "Fout!"
 
 #. module: hr_timesheet_invoice
 #: model:hr_timesheet_invoice.factor,name:hr_timesheet_invoice.timesheet_invoice_factor4
 msgid "80%"
-msgstr ""
+msgstr "80%"
 
 #. module: hr_timesheet_invoice
 #: view:hr.timesheet.analytic.profit:0
 #: view:hr.timesheet.invoice.create:0
 #: view:hr.timesheet.invoice.create.final:0
 msgid "or"
-msgstr ""
+msgstr "of"
 
 #. module: hr_timesheet_invoice
 #: field:report_timesheet.invoice,manager_id:0
@@ -938,4 +972,4 @@ msgstr "Jaar"
 #. module: hr_timesheet_invoice
 #: view:hr.timesheet.analytic.profit:0
 msgid "Duration"
-msgstr ""
+msgstr "Tijdsduur"

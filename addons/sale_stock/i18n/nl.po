@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-21 17:06+0000\n"
-"PO-Revision-Date: 2012-12-21 23:00+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2013-03-07 08:39+0000\n"
+"PO-Revision-Date: 2013-03-09 09:39+0000\n"
+"Last-Translator: Erwin van der Ploeg (Endian Solutions) <Unknown>\n"
 "Language-Team: Dutch <nl@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-01-18 07:07+0000\n"
-"X-Generator: Launchpad (build 16430)\n"
+"X-Launchpad-Export-Date: 2013-03-28 06:01+0000\n"
+"X-Generator: Launchpad (build 16546)\n"
 
 #. module: sale_stock
 #: help:sale.config.settings,group_invoice_deli_orders:0
@@ -77,6 +77,11 @@ msgstr "Beheer meerdere verkooppunten"
 #: model:process.transition.action,name:sale_stock.process_transition_action_validate0
 msgid "Validate"
 msgstr "Bevestig"
+
+#. module: sale_stock
+#: view:sale.order:0
+msgid "Cancel Order"
+msgstr "Annuleer order"
 
 #. module: sale_stock
 #: code:addons/sale_stock/sale_stock.py:207
@@ -156,7 +161,7 @@ msgstr "Project urenstaat"
 #. module: sale_stock
 #: field:sale.config.settings,group_sale_delivery_address:0
 msgid "Allow a different address for delivery and invoicing "
-msgstr "Sta een afwijkend adres voor afleveren en facturering toe "
+msgstr "Invoer van een afwijkend afleveradres en factuuradres toestaan "
 
 #. module: sale_stock
 #: code:addons/sale_stock/sale_stock.py:546
@@ -169,6 +174,11 @@ msgstr "Configuratiefout!"
 #: model:process.node,name:sale_stock.process_node_saleprocurement0
 msgid "Procurement Order"
 msgstr "Verwervingsopdracht"
+
+#. module: sale_stock
+#: model:ir.actions.act_window,name:sale_stock.res_partner_rule_children
+msgid "Contact Details"
+msgstr "Details contactpersoon"
 
 #. module: sale_stock
 #: selection:sale.config.settings,default_order_policy:0
@@ -306,6 +316,7 @@ msgstr ""
 #: help:sale.config.settings,group_mrp_properties:0
 msgid "Allows you to tag sales order lines with properties."
 msgstr ""
+"Geeft u de mogelijkheid om verkooporderregels te labellen met eigenschappen"
 
 #. module: sale_stock
 #: field:sale.config.settings,group_invoice_deli_orders:0
@@ -345,6 +356,11 @@ msgid ""
 "prices.\n"
 "                This installs the module delivery."
 msgstr ""
+"Geeft u de mogelijkheid tot het toevoegen van een leveringswijze in "
+"verkooporders en uitgaande leveringen.\n"
+"                U kunt u eigen vervoerder en afleverschema met prijzen "
+"maken.\n"
+"                Dit installeert de module delivery."
 
 #. module: sale_stock
 #: field:sale.config.settings,default_picking_policy:0
@@ -415,7 +431,7 @@ msgstr ""
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_sale_report
 msgid "Sales Orders Statistics"
-msgstr "Verkooporder statistieken"
+msgstr "Verkooporder analyses"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_res_company
@@ -433,6 +449,13 @@ msgid ""
 "lines.\n"
 "                This installs the modules project_timesheet and project_mrp."
 msgstr ""
+"Dit geeft u de mogelijkheid om de taken, gedefinieerd bij een project te "
+"verschuiven naar\n"
+"                de urenstaat ingave voor een specifieke datum en gebruiker. "
+"U kunt de taken aanmaken, bewerken\n"
+"                en verwijderen op beide plaatsen en het is ook mogelijk om "
+"projecten en taken aan te maken via verwerving.\n"
+"                Dit installeert de modules project_timesheet en project_mrp."
 
 #. module: sale_stock
 #: help:sale.config.settings,group_sale_delivery_address:0
@@ -440,6 +463,8 @@ msgid ""
 "Allows you to specify different delivery and invoice addresses on a sales "
 "order."
 msgstr ""
+"Geeft u de mogelijkheid om verschillend aflever- en factuuradres te "
+"definiëren op een verkooporder."
 
 #. module: sale_stock
 #: model:process.node,note:sale_stock.process_node_saleprocurement0
@@ -494,7 +519,6 @@ msgstr "Factuur"
 #. module: sale_stock
 #: model:process.transition.action,name:sale_stock.process_transition_action_cancel1
 #: model:process.transition.action,name:sale_stock.process_transition_action_cancel2
-#: view:sale.order:0
 msgid "Cancel"
 msgstr "Annuleer"
 

@@ -19,9 +19,13 @@
 #
 ##############################################################################
 
+import logging
+
 from openerp.osv import fields, osv
 from openerp import pooler
 from openerp.tools.translate import _
+
+_logger = logging.getLogger(__name__)
 
 class sale_configuration(osv.osv_memory):
     _inherit = 'sale.config.settings'
@@ -81,8 +85,12 @@ Example: Product: this product is deprecated, do not purchase more than 5.
             user = self.pool.get('res.users').browse(cr, uid, uid, context)
             res['time_unit'] = user.company_id.project_time_mode_id.id
         else:
-            product = ir_model_data.get_object(cr, uid, 'product', 'product_product_consultant')
-            res['time_unit'] = product.uom_id.id
+            try:
+                product = ir_model_data.get_object(cr, uid, 'product', 'product_product_consultant')
+                res['time_unit'] = product.uom_id.id
+            except ValueError:
+                # keep default value in that case
+                _logger.warning("Product with xml_id 'product.product_product_consultant' not found")
         return res
 
     def _get_default_time_unit(self, cr, uid, context=None):
@@ -98,16 +106,11 @@ Example: Product: this product is deprecated, do not purchase more than 5.
         wizard = self.browse(cr, uid, ids)[0]
 
         if wizard.time_unit:
-            product = False
             try:
                 product = ir_model_data.get_object(cr, uid, 'product', 'product_product_consultant')
-            except:
-                #product with xml_id product_product_consultant has not been found. Don't do anything except logging the exception
-                import logging
-                _logger = logging.getLogger(__name__)
-                _logger.warning("Warning, product with xml_id 'product_product_consultant' hasn't been found")
-            if product:
                 product.write({'uom_id': wizard.time_unit.id, 'uom_po_id': wizard.time_unit.id})
+            except ValueError:
+                _logger.warning("Product with xml_id 'product.product_product_consultant' not found, UoMs not updated!")
 
         if wizard.module_project and wizard.time_unit:
             user = self.pool.get('res.users').browse(cr, uid, uid, context)
@@ -138,6 +141,8 @@ class account_config_settings(osv.osv_memory):
 
     def onchange_sale_analytic_plans(self, cr, uid, ids, module_sale_analytic_plans, context=None):
         """ change group_analytic_account_for_sales following module_sale_analytic_plans """
+        if not module_sale_analytic_plans:
+            return {}
         return {'value': {'group_analytic_account_for_sales': module_sale_analytic_plans}}
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-21 17:04+0000\n"
-"PO-Revision-Date: 2012-12-21 23:00+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2013-03-07 08:37+0000\n"
+"PO-Revision-Date: 2013-03-07 18:57+0000\n"
+"Last-Translator: Fekete Mihai <mihai@erpsystems.ro>\n"
 "Language-Team: Romanian <ro@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-01-18 06:44+0000\n"
-"X-Generator: Launchpad (build 16430)\n"
+"X-Launchpad-Export-Date: 2013-03-28 05:41+0000\n"
+"X-Generator: Launchpad (build 16546)\n"
 
 #. module: hr_expense
 #: view:hr.expense.expense:0
@@ -36,7 +36,7 @@ msgstr "Contabilul ramburseaza cheltuielile"
 #. module: hr_expense
 #: model:mail.message.subtype,description:hr_expense.mt_expense_approved
 msgid "Expense approved"
-msgstr ""
+msgstr "Cheltuieli aprobate"
 
 #. module: hr_expense
 #: field:hr.expense.expense,date_confirm:0
@@ -77,7 +77,7 @@ msgstr "Cheltuiali noi"
 #: field:hr.expense.line,uom_id:0
 #: view:product.product:0
 msgid "Unit of Measure"
-msgstr ""
+msgstr "Unitatea de Masura"
 
 #. module: hr_expense
 #: selection:hr.expense.report,month:0
@@ -87,7 +87,7 @@ msgstr "Martie"
 #. module: hr_expense
 #: field:hr.expense.expense,message_unread:0
 msgid "Unread Messages"
-msgstr ""
+msgstr "Mesaje Necitite"
 
 #. module: hr_expense
 #: field:hr.expense.expense,company_id:0
@@ -113,6 +113,8 @@ msgid ""
 "No expense journal found. Please make sure you have a journal with type "
 "'purchase' configured."
 msgstr ""
+"Nu a fost gasit nici un registru de cheltuieli. Asigurati-va ca aveti un "
+"registru cu tipul 'achizitii' configurat."
 
 #. module: hr_expense
 #: model:ir.model,name:hr_expense.model_hr_expense_report
@@ -122,7 +124,7 @@ msgstr "Statistica cheltuieli"
 #. module: hr_expense
 #: view:hr.expense.expense:0
 msgid "Open Receipt"
-msgstr ""
+msgstr "Deschide Chitanta"
 
 #. module: hr_expense
 #: view:hr.expense.report:0
@@ -147,7 +149,7 @@ msgstr "Note"
 #. module: hr_expense
 #: field:hr.expense.expense,message_ids:0
 msgid "Messages"
-msgstr ""
+msgstr "Mesaje"
 
 #. module: hr_expense
 #: code:addons/hr_expense/hr_expense.py:172
@@ -155,12 +157,12 @@ msgstr ""
 #: code:addons/hr_expense/hr_expense.py:197
 #, python-format
 msgid "Error!"
-msgstr ""
+msgstr "Eroare!"
 
 #. module: hr_expense
 #: model:mail.message.subtype,description:hr_expense.mt_expense_refused
 msgid "Expense refused"
-msgstr ""
+msgstr "Cheltuieli refuzate"
 
 #. module: hr_expense
 #: model:ir.actions.act_window,name:hr_expense.hr_expense_product
@@ -188,7 +190,7 @@ msgstr ""
 #. module: hr_expense
 #: help:hr.expense.expense,message_unread:0
 msgid "If checked new messages require your attention."
-msgstr ""
+msgstr "Daca este selectat, mesajele noi necesita atentia dumneavoastra."
 
 #. module: hr_expense
 #: selection:hr.expense.report,state:0
@@ -219,6 +221,12 @@ msgid ""
 "If the admin accepts it, the status is 'Accepted'.\n"
 " If a receipt is made for the expense request, the status is 'Done'."
 msgstr ""
+"Atunci cand este creata cererea pentru cheltuieli, starea este 'Ciorna'.\n"
+" Este confirmata de catre utilizator si cererea este trimisa "
+"administratorului, starea este 'In asteptarea Confirmarii'.            \n"
+"Daca administratorul o accepta, starea este 'Acceptat'.\n"
+" Daca o chitanta este emisa pentru cererea de cheltuieli, starea este "
+"'Efectuat'."
 
 #. module: hr_expense
 #: help:hr.expense.expense,date_confirm:0
@@ -241,12 +249,14 @@ msgid ""
 "Holds the Chatter summary (number of messages, ...). This summary is "
 "directly in html format in order to be inserted in kanban views."
 msgstr ""
+"Contine rezumatul Chatter (numar de mesaje, ...). Acest rezumat este direct "
+"in format HTML, cu scopul de a se introduce in vizualizari kanban."
 
 #. module: hr_expense
-#: code:addons/hr_expense/hr_expense.py:302
+#: code:addons/hr_expense/hr_expense.py:301
 #, python-format
 msgid "Warning"
-msgstr ""
+msgstr "Avertisment"
 
 #. module: hr_expense
 #: report:hr.expense:0
@@ -295,7 +305,7 @@ msgstr ""
 #: view:hr.expense.report:0
 #: field:hr.expense.report,state:0
 msgid "Status"
-msgstr ""
+msgstr "Stare"
 
 #. module: hr_expense
 #: field:hr.expense.line,analytic_account:0
@@ -317,7 +327,7 @@ msgstr "In asteptare"
 #. module: hr_expense
 #: field:hr.expense.expense,message_follower_ids:0
 msgid "Followers"
-msgstr ""
+msgstr "Persoane interesate"
 
 #. module: hr_expense
 #: report:hr.expense:0
@@ -354,7 +364,7 @@ msgstr "Anumite costuri ar putea fi refacturate clientului"
 #: code:addons/hr_expense/hr_expense.py:197
 #, python-format
 msgid "The employee must have a home address."
-msgstr ""
+msgstr "Angajatul trebuie sa aiba o adresa de acasa."
 
 #. module: hr_expense
 #: view:board.board:0
@@ -409,7 +419,7 @@ msgstr "Dupa crearea facturii, rambursati cheltuielile"
 #: code:addons/hr_expense/hr_expense.py:116
 #, python-format
 msgid "Warning!"
-msgstr ""
+msgstr "Avertisment!"
 
 #. module: hr_expense
 #: model:process.node,name:hr_expense.process_node_reimbursement0
@@ -423,10 +433,10 @@ msgid "Validation Date"
 msgstr "Data validarii"
 
 #. module: hr_expense
-#: code:addons/hr_expense/hr_expense.py:227
+#: code:addons/hr_expense/hr_expense.py:226
 #, python-format
 msgid "Expense Receipt"
-msgstr ""
+msgstr "Chitanta cu Cheltuielile"
 
 #. module: hr_expense
 #: view:hr.expense.report:0
@@ -481,7 +491,7 @@ msgstr "Moneda"
 #. module: hr_expense
 #: field:hr.expense.expense,voucher_id:0
 msgid "Employee's Receipt"
-msgstr ""
+msgstr "Chitanta Angajatului"
 
 #. module: hr_expense
 #: selection:hr.expense.expense,state:0
@@ -494,17 +504,24 @@ msgid "Employee encode all his expenses"
 msgstr "Salariatul isi inregistreaza toate cheltuielile"
 
 #. module: hr_expense
-#: code:addons/hr_expense/hr_expense.py:302
+#: view:hr.expense.expense:0
+msgid "Free Notes"
+msgstr "Note Gratuite"
+
+#. module: hr_expense
+#: code:addons/hr_expense/hr_expense.py:301
 #, python-format
 msgid ""
 "Selected Unit of Measure does not belong to the same category as the product "
 "Unit of Measure"
 msgstr ""
+"Unitatea de Masura selectata nu apartine aceleiasi categorii ca si Unitatea "
+"de Masura a produsului"
 
 #. module: hr_expense
 #: help:hr.expense.expense,journal_id:0
 msgid "The journal used when the expense is done."
-msgstr ""
+msgstr "Registrul folosit cand cheltuielile sunt efectuate."
 
 #. module: hr_expense
 #: field:hr.expense.expense,note:0
@@ -528,6 +545,8 @@ msgid ""
 "Please configure Default Expense account for Product purchase: "
 "`property_account_expense_categ`."
 msgstr ""
+"Va rugam sa configurati Contul implicit pentru Cheltuieli pentru Achizitia "
+"produsului: `proprietate_cont_cheltuieli_categ`."
 
 #. module: hr_expense
 #: model:process.transition,note:hr_expense.process_transition_approveexpense0
@@ -562,7 +581,7 @@ msgstr "Ciorna cheltuieli"
 #. module: hr_expense
 #: field:hr.expense.expense,message_is_follower:0
 msgid "Is a Follower"
-msgstr ""
+msgstr "Este un adept"
 
 #. module: hr_expense
 #: model:ir.actions.act_window,name:hr_expense.product_normal_form_view_installer
@@ -594,7 +613,7 @@ msgstr "Utilizator"
 #. module: hr_expense
 #: model:ir.ui.menu,name:hr_expense.menu_hr_product
 msgid "Expense Categories"
-msgstr ""
+msgstr "Categorii de Cheltuieli"
 
 #. module: hr_expense
 #: selection:hr.expense.report,month:0
@@ -616,11 +635,22 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<clasa p=\"oe_vizualizare_niciuncontinut_creeaza\">\n"
+"                Faceti click pentru a inregistra cheltuieli noi. \n"
+"              </p><p>\n"
+"                OpenERP se va asigura ca intregul proces este urmat; foaia\n"
+"                de cheltuieli este validata de manageri, angajatul este "
+"rambursat\n"
+"                din cheltuielile sale, unele cheltuieli trebuie re-"
+"facturate\n"
+"                clientilor.\n"
+"              </p>\n"
+"            "
 
 #. module: hr_expense
 #: view:hr.expense.expense:0
 msgid "Generate Accounting Entries"
-msgstr ""
+msgstr "Genereaza Inregistrari Contabile"
 
 #. module: hr_expense
 #: selection:hr.expense.report,month:0
@@ -635,7 +665,7 @@ msgstr "Cheltuieli Resurse Umane"
 #. module: hr_expense
 #: field:hr.expense.expense,message_summary:0
 msgid "Summary"
-msgstr ""
+msgstr "Continut"
 
 #. module: hr_expense
 #: model:product.template,name:hr_expense.car_travel_product_template
@@ -650,7 +680,7 @@ msgstr "Trimiteti Directorului"
 #. module: hr_expense
 #: view:hr.expense.report:0
 msgid "Done Expenses"
-msgstr ""
+msgstr "Cheltuieli Efectuate"
 
 #. module: hr_expense
 #: model:process.node,note:hr_expense.process_node_confirmedexpenses0
@@ -676,7 +706,7 @@ msgstr "Foaia de cheltuieli"
 #. module: hr_expense
 #: field:hr.expense.report,voucher_id:0
 msgid "Receipt"
-msgstr ""
+msgstr "Chitanta"
 
 #. module: hr_expense
 #: view:hr.expense.report:0
@@ -694,7 +724,7 @@ msgstr "Pret unitar"
 #: view:hr.expense.report:0
 #: selection:hr.expense.report,state:0
 msgid "Done"
-msgstr ""
+msgstr "Efectuat"
 
 #. module: hr_expense
 #: model:process.transition.action,name:hr_expense.process_transition_action_supplierinvoice0
@@ -715,12 +745,12 @@ msgstr "Refacturati"
 #. module: hr_expense
 #: view:hr.expense.expense:0
 msgid "Expense Date"
-msgstr ""
+msgstr "Data Cheltuielii"
 
 #. module: hr_expense
 #: field:hr.expense.expense,user_valid:0
 msgid "Validation By"
-msgstr ""
+msgstr "Validare de catre"
 
 #. module: hr_expense
 #: view:hr.expense.expense:0
@@ -828,7 +858,7 @@ msgstr "Poate fi cheltuit"
 #. module: hr_expense
 #: model:mail.message.subtype,description:hr_expense.mt_expense_confirmed
 msgid "Expense confirmed, waiting confirmation"
-msgstr ""
+msgstr "Cheltuieli confirmate, in asteptarea confirmarii"
 
 #. module: hr_expense
 #: report:hr.expense:0
@@ -865,7 +895,7 @@ msgstr "Nume"
 #: code:addons/hr_expense/hr_expense.py:116
 #, python-format
 msgid "You can only delete draft expenses!"
-msgstr ""
+msgstr "Puteti sterge doar cheltuielile in starea ciorna!"
 
 #. module: hr_expense
 #: field:hr.expense.expense,account_move_id:0
@@ -900,7 +930,7 @@ msgstr "Aprobati"
 #. module: hr_expense
 #: help:hr.expense.expense,message_ids:0
 msgid "Messages and communication history"
-msgstr ""
+msgstr "Istoric mesaje si conversatii"
 
 #. module: hr_expense
 #: field:hr.expense.line,sequence:0
@@ -925,11 +955,12 @@ msgstr "Cheltuieli"
 #: help:product.product,hr_expense_ok:0
 msgid "Specify if the product can be selected in an HR expense line."
 msgstr ""
+"Specifica daca produsul poate fi selectat intr-o linie de cheltuieli HR."
 
 #. module: hr_expense
 #: view:hr.expense.expense:0
 msgid "Accounting"
-msgstr ""
+msgstr "Contabilitate"
 
 #. module: hr_expense
 #: view:hr.expense.expense:0

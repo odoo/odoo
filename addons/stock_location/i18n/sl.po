@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2012-12-21 17:06+0000\n"
-"PO-Revision-Date: 2012-12-21 23:00+0000\n"
-"Last-Translator: Mantavya Gajjar (Open ERP) <Unknown>\n"
+"POT-Creation-Date: 2013-03-07 08:39+0000\n"
+"PO-Revision-Date: 2013-02-09 05:34+0000\n"
+"Last-Translator: Dušan Laznik (Mentis) <laznik@mentis.si>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-01-18 07:09+0000\n"
-"X-Generator: Launchpad (build 16430)\n"
+"X-Launchpad-Export-Date: 2013-03-28 06:04+0000\n"
+"X-Generator: Launchpad (build 16546)\n"
 
 #. module: stock_location
 #: help:product.pulled.flow,company_id:0
@@ -67,6 +67,11 @@ msgstr ""
 #. module: stock_location
 #: help:product.pulled.flow,location_src_id:0
 msgid "Location used by Destination Location to supply"
+msgstr ""
+
+#. module: stock_location
+#: view:product.product:0
+msgid "When receiving at location X, move to location Y"
 msgstr ""
 
 #. module: stock_location
@@ -149,12 +154,12 @@ msgstr ""
 #: field:product.pulled.flow,company_id:0
 #: field:stock.location.path,company_id:0
 msgid "Company"
-msgstr ""
+msgstr "Podjetje"
 
 #. module: stock_location
 #: model:ir.model,name:stock_location.model_stock_move
 msgid "Stock Move"
-msgstr ""
+msgstr "Premik zaloge"
 
 #. module: stock_location
 #: help:stock.move,cancel_cascade:0
@@ -169,12 +174,12 @@ msgstr ""
 #. module: stock_location
 #: selection:product.pulled.flow,procure_method:0
 msgid "Make to Order"
-msgstr ""
+msgstr "Po naročilu"
 
 #. module: stock_location
 #: selection:product.pulled.flow,procure_method:0
 msgid "Make to Stock"
-msgstr ""
+msgstr "Na zalogo"
 
 #. module: stock_location
 #: code:addons/stock_location/procurement_pull.py:118
@@ -185,13 +190,13 @@ msgstr ""
 #. module: stock_location
 #: field:product.pulled.flow,partner_address_id:0
 msgid "Partner Address"
-msgstr ""
+msgstr "Partnerjev naslov"
 
 #. module: stock_location
 #: selection:product.pulled.flow,invoice_state:0
 #: selection:stock.location.path,invoice_state:0
 msgid "To Be Invoiced"
-msgstr ""
+msgstr "Za fakturiranje"
 
 #. module: stock_location
 #: help:stock.location.path,delay:0
@@ -211,7 +216,7 @@ msgstr ""
 #. module: stock_location
 #: field:product.pulled.flow,name:0
 msgid "Name"
-msgstr ""
+msgstr "Ime"
 
 #. module: stock_location
 #: help:product.product,path_ids:0
@@ -229,13 +234,13 @@ msgstr "Ročno upravljanje"
 #: model:ir.model,name:stock_location.model_product_product
 #: field:product.pulled.flow,product_id:0
 msgid "Product"
-msgstr ""
+msgstr "Izdelek"
 
 #. module: stock_location
 #: field:product.pulled.flow,picking_type:0
 #: field:stock.location.path,picking_type:0
 msgid "Shipping Type"
-msgstr ""
+msgstr "Vrsta odpreme"
 
 #. module: stock_location
 #: help:product.pulled.flow,procure_method:0
@@ -253,7 +258,7 @@ msgstr ""
 #. module: stock_location
 #: field:stock.location.path,product_id:0
 msgid "Products"
-msgstr "Proizvodi"
+msgstr "Izdelki"
 
 #. module: stock_location
 #: model:stock.location,name:stock_location.stock_location_qualitytest0
@@ -264,7 +269,7 @@ msgstr ""
 #: selection:product.pulled.flow,invoice_state:0
 #: selection:stock.location.path,invoice_state:0
 msgid "Not Applicable"
-msgstr ""
+msgstr "Brezpredmetno"
 
 #. module: stock_location
 #: field:stock.location.path,delay:0
@@ -305,7 +310,7 @@ msgstr ""
 #. module: stock_location
 #: model:ir.model,name:stock_location.model_procurement_order
 msgid "Procurement"
-msgstr ""
+msgstr "Oskrba"
 
 #. module: stock_location
 #: field:product.pulled.flow,location_id:0
@@ -323,17 +328,22 @@ msgstr "Samodejna knjižba"
 #: selection:product.pulled.flow,picking_type:0
 #: selection:stock.location.path,picking_type:0
 msgid "Getting Goods"
+msgstr "Pridobitev dobrin"
+
+#. module: stock_location
+#: view:product.product:0
+msgid "Fulfill needs on location X from location Y "
 msgstr ""
 
 #. module: stock_location
 #: view:product.product:0
 msgid "Action Type"
-msgstr ""
+msgstr "Vrsta dejanja"
 
 #. module: stock_location
 #: field:product.pulled.flow,procure_method:0
 msgid "Procure Method"
-msgstr ""
+msgstr "Metoda oskrbe"
 
 #. module: stock_location
 #: help:product.pulled.flow,picking_type:0
@@ -351,7 +361,7 @@ msgstr ""
 #. module: stock_location
 #: field:stock.location.path,name:0
 msgid "Operation"
-msgstr "Postopek"
+msgstr "Operacija"
 
 #. module: stock_location
 #: view:stock.location.path:0
@@ -362,7 +372,7 @@ msgstr "Poti do lokacije"
 #: field:product.pulled.flow,journal_id:0
 #: field:stock.location.path,journal_id:0
 msgid "Journal"
-msgstr ""
+msgstr "Dnevnik"
 
 #. module: stock_location
 #: field:product.pulled.flow,cancel_cascade:0
@@ -374,4 +384,4 @@ msgstr ""
 #: selection:product.pulled.flow,invoice_state:0
 #: selection:stock.location.path,invoice_state:0
 msgid "Invoiced"
-msgstr ""
+msgstr "Fakturirano"

@@ -7,16 +7,16 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-21 17:04+0000\n"
-"PO-Revision-Date: 2013-01-20 02:31+0000\n"
+"POT-Creation-Date: 2013-03-07 08:37+0000\n"
+"PO-Revision-Date: 2013-02-02 22:33+0000\n"
 "Last-Translator: Fábio Martinelli - http://zupy.com.br "
 "<webmaster@guaru.net>\n"
 "Language-Team: Brazilian Portuguese <pt_BR@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-01-21 05:27+0000\n"
-"X-Generator: Launchpad (build 16430)\n"
+"X-Launchpad-Export-Date: 2013-03-28 05:52+0000\n"
+"X-Generator: Launchpad (build 16546)\n"
 
 #. module: point_of_sale
 #: field:report.transaction.pos,product_nb:0
@@ -44,16 +44,28 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Clique para definir uma nova categoria.\n"
+"              </p><p>\n"
+"                Categorias são usadas para visualizar os produtos através\n"
+"                da interface touchscreen.\n"
+"              </p><p>\n"
+"                Se você colocar uma imagem na categoria, o layout vai se "
+"ajustar automaticamente\n"
+"                Nós sugerimos não colocar uma foto para dispositivos com "
+"tela pequena (1024x768).\n"
+"              </p>\n"
+"            "
 
 #. module: point_of_sale
 #: view:pos.receipt:0
 msgid "Print the Receipt of the Sale"
-msgstr ""
+msgstr "Imprimir o Recibo da Venda"
 
 #. module: point_of_sale
 #: field:pos.session,cash_register_balance_end:0
 msgid "Computed Balance"
-msgstr ""
+msgstr "Balanço Calculado"
 
 #. module: point_of_sale
 #: view:pos.session:0
@@ -64,24 +76,24 @@ msgstr "Hoje"
 #. module: point_of_sale
 #: field:pos.config,iface_electronic_scale:0
 msgid "Electronic Scale Interface"
-msgstr ""
+msgstr "Interface de Balança Eletrônica"
 
 #. module: point_of_sale
 #: model:pos.category,name:point_of_sale.plain_water
 msgid "Plain Water"
-msgstr ""
+msgstr "Água Natural"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.poire_conference_product_template
 msgid "Conference pears"
-msgstr ""
+msgstr "Pêras"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:408
+#: code:addons/point_of_sale/static/src/xml/pos.xml:398
 #, python-format
 msgid "&atilde;"
-msgstr ""
+msgstr "&atilde;"
 
 #. module: point_of_sale
 #: field:pos.config,journal_id:0
@@ -92,7 +104,7 @@ msgstr "Diário de Vendas"
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.spa_2l_product_template
 msgid "Spa Reine 2L"
-msgstr ""
+msgstr "Spa Reine 2L"
 
 #. module: point_of_sale
 #: model:ir.actions.report.xml,name:point_of_sale.pos_lines_detail
@@ -104,7 +116,7 @@ msgstr "Detalhes das Vendas"
 #. module: point_of_sale
 #: constraint:pos.config:0
 msgid "You cannot have two cash controls in one Point Of Sale !"
-msgstr ""
+msgstr "Você não pode ter dois controles de caixa em um ponto de venda!"
 
 #. module: point_of_sale
 #: field:pos.payment.report.user,user_id:0
@@ -130,13 +142,13 @@ msgstr "Nome do Produto"
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.pamplemousse_rouge_pamplemousse_product_template
 msgid "Red grapefruit"
-msgstr ""
+msgstr "Uva vermelha"
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/point_of_sale.py:1341
+#: code:addons/point_of_sale/point_of_sale.py:1343
 #, python-format
 msgid "Assign a Custom EAN"
-msgstr ""
+msgstr "Definir um EAN personalizado"
 
 #. module: point_of_sale
 #: view:pos.session.opening:0
@@ -145,6 +157,10 @@ msgid ""
 "                          being able to start selling through the "
 "touchscreen interface."
 msgstr ""
+"Você deve controlar o valor na caixa registradora, antes\n"
+"                                                                             "
+"                                             de iniciar as vendas através da "
+"interface de toque."
 
 #. module: point_of_sale
 #: report:account.statement:0
@@ -171,11 +187,11 @@ msgstr "não usado"
 #. module: point_of_sale
 #: field:pos.config,iface_vkeyboard:0
 msgid "Virtual KeyBoard Interface"
-msgstr ""
+msgstr "Interface de Teclado Virtual"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:90
+#: code:addons/point_of_sale/static/src/xml/pos.xml:96
 #, python-format
 msgid "+/-"
 msgstr "+/-"
@@ -186,8 +202,8 @@ msgid "Reference"
 msgstr "Referência"
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/point_of_sale.py:1038
-#: code:addons/point_of_sale/point_of_sale.py:1054
+#: code:addons/point_of_sale/point_of_sale.py:1041
+#: code:addons/point_of_sale/point_of_sale.py:1057
 #: report:pos.invoice:0
 #: report:pos.lines:0
 #, python-format
@@ -202,32 +218,32 @@ msgstr "Data de Início"
 #. module: point_of_sale
 #: constraint:pos.session:0
 msgid "You cannot create two active sessions with the same responsible!"
-msgstr ""
+msgstr "Você não pode criar duas sessões ativas com o mesmo responsável!"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:479
+#: code:addons/point_of_sale/static/src/xml/pos.xml:473
 #, python-format
 msgid "Weighting"
-msgstr ""
+msgstr "Pesando"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.fenouil_fenouil_product_template
 msgid "Fennel"
-msgstr ""
+msgstr "erva-doce"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:478
+#: code:addons/point_of_sale/static/src/xml/pos.xml:472
 #, python-format
 msgid "Help needed"
-msgstr ""
+msgstr "Ajuda necessária"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/point_of_sale.py:739
 #, python-format
 msgid "Configuration Error!"
-msgstr ""
+msgstr "Erro de Configuração!"
 
 #. module: point_of_sale
 #: report:account.statement:0
@@ -239,7 +255,7 @@ msgstr "Parceiro"
 #. module: point_of_sale
 #: view:pos.session:0
 msgid "Closing Cash Control"
-msgstr ""
+msgstr "Fechando Controle de Caixa"
 
 #. module: point_of_sale
 #: report:pos.details:0
@@ -256,12 +272,19 @@ msgstr "Preço Médio"
 #. module: point_of_sale
 #: view:pos.order:0
 msgid "Accounting Information"
+msgstr "Informação Contábil"
+
+#. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/xml/pos.xml:427
+#, python-format
+msgid "0.00€"
 msgstr ""
 
 #. module: point_of_sale
 #: field:pos.session.opening,show_config:0
 msgid "Show Config"
-msgstr ""
+msgstr "Mostrar Configuração"
 
 #. module: point_of_sale
 #: report:pos.lines:0
@@ -276,23 +299,23 @@ msgstr "Total de Desconto"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:447
+#: code:addons/point_of_sale/static/src/xml/pos.xml:441
 #, python-format
 msgid "Debug Window"
-msgstr ""
+msgstr "Janela de depuração"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:247
-#: code:addons/point_of_sale/static/src/xml/pos.xml:616
+#: code:addons/point_of_sale/static/src/xml/pos.xml:241
+#: code:addons/point_of_sale/static/src/xml/pos.xml:613
 #, python-format
 msgid "Change:"
-msgstr ""
+msgstr "Troco:"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.coca_regular_2l_product_template
 msgid "Coca-Cola Regular 2L"
-msgstr ""
+msgstr "Coca-Cola Regular 2L"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_trans_pos_tree_month
@@ -302,7 +325,7 @@ msgstr "Vendas por Mês"
 #. module: point_of_sale
 #: model:pos.category,name:point_of_sale.soda_orange
 msgid "Orange"
-msgstr ""
+msgstr "Laranja"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_report_sales_by_user_pos_today
@@ -317,10 +340,11 @@ msgid "Disc.(%)"
 msgstr "Desc.(%)"
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/point_of_sale.py:1003
+#: code:addons/point_of_sale/point_of_sale.py:1006
 #, python-format
 msgid "Please define income account for this product: \"%s\" (id:%d)."
 msgstr ""
+"Por favor defina conta de recebimento para este produto: \"%s\" (id:%d)."
 
 #. module: point_of_sale
 #: view:report.pos.order:0
@@ -331,7 +355,7 @@ msgstr "Preço Total"
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.leffe_brune_33cl_product_template
 msgid "Leffe Brune 33cl"
-msgstr ""
+msgstr "Leffe Brune 33cl"
 
 #. module: point_of_sale
 #: help:pos.config,iface_self_checkout:0
@@ -349,18 +373,18 @@ msgstr "Relatório de Vendas"
 #. module: point_of_sale
 #: model:pos.category,name:point_of_sale.beverage
 msgid "Beverages"
-msgstr ""
+msgstr "Bebidas"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_pos_session_opening
 #: model:ir.ui.menu,name:point_of_sale.menu_pos_session_opening
 msgid "Your Session"
-msgstr ""
+msgstr "Sua Sessão"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.stella_50cl_product_template
 msgid "Stella Artois 50cl"
-msgstr ""
+msgstr "Stella Artois 50cl"
 
 #. module: point_of_sale
 #: view:pos.details:0
@@ -370,19 +394,19 @@ msgstr "Datas"
 #. module: point_of_sale
 #: field:pos.category,parent_id:0
 msgid "Parent Category"
-msgstr ""
+msgstr "Categoria de Origem"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:488
+#: code:addons/point_of_sale/static/src/xml/pos.xml:482
 #, python-format
 msgid "Open Cashbox"
-msgstr ""
+msgstr "Abrir Caixa Registradora"
 
 #. module: point_of_sale
 #: view:pos.session.opening:0
 msgid "Select your Point of Sale"
-msgstr ""
+msgstr "Escolha seu Ponto de Vendas"
 
 #. module: point_of_sale
 #: field:report.sales.by.margin.pos,total:0
@@ -399,32 +423,32 @@ msgstr "Desconto (%)"
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.oetker_speciale_product_template
 msgid "Dr. Oetker Ristorante Speciale"
-msgstr ""
+msgstr "Dr. Oetker Restaurante Especial"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:486
+#: code:addons/point_of_sale/static/src/xml/pos.xml:480
 #, python-format
 msgid "Payment Request"
-msgstr ""
+msgstr "Solicitação de Pagamento"
 
 #. module: point_of_sale
 #: field:product.product,to_weight:0
 msgid "To Weight"
-msgstr ""
+msgstr "Para Pesar"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:482
+#: code:addons/point_of_sale/static/src/xml/pos.xml:476
 #, python-format
 msgid "Hardware Events"
-msgstr ""
+msgstr "Eventos do Hardware"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/point_of_sale.py:301
 #, python-format
 msgid "You should assign a Point of Sale to your session."
-msgstr ""
+msgstr "Você precisa associar um Ponto de Vendas a sua sessão."
 
 #. module: point_of_sale
 #: view:pos.order.line:0
@@ -434,7 +458,7 @@ msgstr "Total de Qtd"
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.fanta_orange_33cl_product_template
 msgid "Fanta Orange 33cl"
-msgstr ""
+msgstr "Fanta Laranja 33cl"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/point_of_sale.py:420
@@ -451,7 +475,7 @@ msgstr ""
 #: code:addons/point_of_sale/point_of_sale.py:512
 #, python-format
 msgid "error!"
-msgstr ""
+msgstr "erro!"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_report_sales_by_user_pos_month
@@ -468,17 +492,17 @@ msgstr ""
 #. module: point_of_sale
 #: view:pos.session.opening:0
 msgid ") is \""
-msgstr ""
+msgstr ") é \""
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.Onions_product_template
 msgid "Onions"
-msgstr ""
+msgstr "Cebolas"
 
 #. module: point_of_sale
 #: view:pos.session:0
 msgid "Validate & Open Session"
-msgstr ""
+msgstr "Validar e Abrir a Sessão"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/point_of_sale.py:99
@@ -486,18 +510,18 @@ msgstr ""
 #: selection:pos.session.opening,pos_state:0
 #, python-format
 msgid "In Progress"
-msgstr ""
+msgstr "Em Andamento"
 
 #. module: point_of_sale
 #: view:pos.session:0
 #: field:pos.session,opening_details_ids:0
 msgid "Opening Cash Control"
-msgstr ""
+msgstr "Controle de Abertura de Caixa"
 
 #. module: point_of_sale
 #: help:res.users,ean13:0
 msgid "BarCode"
-msgstr ""
+msgstr "Código de barras"
 
 #. module: point_of_sale
 #: help:pos.category,image_medium:0
@@ -510,7 +534,7 @@ msgstr ""
 #. module: point_of_sale
 #: view:pos.session.opening:0
 msgid "Open Session"
-msgstr ""
+msgstr "Abrir Sessão"
 
 #. module: point_of_sale
 #: model:ir.ui.menu,name:point_of_sale.menu_point_of_sale
@@ -522,17 +546,17 @@ msgstr "Operações Diárias"
 #: code:addons/point_of_sale/static/src/xml/pos.xml:42
 #, python-format
 msgid "Google Chrome"
-msgstr ""
+msgstr "Google Chrome"
 
 #. module: point_of_sale
 #: model:pos.category,name:point_of_sale.sparkling_water
 msgid "Sparkling Water"
-msgstr ""
+msgstr "Água com Gás"
 
 #. module: point_of_sale
 #: view:account.bank.statement:0
 msgid "Search Cash Statements"
-msgstr ""
+msgstr "Procurar Demonstrativos do Caixa"
 
 #. module: point_of_sale
 #: view:account.bank.statement:0
@@ -545,7 +569,7 @@ msgstr ""
 #: field:pos.session.opening,pos_state_str:0
 #: field:report.pos.order,state:0
 msgid "Status"
-msgstr ""
+msgstr "Situação"
 
 #. module: point_of_sale
 #: selection:report.pos.order,month:0
@@ -555,7 +579,7 @@ msgstr "Agosto"
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.pepsi_max_lemon_33cl_product_template
 msgid "Pepsi Max Cool Lemon 33cl"
-msgstr ""
+msgstr "Pepsi Max Limão 33cl"
 
 #. module: point_of_sale
 #: selection:report.pos.order,month:0
@@ -570,24 +594,24 @@ msgstr "Linha de Ordem de Venda"
 #. module: point_of_sale
 #: view:pos.config:0
 msgid "Point of Sale Configuration"
-msgstr ""
+msgstr "Configuração do Ponto de Vendas"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:369
+#: code:addons/point_of_sale/static/src/xml/pos.xml:359
 #, python-format
 msgid "Your order has to be validated by a cashier."
-msgstr ""
+msgstr "Seu pedido tem de ser validado pelo caixa."
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.fanta_orange_50cl_product_template
 msgid "Fanta Orange 50cl"
-msgstr ""
+msgstr "Fanta Laranja 50cl"
 
 #. module: point_of_sale
 #: field:pos.category,child_id:0
 msgid "Children Categories"
-msgstr ""
+msgstr "Sub Categorias"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,help:point_of_sale.action_pos_session
@@ -611,10 +635,10 @@ msgid ""
 msgstr ""
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/point_of_sale.py:868
+#: code:addons/point_of_sale/point_of_sale.py:867
 #, python-format
 msgid "Customer Invoice"
-msgstr ""
+msgstr "Fatura de Cliente"
 
 #. module: point_of_sale
 #: view:pos.session.opening:0
@@ -622,6 +646,8 @@ msgid ""
 "You can continue sales from the touchscreen interface by clicking on \"Start "
 "Selling\" or close the cash register session."
 msgstr ""
+"Você pode continuar as suas vendas a partir da interface touchscreen, "
+"clicando em \"Começar a Vender\" ou fechar a sessão da caixa registradora."
 
 #. module: point_of_sale
 #: report:account.statement:0
@@ -633,7 +659,7 @@ msgstr "Data de Fechamento"
 #. module: point_of_sale
 #: view:pos.session:0
 msgid "Opening Cashbox Lines"
-msgstr ""
+msgstr "Linhas de Abertura do Caixa"
 
 #. module: point_of_sale
 #: selection:report.pos.order,month:0
@@ -643,7 +669,7 @@ msgstr "Outubro"
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.coca_light_1l_product_template
 msgid "Coca-Cola Light 1L"
-msgstr ""
+msgstr "Coca-Cola Light 1L"
 
 #. module: point_of_sale
 #: report:pos.details:0
@@ -654,12 +680,12 @@ msgstr "Resumo"
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.lays_naturel_45g_product_template
 msgid "Lays Natural 45g"
-msgstr ""
+msgstr "Lays Natural 45g"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.chaudfontaine_50cl_product_template
 msgid "Chaudfontaine 50cl"
-msgstr ""
+msgstr "Chaudfontaine 50cl"
 
 #. module: point_of_sale
 #: report:pos.invoice:0
@@ -673,14 +699,14 @@ msgstr "Quantidade"
 #. module: point_of_sale
 #: field:pos.order.line,name:0
 msgid "Line No"
-msgstr ""
+msgstr "Linha Núm."
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:459
+#: code:addons/point_of_sale/static/src/xml/pos.xml:453
 #, python-format
 msgid "Set Weight"
-msgstr ""
+msgstr "Configurar Peso"
 
 #. module: point_of_sale
 #: view:account.bank.statement:0
@@ -695,7 +721,7 @@ msgstr "Total líquido:"
 #. module: point_of_sale
 #: model:ir.actions.client,name:point_of_sale.action_client_pos_menu
 msgid "Open POS Menu"
-msgstr ""
+msgstr "Abrir Menu do PDV"
 
 #. module: point_of_sale
 #: report:pos.details_summary:0
@@ -705,14 +731,14 @@ msgstr "Modo de Pagamento"
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_pos_confirm
 msgid "Post POS Journal Entries"
-msgstr ""
+msgstr "Lançar entradas no diário do PDV"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:463
+#: code:addons/point_of_sale/static/src/xml/pos.xml:457
 #, python-format
 msgid "Barcode Scanner"
-msgstr ""
+msgstr "Scanner de Código de Barras"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.pomme_granny_smith_product_template
@@ -730,7 +756,7 @@ msgstr ""
 #: view:report.pos.order:0
 #: field:report.pos.order,total_discount:0
 msgid "Total Discount"
-msgstr ""
+msgstr "Desconto Total"
 
 #. module: point_of_sale
 #. openerp-web
@@ -741,11 +767,13 @@ msgid ""
 "use\n"
 "                        a modern browser like"
 msgstr ""
+"O Ponto de Vendas não é suportado pelo Microsoft Internet Explorer. Use um "
+"navegador melhor como"
 
 #. module: point_of_sale
 #: view:pos.session.opening:0
 msgid "Click to start a session."
-msgstr ""
+msgstr "Clique para iniciar a sessão."
 
 #. module: point_of_sale
 #: view:pos.details:0
@@ -763,7 +791,7 @@ msgstr ""
 #. module: point_of_sale
 #: model:pos.category,name:point_of_sale.pizza
 msgid "Pizza"
-msgstr ""
+msgstr "Pizza"
 
 #. module: point_of_sale
 #: view:pos.session:0
@@ -780,7 +808,7 @@ msgstr "Adicionar Produto"
 #. module: point_of_sale
 #: field:pos.config,name:0
 msgid "Point of Sale Name"
-msgstr ""
+msgstr "Nome do Ponto de Vendas"
 
 #. module: point_of_sale
 #: field:report.transaction.pos,invoice_am:0
@@ -790,7 +818,7 @@ msgstr "Valor da Fatura"
 #. module: point_of_sale
 #: model:pos.category,name:point_of_sale.coke
 msgid "Coke"
-msgstr ""
+msgstr "Coke"
 
 #. module: point_of_sale
 #: report:pos.invoice:0
@@ -799,7 +827,7 @@ msgstr "Tel. :"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:264
+#: code:addons/point_of_sale/static/src/xml/pos.xml:254
 #: model:ir.actions.act_window,name:point_of_sale.action_report_pos_receipt
 #, python-format
 msgid "Receipt"
@@ -814,7 +842,7 @@ msgstr ""
 #. module: point_of_sale
 #: view:pos.confirm:0
 msgid "Post All Orders"
-msgstr ""
+msgstr "Lançar todos os Pedidos"
 
 #. module: point_of_sale
 #: report:account.statement:0
@@ -827,7 +855,7 @@ msgstr "Saldo Final"
 #: code:addons/point_of_sale/wizard/pos_box_out.py:89
 #, python-format
 msgid "please check that account is set to %s."
-msgstr ""
+msgstr "por favor verifique que a conta está definida para %s."
 
 #. module: point_of_sale
 #: help:pos.category,image:0
@@ -835,16 +863,17 @@ msgid ""
 "This field holds the image used as image for the cateogry, limited to "
 "1024x1024px."
 msgstr ""
+"Este campo guarda a imagem a ser usada na categoria, limitada a 1024x1024px."
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.pepsi_max_50cl_product_template
 msgid "Pepsi Max 50cl"
-msgstr ""
+msgstr "Pepsi Max 50cl"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.san_pellegrino_1l_product_template
 msgid "San Pellegrino 1L"
-msgstr ""
+msgstr "San Pellegrino 1L"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/wizard/pos_open_statement.py:49
@@ -860,35 +889,35 @@ msgstr ""
 #. module: point_of_sale
 #: model:pos.category,name:point_of_sale.rouges_noyau_fruits
 msgid "Berries"
-msgstr ""
+msgstr "Frutas vermelhas"
 
 #. module: point_of_sale
 #: view:pos.ean_wizard:0
 msgid "Ean13 Generator"
-msgstr ""
+msgstr "Gerador de Ean13"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.spa_1l_product_template
 msgid "Spa Reine 1L"
-msgstr ""
+msgstr "Spa Reine 1L"
 
 #. module: point_of_sale
 #: constraint:res.partner:0
 #: constraint:res.users:0
 msgid "Error: Invalid ean code"
-msgstr ""
+msgstr "Erro: código EAN inválido"
 
 #. module: point_of_sale
 #: model:pos.category,name:point_of_sale.legumes_racine
 msgid "Root vegetables"
-msgstr ""
+msgstr "Tubérculos"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.act_pos_open_statement
 #: model:ir.model,name:point_of_sale.model_pos_open_statement
 #: view:pos.open.statement:0
 msgid "Open Statements"
-msgstr ""
+msgstr "Extratos em Aberto"
 
 #. module: point_of_sale
 #: field:pos.details,date_end:0
@@ -913,7 +942,7 @@ msgstr "Registro"
 #. module: point_of_sale
 #: view:pos.session:0
 msgid "Statements"
-msgstr ""
+msgstr "Demonstrativos"
 
 #. module: point_of_sale
 #: report:pos.details:0
@@ -926,6 +955,8 @@ msgid ""
 "Check this if you want to group the Journal Items by Product while closing a "
 "Session"
 msgstr ""
+"Marque se você deseja agrupar os itens de diário por produtos quando for "
+"fechar a Sessão"
 
 #. module: point_of_sale
 #: report:pos.details:0
@@ -936,18 +967,18 @@ msgstr "Total pago"
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_pos_session_opening
 msgid "pos.session.opening"
-msgstr ""
+msgstr "pos.session.opening"
 
 #. module: point_of_sale
 #: view:res.users:0
 msgid "Edit EAN"
-msgstr ""
+msgstr "Editar EAN"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/wizard/pos_open_statement.py:80
 #, python-format
 msgid "List of Cash Registers"
-msgstr ""
+msgstr "Lista de Caixas Registradoras"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.maes_50cl_product_template
@@ -957,17 +988,17 @@ msgstr ""
 #. module: point_of_sale
 #: view:report.pos.order:0
 msgid "Not Invoiced"
-msgstr ""
+msgstr "Não Faturado"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.lays_pickles_250g_product_template
 msgid "250g Lays Pickels"
-msgstr ""
+msgstr "Batata Lays 250g"
 
 #. module: point_of_sale
 #: field:pos.session.opening,pos_session_id:0
 msgid "PoS Session"
-msgstr ""
+msgstr "Sessão do PdV"
 
 #. module: point_of_sale
 #: selection:report.pos.order,month:0
@@ -981,37 +1012,45 @@ msgid "User's Product"
 msgstr "Produto do Usuário"
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/point_of_sale.py:1140
+#: code:addons/point_of_sale/point_of_sale.py:984
+#, python-format
+msgid "The POS order must have lines when calling this method"
+msgstr ""
+
+#. module: point_of_sale
+#: code:addons/point_of_sale/point_of_sale.py:1143
 #, python-format
 msgid ""
 "You have to select a pricelist in the sale form !\n"
 "Please set one before choosing a product."
 msgstr ""
+"Você tem que selecionar uma lista de preços, no formulário de venda!\n"
+"Por favor, defina uma antes de escolher um produto."
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.fanta_orange_2l_product_template
 msgid "Fanta Orange 2L"
-msgstr ""
+msgstr "Fanta Laranja 2L"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.perrier_1l_product_template
 msgid "Perrier 1L"
-msgstr ""
+msgstr "Perrier 1L"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.spa_33cl_product_template
 msgid "Spa Reine 33cl"
-msgstr ""
+msgstr "Spa Reine 33cl"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_pos_discount
 msgid "Add a Global Discount"
-msgstr ""
+msgstr "Adicionar Desconto Global"
 
 #. module: point_of_sale
 #: view:pos.config:0
 msgid "Journals"
-msgstr ""
+msgstr "Diários"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.oetker_prosciutto_product_template
@@ -1022,50 +1061,50 @@ msgstr ""
 #: model:product.template,name:point_of_sale.lays_light_paprika_170g_product_template
 #: model:product.template,name:point_of_sale.lays_paprika_170g_product_template
 msgid "Lays Light Paprika 170g"
-msgstr ""
+msgstr "Lays Light Paprika 170g"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.coca_light_lemon_50cl_product_template
 msgid "Coca-Cola Light Lemon 50cl"
-msgstr ""
+msgstr "Coca-Cola Light Lemon 50cl"
 
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/point_of_sale.py:518
-#: code:addons/point_of_sale/static/src/xml/pos.xml:692
-#: code:addons/point_of_sale/static/src/xml/pos.xml:747
+#: code:addons/point_of_sale/static/src/xml/pos.xml:689
+#: code:addons/point_of_sale/static/src/xml/pos.xml:744
 #, python-format
 msgid "return"
-msgstr ""
+msgstr "retornar"
 
 #. module: point_of_sale
 #: view:product.product:0
 msgid "Set a Custom EAN"
-msgstr ""
+msgstr "Definir um EAN personalizado"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:237
+#: code:addons/point_of_sale/static/src/xml/pos.xml:235
 #, python-format
 msgid "Remaining:"
-msgstr ""
+msgstr "Restante:"
 
 #. module: point_of_sale
 #: model:pos.category,name:point_of_sale.legumes
 msgid "Fresh vegetables"
-msgstr ""
+msgstr "Vegetais Frescos"
 
 #. module: point_of_sale
 #: view:pos.session:0
 msgid "tab of the"
-msgstr ""
+msgstr "aba do"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:484
+#: code:addons/point_of_sale/static/src/xml/pos.xml:478
 #, python-format
 msgid "Scan Item Success"
-msgstr ""
+msgstr "Item Digitalizado"
 
 #. module: point_of_sale
 #: report:account.statement:0
@@ -1077,27 +1116,27 @@ msgstr "Saldo Inicial"
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.lays_naturel_oven_150g_product_template
 msgid "Oven Baked Lays Natural 150g"
-msgstr ""
+msgstr "Lays Natural Assada 150g"
 
 #. module: point_of_sale
 #: sql_constraint:pos.session:0
 msgid "The name of this POS Session must be unique !"
-msgstr ""
+msgstr "O nome desta sessão do PDV deve ser exclusivo!"
 
 #. module: point_of_sale
 #: view:pos.session:0
 msgid "Opening Subtotal"
-msgstr ""
+msgstr "Subtotal de Abertura"
 
 #. module: point_of_sale
 #: view:pos.session:0
 msgid "payment method."
-msgstr ""
+msgstr "método de pagamento"
 
 #. module: point_of_sale
 #: view:pos.order:0
 msgid "Re-Print"
-msgstr ""
+msgstr "Re-impressão"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.chimay_bleu_75cl_product_template
@@ -1111,8 +1150,8 @@ msgstr "Pagamentos por Usuário"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:209
-#: code:addons/point_of_sale/static/src/xml/pos.xml:295
+#: code:addons/point_of_sale/static/src/xml/pos.xml:215
+#: code:addons/point_of_sale/static/src/xml/pos.xml:285
 #: code:addons/point_of_sale/wizard/pos_payment.py:79
 #: model:ir.actions.act_window,name:point_of_sale.action_pos_payment
 #: report:pos.details:0
@@ -1129,7 +1168,7 @@ msgstr "No. de Linhas"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:83
+#: code:addons/point_of_sale/static/src/xml/pos.xml:89
 #, python-format
 msgid "Disc"
 msgstr "Disco"
@@ -1137,7 +1176,7 @@ msgstr "Disco"
 #. module: point_of_sale
 #: view:pos.order:0
 msgid "(update)"
-msgstr ""
+msgstr "(atualizar)"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.ijsboerke_vanille_2,5l_product_template
@@ -1148,7 +1187,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:point_of_sale.action_report_pos_details
 #: model:ir.ui.menu,name:point_of_sale.menu_pos_details
 msgid "Sale Details"
-msgstr ""
+msgstr "Detalhes da Venda"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.evian_2l_product_template
@@ -1185,10 +1224,10 @@ msgstr "Total de Vendas"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:744
+#: code:addons/point_of_sale/static/src/xml/pos.xml:741
 #, python-format
 msgid "ABC"
-msgstr ""
+msgstr "ABC"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.ijsboerke_dame_blanche_2,5l_product_template
@@ -1212,17 +1251,17 @@ msgstr ""
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:491
+#: code:addons/point_of_sale/static/src/xml/pos.xml:485
 #, python-format
 msgid "Read Weighting Scale"
 msgstr ""
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:435
+#: code:addons/point_of_sale/static/src/xml/pos.xml:426
 #, python-format
 msgid "0.00 €"
-msgstr ""
+msgstr "R$ 0,00"
 
 #. module: point_of_sale
 #: field:pos.order.line,create_date:0
@@ -1236,11 +1275,11 @@ msgstr "Vendas de Hoje"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:274
-#: code:addons/point_of_sale/static/src/xml/pos.xml:334
+#: code:addons/point_of_sale/static/src/xml/pos.xml:264
+#: code:addons/point_of_sale/static/src/xml/pos.xml:324
 #, python-format
 msgid "Welcome"
-msgstr ""
+msgstr "Bem Vindo"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/wizard/pos_box_entries.py:46
@@ -1273,7 +1312,7 @@ msgstr "Minhas Vendas"
 #. module: point_of_sale
 #: view:pos.config:0
 msgid "Set to Deprecated"
-msgstr ""
+msgstr "Marcar como Obsoleto"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.limon_product_template
@@ -1295,7 +1334,7 @@ msgstr "Total Faturado"
 #: model:ir.model,name:point_of_sale.model_pos_category
 #: field:product.product,pos_categ_id:0
 msgid "Point of Sale Category"
-msgstr ""
+msgstr "Categoria do Ponto de Venda"
 
 #. module: point_of_sale
 #: view:report.pos.order:0
@@ -1312,10 +1351,10 @@ msgstr ""
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:334
+#: code:addons/point_of_sale/static/src/xml/pos.xml:324
 #, python-format
 msgid "Choose your type of receipt:"
-msgstr ""
+msgstr "Escolha o tipo de recebimento:"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_report_sales_by_margin_pos_month
@@ -1325,7 +1364,7 @@ msgstr "Vendas Mensais por Margem"
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.poivron_jaunes_product_template
 msgid "Yellow Peppers"
-msgstr ""
+msgstr "Pimentões Amarelos"
 
 #. module: point_of_sale
 #: view:pos.order:0
@@ -1340,7 +1379,7 @@ msgstr "Data do Pedido"
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.stella_33cl_product_template
 msgid "Stella Artois 33cl"
-msgstr ""
+msgstr "Stella Artois 33cl"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.lays_naturel_300g_product_template
@@ -1349,7 +1388,7 @@ msgstr ""
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:485
+#: code:addons/point_of_sale/static/src/xml/pos.xml:479
 #, python-format
 msgid "Scan Item Unrecognized"
 msgstr ""
@@ -1360,10 +1399,10 @@ msgid "Today's Closed Cashbox"
 msgstr "Fechamento de Caixa do dia"
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/point_of_sale.py:898
+#: code:addons/point_of_sale/point_of_sale.py:897
 #, python-format
 msgid "Selected orders do not have the same session!"
-msgstr ""
+msgstr "Os pedidos selecionados não têm a mesma sessão!"
 
 #. module: point_of_sale
 #: report:pos.invoice:0
@@ -1378,7 +1417,7 @@ msgstr ""
 #. module: point_of_sale
 #: report:pos.invoice:0
 msgid "Fiscal Position Remark :"
-msgstr ""
+msgstr "Ressalva de Posição Fiscal"
 
 #. module: point_of_sale
 #: selection:report.pos.order,month:0
@@ -1396,31 +1435,31 @@ msgstr "Data de Abertura"
 #: model:ir.actions.act_window,name:point_of_sale.action_pos_session
 #: model:ir.ui.menu,name:point_of_sale.menu_pos_session_all
 msgid "All Sessions"
-msgstr ""
+msgstr "Todas as Sessões"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:666
+#: code:addons/point_of_sale/static/src/xml/pos.xml:663
 #, python-format
 msgid "tab"
-msgstr ""
+msgstr "aba"
 
 #. module: point_of_sale
 #: report:pos.lines:0
 msgid "Taxes :"
-msgstr ""
+msgstr "Impostos :"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:281
+#: code:addons/point_of_sale/static/src/xml/pos.xml:271
 #, python-format
 msgid "Thank you for shopping with us."
-msgstr ""
+msgstr "Obrigado pela preferência."
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.coca_light_2l_product_template
 msgid "Coca-Cola Light 2L"
-msgstr ""
+msgstr "Coca-Cola Light 2L"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.oetker_funghi_product_template
@@ -1431,12 +1470,12 @@ msgstr ""
 #: model:ir.actions.act_window,name:point_of_sale.pos_category_action
 #: model:ir.ui.menu,name:point_of_sale.menu_pos_category
 msgid "Product Categories"
-msgstr ""
+msgstr "Categorias de Produtos"
 
 #. module: point_of_sale
 #: help:pos.config,journal_id:0
 msgid "Accounting journal used to post sales entries."
-msgstr ""
+msgstr "Diário contábil usado para lançar as entradas das vendas."
 
 #. module: point_of_sale
 #: field:report.transaction.pos,disc:0
@@ -1445,10 +1484,10 @@ msgstr "Desc."
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:473
+#: code:addons/point_of_sale/static/src/xml/pos.xml:467
 #, python-format
 msgid "Invalid Ean"
-msgstr ""
+msgstr "Ean Inválido"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.lindemans_kriek_37,5cl_product_template
@@ -1458,16 +1497,16 @@ msgstr ""
 #. module: point_of_sale
 #: view:pos.config:0
 msgid "Point of Sale Config"
-msgstr ""
+msgstr "Configuração do Ponto de Vendas"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.coca_zero_33cl_product_template
 msgid "Coca-Cola Zero 33cl"
-msgstr ""
+msgstr "Coca-Cola Zero 33cl"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:415
+#: code:addons/point_of_sale/static/src/xml/pos.xml:405
 #, python-format
 msgid "&auml;"
 msgstr ""
@@ -1503,15 +1542,15 @@ msgstr ""
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:593
+#: code:addons/point_of_sale/static/src/xml/pos.xml:590
 #, python-format
 msgid "Tax:"
-msgstr ""
+msgstr "Imposto:"
 
 #. module: point_of_sale
 #: view:pos.session:0
 msgid "+ Transactions"
-msgstr ""
+msgstr "+Transações"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_pos_discount
@@ -1538,32 +1577,32 @@ msgstr "Usuário"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:188
+#: code:addons/point_of_sale/static/src/xml/pos.xml:194
 #, python-format
 msgid "Kg"
-msgstr ""
+msgstr "Kg"
 
 #. module: point_of_sale
 #: field:product.product,available_in_pos:0
 msgid "Available in the Point of Sale"
-msgstr ""
+msgstr "Disponível no Ponto de Vendas"
 
 #. module: point_of_sale
 #: selection:pos.config,state:0
 msgid "Deprecated"
-msgstr ""
+msgstr "Obsoleto"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.coca_light_decaf_33cl_product_template
 msgid "Coca-Cola Light 33cl Decaf"
-msgstr ""
+msgstr "Coca-Cola Light 33cl Descafeinada"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:348
+#: code:addons/point_of_sale/static/src/xml/pos.xml:338
 #, python-format
 msgid "The scanned product was not recognized"
-msgstr ""
+msgstr "O produto escaneado não foi reconhecido"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_report_transaction_pos
@@ -1589,7 +1628,7 @@ msgstr ""
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_pos_config
 msgid "pos.config"
-msgstr ""
+msgstr "pos.config"
 
 #. module: point_of_sale
 #: view:pos.ean_wizard:0
@@ -1597,6 +1636,8 @@ msgid ""
 "Enter a reference, it will be converted\n"
 "                        automatically to a valid EAN number."
 msgstr ""
+"Insira uma referência, irá ser convertido\n"
+"                         automaticamente para um número válido EAN."
 
 #. module: point_of_sale
 #: field:product.product,expense_pdt:0
@@ -1606,11 +1647,11 @@ msgstr ""
 #. module: point_of_sale
 #: selection:report.pos.order,month:0
 msgid "November"
-msgstr ""
+msgstr "Novembro"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:277
+#: code:addons/point_of_sale/static/src/xml/pos.xml:267
 #, python-format
 msgid "Please scan an item or your member card"
 msgstr ""
@@ -1618,7 +1659,7 @@ msgstr ""
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.poivron_verts_product_template
 msgid "Green Peppers"
-msgstr ""
+msgstr "Pimentões Verdes"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.timmermans_faro_37,5cl_product_template
@@ -1655,11 +1696,11 @@ msgstr ""
 #: view:pos.config:0
 #: selection:pos.config,state:0
 msgid "Inactive"
-msgstr ""
+msgstr "Inativo"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:323
+#: code:addons/point_of_sale/static/src/xml/pos.xml:313
 #: view:pos.confirm:0
 #: view:pos.details:0
 #: view:pos.discount:0
@@ -1676,7 +1717,7 @@ msgstr "Cancelar"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:306
+#: code:addons/point_of_sale/static/src/xml/pos.xml:296
 #, python-format
 msgid "Please put your product on the scale"
 msgstr ""
@@ -1711,18 +1752,18 @@ msgstr "Preço unitário"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:184
+#: code:addons/point_of_sale/static/src/xml/pos.xml:190
 #, python-format
 msgid "Product Weighting"
 msgstr ""
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:707
-#: code:addons/point_of_sale/static/src/xml/pos.xml:749
+#: code:addons/point_of_sale/static/src/xml/pos.xml:704
+#: code:addons/point_of_sale/static/src/xml/pos.xml:746
 #, python-format
 msgid "close"
-msgstr ""
+msgstr "fechar"
 
 #. module: point_of_sale
 #: model:ir.actions.report.xml,name:point_of_sale.report_user_label
@@ -1743,13 +1784,13 @@ msgstr "Quantidade Total"
 #. module: point_of_sale
 #: view:pos.session:0
 msgid "End of Session"
-msgstr ""
+msgstr "Fim da Sessão"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_new_bank_statement_all_tree
 #: view:pos.session:0
 msgid "Cash Registers"
-msgstr ""
+msgstr "Caixa Registradoras"
 
 #. module: point_of_sale
 #: help:pos.session,cash_register_balance_end:0
@@ -1758,15 +1799,15 @@ msgstr ""
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:480
+#: code:addons/point_of_sale/static/src/xml/pos.xml:474
 #, python-format
 msgid "In Transaction"
-msgstr ""
+msgstr "Em Transação"
 
 #. module: point_of_sale
 #: model:pos.category,name:point_of_sale.food
 msgid "Food"
-msgstr ""
+msgstr "Comida"
 
 #. module: point_of_sale
 #: field:pos.box.entries,ref:0
@@ -1775,7 +1816,7 @@ msgstr "Ref."
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:88
+#: code:addons/point_of_sale/static/src/xml/pos.xml:94
 #: report:pos.details:0
 #: report:pos.invoice:0
 #: report:pos.lines:0
@@ -1786,7 +1827,7 @@ msgstr "Preço"
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.coca_light_33cl_product_template
 msgid "Coca-Cola Light 33cl"
-msgstr ""
+msgstr "Coca-Cola Light 33cl"
 
 #. module: point_of_sale
 #: view:report.sales.by.margin.pos:0
@@ -1798,27 +1839,34 @@ msgid "POS"
 msgstr "Ponto de Venda"
 
 #. module: point_of_sale
-#: model:product.template,name:point_of_sale.coca_regular_33cl_product_template
-msgid "Coca-Cola Regular 33cl"
+#. openerp-web
+#: code:addons/point_of_sale/static/src/xml/pos.xml:587
+#, python-format
+msgid "Subtotal:"
 msgstr ""
 
 #. module: point_of_sale
+#: model:product.template,name:point_of_sale.coca_regular_33cl_product_template
+msgid "Coca-Cola Regular 33cl"
+msgstr "Coca-Cola Regular 33cl"
+
+#. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:335
+#: code:addons/point_of_sale/static/src/xml/pos.xml:325
 #, python-format
 msgid "Ticket"
-msgstr ""
+msgstr "Tíquete"
 
 #. module: point_of_sale
 #: field:pos.session,cash_register_difference:0
 msgid "Difference"
-msgstr ""
+msgstr "Diferença"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/point_of_sale.py:529
 #, python-format
 msgid "Unable to Delete !"
-msgstr ""
+msgstr "Não foi possível Excluir!"
 
 #. module: point_of_sale
 #: model:pos.category,name:point_of_sale.autres_agrumes
@@ -1829,7 +1877,7 @@ msgstr ""
 #: report:pos.details:0
 #: report:pos.details_summary:0
 msgid "Start Period"
-msgstr ""
+msgstr "Período Inicial"
 
 #. module: point_of_sale
 #: report:account.statement:0
@@ -1855,16 +1903,16 @@ msgstr ""
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.unreferenced_product_product_template
 msgid "Unreferenced Products"
-msgstr ""
+msgstr "Produtos sem Referência"
 
 #. module: point_of_sale
 #: view:pos.ean_wizard:0
 msgid "Apply"
-msgstr ""
+msgstr "Aplicar"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:298
+#: code:addons/point_of_sale/static/src/xml/pos.xml:288
 #, python-format
 msgid ""
 "Please insert your card in the reader and follow the instructions to "
@@ -1893,14 +1941,14 @@ msgstr ""
 #: model:ir.actions.act_window,name:point_of_sale.action_report_pos_order_all
 #: model:ir.ui.menu,name:point_of_sale.menu_report_pos_order_all
 msgid "Orders Analysis"
-msgstr ""
+msgstr "Análise do Pedido"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:569
+#: code:addons/point_of_sale/static/src/xml/pos.xml:563
 #, python-format
 msgid "User:"
-msgstr ""
+msgstr "Usuário:"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/point_of_sale.py:316
@@ -1918,7 +1966,7 @@ msgstr ""
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.peche_product_template
 msgid "Fishing"
-msgstr ""
+msgstr "Pescado"
 
 #. module: point_of_sale
 #: report:pos.details:0
@@ -1934,13 +1982,15 @@ msgstr "Data de Impressão"
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.poireaux_poireaux_product_template
 msgid "Leeks"
-msgstr ""
+msgstr "alho-poró"
 
 #. module: point_of_sale
 #: help:pos.category,sequence:0
 msgid ""
 "Gives the sequence order when displaying a list of product categories."
 msgstr ""
+"Define a ordem de apresentação quando mostrar a lista de categorias de "
+"produtos."
 
 #. module: point_of_sale
 #: view:account.bank.statement:0
@@ -1952,10 +2002,10 @@ msgstr "Agrupar Por..."
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:570
+#: code:addons/point_of_sale/static/src/xml/pos.xml:564
 #, python-format
 msgid "Shop:"
-msgstr ""
+msgstr "Estabelecimento:"
 
 #. module: point_of_sale
 #: field:account.journal,self_checkout_payment_method:0
@@ -1970,12 +2020,12 @@ msgstr "Ordens de Vendas"
 #. module: point_of_sale
 #: model:ir.actions.report.xml,name:point_of_sale.all_closed_cashbox_of_the_day
 msgid "All Closed CashBox"
-msgstr ""
+msgstr "Todas as Caixas Registradoras Fechadas"
 
 #. module: point_of_sale
 #: field:pos.details,user_ids:0
 msgid "Salespeople"
-msgstr ""
+msgstr "Vendedores"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/point_of_sale.py:756
@@ -1983,10 +2033,10 @@ msgstr ""
 #: code:addons/point_of_sale/wizard/pos_box_out.py:91
 #, python-format
 msgid "You have to open at least one cashbox."
-msgstr ""
+msgstr "Você precisa abrir pelo menos uma Caixa Registradora"
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/point_of_sale.py:1139
+#: code:addons/point_of_sale/point_of_sale.py:1142
 #, python-format
 msgid "No Pricelist !"
 msgstr "Sem Lista de Preços !"
@@ -1994,14 +2044,14 @@ msgstr "Sem Lista de Preços !"
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.poivron_rouges_product_template
 msgid "Red Pepper"
-msgstr ""
+msgstr "Pimenta Vermelha"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:680
+#: code:addons/point_of_sale/static/src/xml/pos.xml:677
 #, python-format
 msgid "caps lock"
-msgstr ""
+msgstr "caps lock"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.grisette_cerise_25cl_product_template
@@ -2015,27 +2065,27 @@ msgstr "Base"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:705
-#: code:addons/point_of_sale/static/src/xml/pos.xml:745
+#: code:addons/point_of_sale/static/src/xml/pos.xml:702
+#: code:addons/point_of_sale/static/src/xml/pos.xml:742
 #, python-format
 msgid "&nbsp;"
-msgstr ""
+msgstr "&nbsp;"
 
 #. module: point_of_sale
 #: model:pos.category,name:point_of_sale.categ_others
 msgid "Others"
-msgstr ""
+msgstr "Outros"
 
 #. module: point_of_sale
 #: model:pos.category,name:point_of_sale.autres_legumes_frais
 msgid "Other fresh vegetables"
-msgstr ""
+msgstr "Outros Vegetais Frescos"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/wizard/pos_open_statement.py:49
 #, python-format
 msgid "No Cash Register Defined !"
-msgstr ""
+msgstr "Nenhuma Caixa Registradora Definida!"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/point_of_sale.py:513
@@ -2047,12 +2097,12 @@ msgstr ""
 #. module: point_of_sale
 #: model:pos.category,name:point_of_sale.oignons_ail_echalotes
 msgid "Onions / Garlic / Shallots"
-msgstr ""
+msgstr "Cebola / Alho / Chalotas"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.evian_50cl_product_template
 msgid "Evian 50cl"
-msgstr ""
+msgstr "Evian 50cl"
 
 #. module: point_of_sale
 #: view:pos.order:0
@@ -2062,7 +2112,7 @@ msgstr "Notas"
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.coca_light_lemon_2l_product_template
 msgid "Coca-Cola Light Lemon 2L"
-msgstr ""
+msgstr "Coca-Cola Light Lemon 2L"
 
 #. module: point_of_sale
 #: report:pos.details:0
@@ -2080,10 +2130,10 @@ msgstr "Linha de Venda"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:744
+#: code:addons/point_of_sale/static/src/xml/pos.xml:741
 #, python-format
 msgid "123"
-msgstr ""
+msgstr "123"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.product_normal_action
@@ -2106,16 +2156,16 @@ msgstr ""
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.tomate_en_grappe_product_template
 msgid "In Cluster Tomatoes"
-msgstr ""
+msgstr "Tomates em Conjunto"
 
 #. module: point_of_sale
 #: model:ir.actions.client,name:point_of_sale.action_pos_pos
 msgid "Start Point of Sale"
-msgstr ""
+msgstr "Iniciar Ponto de Vendas"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:78
+#: code:addons/point_of_sale/static/src/xml/pos.xml:84
 #: report:pos.details:0
 #: report:pos.payment.report.user:0
 #: report:pos.user.product:0
@@ -2128,19 +2178,19 @@ msgstr "Qtd"
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.coca_zero_1l_product_template
 msgid "Coca-Cola Zero 1L"
-msgstr ""
+msgstr "Coca-Cola Zero 1L"
 
 #. module: point_of_sale
 #: report:pos.sales.user:0
 #: report:pos.sales.user.today:0
 #: field:report.pos.order,date:0
 msgid "Date Order"
-msgstr ""
+msgstr "Data do Pedido"
 
 #. module: point_of_sale
 #: view:pos.order:0
 msgid "Point of Sale Orders"
-msgstr ""
+msgstr "Pedidos do Ponto de Vendas"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.spa_et_fruit_50cl_product_template
@@ -2152,7 +2202,7 @@ msgstr ""
 #: field:pos.config,journal_ids:0
 #: field:pos.session,journal_ids:0
 msgid "Available Payment Methods"
-msgstr ""
+msgstr "Métodos de Pagamentos Definidos"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,help:point_of_sale.product_normal_action
@@ -2172,6 +2222,20 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Clique para adicionar um novo produto.\n"
+"              </p><p>\n"
+"                Você precisa definir um produto para tudo que você vender \n"
+"                através do ponto de vendas.\n"
+"              </p><p>\n"
+"               Não se esqueça de definir o preço e a categoria do ponto de "
+"venda\n"
+"                 em que ele deve aparecer. Se um produto não tem uma "
+"categoria do ponto de venda\n"
+"                 você não pode vendê-lo por meio da interface do ponto de "
+"venda.\n"
+"              </p>\n"
+"            "
 
 #. module: point_of_sale
 #: view:pos.order:0
@@ -2186,22 +2250,22 @@ msgstr "Fax :"
 #. module: point_of_sale
 #: view:pos.session:0
 msgid "Point of Sale Session"
-msgstr ""
+msgstr "Sessão do Ponto de Vendas"
 
 #. module: point_of_sale
 #: report:account.statement:0
 #: model:ir.actions.report.xml,name:point_of_sale.account_statement
 msgid "Statement"
-msgstr ""
+msgstr "Demonstrativo"
 
 #. module: point_of_sale
 #: report:pos.invoice:0
 msgid "Source"
-msgstr ""
+msgstr "Origem"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:467
+#: code:addons/point_of_sale/static/src/xml/pos.xml:461
 #, python-format
 msgid "Admin Badge"
 msgstr ""
@@ -2209,18 +2273,18 @@ msgstr ""
 #. module: point_of_sale
 #: field:pos.make.payment,journal_id:0
 msgid "Payment Mode"
-msgstr ""
+msgstr "Modo de Pagamento"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.lays_paprika_45g_product_template
 msgid "Lays Paprika 45g"
-msgstr ""
+msgstr "Lays Paprika 45g"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_account_bank_statement
 #: field:pos.session,statement_ids:0
 msgid "Bank Statement"
-msgstr ""
+msgstr "Extrato Bancário"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/point_of_sale.py:101
@@ -2228,48 +2292,48 @@ msgstr ""
 #: selection:pos.session.opening,pos_state:0
 #, python-format
 msgid "Closed & Posted"
-msgstr ""
+msgstr "Fechado e Lançado"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_report_pos_sale_user
 #: model:ir.model,name:point_of_sale.model_pos_sale_user
 #: view:pos.payment.report.user:0
 msgid "Sale by User"
-msgstr ""
+msgstr "Venda por Usuário"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:568
+#: code:addons/point_of_sale/static/src/xml/pos.xml:562
 #, python-format
 msgid "Phone:"
-msgstr ""
+msgstr "Telefone:"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.evian_1l_product_template
 msgid "Evian 1L"
-msgstr ""
+msgstr "Evian 1L"
 
 #. module: point_of_sale
 #: model:pos.category,name:point_of_sale.water
 msgid "Water"
-msgstr ""
+msgstr "Água"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_pos_ean_wizard
 msgid "pos.ean_wizard"
-msgstr ""
+msgstr "pos.ean_wizard"
 
 #. module: point_of_sale
 #: selection:report.pos.order,month:0
 msgid "July"
-msgstr ""
+msgstr "Julho"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_pos_config_pos
 #: model:ir.ui.menu,name:point_of_sale.menu_pos_config_pos
 #: view:pos.session:0
 msgid "Point of Sales"
-msgstr ""
+msgstr "Ponto de Vendas"
 
 #. module: point_of_sale
 #: report:pos.details:0
@@ -2288,12 +2352,12 @@ msgstr ""
 #: selection:pos.session.opening,pos_state:0
 #, python-format
 msgid "Closing Control"
-msgstr ""
+msgstr "Fechando o Controle"
 
 #. module: point_of_sale
 #: field:report.pos.order,delay_validation:0
 msgid "Delay Validation"
-msgstr ""
+msgstr "Adiar Validação"
 
 #. module: point_of_sale
 #: field:pos.order,nb_print:0
@@ -2303,26 +2367,26 @@ msgstr "Número da Impressão"
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_pos_make_payment
 msgid "Point of Sale Payment"
-msgstr ""
+msgstr "Pagamento do Ponto de Vendas"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.coca_light_50cl_product_template
 msgid "Coca-Cola Light 50cl"
-msgstr ""
+msgstr "Coca-Cola Light 50cl"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:472
+#: code:addons/point_of_sale/static/src/xml/pos.xml:466
 #, python-format
 msgid "Unknown Product"
-msgstr ""
+msgstr "Produto Desconhecido"
 
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/xml/pos.xml:36
 #, python-format
 msgid "<![endif]-->"
-msgstr ""
+msgstr "<![endif]-->"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.jupiler_50cl_product_template
@@ -2333,29 +2397,29 @@ msgstr ""
 #: report:pos.details:0
 #: report:pos.details_summary:0
 msgid "End Period"
-msgstr ""
+msgstr "Finalizar Período"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.coca_light_lemon_33cl_product_template
 msgid "Coca-Cola Light Lemon 33cl"
-msgstr ""
+msgstr "Coca-Cola Light Lemon 33cl"
 
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/xml/pos.xml:33
 #, python-format
 msgid "<!--[if IE]>"
-msgstr ""
+msgstr "<!--[if IE]>"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.lays_ketchup_250g_product_template
 msgid "Lays Ketchup 250g"
-msgstr ""
+msgstr "Lays Ketchup 250g"
 
 #. module: point_of_sale
 #: selection:report.pos.order,state:0
 msgid "Synchronized"
-msgstr ""
+msgstr "Sincronizada"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.chimay_rouge_33cl_product_template
@@ -2366,12 +2430,12 @@ msgstr ""
 #: view:report.pos.order:0
 #: field:report.pos.order,month:0
 msgid "Month"
-msgstr ""
+msgstr "Mês"
 
 #. module: point_of_sale
 #: field:pos.category,image_medium:0
 msgid "Medium-sized image"
-msgstr ""
+msgstr "Imagem de tamanho Médio"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.papillon_orange_product_template
@@ -2381,7 +2445,7 @@ msgstr ""
 #. module: point_of_sale
 #: view:report.pos.order:0
 msgid "Year of order date"
-msgstr ""
+msgstr "Ano da data do pedido"
 
 #. module: point_of_sale
 #: help:product.product,to_weight:0
@@ -2389,56 +2453,58 @@ msgid ""
 "Check if the product should be weighted (mainly used with self check-out "
 "interface)."
 msgstr ""
+"Verifique se o produto deve ser pesado (usado principalmente com interface "
+"de auto check-out)."
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_new_bank_statement_tree
 #: field:pos.box.entries,journal_id:0
 #: field:pos.session,cash_register_id:0
 msgid "Cash Register"
-msgstr ""
+msgstr "Caixa Registradora"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:453
+#: code:addons/point_of_sale/static/src/xml/pos.xml:447
 #, python-format
 msgid "Accept Payment"
-msgstr ""
+msgstr "Aceitar Pagamento"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_pos_receipt
 msgid "Point of sale receipt"
-msgstr ""
+msgstr "Recibo do Ponto de Vendas"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_report_sales_by_margin_pos_today
 msgid "Sales by User Daily margin"
-msgstr ""
+msgstr "Vendas por margem de utilização diário"
 
 #. module: point_of_sale
 #: view:pos.open.statement:0
 msgid "Open Registers"
-msgstr ""
+msgstr "Abrir Registros"
 
 #. module: point_of_sale
 #: model:pos.category,name:point_of_sale.poire
 msgid "Pears"
-msgstr ""
+msgstr "Pêras"
 
 #. module: point_of_sale
 #: field:report.transaction.pos,journal_id:0
 msgid "Sales Journal"
-msgstr ""
+msgstr "Diário de Vendas"
 
 #. module: point_of_sale
 #: view:pos.session:0
 msgid "Opening Balance"
-msgstr ""
+msgstr "Saldo de Abertura"
 
 #. module: point_of_sale
 #: view:account.bank.statement:0
 #: selection:report.pos.order,state:0
 msgid "Closed"
-msgstr ""
+msgstr "Fechado"
 
 #. module: point_of_sale
 #: field:pos.config,iface_cashdrawer:0
@@ -2448,71 +2514,71 @@ msgstr ""
 #. module: point_of_sale
 #: model:pos.category,name:point_of_sale.tomates
 msgid "Tomatos"
-msgstr ""
+msgstr "Tomates"
 
 #. module: point_of_sale
 #: view:report.pos.order:0
 msgid "POS ordered created by today"
-msgstr ""
+msgstr "Pedidos do PDV gerados hoje"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.coca_zero_2l_product_template
 msgid "Coca-Cola Zero 2L"
-msgstr ""
+msgstr "Coca-Cola Zero 2L"
 
 #. module: point_of_sale
 #: model:pos.category,name:point_of_sale.oranges
 msgid "Oranges"
-msgstr ""
+msgstr "Laranjas"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_pos_all_sales_lines
 msgid "All sales lines"
-msgstr ""
+msgstr "Todas as linhas de venda"
 
 #. module: point_of_sale
 #: model:pos.category,name:point_of_sale.beers
 msgid "Beers"
-msgstr ""
+msgstr "Cervejas"
 
 #. module: point_of_sale
 #: help:pos.config,name:0
 msgid "An internal identification of the point of sale"
-msgstr ""
+msgstr "Uma identificação interna do ponto de venda"
 
 #. module: point_of_sale
 #: view:pos.config:0
 #: selection:pos.config,state:0
 msgid "Active"
-msgstr ""
+msgstr "Ativo"
 
 #. module: point_of_sale
 #: field:pos.session,name:0
 msgid "Session ID"
-msgstr ""
+msgstr "ID da Sessão"
 
 #. module: point_of_sale
 #: view:pos.make.payment:0
 msgid "Pay Order"
-msgstr ""
+msgstr "Pagamento do Pedido"
 
 #. module: point_of_sale
 #: view:pos.session:0
 msgid "Summary by Payment Methods"
-msgstr ""
+msgstr "Resumo por Métodos de Pagamento"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:476
+#: code:addons/point_of_sale/static/src/xml/pos.xml:470
 #, python-format
 msgid "Hardware Status"
-msgstr ""
+msgstr "Situação do Hardware"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:214
-#: code:addons/point_of_sale/static/src/xml/pos.xml:435
-#: code:addons/point_of_sale/static/src/xml/pos.xml:599
+#: code:addons/point_of_sale/static/src/xml/pos.xml:220
+#: code:addons/point_of_sale/static/src/xml/pos.xml:426
+#: code:addons/point_of_sale/static/src/xml/pos.xml:596
 #: report:all.closed.cashbox.of.the.day:0
 #: report:pos.invoice:0
 #: report:pos.lines:0
@@ -2524,24 +2590,24 @@ msgstr "Total:"
 #. module: point_of_sale
 #: field:res.users,ean13:0
 msgid "EAN13"
-msgstr ""
+msgstr "EAN13"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:579
+#: code:addons/point_of_sale/static/src/xml/pos.xml:573
 #, python-format
 msgid "% discount"
-msgstr ""
+msgstr "% desconto"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_report_sales_by_margin_pos
 msgid "Sales by margin"
-msgstr ""
+msgstr "Vendas por margem"
 
 #. module: point_of_sale
 #: view:pos.order:0
 msgid "Statement lines"
-msgstr ""
+msgstr "Linhas do demonstrativo"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.croky_paprika_45g_product_template
@@ -2551,19 +2617,19 @@ msgstr ""
 #. module: point_of_sale
 #: view:pos.order:0
 msgid "Reprint"
-msgstr ""
+msgstr "Reimpressão"
 
 #. module: point_of_sale
 #: field:pos.config,iface_payment_terminal:0
 msgid "Payment Terminal Interface"
-msgstr ""
+msgstr "Interface do Terminal de Pagamento"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:135
+#: code:addons/point_of_sale/static/src/xml/pos.xml:141
 #, python-format
 msgid "Search Products"
-msgstr ""
+msgstr "Procurar Produtos"
 
 #. module: point_of_sale
 #: field:report.transaction.pos,invoice_id:0
@@ -2578,7 +2644,7 @@ msgstr "Subtotal"
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.carotte_product_template
 msgid "Carrots"
-msgstr ""
+msgstr "Cenouras"
 
 #. module: point_of_sale
 #: view:pos.open.statement:0
@@ -2595,7 +2661,7 @@ msgstr "Concluído"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:338
+#: code:addons/point_of_sale/static/src/xml/pos.xml:328
 #: model:ir.actions.report.xml,name:point_of_sale.pos_invoice_report
 #: report:pos.invoice:0
 #: view:pos.order:0
@@ -2606,8 +2672,8 @@ msgstr "Fatura"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:693
-#: code:addons/point_of_sale/static/src/xml/pos.xml:704
+#: code:addons/point_of_sale/static/src/xml/pos.xml:690
+#: code:addons/point_of_sale/static/src/xml/pos.xml:701
 #, python-format
 msgid "shift"
 msgstr ""
@@ -2621,7 +2687,7 @@ msgstr ""
 #: view:account.bank.statement:0
 #: view:pos.session:0
 msgid "Open"
-msgstr ""
+msgstr "Aberto"
 
 #. module: point_of_sale
 #: field:pos.order,name:0
@@ -2631,11 +2697,11 @@ msgstr "Referência da Ordem"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:519
-#: code:addons/point_of_sale/static/src/xml/pos.xml:578
+#: code:addons/point_of_sale/static/src/xml/pos.xml:513
+#: code:addons/point_of_sale/static/src/xml/pos.xml:572
 #, python-format
 msgid "With a"
-msgstr ""
+msgstr "Com um"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.courgette_product_template
@@ -2650,20 +2716,20 @@ msgstr ""
 #. module: point_of_sale
 #: view:pos.session:0
 msgid "Continue Selling"
-msgstr ""
+msgstr "Continuar Vendendo"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:450
+#: code:addons/point_of_sale/static/src/xml/pos.xml:444
 #, python-format
 msgid "Payment Terminal"
-msgstr ""
+msgstr "Terminal de Pagamento"
 
 #. module: point_of_sale
 #: view:account.bank.statement:0
 #: field:pos.session,user_id:0
 msgid "Responsible"
-msgstr ""
+msgstr "Responsável"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.croky_bolognaise_250g_product_template
@@ -2672,14 +2738,14 @@ msgstr ""
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:466
+#: code:addons/point_of_sale/static/src/xml/pos.xml:460
 #, python-format
 msgid "Custom Ean13"
-msgstr ""
+msgstr "Ean13 Personalizado"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:471
+#: code:addons/point_of_sale/static/src/xml/pos.xml:465
 #, python-format
 msgid "1.54€ Lemon"
 msgstr ""
@@ -2687,7 +2753,7 @@ msgstr ""
 #. module: point_of_sale
 #: field:pos.make.payment,payment_name:0
 msgid "Payment Reference"
-msgstr ""
+msgstr "Referencia de Pagamento"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_report_sales_by_user_pos_month
@@ -2702,16 +2768,19 @@ msgstr ""
 #. module: point_of_sale
 #: model:ir.actions.report.xml,name:point_of_sale.pos_payment_report_user
 msgid "Today's Payment By User"
-msgstr ""
+msgstr "Pagamentos de Hoje por Usuário"
 
 #. module: point_of_sale
 #: view:report.sales.by.margin.pos:0
 #: view:report.sales.by.margin.pos.month:0
 msgid "Sales by User Margin"
-msgstr ""
+msgstr "Vendas por Margem de Usuário"
 
 #. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/xml/pos.xml:427
 #: report:pos.invoice:0
+#, python-format
 msgid "Taxes:"
 msgstr "Taxas:"
 
@@ -2723,7 +2792,7 @@ msgstr ""
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_report_pos_order
 msgid "Point of Sale Orders Statistics"
-msgstr ""
+msgstr "Estatísticas de Pedidos do Ponto de Vendas"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_product_product
@@ -2746,11 +2815,13 @@ msgstr ""
 msgid ""
 "You cannot create two active sessions related to the same point of sale!"
 msgstr ""
+"Você não pode criar duas sessões ativas relacionadas com o mesmo ponto de "
+"venda!"
 
 #. module: point_of_sale
 #: field:pos.category,image_small:0
 msgid "Smal-sized image"
-msgstr ""
+msgstr "Imagem pequena"
 
 #. module: point_of_sale
 #: model:ir.actions.report.xml,name:point_of_sale.pos_lines_report
@@ -2761,14 +2832,14 @@ msgstr "Linhas de Vendas"
 #: code:addons/point_of_sale/point_of_sale.py:413
 #, python-format
 msgid "Point of Sale Profit"
-msgstr ""
+msgstr "Lucro do Ponto de Vendas"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:348
+#: code:addons/point_of_sale/static/src/xml/pos.xml:338
 #, python-format
 msgid "Please wait, a cashier is on the way"
-msgstr ""
+msgstr "Por favor aguarde, um caixa está a caminho"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/wizard/pos_session_opening.py:68
@@ -2777,7 +2848,7 @@ msgstr ""
 #: field:pos.order,session_id:0
 #, python-format
 msgid "Session"
-msgstr ""
+msgstr "Sessão"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.chaudfontaine_33cl_product_template
@@ -2793,19 +2864,19 @@ msgstr ""
 #: view:pos.order:0
 #: selection:pos.order,state:0
 msgid "Posted"
-msgstr ""
+msgstr "Lançado"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:227
+#: code:addons/point_of_sale/static/src/xml/pos.xml:229
 #, python-format
 msgid "Paid:"
-msgstr ""
+msgstr "Pago:"
 
 #. module: point_of_sale
 #: report:account.statement:0
 msgid "Statement Name"
-msgstr ""
+msgstr "Nome do Demonstrativo"
 
 #. module: point_of_sale
 #: field:pos.session,cash_register_total_entry_encoding:0
@@ -2816,40 +2887,40 @@ msgstr ""
 #: model:pos.category,name:point_of_sale.pommes_de_terre
 #: model:product.template,name:point_of_sale.pomme_de_terre_product_template
 msgid "Potatoes"
-msgstr ""
+msgstr "Batatas"
 
 #. module: point_of_sale
 #: view:pos.session.opening:0
 msgid "\"."
-msgstr ""
+msgstr "\"."
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_report_pos_payment_report_user
 #: model:ir.model,name:point_of_sale.model_pos_payment_report_user
 msgid "Sales lines by Users"
-msgstr ""
+msgstr "Linhas de Vendas por usuários"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:487
+#: code:addons/point_of_sale/static/src/xml/pos.xml:481
 #, python-format
 msgid "Payment Status"
-msgstr ""
+msgstr "Situação do Pagamento"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.pepsi_2l_product_template
 msgid "Pepsi 2L"
-msgstr ""
+msgstr "Pepsi 2L"
 
 #. module: point_of_sale
 #: model:pos.category,name:point_of_sale.pomme
 msgid "Apples"
-msgstr ""
+msgstr "Maçãs"
 
 #. module: point_of_sale
 #: report:pos.details:0
 msgid "Order"
-msgstr ""
+msgstr "Pedido"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_res_users
@@ -2860,11 +2931,11 @@ msgstr "Usuários"
 #. module: point_of_sale
 #: view:pos.details:0
 msgid "POS Details"
-msgstr ""
+msgstr "Detalhes do PDV"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:468
+#: code:addons/point_of_sale/static/src/xml/pos.xml:462
 #, python-format
 msgid "Client Badge"
 msgstr ""
@@ -2872,17 +2943,17 @@ msgstr ""
 #. module: point_of_sale
 #: report:pos.lines:0
 msgid "Net Total :"
-msgstr ""
+msgstr "Total Líquido :"
 
 #. module: point_of_sale
 #: field:pos.session,cash_journal_id:0
 msgid "Cash Journal"
-msgstr ""
+msgstr "Diário de Caixa"
 
 #. module: point_of_sale
 #: model:res.groups,name:point_of_sale.group_pos_manager
 msgid "Manager"
-msgstr ""
+msgstr "Gerente"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.lays_poivre_sel_oven_150g_product_template
@@ -2893,7 +2964,7 @@ msgstr ""
 #: field:pos.details,date_start:0
 #: field:pos.sale.user,date_start:0
 msgid "Date Start"
-msgstr ""
+msgstr "Data de Início"
 
 #. module: point_of_sale
 #: field:pos.order,amount_total:0
@@ -2907,39 +2978,39 @@ msgstr "Total"
 #. module: point_of_sale
 #: view:pos.sale.user:0
 msgid "Sale By User"
-msgstr ""
+msgstr "Vendas por Usuário"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_pos_open_statement
 msgid "Open Cash Register"
-msgstr ""
+msgstr "Abrir Caixa Registradora"
 
 #. module: point_of_sale
 #: field:account.journal,amount_authorized_diff:0
 msgid "Amount Authorized Difference"
-msgstr ""
+msgstr "Diferença de Valor Autorizado"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:321
+#: code:addons/point_of_sale/static/src/xml/pos.xml:311
 #, python-format
 msgid "Please be patient, help is on the way"
-msgstr ""
+msgstr "Por favor tenha paciência, a ajuda já está a caminho"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_pos_session
 msgid "pos.session"
-msgstr ""
+msgstr "pos.session"
 
 #. module: point_of_sale
 #: help:pos.session,config_id:0
 msgid "The physical point of sale you will use."
-msgstr ""
+msgstr "O Ponto de Venda físico que você vai utilizar."
 
 #. module: point_of_sale
 #: view:pos.order:0
 msgid "Search Sales Order"
-msgstr ""
+msgstr "Procurar Pedido de Venda"
 
 #. module: point_of_sale
 #: field:pos.config,iface_self_checkout:0
@@ -2949,12 +3020,12 @@ msgstr ""
 #. module: point_of_sale
 #: field:account.journal,journal_user:0
 msgid "PoS Payment Method"
-msgstr ""
+msgstr "Método de Pagamento do PdV"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.pepsi_33cl_product_template
 msgid "Pepsi 33cl"
-msgstr ""
+msgstr "Pepsi 33cl"
 
 #. module: point_of_sale
 #: help:pos.order,user_id:0
@@ -2966,14 +3037,14 @@ msgstr ""
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.coca_zero_decaf_33cl_product_template
 msgid "Coca-Cola Zero Decaf 33cl"
-msgstr ""
+msgstr "Coca-Cola Zero Decaf 33cl"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_pos_payment_report
 #: model:ir.model,name:point_of_sale.model_pos_payment_report
 #: view:pos.payment.report:0
 msgid "Payment Report"
-msgstr ""
+msgstr "Relatório de Pagamento"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.fanta_orange_25cl_product_template
@@ -2983,7 +3054,7 @@ msgstr ""
 #. module: point_of_sale
 #: view:pos.confirm:0
 msgid "Generate Journal Entries"
-msgstr ""
+msgstr "Gerar entradas de diário"
 
 #. module: point_of_sale
 #: report:account.statement:0
@@ -3009,7 +3080,7 @@ msgstr "Data da Fatura"
 #. module: point_of_sale
 #: field:pos.box.entries,name:0
 msgid "Reason"
-msgstr ""
+msgstr "Motivo"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.orangina_33cl_product_template
@@ -3019,7 +3090,7 @@ msgstr ""
 #. module: point_of_sale
 #: view:pos.config:0
 msgid "Set to Inactive"
-msgstr ""
+msgstr "Definir como Inativo"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.chimay_bleu_33cl_product_template
@@ -3030,12 +3101,12 @@ msgstr ""
 #: model:ir.actions.act_window,name:point_of_sale.action_account_journal_form
 #: model:ir.ui.menu,name:point_of_sale.menu_action_account_journal_form_open
 msgid "Payment Methods"
-msgstr ""
+msgstr "Formas de pagamento"
 
 #. module: point_of_sale
 #: model:pos.category,name:point_of_sale.chips
 msgid "Chips"
-msgstr ""
+msgstr "Fritas"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.oetker_spinaci_product_template
@@ -3044,30 +3115,30 @@ msgstr ""
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:460
+#: code:addons/point_of_sale/static/src/xml/pos.xml:454
 #, python-format
 msgid "Reset"
-msgstr ""
+msgstr "Redefinir"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:352
+#: code:addons/point_of_sale/static/src/xml/pos.xml:342
 #, python-format
 msgid "Ok"
 msgstr "Ok"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:288
+#: code:addons/point_of_sale/static/src/xml/pos.xml:278
 #, python-format
 msgid "Please scan an item"
-msgstr ""
+msgstr "Por favor scaneie um item"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_pos_box_in
 #: view:pos.session:0
 msgid "Put Money In"
-msgstr ""
+msgstr "Colocar dinheiro em"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.fanta_zero_orange_1,5l_product_template
@@ -3087,8 +3158,8 @@ msgstr ""
 #: code:addons/point_of_sale/point_of_sale.py:712
 #: code:addons/point_of_sale/point_of_sale.py:756
 #: code:addons/point_of_sale/point_of_sale.py:818
-#: code:addons/point_of_sale/point_of_sale.py:898
-#: code:addons/point_of_sale/point_of_sale.py:1003
+#: code:addons/point_of_sale/point_of_sale.py:897
+#: code:addons/point_of_sale/point_of_sale.py:1006
 #: code:addons/point_of_sale/report/pos_invoice.py:46
 #: code:addons/point_of_sale/wizard/pos_box.py:23
 #: code:addons/point_of_sale/wizard/pos_box_entries.py:46
@@ -3098,7 +3169,7 @@ msgstr ""
 #: code:addons/point_of_sale/wizard/pos_box_out.py:91
 #, python-format
 msgid "Error!"
-msgstr ""
+msgstr "Erro!"
 
 #. module: point_of_sale
 #: report:pos.lines:0
@@ -3109,12 +3180,12 @@ msgstr "Núm. de Artigos"
 #: selection:pos.order,state:0
 #: selection:report.pos.order,state:0
 msgid "Cancelled"
-msgstr ""
+msgstr "Cancelado"
 
 #. module: point_of_sale
 #: report:pos.user.product:0
 msgid "Ending Date"
-msgstr ""
+msgstr "Data Final"
 
 #. module: point_of_sale
 #: help:product.product,pos_categ_id:0
@@ -3122,6 +3193,9 @@ msgid ""
 "The Point of Sale Category this products belongs to. Those categories are "
 "used to group similar products and are specific to the Point of Sale."
 msgstr ""
+"A Categoria do Ponto de Venda que este produto pertence. Essas categorias "
+"são usadas para agrupar produtos semelhantes e são específicas para o Ponto "
+"de Venda."
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.orangina_1,5l_product_template
@@ -3131,12 +3205,12 @@ msgstr ""
 #. module: point_of_sale
 #: view:report.pos.order:0
 msgid "Point of Sale Analysis"
-msgstr ""
+msgstr "Análise do Ponto de Vendas"
 
 #. module: point_of_sale
 #: model:pos.category,name:point_of_sale.ice_cream
 msgid "Ice Cream"
-msgstr ""
+msgstr "Sorvete"
 
 #. module: point_of_sale
 #: field:pos.config,shop_id:0
@@ -3150,11 +3224,12 @@ msgstr "Loja"
 #, python-format
 msgid "Please check that income account is set to %s."
 msgstr ""
+"Por favor verifique que a conta de recebimento está definida para %s."
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_account_bank_statement_line
 msgid "Bank Statement Line"
-msgstr ""
+msgstr "Linha do Demonstrativo Bancário"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.belle_vue_kriek_25cl_product_template
@@ -3176,7 +3251,7 @@ msgstr ""
 #: view:report.sales.by.user.pos.month:0
 #: view:report.transaction.pos:0
 msgid "POS Report"
-msgstr ""
+msgstr "Relatório do PDV"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.chaudfontaine_1,5l_product_template
@@ -3184,66 +3259,69 @@ msgid "Chaudfontaine 1.5l"
 msgstr ""
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/point_of_sale.py:1066
+#: code:addons/point_of_sale/point_of_sale.py:1069
 #, python-format
 msgid "Trade Receivables"
-msgstr ""
+msgstr "Contas a Receber"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/point_of_sale.py:529
 #, python-format
 msgid "In order to delete a sale, it must be new or cancelled."
-msgstr ""
+msgstr "Para excluir uma venda, ela precisa ser nova ou ser cancelada."
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:65
+#: code:addons/point_of_sale/static/src/xml/pos.xml:71
 #, python-format
 msgid ""
 "There are pending operations that could not be saved into the database, are "
 "you sure you want to exit?"
 msgstr ""
+"Existem operações pendentes que ainda não foram gravadas, você tem certeza "
+"de que quer sair?"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.coca_regular_50cl_product_template
 msgid "Coca-Cola Regular 50cl"
-msgstr ""
+msgstr "Coca-Cola Regular 50cl"
 
 #. module: point_of_sale
 #: view:pos.confirm:0
 msgid "Generate Entries"
-msgstr ""
+msgstr "Gerar Lançamentos"
 
 #. module: point_of_sale
 #: field:pos.box.entries,product_id:0
 msgid "Operation"
-msgstr ""
+msgstr "Operação"
 
 #. module: point_of_sale
 #: field:pos.order,account_move:0
 msgid "Journal Entry"
-msgstr ""
+msgstr "Lançamento de Diário"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/point_of_sale.py:736
 #, python-format
 msgid "There is no receivable account defined to make payment."
 msgstr ""
+"Não existe nenhuma conta de recebimento configurada para fazer o pagamento."
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.citron_product_template
 msgid "Lemon"
-msgstr ""
+msgstr "Limão"
 
 #. module: point_of_sale
 #: report:pos.invoice:0
 msgid "Cancelled Invoice"
-msgstr ""
+msgstr "Fatura Cancelada"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.coca_zero_50cl_product_template
 msgid "Coca-Cola Zero 50cl"
-msgstr ""
+msgstr "Coca-Cola Zero 50cl"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.oetker_tonno_product_template
@@ -3262,28 +3340,30 @@ msgid ""
 "You cannot confirm all orders of this session, because they have not the "
 "'paid' status"
 msgstr ""
+"Você não pode confirmar todos os pedidos desta sessão, porque eles não estão "
+"com a situação \"Pago\""
 
 #. module: point_of_sale
 #: view:pos.order:0
 #: selection:pos.order,state:0
 #: selection:report.pos.order,state:0
 msgid "New"
-msgstr ""
+msgstr "Novo"
 
 #. module: point_of_sale
 #: view:pos.open.statement:0
 msgid "Do you want to open cash registers?"
-msgstr ""
+msgstr "Você deseja abrir a caixa registradora?"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.perrier_50cl_product_template
 msgid "50cl Perrier"
-msgstr ""
+msgstr "50cl Perrier"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_cash_box_out
 msgid "cash.box.out"
-msgstr ""
+msgstr "cash.box.out"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.fanta_zero_orange_33cl_product_template
@@ -3293,12 +3373,12 @@ msgstr ""
 #. module: point_of_sale
 #: help:product.product,available_in_pos:0
 msgid "Check if you want this product to appear in the Point of Sale"
-msgstr ""
+msgstr "Marque se você deseja que este produto apareça no Ponto de Vendas"
 
 #. module: point_of_sale
 #: view:report.pos.order:0
 msgid "Day of order date"
-msgstr ""
+msgstr "Dia da data do pedido"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.maes_33cl_product_template
@@ -3307,10 +3387,10 @@ msgstr ""
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:454
+#: code:addons/point_of_sale/static/src/xml/pos.xml:448
 #, python-format
 msgid "Reject Payment"
-msgstr ""
+msgstr "Rejeitar o Pagamento"
 
 #. module: point_of_sale
 #: model:ir.ui.menu,name:point_of_sale.menu_point_config_product
@@ -3324,31 +3404,31 @@ msgstr ""
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:521
+#: code:addons/point_of_sale/static/src/xml/pos.xml:515
 #, python-format
 msgid "discount"
-msgstr ""
+msgstr "desconto"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.coca_regular_1l_product_template
 msgid "Coca-Cola Regular 1L"
-msgstr ""
+msgstr "Coca-Cola Regular 1L"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/point_of_sale.py:712
 #, python-format
 msgid "Unable to cancel the picking."
-msgstr ""
+msgstr "Não foi possível cancelar a separação."
 
 #. module: point_of_sale
 #: view:pos.config:0
 msgid "Material Interfaces"
-msgstr ""
+msgstr "Interfaces materiais"
 
 #. module: point_of_sale
 #: model:pos.category,name:point_of_sale.fruits
 msgid "Fresh Fruits"
-msgstr ""
+msgstr "Frutas Frescas"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.lindemans_pecheresse_37,,5cl_product_template
@@ -3358,17 +3438,17 @@ msgstr ""
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_pos_invoice
 msgid "Invoices"
-msgstr ""
+msgstr "Faturas"
 
 #. module: point_of_sale
 #: selection:report.pos.order,month:0
 msgid "December"
-msgstr ""
+msgstr "Dezembro"
 
 #. module: point_of_sale
 #: field:pos.category,image:0
 msgid "Image"
-msgstr ""
+msgstr "Imagem"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.spa_gazeuse_1,5l_product_template
@@ -3380,7 +3460,7 @@ msgstr ""
 #: view:pos.order:0
 #, python-format
 msgid "Return Products"
-msgstr ""
+msgstr "Retornar Produtos"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.jupiler_33cl_product_template
@@ -3389,20 +3469,20 @@ msgstr ""
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:490
+#: code:addons/point_of_sale/static/src/xml/pos.xml:484
 #, python-format
 msgid "Print Invoice"
-msgstr ""
+msgstr "Imprimir Fatura"
 
 #. module: point_of_sale
 #: field:pos.order,pos_reference:0
 msgid "Receipt Ref"
-msgstr ""
+msgstr "Ref do Recibo"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_pos_details
 msgid "Sales Details"
-msgstr ""
+msgstr "Detalhes de Vendas"
 
 #. module: point_of_sale
 #: view:account.journal:0
@@ -3438,7 +3518,7 @@ msgstr "Vendedor"
 #: view:pos.sale.user:0
 #, python-format
 msgid "or"
-msgstr ""
+msgstr "ou"
 
 #. module: point_of_sale
 #: report:pos.details:0
@@ -3452,12 +3532,12 @@ msgstr "Faturado"
 #. module: point_of_sale
 #: view:pos.session.opening:0
 msgid "New Session"
-msgstr ""
+msgstr "Nova Sessão"
 
 #. module: point_of_sale
 #: field:pos.config,group_by:0
 msgid "Group Journal Items"
-msgstr ""
+msgstr "Agrupar Itens de Diário"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,help:point_of_sale.action_pos_pos_form
@@ -3473,13 +3553,22 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Clique para criar um novo pedido.\n"
+"              </p><p>\n"
+"                Use este menu para navegar nos pedidos anteriores. Para "
+"registrar novos\n"
+"                pedidos, é melhor você usar o menu <i>Sua Sessão</i> na\n"
+"                interface touchscreen.\n"
+"              </p>\n"
+"            "
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:456
+#: code:addons/point_of_sale/static/src/xml/pos.xml:450
 #, python-format
 msgid "Electronic Scale"
-msgstr ""
+msgstr "Balança Eletrônica"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.spa_gazeuse_50cl_product_template
@@ -3489,28 +3578,28 @@ msgstr ""
 #. module: point_of_sale
 #: field:res.users,pos_config:0
 msgid "Default Point of Sale"
-msgstr ""
+msgstr "Ponto de Venda Padrão"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/wizard/pos_box.py:24
 #, python-format
 msgid "There is no cash register for this PoS Session"
-msgstr ""
+msgstr "Não tem nenhum caixa registradora para esta sessão do PdV"
 
 #. module: point_of_sale
 #: model:pos.category,name:point_of_sale.special_beers
 msgid "Special Beers"
-msgstr ""
+msgstr "Cervejas Especiais"
 
 #. module: point_of_sale
 #: field:pos.order.line,notice:0
 msgid "Discount Notice"
-msgstr ""
+msgstr "Aviso de Desconto"
 
 #. module: point_of_sale
 #: view:account.bank.statement:0
 msgid "Cash Statement"
-msgstr ""
+msgstr "Demonstrativo do Caixa"
 
 #. module: point_of_sale
 #: report:pos.details_summary:0
@@ -3525,7 +3614,7 @@ msgstr "Pago"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:470
+#: code:addons/point_of_sale/static/src/xml/pos.xml:464
 #, python-format
 msgid "3.141Kg Oranges"
 msgstr ""
@@ -3553,7 +3642,7 @@ msgstr ""
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:469
+#: code:addons/point_of_sale/static/src/xml/pos.xml:463
 #, python-format
 msgid "Soda 33cl"
 msgstr ""
@@ -3581,11 +3670,11 @@ msgstr ""
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:489
+#: code:addons/point_of_sale/static/src/xml/pos.xml:483
 #: view:pos.receipt:0
 #, python-format
 msgid "Print Receipt"
-msgstr ""
+msgstr "Imprimir Recibo"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/point_of_sale.py:417
@@ -3601,7 +3690,7 @@ msgstr "Data de Pagamento"
 #. module: point_of_sale
 #: selection:report.pos.order,month:0
 msgid "January"
-msgstr ""
+msgstr "Janeiro"
 
 #. module: point_of_sale
 #: view:pos.order.line:0
@@ -3621,7 +3710,7 @@ msgstr ""
 #. module: point_of_sale
 #: field:pos.session,details_ids:0
 msgid "Cash Control"
-msgstr ""
+msgstr "Controle de Caixa"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.oetker_vegetale_product_template
@@ -3645,7 +3734,7 @@ msgstr "Reembolso"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:427
+#: code:addons/point_of_sale/static/src/xml/pos.xml:417
 #, python-format
 msgid "Your shopping cart is empty"
 msgstr ""
@@ -3665,7 +3754,7 @@ msgstr ""
 #: report:pos.details:0
 #: report:pos.payment.report.user:0
 msgid "Disc(%)"
-msgstr ""
+msgstr "Desc(%)"
 
 #. module: point_of_sale
 #: view:pos.session.opening:0
@@ -3675,7 +3764,7 @@ msgstr ""
 #. module: point_of_sale
 #: view:pos.order:0
 msgid "General Information"
-msgstr ""
+msgstr "Informações Gerais"
 
 #. module: point_of_sale
 #: view:pos.order.line:0
@@ -3685,7 +3774,7 @@ msgstr "Soma dos Subtotais"
 #. module: point_of_sale
 #: view:pos.session.opening:0
 msgid "Close Session"
-msgstr ""
+msgstr "Fechar Sessão"
 
 #. module: point_of_sale
 #: view:pos.order:0
@@ -3704,11 +3793,11 @@ msgstr ""
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:665
-#: code:addons/point_of_sale/static/src/xml/pos.xml:742
+#: code:addons/point_of_sale/static/src/xml/pos.xml:662
+#: code:addons/point_of_sale/static/src/xml/pos.xml:739
 #, python-format
 msgid "delete"
-msgstr ""
+msgstr "excluir"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.spa_50cl_product_template
@@ -3744,7 +3833,7 @@ msgstr ""
 #. module: point_of_sale
 #: view:pos.session:0
 msgid "Session:"
-msgstr ""
+msgstr "Sessão:"
 
 #. module: point_of_sale
 #: field:pos.config,iface_print_via_proxy:0
@@ -3757,9 +3846,18 @@ msgid "Today's Sales By User"
 msgstr ""
 
 #. module: point_of_sale
+#: help:account.journal,amount_authorized_diff:0
+msgid ""
+"This field depicts the maximum difference allowed between the ending balance "
+"and the theorical cash when closing a session, for non-POS managers. If this "
+"maximum is reached, the user will have an error message at the closing of "
+"his session saying that he needs to contact his manager."
+msgstr ""
+
+#. module: point_of_sale
 #: report:pos.invoice:0
 msgid "Customer Code"
-msgstr ""
+msgstr "Código do Cliente"
 
 #. module: point_of_sale
 #: report:pos.invoice:0
@@ -3771,12 +3869,12 @@ msgstr "Descrição"
 #: model:ir.actions.act_window,name:point_of_sale.act_pos_config_sessions
 #: field:pos.config,session_ids:0
 msgid "Sessions"
-msgstr ""
+msgstr "Sessões"
 
 #. module: point_of_sale
 #: selection:report.pos.order,month:0
 msgid "May"
-msgstr ""
+msgstr "Maio"
 
 #. module: point_of_sale
 #: report:pos.lines:0
@@ -3786,7 +3884,7 @@ msgstr ""
 #. module: point_of_sale
 #: field:pos.order,note:0
 msgid "Internal Notes"
-msgstr ""
+msgstr "Anotações Internas"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.ijsboerke_chocolat_2,5l_product_template
@@ -3833,17 +3931,17 @@ msgstr ""
 #: field:pos.order,partner_id:0
 #: view:report.pos.order:0
 msgid "Customer"
-msgstr ""
+msgstr "Cliente"
 
 #. module: point_of_sale
 #: selection:report.pos.order,month:0
 msgid "February"
-msgstr ""
+msgstr "Fevereiro"
 
 #. module: point_of_sale
 #: view:res.partner:0
 msgid "Edit"
-msgstr ""
+msgstr "Editar"
 
 #. module: point_of_sale
 #: view:pos.session.opening:0
@@ -3868,7 +3966,7 @@ msgstr ""
 #. module: point_of_sale
 #: selection:report.pos.order,month:0
 msgid "April"
-msgstr ""
+msgstr "Abril"
 
 #. module: point_of_sale
 #: view:pos.order:0
@@ -3883,10 +3981,10 @@ msgstr "Reembolso a fornecedor"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:596
+#: code:addons/point_of_sale/static/src/xml/pos.xml:593
 #, python-format
 msgid "Discount:"
-msgstr ""
+msgstr "Desconto:"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_report_sales_by_margin_pos_month
@@ -3910,7 +4008,7 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/xml/pos.xml:41
 #, python-format
 msgid "Mozilla Firefox"
-msgstr ""
+msgstr "Mozilla Firefox"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.raisins_noir_product_template
@@ -3920,19 +4018,19 @@ msgstr ""
 #. module: point_of_sale
 #: field:pos.category,sequence:0
 msgid "Sequence"
-msgstr ""
+msgstr "Seqüência"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/wizard/pos_return.py:316
 #: view:pos.make.payment:0
 #, python-format
 msgid "Make Payment"
-msgstr ""
+msgstr "Realizar Pagamento"
 
 #. module: point_of_sale
 #: constraint:pos.category:0
 msgid "Error ! You cannot create recursive categories."
-msgstr ""
+msgstr "Erro! Você não pode criar categorias recursivas."
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_pos_sales_user_today
@@ -3941,7 +4039,7 @@ msgstr ""
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:361
+#: code:addons/point_of_sale/static/src/xml/pos.xml:351
 #, python-format
 msgid "Sorry, we could not create a session for this user."
 msgstr ""
@@ -3963,19 +4061,19 @@ msgstr ""
 #: view:report.pos.order:0
 #: field:report.pos.order,year:0
 msgid "Year"
-msgstr ""
+msgstr "Ano"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:511
+#: code:addons/point_of_sale/static/src/xml/pos.xml:505
 #, python-format
 msgid "at"
-msgstr ""
+msgstr "em"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_cash_box_in
 msgid "cash.box.in"
-msgstr ""
+msgstr "cash.box.in"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.act_pos_session_orders
@@ -3983,4 +4081,4 @@ msgstr ""
 #: model:ir.ui.menu,name:point_of_sale.menu_point_ofsale
 #: field:pos.session,order_ids:0
 msgid "Orders"
-msgstr ""
+msgstr "Pedidos"

@@ -7,20 +7,20 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-21 17:04+0000\n"
-"PO-Revision-Date: 2013-01-10 02:44+0000\n"
+"POT-Creation-Date: 2013-03-07 08:37+0000\n"
+"PO-Revision-Date: 2013-04-07 12:36+0000\n"
 "Last-Translator: gobi <Unknown>\n"
 "Language-Team: Mongolian <mn@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-01-18 07:01+0000\n"
-"X-Generator: Launchpad (build 16430)\n"
+"X-Launchpad-Export-Date: 2013-04-08 06:20+0000\n"
+"X-Generator: Launchpad (build 16550)\n"
 
 #. module: project
 #: view:project.project:0
 msgid "Email Interface"
-msgstr ""
+msgstr "Имэйл Интерфейс"
 
 #. module: project
 #: help:account.analytic.account,use_tasks:0
@@ -28,6 +28,8 @@ msgid ""
 "If checked, this contract will be available in the project menu and you will "
 "be able to manage tasks or track issues"
 msgstr ""
+"Хэрэв сонгосон бол, энэ гэрээ нь төсөл меню нь харагдах бөгөөд даалгавар, "
+"асуудлыг хөтлөж менежмент хийх боломжтой"
 
 #. module: project
 #: field:project.project,progress_rate:0
@@ -122,7 +124,7 @@ msgstr "Аналитик Данс"
 #. module: project
 #: field:project.config.settings,group_time_work_estimation_tasks:0
 msgid "Manage time estimation on tasks"
-msgstr ""
+msgstr "Даалгаврууд дээрх цагийн таамаглалыг менежмент хийх"
 
 #. module: project
 #: help:project.project,message_summary:0
@@ -131,10 +133,12 @@ msgid ""
 "Holds the Chatter summary (number of messages, ...). This summary is "
 "directly in html format in order to be inserted in kanban views."
 msgstr ""
+"Чаатлагчийн хураангуйг агуулна (зурвасын тоо,...). Энэ хураангуй нь шууд "
+"html форматтай бөгөөд канбан харагдацад шууд орж харагдах боломжтой."
 
 #. module: project
 #: code:addons/project/project.py:432
-#: code:addons/project/project.py:1305
+#: code:addons/project/project.py:1318
 #, python-format
 msgid "Warning!"
 msgstr "Анхааруулга!"
@@ -147,7 +151,7 @@ msgstr "Харилцагч"
 #. module: project
 #: field:project.config.settings,group_manage_delegation_task:0
 msgid "Allow task delegation"
-msgstr ""
+msgstr "Даалгаврыг ацаглах явдлыг зөвшөөрөх"
 
 #. module: project
 #: field:project.task.delegate,planned_hours:0
@@ -174,7 +178,7 @@ msgstr "Бүх хийх ёстой даалгварын хаагдсан даа�
 #. module: project
 #: model:ir.actions.client,name:project.action_client_project_menu
 msgid "Open Project Menu"
-msgstr ""
+msgstr "Төсөл менюг нээх"
 
 #. module: project
 #: model:ir.actions.act_window,help:project.action_project_task_user_tree
@@ -195,7 +199,7 @@ msgstr "Хүчинтэй даалгавруудын нэрс"
 #. module: project
 #: model:res.groups,name:project.group_delegate_task
 msgid "Task Delegation"
-msgstr ""
+msgstr "Даалгавар ацаглах"
 
 #. module: project
 #: field:project.project,planned_hours:0
@@ -207,17 +211,31 @@ msgstr "Төлөвлөсөн хугацаа"
 #. module: project
 #: selection:project.project,privacy_visibility:0
 msgid "Public"
-msgstr ""
+msgstr "Нийтийн"
+
+#. module: project
+#: view:project.task:0
+#: selection:project.task,state:0
+#: selection:project.task.delegate,state:0
+#: selection:project.task.history,state:0
+#: selection:project.task.history.cumulative,state:0
+#: model:project.task.type,name:project.project_tt_deployment
+#: selection:project.task.type,state:0
+#: view:report.project.task.user:0
+#: selection:report.project.task.user,state:0
+#: view:res.partner:0
+msgid "Done"
+msgstr "Дууссан"
 
 #. module: project
 #: model:project.category,name:project.project_category_01
 msgid "Contact's suggestion"
-msgstr ""
+msgstr "Зөвлөх холбогчид"
 
 #. module: project
 #: help:project.config.settings,group_time_work_estimation_tasks:0
 msgid "Allows you to compute Time Estimation on tasks."
-msgstr ""
+msgstr "Даалгавар дээрх цагийн таамаглалыг тооцоолох боломжийг олгоно."
 
 #. module: project
 #: field:report.project.task.user,user_id:0
@@ -228,7 +246,7 @@ msgstr "Оноогдсон"
 #: model:mail.message.subtype,name:project.mt_project_task_closed
 #: model:mail.message.subtype,name:project.mt_task_closed
 msgid "Task Done"
-msgstr ""
+msgstr "Даалгавар Хийгдсэн"
 
 #. module: project
 #: view:project.project:0
@@ -252,7 +270,7 @@ msgstr "Төслийн загвар"
 #. module: project
 #: field:project.project,analytic_account_id:0
 msgid "Contract/Analytic"
-msgstr ""
+msgstr "Гэрээ/Шинжилгээ"
 
 #. module: project
 #: view:project.config.settings:0
@@ -269,17 +287,17 @@ msgstr "Төслийн даалгавар ацаглах"
 #: model:mail.message.subtype,name:project.mt_project_task_started
 #: model:mail.message.subtype,name:project.mt_task_started
 msgid "Task Started"
-msgstr ""
+msgstr "Даалгавар Эхэлсэн"
 
 #. module: project
 #: view:project.task:0
 msgid "Very Important"
-msgstr ""
+msgstr "Маш чухал"
 
 #. module: project
 #: view:project.config.settings:0
 msgid "Support"
-msgstr ""
+msgstr "Дэмжлэг"
 
 #. module: project
 #: view:project.project:0
@@ -289,7 +307,7 @@ msgstr "Гишүүн"
 #. module: project
 #: view:project.task:0
 msgid "Cancel Task"
-msgstr ""
+msgstr "Даалгавар Цуцлах"
 
 #. module: project
 #: help:project.project,members:0
@@ -331,6 +349,11 @@ msgid "June"
 msgstr "6 сар"
 
 #. module: project
+#: view:project.task:0
+msgid "Gantt View"
+msgstr ""
+
+#. module: project
 #: selection:report.project.task.user,month:0
 msgid "October"
 msgstr "10 сар"
@@ -362,12 +385,17 @@ msgstr "Даалгавар дууссан үед дууссан төлөвтэй
 #: field:project.project,message_summary:0
 #: field:project.task,message_summary:0
 msgid "Summary"
+msgstr "Хураангуй"
+
+#. module: project
+#: view:project.task:0
+msgid "Task summary..."
 msgstr ""
 
 #. module: project
 #: view:project.project:0
 msgid "Append this project to another one using analytic accounts hierarchy"
-msgstr ""
+msgstr "Энэ төслийг өөр төсөлд шинжилгээний дансын мөчирийг ашиглан нэмэх"
 
 #. module: project
 #: view:project.task:0
@@ -401,7 +429,7 @@ msgstr "Ацагласан хэрэглэгч заагдсан байх хэрэ
 #. module: project
 #: view:project.project:0
 msgid "Project(s) Manager"
-msgstr ""
+msgstr "Төслийн Менежер"
 
 #. module: project
 #: selection:project.project,state:0
@@ -432,18 +460,18 @@ msgstr "Даалгаврыг дахин үнэлүүлэх"
 #. module: project
 #: view:project.task:0
 msgid "Validate planned time"
-msgstr ""
+msgstr "Төлөвлөсөн цагийг шалгах"
 
 #. module: project
 #: field:project.config.settings,module_pad:0
 msgid "Use integrated collaborative note pads on task"
-msgstr ""
+msgstr "Даалгавар дээр хамтран ажиллах тэмдэглэлийн хавтанг хэрэглэх"
 
 #. module: project
 #: model:mail.message.subtype,name:project.mt_project_task_blocked
 #: model:mail.message.subtype,name:project.mt_task_blocked
 msgid "Task Blocked"
-msgstr ""
+msgstr "Даалгавар Хоригдсон"
 
 #. module: project
 #: model:process.node,note:project.process_node_opentask0
@@ -453,27 +481,32 @@ msgstr "Ажлын цагаа оруулах."
 #. module: project
 #: field:project.project,alias_id:0
 msgid "Alias"
-msgstr ""
+msgstr "Зохиомол нэр"
 
 #. module: project
 #: view:project.task:0
 msgid "oe_kanban_text_red"
-msgstr ""
+msgstr "oe_kanban_text_red"
 
 #. module: project
 #: model:mail.message.subtype,description:project.mt_task_blocked
 msgid "Task blocked"
-msgstr ""
+msgstr "Даалгавар Хоригдсон"
 
 #. module: project
 #: view:project.task:0
 msgid "Delegation"
-msgstr ""
+msgstr "Ацаглах"
 
 #. module: project
 #: field:project.task,create_date:0
 msgid "Create Date"
 msgstr "Үүсэх огноо"
+
+#. module: project
+#: view:project.task:0
+msgid "Add a Description..."
+msgstr ""
 
 #. module: project
 #: view:res.partner:0
@@ -483,7 +516,7 @@ msgstr "Нээлттэй төлөвтэй болгоход"
 #. module: project
 #: view:project.config.settings:0
 msgid "Apply"
-msgstr ""
+msgstr "Ашиглах"
 
 #. module: project
 #: model:ir.model,name:project.model_project_task_delegate
@@ -498,7 +531,7 @@ msgstr "Даалгаврын тайлбарыг хэрэглэгчийн даа�
 #. module: project
 #: view:project.project:0
 msgid "Project Settings"
-msgstr ""
+msgstr "Төслийн тохиргоо"
 
 #. module: project
 #: view:report.project.task.user:0
@@ -589,7 +622,7 @@ msgstr "Даалгавар"
 #. module: project
 #: help:project.config.settings,group_tasks_work_on_tasks:0
 msgid "Allows you to compute work on tasks."
-msgstr ""
+msgstr "Даалгаврууд дээр ажиллах явдлыг зөвшөөрөх"
 
 #. module: project
 #: view:project.project:0
@@ -599,7 +632,7 @@ msgstr "Удирдлага"
 #. module: project
 #: field:project.config.settings,group_tasks_work_on_tasks:0
 msgid "Log work activities on tasks"
-msgstr ""
+msgstr "Даалгаврууд дээрх хийсэн ажлыг хөтлөх"
 
 #. module: project
 #: model:project.task.type,name:project.project_tt_analysis
@@ -620,7 +653,7 @@ msgstr "Даалгаврын Үлгэр Биш"
 #. module: project
 #: field:project.task,planned_hours:0
 msgid "Initially Planned Hours"
-msgstr ""
+msgstr "Анхны төлөвлөсөн цаг"
 
 #. module: project
 #: model:process.transition,note:project.process_transition_delegate0
@@ -648,6 +681,23 @@ msgid ""
 "                </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                  Шинэ төсөл эхлэхдээ дарна.\n"
+"                </p><p>\n"
+"                  Төсөл нь үйл ажиллагааг зохион байгуулахад тусладаг; "
+"даалгавар \n"
+"                  төлөвлөх, асуудал хөтлөх, цагийн хуудсыг нэхэмжлэх, "
+"зэрэгт\n"
+"                  хэрэглэгдэнэ. Дотоод төсөл (R&D, Борлуулалтын процессыг \n"
+"                  сайжруулах), хувийн төсөл (өөрийн хийх зүйлс), захиалгат \n"
+"                  төслүүдийг тодорхойлон үүсгэх боломжтой.\n"
+"                </p><p>\n"
+"                  Төслүүд дээр дотоод хэрэглэгчидтэй хамтран ажиллах "
+"боломжтой \n"
+"                  эсвэл захиалагчид үйл ажиллагааг хуваалцах үүднээс урих \n"
+"                  боломжтой.\n"
+"                </p>\n"
+"            "
 
 #. module: project
 #: view:project.config.settings:0
@@ -674,7 +724,7 @@ msgstr "Шинэ даалгавар"
 #. module: project
 #: field:project.config.settings,module_project_issue_sheet:0
 msgid "Invoice working time on issues"
-msgstr ""
+msgstr "Асуудал дээр ажилласан цагийг нэхэмжлэх"
 
 #. module: project
 #: view:project.project:0
@@ -687,7 +737,7 @@ msgstr "Дуусах огноо"
 #. module: project
 #: model:project.task.type,name:project.project_tt_specification
 msgid "Specification"
-msgstr ""
+msgstr "Дэлгэрэнгүй тодорхойлолт"
 
 #. module: project
 #: model:process.transition,note:project.process_transition_draftopentask0
@@ -734,7 +784,7 @@ msgstr "Үүсгэсэн Огноо"
 #. module: project
 #: view:project.project:0
 msgid "Miscellaneous"
-msgstr ""
+msgstr "Бусад"
 
 #. module: project
 #: view:project.task:0
@@ -752,12 +802,12 @@ msgstr "Draft Open task"
 #. module: project
 #: field:project.project,alias_model:0
 msgid "Alias Model"
-msgstr ""
+msgstr "Хуурмаг Модель"
 
 #. module: project
 #: help:report.project.task.user,closing_days:0
 msgid "Number of Days to close the task"
-msgstr "Даалгаврыг хаах өдрүүдийн тоо"
+msgstr "Даалгаврыг хаах хүртлэх хоногийн тоо"
 
 #. module: project
 #: view:board.board:0
@@ -773,7 +823,7 @@ msgstr "Үе"
 #: view:project.project:0
 #: view:project.task:0
 msgid "Delete"
-msgstr ""
+msgstr "Устга"
 
 #. module: project
 #: view:report.project.task.user:0
@@ -793,7 +843,7 @@ msgstr "Яаралтай"
 #. module: project
 #: model:project.category,name:project.project_category_02
 msgid "Feature request"
-msgstr ""
+msgstr "Боломж Хүсэлт"
 
 #. module: project
 #: view:project.task:0
@@ -814,12 +864,12 @@ msgstr "ШАЛГАЛТ: %s"
 #. module: project
 #: view:project.project:0
 msgid "Close Project"
-msgstr ""
+msgstr "Төслийг Хаах"
 
 #. module: project
 #: field:project.project,tasks:0
 msgid "Task Activities"
-msgstr ""
+msgstr "Даалгаврын үйл ажиллагаанууд"
 
 #. module: project
 #: field:project.project,effective_hours:0
@@ -831,23 +881,25 @@ msgstr "Зарцуулсан хугацаа"
 #: view:project.project:0
 #: view:project.task:0
 msgid "í"
-msgstr ""
+msgstr "í"
 
 #. module: project
 #: field:account.analytic.account,company_uom_id:0
 msgid "unknown"
-msgstr ""
+msgstr "тодорхой бус"
 
 #. module: project
 #: field:project.project,message_is_follower:0
 #: field:project.task,message_is_follower:0
 msgid "Is a Follower"
-msgstr ""
+msgstr "Дагагч эсэх"
 
 #. module: project
-#: field:project.task,work_ids:0
-msgid "Work done"
-msgstr "Ажил дууссан"
+#: field:project.task.history,date:0
+#: field:project.task.history.cumulative,date:0
+#: field:project.task.work,date:0
+msgid "Date"
+msgstr "Огноо"
 
 #. module: project
 #: view:report.project.task.user:0
@@ -857,6 +909,11 @@ msgstr "Өргөтгөсөн хайлт..."
 #. module: project
 #: model:ir.ui.menu,name:project.menu_tasks_config
 msgid "GTD"
+msgstr "АА"
+
+#. module: project
+#: view:project.project:0
+msgid "Project Stages"
 msgstr ""
 
 #. module: project
@@ -868,6 +925,10 @@ msgid ""
 "the case needs to be reviewed then the status is                       set "
 "to 'Pending'."
 msgstr ""
+"Шинэ хэрэг үүсмэгц тэр нь \"Ноорог\" төлөвтэй байна. Хэрэв уг хэрэг "
+"боловсруулагдаж эхлэвэл \"Нээлттэй\" төлөвт орно. Хэрэг дуусмагц "
+"\"Хийгдсэн\" төлөвтэй болох ба хэрэв уг хэрэгийг хянах хэрэгтэй бол "
+"\"Хүлээлдэж буй\" төлөвт орно."
 
 #. module: project
 #: model:ir.model,name:project.model_res_company
@@ -877,14 +938,12 @@ msgstr "Компаниуд"
 #. module: project
 #: field:project.task.type,fold:0
 msgid "Folded by Default"
-msgstr ""
+msgstr "Анхныхаараа эвхэгдсэн байна"
 
 #. module: project
-#: field:project.task.history,date:0
-#: field:project.task.history.cumulative,date:0
-#: field:project.task.work,date:0
-msgid "Date"
-msgstr "Огноо"
+#: field:project.task,work_ids:0
+msgid "Work done"
+msgstr "Ажил дууссан"
 
 #. module: project
 #: help:project.config.settings,module_project_issue:0
@@ -892,6 +951,8 @@ msgid ""
 "Provides management of issues/bugs in projects.\n"
 "                This installs the module project_issue."
 msgstr ""
+"Төсөлд асуудал/алдаа-г менежмент хийх боломжийг олгоно.\n"
+"                Энэ нь project_issue модулийг суулгадаг."
 
 #. module: project
 #: help:project.task,kanban_state:0
@@ -902,10 +963,20 @@ msgid ""
 " * Ready for next stage indicates the task is ready to be pulled to the next "
 "stage"
 msgstr ""
+"Даалгаврын канбан төлөв нь нөлөөлж байгаа тусгай нөхцлийг илтгэнэ:\n"
+" * Нормал гэдэг нь анхны төлөв\n"
+" * Блоклогдсон гэдэг нь даалгаврын явцад өөр ямарваа зүйл нөлөөлж байгааг "
+"илтгэнэ.\n"
+" * Бэлэн гэдэг нь даалгаврыг дараагийн үерүү зөөх боломжтойг илэрхийлнэ."
 
 #. module: project
 #: view:project.task:0
 msgid "10"
+msgstr "10"
+
+#. module: project
+#: view:project.project:0
+msgid "Cancel Project"
 msgstr ""
 
 #. module: project
@@ -923,7 +994,6 @@ msgstr ""
 #: model:process.transition.action,name:project.process_transition_action_draftcanceltask0
 #: model:process.transition.action,name:project.process_transition_action_opencanceltask0
 #: view:project.config.settings:0
-#: view:project.project:0
 #: view:project.task.delegate:0
 #: view:project.task.reevaluate:0
 msgid "Cancel"
@@ -932,7 +1002,7 @@ msgstr "Цуцлах"
 #. module: project
 #: view:project.project:0
 msgid "Other Info"
-msgstr ""
+msgstr "Бусад мэдээлэл"
 
 #. module: project
 #: view:project.task.delegate:0
@@ -960,6 +1030,8 @@ msgid ""
 "Follow this project to automatically track the events associated to tasks "
 "and issues of this project."
 msgstr ""
+"Энэ төслийг дагаж даалгавар болон асуудалтай холбогдох үзэгдлүүдийг "
+"автоматаар хөтлөнө."
 
 #. module: project
 #: view:project.task:0
@@ -969,7 +1041,7 @@ msgstr "Хэрэглэгч"
 #. module: project
 #: model:mail.message.subtype,name:project.mt_task_stage
 msgid "Stage Changed"
-msgstr ""
+msgstr "Үе шат өөрчлөгдсөн"
 
 #. module: project
 #: view:project.project:0
@@ -978,14 +1050,23 @@ msgid "Manager"
 msgstr "Менежер"
 
 #. module: project
-#: selection:project.task,priority:0
-msgid "Important"
-msgstr "Чухал"
+#: model:ir.actions.act_window,help:project.project_category_action
+msgid ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Click to add a new tag.\n"
+"              </p>\n"
+"            "
+msgstr ""
+
+#. module: project
+#: model:ir.ui.menu,name:project.menu_task_types_view
+msgid "Task Stages"
+msgstr "Даалгаврын үеүүд"
 
 #. module: project
 #: field:project.category,name:0
 msgid "Name"
-msgstr ""
+msgstr "Нэр"
 
 #. module: project
 #: selection:report.project.task.user,month:0
@@ -1012,7 +1093,7 @@ msgstr "Ерөнхий"
 #: help:project.project,message_ids:0
 #: help:project.task,message_ids:0
 msgid "Messages and communication history"
-msgstr ""
+msgstr "Зурвас болон харилцсан түүх"
 
 #. module: project
 #: view:project.project:0
@@ -1020,6 +1101,8 @@ msgid ""
 "To invoice or setup invoicing and renewal options, go to the related "
 "contract:"
 msgstr ""
+"Нэхэмжлэх юмуу нэхэмжлэлийг тохируулах болон сонголтуудыг шинэчлэхдээ "
+"холбогдох гэрээ рүү очно:"
 
 #. module: project
 #: field:project.task.delegate,state:0
@@ -1075,7 +1158,7 @@ msgstr "Ацаглагдсан Даалгаврууд"
 #: view:project.task:0
 #: field:project.task,message_unread:0
 msgid "Unread Messages"
-msgstr ""
+msgstr "Уншаагүй Мессеж"
 
 #. module: project
 #: view:project.task:0
@@ -1117,7 +1200,7 @@ msgstr "Зөвхөн дуусах хугацаатай даалгаврууды�
 #. module: project
 #: model:project.category,name:project.project_category_04
 msgid "Usability"
-msgstr ""
+msgstr "Хэрэглэхэд эвтэй байдал"
 
 #. module: project
 #: view:report.project.task.user:0
@@ -1134,7 +1217,7 @@ msgstr "Гүйцэтгэсэн"
 #: code:addons/project/project.py:181
 #, python-format
 msgid "Invalid Action!"
-msgstr ""
+msgstr "Буруу Үйлдэл!"
 
 #. module: project
 #: help:project.task.type,state:0
@@ -1143,6 +1226,9 @@ msgid ""
 "stage. For example, if a stage is related to the status 'Close', when your "
 "document reaches this stage, it is automatically closed."
 msgstr ""
+"Баримтын төлөв нь сонгосон үеээс хамааран автоматаар өөрчлөгдөнө. Жишээлбэл, "
+"хэрэв үе нь 'Хаагдсан'-тай холбоотой бол баримт энэ үед хүрэхдээ автоматаар "
+"хаагдана."
 
 #. module: project
 #: view:project.task:0
@@ -1152,7 +1238,7 @@ msgstr "Нэмэлт мэдээлэл"
 #. module: project
 #: view:project.task:0
 msgid "Edit..."
-msgstr ""
+msgstr "Засах..."
 
 #. module: project
 #: view:report.project.task.user:0
@@ -1163,7 +1249,7 @@ msgstr "# даалгаврын"
 #. module: project
 #: field:project.project,doc_count:0
 msgid "Number of documents attached"
-msgstr ""
+msgstr "Хавсрагдсан баримтын тоо"
 
 #. module: project
 #: field:project.task,priority:0
@@ -1183,6 +1269,9 @@ msgid ""
 "automatically synchronizedwith Tasks (or optionally Issues if the Issue "
 "Tracker module is installed)."
 msgstr ""
+"Энэ төсөлтэй холбогдох дотоод имэйл. Ирэх имэйлүүд нь автоматаар "
+"даалгавартай ижилтгэгдэнэ. (Эсвэл асуудал хөтлөх модуль суусан бол "
+"асуудалтай ижилтгэгдэнэ)"
 
 #. module: project
 #: model:ir.actions.act_window,help:project.open_task_type_form
@@ -1198,6 +1287,16 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Асуудлын сувагт шинэ үе нэмэхдээ дарна.\n"
+"              </p><p>\n"
+"                Төсөлд даалгавар болон асуудлыг үүсэхээс эхлээд дуусах "
+"хүртэлх \n"
+"                алхамуудыг тодорхойлно. Энэ үеүүдийг даалгавар болон "
+"асуудлыг \n"
+"                шийдвэрлэх явцыг хөтлөхөд ашиглана.\n"
+"              </p>\n"
+"            "
 
 #. module: project
 #: help:project.task,total_hours:0
@@ -1215,7 +1314,7 @@ msgstr "%s (хуулбар)"
 #. module: project
 #: model:mail.message.subtype,name:project.mt_project_task_stage
 msgid "Task Stage Changed"
-msgstr ""
+msgstr "Даалгаврын Үе Өөрчлөгдлөө"
 
 #. module: project
 #: view:project.task:0
@@ -1245,14 +1344,20 @@ msgid "Delay Hours"
 msgstr "Саатлын цаг"
 
 #. module: project
+#: view:project.task.type:0
+msgid "Add a description..."
+msgstr ""
+
+#. module: project
 #: view:project.project:0
 msgid "Team"
-msgstr ""
+msgstr "Баг"
 
 #. module: project
 #: help:project.config.settings,time_unit:0
 msgid "This will set the unit of measure used in projects and tasks."
 msgstr ""
+"Төслүүдэд болон даалгавруудад хэрэглэгдэх хэмжих нэгжийг энэ нь тохируулна."
 
 #. module: project
 #: selection:project.task,priority:0
@@ -1306,7 +1411,7 @@ msgstr "Хүчинтэй даалгаварыг нэрлэх"
 #. module: project
 #: field:project.config.settings,time_unit:0
 msgid "Working time unit"
-msgstr ""
+msgstr "Ажлын цагийн нэгж"
 
 #. module: project
 #: view:project.project:0
@@ -1322,7 +1427,7 @@ msgstr "Бага"
 #. module: project
 #: selection:project.project,state:0
 msgid "Closed"
-msgstr ""
+msgstr "Хаагдсан"
 
 #. module: project
 #: view:project.project:0
@@ -1339,9 +1444,12 @@ msgid "Pending"
 msgstr "Шийд хүлээсэн"
 
 #. module: project
+#: model:ir.actions.act_window,name:project.project_category_action
+#: model:ir.ui.menu,name:project.menu_project_category_act
+#: view:project.category:0
 #: field:project.task,categ_ids:0
 msgid "Tags"
-msgstr ""
+msgstr "Пайзууд"
 
 #. module: project
 #: model:ir.model,name:project.model_project_task_history
@@ -1361,7 +1469,7 @@ msgstr ""
 #. module: project
 #: help:project.config.settings,group_manage_delegation_task:0
 msgid "Allows you to delegate tasks to other users."
-msgstr ""
+msgstr "Даалгавруудыг өөр хэрэглэгчид ацаглах боломжийг олгоно."
 
 #. module: project
 #: field:project.project,active:0
@@ -1371,7 +1479,7 @@ msgstr "Идэвхитэй"
 #. module: project
 #: model:ir.model,name:project.model_project_category
 msgid "Category of project's task, issue, ..."
-msgstr ""
+msgstr "Төслийн даалгавар, асуудлын ангилал"
 
 #. module: project
 #: help:project.project,resource_calendar_id:0
@@ -1390,12 +1498,12 @@ msgstr ""
 #. module: project
 #: view:project.config.settings:0
 msgid "Helpdesk & Support"
-msgstr ""
+msgstr "Тусламын төв & Дэмжлэг"
 
 #. module: project
 #: help:report.project.task.user,opening_days:0
 msgid "Number of Days to Open the task"
-msgstr "Даалгаврыг нээх хүртэлх өдөр"
+msgstr "Даалгаврыг нээх хүртэлх хоногийн тоо"
 
 #. module: project
 #: field:project.task,delegated_user_id:0
@@ -1415,21 +1523,12 @@ msgstr ""
 #: code:addons/project/project.py:220
 #, python-format
 msgid "Attachments"
-msgstr ""
+msgstr "Хавсралт"
 
 #. module: project
-#: view:project.task:0
-#: selection:project.task,state:0
-#: selection:project.task.delegate,state:0
-#: selection:project.task.history,state:0
-#: selection:project.task.history.cumulative,state:0
-#: model:project.task.type,name:project.project_tt_deployment
-#: selection:project.task.type,state:0
-#: view:report.project.task.user:0
-#: selection:report.project.task.user,state:0
-#: view:res.partner:0
-msgid "Done"
-msgstr "Дууссан"
+#: view:project.category:0
+msgid "Issue Version"
+msgstr ""
 
 #. module: project
 #: code:addons/project/project.py:182
@@ -1438,6 +1537,8 @@ msgid ""
 "You cannot delete a project containing tasks. You can either delete all the "
 "project's tasks and then delete the project or simply deactivate the project."
 msgstr ""
+"Даалгавартай төслийг устгах боломжгүй. Төслийн бүх даалгаврыг устгаад дараа "
+"нь төслийн устгаж болно эсвэл төслийг идэвхгүй болгож болно."
 
 #. module: project
 #: model:process.transition.action,name:project.process_transition_action_draftopentask0
@@ -1448,7 +1549,7 @@ msgstr "Нээх"
 #. module: project
 #: field:project.project,privacy_visibility:0
 msgid "Privacy / Visibility"
-msgstr ""
+msgstr "Хувийн нууцлал / Ил Үзэгдэх байдал"
 
 #. module: project
 #: view:project.task:0
@@ -1462,7 +1563,7 @@ msgstr "Үлдсэн цаг"
 #. module: project
 #: model:mail.message.subtype,description:project.mt_task_stage
 msgid "Stage changed"
-msgstr ""
+msgstr "Үе шат өөрчлөгдсөн"
 
 #. module: project
 #: constraint:project.task:0
@@ -1495,7 +1596,7 @@ msgstr "Нийт цаг"
 #. module: project
 #: model:ir.model,name:project.model_project_config_settings
 msgid "project.config.settings"
-msgstr ""
+msgstr "project.config.settings"
 
 #. module: project
 #: model:project.task.type,name:project.project_tt_development
@@ -1532,6 +1633,10 @@ msgid ""
 "                (by default, http://ietherpad.com/).\n"
 "                This installs the module pad."
 msgstr ""
+"Шинэ хавтанд ямар Хавтангийн суулгац хэрэглэгдэхийг компанид өөриймшүүлэх "
+"боломжийг олгоно\n"
+"                (анхныхаараа бол, http://ietherpad.com/).\n"
+"                Энэ нь pad модулийг суулгадаг."
 
 #. module: project
 #: field:project.task,id:0
@@ -1559,12 +1664,12 @@ msgstr "Эзэн оноох"
 #. module: project
 #: model:res.groups,name:project.group_time_work_estimation_tasks
 msgid "Time Estimation on Tasks"
-msgstr ""
+msgstr "Даалгавар дээрх цагийн таамаг"
 
 #. module: project
 #: field:project.task,total_hours:0
 msgid "Total"
-msgstr ""
+msgstr "Нийт"
 
 #. module: project
 #: model:process.node,note:project.process_node_taskbydelegate0
@@ -1574,7 +1679,7 @@ msgstr "Өөр хэрэглэгчид өөрийн даалгаврыг ацаг
 #. module: project
 #: model:mail.message.subtype,description:project.mt_task_started
 msgid "Task started"
-msgstr ""
+msgstr "Даалгавар эхэлсэн"
 
 #. module: project
 #: help:project.task.reevaluate,remaining_hours:0
@@ -1587,6 +1692,8 @@ msgid ""
 "This stage is not visible, for example in status bar or kanban view, when "
 "there are no records in that stage to display."
 msgstr ""
+"Тухайн үе шатанд харуулах бичлэг байхгүй үед уг үе шатыг төлвийн мөр юмуу "
+"канбан харагдац дээр харуулахгүй."
 
 #. module: project
 #: view:project.task:0
@@ -1616,7 +1723,7 @@ msgstr "Хүлээгдэж байгаа Төслүүд"
 #. module: project
 #: view:project.task:0
 msgid "Remaining"
-msgstr ""
+msgstr "Үлдсэн"
 
 #. module: project
 #: field:project.task,progress:0
@@ -1641,21 +1748,26 @@ msgid ""
 "                editing and deleting either ways.\n"
 "                This installs the module project_timesheet."
 msgstr ""
+"Энэ нь Төслийн менежментийн дор тодорхойлогдсон \n"
+"                байгаа даалгавруудыг цагийн хуудас руу тодорхой огноо, "
+"хэрэглэгчдээр \n"
+"                зөөх, үүсгэх, засварлах, устгах боломжийг олгодог.\n"
+"                Энэ нь project_timesheet модулийг суулгадаг."
 
 #. module: project
 #: field:project.config.settings,module_project_issue:0
 msgid "Track issues and bugs"
-msgstr ""
+msgstr "Асуудал болон алдаа хөтлөх"
 
 #. module: project
 #: field:project.config.settings,module_project_mrp:0
 msgid "Generate tasks from sale orders"
-msgstr ""
+msgstr "Борлуулалтын захиалгаас даалгавар үүсгэх"
 
 #. module: project
-#: model:ir.ui.menu,name:project.menu_task_types_view
-msgid "Task Stages"
-msgstr ""
+#: selection:project.task,priority:0
+msgid "Important"
+msgstr "Чухал"
 
 #. module: project
 #: model:process.node,note:project.process_node_drafttask0
@@ -1666,7 +1778,7 @@ msgstr "Шаардлагуудыг тодорхойлох болон товол�
 #: field:project.project,message_ids:0
 #: field:project.task,message_ids:0
 msgid "Messages"
-msgstr ""
+msgstr "Зурвасууд"
 
 #. module: project
 #: field:project.project,color:0
@@ -1702,6 +1814,7 @@ msgid "Cancelled"
 msgstr "Цуцалсан"
 
 #. module: project
+#: model:ir.actions.act_window,help:project.act_project_project_2_project_task_all
 #: model:ir.actions.act_window,help:project.action_view_task
 msgid ""
 "<p class=\"oe_view_nocontent_create\">\n"
@@ -1714,6 +1827,15 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Шинэ даалгавар үүсгэхдээ дарна.\n"
+"              </p><p>\n"
+"                OpenERP'-н төслийн менежмент нь даалгавруудын сувгуудыг "
+"менежмент хийж бүх ажил хийгдэх явдлыг оновчтойгоор хийх боломжийг олгодог. "
+"Явцыг хөтлөх, даалгавар дээр хэлэлцэх, баримт хавсаргах гэх ажлыг хийх "
+"боломжтой.\n"
+"              </p>\n"
+"            "
 
 #. module: project
 #: field:project.task,date_end:0
@@ -1724,17 +1846,17 @@ msgstr "Дуусах огноо"
 #. module: project
 #: field:project.task.type,state:0
 msgid "Related Status"
-msgstr ""
+msgstr "Холбогдох төлөв"
 
 #. module: project
 #: view:project.project:0
 msgid "Documents"
-msgstr ""
+msgstr "Баримтууд"
 
 #. module: project
 #: model:mail.message.subtype,description:project.mt_task_new
 msgid "Task created"
-msgstr ""
+msgstr "Даалгавар үүссэн"
 
 #. module: project
 #: view:report.project.task.user:0
@@ -1746,7 +1868,7 @@ msgstr "# Өдрийн"
 #: field:project.project,message_follower_ids:0
 #: field:project.task,message_follower_ids:0
 msgid "Followers"
-msgstr ""
+msgstr "Дагагчид"
 
 #. module: project
 #: selection:project.project,state:0
@@ -1784,7 +1906,7 @@ msgstr "Батлагдсан даалгавар"
 #. module: project
 #: field:project.config.settings,module_project_long_term:0
 msgid "Manage resources planning on gantt view"
-msgstr ""
+msgstr "Гант харагдац дээр нөөцийн төлөвлөлтийг менежмент хийх"
 
 #. module: project
 #: view:project.task:0
@@ -1843,7 +1965,7 @@ msgstr "Төслүүд"
 #. module: project
 #: model:res.groups,name:project.group_tasks_work_on_tasks
 msgid "Task's Work on Tasks"
-msgstr ""
+msgstr "Даалгавар дээрх ажил"
 
 #. module: project
 #: help:project.task.delegate,name:0
@@ -1886,7 +2008,7 @@ msgstr "12 сар"
 #: view:project.task.delegate:0
 #: view:project.task.reevaluate:0
 msgid "or"
-msgstr ""
+msgstr "эсвэл"
 
 #. module: project
 #: help:project.config.settings,module_project_mrp:0
@@ -1899,6 +2021,13 @@ msgid ""
 "'Manufacture'.\n"
 "                This installs the module project_mrp."
 msgstr ""
+"Энэ боломж нь борлуулалтын захиалга дээрх үйлчилгээ төрөлтэй бараанаас "
+"төслийн даалгаврыг автоматаар үүсгэдэг.\n"
+"                Бүр тодруулбал, бараан нь 'Үйлчилгээ' төрөлтэй, \n"
+"                'Захиалуулах' татан авалтын аргатай, 'Үйлдвэрлэх' "
+"нийлүүлэлтийн аргатай \n"
+"                байвал даалгавар үүсгэгддэг.\n"
+"                Энэ нь project_mrp модулийг суулгадаг."
 
 #. module: project
 #: help:project.task.delegate,planned_hours:0
@@ -1908,7 +2037,7 @@ msgstr "Энэ даалгаврыг гүйцээхэд ацагласан хэр
 #. module: project
 #: model:project.category,name:project.project_category_03
 msgid "Experiment"
-msgstr ""
+msgstr "Туршилт"
 
 #. module: project
 #: model:process.transition.action,name:project.process_transition_action_opendrafttask0
@@ -1926,7 +2055,7 @@ msgstr "Канбан Төлөв"
 #. module: project
 #: field:project.config.settings,module_project_timesheet:0
 msgid "Record timesheet lines per tasks"
-msgstr ""
+msgstr "Даалгавруудаар цагийн хуудсыг хөтлөнө"
 
 #. module: project
 #: model:ir.model,name:project.model_report_project_task_user
@@ -1963,12 +2092,13 @@ msgid ""
 "The kind of document created when an email is received on this project's "
 "email alias"
 msgstr ""
+"Энэ төслийн имэйлийн өөр нэр дээр имэйл ирэхэд үүсгэгдэх баримтын төрөл"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.action_config_settings
 #: view:project.config.settings:0
 msgid "Configure Project"
-msgstr ""
+msgstr "Төслийг Тохируулах"
 
 #. module: project
 #: view:project.task.history.cumulative:0
@@ -1991,7 +2121,7 @@ msgid "Reevaluation Task"
 msgstr "Даалгаврыг дахин үнэлэх"
 
 #. module: project
-#: code:addons/project/project.py:1305
+#: code:addons/project/project.py:1318
 #, python-format
 msgid "Please delete the project linked with this account first."
 msgstr "Энэ данстай холбогдсон төслийг эхлээд устгана уу."
@@ -2000,7 +2130,7 @@ msgstr "Энэ данстай холбогдсон төслийг эхлээд �
 #: model:mail.message.subtype,name:project.mt_project_task_new
 #: model:mail.message.subtype,name:project.mt_task_new
 msgid "Task Created"
-msgstr ""
+msgstr "Даалгавар Үүссэн"
 
 #. module: project
 #: view:report.project.task.user:0
@@ -2018,12 +2148,12 @@ msgstr "Би менежер нь байгаа төслүүд"
 #: selection:project.task.history,kanban_state:0
 #: selection:project.task.history.cumulative,kanban_state:0
 msgid "Ready for next stage"
-msgstr ""
+msgstr "Дараагийн үед бэлэн"
 
 #. module: project
 #: field:project.task.type,case_default:0
 msgid "Default for New Projects"
-msgstr ""
+msgstr "Шинэ төсөл зориулсан анхны утга"
 
 #. module: project
 #: view:project.task:0
@@ -2063,11 +2193,14 @@ msgid ""
 "resource allocation.\n"
 "                This installs the module project_long_term."
 msgstr ""
+"Урт хугацааны төслийн менежментийн модуль бөгөөд төлөвлөлт, товлолт, нөөц "
+"хуваарилалтыг хийнэ.\n"
+"                Энэ нь project_long_term модулийг суулгадаг."
 
 #. module: project
 #: model:mail.message.subtype,description:project.mt_task_closed
 msgid "Task closed"
-msgstr ""
+msgstr "Даалгавар Хаагдсан"
 
 #. module: project
 #: selection:report.project.task.user,month:0
@@ -2095,17 +2228,19 @@ msgid ""
 "Provides timesheet support for the issues/bugs management in project.\n"
 "                This installs the module project_issue_sheet."
 msgstr ""
+"Төсөл дахь асуудал/алдааны менежментэд цагийн хуудсыг дэмждэг.\n"
+"                Энэ нь project_issue_sheet модулийг суулгадаг."
 
 #. module: project
 #: selection:project.project,privacy_visibility:0
 msgid "Followers Only"
-msgstr ""
+msgstr "Зөвхөн дагагчид"
 
 #. module: project
 #: view:board.board:0
 #: field:project.project,task_count:0
 msgid "Open Tasks"
-msgstr ""
+msgstr "Нээллттэй даалгаврууд"
 
 #. module: project
 #: field:project.project,priority:0
@@ -2135,7 +2270,6 @@ msgid "Year"
 msgstr "Он"
 
 #. module: project
-#: view:project.project:0
 #: field:project.project,type_ids:0
 #: view:project.task.type:0
 msgid "Tasks Stages"

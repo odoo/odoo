@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-21 17:04+0000\n"
-"PO-Revision-Date: 2012-12-25 20:52+0000\n"
+"POT-Creation-Date: 2013-03-07 08:37+0000\n"
+"PO-Revision-Date: 2013-03-09 08:47+0000\n"
 "Last-Translator: Erwin van der Ploeg (Endian Solutions) <Unknown>\n"
 "Language-Team: Dutch <nl@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-01-18 06:44+0000\n"
-"X-Generator: Launchpad (build 16430)\n"
+"X-Launchpad-Export-Date: 2013-03-28 05:40+0000\n"
+"X-Generator: Launchpad (build 16546)\n"
 
 #. module: hr_evaluation
 #: help:hr_evaluation.plan.phase,send_anonymous_manager:0
@@ -33,6 +33,11 @@ msgstr "Start beoordeling"
 #: view:hr_evaluation.plan:0
 msgid "Group By..."
 msgstr "Groepeer op..."
+
+#. module: hr_evaluation
+#: view:hr_evaluation.evaluation:0
+msgid "Cancel Appraisal"
+msgstr "Beoordeling annuleren"
 
 #. module: hr_evaluation
 #: field:hr.evaluation.interview,request_id:0
@@ -98,7 +103,7 @@ msgstr ""
 #: view:hr.employee:0
 #: model:ir.ui.menu,name:hr_evaluation.menu_open_view_hr_evaluation_tree
 msgid "Appraisals"
-msgstr ""
+msgstr "Beoordelingen"
 
 #. module: hr_evaluation
 #: view:hr_evaluation.plan.phase:0
@@ -162,13 +167,9 @@ msgid "Ending Date"
 msgstr "Einddatum"
 
 #. module: hr_evaluation
-#: help:hr_evaluation.evaluation,note_action:0
-msgid ""
-"If the evaluation does not meet the expectations, you can proposean action "
-"plan"
-msgstr ""
-"Als de beoordeling niet aan de verwachtingen voldoet, kunt u een actieplan "
-"voorstellen."
+#: field:hr_evaluation.plan,month_first:0
+msgid "First Appraisal in (months)"
+msgstr "Eerste beoordeling in (maanden)"
 
 #. module: hr_evaluation
 #: view:hr_evaluation.plan.phase:0
@@ -253,6 +254,11 @@ msgstr "Beoordelingen in bewerking"
 #: model:ir.model,name:hr_evaluation.model_survey_request
 msgid "survey.request"
 msgstr "survey.request"
+
+#. module: hr_evaluation
+#: view:hr.evaluation.interview:0
+msgid "Cancel Survey"
+msgstr "Enquête annuleren"
 
 #. module: hr_evaluation
 #: view:hr_evaluation.plan.phase:0
@@ -402,6 +408,19 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Klik om een nieuw beoordelingsplan aan te maken.\n"
+"              </p><p>\n"
+"                Het is mogelijk om beoordelingsplannen te definieren (bijv.: "
+"eerste gesprek\n"
+"                na 6 maanden, daarna ieder jaar). Vervolgens kan iedere "
+"werknemer worden\n"
+"                gekoppeld aan een beoordelingsplan, zo dat OpenERP "
+"automatisch\n"
+"                gespreksaanvragen kan genereren naar managers en/of "
+"ondergeschikten.\n"
+"              </p>\n"
+"            "
 
 #. module: hr_evaluation
 #: view:hr_evaluation.plan.phase:0
@@ -497,9 +516,13 @@ msgid "Legend"
 msgstr "Bijschrift"
 
 #. module: hr_evaluation
-#: field:hr_evaluation.plan,month_first:0
-msgid "First Appraisal in (months)"
-msgstr "Eerste beoordeling in (maanden)"
+#: help:hr_evaluation.evaluation,note_action:0
+msgid ""
+"If the evaluation does not meet the expectations, you can proposean action "
+"plan"
+msgstr ""
+"Als de beoordeling niet aan de verwachtingen voldoet, kunt u een actieplan "
+"voorstellen."
 
 #. module: hr_evaluation
 #: selection:hr.evaluation.report,state:0
@@ -665,7 +688,7 @@ msgstr "Ondervrager"
 #. module: hr_evaluation
 #: model:ir.model,name:hr_evaluation.model_hr_evaluation_report
 msgid "Evaluations Statistics"
-msgstr "Beoordeling statistieken"
+msgstr "Beoordeling analyse"
 
 #. module: hr_evaluation
 #: view:hr.evaluation.interview:0
@@ -675,7 +698,7 @@ msgstr "Uiterste datum"
 #. module: hr_evaluation
 #: help:hr_evaluation.evaluation,rating:0
 msgid "This is the appreciation on which the evaluation is summarized."
-msgstr ""
+msgstr "Dit is de waardering waarop de evaluatie samengevat."
 
 #. module: hr_evaluation
 #: selection:hr_evaluation.plan.phase,action:0
@@ -712,12 +735,6 @@ msgstr "Beoordelingsplan"
 #: model:ir.model,name:hr_evaluation.model_hr_evaluation_interview
 msgid "Appraisal Interview"
 msgstr "Beoordelingsgesprek"
-
-#. module: hr_evaluation
-#: view:hr.evaluation.interview:0
-#: view:hr_evaluation.evaluation:0
-msgid "Cancel"
-msgstr "Annuleren"
 
 #. module: hr_evaluation
 #: view:hr.evaluation.report:0
@@ -805,6 +822,22 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Klik om een nieuwe beoordeling aan te maken.\n"
+"              </p><p>\n"
+"                Iedere werknemer kan worden toegewezen aan een "
+"beoordelingsplan.\n"
+"                Een beoordelingsplan plan definieert de frequentie en de "
+"manier waarop\n"
+"                u de periodieke werknemerbeoordelingen beheerd. Het is "
+"mogelijk om\n"
+"                stappen te maken en gesprekkente koppelen aan iedere stap. "
+"OpenERP\n"
+"                beheert meerdere soorten van beoordelingen. bottom-up, top-"
+"down, \n"
+"                zelfbeoordeling en eindbeoordelingen door een manager.\n"
+"              </p>\n"
+"            "
 
 #. module: hr_evaluation
 #: view:hr_evaluation.evaluation:0
@@ -849,6 +882,11 @@ msgid "You cannot start evaluation without Appraisal."
 msgstr "Het is niet mogelijk een evaluatie te starten zonder beoordeling."
 
 #. module: hr_evaluation
+#: view:hr_evaluation.evaluation:0
+msgid "Appraisal Summary..."
+msgstr "Samenvatting beoordeling..."
+
+#. module: hr_evaluation
 #: field:hr.evaluation.interview,user_to_review_id:0
 msgid "Employee to Interview"
 msgstr "Werknemer voor gesprek"
@@ -860,6 +898,8 @@ msgid ""
 "You cannot change state, because some appraisal(s) are in waiting answer or "
 "draft state."
 msgstr ""
+"U kunt  de status niet wijzigen, omdat sommige Beoordeling (en) op antwoord "
+"wachten of zich in de concept fase bevinden."
 
 #. module: hr_evaluation
 #: selection:hr.evaluation.report,month:0
@@ -886,6 +926,19 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Klik om een nieuw gesprekaanvraag, gerelateerd aan de "
+"persoonlijke evaluatie aan te maken. \n"
+"              </p><p>\n"
+"                Gesprek aanvragen worden automatisch gegenereerd door "
+"OpenERP\n"
+"                op basis van een werknemer beoordelingsplan. Elke gebruiker "
+"ontvangt\n"
+"                automatische e-mails en verzoeken om regelmatig hun "
+"collega's\n"
+"                te beoordelen.\n"
+"              </p>\n"
+"            "
 
 #. module: hr_evaluation
 #: help:hr.evaluation.interview,message_ids:0
@@ -937,3 +990,11 @@ msgstr "Samenvatting beoordeling"
 #: field:hr.employee,evaluation_date:0
 msgid "Next Appraisal Date"
 msgstr "Volgende beoordelingsdatum"
+
+#. module: hr_evaluation
+#: view:hr_evaluation.evaluation:0
+msgid "Action Plan..."
+msgstr "Actie plan..."
+
+#~ msgid "Cancel"
+#~ msgstr "Annuleren"

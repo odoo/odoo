@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-21 17:05+0000\n"
-"PO-Revision-Date: 2013-01-18 10:41+0000\n"
-"Last-Translator: Rui Franco (multibase.pt) <Unknown>\n"
+"POT-Creation-Date: 2013-03-07 08:38+0000\n"
+"PO-Revision-Date: 2013-03-21 12:39+0000\n"
+"Last-Translator: Mike C. <miguelmclara@gmail.com>\n"
 "Language-Team: Portuguese <pt@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-01-19 06:37+0000\n"
-"X-Generator: Launchpad (build 16430)\n"
+"X-Launchpad-Export-Date: 2013-03-28 05:37+0000\n"
+"X-Generator: Launchpad (build 16546)\n"
 
 #. module: document
 #: field:document.directory,parent_id:0
@@ -23,7 +23,7 @@ msgid "Parent Directory"
 msgstr "Pasta ascendente"
 
 #. module: document
-#: code:addons/document/document.py:336
+#: code:addons/document/document.py:350
 #, python-format
 msgid "Directory name contains special characters!"
 msgstr "O nome da pasta contém carateres especiais!"
@@ -115,8 +115,8 @@ msgid "The name of the field."
 msgstr "O nome do campo."
 
 #. module: document
-#: code:addons/document/document.py:326
-#: code:addons/document/document.py:331
+#: code:addons/document/document.py:340
+#: code:addons/document/document.py:345
 #, python-format
 msgid "Directory name must be unique!"
 msgstr "O nome da pasta tem de ser único"
@@ -202,11 +202,19 @@ msgid ""
 "          </p>\n"
 "        "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"            Clique para criar um documento novo.\n"
+"          </p><p>\n"
+"            O repositório de documentos dá-lhe acesso a todos os anexos, "
+"tais como\n"
+"            faturas, documentos de projetos, email, etc.\n"
+"          </p>\n"
+"        "
 
 #. module: document
-#: code:addons/document/document.py:326
-#: code:addons/document/document.py:331
-#: code:addons/document/document.py:336
+#: code:addons/document/document.py:340
+#: code:addons/document/document.py:345
+#: code:addons/document/document.py:350
 #, python-format
 msgid "ValidateError"
 msgstr "Erro de Validação"
@@ -253,7 +261,7 @@ msgstr "O nome do ficheiro deve ser único, na pasta!"
 
 #. module: document
 #: code:addons/document/document.py:110
-#: code:addons/document/document.py:296
+#: code:addons/document/document.py:310
 #, python-format
 msgid "%s (copy)"
 msgstr "%s (cópia)"
@@ -315,7 +323,7 @@ msgid "Virtual Files"
 msgstr "Ficheiros virtuais"
 
 #. module: document
-#: code:addons/document/document.py:562
+#: code:addons/document/document.py:576
 #, python-format
 msgid "Error at doc write!"
 msgstr "Erro ao escrever o documento"
@@ -365,7 +373,7 @@ msgstr "Ficheiros por utilizador"
 #. module: document
 #: view:ir.attachment:0
 msgid "on"
-msgstr ""
+msgstr "ativo"
 
 #. module: document
 #: field:document.directory,domain:0
@@ -679,7 +687,7 @@ msgstr "ir.attachment"
 #. module: document
 #: view:report.document.user:0
 msgid "Users File"
-msgstr ""
+msgstr "Ficheiro de utilizadores"
 
 #. module: document
 #: model:ir.model,name:document.model_document_configuration
@@ -744,7 +752,7 @@ msgstr ""
 #: code:addons/document/static/src/js/document.js:17
 #, python-format
 msgid "%s (%s)"
-msgstr ""
+msgstr "%s (%s)"
 
 #. module: document
 #: field:document.directory.content,sequence:0

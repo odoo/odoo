@@ -6,15 +6,16 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2012-12-21 17:06+0000\n"
-"PO-Revision-Date: 2012-12-21 23:00+0000\n"
-"Last-Translator: pedrobom <pedrobomlimeira@gmail.com>\n"
+"POT-Creation-Date: 2013-03-07 08:39+0000\n"
+"PO-Revision-Date: 2013-03-16 14:54+0000\n"
+"Last-Translator: Fábio Martinelli - http://zupy.com.br "
+"<webmaster@guaru.net>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-01-18 07:09+0000\n"
-"X-Generator: Launchpad (build 16430)\n"
+"X-Launchpad-Export-Date: 2013-03-28 06:04+0000\n"
+"X-Generator: Launchpad (build 16546)\n"
 
 #. module: stock_location
 #: help:product.pulled.flow,company_id:0
@@ -73,6 +74,11 @@ msgid "Location used by Destination Location to supply"
 msgstr "Local utilizado pelo local de destino para fornecimento"
 
 #. module: stock_location
+#: view:product.product:0
+msgid "When receiving at location X, move to location Y"
+msgstr "Quando receber em um local X, mover para o local Y"
+
+#. module: stock_location
 #: selection:product.pulled.flow,picking_type:0
 #: selection:stock.location.path,picking_type:0
 msgid "Internal"
@@ -85,6 +91,8 @@ msgid ""
 "Pulled procurement coming from original location %s, pull rule %s, via "
 "original Procurement %s (#%d)"
 msgstr ""
+"Aquisição Puxada proveniente da localização original %s, regra de puxamento "
+"%s, via Aquisição original %s (#%d)"
 
 #. module: stock_location
 #: model:ir.model,name:stock_location.model_stock_location
@@ -294,6 +302,8 @@ msgid ""
 "Picking for pulled procurement coming from original location %s, pull rule "
 "%s, via original Procurement %s (#%d)"
 msgstr ""
+"Separação Puxada vindo da localização original %s, regra de puxamento %s, "
+"via Aquisição original %s (#%d)"
 
 #. module: stock_location
 #: field:product.product,path_ids:0
@@ -307,6 +317,8 @@ msgid ""
 "Move for pulled procurement coming from original location %s, pull rule %s, "
 "via original Procurement %s (#%d)"
 msgstr ""
+"Movimento para Aquisição Puxada vindo da localização original %s, regra de "
+"arrasto %s, via Aquisição original %s (#%d)"
 
 #. module: stock_location
 #: view:product.product:0
@@ -340,6 +352,11 @@ msgstr "Movimento Automático"
 #: selection:stock.location.path,picking_type:0
 msgid "Getting Goods"
 msgstr "Obtenção de Mercadorias"
+
+#. module: stock_location
+#: view:product.product:0
+msgid "Fulfill needs on location X from location Y "
+msgstr "Satisfazer as necessidades do local X para o local Y "
 
 #. module: stock_location
 #: view:product.product:0

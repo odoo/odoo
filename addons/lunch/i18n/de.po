@@ -7,16 +7,16 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-21 17:05+0000\n"
-"PO-Revision-Date: 2013-01-07 00:40+0000\n"
+"POT-Creation-Date: 2013-03-07 08:38+0000\n"
+"PO-Revision-Date: 2013-03-21 00:25+0000\n"
 "Last-Translator: Thorsten Vocks (OpenBig.org) <thorsten.vocks@big-"
 "consulting.net>\n"
 "Language-Team: German <de@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-01-18 06:52+0000\n"
-"X-Generator: Launchpad (build 16430)\n"
+"X-Launchpad-Export-Date: 2013-03-28 05:47+0000\n"
+"X-Generator: Launchpad (build 16546)\n"
 
 #. module: lunch
 #: field:lunch.product,category_id:0
@@ -151,7 +151,7 @@ msgstr "Erhalt der Mahlzeiten Lieferung"
 #. module: lunch
 #: view:lunch.cashmove:0
 msgid "cashmove form"
-msgstr ""
+msgstr "Barzahlung Formular"
 
 #. module: lunch
 #: model:ir.actions.act_window,help:lunch.action_lunch_cashmove_form
@@ -201,12 +201,12 @@ msgstr "Storniert"
 #. module: lunch
 #: view:lunch.cashmove:0
 msgid "lunch employee payment"
-msgstr ""
+msgstr "Mitarbeiter Mahlzeiten Bezahlung"
 
 #. module: lunch
 #: view:lunch.alert:0
 msgid "alert tree"
-msgstr ""
+msgstr "Alarm Liste"
 
 #. module: lunch
 #: model:ir.model,name:lunch.model_report_lunch_order_line
@@ -290,7 +290,7 @@ msgstr "Gesamtpreis"
 #. module: lunch
 #: model:ir.model,name:lunch.model_lunch_validation
 msgid "lunch validation for order"
-msgstr ""
+msgstr "Bestätigung des Mittagessen"
 
 #. module: lunch
 #: report:lunch.order.line:0
@@ -525,17 +525,12 @@ msgstr "Storniere Mahlzeit"
 #: model:ir.model,name:lunch.model_lunch_cashmove
 #: view:lunch.cashmove:0
 msgid "lunch cashmove"
-msgstr ""
+msgstr "Lunch Bezahlung"
 
 #. module: lunch
 #: view:lunch.cancel:0
 msgid "Are you sure you want to cancel these meals?"
 msgstr "Sind Sie sicher, dass Sie Ihre Bestellung stornieren möchten ?"
-
-#. module: lunch
-#: view:lunch.cashmove:0
-msgid "My Account"
-msgstr "Mein Konto"
 
 #. module: lunch
 #: selection:report.lunch.order.line,month:0
@@ -579,12 +574,12 @@ msgstr "Mittagessen"
 #. module: lunch
 #: model:ir.model,name:lunch.model_lunch_order_line
 msgid "lunch order line"
-msgstr ""
+msgstr "Mahlzeiten Auftragspositionen"
 
 #. module: lunch
 #: model:ir.model,name:lunch.model_lunch_product
 msgid "lunch product"
-msgstr ""
+msgstr "Mittagessen Produkt"
 
 #. module: lunch
 #: field:lunch.order.line,user_id:0
@@ -686,6 +681,13 @@ msgid "And"
 msgstr "und"
 
 #. module: lunch
+#: view:lunch.alert:0
+msgid "Write the message you want to display during the defined period..."
+msgstr ""
+"Schreiben Sie bitte eine Mitteilung, die während der definierten Perioden "
+"angezeigt werden kann."
+
+#. module: lunch
 #: selection:lunch.order.line,state:0
 msgid "Ordered"
 msgstr "Bestellt"
@@ -755,7 +757,7 @@ msgstr "Administriere Barkasse"
 #. module: lunch
 #: model:ir.model,name:lunch.model_lunch_cancel
 msgid "cancel lunch order"
-msgstr ""
+msgstr "Abbrechen Mahlzeitenbestellung"
 
 #. module: lunch
 #: selection:report.lunch.order.line,month:0
@@ -861,6 +863,11 @@ msgid "Unit Price"
 msgstr "Preis/ME"
 
 #. module: lunch
+#: view:lunch.cashmove:0
+msgid "By User"
+msgstr "Nach Benutzer"
+
+#. module: lunch
 #: field:lunch.order.line,product_id:0
 #: field:lunch.product,name:0
 msgid "Product"
@@ -898,7 +905,7 @@ msgstr "Neuer Auftrag"
 #. module: lunch
 #: view:lunch.cashmove:0
 msgid "cashmove tree"
-msgstr ""
+msgstr "Liste Barzahlúngen"
 
 #. module: lunch
 #: view:lunch.cancel:0
@@ -906,6 +913,11 @@ msgid "Cancel a meal means that we didn't receive it from the supplier."
 msgstr ""
 "Stornierung einer Mahlzeit bedeutet, dass der Anbieter diese Bestellung "
 "nicht liefert."
+
+#. module: lunch
+#: view:lunch.cashmove:0
+msgid "My Account grouped"
+msgstr "Meine zusammengefassten Konten"
 
 #. module: lunch
 #: model:ir.ui.menu,name:lunch.menu_lunch_cashmove
@@ -972,12 +984,12 @@ msgstr "Möchten Sie diese Mahlzeit wirklich bestellen ?"
 #. module: lunch
 #: view:lunch.cancel:0
 msgid "cancel order lines"
-msgstr ""
+msgstr "Abbrechen Auftragszeilen"
 
 #. module: lunch
 #: model:ir.model,name:lunch.model_lunch_product_category
 msgid "lunch product category"
-msgstr ""
+msgstr "Mittagessen Produktkategorie"
 
 #. module: lunch
 #: field:lunch.alert,saturday:0
@@ -1012,9 +1024,12 @@ msgstr "Produkt Suche"
 #: field:lunch.order,total:0
 #: view:lunch.order.line:0
 msgid "Total"
-msgstr ""
+msgstr "Bruttobetrag"
 
 #. module: lunch
 #: model:ir.ui.menu,name:lunch.menu_lunch_order_tree
 msgid "Previous Orders"
-msgstr ""
+msgstr "Vorherige Bestellungen"
+
+#~ msgid "My Account"
+#~ msgstr "Mein Konto"

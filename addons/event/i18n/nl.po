@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-21 17:05+0000\n"
-"PO-Revision-Date: 2012-12-21 23:00+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2013-03-07 08:38+0000\n"
+"PO-Revision-Date: 2013-03-15 18:27+0000\n"
+"Last-Translator: Erwin van der Ploeg (Endian Solutions) <Unknown>\n"
 "Language-Team: Dutch <nl@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-01-18 06:42+0000\n"
-"X-Generator: Launchpad (build 16430)\n"
+"X-Launchpad-Export-Date: 2013-03-28 05:38+0000\n"
+"X-Generator: Launchpad (build 16546)\n"
 
 #. module: event
 #: view:event.event:0
@@ -102,7 +102,7 @@ msgstr "Bedrijf"
 #: field:event.event,email_confirmation_id:0
 #: field:event.type,default_email_event:0
 msgid "Event Confirmation Email"
-msgstr "Evenement bevestign e-mail"
+msgstr "Evenement bevestiging e-mail"
 
 #. module: event
 #: field:event.type,default_registration_max:0
@@ -128,7 +128,7 @@ msgstr "Evenementregistratie"
 #. module: event
 #: model:ir.module.category,description:event.module_category_event_management
 msgid "Helps you manage your Events."
-msgstr "Helpt u ik het beheersen van evenementen."
+msgstr "Helpt u ik het beheren van evenementen."
 
 #. module: event
 #: view:report.event.registration:0
@@ -144,6 +144,11 @@ msgstr "Evenement met inschrijving"
 #: view:event.event:0
 msgid "Confirmed events"
 msgstr "Bevestig evenement"
+
+#. module: event
+#: view:event.event:0
+msgid "ZIP"
+msgstr ""
 
 #. module: event
 #: view:report.event.registration:0
@@ -238,6 +243,11 @@ msgstr "Registratie datum"
 #: view:event.event:0
 msgid "tickets"
 msgstr "tickets"
+
+#. module: event
+#: view:event.event:0
+msgid "Street..."
+msgstr ""
 
 #. module: event
 #: view:res.partner:0
@@ -387,7 +397,7 @@ msgstr "Email"
 #: code:addons/event/event.py:329
 #, python-format
 msgid "New registration confirmed: %s."
-msgstr ""
+msgstr "Nieuwe registratie bevestigd: %s."
 
 #. module: event
 #: view:event.event:0
@@ -490,6 +500,7 @@ msgid "Logs"
 msgstr "Logs"
 
 #. module: event
+#: view:event.event:0
 #: field:event.event,state_id:0
 msgid "State"
 msgstr "Status"
@@ -508,6 +519,7 @@ msgstr "December"
 #: help:event.registration,origin:0
 msgid "Reference of the sales order which created the registration"
 msgstr ""
+"Referentie naar de verkooporder welke deze registratie heeft gemaakt."
 
 #. module: event
 #: field:report.event.registration,draft_state:0
@@ -600,9 +612,10 @@ msgid ""
 msgstr ""
 
 #. module: event
-#: field:event.event,user_id:0
-msgid "Responsible User"
-msgstr "Verantwoordelijke gebruiker"
+#: code:addons/event/event.py:106
+#, python-format
+msgid "Only %d Seats are Available!"
+msgstr "Nog maar %d plaatsen beschikbaar!"
 
 #. module: event
 #: code:addons/event/event.py:100
@@ -848,6 +861,11 @@ msgid "You must wait for the starting day of the event to do this action."
 msgstr ""
 
 #. module: event
+#: field:event.event,user_id:0
+msgid "Responsible User"
+msgstr "Verantwoordelijke gebruiker"
+
+#. module: event
 #: selection:event.event,state:0
 #: selection:report.event.registration,event_state:0
 msgid "Done"
@@ -869,16 +887,15 @@ msgid "Reply-to Email"
 msgstr "Antwoord aan e-mail."
 
 #. module: event
-#: code:addons/event/event.py:106
-#, python-format
-msgid "Only %d Seats are Available!"
+#: view:event.event:0
+msgid "City"
 msgstr ""
 
 #. module: event
 #: model:email.template,subject:event.confirmation_event
 #: model:email.template,subject:event.confirmation_registration
 msgid "Your registration at ${object.event_id.name}"
-msgstr ""
+msgstr "Uw registratie voor ${object.event_id.name}"
 
 #. module: event
 #: view:event.registration:0
@@ -905,7 +922,7 @@ msgstr "Verantwoordelijke"
 #. module: event
 #: view:report.event.registration:0
 msgid "Registration contact"
-msgstr ""
+msgstr "Registratie contract"
 
 #. module: event
 #: view:report.event.registration:0
@@ -917,18 +934,18 @@ msgstr "Spreker"
 #. module: event
 #: view:event.event:0
 msgid "Upcoming events from today"
-msgstr ""
+msgstr "Aankomende evenementen vanaf vandaag"
 
 #. module: event
 #: model:event.event,name:event.event_2
 msgid "Conference on ERP Business"
-msgstr ""
+msgstr "Conferentie over ERP Business"
 
 #. module: event
 #: model:ir.actions.act_window,name:event.act_event_view_registration
 #: model:mail.message.subtype,name:event.mt_event_registration
 msgid "New Registration"
-msgstr ""
+msgstr "Nieuwe registratie"
 
 #. module: event
 #: field:event.event,note:0
@@ -943,7 +960,7 @@ msgstr " # Aantal bevestigde inschrijvingen"
 #. module: event
 #: field:report.event.registration,name_registration:0
 msgid "Participant / Contact Name"
-msgstr ""
+msgstr "Deelnemer / Naam contactpersoon"
 
 #. module: event
 #: selection:report.event.registration,month:0
@@ -958,7 +975,7 @@ msgstr "Inschrijven evenementen"
 #. module: event
 #: view:event.event:0
 msgid "No ticket available."
-msgstr ""
+msgstr "Geen kaarten beschikbaar."
 
 #. module: event
 #: field:event.event,register_max:0
@@ -996,6 +1013,7 @@ msgid "Name"
 msgstr "Naam"
 
 #. module: event
+#: view:event.event:0
 #: field:event.event,country_id:0
 msgid "Country"
 msgstr "Land"
@@ -1050,7 +1068,7 @@ msgstr "ID"
 #. module: event
 #: field:event.type,default_reply_to:0
 msgid "Default Reply-To"
-msgstr ""
+msgstr "Standaard antwoord aan"
 
 #. module: event
 #: view:event.event:0
@@ -1066,12 +1084,12 @@ msgstr "Startdatum evenement"
 #. module: event
 #: view:report.event.registration:0
 msgid "Participant / Contact"
-msgstr ""
+msgstr "Deelnemer / Naam contactpersoon"
 
 #. module: event
 #: view:event.event:0
 msgid "Current Registrations"
-msgstr ""
+msgstr "Huidige registraties"
 
 #. module: event
 #: model:email.template,body_html:event.confirmation_registration

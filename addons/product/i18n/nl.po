@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-21 17:06+0000\n"
-"PO-Revision-Date: 2012-12-22 21:46+0000\n"
+"POT-Creation-Date: 2013-03-07 08:38+0000\n"
+"PO-Revision-Date: 2013-04-09 19:39+0000\n"
 "Last-Translator: Erwin van der Ploeg (Endian Solutions) <Unknown>\n"
 "Language-Team: Dutch <nl@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-01-18 06:59+0000\n"
-"X-Generator: Launchpad (build 16430)\n"
+"X-Launchpad-Export-Date: 2013-04-10 05:54+0000\n"
+"X-Generator: Launchpad (build 16550)\n"
 
 #. module: product
 #: field:product.packaging,rows:0
@@ -25,7 +25,7 @@ msgstr "Aantal lagen"
 #. module: product
 #: help:product.pricelist.item,base:0
 msgid "Base price for computation."
-msgstr ""
+msgstr "Basis prijs voor berekeningen"
 
 #. module: product
 #: help:product.product,seller_qty:0
@@ -91,6 +91,8 @@ msgstr "Naam regel"
 msgid ""
 "Base price to compute the customer price. Sometimes called the catalog price."
 msgstr ""
+"Basisprijs voor het berekenen van de klantprijs. Ook wel catalogusprijs "
+"genoemd."
 
 #. module: product
 #: model:product.template,name:product.product_product_3_product_template
@@ -142,7 +144,7 @@ msgstr "Specifieke naam van deze prijslijstregel."
 #. module: product
 #: field:product.template,uos_coeff:0
 msgid "Unit of Measure -> UOS Coeff"
-msgstr ""
+msgstr "Maateenheid -> Verkoopeenheid Coeff."
 
 #. module: product
 #: field:product.price_list,price_list:0
@@ -245,6 +247,16 @@ msgid ""
 "Otherwise, this includes goods leaving any Stock Location with 'internal' "
 "type."
 msgstr ""
+"Hoeveelheid producten welke gepland staan te leveren.\n"
+"Bij een enkele voorraadlocatie, zijn dit de producten opgeslagen in deze ene "
+"locatie en de onderliggende locaties.\n"
+"Bij een enkel magazijn, zijn dit de producten opgeslagen in de "
+"voorraadlocatie van het magazijn en de onderliggende locaties.\n"
+"Bij een enkele winkel, zijn dit de producten opgeslagen in de "
+"voorraadlocatie van het magazijn van deze winkel en de onderliggende "
+"locaties.\n"
+"In alle andere gevallen zijn dit de producten opgeslagen in iedere "
+"voorraadlocatie van het soort 'intern'"
 
 #. module: product
 #: model:product.template,description_sale:product.product_product_42_product_template
@@ -252,6 +264,8 @@ msgid ""
 "Office Editing Software with word processing, spreadsheets, presentations, "
 "graphics, and databases..."
 msgstr ""
+"Kantoor software, voor verwerken van tekst, spreadsheets, presentaties, "
+"afbeeldingen en databases."
 
 #. module: product
 #: field:product.product,seller_id:0
@@ -273,6 +287,8 @@ msgstr "Verpakking"
 msgid ""
 "If unchecked, it will allow you to hide the product without removing it."
 msgstr ""
+"Indien niet aangevinkt, heeft u de mogelijkheid om dit product te verbergen, "
+"zonder deze te verwijderen."
 
 #. module: product
 #: view:product.product:0
@@ -285,6 +301,11 @@ msgstr "Categorie"
 #: model:product.template,name:product.product_product_25_product_template
 msgid "Laptop E5023"
 msgstr "Laptop E5023"
+
+#. module: product
+#: field:product.price_list,qty1:0
+msgid "Quantity-1"
+msgstr "Hoeveelheid-1"
 
 #. module: product
 #: help:product.packaging,ul_qty:0
@@ -348,6 +369,17 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Klik om een nieuwe verpakking toe te voegen.\n"
+"              </p><p>\n"
+"                De verpakkingsoort bepaald de dementies alsmede de "
+"hoeveelheid\n"
+"                producten per verpakking. Dit zorgt ervoor dat de verkoper "
+"de juiste\n"
+"                hoeveelheid verkoopt op basis van de geselecteerde "
+"verpakking.\n"
+"              </p>\n"
+"            "
 
 #. module: product
 #: field:product.template,product_manager:0
@@ -408,6 +440,8 @@ msgid ""
 "Specify a product if this rule only applies to one product. Keep empty "
 "otherwise."
 msgstr ""
+"Specificeer een product als deze regel van toepassing is op één product. "
+"Laat anders leeg."
 
 #. module: product
 #: model:product.uom.categ,name:product.product_uom_categ_kgm
@@ -427,6 +461,17 @@ msgid ""
 "Otherwise, this includes goods stored in any Stock Location with 'internal' "
 "type."
 msgstr ""
+"Virtuele voorraad (berekend als volgt: hoeveelheid op voorraad - uitgaand + "
+"inkomend)\n"
+"Bij een enkele voorraadlocatie, zijn dit de producten opgeslagen in deze ene "
+"locatie en de onderliggende locaties.\n"
+"Bij een enkel magazijn, zijn dit de producten opgeslagen in de "
+"voorraadlocatie van het magazijn en de onderliggende locaties.\n"
+"Bij een enkele winkel, zijn dit de producten opgeslagen in de "
+"voorraadlocatie van het magazijn van deze winkel en de onderliggende "
+"locaties.\n"
+"In alle andere gevallen zijn dit de producten opgeslagen in iedere "
+"voorraadlocatie van het soort 'intern'."
 
 #. module: product
 #: field:product.packaging,height:0
@@ -441,7 +486,7 @@ msgstr "Verwervingen"
 #. module: product
 #: model:res.groups,name:product.group_mrp_properties
 msgid "Manage Properties of Product"
-msgstr "Beheer eigenschappen van het product"
+msgstr "Beheer eigenschappen van samengesteld product"
 
 #. module: product
 #: help:product.uom,factor:0
@@ -450,6 +495,9 @@ msgid ""
 "Measure for this category:\n"
 "1 * (reference unit) = ratio * (this unit)"
 msgstr ""
+"Hoe veel groter of kleiner deze maateenheid is vergeleken met de referentie "
+"maateenheid voor deze categorie:\n"
+"1 * (referentie eenheid) = ratio * (deze eenheid)"
 
 #. module: product
 #: model:ir.model,name:product.model_pricelist_partnerinfo
@@ -467,9 +515,9 @@ msgid "Quantity-3"
 msgstr "Hoeveelheid-3"
 
 #. module: product
-#: field:product.price_list,qty1:0
-msgid "Quantity-1"
-msgstr "Hoeveelheid-1"
+#: model:res.groups,name:product.group_product_variant
+msgid "Product Variant (not supported)"
+msgstr "Product variant (wordt niet ondersteund)"
 
 #. module: product
 #: field:product.price_list,qty4:0
@@ -524,6 +572,16 @@ msgid ""
 "Otherwise, this includes goods arriving to any Stock Location with "
 "'internal' type."
 msgstr ""
+"Hoeveelheid producten welke gepland staan te ontvangen.\n"
+"Bij een enkele voorraadlocatie, zijn dit de producten opgeslagen in deze ene "
+"locatie en de onderliggende locaties.\n"
+"Bij een enkel magazijn, zijn dit de producten opgeslagen in de "
+"voorraadlocatie van het magazijn en de onderliggende locaties.\n"
+"Bij een enkele winkel, zijn dit de producten opgeslagen in de "
+"voorraadlocatie van het magazijn van deze winkel en de onderliggende "
+"locaties.\n"
+"In alle andere gevallen zijn dit de producten opgeslagen in iedere "
+"voorraadlocatie van het soort 'intern'."
 
 #. module: product
 #: constraint:product.template:0
@@ -612,7 +670,7 @@ msgstr "Bovenliggende"
 #. module: product
 #: help:product.pricelist.item,price_max_margin:0
 msgid "Specify the maximum amount of margin over the base price."
-msgstr ""
+msgstr "Specificeer het maximale marge bedrag over de basisprijs."
 
 #. module: product
 #: constraint:product.pricelist.item:0
@@ -620,6 +678,8 @@ msgid ""
 "Error! You cannot assign the Main Pricelist as Other Pricelist in PriceList "
 "Item!"
 msgstr ""
+"Fout! U kunt de hoofd prijslijst niet toewijzen als andere prijslijst in een "
+"prijslijst item."
 
 #. module: product
 #: view:product.price_list:0
@@ -700,6 +760,10 @@ msgid ""
 "period (usually every year). \n"
 "Average Price: The cost price is recomputed at each incoming shipment."
 msgstr ""
+"Vaste prijs: de kostprijs is vast en word periodiek herberekend (meestal aan "
+"het eind van het jaar). \n"
+"Gemiddelde prijs: de kostprijs wordt bij elke binnenkomst van producten "
+"opnieuw berekend."
 
 #. module: product
 #: field:product.product,qty_available:0
@@ -733,7 +797,7 @@ msgstr "Prijslijst"
 #. module: product
 #: field:product.product,virtual_available:0
 msgid "Forecasted Quantity"
-msgstr "Geprognotiseerde hoeveelheid"
+msgstr "Virtuele voorraad"
 
 #. module: product
 #: view:product.product:0
@@ -776,11 +840,19 @@ msgid "External Hard disk"
 msgstr "Externae Harddisk"
 
 #. module: product
+#: view:product.product:0
+msgid "describe the product characteristics..."
+msgstr "Beschrijf de kenmerken van het product..."
+
+#. module: product
 #: help:product.template,standard_price:0
 msgid ""
 "Cost price of the product used for standard stock valuation in accounting "
 "and used as a base price on purchase orders."
 msgstr ""
+"Kostprijs van het product, welke wordt gebruikt voor de standaard "
+"voorraadwaardering in de boekhouding. de prijs wordt ook gebruikt als "
+"standaard prijs voor inkopen."
 
 #. module: product
 #: field:product.category,child_id:0
@@ -899,6 +971,8 @@ msgid ""
 "Coefficient to convert default Unit of Measure to Unit of Sale\n"
 " uos = uom * coeff"
 msgstr ""
+"Factor bij de conversie van standaard maateenheid naar verkoopeenheid\n"
+" verkoopeenheid = standaard maateenheid * factor"
 
 #. module: product
 #: model:ir.actions.act_window,name:product.product_category_action_form
@@ -954,6 +1028,9 @@ msgid ""
 "Measure in this category:\n"
 "1 * (this unit) = ratio * (reference unit)"
 msgstr ""
+"Hoeveel keer deze maateenheid kleiner is dan de referentie maateenheid in "
+"deze categorie:\n"
+"1 * (deze eenheid) = ratio * (referentie eenheid)"
 
 #. module: product
 #: view:product.template:0
@@ -972,11 +1049,13 @@ msgid ""
 "Specify the minimum quantity that needs to be bought/sold for the rule to "
 "apply."
 msgstr ""
+"Specificeer de minimale hoeveelheid dat moet worden ingekocht/verkocht, "
+"zodat de regel van toepassing is."
 
 #. module: product
 #: help:product.pricelist.version,date_start:0
 msgid "First valid date for the version."
-msgstr ""
+msgstr "Eerste geldige datum voor de versie."
 
 #. module: product
 #: help:product.supplierinfo,delay:0
@@ -1049,6 +1128,22 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Klik om een nieuw product aan te maken.\n"
+"              </p><p>\n"
+"                U moet voor alles dat u inkoopt of verkoopt een product "
+"definiëren.\n"
+"                Producten kunnen grondstoffen zijn, voorraad producten, "
+"verbruiksmateriaal\n"
+"               of diensten. \n"
+"              </p><p>\n"
+"                Het product formulier bevat gedetailleerde informatie over "
+"producten\n"
+"                betreffende inkoop logistiek, verkoopprijs, "
+"productcategorie, \n"
+"                leveranciers en zo verder.\n"
+"              </p>\n"
+"            "
 
 #. module: product
 #: view:product.price_list:0
@@ -1058,7 +1153,7 @@ msgstr "Annuleren"
 #. module: product
 #: model:product.template,description:product.product_product_37_product_template
 msgid "All in one hi-speed printer with fax and scanner."
-msgstr ""
+msgstr "All in one hi-speed printer met fax en scanner."
 
 #. module: product
 #: help:product.supplierinfo,min_qty:0
@@ -1067,6 +1162,9 @@ msgid ""
 "Product Unit of Measure if not empty, in the default unit of measure of the "
 "product otherwise."
 msgstr ""
+"De minimale bestelhoeveelheid bij deze leverancier, uitgedrukt in de "
+"maateenheid van de leverancier indien bekend, anders in de standaard "
+"maateenheid van het product."
 
 #. module: product
 #: view:product.product:0
@@ -1135,7 +1233,6 @@ msgstr "Logistieke eenheden"
 #: field:product.category,name:0
 #: field:product.pricelist.type,name:0
 #: field:product.pricelist.version,name:0
-#: field:product.product,name_template:0
 #: field:product.template,name:0
 #: field:product.ul,name:0
 #: field:product.uom.categ,name:0
@@ -1258,6 +1355,12 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p>\n"
+"                Dit is de lijst van alle producten per categorie.\n"
+"                Selecteer een categorie om de lijst van producten voor\n"
+"                die categorie of onderliggende categorieën te krijgen.\n"
+"              </p>\n"
+"            "
 
 #. module: product
 #: code:addons/product/product.py:361
@@ -1268,6 +1371,9 @@ msgid ""
 "you may deactivate this product from the 'Procurements' tab and create a new "
 "one."
 msgstr ""
+"Nieuwe maateenheid '%s' moet behoren tot dezelfde categorie '%s' als de oude "
+"'%s'. Indien u de maateenheid wilt veranderen, dan kunt u het product de-"
+"activeren op het 'Verwerving & Locaties' tabblad en een nieuwe aanmaken."
 
 #. module: product
 #: model:ir.actions.act_window,name:product.product_normal_action
@@ -1285,6 +1391,8 @@ msgstr "Producten"
 msgid ""
 "Hands free headset for laptop PC with in-line microphone and headphone plug."
 msgstr ""
+"Hands free headset voor laptop met in-line microfoon en microfoon "
+"aansluiting."
 
 #. module: product
 #: help:product.packaging,rows:0
@@ -1294,7 +1402,12 @@ msgstr "Aantal lagen op een pallet of doos"
 #. module: product
 #: help:product.pricelist.item,price_min_margin:0
 msgid "Specify the minimum amount of margin over the base price."
-msgstr ""
+msgstr "Specificeer het minimale marge bedrag over de basisprijs."
+
+#. module: product
+#: field:product.product,name_template:0
+msgid "Template Name"
+msgstr "Sjabloonnaam"
 
 #. module: product
 #: field:product.template,weight_net:0
@@ -1313,6 +1426,8 @@ msgid ""
 "This field holds the image used as image for the product, limited to "
 "1024x1024px."
 msgstr ""
+"Dit veld bevat de afbeelding welke wordt gebruikt voor het product, beperkt "
+"tot 1024x1024px."
 
 #. module: product
 #: help:product.pricelist.item,categ_id:0
@@ -1320,11 +1435,18 @@ msgid ""
 "Specify a product category if this rule only applies to products belonging "
 "to this category or its children categories. Keep empty otherwise."
 msgstr ""
+"Specificeer een productcategorie als deze regel van toepassing is op "
+"producten behorende tot deze categorie. Laat anders leeg."
+
+#. module: product
+#: view:product.product:0
+msgid "This note will be displayed on requests for quotation..."
+msgstr "Deze notitie wordt weergegeven op offerte aanvragen..."
 
 #. module: product
 #: view:product.product:0
 msgid "Inventory"
-msgstr "Voorraadtelling"
+msgstr "Voorraad"
 
 #. module: product
 #: field:product.product,seller_info_id:0
@@ -1340,7 +1462,7 @@ msgstr "%s (kopie)"
 #. module: product
 #: model:product.template,name:product.product_product_2_product_template
 msgid "On Site Assistance"
-msgstr ""
+msgstr "On Site Assistentie"
 
 #. module: product
 #: model:product.template,name:product.product_product_39_product_template
@@ -1438,6 +1560,8 @@ msgid ""
 "This price will be considered as a price for the supplier Unit of Measure if "
 "any or the default Unit of Measure of the product otherwise"
 msgstr ""
+"Deze prijs zal worden beschouwd als de prijs per maateenheid leverancier "
+"indien bekend, anders per standaard maateenheid van het product."
 
 #. module: product
 #: field:product.template,uom_po_id:0
@@ -1452,7 +1576,7 @@ msgstr "Groepeer op..."
 #. module: product
 #: field:product.product,image_medium:0
 msgid "Medium-sized image"
-msgstr ""
+msgstr "Middelgrote afbeelding"
 
 #. module: product
 #: selection:product.ul,type:0
@@ -1494,6 +1618,17 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Klik om een prijslijstversie toe te voegen.\n"
+"              </p><p>\n"
+"                Er kan meer dan één versie van een prijslijst worden "
+"gedefinieerd.\n"
+"                Hier heeft u de mogelijkheid voor het aanmaken en beheren "
+"van\n"
+"                nieuwe versies van een prijslijst. Enkele voorbeelden van\n"
+"                versies: 2012, 2013, zomer promotie, enz.\n"
+"              </p>\n"
+"            "
 
 #. module: product
 #: help:product.template,uom_po_id:0
@@ -1542,11 +1677,13 @@ msgstr "Moederbord A20Z7"
 #: model:product.template,description_sale:product.product_product_1_product_template
 msgid "This type of service include basic monitoring of products."
 msgstr ""
+"Deze vorm van dienstverlening zijn voorzien van standaard controle van de "
+"producten."
 
 #. module: product
 #: help:product.pricelist.version,date_end:0
 msgid "Last valid date for the version."
-msgstr ""
+msgstr "Laatste geldige datum voor versie"
 
 #. module: product
 #: model:product.template,name:product.product_product_19_product_template
@@ -1616,6 +1753,7 @@ msgstr "Productveld"
 #: model:product.template,description:product.product_product_5_product_template
 msgid "Custom computer assembled on order based on customer's requirement."
 msgstr ""
+"Klant computer, gemaakt op bestelling op basis van klant specificaties."
 
 #. module: product
 #: model:ir.actions.act_window,name:product.product_price_type_action
@@ -1647,6 +1785,16 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Klik voor het aanmaken van een nieuwe maateenheid categorie "
+".\n"
+"              </p><p>\n"
+"                Maateenheden in dezelfde categorie, kunnen\n"
+"                naar elkaar worden geconverteerd. Bijvoorbeeld, \n"
+"                in de maateenheid categorie <i>Tijd</i>, heeft u de\n"
+"                volgende maateenheden: Uren, Dagen.\n"
+"              </p>\n"
+"            "
 
 #. module: product
 #: help:pricelist.partnerinfo,min_quantity:0
@@ -1654,6 +1802,9 @@ msgid ""
 "The minimal quantity to trigger this rule, expressed in the supplier Unit of "
 "Measure if any or in the default Unit of Measure of the product otherrwise."
 msgstr ""
+"De minimale hoeveelheid om deze regel te activeren, uitgedrukt in de "
+"maateenheid van de leverancier indien bekend, anders in de standaard "
+"maateenheid van het product."
 
 #. module: product
 #: selection:product.uom,uom_type:0
@@ -1675,6 +1826,8 @@ msgstr "Artikelnummer leverancier"
 msgid ""
 "If unchecked, it will allow you to hide the pricelist without removing it."
 msgstr ""
+"Indien niet aangevinkt, kunt u de prijslijst verbergen, zonder deze te "
+"wissen."
 
 #. module: product
 #: selection:product.ul,type:0
@@ -1742,12 +1895,12 @@ msgstr "Kent de prioriteit toe in de lijst van product leveranciers."
 #. module: product
 #: constraint:product.pricelist.item:0
 msgid "Error! The minimum margin should be lower than the maximum margin."
-msgstr ""
+msgstr "Fout! De minimale marge moet lager zijn dan de maximale marge."
 
 #. module: product
 #: model:res.groups,name:product.group_uos
 msgid "Manage Secondary Unit of Measure"
-msgstr ""
+msgstr "Beheer een tweede maateenheid"
 
 #. module: product
 #: help:product.uom,rounding:0
@@ -1755,6 +1908,8 @@ msgid ""
 "The computed quantity will be a multiple of this value. Use 1.0 for a Unit "
 "of Measure that cannot be further split, such as a piece."
 msgstr ""
+"De berekende Hoeveelheid wordt een veelvoud van deze waarde. Gebruik 1.0 "
+"voor een maateenheid die niet verder kan worden gesplitst, zoals een stuk."
 
 #. module: product
 #: view:product.pricelist.item:0
@@ -1803,12 +1958,17 @@ msgid ""
 "Sepcify a unit of measure here if invoicing is made in another unit of "
 "measure than inventory. Keep empty to use the default unit of measure."
 msgstr ""
+"Specificeer hier een maateenheid als facturatie geschied op een andere "
+"maateenheid dan de voorraad. Laat leeg om de standaard maateenheid te "
+"gebruiken."
 
 #. module: product
 #: code:addons/product/product.py:208
 #, python-format
 msgid "Cannot change the category of existing Unit of Measure '%s'."
 msgstr ""
+"Het is niet mogelijk om de categorie te wijzigen van de bestaande "
+"maateenheid  '%s'."
 
 #. module: product
 #: help:product.packaging,height:0
@@ -1869,7 +2029,7 @@ msgstr "Berichten"
 #. module: product
 #: model:product.uom,name:product.product_uom_unit
 msgid "Unit(s)"
-msgstr "Eenheden"
+msgstr "Stuk(s)"
 
 #. module: product
 #: code:addons/product/product.py:176
@@ -1893,6 +2053,11 @@ msgid "Components"
 msgstr "Componenten"
 
 #. module: product
+#: view:product.product:0
+msgid "e.g. 5901234123457"
+msgstr "Bijv. 5901234123457"
+
+#. module: product
 #: model:ir.model,name:product.model_product_pricelist_type
 #: field:product.pricelist,type:0
 msgid "Pricelist Type"
@@ -1912,6 +2077,7 @@ msgstr "Kleur index"
 #: help:product.template,sale_ok:0
 msgid "Specify if the product can be selected in a sales order line."
 msgstr ""
+"Specificeer of het product kan worden geselecteerd in een verkooporderregel."
 
 #. module: product
 #: view:product.product:0
@@ -1969,11 +2135,27 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Klik voor het aanmaken van een nieuw product.\n"
+"              </p><p>\n"
+"               U dient een product aan te maken van alles wat u inkoopt, dit "
+"kan \n"
+"               een voorraad product, een verbruiksartikel of diensten zijn, "
+"van\n"
+"               onderaannemers\n"
+"              </p><p>\n"
+"                Het product formulier bevat gedetailleerde informatie, "
+"waarmee\n"
+"                u het inkoopproces kan verbeteren: prijzen, logistieke "
+"verwerking,\n"
+"                financiële instellingen, beschikbare leverancier, etc.\n"
+"              </p>\n"
+"            "
 
 #. module: product
 #: model:product.template,description_sale:product.product_product_44_product_template
 msgid "Full featured image editing software."
-msgstr ""
+msgstr "Complete beeldbewerking software"
 
 #. module: product
 #: model:ir.model,name:product.model_product_pricelist_version
@@ -2058,6 +2240,8 @@ msgid ""
 "Specify the fixed amount to add or substract(if negative) to the amount "
 "calculated with the discount."
 msgstr ""
+"Specificeer het vaste bedrag wat moet moet worden opgeteld (of afgetrokken, "
+"indien negatief) bij het bedrag berekend met de  korting."
 
 #. module: product
 #: help:product.product,qty_available:0
@@ -2072,6 +2256,16 @@ msgid ""
 "Otherwise, this includes goods stored in any Stock Location with 'internal' "
 "type."
 msgstr ""
+"Aanwezige voorraad van de producten.\n"
+"Bij een enkele voorraadlocatie, zijn dit de producten opgeslagen in deze ene "
+"locatie en de onderliggende locaties.\n"
+"Bij een enkel magazijn, zijn dit de producten opgeslagen in de "
+"voorraadlocatie van het magazijn en de onderliggende locaties.\n"
+"Bij een enkele winkel, zijn dit de producten opgeslagen in de "
+"voorraadlocatie van het magazijn van deze winkel en de onderliggende "
+"locaties.\n"
+"In alle andere gevallen zijn dit de producten opgeslagen in iedere "
+"voorraadlocatie van het soort 'intern'."
 
 #. module: product
 #: help:product.template,type:0
@@ -2079,6 +2273,8 @@ msgid ""
 "Consumable: Will not imply stock management for this product. \n"
 "Stockable product: Will imply stock management for this product."
 msgstr ""
+"Verbruiksartikel: Van dit product wordt geen voorraadbeheer gedaan.\n"
+"Voorraadartikel: Van dit product wordt voorraadbeheer uitgevoerd."
 
 #. module: product
 #: help:product.pricelist.type,key:0
@@ -2100,6 +2296,16 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Klik voor het aanmaken van een nieuw product.\n"
+"              </p><p>\n"
+"               U dient een product aan te maken van alles wat u verkoopt, "
+"dit kan \n"
+"               een voorraad product, een verbruiksartikel of diensten zijn, "
+"van\n"
+"               onderaannemers\n"
+"              </p>\n"
+"            "
 
 #. module: product
 #: view:product.product:0
@@ -2117,6 +2323,9 @@ msgid ""
 "A category of the view type is a virtual category that can be used as the "
 "parent of another category to create a hierarchical structure."
 msgstr ""
+"Een categorie van het type 'weergave' is een virtuele categorie, wat kan "
+"worden gebruikt als een bovenliggende categorie, om zo een hiërarchie "
+"structuur te maken"
 
 #. module: product
 #: selection:product.ul,type:0
@@ -2129,6 +2338,8 @@ msgid ""
 "Specify a template if this rule only applies to one product template. Keep "
 "empty otherwise."
 msgstr ""
+"Specificeer een sjabloon als deze regel van toepassing is op één product "
+"sjabloon. Laat anders leeg."
 
 #. module: product
 #: model:product.template,description:product.product_product_2_product_template
@@ -2136,6 +2347,8 @@ msgid ""
 "This type of service include assistance for security questions, system "
 "configuration requirements, implementation or special needs."
 msgstr ""
+"Deze vorm van dienstverlening bevat hulp voor beveiliging vragen, "
+"systeemconfiguratie en de uitvoering van speciale behoeften."
 
 #. module: product
 #: field:product.product,image:0
@@ -2242,6 +2455,25 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Klik voor het aanmaken van een prijslijst\n"
+"              </p><p>\n"
+"                Een prijslijst bevat regels die worden gebruikt bij het "
+"berekenen\n"
+"                van de inkoopprijs. De standaard prijslijst heeft maar één "
+"regel; gebruik\n"
+"                de kostprijs zoals gedefinieerd bij het product. Indien u "
+"maar 1 leverancier\n"
+"                heeft hoeft u zich geen zorgen te maken over inkoop "
+"prijslijsten.\n"
+"              </p><p>\n"
+"                Maar het is ook mogelijk om complexe prijslijsten van uw "
+"leverancier\n"
+"                te importeren, welke bijvoorbeeld afhankelijk zijn van de "
+"bestelde hoeveelheid,\n"
+"                of de huidige acties.\n"
+"              </p>\n"
+"            "
 
 #. module: product
 #: selection:product.template,mes_type:0
@@ -2276,7 +2508,7 @@ msgstr "Het gewicht van een volledig pakket, pallet of doos."
 #. module: product
 #: view:product.uom:0
 msgid "e.g: 1 * (this unit) = ratio * (reference unit)"
-msgstr ""
+msgstr "Voorbeeld: 1 * (deze eenheid) = ratio * (referentie eenheid)"
 
 #. module: product
 #: model:product.template,description:product.product_product_25_product_template
@@ -2305,6 +2537,11 @@ msgid ""
 "Average delay in days to produce this product. In the case of multi-level "
 "BOM, the manufacturing lead times of the components will be added."
 msgstr ""
+"Dit si de gemiddelde vertraging in dagen om dit product te produceren. Dit "
+"geldt alleen voor de productieorder en, als het een materiaallijst is met "
+"meerdere niveaus, is het alleen voor het niveau van dit product. "
+"Verschillende doorlooptijden worden opgeteld voor alle niveaus en "
+"inkooporders."
 
 #. module: product
 #: model:product.template,name:product.product_assembly_product_template
@@ -2327,6 +2564,14 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Klik voor het toevoegen van een maateenheid.\n"
+"              </p><p>\n"
+"                U dient een conversie ratio te definiëren tussen de "
+"verschillende\n"
+"                maateenheden in dezelfde categorie.\n"
+"              </p>\n"
+"            "
 
 #. module: product
 #: model:product.template,name:product.product_product_11_product_template
@@ -2380,6 +2625,9 @@ msgid ""
 "image, with aspect ratio preserved. Use this field anywhere a small image is "
 "required."
 msgstr ""
+"Kleine afbeelding van het product. de afbeelding wordt automatisch verkleint "
+"naar 64x64px, met behoud van de verhoudingen. Gebruik dit veld, waar een "
+"kleine afbeelding benodigd is."
 
 #. module: product
 #: model:product.template,name:product.product_product_40_product_template
@@ -2398,7 +2646,11 @@ msgstr "Maateenheid leverancier"
 
 #. module: product
 #: view:product.product:0
-#: model:res.groups,name:product.group_product_variant
+msgid "note to be displayed on quotations..."
+msgstr "Opmerkingen welke wordt weergegeven op iedere offerte..."
+
+#. module: product
+#: view:product.product:0
 msgid "Product Variant"
 msgstr "Productvariant"
 
@@ -2434,6 +2686,21 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Klik voor het aanmaken van een prijlijst.\n"
+"              </p><p>\n"
+"                Een prijslijst bevat regels voor de berekening van de\n"
+"                verkoopprijs van producten. \n"
+"              </p><p>\n"
+"                Prijslijsten hebben verschillende versies (2012, 2013, "
+"acties van\n"
+"                februari 2013, enz.) en elke versie heeft een aantal regels. "
+"\n"
+"                Voorbeeld: de klant prijs van een product categorie wordt "
+"gebaseerd\n"
+"                op de leverancier prijs vermenigvuldigd met 1,80.\n"
+"              </p>\n"
+"            "
 
 #. module: product
 #: model:ir.model,name:product.model_product_template
@@ -2458,7 +2725,7 @@ msgstr "Productcategorie"
 #. module: product
 #: model:product.template,description:product.product_product_19_product_template
 msgid "On demand hard-disk having capacity based on requirement."
-msgstr ""
+msgstr "Speciale harddisk. Capaciteit op basis van eisen."
 
 #. module: product
 #: selection:product.template,state:0
@@ -2510,6 +2777,8 @@ msgid ""
 "Conversion between Units of Measure can only occur if they belong to the "
 "same category. The conversion will be made based on the ratios."
 msgstr ""
+"Conversie tussen maateenheden kan alleen plaatsvinden als deze behoren tot "
+"dezelfde categorie. De conversie wordt gemaakt op basis van ratio's."
 
 #. module: product
 #: constraint:product.category:0
@@ -2523,16 +2792,20 @@ msgid ""
 "128x128px image, with aspect ratio preserved, only when the image exceeds "
 "one of those sizes. Use this field in form views or some kanban views."
 msgstr ""
+"Middelgrote afbeelding van het product. de afbeelding wordt automatisch "
+"verkleint naar 128x128px, met behoud van de verhoudingen. Gebruik dit veld "
+"in formuleren of kanban weergaven."
 
 #. module: product
 #: view:product.uom:0
 msgid "e.g: 1 * (reference unit) = ratio * (this unit)"
-msgstr ""
+msgstr "Voorbeeld: 1 * (referentie eenheid) = ratio * (deze eenheid)"
 
 #. module: product
 #: help:product.supplierinfo,qty:0
 msgid "This is a quantity which is converted into Default Unit of Measure."
 msgstr ""
+"Deze hoeveelheid zal worden geconverteerd naar de standaard maateenheid."
 
 #. module: product
 #: help:product.template,volume:0

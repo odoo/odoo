@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-21 17:04+0000\n"
+"POT-Creation-Date: 2013-03-07 08:37+0000\n"
 "PO-Revision-Date: 2012-12-21 23:00+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Japanese <ja@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-01-18 07:02+0000\n"
-"X-Generator: Launchpad (build 16430)\n"
+"X-Launchpad-Export-Date: 2013-03-28 05:57+0000\n"
+"X-Generator: Launchpad (build 16546)\n"
 
 #. module: project_issue
 #: model:project.category,name:project_issue.project_issue_category_03
@@ -114,7 +114,7 @@ msgid "Days to Open"
 msgstr "開始日"
 
 #. module: project_issue
-#: code:addons/project_issue/project_issue.py:465
+#: code:addons/project_issue/project_issue.py:473
 #, python-format
 msgid ""
 "You cannot escalate this issue.\n"
@@ -251,15 +251,10 @@ msgid "Extra Info"
 msgstr "追加情報"
 
 #. module: project_issue
-#: model:ir.actions.act_window,help:project_issue.action_project_issue_report
-msgid ""
-"This report on the project issues allows you to analyse the quality of your "
-"support or after-sales services. You can track the issues per age. You can "
-"analyse the time required to open or close an issue, the number of email to "
-"exchange and the time spent on average by issues."
+#: code:addons/project_issue/project_issue.py:473
+#, python-format
+msgid "Warning!"
 msgstr ""
-"プロジェクトの問題に関するこのレポートは、あなたのサポートやアフターサービスの品質を分析することができます。年齢ごとに問題を追跡可能です。問題を開くまたは"
-"閉じるために要した時間、問題ごとに交換したEメールの数や消費時間の平均を分析できます。"
 
 #. module: project_issue
 #: view:project.issue:0
@@ -272,6 +267,12 @@ msgid "Responsible"
 msgstr "担当"
 
 #. module: project_issue
+#: model:mail.message.subtype,name:project_issue.mt_issue_blocked
+#: model:mail.message.subtype,name:project_issue.mt_project_issue_blocked
+msgid "Issue Blocked"
+msgstr ""
+
+#. module: project_issue
 #: view:project.issue:0
 msgid "Statistics"
 msgstr "統計"
@@ -282,7 +283,7 @@ msgid "Kanban State"
 msgstr ""
 
 #. module: project_issue
-#: code:addons/project_issue/project_issue.py:360
+#: code:addons/project_issue/project_issue.py:368
 #, python-format
 msgid "Project issue <b>converted</b> to task."
 msgstr ""
@@ -316,9 +317,9 @@ msgid "New"
 msgstr "新規"
 
 #. module: project_issue
-#: model:ir.actions.act_window,name:project_issue.project_issue_categ_action
-msgid "Issue Categories"
-msgstr "問題分類"
+#: view:project.project:0
+msgid "{'invisible': [('use_tasks', '=', False),('use_issues','=',False)]}"
+msgstr ""
 
 #. module: project_issue
 #: field:project.issue,email_from:0
@@ -338,7 +339,7 @@ msgid "Lowest"
 msgstr "最低"
 
 #. module: project_issue
-#: code:addons/project_issue/project_issue.py:382
+#: code:addons/project_issue/project_issue.py:390
 #, python-format
 msgid "%s (copy)"
 msgstr ""
@@ -389,9 +390,15 @@ msgid "July"
 msgstr "7月"
 
 #. module: project_issue
-#: model:ir.ui.menu,name:project_issue.menu_project_issue_category_act
-msgid "Categories"
-msgstr "分類"
+#: model:ir.actions.act_window,help:project_issue.action_project_issue_report
+msgid ""
+"This report on the project issues allows you to analyse the quality of your "
+"support or after-sales services. You can track the issues per age. You can "
+"analyse the time required to open or close an issue, the number of email to "
+"exchange and the time spent on average by issues."
+msgstr ""
+"プロジェクトの問題に関するこのレポートは、あなたのサポートやアフターサービスの品質を分析することができます。年齢ごとに問題を追跡可能です。問題を開くまたは"
+"閉じるために要した時間、問題ごとに交換したEメールの数や消費時間の平均を分析できます。"
 
 #. module: project_issue
 #: view:project.issue:0
@@ -409,7 +416,7 @@ msgid "Issues Analysis"
 msgstr "問題分析"
 
 #. module: project_issue
-#: code:addons/project_issue/project_issue.py:485
+#: code:addons/project_issue/project_issue.py:507
 #, python-format
 msgid "No Subject"
 msgstr ""
@@ -433,7 +440,7 @@ msgid "Delete"
 msgstr ""
 
 #. module: project_issue
-#: code:addons/project_issue/project_issue.py:365
+#: code:addons/project_issue/project_issue.py:373
 #, python-format
 msgid "Tasks"
 msgstr "タスク"
@@ -472,11 +479,6 @@ msgstr ""
 #: view:project.project:0
 msgid "creates"
 msgstr ""
-
-#. module: project_issue
-#: model:crm.case.categ,name:project_issue.feature_request_categ
-msgid "Feature Requests"
-msgstr "機能要求"
 
 #. module: project_issue
 #: field:project.issue,write_date:0
@@ -526,11 +528,6 @@ msgid ""
 "outbound emails for this record before being sent. Separate multiple email "
 "addresses with a comma"
 msgstr "これらのEメールアドレスは送受信するEメールの CC 欄に追加されます。複数のEメールアドレスの間をコンマで区切って下さい。"
-
-#. module: project_issue
-#: model:crm.case.categ,name:project_issue.bug_categ
-msgid "Maintenance"
-msgstr "メンテナンス"
 
 #. module: project_issue
 #: selection:project.issue.report,state:0
@@ -586,11 +583,6 @@ msgid "Normal"
 msgstr "通常"
 
 #. module: project_issue
-#: field:project.project,issue_count:0
-msgid "unknown"
-msgstr ""
-
-#. module: project_issue
 #: view:project.issue:0
 msgid "Category:"
 msgstr ""
@@ -642,9 +634,9 @@ msgid "November"
 msgstr "11月"
 
 #. module: project_issue
-#: code:addons/project_issue/project_issue.py:465
+#: code:addons/project_issue/project_issue.py:492
 #, python-format
-msgid "Warning!"
+msgid "Customer Email"
 msgstr ""
 
 #. module: project_issue
@@ -653,9 +645,9 @@ msgid "Search"
 msgstr "検索"
 
 #. module: project_issue
-#: selection:project.issue.report,month:0
-msgid "October"
-msgstr "10月"
+#: view:project.issue:0
+msgid "Creation Month"
+msgstr "作成月"
 
 #. module: project_issue
 #: help:project.issue,days_since_creation:0
@@ -720,11 +712,6 @@ msgid "Version Number"
 msgstr "バージョン番号"
 
 #. module: project_issue
-#: view:project.issue:0
-msgid "Cancel"
-msgstr "キャンセル"
-
-#. module: project_issue
 #: selection:project.issue.report,state:0
 msgid "Open"
 msgstr "開く"
@@ -760,8 +747,13 @@ msgstr "プロジェクトの問題"
 
 #. module: project_issue
 #: view:project.issue:0
-msgid "Creation Month"
-msgstr "作成月"
+msgid "Add an internal note..."
+msgstr ""
+
+#. module: project_issue
+#: view:project.issue:0
+msgid "Cancel Issue"
+msgstr ""
 
 #. module: project_issue
 #: help:project.issue,progress:0
@@ -769,10 +761,20 @@ msgid "Computed as: Time Spent / Total Time."
 msgstr "計算式：消費時間 / 合計時間"
 
 #. module: project_issue
+#: field:project.project,issue_count:0
+msgid "Unclosed Issues"
+msgstr ""
+
+#. module: project_issue
 #: view:project.issue:0
 #: selection:project.issue,kanban_state:0
 msgid "Ready for next stage"
 msgstr ""
+
+#. module: project_issue
+#: selection:project.issue.report,month:0
+msgid "October"
+msgstr "10月"
 
 #. module: project_issue
 #: view:project.issue.report:0
@@ -843,9 +845,9 @@ msgid "Issue Created"
 msgstr ""
 
 #. module: project_issue
-#: model:mail.message.subtype,name:project_issue.mt_issue_blocked
-#: model:mail.message.subtype,name:project_issue.mt_project_issue_blocked
-msgid "Issue Blocked"
+#: code:addons/project_issue/project_issue.py:490
+#, python-format
+msgid "Customer"
 msgstr ""
 
 #. module: project_issue
@@ -908,11 +910,6 @@ msgstr "4月"
 #: view:project.issue:0
 msgid "⇒ Escalate"
 msgstr ""
-
-#. module: project_issue
-#: view:project.issue:0
-msgid "References"
-msgstr "参照"
 
 #. module: project_issue
 #: model:mail.message.subtype,description:project_issue.mt_issue_new
@@ -986,3 +983,21 @@ msgstr "期間"
 #: model:mail.message.subtype,name:project_issue.mt_project_issue_started
 msgid "Issue Started"
 msgstr ""
+
+#~ msgid "Maintenance"
+#~ msgstr "メンテナンス"
+
+#~ msgid "Issue Categories"
+#~ msgstr "問題分類"
+
+#~ msgid "Categories"
+#~ msgstr "分類"
+
+#~ msgid "Feature Requests"
+#~ msgstr "機能要求"
+
+#~ msgid "Cancel"
+#~ msgstr "キャンセル"
+
+#~ msgid "References"
+#~ msgstr "参照"

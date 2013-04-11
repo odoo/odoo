@@ -2,31 +2,33 @@
 # Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
 # This file is distributed under the same license as the openobject-addons package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
-#
+# Sofce Dimitrijeva <sofce@eskon.com.mk>, 2013.
 msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-21 17:06+0000\n"
-"PO-Revision-Date: 2012-12-21 23:00+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: Macedonian <mk@li.org>\n"
+"POT-Creation-Date: 2013-03-07 08:39+0000\n"
+"PO-Revision-Date: 2013-03-31 13:47+0000\n"
+"Last-Translator: Sofce Dimitrijeva <Unknown>\n"
+"Language-Team: ESKON-INZENERING\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-01-18 07:09+0000\n"
-"X-Generator: Launchpad (build 16430)\n"
+"X-Launchpad-Export-Date: 2013-04-01 05:32+0000\n"
+"X-Generator: Launchpad (build 16546)\n"
+"Language: mk\n"
 
 #. module: stock_location
 #: help:product.pulled.flow,company_id:0
 msgid "Is used to know to which company the pickings and moves belong."
 msgstr ""
+"Се користи за да се знае на која компанија припаѓаат требувањата и движењата."
 
 #. module: stock_location
 #: selection:product.pulled.flow,picking_type:0
 #: selection:stock.location.path,picking_type:0
 msgid "Sending Goods"
-msgstr ""
+msgstr "Испраќање на стоки"
 
 #. module: stock_location
 #: view:product.product:0
@@ -36,12 +38,12 @@ msgstr ""
 #. module: stock_location
 #: selection:product.pulled.flow,type_proc:0
 msgid "Move"
-msgstr ""
+msgstr "Движење"
 
 #. module: stock_location
 #: model:ir.model,name:stock_location.model_stock_location_path
 msgid "Pushed Flows"
-msgstr ""
+msgstr "Наметнати текови"
 
 #. module: stock_location
 #: selection:stock.location.path,auto:0
@@ -52,7 +54,7 @@ msgstr ""
 #: field:product.pulled.flow,location_src_id:0
 #: field:stock.location.path,location_from_id:0
 msgid "Source Location"
-msgstr ""
+msgstr "Изворна локација"
 
 #. module: stock_location
 #: help:product.pulled.flow,cancel_cascade:0
@@ -69,12 +71,18 @@ msgstr ""
 #: help:product.pulled.flow,location_src_id:0
 msgid "Location used by Destination Location to supply"
 msgstr ""
+"Локација употребена од страна на Локацијата на одредиштето за добавување"
+
+#. module: stock_location
+#: view:product.product:0
+msgid "When receiving at location X, move to location Y"
+msgstr "Кога примате во локација X, преместете во локација Y"
 
 #. module: stock_location
 #: selection:product.pulled.flow,picking_type:0
 #: selection:stock.location.path,picking_type:0
 msgid "Internal"
-msgstr ""
+msgstr "Внатрешно"
 
 #. module: stock_location
 #: code:addons/stock_location/procurement_pull.py:98
@@ -87,13 +95,13 @@ msgstr ""
 #. module: stock_location
 #: model:ir.model,name:stock_location.model_stock_location
 msgid "Location"
-msgstr ""
+msgstr "Локација"
 
 #. module: stock_location
 #: field:product.pulled.flow,invoice_state:0
 #: field:stock.location.path,invoice_state:0
 msgid "Invoice Status"
-msgstr ""
+msgstr "Статус на фактурата"
 
 #. module: stock_location
 #: help:stock.location.path,auto:0
@@ -109,27 +117,27 @@ msgstr ""
 #. module: stock_location
 #: view:product.product:0
 msgid "Conditions"
-msgstr ""
+msgstr "Услови"
 
 #. module: stock_location
 #: model:stock.location,name:stock_location.location_pack_zone
 msgid "Pack Zone"
-msgstr ""
+msgstr "Зона на пакување"
 
 #. module: stock_location
 #: model:stock.location,name:stock_location.location_gate_b
 msgid "Gate B"
-msgstr ""
+msgstr "Порта B"
 
 #. module: stock_location
 #: model:stock.location,name:stock_location.location_gate_a
 msgid "Gate A"
-msgstr ""
+msgstr "Порта А"
 
 #. module: stock_location
 #: selection:product.pulled.flow,type_proc:0
 msgid "Buy"
-msgstr ""
+msgstr "Купи"
 
 #. module: stock_location
 #: view:product.product:0
@@ -139,7 +147,7 @@ msgstr ""
 #. module: stock_location
 #: model:stock.location,name:stock_location.location_dispatch_zone
 msgid "Dispatch Zone"
-msgstr ""
+msgstr "Зона на испраќање"
 
 #. module: stock_location
 #: view:product.product:0
@@ -150,69 +158,72 @@ msgstr ""
 #: field:product.pulled.flow,company_id:0
 #: field:stock.location.path,company_id:0
 msgid "Company"
-msgstr ""
+msgstr "Компанија"
 
 #. module: stock_location
 #: model:ir.model,name:stock_location.model_stock_move
 msgid "Stock Move"
-msgstr ""
+msgstr "Движење на залиха"
 
 #. module: stock_location
 #: help:stock.move,cancel_cascade:0
 msgid "If checked, when this move is cancelled, cancel the linked move too"
 msgstr ""
+"Доколку е означено, кога ова движење е откажано, откажи го и поврзаното "
+"движење исто така"
 
 #. module: stock_location
 #: selection:product.pulled.flow,type_proc:0
 msgid "Produce"
-msgstr ""
+msgstr "Произведи"
 
 #. module: stock_location
 #: selection:product.pulled.flow,procure_method:0
 msgid "Make to Order"
-msgstr ""
+msgstr "Направи нарачка"
 
 #. module: stock_location
 #: selection:product.pulled.flow,procure_method:0
 msgid "Make to Stock"
-msgstr ""
+msgstr "Направи го залиха"
 
 #. module: stock_location
 #: code:addons/stock_location/procurement_pull.py:118
 #, python-format
 msgid "Pulled from another location."
-msgstr ""
+msgstr "Повлечено од друга локација"
 
 #. module: stock_location
 #: field:product.pulled.flow,partner_address_id:0
 msgid "Partner Address"
-msgstr ""
+msgstr "Адреса на партнер"
 
 #. module: stock_location
 #: selection:product.pulled.flow,invoice_state:0
 #: selection:stock.location.path,invoice_state:0
 msgid "To Be Invoiced"
-msgstr ""
+msgstr "Да се фактурира"
 
 #. module: stock_location
 #: help:stock.location.path,delay:0
 msgid "Number of days to do this transition"
-msgstr ""
+msgstr "Број на денови за да се направи овој премин"
 
 #. module: stock_location
 #: help:product.pulled.flow,name:0
 msgid "This field will fill the packing Origin and the name of its moves"
 msgstr ""
+"Ова поле ќе го пополни Потеклото на пакувањето и името на неговите движења"
 
 #. module: stock_location
 #: field:product.pulled.flow,type_proc:0
 msgid "Type of Procurement"
-msgstr ""
+msgstr "Тип на набавка"
 
 #. module: stock_location
 #: field:product.pulled.flow,name:0
 msgid "Name"
-msgstr ""
+msgstr "Име"
 
 #. module: stock_location
 #: help:product.product,path_ids:0
@@ -223,19 +234,19 @@ msgstr ""
 #. module: stock_location
 #: selection:stock.location.path,auto:0
 msgid "Manual Operation"
-msgstr ""
+msgstr "Рачна операција"
 
 #. module: stock_location
 #: model:ir.model,name:stock_location.model_product_product
 #: field:product.pulled.flow,product_id:0
 msgid "Product"
-msgstr ""
+msgstr "Производ"
 
 #. module: stock_location
 #: field:product.pulled.flow,picking_type:0
 #: field:stock.location.path,picking_type:0
 msgid "Shipping Type"
-msgstr ""
+msgstr "Тип на испорака"
 
 #. module: stock_location
 #: help:product.pulled.flow,procure_method:0
@@ -244,32 +255,35 @@ msgid ""
 "supplying. 'Make to Order': When needed, purchase or produce for the "
 "procurement request."
 msgstr ""
+"'Направи го залиха': Кога е потребно, земи го од залиха или чекај "
+"надополнување. 'Направи налог': Кога е потребно, купи или произведи за "
+"барањето за набавка."
 
 #. module: stock_location
 #: help:product.pulled.flow,location_id:0
 msgid "Is the destination location that needs supplying"
-msgstr ""
+msgstr "Дали локацијата на одредиштето кое има потреба од добавување"
 
 #. module: stock_location
 #: field:stock.location.path,product_id:0
 msgid "Products"
-msgstr ""
+msgstr "Производи"
 
 #. module: stock_location
 #: model:stock.location,name:stock_location.stock_location_qualitytest0
 msgid "Quality Control"
-msgstr ""
+msgstr "Контрола на квалитет"
 
 #. module: stock_location
 #: selection:product.pulled.flow,invoice_state:0
 #: selection:stock.location.path,invoice_state:0
 msgid "Not Applicable"
-msgstr ""
+msgstr "Не може да се примени"
 
 #. module: stock_location
 #: field:stock.location.path,delay:0
 msgid "Delay (days)"
-msgstr ""
+msgstr "Одолжување (денови)"
 
 #. module: stock_location
 #: code:addons/stock_location/procurement_pull.py:67
@@ -300,40 +314,45 @@ msgstr ""
 #. module: stock_location
 #: view:product.product:0
 msgid "Pull Flow"
-msgstr ""
+msgstr "Тек на извлекување"
 
 #. module: stock_location
 #: model:ir.model,name:stock_location.model_procurement_order
 msgid "Procurement"
-msgstr ""
+msgstr "Набавка"
 
 #. module: stock_location
 #: field:product.pulled.flow,location_id:0
 #: field:stock.location.path,location_dest_id:0
 msgid "Destination Location"
-msgstr ""
+msgstr "Локација на одредиштето"
 
 #. module: stock_location
 #: field:stock.location.path,auto:0
 #: selection:stock.location.path,auto:0
 msgid "Automatic Move"
-msgstr ""
+msgstr "Автоматско движење"
 
 #. module: stock_location
 #: selection:product.pulled.flow,picking_type:0
 #: selection:stock.location.path,picking_type:0
 msgid "Getting Goods"
-msgstr ""
+msgstr "Добивање на стоки"
+
+#. module: stock_location
+#: view:product.product:0
+msgid "Fulfill needs on location X from location Y "
+msgstr "Исполни ги потребите на локација X од локација Y "
 
 #. module: stock_location
 #: view:product.product:0
 msgid "Action Type"
-msgstr ""
+msgstr "Тип на Акција"
 
 #. module: stock_location
 #: field:product.pulled.flow,procure_method:0
 msgid "Procure Method"
-msgstr ""
+msgstr "Метод на набавка"
 
 #. module: stock_location
 #: help:product.pulled.flow,picking_type:0
@@ -342,36 +361,38 @@ msgid ""
 "Depending on the company, choose whatever you want to receive or send "
 "products"
 msgstr ""
+"Во зависност од компанијата, изберете дали сакате да примате или испраќате "
+"производи"
 
 #. module: stock_location
 #: model:stock.location,name:stock_location.location_order
 msgid "Order Processing"
-msgstr ""
+msgstr "Обработување на налог"
 
 #. module: stock_location
 #: field:stock.location.path,name:0
 msgid "Operation"
-msgstr ""
+msgstr "Операција"
 
 #. module: stock_location
 #: view:stock.location.path:0
 msgid "Location Paths"
-msgstr ""
+msgstr "Патеки на локација"
 
 #. module: stock_location
 #: field:product.pulled.flow,journal_id:0
 #: field:stock.location.path,journal_id:0
 msgid "Journal"
-msgstr ""
+msgstr "Дневник"
 
 #. module: stock_location
 #: field:product.pulled.flow,cancel_cascade:0
 #: field:stock.move,cancel_cascade:0
 msgid "Cancel Cascade"
-msgstr ""
+msgstr "Откажи каскада"
 
 #. module: stock_location
 #: selection:product.pulled.flow,invoice_state:0
 #: selection:stock.location.path,invoice_state:0
 msgid "Invoiced"
-msgstr ""
+msgstr "Фактурирано"

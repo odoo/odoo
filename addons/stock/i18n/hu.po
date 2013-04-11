@@ -7,15 +7,20 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-21 17:04+0000\n"
-"PO-Revision-Date: 2013-01-07 00:29+0000\n"
+"POT-Creation-Date: 2013-03-07 08:37+0000\n"
+"PO-Revision-Date: 2013-03-10 20:12+0000\n"
 "Last-Translator: krnkris <Unknown>\n"
 "Language-Team: Hungarian <hu@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-01-18 07:08+0000\n"
-"X-Generator: Launchpad (build 16430)\n"
+"X-Launchpad-Export-Date: 2013-03-28 06:02+0000\n"
+"X-Generator: Launchpad (build 16546)\n"
+
+#. module: stock
+#: view:stock.inventory:0
+msgid "Set to Draft"
+msgstr "Beállítás tervezetnek"
 
 #. module: stock
 #: field:stock.inventory.line.split,line_exist_ids:0
@@ -167,6 +172,11 @@ msgstr "Mennyiség nem lehet negatív."
 #: view:stock.picking.in:0
 msgid "Picking list"
 msgstr "Kiszedési lista"
+
+#. module: stock
+#: view:stock.inventory:0
+msgid "e.g. Annual inventory"
+msgstr "Éves leltár készlet"
 
 #. module: stock
 #: report:lot.stock.overview:0
@@ -372,9 +382,9 @@ msgstr ""
 #: code:addons/stock/wizard/stock_partial_picking.py:174
 #: code:addons/stock/wizard/stock_partial_picking.py:181
 #: code:addons/stock/wizard/stock_partial_picking.py:192
-#: code:addons/stock/wizard/stock_return_picking.py:99
-#: code:addons/stock/wizard/stock_return_picking.py:106
-#: code:addons/stock/wizard/stock_return_picking.py:205
+#: code:addons/stock/wizard/stock_return_picking.py:102
+#: code:addons/stock/wizard/stock_return_picking.py:109
+#: code:addons/stock/wizard/stock_return_picking.py:208
 #, python-format
 msgid "Warning!"
 msgstr "Vigyázat!"
@@ -874,6 +884,11 @@ msgid "Procurement Location"
 msgstr "Beszerzési hely"
 
 #. module: stock
+#: view:stock.picking:0
+msgid "e.g. PO0032"
+msgstr "pl. PO0032"
+
+#. module: stock
 #: model:ir.actions.act_window,name:stock.action_location_tree
 #: model:ir.ui.menu,name:stock.menu_action_location_tree
 msgid "Location Structure"
@@ -1150,12 +1165,6 @@ msgid "Ready to Receive"
 msgstr "Készen áll a befogadásra"
 
 #. module: stock
-#: view:stock.move:0
-#: view:stock.picking:0
-msgid "_Cancel"
-msgstr "Megszakítás"
-
-#. module: stock
 #: field:report.stock.move,day_diff:0
 msgid "Execution Lead Time (Days)"
 msgstr "Végrehajtás átfutási ideje (napok)"
@@ -1209,7 +1218,7 @@ msgstr ""
 "egybe legyenek csoportosítva."
 
 #. module: stock
-#: code:addons/stock/wizard/stock_return_picking.py:106
+#: code:addons/stock/wizard/stock_return_picking.py:109
 #, python-format
 msgid ""
 "No products to return (only lines in Done state and not fully returned yet "
@@ -1662,7 +1671,7 @@ msgid "Incoming Shipments already processed"
 msgstr "Beérkező szállítmányok már feldolgozva"
 
 #. module: stock
-#: code:addons/stock/wizard/stock_return_picking.py:99
+#: code:addons/stock/wizard/stock_return_picking.py:102
 #, python-format
 msgid "You may only return pickings that are Confirmed, Available or Done!"
 msgstr ""
@@ -1998,7 +2007,7 @@ msgstr "Termék kategóriák"
 #. module: stock
 #: view:stock.move:0
 msgid "Cancel Availability"
-msgstr "Hozzáférés megszakítása"
+msgstr "Elérhetőség törlése"
 
 #. module: stock
 #: code:addons/stock/wizard/stock_location_product.py:49
@@ -2450,6 +2459,11 @@ msgid "Supplier Address :"
 msgstr "Beszállító címe:"
 
 #. module: stock
+#: field:stock.config.settings,group_product_variant:0
+msgid "Support multiple variants per products  "
+msgstr "Egy terméken több variáció támogatása  "
+
+#. module: stock
 #: view:stock.inventory.line:0
 msgid "Stock Inventory Lines"
 msgstr "Készletleltár sorok"
@@ -2664,11 +2678,6 @@ msgid ""
 msgstr ""
 "Jelenleg termék mennyiség ezzel a széria számmal elérhető a vállalat "
 "raktárépületeiben"
-
-#. module: stock
-#: view:stock.inventory:0
-msgid "Set to Draft"
-msgstr "Beállítás sablonként"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_stock_journal_form
@@ -2954,9 +2963,9 @@ msgid "Cancel Inventory"
 msgstr "Készlet megszakítása"
 
 #. module: stock
-#: field:stock.config.settings,group_product_variant:0
-msgid "Support multiple variants per products  "
-msgstr "Egy terméken több variáció támogatása  "
+#: view:stock.move:0
+msgid "Cancel Move"
+msgstr "Mozgatás megszakítása"
 
 #. module: stock
 #: code:addons/stock/stock.py:2246
@@ -3008,6 +3017,11 @@ msgstr "Raktáron:"
 #: model:ir.model,name:stock.model_stock_report_prodlots
 msgid "Stock report by serial number"
 msgstr "Készlet jelentés szériszámonként"
+
+#. module: stock
+#: view:stock.picking:0
+msgid "Cancel Transfer"
+msgstr "Átszállítás megszakítása"
 
 #. module: stock
 #: selection:report.stock.inventory,month:0
@@ -3083,7 +3097,7 @@ msgid "Stock Journal"
 msgstr "Készletnapló"
 
 #. module: stock
-#: code:addons/stock/wizard/stock_return_picking.py:171
+#: code:addons/stock/wizard/stock_return_picking.py:174
 #, python-format
 msgid "%s-%s-return"
 msgstr "%s-%s-vissza"
@@ -3568,6 +3582,11 @@ msgid "Scheduled"
 msgstr "Ütemezett"
 
 #. module: stock
+#: view:stock.picking:0
+msgid "Add an internal note..."
+msgstr "Belső jegyzet hozzáadása..."
+
+#. module: stock
 #: model:ir.actions.act_window,name:stock.action_warehouse_form
 #: model:ir.ui.menu,name:stock.menu_action_warehouse_form
 msgid "Warehouses"
@@ -3611,7 +3630,7 @@ msgid "Stock"
 msgstr "Készlet"
 
 #. module: stock
-#: code:addons/stock/wizard/stock_return_picking.py:219
+#: code:addons/stock/wizard/stock_return_picking.py:222
 #, python-format
 msgid "Returned Picking"
 msgstr "Visszavételezett kiválogatás"
@@ -4075,6 +4094,7 @@ msgstr "Leltártétel"
 #: field:stock.production.lot,name:0
 #: field:stock.production.lot.revision,lot_id:0
 #: field:stock.report.prodlots,prodlot_id:0
+#: field:stock.return.picking.memory,prodlot_id:0
 msgid "Serial Number"
 msgstr "Szériaszám"
 
@@ -4739,7 +4759,7 @@ msgstr ""
 "                Ez a claim_from_delivery modult telepíti.."
 
 #. module: stock
-#: code:addons/stock/wizard/stock_return_picking.py:205
+#: code:addons/stock/wizard/stock_return_picking.py:208
 #, python-format
 msgid "Please specify at least one non-zero quantity."
 msgstr "Kérem adjon meg legalább egy nem nulla mennyiséget."
@@ -5272,3 +5292,6 @@ msgstr "Feldolgozásra kész"
 #: report:stock.picking.list:0
 msgid "Warehouse Address :"
 msgstr "Rektárépület címe:"
+
+#~ msgid "_Cancel"
+#~ msgstr "Megszakítás"

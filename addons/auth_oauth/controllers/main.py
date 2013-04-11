@@ -2,8 +2,10 @@ import functools
 import logging
 
 import simplejson
+import werkzeug.utils
 from werkzeug.exceptions import BadRequest
 
+import openerp
 from openerp import SUPERUSER_ID
 import openerp.addons.web.http as oeweb
 from openerp.addons.web.controllers.main import db_monodb, set_cookie_and_redirect, login_and_redirect
@@ -62,13 +64,25 @@ class OAuthController(oeweb.Controller):
                 u = registry.get('res.users')
                 credentials = u.auth_oauth(cr, SUPERUSER_ID, provider, kw, context=context)
                 cr.commit()
-                action = state.get('a', None)
-                url = '/#action=' + action if action else '/'
+                action = state.get('a')
+                menu = state.get('m')
+                url = '/'
+                if action:
+                    url = '/#action=%s' % action
+                elif menu:
+                    url = '/#menu_id=%s' % menu
                 return login_and_redirect(req, *credentials, redirect_url=url)
             except AttributeError:
                 # auth_signup is not installed
                 _logger.error("auth_signup not installed on database %s: oauth sign up cancelled." % (dbname,))
                 url = "/#action=login&oauth_error=1"
+            except openerp.exceptions.AccessDenied:
+                # oauth credentials not valid, user could be on a temporary session
+                _logger.info('OAuth2: access denied, redirect to main page in case a valid session exists, without setting cookies')
+                url = "/#action=login&oauth_error=3"
+                redirect = werkzeug.utils.redirect(url, 303)
+                redirect.autocorrect_location_header = False
+                return redirect
             except Exception, e:
                 # signup error
                 _logger.exception("OAuth2: %s" % str(e))

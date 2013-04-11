@@ -7,26 +7,26 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-21 17:05+0000\n"
-"PO-Revision-Date: 2012-12-21 23:00+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2013-03-07 08:38+0000\n"
+"PO-Revision-Date: 2013-03-08 21:25+0000\n"
+"Last-Translator: Ayhan KIZILTAN <Unknown>\n"
 "Language-Team: Turkish <tr@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-01-18 06:42+0000\n"
-"X-Generator: Launchpad (build 16430)\n"
+"X-Launchpad-Export-Date: 2013-03-28 05:38+0000\n"
+"X-Generator: Launchpad (build 16546)\n"
 
 #. module: email_template
 #: field:email.template,email_from:0
 #: field:email_template.preview,email_from:0
 msgid "From"
-msgstr "Gönderen"
+msgstr "Kimden"
 
 #. module: email_template
 #: field:mail.compose.message,template_id:0
 msgid "Template"
-msgstr "Taslak"
+msgstr "Şablon"
 
 #. module: email_template
 #: help:email.template,ref_ir_value:0
@@ -37,13 +37,18 @@ msgstr "Kenar çubuğu işlevini açacak kenar çubuğu düğmesi"
 #. module: email_template
 #: field:res.partner,opt_out:0
 msgid "Opt-Out"
-msgstr ""
+msgstr "Çekildi"
+
+#. module: email_template
+#: view:email.template:0
+msgid "Email contents (in raw HTML format)"
+msgstr "Eposta içeriği (ham HTML biçiminde)"
 
 #. module: email_template
 #: field:email.template,email_to:0
 #: field:email_template.preview,email_to:0
 msgid "To (Emails)"
-msgstr ""
+msgstr "Kime (Epostalar)"
 
 #. module: email_template
 #: field:email.template,mail_server_id:0
@@ -75,7 +80,7 @@ msgstr "Gönderici adresi (burada yer tutucular kullanılabilir)"
 #. module: email_template
 #: view:email.template:0
 msgid "Remove context action"
-msgstr ""
+msgstr "İçerik Eylemini Kaldır"
 
 #. module: email_template
 #: help:email.template,mail_server_id:0
@@ -91,23 +96,23 @@ msgstr ""
 #: field:email.template,report_name:0
 #: field:email_template.preview,report_name:0
 msgid "Report Filename"
-msgstr "Rapor Dosyasının adı"
+msgstr "Rapor Dosyası Adı"
 
 #. module: email_template
 #: view:email.template:0
 msgid "Preview"
-msgstr ""
+msgstr "Önizle"
 
 #. module: email_template
 #: field:email.template,reply_to:0
 #: field:email_template.preview,reply_to:0
 msgid "Reply-To"
-msgstr "Yanıtla"
+msgstr "Buna Yanıtla"
 
 #. module: email_template
 #: view:mail.compose.message:0
 msgid "Use template"
-msgstr ""
+msgstr "Şablon kullan"
 
 #. module: email_template
 #: field:email.template,body_html:0
@@ -119,7 +124,7 @@ msgstr "Gövde"
 #: code:addons/email_template/email_template.py:244
 #, python-format
 msgid "%s (copy)"
-msgstr ""
+msgstr "%s (kopya)"
 
 #. module: email_template
 #: help:email.template,user_signature:0
@@ -127,7 +132,9 @@ msgstr ""
 msgid ""
 "If checked, the user's signature will be appended to the text version of the "
 "message"
-msgstr "Eğer işaretlenirse, kullanıcının imzası mesajın altına eklenecektir"
+msgstr ""
+"Eğer işaretlenirse, kullanıcının imzası mesajın metin sürümünün altına "
+"eklenecektir"
 
 #. module: email_template
 #: view:email.template:0
@@ -137,7 +144,7 @@ msgstr "SMTP Sunucusu"
 #. module: email_template
 #: view:mail.compose.message:0
 msgid "Save as new template"
-msgstr ""
+msgstr "Yeni şablon olarak kaydet"
 
 #. module: email_template
 #: help:email.template,sub_object:0
@@ -152,7 +159,7 @@ msgstr ""
 #. module: email_template
 #: model:ir.model,name:email_template.model_email_template
 msgid "Email Templates"
-msgstr "E-Posta Şablonları"
+msgstr "Eposta Şablonları"
 
 #. module: email_template
 #: help:email.template,report_name:0
@@ -168,7 +175,7 @@ msgstr ""
 #: field:email.template,ref_ir_act_window:0
 #: field:email_template.preview,ref_ir_act_window:0
 msgid "Sidebar action"
-msgstr "Kenar Çubuğu Eylemi"
+msgstr "Kenar Çubuğu yylemi"
 
 #. module: email_template
 #: help:email.template,lang:0
@@ -187,7 +194,7 @@ msgstr ""
 #. module: email_template
 #: field:email_template.preview,res_id:0
 msgid "Sample Document"
-msgstr "Örnek Döküman"
+msgstr "Örnek Belge"
 
 #. module: email_template
 #: help:email.template,model_object_field:0
@@ -204,7 +211,7 @@ msgstr ""
 #. module: email_template
 #: view:email.template:0
 msgid "Dynamic Value Builder"
-msgstr ""
+msgstr "Dinamik Değer Oluşturucu"
 
 #. module: email_template
 #: model:ir.actions.act_window,name:email_template.wizard_email_template_preview
@@ -214,7 +221,7 @@ msgstr "Şablon Önizleme"
 #. module: email_template
 #: view:mail.compose.message:0
 msgid "Save as a new template"
-msgstr "Yeni şablon olarak kaydet"
+msgstr "Yeni bir şablon olarak kaydet"
 
 #. module: email_template
 #: view:email.template:0
@@ -222,6 +229,8 @@ msgid ""
 "Display an option on related documents to open a composition wizard with "
 "this template"
 msgstr ""
+"Bu şablon ile bir yazma sihirbazı açmak için ilgili belgelerde bir seçenek "
+"göster"
 
 #. module: email_template
 #: help:email.template,email_cc:0
@@ -243,12 +252,12 @@ msgstr "Gelişmiş"
 #. module: email_template
 #: view:email_template.preview:0
 msgid "Preview of"
-msgstr ""
+msgstr "Bunun önizlemesi"
 
 #. module: email_template
 #: view:email_template.preview:0
 msgid "Using sample document"
-msgstr ""
+msgstr "Örnek belge kullanımı"
 
 #. module: email_template
 #: view:email.template:0
@@ -261,7 +270,7 @@ msgstr "Şablonlar"
 #: field:email.template,name:0
 #: field:email_template.preview,name:0
 msgid "Name"
-msgstr "Ad"
+msgstr "Adı"
 
 #. module: email_template
 #: field:email.template,lang:0
@@ -272,30 +281,30 @@ msgstr "Dil"
 #. module: email_template
 #: model:ir.model,name:email_template.model_email_template_preview
 msgid "Email Template Preview"
-msgstr "E-posta Şablonu Ön izleme"
+msgstr "E-posta Şablonu Önizleme"
 
 #. module: email_template
 #: view:email_template.preview:0
 msgid "Email Preview"
-msgstr "Eposta Ön izleme"
+msgstr "Eposta Önizle"
 
 #. module: email_template
 #: view:email.template:0
 msgid ""
 "Remove the contextual action to use this template on related documents"
-msgstr ""
+msgstr "İlgili belgelerde bu şablonu kullanmak için içeriksel eylemi kaldır"
 
 #. module: email_template
 #: field:email.template,copyvalue:0
 #: field:email_template.preview,copyvalue:0
 msgid "Placeholder Expression"
-msgstr ""
+msgstr "Yertutucu Tanımı"
 
 #. module: email_template
 #: field:email.template,sub_object:0
 #: field:email_template.preview,sub_object:0
 msgid "Sub-model"
-msgstr "Alt-Model"
+msgstr "Alt-model"
 
 #. module: email_template
 #: help:email.template,subject:0
@@ -313,13 +322,13 @@ msgstr "Yeğlenen yanıtlama adresi (burada yertutucular kullanılır)"
 #: field:email.template,ref_ir_value:0
 #: field:email_template.preview,ref_ir_value:0
 msgid "Sidebar Button"
-msgstr "Kenar Çubuğu Butonu"
+msgstr "Kenar Çubuğu Düğmesi"
 
 #. module: email_template
 #: field:email.template,report_template:0
 #: field:email_template.preview,report_template:0
 msgid "Optional report to print and attach"
-msgstr "Yazdırıp eklemek için opsiyonel rapor"
+msgstr "Yazdırıp eklemek için seçmeli rapor"
 
 #. module: email_template
 #: help:email.template,null_value:0
@@ -335,24 +344,24 @@ msgstr "Model"
 #. module: email_template
 #: model:ir.model,name:email_template.model_mail_compose_message
 msgid "Email composition wizard"
-msgstr ""
+msgstr "Eposta yazma sihirbazı"
 
 #. module: email_template
 #: view:email.template:0
 msgid "Add context action"
-msgstr ""
+msgstr "İçerik eylemi ekle"
 
 #. module: email_template
 #: help:email.template,model_id:0
 #: help:email_template.preview,model_id:0
 msgid "The kind of document with with this template can be used"
-msgstr ""
+msgstr "Belge cinsi bu şablon ile kullanılabilir"
 
 #. module: email_template
 #: field:email.template,email_recipients:0
 #: field:email_template.preview,email_recipients:0
 msgid "To (Partners)"
-msgstr ""
+msgstr "Kime (İş Ortakları)"
 
 #. module: email_template
 #: field:email.template,auto_delete:0
@@ -378,7 +387,7 @@ msgstr "İlgili Döküman Modeli"
 #. module: email_template
 #: view:email.template:0
 msgid "Addressing"
-msgstr ""
+msgstr "Adresleme"
 
 #. module: email_template
 #: help:email.template,email_recipients:0
@@ -386,6 +395,8 @@ msgstr ""
 msgid ""
 "Comma-separated ids of recipient partners (placeholders may be used here)"
 msgstr ""
+"Alıcı iş ortaklarının virgülle ayrılmıi id leri (burada yer tutucular "
+"kullanılabilir)"
 
 #. module: email_template
 #: field:email.template,attachment_ids:0
@@ -397,7 +408,7 @@ msgstr "Ekler"
 #: code:addons/email_template/email_template.py:231
 #, python-format
 msgid "Deletion of the action record failed."
-msgstr "Eylem kaydının silinemedi."
+msgstr "Eylem kaydı silinemedi."
 
 #. module: email_template
 #: field:email.template,email_cc:0
@@ -409,18 +420,18 @@ msgstr "Cc"
 #: field:email.template,model_id:0
 #: field:email_template.preview,model_id:0
 msgid "Applies to"
-msgstr ""
+msgstr "Buna uygulanır"
 
 #. module: email_template
 #: field:email.template,sub_model_object_field:0
 #: field:email_template.preview,sub_model_object_field:0
 msgid "Sub-field"
-msgstr "Alt-Alan"
+msgstr "Alt-aan"
 
 #. module: email_template
 #: view:email.template:0
 msgid "Email Details"
-msgstr "E-posta Ayrıntıları"
+msgstr "Eposta Ayrıntıları"
 
 #. module: email_template
 #: code:addons/email_template/email_template.py:196
@@ -434,19 +445,19 @@ msgid ""
 "If checked, this partner will not receive any automated email notifications, "
 "such as the availability of invoices."
 msgstr ""
-"Eğer işaretlenirse, Cari mesela kesilen fatura bildirimleri gibi otomatik e-"
-"posta bildirimleri almayacaktır."
+"Eğer işaretlenirse, bu iş ortağı kesilen fatura bildirimleri gibi otomatik "
+"eposta bildirimleri almayacaktır."
 
 #. module: email_template
 #: help:email.template,auto_delete:0
 #: help:email_template.preview,auto_delete:0
 msgid "Permanently delete this email after sending it, to save space"
-msgstr "Bu mesajı gönderdikten sonra yerden kazanmak için sil"
+msgstr "Bu mesajı gönderdikten sonra yer kazanmak için kalıcı olarak sil"
 
 #. module: email_template
 #: view:email.template:0
 msgid "Group by..."
-msgstr "Grupla ..."
+msgstr "Gruplandır..."
 
 #. module: email_template
 #: help:email.template,sub_model_object_field:0
@@ -473,13 +484,13 @@ msgstr "İmza Ekle"
 #. module: email_template
 #: model:ir.model,name:email_template.model_res_partner
 msgid "Partner"
-msgstr "Cari"
+msgstr "İş Ortağı"
 
 #. module: email_template
 #: field:email.template,null_value:0
 #: field:email_template.preview,null_value:0
 msgid "Default Value"
-msgstr ""
+msgstr "Varsayılan Değer"
 
 #. module: email_template
 #: help:email.template,attachment_ids:0
@@ -501,7 +512,7 @@ msgstr ""
 #. module: email_template
 #: view:email.template:0
 msgid "Contents"
-msgstr ""
+msgstr "İçindekiler"
 
 #. module: email_template
 #: field:email.template,subject:0

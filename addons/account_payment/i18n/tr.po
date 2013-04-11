@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-21 17:05+0000\n"
-"PO-Revision-Date: 2012-12-21 23:00+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2013-03-07 08:37+0000\n"
+"PO-Revision-Date: 2013-03-08 21:13+0000\n"
+"Last-Translator: Ayhan KIZILTAN <Unknown>\n"
 "Language-Team: Turkish <tr@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-01-18 06:33+0000\n"
-"X-Generator: Launchpad (build 16430)\n"
+"X-Launchpad-Export-Date: 2013-03-28 05:30+0000\n"
+"X-Generator: Launchpad (build 16546)\n"
 
 #. module: account_payment
 #: model:ir.actions.act_window,help:account_payment.action_payment_order_tree
@@ -29,6 +29,14 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Ödeme emri oluşturmak için tıklayın.\n"
+"              </p><p>\n"
+"                Ödeme emri şirketinizden bir tedarikçi faturası ya da bir "
+"müşteri\n"
+"                 iadesi için ödeme yapması için bir istektir.\n"
+"              </p>\n"
+"            "
 
 #. module: account_payment
 #: field:payment.line,currency:0
@@ -49,7 +57,7 @@ msgstr "Uygulanacak Ödeme Şeklini Seç"
 #: view:payment.mode:0
 #: view:payment.order:0
 msgid "Group By..."
-msgstr "Gruplandır..."
+msgstr "Grupla..."
 
 #. module: account_payment
 #: field:payment.order,line_ids:0
@@ -75,7 +83,7 @@ msgstr "Geçerli tarihte ödenecek tutar hali hazırda ödenmiş tutardan düş�
 #: field:payment.mode,company_id:0
 #: field:payment.order,company_id:0
 msgid "Company"
-msgstr "Firma"
+msgstr "Şirket"
 
 #. module: account_payment
 #: model:res.groups,name:account_payment.group_account_payment
@@ -91,7 +99,7 @@ msgstr "Boş"
 #: view:payment.order.create:0
 #: field:payment.order.create,entries:0
 msgid "Entries"
-msgstr "Girişler"
+msgstr "Kayıtlar"
 
 #. module: account_payment
 #: report:payment.order:0
@@ -122,13 +130,15 @@ msgid ""
 "You cannot cancel an invoice which has already been imported in a payment "
 "order. Remove it from the following payment order : %s."
 msgstr ""
+"Ödeme emri içine aktarılan bir faturayı iptal edemezsiniz.\r\n"
+"faturayı ödeme emrinden çıkart: %s."
 
 #. module: account_payment
 #: code:addons/account_payment/account_invoice.py:43
 #: code:addons/account_payment/account_move_line.py:110
 #, python-format
 msgid "Error!"
-msgstr ""
+msgstr "Hata!"
 
 #. module: account_payment
 #: report:payment.order:0
@@ -139,7 +149,7 @@ msgstr "Miktar"
 #. module: account_payment
 #: view:payment.order:0
 msgid "Total in Company Currency"
-msgstr "Firma Para Biriminde Toplam"
+msgstr "Şirket Para Biriminde Toplam"
 
 #. module: account_payment
 #: selection:payment.order,state:0
@@ -193,6 +203,9 @@ msgid ""
 " Once the bank is confirmed the status is set to 'Confirmed'.\n"
 " Then the order is paid the status is 'Done'."
 msgstr ""
+"Emir girildiğinde durumu 'Taslak' olarak ayarlanır.\n"
+" Banka onayladığında durumu 'Onaylı'ya dönüştürülür.\n"
+" Emir ödendiğinde durum 'Tamamlandı' ya çevrilir."
 
 #. module: account_payment
 #: view:payment.order:0
@@ -218,7 +231,7 @@ msgstr "Yapılandırılmış"
 #. module: account_payment
 #: view:account.bank.statement:0
 msgid "Import Payment Lines"
-msgstr ""
+msgstr "Ödeme kalemlerini içe aktar"
 
 #. module: account_payment
 #: view:payment.line:0
@@ -260,7 +273,7 @@ msgstr ""
 #. module: account_payment
 #: field:payment.order,date_created:0
 msgid "Creation Date"
-msgstr ""
+msgstr "Oluşturma Tarihi"
 
 #. module: account_payment
 #: help:payment.mode,journal:0
@@ -318,7 +331,7 @@ msgstr "İletişim Türü"
 #: field:payment.mode,partner_id:0
 #: report:payment.order:0
 msgid "Partner"
-msgstr "Ortak"
+msgstr "Paydaş"
 
 #. module: account_payment
 #: field:payment.line,bank_statement_line_id:0
@@ -368,7 +381,7 @@ msgstr "Hesap Ödeme Doldurma Cetveli"
 #: code:addons/account_payment/account_move_line.py:110
 #, python-format
 msgid "There is no partner defined on the entry line."
-msgstr ""
+msgstr "Giriş kaydında tanımlanmamış paydaş yoktur."
 
 #. module: account_payment
 #: help:payment.mode,name:0
@@ -400,7 +413,7 @@ msgstr "Taslak"
 #: view:payment.order:0
 #: field:payment.order,state:0
 msgid "Status"
-msgstr ""
+msgstr "Durum"
 
 #. module: account_payment
 #: help:payment.line,communication2:0
@@ -448,7 +461,7 @@ msgstr "Ara"
 #. module: account_payment
 #: field:payment.order,user_id:0
 msgid "Responsible"
-msgstr ""
+msgstr "Sorumlu"
 
 #. module: account_payment
 #: field:payment.line,date:0
@@ -463,7 +476,7 @@ msgstr "Toplam:"
 #. module: account_payment
 #: field:payment.order,date_done:0
 msgid "Execution Date"
-msgstr ""
+msgstr "Çalıtırılma Tarihi"
 
 #. module: account_payment
 #: view:account.payment.populate.statement:0
@@ -535,7 +548,6 @@ msgstr "İletişim"
 #. module: account_payment
 #: view:account.payment.make.payment:0
 #: view:account.payment.populate.statement:0
-#: view:payment.order:0
 #: view:payment.order.create:0
 msgid "Cancel"
 msgstr "İptal"
@@ -581,7 +593,7 @@ msgstr "İletişim 2"
 #. module: account_payment
 #: field:payment.order,date_scheduled:0
 msgid "Scheduled Date"
-msgstr ""
+msgstr "Planlanan Tarih"
 
 #. module: account_payment
 #: view:account.payment.make.payment:0
@@ -663,6 +675,11 @@ msgid "Order"
 msgstr "Emir"
 
 #. module: account_payment
+#: view:payment.order:0
+msgid "Cancel Payments"
+msgstr "Ödeme İptal et"
+
+#. module: account_payment
 #: field:payment.order,total:0
 msgid "Total"
 msgstr "Toplam"
@@ -676,14 +693,14 @@ msgstr "Ödeme Yap"
 #. module: account_payment
 #: field:payment.order,date_prefered:0
 msgid "Preferred Date"
-msgstr ""
+msgstr "İstenen Tarih"
 
 #. module: account_payment
 #: view:account.payment.make.payment:0
 #: view:account.payment.populate.statement:0
 #: view:payment.order.create:0
 msgid "or"
-msgstr ""
+msgstr "ya da"
 
 #. module: account_payment
 #: help:payment.mode,bank_id:0

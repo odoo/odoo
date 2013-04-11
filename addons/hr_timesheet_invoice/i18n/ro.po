@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-21 17:05+0000\n"
-"PO-Revision-Date: 2012-12-21 23:00+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2013-03-07 08:38+0000\n"
+"PO-Revision-Date: 2013-01-28 19:08+0000\n"
+"Last-Translator: Fekete Mihai <mihai@erpsystems.ro>\n"
 "Language-Team: Romanian <ro@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-01-18 06:47+0000\n"
-"X-Generator: Launchpad (build 16430)\n"
+"X-Launchpad-Export-Date: 2013-03-28 05:43+0000\n"
+"X-Generator: Launchpad (build 16546)\n"
 
 #. module: hr_timesheet_invoice
 #: view:report.timesheet.line:0
@@ -26,7 +26,7 @@ msgstr "Fisa de pontaj dupa utilizator"
 #. module: hr_timesheet_invoice
 #: field:hr_timesheet_invoice.factor,name:0
 msgid "Internal Name"
-msgstr ""
+msgstr "Nume Intern"
 
 #. module: hr_timesheet_invoice
 #: view:hr_timesheet_invoice.factor:0
@@ -39,18 +39,20 @@ msgid ""
 "The product to invoice is defined on the employee form, the price will be "
 "deducted by this pricelist on the product."
 msgstr ""
+"Produsul de facturat este definit in formularul angajatului, pretul va fi "
+"dedus de aceasta lista de preturi din produs."
 
 #. module: hr_timesheet_invoice
 #: code:addons/hr_timesheet_invoice/wizard/hr_timesheet_analytic_profit.py:58
 #, python-format
 msgid "No record(s) found for this report."
-msgstr ""
+msgstr "Nu au fost gasite inregistrari pentru acest raport."
 
 #. module: hr_timesheet_invoice
 #: code:addons/hr_timesheet_invoice/wizard/hr_timesheet_analytic_profit.py:58
 #, python-format
 msgid "Insufficient Data!"
-msgstr ""
+msgstr "Date Insuficiente!"
 
 #. module: hr_timesheet_invoice
 #: view:report.timesheet.line:0
@@ -70,7 +72,7 @@ msgstr "Venit"
 #. module: hr_timesheet_invoice
 #: field:hr.timesheet.invoice.create.final,name:0
 msgid "Log of Activity"
-msgstr ""
+msgstr "Jurnal de Activitate"
 
 #. module: hr_timesheet_invoice
 #: view:account.analytic.account:0
@@ -80,7 +82,7 @@ msgstr "Redeschideti proiectul"
 #. module: hr_timesheet_invoice
 #: field:report.account.analytic.line.to.invoice,product_uom_id:0
 msgid "Unit of Measure"
-msgstr ""
+msgstr "Unitatea de Masura"
 
 #. module: hr_timesheet_invoice
 #: model:ir.model,name:hr_timesheet_invoice.model_report_timesheet_user
@@ -129,6 +131,9 @@ msgid ""
 "Fill this field only if you want to force to use a specific product. Keep "
 "empty to use the real product that comes from the cost."
 msgstr ""
+"Completati acest camp numai daca doriti sa folositi neaparat un anumit "
+"produs. Lasati necompletat pentru a folosi produsul real care provine din "
+"cost."
 
 #. module: hr_timesheet_invoice
 #: model:ir.actions.act_window,help:hr_timesheet_invoice.action_hr_timesheet_invoice_factor_form
@@ -146,6 +151,19 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<clasa p=\"oe_vizualizare_niciuncontinut_creeaza\">\n"
+"                Dati click pentru a adauga un nou tip de facturare.\n"
+"              </p><p>\n"
+"                OpenERP va permite sa creati tipuri de facturare implicite. "
+"S-ar putea sa\n"
+"                trebuiasca sa atribuiti in mod regulat reduceri din cauza "
+"unui anumit\n"
+"                contract sau a unei intelegeri cu un client. Din acest meniu "
+"puteti\n"
+"                crea tipuri suplimentare de facturare pentru a accelera\n"
+"                facturarea.\n"
+"              </p>\n"
+"            "
 
 #. module: hr_timesheet_invoice
 #: view:report.timesheet.line:0
@@ -166,7 +184,7 @@ msgstr "Suma facturata"
 #: code:addons/hr_timesheet_invoice/hr_timesheet_invoice.py:188
 #, python-format
 msgid "Analytic Account incomplete !"
-msgstr ""
+msgstr "Cont Analitic incomplet !"
 
 #. module: hr_timesheet_invoice
 #: field:report_timesheet.invoice,account_id:0
@@ -176,7 +194,7 @@ msgstr "Proiect"
 #. module: hr_timesheet_invoice
 #: view:account.analytic.account:0
 msgid "Invoice on Timesheets Options"
-msgstr ""
+msgstr "Facturare pe Optiunile FIsei de pontaj"
 
 #. module: hr_timesheet_invoice
 #: field:report.account.analytic.line.to.invoice,amount:0
@@ -191,7 +209,7 @@ msgstr "Detaliile fiecarei activitati prestate vor aparea pe factura"
 #. module: hr_timesheet_invoice
 #: field:account.analytic.account,pricelist_id:0
 msgid "Pricelist"
-msgstr ""
+msgstr "Lista de preturi"
 
 #. module: hr_timesheet_invoice
 #: model:ir.model,name:hr_timesheet_invoice.model_hr_timesheet_invoice_create
@@ -216,6 +234,11 @@ msgid ""
 "20% advance invoice (fixed price, based on a sales order), you should "
 "invoice the rest on timesheet with a 80% ratio."
 msgstr ""
+"De obicei facturati 100% din fisele de pontaj. Dar daca amestecati pretul "
+"fix si facturarea fiselor de pontaj, puteti folosi un alt raport. De "
+"exemplu, daca faceti o factura cu un avans de 20% (pretul fix, bazat pe o "
+"comanda de vanzari), ar trebui sa facturati restul in fisa de pontaj cu un "
+"raport de 80%."
 
 #. module: hr_timesheet_invoice
 #: view:hr.timesheet.invoice.create:0
@@ -245,7 +268,7 @@ msgstr "Termen limita"
 #: code:addons/hr_timesheet_invoice/hr_timesheet_invoice.py:246
 #, python-format
 msgid "Configuration Error!"
-msgstr ""
+msgstr "Eroare de configurare!"
 
 #. module: hr_timesheet_invoice
 #: field:report.analytic.account.close,partner_id:0
@@ -260,7 +283,7 @@ msgstr "Timpul fiecarei activitati efectuate va fi afisat pe factura"
 #. module: hr_timesheet_invoice
 #: view:account.analytic.account:0
 msgid "Cancel Contract"
-msgstr ""
+msgstr "Anuleaza Contractul"
 
 #. module: hr_timesheet_invoice
 #: field:hr.timesheet.analytic.profit,date_from:0
@@ -282,7 +305,7 @@ msgstr "Costuri de facturat"
 #: code:addons/hr_timesheet_invoice/hr_timesheet_invoice.py:246
 #, python-format
 msgid "Please define income account for product '%s'."
-msgstr ""
+msgstr "Va rugam sa definiti contul de venituri pentru produsul '%s'."
 
 #. module: hr_timesheet_invoice
 #: field:report.account.analytic.line.to.invoice,account_id:0
@@ -337,12 +360,12 @@ msgstr "Profit Fisa de pontaj"
 #. module: hr_timesheet_invoice
 #: field:hr.timesheet.invoice.create,product:0
 msgid "Force Product"
-msgstr ""
+msgstr "Forteaza Produsul"
 
 #. module: hr_timesheet_invoice
 #: view:account.analytic.account:0
 msgid "Contract Finished"
-msgstr ""
+msgstr "Contract Finalizat"
 
 #. module: hr_timesheet_invoice
 #: selection:report.account.analytic.line.to.invoice,month:0
@@ -356,13 +379,13 @@ msgstr "Iulie"
 #. module: hr_timesheet_invoice
 #: field:account.analytic.line,to_invoice:0
 msgid "Invoiceable"
-msgstr ""
+msgstr "Poate fi facturat"
 
 #. module: hr_timesheet_invoice
 #: code:addons/hr_timesheet_invoice/wizard/hr_timesheet_invoice_create.py:56
 #, python-format
 msgid "Warning!"
-msgstr ""
+msgstr "Avertisment!"
 
 #. module: hr_timesheet_invoice
 #: model:ir.actions.act_window,name:hr_timesheet_invoice.action_hr_timesheet_invoice_factor_form
@@ -378,7 +401,7 @@ msgstr "Teoretic"
 #. module: hr_timesheet_invoice
 #: model:hr_timesheet_invoice.factor,name:hr_timesheet_invoice.timesheet_invoice_factor3
 msgid "Free of charge"
-msgstr ""
+msgstr "Gratuit"
 
 #. module: hr_timesheet_invoice
 #: model:ir.model,name:hr_timesheet_invoice.model_report_account_analytic_line_to_invoice
@@ -409,7 +432,7 @@ msgstr "Da (100%)"
 #. module: hr_timesheet_invoice
 #: view:report_timesheet.user:0
 msgid "Timesheet by users"
-msgstr ""
+msgstr "Fise de pontaj dupa utilizatori"
 
 #. module: hr_timesheet_invoice
 #: code:addons/hr_timesheet_invoice/wizard/hr_timesheet_final_invoice_create.py:58
@@ -488,7 +511,7 @@ msgstr "Total facturat"
 #. module: hr_timesheet_invoice
 #: field:report.analytic.account.close,state:0
 msgid "Status"
-msgstr ""
+msgstr "Stare"
 
 #. module: hr_timesheet_invoice
 #: model:ir.model,name:hr_timesheet_invoice.model_account_analytic_line
@@ -606,7 +629,7 @@ msgstr "Data"
 #: field:report_timesheet.invoice,quantity:0
 #: field:report_timesheet.user,quantity:0
 msgid "Time"
-msgstr ""
+msgstr "Timp"
 
 #. module: hr_timesheet_invoice
 #: model:ir.model,name:hr_timesheet_invoice.model_hr_timesheet_invoice_create_final
@@ -651,6 +674,8 @@ msgid ""
 "It allows to set the discount while making invoice, keep empty if the "
 "activities should not be invoiced."
 msgstr ""
+"Permite configurarea reducerii in timp ce faceti factura, lasati necompletat "
+"daca activitatile nu trebuie facturate."
 
 #. module: hr_timesheet_invoice
 #: field:account.analytic.account,amount_max:0
@@ -660,7 +685,7 @@ msgstr "Pret maxim factura"
 #. module: hr_timesheet_invoice
 #: field:account.analytic.account,to_invoice:0
 msgid "Timesheet Invoicing Ratio"
-msgstr ""
+msgstr "Raportul de Facturare a Fisei de pontaj"
 
 #. module: hr_timesheet_invoice
 #: selection:report.account.analytic.line.to.invoice,month:0
@@ -711,7 +736,7 @@ msgstr "Catre"
 #. module: hr_timesheet_invoice
 #: view:hr.timesheet.invoice.create:0
 msgid "Do you want to show details of work in invoice?"
-msgstr ""
+msgstr "Doriti ca detaliile muncii sa apara pe factura?"
 
 #. module: hr_timesheet_invoice
 #: view:hr.timesheet.invoice.create:0
@@ -747,6 +772,8 @@ msgstr "Fise de pontaj de facturat"
 msgid ""
 "Contract incomplete. Please fill in the Customer and Pricelist fields."
 msgstr ""
+"Contract incomplet. Va rugam sa completati campurile Client si Lista de "
+"preturi."
 
 #. module: hr_timesheet_invoice
 #: model:ir.actions.act_window,name:hr_timesheet_invoice.action_timesheet_account_date_stat_all
@@ -769,7 +796,7 @@ msgstr "Tipuri de facurare"
 #. module: hr_timesheet_invoice
 #: view:hr.analytic.timesheet:0
 msgid "Invoicing"
-msgstr ""
+msgstr "Facturare"
 
 #. module: hr_timesheet_invoice
 #: selection:report.account.analytic.line.to.invoice,month:0
@@ -793,7 +820,7 @@ msgstr "Produsul care va fi folosit pentru a factura suma ramasa"
 #. module: hr_timesheet_invoice
 #: field:hr.timesheet.invoice.create.final,time:0
 msgid "Time Spent"
-msgstr ""
+msgstr "Timp petrecut"
 
 #. module: hr_timesheet_invoice
 #: help:account.analytic.account,amount_max:0
@@ -805,6 +832,7 @@ msgstr ""
 #: view:hr.timesheet.invoice.create.final:0
 msgid "Do you want to show details of each activity to your customer?"
 msgstr ""
+"Doriti sa aratati detaliile fiecarei activitati clientului dumneavoastra?"
 
 #. module: hr_timesheet_invoice
 #: view:report_timesheet.invoice:0
@@ -833,7 +861,7 @@ msgstr "Nume"
 #. module: hr_timesheet_invoice
 #: view:report.account.analytic.line.to.invoice:0
 msgid "Analytic Lines"
-msgstr ""
+msgstr "Linii Analitice"
 
 #. module: hr_timesheet_invoice
 #: view:report_timesheet.account.date:0
@@ -866,6 +894,8 @@ msgid ""
 "There is no product defined. Please select one or force the product through "
 "the wizard."
 msgstr ""
+"Nu exista nici un produs definit. Va rugam sa selectati unul sau sa fortati "
+"produsul prin wizard."
 
 #. module: hr_timesheet_invoice
 #: help:hr_timesheet_invoice.factor,factor:0
@@ -894,19 +924,19 @@ msgstr "Unitati"
 #: code:addons/hr_timesheet_invoice/hr_timesheet_invoice.py:233
 #, python-format
 msgid "Error!"
-msgstr ""
+msgstr "Eroare!"
 
 #. module: hr_timesheet_invoice
 #: model:hr_timesheet_invoice.factor,name:hr_timesheet_invoice.timesheet_invoice_factor4
 msgid "80%"
-msgstr ""
+msgstr "80%"
 
 #. module: hr_timesheet_invoice
 #: view:hr.timesheet.analytic.profit:0
 #: view:hr.timesheet.invoice.create:0
 #: view:hr.timesheet.invoice.create.final:0
 msgid "or"
-msgstr ""
+msgstr "sau"
 
 #. module: hr_timesheet_invoice
 #: field:report_timesheet.invoice,manager_id:0
@@ -936,4 +966,4 @@ msgstr "An"
 #. module: hr_timesheet_invoice
 #: view:hr.timesheet.analytic.profit:0
 msgid "Duration"
-msgstr ""
+msgstr "Durata"

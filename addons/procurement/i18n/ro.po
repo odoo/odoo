@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-21 17:06+0000\n"
-"PO-Revision-Date: 2012-12-21 23:00+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2013-03-07 08:38+0000\n"
+"PO-Revision-Date: 2013-04-02 16:31+0000\n"
+"Last-Translator: Fekete Mihai <mihai@erpsystems.ro>\n"
 "Language-Team: Romanian <ro@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-01-18 06:58+0000\n"
-"X-Generator: Launchpad (build 16430)\n"
+"X-Launchpad-Export-Date: 2013-04-03 15:03+0000\n"
+"X-Generator: Launchpad (build 16546)\n"
 
 #. module: procurement
 #: model:ir.ui.menu,name:procurement.menu_stock_sched
@@ -26,6 +26,17 @@ msgstr "Programari"
 #: model:ir.model,name:procurement.model_make_procurement
 msgid "Make Procurements"
 msgstr "Efectuati aprovizionarile"
+
+#. module: procurement
+#: help:res.company,schedule_range:0
+msgid ""
+"This is the time frame analysed by the scheduler when computing "
+"procurements. All procurements that are not between today and today+range "
+"are skipped for future computation."
+msgstr ""
+"Acesta este cadrul temporal analizat de catre programator atunci cand a "
+"calculat aprovizionarile. Toate aprovizionarile care nu sunt la zi si "
+"azi+interval sunt omise la urmatorul calcul."
 
 #. module: procurement
 #: help:procurement.order.compute.all,automatic:0
@@ -54,6 +65,13 @@ msgid ""
 "required quantities are always\n"
 "                           available"
 msgstr ""
+"cantitatile necesare sunt intotdeauna\n"
+"                           disponibile"
+
+#. module: procurement
+#: view:procurement.order:0
+msgid "External note..."
+msgstr "Nota externa..."
 
 #. module: procurement
 #: view:product.product:0
@@ -63,6 +81,10 @@ msgid ""
 "inventory, you should\n"
 "                           create others rules like orderpoints."
 msgstr ""
+"Daca nu exista destule cantitati disponibile, ordinul de livrare\n"
+"                           va astepta produse noi. Pentru a realiza "
+"inventarul, ar trebui sa\n"
+"                           creati alte reguli, precum puncte de comanda."
 
 #. module: procurement
 #: field:procurement.order,procure_method:0
@@ -73,7 +95,7 @@ msgstr "Metoda de aprovizionare"
 #. module: procurement
 #: selection:product.template,supply_method:0
 msgid "Manufacture"
-msgstr ""
+msgstr "Fabricati"
 
 #. module: procurement
 #: model:process.process,name:procurement.process_process_serviceproductprocess0
@@ -88,7 +110,7 @@ msgstr "Calculati numai Regulile Stocului Minim"
 #. module: procurement
 #: view:stock.warehouse.orderpoint:0
 msgid "Rules"
-msgstr ""
+msgstr "Reguli"
 
 #. module: procurement
 #: field:procurement.order,company_id:0
@@ -109,7 +131,7 @@ msgstr "Motiv"
 #. module: procurement
 #: view:procurement.order.compute:0
 msgid "Compute Procurements"
-msgstr "Calculati Aprovizionarile"
+msgstr "Calculați Aprovizionăarile"
 
 #. module: procurement
 #: field:procurement.order,message:0
@@ -119,7 +141,7 @@ msgstr "Ultima eroare"
 #. module: procurement
 #: field:stock.warehouse.orderpoint,product_min_qty:0
 msgid "Minimum Quantity"
-msgstr ""
+msgstr "Cantitatea Minimă"
 
 #. module: procurement
 #: help:mrp.property,composition:0
@@ -151,22 +173,22 @@ msgstr ""
 #. module: procurement
 #: field:procurement.order,message_ids:0
 msgid "Messages"
-msgstr ""
+msgstr "Mesaje"
 
 #. module: procurement
-#: help:procurement.order,message:0
-msgid "Exception occurred while computing procurement orders."
-msgstr "Exceptia aparuta in timpul calcularii comenzilor de aprovizionare."
+#: view:procurement.order:0
+msgid "Cancel Procurement"
+msgstr "Anulați Aprovizionarea"
 
 #. module: procurement
 #: view:product.product:0
 msgid "Products"
-msgstr ""
+msgstr "Produse"
 
 #. module: procurement
 #: selection:procurement.order,state:0
 msgid "Cancelled"
-msgstr ""
+msgstr "Anulat(a)"
 
 #. module: procurement
 #: view:procurement.order:0
@@ -176,7 +198,7 @@ msgstr "Exceptii Permanente Aprovizionare"
 #. module: procurement
 #: help:procurement.order,message_unread:0
 msgid "If checked new messages require your attention."
-msgstr ""
+msgstr "Daca este selectat, mesajele noi necesita atentia dumneavoastra."
 
 #. module: procurement
 #: view:procurement.order.compute.all:0
@@ -186,18 +208,18 @@ msgstr "Parametri Programare"
 #. module: procurement
 #: model:ir.model,name:procurement.model_stock_move
 msgid "Stock Move"
-msgstr "Miscare stoc"
+msgstr "Mișcare stoc"
 
 #. module: procurement
 #: view:product.product:0
 msgid "Stockable products"
-msgstr ""
+msgstr "Produse care pot fi stocate"
 
 #. module: procurement
-#: code:addons/procurement/procurement.py:137
+#: code:addons/procurement/procurement.py:138
 #, python-format
 msgid "Invalid Action!"
-msgstr ""
+msgstr "Actiune Nevalida!"
 
 #. module: procurement
 #: help:procurement.order,message_summary:0
@@ -205,11 +227,13 @@ msgid ""
 "Holds the Chatter summary (number of messages, ...). This summary is "
 "directly in html format in order to be inserted in kanban views."
 msgstr ""
+"Contine rezumatul Chatter (numar de mesaje, ...). Acest rezumat este direct "
+"in format HTML, cu scopul de a se introduce in vizualizari kanban."
 
 #. module: procurement
 #: selection:procurement.order,state:0
 msgid "Ready"
-msgstr "Pregatit(a)"
+msgstr "Pregătit(ă)"
 
 #. module: procurement
 #: field:procurement.order.compute.all,automatic:0
@@ -233,16 +257,30 @@ msgid ""
 "                </p>\n"
 "            "
 msgstr ""
+"<p>\n"
+"                Comenzile de Aprovizionare reprezinta nevoia pentru o "
+"anumita cantitate de produse, la un anumit moment, intr-o anumita locatie. "
+"Comenzile de Vanzare sunt o sursa tipica de Comenzi de Aprovizionare (dar "
+"acestea sunt documente distincte). In functie de parametrii de aprovizionare "
+"si de configurarea produsului, motorul de aprovizionare va incerca sa "
+"satisfaca nevoia respectiva prin rezervarea produselor din stoc, comandarea "
+"produselor de la un furnizor, sau emiterea unei comenzi de productie, etc. O "
+"Exceptie de Aprovizionare are loc atunci cand sistemul nu poate gasi o "
+"modalitate de a indeplini o aprovizionare. Unele exceptii se vor rezolva "
+"automat, dar altele necesita interventie manuala (acelea sunt identificate "
+"printr-un mesaj de eroare specific).\n"
+"                </p>\n"
+"            "
 
 #. module: procurement
 #: selection:procurement.order,state:0
 msgid "Confirmed"
-msgstr "Confirmat(a)"
+msgstr "Confirmat(ă)"
 
 #. module: procurement
 #: view:procurement.order:0
 msgid "Retry"
-msgstr "Incearcati din nou"
+msgstr "Reîncearcă"
 
 #. module: procurement
 #: view:procurement.order.compute:0
@@ -258,7 +296,7 @@ msgstr "Confirmati"
 #. module: procurement
 #: view:stock.warehouse.orderpoint:0
 msgid "Quantity Multiple"
-msgstr ""
+msgstr "Cantitate Multipla"
 
 #. module: procurement
 #: help:procurement.order,origin:0
@@ -280,7 +318,7 @@ msgid "Minimum Inventory Rule"
 msgstr "Regula Inventarului Minim"
 
 #. module: procurement
-#: code:addons/procurement/procurement.py:369
+#: code:addons/procurement/procurement.py:370
 #, python-format
 msgid "Procurement '%s' is in exception: "
 msgstr "Aprovizionarea '%s' este in exceptie: "
@@ -293,7 +331,7 @@ msgstr "Prioritate"
 #. module: procurement
 #: view:stock.warehouse.orderpoint:0
 msgid "Reordering Rules Search"
-msgstr ""
+msgstr "Cauta Regulile pentru Comanda reinnoita"
 
 #. module: procurement
 #: selection:procurement.order,state:0
@@ -303,7 +341,7 @@ msgstr "In asteptare"
 #. module: procurement
 #: field:procurement.order,message_follower_ids:0
 msgid "Followers"
-msgstr ""
+msgstr "Persoane interesate"
 
 #. module: procurement
 #: field:procurement.order,location_id:0
@@ -367,7 +405,7 @@ msgid "Quantity"
 msgstr "Cantitate"
 
 #. module: procurement
-#: code:addons/procurement/procurement.py:364
+#: code:addons/procurement/procurement.py:365
 #, python-format
 msgid "Not enough stock and no minimum orderpoint rule defined."
 msgstr ""
@@ -384,7 +422,7 @@ msgstr "Unitatea de masura"
 #: selection:procurement.order,procure_method:0
 #: selection:product.template,procure_method:0
 msgid "Make to Stock"
-msgstr ""
+msgstr "Produce pe stoc"
 
 #. module: procurement
 #: model:ir.actions.act_window,help:procurement.procurement_action
@@ -406,6 +444,23 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<clasa p=\"oe_vizualizare_niciuncontinut_creeaza\">\n"
+"                Clic pentru a crea o comanda de aprovizionare. \n"
+"              </p><p>\n"
+"                O comanda de aprovizionare este utilizata pentru a "
+"inregistra o nevoie pentru un anumit\n"
+"                produs dintr-o anumita locatie. Comenzile de aprovizionare "
+"sunt de obicei\n"
+"                create automat din comenzi de vanzare, reguli logistice sau\n"
+"                reguli de stoc minim.\n"
+"              </p><p>\n"
+"                Atunci cand este confirmata comanda de aprovizionare, "
+"creeaza\n"
+"                automat operatiunile necesare pentru a indeplini nevoia: "
+"propunerea\n"
+"               pentru comanda de cumparare, comanda de productie, etc.\n"
+"              </p>\n"
+"            "
 
 #. module: procurement
 #: help:procurement.order,procure_method:0
@@ -427,6 +482,8 @@ msgid ""
 "use the available\n"
 "                           inventory"
 msgstr ""
+"folositi inventarul\n"
+"                           disponibil"
 
 #. module: procurement
 #: model:ir.model,name:procurement.model_procurement_order
@@ -472,6 +529,11 @@ msgid "Compute Stock"
 msgstr "Calculati Stocul"
 
 #. module: procurement
+#: view:procurement.order:0
+msgid "e.g. SO005"
+msgstr "de exemplu SO005"
+
+#. module: procurement
 #: field:stock.warehouse.orderpoint,procurement_draft_ids:0
 msgid "Related Procurement Orders"
 msgstr "Comenzi de Aprovizionare Asociate"
@@ -479,7 +541,7 @@ msgstr "Comenzi de Aprovizionare Asociate"
 #. module: procurement
 #: field:procurement.order,message_unread:0
 msgid "Unread Messages"
-msgstr ""
+msgstr "Mesaje Necitite"
 
 #. module: procurement
 #: selection:mrp.property,composition:0
@@ -499,6 +561,14 @@ msgid ""
 " It is in 'Waiting'. status when the procurement is waiting for another one "
 "to finish."
 msgstr ""
+"Atunci cand este creata o aprovizionare, starea este setata pe 'Ciorna'.\n"
+" Daca aprovizionarea este confirmata, starea este setata pe 'Confirmata'.\n"
+"Dupa confirmare, starea este setata pe 'Operational'.\n"
+" Daca apare vreo exceptie la comanda, atunci starea este setata pe "
+"'Exceptie'.\n"
+" Odata indepartata exceptia, starea devine 'Pregatita'.\n"
+" Se afla in starea 'In asteptare' atunci cand aprovizionarea asteapta "
+"finalizarea alteia."
 
 #. module: procurement
 #: help:stock.warehouse.orderpoint,active:0
@@ -510,13 +580,9 @@ msgstr ""
 "comanda fara sa-l stergeti."
 
 #. module: procurement
-#: view:product.product:0
-msgid ""
-"When you sell this service, nothing special will be triggered\n"
-"                           to deliver the customer, as you set the "
-"procurement method as\n"
-"                           'Make to Stock'."
-msgstr ""
+#: view:procurement.order:0
+msgid "Internal note..."
+msgstr "Nota interna..."
 
 #. module: procurement
 #: help:procurement.orderpoint.compute,automatic:0
@@ -528,7 +594,7 @@ msgstr ""
 #: field:procurement.order,product_uom:0
 #: field:stock.warehouse.orderpoint,product_uom:0
 msgid "Product Unit of Measure"
-msgstr ""
+msgstr "Unitatea de Masura a Produsului"
 
 #. module: procurement
 #: constraint:stock.warehouse.orderpoint:0
@@ -536,6 +602,8 @@ msgid ""
 "You have to select a product unit of measure in the same category than the "
 "default unit of measure of the product"
 msgstr ""
+"Trebuie sa selectati o unitate de masura a produsului din aceeasi categorie "
+"decat unitatea de masura implicita a produsului"
 
 #. module: procurement
 #: view:procurement.order:0
@@ -548,6 +616,8 @@ msgid ""
 "as it's a consumable (as a result of this, the quantity\n"
 "                           on hand may become negative)."
 msgstr ""
+"pentru ca este consumabil (de aceea, cantitatea\n"
+"                           disponibila poate deveni negativa)."
 
 #. module: procurement
 #: field:procurement.order,note:0
@@ -561,6 +631,9 @@ msgid ""
 "OpenERP generates a procurement to bring the forecasted quantity to the Max "
 "Quantity."
 msgstr ""
+"Atunci cand stocul virtual scade sub Cantitatea Minima specificata pentru "
+"acest camp, OpenERP genereaza o aprovizonare pentru a aduce cantitatea "
+"estimata la Cantitatea Maxima."
 
 #. module: procurement
 #: selection:procurement.order,state:0
@@ -572,7 +645,7 @@ msgstr "Ciorna"
 #: model:ir.ui.menu,name:procurement.menu_stock_proc_schedulers
 #: view:procurement.order.compute.all:0
 msgid "Run Schedulers"
-msgstr ""
+msgstr "Rulati Programatoarele"
 
 #. module: procurement
 #: view:procurement.order.compute:0
@@ -588,12 +661,12 @@ msgstr "Stare"
 #. module: procurement
 #: selection:product.template,supply_method:0
 msgid "Buy"
-msgstr ""
+msgstr "Cumpara"
 
 #. module: procurement
 #: view:product.product:0
 msgid "for the delivery order."
-msgstr ""
+msgstr "pentru comanda de livrare."
 
 #. module: procurement
 #: selection:procurement.order,priority:0
@@ -607,19 +680,23 @@ msgid ""
 "will be generated, depending on the product type. \n"
 "Buy: When procuring the product, a purchase order will be generated."
 msgstr ""
+"Fabricare: Atunci cand procurati produsul, va fi generata o comanda de "
+"productie sau o sarcina, in functie de tipul produsului. \n"
+"Cumparare: Atunci cand procurati produsul, va fi generata o comanda de "
+"achizitie."
 
 #. module: procurement
 #: field:stock.warehouse.orderpoint,product_max_qty:0
 msgid "Maximum Quantity"
-msgstr ""
+msgstr "Cantitatea Maxima"
 
 #. module: procurement
 #: field:procurement.order,message_is_follower:0
 msgid "Is a Follower"
-msgstr ""
+msgstr "Este o persoana interesata"
 
 #. module: procurement
-#: code:addons/procurement/procurement.py:366
+#: code:addons/procurement/procurement.py:367
 #, python-format
 msgid "Not enough stock."
 msgstr "Stoc insuficient."
@@ -635,12 +712,14 @@ msgid "Procure Products"
 msgstr "Procurare produse"
 
 #. module: procurement
-#: code:addons/procurement/procurement.py:311
+#: code:addons/procurement/procurement.py:312
 #, python-format
 msgid ""
 "Please check the quantity in procurement order(s) for the product \"%s\", it "
 "should not be 0 or less!"
 msgstr ""
+"Va rugam sa verificati cantitatea din comenzile de aprovizionare pentru "
+"produsul \"%s\", nu trebuie sa fie 0 sau mai mica!"
 
 #. module: procurement
 #: field:procurement.order,date_planned:0
@@ -658,6 +737,8 @@ msgid ""
 "When you sell this product, a delivery order will be created.\n"
 "                           OpenERP will consider that the"
 msgstr ""
+"Atunci cand vindeti acest produs, va fi creat un ordin de livrare.\n"
+"                           OpenERP va considera ca"
 
 #. module: procurement
 #: code:addons/procurement/schedulers.py:133
@@ -674,6 +755,19 @@ msgstr "Punct de comanda Automat"
 #: field:stock.warehouse.orderpoint,qty_multiple:0
 msgid "Qty Multiple"
 msgstr "Cantitate multipla"
+
+#. module: procurement
+#: view:product.product:0
+msgid ""
+"When you sell this service, nothing special will be triggered\n"
+"                           to deliver the customer, as you set the "
+"procurement method as\n"
+"                           'Make to Stock'."
+msgstr ""
+"Atunci cand vindeti acest serviciu, nu va fi declansat nimic special\n"
+"                           de livrat clientului, pentru ca setati metoda de "
+"aprovizionare ca\n"
+"                           'Produs pe Stoc'."
 
 #. module: procurement
 #: help:stock.warehouse.orderpoint,qty_multiple:0
@@ -693,7 +787,7 @@ msgstr "Informatii suplimentare"
 #. module: procurement
 #: field:procurement.order,message_summary:0
 msgid "Summary"
-msgstr ""
+msgstr "Continut"
 
 #. module: procurement
 #: sql_constraint:stock.warehouse.orderpoint:0
@@ -713,7 +807,7 @@ msgstr "Data inchiderii"
 #. module: procurement
 #: view:res.company:0
 msgid "Logistics"
-msgstr ""
+msgstr "Logistica"
 
 #. module: procurement
 #: help:product.template,procure_method:0
@@ -722,6 +816,10 @@ msgid ""
 "for replenishment. \n"
 "Make to Order: When needed, the product is purchased or produced."
 msgstr ""
+"Produs pe Stoc: Atunci cand este nevoie, produsul este luat din stoc sau "
+"asteptam reaprovizionarea. \n"
+"Produs la Comanda: Atunci cand este necesar, produsul este achizitionat sau "
+"produs."
 
 #. module: procurement
 #: field:mrp.property,composition:0
@@ -729,7 +827,7 @@ msgid "Properties composition"
 msgstr "Alcatuire proprietati"
 
 #. module: procurement
-#: code:addons/procurement/procurement.py:310
+#: code:addons/procurement/procurement.py:311
 #, python-format
 msgid "Data Insufficient !"
 msgstr "Date Insuficiente !"
@@ -763,7 +861,6 @@ msgstr "Efectuat"
 
 #. module: procurement
 #: view:make.procurement:0
-#: view:procurement.order:0
 #: view:procurement.order.compute:0
 #: view:procurement.order.compute.all:0
 #: view:procurement.orderpoint.compute:0
@@ -786,10 +883,13 @@ msgid "Not urgent"
 msgstr "Nu e urgent"
 
 #. module: procurement
-#: model:ir.actions.act_window,name:procurement.product_open_orderpoint
-#: view:product.product:0
-msgid "Orderpoints"
-msgstr ""
+#: model:ir.actions.act_window,name:procurement.procurement_action5
+#: model:ir.actions.act_window,name:procurement.procurement_action_board
+#: model:ir.actions.act_window,name:procurement.procurement_exceptions
+#: model:ir.ui.menu,name:procurement.menu_stock_procurement_action
+#: view:procurement.order:0
+msgid "Procurement Exceptions"
+msgstr "Exceptii Aprovizionare"
 
 #. module: procurement
 #: help:stock.warehouse.orderpoint,product_max_qty:0
@@ -798,6 +898,9 @@ msgid ""
 "procurement to bring the forecasted quantity to the Quantity specified as "
 "Max Quantity."
 msgstr ""
+"Atunci cand stocul virtual coboara sub Cantitatea Minima, OpenERP genereaza "
+"o aprovizionare pentru a aduce cantitatea estimata la Cantitatea specificata "
+"drept Cantitatea Maxima."
 
 #. module: procurement
 #: model:ir.model,name:procurement.model_procurement_order_compute_all
@@ -815,13 +918,10 @@ msgid "Procurements in Exception"
 msgstr "Aprovizionari in Exceptie"
 
 #. module: procurement
-#: model:ir.actions.act_window,name:procurement.procurement_action5
-#: model:ir.actions.act_window,name:procurement.procurement_action_board
-#: model:ir.actions.act_window,name:procurement.procurement_exceptions
-#: model:ir.ui.menu,name:procurement.menu_stock_procurement_action
-#: view:procurement.order:0
-msgid "Procurement Exceptions"
-msgstr "Exceptii Aprovizionare"
+#: model:ir.actions.act_window,name:procurement.product_open_orderpoint
+#: view:product.product:0
+msgid "Orderpoints"
+msgstr "Puncte de comanda"
 
 #. module: procurement
 #: field:product.product,orderpoint_ids:0
@@ -838,6 +938,12 @@ msgid ""
 "order or\n"
 "                        a new task."
 msgstr ""
+"Completati pentru a lansa o cerere de aprovizionare pentru acest\n"
+"                        produs. In functie de configurarea produsului, "
+"aceasta ar putea\n"
+"                        declansa o comanda de achizitie ciorna, o comanda de "
+"productie sau\n"
+"                        o sarcina noua."
 
 #. module: procurement
 #: field:procurement.order,close_move:0
@@ -890,7 +996,7 @@ msgstr "Facut la comanda"
 #. module: procurement
 #: field:product.template,supply_method:0
 msgid "Supply Method"
-msgstr ""
+msgstr "Metoda de Aprovizionare"
 
 #. module: procurement
 #: field:procurement.order,move_id:0
@@ -905,7 +1011,7 @@ msgstr "Modul de aprovizionare depinde de tipul de produs."
 #. module: procurement
 #: view:product.product:0
 msgid "When you sell this product, OpenERP will"
-msgstr ""
+msgstr "Atunci cand vindeti acest produs, OpenERP va"
 
 #. module: procurement
 #: view:procurement.order:0
@@ -930,13 +1036,13 @@ msgstr "max"
 #: model:ir.ui.menu,name:procurement.menu_stock_order_points
 #: view:stock.warehouse.orderpoint:0
 msgid "Reordering Rules"
-msgstr ""
+msgstr "Reguli pentru Comanda reperata"
 
 #. module: procurement
-#: code:addons/procurement/procurement.py:138
+#: code:addons/procurement/procurement.py:139
 #, python-format
 msgid "Cannot delete Procurement Order(s) which are in %s state."
-msgstr ""
+msgstr "Nu se pit sterge Comenzile de Aprovizionare care sunt in starea %s."
 
 #. module: procurement
 #: field:procurement.order,product_uos:0
@@ -946,7 +1052,7 @@ msgstr "UdV Produs"
 #. module: procurement
 #: model:ir.model,name:procurement.model_product_template
 msgid "Product Template"
-msgstr ""
+msgstr "Sablon Produs"
 
 #. module: procurement
 #: view:procurement.orderpoint.compute:0
@@ -962,15 +1068,9 @@ msgid "Search Procurement"
 msgstr "Cautati Aprovizionarea"
 
 #. module: procurement
-#: help:res.company,schedule_range:0
-msgid ""
-"This is the time frame analysed by the scheduler when computing "
-"procurements. All procurements that are not between today and today+range "
-"are skipped for future computation."
-msgstr ""
-"Acesta este cadrul temporal analizat de catre programator atunci cand a "
-"calculat aprovizionarile. Toate aprovizionarile care nu sunt la zi si "
-"azi+interval sunt omise la urmatorul calcul."
+#: help:procurement.order,message:0
+msgid "Exception occurred while computing procurement orders."
+msgstr "Exceptia aparuta in timpul calcularii comenzilor de aprovizionare."
 
 #. module: procurement
 #: selection:procurement.order,priority:0
@@ -985,7 +1085,7 @@ msgstr "Punct de comanda Automat"
 #. module: procurement
 #: help:procurement.order,message_ids:0
 msgid "Messages and communication history"
-msgstr ""
+msgstr "Istoric mesaje si conversatii"
 
 #. module: procurement
 #: view:procurement.order:0
@@ -1003,7 +1103,7 @@ msgstr "min"
 #: view:procurement.order.compute.all:0
 #: view:procurement.orderpoint.compute:0
 msgid "or"
-msgstr ""
+msgstr "sau"
 
 #. module: procurement
 #: code:addons/procurement/schedulers.py:134
@@ -1014,7 +1114,7 @@ msgstr "PROGRAMATOR"
 #. module: procurement
 #: view:product.product:0
 msgid "Request Procurement"
-msgstr ""
+msgstr "Solicitati Aprovizionarea"
 
 #. module: procurement
 #: code:addons/procurement/schedulers.py:87
@@ -1023,7 +1123,7 @@ msgid "PROC %d: on order - %3.2f %-5s - %s"
 msgstr "APROV %d: la comanda - %3.2f %-5s - %s"
 
 #. module: procurement
-#: code:addons/procurement/procurement.py:338
+#: code:addons/procurement/procurement.py:339
 #, python-format
 msgid "Products reserved from stock."
-msgstr ""
+msgstr "Produse rezervate din stoc."

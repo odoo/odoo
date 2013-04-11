@@ -1,0 +1,136 @@
+# Brazilian Portuguese translation for openobject-addons
+# Copyright (c) 2013 Rosetta Contributors and Canonical Ltd 2013
+# This file is distributed under the same license as the openobject-addons package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2013.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: openobject-addons\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2012-11-24 02:53+0000\n"
+"PO-Revision-Date: 2013-01-27 09:45+0000\n"
+"Last-Translator: Fábio Martinelli - http://zupy.com.br "
+"<webmaster@guaru.net>\n"
+"Language-Team: Brazilian Portuguese <pt_BR@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Launchpad-Export-Date: 2013-03-28 05:46+0000\n"
+"X-Generator: Launchpad (build 16546)\n"
+
+#. module: l10n_fr_rib
+#: constraint:res.partner.bank:0
+msgid ""
+"\n"
+"Please define BIC/Swift code on bank for bank type IBAN Account to make "
+"valid payments"
+msgstr ""
+"\n"
+"Por favor defina o BIC/Swift code no Banco para o tipo de conta IBAN para "
+"fazer pagamentos válidos"
+
+#. module: l10n_fr_rib
+#: model:res.partner.bank.type,name:l10n_fr_rib.bank_rib
+msgid "RIB and optional IBAN"
+msgstr "RIB e IBAN Opcional"
+
+#. module: l10n_fr_rib
+#: field:res.partner.bank,rib_acc_number:0
+msgid "RIB account number"
+msgstr "Número da Conta RIB"
+
+#. module: l10n_fr_rib
+#: field:res.partner.bank,bank_code:0
+msgid "Bank Code"
+msgstr "Código do Banco"
+
+#. module: l10n_fr_rib
+#: code:addons/l10n_fr_rib/bank.py:54
+#, python-format
+msgid "The RIB key %s does not correspond to the other codes: %s %s %s."
+msgstr "A chave RIB %s não corresponde aos outros códigos: %s %s %s."
+
+#. module: l10n_fr_rib
+#: model:res.partner.bank.type.field,name:l10n_fr_rib.rib_office_field
+msgid "office"
+msgstr "escritório"
+
+#. module: l10n_fr_rib
+#: field:res.bank,rib_code:0
+msgid "RIB Bank Code"
+msgstr "Código RIB do Banco"
+
+#. module: l10n_fr_rib
+#: code:addons/l10n_fr_rib/bank.py:58
+#, python-format
+msgid "The IBAN %s is not valid."
+msgstr "O IBAN %s não é válido."
+
+#. module: l10n_fr_rib
+#: model:ir.model,name:l10n_fr_rib.model_res_partner_bank
+msgid "Bank Accounts"
+msgstr "Contas Bancárias"
+
+#. module: l10n_fr_rib
+#: field:res.partner.bank,office:0
+msgid "Office Code"
+msgstr "Código do Escritório"
+
+#. module: l10n_fr_rib
+#: model:res.partner.bank.type.field,name:l10n_fr_rib.rib_bic_field
+msgid "bank_bic"
+msgstr "bank_bic"
+
+#. module: l10n_fr_rib
+#: model:res.partner.bank.type.field,name:l10n_fr_rib.rib_bank_code_field
+msgid "bank_code"
+msgstr "bank_code"
+
+#. module: l10n_fr_rib
+#: model:res.partner.bank.type.field,name:l10n_fr_rib.rib_key_field
+msgid "key"
+msgstr "chave"
+
+#. module: l10n_fr_rib
+#: code:addons/l10n_fr_rib/bank.py:53
+#: code:addons/l10n_fr_rib/bank.py:58
+#, python-format
+msgid "Error!"
+msgstr "Erro!"
+
+#. module: l10n_fr_rib
+#: help:res.partner.bank,key:0
+msgid ""
+"The key is a number allowing to check the correctness of the other codes."
+msgstr ""
+"A chave é um número que permite verificar a procedência dos outros códigos."
+
+#. module: l10n_fr_rib
+#: field:res.partner.bank,key:0
+msgid "Key"
+msgstr "Chave"
+
+#. module: l10n_fr_rib
+#: model:res.partner.bank.type.field,name:l10n_fr_rib.rib_rib_acc_number_field
+msgid "rib_acc_number"
+msgstr "rib_acc_number"
+
+#. module: l10n_fr_rib
+#: model:res.partner.bank.type,format_layout:l10n_fr_rib.bank_rib
+msgid "%(bank_name)s: %(bank_code)s %(office)s %(rib_acc_number)s %(key)s"
+msgstr "%(bank_name)s: %(bank_code)s %(office)s %(rib_acc_number)s %(key)s"
+
+#. module: l10n_fr_rib
+#: constraint:res.partner.bank:0
+msgid "The RIB and/or IBAN is not valid"
+msgstr "A RIB e/ ou IBAN não é válido."
+
+#. module: l10n_fr_rib
+#: model:ir.model,name:l10n_fr_rib.model_res_bank
+msgid "Bank"
+msgstr "Banco"
+
+#. module: l10n_fr_rib
+#: model:res.partner.bank.type.field,name:l10n_fr_rib.rib_acc_number_field
+msgid "acc_number"
+msgstr "acc_number"

@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-21 17:04+0000\n"
-"PO-Revision-Date: 2012-12-25 21:11+0000\n"
+"POT-Creation-Date: 2013-03-07 08:37+0000\n"
+"PO-Revision-Date: 2013-02-11 13:41+0000\n"
 "Last-Translator: Erwin van der Ploeg (Endian Solutions) <Unknown>\n"
 "Language-Team: Dutch <nl@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-01-18 06:47+0000\n"
-"X-Generator: Launchpad (build 16430)\n"
+"X-Launchpad-Export-Date: 2013-03-28 05:42+0000\n"
+"X-Generator: Launchpad (build 16546)\n"
 
 #. module: hr_timesheet
 #: model:ir.actions.act_window,help:hr_timesheet.act_analytic_cost_revenue
@@ -42,6 +42,27 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p>\n"
+"                Nog geen activiteit op dit contract.\n"
+"              </p><p>\n"
+"                In OpenERP, zijn contracten en projecten opgenomen als een "
+"kostenplaats.\n"
+"                Dus, kunt u uw kosten en opbrengsten bijhouden om zo uw "
+"marges te analyseren\n"
+"              </ p>\n"
+"                De kosten zullen automatisch gemaakt wanneer u "
+"inkoopfacturen, declaraties of\n"
+"                urenstaten boekt.\n"
+"              </ p>\n"
+"                Opbregsten worden automatisch gemaakt wanneer u "
+"klantfacturen maakt.\n"
+"                Klant facturen kunnen worden aangemaakt op basis van "
+"verkooporders\n"
+"                (vaste prijs facturen), op urenstaten (op basis van de "
+"verrichte werkzaamheden) of\n"
+"                op de uitgaven (bijv. doorrekeningen van reiskosten).\n"
+"              </p>\n"
+"            "
 
 #. module: hr_timesheet
 #: code:addons/hr_timesheet/report/user_timesheet.py:44
@@ -130,7 +151,7 @@ msgstr "Vr"
 #: model:ir.actions.act_window,name:hr_timesheet.act_hr_timesheet_line_evry1_all_form
 #: model:ir.ui.menu,name:hr_timesheet.menu_hr_working_hours
 msgid "Timesheet Activities"
-msgstr "Urenstaking activiteiten"
+msgstr "Urenstaten activiteiten"
 
 #. module: hr_timesheet
 #: field:hr.sign.out.project,analytic_amount:0
@@ -167,7 +188,7 @@ msgstr "Urenverantwoording werknemer afdrukken"
 #: code:addons/hr_timesheet/wizard/hr_timesheet_sign_in_out.py:132
 #, python-format
 msgid "Please define employee for your user."
-msgstr ""
+msgstr "Maak een werknemer aan voor deze gebruiker."
 
 #. module: hr_timesheet
 #: model:ir.actions.act_window,name:hr_timesheet.act_analytic_cost_revenue
@@ -245,6 +266,16 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Klik voor het aanmaken van activiteiten.\n"
+"              </p><p>\n"
+"                U kunt uw gewerkte uren per dag per project registreren en "
+"volgen.\n"
+"                Elke tijd besteed aan een projectgeeft kosten op de "
+"kostenplaats/contract\n"
+"                en kan, indien nodig,  worden doorberekend aan de klant.\n"
+"              </p>\n"
+"            "
 
 #. module: hr_timesheet
 #: view:hr.analytical.timesheet.employee:0
@@ -255,7 +286,7 @@ msgstr "Afdrukken"
 #. module: hr_timesheet
 #: help:account.analytic.account,use_timesheets:0
 msgid "Check this field if this project manages timesheets"
-msgstr ""
+msgstr "Vink dit aan als voor dit project uren worden bijgehouden."
 
 #. module: hr_timesheet
 #: view:hr.analytical.timesheet.users:0
@@ -281,7 +312,7 @@ msgstr "Begindatum"
 #: code:addons/hr_timesheet/wizard/hr_timesheet_sign_in_out.py:77
 #, python-format
 msgid "Please define cost unit for this employee."
-msgstr ""
+msgstr "Definieer een kosten eenheid voor deze werknemer."
 
 #. module: hr_timesheet
 #: help:hr.employee,product_id:0
@@ -296,6 +327,8 @@ msgid ""
 "No analytic account is defined on the project.\n"
 "Please set one or we cannot automatically fill the timesheet."
 msgstr ""
+"Er is geen kostenplaats gedefinieerd voor dit project.\n"
+"Geef deze in, anders kan het systeem de urenstaat niet automatisch invullen."
 
 #. module: hr_timesheet
 #: view:hr.analytic.timesheet:0
@@ -309,6 +342,9 @@ msgid ""
 "No 'Analytic Journal' is defined for employee %s \n"
 "Define an employee for the selected user and assign an 'Analytic Journal'!"
 msgstr ""
+"Er is geen 'kostenplaats dagboek' gedefinieerd voor deze werknemer %s \n"
+"Definieer een werknemer voor de geselecteerde gebruiker en wijs een "
+"kostenplaats dagboek toe!"
 
 #. module: hr_timesheet
 #: code:addons/hr_timesheet/report/user_timesheet.py:41
@@ -423,6 +459,8 @@ msgid ""
 "No analytic journal defined for '%s'.\n"
 "You should assign an analytic journal on the employee form."
 msgstr ""
+"Geen kostenplaats gedefinieerd voor '%s'.\n"
+"U dient een kostenplaats dagboek toe te wijzen bij de werknemer instellingen."
 
 #. module: hr_timesheet
 #: code:addons/hr_timesheet/report/user_timesheet.py:41
@@ -524,7 +562,7 @@ msgstr "Annuleren"
 #: model:ir.actions.report.xml,name:hr_timesheet.report_users_timesheet
 #: model:ir.ui.menu,name:hr_timesheet.menu_hr_timesheet_users
 msgid "Employees Timesheet"
-msgstr "Urenstaat meerdere werknemers"
+msgstr "Urenstaat werknemers"
 
 #. module: hr_timesheet
 #: view:hr.analytic.timesheet:0
@@ -617,6 +655,8 @@ msgid ""
 "Please create an employee for this user, using the menu: Human Resources > "
 "Employees."
 msgstr ""
+"Maak een werknemer aan voor deze gebruiker. Ga naar het menu: Personeel > "
+"Werknemers."
 
 #. module: hr_timesheet
 #: view:hr.analytical.timesheet.users:0

@@ -181,11 +181,11 @@ class contentIndex(object):
                 res = (mime, fobj.indexContent(content,filename,fname or realfname) )
             else:
                 _logger.debug("Have no object, return (%s, None).", mime)
-                res = (mime, None )
+                res = (mime, '')
         except Exception:
             _logger.exception("Cannot index file %s (%s).",
                                     filename, fname or realfname)
-            res = None
+            res = (mime, '')
 
         # If we created a tmp file, unlink it now
         if not realfname and fname:

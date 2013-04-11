@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-21 17:06+0000\n"
-"PO-Revision-Date: 2012-12-21 23:00+0000\n"
+"POT-Creation-Date: 2013-03-07 08:38+0000\n"
+"PO-Revision-Date: 2013-03-08 20:49+0000\n"
 "Last-Translator: Ayhan KIZILTAN <Unknown>\n"
 "Language-Team: Turkish <tr@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-01-18 07:04+0000\n"
-"X-Generator: Launchpad (build 16430)\n"
+"X-Launchpad-Export-Date: 2013-03-28 05:59+0000\n"
+"X-Generator: Launchpad (build 16546)\n"
 
 #. module: purchase_requisition
 #: view:purchase.requisition:0
@@ -30,7 +30,7 @@ msgstr "Çoklu İstekler"
 #. module: purchase_requisition
 #: field:purchase.requisition.line,product_uom_id:0
 msgid "Product Unit of Measure"
-msgstr ""
+msgstr "Ürün Ölçü Birimi"
 
 #. module: purchase_requisition
 #: model:ir.actions.act_window,help:purchase_requisition.action_purchase_requisition
@@ -49,6 +49,19 @@ msgid ""
 "          </p>\n"
 "        "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"            Yeni bir satınalma isteği işlemi oluşturmak için tıklayın. \n"
+"          </p><p>\n"
+"            Bir satınalma isteği teklif isteğinden önceki adımdır.\n"
+"            Bir satınalma isteğinde (satınalma ihalesi) satınalmak "
+"istediğiniz\n"
+"            ürünleri kaydedebilir ve tedarikçilerden Sİ leri "
+"oluşturabilirsiniz.\n"
+"            Tüm tedarikçilerden gelen teklifleri inceleyip anlaşma "
+"görüşmelerinden\n"
+"            sonra bazılarını doğrulayıp bazılarını iptal edebilirsiniz.\n"
+"          </p>\n"
+"        "
 
 #. module: purchase_requisition
 #: view:purchase.requisition:0
@@ -58,14 +71,19 @@ msgstr "Sorumlu"
 
 #. module: purchase_requisition
 #: view:purchase.requisition:0
+msgid "Cancel Requisition"
+msgstr "İsteği İptal et"
+
+#. module: purchase_requisition
+#: view:purchase.requisition:0
 #: field:purchase.requisition,state:0
 msgid "Status"
-msgstr ""
+msgstr "Durumu"
 
 #. module: purchase_requisition
 #: view:purchase.requisition:0
 msgid "Send to Suppliers"
-msgstr ""
+msgstr "Tedarikçiye Gönder"
 
 #. module: purchase_requisition
 #: view:purchase.requisition:0
@@ -76,12 +94,12 @@ msgstr "Gruplandır..."
 #: view:purchase.requisition:0
 #: selection:purchase.requisition,state:0
 msgid "Purchase Done"
-msgstr ""
+msgstr "Satınalma Yapıldı"
 
 #. module: purchase_requisition
 #: field:purchase.requisition,message_follower_ids:0
 msgid "Followers"
-msgstr ""
+msgstr "Takipçiler"
 
 #. module: purchase_requisition
 #: view:purchase.requisition:0
@@ -113,7 +131,7 @@ msgstr "Mik"
 #. module: purchase_requisition
 #: report:purchase.requisition:0
 msgid "Type"
-msgstr "Tür"
+msgstr "Tipi"
 
 #. module: purchase_requisition
 #: model:ir.actions.act_window,name:purchase_requisition.action_purchase_requisition_partner
@@ -131,12 +149,12 @@ msgstr "Satınalma İsteği"
 #. module: purchase_requisition
 #: model:ir.model,name:purchase_requisition.model_purchase_requisition_line
 msgid "Purchase Requisition Line"
-msgstr "Satınalma İsteği Öğesi"
+msgstr "Satınalma İsteği Kalemi"
 
 #. module: purchase_requisition
 #: view:purchase.order:0
 msgid "Purchase Orders with requisition"
-msgstr "İstekli Satınalma Siparişleri"
+msgstr "İstenmiş Satınalma Siparişleri"
 
 #. module: purchase_requisition
 #: model:ir.model,name:purchase_requisition.model_product_product
@@ -152,7 +170,7 @@ msgstr "Teklifler"
 #. module: purchase_requisition
 #: view:purchase.requisition:0
 msgid "Terms and Conditions"
-msgstr ""
+msgstr "Şartlar ve Koşullar"
 
 #. module: purchase_requisition
 #: report:purchase.requisition:0
@@ -163,13 +181,13 @@ msgstr "Açıklama"
 #. module: purchase_requisition
 #: field:purchase.requisition,message_unread:0
 msgid "Unread Messages"
-msgstr ""
+msgstr "Okunmamış Mesajlar"
 
 #. module: purchase_requisition
 #: field:purchase.requisition,company_id:0
 #: field:purchase.requisition.line,company_id:0
 msgid "Company"
-msgstr "Firma"
+msgstr "Şirket"
 
 #. module: purchase_requisition
 #: view:purchase.requisition.partner:0
@@ -177,24 +195,29 @@ msgid "Create Quotation"
 msgstr "Teklif Oluştur"
 
 #. module: purchase_requisition
+#: view:purchase.requisition:0
+msgid "e.g. PO0025"
+msgstr "örn. PO0025"
+
+#. module: purchase_requisition
 #: help:purchase.requisition,message_ids:0
 msgid "Messages and communication history"
-msgstr ""
+msgstr "Mesajlar ve iletişim geçmişi"
 
 #. module: purchase_requisition
 #: view:purchase.requisition:0
 msgid "Approved by Supplier"
-msgstr "Tedarikçi tarafından onaylandı"
+msgstr "Tedarikçiden Onaylı"
 
 #. module: purchase_requisition
 #: view:purchase.requisition.partner:0
 msgid "or"
-msgstr ""
+msgstr "veya"
 
 #. module: purchase_requisition
 #: view:purchase.requisition:0
 msgid "Reset to Draft"
-msgstr "Taslağa Geri Dönüştür"
+msgstr "Taslağa Sıfırla"
 
 #. module: purchase_requisition
 #: view:purchase.requisition:0
@@ -214,7 +237,7 @@ msgstr "Sipariş Referansı"
 #. module: purchase_requisition
 #: field:purchase.requisition,message_is_follower:0
 msgid "Is a Follower"
-msgstr ""
+msgstr "Bir Takipçi"
 
 #. module: purchase_requisition
 #: field:purchase.requisition.line,product_qty:0
@@ -244,8 +267,8 @@ msgid ""
 "You have already one %s purchase order for this partner, you must cancel "
 "this purchase order to create a new quotation."
 msgstr ""
-"Bu paydaş için zaten bir %s siparişiniz var, yeni bir teklif oluşturmak için "
-"bu siparişi iptal edin."
+"Bu iş ortağı için zaten bir %s siparişiniz var, yeni bir teklif oluşturmak "
+"için bu siparişi iptal edin."
 
 #. module: purchase_requisition
 #: view:purchase.requisition:0
@@ -267,7 +290,7 @@ msgstr "Satınalınacak Ürünler"
 #: view:purchase.requisition:0
 #: selection:purchase.requisition,state:0
 msgid "Sent to Suppliers"
-msgstr ""
+msgstr "Tedarikçiye Gönder"
 
 #. module: purchase_requisition
 #: view:purchase.requisition:0
@@ -278,7 +301,7 @@ msgstr "Satınalma İsteği Ara"
 #: code:addons/purchase_requisition/wizard/purchase_requisition_partner.py:41
 #, python-format
 msgid "No Product in Tender."
-msgstr ""
+msgstr "Teklifte hiç Ürün yok."
 
 #. module: purchase_requisition
 #: report:purchase.requisition:0
@@ -288,7 +311,7 @@ msgstr "Sipariş Tarihi"
 #. module: purchase_requisition
 #: field:purchase.requisition,message_ids:0
 msgid "Messages"
-msgstr ""
+msgstr "Mesajlar"
 
 #. module: purchase_requisition
 #: help:purchase.requisition,exclusive:0
@@ -307,7 +330,7 @@ msgstr ""
 #. module: purchase_requisition
 #: view:purchase.requisition:0
 msgid "Cancel Purchase Order"
-msgstr "Alış Siparişini İptal Et"
+msgstr "Satınalma Siparişi İptal"
 
 #. module: purchase_requisition
 #: model:ir.model,name:purchase_requisition.model_purchase_order
@@ -318,7 +341,7 @@ msgstr "Satınalma Siparişi"
 #. module: purchase_requisition
 #: field:purchase.requisition,origin:0
 msgid "Source Document"
-msgstr ""
+msgstr "Kaynak Belge"
 
 #. module: purchase_requisition
 #: code:addons/purchase_requisition/wizard/purchase_requisition_partner.py:41
@@ -354,17 +377,17 @@ msgstr "Vazgeçildi"
 #. module: purchase_requisition
 #: model:ir.model,name:purchase_requisition.model_purchase_requisition_partner
 msgid "Purchase Requisition Partner"
-msgstr "Satınalma İsteği Paydaşı"
+msgstr "Satınalma İsteği Partner"
 
 #. module: purchase_requisition
 #: help:purchase.requisition,message_unread:0
 msgid "If checked new messages require your attention."
-msgstr ""
+msgstr "Eğer seçilirse yeni mesajlar dikkat gerektirir."
 
 #. module: purchase_requisition
 #: report:purchase.requisition:0
 msgid "Purchase for Requisitions"
-msgstr "İstekler için Satınalma"
+msgstr "İstek için Satınalma"
 
 #. module: purchase_requisition
 #: model:ir.actions.act_window,name:purchase_requisition.act_res_partner_2_purchase_order
@@ -374,12 +397,12 @@ msgstr "Satınalma siparişleri"
 #. module: purchase_requisition
 #: field:purchase.requisition,date_end:0
 msgid "Requisition Deadline"
-msgstr "İstek Bitiş Tarihi"
+msgstr "İstek ZamanSınırı"
 
 #. module: purchase_requisition
 #: field:purchase.requisition,message_summary:0
 msgid "Summary"
-msgstr ""
+msgstr "Özet"
 
 #. module: purchase_requisition
 #: view:purchase.requisition:0
@@ -395,7 +418,7 @@ msgstr "Tedarik"
 #: report:purchase.requisition:0
 #: view:purchase.requisition:0
 msgid "Source"
-msgstr ""
+msgstr "Kaynak"
 
 #. module: purchase_requisition
 #: field:purchase.requisition,warehouse_id:0
@@ -423,17 +446,19 @@ msgid ""
 "Holds the Chatter summary (number of messages, ...). This summary is "
 "directly in html format in order to be inserted in kanban views."
 msgstr ""
+"Sohbetçi özetini tutar (mesajların sayısı, ...). Bu özet kanban ekranlarına "
+"eklenebilmesi için html biçimindedir."
 
 #. module: purchase_requisition
 #: report:purchase.requisition:0
 msgid "Product UoM"
-msgstr "Ürün Ölçü Birimi"
+msgstr "Ürün UoM"
 
 #. module: purchase_requisition
 #: code:addons/purchase_requisition/purchase_requisition.py:134
 #, python-format
 msgid "Warning!"
-msgstr ""
+msgstr "Uyar!"
 
 #. module: purchase_requisition
 #: view:purchase.requisition:0
@@ -441,7 +466,6 @@ msgid "Confirm Purchase Order"
 msgstr "Satınalma Siparişi Onayla"
 
 #. module: purchase_requisition
-#: view:purchase.requisition:0
 #: view:purchase.requisition.partner:0
 msgid "Cancel"
 msgstr "Vazgeç"
@@ -473,6 +497,8 @@ msgid ""
 "Check this box to generates purchase requisition instead of generating "
 "requests for quotation from procurement."
 msgstr ""
+"Tedarik tekliflerinden satınalma istekleri oluşturmak yerine bu kutuyu "
+"işaretleyerek satınalma istekleri oluşturabilirsiniz."
 
 #. module: purchase_requisition
 #: field:purchase.requisition,purchase_ids:0

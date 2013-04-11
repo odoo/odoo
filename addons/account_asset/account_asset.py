@@ -25,6 +25,7 @@ from dateutil.relativedelta import relativedelta
 
 from openerp.osv import fields, osv
 import openerp.addons.decimal_precision as dp
+from tools.translate import _
 
 class account_asset_category(osv.osv):
     _name = 'account.asset.category'
@@ -74,6 +75,12 @@ account_asset_category()
 class account_asset_asset(osv.osv):
     _name = 'account.asset.asset'
     _description = 'Asset'
+
+    def unlink(self, cr, uid, ids, context=None):
+        for asset in self.browse(cr, uid, ids, context=context):
+            if asset.account_move_line_ids: 
+                raise osv.except_osv(_('Error!'), _('You cannot delete an asset that contains posted depreciation lines.'))
+        return super(account_asset_asset, self).unlink(cr, uid, ids, context=context)
 
     def _get_period(self, cr, uid, context=None):
         periods = self.pool.get('account.period').find(cr, uid)
@@ -331,6 +338,9 @@ class account_asset_asset(osv.osv):
         depreciation_obj = self.pool.get('account.asset.depreciation.line')
         period = period_obj.browse(cr, uid, period_id, context=context)
         depreciation_ids = depreciation_obj.search(cr, uid, [('asset_id', 'in', ids), ('depreciation_date', '<=', period.date_stop), ('depreciation_date', '>=', period.date_start), ('move_check', '=', False)], context=context)
+        if context is None:
+            context = {}
+        context.update({'depreciation_date':period.date_stop})
         return depreciation_obj.create_move(cr, uid, depreciation_ids, context=context)
 
     def create(self, cr, uid, vals, context=None):
@@ -366,7 +376,7 @@ class account_asset_depreciation_line(osv.osv):
     _columns = {
         'name': fields.char('Depreciation Name', size=64, required=True, select=1),
         'sequence': fields.integer('Sequence', required=True),
-        'asset_id': fields.many2one('account.asset.asset', 'Asset', required=True),
+        'asset_id': fields.many2one('account.asset.asset', 'Asset', required=True, ondelete='cascade'),
         'parent_state': fields.related('asset_id', 'state', type='char', string='State of Asset'),
         'amount': fields.float('Current Depreciation', digits_compute=dp.get_precision('Account'), required=True),
         'remaining_value': fields.float('Next Period Depreciation', digits_compute=dp.get_precision('Account'),required=True),
@@ -388,7 +398,7 @@ class account_asset_depreciation_line(osv.osv):
         created_move_ids = []
         asset_ids = []
         for line in self.browse(cr, uid, ids, context=context):
-            depreciation_date = time.strftime('%Y-%m-%d')
+            depreciation_date = context.get('depreciation_date') or time.strftime('%Y-%m-%d')
             period_ids = period_obj.find(cr, uid, depreciation_date, context=context)
             company_currency = line.asset_id.company_id.currency_id.id
             current_currency = line.asset_id.currency_id.id
@@ -451,7 +461,7 @@ account_asset_depreciation_line()
 class account_move_line(osv.osv):
     _inherit = 'account.move.line'
     _columns = {
-        'asset_id': fields.many2one('account.asset.asset', 'Asset'),
+        'asset_id': fields.many2one('account.asset.asset', 'Asset', ondelete="restrict"),
         'entry_ids': fields.one2many('account.move.line', 'asset_id', 'Entries', readonly=True, states={'draft':[('readonly',False)]}),
 
     }

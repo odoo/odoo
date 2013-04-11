@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-21 17:05+0000\n"
-"PO-Revision-Date: 2012-12-21 23:00+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2013-03-07 08:38+0000\n"
+"PO-Revision-Date: 2013-03-07 19:37+0000\n"
+"Last-Translator: Fekete Mihai <mihai@erpsystems.ro>\n"
 "Language-Team: Romanian <ro@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-01-18 06:53+0000\n"
-"X-Generator: Launchpad (build 16430)\n"
+"X-Launchpad-Export-Date: 2013-03-28 05:48+0000\n"
+"X-Generator: Launchpad (build 16546)\n"
 
 #. module: marketing_campaign
 #: view:marketing.campaign:0
@@ -78,7 +78,7 @@ msgstr "Declanseaza"
 #. module: marketing_campaign
 #: view:marketing.campaign:0
 msgid "Follow-Up"
-msgstr ""
+msgstr "Urmare"
 
 #. module: marketing_campaign
 #: field:campaign.analysis,count:0
@@ -104,6 +104,8 @@ msgid ""
 "Hi, we are delighted to let you know that you have entered the select circle "
 "of our Gold Partners"
 msgstr ""
+"Buna ziua, suntem incantati va sa aducem la cunostinta faptul ca ati intrat "
+"in cercul select al Partenerilor nostri de Aur"
 
 #. module: marketing_campaign
 #: selection:campaign.analysis,month:0
@@ -162,11 +164,15 @@ msgid ""
 "The campaign cannot be started. It does not have any starting activity. "
 "Modify campaign's activities to mark one as the starting point."
 msgstr ""
+"Campania nu poate fi initiata. Nu are nici o activitate de plecare. "
+"Modificati activitatile campaniei pentru a marca una drept punctul de "
+"plecare."
 
 #. module: marketing_campaign
 #: help:marketing.campaign.activity,email_template_id:0
 msgid "The email to send when this activity is activated"
 msgstr ""
+"Email-ul care va fi trimis atunci cand aceasta activitate este activata"
 
 #. module: marketing_campaign
 #: view:marketing.campaign.segment:0
@@ -198,7 +204,7 @@ msgstr "Alegeti resursa unde doriti sa ruleze aceasta campanie"
 #. module: marketing_campaign
 #: model:ir.actions.client,name:marketing_campaign.action_client_marketing_menu
 msgid "Open Marketing Menu"
-msgstr ""
+msgstr "Deschide Meniul de Marketing"
 
 #. module: marketing_campaign
 #: field:marketing.campaign.segment,sync_last_date:0
@@ -209,6 +215,11 @@ msgstr "Ultima sincronizare"
 #: selection:marketing.campaign.transition,interval_type:0
 msgid "Year(s)"
 msgstr "An(i)"
+
+#. module: marketing_campaign
+#: help:marketing.campaign.segment,date_run:0
+msgid "Initial start date of this segment."
+msgstr "Data initiala de inceput a acestui segment."
 
 #. module: marketing_campaign
 #: help:marketing.campaign.segment,sync_last_date:0
@@ -252,14 +263,14 @@ msgstr ""
 "(fiti foarte atent cu acest mod, sunteti in direct!)"
 
 #. module: marketing_campaign
-#: help:marketing.campaign.segment,date_run:0
-msgid "Initial start date of this segment."
-msgstr "Data initiala de inceput a acestui segment."
+#: view:marketing.campaign.segment:0
+msgid "Cancel Segment"
+msgstr "Anulati Segmentul"
 
 #. module: marketing_campaign
 #: view:res.partner:0
 msgid "False"
-msgstr ""
+msgstr "Fals"
 
 #. module: marketing_campaign
 #: view:campaign.analysis:0
@@ -277,6 +288,7 @@ msgstr "Campanie"
 #: model:email.template,body_html:marketing_campaign.email_template_1
 msgid "Hello, you will receive your welcome pack via email shortly."
 msgstr ""
+"Buna ziua, in scurt timp veti primi prin email pachetul de bun venit."
 
 #. module: marketing_campaign
 #: view:campaign.analysis:0
@@ -291,7 +303,7 @@ msgstr "Segment"
 #: code:addons/marketing_campaign/marketing_campaign.py:214
 #, python-format
 msgid "You cannot duplicate a campaign, Not supported yet."
-msgstr ""
+msgstr "Nu puteti copia o campanie, Nu este inca acceptat."
 
 #. module: marketing_campaign
 #: help:marketing.campaign.activity,type:0
@@ -356,7 +368,7 @@ msgstr "Intervalul trebuie sa fie pozitiv sau zero"
 #. module: marketing_campaign
 #: selection:marketing.campaign.activity,type:0
 msgid "Email"
-msgstr ""
+msgstr "E-mail"
 
 #. module: marketing_campaign
 #: field:marketing.campaign,name:0
@@ -391,7 +403,7 @@ msgstr "Activitati precedente"
 #. module: marketing_campaign
 #: model:email.template,subject:marketing_campaign.email_template_2
 msgid "Congratulations! You are now a Silver Partner!"
-msgstr ""
+msgstr "Felicitari! Acum sunteti un Partener de Argint!"
 
 #. module: marketing_campaign
 #: help:marketing.campaign.segment,date_done:0
@@ -497,6 +509,11 @@ msgid "Newly Modified"
 msgstr "Modificate recent"
 
 #. module: marketing_campaign
+#: view:marketing.campaign.workitem:0
+msgid "Cancel Workitem"
+msgstr "Anulati Elementul de lucru"
+
+#. module: marketing_campaign
 #: model:ir.actions.act_window,help:marketing_campaign.action_marketing_campaign_form
 msgid ""
 "<p class=\"oe_view_nocontent_create\">\n"
@@ -517,6 +534,24 @@ msgid ""
 "          </p>\n"
 "        "
 msgstr ""
+"<clasa p=\"oe_vizualizare_niciuncontinut_creeaza\">\n"
+"            Dati click pentru a crea o campanie de marketing.\n"
+"          </p><p>\n"
+"            Campania de marketing a lui OpenERP va permite sa automatizati "
+"comunicarea\n"
+"            perspectivelor dumneavoastra. Puteti defini un segment (set de "
+"conditii) pentru\n"
+"            pistele si partenerii dumneavoastra pentru a realiza campania.\n"
+"          </p><p>\n"
+"            O campanie poate avea multe activitati, precum trimiterea unui "
+"email, imprimarea\n"
+"            unei scrisori, alocarea unei echipe, etc. Aceste activitati sunt "
+"declansate\n"
+"            din situatii specifice; formular de contact, 10 zile dupa "
+"primul\n"
+"            contact, daca o pista nu este inchisa inca, etc.\n"
+"          </p>\n"
+"        "
 
 #. module: marketing_campaign
 #: field:marketing.campaign.transition,interval_nbr:0
@@ -651,7 +686,7 @@ msgstr "Ciorna"
 #. module: marketing_campaign
 #: view:marketing.campaign.workitem:0
 msgid "Marketing Campaign Activity"
-msgstr ""
+msgstr "Activitatea Campaniei de Marketing"
 
 #. module: marketing_campaign
 #: view:marketing.campaign.workitem:0
@@ -668,7 +703,7 @@ msgstr "Previzualizare"
 #: view:marketing.campaign.workitem:0
 #: field:marketing.campaign.workitem,state:0
 msgid "Status"
-msgstr ""
+msgstr "Status"
 
 #. module: marketing_campaign
 #: selection:campaign.analysis,month:0
@@ -827,6 +862,11 @@ msgid "No preview"
 msgstr "Nicio previzualizare"
 
 #. module: marketing_campaign
+#: view:marketing.campaign:0
+msgid "Cancel Campaign"
+msgstr "Anulati Campania"
+
+#. module: marketing_campaign
 #: view:marketing.campaign.workitem:0
 msgid "Process"
 msgstr "Proces"
@@ -860,8 +900,6 @@ msgid "Operation not supported"
 msgstr "Operatiunea nu este acceptata"
 
 #. module: marketing_campaign
-#: view:marketing.campaign:0
-#: view:marketing.campaign.segment:0
 #: view:marketing.campaign.workitem:0
 msgid "Cancel"
 msgstr "Anuleaza"
@@ -896,7 +934,7 @@ msgstr "Tranzitia campaniei"
 #. module: marketing_campaign
 #: view:marketing.campaign.segment:0
 msgid "Marketing Campaign Segment"
-msgstr ""
+msgstr "Segmentul Campaniei de Marketing"
 
 #. module: marketing_campaign
 #: model:ir.actions.act_window,name:marketing_campaign.act_marketing_campaing_segment_opened
@@ -910,7 +948,7 @@ msgstr "Segmente"
 #. module: marketing_campaign
 #: field:marketing.campaign.activity,keep_if_condition_not_met:0
 msgid "Don't Delete Workitems"
-msgstr ""
+msgstr "Nu Stergeti Elementele de Lucru"
 
 #. module: marketing_campaign
 #: view:marketing.campaign.activity:0
@@ -947,7 +985,7 @@ msgstr "Tip"
 #. module: marketing_campaign
 #: model:email.template,subject:marketing_campaign.email_template_3
 msgid "Congratulations! You are now one of our Gold Partners!"
-msgstr ""
+msgstr "Felicitari! Acum sunteti unui din Partenerii nostri de Aur!"
 
 #. module: marketing_campaign
 #: help:marketing.campaign,unique_field_id:0
@@ -1083,7 +1121,7 @@ msgstr ""
 #: code:addons/marketing_campaign/marketing_campaign.py:136
 #, python-format
 msgid "The campaign cannot be started. There are no activities in it."
-msgstr ""
+msgstr "Campania nu poate fi initiata. Nu exista activitati in ea."
 
 #. module: marketing_campaign
 #: field:marketing.campaign.segment,date_next_sync:0
@@ -1095,6 +1133,8 @@ msgstr "Sincronizarea urmatoare"
 msgid ""
 "Hi, we are delighted to welcome you among our Silver Partners as of today!"
 msgstr ""
+"Buna ziua, suntem incantati sa va avem printre Partenerii nostri de Argint "
+"incepand de azi!"
 
 #. module: marketing_campaign
 #: field:marketing.campaign.segment,ir_filter_id:0
@@ -1119,7 +1159,7 @@ msgstr "Cost variabil"
 #. module: marketing_campaign
 #: model:email.template,subject:marketing_campaign.email_template_1
 msgid "Welcome to the OpenERP Partner Channel!"
-msgstr ""
+msgstr "Bine ati venit la OpenERP Partner Channel!"
 
 #. module: marketing_campaign
 #: view:campaign.analysis:0

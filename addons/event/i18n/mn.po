@@ -7,26 +7,26 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-21 17:05+0000\n"
-"PO-Revision-Date: 2012-12-21 23:00+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2013-03-07 08:38+0000\n"
+"PO-Revision-Date: 2013-02-20 07:54+0000\n"
+"Last-Translator: gobi <Unknown>\n"
 "Language-Team: Mongolian <mn@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-01-18 06:42+0000\n"
-"X-Generator: Launchpad (build 16430)\n"
+"X-Launchpad-Export-Date: 2013-03-28 05:38+0000\n"
+"X-Generator: Launchpad (build 16546)\n"
 
 #. module: event
 #: view:event.event:0
 #: view:report.event.registration:0
 msgid "My Events"
-msgstr "Миний үйл ажииллагаанууд"
+msgstr "Миний үйл явдлууд"
 
 #. module: event
 #: field:event.registration,nb_register:0
 msgid "Number of Participants"
-msgstr ""
+msgstr "Оролцогчийн тоо"
 
 #. module: event
 #: field:event.event,register_attended:0
@@ -66,7 +66,7 @@ msgstr "Бүртгүүлсэн огноо"
 #. module: event
 #: field:event.event,type:0
 msgid "Type of Event"
-msgstr ""
+msgstr "Үйл явдлын төрөл"
 
 #. module: event
 #: model:event.event,name:event.event_0
@@ -78,7 +78,7 @@ msgstr "Bon Jovi-н концерт"
 #: selection:event.registration,state:0
 #: selection:report.event.registration,registration_state:0
 msgid "Attended"
-msgstr ""
+msgstr "Оролцсон"
 
 #. module: event
 #: selection:report.event.registration,month:0
@@ -102,12 +102,12 @@ msgstr "Компани"
 #: field:event.event,email_confirmation_id:0
 #: field:event.type,default_email_event:0
 msgid "Event Confirmation Email"
-msgstr ""
+msgstr "Үйл явдлын батламжлах Имэйл"
 
 #. module: event
 #: field:event.type,default_registration_max:0
 msgid "Default Maximum Registration"
-msgstr ""
+msgstr "Хамгийн Их Бүртгэлийн анхны утга"
 
 #. module: event
 #: view:report.event.registration:0
@@ -117,7 +117,7 @@ msgstr ""
 #. module: event
 #: field:event.event,register_avail:0
 msgid "Available Registrations"
-msgstr ""
+msgstr "Боломжит Бүргэлүүд"
 
 #. module: event
 #: view:event.registration:0
@@ -146,6 +146,11 @@ msgid "Confirmed events"
 msgstr "Батлагдсан үйл ажиллагаа"
 
 #. module: event
+#: view:event.event:0
+msgid "ZIP"
+msgstr ""
+
+#. module: event
 #: view:report.event.registration:0
 msgid "Event Beginning Date"
 msgstr "Үйл ажиллагаа эхлэх огноо"
@@ -156,7 +161,7 @@ msgstr "Үйл ажиллагаа эхлэх огноо"
 #: model:ir.ui.menu,name:event.menu_report_event_registration
 #: view:report.event.registration:0
 msgid "Events Analysis"
-msgstr "Үйл ажиллагааны анализ"
+msgstr "Үйл явдлын шинжилгээ"
 
 #. module: event
 #: help:event.type,default_registration_max:0
@@ -191,7 +196,7 @@ msgstr "Бүртгэлүүд"
 #: code:addons/event/event.py:355
 #, python-format
 msgid "Error!"
-msgstr ""
+msgstr "Алдаа!"
 
 #. module: event
 #: view:event.event:0
@@ -226,7 +231,7 @@ msgstr "Verdi-н дуурь"
 #: help:event.event,message_unread:0
 #: help:event.registration,message_unread:0
 msgid "If checked new messages require your attention."
-msgstr ""
+msgstr "Хэрэв тэмдэглэгдсэн бол шинэ зурвас нь анхаарал татахыг шаардана."
 
 #. module: event
 #: view:report.event.registration:0
@@ -240,14 +245,19 @@ msgid "tickets"
 msgstr ""
 
 #. module: event
+#: view:event.event:0
+msgid "Street..."
+msgstr ""
+
+#. module: event
 #: view:res.partner:0
 msgid "False"
-msgstr ""
+msgstr "Худал"
 
 #. module: event
 #: field:event.registration,event_end_date:0
 msgid "Event End Date"
-msgstr ""
+msgstr "Үйл явдал дуусах огноо"
 
 #. module: event
 #: help:event.event,message_summary:0
@@ -256,6 +266,8 @@ msgid ""
 "Holds the Chatter summary (number of messages, ...). This summary is "
 "directly in html format in order to be inserted in kanban views."
 msgstr ""
+"Чаатлагчийн хураангуйг агуулна (зурвасын тоо,...). Энэ хураангуй нь шууд "
+"html форматтай бөгөөд канбан харагдацад шууд орж харагдах боломжтой."
 
 #. module: event
 #: view:report.event.registration:0
@@ -267,7 +279,7 @@ msgstr "Батлагдсан эсвэл хийгдсэн төлөвтэй бүр
 #: code:addons/event/event.py:108
 #, python-format
 msgid "Warning!"
-msgstr ""
+msgstr "Анхааруулга!"
 
 #. module: event
 #: view:event.event:0
@@ -315,7 +327,7 @@ msgstr "Батлагдсан"
 #. module: event
 #: view:event.registration:0
 msgid "Participant"
-msgstr ""
+msgstr "Оролцогч"
 
 #. module: event
 #: view:event.registration:0
@@ -343,13 +355,13 @@ msgstr ""
 #. module: event
 #: view:event.event:0
 msgid "Only"
-msgstr ""
+msgstr "Зөвхөн"
 
 #. module: event
 #: field:event.event,message_follower_ids:0
 #: field:event.registration,message_follower_ids:0
 msgid "Followers"
-msgstr ""
+msgstr "Дагагчид"
 
 #. module: event
 #: view:event.event:0
@@ -362,7 +374,7 @@ msgstr "Байрлал"
 #: view:event.registration:0
 #: field:event.registration,message_unread:0
 msgid "Unread Messages"
-msgstr ""
+msgstr "Уншаагүй Зурвасууд"
 
 #. module: event
 #: view:event.registration:0
@@ -389,7 +401,7 @@ msgstr ""
 #. module: event
 #: view:event.event:0
 msgid "Upcoming"
-msgstr ""
+msgstr "Удахгүй"
 
 #. module: event
 #: field:event.registration,create_date:0
@@ -400,7 +412,7 @@ msgstr "Үүсгэсэн Огноо"
 #: view:report.event.registration:0
 #: field:report.event.registration,user_id:0
 msgid "Event Responsible"
-msgstr ""
+msgstr "Үйл явдлын хариуцагч"
 
 #. module: event
 #: view:event.event:0
@@ -427,7 +439,7 @@ msgstr "Батлагдсан бүртгэлүүд"
 #. module: event
 #: view:event.event:0
 msgid "Starting Date"
-msgstr ""
+msgstr "Эхлэх огноо"
 
 #. module: event
 #: view:event.event:0
@@ -463,7 +475,7 @@ msgstr "Үйл явдлуудын дүүргэлтийн төлөв"
 #. module: event
 #: view:event.event:0
 msgid "Event Category"
-msgstr ""
+msgstr "Үйл явдлын  ангилал"
 
 #. module: event
 #: field:event.event,register_prospect:0
@@ -473,13 +485,13 @@ msgstr "Батлагдаагүй бүртгэлүүд"
 #. module: event
 #: model:ir.actions.client,name:event.action_client_event_menu
 msgid "Open Event Menu"
-msgstr ""
+msgstr "Үйл явдлын менюг нээх"
 
 #. module: event
 #: view:report.event.registration:0
 #: field:report.event.registration,event_state:0
 msgid "Event State"
-msgstr ""
+msgstr "Үйл явдлын төлөв"
 
 #. module: event
 #: field:event.registration,log_ids:0
@@ -487,6 +499,7 @@ msgid "Logs"
 msgstr "Логууд"
 
 #. module: event
+#: view:event.event:0
 #: field:event.event,state_id:0
 msgid "State"
 msgstr "Төлөв"
@@ -526,12 +539,12 @@ msgstr "Сар"
 #. module: event
 #: field:event.registration,date_closed:0
 msgid "Attended Date"
-msgstr ""
+msgstr "Оролцсон огноо"
 
 #. module: event
 #: view:event.event:0
 msgid "Finish Event"
-msgstr ""
+msgstr "Үйл явдлыг дуусгах"
 
 #. module: event
 #: view:event.registration:0
@@ -541,7 +554,7 @@ msgstr "Батлагдаагүй бүртгэлүүдийн төлөв"
 #. module: event
 #: view:event.event:0
 msgid "Event Description"
-msgstr ""
+msgstr "Үйл явдлын тодорхойлолт"
 
 #. module: event
 #: field:event.event,date_begin:0
@@ -551,7 +564,7 @@ msgstr "Эхлэл огноо"
 #. module: event
 #: view:event.confirm:0
 msgid "or"
-msgstr ""
+msgstr "эсвэл"
 
 #. module: event
 #: help:res.partner,speaker:0
@@ -597,9 +610,10 @@ msgid ""
 msgstr ""
 
 #. module: event
-#: field:event.event,user_id:0
-msgid "Responsible User"
-msgstr "Хариуцагч хэрэглэгч"
+#: code:addons/event/event.py:106
+#, python-format
+msgid "Only %d Seats are Available!"
+msgstr ""
 
 #. module: event
 #: code:addons/event/event.py:100
@@ -657,12 +671,12 @@ msgstr "Үйл ажиллагаанууд"
 #: view:event.registration:0
 #: field:event.registration,state:0
 msgid "Status"
-msgstr ""
+msgstr "Төлөв байдал"
 
 #. module: event
 #: field:event.event,city:0
 msgid "city"
-msgstr ""
+msgstr "хот"
 
 #. module: event
 #: selection:report.event.registration,month:0
@@ -672,7 +686,7 @@ msgstr "8-р сар"
 #. module: event
 #: field:event.event,zip:0
 msgid "zip"
-msgstr ""
+msgstr "шуудангийн код"
 
 #. module: event
 #: field:res.partner,event_ids:0
@@ -683,7 +697,7 @@ msgstr "үл мэдэгдэх"
 #. module: event
 #: field:event.event,street2:0
 msgid "Street2"
-msgstr ""
+msgstr "Гудамж 2"
 
 #. module: event
 #: selection:report.event.registration,month:0
@@ -702,12 +716,12 @@ msgstr ""
 #: help:event.event,message_ids:0
 #: help:event.registration,message_ids:0
 msgid "Messages and communication history"
-msgstr ""
+msgstr "Зурвас болон харилцсан түүх"
 
 #. module: event
 #: field:event.registration,phone:0
 msgid "Phone"
-msgstr ""
+msgstr "Утас"
 
 #. module: event
 #: model:email.template,body_html:event.confirmation_event
@@ -727,13 +741,13 @@ msgstr ""
 #: field:event.event,message_is_follower:0
 #: field:event.registration,message_is_follower:0
 msgid "Is a Follower"
-msgstr ""
+msgstr "Дагагч эсэх"
 
 #. module: event
 #: field:event.registration,user_id:0
 #: model:res.groups,name:event.group_event_user
 msgid "User"
-msgstr ""
+msgstr "Хэрэглэгч"
 
 #. module: event
 #: view:event.confirm:0
@@ -831,7 +845,7 @@ msgstr ""
 #: view:event.event:0
 #: view:event.registration:0
 msgid "Attended the Event"
-msgstr ""
+msgstr "Үйл явдалд оролцсон"
 
 #. module: event
 #: constraint:event.event:0
@@ -843,6 +857,11 @@ msgstr "Алдаа ! Хаагдах огноо нь Эхлэх огнооноо�
 #, python-format
 msgid "You must wait for the starting day of the event to do this action."
 msgstr ""
+
+#. module: event
+#: field:event.event,user_id:0
+msgid "Responsible User"
+msgstr "Хариуцагч хэрэглэгч"
 
 #. module: event
 #: selection:event.event,state:0
@@ -866,9 +885,8 @@ msgid "Reply-to Email"
 msgstr ""
 
 #. module: event
-#: code:addons/event/event.py:106
-#, python-format
-msgid "Only %d Seats are Available!"
+#: view:event.event:0
+msgid "City"
 msgstr ""
 
 #. module: event
@@ -993,6 +1011,7 @@ msgid "Name"
 msgstr "Нэр"
 
 #. module: event
+#: view:event.event:0
 #: field:event.event,country_id:0
 msgid "Country"
 msgstr "Улс"
@@ -1052,7 +1071,7 @@ msgstr ""
 #. module: event
 #: view:event.event:0
 msgid "available."
-msgstr ""
+msgstr "бэлэн байгаа."
 
 #. module: event
 #: field:event.registration,event_begin_date:0
@@ -1068,7 +1087,7 @@ msgstr ""
 #. module: event
 #: view:event.event:0
 msgid "Current Registrations"
-msgstr ""
+msgstr "Одоогийн бүртгэл"
 
 #. module: event
 #: model:email.template,body_html:event.confirmation_registration

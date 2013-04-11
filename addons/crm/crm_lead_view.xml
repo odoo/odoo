@@ -2,7 +2,6 @@
 <openerp>
     <data>
 
-
         <!--
             CRM CASE STAGE
         -->
@@ -98,19 +97,20 @@
                             states="draft,open,pending" help="Convert to Opportunity" class="oe_highlight"/>
                     <button name="case_reset" string="Reset" type="object"
                             states="cancel"/>
-                    <button name="case_cancel" string="Cancel" type="object"
+                    <button name="case_cancel" string="Cancel Case" type="object"
                             states="draft,open,pending"/>
                     <field name="stage_id" widget="statusbar" clickable="True"
+                            domain="['&amp;', '|', ('case_default', '=', True), ('section_ids', '=', section_id), '|', ('type', '=', type), ('type', '=', 'both')]"
                             on_change="onchange_stage_id(stage_id)"/>
                 </header>
                 <sheet>
                     <div class="oe_right oe_button_box" name="buttons">
-                        <button type="action"
-                            name="%(act_crm_opportunity_crm_phonecall_new)d"
-                            string="Phone Calls"/>
+                        <button string="Schedule/Log Call" 
+                                name="%(opportunity2phonecall_act)d"
+                                type="action"/>
                     </div>
                     <div class="oe_title">
-                        <label for="name" class="oe_edit_only" string="Lead Description"/>
+                        <label for="name" class="oe_edit_only"/>
                         <h1><field name="name" placeholder="Describe the lead..."/></h1>
                     </div>
                     <group>
@@ -152,7 +152,7 @@
                             -->
                         </group>
                         <group>
-                            <field name="user_id"/>
+                            <field name="user_id" on_change="on_change_user(user_id, context)"/>
                             <label for="section_id"/>
                             <div>
                                 <field name="section_id"/>
@@ -164,11 +164,13 @@
                             <field name="priority"/>
                             <field name="categ_ids"
                                 widget="many2many_tags"
-                                domain="[('object_id.model','=','crm.lead')]"/>
+                                domain="[('object_id.model','=','crm.lead')]"
+                                context="{'object_name': 'crm.lead'}"
+                            />
                         </group>
                     </group>
                     <notebook colspan="4">
-                    <page string="Notes">
+                    <page string="Internal Notes">
                         <field name="description"/>
                     </page>
                     <page string="Extra Info">
@@ -217,7 +219,7 @@
             <field name="arch" type="xml">
                 <tree string="Leads" fonts="bold:message_unread==True" colors="grey:state in ('cancel', 'done')">
                     <field name="date_deadline" invisible="1"/>
-                    <field name="create_date" groups="base.group_no_one"/>
+                    <field name="create_date"/>
                     <field name="name"/>
                     <field name="contact_name"/>
                     <field name="country_id" invisible="context.get('invisible_country', True)"/>
@@ -225,6 +227,7 @@
                     <field name="phone"/>
                     <field name="stage_id"/>
                     <field name="user_id" invisible="1"/>
+                    <field name="partner_id" invisible="1"/>
                     <field name="section_id" invisible="context.get('invisible_section', True)"/>
                     <field name="state" invisible="1"/>
                     <field name="type_id" invisible="1"/>
@@ -234,6 +237,7 @@
                 </tree>
             </field>
         </record>
+
 
         <!-- CRM Lead Calendar View -->
         <record model="ir.ui.view" id="crm_case_calendar_view_leads">
@@ -322,35 +326,43 @@
                 <search string="Search Leads">
                     <field name="name" string="Lead / Customer" filter_domain="['|','|',('partner_name','ilike',self),('email_from','ilike',self),('name','ilike',self)]"/>
                     <field name="categ_ids" string="Category" filter_domain="[('categ_ids','ilike',self)]"/>
-                    <field name="create_date"/>
-                    <filter icon="terp-mail-message-new" string="Unread Messages" help="Unread messages" name="message_unread" domain="[('message_unread','=',True)]"/>
-                    <separator/>
-                    <filter icon="terp-check" string="New" name="new" help="New Leads" domain="[('state','=','draft')]"/>
-                    <filter icon="terp-camera_test" string="In Progress" name="open" domain="[('state','=','open')]"/>
-                    <separator/>
-                    <filter string="Unassigned Leads" icon="terp-personal-" domain="[('user_id','=', False)]" help="Unassigned Leads"/>
-                    <separator/>
-                    <filter string="Leads Assigned to Me or My Team(s)" icon="terp-personal+" context="{'invisible_section': False}"
-                            domain="['|', ('section_id.user_id','=',uid), ('section_id.member_ids', 'in', [uid])]"
-                            help="Leads that are assigned to one of the sale teams I manage, or to me"/>
+                    <field name="section_id" context="{'invisible_section': False, 'default_section_id': self}"/>
                     <field name="user_id"/>
-                    <field name="section_id" context="{'invisible_section': False}"/>
+                    <field name="partner_id"/>
+                    <field name="create_date"/>
                     <field name="country_id" context="{'invisible_country': False}"/>
+                    <separator/>
+                    <filter string="Open" name="open" domain="[('state','!=','cancel')]" help="Open Leads"/>
+                    <filter string="Dead" name="dead" domain="[('state','=','cancel')]"/>
+                    <filter string="Unassigned" domain="[('user_id','=', False)]" help="No salesperson"/>
+                    <filter string="Unread Messages" name="message_unread" domain="[('message_unread','=',True)]" help="Unread messages"/>
+                    <filter string="Assigned to Me"
+                            domain="[('user_id','=',uid)]" context="{'invisible_section': False}"
+                            help="Leads that are assigned to me"/>
+                    <filter string="Assigned to My Team(s)"
+                            domain="[('section_id.member_ids', 'in', [uid])]" context="{'invisible_section': False}"
+                            help="Leads that are assigned to any sales teams I am member of"/>
+                    <separator />
+                    <filter string="Available for mass mailing"
+                            name='not_opt_out' domain="[('opt_out', '=', False)]"
+                            help="Leads that did not ask not to be included in mass mailing campaigns"/>
+                    <separator />
                     <group expand="0" string="Group By...">
-                        <filter string="Salesperson" icon="terp-personal" domain="[]" context="{'group_by':'user_id'}"/>
-                        <filter string="Team" icon="terp-personal+" domain="[]" context="{'group_by':'section_id'}"/>
-                        <filter string="Referrer" icon="terp-personal" domain="[]" context="{'group_by':'referred'}"/>
-                        <filter string="Campaign" icon="terp-gtk-jump-to-rtl" domain="[]" context="{'group_by':'type_id'}"/>
-                        <filter string="Channel" icon="terp-call-start" domain="[]" context="{'group_by':'channel_id'}"/>
-                        <separator orientation="vertical"/>
-                        <filter string="Stage" icon="terp-stage" domain="[]" context="{'group_by':'stage_id'}"/>
-                        <filter string="Creation" help="Create date" icon="terp-go-month" domain="[]" context="{'group_by':'create_date'}" groups="base.group_no_one"/>
+                        <filter string="Salesperson" domain="[]" context="{'group_by':'user_id'}"/>
+                        <filter string="Team" domain="[]" context="{'group_by':'section_id'}"/>
+                        <filter string="Stage" domain="[]" context="{'group_by':'stage_id'}"/>
+                        <filter string="Customer" help="Partner" domain="[]" context="{'group_by':'partner_id'}"/>
+                        <filter string="Country" domain="[]" context="{'group_by':'country_id'}"/>
+                        <filter string="Referrer" domain="[]" context="{'group_by':'referred'}"/>
+                        <filter string="Campaign" domain="[]" context="{'group_by':'type_id'}"/>
+                        <filter string="Channel" domain="[]" context="{'group_by':'channel_id'}"/>
+                        <filter string="Creation" domain="[]" context="{'group_by':'create_date'}"/>
                     </group>
                     <group string="Display">
-                        <filter string="Show Countries" icon="terp-personal+" context="{'invisible_country': False}" help="Show Countries"/>
-                        <filter string="Show Sales Team" icon="terp-personal+" context="{'invisible_section': False}" domain="[]" help="Show Sales Team"/>
+                        <filter string="Show Countries" context="{'invisible_country': False}" help="Show Countries"/>
+                        <filter string="Show Sales Team" context="{'invisible_section': False}" domain="[]" help="Show Sales Team"/>
                     </group>
-               </search>
+                </search>
             </field>
         </record>
 
@@ -371,7 +383,6 @@
                                 states="draft,open,pending" class="oe_highlight"/>
                         <button name="case_mark_lost" string="Mark Lost" type="object"
                                 states="draft,open" class="oe_highlight"/>
-                        <button name="new_mail_send" string="Send Mail" type="object" states="draft,open,pending"/>
                         <field name="stage_id" widget="statusbar" clickable="True"/>
                     </header>
                     <sheet>
@@ -382,8 +393,7 @@
                             <button string="Meeting"
                                 name="action_makeMeeting"
                                 type="object"
-                                context="{'search_default_attendee_id': active_id, 'default_attendee_id' : active_id}"
-                               />
+                                context="{'search_default_attendee_id': active_id, 'default_attendee_id' : active_id}"/>
                         </div>
                         <div class="oe_title">
                             <label for="name" class="oe_edit_only"/>
@@ -417,7 +427,7 @@
                             </group>
 
                             <group>
-                                <field name="user_id"/>
+                                <field name="user_id" on_change="on_change_user(user_id, context)"/>
                                 <label for="section_id"/>
                                 <div>
                                     <field name="section_id" widget="selection"/>
@@ -504,7 +514,7 @@
             <field name="arch" type="xml">
                 <tree string="Opportunities" fonts="bold:message_unread==True" colors="gray:state in ('cancel', 'done');red:date_deadline and (date_deadline &lt; current_date)">
                     <field name="date_deadline" invisible="1"/>
-                    <field name="create_date" groups="base.group_no_one"/>
+                    <field name="create_date"/>
                     <field name="name" string="Opportunity"/>
                     <field name="partner_id" string="Customer"/>
                     <field name="country_id" invisible="context.get('invisible_country', True)"/>
@@ -517,9 +527,10 @@
                     <field name="probability" avg="Avg. of Probability"/>
                     <field name="section_id" invisible="context.get('invisible_section', True)"/>
                     <field name="user_id"/>
+                    <field name="referred" invisible="1"/>
                     <field name="priority" invisible="1"/>
-                    <field name="state" groups="base.group_no_one"/>
                     <field name="message_unread" invisible="1"/>
+                    <field name="state" invisible="1"/>
                 </tree>
             </field>
         </record>
@@ -531,35 +542,41 @@
             <field name="model">crm.lead</field>
             <field name="arch" type="xml">
                 <search string="Search Opportunities">
-                    <field name="name" string="Opportunity"
-                        filter_domain="['|','|','|',('partner_id','ilike',self),('partner_name','ilike',self),('email_from','ilike',self),('name', 'ilike', self)]"/>
+                    <field name="name" string="Opportunity" filter_domain="['|','|','|',('partner_id','ilike',self),('partner_name','ilike',self),('email_from','ilike',self),('name', 'ilike', self)]"/>
                     <field name="categ_ids" string="Category" filter_domain="[('categ_ids','ilike', self)]"/>
-                    <filter icon="terp-mail-message-new" string="Unread Messages" help="Unread messages" name="message_unread" domain="[('message_unread','=',True)]"/>
-                    <separator/>
-                    <filter icon="terp-check" string="New" help="New Opportunities" name="new" domain="[('state','=','draft')]"/>
-                    <filter icon="terp-camera_test" string="In Progress" help="Open Opportunities" name="open" domain="[('state','=','open')]"/>
-                    <separator/>
-                    <filter string="Unassigned Opportunities" icon="terp-personal-" domain="[('user_id','=', False)]" help="Unassigned Opportunities"/>
-                    <separator/>
-                    <filter string="Opportunities Assigned to Me or My Team(s)"  icon="terp-personal+"
-                            domain="['|', ('section_id.user_id','=',uid), ('section_id.member_ids', 'in', [uid])]" context="{'invisible_section': False}"
-                            help="Opportunities that are assigned to either me or one of the sale teams I manage"/>
-                    <field name="user_id"/>
                     <field name="section_id" context="{'invisible_section': False, 'default_section_id': self}"/>
+                    <field name="user_id"/>
                     <field name="partner_id"/>
+                    <separator/>
+                    <filter string="New" name="new" domain="[('state','=','draft')]" help="New Opportunities"/>
+                    <filter string="In Progress" name="open" domain="[('state','=','open')]" help="Open Opportunities"/>
+                    <filter string="Won" name="won" domain="[('state','=','done')]"/>
+                    <filter string="Lost" name="lost" domain="[('state','=','cancel')]"/>
+                    <filter string="Unassigned" domain="[('user_id','=', False)]" help="No salesperson"/>
+                    <filter string="Unread Messages" name="message_unread" domain="[('message_unread','=',True)]" help="Unread messages"/>
+                    <filter string="Assigned to Me"
+                            domain="[('user_id','=',uid)]" context="{'invisible_section': False}"
+                            help="Opportunities that are assigned to me"/>
+                    <filter string="Assigned to My Team(s)"
+                            domain="[('section_id.member_ids', 'in', [uid])]" context="{'invisible_section': False}"
+                            help="Opportunities that are assigned to any sales teams I am member of"/>
+                    <separator/>
                     <group expand="0" string="Group By..." colspan="16">
-                        <filter string="Salesperson" icon="terp-personal" domain="[]" context="{'group_by':'user_id'}"/>
-                        <filter string="Team" help="Sales Team" icon="terp-personal+" domain="[]" context="{'group_by':'section_id'}"/>
-                        <filter string="Customer" help="Partner" icon="terp-personal+" domain="[]" context="{'group_by':'partner_id'}"/>
-                        <filter string="Stage" icon="terp-stage" domain="[]" context="{'group_by':'stage_id'}"/>
-                        <filter string="Priority" icon="terp-rating-rated" domain="[]" context="{'group_by':'priority'}"/>
-                        <filter string="Campaign" icon="terp-gtk-jump-to-rtl" domain="[]" context="{'group_by':'type_id'}"/>
-                        <filter string="Channel" icon="terp-call-start" domain="[]" context="{'group_by':'channel_id'}"/>
-                        <filter string="Creation" icon="terp-go-month" domain="[]" context="{'group_by':'create_date'}" groups="base.group_no_one"/>
-                        <filter string="Exp.Closing" icon="terp-go-month" help="Expected Closing" domain="[]" context="{'group_by':'date_deadline'}"/>
+                        <filter string="Salesperson" domain="[]" context="{'group_by':'user_id'}"/>
+                        <filter string="Team" domain="[]" context="{'group_by':'section_id'}"/>
+                        <filter string="Stage" domain="[]" context="{'group_by':'stage_id'}"/>
+                        <filter string="Customer" help="Partner" domain="[]" context="{'group_by':'partner_id'}"/>
+                        <filter string="Country" domain="[]" context="{'group_by':'country_id'}"/>
+                        <filter string="Priority" domain="[]" context="{'group_by':'priority'}"/>
+                        <filter string="Expected Closing" domain="[]" context="{'group_by':'date_deadline'}"/>
+                        <filter string="Referrer" domain="[]" context="{'group_by':'referred'}"/>
+                        <filter string="Campaign" domain="[]" context="{'group_by':'type_id'}"/>
+                        <filter string="Channel" domain="[]" context="{'group_by':'channel_id'}"/>
+                        <filter string="Creation" domain="[]" context="{'group_by':'create_date'}"/>
                     </group>
                     <group string="Display">
                         <filter string="Show Sales Team" context="{'invisible_section': False}" domain="[]" help="Show Sales Team"/>
+                        <filter string="Show Countries" context="{'invisible_country': False}" help="Show Countries"/>
                     </group>
                 </search>
             </field>

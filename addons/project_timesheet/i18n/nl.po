@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-21 17:06+0000\n"
-"PO-Revision-Date: 2012-12-22 21:56+0000\n"
+"POT-Creation-Date: 2013-03-07 08:38+0000\n"
+"PO-Revision-Date: 2013-03-09 10:11+0000\n"
 "Last-Translator: Erwin van der Ploeg (Endian Solutions) <Unknown>\n"
 "Language-Team: Dutch <nl@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-01-18 07:02+0000\n"
-"X-Generator: Launchpad (build 16430)\n"
+"X-Launchpad-Export-Date: 2013-03-28 05:57+0000\n"
+"X-Generator: Launchpad (build 16546)\n"
 
 #. module: project_timesheet
 #: view:report.timesheet.task.user:0
@@ -44,6 +44,8 @@ msgid ""
 "You cannot delete a partner which is assigned to project, but you can "
 "uncheck the active box."
 msgstr ""
+"Het is niet mogelijk een relatie, welke is gekoppeld aan het project, te "
+"verwijderen. U kunt deze wel inactief maken."
 
 #. module: project_timesheet
 #: model:ir.model,name:project_timesheet.model_project_task_work
@@ -56,6 +58,8 @@ msgstr "Project taak werk"
 msgid ""
 "You cannot select a Analytic Account which is in Close or Cancelled state."
 msgstr ""
+"Het is niet mogelijk een kostenplaats te selecteren welke gesloten of "
+"geannuleerd is."
 
 #. module: project_timesheet
 #: view:report.timesheet.task.user:0
@@ -90,6 +94,14 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Klik hier om een klant contract toe te voegen\n"
+"              </p><p>\n"
+"                Hier vind u de contracten welke u heeft afgesloten met uw "
+"klant-\n"
+"                projecten, waarvan u de facturatie kunt volgen.\n"
+"              </p>\n"
+"            "
 
 #. module: project_timesheet
 #: view:account.analytic.line:0
@@ -114,6 +126,8 @@ msgid ""
 "employee.\n"
 "Fill in the HR Settings tab of the employee form."
 msgstr ""
+"Definieer een product voor de werknemer.\n"
+"Dit kunt u invullen op het tabblad van de werknemer instellingen."
 
 #. module: project_timesheet
 #: model:ir.model,name:project_timesheet.model_account_analytic_line
@@ -147,6 +161,8 @@ msgid ""
 "Please define journal on the related employee.\n"
 "Fill in the timesheet tab of the employee form."
 msgstr ""
+"Definieer een dagboek bij de geselecteerde werknemer. \n"
+"Dit kunt u invullen op op het urenstaat tabblad van de werknemer."
 
 #. module: project_timesheet
 #: model:ir.ui.menu,name:project_timesheet.menu_hr_timesheet_sign_in
@@ -221,6 +237,15 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p>\n"
+"                U vindt hier urenstaten en inkopen die u heeft gedaan voor "
+"de contracten. Deze kunnen worden door gefactureerd aan                      "
+"                                                                        \n"
+"                de klant.\n"
+"                Als u wilt een nieuwe werkzaamheden wilt  factureren, moet u "
+"in plaats daarvan gebruik maken van urenstaten.\n"
+"              </p>\n"
+"            "
 
 #. module: project_timesheet
 #: model:process.node,name:project_timesheet.process_node_timesheettask0
@@ -281,7 +306,7 @@ msgstr "Vul in hoeveel tijd u bezig was met uw taak"
 #: code:addons/project_timesheet/project_timesheet.py:85
 #, python-format
 msgid "Please define employee for user \"%s\". You must create one."
-msgstr ""
+msgstr "Definieer een werknemer voor gebruiker \"%s\"."
 
 #. module: project_timesheet
 #: model:ir.model,name:project_timesheet.model_res_partner
@@ -316,7 +341,7 @@ msgstr "Facturatie"
 #. module: project_timesheet
 #: model:process.node,note:project_timesheet.process_node_triggerinvoice0
 msgid "Trigger invoices from sales order lines"
-msgstr ""
+msgstr "Genereer facturen van verlooporderregels."
 
 #. module: project_timesheet
 #: code:addons/project_timesheet/project_timesheet.py:100
@@ -326,6 +351,8 @@ msgid ""
 "employee.\n"
 "Fill in the timesheet tab of the employee form."
 msgstr ""
+"Definieer een product voor de werknemer.\n"
+"Dit kunt u invullen op het tabblad van de werknemer instellingen."
 
 #. module: project_timesheet
 #: code:addons/project_timesheet/project_timesheet.py:60
@@ -334,6 +361,8 @@ msgid ""
 "<p>Timesheets on this project may be invoiced to %s, according to the terms "
 "defined in the contract.</p>"
 msgstr ""
+"<p>Urenstaten van dit project kunnen worden gefactureerd aan %s, dit volgens "
+"de condities afgesproken in het contract.</p>"
 
 #. module: project_timesheet
 #: model:process.node,note:project_timesheet.process_node_taskwork0
@@ -387,6 +416,7 @@ msgid ""
 "<p class=\"oe_view_nocontent_create\">Record your timesheets for the project "
 "'%s'.</p>"
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">Maak urenstaten voor project '%s'.</p>"
 
 #. module: project_timesheet
 #: field:report.timesheet.task.user,timesheet_hrs:0

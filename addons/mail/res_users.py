@@ -113,13 +113,6 @@ class res_users(osv.Model):
             thread_id = thread_id[0]
         return self.browse(cr, SUPERUSER_ID, thread_id).partner_id.id
 
-    def message_post_user_api(self, cr, uid, thread_id, context=None, **kwargs):
-        """ Redirect the posting of message on res.users to the related partner.
-            This is done because when giving the context of Chatter on the
-            various mailboxes, we do not have access to the current partner_id. """
-        partner_id = self._message_post_get_pid(cr, uid, thread_id, context=context)
-        return self.pool.get('res.partner').message_post_user_api(cr, uid, partner_id, context=context, **kwargs)
-
     def message_post(self, cr, uid, thread_id, context=None, **kwargs):
         """ Redirect the posting of message on res.users to the related partner.
             This is done because when giving the context of Chatter on the
@@ -138,6 +131,27 @@ class res_users(osv.Model):
             partner_id = self.browse(cr, SUPERUSER_ID, id).partner_id.id
             self.pool.get('res.partner').message_subscribe(cr, uid, [partner_id], partner_ids, subtype_ids=subtype_ids, context=context)
         return True
+
+    def message_get_partner_info_from_emails(self, cr, uid, emails, link_mail=False, context=None):
+        return self.pool.get('res.partner').message_get_partner_info_from_emails(cr, uid, emails, link_mail=link_mail, context=context)
+
+    def message_get_suggested_recipients(self, cr, uid, ids, context=None):
+        partner_ids = []
+        for id in ids:
+            partner_ids.append(self.browse(cr, SUPERUSER_ID, id).partner_id.id)
+        return self.pool.get('res.partner').message_get_suggested_recipients(cr, uid, partner_ids, context=context)
+
+    #------------------------------------------------------
+    # Compatibility methods: do not use
+    # TDE TODO: remove me in 8.0
+    #------------------------------------------------------
+
+    def message_post_user_api(self, cr, uid, thread_id, context=None, **kwargs):
+        """ Redirect the posting of message on res.users to the related partner.
+            This is done because when giving the context of Chatter on the
+            various mailboxes, we do not have access to the current partner_id. """
+        partner_id = self._message_post_get_pid(cr, uid, thread_id, context=context)
+        return self.pool.get('res.partner').message_post_user_api(cr, uid, partner_id, context=context, **kwargs)
 
     def message_create_partners_from_emails(self, cr, uid, emails, context=None):
         return self.pool.get('res.partner').message_create_partners_from_emails(cr, uid, emails, context=context)

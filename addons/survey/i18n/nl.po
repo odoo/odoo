@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-21 17:06+0000\n"
-"PO-Revision-Date: 2012-12-21 23:00+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2013-03-07 08:39+0000\n"
+"PO-Revision-Date: 2013-03-28 11:13+0000\n"
+"Last-Translator: Erwin van der Ploeg (Endian Solutions) <Unknown>\n"
 "Language-Team: Dutch <nl@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-01-18 07:10+0000\n"
-"X-Generator: Launchpad (build 16430)\n"
+"X-Launchpad-Export-Date: 2013-03-29 05:09+0000\n"
+"X-Generator: Launchpad (build 16546)\n"
 
 #. module: survey
 #: view:survey.response.line:0
@@ -73,9 +73,9 @@ msgid "Surveys"
 msgstr "Enquêtes"
 
 #. module: survey
-#: field:survey.question,in_visible_answer_type:0
-msgid "Is Answer Type Invisible?"
-msgstr "Is het antwoordsoort onzichtbaar?"
+#: view:survey.request:0
+msgid "Cancel Request"
+msgstr "Aaanvraag annuleren"
 
 #. module: survey
 #: view:survey:0
@@ -503,6 +503,11 @@ msgid "From"
 msgstr "Van"
 
 #. module: survey
+#: view:survey:0
+msgid "Cancel Survey"
+msgstr "Enquête annuleren"
+
+#. module: survey
 #: selection:survey.question,comment_valid_type:0
 #: selection:survey.question,validation_type:0
 msgid "Don't Validate Comment Text."
@@ -587,6 +592,13 @@ msgstr "Soort"
 #: field:survey.request,email:0
 msgid "Email"
 msgstr "Email"
+
+#. module: survey
+#: view:survey:0
+#: view:survey.page:0
+#: view:survey.question:0
+msgid "Required Answer"
+msgstr "Verplicht antwoord"
 
 #. module: survey
 #: code:addons/survey/survey.py:96
@@ -730,6 +742,11 @@ msgid ""
 msgstr ""
 "Maximaal aantal verplichte antwoorden is groter dan aantal antwoorden. "
 "Gebruik aub een aantal dat kleiner is dan %d."
+
+#. module: survey
+#: view:survey:0
+msgid "Survey description..."
+msgstr "Enquête omschrijving..."
 
 #. module: survey
 #: view:survey:0
@@ -935,6 +952,17 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Klik hier voor het maken van een enquête. \n"
+"              </p><p>\n"
+"                U kunt enquêtes voor verschillende doelen maken: "
+"sollicitatiegesprekken,\n"
+"                periodieke beoordelingen, marketing campagnes, etc. \n"
+"              </p><p>\n"
+"                Een enquête is opgebouwd uit pagina's met vragen van\n"
+"                verschillende soorten: tekst, meerkeuze, etc.\n"
+"              </p>\n"
+"            "
 
 #. module: survey
 #: field:survey,date_close:0
@@ -1028,6 +1056,8 @@ msgid ""
 "You cannot give more responses. Please contact the author of this survey for "
 "further assistance."
 msgstr ""
+"U kunt niet meer reageren. Neem contact op met de maker van deze enquete "
+"voor hulp."
 
 #. module: survey
 #: selection:survey.question,type:0
@@ -1098,11 +1128,9 @@ msgid "Multiple Textboxes With Different Type"
 msgstr "Meer tekstvakken van verschillende soort"
 
 #. module: survey
-#: view:survey:0
-#: view:survey.page:0
-#: view:survey.question:0
-msgid "Required Answer"
-msgstr "Verplicht antwoord"
+#: view:survey.name.wiz:0
+msgid "Add Description"
+msgstr "Omschrijving toevoegen"
 
 #. module: survey
 #: model:survey.type,name:survey.survey_type2
@@ -1140,9 +1168,15 @@ msgid "Date"
 msgstr "Datum"
 
 #. module: survey
-#: selection:survey.answer,type:0
-msgid "Integer"
-msgstr "Geheel getal"
+#: view:survey:0
+msgid "All New Survey"
+msgstr "Alle nieuwe onderzoeken"
+
+#. module: survey
+#: view:survey:0
+#: view:survey.page:0
+msgid "Description on the survey page..."
+msgstr "Omschrijving op enquête pagina..."
 
 #. module: survey
 #: model:ir.model,name:survey.model_survey_send_invitation
@@ -1174,6 +1208,8 @@ msgid ""
 "You must enter one or more menu choices in column heading (white spaces not "
 "allowed)."
 msgstr ""
+"U dient één of meeerdere menu keuzes te maken in de kolomhoofd (lege regels "
+"niet toegestaan)."
 
 #. module: survey
 #: field:survey.print,paper_size:0
@@ -1202,6 +1238,7 @@ msgstr "Enquête antwoord regel"
 #, python-format
 msgid "This survey has no pages defined. Please define pages first."
 msgstr ""
+"Voor deze  enquete zijn geen pagina's gedefinieerd. Definieer deze eerst."
 
 #. module: survey
 #: model:ir.actions.report.xml,name:survey.report_survey_form
@@ -1230,9 +1267,9 @@ msgid "Is Rating Scale Invisible?"
 msgstr "Is de waarderingsschaal zichtbaar ?"
 
 #. module: survey
-#: view:survey:0
-msgid "All New Survey"
-msgstr "Alle nieuwe onderzoeken"
+#: selection:survey.answer,type:0
+msgid "Integer"
+msgstr "Geheel getal"
 
 #. module: survey
 #: selection:survey.question,type:0
@@ -1322,13 +1359,11 @@ msgid "Allow Only One Answer per Column (Forced Ranking)"
 msgstr "Slechts één antwoord per kolom toestaan (geforceerde rangorde)"
 
 #. module: survey
-#: view:survey:0
 #: view:survey.browse.answer:0
 #: view:survey.name.wiz:0
 #: view:survey.print:0
 #: view:survey.print.answer:0
 #: view:survey.print.statistics:0
-#: view:survey.request:0
 #: view:survey.send.invitation:0
 msgid "Cancel"
 msgstr "Annuleren"
@@ -1355,6 +1390,7 @@ msgstr "Open"
 #, python-format
 msgid "You must enter one or more answers for question \"%s\" of page %s ."
 msgstr ""
+"U dient één of meer antwoorden in te geven voor vraag \"%s\" op pagina %s."
 
 #. module: survey
 #: field:survey,tot_start_survey:0
@@ -1450,7 +1486,7 @@ msgstr "Uitnodiging versturen"
 #: code:addons/survey/wizard/survey_selection.py:80
 #, python-format
 msgid "You cannot give response for this survey more than %s times."
-msgstr ""
+msgstr "U kunt niet meer dan %s keer reageren op deze enquete."
 
 #. module: survey
 #: view:survey.question:0
@@ -1516,6 +1552,7 @@ msgstr "Leverancier Selectie"
 #, python-format
 msgid "You cannot select same answer more than one time.'"
 msgstr ""
+"Het is niet toegestaan om een antwoord meer dan één keer te selecteren."
 
 #. module: survey
 #: code:addons/survey/survey.py:685
@@ -1774,6 +1811,11 @@ msgstr "Enquête pagina's"
 #: field:survey.question,type:0
 msgid "Question Type"
 msgstr "Soort vraag"
+
+#. module: survey
+#: field:survey.question,in_visible_answer_type:0
+msgid "Is Answer Type Invisible?"
+msgstr "Is het antwoordsoort onzichtbaar?"
 
 #. module: survey
 #: selection:survey.question,type:0

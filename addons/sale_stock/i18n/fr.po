@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-21 17:06+0000\n"
-"PO-Revision-Date: 2013-01-04 08:13+0000\n"
-"Last-Translator: Numérigraphe <Unknown>\n"
+"POT-Creation-Date: 2013-03-07 08:39+0000\n"
+"PO-Revision-Date: 2013-02-11 14:04+0000\n"
+"Last-Translator: WANTELLET Sylvain <Swantellet@tetra-info.com>\n"
 "Language-Team: French <fr@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-01-18 07:07+0000\n"
-"X-Generator: Launchpad (build 16430)\n"
+"X-Launchpad-Export-Date: 2013-03-28 06:01+0000\n"
+"X-Generator: Launchpad (build 16546)\n"
 
 #. module: sale_stock
 #: help:sale.config.settings,group_invoice_deli_orders:0
@@ -23,6 +23,8 @@ msgid ""
 "To allow your salesman to make invoices for Delivery Orders using the menu "
 "'Deliveries to Invoice'."
 msgstr ""
+"Pour autoriser vos commerciaux à créer des factures à partir des bons de "
+"livraisons en utilisant le menu \"Livraisons à facturer\"."
 
 #. module: sale_stock
 #: model:process.node,name:sale_stock.process_node_deliveryorder0
@@ -33,13 +35,13 @@ msgstr "Bon de livraison"
 #: model:ir.actions.act_window,name:sale_stock.outgoing_picking_list_to_invoice
 #: model:ir.ui.menu,name:sale_stock.menu_action_picking_list_to_invoice
 msgid "Deliveries to Invoice"
-msgstr ""
+msgstr "Livraisons à facturer"
 
 #. module: sale_stock
 #: code:addons/sale_stock/sale_stock.py:544
 #, python-format
 msgid "Picking Information ! : "
-msgstr ""
+msgstr "Information sur l'opération ! : "
 
 #. module: sale_stock
 #: model:process.node,name:sale_stock.process_node_packinglist0
@@ -64,7 +66,7 @@ msgstr "Document du mouvement vers la sortie ou vers le client."
 #. module: sale_stock
 #: field:sale.config.settings,group_multiple_shops:0
 msgid "Manage multiple shops"
-msgstr ""
+msgstr "Gérer plusieurs magasins"
 
 #. module: sale_stock
 #: model:process.transition.action,name:sale_stock.process_transition_action_validate0
@@ -72,11 +74,18 @@ msgid "Validate"
 msgstr "Valider"
 
 #. module: sale_stock
+#: view:sale.order:0
+msgid "Cancel Order"
+msgstr ""
+
+#. module: sale_stock
 #: code:addons/sale_stock/sale_stock.py:207
 #, python-format
 msgid ""
 "You must first cancel all delivery order(s) attached to this sales order."
 msgstr ""
+"Vous devez d'abord annuler tous les bons de livraisons liés à ce bon de "
+"commande."
 
 #. module: sale_stock
 #: model:process.transition,name:sale_stock.process_transition_saleprocurement0
@@ -101,7 +110,7 @@ msgstr ""
 #: code:addons/sale_stock/sale_stock.py:615
 #, python-format
 msgid "Error!"
-msgstr ""
+msgstr "Erreur !"
 
 #. module: sale_stock
 #: field:sale.order,picking_policy:0
@@ -135,29 +144,35 @@ msgstr "Mouvement de stock"
 #: code:addons/sale_stock/sale_stock.py:161
 #, python-format
 msgid "Invalid Action!"
-msgstr ""
+msgstr "Action incorrecte !"
 
 #. module: sale_stock
 #: field:sale.config.settings,module_project_timesheet:0
 msgid "Project Timesheet"
-msgstr ""
+msgstr "Feuille de temps par projet"
 
 #. module: sale_stock
 #: field:sale.config.settings,group_sale_delivery_address:0
 msgid "Allow a different address for delivery and invoicing "
 msgstr ""
+"Autoriser une adresse différente pour la livraison et la facturation "
 
 #. module: sale_stock
 #: code:addons/sale_stock/sale_stock.py:546
 #: code:addons/sale_stock/sale_stock.py:597
 #, python-format
 msgid "Configuration Error!"
-msgstr ""
+msgstr "Erreur de paramétrage !"
 
 #. module: sale_stock
 #: model:process.node,name:sale_stock.process_node_saleprocurement0
 msgid "Procurement Order"
 msgstr "Odre d'approvisionnement"
+
+#. module: sale_stock
+#: model:ir.actions.act_window,name:sale_stock.res_partner_rule_children
+msgid "Contact Details"
+msgstr ""
 
 #. module: sale_stock
 #: selection:sale.config.settings,default_order_policy:0
@@ -173,7 +188,7 @@ msgstr "Commande de ventes"
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_stock_picking_out
 msgid "Delivery Orders"
-msgstr ""
+msgstr "Bons de livraison"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_sale_order_line
@@ -220,7 +235,7 @@ msgstr "Forcer l'assignation"
 #. module: sale_stock
 #: field:sale.config.settings,default_order_policy:0
 msgid "The default invoicing method is"
-msgstr ""
+msgstr "La méthode de facturation par défaut est"
 
 #. module: sale_stock
 #: field:sale.order.line,delay:0
@@ -235,7 +250,7 @@ msgstr "Document du mouvement vers le client"
 #. module: sale_stock
 #: view:sale.order:0
 msgid "View Delivery Order"
-msgstr ""
+msgstr "Voir le bon de livraison"
 
 #. module: sale_stock
 #: field:sale.order.line,move_ids:0
@@ -245,7 +260,7 @@ msgstr "Mouvements de stock"
 #. module: sale_stock
 #: view:sale.config.settings:0
 msgid "Default Options"
-msgstr ""
+msgstr "Options par défaut"
 
 #. module: sale_stock
 #: field:sale.config.settings,module_project_mrp:0
@@ -300,17 +315,17 @@ msgstr ""
 #. module: sale_stock
 #: field:sale.config.settings,group_invoice_deli_orders:0
 msgid "Generate invoices after and based on delivery orders"
-msgstr ""
+msgstr "Générez les factures après et sur la base des bons de livraison"
 
 #. module: sale_stock
 #: field:sale.config.settings,module_delivery:0
 msgid "Allow adding shipping costs"
-msgstr ""
+msgstr "Autorise l'ajout de coûts d'expédition"
 
 #. module: sale_stock
 #: view:sale.order:0
 msgid "days"
-msgstr ""
+msgstr "jours"
 
 #. module: sale_stock
 #: field:sale.order.line,product_packaging:0
@@ -342,7 +357,7 @@ msgstr ""
 #. module: sale_stock
 #: model:res.groups,name:sale_stock.group_invoice_deli_orders
 msgid "Enable Invoicing Delivery orders"
-msgstr ""
+msgstr "Active la facturation basée sur les bons de livraison"
 
 #. module: sale_stock
 #: field:res.company,security_lead:0
@@ -366,7 +381,7 @@ msgstr ""
 #: code:addons/sale_stock/sale_stock.py:206
 #, python-format
 msgid "Cannot cancel sales order!"
-msgstr ""
+msgstr "Impossible d'annuler le bon de commande !"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_sale_shop
@@ -472,7 +487,7 @@ msgstr ""
 #. module: sale_stock
 #: selection:sale.config.settings,default_order_policy:0
 msgid "Invoice based on sales orders"
-msgstr ""
+msgstr "Facture basée sur les bons de commande"
 
 #. module: sale_stock
 #: model:process.node,name:sale_stock.process_node_invoiceafterdelivery0
@@ -482,7 +497,6 @@ msgstr "Facture"
 #. module: sale_stock
 #: model:process.transition.action,name:sale_stock.process_transition_action_cancel1
 #: model:process.transition.action,name:sale_stock.process_transition_action_cancel2
-#: view:sale.order:0
 msgid "Cancel"
 msgstr "Annuler"
 
@@ -493,6 +507,10 @@ msgid ""
 "In order to delete a confirmed sales order, you must cancel it.\n"
 "To do so, you must first cancel related picking for delivery orders."
 msgstr ""
+"Afin de supprimer un bon de commande confirmé, vous devez d'abord "
+"l'annuler.\n"
+"Pour faire ceci, vous devez d'abord annuler toutes les opérations liées à la "
+"livraison."
 
 #. module: sale_stock
 #: field:sale.order.line,number_packages:0
@@ -512,7 +530,7 @@ msgstr "Créer facture"
 #. module: sale_stock
 #: field:sale.config.settings,task_work:0
 msgid "Prepare invoices based on task's activities"
-msgstr ""
+msgstr "Générer des factures basées sur des tâches"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_sale_advance_payment_inv
@@ -542,7 +560,7 @@ msgstr "Incoterm"
 #: code:addons/sale_stock/sale_stock.py:496
 #, python-format
 msgid "Cannot cancel sales order line!"
-msgstr ""
+msgstr "Impossible d'annuler les lignes de commande !"
 
 #. module: sale_stock
 #: model:process.transition.action,name:sale_stock.process_transition_action_cancelassignation0
@@ -574,7 +592,7 @@ msgstr ""
 msgid ""
 "This is a list of delivery orders that has been generated for this sales "
 "order."
-msgstr ""
+msgstr "Liste des bons de livraisons générés pour cette commande."
 
 #. module: sale_stock
 #: model:process.node,name:sale_stock.process_node_saleorderprocurement0
@@ -605,12 +623,12 @@ msgstr ""
 #. module: sale_stock
 #: view:sale.order:0
 msgid "Recreate Delivery Order"
-msgstr ""
+msgstr "Re-créer le bon de livraison"
 
 #. module: sale_stock
 #: help:sale.config.settings,group_multiple_shops:0
 msgid "This allows to configure and use multiple shops."
-msgstr ""
+msgstr "Autorise à paramétrer et utiliser plusieurs boutiques."
 
 #. module: sale_stock
 #: field:sale.order,picked_rate:0

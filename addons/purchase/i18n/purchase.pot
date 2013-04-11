@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 7.0alpha\n"
+"Project-Id-Version: OpenERP Server 7.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-12-21 17:04+0000\n"
-"PO-Revision-Date: 2012-12-21 17:04+0000\n"
+"POT-Creation-Date: 2013-03-07 08:37+0000\n"
+"PO-Revision-Date: 2013-03-07 08:37+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -56,6 +56,11 @@ msgstr ""
 #: view:purchase.report:0
 #: field:purchase.report,day:0
 msgid "Day"
+msgstr ""
+
+#. module: purchase
+#: view:purchase.order:0
+msgid "Cancel Order"
 msgstr ""
 
 #. module: purchase
@@ -680,6 +685,11 @@ msgid "RFQ"
 msgstr ""
 
 #. module: purchase
+#: view:purchase.order:0
+msgid "Send by Email"
+msgstr ""
+
+#. module: purchase
 #: report:purchase.order:0
 #: view:purchase.order:0
 #: field:purchase.order,date_order:0
@@ -848,7 +858,6 @@ msgstr ""
 #: model:process.transition.action,name:purchase.process_transition_action_approvingcancelpurchaseorder0
 #: model:process.transition.action,name:purchase.process_transition_action_cancelpurchaseorder0
 #: view:purchase.config.settings:0
-#: view:purchase.order:0
 #: view:purchase.order.group:0
 #: view:purchase.order.line_invoice:0
 msgid "Cancel"
@@ -1112,6 +1121,11 @@ msgid "Products"
 msgstr ""
 
 #. module: purchase
+#: view:purchase.order:0
+msgid "Terms and conditions..."
+msgstr ""
+
+#. module: purchase
 #: model:ir.model,name:purchase.model_stock_move
 msgid "Stock Move"
 msgstr ""
@@ -1304,8 +1318,8 @@ msgid "PO: %s"
 msgstr ""
 
 #. module: purchase
-#: view:purchase.order:0
-msgid "Send by EMail"
+#: model:process.node,note:purchase.process_node_packinginvoice0
+msgid "Outgoing products to invoice"
 msgstr ""
 
 #. module: purchase
@@ -1791,11 +1805,6 @@ msgstr ""
 #: view:purchase.report:0
 #: field:purchase.report,product_uom:0
 msgid "Reference Unit of Measure"
-msgstr ""
-
-#. module: purchase
-#: model:process.node,note:purchase.process_node_packinginvoice0
-msgid "Outgoing products to invoice"
 msgstr ""
 
 #. module: purchase

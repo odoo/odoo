@@ -265,19 +265,25 @@ class mail_message(osv.Model):
         domain = [('partner_id', '=', user_pid), ('message_id', 'in', msg_ids)]
         if not create_missing:
             domain += [('starred', '=', not starred)]
+        values = {
+            'starred': starred
+        }
+        if starred:
+            values['read'] = False
+ 
         notif_ids = notification_obj.search(cr, uid, domain, context=context)
 
         # all message have notifications: already set them as (un)starred
         if len(notif_ids) == len(msg_ids) or not create_missing:
-            notification_obj.write(cr, uid, notif_ids, {'starred': starred}, context=context)
+            notification_obj.write(cr, uid, notif_ids, values, context=context)
             return starred
 
         # some messages do not have notifications: find which one, create notification, update starred status
         notified_msg_ids = [notification.message_id.id for notification in notification_obj.browse(cr, uid, notif_ids, context=context)]
         to_create_msg_ids = list(set(msg_ids) - set(notified_msg_ids))
         for msg_id in to_create_msg_ids:
-            notification_obj.create(cr, uid, {'partner_id': user_pid, 'starred': starred, 'message_id': msg_id}, context=context)
-        notification_obj.write(cr, uid, notif_ids, {'starred': starred}, context=context)
+            notification_obj.create(cr, uid, dict(values, partner_id=user_pid, message_id=msg_id), context=context)
+        notification_obj.write(cr, uid, notif_ids, values, context=context)
         return starred
 
     #------------------------------------------------------
@@ -301,8 +307,8 @@ class mail_message(osv.Model):
         for key, message in message_tree.iteritems():
             if message.author_id:
                 partner_ids |= set([message.author_id.id])
-            if message.partner_ids:
-                partner_ids |= set([partner.id for partner in message.partner_ids])
+            if message.notified_partner_ids:
+                partner_ids |= set([partner.id for partner in message.notified_partner_ids])
             if message.attachment_ids:
                 attachment_ids |= set([attachment.id for attachment in message.attachment_ids])
         # Read partners as SUPERUSER -> display the names like classic m2o even if no access
@@ -310,8 +316,8 @@ class mail_message(osv.Model):
         partner_tree = dict((partner[0], partner) for partner in partners)
 
         # 2. Attachments as SUPERUSER, because could receive msg and attachments for doc uid cannot see
-        attachments = ir_attachment_obj.read(cr, SUPERUSER_ID, list(attachment_ids), ['id', 'datas_fname'], context=context)
-        attachments_tree = dict((attachment['id'], {'id': attachment['id'], 'filename': attachment['datas_fname']}) for attachment in attachments)
+        attachments = ir_attachment_obj.read(cr, SUPERUSER_ID, list(attachment_ids), ['id', 'datas_fname', 'name'], context=context)
+        attachments_tree = dict((attachment['id'], {'id': attachment['id'], 'filename': attachment['datas_fname'], 'name': attachment['name']}) for attachment in attachments)
 
         # 3. Update message dictionaries
         for message_dict in messages:
@@ -322,7 +328,7 @@ class mail_message(osv.Model):
             else:
                 author = (0, message.email_from)
             partner_ids = []
-            for partner in message.partner_ids:
+            for partner in message.notified_partner_ids:
                 if partner.id in partner_tree:
                     partner_ids.append(partner_tree[partner.id])
             attachment_ids = []
@@ -360,6 +366,7 @@ class mail_message(osv.Model):
 
         return {'id': message.id,
                 'type': message.type,
+                'subtype': message.subtype_id.name if message.subtype_id else False,
                 'body': body_html,
                 'model': message.model,
                 'res_id': message.res_id,
@@ -761,7 +768,7 @@ class mail_message(osv.Model):
         attachments_to_delete = []
         for message in self.browse(cr, uid, ids, context=context):
             for attach in message.attachment_ids:
-                if attach.res_model == self._name and attach.res_id == message.id:
+                if attach.res_model == self._name and (attach.res_id == message.id or attach.res_id == 0):
                     attachments_to_delete.append(attach.id)
         if attachments_to_delete:
             self.pool.get('ir.attachment').unlink(cr, uid, attachments_to_delete, context=context)
@@ -861,7 +868,7 @@ class mail_message(osv.Model):
         # message has no subtype_id: pure log message -> no partners, no one notified
         if not message.subtype_id:
             return True
-            
+
         # all followers of the mail.message document have to be added as partners and notified
         if message.model and message.res_id:
             fol_obj = self.pool.get("mail.followers")
@@ -884,8 +891,7 @@ class mail_message(osv.Model):
 
         # notify
         if partners_to_notify:
-            self.write(cr, SUPERUSER_ID, [newid], {'notified_partner_ids': [(4, p.id) for p in partners_to_notify]}, context=context)
-        notification_obj._notify(cr, uid, newid, context=context)
+            notification_obj._notify(cr, uid, newid, partners_to_notify=[p.id for p in partners_to_notify], context=context)
         message.refresh()
 
         # An error appear when a user receive a notification without notifying

@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-21 17:04+0000\n"
-"PO-Revision-Date: 2012-12-21 23:00+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2013-03-07 08:37+0000\n"
+"PO-Revision-Date: 2013-02-12 16:38+0000\n"
+"Last-Translator: Ali Sağlam <ali.saglam@live.de>\n"
 "Language-Team: Turkish <tr@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-01-18 06:44+0000\n"
-"X-Generator: Launchpad (build 16430)\n"
+"X-Launchpad-Export-Date: 2013-03-28 05:40+0000\n"
+"X-Generator: Launchpad (build 16546)\n"
 
 #. module: hr_evaluation
 #: help:hr_evaluation.plan.phase,send_anonymous_manager:0
@@ -32,7 +32,12 @@ msgstr "Değerlendirmeye Başla"
 #: view:hr.evaluation.report:0
 #: view:hr_evaluation.plan:0
 msgid "Group By..."
-msgstr "Grupla..."
+msgstr "Grupla İle..."
+
+#. module: hr_evaluation
+#: view:hr_evaluation.evaluation:0
+msgid "Cancel Appraisal"
+msgstr ""
 
 #. module: hr_evaluation
 #: field:hr.evaluation.interview,request_id:0
@@ -48,7 +53,7 @@ msgstr "Mart"
 #. module: hr_evaluation
 #: field:hr.evaluation.report,delay_date:0
 msgid "Delay to Start"
-msgstr ""
+msgstr "Başlama Gecikmesi"
 
 #. module: hr_evaluation
 #: view:hr_evaluation.evaluation:0
@@ -60,7 +65,7 @@ msgstr ""
 #: field:hr_evaluation.plan,company_id:0
 #: field:hr_evaluation.plan.phase,company_id:0
 msgid "Company"
-msgstr ""
+msgstr "Firma"
 
 #. module: hr_evaluation
 #: field:hr.evaluation.interview,evaluation_id:0
@@ -78,12 +83,12 @@ msgstr "Gün"
 #: view:hr_evaluation.plan:0
 #: field:hr_evaluation.plan,phase_ids:0
 msgid "Appraisal Phases"
-msgstr "Değerlendirme aşamaları"
+msgstr "Değerlendirme Evreleri"
 
 #. module: hr_evaluation
 #: view:hr.evaluation.interview:0
 msgid "Send Request"
-msgstr ""
+msgstr "İstek Gönder"
 
 #. module: hr_evaluation
 #: help:hr_evaluation.plan,month_first:0
@@ -96,18 +101,18 @@ msgstr ""
 #: view:hr.employee:0
 #: model:ir.ui.menu,name:hr_evaluation.menu_open_view_hr_evaluation_tree
 msgid "Appraisals"
-msgstr ""
+msgstr "Değerlendirmeler"
 
 #. module: hr_evaluation
 #: view:hr_evaluation.plan.phase:0
 msgid "(eval_name)s:Appraisal Name"
-msgstr "Değerlendirme adı"
+msgstr "(eval_name)s:Değerlendirme Adı"
 
 #. module: hr_evaluation
 #: field:hr.evaluation.interview,message_ids:0
 #: field:hr_evaluation.evaluation,message_ids:0
 msgid "Messages"
-msgstr ""
+msgstr "Mesajlar"
 
 #. module: hr_evaluation
 #: view:hr_evaluation.plan.phase:0
@@ -117,18 +122,18 @@ msgstr ""
 #. module: hr_evaluation
 #: field:hr_evaluation.plan.phase,wait:0
 msgid "Wait Previous Phases"
-msgstr ""
+msgstr "Önceki Evreleri Bekle"
 
 #. module: hr_evaluation
 #: model:ir.model,name:hr_evaluation.model_hr_evaluation_evaluation
 msgid "Employee Appraisal"
-msgstr "Çalışan Değerlendirme"
+msgstr "Personel Değerlendirme"
 
 #. module: hr_evaluation
 #: selection:hr.evaluation.report,state:0
 #: selection:hr_evaluation.evaluation,state:0
 msgid "Cancelled"
-msgstr ""
+msgstr "Vazgeçildi"
 
 #. module: hr_evaluation
 #: selection:hr.evaluation.report,rating:0
@@ -147,7 +152,7 @@ msgstr "Değerlendirme"
 #: help:hr.evaluation.interview,message_unread:0
 #: help:hr_evaluation.evaluation,message_unread:0
 msgid "If checked new messages require your attention."
-msgstr ""
+msgstr "Eğer seçilirse yeni mesajlar dikkat gerektirir."
 
 #. module: hr_evaluation
 #: view:hr_evaluation.plan.phase:0
@@ -160,16 +165,14 @@ msgid "Ending Date"
 msgstr "Bitiş Tarihi"
 
 #. module: hr_evaluation
-#: help:hr_evaluation.evaluation,note_action:0
-msgid ""
-"If the evaluation does not meet the expectations, you can proposean action "
-"plan"
-msgstr "Değerlendirme yeterli değilse yeni bir proses belirleyebilirsin"
+#: field:hr_evaluation.plan,month_first:0
+msgid "First Appraisal in (months)"
+msgstr ""
 
 #. module: hr_evaluation
 #: view:hr_evaluation.plan.phase:0
 msgid "Send to Employees"
-msgstr "Değerlendirilen ile paylaş"
+msgstr "Personel Gönder"
 
 #. module: hr_evaluation
 #: code:addons/hr_evaluation/hr_evaluation.py:84
@@ -208,24 +211,24 @@ msgstr ""
 #. module: hr_evaluation
 #: view:hr_evaluation.evaluation:0
 msgid "Reset to Draft"
-msgstr "Taslağı iptal et"
+msgstr "Taslağı Sıfırla"
 
 #. module: hr_evaluation
 #: field:hr.evaluation.report,deadline:0
 msgid "Deadline"
-msgstr "Bitiş tarihi"
+msgstr "ZamanSınırı"
 
 #. module: hr_evaluation
 #: code:addons/hr_evaluation/hr_evaluation.py:235
 #: code:addons/hr_evaluation/hr_evaluation.py:320
 #, python-format
 msgid "Warning!"
-msgstr ""
+msgstr "Uyarı!"
 
 #. module: hr_evaluation
 #: view:hr.evaluation.report:0
 msgid "In progress Evaluations"
-msgstr "Değerlendirme durumu"
+msgstr "Değerlendirme DevamEdiyor"
 
 #. module: hr_evaluation
 #: model:ir.model,name:hr_evaluation.model_survey_request
@@ -233,14 +236,19 @@ msgid "survey.request"
 msgstr "İstek"
 
 #. module: hr_evaluation
+#: view:hr.evaluation.interview:0
+msgid "Cancel Survey"
+msgstr ""
+
+#. module: hr_evaluation
 #: view:hr_evaluation.plan.phase:0
 msgid "(date)s: Current Date"
-msgstr "Güncel Tarih"
+msgstr "(tarih)s: Güncel Tarih"
 
 #. module: hr_evaluation
 #: model:ir.actions.act_window,name:hr_evaluation.act_hr_employee_2_hr__evaluation_interview
 msgid "Interviews"
-msgstr ""
+msgstr "Görüşme"
 
 #. module: hr_evaluation
 #: code:addons/hr_evaluation/hr_evaluation.py:83
@@ -252,13 +260,13 @@ msgstr "Hakkında "
 #: field:hr.evaluation.interview,message_follower_ids:0
 #: field:hr_evaluation.evaluation,message_follower_ids:0
 msgid "Followers"
-msgstr ""
+msgstr "Takipçiler"
 
 #. module: hr_evaluation
 #: field:hr.evaluation.interview,message_unread:0
 #: field:hr_evaluation.evaluation,message_unread:0
 msgid "Unread Messages"
-msgstr ""
+msgstr "Okunmamış mesajlar"
 
 #. module: hr_evaluation
 #: view:hr.evaluation.report:0
@@ -267,7 +275,7 @@ msgstr ""
 #: field:hr_evaluation.evaluation,employee_id:0
 #: model:ir.model,name:hr_evaluation.model_hr_employee
 msgid "Employee"
-msgstr "Çalışan"
+msgstr "Personel"
 
 #. module: hr_evaluation
 #: selection:hr_evaluation.evaluation,state:0
@@ -321,7 +329,7 @@ msgstr "Hatırlatma e-posta gönder"
 #: view:hr.evaluation.report:0
 #: field:hr_evaluation.evaluation,rating:0
 msgid "Appreciation"
-msgstr ""
+msgstr "Değerlenmesi"
 
 #. module: hr_evaluation
 #: view:hr_evaluation.evaluation:0
@@ -331,7 +339,7 @@ msgstr "Mülakatı yazdır"
 #. module: hr_evaluation
 #: field:hr.evaluation.report,closed:0
 msgid "closed"
-msgstr "kapalı"
+msgstr "kapandı"
 
 #. module: hr_evaluation
 #: selection:hr.evaluation.report,rating:0
@@ -343,7 +351,7 @@ msgstr "Beklentileri karşılıyor"
 #: view:hr.evaluation.report:0
 #: field:hr.evaluation.report,nbr:0
 msgid "# of Requests"
-msgstr ""
+msgstr "# nın Talepleri"
 
 #. module: hr_evaluation
 #: selection:hr.evaluation.report,month:0
@@ -357,7 +365,7 @@ msgstr "Temmuz"
 #: view:hr_evaluation.evaluation:0
 #: field:hr_evaluation.evaluation,state:0
 msgid "Status"
-msgstr ""
+msgstr "Durumu"
 
 #. module: hr_evaluation
 #: model:ir.actions.act_window,name:hr_evaluation.action_evaluation_plans_installer
@@ -383,17 +391,17 @@ msgstr ""
 #. module: hr_evaluation
 #: view:hr_evaluation.plan.phase:0
 msgid "Action to Perform"
-msgstr ""
+msgstr "İşlemi Gerçekleştirin"
 
 #. module: hr_evaluation
 #: field:hr_evaluation.evaluation,note_action:0
 msgid "Action Plan"
-msgstr ""
+msgstr "İşlem Planı"
 
 #. module: hr_evaluation
 #: model:ir.ui.menu,name:hr_evaluation.menu_eval_hr_config
 msgid "Periodic Appraisal"
-msgstr ""
+msgstr "Periyodik Değerleme"
 
 #. module: hr_evaluation
 #: field:hr_evaluation.plan,month_next:0
@@ -404,60 +412,60 @@ msgstr ""
 #: selection:hr.evaluation.report,rating:0
 #: selection:hr_evaluation.evaluation,rating:0
 msgid "Significantly exceeds expectations"
-msgstr ""
+msgstr "Önemli Ölçüde beklentileri aşıyor"
 
 #. module: hr_evaluation
 #: view:hr_evaluation.evaluation:0
 msgid "In progress"
-msgstr ""
+msgstr "DevamEden"
 
 #. module: hr_evaluation
 #: view:hr.evaluation.interview:0
 msgid "Interview Request"
-msgstr ""
+msgstr "Görüşme İsteği"
 
 #. module: hr_evaluation
 #: field:hr_evaluation.plan.phase,send_answer_employee:0
 #: field:hr_evaluation.plan.phase,send_answer_manager:0
 msgid "All Answers"
-msgstr ""
+msgstr "Tüm Yanıtlar"
 
 #. module: hr_evaluation
 #: view:hr.evaluation.interview:0
 #: view:hr_evaluation.evaluation:0
 msgid "Answer Survey"
-msgstr ""
+msgstr "Anket Cevap"
 
 #. module: hr_evaluation
 #: selection:hr.evaluation.report,month:0
 msgid "September"
-msgstr ""
+msgstr "Eylül"
 
 #. module: hr_evaluation
 #: selection:hr.evaluation.report,month:0
 msgid "December"
-msgstr ""
+msgstr "Aralık"
 
 #. module: hr_evaluation
 #: view:hr.evaluation.report:0
 #: field:hr.evaluation.report,month:0
 msgid "Month"
-msgstr ""
+msgstr "Ay"
 
 #. module: hr_evaluation
 #: view:hr_evaluation.evaluation:0
 msgid "Group by..."
-msgstr ""
+msgstr "Grupla ile"
 
 #. module: hr_evaluation
 #: view:hr_evaluation.plan.phase:0
 msgid "Mail Settings"
-msgstr ""
+msgstr "Posta Ayarları"
 
 #. module: hr_evaluation
 #: model:ir.actions.act_window,name:hr_evaluation.evaluation_reminders
 msgid "Appraisal Reminders"
-msgstr ""
+msgstr "Değerleme Hatırlatmaları"
 
 #. module: hr_evaluation
 #: help:hr_evaluation.plan.phase,wait:0
@@ -472,20 +480,22 @@ msgid "Legend"
 msgstr ""
 
 #. module: hr_evaluation
-#: field:hr_evaluation.plan,month_first:0
-msgid "First Appraisal in (months)"
-msgstr ""
+#: help:hr_evaluation.evaluation,note_action:0
+msgid ""
+"If the evaluation does not meet the expectations, you can proposean action "
+"plan"
+msgstr "Değerlendirme yeterli değilse yeni bir proses belirleyebilirsin"
 
 #. module: hr_evaluation
 #: selection:hr.evaluation.report,state:0
 msgid "Draft"
-msgstr ""
+msgstr "Taslak"
 
 #. module: hr_evaluation
 #: field:hr_evaluation.plan.phase,send_anonymous_employee:0
 #: field:hr_evaluation.plan.phase,send_anonymous_manager:0
 msgid "Anonymous Summary"
-msgstr ""
+msgstr "Anonim Özeti"
 
 #. module: hr_evaluation
 #: view:hr_evaluation.evaluation:0
@@ -500,44 +510,44 @@ msgstr "Bekleyen"
 #: field:hr_evaluation.plan.phase,plan_id:0
 #: model:ir.model,name:hr_evaluation.model_hr_evaluation_plan
 msgid "Appraisal Plan"
-msgstr ""
+msgstr "Değerleme Planı"
 
 #. module: hr_evaluation
 #: view:hr.evaluation.interview:0
 msgid "Print Survey"
-msgstr ""
+msgstr "Anket Yazdır"
 
 #. module: hr_evaluation
 #: selection:hr.evaluation.report,month:0
 msgid "August"
-msgstr ""
+msgstr "Ağustos"
 
 #. module: hr_evaluation
 #: selection:hr.evaluation.report,month:0
 msgid "June"
-msgstr ""
+msgstr "Haziran"
 
 #. module: hr_evaluation
 #: selection:hr.evaluation.report,rating:0
 #: selection:hr_evaluation.evaluation,rating:0
 msgid "Significantly bellow expectations"
-msgstr ""
+msgstr "Önemli Ölçüde beklentilerin altında"
 
 #. module: hr_evaluation
 #: view:hr_evaluation.evaluation:0
 msgid "Validate Appraisal"
-msgstr ""
+msgstr "Değerleme Doğrulama"
 
 #. module: hr_evaluation
 #: view:hr_evaluation.plan.phase:0
 msgid " (employee_name)s: Partner name"
-msgstr ""
+msgstr " (employee_name)s: Partner adı"
 
 #. module: hr_evaluation
 #: field:hr.evaluation.interview,message_is_follower:0
 #: field:hr_evaluation.evaluation,message_is_follower:0
 msgid "Is a Follower"
-msgstr ""
+msgstr "Bir Takipçisi mi"
 
 #. module: hr_evaluation
 #: view:hr.evaluation.report:0
@@ -545,22 +555,22 @@ msgstr ""
 #: view:hr_evaluation.evaluation:0
 #: field:hr_evaluation.evaluation,plan_id:0
 msgid "Plan"
-msgstr ""
+msgstr "Plan"
 
 #. module: hr_evaluation
 #: field:hr_evaluation.plan,active:0
 msgid "Active"
-msgstr ""
+msgstr "Etkin"
 
 #. module: hr_evaluation
 #: selection:hr.evaluation.report,month:0
 msgid "November"
-msgstr ""
+msgstr "Kasım"
 
 #. module: hr_evaluation
 #: view:hr.evaluation.report:0
 msgid "Extended Filters..."
-msgstr ""
+msgstr "Genişletilmiş Filtreler ..."
 
 #. module: hr_evaluation
 #: help:hr_evaluation.plan.phase,send_anonymous_employee:0
@@ -570,82 +580,82 @@ msgstr "Çalışana genel bir değerlendirme özeti gönder"
 #. module: hr_evaluation
 #: model:ir.model,name:hr_evaluation.model_hr_evaluation_plan_phase
 msgid "Appraisal Plan Phase"
-msgstr ""
+msgstr "Değerleme Planı Evre"
 
 #. module: hr_evaluation
 #: selection:hr.evaluation.report,month:0
 msgid "January"
-msgstr ""
+msgstr "Ocak"
 
 #. module: hr_evaluation
 #: view:hr.employee:0
 msgid "Appraisal Interviews"
-msgstr ""
+msgstr "Değerleme Görüşmeler"
 
 #. module: hr_evaluation
 #: field:hr.evaluation.interview,message_summary:0
 #: field:hr_evaluation.evaluation,message_summary:0
 msgid "Summary"
-msgstr ""
+msgstr "Özet"
 
 #. module: hr_evaluation
 #: view:hr_evaluation.evaluation:0
 msgid "Date"
-msgstr ""
+msgstr "Tarih"
 
 #. module: hr_evaluation
 #: view:hr.evaluation.interview:0
 msgid "Survey"
-msgstr ""
+msgstr "Anket"
 
 #. module: hr_evaluation
 #: field:hr_evaluation.plan.phase,action:0
 msgid "Action"
-msgstr ""
+msgstr "İşlem"
 
 #. module: hr_evaluation
 #: view:hr.evaluation.report:0
 #: selection:hr.evaluation.report,state:0
 msgid "Final Validation"
-msgstr ""
+msgstr "Final Onaylama"
 
 #. module: hr_evaluation
 #: selection:hr_evaluation.evaluation,state:0
 msgid "Waiting Appreciation"
-msgstr ""
+msgstr "Bekleyen Değerlenme"
 
 #. module: hr_evaluation
 #: view:hr.evaluation.report:0
 #: model:ir.actions.act_window,name:hr_evaluation.action_evaluation_report_all
 #: model:ir.ui.menu,name:hr_evaluation.menu_evaluation_report_all
 msgid "Appraisal Analysis"
-msgstr ""
+msgstr "Değerleme Analizi"
 
 #. module: hr_evaluation
 #: field:hr_evaluation.evaluation,date:0
 msgid "Appraisal Deadline"
-msgstr ""
+msgstr "Değerleme ZamanSınırı"
 
 #. module: hr_evaluation
 #: field:hr.evaluation.report,rating:0
 msgid "Overall Rating"
-msgstr ""
+msgstr "Genel Derecelendirme"
 
 #. module: hr_evaluation
 #: view:hr.evaluation.interview:0
 #: view:hr_evaluation.evaluation:0
 msgid "Interviewer"
-msgstr ""
+msgstr "Görüşmeci"
 
 #. module: hr_evaluation
 #: model:ir.model,name:hr_evaluation.model_hr_evaluation_report
 msgid "Evaluations Statistics"
-msgstr ""
+msgstr "Değerlendirme İstatistikleri"
 
 #. module: hr_evaluation
 #: view:hr.evaluation.interview:0
 msgid "Deadline Date"
-msgstr ""
+msgstr "ZamanSınırı Tarihi"
 
 #. module: hr_evaluation
 #: help:hr_evaluation.evaluation,rating:0
@@ -660,12 +670,12 @@ msgstr ""
 #. module: hr_evaluation
 #: view:hr_evaluation.plan.phase:0
 msgid "General"
-msgstr ""
+msgstr "Genel"
 
 #. module: hr_evaluation
 #: help:hr_evaluation.plan.phase,send_answer_employee:0
 msgid "Send all answers to the employee"
-msgstr ""
+msgstr "Personel tüm cevaplar gönder"
 
 #. module: hr_evaluation
 #: view:hr.evaluation.interview:0
@@ -674,40 +684,34 @@ msgstr ""
 #: view:hr_evaluation.evaluation:0
 #: selection:hr_evaluation.evaluation,state:0
 msgid "Done"
-msgstr ""
+msgstr "Biten"
 
 #. module: hr_evaluation
 #: view:hr_evaluation.plan:0
 #: model:ir.actions.act_window,name:hr_evaluation.open_view_hr_evaluation_plan_tree
 #: model:ir.ui.menu,name:hr_evaluation.menu_open_view_hr_evaluation_plan_tree
 msgid "Appraisal Plans"
-msgstr ""
+msgstr "Değerleme Planlar"
 
 #. module: hr_evaluation
 #: model:ir.model,name:hr_evaluation.model_hr_evaluation_interview
 msgid "Appraisal Interview"
-msgstr ""
-
-#. module: hr_evaluation
-#: view:hr.evaluation.interview:0
-#: view:hr_evaluation.evaluation:0
-msgid "Cancel"
-msgstr ""
+msgstr "Değerleme Görüşme"
 
 #. module: hr_evaluation
 #: view:hr.evaluation.report:0
 msgid "In Progress"
-msgstr ""
+msgstr "DevamEden"
 
 #. module: hr_evaluation
 #: view:hr.evaluation.interview:0
 msgid "To Do"
-msgstr ""
+msgstr "Yapılacak"
 
 #. module: hr_evaluation
 #: view:hr.evaluation.report:0
 msgid "Final Validation Evaluations"
-msgstr ""
+msgstr "Final Onaylama Değerlendirmeleri"
 
 #. module: hr_evaluation
 #: field:hr_evaluation.plan.phase,mail_feature:0
@@ -722,7 +726,7 @@ msgstr ""
 #. module: hr_evaluation
 #: selection:hr.evaluation.report,month:0
 msgid "October"
-msgstr ""
+msgstr "Ekim"
 
 #. module: hr_evaluation
 #: help:hr.employee,evaluation_date:0
@@ -734,7 +738,7 @@ msgstr ""
 #. module: hr_evaluation
 #: field:hr.evaluation.report,overpass_delay:0
 msgid "Overpassed Deadline"
-msgstr ""
+msgstr "ZamanSınırı Geçen"
 
 #. module: hr_evaluation
 #: help:hr_evaluation.plan,month_next:0
@@ -746,18 +750,18 @@ msgstr ""
 #. module: hr_evaluation
 #: selection:hr_evaluation.plan.phase,action:0
 msgid "Self Appraisal Requests"
-msgstr ""
+msgstr "Öz Değerlendirme İstekleri"
 
 #. module: hr_evaluation
 #: view:hr_evaluation.evaluation:0
 #: field:hr_evaluation.evaluation,survey_request_ids:0
 msgid "Appraisal Forms"
-msgstr ""
+msgstr "Değerleme Formları"
 
 #. module: hr_evaluation
 #: selection:hr.evaluation.report,month:0
 msgid "May"
-msgstr ""
+msgstr "Mayıs"
 
 #. module: hr_evaluation
 #: model:ir.actions.act_window,help:hr_evaluation.open_view_hr_evaluation_tree
@@ -780,17 +784,17 @@ msgstr ""
 #. module: hr_evaluation
 #: view:hr_evaluation.evaluation:0
 msgid "Internal Notes"
-msgstr ""
+msgstr "Dahili not"
 
 #. module: hr_evaluation
 #: selection:hr_evaluation.plan.phase,action:0
 msgid "Final Interview"
-msgstr ""
+msgstr "Nihai Görüşme"
 
 #. module: hr_evaluation
 #: field:hr_evaluation.plan.phase,name:0
 msgid "Phase"
-msgstr ""
+msgstr "Evre"
 
 #. module: hr_evaluation
 #: selection:hr_evaluation.plan.phase,action:0
@@ -800,29 +804,34 @@ msgstr ""
 #. module: hr_evaluation
 #: selection:hr.evaluation.report,month:0
 msgid "February"
-msgstr ""
+msgstr "Şubat"
 
 #. module: hr_evaluation
 #: view:hr.evaluation.interview:0
 #: view:hr_evaluation.evaluation:0
 msgid "Interview Appraisal"
-msgstr ""
+msgstr "Görüşme Değerleme"
 
 #. module: hr_evaluation
 #: field:survey.request,is_evaluation:0
 msgid "Is Appraisal?"
-msgstr ""
+msgstr "Değerleme mi?"
 
 #. module: hr_evaluation
 #: code:addons/hr_evaluation/hr_evaluation.py:320
 #, python-format
 msgid "You cannot start evaluation without Appraisal."
+msgstr "Sen Değerleme olmadan değerlendirilmesi başlatılamıyor."
+
+#. module: hr_evaluation
+#: view:hr_evaluation.evaluation:0
+msgid "Appraisal Summary..."
 msgstr ""
 
 #. module: hr_evaluation
 #: field:hr.evaluation.interview,user_to_review_id:0
 msgid "Employee to Interview"
-msgstr ""
+msgstr "Personel Görüşmesi"
 
 #. module: hr_evaluation
 #: code:addons/hr_evaluation/hr_evaluation.py:235
@@ -835,12 +844,12 @@ msgstr ""
 #. module: hr_evaluation
 #: selection:hr.evaluation.report,month:0
 msgid "April"
-msgstr ""
+msgstr "Nisan"
 
 #. module: hr_evaluation
 #: view:hr_evaluation.plan.phase:0
 msgid "Appraisal Plan Phases"
-msgstr ""
+msgstr "Değerleme Planının Evreleri"
 
 #. module: hr_evaluation
 #: model:ir.actions.act_window,help:hr_evaluation.action_hr_evaluation_interview_tree
@@ -862,23 +871,23 @@ msgstr ""
 #: help:hr.evaluation.interview,message_ids:0
 #: help:hr_evaluation.evaluation,message_ids:0
 msgid "Messages and communication history"
-msgstr ""
+msgstr "Mesajlar ve iletişim geçmişi"
 
 #. module: hr_evaluation
 #: view:hr.evaluation.interview:0
 #: view:hr_evaluation.evaluation:0
 msgid "Search Appraisal"
-msgstr ""
+msgstr "Değerleme Arama"
 
 #. module: hr_evaluation
 #: field:hr_evaluation.plan.phase,sequence:0
 msgid "Sequence"
-msgstr ""
+msgstr "Sıralama"
 
 #. module: hr_evaluation
 #: view:hr_evaluation.plan.phase:0
 msgid "(user_signature)s: User name"
-msgstr ""
+msgstr "(user_signature)s: Kullanıcı adı"
 
 #. module: hr_evaluation
 #: view:board.board:0
@@ -886,25 +895,33 @@ msgstr ""
 #: model:ir.actions.act_window,name:hr_evaluation.action_hr_evaluation_interview_tree
 #: model:ir.ui.menu,name:hr_evaluation.menu_open_hr_evaluation_interview_requests
 msgid "Interview Requests"
-msgstr ""
+msgstr "Görüşme İstekleri"
 
 #. module: hr_evaluation
 #: field:hr.evaluation.report,create_date:0
 msgid "Create Date"
-msgstr ""
+msgstr "Oluşturma Tarihi"
 
 #. module: hr_evaluation
 #: view:hr.evaluation.report:0
 #: field:hr.evaluation.report,year:0
 msgid "Year"
-msgstr ""
+msgstr "Yıl"
 
 #. module: hr_evaluation
 #: field:hr_evaluation.evaluation,note_summary:0
 msgid "Appraisal Summary"
-msgstr ""
+msgstr "Değerleme Özeti"
 
 #. module: hr_evaluation
 #: field:hr.employee,evaluation_date:0
 msgid "Next Appraisal Date"
+msgstr "Sonraki Değerleme Tarihi"
+
+#. module: hr_evaluation
+#: view:hr_evaluation.evaluation:0
+msgid "Action Plan..."
 msgstr ""
+
+#~ msgid "Cancel"
+#~ msgstr "İptal"

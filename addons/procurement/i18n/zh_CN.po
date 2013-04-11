@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-21 17:06+0000\n"
+"POT-Creation-Date: 2013-03-07 08:38+0000\n"
 "PO-Revision-Date: 2012-12-21 23:00+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Chinese (Simplified) <zh_CN@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-01-18 06:58+0000\n"
-"X-Generator: Launchpad (build 16430)\n"
+"X-Launchpad-Export-Date: 2013-03-28 05:54+0000\n"
+"X-Generator: Launchpad (build 16546)\n"
 
 #. module: procurement
 #: model:ir.ui.menu,name:procurement.menu_stock_sched
@@ -26,6 +26,14 @@ msgstr "排程"
 #: model:ir.model,name:procurement.model_make_procurement
 msgid "Make Procurements"
 msgstr "生成需求"
+
+#. module: procurement
+#: help:res.company,schedule_range:0
+msgid ""
+"This is the time frame analysed by the scheduler when computing "
+"procurements. All procurements that are not between today and today+range "
+"are skipped for future computation."
+msgstr "这是计划运行的日期范围。不在今天到今天加指定日数的日期范围内的需求单会留到下次计算。"
 
 #. module: procurement
 #: help:procurement.order.compute.all,automatic:0
@@ -51,6 +59,11 @@ msgid ""
 "required quantities are always\n"
 "                           available"
 msgstr "所需的数量总是可用的"
+
+#. module: procurement
+#: view:procurement.order:0
+msgid "External note..."
+msgstr ""
 
 #. module: procurement
 #: view:product.product:0
@@ -151,9 +164,9 @@ msgid "Messages"
 msgstr "消息"
 
 #. module: procurement
-#: help:procurement.order,message:0
-msgid "Exception occurred while computing procurement orders."
-msgstr "采购订单计算中出错。"
+#: view:procurement.order:0
+msgid "Cancel Procurement"
+msgstr ""
 
 #. module: procurement
 #: view:product.product:0
@@ -191,7 +204,7 @@ msgid "Stockable products"
 msgstr "可库存的产品"
 
 #. module: procurement
-#: code:addons/procurement/procurement.py:137
+#: code:addons/procurement/procurement.py:138
 #, python-format
 msgid "Invalid Action!"
 msgstr "非法的动作"
@@ -281,7 +294,7 @@ msgid "Minimum Inventory Rule"
 msgstr "最小库存规则"
 
 #. module: procurement
-#: code:addons/procurement/procurement.py:369
+#: code:addons/procurement/procurement.py:370
 #, python-format
 msgid "Procurement '%s' is in exception: "
 msgstr "需求单 '%s' 出错： "
@@ -368,7 +381,7 @@ msgid "Quantity"
 msgstr "数量"
 
 #. module: procurement
-#: code:addons/procurement/procurement.py:364
+#: code:addons/procurement/procurement.py:365
 #, python-format
 msgid "Not enough stock and no minimum orderpoint rule defined."
 msgstr "没有足够库存且没有定义最小订货点规则。"
@@ -479,6 +492,11 @@ msgid "Compute Stock"
 msgstr "计算库存"
 
 #. module: procurement
+#: view:procurement.order:0
+msgid "e.g. SO005"
+msgstr ""
+
+#. module: procurement
 #: field:stock.warehouse.orderpoint,procurement_draft_ids:0
 msgid "Related Procurement Orders"
 msgstr "相关需求单"
@@ -521,13 +539,9 @@ msgid ""
 msgstr "如果没有选中“可用”字段，那么将隐藏需求单记录且不会删除它。"
 
 #. module: procurement
-#: view:product.product:0
-msgid ""
-"When you sell this service, nothing special will be triggered\n"
-"                           to deliver the customer, as you set the "
-"procurement method as\n"
-"                           'Make to Stock'."
-msgstr "如果你设定的供应方法是“按库存生产”，当你卖出服务时，没有什么特别的被触发发运给客户。"
+#: view:procurement.order:0
+msgid "Internal note..."
+msgstr ""
 
 #. module: procurement
 #: help:procurement.orderpoint.compute,automatic:0
@@ -633,7 +647,7 @@ msgid "Is a Follower"
 msgstr "是一个关注者"
 
 #. module: procurement
-#: code:addons/procurement/procurement.py:366
+#: code:addons/procurement/procurement.py:367
 #, python-format
 msgid "Not enough stock."
 msgstr "库存不足"
@@ -649,7 +663,7 @@ msgid "Procure Products"
 msgstr "生产产品"
 
 #. module: procurement
-#: code:addons/procurement/procurement.py:311
+#: code:addons/procurement/procurement.py:312
 #, python-format
 msgid ""
 "Please check the quantity in procurement order(s) for the product \"%s\", it "
@@ -688,6 +702,15 @@ msgstr "补足负库存"
 #: field:stock.warehouse.orderpoint,qty_multiple:0
 msgid "Qty Multiple"
 msgstr "数量倍数"
+
+#. module: procurement
+#: view:product.product:0
+msgid ""
+"When you sell this service, nothing special will be triggered\n"
+"                           to deliver the customer, as you set the "
+"procurement method as\n"
+"                           'Make to Stock'."
+msgstr "如果你设定的供应方法是“按库存生产”，当你卖出服务时，没有什么特别的被触发发运给客户。"
 
 #. module: procurement
 #: help:stock.warehouse.orderpoint,qty_multiple:0
@@ -745,7 +768,7 @@ msgid "Properties composition"
 msgstr "属性组成"
 
 #. module: procurement
-#: code:addons/procurement/procurement.py:310
+#: code:addons/procurement/procurement.py:311
 #, python-format
 msgid "Data Insufficient !"
 msgstr "数据不足!"
@@ -779,7 +802,6 @@ msgstr "已完成"
 
 #. module: procurement
 #: view:make.procurement:0
-#: view:procurement.order:0
 #: view:procurement.order.compute:0
 #: view:procurement.order.compute.all:0
 #: view:procurement.orderpoint.compute:0
@@ -802,10 +824,13 @@ msgid "Not urgent"
 msgstr "不紧急"
 
 #. module: procurement
-#: model:ir.actions.act_window,name:procurement.product_open_orderpoint
-#: view:product.product:0
-msgid "Orderpoints"
-msgstr "订购点"
+#: model:ir.actions.act_window,name:procurement.procurement_action5
+#: model:ir.actions.act_window,name:procurement.procurement_action_board
+#: model:ir.actions.act_window,name:procurement.procurement_exceptions
+#: model:ir.ui.menu,name:procurement.menu_stock_procurement_action
+#: view:procurement.order:0
+msgid "Procurement Exceptions"
+msgstr "需求异常"
 
 #. module: procurement
 #: help:stock.warehouse.orderpoint,product_max_qty:0
@@ -831,13 +856,10 @@ msgid "Procurements in Exception"
 msgstr "出错的需求单"
 
 #. module: procurement
-#: model:ir.actions.act_window,name:procurement.procurement_action5
-#: model:ir.actions.act_window,name:procurement.procurement_action_board
-#: model:ir.actions.act_window,name:procurement.procurement_exceptions
-#: model:ir.ui.menu,name:procurement.menu_stock_procurement_action
-#: view:procurement.order:0
-msgid "Procurement Exceptions"
-msgstr "需求异常"
+#: model:ir.actions.act_window,name:procurement.product_open_orderpoint
+#: view:product.product:0
+msgid "Orderpoints"
+msgstr "订购点"
 
 #. module: procurement
 #: field:product.product,orderpoint_ids:0
@@ -949,7 +971,7 @@ msgid "Reordering Rules"
 msgstr "再订购规则"
 
 #. module: procurement
-#: code:addons/procurement/procurement.py:138
+#: code:addons/procurement/procurement.py:139
 #, python-format
 msgid "Cannot delete Procurement Order(s) which are in %s state."
 msgstr "不能删除%s 状态的需求订单"
@@ -976,12 +998,9 @@ msgid "Search Procurement"
 msgstr "搜索需求单"
 
 #. module: procurement
-#: help:res.company,schedule_range:0
-msgid ""
-"This is the time frame analysed by the scheduler when computing "
-"procurements. All procurements that are not between today and today+range "
-"are skipped for future computation."
-msgstr "这是计划运行的日期范围。不在今天到今天加指定日数的日期范围内的需求单会留到下次计算。"
+#: help:procurement.order,message:0
+msgid "Exception occurred while computing procurement orders."
+msgstr "采购订单计算中出错。"
 
 #. module: procurement
 #: selection:procurement.order,priority:0
@@ -1034,7 +1053,7 @@ msgid "PROC %d: on order - %3.2f %-5s - %s"
 msgstr "补货单 %d：订单- %3.2f %-5s - %s"
 
 #. module: procurement
-#: code:addons/procurement/procurement.py:338
+#: code:addons/procurement/procurement.py:339
 #, python-format
 msgid "Products reserved from stock."
 msgstr "产品从仓库保留"

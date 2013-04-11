@@ -18,6 +18,9 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
+import datetime
+import logging
+import time
 
 from openerp.osv import osv, fields
 from openerp.osv.orm import intersect, except_orm
@@ -26,6 +29,7 @@ from openerp.tools.translate import _
 
 from openerp.addons.decimal_precision import decimal_precision as dp
 
+_logger = logging.getLogger(__name__)
 
 class account_analytic_account(osv.osv):
     _name = "account.analytic.account"
@@ -211,6 +215,8 @@ class account_analytic_account(osv.osv):
                     GROUP BY account_analytic_line.account_id", (child_ids,))
             for account_id, sum in cr.fetchall():
                 res[account_id] = round(sum,2)
+        for acc in self.browse(cr, uid, res.keys(), context=context):
+            res[acc.id] = res[acc.id] - (acc.timesheet_ca_invoiced or 0.0)
         res_final = res
         return res_final
 
@@ -291,13 +297,12 @@ class account_analytic_account(osv.osv):
         res = {}
         for account in self.browse(cr, uid, ids, context=context):
             res[account.id] = 0.0
-            sale_ids = sale_obj.search(cr, uid, [('project_id','=', account.id), ('partner_id', '=', account.partner_id.id)], context=context)
+            sale_ids = sale_obj.search(cr, uid, [('project_id','=', account.id), ('state', '=', 'manual')], context=context)
             for sale in sale_obj.browse(cr, uid, sale_ids, context=context):
-                if not sale.invoiced:
-                    res[account.id] += sale.amount_untaxed
-                    for invoice in sale.invoice_ids:
-                        if invoice.state not in ('draft', 'cancel'):
-                            res[account.id] -= invoice.amount_untaxed
+                res[account.id] += sale.amount_untaxed
+                for invoice in sale.invoice_ids:
+                    if invoice.state != 'cancel':
+                        res[account.id] -= invoice.amount_untaxed
         return res
 
     def _timesheet_ca_invoiced_calc(self, cr, uid, ids, name, arg, context=None):
@@ -484,7 +489,59 @@ class account_analytic_account(osv.osv):
             res['value']['to_invoice'] = template.to_invoice.id
             res['value']['pricelist_id'] = template.pricelist_id.id
         return res
-account_analytic_account()
+
+    def cron_account_analytic_account(self, cr, uid, context=None):
+        if context is None:
+            context = {}
+        remind = {}
+
+        def fill_remind(key, domain, write_pending=False):
+            base_domain = [
+                ('type', '=', 'contract'),
+                ('partner_id', '!=', False),
+                ('manager_id', '!=', False),
+                ('manager_id.email', '!=', False),
+            ]
+            base_domain.extend(domain)
+
+            accounts_ids = self.search(cr, uid, base_domain, context=context, order='name asc')
+            accounts = self.browse(cr, uid, accounts_ids, context=context)
+            for account in accounts:
+                if write_pending:
+                    account.write({'state' : 'pending'}, context=context)
+                remind_user = remind.setdefault(account.manager_id.id, {})
+                remind_type = remind_user.setdefault(key, {})
+                remind_partner = remind_type.setdefault(account.partner_id, []).append(account)
+
+        # Already expired
+        fill_remind("old", [('state', 'in', ['pending'])])
+
+        # Expires now
+        fill_remind("new", [('state', 'in', ['draft', 'open']), '|', '&', ('date', '!=', False), ('date', '<=', time.strftime('%Y-%m-%d')), ('is_overdue_quantity', '=', True)], True)
+
+        # Expires in less than 30 days
+        fill_remind("future", [('state', 'in', ['draft', 'open']), ('date', '!=', False), ('date', '<', (datetime.datetime.now() + datetime.timedelta(30)).strftime("%Y-%m-%d"))])
+
+        context['base_url'] = self.pool.get('ir.config_parameter').get_param(cr, uid, 'web.base.url')
+        context['action_id'] = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'account_analytic_analysis', 'action_account_analytic_overdue_all')[1]
+        template_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'account_analytic_analysis', 'account_analytic_cron_email_template')[1]
+        for user_id, data in remind.items():
+            context["data"] = data
+            _logger.debug("Sending reminder to uid %s", user_id)
+            self.pool.get('email.template').send_mail(cr, uid, template_id, user_id, force_send=True, context=context)
+
+        return True
+
+    def onchange_invoice_on_timesheets(self, cr, uid, ids, invoice_on_timesheets, context=None):
+        if not invoice_on_timesheets:
+            return {}
+        result = {'value': {'use_timesheets': True}}
+        try:
+            to_invoice = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'hr_timesheet_invoice', 'timesheet_invoice_factor1')
+            result['value']['to_invoice'] = to_invoice[1]
+        except ValueError:
+            pass
+        return result
 
 class account_analytic_account_summary_user(osv.osv):
     _name = "account_analytic_analysis.summary.user"
@@ -538,8 +595,6 @@ class account_analytic_account_summary_user(osv.osv):
                     lu.user_id as "user",
                     unit_amount
             from lu, mu)''')
-                   
-account_analytic_account_summary_user()
 
 class account_analytic_account_summary_month(osv.osv):
     _name = "account_analytic_analysis.summary.month"
@@ -600,6 +655,4 @@ class account_analytic_account_summary_month(osv.osv):
                 'GROUP BY d.month, d.account_id ' \
                 ')')
 
-
-account_analytic_account_summary_month()
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

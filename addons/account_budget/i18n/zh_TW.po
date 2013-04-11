@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-21 17:05+0000\n"
-"PO-Revision-Date: 2012-12-21 23:00+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2013-03-07 08:37+0000\n"
+"PO-Revision-Date: 2013-01-30 13:17+0000\n"
+"Last-Translator: Charles Hsu <chaoyee22@gmail.com>\n"
 "Language-Team: Chinese (Traditional) <zh_TW@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-01-18 06:32+0000\n"
-"X-Generator: Launchpad (build 16430)\n"
+"X-Launchpad-Export-Date: 2013-03-28 05:29+0000\n"
+"X-Generator: Launchpad (build 16546)\n"
 
 #. module: account_budget
 #: view:account.budget.analytic:0
@@ -116,6 +116,12 @@ msgstr "百分比"
 #: field:crossovered.budget,state:0
 msgid "Status"
 msgstr "狀態"
+
+#. module: account_budget
+#: field:crossovered.budget.lines,analytic_account_id:0
+#: model:ir.model,name:account_budget.model_account_analytic_account
+msgid "Analytic Account"
+msgstr "核助核算項目"
 
 #. module: account_budget
 #: code:addons/account_budget/account_budget.py:119
@@ -235,7 +241,7 @@ msgstr "通過預算"
 #. module: account_budget
 #: view:crossovered.budget:0
 msgid "Duration"
-msgstr ""
+msgstr "持續時間"
 
 #. module: account_budget
 #: field:account.budget.post,code:0
@@ -333,13 +339,12 @@ msgstr "理論金額"
 #: view:account.budget.crossvered.summary.report:0
 #: view:account.budget.report:0
 msgid "or"
-msgstr ""
+msgstr "或"
 
 #. module: account_budget
-#: field:crossovered.budget.lines,analytic_account_id:0
-#: model:ir.model,name:account_budget.model_account_analytic_account
-msgid "Analytic Account"
-msgstr "核助核算項目"
+#: view:crossovered.budget:0
+msgid "Cancel Budget"
+msgstr ""
 
 #. module: account_budget
 #: report:account.budget:0
@@ -368,6 +373,16 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p>\n"
+"                預算是在未來一段期對於貴公司的收入與支出的預測。\n"
+"                預算是以一些財務性科目以及/或分析性科目(可能代表專案、\n"
+"                部門，產品類別等等)來定義。 \n"
+"              </p><p>\n"
+"                經由追蹤金錢的流向，比較不會過度花費，也比較能符合財務目標。\n"
+"                預測預算是經由細分每一個分析性科目的預期盈餘\n"
+"                以及基於在該期間中實現的事實來監控它的變化。\n"
+"              </p>\n"
+"            "
 
 #. module: account_budget
 #: report:account.budget:0
@@ -400,7 +415,6 @@ msgstr "預算明細"
 #: view:account.budget.crossvered.report:0
 #: view:account.budget.crossvered.summary.report:0
 #: view:account.budget.report:0
-#: view:crossovered.budget:0
 msgid "Cancel"
 msgstr "刪除"
 

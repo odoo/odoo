@@ -1026,6 +1026,9 @@ class account_period(osv.osv):
 
     def action_draft(self, cr, uid, ids, *args):
         mode = 'draft'
+        for period in self.browse(cr, uid, ids):
+            if period.fiscalyear_id.state == 'done':
+                raise osv.except_osv(_('Warning !'), _('You can not re-open a period which belongs to closed fiscal year'))
         cr.execute('update account_journal_period set state=%s where period_id in %s', (mode, tuple(ids),))
         cr.execute('update account_period set state=%s where id in %s', (mode, tuple(ids),))
         return True
@@ -1149,6 +1152,29 @@ class account_move(osv.osv):
     _name = "account.move"
     _description = "Account Entry"
     _order = 'id desc'
+
+    def account_move_prepare(self, cr, uid, journal_id, date=False, ref='', company_id=False, context=None):
+        '''
+        Prepares and returns a dictionary of values, ready to be passed to create() based on the parameters received.
+        '''
+        if not date:
+            date = fields.date.today()
+        period_obj = self.pool.get('account.period')
+        if not company_id:
+            user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
+            company_id = user.company_id.id
+        if context is None:
+            context = {}
+        #put the company in context to find the good period
+        ctx = context.copy()
+        ctx.update({'company_id': company_id})
+        return {
+            'journal_id': journal_id,
+            'date': date,
+            'period_id': period_obj.find(cr, uid, date, context=ctx)[0],
+            'ref': ref,
+            'company_id': company_id,
+        }
 
     def name_search(self, cr, user, name, args=None, operator='ilike', context=None, limit=80):
         """
@@ -1357,6 +1383,7 @@ class account_move(osv.osv):
                         'ref':False,
                         'balance':False,
                         'account_tax_id':False,
+                        'statement_id': False,
                     })
 
             if 'journal_id' in vals and vals.get('journal_id', False):
@@ -1393,6 +1420,7 @@ class account_move(osv.osv):
         context = {} if context is None else context.copy()
         default.update({
             'state':'draft',
+            'ref': False,
             'name':'/',
         })
         context.update({
@@ -1850,6 +1878,13 @@ class account_tax(osv.osv):
             return result in the context
             Ex: result=round(price_unit*0.21,4)
     """
+    def copy_data(self, cr, uid, id, default=None, context=None):
+        if default is None:
+            default = {}
+        name = self.read(cr, uid, id, ['name'], context=context)['name']
+        default = default.copy()
+        default.update({'name': name + _(' (Copy)')})
+        return super(account_tax, self).copy_data(cr, uid, id, default=default, context=context)
 
     def get_precision_tax():
         def change_digit_tax(cr):
@@ -3521,7 +3556,7 @@ class account_bank_accounts_wizard(osv.osv_memory):
 
     _columns = {
         'acc_name': fields.char('Account Name.', size=64, required=True),
-        'bank_account_id': fields.many2one('wizard.multi.charts.accounts', 'Bank Account', required=True),
+        'bank_account_id': fields.many2one('wizard.multi.charts.accounts', 'Bank Account', required=True, ondelete='cascade'),
         'currency_id': fields.many2one('res.currency', 'Secondary Currency', help="Forces all moves for this account to have this secondary currency."),
         'account_type': fields.selection([('cash','Cash'), ('check','Check'), ('bank','Bank')], 'Account Type', size=32),
     }

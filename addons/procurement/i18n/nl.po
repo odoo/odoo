@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-21 17:06+0000\n"
-"PO-Revision-Date: 2012-12-21 23:00+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2013-03-07 08:38+0000\n"
+"PO-Revision-Date: 2013-03-15 16:59+0000\n"
+"Last-Translator: Erwin van der Ploeg (Endian Solutions) <Unknown>\n"
 "Language-Team: Dutch <nl@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-01-18 06:58+0000\n"
-"X-Generator: Launchpad (build 16430)\n"
+"X-Launchpad-Export-Date: 2013-03-28 05:53+0000\n"
+"X-Generator: Launchpad (build 16546)\n"
 
 #. module: procurement
 #: model:ir.ui.menu,name:procurement.menu_stock_sched
@@ -26,6 +26,17 @@ msgstr "Planners"
 #: model:ir.model,name:procurement.model_make_procurement
 msgid "Make Procurements"
 msgstr "Verwervingen maken"
+
+#. module: procurement
+#: help:res.company,schedule_range:0
+msgid ""
+"This is the time frame analysed by the scheduler when computing "
+"procurements. All procurements that are not between today and today+range "
+"are skipped for future computation."
+msgstr ""
+"Dit is de door de planner geanalyseerde tijdsperiode bij het berekenen van "
+"de verwervingen. Alle verwervingen die niet tussen vandaag en "
+"vandaag+periode liggen worden overgeslagen voor toekomstige berekening."
 
 #. module: procurement
 #: help:procurement.order.compute.all,automatic:0
@@ -54,6 +65,13 @@ msgid ""
 "required quantities are always\n"
 "                           available"
 msgstr ""
+"benodigde hoeveelheden zijn altijd\n"
+"                          beschikbaar"
+
+#. module: procurement
+#: view:procurement.order:0
+msgid "External note..."
+msgstr "Externe notitie..."
 
 #. module: procurement
 #: view:product.product:0
@@ -63,6 +81,10 @@ msgid ""
 "inventory, you should\n"
 "                           create others rules like orderpoints."
 msgstr ""
+"Indien er geen voldoende voorraad beschikbaar is, zal de uitgaande levering\n"
+"                           wachten op nieuwe producten. Om de voorraad aan "
+"te vullen, dient u\n"
+"                           regels aan te maken voor minimale voorraad."
 
 #. module: procurement
 #: field:procurement.order,procure_method:0
@@ -73,7 +95,7 @@ msgstr "Verwervingswijze"
 #. module: procurement
 #: selection:product.template,supply_method:0
 msgid "Manufacture"
-msgstr ""
+msgstr "Productie"
 
 #. module: procurement
 #: model:process.process,name:procurement.process_process_serviceproductprocess0
@@ -154,9 +176,9 @@ msgid "Messages"
 msgstr "Berichten"
 
 #. module: procurement
-#: help:procurement.order,message:0
-msgid "Exception occurred while computing procurement orders."
-msgstr "Fouten opgetreden bij het berekenen van verwervingsopdrachten."
+#: view:procurement.order:0
+msgid "Cancel Procurement"
+msgstr "Verwerving annuleren"
 
 #. module: procurement
 #: view:product.product:0
@@ -194,7 +216,7 @@ msgid "Stockable products"
 msgstr "Voorraad producten"
 
 #. module: procurement
-#: code:addons/procurement/procurement.py:137
+#: code:addons/procurement/procurement.py:138
 #, python-format
 msgid "Invalid Action!"
 msgstr "Ongeldige actie!"
@@ -236,6 +258,20 @@ msgid ""
 "                </p>\n"
 "            "
 msgstr ""
+"<p>\n"
+"                Verwervingsopdrachten geven de behoefte weer van een "
+"bepaalde hoeveelheid producten op een gegeven moment in een bepaalde "
+"locatie. Verkooporders zijn een typische bron van verwervingsopdrachten "
+"(maar dat zijn afzonderlijke documenten). Afhankelijk van de verwerving "
+"parameters en de product configuratie, probeert het verwervingsprogramma de "
+"aan behoefte te voldoen door producten te reserveren op voorraad, producten "
+"te bestellen bij een leverancier of een productieorder uit te geven, etc. "
+"Een verwervingsfout treedt op als het systeem geen manier kan vinden om de "
+"verwerving te vervullen. Sommige fouten lossen zichzelf automatisch op , "
+"maar anderen vereisen handmatig ingrijpen (die zijn van een specifieke "
+"foutmelding voorzien).\n"
+"                </p>\n"
+"            "
 
 #. module: procurement
 #: selection:procurement.order,state:0
@@ -261,7 +297,7 @@ msgstr "Bevestigen"
 #. module: procurement
 #: view:stock.warehouse.orderpoint:0
 msgid "Quantity Multiple"
-msgstr ""
+msgstr "Veelvoud"
 
 #. module: procurement
 #: help:procurement.order,origin:0
@@ -283,7 +319,7 @@ msgid "Minimum Inventory Rule"
 msgstr "Minimale voorraadregel"
 
 #. module: procurement
-#: code:addons/procurement/procurement.py:369
+#: code:addons/procurement/procurement.py:370
 #, python-format
 msgid "Procurement '%s' is in exception: "
 msgstr "Bij de verwerving van '%s' is een probleem ontstaan: "
@@ -296,7 +332,7 @@ msgstr "Prioriteit"
 #. module: procurement
 #: view:stock.warehouse.orderpoint:0
 msgid "Reordering Rules Search"
-msgstr ""
+msgstr "Aanvulopdrachtregels zoeken"
 
 #. module: procurement
 #: selection:procurement.order,state:0
@@ -370,7 +406,7 @@ msgid "Quantity"
 msgstr "Hoeveelheid"
 
 #. module: procurement
-#: code:addons/procurement/procurement.py:364
+#: code:addons/procurement/procurement.py:365
 #, python-format
 msgid "Not enough stock and no minimum orderpoint rule defined."
 msgstr "Onvoldoende voorraad en geen minimale voorraadregel gedefinieerd."
@@ -407,6 +443,24 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Klik voor het aanmaken van een verwervingsopdracht. \n"
+"              </p><p>\n"
+"                Een verwervingsopdracht wordt gebruikt om een behoefte vast\n"
+"                te leggen voor een specifiek product op een specifieke "
+"locatie.\n"
+"                Een verwervingsopdracht wordt gewoonlijk automatisch "
+"gemaakt\n"
+"               vanuit de verkooporders, een logistieke pull regel of "
+"minimale voorraadregels. \n"
+"              </p><p>\n"
+"                Als de verwervingsopdracht is bevestigd maakt het "
+"automatisch de\n"
+"                noodzakelijke bewerkingen om de behoefte te vervullen: "
+"inkoopvoorstel, \n"
+"                productieorder, etc.\n"
+"              </p>\n"
+"            "
 
 #. module: procurement
 #: help:procurement.order,procure_method:0
@@ -428,6 +482,8 @@ msgid ""
 "use the available\n"
 "                           inventory"
 msgstr ""
+"de beschikbare voorraad\n"
+"                           gebruiken"
 
 #. module: procurement
 #: model:ir.model,name:procurement.model_procurement_order
@@ -473,6 +529,11 @@ msgid "Compute Stock"
 msgstr "Voorraad berekenen"
 
 #. module: procurement
+#: view:procurement.order:0
+msgid "e.g. SO005"
+msgstr "Bijv. SO005"
+
+#. module: procurement
 #: field:stock.warehouse.orderpoint,procurement_draft_ids:0
 msgid "Related Procurement Orders"
 msgstr "Gekoppelde verwervingsopdrachten"
@@ -500,6 +561,14 @@ msgid ""
 " It is in 'Waiting'. status when the procurement is waiting for another one "
 "to finish."
 msgstr ""
+"Nadat een verwerving is gemaakt is de status ingesteld op 'Concept'.\n"
+" Als de verwerving is bevestigd, gaat de status naar 'Bevestigd'.            "
+"\n"
+"Na bevestiging gaat de status naar 'In behandeling'.\n"
+" Als er een fout optreedt in de order gaat de status naar 'Fout'.\n"
+" Als de uitzondering is verwijderd gaat de status naar 'Gereed'.\n"
+" De status is 'Wachtend' als de verwerving wacht op het afronden van een "
+"andere."
 
 #. module: procurement
 #: help:stock.warehouse.orderpoint,active:0
@@ -511,13 +580,9 @@ msgstr ""
 "zonder deze te verwijderen."
 
 #. module: procurement
-#: view:product.product:0
-msgid ""
-"When you sell this service, nothing special will be triggered\n"
-"                           to deliver the customer, as you set the "
-"procurement method as\n"
-"                           'Make to Stock'."
-msgstr ""
+#: view:procurement.order:0
+msgid "Internal note..."
+msgstr "Interne notitie..."
 
 #. module: procurement
 #: help:procurement.orderpoint.compute,automatic:0
@@ -538,6 +603,8 @@ msgid ""
 "You have to select a product unit of measure in the same category than the "
 "default unit of measure of the product"
 msgstr ""
+"U dient een product maateenheid in dezelfde categorie als de standaard "
+"maateenheid."
 
 #. module: procurement
 #: view:procurement.order:0
@@ -550,6 +617,9 @@ msgid ""
 "as it's a consumable (as a result of this, the quantity\n"
 "                           on hand may become negative)."
 msgstr ""
+"omdat het een verbruiksartikel is (als resultaat hiervan, zal kan de "
+"voorraad\n"
+"                           negatief worden)."
 
 #. module: procurement
 #: field:procurement.order,note:0
@@ -563,6 +633,8 @@ msgid ""
 "OpenERP generates a procurement to bring the forecasted quantity to the Max "
 "Quantity."
 msgstr ""
+"Wanneer de virtuele voorraad onder de gespecificeerde minimale voorraad "
+"komt, zal OpenERP verwervingen genereren om de voorraad aan te vullen."
 
 #. module: procurement
 #: selection:procurement.order,state:0
@@ -609,6 +681,9 @@ msgid ""
 "will be generated, depending on the product type. \n"
 "Buy: When procuring the product, a purchase order will be generated."
 msgstr ""
+"Produceren: Wanneer u een product produceert, wordt een productieorder of "
+"een projecttaak gegenereerd. Dit is afhankelijk van het soort product. \n"
+"Kopen: Bij een verwerving wordt een inkooporder gegenereerd,"
 
 #. module: procurement
 #: field:stock.warehouse.orderpoint,product_max_qty:0
@@ -621,7 +696,7 @@ msgid "Is a Follower"
 msgstr "Is een volger"
 
 #. module: procurement
-#: code:addons/procurement/procurement.py:366
+#: code:addons/procurement/procurement.py:367
 #, python-format
 msgid "Not enough stock."
 msgstr "Onvoldoende voorraad."
@@ -637,12 +712,14 @@ msgid "Procure Products"
 msgstr "Producten verwerven"
 
 #. module: procurement
-#: code:addons/procurement/procurement.py:311
+#: code:addons/procurement/procurement.py:312
 #, python-format
 msgid ""
 "Please check the quantity in procurement order(s) for the product \"%s\", it "
 "should not be 0 or less!"
 msgstr ""
+"Controleer de hoeveelheid in de verwerving order(s) voor het product \"%s\". "
+"Deze zou niet 0 of lager moeten zijn!"
 
 #. module: procurement
 #: field:procurement.order,date_planned:0
@@ -660,6 +737,8 @@ msgid ""
 "When you sell this product, a delivery order will be created.\n"
 "                           OpenERP will consider that the"
 msgstr ""
+"Wanneer u dit product verkoopt, wordt een uitgaande levering gemaakt.\n"
+"                           OpenERP beschouwd dat de"
 
 #. module: procurement
 #: code:addons/procurement/schedulers.py:133
@@ -676,6 +755,19 @@ msgstr "Minimale voorraadregel toepassen"
 #: field:stock.warehouse.orderpoint,qty_multiple:0
 msgid "Qty Multiple"
 msgstr "Hvh veelvoud"
+
+#. module: procurement
+#: view:product.product:0
+msgid ""
+"When you sell this service, nothing special will be triggered\n"
+"                           to deliver the customer, as you set the "
+"procurement method as\n"
+"                           'Make to Stock'."
+msgstr ""
+"Wanneer u deze dienst verkoopt, zal niets speciaals worden gestart\n"
+"                           om de klant te leveren, dit omdat u de "
+"verwervingsmethode heeft ingesteld op\n"
+"                           'Maak op voorraad'."
 
 #. module: procurement
 #: help:stock.warehouse.orderpoint,qty_multiple:0
@@ -726,6 +818,10 @@ msgid ""
 "for replenishment. \n"
 "Make to Order: When needed, the product is purchased or produced."
 msgstr ""
+"Maak op voorraad: Wanneer benodigd wordt het product van voorraad gehaald of "
+"er wordt gewacht op een aanvulling. \n"
+"Maak op bestelling: Wanneeer benodigd wordt het product beteld of "
+"geproduceerd."
 
 #. module: procurement
 #: field:mrp.property,composition:0
@@ -733,7 +829,7 @@ msgid "Properties composition"
 msgstr "Samenstellingseigenschappen"
 
 #. module: procurement
-#: code:addons/procurement/procurement.py:310
+#: code:addons/procurement/procurement.py:311
 #, python-format
 msgid "Data Insufficient !"
 msgstr "Onvoldoende gegevens !"
@@ -767,7 +863,6 @@ msgstr "Verwerkt"
 
 #. module: procurement
 #: view:make.procurement:0
-#: view:procurement.order:0
 #: view:procurement.order.compute:0
 #: view:procurement.order.compute.all:0
 #: view:procurement.orderpoint.compute:0
@@ -777,7 +872,7 @@ msgstr "Annuleren"
 #. module: procurement
 #: field:stock.warehouse.orderpoint,logic:0
 msgid "Reordering Mode"
-msgstr "Bestelmethode"
+msgstr "Aanvulopdracht mode"
 
 #. module: procurement
 #: field:procurement.order,origin:0
@@ -790,10 +885,13 @@ msgid "Not urgent"
 msgstr "Niet urgent"
 
 #. module: procurement
-#: model:ir.actions.act_window,name:procurement.product_open_orderpoint
-#: view:product.product:0
-msgid "Orderpoints"
-msgstr "Minimale voorraadregels"
+#: model:ir.actions.act_window,name:procurement.procurement_action5
+#: model:ir.actions.act_window,name:procurement.procurement_action_board
+#: model:ir.actions.act_window,name:procurement.procurement_exceptions
+#: model:ir.ui.menu,name:procurement.menu_stock_procurement_action
+#: view:procurement.order:0
+msgid "Procurement Exceptions"
+msgstr "Verwervingsfouten"
 
 #. module: procurement
 #: help:stock.warehouse.orderpoint,product_max_qty:0
@@ -802,6 +900,9 @@ msgid ""
 "procurement to bring the forecasted quantity to the Quantity specified as "
 "Max Quantity."
 msgstr ""
+"Wannneer de voorraad onder de Minimale voorraad gaat, zal OpenERP "
+"verwervingen genereren om de virtuele voorraad aan te vullen titaan de "
+"maximale voorraad."
 
 #. module: procurement
 #: model:ir.model,name:procurement.model_procurement_order_compute_all
@@ -819,13 +920,10 @@ msgid "Procurements in Exception"
 msgstr "Verwervingen in foutsituatie"
 
 #. module: procurement
-#: model:ir.actions.act_window,name:procurement.procurement_action5
-#: model:ir.actions.act_window,name:procurement.procurement_action_board
-#: model:ir.actions.act_window,name:procurement.procurement_exceptions
-#: model:ir.ui.menu,name:procurement.menu_stock_procurement_action
-#: view:procurement.order:0
-msgid "Procurement Exceptions"
-msgstr "Verwervingsfouten"
+#: model:ir.actions.act_window,name:procurement.product_open_orderpoint
+#: view:product.product:0
+msgid "Orderpoints"
+msgstr "Minimale voorraadregels"
 
 #. module: procurement
 #: field:product.product,orderpoint_ids:0
@@ -889,7 +987,7 @@ msgstr "In behandeling"
 #: selection:procurement.order,procure_method:0
 #: selection:product.template,procure_method:0
 msgid "Make to Order"
-msgstr "Op order maken"
+msgstr "Maak op order"
 
 #. module: procurement
 #: field:product.template,supply_method:0
@@ -909,7 +1007,7 @@ msgstr "De manier van verwerving hangt af van het product type."
 #. module: procurement
 #: view:product.product:0
 msgid "When you sell this product, OpenERP will"
-msgstr ""
+msgstr "Wanneer u dit product verkoopt zal OpenERP"
 
 #. module: procurement
 #: view:procurement.order:0
@@ -934,13 +1032,15 @@ msgstr "max"
 #: model:ir.ui.menu,name:procurement.menu_stock_order_points
 #: view:stock.warehouse.orderpoint:0
 msgid "Reordering Rules"
-msgstr ""
+msgstr "Aanvulopdracht regels"
 
 #. module: procurement
-#: code:addons/procurement/procurement.py:138
+#: code:addons/procurement/procurement.py:139
 #, python-format
 msgid "Cannot delete Procurement Order(s) which are in %s state."
 msgstr ""
+"Het is niet mogelijk om verwerving order(s) te verwijderen welke zich in de "
+"%s status bevindend"
 
 #. module: procurement
 #: field:procurement.order,product_uos:0
@@ -966,15 +1066,9 @@ msgid "Search Procurement"
 msgstr "Verwerving zoeken"
 
 #. module: procurement
-#: help:res.company,schedule_range:0
-msgid ""
-"This is the time frame analysed by the scheduler when computing "
-"procurements. All procurements that are not between today and today+range "
-"are skipped for future computation."
-msgstr ""
-"Dit is de door de planner geanalyseerde tijdsperiode bij het berekenen van "
-"de verwervingen. Alle verwervingen die niet tussen vandaag en "
-"vandaag+periode liggen worden overgeslagen voor toekomstige berekening."
+#: help:procurement.order,message:0
+msgid "Exception occurred while computing procurement orders."
+msgstr "Fouten opgetreden bij het berekenen van verwervingsopdrachten."
 
 #. module: procurement
 #: selection:procurement.order,priority:0
@@ -1027,7 +1121,7 @@ msgid "PROC %d: on order - %3.2f %-5s - %s"
 msgstr "VERW %d: van order - %3.2f %-5s - %s"
 
 #. module: procurement
-#: code:addons/procurement/procurement.py:338
+#: code:addons/procurement/procurement.py:339
 #, python-format
 msgid "Products reserved from stock."
-msgstr ""
+msgstr "Producten gereserveerd van voorraad."

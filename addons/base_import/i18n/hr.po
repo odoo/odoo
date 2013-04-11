@@ -7,19 +7,19 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-21 17:05+0000\n"
-"PO-Revision-Date: 2012-12-21 23:00+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2013-03-07 08:37+0000\n"
+"PO-Revision-Date: 2013-02-13 22:57+0000\n"
+"Last-Translator: Davor Bojkić <bole@dajmi5.com>\n"
 "Language-Team: Croatian <hr@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-01-18 06:36+0000\n"
-"X-Generator: Launchpad (build 16430)\n"
+"X-Launchpad-Export-Date: 2013-03-28 05:33+0000\n"
+"X-Generator: Launchpad (build 16546)\n"
 
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/js/import.js:420
+#: code:addons/base_import/static/src/js/import.js:451
 #, python-format
 msgid "Get all possible values"
 msgstr "Dohvati sve moguće vrijednosti"
@@ -29,7 +29,7 @@ msgstr "Dohvati sve moguće vrijednosti"
 #: code:addons/base_import/static/src/xml/import.xml:71
 #, python-format
 msgid "Need to import data from an other application?"
-msgstr ""
+msgstr "Potreban je uvoz podataka iz druge aplikacije?"
 
 #. module: base_import
 #. openerp-web
@@ -47,6 +47,15 @@ msgid ""
 "give \n"
 "                        you an example for Products and their Categories."
 msgstr ""
+"Kada koristite vanjske ID-eve, možete uvesti csv datoteke \n"
+"                                               sa kolonom \"External ID\" "
+"definirate vanjski ID svakog zapisa \n"
+"                                               koji uvozite. Tada ćete biti "
+"u mogućnosti napraviti referencu \n"
+"                                              na taj zapis sa kolonama tipa "
+"\"polje/External ID\". Sljedeća dvije \n"
+"                                              csv datoteke daju primjer za "
+"proizvode i njihove kategorije."
 
 #. module: base_import
 #. openerp-web
@@ -56,13 +65,16 @@ msgid ""
 "How to export/import different tables from an SQL \n"
 "                        application to OpenERP?"
 msgstr ""
+"Kako izvesti/uvesti različite tablice iz SQL \n"
+"                                                                             "
+"programa u OpenERP"
 
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/js/import.js:310
+#: code:addons/base_import/static/src/js/import.js:331
 #, python-format
 msgid "Relation Fields"
-msgstr ""
+msgstr "Relacijska polja"
 
 #. module: base_import
 #. openerp-web
@@ -72,6 +84,9 @@ msgid ""
 "Country/Database ID: the unique OpenERP ID for a \n"
 "                        record, defined by the ID postgresql column"
 msgstr ""
+"Država/ID baze: jedinstveni OpenERP ID za  \n"
+"                                                                             "
+"   zapis, definran kolonom postgres kolonom ID"
 
 #. module: base_import
 #. openerp-web
@@ -87,6 +102,16 @@ msgid ""
 "\n"
 "                        have a unique Database ID)"
 msgstr ""
+"Korištenje \n"
+"                                                                Država/ID "
+"BAze : ovo bi trebali rijetko koristiti\n"
+"                                                                za "
+"označavanje. Ovo je većinom korišteno od strane programera\n"
+"                                                                jer je "
+"glavna prednost ovoga to što nikad nema konflikata \n"
+"                                                                (možete "
+"imati više zapisa istog naziva, ali uvjek sa jedinstvenim IDentifikatorom u "
+"Bazi)"
 
 #. module: base_import
 #. openerp-web
@@ -96,6 +121,9 @@ msgid ""
 "For the country \n"
 "                        Belgium, you can use one of these 3 ways to import:"
 msgstr ""
+"Za državu \n"
+"                                                                             "
+" Belgiju, možete koristiti jedan od ova 3 načina uza uvoz:"
 
 #. module: base_import
 #. openerp-web
@@ -121,13 +149,20 @@ msgid ""
 "companies) TO \n"
 "                        '/tmp/company.csv' with CSV HEADER;"
 msgstr ""
+"kopirajte \n"
+"                                                                    (select "
+"'company_'||id as \"External ID\",company_name\n"
+"                                                                    as "
+"\"Name\",'True' as \"Is a Company\" from companies) TO\n"
+"                                                                     "
+"'/tmp/company.csv' with CSV HEADER;"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/xml/import.xml:206
 #, python-format
 msgid "CSV file for Manufacturer, Retailer"
-msgstr ""
+msgstr "CSV datoteka za Proizvođače, Veletrgovce"
 
 #. module: base_import
 #. openerp-web
@@ -139,6 +174,11 @@ msgid ""
 "\n"
 "                        data from a third party application."
 msgstr ""
+"Koristi \n"
+"                                                      Država/Vanjski ID. "
+"koristite vanjski ID kad uvozite \n"
+"                                                       podatke iz drugih "
+"aplikacija."
 
 #. module: base_import
 #. openerp-web
@@ -152,7 +192,7 @@ msgstr ""
 #: code:addons/base_import/static/src/xml/import.xml:80
 #, python-format
 msgid "XXX/External ID"
-msgstr ""
+msgstr "XXX/Vanjski ID"
 
 #. module: base_import
 #. openerp-web
@@ -181,6 +221,14 @@ msgid ""
 "\n"
 "                        See the following question."
 msgstr ""
+"Primjetite da vaša csv datoteka \n"
+"                                                   ima tabulator za "
+"odvajanje, a OpenERP neće \n"
+"                                                   primjetiti ta odvajanja. "
+"Morate promjineiti format \n"
+"                                                   zapisa u vašem tabličnom "
+"kalkulatoru. \n"
+"                                                   Vidi sljedeće pitanje."
 
 #. module: base_import
 #. openerp-web
@@ -199,7 +247,7 @@ msgstr ""
 #: code:addons/base_import/static/src/xml/import.xml:239
 #, python-format
 msgid "Can I import several times the same record?"
-msgstr ""
+msgstr "Mogu li isti zapis uvesti nekoliko puta?"
 
 #. module: base_import
 #. openerp-web
@@ -213,7 +261,7 @@ msgstr "Potvrdi"
 #: code:addons/base_import/static/src/xml/import.xml:55
 #, python-format
 msgid "Map your data to OpenERP"
-msgstr ""
+msgstr "Mapirajte vaše podatke na OpenERP"
 
 #. module: base_import
 #. openerp-web
@@ -224,6 +272,10 @@ msgid ""
 "                        the easiest way when your data come from CSV files \n"
 "                        that have been created manually."
 msgstr ""
+"Korištenje Države: ovo je  \n"
+"                                                  najlakši način kada vaši "
+"podaci dolaze iz csv datoteka\n"
+"                                                  koje su sastavljene ručno."
 
 #. module: base_import
 #. openerp-web
@@ -233,6 +285,8 @@ msgid ""
 "What's the difference between Database ID and \n"
 "                        External ID?"
 msgstr ""
+"Koja je razlika izmeži ID Baze i \n"
+"                                                           vanjski ID?"
 
 #. module: base_import
 #. openerp-web
@@ -244,25 +298,30 @@ msgid ""
 "\n"
 "                        you 3 different fields to import:"
 msgstr ""
+"Na primjer, \n"
+"                                                      referenciranje države "
+"kontakta, OpenERP predlaže \n"
+"                                                      3 različita polja za "
+"uvoz :"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/xml/import.xml:175
 #, python-format
 msgid "What can I do if I have multiple matches for a field?"
-msgstr ""
+msgstr "Što da radim ako imam više istih zapisa za polje?"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/xml/import.xml:302
 #, python-format
 msgid "External ID,Name,Is a Company"
-msgstr ""
+msgstr "Vanjski ID , Naziv, Je Tvrtka"
 
 #. module: base_import
 #: field:base_import.tests.models.preview,somevalue:0
 msgid "Some Value"
-msgstr ""
+msgstr "Neka vrijednost"
 
 #. module: base_import
 #. openerp-web
@@ -272,6 +331,9 @@ msgid ""
 "The following CSV file shows how to import \n"
 "                        suppliers and their respective contacts"
 msgstr ""
+"Sljedeća csv datoteka pokazuje kako uvesti \n"
+"                                                                             "
+"   dobavljače i njihove pripadne kontakte"
 
 #. module: base_import
 #. openerp-web
@@ -281,6 +343,9 @@ msgid ""
 "How can I change the CSV file format options when \n"
 "                        saving in my spreadsheet application?"
 msgstr ""
+"Kako da promijenim opcije csv formata \n"
+"                                                                         "
+"kada spremam datoteku u tabličnom kalkulatoru?"
 
 #. module: base_import
 #. openerp-web
@@ -301,6 +366,21 @@ msgid ""
 "orignial \n"
 "                        database)."
 msgstr ""
+"kako možete vidjeti iz ove datoteke, Fabien i Laurence \n"
+"                                                                             "
+"                        rade za organizaciju Biggies (company_1), a \n"
+"                                                                             "
+"                        Eric radi za Organi. Pozezivanje osoba i "
+"organizacija se radi \n"
+"                                                                             "
+"                        korištenjem Vanjskog ID-a organizacije. Morali smo "
+"staviti prefix \n"
+"                                                                             "
+"                        naziva tablice na Vanjski ID da izbjegnemo konflikt "
+"istog ID-a osobe \n"
+"                                                                             "
+"                        i organizacije (osoba_1 i organizacija_1 koji dijele "
+"isti ID u originalnoj bazi)."
 
 #. module: base_import
 #. openerp-web
@@ -315,13 +395,20 @@ msgid ""
 "\n"
 "                        '/tmp/person.csv' with CSV"
 msgstr ""
+"kopirajte \n"
+"                       (select'person_'||id as \"External ID\",person_name "
+"as\n"
+"                       \"Name\",'False' as \"Is a "
+"Company\",'company_'||company_id\n"
+"                       as \"Related Company/External ID\" from persons) TO\n"
+"                        '/tmp/person.csv' with CSV"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/xml/import.xml:148
 #, python-format
 msgid "Country: Belgium"
-msgstr ""
+msgstr "Država : Belgija"
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_tests_models_char_stillreadonly
@@ -339,10 +426,17 @@ msgstr ""
 
 #. module: base_import
 #. openerp-web
+#: code:addons/base_import/static/src/js/import.js:174
+#, python-format
+msgid "Semicolon"
+msgstr ""
+
+#. module: base_import
+#. openerp-web
 #: code:addons/base_import/static/src/xml/import.xml:233
 #, python-format
 msgid "Suppliers and their respective contacts"
-msgstr ""
+msgstr "Dobavljači i njihovi pripadni kontakti"
 
 #. module: base_import
 #. openerp-web
@@ -364,6 +458,23 @@ msgid ""
 "category \n"
 "                        hierarchy."
 msgstr ""
+"Ako na primjer imate dvije kategorije proizvoda \n"
+"                                                                             "
+"     sa podređenim nazivom \"za prodaju\" (npr. \"razno/proizvodi /za "
+"prodaju\"\n"
+"                                                                             "
+"     i \"ostali proizvodi/za prodaju\" vaša validacija je zadržana, ali još "
+"uvijek možete\n"
+"                                                                             "
+"     uvesti vaše podatke. Pazite, ne preporučamo vam da uvozite podatke jer\n"
+"                                                                             "
+"     će oni biti povezani na prvu kategoriju \"za prodaju\" pronađenu u "
+"popisu \n"
+"                                                                             "
+"     kategorija (\"razno/proizvodi/za prodaju\"). Preporučamo Vam da "
+"izmjenite \n"
+"                                                                             "
+"     jednu od dvostrukih vrijednosti ili hijerarhiju vaših kategorija."
 
 #. module: base_import
 #. openerp-web
@@ -375,6 +486,11 @@ msgid ""
 "\n"
 "                        PSQL:"
 msgstr ""
+"Za stvaranje csv datoteke za osobe povezane sa \n"
+"                                                                             "
+"   organizacijama, koristimo ljedeću SQL naredbu u \n"
+"                                                                             "
+"   PSQL:"
 
 #. module: base_import
 #. openerp-web
@@ -385,6 +501,20 @@ msgid ""
 "                        you to modify only the encoding when saving \n"
 "                        (in 'Save As' dialog box > click 'Tools' dropdown \n"
 "                        list > Encoding tab)."
+msgstr ""
+"Microsoft Excell će vam omogućiti \n"
+"                                                da promjenite kodnu stranu "
+"jedino kod snimanja \n"
+"                                                 (U 'Save as' dijalogu > "
+"kliknite na 'Tools' padajući izbornik > \n"
+"                                                 odaberite 'Encoding' "
+"karticu)"
+
+#. module: base_import
+#. openerp-web
+#: code:addons/base_import/static/src/js/import.js:175
+#, python-format
+msgid "Tab"
 msgstr ""
 
 #. module: base_import
@@ -402,6 +532,13 @@ msgid ""
 "                        later, it's thus good practice to specify it\n"
 "                        whenever possible"
 msgstr ""
+"će također biti korišteno za ažuriranje originalnog \n"
+"                                                                            "
+"uvoza, ako kasnije trebate ponovo uvesti \n"
+"                                                                            "
+"izmjenjene podatke, zato se smatra dobrom praksom \n"
+"                                                                            "
+"koristiti kad god je moguće"
 
 #. module: base_import
 #. openerp-web
@@ -411,6 +548,9 @@ msgid ""
 "file to import. If you need a sample importable file, you\n"
 "            can use the export tool to generate one."
 msgstr ""
+"datoteka za uvoz. Ako trebate uzorak datoteke koja se može uvesti,\n"
+"                                                            možete koristiti "
+"alat za izvoz da napravite jednu."
 
 #. module: base_import
 #. openerp-web
@@ -419,7 +559,7 @@ msgstr ""
 msgid ""
 "Country/Database \n"
 "                        ID: 21"
-msgstr ""
+msgstr "Država/Baza"
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_tests_models_char
@@ -429,14 +569,14 @@ msgstr ""
 #. module: base_import
 #: help:base_import.import,file:0
 msgid "File to check and/or import, raw binary (not base64)"
-msgstr ""
+msgstr "Datoteke za provjeru i/ili uvoz, raw binary ( ne base64)"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/xml/import.xml:230
 #, python-format
 msgid "Purchase orders with their respective purchase order lines"
-msgstr ""
+msgstr "Narudžbe i njihove pripadne stavke"
 
 #. module: base_import
 #. openerp-web
@@ -448,6 +588,14 @@ msgid ""
 "                field corresponding to the column. This makes imports\n"
 "                simpler especially when the file has many columns."
 msgstr ""
+"Ako datoteka sadrži\n"
+"                                          nazive kolona, OpenERP može "
+"pokušati \n"
+"                                          automatski odrediti polja koja "
+"odgovaraju kolonama. \n"
+"                                          Ovo čini uvoz jednostavnijim "
+"pogotovo ako datoteka ima \n"
+"                                         mnogo kolona."
 
 #. module: base_import
 #. openerp-web
@@ -464,6 +612,8 @@ msgid ""
 ". The issue is\n"
 "            usually an incorrect file encoding."
 msgstr ""
+". Problem je \n"
+"                                obično netočna kodna strana."
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_tests_models_m2o_required
@@ -490,6 +640,19 @@ msgid ""
 "filter \n"
 "                        settings' > Save)."
 msgstr ""
+"Ako uređujete i premate CSV datoteku u tabličnom kalkulatoru \n"
+"                                                                             "
+"            vaše regionalne postavke sa računala će biti\n"
+"                                                                             "
+"            primjenjene na separatore i odvajanja. \n"
+"                                                                             "
+"            Preporučamo da koristite OpenOffice ili LibreOffice kalkulator\n"
+"                                                                             "
+"            jer vam oni omogućuju izmjene sve tri postavke\n"
+"                                                                             "
+"            (u 'Spremi kao' dijalogu > označite 'uredi postavke filtera' \n"
+"                                                                             "
+"            > Spremi)"
 
 #. module: base_import
 #. openerp-web
@@ -519,7 +682,7 @@ msgstr "ID baze podataka"
 #: code:addons/base_import/static/src/xml/import.xml:313
 #, python-format
 msgid "It will produce the following CSV file:"
-msgstr ""
+msgstr "Će napraviti sljedeću csv datoteku:"
 
 #. module: base_import
 #. openerp-web
@@ -548,7 +711,7 @@ msgstr ""
 #: code:addons/base_import/static/src/xml/import.xml:360
 #, python-format
 msgid "Import preview failed due to:"
-msgstr ""
+msgstr "Predpregled uvoza nije uspio zbog:"
 
 #. module: base_import
 #. openerp-web
@@ -560,6 +723,11 @@ msgid ""
 "\n"
 "                        that imported it)"
 msgstr ""
+"Područje/Vanjski ID : ID ovog zapisa \n"
+"                                                                      je "
+"referenciran u drugoj aplikaciji (ili XML datoteci \n"
+"                                                                      iz "
+"koje je uvezen)"
 
 #. module: base_import
 #. openerp-web
@@ -588,6 +756,19 @@ msgid ""
 "\n"
 "                        per field you want to import."
 msgstr ""
+"Neka polja definiraju poveznice sa drugim \n"
+"                                                                             "
+" objektima. na primjer, područje kontakta je veza \n"
+"                                                                             "
+" na zapis objekta 'područje'. Kada ćelite uvesti ovakva polja, \n"
+"                                                                             "
+" OpenERP će ponovo stvoriti veze između različitih zapisa.\n"
+"                                                                             "
+" Da bi vam pomogao uvesti takva polja, OpenERP pruža 3 \n"
+"                                                                             "
+" mehanizma. Možete koristiti jedan i samo jedan mehanizam \n"
+"                                                                             "
+" po polju koje želite uvesti."
 
 #. module: base_import
 #. openerp-web
@@ -601,6 +782,13 @@ msgid ""
 "                        then you will encode it as follow \"Manufacturer,\n"
 "                        Retailer\" in the same column of your CSV file."
 msgstr ""
+"Podaci bi trebali biti odvojeni sa zarezima bez ikakvih \n"
+"                                                                             "
+"         razmaka. Na primjer. ako želite da vaš partner bude \n"
+"                                                                             "
+"         označen kao 'kupac' i kao 'dobavljač' tada u vačem CSV-u \n"
+"                                                                             "
+"         unosite \"kupac, dobavljač\" u istoj koloni."
 
 #. module: base_import
 #: code:addons/base_import/models.py:264
@@ -643,7 +831,7 @@ msgstr "Uvezi CSV datoteku"
 #: code:addons/base_import/static/src/js/import.js:74
 #, python-format
 msgid "Quoting:"
-msgstr ""
+msgstr "Navođenje:"
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_tests_models_m2o_required_related
@@ -667,10 +855,10 @@ msgstr "Uvoz"
 
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/js/import.js:407
+#: code:addons/base_import/static/src/js/import.js:438
 #, python-format
 msgid "Here are the possible values:"
-msgstr ""
+msgstr "Evo mogućih vrijednosti:"
 
 #. module: base_import
 #. openerp-web
@@ -681,19 +869,21 @@ msgstr ""
 
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/js/import.js:227
+#: code:addons/base_import/static/src/js/import.js:248
 #, python-format
 msgid ""
 "A single column was found in the file, this often means the file separator "
 "is incorrect"
 msgstr ""
+"U datoteci je nađena samo jedna kolona, to često znači da je format "
+"razdjelnika neispravan."
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/xml/import.xml:293
 #, python-format
 msgid "dump of such a PostgreSQL database"
-msgstr ""
+msgstr "dump takve PostgereSQL baze"
 
 #. module: base_import
 #. openerp-web
@@ -710,6 +900,9 @@ msgid ""
 "The following CSV file shows how to import purchase \n"
 "                        orders with their respective purchase order lines:"
 msgstr ""
+"Sljedeća csv datoteka pokazuje kako uvesti \n"
+"                                                    naloge za nabavu sa "
+"njihovm pripadnim stavkama :"
 
 #. module: base_import
 #. openerp-web
@@ -719,6 +912,9 @@ msgid ""
 "What can I do when the Import preview table isn't \n"
 "                        displayed correctly?"
 msgstr ""
+"Što mogu uraditi kada  se tablice Predpregleda za uvoz\n"
+"                                                                             "
+"      ne prikazuju ispravno?"
 
 #. module: base_import
 #: field:base_import.tests.models.char,value:0
@@ -749,7 +945,7 @@ msgstr ""
 #: code:addons/base_import/static/src/xml/import.xml:149
 #, python-format
 msgid "Country/External ID: base.be"
-msgstr ""
+msgstr "Područje/Vanjski ID : base.be"
 
 #. module: base_import
 #. openerp-web
@@ -764,20 +960,29 @@ msgid ""
 "                        the company he work for. (If you want to test this \n"
 "                        example, here is a"
 msgstr ""
+"Kao primjer, pretpostavimo da imate SQL bazu \n"
+"                                                                             "
+"       sa dvije tablice koje želite uvesti: tvrtke i \n"
+"                                                                             "
+"       osobe. Svaka osoba pripada jednoj tvrtci, tako da \n"
+"                                                                             "
+"       ćete morati ponovo stvoriti poveznicu između osobe \n"
+"                                                                             "
+"       i tvrtke za koju radi. (Ako želite probati ovaj primjer, ovdje je"
 
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/js/import.js:396
+#: code:addons/base_import/static/src/js/import.js:427
 #, python-format
 msgid "(%d more)"
-msgstr ""
+msgstr "(%d više)"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/xml/import.xml:227
 #, python-format
 msgid "File for some Quotations"
-msgstr ""
+msgstr "Dadoteka sa nekim ponudama"
 
 #. module: base_import
 #. openerp-web
@@ -804,6 +1009,19 @@ msgid ""
 "\n"
 "                        table. (like 'company_1', 'person_1' instead of '1')"
 msgstr ""
+"Za upravljanje relacijama između tablica, \n"
+"                                                                         "
+"možete koristiti \"Vanjski ID\"  mogućnosti OpenERP-a. \n"
+"                                                                         "
+"\"Vanjski ID\" zapisa je jedinstveni identifikator ovog zapisa\n"
+"                                                                         u "
+"drugoj aplikaciji. Ovaj \"Vanjski ID\" mora biti jedinstven u\n"
+"                                                                         u "
+"svim zapisima i svim objektima, pa je uobičajena dobra praksa\n"
+"                                                                         "
+"dati prefiks tom \"Vanjskom ID\" po nazivu aplikacije ili tablice. \n"
+"                                                                         "
+"(npr. 'company_1', 'osoba_1' umjesto '1')"
 
 #. module: base_import
 #. openerp-web
@@ -814,6 +1032,9 @@ msgid ""
 "                        \"External ID\". In PSQL, write the following "
 "command:"
 msgstr ""
+"Prvo ćemo izvesti ave organizacije i njihove \n"
+"                                                                             "
+" \"Vanjske ID\". U PSQL, napišite sljedeću narebu:"
 
 #. module: base_import
 #. openerp-web
@@ -823,13 +1044,16 @@ msgid ""
 "How can I import a one2many relationship (e.g. several \n"
 "                        Order Lines of a Sales Order)?"
 msgstr ""
+"Kako da uvezem one2many relaciju (npr. nekoliko \n"
+"                                                                             "
+"               stavki prodajnog maloga)?"
 
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/js/import.js:373
+#: code:addons/base_import/static/src/js/import.js:404
 #, python-format
 msgid "Everything seems valid."
-msgstr ""
+msgstr "Sve se čini u redu."
 
 #. module: base_import
 #. openerp-web
@@ -842,10 +1066,17 @@ msgid ""
 "                        use make use of the external ID for this field \n"
 "                        'Category'."
 msgstr ""
+"Međutim ukoliko ne želite mijenjati vaše \n"
+"                                                                       "
+"postavke kategorija proizvoda, preporučamo vam da \n"
+"                                                                       "
+"koristite vanjski ID za ovo polje \n"
+"                                                                       "
+"'Kagtegorija'."
 
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/js/import.js:390
+#: code:addons/base_import/static/src/js/import.js:421
 #, python-format
 msgid "at row %d"
 msgstr "u retku %d"
@@ -858,6 +1089,9 @@ msgid ""
 "How can I import a many2many relationship field \n"
 "                        (e.g. a customer that has multiple tags)?"
 msgstr ""
+"Kako mogu uvesti many2many relacijsko polje \n"
+"                                                                             "
+"      (npr, kupac koji ima višestruke oznake)?"
 
 #. module: base_import
 #. openerp-web
@@ -880,6 +1114,15 @@ msgid ""
 "                        link between each person and the company they work \n"
 "                        for)."
 msgstr ""
+"Ako trebate uvesti podatke iz različitih tablica, \n"
+"                                                                             "
+"       morate ponovo kreirati relacije između zapisa \n"
+"                                                                             "
+"       koji pripadaju različitim tablicama. (npr. ako uvozite\n"
+"                                                                             "
+"       organizacije i osobe, morate ponovo kreirati poveznicu\n"
+"                                                                             "
+"       između između svake osobe i organizacije za koju osoba radi)."
 
 #. module: base_import
 #. openerp-web
@@ -892,6 +1135,13 @@ msgid ""
 "                        Here is when you should use one or the other, \n"
 "                        according to your need:"
 msgstr ""
+"Sukladno vačim potrebama trebali bi koristiti \n"
+"                                                                           "
+"jedan od 3 načina referenciranja zapisa u relacijama.\n"
+"                                                                           "
+"Ovdje trebate koristiti jedan raspoloživih prema, \n"
+"                                                                           "
+"vačim potrebama :"
 
 #. module: base_import
 #. openerp-web
@@ -914,6 +1164,15 @@ msgid ""
 "                        will set the EMPTY value in the field, instead of \n"
 "                        assigning the default value."
 msgstr ""
+"Ako ne postavite sva polja u vašoj csv datoteci, \n"
+"                                                            OpenERP će "
+"dodijeliti zadane vrijednosti za svako \n"
+"                                                            nedefinirano "
+"polje, ali ako postavite polja sa praznim virjenostima u csv-u \n"
+"                                                            OpenERP će "
+"postaviti vrijednost tih polja na \"PRAZNO\", umjesto da im \n"
+"                                                            dodijeli zadane "
+"vrijednosti"
 
 #. module: base_import
 #. openerp-web
@@ -930,6 +1189,9 @@ msgid ""
 "What happens if I do not provide a value for a \n"
 "                        specific field?"
 msgstr ""
+"Što se dešava ako ne dajem vrijednost za \n"
+"                                                                         "
+"pojedino polje?"
 
 #. module: base_import
 #. openerp-web
@@ -947,6 +1209,13 @@ msgstr ""
 
 #. module: base_import
 #. openerp-web
+#: code:addons/base_import/static/src/js/import.js:176
+#, python-format
+msgid "Space"
+msgstr ""
+
+#. module: base_import
+#. openerp-web
 #: code:addons/base_import/static/src/xml/import.xml:249
 #, python-format
 msgid ""
@@ -957,6 +1226,11 @@ msgid ""
 "spreadsheet \n"
 "                        application."
 msgstr ""
+"Ovo vam \n"
+"                                                           omogućuje da "
+"koristite alat za Uvoz/Izvoz OpenERP-a \n"
+"                                                           za izmjenu serija "
+"zapisa u vašem omiljenom tabličnom kalkulatoru"
 
 #. module: base_import
 #. openerp-web
@@ -967,6 +1241,10 @@ msgid ""
 "                        import an other record that links to the first\n"
 "                        one, use"
 msgstr ""
+"kolona u OpenERP-u. Kada \n"
+"                                                     uvozite drugi zapis "
+"koji se referencira na prvi\n"
+"                                                     koristite"
 
 #. module: base_import
 #. openerp-web
@@ -987,20 +1265,33 @@ msgid ""
 "                        take care of creating or modifying each record \n"
 "                        depending if it's new or not."
 msgstr ""
+"Ako uvozite datoteku koja sadži jednu od \n"
+"                                                                          "
+"kolona \"Vanjski ID\" ili \"ID Baze\", zapisi koje ste već\n"
+"                                                                          "
+"uvezli će biti izmjenjeni umjesto stvoreni. Ovo je \n"
+"                                                                           "
+"veoma korisno i dozvoljava vam da uvozite nekoliko puta \n"
+"                                                                           "
+"istu CSV datoteku, upisujući neke izmjene između dva\n"
+"                                                                           "
+"uvoza. OpenERP će se pobrinuti o stvaranju ili izmjeni \n"
+"                                                                           "
+"svakog zapisa ovisno o tome da li je novi ili postojeći."
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/xml/import.xml:169
 #, python-format
 msgid "CSV file for categories"
-msgstr ""
+msgstr "CSV datoteka za kategorije"
 
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/js/import.js:309
+#: code:addons/base_import/static/src/js/import.js:330
 #, python-format
 msgid "Normal Fields"
-msgstr ""
+msgstr "Normalna polja"
 
 #. module: base_import
 #. openerp-web
@@ -1012,6 +1303,11 @@ msgid ""
 "                        identifier from the original application and\n"
 "                        map it to the"
 msgstr ""
+"kako bi ponovo napravili relacije između\n"
+"                                                                         "
+"različitih zapisa, trebali bi koristiti jedinstveni\n"
+"                                                                         "
+"identifikator iz originalnog zapisa i njega mapirati na"
 
 #. module: base_import
 #. openerp-web
@@ -1038,6 +1334,27 @@ msgid ""
 "\n"
 "                        the fields relative to the order."
 msgstr ""
+"Ako želite uvesti prodajne naloge koji sadrže nekoliko \n"
+"                                                                             "
+"      stavki, za svaku stavku morate rezervirati\n"
+"                                                                             "
+"      njezin red u CSV datoteci. Prva stavka naloga \n"
+"                                                                             "
+"      će biti uvezena ako informacija vezana za taj \n"
+"                                                                             "
+"      nalog. Svaka dodatna stavka će trebati svoj\n"
+"                                                                             "
+"      dodatni red koji nema nikakve podatke u poljima\n"
+"                                                                             "
+"      vezanim za taj nalog."
+
+#. module: base_import
+#. openerp-web
+#: code:addons/base_import/static/src/js/import.js:173
+#: code:addons/base_import/static/src/js/import.js:184
+#, python-format
+msgid "Comma"
+msgstr ""
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_tests_models_m2o_related
@@ -1054,7 +1371,7 @@ msgstr "Naziv"
 #: code:addons/base_import/static/src/xml/import.xml:80
 #, python-format
 msgid "to the original unique identifier."
-msgstr ""
+msgstr "originalni jedinstveni identifikator"
 
 #. module: base_import
 #. openerp-web
@@ -1090,6 +1407,17 @@ msgid ""
 "                        to the first company). You must first import the \n"
 "                        companies and then the persons."
 msgstr ""
+"Dvije dobivene datoteke su spremne da budu uvežene u \n"
+"                                                                             "
+"                       OpenERP bez ikakvih izmjena. Nakon uvoza\n"
+"                                                                             "
+"                       ove dvije CSV datoteke, imaćete 4 kontakta \n"
+"                                                                             "
+"                       i 3 organizacije. (prva dva kontakta su povezana na\n"
+"                                                                             "
+"                       prvu organizaciju). Prvo morate uvesti organizacije\n"
+"                                                                             "
+"                       a potom kontakte."
 
 #. module: base_import
 #. openerp-web
@@ -1103,6 +1431,15 @@ msgid ""
 "                        (displayed under the Browse CSV file bar after you \n"
 "                        select your file)."
 msgstr ""
+"Zadane postavke predpogleda za uvoz su zarezi \n"
+"                                                                             "
+"         za razdvajanje polja, i navodnici kao oznaka teksta. \n"
+"                                                                             "
+"         Ako vaša CSV datoteka nema ove postavke, možete ih \n"
+"                                                                             "
+"          izmjeniti u Opcijama postavki formata. (prikazanim u traci\n"
+"                                                                             "
+"          Potraži CSV datoteku nakon što odaberete jednu)."
 
 #. module: base_import
 #. openerp-web
@@ -1131,14 +1468,14 @@ msgstr "Vanjski ID"
 #: code:addons/base_import/static/src/xml/import.xml:39
 #, python-format
 msgid "File Format Options…"
-msgstr ""
+msgstr "Opcije Formata datoteka..."
 
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/js/import.js:392
+#: code:addons/base_import/static/src/js/import.js:423
 #, python-format
 msgid "between rows %d and %d"
-msgstr ""
+msgstr "između reda %d i %d"
 
 #. module: base_import
 #. openerp-web
@@ -1163,4 +1500,4 @@ msgstr ""
 #. module: base_import
 #: field:base_import.import,file:0
 msgid "File"
-msgstr ""
+msgstr "Datoteka"

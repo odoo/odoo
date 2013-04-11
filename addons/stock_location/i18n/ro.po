@@ -6,20 +6,21 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2012-12-21 17:06+0000\n"
-"PO-Revision-Date: 2012-12-21 23:00+0000\n"
-"Last-Translator: Mihai Satmarean <Unknown>\n"
+"POT-Creation-Date: 2013-03-07 08:39+0000\n"
+"PO-Revision-Date: 2013-03-07 19:04+0000\n"
+"Last-Translator: Fekete Mihai <mihai@erpsystems.ro>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-01-18 07:09+0000\n"
-"X-Generator: Launchpad (build 16430)\n"
+"X-Launchpad-Export-Date: 2013-03-28 06:04+0000\n"
+"X-Generator: Launchpad (build 16546)\n"
 
 #. module: stock_location
 #: help:product.pulled.flow,company_id:0
 msgid "Is used to know to which company the pickings and moves belong."
 msgstr ""
+"Este utilizat pentru a sti carei companii ii apartin ridicarile si miscarile."
 
 #. module: stock_location
 #: selection:product.pulled.flow,picking_type:0
@@ -69,6 +70,11 @@ msgstr "Fluxuri retrase"
 #: help:product.pulled.flow,location_src_id:0
 msgid "Location used by Destination Location to supply"
 msgstr "Locatia folosită de către Locatia Destinatie pentru aprovizionare"
+
+#. module: stock_location
+#: view:product.product:0
+msgid "When receiving at location X, move to location Y"
+msgstr "Atunci cand primiti in locatia X, mutati in locatia Y"
 
 #. module: stock_location
 #: selection:product.pulled.flow,picking_type:0
@@ -191,7 +197,7 @@ msgstr "Făcut pe stoc"
 #: code:addons/stock_location/procurement_pull.py:118
 #, python-format
 msgid "Pulled from another location."
-msgstr ""
+msgstr "Tras dintr-o alta locatie."
 
 #. module: stock_location
 #: field:product.pulled.flow,partner_address_id:0
@@ -315,12 +321,12 @@ msgstr ""
 #. module: stock_location
 #: view:product.product:0
 msgid "Push Flow"
-msgstr ""
+msgstr "Flux Push (de impingere)"
 
 #. module: stock_location
 #: view:product.product:0
 msgid "Pull Flow"
-msgstr ""
+msgstr "Flux Pull (de tragere)"
 
 #. module: stock_location
 #: model:ir.model,name:stock_location.model_procurement_order
@@ -344,6 +350,11 @@ msgstr "Mişcare automată"
 #: selection:stock.location.path,picking_type:0
 msgid "Getting Goods"
 msgstr "Achizitie mărfuri"
+
+#. module: stock_location
+#: view:product.product:0
+msgid "Fulfill needs on location X from location Y "
+msgstr "Indepliniti necesarul in locatia X din locatia Y "
 
 #. module: stock_location
 #: view:product.product:0

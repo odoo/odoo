@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-21 17:06+0000\n"
+"POT-Creation-Date: 2013-03-07 08:38+0000\n"
 "PO-Revision-Date: 2012-12-21 23:00+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Galician <gl@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-01-18 06:58+0000\n"
-"X-Generator: Launchpad (build 16430)\n"
+"X-Launchpad-Export-Date: 2013-03-28 05:53+0000\n"
+"X-Generator: Launchpad (build 16546)\n"
 
 #. module: procurement
 #: model:ir.ui.menu,name:procurement.menu_stock_sched
@@ -26,6 +26,17 @@ msgstr "Planificacións"
 #: model:ir.model,name:procurement.model_make_procurement
 msgid "Make Procurements"
 msgstr "Realizar abastecementos"
+
+#. module: procurement
+#: help:res.company,schedule_range:0
+msgid ""
+"This is the time frame analysed by the scheduler when computing "
+"procurements. All procurements that are not between today and today+range "
+"are skipped for future computation."
+msgstr ""
+"Este é o marco temporal analizado polo planificador ó calcular os "
+"abastecementos. Tódolos abastecementos que non se atopen entre hoxe e "
+"'hoxe+rango' aplazaranse a futuros cálculos."
 
 #. module: procurement
 #: help:procurement.order.compute.all,automatic:0
@@ -54,6 +65,11 @@ msgstr ""
 msgid ""
 "required quantities are always\n"
 "                           available"
+msgstr ""
+
+#. module: procurement
+#: view:procurement.order:0
+msgid "External note..."
 msgstr ""
 
 #. module: procurement
@@ -155,10 +171,9 @@ msgid "Messages"
 msgstr ""
 
 #. module: procurement
-#: help:procurement.order,message:0
-msgid "Exception occurred while computing procurement orders."
+#: view:procurement.order:0
+msgid "Cancel Procurement"
 msgstr ""
-"Ocorreu unha excepción mentres se calculaban as ordes de abastecemento."
 
 #. module: procurement
 #: view:product.product:0
@@ -196,7 +211,7 @@ msgid "Stockable products"
 msgstr ""
 
 #. module: procurement
-#: code:addons/procurement/procurement.py:137
+#: code:addons/procurement/procurement.py:138
 #, python-format
 msgid "Invalid Action!"
 msgstr ""
@@ -282,7 +297,7 @@ msgid "Minimum Inventory Rule"
 msgstr "Regra de inventario mínimo"
 
 #. module: procurement
-#: code:addons/procurement/procurement.py:369
+#: code:addons/procurement/procurement.py:370
 #, python-format
 msgid "Procurement '%s' is in exception: "
 msgstr ""
@@ -369,7 +384,7 @@ msgid "Quantity"
 msgstr "Cantidade"
 
 #. module: procurement
-#: code:addons/procurement/procurement.py:364
+#: code:addons/procurement/procurement.py:365
 #, python-format
 msgid "Not enough stock and no minimum orderpoint rule defined."
 msgstr "Non hai stock dabondo e non se definiu unha regra de stock mínimo."
@@ -472,6 +487,11 @@ msgid "Compute Stock"
 msgstr "Calcular stock"
 
 #. module: procurement
+#: view:procurement.order:0
+msgid "e.g. SO005"
+msgstr ""
+
+#. module: procurement
 #: field:stock.warehouse.orderpoint,procurement_draft_ids:0
 msgid "Related Procurement Orders"
 msgstr "Ordes de abastecemento relacionadas"
@@ -510,12 +530,8 @@ msgstr ""
 "eliminala."
 
 #. module: procurement
-#: view:product.product:0
-msgid ""
-"When you sell this service, nothing special will be triggered\n"
-"                           to deliver the customer, as you set the "
-"procurement method as\n"
-"                           'Make to Stock'."
+#: view:procurement.order:0
+msgid "Internal note..."
 msgstr ""
 
 #. module: procurement
@@ -620,7 +636,7 @@ msgid "Is a Follower"
 msgstr ""
 
 #. module: procurement
-#: code:addons/procurement/procurement.py:366
+#: code:addons/procurement/procurement.py:367
 #, python-format
 msgid "Not enough stock."
 msgstr "Stock insuficiente"
@@ -636,7 +652,7 @@ msgid "Procure Products"
 msgstr "Abastecer produtos"
 
 #. module: procurement
-#: code:addons/procurement/procurement.py:311
+#: code:addons/procurement/procurement.py:312
 #, python-format
 msgid ""
 "Please check the quantity in procurement order(s) for the product \"%s\", it "
@@ -675,6 +691,15 @@ msgstr "Regra de stock mínimo automática"
 #: field:stock.warehouse.orderpoint,qty_multiple:0
 msgid "Qty Multiple"
 msgstr "Ctdade múltiple"
+
+#. module: procurement
+#: view:product.product:0
+msgid ""
+"When you sell this service, nothing special will be triggered\n"
+"                           to deliver the customer, as you set the "
+"procurement method as\n"
+"                           'Make to Stock'."
+msgstr ""
 
 #. module: procurement
 #: help:stock.warehouse.orderpoint,qty_multiple:0
@@ -730,7 +755,7 @@ msgid "Properties composition"
 msgstr "Propiedades composición"
 
 #. module: procurement
-#: code:addons/procurement/procurement.py:310
+#: code:addons/procurement/procurement.py:311
 #, python-format
 msgid "Data Insufficient !"
 msgstr "Datos insuficientes !"
@@ -764,7 +789,6 @@ msgstr "Feito"
 
 #. module: procurement
 #: view:make.procurement:0
-#: view:procurement.order:0
 #: view:procurement.order.compute:0
 #: view:procurement.order.compute.all:0
 #: view:procurement.orderpoint.compute:0
@@ -787,10 +811,13 @@ msgid "Not urgent"
 msgstr "Non urxente"
 
 #. module: procurement
-#: model:ir.actions.act_window,name:procurement.product_open_orderpoint
-#: view:product.product:0
-msgid "Orderpoints"
-msgstr ""
+#: model:ir.actions.act_window,name:procurement.procurement_action5
+#: model:ir.actions.act_window,name:procurement.procurement_action_board
+#: model:ir.actions.act_window,name:procurement.procurement_exceptions
+#: model:ir.ui.menu,name:procurement.menu_stock_procurement_action
+#: view:procurement.order:0
+msgid "Procurement Exceptions"
+msgstr "Excepcións abastecemento"
 
 #. module: procurement
 #: help:stock.warehouse.orderpoint,product_max_qty:0
@@ -816,13 +843,10 @@ msgid "Procurements in Exception"
 msgstr "Abastecementos en excepción"
 
 #. module: procurement
-#: model:ir.actions.act_window,name:procurement.procurement_action5
-#: model:ir.actions.act_window,name:procurement.procurement_action_board
-#: model:ir.actions.act_window,name:procurement.procurement_exceptions
-#: model:ir.ui.menu,name:procurement.menu_stock_procurement_action
-#: view:procurement.order:0
-msgid "Procurement Exceptions"
-msgstr "Excepcións abastecemento"
+#: model:ir.actions.act_window,name:procurement.product_open_orderpoint
+#: view:product.product:0
+msgid "Orderpoints"
+msgstr ""
 
 #. module: procurement
 #: field:product.product,orderpoint_ids:0
@@ -934,7 +958,7 @@ msgid "Reordering Rules"
 msgstr ""
 
 #. module: procurement
-#: code:addons/procurement/procurement.py:138
+#: code:addons/procurement/procurement.py:139
 #, python-format
 msgid "Cannot delete Procurement Order(s) which are in %s state."
 msgstr ""
@@ -963,15 +987,10 @@ msgid "Search Procurement"
 msgstr "Buscar abastecemento"
 
 #. module: procurement
-#: help:res.company,schedule_range:0
-msgid ""
-"This is the time frame analysed by the scheduler when computing "
-"procurements. All procurements that are not between today and today+range "
-"are skipped for future computation."
+#: help:procurement.order,message:0
+msgid "Exception occurred while computing procurement orders."
 msgstr ""
-"Este é o marco temporal analizado polo planificador ó calcular os "
-"abastecementos. Tódolos abastecementos que non se atopen entre hoxe e "
-"'hoxe+rango' aplazaranse a futuros cálculos."
+"Ocorreu unha excepción mentres se calculaban as ordes de abastecemento."
 
 #. module: procurement
 #: selection:procurement.order,priority:0
@@ -1024,7 +1043,7 @@ msgid "PROC %d: on order - %3.2f %-5s - %s"
 msgstr ""
 
 #. module: procurement
-#: code:addons/procurement/procurement.py:338
+#: code:addons/procurement/procurement.py:339
 #, python-format
 msgid "Products reserved from stock."
 msgstr ""
