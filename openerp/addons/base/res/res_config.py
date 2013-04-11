@@ -21,6 +21,7 @@
 import logging
 from operator import attrgetter
 
+import openerp
 from openerp.osv import osv, fields
 from openerp.tools import ustr
 from openerp.tools.translate import _
