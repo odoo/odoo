@@ -55,7 +55,7 @@ class hr_gamification_badge(osv.Model):
         if 'badge_user' in context and 'badge_id' in context:
             badge = self.browse(cr, uid, context['badge_id'], context=context)
             badge_user = context['badge_user']
-            if badge.public and badge_user.employee_id:
+            if badge_user.employee_id:
                 return self.pool.get('hr.employee').message_post(cr, uid,
                     badge_user.employee_id.id, context=context, **kwargs)
         return super(hr_gamification_badge, self).message_post(cr, uid, thread_id, context=context, **kwargs)

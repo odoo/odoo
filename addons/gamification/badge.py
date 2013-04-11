@@ -176,8 +176,6 @@ class gamification_badge(osv.Model):
             string='Goals Linked',
             help="The users that have succeeded theses goals will receive automatically the badge."),
 
-        'public': fields.boolean('Public',
-            help="A message will be posted on the user profile or just sent to him"),
         'owner_ids': fields.one2many('gamification.badge.user', 'badge_id',
             string='Owners', help='The list of instances of this badge granted to users'),
         'unique_owner_ids': fields.function(_get_unique_global_list,
@@ -206,8 +204,7 @@ class gamification_badge(osv.Model):
         'stat_this_month': 0,
         'rule_auth': 'everyone',
         'rule_automatic': 'manual',
-        'compute_code': "self.nobody(cr, uid, context)",
-        'public': True
+        'compute_code': "self.nobody(cr, uid, context)"
     }
 
     def send_badge(self, cr, uid, badge_id, badge_user_ids, user_from=None, context=None):
