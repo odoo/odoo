@@ -5386,11 +5386,6 @@ instance.web.form.FieldStatus = instance.web.form.AbstractField.extend({
         var self = this;
         var content = QWeb.render("FieldStatus.content", {widget: self});
         self.$el.html(content);
-        var colors = JSON.parse((self.node.attrs || {}).statusbar_colors || "{}");
-        var color = colors[self.get('value')];
-        if (color) {
-            self.$("oe_active").css("color", color);
-        }
     },
     calc_domain: function() {
         var d = instance.web.pyeval.eval('domain', this.build_domain());
