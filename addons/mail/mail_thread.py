@@ -152,6 +152,13 @@ class mail_thread(osv.AbstractModel):
                 res[id]['message_summary'] = "<span class='oe_kanban_mail_new' title='%s'><span class='oe_e'>9</span> %d %s</span>" % (title, res[id].pop('message_unread_count'), _("New"))
         return res
 
+    def check_access_right(self, cr, uid, ids, context=None):
+        grp_id =  self.pool.get('ir.model.data').get_object_reference(cr, uid, 'base', 'group_no_one')
+        user_pid = self.pool.get('res.groups').read(cr, uid, grp_id[1], ['users'], context=context)['users']
+        if uid in user_pid:
+            return True
+        return False
+
     def _get_subscription_data(self, cr, uid, ids, name, args, user_id=None, context=None):
         """ Computes:
             - message_subtype_data: data about document subtypes: which are
