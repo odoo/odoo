@@ -1,13 +1,9 @@
 /* Kanban views */
 .openerp .oe_kanban_view .oe_kanban_card.oe_kanban_goal,
 .openerp .oe_kanban_view .oe_kanban_card.oe_kanban_badge {
-  width: 220px;
+  width: 200px;
   min-height: 200px;
 }
-.openerp .oe_kanban_view .oe_kanban_card.oe_kanban_goal p {
-    text-align: center;
-}
-
 .oe_kanban_badge_avatars {
     margin-top: 8px;
 }
@@ -25,9 +21,16 @@
     margin: auto;
     margin-bottom: -20px;
 }
-.oe_kanban_goal .oe_goal_state_block p {
-    line-height: 70px;
-    font-size: 3em;
+.oe_kanban_goal .oe_goal_state_block,p {
+    text-align: center;
+}
+.oe_kanban_goal .oe_goal_state_block .oe_goal_state {
+    font-size: 2.5em;
+    font-weight: bold;
+    padding-top: 30px;
+}
+.oe_kanban_goal .oe_goal_state_block .oe_goal_state.oe_e{
+    font-size: 7em;
 }
 .openerp .oe_kanban_view .oe_kanban_content .oe_goal_gauge:first-child {
     margin: auto; /* avoid margin-right: 16px; */

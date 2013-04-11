@@ -142,38 +142,37 @@
                     <field name="start_date"/>
                     <field name="end_date"/>
                     <templates>
+                        <t t-name="kanban-tooltip">
+                           <field name="type_description"/>
+                        </t>
                         <t t-name="kanban-box">
                             <div t-attf-class="oe_kanban_card oe_gamification_goal oe_kanban_goal">
                                 <div class="oe_kanban_content">
+                                    <p><h4 class="oe_goal_name" tooltip="kanban-tooltip"><field name="type_id" /></h4></p>
                                     <div class="oe_kanban_left">
                                         <img t-att-src="kanban_image('res.users', 'image_small', record.user_id.raw_value)" t-att-title="record.user_id.value" width="24" height="24" />
                                     </div>
-                                    <div>
-                                        <h4 class="oe_goal_name"><field name="type_id"/></h4>
-                                    </div>
+                                    <field name="user_id" />
                                     <div class="oe_goal_state_block">
-                                        <t t-if="!record.type_ponctual.value">
-                                            <div class="oe_goal_gauge"></div>
-                                        </t>
                                         <t t-if="record.type_ponctual.value">
-                                            <p class="oe_e">
-                                                <t t-if="record.state.raw_value=='reached'">
-                                                    W
-                                                </t>
-                                                <t t-if="record.state.raw_value=='inprogress' || record.state.raw_value=='inprogress_update'">
-                                                    N
-                                                </t>
-                                                <t t-if="record.state.raw_value=='failed'">
-                                                    X
-                                                </t>
-                                            </p>
+                                            <div class="oe_goal_state oe_e"><t t-if="record.state.raw_value=='reached'">W</t>
+                                                <t t-if="record.state.raw_value=='inprogress' || record.state.raw_value=='inprogress_update'">N</t>
+                                                <t t-if="record.state.raw_value=='failed'">X</t>
+                                            </div>
                                         </t>
+                                        <t t-if="!record.type_ponctual.value">
+                                            <t t-if="record.type_condition.raw_value =='higher'">
+                                                <div class="oe_goal_gauge"></div>
+                                            </t>
+                                            <t t-if="record.type_condition.raw_value != 'higher'">
+                                                <div class="oe_goal_state">
+                                                    <t t-esc="record.current.raw_value" /> → <t t-esc="record.target_goal.raw_value" />
+                                                </div>
+                                                <em>reached when lower than</em>
+                                            </t>
+                                        </t>
+                                        
                                     </div>
-                                    <p>
-                                        <t t-if="record.type_description.value">
-                                            <em><field name="type_description"/></em>
-                                        </t>
-                                    </p>
                                     <p>
                                         <t t-if="record.start_date.value">
                                             From <t t-esc="record.start_date.value" />
