@@ -26,7 +26,8 @@
     order = self.browse(cr, uid, ref("sale.sale_order_6"))
     for order_line in order.order_line:
         procurement = order_line.procurement_id
-        date_planned = datetime.strptime(order.date_order, DEFAULT_SERVER_DATE_FORMAT) + relativedelta(days=order_line.delay or 0.0)
+        sale_order_date = self.date_to_datetime(cr, uid, order.date_order, context)
+        date_planned = datetime.strptime(sale_order_date, DEFAULT_SERVER_DATETIME_FORMAT) + relativedelta(days=order_line.delay or 0.0)
         date_planned = (date_planned - timedelta(days=order.company_id.security_lead)).strftime(DEFAULT_SERVER_DATETIME_FORMAT)
         assert procurement.date_planned == date_planned, "Scheduled date is not correspond."
         assert procurement.product_id.id == order_line.product_id.id, "Product is not correspond."
@@ -60,7 +61,8 @@
       output_id = sale_order.shop_id.warehouse_id.lot_output_id.id
       for move in picking.move_lines:
          order_line = move.sale_line_id
-         date_planned = datetime.strptime(sale_order.date_order, DEFAULT_SERVER_DATE_FORMAT) + relativedelta(days=order_line.delay or 0.0)
+         sale_order_date = self.date_to_datetime(cr, uid, sale_order.date_order, context)
+         date_planned = datetime.strptime(sale_order_date, DEFAULT_SERVER_DATETIME_FORMAT) + relativedelta(days=order_line.delay or 0.0)
          date_planned = (date_planned - timedelta(days=sale_order.company_id.security_lead)).strftime(DEFAULT_SERVER_DATETIME_FORMAT)
          assert datetime.strptime(move.date_expected, DEFAULT_SERVER_DATETIME_FORMAT) == datetime.strptime(date_planned, DEFAULT_SERVER_DATETIME_FORMAT), "Excepted Date is not correspond with Planned Date."
          assert move.product_id.id == order_line.product_id.id,"Product is not correspond."

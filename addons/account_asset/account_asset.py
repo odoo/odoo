@@ -80,7 +80,7 @@ class account_asset_asset(osv.osv):
         for asset in self.browse(cr, uid, ids, context=context):
             if asset.account_move_line_ids: 
                 raise osv.except_osv(_('Error!'), _('You cannot delete an asset that contains posted depreciation lines.'))
-        return super(account_account, self).unlink(cr, uid, ids, context=context)
+        return super(account_asset_asset, self).unlink(cr, uid, ids, context=context)
 
     def _get_period(self, cr, uid, context=None):
         periods = self.pool.get('account.period').find(cr, uid)
