@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2013-03-07 08:37+0000\n"
-"PO-Revision-Date: 2013-01-07 10:29+0000\n"
-"Last-Translator: Numérigraphe <Unknown>\n"
+"PO-Revision-Date: 2013-03-21 01:48+0000\n"
+"Last-Translator: Quentin THEURET <Unknown>\n"
 "Language-Team: French <fr@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-03-08 05:35+0000\n"
-"X-Generator: Launchpad (build 16523)\n"
+"X-Launchpad-Export-Date: 2013-03-28 05:32+0000\n"
+"X-Generator: Launchpad (build 16546)\n"
 
 #. module: auth_signup
 #: field:res.partner,signup_type:0
@@ -169,6 +169,35 @@ msgid ""
 "                \n"
 "            "
 msgstr ""
+"\n"
+"                \n"
+"                    <p>\n"
+"                        ${object.name},\n"
+"                    </p>\n"
+"                    <p>\n"
+"                        Vous êtes invités à vous connecter à "
+"\"${object.company_id.name}\" dans le but d'accéder à vos documents dans "
+"OpenERP.\n"
+"                    </p>\n"
+"                    <p>\n"
+"                        Pour accepter l'invitation, cliquez sur le lien ci-"
+"dessous :\n"
+"                    </p>\n"
+"                    <ul>\n"
+"                        <li><a href=\"${object.signup_url}\">Accepter "
+"l'invitation à \"${object.company_id.name}\"</a></li>\n"
+"                    </ul>\n"
+"                    <p>\n"
+"                        Merci,\n"
+"                    </p>\n"
+"                    <pre>\n"
+"--\n"
+"${object.company_id.name or ''}\n"
+"${object.company_id.email or ''}\n"
+"${object.company_id.phone or ''}\n"
+"                    </pre>\n"
+"                \n"
+"            "
 
 #. module: auth_signup
 #. openerp-web
@@ -199,6 +228,8 @@ msgstr ""
 #, python-format
 msgid "An email has been sent with credentials to reset your password"
 msgstr ""
+"Un courriel a été envoyé avec les informations pour recréez votre mot de "
+"passe"
 
 #. module: auth_signup
 #. openerp-web
@@ -301,7 +332,7 @@ msgstr ""
 #. module: auth_signup
 #: model:email.template,subject:auth_signup.set_password_email
 msgid "${object.company_id.name} invitation to connect on OpenERP"
-msgstr ""
+msgstr "Invitation de ${object.company_id.name} à vous connecter à OpenERP"
 
 #. module: auth_signup
 #. openerp-web
@@ -319,6 +350,7 @@ msgstr "Partenaire"
 #: view:res.users:0
 msgid "Send reset password instructions by email"
 msgstr ""
+"Envoyer les instructions de remise à zéro de votre mot de passe par courriel"
 
 #. module: auth_signup
 #: field:res.partner,signup_token:0

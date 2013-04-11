@@ -8,29 +8,29 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2013-03-07 08:38+0000\n"
-"PO-Revision-Date: 2013-02-04 14:20+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"PO-Revision-Date: 2013-04-07 19:44+0000\n"
+"Last-Translator: Ayhan KIZILTAN <Unknown>\n"
 "Language-Team: Turkish <tr@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-03-08 05:54+0000\n"
-"X-Generator: Launchpad (build 16523)\n"
+"X-Launchpad-Export-Date: 2013-04-08 06:20+0000\n"
+"X-Generator: Launchpad (build 16550)\n"
 
 #. module: portal_sale
 #: model:ir.model,name:portal_sale.model_account_config_settings
 msgid "account.config.settings"
-msgstr ""
+msgstr "account.config.settings"
 
 #. module: portal_sale
 #: view:account.invoice:0
 msgid "[('share','=', False)]"
-msgstr ""
+msgstr "[('share','=', False)]"
 
 #. module: portal_sale
 #: model:ir.actions.act_window,help:portal_sale.portal_action_invoices
 msgid "We haven't sent you any invoice."
-msgstr ""
+msgstr "Size herhangi bir fatura göndermedik."
 
 #. module: portal_sale
 #: model:email.template,report_name:portal_sale.email_template_edi_sale
@@ -38,16 +38,18 @@ msgid ""
 "${(object.name or '').replace('/','_')}_${object.state == 'draft' and "
 "'draft' or ''}"
 msgstr ""
+"${(object.name or '').replace('/','_')}_${object.state == 'draft' and "
+"'draft' or ''}"
 
 #. module: portal_sale
 #: model:res.groups,name:portal_sale.group_payment_options
 msgid "View Online Payment Options"
-msgstr ""
+msgstr "Online Ödeme Seçenekleri"
 
 #. module: portal_sale
 #: field:account.config.settings,group_payment_options:0
 msgid "Show payment buttons to employees too"
-msgstr ""
+msgstr "Çok çalışanlara ödeme tuşlarını göster"
 
 #. module: portal_sale
 #: model:email.template,subject:portal_sale.email_template_edi_sale
@@ -55,16 +57,18 @@ msgid ""
 "${object.company_id.name} ${object.state in ('draft', 'sent') and "
 "'Quotation' or 'Order'} (Ref ${object.name or 'n/a' })"
 msgstr ""
+"${object.company_id.name} ${object.state in ('draft', 'sent') and "
+"'Quotation' or 'Order'} (Ref ${object.name or 'n/a' })"
 
 #. module: portal_sale
 #: model:ir.actions.act_window,help:portal_sale.action_quotations_portal
 msgid "We haven't sent you any quotation."
-msgstr ""
+msgstr "Size herhangi bir teklif göndermedik."
 
 #. module: portal_sale
 #: model:ir.ui.menu,name:portal_sale.portal_sales_orders
 msgid "Sales Orders"
-msgstr ""
+msgstr "Satış Siparişleri"
 
 #. module: portal_sale
 #: model:res.groups,comment:portal_sale.group_payment_options
@@ -74,6 +78,10 @@ msgid ""
 "who are accessing\n"
 "their documents through the portal."
 msgstr ""
+"Bu grubun üyeleri Satış Siparişleri ve Müşteri Faturaları için\n"
+"çevrimiçi ödeme seçeneklerini görür. Bu seçenekler portal aracılığıyla "
+"dokümanlarına\n"
+"erişen müşteriler içindir."
 
 #. module: portal_sale
 #: model:email.template,body_html:portal_sale.email_template_edi_sale
@@ -186,33 +194,35 @@ msgid ""
 "Invoice_${(object.number or '').replace('/','_')}_${object.state == 'draft' "
 "and 'draft' or ''}"
 msgstr ""
+"Invoice_${(object.number or '').replace('/','_')}_${object.state == 'draft' "
+"and 'draft' or ''}"
 
 #. module: portal_sale
 #: model:email.template,subject:portal_sale.email_template_edi_invoice
 msgid "${object.company_id.name} Invoice (Ref ${object.number or 'n/a' })"
-msgstr ""
+msgstr "${object.company_id.name} Invoice (Ref ${object.number or 'n/a' })"
 
 #. module: portal_sale
 #: model:ir.model,name:portal_sale.model_mail_mail
 msgid "Outgoing Mails"
-msgstr ""
+msgstr "Giden Postalar"
 
 #. module: portal_sale
 #: model:ir.actions.act_window,name:portal_sale.action_quotations_portal
 #: model:ir.ui.menu,name:portal_sale.portal_quotations
 msgid "Quotations"
-msgstr ""
+msgstr "Teklifler"
 
 #. module: portal_sale
 #: model:ir.model,name:portal_sale.model_sale_order
 msgid "Sales Order"
-msgstr ""
+msgstr "Satış Siparişi"
 
 #. module: portal_sale
 #: field:account.invoice,portal_payment_options:0
 #: field:sale.order,portal_payment_options:0
 msgid "Portal Payment Options"
-msgstr ""
+msgstr "Portal Ödeme Seçenekleri"
 
 #. module: portal_sale
 #: help:account.config.settings,group_payment_options:0
@@ -220,17 +230,20 @@ msgid ""
 "Show online payment options on Sale Orders and Customer Invoices to "
 "employees. If not checked, these options are only visible to portal users."
 msgstr ""
+"Personele, Satış Siparişi ve Müşteri Faturalarında çevrimiçi ödeme "
+"seçeneklerini göster. İşaretlenmemişse, bu seçenekler yalnızca portal "
+"kullanıcılarına görünür."
 
 #. module: portal_sale
 #: model:ir.actions.act_window,name:portal_sale.portal_action_invoices
 #: model:ir.ui.menu,name:portal_sale.portal_invoices
 msgid "Invoices"
-msgstr ""
+msgstr "Faturalar"
 
 #. module: portal_sale
 #: view:account.config.settings:0
 msgid "Configure payment acquiring methods"
-msgstr ""
+msgstr "Ödeme alma yöntemlerini yapılandırın"
 
 #. module: portal_sale
 #: model:email.template,body_html:portal_sale.email_template_edi_invoice
@@ -336,14 +349,14 @@ msgstr ""
 #. module: portal_sale
 #: model:ir.actions.act_window,help:portal_sale.action_orders_portal
 msgid "We haven't sent you any sales order."
-msgstr ""
+msgstr "Size hiç bir satış siparişi gönderilmemiştir."
 
 #. module: portal_sale
 #: model:ir.model,name:portal_sale.model_account_invoice
 msgid "Invoice"
-msgstr ""
+msgstr "Fatura"
 
 #. module: portal_sale
 #: model:ir.actions.act_window,name:portal_sale.action_orders_portal
 msgid "Sale Orders"
-msgstr ""
+msgstr "Satış Siparişleri"

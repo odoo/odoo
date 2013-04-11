@@ -50,7 +50,7 @@ class pos_config(osv.osv):
              required=True, help="An internal identification of the point of sale"),
         'journal_ids' : fields.many2many('account.journal', 'pos_config_journal_rel', 
              'pos_config_id', 'journal_id', 'Available Payment Methods',
-             domain="[('journal_user', '=', True )]",),
+             domain="[('journal_user', '=', True ), ('type', 'in', ['bank', 'cash'])]",),
         'shop_id' : fields.many2one('sale.shop', 'Shop',
              required=True),
         'journal_id' : fields.many2one('account.journal', 'Sale Journal',
@@ -408,6 +408,9 @@ class pos_session(osv.osv):
                     if not self.pool.get('ir.model.access').check_groups(cr, uid, "point_of_sale.group_pos_manager"):
                         raise osv.except_osv( _('Error!'),
                             _("Your ending balance is too different from the theorical cash closing (%.2f), the maximum allowed is: %.2f. You can contact your manager to force it.") % (st.difference, st.journal_id.amount_authorized_diff))
+                if (st.journal_id.type not in ['bank', 'cash']):
+                    raise osv.except_osv(_('Error!'), 
+                        _("The type of the journal for your payment method should be bank or cash "))
                 if st.difference and st.journal_id.cash_control == True:
                     if st.difference > 0.0:
                         name= _('Point of Sale Profit')
@@ -428,7 +431,6 @@ class pos_session(osv.osv):
 
                 if st.journal_id.type == 'bank':
                     st.write({'balance_end_real' : st.balance_end})
-
                 getattr(st, 'button_confirm_%s' % st.journal_id.type)(context=context)
         self._confirm_orders(cr, uid, ids, context=context)
         self.write(cr, uid, ids, {'state' : 'closed'}, context=context)
@@ -522,6 +524,24 @@ class pos_order(osv.osv):
             wf_service = netsvc.LocalService("workflow")
             wf_service.trg_validate(uid, 'pos.order', order_id, 'paid', cr)
         return order_ids
+
+    def write(self, cr, uid, ids, vals, context=None):
+        res = super(pos_order, self).write(cr, uid, ids, vals, context=context)
+        #If you change the partner of the PoS order, change also the partner of the associated bank statement lines
+        partner_obj = self.pool.get('res.partner')
+        bsl_obj = self.pool.get("account.bank.statement.line")
+        if 'partner_id' in vals:
+            for posorder in self.browse(cr, uid, ids, context=context):
+                if posorder.invoice_id:
+                    raise osv.except_osv( _('Error!'), _("You cannot change the partner of a POS order for which an invoice has already been issued."))
+                if vals['partner_id']:
+                    p_id = partner_obj.browse(cr, uid, vals['partner_id'], context=context)
+                    part_id = partner_obj._find_accounting_partner(p_id).id
+                else:
+                    part_id = False
+                bsl_ids = [x.id for x in posorder.statement_ids]
+                bsl_obj.write(cr, uid, bsl_ids, {'partner_id': part_id}, context=context)
+        return res
 
     def unlink(self, cr, uid, ids, context=None):
         for rec in self.browse(cr, uid, ids, context=context):
@@ -951,9 +971,9 @@ class pos_order(osv.osv):
                 })
 
                 if data_type == 'product':
-                    key = ('product', values['product_id'],)
+                    key = ('product', values['partner_id'], values['product_id'])
                 elif data_type == 'tax':
-                    key = ('tax', values['tax_code_id'],)
+                    key = ('tax', values['partner_id'], values['tax_code_id'],)
                 elif data_type == 'counter_part':
                     key = ('counter_part', values['partner_id'], values['account_id'])
                 else:
@@ -1029,7 +1049,7 @@ class pos_order(osv.osv):
                     'debit': ((amount<0) and -amount) or 0.0,
                     'tax_code_id': tax_code_id,
                     'tax_amount': tax_amount,
-                    'partner_id': order.partner_id and order.partner_id.id or False
+                    'partner_id': order.partner_id and self.pool.get("res.partner")._find_accounting_partner(order.partner_id).id or False
                 })
 
                 # For each remaining tax with a code, whe create a move line
@@ -1047,6 +1067,7 @@ class pos_order(osv.osv):
                         'debit': 0.0,
                         'tax_code_id': tax_code_id,
                         'tax_amount': tax_amount,
+                        'partner_id': order.partner_id and self.pool.get("res.partner")._find_accounting_partner(order.partner_id).id or False
                     })
 
             # Create a move for each tax group
@@ -1063,6 +1084,7 @@ class pos_order(osv.osv):
                     'debit': ((tax_amount<0) and -tax_amount) or 0.0,
                     'tax_code_id': key[tax_code_pos],
                     'tax_amount': tax_amount,
+                    'partner_id': order.partner_id and self.pool.get("res.partner")._find_accounting_partner(order.partner_id).id or False
                 })
 
             # counterpart
@@ -1071,14 +1093,17 @@ class pos_order(osv.osv):
                 'account_id': order_account,
                 'credit': ((order.amount_total < 0) and -order.amount_total) or 0.0,
                 'debit': ((order.amount_total > 0) and order.amount_total) or 0.0,
-                'partner_id': order.partner_id and order.partner_id.id or False
+                'partner_id': order.partner_id and self.pool.get("res.partner")._find_accounting_partner(order.partner_id).id or False
             })
 
             order.write({'state':'done', 'account_move': move_id})
 
+        all_lines = []
         for group_key, group_data in grouped_data.iteritems():
             for value in group_data:
-                account_move_line_obj.create(cr, uid, value, context=context)
+                all_lines.append((0, 0, value),)
+        if move_id: #In case no order was changed
+            self.pool.get("account.move").write(cr, uid, [move_id], {'line_id':all_lines}, context=context)
 
         return True
 

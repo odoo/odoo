@@ -100,6 +100,7 @@
                     <button name="case_cancel" string="Cancel Case" type="object"
                             states="draft,open,pending"/>
                     <field name="stage_id" widget="statusbar" clickable="True"
+                            domain="['&amp;', '|', ('case_default', '=', True), ('section_ids', '=', section_id), '|', ('type', '=', type), ('type', '=', 'both')]"
                             on_change="onchange_stage_id(stage_id)"/>
                 </header>
                 <sheet>
@@ -426,7 +427,7 @@
                             </group>
 
                             <group>
-                                <field name="user_id"/>
+                                <field name="user_id" on_change="on_change_user(user_id, context)"/>
                                 <label for="section_id"/>
                                 <div>
                                     <field name="section_id" widget="selection"/>

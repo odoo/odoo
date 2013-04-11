@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2013-03-07 08:37+0000\n"
-"PO-Revision-Date: 2013-03-13 16:20+0000\n"
-"Last-Translator: Numérigraphe <Unknown>\n"
+"PO-Revision-Date: 2013-04-10 02:55+0000\n"
+"Last-Translator: sulliwane <victor@vbonhomme.fr>\n"
 "Language-Team: French <fr@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-03-14 05:33+0000\n"
-"X-Generator: Launchpad (build 16532)\n"
+"X-Launchpad-Export-Date: 2013-04-10 05:54+0000\n"
+"X-Generator: Launchpad (build 16550)\n"
 
 #. module: account
 #: model:process.transition,name:account.process_transition_supplierreconcilepaid0
@@ -291,6 +291,10 @@ msgid ""
 "sales, purchase, expense, contra, etc.\n"
 "                This installs the module account_voucher."
 msgstr ""
+"Ceci inclut toutes les fonctionnalités nécessaires aux justificatifs "
+"comptables de banque, d'espèce, de vente, d'achat, de dépenses, de contrat, "
+"etc.\n"
+"                Ceci installe le module account_voucher."
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_use_model_create_entry
@@ -479,7 +483,7 @@ msgstr ""
 #. module: account
 #: help:account.bank.statement.line,name:0
 msgid "Originator to Beneficiary Information"
-msgstr ""
+msgstr "Informations de l'initiateur au bénéficiaire"
 
 #. module: account
 #. openerp-web
@@ -861,7 +865,7 @@ msgstr ""
 #. module: account
 #: view:account.account:0
 msgid "Account code"
-msgstr ""
+msgstr "Numéro de compte"
 
 #. module: account
 #: selection:account.financial.report,display_detail:0
@@ -889,7 +893,7 @@ msgstr "Écritures analytiques par ligne"
 #. module: account
 #: field:account.invoice.refund,filter_refund:0
 msgid "Refund Method"
-msgstr "Méthode de remboursement"
+msgstr "Méthode d'avoir"
 
 #. module: account
 #: model:ir.ui.menu,name:account.menu_account_report
@@ -1013,6 +1017,10 @@ msgid ""
 "                </p>\n"
 "            "
 msgstr ""
+"<p>\n"
+"                    Pas d'écritures comptables.\n"
+"                </p>\n"
+"            "
 
 #. module: account
 #: code:addons/account/account.py:1639
@@ -1209,6 +1217,19 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Cliquer pour ajouter un compte\n"
+"              </p><p>\n"
+"                Lors de transactions impliquant plusieurs devises, vous "
+"pouvez perdre ou gagner\n"
+"                une certaine somme d'argent due au taux de change. Ce menu "
+"vous donne\n"
+"                une prévision des gains et de pertes que vous réaliseriez si "
+"ces\n"
+"                transactions étaient passées aujourd'hui. Concerne seulement "
+"les comptes\n"
+"                ayant une deuxième devise.\n"
+"            "
 
 #. module: account
 #: field:account.bank.accounts.wizard,acc_name:0
@@ -1226,6 +1247,8 @@ msgid ""
 "Check this box if you don't want any tax related to this tax code to appear "
 "on invoices"
 msgstr ""
+"Cocher cette case si vous ne voulez par voir apparaître de taxe quelconque "
+"liée à ce numéro de taxe sur les factures."
 
 #. module: account
 #: field:report.account.receivable,name:0
@@ -1260,6 +1283,8 @@ msgstr "Avoir "
 #: help:account.config.settings,company_footer:0
 msgid "Bank accounts as printed in the footer of each printed document"
 msgstr ""
+"Comptes en banque comme imprimé dans le pied de page de chaque document "
+"imprimé"
 
 #. module: account
 #: view:account.tax:0
@@ -1361,6 +1386,9 @@ msgid ""
 "The amount expressed in the secondary currency must be positif when journal "
 "item are debit and negatif when journal item are credit."
 msgstr ""
+"Le montant précisé dans la deuxième devise doit être positif lorsque "
+"l'écriture comptable est un débit et négatif quand l'écriture comptable est "
+"un crédit."
 
 #. module: account
 #: view:account.invoice.cancel:0
@@ -1583,6 +1611,9 @@ msgid ""
 "And after getting confirmation from the bank it will be in 'Confirmed' "
 "status."
 msgstr ""
+"Quand un relevé est créé son statut sera de type \"brouillon\".\n"
+"Et après avoir reçu une confirmation de la banque son statut passera à "
+"\"confirmé\"."
 
 #. module: account
 #: field:account.invoice.report,state:0
@@ -1594,7 +1625,7 @@ msgstr "État de la facturation"
 #: model:ir.actions.act_window,name:account.action_account_open_closed_fiscalyear
 #: model:ir.ui.menu,name:account.menu_wizard_account_open_closed_fiscalyear
 msgid "Cancel Closing Entries"
-msgstr ""
+msgstr "Annuler les écritures de clôture"
 
 #. module: account
 #: view:account.bank.statement:0
@@ -1633,6 +1664,8 @@ msgid ""
 "There is no default debit account defined \n"
 "on journal \"%s\"."
 msgstr ""
+"Aucun compte de débit par défaut n'a été défini\n"
+"sur le journal \"%s\""
 
 #. module: account
 #: view:account.tax:0
@@ -1667,6 +1700,9 @@ msgid ""
 "There is nothing to reconcile. All invoices and payments\n"
 "                    have been reconciled, your partner balance is clean."
 msgstr ""
+"Il n'y a rien à lettrer. Toutes les factures et paiements\n"
+"                       ont été lettré, le solde de votre partenaire est "
+"équilibré."
 
 #. module: account
 #: field:account.chart.template,code_digits:0
@@ -1846,6 +1882,19 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                 Cliquer pour définir un nouveau type de compte.\n"
+"                 </p><p>\n"
+"                 Le type de compte est utilisé pour déterminer comment un "
+"compte est utilisé dans\n"
+"                 chaque journal. La méthode d'ajournement du type de compte "
+"détermine\n"
+"                 la façon dont l'année sera clôturée. Les rapports tels que "
+"le bilan\n"
+"                 et le rapport du compte de résultat utilisent la catégorie\n"
+"                 (produit/charge ou bilan)\n"
+"                 </p>\n"
+"            "
 
 #. module: account
 #: report:account.invoice:0
@@ -1934,6 +1983,8 @@ msgid ""
 "The journal must have centralized counterpart without the Skipping draft "
 "state option checked."
 msgstr ""
+"Le journal doit avoir ses contreparties centralisées dans le cas où l'option "
+"pas de brouillon est cochée."
 
 #. module: account
 #: code:addons/account/account_move_line.py:857
@@ -2156,6 +2207,17 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Cliquer pour enregistrer une nouvelle facture fournisseur.\n"
+"                 </p><p>\n"
+"                 Vous pouvez contrôler la facture de votre fournisseur "
+"selon\n"
+"                 ce que vous avez acheté ou reçu. OpenERP peut également "
+"automatiquement générer\n"
+"                 des factures brouillon à partir des ordres d'achats ou des "
+"reçus.\n"
+"                 </p>\n"
+"            "
 
 #. module: account
 #: sql_constraint:account.move.line:0
@@ -2216,6 +2278,21 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                 Cliquer pour enregistrer un relevé de compte.\n"
+"                 </p><p>\n"
+"                 Un relevé de compte est un résumé de toutes vos "
+"transactions financières\n"
+"                 passées pour une période de temps donnée sur votre compte "
+"en banque. Vous\n"
+"                 pouvez le recevoir de façon périodique de votre banque.\n"
+"                 </p><p>\n"
+"                 OpenERP vous permet de pointer une ligne de relevé en "
+"fonction\n"
+"                 de la facture de vente ou d'achat qui lui est directement "
+"liée.\n"
+"                 </p>\n"
+"            "
 
 #. module: account
 #: field:account.config.settings,currency_id:0
@@ -2288,6 +2365,8 @@ msgid ""
 "You cannot change the type of account to '%s' type as it contains journal "
 "items!"
 msgstr ""
+"Vous ne pouvez pas changer le type de compte pour un type '%s' car il "
+"contient des écritures comptables."
 
 #. module: account
 #: model:ir.model,name:account.model_account_aged_trial_balance
@@ -2685,6 +2764,11 @@ msgid ""
 "amount greater than the total invoiced amount. In order to avoid rounding "
 "issues, the latest line of your payment term must be of type 'balance'."
 msgstr ""
+"La facture ne peut pas être créée.\n"
+"Ses modalités de paiements sont probablement mal configurées car il donne un "
+"montant calculé plus grand que le montant total facturé. Afin d'éviter des "
+"problèmes d'arrondis, la dernière ligne de vos modalités de paiement doit "
+"être du type 'équilibre'."
 
 #. module: account
 #: view:account.move:0
@@ -2753,7 +2837,7 @@ msgstr "Propriétés du compte"
 #. module: account
 #: selection:account.invoice.refund,filter_refund:0
 msgid "Create a draft refund"
-msgstr ""
+msgstr "Créer un avoir en brouillon"
 
 #. module: account
 #: view:account.partner.reconcile.process:0
@@ -6023,7 +6107,7 @@ msgstr "Journal des opérations de fin d'année"
 #. module: account
 #: view:account.invoice:0
 msgid "Draft Refund "
-msgstr ""
+msgstr "Avoir brouillon "
 
 #. module: account
 #: view:cash.box.in:0
@@ -6201,7 +6285,7 @@ msgstr "Modèles des positions fiscales"
 #. module: account
 #: view:account.invoice:0
 msgid "Draft Refund"
-msgstr ""
+msgstr "Avoir brouillon"
 
 #. module: account
 #: view:account.analytic.chart:0
@@ -7395,7 +7479,7 @@ msgstr "Manuel"
 #. module: account
 #: selection:account.invoice.refund,filter_refund:0
 msgid "Cancel: create refund and reconcile"
-msgstr ""
+msgstr "Annuler : créer l'avoir et lettrer"
 
 #. module: account
 #: code:addons/account/wizard/account_report_aged_partner_balance.py:58
@@ -8348,6 +8432,8 @@ msgid ""
 "Refund base on this type. You can not Modify and Cancel if the invoice is "
 "already reconciled"
 msgstr ""
+"Crée l'avoir selon ce type. Il n'est pas possible de \"Modifier\" ni "
+"d'\"annuler\" une facture déjà lettrée."
 
 #. module: account
 #: field:account.bank.statement.line,sequence:0
@@ -8461,6 +8547,8 @@ msgid ""
 "You cannot delete an invoice which is not draft or cancelled. You should "
 "refund it instead."
 msgstr ""
+"Impossible de supprimer une facture qui n'est ni en brouillon ni annulée. "
+"Vous pouvez par contre créer un avoir."
 
 #. module: account
 #: model:ir.ui.menu,name:account.menu_finance_legal_statement
@@ -9608,7 +9696,7 @@ msgstr "Fermer des exercices et des périodes"
 #. module: account
 #: field:account.config.settings,purchase_refund_journal_id:0
 msgid "Purchase refund journal"
-msgstr ""
+msgstr "Journal d'avoir d'achat"
 
 #. module: account
 #: view:account.analytic.line:0
@@ -9759,7 +9847,7 @@ msgstr "Sociétés qui font réference au partenaire"
 #. module: account
 #: view:account.invoice:0
 msgid "Ask Refund"
-msgstr ""
+msgstr "Demander un avoir"
 
 #. module: account
 #: view:account.move.line:0
@@ -9973,6 +10061,8 @@ msgid ""
 "Set the account that will be set by default on invoice tax lines for "
 "refunds. Leave empty to use the expense account."
 msgstr ""
+"Indiquez le compte qui sera indiqué par défaut sur les lignes de facturation "
+"des taxes pour les avoirs. Laissez vide pour utiliser le compte de dépense."
 
 #. module: account
 #: help:account.addtmpl.wizard,cparent_id:0
@@ -10703,7 +10793,7 @@ msgstr "Impossible de %s une facture brouillon/proforma/annulée"
 #. module: account
 #: field:account.tax,account_analytic_paid_id:0
 msgid "Refund Tax Analytic Account"
-msgstr ""
+msgstr "Compte analytique des taxes d'avoirs"
 
 #. module: account
 #: view:account.move.bank.reconcile:0

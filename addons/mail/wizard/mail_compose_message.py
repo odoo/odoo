@@ -21,6 +21,11 @@
 
 import re
 from openerp import tools
+<<<<<<< TREE
+=======
+
+from openerp import SUPERUSER_ID
+>>>>>>> MERGE-SOURCE
 from openerp.osv import osv
 from openerp.osv import fields
 from openerp.tools.safe_eval import safe_eval as eval
@@ -124,6 +129,29 @@ class mail_compose_message(osv.TransientModel):
         'partner_ids': lambda self, cr, uid, ctx={}: [],
     }
 
+    def check_access_rule(self, cr, uid, ids, operation, context=None):
+        """ Access rules of mail.compose.message:
+            - create: if
+                - model, no res_id, I create a message in mass mail mode
+            - then: fall back on mail.message acces rules
+        """
+        if isinstance(ids, (int, long)):
+            ids = [ids]
+
+        # Author condition (CREATE (mass_mail))
+        if operation == 'create' and uid != SUPERUSER_ID:
+            # read mail_compose_message.ids to have their values
+            message_values = {}
+            cr.execute('SELECT DISTINCT id, model, res_id FROM "%s" WHERE id = ANY (%%s) AND res_id = 0' % self._table, (ids,))
+            for id, rmod, rid in cr.fetchall():
+                message_values[id] = {'model': rmod, 'res_id': rid}
+            # remove from the set to check the ids that mail_compose_message accepts
+            author_ids = [mid for mid, message in message_values.iteritems()
+                if message.get('model') and not message.get('res_id')]
+            ids = list(set(ids) - set(author_ids))
+
+        return super(mail_compose_message, self).check_access_rule(cr, uid, ids, operation, context=context)
+
     def _notify(self, cr, uid, newid, context=None):
         """ Override specific notify method of mail.message, because we do
             not want that feature in the wizard. """
@@ -139,11 +167,17 @@ class mail_compose_message(osv.TransientModel):
             :param int res_id: id of the document record this mail is related to
         """
         doc_name_get = self.pool.get(model).name_get(cr, uid, [res_id], context=context)
+        record_name = False
         if doc_name_get:
             record_name = doc_name_get[0][1]
-        else:
-            record_name = False
-        return {'model': model, 'res_id': res_id, 'record_name': record_name}
+        values = {
+            'model': model,
+            'res_id': res_id,
+            'record_name': record_name,
+        }
+        if record_name:
+            values['subject'] = 'Re: %s' % record_name
+        return values
 
     def get_message_data(self, cr, uid, message_id, context=None):
         """ Returns a defaults-like dict with initial values for the composition
@@ -161,7 +195,7 @@ class mail_compose_message(osv.TransientModel):
 
         # create subject
         re_prefix = _('Re:')
-        reply_subject = tools.ustr(message_data.subject or '')
+        reply_subject = tools.ustr(message_data.subject or message_data.record_name or '')
         if not (reply_subject.startswith('Re:') or reply_subject.startswith(re_prefix)) and message_data.subject:
             reply_subject = "%s %s" % (re_prefix, reply_subject)
         # get partner_ids from original message
@@ -190,6 +224,7 @@ class mail_compose_message(osv.TransientModel):
             context = {}
         ir_attachment_obj = self.pool.get('ir.attachment')
         active_ids = context.get('active_ids')
+        is_log = context.get('mail_compose_log', False)
 
         for wizard in self.browse(cr, uid, ids, context=context):
             mass_mail_mode = wizard.composition_mode == 'mass_mail'
@@ -219,8 +254,16 @@ class mail_compose_message(osv.TransientModel):
                     post_values['attachment_ids'] = attachment_ids
                     post_values.update(email_dict)
                 # post the message
-                subtype = 'mail.mt_comment' if not context.get('mail_compose_log', False) else False
-                active_model_pool.message_post(cr, uid, [res_id], type='comment', subtype=subtype, context=context, **post_values)
+                subtype = 'mail.mt_comment'
+                if is_log:  # log a note: subtype is False
+                    subtype = False
+                elif mass_mail_mode:  # mass mail: is a log pushed to recipients, author not added
+                    subtype = False
+                    context = dict(context, mail_create_nosubscribe=True)  # add context key to avoid subscribing the author
+                msg_id = active_model_pool.message_post(cr, uid, [res_id], type='comment', subtype=subtype, context=context, **post_values)
+                # mass_mailing: notify specific partners, because subtype was False, and no-one was notified
+                if mass_mail_mode and post_values['partner_ids']:
+                    self.pool.get('mail.notification')._notify(cr, uid, msg_id, post_values['partner_ids'], context=context)
 
         return {'type': 'ir.actions.act_window_close'}
 

@@ -858,7 +858,9 @@ class calendar_alarm(osv.osv):
 
             if hasattr(res_obj, 'rrule') and res_obj.rrule:
                 event_date = datetime.strptime(res_obj.date, '%Y-%m-%d %H:%M:%S')
-                recurrent_dates = get_recurrent_dates(res_obj.rrule, res_obj.exdate, event_date, res_obj.exrule)
+                #exdate is a string and we need a list
+                exdate = res_obj.exdate and res_obj.exdate.split(',') or []
+                recurrent_dates = get_recurrent_dates(res_obj.rrule, exdate, event_date, res_obj.exrule)
 
                 trigger_interval = alarm.trigger_interval
                 if trigger_interval == 'days':

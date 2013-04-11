@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2013-03-07 08:37+0000\n"
-"PO-Revision-Date: 2012-12-21 23:00+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"PO-Revision-Date: 2013-04-05 06:58+0000\n"
+"Last-Translator: Samuli Kivistö <samuli.kivisto@harppaus.fi>\n"
 "Language-Team: Finnish <fi@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-03-08 05:44+0000\n"
-"X-Generator: Launchpad (build 16523)\n"
+"X-Launchpad-Export-Date: 2013-04-06 06:36+0000\n"
+"X-Generator: Launchpad (build 16550)\n"
 
 #. module: hr_expense
 #: view:hr.expense.expense:0
@@ -36,13 +36,13 @@ msgstr "Tilinhoitaja hyvittää kustannukset"
 #. module: hr_expense
 #: model:mail.message.subtype,description:hr_expense.mt_expense_approved
 msgid "Expense approved"
-msgstr ""
+msgstr "Kustannus hyväksytty"
 
 #. module: hr_expense
 #: field:hr.expense.expense,date_confirm:0
 #: field:hr.expense.report,date_confirm:0
 msgid "Confirmation Date"
-msgstr ""
+msgstr "Vahvistuspvm"
 
 #. module: hr_expense
 #: view:hr.expense.expense:0
@@ -58,7 +58,7 @@ msgstr "Lentolippu"
 #. module: hr_expense
 #: report:hr.expense:0
 msgid "Validated By"
-msgstr ""
+msgstr "Hyväksyjä"
 
 #. module: hr_expense
 #: view:hr.expense.expense:0
@@ -71,13 +71,13 @@ msgstr "Osasto"
 #. module: hr_expense
 #: view:hr.expense.expense:0
 msgid "New Expense"
-msgstr ""
+msgstr "Uusi kustannus"
 
 #. module: hr_expense
 #: field:hr.expense.line,uom_id:0
 #: view:product.product:0
 msgid "Unit of Measure"
-msgstr ""
+msgstr "Mittayksikkö"
 
 #. module: hr_expense
 #: selection:hr.expense.report,month:0
@@ -87,7 +87,7 @@ msgstr "Maaliskuu"
 #. module: hr_expense
 #: field:hr.expense.expense,message_unread:0
 msgid "Unread Messages"
-msgstr ""
+msgstr "Lukemattomat viestit"
 
 #. module: hr_expense
 #: field:hr.expense.expense,company_id:0
@@ -113,22 +113,24 @@ msgid ""
 "No expense journal found. Please make sure you have a journal with type "
 "'purchase' configured."
 msgstr ""
+"Kustannuspäiväkirjaa ei löydy. Varmista, että sinulle on päiväkirja tyyppiä "
+"'osto' määritelty."
 
 #. module: hr_expense
 #: model:ir.model,name:hr_expense.model_hr_expense_report
 msgid "Expenses Statistics"
-msgstr ""
+msgstr "Kustannustilasto"
 
 #. module: hr_expense
 #: view:hr.expense.expense:0
 msgid "Open Receipt"
-msgstr ""
+msgstr "Avaa Tosite"
 
 #. module: hr_expense
 #: view:hr.expense.report:0
 #: field:hr.expense.report,day:0
 msgid "Day"
-msgstr ""
+msgstr "Päivä"
 
 #. module: hr_expense
 #: help:hr.expense.expense,date_valid:0
@@ -140,12 +142,12 @@ msgstr ""
 #. module: hr_expense
 #: view:hr.expense.expense:0
 msgid "Notes"
-msgstr ""
+msgstr "Muistio"
 
 #. module: hr_expense
 #: field:hr.expense.expense,message_ids:0
 msgid "Messages"
-msgstr ""
+msgstr "Viestit"
 
 #. module: hr_expense
 #: code:addons/hr_expense/hr_expense.py:172
@@ -153,23 +155,23 @@ msgstr ""
 #: code:addons/hr_expense/hr_expense.py:197
 #, python-format
 msgid "Error!"
-msgstr ""
+msgstr "Virhe!"
 
 #. module: hr_expense
 #: model:mail.message.subtype,description:hr_expense.mt_expense_refused
 msgid "Expense refused"
-msgstr ""
+msgstr "Kustannus hylätty"
 
 #. module: hr_expense
 #: model:ir.actions.act_window,name:hr_expense.hr_expense_product
 #: view:product.product:0
 msgid "Products"
-msgstr ""
+msgstr "Tuotteet"
 
 #. module: hr_expense
 #: view:hr.expense.report:0
 msgid "Confirm Expenses"
-msgstr ""
+msgstr "Vahvista kustannukset"
 
 #. module: hr_expense
 #: selection:hr.expense.report,state:0
@@ -184,7 +186,7 @@ msgstr ""
 #. module: hr_expense
 #: help:hr.expense.expense,message_unread:0
 msgid "If checked new messages require your attention."
-msgstr ""
+msgstr "Jos valittu, uudet viestit vaativat huomiosi."
 
 #. module: hr_expense
 #: selection:hr.expense.report,state:0
@@ -199,7 +201,7 @@ msgstr "Hyväksytty"
 #. module: hr_expense
 #: field:hr.expense.line,ref:0
 msgid "Reference"
-msgstr ""
+msgstr "Viite"
 
 #. module: hr_expense
 #: report:hr.expense:0
@@ -215,6 +217,11 @@ msgid ""
 "If the admin accepts it, the status is 'Accepted'.\n"
 " If a receipt is made for the expense request, the status is 'Done'."
 msgstr ""
+"Kun kustannuspyyntö on luotu, sen tila on 'Luonnos'.\n"
+" Käyttäjä vahvistaa sen ja pyyntö lähetetään esimiehelle, tällöin sen tila "
+"on 'Odottaa Vahvistusta'.            \n"
+"Jos esimies hyväksyy sen, niin uusi tila on 'Hyväksytty'.\n"
+" Kun kustannus on maksettu, tila on 'Valmis'"
 
 #. module: hr_expense
 #: help:hr.expense.expense,date_confirm:0
@@ -227,7 +234,7 @@ msgstr ""
 #: view:hr.expense.report:0
 #: field:hr.expense.report,nbr:0
 msgid "# of Lines"
-msgstr ""
+msgstr "Rivien lukumäärä"
 
 #. module: hr_expense
 #: help:hr.expense.expense,message_summary:0
@@ -240,7 +247,7 @@ msgstr ""
 #: code:addons/hr_expense/hr_expense.py:301
 #, python-format
 msgid "Warning"
-msgstr ""
+msgstr "Varoitus"
 
 #. module: hr_expense
 #: report:hr.expense:0
@@ -260,7 +267,7 @@ msgstr "Hylkää kustannus"
 #. module: hr_expense
 #: field:hr.expense.report,price_average:0
 msgid "Average Price"
-msgstr ""
+msgstr "Keskihinta"
 
 #. module: hr_expense
 #: view:hr.expense.expense:0
@@ -288,7 +295,7 @@ msgstr ""
 #: view:hr.expense.report:0
 #: field:hr.expense.report,state:0
 msgid "Status"
-msgstr ""
+msgstr "Tila"
 
 #. module: hr_expense
 #: field:hr.expense.line,analytic_account:0
@@ -300,17 +307,17 @@ msgstr "Analyyttinen kirjanpito"
 #. module: hr_expense
 #: field:hr.expense.report,date:0
 msgid "Date "
-msgstr ""
+msgstr "Päivämäärä "
 
 #. module: hr_expense
 #: view:hr.expense.report:0
 msgid "Waiting"
-msgstr ""
+msgstr "Odottaa"
 
 #. module: hr_expense
 #: field:hr.expense.expense,message_follower_ids:0
 msgid "Followers"
-msgstr ""
+msgstr "Seuraajat"
 
 #. module: hr_expense
 #: report:hr.expense:0
@@ -324,7 +331,7 @@ msgstr "Työntekijä"
 #: view:hr.expense.expense:0
 #: selection:hr.expense.expense,state:0
 msgid "New"
-msgstr ""
+msgstr "Uusi"
 
 #. module: hr_expense
 #: report:hr.expense:0
@@ -341,13 +348,13 @@ msgstr "Loppusumma"
 #. module: hr_expense
 #: model:process.node,note:hr_expense.process_node_reinvoicing0
 msgid "Some costs may be reinvoices to the customer"
-msgstr ""
+msgstr "Jotkut kustannukset voidaan uudelleen laskuttaa asiakkaalta"
 
 #. module: hr_expense
 #: code:addons/hr_expense/hr_expense.py:197
 #, python-format
 msgid "The employee must have a home address."
-msgstr ""
+msgstr "Työntekijällä pitää olla kotiosoite"
 
 #. module: hr_expense
 #: view:board.board:0
@@ -359,12 +366,12 @@ msgstr "Omat kustannukset"
 #. module: hr_expense
 #: view:hr.expense.report:0
 msgid "Creation Date"
-msgstr ""
+msgstr "Luontipäivä"
 
 #. module: hr_expense
 #: model:ir.actions.report.xml,name:hr_expense.hr_expenses
 msgid "HR expenses"
-msgstr ""
+msgstr "Henkilöstökulut"
 
 #. module: hr_expense
 #: field:hr.expense.expense,id:0
@@ -386,7 +393,7 @@ msgstr ""
 #: view:hr.expense.report:0
 #: field:hr.expense.report,no_of_products:0
 msgid "# of Products"
-msgstr ""
+msgstr "Tuotteiden lukumäärä"
 
 #. module: hr_expense
 #: selection:hr.expense.report,month:0
@@ -402,7 +409,7 @@ msgstr "Laskun luonnin jälkeen hyväksy kustannukset"
 #: code:addons/hr_expense/hr_expense.py:116
 #, python-format
 msgid "Warning!"
-msgstr ""
+msgstr "Varoitus!"
 
 #. module: hr_expense
 #: model:process.node,name:hr_expense.process_node_reimbursement0
@@ -413,20 +420,20 @@ msgstr "Hyväksynnät"
 #: field:hr.expense.expense,date_valid:0
 #: field:hr.expense.report,date_valid:0
 msgid "Validation Date"
-msgstr ""
+msgstr "Vahvistuspäivä"
 
 #. module: hr_expense
 #: code:addons/hr_expense/hr_expense.py:226
 #, python-format
 msgid "Expense Receipt"
-msgstr ""
+msgstr "Kustannuskuitti"
 
 #. module: hr_expense
 #: view:hr.expense.report:0
 #: model:ir.actions.act_window,name:hr_expense.action_hr_expense_report_all
 #: model:ir.ui.menu,name:hr_expense.menu_hr_expense_report_all
 msgid "Expenses Analysis"
-msgstr ""
+msgstr "Kustannusseuranta"
 
 #. module: hr_expense
 #: view:hr.expense.expense:0
@@ -446,7 +453,7 @@ msgstr "Kustannusrivit"
 #. module: hr_expense
 #: field:hr.expense.report,delay_confirm:0
 msgid "Delay to Confirm"
-msgstr ""
+msgstr "Vahvistettava Viive"
 
 #. module: hr_expense
 #: selection:hr.expense.report,month:0
@@ -463,7 +470,7 @@ msgstr "Joulukuu"
 #: view:hr.expense.report:0
 #: field:hr.expense.report,month:0
 msgid "Month"
-msgstr ""
+msgstr "Kuukausi"
 
 #. module: hr_expense
 #: field:hr.expense.expense,currency_id:0
@@ -489,7 +496,7 @@ msgstr "Työntekijä suojaa kaikki kustannuksensa"
 #. module: hr_expense
 #: view:hr.expense.expense:0
 msgid "Free Notes"
-msgstr ""
+msgstr "Vapaa Muistio"
 
 #. module: hr_expense
 #: code:addons/hr_expense/hr_expense.py:301
@@ -502,7 +509,7 @@ msgstr ""
 #. module: hr_expense
 #: help:hr.expense.expense,journal_id:0
 msgid "The journal used when the expense is done."
-msgstr ""
+msgstr "Käytettävä päiväkirja, kun kustannus valmis"
 
 #. module: hr_expense
 #: field:hr.expense.expense,note:0
@@ -618,7 +625,7 @@ msgstr ""
 #. module: hr_expense
 #: view:hr.expense.expense:0
 msgid "Generate Accounting Entries"
-msgstr ""
+msgstr "Luo Viennit Kirjanpitoon"
 
 #. module: hr_expense
 #: selection:hr.expense.report,month:0
@@ -648,7 +655,7 @@ msgstr ""
 #. module: hr_expense
 #: view:hr.expense.report:0
 msgid "Done Expenses"
-msgstr ""
+msgstr "Valmiit Kustannukset"
 
 #. module: hr_expense
 #: model:process.node,note:hr_expense.process_node_confirmedexpenses0
@@ -692,7 +699,7 @@ msgstr "Yksikköhinta"
 #: view:hr.expense.report:0
 #: selection:hr.expense.report,state:0
 msgid "Done"
-msgstr ""
+msgstr "Valmis"
 
 #. module: hr_expense
 #: model:process.transition.action,name:hr_expense.process_transition_action_supplierinvoice0

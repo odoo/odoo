@@ -8,19 +8,20 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2013-03-07 08:37+0000\n"
-"PO-Revision-Date: 2012-12-21 23:00+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"PO-Revision-Date: 2013-03-20 23:58+0000\n"
+"Last-Translator: Thorsten Vocks (OpenBig.org) <thorsten.vocks@big-"
+"consulting.net>\n"
 "Language-Team: German <de@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-03-08 05:35+0000\n"
-"X-Generator: Launchpad (build 16523)\n"
+"X-Launchpad-Export-Date: 2013-03-28 05:32+0000\n"
+"X-Generator: Launchpad (build 16546)\n"
 
 #. module: auth_signup
 #: field:res.partner,signup_type:0
 msgid "Signup Token Type"
-msgstr ""
+msgstr "Typ Anmelde Token"
 
 #. module: auth_signup
 #: field:base.config.settings,auth_signup_uninvited:0
@@ -165,6 +166,34 @@ msgid ""
 "                \n"
 "            "
 msgstr ""
+"\n"
+"                \n"
+"                    <p>\n"
+"                        ${object.name},\n"
+"                    </p>\n"
+"                    <p>\n"
+"                        Sie wurden eingeladen zur Verbindung mit "
+"\"${object.company_id.name}\"um auf Ihre Dokumente aus OpenERP zuzugreifen.\n"
+"                    </p>\n"
+"                    <p>\n"
+"                        Zur Akzeptierung Ihrer Einladung klicken Sie bitte "
+"auf den folgenden Link:\n"
+"                    </p>\n"
+"                    <ul>\n"
+"                        <li><a href=\"${object.signup_url}\">Akzeptieren der "
+"Einladung von \"${object.company_id.name}\"</a></li>\n"
+"                    </ul>\n"
+"                    <p>\n"
+"                        Danke\n"
+"                    </p>\n"
+"                    <pre>\n"
+"--\n"
+"${object.company_id.name or ''}\n"
+"${object.company_id.email or ''}\n"
+"${object.company_id.phone or ''}\n"
+"                    </pre>\n"
+"                \n"
+"            "
 
 #. module: auth_signup
 #. openerp-web
@@ -185,6 +214,9 @@ msgid ""
 "Cannot send email: no outgoing email server configured.\n"
 "You can configure it under Settings/General Settings."
 msgstr ""
+"Kann Email nicht senden: Es wurde noch kein ausgehender EMail Server "
+"konfiguriert.\n"
+"Sie können dieses unter Einstellungen / Allgemeine Einstellungen nachholen."
 
 #. module: auth_signup
 #. openerp-web
@@ -192,6 +224,7 @@ msgstr ""
 #, python-format
 msgid "An email has been sent with credentials to reset your password"
 msgstr ""
+"Es wurde eine Email mit Zugangsdaten zur Änderung Ihres Passworts gesendet"
 
 #. module: auth_signup
 #. openerp-web
@@ -291,7 +324,7 @@ msgstr "Erlaube Passwort zurücksetzen von der Login-Seite"
 #. module: auth_signup
 #: model:email.template,subject:auth_signup.set_password_email
 msgid "${object.company_id.name} invitation to connect on OpenERP"
-msgstr ""
+msgstr "${object.company_id.name} Einladung zur OpenERP Anbidnung"
 
 #. module: auth_signup
 #. openerp-web
@@ -308,7 +341,7 @@ msgstr "Partner"
 #. module: auth_signup
 #: view:res.users:0
 msgid "Send reset password instructions by email"
-msgstr ""
+msgstr "Sende die Passwort Änderungsanleitung"
 
 #. module: auth_signup
 #: field:res.partner,signup_token:0

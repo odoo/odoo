@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2013-03-07 08:37+0000\n"
-"PO-Revision-Date: 2013-03-11 14:06+0000\n"
+"PO-Revision-Date: 2013-03-28 23:23+0000\n"
 "Last-Translator: Софче Димитријева <Unknown>\n"
 "Language-Team: Macedonian <mk@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-03-12 05:19+0000\n"
-"X-Generator: Launchpad (build 16524)\n"
+"X-Launchpad-Export-Date: 2013-03-30 06:08+0000\n"
+"X-Generator: Launchpad (build 16546)\n"
 
 #. module: hr_timesheet_sheet
 #: field:hr.analytic.timesheet,sheet_id:0
@@ -43,8 +43,8 @@ msgid ""
 "                computation for one sheet. Set this to 0 if you do not want "
 "any control."
 msgstr ""
-"Дозволена разлика во часови помеѓу најава/одјава и пресметката на "
-"распоредот\n"
+"Дозволена разлика во часови помеѓу најава/одјава и пресметката на врменската "
+"таблица\n"
 "                за еден лист. Подесете го на 0 доколку не сакате било каква "
 "контрола."
 
@@ -71,7 +71,7 @@ msgstr "Одделение"
 #. module: hr_timesheet_sheet
 #: model:process.transition,name:hr_timesheet_sheet.process_transition_tasktimesheet0
 msgid "Task timesheet"
-msgstr "Распоред на задача"
+msgstr "Временска таблица на задача"
 
 #. module: hr_timesheet_sheet
 #: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:73
@@ -81,8 +81,8 @@ msgid ""
 "In order to create a timesheet for this employee, you must assign an "
 "analytic journal to the employee, like 'Timesheet Journal'."
 msgstr ""
-"Со цел да креирате распоред за овој вработен, мора да доделите аналитички "
-"дневник на вработениот, како 'Дневник Распоред'"
+"Со цел да креирате временска таблица за овој вработен, мора да доделите "
+"аналитички дневник на вработениот, како 'Дневник Временска таблица'."
 
 #. module: hr_timesheet_sheet
 #: selection:hr.timesheet.report,month:0
@@ -119,7 +119,7 @@ msgstr "Компанија"
 #: model:process.node,name:hr_timesheet_sheet.process_node_timesheet0
 #: view:timesheet.report:0
 msgid "Timesheet"
-msgstr "Распоред"
+msgstr "Временска таблица"
 
 #. module: hr_timesheet_sheet
 #: view:hr_timesheet_sheet.sheet:0
@@ -129,7 +129,7 @@ msgstr "Постави во нацрт"
 #. module: hr_timesheet_sheet
 #: view:hr_timesheet_sheet.sheet:0
 msgid "Timesheet Period"
-msgstr "Период на распоред"
+msgstr "Период на временска таблица"
 
 #. module: hr_timesheet_sheet
 #: field:hr_timesheet_sheet.sheet,date_to:0
@@ -145,14 +145,14 @@ msgstr "до"
 #. module: hr_timesheet_sheet
 #: model:process.node,note:hr_timesheet_sheet.process_node_invoiceonwork0
 msgid "Based on the timesheet"
-msgstr "Засновано на распоред"
+msgstr "Засновано на временска таблица"
 
 #. module: hr_timesheet_sheet
 #: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:326
 #: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:397
 #, python-format
 msgid "You cannot modify an entry in a confirmed timesheet."
-msgstr "Не можете да измените запис во потврден распоред."
+msgstr "Не можете да измените внес во потврдена временска таблица."
 
 #. module: hr_timesheet_sheet
 #: view:hr.timesheet.report:0
@@ -163,7 +163,7 @@ msgstr "Групирај по ден од датум"
 #. module: hr_timesheet_sheet
 #: model:ir.ui.menu,name:hr_timesheet_sheet.menu_act_hr_timesheet_sheet_form_my_current
 msgid "My Current Timesheet"
-msgstr "Мојот тековен распоред"
+msgstr "Мојата тековна временска таблица"
 
 #. module: hr_timesheet_sheet
 #: model:process.transition.action,name:hr_timesheet_sheet.process_transition_action_validatetimesheet0
@@ -195,7 +195,7 @@ msgstr "Одбиј"
 #: view:hr_timesheet_sheet.sheet:0
 #: model:ir.actions.act_window,name:hr_timesheet_sheet.act_hr_timesheet_sheet_sheet_2_hr_analytic_timesheet
 msgid "Timesheet Activities"
-msgstr "Активности по распоред"
+msgstr "Активности по временска таблица"
 
 #. module: hr_timesheet_sheet
 #: code:addons/hr_timesheet_sheet/wizard/hr_timesheet_current.py:38
@@ -210,8 +210,8 @@ msgstr "Креирајте вработен и поврзете го со ово
 msgid ""
 "You cannot enter an attendance date outside the current timesheet dates."
 msgstr ""
-"Не може да внесете датум на присуство надвор од датумите на тековниот "
-"распоред."
+"Не може да внесете датум на присуство надвор од датумите на тековната "
+"временска таблица."
 
 #. module: hr_timesheet_sheet
 #: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:205
@@ -229,13 +229,14 @@ msgid ""
 "the user and can be validated by his manager. If required, as defined on the "
 "project, you can generate the invoices based on the timesheet."
 msgstr ""
-"Мојот распоред го отвара вашиотраспоред така што можете да ги резервирате "
-"вашите активности во системот. Од истиот формулар, може да ги регистрирате "
-"вашите присуства (Пријава/Одјава) и да ги опишете работните часови кои сте "
-"ги поминале на различни проекти. На крајот на периодот дефиниран во "
-"компанијата, распоредот е потврден од страна на корисникот и може да биде "
-"валидиран од неговиот менаџер. Доколку е потребно, како што е дефинирано на "
-"проектот, можете да генерирате фактури врз основа на распоредот."
+"Мојата временска таблица ја отвара вашата временска таблица така што можете "
+"да ги резервирате вашите активности во системот. Од истиот формулар, може да "
+"ги регистрирате вашите присуства (Пријава/Одјава) и да ги опишете работните "
+"часови кои сте ги поминале на различни проекти. На крајот на периодот "
+"дефиниран во компанијата, временската таблица е потврдена од страна на "
+"корисникот и може да биде валидирана од неговиот менаџер. Доколку е "
+"потребно, како што е дефинирано на проектот, можете да генерирате фактури "
+"врз основа на временската таблица."
 
 #. module: hr_timesheet_sheet
 #: field:hr_timesheet_sheet.sheet,message_ids:0
@@ -252,12 +253,12 @@ msgid ""
 "* The 'Done' status is used when users timesheet is accepted by his/her "
 "senior."
 msgstr ""
-" *Статусот 'Нацрт' се користи кога корисникот го кодира новиот и непотврден "
-"распоред.                 \n"
-"* Статусот 'Потврдено' се користи за да се потврди распоредот од страна на "
-"корисникот.                 \n"
-"* Статусот 'Завршено' се користи кога распоредот на корисникот е прифатен од "
-"неговиот претпоставен."
+" *Статусот 'Нацрт' се користи кога корисникот ја кодира новата и непотврдена "
+"временска таблица.                 \n"
+"* Статусот 'Потврдено' се користи за да се потврди временската таблица од "
+"страна на корисникот.                 \n"
+"* Статусот 'Завршено' се користи кога временската таблица на корисникот е "
+"прифатена од неговиот претпоставен."
 
 #. module: hr_timesheet_sheet
 #: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:64
@@ -292,7 +293,7 @@ msgstr "Потврдете дека вкупната вредност на ли�
 #: model:ir.actions.act_window,name:hr_timesheet_sheet.action_timesheet_report_stat_all
 #: model:ir.ui.menu,name:hr_timesheet_sheet.menu_timesheet_report_all
 msgid "Timesheet Sheet Analysis"
-msgstr "Анализи на лист од распоред"
+msgstr "Анализи на лист од временска таблица"
 
 #. module: hr_timesheet_sheet
 #: field:hr_timesheet_sheet.sheet.account,name:0
@@ -317,13 +318,13 @@ msgid ""
 "In order to create a timesheet for this employee, you must assign it to a "
 "user."
 msgstr ""
-"Со цел да креирате распоред за овој вработен, мора да го доделите на "
+"Со цел да креирате врменска таблица за овој вработен, мора да го доделите на "
 "корисник."
 
 #. module: hr_timesheet_sheet
 #: model:process.node,note:hr_timesheet_sheet.process_node_attendance0
 msgid "Employee's timesheet entry"
-msgstr "Запис на распоред на вработен"
+msgstr "Внес во временска таблица на вработен"
 
 #. module: hr_timesheet_sheet
 #: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:213
@@ -366,7 +367,7 @@ msgstr "Датум од"
 #: model:ir.actions.act_window,name:hr_timesheet_sheet.act_hr_employee_2_hr_timesheet
 #: view:res.company:0
 msgid "Timesheets"
-msgstr "Распоред"
+msgstr "Временски таблици"
 
 #. module: hr_timesheet_sheet
 #: model:process.node,name:hr_timesheet_sheet.process_node_confirmedtimesheet0
@@ -390,7 +391,7 @@ msgstr "Потврди"
 #. module: hr_timesheet_sheet
 #: field:hr_timesheet_sheet.sheet,timesheet_ids:0
 msgid "Timesheet lines"
-msgstr "Ставки на распоред"
+msgstr "Ставки на временска таблица"
 
 #. module: hr_timesheet_sheet
 #: field:hr_timesheet_sheet.sheet,message_follower_ids:0
@@ -455,7 +456,7 @@ msgstr "Јули"
 #. module: hr_timesheet_sheet
 #: field:hr.config.settings,timesheet_range:0
 msgid "Validate timesheets every"
-msgstr "Потврди распоред секој"
+msgstr "Потврди временска таблица секој"
 
 #. module: hr_timesheet_sheet
 #: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:73
@@ -507,7 +508,7 @@ msgstr "Најава"
 #: view:timesheet.report:0
 #: field:timesheet.report,total_timesheet:0
 msgid "#Total Timesheet"
-msgstr "# Вкупен распоред"
+msgstr "# Вкупно временска таблица"
 
 #. module: hr_timesheet_sheet
 #: model:ir.model,name:hr_timesheet_sheet.model_hr_timesheet_current_open
@@ -521,8 +522,8 @@ msgid ""
 "In order to create a timesheet for this employee, you must link the employee "
 "to a product, like 'Consultant'."
 msgstr ""
-"Со цел да креирате распоред за овој вработен, мора првин да го поврзете "
-"вработениот за производ, како 'Консултант'."
+"Со цел да креирате временска таблица за овој вработен, мора првин да го "
+"поврзете вработениот за производ, како 'Консултант'."
 
 #. module: hr_timesheet_sheet
 #: selection:hr.timesheet.report,month:0
@@ -539,7 +540,7 @@ msgstr "Декември"
 #. module: hr_timesheet_sheet
 #: view:hr.timesheet.current.open:0
 msgid "It will open your current timesheet"
-msgstr "Ќе го отвори вашиот тековен распоред"
+msgstr "Ќе ја отвори вашата тековна временска таблица"
 
 #. module: hr_timesheet_sheet
 #: selection:hr.config.settings,timesheet_range:0
@@ -574,7 +575,7 @@ msgid ""
 "In order to create a timesheet for this employee, you must link the employee "
 "to a product."
 msgstr ""
-"Со цел да креирате распоред за овој вработен, мора да го поврзете "
+"Со цел да креирате временска таблица за овој вработен, мора да го поврзете "
 "вработениот за производ."
 
 #. module: hr_timesheet_sheet
@@ -628,17 +629,17 @@ msgstr "Недовршено"
 #. module: hr_timesheet_sheet
 #: field:res.company,timesheet_max_difference:0
 msgid "Timesheet allowed difference(Hours)"
-msgstr "Дозволени разлики во распоред (Часови)"
+msgstr "Дозволени разлики во временската таблица (Часови)"
 
 #. module: hr_timesheet_sheet
 #: model:process.transition,note:hr_timesheet_sheet.process_transition_invoiceontimesheet0
 msgid "The invoice is created based on the timesheet."
-msgstr "Фактурата е креирана врз основа на распоред."
+msgstr "Фактурата е креирана врз основа на временската таблица."
 
 #. module: hr_timesheet_sheet
 #: model:process.node,name:hr_timesheet_sheet.process_node_drafttimesheetsheet0
 msgid "Draft Timesheet"
-msgstr "Нацрт распоред"
+msgstr "Нацрт временска таблица"
 
 #. module: hr_timesheet_sheet
 #: model:ir.actions.act_window,help:hr_timesheet_sheet.act_hr_timesheet_sheet_form
@@ -657,16 +658,17 @@ msgid ""
 "            "
 msgstr ""
 "<p class=\"oe_view_nocontent_create\">\n"
-"                Нов распоред за одобрување.\n"
+"                Нова временска таблица за одобрување.\n"
 "              </p><p>\n"
-"               Мора да ги снимате распоредите секој ден и да ги потврдите на "
-"крајот\n"
-"               на неделата. Откако распоредот е потврден, треба да биде \n"
-"               валидиран од страна на менаџерот.\n"
+"               Мора да ги снимате временските таблици секој ден и да ги "
+"потврдите на крајот\n"
+"               на неделата. Откако временската таблица е потврдена, треба да "
+"биде \n"
+"               валидирана од страна на менаџерот.\n"
 "              </p><p>\n"
-"                Timesheets can also be invoiced to customers, depending on "
-"the\n"
-"                configuration of each project's related contract.\n"
+"                Временските таблици исто така може да бидат фактурирани на "
+"купувачите, во зависност од the\n"
+"                конфигурацијата на договорот поврзан со секој договор.\n"
 "              </p>\n"
 "            "
 
@@ -707,12 +709,12 @@ msgstr "Недела"
 #: model:ir.model,name:hr_timesheet_sheet.model_hr_timesheet_sheet_sheet_account
 #: model:ir.model,name:hr_timesheet_sheet.model_hr_timesheet_sheet_sheet_day
 msgid "Timesheets by Period"
-msgstr "Распореди по период"
+msgstr "Временска таблица по период"
 
 #. module: hr_timesheet_sheet
 #: field:hr_timesheet_sheet.sheet,message_is_follower:0
 msgid "Is a Follower"
-msgstr "Пратител"
+msgstr "Е Пратител"
 
 #. module: hr_timesheet_sheet
 #: view:hr.timesheet.report:0
@@ -726,7 +728,7 @@ msgstr "Корисник"
 #. module: hr_timesheet_sheet
 #: model:ir.actions.act_window,name:hr_timesheet_sheet.act_hr_timesheet_sheet_sheet_by_account
 msgid "Timesheet by Account"
-msgstr "Распоред по сметка"
+msgstr "Временска таблица по сметка"
 
 #. module: hr_timesheet_sheet
 #: field:hr.timesheet.report,date:0
@@ -750,7 +752,7 @@ msgstr "Проширени филтри..."
 #. module: hr_timesheet_sheet
 #: field:res.company,timesheet_range:0
 msgid "Timesheet range"
-msgstr "Опсег на распоред"
+msgstr "Опсег на временска таблица"
 
 #. module: hr_timesheet_sheet
 #: view:board.board:0
@@ -770,8 +772,8 @@ msgid ""
 "The timesheet cannot be validated as it does not contain an equal number of "
 "sign ins and sign outs."
 msgstr ""
-"Распоредот не може да биде потврден бидејќи не содржи еднаков број на "
-"пријави и одјави."
+"Временската таблица не може да биде потврдена бидејќи не содржи еднаков број "
+"на пријави и одјави."
 
 #. module: hr_timesheet_sheet
 #: selection:hr.timesheet.report,month:0
@@ -799,12 +801,12 @@ msgstr "Резиме"
 #: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:215
 #, python-format
 msgid "You cannot delete a timesheet which have attendance entries."
-msgstr "Не може да избришете распоред кој има записи за присуство."
+msgstr "Не може да избришете временска таблица која има записи за присуство."
 
 #. module: hr_timesheet_sheet
 #: view:hr_timesheet_sheet.sheet:0
 msgid "Unvalidated Timesheets"
-msgstr "Невалидирани распореди"
+msgstr "Невалидирани временски таблици"
 
 #. module: hr_timesheet_sheet
 #: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:82
@@ -813,8 +815,9 @@ msgid ""
 "You cannot have 2 timesheets that overlap!\n"
 "You should use the menu 'My Timesheet' to avoid this problem."
 msgstr ""
-"Не може да имате 2 распореди кои се преклопуваат!\n"
-"За да го избегнете овој проблем треба да го користите менито 'Мој распоред'."
+"Не може да имате 2 временски таблици кои се преклопуваат!\n"
+"За да го избегнете овој проблем треба да го користите менито 'Моја временска "
+"таблица'."
 
 #. module: hr_timesheet_sheet
 #: view:hr_timesheet_sheet.sheet:0
@@ -833,7 +836,7 @@ msgstr "Општа сметка"
 #: help:hr.config.settings,timesheet_range:0
 #: help:res.company,timesheet_range:0
 msgid "Periodicity on which you validate your timesheets."
-msgstr "Период на кој ги валидирате вашите распореди."
+msgstr "Период на кој ги валидирате вашите временски таблици."
 
 #. module: hr_timesheet_sheet
 #: view:hr_timesheet_sheet.sheet.account:0
@@ -844,7 +847,7 @@ msgstr "Барај сметка"
 #: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:428
 #, python-format
 msgid "You cannot modify an entry in a confirmed timesheet"
-msgstr "Не може да измените запис во потврден распоред"
+msgstr "Не може да измените внес во потврдена временска таблица"
 
 #. module: hr_timesheet_sheet
 #: help:res.company,timesheet_max_difference:0
@@ -853,8 +856,8 @@ msgid ""
 "computation for one sheet. Set this to 0 if you do not want any control."
 msgstr ""
 "Дозволена разлика во часови помеѓу најавата/одјавата и пресметката на "
-"распоредот за еден лист. Подесете го на 0 доколку не сакате било каква "
-"контрола."
+"временската таблица за еден лист. Подесете го на 0 доколку не сакате било "
+"каква контрола."
 
 #. module: hr_timesheet_sheet
 #: view:hr_timesheet_sheet.sheet:0
@@ -879,15 +882,16 @@ msgid ""
 "You cannot have 2 timesheets that overlap!\n"
 "Please use the menu 'My Current Timesheet' to avoid this problem."
 msgstr ""
-"Не може да имате 2 распореди кои се преклопуваат!\n"
-"Употребете го менито 'Мој тековен распоред'  за да го избегнете овој проблем."
+"Не може да имате 2 временски таблици кои се преклопуваат!\n"
+"Употребете го менито 'Моја тековен временска таблица' за да го избегнете "
+"овој проблем."
 
 #. module: hr_timesheet_sheet
 #: view:hr.timesheet.current.open:0
 #: model:ir.actions.act_window,name:hr_timesheet_sheet.action_hr_timesheet_current_open
 #: model:ir.actions.server,name:hr_timesheet_sheet.ir_actions_server_timsheet_sheet
 msgid "My Timesheet"
-msgstr "Мој распоред"
+msgstr "Моја временска таблица"
 
 #. module: hr_timesheet_sheet
 #: view:timesheet.report:0
@@ -918,13 +922,13 @@ msgstr "Фактура за работа"
 #. module: hr_timesheet_sheet
 #: view:hr_timesheet_sheet.sheet.account:0
 msgid "Timesheet by Accounts"
-msgstr "Распоред по сметки"
+msgstr "Временска таблица по сметки"
 
 #. module: hr_timesheet_sheet
 #: code:addons/hr_timesheet_sheet/wizard/hr_timesheet_current.py:50
 #, python-format
 msgid "Open Timesheet"
-msgstr "Отвори распоред"
+msgstr "Отвори временска таблица"
 
 #. module: hr_timesheet_sheet
 #: view:hr.timesheet.report:0
@@ -954,17 +958,17 @@ msgstr "hr.config.settings"
 #: model:ir.actions.act_window,name:hr_timesheet_sheet.action_hr_timesheet_report_stat_all
 #: model:ir.ui.menu,name:hr_timesheet_sheet.menu_hr_timesheet_report_all
 msgid "Timesheet Analysis"
-msgstr "Анализи на распоред"
+msgstr "Анализи на временска таблица"
 
 #. module: hr_timesheet_sheet
 #: view:hr_timesheet_sheet.sheet:0
 msgid "Search Timesheet"
-msgstr "Барај распоред"
+msgstr "Барај временска таблица"
 
 #. module: hr_timesheet_sheet
 #: view:hr_timesheet_sheet.sheet:0
 msgid "Confirmed Timesheets"
-msgstr "Потврдени распореди"
+msgstr "Потврдени временски таблици"
 
 #. module: hr_timesheet_sheet
 #: view:hr_timesheet_sheet.sheet:0
@@ -974,13 +978,13 @@ msgstr "Детали"
 #. module: hr_timesheet_sheet
 #: model:ir.model,name:hr_timesheet_sheet.model_hr_analytic_timesheet
 msgid "Timesheet Line"
-msgstr "Ставка на распоред"
+msgstr "Ставка од временска таблица"
 
 #. module: hr_timesheet_sheet
 #: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:213
 #, python-format
 msgid "You cannot delete a timesheet which is already confirmed."
-msgstr "Не може да избришете распоред кој е веќе потврден."
+msgstr "Не може да избришете временска таблица која е веќе потврдена."
 
 #. module: hr_timesheet_sheet
 #: view:hr.timesheet.report:0
@@ -1006,7 +1010,7 @@ msgstr "Опис"
 #. module: hr_timesheet_sheet
 #: model:process.transition,note:hr_timesheet_sheet.process_transition_confirmtimesheet0
 msgid "The employee periodically confirms his own timesheets."
-msgstr "Вработениот периодично го потврдува својот распоред."
+msgstr "Вработениот периодично ја потврдува својата врменска таблица."
 
 #. module: hr_timesheet_sheet
 #: selection:hr.timesheet.report,month:0
@@ -1027,7 +1031,7 @@ msgstr "Одјава"
 #. module: hr_timesheet_sheet
 #: model:process.transition,note:hr_timesheet_sheet.process_transition_tasktimesheet0
 msgid "Moves task entry into the timesheet line"
-msgstr "Го преместува записот за задачата во ставка од распоредот."
+msgstr "Го преместува внесот за задачата во ставка од временската таблица."
 
 #. module: hr_timesheet_sheet
 #: view:hr_timesheet_sheet.sheet.day:0
@@ -1051,7 +1055,7 @@ msgstr "Разлика"
 #: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:64
 #, python-format
 msgid "You cannot duplicate a timesheet."
-msgstr "Не може да дуплирате распоред."
+msgstr "Не може да дуплирате временски таблици."
 
 #. module: hr_timesheet_sheet
 #: selection:hr_timesheet_sheet.sheet,state_attendance:0
@@ -1077,10 +1081,11 @@ msgid ""
 "            "
 msgstr ""
 "<p>\n"
-"               Овој извештај врши анализи на распоредите креирани од вашите\n"
+"               Овој извештај врши анализи на временските таблици креирани од "
+"вашите\n"
 "                човечки ресурси во системот. Ви овозможува да имате целосен "
 "преглед \n"
-"                на записите направени од вашите вработени. Може да ги "
+"                на внесовите направени од вашите вработени. Може да ги "
 "групирате по\n"
 "                специфични критериуми за селекција благодарение на алатката "
 "за пребарување.\n"
@@ -1095,7 +1100,7 @@ msgstr "Вработени"
 #. module: hr_timesheet_sheet
 #: constraint:hr.analytic.timesheet:0
 msgid "You cannot modify an entry in a Confirmed/Done timesheet !"
-msgstr "Не можете да измените запис во Потврден/Завршен распоред !"
+msgstr "Не можете да измените внес во Потврдена/Завршена временска таблица !"
 
 #. module: hr_timesheet_sheet
 #: model:process.node,note:hr_timesheet_sheet.process_node_timesheet0
@@ -1176,7 +1181,7 @@ msgstr "Тековен датум"
 #. module: hr_timesheet_sheet
 #: model:process.process,name:hr_timesheet_sheet.process_process_hrtimesheetprocess0
 msgid "Hr Timesheet"
-msgstr "Распоред на човечки ресурси"
+msgstr "Временска таблица за човечки ресурси"
 
 #. module: hr_timesheet_sheet
 #: view:hr.timesheet.report:0
@@ -1214,4 +1219,4 @@ msgstr "Дневник"
 #. module: hr_timesheet_sheet
 #: model:ir.actions.act_window,name:hr_timesheet_sheet.act_hr_timesheet_sheet_sheet_by_day
 msgid "Timesheet by Day"
-msgstr "Распоред по ден"
+msgstr "Временска таблица по ден"

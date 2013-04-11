@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2013-03-07 08:37+0000\n"
-"PO-Revision-Date: 2013-03-15 16:24+0000\n"
+"PO-Revision-Date: 2013-04-09 15:37+0000\n"
 "Last-Translator: Erwin van der Ploeg (Endian Solutions) <Unknown>\n"
 "Language-Team: Dutch <nl@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-03-16 06:35+0000\n"
-"X-Generator: Launchpad (build 16532)\n"
+"X-Launchpad-Export-Date: 2013-04-10 05:54+0000\n"
+"X-Generator: Launchpad (build 16550)\n"
 
 #. module: account
 #: model:process.transition,name:account.process_transition_supplierreconcilepaid0
@@ -191,10 +191,10 @@ msgstr ""
 "<p class=\"oe_view_nocontent_create\">\n"
 "                klik hier om een fiscale periode toe te voegen.\n"
 "              </p><p>\n"
-"                Een fiscale periode is vaak een maand of een kwartaal. "
-"Normaal\n"
-"                zal dit gelijk zijn met de periode van uw Belasting "
-"aangifte.\n"
+"                Een fiscale periode is vaak een maand of een kwartaal. Deze "
+"kan\n"
+"                gelijk zijn met de periode van uw belasting aangifte, maar "
+"dat hoeft niet.\n"
 "              </p>\n"
 "            "
 
@@ -2287,7 +2287,7 @@ msgstr ""
 "<p class=\"oe_view_nocontent_create\">\n"
 "                Klik om een bankafschrift te registreren.\n"
 "              </p><p>\n"
-"                Een bankafschrift is een samenvatting van alle financiele "
+"                Een bankafschrift is een samenvatting van alle financiële "
 "transacties\n"
 "                van een bankrekening gedurende een bepaalde periode.\n"
 "                U ontvangt deze periodiek van uw bank.\n"
@@ -2569,7 +2569,7 @@ msgstr "Grootboek BTW-grafieken"
 #: model:account.payment.term,name:account.account_payment_term_net
 #: model:account.payment.term,note:account.account_payment_term_net
 msgid "30 Net Days"
-msgstr "30 dagen netto"
+msgstr "30 dagen"
 
 #. module: account
 #: code:addons/account/account_cash_statement.py:256
@@ -3609,7 +3609,7 @@ msgstr "Model"
 #. module: account
 #: help:account.invoice.tax,base_code_id:0
 msgid "The account basis of the tax declaration."
-msgstr "De grootboekrekening van de belastingverklaring"
+msgstr "De grootboekrekening van de belastingaangifte"
 
 #. module: account
 #: selection:account.account,type:0
@@ -5005,7 +5005,7 @@ msgstr "Rek. type"
 #. module: account
 #: selection:account.journal,type:0
 msgid "Bank and Checks"
-msgstr "Bank en Cheques."
+msgstr "Bank en Cheques"
 
 #. module: account
 #: field:account.account.template,note:0
@@ -5192,7 +5192,7 @@ msgstr "Eindsaldo"
 #. module: account
 #: field:account.chart.template,visible:0
 msgid "Can be Visible?"
-msgstr "Kan zichtbaar zijn?"
+msgstr "Zichtbaar?"
 
 #. module: account
 #: model:ir.model,name:account.model_account_journal_select
@@ -5278,7 +5278,7 @@ msgid ""
 "You can create one in the menu: \n"
 "Configuration\\Journals\\Journals."
 msgstr ""
-"Kan geen enkel dagboek %s vinden voor dit bedrijf.\n"
+"Kan geen dagboek van het soort \"%s\" vinden voor dit bedrijf.\n"
 "\n"
 "U kunt deze aanmaken in het menu:\n"
 "Instellingen\\Dagboeken\\Dagboeken."
@@ -5559,7 +5559,7 @@ msgstr "Vandaag afgeletterde relaties"
 #. module: account
 #: help:account.invoice.tax,tax_code_id:0
 msgid "The tax basis of the tax declaration."
-msgstr "De grondslag van de belastingverklaring."
+msgstr "De grondslag van de belastingaangifte"
 
 #. module: account
 #: view:account.addtmpl.wizard:0
@@ -6385,18 +6385,17 @@ msgid ""
 "            "
 msgstr ""
 "<p class=\"oe_view_nocontent_create\">\n"
-"                Klik voor het maken van een journaalpost.\n"
+"                Klik voor het maken van een boeking.\n"
 "              </p><p>\n"
-"                Een journaalpost bestaat uit verschillende boekingen. Elk "
+"                Een boeking bestaat uit verschillende boekingregels. Elk "
 "daarvan \n"
 "                is ofwel een debet- of een credit-transactie. \n"
 "                </p><p>\n"
-"               OpenERP genereert automatisch één journaalpost per "
-"financieel\n"
+"               OpenERP genereert automatisch één boeking per financieel\n"
 "               boekstuk: factuur, credit factuur, betaling aan een "
 "leverancier, bankafschrift, etc.).\n"
-"               U hoeft dus alleen/hoofdzakelijk handmatige journaalposten "
-"aan te maken \n"
+"               U hoeft dus alleen/hoofdzakelijk handmatige boekingen  aan te "
+"maken \n"
 "               voor memoriaal boekingen.\n"
 "              </p>\n"
 "            "
@@ -7507,7 +7506,7 @@ msgstr "Transactienaam"
 #. module: account
 #: field:account.chart.template,property_account_expense_categ:0
 msgid "Expense Category Account"
-msgstr "Categorie Kostenrekeningen"
+msgstr "Productcategorie kostenrekening"
 
 #. module: account
 #: sql_constraint:account.tax:0
@@ -8125,7 +8124,7 @@ msgstr "Referentie klant"
 #. module: account
 #: field:account.account.template,parent_id:0
 msgid "Parent Account Template"
-msgstr "Bovenliggerde grootboekkaart template"
+msgstr "Bovenliggerde grootboekrekening sjabloon"
 
 #. module: account
 #: report:account.invoice:0
@@ -9199,7 +9198,7 @@ msgstr "Afboekingsdagboek"
 #. module: account
 #: field:account.chart.template,property_account_income_categ:0
 msgid "Income Category Account"
-msgstr "Omzetcategorie"
+msgstr "Productcategorie omzetrekening"
 
 #. module: account
 #: field:account.account,adjusted_balance:0
@@ -10167,7 +10166,7 @@ msgstr "Start periode"
 #. module: account
 #: model:ir.actions.report.xml,name:account.account_central_journal
 msgid "Central Journal"
-msgstr "Centraal dagboek"
+msgstr "Dagboek samenvatting"
 
 #. module: account
 #: field:account.aged.trial.balance,direction_selection:0
@@ -10741,7 +10740,7 @@ msgstr "Code/Datum"
 #: model:ir.model,name:account.model_account_move_line
 #: model:ir.ui.menu,name:account.menu_action_account_moves_all
 msgid "Journal Items"
-msgstr "Dagboekregels"
+msgstr "Boekingen"
 
 #. module: account
 #: view:accounting.report:0
@@ -11275,7 +11274,7 @@ msgstr ""
 #: code:addons/account/account_move_line.py:1059
 #, python-format
 msgid "Unable to change tax!"
-msgstr "Niet ongeluk om belasting te wijzigen"
+msgstr "Het is niet mogelijk om de belasting te wijzigen"
 
 #. module: account
 #: constraint:account.bank.statement:0
@@ -11812,7 +11811,7 @@ msgstr "Bankrekening"
 #: model:ir.actions.act_window,name:account.action_account_central_journal
 #: model:ir.model,name:account.model_account_central_journal
 msgid "Account Central Journal"
-msgstr "Centraal dagboek"
+msgstr "Dagboek samenvatting"
 
 #. module: account
 #: report:account.overdue:0

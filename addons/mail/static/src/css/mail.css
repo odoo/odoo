@@ -57,6 +57,9 @@
 .openerp .oe_mail .oe_msg.oe_msg_nobody{
     background: #F8F8F8;
 }
+.openerp .oe_mail .oe_msg.oe_msg_notification{
+    background: #F8F8F8;
+}
 .openerp .oe_mail .oe_msg .oe_msg_left{
     position: absolute;
     left:0; top: 0; bottom: 0; width: 40px;
@@ -621,6 +624,8 @@
     height: 32px;
     overflow: hidden;
     white-space: nowrap;
+    text-overflow: ellipsis;
+    margin-right: 10px;
 }
 .openerp .oe_followers .oe_partner img{
     width: 32px;

@@ -61,18 +61,6 @@ class sale_order(osv.Model):
         partner = document.partner_id
         if partner.id not in document.message_follower_ids:
             self.message_subscribe(cr, uid, ids, [partner.id], context=context)
-            user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
-            mail_values = {
-                'email_from': user.partner_id.email,
-                'email_to': partner.email,
-                'subject': 'Invitation to follow %s' % document.name_get()[0][1],
-                'body_html': 'You have been invited to follow %s' % document.name_get()[0][1],
-                'auto_delete': True,
-                'type': 'email',
-            }
-            mail_obj = self.pool.get('mail.mail')
-            mail_id = mail_obj.create(cr, uid, mail_values, context=context)
-            mail_obj.send(cr, uid, [mail_id], recipient_ids=[partner.id], context=context)
         return super(sale_order, self).action_button_confirm(cr, uid, ids, context=context)
 
     def get_signup_url(self, cr, uid, ids, context=None):
@@ -122,18 +110,6 @@ class account_invoice(osv.Model):
         partner = document.partner_id
         if partner.id not in document.message_follower_ids:
             self.message_subscribe(cr, uid, ids, [partner.id], context=context)
-            user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
-            mail_values = {
-                'email_from': user.partner_id.email,
-                'email_to': partner.email,
-                'subject': 'Invitation to follow %s' % document.name_get()[0][1],
-                'body_html': 'You have been invited to follow %s' % document.name_get()[0][1],
-                'auto_delete': True,
-                'type': 'email',
-            }
-            mail_obj = self.pool.get('mail.mail')
-            mail_id = mail_obj.create(cr, uid, mail_values, context=context)
-            mail_obj.send(cr, uid, [mail_id], recipient_ids=[partner.id], context=context)
         return super(account_invoice, self).invoice_validate(cr, uid, ids, context=context)
 
     def get_signup_url(self, cr, uid, ids, context=None):
