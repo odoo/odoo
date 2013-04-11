@@ -1314,7 +1314,7 @@ class product_product(osv.osv):
         proxy = self.pool.get('ir.model.data')
         category_id = False
         if ids and available_in_pos:
-            for pos_id in self.browse(cr,uid,ids):
+            for pos_id in self.browse(cr,uid,ids,context=context):
                 if pos_id.pos_categ_id:
                     category_id = pos_id.pos_categ_id.id
         return {'value': {'pos_categ_id': category_id}}
