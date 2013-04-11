@@ -71,7 +71,7 @@ class ir_model(osv.osv):
         models = self.browse(cr, uid, ids, context=context)
         res = dict.fromkeys(ids)
         for model in models:
-            if self.pool.get(model.model):
+            if model.model in self.pool:
                 res[model.id] = self.pool[model.model].is_transient()
             else:
                 _logger.error('Missing model %s' % (model.model, ))
@@ -346,7 +346,7 @@ class ir_model_fields(osv.osv):
             if vals.get('relation',False) and not self.pool['ir.model'].search(cr, user, [('model','=',vals['relation'])]):
                 raise except_orm(_('Error'), _("Model %s does not exist!") % vals['relation'])
 
-            if self.pool.get(vals['model']):
+            if vals['model'] in self.pool:
                 self.pool[vals['model']].__init__(self.pool, cr)
                 #Added context to _auto_init for special treatment to custom field for select_level
                 ctx = dict(context,
@@ -374,7 +374,6 @@ class ir_model_fields(osv.osv):
                     raise except_orm(_('Error!'),  _('Renaming sparse field "%s" is not allowed')%field.name)
 
         column_rename = None # if set, *one* column can be renamed here
-        obj = None
         models_patch = {}    # structs of (obj, [(field, prop, change_to),..])
                              # data to be updated on the orm model
 
@@ -397,8 +396,7 @@ class ir_model_fields(osv.osv):
             checked_selection = False # need only check it once, so defer
 
             for item in self.browse(cr, user, ids, context=context):
-                if not (obj and obj._name == item.model):
-                    obj = self.pool.get(item.model)
+                obj = self.pool.get(item.model)
 
                 if item.state != 'manual':
                     raise except_orm(_('Error!'),
@@ -434,7 +432,7 @@ class ir_model_fields(osv.osv):
 
                 # We don't check the 'state', because it might come from the context
                 # (thus be set for multiple fields) and will be ignored anyway.
-                if obj:
+                if obj is not None:
                     models_patch.setdefault(obj._name, (obj,[]))
                     # find out which properties (per model) we need to update
                     for field_name, field_property, set_fn in model_props:
@@ -515,7 +513,7 @@ class ir_model_constraint(Model):
         ids.reverse()
         for data in self.browse(cr, uid, ids, context):
             model = data.model.model
-            model_obj = self.pool.get(model)
+            model_obj = self.pool[model]
             name = openerp.tools.ustr(data.name)
             typ = data.type
 
@@ -690,7 +688,7 @@ class ir_model_access(osv.osv):
             model_name = model
 
         # TransientModel records have no access rights, only an implicit access rule
-        if not self.pool.get(model_name):
+        if model_name not in self.pool:
             _logger.error('Missing model %s' % (model_name, ))
         elif self.pool[model_name].is_transient():
             return True
@@ -754,9 +752,8 @@ class ir_model_access(osv.osv):
     def call_cache_clearing_methods(self, cr):
         self.check.clear_cache(self)    # clear the cache of check function
         for model, method in self.__cache_clearing_methods:
-            object_ = self.pool.get(model)
-            if object_:
-                getattr(object_, method)()
+            if model in self.pool:
+                getattr(self.pool[model], method)()
 
     #
     # Check rights on actions
@@ -904,7 +901,7 @@ class ir_model_data(osv.osv):
         return super(ir_model_data,self).unlink(cr, uid, ids, context=context)
 
     def _update(self,cr, uid, model, module, values, xml_id=False, store=True, noupdate=False, mode='init', res_id=False, context=None):
-        model_obj = self.pool.get(model)
+        model_obj = self.pool[model]
         if not context:
             context = {}
         # records created during module install should not display the messages of OpenChatter
@@ -1122,7 +1119,7 @@ class ir_model_data(osv.osv):
                 to_unlink.append((model,res_id))
         if not config.get('import_partial'):
             for (model, res_id) in to_unlink:
-                if self.pool.get(model):
+                if model in self.pool:
                     _logger.info('Deleting %s@%s', res_id, model)
                     self.pool[model].unlink(cr, uid, [res_id])
 

@@ -19,7 +19,7 @@ def run(args):
     openerp.netsvc.init_logger()
     registry = openerp.modules.registry.RegistryManager.get(
         args.database, update_module=False)
-    model = registry.get(args.model)
+    model = registry[args.model]
     cr = registry.db.cursor() # TODO context manager
     field_names = [args.field] if args.field else []
     if args.short:

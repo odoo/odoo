@@ -349,8 +349,7 @@ def load_modules(db, force_demo=False, status=None, update_module=False):
         if processed_modules:
             cr.execute("""select model,name from ir_model where id NOT IN (select distinct model_id from ir_model_access)""")
             for (model, name) in cr.fetchall():
-                model_obj = registry.get(model)
-                if model_obj and not model_obj.is_transient():
+                if model in registry and not registry[model].is_transient():
                     _logger.warning('The model %s has no access rules, consider adding one. E.g. access_%s,access_%s,model_%s,,1,1,1,1',
                         model, model.replace('.', '_'), model.replace('.', '_'), model.replace('.', '_'))
 
@@ -358,15 +357,13 @@ def load_modules(db, force_demo=False, status=None, update_module=False):
             # been replaced by owner-only access rights
             cr.execute("""select distinct mod.model, mod.name from ir_model_access acc, ir_model mod where acc.model_id = mod.id""")
             for (model, name) in cr.fetchall():
-                model_obj = registry.get(model)
-                if model_obj and model_obj.is_transient():
+                if model in registry and registry[model].is_transient():
                     _logger.warning('The transient model %s (%s) should not have explicit access rules!', model, name)
 
             cr.execute("SELECT model from ir_model")
             for (model,) in cr.fetchall():
-                obj = registry.get(model)
-                if obj:
-                    obj._check_removed_columns(cr, log=True)
+                if model in registry:
+                    registry[model]._check_removed_columns(cr, log=True)
                 else:
                     _logger.warning("Model %s is declared but cannot be loaded! (Perhaps a module was partially removed or renamed)", model)
 
