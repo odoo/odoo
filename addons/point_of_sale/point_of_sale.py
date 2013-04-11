@@ -1005,6 +1005,8 @@ class pos_order(osv.osv):
             #TOFIX: a deep refactoring of this method (and class!) is needed in order to get rid of this stupid hack
             assert order.lines, _('The POS order must have lines when calling this method')
             # Create an move for each order line
+
+            cur = order.pricelist_id.currency_id
             for line in order.lines:
                 tax_amount = 0
                 taxes = [t for t in line.product_id.taxes_id]
