@@ -89,6 +89,46 @@ class mail_thread(osv.AbstractModel):
     #   :param function lambda: returns whether the tracking should record using this subtype
     _track = {}
 
+    def get_empty_list_help(self, cr, uid, help, context=None):
+        """ Override of BaseModel.get_empty_list_help() to generate an help message
+            that adds alias information. """
+        model = context.get('empty_list_help_model')
+        res_id = context.get('empty_list_help_id')
+        ir_config_parameter = self.pool.get("ir.config_parameter")
+        catchall_domain = ir_config_parameter.get_param(cr, uid, "mail.catchall.domain", context=context)
+        document_name = context.get('empty_list_help_document_name', _('document'))
+        alias = None
+
+        if catchall_domain and model and res_id:  # specific res_id -> find its alias (i.e. section_id specified)
+            object_id = self.pool.get(model).browse(cr, uid, res_id, context=context)
+            alias = object_id.alias_id
+        elif catchall_domain and model:  # no specific res_id given -> generic help message, take an example alias (i.e. alias of some section_id)
+            model_id = self.pool.get('ir.model').search(cr, uid, [("model", "=", self._name)], context=context)[0]
+            alias_obj = self.pool.get('mail.alias')
+            alias_ids = alias_obj.search(cr, uid, [("alias_model_id", "=", model_id)], context=context, limit=1, order='id ASC')
+            if alias_ids:
+                alias = alias_obj.browse(cr, uid, alias_ids[0], context=context)
+
+        if alias:
+            alias_email = alias.name_get()[0][1]
+            return _("""<p class='oe_view_nocontent_create'>
+                            Click here to add a new %(document)s or send an email to: <a href='mailto:%(email)s'>%(email)s</a>
+                        </p>
+                        %(static_help)s"""
+                    ) % {
+                        'document': document_name,
+                        'email': alias_email,
+                        'static_help': help or ''
+                    }
+
+        if document_name != 'document' and help and help.find("oe_view_nocontent_create") == -1:
+            return _("<p class='oe_view_nocontent_create'>Click here to add a new %(document)s</p>%(static_help)s") % {
+                        'document': document_name,
+                        'static_help': help or '',
+                    }
+
+        return help
+
     def _get_message_data(self, cr, uid, ids, name, args, context=None):
         """ Computes:
             - message_unread: has uid unread message for the document
@@ -409,7 +449,7 @@ class mail_thread(osv.AbstractModel):
         """ Used by the plugin addon, based for plugin_outlook and others. """
         ret_dict = {}
         for model_name in self.pool.obj_list():
-            model = self.pool.get(model_name)
+            model = self.pool[model_name]
             if 'mail.thread' in getattr(model, '_inherit', []):
                 ret_dict[model_name] = model._description
         return ret_dict
@@ -480,12 +520,12 @@ class mail_thread(osv.AbstractModel):
         if ref_match:
             thread_id = int(ref_match.group(1))
             model = ref_match.group(2) or model
-            model_pool = self.pool.get(model)
-            if thread_id and model and model_pool and model_pool.exists(cr, uid, thread_id) \
-                and hasattr(model_pool, 'message_update'):
-                _logger.info('Routing mail from %s to %s with Message-Id %s: direct reply to model: %s, thread_id: %s, custom_values: %s, uid: %s',
-                                email_from, email_to, message_id, model, thread_id, custom_values, uid)
-                return [(model, thread_id, custom_values, uid)]
+            if thread_id and model in self.pool:
+                model_obj = self.pool[model]
+                if model_obj.exists(cr, uid, thread_id) and hasattr(model_obj, 'message_update'):
+                    _logger.info('Routing mail from %s to %s with Message-Id %s: direct reply to model: %s, thread_id: %s, custom_values: %s, uid: %s',
+                                    email_from, email_to, message_id, model, thread_id, custom_values, uid)
+                    return [(model, thread_id, custom_values, uid)]
 
         # Verify whether this is a reply to a private message
         if in_reply_to:
@@ -626,7 +666,7 @@ class mail_thread(osv.AbstractModel):
             if self._name == 'mail.thread':
                 context.update({'thread_model': model})
             if model:
-                model_pool = self.pool.get(model)
+                model_pool = self.pool[model]
                 assert thread_id and hasattr(model_pool, 'message_update') or hasattr(model_pool, 'message_new'), \
                     "Undeliverable mail with Message-Id %s, model %s does not accept incoming emails" % \
                         (msg['message_id'], model)
@@ -680,7 +720,7 @@ class mail_thread(osv.AbstractModel):
         if isinstance(custom_values, dict):
             data = custom_values.copy()
         model = context.get('thread_model') or self._name
-        model_pool = self.pool.get(model)
+        model_pool = self.pool[model]
         fields = model_pool.fields_get(cr, uid, context=context)
         if 'name' in fields and not data.get('name'):
             data['name'] = msg_dict.get('subject', '')
@@ -957,7 +997,7 @@ class mail_thread(osv.AbstractModel):
             model = context.get('thread_model', self._name) if self._name == 'mail.thread' else self._name
             if model != self._name:
                 del context['thread_model']
-                return self.pool.get(model).message_post(cr, uid, thread_id, body=body, subject=subject, type=type, subtype=subtype, parent_id=parent_id, attachments=attachments, context=context, content_subtype=content_subtype, **kwargs)
+                return self.pool[model].message_post(cr, uid, thread_id, body=body, subject=subject, type=type, subtype=subtype, parent_id=parent_id, attachments=attachments, context=context, content_subtype=content_subtype, **kwargs)
 
         # 0: Parse email-from, try to find a better author_id based on document's followers for incoming emails
         email_from = kwargs.get('email_from')
