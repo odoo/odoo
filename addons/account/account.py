@@ -3401,7 +3401,7 @@ class wizard_multi_charts_accounts(osv.osv_memory):
                 try:
                     tmp2 = obj_data.get_object_reference(cr, uid, *ref)
                     if tmp2: 
-                        self.pool.get(tmp2[0]).write(cr, uid, tmp2[1], {
+                        self.pool[tmp2[0]].write(cr, uid, tmp2[1], {
                             'currency_id': obj_wizard.currency_id.id
                         })
                 except ValueError, e:

@@ -76,9 +76,9 @@ class mail_message(osv.Model):
         # TDE note: regroup by model/ids, to have less queries to perform
         result = dict.fromkeys(ids, False)
         for message in self.read(cr, uid, ids, ['model', 'res_id'], context=context):
-            if not message.get('model') or not message.get('res_id') or not self.pool.get(message['model']):
+            if not message.get('model') or not message.get('res_id') or message['model'] not in self.pool:
                 continue
-            result[message['id']] = self.pool.get(message['model']).name_get(cr, SUPERUSER_ID, [message['res_id']], context=context)[0][1]
+            result[message['id']] = self.pool[message['model']].name_get(cr, SUPERUSER_ID, [message['res_id']], context=context)[0][1]
         return result
 
     def _get_to_read(self, cr, uid, ids, name, arg, context=None):
@@ -569,7 +569,7 @@ class mail_message(osv.Model):
 
     def _find_allowed_model_wise(self, cr, uid, doc_model, doc_dict, context=None):
         doc_ids = doc_dict.keys()
-        allowed_doc_ids = self.pool.get(doc_model).search(cr, uid, [('id', 'in', doc_ids)], context=context)
+        allowed_doc_ids = self.pool[doc_model].search(cr, uid, [('id', 'in', doc_ids)], context=context)
         return set([message_id for allowed_doc_id in allowed_doc_ids for message_id in doc_dict[allowed_doc_id]])
 
     def _find_allowed_doc_ids(self, cr, uid, model_ids, context=None):
@@ -717,7 +717,7 @@ class mail_message(osv.Model):
         model_record_ids = _generate_model_record_ids(message_values, other_ids)
         document_related_ids = []
         for model, doc_dict in model_record_ids.items():
-            model_obj = self.pool.get(model)
+            model_obj = self.pool[model]
             mids = model_obj.exists(cr, uid, doc_dict.keys())
             if operation in ['create', 'write', 'unlink']:
                 model_obj.check_access_rights(cr, uid, 'write')
