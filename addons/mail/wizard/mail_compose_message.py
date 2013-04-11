@@ -116,6 +116,7 @@ class mail_compose_message(osv.TransientModel):
             'mail_compose_message_ir_attachments_rel',
             'wizard_id', 'attachment_id', 'Attachments'),
         'filter_id': fields.many2one('ir.filters', 'Filters'),
+        'body': fields.text('Contents'),
     }
 
     _defaults = {

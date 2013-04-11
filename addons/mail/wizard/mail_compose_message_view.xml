@@ -30,7 +30,7 @@
                         </div>
                         <field name="subject" placeholder="Subject..."/>
                     </group>
-                    <field name="body"/>
+                    <field name="body" widget='html'/>
                     <field name="attachment_ids" widget="many2many_binary"/>
                     <footer>
                         <button string="Send" name="send_mail" type="object" class="oe_highlight"/>
