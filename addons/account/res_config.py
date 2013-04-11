@@ -305,7 +305,7 @@ class account_config_settings(osv.osv_memory):
     def onchange_analytic_accounting(self, cr, uid, ids, analytic_accounting, context=None):
         if analytic_accounting:
             return {'value': {
-                'module_account_accountant': analytic_accounting,
+                'module_account_accountant': True,
                 }}
         return {}
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
