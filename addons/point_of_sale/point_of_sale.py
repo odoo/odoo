@@ -116,10 +116,16 @@ class pos_config(osv.osv):
         res = self.pool.get('sale.shop').search(cr, uid, [])
         return res and res[0] or False
 
+    def _default_payment_method(self, cr, uid, context=None):
+        journal_obj = self.pool.get('account.journal')
+        res = journal_obj.search(cr, uid, [('journal_user','=', True)])
+        return res or False
+
     _defaults = {
         'state' : POS_CONFIG_STATE[0][0],
         'shop_id': _default_shop,
         'journal_id': _default_sale_journal,
+        'journal_ids': _default_payment_method,
         'group_by' : True,
     }
 
