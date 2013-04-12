@@ -478,5 +478,17 @@
 
         <menuitem name="Reporting" id="base.menu_report_association" parent="event_main_menu" sequence="20"/>
 
+        <!--  Partners inherited form -->
+        <record id="view_event_partner_info_form" model="ir.ui.view">
+            <field name="name">res.partner.event.info.inherit</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="base.view_partner_form"/>
+            <field name="arch" type="xml">
+                <field name="supplier" position="after">
+                    <field name="speaker"/>
+                </field>
+            </field>
+        </record>
+
     </data>
 </openerp>

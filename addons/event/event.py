@@ -403,4 +403,13 @@ class event_registration(osv.osv):
             data.update(d['value'])
         return {'value': data}
 
+class res_partner(osv.osv):
+    _inherit = 'res.partner'
+
+    _columns = {
+        'speaker': fields.boolean('Speaker', help="Check this box if this contact is a speaker."),
+   }
+    
+res_partner()
+
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
