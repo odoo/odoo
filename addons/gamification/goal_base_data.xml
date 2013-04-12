@@ -7,6 +7,7 @@
             <field name="name">Change Timezone</field>
             <field name="description">Configure your profile and specify your timezone</field>
             <field name="computation_mode">count</field>
+            <field name="ponctual">True</field>
             <field name="model_id" eval="ref('base.model_res_users')" />
             <field name="domain">[('id','=',user_id),('partner_id.tz', '!=', False)]</field>
             <field name="action_id" eval="ref('base.action_res_users_my')" />
@@ -17,6 +18,7 @@
             <field name="name">Change of avatar</field>
             <field name="description">In your user perference</field>
             <field name="computation_mode">manually</field>
+            <field name="ponctual">True</field>
             <!-- problem : default avatar != False -> manually + check in write function -->
             <field name="action_id" eval="ref('base.action_res_users_my')" />
             <field name="res_id_field">id</field>
@@ -27,6 +29,7 @@
             <field name="name">Set your company data</field>
             <field name="description">Specify at least a website</field>
             <field name="computation_mode">count</field>
+            <field name="ponctual">True</field>
             <field name="model_id" eval="ref('base.model_res_company')" />
             <field name="domain">[('user_ids', 'in', user_id), ('name', '!=', 'Your Company')]</field>
             <field name="action_id" eval="ref('base.action_res_company_form')" />
@@ -36,6 +39,7 @@
         <record model="gamification.goal.type" id="type_base_company_logo">
             <field name="name">Change your company logo</field>
             <field name="computation_mode">count</field>
+            <field name="ponctual">True</field>
             <field name="model_id" eval="ref('base.model_res_company')" />
             <field name="domain">[('user_ids', 'in', user_id),('logo', '!=', False)]</field>
             <field name="action_id" eval="ref('base.action_res_company_form')" />
@@ -45,6 +49,7 @@
         <record model="gamification.goal.type" id="type_base_invite">
             <field name="name">Invite new users</field>
             <field name="description">Create at least another user</field>
+            <field name="ponctual">True</field>
             <field name="computation_mode">count</field>
             <field name="model_id" eval="ref('base.model_res_users')" />
             <field name="domain">[('id', '!=', user_id)]</field>
