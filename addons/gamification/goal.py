@@ -186,16 +186,16 @@ class gamification_goal(osv.Model):
         'last_update' : fields.date('Last Update',
             help="In case of manual goal, reminders are sent if the goal as not been updated for a while (defined in goal plan). Ignored in case of non-manual goal or goal not linked to a plan."),
 
-        'type_description': fields.related('type_id','description',
-            type='char', string='Type Description'),
+        'type_description': fields.related('type_id', 'description',
+            type='char', string='Type Description', readonly=True),
         'type_unit': fields.related('type_id', 'unit',
-            type='char', string='Type Description'),
+            type='char', string='Type Description', readonly=True),
         'type_condition': fields.related('type_id', 'condition',
-            type='char', string='Type Condition'),
+            type='char', string='Type Condition', readonly=True),
         'type_suffix': fields.related('type_id', 'full_suffix',
-            type="char", string="Suffix"),
+            type="char", string="Suffix", readonly=True),
         'type_ponctual': fields.related('type_id', 'ponctual',
-            type="boolean", string="Ponctual Goal"),
+            type="boolean", string="Ponctual Goal", readonly=True),
     }
 
     _defaults = {

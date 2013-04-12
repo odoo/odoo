@@ -69,16 +69,19 @@
                                 <field name="last_update" groups="base.group_no_one"/>
                             </group>
                             <group string="Data" colspan="4">
-                                <field name="target_goal" attrs="{'readonly':[('state','!=','draft')]}" class="oe_inline"/>
+                                <label for="target_goal" />
+                                <div>
+                                    <field name="target_goal" attrs="{'readonly':[('state','!=','draft')]}" class="oe_inline"/>
+                                    <field name="type_suffix" class="oe_inline"/>
+                                </div>
                                 <label for="current" />
                                 <div>
-                                    <field name="current"  attrs="{'readonly':[('computation_mode','!=','manually')]}" class="oe_inline"/>
-                                    <button string="Refresh state" type="object" name="update" class="oe_highlight oe_inline" attrs="{'invisible':['|',('computation_mode', '=', 'manually'),('state', '=', 'draft')]}"/>
-                                    <button name="write" type="object" string="The current value is up to date" help="Indicate that the current value of the manual goal is still correct and avoid reminders" attrs="{'invisible':['|',('computation_mode','!=', 'manually'),('state','=','draft')]}"/>
+                                    <field name="current" class="oe_inline"/>
+                                    <button string="refresh" type="object" name="update" class="oe_link" attrs="{'invisible':['|',('computation_mode', '=', 'manually'),('state', '=', 'draft')]}" />
+                                    <div class="oe_grey">
+                                        Reached when current value is <strong><field name="type_condition" class="oe_inline"/></strong> than the target.
+                                    </div>
                                 </div>
-                                <field name="type_condition"/>
-                                <field name="type_suffix"/>
-                                <field name="type_ponctual"/>
                             </group>
                         </group>
                     </sheet>
@@ -158,9 +161,9 @@
                                     <field name="user_id" />
                                     <div class="oe_goal_state_block">
                                         <t t-if="record.type_ponctual.value">
-                                            <div class="oe_goal_state oe_e"><t t-if="record.state.raw_value=='reached'">W</t>
+                                            <div class="oe_goal_state oe_e"><t t-if="record.state.raw_value=='reached'"><span class="oe_green">W</span></t>
                                                 <t t-if="record.state.raw_value=='inprogress' || record.state.raw_value=='inprogress_update'">N</t>
-                                                <t t-if="record.state.raw_value=='failed'">X</t>
+                                                <t t-if="record.state.raw_value=='failed'"><span class="oe_red">X</span></t>
                                             </div>
                                         </t>
                                         <t t-if="!record.type_ponctual.value">
@@ -168,7 +171,7 @@
                                                 <div class="oe_goal_gauge"></div>
                                             </t>
                                             <t t-if="record.type_condition.raw_value != 'higher'">
-                                                <div class="oe_goal_state">
+                                                <div t-attf-class="oe_goal_state #{record.current.raw_value == record.target_goal.raw_value+1 ? 'oe_orange' : record.current.raw_value &gt; record.target_goal.raw_value ? 'oe_red' : 'oe_green'}">
                                                     <t t-esc="record.current.raw_value" />
                                                 </div>
                                                 <em>reached when lower than <t t-esc="record.target_goal.raw_value" /></em>
