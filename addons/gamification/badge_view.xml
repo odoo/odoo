@@ -93,8 +93,16 @@
                             <field name="rule_auth_badge_ids" attrs="{'invisible': [('rule_auth','!=','having')]}" widget="many2many_tags" />
                             <field name="rule_max" attrs="{'invisible': [('rule_auth','=','nobody')]}" />
                             <field name="rule_max_number" attrs="{'invisible': ['|',('rule_max','=',False),('rule_auth','=','nobody')]}"/>
-                                                        <field name="stat_my_monthly_sending" attrs="{'invisible': [('rule_auth','=','nobody')]}"/>
-
+                            <label for="stat_my_monthly_sending"/>
+                            <div>
+                                <field name="stat_my_monthly_sending" attrs="{'invisible': [('rule_auth','=','nobody')]}" />
+                                <div attrs="{'invisible': [('remaining_sending','=',-1)]}" class="oe_grey">
+                                    You can still send <field name="remaining_sending" class="oe_inline"/> badges this month
+                                </div>
+                                <div attrs="{'invisible': [('remaining_sending','!=',-1)]}" class="oe_grey">
+                                    No monthly sending limit
+                                </div>
+                            </div>
                         </group>
                         <group string="Automatic Rules">
                             <field name="rule_automatic" widget="radio"/>
@@ -110,7 +118,6 @@
                             <group>
                                 <field name="stat_my"/>
                                 <field name="stat_my_this_month"/>
-
                             </group>
                         </group>
                     </sheet>
@@ -129,25 +136,45 @@
                     <field name="image"/>
                     <field name="stat_my"/>
                     <field name="stat_count"/>
-                    <field name="stat_count_distinct"/>
+                    <field name="stat_this_month"/>
                     <field name="unique_owner_ids"/>
+                    <field name="remaining_sending" />
+                    <field name="rule_max_number" />
                     <templates>
                         <t t-name="kanban-box">
                             <div t-attf-class="#{record.stat_my.raw_value ? 'oe_kanban_color_5' : 'oe_kanban_color_white'} oe_kanban_card oe_kanban_global_click oe_kanban_badge">
                                 <div class="oe_kanban_content">
                                     <div class="oe_kanban_left">
-                                        <a type="open"><img t-att-src="kanban_image('gamification.badge', 'image', record.image.raw_value)" t-att-title="record.name.value" width="24" height="24" /></a>
+                                        <a type="open"><img t-att-src="kanban_image('gamification.badge', 'image', record.image.raw_value)" t-att-title="record.name.value" width="100" height="100" /></a>
+                                        <div class="oe_kanban_badge_avatars">
+                                            <t t-foreach="record.unique_owner_ids.raw_value.slice(0,11)" t-as="owner">
+                                                <img t-att-src="kanban_image('res.users', 'image_small', owner)" t-att-data-member_id="owner"/>
+                                            </t>
+                                        </div>
                                     </div>
-                                    <h4><a type="open"><field name="name"/></a></h4>
-                                    <t t-if="record.description.value">
-                                        <em><field name="description"/></em>
-                                    </t>
-                                    <p>Granted <t t-esc="record.stat_count.raw_value" />x (<t t-esc="record.stat_count_distinct.raw_value"/> pers.)</p>
-                                    <div class="oe_kanban_badge_avatars">
-                                        <t t-foreach="record.unique_owner_ids.raw_value.slice(0,11)" t-as="owner">
-                                            <img t-att-src="kanban_image('res.users', 'image_small', owner)" t-att-data-member_id="owner"/>
+                                    <div>
+                                        <h4><a type="open"><field name="name"/></a></h4>
+                                        <t t-if="record.description.value">
+                                            <em><field name="description"/></em>
                                         </t>
-                                    </div>
+                                        <p>
+                                            Total: <t t-esc="record.stat_count.raw_value"/> (<t t-esc="record.stat_this_month.raw_value"/> this month)
+                                        </p>
+                                        <t t-if="record.remaining_sending.value != 0">
+                                            <button type="action" name="%(action_grant_wizard)d" class="oe_highlight">Grant</button>
+                                            <p class="oe_grey">
+                                                <t t-if="record.remaining_sending.value != -1">
+                                                    <t t-esc="record.remaining_sending.value"/>/<t t-esc="record.rule_max_number.value"/> remaining
+                                                </t>
+                                                <t t-if="record.remaining_sending.value == -1">
+                                                    ∞
+                                                </t>
+                                            </p>
+                                        </t>
+                                        <t t-if="record.remaining_sending.value == 0">
+                                            <div class="oe_grey">You can not send this badge</div>
+                                        </t>
+                                    </div>                
                                 </div>
                             </div>
                         </t>
@@ -171,7 +198,7 @@
                     <field name="create_date"/>
                     <templates>
                         <t t-name="kanban-box">
-                            <div class="oe_kanban_card oe_kanban_global_click oe_kanban_goal oe_kanban_color_white">
+                            <div class="oe_kanban_card oe_kanban_global_click oe_kanban_badge oe_kanban_color_white">
                                 <div class="oe_kanban_content">
                                     <div class="oe_kanban_left">
                                         <a type="open"><img t-att-src="kanban_image('gamification.badge', 'image', record.badge_id.raw_value)" t-att-title="record.badge_name.value" width="24" height="24" /></a>

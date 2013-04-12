@@ -125,7 +125,7 @@ openerp.gamification = function(instance) {
                     self.$el.find('.oe_goal_gauge').attr('id', unique_id);
                     var g = new JustGage({
                         id: unique_id,
-                        node: self.$el.find('.oe_goal_gauge').empty().get(0),
+                        node: self.$('.oe_goal_gauge').empty().get(0),
                         value: self.record.current.raw_value,
                         min: 0,
                         max: self.record.target_goal.raw_value,

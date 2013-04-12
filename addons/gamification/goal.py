@@ -25,9 +25,6 @@ from openerp.tools.safe_eval import safe_eval
 from templates import TemplateHelper
 
 from datetime import date, datetime, timedelta
-import logging
-
-_logger = logging.getLogger(__name__)
 
 
 class gamification_goal_type(osv.Model):

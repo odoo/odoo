@@ -26,6 +26,9 @@ from openerp.tools.safe_eval import safe_eval
 
 from templates import TemplateHelper
 from datetime import date
+import logging
+
+_logger = logging.getLogger(__name__)
 
 
 class gamification_badge_user(osv.Model):
@@ -130,6 +133,24 @@ class gamification_badge(osv.Model):
                           ('create_date', '>=', first_month_day)], context=context))
         return result
 
+    def _remaining_sending_calc(self, cr, uid, ids, name, args, context=None):
+        """Computes the number of badges remaining the user can send
+
+        0 if not allowed or no remaining
+        integer if limited sending
+        -1 if infinite (should not be displayed)
+        """
+        result = dict.fromkeys(ids, False)
+        for badge in self.browse(cr, uid, ids, context=context):
+            if self.can_grant_badge(cr, uid, uid, badge.id, context) != 1:
+                result[badge.id] = 0
+            elif not badge.rule_max:
+                result[badge.id] = -1
+            else:
+                result[badge.id] = badge.rule_max_number - badge.stat_my_monthly_sending
+
+        return result
+
     _columns = {
         'name': fields.char('Badge', required=True, translate=True),
         'description': fields.text('Description'),
@@ -161,6 +182,8 @@ class gamification_badge(osv.Model):
             type="integer",
             string='My Monthly Sending Total',
             help="The number of time the current user has sent this badge this month."),
+        'remaining_sending': fields.function(_remaining_sending_calc, type='integer',
+            string='Remaining Sending Allowed', help="If a maxium is set"),
 
         'rule_automatic': fields.selection([
                 ('goals', 'List of goals to reach'),
@@ -338,22 +361,46 @@ class gamification_badge(osv.Model):
 
         return True
 
+    def check_granting(self, cr, uid, user_from_id, badge_id, context=None):
+        """Check the user can grant a badge and raise the appropriate exception
+        if not"""
+        context = context or {}
+        status_code = self.can_grant_badge(cr, uid, user_from_id, badge_id, context)
+        if status_code == 1:
+            return True
+        elif status_code == 2:
+            raise osv.except_osv(_('Warning!'), _('This badge can not be sent by users.'))
+        elif status_code == 3:
+            raise osv.except_osv(_('Warning!'), _('You are not in the user allowed list.'))
+        elif status_code == 4:
+            raise osv.except_osv(_('Warning!'), _('You do not have the required badges.'))
+        elif status_code == 5:
+            raise osv.except_osv(_('Warning!'), _('You have already sent this badge too many time this month.'))
+        else:
+            _logger.exception("Unknown badge status code: %d" % int(status_code))
+        return False
+
     def can_grant_badge(self, cr, uid, user_from_id, badge_id, context=None):
         """Check if a user can grant a badge to another user
 
         :param user_from_id: the id of the res.users trying to send the badge
         :param badge_id: the granted badge id
-        :return: boolean, True if succeeded to send, False otherwise
+        :return: integer representing the permission.
+            1: can grant
+            2: nobody can send
+            3: user not in the allowed list
+            4: don't have the required badges
+            5: user's monthly limit reached
         """
         context = context or {}
         badge = self.browse(cr, uid, badge_id, context=context)
 
         if badge.rule_auth == 'nobody':
-            raise osv.except_osv(_('Warning!'), _('This badge can not be sent by users.'))
+            return 2
 
-        elif badge.rule_auth == 'list':
+        elif badge.rule_auth == 'users':
             if user_from_id not in [user.id for user in badge.rule_auth_user_ids]:
-                raise osv.except_osv(_('Warning!'), _('You are not in the user allowed list.'))
+                return 3
 
         elif badge.rule_auth == 'having':
             badge_users = self.pool.get('gamification.badge.user').search(
@@ -361,23 +408,24 @@ class gamification_badge(osv.Model):
 
             if len(badge_users) == 0:
                 # the user_from has no badges
-                raise osv.except_osv(_('Warning!'), _('You do not have the required badges.'))
+                return 4
 
             owners = [owner.id for owner in badge.owner_ids]
             granted = False
             for badge_user in badge_users:
-                if badge_user.id in owners:
+                if badge_user in owners:
                     granted = True
+                    break
             if not granted:
-                raise osv.except_osv(_('Warning!'), _('You do not have the required badges.'))
+                return 4
 
         # else badge.rule_auth == 'everyone' -> no check
 
         if badge.rule_max and badge.stat_my_monthly_sending >= badge.rule_max_number:
             # sent the maximum number of time this month
-            raise osv.except_osv(_('Warning!'), _('You have already sent this badge too many time this month.'))
+            return 5
 
-        return True
+        return 1
 
 
 class grant_badge_wizard(osv.TransientModel):
@@ -400,7 +448,7 @@ class grant_badge_wizard(osv.TransientModel):
             if uid == wiz.user_id.id:
                 raise osv.except_osv(_('Warning!'), _('You can not send a badge to yourself'))
 
-            if badge_obj.can_grant_badge(cr, uid,
+            if badge_obj.check_granting(cr, uid,
                                          user_from_id=uid,
                                          badge_id=wiz.badge_id.id,
                                          context=context):

@@ -21,6 +21,7 @@
 
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
+from openerp import SUPERUSER_ID
 
 
 class hr_gamification_badge_user(osv.Model):
@@ -56,7 +57,7 @@ class gamification_badge(osv.Model):
             badge = self.browse(cr, uid, context['badge_id'], context=context)
             badge_user = context['badge_user']
             if badge_user.employee_id:
-                return self.pool.get('hr.employee').message_post(cr, uid,
+                return self.pool.get('hr.employee').message_post(cr, SUPERUSER_ID,
                     badge_user.employee_id.id, context=context, **kwargs)
         return super(gamification_badge, self).message_post(cr, uid, thread_id, context=context, **kwargs)
 
