@@ -163,7 +163,7 @@ class gamification_badge(osv.Model):
                 ('having', 'People having some badges'),
                 ('nobody', 'No one'),
             ],
-            string="User Authorization Rule",
+            string="Allowed to Grant",
             help="Who can grant this badge",
             required=True),
         'rule_auth_user_ids': fields.many2many('res.users', 'rel_badge_auth_users',

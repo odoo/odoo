@@ -67,13 +67,7 @@
             <field name="arch" type="xml">
                 <form string="Badge" version="7.0">
                     <header>
-                        <button string="Grant this Badge" type="action" name="%(action_grant_wizard)d" class="oe_highlight" attrs="{'invisible': [
-                            '|',
-                                ('rule_auth', '=', 'nobody'),
-                                '&amp;',
-                                    ('rule_max', '=', True),
-                                    ('stat_this_month', '&gt;=', 'rule_max_number')
-                            ]}" />
+                        <button string="Grant this Badge" type="action" name="%(action_grant_wizard)d" class="oe_highlight" attrs="{'invisible': [('remaining_sending','!=',0)]}" />
                         <button string="Check Badge" type="object" name="check_automatic" groups="base.group_no_one" />
                     </header>
                     <sheet>
@@ -87,8 +81,8 @@
                         <group>
                             <field name="description" nolabel="1" placeholder="Badge Description" />
                         </group>
-                        <group string="User Rules">
-                            <field name="rule_auth" string="Allowed to Grant" widget="radio" />
+                        <group string="Rules for User Granting">
+                            <field name="rule_auth" widget="radio" />
                             <field name="rule_auth_user_ids" attrs="{'invisible': [('rule_auth','!=','users')]}" widget="many2many_tags" />
                             <field name="rule_auth_badge_ids" attrs="{'invisible': [('rule_auth','!=','having')]}" widget="many2many_tags" />
                             <field name="rule_max" attrs="{'invisible': [('rule_auth','=','nobody')]}" />
@@ -104,7 +98,7 @@
                                 </div>
                             </div>
                         </group>
-                        <group string="Automatic Rules">
+                        <group string="Rules for Automatic Granting">
                             <field name="rule_automatic" widget="radio"/>
                             <field name="compute_code" attrs="{'invisible': [('rule_automatic','!=','python')]}"/>
                             <field name="goal_type_ids" attrs="{'invisible': [('rule_automatic','!=','goals')]}" widget="many2many_tags"/>
@@ -151,12 +145,7 @@
                                         </ul>
                                     </div>
                                     <div class="oe_kanban_left">
-                                        <a type="open"><img t-att-src="kanban_image('gamification.badge', 'image', record.image.raw_value)" t-att-title="record.name.value" width="100" height="100" /></a>
-                                        <div class="oe_kanban_badge_avatars">
-                                            <t t-foreach="record.unique_owner_ids.raw_value.slice(0,11)" t-as="owner">
-                                                <img t-att-src="kanban_image('res.users', 'image_small', owner)" t-att-data-member_id="owner"/>
-                                            </t>
-                                        </div>
+                                        <a type="open"><img t-att-src="kanban_image('gamification.badge', 'image', record.image.raw_value)" t-att-title="record.name.value" width="110" height="110" /></a>
                                     </div>
                                     <div>
                                         <h4><a type="open"><field name="name"/></a></h4>
@@ -168,19 +157,24 @@
                                         </p>
                                         <t t-if="record.remaining_sending.value != 0">
                                             <button type="action" name="%(action_grant_wizard)d" class="oe_highlight">Grant</button>
-                                            <p class="oe_grey">
+                                            <span class="oe_grey">
                                                 <t t-if="record.remaining_sending.value != -1">
-                                                    <t t-esc="record.remaining_sending.value"/>/<t t-esc="record.rule_max_number.value"/> remaining
+                                                    <t t-esc="record.remaining_sending.value"/>/<t t-esc="record.rule_max_number.value"/>
                                                 </t>
                                                 <t t-if="record.remaining_sending.value == -1">
                                                     ∞
                                                 </t>
-                                            </p>
+                                            </span>
                                         </t>
                                         <t t-if="record.remaining_sending.value == 0">
-                                            <div class="oe_grey">You can not send this badge</div>
+                                            <div class="oe_grey">Can not send</div>
                                         </t>
-                                    </div>                
+                                    </div>
+                                    <div class="oe_kanban_badge_avatars">
+                                        <t t-foreach="record.unique_owner_ids.raw_value.slice(0,11)" t-as="owner">
+                                            <img t-att-src="kanban_image('res.users', 'image_small', owner)" t-att-data-member_id="owner"/>
+                                        </t>
+                                    </div>
                                 </div>
                             </div>
                         </t>
