@@ -267,18 +267,16 @@ class account_analytic_account(osv.osv):
                         AND account_analytic_journal.type = 'sale' \
                     GROUP BY account_analytic_line.account_id", (child_ids,))
             for account_id, sum in cr.fetchall():
-                res[account_id] = round(sum,2)
-        for acc in self.browse(cr, uid, res.keys(), context=context):
-            res[acc.id] = res[acc.id] - (acc.timesheet_ca_invoiced or 0.0)
+                res[account_id] = round(sum, 2)
         res_final = res
         return res_final
 
     def _total_cost_calc(self, cr, uid, ids, name, arg, context=None):
         res = {}
         res_final = {}
-        child_ids = tuple(ids) #We don't want consolidation for each of these fields because those complex computation is resource-greedy.
+        child_ids = tuple(ids)  # We don't want consolidation for each of these fields because those complex computation is resource-greedy.
         for i in child_ids:
-            res[i] =  0.0
+            res[i] = 0.0
         if not child_ids:
             return res
         if child_ids:
