@@ -89,7 +89,7 @@ class email_template(osv.osv):
             template = tools.ustr(template)
             record = None
             if res_id:
-                record = self.pool.get(model).browse(cr, uid, res_id, context=context)
+                record = self.pool[model].browse(cr, uid, res_id, context=context)
             user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
             variables = {
                 'object': record,
@@ -297,8 +297,7 @@ class email_template(osv.osv):
                         'copyvalue': self.build_expression(field_value.name, False, null_value or False),
                         'null_value': null_value or False
                         })
-        return {'value':result}
-
+        return {'value': result}
 
     def generate_email(self, cr, uid, template_id, res_id, context=None):
         """Generates an email from the template for given (model, res_id) pair.
@@ -350,11 +349,13 @@ class email_template(osv.osv):
                 report_name += ext
             attachments.append((report_name, result))
 
+        attachment_ids = []
         # Add template attachments
         for attach in template.attachment_ids:
-            attachments.append((attach.datas_fname, attach.datas))
+            attachment_ids.append(attach.id)
 
         values['attachments'] = attachments
+        values['attachment_ids'] = attachment_ids
         return values
 
     def send_mail(self, cr, uid, template_id, res_id, force_send=False, context=None):
@@ -369,28 +370,34 @@ class email_template(osv.osv):
                 was executed for this message only.
            :returns: id of the mail.message that was created
         """
-        if context is None: context = {}
+        if context is None:
+            context = {}
         mail_mail = self.pool.get('mail.mail')
         ir_attachment = self.pool.get('ir.attachment')
+
+        # create a mail_mail based on values, without attachments
         values = self.generate_email(cr, uid, template_id, res_id, context=context)
-        assert 'email_from' in values, 'email_from is missing or empty after template rendering, send_mail() cannot proceed'
-        attachments = values.pop('attachments') or {}
-        del values['partner_to'] # TODO Properly use them.
+        assert values.get('email_from'), 'email_from is missing or empty after template rendering, send_mail() cannot proceed'
+        del values['partner_to']  # TODO Properly use them.
+        attachment_ids = values.pop('attachment_ids', [])
+        attachments = values.pop('attachments', [])
         msg_id = mail_mail.create(cr, uid, values, context=context)
-        # link attachments
-        attachment_ids = []
-        for fname, fcontent in attachments.iteritems():
+
+        # manage attachments
+        for attachment in attachments:
             attachment_data = {
-                    'name': fname,
-                    'datas_fname': fname,
-                    'datas': fcontent,
-                    'res_model': mail_mail._name,
+                    'name': attachment[0],
+                    'datas_fname': attachment[0],
+                    'datas': attachment[1],
+                    'res_model': 'mail.message',
                     'res_id': msg_id,
             }
             context.pop('default_type', None)
             attachment_ids.append(ir_attachment.create(cr, uid, attachment_data, context=context))
         if attachment_ids:
+            values['attachment_ids'] = [(6, 0, attachment_ids)]
             mail_mail.write(cr, uid, msg_id, {'attachment_ids': [(6, 0, attachment_ids)]}, context=context)
+
         if force_send:
             mail_mail.send(cr, uid, [msg_id], context=context)
         return msg_id

@@ -591,7 +591,7 @@ property or property parameter."),
 
         for vals in self.browse(cr, uid, ids, context=context):
             if vals.ref and vals.ref.user_id:
-                mod_obj = self.pool.get(vals.ref._name)
+                mod_obj = self.pool[vals.ref._name]
                 res=mod_obj.read(cr,uid,[vals.ref.id],['duration','class'],context)
                 defaults = {'user_id': vals.user_id.id, 'organizer_id': vals.ref.user_id.id,'duration':res[0]['duration'],'class':res[0]['class']}
                 mod_obj.copy(cr, uid, vals.ref.id, default=defaults, context=context)
@@ -684,7 +684,7 @@ true, it will allow you to hide the event alarm information without removing it.
         ir_obj = self.pool.get('ir.model')
         model_id = ir_obj.search(cr, uid, [('model', '=', model)])[0]
 
-        model_obj = self.pool.get(model)
+        model_obj = self.pool[model]
         for data in model_obj.browse(cr, uid, ids, context=context):
 
             basic_alarm = data.alarm_id
@@ -754,7 +754,7 @@ true, it will allow you to hide the event alarm information without removing it.
         alarm_obj = self.pool.get('calendar.alarm')
         ir_obj = self.pool.get('ir.model')
         model_id = ir_obj.search(cr, uid, [('model', '=', model)])[0]
-        model_obj = self.pool.get(model)
+        model_obj = self.pool[model]
         for data in model_obj.browse(cr, uid, ids, context=context):
             alarm_ids = alarm_obj.search(cr, uid, [('model_id', '=', model_id), ('res_id', '=', data.id)])
             if alarm_ids:
@@ -853,13 +853,15 @@ class calendar_alarm(osv.osv):
         for alarm in self.browse(cr, uid, alarm_ids, context=context):
             next_trigger_date = None
             update_vals = {}
-            model_obj = self.pool.get(alarm.model_id.model)
+            model_obj = self.pool[alarm.model_id.model]
             res_obj = model_obj.browse(cr, uid, alarm.res_id, context=context)
             re_dates = []
 
             if hasattr(res_obj, 'rrule') and res_obj.rrule:
                 event_date = datetime.strptime(res_obj.date, '%Y-%m-%d %H:%M:%S')
-                recurrent_dates = get_recurrent_dates(res_obj.rrule, res_obj.exdate, event_date, res_obj.exrule)
+                #exdate is a string and we need a list
+                exdate = res_obj.exdate and res_obj.exdate.split(',') or []
+                recurrent_dates = get_recurrent_dates(res_obj.rrule, exdate, event_date, res_obj.exrule)
 
                 trigger_interval = alarm.trigger_interval
                 if trigger_interval == 'days':
