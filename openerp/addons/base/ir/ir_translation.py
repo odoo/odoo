@@ -155,12 +155,40 @@ class ir_translation(osv.osv):
         lang_data = lang_model.read(cr, uid, lang_ids, ['code', 'name'], context=context)
         return [(d['code'], d['name']) for d in lang_data]
 
+    def _get_src(self, cr, uid, ids, name, arg, context):
+        res = {}
+        for record in self.browse(cr,uid,ids,context=context):
+            if record.type != 'model':
+                res[record.id] = record.src
+            else:
+                data = record.name.split(',')
+                model = self.pool.get(data[0])
+                field = data[1]
+                context_wo_lang = context.copy()
+                context_wo_lang.pop('lang', None)
+                res[record.id] = model.read(cr, uid, record.res_id, [field], context=context_wo_lang)[field]
+        return res
+
+    def _set_src(self, cr, uid, id, name, value, args=None, context=None):
+        if value:
+            record=self.browse(cr,uid,id,context=context)
+            if record.type == 'model':
+                name = record.name
+                data = name.split(',')
+                model = self.pool.get(data[0])
+                field = data[1]
+                context_wo_lang = context.copy()
+                context_wo_lang.pop('lang', None)
+                model.write(cr, uid, record.res_id, {field: value}, context=context_wo_lang)
+            return self.write(cr,uid,id, {'src': value}, context=context_wo_lang)
+
     _columns = {
         'name': fields.char('Translated field', required=True),
         'res_id': fields.integer('Record ID', select=True),
         'lang': fields.selection(_get_language, string='Language'),
         'type': fields.selection(TRANSLATION_TYPE, string='Type', select=True),
-        'src': fields.text('Source'),
+        'src': fields.text('Old source'),
+        'source': fields.function(_get_src, fnct_inv=_set_src, type='text', string='Source'),
         'value': fields.text('Translation Value'),
         'module': fields.char('Module', help="Module this term belongs to", select=True),
 
