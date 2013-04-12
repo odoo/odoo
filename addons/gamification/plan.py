@@ -428,7 +428,7 @@ class gamification_goal_plan(osv.Model):
 
             # most complete first, current if same percentage (eg: if several 100%)
             sorted_board = enumerate(sorted(board_goals, key=lambda k: (k.completeness, k.current), reverse=True))
-            planlines_boards.append({'goal_type': planline.type_id, 'board_goals': sorted_board})
+            planlines_boards.append({'goal_type': planline.type_id, 'board_goals': sorted_board, 'target_goal': planline.target_goal})
         return planlines_boards
 
     def get_indivual_goal_info(self, cr, uid, user_id, plan, subset_goal_ids=False, context=None):

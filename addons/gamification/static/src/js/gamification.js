@@ -64,6 +64,7 @@ openerp.gamification = function(instance) {
                     self.render_template_replace(self.$el.filter(".oe_gamification_goal"),'gamification.goal_list_to_do');
                     self.render_money_fields(self.goals_info.info[0].currency);
                     self.render_progress_bars();
+                    self.render_piechars();
                 }
             });
         },
@@ -72,7 +73,7 @@ openerp.gamification = function(instance) {
 
             self.dfm = new instance.web.form.DefaultFieldManager(self);
             // Generate a FieldMonetary for each .oe_goal_field_monetary
-            self.$el.find(".oe_goal_field_monetary").each(function() {
+            self.$(".oe_goal_field_monetary").each(function() {
                 money_field = new instance.web.form.FieldMonetary(self.dfm, {
                     attrs: {
                         modifiers: '{"readonly": true}'
@@ -89,7 +90,7 @@ openerp.gamification = function(instance) {
 
             dfm = new instance.web.form.DefaultFieldManager(self);
             // Generate a FieldMonetary for each .oe_goal_field_monetary
-            self.$el.find(".oe_goal_progress").each(function() {
+            self.$(".oe_goal_progress").each(function() {
                 progress_field = new instance.web.form.FieldProgressBar(dfm, {
                     attrs: {
                         modifiers: '{"readonly": true}'
@@ -97,6 +98,14 @@ openerp.gamification = function(instance) {
                 });
                 progress_field.set('value', $(this).attr('value'));
                 progress_field.replace($(this));
+            });
+        },
+        render_piechars: function() {
+            var self = this;
+            self.$(".oe_goal_sparkline_piechart").each(function() {
+                var completeness = parseInt( $(this).attr('data-completeness'), 10);
+                var values = [completeness, 100-completeness];
+                $(this).sparkline(values, {type: 'pie', offset: 180, sliceColors: ['#01922D','#ff0000']});
             });
         }
     });
@@ -143,8 +152,8 @@ openerp.gamification = function(instance) {
                         // },
                         label: self.record.type_suffix.raw_value,
                         levelColors: [
-                            "#f9c802",
                             "#ff0000",
+                            "#f9c802",
                             "#a9d70b"
                         ],
                     });
