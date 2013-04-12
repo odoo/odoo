@@ -4,7 +4,7 @@
 
     <!-- make Employee users Survey users and Gamification manager -->
     <record id="base.group_user" model="res.groups">
-        <field name="implied_ids" eval="[(4, ref('base.group_survey_user')), (4, ref('gamification.group_goal_manager'))]"/>
+        <field name="implied_ids" eval="[(4, ref('base.group_survey_user'))]"/>
     </record>
 
     <record id="survey.menu_surveys" model="ir.ui.menu">

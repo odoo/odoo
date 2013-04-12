@@ -144,6 +144,12 @@
                         <t t-name="kanban-box">
                             <div t-attf-class="#{record.stat_my.raw_value ? 'oe_kanban_color_5' : 'oe_kanban_color_white'} oe_kanban_card oe_kanban_global_click oe_kanban_badge">
                                 <div class="oe_kanban_content">
+                                    <div class="oe_dropdown_toggle oe_dropdown_kanban">
+                                        <span class="oe_e">í</span>
+                                        <ul class="oe_dropdown_menu">
+                                            <li><a type="open">Badge Details</a></li>
+                                        </ul>
+                                    </div>
                                     <div class="oe_kanban_left">
                                         <a type="open"><img t-att-src="kanban_image('gamification.badge', 'image', record.image.raw_value)" t-att-title="record.name.value" width="100" height="100" /></a>
                                         <div class="oe_kanban_badge_avatars">
