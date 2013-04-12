@@ -63,7 +63,6 @@ class TestPortalIssueProject(TestPortalProject):
         # ----------------------------------------
 
         # Do: Alfred reads project -> ok (employee ok public)
-        self.project_project.read(cr, self.user_alfred_id, pigs_id, ['name'])
         # Test: all project issues visible
         issue_ids = self.project_issue.search(cr, self.user_alfred_id, [('project_id', '=', pigs_id)])
         test_issue_ids = set([self.issue_1_id, self.issue_2_id, self.issue_3_id, self.issue_4_id, self.issue_5_id, self.issue_6_id])
@@ -75,8 +74,6 @@ class TestPortalIssueProject(TestPortalProject):
         self.project_issue.write(cr, self.user_alfred_id, issue_ids, {'description': 'TestDescription'})
 
         # Do: Bert reads project -> crash, no group
-        self.assertRaises(except_orm, self.project_project.read,
-            cr, self.user_bert_id, pigs_id, ['name'])
         # Test: no project issue visible
         self.assertRaises(except_orm, self.project_issue.search,
             cr, self.user_bert_id, [('project_id', '=', pigs_id)])
@@ -88,7 +85,6 @@ class TestPortalIssueProject(TestPortalProject):
             cr, self.user_bert_id, issue_ids, {'description': 'TestDescription'})
 
         # Do: Chell reads project -> ok (portal ok public)
-        self.project_project.read(cr, self.user_chell_id, pigs_id, ['name'])
         # Test: all project issues visible
         issue_ids = self.project_issue.search(cr, self.user_chell_id, [('project_id', '=', pigs_id)])
         self.assertEqual(set(issue_ids), test_issue_ids,
@@ -100,7 +96,6 @@ class TestPortalIssueProject(TestPortalProject):
             cr, self.user_chell_id, issue_ids, {'description': 'TestDescription'})
 
         # Do: Donovan reads project -> ok (anonymous ok public)
-        self.project_project.read(cr, self.user_donovan_id, pigs_id, ['name'])
         # Test: no project issue visible (no read on project.issue)
         self.assertRaises(except_orm, self.project_issue.search,
             cr, self.user_donovan_id, [('project_id', '=', pigs_id)])
@@ -111,15 +106,12 @@ class TestPortalIssueProject(TestPortalProject):
         self.project_project.write(cr, uid, [pigs_id], {'privacy_visibility': 'portal'})
 
         # Do: Alfred reads project -> ok (employee ok public)
-        self.project_project.read(cr, self.user_alfred_id, pigs_id, ['name'])
         # Test: all project issues visible
         issue_ids = self.project_issue.search(cr, self.user_alfred_id, [('project_id', '=', pigs_id)])
         self.assertEqual(set(issue_ids), test_issue_ids,
                         'access rights: project user cannot see all issues of a portal project')
 
         # Do: Bert reads project -> crash, no group
-        self.assertRaises(except_orm, self.project_project.read,
-            cr, self.user_bert_id, pigs_id, ['name'])
         # Test: no project issue searchable
         self.assertRaises(except_orm, self.project_issue.search,
             cr, self.user_bert_id, [('project_id', '=', pigs_id)])
@@ -128,7 +120,6 @@ class TestPortalIssueProject(TestPortalProject):
         self.project_issue.message_subscribe_users(cr, self.user_alfred_id, [self.issue_1_id, self.issue_3_id], [self.user_chell_id])
 
         # Do: Chell reads project -> ok (portal ok public)
-        self.project_project.read(cr, self.user_chell_id, pigs_id, ['name'])
         # Test: only followed project issues visible + assigned
         issue_ids = self.project_issue.search(cr, self.user_chell_id, [('project_id', '=', pigs_id)])
         test_issue_ids = set([self.issue_1_id, self.issue_3_id, self.issue_5_id])
@@ -144,20 +135,13 @@ class TestPortalIssueProject(TestPortalProject):
         self.project_project.write(cr, uid, [pigs_id], {'privacy_visibility': 'employees'})
 
         # Do: Alfred reads project -> ok (employee ok employee)
-        self.project_project.read(cr, self.user_alfred_id, pigs_id, ['name'])
         # Test: all project issues visible
         issue_ids = self.project_issue.search(cr, self.user_alfred_id, [('project_id', '=', pigs_id)])
         test_issue_ids = set([self.issue_1_id, self.issue_2_id, self.issue_3_id, self.issue_4_id, self.issue_5_id, self.issue_6_id])
         self.assertEqual(set(issue_ids), test_issue_ids,
                         'access rights: project user cannot see all issues of an employees project')
 
-        # Do: Bert reads project -> crash, no group
-        self.assertRaises(except_orm, self.project_project.read,
-            cr, self.user_bert_id, pigs_id, ['name'])
-
         # Do: Chell reads project -> ko (portal ko employee)
-        self.assertRaises(except_orm, self.project_project.read,
-            cr, self.user_chell_id, pigs_id, ['name'])
         # Test: no project issue visible + assigned
         issue_ids = self.project_issue.search(cr, self.user_chell_id, [('project_id', '=', pigs_id)])
         self.assertFalse(issue_ids, 'access rights: portal user should not see issues of an employees project, even if assigned')
@@ -168,21 +152,13 @@ class TestPortalIssueProject(TestPortalProject):
         self.project_project.write(cr, uid, [pigs_id], {'privacy_visibility': 'followers'})
 
         # Do: Alfred reads project -> ko (employee ko followers)
-        self.assertRaises(except_orm, self.project_project.read,
-            cr, self.user_alfred_id, pigs_id, ['name'])
         # Test: no project issue visible
         issue_ids = self.project_issue.search(cr, self.user_alfred_id, [('project_id', '=', pigs_id)])
         test_issue_ids = set([self.issue_4_id])
         self.assertEqual(set(issue_ids), test_issue_ids,
                         'access rights: employee user should not see issues of a not-followed followers project, only assigned')
 
-        # Do: Bert reads project -> crash, no group
-        self.assertRaises(except_orm, self.project_project.read,
-            cr, self.user_bert_id, pigs_id, ['name'])
-
         # Do: Chell reads project -> ko (portal ko employee)
-        self.assertRaises(except_orm, self.project_project.read,
-            cr, self.user_chell_id, pigs_id, ['name'])
         # Test: no project issue visible
         issue_ids = self.project_issue.search(cr, self.user_chell_id, [('project_id', '=', pigs_id)])
         test_issue_ids = set([self.issue_5_id])
@@ -194,7 +170,6 @@ class TestPortalIssueProject(TestPortalProject):
         self.project_issue.message_subscribe_users(cr, self.user_alfred_id, [self.issue_1_id, self.issue_3_id], [self.user_chell_id, self.user_alfred_id])
 
         # Do: Alfred reads project -> ok (follower ok followers)
-        self.project_project.read(cr, self.user_alfred_id, pigs_id, ['name'])
         # Test: followed + assigned issues visible
         issue_ids = self.project_issue.search(cr, self.user_alfred_id, [('project_id', '=', pigs_id)])
         test_issue_ids = set([self.issue_1_id, self.issue_3_id, self.issue_4_id])
@@ -202,7 +177,6 @@ class TestPortalIssueProject(TestPortalProject):
                         'access rights: employee user should not see followed + assigned issues of a follower project')
 
         # Do: Chell reads project -> ok (follower ok follower)
-        self.project_project.read(cr, self.user_chell_id, pigs_id, ['name'])
         # Test: followed + assigned issues visible
         issue_ids = self.project_issue.search(cr, self.user_chell_id, [('project_id', '=', pigs_id)])
         test_issue_ids = set([self.issue_1_id, self.issue_3_id, self.issue_5_id])
