@@ -58,8 +58,11 @@ class crm_case_section(osv.osv):
         'sum_month_invoice': fields.function(_get_sum_month_invoice,
             string='Total invoiced this month',
             type='integer', readonly=True),
+        'forcasted': fields.integer(string='Total forcasted for this month'),
     }
 
+    def action_forcasted(self, cr, uid, id, value, context=None):
+        return self.write(cr, uid, [id], {'forcasted': value}, context=context)
 
 class res_users(osv.Model):
     _inherit = 'res.users'

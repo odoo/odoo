@@ -217,6 +217,8 @@
                     <field name="quotation_ids"/>
                     <field name="sale_order_ids"/>
                     <field name="invoice_ids"/>
+                    <field name="sum_month_invoice"/>
+                    <field name="forcasted"/>
                 </xpath>
                 <xpath expr="//div[@class='oe_items_list']" position="inside">
                     <a name="%(action_quotations_salesteams)d" type="action">
@@ -237,8 +239,8 @@
                 </xpath>
                 <xpath expr="//div[@class='oe_items_list']" position="after">
                     <div class="oe_center">
-                        <div class="oe_sum"><field name="sum_month_invoice"/></div>
-                        <div class="oe_subsum">Invoiced this month</div>
+                        <div class="oe_justgage" style="width:160px; height: 120px;" t-att-data-value="record.sum_month_invoice.raw_value" t-att-data-max="25000" data-label="this month">Invoiced</div>
+                        <div class="oe_justgage" style="width:160px; height: 120px;" t-att-data-value="record.forcasted.raw_value" t-att-data-max="25000" data-label="this month" data-action="action_forcasted">Forcasted</div>
                     </div>
                 </xpath>
             </data>
