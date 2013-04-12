@@ -78,7 +78,7 @@ class wizard_multi_charts_accounts(osv.osv_memory):
                     else:
                         #replace the value in the destination object only if it's the user lang
                         if context.get('lang') == lang:
-                            self.pool.get(out_obj._name).write(cr, uid, out_ids[j], {in_field: value[in_id]})
+                            self.pool[out_obj._name].write(cr, uid, out_ids[j], {in_field: value[in_id]})
                 else:
                     _logger.info('Language: %s. Translation from template: there is no translation available for %s!' %(lang,  src[in_id]))#out_obj._name))
         return True
