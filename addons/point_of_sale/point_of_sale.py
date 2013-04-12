@@ -117,8 +117,7 @@ class pos_config(osv.osv):
         return res and res[0] or False
 
     def _default_payment_method(self, cr, uid, context=None):
-        journal_obj = self.pool.get('account.journal')
-        res = journal_obj.search(cr, uid, [('journal_user','=', True)])
+        res = self.pool.get('account.journal').search(cr, uid, [('journal_user','=', True)], context=context)
         return res or False
 
     _defaults = {
