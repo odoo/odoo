@@ -6,7 +6,7 @@
         <record id="goal_list_action" model="ir.actions.act_window">
             <field name="name">Goals</field>
             <field name="res_model">gamification.goal</field>
-            <field name="view_mode">tree,form,calendar,kanban</field>
+            <field name="view_mode">tree,form,kanban</field>
             <field name="help" type="html">
                 <p class="oe_view_nocontent_create">
                     Click to create a goal. 
@@ -93,19 +93,6 @@
             </field>
         </record>
 
-        <record id="goal_calendar_view" model="ir.ui.view">
-            <field name="name">Goal Calendar</field>
-            <field name="model">gamification.goal</field>
-            <field name="arch" type="xml">
-                <calendar string="Goal"
-                        date_start="start_date"
-                        date_stop="end_date"
-                        color="type_id">
-                    <field name="type_id"/>
-                </calendar>
-            </field>
-        </record>
-
         <record id="goal_search_view" model="ir.ui.view">
             <field name="name">Goal Search</field>
             <field name="model">gamification.goal</field>
@@ -114,7 +101,12 @@
                     <filter name="my" string="My Goals" domain="[('user_id', '=', uid)]"/>
                     <separator/>
                     <filter name="draft" string="Draft" domain="[('state', '=', 'draft')]"/>
-                    <filter name="inprogress" string="In Progress" domain="[('state', 'in', ('inprogress', 'inprogress_update'))]"/>
+                    <filter name="inprogress" string="Opened"
+                        domain="[
+                            '|',
+                            ('state', 'in', ('inprogress', 'inprogress_update')),
+                            ('end_date', '>=', context_today().strftime('%%Y-%%m-%%d'))
+                            ]"/>
                     <filter name="closed" string="Closed" domain="[('state', 'in', ('reached', 'failed'))]"/>
                     <separator/>
 
@@ -147,12 +139,13 @@
                     <field name="type_ponctual"/>
                     <field name="start_date"/>
                     <field name="end_date"/>
+                    <field name="last_update"/>
                     <templates>
                         <t t-name="kanban-tooltip">
                            <field name="type_description"/>
                         </t>
                         <t t-name="kanban-box">
-                            <div t-attf-class="oe_kanban_card oe_gamification_goal oe_kanban_goal">
+                            <div t-attf-class="oe_kanban_card oe_gamification_goal oe_kanban_goal #{record.end_date.raw_value &lt; record.last_update.raw_value &amp; record.state.raw_value == 'failed' ? 'oe_kanban_color_2' : ''} #{record.end_date.raw_value &lt; record.last_update.raw_value &amp; record.state.raw_value == 'reached' ? 'oe_kanban_color_5' : ''}">
                                 <div class="oe_kanban_content">
                                     <p><h4 class="oe_goal_name" tooltip="kanban-tooltip"><field name="type_id" /></h4></p>
                                     <div class="oe_kanban_left">
@@ -184,7 +177,7 @@
                                             From <t t-esc="record.start_date.value" />
                                         </t>
                                         <t t-if="record.end_date.value">
-                                            To <t t-esc="record.start_date.value" />
+                                            To <t t-esc="record.end_date.value" />
                                         </t>
                                     </p>
                                 </div>

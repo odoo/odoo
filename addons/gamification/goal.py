@@ -156,13 +156,13 @@ class gamification_goal(osv.Model):
             relation='gamification.goal.plan',
             store=True),
         'start_date': fields.date('Start Date'),
-        'end_date': fields.date('End Date'), # no start and end = always active
+        'end_date': fields.date('End Date'),  # no start and end = always active
         'target_goal': fields.float('To Reach',
             required=True,
-            track_visibility = 'always'), # no goal = global index
+            track_visibility='always'),  # no goal = global index
         'current': fields.float('Current',
             required=True,
-            track_visibility = 'always'),
+            track_visibility='always'),
         'completeness': fields.function(_get_completeness,
             type='float',
             string='Completeness'),
@@ -183,7 +183,7 @@ class gamification_goal(osv.Model):
             string="Type computation mode"),
         'remind_update_delay': fields.integer('Remind delay',
             help="The number of days after which the user assigned to a manual goal will be reminded. Never reminded if no value is specified."),
-        'last_update' : fields.date('Last Update',
+        'last_update': fields.date('Last Update',
             help="In case of manual goal, reminders are sent if the goal as not been updated for a while (defined in goal plan). Ignored in case of non-manual goal or goal not linked to a plan."),
 
         'type_description': fields.related('type_id', 'description',
@@ -218,9 +218,6 @@ class gamification_goal(osv.Model):
         for goal in self.browse(cr, uid, ids, context=context):
             if goal.state in ('draft', 'canceled'):
                 # skip if goal draft or canceled
-                continue
-            if goal.last_update and goal.end_date and goal.last_update > goal.end_date:
-                # skip if a goal is finished (updated after the goal end date)
                 continue
 
             if goal.type_id.computation_mode == 'manually':
@@ -276,7 +273,6 @@ class gamification_goal(osv.Model):
             # check goal failure
             elif goal.end_date and fields.date.today() > goal.end_date:
                 towrite['state'] = 'failed'
-
             self.write(cr, uid, [goal.id], towrite, context=context)
         return True
 

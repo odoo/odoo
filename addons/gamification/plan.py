@@ -205,7 +205,7 @@ class gamification_goal_plan(osv.Model):
         Start planned plans (in draft and with start_date = today)
         Create the goals for planlines not linked to goals (eg: modified the
             plan to add planlines)
-        Update every goal running
+        Update every plan running
         """
         if not context: context = {}
 
@@ -218,18 +218,6 @@ class gamification_goal_plan(osv.Model):
         if not ids:
             ids = self.search(cr, uid, [('state', '=', 'inprogress')])
 
-        goal_obj = self.pool.get('gamification.goal')
-        # we use yesterday to update the goals that just ended
-        yesterday = date.today() - timedelta(days=1)
-        goal_ids = goal_obj.search(cr, uid, [
-            '&',
-                ('state', 'not in', ('draft', 'canceled')),
-                '|',
-                    ('end_date', '>=', yesterday.isoformat()),
-                    ('end_date', '=', False)
-        ], context=context)
-        goal_obj.update(cr, uid, goal_ids, context=context)
-
         return self._update_all(cr, uid, ids, context=context)
 
     def _update_all(self, cr, uid, ids, context=None):
@@ -239,6 +227,21 @@ class gamification_goal_plan(osv.Model):
         update only plans in progress."""
         if not context: context = {}
         goal_obj = self.pool.get('gamification.goal')
+
+        # we use yesterday to update the goals that just ended
+        yesterday = date.today() - timedelta(days=1)
+        goal_ids = goal_obj.search(cr, uid, [
+            ('plan_id', 'in', ids),
+            '|',
+                ('state', 'in', ('inprogress', 'inprogress_update')),
+                '&',
+                    ('state', 'in', ('reached', 'failed')),
+                    '|',
+                        ('end_date', '>=', yesterday.isoformat()),
+                        ('end_date', '=', False)
+        ], context=context)
+        # update every running goal already generated linked to selected plans
+        goal_obj.update(cr, uid, goal_ids, context=context)
 
         for plan in self.browse(cr, uid, ids, context=context):
             if plan.autojoin_group_id:
