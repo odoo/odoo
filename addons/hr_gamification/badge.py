@@ -61,6 +61,24 @@ class gamification_badge(osv.Model):
                     badge_user.employee_id.id, context=context, **kwargs)
         return super(gamification_badge, self).message_post(cr, uid, thread_id, context=context, **kwargs)
 
+    def get_granted_employees(self, cr, uid, badge_ids, context=None):
+        if context is None:
+            context = {}
+
+        employee_ids = []
+        badge_user_ids = self.pool.get('gamification.badge.user').search(cr, uid, [('badge_id', 'in', badge_ids), ('employee_id', '!=', False)], context=context)
+        for badge_user in self.pool.get('gamification.badge.user').browse(cr, uid, badge_user_ids, context):
+            employee_ids.append(badge_user.employee_id.id)
+        # remove duplicates
+        employee_ids = list(set(employee_ids))
+        return {
+            'type': 'ir.actions.act_window',
+            'name': 'Granted Employees',
+            'view_mode': 'kanban,tree,form',
+            'view_type': 'form',
+            'res_model': 'hr.employee',
+            'domain': [('id', 'in', employee_ids)]
+        }
 
 class hr_grant_badge_wizard(osv.TransientModel):
     _name = 'gamification.badge.user.wizard'

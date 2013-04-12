@@ -53,7 +53,16 @@
             view_type="form" view_mode="form"
             view_id="gamification.view_badge_wizard_reward"/>
 
-
+        <record id="hr_badge_form_view" model="ir.ui.view">
+            <field name="name">Badge Form</field>
+            <field name="model">gamification.badge</field>
+            <field name="inherit_id" ref="gamification.badge_form_view"/>
+            <field name="arch" type="xml">
+                <xpath expr="//div[@class='oe_right oe_button_box']" position="inside">
+                    <button string="Granted Employees" type="object" name="get_granted_employees" attrs="{'invisible': [('stat_count','=',0)]}" />
+                </xpath>
+            </field>
+        </record>
 
         <!-- HR Employee -->
 

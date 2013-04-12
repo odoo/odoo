@@ -30,4 +30,5 @@ This allow the user to send badges to employees instead of simple users.
 Badge received are displayed on the user profile.""",
     'data': ['badge_view.xml'],
     'auto_install': True,
+    'js': ['static/src/js/badges.js'],
 }

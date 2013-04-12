@@ -67,10 +67,12 @@
             <field name="arch" type="xml">
                 <form string="Badge" version="7.0">
                     <header>
-                        <button string="Grant this Badge" type="action" name="%(action_grant_wizard)d" class="oe_highlight" attrs="{'invisible': [('remaining_sending','!=',0)]}" />
+                        <button string="Grant this Badge" type="action" name="%(action_grant_wizard)d" class="oe_highlight" attrs="{'invisible': [('remaining_sending','=',0)]}" />
                         <button string="Check Badge" type="object" name="check_automatic" groups="base.group_no_one" />
                     </header>
                     <sheet>
+                        <div class="oe_right oe_button_box">
+                        </div>
                         <field name="image" widget='image' class="oe_left oe_avatar"/>
                         <div class="oe_title">
                             <label for="name" class="oe_edit_only"/>
@@ -148,7 +150,7 @@
                                         <a type="open"><img t-att-src="kanban_image('gamification.badge', 'image', record.image.raw_value)" t-att-title="record.name.value" width="110" height="110" /></a>
                                     </div>
                                     <div>
-                                        <h4><a type="open"><field name="name"/></a></h4>
+                                        <h4><field name="name"/></h4>
                                         <t t-if="record.description.value">
                                             <em><field name="description"/></em>
                                         </t>
@@ -171,9 +173,11 @@
                                         </t>
                                     </div>
                                     <div class="oe_kanban_badge_avatars">
-                                        <t t-foreach="record.unique_owner_ids.raw_value.slice(0,11)" t-as="owner">
-                                            <img t-att-src="kanban_image('res.users', 'image_small', owner)" t-att-data-member_id="owner"/>
-                                        </t>
+                                        <a type="object" name="get_granted_employees">
+                                            <t t-foreach="record.unique_owner_ids.raw_value.slice(0,11)" t-as="owner">
+                                                <img t-att-src="kanban_image('res.users', 'image_small', owner)" t-att-data-member_id="owner"/>
+                                            </t>
+                                        </a>
                                     </div>
                                 </div>
                             </div>
