@@ -90,7 +90,7 @@ class TestPortalProject(common.TransactionCase):
 
         # Test 'Pigs' project
         self.project_pigs_id = self.project_project.create(cr, uid,
-            {'name': 'Pigs', 'alias_contact': 'everyone', 'privacy_visibility': 'public'},
+            {'name': 'Pigs', 'privacy_visibility': 'public'},
             {'mail_create_nolog': True})
         # Various test tasks
         self.task_1_id = self.project_task.create(cr, uid,
