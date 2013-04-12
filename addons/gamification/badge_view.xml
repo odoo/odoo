@@ -29,7 +29,7 @@
                     <group>
                         <field name="user_id" nolabel="1" />
                         <field name="badge_id" invisible="1"/>
-                        <field name="comment" nolabel="1" placeholder="Describe what they did and why it matters (will be public)" />
+                        <field name="comment" nolabel="1" placeholder="Describe what they did and why it matters (will be public)" class="oe_no_padding" />
                     </group>
                     <footer>
                         <button string="Grant Badge" type="object" name="action_grant_badge" class="oe_highlight" /> or
@@ -134,6 +134,7 @@
                     <field name="stat_count"/>
                     <field name="stat_this_month"/>
                     <field name="unique_owner_ids"/>
+                    <field name="stat_my_monthly_sending"/>
                     <field name="remaining_sending" />
                     <field name="rule_max_number" />
                     <templates>
@@ -161,10 +162,10 @@
                                             <button type="action" name="%(action_grant_wizard)d" class="oe_highlight">Grant</button>
                                             <span class="oe_grey">
                                                 <t t-if="record.remaining_sending.value != -1">
-                                                    <t t-esc="record.remaining_sending.value"/>/<t t-esc="record.rule_max_number.value"/>
+                                                    <t t-esc="record.stat_my_monthly_sending.value"/>/<t t-esc="record.rule_max_number.value"/>
                                                 </t>
                                                 <t t-if="record.remaining_sending.value == -1">
-                                                    ∞
+                                                    <t t-esc="record.stat_my_monthly_sending.value"/>/∞
                                                 </t>
                                             </span>
                                         </t>

@@ -52,7 +52,10 @@
 .openerp .oe_orange {
     color: orange;
 }
-
+/* compensate padding from .openerp .oe_form td.oe_form_group_cell + .oe_form_group_cell */
+.openerp .oe_form td .oe_no_padding {
+    margin-left: -6px;
+}
 
 /* Mail Sidebar */
 
