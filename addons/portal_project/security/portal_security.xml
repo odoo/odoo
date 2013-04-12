@@ -9,7 +9,7 @@
                                             ('visibility', 'in', ['public', 'portal', 'employees']),
                                             '&amp;',
                                                 ('visibility', '=', 'followers'),
-                                                ('message_follower_ids', 'in', [user.id]),
+                                                ('message_follower_ids', 'in', [user.partner_id.id]),
                                         ]</field>
             <field name="groups" eval="[(4, ref('base.group_user'))]"/>
         </record>
@@ -21,7 +21,7 @@
                                             ('visibility', 'in', ['public', 'portal']),
                                             '&amp;',
                                                 ('visibility', '=', 'followers'),
-                                                ('message_follower_ids', 'in', [user.id]),
+                                                ('message_follower_ids', 'in', [user.partner_id.id]),
                                             ]</field>
             <field name="groups" eval="[(4, ref('portal.group_portal'))]"/>
         </record>
@@ -36,12 +36,12 @@
         <record model="ir.rule" id="project.task_user_rule">
             <field name="name">Project/Task: employees: public, portal, employee or following or assigned</field>
             <field name="domain_force">['|',
+                                            ('user_id', '=', user.id),
                                             '|',
                                                 ('project_id.visibility', 'in', ['public', 'portal', 'employees']),
                                                 '&amp;',
                                                     ('project_id.visibility', '=', 'followers'),
-                                                    ('message_follower_ids', 'in', [user.id]),
-                                            ('user_id', '=', user.id),
+                                                    ('message_follower_ids', 'in', [user.partner_id.id]),
                                         ]</field>
         </record>
 
@@ -49,12 +49,12 @@
             <field name="name">Project/Task: portal users: public or portal and following</field>
             <field name="model_id" ref="project.model_project_task"/>
             <field name="domain_force">['|',
-                                            '|',
-                                                ('project_id.visibility', '=', 'public'),
-                                                '&amp;',
-                                                    ('project_id.visibility', 'in', ['portal', 'followers']),
+                                            ('project_id.visibility', '=', 'public'),
+                                            '&amp;',
+                                                ('project_id.visibility', 'in', ['portal', 'followers']),
+                                                '|',
                                                     ('message_follower_ids','in', [user.partner_id.id]),
-                                            ('user_id', '=', user.id),
+                                                    ('user_id', '=', user.id),
                                         ]</field>
             <field name="groups" eval="[(4, ref('portal.group_portal'))]"/>
         </record>
