@@ -44,6 +44,7 @@ class crm_meeting(base_state, osv.Model):
     _description = "Meeting"
     _order = "id desc"
     _inherit = ["calendar.event", "mail.thread", "ir.needaction_mixin"]
+
     def _get_attendee(self, cursor, user, ids, name, arg, context=None):
         res = {}
         return res
@@ -62,11 +63,10 @@ class crm_meeting(base_state, osv.Model):
                 'FROM crm_meeting_partner_rel AS rel ' \
                 'WHERE ' + clause )
             res = cursor.fetchall()
-        
         if not res:
             return [('id', '=', 0)]
         return [('id', 'in', [x[0] for x in res])]
-    
+
     _columns = {
         # base_state required fields
         'create_date': fields.datetime('Creation Date', readonly=True),
@@ -75,7 +75,7 @@ class crm_meeting(base_state, osv.Model):
         'date_closed': fields.datetime('Closed', readonly=True),
         'partner_ids': fields.many2many('res.partner', 'crm_meeting_partner_rel', 'meeting_id', 'partner_id',
             string='Attendees', states={'done': [('readonly', True)]}),
-         'partner_id': fields.function(_get_attendee, string='Attendees',
+        'partner_id': fields.function(_get_attendee, string='Attendees',
             fnct_search=_attendees_search, type='many2one', relation='res.partner'),
         'state': fields.selection(
                     [('draft', 'Unconfirmed'), ('open', 'Confirmed')],
