@@ -177,7 +177,7 @@ class account_cash_statement(osv.osv):
         'opening_details_ids' : fields.one2many('account.cashbox.line', 'bank_statement_id', string='Opening Cashbox Lines'),
         'closing_details_ids' : fields.one2many('account.cashbox.line', 'bank_statement_id', string='Closing Cashbox Lines'),
         'user_id': fields.many2one('res.users', 'Responsible', required=False),
-        'difference' : fields.function(_compute_difference, method=True, string="Difference", type="float", help="Difference between the theoritical closing balance and the real closing balance."),
+        'difference' : fields.function(_compute_difference, method=True, string="Difference", type="float", help="Difference between the theoretical closing balance and the real closing balance."),
         'last_closing_balance' : fields.function(_compute_last_closing_balance, method=True, string='Last Closing Balance', type='float'),
     }
     _defaults = {
