@@ -116,6 +116,12 @@ class mail_compose_message(osv.TransientModel):
             'mail_compose_message_ir_attachments_rel',
             'wizard_id', 'attachment_id', 'Attachments'),
         'filter_id': fields.many2one('ir.filters', 'Filters'),
+
+        # Replace `body` with a text field because html fields are sanitized
+        # just before saving data into the database. This cause the
+        # sanitization of the templated messages (for mass mailing messages)
+        # before the rendering, forbidding the use of templated html links.
+        # The html of the message will be sanitized by message_post()
         'body': fields.text('Contents'),
     }
 
