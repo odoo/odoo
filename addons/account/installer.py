@@ -138,7 +138,7 @@ class account_installer(osv.osv_memory):
 
     def execute(self, cr, uid, ids, context=None):
         self.execute_simple(cr, uid, ids, context)
-        super(account_installer, self).execute(cr, uid, ids, context=context)
+        return super(account_installer, self).execute(cr, uid, ids, context=context)
 
     def execute_simple(self, cr, uid, ids, context=None):
         if context is None:
@@ -171,7 +171,7 @@ class account_installer(osv.osv_memory):
         chart = self.read(cr, uid, ids, ['charts'],
                           context=context)[0]['charts']
         _logger.debug('Installing chart of accounts %s', chart)
-        return modules | set([chart])
+        return (modules | set([chart])) - set(['has_default_company'])
 
 account_installer()
 
