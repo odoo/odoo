@@ -217,25 +217,6 @@
             </field>
         </record>
 
-        <record id="res_partner_crm_claim_tree" model="ir.ui.view">
-            <field name="name">res.partner.crm.claim.tree</field>
-            <field name="model">crm.claim</field>
-            <field name="arch" type="xml">
-                <tree string="Partners Claim">
-                    <field name="name"/>
-                </tree>
-            </field>
-        </record>
-
-        <record id="action_res_partner_crm_claim" model="ir.actions.act_window">
-            <field name="name">Claims</field>
-            <field name="res_model">crm.claim</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">tree,form,calendar</field>
-            <field name="context">{'search_default_partner_id': [active_id]}</field>
-            <field name="view_id" ref="res_partner_crm_claim_tree"/>
-        </record>
-
          <!--  Partners inherited form -->
          <record id="view_claim_res_partner_info_form" model="ir.ui.view">
             <field name="name">res.partner.claim.info.form</field>
@@ -245,8 +226,9 @@
             <field name="arch" type="xml">
                 <xpath expr="//div[@name='buttons']" position="inside">
                     <button type="action"
-                        name="%(crm_claim.action_res_partner_crm_claim)d"
+                        name="%(crm_case_categ_claim0)d"
                         string="Claims"
+                        context="{'search_default_partner_id': active_id, 'default_partner_id': active_id}"
                         groups="base.group_sale_salesman" />
                 </xpath>
             </field>
