@@ -174,7 +174,6 @@ class event_event(osv.osv):
         return res
 
     def _get_visibility_selection(self, cr, uid, context=None):
-        """ Overriden in project_issue to offer more options """
         return [('public', 'All Users'),
                 ('employees', 'Employees Only')]
     # Lambda indirection method to avoid passing a copy of the overridable method when declaring the field
