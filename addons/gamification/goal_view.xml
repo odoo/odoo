@@ -101,13 +101,13 @@
                     <filter name="my" string="My Goals" domain="[('user_id', '=', uid)]"/>
                     <separator/>
                     <filter name="draft" string="Draft" domain="[('state', '=', 'draft')]"/>
-                    <filter name="inprogress" string="Opened"
+                    <filter name="inprogress" string="Current"
                         domain="[
                             '|',
-                            ('state', 'in', ('inprogress', 'inprogress_update')),
-                            ('end_date', '>=', context_today().strftime('%%Y-%%m-%%d'))
+                                ('state', 'in', ('inprogress', 'inprogress_update')),
+                                ('end_date', '>=', context_today().strftime('%%Y-%%m-%%d'))
                             ]"/>
-                    <filter name="closed" string="Closed" domain="[('state', 'in', ('reached', 'failed'))]"/>
+                    <filter name="closed" string="Passed" domain="[('state', 'in', ('reached', 'failed'))]"/>
                     <separator/>
 
                     <field name="user_id"/>
