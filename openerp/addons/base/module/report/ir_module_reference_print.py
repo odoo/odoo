@@ -72,14 +72,16 @@ class ir_module_reference_print(report_sxw.rml_parse):
         return modobj.browse(self.cr, self.uid, ids)
 
     def _fields_find(self, obj, module):
+        res = []
         data_obj = self.pool.get('ir.model.data')
         modobj = self.pool.get(obj)
-        tmp_res = modobj.fields_get(self.cr, self.uid).items()
-        module_fields_ids = data_obj.search(self.cr, self.uid, [('model', '=', 'ir.model.fields'), ('module', '=', module)])
-        module_fields_res_ids = [x['res_id'] for x in data_obj.read(self.cr, self.uid, module_fields_ids, ['res_id'])]
-        module_fields_names = [x['name'] for x in self.pool.get('ir.model.fields').read(self.cr, self.uid, module_fields_res_ids, ['name'])]
-        res = [tmp_res[i] for i in range(len(tmp_res)) if tmp_res[i][0] in module_fields_names]
-        res.sort()
+        fname_wildcard = 'field_' + modobj._name.replace('.', '_') + '_%'
+        module_fields_ids = data_obj.search(self.cr, self.uid, [('model', '=', 'ir.model.fields'), ('module', '=', module), ('name', 'like', fname_wildcard)])
+        if module_fields_ids:
+            module_fields_res_ids = [x['res_id'] for x in data_obj.read(self.cr, self.uid, module_fields_ids, ['res_id'])]
+            module_fields_names = [x['name'] for x in self.pool.get('ir.model.fields').read(self.cr, self.uid, module_fields_res_ids, ['name'])]
+            res = modobj.fields_get(self.cr, self.uid, allfields=module_fields_names).items()
+            res.sort()
         return res
 
 report_sxw.report_sxw('report.ir.module.reference', 'ir.module.module',
