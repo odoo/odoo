@@ -1584,7 +1584,6 @@ class account_invoice_line(osv.osv):
                 unique_tax_ids = product_change_result['value']['invoice_line_tax_id']
         return {'value':{'invoice_line_tax_id': unique_tax_ids}}
 
-account_invoice_line()
 
 class account_invoice_tax(osv.osv):
     _name = "account.invoice.tax"

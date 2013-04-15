@@ -454,7 +454,6 @@ class resource_calendar_leaves(osv.osv):
         'holiday_id': fields.many2one("hr.holidays", "Leave Request"),
     }
 
-resource_calendar_leaves()
 
 
 class hr_employee(osv.osv):
@@ -543,6 +542,5 @@ class hr_employee(osv.osv):
         'leave_date_to': fields.function(_get_leave_status, multi='leave_status', type='date', string='To Date'),
     }
 
-hr_employee()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

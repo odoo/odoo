@@ -38,7 +38,6 @@ class account_analytic_journal(osv.osv):
         'company_id': lambda self,cr,uid,c: self.pool.get('res.users').browse(cr, uid, uid, c).company_id.id,
     }
 
-account_analytic_journal()
 
 class account_journal(osv.osv):
     _inherit="account.journal"
@@ -47,6 +46,5 @@ class account_journal(osv.osv):
         'analytic_journal_id':fields.many2one('account.analytic.journal','Analytic Journal', help="Journal for analytic entries"),
     }
 
-account_journal()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

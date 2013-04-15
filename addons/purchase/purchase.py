@@ -1015,7 +1015,6 @@ class purchase_order_line(osv.osv):
         self.write(cr, uid, ids, {'state': 'confirmed'}, context=context)
         return True
 
-purchase_order_line()
 
 class procurement_order(osv.osv):
     _inherit = 'procurement.order'

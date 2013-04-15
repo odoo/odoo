@@ -84,7 +84,6 @@ class product_uom_categ(osv.osv):
     _columns = {
         'name': fields.char('Name', size=64, required=True, translate=True),
     }
-product_uom_categ()
 
 class product_uom(osv.osv):
     _name = 'product.uom'
@@ -208,7 +207,6 @@ class product_uom(osv.osv):
                     raise osv.except_osv(_('Warning!'),_("Cannot change the category of existing Unit of Measure '%s'.") % (uom.name,))
         return super(product_uom, self).write(cr, uid, ids, vals, context=context)
 
-product_uom()
 
 
 class product_ul(osv.osv):
@@ -218,7 +216,6 @@ class product_ul(osv.osv):
         'name' : fields.char('Name', size=64,select=True, required=True, translate=True),
         'type' : fields.selection([('unit','Unit'),('pack','Pack'),('box', 'Box'), ('pallet', 'Pallet')], 'Type', required=True),
     }
-product_ul()
 
 
 #----------------------------------------------------------
@@ -283,7 +280,6 @@ class product_category(osv.osv):
     def child_get(self, cr, uid, ids):
         return [ids]
 
-product_category()
 
 
 #----------------------------------------------------------
@@ -401,7 +397,6 @@ class product_template(osv.osv):
             pass
         return super(product_template, self).name_get(cr, user, ids, context)
 
-product_template()
 
 class product_product(osv.osv):
     def view_header_get(self, cr, uid, view_id, view_type, context=None):
@@ -753,7 +748,6 @@ class product_product(osv.osv):
             args.append((('categ_id', 'child_of', context['search_default_categ_id'])))
         return super(product_product, self).search(cr, uid, args, offset=offset, limit=limit, order=order, context=context, count=False)
 
-product_product()
 
 class product_packaging(osv.osv):
     _name = "product.packaging"
@@ -819,7 +813,6 @@ class product_packaging(osv.osv):
         return (10 - (sum % 10)) % 10
     checksum = staticmethod(checksum)
 
-product_packaging()
 
 
 class product_supplierinfo(osv.osv):
@@ -893,7 +886,6 @@ class product_supplierinfo(osv.osv):
             res[supplier.id] = price
         return res
     _order = 'sequence'
-product_supplierinfo()
 
 
 class pricelist_partnerinfo(osv.osv):
@@ -905,7 +897,6 @@ class pricelist_partnerinfo(osv.osv):
         'price': fields.float('Unit Price', required=True, digits_compute=dp.get_precision('Product Price'), help="This price will be considered as a price for the supplier Unit of Measure if any or the default Unit of Measure of the product otherwise"),
     }
     _order = 'min_quantity asc'
-pricelist_partnerinfo()
 
 class res_currency(osv.osv):
     _inherit = 'res.currency'

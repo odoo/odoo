@@ -903,7 +903,6 @@ class share_wizard(osv.TransientModel):
         options = dict(title=opt_title, search=opt_search)
         return {'value': {'embed_code': self._generate_embedded_code(wizard, options)}}
 
-share_wizard()
 
 class share_result_line(osv.osv_memory):
     _name = 'share.wizard.result.line'
