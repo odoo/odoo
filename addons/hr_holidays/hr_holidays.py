@@ -184,6 +184,16 @@ class hr_holidays(osv.osv):
         ('date_check2', "CHECK ( (type='add') OR (date_from <= date_to))", "The start date must be anterior to the end date."),
         ('date_check', "CHECK ( number_of_days_temp >= 0 )", "The number of days must be greater than 0."),
     ]
+    
+    def copy(self, cr, uid, id, default=None, context=None):
+        if default is None:
+            default = {}
+        if context is None:
+            context = {}
+        default = default.copy()
+        default['date_from'] = False
+        default['date_to'] = False
+        return super(hr_holidays, self).copy(cr, uid, id, default, context=context)
 
     def _create_resource_leave(self, cr, uid, leaves, context=None):
         '''This method will create entry in resource calendar leave object at the time of holidays validated '''
@@ -476,9 +486,9 @@ class hr_employee(osv.osv):
             leave_id = holiday_obj.create(cr, uid, {'name': _('Leave Request for %s') % employee.name, 'employee_id': employee.id, 'holiday_status_id': status_id, 'type': 'remove', 'holiday_type': 'employee', 'number_of_days_temp': abs(diff)}, context=context)
         else:
             return False
-        holidays_obj.signal_confirm(cr, uid, [leave_id])
-        holidays_obj.signal_validate(cr, uid, [leave_id])
-        holidays_obj.signal_second_validate(cr, uid, [leave_id])
+        holiday_obj.signal_confirm(cr, uid, [leave_id])
+        holiday_obj.signal_validate(cr, uid, [leave_id])
+        holiday_obj.signal_second_validate(cr, uid, [leave_id])
         return True
 
     def _get_remaining_days(self, cr, uid, ids, name, args, context=None):

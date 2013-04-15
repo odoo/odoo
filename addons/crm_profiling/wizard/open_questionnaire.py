@@ -61,7 +61,7 @@ class open_questionnaire(osv.osv_memory):
             for d in data.question_ans_ids:
                  if d.answer_id:
                      answers.append(d.answer_id.id)
-            self.pool.get(model)._questionnaire_compute(cr, uid, answers, context=context)
+            self.pool[model]._questionnaire_compute(cr, uid, answers, context=context)
         return {'type': 'ir.actions.act_window_close'}
 
 
