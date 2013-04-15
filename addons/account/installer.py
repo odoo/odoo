@@ -152,6 +152,5 @@ class account_installer(osv.osv_memory):
         _logger.debug('Installing chart of accounts %s', chart)
         return modules | set([chart])
 
-account_installer()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

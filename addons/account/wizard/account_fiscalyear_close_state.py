@@ -56,6 +56,5 @@ class account_fiscalyear_close_state(osv.osv_memory):
 
             return {'type': 'ir.actions.act_window_close'}
 
-account_fiscalyear_close_state()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

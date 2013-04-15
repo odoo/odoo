@@ -70,7 +70,6 @@ class account_asset_category(osv.osv):
            res['value'] = {'account_depreciation_id': account_asset_id}
         return res
 
-account_asset_category()
 
 class account_asset_asset(osv.osv):
     _name = 'account.asset.asset'
@@ -361,7 +360,6 @@ class account_asset_asset(osv.osv):
             'context': context,
         }
 
-account_asset_asset()
 
 class account_asset_depreciation_line(osv.osv):
     _name = 'account.asset.depreciation.line'
@@ -456,7 +454,6 @@ class account_asset_depreciation_line(osv.osv):
                 asset.write({'state': 'close'})
         return created_move_ids
 
-account_asset_depreciation_line()
 
 class account_move_line(osv.osv):
     _inherit = 'account.move.line'
@@ -465,7 +462,6 @@ class account_move_line(osv.osv):
         'entry_ids': fields.one2many('account.move.line', 'asset_id', 'Entries', readonly=True, states={'draft':[('readonly',False)]}),
 
     }
-account_move_line()
 
 class account_asset_history(osv.osv):
     _name = 'account.asset.history'
@@ -490,6 +486,5 @@ class account_asset_history(osv.osv):
         'user_id': lambda self, cr, uid, ctx: uid
     }
 
-account_asset_history()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

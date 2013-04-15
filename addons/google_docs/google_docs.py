@@ -191,4 +191,3 @@ This is the id of the template document, on google side. You can find it thanks 
     _defaults = {
         'name_template': 'gdoc_%(name)s',
     }
-config()

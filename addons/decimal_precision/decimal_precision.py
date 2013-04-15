@@ -63,7 +63,6 @@ class decimal_precision(osv.osv):
                     col.digits_change(cr)
         return res
 
-decimal_precision()
 
 def get_precision(application):
     def change_digit(cr):

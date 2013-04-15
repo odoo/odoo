@@ -142,7 +142,6 @@ class report_stock_move(osv.osv):
                )
         """)
 
-report_stock_move()
 
 
 class report_stock_inventory(osv.osv):
@@ -224,7 +223,6 @@ CREATE OR REPLACE view report_stock_inventory AS (
     )
 );
         """)
-report_stock_inventory()
 
 
 
