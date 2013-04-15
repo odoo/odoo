@@ -5063,20 +5063,18 @@ class BaseModel(object):
         :param parent: optional parent field name (default: ``self._parent_name = parent_id``)
         :return: **True** if the operation can proceed safely, or **False** if an infinite loop is detected.
         """
-
         if not parent:
             parent = self._parent_name
-        ids_parent = ids[:]
-        query = 'SELECT distinct "%s" FROM "%s" WHERE id IN %%s' % (parent, self._table)
-        while ids_parent:
-            ids_parent2 = []
-            for i in range(0, len(ids), cr.IN_MAX):
-                sub_ids_parent = ids_parent[i:i+cr.IN_MAX]
-                cr.execute(query, (tuple(sub_ids_parent),))
-                ids_parent2.extend(filter(None, map(lambda x: x[0], cr.fetchall())))
-            ids_parent = ids_parent2
-            for i in ids_parent:
-                if i in ids:
+
+        # must ignore 'active' flag, ir.rules, etc. => direct SQL query
+        query = 'SELECT "%s" FROM "%s" WHERE id = %%s' % (parent, self._table)
+        for id in ids:
+            current_id = id
+            while current_id is not None:
+                cr.execute(query, (current_id,))
+                result = cr.fetchone()
+                current_id = result[0] if result else None
+                if current_id == id:
                     return False
         return True
 
