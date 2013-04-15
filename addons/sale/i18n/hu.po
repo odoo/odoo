@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2013-03-07 08:37+0000\n"
-"PO-Revision-Date: 2013-03-10 20:14+0000\n"
-"Last-Translator: krnkris <Unknown>\n"
+"PO-Revision-Date: 2013-04-11 23:17+0000\n"
+"Last-Translator: Krisztian Eyssen <krisz@eyssen.hu>\n"
 "Language-Team: Hungarian <hu@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-03-28 06:00+0000\n"
-"X-Generator: Launchpad (build 16546)\n"
+"X-Launchpad-Export-Date: 2013-04-12 06:05+0000\n"
+"X-Generator: Launchpad (build 16564)\n"
 
 #. module: sale
 #: model:ir.model,name:sale.model_mail_compose_message
@@ -25,7 +25,7 @@ msgstr "Email összeállító varázsló"
 #. module: sale
 #: field:sale.order,currency_id:0
 msgid "Currency"
-msgstr "Deviza"
+msgstr "Pénznem"
 
 #. module: sale
 #: view:sale.report:0
@@ -42,7 +42,7 @@ msgstr "Nem lehet visszavonni ezt a megrendelést!"
 #. module: sale
 #: field:sale.config.settings,module_warning:0
 msgid "Allow configuring alerts by customer or products"
-msgstr "Engedélyezi a riasztás beállítását vevőkre vagy termékekre"
+msgstr "Engedélyezi riasztás beállítását vevők vagy termékek szerint"
 
 #. module: sale
 #: help:sale.config.settings,group_invoice_so_lines:0
@@ -76,17 +76,6 @@ msgid "Contract / Analytic"
 msgstr "Szerződés / Gyüjő,Elemző"
 
 #. module: sale
-#: selection:sale.order,state:0
-#: selection:sale.report,state:0
-msgid "Waiting Schedule"
-msgstr "Várakozás ütemezés"
-
-#. module: sale
-#: field:sale.order,note:0
-msgid "Terms and conditions"
-msgstr "Kikötések és feltételek"
-
-#. module: sale
 #: model:ir.actions.act_window,name:sale.action_orders
 #: model:ir.ui.menu,name:sale.menu_sale_order
 #: view:sale.order:0
@@ -96,17 +85,12 @@ msgstr "Vevői megrendelések"
 #. module: sale
 #: help:sale.order,amount_tax:0
 msgid "The tax amount."
-msgstr "Az adó összege"
+msgstr "Az adó összege."
 
 #. module: sale
 #: field:sale.order,invoiced_rate:0
 msgid "Invoiced Ratio"
 msgstr "Számlázáskori árfolyam"
-
-#. module: sale
-#: selection:sale.order,order_policy:0
-msgid "On Demand"
-msgstr "Készleten"
 
 #. module: sale
 #: model:res.groups,name:sale.group_analytic_accounting
@@ -1192,6 +1176,22 @@ msgstr "Tervezet"
 #: model:ir.actions.act_window,name:sale.action_email_templates
 msgid "Email Templates"
 msgstr "E-mail sablonok"
+
+#. module: sale
+#: selection:sale.order,state:0
+#: selection:sale.report,state:0
+msgid "Waiting Schedule"
+msgstr "Ütemezésre vár"
+
+#. module: sale
+#: field:sale.order,note:0
+msgid "Terms and conditions"
+msgstr "Kikötések és feltételek"
+
+#. module: sale
+#: selection:sale.order,order_policy:0
+msgid "On Demand"
+msgstr "Készleten"
 
 #. module: sale
 #: selection:sale.report,month:0
