@@ -54,7 +54,10 @@ def start_end_date_for_period(period):
         start_date = False  # for manual goal, start each time
         end_date = False
 
-    return (start_date, end_date)
+    if start_date and end_date:
+        return (start_date.isoformat(), end_date.isoformat())
+    else:
+        return (start_date, end_date)
 
 
 class gamification_goal_plan(osv.Model):
@@ -428,9 +431,9 @@ class gamification_goal_plan(osv.Model):
                     }
 
                     if start_date:
-                        values['start_date'] = start_date.isoformat()
+                        values['start_date'] = start_date
                     if end_date:
-                        values['end_date'] = end_date.isoformat()
+                        values['end_date'] = end_date
 
                     if planline.plan_id.remind_update_delay:
                         values['remind_update_delay'] = planline.plan_id.remind_update_delay
@@ -479,9 +482,9 @@ class gamification_goal_plan(osv.Model):
             else:
                 # if no subset goals, use the dates for restriction
                 if start_date:
-                    domain.append(('start_date', '=', start_date.isoformat()))
+                    domain.append(('start_date', '=', start_date))
                 if end_date:
-                    domain.append(('end_date', '=', end_date.isoformat()))
+                    domain.append(('end_date', '=', end_date))
                 common_goal_ids = goal_obj.search(cr, uid, domain, context=context)
 
             board_goals = [goal for goal in goal_obj.browse(cr, uid, common_goal_ids, context=context)]
@@ -513,9 +516,9 @@ class gamification_goal_plan(osv.Model):
         else:
             # if no subset goals, use the dates for restriction
             if start_date:
-                domain.append(('start_date', '=', start_date.isoformat()))
+                domain.append(('start_date', '=', start_date))
             if end_date:
-                domain.append(('end_date', '=', end_date.isoformat()))
+                domain.append(('end_date', '=', end_date))
             related_goal_ids = goal_obj.search(cr, uid, domain, context=context)
 
         if len(related_goal_ids) == 0:
