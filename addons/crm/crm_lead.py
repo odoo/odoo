@@ -1045,6 +1045,14 @@ class crm_lead(base_stage, format_address, osv.osv):
         message = _("%s a call for %s.%s") % (prefix, phonecall.date, suffix)
         return self.message_post(cr, uid, ids, body=message, context=context)
 
+    def log_meeting(self, cr, uid, ids, meeting_subject, meeting_date, duration, context=None):
+        if not duration:
+            duration = 'unknow'
+        else:
+            duration = str(duration)+'h'
+        message = _("Meeting: '%s' has been scheduled at '%s' <br> Duration: %s" % (meeting_subject, meeting_date, duration))
+        return self.message_post(cr, uid, ids, body=message, context=context)
+
     def onchange_state(self, cr, uid, ids, state_id, context=None):
         if state_id:
             country_id=self.pool.get('res.country.state').browse(cr, uid, state_id, context).country_id.id
