@@ -3,23 +3,24 @@
     <data>
 
         <record id="goal_plan_list_action" model="ir.actions.act_window">
-            <field name="name">Goal Plans</field>
+            <field name="name">Challenges</field>
             <field name="res_model">gamification.goal.plan</field>
             <field name="view_mode">kanban,tree,form</field>
+            <field name="context">{'search_default_inprogress':True, 'default_inprogress':True}</field>
             <field name="help" type="html">
                 <p class="oe_view_nocontent_create">
-                    Click to create a goal plan. 
+                    Click to create a challenge. 
                 </p>
                 <p>
                     Assign a list of goals to chosen users to evaluate them.
-                    The plan can use a period (weekly, monthly...) for automatic creation of goals.
+                    The challenge can use a period (weekly, monthly...) for automatic creation of goals.
                     The goals are created for the specified users or member of the group.
                 </p>
             </field>
         </record>
 
         <record id="goal_plan_list_view" model="ir.ui.view">
-            <field name="name">Goal Plans List</field>
+            <field name="name">Challenges List</field>
             <field name="model">gamification.goal.plan</field>
             <field name="arch" type="xml">
                 <tree string="Goal types" colors="blue:state == 'draft';grey:state == 'done'">
@@ -38,14 +39,14 @@
             <field name="context">{'search_default_group_by_type': True, 'search_default_inprogress': True, 'search_default_plan_id': active_id, 'default_plan_id': active_id}</field>
             <field name="help" type="html">
               <p>
-                There is no goals associated to this plan matching your search.
-                Make sure that your plan is active and associated to at least one user.
+                There is no goals associated to this challenge matching your search.
+                Make sure that your challenge is active and assigned to at least one user.
               </p>
             </field>
         </record>
 
         <record id="goal_plan_form_view" model="ir.ui.view">
-            <field name="name">Goal Plan Form</field>
+            <field name="name">Challenge Form</field>
             <field name="model">gamification.goal.plan</field>
             <field name="arch" type="xml">
                 <form string="Goal types" version="7.0">
@@ -83,38 +84,51 @@
                             <group>
                                 <field name="manager_id"/>
                                 <field name="start_date" attrs="{'readonly':[('state','!=','draft')]}"/>
+                                <field name="end_date" attrs="{'readonly':[('state','!=','draft')]}"/>
                             </group>
                         </group>
                         <notebook>
-                        <page string="Goals">
-                            <field name="planline_ids" nolabel="1" colspan="4">
-                                <tree string="Planline List" version="7.0" editable="bottom" >
-                                    <field name="type_id"/>
-                                    <field name="type_condition"/>
-                                    <field name="target_goal"/>
-                                    <field name="type_full_suffix"/>
-                                </tree>
-                            </field>
-                        </page>
-                        <page string="Advanced Options">
-                            <group string="Subscribe Users Automatically">
-                                <field name="autojoin_group_id" />
-                            </group>
-                            <group string="Notification Messages">
-                                <field name="report_message_frequency" />
-                                <field name="report_header" placeholder="e.g. The following message contains the current progress of the sale team..." attrs="{'invisible': [('report_message_frequency','=','never')]}" />
-                                <field name="report_message_group_id" attrs="{'invisible': [('report_message_frequency','=','never')]}" />
-                            </group>
-                            <group string="Reminders for Manual Goals">
-                                <label for="remind_update_delay" />
-                                <div>
-                                    <field name="remind_update_delay" class="oe_inline"/> days
-                                </div>
-                            </group>
-                            <group string="Category" groups="base.group_no_one">
-                                <field name="category" widget="radio" />
-                            </group>
-                        </page>
+                            <page string="Goals">
+                                <field name="planline_ids" nolabel="1" colspan="4">
+                                    <tree string="Planline List" version="7.0" editable="bottom" >
+                                        <field name="type_id"/>
+                                        <field name="type_condition"/>
+                                        <field name="target_goal"/>
+                                        <field name="type_full_suffix"/>
+                                    </tree>
+                                </field>
+                            </page>
+                            <page string="Reward">
+                                <group>
+                                    <field name="reward_id"/>
+                                    <field name="reward_bests" attrs="{'invisible': [('reward_id','=', False)]}" />
+                                    <field name="reward_failure" attrs="{'invisible': [('reward_id','=', False)]}" />
+                                </group>
+                            </page>
+                            <page string="Advanced Options">
+                                <group string="Subscribe Users Automatically">
+                                    <field name="autojoin_group_id" />
+                                    <field name="subscription_action" />
+                                    <field name="proposed_user_ids" attrs="{'invisible':[('subscription_action','=','automatic')]}" widget="many2many_tags" />
+                                    <field name="proposed_mail_group_ids" attrs="{'invisible':[('subscription_action','=','automatic')]}" widget="many2many_tags" />
+                                    <field name="proposed_later_user_ids" attrs="{'invisible':[('subscription_action','=','automatic')]}" widget="many2many_tags" />
+                                    <field name="proposed_refused_user_ids" attrs="{'invisible':[('subscription_action','=','automatic')]}" widget="many2many_tags" />
+                                </group>
+                                <group string="Notification Messages">
+                                    <field name="report_message_frequency" />
+                                    <field name="report_header" placeholder="e.g. The following message contains the current progress of the sale team..." attrs="{'invisible': [('report_message_frequency','=','never')]}" />
+                                    <field name="report_message_group_id" attrs="{'invisible': [('report_message_frequency','=','never')]}" />
+                                </group>
+                                <group string="Reminders for Manual Goals">
+                                    <label for="remind_update_delay" />
+                                    <div>
+                                        <field name="remind_update_delay" class="oe_inline"/> days
+                                    </div>
+                                </group>
+                                <group string="Category" groups="base.group_no_one">
+                                    <field name="category" widget="radio" />
+                                </group>
+                            </page>
                         </notebook>
 
                         
@@ -128,7 +142,7 @@
         </record>
 
         <record model="ir.ui.view" id="view_goal_plan_kanban">
-            <field name="name">Goal Plan Kanban</field>
+            <field name="name">Challenge Kanban</field>
             <field name="model">gamification.goal.plan</field>
             <field name="arch" type="xml">
                 <kanban version="7.0" class="oe_background_grey">
@@ -141,7 +155,7 @@
                                 <div class="oe_dropdown_toggle oe_dropdown_kanban">
                                     <span class="oe_e">í</span>
                                     <ul class="oe_dropdown_menu">
-                                        <li><a type="edit">Configure Goal Plan</a></li>
+                                        <li><a type="edit">Configure Challenge</a></li>
                                     </ul>
                                 </div>
                                 <div class="oe_kanban_content">
@@ -180,13 +194,13 @@
 
 
         <record id="goal_plan_search_view" model="ir.ui.view">
-            <field name="name">Goal Plan Search</field>
+            <field name="name">Challenge Search</field>
             <field name="model">gamification.goal.plan</field>
             <field name="arch" type="xml">
-                <search string="Search Goal Plans">
-                    <filter name="draft_inprogress" string="Non-closed Plans"
-                        domain="[('state', 'in', ('inprogress', 'draft'))]"/>
-                    <filter name="hr_plans" string="HR Plans"
+                <search string="Search Challenges">
+                    <filter name="inprogress" string="Running Challenges"
+                        domain="[('state', '=', 'inprogress')]"/>
+                    <filter name="hr_plans" string="HR Challenges"
                         domain="[('category', '=', 'hr')]"/>
                     <field name="name"/>
                     <group expand="0" string="Group By...">

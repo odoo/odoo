@@ -20,6 +20,7 @@
 ##############################################################################
 
 from openerp.osv import fields, osv
+from openerp.tools.translate import _
 
 from templates import TemplateHelper
 
@@ -104,6 +105,7 @@ class gamification_goal_plan(osv.Model):
 
     _columns = {
         'name': fields.char('Plan Name', required=True, translate=True),
+        'description': fields.text('Description', translate=True),
         'state': fields.selection([
                 ('draft', 'Draft'),
                 ('inprogress', 'In Progress'),
@@ -113,21 +115,46 @@ class gamification_goal_plan(osv.Model):
             required=True),
         'manager_id': fields.many2one('res.users',
             string='Responsible', help="The user responsible for the plan."),
-        'start_date': fields.date('Planned Start Date', help="The day a new plan will be automatically started. The start and end dates for goals are still defined by the periodicity (eg: weekly goals run from Monday to Sunday)."),
+        'start_date': fields.date('Planned Start Date',
+            help="The day a new plan will be automatically started. If no periodicity is set, will use this date as the goal start date."),
+        'end_date': fields.date('Planned End Date',
+            help="The day a new plan will be automatically closed. If no periodicity is set, will use this date as the goal end date."),
 
-        'user_ids': fields.many2many('res.users',
+        'user_ids': fields.many2many('res.users', 'user_ids',
             string='Users',
             help="List of users to which the goal will be set"),
         'autojoin_group_id': fields.many2one('res.groups',
             string='Auto-subscription Group',
             help='Group of users whose members will automatically be added to the users'),
 
-        'planline_ids': fields.one2many('gamification.goal.planline',
-            'plan_id',
+        'subscription_action': fields.selection([
+                ('automatic', 'The user is subscribed automatically'),
+                ('approve', 'The user has to approve the challenge'),
+            ],
+            string="Subscription approval",
+            help="What happens when the user is added to a challenge (manually or automatically) ?",
+            required=True),
+        'proposed_user_ids': fields.many2many('res.users', 'proposed_user_ids',
+            string="Propose to users"),
+        'proposed_mail_group_ids': fields.many2many('mail.group', 'proposed_mail_group_ids',
+            string="Propose to mail groups"),
+        'proposed_later_user_ids': fields.many2many('res.users', 'proposed_later_user_ids',
+            string='Users to Remind',
+            help="List of users that have asked to decide later if they approve the challenge"),
+        'proposed_refused_user_ids': fields.many2many('res.users', 'refused_approval_user_ids',
+            string='Discard Request Users',
+            help="List of users that have discared the approval request"),
+        'propose_after_login': fields.integer("Propose challenge after login", help="Number of minutes"),
+
+        'planline_ids': fields.one2many('gamification.goal.planline', 'plan_id',
             string='Planline',
-            help="list of goals that will be set",
+            help="List of goals that will be set",
             required=True),
         'planline_count': fields.function(_planline_count, type='integer', string="Planlines"),
+
+        'reward_id': fields.many2one('gamification.badge', string="Reward upon completion"),
+        'reward_bests': fields.integer('Number of Best Perforers Rewared'),
+        'reward_failure': fields.boolean('Grant if not succeed'),
 
         'period': fields.selection([
                 ('once', 'Non recurring'),
@@ -145,11 +172,11 @@ class gamification_goal_plan(osv.Model):
             ],
             string="Display Mode", required=True),
         'report_message_frequency': fields.selection([
-                ('never','Never'),
-                ('onchange','On change'),
-                ('daily','Daily'),
-                ('weekly','Weekly'),
-                ('monthly','Monthly'),
+                ('never', 'Never'),
+                ('onchange', 'On change'),
+                ('daily', 'Daily'),
+                ('weekly', 'Weekly'),
+                ('monthly', 'Monthly'),
                 ('yearly', 'Yearly')
             ],
             string="Report Frequency", required=True),
@@ -165,10 +192,10 @@ class gamification_goal_plan(osv.Model):
             string='Next Report Date'),
 
         'category': fields.selection([
-            ('hr', 'Human Ressources / Appraisals'),
-            ('other', 'Other'),
+                ('hr', 'Human Ressources / Engagement'),
+                ('other', 'Settings / Gamification Tools'),
             ],
-            string="Appears in", help="Only HR plans can be accessed by managers", required=True)
+            string="Appears in", help="Define the visibility of the challenge through menus", required=True),
         }
 
     _defaults = {
@@ -180,7 +207,11 @@ class gamification_goal_plan(osv.Model):
         'start_date': fields.date.today,
         'manager_id': lambda s, cr, uid, c: uid,
         'category': 'hr',
+        'subscription_action': 'automatic',
+        'reward_failure': False,
     }
+
+    _sort = 'end_date start_date name'
 
     def write(self, cr, uid, ids, vals, context=None):
         """Overwrite the write method to add the user of groups"""
@@ -196,8 +227,23 @@ class gamification_goal_plan(osv.Model):
             if new_group:
                 self.plan_subscribe_users(cr, uid, ids, [user.id for user in new_group.users], context=context)
 
+        if 'proposed_user_ids' in vals:
+            for plan in self.browse(cr, uid, ids, context=context):
+                if plan.subscription_action == 'approve':
+                    puser_ids = [puser.id for puser in plan.proposed_user_ids]
+                    ruser_ids = [ruser.id for ruser in plan.proposed_refused_user_ids if ruser.id in puser_ids]
+                    if len(ruser_ids) > 0:
+                        raise osv.except_osv(_('Error!'), _('Can not propose a challenge to an user that has refused it'))
+                    auser_ids = [auser.id for auser in plan.proposed_later_user_ids if auser.id in puser_ids]
+                    if len(auser_ids) > 0:
+                        raise osv.except_osv(_('Error!'), _('Can not propose a challenge to an user that has cast aside it'))
+                    user_ids = [user.id for user in plan.user_ids if user.id in puser_ids]
+                    if len(user_ids) > 0:
+                        raise osv.except_osv(_('Error!'), _('Can not propose a challenge to an user already assigned to it'))
+
         return write_res
 
+    ##### Update #####
 
     def _cron_update(self, cr, uid, context=None, ids=False):
         """Daily cron check.
@@ -214,6 +260,12 @@ class gamification_goal_plan(osv.Model):
             ('state', '=', 'draft'),
             ('start_date', '<=', fields.date.today())])
         self.action_start(cr, uid, planned_plan_ids, context=context)
+
+        # close planned plans
+        planned_plan_ids = self.search(cr, uid, [
+            ('state', '=', 'inprogress'),
+            ('end_date', '>=', fields.date.today())])
+        self.action_close(cr, uid, planned_plan_ids, context=context)
 
         if not ids:
             ids = self.search(cr, uid, [('state', '=', 'inprogress')])
@@ -273,10 +325,12 @@ class gamification_goal_plan(osv.Model):
         self.pool.get('gamification.goal').update(cr, uid, goal_ids, context=context)
         return True
 
+    ##### User actions #####
+
     def action_start(self, cr, uid, ids, context=None):
         """Start a draft goal plan
 
-        Change the state of the plan to in progress and genereate related goals
+        Change the state of the plan to in progress and generate related goals
         """
         # subscribe users if autojoin group
         for plan in self.browse(cr, uid, ids, context=context):
@@ -327,6 +381,8 @@ class gamification_goal_plan(osv.Model):
             self.report_progress(cr, uid, plan, context=context)
         return True
 
+    ##### Automatic actions #####
+
     def generate_goals_from_plan(self, cr, uid, ids, context=None):
         """Generate the list of goals linked to a plan.
 
@@ -336,6 +392,12 @@ class gamification_goal_plan(osv.Model):
 
         for plan in self.browse(cr, uid, ids, context):
             (start_date, end_date) = start_end_date_for_period(plan.period)
+
+            # if no periodicity, use plan dates
+            if not start_date and plan.start_date:
+                start_date = plan.start_date
+            if not end_date and plan.end_date:
+                end_date = plan.end_date
 
             for planline in plan.planline_ids:
                 for user in plan.user_ids:
@@ -391,8 +453,10 @@ class gamification_goal_plan(osv.Model):
             # remove duplicates
             unified_subscription = list(set(subscription))
 
-            self.write(cr, uid, ids, {'user_ids': [(4, user) for user in unified_subscription]}, context=context)
+            self.write(cr, uid, [plan.id], {'user_ids': [(4, user) for user in unified_subscription]}, context=context)
         return True
+
+    ##### JS utilities #####
 
     def get_board_goal_info(self, cr, uid, plan, subset_goal_ids=False, context=None):
         """Get the list of latest goals for a plan, sorted by user ranking for each planline"""
@@ -478,6 +542,8 @@ class gamification_goal_plan(osv.Model):
         else:
             return values
 
+    ##### Reporting #####
+
     def report_progress(self, cr, uid, plan, context=None, users=False, subset_goal_ids=False):
         """Post report about the progress of the goals
 
@@ -536,6 +602,30 @@ class gamification_goal_plan(osv.Model):
                                                              context=context,
                                                              subtype='mail.mt_comment')
         return True
+
+    ##### Suggestions #####
+
+    def accept_challenge(self, cr, uid, plan_id, user_id=None, context=None):
+        """The user accept the suggested challenge"""
+        context = context or {}
+        user_id = user_id or uid
+        self.write(cr, uid, [plan_id], {'proposed_user_ids': (3, user_id), 'user_id': (4, user_id)}, context=context)
+        return self.generate_goals_from_plan(cr, uid, [plan_id], context=context)
+
+    def discard_challenge(self, cr, uid, plan_id, user_id=None, context=None):
+        """The user discard the suggested challenge"""
+        context = context or {}
+        user_id = user_id or uid
+        return self.write(cr, uid, [plan_id], {'proposed_user_ids': (3, user_id), 'proposed_refused_user_ids': (4, user_id)}, context=context)
+
+    def postpone_challenge(self, cr, uid, plan_id, user_id=None, context=None):
+        """The user ask to be reminded later for the suggested challenge"""
+        context = context or {}
+        user_id = user_id or uid
+        return self.write(cr, uid, [plan_id], {'proposed_user_ids': (3, user_id), 'proposed_later_user_ids': (4, user_id)}, context=context)
+
+    def get_suggestions_info(self, cr, uid, context=None):
+        pass
 
 
 class gamification_goal_planline(osv.Model):

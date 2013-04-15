@@ -41,12 +41,11 @@
                     <tr>
                         <th colspan="4" t-attf-title="#{planline.type_description ? planline.type_description : ''}">
                             <t t-esc="planline.type_name"/>
-                            (Goal: <span t-attf-class="#{planline.type_monetary ? 'oe_goal_field_monetary' : ''}"><t t-esc="planline.target_goal" /></span><t t-if="planline.type_unit"> <t t-esc="planline.type_unit"/></t>)
+                            (Goal: max <span t-attf-class="#{planline.type_monetary ? 'oe_goal_field_monetary' : ''}"><t t-esc="planline.target_goal" /></span><t t-if="planline.type_unit"> <t t-esc="planline.type_unit"/></t>)
                             <t t-if="planline.type_computation_mode == 'manually' or planline.type_action">
                                 <a class="oe_goal_action" t-att-id="planline.own_goal_id">modify</a>
                             </t>
                         </th>
-                        <th></th><th></th>
                     </tr>
                     <tr>
                         <th>#</th>
