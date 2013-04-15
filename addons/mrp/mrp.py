@@ -295,8 +295,10 @@ class mrp_bom(osv.osv):
         """
         if properties is None:
             properties = []
-        cr.execute('select id from mrp_bom where product_id=%s and bom_id is null order by sequence', (product_id,))
-        ids = map(lambda x: x[0], cr.fetchall())
+        domain = [('product_id', '=', product_id), ('bom_id', '=', False), '&', 
+                   '|', ('date_start', '=', False), ('date_start', '<=', time.strftime('%Y-%m-%d %H:%M:%S')),
+                   '|', ('date_stop', '=', False), ('date_stop', '>=', time.strftime('%Y-%m-%d %H:%M:%S'))]
+        ids = self.search(cr, uid, domain, order='sequence')
         max_prop = 0
         result = False
         for bom in self.pool.get('mrp.bom').browse(cr, uid, ids):
