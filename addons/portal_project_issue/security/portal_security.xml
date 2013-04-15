@@ -3,14 +3,29 @@
     <data noupdate="1">
 
         <record id="portal_issue_rule" model="ir.rule">
-            <field name="name">Portal Personal Issues</field>
-            <field ref="project_issue.model_project_issue" name="model_id"/>
-            <field name="domain_force">[('message_follower_ids','in', [user.partner_id.id])]</field>
+            <field name="name">Project/Issue: portal users: public or portal and following</field>
+            <field name="model_id" ref="project_issue.model_project_issue"/>
+            <field name="domain_force">['|',
+                                            ('project_id.privacy_visibility', '=', 'public'),
+                                            '&amp;',
+                                                ('project_id.privacy_visibility', 'in', ['portal', 'followers']),
+                                                '|',
+                                                    ('message_follower_ids','in', [user.partner_id.id]),
+                                                    ('user_id', '=', user.id),
+                                        ]</field>
             <field name="groups" eval="[(4, ref('portal.group_portal'))]"/>
-            <field eval="1" name="perm_unlink"/>
-            <field eval="1" name="perm_write"/>
-            <field eval="1" name="perm_read"/>
-            <field eval="0" name="perm_create"/>
+        </record>
+
+        <record model="ir.rule" id="project_issue.issue_user_rule">
+            <field name="name">Project/Issue: employees: public, portal, employee or following or assigned</field>
+            <field name="domain_force">['|',
+                                            ('user_id', '=', user.id),
+                                            '|',
+                                                ('project_id.privacy_visibility', 'in', ['public', 'portal', 'employees']),
+                                                '&amp;',
+                                                    ('project_id.privacy_visibility', '=', 'followers'),
+                                                    ('message_follower_ids', 'in', [user.partner_id.id]),
+                                        ]</field>
         </record>
 
     </data>

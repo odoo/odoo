@@ -208,6 +208,12 @@ class project(osv.osv):
         """Overriden in project_issue to offer more options"""
         return [('project.task', "Tasks")]
 
+    def _get_visibility_selection(self, cr, uid, context=None):
+        """ Overriden in portal_project to offer more options """
+        return [('public', 'All Users'),
+                ('employees', 'Employees Only'),
+                ('followers', 'Followers Only')]
+
     def attachment_tree_view(self, cr, uid, ids, context):
         task_ids = self.pool.get('project.task').search(cr, uid, [('project_id', 'in', ids)])
         domain = [
@@ -229,6 +235,8 @@ class project(osv.osv):
         }
     # Lambda indirection method to avoid passing a copy of the overridable method when declaring the field
     _alias_models = lambda self, *args, **kwargs: self._get_alias_models(*args, **kwargs)
+    _visibility_selection = lambda self, *args, **kwargs: self._get_visibility_selection(*args, **kwargs)
+
     _columns = {
         'complete_name': fields.function(_complete_name, string="Project Name", type='char', size=250),
         'active': fields.boolean('Active', help="If the active field is set to False, it will allow you to hide the project without removing it."),
@@ -267,7 +275,7 @@ class project(osv.osv):
                                          "with Tasks (or optionally Issues if the Issue Tracker module is installed)."),
         'alias_model': fields.selection(_alias_models, "Alias Model", select=True, required=True,
                                         help="The kind of document created when an email is received on this project's email alias"),
-        'privacy_visibility': fields.selection([('public','Public'), ('followers','Followers Only')], 'Privacy / Visibility', required=True),
+        'privacy_visibility': fields.selection(_visibility_selection, 'Privacy / Visibility', required=True),
         'state': fields.selection([('template', 'Template'),('draft','New'),('open','In Progress'), ('cancelled', 'Cancelled'),('pending','Pending'),('close','Closed')], 'Status', required=True,),
         'doc_count':fields.function(_get_attached_docs, string="Number of documents attached", type='int')
      }
