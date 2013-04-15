@@ -486,9 +486,9 @@ class hr_employee(osv.osv):
             leave_id = holiday_obj.create(cr, uid, {'name': _('Leave Request for %s') % employee.name, 'employee_id': employee.id, 'holiday_status_id': status_id, 'type': 'remove', 'holiday_type': 'employee', 'number_of_days_temp': abs(diff)}, context=context)
         else:
             return False
-        holidays_obj.signal_confirm(cr, uid, [leave_id])
-        holidays_obj.signal_validate(cr, uid, [leave_id])
-        holidays_obj.signal_second_validate(cr, uid, [leave_id])
+        holiday_obj.signal_confirm(cr, uid, [leave_id])
+        holiday_obj.signal_validate(cr, uid, [leave_id])
+        holiday_obj.signal_second_validate(cr, uid, [leave_id])
         return True
 
     def _get_remaining_days(self, cr, uid, ids, name, args, context=None):
