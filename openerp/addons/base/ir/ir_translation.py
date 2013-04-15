@@ -155,32 +155,41 @@ class ir_translation(osv.osv):
         lang_data = lang_model.read(cr, uid, lang_ids, ['code', 'name'], context=context)
         return [(d['code'], d['name']) for d in lang_data]
 
-    def _get_src(self, cr, uid, ids, name, arg, context):
+    def _get_src(self, cr, uid, ids, name, arg, context=None):
+        ''' Get source name for the translation. If object type is model then
+        return the value store in db. Otherwise return value store in src field
+        '''
+        if not context:
+            context = {}
         res = {}
-        for record in self.browse(cr,uid,ids,context=context):
+        for record in self.browse(cr, uid, ids, context=context):
             if record.type != 'model':
                 res[record.id] = record.src
             else:
-                data = record.name.split(',')
-                model = self.pool.get(data[0])
-                field = data[1]
+                model, field = record.name.split(',')
+                #We need to take the context without the language information, because we want to read the
+                #value store in db and not on the one associate with current language.
                 context_wo_lang = context.copy()
                 context_wo_lang.pop('lang', None)
                 res[record.id] = model.read(cr, uid, record.res_id, [field], context=context_wo_lang)[field]
         return res
 
-    def _set_src(self, cr, uid, id, name, value, args=None, context=None):
-        if value:
-            record=self.browse(cr,uid,id,context=context)
-            if record.type == 'model':
-                name = record.name
-                data = name.split(',')
-                model = self.pool.get(data[0])
-                field = data[1]
-                context_wo_lang = context.copy()
-                context_wo_lang.pop('lang', None)
-                model.write(cr, uid, record.res_id, {field: value}, context=context_wo_lang)
-            return self.write(cr,uid,id, {'src': value}, context=context_wo_lang)
+    def _set_src(self, cr, uid, id, name, value, args, context=None):
+        ''' When changing source term of a translation, change its value in db for
+        the associated object, and the src field
+        '''
+        if not context:
+            context = {}
+        if value and record.model == 'model':
+            record = self.browse(cr, uid, id, context=context)
+            model, field = record.name.split(',')
+            #We need to take the context without the language information, because we want to write on the
+            #value store in db and not on the one associate with current language.
+            #Also not removing lang from context trigger an error when lang is different
+            context_wo_lang = context.copy()
+            context_wo_lang.pop('lang', None)
+            model.write(cr, uid, record.res_id, {field: value}, context=context_wo_lang)
+        return self.write(cr, uid, id, {'src': value}, context=context_wo_lang)
 
     _columns = {
         'name': fields.char('Translated field', required=True),
