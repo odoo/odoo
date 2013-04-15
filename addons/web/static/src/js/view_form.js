@@ -2815,8 +2815,6 @@ instance.web.form.FieldRadio = instance.web.form.AbstractField.extend(instance.w
         * - "no_radiolabel" don't display text values
         */
         this._super(field_manager, node);
-        this.horizontal = +this.options.horizontal || false;
-        this.no_radiolabel = +this.options.no_radiolabel || false;
         this.selection = _.clone(this.field.selection) || [];
         this.domain = false;
     },
@@ -2828,7 +2826,7 @@ instance.web.form.FieldRadio = instance.web.form.AbstractField.extend(instance.w
     },
     click_change_value: function (event) {
         var val = $(event.target).val();
-        val = isNaN(+val) ? val : +val;
+        val = this.field.type == "selection" ? val : +val;
         if (val == this.get_value()) {
             this.set_value(false);
         } else {
@@ -2856,6 +2854,9 @@ instance.web.form.FieldRadio = instance.web.form.AbstractField.extend(instance.w
                             def.resolve();
                         });
                     });
+            } else {
+                selection = self.selection;
+                def.resolve();
             }
         }
         else if (self.field.type == "selection") {
@@ -2865,17 +2866,19 @@ instance.web.form.FieldRadio = instance.web.form.AbstractField.extend(instance.w
         return def.then(function () {
             if (! _.isEqual(selection, self.selection)) {
                 self.selection = _.clone(selection);
-                self.$el.html($(QWeb.render("FieldRadio", {'widget': self})).html());
+                self.renderElement();
                 self.render_value();
             }
         });
     },
     set_value: function (value_) {
-        if (this.field.type == "selection") {
-            value_ = _.find(this.field.selection, function (sel) { return sel[0] == value_});
-        }
-        else if (!this.selection.length) {
-            this.selection = [value_];
+        if (value_) {
+            if (this.field.type == "selection") {
+                value_ = _.find(this.field.selection, function (sel) { return sel[0] == value_});
+            }
+            else if (!this.selection.length) {
+                this.selection = [value_];
+            }
         }
         this._super(value_);
     },
@@ -2884,11 +2887,12 @@ instance.web.form.FieldRadio = instance.web.form.AbstractField.extend(instance.w
         return value instanceof Array ? value[0] : value;
     },
     render_value: function () {
+        var self = this;
         this.$el.toggleClass("oe_readonly", this.get('effective_readonly'));
-        this.$("input[checked]").attr("checked", false);
+        this.$("input:checked").prop("checked", false);
         if (this.get_value()) {
-            this.$("input[value='" + this.get_value() + "']").attr("checked", true);
-            this.$(".oe_radio_read_only .oe_radio_header").text(this.get('value') ? this.get('value')[1] : "");
+            this.$("input").filter(function () {return this.value == self.get_value()}).prop("checked", true);
+            this.$(".oe_radio_readonly").text(this.get('value') ? this.get('value')[1] : "");
         }
     }
 });
