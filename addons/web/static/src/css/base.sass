@@ -483,21 +483,25 @@ $sheet-padding: 16px
     .oe_form_field_radio
         &.oe_horizontal
             white-space: nowrap
-            .oe_radio_header
+            label
                 display: inline-block
                 text-align: center
+                height: 16px
         &.oe_vertical
-            .oe_radio_header
-                cursor: pointer
-        .oe_radio_input
-            cursor: pointer
-            display: inline-block
-            width: 20px
-            background: transparent url(/web/static/src/img/icons/input_radio-off.png) no-repeat center center
-        .oe_radio_input_on
-            background: transparent url(/web/static/src/img/icons/input_radio-on.png) no-repeat center center
-        .oe_radio_label
-            cursor: default
+            label
+                margin-left: 4px
+        &.oe_form_required
+            .oe_radio_input
+                border: 2px solid transparent
+                display: inline-block
+                height: 12px
+                width: 12px
+                vertical-align: bottom
+                border-radius: 10px
+                margin: 1px 0
+            &.oe_form_invalid
+                .oe_radio_input
+                    border-color: red
     .oe_tags
         &.oe_inline
             min-width: 250px
