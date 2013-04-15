@@ -307,6 +307,10 @@ class res_partner(osv.osv, format_address):
         'image': False,
     }
 
+    _constraints = [
+        (osv.osv._check_recursion, 'You cannot create recursive Partner hierarchies.', ['parent_id']),
+    ]
+
     def copy(self, cr, uid, id, default=None, context=None):
         if default is None:
             default = {}
