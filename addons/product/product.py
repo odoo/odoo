@@ -534,10 +534,9 @@ class product_product(osv.osv):
 
     def _get_name_template_ids(self, cr, uid, ids, context=None):
         result = set()
-        for template in self.browse(cr, uid, ids, context=context):
-            template_ids = self.pool.get('product.product').search(cr, uid, [('product_tmpl_id','=',template.id)])
-            for el in template_ids:
-                result.add(el)
+        template_ids = self.pool.get('product.product').search(cr, uid, [('product_tmpl_id', 'in', ids)])
+        for el in template_ids:
+            result.add(el)
         return list(result)
 
     _defaults = {
