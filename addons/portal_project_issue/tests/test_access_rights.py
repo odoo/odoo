@@ -96,9 +96,10 @@ class TestPortalIssueProject(TestPortalProject):
             cr, self.user_chell_id, issue_ids, {'description': 'TestDescription'})
 
         # Do: Donovan reads project -> ok (anonymous ok public)
-        # Test: no project issue visible (no read on project.issue)
-        self.assertRaises(except_orm, self.project_issue.search,
-            cr, self.user_donovan_id, [('project_id', '=', pigs_id)])
+        # Test: all project issues visible
+        issue_ids = self.project_issue.search(cr, self.user_donovan_id, [('project_id', '=', pigs_id)])
+        self.assertEqual(set(issue_ids), test_issue_ids,
+                        'access rights: project user cannot see all issues of a public project')
 
         # ----------------------------------------
         # CASE2: portal project
