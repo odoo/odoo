@@ -26,6 +26,10 @@ from templates import TemplateHelper
 
 from datetime import date, datetime, timedelta
 
+import logging
+
+_logger = logging.getLogger(__name__)
+
 
 class gamification_goal_type(osv.Model):
     """Goal type definition
@@ -67,11 +71,13 @@ class gamification_goal_type(osv.Model):
                 ('manually', 'Recorded manually'),
                 ('count', 'Automatic: number of records'),
                 ('sum', 'Automatic: sum on a field'),
+                ('python', 'Automatic: execute a specific Python code'),
             ],
             string="Computation Mode",
             required=True),
-        'ponctual': fields.boolean("Ponctual Goal",
-            help="A non-numerical goal is displayed with only two states: TODO or Done."),
+        'ponctual': fields.boolean("Non-numerical Goal",
+            help="Instead of a progress, the goal is displayed with only two states: TODO or Done."),
+
         'model_id': fields.many2one('ir.model',
             string='Model',
             help='The model object for the field to evaluate'),
@@ -84,6 +90,9 @@ class gamification_goal_type(osv.Model):
         'domain': fields.char("Filter Domain",
             help="Technical filters rules to apply",
             required=True),
+        'compute_code': fields.char('Compute Code',
+            help="The name of the python method that will be executed to verify if a user can receive this badge."),
+
         'condition': fields.selection([
                 ('higher', 'The higher the better'),
                 ('lower', 'The lower the better')
@@ -237,6 +246,16 @@ class gamification_goal(osv.Model):
                             partner_ids=[goal.user_id.partner_id.id],
                             context=context,
                             subtype='mail.mt_comment')
+
+            elif goal.type_id.computation_mode == 'python':
+                values = {'cr': cr, 'uid': uid, 'context': context, 'self': self.pool.get('gamification.goal.type')}
+                result = safe_eval(goal.type_id.compute_code, values, {})
+
+                if type(result) == float or type(result) == int:
+                    towrite = {'current': result}
+                else:
+                    _logger.exception(_('Unvalid return content from the evaluation of %s' % str(goal.type_id.compute_code)))
+                    # raise osv.except_osv(_('Error!'), _('Unvalid return content from the evaluation of %s' % str(goal.type_id.compute_code)))
 
             else:  # count or sum
                 obj = self.pool.get(goal.type_id.model_id.model)

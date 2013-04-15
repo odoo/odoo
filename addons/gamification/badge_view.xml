@@ -100,12 +100,12 @@
                                 </div>
                             </div>
                         </group>
-                        <group string="Rules for Automatic Granting">
+<!--                         <group string="Rules for Automatic Granting">
                             <field name="rule_automatic" widget="radio"/>
                             <field name="compute_code" attrs="{'invisible': [('rule_automatic','!=','python')]}"/>
                             <field name="goal_type_ids" attrs="{'invisible': [('rule_automatic','!=','goals')]}" widget="many2many_tags"/>
                         </group>
-                        <group string="Statistics">
+-->                        <group string="Statistics">
                             <group>
                                 <field name="stat_count"/>
                                 <field name="stat_this_month"/>
@@ -115,6 +115,9 @@
                                 <field name="stat_my"/>
                                 <field name="stat_my_this_month"/>
                             </group>
+                        </group>
+                        <group string="Reward for Challenges">
+                            <field name="plan_ids" widget="many2many_kanban" nolabel="1" />
                         </group>
                     </sheet>
                 </form>

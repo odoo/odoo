@@ -161,7 +161,7 @@ class gamification_badge(osv.Model):
                 ('everyone', 'Everyone'),
                 ('users', 'A selected list of users'),
                 ('having', 'People having some badges'),
-                ('nobody', 'No one'),
+                ('nobody', 'No one, assigned through challenges'),
             ],
             string="Allowed to Grant",
             help="Who can grant this badge",
@@ -185,15 +185,7 @@ class gamification_badge(osv.Model):
         'remaining_sending': fields.function(_remaining_sending_calc, type='integer',
             string='Remaining Sending Allowed', help="If a maxium is set"),
 
-        'rule_automatic': fields.selection([
-                ('goals', 'List of goals to reach'),
-                ('python', 'Custom python code executed'),
-                ('manual', 'Not automatic'),
-            ],
-            string="Automatic Rule",
-            help="Can this badge be automatically rewarded",
-            required=True),
-        'challenge_ids': fields.one2many('gamification.goal.plan', 'reward_id',
+        'plan_ids': fields.one2many('gamification.goal.plan', 'reward_id',
             string="Granted upon completion of"),
 
         'compute_code': fields.char('Compute Code',
@@ -234,7 +226,6 @@ class gamification_badge(osv.Model):
         'stat_count_distinct': 0,
         'stat_this_month': 0,
         'rule_auth': 'everyone',
-        'rule_automatic': 'manual',
         'compute_code': "self.nobody(cr, uid, context)"
     }
 
