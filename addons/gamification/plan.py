@@ -107,7 +107,7 @@ class gamification_goal_plan(osv.Model):
         return res
 
     _columns = {
-        'name': fields.char('Plan Name', required=True, translate=True),
+        'name': fields.char('Challenge Name', required=True, translate=True),
         'description': fields.text('Description', translate=True),
         'state': fields.selection([
                 ('draft', 'Draft'),
@@ -117,11 +117,11 @@ class gamification_goal_plan(osv.Model):
             string='State',
             required=True),
         'manager_id': fields.many2one('res.users',
-            string='Responsible', help="The user responsible for the plan."),
+            string='Responsible', help="The user responsible for the challenge."),
         'start_date': fields.date('Planned Start Date',
-            help="The day a new plan will be automatically started. If no periodicity is set, will use this date as the goal start date."),
+            help="The day a new challenge will be automatically started. If no periodicity is set, will use this date as the goal start date."),
         'end_date': fields.date('Planned End Date',
-            help="The day a new plan will be automatically closed. If no periodicity is set, will use this date as the goal end date."),
+            help="The day a new challenge will be automatically closed. If no periodicity is set, will use this date as the goal end date."),
 
         'user_ids': fields.many2many('res.users', 'user_ids',
             string='Users',
@@ -641,7 +641,7 @@ class gamification_goal_planline(osv.Model):
 
     _name = 'gamification.goal.planline'
     _description = 'Gamification generic goal for plan'
-    _order = "sequence_type, id"
+    _order = "sequence, sequence_type, id"
 
     def _get_planline_types(self, cr, uid, ids, context=None):
         """Return the ids of planline items related to the gamification.goal.type
@@ -667,6 +667,9 @@ class gamification_goal_planline(osv.Model):
             ondelete="cascade"),
         'target_goal': fields.float('Target Value to Reach',
             required=True),
+        'sequence': fields.integer('Sequence',
+            help='Sequence number for ordering',
+            required=True),
         'sequence_type': fields.related('type_id', 'sequence',
             type='integer',
             string='Sequence',
@@ -679,4 +682,8 @@ class gamification_goal_planline(osv.Model):
         'type_unit': fields.related('type_id', 'unit', type="char", readonly=True, string="Unit"),
         'type_monetary': fields.related('type_id', 'monetary', type="boolean", readonly=True, string="Monetary"),
         'type_full_suffix': fields.related('type_id', 'full_suffix', type="char", readonly=True, string="Suffix"),
+    }
+
+    _default = {
+        'sequence': 1,
     }

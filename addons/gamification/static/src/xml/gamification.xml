@@ -3,8 +3,8 @@
         <div class="oe_gamification_goal"><em>Your goal list is empty</em></div>
     </t>
     <t t-name="gamification.goal_list_to_do">
-        <div t-foreach="widget.goals_info.info" t-as="plan">
-            <em><a class="oe_update_plan" rol="button" t-attf-id="{plan.id}">refresh</a></em>
+        <div t-foreach="widget.goals_info.info" t-as="plan" class="oe_goal">
+            <a class="oe_update_plan oe_e" rol="button" t-attf-id="{plan.id}">e</a>
             <h3><t t-esc="plan.name" /></h3>
 
             <t t-if="plan.visibility_mode == 'progressbar'">
@@ -13,7 +13,7 @@
                     <span class="oe_goal_sparkline_piechart" t-att-data-completeness="goal.completeness"></span>
                     <strong t-attf-class="#{goal.state == 'reached' ? 'oe_goal_reached' : goal.state == 'failed' ? 'oe_goal_failed' : ''}" t-att-title="goal.type_description"><t t-esc="goal.type_name" /></strong>
                     <t t-if="goal.computation_mode == 'manually' or goal.type_action">
-                        <a class="oe_goal_action" t-att-id="goal.id">modify</a>
+                        <a class="oe_goal_action oe_e" t-att-id="goal.id">&amp;</a>
                     </t>
                     <t t-if="!goal.type_ponctual">
                         <t t-if="goal.type_condition == 'higher'">
@@ -43,7 +43,7 @@
                             <t t-esc="planline.type_name"/>
                             (Goal: max <span t-attf-class="#{planline.type_monetary ? 'oe_goal_field_monetary' : ''}"><t t-esc="planline.target_goal" /></span><t t-if="planline.type_unit"> <t t-esc="planline.type_unit"/></t>)
                             <t t-if="planline.type_computation_mode == 'manually' or planline.type_action">
-                                <a class="oe_goal_action" t-att-id="planline.own_goal_id">modify</a>
+                                <a class="oe_goal_action oe_e" t-att-id="planline.own_goal_id">&amp;</a>
                             </t>
                         </th>
                     </tr>
@@ -61,11 +61,6 @@
                             <span class="oe_goal_sparkline_piechart" t-att-data-completeness="goal.completeness"></span>
                             <span t-attf-class="#{planline.type_monetary ? 'oe_goal_field_monetary' : ''}"><t t-esc="goal.current" /></span><t t-if="planline.type_unit"> <t t-esc="planline.type_unit"/></t>
                         </td>
-<!--                             <progress class="oe_goal_progress" t-att-value="goal.completeness" max="100" /></td>
-                        <td class="col3">
-                            <t t-esc="goal.current" />/<span t-attf-class="#{planline.type_monetary ? 'oe_goal_field_monetary' : ''}"><t t-esc="goal.target_goal"/></span>
-                            <t t-if="planline.type_unit"><t t-esc="planline.type_unit"/></t>
-                        </td> -->
                     </tr>
                 </tbody>
                 </table>

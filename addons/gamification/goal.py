@@ -145,9 +145,9 @@ class gamification_goal(osv.Model):
     def on_change_type_id(self, cr, uid, ids, type_id=False, context=None):
         goal_type = self.pool.get('gamification.goal.type')
         if not type_id:
-            return {'value':{'type_id': False}}
+            return {'value': {'type_id': False}}
         goal_type = goal_type.browse(cr, uid, type_id, context=context)
-        ret = {'value' : {'computation_mode' : goal_type.computation_mode}}
+        ret = {'value': {'computation_mode': goal_type.computation_mode}}
         return ret
 
     _columns = {
@@ -188,7 +188,7 @@ class gamification_goal(osv.Model):
             track_visibility='always'),
 
         'computation_mode': fields.related('type_id', 'computation_mode',
-            type='char', 
+            type='char',
             string="Type computation mode"),
         'remind_update_delay': fields.integer('Remind delay',
             help="The number of days after which the user assigned to a manual goal will be reminded. Never reminded if no value is specified."),

@@ -4,7 +4,7 @@
 
         <!-- goal types -->
         <record model="gamification.goal.type" id="type_base_timezone">
-            <field name="name">Change Timezone</field>
+            <field name="name">Set your Timezone</field>
             <field name="description">Configure your profile and specify your timezone</field>
             <field name="computation_mode">count</field>
             <field name="ponctual">True</field>
@@ -15,7 +15,7 @@
         </record>
 
         <record model="gamification.goal.type" id="type_base_avatar">
-            <field name="name">Change of avatar</field>
+            <field name="name">Set your Avatar</field>
             <field name="description">In your user perference</field>
             <field name="computation_mode">manually</field>
             <field name="ponctual">True</field>
@@ -26,7 +26,7 @@
 
 
         <record model="gamification.goal.type" id="type_base_company_data">
-            <field name="name">Set your company data</field>
+            <field name="name">Set your Company Data</field>
             <field name="description">Specify at least a website</field>
             <field name="computation_mode">count</field>
             <field name="ponctual">True</field>
@@ -37,7 +37,7 @@
         </record>
 
         <record model="gamification.goal.type" id="type_base_company_logo">
-            <field name="name">Change your company logo</field>
+            <field name="name">Set your Company Logo</field>
             <field name="computation_mode">count</field>
             <field name="ponctual">True</field>
             <field name="model_id" eval="ref('base.model_res_company')" />
@@ -47,7 +47,7 @@
         </record>
 
         <record model="gamification.goal.type" id="type_base_invite">
-            <field name="name">Invite new users</field>
+            <field name="name">Invite new Users</field>
             <field name="description">Create at least another user</field>
             <field name="ponctual">True</field>
             <field name="computation_mode">count</field>
