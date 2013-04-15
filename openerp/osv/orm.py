@@ -2055,6 +2055,7 @@ class BaseModel(object):
         """
         if context is None:
             context = {}
+        View = self.pool['ir.ui.view']
 
         def encode(s):
             if isinstance(s, unicode):
@@ -2197,6 +2198,9 @@ class BaseModel(object):
         sql_res = False
         parent_view_model = None
         view_ref = context.get(view_type + '_view_ref')
+
+        view_fields = ['arch', 'name', 'field_parent', 'id',
+                       'type', 'inherit_id', 'model']
         # Search for a root (i.e. without any parent) view.
         while True:
             if view_ref and not view_id:
@@ -2206,22 +2210,25 @@ class BaseModel(object):
                     view_ref_res = cr.fetchone()
                     if view_ref_res:
                         view_id = view_ref_res[0]
-
             if view_id:
-                cr.execute("""SELECT arch,name,field_parent,id,type,inherit_id,model
-                              FROM ir_ui_view
-                              WHERE id=%s""", (view_id,))
+                ids = [view_id]
             else:
-                cr.execute("""SELECT arch,name,field_parent,id,type,inherit_id,model
-                              FROM ir_ui_view
-                              WHERE model=%s AND type=%s AND inherit_id IS NULL
-                              ORDER BY priority""", (self._name, view_type))
-            sql_res = cr.dictfetchone()
+                # read does not guarantee ordering so directly take just first
+                # search'ed id and read that, this way we don't care
+                ids = View.search(cr, user, [
+                        ['model', '=', self._name],
+                        ['type', '=', view_type],
+                        ['inherit_id', '=', False],
+                    ], context=context, order='priority')[:1]
+            views = View.read(cr, user, ids, view_fields, context=context)
+            sql_res = views[0] if views else False
 
             if not sql_res:
                 break
 
             view_id = sql_res['inherit_id'] or sql_res['id']
+            # due to read() inherit_id may be a name_get pair, unpack id
+            if isinstance(view_id, tuple): view_id, _name = view_id
             parent_view_model = sql_res['model']
             if not sql_res['inherit_id']:
                 break
