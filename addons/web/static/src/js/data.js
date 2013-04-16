@@ -607,6 +607,9 @@ instance.web.DataSet =  instance.web.Class.extend(instance.web.PropertiesMixin, 
     alter_ids: function(n_ids) {
         this.ids = n_ids;
     },
+    remove_ids: function (ids) {
+        this.alter_ids(_(this.ids).difference(ids));
+    },
     /**
      * Resequence records.
      *
@@ -704,17 +707,23 @@ instance.web.DataSetSearch =  instance.web.DataSet.extend({
     get_domain: function (other_domain) {
         this._model.domain(other_domain);
     },
+    alter_ids: function (ids) {
+        this._super(ids);
+        if (this.index !== null && this.index >= this.ids.length) {
+            this.index = this.ids.length > 0 ? this.ids.length - 1 : 0;
+        }
+    },
+    remove_ids: function (ids) {
+        var before = this.ids.length;
+        this._super(ids);
+        if (this._length) {
+            this._length -= (before - this.ids.length);
+        }
+    },
     unlink: function(ids, callback, error_callback) {
         var self = this;
         return this._super(ids).done(function(result) {
-            self.ids = _(self.ids).difference(ids);
-            if (self._length) {
-                self._length -= 1;
-            }
-            if (self.index !== null) {
-                self.index = self.index <= self.ids.length - 1 ?
-                    self.index : (self.ids.length > 0 ? self.ids.length -1 : 0);
-            }
+            self.remove_ids( ids);
             self.trigger("dataset_changed", ids, callback, error_callback);
         });
     },
