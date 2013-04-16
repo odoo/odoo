@@ -137,7 +137,7 @@
                     <field name="target_goal"/>
                     <field name="type_condition"/>
                     <field name="type_suffix"/>
-                    <field name="type_ponctual"/>
+                    <field name="type_display"/>
                     <field name="start_date"/>
                     <field name="end_date"/>
                     <field name="last_update"/>
@@ -154,13 +154,13 @@
                                     </div>
                                     <field name="user_id" />
                                     <div class="oe_goal_state_block">
-                                        <t t-if="record.type_ponctual.value">
+                                        <t t-if="record.type_display.raw_value == 'checkbox'">
                                             <div class="oe_goal_state oe_e"><t t-if="record.state.raw_value=='reached'"><span class="oe_green">W</span></t>
                                                 <t t-if="record.state.raw_value=='inprogress' || record.state.raw_value=='inprogress_update'">N</t>
                                                 <t t-if="record.state.raw_value=='failed'"><span class="oe_red">X</span></t>
                                             </div>
                                         </t>
-                                        <t t-if="!record.type_ponctual.value">
+                                        <t t-if="record.type_display.raw_value == 'progress'">
                                             <t t-if="record.type_condition.raw_value =='higher'">
                                                 <div class="oe_goal_gauge"></div>
                                             </t>
@@ -245,11 +245,10 @@
                                 <field name="field_date_id" attrs="{'invisible':[('computation_mode','not in',('sum', 'count'))]}" domain="[('ttype', 'in', ('date', 'datetime')), ('model_id','=',model_id)]" class="oe_inline"/>
                                 <field name="domain" attrs="{'invisible':[('computation_mode','not in',('sum', 'count'))], 'required':[('computation_mode','in',('sum', 'count'))]}" class="oe_inline"/>
                                 <field name="compute_code" attrs="{'invisible':[('computation_mode','!=','python')], 'required':[('computation_mode','=','python')]}"/>
-
                                 <field name="condition" widget="radio"/>
-                                <field name="ponctual" />
                             </group>
                             <group string="Formating Options">
+                                <field name="display_mode" widget="radio" />
                                 <field name="unit" class="oe_inline"/>
                                 <field name="monetary"  class="oe_inline"/>
                             </group>

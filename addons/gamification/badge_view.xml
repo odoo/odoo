@@ -83,7 +83,7 @@
                         <group>
                             <field name="description" nolabel="1" placeholder="Badge Description" />
                         </group>
-                        <group string="Rules for User Granting">
+                        <group string="Granting">
                             <field name="rule_auth" widget="radio" />
                             <field name="rule_auth_user_ids" attrs="{'invisible': [('rule_auth','!=','users')]}" widget="many2many_tags" />
                             <field name="rule_auth_badge_ids" attrs="{'invisible': [('rule_auth','!=','having')]}" widget="many2many_tags" />
@@ -93,12 +93,15 @@
                             <div>
                                 <field name="stat_my_monthly_sending" attrs="{'invisible': [('rule_auth','=','nobody')]}" />
                                 <div attrs="{'invisible': [('remaining_sending','=',-1)]}" class="oe_grey">
-                                    You can still send <field name="remaining_sending" class="oe_inline"/> badges this month
+                                    You can still grant <field name="remaining_sending" class="oe_inline"/> badges this month
                                 </div>
                                 <div attrs="{'invisible': [('remaining_sending','!=',-1)]}" class="oe_grey">
                                     No monthly sending limit
                                 </div>
                             </div>
+                        </group>
+                        <group string="Rewards for challenges">
+                            <field name="plan_ids" widget="many2many_kanban" nolabel="1" />
                         </group>
 <!--                         <group string="Rules for Automatic Granting">
                             <field name="rule_automatic" widget="radio"/>
@@ -115,9 +118,6 @@
                                 <field name="stat_my"/>
                                 <field name="stat_my_this_month"/>
                             </group>
-                        </group>
-                        <group string="Reward for Challenges">
-                            <field name="plan_ids" widget="many2many_kanban" nolabel="1" />
                         </group>
                     </sheet>
                 </form>

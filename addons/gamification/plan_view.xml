@@ -102,18 +102,20 @@
                             <page string="Reward">
                                 <group>
                                     <field name="reward_id"/>
-                                    <field name="reward_bests" attrs="{'invisible': [('reward_id','=', False)]}" />
-                                    <field name="reward_failure" attrs="{'invisible': [('reward_id','=', False)]}" />
+                                    <field name="reward_first_id" />
+                                    <field name="reward_second_id" attrs="{'invisible': [('reward_first_id','=', False)]}" />
+                                    <field name="reward_third_id" attrs="{'invisible': ['|',('reward_first_id','=', False),('reward_second_id','=', False)]}" />
+                                    <field name="reward_failure" attrs="{'invisible': [('reward_first_id','=', False)]}" />
                                 </group>
+                                <div class="oe_grey">
+                                    <p>Badges are granted when a challenge is finished. This is either when at the end of a running period (eg: end of the month for a monthly challenge) or at the end date of a challenge (if no periodicity is set).</p>
+                                    <p>Ranking is done on the number of succeeded goals and the percentage of each one.</p>
+                                </div>
                             </page>
                             <page string="Advanced Options">
-                                <group string="Subscribe Users Automatically">
+                                <group string="Subscriptions">
                                     <field name="autojoin_group_id" />
-                                    <field name="subscription_action" />
-                                    <field name="proposed_user_ids" attrs="{'invisible':[('subscription_action','=','automatic')]}" widget="many2many_tags" />
-                                    <field name="proposed_mail_group_ids" attrs="{'invisible':[('subscription_action','=','automatic')]}" widget="many2many_tags" />
-                                    <field name="proposed_later_user_ids" attrs="{'invisible':[('subscription_action','=','automatic')]}" widget="many2many_tags" />
-                                    <field name="proposed_refused_user_ids" attrs="{'invisible':[('subscription_action','=','automatic')]}" widget="many2many_tags" />
+                                    <field name="proposed_user_ids" widget="many2many_tags" />
                                 </group>
                                 <group string="Notification Messages">
                                     <field name="report_message_frequency" />
@@ -131,7 +133,9 @@
                                 </group>
                             </page>
                         </notebook>
-
+                        <group>
+                            <field name="description" placeholder="Describe the challenge: what is does, who it targets, why it matters..."/>
+                        </group>
                         
                     </sheet>
                     <div class="oe_chatter">

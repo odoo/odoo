@@ -75,8 +75,11 @@ class gamification_goal_type(osv.Model):
             ],
             string="Computation Mode",
             required=True),
-        'ponctual': fields.boolean("Non-numerical Goal",
-            help="Instead of a progress, the goal is displayed with only two states: TODO or Done."),
+        'display_mode': fields.selection([
+                ('progress', 'Progressive (using numerical values)'),
+                ('checkbox', 'Checkbox (done or not-done)'),
+            ],
+            string="Displayed as", required=True),
 
         'model_id': fields.many2one('ir.model',
             string='Model',
@@ -118,7 +121,7 @@ class gamification_goal_type(osv.Model):
         'computation_mode': 'manually',
         'domain': "[]",
         'monetary': False,
-        'ponctual': False,
+        'display_mode': 'progress',
     }
 
 
@@ -203,8 +206,8 @@ class gamification_goal(osv.Model):
             type='char', string='Type Condition', readonly=True),
         'type_suffix': fields.related('type_id', 'full_suffix',
             type="char", string="Suffix", readonly=True),
-        'type_ponctual': fields.related('type_id', 'ponctual',
-            type="boolean", string="Ponctual Goal", readonly=True),
+        'type_display': fields.related('type_id', 'display_mode',
+            type="char", string="Display Mode", readonly=True),
     }
 
     _defaults = {

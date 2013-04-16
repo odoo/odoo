@@ -118,9 +118,9 @@ class gamification_goal_plan(osv.Model):
             required=True),
         'manager_id': fields.many2one('res.users',
             string='Responsible', help="The user responsible for the challenge."),
-        'start_date': fields.date('Planned Start Date',
+        'start_date': fields.date('Start Date',
             help="The day a new challenge will be automatically started. If no periodicity is set, will use this date as the goal start date."),
-        'end_date': fields.date('Planned End Date',
+        'end_date': fields.date('End Date',
             help="The day a new challenge will be automatically closed. If no periodicity is set, will use this date as the goal end date."),
 
         'user_ids': fields.many2many('res.users', 'user_ids',
@@ -130,24 +130,8 @@ class gamification_goal_plan(osv.Model):
             string='Auto-subscription Group',
             help='Group of users whose members will automatically be added to the users'),
 
-        'subscription_action': fields.selection([
-                ('automatic', 'The user is subscribed automatically'),
-                ('approve', 'The user has to approve the challenge'),
-            ],
-            string="Subscription approval",
-            help="What happens when the user is added to a challenge (manually or automatically) ?",
-            required=True),
         'proposed_user_ids': fields.many2many('res.users', 'proposed_user_ids',
             string="Propose to users"),
-        'proposed_mail_group_ids': fields.many2many('mail.group', 'proposed_mail_group_ids',
-            string="Propose to mail groups"),
-        'proposed_later_user_ids': fields.many2many('res.users', 'proposed_later_user_ids',
-            string='Users to Remind',
-            help="List of users that have asked to decide later if they approve the challenge"),
-        'proposed_refused_user_ids': fields.many2many('res.users', 'refused_approval_user_ids',
-            string='Discard Request Users',
-            help="List of users that have discared the approval request"),
-        'propose_after_login': fields.integer("Propose challenge after login", help="Number of minutes"),
 
         'planline_ids': fields.one2many('gamification.goal.planline', 'plan_id',
             string='Planline',
@@ -155,9 +139,11 @@ class gamification_goal_plan(osv.Model):
             required=True),
         'planline_count': fields.function(_planline_count, type='integer', string="Planlines"),
 
-        'reward_id': fields.many2one('gamification.badge', string="Reward upon completion"),
-        'reward_bests': fields.integer('Number of Best Perforers Rewared'),
-        'reward_failure': fields.boolean('Grant if not succeed'),
+        'reward_id': fields.many2one('gamification.badge', string="For Every Succeding User"),
+        'reward_first_id': fields.many2one('gamification.badge', string="For 1st user"),
+        'reward_second_id': fields.many2one('gamification.badge', string="For 2nd user"),
+        'reward_third_id': fields.many2one('gamification.badge', string="For 3rd user"),
+        'reward_failure': fields.boolean('Reward Top 3 even if not succeed'),
 
         'period': fields.selection([
                 ('once', 'Non recurring'),
@@ -210,7 +196,6 @@ class gamification_goal_plan(osv.Model):
         'start_date': fields.date.today,
         'manager_id': lambda s, cr, uid, c: uid,
         'category': 'hr',
-        'subscription_action': 'automatic',
         'reward_failure': False,
     }
 
@@ -232,17 +217,9 @@ class gamification_goal_plan(osv.Model):
 
         if 'proposed_user_ids' in vals:
             for plan in self.browse(cr, uid, ids, context=context):
-                if plan.subscription_action == 'approve':
-                    puser_ids = [puser.id for puser in plan.proposed_user_ids]
-                    ruser_ids = [ruser.id for ruser in plan.proposed_refused_user_ids if ruser.id in puser_ids]
-                    if len(ruser_ids) > 0:
-                        raise osv.except_osv(_('Error!'), _('Can not propose a challenge to an user that has refused it'))
-                    auser_ids = [auser.id for auser in plan.proposed_later_user_ids if auser.id in puser_ids]
-                    if len(auser_ids) > 0:
-                        raise osv.except_osv(_('Error!'), _('Can not propose a challenge to an user that has cast aside it'))
-                    user_ids = [user.id for user in plan.user_ids if user.id in puser_ids]
-                    if len(user_ids) > 0:
-                        raise osv.except_osv(_('Error!'), _('Can not propose a challenge to an user already assigned to it'))
+                puser_ids = [puser.id for puser in plan.proposed_user_ids]
+                if len([user for user in plan.user_ids if user.id in puser_ids]) > 0:
+                    raise osv.except_osv(_('Error!'), _('Can not propose a challenge to an user already assigned to it'))
 
         return write_res
 
@@ -612,6 +589,9 @@ class gamification_goal_plan(osv.Model):
         """The user accept the suggested challenge"""
         context = context or {}
         user_id = user_id or uid
+        user = self.pool.get('res.users').browse(cr, uid, user_id, context=context)
+        message = "%s has joined the challenge" % user.name
+        self.message_post(cr, uid, plan_id, body=message, context=context)
         self.write(cr, uid, [plan_id], {'proposed_user_ids': (3, user_id), 'user_id': (4, user_id)}, context=context)
         return self.generate_goals_from_plan(cr, uid, [plan_id], context=context)
 
@@ -619,13 +599,10 @@ class gamification_goal_plan(osv.Model):
         """The user discard the suggested challenge"""
         context = context or {}
         user_id = user_id or uid
-        return self.write(cr, uid, [plan_id], {'proposed_user_ids': (3, user_id), 'proposed_refused_user_ids': (4, user_id)}, context=context)
-
-    def postpone_challenge(self, cr, uid, plan_id, user_id=None, context=None):
-        """The user ask to be reminded later for the suggested challenge"""
-        context = context or {}
-        user_id = user_id or uid
-        return self.write(cr, uid, [plan_id], {'proposed_user_ids': (3, user_id), 'proposed_later_user_ids': (4, user_id)}, context=context)
+        user = self.pool.get('res.users').browse(cr, uid, user_id, context=context)
+        message = "%s has refused the challenge" % user.name
+        self.message_post(cr, uid, plan_id, body=message, context=context)
+        return self.write(cr, uid, [plan_id], {'proposed_user_ids': (3, user_id)}, context=context)
 
     def get_suggestions_info(self, cr, uid, context=None):
         pass

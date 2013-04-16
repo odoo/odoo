@@ -105,7 +105,7 @@ openerp.gamification = function(instance) {
             self.$(".oe_goal_sparkline_piechart").each(function() {
                 var completeness = parseInt( $(this).attr('data-completeness'), 10);
                 var values = [completeness, 100-completeness];
-                $(this).sparkline(values, {type: 'pie', offset: 180, sliceColors: ['#01922D','#ff0000']});
+                $(this).sparkline(values, {type: 'pie', offset: 180, sliceColors: ['#0B610B','#F78181']});
             });
         }
     });

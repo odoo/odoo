@@ -58,7 +58,7 @@ class res_users_gamification_group(osv.Model):
                             'type_monetary': planline_board['goal_type'].monetary,
                             'type_unit': planline_board['goal_type'].unit,
                             'type_action': True if planline_board['goal_type'].action_id else False,
-                            'type_ponctual': planline_board['goal_type'].ponctual,
+                            'type_display': planline_board['goal_type'].display_mode,
                             'target_goal': planline_board['target_goal'],
                             'goals': []}
                     for goal in planline_board['board_goals']:
@@ -92,7 +92,7 @@ class res_users_gamification_group(osv.Model):
                         'type_monetary': goal.type_id.monetary,
                         'type_unit': goal.type_id.unit,
                         'type_action': True if goal.type_id.action_id else False,
-                        'type_ponctual': goal.type_id.ponctual,
+                        'type_display': goal.type_id.display_mode,
                         'state': goal.state,
                         'completeness': goal.completeness,
                         'computation_mode': goal.computation_mode,

@@ -186,7 +186,7 @@ class gamification_badge(osv.Model):
             string='Remaining Sending Allowed', help="If a maxium is set"),
 
         'plan_ids': fields.one2many('gamification.goal.plan', 'reward_id',
-            string="Granted upon completion of"),
+            string="Reward for Challenges"),
 
         'compute_code': fields.char('Compute Code',
             help="The name of the python method that will be executed to verify if a user can receive this badge."),

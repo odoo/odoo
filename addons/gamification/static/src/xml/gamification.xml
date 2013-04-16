@@ -15,7 +15,7 @@
                     <t t-if="goal.computation_mode == 'manually' or goal.type_action">
                         <a class="oe_goal_action oe_e" t-att-id="goal.id">&amp;</a>
                     </t>
-                    <t t-if="!goal.type_ponctual">
+                    <t t-if="goal.type_display == 'progress'">
                         <t t-if="goal.type_condition == 'higher'">
                             <p>
                                 <t t-esc="goal.current" />/<span t-attf-class="#{goal.type_monetary ? 'oe_goal_field_monetary' : ''}"><t t-esc="goal.target_goal"/></span>
@@ -46,11 +46,6 @@
                                 <a class="oe_goal_action oe_e" t-att-id="planline.own_goal_id">&amp;</a>
                             </t>
                         </th>
-                    </tr>
-                    <tr>
-                        <th>#</th>
-                        <th>Pers.</th>
-                        <th>current</th>
                     </tr>
                     </thead>
                     <tbody>
