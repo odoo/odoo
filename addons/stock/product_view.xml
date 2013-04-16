@@ -112,7 +112,7 @@
                 <group name="status" position="after" version="7.0">
                     <div>
                         <separator string="Storage Location" attrs="{'invisible':[('type','=','service')]}"/>
-                        <separator string="Storage Location" groups="base.group_multi_company" attrs="{'invisible':[('type','!=','service')]}"/>
+                        <separator string="Location" groups="base.group_multi_company" attrs="{'invisible':[('type','!=','service')]}"/>
                         <group name="store">
                             <field name="company_id" groups="base.group_multi_company" widget="selection"/>
                             <field name="loc_rack" attrs="{'invisible':[('type','=','service')]}"/>
