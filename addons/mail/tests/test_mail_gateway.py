@@ -20,6 +20,7 @@
 ##############################################################################
 
 from openerp.addons.mail.tests.test_mail_base import TestMailBase
+from openerp.tools import mute_logger
 
 MAIL_TEMPLATE = """Return-Path: <whatever-2a840@postmaster.twitter.com>
 To: {to}
@@ -98,20 +99,20 @@ class TestMailgateway(TestMailBase):
         # --------------------------------------------------
 
         # Do: find partner with email -> first partner should be found
-        partner_info = self.mail_thread.message_find_partner_from_emails(cr, uid, None, ['Maybe Raoul <test@test.fr>'], link_mail=False)[0]
+        partner_info = self.mail_thread.message_partner_info_from_emails(cr, uid, None, ['Maybe Raoul <test@test.fr>'], link_mail=False)[0]
         self.assertEqual(partner_info['full_name'], 'Maybe Raoul <test@test.fr>',
-                        'mail_thread: message_find_partner_from_emails did not handle email')
+                        'mail_thread: message_partner_info_from_emails did not handle email')
         self.assertEqual(partner_info['partner_id'], p_a_id,
-                        'mail_thread: message_find_partner_from_emails wrong partner found')
+                        'mail_thread: message_partner_info_from_emails wrong partner found')
 
         # Data: add some data about partners
         # 2 - User BRaoul
         p_b_id = self.res_partner.create(cr, uid, {'name': 'BRaoul', 'email': 'test@test.fr', 'user_ids': [(4, user_raoul.id)]})
 
         # Do: find partner with email -> first user should be found
-        partner_info = self.mail_thread.message_find_partner_from_emails(cr, uid, None, ['Maybe Raoul <test@test.fr>'], link_mail=False)[0]
+        partner_info = self.mail_thread.message_partner_info_from_emails(cr, uid, None, ['Maybe Raoul <test@test.fr>'], link_mail=False)[0]
         self.assertEqual(partner_info['partner_id'], p_b_id,
-                        'mail_thread: message_find_partner_from_emails wrong partner found')
+                        'mail_thread: message_partner_info_from_emails wrong partner found')
 
         # --------------------------------------------------
         # CASE1: with object
@@ -119,10 +120,11 @@ class TestMailgateway(TestMailBase):
 
         # Do: find partner in group where there is a follower with the email -> should be taken
         self.mail_group.message_subscribe(cr, uid, [group_pigs.id], [p_b_id])
-        partner_info = self.mail_group.message_find_partner_from_emails(cr, uid, group_pigs.id, ['Maybe Raoul <test@test.fr>'], link_mail=False)[0]
+        partner_info = self.mail_group.message_partner_info_from_emails(cr, uid, group_pigs.id, ['Maybe Raoul <test@test.fr>'], link_mail=False)[0]
         self.assertEqual(partner_info['partner_id'], p_b_id,
-                        'mail_thread: message_find_partner_from_emails wrong partner found')
+                        'mail_thread: message_partner_info_from_emails wrong partner found')
 
+    @mute_logger('openerp.addons.mail.mail_thread', 'openerp.osv.orm')
     def test_10_message_process(self):
         """ Testing incoming emails processing. """
         cr, uid, user_raoul = self.cr, self.uid, self.user_raoul
@@ -187,27 +189,42 @@ class TestMailgateway(TestMailBase):
         # Data: unlink group
         frog_group.unlink()
 
-        # Do: incoming email from an unknown partner on a restricted alias
+        # Do: incoming email from an unknown partner on an Authenticated only alias -> bounce
         self._init_mock_build_email()
         self.mail_alias.write(cr, uid, [alias_id], {'alias_contact': 'partners'})
-        frog_groups = format_and_process(MAIL_TEMPLATE, to='groups@example.com, other@gmail.com')
+        frog_groups = format_and_process(MAIL_TEMPLATE, to='groups@example.com, other2@gmail.com')
         # Test: no group created
         self.assertTrue(len(frog_groups) == 0)
         # Test: email bounced
         sent_emails = self._build_email_kwargs_list
         self.assertEqual(len(sent_emails), 1,
-                            'message_process: incoming email on private alias should send a bounce email')
+                            'message_process: incoming email on Partners alias should send a bounce email')
         self.assertIn('Frogs', sent_emails[0].get('subject'),
-                            'message_process: bounce email on private alias should contain the original subject')
+                            'message_process: bounce email on Partners alias should contain the original subject')
         self.assertIn('test.sylvie.lelitre@agrolait.com', sent_emails[0].get('email_to'),
-                            'message_process: bounce email on private alias should have original email sender as recipient')
+                            'message_process: bounce email on Partners alias should have original email sender as recipient')
+
+        # Do: incoming email from an unknown partner on a Followers only alias -> bounce
+        self._init_mock_build_email()
+        self.mail_alias.write(cr, uid, [alias_id], {'alias_contact': 'followers'})
+        frog_groups = format_and_process(MAIL_TEMPLATE, to='groups@example.com, other3@gmail.com')
+        # Test: no group created
+        self.assertTrue(len(frog_groups) == 0)
+        # Test: email bounced
+        sent_emails = self._build_email_kwargs_list
+        self.assertEqual(len(sent_emails), 1,
+                            'message_process: incoming email on Followers alias should send a bounce email')
+        self.assertIn('Frogs', sent_emails[0].get('subject'),
+                            'message_process: bounce email on Followers alias should contain the original subject')
+        self.assertIn('test.sylvie.lelitre@agrolait.com', sent_emails[0].get('email_to'),
+                            'message_process: bounce email on Followers alias should have original email sender as recipient')
 
         # Do: incoming email from a known partner on an alias with known recipients, alias is owned by user that can create a group
-        self.mail_alias.write(cr, uid, [alias_id], {'alias_user_id': self.user_raoul_id})
+        self.mail_alias.write(cr, uid, [alias_id], {'alias_user_id': self.user_raoul_id, 'alias_contact': 'partners'})
         p1id = self.res_partner.create(cr, uid, {'name': 'Sylvie Lelitre', 'email': 'test.sylvie.lelitre@agrolait.com'})
         p2id = self.res_partner.create(cr, uid, {'name': 'Other Poilvache', 'email': 'other@gmail.com'})
         self._init_mock_build_email()
-        frog_groups = format_and_process(MAIL_TEMPLATE, to='groups@example.com, other@gmail.com')
+        frog_groups = format_and_process(MAIL_TEMPLATE, to='groups@example.com, other4@gmail.com')
         sent_emails = self._build_email_kwargs_list
         # Test: one group created by Raoul
         self.assertEqual(len(frog_groups), 1, 'message_process: a new mail.group should have been created')
@@ -381,6 +398,7 @@ class TestMailgateway(TestMailBase):
         self.assertEqual(msg.body, '<pre>\nPlease call me as soon as possible this afternoon!\n\n--\nSylvie\n</pre>',
                             'message_process: plaintext incoming email incorrectly parsed')
 
+    @mute_logger('openerp.addons.mail.mail_thread', 'openerp.osv.orm')
     def test_20_thread_parent_resolution(self):
         """ Testing parent/child relationships are correctly established when processing incoming mails """
         cr, uid = self.cr, self.uid
