@@ -23,8 +23,6 @@ from openerp import addons
 import logging
 from openerp.osv import fields, osv
 from openerp import tools
-from openerp.tools.translate import _
-
 _logger = logging.getLogger(__name__)
 
 class hr_employee_category(osv.osv):

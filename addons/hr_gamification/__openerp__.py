@@ -34,6 +34,5 @@ Badge received are displayed on the user profile.
         'security/ir.model.access.csv',
         'gamification_view.xml',
     ],
-    'auto_install': True,
     'js': ['static/src/js/gamification.js'],
 }

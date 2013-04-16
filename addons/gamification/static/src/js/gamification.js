@@ -155,7 +155,7 @@ openerp.gamification = function(instance) {
                             "#ff0000",
                             "#f9c802",
                             "#a9d70b"
-                        ],
+                        ]
                     });
                 }
             });

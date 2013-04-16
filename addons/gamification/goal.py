@@ -357,21 +357,9 @@ class gamification_goal(osv.Model):
         In case of a manual goal, should return a wizard to update the value
         :return: action description in a dictionnary
         """
-        print("get_action")
         goal = self.browse(cr, uid, goal_id, context=context)
         if goal.type_id.action_id:
-            action_obj = goal.type_id.action_id
-            action = {
-                'name': action_obj.name,
-                'view_type': action_obj.view_type,
-                'view_mode': action_obj.view_mode,
-                'res_model': action_obj.res_model,
-                'domain': action_obj.domain,
-                'context': action_obj.context,
-                'type': 'ir.actions.act_window',
-                'search_view_id': action_obj.search_view_id.id,
-                'views': [(v.view_id.id, v.view_mode) for v in action_obj.view_ids]
-            }
+            action = goal.type_id.action_id.read()[0]
 
             if goal.type_id.res_id_field:
                 current_user = self.pool.get('res.users').browse(cr, uid, uid, context)
@@ -381,9 +369,14 @@ class gamification_goal(osv.Model):
                 for field_name in field_names[1:]:
                     res = res.__getitem__(field_name)
                 action['res_id'] = res
-                action['view_mode'] = 'form'  # if one element to display, should see it in form mode
+
+                # if one element to display, should see it in form mode if possible
+                views = action['views']
+                for (view_id, mode) in action['views']:
+                    if mode == "form":
+                        views = [(view_id, mode)]
+                action['views'] = views
                 action['target'] = 'new'
-            print(action)
             return action
 
         if goal.computation_mode == 'manually':
