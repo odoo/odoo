@@ -274,9 +274,9 @@ class account_analytic_account(osv.osv):
     def _total_cost_calc(self, cr, uid, ids, name, arg, context=None):
         res = {}
         res_final = {}
-        child_ids = tuple(ids)  # We don't want consolidation for each of these fields because those complex computation is resource-greedy.
+        child_ids = tuple(ids) #We don't want consolidation for each of these fields because those complex computation is resource-greedy.
         for i in child_ids:
-            res[i] = 0.0
+            res[i] =  0.0
         if not child_ids:
             return res
         if child_ids:
