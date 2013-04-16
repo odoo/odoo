@@ -516,7 +516,7 @@ class res_partner(osv.osv, format_address):
         for record in self.browse(cr, uid, ids, context=context):
             name = record.name
             if record.parent_id:
-                name =  "%s (%s)" % (name, record.parent_id.name)
+                name =  "%s, %s" % (record.parent_id.name, name)
             if context.get('show_address'):
                 name = name + "\n" + self._display_address(cr, uid, record, without_company=True, context=context)
                 name = name.replace('\n\n','\n')
