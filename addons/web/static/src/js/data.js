@@ -112,24 +112,27 @@ instance.web.Query = instance.web.Class.extend({
      * @returns {jQuery.Deferred<Array<openerp.web.QueryGroup>> | null}
      */
     group_by: function (grouping) {
-        if (grouping === undefined) {
-            return null;
+        var ctx = instance.web.pyeval.eval(
+            'context', this._model.context(this._context));
+
+        // undefined passed in explicitly (!)
+        if (_.isUndefined(grouping)) {
+            grouping = [];
         }
 
         if (!(grouping instanceof Array)) {
             grouping = _.toArray(arguments);
         }
-        if (_.isEmpty(grouping)) { return null; }
+        if (_.isEmpty(grouping) && !ctx['group_by_no_leaf']) {
+            return null;
+        }
 
         var self = this;
-
-        var ctx = instance.web.pyeval.eval(
-            'context', this._model.context(this._context));
         return this._model.call('read_group', {
             groupby: grouping,
             fields: _.uniq(grouping.concat(this._fields || [])),
             domain: this._model.domain(this._filter),
-            context: this._model.context(this._context),
+            context: ctx,
             offset: this._offset,
             limit: this._limit,
             orderby: instance.web.serialize_sort(this._order_by) || false
@@ -325,7 +328,7 @@ instance.web.Model = instance.web.Class.extend({
      * Fetches the model's domain, combined with the provided domain if any
      *
      * @param {Array} [domain] to combine with the model's internal domain
-     * @returns The model's internal domain, or the AND-ed union of the model's internal domain and the provided domain
+     * @returns {instance.web.CompoundDomain} The model's internal domain, or the AND-ed union of the model's internal domain and the provided domain
      */
     domain: function (domain) {
         if (!domain) { return this._domain; }
@@ -337,7 +340,7 @@ instance.web.Model = instance.web.Class.extend({
      * combined with the provided context if any
      *
      * @param {Object} [context] to combine with the model's internal context
-     * @returns The union of the user's context and the model's internal context, as well as the provided context if any. In that order.
+     * @returns {instance.web.CompoundContext} The union of the user's context and the model's internal context, as well as the provided context if any. In that order.
      */
     context: function (context) {
         return new instance.web.CompoundContext(

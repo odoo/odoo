@@ -77,6 +77,7 @@ This module provides the core of the OpenERP Web Client.
         "static/test/class.js",
         "static/test/registry.js",
         "static/test/form.js",
+        "static/test/data.js",
         "static/test/list-utils.js",
         "static/test/formats.js",
         "static/test/rpc.js",
