@@ -1047,10 +1047,10 @@ class crm_lead(base_stage, format_address, osv.osv):
 
     def log_meeting(self, cr, uid, ids, meeting_subject, meeting_date, duration, context=None):
         if not duration:
-            duration = 'unknow'
+            duration = _('unknown')
         else:
-            duration = str(duration)+'h'
-        message = _("Meeting: '%s' has been scheduled at '%s' <br> Duration: %s" % (meeting_subject, meeting_date, duration))
+            duration = str(duration) + 'h'
+        message = _("Meeting scheduled at '%s'<br> Subject: %s <br> Duration: %s" % (meeting_date, meeting_subject, duration))
         return self.message_post(cr, uid, ids, body=message, context=context)
 
     def onchange_state(self, cr, uid, ids, state_id, context=None):

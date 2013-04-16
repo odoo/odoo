@@ -35,10 +35,10 @@ class crm_meeting(osv.Model):
     }
 
     def create(self, cr, uid, vals, context=None):
-        res = super(crm_meeting,self).create(cr, uid, vals, context=context)
+        res = super(crm_meeting, self).create(cr, uid, vals, context=context)
         obj = self.browse(cr, uid, res, context=context)
         if obj.opportunity_id:
-            self.pool.get('crm.lead').log_meeting(cr, uid, obj.opportunity_id.id, obj.name, obj.date, obj.duration, context=context)
+            self.pool.get('crm.lead').log_meeting(cr, uid, [obj.opportunity_id.id], obj.name, obj.date, obj.duration, context=context)
         return res
 
 
