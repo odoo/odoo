@@ -150,6 +150,5 @@ class wizard_multi_charts_accounts(osv.osv_memory):
         out_ids = obj_fiscal_position.search(cr, uid, [('company_id', '=', company_id)], order='id')
         return self.process_translations(cr, uid, langs, obj_fiscal_position_template, field, in_ids, obj_fiscal_position, out_ids, force_write=False, context=context)
 
-wizard_multi_charts_accounts()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

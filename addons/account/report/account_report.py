@@ -66,7 +66,6 @@ class report_account_receivable(osv.osv):
                 group by
                     to_char(date,'YYYY:IW'), a.type
             )""")
-report_account_receivable()
 
                     #a.type in ('receivable','payable')
 class temp_range(osv.osv):
@@ -77,7 +76,6 @@ class temp_range(osv.osv):
         'name': fields.char('Range',size=64)
     }
 
-temp_range()
 
 class report_aged_receivable(osv.osv):
     _name = "report.aged.receivable"
@@ -147,7 +145,6 @@ class report_aged_receivable(osv.osv):
                 select id,name from temp_range
             )""")
 
-report_aged_receivable()
 
 class report_invoice_created(osv.osv):
     _name = "report.invoice.created"
@@ -200,7 +197,6 @@ class report_invoice_created(osv.osv):
                 AND
                 (to_date(to_char(inv.create_date, 'YYYY-MM-dd'),'YYYY-MM-dd') > (CURRENT_DATE-15))
             )""")
-report_invoice_created()
 
 class report_account_type_sales(osv.osv):
     _name = "report.account_type.sales"
@@ -241,7 +237,6 @@ class report_account_type_sales(osv.osv):
             group by
                 to_char(inv.date_invoice, 'YYYY'),to_char(inv.date_invoice,'MM'),inv.currency_id, inv.period_id, inv_line.product_id, account.user_type
             )""")
-report_account_type_sales()
 
 
 class report_account_sales(osv.osv):
@@ -283,6 +278,5 @@ class report_account_sales(osv.osv):
             group by
                 to_char(inv.date_invoice, 'YYYY'),to_char(inv.date_invoice,'MM'),inv.currency_id, inv.period_id, inv_line.product_id, account.id
             )""")
-report_account_sales()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

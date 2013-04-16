@@ -75,7 +75,6 @@ class report_xml(osv.osv):
             'report_rml_content': rml_data and base64.encodestring(rml_data) or False
         }
 
-report_xml()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

@@ -48,7 +48,6 @@ class hr_contract(osv.osv):
         'supplementary_allowance': fields.float('Supplementary Allowance', digits_compute=dp.get_precision('Payroll')),
     }
 
-hr_contract()
 
 class payroll_advice(osv.osv):
     '''
@@ -157,7 +156,6 @@ class payroll_advice(osv.osv):
         return {
             'value':res
         }
-payroll_advice()
 
 class hr_payslip_run(osv.osv):
 
@@ -216,7 +214,6 @@ class hr_payslip_run(osv.osv):
                     advice_line_pool.create(cr, uid, advice_line, context=context)
         return self.write(cr, uid, ids, {'available_advice' : True})
 
-hr_payslip_run()
 
 class payroll_advice_line(osv.osv):
     '''
@@ -247,7 +244,6 @@ class payroll_advice_line(osv.osv):
         'debit_credit': 'C',
     }
 
-payroll_advice_line()
 
 class hr_payslip(osv.osv):
     '''
@@ -265,7 +261,6 @@ class hr_payslip(osv.osv):
         default.update({'advice_id' : False})
         return super(hr_payslip, self).copy(cr, uid, id, default, context=context)
 
-hr_payslip()
 
 class res_company(osv.osv):
 
@@ -277,6 +272,5 @@ class res_company(osv.osv):
         'dearness_allowance': True,
     }
 
-res_company()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

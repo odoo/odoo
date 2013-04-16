@@ -42,7 +42,6 @@ class sale_shop(osv.osv):
         'company_id': lambda s, cr, uid, c: s.pool.get('res.company')._company_default_get(cr, uid, 'sale.shop', context=c),
     }
 
-sale_shop()
 
 class sale_order(osv.osv):
     _name = "sale.order"
