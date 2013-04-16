@@ -1,15 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
-    <!-- <data noupdate="1"> -->
-    <data>
+    <data noupdate="1">
 
-        <record model="ir.rule" id="issue_portal_user_rule">
+        <record id="portal_issue_rule" model="ir.rule">
             <field name="name">Project/Issue: portal users: public or portal and following</field>
             <field name="model_id" ref="project_issue.model_project_issue"/>
             <field name="domain_force">['|',
-                                            ('project_id.visibility', '=', 'public'),
+                                            ('project_id.privacy_visibility', '=', 'public'),
                                             '&amp;',
-                                                ('project_id.visibility', 'in', ['portal', 'followers']),
+                                                ('project_id.privacy_visibility', 'in', ['portal', 'followers']),
                                                 '|',
                                                     ('message_follower_ids','in', [user.partner_id.id]),
                                                     ('user_id', '=', user.id),
@@ -22,11 +21,18 @@
             <field name="domain_force">['|',
                                             ('user_id', '=', user.id),
                                             '|',
-                                                ('project_id.visibility', 'in', ['public', 'portal', 'employees']),
+                                                ('project_id.privacy_visibility', 'in', ['public', 'portal', 'employees']),
                                                 '&amp;',
-                                                    ('project_id.visibility', '=', 'followers'),
+                                                    ('project_id.privacy_visibility', '=', 'followers'),
                                                     ('message_follower_ids', 'in', [user.partner_id.id]),
                                         ]</field>
+        </record>
+
+        <record model="ir.rule" id="issue_anonymous_rule">
+            <field name="name">Project/Issue: anonymous users: public only</field>
+            <field name="model_id" ref="project_issue.model_project_issue"/>
+            <field name="domain_force">[('project_id.privacy_visibility', '=', 'public')]</field>
+            <field name="groups" eval="[(4, ref('portal.group_anonymous'))]"/>
         </record>
 
     </data>

@@ -31,7 +31,6 @@ class open_questionnaire_line(osv.osv_memory):
         'wizard_id': fields.many2one('open.questionnaire', 'Questionnaire'),
     }
 
-open_questionnaire_line()
 
 class open_questionnaire(osv.osv_memory):
     _name = 'open.questionnaire'
@@ -84,6 +83,5 @@ class open_questionnaire(osv.osv_memory):
             'context': context
         }
 
-open_questionnaire()
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

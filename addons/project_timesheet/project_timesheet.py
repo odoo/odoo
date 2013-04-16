@@ -69,7 +69,6 @@ class project_project(osv.osv):
         result['help'] = help
         return result
 
-project_project()
 
 class project_work(osv.osv):
     _inherit = "project.task.work"
@@ -218,7 +217,6 @@ class project_work(osv.osv):
         'hr_analytic_timesheet_id':fields.many2one('hr.analytic.timesheet','Related Timeline Id', ondelete='set null'),
     }
 
-project_work()
 
 class task(osv.osv):
     _inherit = "project.task"
@@ -254,7 +252,6 @@ class task(osv.osv):
                         hr_anlytic_timesheet.write(cr, uid, [line_id], vals_line, {})
         return super(task,self).write(cr, uid, ids, vals, context)
 
-task()
 
 class res_partner(osv.osv):
     _inherit = 'res.partner'
@@ -266,7 +263,6 @@ class res_partner(osv.osv):
         return super(res_partner,self).unlink(cursor, user, ids,
                 context=context)
 
-res_partner()
 
 class account_analytic_line(osv.osv):
    _inherit = "account.analytic.line"
@@ -293,6 +289,5 @@ class account_analytic_line(osv.osv):
            raise osv.except_osv(_('Invalid Analytic Account !'), _('You cannot select a Analytic Account which is in Close or Cancelled state.'))
        return res
 
-account_analytic_line()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

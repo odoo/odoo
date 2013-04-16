@@ -90,7 +90,7 @@ class TestPortalProject(common.TransactionCase):
 
         # Test 'Pigs' project
         self.project_pigs_id = self.project_project.create(cr, uid,
-            {'name': 'Pigs', 'alias_contact': 'everyone', 'visibility': 'public'},
+            {'name': 'Pigs', 'privacy_visibility': 'public'},
             {'mail_create_nolog': True})
         # Various test tasks
         self.task_1_id = self.project_task.create(cr, uid,
@@ -173,7 +173,7 @@ class TestPortalProject(common.TransactionCase):
         # ----------------------------------------
         # CASE2: portal project
         # ----------------------------------------
-        self.project_project.write(cr, uid, [pigs_id], {'visibility': 'portal'})
+        self.project_project.write(cr, uid, [pigs_id], {'privacy_visibility': 'portal'})
 
         # Do: Alfred reads project -> ok (employee ok public)
         self.project_project.read(cr, self.user_alfred_id, pigs_id, ['name'])
@@ -213,7 +213,7 @@ class TestPortalProject(common.TransactionCase):
         # ----------------------------------------
         # CASE3: employee project
         # ----------------------------------------
-        self.project_project.write(cr, uid, [pigs_id], {'visibility': 'employees'})
+        self.project_project.write(cr, uid, [pigs_id], {'privacy_visibility': 'employees'})
 
         # Do: Alfred reads project -> ok (employee ok employee)
         self.project_project.read(cr, self.user_alfred_id, pigs_id, ['name'])
@@ -244,7 +244,7 @@ class TestPortalProject(common.TransactionCase):
         # ----------------------------------------
         # CASE4: followers project
         # ----------------------------------------
-        self.project_project.write(cr, uid, [pigs_id], {'visibility': 'followers'})
+        self.project_project.write(cr, uid, [pigs_id], {'privacy_visibility': 'followers'})
 
         # Do: Alfred reads project -> ko (employee ko followers)
         self.assertRaises(except_orm, self.project_project.read,

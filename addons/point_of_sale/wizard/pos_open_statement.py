@@ -86,6 +86,5 @@ class pos_open_statement(osv.osv_memory):
             'search_view_id': search_id,
         }
 
-pos_open_statement()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

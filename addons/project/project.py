@@ -209,7 +209,7 @@ class project(osv.osv):
         return [('project.task', "Tasks")]
 
     def _get_visibility_selection(self, cr, uid, context=None):
-        """ Overriden in project_issue to offer more options """
+        """ Overriden in portal_project to offer more options """
         return [('public', 'All Users'),
                 ('employees', 'Employees Only'),
                 ('followers', 'Followers Only')]
@@ -275,8 +275,7 @@ class project(osv.osv):
                                          "with Tasks (or optionally Issues if the Issue Tracker module is installed)."),
         'alias_model': fields.selection(_alias_models, "Alias Model", select=True, required=True,
                                         help="The kind of document created when an email is received on this project's email alias"),
-        'visibility': fields.selection(_visibility_selection, 'Privacy / Visibility',
-            select=True, required=True, oldname="privacy_visibility"),
+        'privacy_visibility': fields.selection(_visibility_selection, 'Privacy / Visibility', required=True),
         'state': fields.selection([('template', 'Template'),('draft','New'),('open','In Progress'), ('cancelled', 'Cancelled'),('pending','Pending'),('close','Closed')], 'Status', required=True,),
         'doc_count':fields.function(_get_attached_docs, string="Number of documents attached", type='int')
      }

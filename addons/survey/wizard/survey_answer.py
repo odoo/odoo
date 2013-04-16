@@ -1253,6 +1253,5 @@ class survey_question_wiz(osv.osv_memory):
             'context': context
         }
 
-survey_question_wiz()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
