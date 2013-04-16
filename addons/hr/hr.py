@@ -19,10 +19,12 @@
 #
 ##############################################################################
 
-from openerp import addons
 import logging
+
+from openerp.modules.module import get_module_resource
 from openerp.osv import fields, osv
 from openerp import tools
+
 _logger = logging.getLogger(__name__)
 
 class hr_employee_category(osv.osv):
@@ -259,7 +261,7 @@ class hr_employee(osv.osv):
         return {'value': {'work_email' : work_email}}
 
     def _get_default_image(self, cr, uid, context=None):
-        image_path = addons.get_module_resource('hr', 'static/src/img', 'default_image.png')
+        image_path = get_module_resource('hr', 'static/src/img', 'default_image.png')
         return tools.image_resize_image_big(open(image_path, 'rb').read().encode('base64'))
 
     _defaults = {
