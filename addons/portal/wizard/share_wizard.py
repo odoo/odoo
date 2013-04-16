@@ -179,7 +179,6 @@ class share_wizard_portal(osv.TransientModel):
         super(share_wizard_portal,self)._finish_result_lines(cr, uid, wizard_data, share_group_id, context=context)
         self.copy_share_group_access_and_delete(cr, wizard_data, share_group_id, context=context)
 
-share_wizard_portal()
 
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

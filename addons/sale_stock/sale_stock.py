@@ -33,7 +33,6 @@ class sale_shop(osv.osv):
         'warehouse_id': fields.many2one('stock.warehouse', 'Warehouse'),
     }
 
-sale_shop()
 
 class sale_order(osv.osv):
     _inherit = "sale.order"

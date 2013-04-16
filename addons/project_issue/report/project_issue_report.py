@@ -105,6 +105,5 @@ class project_issue_report(osv.osv):
                 WHERE c.active= 'true'
             )""")
 
-project_issue_report()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

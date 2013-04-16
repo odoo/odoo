@@ -46,7 +46,6 @@ class stock_move(osv.osv):
         })
         return super(stock_move, self).copy(cr, uid, id, default, context)
 
-stock_move()
 
 class mrp_production_workcenter_line(osv.osv):
 
@@ -371,7 +370,6 @@ class mrp_production(osv.osv):
         self._compute_planned_workcenter(cr, uid, ids, context=context)
         return result
 
-mrp_production()
 
 class mrp_operations_operation_code(osv.osv):
     _name="mrp_operations.operation.code"
@@ -380,7 +378,6 @@ class mrp_operations_operation_code(osv.osv):
         'code': fields.char('Code', size=16, required=True),
         'start_stop': fields.selection([('start','Start'),('pause','Pause'),('resume','Resume'),('cancel','Cancelled'),('done','Done')], 'Status', required=True),
     }
-mrp_operations_operation_code()
 
 class mrp_operations_operation(osv.osv):
     _name="mrp_operations.operation"
@@ -560,6 +557,5 @@ class mrp_operations_operation(osv.osv):
         'date_start': lambda *a:datetime.now().strftime('%Y-%m-%d %H:%M:%S')
     }
 
-mrp_operations_operation()
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

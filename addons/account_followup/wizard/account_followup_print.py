@@ -72,7 +72,6 @@ class account_followup_stat_by_partner(osv.osv):
                     GROUP BY
                     l.partner_id, l.company_id
             )""") #Blocked is to take into account litigation
-account_followup_stat_by_partner()
 
 
 class account_followup_sending_results(osv.osv_memory):
@@ -106,7 +105,6 @@ class account_followup_sending_results(osv.osv_memory):
         'description':_get_description,
     }
  
-account_followup_sending_results()
 
 
 class account_followup_print(osv.osv_memory):
@@ -315,6 +313,5 @@ class account_followup_print(osv.osv_memory):
                 to_update[str(id)]= {'level': fups[followup_line_id][1], 'partner_id': stat_line_id}
         return {'partner_ids': partner_list, 'to_update': to_update}
 
-account_followup_print()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -1131,7 +1131,6 @@ class account_bank_statement(osv.osv):
     _defaults = {
         'user_id': lambda self,cr,uid,c={}: uid
     }
-account_bank_statement()
 
 class account_bank_statement_line(osv.osv):
     _inherit = 'account.bank.statement.line'
@@ -1139,7 +1138,6 @@ class account_bank_statement_line(osv.osv):
         'pos_statement_id': fields.many2one('pos.order', ondelete='cascade'),
     }
 
-account_bank_statement_line()
 
 class pos_order_line(osv.osv):
     _name = "pos.order.line"

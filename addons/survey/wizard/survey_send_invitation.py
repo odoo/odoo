@@ -220,7 +220,6 @@ Thanks,''') % (name, self.pool.get('ir.config_parameter').get_param(cr, uid, 'we
             'target': 'new',
             'context': context
         }
-survey_send_invitation()
 
 class survey_send_invitation_log(osv.osv_memory):
     _name = 'survey.send.invitation.log'
@@ -235,6 +234,5 @@ class survey_send_invitation_log(osv.osv_memory):
         data['note'] = context.get('note', '')
         return data
 
-survey_send_invitation_log()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -36,7 +36,6 @@ class res_partner(osv.osv):
             help="This pricelist will be used, instead of the default one, for sales to the current partner"),
     }
 
-res_partner()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 
