@@ -92,15 +92,6 @@ class crm_lead(base_stage, format_address, osv.osv):
         context['empty_list_help_document_name'] = _("leads")
         return super(crm_lead, self).get_empty_list_help(cr, uid, help, context=context)
 
-    def onchange_user_id(self, cr, uid, ids, section_id, user_id, context=None):
-        """ When changing the user, also set a section_id or restrict section id
-            to the ones user_id is member of. """
-        if user_id:
-            section_ids = self.pool.get('crm.case.section').search(cr, uid, ['|', ('user_id', '=', user_id), ('member_ids', '=', user_id)], context=context)
-            if len(section_ids) > 0 and section_id not in section_ids:
-                section_id = section_ids[0]
-        return {'value': {'section_id': section_id}}
-
     def create(self, cr, uid, vals, context=None):
         if context is None:
             context = {}
@@ -371,6 +362,16 @@ class crm_lead(base_stage, format_address, osv.osv):
                 'fax' : partner.fax,
             }
         return {'value' : values}
+
+    def on_change_user(self, cr, uid, ids, user_id, context=None):
+        """ When changing the user, also set a section_id or restrict section id
+            to the ones user_id is member of. """
+        section_id = False
+        if user_id:
+            section_ids = self.pool.get('crm.case.section').search(cr, uid, ['|', ('user_id', '=', user_id), ('member_ids', '=', user_id)], context=context)
+            if section_ids:
+                section_id = section_ids[0]
+        return {'value': {'section_id': section_id}}
 
     def _check(self, cr, uid, ids=False, context=None):
         """ Override of the base.stage method.

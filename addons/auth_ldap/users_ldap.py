@@ -227,7 +227,6 @@ class CompanyLDAP(osv.osv):
         'create_user': True,
     }
 
-CompanyLDAP()
 
 
 class res_company(osv.osv):
@@ -236,7 +235,6 @@ class res_company(osv.osv):
         'ldaps': fields.one2many(
             'res.company.ldap', 'company', 'LDAP Parameters'),
     }
-res_company()
 
 
 class users(osv.osv):
@@ -282,5 +280,4 @@ class users(osv.osv):
         cr.close()
         raise openerp.exceptions.AccessDenied()
         
-users()
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -67,7 +67,6 @@ class hr_employee_category(osv.osv):
         (_check_recursion, 'Error! You cannot create recursive Categories.', ['parent_id'])
     ]
 
-hr_employee_category()
 
 class hr_job(osv.osv):
 
@@ -144,7 +143,6 @@ class hr_job(osv.osv):
         self.write(cr, uid, ids, {'state': 'open', 'no_of_recruitment': 0})
         return True
 
-hr_job()
 
 class hr_employee(osv.osv):
     _name = "hr.employee"
@@ -221,7 +219,7 @@ class hr_employee(osv.osv):
             (model, mail_group_id) = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'mail', 'group_all_employees')
             employee = self.browse(cr, uid, employee_id, context=context)
             self.pool.get('mail.group').message_post(cr, uid, [mail_group_id],
-                body='Welcome to %s! Please help them take the first steps with OpenERP!' % (employee.name),
+                body='Welcome to %s! Please help him/her take the first steps with OpenERP!' % (employee.name),
                 subtype='mail.mt_comment', context=context)
         except:
             pass # group deleted: do not push a message
@@ -284,7 +282,6 @@ class hr_employee(osv.osv):
         (_check_recursion, 'Error! You cannot create recursive hierarchy of Employee(s).', ['parent_id']),
     ]
 
-hr_employee()
 
 class hr_department(osv.osv):
     _description = "Department"
@@ -326,7 +323,6 @@ class res_users(osv.osv):
         'employee_ids': fields.one2many('hr.employee', 'user_id', 'Related employees'),
         }
 
-res_users()
 
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

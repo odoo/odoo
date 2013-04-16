@@ -37,7 +37,6 @@ class sale_order_line(osv.osv):
             i = i + 1
         return create_ids
 
-sale_order_line()
 
 class sale_order(osv.osv):
     _inherit = "sale.order"

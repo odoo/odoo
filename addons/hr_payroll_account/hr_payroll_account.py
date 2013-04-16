@@ -187,7 +187,6 @@ class hr_payslip(osv.osv):
                 move_pool.post(cr, uid, [move_id], context=context)
         return super(hr_payslip, self).process_sheet(cr, uid, [slip.id], context=context)
 
-hr_payslip()
 
 class hr_salary_rule(osv.osv):
     _inherit = 'hr.salary.rule'
@@ -197,7 +196,6 @@ class hr_salary_rule(osv.osv):
         'account_debit': fields.many2one('account.account', 'Debit Account'),
         'account_credit': fields.many2one('account.account', 'Credit Account'),
     }
-hr_salary_rule()
 
 class hr_contract(osv.osv):
 
@@ -207,7 +205,6 @@ class hr_contract(osv.osv):
         'analytic_account_id':fields.many2one('account.analytic.account', 'Analytic Account'),
         'journal_id': fields.many2one('account.journal', 'Salary Journal'),
     }
-hr_contract()
 
 class hr_payslip_run(osv.osv):
 
@@ -228,6 +225,5 @@ class hr_payslip_run(osv.osv):
         'journal_id': _get_default_journal,
     }
 
-hr_payslip_run()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
