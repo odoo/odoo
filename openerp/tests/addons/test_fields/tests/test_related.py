@@ -1,9 +1,9 @@
 #
-# test cases for fields access, etc.
+# test cases for related fields, etc.
 #
-import common
 
 from openerp.osv import fields
+from openerp.tests import common
 
 
 class TestRelatedField(common.TransactionCase):
@@ -12,27 +12,6 @@ class TestRelatedField(common.TransactionCase):
         super(TestRelatedField, self).setUp()
         self.partner = self.registry('res.partner')
         self.company = self.registry('res.company')
-
-        # add related fields in _columns, and update _all_columns accordingly
-        self.partner_columns = self.partner._columns
-        self.partner_all_columns = self.partner._all_columns
-        test_columns = {
-            'related_company_partner_id': fields.related('company_id', 'partner_id', type='many2one', obj='res.partner'),
-            'single_related_company_id': fields.related('company_id', type='many2one', obj='res.company'),
-            'related_related_company_id': fields.related('single_related_company_id', type='many2one', obj='res.company'),
-        }
-
-        self.partner._columns = dict(self.partner_columns)
-        self.partner._all_columns = dict(self.partner_all_columns)
-        for name, field in test_columns.iteritems():
-            self.partner._columns[name] = field
-            self.partner._all_columns[name] = fields.column_info(name, field, None, None, None)
-
-    def tearDown(self):
-        # restore _columns and _all_columns
-        self.partner._columns = self.partner_columns
-        self.partner._all_columns = self.partner_all_columns
-        super(TestRelatedField, self).tearDown()
 
     def test_0_related(self):
         """ test an usual related field """

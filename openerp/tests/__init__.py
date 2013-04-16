@@ -13,7 +13,6 @@ import test_api
 import test_basecase
 import test_db_cursor
 import test_expression
-import test_fields
 import test_ir_filters
 import test_ir_sequence
 import test_mail
@@ -37,7 +36,6 @@ checks = [
     test_mail,
     test_db_cursor,
     test_orm,
-    test_fields,
     test_basecase,
     test_view_validation,
     test_misc,
