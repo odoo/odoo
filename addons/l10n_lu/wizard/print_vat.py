@@ -92,6 +92,5 @@ class vat_declaration_report(osv.osv_memory):
         data['form']['period_id'] = self.browse(cr, uid, ids)[0].period_id.id
         return { 'type': 'ir.actions.report.xml', 'report_name': 'l10n_lu.tax.report.print', 'datas': data}
 
-vat_declaration_report()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

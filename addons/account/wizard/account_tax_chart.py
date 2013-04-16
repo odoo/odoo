@@ -73,6 +73,5 @@ class account_tax_chart(osv.osv_memory):
         'target_move': 'posted'
     }
 
-account_tax_chart()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

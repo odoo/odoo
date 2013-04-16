@@ -220,6 +220,5 @@ class account_invoice_refund(osv.osv_memory):
         return self.compute_refund(cr, uid, ids, data_refund, context=context)
 
 
-account_invoice_refund()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

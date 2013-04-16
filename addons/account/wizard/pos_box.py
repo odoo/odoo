@@ -63,7 +63,6 @@ class CashBoxIn(CashBox):
             'name' : box.name,
         }
 
-CashBoxIn()
 
 class CashBoxOut(CashBox):
     _name = 'cash.box.out'
@@ -78,4 +77,3 @@ class CashBoxOut(CashBox):
             'name' : box.name,
         }
 
-CashBoxOut()

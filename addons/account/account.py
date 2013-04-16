@@ -132,7 +132,6 @@ class account_payment_term_line(osv.osv):
         (_check_percent, 'Percentages for Payment Term Line must be between 0 and 1, Example: 0.02 for 2%.', ['value_amount']),
     ]
 
-account_payment_term_line()
 
 class account_account_type(osv.osv):
     _name = "account.account.type"
@@ -198,7 +197,6 @@ class account_account_type(osv.osv):
     }
     _order = "code"
 
-account_account_type()
 
 def _code_get(self, cr, uid, context=None):
     acc_type_obj = self.pool.get('account.account.type')
@@ -212,7 +210,6 @@ def _code_get(self, cr, uid, context=None):
 
 class account_tax(osv.osv):
     _name = 'account.tax'
-account_tax()
 
 class account_account(osv.osv):
     _order = "parent_left"
@@ -697,7 +694,6 @@ class account_account(osv.osv):
         self._check_moves(cr, uid, ids, "unlink", context=context)
         return super(account_account, self).unlink(cr, uid, ids, context=context)
 
-account_account()
 
 class account_journal(osv.osv):
     _name = "account.journal"
@@ -849,7 +845,6 @@ class account_journal(osv.osv):
 
         return self.name_get(cr, user, ids, context=context)
 
-account_journal()
 
 class account_fiscalyear(osv.osv):
     _name = "account.fiscalyear"
@@ -945,7 +940,6 @@ class account_fiscalyear(osv.osv):
             ids = self.search(cr, user, [('name', operator, name)]+ args, limit=limit)
         return self.name_get(cr, user, ids, context=context)
 
-account_fiscalyear()
 
 class account_period(osv.osv):
     _name = "account.period"
@@ -1071,7 +1065,6 @@ class account_period(osv.osv):
             return self.search(cr, uid, [('date_start', '>=', period_date_start), ('date_stop', '<=', period_date_stop), ('company_id', '=', company1_id)])
         return self.search(cr, uid, [('date_start', '>=', period_date_start), ('date_stop', '<=', period_date_stop), ('company_id', '=', company1_id), ('special', '=', False)])
 
-account_period()
 
 class account_journal_period(osv.osv):
     _name = "account.journal.period"
@@ -1128,7 +1121,6 @@ class account_journal_period(osv.osv):
     }
     _order = "period_id"
 
-account_journal_period()
 
 class account_fiscalyear(osv.osv):
     _inherit = "account.fiscalyear"
@@ -1145,7 +1137,6 @@ class account_fiscalyear(osv.osv):
         })
         return super(account_fiscalyear, self).copy(cr, uid, id, default=default, context=context)
 
-account_fiscalyear()
 #----------------------------------------------------------
 # Entries
 #----------------------------------------------------------
@@ -1643,7 +1634,6 @@ class account_move(osv.osv):
         valid_moves = [move.id for move in valid_moves]
         return len(valid_moves) > 0 and valid_moves or False
 
-account_move()
 
 class account_move_reconcile(osv.osv):
     _name = "account.move.reconcile"
@@ -1717,7 +1707,6 @@ class account_move_reconcile(osv.osv):
                 result.append((r.id,r.name))
         return result
 
-account_move_reconcile()
 
 #----------------------------------------------------------
 # Tax
@@ -1865,7 +1854,6 @@ class account_tax_code(osv.osv):
     ]
     _order = 'code'
 
-account_tax_code()
 
 class account_tax(osv.osv):
     """
@@ -2273,7 +2261,6 @@ class account_tax(osv.osv):
                 total += r['amount']
         return res
 
-account_tax()
 
 # ---------------------------------------------------------
 # Account Entries Models
@@ -2385,7 +2372,6 @@ class account_model(osv.osv):
 
         return {'value': {'company_id': company_id}}
 
-account_model()
 
 class account_model_line(osv.osv):
     _name = "account.model.line"
@@ -2409,7 +2395,6 @@ class account_model_line(osv.osv):
         ('credit_debit1', 'CHECK (credit*debit=0)',  'Wrong credit or debit value in model, they must be positive!'),
         ('credit_debit2', 'CHECK (credit+debit>=0)', 'Wrong credit or debit value in model, they must be positive!'),
     ]
-account_model_line()
 
 # ---------------------------------------------------------
 # Account Subscription
@@ -2483,7 +2468,6 @@ class account_subscription(osv.osv):
         self.write(cr, uid, ids, {'state':'running'})
         return True
 
-account_subscription()
 
 class account_subscription_line(osv.osv):
     _name = "account.subscription.line"
@@ -2512,7 +2496,6 @@ class account_subscription_line(osv.osv):
 
     _rec_name = 'date'
 
-account_subscription_line()
 
 #  ---------------------------------------------------------------
 #   Account Templates: Account, Tax, Tax Code and chart. + Wizard
@@ -2520,7 +2503,6 @@ account_subscription_line()
 
 class account_tax_template(osv.osv):
     _name = 'account.tax.template'
-account_tax_template()
 
 class account_account_template(osv.osv):
     _order = "code"
@@ -2648,7 +2630,6 @@ class account_account_template(osv.osv):
         obj_acc._parent_store_compute(cr)
         return acc_template_ref
 
-account_account_template()
 
 class account_add_tmpl_wizard(osv.osv_memory):
     """Add one more account from the template.
@@ -2702,7 +2683,6 @@ class account_add_tmpl_wizard(osv.osv_memory):
     def action_cancel(self, cr, uid, ids, context=None):
         return { 'type': 'state', 'state': 'end' }
 
-account_add_tmpl_wizard()
 
 class account_tax_code_template(osv.osv):
 
@@ -2774,7 +2754,6 @@ class account_tax_code_template(osv.osv):
         (_check_recursion, 'Error!\nYou cannot create recursive Tax Codes.', ['parent_id'])
     ]
     _order = 'code,name'
-account_tax_code_template()
 
 
 class account_chart_template(osv.osv):
@@ -2807,7 +2786,6 @@ class account_chart_template(osv.osv):
         'complete_tax_set': True,
     }
 
-account_chart_template()
 
 class account_tax_template(osv.osv):
 
@@ -2937,7 +2915,6 @@ class account_tax_template(osv.osv):
         res.update({'tax_template_to_tax': tax_template_to_tax, 'account_dict': todo_dict})
         return res
 
-account_tax_template()
 
 # Fiscal Position Templates
 
@@ -2985,7 +2962,6 @@ class account_fiscal_position_template(osv.osv):
                 })
         return True
 
-account_fiscal_position_template()
 
 class account_fiscal_position_tax_template(osv.osv):
     _name = 'account.fiscal.position.tax.template'
@@ -2998,7 +2974,6 @@ class account_fiscal_position_tax_template(osv.osv):
         'tax_dest_id': fields.many2one('account.tax.template', 'Replacement Tax')
     }
 
-account_fiscal_position_tax_template()
 
 class account_fiscal_position_account_template(osv.osv):
     _name = 'account.fiscal.position.account.template'
@@ -3010,7 +2985,6 @@ class account_fiscal_position_account_template(osv.osv):
         'account_dest_id': fields.many2one('account.account.template', 'Account Destination', domain=[('type','<>','view')], required=True)
     }
 
-account_fiscal_position_account_template()
 
 # ---------------------------------------------------------
 # Account generation from template wizards
@@ -3550,7 +3524,6 @@ class wizard_multi_charts_accounts(osv.osv_memory):
             current_num += 1
         return True
 
-wizard_multi_charts_accounts()
 
 class account_bank_accounts_wizard(osv.osv_memory):
     _name='account.bank.accounts.wizard'
@@ -3562,6 +3535,5 @@ class account_bank_accounts_wizard(osv.osv_memory):
         'account_type': fields.selection([('cash','Cash'), ('check','Check'), ('bank','Bank')], 'Account Type', size=32),
     }
 
-account_bank_accounts_wizard()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

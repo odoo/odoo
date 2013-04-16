@@ -454,7 +454,6 @@ class resource_calendar_leaves(osv.osv):
         'holiday_id': fields.many2one("hr.holidays", "Leave Request"),
     }
 
-resource_calendar_leaves()
 
 
 class hr_employee(osv.osv):
@@ -486,9 +485,9 @@ class hr_employee(osv.osv):
             leave_id = holiday_obj.create(cr, uid, {'name': _('Leave Request for %s') % employee.name, 'employee_id': employee.id, 'holiday_status_id': status_id, 'type': 'remove', 'holiday_type': 'employee', 'number_of_days_temp': abs(diff)}, context=context)
         else:
             return False
-        holidays_obj.signal_confirm(cr, uid, [leave_id])
-        holidays_obj.signal_validate(cr, uid, [leave_id])
-        holidays_obj.signal_second_validate(cr, uid, [leave_id])
+        holiday_obj.signal_confirm(cr, uid, [leave_id])
+        holiday_obj.signal_validate(cr, uid, [leave_id])
+        holiday_obj.signal_second_validate(cr, uid, [leave_id])
         return True
 
     def _get_remaining_days(self, cr, uid, ids, name, args, context=None):
@@ -543,6 +542,5 @@ class hr_employee(osv.osv):
         'leave_date_to': fields.function(_get_leave_status, multi='leave_status', type='date', string='To Date'),
     }
 
-hr_employee()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

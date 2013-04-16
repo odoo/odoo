@@ -41,7 +41,6 @@ class event_type(osv.osv):
         'default_registration_max': 0,
     }
 
-event_type()
 
 class event_event(osv.osv):
     """Event"""
