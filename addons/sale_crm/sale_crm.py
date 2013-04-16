@@ -19,8 +19,10 @@
 #
 ##############################################################################
 
-from datetime import datetime
+from datetime import date
+from dateutil.relativedelta import relativedelta
 from openerp.osv import osv, fields
+from openerp.tools.translate import _
 
 
 class sale_order(osv.osv):
@@ -35,14 +37,35 @@ class sale_order(osv.osv):
 class crm_case_section(osv.osv):
     _inherit = 'crm.case.section'
 
-    def _get_sum_month_invoice(self, cr, uid, ids, field_name, arg, context=None):
+    def _get_sum_duration_invoice(self, cr, uid, ids, field_name, arg, context=None):
         res = dict.fromkeys(ids, 0)
         obj = self.pool.get('account.invoice.report')
-        when = datetime.today()
-        for section_id in ids:
-            invoice_ids = obj.search(cr, uid, [("section_id", "=", section_id), ('state', 'not in', ['draft', 'cancel']), ('year', '=', when.year), ('month', '=', when.month > 9 and when.month or "0%s" % when.month)], context=context)
+
+        previous_month = {
+            "monthly": 0,
+            "semesterly": 2,
+            "semiannually": 5,
+            "annually": 11
+        }
+        for section in self.browse(cr, uid, ids, context=context):
+            when = date.today().replace(day=1) + relativedelta(months=-previous_month[section.target_invoice_duration])
+
+            invoice_ids = obj.search(cr, uid, [("section_id", "=", section.id), ('state', 'not in', ['draft', 'cancel']), ('date', '>=', when)], context=context)
             for invoice in obj.browse(cr, uid, invoice_ids, context=context):
-                res[section_id] += invoice.price_total
+                res[section.id] += invoice.price_total
+        return res
+
+    def _get_target_invoice_duration_txt(self, cr, uid, ids, field_name, arg, context=None):
+        res = dict.fromkeys(ids, "")
+
+        duration_txt = {
+            "monthly": _("this month"),
+            "semesterly": _("this semester"),
+            "semiannually": _("this semi"),
+            "annually": _("this year")
+        }
+        for section in self.browse(cr, uid, ids, context=context):
+            res[section.id] = duration_txt[section.target_invoice_duration]
         return res
 
     _columns = {
@@ -55,11 +78,19 @@ class crm_case_section(osv.osv):
         'invoice_ids': fields.one2many('account.invoice', 'section_id',
             string='Invoices', readonly=True,
             domain=[('state', 'not in', ['draft', 'cancel'])]),
-        'sum_month_invoice': fields.function(_get_sum_month_invoice,
-            string='Total invoiced this month',
+        'sum_duration_invoice': fields.function(_get_sum_duration_invoice,
+            string='Total invoiced',
             type='integer', readonly=True),
         'forcasted': fields.integer(string='Total forcasted'),
         'target_invoice': fields.integer(string='Target Invoice'),
+        'target_invoice_duration': fields.selection([("monthly", "Monthly"), ("semesterly", "Semesterly"), ("semiannually", "Semiannually"), ("annually", "Annually")],
+            string='Report duration view', required=True),
+        'target_invoice_duration_txt': fields.function(_get_target_invoice_duration_txt,
+            string='Duration',
+            type="string", readonly=True),
+    }
+    _defaults = {
+        'target_invoice_duration': "monthly",
     }
 
     def action_forcasted(self, cr, uid, id, value, context=None):
