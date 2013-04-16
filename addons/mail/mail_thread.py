@@ -705,7 +705,6 @@ class mail_thread(osv.AbstractModel):
 
             # check for author
             if not author_id:
-                email_from = decode(message.get('From'))
                 author_ids = model_pool._find_partner_from_emails(cr, uid, thread_id, [email_from], context=context)
                 if author_ids:
                     author_id = author_ids[0]
