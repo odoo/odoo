@@ -334,7 +334,7 @@
             <field name="name">Quotations</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">purchase.order</field>
-            <field name="context">{'search_default_draft': 1, 'search_default_to_approve': 1}</field>
+            <field name="context">{'search_default_to_approve': 1}</field>
             <field name="domain">[('state','in',('draft','sent','confirmed'))]</field>
             <field name="view_mode">tree,form,graph,calendar</field>
             <field name="search_view_id" ref="view_purchase_order_filter"/>
