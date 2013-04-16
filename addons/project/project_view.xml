@@ -98,6 +98,8 @@
                                 <span class="oe_e oe_e_alias">%%</span>
                                 <field name="alias_name" class="oe_inline"/>@<field name="alias_domain" class="oe_inline" readonly="1"/>
                             </span>
+                            <span class="oe_e oe_e_alias">V</span>
+                            <field name="alias_contact" class="oe_inline"/>
                         </div>
                         <div name="options_active">
                             <field name="use_tasks" class="oe_inline"/>
@@ -111,7 +113,7 @@
                     </div>
                     <group>
                         <group>
-                            <field name="visibility" widget="radio"/>
+                            <field name="privacy_visibility" widget="radio"/>
                             <field name="user_id" string="Project Manager" 
                                 attrs="{'readonly':[('state','in',['close', 'cancelled'])]}" 
                                 context="{'default_groups_ref': ['base.group_user', 'project.group_project_manager']}"/>
