@@ -54,14 +54,17 @@ class crm_meeting(base_state, osv.Model):
             return []
         clause = ''
         res = False
-        for arg in args:
-            if arg[1] == '=':
-                if arg[2]:
-                    clause = 'rel.partner_id = ' + str(arg[2])
+        for field, operator, value in args:
+            if operator == '=':
+                if value:
+                    clause = 'rel.partner_id ' + operator + str(value)
+            elif operator == 'ilike':
+                if value:
+                    clause = 'p.id = rel.partner_id and p.name ' + operator + "'%" + str(value) +"%'"
         if clause:
-            cursor.execute('SELECT rel.meeting_id ' \
-                'FROM crm_meeting_partner_rel AS rel ' \
-                'WHERE ' + clause )
+            cursor.execute('SELECT rel.meeting_id, p.name ' \
+                'FROM crm_meeting_partner_rel AS rel, res_partner AS p ' \
+                'WHERE ' + clause)
             res = cursor.fetchall()
         if not res:
             return [('id', '=', 0)]
