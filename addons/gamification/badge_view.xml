@@ -103,7 +103,8 @@
                         <group string="Rewards for challenges">
                             <field name="plan_ids" widget="many2many_kanban" nolabel="1" />
                         </group>
-<!--                         <group string="Rules for Automatic Granting">
+<!--
+                         <group string="Rules for Automatic Granting">
                             <field name="rule_automatic" widget="radio"/>
                             <field name="compute_code" attrs="{'invisible': [('rule_automatic','!=','python')]}"/>
                             <field name="goal_type_ids" attrs="{'invisible': [('rule_automatic','!=','goals')]}" widget="many2many_tags"/>
@@ -144,12 +145,6 @@
                         <t t-name="kanban-box">
                             <div t-attf-class="#{record.stat_my.raw_value ? 'oe_kanban_color_5' : 'oe_kanban_color_white'} oe_kanban_card oe_kanban_global_click oe_kanban_badge">
                                 <div class="oe_kanban_content">
-                                    <div class="oe_dropdown_toggle oe_dropdown_kanban">
-                                        <span class="oe_e">í</span>
-                                        <ul class="oe_dropdown_menu">
-                                            <li><a type="open">Badge Details</a></li>
-                                        </ul>
-                                    </div>
                                     <div class="oe_kanban_left">
                                         <a type="open"><img t-att-src="kanban_image('gamification.badge', 'image', record.image.raw_value)" t-att-title="record.name.value" width="110" height="110" /></a>
                                     </div>
@@ -173,7 +168,7 @@
                                             </span>
                                         </t>
                                         <t t-if="record.remaining_sending.value == 0">
-                                            <div class="oe_grey">Can not send</div>
+                                            <div class="oe_grey">Can not grant</div>
                                         </t>
                                     </div>
                                     <div class="oe_kanban_badge_avatars">

@@ -130,6 +130,13 @@ class hr_employee(osv.osv):
     _name = "hr.employee"
     _inherit = "hr.employee"
 
+    def _get_employee_goals(self, cr, uid, ids, field_name, arg, context=None):
+        """Return the list of goals assigned to the employee"""
+        res = {}
+        for employee in self.browse(cr, uid, ids, context=context):
+            res[employee.id] = self.pool.get('gamification.goal').search(cr,uid,[('user_id', '=', employee.user_id.id), ('plan_id.category', '=', 'hr')], context=context)
+        return res
+
     def _get_employee_badges(self, cr, uid, ids, field_name, arg, context=None):
         """Return the list of badge_users assigned to the employee"""
         res = {}
@@ -148,6 +155,7 @@ class hr_employee(osv.osv):
         return res
 
     _columns = {
+        'goal_ids': fields.function(_get_employee_goals, type="one2many", obj='gamification.goal', string="Employee HR Goals"),
         'badge_ids': fields.function(_get_employee_badges, type="one2many",
             obj='gamification.badge.user', string="Employee Badges"),
         'has_badges': fields.function(_has_badges, type="boolean", string="Has Badges"),

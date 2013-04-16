@@ -1,13 +1,7 @@
 openerp.hr_gamification = function(instance) {
     instance.web_kanban.KanbanRecord.include({
         on_card_clicked: function() {
-            if (this.view.dataset.model === 'gamification.badge') {
-                if (this.record.stat_count.raw_value > 0) {
-                    this.$('.oe_kanban_badge_avatars a').first().click();
-                } else {
-                    return false;
-                }
-            } else if (this.view.dataset.model === 'gamification.badge.user') {
+            if (this.view.dataset.model === 'gamification.badge.user') {
                 var action = {
                     type: 'ir.actions.act_window',
                     res_model: 'gamification.badge',

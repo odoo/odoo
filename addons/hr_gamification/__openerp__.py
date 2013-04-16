@@ -24,11 +24,16 @@
     'author': 'OpenERP SA',
     'category': 'HR',
     'depends': ['gamification', 'hr'],
-    'description': """Use the HR ressources for the gamification process of goals.
+    'description': """Use the HR ressources for the gamification process.
 
+The HR officer can now manage challenges and badges.
 This allow the user to send badges to employees instead of simple users.
-Badge received are displayed on the user profile.""",
-    'data': ['badge_view.xml'],
+Badge received are displayed on the user profile.
+""",
+    'data': [
+        'security/ir.model.access.csv',
+        'gamification_view.xml',
+    ],
     'auto_install': True,
-    'js': ['static/src/js/badges.js'],
+    'js': ['static/src/js/gamification.js'],
 }

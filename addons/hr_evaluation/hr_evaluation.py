@@ -105,17 +105,9 @@ class hr_employee(osv.osv):
     _inherit="hr.employee"
     
 
-    def _get_employee_goals(self, cr, uid, ids, field_name, arg, context=None):
-        """Return the list of goals assigned to the employee"""
-        res = {}
-        for employee in self.browse(cr, uid, ids, context=context):
-            res[employee.id] = self.pool.get('gamification.goal').search(cr,uid,[('user_id', '=', employee.user_id.id), ('plan_id.category', '=', 'hr')], context=context)
-        return res
-
     _columns = {
         'evaluation_plan_id': fields.many2one('hr_evaluation.plan', 'Appraisal Plan'),
         'evaluation_date': fields.date('Next Appraisal Date', help="The date of the next appraisal is computed by the appraisal plan's dates (first appraisal + periodicity)."),
-        'goal_ids': fields.function(_get_employee_goals, type="one2many", obj='gamification.goal', string="Employee HR Goals")
     }
     def run_employee_evaluation(self, cr, uid, automatic=False, use_new_cursor=False, context=None):
         now = parser.parse(datetime.now().strftime('%Y-%m-%d'))
