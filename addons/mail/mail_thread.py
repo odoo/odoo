@@ -618,7 +618,7 @@ class mail_thread(osv.AbstractModel):
                                 'body_html': '<div><p>Hello,</p>'
                                     '<p>The following email sent to %s cannot be accepted because this address'
                                     'is private. Only known contacts are allowed to contact this address.</p></div>'
-                                    '<blockquote>%s</blockquote>' % (message.get('to'), message.get('body')),
+                                    '<blockquote>%s</blockquote>' % (message.get('to'), message_dict.get('body')),
                                 'subject': 'Re: %s' % message.get('subject'),
                                 'email_to': message.get('from'),
                                 'auto_delete': True,
