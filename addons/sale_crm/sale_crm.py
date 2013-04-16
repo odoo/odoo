@@ -58,7 +58,8 @@ class crm_case_section(osv.osv):
         'sum_month_invoice': fields.function(_get_sum_month_invoice,
             string='Total invoiced this month',
             type='integer', readonly=True),
-        'forcasted': fields.integer(string='Total forcasted for this month'),
+        'forcasted': fields.integer(string='Total forcasted'),
+        'target_invoice': fields.integer(string='Target Invoice'),
     }
 
     def action_forcasted(self, cr, uid, id, value, context=None):

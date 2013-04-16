@@ -207,6 +207,19 @@
             <field name="act_window_id" ref="sale_crm.action_invoice_salesteams"/>
         </record>
 
+        <record id="crm_case_section_salesteams_view_form" model="ir.ui.view">
+            <field name="name">crm.case.section.form</field>
+            <field name="model">crm.case.section</field>
+            <field name="inherit_id" ref="crm.crm_case_section_view_form"/>
+            <field name="arch" type="xml">
+            <data>
+                <field name="active" position="before">
+                    <field name="target_invoice"/>
+                </field>
+            </data>
+            </field>
+        </record>
+
         <record id="crm_case_section_salesteams_view_kanban" model="ir.ui.view">
             <field name="name">crm.case.section.kanban</field>
             <field name="model">crm.case.section</field>
@@ -219,6 +232,7 @@
                     <field name="invoice_ids"/>
                     <field name="sum_month_invoice"/>
                     <field name="forcasted"/>
+                    <field name="target_invoice"/>
                 </xpath>
                 <xpath expr="//div[@class='oe_items_list']" position="inside">
                     <a name="%(action_quotations_salesteams)d" type="action">
@@ -239,8 +253,8 @@
                 </xpath>
                 <xpath expr="//div[@class='oe_items_list']" position="after">
                     <div class="oe_center">
-                        <div class="oe_justgage" style="width:160px; height: 120px;" t-att-data-value="record.sum_month_invoice.raw_value" t-att-data-max="25000" data-label="this month">Invoiced</div>
-                        <div class="oe_justgage" style="width:160px; height: 120px;" t-att-data-value="record.forcasted.raw_value" t-att-data-max="25000" data-label="this month" data-action="action_forcasted">Forcasted</div>
+                        <div class="oe_justgage" style="width:160px; height: 120px;" t-att-data-value="record.sum_month_invoice.raw_value" t-att-data-max="record.target_invoice.raw_value" data-label="this month">Invoiced</div>
+                        <div class="oe_justgage" style="width:160px; height: 120px;" t-att-data-value="record.forcasted.raw_value" t-att-data-max="record.target_invoice.raw_value" data-label="this month" data-action="action_forcasted">Forcasted</div>
                     </div>
                 </xpath>
             </data>

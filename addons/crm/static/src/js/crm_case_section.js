@@ -32,7 +32,7 @@ openerp.crm = function(openerp) {
                         if ($el.data('action')) {
                             $el.click(function (event) {
                                 event.stopPropagation();
-                                if (!$el.find(".oe_justgage_edit").size()) {
+                                if (self.view.is_action_enabled('edit') && !$el.find(".oe_justgage_edit").size()) {
                                     var $svg = $el.find('svg');
                                     $div = $('<div class="oe_justgage_edit" style="z-index: 1; position: absolute; width: ' + $svg.width() + 'px; top: ' + ($svg.height()/2-5) + 'px;"/>');
                                     $input = $('<input style="text-align: center; width: ' + ($svg.width()-40) + 'px; margin: auto;"/>').val($el.data('value'));
