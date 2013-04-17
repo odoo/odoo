@@ -63,10 +63,11 @@ class CashBoxIn(CashBox):
             'name' : box.name,
         }
 
-CashBoxIn()
 
 class CashBoxOut(CashBox):
     _name = 'cash.box.out'
+
+    _columns = CashBox._columns.copy()
 
     def _compute_values_for_statement_line(self, cr, uid, box, record, context=None):
         amount = box.amount or 0.0
@@ -78,4 +79,3 @@ class CashBoxOut(CashBox):
             'name' : box.name,
         }
 
-CashBoxOut()

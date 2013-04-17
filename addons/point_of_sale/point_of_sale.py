@@ -911,6 +911,7 @@ class pos_order(osv.osv):
         account_tax_obj = self.pool.get('account.tax')
         user_proxy = self.pool.get('res.users')
         property_obj = self.pool.get('ir.property')
+        cur_obj = self.pool.get('res.currency')
 
         period = account_period_obj.find(cr, uid, context=context)[0]
 
@@ -1006,17 +1007,19 @@ class pos_order(osv.osv):
             #TOFIX: a deep refactoring of this method (and class!) is needed in order to get rid of this stupid hack
             assert order.lines, _('The POS order must have lines when calling this method')
             # Create an move for each order line
+
+            cur = order.pricelist_id.currency_id
             for line in order.lines:
                 tax_amount = 0
                 taxes = [t for t in line.product_id.taxes_id]
                 computed_taxes = account_tax_obj.compute_all(cr, uid, taxes, line.price_unit * (100.0-line.discount) / 100.0, line.qty)['taxes']
 
                 for tax in computed_taxes:
-                    tax_amount += round(tax['amount'], 2)
+                    tax_amount += cur_obj.round(cr, uid, cur, tax['amount'])
                     group_key = (tax['tax_code_id'], tax['base_code_id'], tax['account_collected_id'], tax['id'])
 
                     group_tax.setdefault(group_key, 0)
-                    group_tax[group_key] += round(tax['amount'], 2)
+                    group_tax[group_key] += cur_obj.round(cr, uid, cur, tax['amount'])
 
                 amount = line.price_subtotal
 
@@ -1133,7 +1136,6 @@ class account_bank_statement(osv.osv):
     _defaults = {
         'user_id': lambda self,cr,uid,c={}: uid
     }
-account_bank_statement()
 
 class account_bank_statement_line(osv.osv):
     _inherit = 'account.bank.statement.line'
@@ -1141,7 +1143,6 @@ class account_bank_statement_line(osv.osv):
         'pos_statement_id': fields.many2one('pos.order', ondelete='cascade'),
     }
 
-account_bank_statement_line()
 
 class pos_order_line(osv.osv):
     _name = "pos.order.line"

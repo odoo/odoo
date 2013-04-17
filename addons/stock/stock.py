@@ -49,7 +49,6 @@ class stock_incoterms(osv.osv):
         'active': True,
     }
 
-stock_incoterms()
 
 class stock_journal(osv.osv):
     _name = "stock.journal"
@@ -62,7 +61,6 @@ class stock_journal(osv.osv):
         'user_id': lambda s, c, u, ctx: u
     }
 
-stock_journal()
 
 #----------------------------------------------------------
 # Stock Location
@@ -472,7 +470,6 @@ class stock_location(osv.osv):
                     continue
         return False
 
-stock_location()
 
 
 class stock_tracking(osv.osv):
@@ -538,7 +535,6 @@ class stock_tracking(osv.osv):
         """
         return self.pool.get('action.traceability').action_traceability(cr,uid,ids,context)
 
-stock_tracking()
 
 #----------------------------------------------------------
 # Stock Picking
@@ -1491,7 +1487,6 @@ class stock_production_lot(osv.osv):
         default.update(date=time.strftime('%Y-%m-%d %H:%M:%S'), move_ids=[])
         return super(stock_production_lot, self).copy(cr, uid, id, default=default, context=context)
 
-stock_production_lot()
 
 class stock_production_lot_revision(osv.osv):
     _name = 'stock.production.lot.revision'
@@ -1512,7 +1507,6 @@ class stock_production_lot_revision(osv.osv):
         'date': fields.date.context_today,
     }
 
-stock_production_lot_revision()
 
 # ----------------------------------------------------
 # Move
@@ -2737,7 +2731,6 @@ class stock_move(osv.osv):
 
         return [move.id for move in complete]
 
-stock_move()
 
 class stock_inventory(osv.osv):
     _name = "stock.inventory"
@@ -2860,7 +2853,6 @@ class stock_inventory(osv.osv):
             self.write(cr, uid, [inv.id], {'state': 'cancel'}, context=context)
         return True
 
-stock_inventory()
 
 class stock_inventory_line(osv.osv):
     _name = "stock.inventory.line"
@@ -2900,7 +2892,6 @@ class stock_inventory_line(osv.osv):
         result = {'product_qty': amount, 'product_uom': uom, 'prod_lot_id': False}
         return {'value': result}
 
-stock_inventory_line()
 
 #----------------------------------------------------------
 # Stock Warehouse
@@ -2932,7 +2923,6 @@ class stock_warehouse(osv.osv):
         'lot_output_id': _default_lot_output_id,
     }
 
-stock_warehouse()
 
 #----------------------------------------------------------
 # "Empty" Classes that are used to vary from the original stock.picking  (that are dedicated to the internal pickings)

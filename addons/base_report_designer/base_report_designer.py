@@ -20,12 +20,13 @@
 ##############################################################################
 
 import base64
+from StringIO import StringIO
+
+from openerp.modules.module import get_module_resource
 import openerp.modules.registry
 from openerp.osv import osv
 from openerp_sxw2rml import sxw2rml
-from StringIO import StringIO
-from openerp import addons
- 
+
 
 class report_xml(osv.osv):
     _inherit = 'ir.actions.report.xml'
@@ -36,9 +37,9 @@ class report_xml(osv.osv):
         '''
         sxwval = StringIO(base64.decodestring(file_sxw))
         if file_type=='sxw':
-            fp = open(addons.get_module_resource('base_report_designer','openerp_sxw2rml', 'normalized_oo2rml.xsl'),'rb')
+            fp = open(get_module_resource('base_report_designer','openerp_sxw2rml', 'normalized_oo2rml.xsl'),'rb')
         if file_type=='odt':
-            fp = open(addons.get_module_resource('base_report_designer','openerp_sxw2rml', 'normalized_odt2rml.xsl'),'rb')
+            fp = open(get_module_resource('base_report_designer','openerp_sxw2rml', 'normalized_odt2rml.xsl'),'rb')
         return  {'report_rml_content': str(sxw2rml(sxwval, xsl=fp.read()))}
 
     def upload_report(self, cr, uid, report_id, file_sxw, file_type, context=None):
@@ -47,9 +48,9 @@ class report_xml(osv.osv):
         '''
         sxwval = StringIO(base64.decodestring(file_sxw))
         if file_type=='sxw':
-            fp = open(addons.get_module_resource('base_report_designer','openerp_sxw2rml', 'normalized_oo2rml.xsl'),'rb')
+            fp = open(get_module_resource('base_report_designer','openerp_sxw2rml', 'normalized_oo2rml.xsl'),'rb')
         if file_type=='odt':
-            fp = open(addons.get_module_resource('base_report_designer','openerp_sxw2rml', 'normalized_odt2rml.xsl'),'rb')
+            fp = open(get_module_resource('base_report_designer','openerp_sxw2rml', 'normalized_odt2rml.xsl'),'rb')
         report = self.pool['ir.actions.report.xml'].write(cr, uid, [report_id], {
             'report_sxw_content': base64.decodestring(file_sxw), 
             'report_rml_content': str(sxw2rml(sxwval, xsl=fp.read())), 
@@ -75,7 +76,6 @@ class report_xml(osv.osv):
             'report_rml_content': rml_data and base64.encodestring(rml_data) or False
         }
 
-report_xml()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

@@ -77,7 +77,6 @@ class stock_report_prodlots(osv.osv):
     def unlink(self, cr, uid, ids, context=None):
         raise osv.except_osv(_('Error!'), _('You cannot delete any record!'))
 
-stock_report_prodlots()
 
 class stock_report_tracklots(osv.osv):
     _name = "stock.report.tracklots"
@@ -133,7 +132,6 @@ class stock_report_tracklots(osv.osv):
     def unlink(self, cr, uid, ids, context=None):
         raise osv.except_osv(_('Error!'), _('You cannot delete any record!'))
 
-stock_report_tracklots()
 
 class report_stock_lines_date(osv.osv):
     _name = "report.stock.lines.date"
@@ -162,6 +160,5 @@ class report_stock_lines_date(osv.osv):
                 group by p.id
             )""")
 
-report_stock_lines_date()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

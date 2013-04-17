@@ -178,6 +178,5 @@ class account_common_report(osv.osv_memory):
         data['form']['used_context'] = used_context
         return self._print_report(cr, uid, ids, data, context=context)
 
-account_common_report()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -136,7 +136,6 @@ class purchase_report(osv.osv):
                     u2.factor
             )
         """)
-purchase_report()
 
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

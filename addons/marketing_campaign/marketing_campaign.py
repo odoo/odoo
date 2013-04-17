@@ -236,7 +236,6 @@ Normal - the campaign runs normally and automatically sends all emails and repor
         return Workitems.search(cr, uid, duplicate_workitem_domain, context=context)
 
 
-marketing_campaign()
 
 class marketing_campaign_segment(osv.osv):
     _name = "marketing.campaign.segment"
@@ -383,7 +382,6 @@ class marketing_campaign_segment(osv.osv):
         Workitems.process_all(cr, uid, list(campaigns), context=context)
         return True
 
-marketing_campaign_segment()
 
 class marketing_campaign_activity(osv.osv):
     _name = "marketing.campaign.activity"
@@ -510,7 +508,6 @@ class marketing_campaign_activity(osv.osv):
         workitem = workitem_obj.browse(cr, uid, wi_id, context=context)
         return action(cr, uid, activity, workitem, context=context)
 
-marketing_campaign_activity()
 
 class marketing_campaign_transition(osv.osv):
     _name = "marketing.campaign.transition"
@@ -582,7 +579,6 @@ class marketing_campaign_transition(osv.osv):
         ('interval_positive', 'CHECK(interval_nbr >= 0)', 'The interval must be positive or zero')
     ]
 
-marketing_campaign_transition()
 
 class marketing_campaign_workitem(osv.osv):
     _name = "marketing.campaign.workitem"
@@ -818,7 +814,6 @@ class marketing_campaign_workitem(osv.osv):
             raise osv.except_osv(_('No preview'),_('The current step for this item has no email or report to preview.'))
         return res
 
-marketing_campaign_workitem()
 
 class email_template(osv.osv):
     _inherit = "email.template"
@@ -828,7 +823,6 @@ class email_template(osv.osv):
 
     # TODO: add constraint to prevent disabling / disapproving an email account used in a running campaign
 
-email_template()
 
 class report_xml(osv.osv):
     _inherit = 'ir.actions.report.xml'
@@ -841,7 +835,6 @@ class report_xml(osv.osv):
             args.append(('model', '=', model))
         return super(report_xml, self).search(cr, uid, args, offset, limit, order, context, count)
 
-report_xml()
 
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
