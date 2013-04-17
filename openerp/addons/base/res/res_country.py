@@ -71,13 +71,13 @@ addresses belonging to this country.\n\nYou can use the python-style string pate
     name_search = location_name_search
 
     def create(self, cursor, user, vals, context=None):
-        if 'code' in vals:
+        if vals.get('code'):
             vals['code'] = vals['code'].upper()
         return super(Country, self).create(cursor, user, vals,
                 context=context)
 
     def write(self, cursor, user, ids, vals, context=None):
-        if 'code' in vals:
+        if vals.get('code', False):
             vals['code'] = vals['code'].upper()
         return super(Country, self).write(cursor, user, ids, vals,
                 context=context)

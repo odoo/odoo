@@ -41,6 +41,8 @@ import openerp.tools as tools
 from openerp.loglevels import ustr
 
 _logger = logging.getLogger(__name__)
+_test_logger = logging.getLogger('openerp.tests')
+
 
 class MailDeliveryException(osv.except_osv):
     """Specific exception subclass for mail delivery errors"""
@@ -411,7 +413,7 @@ class ir_mail_server(osv.osv):
 
         # Do not actually send emails in testing mode!
         if getattr(threading.currentThread(), 'testing', False):
-            _logger.log(logging.TEST, "skip sending email in test mode")
+            _test_logger.info("skip sending email in test mode")
             return message['Message-Id']
 
         # Get SMTP Server Details from Mail Server

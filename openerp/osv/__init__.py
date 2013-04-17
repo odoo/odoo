@@ -22,7 +22,6 @@
 import osv
 import fields
 
-#.apidoc title: Object Services and Relational Mapping
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

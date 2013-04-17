@@ -27,13 +27,13 @@ import re
 
 import openerp
 from openerp import SUPERUSER_ID
-from openerp import pooler, tools
+from openerp import tools
 from openerp.osv import osv, fields
 from openerp.tools.translate import _
 
 class format_address(object):
     def fields_view_get_address(self, cr, uid, arch, context={}):
-        user_obj = self.pool.get('res.users')
+        user_obj = self.pool['res.users']
         fmt = user_obj.browse(cr, SUPERUSER_ID, uid, context).company_id.country_id
         fmt = fmt and fmt.address_format
         layouts = {
@@ -154,7 +154,7 @@ class res_partner_title(osv.osv):
     }
 
 def _lang_get(self, cr, uid, context=None):
-    lang_pool = self.pool.get('res.lang')
+    lang_pool = self.pool['res.lang']
     ids = lang_pool.search(cr, uid, [], context=context)
     res = lang_pool.read(cr, uid, ids, ['code', 'name'], context)
     return [(r['code'], r['name']) for r in res]
@@ -299,7 +299,7 @@ class res_partner(osv.osv, format_address):
 
     def fields_view_get(self, cr, user, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
         if (not view_id) and (view_type=='form') and context and context.get('force_email', False):
-            view_id = self.pool.get('ir.model.data').get_object_reference(cr, user, 'base', 'view_partner_simple_form')[1]
+            view_id = self.pool['ir.model.data'].get_object_reference(cr, user, 'base', 'view_partner_simple_form')[1]
         res = super(res_partner,self).fields_view_get(cr, user, view_id, view_type, context, toolbar=toolbar, submenu=submenu)
         if view_type == 'form':
             res['arch'] = self.fields_view_get_address(cr, user, res['arch'], context=context)
@@ -311,7 +311,7 @@ class res_partner(osv.osv, format_address):
         'tz': lambda self, cr, uid, ctx: ctx.get('tz', False),
         'customer': True,
         'category_id': _default_category,
-        'company_id': lambda self, cr, uid, ctx: self.pool.get('res.company')._company_default_get(cr, uid, 'res.partner', context=ctx),
+        'company_id': lambda self, cr, uid, ctx: self.pool['res.company']._company_default_get(cr, uid, 'res.partner', context=ctx),
         'color': 0,
         'is_company': False,
         'type': 'default',
@@ -348,12 +348,12 @@ class res_partner(osv.osv, format_address):
 
     def onchange_state(self, cr, uid, ids, state_id, context=None):
         if state_id:
-            country_id = self.pool.get('res.country.state').browse(cr, uid, state_id, context).country_id.id
+            country_id = self.pool['res.country.state'].browse(cr, uid, state_id, context).country_id.id
             return {'value':{'country_id':country_id}}
         return {}
 
     def _check_ean_key(self, cr, uid, ids, context=None):
-        for partner_o in pooler.get_pool(cr.dbname).get('res.partner').read(cr, uid, ids, ['ean13',]):
+        for partner_o in self.pool['res.partner'].read(cr, uid, ids, ['ean13',]):
             thisean=partner_o['ean13']
             if thisean and thisean!='':
                 if len(thisean)!=13:
@@ -374,35 +374,43 @@ class res_partner(osv.osv, format_address):
         # Update parent and siblings or children records
         if isinstance(ids, (int, long)):
             ids = [ids]
-        if vals.get('is_company')==False:
-            vals.update({'child_ids' : [(5,)]})
         for partner in self.browse(cr, uid, ids, context=context):
             update_ids = []
             if partner.is_company:
-                domain_children = [('parent_id', '=', partner.id), ('use_parent_address', '=', True)]
+                domain_children = [('parent_id', 'child_of', partner.id), ('use_parent_address', '=', True)]
                 update_ids = self.search(cr, uid, domain_children, context=context)
-            elif partner.parent_id:
-                 if vals.get('use_parent_address')==True:
-                     domain_siblings = [('parent_id', '=', partner.parent_id.id), ('use_parent_address', '=', True)]
-                     update_ids = [partner.parent_id.id] + self.search(cr, uid, domain_siblings, context=context)
-                 if 'use_parent_address' not in vals and  partner.use_parent_address:
-                    domain_siblings = [('parent_id', '=', partner.parent_id.id), ('use_parent_address', '=', True)]
-                    update_ids = [partner.parent_id.id] + self.search(cr, uid, domain_siblings, context=context)
+            elif partner.parent_id and vals.get('use_parent_address', partner.use_parent_address):
+                domain_siblings = [('parent_id', '=', partner.parent_id.id), ('use_parent_address', '=', True)]
+                update_ids = [partner.parent_id.id] + self.search(cr, uid, domain_siblings, context=context)
             self.update_address(cr, uid, update_ids, vals, context)
         return super(res_partner,self).write(cr, uid, ids, vals, context=context)
 
     def create(self, cr, uid, vals, context=None):
         if context is None:
-            context={}
+            context = {}
         # Update parent and siblings records
-        if vals.get('parent_id') and vals.get('use_parent_address'):
-            domain_siblings = [('parent_id', '=', vals['parent_id']), ('use_parent_address', '=', True)]
-            update_ids = [vals['parent_id']] + self.search(cr, uid, domain_siblings, context=context)
-            self.update_address(cr, uid, update_ids, vals, context)
-        return super(res_partner,self).create(cr, uid, vals, context=context)
+        if vals.get('parent_id'):
+            if 'use_parent_address' in vals:
+                use_parent_address = vals['use_parent_address']
+            else:
+                use_parent_address = self.default_get(cr, uid, ['use_parent_address'], context=context)['use_parent_address']
+
+            if use_parent_address:
+                domain_siblings = [('parent_id', '=', vals['parent_id']), ('use_parent_address', '=', True)]
+                update_ids = [vals['parent_id']] + self.search(cr, uid, domain_siblings, context=context)
+                self.update_address(cr, uid, update_ids, vals, context)
+
+                # add missing address keys
+                onchange_values = self.onchange_address(cr, uid, [], use_parent_address,
+                                                        vals['parent_id'], context=context).get('value') or {}
+                vals.update(dict((key, value)
+                            for key, value in onchange_values.iteritems()
+                            if key in ADDRESS_FIELDS and key not in vals))
+
+        return super(res_partner, self).create(cr, uid, vals, context=context)
 
     def update_address(self, cr, uid, ids, vals, context=None):
-        addr_vals = dict((key, vals[key]) for key in POSTAL_ADDRESS_FIELDS if vals.get(key))
+        addr_vals = dict((key, vals[key]) for key in POSTAL_ADDRESS_FIELDS if key in vals)
         if addr_vals:
             return super(res_partner, self).write(cr, uid, ids, addr_vals, context)
 
@@ -429,10 +437,10 @@ class res_partner(osv.osv, format_address):
         """ Supported syntax:
             - 'Raoul <raoul@grosbedon.fr>': will find name and email address
             - otherwise: default, everything is set as the name """
-        match = re.search(r'([^\s,<@]+@[^>\s,]+)', text)
-        if match:
-            email = match.group(1)
-            name = text[:text.index(email)].replace('"','').replace('<','').strip()
+        emails = tools.email_split(text)
+        if emails:
+            email = emails[0]
+            name = text[:text.index(email)].replace('"', '').replace('<', '').strip()
         else:
             name, email = text, ''
         return name, email
@@ -475,8 +483,7 @@ class res_partner(osv.osv, format_address):
                              OR partner.name || ' (' || COALESCE(company.name,'') || ')'
                           ''' + operator + ' %(name)s ' + limit_str, query_args)
             ids = map(lambda x: x[0], cr.fetchall())
-            if args:
-                ids = self.search(cr, uid, [('id', 'in', ids)] + args, limit=limit, context=context)
+            ids = self.search(cr, uid, [('id', 'in', ids)] + args, limit=limit, context=context)
             if ids:
                 return self.name_get(cr, uid, ids, context)
         return super(res_partner,self).name_search(cr, uid, name, args, operator=operator, context=context, limit=limit)
@@ -505,7 +512,7 @@ class res_partner(osv.osv, format_address):
 
     def email_send(self, cr, uid, ids, email_from, subject, body, on_error=''):
         while len(ids):
-            self.pool.get('ir.cron').create(cr, uid, {
+            self.pool['ir.cron'].create(cr, uid, {
                 'name': 'Send Partner Emails',
                 'user_id': uid,
                 'model': 'res.partner',
@@ -541,12 +548,12 @@ class res_partner(osv.osv, format_address):
         if res: return res
         if not context.get('category_id', False):
             return False
-        return _('Partners: ')+self.pool.get('res.partner.category').browse(cr, uid, context['category_id'], context).name
+        return _('Partners: ')+self.pool['res.partner.category'].browse(cr, uid, context['category_id'], context).name
 
     def main_partner(self, cr, uid):
         ''' Return the id of the main partner
         '''
-        model_data = self.pool.get('ir.model.data')
+        model_data = self.pool['ir.model.data']
         return model_data.browse(cr, uid,
                             model_data.search(cr, uid, [('module','=','base'),
                                                 ('name','=','main_partner')])[0],

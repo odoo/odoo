@@ -21,6 +21,5 @@
 
 from odt2odt import parseNode
 
-#.apidoc title: ODT to ODT engine
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

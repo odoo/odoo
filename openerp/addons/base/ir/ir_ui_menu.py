@@ -30,6 +30,8 @@ from openerp.osv import fields, osv
 from openerp.tools.translate import _
 from openerp import SUPERUSER_ID
 
+MENU_ITEM_SEPARATOR = "/"
+
 def one_in(setA, setB):
     """Check the presence of an element of setA in setB
     """
@@ -154,7 +156,7 @@ class ir_ui_menu(osv.osv):
         if level<=0:
             return '...'
         if elmt.parent_id:
-            parent_path = self._get_one_full_name(elmt.parent_id, level-1) + "/"
+            parent_path = self._get_one_full_name(elmt.parent_id, level-1) + MENU_ITEM_SEPARATOR
         else:
             parent_path = ''
         return parent_path + elmt.name
@@ -287,8 +289,7 @@ class ir_ui_menu(osv.osv):
         res = dict.fromkeys(ids, False)
         for menu in self.browse(cr, uid, ids, context=context):
             if menu.action and menu.action.type in ('ir.actions.act_window', 'ir.actions.client') and menu.action.res_model:
-                obj = self.pool.get(menu.action.res_model)
-                if obj and obj._needaction:
+                if menu.action.res_model in self.pool and self.pool[menu.action.res_model]._needaction:
                     res[menu.id] = True
         return res
 
@@ -305,14 +306,15 @@ class ir_ui_menu(osv.osv):
                 'needaction_counter': False,
             }
             if menu.action and menu.action.type in ('ir.actions.act_window', 'ir.actions.client') and menu.action.res_model:
-                obj = self.pool.get(menu.action.res_model)
-                if obj and obj._needaction:
-                    if menu.action.type == 'ir.actions.act_window':
-                        dom = menu.action.domain and eval(menu.action.domain, {'uid': uid}) or []
-                    else:
-                        dom = eval(menu.action.params_store or '{}', {'uid': uid}).get('domain')
-                    res[menu.id]['needaction_enabled'] = obj._needaction
-                    res[menu.id]['needaction_counter'] = obj._needaction_count(cr, uid, dom, context=context)
+                if menu.action.res_model in self.pool:
+                    obj = self.pool[menu.action.res_model]
+                    if obj._needaction:
+                        if menu.action.type == 'ir.actions.act_window':
+                            dom = menu.action.domain and eval(menu.action.domain, {'uid': uid}) or []
+                        else:
+                            dom = eval(menu.action.params_store or '{}', {'uid': uid}).get('domain')
+                        res[menu.id]['needaction_enabled'] = obj._needaction
+                        res[menu.id]['needaction_counter'] = obj._needaction_count(cr, uid, dom, context=context)
         return res
 
     _columns = {

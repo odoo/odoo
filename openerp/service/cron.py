@@ -30,6 +30,7 @@ cron jobs, for all databases of a single OpenERP server instance.
 import logging
 import threading
 import time
+from datetime import datetime
 
 import openerp
 
@@ -44,11 +45,7 @@ def cron_runner(number):
         _logger.debug('cron%d polling for jobs', number)
         for db_name, registry in registries.items():
             while True and registry.ready:
-                # acquired = openerp.addons.base.ir.ir_cron.ir_cron._acquire_job(db_name)
-                # TODO why isnt openerp.addons.base defined ?
-                import sys
-                base = sys.modules['addons.base']
-                acquired = base.ir.ir_cron.ir_cron._acquire_job(db_name)
+                acquired = openerp.addons.base.ir.ir_cron.ir_cron._acquire_job(db_name)
                 if not acquired:
                     break
 
@@ -60,6 +57,12 @@ def start_service():
     threads it spawns are not marked daemon).
 
     """
+    
+    # Force call to strptime just before starting the cron thread
+    # to prevent time.strptime AttributeError within the thread.
+    # See: http://bugs.python.org/issue7980
+    datetime.strptime('2012-01-01', '%Y-%m-%d')
+
     for i in range(openerp.tools.config['max_cron_threads']):
         def target():
             cron_runner(i)

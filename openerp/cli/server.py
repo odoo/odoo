@@ -95,7 +95,7 @@ def preload_registry(dbname):
     """ Preload a registry, and start the cron."""
     try:
         update_module = True if openerp.tools.config['init'] or openerp.tools.config['update'] else False
-        db, registry = openerp.pooler.get_db_and_pool(dbname,update_module=update_module)
+        openerp.modules.registry.RegistryManager.new(dbname, update_module=update_module)
     except Exception:
         _logger.exception('Failed to initialize database `%s`.', dbname)
 
@@ -103,8 +103,8 @@ def run_test_file(dbname, test_file):
     """ Preload a registry, possibly run a test file, and start the cron."""
     try:
         config = openerp.tools.config
-        db, registry = openerp.pooler.get_db_and_pool(dbname, update_module=config['init'] or config['update'])
-        cr = db.cursor()
+        registry = openerp.modules.registry.RegistryManager.new(dbname, update_module=config['init'] or config['update'])
+        cr = registry.db.cursor()
         _logger.info('loading test file %s', test_file)
         openerp.tools.convert_yaml_import(cr, 'base', file(test_file), 'test', {}, 'test', True)
         cr.rollback()
@@ -125,7 +125,8 @@ def export_translation():
 
     fileformat = os.path.splitext(config["translate_out"])[-1][1:].lower()
     buf = file(config["translate_out"], "w")
-    cr = openerp.pooler.get_db(dbname).cursor()
+    registry = openerp.modules.registry.RegistryManager.new(dbname)
+    cr = registry.db.cursor()
     openerp.tools.trans_export(config["language"],
         config["translate_modules"] or ["all"], buf, fileformat, cr)
     cr.close()
@@ -138,7 +139,8 @@ def import_translation():
     context = {'overwrite': config["overwrite_existing_translations"]}
     dbname = config['db_name']
 
-    cr = openerp.pooler.get_db(dbname).cursor()
+    registry = openerp.modules.registry.RegistryManager.new(dbname)
+    cr = registry.db.cursor()
     openerp.tools.trans_load( cr, config["translate_in"], config["language"],
         context=context)
     cr.commit()
@@ -218,25 +220,23 @@ def quit_on_signals():
         os.unlink(config['pidfile'])
     sys.exit(0)
 
-def configure_babel_localedata_path():
-    # Workaround: py2exe and babel.
-    if hasattr(sys, 'frozen'):
-        import babel
-        babel.localedata._dirname = os.path.join(os.path.dirname(sys.executable), 'localedata')
-
 def main(args):
-    os.environ["TZ"] = "UTC"
-
     check_root_user()
     openerp.tools.config.parse_config(args)
+
+    if openerp.tools.config.options["gevent"]:
+        openerp.evented = True
+        _logger.info('Using gevent mode')
+        import gevent.monkey
+        gevent.monkey.patch_all()
+        import gevent_psycopg2
+        gevent_psycopg2.monkey_patch()
 
     check_postgres_user()
     openerp.netsvc.init_logger()
     report_configuration()
 
     config = openerp.tools.config
-
-    configure_babel_localedata_path()
 
     setup_signal_handlers(signal_handler)
 

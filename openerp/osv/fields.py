@@ -193,7 +193,7 @@ class reference(_column):
             result[value['id']] = value[name]
             if value[name]:
                 model, res_id = value[name].split(',')
-                if not obj.pool.get(model).exists(cr, uid, [int(res_id)], context=context):
+                if not obj.pool[model].exists(cr, uid, [int(res_id)], context=context):
                     result[value['id']] = False
         return result
 
@@ -203,8 +203,8 @@ class reference(_column):
             # reference fields have a 'model,id'-like value, that we need to convert
             # to a real name
             model_name, res_id = value.split(',')
-            model = obj.pool.get(model_name)
-            if model and res_id:
+            if model_name in obj.pool and res_id:
+                model = obj.pool[model_name]
                 return model.name_get(cr, uid, [int(res_id)], context=context)[0][1]
         return tools.ustr(value)
 
@@ -456,7 +456,7 @@ class many2one(_column):
             res[r['id']] = r[name]
         for id in ids:
             res.setdefault(id, '')
-        obj = obj.pool.get(self._obj)
+        obj = obj.pool[self._obj]
 
         # build a dictionary of the form {'id_of_distant_resource': name_of_distant_resource}
         # we use uid=1 because the visibility of a many2one field value (just id and name)
@@ -474,8 +474,8 @@ class many2one(_column):
     def set(self, cr, obj_src, id, field, values, user=None, context=None):
         if not context:
             context = {}
-        obj = obj_src.pool.get(self._obj)
-        self._table = obj_src.pool.get(self._obj)._table
+        obj = obj_src.pool[self._obj]
+        self._table = obj._table
         if type(values) == type([]):
             for act in values:
                 if act[0] == 0:
@@ -496,7 +496,7 @@ class many2one(_column):
                 cr.execute('update '+obj_src._table+' set '+field+'=null where id=%s', (id,))
 
     def search(self, cr, obj, args, name, value, offset=0, limit=None, uid=None, context=None):
-        return obj.pool.get(self._obj).search(cr, uid, args+self._domain+[('name', 'like', value)], offset, limit, context=context)
+        return obj.pool[self._obj].search(cr, uid, args+self._domain+[('name', 'like', value)], offset, limit, context=context)
 
     
     @classmethod
@@ -533,8 +533,9 @@ class one2many(_column):
             res[id] = []
 
         domain = self._domain(obj) if callable(self._domain) else self._domain
-        ids2 = obj.pool.get(self._obj).search(cr, user, domain + [(self._fields_id, 'in', ids)], limit=self._limit, context=context)
-        for r in obj.pool.get(self._obj)._read_flat(cr, user, ids2, [self._fields_id], context=context, load='_classic_write'):
+        model = obj.pool[self._obj]
+        ids2 = model.search(cr, user, domain + [(self._fields_id, 'in', ids)], limit=self._limit, context=context)
+        for r in model._read_flat(cr, user, ids2, [self._fields_id], context=context, load='_classic_write'):
             if r[self._fields_id] in res:
                 res[r[self._fields_id]].append(r['id'])
         return res
@@ -549,8 +550,8 @@ class one2many(_column):
         context['no_store_function'] = True
         if not values:
             return
-        _table = obj.pool.get(self._obj)._table
-        obj = obj.pool.get(self._obj)
+        obj = obj.pool[self._obj]
+        _table = obj._table
         for act in values:
             if act[0] == 0:
                 act[2][self._fields_id] = id
@@ -595,7 +596,7 @@ class one2many(_column):
 
     def search(self, cr, obj, args, name, value, offset=0, limit=None, uid=None, operator='like', context=None):
         domain = self._domain(obj) if callable(self._domain) else self._domain
-        return obj.pool.get(self._obj).name_search(cr, uid, value, domain, operator, context=context,limit=limit)
+        return obj.pool[self._obj].name_search(cr, uid, value, domain, operator, context=context,limit=limit)
 
     
     @classmethod
@@ -666,7 +667,7 @@ class many2many(_column):
         tbl, col1, col2 = self._rel, self._id1, self._id2
         if not all((tbl, col1, col2)):
             # the default table name is based on the stable alphabetical order of tables
-            dest_model = source_model.pool.get(self._obj)
+            dest_model = source_model.pool[self._obj]
             tables = tuple(sorted([source_model._table, dest_model._table]))
             if not tbl:
                 assert tables[0] != tables[1], 'Implicit/Canonical naming of m2m relationship table '\
@@ -707,7 +708,7 @@ class many2many(_column):
             _logger.warning(
                 "Specifying offset at a many2many.get() is deprecated and may"
                 " produce unpredictable results.")
-        obj = model.pool.get(self._obj)
+        obj = model.pool[self._obj]
         rel, id1, id2 = self._sql_names(model)
 
         # static domains are lists, and are evaluated both here and on client-side, while string
@@ -749,7 +750,7 @@ class many2many(_column):
         if not values:
             return
         rel, id1, id2 = self._sql_names(model)
-        obj = model.pool.get(self._obj)
+        obj = model.pool[self._obj]
         for act in values:
             if not (isinstance(act, list) or isinstance(act, tuple)) or not act:
                 continue
@@ -785,7 +786,7 @@ class many2many(_column):
     # TODO: use a name_search
     #
     def search(self, cr, obj, args, name, value, offset=0, limit=None, uid=None, operator='like', context=None):
-        return obj.pool.get(self._obj).search(cr, uid, args+self._domain+[('name', operator, value)], offset, limit, context=context)
+        return obj.pool[self._obj].search(cr, uid, args+self._domain+[('name', operator, value)], offset, limit, context=context)
 
     @classmethod
     def _as_display_name(cls, field, cr, uid, obj, value, context=None):
@@ -1107,7 +1108,7 @@ class function(_column):
         if field_type == "many2one":
             # make the result a tuple if it is not already one
             if isinstance(value, (int,long)) and hasattr(obj._columns[field], 'relation'):
-                obj_model = obj.pool.get(obj._columns[field].relation)
+                obj_model = obj.pool[obj._columns[field].relation]
                 dict_names = dict(obj_model.name_get(cr, uid, [value], context))
                 result = (value, dict_names[value])
 
@@ -1204,7 +1205,7 @@ class related(function):
             # Perform name_get as root, as seeing the name of a related object depends on
             # access right of source document, not target, so user may not have access.
             value_ids = list(set(value.id for value in res.itervalues() if value))
-            value_name = dict(obj.pool.get(self._obj).name_get(cr, SUPERUSER_ID, value_ids, context=context))
+            value_name = dict(obj.pool[self._obj].name_get(cr, SUPERUSER_ID, value_ids, context=context))
             res = dict((id, value and (value.id, value_name[value.id])) for id, value in res.iteritems())
 
         elif self._type in ('one2many', 'many2many'):
@@ -1258,7 +1259,7 @@ class sparse(function):
         elif self._type == 'one2many':
             if not read_value:
                 read_value = []
-            relation_obj = obj.pool.get(self.relation)
+            relation_obj = obj.pool[self.relation]
             for vals in value:
                 assert vals[0] in (0,1,2), 'Unsupported o2m value for sparse field: %s' % vals
                 if vals[0] == 0:
@@ -1301,10 +1302,10 @@ class sparse(function):
                     value = value or []
                     if value:
                         # filter out deleted records as superuser
-                        relation_obj = obj.pool.get(obj._columns[field_name].relation)
+                        relation_obj = obj.pool[obj._columns[field_name].relation]
                         value = relation_obj.exists(cr, openerp.SUPERUSER_ID, value)
                 if type(value) in (int,long) and field_type == 'many2one':
-                    relation_obj = obj.pool.get(obj._columns[field_name].relation)
+                    relation_obj = obj.pool[obj._columns[field_name].relation]
                     # check for deleted record as superuser
                     if not relation_obj.exists(cr, openerp.SUPERUSER_ID, [value]):
                         value = False
@@ -1452,7 +1453,7 @@ class property(function):
                 # not target, so user may not have access) in order to avoid
                 # pointing on an unexisting record.
                 if property_destination_obj:
-                    if res[id][prop_name] and obj.pool.get(property_destination_obj).exists(cr, SUPERUSER_ID, res[id][prop_name].id):
+                    if res[id][prop_name] and obj.pool[property_destination_obj].exists(cr, SUPERUSER_ID, res[id][prop_name].id):
                         name_get_ids[id] = res[id][prop_name].id
                     else:
                         res[id][prop_name] = False
@@ -1460,7 +1461,7 @@ class property(function):
                 # name_get as root (as seeing the name of a related
                 # object depends on access right of source document,
                 # not target, so user may not have access.)
-                name_get_values = dict(obj.pool.get(property_destination_obj).name_get(cr, SUPERUSER_ID, name_get_ids.values(), context=context))
+                name_get_values = dict(obj.pool[property_destination_obj].name_get(cr, SUPERUSER_ID, name_get_ids.values(), context=context))
                 # the property field is a m2o, we need to return a tuple with (id, name)
                 for k, v in name_get_ids.iteritems():
                     if res[k][prop_name]:

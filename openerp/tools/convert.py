@@ -25,10 +25,14 @@ import logging
 import os.path
 import pickle
 import re
+import sys
 
 # for eval context:
 import time
-import openerp.release as release
+
+import openerp
+import openerp.release
+import openerp.workflow
 
 import assertion_report
 
@@ -46,7 +50,6 @@ except:
 from datetime import datetime, timedelta
 from lxml import etree
 import misc
-import openerp.pooler as pooler
 from config import config
 from translate import _
 
@@ -61,19 +64,22 @@ from misc import unquote
 unsafe_eval = eval
 from safe_eval import safe_eval as eval
 
-class ConvertError(Exception):
-    def __init__(self, doc, orig_excpt):
-        self.d = doc
-        self.orig = orig_excpt
+class ParseError(Exception):
+    def __init__(self, msg, text, filename, lineno):
+        self.msg = msg
+        self.text = text
+        self.filename = filename
+        self.lineno = lineno
 
     def __str__(self):
-        return 'Exception:\n\t%s\nUsing file:\n%s' % (self.orig, self.d)
+        return '"%s" while parsing %s:%s, near\n%s' \
+            % (self.msg, self.filename, self.lineno, self.text)
 
 def _ref(self, cr):
     return lambda x: self.id_get(cr, x)
 
 def _obj(pool, cr, uid, model_str, context=None):
-    model = pool.get(model_str)
+    model = pool[model_str]
     return lambda x: model.browse(cr, uid, x, context=context)
 
 def _get_idref(self, cr, uid, model_str, context, idref):
@@ -81,7 +87,7 @@ def _get_idref(self, cr, uid, model_str, context, idref):
                   time=time,
                   DateTime=datetime,
                   timedelta=timedelta,
-                  version=release.major_version,
+                  version=openerp.release.major_version,
                   ref=_ref(self, cr),
                   pytz=pytz)
     if len(model_str):
@@ -120,10 +126,10 @@ def _eval_xml(self, node, pool, cr, uid, idref, context=None):
             if f_search:
                 idref2 = _get_idref(self, cr, uid, f_model, context, idref)
             q = unsafe_eval(f_search, idref2)
-            ids = pool.get(f_model).search(cr, uid, q)
+            ids = pool[f_model].search(cr, uid, q)
             if f_use != 'id':
-                ids = map(lambda x: x[f_use], pool.get(f_model).read(cr, uid, ids, [f_use]))
-            _cols = pool.get(f_model)._columns
+                ids = map(lambda x: x[f_use], pool[f_model].read(cr, uid, ids, [f_use]))
+            _cols = pool[f_model]._columns
             if (f_name in _cols) and _cols[f_name]._type=='many2many':
                 return ids
             f_val = False
@@ -192,7 +198,7 @@ def _eval_xml(self, node, pool, cr, uid, idref, context=None):
             return_val = _eval_xml(self,n, pool, cr, uid, idref, context)
             if return_val is not None:
                 args.append(return_val)
-        model = pool.get(node.get('model',''))
+        model = pool[node.get('model','')]
         method = node.get('name','')
         res = getattr(model, method)(cr, uid, *args)
         return res
@@ -252,7 +258,7 @@ class xml_import(object):
 maximum one dot. They are used to refer to other modules ID, in the
 form: module.record_id""" % (xml_id,)
             if module != self.module:
-                modcnt = self.pool.get('ir.module.module').search_count(self.cr, self.uid, ['&', ('name', '=', module), ('state', 'in', ['installed'])])
+                modcnt = self.pool['ir.module.module'].search_count(self.cr, self.uid, ['&', ('name', '=', module), ('state', 'in', ['installed'])])
                 assert modcnt == 1, """The ID "%s" refers to an uninstalled module""" % (xml_id,)
 
         if len(id) > 64:
@@ -266,7 +272,7 @@ form: module.record_id""" % (xml_id,)
 
         if d_search:
             idref = _get_idref(self, cr, self.uid, d_model, context={}, idref={})
-            ids = self.pool.get(d_model).search(cr, self.uid, unsafe_eval(d_search, idref))
+            ids = self.pool[d_model].search(cr, self.uid, unsafe_eval(d_search, idref))
         if d_id:
             try:
                 ids.append(self.id_get(cr, d_id))
@@ -274,10 +280,10 @@ form: module.record_id""" % (xml_id,)
                 # d_id cannot be found. doesn't matter in this case
                 pass
         if ids:
-            self.pool.get(d_model).unlink(cr, self.uid, ids)
+            self.pool[d_model].unlink(cr, self.uid, ids)
 
     def _remove_ir_values(self, cr, name, value, model):
-        ir_values_obj = self.pool.get('ir.values')
+        ir_values_obj = self.pool['ir.values']
         ir_value_ids = ir_values_obj.search(cr, self.uid, [('name','=',name),('value','=',value),('model','=',model)])
         if ir_value_ids:
             ir_values_obj.unlink(cr, self.uid, ir_value_ids)
@@ -290,7 +296,8 @@ form: module.record_id""" % (xml_id,)
             res[dest] = rec.get(f,'').encode('utf8')
             assert res[dest], "Attribute %s of report is empty !" % (f,)
         for field,dest in (('rml','report_rml'),('file','report_rml'),('xml','report_xml'),('xsl','report_xsl'),
-                           ('attachment','attachment'),('attachment_use','attachment_use'), ('usage','usage')):
+                           ('attachment','attachment'),('attachment_use','attachment_use'), ('usage','usage'),
+                           ('report_type', 'report_type'), ('parser', 'parser')):
             if rec.get(field):
                 res[dest] = rec.get(field).encode('utf8')
         if rec.get('auto'):
@@ -300,8 +307,6 @@ form: module.record_id""" % (xml_id,)
             res['report_sxw_content'] = sxw_content
         if rec.get('header'):
             res['header'] = eval(rec.get('header','False'))
-        if rec.get('report_type'):
-            res['report_type'] = rec.get('report_type')
 
         res['multi'] = rec.get('multi') and eval(rec.get('multi','False'))
 
@@ -320,14 +325,14 @@ form: module.record_id""" % (xml_id,)
                     groups_value.append((4, group_id))
             res['groups_id'] = groups_value
 
-        id = self.pool.get('ir.model.data')._update(cr, self.uid, "ir.actions.report.xml", self.module, res, xml_id, noupdate=self.isnoupdate(data_node), mode=self.mode)
+        id = self.pool['ir.model.data']._update(cr, self.uid, "ir.actions.report.xml", self.module, res, xml_id, noupdate=self.isnoupdate(data_node), mode=self.mode)
         self.idref[xml_id] = int(id)
 
         if not rec.get('menu') or eval(rec.get('menu','False')):
             keyword = str(rec.get('keyword', 'client_print_multi'))
             value = 'ir.actions.report.xml,'+str(id)
             replace = rec.get('replace', True)
-            self.pool.get('ir.model.data').ir_set(cr, self.uid, 'action', keyword, res['name'], [res['model']], value, replace=replace, isobject=True, xml_id=xml_id)
+            self.pool['ir.model.data'].ir_set(cr, self.uid, 'action', keyword, res['name'], [res['model']], value, replace=replace, isobject=True, xml_id=xml_id)
         elif self.mode=='update' and eval(rec.get('menu','False'))==False:
             # Special check for report having attribute menu=False on update
             value = 'ir.actions.report.xml,'+str(id)
@@ -363,14 +368,14 @@ form: module.record_id""" % (xml_id,)
                     groups_value.append((4, group_id))
             res['groups_id'] = groups_value
 
-        id = self.pool.get('ir.model.data')._update(cr, self.uid, "ir.actions.wizard", self.module, res, xml_id, noupdate=self.isnoupdate(data_node), mode=self.mode)
+        id = self.pool['ir.model.data']._update(cr, self.uid, "ir.actions.wizard", self.module, res, xml_id, noupdate=self.isnoupdate(data_node), mode=self.mode)
         self.idref[xml_id] = int(id)
         # ir_set
         if (not rec.get('menu') or eval(rec.get('menu','False'))) and id:
             keyword = str(rec.get('keyword','') or 'client_action_multi')
             value = 'ir.actions.wizard,'+str(id)
             replace = rec.get("replace",'') or True
-            self.pool.get('ir.model.data').ir_set(cr, self.uid, 'action', keyword, string, [model], value, replace=replace, isobject=True, xml_id=xml_id)
+            self.pool['ir.model.data'].ir_set(cr, self.uid, 'action', keyword, string, [model], value, replace=replace, isobject=True, xml_id=xml_id)
         elif self.mode=='update' and (rec.get('menu') and eval(rec.get('menu','False'))==False):
             # Special check for wizard having attribute menu=False on update
             value = 'ir.actions.wizard,'+str(id)
@@ -385,7 +390,7 @@ form: module.record_id""" % (xml_id,)
 
         res = {'name': name, 'url': url, 'target':target}
 
-        id = self.pool.get('ir.model.data')._update(cr, self.uid, "ir.actions.act_url", self.module, res, xml_id, noupdate=self.isnoupdate(data_node), mode=self.mode)
+        id = self.pool['ir.model.data']._update(cr, self.uid, "ir.actions.act_url", self.module, res, xml_id, noupdate=self.isnoupdate(data_node), mode=self.mode)
         self.idref[xml_id] = int(id)
 
     def _tag_act_window(self, cr, rec, data_node=None):
@@ -485,7 +490,7 @@ form: module.record_id""" % (xml_id,)
             res['target'] = rec.get('target','')
         if rec.get('multi'):
             res['multi'] = rec.get('multi', False)
-        id = self.pool.get('ir.model.data')._update(cr, self.uid, 'ir.actions.act_window', self.module, res, xml_id, noupdate=self.isnoupdate(data_node), mode=self.mode)
+        id = self.pool['ir.model.data']._update(cr, self.uid, 'ir.actions.act_window', self.module, res, xml_id, noupdate=self.isnoupdate(data_node), mode=self.mode)
         self.idref[xml_id] = int(id)
 
         if src_model:
@@ -493,7 +498,7 @@ form: module.record_id""" % (xml_id,)
             keyword = rec.get('key2','').encode('utf-8') or 'client_action_relate'
             value = 'ir.actions.act_window,'+str(id)
             replace = rec.get('replace','') or True
-            self.pool.get('ir.model.data').ir_set(cr, self.uid, 'action', keyword, xml_id, [src_model], value, replace=replace, isobject=True, xml_id=xml_id)
+            self.pool['ir.model.data'].ir_set(cr, self.uid, 'action', keyword, xml_id, [src_model], value, replace=replace, isobject=True, xml_id=xml_id)
         # TODO add remove ir.model.data
 
     def _tag_ir_set(self, cr, rec, data_node=None):
@@ -504,7 +509,7 @@ form: module.record_id""" % (xml_id,)
             f_name = field.get("name",'').encode('utf-8')
             f_val = _eval_xml(self,field,self.pool, cr, self.uid, self.idref)
             res[f_name] = f_val
-        self.pool.get('ir.model.data').ir_set(cr, self.uid, res['key'], res['key2'], res['name'], res['models'], res['value'], replace=res.get('replace',True), isobject=res.get('isobject', False), meta=res.get('meta',None))
+        self.pool['ir.model.data'].ir_set(cr, self.uid, res['key'], res['key2'], res['name'], res['models'], res['value'], replace=res.get('replace',True), isobject=res.get('isobject', False), meta=res.get('meta',None))
 
     def _tag_workflow(self, cr, rec, data_node=None):
         if self.isnoupdate(data_node) and self.mode != 'init':
@@ -522,9 +527,7 @@ form: module.record_id""" % (xml_id,)
             id = _eval_xml(self, rec[0], self.pool, cr, self.uid, self.idref)
 
         uid = self.get_uid(cr, self.uid, data_node, rec)
-        import openerp.netsvc as netsvc
-        wf_service = netsvc.LocalService("workflow")
-        wf_service.trg_validate(uid, model,
+        openerp.workflow.trg_validate(uid, model,
             id,
             str(rec.get('action','')), cr)
 
@@ -559,7 +562,7 @@ form: module.record_id""" % (xml_id,)
                 else:
                     # the menuitem does't exist but we are in branch (not a leaf)
                     _logger.warning('Warning no ID for submenu %s of menu %s !', menu_elem, str(m_l))
-                    pid = self.pool.get('ir.ui.menu').create(cr, self.uid, {'parent_id' : pid, 'name' : menu_elem})
+                    pid = self.pool['ir.ui.menu'].create(cr, self.uid, {'parent_id' : pid, 'name' : menu_elem})
             values['parent_id'] = pid
         else:
             # The parent attribute was specified, if non-empty determine its ID, otherwise
@@ -653,14 +656,14 @@ form: module.record_id""" % (xml_id,)
                     groups_value.append((4, group_id))
             values['groups_id'] = groups_value
 
-        pid = self.pool.get('ir.model.data')._update(cr, self.uid, 'ir.ui.menu', self.module, values, rec_id, noupdate=self.isnoupdate(data_node), mode=self.mode, res_id=res and res[0] or False)
+        pid = self.pool['ir.model.data']._update(cr, self.uid, 'ir.ui.menu', self.module, values, rec_id, noupdate=self.isnoupdate(data_node), mode=self.mode, res_id=res and res[0] or False)
 
         if rec_id and pid:
             self.idref[rec_id] = int(pid)
 
         if rec.get('action') and pid:
             action = "ir.actions.%s,%d" % (a_type, a_id)
-            self.pool.get('ir.model.data').ir_set(cr, self.uid, 'action', 'tree_but_open', 'Menuitem', [('ir.ui.menu', int(pid))], action, True, True, xml_id=rec_id)
+            self.pool['ir.model.data'].ir_set(cr, self.uid, 'action', 'tree_but_open', 'Menuitem', [('ir.ui.menu', int(pid))], action, True, True, xml_id=rec_id)
         return 'ir.ui.menu', pid
 
     def _assert_equals(self, f1, f2, prec=4):
@@ -671,8 +674,7 @@ form: module.record_id""" % (xml_id,)
             return
 
         rec_model = rec.get("model",'').encode('ascii')
-        model = self.pool.get(rec_model)
-        assert model, "The model %s does not exist !" % (rec_model,)
+        model = self.pool[rec_model]
         rec_id = rec.get("id",'').encode('ascii')
         self._test_xml_id(rec_id)
         rec_src = rec.get("search",'').encode('utf8')
@@ -688,7 +690,7 @@ form: module.record_id""" % (xml_id,)
             ids = [self.id_get(cr, rec_id)]
         elif rec_src:
             q = unsafe_eval(rec_src, eval_dict)
-            ids = self.pool.get(rec_model).search(cr, uid, q, context=context)
+            ids = self.pool[rec_model].search(cr, uid, q, context=context)
             if rec_src_count:
                 count = int(rec_src_count)
                 if len(ids) != count:
@@ -733,8 +735,7 @@ form: module.record_id""" % (xml_id,)
 
     def _tag_record(self, cr, rec, data_node=None):
         rec_model = rec.get("model").encode('ascii')
-        model = self.pool.get(rec_model)
-        assert model, "The model %s does not exist !" % (rec_model,)
+        model = self.pool[rec_model]
         rec_id = rec.get("id",'').encode('ascii')
         rec_context = rec.get("context", None)
         if rec_context:
@@ -748,7 +749,7 @@ form: module.record_id""" % (xml_id,)
                 else:
                     module = self.module
                     rec_id2 = rec_id
-                id = self.pool.get('ir.model.data')._update_dummy(cr, self.uid, rec_model, module, rec_id2)
+                id = self.pool['ir.model.data']._update_dummy(cr, self.uid, rec_model, module, rec_id2)
                 # check if the resource already existed at the last update
                 if id:
                     # if it existed, we don't update the data, but we need to
@@ -781,11 +782,11 @@ form: module.record_id""" % (xml_id,)
                 q = unsafe_eval(f_search, self.idref)
                 field = []
                 assert f_model, 'Define an attribute model="..." in your .XML file !'
-                f_obj = self.pool.get(f_model)
+                f_obj = self.pool[f_model]
                 # browse the objects searched
                 s = f_obj.browse(cr, self.uid, f_obj.search(cr, self.uid, q))
                 # column definitions of the "local" object
-                _cols = self.pool.get(rec_model)._columns
+                _cols = self.pool[rec_model]._columns
                 # if the current field is many2many
                 if (f_name in _cols) and _cols[f_name]._type=='many2many':
                     f_val = [(6, 0, map(lambda x: x[f_use], s))]
@@ -811,7 +812,7 @@ form: module.record_id""" % (xml_id,)
                         f_val = int(f_val)
             res[f_name] = f_val
 
-        id = self.pool.get('ir.model.data')._update(cr, self.uid, rec_model, self.module, res, rec_id or False, not self.isnoupdate(data_node), noupdate=self.isnoupdate(data_node), mode=self.mode, context=rec_context )
+        id = self.pool['ir.model.data']._update(cr, self.uid, rec_model, self.module, res, rec_id or False, not self.isnoupdate(data_node), noupdate=self.isnoupdate(data_node), mode=self.mode, context=rec_context )
         if rec_id:
             self.idref[rec_id] = int(id)
         if config.get('import_partial', False):
@@ -826,32 +827,25 @@ form: module.record_id""" % (xml_id,)
         return res
 
     def model_id_get(self, cr, id_str):
-        model_data_obj = self.pool.get('ir.model.data')
+        model_data_obj = self.pool['ir.model.data']
         mod = self.module
         if '.' in id_str:
             mod,id_str = id_str.split('.')
         return model_data_obj.get_object_reference(cr, self.uid, mod, id_str)
 
     def parse(self, de):
-        if not de.tag in ['terp', 'openerp']:
-            _logger.error("Mismatch xml format")
-            raise Exception( "Mismatch xml format: only terp or openerp as root tag" )
-
-        if de.tag == 'terp':
-            _logger.warning("The tag <terp/> is deprecated, use <openerp/>")
+        if de.tag != 'openerp':
+            raise Exception("Mismatch xml format: root tag must be `openerp`.")
 
         for n in de.findall('./data'):
             for rec in n:
                 if rec.tag in self._tags:
                     try:
                         self._tags[rec.tag](self.cr, rec, n)
-                    except:
-                        _logger.error('Parse error in %s:%d: \n%s',
-                                      rec.getroottree().docinfo.URL,
-                                      rec.sourceline,
-                                      etree.tostring(rec).strip(), exc_info=True)
+                    except Exception, e:
                         self.cr.rollback()
-                        raise
+                        exc_info = sys.exc_info()
+                        raise ParseError, (misc.ustr(e), etree.tostring(rec).rstrip(), rec.getroottree().docinfo.URL, rec.sourceline), exc_info[2]
         return True
 
     def __init__(self, cr, module, idref, mode, report=None, noupdate=False):
@@ -860,7 +854,7 @@ form: module.record_id""" % (xml_id,)
         self.module = module
         self.cr = cr
         self.idref = idref
-        self.pool = pooler.get_pool(cr.dbname)
+        self.pool = openerp.registry(cr.dbname)
         self.uid = 1
         if report is None:
             report = assertion_report.assertion_report()
@@ -892,8 +886,6 @@ def convert_csv_import(cr, module, fname, csvcontent, idref=None, mode='init',
     #remove folder path from model
     head, model = os.path.split(model)
 
-    pool = pooler.get_pool(cr.dbname)
-
     input = cStringIO.StringIO(csvcontent) #FIXME
     reader = csv.reader(input, quotechar='"', delimiter=',')
     fields = reader.next()
@@ -918,13 +910,15 @@ def convert_csv_import(cr, module, fname, csvcontent, idref=None, mode='init',
     uid = 1
     datas = []
     for line in reader:
-        if (not line) or not reduce(lambda x,y: x or y, line) :
+        if not (line and any(line)):
             continue
         try:
-            datas.append(map(lambda x: misc.ustr(x), line))
+            datas.append(map(misc.ustr, line))
         except:
             _logger.error("Cannot import the line: %s", line)
-    result, rows, warning_msg, dummy = pool.get(model).import_data(cr, uid, fields, datas,mode, module, noupdate, filename=fname_partial)
+
+    registry = openerp.registry(cr.dbname)
+    result, rows, warning_msg, dummy = registry[model].import_data(cr, uid, fields, datas,mode, module, noupdate, filename=fname_partial)
     if result < 0:
         # Report failed import and abort module install
         raise Exception(_('Module loading failed: file %s/%s could not be processed:\n %s') % (module, fname, warning_msg))
