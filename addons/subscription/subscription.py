@@ -38,7 +38,6 @@ class subscription_document(osv.osv):
     _defaults = {
         'active' : lambda *a: True,
     }
-subscription_document()
 
 class subscription_document_fields(osv.osv):
     _name = "subscription.document.fields"
@@ -50,7 +49,6 @@ class subscription_document_fields(osv.osv):
         'document_id': fields.many2one('subscription.document', 'Subscription Document', ondelete='cascade'),
     }
     _defaults = {}
-subscription_document_fields()
 
 def _get_document_types(self, cr, uid, context=None):
     cr.execute('select m.model, s.name from subscription_document s, ir_model m WHERE s.model = m.id order by s.name')
@@ -115,7 +113,7 @@ class subscription_subscription(osv.osv):
             try:
                 (model_name, id) = row['doc_source'].split(',')
                 id = int(id)
-                model = self.pool.get(model_name)
+                model = self.pool[model_name]
             except:
                 raise osv.except_osv(_('Wrong Source Document !'), _('Please provide another source document.\nThis one does not exist !'))
 
@@ -136,7 +134,7 @@ class subscription_subscription(osv.osv):
             # the subscription is over and we mark it as being done
             if remaining == 1:
                 state = 'done'
-            id = self.pool.get(model_name).copy(cr, uid, id, default, context)
+            id = self.pool[model_name].copy(cr, uid, id, default, context)
             self.pool.get('subscription.subscription.history').create(cr, uid, {'subscription_id': row['id'], 'date':time.strftime('%Y-%m-%d %H:%M:%S'), 'document_id': model_name+','+str(id)})
             self.write(cr, uid, [row['id']], {'state':state})
         return True
@@ -157,7 +155,6 @@ class subscription_subscription(osv.osv):
     def set_draft(self, cr, uid, ids, context=None):
         self.write(cr, uid, ids, {'state':'draft'})
         return True
-subscription_subscription()
 
 class subscription_subscription_history(osv.osv):
     _name = "subscription.subscription.history"
@@ -168,7 +165,6 @@ class subscription_subscription_history(osv.osv):
         'subscription_id': fields.many2one('subscription.subscription', 'Subscription', ondelete='cascade'),
         'document_id': fields.reference('Source Document', required=True, selection=_get_document_types, size=128),
     }
-subscription_subscription_history()
 
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -8,7 +8,7 @@
             <field name="model">crm.partner.report.assign</field>
             <field name="arch" type="xml">
                 <search string="Partner assigned Analysis">
-                    <field name="section_id"/>
+                    <field name="section_id" groups="base.group_multi_salesteams"/>
                     <field name="user_id"/>
                     <field name="grade_id"/>
                     <field name="activation"/>
@@ -49,7 +49,7 @@
                 <field name="date_review" invisible="1"/>
                 <field name="date_partnership" invisible="1"/>
                 <field name="period_id" invisible="1"/>
-                <field name="section_id" invisible="1"/>
+                <field name="section_id" invisible="1" groups="base.group_multi_salesteams"/>
                 <field name="user_id" invisible="1"/>
                 <field name="opp"/>
                 <field name="turnover"/>

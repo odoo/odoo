@@ -30,7 +30,6 @@ class AccountWizard_cd(osv.osv_memory):
 		'code_digits' : 0,
 	}
 
-AccountWizard_cd()
 
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

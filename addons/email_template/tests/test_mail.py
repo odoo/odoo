@@ -48,8 +48,8 @@ class test_message_compose(TestMailBase):
         _body_html1 = 'Fans of Pigs, unite !'
         _body_html2 = 'I am angry !'
         _attachments = [
-            {'name': 'First', 'datas_fname': 'first.txt', 'datas': base64.b64encode('My first attachment')},
-            {'name': 'Second', 'datas_fname': 'second.txt', 'datas': base64.b64encode('My second attachment')}
+            {'name': 'First', 'datas_fname': 'first.txt', 'datas': base64.b64encode('My first attachment'), 'res_model': 'res.partner', 'res_id': self.partner_admin_id},
+            {'name': 'Second', 'datas_fname': 'second.txt', 'datas': base64.b64encode('My second attachment'), 'res_model': 'res.partner', 'res_id': self.partner_admin_id},
             ]
         _attachments_test = [('first.txt', 'My first attachment'), ('second.txt', 'My second attachment')]
 
@@ -115,12 +115,20 @@ class test_message_compose(TestMailBase):
         self.assertEqual(compose.subject, _subject1, 'mail.compose.message subject incorrect')
         self.assertIn(_body_html1, compose.body, 'mail.compose.message body incorrect')
         self.assertEqual(set(message_pids), set(partner_ids), 'mail.compose.message partner_ids incorrect')
-        # Test: mail.compose.message: attachments
-        # Test: mail.message: attachments
+        # Test: mail.compose.message: attachments (owner has not been modified)
         for attach in compose.attachment_ids:
-            self.assertEqual(attach.res_model, 'mail.group', 'mail.message attachment res_model incorrect')
-            self.assertEqual(attach.res_id, self.group_pigs_id, 'mail.message attachment res_id incorrect')
-            self.assertIn((attach.name, base64.b64decode(attach.datas)), _attachments_test,
+            self.assertEqual(attach.res_model, 'res.partner', 'mail.compose.message attachment res_model through templat was overriden')
+            self.assertEqual(attach.res_id, self.partner_admin_id, 'mail.compose.message attachment res_id incorrect')
+            self.assertIn((attach.datas_fname, base64.b64decode(attach.datas)), _attachments_test,
+                'mail.message attachment name / data incorrect')
+        # Test: mail.message: attachments
+        mail_compose.send_mail(cr, uid, [compose_id])
+        group_pigs.refresh()
+        message_pigs = group_pigs.message_ids[0]
+        for attach in message_pigs.attachment_ids:
+            self.assertEqual(attach.res_model, 'mail.group', 'mail.compose.message attachment res_model through templat was overriden')
+            self.assertEqual(attach.res_id, self.group_pigs_id, 'mail.compose.message attachment res_id incorrect')
+            self.assertIn((attach.datas_fname, base64.b64decode(attach.datas)), _attachments_test,
                 'mail.message attachment name / data incorrect')
 
         # ----------------------------------------

@@ -3,7 +3,8 @@
 -
   !python {model: mrp.repair}: |
     import os
-    from openerp import netsvc, tools
-    (data, format) = netsvc.LocalService('report.repair.order').create(cr, uid, [ref('mrp_repair.mrp_repair_rmrp0')], {}, {})
+    import openerp.report
+    from openerp import tools
+    data, format = openerp.report.render_report(cr, uid, [ref('mrp_repair.mrp_repair_rmrp0')], 'repair.order', {}, {})
     if tools.config['test_report_directory']:
         file(os.path.join(tools.config['test_report_directory'], 'mrp_repair-order_report.'+format), 'wb+').write(data)

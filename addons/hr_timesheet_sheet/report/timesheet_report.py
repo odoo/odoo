@@ -114,6 +114,5 @@ class timesheet_report(osv.osv):
                         htss.user_id
             )
         """)
-timesheet_report()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
