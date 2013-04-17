@@ -2,21 +2,6 @@
 <openerp>
     <data noupdate="1">
 
-        <!-- Case Categories -->
-        <!--    For Bugs    -->
-
-        <record model="crm.case.categ" id="bug_categ">
-            <field name="name">Maintenance</field>
-            <field name="section_id" ref="crm.section_sales_department"/>
-            <field name="object_id" search="[('model','=','project.issue')]" model="ir.model"/>
-        </record>    
-
-        <record model="crm.case.categ" id="feature_request_categ">
-            <field name="name">Feature Requests</field>
-            <field name="section_id" ref="crm.section_sales_department"/>
-            <field name="object_id" search="[('model','=','project.issue')]" model="ir.model"/>
-        </record>
-
         <!-- Case type_id -->
         <!--    For Bugs    -->
         <record model="project.issue.version" id="type1">
@@ -59,16 +44,19 @@ Access all issues from the top Project menu, and access the issues of a specific
         <record id="mt_issue_blocked" model="mail.message.subtype">
             <field name="name">Issue Blocked</field>
             <field name="res_model">project.issue</field>
+            <field name="default" eval="False"/>
             <field name="description">Issue blocked</field>
         </record>
         <record id="mt_issue_closed" model="mail.message.subtype">
             <field name="name">Issue Closed</field>
             <field name="res_model">project.issue</field>
+            <field name="default" eval="False"/>
             <field name="description">Issue closed</field>
         </record>
         <record id="mt_issue_stage" model="mail.message.subtype">
             <field name="name">Stage Changed</field>
             <field name="res_model">project.issue</field>
+            <field name="default" eval="False"/>
             <field name="description">Stage changed</field>
         </record>
         <!-- Project-related subtypes for messaging / Chatter -->

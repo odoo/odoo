@@ -59,6 +59,5 @@ class sale_order_dates(osv.osv):
         'effective_date': fields.function(_get_effective_date, type='date', store=True, string='Effective Date',help="Date on which picking is created."),
     }
 
-sale_order_dates()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -411,7 +411,7 @@ class ir_model_fields_anonymize_wizard(osv.osv_memory):
             model_name = field.model_id.model
             field_name = field.field_id.name
             field_type = field.field_id.ttype
-            table_name = self.pool.get(model_name)._table
+            table_name = self.pool[model_name]._table
 
             # get the current value
             sql = "select id, %s from %s" % (field_name, table_name)
@@ -543,13 +543,13 @@ class ir_model_fields_anonymize_wizard(osv.osv_memory):
             fixes = group(fixes, ('model_name', 'field_name'))
 
             for line in data:
-                table_name = self.pool.get(line['model_id'])._table if self.pool.get(line['model_id']) else None
+                table_name = self.pool[line['model_id']]._table if line['model_id'] in self.pool else None
 
                 # check if custom sql exists:
                 key = (line['model_id'], line['field_id'])
                 custom_updates =  fixes.get(key)
                 if custom_updates:
-                    custom_updates.sort(itemgetter('sequence'))
+                    custom_updates.sort(key=itemgetter('sequence'))
                     queries = [(record['query'], record['query_type']) for record in custom_updates if record['query_type']]
                 elif table_name:
                     queries = [("update %(table)s set %(field)s = %%(value)s where id = %%(id)s" % {

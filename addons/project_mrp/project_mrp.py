@@ -45,14 +45,12 @@ class project_task(osv.osv):
         res = super(project_task, self).do_cancel(cr, uid, ids, *args, **kwargs)
         self._validate_subflows(cr, uid, ids)
         return res
-project_task()
 
 class product_product(osv.osv):
     _inherit = "product.product"
     _columns = {
         'project_id': fields.many2one('project.project', 'Project', ondelete='set null',)
     }
-product_product()
 
 class sale_order(osv.osv):
     _inherit ='sale.order'
@@ -108,5 +106,4 @@ class sale_order(osv.osv):
         'picked_rate': fields.function(_picked_rate, method=True, string='Picked', type='float'),
     }
 
-sale_order()
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

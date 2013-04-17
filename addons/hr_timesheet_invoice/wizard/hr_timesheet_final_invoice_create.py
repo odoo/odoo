@@ -58,6 +58,5 @@ class final_invoice_create(osv.osv_memory):
         act_win['name'] = _('Invoices')
         return act_win
 
-final_invoice_create()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -52,8 +52,6 @@ class crm_opportunity2phonecall(osv.osv_memory):
                 res.update({'categ_id': categ_id})
             if 'partner_id' in fields:
                 res.update({'partner_id': opp.partner_id and opp.partner_id.id or False})
-            if 'note' in fields:
-                res.update({'note': opp.description})
             if 'contact_name' in fields:
                 res.update({'contact_name': opp.partner_id and opp.partner_id.name or False})
             if 'phone' in fields:
@@ -75,6 +73,5 @@ class crm_opportunity2phonecall(osv.osv_memory):
                 action=data.action, context=context)
         return {'type': 'ir.actions.act_window_close'}
 
-crm_opportunity2phonecall()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

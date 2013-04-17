@@ -41,11 +41,10 @@
   I open the Invoice.
 -
   !python {model: sale.order}: |
-    import netsvc
-    wf_service = netsvc.LocalService("workflow")
     so = self.browse(cr, uid, ref("sale_order_2"))
+    account_invoice_obj = self.pool.get('account.invoice')
     for invoice in so.invoice_ids:
-      wf_service.trg_validate(uid, 'account.invoice', invoice.id, 'invoice_open', cr)
+      account_invoice_obj.signal_invoice_open(cr, uid, [invoice.id])
 -
   I pay the invoice.
 -
