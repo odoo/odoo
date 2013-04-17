@@ -296,7 +296,7 @@ class hr_employee(osv.osv):
         """
         if 'res_users_id' in context:
             employee_ids = self.search(cr, uid, [('user_id', '=', context['res_users_id'])], context=context)
-            if len(employee_ids) > 0:
+            if employee_ids:
                 for employee_id in employee_ids:
                     res = super(hr_employee, self).message_post(cr, uid, employee_id, context=context, **kwargs)
                 return res
@@ -314,6 +314,16 @@ class hr_employee(osv.osv):
             return []
         else:
             return super(hr_employee, self).get_suggested_thread(cr, uid, removed_suggested_threads, context)
+
+    def _message_get_auto_subscribe_fields(self, cr, uid, updated_fields, auto_follow_fields=['user_id'], context=None):
+        """ Overwrite of the original method to always follow user_id field,
+        even when not track_visibility so that a user will follow it's employee
+        """
+        user_field_lst = []
+        for name, column_info in self._all_columns.items():
+            if name in auto_follow_fields and name in updated_fields and column_info.column._obj == 'res.users':
+                user_field_lst.append(name)
+        return user_field_lst
 
 
     _defaults = {
