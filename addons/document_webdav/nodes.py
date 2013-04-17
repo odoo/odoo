@@ -67,7 +67,7 @@ class node_acl_mixin(object):
         """
         ret = par_class.get_dav_props(self, cr)
         if prop_model:
-            propobj = self.context._dirobj.pool.get(prop_model)
+            propobj = self.context._dirobj.pool[prop_model]
             uid = self.context.uid
             ctx = self.context.context.copy()
             ctx.update(self.dctx)
@@ -105,7 +105,7 @@ class node_acl_mixin(object):
         if ret is not None:
             return ret
         if prop_model:
-            propobj = self.context._dirobj.pool.get(prop_model)
+            propobj = self.context._dirobj.pool[prop_model]
             uid = self.context.uid
             ctx = self.context.context.copy()
             ctx.update(self.dctx)
@@ -151,7 +151,7 @@ class node_acl_mixin(object):
         assert prop_model
         assert res_id
         assert isinstance(lock_data, dict), '%r' % lock_data
-        propobj = self.context._dirobj.pool.get(prop_model)
+        propobj = self.context._dirobj.pool[prop_model]
         uid = self.context.uid
         ctx = self.context.context.copy()
         ctx.update(self.dctx)

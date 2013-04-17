@@ -38,39 +38,62 @@
 <data noupdate="1">
 
     <record model="ir.rule" id="project_comp_rule">
-        <field name="name">Project multi-company</field>
+        <field name="name">Project: multi-company</field>
         <field name="model_id" ref="model_project_project"/>
         <field name="global" eval="True"/>
-        <field name="domain_force">['|',('company_id','=',False),('company_id','child_of',[user.company_id.id])]</field>
+        <field name="domain_force">['|',
+                                        ('company_id', '=', False),
+                                        ('company_id', 'child_of', [user.company_id.id]),
+                                    ]</field>
+    </record>
+
+    <record model="ir.rule" id="project_project_manager_rule">
+        <field name="name">Project: project manager: see all</field>
+        <field name="model_id" ref="model_project_project"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="groups" eval="[(4,ref('project.group_project_manager'))]"/>
     </record>
 
     <record model="ir.rule" id="project_public_members_rule">
-        <field name="name">Public Members</field>
+        <field name="name">Project: employees: public, employees or followers</field>
         <field name="model_id" ref="model_project_project"/>
-        <field name="global" eval="True"/>
-        <field name="domain_force">['|',('privacy_visibility','in',[False,'public']),('message_follower_ids','in',[user.partner_id.id])]</field>
+        <field name="domain_force">['|',
+                                        ('privacy_visibility', 'in', ['public', 'employees']),
+                                        ('message_follower_ids', 'in', [user.partner_id.id])
+                                    ]</field>
+        <field name="groups" eval="[(4, ref('base.group_user'))]"/>
     </record>
 
     <record model="ir.rule" id="task_comp_rule">
-        <field name="name" >Task multi-company</field>
+        <field name="name">Project/Task: multi-company</field>
         <field name="model_id" ref="model_project_task"/>
         <field name="global" eval="True"/>
-        <field name="domain_force">['|',('company_id','=',False),('company_id','child_of',[user.company_id.id])]</field>
+        <field name="domain_force">['|',
+                                        ('company_id', '=', False),
+                                        ('company_id', 'child_of', [user.company_id.id]),
+                                    ]</field>
     </record>
 
     <record model="ir.rule" id="task_visibility_rule">
-        <field name="name" >Tasks According to User and Project</field>
+        <field name="name">Project/Task: employees: public or employee or following or assigned</field>
         <field name="model_id" ref="model_project_task"/>
-        <field name="global" eval="True"/>
-        <field name="domain_force">['|','|','|',('user_id','=',False),('user_id','=',user.id),('project_id.members','in', [user.id]),('project_id.user_id','=',user.id)]</field>
-        <field name="groups" eval="[(4,ref('project.group_project_user'))]"/>
+        <field name="domain_force">['|',
+                                        ('user_id', '=', user.id),
+                                        '|',
+                                            ('project_id.privacy_visibility', 'in', ['public', 'employees']),
+                                            '&amp;',
+                                                ('project_id.privacy_visibility', '=', 'followers'),
+                                                ('message_follower_ids', 'in', [user.partner_id.id]),
+                                    ]</field>
+        <field name="groups" eval="[(4,ref('base.group_user'))]"/>
     </record>
 
     <record model="ir.rule" id="project_manager_all_project_tasks_rule">
-        <field name="name">Project Managers: all tasks from all projects</field>
+        <field name="name">Project/Task: project manager: see all</field>
         <field name="model_id" ref="model_project_task"/>
-        <field name="domain_force">[(1,'=',1)]</field>
+        <field name="domain_force">[(1, '=', 1)]</field>
         <field name="groups" eval="[(4,ref('project.group_project_manager'))]"/>
     </record>
+
 </data>
 </openerp>

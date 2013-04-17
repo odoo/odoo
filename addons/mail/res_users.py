@@ -60,8 +60,9 @@ class res_users(osv.Model):
     def _auto_init(self, cr, context=None):
         """ Installation hook: aliases, partner following themselves """
         # create aliases for all users and avoid constraint errors
-        self.pool.get('mail.alias').migrate_to_alias(cr, self._name, self._table, super(res_users, self)._auto_init,
+        res = self.pool.get('mail.alias').migrate_to_alias(cr, self._name, self._table, super(res_users, self)._auto_init,
             self._columns['alias_id'], 'login', alias_force_key='id', context=context)
+        return res
 
     def create(self, cr, uid, data, context=None):
         # create default alias same as the login

@@ -123,6 +123,5 @@ class account_statement_from_invoice_lines(osv.osv_memory):
             }, context=context)
         return {'type': 'ir.actions.act_window_close'}
 
-account_statement_from_invoice_lines()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
