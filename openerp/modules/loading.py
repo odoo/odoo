@@ -3,7 +3,7 @@
 #
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
-#    Copyright (C) 2010-2012 OpenERP s.a. (<http://openerp.com>).
+#    Copyright (C) 2010-2013 OpenERP s.a. (<http://openerp.com>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -34,25 +34,17 @@ import openerp
 import openerp.modules.db
 import openerp.modules.graph
 import openerp.modules.migration
+import openerp.modules.registry
 import openerp.osv as osv
-import openerp.pooler as pooler
-import openerp.release as release
 import openerp.tools as tools
 from openerp import SUPERUSER_ID
 
-from openerp import SUPERUSER_ID
 from openerp.tools.translate import _
 from openerp.modules.module import initialize_sys_path, \
-    load_openerp_module, init_module_models
+    load_openerp_module, init_module_models, adapt_version
 
 _logger = logging.getLogger(__name__)
-
-def open_openerp_namespace():
-    # See comment for open_openerp_namespace.
-    if openerp.conf.deprecation.open_openerp_namespace:
-        for k, v in list(sys.modules.items()):
-            if k.startswith('openerp.') and sys.modules.get(k[8:]) is None:
-                sys.modules[k[8:]] = v
+_test_logger = logging.getLogger('openerp.tests')
 
 
 def load_module_graph(cr, graph, status=None, perform_checks=True, skip_modules=None, report=None):
@@ -84,7 +76,7 @@ def load_module_graph(cr, graph, status=None, perform_checks=True, skip_modules=
             _load_data(cr, module_name, idref, mode, 'test')
             return True
         except Exception:
-            _logger.exception(
+            _test_logger.exception(
                 'module %s: an exception occurred in a test', module_name)
             return False
         finally:
@@ -105,7 +97,7 @@ def load_module_graph(cr, graph, status=None, perform_checks=True, skip_modules=
         """
         for filename in package.data[kind]:
             if kind == 'test':
-                _logger.log(logging.TEST, "module %s: loading %s", module_name, filename)
+                _test_logger.info("module %s: loading %s", module_name, filename)
             else:
                 _logger.info("module %s: loading %s", module_name, filename)
             _, ext = os.path.splitext(filename)
@@ -138,17 +130,17 @@ def load_module_graph(cr, graph, status=None, perform_checks=True, skip_modules=
 
     processed_modules = []
     loaded_modules = []
-    pool = pooler.get_pool(cr.dbname)
+    registry = openerp.registry(cr.dbname)
     migrations = openerp.modules.migration.MigrationManager(cr, graph)
-    _logger.debug('loading %d packages...', len(graph))
+    _logger.info('loading %d modules...', len(graph))
 
     # Query manual fields for all models at once and save them on the registry
     # so the initialization code for each model does not have to do it
     # one model at a time.
-    pool.fields_by_model = {}
+    registry.fields_by_model = {}
     cr.execute('SELECT * FROM ir_model_fields WHERE state=%s', ('manual',))
     for field in cr.dictfetchall():
-        pool.fields_by_model.setdefault(field['model'], []).append(field)
+        registry.fields_by_model.setdefault(field['model'], []).append(field)
 
     # register, instantiate and initialize models for each modules
     for index, package in enumerate(graph):
@@ -158,21 +150,21 @@ def load_module_graph(cr, graph, status=None, perform_checks=True, skip_modules=
         if skip_modules and module_name in skip_modules:
             continue
 
-        _logger.info('module %s: loading objects', package.name)
+        _logger.debug('module %s: loading objects', package.name)
         migrations.migrate_module(package, 'pre')
         load_openerp_module(package.name)
 
-        models = pool.load(cr, package)
+        models = registry.load(cr, package)
 
         loaded_modules.append(package.name)
         if hasattr(package, 'init') or hasattr(package, 'update') or package.state in ('to install', 'to upgrade'):
             init_module_models(cr, package.name, models)
-        pool._init_modules.add(package.name)
+        registry._init_modules.add(package.name)
         status['progress'] = float(index) / len(graph)
 
         # Can't put this line out of the loop: ir.module.module will be
         # registered by init_module_models() above.
-        modobj = pool.get('ir.module.module')
+        modobj = registry['ir.module.module']
 
         if perform_checks:
             modobj.check(cr, SUPERUSER_ID, [module_id])
@@ -213,7 +205,7 @@ def load_module_graph(cr, graph, status=None, perform_checks=True, skip_modules=
 
             migrations.migrate_module(package, 'post')
 
-            ver = release.major_version + '.' + package.data['version']
+            ver = adapt_version(package.data['version'])
             # Set new modules and dependencies
             modobj.write(cr, SUPERUSER_ID, [module_id], {'state': 'installed', 'latest_version': ver})
             # Update translations for all installed languages
@@ -228,7 +220,7 @@ def load_module_graph(cr, graph, status=None, perform_checks=True, skip_modules=
 
     # The query won't be valid for models created later (i.e. custom model
     # created after the registry has been loaded), so empty its result.
-    pool.fields_by_model = None
+    registry.fields_by_model = None
     
     cr.commit()
 
@@ -267,10 +259,8 @@ def load_marked_modules(cr, graph, states, force, progressdict, report, loaded_m
 def load_modules(db, force_demo=False, status=None, update_module=False):
     # TODO status['progress'] reporting is broken: used twice (and reset each
     # time to zero) in load_module_graph, not fine-grained enough.
-    # It should be a method exposed by the pool.
+    # It should be a method exposed by the registry.
     initialize_sys_path()
-
-    open_openerp_namespace()
 
     force = []
     if force_demo:
@@ -286,8 +276,9 @@ def load_modules(db, force_demo=False, status=None, update_module=False):
             if not tools.config['without_demo']:
                 tools.config["demo"]['all'] = 1
 
-        # This is a brand new pool, just created in pooler.get_db_and_pool()
-        pool = pooler.get_pool(cr.dbname)
+        # This is a brand new registry, just created in
+        # openerp.modules.registry.RegistryManager.new().
+        registry = openerp.registry(cr.dbname)
 
         if 'base' in tools.config['update'] or 'all' in tools.config['update']:
             cr.execute("update ir_module_module set state=%s where name=%s and state=%s", ('to upgrade', 'base', 'installed'))
@@ -301,7 +292,7 @@ def load_modules(db, force_demo=False, status=None, update_module=False):
 
         # processed_modules: for cleanup step after install
         # loaded_modules: to avoid double loading
-        report = pool._assertion_report
+        report = registry._assertion_report
         loaded_modules, processed_modules = load_module_graph(cr, graph, status, perform_checks=update_module, report=report)
 
         if tools.config['load_language']:
@@ -310,7 +301,7 @@ def load_modules(db, force_demo=False, status=None, update_module=False):
 
         # STEP 2: Mark other modules to be loaded/updated
         if update_module:
-            modobj = pool.get('ir.module.module')
+            modobj = registry['ir.module.module']
             if ('base' in tools.config['init']) or ('base' in tools.config['update']):
                 _logger.info('updating modules list')
                 modobj.update_list(cr, SUPERUSER_ID)
@@ -352,14 +343,13 @@ def load_modules(db, force_demo=False, status=None, update_module=False):
         # load custom models
         cr.execute('select model from ir_model where state=%s', ('manual',))
         for model in cr.dictfetchall():
-            pool.get('ir.model').instanciate(cr, SUPERUSER_ID, model['model'], {})
+            registry['ir.model'].instanciate(cr, SUPERUSER_ID, model['model'], {})
 
         # STEP 4: Finish and cleanup installations
         if processed_modules:
             cr.execute("""select model,name from ir_model where id NOT IN (select distinct model_id from ir_model_access)""")
             for (model, name) in cr.fetchall():
-                model_obj = pool.get(model)
-                if model_obj and not model_obj.is_transient():
+                if model in registry and not registry[model].is_transient():
                     _logger.warning('The model %s has no access rules, consider adding one. E.g. access_%s,access_%s,model_%s,,1,1,1,1',
                         model, model.replace('.', '_'), model.replace('.', '_'), model.replace('.', '_'))
 
@@ -367,20 +357,18 @@ def load_modules(db, force_demo=False, status=None, update_module=False):
             # been replaced by owner-only access rights
             cr.execute("""select distinct mod.model, mod.name from ir_model_access acc, ir_model mod where acc.model_id = mod.id""")
             for (model, name) in cr.fetchall():
-                model_obj = pool.get(model)
-                if model_obj and model_obj.is_transient():
+                if model in registry and registry[model].is_transient():
                     _logger.warning('The transient model %s (%s) should not have explicit access rules!', model, name)
 
             cr.execute("SELECT model from ir_model")
             for (model,) in cr.fetchall():
-                obj = pool.get(model)
-                if obj:
-                    obj._check_removed_columns(cr, log=True)
+                if model in registry:
+                    registry[model]._check_removed_columns(cr, log=True)
                 else:
                     _logger.warning("Model %s is declared but cannot be loaded! (Perhaps a module was partially removed or renamed)", model)
 
             # Cleanup orphan records
-            pool.get('ir.model.data')._process_end(cr, SUPERUSER_ID, processed_modules)
+            registry['ir.model.data']._process_end(cr, SUPERUSER_ID, processed_modules)
 
         for kind in ('init', 'demo', 'update'):
             tools.config[kind] = {}
@@ -414,12 +402,12 @@ def load_modules(db, force_demo=False, status=None, update_module=False):
             cr.execute("SELECT id FROM ir_module_module WHERE state=%s", ('to remove',))
             mod_ids_to_remove = [x[0] for x in cr.fetchall()]
             if mod_ids_to_remove:
-                pool.get('ir.module.module').module_uninstall(cr, SUPERUSER_ID, mod_ids_to_remove)
+                registry['ir.module.module'].module_uninstall(cr, SUPERUSER_ID, mod_ids_to_remove)
                 # Recursive reload, should only happen once, because there should be no
                 # modules to remove next time
                 cr.commit()
                 _logger.info('Reloading registry once more after uninstalling modules')
-                return pooler.restart_pool(cr.dbname, force_demo, status, update_module)
+                return openerp.modules.registry.RegistryManager.new(cr.dbname, force_demo, status, update_module)
 
         if report.failures:
             _logger.error('At least one test failed when loading the modules.')
@@ -427,7 +415,7 @@ def load_modules(db, force_demo=False, status=None, update_module=False):
             _logger.info('Modules loaded.')
 
         # STEP 7: call _register_hook on every model
-        for model in pool.models.values():
+        for model in registry.models.values():
             model._register_hook(cr)
 
     finally:

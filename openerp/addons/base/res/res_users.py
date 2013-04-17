@@ -3,7 +3,7 @@
 #
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
-#    Copyright (C) 2010-2012 OpenERP s.a. (<http://openerp.com>).
+#    Copyright (C) 2010-2013 OpenERP s.a. (<http://openerp.com>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -26,7 +26,7 @@ from lxml.builder import E
 
 import openerp
 from openerp import SUPERUSER_ID
-from openerp import pooler, tools
+from openerp import tools
 import openerp.exceptions
 from openerp.osv import fields,osv
 from openerp.osv.orm import browse_record
@@ -98,7 +98,7 @@ class groups(osv.osv):
                 raise osv.except_osv(_('Error'),
                         _('The name of the group can not start with "-"'))
         res = super(groups, self).write(cr, uid, ids, vals, context=context)
-        self.pool.get('ir.model.access').call_cache_clearing_methods(cr)
+        self.pool['ir.model.access'].call_cache_clearing_methods(cr)
         return res
 
 groups()
@@ -172,13 +172,17 @@ class res_users(osv.osv):
                 }
         }
 
+    def onchange_state(self, cr, uid, ids, state_id, context=None):
+        partner_ids = [user.partner_id.id for user in self.browse(cr, uid, ids, context=context)]
+        return self.pool.get('res.partner').onchange_state(cr, uid, partner_ids, state_id, context=context)
+
     def onchange_type(self, cr, uid, ids, is_company, context=None):
         """ Wrapper on the user.partner onchange_type, because some calls to the
             partner form view applied to the user may trigger the
             partner.onchange_type method, but applied to the user object.
         """
         partner_ids = [user.partner_id.id for user in self.browse(cr, uid, ids, context=context)]
-        return self.pool.get('res.partner').onchange_type(cr, uid, partner_ids, is_company, context=context)
+        return self.pool['res.partner'].onchange_type(cr, uid, partner_ids, is_company, context=context)
 
     def onchange_address(self, cr, uid, ids, use_parent_address, parent_id, context=None):
         """ Wrapper on the user.partner onchange_address, because some calls to the
@@ -186,7 +190,7 @@ class res_users(osv.osv):
             partner.onchange_type method, but applied to the user object.
         """
         partner_ids = [user.partner_id.id for user in self.browse(cr, uid, ids, context=context)]
-        return self.pool.get('res.partner').onchange_address(cr, uid, partner_ids, use_parent_address, parent_id, context=context)
+        return self.pool['res.partner'].onchange_address(cr, uid, partner_ids, use_parent_address, parent_id, context=context)
 
     def _check_company(self, cr, uid, ids, context=None):
         return all(((this.company_id in this.company_ids) or not this.company_ids) for this in self.browse(cr, uid, ids, context))
@@ -202,7 +206,7 @@ class res_users(osv.osv):
     def _get_company(self,cr, uid, context=None, uid2=False):
         if not uid2:
             uid2 = uid
-        user = self.pool.get('res.users').read(cr, uid, uid2, ['company_id'], context)
+        user = self.pool['res.users'].read(cr, uid, uid2, ['company_id'], context)
         company_id = user.get('company_id', False)
         return company_id and company_id[0] or False
 
@@ -243,7 +247,7 @@ class res_users(osv.osv):
         'company_id': _get_company,
         'company_ids': _get_companies,
         'groups_id': _get_group,
-        'image': lambda self, cr, uid, ctx={}: self.pool.get('res.partner')._get_default_image(cr, uid, False, ctx, colorize=True),
+        'image': lambda self, cr, uid, ctx={}: self.pool['res.partner']._get_default_image(cr, uid, False, ctx, colorize=True),
     }
 
     # User can write on a few of his own fields (but not his groups for example)
@@ -266,7 +270,7 @@ class res_users(osv.osv):
                 uid = SUPERUSER_ID
 
         result = super(res_users, self).read(cr, uid, ids, fields=fields, context=context, load=load)
-        canwrite = self.pool.get('ir.model.access').check(cr, uid, 'res.users', 'write', False)
+        canwrite = self.pool['ir.model.access'].check(cr, uid, 'res.users', 'write', False)
         if not canwrite:
             if isinstance(ids, (int, long)):
                 result = override_password(result)
@@ -291,8 +295,8 @@ class res_users(osv.osv):
         res = super(res_users, self).write(cr, uid, ids, values, context=context)
 
         # clear caches linked to the users
-        self.pool.get('ir.model.access').call_cache_clearing_methods(cr)
-        clear = partial(self.pool.get('ir.rule').clear_cache, cr)
+        self.pool['ir.model.access'].call_cache_clearing_methods(cr)
+        clear = partial(self.pool['ir.rule'].clear_cache, cr)
         map(clear, ids)
         db = cr.dbname
         if db in self._uid_cache:
@@ -352,7 +356,7 @@ class res_users(osv.osv):
         return result
 
     def action_get(self, cr, uid, context=None):
-        dataobj = self.pool.get('ir.model.data')
+        dataobj = self.pool['ir.model.data']
         data_id = dataobj._get_id(cr, SUPERUSER_ID, 'base', 'action_res_users_my')
         return dataobj.browse(cr, uid, data_id, context=context).res_id
 
@@ -372,7 +376,7 @@ class res_users(osv.osv):
         if not password:
             return False
         user_id = False
-        cr = pooler.get_db(db).cursor()
+        cr = self.pool.db.cursor()
         try:
             # autocommit: our single update request will be performed atomically.
             # (In this way, there is no opportunity to have two transactions
@@ -423,10 +427,12 @@ class res_users(osv.osv):
             # Successfully logged in as admin!
             # Attempt to guess the web base url...
             if user_agent_env and user_agent_env.get('base_location'):
-                cr = pooler.get_db(db).cursor()
+                cr = self.pool.db.cursor()
                 try:
                     base = user_agent_env['base_location']
-                    self.pool.get('ir.config_parameter').set_param(cr, uid, 'web.base.url', base)
+                    ICP = self.pool['ir.config_parameter']
+                    if not ICP.get_param(cr, uid, 'web.base.url.freeze'):
+                        ICP.set_param(cr, uid, 'web.base.url', base)
                     cr.commit()
                 except Exception:
                     _logger.exception("Failed to update web.base.url configuration parameter")
@@ -442,7 +448,7 @@ class res_users(osv.osv):
             raise openerp.exceptions.AccessDenied()
         if self._uid_cache.get(db, {}).get(uid) == passwd:
             return
-        cr = pooler.get_db(db).cursor()
+        cr = self.pool.db.cursor()
         try:
             self.check_credentials(cr, uid, passwd)
             if self._uid_cache.has_key(db):
@@ -690,7 +696,7 @@ class groups_view(osv.osv):
 
     def get_user_groups_view(self, cr, uid, context=None):
         try:
-            view = self.pool.get('ir.model.data').get_object(cr, SUPERUSER_ID, 'base', 'user_groups_view', context)
+            view = self.pool['ir.model.data'].get_object(cr, SUPERUSER_ID, 'base', 'user_groups_view', context)
             assert view and view._table_name == 'ir.ui.view'
         except Exception:
             view = False
@@ -744,6 +750,7 @@ class users_view(osv.osv):
 
     def create(self, cr, uid, values, context=None):
         self._set_reified_groups(values)
+
         return super(users_view, self).create(cr, uid, values, context)
 
     def write(self, cr, uid, ids, values, context=None):
@@ -782,6 +789,21 @@ class users_view(osv.osv):
         fields1 = (fields + ['groups_id']) if group_fields else fields
         values = super(users_view, self).default_get(cr, uid, fields1, context)
         self._get_reified_groups(group_fields, values)
+
+        # add "default_groups_ref" inside the context to set default value for group_id with xml values
+        if 'groups_id' in fields and isinstance(context.get("default_groups_ref"), list):
+            groups = []
+            ir_model_data = self.pool.get('ir.model.data')
+            for group_xml_id in context["default_groups_ref"]:
+                group_split = group_xml_id.split('.')
+                if len(group_split) != 2:
+                    raise osv.except_osv(_('Invalid context value'), _('Invalid context default_groups_ref value (model.name_id) : "%s"') % group_xml_id)
+                try:
+                    temp, group_id = ir_model_data.get_object_reference(cr, uid,  group_split[0], group_split[1])
+                except ValueError:
+                    group_id = False
+                groups += [group_id]
+            values['groups_id'] = groups
         return values
 
     def read(self, cr, uid, ids, fields=None, context=None, load='_classic_read'):
@@ -810,7 +832,7 @@ class users_view(osv.osv):
     def fields_get(self, cr, uid, allfields=None, context=None, write_access=True):
         res = super(users_view, self).fields_get(cr, uid, allfields, context, write_access)
         # add reified groups fields
-        for app, kind, gs in self.pool.get('res.groups').get_groups_by_application(cr, uid, context):
+        for app, kind, gs in self.pool['res.groups'].get_groups_by_application(cr, uid, context):
             if kind == 'selection':
                 # selection group field
                 tips = ['%s: %s' % (g.name, g.comment) for g in gs if g.comment]

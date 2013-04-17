@@ -19,8 +19,8 @@
 #
 ##############################################################################
 
+import openerp
 from openerp.report.interface import report_int
-import openerp.pooler as pooler
 import openerp.tools as tools
 from openerp.tools.safe_eval import safe_eval as eval
 from lxml  import etree
@@ -31,7 +31,6 @@ import time, os
 from operator import itemgetter
 from datetime import datetime
 
-#.apidoc title: Printscreen for List Views
 
 class report_printscreen_list(report_int):
     def __init__(self, name):
@@ -67,12 +66,12 @@ class report_printscreen_list(report_int):
         self.context = context
         self.groupby = context.get('group_by',[])
         self.groupby_no_leaf = context.get('group_by_no_leaf',False)
-        pool = pooler.get_pool(cr.dbname)
-        model = pool.get(datas['model'])
-        model_id = pool.get('ir.model').search(cr, uid, [('model','=',model._name)])
+        registry = openerp.registry(cr.dbname)
+        model = registry[datas['model']]
+        model_id = registry['ir.model'].search(cr, uid, [('model','=',model._name)])
         model_desc = model._description
         if model_id:
-            model_desc = pool.get('ir.model').browse(cr, uid, model_id[0], context).name
+            model_desc = registry['ir.model'].browse(cr, uid, model_id[0], context).name
         self.title = model_desc
         datas['ids'] = ids
         result = model.fields_view_get(cr, uid, view_type='tree', context=context)
@@ -135,8 +134,9 @@ class report_printscreen_list(report_int):
         _append_node('PageHeight', '%.2f' %(pageSize[1] * 2.8346,))
         _append_node('report-header', title)
 
-        _append_node('company', pooler.get_pool(self.cr.dbname).get('res.users').browse(self.cr,uid,uid).company_id.name)
-        rpt_obj = pooler.get_pool(self.cr.dbname).get('res.users')
+        registry = openerp.registry(self.cr.dbname)
+        _append_node('company', registry['res.users'].browse(self.cr,uid,uid).company_id.name)
+        rpt_obj = registry['res.users']
         rml_obj=report_sxw.rml_parse(self.cr, uid, rpt_obj._name,context)
         _append_node('header-date', str(rml_obj.formatLang(time.strftime("%Y-%m-%d"),date=True))+' ' + str(time.strftime("%H:%M")))
         l = []

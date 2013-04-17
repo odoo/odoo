@@ -28,7 +28,7 @@ class ir_filters(osv.osv):
     _description = 'Filters'
 
     def _list_all_models(self, cr, uid, context=None):
-        cr.execute("SELECT model, name from ir_model")
+        cr.execute("SELECT model, name FROM ir_model ORDER BY name")
         return cr.fetchall()
 
     def copy(self, cr, uid, id, default=None, context=None):

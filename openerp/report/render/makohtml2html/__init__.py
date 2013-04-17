@@ -21,7 +21,6 @@
 
 from makohtml2html import parseNode
 
-#.apidoc title: MAKO to HTML engine
 
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

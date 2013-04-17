@@ -19,8 +19,8 @@
 #
 ##############################################################################
 
+import openerp
 from openerp.report.interface import report_int
-import openerp.pooler as pooler
 import openerp.tools as tools
 
 from openerp.report import render
@@ -28,7 +28,6 @@ from lxml import etree
 
 import time, os
 
-#.apidoc title: Printscreen for Form Views
 
 class report_printscreen_list(report_int):
     def __init__(self, name):
@@ -56,8 +55,8 @@ class report_printscreen_list(report_int):
         if not context:
             context={}
         datas['ids'] = ids
-        pool = pooler.get_pool(cr.dbname)
-        model = pool.get(datas['model'])
+        registry = openerp.registry(cr.dbname)
+        model = registry[datas['model']]
         # title come from description of model which are specified in py file.
         self.title = model._description
         result = model.fields_view_get(cr, uid, view_type='form', context=context)

@@ -83,7 +83,8 @@ class view(osv.osv):
     }
     _defaults = {
         'arch': '<?xml version="1.0"?>\n<tree string="My view">\n\t<field name="name"/>\n</tree>',
-        'priority': 16
+        'priority': 16,
+        'type': 'tree',
     }
     _order = "priority,name"
 
@@ -122,7 +123,7 @@ class view(osv.osv):
                if no error occurred, else False.  
         """
         try:
-            fvg = self.pool.get(view.model).fields_view_get(cr, uid, view_id=view.id, view_type=view.type, context=context)
+            fvg = self.pool[view.model].fields_view_get(cr, uid, view_id=view.id, view_type=view.type, context=context)
             return fvg['arch']
         except:
             _logger.exception("Can't render view %s for model: %s", view.xml_id, view.model)
@@ -216,9 +217,9 @@ class view(osv.osv):
         no_ancester=[]
         blank_nodes = []
 
-        _Model_Obj=self.pool.get(model)
-        _Node_Obj=self.pool.get(node_obj)
-        _Arrow_Obj=self.pool.get(conn_obj)
+        _Model_Obj = self.pool[model]
+        _Node_Obj = self.pool[node_obj]
+        _Arrow_Obj = self.pool[conn_obj]
 
         for model_key,model_value in _Model_Obj._columns.items():
                 if model_value._type=='one2many':
@@ -292,7 +293,7 @@ class view_sc(osv.osv):
     def get_sc(self, cr, uid, user_id, model='ir.ui.menu', context=None):
         ids = self.search(cr, uid, [('user_id','=',user_id),('resource','=',model)], context=context)
         results = self.read(cr, uid, ids, ['res_id'], context=context)
-        name_map = dict(self.pool.get(model).name_get(cr, uid, [x['res_id'] for x in results], context=context))
+        name_map = dict(self.pool[model].name_get(cr, uid, [x['res_id'] for x in results], context=context))
         # Make sure to return only shortcuts pointing to exisintg menu items.
         filtered_results = filter(lambda result: result['res_id'] in name_map, results)
         for result in filtered_results:

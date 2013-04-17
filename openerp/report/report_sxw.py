@@ -29,10 +29,11 @@ import time
 from interface import report_rml
 import preprocess
 import logging
-import openerp.pooler as pooler
 import openerp.tools as tools
 import zipfile
 import common
+
+import openerp
 from openerp.osv.fields import float as float_field, function as function_field, datetime as datetime_field
 from openerp.tools.translate import _
 from openerp.tools import DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT
@@ -152,8 +153,8 @@ class rml_parse(object):
             context={}
         self.cr = cr
         self.uid = uid
-        self.pool = pooler.get_pool(cr.dbname)
-        user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
+        self.pool = openerp.registry(cr.dbname)
+        user = self.pool['res.users'].browse(cr, uid, uid, context=context)
         self.localcontext = {
             'user': user,
             'setCompany': self.setCompany,
@@ -189,6 +190,8 @@ class rml_parse(object):
         return newtag, attrs
 
     def _ellipsis(self, char, size=100, truncation_str='...'):
+        if not char:
+            return ''
         if len(char) <= size:
             return char
         return char[:size-len(truncation_str)] + truncation_str
@@ -218,7 +221,7 @@ class rml_parse(object):
             model = 'ir.attachment'
         try :
             id = int(id)
-            res = self.pool.get(model).read(self.cr,self.uid,id)
+            res = self.pool[model].read(self.cr,self.uid,id)
             if field :
                 return res[field]
             elif model =='ir.attachment' :
@@ -235,7 +238,7 @@ class rml_parse(object):
             obj._context['lang'] = lang
 
     def _get_lang_dict(self):
-        pool_lang = self.pool.get('res.lang')
+        pool_lang = self.pool['res.lang']
         lang = self.localcontext.get('lang', 'en_US') or 'en_US'
         lang_ids = pool_lang.search(self.cr,self.uid,[('code','=',lang)])[0]
         lang_obj = pool_lang.browse(self.cr,self.uid,lang_ids)
@@ -250,7 +253,7 @@ class rml_parse(object):
     def get_digits(self, obj=None, f=None, dp=None):
         d = DEFAULT_DIGITS = 2
         if dp:
-            decimal_precision_obj = self.pool.get('decimal.precision')
+            decimal_precision_obj = self.pool['decimal.precision']
             ids = decimal_precision_obj.search(self.cr, self.uid, [('name', '=', dp)])
             if ids:
                 d = decimal_precision_obj.browse(self.cr, self.uid, ids)[0].digits
@@ -321,7 +324,7 @@ class rml_parse(object):
         return res
 
     def display_address(self, address_browse_record):
-        return self.pool.get('res.partner')._display_address(self.cr, self.uid, address_browse_record)
+        return self.pool['res.partner']._display_address(self.cr, self.uid, address_browse_record)
 
     def repeatIn(self, lst, name,nodes_parent=False):
         ret_lst = []
@@ -332,7 +335,7 @@ class rml_parse(object):
     def _translate(self,text):
         lang = self.localcontext['lang']
         if lang and text and not text.isspace():
-            transl_obj = self.pool.get('ir.translation')
+            transl_obj = self.pool['ir.translation']
             piece_list = self._transl_regex.split(text)
             for pn in range(len(piece_list)):
                 if not self._transl_regex.match(piece_list[pn]):
@@ -386,8 +389,19 @@ class rml_parse(object):
             self.setCompany(objects[0].company_id)
 
 class report_sxw(report_rml, preprocess.report):
-    def __init__(self, name, table, rml=False, parser=rml_parse, header='external', store=False):
-        report_rml.__init__(self, name, table, rml, '')
+    """
+    The register=True kwarg has been added to help remove the
+    openerp.netsvc.LocalService() indirection and the related
+    openerp.report.interface.report_int._reports dictionary:
+    report_sxw registered in XML with auto=False are also registered in Python.
+    In that case, they are registered in the above dictionary. Since
+    registration is automatically done upon instanciation, and that
+    instanciation is needed before rendering, a way was needed to
+    instanciate-without-register a report. In the future, no report
+    should be registered in the above dictionary and it will be dropped.
+    """
+    def __init__(self, name, table, rml=False, parser=rml_parse, header='external', store=False, register=True):
+        report_rml.__init__(self, name, table, rml, '', register=register)
         self.name = name
         self.parser = parser
         self.header = header
@@ -397,7 +411,7 @@ class report_sxw(report_rml, preprocess.report):
             self.internal_header=True
 
     def getObjects(self, cr, uid, ids, context):
-        table_obj = pooler.get_pool(cr.dbname).get(self.table)
+        table_obj = openerp.registry(cr.dbname)[self.table]
         return table_obj.browse(cr, uid, ids, list_class=browse_record_list, context=context, fields_process=_fields_process)
 
     def create(self, cr, uid, ids, data, context=None):
@@ -407,8 +421,8 @@ class report_sxw(report_rml, preprocess.report):
             context.update(internal_header=self.internal_header)
         # skip osv.fields.sanitize_binary_value() because we want the raw bytes in all cases
         context.update(bin_raw=True)
-        pool = pooler.get_pool(cr.dbname)
-        ir_obj = pool.get('ir.actions.report.xml')
+        registry = openerp.registry(cr.dbname)
+        ir_obj = registry['ir.actions.report.xml']
         report_xml_ids = ir_obj.search(cr, uid,
                 [('report_name', '=', self.name[7:])], context=context)
         if report_xml_ids:
@@ -456,7 +470,7 @@ class report_sxw(report_rml, preprocess.report):
     def create_source_pdf(self, cr, uid, ids, data, report_xml, context=None):
         if not context:
             context={}
-        pool = pooler.get_pool(cr.dbname)
+        registry = openerp.registry(cr.dbname)
         attach = report_xml.attachment
         if attach:
             objs = self.getObjects(cr, uid, ids, context)
@@ -465,9 +479,9 @@ class report_sxw(report_rml, preprocess.report):
                 aname = eval(attach, {'object':obj, 'time':time})
                 result = False
                 if report_xml.attachment_use and aname and context.get('attachment_use', True):
-                    aids = pool.get('ir.attachment').search(cr, uid, [('datas_fname','=',aname+'.pdf'),('res_model','=',self.table),('res_id','=',obj.id)])
+                    aids = registry['ir.attachment'].search(cr, uid, [('datas_fname','=',aname+'.pdf'),('res_model','=',self.table),('res_id','=',obj.id)])
                     if aids:
-                        brow_rec = pool.get('ir.attachment').browse(cr, uid, aids[0])
+                        brow_rec = registry['ir.attachment'].browse(cr, uid, aids[0])
                         if not brow_rec.datas:
                             continue
                         d = base64.decodestring(brow_rec.datas)
@@ -485,7 +499,7 @@ class report_sxw(report_rml, preprocess.report):
                         # field.
                         ctx = dict(context)
                         ctx.pop('default_type', None)
-                        pool.get('ir.attachment').create(cr, uid, {
+                        registry['ir.attachment'].create(cr, uid, {
                             'name': aname,
                             'datas': base64.encodestring(result[0]),
                             'datas_fname': name,

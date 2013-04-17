@@ -49,7 +49,6 @@ def run(args):
     openerp.cli.server.check_root_user()
     openerp.netsvc.init_logger()
     #openerp.cli.server.report_configuration()
-    openerp.cli.server.configure_babel_localedata_path()
 
     target = openerp.service.wsgi_server.serve
     if not args.gevent:

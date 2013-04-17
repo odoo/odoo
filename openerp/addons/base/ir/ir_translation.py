@@ -334,7 +334,7 @@ class ir_translation(osv.osv):
         return result
 
     def translate_fields(self, cr, uid, model, id, field=None, context=None):
-        trans_model = self.pool.get(model)
+        trans_model = self.pool[model]
         domain = ['&', ('res_id', '=', id), ('name', '=like', model + ',%')]
         langs_ids = self.pool.get('res.lang').search(cr, uid, [('code', '!=', 'en_US')], context=context)
         if not langs_ids:
