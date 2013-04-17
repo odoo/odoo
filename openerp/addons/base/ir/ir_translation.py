@@ -166,7 +166,8 @@ class ir_translation(osv.osv):
             if record.type != 'model':
                 res[record.id] = record.src
             else:
-                model, field = record.name.split(',')
+                model_name, field = record.name.split(',')
+                model = self.pool.get(model_name)
                 #We need to take the context without the language information, because we want to read the
                 #value store in db and not on the one associate with current language.
                 context_wo_lang = context.copy()
@@ -180,9 +181,10 @@ class ir_translation(osv.osv):
         '''
         if context is None:
             context = {}
-        if value and record.model == 'model':
-            record = self.browse(cr, uid, id, context=context)
-            model, field = record.name.split(',')
+        record = self.browse(cr, uid, id, context=context)
+        if value and record.type == 'model':
+            model_name, field = record.name.split(',')
+            model = self.pool.get(model_name)
             #We need to take the context without the language information, because we want to write on the
             #value store in db and not on the one associate with current language.
             #Also not removing lang from context trigger an error when lang is different
