@@ -155,7 +155,7 @@ class test_message_compose(TestMailBase):
         message_pids = [partner.id for partner in compose.partner_ids]
         partner_ids = [p_a_id]
         self.assertEqual(compose.subject, '${object.name}', 'mail.compose.message subject incorrect')
-        self.assertEqual(compose.body, '${object.description}', 'mail.compose.message body incorrect')
+        self.assertEqual(compose.body, '<p>${object.description}</p>', 'mail.compose.message body incorrect')
         self.assertEqual(set(message_pids), set(partner_ids), 'mail.compose.message partner_ids incorrect')
 
         # 2. Post the comment, get created message
