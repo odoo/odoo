@@ -268,6 +268,8 @@ class account_analytic_account(osv.osv):
                     GROUP BY account_analytic_line.account_id", (child_ids,))
             for account_id, sum in cr.fetchall():
                 res[account_id] = round(sum, 2)
+        for acc in self.browse(cr, uid, res.keys(), context=context):
+            res[acc.id] = res[acc.id] - (acc.timesheet_ca_invoiced or 0.0)
         res_final = res
         return res_final
 
