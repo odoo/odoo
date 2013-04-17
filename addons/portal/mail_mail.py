@@ -53,3 +53,16 @@ class mail_mail(osv.Model):
             return body_footer
         else:
             return super(mail_mail, self).send_get_mail_body_footer(cr, uid, mail, partner=partner, context=context)
+
+
+class mail_thread_portal(osv.Model):
+
+    _inherit = 'mail.thread'
+
+    def get_suggested_thread(self, cr, uid, removed_suggested_threads=None, context=None):
+        """Overwrite to avoid showing suggestions for anonymous users"""
+        print("Group portal.group_anonymous")
+        anonymous_group = self.pool.get('ir.model.data').get_object(cr, SUPERUSER_ID, 'portal', 'group_anonymous')
+        if uid in [user.id for user in anonymous_group.users]:
+            return []
+        return super(mail_thread, self).get_suggested_thread(cr, uid, removed_suggested_threads, context=context)
