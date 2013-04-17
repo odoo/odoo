@@ -34,7 +34,7 @@ class mail_message(osv.Model):
 
         if model_obj._name == 'hr.employee':
             employee_ids = model_obj.search(cr, uid, [('user_id', '=', uid)], context=context)
-            if len(employee_ids) > 0:
+            if employee_ids:
                 model_obj.check_access_rights(cr, uid, 'read')
                 model_obj.check_access_rule(cr, uid, mids, 'read', context=context)
                 return

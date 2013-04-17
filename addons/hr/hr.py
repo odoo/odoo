@@ -228,9 +228,6 @@ class hr_employee(osv.osv):
         except:
             pass # group deleted: do not push a message
 
-        # the user linked to the employee follow the employee
-        if 'user_id' in data:
-            self.message_subscribe_users(cr, uid, [employee_id], [data['user_id']], context=context)
         return employee_id
 
     def unlink(self, cr, uid, ids, context=None):
