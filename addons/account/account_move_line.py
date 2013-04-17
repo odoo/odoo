@@ -1308,6 +1308,5 @@ class account_move_line(osv.osv):
                 bool(journal.currency),bool(journal.analytic_journal_id)))
         return result
 
-account_move_line()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

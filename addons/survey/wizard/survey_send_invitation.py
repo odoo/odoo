@@ -26,7 +26,8 @@ import os
 import datetime
 import socket
 
-from openerp import addons, tools
+from openerp import tools
+from openerp.modules.module import get_module_resource
 from openerp.osv import fields, osv
 import openerp.report
 from openerp.tools.translate import _
@@ -85,7 +86,7 @@ Thanks,''') % (name, self.pool.get('ir.config_parameter').get_param(cr, uid, 'we
         if not report_name or not res_ids:
             return (False, Exception('Report name and Resources ids are required !!!'))
         try:
-            ret_file_name = addons.get_module_resource('survey', 'report') + file_name + '.pdf'
+            ret_file_name = get_module_resource('survey', 'report') + file_name + '.pdf'
             result, format = openerp.report.render_report(cr, uid, res_ids, report_name[len('report.'):], {}, {})
             fp = open(ret_file_name, 'wb+');
             fp.write(result);
@@ -128,7 +129,7 @@ Thanks,''') % (name, self.pool.get('ir.config_parameter').get_param(cr, uid, 'we
                 new_user.append(use.id)
         for id in survey_ref.browse(cr, uid, survey_ids):
             report = self.create_report(cr, uid, [id.id], 'report.survey.form', id.title)
-            file = open(addons.get_module_resource('survey', 'report') + id.title +".pdf")
+            file = open(get_module_resource('survey', 'report') + id.title +".pdf")
             file_data = ""
             while 1:
                 line = file.readline()
@@ -137,7 +138,7 @@ Thanks,''') % (name, self.pool.get('ir.config_parameter').get_param(cr, uid, 'we
                     break
             file.close()
             attachments[id.title +".pdf"] = file_data
-            os.remove(addons.get_module_resource('survey', 'report') + id.title +".pdf")
+            os.remove(get_module_resource('survey', 'report') + id.title +".pdf")
 
         for partner in self.pool.get('res.partner').browse(cr, uid, partner_ids):
             if not partner.email:
@@ -220,7 +221,6 @@ Thanks,''') % (name, self.pool.get('ir.config_parameter').get_param(cr, uid, 'we
             'target': 'new',
             'context': context
         }
-survey_send_invitation()
 
 class survey_send_invitation_log(osv.osv_memory):
     _name = 'survey.send.invitation.log'
@@ -235,6 +235,5 @@ class survey_send_invitation_log(osv.osv_memory):
         data['note'] = context.get('note', '')
         return data
 
-survey_send_invitation_log()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

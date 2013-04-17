@@ -40,8 +40,8 @@ import logging
 
 from report_helper import WebKitHelper
 import openerp
+from openerp.modules.module import get_module_resource
 from openerp.report.report_sxw import *
-from openerp import addons
 from openerp import tools
 from openerp.tools.translate import _
 from openerp.osv.osv import except_osv
@@ -280,7 +280,7 @@ class WebKitParser(report_sxw):
         template =  False
 
         if report_xml.report_file :
-            path = addons.get_module_resource(*report_xml.report_file.split(os.path.sep))
+            path = get_module_resource(*report_xml.report_file.split(os.path.sep))
             if path and os.path.exists(path) :
                 template = file(path).read()
         if not template and report_xml.report_webkit_data :
@@ -296,7 +296,7 @@ class WebKitParser(report_sxw):
               )
         if not report_xml.header :
             header = ''
-            default_head = addons.get_module_resource('report_webkit', 'default_header.html')
+            default_head = get_module_resource('report_webkit', 'default_header.html')
             with open(default_head,'r') as f:
                 header = f.read()
         css = report_xml.webkit_header.css

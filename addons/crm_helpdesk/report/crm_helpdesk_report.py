@@ -108,6 +108,5 @@ class crm_helpdesk_report(osv.osv):
                      c.categ_id,c.channel_id,c.planned_cost,c.id
             )""")
 
-crm_helpdesk_report()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

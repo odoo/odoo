@@ -41,7 +41,7 @@
         <field name="arch" type="xml">
             <tree string="Applicants" fonts="bold:message_unread==True" colors="grey:state in ('cancel','done');blue:state=='pending'">
                 <field name="message_unread" invisible="1"/>
-                <field name="create_date" groups="base.group_no_one"/>
+                <field name="create_date"/>
                 <field name="name" string="Subject"/>
                 <field name="partner_name"/>
                 <field name="email_from"/>
@@ -199,7 +199,7 @@
                     <filter string="Appreciation" domain="[]" context="{'group_by':'priority'}"/>
                     <filter string="Stage" domain="[]" context="{'group_by':'stage_id'}"/>
                     <filter string="Source" domain="[]" context="{'group_by':'source_id'}"/>
-                    <filter string="Creation Date" domain="[]" context="{'group_by':'create_date'}" groups="base.group_no_one"/>
+                    <filter string="Creation Date" domain="[]" context="{'group_by':'create_date'}"/>
                 </group>
            </search>
         </field>
@@ -312,11 +312,17 @@
                         attrs="{'invisible':[('survey_id','=',False)]}"/>
                 </div>
             </field>
-            <xpath expr="//div[@class='oe_title']" version="7.0" position="after">
-                <div attrs="{'invisible': [('alias_domain', '=', False)]}">
-                    <field name="alias_id" invisible="1" required="0"/>
-                    <label for="alias_name" class="oe_edit_only"/>
-                    <field name="alias_name" nolabel="1" class="oe_inline" attrs="{'required': [('alias_id', '!=', False)]}"/>@<field name="alias_domain" nolabel="1" class="oe_inline"/>
+            <xpath expr="//div[@class='oe_title']//h1" position="after">
+                <div name="group_alias"
+                        attrs="{'invisible': [('alias_domain', '=', False)]}">
+                    <label for="alias_id" string="Email Alias"/>
+                    <field name="alias_id" class="oe_inline oe_read_only" required="0" nolabel="1"/>
+                    <span name="edit_alias" class="oe_edit_only">
+                        <field name="alias_name" class="oe_inline"
+                                attrs="{'required': [('alias_id', '!=', False)]}"/>
+                        @
+                        <field name="alias_domain" class="oe_inline" readonly="1"/>
+                    </span>
                 </div>
             </xpath>
         </field>

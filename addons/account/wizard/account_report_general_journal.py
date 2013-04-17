@@ -34,7 +34,6 @@ class account_general_journal(osv.osv_memory):
         data = self.pre_print_report(cr, uid, ids, data, context=context)
         return {'type': 'ir.actions.report.xml', 'report_name': 'account.general.journal', 'datas': data}
 
-account_general_journal()
 
 #vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

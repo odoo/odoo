@@ -49,7 +49,6 @@ class pos_payment_report_user(osv.osv_memory):
         'user_id': fields.many2many('res.users', 'res_user_sale', 'user_id', 'sale_id', 'Salesperson')
     }
 
-pos_payment_report_user()
 
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

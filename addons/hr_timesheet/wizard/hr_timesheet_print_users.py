@@ -52,6 +52,5 @@ class analytical_timesheet_employees(osv.osv_memory):
             'datas': datas,
             }
 
-analytical_timesheet_employees()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

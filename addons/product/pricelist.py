@@ -64,7 +64,6 @@ class price_type(osv.osv):
         "currency_id": _get_currency
     }
 
-price_type()
 
 #----------------------------------------------------------
 # Price lists
@@ -77,7 +76,6 @@ class product_pricelist_type(osv.osv):
         'name': fields.char('Name',size=64, required=True, translate=True),
         'key': fields.char('Key', size=64, required=True, help="Used in the code to select specific prices based on the context. Keep unchanged."),
     }
-product_pricelist_type()
 
 
 class product_pricelist(osv.osv):
@@ -305,7 +303,6 @@ class product_pricelist(osv.osv):
         res.update({'item_id': {ids[-1]: res_multi.get('item_id', ids[-1])}})
         return res
 
-product_pricelist()
 
 
 class product_pricelist_version(osv.osv):
@@ -363,7 +360,6 @@ class product_pricelist_version(osv.osv):
             ['date_start', 'date_end'])
     ]
 
-product_pricelist_version()
 
 class product_pricelist_item(osv.osv):
     def _price_field_get(self, cr, uid, context=None):
@@ -443,7 +439,6 @@ class product_pricelist_item(osv.osv):
         if prod[0]['code']:
             return {'value': {'name': prod[0]['code']}}
         return {}
-product_pricelist_item()
 
 
 
