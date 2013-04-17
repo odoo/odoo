@@ -299,7 +299,24 @@ class ir_ui_menu(osv.osv):
               the action domain
         """
         res = {}
+        menu_ids = []
         for menu in self.browse(cr, uid, ids, context=context):
+            menu_ids.append(menu.id)
+            ctx = None
+            if menu.action and menu.action.type in ('ir.actions.act_window', 'ir.actions.client') and menu.action.context:
+                ctx = eval(menu.action.context, context) or None
+            menu_ref = ctx and ctx.get('needaction_menu_ref')
+            if menu_ref:
+                if not isinstance(menu_ref, list):
+                    menu_ref = [menu_ref]
+                model_data_obj = self.pool.get('ir.model.data')
+                for menu_data in menu_ref:
+                    model, id = model_data_obj.get_object_reference(cr, uid, menu_data.split('.')[0], menu_data.split('.')[1])
+                    if (model == 'ir.ui.menu'):
+                        menu_ids.append(id)
+        menu_ids = list(set(menu_ids))
+
+        for menu in self.browse(cr, uid, menu_ids, context=context):
             res[menu.id] = {
                 'needaction_enabled': False,
                 'needaction_counter': False,
