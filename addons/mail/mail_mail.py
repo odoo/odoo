@@ -28,7 +28,6 @@ from urlparse import urljoin
 from openerp import tools
 from openerp import SUPERUSER_ID
 from openerp.osv import fields, osv
-from openerp.osv.orm import except_orm
 from openerp.tools.translate import _
 
 _logger = logging.getLogger(__name__)
@@ -150,6 +149,31 @@ class mail_mail(osv.Model):
             self.unlink(cr, SUPERUSER_ID, [mail.id], context=context)
         return True
 
+    #------------------------------------------------------
+    # mail_mail formatting, tools and send mechanism
+    #------------------------------------------------------
+
+    def _get_partner_access_link(self, cr, uid, mail, partner=None, context=None):
+        """ Generate URLs for links in mails:
+            - partner is an user and has read access to the document: direct link to document with model, res_id
+        """
+        if partner and partner.user_ids:
+            base_url = self.pool.get('ir.config_parameter').get_param(cr, uid, 'web.base.url')
+            # the parameters to encode for the query and fragment part of url
+            query = {'db': cr.dbname}
+            fragment = {
+                'login': partner.user_ids[0].login,
+                'action': 'mail.action_mail_redirect',
+            }
+            if mail.notification:
+                fragment.update({
+                        'message_id': mail.mail_message_id.id,
+                    })
+            url = urljoin(base_url, "?%s#%s" % (urlencode(query), urlencode(fragment)))
+            return _("""<small>Access this document <a style='color:inherit' href="%s">directly in OpenERP</a></small>""") % url
+        else:
+            return None
+
     def send_get_mail_subject(self, cr, uid, mail, force=False, partner=None, context=None):
         """ If subject is void and record_name defined: '<Author> posted on <Resource>'
 
@@ -170,25 +194,10 @@ class mail_mail(osv.Model):
             :param browse_record partner: specific recipient partner
         """
         body = mail.body_html
-        # partner is a user, link to a related document (incentive to install portal)
-        if partner and partner.user_ids and mail.model and mail.res_id \
-                and self.check_access_rights(cr, partner.user_ids[0].id, 'read', raise_exception=False):
-            related_user = partner.user_ids[0]
-            try:
-                self.pool.get(mail.model).check_access_rule(cr, related_user.id, [mail.res_id], 'read', context=context)
-                base_url = self.pool.get('ir.config_parameter').get_param(cr, uid, 'web.base.url')
-                # the parameters to encode for the query and fragment part of url
-                query = {'db': cr.dbname}
-                fragment = {
-                    'login': related_user.login,
-                    'model': mail.model,
-                    'id': mail.res_id,
-                }
-                url = urljoin(base_url, "?%s#%s" % (urlencode(query), urlencode(fragment)))
-                text = _("""<p>Access this document <a href="%s">directly in OpenERP</a></p>""") % url
-                body = tools.append_content_to_html(body, ("<div><p>%s</p></div>" % text), plaintext=False)
-            except except_orm, e:
-                pass
+        # generate footer
+        link = self._get_partner_access_link(cr, uid, mail, partner, context=context)
+        if link:
+            body = tools.append_content_to_html(body, link, plaintext=False, container_tag='div')
         return body
 
     def send_get_mail_reply_to(self, cr, uid, mail, partner=None, context=None):

@@ -389,6 +389,54 @@ class mail_thread(osv.AbstractModel):
             return [('message_unread', '=', True)]
         return []
 
+    def message_redirect_get_inbox_action_xml_id(self, cr, uid, context=None):
+        """ When redirecting towards the Inbox, choose which action xml_id has
+            to be fetched. This method is meant to be inherited, at least in portal
+            because portal users have a different Inbox action than classic users. """
+        return ('mail', 'action_mail_inbox_feeds')
+
+    def message_redirect_action(self, cr, uid, context=None):
+        """ For a given message, return an action that either
+            - opens the form view of the related document if model, res_id, and
+              read access to the document
+            - opens the Inbox with a default search on the conversation if model,
+              res_id
+            - opens the Inbox with context propagated
+        """
+        if context is None:
+            context = {}
+
+        # default action is the Inbox action
+        self.pool.get('res.users').browse(cr, SUPERUSER_ID, uid, context=context)
+        act_model, act_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, *self.message_redirect_get_inbox_action_xml_id(cr, uid, context=context))
+        action = self.pool.get(act_model).read(cr, uid, act_id, [])
+
+        # if msg_id specified: try to redirect to the document or fallback on the Inbox
+        msg_id = context.get('params', {}).get('message_id')
+        if not msg_id:
+            return action
+        msg = self.pool.get('mail.message').browse(cr, uid, msg_id, context=context)
+        if msg.model and msg.res_id and self.pool.get(msg.model).check_access_rights(cr, uid, 'read', raise_exception=False):
+            try:
+                self.pool.get(msg.model).check_access_rule(cr, uid, [msg.res_id], 'read', context=context)
+                action = {
+                    'type': 'ir.actions.act_window',
+                    'res_model': msg.model,
+                    'view_type': 'form',
+                    'view_mode': 'form',
+                    'views': [(msg.res_id, 'form')],
+                    'target': 'current',
+                    'res_id': msg.res_id,
+                }
+            except osv.except_osv:
+                action.update({
+                    'context': {
+                        'search_default_model': msg.model,
+                        'search_default_res_id': msg.res_id,
+                    }
+                })
+        return action
+
     #------------------------------------------------------
     # Email specific
     #------------------------------------------------------
@@ -1077,36 +1125,6 @@ class mail_thread(osv.AbstractModel):
         if message.author_id and thread_id and type != 'notification' and not context.get('mail_create_nosubscribe'):
             self.message_subscribe(cr, uid, [thread_id], [message.author_id.id], context=context)
         return msg_id
-
-    def get_message_action_from_link(self, cr, uid, message_id, context=None):
-        action = None
-        msg_obj = self.pool.get('mail.message')
-        msg = msg_obj.browse(cr, uid, message_id, context=context)
-        if msg.model:
-            try:
-                self.pool.get(msg.model).check_access_rights(cr, uid, 'read')
-                action = {
-                    'type': 'ir.actions.act_window',
-                    'res_model': msg.model,
-                    'view_type': 'form',
-                    'view_mode': 'form',
-                    'views': [(msg.res_id, 'form')],
-                    'target': 'current',
-                    'res_id': msg.res_id,
-                }
-            except openerp.exceptions.AccessDenied:
-                mod_obj = self.pool.get('ir.model.data')
-                act_model, act_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'mail', 'action_mail_inbox_feeds')
-                action = self.pool.get(act_model).read(cr, uid, act_id, [])
-                action.update({
-                    'context': {
-                        'default_model': 'res.users',
-                        'default_res_id': uid,
-                        'search_default_res_id': 1,
-                        'search_default_model': 1,
-                    }
-                })
-        return action
 
     #------------------------------------------------------
     # Compatibility methods: do not use

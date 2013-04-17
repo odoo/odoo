@@ -20,6 +20,7 @@
 ##############################################################################
 
 import portal
+import mail_thread
 import mail_mail
 import wizard
 import acquirer

@@ -8,8 +8,6 @@
             <field name="context">{
               'default_model': 'res.users',
               'default_res_id': uid,
-              'search_default_model': context.get('params') and context.params.get('model'),
-              'search_default_res_id': context.get('params') and context.params.get('res_id')
             }</field>
             <field name="params" eval="&quot;{
                 'domain': [
@@ -108,6 +106,15 @@
                     message will be sent by email if it's an internal contact.
                 </p>
             </field>
+        </record>
+
+        <record id="action_mail_redirect" model="ir.actions.server">
+            <field name="name">Mail Redirection (Document / Inbox)</field>
+            <field name="condition">True</field>
+            <field name="model_id" ref="model_mail_thread"/>
+            <field name="code">action = pool.get('mail.thread').message_redirect_action(cr, uid, context)</field>
+            <field name="state">code</field>
+            <field name="type">ir.actions.server</field>
         </record>
 
         <!-- MENU -->
