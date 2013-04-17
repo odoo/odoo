@@ -72,11 +72,11 @@ class report_mrp_inout(osv.osv):
                     min(sm.id) as id,
                     to_char(sm.date,'YYYY:IW') as date,
                     sum(case when (sl.usage='internal') then
-                        pt.standard_price * sm.product_qty
+                        ip.value_float * sm.product_qty
                     else
                         0.0
                     end - case when (sl2.usage='internal') then
-                        pt.standard_price * sm.product_qty
+                        ip.value_float * sm.product_qty
                     else
                         0.0
                     end) as value
@@ -86,6 +86,8 @@ class report_mrp_inout(osv.osv):
                     on (pp.id = sm.product_id)
                 left join product_template pt
                     on (pt.id = pp.product_tmpl_id)
+                LEFT JOIN ir_property ip 
+                    ON (ip.name='standard_price' AND ip.res_id=CONCAT('product.template,',pt.id) AND ip.company_id=sm.company_id)
                 left join stock_location sl
                     on ( sl.id = sm.location_id)
                 left join stock_location sl2
