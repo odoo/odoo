@@ -382,6 +382,7 @@ instance.web.SearchView = instance.web.Widget.extend(/** @lends instance.web.Sea
                 model: this.dataset._model,
                 view_id: this.view_id,
                 view_type: 'search',
+                context: this.dataset.get_context(),
             });
 
             $.when(load_view).then(function (r) {

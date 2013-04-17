@@ -480,7 +480,28 @@ $sheet-padding: 16px
     .oe_tag_dark
         background: $tag-bg-dark
         color: #eee
-
+    .oe_form_field_radio
+        &.oe_horizontal
+            white-space: nowrap
+            label
+                display: inline-block
+                text-align: center
+                height: 16px
+        &.oe_vertical
+            label
+                margin-left: 4px
+        &.oe_form_required
+            .oe_radio_input
+                border: 2px solid transparent
+                display: inline-block
+                height: 12px
+                width: 12px
+                vertical-align: bottom
+                border-radius: 10px
+                margin: 1px 0
+            &.oe_form_invalid
+                .oe_radio_input
+                    border-color: red
     .oe_tags
         &.oe_inline
             min-width: 250px
@@ -1664,6 +1685,9 @@ $sheet-padding: 16px
             @include box-shadow((0 1px 2px rgba(0, 0, 0, .1), 0 1px 1px rgba(255, 255, 255, .8) inset))
     .oe_form_invisible
         display: none !important
+    .oe_form_editable
+        .oe_read_only
+            display: none !important
     .oe_form_readonly
         .oe_edit_only, .oe_form_field:empty
             display: none !important
@@ -1884,6 +1908,7 @@ $sheet-padding: 16px
             background: white
             min-width: 60px
             color: #1f1f1f
+            font-family: "Lucida Grande", Helvetica, Verdana, Arial, sans-serif
         input[readonly], select[readonly], textarea[readonly], input[disabled], select[disabled]
             background: #E5E5E5 !important
             color: #666
@@ -1892,6 +1917,7 @@ $sheet-padding: 16px
             padding-left: 8px
             @include box-shadow(none)
             @include radius(0px)
+            color: #4c4c4c
         textarea.oe_inline[disabled]
             border-left: 8px solid #eee
         .oe_form_field_url button img
@@ -2482,6 +2508,9 @@ $sheet-padding: 16px
     background-attachment: fixed
     >*
         opacity: 0.70
+.loading-kitten
+    @include radius(15px)
+    @include box-shadow(0 0 5px 5px #999)
 // }}}
 
 // jQueryUI top level {{{
