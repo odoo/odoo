@@ -35,6 +35,8 @@ class crm_lead2opportunity_partner(osv.osv_memory):
                 ('merge', 'Merge with existing opportunities')
             ], 'Conversion Action', required=True),
         'opportunity_ids': fields.many2many('crm.lead', string='Opportunities'),
+        'user_id': fields.many2one('res.users', 'Salesperson', select=True),
+        'section_id': fields.many2one('crm.case.section', 'Sales Team', select=True),
     }
 
     def default_get(self, cr, uid, fields, context=None):
@@ -74,8 +76,26 @@ class crm_lead2opportunity_partner(osv.osv_memory):
                 res.update({'name' : len(tomerge) >= 2 and 'merge' or 'convert'})
             if 'opportunity_ids' in fields and len(tomerge) >= 2:
                 res.update({'opportunity_ids': list(tomerge)})
-
+            if lead.user_id:
+                res.update({'user_id': lead.user_id.id})
+            if lead.section_id:
+                res.update({'section_id': lead.section_id.id})
         return res
+
+    def on_change_user(self, cr, uid, ids, user_id, section_id, context=None):
+        """ When changing the user, also set a section_id or restrict section id
+            to the ones user_id is member of. """
+        if user_id:
+            if section_id:
+                user_in_section = self.pool.get('crm.case.section').search(cr, uid, [('id', '=', section_id), '|', ('user_id', '=', user_id), ('member_ids', '=', user_id)], context=context, count=True)
+            else:
+                user_in_section = False
+            if not user_in_section:
+                section_id = False
+                section_ids = self.pool.get('crm.case.section').search(cr, uid, ['|', ('user_id', '=', user_id), ('member_ids', '=', user_id)], context=context)
+                if section_ids:
+                    section_id = section_ids[0]
+        return {'value': {'section_id': section_id}}
 
     def view_init(self, cr, uid, fields, context=None):
         """
@@ -118,15 +138,15 @@ class crm_lead2opportunity_partner(osv.osv_memory):
         w = self.browse(cr, uid, ids, context=context)[0]
         opp_ids = [o.id for o in w.opportunity_ids]
         if w.name == 'merge':
-            lead_id = self.pool.get('crm.lead').merge_opportunity(cr, uid, opp_ids, context=context)
+            lead_id = self.pool.get('crm.lead').merge_opportunity(cr, uid, opp_ids, w.user_id.id, w.section_id.id, context=context)
             lead_ids = [lead_id]
             lead = self.pool.get('crm.lead').read(cr, uid, lead_id, ['type'], context=context)
             if lead['type'] == "lead":
                 context.update({'active_ids': lead_ids})
-                self._convert_opportunity(cr, uid, ids, {'lead_ids': lead_ids}, context=context)
+                self._convert_opportunity(cr, uid, ids, {'lead_ids': lead_ids, 'user_ids': [w.user_id.id], 'section_id': w.section_id.id}, context=context)
         else:
             lead_ids = context.get('active_ids', [])
-            self._convert_opportunity(cr, uid, ids, {'lead_ids': lead_ids}, context=context)
+            self._convert_opportunity(cr, uid, ids, {'lead_ids': lead_ids, 'user_ids': [w.user_id.id], 'section_id': w.section_id.id}, context=context)
 
         return self.pool.get('crm.lead').redirect_opportunity_view(cr, uid, lead_ids[0], context=context)
 
