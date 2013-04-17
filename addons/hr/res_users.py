@@ -1,4 +1,5 @@
 from openerp.osv import fields, osv
+from openerp.tools.translate import _
 
 
 class res_users(osv.Model):
@@ -36,3 +37,38 @@ class res_users(osv.Model):
         """Update display_employees_suggestions value to False"""
         if context is None: context = {}
         self.write(cr, uid, user_id, {"display_employees_suggestions": False}, context)
+
+    def _create_welcome_message(self, cr, uid, user, context=None):
+        """Do not welcome new users anymore, welcome new employees instead"""
+        return True
+
+    def _message_post_get_eid(self, cr, uid, thread_id, context=None):
+        assert thread_id, "res.users does not support posting global messages"
+        if context and 'thread_model' in context:
+            context['thread_model'] = 'hr.employee'
+        if isinstance(thread_id, (list, tuple)):
+            thread_id = thread_id[0]
+        employee_ids = self.pool.get('hr.employee').search(cr, uid, [('user_id', '=', thread_id)], context=context)
+        assert employee_ids, "Can not post message to res.users not linked to employee"
+        return employee_ids
+
+    def message_post(self, cr, uid, thread_id, context=None, **kwargs):
+        """ Redirect the posting of message on res.users to the related employee.
+            This is done because when giving the context of Chatter on the
+            various mailboxes, we do not have access to the current partner_id. """
+        employee_ids = self._message_post_get_eid(cr, uid, thread_id, context=context)
+        for employee_id in employee_ids:
+            res = self.pool.get('hr.employee').message_post(cr, uid, employee_id, context=context, **kwargs)
+        return res
+
+    def message_update(self, cr, uid, ids, msg_dict, update_vals=None, context=None):
+        for id in ids:
+            employee_ids = self._message_post_get_eid(cr, uid, id, context=context)
+            res = self.pool.get('hr.employee').message_update(cr, uid, employee_ids, msg_dict, update_vals=update_vals, context=context)
+        return res
+
+    def message_subscribe(self, cr, uid, ids, partner_ids, subtype_ids=None, context=None):
+        for id in ids:
+            employee_ids = self._message_post_get_eid(cr, uid, id, context=context)
+            res = self.pool.get('hr.employee').message_subscribe(cr, uid, employee_ids, partner_ids, subtype_ids=subtype_ids, context=context)
+        return res

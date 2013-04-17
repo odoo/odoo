@@ -23,8 +23,6 @@ from openerp.osv import osv
 
 
 class mail_message(osv.Model):
-    """ Messages model: system notification (replacing res.log notifications),
-        comments (OpenChatter discussion) and incoming emails. """
     _name = 'mail.message'
     _inherit = 'mail.message'
 

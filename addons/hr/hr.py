@@ -219,15 +219,18 @@ class hr_employee(osv.osv):
 
     def create(self, cr, uid, data, context=None):
         employee_id = super(hr_employee, self).create(cr, uid, data, context=context)
+        employee = self.browse(cr, uid, employee_id, context=context)
         try:
             (model, mail_group_id) = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'mail', 'group_all_employees')
-            employee = self.browse(cr, uid, employee_id, context=context)
             self.pool.get('mail.group').message_post(cr, uid, [mail_group_id],
-                body='Welcome to %s! Please help him/her take the first steps with OpenERP!' % (employee.name),
+                body=_('Welcome to %s! Please help him/her take the first steps with OpenERP!') % (employee.name),
                 subtype='mail.mt_comment', context=context)
         except:
             pass # group deleted: do not push a message
 
+        self.message_post(cr, uid, employee_id,
+            body=_('%s has joined the company.') % employee.name,
+            subtype='mail.mt_comment', context=context)
         return employee_id
 
     def unlink(self, cr, uid, ids, context=None):
