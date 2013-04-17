@@ -117,8 +117,13 @@ class mail_alias(osv.Model):
            mail catchall domain from config.
            e.g. `jobs@openerp.my.openerp.com` or `sales@openerp.my.openerp.com`
         """
-        return [(record['id'], "%s@%s" % (record['alias_name'], record['alias_domain']))
-                    for record in self.read(cr, uid, ids, ['alias_name', 'alias_domain'], context=context)]
+        res = []
+        for record in self.browse(cr, uid, ids, context=context):
+            if record.alias_name and record.alias_domain:
+                res.append((record['id'], "%s@%s" % (record.alias_name, record.alias_domain)))
+            else:
+                res.append((record['id'], False))
+        return res
 
     def _find_unique(self, cr, uid, name, context=None):
         """Find a unique alias name similar to ``name``. If ``name`` is
@@ -155,11 +160,11 @@ class mail_alias(osv.Model):
         alias_id_column.required = False
 
         # call _auto_init
-        child_model_auto_init_fct(cr, context=context)
+        res = child_model_auto_init_fct(cr, context=context)
 
         registry = RegistryManager.get(cr.dbname)
         mail_alias = registry.get('mail.alias')
-        child_class_model = registry.get(child_model_name)
+        child_class_model = registry[child_model_name]
         no_alias_ids = child_class_model.search(cr, SUPERUSER_ID, [('alias_id', '=', False)], context={'active_test':False})
         # Use read() not browse(), to avoid prefetching uninitialized inherited fields
         for obj_data in child_class_model.read(cr, SUPERUSER_ID, no_alias_ids, [alias_key]):
@@ -182,6 +187,8 @@ class mail_alias(osv.Model):
 
         # set back the unique alias_id constraint
         alias_id_column.required = True
+
+        return res
 
     def create_unique_alias(self, cr, uid, vals, model_name=None, context=None):
         """Creates an email.alias record according to the values provided in ``vals``,

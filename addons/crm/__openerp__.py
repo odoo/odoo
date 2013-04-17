@@ -81,6 +81,8 @@ Dashboard for CRM will include:
         'crm_lead_view.xml',
         'crm_lead_menu.xml',
 
+        'crm_case_section_view.xml',
+
         'crm_meeting_menu.xml',
 
         'crm_phonecall_view.xml',
@@ -114,9 +116,26 @@ Dashboard for CRM will include:
         'test/crm_lead_copy.yml',
         'test/crm_lead_unlink.yml',
     ],
+    'css': [
+        'static/src/css/crm.css'
+    ],
+    'js': [
+        'static/src/js/crm.js'
+    ],
     'installable': True,
     'application': True,
     'auto_install': False,
-    'images': ['images/crm_dashboard.png', 'images/customers.png','images/leads.png','images/opportunities_kanban.png','images/opportunities_form.png','images/opportunities_calendar.png','images/opportunities_graph.png','images/logged_calls.png','images/scheduled_calls.png','images/stages.png'],
+    'images': [
+        'images/crm_dashboard.png',
+        'images/customers.png',
+        'images/leads.png',
+        'images/opportunities_kanban.png',
+        'images/opportunities_form.png',
+        'images/opportunities_calendar.png',
+        'images/opportunities_graph.png',
+        'images/logged_calls.png',
+        'images/scheduled_calls.png',
+        'images/stages.png',
+    ],
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -217,6 +217,7 @@ openerp.mail = function (session) {
             this.res_id = datasets.res_id || this.context.default_res_id ||  false,
             this.parent_id = datasets.parent_id ||  false,
             this.type = datasets.type ||  false,
+            this.subtype = datasets.subtype ||  false,
             this.is_author = datasets.is_author ||  false,
             this.is_private = datasets.is_private ||  false,
             this.subject = datasets.subject ||  false,
@@ -619,7 +620,10 @@ openerp.mail = function (session) {
             // have unknown names -> call message_get_partner_info_from_emails to try to find partner_id
             var find_done = $.Deferred();
             if (names_to_find.length > 0) {
-                find_done = self.parent_thread.ds_thread._model.call('message_get_partner_info_from_emails', [names_to_find]);
+                var values = {
+                    'res_id': this.context.default_res_id,
+                }
+                find_done = self.parent_thread.ds_thread._model.call('message_get_partner_info_from_emails', [names_to_find], values);
             }
             else {
                 find_done.resolve([]);
@@ -665,7 +669,11 @@ openerp.mail = function (session) {
                     var new_names_to_find = _.difference(names_to_find, names_to_remove);
                     find_done = $.Deferred();
                     if (new_names_to_find.length > 0) {
-                        find_done = self.parent_thread.ds_thread._model.call('message_get_partner_info_from_emails', [new_names_to_find, true]);
+                        var values = {
+                            'link_mail': true,
+                            'res_id': self.context.default_res_id,
+                        }
+                        find_done = self.parent_thread.ds_thread._model.call('message_get_partner_info_from_emails', [new_names_to_find], values);
                     }
                     else {
                         find_done.resolve([]);

@@ -138,6 +138,5 @@ class account_financial_report(osv.osv):
         'style_overwrite': 0,
     }
 
-account_financial_report()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
