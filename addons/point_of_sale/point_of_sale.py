@@ -1340,14 +1340,6 @@ class product_product(osv.osv):
         'to_weight' : fields.boolean('To Weight', help="Check if the product should be weighted (mainly used with self check-out interface)."),
     }
 
-    def onchange_available_pos(self, cr, uid, ids, available_in_pos=None, context=None):
-        proxy = self.pool.get('ir.model.data')
-        category_id = False
-        if ids and available_in_pos:
-            for pos_id in self.browse(cr,uid,ids,context=context):
-                if pos_id.pos_categ_id:
-                    category_id = pos_id.pos_categ_id.id
-        return {'value': {'pos_categ_id': category_id}}
 
     _defaults = {
         'to_weight' : False,
