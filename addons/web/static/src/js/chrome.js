@@ -861,9 +861,7 @@ instance.web.Menu =  instance.web.Widget.extend({
             self.reflow();
             // launch the fetch of needaction counters, asynchronous
             if (!_.isEmpty(menu_data.all_menu_ids)) {
-                this.rpc("/web/menu/load_needaction", {menu_ids: menu_data.all_menu_ids}).done(function(r) {
-                    self.on_needaction_loaded(r);
-                });
+                this.do_load_needaction(menu_data.all_menu_ids);
             }
         });
         var lazyreflow = _.debounce(this.reflow.bind(this), 200);
@@ -885,18 +883,23 @@ instance.web.Menu =  instance.web.Widget.extend({
         });
     },
     menu_loaded: function(data) {
-        var self = this;
         this.data = {data: data};
         this.renderElement();
         this.$secondary_menus.html(QWeb.render("Menu.secondary", { widget : this }));
-        this.$el.on('click', 'a[data-menu]', this.on_menu_click);
+        this.$el.on('click', 'a[data-menu]', this.on_top_menu_click);
         // Hide second level submenus
         this.$secondary_menus.find('.oe_menu_toggler').siblings('.oe_secondary_submenu').hide();
-        if (self.current_menu) {
-            self.open_menu(self.current_menu);
+        if (this.current_menu) {
+            this.open_menu(this.current_menu);
         }
         this.trigger('menu_loaded', data);
         this.has_been_loaded.resolve();
+    },
+    do_load_needaction: function (menu_ids) {
+        var self = this;
+        return this.rpc("/web/menu/load_needaction", {'menu_ids': menu_ids}).done(function(r) {
+            self.on_needaction_loaded(r);
+        });
     },
     on_needaction_loaded: function(data) {
         var self = this;
@@ -1029,11 +1032,36 @@ instance.web.Menu =  instance.web.Widget.extend({
         }
         this.open_menu(id);
     },
+    do_reload_needaction: function () {
+        var self = this;
+        self.do_load_needaction([self.current_menu]).then(function () {
+            self.trigger("need_action_reloaded");
+        });
+    },
     /**
      * Jquery event handler for menu click
      *
      * @param {Event} ev the jquery event
      */
+    on_top_menu_click: function(ev) {
+        var self = this;
+        var id = $(ev.currentTarget).data('menu');
+        var menu_ids = [id];
+        var menu = _.filter(this.data.data.children, function (menu) {return menu.id == id;})[0];
+        function add_menu_ids (menu) {
+            if (menu.children) {
+                _.each(menu.children, function (menu) {
+                    menu_ids.push(menu.id);
+                    add_menu_ids(menu);
+                });
+            }
+        };
+        add_menu_ids(menu);
+        self.do_load_needaction(menu_ids).then(function () {
+            self.trigger("need_action_reloaded");
+        });
+        this.on_menu_click(ev);
+    },
     on_menu_click: function(ev) {
         ev.preventDefault();
         var needaction = $(ev.target).is('div.oe_menu_counter');
