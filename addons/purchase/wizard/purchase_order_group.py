@@ -21,9 +21,6 @@
 import time
 
 from openerp.osv import fields, osv
-from openerp import netsvc
-from openerp import pooler
-from openerp.osv.orm import browse_record, browse_null
 from openerp.tools.translate import _
 
 class purchase_order_group(osv.osv_memory):
@@ -86,6 +83,5 @@ class purchase_order_group(osv.osv_memory):
             'search_view_id': id['res_id']
         }
 
-purchase_order_group()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

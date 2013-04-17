@@ -148,8 +148,6 @@ openerp_mail_followers = function(session, mail) {
             }).then(self.proxy('display_generic'));
         },
         _format_followers: function(count){
-            // TDE note: why redefining _t ?
-            function _t(str) { return str; }
             var str = '';
             if(count <= 0){
                 str = _t('No followers');
@@ -220,23 +218,16 @@ openerp_mail_followers = function(session, mail) {
         /** Display subtypes: {'name': default, followed} */
         display_subtypes:function (data, id) {
             var self = this;
-            var subtype_list_ul = this.$('.oe_subtype_list');
-            var records = [];
-            var nb_subtype = 0;
-            subtype_list_ul.empty();
-            if (data[id]) {
-                records = data[id].message_subtype_data;
-            }
-            _(records).each(function (record) {nb_subtype++;});
-            if (nb_subtype > 1) {
-                this.$('hr').show();
-                _(records).each(function (record, record_name) {
-                    record.name = record_name;
-                    record.followed = record.followed || undefined;
-                    $(session.web.qweb.render('mail.followers.subtype', {'record': record})).appendTo( self.$('.oe_subtype_list') );
-                });
-            } else {
-                this.$('hr').hide();
+            var $list = this.$('.oe_subtype_list');
+            $list.empty().hide();
+            var records = data[this.view.datarecord.id || this.view.dataset.ids[0]].message_subtype_data;
+            _(records).each(function (record, record_name) {
+                record.name = record_name;
+                record.followed = record.followed || undefined;
+                $(session.web.qweb.render('mail.followers.subtype', {'record': record})).appendTo( self.$('.oe_subtype_list') );
+            });
+            if (_.size(records) > 1) {
+                $list.show();
             }
         },
 

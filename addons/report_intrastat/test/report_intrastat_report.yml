@@ -14,7 +14,8 @@
 -
   !python {model: account.invoice}: |
     import os
-    from openerp import netsvc, tools
-    (data, format) = netsvc.LocalService('report.account.invoice.intrastat').create(cr, uid, [ref('test_invoice_1')], {}, {})
+    import openerp.report
+    from openerp import tools
+    data, format = openerp.report.render_report(cr, uid, [ref('test_invoice_1')], 'account.invoice.intrastat', {}, {})
     if tools.config['test_report_directory']:
         file(os.path.join(tools.config['test_report_directory'], 'report_intrastat-intrastat_report.'+format), 'wb+').write(data)

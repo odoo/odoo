@@ -128,6 +128,8 @@ class account_coda_import(osv.osv_memory):
                     raise osv.except_osv(_('Error') + ' R1004', _("No matching Bank Account (with Account Journal) found.\n\nPlease set-up a Bank Account with as Account Number '%s' and as Currency '%s' and an Account Journal.") % (statement['acc_number'], statement['currency']))
                 statement['description'] = rmspaces(line[90:125])
                 statement['balance_start'] = float(rmspaces(line[43:58])) / 1000
+                if line[42] == '1':    #1 = Debit, the starting balance is negative
+                    statement['balance_start'] = - statement['balance_start']
                 statement['balance_start_date'] = time.strftime(tools.DEFAULT_SERVER_DATE_FORMAT, time.strptime(rmspaces(line[58:64]), '%d%m%y'))
                 statement['accountHolder'] = rmspaces(line[64:90])
                 statement['paperSeqNumber'] = rmspaces(line[2:5])
@@ -389,7 +391,7 @@ class account_coda_import(osv.osv_memory):
             if statement['coda_note'] != '':
                 self.pool.get('account.bank.statement').write(cr, uid, [statement['id']], {'coda_note': statement['coda_note']}, context=context)
         model, action_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'account', 'action_bank_statement_tree')
-        action = self.pool.get(model).browse(cr, uid, action_id, context=context)
+        action = self.pool[model].browse(cr, uid, action_id, context=context)
         return {
             'name': action.name,
             'view_type': action.view_type,

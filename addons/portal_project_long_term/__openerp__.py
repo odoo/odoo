@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
 #
-#    OpenERP, Open Source Business Applications
-#    Copyright (C) 2004-2012 OpenERP S.A. (<http://openerp.com>).
+#    OpenERP, Open Source Management Solution
+#    Copyright (C) 2010-Today OpenERP S.A. (<http://www.openerp.com>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -19,14 +19,24 @@
 #
 ##############################################################################
 
-from openerp.osv import fields, osv
 
-class crm_claim_settings(osv.osv_memory):
-    _name = 'sale.config.settings'
-    _inherit = ['sale.config.settings', 'fetchmail.config.settings']
-
-    _columns = {
-        'fetchmail_claim': fields.boolean("Create claims from incoming mails",
-            fetchmail_model='crm.claim', fetchmail_name='Incoming Claims',
-            help="""Allows you to configure your incoming mail server, and create claims from incoming emails."""),
-    }
+{
+    'name': 'Portal Project Long Term',
+    'version': '1.0',
+    'category': 'Tools',
+    'complexity': 'easy',
+    'description': """
+This module adds necessary security rules and access rights for project long term and portal.
+=============================================================================================
+    """,
+    'author': 'OpenERP SA',
+    'depends': ['project_long_term', 'portal'],
+    'data': [
+        'security/portal_security.xml',
+        'security/ir.model.access.csv',
+    ],
+    'installable': True,
+    'auto_install': True,
+    'category': 'Hidden',
+}
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -213,6 +213,7 @@ class hr_timesheet_sheet(osv.osv):
 
     def onchange_employee_id(self, cr, uid, ids, employee_id, context=None):
         department_id =  False
+        user_id = False
         if employee_id:
             empl_id = self.pool.get('hr.employee').browse(cr, uid, employee_id, context=context)
             department_id = empl_id.department_id.id
@@ -326,7 +327,6 @@ class hr_timesheet_line(osv.osv):
         return dict([(el, self.on_change_account_id(cr, uid, ids, el, context.get('user_id', uid))) for el in account_ids])
 
 
-hr_timesheet_line()
 
 class hr_attendance(osv.osv):
     _inherit = "hr.attendance"
@@ -424,7 +424,6 @@ class hr_attendance(osv.osv):
                 raise osv.except_osv(_('Error!'), _('You cannot modify an entry in a confirmed timesheet'))
         return True
 
-hr_attendance()
 
 class hr_timesheet_sheet_sheet_day(osv.osv):
     _name = "hr_timesheet_sheet.sheet.day"
@@ -504,7 +503,6 @@ class hr_timesheet_sheet_sheet_day(osv.osv):
                         GROUP BY name, sheet_id
                 )) AS bar""")
 
-hr_timesheet_sheet_sheet_day()
 
 
 class hr_timesheet_sheet_sheet_account(osv.osv):
@@ -538,7 +536,6 @@ class hr_timesheet_sheet_sheet_account(osv.osv):
             group by l.account_id, s.id, l.to_invoice
         )""")
 
-hr_timesheet_sheet_sheet_account()
 
 
 
@@ -557,7 +554,6 @@ class res_company(osv.osv):
         'timesheet_max_difference': lambda *args: 0.0
     }
 
-res_company()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

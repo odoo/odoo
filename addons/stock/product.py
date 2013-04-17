@@ -471,7 +471,6 @@ class product_product(osv.osv):
                         res['fields']['qty_available']['string'] = _('Produced Qty')
         return res
 
-product_product()
 
 class product_template(osv.osv):
     _name = 'product.template'
@@ -520,7 +519,6 @@ class product_template(osv.osv):
     _defaults = {
         'sale_delay': 7,
     }
-product_template()
 
 class product_category(osv.osv):
 
@@ -550,6 +548,5 @@ class product_category(osv.osv):
             help="When real-time inventory valuation is enabled on a product, this account will hold the current value of the products.",),
     }
 
-product_category()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
