@@ -19,7 +19,7 @@
 #
 ##############################################################################
 
-from openerp import pooler
+import openerp
 from openerp.report.interface import report_rml
 from openerp.report.interface import toxml
 
@@ -47,16 +47,17 @@ class report_custom(report_rml):
         """
 
         def process(location_id, level):
+            registry = openerp.registry(cr.dbname)
             xml = '<row>'
-            location_name = pooler.get_pool(cr.dbname).get('stock.location').read(cr, uid, [location_id], ['name'])
+            location_name = registry['stock.location'].read(cr, uid, [location_id], ['name'])
             xml += "<col para='yes' tree='yes' space='" + str(3*level) + "mm'>"
             xml += location_name[0]['name'] + '</col>'
 
-            prod_info = pooler.get_pool(cr.dbname).get('stock.location')._product_get(cr, uid, location_id)
+            prod_info = registry['stock.location']._product_get(cr, uid, location_id)
             xml += "<col>"
             for prod_id in prod_info.keys():
                 if prod_info[prod_id] != 0.0:
-                    prod_name = pooler.get_pool(cr.dbname).get('product.product').read(cr, uid, [prod_id], ['name'])
+                    prod_name = registry['product.product'].read(cr, uid, [prod_id], ['name'])
                     xml +=  prod_name[0]['name'] + '\n'
             xml += '</col>'
 
@@ -66,7 +67,7 @@ class report_custom(report_rml):
                     xml +=  str(prod_info[prod_id]) + '\n'
             xml += '</col></row>'
 
-            location_child = pooler.get_pool(cr.dbname).get('stock.location').read(cr, uid, [location_id], ['child_ids'])
+            location_child = registry['stock.location'].read(cr, uid, [location_id], ['child_ids'])
             for child_id in location_child[0]['child_ids']:
                 xml += process(child_id, level+1)
             return xml

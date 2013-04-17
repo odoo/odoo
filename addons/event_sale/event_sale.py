@@ -32,7 +32,6 @@ class product(osv.osv):
     def onchange_event_ok(self, cr, uid, ids, event_ok, context=None):
         return {'value': {'type': event_ok and 'service' or False}}
 
-product()
 
 class sale_order_line(osv.osv):
     _inherit = 'sale.order.line'

@@ -328,19 +328,24 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form,calendar,graph</field>
             <field name="search_view_id" ref="view_sales_order_filter"/>
-            <field name="context">{'show_address': 1}</field>
-            <field name="domain">[('state','not in',('draft','sent','cancel'))]</field>
+            <field name="context">{
+                    'show_address': 1,
+                    'search_default_my_sale_orders_filter': 1
+                }
+            </field>
+            <field name="domain">[('state', 'not in', ('draft', 'sent', 'cancel'))]</field>
             <field name="help" type="html">
-              <p class="oe_view_nocontent_create">
-                Click to create a quotation that can be converted into a sales
-                order.
-              </p><p>
-                OpenERP will help you efficiently handle the complete sales flow:
-                quotation, sales order, delivery, invoicing and payment.
-              </p>
+                <p class="oe_view_nocontent_create">
+                    Click to create a quotation that can be converted into a sales
+                    order.
+                </p><p>
+                    OpenERP will help you efficiently handle the complete sales flow:
+                    quotation, sales order, delivery, invoicing and payment.
+                </p>
             </field>
         </record>
-        <menuitem action="action_orders" id="menu_sale_order" parent="base.menu_sales" sequence="5" groups="base.group_sale_salesman,base.group_sale_manager"/>
+
+        <menuitem action="action_orders" id="menu_sale_order" parent="base.menu_sales" sequence="6" groups="base.group_sale_salesman,base.group_sale_manager"/>
 
         <record id="action_orders_exception" model="ir.actions.act_window">
             <field name="name">Sales in Exception</field>
@@ -371,7 +376,7 @@
             <field name="view_type">form</field>
             <field name="view_id" ref="view_quotation_tree"/>
             <field name="view_mode">tree,form,calendar,graph</field>
-            <field name="context">{'show_address': 1}</field>
+            <field name="context">{'show_address': 1, 'search_default_my_sale_orders_filter': 1}</field>
             <field name="domain">[('state','in',('draft','sent','cancel'))]</field>
             <field name="search_view_id" ref="view_sales_order_filter"/>
             <field name="help" type="html">
@@ -390,8 +395,8 @@
         </record>
 
         <menuitem id="menu_sale_quotations"
-        action="action_quotations" parent="base.menu_sales"
-        sequence="4"/>
+                action="action_quotations" parent="base.menu_sales"
+                sequence="5"/>
 
         <record id="action_order_tree" model="ir.actions.act_window">
             <field name="name">Old Quotations</field>

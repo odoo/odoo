@@ -50,6 +50,5 @@ class hired_employee(osv.osv_memory):
             context = {}
         return self.pool.get('hr.applicant').case_close_with_emp(cr, uid,context.get('active_ids', []))
 
-hired_employee()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

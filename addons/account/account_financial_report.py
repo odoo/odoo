@@ -24,8 +24,6 @@ from datetime import datetime
 from dateutil.relativedelta import relativedelta
 from operator import itemgetter
 
-from openerp import netsvc
-from openerp import pooler
 from openerp.osv import fields, osv
 import openerp.addons.decimal_precision as dp
 from openerp.tools.translate import _
@@ -140,6 +138,5 @@ class account_financial_report(osv.osv):
         'style_overwrite': 0,
     }
 
-account_financial_report()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
