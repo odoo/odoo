@@ -32,29 +32,36 @@ openerp.crm = function(openerp) {
                         if ($el.data('action')) {
                             $el.click(function (event) {
                                 event.stopPropagation();
-                                if (self.view.is_action_enabled('edit') && !$el.find(".oe_justgage_edit").size()) {
+                                if (!self.view.is_action_enabled('edit')) {
+                                    return;
+                                }
+                                if ($el.find(".oe_justgage_edit").size()) {
+                                    $el.find(".oe_justgage_edit").remove();
+                                } else {
                                     var $svg = $el.find('svg');
                                     $div = $('<div class="oe_justgage_edit" style="z-index: 1; position: absolute; width: ' + $svg.width() + 'px; top: ' + ($svg.height()/2-5) + 'px;"/>');
                                     $input = $('<input style="text-align: center; width: ' + ($svg.width()-40) + 'px; margin: auto;"/>').val($el.data('value'));
                                     $div.append($input);
                                     $el.prepend($div)
-                                    $input.focus();
-                                    $input.keydown(function (event) {
-                                        event.stopPropagation();
-                                        if (event.keyCode == 13 || event.keyCode == 9) {
-                                            if ($input.val() != $el.data('value')) {
-                                                self.view.dataset.call($el.data('action'), [self.id, $input.val()]).then(function () {
-                                                    self.do_reload();
-                                                });
-                                            } else {
-                                                $div.remove();
+                                    $input.focus()
+                                        .keydown(function (event) {
+                                            event.stopPropagation();
+                                            if (event.keyCode == 13 || event.keyCode == 9) {
+                                                if ($input.val() != $el.data('value')) {
+                                                    self.view.dataset.call($el.data('action'), [self.id, $input.val()]).then(function () {
+                                                        self.do_reload();
+                                                    });
+                                                } else {
+                                                    $div.remove();
+                                                }
                                             }
-                                        }
-                                    });
+                                        })
+                                        .click(function (event) {event.stopPropagation();});
                                 }
                             });
                         }
                     });
+                    setTimeout(function () {self.$(".oe_sparkline_bar").sparkline('html', {type: 'bar', barWidth: 5, zeroColor: '#ff0000'} );}, 0);
                 });
             }
         },

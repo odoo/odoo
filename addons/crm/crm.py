@@ -44,6 +44,13 @@ AVAILABLE_PRIORITIES = [
     ('5', 'Lowest'),
 ]
 
+duration_txt = {
+    "monthly": _("this month"),
+    "semesterly": _("this semester"),
+    "semiannually": _("this semi"),
+    "annually": _("this year")
+}
+
 class crm_case_channel(osv.osv):
     _name = "crm.case.channel"
     _description = "Channels"
@@ -110,6 +117,12 @@ class crm_case_section(osv.osv):
     def get_full_name(self, cr, uid, ids, field_name, arg, context=None):
         return dict(self.name_get(cr, uid, ids, context=context))
 
+    def _get_target_duration_txt(self, cr, uid, ids, field_name, arg, context=None):
+        res = dict.fromkeys(ids, "")
+        for section in self.browse(cr, uid, ids, context=context):
+            res[section.id] = duration_txt[section.target_duration]
+        return res
+
     _columns = {
         'name': fields.char('Sales Team', size=64, required=True, translate=True),
         'complete_name': fields.function(get_full_name, type='char', size=256, readonly=True, store=True),
@@ -138,6 +151,11 @@ class crm_case_section(osv.osv):
         'color': fields.integer('Color Index'),
         'use_leads': fields.boolean('Leads',
             help="This enables the management of leads in the sales team. Otherwise the sales team manages only opportunities."),
+        'target_duration': fields.selection([("monthly", "Monthly"), ("semesterly", "Semesterly"), ("semiannually", "Semiannually"), ("annually", "Annually")],
+            string='Report duration view', required=True),
+        'target_duration_txt': fields.function(_get_target_duration_txt,
+            string='Duration',
+            type="string", readonly=True),
     }
 
     def _get_stage_common(self, cr, uid, context):
@@ -148,6 +166,7 @@ class crm_case_section(osv.osv):
         'active': 1,
         'stage_ids': _get_stage_common,
         'use_leads': True,
+        'target_duration': "monthly",
     }
 
     _sql_constraints = [

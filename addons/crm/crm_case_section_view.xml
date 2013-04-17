@@ -81,6 +81,7 @@
                     <field name="color"/>
                     <field name="open_lead_ids"/>
                     <field name="open_opportunity_ids"/>
+                    <field name="target_duration_txt"/>
                     <templates>
                         <t t-name="kanban-box">
                             <div t-attf-class="oe_kanban_color_#{kanban_getcolor(record.color.raw_value)} oe_kanban_card oe_kanban_global_click oe_kanban_crm_salesteams">
@@ -98,21 +99,15 @@
                                         <small><span class="oe_e" style="float: none;">%%</span><t t-raw="record.alias_id.raw_value[1]"/></small>
                                     </div>
                                     <div class="oe_items_list">
-                                        <a t-if="record.use_leads.raw_value" name="%(crm_case_form_view_salesteams_lead)d" type="action">
-                                            <t t-raw="record.open_lead_ids.raw_value.length"/>
-                                            <t t-if="record.open_lead_ids.raw_value.length &gt;= 2">Leads</t>
-                                            <t t-if="record.open_lead_ids.raw_value.length &lt; 2">Lead</t></a>
-                                        <a name="%(crm_case_form_view_salesteams_opportunity)d" type="action">
-                                            <t t-raw="record.open_opportunity_ids.raw_value.length"/>
-                                            <t t-if="record.open_opportunity_ids.raw_value.length &gt;= 2">Opportunities</t>
-                                            <t t-if="record.open_opportunity_ids.raw_value.length &lt; 2">Opportunity</t></a>
+                                        <div>
+                                            <a t-if="record.use_leads.raw_value" name="%(crm_case_form_view_salesteams_lead)d" type="action"><t t-raw="record.open_lead_ids.raw_value.length"/><t t-if="record.open_lead_ids.raw_value.length &gt;= 2">Leads</t><t t-if="record.open_lead_ids.raw_value.length &lt; 2">Lead</t></a>
+                                            <a name="%(crm_case_form_view_salesteams_lead)d" type="action" class="oe_sparkline_bar"><t t-raw="[6,4,7,2]"/></a>
+                                        </div>
+                                        <div>
+                                            <a name="%(crm_case_form_view_salesteams_opportunity)d" type="action"><t t-raw="record.open_opportunity_ids.raw_value.length"/><t t-if="record.open_opportunity_ids.raw_value.length &gt;= 2">Opportunities</t><t t-if="record.open_opportunity_ids.raw_value.length &lt; 2">Opportunity</t></a>
+                                            <a name="%(crm_case_form_view_salesteams_opportunity)d" type="action" class="oe_sparkline_bar"><t t-raw="[6,4,7,2]"/></a>
+                                        </div>
                                     </div>
-                                    <!--div class="oe_avatars">
-                                        <img t-if="record.user_id.raw_value" t-att-src="kanban_image('res.users', 'image_small', record.user_id.raw_value)" t-att-data-member_id="record.user_id.raw_value"/>
-                                        <t t-foreach="record.member_ids.raw_value.slice(0,11)" t-as="member">
-                                            <img t-att-src="kanban_image('res.users', 'image_small', member)" t-att-data-member_id="member"/>
-                                        </t>
-                                    </div-->
                                 </div>
                             </div>
                         </t>
@@ -177,6 +172,9 @@
                             <group>
                                 <field name="user_id"/>
                                 <field name="code"/>
+                            </group>
+                            <group colspan="4" col="4">
+                                <field name="target_duration" widget="radio"/>
                             </group>
                             <group colspan="4" attrs="{'invisible': [('use_leads', '=', False)]}">
                                 

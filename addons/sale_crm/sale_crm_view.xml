@@ -213,12 +213,9 @@
             <field name="inherit_id" ref="crm.crm_case_section_view_form"/>
             <field name="arch" type="xml">
             <data>
-                <xpath expr="//notebook" position="before">
-                    <group col="4">
-                        <field name="target_invoice_duration" widget="radio"/>
-                        <field name="target_invoice"/>
-                    </group>
-                </xpath>
+                <field name="target_duration" position="after">
+                    <field name="target_invoice"/>
+                </field>
             </data>
             </field>
         </record>
@@ -236,35 +233,32 @@
                     <field name="sum_duration_invoice"/>
                     <field name="forcasted"/>
                     <field name="target_invoice"/>
-                    <field name="target_invoice_duration_txt"/>
                 </xpath>
                 <xpath expr="//div[@class='oe_items_list']" position="inside">
-                    <a name="%(action_quotations_salesteams)d" type="action">
-                        <t t-raw="record.quotation_ids.raw_value.length"/>
-                        <t t-if="record.quotation_ids.raw_value.length &gt;= 2">Quotations</t>
-                        <t t-if="record.quotation_ids.raw_value.length &lt; 2">Quotation</t>
-                    </a>
-                    <a name="%(action_orders_salesteams)d" type="action">
-                        <t t-raw="record.sale_order_ids.raw_value.length"/>
-                        <t t-if="record.sale_order_ids.raw_value.length &gt;= 2">Sales Orders</t>
-                        <t t-if="record.sale_order_ids.raw_value.length &lt; 2">Sales Order</t>
-                    </a>
-                    <a name="%(action_invoice_salesteams)d" type="action" groups="account.group_account_invoice">
-                        <t t-raw="record.invoice_ids.raw_value.length"/>
-                        <t t-if="record.invoice_ids.raw_value.length &gt;= 2">Invoices</t>
-                        <t t-if="record.invoice_ids.raw_value.length &lt; 2">Invoice</t>
-                    </a>
+                    <div>
+                        <a name="%(action_quotations_salesteams)d" type="action"><t t-raw="record.quotation_ids.raw_value.length"/><t t-if="record.quotation_ids.raw_value.length &gt;= 2">Quotations</t><t t-if="record.quotation_ids.raw_value.length &lt; 2">Quotation</t></a>
+                        <a name="%(action_quotations_salesteams)d" type="action" class="oe_sparkline_bar"><t t-raw="[6,4,7,2]"/></a>
+                    </div>
+                    <div>
+                        <a name="%(action_orders_salesteams)d" type="action"><t t-raw="record.sale_order_ids.raw_value.length"/><t t-if="record.sale_order_ids.raw_value.length &gt;= 2">Sales Orders</t><t t-if="record.sale_order_ids.raw_value.length &lt; 2">Sales Order</t>
+                        </a>
+                        <a name="%(action_orders_salesteams)d" type="action" class="oe_sparkline_bar"><t t-raw="[6,4,7,2]"/></a>
+                    </div>
+                    <div>
+                        <a name="%(action_invoice_salesteams)d" type="action" groups="account.group_account_invoice"><t t-raw="record.invoice_ids.raw_value.length"/><t t-if="record.invoice_ids.raw_value.length &gt;= 2">Invoices</t><t t-if="record.invoice_ids.raw_value.length &lt; 2">Invoice</t></a>
+                        <a name="%(action_invoice_salesteams)d" type="action" class="oe_sparkline_bar"><t t-raw="[6,4,7,2]"/></a>
+                    </div>
                 </xpath>
                 <xpath expr="//div[@class='oe_items_list']" position="after">
                     <div class="oe_center">
                         <div class="oe_justgage" style="width:160px; height: 120px;"
                             t-att-data-value="record.sum_duration_invoice.raw_value"
                             t-att-data-max="record.target_invoice.raw_value"
-                            t-att-data-label="record.target_invoice_duration_txt.raw_value">Invoiced</div>
+                            t-att-data-label="record.target_duration_txt.raw_value">Invoiced</div>
                         <div class="oe_justgage" style="width:160px; height: 120px;"
                             t-att-data-value="record.forcasted.raw_value"
                             t-att-data-max="record.target_invoice.raw_value"
-                            t-att-data-label="record.target_invoice_duration_txt.raw_value"
+                            t-att-data-label="record.target_duration_txt.raw_value"
                             data-action="action_forcasted">Forcasted</div>
                     </div>
                 </xpath>
