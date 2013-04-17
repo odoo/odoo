@@ -79,9 +79,9 @@
                     <field name="note"/>
                     <field name="alias_id"/>
                     <field name="color"/>
-                    <field name="open_lead_ids"/>
-                    <field name="open_opportunity_ids"/>
                     <field name="target_duration_txt"/>
+                    <field name="open_lead_per_duration"/>
+                    <field name="won_opportunity_per_duration"/>
                     <templates>
                         <t t-name="kanban-box">
                             <div t-attf-class="oe_kanban_color_#{kanban_getcolor(record.color.raw_value)} oe_kanban_card oe_kanban_global_click oe_kanban_crm_salesteams">
@@ -100,12 +100,12 @@
                                     </div>
                                     <div class="oe_items_list">
                                         <div>
-                                            <a t-if="record.use_leads.raw_value" name="%(crm_case_form_view_salesteams_lead)d" type="action"><t t-raw="record.open_lead_ids.raw_value.length"/><t t-if="record.open_lead_ids.raw_value.length &gt;= 2">Leads</t><t t-if="record.open_lead_ids.raw_value.length &lt; 2">Lead</t></a>
-                                            <a name="%(crm_case_form_view_salesteams_lead)d" type="action" class="oe_sparkline_bar"><t t-raw="[6,4,7,2]"/></a>
+                                            <a t-if="record.use_leads.raw_value" name="%(crm_case_form_view_salesteams_lead)d" type="action">Leads</a>
+                                            <a name="%(crm_case_form_view_salesteams_lead)d" type="action" class="oe_sparkline_bar" title="Number of opening leads per duration.\n(last item is the most recent)"><t t-raw="record.open_lead_per_duration.raw_value"/></a>
                                         </div>
                                         <div>
-                                            <a name="%(crm_case_form_view_salesteams_opportunity)d" type="action"><t t-raw="record.open_opportunity_ids.raw_value.length"/><t t-if="record.open_opportunity_ids.raw_value.length &gt;= 2">Opportunities</t><t t-if="record.open_opportunity_ids.raw_value.length &lt; 2">Opportunity</t></a>
-                                            <a name="%(crm_case_form_view_salesteams_opportunity)d" type="action" class="oe_sparkline_bar"><t t-raw="[6,4,7,2]"/></a>
+                                            <a name="%(crm_case_form_view_salesteams_opportunity)d" type="action">Opportunities</a>
+                                            <a name="%(crm_case_form_view_salesteams_opportunity)d" type="action" class="oe_sparkline_bar" title="Rate of won opportunities per duration.\n(last item is the most recent)"><t t-raw="record.won_opportunity_per_duration.raw_value"/></a>
                                         </div>
                                     </div>
                                 </div>

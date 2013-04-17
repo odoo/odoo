@@ -19,13 +19,11 @@
 #
 ##############################################################################
 
-import base64
-import time
-from lxml import etree
 from openerp.osv import fields
 from openerp.osv import osv
-from openerp import tools
 from openerp.tools.translate import _
+from datetime import date
+from dateutil.relativedelta import relativedelta
 
 MAX_LEVEL = 15
 AVAILABLE_STATES = [
@@ -44,12 +42,21 @@ AVAILABLE_PRIORITIES = [
     ('5', 'Lowest'),
 ]
 
-duration_txt = {
+DURATION_TXT = {
     "monthly": _("this month"),
     "semesterly": _("this semester"),
     "semiannually": _("this semi"),
     "annually": _("this year")
 }
+
+MONTHS = {
+    "monthly": 1,
+    "semesterly": 3,
+    "semiannually": 6,
+    "annually": 12
+}
+
+_strftime = '%Y-%m-%d %H:%M:%S'
 
 class crm_case_channel(osv.osv):
     _name = "crm.case.channel"
@@ -120,7 +127,45 @@ class crm_case_section(osv.osv):
     def _get_target_duration_txt(self, cr, uid, ids, field_name, arg, context=None):
         res = dict.fromkeys(ids, "")
         for section in self.browse(cr, uid, ids, context=context):
-            res[section.id] = duration_txt[section.target_duration]
+            res[section.id] = DURATION_TXT[section.target_duration]
+        return res
+
+    def _get_open_lead_per_duration(self, cr, uid, ids, field_name, arg, context=None):
+        res = dict.fromkeys(ids, [])
+        lead_obj = self.pool.get('crm.lead')
+        first_day = date.today().replace(day=1)
+
+        for section in self.browse(cr, uid, ids, context=context):
+            dates = [first_day + relativedelta(months=-(MONTHS[section.target_duration]*(key+1)-1)) for key in range(0, 5)]
+            nb_leads = []
+            for when in range(0, 5):
+                domain = [('type', '!=', 'opportunity'), ("section_id", "=", section.id), ('create_date', '>=', dates[when].strftime(_strftime))]
+                if when:
+                    domain += [('create_date', '<', dates[when-1].strftime(_strftime))]
+                nb_leads.append(lead_obj.search(cr, uid, domain, context=context, count=True))
+            nb_leads.reverse()
+            res[section.id] = nb_leads
+        return res
+
+    def _get_won_opportunity_per_duration(self, cr, uid, ids, field_name, arg, context=None):
+        res = dict.fromkeys(ids, [])
+        lead_obj = self.pool.get('crm.lead')
+        first_day = date.today().replace(day=1)
+
+        for section in self.browse(cr, uid, ids, context=context):
+            dates = [first_day + relativedelta(months=-(MONTHS[section.target_duration]*(key+1)-1)) for key in range(0, 5)]
+            nb_leads = []
+            for when in range(0, 5):
+                domain = [('type', '=', 'opportunity'), ("section_id", "=", section.id), ('state', '!=', 'cancel'), ('date_closed', '>=', dates[when].strftime(_strftime))]
+                if when:
+                    domain += [('date_closed', '<', dates[when-1].strftime(_strftime))]
+                rate = 0
+                opportunity_ids = lead_obj.search(cr, uid, domain, context=context)
+                for opportunity in lead_obj.browse(cr, uid, opportunity_ids, context=context):
+                    rate += opportunity.planned_revenue
+                nb_leads.append(rate)
+            nb_leads.reverse()
+            res[section.id] = nb_leads
         return res
 
     _columns = {
@@ -142,20 +187,19 @@ class crm_case_section(osv.osv):
         'alias_id': fields.many2one('mail.alias', 'Alias', ondelete="cascade", required=True,
                                     help="The email address associated with this team. New emails received will automatically "
                                          "create new leads assigned to the team."),
-        'open_lead_ids': fields.one2many('crm.lead', 'section_id',
-            string='Open Leads', readonly=True,
-            domain=['&', ('type', '!=', 'opportunity'), ('state', 'not in', ['done', 'cancel'])]),
-        'open_opportunity_ids': fields.one2many('crm.lead', 'section_id',
-            string='Open Opportunities', readonly=True,
-            domain=['&', '|', ('type', '=', 'opportunity'), ('type', '=', 'both'), ('state', 'not in', ['done', 'cancel'])]),
         'color': fields.integer('Color Index'),
         'use_leads': fields.boolean('Leads',
             help="This enables the management of leads in the sales team. Otherwise the sales team manages only opportunities."),
+
         'target_duration': fields.selection([("monthly", "Monthly"), ("semesterly", "Semesterly"), ("semiannually", "Semiannually"), ("annually", "Annually")],
             string='Report duration view', required=True),
         'target_duration_txt': fields.function(_get_target_duration_txt,
             string='Duration',
             type="string", readonly=True),
+
+        'open_lead_per_duration': fields.function(_get_open_lead_per_duration, string='Open Leads per duration', type="string", readonly=True),
+        'won_opportunity_per_duration': fields.function(_get_won_opportunity_per_duration, string='Rate of opporunities whon per duration', type="string", readonly=True)
+        
     }
 
     def _get_stage_common(self, cr, uid, context):

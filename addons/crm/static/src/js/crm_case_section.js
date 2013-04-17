@@ -61,7 +61,7 @@ openerp.crm = function(openerp) {
                             });
                         }
                     });
-                    setTimeout(function () {self.$(".oe_sparkline_bar").sparkline('html', {type: 'bar', barWidth: 5, zeroColor: '#ff0000'} );}, 0);
+                    setTimeout(function () {self.$(".oe_sparkline_bar").sparkline('html', {type: 'bar', barWidth: 5} );}, 0);
                 });
             }
         },
