@@ -210,13 +210,12 @@ class account_invoice_report(osv.osv):
                 cr.id IN (SELECT id
                           FROM res_currency_rate cr2
                           WHERE (cr2.currency_id = sub.currency_id)
-                              AND ((sub.date IS NOT NULL AND cr.name <= sub.date)
-                                    OR (sub.date IS NULL AND cr.name <= NOW()))
+                              AND ((sub.date IS NOT NULL AND cr2.name <= sub.date)
+                                    OR (sub.date IS NULL AND cr2.name <= NOW()))
                           ORDER BY name DESC LIMIT 1)
         )""" % (
                     self._table, 
                     self._select(), self._sub_select(), self._from(), self._group_by()))
 
-account_invoice_report()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

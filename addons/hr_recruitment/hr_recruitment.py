@@ -543,6 +543,12 @@ class hr_applicant(base_stage, osv.Model):
         """
         return self.set_priority(cr, uid, ids, '3')
 
+    def get_empty_list_help(self, cr, uid, help, context=None):
+        context['empty_list_help_model'] = 'hr.job'
+        context['empty_list_help_id'] = context.get('default_job_id', None)
+        context['empty_list_help_document_name'] = _("job applicants")
+        return super(hr_applicant, self).get_empty_list_help(cr, uid, help, context=context)
+
 
 class hr_job(osv.osv):
     _inherit = "hr.job"

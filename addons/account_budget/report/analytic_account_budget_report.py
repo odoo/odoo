@@ -22,7 +22,6 @@
 import time
 import datetime
 
-from openerp import pooler
 from openerp.report import report_sxw
 
 class analytic_account_budget_report(report_sxw.rml_parse):

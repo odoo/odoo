@@ -5,7 +5,7 @@ import sys
 import urllib
 import urllib2
 
-from openerp import pooler
+import openerp
 from openerp import release
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
@@ -26,7 +26,7 @@ def get_sys_logs(self, cr, uid):
     """
     Utility method to send a publisher warranty get logs messages.
     """
-    pool = pooler.get_pool(cr.dbname)
+    pool = openerp.registry(cr.dbname)
 
     dbuuid = pool.get('ir.config_parameter').get_param(cr, uid, 'database.uuid')
     db_create_date = pool.get('ir.config_parameter').get_param(cr, uid, 'database.create_date')

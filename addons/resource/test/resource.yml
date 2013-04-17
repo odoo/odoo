@@ -40,12 +40,13 @@
   I check Actual working hours on resource 'Developer' from this week
 -
   !python {model: resource.calendar}: |
-    from datetime import datetime, timedelta
+    from datetime import datetime
+    from dateutil.relativedelta import relativedelta
     now = datetime.now()
-    dt_from = now - timedelta(days=now.weekday()) 
-    dt_to = dt_from+ timedelta(days=6) 
+    dt_from = now - relativedelta(days=now.weekday(), hour=8, minute=30) 
+    dt_to = dt_from + relativedelta(days=6, hour=17) 
     hours = self.interval_hours_get(cr, uid, ref('timesheet_group1'), dt_from, dt_to, resource=ref('resource_developer'))
-    assert hours > 27 , 'Invalid Total Week working hour calculated'
+    assert hours > 27 , 'Invalid Total Week working hour calculated, got %r, expected > 27' % hours
 -
   Project Analysis work is of 20 hours which will start from Week start so i will calculate working schedule for resource Analyst for the same.
 -

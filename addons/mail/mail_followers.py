@@ -95,6 +95,9 @@ class mail_notification(osv.Model):
             # Do not send to partners without email address defined
             if not partner.email:
                 continue
+            # Do not send to partners having same email address than the author (can cause loops or bounce effect due to messy database)
+            if message.author_id and message.author_id.email == partner.email:
+                continue
             # Partner does not want to receive any emails or is opt-out
             if partner.notification_email_send == 'none':
                 continue
@@ -136,10 +139,10 @@ class mail_notification(osv.Model):
             company = user.company_id.website and "<a style='color:inherit' href='%s'>%s</a>" % (user.company_id.website, user.company_id.name) or user.company_id.name
         else:
             company = user.name
-        signature_company = _('<small>Send by %(company)s using %(openerp)s.</small>' % {
+        signature_company = _('<small>Send by %(company)s using %(openerp)s.</small>') % {
                 'company': company,
                 'openerp': "<a style='color:inherit' href='https://www.openerp.com/'>OpenERP</a>"
-            })
+            }
         footer = tools.append_content_to_html(footer, signature_company, plaintext=False, container_tag='div')
 
         return footer
@@ -186,23 +189,24 @@ class mail_notification(osv.Model):
         signature_company = self.get_signature_footer(cr, uid, user_id, res_model=msg.model, res_id=msg.res_id, context=context)
         body_html = tools.append_content_to_html(body_html, signature_company, plaintext=False, container_tag='div')
 
-        # email_from: partner-user alias or partner email or mail.message email_from
-        if msg.author_id and msg.author_id.user_ids and msg.author_id.user_ids[0].alias_domain and msg.author_id.user_ids[0].alias_name:
-            email_from = '%s <%s@%s>' % (msg.author_id.name, msg.author_id.user_ids[0].alias_name, msg.author_id.user_ids[0].alias_domain)
-        elif msg.author_id:
-            email_from = '%s <%s>' % (msg.author_id.name, msg.author_id.email)
-        else:
-            email_from = msg.email_from
+        references = False
+        if msg.parent_id:
+            references = msg.parent_id.message_id
 
         mail_values = {
             'mail_message_id': msg.id,
             'auto_delete': True,
             'body_html': body_html,
-            'email_from': email_from,
+            'recipient_ids': [(4, id) for id in notify_partner_ids],
+            'references': references,
         }
+        if msg.email_from:
+            mail_values['email_from'] = msg.email_from
+        if msg.reply_to:
+            mail_values['reply_to'] = msg.reply_to
         mail_mail = self.pool.get('mail.mail')
         email_notif_id = mail_mail.create(cr, uid, mail_values, context=context)
         try:
-            return mail_mail.send(cr, uid, [email_notif_id], recipient_ids=notify_partner_ids, context=context)
+            return mail_mail.send(cr, uid, [email_notif_id], context=context)
         except Exception:
             return False

@@ -983,7 +983,7 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
             }
                 
             if(this.pos_widget.action_bar){
-                this.pos_widget.action_bar.set_button_disabled('validation', remaining > 0);
+                this.pos_widget.action_bar.set_button_disabled('validation', remaining > 0.000001);
             }
         },
         set_numpad_state: function(numpadState) {
