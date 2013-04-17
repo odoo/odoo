@@ -31,21 +31,18 @@ class account_account_template(osv.osv):
     _columns = {
         'name': fields.char('Name', size=128, required=True, select=True, translate=True),
     }
-account_account_template()
 
 class account_account(osv.osv):
     _inherit = 'account.account'
     _columns = {
         'name': fields.char('Name', size=128, required=True, select=True, translate=True),
     }
-account_account()
 
 class account_tax(osv.osv):
     _inherit = 'account.tax'
     _columns = {
         'name': fields.char('Tax Name', size=128, required=True, select=True, translate=True),
     }
-account_tax()
 
 
 class account_tax_template(osv.osv):
@@ -53,7 +50,6 @@ class account_tax_template(osv.osv):
     _columns = {
         'name': fields.char('Tax Name', size=128, required=True, select=True, translate=True),
     }
-account_tax_template()
 
 
 class account_tax_code_template(osv.osv):
@@ -61,7 +57,6 @@ class account_tax_code_template(osv.osv):
     _columns = {
         'name': fields.char('Tax Case Name', size=64, required=True, translate=True),
     }
-account_tax_code_template()
 
 
 class account_chart_template(osv.osv):
@@ -71,7 +66,6 @@ class account_chart_template(osv.osv):
         'spoken_languages': fields.char('Spoken Languages', size=64, help="State here the languages for which the translations of templates could be loaded at the time of installation of this localization module and copied in the final object when generating them from templates. You must provide the language codes separated by ';'"),
     }
     _order = 'name'
-account_chart_template()
 
 
 class account_fiscal_position(osv.osv):
@@ -79,7 +73,6 @@ class account_fiscal_position(osv.osv):
     _columns = {
         'name': fields.char('Fiscal Position', size=64, required=True, translate=True),
     }
-account_fiscal_position()
 
 
 class account_fiscal_position_template(osv.osv):
@@ -87,7 +80,6 @@ class account_fiscal_position_template(osv.osv):
     _columns = {
         'name': fields.char('Fiscal Position Template', size=64, required=True, translate=True),
     }
-account_fiscal_position_template()
 
 
 class account_journal(osv.osv):
@@ -95,7 +87,6 @@ class account_journal(osv.osv):
     _columns = {
         'name': fields.char('Journal Name', size=64, required=True, translate=True),
     }
-account_journal()
 
 
 class account_analytic_account(osv.osv):
@@ -103,7 +94,6 @@ class account_analytic_account(osv.osv):
     _columns = {
         'name': fields.char('Account Name', size=128, required=True, translate=True),
     }
-account_analytic_account()
 
 
 class account_analytic_journal(osv.osv):
@@ -111,4 +101,3 @@ class account_analytic_journal(osv.osv):
     _columns = {
         'name': fields.char('Journal Name', size=64, required=True, translate=True),
     }
-account_analytic_journal()

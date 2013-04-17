@@ -169,7 +169,6 @@ class membership_line(osv.osv):
         (_check_membership_date, 'Error, this membership product is out of date', [])
     ]
 
-membership_line()
 
 
 class Partner(osv.osv):
@@ -442,7 +441,6 @@ class Partner(osv.osv):
         self.pool.get('res.partner').write(cr, uid, ids, {})
         return invoice_list
 
-Partner()
 
 class Product(osv.osv):
 
@@ -476,7 +474,6 @@ class Product(osv.osv):
         'membership': False,
     }
 
-Product()
 
 
 class Invoice(osv.osv):
@@ -494,7 +491,6 @@ class Invoice(osv.osv):
             member_line_obj.write(cr, uid, mlines, {'date_cancel': today})
         return super(Invoice, self).action_cancel(cr, uid, ids, context=context)
 
-Invoice()
 
 class account_invoice_line(osv.osv):
     _inherit='account.invoice.line'
@@ -561,6 +557,5 @@ class account_invoice_line(osv.osv):
                         }, context=context)
         return result
 
-account_invoice_line()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

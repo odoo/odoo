@@ -108,8 +108,8 @@ class mail_mail(osv.Model):
                 res_id = message.res_id
 
         # if model and res_id: try to use ``message_get_reply_to`` that returns the document alias
-        if model and res_id and hasattr(self.pool.get(model), 'message_get_reply_to'):
-            email_reply_to = self.pool.get(model).message_get_reply_to(cr, uid, [res_id], context=context)[0]
+        if model and res_id and hasattr(self.pool[model], 'message_get_reply_to'):
+            email_reply_to = self.pool[model].message_get_reply_to(cr, uid, [res_id], context=context)[0]
         # no alias reply_to -> reply_to will be the email_from, only the email part
         if not email_reply_to and values.get('email_from'):
             emails = tools.email_split(values.get('email_from'))
@@ -118,7 +118,7 @@ class mail_mail(osv.Model):
 
         # format 'Document name <email_address>'
         if email_reply_to and model and res_id:
-            document_name = self.pool.get(model).name_get(cr, SUPERUSER_ID, [res_id], context=context)[0]
+            document_name = self.pool[model].name_get(cr, SUPERUSER_ID, [res_id], context=context)[0]
             if document_name:
                 # sanitize document name
                 sanitized_doc_name = re.sub(r'[^\w+.]+', '-', document_name[1])
@@ -217,7 +217,7 @@ class mail_mail(osv.Model):
                 and self.check_access_rights(cr, partner.user_ids[0].id, 'read', raise_exception=False):
             related_user = partner.user_ids[0]
             try:
-                self.pool.get(mail.model).check_access_rule(cr, related_user.id, [mail.res_id], 'read', context=context)
+                self.pool[mail.model].check_access_rule(cr, related_user.id, [mail.res_id], 'read', context=context)
                 base_url = self.pool.get('ir.config_parameter').get_param(cr, uid, 'web.base.url')
                 # the parameters to encode for the query and fragment part of url
                 query = {'db': cr.dbname}
@@ -256,7 +256,19 @@ class mail_mail(osv.Model):
         body = self.send_get_mail_body(cr, uid, mail, partner=partner, context=context)
         subject = self.send_get_mail_subject(cr, uid, mail, partner=partner, context=context)
         body_alternative = tools.html2plaintext(body)
-        email_to = ['%s <%s>' % (partner.name, partner.email)] if partner else tools.email_split(mail.email_to)
+
+        # generate email_to, heuristic:
+        # 1. if 'partner' is specified and there is a related document: Followers of 'Doc' <email>
+        # 2. if 'partner' is specified, but no related document: Partner Name <email>
+        # 3; fallback on mail.email_to that we split to have an email addresses list
+        if partner and mail.record_name:
+            sanitized_record_name = re.sub(r'[^\w+.]+', '-', mail.record_name)
+            email_to = [_('"Followers of %s" <%s>') % (sanitized_record_name, partner.email)]
+        elif partner:
+            email_to = ['%s <%s>' % (partner.name, partner.email)]
+        else:
+            email_to = tools.email_split(mail.email_to)
+
         return {
             'body': body,
             'body_alternative': body_alternative,

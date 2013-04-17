@@ -137,7 +137,7 @@ class document_file(osv.osv):
             It is a hack that will try to discover if the mentioned record is
             clearly associated with a partner record.
         """
-        obj_model = self.pool.get(res_model)
+        obj_model = self.pool[res_model]
         if obj_model._name == 'res.partner':
             return res_id
         elif 'partner_id' in obj_model._columns and obj_model._columns['partner_id']._obj == 'res.partner':
@@ -422,7 +422,6 @@ class document_directory_content(osv.osv):
         tname = ''
         if content.include_name:
             record_name = node.displayname or ''
-            # obj = node.context._dirobj.pool.get(model)
             if record_name:
                 tname = (content.prefix or '') + record_name + (content.suffix or '') + (content.extension or '')
         else:
@@ -1296,9 +1295,9 @@ class node_res_dir(node_class):
             Note that many objects use NULL for a name, so we should
             better call the name_search(),name_get() set of methods
         """
-        obj = self.context._dirobj.pool.get(self.res_model)
-        if not obj:
+        if self.res_model not in self.context._dirobj.pool:
             return []
+        obj = self.context._dirobj.pool[self.res_model]
         dirobj = self.context._dirobj
         uid = self.context.uid
         ctx = self.context.context.copy()
@@ -1333,7 +1332,7 @@ class node_res_dir(node_class):
         if self.ressource_tree:
             object2 = False
             if self.resm_id:
-                object2 = dirobj.pool.get(self.res_model).browse(cr, uid, self.resm_id) or False
+                object2 = dirobj.pool[self.res_model].browse(cr, uid, self.resm_id) or False
             if obj._parent_name in obj.fields_get(cr, uid):
                 where.append((obj._parent_name,'=',object2 and object2.id or False))
 
@@ -1504,7 +1503,7 @@ class node_res_obj(node_class):
         ctx = self.context.context.copy()
         ctx.update(self.dctx)
         directory = dirobj.browse(cr, uid, self.dir_id)
-        obj = dirobj.pool.get(self.res_model)
+        obj = dirobj.pool[self.res_model]
         where = []
         res = []
         if name:
@@ -1590,7 +1589,7 @@ class node_res_obj(node_class):
         uid = self.context.uid
         ctx = self.context.context.copy()
         ctx.update(self.dctx)
-        res_obj = dirobj.pool.get(self.res_model)
+        res_obj = dirobj.pool[self.res_model]
 
         object2 = res_obj.browse(cr, uid, self.res_id) or False
 

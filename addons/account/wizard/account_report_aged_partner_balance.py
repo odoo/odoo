@@ -86,6 +86,5 @@ class account_aged_trial_balance(osv.osv_memory):
             'datas': data
         }
 
-account_aged_trial_balance()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

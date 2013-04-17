@@ -22,7 +22,7 @@
             <field name="inherit_id" ref="sale.view_order_form"/>
             <field name="arch" type="xml">
                 <field name="user_id" position="after">
-                    <field name="section_id" widget="selection"/>
+                    <field name="section_id" widget="selection" groups="base.group_multi_salesteams"/>
                     <field name="categ_ids" widget="many2many_tags"/>
                 </field>
             </field>
@@ -41,7 +41,7 @@
                         help="My Sales Team(s)"/>
                 </xpath>
                 <xpath expr="//field[@name='user_id']" position="after">
-                    <field name="section_id" string="Sales Team"/>
+                    <field name="section_id" string="Sales Team" groups="base.group_multi_salesteams"/>
                 </xpath>
             </field>
         </record>
@@ -53,18 +53,22 @@
             <field name="inherit_id" ref="account.invoice_tree"/>
             <field name="arch" type="xml">
                 <data>
-                    <xpath expr="//field[@name='date_invoice']" position="after">
-                        <field name="section_id" invisible="1"/>
+                    <xpath expr="//field[@name='user_id']" position="after">
+                        <field name="section_id" string="Sales Team" groups="base.group_multi_salesteams"/>
                     </xpath>
                 </data>
             </field>
         </record>
 
+        <!-- Update account invoice search view!-->
         <record id="account_invoice_groupby_inherit" model="ir.ui.view">
             <field name="name">account.invoice.groupby</field>
             <field name="model">account.invoice</field>
             <field name="inherit_id" ref="account.view_account_invoice_filter"/>
             <field name="arch" type="xml">
+                <xpath expr="//field[@name='user_id']" position="after">
+                    <field name="section_id"/>
+                </xpath>
                 <xpath expr="//group/filter[@string='Due Date']" position="after">
                     <filter string="Sales Team" domain="[]" context="{'group_by':'section_id'}"/>
                 </xpath>
@@ -79,7 +83,7 @@
             <field name="arch" type="xml">
                 <data>
                     <xpath expr="//field[@name='user_id']" position="after">
-                        <field name="section_id"/>
+                        <field name="section_id" groups="base.group_multi_salesteams"/>
                     </xpath>
                 </data>
             </field>
@@ -113,5 +117,132 @@
             </field>
         </record>
 
+        <!-- search by Salesteams -->
+
+        <record id="action_orders_salesteams" model="ir.actions.act_window">
+            <field name="name">Sales Orders</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">sale.order</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form,calendar,graph</field>
+            <field name="search_view_id" ref="sale.view_sales_order_filter"/>
+            <field name="domain">[('state','not in',('draft','sent','cancel'))]</field>
+            <field name="context">{
+                    'search_default_section_id': [active_id],
+                    'default_section_id': active_id,
+                    'search_default_my_sale_orders_filter': 1,
+                }
+            </field>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to create a quotation that can be converted into a sales
+                order.
+              </p><p>
+                OpenERP will help you efficiently handle the complete sales flow:
+                quotation, sales order, delivery, invoicing and payment.
+              </p>
+            </field>
+        </record>
+
+        <record id="action_quotations_salesteams" model="ir.actions.act_window">
+            <field name="name">Quotations</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">sale.order</field>
+            <field name="view_type">form</field>
+            <field name="view_id" ref="sale.view_quotation_tree"/>
+            <field name="view_mode">tree,form,calendar,graph</field>
+            <field name="context">{
+                    'search_default_section_id': [active_id],
+                    'default_section_id': active_id, 'show_address': 1,
+                    'search_default_my_sale_orders_filter': 1
+                }
+            </field>
+            <field name="domain">[('state','in',('draft','sent','cancel'))]</field>
+            <field name="search_view_id" ref="sale.view_sales_order_filter"/>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to create a quotation, the first step of a new sale.
+              </p><p>
+                OpenERP will help you handle efficiently the complete sale flow:
+                from the quotation to the sales order, the
+                delivery, the invoicing and the payment collection.
+              </p><p>
+                The social feature helps you organize discussions on each sales
+                order, and allow your customers to keep track of the evolution
+                of the sales order.
+              </p>
+            </field>
+        </record>
+
+        <record id="action_invoice_salesteams" model="ir.actions.act_window">
+            <field name="name">Invoices</field>
+            <field name="res_model">account.invoice</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form,calendar,graph</field>
+            <field name="view_id" ref="account.invoice_tree"/>
+            <field name="domain">[
+                ('state', 'not in', ['draft', 'cancel']),
+                ('type', '=', 'out_invoice')]</field>
+            <field name="context">{
+                    'search_default_section_id': [active_id],
+                    'default_section_id': active_id},
+                    'default_type':'out_invoice',
+                    'type':'out_invoice',
+                    'journal_type': 'sale',
+                }
+            </field>
+            <field name="search_view_id" ref="account.view_account_invoice_filter"/>
+        </record>
+
+        <record id="action_invoice_salesteams_view_tree" model="ir.actions.act_window.view">
+            <field name="sequence">1</field>
+            <field name="view_mode">tree</field>
+            <field name="act_window_id" ref="sale_crm.action_invoice_salesteams"/>
+        </record>
+
+        <record id="action_invoice_salesteams_view_form" model="ir.actions.act_window.view">
+            <field name="sequence">2</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="account.invoice_form"/>
+            <field name="act_window_id" ref="sale_crm.action_invoice_salesteams"/>
+        </record>
+
+        <record id="crm_case_section_salesteams_view_kanban" model="ir.ui.view">
+            <field name="name">crm.case.section.kanban</field>
+            <field name="model">crm.case.section</field>
+            <field name="inherit_id" ref="crm.crm_case_section_salesteams_view_kanban"/>
+            <field name="arch" type="xml">
+            <data>
+                <xpath expr="//field[@name='open_opportunity_ids']" position="after">
+                    <field name="quotation_ids"/>
+                    <field name="sale_order_ids"/>
+                    <field name="invoice_ids"/>
+                </xpath>
+                <xpath expr="//div[@class='oe_items_list']" position="inside">
+                    <a name="%(action_quotations_salesteams)d" type="action">
+                        <t t-raw="record.quotation_ids.raw_value.length"/>
+                        <t t-if="record.quotation_ids.raw_value.length &gt;= 2">Quotations</t>
+                        <t t-if="record.quotation_ids.raw_value.length &lt; 2">Quotation</t>
+                    </a>
+                    <a name="%(action_orders_salesteams)d" type="action">
+                        <t t-raw="record.sale_order_ids.raw_value.length"/>
+                        <t t-if="record.sale_order_ids.raw_value.length &gt;= 2">Sales Orders</t>
+                        <t t-if="record.sale_order_ids.raw_value.length &lt; 2">Sales Order</t>
+                    </a>
+                    <a name="%(action_invoice_salesteams)d" type="action" groups="account.group_account_invoice">
+                        <t t-raw="record.invoice_ids.raw_value.length"/>
+                        <t t-if="record.invoice_ids.raw_value.length &gt;= 2">Invoices</t>
+                        <t t-if="record.invoice_ids.raw_value.length &lt; 2">Invoice</t>
+                    </a>
+                </xpath>
+                <xpath expr="//div[@class='oe_items_list']" position="after">
+                    <div class="oe_center">
+                        <div class="oe_sum"><field name="sum_month_invoice"/></div>
+                        <div class="oe_subsum">Invoiced this month</div>
+                    </div>
+                </xpath>
+            </data>
+            </field>
+        </record>
     </data>
 </openerp>

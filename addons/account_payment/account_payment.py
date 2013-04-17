@@ -62,7 +62,6 @@ class payment_mode(osv.osv):
         return {'value': result}
 
 
-payment_mode()
 
 class payment_order(osv.osv):
     _name = 'payment.order'
@@ -170,7 +169,6 @@ class payment_order(osv.osv):
             payment_line_obj.write(cr, uid, payment_line_ids, {'date': False}, context=context)
         return super(payment_order, self).write(cr, uid, ids, vals, context=context)
 
-payment_order()
 
 class payment_line(osv.osv):
     _name = 'payment.line'
@@ -417,6 +415,5 @@ class payment_line(osv.osv):
             res['communication2']['states']['normal'] = [('readonly', False)]
         return res
 
-payment_line()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
