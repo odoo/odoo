@@ -33,7 +33,7 @@ from email.message import Message
 from openerp import tools
 from openerp import SUPERUSER_ID
 from openerp.addons.mail.mail_message import decode
-from openerp.osv import fields, osv
+from openerp.osv import fields, osv, orm
 from openerp.tools.safe_eval import safe_eval as eval
 from openerp.tools.translate import _
 
@@ -419,7 +419,7 @@ class mail_thread(osv.AbstractModel):
         return ["%s@%s" % (record['alias_name'], record['alias_domain'])
                     if record.get('alias_domain') and record.get('alias_name')
                     else False
-                    for record in self.read(cr, uid, ids, ['alias_name', 'alias_domain'], context=context)]
+                    for record in self.read(cr, SUPERUSER_ID, ids, ['alias_name', 'alias_domain'], context=context)]
 
     #------------------------------------------------------
     # Mail gateway
@@ -1156,7 +1156,10 @@ class mail_thread(osv.AbstractModel):
         """ Add partners to the records followers. """
         user_pid = self.pool.get('res.users').read(cr, uid, uid, ['partner_id'], context=context)['partner_id'][0]
         if set(partner_ids) == set([user_pid]):
-            self.check_access_rights(cr, uid, 'read')
+            try:
+                self.check_access_rights(cr, uid, 'read')
+            except (osv.except_osv, orm.except_orm):
+                return
         else:
             self.check_access_rights(cr, uid, 'write')
 
