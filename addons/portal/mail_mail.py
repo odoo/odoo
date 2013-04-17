@@ -61,7 +61,6 @@ class mail_thread_portal(osv.AbstractModel):
 
     def get_suggested_thread(self, cr, uid, removed_suggested_threads=None, context=None):
         """Overwrite to avoid showing suggestions for anonymous users"""
-        print("Group portal.group_anonymous")
         anonymous_group = self.pool.get('ir.model.data').get_object(cr, SUPERUSER_ID, 'portal', 'group_anonymous')
         if uid in [user.id for user in anonymous_group.users]:
             return []

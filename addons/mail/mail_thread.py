@@ -1359,9 +1359,6 @@ class mail_thread(osv.AbstractModel):
         if context is None:
             context = {}
 
-        _logger.info("Normal behavior")
-        print(self.__class__.mro())
-
         threads = []
         if removed_suggested_threads is None:
             removed_suggested_threads = []
