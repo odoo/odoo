@@ -55,7 +55,7 @@ class mail_mail(osv.Model):
             return super(mail_mail, self).send_get_mail_body_footer(cr, uid, mail, partner=partner, context=context)
 
 
-class mail_thread_portal(osv.Model):
+class mail_thread_portal(osv.AbstractModel):
 
     _inherit = 'mail.thread'
 
@@ -65,4 +65,4 @@ class mail_thread_portal(osv.Model):
         anonymous_group = self.pool.get('ir.model.data').get_object(cr, SUPERUSER_ID, 'portal', 'group_anonymous')
         if uid in [user.id for user in anonymous_group.users]:
             return []
-        return super(mail_thread, self).get_suggested_thread(cr, uid, removed_suggested_threads, context=context)
+        return super(mail_thread_portal, self).get_suggested_thread(cr, uid, removed_suggested_threads, context=context)
