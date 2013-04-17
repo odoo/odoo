@@ -1056,9 +1056,7 @@ openerp.mail = function (session) {
                             msg.renderElement();
                             msg.start();
                         }
-                        if( self.options.root_thread.__parentedParent.__parentedParent.do_reload_menu_emails ) {
-                            self.options.root_thread.__parentedParent.__parentedParent.do_reload_menu_emails();
-                        }
+                        self.options.root_thread.MailWidget.do_reload_menu_emails();
                     });
 
                 });
@@ -1198,6 +1196,7 @@ openerp.mail = function (session) {
         init: function (parent, datasets, options) {
             var self = this;
             this._super(parent, options);
+            this.MailWidget = parent.__proto__ == mail.Widget.prototype ? parent : false;
             this.domain = options.domain || [];
             this.context = _.extend(options.context || {});
 
@@ -1431,11 +1430,16 @@ openerp.mail = function (session) {
 
         message_fetch_set_read: function (message_list) {
             if (! this.context.mail_read_set_read) return;
-            this.render_mutex.exec(_.bind(function() {
+            var self = this;
+            this.render_mutex.exec(function() {
                 msg_ids = _.pluck(message_list, 'id');
-                return this.ds_message.call('set_message_read', [
-                        msg_ids, true, false, this.context]);
-             }, this));
+                return self.ds_message.call('set_message_read', [msg_ids, true, false, self.context])
+                    .then(function (nb_read) {
+                        if (nb_read) {
+                            self.options.root_thread.MailWidget.do_reload_menu_emails();
+                        }
+                    });
+             });
         },
 
         /**
@@ -1701,6 +1705,15 @@ openerp.mail = function (session) {
         },
         
         /**
+        * crete an object "related_menu"
+        * contain the menu widget and the the sub menu related of this wall
+        */
+        do_reload_menu_emails: function () {
+            var ActionManager = this.__parentedParent.ActionManager || this.__parentedParent.__parentedParent.ViewManager.ActionManager;
+            ActionManager.__parentedParent.menu.do_reload_needaction();
+        },
+
+        /**
          *Create the root thread and display this object in the DOM.
          * Call the no_message method then c all the message_fetch method 
          * of this root thread to display the messages.
@@ -1749,6 +1762,7 @@ openerp.mail = function (session) {
 
         init: function (parent, node) {
             this._super.apply(this, arguments);
+            this.ParentViewManager = parent;
             this.node = _.clone(node);
             this.node.params = _.extend({
                 'display_indented_thread': -1,
@@ -1768,7 +1782,7 @@ openerp.mail = function (session) {
 
             this.domain = this.node.params && this.node.params.domain || [];
 
-            if (!this.__parentedParent.is_action_enabled('edit')) {
+            if (!this.ParentViewManager.is_action_enabled('edit')) {
                 this.node.params.show_link = false;
             }
         },
@@ -1839,6 +1853,7 @@ openerp.mail = function (session) {
          */
         init: function (parent, action) {
             this._super(parent, action);
+            this.ActionManager = parent;
 
             this.action = _.clone(action);
             this.domain = this.action.params.domain || this.action.domain || [];
@@ -1869,23 +1884,6 @@ openerp.mail = function (session) {
             if (! this.searchview.has_defaults) {
                 this.message_render();
             }
-        },
-
-        /**
-        * crete an object "related_menu"
-        * contain the menu widget and the the sub menu related of this wall
-        */
-        do_reload_menu_emails: function () {
-            var menu = this.__parentedParent.__parentedParent.menu;
-            // return this.rpc("/web/menu/load", {'menu_id': 100}).done(function(r) {
-            //     _.each(menu.data.data.children, function (val) {
-            //         if (val.id == 100) {
-            //             val.children = _.find(r.data.children, function (r_val) {return r_val.id == 100;}).children;
-            //         }
-            //     });
-            //     var r = menu.data;
-            // window.setTimeout(function(){menu.do_reload();}, 0);
-            // });
         },
 
         /**
