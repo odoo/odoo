@@ -378,6 +378,7 @@ class res_partner(osv.osv, format_address):
             context = {}
         # Update parent and siblings records
         if vals.get('parent_id'):
+            is_supplier = self.browse(cr, uid, vals.get('parent_id'), context=context).supplier
             if 'use_parent_address' in vals:
                 use_parent_address = vals['use_parent_address']
             else:
@@ -395,6 +396,9 @@ class res_partner(osv.osv, format_address):
                             for key, value in onchange_values.iteritems()
                             if key in ADDRESS_FIELDS and key not in vals))
 
+                if is_supplier:
+                    vals.update({'supplier': 1,'customer': 0}) 
+                    
         return super(res_partner, self).create(cr, uid, vals, context=context)
 
     def update_address(self, cr, uid, ids, vals, context=None):
