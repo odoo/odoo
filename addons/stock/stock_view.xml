@@ -749,7 +749,7 @@
                 <header>
                     <button name="draft_force_assign" states="draft" string="Confirm" type="object" class="oe_highlight" groups="base.group_user"/>
                     <button name="draft_validate" states="draft" string="Confirm &amp; Transfer" type="object" class="oe_highlight" groups="base.group_user"/>
-                    <!-- <button name="action_assign" states="confirmed" string="Check Availability" type="object"/> -->
+                    <button name="action_assign" states="confirmed" string="Check Availability" type="object" class="oe_highlight"/>
                     <button name="force_assign" states="confirmed" string="Force Availability" type="object" class="oe_highlight" groups="base.group_user"/>
                     <button name="action_process" states="assigned" string="Confirm &amp; Transfer" groups="stock.group_stock_user" type="object" class="oe_highlight"/>
                     <button name="%(action_stock_invoice_onshipping)d" string="Create Invoice/Refund"  attrs="{'invisible': ['|','|',('state','&lt;&gt;','done'),('invoice_state','=','invoiced'),('invoice_state','=','none')]}"  type="action" class="oe_highlight" groups="base.group_user"/>
@@ -899,7 +899,6 @@
                 </xpath>
                 <xpath expr="/form/header//button[@name='draft_validate']" position="replace">
                     <button name="draft_validate" states="draft" string="Confirm &amp; Deliver" type="object" class="oe_highlight"/>
-                    <button name="action_assign" states="confirmed" string="Check Availability" type="object" class="oe_highlight"/>
                 </xpath>
                 <xpath expr="/form/header//button[@name='action_process']" position="replace">
                     <button name="action_process" states="assigned" string="Deliver" type="object" class="oe_highlight"/>
