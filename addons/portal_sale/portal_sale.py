@@ -59,19 +59,8 @@ class sale_order(osv.Model):
         assert len(ids) == 1
         document = self.browse(cr, uid, ids[0], context=context)
         partner = document.partner_id
-        # TDE note: this code should be improved: used a real invite wizard instead of an ugly email
         if partner.id not in document.message_follower_ids:
             self.message_subscribe(cr, uid, ids, [partner.id], context=context)
-            mail_values = {
-                'recipient_ids': [(4, partner.id)],
-                'subject': 'Invitation to follow %s' % document.name_get()[0][1],
-                'body_html': 'You have been invited to follow %s' % document.name_get()[0][1],
-                'auto_delete': True,
-                'type': 'email',
-            }
-            mail_obj = self.pool.get('mail.mail')
-            mail_id = mail_obj.create(cr, uid, mail_values, context=context)
-            mail_obj.send(cr, uid, [mail_id], context=context)
         return super(sale_order, self).action_button_confirm(cr, uid, ids, context=context)
 
     def get_signup_url(self, cr, uid, ids, context=None):

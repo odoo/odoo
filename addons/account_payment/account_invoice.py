@@ -42,6 +42,5 @@ class Invoice(osv.osv):
                 raise osv.except_osv(_('Error!'), _("You cannot cancel an invoice which has already been imported in a payment order. Remove it from the following payment order : %s."%(payment_order_name)))
         return super(Invoice, self).action_cancel(cr, uid, ids, context=context)
 
-Invoice()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

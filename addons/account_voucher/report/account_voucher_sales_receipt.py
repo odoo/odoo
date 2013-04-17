@@ -126,6 +126,5 @@ class sale_receipt_report(osv.osv):
             )
         """)
 
-sale_receipt_report()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

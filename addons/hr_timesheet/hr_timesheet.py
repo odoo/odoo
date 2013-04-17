@@ -56,7 +56,6 @@ class hr_employee(osv.osv):
         'journal_id': _getAnalyticJournal,
         'product_id': _getEmployeeProduct
     }
-hr_employee()
 
 
 class hr_analytic_timesheet(osv.osv):

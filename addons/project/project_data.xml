@@ -21,6 +21,7 @@
         <record id="all_projects_account" model="account.analytic.account">
             <field name="name">Projects</field>
             <field name="code">3</field>
+            <field name="type">view</field>
         </record>
         <function id="parent_project_default_set" model="ir.values" name="set" eval="('default',False,'parent_id', [('project.project', False)], all_projects_account, True, False, False, False, True)"/>
 

@@ -37,7 +37,6 @@ class project_gtd_context(osv.osv):
     }
     _order = "sequence, name"
 
-project_gtd_context()
 
 
 class project_gtd_timebox(osv.osv):
@@ -49,7 +48,6 @@ class project_gtd_timebox(osv.osv):
         'icon': fields.selection(tools.icons, 'Icon', size=64),
     }
 
-project_gtd_timebox()
 
 class project_task(osv.osv):
     _inherit = "project.task"
@@ -120,6 +118,5 @@ class project_task(osv.osv):
 
         return res
 
-project_task()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -49,26 +49,44 @@ class mail_compose_message(osv.TransientModel):
             help="Carbon copy recipients (placeholders may be used here)"),
     }
 
+    def send_mail(self, cr, uid, ids, context=None):
+        """ Override of send_mail to duplicate attachments linked to the email.template.
+            Indeed, basic mail.compose.message wizard duplicates attachments in mass
+            mailing mode. But in 'single post' mode, attachments of an email template
+            also have to be duplicated to avoid changing their ownership. """
+        for wizard in self.browse(cr, uid, ids, context=context):
+            if not wizard.attachment_ids or wizard.composition_mode == 'mass_mail' or not wizard.template_id:
+                continue
+            template = self.pool.get('email.template').browse(cr, uid, wizard.template_id.id, context=context)
+            new_attachment_ids = []
+            for attachment in wizard.attachment_ids:
+                if attachment in template.attachment_ids:
+                    new_attachment_ids.append(self.pool.get('ir.attachment').copy(cr, uid, attachment.id, {'res_model': 'mail.compose.message', 'res_id': wizard.id}, context=context))
+                else:
+                    new_attachment_ids.append(attachment.id)
+                self.write(cr, uid, wizard.id, {'attachment_ids': [(6, 0, new_attachment_ids)]}, context=context)
+        return super(mail_compose_message, self).send_mail(cr, uid, ids, context=context)
+
     def onchange_template_id(self, cr, uid, ids, template_id, composition_mode, model, res_id, context=None):
         """ - mass_mailing: we cannot render, so return the template values
             - normal mode: return rendered values """
         if template_id and composition_mode == 'mass_mail':
-            fields = ['subject', 'body_html', 'email_from', 'email_to', 'partner_to', 'email_cc',  'reply_to']
+            fields = ['subject', 'body_html', 'email_from', 'email_to', 'partner_to', 'email_cc', 'reply_to', 'attachment_ids']
             template_values = self.pool.get('email.template').read(cr, uid, template_id, fields, context)
             values = dict((field, template_values[field]) for field in fields if template_values.get(field))
         elif template_id:
-            # FIXME odo: change the mail generation to avoid attachment duplication
             values = self.generate_email_for_composer(cr, uid, template_id, res_id, context=context)
-            # transform attachments into attachment_ids
-            values['attachment_ids'] = []
+            # transform attachments into attachment_ids; not attached to the document because this will
+            # be done further in the posting process, allowing to clean database if email not send
+            values['attachment_ids'] = values.pop('attachment_ids', [])
             ir_attach_obj = self.pool.get('ir.attachment')
             for attach_fname, attach_datas in values.pop('attachments', []):
                 data_attach = {
                     'name': attach_fname,
                     'datas': attach_datas,
                     'datas_fname': attach_fname,
-                    'res_model': model,
-                    'res_id': res_id,
+                    'res_model': 'mail.compose.message',
+                    'res_id': 0,
                     'type': 'binary',  # override default_type from context, possibly meant for another model!
                 }
                 values['attachment_ids'].append(ir_attach_obj.create(cr, uid, data_attach, context=context))
@@ -128,7 +146,7 @@ class mail_compose_message(osv.TransientModel):
             mail.compose.message, transform email_cc and email_to into partner_ids """
         template_values = self.pool.get('email.template').generate_email(cr, uid, template_id, res_id, context=context)
         # filter template values
-        fields = ['subject', 'body_html', 'email_from', 'email_to', 'partner_to', 'email_cc',  'reply_to', 'attachments']
+        fields = ['subject', 'body_html', 'email_from', 'email_to', 'partner_to', 'email_cc',  'reply_to', 'attachment_ids', 'attachments']
         values = dict((field, template_values[field]) for field in fields if template_values.get(field))
         values['body'] = values.pop('body_html', '')
 
@@ -145,9 +163,11 @@ class mail_compose_message(osv.TransientModel):
         """ Override to handle templates. """
         # generate the composer email
         if wizard.template_id:
-            values = self.generate_email_for_composer(cr, uid, wizard.template_id, res_id, context=context)
+            values = self.generate_email_for_composer(cr, uid, wizard.template_id.id, res_id, context=context)
         else:
             values = {}
+        # remove attachments as they should not be rendered
+        values.pop('attachment_ids', None)
         # get values to return
         email_dict = super(mail_compose_message, self).render_message(cr, uid, wizard, res_id, context)
         # those values are not managed; they are readonly
