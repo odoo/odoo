@@ -62,5 +62,66 @@
             </field>
          </record>
 
+         <record id="view_crm_lead_geo_assign_form" model="ir.ui.view">
+            <field name="name">crm.lead.lead.geo_assign.inherit</field>
+            <field name="model">crm.lead</field>
+            <field name="inherit_id" ref="crm.crm_case_form_view_leads"/>
+            <field name="arch" type="xml">
+                <data>
+                    <xpath expr="//notebook/page[@string='Extra Info']" position="after">
+                        <page string="Assignation">
+                            <group name="partner_assign_group">
+                                <group string="Partner Assignation">
+                                    <field name="partner_assigned_id" on_change="onchange_assign_id(partner_assigned_id)" domain="[('grade_id','&lt;&gt;',False)]"/>
+                                    <label for="date_assign"/>
+                                    <div>
+                                        <field name="date_assign"/>
+                                        <button string="Forward"
+                                            attrs="{'invisible':[('partner_assigned_id','=',False)]}"
+                                            name="%(crm_lead_forward_to_partner_act)d"
+                                            icon="terp-mail-forward" type="action"
+                                            context="{'default_composition_mode': 'forward', 'default_partner_ids': [partner_assigned_id]}"/>
+                                    </div>
+                                </group>
+                                <group string="Geo Assignation">
+                                    <field name="partner_latitude"/>
+                                    <field name="partner_longitude"/>
+                                    <span/>
+                                    <button string="Geo Assign" name="action_assign_partner" type="object" colspan="1"
+                                        icon="gtk-apply"/>
+                                </group>
+                            </group>
+                        </page>
+                    </xpath>
+                </data>
+            </field>
+        </record>
+
+        <record id="view_crm_lead_geo_assign_tree" model="ir.ui.view">
+            <field name="name">crm.lead.lead.geo_assign.tree.inherit</field>
+            <field name="model">crm.lead</field>
+            <field name="inherit_id" ref="crm.crm_case_tree_view_leads"/>
+            <field name="arch" type="xml">
+                <field name="partner_id" position="after">
+                    <field name="partner_assigned_id"/>
+                 </field>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="crm_lead_partner_filter">
+            <field name="name">crm.lead.partner.filter.assigned</field>
+            <field name="model">crm.lead</field>
+            <field name="inherit_id" ref="crm.view_crm_case_leads_filter"/>
+            <field name="arch" type="xml">
+                <filter string="Team" position="after">
+                    <filter string="Assigned Partner" icon="terp-personal" domain="[]" context="{'group_by':'partner_assigned_id'}"/>
+                </filter>
+
+                <field name="partner_id" position="after">
+                    <field name="partner_assigned_id"/>
+                </field>
+            </field>
+         </record>
+
     </data>
 </openerp>

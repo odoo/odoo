@@ -160,7 +160,7 @@
                     <button name="button_final_validation" string="Validate Appraisal" states="wait" type="object" class="oe_highlight"/>
                     <button name="button_done" string="Done" states="progress" type="object" class="oe_highlight"/>
                     <button name="button_draft" string="Reset to Draft" states="cancel" type="object" />
-                    <button name="button_cancel" string="Cancel" states="draft,wait,progress" type="object"/>
+                    <button name="button_cancel" string="Cancel Appraisal" states="draft,wait,progress" type="object"/>
                     <field name="state" widget="statusbar" statusbar_visible="draft,progress,wait,done" statusbar_colors='{"progress":"blue"}'/>
                 </header>
                 <sheet>
@@ -282,7 +282,7 @@
             <field name="arch" type="xml">
                 <form string="Interview Appraisal" version="7.0">
                     <header>
-                        <button string="Cancel" name="survey_req_cancel" type="object"
+                        <button string="Cancel Survey" name="survey_req_cancel" type="object"
                             states="draft,waiting_answer" class="oe_left"/>
                         <button string="Print Survey" name="action_print_survey"  type="object"
                             states="draft" context="{'survey_id': survey_id, 'response_id': [response], 'response_no':0}"

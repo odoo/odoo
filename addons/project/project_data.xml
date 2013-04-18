@@ -21,6 +21,7 @@
         <record id="all_projects_account" model="account.analytic.account">
             <field name="name">Projects</field>
             <field name="code">3</field>
+            <field name="type">view</field>
         </record>
         <function id="parent_project_default_set" model="ir.values" name="set" eval="('default',False,'parent_id', [('project.project', False)], all_projects_account, True, False, False, False, True)"/>
 
@@ -94,16 +95,19 @@
         <record id="mt_task_blocked" model="mail.message.subtype">
             <field name="name">Task Blocked</field>
             <field name="res_model">project.task</field>
+            <field name="default" eval="False"/>
             <field name="description">Task blocked</field>
         </record>
         <record id="mt_task_closed" model="mail.message.subtype">
             <field name="name">Task Done</field>
             <field name="res_model">project.task</field>
+            <field name="default" eval="False"/>
             <field name="description">Task closed</field>
         </record>
         <record id="mt_task_stage" model="mail.message.subtype">
             <field name="name">Stage Changed</field>
             <field name="res_model">project.task</field>
+            <field name="default" eval="False"/>
             <field name="description">Stage changed</field>
         </record>
         <!-- Project-related subtypes for messaging / Chatter -->

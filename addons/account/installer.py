@@ -26,7 +26,7 @@ from operator import itemgetter
 from os.path import join as opj
 import time
 
-from openerp import netsvc, tools
+from openerp import tools
 from openerp.tools.translate import _
 from openerp.osv import fields, osv
 
@@ -152,6 +152,5 @@ class account_installer(osv.osv_memory):
         _logger.debug('Installing chart of accounts %s', chart)
         return modules | set([chart])
 
-account_installer()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

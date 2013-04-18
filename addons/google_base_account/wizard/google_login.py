@@ -81,6 +81,5 @@ class google_login(osv.osv_memory):
     def _get_next_action(self, cr, uid, context=None):
         return {'type': 'ir.actions.act_window_close'}
 
-google_login()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

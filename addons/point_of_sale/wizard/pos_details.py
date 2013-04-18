@@ -60,7 +60,6 @@ class pos_details(osv.osv_memory):
             'datas': datas,
         }
 
-pos_details()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

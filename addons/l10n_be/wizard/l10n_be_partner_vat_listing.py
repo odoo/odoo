@@ -39,7 +39,6 @@ class vat_listing_clients(osv.osv_memory):
         'vat_amount': fields.float('VAT Amount'),
     }
 
-vat_listing_clients()
 
 class partner_vat(osv.osv_memory):
     """ Vat Listing """
@@ -116,7 +115,6 @@ class partner_vat(osv.osv_memory):
         'limit_amount': 250,
     }
 
-partner_vat()
 
 class partner_vat_list(osv.osv_memory):
     """ Partner Vat Listing """
@@ -321,7 +319,6 @@ class partner_vat_list(osv.osv_memory):
             'datas': datas,
         }
 
-partner_vat_list()
 
 class partner_vat_listing_print(report_sxw.rml_parse):
 

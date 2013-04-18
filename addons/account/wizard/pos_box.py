@@ -21,7 +21,7 @@ class CashBox(osv.osv_memory):
         active_model = context.get('active_model', False) or False
         active_ids = context.get('active_ids', []) or []
 
-        records = self.pool.get(active_model).browse(cr, uid, active_ids, context=context)
+        records = self.pool[active_model].browse(cr, uid, active_ids, context=context)
 
         return self._run(cr, uid, ids, records, context=None)
 
@@ -63,10 +63,11 @@ class CashBoxIn(CashBox):
             'name' : box.name,
         }
 
-CashBoxIn()
 
 class CashBoxOut(CashBox):
     _name = 'cash.box.out'
+
+    _columns = CashBox._columns.copy()
 
     def _compute_values_for_statement_line(self, cr, uid, box, record, context=None):
         amount = box.amount or 0.0
@@ -78,4 +79,3 @@ class CashBoxOut(CashBox):
             'name' : box.name,
         }
 
-CashBoxOut()

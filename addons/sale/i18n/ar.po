@@ -13,8 +13,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-12-22 05:38+0000\n"
-"X-Generator: Launchpad (build 16378)\n"
+"X-Launchpad-Export-Date: 2013-03-16 05:21+0000\n"
+"X-Generator: Launchpad (build 16532)\n"
 
 #. module: sale
 #: model:res.groups,name:sale.group_analytic_accounting
@@ -94,7 +94,7 @@ msgstr ""
 #: view:sale.order.line:0
 #: field:sale.report,product_uom:0
 msgid "Unit of Measure"
-msgstr ""
+msgstr "وحدة القياس"
 
 #. module: sale
 #: field:sale.order.line,type:0
@@ -117,7 +117,7 @@ msgid "March"
 msgstr "مارس/آذار"
 
 #. module: sale
-#: code:addons/sale/sale.py:559
+#: code:addons/sale/sale.py:567
 #, python-format
 msgid "First cancel all invoices attached to this sales order."
 msgstr ""
@@ -125,13 +125,13 @@ msgstr ""
 #. module: sale
 #: view:sale.order:0
 msgid "Quotation Number"
-msgstr ""
+msgstr "رقم عرض السعر"
 
 #. module: sale
 #: view:sale.order:0
 #: field:sale.order,message_unread:0
 msgid "Unread Messages"
-msgstr ""
+msgstr "رسائل غير مقروءة"
 
 #. module: sale
 #: field:sale.order,company_id:0
@@ -166,12 +166,12 @@ msgstr "خلل في الفاتورة"
 #. module: sale
 #: view:sale.order:0
 msgid "Quotation "
-msgstr ""
+msgstr "عرض سعر "
 
 #. module: sale
 #: selection:sale.order,state:0
 msgid "Draft Quotation"
-msgstr ""
+msgstr "عرض سعر 'مسودة'"
 
 #. module: sale
 #: field:sale.order,partner_shipping_id:0
@@ -203,6 +203,7 @@ msgstr "اليوم"
 
 #. module: sale
 #: model:process.transition.action,name:sale.process_transition_action_cancelorder0
+#: view:sale.order:0
 msgid "Cancel Order"
 msgstr "إلغاء الطلب"
 
@@ -224,13 +225,13 @@ msgstr ""
 #. module: sale
 #: field:sale.order.line,product_uom:0
 msgid "Unit of Measure "
-msgstr ""
+msgstr "وحدة قياس "
 
 #. module: sale
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:101
 #, python-format
 msgid "Incorrect Data"
-msgstr ""
+msgstr "معلومات خاطئة"
 
 #. module: sale
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:102
@@ -280,11 +281,12 @@ msgid "Project"
 msgstr ""
 
 #. module: sale
-#: code:addons/sale/sale.py:360
-#: code:addons/sale/sale.py:501
-#: code:addons/sale/sale.py:592
-#: code:addons/sale/sale.py:755
-#: code:addons/sale/sale.py:772
+#: code:addons/sale/sale.py:185
+#: code:addons/sale/sale.py:368
+#: code:addons/sale/sale.py:509
+#: code:addons/sale/sale.py:600
+#: code:addons/sale/sale.py:763
+#: code:addons/sale/sale.py:780
 #, python-format
 msgid "Error!"
 msgstr ""
@@ -399,12 +401,12 @@ msgstr "إنشاء الفواتير"
 #. module: sale
 #: report:sale.order:0
 msgid "Tax"
-msgstr ""
+msgstr "ضريبة"
 
 #. module: sale
-#: code:addons/sale/sale.py:270
-#: code:addons/sale/sale.py:812
-#: code:addons/sale/sale.py:976
+#: code:addons/sale/sale.py:278
+#: code:addons/sale/sale.py:820
+#: code:addons/sale/sale.py:983
 #, python-format
 msgid "Invalid Action!"
 msgstr ""
@@ -455,7 +457,7 @@ msgid "Fax :"
 msgstr "الفاكس:"
 
 #. module: sale
-#: code:addons/sale/sale.py:270
+#: code:addons/sale/sale.py:278
 #, python-format
 msgid ""
 "In order to delete a confirmed sales order, you must cancel it before !"
@@ -464,7 +466,7 @@ msgstr ""
 #. module: sale
 #: view:sale.order:0
 msgid "(update)"
-msgstr ""
+msgstr "(تحديث)"
 
 #. module: sale
 #: model:ir.model,name:sale.model_res_partner
@@ -479,8 +481,8 @@ msgid "Contract Features"
 msgstr ""
 
 #. module: sale
-#: code:addons/sale/sale.py:280
-#: code:addons/sale/sale.py:578
+#: code:addons/sale/sale.py:288
+#: code:addons/sale/sale.py:586
 #: model:ir.model,name:sale.model_sale_order
 #: model:process.node,name:sale.process_node_order0
 #: model:process.node,name:sale.process_node_saleorder0
@@ -545,7 +547,7 @@ msgid "Prepare invoices based on timesheets"
 msgstr ""
 
 #. module: sale
-#: code:addons/sale/sale.py:812
+#: code:addons/sale/sale.py:820
 #, python-format
 msgid "You cannot cancel a sales order line that has already been invoiced."
 msgstr ""
@@ -571,7 +573,7 @@ msgstr "السنة"
 #. module: sale
 #: field:sale.config.settings,group_uom:0
 msgid "Allow using different units of measures"
-msgstr ""
+msgstr "السماح باستخدام اكثر من وحدة حساب"
 
 #. module: sale
 #: model:mail.message.subtype,name:sale.mt_order_confirmed
@@ -586,7 +588,7 @@ msgstr ""
 #. module: sale
 #: view:sale.order:0
 msgid "Print"
-msgstr ""
+msgstr "طباعة"
 
 #. module: sale
 #: report:sale.order:0
@@ -605,7 +607,7 @@ msgid "Disc.(%)"
 msgstr "نسبة الخصم (%)"
 
 #. module: sale
-#: code:addons/sale/sale.py:756
+#: code:addons/sale/sale.py:764
 #, python-format
 msgid "Please define income account for this product: \"%s\" (id:%d)."
 msgstr ""
@@ -647,7 +649,7 @@ msgid "Make Invoices"
 msgstr "أصدر الفواتير"
 
 #. module: sale
-#: code:addons/sale/res_config.py:89
+#: code:addons/sale/res_config.py:97
 #, python-format
 msgid "Hour"
 msgstr "ساعة"
@@ -655,7 +657,7 @@ msgstr "ساعة"
 #. module: sale
 #: field:res.partner,sale_order_count:0
 msgid "# of Sales Order"
-msgstr ""
+msgstr "عدد طلبات البيع"
 
 #. module: sale
 #: help:sale.config.settings,timesheet:0
@@ -756,12 +758,12 @@ msgid "Default Options"
 msgstr ""
 
 #. module: sale
-#: code:addons/sale/sale.py:953
+#: code:addons/sale/sale.py:960
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:91
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:95
 #, python-format
 msgid "Configuration Error!"
-msgstr ""
+msgstr "خطأ في الإعدادات!"
 
 #. module: sale
 #: field:account.config.settings,group_analytic_account_for_sales:0
@@ -775,7 +777,7 @@ msgstr ""
 #: field:sale.order.line,state:0
 #: view:sale.report:0
 msgid "Status"
-msgstr ""
+msgstr "الحالة"
 
 #. module: sale
 #: view:sale.advance.payment.inv:0
@@ -787,7 +789,7 @@ msgstr ""
 #. module: sale
 #: view:sale.order:0
 msgid "Send by Email"
-msgstr ""
+msgstr "إرسال كرسالة بالبريد الالكتروني"
 
 #. module: sale
 #: code:addons/sale/edi/sale_order.py:140
@@ -803,7 +805,7 @@ msgstr ""
 #. module: sale
 #: view:sale.config.settings:0
 msgid "Invoicing Process"
-msgstr ""
+msgstr "عملية الفوترة"
 
 #. module: sale
 #: view:sale.order:0
@@ -813,10 +815,10 @@ msgstr "تاريخ الأمر"
 #. module: sale
 #: view:sale.order:0
 msgid "Sales Order done"
-msgstr ""
+msgstr "تم طلب البيع"
 
 #. module: sale
-#: code:addons/sale/sale.py:361
+#: code:addons/sale/sale.py:369
 #, python-format
 msgid "Please define sales journal for this company: \"%s\" (id:%d)."
 msgstr ""
@@ -825,7 +827,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:sale.act_res_partner_2_sale_order
 #: view:res.partner:0
 msgid "Quotations and Sales"
-msgstr ""
+msgstr "عروض الأسعار والمبيعات"
 
 #. module: sale
 #: field:sale.order,invoiced:0
@@ -836,7 +838,7 @@ msgstr "مدفوع"
 #: help:sale.config.settings,group_uom:0
 msgid ""
 "Allows you to select and maintain different units of measure for products."
-msgstr ""
+msgstr "يسمح لك باختيار والحفاظ على وحدات قياس متعددة للمنتجات"
 
 #. module: sale
 #: view:sale.report:0
@@ -869,10 +871,10 @@ msgid "Sales Make Invoice"
 msgstr "تُنشأ المبيعات الفاتورة"
 
 #. module: sale
-#: code:addons/sale/sale.py:300
+#: code:addons/sale/sale.py:308
 #, python-format
 msgid "Pricelist Warning!"
-msgstr ""
+msgstr "تحذير قائمة الأسعار!"
 
 #. module: sale
 #: field:sale.order.line,discount:0
@@ -916,7 +918,7 @@ msgstr "ديسمبر/كانون الأول"
 #. module: sale
 #: view:sale.config.settings:0
 msgid "Contracts Management"
-msgstr ""
+msgstr "ادارة العقود"
 
 #. module: sale
 #: view:sale.order.line:0
@@ -946,10 +948,10 @@ msgid "Category of Product"
 msgstr "فئة المنتج"
 
 #. module: sale
-#: code:addons/sale/sale.py:558
+#: code:addons/sale/sale.py:566
 #, python-format
 msgid "Cannot cancel this sales order!"
-msgstr ""
+msgstr "لا يمكن الغاء طلب البيع!"
 
 #. module: sale
 #: view:sale.order:0
@@ -1001,7 +1003,7 @@ msgid "Open Sale Menu"
 msgstr ""
 
 #. module: sale
-#: code:addons/sale/sale.py:592
+#: code:addons/sale/sale.py:600
 #, python-format
 msgid "You cannot confirm a sales order which has no line."
 msgstr ""
@@ -1012,7 +1014,7 @@ msgid "In Progress"
 msgstr "قيد التقدم"
 
 #. module: sale
-#: code:addons/sale/sale.py:857
+#: code:addons/sale/sale.py:865
 #, python-format
 msgid "No Customer Defined !"
 msgstr "لا يوجد عملاء"
@@ -1095,7 +1097,7 @@ msgstr ""
 #. module: sale
 #: selection:sale.order,order_policy:0
 msgid "On Demand"
-msgstr ""
+msgstr "عند الطلب"
 
 #. module: sale
 #: selection:sale.report,month:0
@@ -1146,7 +1148,7 @@ msgstr "تحليل المبيعات"
 #. module: sale
 #: field:sale.order,message_is_follower:0
 msgid "Is a Follower"
-msgstr ""
+msgstr "متابع"
 
 #. module: sale
 #: view:sale.order.line:0
@@ -1174,7 +1176,7 @@ msgstr "التاريخ"
 #: view:sale.report:0
 #: field:sale.report,user_id:0
 msgid "Salesperson"
-msgstr ""
+msgstr "موظف مبيعات"
 
 #. module: sale
 #: selection:sale.report,month:0
@@ -1287,7 +1289,7 @@ msgstr "الحساب التحليلي المتعلق بأمر بيع"
 #. module: sale
 #: view:sale.order:0
 msgid "View Invoice"
-msgstr ""
+msgstr "عرض الفاتورة"
 
 #. module: sale
 #: field:sale.advance.payment.inv,advance_payment_method:0
@@ -1297,7 +1299,7 @@ msgstr ""
 #. module: sale
 #: field:sale.config.settings,group_sale_pricelist:0
 msgid "Use pricelists to adapt your price per customers"
-msgstr ""
+msgstr "استخدم قوائم الأسعار لتغير السعر على حسب العميل"
 
 #. module: sale
 #: model:process.transition,note:sale.process_transition_confirmquotation0
@@ -1309,7 +1311,7 @@ msgstr ""
 "'قيد التنفيذ يدوياً'."
 
 #. module: sale
-#: code:addons/sale/sale.py:935
+#: code:addons/sale/sale.py:942
 #, python-format
 msgid ""
 "You have to select a pricelist or a customer in the sales form !\n"
@@ -1322,7 +1324,7 @@ msgid "Reference of the document that generated this sales order request."
 msgstr "مرجع المستند الذي أصدر طلب أمر المبيعات هذا"
 
 #. module: sale
-#: code:addons/sale/sale.py:948
+#: code:addons/sale/sale.py:955
 #, python-format
 msgid "No valid pricelist line found ! :"
 msgstr ""
@@ -1406,7 +1408,7 @@ msgid "TVA :"
 msgstr "TVA :"
 
 #. module: sale
-#: code:addons/sale/sale.py:441
+#: code:addons/sale/sale.py:449
 #, python-format
 msgid "Customer Invoices"
 msgstr "فواتير العميل"
@@ -1432,7 +1434,7 @@ msgid "Sales"
 msgstr "المبيعات"
 
 #. module: sale
-#: code:addons/sale/sale.py:301
+#: code:addons/sale/sale.py:309
 #, python-format
 msgid ""
 "If you change the pricelist of this order (and eventually the currency), "
@@ -1491,8 +1493,6 @@ msgstr ""
 #: model:process.transition.action,name:sale.process_transition_action_cancel0
 #: view:sale.advance.payment.inv:0
 #: view:sale.make.invoice:0
-#: view:sale.order:0
-#: view:sale.order.line:0
 #: view:sale.order.line.make.invoice:0
 msgid "Cancel"
 msgstr "إلغاء"
@@ -1503,7 +1503,7 @@ msgid "Followers"
 msgstr ""
 
 #. module: sale
-#: code:addons/sale/sale.py:937
+#: code:addons/sale/sale.py:944
 #, python-format
 msgid "No Pricelist ! : "
 msgstr ""
@@ -1532,7 +1532,7 @@ msgstr ""
 #. module: sale
 #: sql_constraint:sale.order:0
 msgid "Order Reference must be unique per Company!"
-msgstr ""
+msgstr "مرجع الطلب يجب أن يكون فريدا لكل شركة على حدا!"
 
 #. module: sale
 #: model:ir.actions.act_window,help:sale.action_order_line_tree2
@@ -1555,7 +1555,7 @@ msgid "Shipping address :"
 msgstr "عنوان الشحن"
 
 #. module: sale
-#: code:addons/sale/sale.py:502
+#: code:addons/sale/sale.py:510
 #, python-format
 msgid ""
 "You cannot group sales having different currencies for the same partner."
@@ -1580,7 +1580,7 @@ msgid "Use contracts management"
 msgstr ""
 
 #. module: sale
-#: code:addons/sale/sale.py:945
+#: code:addons/sale/sale.py:952
 #, python-format
 msgid ""
 "Cannot find a pricelist line matching this product and quantity.\n"
@@ -1610,7 +1610,7 @@ msgstr "المبلغ دون ضرائب"
 #. module: sale
 #: view:sale.order.line:0
 msgid "Order reference"
-msgstr ""
+msgstr "مرجع الطلب"
 
 #. module: sale
 #: help:sale.order,invoiced:0
@@ -1626,7 +1626,7 @@ msgstr "سعر الوحدة"
 #. module: sale
 #: selection:sale.advance.payment.inv,advance_payment_method:0
 msgid "Percentage"
-msgstr ""
+msgstr "النسبة"
 
 #. module: sale
 #: view:sale.order:0
@@ -1830,7 +1830,7 @@ msgid "sale.group_delivery_invoice_address"
 msgstr ""
 
 #. module: sale
-#: code:addons/sale/sale.py:773
+#: code:addons/sale/sale.py:781
 #, python-format
 msgid ""
 "There is no Fiscal Position defined or Income category account defined for "
@@ -1917,7 +1917,7 @@ msgstr "تاريخ الأمر"
 #. module: sale
 #: selection:sale.order,order_policy:0
 msgid "Before Delivery"
-msgstr ""
+msgstr "قبل التوصيل"
 
 #. module: sale
 #: field:sale.order.line,product_uos:0
@@ -1949,7 +1949,7 @@ msgstr "قيد التنفيذ يدوياً"
 #: code:addons/sale/wizard/sale_make_invoice.py:43
 #, python-format
 msgid "Warning!"
-msgstr ""
+msgstr "تحذير!"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_order_tree
@@ -1980,12 +1980,12 @@ msgstr ""
 #. module: sale
 #: field:sale.order,message_summary:0
 msgid "Summary"
-msgstr ""
+msgstr "ملخص"
 
 #. module: sale
 #: help:sale.order,message_ids:0
 msgid "Messages and communication history"
-msgstr ""
+msgstr "الرسائل و سجل التواصل"
 
 #. module: sale
 #: view:sale.order:0
@@ -2046,7 +2046,7 @@ msgid "Some order lines"
 msgstr ""
 
 #. module: sale
-#: code:addons/sale/sale.py:976
+#: code:addons/sale/sale.py:983
 #, python-format
 msgid "Cannot delete a sales order line which is in state '%s'."
 msgstr ""
@@ -2060,7 +2060,7 @@ msgstr "أجل السداد"
 #. module: sale
 #: view:sale.order:0
 msgid "Sales Order ready to be invoiced"
-msgstr ""
+msgstr "طلبات البيع الجاهزة للفوترة"
 
 #. module: sale
 #: field:sale.config.settings,group_invoice_so_lines:0
@@ -2072,7 +2072,7 @@ msgstr ""
 #: view:sale.make.invoice:0
 #: view:sale.order.line.make.invoice:0
 msgid "or"
-msgstr ""
+msgstr "أو"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_order_line_product_tree
@@ -2116,7 +2116,7 @@ msgid ""
 msgstr ""
 
 #. module: sale
-#: code:addons/sale/sale.py:857
+#: code:addons/sale/sale.py:865
 #, python-format
 msgid ""
 "Before choosing a product,\n"
@@ -2131,7 +2131,7 @@ msgstr "المجموع مع الضرائب"
 #. module: sale
 #: view:sale.order:0
 msgid "New Copy of Quotation"
-msgstr ""
+msgstr "نسخة جديدة من عرض السعر"
 
 #. module: sale
 #: view:sale.advance.payment.inv:0

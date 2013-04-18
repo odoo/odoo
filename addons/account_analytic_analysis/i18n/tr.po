@@ -13,33 +13,33 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-12-22 05:42+0000\n"
-"X-Generator: Launchpad (build 16378)\n"
+"X-Launchpad-Export-Date: 2013-03-16 05:26+0000\n"
+"X-Generator: Launchpad (build 16532)\n"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
 msgid "No order to invoice, create"
-msgstr ""
+msgstr "Faturalacak sipariş yok, oluştur"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
 msgid "Group By..."
-msgstr "Gruplandır..."
+msgstr "Grupla..."
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
 msgid "To Invoice"
-msgstr ""
+msgstr "Faturalanacak"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
 msgid "Remaining"
-msgstr ""
+msgstr "Kalan"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
 msgid "Contracts in progress"
-msgstr "Sürmekte olan sözleşmeler"
+msgstr "Süren sözleşmeler"
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,last_worked_invoiced_date:0
@@ -47,8 +47,8 @@ msgid ""
 "If invoice from the costs, this is the date of the latest work or cost that "
 "have been invoiced."
 msgstr ""
-"Eğer fatura maliyetlerden çıkarılmışsa, bu en son işin yada faturalandırılan "
-"maliyetin tarihidir."
+"Eğer fatura maliyetlerden çıkarılmışsa, bu en son işin ya da "
+"faturalandırılan maliyetin tarihidir."
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,last_worked_date:0
@@ -58,7 +58,7 @@ msgstr "Son Maliyet/İş Tarihi"
 #. module: account_analytic_analysis
 #: field:account.analytic.account,ca_to_invoice:0
 msgid "Uninvoiced Amount"
-msgstr "Faturasız Tutar"
+msgstr "Faturalanmamış Tutar"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
@@ -69,16 +69,22 @@ msgid ""
 "to\n"
 "                            define the customer invoice price rate."
 msgstr ""
+"Zaman çizelgesine göre faturalarken, OpenERP, \n"
+"                            müşteri faturası fiyat değerini tanımlamak için "
+"\n"
+"                            her personelle ilişkilendirilmiş üründe tanımlı "
+"fiyatı kullanan \n"
+"                            sözleşmeye ait fiyat listesini kullanır."
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
 msgid "⇒ Invoice"
-msgstr ""
+msgstr "⇒ Fatura"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,ca_invoiced:0
 msgid "Invoiced Amount"
-msgstr "Fatura Tutarı"
+msgstr "Faturalanmış Tutar"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,last_worked_invoiced_date:0
@@ -88,23 +94,24 @@ msgstr "Son Faturalanmış Maliyet Tarihi"
 #. module: account_analytic_analysis
 #: help:account.analytic.account,fix_price_to_invoice:0
 msgid "Sum of quotations for this contract."
-msgstr ""
+msgstr "Bu sözleşme için tekliflerin toplamı."
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,ca_invoiced:0
 msgid "Total customer invoiced amount for this account."
-msgstr "Bu hesap için toplam müşteri faturası miktarı."
+msgstr "Bu hesap için toplam müşteriye faturalanmış tutar."
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,timesheet_ca_invoiced:0
 msgid "Sum of timesheet lines invoiced for this contract."
 msgstr ""
+"Bu sözleşmeye ait faturalandırılan zaman çizelgesi kalemlerinin toplamı."
 
 #. module: account_analytic_analysis
-#: code:addons/account_analytic_analysis/account_analytic_analysis.py:462
+#: code:addons/account_analytic_analysis/account_analytic_analysis.py:466
 #, python-format
 msgid "Sales Order Lines of %s"
-msgstr ""
+msgstr "Satış Siparişi Kalemlerinin %s"
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,revenue_per_hour:0
@@ -112,7 +119,6 @@ msgid "Computed using the formula: Invoiced Amount / Total Time"
 msgstr "Hesaplamada kullanılan formül: Faturalandırılan Tutar / Toplam Süre"
 
 #. module: account_analytic_analysis
-#: view:account.analytic.account:0
 #: field:account_analytic_analysis.summary.month,account_id:0
 #: field:account_analytic_analysis.summary.user,account_id:0
 #: model:ir.model,name:account_analytic_analysis.model_account_analytic_account
@@ -122,7 +128,7 @@ msgstr "Analitik Hesap"
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
 msgid "Partner"
-msgstr ""
+msgstr "Cari"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
@@ -147,6 +153,18 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Yeni bir sözleşme oluşturmak için tıklayın.\n"
+"              </p><p>\n"
+"                Yenilenecek sözleşmeleri listede göreceksiniz çünkü\n"
+"\t\tya sözleşme bitiş tarihi geçmiş ya da harcanan emek\n"
+"\t\tizin verilenden fazladır.\n"
+"              </p><p>\n"
+"                Yenilenecek sözleşmeleri OpenERP otomatik olarak bekleyen\n"
+"\t\tdurumuna atar. Müşteri ile pazarlık ettikten sonra satış\n"
+"\t\ttemsilcisi sözleşmeyi ya kapatmalı ya da yenilemelidir.\n"
+"              </p>\n"
+"            "
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
@@ -156,27 +174,28 @@ msgstr "Bitiş Tarihi"
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
 msgid "Account Manager"
-msgstr ""
+msgstr "Hesap Temsilcisi"
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,remaining_hours_to_invoice:0
 msgid "Computed using the formula: Maximum Time - Total Invoiced Time"
 msgstr ""
+"Hesaplamada kullanılan formül:Maksimum Zaman - Toplam faturalandırılan Zaman"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
 msgid "Expected"
-msgstr ""
+msgstr "Beklenen"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
 msgid "Contracts not assigned"
-msgstr ""
+msgstr "atanmamış sözleşmeler"
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,theorical_margin:0
 msgid "Computed using the formula: Theoretical Revenue - Total Costs"
-msgstr ""
+msgstr "Şu formül kullanılarak hesaplandı: Teorik Gelir - Toplam Maliyet."
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,hours_qtt_invoiced:0
@@ -197,16 +216,19 @@ msgid ""
 "{'required': [('type','=','contract')], 'invisible': [('type','in',['view', "
 "'normal','template'])]}"
 msgstr ""
+"{'required': [('type','=','contract')], 'invisible': [('type','in',['view', "
+"'normal','template'])]}"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,real_margin_rate:0
 msgid "Real Margin Rate (%)"
-msgstr "Gerçek Kar Oranı (%)"
+msgstr "Reel Kâr Oranı (%)"
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,remaining_hours:0
 msgid "Computed using the formula: Maximum Time - Total Worked Time"
 msgstr ""
+"Hesaplamada kullanılan formül:Maksimum Zaman - Toplam Çalışılan Zaman"
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,hours_quantity:0
@@ -214,49 +236,49 @@ msgid ""
 "Number of time you spent on the analytic account (from timesheet). It "
 "computes quantities on all journal of type 'general'."
 msgstr ""
-"Analiz hesabı için harcadığınız saat sayısı (zaman çizelgesinden). 'genel' "
-"tipindeki bütün günlüklerdeki miktarları hesaplar."
+"Analitik hesap için harcadığınız saat sayısı (zaman çizelgesinden). 'genel' "
+"tipindeki bütün günlüklerdeki miktarlar hesaplanır."
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
 msgid "Nothing to invoice, create"
-msgstr ""
+msgstr "Faturalanacak Bir şey yok, oluiştur"
 
 #. module: account_analytic_analysis
 #: model:res.groups,name:account_analytic_analysis.group_template_required
 msgid "Mandatory use of templates in contracts"
-msgstr ""
+msgstr "Sözlemleşerde şablon kullanılması zorunluluğu"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,hours_quantity:0
 msgid "Total Worked Time"
-msgstr ""
+msgstr "Toplam Çalışılan Süre"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,real_margin:0
 msgid "Real Margin"
-msgstr "Gerçek Teminat"
+msgstr "Gerçek Kar"
 
 #. module: account_analytic_analysis
 #: model:ir.model,name:account_analytic_analysis.model_account_analytic_analysis_summary_month
 msgid "Hours summary by month"
-msgstr "Aya göre saatlil özet"
+msgstr "Aya göre saatlik özet"
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,real_margin_rate:0
 msgid "Computes using the formula: (Real Margin / Total Costs) * 100."
 msgstr ""
-"Şu formülü kullanarak hesaplar: (Gerçek Teminat / Toplam Maliyet) * 100."
+"Şu formülü kullanarak hesaplanır: (Gerçek Kâr / Toplam Maliyet) * 100."
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
 msgid "or view"
-msgstr ""
+msgstr "ya da göster"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
 msgid "Customer Contracts"
-msgstr ""
+msgstr "Müşteri Şözleşmeleri"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
@@ -273,9 +295,10 @@ msgstr "Ay"
 #: model:ir.actions.act_window,name:account_analytic_analysis.action_hr_tree_invoiced_all
 #: model:ir.ui.menu,name:account_analytic_analysis.menu_action_hr_tree_invoiced_all
 msgid "Time & Materials to Invoice"
-msgstr ""
+msgstr "Faturalanacak Zaman & Malzemeler"
 
 #. module: account_analytic_analysis
+#: view:account.analytic.account:0
 #: model:ir.actions.act_window,name:account_analytic_analysis.action_account_analytic_overdue_all
 #: model:ir.ui.menu,name:account_analytic_analysis.menu_action_account_analytic_overdue_all
 msgid "Contracts"
@@ -284,12 +307,12 @@ msgstr "Sözleşmeler"
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
 msgid "Start Date"
-msgstr ""
+msgstr "Başlangıç Tarihi"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
 msgid "Invoiced"
-msgstr ""
+msgstr "Faturalandı"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
@@ -308,7 +331,7 @@ msgstr "Müşterilerinizle yenilenmeyi bekleyen sözleşmeler"
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
 msgid "Timesheets"
-msgstr ""
+msgstr "Zaman Çizelgeleri"
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,hours_qtt_non_invoiced:0
@@ -316,7 +339,7 @@ msgid ""
 "Number of time (hours/days) (from journal of type 'general') that can be "
 "invoiced if you invoice based on analytic account."
 msgstr ""
-"Analiz hesabına göre faturalandırıyorsanız faturalandırılacak saat sayısı "
+"Analiz hesabına göre faturalandırıyorsanız faturalandırılacak zaman sayısı "
 "(saat/gün)(günlük tipi 'genel'den) ."
 
 #. module: account_analytic_analysis
@@ -332,12 +355,12 @@ msgstr "Gecikmiş Miktarlar"
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
 msgid "Status"
-msgstr ""
+msgstr "Durum"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,ca_theorical:0
 msgid "Theoretical Revenue"
-msgstr "Teorik Ciro"
+msgstr "Teorik Gelir"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
@@ -349,19 +372,19 @@ msgstr "Yenilenecek"
 msgid ""
 "A contract in OpenERP is an analytic account having a partner set on it."
 msgstr ""
-"OpenERP'de bir sözleşme üzerinde bir paydaşın ayarlandığı bir analiz "
+"OpenERP'de bir sözleşme, üzerine bir paydaşın ayarlandığı bir analiz "
 "hesabıdır."
 
 #. module: account_analytic_analysis
 #: model:ir.actions.act_window,name:account_analytic_analysis.action_sales_order
 msgid "Sales Orders"
-msgstr ""
+msgstr "Satış Siparişleri"
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,last_invoice_date:0
 msgid "If invoice from the costs, this is the date of the latest invoiced."
 msgstr ""
-"Eğer maliyetlerden faturalandırılmışsa, bu son faturalandırmanın tarihidir."
+"Eğer maliyetlerden faturalandırılıyorsa, bu son faturalandırmanın tarihidir."
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,ca_theorical:0
@@ -393,6 +416,16 @@ msgid ""
 "                </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_görünüm_içerikyok_oluştur\">\n"
+"                    Sözleşme şablonu oluşturmak için buraya tıklayın.\n"
+"                </p><p>\n"
+"                    Şablonlar, sözleşme ödeme koşullarının ve şartlarının \n"
+"                    kolayca yapılandırılması için satış elemanı tarafından "
+"seçilen \n"
+"                    sözleşme/projeyi öncanlandırma olarak kullanır.          "
+"          \n"
+"                </p>\n"
+"            "
 
 #. module: account_analytic_analysis
 #: model:ir.model,name:account_analytic_analysis.model_account_analytic_analysis_summary_user
@@ -410,6 +443,8 @@ msgid ""
 "Allows you to set the template field as required when creating an analytic "
 "account or a contract."
 msgstr ""
+"Bir analitik hesap ya da sözleşme oluştururken şablon alanının gerekli "
+"olarak ayarlamanıza olanak sağlar"
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,hours_qtt_invoiced:0
@@ -438,16 +473,28 @@ msgid ""
 "                </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                    Yeni bir sözleşme oluşturmak için tıklayın.\n"
+"                </p><p>\n"
+"                    Sözleşmeleri görevleri, zaman çizelgelerini ya da "
+"yapılan iş üzerine kesilen\n"
+"                    faturaları, harcamaları ya da satış siparişlerini takip "
+"etmek için kullanabilirsiniz.\n"
+"                    OpenERP sözleşmelerin yenilenmesi için ilgili satış "
+"temsilcisini otomatik olarak\n"
+"                    uyaracaktır.\n"
+"                </p>\n"
+"            "
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,toinvoice_total:0
 msgid "Total to Invoice"
-msgstr ""
+msgstr "Faturalanacak Toplam"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
 msgid "Sale Orders"
-msgstr ""
+msgstr "Satış Siparişleri"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
@@ -457,7 +504,7 @@ msgstr "Açık"
 #. module: account_analytic_analysis
 #: field:account.analytic.account,invoiced_total:0
 msgid "Total Invoiced"
-msgstr ""
+msgstr "Faturalanmış Toplam"
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,remaining_ca:0
@@ -473,7 +520,7 @@ msgstr "Son Fatura Tarihi"
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
 msgid "Units Remaining"
-msgstr ""
+msgstr "Kalan Birimler"
 
 #. module: account_analytic_analysis
 #: model:ir.actions.act_window,help:account_analytic_analysis.action_hr_tree_invoiced_all
@@ -488,11 +535,19 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p>\n"
+"                Burada müşteriye faturalabilecek sözleşmelerde için yapılan\n"
+"                satınalmaları ve zaman çizelgelerini bulacaksınız. Eğer "
+"faturalanacak\n"
+"                aktiviteler girmek istiyorsanız, zaman çizelgeleri menüsünü "
+"kullanmalısınız.\n"
+"              </p>\n"
+"            "
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,hours_qtt_non_invoiced:0
 msgid "Uninvoiced Time"
-msgstr "Faturalandırılmamıi Zaman"
+msgstr "Faturalandırılmamış Zaman"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
@@ -511,6 +566,9 @@ msgid ""
 "remaining subtotals which, in turn, are computed as the maximum between "
 "'(Estimation - Invoiced)' and 'To Invoice' amounts"
 msgstr ""
+"Bu sözleşmeden beklenen gelirin kalanı. kalan alt toplamların {(tahmin-"
+"faturalanan) ve faturalanacaklar içinden büyük olanlardan}  toplamı olarak "
+"hesaplanan"
 
 #. module: account_analytic_analysis
 #: model:ir.actions.act_window,name:account_analytic_analysis.action_account_analytic_overdue
@@ -521,17 +579,17 @@ msgstr "Yenilenecek Sözleşmeler"
 #. module: account_analytic_analysis
 #: help:account.analytic.account,toinvoice_total:0
 msgid " Sum of everything that could be invoiced for this contract."
-msgstr ""
+msgstr " Bu sözleşme için faturalanabilecek her şeyin toplamı"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,theorical_margin:0
 msgid "Theoretical Margin"
-msgstr "Kuramsal Sınır"
+msgstr "Teorik kâr"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,remaining_total:0
 msgid "Total Remaining"
-msgstr ""
+msgstr "Kalan Toplam"
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,real_margin:0
@@ -542,12 +600,12 @@ msgstr ""
 #. module: account_analytic_analysis
 #: field:account.analytic.account,hours_qtt_est:0
 msgid "Estimation of Hours to Invoice"
-msgstr ""
+msgstr "Faturalanacak saatlerin tahmini"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,fix_price_invoices:0
 msgid "Fixed Price"
-msgstr ""
+msgstr "Sabit Fiyat"
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,last_worked_date:0
@@ -557,23 +615,23 @@ msgstr "Bu hesapta yapılan son işlem tarihi"
 #. module: account_analytic_analysis
 #: model:ir.model,name:account_analytic_analysis.model_sale_config_settings
 msgid "sale.config.settings"
-msgstr ""
+msgstr "sale.config.settings"
 
 #. module: account_analytic_analysis
 #: field:sale.config.settings,group_template_required:0
 msgid "Mandatory use of templates."
-msgstr ""
+msgstr "Şablonların zorunlu kullanımı"
 
 #. module: account_analytic_analysis
 #: model:ir.actions.act_window,name:account_analytic_analysis.template_of_contract_action
 #: model:ir.ui.menu,name:account_analytic_analysis.menu_template_of_contract_action
 msgid "Contract Template"
-msgstr ""
+msgstr "Şözleşme Şablonu"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
 msgid "Units Done"
-msgstr ""
+msgstr "Yapılan Birimler"
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,total_cost:0
@@ -587,12 +645,12 @@ msgstr ""
 #. module: account_analytic_analysis
 #: field:account.analytic.account,est_total:0
 msgid "Total Estimation"
-msgstr ""
+msgstr "Toplam Tahmin"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,remaining_ca:0
 msgid "Remaining Revenue"
-msgstr "Kalan Ciro"
+msgstr "Kalan Gelir"
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,ca_to_invoice:0
@@ -613,17 +671,17 @@ msgstr "Toplam Süre"
 #: model:res.groups,comment:account_analytic_analysis.group_template_required
 msgid ""
 "the field template of the analytic accounts and contracts will be required."
-msgstr ""
+msgstr "Analitik hesabın ve sözleşmelerin alan şablonu gerekecek."
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,invoice_on_timesheets:0
 msgid "On Timesheets"
-msgstr ""
+msgstr "Zaman Çizelgelerinde"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
 msgid "Total"
-msgstr ""
+msgstr "Toplam"
 
 #~ msgid "All Analytic Accounts"
 #~ msgstr "Tüm Analitik Hesaplar"
