@@ -193,7 +193,7 @@ parameter) will see those record just disappear.
         <record forcecreate="True" id="standard_price" model="ir.property">
             <field name="name">standard_price</field>
             <field name="fields_id" search="[('model','=','product.template'),('name','=','standard_price')]"/>
-            <field eval=30.0 name="value"/>
+            <field eval="30.0" name="value"/>
         </record>
         
         <record id="product_product_consultant" model="product.product">
