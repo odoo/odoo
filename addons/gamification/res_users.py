@@ -30,7 +30,7 @@ class res_users_gamification_group(osv.Model):
         all_goals_info = []
         plan_obj = self.pool.get('gamification.goal.plan')
 
-        plan_ids = plan_obj.search(cr, uid, [('user_ids', 'in', uid)], context=context)
+        plan_ids = plan_obj.search(cr, uid, [('user_ids', 'in', uid), ('state', '=', 'inprogress')], context=context)
         for plan in plan_obj.browse(cr, uid, plan_ids, context=context):
             # serialize goals info to be able to use it in javascript
             serialized_goals_info = {
@@ -102,6 +102,20 @@ class res_users_gamification_group(osv.Model):
 
             all_goals_info.append(serialized_goals_info)
         return all_goals_info
+
+    def get_challenge_suggestions(self, cr, uid, context=None):
+        """Return the list of goal plans suggested to the user"""
+        if context is None: context = {}
+        plan_info = []
+        plan_ids = self.pool.get('gamification.goal.plan').search(cr, uid, [('proposed_user_ids', 'in', uid), ('state', '=', 'inprogress')], context=context)
+        for plan in self.pool.get('gamification.goal.plan').browse(cr, uid, plan_ids, context=context):
+            values = {
+                'id': plan.id,
+                'name': plan.name,
+                'description': plan.description,
+            }
+            plan_info.append(values)
+        return plan_info
 
 
 class res_groups_gamification_group(osv.Model):

@@ -131,7 +131,7 @@ class gamification_goal_plan(osv.Model):
             help='Group of users whose members will automatically be added to the users'),
 
         'proposed_user_ids': fields.many2many('res.users', 'proposed_user_ids',
-            string="Propose to users"),
+            string="Suggest to users"),
 
         'planline_ids': fields.one2many('gamification.goal.planline', 'plan_id',
             string='Planline',

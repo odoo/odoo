@@ -1,5 +1,6 @@
 <templates>
     <t t-name="gamification.user_wall_sidebar" class="oe_gamification_user_wall_sidebar">
+        <div class="oe_gamification_suggestion"><em>No challenge suggestions</em></div>
         <div class="oe_gamification_goal"><em>Your goal list is empty</em></div>
     </t>
     <t t-name="gamification.goal_list_to_do">
@@ -60,6 +61,19 @@
                 </tbody>
                 </table>
             </t>
+        </div>
+    </t>
+
+    <t t-name="gamification.challenge_suggestions">
+        <h3>Suggested challenges</h3>
+        <div t-foreach="widget.challenge_suggestions.info" t-as="challenge" class="oe_challenge">
+            <p>
+                <strong><t t-esc="challenge.name"/></strong> <a class="oe_challenge_reply">reply</a>
+                <t t-if="challenge.description.value">
+                    <br/>
+                    <em><t t-esc="challenge.description.value"/></em>
+                </t>
+            </p>
         </div>
     </t>
 

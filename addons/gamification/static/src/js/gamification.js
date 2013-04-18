@@ -9,6 +9,7 @@ openerp.gamification = function(instance) {
             this.deferred = $.Deferred();
             this.res_user = new instance.web.DataSetSearch(this, 'res.users');
             this.goals_info = {};
+            this.challenge_suggestions = {};
         },
         events: {
             'click a.oe_update_goal': function(event) {
@@ -45,6 +46,7 @@ openerp.gamification = function(instance) {
             var self = this;
             this._super.apply(this, arguments);
             self.get_goal_todo_info();
+            self.get_challenge_suggestions();
         },
         render_template: function(target,template) {
             var self = this;
@@ -65,6 +67,22 @@ openerp.gamification = function(instance) {
                     self.render_money_fields(self.goals_info.info[0].currency);
                     self.render_progress_bars();
                     self.render_piechars();
+                } else {
+                    self.$el.filter(".oe_gamification_goal").hide();
+                }
+            });
+        },
+        get_challenge_suggestions: function() {
+            var self = this;
+            var challenge_suggestions = this.res_user.call('get_challenge_suggestions', {}).then(function(res) {
+                self.challenge_suggestions['info'] = res;
+                console.log(res);
+            });
+            $.when(challenge_suggestions).done(function() {
+                if(self.challenge_suggestions.info.length > 0){
+                    self.render_template_replace(self.$el.filter(".oe_gamification_suggestion"),'gamification.challenge_suggestions');
+                } else {
+                    self.$el.filter(".oe_gamification_suggestion").hide();
                 }
             });
         },
@@ -128,6 +146,7 @@ openerp.gamification = function(instance) {
             var rendering = this._super();
             var self = this;
 
+            // add gauge in goal kanban views
             $.when(rendering).done(function() {
                 if (self.view.dataset.model === 'gamification.goal' && self.$el.find('.oe_goal_gauge').length == 1) {
                     var unique_id = _.uniqueId("goal_gauge_");
@@ -140,16 +159,6 @@ openerp.gamification = function(instance) {
                         max: self.record.target_goal.raw_value,
                         relativeGaugeSize: true,
                         humanFriendly: true,
-                        // add space between value and symbol
-                        // textRenderer: function(value) {
-                        //     symbol = self.record.type_suffix.raw_value;
-                        //     humannbr = humanFriendlyNumber(value, 0)
-                        //     if ((humannbr + symbol).length > 6) {
-                        //         return humannbr;
-                        //     } else {
-                        //         return humannbr + " " + symbol;
-                        //     }
-                        // },
                         label: self.record.type_suffix.raw_value,
                         levelColors: [
                             "#ff0000",
@@ -160,6 +169,7 @@ openerp.gamification = function(instance) {
                 }
             });
         },
+        // open related goals when clicking on challenge kanban view
         on_card_clicked: function() {
             if (this.view.dataset.model === 'gamification.goal.plan') {
                 this.$('.oe_kanban_project_list a').first().click();
