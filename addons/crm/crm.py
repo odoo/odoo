@@ -199,7 +199,6 @@ class crm_case_section(osv.osv):
 
         'open_lead_per_duration': fields.function(_get_open_lead_per_duration, string='Open Leads per duration', type="string", readonly=True),
         'won_opportunity_per_duration': fields.function(_get_won_opportunity_per_duration, string='Rate of opporunities whon per duration', type="string", readonly=True)
-        
     }
 
     def _get_stage_common(self, cr, uid, context):

@@ -61,7 +61,14 @@ openerp.crm = function(openerp) {
                             });
                         }
                     });
-                    setTimeout(function () {self.$(".oe_sparkline_bar").sparkline('html', {type: 'bar', barWidth: 5} );}, 0);
+                    setTimeout(function () {
+                        self.$(".oe_sparkline_bar").each(function () {
+                            var $el = $(this);
+                            $el.data("title", $el.html());
+                            $el.sparkline($el.data("value").split(','), {type: 'bar', barWidth: 5} );
+                            $el.tipsy({'delayIn': 0, 'html': true, 'title': function(){return $(this).data("title")}, 'gravity': 'n'});
+                        });
+                    }, 0);
                 });
             }
         },

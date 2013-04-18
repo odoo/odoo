@@ -101,11 +101,11 @@
                                     <div class="oe_items_list">
                                         <div>
                                             <a t-if="record.use_leads.raw_value" name="%(crm_case_form_view_salesteams_lead)d" type="action">Leads</a>
-                                            <a name="%(crm_case_form_view_salesteams_lead)d" type="action" class="oe_sparkline_bar" title="Number of opening leads per duration.\n(last item is the most recent)"><t t-raw="record.open_lead_per_duration.raw_value"/></a>
+                                            <a name="%(action_report_crm_lead)d" type="action" class="oe_sparkline_bar" t-att-data-value="record.open_lead_per_duration.raw_value">Number of opening leads per duration.<br/>(last one is <t t-esc="record.target_duration_txt.raw_value"/>)</a>
                                         </div>
                                         <div>
                                             <a name="%(crm_case_form_view_salesteams_opportunity)d" type="action">Opportunities</a>
-                                            <a name="%(crm_case_form_view_salesteams_opportunity)d" type="action" class="oe_sparkline_bar" title="Rate of won opportunities per duration.\n(last item is the most recent)"><t t-raw="record.won_opportunity_per_duration.raw_value"/></a>
+                                            <a name="%(action_report_crm_opportunity)d" type="action" class="oe_sparkline_bar" t-att-data-value="record.won_opportunity_per_duration.raw_value">Rate of won opportunities per duration.<br/>(last one is <t t-esc="record.target_duration_txt.raw_value"/>)</a>
                                         </div>
                                     </div>
                                 </div>
