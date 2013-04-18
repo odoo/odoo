@@ -48,6 +48,7 @@ except:
 
 
 from datetime import datetime, timedelta
+from dateutil.relativedelta import relativedelta
 from lxml import etree
 import misc
 from config import config
@@ -86,7 +87,9 @@ def _get_idref(self, cr, uid, model_str, context, idref):
     idref2 = dict(idref,
                   time=time,
                   DateTime=datetime,
+                  datetime=datetime,
                   timedelta=timedelta,
+                  relativedelta=relativedelta,
                   version=openerp.release.major_version,
                   ref=_ref(self, cr),
                   pytz=pytz)
