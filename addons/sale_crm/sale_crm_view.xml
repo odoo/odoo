@@ -211,7 +211,7 @@
             <field name="inherit_id" ref="crm.crm_case_section_view_form"/>
             <field name="arch" type="xml">
             <data>
-                <field name="target_duration" position="after">
+                <field name="target_duration" position="before">
                     <field name="target_invoice"/>
                 </field>
             </data>
@@ -247,7 +247,7 @@
                     </div>
                 </xpath>
                 <xpath expr="//div[@class='oe_items_list']" position="after">
-                    <div class="oe_center">
+                    <div class="oe_center" t-if="record.target_invoice.raw_value">
                         <div class="oe_justgage" style="width:160px; height: 120px;"
                             t-att-data-value="record.sent_invoice_per_duration.raw_value.pop()"
                             t-att-data-max="record.target_invoice.raw_value"
@@ -257,6 +257,9 @@
                             t-att-data-max="record.target_invoice.raw_value"
                             t-att-data-label="record.target_duration_txt.raw_value"
                             data-action="action_forecast">Forecast</div>
+                    </div>
+                    <div class="oe_center" style="color:#bbbbbb;" t-if="!record.target_invoice.raw_value">
+                        <br/>Not target invoicing define
                     </div>
                 </xpath>
             </data>

@@ -2,9 +2,9 @@ openerp.crm = function(openerp) {
     openerp.web_kanban.KanbanRecord.include({
         renderElement: function () {
             var rendering = this._super();
-            var self = this;
 
-            if (self.view.dataset.model === 'crm.case.section') {
+            if (this.view.dataset.model === 'crm.case.section') {
+                var self = this;
                 $.when(rendering).done(function() {
                     self.$(".oe_justgage").each(function () {
                         var $el = $(this);
