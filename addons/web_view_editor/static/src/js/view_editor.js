@@ -15,7 +15,7 @@ instance.web.ViewManagerAction.include({
                 }
                 evt.currentTarget.selectedIndex = 0;
         }else{
-            return this._super.apply(this,arguments); 
+            return this._super.apply(this,arguments);
         }
     }
 });
@@ -232,10 +232,11 @@ instance.web_view_editor.ViewEditor =   instance.web.Widget.extend({
         return main_object;
     },
     parse_xml: function(arch, view_id) {
+        //First element of att_list must be element tagname.
         main_object = {
             'level': 0,
             'id': this.xml_element_id +=1,
-            'att_list': [],
+            'att_list': ["view"],
             'name': _.str.sprintf("<view view_id = %s>", view_id),
             'child_id': []
         };
@@ -535,14 +536,21 @@ instance.web_view_editor.ViewEditor =   instance.web.Widget.extend({
         var field_dataset = new instance.web.DataSetSearch(this, this.model, null, null);
         parent_tr = self.get_object_by_id(parseInt($(parent_tr).attr('id').replace(/[^0-9]+/g, '')), this.one_object['main_object'], [])[0].att_list[0];
         _.each([tr, parent_tr],function(element) {
-            var value = _.has(_CHILDREN, element) ? element : _.str.include(html_tag, element)?"html_tag":false; 
+            var value = _.has(_CHILDREN, element) ? element : _.str.include(html_tag, element)?"html_tag":false;
             property_to_check.push(value);
         });
         field_dataset.call( 'fields_get', []).done(function(result) {
             var fields = _.keys(result);
             fields.push(" "),fields.sort();
-            self.on_add_node(property_to_check, fields);
+            self.on_add_node(property_to_check, fields, self.inject_position(parent_tr,tr));
         });
+    },
+    inject_position : function(parent_tag,current_tag){
+        if(parent_tag == "view")
+            return ['Inside'];
+        if(current_tag == "field")
+            return ['After','Before'];
+        return ['After','Before','Inside'];
     },
     do_node_edit: function(side) {
         var self = this;
@@ -941,11 +949,11 @@ instance.web_view_editor.ViewEditor =   instance.web.Widget.extend({
             });
         return def.promise();
     },
-    on_add_node: function(properties, fields){
+    on_add_node: function(properties, fields, position){
         var self = this;
         var  render_list = [{'name': 'node_type','selection': _.keys(_CHILDREN).sort(), 'value': 'field', 'string': 'Node Type','type': 'selection'},
                             {'name': 'field_value','selection': fields, 'value': false, 'string': '','type': 'selection'},
-                            {'name': 'position','selection': ['After','Before','Inside'], 'value': false, 'string': 'Position','type': 'selection'}];
+                            {'name': 'position','selection': position, 'value': false, 'string': 'Position','type': 'selection'}];
         this.add_widget = [];
         this.add_node_dialog = new instance.web.Dialog(this,{
             title: _t("Properties"),
@@ -1186,7 +1194,7 @@ var _CHILDREN = {
 //e.g.:xyz 'td' : ['field']
 };
 // Generic html_tag list and can be added html tag in future. It's support above _CHILDREN dict's *html_tag* by default.
-// For specific child node one has to define tag above and specify children tag in list. Like above xyz example. 
+// For specific child node one has to define tag above and specify children tag in list. Like above xyz example.
 var html_tag = ['div','h1','h2','h3','h4','h5','h6','td','tr'];
 
 var _ICONS = ['','STOCK_ABOUT', 'STOCK_ADD', 'STOCK_APPLY', 'STOCK_BOLD',
