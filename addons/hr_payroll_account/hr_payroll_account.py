@@ -94,7 +94,8 @@ class hr_payslip(osv.osv):
             debit_sum = 0.0
             credit_sum = 0.0
             if not slip.period_id:
-                search_periods = period_pool.find(cr, uid, slip.date_to, context=context)
+                ctx = dict(context or {}, account_period_prefer_normal=True)
+                search_periods = period_pool.find(cr, uid, slip.date_to, context=ctx)
                 period_id = search_periods[0]
             else:
                 period_id = slip.period_id.id

@@ -86,7 +86,8 @@ class account_voucher(osv.osv):
         if context is None: context = {}
         if context.get('period_id', False):
             return context.get('period_id')
-        periods = self.pool.get('account.period').find(cr, uid)
+        ctx = dict(context, account_period_prefer_normal=True)
+        periods = self.pool.get('account.period').find(cr, uid, context=ctx)
         return periods and periods[0] or False
 
     def _make_journal_search(self, cr, uid, ttype, context=None):
@@ -791,7 +792,7 @@ class account_voucher(osv.osv):
         period_pool = self.pool.get('account.period')
         currency_obj = self.pool.get('res.currency')
         ctx = context.copy()
-        ctx.update({'company_id': company_id})
+        ctx.update({'company_id': company_id, 'account_period_prefer_normal': True})
         pids = period_pool.find(cr, uid, date, context=ctx)
         if pids:
             res['value'].update({'period_id':pids[0]})

@@ -513,7 +513,8 @@ class account_move_line(osv.osv):
         if context.get('period_id', False):
             return context['period_id']
         account_period_obj = self.pool.get('account.period')
-        ids = account_period_obj.find(cr, uid, context=context)
+        ctx = dict(context, account_period_prefer_normal=True)
+        ids = account_period_obj.find(cr, uid, context=ctx)
         period_id = False
         if ids:
             period_id = ids[0]

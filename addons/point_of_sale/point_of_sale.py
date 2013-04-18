@@ -911,7 +911,8 @@ class pos_order(osv.osv):
         property_obj = self.pool.get('ir.property')
         cur_obj = self.pool.get('res.currency')
 
-        period = account_period_obj.find(cr, uid, context=context)[0]
+        ctx = dict(context or {}, account_period_prefer_normal=True)
+        period = account_period_obj.find(cr, uid, context=ctx)[0]
 
         #session_ids = set(order.session_id for order in self.browse(cr, uid, ids, context=context))
 
