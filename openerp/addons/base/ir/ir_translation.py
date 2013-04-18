@@ -191,7 +191,7 @@ class ir_translation(osv.osv):
             context_wo_lang = context.copy()
             context_wo_lang.pop('lang', None)
             model.write(cr, uid, record.res_id, {field: value}, context=context_wo_lang)
-        return self.write(cr, uid, id, {'src': value}, context=context_wo_lang)
+        return self.write(cr, uid, id, {'src': value}, context=context)
 
     _columns = {
         'name': fields.char('Translated field', required=True),
