@@ -22,7 +22,15 @@
 from datetime import date
 from dateutil.relativedelta import relativedelta
 from openerp.osv import osv, fields
-from openerp.tools.translate import _
+
+MONTHS = {
+    "monthly": 1,
+    "semesterly": 3,
+    "semiannually": 6,
+    "annually": 12
+}
+
+_strftime = '%Y-%m-%d %H:%M:%S'
 
 
 class sale_order(osv.osv):
@@ -37,22 +45,67 @@ class sale_order(osv.osv):
 class crm_case_section(osv.osv):
     _inherit = 'crm.case.section'
 
-    def _get_sum_duration_invoice(self, cr, uid, ids, field_name, arg, context=None):
-        res = dict.fromkeys(ids, 0)
-        obj = self.pool.get('account.invoice.report')
+    def _get_created_quotation_per_duration(self, cr, uid, ids, field_name, arg, context=None):
+        res = dict.fromkeys(ids, [])
+        obj = self.pool.get('sale.order')
+        first_day = date.today().replace(day=1)
 
-        previous_month = {
-            "monthly": 0,
-            "semesterly": 2,
-            "semiannually": 5,
-            "annually": 11
-        }
         for section in self.browse(cr, uid, ids, context=context):
-            when = date.today().replace(day=1) + relativedelta(months=-previous_month[section.target_duration])
+            dates = [first_day + relativedelta(months=-(MONTHS[section.target_duration]*(key+1)-1)) for key in range(0, 5)]
+            rate_invoice = []
+            for when in range(0, 5):
+                domain = [("section_id", "=", section.id), ('state', 'in', ['draft', 'sent']), ('date_order', '>=', dates[when].strftime(_strftime))]
+                if when:
+                    domain += [('date_order', '<', dates[when-1].strftime(_strftime))]
+                rate = 0
+                opportunity_ids = obj.search(cr, uid, domain, context=context)
+                for invoice in obj.browse(cr, uid, opportunity_ids, context=context):
+                    rate += invoice.amount_total
+                rate_invoice.append(rate)
+            rate_invoice.reverse()
+            res[section.id] = rate_invoice
+        return res
 
-            invoice_ids = obj.search(cr, uid, [("section_id", "=", section.id), ('state', 'not in', ['draft', 'cancel']), ('date', '>=', when)], context=context)
-            for invoice in obj.browse(cr, uid, invoice_ids, context=context):
-                res[section.id] += invoice.price_total
+    def _get_validate_saleorder_per_duration(self, cr, uid, ids, field_name, arg, context=None):
+        res = dict.fromkeys(ids, [])
+        obj = self.pool.get('sale.order')
+        first_day = date.today().replace(day=1)
+
+        for section in self.browse(cr, uid, ids, context=context):
+            dates = [first_day + relativedelta(months=-(MONTHS[section.target_duration]*(key+1)-1)) for key in range(0, 5)]
+            rate_invoice = []
+            for when in range(0, 5):
+                domain = [("section_id", "=", section.id), ('state', 'not in', ['draft', 'sent']), ('date_confirm', '>=', dates[when].strftime(_strftime))]
+                if when:
+                    domain += [('date_confirm', '<', dates[when-1].strftime(_strftime))]
+                rate = 0
+                opportunity_ids = obj.search(cr, uid, domain, context=context)
+                for invoice in obj.browse(cr, uid, opportunity_ids, context=context):
+                    rate += invoice.amount_total
+                rate_invoice.append(rate)
+            rate_invoice.reverse()
+            res[section.id] = rate_invoice
+        return res
+
+    def _get_sent_invoice_per_duration(self, cr, uid, ids, field_name, arg, context=None):
+        res = dict.fromkeys(ids, [])
+        obj = self.pool.get('account.invoice.report')
+        first_day = date.today().replace(day=1)
+
+        for section in self.browse(cr, uid, ids, context=context):
+            dates = [first_day + relativedelta(months=-(MONTHS[section.target_duration]*(key+1)-1)) for key in range(0, 5)]
+            rate_invoice = []
+            for when in range(0, 5):
+                domain = [("section_id", "=", section.id), ('state', 'not in', ['draft', 'cancel']), ('date', '>=', dates[when].strftime(_strftime))]
+                if when:
+                    domain += [('date', '<', dates[when-1].strftime(_strftime))]
+                rate = 0
+                opportunity_ids = obj.search(cr, uid, domain, context=context)
+                for invoice in obj.browse(cr, uid, opportunity_ids, context=context):
+                    rate += invoice.price_total
+                rate_invoice.append(rate)
+            rate_invoice.reverse()
+            res[section.id] = rate_invoice
         return res
 
     _columns = {
@@ -65,15 +118,16 @@ class crm_case_section(osv.osv):
         'invoice_ids': fields.one2many('account.invoice', 'section_id',
             string='Invoices', readonly=True,
             domain=[('state', 'not in', ['draft', 'cancel'])]),
-        'sum_duration_invoice': fields.function(_get_sum_duration_invoice,
-            string='Total invoiced',
-            type='integer', readonly=True),
-        'forcasted': fields.integer(string='Total forcasted'),
+
+        'forecast': fields.integer(string='Total forecast'),
         'target_invoice': fields.integer(string='Target Invoice'),
+        'created_quotation_per_duration': fields.function(_get_created_quotation_per_duration, string='Rate of created quotation per duration', type="string", readonly=True),
+        'validate_saleorder_per_duration': fields.function(_get_validate_saleorder_per_duration, string='Rate of validate sales orders per duration', type="string", readonly=True),
+        'sent_invoice_per_duration': fields.function(_get_sent_invoice_per_duration, string='Rate of sent invoices per duration', type="string", readonly=True),
     }
 
-    def action_forcasted(self, cr, uid, id, value, context=None):
-        return self.write(cr, uid, [id], {'forcasted': value}, context=context)
+    def action_forecast(self, cr, uid, id, value, context=None):
+        return self.write(cr, uid, [id], {'forecast': value}, context=context)
 
 class res_users(osv.Model):
     _inherit = 'res.users'

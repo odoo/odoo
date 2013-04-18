@@ -227,42 +227,38 @@
             <field name="arch" type="xml">
             <data>
                 <xpath expr="//field[@name='name']" position="after">
+                    <field name="created_quotation_per_duration"/>
+                    <field name="validate_saleorder_per_duration"/>
+                    <field name="sent_invoice_per_duration"/>
 
-
-                    <field name="quotation_ids"/>
-                    <field name="sale_order_ids"/>
-                    <field name="invoice_ids"/>
-
-
-                    <field name="sum_duration_invoice"/>
-                    <field name="forcasted"/>
+                    <field name="forecast"/>
                     <field name="target_invoice"/>
                 </xpath>
                 <xpath expr="//div[@class='oe_items_list']" position="inside">
                     <div>
                         <a name="%(action_quotations_salesteams)d" type="action">Quotations</a>
-                        <a name="%(action_quotations_salesteams)d" type="action" class="oe_sparkline_bar" data-value="6,4,7,2,6">jhfhgj</a>
+                        <a name="%(sale.action_order_report_all)d" type="action" class="oe_sparkline_bar" t-att-data-value="record.created_quotation_per_duration.raw_value">Rate of created quotation per duration.<br/>(last one is <t t-esc="record.target_duration_txt.raw_value"/>).<br/>Click to access to Sales Analysis</a>
                     </div>
                     <div>
                         <a name="%(action_orders_salesteams)d" type="action">Sales Orders</a>
-                        <a name="%(action_orders_salesteams)d" type="action" class="oe_sparkline_bar" data-value="6,4,7,2,6">jfhjh</a>
+                        <a name="%(sale.action_order_report_all)d" type="action" class="oe_sparkline_bar" t-att-data-value="record.validate_saleorder_per_duration.raw_value">Rate of validate sales orders per duration.<br/>(last one is <t t-esc="record.target_duration_txt.raw_value"/>).<br/>Click to access to Sales Analysis</a>
                     </div>
                     <div>
                         <a name="%(action_invoice_salesteams)d" type="action" groups="account.group_account_invoice">Invoices</a>
-                        <a name="%(action_invoice_salesteams)d" type="action" class="oe_sparkline_bar" data-value="6,4,7,2,6">jfghjgh</a>
+                        <a name="%(account.action_account_invoice_report_all)d" type="action" class="oe_sparkline_bar" t-att-data-value="record.sent_invoice_per_duration.raw_value">Rate of sent invoices per duration.<br/>(last one is <t t-esc="record.target_duration_txt.raw_value"/>).<br/>Click to access to Invoices Analysis</a>
                     </div>
                 </xpath>
                 <xpath expr="//div[@class='oe_items_list']" position="after">
                     <div class="oe_center">
                         <div class="oe_justgage" style="width:160px; height: 120px;"
-                            t-att-data-value="record.sum_duration_invoice.raw_value"
+                            t-att-data-value="record.sent_invoice_per_duration.raw_value.pop()"
                             t-att-data-max="record.target_invoice.raw_value"
                             t-att-data-label="record.target_duration_txt.raw_value">Invoiced</div>
                         <div class="oe_justgage" style="width:160px; height: 120px;"
-                            t-att-data-value="record.forcasted.raw_value"
+                            t-att-data-value="record.forecast.raw_value"
                             t-att-data-max="record.target_invoice.raw_value"
                             t-att-data-label="record.target_duration_txt.raw_value"
-                            data-action="action_forcasted">Forcasted</div>
+                            data-action="action_forecast">Forecast</div>
                     </div>
                 </xpath>
             </data>
