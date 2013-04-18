@@ -219,7 +219,7 @@ class test_base(common.TransactionCase):
 
         for p in (p0, p1, p11, p2):
             p.refresh()
-            self.assertEquals(p.commercial_id, sunhelm, 'Incorrect commercial entity resolution')
+            self.assertEquals(p.commercial_partner_id, sunhelm, 'Incorrect commercial entity resolution')
             self.assertEquals(p.vat, sunhelm.vat, 'Commercial fields must be automatically synced')
         sunhelmvat = 'BE0123456789'
         sunhelm.write({'vat': sunhelmvat})
@@ -240,7 +240,7 @@ class test_base(common.TransactionCase):
                       name='Sunhelm Subsidiary'))
         p1.refresh()
         self.assertEquals(p1.vat, p1vat, 'Setting is_company should stop auto-sync of commercial fields')
-        self.assertEquals(p1.commercial_id, p1, 'Incorrect commercial entity resolution after setting is_company')
+        self.assertEquals(p1.commercial_partner_id, p1, 'Incorrect commercial entity resolution after setting is_company')
 
         # writing on parent should not touch child commercial entities
         sunhelmvat2 = 'BE0112233445'

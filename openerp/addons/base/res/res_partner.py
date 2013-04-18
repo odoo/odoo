@@ -195,7 +195,7 @@ class res_partner(osv.osv, format_address):
             result[obj.id] = obj.image != False
         return result
 
-    def _commercial_id_compute(self, cr, uid, ids, name, args, context=None):
+    def _commercial_partner_compute(self, cr, uid, ids, name, args, context=None):
         """ Returns the partner that is considered the commercial
         entity of this partner. The commercial entity holds the master data
         for all commercial fields (see :py:meth:`~_commercial_fields`) """
@@ -206,6 +206,9 @@ class res_partner(osv.osv, format_address):
                 current_partner = current_partner.parent_id
             result[partner.id] = current_partner.id
         return result
+
+    # indirection to avoid passing a copy of the overridable method when declaring the function field
+    _commercial_partner_id = lambda self, *args, **kwargs: self._commercial_partner_compute(*args, **kwargs)
 
     _order = "name"
     _columns = {
@@ -280,7 +283,7 @@ class res_partner(osv.osv, format_address):
         'contact_address': fields.function(_address_display,  type='char', string='Complete Address'),
 
         # technical field used for managing commercial fields
-        'commercial_id': fields.function(_commercial_id_compute, type='many2one', relation='res.partner', string='Commercial Entity')
+        'commercial_partner_id': fields.function(_commercial_partner_id, type='many2one', relation='res.partner', string='Commercial Entity')
     }
 
     def _default_category(self, cr, uid, context=None):
@@ -416,16 +419,16 @@ class res_partner(osv.osv, format_address):
     def _commercial_sync_from_company(self, cr, uid, partner, context=None):
         """ Handle sync of commercial fields when a new parent commercial entity is set,
         as if they were related fields """
-        if partner.commercial_id != partner:
+        if partner.commercial_partner_id != partner:
             commercial_fields = self._commercial_fields(cr, uid, context=context)
-            sync_vals = self._update_fields_values(cr, uid, partner.commercial_id,
+            sync_vals = self._update_fields_values(cr, uid, partner.commercial_partner_id,
                                                         commercial_fields, context=context)
             return self.write(cr, uid, partner.id, sync_vals, context=context)
 
     def _commercial_sync_to_children(self, cr, uid, partner, context=None):
         """ Handle sync of commercial fields to descendants """
         commercial_fields = self._commercial_fields(cr, uid, context=context)
-        sync_vals = self._update_fields_values(cr, uid, partner.commercial_id,
+        sync_vals = self._update_fields_values(cr, uid, partner.commercial_partner_id,
                                                    commercial_fields, context=context)
         sync_children = [c for c in partner.child_ids if not c.is_company]
         for child in sync_children:
@@ -451,7 +454,7 @@ class res_partner(osv.osv, format_address):
         # 2. To DOWNSTREAM: sync children 
         if partner.child_ids:
             # 2a. Commercial Fields: sync if commercial entity
-            if partner.commercial_id == partner:
+            if partner.commercial_partner_id == partner:
                 self._commercial_sync_to_children(cr, uid, partner, context=context)
             # 2b. Address fields: sync if address changed
             address_fields = self._address_fields(cr, uid, context=context)
@@ -493,7 +496,7 @@ class res_partner(osv.osv, format_address):
         return {'type': 'ir.actions.act_window',
                 'res_model': 'res.partner',
                 'view_mode': 'form',
-                'res_id': partner.commercial_id.id,
+                'res_id': partner.commercial_partner_id.id,
                 'target': 'new',
                 'flags': {'form': {'action_buttons': True}}}
 
