@@ -369,6 +369,7 @@ class mail_message(osv.Model):
 
         return {'id': message.id,
                 'type': message.type,
+                'subtype': message.subtype_id.name if message.subtype_id else False,
                 'body': body_html,
                 'model': message.model,
                 'res_id': message.res_id,
@@ -773,7 +774,7 @@ class mail_message(osv.Model):
         attachments_to_delete = []
         for message in self.browse(cr, uid, ids, context=context):
             for attach in message.attachment_ids:
-                if attach.res_model == self._name and attach.res_id == message.id:
+                if attach.res_model == self._name and (attach.res_id == message.id or attach.res_id == 0):
                     attachments_to_delete.append(attach.id)
         if attachments_to_delete:
             self.pool.get('ir.attachment').unlink(cr, uid, attachments_to_delete, context=context)

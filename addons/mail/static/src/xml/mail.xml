@@ -226,7 +226,7 @@
 
     <!-- default layout -->
     <t t-name="mail.thread.message">
-        <div t-attf-class="oe_msg #{widget.thread_level and widget.options.display_indented_thread > -1 ? 'oe_msg_indented' : ''} #{widget.partner_ids.length == 0 ? 'oe_msg_nobody' : ''} oe_msg_#{widget.type}">
+        <div t-attf-class="oe_msg #{widget.thread_level and widget.options.display_indented_thread > -1 ? 'oe_msg_indented' : ''} #{widget.subtype ? '' : 'oe_msg_nobody'} oe_msg_#{widget.type}">
 
             <div class='oe_msg_left'>
                 <a t-if="widget.options.show_link" t-attf-href="#model=res.partner&amp;id=#{widget.author_id[0]}" t-att-title="widget.author_id[1]">
@@ -263,13 +263,23 @@
                     </t>
                     <a t-if="widget.author_id and widget.options.show_link and widget.author_id[0]" t-attf-href="#model=res.partner&amp;id=#{widget.author_id[0]}"><t t-raw="widget.author_id[2]"/></a>
                     <span t-if="widget.author_id and (!widget.options.show_link or !widget.author_id[0])"><t t-raw="widget.author_id[2]"/></span>
-                    <t t-if="widget.partner_ids.length == 0">
+                    <t t-if="widget.type == 'notification'">
+                        updated document
+                        <t t-if="widget.partner_ids.length > 0">
+                            <span class='oe_subtle'>•</span>
+                        </t>
+                    </t>
+                    <t t-if="widget.type == 'comment' and ! widget.subtype">
                         logged a note
                     </t>
-                    <t t-if="widget.partner_ids.length > 0">
+                    <t t-if="(widget.type == 'comment' or widget.type == 'email') and widget.subtype">
                         to
+                        <t t-if="widget.partner_ids.length == 0">
+                            nobody
+                        </t>
                     </t>
-                    <t t-foreach="widget.partner_ids.slice(0, 3)" t-as="partner">
+                    <t t-if="widget.type == 'notification' or ( (widget.type == 'email' or widget.type == 'comment') and widget.subtype)"
+                            t-foreach="widget.partner_ids.slice(0, 3)" t-as="partner">
                         <span t-attf-class="oe_partner_follower">
                         <a t-if="widget.options.show_link" t-attf-href="#model=res.partner&amp;id=#{partner[0]}"><t t-raw="partner[1]"/></a>
                         <t t-if="!widget.options.show_link" t-raw="partner[1]"/>
@@ -278,6 +288,9 @@
                     </t>
                     <t t-if="widget.partner_ids.length > 3">
                         <span t-att-title="widget.extra_partners_str">and <t t-raw="widget.extra_partners_nbr"/> more</span>
+                    </t>
+                    <t t-if="widget.type == 'notification' and widget.partner_ids.length > 0">
+                        notified
                     </t>
                     <span class='oe_subtle'>•</span>
                     <span t-att-title="widget.date"><t t-if="widget.timerelative" t-raw="widget.timerelative"/><t t-if="!widget.timerelative" t-raw="widget.date"/></span>

@@ -40,7 +40,6 @@ class project_issue_version(osv.osv):
     _defaults = {
         'active': 1,
     }
-project_issue_version()
 
 class project_issue(base_stage, osv.osv):
     _name = "project.issue"
