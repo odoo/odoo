@@ -1735,7 +1735,7 @@ class res_partner(osv.osv):
         '''
         Find the partner for which the accounting entries will be created
         '''
-        # FIXME: after 7.0, to replace by function field partner.commercial_id
+        # FIXME: after 7.0, to replace by function field partner.commercial_partner_id
 
         #if the chosen partner is not a company and has a parent company, use the parent for the journal entries
         #because you want to invoice 'Agrolait, accounting department' but the journal items are for 'Agrolait'

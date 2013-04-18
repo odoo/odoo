@@ -6,7 +6,7 @@
             <field name="inherit_id" ref="account.invoice_tree"/>
             <field name="arch" type="xml">
                 <field name="partner_id" position="after">
-                    <field name="partner_commercial_id" invisible="1"/>
+                    <field name="commercial_partner_id" invisible="1"/>
                 </field>
             </field>
         </record>
@@ -16,7 +16,7 @@
             <field name="inherit_id" ref="account.view_account_invoice_filter"/>
             <field name="arch" type="xml">
                 <filter string="Partner" position="replace">
-                    <filter name="partner_commercial_id" string="Partner" domain="[]" context="{'group_by':'partner_commercial_id'}"/>
+                    <filter name="commercial_partner_id" string="Partner" domain="[]" context="{'group_by':'commercial_partner_id'}"/>
                 </filter>
             </field>
         </record>

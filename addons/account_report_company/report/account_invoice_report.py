@@ -23,14 +23,14 @@ from openerp.osv import osv, fields
 class account_invoice_report(osv.Model):
     _inherit = 'account.invoice.report'
     _columns = {
-        'partner_commercial_id': fields.many2one('res.partner', 'Partner Company', help="Commercial Entity"),
+        'commercial_partner_id': fields.many2one('res.partner', 'Partner Company', help="Commercial Entity"),
     }
 
     def _select(self):
-        return  super(account_invoice_report, self)._select() + ", sub.partner_commercial_id as partner_commercial_id"
+        return  super(account_invoice_report, self)._select() + ", sub.commercial_partner_id as commercial_partner_id"
 
     def _sub_select(self):
-        return  super(account_invoice_report, self)._sub_select() + ", ai.partner_commercial_id as partner_commercial_id"
+        return  super(account_invoice_report, self)._sub_select() + ", ai.commercial_partner_id as commercial_partner_id"
 
     def _group_by(self):
-        return super(account_invoice_report, self)._group_by() + ", ai.partner_commercial_id"
+        return super(account_invoice_report, self)._group_by() + ", ai.commercial_partner_id"
