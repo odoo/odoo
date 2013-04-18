@@ -1346,20 +1346,22 @@ instance.web.search.CharField = instance.web.search.Field.extend( /** @lends ins
     }
 });
 instance.web.search.NumberField = instance.web.search.Field.extend(/** @lends instance.web.search.NumberField# */{
-    value_from: function () {
-        if (!this.$el.val()) {
-            return null;
-        }
-        var val = this.parse(this.$el.val()),
-          check = Number(this.$el.val());
-        if (isNaN(val) || val !== check) {
-            this.$el.addClass('error');
-            throw new instance.web.search.Invalid(
-                this.attrs.name, this.$el.val(), this.error_message);
-        }
-        this.$el.removeClass('error');
-        return val;
-    }
+    complete: function (value) {
+        var val = this.parse(value);
+        if (isNaN(val)) { return $.when(); }
+        var label = _.str.sprintf(
+            _t("Search %(field)s for: %(value)s"), {
+                field: '<em>' + this.attrs.string + '</em>',
+                value: '<strong>' + _.str.escapeHTML(value) + '</strong>'});
+        return $.when([{
+            label: label,
+            facet: {
+                category: this.attrs.string,
+                field: this,
+                values: [{label: value, value: val}]
+            }
+        }]);
+    },
 });
 /**
  * @class
