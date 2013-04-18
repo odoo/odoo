@@ -51,12 +51,19 @@
                     </thead>
                     <tbody>
                     <tr t-foreach="planline.goals" t-as="goal" t-attf-class="#{goal.id == planline.own_goal_id ? 'oe_bold' : ''}">
-                        <th><t t-esc="goal.rank" /></th>
-                        <td class="col1"><t t-esc="goal.user_name" /></td>
-                        <td class="col2">
-                            <span class="oe_goal_sparkline_piechart" t-att-data-completeness="goal.completeness"></span>
-                            <span t-attf-class="#{planline.type_monetary ? 'oe_goal_field_monetary' : ''}"><t t-esc="goal.current" /></span><t t-if="planline.type_unit"> <t t-esc="planline.type_unit"/></t>
-                        </td>
+                        <div style="background:#fff;">
+                            <th class="col0"><t t-esc="goal.rank" /></th>
+                            <td class="col1"><img class="oe_user_avatar" t-attf-alt="#{goal.user_name}" t-attf-data-id="#{goal.user_id}"/></td>
+                            <td class="col2" style="width:150px;">
+                                <div class="oe_goal_progress" t-attf-style="width: #{goal.completeness}%;">
+                                    <div style="width:150px;">
+                                    <!-- <span class="oe_goal_sparkline_piechart" t-att-data-completeness="goal.completeness"></span> -->
+                                    <t t-esc="goal.user_name"/><br/>
+                                    <span t-attf-class="#{planline.type_monetary ? 'oe_goal_field_monetary' : ''}"><t t-esc="goal.current" /></span><t t-if="planline.type_unit"> <t t-esc="planline.type_unit"/></t>
+                                    </div>
+                                </div>
+                            </td>
+                        </div>
                     </tr>
                 </tbody>
                 </table>
@@ -68,11 +75,7 @@
         <h3>Suggested challenges</h3>
         <div t-foreach="widget.challenge_suggestions.info" t-as="challenge" class="oe_challenge">
             <p>
-                <strong><t t-esc="challenge.name"/></strong> <a class="oe_challenge_reply">reply</a>
-                <t t-if="challenge.description.value">
-                    <br/>
-                    <em><t t-esc="challenge.description.value"/></em>
-                </t>
+                <strong><t t-esc="challenge.name"/></strong> <a class="oe_challenge_reply" t-attf-title="#{challenge.description.value ? challenge.description.value : ''}" t-attf-id="{challenge.id}">reply</a>
             </p>
         </div>
     </t>

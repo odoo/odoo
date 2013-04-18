@@ -585,27 +585,34 @@ class gamification_goal_plan(osv.Model):
 
     ##### Suggestions #####
 
-    def accept_challenge(self, cr, uid, plan_id, user_id=None, context=None):
+    def accept_challenge(self, cr, uid, plan_ids, context=None, user_id=None):
         """The user accept the suggested challenge"""
         context = context or {}
         user_id = user_id or uid
         user = self.pool.get('res.users').browse(cr, uid, user_id, context=context)
         message = "%s has joined the challenge" % user.name
-        self.message_post(cr, uid, plan_id, body=message, context=context)
-        self.write(cr, uid, [plan_id], {'proposed_user_ids': (3, user_id), 'user_id': (4, user_id)}, context=context)
-        return self.generate_goals_from_plan(cr, uid, [plan_id], context=context)
+        self.message_post(cr, uid, plan_ids, body=message, context=context)
+        self.write(cr, uid, plan_ids, {'proposed_user_ids': [(3, user_id)], 'user_id': [(4, user_id)]}, context=context)
+        return self.generate_goals_from_plan(cr, uid, plan_ids, context=context)
 
-    def discard_challenge(self, cr, uid, plan_id, user_id=None, context=None):
+    def discard_challenge(self, cr, uid, plan_ids, context=None, user_id=None):
         """The user discard the suggested challenge"""
         context = context or {}
         user_id = user_id or uid
         user = self.pool.get('res.users').browse(cr, uid, user_id, context=context)
         message = "%s has refused the challenge" % user.name
-        self.message_post(cr, uid, plan_id, body=message, context=context)
-        return self.write(cr, uid, [plan_id], {'proposed_user_ids': (3, user_id)}, context=context)
+        self.message_post(cr, uid, plan_ids, body=message, context=context)
+        return self.write(cr, uid, plan_ids, {'proposed_user_ids': (3, user_id)}, context=context)
 
-    def get_suggestions_info(self, cr, uid, context=None):
-        pass
+    def reply_challenge_wizard(self, cr, uid, plan_id, context=None):
+        context = context or {}
+        mod_obj = self.pool.get('ir.model.data')
+        act_obj = self.pool.get('ir.actions.act_window')
+        result = mod_obj.get_object_reference(cr, uid, 'gamification', 'challenge_wizard')
+        id = result and result[1] or False
+        result = act_obj.read(cr, uid, [id], context=context)[0]
+        result['res_id'] = plan_id
+        return result
 
 
 class gamification_goal_planline(osv.Model):

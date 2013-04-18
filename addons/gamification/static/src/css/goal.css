@@ -63,17 +63,13 @@
     position: relative;
     display: inline-block;
     vertical-align: top;
-    width: 260px;
-}
-.openerp .oe_mail_wall .oe_mail_wall_aside {
-    position: relative;
-    vertical-align: top;
+    width: 280px;
     background: #EDEDF6;
     border-radius: 2px;
 }
 .openerp .oe_mail_wall_aside > div {
     background: #EDEDF6;
-    padding: 5px 0 0 15px;
+    padding: 5px 5px 0 15px;
 }
 .openerp .oe_mail_wall_aside .oe_gamification_goal .oe_goal_reached,
 .openerp .oe_mail_wall_aside .oe_gamification_goal .oe_goal_failed {
@@ -94,14 +90,30 @@
 .oe_mail_wall_aside .oe_list_content tbody tr:nth-child(even) {
     background-color: #fff;
 }
-.openerp .oe_mail_wall .oe_mail_wall_aside table td,th {
+.openerp .oe_mail_wall .oe_mail_wall_aside td,
+.openerp .oe_mail_wall .oe_mail_wall_aside th {
     vertical-align: middle;
     border: none;
 }
-.openerp .oe_mail_wall .oe_mail_wall_aside table td.col1 { width: 40%; }
-.openerp .oe_mail_wall .oe_mail_wall_aside table td.col2 { width: 50%; }
-/* ... and 10% left for ranking */
+.openerp .oe_mail_wall_aside .oe_list_content tbody th {
+    padding-left: 5px;
+}
+.openerp .oe_mail_wall .oe_mail_wall_aside table .col0 {
+    font-size: 150%;
+    font-weight: bold;
+}
+.openerp .oe_mail_wall .oe_mail_wall_aside table td.col0 { width: 25px; }
+.openerp .oe_mail_wall .oe_mail_wall_aside table td.col1 { width: 32px; }
 
+.openerp .oe_mail_wall .oe_mail_wall_aside .oe_user_avatar { width: 32px; }
+
+.openerp .oe_mail_wall .oe_mail_wall_aside .oe_goal_progress {
+    background: rgb(173, 219, 178);
+/*    background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAIAAACQd1PeAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAB3RJTUUH3QQSDDgQbtbJfgAAABl0RVh0Q29tbWVudABDcmVhdGVkIHdpdGggR0lNUFeBDhcAAAAMSURBVAjXY2jY2AoAA2sBt0HZbqoAAAAASUVORK5CYII=);
+    background-image: url("http://lorempixel.com/20/10/");
+    background-repeat: repeat-y;
+    background-position: 0 50%;*/
+}
 .openerp .oe_mail_wall .oe_mail_wall_aside table progress,.oe_form_field_progressbar {
     width: 100%;
     display: inline-block;

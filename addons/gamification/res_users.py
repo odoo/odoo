@@ -62,9 +62,14 @@ class res_users_gamification_group(osv.Model):
                             'target_goal': planline_board['target_goal'],
                             'goals': []}
                     for goal in planline_board['board_goals']:
+                        # Keep only the Top 3 and the current user
+                        if goal[0] > 2 and goal[1].user_id.id != uid:
+                            continue
+
                         vals['goals'].append({
                             'rank': goal[0]+1,
                             'id': goal[1].id,
+                            'user_id': goal[1].user_id.id,
                             'user_name': goal[1].user_id.name,
                             'state': goal[1].state,
                             'completeness': goal[1].completeness,

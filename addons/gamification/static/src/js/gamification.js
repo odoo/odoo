@@ -40,6 +40,20 @@ openerp.gamification = function(instance) {
                         self.get_goal_todo_info();
                     });
                 });
+            },
+            'click a.oe_challenge_reply': function(event) {
+                var self = this;
+                var plan_id = parseInt(event.currentTarget.id, 10);
+                var plan_action = new instance.web.Model('gamification.goal.plan').call('reply_challenge_wizard', [plan_id]).then(function(res) {
+                    plan_action['action'] = res;
+                });
+                $.when(plan_action).done(function() {
+                    var action_manager = new instance.web.ActionManager(this);
+                    action_manager.do_action(plan_action.action).done(function () {
+                        console.log(plan_action.action);
+                        self.get_goal_todo_info();
+                    });
+                });
             }
         },
         renderElement: function() {
@@ -65,8 +79,9 @@ openerp.gamification = function(instance) {
                 if(self.goals_info.info.length > 0){
                     self.render_template_replace(self.$el.filter(".oe_gamification_goal"),'gamification.goal_list_to_do');
                     self.render_money_fields(self.goals_info.info[0].currency);
-                    self.render_progress_bars();
+                    // self.render_progress_bars();
                     self.render_piechars();
+                    self.render_user_avatars();
                 } else {
                     self.$el.filter(".oe_gamification_goal").hide();
                 }
@@ -76,7 +91,6 @@ openerp.gamification = function(instance) {
             var self = this;
             var challenge_suggestions = this.res_user.call('get_challenge_suggestions', {}).then(function(res) {
                 self.challenge_suggestions['info'] = res;
-                console.log(res);
             });
             $.when(challenge_suggestions).done(function() {
                 if(self.challenge_suggestions.info.length > 0){
@@ -124,6 +138,14 @@ openerp.gamification = function(instance) {
                 var completeness = parseInt( $(this).attr('data-completeness'), 10);
                 var values = [completeness, 100-completeness];
                 $(this).sparkline(values, {type: 'pie', offset: 180, sliceColors: ['#0B610B','#F78181']});
+            });
+        },
+        render_user_avatars: function() {
+            var self = this;
+            self.$(".oe_user_avatar").each(function() {
+                var user_id = parseInt( $(this).attr('data-id'), 10);
+                var url = instance.session.url('/web/binary/image', {model: 'res.users', field: 'image_small', id: user_id});
+                $(this).attr("src", url);
             });
         }
     });

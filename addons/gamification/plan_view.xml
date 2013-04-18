@@ -6,6 +6,7 @@
             <field name="name">Challenges</field>
             <field name="res_model">gamification.goal.plan</field>
             <field name="view_mode">kanban,tree,form</field>
+            <field name="view_id" ref="goal_plan_form_view"/>
             <field name="context">{'search_default_inprogress':True, 'default_inprogress':True}</field>
             <field name="help" type="html">
                 <p class="oe_view_nocontent_create">
@@ -212,6 +213,42 @@
                     </group>
                 </search>
             </field>
+        </record>
+
+
+        <record id="view_challenge_wizard" model="ir.ui.view">
+            <field name="name">Challenge Wizard</field>
+            <field name="model">gamification.goal.plan</field>
+            <field name="arch" type="xml">
+                <form string="Challenge" version="7.0">
+                    <div class="oe_title">
+                        <field name="name" nolabel="1" readonly="1"/>
+                    </div>
+                    <field name="description" nolabel="1" readonly="1" />
+                    The challenge is running from <field name="start_date" class="oe_inline" readonly="1" /> to <field name="end_date" class="oe_inline" readonly="1" />
+                    <group string="Members">
+                        <field name="user_ids" nolabel="1" readonly="1" widget="many2many_tags" />
+                    </group>
+                    <group string="Reward">
+                        <field name="reward_id" readonly="1" widget="many2many_tags" />
+                        <field name="reward_first_id" readonly="1" widget="many2many_tags" />
+                        <field name="reward_second_id" readonly="1" widget="many2many_tags" />
+                        <field name="reward_third_id" readonly="1" widget="many2many_tags" />
+                    </group>
+                    <footer>
+                        <button string="Accept" type="object" name="accept_challenge" class="oe_highlight" /> or
+                        <button string="Discard" type="object" name="discard_challenge" class="oe_link"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="challenge_wizard" model="ir.actions.act_window">
+            <field name="name">Challenge Description</field>
+            <field name="res_model">gamification.goal.plan</field>
+            <field name="view_type">form</field>
+            <field name="view_id" ref="view_challenge_wizard"/>
+            <field name="target">new</field>
         </record>
 
     </data>
