@@ -1,9 +1,10 @@
-import openerp
+from openerp.addons.web.http import Controller, jsonrequest
 
-class DiagramView(openerp.addons.web.controllers.main.View):
+
+class Diagram(Controller):
     _cp_path = "/web_diagram/diagram"
 
-    @openerp.addons.web.http.jsonrequest
+    @jsonrequest
     def get_diagram_info(self, req, id, model, node, connector,
                          src_node, des_node, label, **kw):
 

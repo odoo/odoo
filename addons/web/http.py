@@ -354,17 +354,63 @@ def httprequest(f):
 #----------------------------------------------------------
 addons_module = {}
 addons_manifest = {}
-controllers_class = []
-controllers_object = {}
+controllers_class = {}
 controllers_path = {}
 
 class ControllerType(type):
     def __init__(cls, name, bases, attrs):
         super(ControllerType, cls).__init__(name, bases, attrs)
-        controllers_class.append(("%s.%s" % (cls.__module__, cls.__name__), cls))
+        # Only for root "Controller"
+        if bases == (object,):
+            assert name == 'Controller'
+            return
+
+        path = attrs.get('_cp_path')
+        if Controller in bases:
+            assert path, "Controller subclass %s missing a _cp_path" % name
+        else:
+            parent_paths = set(base._cp_path for base in bases
+                               if issubclass(base, Controller))
+            assert len(parent_paths) == 1,\
+                "%s inheriting from multiple controllers is not supported" % (
+                    name)
+            [parent_path] = parent_paths
+            [parent] = [
+                controller for controller in controllers_class.itervalues()
+                if controller._cp_path == parent_path]
+
+            # inherit from a Controller subclass
+            if path:
+                # if extending in place with same URL, ignore URL
+                if parent_path == path:
+                    _logger.warn(
+                        "Controller %s extending %s in-place should not "
+                        "explicitly specify URL", name, parent)
+                    return
+                _logger.warn("Re-exposing %s at %s.\n"
+                             "\tThis usage is unsupported.",
+                             parent.__name__,
+                             attrs['_cp_path'])
+
+        if path:
+            assert path not in controllers_class,\
+                "Trying to expose %s at the same URL as %s" % (
+                    name, controllers_class[path])
+            controllers_class[path] = cls
+
 
 class Controller(object):
     __metaclass__ = ControllerType
+
+    def __new__(cls, *args, **kwargs):
+        subclasses = [c for c in cls.__subclasses__()
+                      if c._cp_path == cls._cp_path]
+        if subclasses:
+            name = "%s (+%s)" % (
+                cls.__name__,
+                '+'.join(sub.__name__ for sub in subclasses))
+            cls = type(name, tuple(reversed(subclasses)), {})
+        return object.__new__(cls)
 
 #----------------------------------------------------------
 # Session context manager
@@ -558,12 +604,8 @@ class Root(object):
                         addons_manifest[module] = manifest
                         self.statics['/%s/static' % module] = path_static
 
-        for k, v in controllers_class:
-            if k not in controllers_object:
-                o = v()
-                controllers_object[k] = o
-                if hasattr(o, '_cp_path'):
-                    controllers_path[o._cp_path] = o
+        for c in controllers_class.itervalues():
+            controllers_path[c._cp_path] = c()
 
         app = werkzeug.wsgi.SharedDataMiddleware(self.dispatch, self.statics)
         self.dispatch = DisableCacheMiddleware(app)
