@@ -999,4 +999,22 @@ class mail_compose_message(osv.Model):
             wf_service.trg_validate(uid, 'sale.order', context['default_res_id'], 'quotation_sent', cr)
         return super(mail_compose_message, self).send_mail(cr, uid, ids, context=context)
 
+#
+# account.invoice is defined in module account
+#
+class account_invoice(osv.Model):
+    """ Overwrite unlink method of account invoice to send a trigger to the sale workflow upon invoice deletion """
+    _inherit = 'account.invoice'
+
+    def unlink(self, cr, uid, ids, context=None):
+        #Cancel invoice(s) first before deleting them so that if any sale order are associated with them
+        #it will trigger the workflow to put the sale order in an invoice exception state
+        #if we can't cancel all invoices, do nothing
+        invoice_ids = self.search(cr, uid, [('id', 'in', ids), ('state', 'in', ['draft', 'cancel'])], context=context)
+        if len(invoice_ids)==len(ids):
+            wf_service = netsvc.LocalService("workflow")
+            for id in ids:
+                wf_service.trg_validate(uid, 'account.invoice', id, 'invoice_cancel', cr)
+        return super(account_invoice, self).unlink(cr, uid, ids, context=context)
+
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
