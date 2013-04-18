@@ -1,0 +1,28 @@
+Index: web_example/static/src/tests/timer.js
+===================================================================
+--- web_example.orig/static/src/tests/timer.js
++++ web_example/static/src/tests/timer.js
+@@ -71,4 +71,23 @@ openerp.testing.section('timer', functio
+         strictEqual($lis[0].textContent, '11:34:36');
+         strictEqual($lis[1].textContent, '23:21:32');
+     });
++    test('start', {templates: true, rpc: 'mock', asserts: 3}, function (instance, $fixture, mock) {
++        // Rather odd-looking shortcut for search+read in a single RPC call
++        mock('/web/dataset/search_read', function () {
++            // ignore parameters, just return a pair of records.
++            return {records: [
++                {time: 22733958},
++                {time: 84092336}
++            ]};
++        });
++
++        var w = new instance.web_example.Action();
++        return w.appendTo($fixture)
++        .then(function () {
++            var $lis = $fixture.find('li');
++            strictEqual($lis.length, 2);
++            strictEqual($lis[0].textContent, '06:18:53');
++            strictEqual($lis[1].textContent, '23:21:32');
++        });
++    });
+ });
