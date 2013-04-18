@@ -351,12 +351,22 @@ class res_partner(osv.osv, format_address):
         def value_or_id(val):
             """ return val or val.id if val is a browse record """
             return val if isinstance(val, (bool, int, long, float, basestring)) else val.id
-
+        result = {}
         if parent_id:
+            if ids:
+                partner = self.browse(cr, uid, ids[0], context=context)
+                if partner.parent_id and partner.parent_id.id != parent_id:
+                    result['warning'] = {'title': _('Warning'),
+                                         'message': _('Changing the company of a contact should only be done if it '
+                                                      'was never correctly set. If an existing contact starts working for a new '
+                                                      'company then a new contact should be created under that new '
+                                                      'company. You can use the "Discard" button to abandon this change.')}
             parent = self.browse(cr, uid, parent_id, context=context)
             address_fields = self._address_fields(cr, uid, context=context)
-            return {'value': dict((key, value_or_id(parent[key])) for key in address_fields)}
-        return {'value': {'use_parent_address': False}}
+            result['value'] = dict((key, value_or_id(parent[key])) for key in address_fields)
+        else:
+            result['value'] = {'use_parent_address': False}
+        return result
 
     def onchange_state(self, cr, uid, ids, state_id, context=None):
         if state_id:
