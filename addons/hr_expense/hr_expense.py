@@ -377,7 +377,6 @@ class hr_expense_expense(osv.osv):
         }
         return result
 
-hr_expense_expense()
 
 class product_product(osv.osv):
     _inherit = "product.product"
@@ -385,7 +384,6 @@ class product_product(osv.osv):
         'hr_expense_ok': fields.boolean('Can be Expensed', help="Specify if the product can be selected in an HR expense line."),
     }
 
-product_product()
 
 class hr_expense_line(osv.osv):
     _name = "hr.expense.line"
@@ -444,6 +442,5 @@ class hr_expense_line(osv.osv):
             res['value'].update({'uom_id': product.uom_id.id})
         return res
 
-hr_expense_line()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

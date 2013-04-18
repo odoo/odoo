@@ -282,7 +282,6 @@ class partner_vat_intra(osv.osv_memory):
             'datas': datas,
         }
 
-partner_vat_intra()
 
 class vat_intra_print(report_sxw.rml_parse):
     def __init__(self, cr, uid, name, context):

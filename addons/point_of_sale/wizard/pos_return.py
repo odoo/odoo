@@ -171,7 +171,6 @@ class pos_return(osv.osv_memory):
             }
         return act
 
-pos_return()
 
 class add_product(osv.osv_memory):
     _inherit = 'pos.add.product'
@@ -321,5 +320,4 @@ class add_product(osv.osv_memory):
             }
         return True
 
-add_product()
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

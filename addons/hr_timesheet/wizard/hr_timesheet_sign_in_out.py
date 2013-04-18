@@ -103,7 +103,6 @@ class hr_so_project(osv.osv_memory):
             self._write(cr, uid, data, emp_id, context=context)
         return {'type': 'ir.actions.act_window_close'}
 
-hr_so_project()
 
 class hr_si_project(osv.osv_memory):
 
@@ -168,6 +167,5 @@ class hr_si_project(osv.osv_memory):
                 res.update({'name': employee.name, 'state': employee.state, 'emp_id': emp_id[0], 'server_date':time.strftime('%Y-%m-%d %H:%M:%S')})
         return res
 
-hr_si_project()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

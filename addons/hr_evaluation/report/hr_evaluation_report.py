@@ -97,7 +97,6 @@ class hr_evaluation_report(osv.osv):
             )
         """)
 
-hr_evaluation_report()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

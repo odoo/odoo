@@ -632,7 +632,6 @@ property or property parameter."),
         res = super(calendar_attendee, self).create(cr, uid, vals, context=context)
         return res
 
-calendar_attendee()
 
 class res_alarm(osv.osv):
     """Resource Alarm """
@@ -763,7 +762,6 @@ true, it will allow you to hide the event alarm information without removing it.
                             where id=%%s' % model_obj._table,(data.id,))
         return True
 
-res_alarm()
 
 class calendar_alarm(osv.osv):
     _name = 'calendar.alarm'
@@ -918,7 +916,6 @@ From:
             self.write(cr, uid, [alarm.id], update_vals)
         return True
 
-calendar_alarm()
 
 
 class calendar_event(osv.osv):
@@ -1610,7 +1607,6 @@ rule or repeating pattern of time to exclude from the recurring rule."),
         """
         return self.write(cr, uid, ids, {'state': 'confirmed'}, context)
 
-calendar_event()
 
 class calendar_todo(osv.osv):
     """ Calendar Task """
@@ -1659,7 +1655,6 @@ class calendar_todo(osv.osv):
     __attribute__ = {}
 
 
-calendar_todo()
 
 
 class ir_values(osv.osv):
@@ -1704,7 +1699,6 @@ class ir_values(osv.osv):
         return super(ir_values, self).get(cr, uid, key, key2, new_model, \
                          meta, context, res_id_req, without_user, key2_req)
 
-ir_values()
 
 class ir_model(osv.osv):
 
@@ -1730,7 +1724,6 @@ class ir_model(osv.osv):
                 val['id'] = base_calendar_id2real_id(val['id'])
         return isinstance(ids, (str, int, long)) and data[0] or data
 
-ir_model()
 
 original_exp_report = openerp.service.report.exp_report
 

@@ -41,7 +41,6 @@ class account_common_account_report(osv.osv_memory):
         data['form'].update(self.read(cr, uid, ids, ['display_account'], context=context)[0])
         return data
 
-account_common_account_report()
 
 #vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

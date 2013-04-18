@@ -56,5 +56,4 @@ class accounting_assert_test(osv.osv):
         'sequence': 10,
     }
 
-accounting_assert_test()
 
