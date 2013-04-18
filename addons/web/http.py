@@ -381,6 +381,12 @@ class ControllerType(type):
 
             # inherit from a Controller subclass
             if path:
+                # if extending in place with same URL, ignore URL
+                if parent_path == path:
+                    _logger.warn(
+                        "Controller %s extending %s in-place should not "
+                        "explicitly specify URL", cls, parent)
+                    return
                 _logger.warn("Re-exposing %s at %s.\n"
                              "\tThis usage is unsupported.",
                              parent.__name__,
@@ -398,7 +404,7 @@ class Controller(object):
 
     def __new__(cls, *args, **kwargs):
         subclasses = [c for c in cls.__subclasses__()
-                      if c._cp_path is cls._cp_path]
+                      if c._cp_path == cls._cp_path]
         if subclasses:
             name = "%s (+%s)" % (
                 cls.__name__,

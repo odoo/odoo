@@ -242,6 +242,29 @@ class TestSubclassing(DispatchCleanup):
         self.assertEqual('200 OK', status)
         self.assertEqual('1 2 3', ''.join(body))
 
+    def test_extends_same_path(self):
+        """
+        When subclassing an existing Controller and specifying the same
+        _cp_path as the parent, ???
+        """
+        class A(http.Controller):
+            _cp_path = '/foo'
+            @http.httprequest
+            def index(self, req):
+                return '1'
+
+        class B(A):
+            _cp_path = '/foo'
+            @http.httprequest
+            def index(self, req):
+                return '2'
+
+        self.app.load_addons()
+
+        body, status, headers = self.client.get('/foo')
+        self.assertEqual('200 OK', status)
+        self.assertEqual('2', ''.join(body))
+
     def test_re_expose(self):
         """
         An existing Controller should not be extended with a new cp_path
