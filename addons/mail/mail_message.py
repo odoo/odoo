@@ -144,6 +144,7 @@ class mail_message(osv.Model):
         'author_id': fields.many2one('res.partner', 'Author', select=1,
             ondelete='set null',
             help="Author of the message. If not set, email_from may hold an email address that did not match any partner."),
+        'image_small': fields.related('author_id', 'image_small', string="Author's Avatar", type="binary"),
         'partner_ids': fields.many2many('res.partner', string='Recipients'),
         'notified_partner_ids': fields.many2many('res.partner', 'mail_notification',
             'message_id', 'partner_id', 'Notified partners',
