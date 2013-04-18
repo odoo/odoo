@@ -31,8 +31,6 @@
   I'm Opening that Invoice which is created for "Seagate".
 -
   !python {model: res.partner}: |
-        import netsvc
-        from tools.translate import _
         invoice_pool = self.pool.get('account.invoice')
         partner_pool = self.pool.get('res.partner')
         membership_line_pool = self.pool.get('membership.membership_line')
@@ -40,10 +38,10 @@
 
         membership_line_ids = membership_line_pool.search(cr, uid, [('membership_id','=',ref('product_product_membershipproduct0')),('partner','=',ref('base.res_partner_19'))])
         membership_lines = membership_line_pool.browse(cr, uid, membership_line_ids)
-        assert membership_lines, _('Membership is not registrated.')
+        assert membership_lines, 'Membership is not registrated.'
         membership_line = membership_lines[0]
-        wf_service = netsvc.LocalService("workflow")
-        wf_service.trg_validate(uid, 'account.invoice', membership_line.account_invoice_id.id, 'invoice_open', cr)
+        invoice_pool.signal_invoice_open(cr, uid, [membership_line.account_invoice_id.id])
+
 - |
   I'm checking "Current membership state" of "Seagate". It is an "Invoiced Member" or not.
 -
@@ -106,7 +104,6 @@
   I'm doing to make credit note of invoice which is paid by "Seagate" to cancel membership.
 -
   !python {model: account.invoice}: |
-        from tools.translate import _
         invoice_pool = self.pool.get('account.invoice')
         partner_pool = self.pool.get('res.partner')
         membership_line_pool = self.pool.get('membership.membership_line')
@@ -115,7 +112,7 @@
 
         membership_line_ids = membership_line_pool.search(cr, uid, [('membership_id','=',ref('product_product_membershipproduct0')),('partner','=',ref('base.res_partner_19'))])
         membership_lines = membership_line_pool.browse(cr, uid, membership_line_ids)
-        assert membership_lines, _('Membership is not registrated.')
+        assert membership_lines, 'Membership is not registrated.'
         membership_line = membership_lines[0]
         refund_id = invoice_refund_pool.create(cr, uid, {'description': 'Refund of Membership', 'filter_refund': 'refund'}, {'active_id': membership_line.account_invoice_id.id})
         invoice_refund_pool.invoice_refund(cr, uid, [refund_id], {'active_id': membership_line.account_invoice_id.id, 'active_ids': [membership_line.account_invoice_id.id]})

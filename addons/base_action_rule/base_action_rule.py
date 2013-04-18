@@ -96,7 +96,7 @@ class base_action_rule(osv.osv):
         """ filter the list record_ids that satisfy the action filter """
         if record_ids and action_filter:
             assert action.model == action_filter.model_id, "Filter model different from action rule model"
-            model = self.pool.get(action_filter.model_id)
+            model = self.pool[action_filter.model_id]
             domain = [('id', 'in', record_ids)] + eval(action_filter.domain)
             ctx = dict(context or {})
             ctx.update(eval(action_filter.context))
@@ -106,7 +106,7 @@ class base_action_rule(osv.osv):
     def _process(self, cr, uid, action, record_ids, context=None):
         """ process the given action on the records """
         # execute server actions
-        model = self.pool.get(action.model_id.model)
+        model = self.pool[action.model_id.model]
         if action.server_action_ids:
             server_action_ids = map(int, action.server_action_ids)
             for record in model.browse(cr, uid, record_ids, context):
@@ -195,7 +195,7 @@ class base_action_rule(osv.osv):
             ids = self.search(cr, SUPERUSER_ID, [])
         for action_rule in self.browse(cr, SUPERUSER_ID, ids):
             model = action_rule.model_id.model
-            model_obj = self.pool.get(model)
+            model_obj = self.pool[model]
             if not hasattr(model_obj, 'base_action_ruled'):
                 model_obj.create = self._wrap_create(model_obj.create, model)
                 model_obj.write = self._wrap_write(model_obj.write, model)
@@ -214,6 +214,13 @@ class base_action_rule(osv.osv):
         self._register_hook(cr, ids)
         return True
 
+    def onchange_model_id(self, cr, uid, ids, model_id, context=None):
+        data = {'model': False, 'filter_pre_id': False, 'filter_id': False}
+        if model_id:
+            model = self.pool.get('ir.model').browse(cr, uid, model_id, context=context)
+            data.update({'model': model.model})
+        return {'value': data}
+
     def _check(self, cr, uid, automatic=False, use_new_cursor=False, context=None):
         """ This Function is called by scheduler. """
         context = context or {}
@@ -225,7 +232,7 @@ class base_action_rule(osv.osv):
             last_run = get_datetime(action.last_run) if action.last_run else False
 
             # retrieve all the records that satisfy the action's condition
-            model = self.pool.get(action.model_id.model)
+            model = self.pool[action.model_id.model]
             domain = []
             ctx = dict(context)
             if action.filter_id:

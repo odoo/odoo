@@ -25,8 +25,10 @@ from lxml import etree
 import os
 from time import strftime
 
-from openerp import addons, netsvc, tools
+from openerp import tools
+from openerp.modules.module import get_module_resource
 from openerp.osv import fields, osv
+import openerp.report
 from openerp.tools import to_xml
 from openerp.tools.translate import _
 from openerp.tools.safe_eval import safe_eval
@@ -401,16 +403,17 @@ class survey_question_wiz(osv.osv_memory):
                     sur_response_obj.write(cr, uid, [sur_name_read.response], {'state' : 'done'})
 
                     # mark the survey request as done; call 'survey_req_done' on its actual model
-                    survey_req_obj = self.pool.get(context.get('active_model'))
-                    if survey_req_obj and hasattr(survey_req_obj, 'survey_req_done'): 
-                        survey_req_obj.survey_req_done(cr, uid, context.get('active_ids', []), context=context)
+                    if context.get('active_model') in self.pool:
+                        survey_req_obj = self.pool[context.get('active_model')]
+                        if hasattr(survey_req_obj, 'survey_req_done'): 
+                            survey_req_obj.survey_req_done(cr, uid, context.get('active_ids', []), context=context)
 
                     if sur_rec.send_response:
                         survey_data = survey_obj.browse(cr, uid, survey_id)
                         response_id = surv_name_wiz.read(cr, uid, context.get('sur_name_id',False))['response']
                         report = self.create_report(cr, uid, [survey_id], 'report.survey.browse.response', survey_data.title,context)
                         attachments = {}
-                        pdf_filename = addons.get_module_resource('survey', 'report') + survey_data.title + ".pdf"
+                        pdf_filename = get_module_resource('survey', 'report') + survey_data.title + ".pdf"
                         if os.path.exists(pdf_filename):
                             file = open(pdf_filename)
                             file_data = ""
@@ -422,7 +425,7 @@ class survey_question_wiz(osv.osv_memory):
 
                             attachments[survey_data.title + ".pdf"] = file_data
                             file.close()
-                            os.remove(addons.get_module_resource('survey', 'report') + survey_data.title + ".pdf")
+                            os.remove(get_module_resource('survey', 'report') + survey_data.title + ".pdf")
                         context.update({'response_id':response_id})
                         user_email = user_obj.browse(cr, uid, uid, context).email
                         resp_email = survey_data.responsible_id and survey_data.responsible_id.email or False
@@ -463,9 +466,8 @@ class survey_question_wiz(osv.osv_memory):
             return (False, Exception('Report name and Resources ids are required !!!'))
         try:
             uid = 1
-            service = netsvc.LocalService(report_name);
-            (result, format) = service.create(cr, uid, res_ids, {}, context)
-            ret_file_name = addons.get_module_resource('survey', 'report') + file_name + '.pdf'
+            result, format = openerp.report.render_report(cr, uid, res_ids, report_name[len('report.'):], {}, context)
+            ret_file_name = get_module_resource('survey', 'report') + file_name + '.pdf'
             fp = open(ret_file_name, 'wb+');
             fp.write(result);
             fp.close();
@@ -609,10 +611,10 @@ class survey_question_wiz(osv.osv_memory):
             survey_obj.write(cr, uid, survey_id,  {'tot_start_survey' : sur_rec['tot_start_survey'] + 1})
             if context.has_key('cur_id'):
                 if context.has_key('request') and context.get('request',False):
-                    self.pool.get(context.get('object',False)).write(cr, uid, [int(context.get('cur_id',False))], {'response' : response_id})
-                    self.pool.get(context.get('object',False)).survey_req_done(cr, uid, [int(context.get('cur_id'))], context)
+                    self.pool[context.get('object')].write(cr, uid, [int(context.get('cur_id',False))], {'response' : response_id})
+                    self.pool[context.get('object')].survey_req_done(cr, uid, [int(context.get('cur_id'))], context)
                 else:
-                    self.pool.get(context.get('object',False)).write(cr, uid, [int(context.get('cur_id',False))], {'response' : response_id})        
+                    self.pool[context.get('object')].write(cr, uid, [int(context.get('cur_id',False))], {'response' : response_id})        
         if sur_name_read['store_ans'] and type(safe_eval(sur_name_read['store_ans'])) == dict:
             sur_name_read['store_ans'] = safe_eval(sur_name_read['store_ans'])
             for key,val in sur_name_read['store_ans'].items():
@@ -1252,6 +1254,5 @@ class survey_question_wiz(osv.osv_memory):
             'context': context
         }
 
-survey_question_wiz()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

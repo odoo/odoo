@@ -20,7 +20,6 @@
 ##############################################################################
 
 from openerp.osv import fields, osv
-from openerp import pooler
 from openerp.tools.translate import _
 
 class purchase_config_settings(osv.osv_memory):
@@ -30,7 +29,7 @@ class purchase_config_settings(osv.osv_memory):
     _columns = {
         'default_invoice_method': fields.selection(
             [('manual', 'Based on purchase order lines'),
-             ('picking', 'Based on receptions'),
+             ('picking', 'Based on incoming shipments'),
              ('order', 'Pre-generate draft invoices based on purchase orders'),
             ], 'Default invoicing control method', required=True, default_model='purchase.order'),
         'group_purchase_pricelist':fields.boolean("Manage pricelist per supplier",
@@ -66,6 +65,11 @@ Example: Product: this product is deprecated, do not purchase more than 5.
         'default_invoice_method': 'manual',
     }
 
+    def onchange_purchase_analytic_plans(self, cr, uid, ids, module_purchase_analytic_plans, context=None):
+        """ change group_analytic_account_for_purchases following module_purchase_analytic_plans """
+        if not module_purchase_analytic_plans:
+            return {}
+        return {'value': {'group_analytic_account_for_purchases': module_purchase_analytic_plans}}
 
 
 
@@ -82,6 +86,8 @@ class account_config_settings(osv.osv_memory):
 
     def onchange_purchase_analytic_plans(self, cr, uid, ids, module_purchase_analytic_plans, context=None):
         """ change group_analytic_account_for_purchases following module_purchase_analytic_plans """
+        if not module_purchase_analytic_plans:
+            return {}
         return {'value': {'group_analytic_account_for_purchases': module_purchase_analytic_plans}}
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

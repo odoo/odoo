@@ -342,6 +342,15 @@ class hr_applicant(base_stage, osv.Model):
         value = self.pool.get("survey").action_print_survey(cr, uid, ids, context=context)
         return value
 
+    def message_get_suggested_recipients(self, cr, uid, ids, context=None):
+        recipients = super(hr_applicant, self).message_get_suggested_recipients(cr, uid, ids, context=context)
+        for applicant in self.browse(cr, uid, ids, context=context):
+            if applicant.partner_id:
+                self._message_add_suggested_recipient(cr, uid, recipients, applicant, partner=applicant.partner_id, reason=_('Contact'))
+            elif applicant.email_from:
+                self._message_add_suggested_recipient(cr, uid, recipients, applicant, email=applicant.email_from, reason=_('Contact Email'))
+        return recipients
+
     def message_new(self, cr, uid, msg, custom_values=None, context=None):
         """ Overrides mail_thread message_new that is called by the mailgateway
             through message_process.
@@ -355,6 +364,7 @@ class hr_applicant(base_stage, osv.Model):
             'email_from': msg.get('from'),
             'email_cc': msg.get('cc'),
             'user_id': False,
+            'partner_id': msg.get('author_id', False),
         }
         if msg.get('priority'):
             defaults['priority'] = msg.get('priority')
@@ -372,7 +382,6 @@ class hr_applicant(base_stage, osv.Model):
             update_vals = {}
 
         update_vals.update({
-            'description': msg.get('body'),
             'email_from': msg.get('from'),
             'email_cc': msg.get('cc'),
         })
@@ -422,12 +431,13 @@ class hr_applicant(base_stage, osv.Model):
         act_window = self.pool.get('ir.actions.act_window')
         emp_id = False
         for applicant in self.browse(cr, uid, ids, context=context):
-            address_id = False
+            address_id = contact_name = False
             if applicant.partner_id:
                 address_id = self.pool.get('res.partner').address_get(cr,uid,[applicant.partner_id.id],['contact'])['contact']
-            if applicant.job_id:
+                contact_name = self.pool.get('res.partner').name_get(cr,uid,[applicant.partner_id.id])[0][1]
+            if applicant.job_id and (applicant.partner_name or contact_name):
                 applicant.job_id.write({'no_of_recruitment': applicant.job_id.no_of_recruitment - 1})
-                emp_id = hr_employee.create(cr,uid,{'name': applicant.partner_name or applicant.name,
+                emp_id = hr_employee.create(cr,uid,{'name': applicant.partner_name or contact_name,
                                                      'job_id': applicant.job_id.id,
                                                      'address_home_id': address_id,
                                                      'department_id': applicant.department_id.id
@@ -435,7 +445,7 @@ class hr_applicant(base_stage, osv.Model):
                 self.write(cr, uid, [applicant.id], {'emp_id': emp_id}, context=context)
                 self.case_close(cr, uid, [applicant.id], context)
             else:
-                raise osv.except_osv(_('Warning!'), _('You must define Applied Job for this applicant.'))
+                raise osv.except_osv(_('Warning!'), _('You must define an Applied Job and a Contact Name for this applicant.'))
 
         action_model, action_id = model_data.get_object_reference(cr, uid, 'hr', 'open_view_employee_list')
         dict_act_window = act_window.read(cr, uid, action_id, [])
@@ -479,6 +489,12 @@ class hr_applicant(base_stage, osv.Model):
         """
         return self.set_priority(cr, uid, ids, '3')
 
+    def get_empty_list_help(self, cr, uid, help, context=None):
+        context['empty_list_help_model'] = 'hr.job'
+        context['empty_list_help_id'] = context.get('default_job_id', None)
+        context['empty_list_help_document_name'] = _("job applicants")
+        return super(hr_applicant, self).get_empty_list_help(cr, uid, help, context=context)
+
 
 class hr_job(osv.osv):
     _inherit = "hr.job"
@@ -496,8 +512,9 @@ class hr_job(osv.osv):
 
     def _auto_init(self, cr, context=None):
         """Installation hook to create aliases for all jobs and avoid constraint errors."""
-        self.pool.get('mail.alias').migrate_to_alias(cr, self._name, self._table, super(hr_job,self)._auto_init,
+        res = self.pool.get('mail.alias').migrate_to_alias(cr, self._name, self._table, super(hr_job,self)._auto_init,
             self._columns['alias_id'], 'name', alias_prefix='job+', alias_defaults={'job_id': 'id'}, context=context)
+        return res
 
     def create(self, cr, uid, vals, context=None):
         mail_alias = self.pool.get('mail.alias')

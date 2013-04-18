@@ -62,6 +62,5 @@ class analytical_timesheet_employee(osv.osv_memory):
             'report_name': 'hr.analytical.timesheet',
             'datas': datas,
             }
-analytical_timesheet_employee()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

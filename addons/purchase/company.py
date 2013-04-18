@@ -24,13 +24,16 @@ from openerp.osv import osv,fields
 class company(osv.osv):
     _inherit = 'res.company'
     _columns = {
-        'po_lead': fields.float('Purchase Lead Time', required=True,
-            help="This is the leads/security time for each purchase order."),
+        'po_lead': fields.float(
+            'Purchase Lead Time', required=True,
+            help="Margin of error for supplier lead times. When the system"\
+                 "generates Purchase Orders for procuring products,"\
+                 "they will be scheduled that many days earlier "\
+                 "to cope with unexpected supplier delays."),
     }
     _defaults = {
         'po_lead': lambda *a: 1.0,
     }
-company()
 
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

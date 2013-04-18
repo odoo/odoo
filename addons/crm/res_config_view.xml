@@ -22,20 +22,15 @@
                             </div>
                         </div>
                     </group>
-	            </div>
-                <group name="On Mail Client" version="7.0" position="after">
+                    <separator string="Sales Teams Configuration"/>
                     <group>
-                        <label for="id" string="On Mail Server"/>
+                        <label for="id" string="Use Sales Teams"/>
                         <div>
-                            <div name="fetchmail_lead">
-                                <field name="fetchmail_lead" class="oe_inline"/>
-                                <label for="fetchmail_lead"/>
-                                <button name="configure_fetchmail_lead" type="object" string="Configure" icon="gtk-go-forward"
-                                attrs="{'invisible': [('fetchmail_lead','=',False)]}" class="oe_link"/>
-                            </div>
+                            <field name="group_multi_salesteams" class="oe_inline"/>
+                            <label for="group_multi_salesteams"/>
                         </div>
                     </group>
-                </group>
+	            </div>
             </field>
         </record>
 
