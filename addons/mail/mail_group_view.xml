@@ -7,7 +7,6 @@
             <field name="tag">mail.wall</field>
             <field name="res_model">mail.message</field>
             <field name="context">{
-              'search_default_message_unread': True
             }</field>
             <field name="params">{
                 'read_action': 'read'
@@ -30,6 +29,7 @@
                     <field name="message_is_follower"/>
                     <field name="message_summary"/>
                     <field name="description"/>
+                    <field name="alias_id"/>
                     <templates>
                         <t t-name="kanban-description">
                             <div class="oe_group_description" t-if="record.description.raw_value">
@@ -43,6 +43,9 @@
                                 </div>
                                 <div class="oe_group_details">
                                     <h4><a type="open"><field name="name"/></a></h4>
+                                    <div class="oe_kanban_alias" t-if="record.alias_id.value">
+                                        <span class="oe_e">%%</span><small><field name="alias_id"/></small>
+                                    </div>
                                     <div class="oe_grey">
                                         <field name="description"/>
                                     </div>
@@ -69,44 +72,48 @@
             <field name="arch" type="xml">
                 <form string="Group Form" version="7.0">
                     <sheet class="openerp_mail_group_sheet">
-                        <field name="image" widget='image' class="oe_avatar oe_left" options='{"preview_image": "image_medium"}'/>
+                        <field name="image" widget='image' class="oe_avatar oe_left" options='{"preview_image": "image_small"}'/>
                         <div class="oe_title">
                             <div class="oe_edit_only">
                                 <label for="name" string="Group Name"/>
                             </div>
                             <h1><field name="name" readonly="0"/></h1>
-                            <div name="alias_box" colspan="4" attrs="{'invisible': [('alias_domain', '=', False)]}">
-                                    <field name="alias_id" invisible="1" required="0"/>
-                                    <label for="alias_name" class="oe_edit_only"/>
-                                    <field name="alias_name" nolabel="1" class="oe_inline" attrs="{'required': [('alias_id', '!=', False)]}"/>@<field name="alias_domain" nolabel="1" class="oe_inline"/>
+                            <div name="group_alias"
+                                    attrs="{'invisible': [('alias_domain', '=', False)]}">
+                                <label for="alias_id" string="Email Alias"/>
+                                <field name="alias_id" class="oe_inline oe_read_only" required="0" nolabel="1"/>
+                                <span name="edit_alias" class="oe_edit_only">
+                                    <field name="alias_name" class="oe_inline"
+                                            attrs="{'required': [('alias_id', '!=', False)]}"/>
+                                    @
+                                    <field name="alias_domain" class="oe_inline" readonly="1"/>
+                                </span>
                             </div>
-                            <field name="description" placeholder="Topics discussed in this group..."/>
                         </div>
+                        <field name="description" placeholder="Topics discussed in this group..."/>
                         <div class="oe_clear"/>
-                        <group>
-                            <group class="oe_edit_only">
-                                <field name="public"/>
-                                <field name="group_public_id"
-                                    attrs="{'invisible': [('public','&lt;&gt;','groups')], 'required': [('public','=','groups')]}"
-                                    />
-                                <field name="group_ids" widget="many2many_tags"/>
-                            </group>
-                            <group>
-                                <div class="oe_grey" attrs="{'invisible': [('public','&lt;&gt;','public')]}">
-                                    This group is visible by everyone,
-                                    including your customers if you installed
-                                    the portal module.
-                                </div>
-                                <div class="oe_grey" attrs="{'invisible': [('public','&lt;&gt;','private')]}">
-                                    Only the invited followers can read the
-                                    discussions on this group.
-                                </div>
-                            </group>
+                        <group class="oe_edit_only">
+                            <field name="public"/>
+                            <field name="group_public_id"
+                                attrs="{'invisible': [('public','&lt;&gt;','groups')], 'required': [('public','=','groups')]}"
+                                />
+                            <field name="group_ids" widget="many2many_tags"/>
+                        </group>
+                        <group attrs="{'invisible': [('public', 'not in', ['public', 'private'])]}">
+                            <div class="oe_grey" attrs="{'invisible': [('public','&lt;&gt;','public')]}">
+                                This group is visible by everyone,
+                                including your customers if you installed
+                                the portal module.
+                            </div>
+                            <div class="oe_grey" attrs="{'invisible': [('public','&lt;&gt;','private')]}">
+                                Only the invited followers can read the
+                                discussions on this group.
+                            </div>
                         </group>
                     </sheet>
                     <div class="oe_chatter">
                         <field name="message_follower_ids" widget="mail_followers" groups="base.group_user"/>
-                        <field name="message_ids" widget="mail_thread" options='{"thread_level": 1}' placeholder="Send a message to the group..."/>
+                        <field name="message_ids" widget="mail_thread" options='{"thread_level": 1}' placeholder="Send a message to the group"/>
                     </div>
                 </form>
             </field>

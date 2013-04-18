@@ -29,12 +29,10 @@ class product(osv.osv):
     _defaults = {
         'auto_pick': True
     }
-product()
 
 class mrp_production(osv.osv):
     _inherit = "mrp.production"
     def _get_auto_picking(self, cr, uid, production):
         return production.product_id.auto_pick
-mrp_production()
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

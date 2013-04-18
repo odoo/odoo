@@ -20,12 +20,14 @@
 ##############################################################################
 
 
-from document import document as nodes
-from openerp.tools.safe_eval import safe_eval as eval
 import time
 import urllib
 import uuid
+
 from openerp import SUPERUSER_ID
+from openerp.tools.safe_eval import safe_eval as eval
+
+from openerp.addons.document import document as nodes
 
 def dict_filter(srcdic, keys, res=None):
     ''' Return a copy of srcdic that has only keys set.
@@ -65,7 +67,7 @@ class node_acl_mixin(object):
         """
         ret = par_class.get_dav_props(self, cr)
         if prop_model:
-            propobj = self.context._dirobj.pool.get(prop_model)
+            propobj = self.context._dirobj.pool[prop_model]
             uid = self.context.uid
             ctx = self.context.context.copy()
             ctx.update(self.dctx)
@@ -103,7 +105,7 @@ class node_acl_mixin(object):
         if ret is not None:
             return ret
         if prop_model:
-            propobj = self.context._dirobj.pool.get(prop_model)
+            propobj = self.context._dirobj.pool[prop_model]
             uid = self.context.uid
             ctx = self.context.context.copy()
             ctx.update(self.dctx)
@@ -149,7 +151,7 @@ class node_acl_mixin(object):
         assert prop_model
         assert res_id
         assert isinstance(lock_data, dict), '%r' % lock_data
-        propobj = self.context._dirobj.pool.get(prop_model)
+        propobj = self.context._dirobj.pool[prop_model]
         uid = self.context.uid
         ctx = self.context.context.copy()
         ctx.update(self.dctx)

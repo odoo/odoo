@@ -34,7 +34,7 @@ class crm_lead2opportunity_partner(osv.osv_memory):
                 ('convert', 'Convert to opportunity'),
                 ('merge', 'Merge with existing opportunities')
             ], 'Conversion Action', required=True),
-        'opportunity_ids': fields.many2many('crm.lead', string='Opportunities', domain=[('type', '=', 'opportunity')]),
+        'opportunity_ids': fields.many2many('crm.lead', string='Opportunities'),
     }
 
     def default_get(self, cr, uid, fields, context=None):
@@ -46,42 +46,34 @@ class crm_lead2opportunity_partner(osv.osv_memory):
         lead_obj = self.pool.get('crm.lead')
 
         res = super(crm_lead2opportunity_partner, self).default_get(cr, uid, fields, context=context)
-        opportunities = res.get('opportunity_ids') or []
-        partner_id = False
-        email = False
-        for lead in lead_obj.browse(cr, uid, opportunities, context=context):
-            partner_id = lead.partner_id and lead.partner_id.id or False
+        if context.get('active_id'):
+            tomerge = set([int(context['active_id'])])
+
+            email = False
+            partner_id = res.get('partner_id')
+            lead = lead_obj.browse(cr, uid, int(context['active_id']), context=context)
 
             #TOFIX: use mail.mail_message.to_mail
             email = re.findall(r'([^ ,<@]+@[^> ,]+)', lead.email_from or '')
-            email = map(lambda x: "'" + x + "'", email)
 
-        if not partner_id and res.get('partner_id'):
-            partner_id = res.get('partner_id')
-
-        ids = []
-        if partner_id:
-            # Search for opportunities that have the same partner and that arent done or cancelled
-            ids = lead_obj.search(cr, uid, [('partner_id', '=', partner_id), ('type', '=', 'opportunity'), '!', ('state', 'in', ['done', 'cancel'])])
-            if ids:
-                opportunities.append(ids[0])
-        if not partner_id:
+            if partner_id:
+                # Search for opportunities that have the same partner and that arent done or cancelled
+                ids = lead_obj.search(cr, uid, [('partner_id', '=', partner_id), ('state', '!=', 'done')])
+                for id in ids:
+                    tomerge.add(id)
             if email:
-                # Find email of existing opportunity matching the email_from of the lead
-                cr.execute("""select id from crm_lead where type='opportunity' and
-                                substring(email_from from '([^ ,<@]+@[^> ,]+)') in (%s)""" % (','.join(email)))
-                ids = map(lambda x:x[0], cr.fetchall())
-            if ids:
-                opportunities.append(ids[0])
+                ids = lead_obj.search(cr, uid, [('email_from', 'ilike', email[0]), ('state', '!=', 'done')])
+                for id in ids:
+                    tomerge.add(id)
 
-        if 'action' in fields:
-            res.update({'action' : partner_id and 'exist' or 'create'})
-        if 'partner_id' in fields:
-            res.update({'partner_id' : partner_id})
-        if 'name' in fields:
-            res.update({'name' : ids and 'merge' or 'convert'})
-        if 'opportunity_ids' in fields:
-            res.update({'opportunity_ids': opportunities})
+            if 'action' in fields:
+                res.update({'action' : partner_id and 'exist' or 'create'})
+            if 'partner_id' in fields:
+                res.update({'partner_id' : partner_id})
+            if 'name' in fields:
+                res.update({'name' : len(tomerge) >= 2 and 'merge' or 'convert'})
+            if 'opportunity_ids' in fields and len(tomerge) >= 2:
+                res.update({'opportunity_ids': list(tomerge)})
 
         return res
 
@@ -115,24 +107,6 @@ class crm_lead2opportunity_partner(osv.osv_memory):
             lead.allocate_salesman(cr, uid, lead_ids, user_ids, team_id=team_id, context=context)
         return res
 
-    def _merge_opportunity(self, cr, uid, ids, opportunity_ids, action='merge', context=None):
-        if context is None:
-            context = {}
-        res = False
-        # Expected: all newly-converted leads (active_ids) will be merged with the opportunity(ies)
-        # that have been selected in the 'opportunity_ids' m2m, with all these records
-        # merged into the first opportunity (and the rest deleted)
-        opportunity_ids = [o.id for o in opportunity_ids]
-        lead_ids = context.get('active_ids', [])
-        if action == 'merge' and lead_ids and opportunity_ids:
-            # Add the leads in the to-merge list, next to other opps
-            # (the fact that they're passed in context['lead_ids'] means that
-            # they cannot be selected to contain the result of the merge.
-            opportunity_ids.extend(lead_ids)
-            context.update({'lead_ids': lead_ids, "convert" : True})
-            res = self.pool.get('crm.lead').merge_opportunity(cr, uid, opportunity_ids, context=context)
-        return res
-
     def action_apply(self, cr, uid, ids, context=None):
         """
         Convert lead to opportunity or merge lead and opportunity and open
@@ -140,13 +114,37 @@ class crm_lead2opportunity_partner(osv.osv_memory):
         """
         if context is None:
             context = {}
+
+        w = self.browse(cr, uid, ids, context=context)[0]
+        opp_ids = [o.id for o in w.opportunity_ids]
+        if w.name == 'merge':
+            lead_id = self.pool.get('crm.lead').merge_opportunity(cr, uid, opp_ids, context=context)
+            lead_ids = [lead_id]
+            lead = self.pool.get('crm.lead').read(cr, uid, lead_id, ['type'], context=context)
+            if lead['type'] == "lead":
+                context.update({'active_ids': lead_ids})
+                self._convert_opportunity(cr, uid, ids, {'lead_ids': lead_ids}, context=context)
+        else:
+            lead_ids = context.get('active_ids', [])
+            self._convert_opportunity(cr, uid, ids, {'lead_ids': lead_ids}, context=context)
+
+        return self.pool.get('crm.lead').redirect_opportunity_view(cr, uid, lead_ids[0], context=context)
+
+    def _create_partner(self, cr, uid, ids, context=None):
+        """
+        Create partner based on action.
+        :return dict: dictionary organized as followed: {lead_id: partner_assigned_id}
+        """
+        #TODO this method in only called by crm_lead2opportunity_partner
+        #wizard and would probably diserve to be refactored or at least
+        #moved to a better place
+        if context is None:
+            context = {}
         lead = self.pool.get('crm.lead')
         lead_ids = context.get('active_ids', [])
         data = self.browse(cr, uid, ids, context=context)[0]
-        self._convert_opportunity(cr, uid, ids, {'lead_ids': lead_ids}, context=context)
-        self._merge_opportunity(cr, uid, ids, data.opportunity_ids, data.name, context=context)
-        return lead.redirect_opportunity_view(cr, uid, lead_ids[0], context=context)
-
+        partner_id = data.partner_id and data.partner_id.id or False
+        return lead.handle_partner_assignation(cr, uid, lead_ids, data.action, partner_id, context=context)
 
 class crm_lead2opportunity_mass_convert(osv.osv_memory):
     _name = 'crm.lead2opportunity.partner.mass'

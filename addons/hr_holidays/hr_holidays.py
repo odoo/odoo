@@ -24,10 +24,9 @@
 import datetime
 import time
 from itertools import groupby
-from operator import itemgetter
+from operator import attrgetter, itemgetter
 
 import math
-from openerp import netsvc
 from openerp import tools
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
@@ -117,7 +116,10 @@ class hr_holidays(osv.osv):
         },
     }
 
-    def _employee_get(self, cr, uid, context=None):
+    def _employee_get(self, cr, uid, context=None):        
+        emp_id = context.get('default_employee_id', False)
+        if emp_id:
+            return emp_id
         ids = self.pool.get('hr.employee').search(cr, uid, [('user_id', '=', uid)], context=context)
         if ids:
             return ids[0]
@@ -178,10 +180,21 @@ class hr_holidays(osv.osv):
     ] 
     
     _sql_constraints = [
-        ('type_value', "CHECK( (holiday_type='employee' AND employee_id IS NOT NULL) or (holiday_type='category' AND category_id IS NOT NULL))", "The employee or employee category of this request is missing."),
+        ('type_value', "CHECK( (holiday_type='employee' AND employee_id IS NOT NULL) or (holiday_type='category' AND category_id IS NOT NULL))", 
+         "The employee or employee category of this request is missing. Please make sure that your user login is linked to an employee."),
         ('date_check2', "CHECK ( (type='add') OR (date_from <= date_to))", "The start date must be anterior to the end date."),
         ('date_check', "CHECK ( number_of_days_temp >= 0 )", "The number of days must be greater than 0."),
     ]
+    
+    def copy(self, cr, uid, id, default=None, context=None):
+        if default is None:
+            default = {}
+        if context is None:
+            context = {}
+        default = default.copy()
+        default['date_from'] = False
+        default['date_to'] = False
+        return super(hr_holidays, self).copy(cr, uid, id, default, context=context)
 
     def _create_resource_leave(self, cr, uid, leaves, context=None):
         '''This method will create entry in resource calendar leave object at the time of holidays validated '''
@@ -204,9 +217,9 @@ class hr_holidays(osv.osv):
         leave_ids = obj_res_leave.search(cr, uid, [('holiday_id', 'in', ids)], context=context)
         return obj_res_leave.unlink(cr, uid, leave_ids, context=context)
 
-    def onchange_type(self, cr, uid, ids, holiday_type):
-        result = {'value': {'employee_id': False}}
-        if holiday_type == 'employee':
+    def onchange_type(self, cr, uid, ids, holiday_type, employee_id=False, context=None):
+        result = {}
+        if holiday_type == 'employee' and not employee_id:
             ids_employee = self.pool.get('hr.employee').search(cr, uid, [('user_id','=', uid)])
             if ids_employee:
                 result['value'] = {
@@ -304,10 +317,8 @@ class hr_holidays(osv.osv):
             'manager_id': False,
             'manager_id2': False,
         })
-        wf_service = netsvc.LocalService("workflow")
-        for id in ids:
-            wf_service.trg_delete(uid, 'hr.holidays', id, cr)
-            wf_service.trg_create(uid, 'hr.holidays', id, cr)
+        self.delete_workflow(cr, uid, ids)
+        self.create_workflow(cr, uid, ids)
         to_unlink = []
         for record in self.browse(cr, uid, ids, context=context):
             for record2 in record.linked_request_ids:
@@ -370,11 +381,11 @@ class hr_holidays(osv.osv):
                         'employee_id': emp.id
                     }
                     leave_ids.append(self.create(cr, uid, vals, context=None))
-                wf_service = netsvc.LocalService("workflow")
                 for leave_id in leave_ids:
-                    wf_service.trg_validate(uid, 'hr.holidays', leave_id, 'confirm', cr)
-                    wf_service.trg_validate(uid, 'hr.holidays', leave_id, 'validate', cr)
-                    wf_service.trg_validate(uid, 'hr.holidays', leave_id, 'second_validate', cr)
+                    # TODO is it necessary to interleave the calls?
+                    self.signal_confirm(cr, uid, [leave_id])
+                    self.signal_validate(cr, uid, [leave_id])
+                    self.signal_second_validate(cr, uid, [leave_id])
         return True
 
     def holidays_confirm(self, cr, uid, ids, context=None):
@@ -404,9 +415,7 @@ class hr_holidays(osv.osv):
                 meeting_obj.unlink(cr, uid, [record.meeting_id.id])
 
             # If a category that created several holidays, cancel all related
-            wf_service = netsvc.LocalService("workflow")
-            for request in record.linked_request_ids or []:
-                wf_service.trg_validate(uid, 'hr.holidays', request.id, 'refuse', cr)
+            self.signal_refuse(cr, uid, map(attrgetter('id'), record.linked_request_ids or []))
 
         self._remove_resource_leave(cr, uid, ids, context=context)
         return True
@@ -446,7 +455,6 @@ class resource_calendar_leaves(osv.osv):
         'holiday_id': fields.many2one("hr.holidays", "Leave Request"),
     }
 
-resource_calendar_leaves()
 
 
 class hr_employee(osv.osv):
@@ -478,10 +486,9 @@ class hr_employee(osv.osv):
             leave_id = holiday_obj.create(cr, uid, {'name': _('Leave Request for %s') % employee.name, 'employee_id': employee.id, 'holiday_status_id': status_id, 'type': 'remove', 'holiday_type': 'employee', 'number_of_days_temp': abs(diff)}, context=context)
         else:
             return False
-        wf_service = netsvc.LocalService("workflow")
-        wf_service.trg_validate(uid, 'hr.holidays', leave_id, 'confirm', cr)
-        wf_service.trg_validate(uid, 'hr.holidays', leave_id, 'validate', cr)
-        wf_service.trg_validate(uid, 'hr.holidays', leave_id, 'second_validate', cr)
+        holiday_obj.signal_confirm(cr, uid, [leave_id])
+        holiday_obj.signal_validate(cr, uid, [leave_id])
+        holiday_obj.signal_second_validate(cr, uid, [leave_id])
         return True
 
     def _get_remaining_days(self, cr, uid, ids, name, args, context=None):
@@ -536,6 +543,5 @@ class hr_employee(osv.osv):
         'leave_date_to': fields.function(_get_leave_status, multi='leave_status', type='date', string='To Date'),
     }
 
-hr_employee()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
