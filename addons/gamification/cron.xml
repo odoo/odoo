@@ -12,16 +12,5 @@
             <field name="function">_cron_update</field>
             <field name="args">()</field>
         </record>
-        <record forcecreate="True" id="ir_cron_check_badge"
-            model="ir.cron">
-            <field name="name">Run Bagde Checker</field>
-            <field name="interval_number">1</field>
-            <field name="interval_type">days</field>
-            <field name="numbercall">-1</field>
-            <field eval="False" name="doall" />
-            <field name="model">gamification.badge</field>
-            <field name="function">_cron_check</field>
-            <field name="args">()</field>
-        </record>
     </data>
 </openerp>
