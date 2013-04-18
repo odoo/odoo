@@ -68,6 +68,7 @@ openerp.crm = function(openerp) {
                             $el.sparkline($el.data("value").split(','), {type: 'bar', barWidth: 5} );
                             $el.tipsy({'delayIn': 0, 'html': true, 'title': function(){return $(this).data("title")}, 'gravity': 'n'});
                         });
+                        self.$(".oe_kanban_card").css('min-height', "");
                     }, 0);
                 });
             }
