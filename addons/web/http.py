@@ -367,7 +367,7 @@ class ControllerType(type):
 
         path = attrs.get('_cp_path')
         if Controller in bases:
-            assert path, "Controller subclass %s missing a _cp_path" % cls
+            assert path, "Controller subclass %s missing a _cp_path" % name
         else:
             parent_paths = set(base._cp_path for base in bases
                                if issubclass(base, Controller))
@@ -385,7 +385,7 @@ class ControllerType(type):
                 if parent_path == path:
                     _logger.warn(
                         "Controller %s extending %s in-place should not "
-                        "explicitly specify URL", cls, parent)
+                        "explicitly specify URL", name, parent)
                     return
                 _logger.warn("Re-exposing %s at %s.\n"
                              "\tThis usage is unsupported.",
@@ -395,7 +395,7 @@ class ControllerType(type):
         if path:
             assert path not in controllers_class,\
                 "Trying to expose %s at the same URL as %s" % (
-                    cls, controllers_class[path])
+                    name, controllers_class[path])
             controllers_class[path] = cls
 
 
