@@ -1006,8 +1006,7 @@ class account_period(osv.osv):
     def find(self, cr, uid, dt=None, context=None):
         if context is None: context = {}
         if not dt:
-            dt = fields.date.context_today(self,cr,uid,context=context)
-#CHECKME: shouldn't we check the state of the period?
+            dt = fields.date.context_today(self, cr, uid, context=context)
         args = [('date_start', '<=' ,dt), ('date_stop', '>=', dt)]
         if context.get('company_id', False):
             args.append(('company_id', '=', context['company_id']))
@@ -1015,6 +1014,7 @@ class account_period(osv.osv):
             company_id = self.pool.get('res.users').browse(cr, uid, uid, context=context).company_id.id
             args.append(('company_id', '=', company_id))
         result = []
+        #WARNING: in next version the default value for account_periof_prefer_normal will be True
         if context.get('account_period_prefer_normal'):
             # look for non-special periods first, and fallback to all if no result is found
             result = self.search(cr, uid, args + [('special', '=', False)], context=context)
@@ -1167,7 +1167,7 @@ class account_move(osv.osv):
             context = {}
         #put the company in context to find the good period
         ctx = context.copy()
-        ctx.update({'company_id': company_id})
+        ctx.update({'company_id': company_id, 'account_period_prefer_normal': True})
         return {
             'journal_id': journal_id,
             'date': date,
@@ -1796,7 +1796,8 @@ class account_tax_code(osv.osv):
         if context.get('period_id', False):
             period_id = context['period_id']
         else:
-            period_id = self.pool.get('account.period').find(cr, uid)
+            ctx = dict(context, account_period_prefer_normal=True)
+            period_id = self.pool.get('account.period').find(cr, uid, context=ctx)
             if not period_id:
                 return dict.fromkeys(ids, 0.0)
             period_id = period_id[0]
@@ -2313,7 +2314,7 @@ class account_model(osv.osv):
         move_date = datetime.strptime(move_date,"%Y-%m-%d")
         for model in self.browse(cr, uid, ids, context=context):
             ctx = context.copy()
-            ctx.update({'company_id': model.company_id.id})
+            ctx.update({'company_id': model.company_id.id, 'account_period_prefer_normal': True})
             period_ids = period_obj.find(cr, uid, dt=context.get('date', False), context=ctx)
             period_id = period_ids and period_ids[0] or False
             ctx.update({'journal_id': model.journal_id.id,'period_id': period_id})
