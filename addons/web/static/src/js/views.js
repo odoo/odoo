@@ -156,8 +156,7 @@ instance.web.ActionManager = instance.web.Widget.extend({
                 tit = [tit];
             }
             for (var j = 0; j < tit.length; j += 1) {
-                var remove_html_tag = String(tit[j]).replace(/<\/?[^>]+>/g, '');
-                var label = _.escape(remove_html_tag);
+                var label = _.escape(tit[j]);
                 if (i === this.breadcrumbs.length - 1 && j === tit.length - 1) {
                     titles.push(_.str.sprintf('<span class="oe_breadcrumb_item">%s</span>', label));
                 } else {
