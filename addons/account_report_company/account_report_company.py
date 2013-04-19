@@ -23,19 +23,27 @@ from openerp.osv import osv, fields
 
 class res_partner(osv.Model):
     _inherit = 'res.partner'
-    
-    # indirection to avoid passing a copy of the overridable method when declaring the function field
-    _commercial_partner_id = lambda self, *args, **kwargs: self._commercial_partner_compute(*args, **kwargs)
+    _order = 'display_name'
+
+    def _display_name_compute(self, cr, uid, ids, name, args, context=None):
+        return dict(self.name_get(cr, uid, ids, context=context))
 
     _commercial_partner_id_store_triggers = {
         'res.partner': (lambda self,cr,uid,ids,context=None: self.search(cr, uid, [('id','child_of',ids)]),
                         ['parent_id', 'is_company'], 10)
     }
 
+    # indirections to avoid passing a copy of the overridable method when declaring the function field
+    _commercial_partner_id = lambda self, *args, **kwargs: self._commercial_partner_compute(*args, **kwargs)
+    _display_name = lambda self, *args, **kwargs: self._display_name_compute(*args, **kwargs)
+
     _columns = {
         # make the original field stored, in case it's needed for reporting purposes
         'commercial_partner_id': fields.function(_commercial_partner_id, type='many2one', relation='res.partner', string='Commercial Entity',
-                                                 store=_commercial_partner_id_store_triggers)
+                                                 store=_commercial_partner_id_store_triggers),
+
+        # extra field to allow ORDER BY to match visible names
+        'display_name': fields.function(_display_name, type='char', string='Name', store=_commercial_partner_id_store_triggers),
     }
 
 class account_invoice(osv.Model):
