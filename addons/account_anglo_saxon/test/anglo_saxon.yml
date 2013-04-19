@@ -8,16 +8,16 @@
     type: other
     user_type: account.data_account_type_asset
 -
-  Configure Stock Interim account (Received)
+  Configure Stock Interim account (Received).
 -
   !record {model: account.account, id: account_anglo_2}:
     code: 2800
     name: Stock Interim account (Received)
-    parent_id: account.ovr
+    parent_id: account.cog
     type: other
     user_type: account.data_account_type_expense
 -
-  Configure Stock Interim account (Delivered)
+  Configure Stock Interim account (Delivered).
 -
   !record {model: account.account, id: account_anglo_3}:
     code: 2801
@@ -26,7 +26,7 @@
     type: other
     user_type: account.data_account_type_income
 -
-  Configure Price difference creditor Account
+  Configure Price difference creditor Account.
 -
   !record {model: account.account, id: account_anglo_4}:
     code: 7095
@@ -35,7 +35,16 @@
     type: other
     user_type: account.data_account_type_expense
 -
-  Configure Creditor Account Payable 
+  Configure Cash Bank Account.
+-
+  !record {model: account.account, id: account_anglo_5}:
+    code: 5000
+    name: Cash/Bank Account 
+    parent_id: account.cash  
+    type: other
+    user_type: account.data_account_type_asset
+-
+  Configure Creditor Account Payable. 
 -
   !record {model: account.account, id: account_anglo_6}:
     code: 440001
@@ -44,7 +53,16 @@
     type: other
     user_type: account.data_account_type_payable
 -
-  Configure Cost of Good sale
+  Configure Debtor Account Receivable. 
+-
+  !record {model: account.account, id: account_anglo_7}:
+    code: 400001
+    name: Debtor Account Receivable 
+    parent_id: account.a_recv  
+    type: other
+    user_type: account.data_account_type_receivable
+-
+  Configure Cost of Good sale Account.
 -
   !record {model: account.account, id: account_anglo_8}:
     code: 7000
@@ -53,7 +71,7 @@
     type: other
     user_type: account.data_account_type_expense
 -
-  Configure Income Account
+  Configure Income Account.
 -
   !record {model: account.account, id: account_anglo_9}:
     code: 8000
@@ -64,28 +82,30 @@
 -
   I have configure the account receivable of supplier
 -
-  !python {model: res.partner}: |
-     a = self.write(cr, uid, [ref('base.res_partner_3')], {'property_account_payable': ref('account_anglo_6')})
+  !record {model: res.partner, id: base.res_partner_3}:
+    property_account_payable: account_anglo_6
+    property_account_receivable: account_anglo_7
 -
-  I have configure the account receivable of Customer
+  I have configure the account receivable of Customer.
 -
-  !python {model: res.partner}: |
-     a = self.write(cr, uid, [ref('base.res_partner_13')], {'property_account_payable': ref('account_anglo_6')})
+  !record {model: res.partner, id: base.res_partner_13}:
+    property_account_payable: account_anglo_6
+    property_account_receivable: account_anglo_7
 -
-  I have configure the product category with stock valuation account
+  I have configure the product category with stock valuation account.
 -
   !python {model: product.category}: |
      self.write(cr, uid, [ref('product.product_category_4')], {'property_stock_valuation_account_id': ref('account_anglo_1')})
 -
-  I have configure the product with required accounts
+  I have configure the product with required accounts.
 -
   !python {model: product.product}: |
-     self.write(cr, uid, [ref('product.product_product_3')], {'list_price': 20.00,'standard_price': 9,'valuation': 'real_time',
+     self.write(cr, uid, [ref('product.product_product_3')], {'list_price': 20.00,'standard_price': 9,'categ_id': ref('product.product_category_4'),'valuation': 'real_time',
       'property_account_income': ref('account_anglo_9'),'property_account_expense': ref('account_anglo_8'),
       'property_account_creditor_price_difference': ref('account_anglo_4'),'property_stock_account_input': ref('account_anglo_2'),
       'property_stock_account_output': ref('account_anglo_3')})
 -
-  I create a draft Purchase Order
+  I create a draft Purchase Order.
 -
   !record {model: purchase.order, id: purchase_order_001}:
     partner_id: base.res_partner_3
@@ -97,7 +117,7 @@
         price_unit: 10
         date_planned: '2013-08-31'
 -
-  I confirm the purchase order
+  I confirm the purchase order.
 -
   !workflow {model: purchase.order, ref: purchase_order_001, action: purchase_confirm}
 -
@@ -108,17 +128,15 @@
     partial_id = self.create(cr, uid, {},context={'active_model': 'stock.picking','active_ids': [pick_ids[0].id]})
     self.do_partial(cr, uid, [partial_id])
 -
-  I check the Stock Interim account (Received) credit successfully
+  I check the Stock Interim account (Received) is credit successfully.
 -
-  !python {model: account.account}: |
-    acc = self.browse(cr, uid, ref('account_anglo_2'))
-    assert acc.credit == 9, "Stock Interim account (Received) credit not successfully"
+  !assert {model: account.account, id : account_anglo_2, string : Stock Interim account (Received) is not credited successfully.}:
+    - credit == 9
 -
-  I check the Stock valuation account debit sucessfully
+  I check the Stock valuation account is debit sucessfully.
 -
-  !python {model: account.account}: |
-    acc = self.browse(cr, uid, ref('account_anglo_1'))
-    assert acc.debit == 9, "Stock valuation account not debited successfully"
+  !assert {model: account.account, id : account_anglo_1, string : Stock valuation account is not debited successfully.}:
+    - debit == 9
 -
   I Validate Invoice of Purchase Order.
 -
@@ -126,33 +144,29 @@
     invoice_ids = [x.id for x in self.browse(cr, uid, ref("purchase_order_001")).invoice_ids]
     self.pool.get('account.invoice').signal_invoice_open(cr, uid, invoice_ids)
 -
-  I check the Stock Interim account (Received) debited sucessfully when Invoice validated
+  I check the Stock Interim account (Received) is debited sucessfully when Invoice validated.
 -
- !python {model: account.account}: |
-    acc = self.browse(cr, uid, ref('account_anglo_2'))
-    assert acc.debit == 9, "Stock Interim account (Received) debited not successfully"
+  !assert {model: account.account, id : account_anglo_2, string : Stock Interim account (Received) is not debited successfully.}:
+    - debit == 9
 -
-  I check the Price difference creditor Account debited sucessfully when Invoice validated
+  I check the Price difference creditor Account is debited sucessfully when Invoice validated.
 -
- !python {model: account.account}: |
-    acc = self.browse(cr, uid, ref('account_anglo_4'))
-    assert acc.debit == 1, "Price difference creditor Account debited not successfully"
+  !assert {model: account.account, id : account_anglo_4, string : Price difference creditor Account is not debited successfully.}:
+    - debit == 1
 -
-  I check Payable(creditor) Account Credited sucessfully when Invoice validated
+  I check Payable(creditor) Account is Credited sucessfully when Invoice validated.
 -
- !python {model: account.account}: |
-    acc = self.browse(cr, uid, ref('account_anglo_6'))
-    assert acc.credit == 10, "Payable(creditor) Account Credited not successfully"
+  !assert {model: account.account, id : account_anglo_6, string : Payable(creditor) Account is not Credited successfully.}:
+    - credit == 10
 -
- I open the Invoice.
+  I open the Invoice.
 -
   !python {model: purchase.order}: |
     po = self.browse(cr, uid, ref("purchase_order_001"))
-    account_invoice_obj = self.pool.get('account.invoice')
     for invoice in po.invoice_ids:
-      account_invoice_obj.signal_invoice_open(cr, uid, [invoice.id])
+      self.pool.get('account.invoice').signal_invoice_open(cr, uid, [invoice.id])
 -
-  I pay the invoice
+  I pay the invoice.
 -
   !python {model: purchase.order}: |
     invoice_ids = self.browse(cr, uid, ref("purchase_order_001")).invoice_ids
@@ -160,27 +174,25 @@
     journal_ids = self.pool.get('account.journal').search(cr, uid, [('type', '=', 'cash'), ('company_id', '=', order.company_id.id)], limit=1)
     for invoice in invoice_ids:
       invoice.pay_and_reconcile(
-          invoice.amount_total, ref('account.cash'), ref('account.period_8'),
-          journal_ids[0], ref('account.cash'),
+          invoice.amount_total, ref('account_anglo_5'), ref('account.period_8'),
+          journal_ids[0], ref('account_anglo_5'),
           ref('account.period_8'), journal_ids[0],
           name='test')
 -
-  I check Payable(Creditors) Account Debited sucessfully after invoice paid
+  I check Payable(Creditors) Account is Debited sucessfully after invoice paid.
 -
- !python {model: account.account}: |
-    acc = self.browse(cr, uid, ref('account_anglo_6'))
-    assert acc.debit == 10, "Payable(Creditors) Account Debited not successfully"
+  !assert {model: account.account, id : account_anglo_6, string : Payable(Creditors) Account is not Debited successfully.}:
+    - debit == 10
 -
- I check Bank/Cash account credited sucessfully after invoice paid
+  I check Bank/Cash account is credited sucessfully after invoice paid.
 -
- !python {model: account.account}: |
-    acc = self.browse(cr, uid, ref('account.cash'))
-    assert acc.credit == 10, "Bank/Cash account not successfully credited"
+  !assert {model: account.account, id : account_anglo_5, string: Bank/Cash account is not credited successfully.}:
+    - credit == 10
 -
   I create an Outgoing Picking order
 -
   !record {model: stock.picking, id: stock_picking_out001}:
-    partner_id: base.res_partner_address_22
+    partner_id: base.res_partner_13
     invoice_state: 2binvoiced
     move_lines:
       - company_id: base.main_company
@@ -192,7 +204,7 @@
     move_type: direct
     type: out
 -
-  I need to check the availability of the product so I make my picking order for processing later.
+  I need to check the availability of the product, So I make my picking order for processing later.
 -
   !python {model: stock.picking}: |
     self.draft_force_assign(cr, uid, [ref("stock_picking_out001")], {"lang": "en_US", "search_default_available":
@@ -200,7 +212,7 @@
       "active_ids": [ref("stock.menu_action_picking_tree")], "active_id": ref("stock.menu_action_picking_tree"),
       })
 -
-  I check the product availability. Product is available in the stock and ready to be sent.
+  I check the product availability, Product is available in the stock and ready to be sent.
 -
   !python {model: stock.picking}: |
     self.action_assign(cr, uid, [ref("stock_picking_out001")], {"lang": "en_US", "search_default_available":
@@ -208,23 +220,21 @@
       "active_ids": [ref("stock.menu_action_picking_tree")], "active_id": ref("stock.menu_action_picking_tree"),
       })
 -
-  I process the delivery
+  I process the delivery.
 -
   !python {model: stock.partial.picking}: |
     partial_id = self.create(cr, uid, {}, context={'active_model':'stock.picking','active_ids':[ref('stock_picking_out001')]})
     self.do_partial(cr, uid, [partial_id])
 - 
- I check Stock Interim account (Delivary) debited successfully
+  I check Stock Interim account (Delivary) is debited successfully.
 -
- !python {model: account.account}: |
-    acc = self.browse(cr, uid, ref('account_anglo_3'))
-    assert acc.debit == 9, "Stock Interim account (Delivary) not successfully debited"
+  !assert {model: account.account, id : account_anglo_3, string : Stock Interim account (Delivary) is not debited successfully.}:
+    - debit == 9
 -
-  I check the Stock valuation account credited sucessfully
+  I check the Stock valuation account is credited sucessfully.
 -
-  !python {model: account.account}: |
-    acc = self.browse(cr, uid, ref('account_anglo_1'))
-    assert acc.credit == 9, "Stock valuation account not credited successfully"
+  !assert {model: account.account, id : account_anglo_1, string : Stock valuation account is not credited successfully.}: 
+    - credit == 9
 -
   As the Invoice state of the picking order is To be invoiced. I create invoice for my outgoing picking order.
 -
@@ -238,69 +248,57 @@
   I check that the customer invoice is created successfully.
 -
   !python {model: account.invoice}: |
-    picking_obj = self.pool.get('stock.picking')
-    picking = picking_obj.browse(cr, uid, [ref('stock_picking_out001')])
-    partner = picking[0].partner_id.id
-    inv_ids = self.search(cr, uid, [('type','=','out_invoice'),('partner_id','=',partner)])
+    partner_id = self.pool.get('stock.picking').browse(cr, uid, ref('stock_picking_out001')).partner_id.id
+    inv_ids = self.search(cr, uid, [('type','=','out_invoice'),('partner_id','=',partner_id)])
     assert inv_ids, 'No Invoice is generated!'
 -
   I open the Invoice.
 -
   !python {model: stock.picking}: |
-    picking_obj = self.pool.get('stock.picking')
-    name = picking_obj.browse(cr, uid, ref('stock_picking_out001')).name
-    account_invoice = self.pool.get('account.invoice').search(cr, uid, [('origin', '=', name)])
-    account_invoice_obj = self.pool.get('account.invoice')
-    account_invoice_obj.signal_invoice_open(cr, uid, account_invoice)
+    move_name = self.pool.get('stock.picking').browse(cr, uid, ref('stock_picking_out001')).name
+    account_invoice = self.pool.get('account.invoice').search(cr, uid, [('origin', '=', move_name)])
+    self.pool.get('account.invoice').signal_invoice_open(cr, uid, account_invoice)
 -
-  I pay the invoice
+  I pay the invoice.
 -
   !python {model: account.invoice}: |
-    picking_obj = self.pool.get('stock.picking')
-    name = picking_obj.browse(cr, uid, ref('stock_picking_out001')).name
-    account_invoice= self.pool.get('account.invoice').search(cr, uid, [('origin', '=', name)])
+    move_name = self.pool.get('stock.picking').browse(cr, uid, ref('stock_picking_out001')).name
+    account_invoice= self.pool.get('account.invoice').search(cr, uid, [('origin', '=', move_name)])
     import time
     journal_ids = self.pool.get('account.journal').search(cr, uid, [('type', '=', 'cash')], limit=1)
     pay = self.pay_and_reconcile(cr, uid, account_invoice,
-        20.0, ref('account.cash'), ref('account.period_8'),
-        journal_ids[0], ref('account.cash'),
+        20.0, ref('account_anglo_5'), ref('account.period_8'),
+        journal_ids[0], ref('account_anglo_5'),
         ref('account.period_8'), journal_ids[0],
         name='Payment for test customer invoice')
-    assert (pay == True), "Incorrect Payment"
+    assert (pay == True), "Incorrect Payment."
 -
-  I check Income Account Credited sucessfully when Invoice validated
+  I check Income Account is Credited sucessfully when Invoice validated.
 -
- !python {model: account.account}: |
-    acc = self.browse(cr, uid, ref('account_anglo_9'))
-    assert acc.credit == 20, "Income Account Credited not successfully"
+  !assert {model: account.account, id : account_anglo_9, string : Income Account is not Credited successfully.}:
+    - credit == 20
 -
-  I check Cost of goods sale debit
+  I check Cost of goods sale account for debit.
 -
- !python {model: account.account}: |
-    acc = self.browse(cr, uid, ref('account_anglo_8'))
-    assert acc.debit == 9, "Cost of goods sale not debited"
+  !assert {model: account.account, id : account_anglo_8, string : Cost of goods sale is not Debited successfully.}:
+    - debit == 9
 -
-  I check Cost of goods sale credit
+  I check Cost of goods sale account for credit.
 -
- !python {model: account.account}: |
-    acc = self.browse(cr, uid, ref('account_anglo_3'))
-    assert acc.credit == 9, "Stock Interim account (Delivary) not successfully credited"
+  !assert {model: account.account, id : account_anglo_3, string : Stock Interim account (Delivary) is not credited successfully.}:
+    - credit == 9
 -
-  I check Receivable(Debtor) Account for debit and credit
+  I check Receivable(Debtor) Account for debit.
 -
-  !python {model: account.invoice}: |
-    move_obj = self.pool.get('account.move.line')
-    move_line = move_obj.search(cr, uid, [('partner_id','=',ref('base.res_partner_13')),('name','=', 'Payment for test customer invoice')])
-    move_lines = move_obj.browse(cr, uid, move_line)
-    debit_line = move_lines[0].debit
-    credit_line = move_lines[1].credit
-    assert debit_line == 20.00, " Receivable(debtor) Account debited not successfully"
-    assert credit_line == 20.00, "Receivable(debtor) Account credited not successfully"
+  !assert {model: account.account, id : account_anglo_7, string : Receivable(Debtors) Account is not Debited successfully.}: 
+    - debit == 20
 -
- I check Bank/Cash account debited sucessfully after invoice paid
+  I check Receivable(Debtor) Account for credit.
 -
- !python {model: account.account}: |
-    move_obj = self.pool.get('account.invoice')
-    move_line = move_obj.search(cr, uid, [('amount_total','=', 20.00),('type', '=', 'out_invoice')])
-    credit_line = move_obj.browse(cr, uid, move_line[0]).amount_total
-    assert credit_line == 20.00, "Bank/Cash account not debited sucessfully after invoice paid"
+  !assert {model: account.account, id : account_anglo_7, string : Receivable(Debtors) Account is not Credited successfully.}: 
+    - credit == 20
+-
+  I check Bank/Cash account is debited sucessfully after invoice paid.
+-
+  !assert {model: account.account, id : account_anglo_5, string: Bank/Cash account is not successfully credited.}:
+    - debit == 20
