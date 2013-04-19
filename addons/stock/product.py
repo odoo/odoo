@@ -202,7 +202,6 @@ class product_product(osv.osv):
         """
         if context is None:
             context = {}
-        
         location_obj = self.pool.get('stock.location')
         warehouse_obj = self.pool.get('stock.warehouse')
         shop_obj = self.pool.get('sale.shop')
@@ -277,11 +276,17 @@ class product_product(osv.osv):
         if date_values:
             where.append(tuple(date_values))
 
+        #It depends on the company of the user
+        user = self.pool.get("res.users").browse(cr, uid, uid, context=context)
+        where.append(user.company_id.id)
+
         prodlot_id = context.get('prodlot_id', False)
         prodlot_clause = ''
         if prodlot_id:
             prodlot_clause = ' and prodlot_id = %s '
             where += [prodlot_id]
+
+
 
         # TODO: perhaps merge in one query.
         if 'in' in what:
@@ -293,6 +298,7 @@ class product_product(osv.osv):
                 'and location_dest_id IN %s '\
                 'and product_id IN %s '\
                 'and state IN %s ' + (date_str and 'and '+date_str+' ' or '') +' '\
+                'and company_id = %s '\
                 + prodlot_clause + 
                 'group by product_id,product_uom',tuple(where))
             results = cr.fetchall()
@@ -305,6 +311,7 @@ class product_product(osv.osv):
                 'and location_dest_id NOT IN %s '\
                 'and product_id  IN %s '\
                 'and state in %s ' + (date_str and 'and '+date_str+' ' or '') + ' '\
+                'and company_id = %s '\
                 + prodlot_clause + 
                 'group by product_id,product_uom',tuple(where))
             results2 = cr.fetchall()

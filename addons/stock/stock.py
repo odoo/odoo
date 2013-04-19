@@ -1277,6 +1277,38 @@ class stock_picking(osv.osv):
                                 {'price_unit': product_price,
                                  'price_currency_id': product_currency})
 
+                #Average price computation when returning products
+                if (pick.type == 'out') and (move.product_id.cost_method == 'average'):
+                    orig_move_id = move_obj.search(cr, uid, [('move_history_ids2', 'in', [move.id])], context=context)
+                    if len(orig_move_id) == 1:
+                        #Is it ok to repeat code here?
+                        move_orig = move_obj.browse(cr, uid, orig_move_id[0], context=context)
+                        product = product_obj.browse(cr, uid, move.product_id.id)
+                        move_currency_id = move.company_id.currency_id.id
+                        context['currency_id'] = move_currency_id
+                        qty = uom_obj._compute_qty(cr, uid, product_uom, product_qty, product.uom_id.id)
+
+                        if product.id in product_avail:
+                            product_avail[product.id] += qty
+                        else:
+                            product_avail[product.id] = product.qty_available
+                        if qty > 0:
+                            new_price = currency_obj.compute(cr, uid, product_currency,
+                                move_currency_id, move_orig.price_unit)
+                            new_price = uom_obj._compute_price(cr, uid, product_uom, new_price,
+                                product.uom_id.id)
+                            # Get the standard price
+                            amount_unit = product.price_get('standard_price', context=context)[product.id]
+                            new_std_price = ((amount_unit * product_avail[product.id])\
+                                - (new_price * qty))/(product_avail[product.id] - qty)
+                            # Write the field according to price type field
+                            product_obj.write(cr, uid, [product.id], {'standard_price': new_std_price})
+
+                            # Record the values that were chosen in the wizard, so they can be
+                            # used for inventory valuation if real-time valuation is enabled.
+                            move_obj.write(cr, uid, [move.id],
+                                {'price_unit': move_orig.price_unit,
+                                 'price_currency_id': product_currency})
 
             for move in too_few:
                 product_qty = move_product_qty[move.id]
