@@ -4792,8 +4792,8 @@ class BaseModel(object):
                 order_field = order_split[0].strip()
                 order_direction = order_split[1].strip() if len(order_split) == 2 else ''
                 inner_clause = None
-                if order_field == 'id':
-                    order_by_elements.append('"%s"."id" %s' % (self._table, order_direction))
+                if order_field == 'id' or (self._log_access and order_field in LOG_ACCESS_COLUMNS.keys()):
+                    order_by_elements.append('"%s"."%s" %s' % (self._table, order_field, order_direction))
                 elif order_field in self._columns:
                     order_column = self._columns[order_field]
                     if order_column._classic_read:
@@ -4811,6 +4811,8 @@ class BaseModel(object):
                         inner_clause = self._generate_m2o_order_by(order_field, query)
                     else:
                         continue  # ignore non-readable or "non-joinable" fields
+                else:
+                    raise ValueError( _("Sorting field %s not found on model %s") %( order_field, self._name))
                 if inner_clause:
                     if isinstance(inner_clause, list):
                         for clause in inner_clause:
