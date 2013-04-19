@@ -9,9 +9,10 @@
             <h3><t t-esc="plan.name" /></h3>
 
             <t t-if="plan.visibility_mode == 'progressbar'">
-                <ul class="oe_goals_list">
-                <li t-foreach="plan.goals" t-as="goal">
-                    <span class="oe_goal_sparkline_piechart" t-att-data-completeness="goal.completeness"></span>
+                <ul class="oe_goals_list" style="width:200px;">
+                <li t-foreach="plan.goals" t-as="goal" t-attf-style="width: #{goal.completeness}%;" class="oe_goal_progress">
+                    <div style="width:200px;">
+                    <!-- <span class="oe_goal_sparkline_piechart" t-att-data-completeness="goal.completeness"></span> -->
                     <strong t-attf-class="#{goal.state == 'reached' ? 'oe_goal_reached' : goal.state == 'failed' ? 'oe_goal_failed' : ''}" t-att-title="goal.type_description"><t t-esc="goal.type_name" /></strong>
                     <t t-if="goal.computation_mode == 'manually' or goal.type_action">
                         <a class="oe_goal_action oe_e" t-att-id="goal.id">&amp;</a>
@@ -33,6 +34,7 @@
                             </p>
                         </t>
                     </t>
+                    </div>
                 </li>
                 </ul>
             </t>
