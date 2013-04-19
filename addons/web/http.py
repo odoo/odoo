@@ -19,7 +19,6 @@ import time
 import traceback
 import urlparse
 import uuid
-import xmlrpclib
 
 import babel.core
 import simplejson
@@ -93,6 +92,14 @@ class WebRequest(object):
         if not self.session:
             self.session = session.OpenERPSession()
             self.httpsession[self.session_id] = self.session
+
+        # set db/uid trackers - they're cleaned up at the WSGI
+        # dispatching phase in openerp.service.wsgi_server.application
+        if self.session._db:
+            threading.current_thread().dbname = self.session._db
+        if self.session._uid:
+            threading.current_thread().uid = self.session._uid
+
         self.context = self.params.pop('context', {})
         self.debug = self.params.pop('debug', False) is not False
         # Determine self.lang
@@ -194,35 +201,18 @@ class JsonRequest(WebRequest):
             response['id'] = self.jsonrequest.get('id')
             response["result"] = method(self, **self.params)
         except session.AuthenticationError:
+            se = serialize_exception(e)
             error = {
                 'code': 100,
                 'message': "OpenERP Session Invalid",
-                'data': {
-                    'type': 'session_invalid',
-                    'debug': traceback.format_exc()
-                }
+                'data': se
             }
-        except xmlrpclib.Fault, e:
+        except Exception, e:
+            se = serialize_exception(e)
             error = {
                 'code': 200,
                 'message': "OpenERP Server Error",
-                'data': {
-                    'type': 'server_exception',
-                    'fault_code': e.faultCode,
-                    'debug': "Client %s\nServer %s" % (
-                    "".join(traceback.format_exception("", None, sys.exc_traceback)), e.faultString)
-                }
-            }
-        except Exception:
-            logging.getLogger(__name__ + '.JSONRequest.dispatch').exception\
-                ("An error occured while handling a json request")
-            error = {
-                'code': 300,
-                'message': "OpenERP WebClient Error",
-                'data': {
-                    'type': 'client_exception',
-                    'debug': "Client %s" % traceback.format_exc()
-                }
+                'data': se
             }
         if error:
             response["error"] = error
@@ -243,6 +233,36 @@ class JsonRequest(WebRequest):
 
         r = werkzeug.wrappers.Response(body, headers=[('Content-Type', mime), ('Content-Length', len(body))])
         return r
+
+def serialize_exception(e):
+    tmp = {
+        "name": type(e).__module__ + "." + type(e).__name__ if type(e).__module__ else type(e).__name__,
+        "debug": traceback.format_exc(),
+        "message": u"%s" % e,
+        "arguments": to_jsonable(e.args),
+    }
+    if isinstance(e, openerp.osv.osv.except_osv):
+        tmp["exception_type"] = "except_osv"
+    elif isinstance(e, openerp.exceptions.Warning):
+        tmp["exception_type"] = "warning"
+    elif isinstance(e, openerp.exceptions.AccessError):
+        tmp["exception_type"] = "access_error"
+    elif isinstance(e, openerp.exceptions.AccessDenied):
+        tmp["exception_type"] = "access_denied"
+    return tmp
+
+def to_jsonable(o):
+    if isinstance(o, str) or isinstance(o,unicode) or isinstance(o, int) or isinstance(o, long) \
+        or isinstance(o, bool) or o is None or isinstance(o, float):
+        return o
+    if isinstance(o, list) or isinstance(o, tuple):
+        return [to_jsonable(x) for x in o]
+    if isinstance(o, dict):
+        tmp = {}
+        for k, v in o.items():
+            tmp[u"%s" % k] = to_jsonable(v)
+        return tmp
+    return u"%s" % o
 
 def jsonrequest(f):
     """ Decorator marking the decorated method as being a handler for a
@@ -274,28 +294,15 @@ class HttpRequest(WebRequest):
         _logger.debug("%s --> %s.%s %r", self.httprequest.method, method.im_class.__name__, method.__name__, akw)
         try:
             r = method(self, **self.params)
-        except xmlrpclib.Fault, e:
-            r = werkzeug.exceptions.InternalServerError(cgi.escape(simplejson.dumps({
+        except Exception, e:
+            _logger.exception("An exception occured during an http request")
+            se = serialize_exception(e)
+            error = {
                 'code': 200,
                 'message': "OpenERP Server Error",
-                'data': {
-                    'type': 'server_exception',
-                    'fault_code': e.faultCode,
-                    'debug': "Server %s\nClient %s" % (
-                        e.faultString, traceback.format_exc())
-                }
-            })))
-        except Exception:
-            logging.getLogger(__name__ + '.HttpRequest.dispatch').exception(
-                    "An error occurred while handling a json request")
-            r = werkzeug.exceptions.InternalServerError(cgi.escape(simplejson.dumps({
-                'code': 300,
-                'message': "OpenERP WebClient Error",
-                'data': {
-                    'type': 'client_exception',
-                    'debug': "Client %s" % traceback.format_exc()
-                }
-            })))
+                'data': se
+            }
+            r = werkzeug.exceptions.InternalServerError(cgi.escape(simplejson.dumps(error)))
         if self.debug or 1:
             if isinstance(r, (werkzeug.wrappers.BaseResponse, werkzeug.exceptions.HTTPException)):
                 _logger.debug('<-- %s', r)

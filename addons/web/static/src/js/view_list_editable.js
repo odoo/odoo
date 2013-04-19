@@ -96,7 +96,8 @@ openerp.web.list_editable = function (instance) {
             });
         },
         editable: function () {
-            return !this.options.disable_editable_mode 
+            return !this.grouped
+                && !this.options.disable_editable_mode
                 && (this.fields_view.arch.attrs.editable
                 || this._context_editable
                 || this.options.editable);
@@ -132,6 +133,15 @@ openerp.web.list_editable = function (instance) {
             var self = this;
             // tree/@editable takes priority on everything else if present.
             var result = this._super(data, grouped);
+
+            // In case current editor was started previously, also has to run
+            // when toggling from editable to non-editable in case form widgets
+            // have setup global behaviors expecting themselves to exist
+            // somehow.
+            this.editor.destroy();
+            // Editor is not restartable due to formview not being restartable
+            this.editor = this.make_editor();
+
             if (this.editable()) {
                 this.$el.addClass('oe_list_editable');
                 // FIXME: any hook available to ensure this is only done once?
@@ -143,10 +153,6 @@ openerp.web.list_editable = function (instance) {
                         e.preventDefault();
                         self.cancel_edition();
                     });
-                this.editor.destroy();
-                // Editor is not restartable due to formview not being
-                // restartable
-                this.editor = this.make_editor();
                 var editor_ready = this.editor.prependTo(this.$el)
                     .done(this.proxy('setup_events'));
 
@@ -795,7 +801,7 @@ openerp.web.list_editable = function (instance) {
     });
 
     instance.web.ListView.Groups.include(/** @lends instance.web.ListView.Groups# */{
-        passtrough_events: instance.web.ListView.Groups.prototype.passtrough_events + " edit saved",
+        passthrough_events: instance.web.ListView.Groups.prototype.passthrough_events + " edit saved",
         get_row_for: function (record) {
             return _(this.children).chain()
                 .invoke('get_row_for', record)

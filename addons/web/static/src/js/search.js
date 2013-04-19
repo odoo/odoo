@@ -127,41 +127,26 @@ my.InputView = instance.web.Widget.extend({
     events: {
         focus: function () { this.trigger('focused', this); },
         blur: function () { this.$el.text(''); this.trigger('blurred', this); },
-        keydown: 'onKeydown'
+        keydown: 'onKeydown',
+        paste: 'onPaste',
     },
     getSelection: function () {
         // get Text node
-        var root = this.$el[0].childNodes[0];
+        var root = this.el.childNodes[0];
         if (!root || !root.textContent) {
             // if input does not have a child node, or the child node is an
             // empty string, then the selection can only be (0, 0)
             return {start: 0, end: 0};
         }
-        if (window.getSelection) {
-            var domRange = window.getSelection().getRangeAt(0);
-            assert(domRange.startContainer === root,
-                   "selection should be in the input view");
-            assert(domRange.endContainer === root,
-                   "selection should be in the input view");
-            return {
-                start: domRange.startOffset,
-                end: domRange.endOffset
-            }
-        } else if (document.selection) {
-            var ieRange = document.selection.createRange();
-            var rangeParent = ieRange.parentElement();
-            assert(rangeParent === root,
-                   "selection should be in the input view");
-            var offsetRange = document.body.createTextRange();
-            offsetRange = offsetRange.moveToElementText(rangeParent);
-            offsetRange.setEndPoint("EndToStart", ieRange);
-            var start = offsetRange.text.length;
-            return {
-                start: start,
-                end: start + ieRange.text.length
-            }
+        var range = window.getSelection().getRangeAt(0);
+        assert(range.startContainer === root,
+               "selection should be in the input view");
+        assert(range.endContainer === root,
+               "selection should be in the input view");
+        return {
+            start: range.startOffset,
+            end: range.endOffset
         }
-        throw new Error("Could not get caret position");
     },
     onKeydown: function (e) {
         var sel;
@@ -199,6 +184,50 @@ my.InputView = instance.web.Widget.extend({
             }
             break;
         }
+    },
+    setCursorAtEnd: function () {
+        var sel = window.getSelection();
+        sel.removeAllRanges();
+        var range = document.createRange();
+        // in theory, range.selectNodeContents should work here. In practice,
+        // MSIE9 has issues from time to time, instead of selecting the inner
+        // text node it would select the reference node instead (e.g. in demo
+        // data, company news, copy across the "Company News" link + the title,
+        // from about half the link to half the text, paste in search box then
+        // hit the left arrow key, getSelection would blow up).
+        //
+        // Explicitly selecting only the inner text node (only child node at
+        // this point, though maybe we should assert that) avoiids the issue
+        range.selectNode(this.el.childNodes[0]);
+        range.collapse(false);
+        sel.addRange(range);
+    },
+    onPaste: function () {
+        // In MSIE and Webkit, it is possible to get various representations of
+        // the clipboard data at this point e.g.
+        // window.clipboardData.getData('Text') and
+        // event.clipboardData.getData('text/plain') to ensure we have a plain
+        // text representation of the object (and probably ensure the object is
+        // pastable as well, so nobody puts an image in the search view)
+        // (nb: since it's not possible to alter the content of the clipboard
+        // — at least in Webkit — to ensure only textual content is available,
+        // using this would require 1. getting the text data; 2. manually
+        // inserting the text data into the content; and 3. cancelling the
+        // paste event)
+        //
+        // But Firefox doesn't support the clipboard API (as of FF18)
+        // although it correctly triggers the paste event (Opera does not even
+        // do that) => implement lowest-denominator system where onPaste
+        // triggers a followup "cleanup" pass after the data has been pasted
+        setTimeout(function () {
+            // Read text content (ignore pasted HTML)
+            var data = this.$el.text();
+            // paste raw text back in
+            this.$el.empty().text(data);
+            // Set the cursor at the end of the text, so the cursor is not lost
+            // in some kind of error-spawning limbo.
+            this.setCursorAtEnd();
+        }.bind(this), 0);
     }
 });
 my.FacetView = instance.web.Widget.extend({
@@ -295,7 +324,10 @@ instance.web.SearchView = instance.web.Widget.extend(/** @lends instance.web.Sea
                 e.preventDefault();
                 break;
             }
-        }
+        },
+        'autocompleteopen': function () {
+            this.$el.autocomplete('widget').css('z-index', 3);
+        },
     },
     /**
      * @constructs instance.web.SearchView
@@ -323,7 +355,7 @@ instance.web.SearchView = instance.web.Widget.extend(/** @lends instance.web.Sea
         this.has_defaults = !_.isEmpty(this.defaults);
 
         this.inputs = [];
-        this.controls = {};
+        this.controls = [];
 
         this.headless = this.options.hidden && !this.has_defaults;
 
@@ -350,6 +382,7 @@ instance.web.SearchView = instance.web.Widget.extend(/** @lends instance.web.Sea
                 model: this.dataset._model,
                 view_id: this.view_id,
                 view_type: 'search',
+                context: this.dataset.get_context(),
             });
 
             $.when(load_view).then(function (r) {
@@ -463,6 +496,7 @@ instance.web.SearchView = instance.web.Widget.extend(/** @lends instance.web.Sea
      */
     complete_global_search:  function (req, resp) {
         $.when.apply(null, _(this.inputs).chain()
+            .filter(function (input) { return input.visible(); })
             .invoke('complete', req.term)
             .value()).then(function () {
                 resp(_(_(arguments).compact()).flatten(true));
@@ -551,18 +585,18 @@ instance.web.SearchView = instance.web.Widget.extend(/** @lends instance.web.Sea
      *
      * @param {Array} items a list of nodes to convert to widgets
      * @param {Object} fields a mapping of field names to (ORM) field attributes
-     * @param {String} [group_name] name of the group to put the new controls in
+     * @param {Object} [group] group to put the new controls in
      */
-    make_widgets: function (items, fields, group_name) {
-        group_name = group_name || null;
-        if (!(group_name in this.controls)) {
-            this.controls[group_name] = [];
+    make_widgets: function (items, fields, group) {
+        if (!group) {
+            group = new instance.web.search.Group(
+                this, 'q', {attrs: {string: _t("Filters")}});
         }
-        var self = this, group = this.controls[group_name];
+        var self = this;
         var filters = [];
         _.each(items, function (item) {
             if (filters.length && item.tag !== 'filter') {
-                group.push(new instance.web.search.FilterGroup(filters, this));
+                group.push(new instance.web.search.FilterGroup(filters, group));
                 filters = [];
             }
 
@@ -570,15 +604,18 @@ instance.web.SearchView = instance.web.Widget.extend(/** @lends instance.web.Sea
             case 'separator': case 'newline':
                 break;
             case 'filter':
-                filters.push(new instance.web.search.Filter(item, this));
+                filters.push(new instance.web.search.Filter(item, group));
                 break;
             case 'group':
-                self.make_widgets(item.children, fields, item.attrs.string);
+                self.make_widgets(item.children, fields,
+                    new instance.web.search.Group(group, 'w', item));
                 break;
             case 'field':
-                group.push(this.make_field(item, fields[item['attrs'].name]));
+                var field = this.make_field(
+                    item, fields[item['attrs'].name], group);
+                group.push(field);
                 // filters
-                self.make_widgets(item.children, fields, group_name);
+                self.make_widgets(item.children, fields, group);
                 break;
             }
         }, this);
@@ -593,12 +630,13 @@ instance.web.SearchView = instance.web.Widget.extend(/** @lends instance.web.Sea
      *
      * @param {Object} item fields_view_get node for the field
      * @param {Object} field fields_get result for the field
+     * @param {Object} [parent]
      * @returns instance.web.search.Field
      */
-    make_field: function (item, field) {
+    make_field: function (item, field, parent) {
         var obj = instance.web.search.fields.get_any( [item.attrs.widget, field.type]);
         if(obj) {
-            return new (obj) (item, field, this);
+            return new (obj) (item, field, parent || this);
         } else {
             console.group('Unknown field type ' + field.type);
             console.error('View node', item);
@@ -661,7 +699,7 @@ instance.web.SearchView = instance.web.Widget.extend(/** @lends instance.web.Sea
                 return filter.user_id && filter.is_default;
             });
             if (personal_filter) {
-                this.custom_filters.enable_filter(personal_filter, true);
+                this.custom_filters.toggle_filter(personal_filter, true);
                 return;
             }
 
@@ -669,7 +707,7 @@ instance.web.SearchView = instance.web.Widget.extend(/** @lends instance.web.Sea
                 return !filter.user_id && filter.is_default;
             });
             if (global_filter) {
-                this.custom_filters.enable_filter(global_filter, true);
+                this.custom_filters.toggle_filter(global_filter, true);
                 return;
             }
         }
@@ -833,13 +871,18 @@ instance.web.search.Widget = instance.web.Widget.extend( /** @lends instance.web
      * @constructs instance.web.search.Widget
      * @extends instance.web.Widget
      *
-     * @param view the ancestor view of this widget
+     * @param parent parent of this widget
      */
-    init: function (view) {
-        this._super(view);
-        this.view = view;
+    init: function (parent) {
+        this._super(parent);
+        var ancestor = parent;
+        do {
+            this.view = ancestor;
+        } while (!(ancestor instanceof instance.web.SearchView)
+               && (ancestor = (ancestor.getParent && ancestor.getParent())));
     }
 });
+
 instance.web.search.add_expand_listener = function($root) {
     $root.find('a.searchview_group_string').click(function (e) {
         $root.toggleClass('folded expanded');
@@ -848,13 +891,24 @@ instance.web.search.add_expand_listener = function($root) {
     });
 };
 instance.web.search.Group = instance.web.search.Widget.extend({
-    template: 'SearchView.group',
-    init: function (view_section, view, fields) {
-        this._super(view);
-        this.attrs = view_section.attrs;
-        this.lines = view.make_widgets(
-            view_section.children, fields);
-    }
+    init: function (parent, icon, node) {
+        this._super(parent);
+        var attrs = node.attrs;
+        this.modifiers = attrs.modifiers =
+            attrs.modifiers ? JSON.parse(attrs.modifiers) : {};
+        this.attrs = attrs;
+        this.icon = icon;
+        this.name = attrs.string;
+        this.children = [];
+
+        this.view.controls.push(this);
+    },
+    push: function (input) {
+        this.children.push(input);
+    },
+    visible: function () {
+        return !this.modifiers.invisible;
+    },
 });
 
 instance.web.search.Input = instance.web.search.Widget.extend( /** @lends instance.web.search.Input# */{
@@ -863,12 +917,12 @@ instance.web.search.Input = instance.web.search.Widget.extend( /** @lends instan
      * @constructs instance.web.search.Input
      * @extends instance.web.search.Widget
      *
-     * @param view
+     * @param parent
      */
-    init: function (view) {
-        this._super(view);
+    init: function (parent) {
+        this._super(parent);
+        this.load_attrs({});
         this.view.inputs.push(this);
-        this.style = undefined;
     },
     /**
      * Fetch auto-completion values for the widget.
@@ -916,15 +970,30 @@ instance.web.search.Input = instance.web.search.Widget.extend( /** @lends instan
             "get_domain not implemented for widget " + this.attrs.type);
     },
     load_attrs: function (attrs) {
-        if (attrs.modifiers) {
-            attrs.modifiers = JSON.parse(attrs.modifiers);
-            attrs.invisible = attrs.modifiers.invisible || false;
-            if (attrs.invisible) {
-                this.style = 'display: none;'
+        attrs.modifiers = attrs.modifiers ? JSON.parse(attrs.modifiers) : {};
+        this.attrs = attrs;
+    },
+    /**
+     * Returns whether the input is "visible". The default behavior is to
+     * query the ``modifiers.invisible`` flag on the input's description or
+     * view node.
+     *
+     * @returns {Boolean}
+     */
+    visible: function () {
+        if (this.attrs.modifiers.invisible) {
+            return false;
+        }
+        var parent = this;
+        while ((parent = parent.getParent()) &&
+               (   (parent instanceof instance.web.search.Group)
+                || (parent instanceof instance.web.search.Input))) {
+            if (!parent.visible()) {
+                return false;
             }
         }
-        this.attrs = attrs;
-    }
+        return true;
+    },
 });
 instance.web.search.FilterGroup = instance.web.search.Input.extend(/** @lends instance.web.search.FilterGroup# */{
     template: 'SearchView.filters',
@@ -938,17 +1007,19 @@ instance.web.search.FilterGroup = instance.web.search.Input.extend(/** @lends in
      * @extends instance.web.search.Input
      *
      * @param {Array<instance.web.search.Filter>} filters elements of the group
-     * @param {instance.web.SearchView} view view in which the filters are contained
+     * @param {instance.web.SearchView} parent parent in which the filters are contained
      */
-    init: function (filters, view) {
+    init: function (filters, parent) {
         // If all filters are group_by and we're not initializing a GroupbyGroup,
         // create a GroupbyGroup instead of the current FilterGroup
         if (!(this instanceof instance.web.search.GroupbyGroup) &&
               _(filters).all(function (f) {
-                  return f.attrs.context && f.attrs.context.group_by; })) {
-            return new instance.web.search.GroupbyGroup(filters, view);
+                  if (!f.attrs.context) { return false; }
+                  var c = instance.web.pyeval.eval('context', f.attrs.context);
+                  return !_.isEmpty(c.group_by);})) {
+            return new instance.web.search.GroupbyGroup(filters, parent);
         }
-        this._super(view);
+        this._super(parent);
         this.filters = filters;
         this.view.query.on('add remove change reset', this.proxy('search_change'));
     },
@@ -1067,6 +1138,7 @@ instance.web.search.FilterGroup = instance.web.search.Input.extend(/** @lends in
         var self = this;
         item = item.toLowerCase();
         var facet_values = _(this.filters).chain()
+            .filter(function (filter) { return filter.visible(); })
             .filter(function (filter) {
                 var at = {
                     string: filter.attrs.string || '',
@@ -1093,8 +1165,8 @@ instance.web.search.FilterGroup = instance.web.search.Input.extend(/** @lends in
 instance.web.search.GroupbyGroup = instance.web.search.FilterGroup.extend({
     icon: 'w',
     completion_label: _lt("Group by: %s"),
-    init: function (filters, view) {
-        this._super(filters, view);
+    init: function (filters, parent) {
+        this._super(filters, parent);
         // Not flanders: facet unicity is handled through the
         // (category, field) pair of facet attributes. This is all well and
         // good for regular filter groups where a group matches a facet, but for
@@ -1102,8 +1174,8 @@ instance.web.search.GroupbyGroup = instance.web.search.FilterGroup.extend({
         // view which proxies to the first GroupbyGroup, so it can be used
         // for every GroupbyGroup and still provides the various methods needed
         // by the search view. Use weirdo name to avoid risks of conflicts
-        if (!this.getParent()._s_groupby) {
-            this.getParent()._s_groupby = {
+        if (!this.view._s_groupby) {
+            this.view._s_groupby = {
                 help: "See GroupbyGroup#init",
                 get_context: this.proxy('get_context'),
                 get_domain: this.proxy('get_domain'),
@@ -1112,14 +1184,14 @@ instance.web.search.GroupbyGroup = instance.web.search.FilterGroup.extend({
         }
     },
     match_facet: function (facet) {
-        return facet.get('field') === this.getParent()._s_groupby;
+        return facet.get('field') === this.view._s_groupby;
     },
     make_facet: function (values) {
         return {
             category: _t("GroupBy"),
             icon: this.icon,
             values: values,
-            field: this.getParent()._s_groupby
+            field: this.view._s_groupby
         };
     }
 });
@@ -1137,10 +1209,10 @@ instance.web.search.Filter = instance.web.search.Input.extend(/** @lends instanc
      * @extends instance.web.search.Input
      *
      * @param node
-     * @param view
+     * @param parent
      */
-    init: function (node, view) {
-        this._super(view);
+    init: function (node, parent) {
+        this._super(parent);
         this.load_attrs(node.attrs);
     },
     facet_for: function () { return $.when(null); },
@@ -1156,10 +1228,10 @@ instance.web.search.Field = instance.web.search.Input.extend( /** @lends instanc
      *
      * @param view_section
      * @param field
-     * @param view
+     * @param parent
      */
-    init: function (view_section, field, view) {
-        this._super(view);
+    init: function (view_section, field, parent) {
+        this._super(parent);
         this.load_attrs(_.extend({}, field, view_section.attrs));
     },
     facet_for: function (value) {
@@ -1199,7 +1271,7 @@ instance.web.search.Field = instance.web.search.Input.extend( /** @lends instanc
      *
      * @param {String} name the field's name
      * @param {String} operator the field's operator (either attribute-specified or default operator for the field
-     * @param {Number|String} value parsed value for the field
+     * @param {Number|String} facet parsed value for the field
      * @returns {Array<Array>} domain to include in the resulting search
      */
     make_domain: function (name, operator, facet) {
@@ -1431,18 +1503,21 @@ instance.web.search.DateTimeField = instance.web.search.DateField.extend(/** @le
 });
 instance.web.search.ManyToOneField = instance.web.search.CharField.extend({
     default_operator: {},
-    init: function (view_section, field, view) {
-        this._super(view_section, field, view);
+    init: function (view_section, field, parent) {
+        this._super(view_section, field, parent);
         this.model = new instance.web.Model(this.attrs.relation);
     },
     complete: function (needle) {
         var self = this;
-        // TODO: context
         // FIXME: "concurrent" searches (multiple requests, mis-ordered responses)
+        var context = instance.web.pyeval.eval(
+            'contexts', [this.view.dataset.get_context()]);
         return this.model.call('name_search', [], {
             name: needle,
+            args: instance.web.pyeval.eval(
+                'domains', this.attrs.domain ? [this.attrs.domain] : [], context),
             limit: 8,
-            context: {}
+            context: context
         }).then(function (results) {
             if (_.isEmpty(results)) { return null; }
             return [{label: self.attrs.string}].concat(
@@ -1512,6 +1587,9 @@ instance.web.search.CustomFilters = instance.web.search.Input.extend({
             })
             .on('reset', this.proxy('clear_selection'));
         this.$el.on('submit', 'form', this.proxy('save_current'));
+        this.$el.on('click', 'input[type=checkbox]', function() {
+            $(this).siblings('input[type=checkbox]').prop('checked', false);
+        });
         this.$el.on('click', 'h4', function () {
             self.$el.toggleClass('oe_opened');
         });
@@ -1562,6 +1640,7 @@ instance.web.search.CustomFilters = instance.web.search.Input.extend({
                 get_groupby: function () { return [filter.context]; },
                 get_domain: function () { return filter.domain; }
             },
+            _id: filter['id'],
             is_custom_filter: true,
             values: [{label: filter.name, value: null}]
         };
@@ -1572,6 +1651,7 @@ instance.web.search.CustomFilters = instance.web.search.Input.extend({
     append_filter: function (filter) {
         var self = this;
         var key = this.key_for(filter);
+        var warning = _t("This filter is global and will be removed for everybody if you continue.");
 
         var $filter;
         if (key in this.$filters) {
@@ -1589,6 +1669,9 @@ instance.web.search.CustomFilters = instance.web.search.Input.extend({
             $('<a class="oe_searchview_custom_delete">x</a>')
                 .click(function (e) {
                     e.stopPropagation();
+                    if (!(filter.user_id || confirm(warning))) {
+                        return;
+                    }
                     self.model.call('unlink', [id]).done(function () {
                         $filter.remove();
                         delete self.$filters[key];
@@ -1599,10 +1682,18 @@ instance.web.search.CustomFilters = instance.web.search.Input.extend({
         }
 
         $filter.unbind('click').click(function () {
-            self.enable_filter(filter);
+            self.toggle_filter(filter);
         });
     },
-    enable_filter: function (filter, preventSearch) {
+    toggle_filter: function (filter, preventSearch) {
+        var current = this.view.query.find(function (facet) {
+            return facet.get('_id') === filter.id;
+        });
+        if (current) {
+            this.view.query.remove(current);
+            this.$filters[this.key_for(filter)].removeClass('oe_selected');
+            return;
+        }
         this.view.query.reset([this.facet_for(filter)], {
             preventSearch: preventSearch || false});
         this.$filters[this.key_for(filter)].addClass('oe_selected');
@@ -1625,6 +1716,13 @@ instance.web.search.CustomFilters = instance.web.search.Input.extend({
             if (!_.isEmpty(results.group_by)) {
                 results.context.group_by = results.group_by;
             }
+            // Don't save user_context keys in the custom filter, otherwise end
+            // up with e.g. wrong uid or lang stored *and used in subsequent
+            // reqs*
+            var ctx = results.context;
+            _(_.keys(instance.session.user_context)).each(function (key) {
+                delete ctx[key];
+            });
             var filter = {
                 name: $name.val(),
                 user_id: private_filter ? instance.session.uid : false,
@@ -1654,22 +1752,28 @@ instance.web.search.Filters = instance.web.search.Input.extend({
         var running_count = 0;
         // get total filters count
         var is_group = function (i) { return i instanceof instance.web.search.FilterGroup; };
-        var filters_count = _(this.view.controls).chain()
+        var visible_filters = _(this.view.controls).chain().reject(function (group) {
+            return _(_(group.children).filter(is_group)).isEmpty()
+                || group.modifiers.invisible;
+        });
+        var filters_count = visible_filters
+            .pluck('children')
             .flatten()
             .filter(is_group)
             .map(function (i) { return i.filters.length; })
             .sum()
             .value();
 
-        var col1 = [], col2 = _(this.view.controls).map(function (inputs, group) {
-            var filters = _(inputs).filter(is_group);
-            return {
-                name: group === 'null' ? "<span class='oe_i'>q</span> " + _t("Filters") : "<span class='oe_i'>w</span> " + group,
-                filters: filters,
-                length: _(filters).chain().map(function (i) {
-                    return i.filters.length; }).sum().value()
-            };
-        });
+        var col1 = [], col2 = visible_filters.map(function (group) {
+                var filters = _(group.children).filter(is_group);
+                return {
+                    name: _.str.sprintf("<span class='oe_i'>%s</span> %s",
+                            group.icon, group.name),
+                    filters: filters,
+                    length: _(filters).chain().map(function (i) {
+                        return i.filters.length; }).sum().value()
+                };
+            }).value();
 
         while (col2.length) {
             // col1 + group should be smaller than col2 + group
@@ -1711,10 +1815,12 @@ instance.web.search.Advanced = instance.web.search.Input.extend({
             });
         return $.when(
             this._super(),
-            new instance.web.Model(this.view.model).call('fields_get').done(function(data) {
-                self.fields = _.extend({
-                    id: { string: 'ID', type: 'id' }
-                }, data);
+            new instance.web.Model(this.view.model).call('fields_get', {
+                    context: this.view.dataset.context
+                }).done(function(data) {
+                    self.fields = _.extend({
+                        id: { string: 'ID', type: 'id' }
+                    }, data);
         })).done(function () {
             self.append_proposition();
         });
@@ -1765,6 +1871,7 @@ instance.web.search.ExtendedSearchProposition = instance.web.Widget.extend(/** @
     template: 'SearchView.extended_search.proposition',
     events: {
         'change .searchview_extended_prop_field': 'changed',
+        'change .searchview_extended_prop_op': 'operator_changed',
         'click .searchview_extended_delete_prop': function (e) {
             e.stopPropagation();
             this.getParent().remove_proposition(this);
@@ -1781,6 +1888,7 @@ instance.web.search.ExtendedSearchProposition = instance.web.Widget.extend(/** @
         this._super(parent);
         this.fields = _(fields).chain()
             .map(function(val, key) { return _.extend({}, val, {'name': key}); })
+            .filter(function (field) { return !field.deprecated; })
             .sortBy(function(field) {return field.string;})
             .value();
         this.attrs = {_: _, fields: this.fields, selected: null};
@@ -1793,6 +1901,17 @@ instance.web.search.ExtendedSearchProposition = instance.web.Widget.extend(/** @
         var nval = this.$(".searchview_extended_prop_field").val();
         if(this.attrs.selected == null || nval != this.attrs.selected.name) {
             this.select_field(_.detect(this.fields, function(x) {return x.name == nval;}));
+        }
+    },
+    operator_changed: function (e) {
+        var $value = this.$('.searchview_extended_prop_value');
+        switch ($(e.target).val()) {
+        case '∃':
+        case '∄':
+            $value.hide();
+            break;
+        default:
+            $value.show();
         }
     },
     /**
@@ -1823,7 +1942,7 @@ instance.web.search.ExtendedSearchProposition = instance.web.Widget.extend(/** @
                 .text(String(operator.text))
                 .appendTo(self.$('.searchview_extended_prop_op'));
         });
-        var $value_loc = this.$('.searchview_extended_prop_value').empty();
+        var $value_loc = this.$('.searchview_extended_prop_value').show().empty();
         this.value.appendTo($value_loc);
 
     },
@@ -1831,19 +1950,12 @@ instance.web.search.ExtendedSearchProposition = instance.web.Widget.extend(/** @
         if ( this.attrs.selected == null)
             return null;
         var field = this.attrs.selected;
-        var op = this.$('.searchview_extended_prop_op')[0];
-        var operator = op.options[op.selectedIndex];
+        var op_select = this.$('.searchview_extended_prop_op')[0];
+        var operator = op_select.options[op_select.selectedIndex];
+
         return {
-            label: _.str.sprintf(_t('%(field)s %(operator)s "%(value)s"'), {
-                field: field.string,
-                // According to spec, HTMLOptionElement#label should return
-                // HTMLOptionElement#text when not defined/empty, but it does
-                // not in older Webkit (between Safari 5.1.5 and Chrome 17) and
-                // Gecko (pre Firefox 7) browsers, so we need a manual fallback
-                // for those
-                operator: operator.label || operator.text,
-                value: this.value}),
-            value: [field.name, operator.value, this.value.get_value()]
+            label: this.value.get_label(field, operator),
+            value: this.value.get_domain(field, operator),
         };
     }
 });
@@ -1852,6 +1964,37 @@ instance.web.search.ExtendedSearchProposition.Field = instance.web.Widget.extend
     init: function (parent, field) {
         this._super(parent);
         this.field = field;
+    },
+    get_label: function (field, operator) {
+        var format;
+        switch (operator.value) {
+        case '∃': case '∄': format = _t('%(field)s %(operator)s'); break;
+        default: format = _t('%(field)s %(operator)s "%(value)s"'); break;
+        }
+        return this.format_label(format, field, operator);
+    },
+    format_label: function (format, field, operator) {
+        return _.str.sprintf(format, {
+            field: field.string,
+            // According to spec, HTMLOptionElement#label should return
+            // HTMLOptionElement#text when not defined/empty, but it does
+            // not in older Webkit (between Safari 5.1.5 and Chrome 17) and
+            // Gecko (pre Firefox 7) browsers, so we need a manual fallback
+            // for those
+            operator: operator.label || operator.text,
+            value: this
+        });
+    },
+    get_domain: function (field, operator) {
+        switch (operator.value) {
+        case '∃': return this.make_domain(field.name, '!=', false);
+        case '∄': return this.make_domain(field.name, '=', false);
+        default: return this.make_domain(
+            field.name, operator.value, this.get_value());
+        }
+    },
+    make_domain: function (field, operator, value) {
+        return [field, operator, value];
     },
     /**
      * Returns a human-readable version of the value, in case the "logical"
@@ -1872,7 +2015,9 @@ instance.web.search.ExtendedSearchProposition.Char = instance.web.search.Extende
         {value: "ilike", text: _lt("contains")},
         {value: "not ilike", text: _lt("doesn't contain")},
         {value: "=", text: _lt("is equal to")},
-        {value: "!=", text: _lt("is not equal to")}
+        {value: "!=", text: _lt("is not equal to")},
+        {value: "∃", text: _lt("is set")},
+        {value: "∄", text: _lt("is not set")}
     ],
     get_value: function() {
         return this.$el.val();
@@ -1886,7 +2031,9 @@ instance.web.search.ExtendedSearchProposition.DateTime = instance.web.search.Ext
         {value: ">", text: _lt("greater than")},
         {value: "<", text: _lt("less than")},
         {value: ">=", text: _lt("greater or equal than")},
-        {value: "<=", text: _lt("less or equal than")}
+        {value: "<=", text: _lt("less or equal than")},
+        {value: "∃", text: _lt("is set")},
+        {value: "∄", text: _lt("is not set")}
     ],
     /**
      * Date widgets live in view_form which is not yet loaded when this is
@@ -1920,7 +2067,9 @@ instance.web.search.ExtendedSearchProposition.Integer = instance.web.search.Exte
         {value: ">", text: _lt("greater than")},
         {value: "<", text: _lt("less than")},
         {value: ">=", text: _lt("greater or equal than")},
-        {value: "<=", text: _lt("less or equal than")}
+        {value: "<=", text: _lt("less or equal than")},
+        {value: "∃", text: _lt("is set")},
+        {value: "∄", text: _lt("is not set")}
     ],
     toString: function () {
         return this.$el.val();
@@ -1945,7 +2094,9 @@ instance.web.search.ExtendedSearchProposition.Float = instance.web.search.Extend
         {value: ">", text: _lt("greater than")},
         {value: "<", text: _lt("less than")},
         {value: ">=", text: _lt("greater or equal than")},
-        {value: "<=", text: _lt("less or equal than")}
+        {value: "<=", text: _lt("less or equal than")},
+        {value: "∃", text: _lt("is set")},
+        {value: "∄", text: _lt("is not set")}
     ],
     toString: function () {
         return this.$el.val();
@@ -1963,7 +2114,9 @@ instance.web.search.ExtendedSearchProposition.Selection = instance.web.search.Ex
     template: 'SearchView.extended_search.proposition.selection',
     operators: [
         {value: "=", text: _lt("is")},
-        {value: "!=", text: _lt("is not")}
+        {value: "!=", text: _lt("is not")},
+        {value: "∃", text: _lt("is set")},
+        {value: "∄", text: _lt("is not set")}
     ],
     toString: function () {
         var select = this.$el[0];
@@ -1980,7 +2133,10 @@ instance.web.search.ExtendedSearchProposition.Boolean = instance.web.search.Exte
         {value: "=", text: _lt("is true")},
         {value: "!=", text: _lt("is false")}
     ],
-    toString: function () { return ''; },
+    get_label: function (field, operator) {
+        return this.format_label(
+            _t('%(field)s %(operator)s'), field, operator);
+    },
     get_value: function() {
         return true;
     }

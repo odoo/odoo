@@ -149,6 +149,9 @@ instance.web.ActionManager = instance.web.Widget.extend({
         for (var i = 0; i < this.breadcrumbs.length; i += 1) {
             var item = this.breadcrumbs[i];
             var tit = item.get_title();
+            if (item.hide_breadcrumb) {
+                continue;
+            }
             if (!_.isArray(tit)) {
                 tit = [tit];
             }
@@ -191,6 +194,18 @@ instance.web.ActionManager = instance.web.Widget.extend({
                     });
                     state = _.extend(params || {}, state);
                 }
+                if (this.inner_action.context) {
+                    var active_id = this.inner_action.context.active_id;
+                    if (active_id) {
+                        state["active_id"] = active_id;
+                    }
+                    var active_ids = this.inner_action.context.active_ids;
+                    if (active_ids && !(active_ids.length === 1 && active_ids[0] === active_id)) {
+                        // We don't push active_ids if it's a single element array containing the active_id
+                        // This makes the url shorter in most cases.
+                        state["active_ids"] = this.inner_action.context.active_ids.join(',');
+                    }
+                }
             }
             if(!this.dialog) {
                 this.getParent().do_push_state(state);
@@ -213,8 +228,22 @@ instance.web.ActionManager = instance.web.Widget.extend({
             } else {
                 var run_action = (!this.inner_widget || !this.inner_widget.action) || this.inner_widget.action.id !== state.action;
                 if (run_action) {
+                    var add_context = {};
+                    if (state.active_id) {
+                        add_context.active_id = state.active_id;
+                    }
+                    if (state.active_ids) {
+                        // The jQuery BBQ plugin does some parsing on values that are valid integers.
+                        // It means that if there's only one item, it will do parseInt() on it,
+                        // otherwise it will keep the comma seperated list as string.
+                        add_context.active_ids = state.active_ids.toString().split(',').map(function(id) {
+                            return parseInt(id, 10) || id;
+                        });
+                    } else if (state.active_id) {
+                        add_context.active_ids = [state.active_id];
+                    }
                     this.null_action();
-                    action_loaded = this.do_action(state.action);
+                    action_loaded = this.do_action(state.action, { additional_context: add_context });
                     $.when(action_loaded || null).done(function() {
                         instance.webclient.menu.has_been_loaded.done(function() {
                             if (self.inner_action && self.inner_action.id) {
@@ -250,12 +279,27 @@ instance.web.ActionManager = instance.web.Widget.extend({
             }
         });
     },
+    /**
+     * Execute an OpenERP action
+     *
+     * @param {Number|String|Object} Can be either an action id, a client action or an action descriptor.
+     * @param {Object} [options]
+     * @param {Boolean} [options.clear_breadcrumbs=false] Clear the breadcrumbs history list
+     * @param {Function} [options.on_reverse_breadcrumb] Callback to be executed whenever an anterior breadcrumb item is clicked on.
+     * @param {Function} [options.hide_breadcrumb] Do not display this widget's title in the breadcrumb
+     * @param {Function} [options.on_close] Callback to be executed when the dialog is closed (only relevant for target=new actions)
+     * @param {Function} [options.action_menu_id] Manually set the menu id on the fly.
+     * @param {Object} [options.additional_context] Additional context to be merged with the action's context.
+     * @return {jQuery.Deferred} Action loaded
+     */
     do_action: function(action, options) {
         options = _.defaults(options || {}, {
             clear_breadcrumbs: false,
             on_reverse_breadcrumb: function() {},
+            hide_breadcrumb: false,
             on_close: function() {},
             action_menu_id: null,
+            additional_context: {},
         });
         if (action === false) {
             action = { type: 'ir.actions.act_window_close' };
@@ -270,9 +314,13 @@ instance.web.ActionManager = instance.web.Widget.extend({
         }
 
         // Ensure context & domain are evaluated and can be manipulated/used
-        if (action.context) {
-            action.context = instance.web.pyeval.eval(
-                'context', action.context);
+        var ncontext = new instance.web.CompoundContext(options.additional_context, action.context || {});
+        action.context = instance.web.pyeval.eval('context', ncontext);
+        if (action.context.active_id || action.context.active_ids) {
+            // Here we assume that when an `active_id` or `active_ids` is used
+            // in the context, we are in a `related` action, so we disable the
+            // searchview's default custom filters.
+            action.context.search_disable_custom_filters = true;
         }
         if (action.domain) {
             action.domain = instance.web.pyeval.eval(
@@ -361,7 +409,12 @@ instance.web.ActionManager = instance.web.Widget.extend({
             widget: function () { return new instance.web.ViewManagerAction(self, action); },
             action: action,
             klass: 'oe_act_window',
-            post_process: function (widget) { widget.add_breadcrumb(options.on_reverse_breadcrumb); }
+            post_process: function (widget) {
+                widget.add_breadcrumb({
+                    on_reverse_breadcrumb: options.on_reverse_breadcrumb,
+                    hide_breadcrumb: options.hide_breadcrumb,
+                });
+            },
         }, options);
     },
     ir_actions_client: function (action, options) {
@@ -385,6 +438,7 @@ instance.web.ActionManager = instance.web.Widget.extend({
                     widget: widget,
                     title: action.name,
                     on_reverse_breadcrumb: options.on_reverse_breadcrumb,
+                    hide_breadcrumb: options.hide_breadcrumb,
                 });
                 if (action.tag !== 'reload') {
                     self.do_push_state({});
@@ -540,7 +594,7 @@ instance.web.ViewManager =  instance.web.Widget.extend({
             _.each(_.keys(self.views), function(view_name) {
                 var controller = self.views[view_name].controller;
                 if (controller) {
-                    var container = self.$el.find(".oe_view_manager_view_" + view_name + ":first");
+                    var container = self.$el.find("> .oe_view_manager_body > .oe_view_manager_view_" + view_name);
                     if (view_name === view_type) {
                         container.show();
                         controller.do_show(view_options || {});
@@ -583,7 +637,7 @@ instance.web.ViewManager =  instance.web.Widget.extend({
         controller.on('switch_mode', self, this.switch_mode);
         controller.on('previous_view', self, this.prev_view);
         
-        var container = this.$el.find(".oe_view_manager_view_" + view_type);
+        var container = this.$el.find("> .oe_view_manager_body > .oe_view_manager_view_" + view_type);
         var view_promise = controller.appendTo(container);
         this.views[view_type].controller = controller;
         this.views[view_type].deferred.resolve(view_type);
@@ -598,10 +652,17 @@ instance.web.ViewManager =  instance.web.Widget.extend({
             self.trigger("controller_inited",view_type,controller);
         });
     },
+    /**
+     * @returns {Number|Boolean} the view id of the given type, false if not found
+     */
+    get_view_id: function(view_type) {
+        return this.views[view_type] && this.views[view_type].view_id || false;
+    },
     set_title: function(title) {
         this.$el.find('.oe_view_title_text:first').text(title);
     },
-    add_breadcrumb: function(on_reverse_breadcrumb) {
+    add_breadcrumb: function(options) {
+        var options = options || {};
         var self = this;
         var views = [this.active_view || this.views_src[0].view_type];
         this.on('switch_mode', self, function(mode) {
@@ -613,7 +674,7 @@ instance.web.ViewManager =  instance.web.Widget.extend({
                 views.push(mode);
             }
         });
-        this.getParent().push_breadcrumb({
+        var item = _.extend({
             widget: this,
             action: this.action,
             show: function(index) {
@@ -647,9 +708,9 @@ instance.web.ViewManager =  instance.web.Widget.extend({
                     titles.pop();
                 }
                 return titles;
-            },
-            on_reverse_breadcrumb: on_reverse_breadcrumb,
-        });
+            }
+        }, options);
+        this.getParent().push_breadcrumb(item);
     },
     /**
      * Returns to the view preceding the caller view in this manager's
@@ -954,10 +1015,11 @@ instance.web.ViewManagerAction = instance.web.ViewManager.extend({
         });
     },
     do_create_view: function(view_type) {
-        var r = this._super.apply(this, arguments);
-        var view = this.views[view_type].controller;
-        view.set({ 'title': this.action.name });
-        return r;
+        var self = this;
+        return this._super.apply(this, arguments).then(function() {
+            var view = self.views[view_type].controller;
+            view.set({ 'title': self.action.name });
+        });
     },
     get_action_manager: function() {
         var cur = this;
@@ -1214,6 +1276,7 @@ instance.web.View = instance.web.Widget.extend({
                 "view_id": this.view_id,
                 "view_type": this.view_type,
                 "toolbar": !!this.options.$sidebar,
+                "context": this.dataset.get_context(),
             });
         }
         return view_loaded_def.then(function(r) {
@@ -1271,11 +1334,6 @@ instance.web.View = instance.web.Widget.extend({
                         active_ids: [record_id],
                         active_model: dataset.model
                     });
-                    if (("" + action.context).match(/\bactive_id\b/)) {
-                        // Special case: when the context is evaluted using
-                        // the active_id, we want to disable the custom filters.
-                        ncontext.add({ search_disable_custom_filters: true });
-                    }
                 }
                 ncontext.add(action.context || {});
                 action.context = ncontext;
@@ -1307,7 +1365,7 @@ instance.web.View = instance.web.Widget.extend({
         } else if (action_data.type=="action") {
             return this.rpc('/web/action/load', {
                 action_id: action_data.name,
-                context: instance.web.pyeval.eval('context', context),
+                context: _.extend({'active_model': dataset.model, 'active_ids': dataset.ids, 'active_id': record_id}, instance.web.pyeval.eval('context', context)),
                 do_not_eval: true
             }).then(handler);
         } else  {
@@ -1395,18 +1453,18 @@ instance.web.View = instance.web.Widget.extend({
     is_action_enabled: function(action) {
         var attrs = this.fields_view.arch.attrs;
         return (action in attrs) ? JSON.parse(attrs[action]) : true;
-    }
+    },
 });
 
 /**
  * Performs a fields_view_get and apply postprocessing.
  * return a {$.Deferred} resolved with the fvg
  *
- * @param {Object} [args]
+ * @param {Object} args
  * @param {String|Object} args.model instance.web.Model instance or string repr of the model
- * @param {null|Object} args.context context if args.model is a string
- * @param {null|Number} args.view_id id of the view to be loaded, default view if null
- * @param {null|String} args.view_type type of view to be loaded if view_id is null
+ * @param {Object} [args.context] context if args.model is a string
+ * @param {Number} [args.view_id] id of the view to be loaded, default view if null
+ * @param {String} [args.view_type] type of view to be loaded if view_id is null
  * @param {Boolean} [args.toolbar=false] get the toolbar definition
  */
 instance.web.fields_view_get = function(args) {
@@ -1433,7 +1491,7 @@ instance.web.fields_view_get = function(args) {
     if (typeof model === 'string') {
         model = new instance.web.Model(args.model, args.context);
     }
-    return args.model.call('fields_view_get', [args.view_id, args.view_type, model.context(), args.toolbar]).then(function(fvg) {
+    return args.model.call('fields_view_get', [args.view_id, args.view_type, args.context, args.toolbar]).then(function(fvg) {
         return postprocess(fvg);
     });
 };
@@ -1503,13 +1561,27 @@ instance.web.json_node_to_xml = function(node, human_readable, indent) {
     }
 };
 instance.web.xml_to_str = function(node) {
+    var str = "";
     if (window.XMLSerializer) {
-        return (new XMLSerializer()).serializeToString(node);
+        str = (new XMLSerializer()).serializeToString(node);
     } else if (window.ActiveXObject) {
-        return node.xml;
+        str = node.xml;
     } else {
         throw new Error(_t("Could not serialize XML"));
     }
+    // Browsers won't deal with self closing tags except void elements:
+    // http://www.w3.org/TR/html-markup/syntax.html
+    var void_elements = 'area base br col command embed hr img input keygen link meta param source track wbr'.split(' ');
+
+    // The following regex is a bit naive but it's ok for the xmlserializer output
+    str = str.replace(/<([a-z]+)([^<>]*)\s*\/\s*>/g, function(match, tag, attrs) {
+        if (void_elements.indexOf(tag) < 0) {
+            return "<" + tag + attrs + "></" + tag + ">";
+        } else {
+            return match;
+        }
+    });
+    return str;
 };
 
 /**

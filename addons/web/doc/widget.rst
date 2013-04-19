@@ -93,7 +93,7 @@ The DOM root can also be defined programmatically by overridding
     Any override to :js:func:`~openerp.web.Widget.renderElement` which
     does not call its ``_super`` **must** call
     :js:func:`~openerp.web.Widget.setElement` with whatever it
-    generated or the widget's behavior is undefined.r
+    generated or the widget's behavior is undefined.
 
     .. note::
 

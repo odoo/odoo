@@ -1,3 +1,7 @@
+.. _module:
+
+.. queue:: module/series
+
 Building an OpenERP Web module
 ==============================
 
@@ -17,8 +21,7 @@ A very basic OpenERP module structure will be our starting point:
     ├── __init__.py
     └── __openerp__.py
 
-.. literalinclude:: module/__openerp__.py
-    :language: python
+.. patch::
 
 This is a sufficient minimal declaration of a valid OpenERP module.
 
@@ -39,8 +42,7 @@ module is automatically recognized as "web-enabled" if it contains a
 is the extent of it. You should also change the dependency to list
 ``web``:
 
-.. literalinclude:: module/__openerp__.py.1.diff
-    :language: diff
+.. patch::
 
 .. note::
 
@@ -65,15 +67,13 @@ The first one is to add javascript code. It's customary to put it in
 ``static/src/js``, to have room for e.g. other file types, or
 third-party libraries.
 
-.. literalinclude:: module/static/src/js/first_module.js
-    :language: javascript
+.. patch::
 
 The client won't load any file unless specified, thus the new file
 should be listed in the module's manifest file, under a new key ``js``
 (a list of file names, or glob patterns):
 
-.. literalinclude:: module/__openerp__.py.2.diff
-    :language: diff
+.. patch::
 
 At this point, if the module is installed and the client reloaded the
 message should appear in your browser's development console.
@@ -98,8 +98,7 @@ initialized, and it can't get access to the various APIs of the web
 client (such as making RPC requests to the server). This is done by
 providing a `javascript module`_:
 
-.. literalinclude:: module/static/src/js/first_module.js.1.diff
-    :language: diff
+.. patch::
 
 If you reload the client, you'll see a message in the console exactly
 as previously. The differences, though invisible at this point, are:
@@ -120,17 +119,12 @@ To demonstrate, let's build a simple :doc:`client action
 
 First, the action declaration:
 
-.. literalinclude:: module/__openerp__.py.3.diff
-    :language: diff
-
-.. literalinclude:: module/web_example.xml
-    :language: xml
+.. patch::
 
 then set up the :doc:`client action hook <client_action>` to register
 a function (for now):
 
-.. literalinclude:: module/static/src/js/first_module.js.2.diff
-    :language: diff
+.. patch::
 
 Updating the module (in order to load the XML description) and
 re-starting the server should display a new menu *Example Client
@@ -146,8 +140,7 @@ client action function by a :doc:`widget`. Our widget will simply use
 its :js:func:`~openerp.web.Widget.start` to add some content to its
 DOM:
 
-.. literalinclude:: module/static/src/js/first_module.js.3.diff
-    :language: diff
+.. patch::
 
 after reloading the client (to update the javascript file), instead of
 printing to the console the menu item clears the whole screen and
@@ -157,15 +150,13 @@ Since we've added a class on the widget's :ref:`DOM root
 <widget-dom_root>` we can now see how to add a stylesheet to a module:
 first create the stylesheet file:
 
-.. literalinclude:: module/static/src/css/web_example.css
-    :language: css
+.. patch::
 
 then add a reference to the stylesheet in the module's manifest (which
 will require restarting the OpenERP Server to see the changes, as
 usual):
 
-.. literalinclude:: module/__openerp__.py.4.diff
-    :language: diff
+.. patch::
 
 the text displayed by the menu item should now be huge, and
 white-on-black (instead of small and black-on-white). From there on,
@@ -202,22 +193,16 @@ integration to OpenERP Web widgets.
 
 Adding a template file is similar to adding a style sheet:
 
-.. literalinclude:: module/static/src/xml/web_example.xml
-    :language: xml
-
-.. literalinclude:: module/__openerp__.py.5.diff
-    :language: diff
+.. patch::
 
 The template can then easily be hooked in the widget:
 
-.. literalinclude:: module/static/src/js/first_module.js.4.diff
-    :language: diff
+.. patch::
 
 And finally the CSS can be altered to style the new (and more complex)
 template-generated DOM, rather than the code-generated one:
 
-.. literalinclude:: module/static/src/css/web_example.css.1.diff
-    :language: diff
+.. patch::
 
 .. note::
 
@@ -236,15 +221,13 @@ The last step (until the next one) is to add some behavior and make
 our stopwatch watch. First hook some events on the buttons to toggle
 the widget's state:
 
-.. literalinclude:: module/static/src/js/first_module.js.5.diff
-    :language: diff
+.. patch::
 
 This demonstrates the use of the "events hash" and event delegation to
 declaratively handle events on the widget's DOM. And already changes
 the button displayed in the UI. Then comes some actual logic:
 
-.. literalinclude:: module/static/src/js/first_module.js.6.diff
-    :language: diff
+.. patch::
 
 * An initializer (the ``init`` method) is introduced to set-up a few
   internal variables: ``_start`` will hold the start of the timer (as
@@ -270,6 +253,184 @@ the button displayed in the UI. Then comes some actual logic:
 
 Starting and stopping the watch now works, and correctly tracks time
 since having started the watch, neatly formatted.
+
+Burning through the skies
+-------------------------
+
+All work so far has been "local" outside of the original impetus
+provided by the client action: the widget is self-contained and, once
+started, does not communicate with anything outside itself. Not only
+that, but it has no persistence: if the user leaves the stopwatch
+screen (to go and see his inbox, or do some well-deserved accounting,
+for instance) whatever was being timed will be lost.
+
+To prevent this irremediable loss, we can use OpenERP's support for
+storing data as a model, allowing so that we don't lose our data and
+can later retrieve, query and manipulate it. First let's create a
+basic OpenERP model in which our data will be stored:
+
+.. patch::
+
+then let's add saving times to the database every time the stopwatch
+is stopped, using :js:class:`the "high-level" Model API
+<openerp.web.Model.call>`:
+
+.. patch::
+
+A look at the "Network" tab of your preferred browser's developer
+tools while playing with the stopwatch will show that the save
+(creation) request is indeed sent (and replied to, even though we're
+ignoring the response at this point).
+
+These saved data should now be loaded and displayed when first opening
+the action, so the user can see his previously recorded times. This is
+done by overloading the model's ``start`` method: the purpose of
+:js:func:`~openerp.base.Widget.start()` is to perform *asynchronous*
+initialization steps, so the rest of the web client knows to "wait"
+and gets a readiness signal. In this case, it will fetch the data
+recorded previously using the :js:class:`~openerp.web.Query` interface
+and add this data to an ordered list added to the widget's template:
+
+.. patch::
+
+And for consistency's sake (so that the display a user leaves is
+pretty much the same as the one he comes back to), newly created
+records should also automatically be added to the list:
+
+.. patch::
+
+Note that we're only displaying the record once we know it's been
+saved from the database (the ``create`` call has returned without
+error).
+
+Mic check, is this working?
+---------------------------
+
+So far, features have been implemented, code has been worked and
+tentatively tried. However, there is no guarantee they will *keep
+working* as new changes are performed, new features added, …
+
+The original author (you, dear reader) could keep a notebook with a
+list of workflows to check, to ensure everything keeps working. And
+follow the notebook day after day, every time something is changed in
+the module.
+
+That gets repetitive after a while. And computers are good at doing
+repetitive stuff, as long as you tell them how to do it.
+
+So let's add test to the module, so that in the future the computer
+can take care of ensuring what works today keeps working tomorrow.
+
+.. note::
+
+    Here we're writing tests after having implemented the widget. This
+    may or may not work, we may need to alter bits and pieces of code
+    to get them in a testable state. An other testing methodology is
+    :abbr:`TDD (Test-Driven Development)` where the tests are written
+    first, and the code necessary to make these tests pass is written
+    afterwards.
+
+    Both methods have their opponents and detractors, advantages and
+    inconvenients. Pick the one you prefer.
+
+The first step of :doc:`testing` is to set up the basic testing
+structure:
+
+1. Creating a javascript file
+
+   .. patch::
+
+2. Containing a test section (and a few tests to make sure the tests
+   are correctly run)
+
+   .. patch::
+
+3. Then declaring the test file in the module's manifest
+
+   .. patch::
+
+4. And finally — after restarting OpenERP — navigating to the test
+   runner at ``/web/tests`` and selecting your soon-to-be-tested
+   module:
+
+   .. image:: module/testing_0.png
+       :align: center
+
+   the testing result do indeed match the test.
+
+The simplest tests to write are for synchronous pure
+functions. Synchronous means no RPC call or any other such thing
+(e.g. ``setTimeout``), only direct data processing, and pure means no
+side-effect: the function takes some input, manipulates it and yields
+an output.
+
+In our widget, only ``format_time`` fits the bill: it takes a duration
+(in milliseconds) and returns an ``hours:minutes:second`` formatting
+of it. Let's test it:
+
+.. patch::
+
+This series of simple tests passes with no issue. The next easy-ish
+test type is to test basic DOM alterations from provided input, such
+as (for our widget) updating the counter or displaying a record to the
+records list: while it's not pure (it alters the DOM "in-place") it
+has well-delimited side-effects and these side-effects come solely
+from the provided input.
+
+Because these methods alter the widget's DOM, the widget needs a
+DOM. Looking up :doc:`a widget's lifecycle <widget>`, the widget
+really only gets its DOM when adding it to the document. However a
+side-effect of this is to :js:func:`~openerp.web.Widget.start` it,
+which for us means going to query the user's times.
+
+We don't have any records to get in our test, and we don't want to
+test the initialization yet! So let's cheat a bit: we can manually
+:js:func:`set a widget's DOM <openerp.web.Widget.setElement>`, let's
+create a basic DOM matching what each method expects then call the
+method:
+
+.. patch::
+
+The next group of patches (in terms of setup/complexity) is RPC tests:
+testing components/methods which perform network calls (RPC
+requests). In our module, ``start`` and ``watch_stop`` are in that
+case: ``start`` fetches the user's recorded times and ``watch_stop``
+creates a new record with the current watch.
+
+By default, tests don't allow RPC requests and will generate an error
+when trying to perform one:
+
+.. image:: module/testing_1.png
+    :align: center
+
+To allow them, the test case (or the test suite) has to explicitly opt
+into :js:attr:`rpc support <TestOptions.rpc>` by adding the ``rpc:
+'mock'`` option to the test case, and providing its own "rpc
+responses":
+
+.. patch::
+
+.. note::
+
+    By defaut, tests cases don't load templates either. We had not
+    needed to perform any template rendering before here, so we must
+    now enable templates loading via :js:attr:`the corresponding
+    option <TestOptions.templates>`.
+
+Our final test requires altering the module's code: asynchronous tests
+use :doc:`deferred </async>` to know when a test ends and the other
+one can start (otherwise test content will execute non-linearly and
+the assertions of a test will be executed during the next test or
+worse), but although ``watch_stop`` performs an asynchronous
+``create`` operation it doesn't return a deferred we can synchronize
+on. We simply need to return its result:
+
+.. patch::
+
+This makes no difference to the original code, but allows us to write
+our test:
+
+.. patch::
 
 .. [#DOM-building] they are not alternative solutions: they work very
                    well together. Templates are used to build "just

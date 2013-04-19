@@ -40,7 +40,7 @@
         <td>
             <p>
                 <t t-js="d">
-                    var message = d.message ? d.message : d.error.data.fault_code;
+                    var message = d.message ? d.message : d.error.data.message;
                     d.html_error = context.engine.tools.html_escape(message)
                         .replace(/\n/g, '<br/>');
                 </t>
@@ -71,9 +71,9 @@
                 </div>
                 <ul>
                     <li>Username</li>
-                    <li><input name="login" type="text" t-att-value="widget.selected_login || ''" autofocus="autofocus"/></li>
+                    <li><input name="login" type="text" value="" autofocus="autofocus"/></li>
                     <li>Password</li>
-                    <li><input name="password" type="password" t-att-value="widget.selected_password || ''"/></li>
+                    <li><input name="password" type="password" value=""/></li>
                     <li><button name="submit">Log in</button></li>
                 </ul>
             </form>
@@ -106,33 +106,47 @@
                     <div class="oe_view_manager_header" style="padding: 8px;">
                         <div class="oe_header_row">
                             <h2 class="oe_view_title">
-                                <span class="oe_view_title_text oe_breadcrumb_title">Create Database</span>
+                                <span class="oe_view_title_text oe_breadcrumb_title">Create a New Database</span>
                             </h2>
-                            <button type="submit" class="oe_button oe_highlight db_create">Create</button>
                         </div>
                     </div>
                 </div>
-                <table align="center" class="db_option_table">
+                <p class="oe_grey" style="margin: 10px">
+                    Fill in this form to create an OpenERP database. You can
+                    create databases for different companies or for different
+                    goals (testing, production). Once the database is created,
+                    you will be able to install your first application.
+                </p>
+                <p class="oe_grey" style="margin: 10px">
+                    By default, the master password is 'admin'. This password
+                    is required to created, delete dump or restore databases.
+                </p>
+                <table class="db_option_table" style="margin: 10px">
                     <tr>
                         <td><label for="super_admin_pwd">Master password:</label></td>
-                        <td><input type="password" name="super_admin_pwd" class="required" value="admin" /></td>
+                        <td>
+                            <input type="password" name="super_admin_pwd" class="required" value="admin"/>
+                        </td>
                     </tr>
                     <tr>
-                        <td><label for="db_name">New database name:</label></td>
-                        <td><input type="text" name="db_name" class="required" matches="^[a-zA-Z][a-zA-Z0-9_-]+$" autofocus="true"/></td>
+                        <td><label for="db_name">Select a database name:</label></td>
+                        <td>
+                            <input type="text" name="db_name" class="required" matches="^[a-zA-Z0-9][a-zA-Z0-9_-]+$" autofocus="true" placeholder="e.g. mycompany"/> 
+                        </td>
                     </tr>
                     <tr>
-                        <td><label for="demo_data">Load Demonstration data:</label></td>
+                        <td><label for="demo_data">Load demonstration data:</label></td>
                         <td class="oe_form_group_cell">
-                            <span class="oe_form_field oe_form_field_boolean">
+                            <span class="oe_form_field oe_form_field_boolean oe_grey" >
                                 <input type="checkbox" name="demo_data" />
+                                Check this box to evaluate OpenERP.
                             </span>
                         </td>
                     </tr>
                     <tr>
                         <td><label for="db_lang">Default language:</label></td>
-                        <td class="oe_form_field oe_form_field_selection ">
-                            <select name="db_lang" t-if="widget.lang_list">
+                        <td class="oe_form_field oe_form_field_selection">
+                            <select name="db_lang" t-if="widget.lang_list" class="oe_inline">
                                 <t t-foreach="widget.lang_list" t-as="lang">
                                     <option t-att-value="lang[0]" t-att-selected="lang[0] === 'en_US' ? 'selected' : undefined">
                                         <t t-esc="lang[1]" />
@@ -142,12 +156,16 @@
                         </td>
                     </tr>
                     <tr>
-                        <td><label for="create_admin_pwd">Admin password:</label></td>
+                        <td><label for="create_admin_pwd">Choose a password:</label></td>
                         <td><input type="password" name="create_admin_pwd" class="required" /></td>
                     </tr>
                     <tr>
                         <td><label for="create_confirm_pwd">Confirm password:</label></td>
                         <td><input type="password" name="create_confirm_pwd" class="required" equalTo="input[name=create_admin_pwd]"/></td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td><button type="submit" class="oe_button oe_highlight db_create">Create Database</button></td>
                     </tr>
                 </table>
             </form>
@@ -403,8 +421,9 @@
         <img class="oe_topbar_avatar" t-att-data-default-src="_s + '/web/static/src/img/user_menu_avatar.png'"/>
         <span class="oe_topbar_name"/>
         <ul class="oe_dropdown_menu">
-            <li><a href="#" data-menu="about">About OpenERP</a></li>
             <li><a href="#" data-menu="settings">Preferences</a></li>
+            <li><a href="#" data-menu="about">About OpenERP</a></li>
+            <li><a href="#" data-menu="help">Help</a></li>
             <li><a href="#" data-menu="logout">Log out</a></li>
         </ul>
     </span>
@@ -1031,17 +1050,22 @@
 </t>
 <t t-name="FieldText">
     <div class="oe_form_field oe_form_field_text" t-att-style="widget.node.attrs.style">
-        <textarea rows="6"
-            t-att-name="widget.name"
-            class="field_text"
-            t-att-tabindex="widget.node.attrs.tabindex"
-            t-att-autofocus="widget.node.attrs.autofocus"
-            t-att-placeholder="! widget.get('effective_readonly') ? widget.node.attrs.placeholder : ''"
-            t-att-maxlength="widget.field.size"
-        ></textarea><img class="oe_field_translate oe_input_icon"
-                        t-if="widget.field.translate and !widget.get('effective_readonly')"
-                        t-att-src='_s + "/web/static/src/img/icons/terp-translate.png"' width="16" height="16" border="0"
-        />
+        <t t-if="!widget.get('effective_readonly')">
+            <textarea rows="6"
+                t-att-name="widget.name"
+                class="field_text"
+                t-att-tabindex="widget.node.attrs.tabindex"
+                t-att-autofocus="widget.node.attrs.autofocus"
+                t-att-placeholder="! widget.get('effective_readonly') ? widget.node.attrs.placeholder : ''"
+                t-att-maxlength="widget.field.size"
+            ></textarea><img class="oe_field_translate oe_input_icon"
+                            t-if="widget.field.translate and !widget.get('effective_readonly')"
+                            t-att-src='_s + "/web/static/src/img/icons/terp-translate.png"' width="16" height="16" border="0"
+            />            
+        </t>
+        <t t-if="widget.get('effective_readonly')">
+            <span class="oe_form_text_content"></span>
+        </t>
     </div>
 </t>
 <t t-name="FieldTextHtml">
@@ -1060,8 +1084,9 @@
             t-att-name="widget.name"
             t-att-placeholder="placeholder"
             class="oe_datepicker_master"
-        /><img class="oe_input_icon oe_datepicker_trigger" t-att-src='_s + "/web/static/src/img/ui/field_calendar.png"'
-             title="Select date" width="16" height="16" border="0"/>
+        /><img class="oe_input_icon oe_datepicker_trigger" draggable="false"
+               t-att-src='_s + "/web/static/src/img/ui/field_calendar.png"'
+               title="Select date" width="16" height="16" border="0"/>
     </span>
 </t>
 <t t-name="FieldDate">
@@ -1086,6 +1111,34 @@
         </select>
     </span>
 </t>
+<t t-name="FieldRadio">
+    <span t-attf-class="oe_form_field oe_form_field_radio #{widget.options.horizontal ? 'oe_horizontal' : 'oe_vertical'}" t-att-style="widget.node.attrs.style">
+        <span t-if="!widget.get('effective_readonly')">
+            <t t-if="widget.options.horizontal">
+                <t t-set="width" t-value="Math.floor(100 / widget.selection.length)"/>
+                <t t-if="!widget.options.no_radiolabel">
+                    <t t-foreach="widget.selection" t-as="selection">
+                        <label t-att-for="widget.uniqueId + '_' + selection[0]" t-att-style="'width: ' + width + '%;'"><t t-esc="selection[1]"/></label>
+                    </t>
+                    <br/>
+                </t>
+                <t t-foreach="widget.selection" t-as="selection">
+                    <div t-att-style="'width: ' + width + '%;'">
+                        <span class="oe_radio_input"><input type="radio" t-att-name="widget.uniqueId" t-att-id="widget.uniqueId + '_' + selection[0]" t-att-value="selection[0]"/></span>
+                    </div>
+                </t>
+            </t>
+            <t t-if="!widget.options.horizontal">
+                <t t-foreach="widget.selection" t-as="selection">
+                    <div>
+                        <span class="oe_radio_input"><input type="radio" t-att-id="widget.uniqueId + '_' + selection[0]" t-att-name="widget.uniqueId" t-att-value="selection[0]"/></span><label t-if="!widget.options.no_radiolabel" t-att-for="widget.uniqueId + '_' + selection[0]"><t t-esc="selection[1]"/></label>
+                    </div>
+                </t>
+            </t>
+        </span>
+        <span t-if="widget.get('effective_readonly')" class="oe_radio_readonly"><t t-esc="widget.get('value')[1]"/></span>
+    </span>
+</t>
 <t t-name="FieldMany2One">
     <span class="oe_form_field oe_form_field_many2one oe_form_field_with_button" t-att-style="widget.node.attrs.style">
         <t t-if="widget.get('effective_readonly')">
@@ -1095,7 +1148,7 @@
         </t>
         <t t-if="!widget.get('effective_readonly')">
             <a t-if="! widget.options.no_open" href="#" tabindex="-1"
-                class="oe_m2o_cm_button oe_e">/</a>
+                class="oe_m2o_cm_button oe_e" draggable="false">/</a>
             <div>
                 <input type="text"
                     t-att-id="widget.id_for_label"
@@ -1104,7 +1157,7 @@
                     t-att-placeholder="widget.node.attrs.placeholder"
                 />
                 <span class="oe_m2o_drop_down_button">
-                    <img t-att-src='_s + "/web/static/src/img/down-arrow.png"'/>
+                    <img t-att-src='_s + "/web/static/src/img/down-arrow.png"' draggable="false"/>
                 </span>
             </div>
         </t>
@@ -1265,8 +1318,9 @@
 </t>
 <t t-name="FieldBinaryFileUploader.files">
     <div class="oe_attachments">
-        <t t-if="widget.get('value')">
-            <t t-if="!widget.get('effective_readonly')" t-foreach="widget.get('value')" t-as="file">
+        <t t-if="!widget.get('effective_readonly')">
+            <t t-foreach="widget.get('value')" t-as="id">
+                <t t-set="file" t-value="widget.data[id]"/>
                 <div class="oe_attachment">
                     <span t-if="(file.upload or file.percent_loaded&lt;100)" t-attf-title="{(file.name || file.filename) + (file.date?' \n('+file.date+')':'' )}" t-attf-name="{file.name || file.filename}">
                         <span class="oe_fileuploader_in_process">...Upload in progress...</span>
@@ -1280,7 +1334,10 @@
                     </t>
                 </div>
             </t>
-            <t t-if="widget.get('effective_readonly')" t-foreach="widget.get('value')" t-as="file">
+        </t>
+        <t t-if="widget.get('effective_readonly')">
+            <t t-foreach="widget.get('value')" t-as="id">
+                <t t-set="file" t-value="widget.data[id]"/>
                 <div>
                     <a t-att-href="file.url" t-attf-title="{(file.name || file.filename) + (file.date?' \n('+file.date+')':'' )}">
                         <t t-raw="file.name || file.filename"/>
@@ -1296,10 +1353,10 @@
         <div class="oe_add" t-if="!widget.get('effective_readonly')">
             <!-- uploader of file -->
             <button class="oe_attach"><span class="oe_e">'</span></button> 
-            <span class='oe_attach_label'>File</span>
+            <span class='oe_attach_label'><t t-esc="widget.string"/></span>
             <t t-call="HiddenInputFile">
                 <t t-set="fileupload_id" t-value="widget.fileupload_id"/>
-                <t t-set="fileupload_action">/web/binary/upload_attachment</t>
+                <t t-set="fileupload_action" t-translation="off">/web/binary/upload_attachment</t>
                 <input type="hidden" name="model" t-att-value="widget.view.model"/>
                 <input type="hidden" name="id" value="0"/>
                 <input type="hidden" name="session_id" t-att-value="widget.session.session_id"/>
@@ -1414,8 +1471,6 @@
         this.removeAttr('t-if');
     </t>
 
-    <t t-jquery="tfoot &gt; tr:last-child" t-operation="replace"/>
-
     <t t-jquery="td.oe-actions">
         this.removeAttr('t-if');
     </t>
@@ -1497,7 +1552,7 @@
     <t t-esc="attrs.string"/>
 </button>
 <ul t-name="SearchView.filters">
-    <li t-foreach="widget.filters" t-as="filter"
+    <li t-foreach="widget.filters" t-as="filter" t-if="filter.visible()"
             t-att-title="filter.attrs.string ? filter.attrs.help : undefined">
         <t t-esc="filter.attrs.string or filter.attrs.help or filter.attrs.name or 'Ω'"/>
     </li>
@@ -1584,15 +1639,6 @@
             <t t-raw="content"/>
         </div>
     </div>
-</t>
-<t t-name="SearchView.group">
-    <t t-call="SearchView.util.expand">
-        <t t-set="expand" t-value="attrs.expand"/>
-        <t t-set="label" t-value="attrs.string"/>
-        <t t-set="content">
-            <t t-call="SearchView.render_lines"/>
-        </t>
-    </t>
 </t>
 <div t-name="SearchView.Filters" class="oe_searchview_filters oe_searchview_section">
 
@@ -1824,7 +1870,7 @@
         <tr>
             <td t-foreach="records[0]" t-as="column">
                 <input class="sel_fields" placeholder="--- Don't Import ---"/><span class="oe_m2o_drop_down_button">
-                        <img t-att-src='_s + "/web/static/src/img/down-arrow.png"' /></span>
+                        <img t-att-src='_s + "/web/static/src/img/down-arrow.png"' draggable="false"/></span>
             </td>
         </tr>
         <tr t-foreach="records" t-as="record" class="oe_import_grid-row">

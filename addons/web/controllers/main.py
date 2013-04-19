@@ -13,7 +13,9 @@ import os
 import re
 import simplejson
 import time
+import urllib
 import urllib2
+import urlparse
 import xmlrpclib
 import zlib
 from xml.etree import ElementTree
@@ -91,16 +93,50 @@ def db_list(req):
     dbs = [i for i in dbs if re.match(r, i)]
     return dbs
 
-def db_monodb(req):
-    # if only one db exists, return it else return False
+def db_monodb_redirect(req):
+    db = False
+    redirect = False
+
+    # 1 try the db in the url
+    db_url = req.params.get('db')
+    if db_url:
+        return (db_url, False)
+
     try:
         dbs = db_list(req)
-        if len(dbs) == 1:
-            return dbs[0]
-    except xmlrpclib.Fault:
+    except Exception:
         # ignore access denied
-        pass
-    return False
+        dbs = []
+
+    # 2 use the database from the cookie if it's listable and still listed
+    cookie_db = req.httprequest.cookies.get('last_used_database')
+    if cookie_db in dbs:
+        db = cookie_db
+
+    # 3 use the first db
+    if dbs and not db:
+        db = dbs[0]
+
+    # redirect to the chosen db if multiple are available
+    if db and len(dbs) > 1:
+        query = dict(urlparse.parse_qsl(req.httprequest.query_string, keep_blank_values=True))
+        query.update({ 'db': db })
+        redirect = req.httprequest.path + '?' + urllib.urlencode(query)
+    return (db, redirect)
+
+def db_monodb(req):
+    # if only one db exists, return it else return False
+    return db_monodb_redirect(req)[0]
+
+def redirect_with_hash(req, url, code=303):
+    if req.httprequest.user_agent.browser == 'msie':
+        try:
+            version = float(req.httprequest.user_agent.version)
+            if version < 10:
+                return "<html><head><script>window.location = '%s#' + location.hash;</script></head></html>" % url
+        except Exception:
+            pass
+    return werkzeug.utils.redirect(url, code)
 
 def module_topological_sort(modules):
     """ Return a list of module names sorted so that their dependencies of the
@@ -291,20 +327,19 @@ def manifest_glob(req, extension, addons=None, db=None):
     return r
 
 def manifest_list(req, extension, mods=None, db=None):
+    """ list ressources to load specifying either:
+    mods: a comma separated string listing modules
+    db: a database name (return all installed modules in that database)
+    """
     if not req.debug:
         path = '/web/webclient/' + extension
         if mods is not None:
-            path += '?mods=' + mods
+            path += '?' + urllib.urlencode({'mods': mods})
         elif db:
-            path += '?db=' + db
+            path += '?' + urllib.urlencode({'db': db})
         return [path]
     files = manifest_glob(req, extension, addons=mods, db=db)
-    i_am_diabetic = req.httprequest.environ["QUERY_STRING"].count("no_sugar") >= 1 or \
-                    req.httprequest.environ.get('HTTP_REFERER', '').count("no_sugar") >= 1
-    if i_am_diabetic:
-        return [wp for _fp, wp in files]
-    else:
-        return ['%s?debug=%s' % (wp, os.path.getmtime(fp)) for fp, wp in files]
+    return [wp for _fp, wp in files]
 
 def get_last_modified(files):
     """ Returns the modification time of the most recently modified
@@ -522,7 +557,7 @@ html_template = """<!DOCTYPE html>
     </head>
     <body>
         <!--[if lte IE 8]>
-        <script src="http://ajax.googleapis.com/ajax/libs/chrome-frame/1/CFInstall.min.js"></script>
+        <script src="//ajax.googleapis.com/ajax/libs/chrome-frame/1/CFInstall.min.js"></script>
         <script>CFInstall.check({mode: "overlay"});</script>
         <![endif]-->
     </body>
@@ -534,6 +569,10 @@ class Home(openerpweb.Controller):
 
     @openerpweb.httprequest
     def index(self, req, s_action=None, db=None, **kw):
+        db, redir = db_monodb_redirect(req)
+        if redir:
+            return redirect_with_hash(req, redir)
+
         js = "\n        ".join('<script type="text/javascript" src="%s"></script>' % i for i in manifest_list(req, 'js', db=db))
         css = "\n        ".join('<link rel="stylesheet" href="%s">' % i for i in manifest_list(req, 'css', db=db))
 
@@ -684,7 +723,7 @@ class WebClient(openerpweb.Controller):
 
     @openerpweb.jsonrequest
     def version_info(self, req):
-        return openerp.service.web_services.RPC_VERSION_1
+        return openerp.service.common.exp_version()
 
 class Proxy(openerpweb.Controller):
     _cp_path = '/web/proxy'
@@ -749,10 +788,10 @@ class Database(openerpweb.Controller):
 
         try:
             return req.session.proxy("db").drop(password, db)
-        except xmlrpclib.Fault, e:
-            if e.faultCode and e.faultCode.split(':')[0] == 'AccessDenied':
-                return {'error': e.faultCode, 'title': 'Drop Database'}
-        return {'error': _('Could not drop database !'), 'title': _('Drop Database')}
+        except openerp.exceptions.AccessDenied:
+            return {'error': 'AccessDenied', 'title': 'Drop Database'}
+        except Exception:
+            return {'error': _('Could not drop database !'), 'title': _('Drop Database')}
 
     @openerpweb.httprequest
     def backup(self, req, backup_db, backup_pwd, token):
@@ -769,8 +808,8 @@ class Database(openerpweb.Controller):
                ('Content-Disposition', content_disposition(filename, req))],
                {'fileToken': int(token)}
             )
-        except xmlrpclib.Fault, e:
-            return simplejson.dumps([[],[{'error': e.faultCode, 'title': _('Backup Database')}]])
+        except Exception, e:
+            return simplejson.dumps([[],[{'error': openerp.tools.ustr(e), 'title': _('Backup Database')}]])
 
     @openerpweb.httprequest
     def restore(self, req, db_file, restore_pwd, new_db):
@@ -778,9 +817,8 @@ class Database(openerpweb.Controller):
             data = base64.b64encode(db_file.read())
             req.session.proxy("db").restore(restore_pwd, new_db, data)
             return ''
-        except xmlrpclib.Fault, e:
-            if e.faultCode and e.faultCode.split(':')[0] == 'AccessDenied':
-                raise Exception("AccessDenied")
+        except openerp.exceptions.AccessDenied, e:
+            raise Exception("AccessDenied")
 
     @openerpweb.jsonrequest
     def change_password(self, req, fields):
@@ -789,10 +827,10 @@ class Database(openerpweb.Controller):
                 dict(map(operator.itemgetter('name', 'value'), fields)))
         try:
             return req.session.proxy("db").change_admin_password(old_password, new_password)
-        except xmlrpclib.Fault, e:
-            if e.faultCode and e.faultCode.split(':')[0] == 'AccessDenied':
-                return {'error': e.faultCode, 'title': _('Change Password')}
-        return {'error': _('Error, password not changed !'), 'title': _('Change Password')}
+        except openerp.exceptions.AccessDenied:
+            return {'error': 'AccessDenied', 'title': _('Change Password')}
+        except Exception:
+            return {'error': _('Error, password not changed !'), 'title': _('Change Password')}
 
 class Session(openerpweb.Controller):
     _cp_path = "/web/session"
@@ -870,7 +908,7 @@ class Session(openerpweb.Controller):
         """
         saved_actions = req.httpsession.get('saved_actions')
         if not saved_actions:
-            saved_actions = {"next":0, "actions":{}}
+            saved_actions = {"next":1, "actions":{}}
             req.httpsession['saved_actions'] = saved_actions
         # we don't allow more than 10 stored actions
         if len(saved_actions["actions"]) >= 10:
@@ -1194,7 +1232,7 @@ class Binary(openerpweb.Controller):
 
             image_data = base64.b64decode(image_base64)
 
-        except (TypeError, xmlrpclib.Fault):
+        except Exception:
             image_data = self.placeholder(req)
         headers.append(('ETag', retag))
         headers.append(('Content-Length', len(image_data)))
@@ -1311,8 +1349,8 @@ class Binary(openerpweb.Controller):
                 'filename': ufile.filename,
                 'id':  attachment_id
             }
-        except xmlrpclib.Fault, e:
-            args = {'error':e.faultCode }
+        except Exception:
+            args = {'error': "Something horrible happened"}
         return out % (simplejson.dumps(callback), simplejson.dumps(args))
 
     @openerpweb.httprequest
