@@ -21,6 +21,23 @@
 
 from openerp.osv import osv, fields
 
+class res_partner(osv.Model):
+    _inherit = 'res.partner'
+    
+    # indirection to avoid passing a copy of the overridable method when declaring the function field
+    _commercial_partner_id = lambda self, *args, **kwargs: self._commercial_partner_compute(*args, **kwargs)
+
+    _commercial_partner_id_store_triggers = {
+        'res.partner': (lambda self,cr,uid,ids,context=None: self.search(cr, uid, [('id','child_of',ids)]),
+                        ['parent_id', 'is_company'], 10)
+    }
+
+    _columns = {
+        # make the original field stored, in case it's needed for reporting purposes
+        'commercial_partner_id': fields.function(_commercial_partner_id, type='many2one', relation='res.partner', string='Commercial Entity',
+                                                 store=_commercial_partner_id_store_triggers)
+    }
+
 class account_invoice(osv.Model):
     _inherit = 'account.invoice'
 
