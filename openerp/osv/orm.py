@@ -2068,44 +2068,6 @@ class BaseModel(object):
             raise AttributeError("View definition error for inherited view '%s' on model '%s': %s"
                                  %  (child_view.xml_id, self._name, error_msg))
 
-        def locate(source, spec):
-            """ Locate a node in a source (parent) architecture.
-
-            Given a complete source (parent) architecture (i.e. the field
-            `arch` in a view), and a 'spec' node (a node in an inheriting
-            view that specifies the location in the source view of what
-            should be changed), return (if it exists) the node in the
-            source view matching the specification.
-
-            :param source: a parent architecture to modify
-            :param spec: a modifying node in an inheriting view
-            :return: a node in the source matching the spec
-
-            """
-            if spec.tag == 'xpath':
-                nodes = source.xpath(spec.get('expr'))
-                return nodes[0] if nodes else None
-            elif spec.tag == 'field':
-                # Only compare the field name: a field can be only once in a given view
-                # at a given level (and for multilevel expressions, we should use xpath
-                # inheritance spec anyway).
-                for node in source.getiterator('field'):
-                    if node.get('name') == spec.get('name'):
-                        return node
-                return None
-
-            for node in source.getiterator(spec.tag):
-                if isinstance(node, SKIPPED_ELEMENT_TYPES):
-                    continue
-                if all(node.get(attr) == spec.get(attr) \
-                        for attr in spec.attrib
-                            if attr not in ('position','version')):
-                    # Version spec should match parent's root element's version
-                    if spec.get('version') and spec.get('version') != source.get('version'):
-                        return None
-                    return node
-            return None
-
         def apply_inheritance_specs(source, specs_arch, inherit_id=None):
             """ Apply an inheriting view.
 
@@ -2131,7 +2093,7 @@ class BaseModel(object):
                 if spec.tag == 'data':
                     specs += [ c for c in specs_tree ]
                     continue
-                node = locate(source, spec)
+                node = View.locate_node(source, spec)
                 if node is not None:
                     pos = spec.get('position', 'inside')
                     if pos == 'replace':

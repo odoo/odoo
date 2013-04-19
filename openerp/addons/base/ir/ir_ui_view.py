@@ -25,7 +25,7 @@ import os
 
 from openerp import tools
 from openerp.osv import fields,osv
-from openerp.tools import graph
+from openerp.tools import graph, SKIPPED_ELEMENT_TYPES
 from openerp.tools.safe_eval import safe_eval as eval
 from openerp.tools.view_validation import valid_view
 
@@ -162,6 +162,44 @@ class view(osv.osv):
         cr.execute('SELECT indexname FROM pg_indexes WHERE indexname = \'ir_ui_view_model_type_inherit_id\'')
         if not cr.fetchone():
             cr.execute('CREATE INDEX ir_ui_view_model_type_inherit_id ON ir_ui_view (model, inherit_id)')
+
+    def locate_node(self, arch, spec):
+        """ Locate a node in a source (parent) architecture.
+
+        Given a complete source (parent) architecture (i.e. the field
+        `arch` in a view), and a 'spec' node (a node in an inheriting
+        view that specifies the location in the source view of what
+        should be changed), return (if it exists) the node in the
+        source view matching the specification.
+
+        :param arch: a parent architecture to modify
+        :param spec: a modifying node in an inheriting view
+        :return: a node in the source matching the spec
+
+        """
+        if spec.tag == 'xpath':
+            nodes = arch.xpath(spec.get('expr'))
+            return nodes[0] if nodes else None
+        elif spec.tag == 'field':
+            # Only compare the field name: a field can be only once in a given view
+            # at a given level (and for multilevel expressions, we should use xpath
+            # inheritance spec anyway).
+            for node in arch.getiterator('field'):
+                if node.get('name') == spec.get('name'):
+                    return node
+            return None
+
+        for node in arch.getiterator(spec.tag):
+            if isinstance(node, SKIPPED_ELEMENT_TYPES):
+                continue
+            if all(node.get(attr) == spec.get(attr) \
+                    for attr in spec.attrib
+                        if attr not in ('position','version')):
+                # Version spec should match parent's root element's version
+                if spec.get('version') and spec.get('version') != arch.get('version'):
+                    return None
+                return node
+        return None
 
     def get_inheriting_views_arch(self, cr, uid, view_id, model, context=None):
         """Retrieves the architecture of views that inherit from the given view, from the sets of
