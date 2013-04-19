@@ -20,8 +20,8 @@ class TestNewFields(common.TransactionCase):
         self.assertIsInstance(partner.children_count, (int, long))
 
         # read field as a record item
-        # self.assertIsInstance(partner['children_count'], (int, long))
-        # self.assertEqual(partner['children_count'], partner.children_count)
+        self.assertIsInstance(partner['children_count'], (int, long))
+        self.assertEqual(partner['children_count'], partner.children_count)
 
         # read field as a record item
         # values = partner.read(['children_count'])

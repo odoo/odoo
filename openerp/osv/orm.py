@@ -59,6 +59,7 @@ from lxml import etree
 import api
 from scope import proxy as scope_proxy
 import fields
+from fields2 import Field
 import openerp
 import openerp.tools as tools
 from openerp.tools.config import config
@@ -721,6 +722,16 @@ class BaseModel(object):
                 '_local_sql_constraints': cls.__dict__.get('_sql_constraints', []),
             }
             cls = type(cls._name, (cls,), nattr)
+
+        # copy all new-style fields in cls to avoid clashes with inheritance
+        cls._fields = {}
+        for attr in dir(cls):
+            value = getattr(cls, attr)
+            if isinstance(value, Field):
+                field = copy.copy(value)
+                field.set_model_name(cls._name, attr)
+                setattr(cls, attr, field)           # for record field access
+                cls._fields[attr] = field           # for model reflection
 
         if not getattr(cls, '_original_module', None):
             cls._original_module = cls._module
@@ -5329,6 +5340,24 @@ class BaseModel(object):
             return self._id
 
         with self.scope:
+            model_cache = self.scope.cache[self._name]
+
+            # handle the case of new-style fields
+            field = self._fields.get(field_name)
+            if field:
+                if self.is_null():
+                    return field.null()
+
+                if self._id in model_cache[field_name]:
+                    value = model_cache[field_name][self._id]
+                    return field.cache_to_record(value)
+
+                if not field.store:
+                    assert field.compute
+                    getattr(self, field.compute)()
+                    value = model_cache[field_name][self._id]
+                    return field.cache_to_record(value)
+
             # fetch the definition of the field which was asked for
             column = self._all_columns[field_name].column
             browse_function = _browse_functions.get(column._type, _browse_default)
@@ -5336,8 +5365,6 @@ class BaseModel(object):
             if self.is_null():
                 # return False, null or recordset, depending on the field's type
                 return browse_function(self, column, False)
-
-            model_cache = self.scope.cache[self._name]
 
             if self._id not in model_cache[field_name]:
                 # determine which fields to fetch

@@ -23,9 +23,6 @@
 
 from datetime import date, datetime
 
-from openerp.osv import fields
-from openerp.osv.scope import proxy as scope
-
 
 class Field(object):
     """ Base class of all fields. """
@@ -58,17 +55,14 @@ class Field(object):
 
     def __get__(self, instance, owner):
         """ read the value of field `self` for the record `instance` """
-        assert instance and instance.is_record()
-        field_cache = scope.cache[self.model][self.name]
-        if instance._id not in field_cache:
-            if not self.compute:
-                return instance._get_field_value(self.name)
-            getattr(instance, self.compute)()
-        return self.cache_to_record(field_cache[instance._id])
+        if instance is None:
+            return self         # the field is accessed through the class owner
+        assert instance.is_record_or_null() and instance._name == self.model
+        return instance._get_field_value(self.name)
 
     def __set__(self, instance, value):
         """ set the value of field `self` for the record `instance` """
-        assert instance.is_record()
+        assert instance.is_record() and instance._name == self.model
         value = self.record_to_cache(value)
         scope.cache[self.model][self.name][instance._id] = value
         if self.store:
@@ -81,6 +75,10 @@ class Field(object):
     def record_to_cache(self, value):
         """ convert `value` from the record level to the cache level """
         return value
+
+    def null(self):
+        """ return the null value for this field at the record level """
+        return False
 
 
 class Integer(Field):
@@ -97,3 +95,7 @@ class Integer(Field):
     def record_to_cache(self, value):
         return int(value or 0)
 
+
+# imported here to avoid dependency cycle issues
+from openerp.osv import fields
+from openerp.osv.scope import proxy as scope
