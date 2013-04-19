@@ -528,7 +528,7 @@ class res_partner(osv.osv, format_address):
         res = []
         for record in self.browse(cr, uid, ids, context=context):
             name = record.name
-            if record.parent_id:
+            if record.parent_id and not record.is_company:
                 name =  "%s, %s" % (record.parent_id.name, name)
             if context.get('show_address'):
                 name = name + "\n" + self._display_address(cr, uid, record, without_company=True, context=context)
