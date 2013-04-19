@@ -129,6 +129,18 @@
                 </p>
             </field>
         </record>
+        <record id="goal_plan_list_action2_view1" model="ir.actions.act_window.view">
+            <field eval="1" name="sequence"/>
+            <field name="view_mode">kanban</field>
+            <field name="act_window_id" ref="goal_plan_list_action2"/>
+            <field name="view_id" ref="gamification.view_goal_plan_kanban"/>
+        </record>
+        <record id="goal_plan_list_action2_view2" model="ir.actions.act_window.view">
+            <field eval="10" name="sequence"/>
+            <field name="view_mode">form</field>
+            <field name="act_window_id" ref="goal_plan_list_action2"/>
+            <field name="view_id" ref="gamification.goal_plan_form_view"/>
+        </record>
 
         <menuitem id="menu_hr_gamification" parent="hr.menu_hr_root" name="Engagement" sequence="40"/>
 

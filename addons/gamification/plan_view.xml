@@ -184,6 +184,12 @@
         </record>
         <record id="goal_plan_list_action_view1" model="ir.actions.act_window.view">
             <field eval="1" name="sequence"/>
+            <field name="view_mode">kanban</field>
+            <field name="act_window_id" ref="goal_plan_list_action"/>
+            <field name="view_id" ref="view_goal_plan_kanban"/>
+        </record>
+        <record id="goal_plan_list_action_view2" model="ir.actions.act_window.view">
+            <field eval="10" name="sequence"/>
             <field name="view_mode">form</field>
             <field name="act_window_id" ref="goal_plan_list_action"/>
             <field name="view_id" ref="goal_plan_form_view"/>
@@ -226,23 +232,81 @@
             <field name="model">gamification.goal.plan</field>
             <field name="arch" type="xml">
                 <form string="Challenge" version="7.0">
+                    <field name="reward_id" invisible="1"/>
+                    <field name="reward_first_id" invisible="1"/>
+                    <field name="reward_second_id" invisible="1"/>
+                    <field name="reward_third_id" invisible="1"/>
+                    <field name="reward_failure" invisible="1"/>
                     <div class="oe_title">
-                        <field name="name" nolabel="1" readonly="1"/>
+                        <h1><field name="name" nolabel="1" readonly="1"/></h1>
                     </div>
                     <field name="description" nolabel="1" readonly="1" />
                     The challenge is running from <field name="start_date" class="oe_inline" readonly="1" /> to <field name="end_date" class="oe_inline" readonly="1" />
-                    <group string="Members">
-                        <field name="user_ids" nolabel="1" readonly="1" widget="many2many_tags" />
-                    </group>
                     <group string="Reward">
-                        <field name="reward_id" readonly="1" widget="many2many_tags" />
-                        <field name="reward_first_id" readonly="1" widget="many2many_tags" />
-                        <field name="reward_second_id" readonly="1" widget="many2many_tags" />
-                        <field name="reward_third_id" readonly="1" widget="many2many_tags" />
+                        <div class="oe_grey" attrs="{'invisible': ['|',('reward_id','!=',False),('reward_first_id','!=',False)]}">
+                            There is no reward upon completion of this challenge.
+                        </div>
+                        <group attrs="{'invisible': [('reward_id','=',False),('reward_first_id','=',False)]}">
+                            <field name="reward_id_many" readonly="1" attrs="{'invisible': [('reward_first_id','=', False)]}" widget="many2many_kanban">
+                                <kanban>
+                                    <field name="image"/>
+                                    <templates>
+                                        <t t-name="kanban-box"><div class="oe_kanban_record">
+                                            <div class="oe_kanban_badge_avatars"><img t-att-src="kanban_image('gamification.badge', 'image', record.image.raw_value)" t-att-title="record.name.value" width="32" height="32" /></div>
+                                            <field name="name"/>
+                                        </div></t>
+                                    </templates>
+                                </kanban>
+                            </field>
+                            <field name="reward_first_id_many" readonly="1" attrs="{'invisible': [('reward_first_id','=', False)]}" widget="many2many_kanban">
+                                <kanban>
+                                    <field name="image"/>
+                                    <templates>
+                                        <t t-name="kanban-box"><div class="oe_kanban_record">
+                                            <div class="oe_kanban_badge_avatars"><img t-att-src="kanban_image('gamification.badge', 'image', record.image.raw_value)" t-att-title="record.name.value" width="32" height="32" /></div>
+                                            <field name="name"/>
+                                        </div></t>
+                                    </templates>
+                                </kanban>
+                            </field>
+                            <field name="reward_second_id_many" readonly="1" attrs="{'invisible': [('reward_second_id','=', False)]}" widget="many2many_kanban">
+                                <kanban>
+                                    <field name="image"/>
+                                    <templates>
+                                        <t t-name="kanban-box"><div class="oe_kanban_record">
+                                            <div class="oe_kanban_badge_avatars"><img t-att-src="kanban_image('gamification.badge', 'image', record.image.raw_value)" t-att-title="record.name.value" width="32" height="32" /></div>
+                                            <field name="name"/>
+                                        </div></t>
+                                    </templates>
+                                </kanban>
+                            </field>
+                            <field name="reward_third_id_many" readonly="1" attrs="{'invisible': [('reward_third_id','=', False)]}" widget="many2many_kanban">
+                                <kanban>
+                                    <field name="image"/>
+                                    <templates>
+                                        <t t-name="kanban-box"><div class="oe_kanban_record">
+                                            <div class="oe_kanban_badge_avatars"><img t-att-src="kanban_image('gamification.badge', 'image', record.image.raw_value)" t-att-title="record.name.value" width="32" height="32" /></div>
+                                            <field name="name"/>
+                                        </div></t>
+                                    </templates>
+                                </kanban>
+                            </field>
+                        </group>
+                        <div class="oe_grey" attrs="{'invisible': [('reward_failure','=',False)]}">
+                            Even if the challenge is failed, best challengers will be rewarded
+                        </div>
+                    </group>
+                    <group string="Challengers">
+                        <div class="oe_grey" colspan="4">Who will you be competiting with ?</div>
+                        <field name="user_ids" string="Participating" readonly="1" widget="many2many_tags" />
+                        <field name="proposed_user_ids" string="Invited" readonly="1" widget="many2many_tags" />
                     </group>
                     <footer>
-                        <button string="Accept" type="object" name="accept_challenge" class="oe_highlight" /> or
-                        <button string="Discard" type="object" name="discard_challenge" class="oe_link"/>
+                        <center>
+                            <button string="Accept" type="object" name="accept_challenge" class="oe_highlight" />
+                            <button string="Discard" type="object" name="discard_challenge"/> or
+                            <button string="reply later" special="cancel" class="oe_link"/>
+                        </center>
                     </footer>
                 </form>
             </field>

@@ -106,6 +106,46 @@ class gamification_goal_plan(osv.Model):
             res[plan.id] = len(plan.planline_ids)
         return res
 
+    def _reward_id_many(self, cr, uid, ids, field_name, arg, context=None):
+        """Return the field reward_id as a many2many field"""
+        res = dict.fromkeys(ids, 0)
+        for plan in self.browse(cr, uid, ids, context):
+            if plan.reward_id:
+                res[plan.id] = [plan.reward_id.id]
+            else:
+                res[plan.id] = []
+        return res
+
+    def _reward_first_id_many(self, cr, uid, ids, field_name, arg, context=None):
+        """Return the field reward_first_id as a many2many field"""
+        res = dict.fromkeys(ids, 0)
+        for plan in self.browse(cr, uid, ids, context):
+            if plan.reward_first_id:
+                res[plan.id] = [plan.reward_first_id.id]
+            else:
+                res[plan.id] = []
+        return res
+
+    def _reward_second_id_many(self, cr, uid, ids, field_name, arg, context=None):
+        """Return the field reward_second_id as a many2many field"""
+        res = dict.fromkeys(ids, 0)
+        for plan in self.browse(cr, uid, ids, context):
+            if plan.reward_second_id:
+                res[plan.id] = [plan.reward_second_id.id]
+            else:
+                res[plan.id] = []
+        return res
+
+    def _reward_third_id_many(self, cr, uid, ids, field_name, arg, context=None):
+        """Return the field reward_third_id as a many2many field"""
+        res = dict.fromkeys(ids, 0)
+        for plan in self.browse(cr, uid, ids, context):
+            if plan.reward_third_id:
+                res[plan.id] = [plan.reward_third_id.id]
+            else:
+                res[plan.id] = []
+        return res
+
     _columns = {
         'name': fields.char('Challenge Name', required=True, translate=True),
         'description': fields.text('Description', translate=True),
@@ -143,7 +183,12 @@ class gamification_goal_plan(osv.Model):
         'reward_first_id': fields.many2one('gamification.badge', string="For 1st user"),
         'reward_second_id': fields.many2one('gamification.badge', string="For 2nd user"),
         'reward_third_id': fields.many2one('gamification.badge', string="For 3rd user"),
-        'reward_failure': fields.boolean('Reward Top 3 even if not succeed'),
+        'reward_failure': fields.boolean('Reward Bests if not Succeeded?'),
+        # same fields but as many2many to be able to display as kanban
+        'reward_id_many': fields.function(_reward_id_many, type="many2many", relation="gamification.badge", string="For Every Succeding User"),
+        'reward_first_id_many': fields.function(_reward_first_id_many, type="many2many", relation="gamification.badge", string="For 1st user"),
+        'reward_second_id_many': fields.function(_reward_second_id_many, type="many2many", relation="gamification.badge", string="For 2nd user"),
+        'reward_third_id_many': fields.function(_reward_third_id_many, type="many2many", relation="gamification.badge", string="For 3rd user"),
 
         'period': fields.selection([
                 ('once', 'Non recurring'),
@@ -295,6 +340,7 @@ class gamification_goal_plan(osv.Model):
             if fields.date.today() == plan.next_report_date:
                 self.report_progress(cr, uid, plan, context=context)
                 self.write(cr, uid, plan.id, {'last_report_date': fields.date.today}, context=context)
+
         return True
 
     def quick_update(self, cr, uid, plan_id, context=None):
