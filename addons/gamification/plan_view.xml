@@ -2,24 +2,6 @@
 <openerp>
     <data>
 
-        <record id="goal_plan_list_action" model="ir.actions.act_window">
-            <field name="name">Challenges</field>
-            <field name="res_model">gamification.goal.plan</field>
-            <field name="view_mode">kanban,tree,form</field>
-            <field name="view_id" ref="goal_plan_form_view"/>
-            <field name="context">{'search_default_inprogress':True, 'default_inprogress':True}</field>
-            <field name="help" type="html">
-                <p class="oe_view_nocontent_create">
-                    Click to create a challenge. 
-                </p>
-                <p>
-                    Assign a list of goals to chosen users to evaluate them.
-                    The challenge can use a period (weekly, monthly...) for automatic creation of goals.
-                    The goals are created for the specified users or member of the group.
-                </p>
-            </field>
-        </record>
-
         <record id="goal_plan_list_view" model="ir.ui.view">
             <field name="name">Challenges List</field>
             <field name="model">gamification.goal.plan</field>
@@ -182,6 +164,29 @@
                     </templates>
                 </kanban>
             </field>
+        </record>
+
+        <record id="goal_plan_list_action" model="ir.actions.act_window">
+            <field name="name">Challenges</field>
+            <field name="res_model">gamification.goal.plan</field>
+            <field name="view_mode">kanban,tree,form</field>
+            <field name="context">{'search_default_inprogress':True, 'default_inprogress':True}</field>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    Click to create a challenge. 
+                </p>
+                <p>
+                    Assign a list of goals to chosen users to evaluate them.
+                    The challenge can use a period (weekly, monthly...) for automatic creation of goals.
+                    The goals are created for the specified users or member of the group.
+                </p>
+            </field>
+        </record>
+        <record id="goal_plan_list_action_view1" model="ir.actions.act_window.view">
+            <field eval="1" name="sequence"/>
+            <field name="view_mode">form</field>
+            <field name="act_window_id" ref="goal_plan_list_action"/>
+            <field name="view_id" ref="goal_plan_form_view"/>
         </record>
 
         <!-- Planline -->
