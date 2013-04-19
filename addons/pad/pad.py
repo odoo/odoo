@@ -84,15 +84,10 @@ class pad_common(osv.osv_memory):
 
     # Set the pad content in vals
     def _set_pad_value(self, cr, uid, vals, context=None):
-        for k in self._all_columns.keys():
+        for k,v in vals.items():
             field = self._all_columns[k].column
             if hasattr(field,'pad_content_field'):
-                url = vals.get(k)
-                if not url and ("id" in vals):
-                    url = self.read(cr, uid, vals["id"], [k], context=context)[k]
-                if url:
-                    vals[field.pad_content_field] = self.pad_get_content(cr, uid, url, context=context)
- 
+                vals[field.pad_content_field] = self.pad_get_content(cr, uid, v, context=context)        
 
     def copy(self, cr, uid, id, default=None, context=None):
         if not default:
