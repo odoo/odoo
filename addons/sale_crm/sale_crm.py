@@ -20,6 +20,7 @@
 ##############################################################################
 
 from datetime import date
+from openerp import tools
 from dateutil.relativedelta import relativedelta
 from openerp.osv import osv, fields
 
@@ -29,9 +30,6 @@ MONTHS = {
     "semiannually": 6,
     "annually": 12
 }
-
-_strftime = '%Y-%m-%d %H:%M:%S'
-
 
 class sale_order(osv.osv):
     _inherit = 'sale.order'
@@ -54,9 +52,9 @@ class crm_case_section(osv.osv):
             dates = [first_day + relativedelta(months=-(MONTHS[section.target_duration]*(key+1)-1)) for key in range(0, 5)]
             rate_invoice = []
             for when in range(0, 5):
-                domain = [("section_id", "=", section.id), ('state', 'in', ['draft', 'sent']), ('date_order', '>=', dates[when].strftime(_strftime))]
+                domain = [("section_id", "=", section.id), ('state', 'in', ['draft', 'sent']), ('date_order', '>=', dates[when].strftime(tools.DEFAULT_SERVER_DATE_FORMAT))]
                 if when:
-                    domain += [('date_order', '<', dates[when-1].strftime(_strftime))]
+                    domain += [('date_order', '<', dates[when-1].strftime(tools.DEFAULT_SERVER_DATE_FORMAT))]
                 rate = 0
                 opportunity_ids = obj.search(cr, uid, domain, context=context)
                 for invoice in obj.browse(cr, uid, opportunity_ids, context=context):
@@ -75,9 +73,9 @@ class crm_case_section(osv.osv):
             dates = [first_day + relativedelta(months=-(MONTHS[section.target_duration]*(key+1)-1)) for key in range(0, 5)]
             rate_invoice = []
             for when in range(0, 5):
-                domain = [("section_id", "=", section.id), ('state', 'not in', ['draft', 'sent']), ('date_confirm', '>=', dates[when].strftime(_strftime))]
+                domain = [("section_id", "=", section.id), ('state', 'not in', ['draft', 'sent']), ('date_confirm', '>=', dates[when].strftime(tools.DEFAULT_SERVER_DATE_FORMAT))]
                 if when:
-                    domain += [('date_confirm', '<', dates[when-1].strftime(_strftime))]
+                    domain += [('date_confirm', '<', dates[when-1].strftime(tools.DEFAULT_SERVER_DATE_FORMAT))]
                 rate = 0
                 opportunity_ids = obj.search(cr, uid, domain, context=context)
                 for invoice in obj.browse(cr, uid, opportunity_ids, context=context):
@@ -96,9 +94,9 @@ class crm_case_section(osv.osv):
             dates = [first_day + relativedelta(months=-(MONTHS[section.target_duration]*(key+1)-1)) for key in range(0, 5)]
             rate_invoice = []
             for when in range(0, 5):
-                domain = [("section_id", "=", section.id), ('state', 'not in', ['draft', 'cancel']), ('date', '>=', dates[when].strftime(_strftime))]
+                domain = [("section_id", "=", section.id), ('state', 'not in', ['draft', 'cancel']), ('date', '>=', dates[when].strftime(tools.DEFAULT_SERVER_DATE_FORMAT))]
                 if when:
-                    domain += [('date', '<', dates[when-1].strftime(_strftime))]
+                    domain += [('date', '<', dates[when-1].strftime(tools.DEFAULT_SERVER_DATE_FORMAT))]
                 rate = 0
                 opportunity_ids = obj.search(cr, uid, domain, context=context)
                 for invoice in obj.browse(cr, uid, opportunity_ids, context=context):

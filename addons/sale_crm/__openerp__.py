@@ -47,7 +47,7 @@ modules.
         'security/ir.model.access.csv',
         'report/sale_crm_account_invoice_report_view.xml',
     ],
-    'demo': [],
+    'demo': ['sale_crm_demo.xml'],
     'test': ['test/sale_crm.yml'],
     'installable': True,
     'auto_install': True,

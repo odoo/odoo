@@ -19,6 +19,7 @@
 #
 ##############################################################################
 
+from openerp import tools
 from openerp.osv import fields
 from openerp.osv import osv
 from openerp.tools.translate import _
@@ -55,8 +56,6 @@ MONTHS = {
     "semiannually": 6,
     "annually": 12
 }
-
-_strftime = '%Y-%m-%d %H:%M:%S'
 
 class crm_case_channel(osv.osv):
     _name = "crm.case.channel"
@@ -139,9 +138,9 @@ class crm_case_section(osv.osv):
             dates = [first_day + relativedelta(months=-(MONTHS[section.target_duration]*(key+1)-1)) for key in range(0, 5)]
             nb_leads = []
             for when in range(0, 5):
-                domain = [('type', '!=', 'opportunity'), ("section_id", "=", section.id), ('create_date', '>=', dates[when].strftime(_strftime))]
+                domain = [("section_id", "=", section.id), '|', ('type', '=', 'lead'), ('date_open', '!=', None), ('create_date', '>=', dates[when].strftime(tools.DEFAULT_SERVER_DATE_FORMAT))]
                 if when:
-                    domain += [('create_date', '<', dates[when-1].strftime(_strftime))]
+                    domain += [('create_date', '<', dates[when-1].strftime(tools.DEFAULT_SERVER_DATE_FORMAT))]
                 nb_leads.append(lead_obj.search(cr, uid, domain, context=context, count=True))
             nb_leads.reverse()
             res[section.id] = nb_leads
@@ -156,9 +155,9 @@ class crm_case_section(osv.osv):
             dates = [first_day + relativedelta(months=-(MONTHS[section.target_duration]*(key+1)-1)) for key in range(0, 5)]
             nb_leads = []
             for when in range(0, 5):
-                domain = [('type', '=', 'opportunity'), ("section_id", "=", section.id), ('state', '!=', 'cancel'), ('date_closed', '>=', dates[when].strftime(_strftime))]
+                domain = [("section_id", "=", section.id), ('state', '=', 'done'), ('type', '=', 'opportunity'), ('date_closed', '>=', dates[when].strftime(tools.DEFAULT_SERVER_DATE_FORMAT))]
                 if when:
-                    domain += [('date_closed', '<', dates[when-1].strftime(_strftime))]
+                    domain += [('date_closed', '<', dates[when-1].strftime(tools.DEFAULT_SERVER_DATE_FORMAT))]
                 rate = 0
                 opportunity_ids = lead_obj.search(cr, uid, domain, context=context)
                 for opportunity in lead_obj.browse(cr, uid, opportunity_ids, context=context):
