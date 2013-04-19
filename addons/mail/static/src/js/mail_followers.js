@@ -28,9 +28,7 @@ openerp_mail_followers = function(session, mail) {
             this.comment = this.node.attrs.help || false;
             this.displayed_limit = this.node.attrs.displayed_nb || 10;
             this.displayed_nb = this.displayed_limit;
-            console.log(this.displayed_nb);
             this.ds_model = new session.web.DataSetSearch(this, this.view.model);
-            console.log(this.ds_model);
             this.ds_follow = new session.web.DataSetSearch(this, this.field.relation);
             this.ds_users = new session.web.DataSetSearch(this, 'res.users');
 
