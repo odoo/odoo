@@ -75,42 +75,42 @@ class modify(unohelper.Base, XJobExecutor ):
             self.sMyHost= docinfo.getUserFieldValue(0)
         else:
             ErrorDialog(
-		"Please insert user define field Field-1",
-		"Just go to File->Properties->User Define \n"
-		"Field-1 E.g. http://localhost:8069"
-	    )
+                "Please insert user define field Field-1",
+                "Just go to File->Properties->User Define \n"
+                "Field-1 E.g. http://localhost:8069"
+            )
             exit(1)
 
         # Check weather Field-4 is available or not otherwise exit from application
         if not docinfo.getUserFieldValue(3) == "" and not docinfo.getUserFieldValue(0)=="":
             if self.oVC.TextField:
                 self.oCurObj=self.oVC.TextField
-		item = self.oCurObj.Items[0]
+                item = self.oCurObj.Items[0]
 
-		kind, group1, group2 = self.getOperation(self.oCurObj.Items[1] )
+                kind, group1, group2 = self.getOperation(self.oCurObj.Items[1] )
 
-		start_group1 = group1[:group1.find(".")]
-		stop_group1 = group1[group1.find("."):].replace(".", "/")
+                start_group1 = group1[:group1.find(".")]
+                stop_group1 = group1[group1.find("."):].replace(".", "/")
 
                 if kind == "field":
-		    Fields( start_group1, stop_group1, item, True )
+                    Fields( start_group1, stop_group1, item, True )
                 elif kind == "expression":
                     Expression( group1, item, True )
                 elif kind == "repeatIn":
-		    RepeatIn( start_group1, group2, stop_group1, item, True )
+                    RepeatIn( start_group1, group2, stop_group1, item, True )
             else:
                 ErrorDialog(
             "Please place your cursor at beginning of field that you want to modify.",""
-		)
+                )
 
         else:
             ErrorDialog(
-		"Please insert user define field Field-1 or Field-4",
-		"Just go to File->Properties->User Define \n"
-		"Field-1 E.g. http://localhost:8069 \n"
-		"OR \n"
-		"Field-4 E.g. account.invoice"
-	    )
+                "Please insert user define field Field-1 or Field-4",
+                "Just go to File->Properties->User Define \n"
+                "Field-1 E.g. http://localhost:8069 \n"
+                "OR \n"
+                "Field-4 E.g. account.invoice"
+            )
             exit(1)
 
     def getOperation(self, str):
@@ -121,14 +121,14 @@ class modify(unohelper.Base, XJobExecutor ):
         method2 = lambda x: (u'field', x.group(1), None)
         method3 = lambda x: (u'expression', x.group(1), None)
         regexes = [
-	    ('\\[\\[ *repeatIn\\( *(.+)*, *\'([a-zA-Z0-9_]+)\' *\\) *\\]\\]', method1),
-	    ('\\[\\[ *([a-zA-Z0-9_\.]+) *\\]\\]', method2),
-	    ('\\[\\[ *(.+) *\\]\\]', method3)
+            ('\\[\\[ *repeatIn\\( *(.+)*, *\'([a-zA-Z0-9_]+)\' *\\) *\\]\\]', method1),
+            ('\\[\\[ *([a-zA-Z0-9_\.]+) *\\]\\]', method2),
+            ('\\[\\[ *(.+) *\\]\\]', method3)
         ]
         for (rule,method) in regexes:
-	    res = re.match(rule, str)
-	    if res:
-		return method(res)
+            res = re.match(rule, str)
+            if res:
+                return method(res)
 
 if __name__<>"package":
     modify(None)

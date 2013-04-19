@@ -55,7 +55,6 @@ class res_partner(osv.osv):
         'purchase_order_count': fields.function(_purchase_order_count, string='# of Purchase Order', type='integer'),
         'purchase_order_ids': fields.one2many('purchase.order','partner_id','Purchase Order')
     }
-res_partner()
 
 
 

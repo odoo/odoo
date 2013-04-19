@@ -1,7 +1,7 @@
 function openerp_pos_widgets(instance, module){ //module is instance.point_of_sale
     var QWeb = instance.web.qweb;
 
-    // The ImageCache is used to hide the latency of the application cache on-disk access in chrome 
+    // The ImageCache is used to hide the latency of the application cache on-disk access in chrome
     // that causes annoying flickering on product pictures. Why the hell a simple access to
     // the application cache involves such latency is beyond me, hopefully one day this can be
     // removed.
@@ -88,7 +88,7 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
         },
     });
 
-    // The paypad allows to select the payment method (cashRegisters) 
+    // The paypad allows to select the payment method (cashRegisters)
     // used to pay the order.
     module.PaypadWidget = module.PosBaseWidget.extend({
         template: 'PaypadWidget',
@@ -156,7 +156,7 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
             this.trigger('order_line_refreshed');
         },
     });
-    
+
     module.OrderWidget = module.PosBaseWidget.extend({
         template:'OrderWidget',
         init: function(parent, options) {
@@ -186,7 +186,7 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
                 }else if( mode === 'discount'){
                     order.getSelectedLine().set_discount(val);
                 }else if( mode === 'price'){
-                    order.getSelectedLine().set_price(val);
+                    order.getSelectedLine().set_unit_price(val);
                 }
         	} else {
         	    this.pos.get('selectedOrder').destroy();
@@ -212,7 +212,7 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
             this._super();
 
             // freeing subwidgets
-            
+
             if(this.scrollbar){
                 this.scrollbar.destroy();
             }
@@ -245,7 +245,7 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
 
             var position = this.scrollbar ? this.scrollbar.get_position() : 0;
             var at_bottom = this.scrollbar ? this.scrollbar.is_at_bottom() : false;
-            
+
             this.scrollbar = new module.ScrollbarWidget(this,{
                 target_widget:   this,
                 target_selector: '.order-scroller',
@@ -269,8 +269,10 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
         },
         update_summary: function(){
             var order = this.pos.get('selectedOrder');
-            var total = order ? order.getTotal() : 0;
-            this.$('.summary .value.total').html(this.format_currency(total));
+            var total     = order ? order.getTotalTaxIncluded() : 0;
+            var taxes     = order ? total - order.getTotalTaxExcluded() : 0;
+            this.$('.summary .total > .value').html(this.format_currency(total));
+            this.$('.summary .total .subentry .value').html(this.format_currency(taxes));
         },
         set_display_mode: function(mode){
             if(this.display_mode !== mode){
@@ -287,7 +289,7 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
             this.model = options.model;
             this.model.attributes.weight = options.weight;
             this.next_screen = options.next_screen; //when a product is clicked, this screen is set
-            this.click_product_action = options.click_product_action; 
+            this.click_product_action = options.click_product_action;
         },
         // returns the url of the product thumbnail
         renderElement: function() {
@@ -311,14 +313,16 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
         },
         changeAmount: function(event) {
             var newAmount = event.currentTarget.value;
-            if (newAmount && !isNaN(newAmount)) {
-            	this.amount = parseFloat(newAmount);
-                this.payment_line.set_amount(this.amount);
+            var amount = parseFloat(newAmount);
+            if(!isNaN(amount)){
+                this.amount = amount;
+                this.payment_line.set_amount(amount);
             }
         },
         changedAmount: function() {
-        	if (this.amount !== this.payment_line.get_amount())
+        	if (this.amount !== this.payment_line.get_amount()){
         		this.renderElement();
+            }
         },
         checkAmount:function(e){
             if (e.which !== 0 && e.charCode !== 0) {
@@ -338,6 +342,12 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
             this.$('.delete-payment-line').click(function() {
                 self.trigger('delete_payment_line', self);
             });
+        },
+        focus: function(){
+            var val = this.$('input')[0].value;
+            this.$('input')[0].focus();
+            this.$('input')[0].value = val;
+            this.$('input')[0].select();
         },
     });
 
@@ -540,7 +550,7 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
             });
             this.search_and_categories();
         },
-        
+
         set_product_type: function(type){       // 'all' | 'weightable'
             this.product_type = type;
             this.reset_category();
@@ -608,28 +618,23 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
             this._super();
 
             // free subwidgets  memory from previous renders
-            
+
             for(var i = 0, len = this.productwidgets.length; i < len; i++){
                 this.productwidgets[i].destroy();
             }
-            this.productwidgets = []; 
+            this.productwidgets = [];
             if(this.scrollbar){
                 this.scrollbar.destroy();
             }
-
-            this.pos.get('products')
-                .chain()
-                .map(function(product) {
-                    var product = new module.ProductWidget(self, {
-                            model: product,
-                            weight: self.weight,
-                            click_product_action: self.click_product_action,
-                    })
-                    self.productwidgets.push(product);
-                    return product;
-                })
-                .invoke('appendTo', this.$('.product-list'));
-
+            var products = this.pos.get('products').models || [];
+            for(var i = 0, len = products.length; i < len; i++){
+                var product = new module.ProductWidget(self, {
+                    model: products[i],
+                    click_product_action: this.click_product_action,
+                });
+                this.productwidgets.push(product);
+                product.appendTo(this.$('.product-list'));
+            }
             this.scrollbar = new module.ScrollbarWidget(this,{
                 target_widget:   this,
                 target_selector: '.product-list-scroller',
@@ -760,7 +765,7 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
             });
             _.each(this.events, function(name){
                 self.pos.proxy.add_notification(name,function(){
-                    self.$('.event.'+name).stop().clearQueue().css({'background-color':'#6CD11D'}); 
+                    self.$('.event.'+name).stop().clearQueue().css({'background-color':'#6CD11D'});
                     self.$('.event.'+name).animate({'background-color':'#1E1E1E'},2000);
                 });
             });
@@ -797,7 +802,7 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
         renderElement: function() {
             var self = this;
             this._super();
-            this.$('.oe_pos_synch-notification-button').click(function(){
+            this.$el.click(function(){
                 self.pos.flush();
             });
         },
@@ -816,7 +821,7 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
     // The PosWidget is the main widget that contains all other widgets in the PointOfSale.
     // It is mainly composed of :
     // - a header, containing the list of orders
-    // - a leftpane, containing the list of bought products (orderlines) 
+    // - a leftpane, containing the list of bought products (orderlines)
     // - a rightpane, containing the screens (see pos_screens.js)
     // - an actionbar on the bottom, containing various action buttons
     // - popups
@@ -825,10 +830,10 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
 
     module.PosWidget = module.PosBaseWidget.extend({
         template: 'PosWidget',
-        init: function() { 
+        init: function() {
             this._super(arguments[0],{});
 
-            instance.web.blockUI(); 
+            instance.web.blockUI();
 
             this.pos = new module.PosModel(this.session);
             this.pos_widget = this; //So that pos_widget's childs have pos_widget set automatically
@@ -840,17 +845,17 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
             this.cashier_controls_visible = true;
             this.image_cache = new module.ImageCache(); // for faster products image display
         },
-      
+
         start: function() {
             var self = this;
             return self.pos.ready.done(function() {
                 self.build_currency_template();
                 self.renderElement();
-                
+
                 self.$('.neworder-button').click(function(){
                     self.pos.add_new_order();
                 });
-                
+
                 //when a new order is created, add an order button widget
                 self.pos.get('orders').bind('add', function(new_order){
                     var new_order_button = new module.OrderButtonWidget(null, {
@@ -878,9 +883,11 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
                 }else if(!self.pos.get('pos_config')){
                     self.screen_selector.show_popup('error', 'Sorry, we could not find any PoS Configuration for this session');
                 }
-            
+
                 instance.web.unblockUI();
                 self.$('.loader').animate({opacity:0},1500,'swing',function(){self.$('.loader').hide();});
+
+                self.pos.flush();
 
             }).fail(function(){   // error when loading models data from the backend
                 instance.web.unblockUI();
@@ -894,7 +901,7 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
                     }, self));
             });
         },
-        
+
         // This method instantiates all the screens, widgets, etc. If you want to add new screens change the
         // startup screen, etc, override this method.
         build_widgets: function() {
@@ -969,7 +976,7 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
             this.onscreen_keyboard = new module.OnscreenKeyboardWidget(this, {
                 'keyboard_model': 'simple'
             });
-            this.onscreen_keyboard.appendTo($(".point-of-sale #content")); 
+            this.onscreen_keyboard.appendTo($(".point-of-sale #content"));
 
             this.close_button = new module.HeaderButtonWidget(this,{
                 label:'Close',
@@ -983,7 +990,7 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
             });
             this.client_button.appendTo(this.$('#rightheader'));
 
-            
+
             // --------  Screen Selector ---------
 
             this.screen_selector = new module.ScreenSelector({
@@ -1068,7 +1075,7 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
                 }
             }
         },
-        //shows or hide the controls in the PosWidget that are specific to the cashier ( Orders, close button, etc. ) 
+        //shows or hide the controls in the PosWidget that are specific to the cashier ( Orders, close button, etc. )
         set_cashier_controls_visible: function(visible){
             if(visible !== this.cashier_controls_visible){
                 this.cashier_controls_visible = visible;

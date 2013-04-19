@@ -22,7 +22,6 @@
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
 import time
-from openerp import netsvc
 
 from openerp.osv import fields,osv
 from openerp.tools.translate import _
@@ -133,6 +132,7 @@ class purchase_requisition(osv.osv):
             if supplier.id in filter(lambda x: x, [rfq.state <> 'cancel' and rfq.partner_id.id or None for rfq in requisition.purchase_ids]):
                  raise osv.except_osv(_('Warning!'), _('You have already one %s purchase order for this partner, you must cancel this purchase order to create a new quotation.') % rfq.state)
             location_id = requisition.warehouse_id.lot_input_id.id
+            context.update({'mail_create_nolog': True})
             purchase_id = purchase_order.create(cr, uid, {
                         'origin': requisition.name,
                         'partner_id': supplier.id,
@@ -144,6 +144,7 @@ class purchase_requisition(osv.osv):
                         'notes':requisition.description,
                         'warehouse_id':requisition.warehouse_id.id ,
             })
+            purchase_order.message_post(cr, uid, [purchase_id], body=_("RFQ created"), context=context)
             res[requisition.id] = purchase_id
             for line in requisition.line_ids:
                 product = line.product_id
@@ -193,7 +194,6 @@ class purchase_requisition_line(osv.osv):
     _defaults = {
         'company_id': lambda self, cr, uid, c: self.pool.get('res.company')._company_default_get(cr, uid, 'purchase.requisition.line', context=c),
     }
-purchase_requisition_line()
 
 class purchase_order(osv.osv):
     _inherit = "purchase.order"
@@ -211,12 +211,10 @@ class purchase_order(osv.osv):
                         proc_ids = proc_obj.search(cr, uid, [('purchase_id', '=', order.id)])
                         if proc_ids and po.state=='confirmed':
                             proc_obj.write(cr, uid, proc_ids, {'purchase_id': po.id})
-                        wf_service = netsvc.LocalService("workflow")
-                        wf_service.trg_validate(uid, 'purchase.order', order.id, 'purchase_cancel', cr)
+                        self.signal_purchase_cancel(cr, uid, [order.id])
                     po.requisition_id.tender_done(context=context)
         return res
 
-purchase_order()
 
 class product_product(osv.osv):
     _inherit = 'product.product'
@@ -228,7 +226,6 @@ class product_product(osv.osv):
         'purchase_requisition': False
     }
 
-product_product()
 
 class procurement_order(osv.osv):
 
@@ -261,6 +258,5 @@ class procurement_order(osv.osv):
             res = super(procurement_order, self).make_po(cr, uid, ids, context=context)
         return res
 
-procurement_order()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

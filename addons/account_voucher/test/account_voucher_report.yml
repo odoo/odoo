@@ -19,7 +19,9 @@
   In order to test the PDF reports defined on a account_voucher, we will print account voucher Report
 -
   !python {model: account.voucher}: |
-    import netsvc, tools, os
-    (data, format) = netsvc.LocalService('report.voucher.cash_receipt.drcr').create(cr, uid, [ref("account_voucher_voucheraxelor0again")], {}, {})
+    import os
+    import openerp.report
+    from openerp import tools
+    data, format = openerp.report.render_report(cr, uid, [ref("account_voucher_voucheraxelor0again")], 'voucher.cash_receipt.drcr', {}, {})
     if tools.config['test_report_directory']:
         file(os.path.join(tools.config['test_report_directory'], 'account_voucher-report.'+format), 'wb+').write(data)

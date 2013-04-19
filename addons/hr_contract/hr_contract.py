@@ -49,7 +49,6 @@ class hr_employee(osv.osv):
         'contract_id':fields.function(_get_latest_contract, string='Contract', type='many2one', relation="hr.contract", help='Latest contract of the employee'),
     }
 
-hr_employee()
 
 class hr_contract_type(osv.osv):
     _name = 'hr.contract.type'
@@ -57,7 +56,6 @@ class hr_contract_type(osv.osv):
     _columns = {
         'name': fields.char('Contract Type', size=32, required=True),
     }
-hr_contract_type()
 
 class hr_contract(osv.osv):
     _name = 'hr.contract'
@@ -99,6 +97,5 @@ class hr_contract(osv.osv):
     _constraints = [
         (_check_dates, 'Error! Contract start-date must be less than contract end-date.', ['date_start', 'date_end'])
     ]
-hr_contract()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

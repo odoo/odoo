@@ -22,7 +22,6 @@
 import time
 import datetime
 
-from openerp import pooler
 from openerp.report import report_sxw
 import operator
 from openerp import osv
