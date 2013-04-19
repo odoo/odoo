@@ -80,6 +80,7 @@ class view(osv.osv):
                                   help="ID of the view defined in xml file"),
         'groups_id': fields.many2many('res.groups', 'ir_ui_view_group_rel', 'view_id', 'group_id',
             string='Groups', help="If this field is empty, the view applies to all users. Otherwise, the view applies to the users of those groups only."),
+        'model_ids': fields.one2many('ir.model.data', 'res_id', auto_join=True),
     }
     _defaults = {
         'arch': '<?xml version="1.0"?>\n<tree string="My view">\n\t<field name="name"/>\n</tree>',
@@ -176,20 +177,17 @@ class view(osv.osv):
            :return: [(view_arch,view_id), ...]
         """
         user_groups = frozenset(self.pool.get('res.users').browse(cr, 1, uid, context).groups_id)
+
+        conditions = [['inherit_id', '=', view_id], ['model', '=', model]]
         if self.pool._init:
-            # Module init currently in progress, only consider views from modules whose code was already loaded 
-            query = """SELECT v.id FROM ir_ui_view v LEFT JOIN ir_model_data md ON (md.model = 'ir.ui.view' AND md.res_id = v.id)
-                       WHERE v.inherit_id=%s AND v.model=%s AND md.module in %s  
-                       ORDER BY priority"""
-            query_params = (view_id, model, tuple(self.pool._init_modules))
-        else:
-            # Modules fully loaded, consider all views
-            query = """SELECT v.id FROM ir_ui_view v
-                       WHERE v.inherit_id=%s AND v.model=%s  
-                       ORDER BY priority"""
-            query_params = (view_id, model)
-        cr.execute(query, query_params)
-        view_ids = [v[0] for v in cr.fetchall()]
+            # Module init currently in progress, only consider views from
+            # modules whose code is already loaded
+            conditions.extend([
+                ['model_ids.model', '=', 'ir.ui.view'],
+                ['model_ids.module', 'in', tuple(self.pool._init_modules)],
+            ])
+        view_ids = self.search(cr, uid, conditions, context=context)
+
         # filter views based on user groups
         return [(view.arch, view.id)
                 for view in self.browse(cr, 1, view_ids, context)
