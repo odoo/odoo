@@ -75,6 +75,7 @@ __all__ = [
     'cr', 'cr_context', 'cr_uid', 'cr_uid_context',
     'cr_uid_id', 'cr_uid_id_context', 'cr_uid_ids', 'cr_uid_ids_context',
     'returns',
+    'depends',
 ]
 
 from functools import wraps
@@ -115,6 +116,17 @@ class Meta(type):
                 attrs[key] = value
 
         return type.__new__(meta, name, bases, attrs)
+
+
+def depends(*args):
+    """ Return a decorator for "compute" methods (function fields) that specify
+        its field dependencies.
+    """
+    def decorate(method):
+        method._depends = args
+        return method
+
+    return decorate
 
 
 def _get_returns(method):

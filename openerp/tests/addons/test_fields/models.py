@@ -39,3 +39,15 @@ class res_partner(osv.Model):
             'single_related_company_id', type='many2one', obj='res.company'),
     }
 
+
+from openerp import api, scope, models, fields
+
+class res_partner(models.Model):
+    _inherit = 'res.partner'
+
+    children_count = fields.Integer(compute='compute_children_count', store=False)
+
+    @api.depends('child_ids')
+    def compute_children_count(self):
+        self.children_count = len(self.child_ids)
+

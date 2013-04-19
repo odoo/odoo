@@ -23,7 +23,6 @@ import api
 import osv
 import scope
 import fields
-
+import fields2
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

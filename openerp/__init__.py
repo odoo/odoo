@@ -51,6 +51,28 @@ import service
 import sql_db
 import tools
 import workflow
+
+from openerp.osv import api, fields2 as fields
+from openerp.osv.scope import proxy as scope
+
+class ModelProxy(object):
+    Abstract    = osv.orm.AbstractModel
+    Model       = osv.orm.Model
+    Transient   = osv.orm.TransientModel
+
+    Record      = osv.orm.Record
+    Recordset   = osv.orm.Recordset
+    Null        = osv.orm.Null
+
+    def __getitem__(self, model_name):
+        return scope.model(model_name)
+
+    def __getattr__(self, model_name):
+        return scope.model(model_name)
+
+models = ModelProxy()
+
+
 # backward compatilbility
 # TODO: This is for the web addons, can be removed later.
 wsgi = service
