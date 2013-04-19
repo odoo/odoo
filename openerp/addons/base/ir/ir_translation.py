@@ -155,12 +155,51 @@ class ir_translation(osv.osv):
         lang_data = lang_model.read(cr, uid, lang_ids, ['code', 'name'], context=context)
         return [(d['code'], d['name']) for d in lang_data]
 
+    def _get_src(self, cr, uid, ids, name, arg, context=None):
+        ''' Get source name for the translation. If object type is model then
+        return the value store in db. Otherwise return value store in src field
+        '''
+        if context is None:
+            context = {}
+        res = {}
+        for record in self.browse(cr, uid, ids, context=context):
+            if record.type != 'model':
+                res[record.id] = record.src
+            else:
+                model_name, field = record.name.split(',')
+                model = self.pool.get(model_name)
+                #We need to take the context without the language information, because we want to read the
+                #value store in db and not on the one associate with current language.
+                context_wo_lang = context.copy()
+                context_wo_lang.pop('lang', None)
+                res[record.id] = model.read(cr, uid, record.res_id, [field], context=context_wo_lang)[field]
+        return res
+
+    def _set_src(self, cr, uid, id, name, value, args, context=None):
+        ''' When changing source term of a translation, change its value in db for
+        the associated object, and the src field
+        '''
+        if context is None:
+            context = {}
+        record = self.browse(cr, uid, id, context=context)
+        if value and record.type == 'model':
+            model_name, field = record.name.split(',')
+            model = self.pool.get(model_name)
+            #We need to take the context without the language information, because we want to write on the
+            #value store in db and not on the one associate with current language.
+            #Also not removing lang from context trigger an error when lang is different
+            context_wo_lang = context.copy()
+            context_wo_lang.pop('lang', None)
+            model.write(cr, uid, record.res_id, {field: value}, context=context_wo_lang)
+        return self.write(cr, uid, id, {'src': value}, context=context)
+
     _columns = {
         'name': fields.char('Translated field', required=True),
         'res_id': fields.integer('Record ID', select=True),
         'lang': fields.selection(_get_language, string='Language'),
         'type': fields.selection(TRANSLATION_TYPE, string='Type', select=True),
-        'src': fields.text('Source'),
+        'src': fields.text('Old source'),
+        'source': fields.function(_get_src, fnct_inv=_set_src, type='text', string='Source'),
         'value': fields.text('Translation Value'),
         'module': fields.char('Module', help="Module this term belongs to", select=True),
 
@@ -300,7 +339,7 @@ class ir_translation(osv.osv):
         return trad
 
     def create(self, cr, uid, vals, context=None):
-        if not context:
+        if context is None:
             context = {}
         ids = super(ir_translation, self).create(cr, uid, vals, context=context)
         self._get_source.clear_cache(self, uid, vals.get('name',0), vals.get('type',0),  vals.get('lang',0), vals.get('src',0))
@@ -308,7 +347,7 @@ class ir_translation(osv.osv):
         return ids
 
     def write(self, cursor, user, ids, vals, context=None):
-        if not context:
+        if context is None:
             context = {}
         if isinstance(ids, (int, long)):
             ids = [ids]
@@ -323,7 +362,7 @@ class ir_translation(osv.osv):
         return result
 
     def unlink(self, cursor, user, ids, context=None):
-        if not context:
+        if context is None:
             context = {}
         if isinstance(ids, (int, long)):
             ids = [ids]
