@@ -94,8 +94,8 @@
 -
   I have configure the product category with stock valuation account.
 -
-  !python {model: product.category}: |
-     self.write(cr, uid, [ref('product.product_category_4')], {'property_stock_valuation_account_id': ref('account_anglo_1')})
+  !record {model: product.category, id: product.product_category_4}:
+    property_stock_valuation_account_id: account_anglo_1
 -
   I have configure the product with required accounts.
 -
