@@ -51,7 +51,7 @@
                     </thead>
                     <tbody>
                     <tr t-foreach="planline.goals" t-as="goal" t-attf-class="#{goal.id == planline.own_goal_id ? 'oe_bold' : ''}">
-                        <div style="background:#fff;">
+                        <div style="background: #fff;">
                             <th class="col0"><t t-esc="goal.rank" /></th>
                             <td class="col1"><img class="oe_user_avatar" t-attf-alt="#{goal.user_name}" t-attf-data-id="#{goal.user_id}"/></td>
                             <td class="col2" style="width:150px;">

@@ -141,7 +141,13 @@ class hr_employee(osv.osv):
         """Return the list of badge_users assigned to the employee"""
         res = {}
         for employee in self.browse(cr, uid, ids, context=context):
-            res[employee.id] = self.pool.get('gamification.badge.user').search(cr, uid, [('employee_id', '=', employee.id)], context=context)
+            res[employee.id] = self.pool.get('gamification.badge.user').search(cr, uid, [
+                '|',
+                    ('employee_id', '=', employee.id),
+                    '&',
+                        ('employee_id', '=', False),
+                        ('user_id', '=', employee.user_id.id)
+                ], context=context)
         return res
 
     def _has_badges(self, cr, uid, ids, field_name, arg, context=None):

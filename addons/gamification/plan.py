@@ -764,7 +764,7 @@ class gamification_goal_plan(osv.Model):
     def reward_user(self, cr, uid, user_id, badge_id, context=None):
         """Create a badge user and send the badge to him"""
         user_badge_id = self.pool.get('gamification.badge.user').create(cr, uid, {'user_id': user_id, 'badge_id': badge_id}, context=context)
-        return self.pool.get('gamification.badge').send_badge(cr, uid, badge_id, [user_badge_id], context=context)
+        return self.pool.get('gamification.badge').send_badge(cr, uid, badge_id, [user_badge_id], user_from=None, context=context)
 
 
 class gamification_goal_planline(osv.Model):
