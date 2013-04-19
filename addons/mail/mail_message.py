@@ -121,14 +121,26 @@ class mail_message(osv.Model):
 
     def name_get(self, cr, uid, ids, context=None):
         # name_get may receive int id instead of an id list
+        from HTMLParser import HTMLParser
+        class MLStripper(HTMLParser):
+            def __init__(self):
+                self.reset()
+                self.fed = []
+            def handle_data(self, d):
+                self.fed.append(d)
+            def get_data(self):
+                return ''.join(self.fed)
+        def strip_tags(html):
+            s = MLStripper()
+            s.feed(html)
+            return s.get_data()
         if isinstance(ids, (int, long)):
             ids = [ids]
         res = []
         for message in self.browse(cr, uid, ids, context=context):
-            name = '%s: %s' % (message.subject or '', message.body or '')
+            name = '%s: %s' % (message.subject or '', strip_tags(message.body or '') or '')
             res.append((message.id, self._shorten_name(name.lstrip(' :'))))
         return res
-
     _columns = {
         'type': fields.selection([
                         ('email', 'Email'),
