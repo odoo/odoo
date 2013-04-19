@@ -30,7 +30,7 @@ import logging
 _logger = logging.getLogger(__name__)
 
 
-def start_end_date_for_period(period):
+def start_end_date_for_period(period, global_start_date=False, global_end_date=False):
     """Return the start and end date for a goal period based on today
 
     :return: (start_date, end_date), datetime.date objects, False if the period is
@@ -51,8 +51,8 @@ def start_end_date_for_period(period):
         start_date = today.replace(month=1, day=1)
         end_date = today.replace(month=12, day=31)
     else:  # period == 'once':
-        start_date = False  # for manual goal, start each time
-        end_date = False
+        start_date = global_start_date  # for manual goal, start each time
+        end_date = global_end_date
 
     if start_date and end_date:
         return (start_date.isoformat(), end_date.isoformat())
@@ -293,7 +293,7 @@ class gamification_goal_plan(osv.Model):
         self.action_close(cr, uid, planned_plan_ids, context=context)
 
         if not ids:
-            ids = self.search(cr, uid, [('state', '=', 'inprogress')])
+            ids = self.search(cr, uid, [('state', '=', 'inprogress')], context=context)
 
         return self._update_all(cr, uid, ids, context=context)
 
@@ -335,12 +335,11 @@ class gamification_goal_plan(osv.Model):
             if len(closed_goals_to_report) > 0:
                 # some goals need a final report
                 self.report_progress(cr, uid, plan, subset_goal_ids=closed_goals_to_report, context=context)
-                self.write(cr, uid, plan.id, {'last_report_date': fields.date.today}, context=context)
 
             if fields.date.today() == plan.next_report_date:
                 self.report_progress(cr, uid, plan, context=context)
-                self.write(cr, uid, plan.id, {'last_report_date': fields.date.today}, context=context)
 
+        self.check_challenge_reward(cr, uid, ids, context=context)
         return True
 
     def quick_update(self, cr, uid, plan_id, context=None):
@@ -363,10 +362,8 @@ class gamification_goal_plan(osv.Model):
             if plan.autojoin_group_id:
                 self.plan_subscribe_users(cr, uid, ids, [user.id for user in plan.autojoin_group_id.users], context=context)
 
-            if len(plan.user_ids) > 0:
-                self.write(cr, uid, plan.id, {'state': 'inprogress'}, context=context)
-            else:
-                _logger.warning("Can not start planned plan, no subscribed users")
+            self.write(cr, uid, plan.id, {'state': 'inprogress'}, context=context)
+            self.message_post(cr, uid, plan.id, body="New challenge started.", context=context)
         return self.generate_goals_from_plan(cr, uid, ids, context=context)
 
     def action_check(self, cr, uid, ids, context=None):
@@ -381,6 +378,7 @@ class gamification_goal_plan(osv.Model):
 
         Change the state of the plan to in done
         Does NOT close the related goals, this is handled by the goal itself"""
+        self.check_challenge_reward(cr, uid, ids, force=True, context=context)
         return self.write(cr, uid, ids, {'state': 'done'}, context=context)
 
     def action_reset(self, cr, uid, ids, context=None):
@@ -627,9 +625,9 @@ class gamification_goal_plan(osv.Model):
                                                              body=body_html,
                                                              context=context,
                                                              subtype='mail.mt_comment')
-        return True
+        return self.write(cr, uid, plan.id, {'last_report_date': fields.date.today()}, context=context)
 
-    ##### Suggestions #####
+    ##### Challenges #####
 
     def accept_challenge(self, cr, uid, plan_ids, context=None, user_id=None):
         """The user accept the suggested challenge"""
@@ -659,6 +657,114 @@ class gamification_goal_plan(osv.Model):
         result = act_obj.read(cr, uid, [id], context=context)[0]
         result['res_id'] = plan_id
         return result
+
+    def check_challenge_reward(self, cr, uid, plan_ids, force=False, context=None):
+        """Actions for the end of a challenge
+
+        If a reward was selected, grant it to the correct users.
+        The TOP 3 reward should be granted at:
+            - the end date for a challenge with no periodicity
+            - the end of a period for challenge with periodicity
+            - when a challenge is manually closed
+        The every success reward should be granted at:
+            - the end date for a challenge with no periodicity
+            - the end of a period for challenge with periodicity
+            - as soon as a user reach every goal of a plan
+        (can not reward TOP 3 for challenge/goals with no end date)
+        """
+        for plan in self.browse(cr, uid, plan_ids, context=context):
+            (start_date, end_date) = start_end_date_for_period(plan.period, plan.start_date, plan.end_date)
+            yesterday = date.today() - timedelta(days=1)
+            if end_date == yesterday.isoformat() or force:
+                # reward everybody
+                rewarded_users = []
+                if plan.reward_id:
+                    for user in plan.user_ids:
+                        reached_goal_ids = self.pool.get('gamification.goal').search(cr, uid, [
+                            ('plan_id', '=', plan.id),
+                            ('user_id', '=', user.id),
+                            ('start_date', '=', start_date),
+                            ('end_date', '=', end_date),
+                            ('state', '=', 'reached')
+                        ], context=context)
+                        if len(reached_goal_ids) == len(plan.planline_ids):
+                            self.reward_user(cr, uid, user.id, plan.reward_id.id, context)
+                            rewarded_users.append(user)
+
+                # reward bests
+                best_users = []
+                if plan.reward_first_id:
+                    (first_user, second_user, third_user) = self.get_top3_users(cr, uid, plan, context)
+                    if first_user:
+                        self.reward_user(cr, uid, first_user.id, plan.reward_first_id.id, context)
+                        best_users.append(first_user)
+                    if second_user and plan.reward_second_id:
+                        self.reward_user(cr, uid, second_user.id, plan.reward_second_id.id, context)
+                        best_users.append(second_user)
+                    if third_user and plan.reward_third_id:
+                        self.reward_user(cr, uid, third_user.id, plan.reward_second_id.id, context)
+                        best_users.append(third_user)
+
+                print(end_date, force)
+                # open chatter message
+                message_body = "The challenge %s is finished." % plan.name
+                if rewarded_users:
+                    message_body += " Badge rewards were sent to %s." % ", ".join([user.name for user in rewarded_users])
+                if best_users:
+                    message_body += " Specials badges were sent to %s." % ", ".join([user.name for user in best_users])
+                if not rewarded_users and not best_users and (plan.reward_id or plan.reward_first_id):
+                    message_body += " No badge was granted as nobody reached the required conditions."
+                self.message_post(cr, uid, plan.id, body=message_body, context=context)
+        return True
+
+    def get_top3_users(self, cr, uid, plan, context=None):
+        """Get the top 3 users for a defined plan
+
+        Ranking criterias:
+            - succeed every goal of the challenge
+            - total completeness of each goal (can be over 100)
+        """
+        goal_obj = self.pool.get('gamification.goal')
+        (start_date, end_date) = start_end_date_for_period(plan.period, plan.start_date, plan.end_date)
+        challengers = []
+        for user in plan.user_ids:
+            all_reached = True
+            total_completness = 0
+            # every goal of the user for the running period
+            goal_ids = goal_obj.search(cr, uid, [
+                ('plan_id', '=', plan.id),
+                ('user_id', '=', user.id),
+                ('start_date', '=', start_date),
+                ('end_date', '=', end_date)
+            ], context=context)
+            for goal in goal_obj.browse(cr, uid, goal_ids, context=context):
+                if goal.state != 'reached':
+                    all_reached = False
+                if goal.type_condition == 'higher':
+                    # can be over 100
+                    total_completness += 100.0 * goal.current / goal.target_goal
+                elif goal.state == 'reached':
+                    # for lower goals, can not get percentage so 0 or 100
+                    total_completness += 100
+
+            challengers.append({'user': user, 'all_reached': all_reached, 'total_completness': total_completness})
+        sorted_challengers = sorted(challengers, key=lambda k: (k['all_reached'], k['total_completness']), reverse=True)
+        print(sorted_challengers)
+        if len(sorted_challengers) == 0 or (not plan.reward_failure and not sorted_challengers[0]['all_reached']):
+            # nobody succeeded
+            return (False, False, False)
+        if len(sorted_challengers) == 1 or (not plan.reward_failure and not sorted_challengers[1]['all_reached']):
+            # only one user succeeded
+            return (sorted_challengers[0]['user'], False, False)
+        if len(sorted_challengers) == 2 or (not plan.reward_failure and not sorted_challengers[2]['all_reached']):
+            # only one user succeeded
+            return (sorted_challengers[0]['user'], sorted_challengers[1]['user'], False)
+        return (sorted_challengers[0]['user'], sorted_challengers[1]['user'], sorted_challengers[2]['user'])
+
+    def reward_user(self, cr, uid, user_id, badge_id, context=None):
+        """Create a badge user and send the badge to him"""
+        user_badge_id = self.pool.get('gamification.badge.user').create(cr, uid, {'user_id': user_id, 'badge_id': badge_id}, context=context)
+        return self.pool.get('gamification.badge').send_badge(cr, uid, badge_id, [user_badge_id], context=context)
 
 
 class gamification_goal_planline(osv.Model):
