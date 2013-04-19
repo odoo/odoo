@@ -48,6 +48,7 @@ directly integrated in the core accounting.
     'depends': ['account'],
     'data': [
         'account_invoice_view.xml',
+        'res_partner_view.xml',
         'report/account_invoice_report_view.xml',
     ],
     'auto_install': True,
