@@ -210,7 +210,7 @@
                   <separator/>
                   <filter icon="terp-dolar" string="Invoiced" domain="[('invoiced','=',True)]"/>
                   <field name="product_id"/>
-                  <field name="partner_id"/>
+                  <field name="partner_id" filter_domain="[('partner_id', 'child_of', self)]"/>
                   <group expand="0" string="Group By...">
                       <filter string="Partner" icon="terp-partner" domain="[]" context="{'group_by':'partner_id'}"/>
                       <filter string="Product" icon="terp-accessories-archiver" domain="[]" context="{'group_by':'product_id'}"/>
