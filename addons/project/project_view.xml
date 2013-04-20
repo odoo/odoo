@@ -182,7 +182,7 @@
                     <separator/>
                     <filter string="Project(s) Manager" domain="[('user_id','=',uid)]" help="Projects in which I am a manager" icon="terp-personal"/>
                     <field name="user_id" string="Project Manager"/>
-                    <field name="partner_id" string="Contact"/>
+                    <field name="partner_id" string="Contact" filter_domain="[('partner_id', 'child_of', self)]"/>
                     <group expand="0" string="Group By...">
                         <filter string="Manager" name="Manager" icon="terp-personal" domain="[]" context="{'group_by':'user_id'}"/>
                         <filter string="Contact" name="Partner" icon="terp-partner" domain="[]" context="{'group_by':'partner_id'}"/>
