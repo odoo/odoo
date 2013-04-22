@@ -117,8 +117,8 @@
 .oe_mail_wall_aside .oe_goals_list tbody tr:nth-child(even) {
     background-color: #fff;
 }
-.openerp .oe_mail_wall .oe_mail_wall_aside td,
-.openerp .oe_mail_wall .oe_mail_wall_aside th {
+.openerp .oe_mail_wall_aside td,
+.openerp .oe_mail_wall_aside th {
     vertical-align: middle;
     border: none;
 }
@@ -133,22 +133,24 @@
     padding-left: 5px;
     height: 32px;
 }
-.openerp .oe_mail_wall .oe_mail_wall_aside table .col0 {
+.openerp .oe_mail_wall_aside table.oe_goals_list .col0 {
     font-size: 160%;
     font-weight: bold;
     width: 24px;
+}
+.openerp .oe_mail_wall_aside table.oe_goals_list .col1 {
+    width: 200px;
 }
 .openerp .oe_mail_wall .oe_mail_wall_aside .oe_user_avatar {
     width: 32px;
     padding-right: 5px;
 }
 .openerp .oe_mail_wall .oe_mail_wall_aside .oe_goal .oe_update_plan,
-.openerp .oe_mail_wall .oe_mail_wall_aside .oe_goal_inner_box .oe_goal_action {
+.openerp .oe_mail_wall .oe_mail_wall_aside .oe_goal .oe_goal_action {
     visibility: hidden;
-    display: block;
-    float: right;
+    font-size: 25px;
 }
-.openerp .oe_mail_wall .oe_mail_wall_aside .oe_goal:hover > .oe_update_plan,
+.openerp .oe_mail_wall .oe_mail_wall_aside .oe_clear:hover .oe_update_plan,
 .openerp .oe_mail_wall .oe_mail_wall_aside .oe_goal_inner_box:hover .oe_goal_action {
     visibility: visible;
 }

@@ -6,8 +6,14 @@
     <t t-name="gamification.goal_list_to_do">
         <h3>Challenges</h3>
         <div t-foreach="widget.goals_info.info" t-as="plan" class="oe_goal">
-            <a class="oe_update_plan oe_e" rol="button" t-attf-id="{plan.id}">e</a>
-            <h4><t t-esc="plan.name" /></h4>
+            <div class="oe_clear">
+                <div class="oe_left">
+                    <h4><t t-esc="plan.name" /></h4>
+                </div>
+                <div class="oe_left">
+                    <a class="oe_update_plan oe_e" rol="button" t-attf-id="{plan.id}">e</a>
+                </div>
+            </div>
 
             <t t-if="plan.visibility_mode == 'progressbar'">
                 <div class="oe_goals_list">
@@ -41,11 +47,12 @@
                     <thead>
                     <tr>
                         <th colspan="4" t-attf-title="#{planline.type_description ? planline.type_description : ''}">
-                            <strong><t t-esc="planline.type_name"/></strong><br/>
-                            (Goal: max <span t-attf-class="#{planline.type_monetary ? 'oe_goal_field_monetary' : ''}"><t t-esc="planline.target_goal" /></span><t t-if="planline.type_unit"> <t t-esc="planline.type_unit"/></t>)
+                            <strong><t t-esc="planline.type_name"/></strong>
                             <t t-if="planline.type_computation_mode == 'manually' or planline.type_action">
                                 <a class="oe_goal_action oe_e" t-att-id="planline.own_goal_id">&amp;</a>
                             </t>
+                            <br/>
+                            (Goal: max <span t-attf-class="#{planline.type_monetary ? 'oe_goal_field_monetary' : ''}"><t t-esc="planline.target_goal" /></span><t t-if="planline.type_unit"> <t t-esc="planline.type_unit"/></t>)
                         </th>
                     </tr>
                     </thead>
@@ -54,7 +61,7 @@
                         <div style="background: #fff;">
                             <th class="col0"><t t-esc="goal.rank" /></th>
                             <td><img class="oe_user_avatar" t-attf-alt="#{goal.user_name}" t-attf-data-id="#{goal.user_id}"/></td>
-                            <td class="col1" style="width:180px;">
+                            <td class="col1">
                                 <div class="oe_goal_outer_box" t-attf-style="width: #{goal.completeness}%;">
                                 <div class="oe_goal_inner_box">
                                     <t t-esc="goal.user_name"/><br/>
@@ -72,8 +79,7 @@
 
     <t t-name="gamification.challenge_suggestions">
         <h3>Suggestions</h3>
-        <em>You have been invited to the following challenges:</em>
-        <ul t-foreach="widget.challenge_suggestions.info" t-as="challenge" class="oe_challenge">
+        <ul t-foreach="widget.challenge_suggestions.info" t-as="challenge" class="oe_goals_list">
             <li>
                 <strong><a class="oe_challenge_reply" t-attf-title="#{challenge.description.value ? challenge.description.value : ''}" t-attf-id="{challenge.id}" title="more details..."><t t-esc="challenge.name"/></a></strong>
             </li>
