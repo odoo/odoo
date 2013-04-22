@@ -199,7 +199,7 @@ class stock_partial_picking(osv.osv_memory):
                                                     'prodlot_id': wizard_line.prodlot_id.id,
                                                     'location_id' : wizard_line.location_id.id,
                                                     'location_dest_id' : wizard_line.location_dest_id.id,
-                                                    'picking_id': partial.picking_id.id
+                                                    'picking_id': partial.picking_id.id,
                                                     },context=context)
                 stock_move.action_confirm(cr, uid, [move_id], context)
             partial_data['move%s' % (move_id)] = {

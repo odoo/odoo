@@ -196,24 +196,12 @@ class product_product(osv.osv):
             return _('Products: ')+self.pool.get('stock.location').browse(cr, user, context['active_id'], context).name
         return res
 
-    def get_product_available(self, cr, uid, ids, context=None):
-        """ Finds whether product is available or not in particular warehouse.
-        @return: Dictionary of values
-        """
+    def _get_locations_from_context(self, cr, uid, ids, context=None):
         if context is None:
             context = {}
         location_obj = self.pool.get('stock.location')
         warehouse_obj = self.pool.get('stock.warehouse')
         shop_obj = self.pool.get('sale.shop')
-        
-        states = context.get('states',[])
-        what = context.get('what',())
-        if not ids:
-            ids = self.search(cr, uid, [])
-        res = {}.fromkeys(ids, 0.0)
-        if not ids:
-            return res
-
         if context.get('shop', False):
             warehouse_id = shop_obj.read(cr, uid, int(context['shop']), ['warehouse_id'])['warehouse_id'][0]
             if warehouse_id:
@@ -235,7 +223,7 @@ class product_product(osv.osv):
             location_ids = []
             wids = warehouse_obj.search(cr, uid, [], context=context)
             if not wids:
-                return res
+                return False
             for w in warehouse_obj.browse(cr, uid, wids, context=context):
                 location_ids.append(w.lot_stock_id.id)
 
@@ -243,6 +231,53 @@ class product_product(osv.osv):
         if context.get('compute_child',True):
             child_location_ids = location_obj.search(cr, uid, [('location_id', 'child_of', location_ids)])
             location_ids = child_location_ids or location_ids
+            
+        return location_ids
+
+
+    def _get_date_query(self, cr, uid, ids, context):
+        from_date = context.get('from_date',False)
+        to_date = context.get('to_date',False)
+        date_str = False
+        date_values = False
+        whereadd = []
+        
+        if from_date and to_date:
+            date_str = "date>=%s and date<=%s"
+            whereadd.append(tuple([from_date]))
+            whereadd.append(tuple([to_date]))
+        elif from_date:
+            date_str = "date>=%s"
+            whereadd.append(tuple([from_date]))
+        elif to_date:
+            date_str = "date<=%s"
+            whereadd.append(tuple([to_date]))
+        return (whereadd, date_str)
+
+
+
+
+    def get_product_available(self, cr, uid, ids, context=None):
+        """ Finds whether product is available or not in particular warehouse.
+        @return: Dictionary of values
+        """
+        if context is None:
+            context = {}
+        location_obj = self.pool.get('stock.location')
+        warehouse_obj = self.pool.get('stock.warehouse')
+        shop_obj = self.pool.get('sale.shop')
+        
+        states = context.get('states',[])
+        what = context.get('what',())
+        if not ids:
+            ids = self.search(cr, uid, [])
+        res = {}.fromkeys(ids, 0.0)
+        if not ids:
+            return res
+        #set_context: refactor code here
+        location_ids = self._getlocations_from_context(cr, uid, ids, context=context)
+        if not location_ids: #in case of no locations, query will be empty anyways
+            return res
         
         # this will be a dictionary of the product UoM by product id
         product2uom = {}
@@ -258,35 +293,24 @@ class product_product(osv.osv):
         results = []
         results2 = []
 
-        from_date = context.get('from_date',False)
-        to_date = context.get('to_date',False)
-        date_str = False
-        date_values = False
         where = [tuple(location_ids),tuple(location_ids),tuple(ids),tuple(states)]
-        if from_date and to_date:
-            date_str = "date>=%s and date<=%s"
-            where.append(tuple([from_date]))
-            where.append(tuple([to_date]))
-        elif from_date:
-            date_str = "date>=%s"
-            date_values = [from_date]
-        elif to_date:
-            date_str = "date<=%s"
-            date_values = [to_date]
-        if date_values:
-            where.append(tuple(date_values))
 
-        #It depends on the company of the user
+        where_add, date_str = self._get_date_query(cr, uid, ids, context=context)
+        if where_add:
+            where += where_add
+
+        #It depends on the company of the user OR by using force_company in context
         user = self.pool.get("res.users").browse(cr, uid, uid, context=context)
-        where.append(user.company_id.id)
+        if context.get("force_company", False):
+            where.append(context['force_company'])
+        else:
+            where.append(user.company_id.id)
 
         prodlot_id = context.get('prodlot_id', False)
         prodlot_clause = ''
         if prodlot_id:
             prodlot_clause = ' and prodlot_id = %s '
             where += [prodlot_id]
-
-
 
         # TODO: perhaps merge in one query.
         if 'in' in what:

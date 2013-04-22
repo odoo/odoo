@@ -1244,7 +1244,7 @@ class stock_picking(osv.osv):
                 else:
                     too_many.append(move)
                 
-                #Change cost price according to 
+                #Change cost price according to company
                 user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
                 product = product_obj.browse(cr, uid, move.product_id.id, context=context)
                 company_id = move.company_id.id
