@@ -192,9 +192,8 @@ class view(osv.osv):
         for node in arch.getiterator(spec.tag):
             if isinstance(node, SKIPPED_ELEMENT_TYPES):
                 continue
-            if all(node.get(attr) == spec.get(attr) \
-                    for attr in spec.attrib
-                        if attr not in ('position','version')):
+            if all(node.get(attr) == spec.get(attr) for attr in spec.attrib
+                   if attr not in ('position','version')):
                 # Version spec should match parent's root element's version
                 if spec.get('version') and spec.get('version') != arch.get('version'):
                     return None
