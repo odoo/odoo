@@ -6,16 +6,13 @@
     <t t-name="gamification.goal_list_to_do">
         <h3>Challenges</h3>
         <div t-foreach="widget.goals_info.info" t-as="plan" class="oe_goal">
-            <div class="oe_clear">
-                <div class="oe_left">
-                    <h4><t t-esc="plan.name" /></h4>
-                </div>
-                <div class="oe_left">
-                    <a class="oe_update_plan oe_e" rol="button" t-attf-id="{plan.id}">e</a>
-                </div>
+            <div>
+                <h4 style="display:inline-block;"><t t-esc="plan.name" /></h4>
+                <a class="oe_update_plan oe_e" rol="button" t-attf-id="{plan.id}">e</a>
             </div>
 
             <t t-if="plan.visibility_mode == 'progressbar'">
+
                 <div class="oe_goals_list">
                     <div t-attf-class="#{goal.type_display == 'progress' ? 'oe_goal_outer_box' : ''}" t-foreach="plan.goals" t-as="goal" t-attf-style="#{goal.type_display == 'progress' ? 'width: '+goal.completeness+'%;' : ''}">
                     <div class="oe_goal_inner_box">
