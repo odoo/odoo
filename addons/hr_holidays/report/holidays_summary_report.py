@@ -96,7 +96,7 @@ class report_custom(report_rml):
         res=cr.fetchone()[0]
         date_xml=[]
         date_today=time.strftime('%Y-%m-%d %H:%M:%S')
-        date_xml +=['<res name="%s" today="%s" />' % (res,date_today)]
+        date_xml +=['<res name="%s" today="%s" />' % (to_xml(res),date_today)]
 
         cr.execute("SELECT id, name, color_name FROM hr_holidays_status ORDER BY id")
         legend=cr.fetchall()
