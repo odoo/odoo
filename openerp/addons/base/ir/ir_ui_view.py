@@ -154,7 +154,7 @@ class view(osv.osv):
         return True
 
     _constraints = [
-        (_check_xml, 'Invalid XML for View Architecture!', ['arch'])
+        #(_check_xml, 'Invalid XML for View Architecture!', ['arch'])
     ]
 
     def _auto_init(self, cr, context=None):
