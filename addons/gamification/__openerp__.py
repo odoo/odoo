@@ -57,7 +57,6 @@ Both goals and badges are flexibles and can be adapted to a large range of modul
     'js': [
         'static/src/js/gamification.js',
         'static/src/js/justgage.js',
-        'static/src/js/jquery.sparkline.2.1.1.min.js',
     ],
     'qweb': ['static/src/xml/gamification.xml'],
 }

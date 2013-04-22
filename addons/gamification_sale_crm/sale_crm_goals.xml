@@ -124,7 +124,6 @@
 
 
 
-
         <!-- plans -->
         <record model="gamification.goal.plan" id="plan_crm_sale">
             <field name="name">Monthly Sales Targets</field>
@@ -148,11 +147,6 @@
         <record model="gamification.goal.planline" id="planline_crm_sale1">
             <field name="type_id" eval="ref('type_crm_tot_invoices')" />
             <field name="target_goal">20000</field>
-            <field name="plan_id" eval="ref('plan_crm_sale')" />
-        </record>
-        <record model="gamification.goal.planline" id="planline_crm_sale5">
-            <field name="type_id" eval="ref('type_crm_nbr_customer_refunds')" />
-            <field name="target_goal">4</field>
             <field name="plan_id" eval="ref('plan_crm_sale')" />
         </record>
 

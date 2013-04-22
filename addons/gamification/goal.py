@@ -138,11 +138,17 @@ class gamification_goal(osv.Model):
         """Return the percentage of completeness of the goal, between 0 and 100"""
         res = {}
         for goal in self.browse(cr, uid, ids, context):
-            if goal.current > 0:
-                res[goal.id] = min(100, round(100.0 * goal.current / goal.target_goal, 2))
-            else:
-                res[goal.id] = 0.0
-
+            # if goal.computation_mode == 'higher':
+                if goal.current > 0:
+                    res[goal.id] = min(100, round(100.0 * goal.current / goal.target_goal, 2))
+                else:
+                    res[goal.id] = 0.0
+            # else:
+            #     # a goal 'lower than' has only two values possible: 0 or 100%
+            #     if goal.current < goal.target_goal:
+            #         res[goal.id] = 100.0
+            #     else:
+            #         res[goal.id] = 0.0
         return res
 
     def on_change_type_id(self, cr, uid, ids, type_id=False, context=None):

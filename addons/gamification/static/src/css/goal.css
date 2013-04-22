@@ -80,11 +80,8 @@
 }
 /* mark goal as completed */
 .openerp .oe_mail_wall_aside .oe_gamification_goal .oe_goal_reached {
-    /*text-decoration: line-through;*/
-    color: rgb(17, 95, 17);
-}
-.openerp .oe_mail_wall_aside .oe_gamification_goal .oe_goal_failed {
-    color: rgb(95, 17, 17);
+    text-decoration: line-through;
+    color: rgb(138, 137, 137);
 }
 
 .openerp .oe_mail_wall_aside .oe_goals_list {
@@ -94,7 +91,7 @@
     width: 200px;
 }
 .openerp .oe_mail_wall .oe_mail_wall_aside .oe_goal_outer_box {
-    background: rgb(173, 219, 178);
+    background: rgb(213, 213, 213);
     min-height: 32px;
 }
 .openerp .oe_mail_wall_aside .oe_goals_list .oe_goal_inner_box {
@@ -110,8 +107,12 @@
 .openerp .oe_mail_wall_aside .oe_goals_list .oe_goal_inner_box strong {
     padding-left: 5px;
 }
-.openerp .oe_mail_wall .oe_mail_wall_aside table {
+.openerp .oe_mail_wall .oe_mail_wall_aside table.oe_goals_list {
     margin: 10px 0;
+    border: solid 1px white;
+}
+.openerp .oe_mail_wall .oe_mail_wall_aside .oe_goals_list thead {
+    font-weight: normal;
 }
 .oe_mail_wall_aside .oe_goals_list tbody tr:nth-child(even) {
     background-color: #fff;
@@ -122,6 +123,7 @@
     border: none;
 }
 .openerp .oe_mail_wall_aside .oe_goals_list thead th {
+    font-weight: normal;
     padding: 5px;
 }
 .openerp .oe_mail_wall_aside .oe_goals_list tbody tr {

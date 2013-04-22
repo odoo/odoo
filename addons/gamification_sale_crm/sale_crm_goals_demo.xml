@@ -18,16 +18,6 @@
             <field name="target_goal">2000</field>
             <field name="state">inprogress</field>
         </record>
-
-        <record model="gamification.goal" id="goal_crm_sale5">
-            <field name="type_id" eval="ref('type_crm_nbr_customer_refunds')" />
-            <field name="user_id" eval="ref('base.user_demo')" />
-            <field name="planline_id" eval="ref('planline_crm_sale5')" />
-            <field name="start_date" eval="time.strftime('2013-03-01')" />
-            <field name="end_date" eval="time.strftime('2013-03-31')" />
-            <field name="target_goal">4</field>
-            <field name="state">inprogress</field>
-        </record>
         
     </data>
 </openerp>

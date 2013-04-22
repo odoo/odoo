@@ -79,8 +79,6 @@ openerp.gamification = function(instance) {
                 if(self.goals_info.info.length > 0){
                     self.render_template_replace(self.$el.filter(".oe_gamification_goal"),'gamification.goal_list_to_do');
                     self.render_money_fields(self.goals_info.info[0].currency);
-                    // self.render_progress_bars();
-                    self.render_piechars();
                     self.render_user_avatars();
                 } else {
                     self.$el.filter(".oe_gamification_goal").hide();
@@ -115,29 +113,6 @@ openerp.gamification = function(instance) {
                 money_field.get_currency_info();
                 money_field.set('value', parseInt($(this).text(), 10));
                 money_field.replace($(this));
-            });
-        },
-        render_progress_bars: function() {
-            var self = this;
-
-            dfm = new instance.web.form.DefaultFieldManager(self);
-            // Generate a FieldMonetary for each .oe_goal_field_monetary
-            self.$(".oe_goal_progress").each(function() {
-                progress_field = new instance.web.form.FieldProgressBar(dfm, {
-                    attrs: {
-                        modifiers: '{"readonly": true}'
-                    }
-                });
-                progress_field.set('value', $(this).attr('value'));
-                progress_field.replace($(this));
-            });
-        },
-        render_piechars: function() {
-            var self = this;
-            self.$(".oe_goal_sparkline_piechart").each(function() {
-                var completeness = parseInt( $(this).attr('data-completeness'), 10);
-                var values = [completeness, 100-completeness];
-                $(this).sparkline(values, {type: 'pie', offset: 180, sliceColors: ['#0B610B','#F78181']});
             });
         },
         render_user_avatars: function() {
