@@ -381,6 +381,7 @@ class email_template(osv.osv):
         attachment_ids = values.pop('attachment_ids', [])
         attachments = values.pop('attachments', [])
         msg_id = mail_mail.create(cr, uid, values, context=context)
+        mail = mail_mail.browse(cr, uid, msg_id, context=context)
 
         # manage attachments
         for attachment in attachments:
@@ -389,7 +390,7 @@ class email_template(osv.osv):
                     'datas_fname': attachment[0],
                     'datas': attachment[1],
                     'res_model': 'mail.message',
-                    'res_id': msg_id,
+                    'res_id': mail.mail_message_id.id,
             }
             context.pop('default_type', None)
             attachment_ids.append(ir_attachment.create(cr, uid, attachment_data, context=context))
