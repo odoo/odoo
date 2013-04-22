@@ -20,6 +20,7 @@ import traceback
 import urlparse
 import uuid
 import xmlrpclib
+import errno
 
 import babel.core
 import simplejson
@@ -523,8 +524,15 @@ def session_path():
     except Exception:
         username = "unknown"
     path = os.path.join(tempfile.gettempdir(), "oe-sessions-" + username)
-    if not os.path.exists(path):
+    try:
         os.mkdir(path, 0700)
+    except OSError as exc:
+        if exc.errno == errno.EEXIST:
+            # directory exists: ensure it has the correct permissions
+            # this will fail if the directory is not owned by the current user
+            os.chmod(path, 0700)
+        else:
+            raise
     return path
 
 class Root(object):
