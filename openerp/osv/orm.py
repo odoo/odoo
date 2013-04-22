@@ -2062,13 +2062,13 @@ class BaseModel(object):
                 return s.encode('utf8')
             return s
 
-        def raise_view_error(error_msg, child_view_id):
-            view, child_view = self.pool.get('ir.ui.view').browse(cr, user, [view_id, child_view_id], context)
+        def raise_view_error(cr, uid, model, error_msg, view_id, child_view_id, context=None):
+            view, child_view = self.pool.get('ir.ui.view').browse(cr, uid, [view_id, child_view_id], context)
             error_msg = error_msg % {'parent_xml_id': view.xml_id}
             raise AttributeError("View definition error for inherited view '%s' on model '%s': %s"
-                                 %  (child_view.xml_id, self._name, error_msg))
+                                 %  (child_view.xml_id, model, error_msg))
 
-        def apply_inheritance_specs(source, descendant_id, specs_arch):
+        def apply_inheritance_specs(cr, uid, model, root_view_id, source, descendant_id, specs_arch, context=None):
             """ Apply an inheriting view (a descendant of the base view)
 
             Apply to a source architecture all the spec nodes (i.e. nodes
@@ -2124,7 +2124,7 @@ class BaseModel(object):
                             elif pos == 'before':
                                 node.addprevious(child)
                             else:
-                                raise_view_error("Invalid position value: '%s'" % pos, descendant_id)
+                                raise_view_error(cr, uid, model, "Invalid position value: '%s'" % pos, root_view_id, descendant_id, context=context)
                 else:
                     attrs = ''.join([
                         ' %s="%s"' % (attr, spec.get(attr))
@@ -2133,9 +2133,9 @@ class BaseModel(object):
                     ])
                     tag = "<%s%s>" % (spec.tag, attrs)
                     if spec.get('version') and spec.get('version') != source.get('version'):
-                        raise_view_error("Mismatching view API version for element '%s': %r vs %r in parent view '%%(parent_xml_id)s'" % \
-                                            (tag, spec.get('version'), source.get('version')), descendant_id)
-                    raise_view_error("Element '%s' not found in parent view '%%(parent_xml_id)s'" % tag, descendant_id)
+                        raise_view_error(cr, uid, model, "Mismatching view API version for element '%s': %r vs %r in parent view '%%(parent_xml_id)s'" % \
+                                            (tag, spec.get('version'), source.get('version')), root_view_id, descendant_id, context=context)
+                    raise_view_error(cr, uid, model, "Element '%s' not found in parent view '%%(parent_xml_id)s'" % tag, root_view_id, descendant_id, context=context)
 
             return source
 
@@ -2150,8 +2150,9 @@ class BaseModel(object):
 
             """
             return reduce(
-                lambda s, descendant: apply_inheritance_specs(s, *descendant),
-                self.pool['ir.ui.view'].iter(cr, user, inherit_id, self._name),
+                lambda s, descendant: apply_inheritance_specs(
+                    cr, user, self._name, inherit_id, s, *descendant, context=context),
+                self.pool['ir.ui.view'].iter(cr, user, inherit_id, self._name, context=context),
                 source)
 
         result = {'type': view_type, 'model': self._name}
