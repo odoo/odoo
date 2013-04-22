@@ -385,6 +385,7 @@ class gamification_goal(osv.Model):
                 for (view_id, mode) in action['views']:
                     if mode == "form":
                         views = [(view_id, mode)]
+                        break
                 action['views'] = views
                 action['target'] = 'new'
             return action

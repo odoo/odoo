@@ -50,7 +50,6 @@ openerp.gamification = function(instance) {
                 $.when(plan_action).done(function() {
                     var action_manager = new instance.web.ActionManager(this);
                     action_manager.do_action(plan_action.action).done(function () {
-                        console.log(plan_action.action);
                         self.get_goal_todo_info();
                     });
                 });
