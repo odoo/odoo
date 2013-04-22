@@ -2,7 +2,7 @@
   In order to test anglo_saxon Configure Different Accounts.
 -
   !record {model: account.account, id: account_anglo_1}:
-    code: 3000
+    code: X3000
     name: Stock Valuation Account- (test)
     parent_id: account.cas
     type: other
@@ -11,16 +11,16 @@
   Configure Stock Interim account (Received).
 -
   !record {model: account.account, id: account_anglo_2}:
-    code: 2800
+    code: X2800
     name: Stock Interim account (Received)
-    parent_id: account.cog
+    parent_id: account.cos
     type: other
     user_type: account.data_account_type_expense
 -
   Configure Stock Interim account (Delivered).
 -
   !record {model: account.account, id: account_anglo_3}:
-    code: 2801
+    code: X2801
     name: Stock Interim account (Delivered)
     parent_id: account.rev
     type: other
@@ -29,7 +29,7 @@
   Configure Price difference creditor Account.
 -
   !record {model: account.account, id: account_anglo_4}:
-    code: 7095
+    code: X7095
     name: Price difference creditor Account
     parent_id: account.cos
     type: other
@@ -38,7 +38,7 @@
   Configure Cash Bank Account.
 -
   !record {model: account.account, id: account_anglo_5}:
-    code: 5000
+    code: X5000
     name: Cash/Bank Account 
     parent_id: account.cash  
     type: other
@@ -47,7 +47,7 @@
   Configure Creditor Account Payable. 
 -
   !record {model: account.account, id: account_anglo_6}:
-    code: 440001
+    code: X440001
     name: Creditor Account Payable 
     parent_id: account.a_pay  
     type: other
@@ -56,7 +56,7 @@
   Configure Debtor Account Receivable. 
 -
   !record {model: account.account, id: account_anglo_7}:
-    code: 400001
+    code: X400001
     name: Debtor Account Receivable 
     parent_id: account.a_recv  
     type: other
@@ -65,7 +65,7 @@
   Configure Cost of Good sale Account.
 -
   !record {model: account.account, id: account_anglo_8}:
-    code: 7000
+    code: X7000
     name: Cost of goods sale account
     parent_id: account.o_expense
     type: other
@@ -74,7 +74,7 @@
   Configure Income Account.
 -
   !record {model: account.account, id: account_anglo_9}:
-    code: 8000
+    code: X8000
     name: Income Account
     parent_id: account.o_income
     type: other
