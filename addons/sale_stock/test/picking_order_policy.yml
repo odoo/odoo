@@ -5,6 +5,12 @@
 -
   !assert {model: sale.order, id: sale.sale_order_6, string: The amount of the Quotation is not correctly computed}:
     - sum([l.price_subtotal for l in order_line]) == amount_untaxed
+- 
+  I set an explicit invoicing partner that is different from the main SO Customer
+-
+  !python {model: sale.order, id: sale.sale_order_6}: |
+    order = self.browse(cr, uid, ref("sale.sale_order_6"))
+    order.write({'partner_invoice_id': ref('base.res_partner_address_29')})
 -
   I confirm the quotation with Invoice based on deliveries policy.
 -
@@ -110,13 +116,13 @@
   !python {model: sale.order}: |
     order = self.browse(cr, uid, ref("sale.sale_order_6"))
     assert order.invoice_ids, "Invoice is not created."
-    ac = order.partner_id.property_account_receivable.id
+    ac = order.partner_invoice_id.property_account_receivable.id
     journal_ids = self.pool.get('account.journal').search(cr, uid, [('type', '=', 'sale'), ('company_id', '=', order.company_id.id)])
     for invoice in order.invoice_ids:
         assert invoice.type == 'out_invoice',"Invoice should be Customer Invoice."
         assert invoice.account_id.id == ac,"Invoice account is not correspond."
         assert invoice.reference == order.client_order_ref or order.name,"Reference is not correspond."
-        assert invoice.partner_id.id == order.partner_id.id,"Customer is not correspond."
+        assert invoice.partner_id.id == order.partner_invoice_id.id,"Customer does not correspond."
         assert invoice.currency_id.id == order.pricelist_id.currency_id.id, "Currency is not correspond."
         assert invoice.comment == (order.note or ''),"Note is not correspond."
         assert invoice.journal_id.id in journal_ids,"Sales Journal is not link on Invoice."
