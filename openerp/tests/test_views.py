@@ -94,3 +94,48 @@ class TestNodeLocator(common.BaseCase):
             E.root(E.foo(attr='1'), version='4'),
             E.foo(attr='1', version='3'))
         self.assertIsNone(node)
+
+class TestViewInheritance(common.TransactionCase):
+    def view_for(self, name):
+        return ET.tostring(ET.Element('form', string=name))
+
+    def makeView(self, name, parent=None):
+        view_id = self.View.create(self.cr, self.uid, {
+            'model': self.model,
+            'name': name,
+            'arch': self.view_for(name),
+            'inherit_id': parent, })
+        self.ids[name] = view_id
+        return view_id
+
+    def setUp(self):
+        super(TestViewInheritance, self).setUp()
+
+        self.model = 'dummy'
+        self.View = self.registry('ir.ui.view')
+        self.ids = {}
+
+        a = self.makeView("A")
+        a1 = self.makeView("A1", a)
+        a11 = self.makeView("A11", a1)
+        self.makeView("A111", a11)
+        self.makeView("A12", a1)
+        a2 = self.makeView("A2", a)
+        self.makeView("A21", a2)
+        a22 = self.makeView("A22", a2)
+        self.makeView("A221", a22)
+
+    def test_get_children(self):
+        self.assertEqual(self.View.get_inheriting_views_arch(
+            self.cr, self.uid, self.ids['A'], self.model), [
+            (self.view_for('A1'), self.ids['A1']),
+            (self.view_for('A2'), self.ids['A2']),
+        ])
+
+        self.assertEqual(self.View.get_inheriting_views_arch(
+            self.cr, self.uid, self.ids['A21'], self.model),
+            [])
+
+        self.assertEqual(self.View.get_inheriting_views_arch(
+            self.cr, self.uid, self.ids['A11'], self.model),
+            [(self.view_for('A111'), self.ids['A111'])])
