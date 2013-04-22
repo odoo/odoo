@@ -184,12 +184,12 @@ class view(osv.osv):
             # Only compare the field name: a field can be only once in a given view
             # at a given level (and for multilevel expressions, we should use xpath
             # inheritance spec anyway).
-            for node in arch.getiterator('field'):
+            for node in arch.iter('field'):
                 if node.get('name') == spec.get('name'):
                     return node
             return None
 
-        for node in arch.getiterator(spec.tag):
+        for node in arch.iter(spec.tag):
             if isinstance(node, SKIPPED_ELEMENT_TYPES):
                 continue
             if all(node.get(attr) == spec.get(attr) for attr in spec.attrib
