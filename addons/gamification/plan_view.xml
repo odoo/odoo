@@ -242,7 +242,21 @@
                         <h1><field name="name" nolabel="1" readonly="1"/></h1>
                     </div>
                     <field name="description" nolabel="1" readonly="1" />
+                    <div attrs="{'invisible': ['|',('start_date','!=', False),('end_date','!=', False)]}" class="oe_grey">
+                        This  challenge has no starting and end date specified, it will be closed 
+                    </div>
                     The challenge is running from <field name="start_date" class="oe_inline" readonly="1" /> to <field name="end_date" class="oe_inline" readonly="1" />
+                    <group string="Goals">
+                        <field name="planline_ids" nolabel="1" readonly="1" colspan="4">
+                            <tree string="Planline List" version="7.0" editable="bottom" >
+                                <field name="sequence" widget="handle"/>
+                                <field name="type_id"/>
+                                <field name="type_condition"/>
+                                <field name="target_goal"/>
+                                <field name="type_full_suffix"/>
+                            </tree>
+                        </field>
+                    </group>
                     <group string="Reward">
                         <div class="oe_grey" attrs="{'invisible': ['|',('reward_id','!=',False),('reward_first_id','!=',False)]}">
                             There is no reward upon completion of this challenge.

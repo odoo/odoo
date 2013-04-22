@@ -158,10 +158,6 @@ class gamification_goal_plan(osv.Model):
             required=True),
         'manager_id': fields.many2one('res.users',
             string='Responsible', help="The user responsible for the challenge."),
-        'start_date': fields.date('Start Date',
-            help="The day a new challenge will be automatically started. If no periodicity is set, will use this date as the goal start date."),
-        'end_date': fields.date('End Date',
-            help="The day a new challenge will be automatically closed. If no periodicity is set, will use this date as the goal end date."),
 
         'user_ids': fields.many2many('res.users', 'user_ids',
             string='Users',
@@ -169,6 +165,21 @@ class gamification_goal_plan(osv.Model):
         'autojoin_group_id': fields.many2one('res.groups',
             string='Auto-subscription Group',
             help='Group of users whose members will automatically be added to the users'),
+
+        'period': fields.selection([
+                ('once', 'Non recurring'),
+                ('daily', 'Daily'),
+                ('weekly', 'Weekly'),
+                ('monthly', 'Monthly'),
+                ('yearly', 'Yearly')
+            ],
+            string='Periodicity',
+            help='Period of automatic goal assigment. If none is selected, should be launched manually.',
+            required=True),
+        'start_date': fields.date('Start Date',
+            help="The day a new challenge will be automatically started. If no periodicity is set, will use this date as the goal start date."),
+        'end_date': fields.date('End Date',
+            help="The day a new challenge will be automatically closed. If no periodicity is set, will use this date as the goal end date."),
 
         'proposed_user_ids': fields.many2many('res.users', 'proposed_user_ids',
             string="Suggest to users"),
@@ -190,16 +201,6 @@ class gamification_goal_plan(osv.Model):
         'reward_second_id_many': fields.function(_reward_second_id_many, type="many2many", relation="gamification.badge", string="For 2nd user"),
         'reward_third_id_many': fields.function(_reward_third_id_many, type="many2many", relation="gamification.badge", string="For 3rd user"),
 
-        'period': fields.selection([
-                ('once', 'Non recurring'),
-                ('daily', 'Daily'),
-                ('weekly', 'Weekly'),
-                ('monthly', 'Monthly'),
-                ('yearly', 'Yearly')
-            ],
-            string='Periodicity',
-            help='Period of automatic goal assigment. If none is selected, should be launched manually.',
-            required=True),
         'visibility_mode': fields.selection([
                 ('progressbar', 'Individual Goals'),
                 ('board', 'Leader Board (Group Ranking)'),

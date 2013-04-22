@@ -71,23 +71,49 @@
     background: #EDEDF6;
     padding: 5px 5px 0 15px;
 }
-.openerp .oe_mail_wall_aside .oe_gamification_goal .oe_goal_reached,
+.openerp .oe_mail_wall_aside h3 {
+    font-size: 1.3em;
+    margin-left: -7px;
+    font-variant: small-caps;
+    text-transform: capitalize;
+    line-height: 1em;
+}
+/* mark goal as completed */
+.openerp .oe_mail_wall_aside .oe_gamification_goal .oe_goal_reached {
+    /*text-decoration: line-through;*/
+    color: rgb(17, 95, 17);
+}
 .openerp .oe_mail_wall_aside .oe_gamification_goal .oe_goal_failed {
-    text-decoration: line-through;
+    color: rgb(95, 17, 17);
 }
 
-.openerp .oe_mail_wall .oe_mail_wall_aside ul {
+.openerp .oe_mail_wall_aside .oe_goals_list {
     list-style-type: none; 
-    padding-left: 20px;
+    padding-left: 15px;
     margin-bottom: 15px;
+    width: 200px;
 }
-.openerp .oe_mail_wall .oe_mail_wall_aside li {
-    margin-bottom: 15px;
+.openerp .oe_mail_wall .oe_mail_wall_aside .oe_goal_outer_box {
+    background: rgb(173, 219, 178);
+    min-height: 32px;
+}
+.openerp .oe_mail_wall_aside .oe_goals_list .oe_goal_inner_box {
+    display: inline-block;
+    width: 200px;
+    min-height: 32px;
+    vertical-align: middle;
+    border: solid 1px white;
+}
+.openerp .oe_mail_wall_aside table.oe_goals_list .oe_goal_inner_box {
+    border: none;
+}
+.openerp .oe_mail_wall_aside .oe_goals_list .oe_goal_inner_box strong {
+    padding-left: 5px;
 }
 .openerp .oe_mail_wall .oe_mail_wall_aside table {
     margin: 10px 0;
 }
-.oe_mail_wall_aside .oe_list_content tbody tr:nth-child(even) {
+.oe_mail_wall_aside .oe_goals_list tbody tr:nth-child(even) {
     background-color: #fff;
 }
 .openerp .oe_mail_wall .oe_mail_wall_aside td,
@@ -95,41 +121,33 @@
     vertical-align: middle;
     border: none;
 }
-.openerp .oe_mail_wall_aside .oe_list_content tbody th {
+.openerp .oe_mail_wall_aside .oe_goals_list thead th {
+    padding: 5px;
+}
+.openerp .oe_mail_wall_aside .oe_goals_list tbody tr {
+    height: 32px;
+}
+.openerp .oe_mail_wall_aside .oe_goals_list tbody th {
     padding-left: 5px;
+    height: 32px;
 }
 .openerp .oe_mail_wall .oe_mail_wall_aside table .col0 {
-    font-size: 150%;
+    font-size: 160%;
     font-weight: bold;
+    width: 24px;
 }
-.openerp .oe_mail_wall .oe_mail_wall_aside table td.col0 { width: 25px; }
-.openerp .oe_mail_wall .oe_mail_wall_aside table td.col1 { width: 32px; }
-
-.openerp .oe_mail_wall .oe_mail_wall_aside .oe_user_avatar { width: 32px; }
-
-/* background progress bar */
-.openerp .oe_mail_wall .oe_mail_wall_aside .oe_goal_progress {
-    background: rgb(173, 219, 178);
-}
-.openerp .oe_mail_wall .oe_mail_wall_aside table progress,.oe_form_field_progressbar {
-    width: 100%;
-    display: inline-block;
-}
-.openerp .oe_mail_wall .oe_mail_wall_aside li progress,.oe_form_field_progressbar {
-    width: 80%;
-    display: inline-block;
-}
-.openerp .oe_mail_wall .oe_mail_wall_aside li p {
-    margin:5px 0;
+.openerp .oe_mail_wall .oe_mail_wall_aside .oe_user_avatar {
+    width: 32px;
+    padding-right: 5px;
 }
 .openerp .oe_mail_wall .oe_mail_wall_aside .oe_goal .oe_update_plan,
-.openerp .oe_mail_wall .oe_mail_wall_aside .oe_goal .oe_goal_action {
+.openerp .oe_mail_wall .oe_mail_wall_aside .oe_goal_inner_box .oe_goal_action {
     visibility: hidden;
     display: block;
     float: right;
 }
 .openerp .oe_mail_wall .oe_mail_wall_aside .oe_goal:hover > .oe_update_plan,
-.openerp .oe_mail_wall .oe_mail_wall_aside .oe_goal:hover .oe_goal_action {
+.openerp .oe_mail_wall .oe_mail_wall_aside .oe_goal_inner_box:hover .oe_goal_action {
     visibility: visible;
 }
 .openerp .oe_mail_wall .oe_mail {
