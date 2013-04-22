@@ -139,3 +139,16 @@ class TestViewInheritance(common.TransactionCase):
         self.assertEqual(self.View.get_inheriting_views_arch(
             self.cr, self.uid, self.ids['A11'], self.model),
             [(self.view_for('A111'), self.ids['A111'])])
+
+    def test_iterate_descendents(self):
+        descendents = list(self.View.iter(self.cr, self.uid, self.ids['A1'], self.model))
+        self.assertEqual(descendents, [
+            (self.ids[name], self.view_for(name))
+            for name in ['A1', 'A11', 'A111', 'A12']
+        ])
+        descendents = list(self.View.iter(
+            self.cr, self.uid, self.ids['A2'], self.model, exclude_base=True))
+        self.assertEqual(descendents, [
+            (self.ids[name], self.view_for(name))
+            for name in ['A21', 'A22', 'A221']
+        ])

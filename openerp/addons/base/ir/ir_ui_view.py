@@ -230,6 +230,31 @@ class view(osv.osv):
                 for view in self.browse(cr, 1, view_ids, context)
                 if not (view.groups_id and user_groups.isdisjoint(view.groups_id))]
 
+    def iter(self, cr, uid, view_id, model, exclude_base=False, context=None):
+        """ iterates on all of `view_id`'s descendants tree depth-first.
+
+        If `exclude_base` is `False`, also yields `view_id` itself. It is
+        `False` by default to match the behavior of etree's Element.iter.
+
+        :param int view_id: database id of the root view
+        :param str model: name of the view's related model (for filtering)
+        :param boolean exclude_base: whether `view_id` should be excluded from the iteration
+        :param context:
+        :return: iterator of (database_id, arch_field) pairs for all
+                 descendants of `view_id` (including `view_id` itself if
+                 `exclude_base` is `False`, the default)
+        """
+        if not exclude_base:
+            [base] = self.browse(cr, uid, [view_id], context=context)
+            yield base.id, base.arch
+
+        for arch, id in self.get_inheriting_views_arch(
+                cr, uid, view_id, model, context=context):
+            yield id, arch
+            for info in self.iter(
+                    cr, uid, id, model, exclude_base=True, context=None):
+                yield info
+
     def write(self, cr, uid, ids, vals, context=None):
         if not isinstance(ids, (list, tuple)):
             ids = [ids]
