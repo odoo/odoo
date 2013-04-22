@@ -29,8 +29,10 @@
     </t>
     <t t-name="LinkedIn.DisabledWarning">
         <div>
-            LinkedIn access was not enabled on this server.
-            Please ask your administrator to configure it in Settings > Configuration > Sales > Social Network Integration.
+            <img t-att-src='_s + "/web/static/src/img/warning.png"' style="float: left; margin: 5px"/>
+            <p>LinkedIn access was not enabled on this server.</p>
+            <p>Please ask your administrator to configure it in Settings > Configuration > Sales > Social Network Integration.</p>
+            <p>LinkedIn: <t t-raw="error.name"/></p>
         </div>
     </t>
 </templates>
