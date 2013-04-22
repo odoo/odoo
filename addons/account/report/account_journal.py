@@ -22,7 +22,6 @@
 import time
 from common_report_header import common_report_header
 from openerp.report import report_sxw
-from openerp.tools.translate import _
 
 class journal_print(report_sxw.rml_parse, common_report_header):
 
@@ -191,10 +190,10 @@ class journal_print(report_sxw.rml_parse, common_report_header):
 
     def _get_sortby(self, data):
         if self.sort_selection == 'date':
-            return _('Date')
+            return self._translate('Date')
         elif self.sort_selection == 'ref':
-            return _('Reference Number')
-        return _('Date')
+            return self._translate('Reference Number')
+        return self._translate('Date')
 
 report_sxw.report_sxw('report.account.journal.period.print', 'account.journal.period', 'addons/account/report/account_journal.rml', parser=journal_print, header='external')
 report_sxw.report_sxw('report.account.journal.period.print.sale.purchase', 'account.journal.period', 'addons/account/report/account_journal_sale_purchase.rml', parser=journal_print, header='external')
