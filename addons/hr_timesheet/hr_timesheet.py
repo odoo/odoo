@@ -40,7 +40,7 @@ class hr_employee(osv.osv):
             result = md.get_object_reference(cr, uid, 'hr_timesheet', 'analytic_journal')
             #search on id found in result to check if current user has read access right, if he does, it will return same id,
             #otherwise it will return empty list
-            check_right = self.pool.get('account.analytic.journal').search(cr, uid, [('name', '=', result[1])], context=context)
+            check_right = self.pool.get('account.analytic.journal').search(cr, uid, [('id', '=', result[1])], context=context)
             if check_right:
                 return result[1]
             else:
