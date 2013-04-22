@@ -113,6 +113,8 @@ class TestViewInheritance(common.TransactionCase):
 
         self.model = 'dummy'
         self.View = self.registry('ir.ui.view')
+        self._init = self.View.pool._init
+        self.View.pool._init = False
         self.ids = {}
 
         a = self.makeView("A")
@@ -124,6 +126,10 @@ class TestViewInheritance(common.TransactionCase):
         self.makeView("A21", a2)
         a22 = self.makeView("A22", a2)
         self.makeView("A221", a22)
+
+    def tearDown(self):
+        self.View.pool._init = self._init
+        super(TestViewInheritance, self).tearDown()
 
     def test_get_children(self):
         self.assertEqual(self.View.get_inheriting_views_arch(
