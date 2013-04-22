@@ -53,6 +53,5 @@ class hr_holidays_summary_dept(osv.osv_memory):
             'datas': datas,
             }
 
-hr_holidays_summary_dept()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

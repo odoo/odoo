@@ -27,6 +27,19 @@
             <field name="priority">1000</field>
         </record>
 
+        <record id="ir_cron_mail_garbage_collect_attachments" model="ir.cron">
+            <field name="name">Garbage Collect Mail Attachments</field>
+            <field eval="True" name="active" />
+            <field name="user_id" ref="base.user_root" />
+            <field name="interval_number">1</field>
+            <field name="interval_type">weeks</field>
+            <field name="numbercall">-1</field>
+            <field eval="False" name="doall" />
+            <field name="model">mail.thread</field>
+            <field name="function">_garbage_collect_attachments</field>
+            <field name="args">()</field>
+        </record>
+
         <!-- Discussion subtype for messaging / Chatter -->
         <record id="mt_comment" model="mail.message.subtype">
             <field name="name">Discussions</field>

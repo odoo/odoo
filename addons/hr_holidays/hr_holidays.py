@@ -180,10 +180,21 @@ class hr_holidays(osv.osv):
     ] 
     
     _sql_constraints = [
-        ('type_value', "CHECK( (holiday_type='employee' AND employee_id IS NOT NULL) or (holiday_type='category' AND category_id IS NOT NULL))", "The employee or employee category of this request is missing."),
+        ('type_value', "CHECK( (holiday_type='employee' AND employee_id IS NOT NULL) or (holiday_type='category' AND category_id IS NOT NULL))", 
+         "The employee or employee category of this request is missing. Please make sure that your user login is linked to an employee."),
         ('date_check2', "CHECK ( (type='add') OR (date_from <= date_to))", "The start date must be anterior to the end date."),
         ('date_check', "CHECK ( number_of_days_temp >= 0 )", "The number of days must be greater than 0."),
     ]
+    
+    def copy(self, cr, uid, id, default=None, context=None):
+        if default is None:
+            default = {}
+        if context is None:
+            context = {}
+        default = default.copy()
+        default['date_from'] = False
+        default['date_to'] = False
+        return super(hr_holidays, self).copy(cr, uid, id, default, context=context)
 
     def _create_resource_leave(self, cr, uid, leaves, context=None):
         '''This method will create entry in resource calendar leave object at the time of holidays validated '''
@@ -444,7 +455,6 @@ class resource_calendar_leaves(osv.osv):
         'holiday_id': fields.many2one("hr.holidays", "Leave Request"),
     }
 
-resource_calendar_leaves()
 
 
 class hr_employee(osv.osv):
@@ -476,9 +486,9 @@ class hr_employee(osv.osv):
             leave_id = holiday_obj.create(cr, uid, {'name': _('Leave Request for %s') % employee.name, 'employee_id': employee.id, 'holiday_status_id': status_id, 'type': 'remove', 'holiday_type': 'employee', 'number_of_days_temp': abs(diff)}, context=context)
         else:
             return False
-        holidays_obj.signal_confirm(cr, uid, [leave_id])
-        holidays_obj.signal_validate(cr, uid, [leave_id])
-        holidays_obj.signal_second_validate(cr, uid, [leave_id])
+        holiday_obj.signal_confirm(cr, uid, [leave_id])
+        holiday_obj.signal_validate(cr, uid, [leave_id])
+        holiday_obj.signal_second_validate(cr, uid, [leave_id])
         return True
 
     def _get_remaining_days(self, cr, uid, ids, name, args, context=None):
@@ -533,6 +543,5 @@ class hr_employee(osv.osv):
         'leave_date_to': fields.function(_get_leave_status, multi='leave_status', type='date', string='To Date'),
     }
 
-hr_employee()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

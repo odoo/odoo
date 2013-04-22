@@ -559,10 +559,11 @@ class account_move_line(osv.osv):
     ]
 
     def _auto_init(self, cr, context=None):
-        super(account_move_line, self)._auto_init(cr, context=context)
+        res = super(account_move_line, self)._auto_init(cr, context=context)
         cr.execute('SELECT indexname FROM pg_indexes WHERE indexname = \'account_move_line_journal_id_period_id_index\'')
         if not cr.fetchone():
             cr.execute('CREATE INDEX account_move_line_journal_id_period_id_index ON account_move_line (journal_id, period_id)')
+        return res
 
     def _check_no_view(self, cr, uid, ids, context=None):
         lines = self.browse(cr, uid, ids, context=context)
@@ -742,7 +743,7 @@ class account_move_line(osv.osv):
     def list_partners_to_reconcile(self, cr, uid, context=None):
         cr.execute(
              """SELECT partner_id FROM (
-                SELECT l.partner_id, p.last_reconciliation_date, SUM(l.debit) AS debit, SUM(l.credit) AS credit, MAX(l.date) AS max_date
+                SELECT l.partner_id, p.last_reconciliation_date, SUM(l.debit) AS debit, SUM(l.credit) AS credit, MAX(l.create_date) AS max_date
                 FROM account_move_line l
                 RIGHT JOIN account_account a ON (a.id = l.account_id)
                 RIGHT JOIN res_partner p ON (l.partner_id = p.id)
@@ -753,9 +754,14 @@ class account_move_line(osv.osv):
                 ) AS s
                 WHERE debit > 0 AND credit > 0 AND (last_reconciliation_date IS NULL OR max_date > last_reconciliation_date)
                 ORDER BY last_reconciliation_date""")
-        ids = cr.fetchall()
-        ids = len(ids) and [x[0] for x in ids] or []
-        return self.pool.get('res.partner').name_get(cr, uid, ids, context=context)
+        ids = [x[0] for x in cr.fetchall()]
+        if not ids: 
+            return []
+
+        # To apply the ir_rules
+        partner_obj = self.pool.get('res.partner')
+        ids = partner_obj.search(cr, uid, [('id', 'in', ids)], context=context)
+        return partner_obj.name_get(cr, uid, ids, context=context)
 
     def reconcile_partial(self, cr, uid, ids, type='auto', context=None, writeoff_acc_id=False, writeoff_period_id=False, writeoff_journal_id=False):
         move_rec_obj = self.pool.get('account.move.reconcile')
@@ -980,8 +986,7 @@ class account_move_line(osv.osv):
         if context is None:
             context = {}
         period_pool = self.pool.get('account.period')
-        ctx = dict(context, account_period_prefer_normal=True)
-        pids = period_pool.find(cr, user, date, context=ctx)
+        pids = period_pool.find(cr, user, date, context=context)
         if pids:
             res.update({
                 'period_id':pids[0]
@@ -1303,6 +1308,5 @@ class account_move_line(osv.osv):
                 bool(journal.currency),bool(journal.analytic_journal_id)))
         return result
 
-account_move_line()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
