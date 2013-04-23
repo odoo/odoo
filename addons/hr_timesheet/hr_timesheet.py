@@ -37,8 +37,8 @@ class hr_employee(osv.osv):
     def _getAnalyticJournal(self, cr, uid, context=None):
         md = self.pool.get('ir.model.data')
         try:
-            result = md.get_object_reference(cr, uid, 'hr_timesheet', 'analytic_journal')
-            return result[1]
+            dummy, res_id = md.check_object_reference(cr, uid, 'hr_timesheet', 'analytic_journal')
+            return res_id
         except ValueError:
             pass
         return False
@@ -46,8 +46,8 @@ class hr_employee(osv.osv):
     def _getEmployeeProduct(self, cr, uid, context=None):
         md = self.pool.get('ir.model.data')
         try:
-            result = md.get_object_reference(cr, uid, 'product', 'product_product_consultant')
-            return result[1]
+            dummy, res_id = md.check_object_reference(cr, uid, 'product', 'product_product_consultant')
+            return res_id
         except ValueError:
             pass
         return False
