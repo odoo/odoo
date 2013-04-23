@@ -274,35 +274,33 @@ class view(osv.osv):
             "caller must provide either a view_id or a model and a view_type"\
             " to be able to fetch a root view"
 
-        view = False
+        if not view_id:
+            ids = self.search(cr, uid, [
+                ['model', '=', model],
+                ['type', '=', view_type],
+                ['inherit_id', '=', False],
+            ], limit=1, order='priority', context=context)[:1]
+            if not ids: return False
+            [view_id] = ids
+
         # Search for a root (i.e. without any parent) view.
         while True:
-            if view_id:
-                ids = [view_id]
-            else:
-                # read does not guarantee ordering so directly take just first
-                # search'ed id and read that, this way we don't care
-                ids = self.search(cr, uid, [
-                    ['model', '=', model],
-                    ['type', '=', view_type],
-                    ['inherit_id', '=', False],
-                ], context=context, order='priority')[:1]
-            views = self.read(cr, uid, ids,[
+            views = self.read(cr, uid, [view_id],[
                 'arch', 'name', 'field_parent',
                 'id', 'type', 'inherit_id', 'model'
             ], context=context)
+            if not views: return False
+
             view = views[0] if views else False
 
-            if not views:
-                break
-
-            view_id = view['inherit_id'] or view['id']
-            # due to read() inherit_id may be a name_get pair, unpack id
-            if isinstance(view_id, tuple): view_id, _name = view_id
             if not view['inherit_id']:
-                break
+                return view
 
-        return view
+            view_id = view['inherit_id']
+            # due to read() inherit_id may be a name_get pair, unpack id
+            if isinstance(view_id, tuple):
+                view_id, _name = view_id
+
 
     def raise_view_error(self, cr, uid, model, error_msg, view_id, child_view_id, context=None):
         view, child_view = self.browse(cr, uid, [view_id, child_view_id], context)
