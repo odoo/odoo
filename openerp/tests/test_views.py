@@ -179,3 +179,16 @@ class TestViewInheritance(common.TransactionCase):
         root = self.View.get_root_ancestor(
             self.cr, self.uid, model=self.model, view_type='form')
         self.assertEqual(root['id'], A_id)
+
+    def test_no_root(self):
+        root = self.View.get_root_ancestor(
+            self.cr, self.uid, model='does.not.exist', view_type='form')
+        self.assertFalse(root)
+
+        root = self.View.get_root_ancestor(
+            self.cr, self.uid, model=self.model, view_type='tree')
+        self.assertFalse(root)
+
+        root = self.View.get_root_ancestor(
+            self.cr, self.uid, view_id=12345678)
+        self.assertFalse(root)
