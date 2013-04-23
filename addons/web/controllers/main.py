@@ -1,9 +1,11 @@
 # -*- coding: utf-8 -*-
+
 import ast
 import base64
 import csv
 import glob
 import itertools
+import logging
 import operator
 import datetime
 import hashlib
@@ -28,6 +30,7 @@ except ImportError:
     xlwt = None
 
 import openerp
+import openerp.modules.registry
 from openerp.tools.translate import _
 
 from .. import http
@@ -1436,8 +1439,7 @@ class Action(openerpweb.Controller):
         else:
             return False
 
-
-class Export(openerpweb.Controller):
+class Export(View):
     _cp_path = "/web/export"
 
     @openerpweb.jsonrequest
@@ -1578,13 +1580,7 @@ class Export(openerpweb.Controller):
             (prefix + '/' + k, prefix_string + '/' + v)
             for k, v in self.fields_info(req, model, export_fields).iteritems())
 
-
-class ExportFormat(object):
-    """
-    Superclass for export formats, should probably be an abc and have a way to
-    generate _cp_path from fmt but it's a pain to deal with conflicts with
-    ControllerType
-    """
+    #noinspection PyPropertyDefinition
     @property
     def content_type(self):
         """ Provides the format's content type """
@@ -1625,14 +1621,14 @@ class ExportFormat(object):
         else:
             columns_headers = [val['label'].strip() for val in fields]
 
+
         return req.make_response(self.from_data(columns_headers, import_data),
             headers=[('Content-Disposition',
                             content_disposition(self.filename(model), req)),
                      ('Content-Type', self.content_type)],
             cookies={'fileToken': int(token)})
 
-
-class CSVExport(ExportFormat, http.Controller):
+class CSVExport(Export):
     _cp_path = '/web/export/csv'
     fmt = {'tag': 'csv', 'label': 'CSV'}
 
@@ -1667,8 +1663,7 @@ class CSVExport(ExportFormat, http.Controller):
         fp.close()
         return data
 
-
-class ExcelExport(ExportFormat, http.Controller):
+class ExcelExport(Export):
     _cp_path = '/web/export/xls'
     fmt = {
         'tag': 'xls',
@@ -1707,8 +1702,7 @@ class ExcelExport(ExportFormat, http.Controller):
         fp.close()
         return data
 
-
-class Reports(openerpweb.Controller):
+class Reports(View):
     _cp_path = "/web/report"
     POLLING_DELAY = 0.25
     TYPES_MAPPING = {
