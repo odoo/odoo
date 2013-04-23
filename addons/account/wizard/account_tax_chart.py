@@ -38,7 +38,7 @@ class account_tax_chart(osv.osv_memory):
 
     def _get_period(self, cr, uid, context=None):
         """Return default period value"""
-        period_ids = self.pool.get('account.period').find(cr, uid)
+        period_ids = self.pool.get('account.period').find(cr, uid, context=context)
         return period_ids and period_ids[0] or False
 
     def account_tax_chart_open_window(self, cr, uid, ids, context=None):
