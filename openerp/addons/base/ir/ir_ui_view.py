@@ -103,7 +103,7 @@ class view(osv.osv):
             else:
                 inferred_type = etree.fromstring(values['arch'].encode('utf8')).tag
             values['name'] = "%s %s" % (values['model'], inferred_type)
-        return super(osv.osv, self).create(cr, uid, values, context)
+        return super(view, self).create(cr, uid, values, context)
 
     def _relaxng(self):
         if not self._relaxng_validator:

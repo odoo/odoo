@@ -44,7 +44,7 @@ openerp.base = function(instance) {
                             } else {
                                 sessionStorage.removeItem('apps.login');
                                 sessionStorage.removeItem('apps.access_token');
-                                client.bind_crendentials(client.dbname, 'anonymous', 'anonymous');
+                                client.bind_credentials(client.dbname, 'anonymous', 'anonymous');
                                 client.authenticate().then(
                                    function() {     /* done */
                                     d.resolve(client);

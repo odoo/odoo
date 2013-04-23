@@ -241,6 +241,9 @@ class Worker(object):
         self.request_max = multi.limit_request
         self.request_count = 0
 
+    def setproctitle(self, title=""):
+        setproctitle('openerp: %s %s %s' % (self.__class__.__name__, self.pid, title))
+
     def close(self):
         os.close(self.watchdog_pipe[0])
         os.close(self.watchdog_pipe[1])
@@ -290,7 +293,7 @@ class Worker(object):
 
     def start(self):
         self.pid = os.getpid()
-        setproctitle('openerp: %s %s' % (self.__class__.__name__, self.pid))
+        self.setproctitle()
         _logger.info("Worker %s (%s) alive", self.__class__.__name__, self.pid)
         # Reseed the random number generator
         random.seed()
@@ -413,6 +416,7 @@ class WorkerCron(Worker):
         if len(db_names):
             self.db_index = (self.db_index + 1) % len(db_names)
             db_name = db_names[self.db_index]
+            self.setproctitle(db_name)
             if rpc_request_flag:
                 start_time = time.time()
                 start_rss, start_vms = psutil.Process(os.getpid()).get_memory_info()
@@ -422,6 +426,7 @@ class WorkerCron(Worker):
                 import openerp.addons.base as base
                 acquired = base.ir.ir_cron.ir_cron._acquire_job(db_name)
                 if not acquired:
+                    openerp.modules.registry.RegistryManager.delete(db_name)
                     break
             # dont keep cursors in multi database mode
             if len(db_names) > 1:
