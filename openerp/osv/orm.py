@@ -2152,7 +2152,7 @@ class BaseModel(object):
             return reduce(
                 lambda s, descendant: apply_inheritance_specs(
                     cr, user, self._name, inherit_id, s, *descendant, context=context),
-                self.pool['ir.ui.view'].iter(cr, user, inherit_id, self._name, context=context),
+                self.pool['ir.ui.view'].iter(cr, user, inherit_id, self._name, exclude_base=True, context=context),
                 source)
 
         result = {'type': view_type, 'model': self._name}
