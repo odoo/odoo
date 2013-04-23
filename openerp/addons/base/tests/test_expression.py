@@ -263,7 +263,7 @@ class test_expression(common.TransactionCase):
             "_auto_join on: ('child_ids.bank_ids.id', 'in', [..]) query incorrect join condition")
         self.assertIn('"res_partner__child_ids"."id"="res_partner__child_ids__bank_ids"."partner_id"', sql_query[1],
             "_auto_join on: ('child_ids.bank_ids.id', 'in', [..]) query incorrect join condition")
-        self.assertEqual(set([b_aa, b_ba]), set(sql_query[2]),
+        self.assertEqual(set([b_aa, b_ba]), set(sql_query[2][-2:]),
             "_auto_join on: ('child_ids.bank_ids.id', 'in', [..]) query incorrect parameter")
 
         # --------------------------------------------------
