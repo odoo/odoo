@@ -12,14 +12,7 @@ openerp.gamification = function(instance) {
             this.challenge_suggestions = {};
         },
         events: {
-            'click a.oe_update_goal': function(event) {
-                var self = this;
-                var goal_id = parseInt(event.currentTarget.id, 10);
-                var goal_updated = new instance.web.Model('gamification.goal').call('update', [[goal_id]]);
-                $.when(goal_updated).done(function() {
-                    self.get_goal_todo_info();
-                });
-            },
+            // update a plan and related goals
             'click a.oe_update_plan': function(event) {
                 var self = this;
                 var plan_id = parseInt(event.currentTarget.id, 10);
@@ -28,6 +21,7 @@ openerp.gamification = function(instance) {
                     self.get_goal_todo_info();
                 });
             },
+            // action to modify a goal
             'click a.oe_goal_action': function(event) {
                 var self = this;
                 var goal_id = parseInt(event.currentTarget.id, 10);
@@ -41,6 +35,7 @@ openerp.gamification = function(instance) {
                     });
                 });
             },
+            // get more info about a challenge request
             'click a.oe_challenge_reply': function(event) {
                 var self = this;
                 var plan_id = parseInt(event.currentTarget.id, 10);

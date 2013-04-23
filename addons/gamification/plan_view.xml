@@ -35,7 +35,7 @@
                 <form string="Goal types" version="7.0">
                     <header>
                         <button string="Start Now" type="object" name="action_start" states="draft" class="oe_highlight"/>
-                        <button string="Check Challenge" type="object" name="action_check" states="inprogress"/>
+                        <button string="Refresh Challenge" type="object" name="action_check" states="inprogress"/>
                         <button string="Close Challenge" type="object" name="action_close" states="inprogress" class="oe_highlight"/>
                         <button string="Reset to Draft" type="object" name="action_cancel" states="inprogress"/>
                         <button string="Reset Completion" type="object" name="action_reset" states="done"/>
@@ -92,8 +92,7 @@
                                     <field name="reward_failure" attrs="{'invisible': [('reward_first_id','=', False)]}" />
                                 </group>
                                 <div class="oe_grey">
-                                    <p>Badges are granted when a challenge is finished. This is either when at the end of a running period (eg: end of the month for a monthly challenge) or at the end date of a challenge (if no periodicity is set).</p>
-                                    <p>Ranking is done on the number of succeeded goals and the percentage of each one.</p>
+                                    <p>Badges are granted when a challenge is finished. This is either at the end of a running period (eg: end of the month for a monthly challenge), at the end date of a challenge (if no periodicity is set) or when the challenge is manually closed.</p>
                                 </div>
                             </page>
                             <page string="Advanced Options">

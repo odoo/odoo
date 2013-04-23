@@ -21,6 +21,7 @@
 
 from openerp.osv import fields, osv
 from openerp.tools.safe_eval import safe_eval
+from openerp.tools.translate import _
 
 from templates import TemplateHelper
 
@@ -138,17 +139,17 @@ class gamification_goal(osv.Model):
         """Return the percentage of completeness of the goal, between 0 and 100"""
         res = {}
         for goal in self.browse(cr, uid, ids, context):
-            # if goal.computation_mode == 'higher':
+            if goal.type_condition == 'higher':
                 if goal.current > 0:
                     res[goal.id] = min(100, round(100.0 * goal.current / goal.target_goal, 2))
                 else:
                     res[goal.id] = 0.0
-            # else:
-            #     # a goal 'lower than' has only two values possible: 0 or 100%
-            #     if goal.current < goal.target_goal:
-            #         res[goal.id] = 100.0
-            #     else:
-            #         res[goal.id] = 0.0
+            else:
+                # a goal 'lower than' has only two values possible: 0 or 100%
+                if goal.current < goal.target_goal:
+                    res[goal.id] = 100.0
+                else:
+                    res[goal.id] = 0.0
         return res
 
     def on_change_type_id(self, cr, uid, ids, type_id=False, context=None):
@@ -342,8 +343,8 @@ class gamification_goal(osv.Model):
         """Overwrite the write method to update the last_update field to today
 
         If the current value is changed and the report frequency is set to On
-        change, a report is generated"""
-
+        change, a report is generated
+        """
         vals['last_update'] = fields.date.today()
         result = super(gamification_goal, self).write(cr, uid, ids, vals, context=context)
         for goal in self.browse(cr, uid, ids, context=context):
