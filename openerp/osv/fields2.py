@@ -80,6 +80,12 @@ class Field(object):
         """ return the null value for this field at the record level """
         return False
 
+    def format_read(self, value):
+        """ convert the record-level value as returned by method
+            :meth:`openerp.osv.orm.BaseModel.read`
+        """
+        return value
+
 
 class Integer(Field):
     """ Integer field. """

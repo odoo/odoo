@@ -24,10 +24,10 @@ class TestNewFields(common.TransactionCase):
         self.assertEqual(partner['children_count'], partner.children_count)
 
         # read field as a record item
-        # values = partner.read(['children_count'])
-        # self.assertIsInstance(values, dict)
-        # self.assertIsInstance(values['children_count'], (int, long))
-        # self.assertEqual(values['children_count'], partner.children_count)
+        values = partner.read(['children_count'])
+        self.assertIsInstance(values, dict)
+        self.assertIsInstance(values['children_count'], (int, long))
+        self.assertEqual(values['children_count'], partner.children_count)
 
     def test_non_stored(self):
         """ test non-stored fields """

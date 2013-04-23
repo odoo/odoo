@@ -297,6 +297,20 @@ _browse_functions = {
 }
 
 
+#
+# Helper functions to return field values as the method read should.
+#
+
+_read_default = lambda value: value
+
+_read_functions = {
+    'many2one': lambda value: bool(value) and value.name_get(),
+    'many2many': lambda value: value.unbrowse(),
+    'one2many': lambda value: value.unbrowse(),
+    'reference': lambda value: bool(value) and "%s,%s" % (value._name, value._id),
+}
+
+
 def pg_varchar(size=0):
     """ Returns the VARCHAR declaration for the provided size:
 
@@ -3421,7 +3435,44 @@ class BaseModel(object):
         return fields
 
     def read(self, cr, user, ids, fields=None, context=None, load='_classic_read'):
-        """ Read records with given ids with the given fields
+        """ Read the given fields of the records.
+
+            :param fields: optional list of field names to return
+            :param load: ignore this, this is for compatibility purpose
+            :return: list of dictionaries with the requested fields
+        """
+        # This method is defined with the old-style signature, because of sloppy
+        # positional calls that result in wrongly assigning parameters 'load'
+        # and 'context'.
+
+        # use the new-style API internally
+        recs = self.browse(ids, scoped=False)
+
+        # split up fields into old-style and pure new-style ones
+        if fields is None:
+            old_fields = set(self._columns)
+            new_fields = set(self._fields) - old_fields
+        else:
+            new_fields = set(fields) & (set(self._fields) - set(self._columns))
+            old_fields = set(fields) - new_fields
+
+        # read old-style fields with the low-level method
+        result = recs.recordset()._read(list(old_fields), load=load)
+
+        # read new-style fields with records
+        for f in new_fields:
+            format = self._fields[f].format_read
+            for values in result:
+                rec = self.record(values['id'])
+                values[f] = format(rec[f])
+
+        return result if recs.is_recordset() else (bool(result) and result[0])
+
+    def _read(self, cr, user, ids, fields=None, context=None, load='_classic_read'):
+        """ Read records with given ids with the given fields.
+
+            This method should be considered low-level, as it ignores new-style
+            fields. It should never be used by client code.
 
         :param cr: database cursor
         :param user: current user id
@@ -3475,7 +3526,7 @@ class BaseModel(object):
                      ] + self._inherits.values()
 
         res = []
-        if len(fields_pre):
+        if fields_pre or rule_clause:
             def convert_field(f):
                 f_qual = '%s."%s"' % (self._table, f) # need fully-qualified references in case len(tables) > 1
                 if f in ('create_date', 'write_date'):
@@ -5368,7 +5419,10 @@ class BaseModel(object):
 
             if self._id not in model_cache[field_name]:
                 # determine which fields to fetch
-                if column._prefetch:
+                if column._prefetch and not self.pool._init:
+                    # Note: do not prefetch fields when self.pool._init is True,
+                    # because some columns may be missing from the database!
+                    #
                     # fetch all classic and many2one fields
                     field_names = [
                         fname for fname, cinfo in self._all_columns.iteritems()
@@ -5403,7 +5457,7 @@ class BaseModel(object):
         """ read the given fields in the record cache """
         cache = self.scope.cache
 
-        # read the fields
+        # read the (old-style only) fields
         result = self.browse(ids).read(field_names, load="_classic_write")
 
         # process result field by field
