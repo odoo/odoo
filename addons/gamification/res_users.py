@@ -19,7 +19,7 @@ class res_users_gamification_group(osv.Model):
             goal_plan_obj = self.pool.get('gamification.goal.plan')
             plan_ids = goal_plan_obj.search(cr, uid, [('autojoin_group_id', 'in', user_group_ids)], context=context)
 
-            goal_plan_obj.plan_subscribe_users(cr, uid, plan_ids, ids, context=context)
+            self.write(cr, uid, [plan.id], {'user_ids': [(4, user_id) for user_id in ids]}, context=context)
 
         if vals.get('image'):
             self.pool.get('gamification.goal').changed_users_avatar(cr, uid, ids, context)
@@ -141,5 +141,5 @@ class res_groups_gamification_group(osv.Model):
             goal_plan_obj = self.pool.get('gamification.goal.plan')
             plan_ids = goal_plan_obj.search(cr, uid, [('autojoin_group_id', 'in', ids)], context=context)
 
-            goal_plan_obj.plan_subscribe_users(cr, uid, plan_ids, user_ids, context=context)
+            self.write(cr, uid, [plan.id], {'user_ids': [(4, user_id) for user_id in user_ids]}, context=context)
         return write_res
