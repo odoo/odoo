@@ -22,7 +22,7 @@
     'name': 'CRM Gamification',
     'version': '1.0',
     'author': 'OpenERP SA',
-    'category': 'CRM',
+    'category': 'hidden',
     'depends': ['gamification','sale_crm'],
     'description': """Example of goal types and plans that can be used related to the usage of the CRM Sale module.""",
 

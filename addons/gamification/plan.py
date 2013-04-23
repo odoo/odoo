@@ -757,6 +757,16 @@ class gamification_goal_planline(osv.Model):
                 result[p_id] = True
         return result.keys()
 
+    def on_change_type_id(self, cr, uid, ids, type_id=False, context=None):
+        goal_type = self.pool.get('gamification.goal.type')
+        if not type_id:
+            return {'value': {'type_id': False}}
+        goal_type = goal_type.browse(cr, uid, type_id, context=context)
+        ret = {'value': {
+            'type_condition': goal_type.condition,
+            'type_full_suffix': goal_type.full_suffix}}
+        return ret
+
     _columns = {
         'name': fields.related('type_id', 'name', string="Name"),
         'plan_id': fields.many2one('gamification.goal.plan',

@@ -79,7 +79,7 @@
                                 <div>
                                     <field name="current" class="oe_inline"/>
                                     <button string="refresh" type="object" name="update" class="oe_link" attrs="{'invisible':['|',('computation_mode', '=', 'manually'),('state', '=', 'draft')]}" />
-                                    <div class="oe_grey">
+                                    <div class="oe_grey" attrs="{'invisible':[('type_id', '=', False)]}">
                                         Reached when current value is <strong><field name="type_condition" class="oe_inline"/></strong> than the target.
                                     </div>
                                 </div>

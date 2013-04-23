@@ -22,7 +22,7 @@
     'name': 'HR Gamification',
     'version': '1.0',
     'author': 'OpenERP SA',
-    'category': 'HR',
+    'category': 'hidden',
     'depends': ['gamification', 'hr'],
     'description': """Use the HR ressources for the gamification process.
 

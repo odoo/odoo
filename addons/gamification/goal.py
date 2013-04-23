@@ -157,7 +157,7 @@ class gamification_goal(osv.Model):
         if not type_id:
             return {'value': {'type_id': False}}
         goal_type = goal_type.browse(cr, uid, type_id, context=context)
-        ret = {'value': {'computation_mode': goal_type.computation_mode}}
+        ret = {'value': {'computation_mode': goal_type.computation_mode, 'type_condition': goal_type.condition}}
         return ret
 
     _columns = {

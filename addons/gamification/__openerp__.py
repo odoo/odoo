@@ -22,7 +22,7 @@
     'name': 'Gamification',
     'version': '1.0',
     'author': 'OpenERP SA',
-    'category': 'Human Resources',
+    'category': 'Human Ressources',
     'depends': ['mail'],
     'description': """
 Gamification process
