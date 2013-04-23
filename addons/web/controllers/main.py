@@ -768,20 +768,11 @@ class Database(openerpweb.Controller):
     @openerpweb.jsonrequest
     def duplicate(self, req, fields):
         params = dict(map(operator.itemgetter('name', 'value'), fields))
-        return req.session.proxy("db").duplicate_database(
-            params['super_admin_pwd'],
-            params['db_original_name'],
-            params['db_name'])
-
-    @openerpweb.jsonrequest
-    def duplicate(self, req, fields):
-        params = dict(map(operator.itemgetter('name', 'value'), fields))
         duplicate_attrs = (
             params['super_admin_pwd'],
             params['db_original_name'],
             params['db_name'],
         )
-
         return req.session.proxy("db").duplicate_database(*duplicate_attrs)
 
     @openerpweb.jsonrequest
@@ -789,13 +780,17 @@ class Database(openerpweb.Controller):
         password, db = operator.itemgetter(
             'drop_pwd', 'drop_db')(
                 dict(map(operator.itemgetter('name', 'value'), fields)))
-
+        error = {'error':_('Could not drop database !'), 'title': _('Drop Database') }
         try:
-            return req.session.proxy("db").drop(password, db)
+            proxy = req.session.proxy("db")
+            if db in proxy.list(True):
+                return proxy.drop(password, db)
+            else:
+                 error.update({'error': "Database '%s' does not exist !" % db})
         except xmlrpclib.Fault, e:
             if e.faultCode and e.faultCode.split(':')[0] == 'AccessDenied':
-                return {'error': e.faultCode, 'title': 'Drop Database'}
-        return {'error': _('Could not drop database !'), 'title': _('Drop Database')}
+                error.update({'error': e.faultCode})
+        return error
 
     @openerpweb.httprequest
     def backup(self, req, backup_db, backup_pwd, token):
