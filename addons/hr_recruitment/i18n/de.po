@@ -14,8 +14,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-12-22 05:58+0000\n"
-"X-Generator: Launchpad (build 16378)\n"
+"X-Launchpad-Export-Date: 2013-03-16 05:42+0000\n"
+"X-Generator: Launchpad (build 16532)\n"
 
 #. module: hr_recruitment
 #: help:hr.applicant,active:0
@@ -120,7 +120,7 @@ msgid "Sources of Applicants"
 msgstr "Herkunft der Bewerber"
 
 #. module: hr_recruitment
-#: code:addons/hr_recruitment/hr_recruitment.py:435
+#: code:addons/hr_recruitment/hr_recruitment.py:445
 #, python-format
 msgid "You must define Applied Job for this applicant."
 msgstr "Sie müssen den beantragten Job für diesen Bewerber definieren."
@@ -317,7 +317,7 @@ msgstr ""
 "weiterzuarbeiten."
 
 #. module: hr_recruitment
-#: code:addons/hr_recruitment/hr_recruitment.py:435
+#: code:addons/hr_recruitment/hr_recruitment.py:445
 #, python-format
 msgid "Warning!"
 msgstr "Warnung!"
@@ -400,7 +400,7 @@ msgstr "Monster"
 #. module: hr_recruitment
 #: model:mail.message.subtype,name:hr_recruitment.mt_applicant_hired
 msgid "Applicant Hired"
-msgstr ""
+msgstr "Bewerber wurde eingestellt"
 
 #. module: hr_recruitment
 #: field:hr.applicant,email_from:0
@@ -533,7 +533,7 @@ msgid "Applicants"
 msgstr "Bewerber"
 
 #. module: hr_recruitment
-#: code:addons/hr_recruitment/hr_recruitment.py:351
+#: code:addons/hr_recruitment/hr_recruitment.py:360
 #, python-format
 msgid "No Subject"
 msgstr "Kein Betreff"
@@ -554,7 +554,9 @@ msgid "Gives the sequence order when displaying a list of stages."
 msgstr "Zeigt Reihenfolge bei Listenansicht der Einstellungsstufen."
 
 #. module: hr_recruitment
+#: code:addons/hr_recruitment/hr_recruitment.py:347
 #: field:hr.applicant,partner_id:0
+#, python-format
 msgid "Contact"
 msgstr "Kontakt"
 
@@ -615,7 +617,7 @@ msgstr "Einstellen & Erstellen Mitarbeiter"
 #. module: hr_recruitment
 #: model:mail.message.subtype,description:hr_recruitment.mt_applicant_hired
 msgid "Applicant hired"
-msgstr ""
+msgstr "Bewerber wurde eingestellt"
 
 #. module: hr_recruitment
 #: view:hr.applicant:0
@@ -699,7 +701,7 @@ msgstr "oder"
 #. module: hr_recruitment
 #: model:mail.message.subtype,name:hr_recruitment.mt_applicant_refused
 msgid "Applicant Refused"
-msgstr ""
+msgstr "Bewerbung wurde abgelehnt"
 
 #. module: hr_recruitment
 #: view:hr.applicant:0
@@ -807,10 +809,10 @@ msgid "Schedule interview with this applicant"
 msgstr "Terminiere ein Interview mit Bewerber"
 
 #. module: hr_recruitment
-#: code:addons/hr_recruitment/hr_recruitment.py:397
+#: code:addons/hr_recruitment/hr_recruitment.py:407
 #, python-format
 msgid "Applicant <b>created</b>"
-msgstr ""
+msgstr "Bewerbung wurde <b>eingegeben</b>"
 
 #. module: hr_recruitment
 #: view:hr.applicant:0
@@ -1041,7 +1043,7 @@ msgstr ""
 #. module: hr_recruitment
 #: model:mail.message.subtype,description:hr_recruitment.mt_stage_changed
 msgid "Stage changed"
-msgstr ""
+msgstr "Stufe geändert"
 
 #. module: hr_recruitment
 #: view:hr.applicant:0
@@ -1115,7 +1117,7 @@ msgstr "Beschreibung"
 #. module: hr_recruitment
 #: model:mail.message.subtype,name:hr_recruitment.mt_stage_changed
 msgid "Stage Changed"
-msgstr ""
+msgstr "Stufe wurde geändert"
 
 #. module: hr_recruitment
 #: selection:hr.recruitment.report,month:0
@@ -1268,7 +1270,7 @@ msgstr "Nachrichten und Kommunikations-Historie"
 #. module: hr_recruitment
 #: model:mail.message.subtype,description:hr_recruitment.mt_applicant_refused
 msgid "Applicant refused"
-msgstr ""
+msgstr "Bewerbung wurde abgelehnt"
 
 #. module: hr_recruitment
 #: field:hr.recruitment.stage,department_id:0

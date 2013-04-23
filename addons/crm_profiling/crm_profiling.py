@@ -150,7 +150,6 @@ class question(osv.osv):
         'answers_ids': fields.one2many("crm_profiling.answer","question_id","Avalaible Answers",),
         }
 
-question()
 
 
 class questionnaire(osv.osv):
@@ -166,7 +165,6 @@ class questionnaire(osv.osv):
                                 'questionnaire', 'question', "Questions"),
     }
 
-questionnaire()
 
 
 class answer(osv.osv):
@@ -176,7 +174,6 @@ class answer(osv.osv):
         "name": fields.char("Answer",size=128, required=True),
         "question_id": fields.many2one('crm_profiling.question',"Question"),
         }
-answer()
 
 
 class partner(osv.osv):
@@ -214,7 +211,6 @@ class partner(osv.osv):
             vals['category_id']=[[6, 0, _recompute_categ(self, cr, uid, ids[0], vals['answers_ids'][0][2])]]
         return super(partner, self).write(cr, uid, ids, vals, context=context)
 
-partner()
 
 
 class crm_segmentation(osv.osv):
@@ -289,7 +285,6 @@ class crm_segmentation(osv.osv):
             self.write(cr, uid, [id], {'state':'not running', 'partner_id':0})
         return True
 
-crm_segmentation()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

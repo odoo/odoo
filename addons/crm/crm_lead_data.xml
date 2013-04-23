@@ -7,59 +7,60 @@
             <field name="name">New</field>
             <field eval="1" name="case_default"/>
             <field name="state">draft</field>
-            <field eval="'10'" name="probability"/>
-            <field eval="'10'" name="sequence"/>
+            <field eval="0" name="probability"/>
+            <field eval="10" name="sequence"/>
             <field name="type">both</field>
         </record>
         <record model="crm.case.stage" id="stage_lead2">
             <field name="name">Opportunity</field>
             <field eval="1" name="case_default"/>
             <field name="state">open</field>
-            <field eval="'20'" name="probability"/>
-            <field eval="'11'" name="sequence"/>
+            <field eval="20" name="probability"/>
+            <field eval="20" name="sequence"/>
             <field name="type">lead</field>
-        </record>
-        <record model="crm.case.stage" id="stage_lead3">
-            <field name="name">Qualification</field>
-            <field eval="1" name="case_default"/>
-            <field name="state">open</field>
-            <field eval="'20'" name="probability"/>
-            <field eval="'12'" name="sequence"/>
-            <field name="type">opportunity</field>
-        </record>
-        <record model="crm.case.stage" id="stage_lead4">
-            <field name="name">Proposition</field>
-            <field eval="1" name="case_default"/>
-            <field name="state">open</field>
-            <field eval="'40'" name="probability"/>
-            <field eval="'13'" name="sequence"/>
-            <field name="type">opportunity</field>
-        </record>
-        <record model="crm.case.stage" id="stage_lead5">
-            <field name="name">Negotiation</field>
-            <field eval="1" name="case_default"/>
-            <field name="state">open</field>
-            <field eval="'60'" name="probability"/>
-            <field eval="'14'" name="sequence"/>
-            <field name="type">opportunity</field>
-        </record>
-        <record model="crm.case.stage" id="stage_lead6">
-            <field name="name">Won</field>
-            <field eval="1" name="case_default"/>
-            <field name="state">done</field>
-            <field eval="'100'" name="probability"/>
-            <field eval="'15'" name="sequence"/>
-            <field eval="1" name="on_change"/>
-            <field name="type">opportunity</field>
         </record>
         <record model="crm.case.stage" id="stage_lead7">
             <field name="name">Dead</field>
             <field eval="1" name="case_default"/>
             <field eval="False" name="fold"/>
             <field name="state">cancel</field>
-            <field eval="'0'" name="probability"/>
-            <field eval="'16'" name="sequence"/>
+            <field eval="0" name="probability"/>
+            <field eval="30" name="sequence"/>
             <field name="type">lead</field>
+        </record>
+        <record model="crm.case.stage" id="stage_lead3">
+            <field name="name">Qualification</field>
+            <field eval="1" name="case_default"/>
+            <field name="state">open</field>
+            <field eval="20" name="probability"/>
+            <field eval="100" name="sequence"/>
+            <field name="type">opportunity</field>
+        </record>
+        <record model="crm.case.stage" id="stage_lead4">
+            <field name="name">Proposition</field>
+            <field eval="1" name="case_default"/>
+            <field name="state">open</field>
+            <field eval="40" name="probability"/>
+            <field eval="110" name="sequence"/>
+            <field name="type">opportunity</field>
+        </record>
+        <record model="crm.case.stage" id="stage_lead5">
+            <field name="name">Negotiation</field>
+            <field eval="1" name="case_default"/>
+            <field name="state">open</field>
+            <field eval="60" name="probability"/>
+            <field eval="120" name="sequence"/>
+            <field name="type">opportunity</field>
+        </record>
+        <record model="crm.case.stage" id="stage_lead6">
+            <field name="name">Won</field>
+            <field eval="True" name="fold"/>
+            <field eval="1" name="case_default"/>
+            <field name="state">done</field>
+            <field eval="100" name="probability"/>
+            <field eval="130" name="sequence"/>
+            <field eval="1" name="on_change"/>
+            <field name="type">opportunity</field>
         </record>
         <record model="crm.case.stage" id="stage_lead8">
             <field name="name">Lost</field>
@@ -67,8 +68,8 @@
             <field eval="True" name="fold"/>
             <field eval="1" name="on_change"/>
             <field name="state">cancel</field>
-            <field eval="'0'" name="probability"/>
-            <field eval="'17'" name="sequence"/>
+            <field eval="0" name="probability"/>
+            <field eval="140" name="sequence"/>
             <field name="type">opportunity</field>
         </record>
         
@@ -171,11 +172,13 @@
         <record id="mt_lead_stage" model="mail.message.subtype">
             <field name="name">Stage Changed</field>
             <field name="res_model">crm.lead</field>
+            <field name="default" eval="False"/>
             <field name="description">Stage changed</field>
         </record>
         <record id="mt_lead_won" model="mail.message.subtype">
             <field name="name">Opportunity Won</field>
             <field name="res_model">crm.lead</field>
+            <field name="default" eval="False"/>
             <field name="description">Opportunity won</field>
         </record>
         <record id="mt_lead_lost" model="mail.message.subtype">
@@ -217,6 +220,18 @@
             <field name="default" eval="False"/>
             <field name="parent_id" eval="ref('mt_lead_lost')"/>
             <field name="relation_field">section_id</field>
+        </record>
+
+        <!--Definition of an email template with an empty body that will be used in opportunity mailing.
+            Used to give a basis for email recipients, name and to ease the definition of a further
+            elaborated template.  -->
+        <record id="email_template_opportunity_mail" model="email.template">
+            <field name="name">Lead/Opportunity Mass Mail</field>
+            <field name="model_id" ref="crm.model_crm_lead"/>
+            <field name="auto_delete" eval="True"/>
+            <field name="partner_to">${object.partner_id != False and object.partner_id.id}</field>
+            <field name="email_to">${not object.partner_id and object.email_from}</field>
+            <field name="body_html"></field>
         </record>
 
     </data>

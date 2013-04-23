@@ -23,7 +23,6 @@ from openerp.osv import fields
 from openerp.osv import osv
 import base64
 from openerp.tools.translate import _
-from openerp import addons
 
 class base_report_designer_installer(osv.osv_memory):
     _name = 'base_report_designer.installer'
@@ -31,13 +30,13 @@ class base_report_designer_installer(osv.osv_memory):
 
     def default_get(self, cr, uid, fields, context=None):
         data = super(base_report_designer_installer, self).default_get(cr, uid, fields, context=context)
-        plugin_file = open(addons.get_module_resource('base_report_designer','plugin', 'openerp_report_designer.zip'),'rb')
-        data['plugin_file'] = base64.encodestring(plugin_file.read())
+        base_url = self.pool.get('ir.config_parameter').get_param(cr, uid, 'web.base.url')
+        data['plugin_file'] = base_url + '/base_report_designer/static/base-report-designer-plugin/openerp_report_designer.zip'
         return data
 
     _columns = {
         'name':fields.char('File name', size=34),
-        'plugin_file':fields.binary('OpenObject Report Designer Plug-in', readonly=True, help="OpenObject Report Designer plug-in file. Save as this file and install this plug-in in OpenOffice."),
+        'plugin_file':fields.char('OpenObject Report Designer Plug-in', size=256, readonly=True, help="OpenObject Report Designer plug-in file. Save as this file and install this plug-in in OpenOffice."),
         'description':fields.text('Description', readonly=True)
     }
 
@@ -58,6 +57,5 @@ class base_report_designer_installer(osv.osv_memory):
             4. if your connection success, A message appears like 'You can start creating your report in current document.'.
         """
     }
-base_report_designer_installer()
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

@@ -166,7 +166,6 @@ class delivery_carrier(osv.osv):
         self.create_grid_lines(cr, uid, [res_id], vals, context=context)
         return res_id
 
-delivery_carrier()
 
 class delivery_grid(osv.osv):
     _name = "delivery.grid"
@@ -223,7 +222,6 @@ class delivery_grid(osv.osv):
         return price
 
 
-delivery_grid()
 
 class delivery_grid_line(osv.osv):
     _name = "delivery.grid.line"
@@ -249,6 +247,5 @@ class delivery_grid_line(osv.osv):
     }
     _order = 'list_price'
 
-delivery_grid_line()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

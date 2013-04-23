@@ -149,7 +149,7 @@
                 <field name="location_id" filter_domain="[('location_id', 'child_of', self)]"/>
                 <field name="company_id" groups="base.group_multi_company"/>
                 <group expand="0" string="Extended Filters...">
-                    <field name="partner_id" context="{'contact_display':'partner'}"/>
+                    <field name="partner_id" context="{'contact_display':'partner'}" filter_domain="[('partner_id', 'child_of', self)]"/>
                     <field name="product_categ_id" />
                     <field name="prodlot_id"/>
                     <field name="state"/>

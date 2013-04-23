@@ -45,6 +45,7 @@
     partner_id: base.res_partner_12
 - 
   !python {model: purchase.requisition.partner}: |
+    context.update({"mail_create_nolog" : True })
     self.create_order(cr, uid, [ref("requisition_partner_0")], context=context)
 -
   I check that the RFQ details which created for supplier.
@@ -69,10 +70,8 @@
   I confirmed RFQ which has best price.
 -
   !python {model: purchase.order}: |
-    import netsvc
-    wf_service = netsvc.LocalService("workflow")
     purchase = self.browse(cr, uid, ref('rfq2'), context=context)
-    wf_service.trg_validate(uid, 'purchase.order', purchase.id, 'purchase_confirm', cr)
+    self.signal_purchase_confirm(cr, uid, [purchase.id])
 
 -
   I check status of requisition after confirmed best RFQ.
@@ -84,7 +83,9 @@
   I print a Requisition report
 - 
   !python {model: purchase.requisition}: |
-    import netsvc, tools, os
-    (data, format) = netsvc.LocalService('report.purchase.requisition').create(cr, uid, [ref('purchase_requisition.requisition1')], {}, {})
+    import os
+    import openerp.report
+    from openerp import tools
+    data, format = openerp.report.render_report(cr, uid, [ref('purchase_requisition.requisition1')], 'purchase.requisition', {}, {})
     if tools.config['test_report_directory']:
         file(os.path.join(tools.config['test_report_directory'], 'purchase_requisition-purchase_requisition_report.'+format), 'wb+').write(data)

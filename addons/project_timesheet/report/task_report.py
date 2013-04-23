@@ -79,6 +79,5 @@ class report_timesheet_task_user(osv.osv):
                 to_char(to_date(months.name, 'YYYY/MM/DD'),'MM')
               ) """)
 
-report_timesheet_task_user()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

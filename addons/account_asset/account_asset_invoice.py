@@ -35,7 +35,6 @@ class account_invoice(osv.osv):
         res['asset_id'] = x.get('asset_id', False)
         return res
 
-account_invoice()
 
 class account_invoice_line(osv.osv):
 
@@ -66,6 +65,5 @@ class account_invoice_line(osv.osv):
                     asset_obj.validate(cr, uid, [asset_id], context=context)
         return True
 
-account_invoice_line()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
