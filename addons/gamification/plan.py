@@ -612,21 +612,20 @@ class gamification_goal_plan(osv.Model):
         """Actions for the end of a challenge
 
         If a reward was selected, grant it to the correct users.
-        The TOP 3 reward should be granted at:
+        Rewards granted at:
             - the end date for a challenge with no periodicity
             - the end of a period for challenge with periodicity
             - when a challenge is manually closed
-        The every success reward should be granted at:
-            - the end date for a challenge with no periodicity
-            - the end of a period for challenge with periodicity
-            - as soon as a user reach every goal of a plan
-        (can not reward TOP 3 for challenge/goals with no end date)
+        (if no end date, a running challenge is never rewarded)
         """
         for plan in self.browse(cr, uid, plan_ids, context=context):
             (start_date, end_date) = start_end_date_for_period(plan.period, plan.start_date, plan.end_date)
             yesterday = date.today() - timedelta(days=1)
             if end_date == yesterday.isoformat() or force:
-                # reward everybody
+                # open chatter message
+                message_body = "The challenge %s is finished." % plan.name
+
+                # reward for everybody succeeding
                 rewarded_users = []
                 if plan.reward_id:
                     for user in plan.user_ids:
@@ -641,29 +640,28 @@ class gamification_goal_plan(osv.Model):
                             self.reward_user(cr, uid, user.id, plan.reward_id.id, context)
                             rewarded_users.append(user)
 
+                    if rewarded_users:
+                        message_body += "<br/>Reward (badge %s) for every succeeding user was sent to %s." % (plan.reward_id.name, ", ".join([user.name for user in rewarded_users]))
+                    else:
+                        message_body += "<br/>Nobody succeeded every goal, no reward is then sent for this challenge."
+
                 # reward bests
-                best_users = []
                 if plan.reward_first_id:
                     (first_user, second_user, third_user) = self.get_top3_users(cr, uid, plan, context)
                     if first_user:
                         self.reward_user(cr, uid, first_user.id, plan.reward_first_id.id, context)
-                        best_users.append(first_user)
+                        message_body += "<br/>Special rewards were sent to the top competing users. The ranking for this challenge is :"
+                        message_body += "<br/> 1. %s - %s" % (first_user.name, plan.reward_first_id.name)
+                    else:
+                        message_body += "Nobody reached the required conditions to receive special rewards."
+
                     if second_user and plan.reward_second_id:
                         self.reward_user(cr, uid, second_user.id, plan.reward_second_id.id, context)
-                        best_users.append(second_user)
+                        message_body += "<br/> 2. %s - %s" % (second_user.name, plan.reward_second_id.name)
                     if third_user and plan.reward_third_id:
                         self.reward_user(cr, uid, third_user.id, plan.reward_second_id.id, context)
-                        best_users.append(third_user)
+                        message_body += "<br/> 3. %s - %s" % (third_user.name, plan.reward_third_id.name)
 
-                print(end_date, force)
-                # open chatter message
-                message_body = "The challenge %s is finished." % plan.name
-                if rewarded_users:
-                    message_body += " Badge rewards were sent to %s." % ", ".join([user.name for user in rewarded_users])
-                if best_users:
-                    message_body += " Specials badges were sent to %s." % ", ".join([user.name for user in best_users])
-                if not rewarded_users and not best_users and (plan.reward_id or plan.reward_first_id):
-                    message_body += " No badge was granted as nobody reached the required conditions."
                 self.message_post(cr, uid, plan.id, body=message_body, context=context)
         return True
 
@@ -671,8 +669,15 @@ class gamification_goal_plan(osv.Model):
         """Get the top 3 users for a defined plan
 
         Ranking criterias:
-            - succeed every goal of the challenge
-            - total completeness of each goal (can be over 100)
+            1. succeed every goal of the challenge
+            2. total completeness of each goal (can be over 100)
+        Top 3 is computed only for users succeeding every goal of the challenge,
+        except if reward_failure is True, in which case every user is
+        considered.
+        :return: ('first', 'second', 'third'), tuple containing the res.users
+        objects of the top 3 users. If no user meets the criterias for a rank,
+        it is set to False. Nobody can receive a rank is noone receives the
+        higher one (eg: if 'second' == False, 'third' will be False)
         """
         goal_obj = self.pool.get('gamification.goal')
         (start_date, end_date) = start_end_date_for_period(plan.period, plan.start_date, plan.end_date)
@@ -699,7 +704,7 @@ class gamification_goal_plan(osv.Model):
 
             challengers.append({'user': user, 'all_reached': all_reached, 'total_completness': total_completness})
         sorted_challengers = sorted(challengers, key=lambda k: (k['all_reached'], k['total_completness']), reverse=True)
-        print(sorted_challengers)
+
         if len(sorted_challengers) == 0 or (not plan.reward_failure and not sorted_challengers[0]['all_reached']):
             # nobody succeeded
             return (False, False, False)
