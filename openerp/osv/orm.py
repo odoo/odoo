@@ -2068,7 +2068,7 @@ class BaseModel(object):
         root_view_id = View.get_root_ancestor(
             cr, user, view_id, self._name, view_type, context=context)
         root_view = View.read_combined(cr, user, root_view_id, fields=[
-            'id', 'name', 'field_parent', 'type', 'model'
+            'id', 'name', 'field_parent', 'type', 'model', 'arch'
         ], model=self._name, context=context)
         if root_view:
             result.update(

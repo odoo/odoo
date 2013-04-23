@@ -105,7 +105,6 @@ class TestViewInheritance(common.TransactionCase):
             'name': name,
             'arch': self.view_for(name),
             'inherit_id': parent,
-            'type': 'form',
         })
         self.ids[name] = view_id
         return view_id
