@@ -2085,17 +2085,16 @@ class BaseModel(object):
         parent_view_model = None
         view_ref = context.get(view_type + '_view_ref')
 
+        if view_ref and not view_id and '.' in view_ref:
+            module, view_ref = view_ref.split('.', 1)
+            cr.execute("SELECT res_id FROM ir_model_data WHERE model='ir.ui.view' AND module=%s AND name=%s", (module, view_ref))
+            view_ref_res = cr.fetchone()
+            if view_ref_res:
+                view_id = view_ref_res[0]
         view_fields = ['arch', 'name', 'field_parent', 'id',
                        'type', 'inherit_id', 'model']
         # Search for a root (i.e. without any parent) view.
         while True:
-            if view_ref and not view_id:
-                if '.' in view_ref:
-                    module, view_ref = view_ref.split('.', 1)
-                    cr.execute("SELECT res_id FROM ir_model_data WHERE model='ir.ui.view' AND module=%s AND name=%s", (module, view_ref))
-                    view_ref_res = cr.fetchone()
-                    if view_ref_res:
-                        view_id = view_ref_res[0]
             if view_id:
                 ids = [view_id]
             else:
