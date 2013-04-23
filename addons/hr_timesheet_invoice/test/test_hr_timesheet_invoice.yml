@@ -103,3 +103,18 @@
     assert aline.invoice_id == invoice_id, "Invoice doesn't match the one at analytic line"
     assert invoice_id.amount_untaxed == 187.5, "Invoice amount mismatch: %s" % invoice_id.amount_untaxed
     assert invoice_id.amount_tax == 50, "Invoice tax mismatch: %s" %  invoice_id.amount_tax
+-
+  I create final invoice for this analytic account.
+-
+  !record {model: hr.timesheet.invoice.create.final, id: hr_timesheet_invoice_create_final_0}:
+    date: 1
+    name: 1
+    price: 1
+    time: 1
+-
+  I click on "Create Invoice" button to create Invoice and validate the invoice.
+-
+  !python {model: hr.timesheet.invoice.create.final}: |
+    import netsvc
+    wkf_service = netsvc.LocalService("workflow")
+    res = self.do_create(cr, uid, [ref("hr_timesheet_invoice_create_final_0")], {"active_ids": [ref("account.analytic_agrolait")]})

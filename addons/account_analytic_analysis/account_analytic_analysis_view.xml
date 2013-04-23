@@ -98,8 +98,8 @@
                                 <field class="oe_inline" name="ca_to_invoice" attrs="{'invisible': [('invoice_on_timesheets','=',False)]}"/>
                             </td><td class="oe_timesheet_action" attrs="{'invisible': ['|',('invoice_on_timesheets','=',False),('type','=','template')]}">
                                 <span attrs="{'invisible': [('ca_to_invoice','=',0.0)]}" class="oe_grey">
-                                    <button name="hr_to_invoice_timesheets"
-                                        type="object"
+                                    <button name="%(hr_timesheet_invoice.action_hr_timesheet_invoice_create_final)d"
+                                        type="action"
                                         class="oe_link"
                                         string="⇒ Invoice"/>
                                     or view 
