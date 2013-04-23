@@ -20,7 +20,6 @@
 ##############################################################################
 
 import threading
-from openerp import pooler
 
 from openerp.osv import fields, osv
 
@@ -46,7 +45,7 @@ class procurement_compute_all(osv.osv_memory):
         """
         proc_obj = self.pool.get('procurement.order')
         #As this function is in a new thread, i need to open a new cursor, because the old one may be closed
-        new_cr = pooler.get_db(cr.dbname).cursor()
+        new_cr = self.pool.db.cursor()
         for proc in self.browse(new_cr, uid, ids, context=context):
             proc_obj.run_scheduler(new_cr, uid, automatic=proc.automatic, use_new_cursor=new_cr.dbname,\
                     context=context)
@@ -66,6 +65,5 @@ class procurement_compute_all(osv.osv_memory):
         threaded_calculation.start()
         return {'type': 'ir.actions.act_window_close'}
 
-procurement_compute_all()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

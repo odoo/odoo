@@ -14,8 +14,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-12-22 05:18+0000\n"
-"X-Generator: Launchpad (build 16378)\n"
+"X-Launchpad-Export-Date: 2013-03-16 05:02+0000\n"
+"X-Generator: Launchpad (build 16532)\n"
 
 #. module: delivery
 #: report:sale.shipping:0
@@ -30,7 +30,7 @@ msgstr "Auslieferung durch DHL"
 #. module: delivery
 #: view:delivery.grid.line:0
 msgid " in Function of "
-msgstr ""
+msgstr " in Bezug auf "
 
 #. module: delivery
 #: view:delivery.carrier:0
@@ -52,7 +52,7 @@ msgstr "Liefertarifposition"
 #: field:stock.move,weight_uom_id:0
 #: field:stock.picking,weight_uom_id:0
 msgid "Unit of Measure"
-msgstr ""
+msgstr "Einheit"
 
 #. module: delivery
 #: view:delivery.carrier:0
@@ -248,6 +248,8 @@ msgid ""
 "If you don't 'Add in Quote', the exact price will be computed when invoicing "
 "based on delivery order(s)."
 msgstr ""
+"Wenn Sie nicht 'Hinzufügen in Rechnung' aktivieren, wird der exakte Preis "
+"bei der Abrechnung im Rahmen der Lieferung berechnet."
 
 #. module: delivery
 #: field:delivery.carrier,partner_id:0
@@ -294,7 +296,7 @@ msgstr ""
 #. module: delivery
 #: field:delivery.carrier,free_if_more_than:0
 msgid "Free If Order Total Amount Is More Than"
-msgstr ""
+msgstr "Kostenfrei wenn Gesamtbetrag höher ist als"
 
 #. module: delivery
 #: field:delivery.grid.line,grid_id:0
@@ -451,6 +453,23 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Klicken Sie hier zur Erstellung einer neuen "
+"Auslieferungsmethode.\n"
+"              </p><p>\n"
+"                Jeder Frachtführer (z.B. UPS) kann verschiedene "
+"Auslieferungsmethoden (e.g.\n"
+"                UPS Express, UPS Standard) mit unterschiedlichen "
+"Tarifbedingungen anbieten.\n"
+"              </p><p>\n"
+"                Die Auslieferungsmethode ermöglicht eine  genaue Kalkulation "
+"der Frachtkosten\n"
+"                gemäß Ihrer Einstellungen; wahlweise beim Angebot (auf "
+"Basis\n"
+"                eines Angebots) oder spätestens bei der Rechnung (auf Basis "
+"von Auslieferungen).\n"
+"              </p>\n"
+"            "
 
 #. module: delivery
 #: field:delivery.grid.line,max_value:0
@@ -484,7 +503,7 @@ msgstr "Frei wenn mehr als %.2f"
 #. module: delivery
 #: model:ir.model,name:delivery.model_stock_picking_in
 msgid "Incoming Shipments"
-msgstr ""
+msgstr "Wareneingang"
 
 #. module: delivery
 #: selection:delivery.grid.line,operator:0
@@ -494,7 +513,7 @@ msgstr "<="
 #. module: delivery
 #: help:stock.picking,weight_uom_id:0
 msgid "Unit of measurement for Weight"
-msgstr ""
+msgstr "Gewichtseinheit"
 
 #. module: delivery
 #: report:sale.shipping:0
@@ -569,7 +588,7 @@ msgstr "Frachtführer"
 #: model:ir.actions.act_window,name:delivery.action_delivery_carrier_form
 #: model:ir.ui.menu,name:delivery.menu_action_delivery_carrier_form
 msgid "Delivery Methods"
-msgstr ""
+msgstr "Auslieferungsmethoden"
 
 #. module: delivery
 #: code:addons/delivery/sale.py:57
@@ -596,7 +615,7 @@ msgstr "Verkaufspreis"
 #. module: delivery
 #: view:stock.picking.out:0
 msgid "Print Delivery Order"
-msgstr ""
+msgstr "Druck Lieferauftrag"
 
 #. module: delivery
 #: view:delivery.grid:0
@@ -608,7 +627,7 @@ msgstr "Staaten"
 #: help:stock.move,weight_uom_id:0
 msgid ""
 "Unit of Measure (Unit of Measure) is the unit of measurement for Weight"
-msgstr ""
+msgstr "Mengeneinheit (ME) ist die Einheit für die Ermittlung des Gewichts"
 
 #. module: delivery
 #: field:delivery.grid.line,price_type:0

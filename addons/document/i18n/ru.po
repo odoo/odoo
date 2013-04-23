@@ -13,8 +13,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-12-29 05:02+0000\n"
-"X-Generator: Launchpad (build 16378)\n"
+"X-Launchpad-Export-Date: 2013-03-16 05:35+0000\n"
+"X-Generator: Launchpad (build 16532)\n"
 
 #. module: document
 #: field:document.directory,parent_id:0
@@ -22,7 +22,7 @@ msgid "Parent Directory"
 msgstr "Родительский каталог"
 
 #. module: document
-#: code:addons/document/document.py:336
+#: code:addons/document/document.py:350
 #, python-format
 msgid "Directory name contains special characters!"
 msgstr "Имя каталога содержит специальные символы !"
@@ -115,8 +115,8 @@ msgid "The name of the field."
 msgstr "Название поля."
 
 #. module: document
-#: code:addons/document/document.py:326
-#: code:addons/document/document.py:331
+#: code:addons/document/document.py:340
+#: code:addons/document/document.py:345
 #, python-format
 msgid "Directory name must be unique!"
 msgstr "Имя каталога должно быть уникальным!"
@@ -202,11 +202,19 @@ msgid ""
 "          </p>\n"
 "        "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"            Нажмите для создания нового документа.\n"
+"          </p><p>\n"
+"            Репозиторий документов предоставляет вам доступ ко всем "
+"вложениям, таким как\n"
+"            почта, проектные документы, счета и т.д.\n"
+"          </p>\n"
+"        "
 
 #. module: document
-#: code:addons/document/document.py:326
-#: code:addons/document/document.py:331
-#: code:addons/document/document.py:336
+#: code:addons/document/document.py:340
+#: code:addons/document/document.py:345
+#: code:addons/document/document.py:350
 #, python-format
 msgid "ValidateError"
 msgstr "ValidateError"
@@ -253,7 +261,7 @@ msgstr "Имя файла в папке должно быть уникальны
 
 #. module: document
 #: code:addons/document/document.py:110
-#: code:addons/document/document.py:296
+#: code:addons/document/document.py:310
 #, python-format
 msgid "%s (copy)"
 msgstr "%s (копия)"
@@ -316,7 +324,7 @@ msgid "Virtual Files"
 msgstr "Виртуальные файлы"
 
 #. module: document
-#: code:addons/document/document.py:562
+#: code:addons/document/document.py:576
 #, python-format
 msgid "Error at doc write!"
 msgstr "Ошибка записи документа!"
@@ -366,7 +374,7 @@ msgstr "Файлы по пользователю"
 #. module: document
 #: view:ir.attachment:0
 msgid "on"
-msgstr ""
+msgstr "на"
 
 #. module: document
 #: field:document.directory,domain:0

@@ -151,12 +151,12 @@ class account_config_settings(osv.osv_memory):
         self.write(cr, uid, [id], vals, context)
         return id
 
-    def onchange_company_id(self, cr, uid, ids, company_id):
+    def onchange_company_id(self, cr, uid, ids, company_id, context=None):
         # update related fields
         values = {}
         values['currency_id'] = False
         if company_id:
-            company = self.pool.get('res.company').browse(cr, uid, company_id)
+            company = self.pool.get('res.company').browse(cr, uid, company_id, context=context)
             has_chart_of_accounts = company_id not in self.pool.get('account.installer').get_unconfigured_cmp(cr, uid)
             fiscalyear_count = self.pool.get('account.fiscalyear').search_count(cr, uid,
                 [('date_start', '<=', time.strftime('%Y-%m-%d')), ('date_stop', '>=', time.strftime('%Y-%m-%d')),

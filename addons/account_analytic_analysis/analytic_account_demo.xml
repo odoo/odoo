@@ -33,9 +33,11 @@
         
         <record id="sale.sale_order_6" model="sale.order">
             <field name="project_id" ref="account.analytic_super_product_trainings"/>
+            <field name="partner_id" ref="base.res_partner_1"/>
         </record>
 
         <record id="account.analytic_support_internal" model="account.analytic.account">
+        	<field name="partner_id" ref="base.res_partner_1"/>
             <field name="use_timesheets">True</field>
             <field name="invoice_on_timesheets">True</field>
             <field name="hours_qtt_est">100</field>
