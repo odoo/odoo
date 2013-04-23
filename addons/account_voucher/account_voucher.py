@@ -1167,8 +1167,13 @@ class account_voucher(osv.osv):
                         amount_currency = sign * (line.amount)
                     elif line.move_line_id.currency_id.id == voucher_brw.payment_rate_currency_id.id:
                         # if the rate is specified on the voucher, we must use it
-                        voucher_rate = currency_obj.browse(cr, uid, voucher_currency, context=ctx).rate
-                        amount_currency = (move_line['debit'] - move_line['credit']) * voucher_brw.payment_rate * voucher_rate
+                        payment_rate = voucher_brw.payment_rate
+                        if voucher_currency != company_currency:
+                            #if the voucher currency is not the company currency, we need to consider the rate of the line's currency
+                            voucher_rate = currency_obj.browse(cr, uid, voucher_currency, context=ctx).rate
+                            payment_rate = voucher_rate * payment_rate
+                        amount_currency = (move_line['debit'] - move_line['credit']) * payment_rate
+
                     else:
                         # otherwise we use the rates of the system (giving the voucher date in the context)
                         amount_currency = currency_obj.compute(cr, uid, company_currency, line.move_line_id.currency_id.id, move_line['debit']-move_line['credit'], context=ctx)
