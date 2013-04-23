@@ -32,11 +32,12 @@
 -
   !python {model: stock.picking}: |
     import os
-    from openerp import netsvc, tools
+    import openerp.report
+    from openerp import tools
     sale = self.pool.get('sale.order')
     sale_order = sale.browse(cr, uid, ref("sale.sale_order_6"))
     ship_ids = [x.id for x in sale_order.picking_ids]
-    (data, format) = netsvc.LocalService('report.sale.shipping').create(cr, uid, ship_ids, {}, {})
+    data, format = openerp.report.render_report(cr, uid, ship_ids, 'sale.shipping', {}, {})
     if tools.config['test_report_directory']:
         file(os.path.join(tools.config['test_report_directory'], 'delivery-shipping'+format), 'wb+').write(data)
 -

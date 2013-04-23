@@ -64,7 +64,6 @@ class price_type(osv.osv):
         "currency_id": _get_currency
     }
 
-price_type()
 
 #----------------------------------------------------------
 # Price lists
@@ -77,7 +76,6 @@ class product_pricelist_type(osv.osv):
         'name': fields.char('Name',size=64, required=True, translate=True),
         'key': fields.char('Key', size=64, required=True, help="Used in the code to select specific prices based on the context. Keep unchanged."),
     }
-product_pricelist_type()
 
 
 class product_pricelist(osv.osv):
@@ -236,7 +234,10 @@ class product_pricelist(osv.osv):
                                         qty, context=context)[res['base_pricelist_id']]
                                 ptype_src = self.browse(cr, uid, res['base_pricelist_id']).currency_id.id
                                 uom_price_already_computed = True
-                                price = currency_obj.compute(cr, uid, ptype_src, res['currency_id'], price_tmp, round=False)
+                                price = currency_obj.compute(cr, uid,
+                                        ptype_src, res['currency_id'],
+                                        price_tmp, round=False,
+                                        context=context)
                         elif res['base'] == -2:
                             # this section could be improved by moving the queries outside the loop:
                             where = []
@@ -305,7 +306,6 @@ class product_pricelist(osv.osv):
         res.update({'item_id': {ids[-1]: res_multi.get('item_id', ids[-1])}})
         return res
 
-product_pricelist()
 
 
 class product_pricelist_version(osv.osv):
@@ -363,7 +363,6 @@ class product_pricelist_version(osv.osv):
             ['date_start', 'date_end'])
     ]
 
-product_pricelist_version()
 
 class product_pricelist_item(osv.osv):
     def _price_field_get(self, cr, uid, context=None):
@@ -374,7 +373,7 @@ class product_pricelist_item(osv.osv):
             result.append((line.id, line.name))
 
         result.append((-1, _('Other Pricelist')))
-        result.append((-2, _('Partner section of the product form')))
+        result.append((-2, _('Supplier Prices on the product form')))
         return result
 
     _name = "product.pricelist.item"
@@ -443,7 +442,6 @@ class product_pricelist_item(osv.osv):
         if prod[0]['code']:
             return {'value': {'name': prod[0]['code']}}
         return {}
-product_pricelist_item()
 
 
 

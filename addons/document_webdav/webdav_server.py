@@ -36,7 +36,6 @@
 
 import logging
 import openerp
-from openerp import netsvc
 from dav_fs import openerp_dav_handler
 from openerp.tools.config import config
 try:
@@ -609,7 +608,7 @@ try:
             if base_path and base_path == '/':
                 dir_path = config.get_misc('static-http', 'dir_path', False)
             else:
-                dir_path = openerp.addons.get_module_resource('document_webdav','public_html')
+                dir_path = openerp.modules.module.get_module_resource('document_webdav','public_html')
                 # an _ugly_ hack: we put that dir back in tools.config.misc, so that
                 # the StaticHttpHandler can find its dir_path.
                 config.misc.setdefault('static-http',{})['dir_path'] = dir_path

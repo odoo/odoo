@@ -36,7 +36,6 @@ class survey_type(osv.osv):
         'name': fields.char("Name", size=128, required=1, translate=True),
     }
 
-
 class survey(osv.osv):
     _name = 'survey'
     _description = 'Survey'
@@ -270,7 +269,6 @@ class survey(osv.osv):
             'target': 'new',
             'context': ctx,
         }
-
 
 class survey_page(osv.osv):
     _name = 'survey.page'

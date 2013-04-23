@@ -32,7 +32,7 @@
                     <field name="user_id" invisible="1"/>
                     <field name="name"/>
                     <field name="currency_id" groups="base.group_multi_currency"/>
-                    <field name="amount"/>
+                    <field name="amount" sum="Total Amount"/>
                     <field name="state"/>
                 </tree>
             </field>
@@ -112,7 +112,7 @@
                                     <field name="date_value" string="Expense Date"/>
                                     <field name="name"/>
                                     <field name="ref"/>
-                                    <field domain="[('type','in',['normal','contract']), ('parent_id','!=',False)]" name="analytic_account" groups="analytic.group_analytic_accounting"/>
+                                    <field domain="[('type','in',['normal','contract'])]" name="analytic_account" groups="analytic.group_analytic_accounting"/>
                                     <field name="uom_id" on_change="onchange_uom(product_id, uom_id, context)"/>
                                     <field name="unit_amount"/>
                                     <field name="unit_quantity"/>

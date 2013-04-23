@@ -21,7 +21,6 @@
 
 import time
 from openerp.report import report_sxw
-from openerp import pooler
 
 def titlize(journal_name):
     words = journal_name.split()
@@ -34,7 +33,7 @@ class order(report_sxw.rml_parse):
     def __init__(self, cr, uid, name, context):
         super(order, self).__init__(cr, uid, name, context=context)
 
-        user = pooler.get_pool(cr.dbname).get('res.users').browse(cr, uid, uid, context=context)
+        user = self.pool['res.users'].browse(cr, uid, uid, context=context)
         partner = user.company_id.partner_id
 
         self.localcontext.update({

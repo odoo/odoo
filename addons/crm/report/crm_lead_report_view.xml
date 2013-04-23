@@ -19,7 +19,8 @@
                 <field name="channel_id" invisible="1"/>
                 <field name="type" invisible="1"/>
                 <field name="priority" invisible="1"/>
-                <field name="section_id" invisible="1"/>
+                <field name="section_id" invisible="1"
+                        groups="base.group_multi_salesteams"/>
                 <field name="user_id" invisible="1"/>
                 <field name="company_id" invisible="1"/>
                 <field name="partner_id" invisible="1"/>
@@ -77,10 +78,11 @@
                             help="Leads/Opportunities that are assigned to one of the sale teams I manage"/>
                     <separator/>
                     <filter icon="terp-personal" string="My Case(s)" help="Leads/Opportunities that are assigned to me" domain="[('user_id','=',uid)]"/>
-                    <field name="section_id" context="{'invisible_section': False}"/>
+                    <field name="section_id" context="{'invisible_section': False}"
+                            groups="base.group_multi_salesteams"/>
                     <field name="user_id" string="Salesperson"/>
                     <group expand="0" string="Extended Filters...">
-                        <field name="partner_id"/>
+                        <field name="partner_id" filter_domain="[('partner_id','child_of',self)]"/>
                         <field name="stage_id" domain="[('section_ids', '=', 'section_id')]" />
                         <field name="type_id"/>
                         <field name="channel_id"/>
@@ -134,7 +136,8 @@
                 <field name="creation_month" invisible="1"/>
                 <field name="creation_day" invisible="1"/>
                 <field name="deadline_month" invisible="1"/>
-                <field name="section_id" invisible="1"/>
+                <field name="section_id" invisible="1"
+                        groups="base.group_multi_salesteams"/>
                 <field name="user_id" invisible="1"/>
                 <field name="partner_id" invisible="1"/>
                 <field name="country_id" invisible="1"/>
