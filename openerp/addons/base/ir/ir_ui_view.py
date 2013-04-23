@@ -283,23 +283,19 @@ class view(osv.osv):
             if not ids: return False
             [view_id] = ids
 
+        view = self.browse(cr, uid, view_id, context=context)
+        if not view.exists():
+            return False
+
         # Search for a root (i.e. without any parent) view.
-        while True:
-            views = self.read(cr, uid, [view_id],[
-                'arch', 'name', 'field_parent',
-                'id', 'type', 'inherit_id', 'model'
-            ], context=context)
-            if not views: return False
+        while view.inherit_id:
+            view = view.inherit_id
 
-            view = views[0] if views else False
-
-            if not view['inherit_id']:
-                return view
-
-            view_id = view['inherit_id']
-            # due to read() inherit_id may be a name_get pair, unpack id
-            if isinstance(view_id, tuple):
-                view_id, _name = view_id
+        views = self.read(cr, uid, [view.id],[
+            'arch', 'name', 'field_parent',
+            'id', 'type', 'inherit_id', 'model'
+        ], context=context)
+        return views[0]
 
 
     def raise_view_error(self, cr, uid, model, error_msg, view_id, child_view_id, context=None):
