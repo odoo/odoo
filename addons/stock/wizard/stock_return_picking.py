@@ -199,6 +199,7 @@ class stock_return_picking(osv.osv_memory):
                                             'location_id': new_location, 
                                             'location_dest_id': move.location_id.id,
                                             'date': date_cur,
+                                            'move_returned_from': move.id,
                 })
                 move_obj.write(cr, uid, [move.id], {'move_history_ids2':[(4,new_move)]}, context=context)
         if not returned_lines:

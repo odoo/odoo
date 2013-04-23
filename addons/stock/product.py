@@ -275,7 +275,7 @@ class product_product(osv.osv):
         if not ids:
             return res
         #set_context: refactor code here
-        location_ids = self._getlocations_from_context(cr, uid, ids, context=context)
+        location_ids = self._get_locations_from_context(cr, uid, ids, context=context)
         if not location_ids: #in case of no locations, query will be empty anyways
             return res
         
