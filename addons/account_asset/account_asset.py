@@ -82,7 +82,7 @@ class account_asset_asset(osv.osv):
         return super(account_asset_asset, self).unlink(cr, uid, ids, context=context)
 
     def _get_period(self, cr, uid, context=None):
-        periods = self.pool.get('account.period').find(cr, uid)
+        periods = self.pool.get('account.period').find(cr, uid, context=context)
         if periods:
             return periods[0]
         else:
