@@ -18,6 +18,7 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
+import copy
 
 import logging
 from lxml import etree
@@ -254,6 +255,86 @@ class view(osv.osv):
             for info in self.iter(
                     cr, uid, id, model, exclude_base=True, context=None):
                 yield info
+
+
+    def raise_view_error(self, cr, uid, model, error_msg, view_id, child_view_id, context=None):
+        view, child_view = self.browse(cr, uid, [view_id, child_view_id], context)
+        error_msg = error_msg % {'parent_xml_id': view.xml_id}
+        raise AttributeError("View definition error for inherited view '%s' on model '%s': %s"
+                             %  (child_view.xml_id, model, error_msg))
+
+    def apply_inheritance_specs(self, cr, uid, model, root_view_id, source, descendant_id, specs_arch, context=None):
+        """ Apply an inheriting view (a descendant of the base view)
+
+        Apply to a source architecture all the spec nodes (i.e. nodes
+        describing where and what changes to apply to some parent
+        architecture) given by an inheriting view.
+
+        :param source: a parent architecture to modify
+        :param descendant_id: the database id of the descendant
+        :param specs_arch: a modifying architecture in an inheriting view
+        :return: a modified source where the specs are applied
+
+        """
+        if isinstance(specs_arch, unicode):
+            specs_arch = specs_arch.encode('utf-8')
+        specs_tree = etree.fromstring(specs_arch)
+        # Queue of specification nodes (i.e. nodes describing where and
+        # changes to apply to some parent architecture).
+        specs = [specs_tree]
+
+        while len(specs):
+            spec = specs.pop(0)
+            if isinstance(spec, SKIPPED_ELEMENT_TYPES):
+                continue
+            if spec.tag == 'data':
+                specs += [ c for c in specs_tree ]
+                continue
+            node = self.locate_node(source, spec)
+            if node is not None:
+                pos = spec.get('position', 'inside')
+                if pos == 'replace':
+                    if node.getparent() is None:
+                        source = copy.deepcopy(spec[0])
+                    else:
+                        for child in spec:
+                            node.addprevious(child)
+                        node.getparent().remove(node)
+                elif pos == 'attributes':
+                    for child in spec.getiterator('attribute'):
+                        attribute = (child.get('name'), child.text and child.text.encode('utf8') or None)
+                        if attribute[1]:
+                            node.set(attribute[0], attribute[1])
+                        else:
+                            del(node.attrib[attribute[0]])
+                else:
+                    sib = node.getnext()
+                    for child in spec:
+                        if pos == 'inside':
+                            node.append(child)
+                        elif pos == 'after':
+                            if sib is None:
+                                node.addnext(child)
+                                node = child
+                            else:
+                                sib.addprevious(child)
+                        elif pos == 'before':
+                            node.addprevious(child)
+                        else:
+                            self.raise_view_error(cr, uid, model, "Invalid position value: '%s'" % pos, root_view_id, descendant_id, context=context)
+            else:
+                attrs = ''.join([
+                    ' %s="%s"' % (attr, spec.get(attr))
+                    for attr in spec.attrib
+                    if attr != 'position'
+                ])
+                tag = "<%s%s>" % (spec.tag, attrs)
+                if spec.get('version') and spec.get('version') != source.get('version'):
+                    self.raise_view_error(cr, uid, model, "Mismatching view API version for element '%s': %r vs %r in parent view '%%(parent_xml_id)s'" % \
+                                        (tag, spec.get('version'), source.get('version')), root_view_id, descendant_id, context=context)
+                self.raise_view_error(cr, uid, model, "Element '%s' not found in parent view '%%(parent_xml_id)s'" % tag, root_view_id, descendant_id, context=context)
+
+        return source
 
     def write(self, cr, uid, ids, vals, context=None):
         if not isinstance(ids, (list, tuple)):

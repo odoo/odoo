@@ -2062,83 +2062,6 @@ class BaseModel(object):
                 return s.encode('utf8')
             return s
 
-        def raise_view_error(cr, uid, model, error_msg, view_id, child_view_id, context=None):
-            view, child_view = self.pool.get('ir.ui.view').browse(cr, uid, [view_id, child_view_id], context)
-            error_msg = error_msg % {'parent_xml_id': view.xml_id}
-            raise AttributeError("View definition error for inherited view '%s' on model '%s': %s"
-                                 %  (child_view.xml_id, model, error_msg))
-
-        def apply_inheritance_specs(cr, uid, model, root_view_id, source, descendant_id, specs_arch, context=None):
-            """ Apply an inheriting view (a descendant of the base view)
-
-            Apply to a source architecture all the spec nodes (i.e. nodes
-            describing where and what changes to apply to some parent
-            architecture) given by an inheriting view.
-
-            :param source: a parent architecture to modify
-            :param descendant_id: the database id of the descendant
-            :param specs_arch: a modifying architecture in an inheriting view
-            :return: a modified source where the specs are applied
-
-            """
-            specs_tree = etree.fromstring(encode(specs_arch))
-            # Queue of specification nodes (i.e. nodes describing where and
-            # changes to apply to some parent architecture).
-            specs = [specs_tree]
-
-            while len(specs):
-                spec = specs.pop(0)
-                if isinstance(spec, SKIPPED_ELEMENT_TYPES):
-                    continue
-                if spec.tag == 'data':
-                    specs += [ c for c in specs_tree ]
-                    continue
-                node = View.locate_node(source, spec)
-                if node is not None:
-                    pos = spec.get('position', 'inside')
-                    if pos == 'replace':
-                        if node.getparent() is None:
-                            source = copy.deepcopy(spec[0])
-                        else:
-                            for child in spec:
-                                node.addprevious(child)
-                            node.getparent().remove(node)
-                    elif pos == 'attributes':
-                        for child in spec.getiterator('attribute'):
-                            attribute = (child.get('name'), child.text and child.text.encode('utf8') or None)
-                            if attribute[1]:
-                                node.set(attribute[0], attribute[1])
-                            else:
-                                del(node.attrib[attribute[0]])
-                    else:
-                        sib = node.getnext()
-                        for child in spec:
-                            if pos == 'inside':
-                                node.append(child)
-                            elif pos == 'after':
-                                if sib is None:
-                                    node.addnext(child)
-                                    node = child
-                                else:
-                                    sib.addprevious(child)
-                            elif pos == 'before':
-                                node.addprevious(child)
-                            else:
-                                raise_view_error(cr, uid, model, "Invalid position value: '%s'" % pos, root_view_id, descendant_id, context=context)
-                else:
-                    attrs = ''.join([
-                        ' %s="%s"' % (attr, spec.get(attr))
-                        for attr in spec.attrib
-                        if attr != 'position'
-                    ])
-                    tag = "<%s%s>" % (spec.tag, attrs)
-                    if spec.get('version') and spec.get('version') != source.get('version'):
-                        raise_view_error(cr, uid, model, "Mismatching view API version for element '%s': %r vs %r in parent view '%%(parent_xml_id)s'" % \
-                                            (tag, spec.get('version'), source.get('version')), root_view_id, descendant_id, context=context)
-                    raise_view_error(cr, uid, model, "Element '%s' not found in parent view '%%(parent_xml_id)s'" % tag, root_view_id, descendant_id, context=context)
-
-            return source
-
         def apply_view_inheritance(cr, user, source, inherit_id):
             """ Apply all the (directly and indirectly) inheriting views.
 
@@ -2149,10 +2072,11 @@ class BaseModel(object):
                 are applied
 
             """
+            View = self.pool['ir.ui.view']
             return reduce(
-                lambda s, descendant: apply_inheritance_specs(
+                lambda s, descendant: View.apply_inheritance_specs(
                     cr, user, self._name, inherit_id, s, *descendant, context=context),
-                self.pool['ir.ui.view'].iter(cr, user, inherit_id, self._name, exclude_base=True, context=context),
+                View.iter(cr, user, inherit_id, self._name, exclude_base=True, context=context),
                 source)
 
         result = {'type': view_type, 'model': self._name}
