@@ -104,7 +104,9 @@ class TestViewInheritance(common.TransactionCase):
             'model': self.model,
             'name': name,
             'arch': self.view_for(name),
-            'inherit_id': parent, })
+            'inherit_id': parent,
+            'type': 'form',
+        })
         self.ids[name] = view_id
         return view_id
 
@@ -158,3 +160,22 @@ class TestViewInheritance(common.TransactionCase):
             (self.ids[name], self.view_for(name))
             for name in ['A21', 'A22', 'A221']
         ])
+
+    def test_find_root(self):
+        A_id = self.ids['A']
+        root = self.View.get_root_ancestor(self.cr, self.uid, view_id=A_id)
+        self.assertEqual(root['id'], A_id,
+             "when given a root view, operation should be id")
+
+        root = self.View.get_root_ancestor(
+            self.cr, self.uid, view_id=self.ids['A11'])
+        self.assertEqual(root['id'], A_id)
+
+        root = self.View.get_root_ancestor(
+            self.cr, self.uid, view_id=self.ids['A221'])
+        self.assertEqual(root['id'], A_id)
+
+        # search by model
+        root = self.View.get_root_ancestor(
+            self.cr, self.uid, model=self.model, view_type='form')
+        self.assertEqual(root['id'], A_id)

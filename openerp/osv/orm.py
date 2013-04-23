@@ -2067,9 +2067,7 @@ class BaseModel(object):
             :param inherit_id: the database view_id of the parent view
             :return: a modified source where all the modifying architecture
                 are applied
-
             """
-            View = self.pool['ir.ui.view']
             return reduce(
                 lambda s, descendant: View.apply_inheritance_specs(
                     cr, user, self._name, inherit_id, s, *descendant, context=context),
