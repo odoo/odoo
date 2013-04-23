@@ -2054,26 +2054,6 @@ class BaseModel(object):
             context = {}
         View = self.pool['ir.ui.view']
 
-        def encode(s):
-            if isinstance(s, unicode):
-                return s.encode('utf8')
-            return s
-
-        def apply_view_inheritance(cr, user, source, inherit_id):
-            """ Apply all the (directly and indirectly) inheriting views.
-
-            :param source: a parent architecture to modify (with parent
-                modifications already applied)
-            :param inherit_id: the database view_id of the parent view
-            :return: a modified source where all the modifying architecture
-                are applied
-            """
-            return reduce(
-                lambda s, descendant: View.apply_inheritance_specs(
-                    cr, user, self._name, inherit_id, s, *descendant, context=context),
-                View.iter(cr, user, inherit_id, self._name, exclude_base=True, context=context),
-                source)
-
         result = {'type': view_type, 'model': self._name}
 
         view_ref = context.get(view_type + '_view_ref')
@@ -2085,12 +2065,14 @@ class BaseModel(object):
             if view_ref_res:
                 view_id = view_ref_res[0]
 
-        root_view = View.get_root_ancestor(
+        root_view_id = View.get_root_ancestor(
             cr, user, view_id, self._name, view_type, context=context)
+        root_view = View.read_combined(cr, user, root_view_id, fields=[
+            'id', 'name', 'field_parent', 'type', 'model'
+        ], model=self._name, context=context)
         if root_view:
-            source = etree.fromstring(encode(root_view['arch']))
             result.update(
-                arch=apply_view_inheritance(cr, user, source, root_view['id']),
+                arch=root_view['arch'],
                 type=root_view['type'],
                 view_id=root_view['id'],
                 name=root_view['name'],

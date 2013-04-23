@@ -163,22 +163,22 @@ class TestViewInheritance(common.TransactionCase):
 
     def test_find_root(self):
         A_id = self.ids['A']
-        root = self.View.get_root_ancestor(self.cr, self.uid, view_id=A_id)
-        self.assertEqual(root['id'], A_id,
+        root_id = self.View.get_root_ancestor(self.cr, self.uid, view_id=A_id)
+        self.assertEqual(root_id, A_id,
              "when given a root view, operation should be id")
 
-        root = self.View.get_root_ancestor(
+        root_id = self.View.get_root_ancestor(
             self.cr, self.uid, view_id=self.ids['A11'])
-        self.assertEqual(root['id'], A_id)
+        self.assertEqual(root_id, A_id)
 
-        root = self.View.get_root_ancestor(
+        root_id = self.View.get_root_ancestor(
             self.cr, self.uid, view_id=self.ids['A221'])
-        self.assertEqual(root['id'], A_id)
+        self.assertEqual(root_id, A_id)
 
         # search by model
-        root = self.View.get_root_ancestor(
+        root_id = self.View.get_root_ancestor(
             self.cr, self.uid, model=self.model, view_type='form')
-        self.assertEqual(root['id'], A_id)
+        self.assertEqual(root_id, A_id)
 
     def test_no_root(self):
         root = self.View.get_root_ancestor(
