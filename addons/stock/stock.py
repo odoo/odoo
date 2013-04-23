@@ -19,7 +19,6 @@
 #
 ##############################################################################
 
-from lxml import etree
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
 import time
@@ -50,7 +49,6 @@ class stock_incoterms(osv.osv):
         'active': True,
     }
 
-stock_incoterms()
 
 class stock_journal(osv.osv):
     _name = "stock.journal"
@@ -63,7 +61,6 @@ class stock_journal(osv.osv):
         'user_id': lambda s, c, u, ctx: u
     }
 
-stock_journal()
 
 #----------------------------------------------------------
 # Stock Location
@@ -473,7 +470,6 @@ class stock_location(osv.osv):
                     continue
         return False
 
-stock_location()
 
 
 class stock_tracking(osv.osv):
@@ -539,7 +535,6 @@ class stock_tracking(osv.osv):
         """
         return self.pool.get('action.traceability').action_traceability(cr,uid,ids,context)
 
-stock_tracking()
 
 #----------------------------------------------------------
 # Stock Picking
@@ -617,7 +612,7 @@ class stock_picking(osv.osv):
         return res
 
     def create(self, cr, user, vals, context=None):
-        if ('name' not in vals) or (vals.get('name')=='/'):
+        if ('name' not in vals) or (vals.get('name')=='/') or (vals.get('name') == False):
             seq_obj_name =  self._name
             vals['name'] = self.pool.get('ir.sequence').get(cr, user, seq_obj_name)
         new_id = super(stock_picking, self).create(cr, user, vals, context)
@@ -704,29 +699,29 @@ class stock_picking(osv.osv):
             default = {}
         default = default.copy()
         picking_obj = self.browse(cr, uid, id, context=context)
-        move_obj=self.pool.get('stock.move')
-        if ('name' not in default) or (picking_obj.name=='/'):
-            seq_obj_name =  'stock.picking.' + picking_obj.type
+        move_obj = self.pool.get('stock.move')
+        if ('name' not in default) or (picking_obj.name == '/'):
+            seq_obj_name = 'stock.picking.' + picking_obj.type
             default['name'] = self.pool.get('ir.sequence').get(cr, uid, seq_obj_name)
             default['origin'] = ''
             default['backorder_id'] = False
         if 'invoice_state' not in default and picking_obj.invoice_state == 'invoiced':
             default['invoice_state'] = '2binvoiced'
-        res=super(stock_picking, self).copy(cr, uid, id, default, context)
+        res = super(stock_picking, self).copy(cr, uid, id, default, context)
         if res:
             picking_obj = self.browse(cr, uid, res, context=context)
             for move in picking_obj.move_lines:
-                move_obj.write(cr, uid, [move.id], {'tracking_id': False,'prodlot_id':False, 'move_history_ids2': [(6, 0, [])], 'move_history_ids': [(6, 0, [])]})
+                move_obj.write(cr, uid, [move.id], {'tracking_id': False, 'prodlot_id': False, 'move_history_ids2': [(6, 0, [])], 'move_history_ids': [(6, 0, [])]})
         return res
-    
+
     def fields_view_get(self, cr, uid, view_id=None, view_type=False, context=None, toolbar=False, submenu=False):
         if view_type == 'form' and not view_id:
             mod_obj = self.pool.get('ir.model.data')
             if self._name == "stock.picking.in":
-                model,view_id = mod_obj.get_object_reference(cr, uid, 'stock', 'view_picking_in_form')
+                model, view_id = mod_obj.get_object_reference(cr, uid, 'stock', 'view_picking_in_form')
             if self._name == "stock.picking.out":
-                model,view_id = mod_obj.get_object_reference(cr, uid, 'stock', 'view_picking_out_form')
-        return super(stock_picking,self).fields_view_get(cr, uid, view_id=view_id, view_type=view_type, context=context, toolbar=toolbar, submenu=submenu)
+                model, view_id = mod_obj.get_object_reference(cr, uid, 'stock', 'view_picking_out_form')
+        return super(stock_picking, self).fields_view_get(cr, uid, view_id=view_id, view_type=view_type, context=context, toolbar=toolbar, submenu=submenu)
 
     def onchange_partner_in(self, cr, uid, ids, partner_id=None, context=None):
         return {}
@@ -1492,7 +1487,6 @@ class stock_production_lot(osv.osv):
         default.update(date=time.strftime('%Y-%m-%d %H:%M:%S'), move_ids=[])
         return super(stock_production_lot, self).copy(cr, uid, id, default=default, context=context)
 
-stock_production_lot()
 
 class stock_production_lot_revision(osv.osv):
     _name = 'stock.production.lot.revision'
@@ -1513,7 +1507,6 @@ class stock_production_lot_revision(osv.osv):
         'date': fields.date.context_today,
     }
 
-stock_production_lot_revision()
 
 # ----------------------------------------------------
 # Move
@@ -2440,9 +2433,8 @@ class stock_move(osv.osv):
             context = {}
         ctx = context.copy()
         for move in self.browse(cr, uid, ids, context=context):
-            if move.state != 'draft' and not ctx.get('call_unlink',False):
-                raise osv.except_osv(_('User Error!'),
-                        _('You can only delete draft moves.'))
+            if move.state != 'draft' and not ctx.get('call_unlink', False):
+                raise osv.except_osv(_('User Error!'), _('You can only delete draft moves.'))
         return super(stock_move, self).unlink(
             cr, uid, ids, context=ctx)
 
@@ -2470,13 +2462,20 @@ class stock_move(osv.osv):
             raise osv.except_osv(_('Warning!'), _('Please provide a positive quantity to scrap.'))
         res = []
         for move in self.browse(cr, uid, ids, context=context):
+            source_location = move.location_id
+            if move.state == 'done':
+                source_location = move.location_dest_id
+            if source_location.usage != 'internal':
+                #restrict to scrap from a virtual location because it's meaningless and it may introduce errors in stock ('creating' new products from nowhere)
+                raise osv.except_osv(_('Error!'), _('Forbidden operation: it is not allowed to scrap products from a virtual location.'))
             move_qty = move.product_qty
             uos_qty = quantity / move_qty * move.product_uos_qty
             default_val = {
+                'location_id': source_location.id,
                 'product_qty': quantity,
                 'product_uos_qty': uos_qty,
                 'state': move.state,
-                'scrapped' : True,
+                'scrapped': True,
                 'location_dest_id': location_id,
                 'tracking_id': move.tracking_id.id,
                 'prodlot_id': move.prodlot_id.id,
@@ -2732,7 +2731,6 @@ class stock_move(osv.osv):
 
         return [move.id for move in complete]
 
-stock_move()
 
 class stock_inventory(osv.osv):
     _name = "stock.inventory"
@@ -2855,7 +2853,6 @@ class stock_inventory(osv.osv):
             self.write(cr, uid, [inv.id], {'state': 'cancel'}, context=context)
         return True
 
-stock_inventory()
 
 class stock_inventory_line(osv.osv):
     _name = "stock.inventory.line"
@@ -2895,7 +2892,6 @@ class stock_inventory_line(osv.osv):
         result = {'product_qty': amount, 'product_uom': uom, 'prod_lot_id': False}
         return {'value': result}
 
-stock_inventory_line()
 
 #----------------------------------------------------------
 # Stock Warehouse
@@ -2927,7 +2923,6 @@ class stock_warehouse(osv.osv):
         'lot_output_id': _default_lot_output_id,
     }
 
-stock_warehouse()
 
 #----------------------------------------------------------
 # "Empty" Classes that are used to vary from the original stock.picking  (that are dedicated to the internal pickings)
@@ -2938,6 +2933,12 @@ class stock_picking_in(osv.osv):
     _inherit = "stock.picking"
     _table = "stock_picking"
     _description = "Incoming Shipments"
+
+    def search(self, cr, user, args, offset=0, limit=None, order=None, context=None, count=False):
+        return self.pool.get('stock.picking').search(cr, user, args, offset, limit, order, context, count)
+
+    def read(self, cr, uid, ids, fields=None, context=None, load='_classic_read'):
+        return self.pool.get('stock.picking').read(cr, uid, ids, fields=fields, context=context, load=load)
 
     def check_access_rights(self, cr, uid, operation, raise_exception=True):
         #override in order to redirect the check of acces rights on the stock.picking object
@@ -2993,6 +2994,12 @@ class stock_picking_out(osv.osv):
     _inherit = "stock.picking"
     _table = "stock_picking"
     _description = "Delivery Orders"
+
+    def search(self, cr, user, args, offset=0, limit=None, order=None, context=None, count=False):
+        return self.pool.get('stock.picking').search(cr, user, args, offset, limit, order, context, count)
+
+    def read(self, cr, uid, ids, fields=None, context=None, load='_classic_read'):
+        return self.pool.get('stock.picking').read(cr, uid, ids, fields=fields, context=context, load=load)
 
     def check_access_rights(self, cr, uid, operation, raise_exception=True):
         #override in order to redirect the check of acces rights on the stock.picking object

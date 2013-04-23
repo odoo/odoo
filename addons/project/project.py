@@ -208,6 +208,12 @@ class project(osv.osv):
         """Overriden in project_issue to offer more options"""
         return [('project.task', "Tasks")]
 
+    def _get_visibility_selection(self, cr, uid, context=None):
+        """ Overriden in portal_project to offer more options """
+        return [('public', 'All Users'),
+                ('employees', 'Employees Only'),
+                ('followers', 'Followers Only')]
+
     def attachment_tree_view(self, cr, uid, ids, context):
         task_ids = self.pool.get('project.task').search(cr, uid, [('project_id', 'in', ids)])
         domain = [
@@ -229,6 +235,8 @@ class project(osv.osv):
         }
     # Lambda indirection method to avoid passing a copy of the overridable method when declaring the field
     _alias_models = lambda self, *args, **kwargs: self._get_alias_models(*args, **kwargs)
+    _visibility_selection = lambda self, *args, **kwargs: self._get_visibility_selection(*args, **kwargs)
+
     _columns = {
         'complete_name': fields.function(_complete_name, string="Project Name", type='char', size=250),
         'active': fields.boolean('Active', help="If the active field is set to False, it will allow you to hide the project without removing it."),
@@ -267,7 +275,7 @@ class project(osv.osv):
                                          "with Tasks (or optionally Issues if the Issue Tracker module is installed)."),
         'alias_model': fields.selection(_alias_models, "Alias Model", select=True, required=True,
                                         help="The kind of document created when an email is received on this project's email alias"),
-        'privacy_visibility': fields.selection([('public','All Users'), ('followers','Followers Only')], 'Privacy / Visibility', required=True),
+        'privacy_visibility': fields.selection(_visibility_selection, 'Privacy / Visibility', required=True),
         'state': fields.selection([('template', 'Template'),('draft','New'),('open','In Progress'), ('cancelled', 'Cancelled'),('pending','Pending'),('close','Closed')], 'Status', required=True,),
         'doc_count':fields.function(_get_attached_docs, string="Number of documents attached", type='int')
      }
@@ -286,7 +294,6 @@ class project(osv.osv):
         'type_ids': _get_type_common,
         'alias_model': 'project.task',
         'privacy_visibility': 'public',
-        'alias_domain': False, # always hide alias during creation
     }
 
     # TODO: Why not using a SQL contraints ?
@@ -531,11 +538,11 @@ def Project():
         context = dict(context, project_creation_in_progress=True)
         mail_alias = self.pool.get('mail.alias')
         if not vals.get('alias_id') and vals.get('name', False):
-            vals.pop('alias_name', None) # prevent errors during copy()
+            alias_name = vals.pop('alias_name', None) # prevent errors during copy()
             alias_id = mail_alias.create_unique_alias(cr, uid,
                           # Using '+' allows using subaddressing for those who don't
                           # have a catchall domain setup.
-                          {'alias_name': "project+"+short_name(vals['name'])},
+                          {'alias_name': alias_name or "project+"+short_name(vals['name'])},
                           model_name=vals.get('alias_model', 'project.task'),
                           context=context)
             vals['alias_id'] = alias_id
@@ -605,8 +612,7 @@ class task(base_stage, osv.osv):
         search_domain = []
         project_id = self._resolve_project_id_from_context(cr, uid, context=context)
         if project_id:
-            search_domain += ['|', ('project_ids', '=', project_id)]
-        search_domain += [('id', 'in', ids)]
+            search_domain += [('project_ids', '=', project_id)]
         stage_ids = stage_obj._search(cr, uid, search_domain, order=order, access_rights_uid=access_rights_uid, context=context)
         result = stage_obj.name_get(cr, access_rights_uid, stage_ids, context=context)
         # restore order of the search
@@ -888,6 +894,12 @@ class task(base_stage, osv.osv):
             if 'Hours' in res['fields'][f]['string']:
                 res['fields'][f]['string'] = res['fields'][f]['string'].replace('Hours',tm)
         return res
+
+    def get_empty_list_help(self, cr, uid, help, context=None):
+        context['empty_list_help_id'] = context.get('default_project_id')
+        context['empty_list_help_model'] = 'project.project'
+        context['empty_list_help_document_name'] = _("tasks")
+        return super(task, self).get_empty_list_help(cr, uid, help, context=context)
 
     # ----------------------------------------
     # Case management

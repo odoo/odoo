@@ -70,6 +70,7 @@ class account_invoice_report(osv.osv):
         'categ_id': fields.many2one('product.category','Category of Product', readonly=True),
         'journal_id': fields.many2one('account.journal', 'Journal', readonly=True),
         'partner_id': fields.many2one('res.partner', 'Partner', readonly=True),
+        'commercial_partner_id': fields.many2one('res.partner', 'Partner Company', help="Commercial Entity"),
         'company_id': fields.many2one('res.company', 'Company', readonly=True),
         'user_id': fields.many2one('res.users', 'Salesperson', readonly=True),
         'price_total': fields.float('Total Without Tax', readonly=True),
@@ -108,7 +109,7 @@ class account_invoice_report(osv.osv):
                 sub.fiscal_position, sub.user_id, sub.company_id, sub.nbr, sub.type, sub.state,
                 sub.categ_id, sub.date_due, sub.account_id, sub.account_line_id, sub.partner_bank_id,
                 sub.product_qty, sub.price_total / cr.rate as price_total, sub.price_average /cr.rate as price_average,
-                cr.rate as currency_rate, sub.residual / cr.rate as residual
+                cr.rate as currency_rate, sub.residual / cr.rate as residual, sub.commercial_partner_id as commercial_partner_id
         """
         return select_str
 
@@ -170,7 +171,8 @@ class account_invoice_report(osv.osv):
                                       LEFT JOIN account_invoice a ON a.id = l.invoice_id
                                       WHERE a.id = ai.id)
                                ELSE 1::bigint
-                          END::numeric AS residual
+                          END::numeric AS residual,
+                    ai.commercial_partner_id as commercial_partner_id
         """
         return select_str
 
@@ -193,7 +195,7 @@ class account_invoice_report(osv.osv):
                     ai.partner_id, ai.payment_term, ai.period_id, u.name, ai.currency_id, ai.journal_id,
                     ai.fiscal_position, ai.user_id, ai.company_id, ai.type, ai.state, pt.categ_id,
                     ai.date_due, ai.account_id, ail.account_id, ai.partner_bank_id, ai.residual,
-                    ai.amount_total, u.uom_type, u.category_id
+                    ai.amount_total, u.uom_type, u.category_id, ai.commercial_partner_id
         """
         return group_by_str
 
@@ -210,13 +212,12 @@ class account_invoice_report(osv.osv):
                 cr.id IN (SELECT id
                           FROM res_currency_rate cr2
                           WHERE (cr2.currency_id = sub.currency_id)
-                              AND ((sub.date IS NOT NULL AND cr.name <= sub.date)
-                                    OR (sub.date IS NULL AND cr.name <= NOW()))
+                              AND ((sub.date IS NOT NULL AND cr2.name <= sub.date)
+                                    OR (sub.date IS NULL AND cr2.name <= NOW()))
                           ORDER BY name DESC LIMIT 1)
         )""" % (
                     self._table, 
                     self._select(), self._sub_select(), self._from(), self._group_by()))
 
-account_invoice_report()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

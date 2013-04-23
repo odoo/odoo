@@ -24,7 +24,6 @@ from lxml import etree
 import openerp.addons.decimal_precision as dp
 import openerp.exceptions
 
-from openerp import pooler
 from openerp.osv import fields, osv, orm
 from openerp.tools.translate import _
 
@@ -97,6 +96,8 @@ class account_invoice(osv.osv):
                 for m in invoice.move_id.line_id:
                     if m.account_id.type in ('receivable','payable'):
                         result[invoice.id] += m.amount_residual_currency
+            #prevent the residual amount on the invoice to be less than 0
+            result[invoice.id] = max(result[invoice.id], 0.0)            
         return result
 
     # Give Journal Items related to the payment reconciled to this invoice
@@ -285,7 +286,10 @@ class account_invoice(osv.osv):
         'payment_ids': fields.function(_compute_lines, relation='account.move.line', type="many2many", string='Payments'),
         'move_name': fields.char('Journal Entry', size=64, readonly=True, states={'draft':[('readonly',False)]}),
         'user_id': fields.many2one('res.users', 'Salesperson', readonly=True, track_visibility='onchange', states={'draft':[('readonly',False)]}),
-        'fiscal_position': fields.many2one('account.fiscal.position', 'Fiscal Position', readonly=True, states={'draft':[('readonly',False)]})
+        'fiscal_position': fields.many2one('account.fiscal.position', 'Fiscal Position', readonly=True, states={'draft':[('readonly',False)]}),
+        'commercial_partner_id': fields.related('partner_id', 'commercial_partner_id', string='Commercial Entity', type='many2one',
+                                                relation='res.partner', store=True, readonly=True,
+                                                help="The commercial entity that will be used on Journal Entries for this invoice")
     }
     _defaults = {
         'type': _get_type,
@@ -312,7 +316,7 @@ class account_invoice(osv.osv):
             context = {}
 
         if context.get('active_model', '') in ['res.partner'] and context.get('active_ids', False) and context['active_ids']:
-            partner = self.pool.get(context['active_model']).read(cr, uid, context['active_ids'], ['supplier','customer'])[0]
+            partner = self.pool[context['active_model']].read(cr, uid, context['active_ids'], ['supplier','customer'])[0]
             if not view_type:
                 view_id = self.pool.get('ir.ui.view').search(cr, uid, [('name', '=', 'account.invoice.tree')])
                 view_type = 'tree'
@@ -366,18 +370,6 @@ class account_invoice(osv.osv):
         context['view_id'] = view_id
         return context
 
-    def create(self, cr, uid, vals, context=None):
-        if context is None:
-            context = {}
-        try:
-            return super(account_invoice, self).create(cr, uid, vals, context)
-        except Exception, e:
-            if '"journal_id" viol' in e.args[0]:
-                raise orm.except_orm(_('Configuration Error!'),
-                     _('There is no Sale/Purchase Journal(s) defined.'))
-            else:
-                raise orm.except_orm(_('Unknown Error!'), str(e))
-
     def invoice_print(self, cr, uid, ids, context=None):
         '''
         This function prints the invoice and mark it as sent, so that we can see more easily the next step of the workflow
@@ -420,6 +412,7 @@ class account_invoice(osv.osv):
             'mark_invoice_as_sent': True,
             })
         return {
+            'name': _('Compose Email'),
             'type': 'ir.actions.act_window',
             'view_type': 'form',
             'view_mode': 'form',
@@ -995,8 +988,7 @@ class account_invoice(osv.osv):
                 'narration':inv.comment
             }
             period_id = inv.period_id and inv.period_id.id or False
-            ctx.update(company_id=inv.company_id.id,
-                       account_period_prefer_normal=True)
+            ctx.update(company_id=inv.company_id.id)
             if not period_id:
                 period_ids = period_obj.find(cr, uid, inv.date_invoice, context=ctx)
                 period_id = period_ids and period_ids[0] or False
@@ -1272,9 +1264,7 @@ class account_invoice(osv.osv):
             ref = invoice.reference
         else:
             ref = self._convert_ref(cr, uid, invoice.number)
-        partner = invoice.partner_id
-        if partner.parent_id and not partner.is_company:
-            partner = partner.parent_id
+        partner = self.pool['res.partner']._find_accounting_partner(invoice.partner_id)
         # Pay attention to the sign for both debit/credit AND amount_currency
         l1 = {
             'debit': direction * pay_amount>0 and direction * pay_amount,
@@ -1594,7 +1584,6 @@ class account_invoice_line(osv.osv):
                 unique_tax_ids = product_change_result['value']['invoice_line_tax_id']
         return {'value':{'invoice_line_tax_id': unique_tax_ids}}
 
-account_invoice_line()
 
 class account_invoice_tax(osv.osv):
     _name = "account.invoice.tax"
@@ -1745,15 +1734,11 @@ class res_partner(osv.osv):
         'invoice_ids': fields.one2many('account.invoice.line', 'partner_id', 'Invoices', readonly=True),
     }
 
-    def _find_accounting_partner(self, part):
+    def _find_accounting_partner(self, partner):
         '''
         Find the partner for which the accounting entries will be created
         '''
-        #if the chosen partner is not a company and has a parent company, use the parent for the journal entries
-        #because you want to invoice 'Agrolait, accounting department' but the journal items are for 'Agrolait'
-        if part.parent_id and not part.is_company:
-            part = part.parent_id
-        return part
+        return partner.commercial_partner_id
 
     def copy(self, cr, uid, id, default=None, context=None):
         default = default or {}

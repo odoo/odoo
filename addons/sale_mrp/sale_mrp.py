@@ -74,6 +74,5 @@ class mrp_production(osv.osv):
         'sale_ref': fields.function(_ref_calc, multi='sale_name', type='char', string='Sale Reference', help='Indicate the Customer Reference from sales order.'),
     }
 
-mrp_production()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

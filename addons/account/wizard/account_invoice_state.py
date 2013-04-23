@@ -21,7 +21,6 @@
 
 from openerp.osv import osv
 from openerp.tools.translate import _
-from openerp import pooler
 
 class account_invoice_confirm(osv.osv_memory):
     """
@@ -34,8 +33,7 @@ class account_invoice_confirm(osv.osv_memory):
     def invoice_confirm(self, cr, uid, ids, context=None):
         if context is None:
             context = {}
-        pool_obj = pooler.get_pool(cr.dbname)
-        account_invoice_obj = pool_obj.get('account.invoice')
+        account_invoice_obj = self.pool['account.invoice']
         data_inv = account_invoice_obj.read(cr, uid, context['active_ids'], ['state'], context=context)
         for record in data_inv:
             if record['state'] not in ('draft','proforma','proforma2'):
@@ -44,7 +42,6 @@ class account_invoice_confirm(osv.osv_memory):
             
         return {'type': 'ir.actions.act_window_close'}
 
-account_invoice_confirm()
 
 class account_invoice_cancel(osv.osv_memory):
     """
@@ -58,8 +55,7 @@ class account_invoice_cancel(osv.osv_memory):
     def invoice_cancel(self, cr, uid, ids, context=None):
         if context is None:
             context = {}
-        pool_obj = pooler.get_pool(cr.dbname)
-        account_invoice_obj = pool_obj.get('account.invoice')
+        account_invoice_obj = self.pool['account.invoice']
         data_inv = account_invoice_obj.read(cr, uid, context['active_ids'], ['state'], context=context)
         for record in data_inv:
             if record['state'] in ('cancel','paid'):
@@ -67,6 +63,5 @@ class account_invoice_cancel(osv.osv_memory):
             account_invoice_obj.signal_invoice_cancel(cr , uid, [record['id']])
         return {'type': 'ir.actions.act_window_close'}
 
-account_invoice_cancel()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -73,6 +73,5 @@ class crm_opportunity2phonecall(osv.osv_memory):
                 action=data.action, context=context)
         return {'type': 'ir.actions.act_window_close'}
 
-crm_opportunity2phonecall()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

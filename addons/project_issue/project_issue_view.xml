@@ -146,7 +146,7 @@
             <field name="model">project.issue</field>
             <field name="arch" type="xml">
                 <search string="Issue Tracker Search">
-                    <field name="name" string="Issue" filter_domain="['|', '|',('description','ilike',self),('email_from','ilike',self),('name','ilike',self)]"/>
+                    <field name="name" string="Issue" filter_domain="['|', '|', '|', ('partner_id','child_of',self), ('description','ilike',self),('email_from','ilike',self),('name','ilike',self)]"/>
                     <field name="id"/>
                     <filter icon="terp-mail-message-new" string="Unread Messages" name="message_unread" domain="[('message_unread','=',True)]"/>
                     <separator/>
@@ -154,10 +154,11 @@
                     <filter string="To Do" domain="[('state','=','open')]" help="To Do Issues" icon="terp-check"/>
                     <separator/>
                     <filter string="Unassigned Issues" domain="[('user_id','=',False)]"  help="Unassigned Issues" icon="terp-personal-"/>
-                    <field name="partner_id"/>
+                    <separator/>
                     <field name="user_id"/>
                     <field name="project_id"/>
                     <field name="categ_ids"/>
+                    <field name="partner_id" filter_domain="[('partner_id', 'child_of', self)]"/>
                     <group expand="0" string="Group By..." >
                         <filter string="Responsible" icon="terp-personal" domain="[]" context="{'group_by':'user_id'}"/>
                         <filter string="Contact" icon="terp-partner" domain="[]" context="{'group_by':'partner_id'}"/>
@@ -302,7 +303,18 @@
             <field name="view_type">form</field>
             <field name="name">Issues</field>
             <field name="view_mode">kanban,tree,form,calendar,graph</field>
-            <field name="context">{'search_default_project_id': [active_id], 'default_project_id': active_id}</field>
+            <field name="context">{
+                    'search_default_project_id': [active_id], 
+                    'default_project_id': active_id,
+                }
+            </field>
+            <field name="help" type="html">
+                <p>
+                    The OpenERP issues tacker allows you to efficiantly manage things
+                    like internal requests, software development bugs, customer
+                    complaints, project troubles, material breakdowns, etc.
+                </p>
+            </field>
         </record>
 
         <!-- Project -->
@@ -324,9 +336,18 @@
                 <field name="priority" position="before">
                     <field name="project_escalation_id"/>
                 </field>
-                <field name="alias_domain" position="after">
-                    <label for="alias_model" class="oe_edit_only" string="creates"/><field name="alias_model" class="oe_edit_only oe_inline"/>
-                </field>
+                <xpath expr='//span[@name="edit_alias"]' position='replace'>
+                    <span class="oe_edit_only" name="edit_alias">
+                        <field name="alias_name" class="oe_inline" attrs="{'required': [('alias_id', '!=', False)]}"/>
+                        @
+                        <field class="oe_inline" name="alias_domain"/>
+                        <span class="oe_inline"
+                                attrs="{'invisible': ['|', ('use_issues', '!=', True), ('use_tasks', '!=', True)]}">
+                            <label for="alias_model" string="creates"/>
+                            <field name="alias_model" class="oe_inline"/>
+                        </span>
+                    </span>
+                </xpath>
             </field>
        </record>
 

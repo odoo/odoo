@@ -117,6 +117,7 @@
             <field name="arch" type="xml">
                 <tree colors="blue:state == 'draft';black:state in ('proforma','proforma2','open');gray:state == 'cancel'" string="Invoice">
                     <field name="partner_id" groups="base.group_user"/>
+                    <field name="commercial_partner_id" invisible="1"/>
                     <field name="date_invoice"/>
                     <field name="number"/>
                     <field name="reference" invisible="1"/>
@@ -320,7 +321,8 @@
                             <field string="Customer" name="partner_id"
                                 on_change="onchange_partner_id(type,partner_id,date_invoice,payment_term, partner_bank_id,company_id)"
                                 groups="base.group_user" context="{'search_default_customer':1, 'show_address': 1}"
-                                options='{"always_reload": True}'/>
+                                options='{"always_reload": True}'
+                                domain="[('customer', '=', True)]"/>
                             <field name="fiscal_position" widget="selection" />
                         </group>
                         <group>
@@ -447,18 +449,20 @@
             <field name="model">account.invoice</field>
             <field name="arch" type="xml">
                 <search string="Search Invoice">
-                    <field name="number" string="Invoice" filter_domain="['|','|','|', ('number','ilike',self), ('origin','ilike',self), ('supplier_invoice_number', 'ilike', self), ('partner_id', 'ilike', self)]"/>
+                    <field name="number" string="Invoice" filter_domain="['|','|','|', ('number','ilike',self), ('origin','ilike',self), ('supplier_invoice_number', 'ilike', self), ('partner_id', 'child_of', self)]"/>
                     <filter name="draft" string="Draft" domain="[('state','=','draft')]" help="Draft Invoices"/>
                     <filter name="proforma" string="Proforma" domain="[('state','=','proforma2')]" help="Proforma Invoices" groups="account.group_proforma_invoices"/>
                     <filter name="invoices" string="Invoices" domain="[('state','not in',['draft','cancel'])]" help="Proforma/Open/Paid Invoices"/>
                     <filter name="unpaid" string="Unpaid" domain="[('state','=','open')]" help="Unpaid Invoices"/>
                     <separator/>
-                    <filter domain="[('user_id','=',uid)]" help="My Invoices" icon="terp-personal"/>
-                    <field name="partner_id"/>
+                    <field name="partner_id" filter_domain="[('partner_id', 'child_of', self)]"/>
                     <field name="user_id" string="Salesperson"/>
                     <field name="period_id" string="Period"/>
+                    <separator/>
+                    <filter domain="[('user_id','=',uid)]" help="My Invoices"/>
                     <group expand="0" string="Group By...">
-                        <filter string="Partner" icon="terp-partner" domain="[]" context="{'group_by':'partner_id'}"/>
+                    	<filter name="partner_id" string="Partner" domain="[]" context="{'group_by':'partner_id'}"/>
+                    	<filter name="commercial_partner_id" string="Commercial Partner" domain="[]" context="{'group_by':'commercial_partner_id'}"/>
                         <filter string="Responsible" icon="terp-personal" domain="[]"  context="{'group_by':'user_id'}"/>
                         <filter string="Journal" icon="terp-folder-orange" domain="[]" context="{'group_by':'journal_id'}"/>
                         <filter string="Status" icon="terp-stock_effects-object-colorize" domain="[]"  context="{'group_by':'state'}"/>
@@ -620,8 +624,6 @@
             </field>
         </record>
         <menuitem action="action_invoice_tree4" id="menu_action_invoice_tree4" parent="menu_finance_payables"/>
-
-        <act_window context="{'search_default_partner_id':[active_id], 'default_partner_id': active_id}" id="act_res_partner_2_account_invoice_opened" name="Invoices" res_model="account.invoice" src_model="res.partner"/>
 
         <act_window
            id="act_account_journal_2_account_invoice_opened"

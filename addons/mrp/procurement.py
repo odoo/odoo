@@ -122,6 +122,5 @@ class procurement_order(osv.osv):
             body = _("Manufacturing Order <em>%s</em> created.") % ( procurement.production_id.name,)
             self.message_post(cr, uid, [procurement.id], body=body, context=context)
     
-procurement_order()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

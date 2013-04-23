@@ -156,7 +156,7 @@
                             <field name="partner_id" on_change="onchange_partner_id(partner_id, context)" domain="[('customer','=',True)]" context="{'search_default_customer':1, 'show_address': 1}" options='{"always_reload": True}'/>
                             <field name="partner_invoice_id" groups="sale.group_delivery_invoice_address" context="{'default_type':'invoice'}"/>
                             <field name="partner_shipping_id" groups="sale.group_delivery_invoice_address" context="{'default_type':'delivery'}"/>
-                            <field name="project_id" context="{'partner_id':partner_id, 'default_pricelist_id':pricelist_id, 'default_name':name, 'default_type': 'contract'}" groups="sale.group_analytic_accounting" domain="[('type','in',['view','normal','contract'])]"/>
+                            <field name="project_id" context="{'partner_id':partner_invoice_id, 'default_pricelist_id':pricelist_id, 'default_name':name, 'default_type': 'contract'}" groups="sale.group_analytic_accounting" domain="[('type','in',['view','normal','contract'])]"/>
                         </group>
                         <group>
                             <field name="date_order"/>
@@ -308,7 +308,7 @@
                     <filter icon="terp-dolar_ok!" string="Done" domain="[('state','=','done')]" help="Sales Order done"/>
                     <separator/>
                     <filter string="My Sales Orders" domain="[('user_id','=',uid)]" help="My Sales Orders" icon="terp-personal" name="my_sale_orders_filter"/>
-                    <field name="partner_id"/>
+                    <field name="partner_id" filter_domain="[('partner_id', 'child_of', self)]"/>
                     <field name="user_id"/>
                     <field name="project_id"/>
                     <group expand="0" string="Group By...">
@@ -328,19 +328,23 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form,calendar,graph</field>
             <field name="search_view_id" ref="view_sales_order_filter"/>
-            <field name="context">{'show_address': 1}</field>
-            <field name="domain">[('state','not in',('draft','sent','cancel'))]</field>
+            <field name="context">{
+                    'search_default_my_sale_orders_filter': 1
+                }
+            </field>
+            <field name="domain">[('state', 'not in', ('draft', 'sent', 'cancel'))]</field>
             <field name="help" type="html">
-              <p class="oe_view_nocontent_create">
-                Click to create a quotation that can be converted into a sales
-                order.
-              </p><p>
-                OpenERP will help you efficiently handle the complete sales flow:
-                quotation, sales order, delivery, invoicing and payment.
-              </p>
+                <p class="oe_view_nocontent_create">
+                    Click to create a quotation that can be converted into a sales
+                    order.
+                </p><p>
+                    OpenERP will help you efficiently handle the complete sales flow:
+                    quotation, sales order, delivery, invoicing and payment.
+                </p>
             </field>
         </record>
-        <menuitem action="action_orders" id="menu_sale_order" parent="base.menu_sales" sequence="5" groups="base.group_sale_salesman,base.group_sale_manager"/>
+
+        <menuitem action="action_orders" id="menu_sale_order" parent="base.menu_sales" sequence="6" groups="base.group_sale_salesman,base.group_sale_manager"/>
 
         <record id="action_orders_exception" model="ir.actions.act_window">
             <field name="name">Sales in Exception</field>
@@ -371,7 +375,7 @@
             <field name="view_type">form</field>
             <field name="view_id" ref="view_quotation_tree"/>
             <field name="view_mode">tree,form,calendar,graph</field>
-            <field name="context">{'show_address': 1}</field>
+            <field name="context">{'search_default_my_sale_orders_filter': 1}</field>
             <field name="domain">[('state','in',('draft','sent','cancel'))]</field>
             <field name="search_view_id" ref="view_sales_order_filter"/>
             <field name="help" type="html">
@@ -390,8 +394,8 @@
         </record>
 
         <menuitem id="menu_sale_quotations"
-        action="action_quotations" parent="base.menu_sales"
-        sequence="4"/>
+                action="action_quotations" parent="base.menu_sales"
+                sequence="5"/>
 
         <record id="action_order_tree" model="ir.actions.act_window">
             <field name="name">Old Quotations</field>
@@ -472,7 +476,7 @@
                     <separator/>
                     <filter string="My Sales Order Lines" icon="terp-personnal" domain="[('salesman_id','=',uid)]" help="Sales Order Lines related to a Sales Order of mine"/>
                     <field name="order_id"/>
-                    <field name="order_partner_id"/>
+                    <field name="order_partner_id" filter_domain="[('order_partner_id', 'child_of', self)]"/>
                     <field name="product_id"/>
                     <field name="salesman_id"/>
                     <group expand="0" string="Group By...">
@@ -498,7 +502,7 @@
                     <separator/>
                     <filter string="My Sales Order Lines" icon="terp-personal" domain="[('salesman_id','=',uid)]" help="My Sales Order Lines"/>
                     <field name="order_id"/>
-                    <field name="order_partner_id"/>
+                    <field name="order_partner_id" filter_domain="[('order_partner_id', 'child_of', self)]"/>
                     <field name="product_id"/>
                     <field name="salesman_id"/>
                     <group expand="0" string="Group By...">

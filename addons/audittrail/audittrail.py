@@ -19,10 +19,10 @@
 #
 ##############################################################################
 
+import openerp
 from openerp.osv import fields, osv
 import openerp.service.model
 from openerp.tools.translate import _
-from openerp import pooler
 import time
 from openerp import tools
 from openerp import SUPERUSER_ID
@@ -70,8 +70,7 @@ class audittrail_rule(osv.osv):
         obj_model = self.pool.get('ir.model.data')
         #start Loop
         for thisrule in self.browse(cr, uid, ids):
-            obj = self.pool.get(thisrule.object_id.model)
-            if not obj:
+            if thisrule.object_id.model not in self.pool:
                 raise osv.except_osv(
                         _('WARNING: audittrail is not part of the pool'),
                         _('Change audittrail depends -- Setting rule as DRAFT'))
@@ -113,7 +112,6 @@ class audittrail_rule(osv.osv):
                 value = "ir.actions.act_window" + ',' + str(w_id[0])
             val_id = ir_values_obj.search(cr, uid, [('model', '=', thisrule.object_id.model), ('value', '=', value)])
             if val_id:
-                ir_values_obj = pooler.get_pool(cr.dbname).get('ir.values')
                 res = ir_values_obj.unlink(cr, uid, [val_id[0]])
             self.write(cr, uid, [thisrule.id], {"state": "draft"})
         #End Loop
@@ -132,7 +130,7 @@ class audittrail_log(osv.osv):
             model_object = resname.object_id
             res_id = resname.res_id
             if model_object and res_id:
-                model_pool = self.pool.get(model_object.model)
+                model_pool = self.pool[model_object.model]
                 res = model_pool.read(cr, uid, res_id, ['name'])
                 data[resname.id] = res['name']
             else:
@@ -191,7 +189,7 @@ def get_value_text(cr, uid, pool, resource_pool, method, field, value):
 
     field_obj = (resource_pool._all_columns.get(field)).column
     if field_obj._type in ('one2many','many2many'):
-        data = pool.get(field_obj._obj).name_get(cr, uid, value)
+        data = pool[field_obj._obj].name_get(cr, uid, value)
         #return the modifications on x2many fields as a list of names
         res = map(lambda x:x[1], data)
     elif field_obj._type == 'many2one':
@@ -212,8 +210,8 @@ def create_log_line(cr, uid, log_id, model, lines=None):
     """
     if lines is None:
         lines = []
-    pool = pooler.get_pool(cr.dbname)
-    obj_pool = pool.get(model.model)
+    pool = openerp.registry(cr.dbname)
+    obj_pool = pool[model.model]
     model_pool = pool.get('ir.model')
     field_pool = pool.get('ir.model.fields')
     log_line_pool = pool.get('audittrail.log.line')
@@ -251,8 +249,8 @@ def log_fct(cr, uid_orig, model, method, fct_src, *args, **kw):
 
     @return: Returns result as per method of Object proxy
     """
-    pool = pooler.get_pool(cr.dbname)
-    resource_pool = pool.get(model)
+    pool = openerp.registry(cr.dbname)
+    resource_pool = pool[model]
     model_pool = pool.get('ir.model')
     model_ids = model_pool.search(cr, SUPERUSER_ID, [('model', '=', model)])
     model_id = model_ids and model_ids[0] or False
@@ -322,7 +320,7 @@ def get_data(cr, uid, pool, res_ids, model, method):
             }
     """
     data = {}
-    resource_pool = pool.get(model.model)
+    resource_pool = pool[model.model]
     # read all the fields of the given resources in super admin mode
     for resource in resource_pool.read(cr, SUPERUSER_ID, res_ids):
         values = {}
@@ -391,7 +389,7 @@ def prepare_audittrail_log_line(cr, uid, pool, model, resource_id, method, old_v
         key: []
     }
     # loop on all the fields
-    for field_name, field_definition in pool.get(model.model)._all_columns.items():
+    for field_name, field_definition in pool[model.model]._all_columns.items():
         if field_name in ('__last_update', 'id'):
             continue
         #if the field_list param is given, skip all the fields not in that list
@@ -458,7 +456,7 @@ def process_data(cr, uid, pool, res_ids, model, method, old_values=None, new_val
 
         # if at least one modification has been found
         for model_id, resource_id in lines:
-            name = pool.get(model.model).name_get(cr, uid, [resource_id])[0][1]
+            name = pool[model.model].name_get(cr, uid, [resource_id])[0][1]
             vals = {
                 'method': method,
                 'object_id': model_id,
@@ -492,7 +490,7 @@ def check_rules(cr, uid, model, method):
     @param method: method to log: create, read, unlink,write,actions,workflow actions
     @return: True or False
     """
-    pool = pooler.get_pool(cr.dbname)
+    pool = openerp.registry(cr.dbname)
     if 'audittrail.rule' in pool.models:
         model_ids = pool.get('ir.model').search(cr, SUPERUSER_ID, [('model', '=', model)])
         model_id = model_ids and model_ids[0] or False
