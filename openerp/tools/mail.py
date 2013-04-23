@@ -52,7 +52,7 @@ def html_sanitize(src):
     # html encode email tags
     part = re.compile(r"(<(([^a<>]|a[^<>\s])[^<>]*)@[^<>]+>)", re.IGNORECASE | re.DOTALL)
     src = part.sub(lambda m: cgi.escape(m.group(1)), src)
-    
+
     # some corner cases make the parser crash (such as <SCRIPT/XSS SRC=\"http://ha.ckers.org/xss.js\"></SCRIPT> in test_mail)
     try:
         cleaner = clean.Cleaner(page_structure=True, style=False, safe_attrs_only=False, forms=False, kill_tags=tags_to_kill, remove_tags=tags_to_remove)
@@ -60,11 +60,14 @@ def html_sanitize(src):
     except TypeError, e:
         # lxml.clean version < 2.3.1 does not have a kill_tags attribute
         # to remove in 2014
-        cleaner = clean.Cleaner(page_structure=True, style=False, safe_attrs_only=False, forms=False, remove_tags=tags_to_kill+tags_to_remove)
+        cleaner = clean.Cleaner(page_structure=True, style=False, safe_attrs_only=False, forms=False, remove_tags=tags_to_kill + tags_to_remove)
         cleaned = cleaner.clean_html(src)
-    except:
-        _logger.warning('html_sanitize failed to parse %s' % (src))
-        cleaned = '<p>Impossible to parse</p>'
+    except etree.ParserError, e:
+        _logger.warning('html_sanitize: ParserError "%s" obtained when sanitizing "%s"' % (e, src))
+        cleaned = '<p>ParserError when sanitizing</p>'
+    except Exception, e:
+        _logger.warning('html_sanitize: unknown error "%s" obtained when sanitizing "%s"' % (e, src))
+        cleaned = '<p>Unknown error when sanitizing</p>'
     return cleaned
 
 
@@ -72,7 +75,7 @@ def html_sanitize(src):
 # HTML Cleaner
 #----------------------------------------------------------
 
-def html_email_clean(html):
+def html_email_clean(html, remove_unwanted=False, use_max_length=False, max_length=300):
     """ html_email_clean: clean the html to display in the web client.
         - strip email quotes (remove blockquote nodes)
         - strip signatures (remove --\n{\n)Blahblah), by replacing <br> by
@@ -83,6 +86,8 @@ def html_email_clean(html):
             html code coming from a sanitized source, like fields.html.
     """
     def _replace_matching_regex(regex, source, replace=''):
+        if not source:
+            return source
         dest = ''
         idx = 0
         for item in re.finditer(regex, source):
@@ -91,62 +96,113 @@ def html_email_clean(html):
         dest += source[idx:]
         return dest
 
+    def _tag_matching_regex_in_text(regex, node, new_node_tag='span', new_node_attrs=None):
+        # print '\t_tag_matching_regex_in_text'
+        text = node.text or ''
+        node.text = ''
+        cur_node = node
+        idx = 0
+        caca = 0
+        for item in re.finditer(regex, text):
+            # print '\t\tfound', item.start(), item.end(), '-', text[item.start():item.end()], '-'
+            if caca == 0:
+                cur_node.text = text[idx:item.start()]
+            else:
+                cur_node.tail = text[idx:item.start()]
+
+            # create element
+            new_node = etree.Element(new_node_tag)
+            new_node.text = text[item.start():item.end()]
+            for key, val in new_node_attrs.iteritems():
+                new_node.set(key, val)
+
+            # insert element in DOM
+            node.insert(caca, new_node)
+            cur_node = new_node
+            idx = item.end()
+            caca += 1
+        if caca == 0:
+            cur_node.text = (cur_node.text or '') + text[idx:]
+        else:
+            cur_node.tail = text[idx:] + (cur_node.tail or '')
+
     if not html or not isinstance(html, basestring):
         return html
-
     html = ustr(html)
 
-    # 0. remove encoding attribute inside tags
+    # Pre processing
+    # ------------------------------------------------------------
+
+    # --- MAIL ORIGINAL ---: '[\-]{4,}([^\-]*)[\-]{4,}'
+
+    # html: remove encoding attribute inside tags
     doctype = re.compile(r'(<[^>]*\s)(encoding=(["\'][^"\']*?["\']|[^\s\n\r>]+)(\s[^>]*|/)?>)', re.IGNORECASE | re.DOTALL)
     html = doctype.sub(r"", html)
 
-    # 1. <br[ /]> -> \n, because otherwise the tree is obfuscated
+    # html: ClEditor seems to love using <div><br /><div> -> replace with <br />
+    br_div_tags = re.compile(r'(<div>\s*<br\s*\/>\s*<\/div>)')
+    html = _replace_matching_regex(br_div_tags, html, '<br />')
+
+    # html: <br[ /]> -> \n, to de-obfuscate the tree
     br_tags = re.compile(r'([<]\s*[bB][rR]\s*\/?[>])')
     html = _replace_matching_regex(br_tags, html, '__BR_TAG__')
 
-    # 2. form a tree, handle (currently ?) pure-text by enclosing them in a pre
+    # form a tree
     root = lxml.html.fromstring(html)
     if not len(root) and root.text is None and root.tail is None:
         html = '<div>%s</div>' % html
         root = lxml.html.fromstring(html)
 
-    # 2.5 remove quoted text in nodes
+    # form node and tag text-based quotes and signature
     quote_tags = re.compile(r'(\n(>)+[^\n\r]*)')
-    for node in root.getiterator():
-        if not node.text:
-            continue
-        node.text = _replace_matching_regex(quote_tags, node.text)
-
-    # 3. remove blockquotes
-    quotes = [el for el in root.getiterator(tag='blockquote')]
-    for node in quotes:
-        # copy the node tail into parent text
-        if node.tail:
-            parent = node.getparent()
-            parent.text = parent.text or '' + node.tail
-        # remove the node
-        node.getparent().remove(node)
-
-    # 4. strip signatures
     signature = re.compile(r'([-]{2}[\s]?[\r\n]{1,2}[^\z]+)')
-    for elem in root.getiterator():
-        if elem.text:
-            match = re.search(signature, elem.text)
-            if match:
-                elem.text = elem.text[:match.start()] + elem.text[match.end():]
-        if elem.tail:
-            match = re.search(signature, elem.tail)
-            if match:
-                elem.tail = elem.tail[:match.start()] + elem.tail[match.end():]
+    for node in root.getiterator():
+        _tag_matching_regex_in_text(quote_tags, node, 'span', {'text_quote': '1'})
+        _tag_matching_regex_in_text(signature, node, 'span', {'text_signature': '1'})
 
-    # 5. \n back to <br/>
+    # Processing
+    # ------------------------------------------------------------
+
+    # tree: tag nodes
+    quote_begin = False
+    for node in root.getiterator():
+        if node.get('class') in ['WordSection1', 'MsoNormal']:
+            root.set('msoffice', '1')
+        if node.get('class') in ['SkyDrivePlaceholder'] or node.get('id') in ['SkyDrivePlaceholder']:
+            root.set('hotmail', '1')
+
+        if quote_begin:
+            node.set('quote', '1')
+
+        if root.get('msoffice') and node.tag == 'div' and 'border-top:solid' in node.get('style', ''):
+            quote_begin = True
+        if root.get('hotmail') and node.tag == 'hr' and ('stopSpelling' in node.get('class', '') or 'stopSpelling' in node.get('id', '')):
+            quote_begin = True
+
+        if node.tag == 'blockquote' or node.get('text_quote') or node.get('text_signature'):
+            node.set('remove', '1')
+        if quote_begin:
+            node.set('remove', '1')
+            node.set('tail_remove', '1')
+
+    # Post processing
+    # ------------------------------------------------------------
+
+    if remove_unwanted:
+        to_delete = []
+        for node in root.getiterator():
+            if node.get('remove'):
+                # copy the node tail into parent text
+                if node.tail and not node.get('tail_remove'):
+                    parent = node.getparent()
+                    parent.tail = node.tail + (parent.tail or '')
+                to_delete.append(node)
+        for node in to_delete:
+            node.getparent().remove(node)
+
+    # html: \n back to <br/>
     html = etree.tostring(root, pretty_print=True)
     html = html.replace('__BR_TAG__', '<br />')
-
-    # 6. Misc cleaning :
-    # - ClEditor seems to love using <div><br /><div> -> replace with <br />
-    br_div_tags = re.compile(r'(<div>\s*<br\s*\/>\s*<\/div>)')
-    html = _replace_matching_regex(br_div_tags, html, '<br />')
 
     return html
 
