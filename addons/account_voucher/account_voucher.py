@@ -826,6 +826,8 @@ class account_voucher(osv.osv):
         currency_id = False
         if journal.currency:
             currency_id = journal.currency.id
+        else:
+            currency_id = journal.company_id.currency_id.id
         vals['value'].update({'currency_id': currency_id})
         res = self.onchange_partner_id(cr, uid, ids, partner_id, journal_id, amount, currency_id, ttype, date, context)
         for key in res.keys():
