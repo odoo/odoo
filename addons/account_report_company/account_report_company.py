@@ -30,7 +30,7 @@ class res_partner(osv.Model):
 
     _display_name_store_triggers = {
         'res.partner': (lambda self,cr,uid,ids,context=None: self.search(cr, uid, [('id','child_of',ids)]),
-                        ['parent_id', 'is_company'], 10)
+                        ['parent_id', 'is_company', 'name'], 10)
     }
 
     # indirection to avoid passing a copy of the overridable method when declaring the function field
