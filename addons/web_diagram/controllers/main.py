@@ -1,6 +1,6 @@
 import openerp
 
-class DiagramView(openerp.addons.web.controllers.main.View):
+class DiagramView(openerp.addons.web.http.Controller):
     _cp_path = "/web_diagram/diagram"
 
     @openerp.addons.web.http.jsonrequest
