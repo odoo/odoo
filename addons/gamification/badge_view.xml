@@ -140,16 +140,10 @@
                             <div t-attf-class="#{record.stat_my.raw_value ? 'oe_kanban_color_5' : 'oe_kanban_color_white'} oe_kanban_card oe_kanban_global_click oe_kanban_badge">
                                 <div class="oe_kanban_content">
                                     <div class="oe_kanban_left">
-                                        <a type="open"><img t-att-src="kanban_image('gamification.badge', 'image', record.image.raw_value)" t-att-title="record.name.value" width="110" height="110" /></a>
+                                        <a type="open"><img t-att-src="kanban_image('gamification.badge', 'image', record.image.raw_value)" t-att-title="record.name.value" width="90" height="90" /></a>
                                     </div>
-                                    <div>
+                                    <div class="oe_no_overflow">
                                         <h4><field name="name"/></h4>
-                                        <t t-if="record.description.value">
-                                            <em><field name="description"/></em>
-                                        </t>
-                                        <p>
-                                            Total: <t t-esc="record.stat_count.raw_value"/> (<t t-esc="record.stat_this_month.raw_value"/> this month)
-                                        </p>
                                         <t t-if="record.remaining_sending.value != 0">
                                             <button type="action" name="%(action_grant_wizard)d" class="oe_highlight">Grant</button>
                                             <span class="oe_grey">
@@ -164,8 +158,16 @@
                                         <t t-if="record.remaining_sending.value == 0">
                                             <div class="oe_grey">Can not grant</div>
                                         </t>
+                                        <p>
+                                            <strong>Stats</strong><br/>
+                                            Total: <t t-esc="record.stat_count.raw_value"/><br/>
+                                            This month: <t t-esc="record.stat_this_month.raw_value"/>
+                                        </p>
                                     </div>
                                     <div class="oe_kanban_badge_avatars">
+                                        <t t-if="record.description.value">
+                                            <p><em><field name="description"/></em></p>
+                                        </t>
                                         <a type="object" name="get_granted_employees">
                                             <t t-foreach="record.unique_owner_ids.raw_value.slice(0,11)" t-as="owner">
                                                 <img t-att-src="kanban_image('res.users', 'image_small', owner)" t-att-data-member_id="owner"/>
