@@ -211,7 +211,7 @@ class gamification_goal_plan(osv.Model):
         # unsubscribe removed users from the plan
         # users are not able to manually unsubscribe to challenges so should
         # do it for them when not concerned anymore
-        if 'user_ids' in vals:
+        if vals.get('user_ids'):
             for action_tuple in vals['user_ids']:
                 if action_tuple[0] == 3:
                     # form (3, ID), remove one
