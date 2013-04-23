@@ -208,14 +208,37 @@ class gamification_goal_plan(osv.Model):
         if not ids:
             return True
 
+        # unsubscribe removed users from the plan
+        # users are not able to manually unsubscribe to challenges so should
+        # do it for them when not concerned anymore
+        if 'user_ids' in vals:
+            for action_tuple in vals['user_ids']:
+                if action_tuple[0] == 3:
+                    # form (3, ID), remove one
+                    self.message_unsubscribe_users(cr, uid, ids, [action_tuple[1]], context=context)
+                if action_tuple[0] == 5:
+                    # form (5,), remove all
+                    for plan in self.browse(cr, uid, ids, context=context):
+                        self.message_unsubscribe_users(cr, uid, [plan.id], [user.id for user in plan.user_ids], context=context)
+                if action_tuple[0] == 6:
+                    # form (6, False, [IDS]), replace by IDS
+                    for plan in self.browse(cr, uid, ids, context=context):
+                        removed_users = set([user.id for user in plan.user_ids]) - set(action_tuple[2])
+                        self.message_unsubscribe_users(cr, uid, [plan.id], list(removed_users), context=context)
+
         write_res = super(gamification_goal_plan, self).write(cr, uid, ids, vals, context=context)
 
         # add users when change the group auto-subscription
         if 'autojoin_group_id' in vals:
             new_group = self.pool.get('res.groups').browse(cr, uid, vals['autojoin_group_id'], context=context)
-            if new_group:
-                self.plan_subscribe_users(cr, uid, ids, [user.id for user in new_group.users], context=context)
+            group_user_ids = [user.id for user in new_group.users]
+            for plan in self.browse(cr, uid, ids, context=context):
+                self.write(cr, uid, [plan.id], {'user_ids': [(4, user) for user in group_user_ids]}, context=context)
 
+        # subscribe new users to the plan
+        if 'user_ids' in vals:
+            for plan in self.browse(cr, uid, ids, context=context):
+                self.message_subscribe_users(cr, uid, ids, [user.id for user in plan.user_ids], context=context)
         return write_res
 
     ##### Update #####
@@ -272,7 +295,8 @@ class gamification_goal_plan(osv.Model):
 
         for plan in self.browse(cr, uid, ids, context=context):
             if plan.autojoin_group_id:
-                self.plan_subscribe_users(cr, uid, [plan.id], [user.id for user in plan.autojoin_group_id.users], context=context)
+                # check in case of new users in plan, this happens if manager removed users in plan manually
+                self.write(cr, uid, [plan.id], {'user_ids': [(4, user) for user in plan.autojoin_group_id.users]}, context=context)
             self.generate_goals_from_plan(cr, uid, [plan.id], context=context)
 
             # goals closed but still opened at the last report date
@@ -310,7 +334,7 @@ class gamification_goal_plan(osv.Model):
         # subscribe users if autojoin group
         for plan in self.browse(cr, uid, ids, context=context):
             if plan.autojoin_group_id:
-                self.plan_subscribe_users(cr, uid, ids, [user.id for user in plan.autojoin_group_id.users], context=context)
+                self.write(cr, uid, [plan.id], {'user_ids': [(4, user) for user in plan.autojoin_group_id.users]}, context=context)
 
             self.write(cr, uid, plan.id, {'state': 'inprogress'}, context=context)
             self.message_post(cr, uid, plan.id, body="New challenge started.", context=context)
@@ -413,21 +437,6 @@ class gamification_goal_plan(osv.Model):
 
                     goal_obj.update(cr, uid, [new_goal_id], context=context)
 
-        return True
-
-    def plan_subscribe_users(self, cr, uid, ids, new_user_ids, context=None):
-        """ Add the following users to plans
-
-        :param ids: ids of plans to which the users will be added
-        :param new_user_ids: ids of the users to add"""
-
-        for plan in self.browse(cr, uid, ids, context):
-            subscription = [user.id for user in plan.user_ids]
-            subscription.extend(new_user_ids)
-            # remove duplicates
-            unified_subscription = list(set(subscription))
-
-            self.write(cr, uid, [plan.id], {'user_ids': [(4, user) for user in unified_subscription]}, context=context)
         return True
 
     ##### JS utilities #####
@@ -542,9 +551,9 @@ class gamification_goal_plan(osv.Model):
 
             body_html = template_env.get_template('group_progress.mako').render({'object': plan, 'planlines_boards': planlines_boards})
 
+            # send to every follower of the plan
             self.message_post(cr, uid, plan.id,
                 body=body_html,
-                partner_ids=[(6, 0, [user.partner_id.id for user in plan.user_ids])],
                 context=context,
                 subtype='mail.mt_comment')
             if plan.report_message_group_id:
@@ -565,7 +574,8 @@ class gamification_goal_plan(osv.Model):
 
                 body_html = template_env.get_template('personal_progress.mako').render(values)
 
-                self.message_post(cr, uid, plan.id,
+                # send message only to user
+                self.message_post(cr, uid, 0,
                                   body=body_html,
                                   partner_ids=[(4, user.partner_id.id)],
                                   context=context,
