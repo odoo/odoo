@@ -2,7 +2,7 @@
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2012 OpenERP S.A. (<http://openerp.com>).
+#    Copyright (C) 2004-2013 OpenERP S.A. (<http://openerp.com>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -39,7 +39,7 @@ except ImportError:
     from StringIO import StringIO   # NOQA
 
 import openerp
-from openerp import modules, pooler, tools, addons
+from openerp import modules, tools, addons
 from openerp.modules.db import create_categories
 from openerp.tools.parse_version import parse_version
 from openerp.tools.translate import _
@@ -254,9 +254,9 @@ class module(osv.osv):
         'website': fields.char("Website", size=256, readonly=True),
 
         # attention: Incorrect field names !!
-        #   installed_version refer the latest version (the one on disk)
-        #   latest_version refer the installed version (the one in database)
-        #   published_version refer the version available on the repository
+        #   installed_version refers the latest version (the one on disk)
+        #   latest_version refers the installed version (the one in database)
+        #   published_version refers the version available on the repository
         'installed_version': fields.function(_get_latest_version, string='Latest Version', type='char'),
         'latest_version': fields.char('Installed Version', size=64, readonly=True),
         'published_version': fields.char('Published Version', size=64, readonly=True),
@@ -411,7 +411,6 @@ class module(osv.osv):
         if to_install_ids:
             self.button_install(cr, uid, to_install_ids, context=context)
 
-        openerp.modules.registry.RegistryManager.signal_registry_change(cr.dbname)
         return dict(ACTION_DICT, name=_('Install'))
 
     def button_immediate_install(self, cr, uid, ids, context=None):
@@ -473,14 +472,15 @@ class module(osv.osv):
         function(cr, uid, ids, context=context)
 
         cr.commit()
-        _, pool = pooler.restart_pool(cr.dbname, update_module=True)
+        openerp.modules.registry.RegistryManager.signal_registry_change(cr.dbname)
+        registry = openerp.modules.registry.RegistryManager.new(cr.dbname, update_module=True)
 
-        config = pool.get('res.config').next(cr, uid, [], context=context) or {}
+        config = registry['res.config'].next(cr, uid, [], context=context) or {}
         if config.get('type') not in ('ir.actions.act_window_close',):
             return config
 
         # reload the client; open the first available root menu
-        menu_obj = self.pool.get('ir.ui.menu')
+        menu_obj = registry['ir.ui.menu']
         menu_ids = menu_obj.search(cr, uid, [('parent_id', '=', False)], context=context)
         return {
             'type': 'ir.actions.client',
@@ -656,32 +656,38 @@ class module(osv.osv):
     def install_from_urls(self, cr, uid, urls, context=None):
         OPENERP = 'openerp'
         tmp = tempfile.mkdtemp()
+        _logger.debug('Install from url: %r', urls)
         try:
+            # 1. Download & unzip missing modules
             for module_name, url in urls.items():
                 if not url:
                     continue    # nothing to download, local version is already the last one
                 try:
+                    _logger.info('Downloading module `%s` from OpenERP Apps', module_name)
                     content = urllib2.urlopen(url).read()
-                except Exception, e:
-                    _logger.exception('ggr')
-                    raise osv.except_osv('grrr', e)
+                except Exception:
+                    _logger.exception('Failed to fetch module %s', module_name)
+                    raise osv.except_osv(_('Module not found'),
+                                         _('The `%s` module appears to be unavailable at the moment, please try again later.') % module_name)
                 else:
                     zipfile.ZipFile(StringIO(content)).extractall(tmp)
                     assert os.path.isdir(os.path.join(tmp, module_name))
 
-            for module_name in urls:
-                if module_name == OPENERP:
-                    continue    # special case. handled below
+            # 2a. Copy/Replace module source in addons path
+            for module_name, url in urls.items():
+                if module_name == OPENERP or not url:
+                    continue    # OPENERP is special case, handled below, and no URL means local module
                 module_path = modules.get_module_path(module_name, downloaded=True, display_warning=False)
                 bck = backup(module_path, False)
+                _logger.info('Copy downloaded module `%s` to `%s`', module_name, module_path)
                 shutil.move(os.path.join(tmp, module_name), module_path)
                 if bck:
                     shutil.rmtree(bck)
 
+            # 2b.  Copy/Replace server+base module source if downloaded
             if urls.get(OPENERP, None):
-                # special case. it containt the server and the base module.
+                # special case. it contains the server and the base module.
                 # extract path is not the same
-
                 base_path = os.path.dirname(modules.get_module_path('base'))
 
                 # copy all modules in the SERVER/openerp/addons directory to the new "openerp" module (except base itself)
@@ -693,15 +699,22 @@ class module(osv.osv):
                 # then replace the server by the new "base" module
                 server_dir = openerp.tools.config['root_path']      # XXX or dirname()
                 bck = backup(server_dir)
+                _logger.info('Copy downloaded module `openerp` to `%s`', server_dir)
                 shutil.move(os.path.join(tmp, OPENERP), server_dir)
                 #if bck:
                 #    shutil.rmtree(bck)
 
             self.update_list(cr, uid, context=context)
 
-            ids = self.search(cr, uid, [('name', 'in', urls.keys())], context=context)
-            if self.search_count(cr, uid, [('id', 'in', ids), ('state', '=', 'installed')], context=context):
-                # if any to update
+            with_urls = [m for m, u in urls.items() if u]
+            downloaded_ids = self.search(cr, uid, [('name', 'in', with_urls)], context=context)
+            already_installed = self.search(cr, uid, [('id', 'in', downloaded_ids), ('state', '=', 'installed')], context=context)
+
+            to_install_ids = self.search(cr, uid, [('name', 'in', urls.keys()), ('state', '=', 'uninstalled')], context=context)
+            post_install_action = self.button_immediate_install(cr, uid, to_install_ids, context=context)
+
+            if already_installed:
+                # in this case, force server restart to reload python code...
                 cr.commit()
                 openerp.service.restart_server()
                 return {
@@ -709,7 +722,7 @@ class module(osv.osv):
                     'tag': 'home',
                     'params': {'wait': True},
                 }
-            return self.button_immediate_install(cr, uid, ids, context=context)
+            return post_install_action
         finally:
             shutil.rmtree(tmp)
 

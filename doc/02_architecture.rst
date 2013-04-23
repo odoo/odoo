@@ -1,6 +1,6 @@
-========================================
+============
 Architecture
-========================================
+============
 
 OpenERP as a multitenant three-tiers architecture
 =================================================
@@ -180,6 +180,7 @@ OpenERP follows the MVC semantic with
 
 Network communications and WSGI
 ===============================
+
 OpenERP is an HTTP web server and may also be deployed as an WSGI-compliant
 application.
 
@@ -206,4 +207,46 @@ As such, it can be run as a stand-alone HTTP server or embedded inside OpenERP.
 
 The HTTP namespaces /openerp/ /object/ /common/ are reserved for the XML-RPC
 layer, every module restrict it's HTTP namespace to /<name_of_the_module>/
+
+Process model
+=============
+
+In the past, the OpenERP server was using threads to handle HTTP requests
+concurrently or to process cron jobs. Using threads is still the default
+behavior when running the ``openerp-server`` script but not the recommended
+one: it is in fact recommended to use the ``--workers`` option.
+
+By using the ``--workers`` option, the OpenERP server will spawn a fixed number
+of processes instead of spawning a new thread for each incoming request.
+
+This has a number of advantages:
+
+ - Processes do not suffer from CPython's Global Interpreter Lock.
+ - Processes can be gracefully recycled while requests are still handled by the
+   server.
+ - Resources such as CPU time and memory made available to a process can be
+   monitored on a per-process basis.
+
+When using the ``--workers`` options, two types of processes may be spawned:
+web process, and cron process.
+
+.. versionadded:: 7.1
+
+.. _longpolling-worker:
+
+When using the ``--workers`` options, three types of processes may be spawned:
+web process, and cron process, just as previsouly, but also an evented (using
+gevent) web process is started. It is used for long-polling as needed by the
+upcoming Instant Messaging feature. As for now, that process is listening on a
+different port than the main web processes. A reverse proxy (e.g. Nginx) to
+listen on a unique port, mapping all requests to the normal port, but mapping
+the ``/longpolling`` route to the evented process is necessary (the web
+interface cannot issue requests to different ports).
+
+(It is possible to make the threaded server evented by passing the ``--gevent``
+flag.)
+
+The goal is to drop support for the threaded model, and also make all web
+processes evented; there would be no more distinction between "normal" and
+"longpolling" processes. For this to happen, further testing is needed.
 

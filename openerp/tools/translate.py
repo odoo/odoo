@@ -25,7 +25,6 @@ import fnmatch
 import inspect
 import locale
 import os
-import openerp.pooler as pooler
 import openerp.sql_db as sql_db
 import re
 import logging
@@ -43,6 +42,7 @@ import misc
 from misc import UpdateableStr
 from misc import SKIPPED_ELEMENT_TYPES
 import osutil
+import openerp
 from openerp import SUPERUSER_ID
 
 _logger = logging.getLogger(__name__)
@@ -208,7 +208,7 @@ class GettextAlias(object):
             (cr, dummy) = self._get_cr(frame, allow_create=False)
             uid = self._get_uid(frame)
             if pool and cr and uid:
-                lang = pool.get('res.users').context_get(cr, uid)['lang']
+                lang = pool['res.users'].context_get(cr, uid)['lang']
         return lang
 
     def __call__(self, source):
@@ -227,8 +227,8 @@ class GettextAlias(object):
                 cr, is_new_cr = self._get_cr(frame)
                 if cr:
                     # Try to use ir.translation to benefit from global cache if possible
-                    pool = pooler.get_pool(cr.dbname)
-                    res = pool.get('ir.translation')._get_source(cr, SUPERUSER_ID, None, ('code','sql_constraint'), lang, source)
+                    registry = openerp.registry(cr.dbname)
+                    res = registry['ir.translation']._get_source(cr, SUPERUSER_ID, None, ('code','sql_constraint'), lang, source)
                 else:
                     _logger.debug('no context cursor detected, skipping translation for "%r"', source)
             else:
@@ -550,6 +550,8 @@ def trans_parse_view(de):
         res.append(de.get('sum').encode("utf8"))
     if de.get("confirm"):
         res.append(de.get('confirm').encode("utf8"))
+    if de.get("placeholder"):
+        res.append(de.get('placeholder').encode("utf8"))
     for n in de:
         res.extend(trans_parse_view(n))
     return res
@@ -611,11 +613,11 @@ def babel_extract_qweb(fileobj, keywords, comment_tags, options):
 def trans_generate(lang, modules, cr):
     dbname = cr.dbname
 
-    pool = pooler.get_pool(dbname)
-    trans_obj = pool.get('ir.translation')
-    model_data_obj = pool.get('ir.model.data')
+    registry = openerp.registry(dbname)
+    trans_obj = registry.get('ir.translation')
+    model_data_obj = registry.get('ir.model.data')
     uid = 1
-    l = pool.models.items()
+    l = registry.models.items()
     l.sort()
 
     query = 'SELECT name, model, res_id, module'    \
@@ -659,64 +661,22 @@ def trans_generate(lang, modules, cr):
         model = encode(model)
         xml_name = "%s.%s" % (module, encode(xml_name))
 
-        if not pool.get(model):
+        if model not in registry:
             _logger.error("Unable to find object %r", model)
             continue
 
-        exists = pool.get(model).exists(cr, uid, res_id)
+        exists = registry[model].exists(cr, uid, res_id)
         if not exists:
             _logger.warning("Unable to find object %r with id %d", model, res_id)
             continue
-        obj = pool.get(model).browse(cr, uid, res_id)
+        obj = registry[model].browse(cr, uid, res_id)
 
         if model=='ir.ui.view':
             d = etree.XML(encode(obj.arch))
             for t in trans_parse_view(d):
                 push_translation(module, 'view', encode(obj.model), 0, t)
         elif model=='ir.actions.wizard':
-            service_name = 'wizard.'+encode(obj.wiz_name)
-            import openerp.netsvc as netsvc
-            if netsvc.Service._services.get(service_name):
-                obj2 = netsvc.Service._services[service_name]
-                for state_name, state_def in obj2.states.iteritems():
-                    if 'result' in state_def:
-                        result = state_def['result']
-                        if result['type'] != 'form':
-                            continue
-                        name = "%s,%s" % (encode(obj.wiz_name), state_name)
-
-                        def_params = {
-                            'string': ('wizard_field', lambda s: [encode(s)]),
-                            'selection': ('selection', lambda s: [encode(e[1]) for e in ((not callable(s)) and s or [])]),
-                            'help': ('help', lambda s: [encode(s)]),
-                        }
-
-                        # export fields
-                        if not result.has_key('fields'):
-                            _logger.warning("res has no fields: %r", result)
-                            continue
-                        for field_name, field_def in result['fields'].iteritems():
-                            res_name = name + ',' + field_name
-
-                            for fn in def_params:
-                                if fn in field_def:
-                                    transtype, modifier = def_params[fn]
-                                    for val in modifier(field_def[fn]):
-                                        push_translation(module, transtype, res_name, 0, val)
-
-                        # export arch
-                        arch = result['arch']
-                        if arch and not isinstance(arch, UpdateableStr):
-                            d = etree.XML(arch)
-                            for t in trans_parse_view(d):
-                                push_translation(module, 'wizard_view', name, 0, t)
-
-                        # export button labels
-                        for but_args in result['state']:
-                            button_name = but_args[0]
-                            button_label = but_args[1]
-                            res_name = name + ',' + button_name
-                            push_translation(module, 'wizard_button', res_name, 0, button_label)
+            pass # TODO Can model really be 'ir.actions.wizard' ?
 
         elif model=='ir.model.fields':
             try:
@@ -724,7 +684,7 @@ def trans_generate(lang, modules, cr):
             except AttributeError, exc:
                 _logger.error("name error in %s: %s", xml_name, str(exc))
                 continue
-            objmodel = pool.get(obj.model)
+            objmodel = registry[obj.model]
             if not objmodel or not field_name in objmodel._columns:
                 continue
             field_def = objmodel._columns[field_name]
@@ -806,11 +766,11 @@ def trans_generate(lang, modules, cr):
                 push_constraint_msg(module, term_type, model._name, constraint[msg_pos])
             
     for (_, model, module) in cr.fetchall():
-        model_obj = pool.get(model)
-
-        if not model_obj:
+        if model not in registry:
             _logger.error("Unable to find object %r", model)
             continue
+
+        model_obj = registry[model]
 
         if model_obj._constraints:
             push_local_constraints(module, model_obj, 'constraints')
@@ -836,7 +796,7 @@ def trans_generate(lang, modules, cr):
                 return path.split(os.path.sep)[0]
         return 'base'   # files that are not in a module are considered as being in 'base' module
 
-    modobj = pool.get('ir.module.module')
+    modobj = registry['ir.module.module']
     installed_modids = modobj.search(cr, uid, [('state', '=', 'installed')])
     installed_modules = map(lambda m: m['name'], modobj.read(cr, uid, installed_modids, ['name']))
 
@@ -929,9 +889,9 @@ def trans_load_data(cr, fileobj, fileformat, lang, lang_name=None, verbose=True,
     if context is None:
         context = {}
     db_name = cr.dbname
-    pool = pooler.get_pool(db_name)
-    lang_obj = pool.get('res.lang')
-    trans_obj = pool.get('ir.translation')
+    registry = openerp.registry(db_name)
+    lang_obj = registry.get('res.lang')
+    trans_obj = registry.get('ir.translation')
     iso_lang = misc.get_iso_codes(lang)
     try:
         ids = lang_obj.search(cr, SUPERUSER_ID, [('code','=', lang)])
@@ -1051,11 +1011,10 @@ def load_language(cr, lang):
     :param lang: language ISO code with optional _underscore_ and l10n flavor (ex: 'fr', 'fr_BE', but not 'fr-BE')
     :type lang: str
     """
-    pool = pooler.get_pool(cr.dbname)
-    language_installer = pool.get('base.language.install')
-    uid = 1
-    oid = language_installer.create(cr, uid, {'lang': lang})
-    language_installer.lang_install(cr, uid, [oid], context=None)
+    registry = openerp.registry(cr.dbname)
+    language_installer = registry['base.language.install']
+    oid = language_installer.create(cr, SUPERUSER_ID, {'lang': lang})
+    language_installer.lang_install(cr, SUPERUSER_ID, [oid], context=None)
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

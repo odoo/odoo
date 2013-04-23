@@ -23,9 +23,10 @@ import os
 import re
 
 from lxml import etree
-import openerp.netsvc as netsvc
-import openerp.pooler as pooler
 
+import openerp
+
+import openerp
 import openerp.tools as tools
 import openerp.modules
 import print_xml
@@ -40,12 +41,22 @@ def toxml(value):
     unicode_value = tools.ustr(value)
     return unicode_value.replace('&', '&amp;').replace('<','&lt;').replace('>','&gt;')
 
-class report_int(netsvc.Service):
-    def __init__(self, name):
-        assert not self.exists(name), 'The report "%s" already exists!' % name
-        super(report_int, self).__init__(name)
-        if not name.startswith('report.'):
-            raise Exception('ConceptionError, bad report name, should start with "report."')
+class report_int(object):
+
+    _reports = {}
+    
+    def __init__(self, name, register=True):
+        if register:
+            assert openerp.conf.deprecation.allow_report_int_registration
+            assert name.startswith('report.'), 'Report names should start with "report.".'
+            assert name not in self._reports, 'The report "%s" already exists.' % name
+            self._reports[name] = self
+        else:
+            # The report is instanciated at each use site, which is ok.
+            pass
+
+        self.__name = name
+
         self.name = name
         self.id = 0
         self.name2 = '.'.join(name.split('.')[1:])
@@ -61,8 +72,8 @@ class report_rml(report_int):
             XML -> DATAS -> RML -> PDF -> HTML
         using a XSL:RML transformation
     """
-    def __init__(self, name, table, tmpl, xsl):
-        super(report_rml, self).__init__(name)
+    def __init__(self, name, table, tmpl, xsl, register=True):
+        super(report_rml, self).__init__(name, register=register)
         self.table = table
         self.internal_header=False
         self.tmpl = tmpl
@@ -86,8 +97,8 @@ class report_rml(report_int):
         if report_type == 'raw':
             return xml, report_type
         rml = self.create_rml(cr, xml, uid, context)
-        pool = pooler.get_pool(cr.dbname)
-        ir_actions_report_xml_obj = pool.get('ir.actions.report.xml')
+        registry = openerp.registry(cr.dbname)
+        ir_actions_report_xml_obj = registry['ir.actions.report.xml']
         report_xml_ids = ir_actions_report_xml_obj.search(cr, uid, [('report_name', '=', self.name[7:])], context=context)
         self.title = report_xml_ids and ir_actions_report_xml_obj.browse(cr,uid,report_xml_ids)[0].name or 'OpenERP Report'
         create_doc = self.generators[report_type]
@@ -136,8 +147,8 @@ class report_rml(report_int):
             self.internal_header=True
         if not context:
             context={}
-        pool = pooler.get_pool(cr.dbname)
-        ir_translation_obj = pool.get('ir.translation')
+        registry = openerp.registry(cr.dbname)
+        ir_translation_obj = registry['ir.translation']
 
         # In some case we might not use xsl ...
         if not self.xsl:

@@ -20,7 +20,6 @@
 #
 ##############################################################################
 
-#.apidoc title: Utilities: tools.misc
 
 """
 Miscellaneous tools used by OpenERP.
@@ -139,6 +138,7 @@ def file_open(name, mode="r", subdir='addons', pathinfo=False):
         # Is it below 'addons_path' or 'root_path'?
         name = os.path.normcase(os.path.normpath(name))
         for root in adps + [rtp]:
+            root = os.path.normcase(os.path.normpath(root)) + os.sep
             if name.startswith(root):
                 base = root.rstrip(os.sep)
                 name = name[len(base) + 1:]
@@ -642,21 +642,6 @@ __icons_list = ['STOCK_ABOUT', 'STOCK_ADD', 'STOCK_APPLY', 'STOCK_BOLD',
 def icons(*a, **kw):
     global __icons_list
     return [(x, x) for x in __icons_list ]
-
-def extract_zip_file(zip_file, outdirectory):
-    zf = zipfile.ZipFile(zip_file, 'r')
-    out = outdirectory
-    for path in zf.namelist():
-        tgt = os.path.join(out, path)
-        tgtdir = os.path.dirname(tgt)
-        if not os.path.exists(tgtdir):
-            os.makedirs(tgtdir)
-
-        if not tgt.endswith(os.sep):
-            fp = open(tgt, 'wb')
-            fp.write(zf.read(path))
-            fp.close()
-    zf.close()
 
 def detect_ip_addr():
     """Try a very crude method to figure out a valid external

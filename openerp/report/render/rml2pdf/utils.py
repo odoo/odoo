@@ -131,14 +131,11 @@ def _process_text(self, txt):
             to_translate = tools.ustr(sps.pop(0))
             result += tools.ustr(self.localcontext.get('translate', lambda x:x)(to_translate))
             if sps:
-                try:
-                    txt = None
-                    expr = sps.pop(0)
-                    txt = eval(expr, self.localcontext)
-                    if txt and isinstance(txt, basestring):
-                        txt = tools.ustr(txt)
-                except Exception:
-                    pass
+                txt = None
+                expr = sps.pop(0)
+                txt = eval(expr, self.localcontext)
+                if txt and isinstance(txt, basestring):
+                    txt = tools.ustr(txt)
                 if isinstance(txt, basestring):
                     result += txt
                 elif txt and (txt is not None) and (txt is not False):

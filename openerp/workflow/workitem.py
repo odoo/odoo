@@ -23,11 +23,13 @@
 # TODO:
 # cr.execute('delete from wkf_triggers where model=%s and res_id=%s', (res_type,res_id))
 #
+import logging
 
 import instance
 
 import wkf_expr
-import wkf_logs
+
+logger = logging.getLogger(__name__)
 
 def create(cr, act_datas, inst_id, ident, stack):
     for act in act_datas:
@@ -36,34 +38,29 @@ def create(cr, act_datas, inst_id, ident, stack):
         cr.execute("insert into wkf_workitem (id,act_id,inst_id,state) values (%s,%s,%s,'active')", (id_new, act['id'], inst_id))
         cr.execute('select * from wkf_workitem where id=%s',(id_new,))
         res = cr.dictfetchone()
-        wkf_logs.log(cr,ident,act['id'],'active')
+        logger.info('Created workflow item in activity %s',
+                    act['id'], extra={'ident': ident})
         process(cr, res, ident, stack=stack)
 
 def process(cr, workitem, ident, signal=None, force_running=False, stack=None):
-    if stack is None:
-        raise 'Error !!!'
-    result = True
+    assert stack is not None
+
     cr.execute('select * from wkf_activity where id=%s', (workitem['act_id'],))
     activity = cr.dictfetchone()
 
     triggers = False
-    if workitem['state']=='active':
+    if workitem['state'] == 'active':
         triggers = True
-        result = _execute(cr, workitem, activity, ident, stack)
-        if not result:
+        if not _execute(cr, workitem, activity, ident, stack):
             return False
 
-    if workitem['state']=='running':
-        pass
-
-    if workitem['state']=='complete' or force_running:
+    if force_running or workitem['state'] == 'complete':
         ok = _split_test(cr, workitem, activity['split_mode'], ident, signal, stack)
         triggers = triggers and not ok
 
     if triggers:
         cr.execute('select * from wkf_transition where act_from=%s', (workitem['act_id'],))
-        alltrans = cr.dictfetchall()
-        for trans in alltrans:
+        for trans in cr.dictfetchall():
             if trans['trigger_model']:
                 ids = wkf_expr._eval_expr(cr,ident,workitem,trans['trigger_expr_id'])
                 for res_id in ids:
@@ -71,7 +68,7 @@ def process(cr, workitem, ident, signal=None, force_running=False, stack=None):
                     id =cr.fetchone()[0]
                     cr.execute('insert into wkf_triggers (model,res_id,instance_id,workitem_id,id) values (%s,%s,%s,%s,%s)', (trans['trigger_model'],res_id,workitem['inst_id'], workitem['id'], id))
 
-    return result
+    return True
 
 
 # ---------------------- PRIVATE FUNCS --------------------------------
@@ -79,7 +76,8 @@ def process(cr, workitem, ident, signal=None, force_running=False, stack=None):
 def _state_set(cr, workitem, activity, state, ident):
     cr.execute('update wkf_workitem set state=%s where id=%s', (state,workitem['id']))
     workitem['state'] = state
-    wkf_logs.log(cr,ident,activity['id'],state)
+    logger.info("Changed state of work item %s to \"%s\" in activity %s",
+                workitem['id'], state, activity['id'], extra={'ident': ident})
 
 def _execute(cr, workitem, activity, ident, stack):
     result = True
@@ -146,8 +144,6 @@ def _execute(cr, workitem, activity, ident, stack):
     return result
 
 def _split_test(cr, workitem, split_mode, ident, signal=None, stack=None):
-    if stack is None:
-        raise 'Error !!!'
     cr.execute('select * from wkf_transition where act_from=%s', (workitem['act_id'],))
     test = False
     transitions = []

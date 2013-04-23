@@ -21,7 +21,7 @@
 
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
-from openerp import netsvc
+import openerp.workflow
 
 class workflow(osv.osv):
     _name = "workflow"
@@ -40,8 +40,7 @@ class workflow(osv.osv):
     def write(self, cr, user, ids, vals, context=None):
         if not context:
             context={}
-        wf_service = netsvc.LocalService("workflow")
-        wf_service.clear_cache(cr, user)
+        openerp.workflow.clear_cache(cr, user)
         return super(workflow, self).write(cr, user, ids, vals, context=context)
 
     def get_active_workitems(self, cr, uid, res, res_id, context=None):
@@ -62,8 +61,7 @@ class workflow(osv.osv):
     def create(self, cr, user, vals, context=None):
         if not context:
             context={}
-        wf_service = netsvc.LocalService("workflow")
-        wf_service.clear_cache(cr, user)
+        openerp.workflow.clear_cache(cr, user)
         return super(workflow, self).create(cr, user, vals, context=context)
 
 workflow()

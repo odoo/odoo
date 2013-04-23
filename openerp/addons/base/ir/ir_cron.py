@@ -18,8 +18,9 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-import time
 import logging
+import threading
+import time
 import psycopg2
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
@@ -30,8 +31,11 @@ from openerp.osv import fields, osv
 from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT
 from openerp.tools.safe_eval import safe_eval as eval
 from openerp.tools.translate import _
+from openerp.modules import load_information_from_description_file
 
 _logger = logging.getLogger(__name__)
+
+BASE_VERSION = load_information_from_description_file('base')['version']
 
 def str2tuple(s):
     return eval('tuple(%s)' % (s or ''))
@@ -120,25 +124,30 @@ class ir_cron(osv.osv):
         :param args: arguments of the method (without the usual self, cr, uid).
         :param job_id: job id.
         """
-        args = str2tuple(args)
-        model = self.pool.get(model_name)
-        if model and hasattr(model, method_name):
-            method = getattr(model, method_name)
-            try:
-                log_depth = (None if _logger.isEnabledFor(logging.DEBUG) else 1)
-                netsvc.log(_logger, logging.DEBUG, 'cron.object.execute', (cr.dbname,uid,'*',model_name,method_name)+tuple(args), depth=log_depth)
-                if _logger.isEnabledFor(logging.DEBUG):
-                    start_time = time.time()
-                method(cr, uid, *args)
-                if _logger.isEnabledFor(logging.DEBUG):
-                    end_time = time.time()
-                    _logger.debug('%.3fs (%s, %s)' % (end_time - start_time, model_name, method_name))
-            except Exception, e:
-                self._handle_callback_exception(cr, uid, model_name, method_name, args, job_id, e)
-        else:
-            msg = "Method `%s.%s` do not exist." % (model._name, method_name) \
-                if model else "Model `%s` do not exist." % model._name
-            _logger.warning(msg)
+        try:
+            args = str2tuple(args)
+            openerp.modules.registry.RegistryManager.check_registry_signaling(cr.dbname)
+            registry = openerp.registry(cr.dbname)
+            if model_name in registry:
+                model = registry[model_name]
+                if hasattr(model, method_name):
+                    log_depth = (None if _logger.isEnabledFor(logging.DEBUG) else 1)
+                    netsvc.log(_logger, logging.DEBUG, 'cron.object.execute', (cr.dbname,uid,'*',model_name,method_name)+tuple(args), depth=log_depth)
+                    if _logger.isEnabledFor(logging.DEBUG):
+                        start_time = time.time()
+                    getattr(model, method_name)(cr, uid, *args)
+                    if _logger.isEnabledFor(logging.DEBUG):
+                        end_time = time.time()
+                        _logger.debug('%.3fs (%s, %s)' % (end_time - start_time, model_name, method_name))
+                    openerp.modules.registry.RegistryManager.signal_caches_change(cr.dbname)
+                else:
+                    msg = "Method `%s.%s` does not exist." % (model_name, method_name)
+                    _logger.warning(msg)
+            else:
+                msg = "Model `%s` does not exist." % model_name
+                _logger.warning(msg)
+        except Exception, e:
+            self._handle_callback_exception(cr, uid, model_name, method_name, args, job_id, e)
 
     def _process_job(self, job_cr, job, cron_cr):
         """ Run a given job taking care of the repetition.
@@ -185,15 +194,21 @@ class ir_cron(osv.osv):
         If a job was processed, returns True, otherwise returns False.
         """
         db = openerp.sql_db.db_connect(db_name)
+        threading.current_thread().dbname = db_name
         cr = db.cursor()
         jobs = []
         try:
-            # Careful to compare timestamps with 'UTC' - everything is UTC as of v6.1.
-            cr.execute("""SELECT * FROM ir_cron
-                          WHERE numbercall != 0
-                              AND active AND nextcall <= (now() at time zone 'UTC')
-                          ORDER BY priority""")
-            jobs = cr.dictfetchall()
+            # Make sure the database we poll has the same version as the code of base
+            cr.execute("SELECT 1 FROM ir_module_module WHERE name=%s AND latest_version=%s", ('base', BASE_VERSION))
+            if cr.fetchone():
+                # Careful to compare timestamps with 'UTC' - everything is UTC as of v6.1.
+                cr.execute("""SELECT * FROM ir_cron
+                              WHERE numbercall != 0
+                                  AND active AND nextcall <= (now() at time zone 'UTC')
+                              ORDER BY priority""")
+                jobs = cr.dictfetchall()
+            else:
+                _logger.warning('Skipping database %s as its base version is not %s.', db_name, BASE_VERSION)
         except psycopg2.ProgrammingError, e:
             if e.pgcode == '42P01':
                 # Class 42 — Syntax Error or Access Rule Violation; 42P01: undefined_table
@@ -220,10 +235,8 @@ class ir_cron(osv.osv):
                 _logger.debug('Starting job `%s`.', job['name'])
                 job_cr = db.cursor()
                 try:
-                    openerp.modules.registry.RegistryManager.check_registry_signaling(db_name)
-                    registry = openerp.pooler.get_pool(db_name)
+                    registry = openerp.registry(db_name)
                     registry[cls._name]._process_job(job_cr, job, lock_cr)
-                    openerp.modules.registry.RegistryManager.signal_caches_change(db_name)
                 except Exception:
                     _logger.exception('Unexpected exception while processing cron job %r', job)
                 finally:
@@ -240,6 +253,9 @@ class ir_cron(osv.osv):
             finally:
                 # we're exiting due to an exception while acquiring the lock
                 lock_cr.close()
+
+        if hasattr(threading.current_thread(), 'dbname'): # cron job could have removed it as side-effect
+            del threading.current_thread().dbname
 
     def _try_lock(self, cr, uid, ids, context=None):
         """Try to grab a dummy exclusive write-lock to the rows with the given ids,
