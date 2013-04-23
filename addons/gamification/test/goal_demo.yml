@@ -37,3 +37,17 @@
     self.update(cr, uid, goal_ids, context=context)
     for goal in self.browse(cr, uid, goal_ids, context=context):
       assert goal.state == "reached", "Goal not successful %s" % goal.state
+-
+  I add a reward to the challenge
+-
+  !record {model: gamification.goal.plan, id: plan_base_discover}:
+    reward_first_id: gamification.badge_good_job
+    reward_failure: True
+-
+  I check the demo user received the badge
+-
+  !python {model: gamification.goal.plan}: |
+    plan = self.browse(cr, uid, ref('plan_base_discover'), context=context)
+    self.action_close(cr, uid, [plan.id])
+    badge_ids = self.pool.get('gamification.badge.user').search(cr, uid, [('badge_id', '=', ref('badge_good_job')), ('user_id', '=', ref('base.user_demo'))])
+    assert badge_ids, "Demo users didn't received the badge"

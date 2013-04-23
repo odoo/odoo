@@ -239,6 +239,7 @@ class gamification_badge(osv.Model):
         :param badge_user_ids: list(int) of badge users that will receive the badge
         :param user_from: res.users object that has sent the badge
         """
+        context = context or {}
         badge = self.browse(cr, uid, badge_id, context=context)
         template_env = TemplateHelper()
 

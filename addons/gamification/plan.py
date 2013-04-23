@@ -296,7 +296,7 @@ class gamification_goal_plan(osv.Model):
         for plan in self.browse(cr, uid, ids, context=context):
             if plan.autojoin_group_id:
                 # check in case of new users in plan, this happens if manager removed users in plan manually
-                self.write(cr, uid, [plan.id], {'user_ids': [(4, user) for user in plan.autojoin_group_id.users]}, context=context)
+                self.write(cr, uid, [plan.id], {'user_ids': [(4, user.id) for user in plan.autojoin_group_id.users]}, context=context)
             self.generate_goals_from_plan(cr, uid, [plan.id], context=context)
 
             # goals closed but still opened at the last report date
@@ -334,7 +334,7 @@ class gamification_goal_plan(osv.Model):
         # subscribe users if autojoin group
         for plan in self.browse(cr, uid, ids, context=context):
             if plan.autojoin_group_id:
-                self.write(cr, uid, [plan.id], {'user_ids': [(4, user) for user in plan.autojoin_group_id.users]}, context=context)
+                self.write(cr, uid, [plan.id], {'user_ids': [(4, user.id) for user in plan.autojoin_group_id.users]}, context=context)
 
             self.write(cr, uid, plan.id, {'state': 'inprogress'}, context=context)
             self.message_post(cr, uid, plan.id, body="New challenge started.", context=context)
@@ -628,6 +628,7 @@ class gamification_goal_plan(osv.Model):
             - when a challenge is manually closed
         (if no end date, a running challenge is never rewarded)
         """
+        context = context or {}
         for plan in self.browse(cr, uid, plan_ids, context=context):
             (start_date, end_date) = start_end_date_for_period(plan.period, plan.start_date, plan.end_date)
             yesterday = date.today() - timedelta(days=1)
