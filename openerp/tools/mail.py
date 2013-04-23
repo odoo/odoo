@@ -165,6 +165,8 @@ def html_email_clean(html, remove_unwanted=False, use_max_length=False, max_leng
 
     # tree: tag nodes
     quote_begin = False
+    overlength = False
+    cur_char_nbr = 0
     for node in root.getiterator():
         if node.get('class') in ['WordSection1', 'MsoNormal']:
             root.set('msoffice', '1')
@@ -173,11 +175,21 @@ def html_email_clean(html, remove_unwanted=False, use_max_length=False, max_leng
 
         if quote_begin:
             node.set('quote', '1')
+        if overlength:
+            node.set('remove', '1')
+            node.set('tail_remove', '1')
 
         if root.get('msoffice') and node.tag == 'div' and 'border-top:solid' in node.get('style', ''):
             quote_begin = True
         if root.get('hotmail') and node.tag == 'hr' and ('stopSpelling' in node.get('class', '') or 'stopSpelling' in node.get('id', '')):
             quote_begin = True
+
+        if use_max_length:
+            if not overlength and cur_char_nbr + len(node.text or '') > max_length:
+                overlength = True
+                node.text = node.text[0:(max_length - cur_char_nbr)] + ' <span class="oe_mail_expand"><a href="#">... read more</a></span>'
+                node.set('tail_remove', '1')
+            cur_char_nbr += len(node.text or '')
 
         if node.tag == 'blockquote' or node.get('text_quote') or node.get('text_signature'):
             node.set('remove', '1')
@@ -197,6 +209,8 @@ def html_email_clean(html, remove_unwanted=False, use_max_length=False, max_leng
                     parent = node.getparent()
                     parent.tail = node.tail + (parent.tail or '')
                 to_delete.append(node)
+            if node.get('tail_remove'):
+                node.tail = ''
         for node in to_delete:
             node.getparent().remove(node)
 
