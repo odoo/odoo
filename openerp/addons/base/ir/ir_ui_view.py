@@ -256,6 +256,53 @@ class view(osv.osv):
                     cr, uid, id, model, exclude_base=True, context=None):
                 yield info
 
+    def get_root_ancestor(self, cr, uid, view_id=None,
+                          model=None, view_type=None, context=None):
+        """
+        Fetches the root of the view tree specified by the id or (type, model)
+        parameters.
+
+        If view_id is specified, view_type and model aren't needed (and the
+        other way around)
+
+        :param view_id: id of view to search the root ancestor of
+        :param str model: model to use the view for
+        :param str view_type: expected view type
+        :return:
+        """
+        assert view_id or (model and view_type),\
+            "caller must provide either a view_id or a model and a view_type"\
+            " to be able to fetch a root view"
+
+        view = False
+        # Search for a root (i.e. without any parent) view.
+        while True:
+            if view_id:
+                ids = [view_id]
+            else:
+                # read does not guarantee ordering so directly take just first
+                # search'ed id and read that, this way we don't care
+                ids = self.search(cr, uid, [
+                    ['model', '=', model],
+                    ['type', '=', view_type],
+                    ['inherit_id', '=', False],
+                ], context=context, order='priority')[:1]
+            views = self.read(cr, uid, ids,[
+                'arch', 'name', 'field_parent',
+                'id', 'type', 'inherit_id', 'model'
+            ], context=context)
+            view = views[0] if views else False
+
+            if not views:
+                break
+
+            view_id = view['inherit_id'] or view['id']
+            # due to read() inherit_id may be a name_get pair, unpack id
+            if isinstance(view_id, tuple): view_id, _name = view_id
+            if not view['inherit_id']:
+                break
+
+        return view
 
     def raise_view_error(self, cr, uid, model, error_msg, view_id, child_view_id, context=None):
         view, child_view = self.browse(cr, uid, [view_id, child_view_id], context)
