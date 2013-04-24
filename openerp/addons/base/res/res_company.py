@@ -253,7 +253,7 @@ class res_company(osv.osv):
         vals.update({'partner_id': partner_id})
         self.cache_restart(cr)
         company_id = super(res_company, self).create(cr, uid, vals, context=context)
-        obj_partner.write(cr, uid, partner_id, {'company_id': company_id}, context=context)
+        obj_partner.write(cr, uid, [partner_id], {'company_id': company_id}, context=context)
         return company_id
 
     def write(self, cr, uid, ids, values, context=None):

@@ -182,7 +182,7 @@ class Multicorn(object):
         self.socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
         self.socket.setblocking(0)
         self.socket.bind(self.address)
-        self.socket.listen(8)
+        self.socket.listen(8*self.population)
         # long polling socket
         self.long_polling_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.long_polling_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
