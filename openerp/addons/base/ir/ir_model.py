@@ -869,7 +869,7 @@ class ir_model_data(osv.osv):
             raise ValueError('No such external ID currently defined in the system: %s.%s' % (module, xml_id))
         return res['model'], res['res_id']
 
-    def check_object_reference(self, cr, uid, module, xml_id):
+    def check_object_reference(self, cr, uid, module, xml_id, raise_on_access_error=False):
         """Returns (model, res_id) corresponding to a given module and xml_id (cached), if and only if the user has the necessary access rights
         to see that object, otherwise raise ValueError"""
         model, res_id = self.get_object_reference(cr, uid, module, xml_id)
@@ -877,7 +877,9 @@ class ir_model_data(osv.osv):
         check_right = self.pool.get(model).search(cr, uid, [('id', '=', res_id)])
         if check_right:
             return model, res_id
-        raise ValueError('Not enough access rights on the external ID: %s.%s' % (module, xml_id))
+        if raise_on_access_error:
+            raise ValueError('Not enough access rights on the external ID: %s.%s' % (module, xml_id))
+        return model, False
 
     def get_object(self, cr, uid, module, xml_id, context=None):
         """Returns a browsable record for the given module name and xml_id or raise ValueError if not found"""
