@@ -1697,7 +1697,7 @@ class BaseModel(object):
         return any([self.pool.get('res.users').has_group(cr, uid, group_ext_id)
                         for group_ext_id in groups.split(',')])
 
-    def __view_look_dom(self, cr, user, node, view_id, in_tree_view, model_fields, context=None):
+    def __view_look_dom(self, cr, user, model, node, view_id, in_tree_view, model_fields, context=None):
         """Return the description of the fields in the node.
 
         In a normal call to this method, node is a complete view architecture
@@ -1716,6 +1716,7 @@ class BaseModel(object):
         children = True
 
         modifiers = {}
+        Model = self.pool[model]
 
         def encode(s):
             if isinstance(s, unicode):
@@ -1732,8 +1733,8 @@ class BaseModel(object):
 
                :return: True if field should be included in the result of fields_view_get
             """
-            if node.tag == 'field' and node.get('name') in self._all_columns:
-                column = self._all_columns[node.get('name')].column
+            if node.tag == 'field' and node.get('name') in Model._all_columns:
+                column = Model._all_columns[node.get('name')].column
                 if column.groups and not self.user_has_groups(cr, user,
                                                               groups=column.groups,
                                                               context=context):
@@ -1764,8 +1765,8 @@ class BaseModel(object):
                 xml += "</form>"
                 new_xml = etree.fromstring(encode(xml))
                 ctx = context.copy()
-                ctx['base_model_name'] = self._name
-                xarch, xfields = self.pool[node.get('object')].__view_look_dom_arch(cr, user, new_xml, view_id, ctx)
+                ctx['base_model_name'] = model
+                xarch, xfields = self.__view_look_dom_arch(cr, user, node.get('object'), new_xml, view_id, ctx)
                 views['form'] = {
                     'arch': xarch,
                     'fields': xfields
@@ -1775,10 +1776,10 @@ class BaseModel(object):
             if node.get('name'):
                 attrs = {}
                 try:
-                    if node.get('name') in self._columns:
-                        column = self._columns[node.get('name')]
+                    if node.get('name') in Model._columns:
+                        column = Model._columns[node.get('name')]
                     else:
-                        column = self._inherit_fields[node.get('name')][2]
+                        column = Model._inherit_fields[node.get('name')][2]
                 except Exception:
                     column = False
 
@@ -1791,8 +1792,8 @@ class BaseModel(object):
                         if f.tag in ('form', 'tree', 'graph', 'kanban'):
                             node.remove(f)
                             ctx = context.copy()
-                            ctx['base_model_name'] = self._name
-                            xarch, xfields = relation.__view_look_dom_arch(cr, user, f, view_id, ctx)
+                            ctx['base_model_name'] = Model
+                            xarch, xfields = self.__view_look_dom_arch(cr, user, column._obj or None, f, view_id, ctx)
                             views[str(f.tag)] = {
                                 'arch': xarch,
                                 'fields': xfields
@@ -1826,7 +1827,7 @@ class BaseModel(object):
 
 
         elif node.tag in ('form', 'tree'):
-            result = self.view_header_get(cr, user, False, node.tag, context)
+            result = Model.view_header_get(cr, user, False, node.tag, context)
             if result:
                 node.set('string', result)
             in_tree_view = node.tag == 'tree'
@@ -1848,39 +1849,40 @@ class BaseModel(object):
 
         # translate view
         if 'lang' in context:
+            Translations = self.pool['ir.translation']
             if node.text and node.text.strip():
-                trans = self.pool.get('ir.translation')._get_source(cr, user, self._name, 'view', context['lang'], node.text.strip())
+                trans = Translations._get_source(cr, user, model, 'view', context['lang'], node.text.strip())
                 if trans:
                     node.text = node.text.replace(node.text.strip(), trans)
             if node.tail and node.tail.strip():
-                trans = self.pool.get('ir.translation')._get_source(cr, user, self._name, 'view', context['lang'], node.tail.strip())
+                trans = Translations._get_source(cr, user, model, 'view', context['lang'], node.tail.strip())
                 if trans:
                     node.tail =  node.tail.replace(node.tail.strip(), trans)
 
             if node.get('string') and not result:
-                trans = self.pool.get('ir.translation')._get_source(cr, user, self._name, 'view', context['lang'], node.get('string'))
+                trans = Translations._get_source(cr, user, model, 'view', context['lang'], node.get('string'))
                 if trans == node.get('string') and ('base_model_name' in context):
                     # If translation is same as source, perhaps we'd have more luck with the alternative model name
                     # (in case we are in a mixed situation, such as an inherited view where parent_view.model != model
-                    trans = self.pool.get('ir.translation')._get_source(cr, user, context['base_model_name'], 'view', context['lang'], node.get('string'))
+                    trans = Translations._get_source(cr, user, context['base_model_name'], 'view', context['lang'], node.get('string'))
                 if trans:
                     node.set('string', trans)
 
             for attr_name in ('confirm', 'sum', 'avg', 'help', 'placeholder'):
                 attr_value = node.get(attr_name)
                 if attr_value:
-                    trans = self.pool.get('ir.translation')._get_source(cr, user, self._name, 'view', context['lang'], attr_value)
+                    trans = Translations._get_source(cr, user, model, 'view', context['lang'], attr_value)
                     if trans:
                         node.set(attr_name, trans)
 
         for f in node:
             if children or (node.tag == 'field' and f.tag in ('filter','separator')):
-                fields.update(self.__view_look_dom(cr, user, f, view_id, in_tree_view, model_fields, context))
+                fields.update(self.__view_look_dom(cr, user, model, f, view_id, in_tree_view, model_fields, context))
 
         transfer_modifiers_to_node(modifiers, node)
         return fields
 
-    def _disable_workflow_buttons(self, cr, user, node):
+    def _disable_workflow_buttons(self, cr, user, model, node):
         """ Set the buttons in node to readonly if the user can't activate them. """
         if user == 1:
             # admin user can always activate workflow buttons
@@ -1899,13 +1901,13 @@ class BaseModel(object):
                        WHERE wkf.osv = %s
                          AND t.signal = %s
                          AND t.group_id is NOT NULL
-                   """, (self._name, button.get('name')))
+                   """, (model, button.get('name')))
             group_ids = [x[0] for x in cr.fetchall() if x[0]]
             can_click = not group_ids or bool(set(user_groups).intersection(group_ids))
             button.set('readonly', str(int(not can_click)))
         return node
 
-    def __view_look_dom_arch(self, cr, user, node, view_id, context=None):
+    def __view_look_dom_arch(self, cr, user, model, node, view_id, context=None):
         """ Return an architecture and a description of all the fields.
 
         The field description combines the result of fields_get() and
@@ -1917,6 +1919,7 @@ class BaseModel(object):
 
         """
         fields = {}
+        Model = self.pool[model]
         if node.tag == 'diagram':
             if node.getchildren()[0].tag == 'node':
                 node_model = self.pool[node.getchildren()[0].get('object')]
@@ -1928,12 +1931,12 @@ class BaseModel(object):
                 arrow_fields = self.pool[node.getchildren()[1].get('object')].fields_get(cr, user, None, context)
                 fields.update(arrow_fields)
         else:
-            fields = self.fields_get(cr, user, None, context)
-        fields_def = self.__view_look_dom(cr, user, node, view_id, False, fields, context=context)
-        node = self._disable_workflow_buttons(cr, user, node)
+            fields = Model.fields_get(cr, user, None, context)
+        fields_def = self.__view_look_dom(cr, user, model, node, view_id, False, fields, context=context)
+        node = self._disable_workflow_buttons(cr, user, model, node)
         if node.tag in ('kanban', 'tree', 'form', 'gantt'):
             for action, operation in (('create', 'create'), ('delete', 'unlink'), ('edit', 'write')):
-                if not node.get(action) and not self.check_access_rights(cr, user, operation, raise_exception=False):
+                if not node.get(action) and not Model.check_access_rights(cr, user, operation, raise_exception=False):
                     node.set(action, 'false')
         arch = etree.tostring(node, encoding="utf-8").replace('\t', '')
         for k in fields.keys():
@@ -2103,7 +2106,8 @@ class BaseModel(object):
         if root_view.get('model') != self._name:
             ctx = dict(context, base_model_name=root_view.get('model'))
         xarch, xfields = self.__view_look_dom_arch(
-            cr, user, etree.fromstring(result['arch']), result['view_id'], context=ctx)
+            cr, user, self._name, etree.fromstring(result['arch']),
+            result['view_id'], context=ctx)
         result['arch'] = xarch
         result['fields'] = xfields
 
