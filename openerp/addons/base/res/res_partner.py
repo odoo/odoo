@@ -213,15 +213,19 @@ class res_partner(osv.osv, format_address):
     _commercial_partner_id = lambda self, *args, **kwargs: self._commercial_partner_compute(*args, **kwargs)
     _display_name = lambda self, *args, **kwargs: self._display_name_compute(*args, **kwargs)
 
-    _commercial_partner_store_triggers = { 
+    _commercial_partner_store_triggers = {
         'res.partner': (lambda self,cr,uid,ids,context=None: self.search(cr, uid, [('id','child_of',ids)]),
                         ['parent_id', 'is_company'], 10) 
-    }   
+    }
+    _display_name_store_triggers = {
+        'res.partner': (lambda self,cr,uid,ids,context=None: self.search(cr, uid, [('id','child_of',ids)]),
+                        ['parent_id', 'is_company', 'name'], 10) 
+    }
 
     _order = "display_name"
     _columns = {
         'name': fields.char('Name', size=128, required=True, select=True),
-        'display_name': fields.function(_display_name, type='char', string='Name', store=_commercial_partner_store_triggers),
+        'display_name': fields.function(_display_name, type='char', string='Name', store=_display_name_store_triggers),
         'date': fields.date('Date', select=1),
         'title': fields.many2one('res.partner.title', 'Title'),
         'parent_id': fields.many2one('res.partner', 'Related Company'),
