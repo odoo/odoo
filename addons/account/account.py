@@ -1680,7 +1680,7 @@ class account_move_reconcile(osv.osv):
                 elif reconcile.line_partial_ids:
                     first_partner = reconcile.line_partial_ids[0].partner_id.id
                     move_lines = reconcile.line_partial_ids
-                if any([line.partner_id.id != first_partner for line in move_lines]):
+                if any([(line.account_id.type in ('receivable', 'payable') and line.partner_id.id != first_partner) for line in move_lines]):
                     return False
         return True
 
