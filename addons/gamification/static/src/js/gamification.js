@@ -30,8 +30,11 @@ openerp.gamification = function(instance) {
                 });
                 $.when(goal_action).done(function() {
                     var action_manager = new instance.web.ActionManager(this);
-                    action_manager.do_action(goal_action.action).done(function () {
-                        self.get_goal_todo_info();
+                    var action = action_manager.do_action(goal_action.action);
+                    $.when(action).done(function () {
+                        new instance.web.Model('gamification.goal').call('update', [[goal_id]]).then(function(res) {
+                            self.get_goal_todo_info();
+                        });
                     });
                 });
             },
@@ -140,11 +143,8 @@ openerp.gamification = function(instance) {
             // add gauge in goal kanban views
             $.when(rendering).done(function() {
                 if (self.view.dataset.model === 'gamification.goal' && self.$el.find('.oe_goal_gauge').length == 1) {
-                    var unique_id = _.uniqueId("goal_gauge_");
-                    self.$el.find('.oe_goal_gauge').attr('id', unique_id);
                     var g = new JustGage({
-                        id: unique_id,
-                        node: self.$('.oe_goal_gauge').empty().get(0),
+                        parentNode: self.$('.oe_goal_gauge').empty().get(0),
                         value: self.record.current.raw_value,
                         min: 0,
                         max: self.record.target_goal.raw_value,

@@ -7,6 +7,18 @@
  * LATEST UPDATES
 
  * -----------------------------
+ * April 18, 2013.
+ * -----------------------------
+     * parentNode - use this instead of id, to attach gauge to node which is outside of DOM tree - https://github.com/toorshia/justgage/issues/48
+     * width - force gauge width
+     * height - force gauge height
+
+ * -----------------------------
+ * April 17, 2013.
+ * -----------------------------
+     * fix - https://github.com/toorshia/justgage/issues/49
+
+ * -----------------------------
  * April 01, 2013.
  * -----------------------------
      * fix - https://github.com/toorshia/justgage/issues/46
@@ -68,11 +80,8 @@
 
  JustGage = function(config) {
 
-  if (!config.id) {alert("Missing id parameter for gauge!"); return false;}
-  if (!config.node) {
-    if (!document.getElementById(config.id)) {alert("No element with id: \""+config.id+"\" found!"); return false;}
-    config.node = document.getElementById(config.id);
-  }
+  // if (!config.id) {alert("Missing id parameter for gauge!"); return false;}
+  // if (!document.getElementById(config.id)) {alert("No element with id: \""+config.id+"\" found!"); return false;}
 
   var obj = this;
 
@@ -83,9 +92,17 @@
     // this is container element id
     id : config.id,
 
-    // node : string
-    // the node to use instead of DOM
-    node : config.node,
+    // parentNode : node object
+    // this is container element
+    parentNode : (config.parentNode) ? config.parentNode : null,
+
+    // width : int
+    // gauge width
+    width : (config.width) ? config.width : null,
+
+    // height : int
+    // gauge height
+    height : (config.height) ? config.height : null,
 
     // title : string
     // gauge title
@@ -98,7 +115,6 @@
     // value : int
     // value gauge is showing
     value : (config.value) ? config.value : 0,
-
 
     // valueFontColor : string
     // color of label showing current value
@@ -267,27 +283,39 @@
   maxY;
 
   // overflow values
-  if (this.config.value > this.config.max) this.config.value = this.config.max;
-  if (this.config.value < this.config.min) this.config.value = this.config.min;
-  this.originalValue = config.value;
+  if (obj.config.value > obj.config.max) obj.config.value = obj.config.max;
+  if (obj.config.value < obj.config.min) obj.config.value = obj.config.min;
+  obj.originalValue = config.value;
 
-  // canvas
-  this.canvas = Raphael(this.config.node, "100%", "100%");
-  if (this.config.relativeGaugeSize === true) {
-    this.canvas.setViewBox(0, 0, 200, 150, true);
+  // create canvas
+  if (obj.config.id !== null && (document.getElementById(obj.config.id)) !== null) {
+    obj.canvas = Raphael(obj.config.id, "100%", "100%");
+  } else if (obj.config.parentNode !== null) {
+    obj.canvas = Raphael(obj.config.parentNode, "100%", "100%");
+  }
+
+  if (obj.config.relativeGaugeSize === true) {
+    obj.canvas.setViewBox(0, 0, 200, 150, true);
   }
 
   // canvas dimensions
-  if (this.config.relativeGaugeSize === true) {
+  if (obj.config.relativeGaugeSize === true) {
+    canvasW = 200;
+    canvasH = 150;
+  } else if (obj.config.width !== null && obj.config.height !== null) {
+    canvasW = obj.config.width;
+    canvasH = obj.config.height;
+  } else if (obj.config.parentNode !== null) {
+    obj.canvas.setViewBox(0, 0, 200, 150, true);
     canvasW = 200;
     canvasH = 150;
   } else {
-    canvasW = getStyle(this.config.node, "width").slice(0, -2) * 1;
-    canvasH = getStyle(this.config.node, "height").slice(0, -2) * 1;
+    canvasW = getStyle(document.getElementById(obj.config.id), "width").slice(0, -2) * 1;
+    canvasH = getStyle(document.getElementById(obj.config.id), "height").slice(0, -2) * 1;
   }
 
   // widget dimensions
-  if (this.config.donut === true) {
+  if (obj.config.donut === true) {
 
     // DONUT *******************************
 
@@ -323,7 +351,7 @@
     // value
     valueFontSize = ((widgetH / 6.4) > 16) ? (widgetH / 5.4) : 18;
     valueX = dx + widgetW / 2;
-    if(this.config.label !== '') {
+    if(obj.config.label !== '') {
       valueY = dy + widgetH / 1.85;
     } else {
       valueY = dy + widgetH / 1.7;
@@ -336,12 +364,12 @@
 
     // min
     minFontSize = ((widgetH / 16) > 10) ? (widgetH / 16) : 10;
-    minX = dx + (widgetW / 10) + (widgetW / 6.666666666666667 * this.config.gaugeWidthScale) / 2 ;
+    minX = dx + (widgetW / 10) + (widgetW / 6.666666666666667 * obj.config.gaugeWidthScale) / 2 ;
     minY = labelY;
 
     // max
     maxFontSize = ((widgetH / 16) > 10) ? (widgetH / 16) : 10;
-    maxX = dx + widgetW - (widgetW / 10) - (widgetW / 6.666666666666667 * this.config.gaugeWidthScale) / 2 ;
+    maxX = dx + widgetW - (widgetW / 10) - (widgetW / 6.666666666666667 * obj.config.gaugeWidthScale) / 2 ;
     maxY = labelY;
 
   } else {
@@ -378,33 +406,33 @@
     dy = (canvasH - widgetH)/2;
 
     // title
-    titleFontSize = ((widgetH / 8) > this.config.titleMinFontSize) ? (widgetH / 10) : this.config.titleMinFontSize;
+    titleFontSize = ((widgetH / 8) > obj.config.titleMinFontSize) ? (widgetH / 10) : obj.config.titleMinFontSize;
     titleX = dx + widgetW / 2;
     titleY = dy + widgetH / 6.4;
 
     // value
-    valueFontSize = ((widgetH / 6.5) > this.config.valueMinFontSize) ? (widgetH / 6.5) : this.config.valueMinFontSize;
+    valueFontSize = ((widgetH / 6.5) > obj.config.valueMinFontSize) ? (widgetH / 6.5) : obj.config.valueMinFontSize;
     valueX = dx + widgetW / 2;
     valueY = dy + widgetH / 1.275;
 
     // label
-    labelFontSize = ((widgetH / 16) > this.config.labelMinFontSize) ? (widgetH / 16) : this.config.labelMinFontSize;
+    labelFontSize = ((widgetH / 16) > obj.config.labelMinFontSize) ? (widgetH / 16) : obj.config.labelMinFontSize;
     labelX = dx + widgetW / 2;
     labelY = valueY + valueFontSize / 2 + 5;
 
     // min
-    minFontSize = ((widgetH / 16) > this.config.minLabelMinFontSize) ? (widgetH / 16) : this.config.minLabelMinFontSize;
-    minX = dx + (widgetW / 10) + (widgetW / 6.666666666666667 * this.config.gaugeWidthScale) / 2 ;
+    minFontSize = ((widgetH / 16) > obj.config.minLabelMinFontSize) ? (widgetH / 16) : obj.config.minLabelMinFontSize;
+    minX = dx + (widgetW / 10) + (widgetW / 6.666666666666667 * obj.config.gaugeWidthScale) / 2 ;
     minY = labelY;
 
     // max
-    maxFontSize = ((widgetH / 16) > this.config.maxLabelMinFontSize) ? (widgetH / 16) : this.config.maxLabelMinFontSize;
-    maxX = dx + widgetW - (widgetW / 10) - (widgetW / 6.666666666666667 * this.config.gaugeWidthScale) / 2 ;
+    maxFontSize = ((widgetH / 16) > obj.config.maxLabelMinFontSize) ? (widgetH / 16) : obj.config.maxLabelMinFontSize;
+    maxX = dx + widgetW - (widgetW / 10) - (widgetW / 6.666666666666667 * obj.config.gaugeWidthScale) / 2 ;
     maxY = labelY;
   }
 
   // parameters
-  this.params  = {
+  obj.params  = {
     canvasW : canvasW,
     canvasH : canvasH,
     widgetW : widgetW,
@@ -432,7 +460,7 @@
   canvasW, canvasH, widgetW, widgetH, aspect, dx, dy, titleFontSize, titleX, titleY, valueFontSize, valueX, valueY, labelFontSize, labelX, labelY, minFontSize, minX, minY, maxFontSize, maxX, maxY = null
 
   // pki - custom attribute for generating gauge paths
-  this.canvas.customAttributes.pki = function (value, min, max, w, h, dx, dy, gws, donut) {
+  obj.canvas.customAttributes.pki = function (value, min, max, w, h, dx, dy, gws, donut) {
 
     var alpha, Ro, Ri, Cx, Cy, Xo, Yo, Xi, Yi, path;
 
@@ -492,212 +520,247 @@
   };
 
   // gauge
-  this.gauge = this.canvas.path().attr({
-    "stroke": "none",
-    "fill": this.config.gaugeColor,
-    pki: [this.config.max, this.config.min, this.config.max, this.params.widgetW, this.params.widgetH,  this.params.dx, this.params.dy, this.config.gaugeWidthScale, this.config.donut]
+  obj.gauge = obj.canvas.path().attr({
+      "stroke": "none",
+      "fill": obj.config.gaugeColor,
+      pki: [
+        obj.config.max,
+        obj.config.min,
+        obj.config.max,
+        obj.params.widgetW,
+        obj.params.widgetH,
+        obj.params.dx,
+        obj.params.dy,
+        obj.config.gaugeWidthScale,
+        obj.config.donut
+      ]
   });
-  this.gauge.id = this.config.id+"-gauge";
 
   // level
-  this.level = this.canvas.path().attr({
+  obj.level = obj.canvas.path().attr({
     "stroke": "none",
-    "fill": getColor(this.config.value, (this.config.value - this.config.min) / (this.config.max - this.config.min), this.config.levelColors, this.config.noGradient, this.config.customSectors),
-    pki: [this.config.min, this.config.min, this.config.max, this.params.widgetW, this.params.widgetH,  this.params.dx, this.params.dy, this.config.gaugeWidthScale, this.config.donut]
+    "fill": getColor(obj.config.value, (obj.config.value - obj.config.min) / (obj.config.max - obj.config.min), obj.config.levelColors, obj.config.noGradient, obj.config.customSectors),
+    pki: [
+      obj.config.min,
+      obj.config.min,
+      obj.config.max,
+      obj.params.widgetW,
+      obj.params.widgetH,
+      obj.params.dx,
+      obj.params.dy,
+      obj.config.gaugeWidthScale,
+      obj.config.donut
+    ]
   });
-  if(this.config.donut) {
-    this.level.transform("r" + this.config.donutStartAngle + ", " + (this.params.widgetW/2 + this.params.dx) + ", " + (this.params.widgetH/1.95 + this.params.dy));
+  if(obj.config.donut) {
+    obj.level.transform("r" + obj.config.donutStartAngle + ", " + (obj.params.widgetW/2 + obj.params.dx) + ", " + (obj.params.widgetH/1.95 + obj.params.dy));
   }
-  this.level.id = this.config.id+"-level";
 
   // title
-  this.txtTitle = this.canvas.text(this.params.titleX, this.params.titleY, this.config.title);
-  this.txtTitle.attr({
-    "font-size":this.params.titleFontSize,
+  obj.txtTitle = obj.canvas.text(obj.params.titleX, obj.params.titleY, obj.config.title);
+  obj.txtTitle.attr({
+    "font-size":obj.params.titleFontSize,
     "font-weight":"bold",
     "font-family":"Arial",
-    "fill":this.config.titleFontColor,
+    "fill":obj.config.titleFontColor,
     "fill-opacity":"1"
   });
-  setDy(this.txtTitle, this.params.titleFontSize, this.params.titleY);
-  this.txtTitle.id = this.config.id+"-txttitle";
+  setDy(obj.txtTitle, obj.params.titleFontSize, obj.params.titleY);
 
   // value
-  this.txtValue = this.canvas.text(this.params.valueX, this.params.valueY, 0);
-  this.txtValue.attr({
-    "font-size":this.params.valueFontSize,
+  obj.txtValue = obj.canvas.text(obj.params.valueX, obj.params.valueY, 0);
+  obj.txtValue.attr({
+    "font-size":obj.params.valueFontSize,
     "font-weight":"bold",
     "font-family":"Arial",
-    "fill":this.config.valueFontColor,
+    "fill":obj.config.valueFontColor,
     "fill-opacity":"0"
   });
-  setDy(this.txtValue, this.params.valueFontSize, this.params.valueY);
-  this.txtValue.id = this.config.id+"-txtvalue";
+  setDy(obj.txtValue, obj.params.valueFontSize, obj.params.valueY);
 
   // label
-  this.txtLabel = this.canvas.text(this.params.labelX, this.params.labelY, this.config.label);
-  this.txtLabel.attr({
-    "font-size":this.params.labelFontSize,
+  obj.txtLabel = obj.canvas.text(obj.params.labelX, obj.params.labelY, obj.config.label);
+  obj.txtLabel.attr({
+    "font-size":obj.params.labelFontSize,
     "font-weight":"normal",
     "font-family":"Arial",
-    "fill":this.config.labelFontColor,
+    "fill":obj.config.labelFontColor,
     "fill-opacity":"0"
   });
-  setDy(this.txtLabel, this.params.labelFontSize, this.params.labelY);
-  this.txtLabel.id = this.config.id+"-txtlabel";
+  setDy(obj.txtLabel, obj.params.labelFontSize, obj.params.labelY);
 
   // min
-  this.txtMinimum = this.config.min;
-  if( this.config.humanFriendly ) this.txtMinimum = humanFriendlyNumber( this.config.min, this.config.humanFriendlyDecimal );
-  this.txtMin = this.canvas.text(this.params.minX, this.params.minY, this.txtMinimum);
-  this.txtMin.attr({
-    "font-size":this.params.minFontSize,
+  obj.txtMinimum = obj.config.min;
+  if( obj.config.humanFriendly ) obj.txtMinimum = humanFriendlyNumber( obj.config.min, obj.config.humanFriendlyDecimal );
+  obj.txtMin = obj.canvas.text(obj.params.minX, obj.params.minY, obj.txtMinimum);
+  obj.txtMin.attr({
+    "font-size":obj.params.minFontSize,
     "font-weight":"normal",
     "font-family":"Arial",
-    "fill":this.config.labelFontColor,
-    "fill-opacity": (this.config.hideMinMax || this.config.donut)? "0" : "1"
+    "fill":obj.config.labelFontColor,
+    "fill-opacity": (obj.config.hideMinMax || obj.config.donut)? "0" : "1"
   });
-  setDy(this.txtMin, this.params.minFontSize, this.params.minY);
-  this.txtMin.id = this.config.id+"-txtmin";
+  setDy(obj.txtMin, obj.params.minFontSize, obj.params.minY);
 
   // max
-  this.txtMaximum = this.config.max;
-  if( this.config.humanFriendly ) this.txtMaximum = humanFriendlyNumber( this.config.max, this.config.humanFriendlyDecimal );
-  this.txtMax = this.canvas.text(this.params.maxX, this.params.maxY, this.txtMaximum);
-  this.txtMax.attr({
-    "font-size":this.params.maxFontSize,
+  obj.txtMaximum = obj.config.max;
+  if( obj.config.humanFriendly ) obj.txtMaximum = humanFriendlyNumber( obj.config.max, obj.config.humanFriendlyDecimal );
+  obj.txtMax = obj.canvas.text(obj.params.maxX, obj.params.maxY, obj.txtMaximum);
+  obj.txtMax.attr({
+    "font-size":obj.params.maxFontSize,
     "font-weight":"normal",
     "font-family":"Arial",
-    "fill":this.config.labelFontColor,
-    "fill-opacity": (this.config.hideMinMax || this.config.donut)? "0" : "1"
+    "fill":obj.config.labelFontColor,
+    "fill-opacity": (obj.config.hideMinMax || obj.config.donut)? "0" : "1"
   });
-  setDy(this.txtMax, this.params.maxFontSize, this.params.maxY);
-  this.txtMax.id = this.config.id+"-txtmax";
+  setDy(obj.txtMax, obj.params.maxFontSize, obj.params.maxY);
 
-  var defs = this.canvas.canvas.childNodes[1];
+  var defs = obj.canvas.canvas.childNodes[1];
   var svg = "http://www.w3.org/2000/svg";
 
   if (ie < 9) {
     onCreateElementNsReady(function() {
-      this.generateShadow(svg, defs);
+      obj.generateShadow(svg, defs);
     });
   } else {
-    this.generateShadow(svg, defs);
+    obj.generateShadow(svg, defs);
   }
 
   // var clear
   defs, svg = null;
 
-  // execute on each animation frame
-  function onAnimate() {
-    if (obj.config.counter) {
-      var currentValue = obj.level.attr("pki");
+  // set value to display
+  if(obj.config.textRenderer) {
+    obj.originalValue = obj.config.textRenderer(obj.originalValue);
+  } else if(obj.config.humanFriendly) {
+    obj.originalValue = humanFriendlyNumber( obj.originalValue, obj.config.humanFriendlyDecimal ) + obj.config.symbol;
+  } else {
+    obj.originalValue = (obj.originalValue * 1).toFixed(obj.config.decimals) + obj.config.symbol;
+  }
 
+  if(obj.config.counter === true) {
+    //on each animation frame
+    eve.on("raphael.anim.frame." + (obj.level.id), function() {
+      var currentValue = obj.level.attr("pki");
       if(obj.config.textRenderer) {
-        // this.originalValue = this.config.textRenderer(this.originalValue);
         obj.txtValue.attr("text", obj.config.textRenderer(Math.floor(currentValue[0])));
       } else if(obj.config.humanFriendly) {
-        // this.originalValue = humanFriendlyNumber( this.originalValue, this.config.humanFriendlyDecimal ) + this.config.symbol;
         obj.txtValue.attr("text", humanFriendlyNumber( Math.floor(currentValue[0]), obj.config.humanFriendlyDecimal ) + obj.config.symbol);
       } else {
-        // this.originalValue += this.config.symbol;
         obj.txtValue.attr("text", (currentValue[0] * 1).toFixed(obj.config.decimals) + obj.config.symbol);
       }
-
       setDy(obj.txtValue, obj.params.valueFontSize, obj.params.valueY);
       currentValue = null;
-    }
+    });
+    //on animation end
+    eve.on("raphael.anim.finish." + (obj.level.id), function() {
+      obj.txtValue.attr({"text" : obj.originalValue});
+      setDy(obj.txtValue, obj.params.valueFontSize, obj.params.valueY);
+    });
+  } else {
+    //on animation start
+    eve.on("raphael.anim.start." + (obj.level.id), function() {
+      obj.txtValue.attr({"text" : obj.originalValue});
+      setDy(obj.txtValue, obj.params.valueFontSize, obj.params.valueY);
+    });
   }
 
-  if(!obj.config.counter) {
-    if(obj.config.textRenderer) {
-      obj.originalValue = obj.config.textRenderer(obj.originalValue);
-    } else if(obj.config.humanFriendly) {
-      obj.originalValue = humanFriendlyNumber( obj.originalValue, obj.config.humanFriendlyDecimal ) + obj.config.symbol;
-    } else {
-      obj.originalValue = (obj.originalValue * 1).toFixed(obj.config.decimals) + obj.config.symbol;
-    }
-
-    obj.txtValue.attr("text", obj.originalValue);
-    setDy(obj.txtValue, obj.params.valueFontSize, obj.params.valueY);
-  }
-
-  //event fired on each animation frame
-  eve.on("raphael.anim.frame.*", onAnimate);
-
-  // animate gauge level
-  this.level.animate({pki: [this.config.value, this.config.min, this.config.max, this.params.widgetW, this.params.widgetH,  this.params.dx, this.params.dy, this.config.gaugeWidthScale, this.config.donut]},  this.config.startAnimationTime, this.config.startAnimationType);
-
-  // animate value
-  this.txtValue.animate({"fill-opacity":"1"}, this.config.startAnimationTime, this.config.startAnimationType);
-
-  // animate label
-  this.txtLabel.animate({"fill-opacity":"1"}, this.config.startAnimationTime, this.config.startAnimationType);
+  // animate gauge level, value & label
+  obj.level.animate({
+    pki: [
+      obj.config.value,
+      obj.config.min,
+      obj.config.max,
+      obj.params.widgetW,
+      obj.params.widgetH,
+      obj.params.dx,
+      obj.params.dy,
+      obj.config.gaugeWidthScale,
+      obj.config.donut
+    ]
+  }, obj.config.startAnimationTime, obj.config.startAnimationType);
+  obj.txtValue.animate({"fill-opacity":(obj.config.hideValue)?"0":"1"}, obj.config.startAnimationTime, obj.config.startAnimationType);
+  obj.txtLabel.animate({"fill-opacity":"1"}, obj.config.startAnimationTime, obj.config.startAnimationType);
 };
 
 /** Refresh gauge level */
 JustGage.prototype.refresh = function(val, max) {
 
-  var originalVal, displayVal, color, max = max || null;
+  var obj = this;
+  var displayVal, color, max = max || null;
 
   // set new max
   if(max !== null) {
-    this.config.max = max;
+    obj.config.max = max;
 
-    this.txtMaximum = this.config.max;
-    if( this.config.humanFriendly ) this.txtMaximum = humanFriendlyNumber( this.config.max, this.config.humanFriendlyDecimal );
-    this.txtMax.attr({"text" : this.config.max});
-    setDy(this.txtMax, this.params.maxFontSize, this.params.maxY);
+    obj.txtMaximum = obj.config.max;
+    if( obj.config.humanFriendly ) obj.txtMaximum = humanFriendlyNumber( obj.config.max, obj.config.humanFriendlyDecimal );
+    obj.txtMax.attr({"text" : obj.txtMaximum});
+    setDy(obj.txtMax, obj.params.maxFontSize, obj.params.maxY);
   }
 
   // overflow values
-  originalVal = val;
   displayVal = val;
-  if ((val * 1) > (this.config.max * 1)) {val = (this.config.max * 1);}
-  if ((val * 1) < (this.config.min * 1)) {val = (this.config.min * 1);}
+  if ((val * 1) > (obj.config.max * 1)) {val = (obj.config.max * 1);}
+  if ((val * 1) < (obj.config.min * 1)) {val = (obj.config.min * 1);}
 
-  color = getColor(val, (val - this.config.min) / (this.config.max - this.config.min), this.config.levelColors, this.config.noGradient, this.config.customSectors);
+  color = getColor(val, (val - obj.config.min) / (obj.config.max - obj.config.min), obj.config.levelColors, obj.config.noGradient, obj.config.customSectors);
 
-  if(this.config.textRenderer) {
-    displayVal = this.config.textRenderer(displayVal);
-  } else if( this.config.humanFriendly ) {
-    displayVal = humanFriendlyNumber( displayVal, this.config.humanFriendlyDecimal ) + this.config.symbol;
+  if(obj.config.textRenderer) {
+    displayVal = obj.config.textRenderer(displayVal);
+  } else if( obj.config.humanFriendly ) {
+    displayVal = humanFriendlyNumber( displayVal, obj.config.humanFriendlyDecimal ) + obj.config.symbol;
   } else {
-    displayVal = (displayVal * 1).toFixed(this.config.decimals) + this.config.symbol;
+    displayVal = (displayVal * 1).toFixed(obj.config.decimals) + obj.config.symbol;
+  }
+  obj.originalValue = displayVal;
+  obj.config.value = val * 1;
+
+  if(!obj.config.counter) {
+    obj.txtValue.attr({"text":displayVal});
+    setDy(obj.txtValue, obj.params.valueFontSize, obj.params.valueY);
   }
 
-  if(!this.config.counter) {
-    this.canvas.getById(this.config.id+"-txtvalue").attr({"text":displayVal});
-    setDy(this.canvas.getById(this.config.id+"-txtvalue"), this.params.valueFontSize, this.params.valueY);
-  }
-
-  this.canvas.getById(this.config.id+"-level").animate({pki: [val, this.config.min, this.config.max, this.params.widgetW, this.params.widgetH,  this.params.dx, this.params.dy, this.config.gaugeWidthScale, this.config.donut], "fill":color},  this.config.refreshAnimationTime, this.config.refreshAnimationType);
-  this.config.value = val * 1;
+  obj.level.animate({
+    pki: [
+      obj.config.value,
+      obj.config.min,
+      obj.config.max,
+      obj.params.widgetW,
+      obj.params.widgetH,
+      obj.params.dx,
+      obj.params.dy,
+      obj.config.gaugeWidthScale,
+      obj.config.donut
+    ],
+    "fill":color
+  },  obj.config.refreshAnimationTime, obj.config.refreshAnimationType);
 
   // var clear
-  originalVal, displayVal, color, max = null;
+  obj, displayVal, color, max = null;
 };
 
 /** Generate shadow */
 JustGage.prototype.generateShadow = function(svg, defs) {
 
+  var obj = this;
   var gaussFilter, feOffset, feGaussianBlur, feComposite1, feFlood, feComposite2, feComposite3;
 
   // FILTER
-  gaussFilter=document.createElementNS(svg,"filter");
-  gaussFilter.setAttribute("id", this.config.id + "-inner-shadow");
+  gaussFilter = document.createElementNS(svg,"filter");
+  gaussFilter.setAttribute("id","inner-shadow");
   defs.appendChild(gaussFilter);
 
   // offset
   feOffset = document.createElementNS(svg,"feOffset");
   feOffset.setAttribute("dx", 0);
-  feOffset.setAttribute("dy", this.config.shadowVerticalOffset);
+  feOffset.setAttribute("dy", obj.config.shadowVerticalOffset);
   gaussFilter.appendChild(feOffset);
 
   // blur
   feGaussianBlur = document.createElementNS(svg,"feGaussianBlur");
   feGaussianBlur.setAttribute("result","offset-blur");
-  feGaussianBlur.setAttribute("stdDeviation", this.config.shadowSize);
+  feGaussianBlur.setAttribute("stdDeviation", obj.config.shadowSize);
   gaussFilter.appendChild(feGaussianBlur);
 
   // composite 1
@@ -711,7 +774,7 @@ JustGage.prototype.generateShadow = function(svg, defs) {
   // flood
   feFlood = document.createElementNS(svg,"feFlood");
   feFlood.setAttribute("flood-color","black");
-  feFlood.setAttribute("flood-opacity", this.config.shadowOpacity);
+  feFlood.setAttribute("flood-opacity", obj.config.shadowOpacity);
   feFlood.setAttribute("result","color");
   gaussFilter.appendChild(feFlood);
 
@@ -731,9 +794,9 @@ JustGage.prototype.generateShadow = function(svg, defs) {
   gaussFilter.appendChild(feComposite3);
 
   // set shadow
-  if (!this.config.hideInnerShadow) {
-    this.canvas.canvas.childNodes[2].setAttribute("filter", "url(#" + this.config.id + "-inner-shadow)");
-    this.canvas.canvas.childNodes[3].setAttribute("filter", "url(#" + this.config.id + "-inner-shadow)");
+  if (!obj.config.hideInnerShadow) {
+    obj.canvas.canvas.childNodes[2].setAttribute("filter", "url(#inner-shadow)");
+    obj.canvas.canvas.childNodes[3].setAttribute("filter", "url(#inner-shadow)");
   }
 
   // var clear
@@ -796,7 +859,7 @@ function getColor(val, pct, col, noGradient, custSec) {
 
 /** Fix Raphael display:none tspan dy attribute bug */
 function setDy(elem, fontSize, txtYpos) {
-  if ((!ie || ie > 9) && (elem.node.firstChild.attributes.dy)) {
+  if (!ie || ie > 9) {
     elem.node.firstChild.attributes.dy.value = 0;
   }
 }
@@ -831,7 +894,7 @@ function humanFriendlyNumber( n, d ) {
 function getStyle(oElm, strCssRule){
   var strValue = "";
   if(document.defaultView && document.defaultView.getComputedStyle){
-    strValue = document.defaultView.getComputedStyle(oElm).getPropertyValue(strCssRule);
+    strValue = document.defaultView.getComputedStyle(oElm, "").getPropertyValue(strCssRule);
   }
   else if(oElm.currentStyle){
     strCssRule = strCssRule.replace(/\-(\w)/g, function (strMatch, p1){
