@@ -13,7 +13,6 @@
         </record>
 
         <record id="goal_user_visibility" model="ir.rule">
-            <!-- TODO fix private for board -->
             <field name="name">User can only see his/her goals or goal from the same plan in board visibility</field>
             <field name="model_id" ref="model_gamification_goal"/>
             <field name="groups" eval="[(4, ref('base.group_user'))]"/>
@@ -28,24 +27,5 @@
                         ('plan_id.user_ids','in',user.id),
                         ('plan_id.visibility_mode','=','board')]</field>
         </record>
-        <record id="goal_manager_visibility" model="ir.rule">
-            <field name="name">Manager has all rights on user's goals</field>
-            <field name="model_id" ref="model_gamification_goal"/>
-            <field name="groups" eval="[(4, ref('group_goal_manager'))]"/>
-            <field name="perm_read" eval="True"/>
-            <field name="perm_write" eval="True"/>
-            <field name="perm_create" eval="True"/>
-            <field name="perm_unlink" eval="True"/>
-        </record>
-        <record id="goal_plan_manager_visibility" model="ir.rule">
-            <field name="name">Manager has all rights on goal plans</field>
-            <field name="model_id" ref="model_gamification_goal_plan"/>
-            <field name="groups" eval="[(4, ref('group_goal_manager'))]"/>
-            <field name="perm_read" eval="True"/>
-            <field name="perm_write" eval="True"/>
-            <field name="perm_create" eval="True"/>
-            <field name="perm_unlink" eval="True"/>
-        </record>
-
     </data>
 </openerp>
