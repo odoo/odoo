@@ -222,7 +222,7 @@ class gamification_goal(osv.Model):
         'state': 'draft',
         'start_date': fields.date.today,
     }
-    _order = 'create_date, end_date desc, type_id, id'
+    _order = 'create_date desc, end_date desc, type_id, id'
 
     def update(self, cr, uid, ids, context=None):
         """Update the goals to recomputes values and change of states

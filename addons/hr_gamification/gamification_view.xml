@@ -11,7 +11,7 @@
                 <form string="Grant Badge To" version="7.0">
                     Who would you like to reward?
                     <group>
-                        <field name="employee_id" nolabel="1" domain="[('user_id', '!=', False)]" />
+                        <field name="employee_id" nolabel="1" domain="[('user_id', '!=', False),('user_id', '!=', uid)]" />
                         <field name="badge_id" invisible="1"/>
                         <field name="comment" nolabel="1" placeholder="Describe what they did and why it matters (will be public)" class="oe_no_padding"/>
                     </group>
