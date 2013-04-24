@@ -29,6 +29,7 @@ from openerp import tools
 from openerp.osv import fields,osv
 from openerp.tools import graph, SKIPPED_ELEMENT_TYPES
 from openerp.tools.safe_eval import safe_eval as eval
+from openerp.tools.translate import _
 from openerp.tools.view_validation import valid_view
 
 _logger = logging.getLogger(__name__)
@@ -50,6 +51,9 @@ class view_custom(osv.osv):
 
 class view(osv.osv):
     _name = 'ir.ui.view'
+
+    class NoViewError(Exception): pass
+    class NoDefaultError(NoViewError): pass
 
     def _type_field(self, cr, uid, ids, name, args, context=None):
         result = {}
@@ -166,7 +170,7 @@ class view(osv.osv):
             cr.execute('CREATE INDEX ir_ui_view_model_type_inherit_id ON ir_ui_view (model, inherit_id)')
 
     def read_combined(self, cr, uid, view_id, view_type, model,
-                      fields=None, context=None):
+                      fields=None, fallback=None, context=None):
         """
         Utility function stringing together all method calls necessary to get
         a full, final view:
@@ -174,8 +178,7 @@ class view(osv.osv):
         * Gets the default view if no view_id is provided
         * Gets the top of the view tree if a sub-view is requested
         * Applies all inherited archs on the root view
-        * Applies post-processing both generic (ir.ui.view) and specific
-          (ir.ui.view.$type)
+        * Applies post-processing
         * Returns the view with all requested fields
 
           .. note:: ``arch`` is always added to the fields list even if not
@@ -183,29 +186,47 @@ class view(osv.osv):
 
         If no view is available (no view_id or invalid view_id provided, or
         no view stored for (model, view_type)) a view record will be fetched
-        from the ``defaults`` mapping.
+        from the ``defaults`` mapping?
+
+        :param fallback: a mapping of {view_type: view_dict}, if no view can
+                         be found (read) will be used to provide a default
+                         before post-processing
+        :type fallback: mapping
         """
-        if not view_id:
-            view_id = self.default_view(cr, uid, model, view_type, context=context)
-        root_id = self.root_ancestor(cr, uid, view_id, context=context)
+        if context is None: context = {}
+        try:
+            if not view_id:
+                view_id = self.default_view(cr, uid, model, view_type, context=context)
+            root_id = self.root_ancestor(cr, uid, view_id, context=context)
 
-        if fields and 'arch' not in fields:
-            fields = list(itertools.chain(['arch'], fields))
+            if fields and 'arch' not in fields:
+                fields = list(itertools.chain(['arch'], fields))
 
-        [view] = self.read(cr, uid, [root_id], fields=fields, context=context)
+            [view] = self.read(cr, uid, [root_id], fields=fields, context=context)
 
-        arch_tree = etree.fromstring(
-            view['arch'].encode('utf-8') if isinstance(view['arch'], unicode)
-            else view['arch'])
-        descendants = self.iter(
-            cr, uid, view['id'], model, exclude_base=True, context=context)
-        arch = self.apply_inherited_archs(
-            cr, uid, arch_tree, descendants,
-            model, view['id'], context=context)
+            arch_tree = etree.fromstring(
+                view['arch'].encode('utf-8') if isinstance(view['arch'], unicode)
+                else view['arch'])
+            descendants = self.iter(
+                cr, uid, view['id'], model, exclude_base=True, context=context)
+            arch = self.apply_inherited_archs(
+                cr, uid, arch_tree, descendants,
+                model, view['id'], context=context)
+
+            if view['model'] != model:
+                context = dict(context, base_model_name=view['model'])
+        except self.NoViewError:
+            # defaultdict is "empty" until first __getattr__
+            if fallback is None: raise
+            view = fallback[view_type]
+            arch = view['arch']
+            if isinstance(arch, basestring):
+                arch = etree.fromstring(
+                    arch.encode('utf-8') if isinstance(arch, unicode) else arch)
 
         # TODO: post-processing
 
-        return dict(view, arch=arch)#etree.tostring(arch, 'utf-8'))
+        return dict(view, arch=etree.tostring(arch, encoding='utf-8'))
 
     def locate_node(self, arch, spec):
         """ Locate a node in a source (parent) architecture.
@@ -308,11 +329,16 @@ class view(osv.osv):
         :return: id of the default view for the (model, view_type) pair
         :rtype: int
         """
-        return self.search(cr, uid, [
+        ids = self.search(cr, uid, [
             ['model', '=', model],
             ['type', '=', view_type],
             ['inherit_id', '=', False],
-        ], limit=1, order='priority', context=context)[0]
+        ], limit=1, order='priority', context=context)
+        if not ids:
+            raise self.NoDefaultError(
+                _("No default view of type %s for model %s") % (
+                    view_type, model))
+        return ids[0]
 
     def root_ancestor(self, cr, uid, view_id, context=None):
         """
@@ -325,6 +351,9 @@ class view(osv.osv):
         :return: id of the root view for the tree
         """
         view = self.browse(cr, uid, view_id, context=context)
+        if not view.exists():
+            raise self.NoViewError(
+                _("No view for id %s, root ancestor not available") % view_id)
 
         # Search for a root (i.e. without any parent) view.
         while view.inherit_id:

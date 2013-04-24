@@ -631,6 +631,27 @@ class MetaModel(type):
         if not self._custom:
             self.module_to_models.setdefault(self._module, []).append(self)
 
+class FallbackViewMapping(collections.defaultdict):
+    def __init__(self, cr, uid, model, context=None):
+        super(FallbackViewMapping, self).__init__()
+        self.cr = cr
+        self.uid = uid
+        self.model = model
+        self.context = context
+
+    def __missing__(self, view_type):
+        try:
+            arch = getattr(self.model, '_get_default_%s_view' % view_type)(
+                self.cr, self.uid, self.context)
+        except AttributeError:
+            raise except_orm(_('Invalid Architecture!'), _("There is no view of type '%s' defined for the structure!") % view_type)
+        return {
+            'id': 0,
+            'type': view_type,
+            'name': 'default',
+            'field_parent': False,
+            'arch': arch,
+        }
 
 # Definition of log access columns, automatically added to models if
 # self._log_access is True
@@ -2054,8 +2075,6 @@ class BaseModel(object):
             context = {}
         View = self.pool['ir.ui.view']
 
-        result = {'type': view_type, 'model': self._name}
-
         view_ref = context.get(view_type + '_view_ref')
 
         if view_ref and not view_id and '.' in view_ref:
@@ -2068,37 +2087,23 @@ class BaseModel(object):
         root_view = View.read_combined(
             cr, user, view_id, view_type, self._name, fields=[
                 'id', 'name', 'field_parent', 'type', 'model', 'arch'
-            ], context=context)
-        if root_view:
-            result.update(
-                arch=root_view['arch'],
-                type=root_view['type'],
-                view_id=root_view['id'],
-                name=root_view['name'],
-                field_parent=root_view['field_parent'] or False)
-        else:
-            # otherwise, build some kind of default view
-            try:
-                view = getattr(self, '_get_default_%s_view' % view_type)(
-                    cr, user, context)
-            except AttributeError:
-                # what happens here, graph case?
-                raise except_orm(_('Invalid Architecture!'), _("There is no view of type '%s' defined for the structure!") % view_type)
+            ], fallback=FallbackViewMapping(cr, user, self, context=context),
+            context=context)
 
-            result.update(
-                arch=view,
-                name='default',
-                field_parent=False,
-                view_id=0)
+        result = {
+            'model': self._name,
+            'arch': root_view['arch'],
+            'type': root_view['type'],
+            'view_id': root_view['id'],
+            'name': root_view['name'],
+            'field_parent': root_view['field_parent'] or False
+        }
 
-        parent_view_model = root_view['model'] if root_view else None
-        if parent_view_model != self._name:
-            ctx = context.copy()
-            ctx['base_model_name'] = parent_view_model
-        else:
-            ctx = context
+        ctx = context
+        if root_view.get('model') != self._name:
+            ctx = dict(context, base_model_name=root_view.get('model'))
         xarch, xfields = self.__view_look_dom_arch(
-            cr, user, result['arch'], result['view_id'], context=ctx)
+            cr, user, etree.fromstring(result['arch']), result['view_id'], context=ctx)
         result['arch'] = xarch
         result['fields'] = xfields
 

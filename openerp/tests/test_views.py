@@ -184,12 +184,9 @@ class TestViewInheritance(common.TransactionCase):
             self.cr, self.uid, view_id=self.ids['B1'])
         self.assertEqual(root_id, self.ids['B'])
 
-    @unittest2.skip("What should the behavior be when no ancestor is found "
-                    "because view_id is invalid?")
     def test_no_root_ancestor(self):
-        root = self.View.root_ancestor(
-            self.cr, self.uid, view_id=12345678)
-        self.assertFalse(root)
+        with self.assertRaises(self.View.NoViewError):
+            self.View.root_ancestor(self.cr, self.uid, view_id=12345678)
 
     def test_default_view(self):
         default = self.View.default_view(
@@ -200,16 +197,22 @@ class TestViewInheritance(common.TransactionCase):
             self.cr, self.uid, model=self.model, view_type='tree')
         self.assertEqual(default_tree, self.ids['C'])
 
-    @unittest2.skip("What should the behavior be when no default is found "
-                    "because model does not exist or no view for model?")
     def test_no_default_view(self):
-        default = self.View.default_view(
-            self.cr, self.uid, model='does.not.exist', view_type='form')
-        self.assertFalse(default)
+        with self.assertRaises(self.View.NoDefaultError):
+            self.View.default_view(
+                self.cr, self.uid, model='does.not.exist', view_type='form')
 
-        default = self.View.default_view(
-            self.cr, self.uid, model=self.model, view_type='graph')
-        self.assertFalse(default)
+        with self.assertRaises(self.View.NoDefaultError):
+            self.View.default_view(
+                self.cr, self.uid, model=self.model, view_type='graph')
+
+    @unittest2.skip("Not tested")
+    def test_apply_inherited_archs(self):
+        self.fail()
+
+    @unittest2.skip("Not tested")
+    def test_apply_inheritance_specs(self):
+        self.fail()
 
 class TestViewCombined(common.TransactionCase):
     """
