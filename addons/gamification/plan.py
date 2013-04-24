@@ -30,7 +30,7 @@ import logging
 _logger = logging.getLogger(__name__)
 
 
-def start_end_date_for_period(period, global_start_date=False, global_end_date=False):
+def start_end_date_for_period(period, default_start_date=False, default_end_date=False):
     """Return the start and end date for a goal period based on today
 
     :return: (start_date, end_date), datetime.date objects, False if the period is
@@ -51,8 +51,8 @@ def start_end_date_for_period(period, global_start_date=False, global_end_date=F
         start_date = today.replace(month=1, day=1)
         end_date = today.replace(month=12, day=31)
     else:  # period == 'once':
-        start_date = global_start_date  # for manual goal, start each time
-        end_date = global_end_date
+        start_date = default_start_date  # for manual goal, start each time
+        end_date = default_end_date
 
     if start_date and end_date:
         return (start_date.isoformat(), end_date.isoformat())
@@ -95,7 +95,8 @@ class gamification_goal_plan(osv.Model):
                 res[plan.id] = next.isoformat()
             elif plan.report_message_frequency == 'yearly':
                 res[plan.id] = last.replace(year=last.year + 1).isoformat()
-            else:  # frequency == 'once':
+            # frequency == 'once', reported when closed only
+            else:
                 res[plan.id] = False
 
         return res
@@ -549,7 +550,7 @@ class gamification_goal_plan(osv.Model):
         if plan.visibility_mode == 'board':
             planlines_boards = self.get_board_goal_info(cr, uid, plan, subset_goal_ids, context)
 
-            body_html = template_env.get_template('group_progress.mako').render({'object': plan, 'planlines_boards': planlines_boards})
+            body_html = template_env.get_template('group_progress.mako').render({'object': plan, 'planlines_boards': planlines_boards, 'uid': uid})
 
             # send to every follower of the plan
             self.message_post(cr, uid, plan.id,
@@ -574,7 +575,7 @@ class gamification_goal_plan(osv.Model):
 
                 body_html = template_env.get_template('personal_progress.mako').render(values)
 
-                # send message only to user
+                # send message only to users
                 self.message_post(cr, uid, 0,
                                   body=body_html,
                                   partner_ids=[(4, user.partner_id.id)],

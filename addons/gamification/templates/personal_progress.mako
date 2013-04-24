@@ -8,10 +8,14 @@
         <th>Completeness</th>
     </tr>
     % for goal in goals:
-        <tr>
+        <tr
+            % if goal.completeness >= 100:
+                style="font-weight:bold;"
+            % endif
+            >
             <td>${goal.type_id.name}</td>
-            <td>${goal.target_goal}</td>
-            <td>${goal.current}</td>
+            <td>${goal.target_goal} ${goal.type_suffix}</td>
+            <td>${goal.current} ${goal.type_suffix}</td>
             <td>${goal.completeness} %</td>
         </tr>
     % endfor
