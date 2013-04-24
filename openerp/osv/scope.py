@@ -212,16 +212,23 @@ class ModelCache(defaultdict):
             :param ids: the list of record ids to invalidate, ``None`` for all
         """
         if fields is None:
-            for field_cache in self.itervalues():
-                field_cache.clear()
-        elif ids is None:
-            for field in fields:
-                self[field].clear()
+            if ids is None:
+                self.ids.clear()
+                self.clear()
+            else:
+                self.ids.difference_update(ids)
+                for field_cache in self.itervalues():
+                    for id in ids:
+                        field_cache.pop(id, None)
         else:
-            for field in fields:
-                field_cache = self[field]
-                for id in ids:
-                    field_cache.pop(id, None)
+            if ids is None:
+                for field in fields:
+                    self.pop(field, None)
+            else:
+                for field in fields:
+                    field_cache = self[field]
+                    for id in ids:
+                        field_cache.pop(id, None)
 
 
 class RecordCache(defaultdict):

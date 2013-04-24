@@ -5635,23 +5635,21 @@ class BaseModel(object):
             :param fields: the list of modified fields, or ``None`` for all fields
             :param ids: the list of modified record ids, or ``None`` for all
         """
-        if fields is None:
-            scope_proxy.invalidate_cache()
-            return
+        if fields is None and ids is None:
+            return scope_proxy.invalidate_cache()
 
-        # group fields by model
+        # determine equivalent and inverse fields (grouped by model)
+        iter_fields = self._all_columns if fields is None else fields
         model_fields = defaultdict(set)
-        for field in fields:
+        for field in iter_fields:
             cinfo = self._all_columns[field]
             equivalents = cinfo.equivalents - set([(self._name, field)])
             for m, f in itertools.chain(equivalents, cinfo.inverses):
                 model_fields[m].add(f)
 
-        # add them all in spec
-        spec = [(self._name, fields, ids)]
-        for m in model_fields:
-            spec.append((m, model_fields[m], None))
-
+        # add them in spec, and invalidate the cache
+        spec = [(self._name, fields, ids)] + \
+               [(m, fs, None) for m, fs in model_fields.iteritems()]
         scope_proxy.invalidate_cache(spec)
 
     @api.recordset
