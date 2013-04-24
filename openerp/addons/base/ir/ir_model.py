@@ -871,7 +871,7 @@ class ir_model_data(osv.osv):
 
     def check_object_reference(self, cr, uid, module, xml_id, raise_on_access_error=False):
         """Returns (model, res_id) corresponding to a given module and xml_id (cached), if and only if the user has the necessary access rights
-        to see that object, otherwise raise ValueError"""
+        to see that object, otherwise raise a ValueError if raise_on_access_error is True or returns a tuple (model found, False)"""
         model, res_id = self.get_object_reference(cr, uid, module, xml_id)
         #search on id found in result to check if current user has read access right
         check_right = self.pool.get(model).search(cr, uid, [('id', '=', res_id)])
